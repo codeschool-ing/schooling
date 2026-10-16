@@ -1,0 +1,745 @@
+[
+  {
+    "id": "ex-zxnc4fe7",
+    "version": 1,
+    "section": "what-always-breaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An Oracle application runs `INSERT INTO t (name) VALUES ('')`. What does the row hold in the `name` column?",
+    "hint": "Oracle is the odd one out among the four engines.",
+    "choices": [
+      {
+        "text": "An empty string, as in every other engine",
+        "correct": false,
+        "why": "That is what MySQL, SQL Server and PostgreSQL do. Oracle turns it into NULL."
+      },
+      {
+        "text": "A single space, padded by the VARCHAR2 type",
+        "correct": false,
+        "why": "VARCHAR2 does not pad. Padding is what a fixed-width CHAR does, and it is not what happens here."
+      },
+      {
+        "text": "Nothing: the insert is refused as an invalid value",
+        "correct": false,
+        "why": "The insert succeeds without complaint, which is why the difference goes unnoticed until a migration."
+      },
+      {
+        "text": "NULL",
+        "correct": true,
+        "why": "Right. Oracle stores an empty string as NULL, so `WHERE name = ''` finds nothing there."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh0rqs53",
+    "version": 1,
+    "section": "what-always-breaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A MySQL column is `INT UNSIGNED`. Why does it become `bigint` in PostgreSQL rather than `integer`?",
+    "hint": "Compare the largest value each type can hold.",
+    "choices": [
+      {
+        "text": "It allows values up to about 4.29 billion, twice what `integer` holds",
+        "correct": true,
+        "why": "Right. PostgreSQL has no unsigned types, so the next signed type wide enough is `bigint`."
+      },
+      {
+        "text": "Because PostgreSQL's `integer` is slower than `bigint` on tables with millions of rows",
+        "correct": false,
+        "why": "Speed has nothing to do with it; the question is which values fit."
+      },
+      {
+        "text": "pgloader always widens every integer column",
+        "correct": false,
+        "why": "A signed MySQL INT maps to integer. The widening is because of UNSIGNED."
+      },
+      {
+        "text": "Because `integer` cannot be the target of a sequence",
+        "correct": false,
+        "why": "A sequence can feed an integer column. The size of the values decides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1pzyr0p",
+    "version": 1,
+    "section": "what-always-breaks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each source engine's habit with what it becomes in PostgreSQL.",
+    "hint": "Each one is an item of the first section.",
+    "pairs": [
+      {
+        "left": "MySQL `TINYINT(1)`",
+        "right": "`boolean`, losing any value other than 0 and 1"
+      },
+      {
+        "left": "MySQL `0000-00-00`",
+        "right": "NULL, in a column that can no longer be NOT NULL"
+      },
+      {
+        "left": "SQL Server `IDENTITY(1,1)`",
+        "right": "A sequence that has to start after the highest id"
+      },
+      {
+        "left": "Oracle unquoted `Customers`",
+        "right": "Stored as CUSTOMERS, where PostgreSQL would fold to customers"
+      }
+    ],
+    "right_distractors": [
+      "An unsigned integer column"
+    ]
+  },
+  {
+    "id": "ex-sadcrktd",
+    "version": 1,
+    "section": "what-always-breaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A SQL Server database used its default case-insensitive collation, and its `users.login` column has a UNIQUE constraint. After a migration that copies the constraint as it is, what can now happen that could not before?",
+    "hint": "What does the collation change about equality?",
+    "choices": [
+      {
+        "text": "Logins with accents are refused by the UTF8 encoding of the new database",
+        "correct": false,
+        "why": "UTF8 stores accented letters without trouble. The collation decides comparison, not storage."
+      },
+      {
+        "text": "Two users called `Ana` and `ana`",
+        "correct": true,
+        "why": "Right. PostgreSQL compares exactly by default, so the same constraint now allows both."
+      },
+      {
+        "text": "The constraint is dropped by the migration tool and has to be recreated by hand",
+        "correct": false,
+        "why": "The constraint was copied, as the question says. It kept its name and changed its meaning."
+      },
+      {
+        "text": "Lookups by login become slower because the index cannot be used",
+        "correct": false,
+        "why": "An exact lookup uses the index well. The problem is a lookup that finds nothing, not a slow one."
+      }
+    ]
+  },
+  {
+    "id": "ex-5avar4yz",
+    "version": 1,
+    "section": "a-mysql-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a new MySQL 8.0, `SELECT COUNT(*) FROM Customers WHERE BirthDate = '0000-00-00'` failed with `Incorrect DATE value`. Why?",
+    "hint": "Look at the sql_mode the server printed.",
+    "choices": [
+      {
+        "text": "The table has no zero dates at all",
+        "correct": false,
+        "why": "It has 286 of them; comparing with the number 0 found them."
+      },
+      {
+        "text": "BirthDate is a DATETIME, and a date literal does not compare with it",
+        "correct": false,
+        "why": "BirthDate is a DATE in legacy.sql, and a date literal compares with a DATE."
+      },
+      {
+        "text": "The user has no privilege to read that column",
+        "correct": false,
+        "why": "root reads everything; the next query on the same column worked."
+      },
+      {
+        "text": "The strict mode refuses to read the zero date as a value",
+        "correct": true,
+        "why": "Right. NO_ZERO_DATE in the session's mode refuses the literal, even though the table holds such values."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3yexsg1",
+    "version": 1,
+    "section": "a-mysql-database",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many customers in the legacy database have the zero date as their birth date?",
+    "hint": "The count found by comparing with the number 0.",
+    "value": 286,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-t5mzhndy",
+    "version": 1,
+    "section": "a-mysql-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`legacy.sql` starts with `SET NAMES utf8mb4`. What goes wrong without it, on a terminal whose locale is not UTF-8?",
+    "hint": "The client announces a character set and then sends bytes.",
+    "choices": [
+      {
+        "text": "The accented names are stored as wrong characters",
+        "correct": true,
+        "why": "Right. The client announces latin1, sends UTF-8, and each ã becomes two characters that the migration then copies."
+      },
+      {
+        "text": "The server refuses the file",
+        "correct": false,
+        "why": "Nothing is refused, which is the problem: the bytes are accepted under the wrong name."
+      },
+      {
+        "text": "The tables are created with the latin1 character set instead of utf8mb4",
+        "correct": false,
+        "why": "The CREATE DATABASE line sets utf8mb4 for the tables. The damage is in the bytes sent, not in the column's character set."
+      },
+      {
+        "text": "The emoji row is cut to three bytes and the rest arrive intact",
+        "correct": false,
+        "why": "The emoji is written as hex in the file, so it does not depend on the client. The accented names do."
+      }
+    ]
+  },
+  {
+    "id": "ex-c93gn102",
+    "version": 1,
+    "section": "pgloader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `migrator` user was changed to `mysql_native_password`, and pgloader still failed with `MYSQL-UNSUPPORTED-AUTHENTICATION`. What else had to change?",
+    "hint": "Who speaks first when a client connects?",
+    "choices": [
+      {
+        "text": "The password, which was too short",
+        "correct": false,
+        "why": "A short password is refused when it is set, not at login, and this one was accepted."
+      },
+      {
+        "text": "The server's default method, which it proposes at the start of every conversation",
+        "correct": true,
+        "why": "Right. The client cannot answer a caching_sha2_password proposal, so default_authentication_plugin had to change too."
+      },
+      {
+        "text": "The GRANT, which needed ALL PRIVILEGES",
+        "correct": false,
+        "why": "The failure is at login, before any privilege is checked. SELECT is enough for pgloader."
+      },
+      {
+        "text": "The PostgreSQL side, which needed a password for ana because pgloader connects over TCP",
+        "correct": false,
+        "why": "The error names mysql and the MySQL user. The PostgreSQL side connects by the local socket, with no password."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwc3pw4k",
+    "version": 1,
+    "section": "pgloader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pgloader printed `76 fell through ECASE expression` before copying anything. What is 76?",
+    "hint": "MySQL numbers something that every string column has.",
+    "choices": [
+      {
+        "text": "A collation number its client does not know",
+        "correct": true,
+        "why": "Right. 76 is utf8mb3_tolower_ci, used for column names in MySQL 8's catalogue."
+      },
+      {
+        "text": "The number of columns pgloader can map before it needs a load file",
+        "correct": false,
+        "why": "There is no such limit. The list after the message is a list of collation numbers it knows."
+      },
+      {
+        "text": "A MySQL error code for an unsupported login",
+        "correct": false,
+        "why": "The login had already worked at that point. The login failure has its own message."
+      },
+      {
+        "text": "The id of the first table it tried to read",
+        "correct": false,
+        "why": "It failed on the catalogue query, before reading any table."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv110hnx",
+    "version": 1,
+    "section": "pgloader",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the third pgloader run, `legacy.customers` reported 1 error and 0 rows. What was the exit status?",
+    "hint": "It was printed by `echo` right after the summary.",
+    "choices": [
+      {
+        "text": "1, one per failed table",
+        "correct": false,
+        "why": "That would have been useful. It printed 0."
+      },
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right, success, with a whole table missing. The summary is the part to read."
+      },
+      {
+        "text": "2, the number of errors in the summary's total",
+        "correct": false,
+        "why": "The total said 1 and the status said 0. Neither was 2."
+      },
+      {
+        "text": "Nothing; pgloader was killed before it could exit",
+        "correct": false,
+        "why": "It exited normally and echo printed its status."
+      }
+    ]
+  },
+  {
+    "id": "ex-pabdysbc",
+    "version": 1,
+    "section": "pgloader",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did one zero birth date leave the PostgreSQL table with 0 rows rather than 2,000?",
+    "hint": "How does pgloader send rows?",
+    "choices": [
+      {
+        "text": "pgloader deletes a table's rows when its foreign keys fail",
+        "correct": false,
+        "why": "The foreign key failed on orders, afterwards, because customers was already empty."
+      },
+      {
+        "text": "It copies in batches with COPY, and one bad row fails the whole batch; this table was one batch",
+        "correct": true,
+        "why": "Right. On a larger table you would see some rows arrive and some not, which is harder to notice."
+      },
+      {
+        "text": "PostgreSQL refuses a whole table when one column has the wrong type",
+        "correct": false,
+        "why": "The type was fine; the NOT NULL was the problem, and PostgreSQL judges rows, not tables."
+      },
+      {
+        "text": "The migrator user could read only the first row",
+        "correct": false,
+        "why": "It read all of them; the error names line 7 of the COPY."
+      }
+    ]
+  },
+  {
+    "id": "ex-khgk4e42",
+    "version": 1,
+    "section": "checking-the-copy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the load, both sides report 2,001 customers. What does that prove?",
+    "hint": "A count looks at rows, not at values.",
+    "choices": [
+      {
+        "text": "That no row was lost or added",
+        "correct": true,
+        "why": "Right, and nothing more. The values still need the checksum."
+      },
+      {
+        "text": "That every value in the table is the same on both sides",
+        "correct": false,
+        "why": "That is what a checksum asks, and here it disagreed."
+      },
+      {
+        "text": "That pgloader's cast rules did what the application expects",
+        "correct": false,
+        "why": "A count says nothing about types or values; the flag of 2 passed the count."
+      },
+      {
+        "text": "That the sequence was reset past the highest id",
+        "correct": false,
+        "why": "The count does not look at sequences. The insert that returned 2049 did."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qwkqbyz",
+    "version": 1,
+    "section": "checking-the-copy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first block-by-block checksum on MySQL showed every block different from PostgreSQL's. What was wrong?",
+    "hint": "Read the line under the table.",
+    "choices": [
+      {
+        "text": "GROUP_CONCAT silently cut each block's text off at 1,024 bytes",
+        "correct": true,
+        "why": "Right. Four warnings said so, and the hashes were of truncated strings."
+      },
+      {
+        "text": "Every row in those blocks had been damaged by the migration",
+        "correct": false,
+        "why": "After the session raised group_concat_max_len, blocks 0 to 3 matched. The check was broken, not the data."
+      },
+      {
+        "text": "MySQL's MD5 and PostgreSQL's md5 give different hashes for the same text",
+        "correct": false,
+        "why": "They are the same algorithm; the orders checksums matched exactly."
+      },
+      {
+        "text": "Integer division put the ids in different blocks on each side",
+        "correct": false,
+        "why": "DIV and integer / give the same block numbers here, and the row counts per block matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-52jatcs7",
+    "version": 1,
+    "section": "checking-the-copy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The customers checksum differed because of one row with `IsActive = 2`. Why was the fix made in `check-mysql.sql` and not in the migration?",
+    "hint": "What did the application mean by that column?",
+    "choices": [
+      {
+        "text": "Because pgloader cannot be told how to convert a TINYINT",
+        "correct": false,
+        "why": "A CAST rule could change it. The question is whether it should."
+      },
+      {
+        "text": "Because a checksum mismatch on one row is within tolerance",
+        "correct": false,
+        "why": "A checksum has no tolerance. Either the text is the same or it is not."
+      },
+      {
+        "text": "To make the hashes match before the deadline",
+        "correct": false,
+        "why": "Changing the check only to make it pass would hide damage. Here the row was examined first and found correct."
+      },
+      {
+        "text": "Because the copy was right: to the application, any non-zero value meant active",
+        "correct": true,
+        "why": "Right. The difference was a decision nobody had written down, so it goes into the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-psjzpn7y",
+    "version": 1,
+    "section": "checking-the-copy",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "pgloader read MySQL's DATETIME values, which carry no offset, in the PostgreSQL server's `___` setting, so 12:00:00 became 12:00:00-03.",
+    "hint": "The parameter SHOW prints the zone with.",
+    "blanks": [
+      {
+        "accept": [
+          "TimeZone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xn8p5exg",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A report computes `SELECT total / quantity` where both columns are integers. It printed 2.5000 in MySQL. What does it print in PostgreSQL for 5 and 2?",
+    "hint": "PostgreSQL keeps the type of the operands.",
+    "choices": [
+      {
+        "text": "2.5000",
+        "correct": false,
+        "why": "That is MySQL's answer. PostgreSQL divides integers as integers."
+      },
+      {
+        "text": "3, rounded half up",
+        "correct": false,
+        "why": "Integer division truncates; it does not round."
+      },
+      {
+        "text": "2",
+        "correct": true,
+        "why": "Right, with no error and no warning. Cast one side to numeric to keep the fraction."
+      },
+      {
+        "text": "An error asking for an explicit cast",
+        "correct": false,
+        "why": "It would be better if it did. It returns 2 silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1fy10ds",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the migration, `SELECT CustomerID FROM Customers` works in psql, and `SELECT \"CustomerID\" FROM customers` fails. Why?",
+    "hint": "What does PostgreSQL do to a name with no quotes?",
+    "choices": [
+      {
+        "text": "Unquoted names fold to lower case; the quotes keep the capitals",
+        "correct": true,
+        "why": "Right. pgloader folded every name, so only the unquoted spelling, or the lower-case one, finds it."
+      },
+      {
+        "text": "The quoted form needs the schema name in front of it",
+        "correct": false,
+        "why": "The search_path finds the table either way. The column's name is the problem."
+      },
+      {
+        "text": "Double quotes are a string in PostgreSQL",
+        "correct": false,
+        "why": "Single quotes make a string. Double quotes make an identifier, with its case kept."
+      },
+      {
+        "text": "psql converts every unquoted name to lower case before sending the query to the server",
+        "correct": false,
+        "why": "The server folds them, whatever client sends the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgeb22h8",
+    "version": 1,
+    "section": "the-application",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each MySQL construct with what to write in PostgreSQL.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "`IFNULL(x, 0)`",
+        "right": "`coalesce(x, 0)`"
+      },
+      {
+        "left": "`LIMIT 20, 10`",
+        "right": "`LIMIT 10 OFFSET 20`"
+      },
+      {
+        "left": "`GROUP_CONCAT(name)`",
+        "right": "`string_agg(name, ',')`"
+      },
+      {
+        "left": "`ON DUPLICATE KEY UPDATE`",
+        "right": "`ON CONFLICT (…) DO UPDATE`"
+      }
+    ],
+    "right_distractors": [
+      "`LIMIT 20 OFFSET 10`"
+    ]
+  },
+  {
+    "id": "ex-43kzrxa4",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The insert of `CUSTOMER1@example.com` succeeded in PostgreSQL and returned id 2049. What did that one statement show?",
+    "hint": "Two things: that it succeeded, and the number.",
+    "choices": [
+      {
+        "text": "Only that the e-mail column accepts upper case",
+        "correct": false,
+        "why": "Both engines accept upper case. The point is that it now coexists with the lower-case address."
+      },
+      {
+        "text": "The unique key got weaker, and the sequence continued past the highest id",
+        "correct": true,
+        "why": "Right. MySQL refused that address; PostgreSQL took it, under the next id after 2048."
+      },
+      {
+        "text": "That the table has 2,049 rows now",
+        "correct": false,
+        "why": "It has 2,002. The ids have a gap, which is why the id and the count differ."
+      },
+      {
+        "text": "That the citext extension had been installed by pgloader",
+        "correct": false,
+        "why": "With citext the insert would have been refused. Nothing installed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3d76qzq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's migration in the order that works.",
+    "hint": "Check comes after copy, and decisions come before the final run.",
+    "items": [
+      "Create a read-only MySQL user and an empty PostgreSQL database",
+      "Make the server propose mysql_native_password, and restart it",
+      "Write the CAST rule for zero dates into a load file",
+      "Run pgloader with the load file and read the errors column",
+      "Compare counts and checksums on both sides"
+    ],
+    "trap": "Comparing checksums before the final load compares a half-copied table."
+  },
+  {
+    "id": "ex-q3wqfkph",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You migrate an Oracle table where `middle_name` is empty for most people. After the move to PostgreSQL, a screen that used to list everyone with no middle name now lists nobody. Its query is `WHERE middle_name IS NULL`. What happened?",
+    "hint": "What did Oracle store, and what did the tool write?",
+    "choices": [
+      {
+        "text": "PostgreSQL ignores IS NULL on text columns",
+        "correct": false,
+        "why": "IS NULL works on every type. The values are the question."
+      },
+      {
+        "text": "The tool wrote empty strings where Oracle had NULLs, so IS NULL finds none",
+        "correct": true,
+        "why": "Right. In Oracle the two were one thing; in PostgreSQL they are two, and the query asks for only one of them."
+      },
+      {
+        "text": "The collation changed, so NULL compares differently",
+        "correct": false,
+        "why": "Collation affects comparing text with text. NULL is not compared by collation."
+      },
+      {
+        "text": "The rows were lost in the copy and a count would show it",
+        "correct": false,
+        "why": "The rows are there; the screen lists nobody because the condition matches nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-pas03c4n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says the migration is verified: pgloader exited with 0 and the row counts match on both sides. Which check from this lesson would still have found a problem in `legacy`?",
+    "hint": "Which table disagreed, and in what?",
+    "choices": [
+      {
+        "text": "None; exit 0 and matching counts are enough",
+        "correct": false,
+        "why": "The third run exited 0 with a whole table missing, and the counts matched while the customers checksum did not."
+      },
+      {
+        "text": "The per-table checksum",
+        "correct": true,
+        "why": "Right. It caught the flag of 2, which the count and the exit status could not see."
+      },
+      {
+        "text": "Running pgloader a second time and comparing the summaries",
+        "correct": false,
+        "why": "Two runs of the same tool repeat the same decisions. The check has to be independent of it."
+      },
+      {
+        "text": "Comparing the size of the two databases on disk, in bytes, with pg_database_size and the information schema",
+        "correct": false,
+        "why": "Two engines store the same rows in different sizes, so bytes on disk can neither confirm nor refute a copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqmhrxnc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A MySQL application stored its DATETIME values in UTC. The migration ran on a PostgreSQL server whose TimeZone is America/Sao_Paulo, exactly as in this lesson. What is true of the migrated `created_at` values?",
+    "hint": "pgloader read the wall-clock time in the server's zone.",
+    "choices": [
+      {
+        "text": "Each one is three hours off, and the checksum in this lesson would not notice",
+        "correct": true,
+        "why": "Right. to_char prints the same wall-clock text on both sides, so the hashes agree while every instant is wrong."
+      },
+      {
+        "text": "They are correct, because timestamptz stores UTC internally",
+        "correct": false,
+        "why": "It stores UTC, after converting from the zone the value was read in, and that zone was wrong."
+      },
+      {
+        "text": "pgloader refuses to load DATETIME into timestamptz without a zone",
+        "correct": false,
+        "why": "It loaded them without a word, as the customers table shows."
+      },
+      {
+        "text": "They are NULL, like the zero dates",
+        "correct": false,
+        "why": "Only zero dates become NULL. Ordinary values are kept, in the wrong zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3rzkebs",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these are decisions a person has to make during a MySQL to PostgreSQL migration, because no tool can know the answer? Choose all that apply.",
+    "hint": "Which ones depend on what the application meant?",
+    "choices": [
+      {
+        "text": "Which time zone the DATETIME values were written in",
+        "correct": true,
+        "why": "Yes. The values do not say, and only the application's owners know."
+      },
+      {
+        "text": "Whether e-mail uniqueness should ignore case",
+        "correct": true,
+        "why": "Yes. MySQL's collation decided it silently; in PostgreSQL somebody chooses lower() or citext, or nothing."
+      },
+      {
+        "text": "What a zero date means: unknown, or a value to keep",
+        "correct": true,
+        "why": "Yes. NULL is the usual answer, and it is still an answer somebody gives."
+      },
+      {
+        "text": "Whether INT UNSIGNED fits in a PostgreSQL integer",
+        "correct": false,
+        "why": "That is arithmetic with a right answer, and pgloader chose bigint by itself."
+      },
+      {
+        "text": "How many rows each table has",
+        "correct": false,
+        "why": "That is a fact you count, not a decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdcnfdjt",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To load its own code at start-up, which is how this lesson taught it the MySQL 8 collations, pgloader takes the option `--___`.",
+    "hint": "Three words joined by hyphens; the language is Lisp.",
+    "blanks": [
+      {
+        "accept": [
+          "load-lisp-file"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

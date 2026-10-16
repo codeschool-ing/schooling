@@ -1,0 +1,512 @@
+{
+  "ex-zxnc4fe7": {
+    "prompt": "Uma aplicação Oracle roda `INSERT INTO t (name) VALUES ('')`. O que a linha guarda na coluna `name`?",
+    "hint": "O Oracle é o diferente entre os quatro engines.",
+    "choices": [
+      {
+        "text": "Uma string vazia, como em todos os outros engines",
+        "why": "É o que o MySQL, o SQL Server e o PostgreSQL fazem. O Oracle transforma em NULL."
+      },
+      {
+        "text": "Um único espaço, preenchido pelo tipo VARCHAR2",
+        "why": "O VARCHAR2 não preenche. Preencher é o que um CHAR de largura fixa faz, e não é o que acontece aqui."
+      },
+      {
+        "text": "Nada: o insert é recusado como valor inválido",
+        "why": "O insert dá certo sem reclamar, e é por isso que a diferença passa despercebida até uma migração."
+      },
+      {
+        "text": "NULL",
+        "why": "Isso. O Oracle guarda uma string vazia como NULL, então `WHERE name = ''` não acha nada ali."
+      }
+    ]
+  },
+  "ex-zh0rqs53": {
+    "prompt": "Uma coluna MySQL é `INT UNSIGNED`. Por que ela vira `bigint` no PostgreSQL e não `integer`?",
+    "hint": "Compare o maior valor que cada tipo consegue guardar.",
+    "choices": [
+      {
+        "text": "Ela permite valores até uns 4,29 bilhões, o dobro do que cabe num `integer`",
+        "why": "Isso. O PostgreSQL não tem tipos sem sinal, então o próximo tipo com sinal largo o bastante é o `bigint`."
+      },
+      {
+        "text": "Porque o `integer` do PostgreSQL é mais lento que o `bigint` em tabelas com milhões de linhas",
+        "why": "A velocidade não tem nada a ver; a questão é quais valores cabem."
+      },
+      {
+        "text": "O pgloader sempre alarga toda coluna inteira",
+        "why": "Um INT com sinal do MySQL vira integer. O alargamento é por causa do UNSIGNED."
+      },
+      {
+        "text": "Porque um `integer` não pode ser alvo de uma sequence",
+        "why": "Uma sequence pode alimentar uma coluna integer. O que decide é o tamanho dos valores."
+      }
+    ]
+  },
+  "ex-f1pzyr0p": {
+    "prompt": "Ligue cada hábito do engine de origem ao que ele vira no PostgreSQL.",
+    "hint": "Cada um é um item da primeira seção.",
+    "pairs": [
+      {
+        "left": "`TINYINT(1)` do MySQL",
+        "right": "`boolean`, perdendo qualquer valor diferente de 0 e 1"
+      },
+      {
+        "left": "`0000-00-00` do MySQL",
+        "right": "NULL, numa coluna que não pode mais ser NOT NULL"
+      },
+      {
+        "left": "`IDENTITY(1,1)` do SQL Server",
+        "right": "Uma sequence que precisa começar depois do maior id"
+      },
+      {
+        "left": "`Customers` sem aspas no Oracle",
+        "right": "Guardado como CUSTOMERS, onde o PostgreSQL converteria para customers"
+      }
+    ],
+    "right_distractors": [
+      "Uma coluna de inteiro sem sinal"
+    ]
+  },
+  "ex-sadcrktd": {
+    "prompt": "Um banco SQL Server usava a collation padrão que ignora maiúsculas, e a coluna `users.login` tem uma restrição UNIQUE. Depois de uma migração que copia a restrição como está, o que pode acontecer agora que antes não podia?",
+    "hint": "O que a collation muda na igualdade?",
+    "choices": [
+      {
+        "text": "Logins com acento são recusados pela codificação UTF8 do banco novo",
+        "why": "O UTF8 guarda letras acentuadas sem problema. A collation decide a comparação, não o armazenamento."
+      },
+      {
+        "text": "Dois usuários chamados `Ana` e `ana`",
+        "why": "Isso. O PostgreSQL compara exatamente por padrão, então a mesma restrição agora permite os dois."
+      },
+      {
+        "text": "A restrição é descartada pela ferramenta de migração e precisa ser recriada à mão",
+        "why": "A restrição foi copiada, como a pergunta diz. Ela manteve o nome e mudou o significado."
+      },
+      {
+        "text": "As buscas por login ficam mais lentas porque o índice não pode ser usado",
+        "why": "Uma busca exata usa bem o índice. O problema é uma busca que não acha nada, não uma lenta."
+      }
+    ]
+  },
+  "ex-5avar4yz": {
+    "prompt": "Num MySQL 8.0 novo, `SELECT COUNT(*) FROM Customers WHERE BirthDate = '0000-00-00'` falhou com `Incorrect DATE value`. Por quê?",
+    "hint": "Olhe o sql_mode que o servidor imprimiu.",
+    "choices": [
+      {
+        "text": "A tabela não tem data zerada nenhuma",
+        "why": "Ela tem 286; comparar com o número 0 as encontrou."
+      },
+      {
+        "text": "BirthDate é um DATETIME, e um literal de data não se compara com ele",
+        "why": "BirthDate é um DATE no legacy.sql, e um literal de data se compara com um DATE."
+      },
+      {
+        "text": "O usuário não tem privilégio para ler essa coluna",
+        "why": "O root lê tudo; a consulta seguinte na mesma coluna funcionou."
+      },
+      {
+        "text": "O modo estrito se recusa a ler a data zerada como valor",
+        "why": "Isso. O NO_ZERO_DATE no modo da sessão recusa o literal, embora a tabela guarde valores assim."
+      }
+    ]
+  },
+  "ex-b3yexsg1": {
+    "prompt": "Quantos clientes do banco legacy têm a data zerada como data de nascimento?",
+    "hint": "A contagem achada comparando com o número 0."
+  },
+  "ex-t5mzhndy": {
+    "prompt": "O `legacy.sql` começa com `SET NAMES utf8mb4`. O que dá errado sem ele, num terminal cujo locale não é UTF-8?",
+    "hint": "O cliente anuncia um conjunto de caracteres e depois manda bytes.",
+    "choices": [
+      {
+        "text": "Os nomes acentuados são guardados como caracteres errados",
+        "why": "Isso. O cliente anuncia latin1, manda UTF-8, e cada ã vira dois caracteres que a migração depois copia."
+      },
+      {
+        "text": "O servidor recusa o arquivo",
+        "why": "Nada é recusado, e esse é o problema: os bytes são aceitos com o nome errado."
+      },
+      {
+        "text": "As tabelas são criadas com o conjunto latin1 em vez de utf8mb4",
+        "why": "A linha CREATE DATABASE define utf8mb4 para as tabelas. O estrago está nos bytes enviados, não no conjunto da coluna."
+      },
+      {
+        "text": "A linha do emoji é cortada em três bytes e o resto chega intacto",
+        "why": "O emoji está escrito em hexadecimal no arquivo, então não depende do cliente. Os nomes acentuados dependem."
+      }
+    ]
+  },
+  "ex-c93gn102": {
+    "prompt": "O usuário `migrator` foi mudado para `mysql_native_password`, e o pgloader ainda falhou com `MYSQL-UNSUPPORTED-AUTHENTICATION`. O que mais precisou mudar?",
+    "hint": "Quem fala primeiro quando um cliente se conecta?",
+    "choices": [
+      {
+        "text": "A senha, que era curta demais",
+        "why": "Uma senha curta é recusada quando é definida, não no login, e esta foi aceita."
+      },
+      {
+        "text": "O método padrão do servidor, que ele propõe no início de toda conversa",
+        "why": "Isso. O cliente não consegue responder a uma proposta de caching_sha2_password, então o default_authentication_plugin também precisou mudar."
+      },
+      {
+        "text": "O GRANT, que precisava de ALL PRIVILEGES",
+        "why": "A falha é no login, antes de qualquer privilégio ser conferido. SELECT basta para o pgloader."
+      },
+      {
+        "text": "O lado do PostgreSQL, que precisava de uma senha para ana porque o pgloader se conecta por TCP",
+        "why": "O erro cita o mysql e o usuário MySQL. O lado do PostgreSQL se conecta pelo socket local."
+      }
+    ]
+  },
+  "ex-qwc3pw4k": {
+    "prompt": "O pgloader imprimiu `76 fell through ECASE expression` antes de copiar qualquer coisa. O que é 76?",
+    "hint": "O MySQL numera algo que toda coluna de texto tem.",
+    "choices": [
+      {
+        "text": "Um número de collation que o cliente dele não conhece",
+        "why": "Isso. 76 é a utf8mb3_tolower_ci, usada para nomes de coluna no catálogo do MySQL 8."
+      },
+      {
+        "text": "O número de colunas que o pgloader consegue mapear antes de precisar de um arquivo de carga",
+        "why": "Não existe esse limite. A lista depois da mensagem é a lista dos números de collation que ele conhece."
+      },
+      {
+        "text": "Um código de erro do MySQL para um login não suportado",
+        "why": "O login já tinha funcionado nesse ponto. A falha de login tem a sua própria mensagem."
+      },
+      {
+        "text": "O id da primeira tabela que ele tentou ler",
+        "why": "Ele falhou na consulta ao catálogo, antes de ler qualquer tabela."
+      }
+    ]
+  },
+  "ex-fv110hnx": {
+    "prompt": "Na terceira execução do pgloader, `legacy.customers` relatou 1 erro e 0 linhas. Qual foi o código de saída?",
+    "hint": "Foi impresso pelo `echo` logo depois do resumo.",
+    "choices": [
+      {
+        "text": "1, um por tabela que falhou",
+        "why": "Isso teria sido útil. Ele imprimiu 0."
+      },
+      {
+        "text": "0",
+        "why": "Isso, sucesso, com uma tabela inteira faltando. O resumo é a parte a ler."
+      },
+      {
+        "text": "2, o número de erros no total do resumo",
+        "why": "O total dizia 1 e o código dizia 0. Nenhum dos dois era 2."
+      },
+      {
+        "text": "Nada; o pgloader foi morto antes de conseguir sair",
+        "why": "Ele saiu normalmente e o echo imprimiu o código."
+      }
+    ]
+  },
+  "ex-pabdysbc": {
+    "prompt": "Por que uma data de nascimento zerada deixou a tabela do PostgreSQL com 0 linhas e não 2.000?",
+    "hint": "Como o pgloader manda as linhas?",
+    "choices": [
+      {
+        "text": "O pgloader apaga as linhas de uma tabela quando as chaves estrangeiras dela falham",
+        "why": "A chave estrangeira falhou em orders, depois, porque customers já estava vazia."
+      },
+      {
+        "text": "Ele copia em lotes com COPY, e uma linha ruim derruba o lote inteiro; esta tabela era um lote só",
+        "why": "Isso. Numa tabela maior você veria algumas linhas chegarem e outras não, o que é mais difícil de notar."
+      },
+      {
+        "text": "O PostgreSQL recusa uma tabela inteira quando uma coluna tem o tipo errado",
+        "why": "O tipo estava certo; o NOT NULL era o problema, e o PostgreSQL julga linhas, não tabelas."
+      },
+      {
+        "text": "O usuário migrator só conseguia ler a primeira linha",
+        "why": "Ele leu todas; o erro cita a linha 7 do COPY."
+      }
+    ]
+  },
+  "ex-khgk4e42": {
+    "prompt": "Depois da carga, os dois lados relatam 2.001 clientes. O que isso prova?",
+    "hint": "Uma contagem olha linhas, não valores.",
+    "choices": [
+      {
+        "text": "Que nenhuma linha se perdeu ou sobrou",
+        "why": "Isso, e nada mais. Os valores ainda precisam do checksum."
+      },
+      {
+        "text": "Que cada valor da tabela é igual dos dois lados",
+        "why": "Isso é o que um checksum pergunta, e aqui ele discordou."
+      },
+      {
+        "text": "Que as regras de cast do pgloader fizeram o que a aplicação espera",
+        "why": "Uma contagem não diz nada sobre tipos ou valores; a flag com 2 passou na contagem."
+      },
+      {
+        "text": "Que a sequence foi reposicionada depois do maior id",
+        "why": "A contagem não olha sequences. O insert que devolveu 2049 olhou."
+      }
+    ]
+  },
+  "ex-3qwkqbyz": {
+    "prompt": "O primeiro checksum por blocos no MySQL mostrou todos os blocos diferentes dos do PostgreSQL. O que estava errado?",
+    "hint": "Leia a linha debaixo da tabela.",
+    "choices": [
+      {
+        "text": "O GROUP_CONCAT cortou em silêncio o texto de cada bloco em 1.024 bytes",
+        "why": "Isso. Quatro warnings diziam isso, e os hashes eram de strings truncadas."
+      },
+      {
+        "text": "Todas as linhas daqueles blocos tinham sido estragadas pela migração",
+        "why": "Depois que a sessão aumentou o group_concat_max_len, os blocos 0 a 3 bateram. A conferência estava quebrada, não os dados."
+      },
+      {
+        "text": "O MD5 do MySQL e o md5 do PostgreSQL dão hashes diferentes para o mesmo texto",
+        "why": "São o mesmo algoritmo; os checksums de orders bateram exatamente."
+      },
+      {
+        "text": "A divisão inteira pôs os ids em blocos diferentes de cada lado",
+        "why": "DIV e o / inteiro dão os mesmos números de bloco aqui, e as contagens por bloco bateram."
+      }
+    ]
+  },
+  "ex-52jatcs7": {
+    "prompt": "O checksum de customers diferia por causa de uma linha com `IsActive = 2`. Por que o conserto foi feito no `check-mysql.sql` e não na migração?",
+    "hint": "O que a aplicação queria dizer com aquela coluna?",
+    "choices": [
+      {
+        "text": "Porque não dá para dizer ao pgloader como converter um TINYINT",
+        "why": "Uma regra CAST poderia mudar isso. A questão é se deveria."
+      },
+      {
+        "text": "Porque uma diferença de checksum numa linha está dentro da tolerância",
+        "why": "Um checksum não tem tolerância. Ou o texto é igual ou não é."
+      },
+      {
+        "text": "Para fazer os hashes baterem antes do prazo",
+        "why": "Mudar a conferência só para ela passar esconderia estrago. Aqui a linha foi examinada antes e estava correta."
+      },
+      {
+        "text": "Porque a cópia estava certa: para a aplicação, qualquer valor diferente de zero significava ativo",
+        "why": "Isso. A diferença era uma decisão que ninguém tinha escrito, então ela vai para a conferência."
+      }
+    ]
+  },
+  "ex-psjzpn7y": {
+    "prompt": "O pgloader leu os valores DATETIME do MySQL, que não têm fuso, na configuração `___` do servidor PostgreSQL, então 12:00:00 virou 12:00:00-03.",
+    "hint": "O parâmetro com que o SHOW imprime o fuso.",
+    "blanks": [
+      {
+        "accept": [
+          "TimeZone"
+        ]
+      }
+    ]
+  },
+  "ex-xn8p5exg": {
+    "prompt": "Um relatório calcula `SELECT total / quantity` em que as duas colunas são inteiras. Ele imprimia 2.5000 no MySQL. O que imprime no PostgreSQL para 5 e 2?",
+    "hint": "O PostgreSQL mantém o tipo dos operandos.",
+    "choices": [
+      {
+        "text": "2.5000",
+        "why": "Essa é a resposta do MySQL. O PostgreSQL divide inteiros como inteiros."
+      },
+      {
+        "text": "3, arredondado para cima",
+        "why": "A divisão inteira trunca; ela não arredonda."
+      },
+      {
+        "text": "2",
+        "why": "Isso, sem erro e sem aviso. Converta um dos lados para numeric para manter a fração."
+      },
+      {
+        "text": "Um erro pedindo uma conversão explícita",
+        "why": "Seria melhor se pedisse. Ele devolve 2 em silêncio."
+      }
+    ]
+  },
+  "ex-w1fy10ds": {
+    "prompt": "Depois da migração, `SELECT CustomerID FROM Customers` funciona no psql, e `SELECT \"CustomerID\" FROM customers` falha. Por quê?",
+    "hint": "O que o PostgreSQL faz com um nome sem aspas?",
+    "choices": [
+      {
+        "text": "Nomes sem aspas viram minúsculas; as aspas mantêm as maiúsculas",
+        "why": "Isso. O pgloader converteu todos os nomes, então só a grafia sem aspas, ou a minúscula, a encontra."
+      },
+      {
+        "text": "A forma com aspas precisa do nome do esquema na frente",
+        "why": "O search_path acha a tabela dos dois jeitos. O problema é o nome da coluna."
+      },
+      {
+        "text": "Aspas duplas são uma string no PostgreSQL",
+        "why": "Aspas simples fazem uma string. Aspas duplas fazem um identificador, com as maiúsculas mantidas."
+      },
+      {
+        "text": "O psql converte todo nome sem aspas para minúsculas antes de mandar a consulta ao servidor",
+        "why": "Quem converte é o servidor, qualquer que seja o cliente que manda a consulta."
+      }
+    ]
+  },
+  "ex-xgeb22h8": {
+    "prompt": "Ligue cada construção do MySQL ao que escrever no PostgreSQL.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "`IFNULL(x, 0)`",
+        "right": "`coalesce(x, 0)`"
+      },
+      {
+        "left": "`LIMIT 20, 10`",
+        "right": "`LIMIT 10 OFFSET 20`"
+      },
+      {
+        "left": "`GROUP_CONCAT(name)`",
+        "right": "`string_agg(name, ',')`"
+      },
+      {
+        "left": "`ON DUPLICATE KEY UPDATE`",
+        "right": "`ON CONFLICT (…) DO UPDATE`"
+      }
+    ],
+    "right_distractors": [
+      "`LIMIT 20 OFFSET 10`"
+    ]
+  },
+  "ex-43kzrxa4": {
+    "prompt": "O insert de `CUSTOMER1@example.com` deu certo no PostgreSQL e devolveu o id 2049. O que esse único comando mostrou?",
+    "hint": "Duas coisas: que deu certo, e o número.",
+    "choices": [
+      {
+        "text": "Só que a coluna de e-mail aceita maiúsculas",
+        "why": "Os dois engines aceitam maiúsculas. O ponto é que agora ele convive com o endereço em minúsculas."
+      },
+      {
+        "text": "A chave única ficou mais fraca, e a sequence continuou depois do maior id",
+        "why": "Isso. O MySQL recusou esse endereço; o PostgreSQL o aceitou, com o próximo id depois de 2048."
+      },
+      {
+        "text": "Que a tabela agora tem 2.049 linhas",
+        "why": "Ela tem 2.002. Os ids têm um buraco, e é por isso que o id e a contagem diferem."
+      },
+      {
+        "text": "Que a extensão citext tinha sido instalada pelo pgloader",
+        "why": "Com citext o insert teria sido recusado. Nada a instalou."
+      }
+    ]
+  },
+  "ex-n3d76qzq": {
+    "prompt": "Ponha os passos da migração desta lição na ordem que funciona.",
+    "hint": "A conferência vem depois da cópia, e as decisões vêm antes da execução final.",
+    "items": [
+      "Criar um usuário MySQL só de leitura e um banco PostgreSQL vazio",
+      "Fazer o servidor propor mysql_native_password, e reiniciá-lo",
+      "Escrever a regra CAST para datas zeradas num arquivo de carga",
+      "Rodar o pgloader com o arquivo de carga e ler a coluna errors",
+      "Comparar contagens e checksums dos dois lados"
+    ],
+    "trap": "Comparar checksums antes da carga final compara uma tabela copiada pela metade."
+  },
+  "ex-q3wqfkph": {
+    "prompt": "Você migra uma tabela Oracle em que `middle_name` está vazio para a maioria das pessoas. Depois da mudança para o PostgreSQL, uma tela que listava todo mundo sem nome do meio agora não lista ninguém. A consulta dela é `WHERE middle_name IS NULL`. O que aconteceu?",
+    "hint": "O que o Oracle guardava, e o que a ferramenta escreveu?",
+    "choices": [
+      {
+        "text": "O PostgreSQL ignora IS NULL em colunas de texto",
+        "why": "IS NULL funciona em todo tipo. A questão são os valores."
+      },
+      {
+        "text": "A ferramenta escreveu strings vazias onde o Oracle tinha NULLs, então IS NULL não acha nenhuma",
+        "why": "Isso. No Oracle as duas coisas eram uma só; no PostgreSQL são duas, e a consulta pede só uma delas."
+      },
+      {
+        "text": "A collation mudou, então NULL se compara de outro jeito",
+        "why": "A collation afeta a comparação de texto com texto. NULL não é comparado pela collation."
+      },
+      {
+        "text": "As linhas se perderam na cópia e uma contagem mostraria isso",
+        "why": "As linhas estão lá; a tela não lista ninguém porque a condição não casa com nada."
+      }
+    ]
+  },
+  "ex-pas03c4n": {
+    "prompt": "Um colega diz que a migração está verificada: o pgloader saiu com 0 e as contagens de linhas batem dos dois lados. Que conferência desta lição ainda teria achado um problema no `legacy`?",
+    "hint": "Que tabela discordou, e em quê?",
+    "choices": [
+      {
+        "text": "Nenhuma; saída 0 e contagens iguais bastam",
+        "why": "A terceira execução saiu com 0 com uma tabela inteira faltando, e as contagens bateram enquanto o checksum de customers não."
+      },
+      {
+        "text": "O checksum por tabela",
+        "why": "Isso. Ele pegou a flag com 2, que a contagem e o código de saída não enxergavam."
+      },
+      {
+        "text": "Rodar o pgloader uma segunda vez e comparar os resumos",
+        "why": "Duas execuções da mesma ferramenta repetem as mesmas decisões. A conferência precisa ser independente dela."
+      },
+      {
+        "text": "Comparar o tamanho dos dois bancos em disco, em bytes, com pg_database_size e o information schema",
+        "why": "Dois engines guardam as mesmas linhas com tamanhos diferentes, então bytes em disco nem confirmam nem refutam uma cópia."
+      }
+    ]
+  },
+  "ex-qqmhrxnc": {
+    "prompt": "Uma aplicação MySQL gravava os valores DATETIME em UTC. A migração rodou num servidor PostgreSQL cujo TimeZone é America/Sao_Paulo, exatamente como nesta lição. O que vale para os valores migrados de `created_at`?",
+    "hint": "O pgloader leu a hora de relógio no fuso do servidor.",
+    "choices": [
+      {
+        "text": "Cada um está três horas errado, e o checksum desta lição não perceberia",
+        "why": "Isso. O to_char imprime o mesmo texto de relógio dos dois lados, então os hashes batem enquanto cada instante está errado."
+      },
+      {
+        "text": "Estão corretos, porque o timestamptz guarda UTC internamente",
+        "why": "Ele guarda UTC, depois de converter do fuso em que o valor foi lido, e esse fuso estava errado."
+      },
+      {
+        "text": "O pgloader se recusa a carregar DATETIME em timestamptz sem um fuso",
+        "why": "Ele os carregou sem uma palavra, como a tabela customers mostra."
+      },
+      {
+        "text": "Viram NULL, como as datas zeradas",
+        "why": "Só datas zeradas viram NULL. Valores comuns são mantidos, no fuso errado."
+      }
+    ]
+  },
+  "ex-q3rzkebs": {
+    "prompt": "Quais destes são decisões que uma pessoa precisa tomar numa migração de MySQL para PostgreSQL, porque nenhuma ferramenta sabe a resposta? Marque todos que se aplicam.",
+    "hint": "Quais dependem do que a aplicação queria dizer?",
+    "choices": [
+      {
+        "text": "Em que fuso os valores DATETIME foram gravados",
+        "why": "Sim. Os valores não dizem, e só os donos da aplicação sabem."
+      },
+      {
+        "text": "Se a unicidade de e-mail deve ignorar maiúsculas",
+        "why": "Sim. A collation do MySQL decidia isso em silêncio; no PostgreSQL alguém escolhe lower() ou citext, ou nada."
+      },
+      {
+        "text": "O que uma data zerada significa: desconhecido, ou um valor a manter",
+        "why": "Sim. NULL é a resposta comum, e ainda assim é uma resposta que alguém dá."
+      },
+      {
+        "text": "Se um INT UNSIGNED cabe num integer do PostgreSQL",
+        "why": "Isso é aritmética com uma resposta certa, e o pgloader escolheu bigint sozinho."
+      },
+      {
+        "text": "Quantas linhas cada tabela tem",
+        "why": "Isso é um fato que se conta, não uma decisão."
+      }
+    ]
+  },
+  "ex-jdcnfdjt": {
+    "prompt": "Para carregar código próprio na partida, que é como esta lição lhe ensinou as collations do MySQL 8, o pgloader recebe a opção `--___`.",
+    "hint": "Três palavras unidas por hífens; a linguagem é Lisp.",
+    "blanks": [
+      {
+        "accept": [
+          "load-lisp-file"
+        ]
+      }
+    ]
+  }
+}

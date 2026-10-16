@@ -1,0 +1,553 @@
+{
+  "ex-xpgpfnsa": {
+    "prompt": "Um servidor vai do 16.2 para o 16.15. O que acontece com os arquivos do diretório de dados?",
+    "hint": "Uma versão menor nunca muda o formato em disco.",
+    "choices": [
+      {
+        "text": "O pg_upgrade reescreve o catálogo",
+        "why": "Isso é um upgrade maior. Entre versões menores o catálogo não muda."
+      },
+      {
+        "text": "São convertidos no primeiro acesso",
+        "why": "O PostgreSQL nunca converte arquivos aos poucos. Não há nada para converter entre versões menores."
+      },
+      {
+        "text": "Nada; os programas novos abrem os mesmos arquivos depois de um reinício",
+        "why": "Isso. O 16.15 lê exatamente o que o 16.2 escreveu; só mudam os programas e há um reinício."
+      },
+      {
+        "text": "Precisam passar por dump e restore",
+        "why": "Um dump é um dos caminhos para uma versão maior. Um upgrade menor não precisa de nenhum."
+      }
+    ]
+  },
+  "ex-smxhf2h2": {
+    "prompt": "Um servidor roda o 16.2. Qual caminho até o 16.15 a lição descreve?",
+    "hint": "As versões menores são cumulativas.",
+    "choices": [
+      {
+        "text": "Instalar cada versão do 16.3 ao 16.15 em sequência, reiniciando depois de cada uma",
+        "why": "Cada versão menor contém todas as correções anteriores, então as do meio não acrescentam nada."
+      },
+      {
+        "text": "Direto para o 16.15, lendo as notas de cada versão",
+        "why": "Isso. O 16.15 contém tudo do 16.3 ao 16.14. Você ainda lê as notas de cada uma."
+      },
+      {
+        "text": "Fazer upgrade para o 17 primeiro e depois voltar",
+        "why": "Uma versão maior não se desfaz instalando programas mais antigos; o diretório de dados seria do 17."
+      },
+      {
+        "text": "Passando pelo 16.10, a última versão que muda o formato",
+        "why": "Nenhuma versão menor muda o formato em disco, então não há escala obrigatória."
+      }
+    ]
+  },
+  "ex-refvmcm1": {
+    "prompt": "Ligue cada caminho para uma versão maior ao seu caminho de volta se a versão nova se comportar mal.",
+    "hint": "Quais deixam o cluster antigo capaz de subir?",
+    "pairs": [
+      {
+        "left": "pg_upgrade com --link",
+        "right": "Um backup feito antes de começar"
+      },
+      {
+        "left": "pg_upgrade copiando os arquivos",
+        "right": "Subir o cluster antigo de novo"
+      },
+      {
+        "left": "Replicação lógica",
+        "right": "Apontar a aplicação de volta para o servidor antigo, ainda rodando"
+      }
+    ],
+    "right_distractors": [
+      "Rodar o pg_upgrade ao contrário, do 17 para o 16"
+    ]
+  },
+  "ex-kzg8rd8h": {
+    "prompt": "Depois de `sudo apt install postgresql-16`, o que mostrou que o servidor tinha mesmo sido reiniciado?",
+    "hint": "Dois valores foram perguntados antes e depois.",
+    "choices": [
+      {
+        "text": "O `pg_postmaster_start_time()` devolveu uma hora posterior",
+        "why": "Isso. A hora de início do postmaster mudou, e o log mostra o desligamento e a subida no meio."
+      },
+      {
+        "text": "O apt imprimiu uma linha dizendo que o cluster foi reiniciado",
+        "why": "A lição não cita a saída do apt; a prova veio do próprio servidor."
+      },
+      {
+        "text": "O `pg_lsclusters` mostrou uma porta nova",
+        "why": "A porta continua 5432 num upgrade menor."
+      },
+      {
+        "text": "O diretório de dados ganhou um nome novo",
+        "why": "É /var/lib/postgresql/16/main antes e depois; nada nele mudou."
+      }
+    ]
+  },
+  "ex-kzw4ezfy": {
+    "prompt": "O log mostra `received fast shutdown request` durante o upgrade. O que isso significa para um cliente que estava no meio de uma transação?",
+    "hint": "Rápido não é educado.",
+    "choices": [
+      {
+        "text": "Desfeita, e desconectado",
+        "why": "Isso. Um desligamento fast desfaz as transações abertas e derruba toda conexão; o cliente reconecta depois."
+      },
+      {
+        "text": "O servidor espera o commit dele antes de parar",
+        "why": "Isso seria um desligamento smart. Um fast não espera ninguém."
+      },
+      {
+        "text": "A transação dele passa para o servidor 16.15",
+        "why": "Nenhuma transação sobrevive a um reinício do servidor; não sobra processo para segurá-la."
+      },
+      {
+        "text": "Nada, porque um upgrade menor não para o servidor",
+        "why": "Para, sim, por poucos segundos, e o log mostra exatamente quando."
+      }
+    ]
+  },
+  "ex-p5jv3aey": {
+    "prompt": "Uma equipe descobre que o PostgreSQL reiniciou às 06:20 de uma terça sem ninguém logado. O `apt list --upgradable` tinha mostrado a versão nova em `noble-security` no dia anterior. Qual a causa provável?",
+    "hint": "O que instala atualizações de segurança sozinho no Ubuntu?",
+    "choices": [
+      {
+        "text": "O unattended-upgrades instalou a versão menor",
+        "why": "Isso. Ele instala diariamente os pacotes de segurança, e os scripts do pacote reiniciam o cluster."
+      },
+      {
+        "text": "O autovacuum o reiniciou",
+        "why": "O autovacuum nunca reinicia o servidor."
+      },
+      {
+        "text": "Foi o checkpointer",
+        "why": "Um checkpoint escreve páginas sujas; não reinicia nada."
+      },
+      {
+        "text": "O OOM killer do kernel, que toda atualização de segurança dispara",
+        "why": "Atualizações de segurança não disparam o OOM killer, e a hora bate com a atualização, não com a memória."
+      }
+    ]
+  },
+  "ex-jxczcdm9": {
+    "prompt": "O `sudo pg_createcluster 16 rehearsal --start` deu ao cluster novo a porta 5433. Por que essa porta?",
+    "hint": "O que já ocupa a 5432?",
+    "choices": [
+      {
+        "text": "Clusters de ensaio sempre usam a 5433",
+        "why": "O nome não significa nada para o pg_createcluster; ele só procura uma porta livre."
+      },
+      {
+        "text": "A 5433 fica para uma segunda versão",
+        "why": "Este cluster é 16, como o main. Nenhuma porta está presa a uma versão."
+      },
+      {
+        "text": "Era a próxima porta livre depois da 5432 do main",
+        "why": "Isso. O main ocupa a 5432, então o pg_createcluster pegou a próxima porta livre."
+      },
+      {
+        "text": "Ele copia a porta do main e soma um",
+        "why": "Ele escreve uma configuração nova; a porta é escolhida olhando o que está ocupado."
+      }
+    ]
+  },
+  "ex-ej8jtmgx": {
+    "prompt": "Copiar o main para o ensaio com `pg_dumpall | psql -p 5433` imprimiu `ERROR: role \"postgres\" already exists`. O que esse erro significa para a cópia?",
+    "hint": "O que um cluster novo já contém?",
+    "choices": [
+      {
+        "text": "Nada; um comando falhou e o resto rodou",
+        "why": "Isso. O cluster novo já tinha o papel postgres, então só aquele CREATE ROLE falhou."
+      },
+      {
+        "text": "A cópia parou ali e precisa ser repetida com --clean",
+        "why": "O psql segue depois de um erro, a menos que mandem parar, e a contagem de pedidos mostrou que os dados chegaram."
+      },
+      {
+        "text": "Todos os papéis foram pulados, então a ana não existe na 5433",
+        "why": "Só aquele comando falhou; os outros papéis foram criados."
+      },
+      {
+        "text": "Ele divide o postgres do main",
+        "why": "Cada cluster tem os seus papéis. Nada é compartilhado entre clusters."
+      }
+    ]
+  },
+  "ex-x7a3emtb": {
+    "prompt": "Um colega diz que o ensaio é inútil porque o banco do ensaio é só uma cópia, e cópias passam pelo upgrade exatamente como o original. Qual motivo da lição responde melhor?",
+    "hint": "Quais problemas são propriedades do servidor e não das linhas?",
+    "choices": [
+      {
+        "text": "Uma cópia passa pelo upgrade mais rápido, então o ensaio não mede nada",
+        "why": "Se a cópia tem o tamanho da produção, os tempos dela são os da produção; isso é motivo para ensaiar."
+      },
+      {
+        "text": "O ensaio testa se os próprios dados estão corrompidos",
+        "why": "O pg_upgrade nem lê os arquivos de dados, então não perceberia corrupção."
+      },
+      {
+        "text": "Ele acha as falhas barato",
+        "why": "Isso. Uma extensão sem versão, um parâmetro renomeado ou disco de menos aparecem na cópia, onde uma recusa não custa nada."
+      },
+      {
+        "text": "Fazer upgrade da cópia também faz do original, pelos arquivos compartilhados",
+        "why": "O ensaio não compartilha arquivos com o main; foi preenchido por um dump."
+      }
+    ]
+  },
+  "ex-5atbw8t8": {
+    "prompt": "O que o `pg_upgradecluster 16 rehearsal` faz quando se deixa de fora o `-m upgrade`?",
+    "hint": "O método padrão dele.",
+    "choices": [
+      {
+        "text": "O pg_upgrade com --link",
+        "why": "Ligar precisa ser pedido, e o pg_upgrade também."
+      },
+      {
+        "text": "Um dump e restore, o método padrão quando nenhum é dado",
+        "why": "Isso. O dump é o padrão, correto mas tão lento quanto os dados são grandes; -m upgrade escolhe o pg_upgrade."
+      },
+      {
+        "text": "Ele recusa e pede um método",
+        "why": "Ele tem um padrão e o usa sem perguntar."
+      },
+      {
+        "text": "O pg_upgrade copiando os arquivos",
+        "why": "Isso é -m upgrade sem --link, que ainda precisa do -m upgrade."
+      }
+    ]
+  },
+  "ex-7y6t5937": {
+    "prompt": "O primeiro `pg_upgradecluster` falhou em `Checking for presence of required libraries`. Em que estado ele deixou o cluster antigo?",
+    "hint": "Onde fica essa verificação em relação à linha sobre re-initdb?",
+    "choices": [
+      {
+        "text": "Inutilizável, porque o --link já tinha ligado os arquivos",
+        "why": "Ligar vem depois de todas as verificações; nada tinha sido ligado quando falhou."
+      },
+      {
+        "text": "Parado, esperando o administrador subi-lo",
+        "why": "O pg_upgradecluster imprimiu `Starting old cluster again` e fez isso."
+      },
+      {
+        "text": "Rodando de novo, como antes",
+        "why": "Isso. As verificações rodam antes de qualquer arquivo ser tocado, então ele removeu o cluster novo e subiu o antigo."
+      },
+      {
+        "text": "Meio atualizado, com o catálogo no formato do 17",
+        "why": "O catálogo antigo nunca é reescrito; o novo é montado no cluster novo."
+      }
+    ]
+  },
+  "ex-mgd7ef9t": {
+    "prompt": "Depois do upgrade com --link, o `ls -li` mostrou o arquivo da tabela orders nos dois diretórios de dados. Que contagem de links ele mostrou?",
+    "hint": "Um arquivo, quantos nomes?"
+  },
+  "ex-z72y3crj": {
+    "prompt": "Depois de um upgrade com --link, alguém tira o sufixo `.old` do `pg_control` e sobe o cluster 16 para comparar uma consulta com o 17. O que acontece com os dados?",
+    "hint": "De quem são esses arquivos agora?",
+    "choices": [
+      {
+        "text": "O 16 sobe só para leitura",
+        "why": "Não existe esse modo; o PostgreSQL não sabe que outro servidor é dono dos arquivos."
+      },
+      {
+        "text": "O 16 e o 17 corrompem as páginas que dividem",
+        "why": "Isso. Os arquivos são compartilhados, o 17 já escreveu neles, e o 16 lê e escreve as mesmas páginas."
+      },
+      {
+        "text": "O 16 se recusa a subir",
+        "why": "O catálogo do 16 ainda está lá no formato do 16; o perigo são os arquivos de dados compartilhados."
+      },
+      {
+        "text": "Cada cluster ganha a sua cópia na primeira escrita",
+        "why": "Hard links não são copy-on-write; uma escrita por qualquer nome muda o único arquivo."
+      }
+    ]
+  },
+  "ex-x7vyz289": {
+    "prompt": "Para fazer o dump de um banco 16 para um servidor 17, qual pg_dump a lição usa?",
+    "hint": "O wrapper teria escolhido o outro.",
+    "choices": [
+      {
+        "text": "O do 16, porque o dump precisa combinar com o servidor que ele lê",
+        "why": "Um pg_dump mais novo lê servidores mais antigos; é o mais novo que sabe do que o 17 precisa."
+      },
+      {
+        "text": "Qualquer um; o formato do dump é o mesmo em toda versão",
+        "why": "O conselho da lição é explícito: o pg_dump da versão nova. O contrário não tem garantia de funcionar."
+      },
+      {
+        "text": "O pg_dumpall",
+        "why": "O pg_dump atravessa versões sem problema. O pg_dumpall foi usado só para os papéis."
+      },
+      {
+        "text": "O do 17, pelo caminho completo",
+        "why": "Isso. /usr/lib/postgresql/17/bin/pg_dump, porque o pg_dump simples rodava o do 16 para o cluster da 5432."
+      }
+    ]
+  },
+  "ex-5671errt": {
+    "prompt": "O `pg_dump shop` não contém o papel ana, porque papéis pertencem ao cluster. Eles vêm do `pg_dumpall --___-only`.",
+    "hint": "Nem schema, nem data.",
+    "blanks": [
+      {
+        "accept": [
+          "globals"
+        ]
+      }
+    ]
+  },
+  "ex-dteambfw": {
+    "prompt": "Os índices de orders restaurados tinham 37 MB contra 42 MB no main. Por quê?",
+    "hint": "Quando cada índice foi construído, em relação às linhas?",
+    "choices": [
+      {
+        "text": "O 17 comprime índices e o 16 não",
+        "why": "Nenhum dos dois comprime índices B-tree; a diferença está em como foram construídos."
+      },
+      {
+        "text": "O pg_dump deixou um dos índices de fora",
+        "why": "Todo CREATE INDEX estava no dump e o restore construiu cada um."
+      },
+      {
+        "text": "O autovacuum no main ainda não tinha removido as linhas mortas deles",
+        "why": "O shop foi carregado uma vez e nunca atualizado, então os índices não têm linhas mortas."
+      },
+      {
+        "text": "Construídos numa passada só, depois dos dados",
+        "why": "Isso. O shop.sql criou os índices antes de carregar, então cresceram por divisões de página; o restore os construiu compactos."
+      }
+    ]
+  },
+  "ex-910vy7py": {
+    "prompt": "Por que o publicador foi um terceiro cluster 16 e não o main?",
+    "hint": "Do que o wal_level precisa?",
+    "choices": [
+      {
+        "text": "Mudar o wal_level exige reinício",
+        "why": "Isso. A lição deixa o main intocado, então o publicador foi criado já com wal_level = logical."
+      },
+      {
+        "text": "O main não tem chaves primárias",
+        "why": "As duas tabelas do shop têm chave primária."
+      },
+      {
+        "text": "O shop não comporta publicação",
+        "why": "A publicação foi criada num banco chamado shop."
+      },
+      {
+        "text": "Replicação lógica só funciona entre clusters criados no mesmo dia",
+        "why": "Nada na replicação lógica depende de quando um cluster foi criado."
+      }
+    ]
+  },
+  "ex-rbkhg4z2": {
+    "prompt": "Ponha os passos do upgrade por replicação lógica na ordem em que a lição os executou.",
+    "hint": "As tabelas precisam existir antes de algo preenchê-las.",
+    "items": [
+      "Criar uma publicação no servidor 16",
+      "Copiar só o esquema para o banco do 17",
+      "Criar a assinatura no 17",
+      "Esperar até toda tabela estar no estado r",
+      "Remover a assinatura",
+      "Mover cada sequência para além do maior id em uso"
+    ],
+    "trap": "Acertar as sequências antes da troca as deixa atrasadas de novo à medida que chegam linhas novas do servidor antigo."
+  },
+  "ex-cv1wf4q5": {
+    "prompt": "Depois de remover a assinatura, o primeiro insert no 17 falhou com `Key (id)=(1) already exists`. O que não tinha sido replicado?",
+    "hint": "As linhas chegaram. O que não é linha?",
+    "choices": [
+      {
+        "text": "O índice orders_pkey",
+        "why": "O índice existe; é por isso que a duplicata foi pega."
+      },
+      {
+        "text": "A posição da sequência",
+        "why": "Isso. A orders_id_seq estava em 1 no assinante; o setval a moveu para além do maior id."
+      },
+      {
+        "text": "As linhas inseridas depois da cópia inicial",
+        "why": "O pedido 1.000.001 chegou ao 17 num instante."
+      },
+      {
+        "text": "A definição da coluna identity, que o pg_dump --schema-only deixa de fora",
+        "why": "A coluna identity estava lá; ela entregou 1 porque a sequência nunca tinha se movido."
+      }
+    ]
+  },
+  "ex-f556sejk": {
+    "prompt": "Qual destes o pg_upgrade NÃO leva para o cluster novo?",
+    "hint": "A própria saída dele diz.",
+    "choices": [
+      {
+        "text": "As estatísticas do planejador sobre os valores de cada coluna",
+        "why": "Isso. `Optimizer statistics are not transferred by pg_upgrade`; o vacuumdb --analyze-in-stages as refaz."
+      },
+      {
+        "text": "Os papéis e suas senhas",
+        "why": "O `Restoring global objects in the new cluster` os levou."
+      },
+      {
+        "text": "Os índices",
+        "why": "Arquivos de índice são ligados ou copiados como os de tabela."
+      },
+      {
+        "text": "As extensões instaladas em cada banco",
+        "why": "Elas vieram, na versão antiga, e é por isso que existe o update_extensions.sql."
+      }
+    ]
+  },
+  "ex-hgk5p8y6": {
+    "prompt": "O `pg_dropcluster 16 rehearsal` apagou o diretório de dados antigo, e mesmo assim os pedidos no 17 continuavam todos lá. Por quê?",
+    "hint": "Quantos nomes cada arquivo tinha?",
+    "choices": [
+      {
+        "text": "O pg_dropcluster copia os arquivos compartilhados para o cluster novo antes de apagar",
+        "why": "Ele não copia nada; remove o diretório, e o arquivo sobrevive pelo outro nome."
+      },
+      {
+        "text": "O 17 já tinha reescrito cada tabela nos próprios arquivos",
+        "why": "O 17 não reescreveu nada; o inode era o mesmo nos dois diretórios."
+      },
+      {
+        "text": "Arquivos em uso são pulados",
+        "why": "Ele apagou o diretório antigo inteiro; os dados sobreviveram por outro motivo."
+      },
+      {
+        "text": "O outro nome manteve cada arquivo",
+        "why": "Isso. Um arquivo só é liberado quando some o último link, e o 17/rehearsal ainda tinha um."
+      }
+    ]
+  },
+  "ex-58tmnaxv": {
+    "prompt": "Depois do upgrade, a `pg_stat_statements` ainda dizia versão 1.10 até que `ALTER EXTENSION pg_stat_statements ___;` a levasse para 1.11.",
+    "hint": "Uma palavra, a mesma que o update_extensions.sql usou.",
+    "blanks": [
+      {
+        "accept": [
+          "UPDATE"
+        ]
+      }
+    ]
+  },
+  "ex-vax8xakn": {
+    "prompt": "Um banco de 3 TB precisa ir para o 17 com no máximo vinte minutos de parada, e o disco tem 1 TB livre. Qual método serve?",
+    "hint": "Elimine primeiro pelo espaço, depois pelo tempo.",
+    "choices": [
+      {
+        "text": "O pg_upgrade copiando os arquivos",
+        "why": "Copiar precisa de espaço para outros 3 TB, e há 1 TB."
+      },
+      {
+        "text": "pg_upgrade --link, depois de um backup que é o caminho de volta",
+        "why": "Isso. Ligar quase não precisa de disco a mais e leva mais ou menos o mesmo tempo em qualquer tamanho; o backup é o caminho de volta."
+      },
+      {
+        "text": "Um dump e restore, que também tira o inchaço",
+        "why": "Fazer dump e restore de 3 TB leva muito mais que vinte minutos de escritas paradas."
+      },
+      {
+        "text": "Um upgrade menor com apt",
+        "why": "O apt não leva o 16 ao 17; uma versão maior precisa de um dos três métodos."
+      }
+    ]
+  },
+  "ex-0n5kcszj": {
+    "prompt": "Na noite marcada, `sudo pg_upgradecluster -m upgrade --link 16 main` para na hora com um erro antes de tocar em qualquer coisa. O pacote instalou o 17 uma semana atrás. Qual a primeira coisa a conferir?",
+    "hint": "O que instalar o pacote criou?",
+    "choices": [
+      {
+        "text": "Se o main foi analisado recentemente",
+        "why": "As estatísticas não influenciam se o upgrade começa; são refeitas depois."
+      },
+      {
+        "text": "Se o wal_level está como logical no main",
+        "why": "Isso importa para replicação lógica, não para o pg_upgrade."
+      },
+      {
+        "text": "Se a versão menor do 16 é a mais nova de todas",
+        "why": "O pg_upgrade não exige a versão menor mais nova; ele compara versões maiores."
+      },
+      {
+        "text": "Se o 17/main vazio do pacote ainda está lá",
+        "why": "Isso. O pacote criou um 17/main vazio, e o pg_upgradecluster recusa um cluster de destino que existe; remova-o depois de conferir que está vazio."
+      }
+    ]
+  },
+  "ex-0exhs8ck": {
+    "prompt": "Ligue cada mensagem ao que ela está dizendo.",
+    "hint": "Cada uma apareceu nesta lição.",
+    "pairs": [
+      {
+        "left": "database files are incompatible with server",
+        "right": "Um servidor mais novo recebeu o diretório de dados de uma versão maior mais antiga"
+      },
+      {
+        "left": "Checking for presence of required libraries ... fatal",
+        "right": "Uma extensão não tem versão compilada para a versão nova"
+      },
+      {
+        "left": "could not open file .../global/pg_control",
+        "right": "O cluster antigo foi desativado depois de um upgrade com --link"
+      },
+      {
+        "left": "duplicate key value violates unique constraint \"orders_pkey\"",
+        "right": "Uma sequência não foi movida depois da replicação lógica"
+      }
+    ],
+    "right_distractors": [
+      "O disco está cheio"
+    ]
+  },
+  "ex-wkf9gxdt": {
+    "prompt": "Quais destes ainda precisam ser feitos depois de um `pg_upgradecluster -m upgrade --link` bem-sucedido? Marque todos que se aplicam.",
+    "hint": "Alguns o passo de análise do wrapper já fez.",
+    "choices": [
+      {
+        "text": "Rodar os ALTER EXTENSION ... UPDATE do update_extensions.sql",
+        "why": "Sim. As extensões ficam na versão antiga até serem atualizadas."
+      },
+      {
+        "text": "Testar a aplicação contra o cluster novo",
+        "why": "Sim. Nada no upgrade confere as consultas da sua aplicação."
+      },
+      {
+        "text": "Refazer qualquer standby físico",
+        "why": "Sim. Um standby não segue um primário de outra versão maior."
+      },
+      {
+        "text": "Rodar o vacuumdb --all --analyze-in-stages à mão",
+        "why": "O passo de análise do pg_upgradecluster já rodou isso; o last_analyze mostrou quando."
+      },
+      {
+        "text": "Rodar o delete_old_cluster.sh para liberar os arquivos antigos",
+        "why": "No Ubuntu o pg_dropcluster remove o cluster antigo, a configuração e o log, depois de conferir o novo."
+      }
+    ]
+  },
+  "ex-8s1ffwxr": {
+    "prompt": "Uma equipe quer ir do 16 no Ubuntu para o 17 num servidor ARM novo, e mudar o locale do cluster de quebra. Qual método faz tudo isso?",
+    "hint": "O pg_upgrade precisa dos dois clusters numa máquina, com configurações compatíveis.",
+    "choices": [
+      {
+        "text": "pg_upgrade --link",
+        "why": "Links só existem dentro de um sistema de arquivos, e o pg_upgrade precisa de configurações compatíveis numa máquina."
+      },
+      {
+        "text": "Dump e restore",
+        "why": "Isso. Um dump é SQL; não liga para máquina, arquitetura ou locale."
+      },
+      {
+        "text": "O pg_upgrade copiando os arquivos para o servidor novo pela rede",
+        "why": "O pg_upgrade copia dentro de uma máquina, e os arquivos de dados de uma arquitetura não são legíveis em outra."
+      },
+      {
+        "text": "Um upgrade menor primeiro, que muda o locale",
+        "why": "Um upgrade menor muda os programas e mais nada."
+      }
+    ]
+  }
+}

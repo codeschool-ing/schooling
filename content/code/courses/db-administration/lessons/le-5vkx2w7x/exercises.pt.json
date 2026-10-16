@@ -1,0 +1,483 @@
+{
+  "ex-2dsz10ae": {
+    "prompt": "O `work_mem` mostrou `4MB`, mas não está entre as 25 linhas ativas do `postgresql.conf` do Ubuntu. De onde vem esse 4MB?",
+    "hint": "O que vale quando nenhum arquivo define um parâmetro?",
+    "choices": [
+      {
+        "text": "Da linha comentada `#work_mem = 4MB`",
+        "why": "O servidor ignora comentários. A linha documenta o padrão; não o define."
+      },
+      {
+        "text": "De um arquivo no conf.d que o pacote instalou",
+        "why": "O diretório estava vazio: o `ls -l` imprimiu `total 0`."
+      },
+      {
+        "text": "Do padrão compilado no próprio servidor PostgreSQL",
+        "why": "Isso. Um parâmetro que nenhum arquivo define fica com o padrão embutido."
+      },
+      {
+        "text": "Do postgresql.auto.conf no diretório de dados",
+        "why": "Esse arquivo tinha só as duas linhas de comentário até o ALTER SYSTEM escrever nele."
+      }
+    ]
+  },
+  "ex-axsxja7p": {
+    "prompt": "Você põe `shared_buffers = 512MB` em `conf.d/10-memory.conf`, enquanto a linha 130 do `postgresql.conf` continua dizendo `128MB`. Depois de um restart, que valor o servidor usa?",
+    "hint": "Onde fica o `include_dir` no arquivo principal, e qual valor vence?",
+    "choices": [
+      {
+        "text": "128MB, porque o arquivo principal tem prioridade sobre os que inclui",
+        "why": "Não existe hierarquia entre arquivos, só ordem. O include vem no fim, então é lido por último."
+      },
+      {
+        "text": "Nenhum: o servidor se recusa a subir com um parâmetro definido duas vezes",
+        "why": "Um nome definido duas vezes é permitido e silencioso. É justamente por isso que é um risco."
+      },
+      {
+        "text": "512MB",
+        "why": "Isso. O conf.d é lido depois do arquivo principal, e vence o último valor lido para um nome."
+      },
+      {
+        "text": "O menor dos dois, por segurança",
+        "why": "O servidor não compara valores. A linha posterior simplesmente substitui a anterior."
+      }
+    ]
+  },
+  "ex-k2t7z4qy": {
+    "prompt": "No postgresql.conf, `shared_buffers = 128mb` é um erro, porque as unidades de memória diferenciam maiúsculas: a grafia certa é 128___.",
+    "hint": "Megabytes, como o cabeçalho do arquivo escreve.",
+    "blanks": [
+      {
+        "accept": [
+          "MB"
+        ]
+      }
+    ]
+  },
+  "ex-b34vt8w9": {
+    "prompt": "O `pg_settings` mostra o `shared_buffers` com setting `16384` e unit `8kB`. Quanta memória é isso?",
+    "hint": "Multiplique pela unidade.",
+    "choices": [
+      {
+        "text": "16 MB",
+        "why": "Isso lê 16384 como kilobytes. A unidade é página de 8 kB."
+      },
+      {
+        "text": "128 MB",
+        "why": "Isso: 16384 × 8 kB, o mesmo valor que o SHOW imprimiu."
+      },
+      {
+        "text": "16384 MB",
+        "why": "Isso ignora a coluna de unidade."
+      },
+      {
+        "text": "8 GB",
+        "why": "Isso multiplica por 8 MB em vez de 8 kB."
+      }
+    ]
+  },
+  "ex-khpnc0yv": {
+    "prompt": "Ligue cada `context` ao que um novo valor precisa para valer.",
+    "hint": "A coluna responde: o que é preciso para mudar isto?",
+    "pairs": [
+      {
+        "left": "postmaster",
+        "right": "um restart do servidor"
+      },
+      {
+        "left": "sighup",
+        "right": "um reload da configuração"
+      },
+      {
+        "left": "user",
+        "right": "um SET na sessão, por qualquer um"
+      },
+      {
+        "left": "internal",
+        "right": "nada muda isso neste cluster"
+      }
+    ],
+    "right_distractors": [
+      "uma nova conexão ao banco, como superusuário"
+    ]
+  },
+  "ex-r01qw1qh": {
+    "prompt": "O `data_directory` está escrito no `postgresql.conf`, mas o `pg_settings` diz que a origem é `override`. Por quê?",
+    "hint": "Olhe a linha de comando na saída do `ps` da lição 3.",
+    "choices": [
+      {
+        "text": "O ALTER SYSTEM o sobrepôs no postgresql.auto.conf",
+        "why": "Um valor desse arquivo aparece como `configuration file`, com o nome dele em sourcefile."
+      },
+      {
+        "text": "O servidor foi iniciado com `-D`, que o define",
+        "why": "Isso. O valor vem de como o postmaster foi iniciado; a linha no arquivo é uma anotação."
+      },
+      {
+        "text": "A linha no arquivo tem erro de sintaxe e foi pulada",
+        "why": "Uma linha pulada apareceria no pg_file_settings com erro, e o servidor não teria achado seus dados."
+      },
+      {
+        "text": "`override` é o que todo parâmetro postmaster mostra",
+        "why": "O `max_connections` também é postmaster e mostrou `configuration file`, linha 65."
+      }
+    ]
+  },
+  "ex-4dscnnfd": {
+    "prompt": "Depois de um reload, o log termina com `configuration file ... contains errors; unaffected changes were applied`. A linha acima diz `parameter \"shared_buffers\" cannot be changed without restarting the server`. O que há de errado no arquivo?",
+    "hint": "Leia as linhas acima da palavra errors.",
+    "choices": [
+      {
+        "text": "Nada: um valor está esperando um restart",
+        "why": "Isso. O arquivo é válido; pending_restart fica verdadeiro para o shared_buffers até o próximo restart."
+      },
+      {
+        "text": "O shared_buffers está escrito errado",
+        "why": "Um nome errado produz `unrecognized configuration parameter`, outra linha."
+      },
+      {
+        "text": "O valor 256MB passa do que a máquina permite",
+        "why": "O restart aplicou o valor sem reclamar: 32768 páginas de 8 kB."
+      },
+      {
+        "text": "Todas as mudanças do arquivo foram rejeitadas",
+        "why": "O log diz o contrário: o log_min_duration_statement mudou na hora."
+      }
+    ]
+  },
+  "ex-tb54r5vd": {
+    "prompt": "Um colega pôs `work_mem = 64mb` num arquivo do conf.d, deu reload e não viu reclamação do `systemctl`. O servidor roda normalmente. Qual é o risco?",
+    "hint": "O que o servidor faz com esse arquivo na próxima vez que subir?",
+    "choices": [
+      {
+        "text": "Nenhum: um valor ruim é pulado e o padrão usado, no reload e na partida igualmente",
+        "why": "Só o reload perdoa. Na partida, a mesma linha é FATAL."
+      },
+      {
+        "text": "O próximo restart falha",
+        "why": "Isso. O servidor rodando manteve 4MB, mas na partida ele recusa um arquivo com valor inválido."
+      },
+      {
+        "text": "Toda sessão agora usa 64 kilobytes de work_mem",
+        "why": "O valor foi recusado, não reinterpretado: o SHOW work_mem ainda imprimia 4MB."
+      },
+      {
+        "text": "Conexões abertas depois do reload são recusadas",
+        "why": "Novas conexões funcionam; a linha ruim não afeta nada até o servidor ler os arquivos na partida."
+      }
+    ]
+  },
+  "ex-2d0c41wx": {
+    "prompt": "Qual destes corta todas as conexões abertas?",
+    "hint": "Um relê os arquivos; outro para o servidor.",
+    "choices": [
+      {
+        "text": "`SELECT pg_reload_conf();`",
+        "why": "Isso manda SIGHUP; as sessões continuam conectadas e recebem os novos valores."
+      },
+      {
+        "text": "`sudo systemctl reload postgresql`",
+        "why": "Um reload, o mesmo sinal que o pg_reload_conf()."
+      },
+      {
+        "text": "`sudo pg_ctlcluster 16 main reload`",
+        "why": "O atalho do Ubuntu para o mesmo reload."
+      },
+      {
+        "text": "`sudo systemctl restart postgresql`",
+        "why": "Isso. Um restart para o servidor, então toda sessão e transação termina."
+      }
+    ]
+  },
+  "ex-zfh49dkj": {
+    "prompt": "Você define `work_mem = 8MB` no conf.d e dá reload, e o SHOW continua imprimindo 16MB. O `pg_file_settings` mostra sua linha com `applied = f`. Qual a causa mais provável?",
+    "hint": "Que arquivo o servidor lê por último?",
+    "choices": [
+      {
+        "text": "O work_mem precisa de restart, não de reload",
+        "why": "O work_mem é parâmetro user; um reload o aplica."
+      },
+      {
+        "text": "O arquivo do conf.d não está nomeado no postgresql.conf",
+        "why": "O include_dir lê todo arquivo .conf do diretório; a linha foi lida, aparece no pg_file_settings."
+      },
+      {
+        "text": "8MB está abaixo do mínimo do work_mem",
+        "why": "O mínimo é 64 kB, e um valor inválido mostra erro, não só applied = f."
+      },
+      {
+        "text": "Alguém rodou ALTER SYSTEM SET work_mem = '16MB'",
+        "why": "Isso. O postgresql.auto.conf é lido depois do conf.d e vence."
+      }
+    ]
+  },
+  "ex-ennwqjwh": {
+    "prompt": "Ponha estas camadas na ordem em que o servidor as aplica, a primeira no topo; vence a última que define o valor.",
+    "hint": "Primeiro os arquivos, na ordem de leitura; depois o que pertence à conexão.",
+    "items": [
+      "postgresql.conf",
+      "um arquivo no conf.d",
+      "postgresql.auto.conf",
+      "ALTER DATABASE shop SET",
+      "SET na sessão"
+    ],
+    "trap": "O arquivo do ALTER SYSTEM vem depois do conf.d, não antes."
+  },
+  "ex-rds6f3bg": {
+    "prompt": "`ALTER SYSTEM SET work_mem = '64mb';` respondeu com erro, enquanto o mesmo erro num arquivo do conf.d foi aceito até o reload. Por que a diferença?",
+    "hint": "Quem lê o valor no momento em que ele é escrito?",
+    "choices": [
+      {
+        "text": "O ALTER SYSTEM aplica o valor na hora, por isso precisa ser válido",
+        "why": "Ele não aplica nada: os 16MB só valeram depois do pg_reload_conf()."
+      },
+      {
+        "text": "O ALTER SYSTEM só aceita valores em kilobytes",
+        "why": "'16MB' foi aceito no comando seguinte."
+      },
+      {
+        "text": "A ana não tem permissão de mudar o work_mem com ALTER SYSTEM",
+        "why": "A ana é superusuária, e o erro falava do valor, não de permissão."
+      },
+      {
+        "text": "Ele confere o valor antes de escrever a linha",
+        "why": "Isso. O servidor confere o valor na hora; um editor não sabe nada de unidades."
+      }
+    ]
+  },
+  "ex-akdf81xc": {
+    "prompt": "Uma conexão casa com a linha 125 e falha na senha. A linha 127, abaixo, também a admitiria. O que acontece?",
+    "hint": "O servidor continua lendo depois de um casamento?",
+    "choices": [
+      {
+        "text": "O servidor tenta a linha 127 em seguida",
+        "why": "Não há passagem adiante: a primeira linha que casa decide sozinha."
+      },
+      {
+        "text": "Ela é admitida com um aviso no log",
+        "why": "Um método que falha é uma recusa FATAL, com o motivo no log."
+      },
+      {
+        "text": "Ela é recusada",
+        "why": "Isso. A primeira linha que casa é a única que conta."
+      },
+      {
+        "text": "O psql pede a senha uma segunda vez, como linha 127",
+        "why": "A segunda tentativa do psql foi com e sem criptografia, as duas contra a linha 125."
+      }
+    ]
+  },
+  "ex-maxz3yqn": {
+    "prompt": "Por que o cliente vê só `password authentication failed`, quando o log diz `User \"ana\" has no password assigned`?",
+    "hint": "Quem deveria saber quais papéis existem?",
+    "choices": [
+      {
+        "text": "O psql corta mensagens longas do servidor",
+        "why": "O psql imprimiu a mensagem inteira; o servidor escolheu mandar menos."
+      },
+      {
+        "text": "O DETAIL é escrito depois, por um processo em segundo plano",
+        "why": "As duas linhas do log têm o mesmo horário e o mesmo id de processo."
+      },
+      {
+        "text": "O cliente desistiu antes que o servidor explicasse",
+        "why": "O servidor mandou o FATAL e fechou; a explicação é retida de propósito."
+      },
+      {
+        "text": "Para que um estranho não descubra quais papéis existem ou têm senha",
+        "why": "Isso. O detalhe é para o administrador que lê o log."
+      }
+    ]
+  },
+  "ex-g0r5df2y": {
+    "prompt": "Ligue cada método do pg_hba.conf ao que ele faz.",
+    "hint": "Um pergunta ao kernel, um pede senha, um admite, um recusa.",
+    "pairs": [
+      {
+        "left": "peer",
+        "right": "o usuário do sistema operacional precisa bater com o papel"
+      },
+      {
+        "left": "scram-sha-256",
+        "right": "uma senha, provada por meio de um desafio"
+      },
+      {
+        "left": "trust",
+        "right": "admite quem casar, sem perguntar nada"
+      },
+      {
+        "left": "reject",
+        "right": "recusa quem casar"
+      }
+    ]
+  },
+  "ex-kc0m2xh3": {
+    "prompt": "Uma aplicação em 10.0.0.15 recebe `FATAL: no pg_hba.conf entry for host \"10.0.0.15\", user \"app\", database \"shop\", no encryption`. O que isso diz?",
+    "hint": "Recebeu um FATAL do PostgreSQL, então chegou a algum lugar.",
+    "choices": [
+      {
+        "text": "O servidor não está escutando nessa rede",
+        "why": "Aí o cliente receberia Connection refused do kernel e nenhum FATAL."
+      },
+      {
+        "text": "A senha do app está errada",
+        "why": "Uma senha errada precisa antes de uma linha que case, e dá password authentication failed."
+      },
+      {
+        "text": "O papel app não existe",
+        "why": "O arquivo é conferido antes de procurar o papel; a mensagem fala do arquivo."
+      },
+      {
+        "text": "Chegou ao servidor, e nenhuma linha casa com esses quatro valores",
+        "why": "Isso. A escuta funciona; falta uma linha host para esse endereço, papel e banco."
+      }
+    ]
+  },
+  "ex-nx7bz2rt": {
+    "prompt": "Qual destes parâmetros deve manter o padrão em todo servidor que você administra?",
+    "hint": "Um deles protege os dados contra queda de energia.",
+    "choices": [
+      {
+        "text": "fsync",
+        "why": "Isso. Desligado, uma queda de energia corrompe o cluster."
+      },
+      {
+        "text": "shared_buffers",
+        "why": "O padrão de 128MB é pequeno para a maioria dos servidores; a lição 6 o dimensiona."
+      },
+      {
+        "text": "listen_addresses",
+        "why": "Todo servidor que atende outra máquina muda esse."
+      },
+      {
+        "text": "log_min_duration_statement",
+        "why": "Desligado por padrão, e a lição 19 o liga."
+      }
+    ]
+  },
+  "ex-y34qcz5x": {
+    "prompt": "Depois de definir `listen_addresses = '*'` e dar reload, o `ss -ltn` continua mostrando só `127.0.0.1:5432`. Por quê?",
+    "hint": "Olhe o context dele.",
+    "choices": [
+      {
+        "text": "O pg_hba.conf não tem linha para outros endereços",
+        "why": "O pg_hba.conf decide quem é admitido, não onde o servidor escuta."
+      },
+      {
+        "text": "É um parâmetro postmaster: precisa de restart",
+        "why": "Isso. Os sockets são abertos na partida; o restart da lição mudou o ss para 0.0.0.0."
+      },
+      {
+        "text": "O firewall esconde os outros sockets do ss",
+        "why": "O ss lista os sockets da própria máquina; um firewall filtra pacotes, não essa lista."
+      },
+      {
+        "text": "'*' é só IPv6 e o ss -ltn mostra IPv4",
+        "why": "'*' significa todos os endereços; depois do restart o ss mostrou 0.0.0.0."
+      }
+    ]
+  },
+  "ex-pxq73xn3": {
+    "prompt": "Quantos destes parâmetros da tabela do curso precisam de restart para mudar: listen_addresses, max_connections, shared_buffers, shared_preload_libraries, work_mem, max_wal_size?",
+    "hint": "O work_mem é user, o max_wal_size é sighup."
+  },
+  "ex-psy94aas": {
+    "prompt": "Você herda um servidor e quer saber, antes que alguém o reinicie, se um restart mudaria algo ou falharia. Que par de verificações responde as duas coisas?",
+    "hint": "Uma view sabe o que está esperando; um comando lê os arquivos como uma partida leria.",
+    "choices": [
+      {
+        "text": "SHOW all, e systemctl status",
+        "why": "Os dois descrevem o servidor rodando; nenhum lê os arquivos como o restart lerá."
+      },
+      {
+        "text": "grep no postgresql.conf, e pg_lsclusters",
+        "why": "O grep não vê o conf.d nem o postgresql.auto.conf, e o pg_lsclusters só diz online ou down."
+      },
+      {
+        "text": "Um reload, depois ver se o systemctl imprimiu erro",
+        "why": "O systemctl reload não imprimiu nada mesmo com o erro no arquivo."
+      },
+      {
+        "text": "pending_restart no pg_settings, e postgres -C nos arquivos",
+        "why": "Isso. O primeiro lista mudanças ainda não aplicadas; o segundo falha exatamente onde uma partida falharia."
+      }
+    ]
+  },
+  "ex-aq6ra36t": {
+    "prompt": "Você acrescenta `host shop app 10.0.0.15/32 scram-sha-256` no fim do pg_hba.conf, abaixo de uma linha `host all all 10.0.0.0/24 reject`, e dá reload. O que o app em 10.0.0.15 recebe?",
+    "hint": "Com que linha a conexão se encontra primeiro?",
+    "choices": [
+      {
+        "text": "Um pedido de senha, já que a linha dele é mais específica",
+        "why": "Especificidade não conta; a ordem decide, e a linha reject vem antes."
+      },
+      {
+        "text": "no pg_hba.conf entry",
+        "why": "Duas linhas casam; a mensagem seria pg_hba.conf rejects connection."
+      },
+      {
+        "text": "Recusa pela linha reject",
+        "why": "Isso. 10.0.0.15 está dentro de 10.0.0.0/24, então a linha anterior decide. Suba a linha nova."
+      },
+      {
+        "text": "O reload falha porque as duas linhas se contradizem",
+        "why": "Linhas que se sobrepõem são normais e válidas; só a ordem as separa."
+      }
+    ]
+  },
+  "ex-8txccr9v": {
+    "prompt": "Ligue cada sintoma à mudança que falta.",
+    "hint": "Kernel, arquivo, método, restart.",
+    "pairs": [
+      {
+        "left": "Connection refused",
+        "right": "o listen_addresses não inclui esse endereço"
+      },
+      {
+        "left": "no pg_hba.conf entry for host",
+        "right": "uma linha host para esse cliente"
+      },
+      {
+        "left": "password authentication failed",
+        "right": "a senha certa do papel"
+      },
+      {
+        "left": "pending_restart é true",
+        "right": "um restart do servidor"
+      }
+    ]
+  },
+  "ex-w2dxs3ar": {
+    "prompt": "Um relatório precisa de `work_mem = 256MB`, e só o papel `reporting` o roda. Que mudança dá isso a ele sem mexer em mais ninguém?",
+    "hint": "Existe uma camada por papel.",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM SET work_mem = '256MB', depois um reload",
+        "why": "Isso dá a toda conexão 256MB por sort, o que a lição 6 mostra ser como uma máquina fica sem memória."
+      },
+      {
+        "text": "work_mem = 256MB em conf.d/50-reporting.conf",
+        "why": "Um arquivo no conf.d vale para o servidor inteiro, diga o nome o que disser."
+      },
+      {
+        "text": "ALTER DATABASE shop SET work_mem = '256MB'",
+        "why": "Todo papel que conectar ao shop receberia, não só o reporting."
+      },
+      {
+        "text": "ALTER ROLE reporting SET work_mem = '256MB'",
+        "why": "Isso. Vale a partir da próxima conexão desse papel, e de mais ninguém."
+      }
+    ]
+  },
+  "ex-4yhaw1b4": {
+    "prompt": "A view que lista toda linha de todo arquivo de configuração na ordem de leitura, com colunas `applied` e `error`, é pg___.",
+    "hint": "Não é o pg_settings: esse mostra os valores em uso.",
+    "blanks": [
+      {
+        "accept": [
+          "_file_settings"
+        ]
+      }
+    ]
+  }
+}

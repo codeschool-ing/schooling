@@ -1,0 +1,513 @@
+{
+  "ex-1tg1hfkj": {
+    "prompt": "Depois que `UPDATE orders_copy SET status = 'shipped' WHERE id = 7` faz commit, onde está a versão da linha 7 que dizia `paid`?",
+    "hint": "Veja o que o `heap_page_items` mostrou para a página 0.",
+    "choices": [
+      {
+        "text": "Sobrescrita no lugar pelo valor novo, e por isso o ctid continua (0,7)",
+        "why": "O ctid mudou para (8333,41). O PostgreSQL nunca sobrescreve uma versão de linha no lugar."
+      },
+      {
+        "text": "Copiada para o write-ahead log e removida da tabela no commit",
+        "why": "O commit não remove nada da tabela. A versão antiga continua na página 0 depois dele."
+      },
+      {
+        "text": "Ainda na sua página, com xmax preenchido",
+        "why": "Isso. A versão antiga fica onde estava até o VACUUM liberar o espaço; o xmax nomeia a transação que a substituiu."
+      },
+      {
+        "text": "Movida para o mapa de espaço livre, que guarda versões antigas para leitores",
+        "why": "O mapa de espaço livre anota o espaço livre por página. Ele não guarda versão de linha nenhuma."
+      }
+    ]
+  },
+  "ex-6efdvahs": {
+    "prompt": "Uma transação atualiza uma linha e depois roda `ROLLBACK`. O que ela deixa na tabela?",
+    "hint": "O update escreveu algo antes de ser desfeito.",
+    "choices": [
+      {
+        "text": "Nada: um rollback restaura a página exatamente",
+        "why": "O rollback não apaga o que foi escrito; o n_dead_tup subiu um por causa dele."
+      },
+      {
+        "text": "Duas versões mortas, a antiga e a nova",
+        "why": "A versão antiga continua sendo a viva depois de um rollback. Só a nova está morta."
+      },
+      {
+        "text": "Uma versão morta: a nova que ele escreveu",
+        "why": "Isso. A versão antiga continua viva, e a que a transação abortada escreveu é a que ninguém vai ver."
+      },
+      {
+        "text": "Uma trava na linha até o próximo VACUUM",
+        "why": "Travas de linha acabam com a transação. O VACUUM não tem nada a ver com elas."
+      }
+    ]
+  },
+  "ex-yxsnymn0": {
+    "prompt": "A coluna escondida que nomeia a transação que escreveu uma versão de linha é ___.",
+    "hint": "A parceira dela, xmax, nomeia a que a substituiu.",
+    "blanks": [
+      {
+        "accept": [
+          "xmin"
+        ]
+      }
+    ]
+  },
+  "ex-tcnyhasy": {
+    "prompt": "`orders_copy` tinha 68 MB antes e depois de o `VACUUM` limpar 50.000 versões mortas. Por que ela não encolheu?",
+    "hint": "Para onde foi o espaço liberado?",
+    "choices": [
+      {
+        "text": "As versões mortas ainda estavam visíveis",
+        "why": "Nada segurava um snapshot ali. As versões mortas foram removidas; o espaço só ficou no arquivo."
+      },
+      {
+        "text": "O espaço liberado fica livre dentro do arquivo, para as próximas linhas",
+        "why": "Isso. Um VACUUM simples anota o espaço no mapa de espaço livre; só páginas vazias no fim do arquivo chegam a ser cortadas."
+      },
+      {
+        "text": "O VACUUM só encolhe arquivos depois de um checkpoint",
+        "why": "Checkpoints gravam páginas sujas. Eles não mudam o tamanho de uma tabela."
+      },
+      {
+        "text": "pg_relation_size informa o tamanho do último ANALYZE",
+        "why": "Ela lê o tamanho real dos arquivos. relpages é que é a estimativa que o ANALYZE guarda."
+      }
+    ]
+  },
+  "ex-f8k26664": {
+    "prompt": "Ligue cada estrutura ao que o VACUUM registra nela.",
+    "hint": "Uma por página sobre espaço, dois bits por página sobre visibilidade, um número por tabela.",
+    "pairs": [
+      {
+        "left": "O mapa de espaço livre",
+        "right": "Quanto espaço cada página tem para linhas novas"
+      },
+      {
+        "left": "O mapa de visibilidade",
+        "right": "Quais páginas só têm linhas que toda transação vê, e quais estão congeladas"
+      },
+      {
+        "left": "relfrozenxid no pg_class",
+        "right": "O id de transação mais antigo que ainda pode estar não congelado na tabela"
+      }
+    ],
+    "right_distractors": [
+      "A estimativa do planejador para as linhas da tabela"
+    ]
+  },
+  "ex-qn804g17": {
+    "prompt": "Uma varredura só de índice na cópia ainda visita a tabela para muitas linhas logo depois de um UPDATE grande, e para de fazer isso depois de um VACUUM. O que mudou?",
+    "hint": "Em que a varredura pode confiar sem ler a página?",
+    "choices": [
+      {
+        "text": "As páginas voltaram a ser todas visíveis",
+        "why": "Isso. O UPDATE tirou essas páginas do mapa de visibilidade e o VACUUM as devolveu, então a varredura pode confiar no índice para elas."
+      },
+      {
+        "text": "O índice foi reconstruído",
+        "why": "O VACUUM remove entradas mortas do índice; ele não reconstrói o índice."
+      },
+      {
+        "text": "As estatísticas do planejador foram atualizadas pelo VACUUM, e é isso que uma varredura só de índice lê",
+        "why": "Estatísticas são trabalho do ANALYZE, e uma varredura lê o mapa de visibilidade, não o pg_stats, para decidir se visita a página."
+      },
+      {
+        "text": "As linhas foram congeladas",
+        "why": "Congelar liga o segundo bit. A varredura só precisa do bit de toda visível, que um VACUUM simples ligou nas 8.751 páginas."
+      }
+    ]
+  },
+  "ex-zrdd8ayd": {
+    "prompt": "Com os parâmetros padrão, depois de quantas versões mortas o autovacuum faz o vacuum de uma tabela cujo reltuples é 1.000.000?",
+    "hint": "50 mais um quinto.",
+    "unit": "linhas"
+  },
+  "ex-ehmkesvq": {
+    "prompt": "Depois de 150.000 linhas da cópia serem atualizadas, um minuto depois `last_autoanalyze` tinha um horário e `last_autovacuum` estava vazio. Por quê?",
+    "hint": "Duas linhas, duas frações.",
+    "choices": [
+      {
+        "text": "O autovacuum analisa primeiro e faz o vacuum na visita seguinte",
+        "why": "Os dois são decididos na mesma visita. O vacuum simplesmente não era devido, como o caso de 250.000 mostrou."
+      },
+      {
+        "text": "150.000 passa da linha do analyze e fica abaixo da linha do vacuum",
+        "why": "Isso: 100.050 para o analyze, 200.050 para o vacuum."
+      },
+      {
+        "text": "O worker foi cancelado pela trava do UPDATE",
+        "why": "O UPDATE já tinha terminado; nada segurava trava na cópia."
+      },
+      {
+        "text": "Uma tabela precisa do primeiro VACUUM manual antes de o autovacuum mexer nela",
+        "why": "O autovacuum fez o vacuum de orders e customers depois da carga sem ninguém digitar VACUUM."
+      }
+    ]
+  },
+  "ex-qa8q9dex": {
+    "prompt": "Ninguém tinha atualizado nem apagado uma linha de `orders` quando o autovacuum fez o vacuum dela, um minuto depois da carga. Qual gatilho disparou?",
+    "hint": "Um milhão de linhas chegou.",
+    "choices": [
+      {
+        "text": "O limite de wraparound",
+        "why": "As idades eram de poucas dezenas de transações, longe de 200 milhões."
+      },
+      {
+        "text": "O limiar de inserção: linhas inseridas desde o último vacuum",
+        "why": "Isso. 1.000 mais um quinto da tabela, e um milhão de linhas inseridas estava muito além disso."
+      },
+      {
+        "text": "O limiar de versões mortas, contando as linhas da carga como mortas",
+        "why": "Linhas inseridas são vivas; o n_dead_tup ficou em 0."
+      },
+      {
+        "text": "Um temporizador que faz vacuum de toda tabela uma vez por minuto",
+        "why": "O lançador acorda a cada minuto, mas só faz vacuum de tabelas que passaram de uma linha. orders não foi de novo nas rodadas seguintes."
+      }
+    ]
+  },
+  "ex-g3emvh3k": {
+    "prompt": "Uma tabela tem 500 milhões de linhas e recebe 20 milhões de updates por dia. Com os padrões, mais ou menos a cada quanto tempo ela passa pelo vacuum?",
+    "hint": "Calcule um quinto da tabela, depois divida.",
+    "choices": [
+      {
+        "text": "A cada minuto, em cada rodada do lançador",
+        "why": "O lançador olha a cada minuto; ele só faz o vacuum depois da linha, que aqui é de 100 milhões de versões mortas."
+      },
+      {
+        "text": "Nunca, porque uma tabela desse tamanho é pulada",
+        "why": "Não existe limite de tamanho; a linha só sobe junto com a tabela."
+      },
+      {
+        "text": "Uma vez por dia, já que 20 milhões passam da linha de 200.050",
+        "why": "200.050 é a linha de uma tabela de um milhão de linhas. A linha cresce com o reltuples."
+      },
+      {
+        "text": "Mais ou menos a cada cinco dias",
+        "why": "Isso: 50 + 0,2 x 500 milhões dá cerca de 100 milhões, que levam cinco dias a 20 milhões por dia. Cada passada então limpa 100 milhões de versões, e por isso uma tabela assim ganha uma fração própria."
+      }
+    ]
+  },
+  "ex-ctjneb99": {
+    "prompt": "O `VACUUM VERBOSE` informa `100000 are dead but not yet removable`. Qual é a primeira coisa a procurar?",
+    "hint": "Removível depende de quem ainda poderia vê-las.",
+    "choices": [
+      {
+        "text": "Um disco mais rápido para o autovacuum",
+        "why": "O VACUUM leu as páginas bem e rápido; a velocidade não foi o que o impediu."
+      },
+      {
+        "text": "Mais workers de autovacuum",
+        "why": "Mais workers leriam as mesmas páginas e teriam a mesma resposta."
+      },
+      {
+        "text": "Um maintenance_work_mem maior",
+        "why": "A memória muda quantas entradas mortas cabem por passada, não se elas podem ser removidas."
+      },
+      {
+        "text": "Uma sessão segurando um snapshot antigo",
+        "why": "Isso. O removable cutoff bateu com o backend_xmin da sessão em idle in transaction."
+      }
+    ]
+  },
+  "ex-nj4203ry": {
+    "prompt": "A sessão parada tinha lido só `orders_copy`. O snapshot aberto dela também impediria o VACUUM de remover versões mortas de `customers`?",
+    "hint": "Um snapshot é do banco, não de uma tabela.",
+    "choices": [
+      {
+        "text": "Não: um snapshot só protege as tabelas que leu",
+        "why": "O snapshot poderia ler qualquer tabela em seguida. O horizonte vale para todas as tabelas do banco."
+      },
+      {
+        "text": "Sim, e também bloquearia todo INSERT em customers até terminar",
+        "why": "Um snapshot não bloqueia escritas. Ele só impede que versões antigas sejam removidas."
+      },
+      {
+        "text": "Não, porque customers pertence a outro esquema",
+        "why": "As duas tabelas estão em public, e esquemas não têm nada a ver com o horizonte."
+      },
+      {
+        "text": "Sim, para tudo o que morreu depois de ela começar",
+        "why": "Isso. A sessão ainda poderia ler customers, então tudo o que morreu depois do snapshot dela fica, em todas as tabelas do banco."
+      }
+    ]
+  },
+  "ex-qfe4xsbd": {
+    "prompt": "Ponha a demonstração da transação aberta na ordem em que aconteceu.",
+    "hint": "O snapshot precisa existir antes do update para importar.",
+    "items": [
+      "O terminal 1 abre uma transação REPEATABLE READ e lê a cópia",
+      "O terminal 2 atualiza 100.000 linhas",
+      "O VACUUM as informa como mortas mas ainda não removíveis",
+      "O terminal 1 faz commit",
+      "O VACUUM remove as 100.000 versões"
+    ],
+    "trap": "O commit antes do segundo VACUUM é a correção inteira; nada mais mudou entre as duas execuções."
+  },
+  "ex-c37mrg16": {
+    "prompt": "O VACUUM continua dizendo `not yet removable`, e o `pg_stat_activity` não mostra nenhuma sessão com mais de alguns segundos. Onde você olha em seguida?",
+    "hint": "Duas coisas seguram o horizonte sem serem sessões.",
+    "choices": [
+      {
+        "text": "pg_stat_user_tables, para ver se last_autovacuum é recente",
+        "why": "Isso mostra que o autovacuum está visitando. A pergunta é o que o impede de remover algo."
+      },
+      {
+        "text": "Os reloptions da tabela, caso o autovacuum esteja desligado para ela",
+        "why": "Um VACUUM manual está relatando o problema, então o interruptor do autovacuum não é a causa."
+      },
+      {
+        "text": "pg_prepared_xacts e pg_replication_slots",
+        "why": "Isso. Uma transação preparada esquecida ou um slot cujo consumidor parou seguram a linha, e nenhum aparece como sessão."
+      },
+      {
+        "text": "pg_settings, atrás do autovacuum_naptime",
+        "why": "O naptime decide a frequência com que o autovacuum olha, não o que ele pode remover."
+      }
+    ]
+  },
+  "ex-qv0zmrbh": {
+    "prompt": "O que aconteceria com uma linha não congelada quando o xmin dela tivesse mais de uns dois bilhões de transações?",
+    "hint": "Os números são comparados num círculo.",
+    "choices": [
+      {
+        "text": "Pareceria estar no futuro e sumiria das consultas",
+        "why": "Isso. É por isso que o congelamento existe, e por isso o servidor recusa novos ids de transação antes que aconteça."
+      },
+      {
+        "text": "Seria apagada pelo próximo VACUUM",
+        "why": "O VACUUM congela linhas antigas; ele só apaga versões mortas."
+      },
+      {
+        "text": "O servidor a renumeraria com um novo id de 64 bits",
+        "why": "Versões de linha carregam ids de 32 bits, e nada as renumera."
+      },
+      {
+        "text": "Nada: a idade só importa para estatísticas",
+        "why": "A idade decide a visibilidade. Esse é o perigo inteiro."
+      }
+    ]
+  },
+  "ex-hha3av1x": {
+    "prompt": "No cluster de rascunho empurrado além do limite, qual destes ainda funcionava?",
+    "hint": "O que precisa de um novo id de transação?",
+    "choices": [
+      {
+        "text": "CREATE TABLE t (i int)",
+        "why": "Criar uma tabela escreve no catálogo e precisa de um id de transação, então foi recusado."
+      },
+      {
+        "text": "SELECT txid_current()",
+        "why": "O txid_current atribui um id se a transação não tem um, então também é recusado."
+      },
+      {
+        "text": "Um INSERT numa tabela existente",
+        "why": "Qualquer escrita precisa de um id de transação."
+      },
+      {
+        "text": "SELECT count(*) FROM pg_class",
+        "why": "Isso. Uma leitura não precisa de um novo id de transação, e ela respondeu 413."
+      }
+    ]
+  },
+  "ex-vqjt53rd": {
+    "prompt": "Depois do `vacuumdb --all --freeze`, o cluster de rascunho ainda recusava escritas. Por quê?",
+    "hint": "Olhe o datallowconn.",
+    "choices": [
+      {
+        "text": "O failsafe tinha pulado o congelamento",
+        "why": "O failsafe pula a limpeza de índice e o freio, nunca o congelamento; postgres e template1 voltaram à idade 0."
+      },
+      {
+        "text": "O servidor precisa reiniciar antes de as idades novas valerem",
+        "why": "As escritas voltaram sem reinício, assim que o template0 foi congelado."
+      },
+      {
+        "text": "O template0 não aceita conexões, então o vacuumdb o pulou",
+        "why": "Isso. O autovacuum alcança o template0, e em cerca de um minuto tinha congelado ele também."
+      },
+      {
+        "text": "O vacuumdb precisa rodar em modo de usuário único para liberar o limite",
+        "why": "Ele rodou com o servidor no ar e congelou os dois bancos que alcançava. O modo de usuário único não foi necessário."
+      }
+    ]
+  },
+  "ex-qbk5z706": {
+    "prompt": "Um gráfico de monitoramento mostra `age(datfrozenxid)` de um banco subindo sem parar além de 400 milhões, com autovacuum_freeze_max_age em 200 milhões. O que isso quer dizer?",
+    "hint": "Depois de 200 milhões um autovacuum agressivo já deveria tê-la trazido para baixo.",
+    "choices": [
+      {
+        "text": "Crescimento normal; aja só quando o servidor começar a avisar",
+        "why": "Os avisos começam 40 milhões antes da parada. Esperar por eles numa tabela grande não deixa tempo para um congelamento que leva horas."
+      },
+      {
+        "text": "O autovacuum está desligado, e ligá-lo resolve",
+        "why": "O autovacuum agressivo roda mesmo com o autovacuum desligado, então isso sozinho não explica uma idade que continua subindo."
+      },
+      {
+        "text": "O autovacuum não consegue terminar de congelar: descubra o que segura o horizonte ou o bloqueia",
+        "why": "Isso. Trate como incidente: um snapshot antigo, uma transação preparada ou um slot é o motivo de costume."
+      },
+      {
+        "text": "O parâmetro está baixo demais e deveria subir para 2 bilhões",
+        "why": "Subir a linha só aproxima o alarme da parada. A idade subindo além dela é o sintoma a explicar."
+      }
+    ]
+  },
+  "ex-t4nps9qg": {
+    "prompt": "No PostgreSQL 16 com os padrões, quais execuções do autovacuum chegam ao log do servidor?",
+    "hint": "SHOW log_autovacuum_min_duration.",
+    "choices": [
+      {
+        "text": "Todas",
+        "why": "Isso é o valor 0, que a lição pôs numa tabela."
+      },
+      {
+        "text": "As de dez minutos ou mais",
+        "why": "Isso. O padrão é 10min."
+      },
+      {
+        "text": "Só as que não removem nada",
+        "why": "O parâmetro é sobre duração, não sobre o que a execução conseguiu."
+      },
+      {
+        "text": "Nenhuma, a menos que o logging_collector esteja ligado",
+        "why": "O servidor do Ubuntu grava no arquivo sem o coletor; a linha do autovacuum chegou lá."
+      }
+    ]
+  },
+  "ex-496a7hcb": {
+    "prompt": "Depois de `ALTER TABLE orders_copy SET (autovacuum_vacuum_scale_factor = 0.01)`, depois de quantas versões mortas a cópia passa pelo vacuum?",
+    "hint": "O limiar continua em 50.",
+    "choices": [
+      {
+        "text": "200.050, porque uma opção de tabela não sobrepõe o padrão do servidor",
+        "why": "A opção da própria tabela vence a do servidor para aquela tabela; o autovacuum depois de 20.000 updates mostra isso."
+      },
+      {
+        "text": "1.050",
+        "why": "Isso seria uma fração de 0,001."
+      },
+      {
+        "text": "100.050",
+        "why": "Essa é a linha padrão do analyze, com fração de 0,1."
+      },
+      {
+        "text": "10.050",
+        "why": "Isso: 50 + 0,01 x 1.000.000."
+      }
+    ]
+  },
+  "ex-wsp34p92": {
+    "prompt": "Um colega propõe `ALTER TABLE events SET (autovacuum_enabled = false)` porque o autovacuum em `events` atrasa o lote da noite. Aonde isso leva?",
+    "hint": "Qual autovacuum ainda roda?",
+    "choices": [
+      {
+        "text": "Nenhum vacuum de events nunca mais",
+        "why": "O autovacuum agressivo contra wraparound continua vindo, diga essa opção o que disser."
+      },
+      {
+        "text": "Versões mortas se acumulam até um vacuum agressivo, mais tarde e maior",
+        "why": "Isso. Reduza o custo de cada visita ou mude o horário; desligar as visitas comuns deixa só a grande."
+      },
+      {
+        "text": "Um lote mais rápido e nenhum outro efeito, já que dá para rodar VACUUM à mão depois",
+        "why": "Só se alguém lembrar, toda vez. Enquanto isso a tabela incha e a idade dela sobe."
+      },
+      {
+        "text": "Um erro, já que o autovacuum não pode ser configurado por tabela",
+        "why": "Parâmetros por tabela são exatamente como o autovacuum é ajustado; a lição definiu dois."
+      }
+    ]
+  },
+  "ex-29hcrshb": {
+    "prompt": "Uma tabela de 2 milhões de linhas continua crescendo embora `last_autovacuum` seja atualizado a cada poucos minutos e `n_dead_tup` fique perto de 3 milhões. Qual explicação cobre tudo?",
+    "hint": "O autovacuum está visitando. O que cada visita consegue?",
+    "choices": [
+      {
+        "text": "A fração é alta demais para a tabela",
+        "why": "Então o autovacuum não estaria visitando a cada poucos minutos; estaria esperando a linha."
+      },
+      {
+        "text": "O autovacuum está freado pelo cost delay e nunca chega ao fim da tabela, então são necessários mais workers",
+        "why": "Uma execução freada não terminaria e atualizaria last_autovacuum a cada poucos minutos. E mais workers leriam as mesmas páginas."
+      },
+      {
+        "text": "Algo segura um snapshot antigo",
+        "why": "Isso. Visitas frequentes que deixam a contagem de mortas alta são a assinatura de um horizonte preso."
+      },
+      {
+        "text": "As estatísticas estão velhas, então o n_dead_tup está errado",
+        "why": "O n_dead_tup é um contador mantido pelo servidor, não uma estimativa do ANALYZE, e o arquivo crescendo concorda com ele."
+      }
+    ]
+  },
+  "ex-zh0f09kk": {
+    "prompt": "Às 02:00 um relatório abre uma transação REPEATABLE READ e roda por três horas. Enquanto isso a aplicação atualiza 5 milhões de linhas de `orders`. O que o autovacuum consegue em `orders` entre 02:00 e 05:00?",
+    "hint": "Quais versões morreram depois das 02:00?",
+    "choices": [
+      {
+        "text": "Ele remove as versões mortas como sempre, já que o relatório só lê",
+        "why": "Ler é justamente o que precisa das versões antigas; um snapshot só de leitura também segura o horizonte."
+      },
+      {
+        "text": "Ele cancela o relatório para limpar a tabela",
+        "why": "O autovacuum não cancela consulta de ninguém; ele cede, e as versões mortas esperam."
+      },
+      {
+        "text": "Ele é bloqueado pela trava do relatório e não consegue começar",
+        "why": "A trava de um SELECT não conflita com a do VACUUM. O autovacuum roda; só não consegue remover essas versões."
+      },
+      {
+        "text": "Nada nas versões que morreram depois das 02:00; elas saem quando o relatório terminar",
+        "why": "Isso. O relatório ainda poderia lê-las, então elas ficam até o snapshot dele sumir."
+      }
+    ]
+  },
+  "ex-yvsjqzqg": {
+    "prompt": "Ligue cada sintoma ao que ele indica.",
+    "hint": "Cada linha vem das capturas desta lição.",
+    "pairs": [
+      {
+        "left": "`dead but not yet removable` continua alto execução após execução",
+        "right": "Um snapshot, slot ou transação preparada presos"
+      },
+      {
+        "left": "`last_autovacuum` vazio numa tabela grande e movimentada",
+        "right": "Uma linha alta demais para o tamanho da tabela"
+      },
+      {
+        "left": "`must be vacuumed within N transactions` no log",
+        "right": "Idade de id de transação perto do wraparound"
+      },
+      {
+        "left": "`index scan bypassed`",
+        "right": "Poucas páginas com entradas mortas, índices deixados para depois"
+      }
+    ]
+  },
+  "ex-rbq3erfp": {
+    "prompt": "Você define `autovacuum_vacuum_scale_factor = 0.01` numa tabela de 300 milhões de linhas. O autovacuum agora roda de hora em hora, termina, e o `n_dead_tup` volta a perto de 0 toda vez, mas o arquivo mantém o tamanho. O que concluir?",
+    "hint": "O que um VACUUM simples faz com o espaço liberado?",
+    "choices": [
+      {
+        "text": "O parâmetro não teve efeito",
+        "why": "Execuções de hora em hora que zeram as mortas são o parâmetro funcionando."
+      },
+      {
+        "text": "Um snapshot está preso, então nada é removido",
+        "why": "Então o n_dead_tup ficaria alto. Ele volta a perto de 0."
+      },
+      {
+        "text": "A tabela precisa também de VACUUM (FREEZE) de hora em hora, para liberar as páginas ao mapa de espaço livre",
+        "why": "Congelar é sobre a idade dos ids de transação. Um VACUUM simples já anota o espaço liberado no mapa de espaço livre."
+      },
+      {
+        "text": "Está funcionando: o espaço é reaproveitado dentro do arquivo",
+        "why": "Isso. Um tamanho estável é o objetivo; devolver espaço ao sistema operacional é o assunto da lição 15."
+      }
+    ]
+  }
+}

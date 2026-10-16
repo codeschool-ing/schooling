@@ -1,0 +1,463 @@
+{
+  "ex-ztz88m88": {
+    "prompt": "O que o WAL do PostgreSQL, o redo log do InnoDB e o transaction log do SQL Server têm em comum?",
+    "hint": "Olhe a linha do log de mudanças.",
+    "choices": [
+      {
+        "text": "São o mesmo formato de arquivo",
+        "why": "Cada motor tem seu formato; a ideia é comum, não os bytes."
+      },
+      {
+        "text": "São ferramentas de backup que os leem",
+        "why": "O próprio servidor os lê depois de uma queda."
+      },
+      {
+        "text": "As mudanças chegam ali antes dos arquivos de dados",
+        "why": "Isso. A ideia é comum; os nomes mudam."
+      },
+      {
+        "text": "Guardam as linhas atuais de cada tabela",
+        "why": "As linhas ficam nos arquivos de dados; o log guarda mudanças."
+      }
+    ]
+  },
+  "ex-mjwntph8": {
+    "prompt": "Por que uma conexão nova acrescenta uma linha no `ps` para o PostgreSQL e não para o MySQL?",
+    "hint": "Processo ou thread.",
+    "choices": [
+      {
+        "text": "Processos contra threads",
+        "why": "Isso. Uma linha por processo."
+      },
+      {
+        "text": "O MySQL esconde suas conexões do sistema operacional",
+        "why": "Nada é escondido: as threads existem, e o ps as lista se pedirem com -L."
+      },
+      {
+        "text": "O MySQL recusa conexões da mesma máquina",
+        "why": "O sudo mysql conectou da mesma máquina."
+      },
+      {
+        "text": "O PostgreSQL faz um fork por consulta",
+        "why": "Por conexão, não por consulta."
+      }
+    ]
+  },
+  "ex-rsmrwh4t": {
+    "prompt": "Ligue cada motor ao nome do seu cache de páginas.",
+    "hint": "Um deles o põe dentro de uma área compartilhada maior.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "shared buffers"
+      },
+      {
+        "left": "MySQL (InnoDB)",
+        "right": "buffer pool"
+      },
+      {
+        "left": "Oracle",
+        "right": "buffer cache, na SGA"
+      }
+    ],
+    "right_distractors": [
+      "undo tablespace"
+    ]
+  },
+  "ex-djqxj5g7": {
+    "prompt": "Um colega diz que o MySQL não precisa de log de mudanças porque tem o binary log. O que está errado nisso?",
+    "hint": "O MySQL escreve dois logs.",
+    "choices": [
+      {
+        "text": "Nada; o binary log é o log de mudanças do InnoDB",
+        "why": "O InnoDB tem o seu redo log; o binary log fica ao lado."
+      },
+      {
+        "text": "O InnoDB mantém um redo log ao lado do binary log",
+        "why": "Isso. Redo para reparar quedas, binlog para replicação e recuperação."
+      },
+      {
+        "text": "O binary log foi removido no MySQL 8.0",
+        "why": "A captura lista binlog.000001 a binlog.000003 na 8.0."
+      },
+      {
+        "text": "Logs de mudança são uma ideia do PostgreSQL",
+        "why": "Os quatro escrevem um."
+      }
+    ]
+  },
+  "ex-2a9ep8md": {
+    "prompt": "No MySQL, o que o `CREATE SCHEMA billing` cria?",
+    "hint": "Duas palavras, uma coisa.",
+    "choices": [
+      {
+        "text": "Um database, listado pelo SHOW DATABASES",
+        "why": "Isso. Schema e database são sinônimos lá."
+      },
+      {
+        "text": "Um espaço de nomes dentro do database atual",
+        "why": "Isso é o que o PostgreSQL faz. O MySQL não tem nível entre servidor e tabelas."
+      },
+      {
+        "text": "Um usuário chamado billing",
+        "why": "Esse seria o vínculo do Oracle entre esquema e usuário."
+      },
+      {
+        "text": "Um erro: o MySQL não tem esquemas",
+        "why": "O comando funciona; a palavra é aceita."
+      }
+    ]
+  },
+  "ex-ypweq702": {
+    "prompt": "No Oracle, o que acontece quando você cria um usuário chamado sales?",
+    "hint": "Esquema e usuário.",
+    "choices": [
+      {
+        "text": "Um papel esperando ser concedido",
+        "why": "O usuário e o esquema dele existem na hora; privilégios são outra coisa."
+      },
+      {
+        "text": "É criado um banco plugável chamado sales",
+        "why": "Um PDB se cria separadamente e é algo maior."
+      },
+      {
+        "text": "Vem junto um esquema vazio chamado sales",
+        "why": "Isso. Uma tabela pertence ao usuário dono dela."
+      },
+      {
+        "text": "Um login na instância e nada em nenhum banco",
+        "why": "Essa é a divisão do SQL Server, não a do Oracle."
+      }
+    ]
+  },
+  "ex-417t193c": {
+    "prompt": "Alguém consegue fazer login numa instância SQL Server mas é recusado pelo banco shop. Qual a causa provável?",
+    "hint": "Duas identidades.",
+    "choices": [
+      {
+        "text": "A senha expirou",
+        "why": "Então o login teria falhado."
+      },
+      {
+        "text": "O shop está em outro esquema",
+        "why": "Um banco não fica dentro de um esquema; é o contrário."
+      },
+      {
+        "text": "O login não tem user em shop",
+        "why": "Isso. Um login entra na instância; um user entra num banco."
+      },
+      {
+        "text": "A instância está em modo de usuário único para manutenção",
+        "why": "Então ele também não teria feito login."
+      }
+    ]
+  },
+  "ex-7n4mzcj5": {
+    "prompt": "No PostgreSQL, um relatório precisa juntar uma tabela do banco shop com uma do banco billing. O que é verdade?",
+    "hint": "Uma conexão é a exatamente um banco.",
+    "choices": [
+      {
+        "text": "Funciona se os dois estiverem no mesmo cluster",
+        "why": "Mesmo cluster ou não, uma consulta comum vê um banco."
+      },
+      {
+        "text": "Uma consulta comum não consegue",
+        "why": "Isso. Esquemas se juntam à vontade; bancos não."
+      },
+      {
+        "text": "Funciona como no MySQL, com database.table",
+        "why": "No PostgreSQL esse nome com ponto é schema.table."
+      },
+      {
+        "text": "Um superusuário pode rodar, os outros não",
+        "why": "O obstáculo não é privilégio; é a conexão."
+      }
+    ]
+  },
+  "ex-esqj58qg": {
+    "prompt": "Ligue cada motor ao nome da sua caixa mais externa.",
+    "hint": "A primeira linha da figura.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "cluster"
+      },
+      {
+        "left": "SQL Server",
+        "right": "instance"
+      },
+      {
+        "left": "Oracle",
+        "right": "CDB"
+      },
+      {
+        "left": "MySQL",
+        "right": "server"
+      }
+    ]
+  },
+  "ex-r754azgq": {
+    "prompt": "Por que o `sudo mysql` conectou sem senha no Ubuntu?",
+    "hint": "A mesma ideia do sudo -u postgres psql.",
+    "choices": [
+      {
+        "text": "O root não tem senha num MySQL novo",
+        "why": "Não há senha vazia: o auth_socket nunca pede uma."
+      },
+      {
+        "text": "O sudo repassa a senha sozinho",
+        "why": "O sudo não sabe nada de senhas do MySQL."
+      },
+      {
+        "text": "O kernel diz ao MySQL quem está no socket",
+        "why": "Isso. A verificação peer com outro nome."
+      },
+      {
+        "text": "O MySQL confia em conexões locais",
+        "why": "Só o root@localhost usa auth_socket; as outras contas usam senha."
+      }
+    ]
+  },
+  "ex-g342f8rt": {
+    "prompt": "Em /var/lib/mysql, qual entrada faz o papel que o pg_wal faz no PostgreSQL?",
+    "hint": "Redo.",
+    "choices": [
+      {
+        "text": "ibdata1",
+        "why": "O espaço compartilhado do InnoDB, não o log."
+      },
+      {
+        "text": "binlog.000001",
+        "why": "O binary log, um segundo log para replicação."
+      },
+      {
+        "text": "mysql.ibd",
+        "why": "Esse guarda as tabelas de sistema do MySQL."
+      },
+      {
+        "text": "#innodb_redo",
+        "why": "Isso. O redo log é o log de mudanças."
+      }
+    ]
+  },
+  "ex-k947fvk9": {
+    "prompt": "O MySQL lista o root com host localhost. O que a coluna host muda?",
+    "hint": "Uma conta são dois nomes.",
+    "choices": [
+      {
+        "text": "Nada; é um comentário",
+        "why": "Faz parte da identidade da conta."
+      },
+      {
+        "text": "Ele limita o root ao binary log",
+        "why": "O host não tem nada a ver com logs."
+      },
+      {
+        "text": "Decide qual database é o padrão",
+        "why": "O database padrão se escolhe na conexão, não pelo host."
+      },
+      {
+        "text": "Faz parte da conta",
+        "why": "Isso. usuário@host é a conta."
+      }
+    ]
+  },
+  "ex-8t2fpwnc": {
+    "prompt": "Depois de `CREATE SCHEMA billing` no banco ana do PostgreSQL, por que o `\\l` não lista billing?",
+    "hint": "O \\l lista um nível; o \\dn outro.",
+    "choices": [
+      {
+        "text": "O esquema foi criado em outro cluster",
+        "why": "Ele foi para o banco a que a sessão estava conectada."
+      },
+      {
+        "text": "Ele fica um nível abaixo",
+        "why": "Isso. O \\dn o mostra."
+      },
+      {
+        "text": "O esquema precisa de commit para aparecer",
+        "why": "O psql faz commit de cada comando sozinho."
+      },
+      {
+        "text": "Esquemas ficam ocultos do \\l por segurança",
+        "why": "O \\dn mostrou para a ana, e mostraria a qualquer um."
+      }
+    ]
+  },
+  "ex-sep2qtxa": {
+    "prompt": "No Ubuntu, o log de erros do MySQL é o arquivo ___ em /var/log/mysql.",
+    "hint": "Duas palavras com um ponto.",
+    "blanks": [
+      {
+        "accept": [
+          "error.log"
+        ]
+      }
+    ]
+  },
+  "ex-fajrtgsz": {
+    "prompt": "Por que o Oracle não tem autovacuum?",
+    "hint": "Onde moram as versões antigas das linhas.",
+    "choices": [
+      {
+        "text": "As tabelas dele só recebem inserções",
+        "why": "Tabelas Oracle mudam como quaisquer outras."
+      },
+      {
+        "text": "O RMAN remove linhas mortas durante os backups",
+        "why": "O RMAN faz backup; não limpa tabelas."
+      },
+      {
+        "text": "As versões antigas vão para o undo, não para a tabela",
+        "why": "Isso. Nada sobra na tabela para um vacuum remover."
+      },
+      {
+        "text": "Ele roda VACUUM FULL à noite",
+        "why": "Não existe esse comando no Oracle."
+      }
+    ]
+  },
+  "ex-yqvcmxdp": {
+    "prompt": "O recovery model FULL do SQL Server guarda o transaction log para restauração a um ponto no tempo. O que decide a mesma coisa no PostgreSQL?",
+    "hint": "Guardar o log depois que o servidor terminou com ele.",
+    "choices": [
+      {
+        "text": "Arquivar o WAL",
+        "why": "Isso. As lições 4 e 6 de db-reliability."
+      },
+      {
+        "text": "Rodar ANALYZE com mais frequência",
+        "why": "O ANALYZE coleta estatísticas; não guarda log."
+      },
+      {
+        "text": "Pôr fsync = off",
+        "why": "Isso arrisca os dados; não guarda nada."
+      },
+      {
+        "text": "Criar um tablespace para o log",
+        "why": "Onde o log mora não decide se ele é guardado."
+      }
+    ]
+  },
+  "ex-r5e20s2h": {
+    "prompt": "Ligue cada termo ao equivalente mais próximo no PostgreSQL.",
+    "hint": "Memória, manutenção, log.",
+    "pairs": [
+      {
+        "left": "A PGA do Oracle",
+        "right": "memória de trabalho por sessão"
+      },
+      {
+        "left": "A fragmentação de índice do SQL Server",
+        "right": "bloat de índice"
+      },
+      {
+        "left": "O transaction log do SQL Server",
+        "right": "o write-ahead log"
+      },
+      {
+        "left": "O alert log do Oracle",
+        "right": "o arquivo de log do servidor"
+      }
+    ]
+  },
+  "ex-d92a1ak3": {
+    "prompt": "O que o PostgreSQL responde a `SELECT '1abc' = 1`?",
+    "hint": "Rigoroso com tipos.",
+    "choices": [
+      {
+        "text": "Um erro",
+        "why": "Isso. Ele não adivinha."
+      },
+      {
+        "text": "true, com um aviso",
+        "why": "Essa é a resposta do MySQL."
+      },
+      {
+        "text": "false",
+        "why": "Ele nem compara; a conversão falha antes."
+      },
+      {
+        "text": "NULL",
+        "why": "NULL significaria desconhecido; aqui ele recusa."
+      }
+    ]
+  },
+  "ex-pb1taj9c": {
+    "prompt": "Qual motivo para usar o PostgreSQL neste curso é específico de aprender administração?",
+    "hint": "Ajustes, estatísticas e logs na sua frente.",
+    "choices": [
+      {
+        "text": "É o mais rápido dos quatro motores",
+        "why": "O curso não afirma isso."
+      },
+      {
+        "text": "Ele mostra como chegou lá",
+        "why": "Isso. Um arquivo que você lê, uma view que você consulta."
+      },
+      {
+        "text": "Precisa de menos configuração",
+        "why": "A lição 5 é sobre a configuração dele."
+      },
+      {
+        "text": "Oracle e SQL Server estão sendo aposentados",
+        "why": "Os dois são vendidos e muito usados."
+      }
+    ]
+  },
+  "ex-z59gfv8k": {
+    "prompt": "Um gestor pede \"um banco novo para o serviço de faturamento\" num servidor MySQL. O que você cria?",
+    "hint": "Que nível a palavra quer dizer lá?",
+    "choices": [
+      {
+        "text": "Um segundo mysqld em outra porta",
+        "why": "Isso é um segundo servidor, muito mais do que foi pedido."
+      },
+      {
+        "text": "Mais uma linha no SHOW DATABASES",
+        "why": "Isso. No MySQL a palavra quer dizer esse nível."
+      },
+      {
+        "text": "Um usuário chamado invoicing dono das tabelas",
+        "why": "Essa é a leitura do Oracle."
+      },
+      {
+        "text": "Um tablespace chamado invoicing",
+        "why": "Um tablespace trata de onde os arquivos moram, não de nomes."
+      }
+    ]
+  },
+  "ex-73tr08cv": {
+    "prompt": "Um servidor fica sem disco porque o log de mudanças não para de crescer. As ideias de qual lição valem se o motor for SQL Server?",
+    "hint": "A linha do log de mudanças.",
+    "choices": [
+      {
+        "text": "A lição 12, sobre GRANT",
+        "why": "Privilégios não enchem disco."
+      },
+      {
+        "text": "A lição 18, sobre extensões",
+        "why": "Extensões não estão envolvidas."
+      },
+      {
+        "text": "A lição 7, sobre o write-ahead log",
+        "why": "Isso. Mesmo mecanismo, outro nome."
+      },
+      {
+        "text": "A lição 22, sobre mudanças de esquema",
+        "why": "Ele é o log de mudanças do SQL Server."
+      }
+    ]
+  },
+  "ex-d359kpd1": {
+    "prompt": "Ordene os níveis do PostgreSQL do mais externo ao mais interno.",
+    "hint": "Servidor primeiro, linhas por último.",
+    "items": [
+      "cluster",
+      "database",
+      "schema",
+      "table"
+    ],
+    "trap": "Esquema antes de banco é a confusão do MySQL trazida junto: no PostgreSQL os esquemas ficam dentro de um banco."
+  }
+}
