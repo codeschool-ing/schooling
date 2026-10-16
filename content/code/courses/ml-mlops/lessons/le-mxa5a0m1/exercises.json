@@ -1,0 +1,744 @@
+[
+  {
+    "id": "ex-arxz8gsr",
+    "version": 1,
+    "section": "the-score-that-lies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The tree with no depth limit scores 1.000 on its training rows. What does that show?",
+    "choices": [
+      {
+        "text": "That it memorised them",
+        "correct": true,
+        "why": "Right. Remembering rows is not learning about members."
+      },
+      {
+        "text": "That it is the best of the six trees",
+        "correct": false,
+        "why": "On the validation rows it is the worst, 0.636."
+      },
+      {
+        "text": "That the training rows contain a leak of the label into the features",
+        "correct": false,
+        "why": "No leak is needed: an unlimited tree can fit any rows perfectly."
+      },
+      {
+        "text": "That AUC is the wrong score for trees",
+        "correct": false,
+        "why": "AUC is fine; it was computed on the wrong rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-x03kga77",
+    "version": 1,
+    "section": "the-score-that-lies",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which maximum depth had the best validation AUC in overfit.py?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-mfbr76rt",
+    "version": 1,
+    "section": "the-score-that-lies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an AUC of 0.5 mean for the lapse model?",
+    "choices": [
+      {
+        "text": "Half the members are predicted to lapse",
+        "correct": false,
+        "why": "AUC says nothing about how many are flagged."
+      },
+      {
+        "text": "No better than a coin at ranking pairs",
+        "correct": true,
+        "why": "Right. AUC is that pairwise chance, from 0.5 to 1."
+      },
+      {
+        "text": "It is right about half the members and wrong about the rest",
+        "correct": false,
+        "why": "That would be accuracy, not AUC, and lesson 4 shows why it misleads."
+      },
+      {
+        "text": "The model was trained on half the rows",
+        "correct": false,
+        "why": "AUC does not describe the training set."
+      }
+    ]
+  },
+  {
+    "id": "ex-pccdbmcs",
+    "version": 1,
+    "section": "three-sets",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each set to its job.",
+    "pairs": [
+      {
+        "left": "training",
+        "right": "the rows fit reads"
+      },
+      {
+        "left": "validation",
+        "right": "choosing between models"
+      },
+      {
+        "left": "test",
+        "right": "one honest estimate, at the end"
+      }
+    ],
+    "right_distractors": [
+      "the rows the model is used on in production"
+    ]
+  },
+  {
+    "id": "ex-gzysmdjt",
+    "version": 1,
+    "section": "three-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After seeing a disappointing test score, a colleague tries another depth and checks the test again. What has happened?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the test rows were not used for training",
+        "correct": false,
+        "why": "They were used for choosing, which is a kind of learning."
+      },
+      {
+        "text": "The model now overfits the training rows",
+        "correct": false,
+        "why": "The problem is with the test rows, not the training rows."
+      },
+      {
+        "text": "The test set became a validation set",
+        "correct": true,
+        "why": "Right. There is no honest number left until fresh rows are held back."
+      },
+      {
+        "text": "The score will be lower, because each look costs accuracy",
+        "correct": false,
+        "why": "Looking costs nothing in the score; it costs its honesty."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4yd0chb",
+    "version": 1,
+    "section": "three-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a platform, who should compute the score on the test rows?",
+    "choices": [
+      {
+        "text": "The person tuning the model, as often as they need",
+        "correct": false,
+        "why": "Then the test rows become part of the tuning."
+      },
+      {
+        "text": "Nobody: a held-out test is too small to matter",
+        "correct": false,
+        "why": "3,130 members is enough to tell 0.76 from 0.79."
+      },
+      {
+        "text": "Whoever trained the previous version of the model",
+        "correct": false,
+        "why": "Who it is matters less than that nobody choosing uses it."
+      },
+      {
+        "text": "The release step",
+        "correct": true,
+        "why": "Right. Training jobs do not read the test rows at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-pt1qpm4f",
+    "version": 1,
+    "section": "what-leakage-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is leakage?",
+    "choices": [
+      {
+        "text": "Information in the rows that will not exist when the model is used",
+        "correct": true,
+        "why": "Right. Both scores look excellent, and production does something nobody measured."
+      },
+      {
+        "text": "A test set smaller than the training set",
+        "correct": false,
+        "why": "That is normal and harmless."
+      },
+      {
+        "text": "Rows lost between the warehouse and the training job",
+        "correct": false,
+        "why": "Losing rows is a different problem; leakage adds information."
+      },
+      {
+        "text": "A model that leaks members' personal data in the predictions it serves",
+        "correct": false,
+        "why": "That is a privacy problem; leakage here is about time."
+      }
+    ]
+  },
+  {
+    "id": "ex-k72xkpck",
+    "version": 1,
+    "section": "what-leakage-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the lapse model, what is the moment of prediction?",
+    "choices": [
+      {
+        "text": "The day the member's 90-day window closes",
+        "correct": false,
+        "why": "That is when the label becomes known, after the prediction."
+      },
+      {
+        "text": "The cutoff, the night the scores are computed",
+        "correct": true,
+        "why": "Right. What is known by then may be a feature."
+      },
+      {
+        "text": "The member's first purchase",
+        "correct": false,
+        "why": "That only starts their history."
+      },
+      {
+        "text": "The day the model was trained, whenever that was",
+        "correct": false,
+        "why": "A model trained once is used at many later cutoffs."
+      }
+    ]
+  },
+  {
+    "id": "ex-adx09440",
+    "version": 1,
+    "section": "the-summary-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In leak.py, member 1's recency is -14 days. What does the negative value give away?",
+    "choices": [
+      {
+        "text": "That the member joined after the cutoff",
+        "correct": false,
+        "why": "Joining is tenure; a negative recency is a visit after the cutoff."
+      },
+      {
+        "text": "That the purchases table has a wrong date",
+        "correct": false,
+        "why": "The date is right; it is read from the wrong moment."
+      },
+      {
+        "text": "That they came back after the cutoff, which is the label itself",
+        "correct": true,
+        "why": "Right. The model learned to read the answer."
+      },
+      {
+        "text": "That pandas subtracted the dates in the wrong order",
+        "correct": false,
+        "why": "The order is right; the later date is from after the cutoff."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewx59d1a",
+    "version": 1,
+    "section": "the-summary-table",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Trained on the summary table and used in production, how many of 3,130 members did the model predict would lapse?",
+    "value": 2450,
+    "tolerance": 0,
+    "unit": "members"
+  },
+  {
+    "id": "ex-3jfn5sp6",
+    "version": 1,
+    "section": "the-summary-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The leaky model still ranks members with AUC 0.787 in production. Why is it still unusable?",
+    "choices": [
+      {
+        "text": "Because 0.787 is below the 0.8 every model needs to reach production",
+        "correct": false,
+        "why": "There is no such rule; the honest model scores 0.790 too."
+      },
+      {
+        "text": "Because it was trained on fewer members than the honest one",
+        "correct": false,
+        "why": "Both trained on the same members."
+      },
+      {
+        "text": "Because the summary table is deleted every night",
+        "correct": false,
+        "why": "It is rebuilt, and that is exactly why it only holds the present."
+      },
+      {
+        "text": "Its probabilities are off by a factor of four",
+        "correct": true,
+        "why": "Right. Any threshold, budget or forecast built on them is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-22xz8qj5",
+    "version": 1,
+    "section": "the-summary-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets the platform compute a feature as it stood on a past cutoff?",
+    "choices": [
+      {
+        "text": "The history, or snapshots kept rather than overwritten",
+        "correct": true,
+        "why": "Right. Lesson 6 builds the point-in-time join on top of that."
+      },
+      {
+        "text": "Rebuilding the summary table more often",
+        "correct": false,
+        "why": "More often still only holds the present."
+      },
+      {
+        "text": "Dropping recency from the features altogether",
+        "correct": false,
+        "why": "Recency is the most useful feature; it just has to be computed as of the cutoff."
+      },
+      {
+        "text": "Training on the summary table but testing on purchases",
+        "correct": false,
+        "why": "That is what production would do, and it gave 2,450 false alarms' worth of nonsense."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qtrmz3w",
+    "version": 1,
+    "section": "stacked-cutoffs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a random split of nine stacked cutoffs flatter the model?",
+    "choices": [
+      {
+        "text": "Random splits always put the easier rows in the test set",
+        "correct": false,
+        "why": "Chance has no preference for easy rows."
+      },
+      {
+        "text": "The same members end up in training and test",
+        "correct": true,
+        "why": "Right. The test is partly people the model met a month earlier or later."
+      },
+      {
+        "text": "Nine cutoffs are too many rows for a random forest",
+        "correct": false,
+        "why": "25,000 rows is small for a forest."
+      },
+      {
+        "text": "The newest cutoff's labels are unfinished",
+        "correct": false,
+        "why": "The newest is 30 November, whose window closed on 28 February."
+      }
+    ]
+  },
+  {
+    "id": "ex-azd9fnsc",
+    "version": 1,
+    "section": "stacked-cutoffs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What AUC did the random split report in splits.py?",
+    "value": 0.766,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-r7cz6n67",
+    "version": 1,
+    "section": "stacked-cutoffs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model will score customers of a shop that opens next year and has never sold anything. Which split tests it honestly?",
+    "choices": [
+      {
+        "text": "A random split of rows, since the shop has no history",
+        "correct": false,
+        "why": "That would test it on people it has already met."
+      },
+      {
+        "text": "Training on the newest cutoff only",
+        "correct": false,
+        "why": "Newness of the date does not make the people new."
+      },
+      {
+        "text": "One that keeps whole members on one side",
+        "correct": true,
+        "why": "Right. In production every customer is new, so the test has to be too."
+      },
+      {
+        "text": "No split: score it on all the rows",
+        "correct": false,
+        "why": "That is the score that lies."
+      }
+    ]
+  },
+  {
+    "id": "ex-tey185m3",
+    "version": 1,
+    "section": "splitting-by-time",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these dates for the lapse model in calendar order.",
+    "items": [
+      "the newest training cutoff, 31 August",
+      "its label window closes, 29 November",
+      "the test cutoff, 30 November",
+      "the test labels are known, 28 February"
+    ]
+  },
+  {
+    "id": "ex-avxxbdfr",
+    "version": 1,
+    "section": "splitting-by-time",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a model with a 90-day label window used on date T, the newest training cutoff is T minus ___ days or earlier.",
+    "blanks": [
+      {
+        "accept": [
+          "90",
+          "ninety"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8rjaspm2",
+    "version": 1,
+    "section": "splitting-by-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job retrains the lapse model on every cutoff up to yesterday. What is wrong with its training set?",
+    "choices": [
+      {
+        "text": "Nothing: more recent rows are more relevant",
+        "correct": false,
+        "why": "Recent, and with labels still being written."
+      },
+      {
+        "text": "It has too many rows to train overnight",
+        "correct": false,
+        "why": "Size is not the issue."
+      },
+      {
+        "text": "It forgets the older cutoffs",
+        "correct": false,
+        "why": "Every cutoff is in it; the newest ones are the problem."
+      },
+      {
+        "text": "Its newest labels are still being written",
+        "correct": true,
+        "why": "Right. Members with no time to return are counted as lapsed."
+      }
+    ]
+  },
+  {
+    "id": "ex-g94z2st8",
+    "version": 1,
+    "section": "unfinished-labels",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What share of members was labelled lapsed for the cutoff 2026-02-15, in percent?",
+    "value": 65.5,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-3s8p604m",
+    "version": 1,
+    "section": "unfinished-labels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the fix for unfinished labels belong?",
+    "choices": [
+      {
+        "text": "In the pipeline that builds the training set",
+        "correct": true,
+        "why": "Right. One condition: cutoff plus 90 days on or before the last complete day."
+      },
+      {
+        "text": "In the modeller's notebook, as a filter before fitting",
+        "correct": false,
+        "why": "It is a property of when the data landed, so it belongs where the data is built."
+      },
+      {
+        "text": "In the model, which learns to ignore recent rows",
+        "correct": false,
+        "why": "A model cannot tell an unfinished label from a real one."
+      },
+      {
+        "text": "In the dashboard, which hides the newest cutoffs",
+        "correct": false,
+        "why": "The damage is in the training, not in what anybody sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-s2mmdtth",
+    "version": 1,
+    "section": "unfinished-labels",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these labels need a maturity before they can be trusted? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "a member lapsing within 90 days",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "a purchase returned within thirty days",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "a fraud reported by a chargeback",
+        "correct": true,
+        "why": "Right. It can take weeks."
+      },
+      {
+        "text": "the category of a book bought today",
+        "correct": false,
+        "why": "That is known the moment it is bought."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce7v7aj7",
+    "version": 1,
+    "section": "fitted-on-everything",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does target encoding fitted on all rows leak so badly?",
+    "choices": [
+      {
+        "text": "It creates too many columns for the model",
+        "correct": false,
+        "why": "It creates one column per category, not many."
+      },
+      {
+        "text": "It writes the test rows' labels into their features",
+        "correct": true,
+        "why": "Right. Each category becomes the average label, test rows included."
+      },
+      {
+        "text": "It changes the order of the rows",
+        "correct": false,
+        "why": "Order has nothing to do with it."
+      },
+      {
+        "text": "Its averages are computed in floating point",
+        "correct": false,
+        "why": "Precision is not the issue; what it averages is."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcfj9b0g",
+    "version": 1,
+    "section": "fitted-on-everything",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are handed a model plus a separate scaler that was fitted in a notebook on the whole dataset. What is the risk for production?",
+    "choices": [
+      {
+        "text": "The scaler will be too slow at prediction time",
+        "correct": false,
+        "why": "Applying a scaler costs nothing; the problem is how it was fitted."
+      },
+      {
+        "text": "Scalers cannot be saved to a file next to the model",
+        "correct": false,
+        "why": "They can; that is not the problem."
+      },
+      {
+        "text": "It saw the test rows and lives outside the model",
+        "correct": true,
+        "why": "Right. Inside a pipeline, fit fits both on the training rows only, the same way every time."
+      },
+      {
+        "text": "It will reorder the categories of home_shop",
+        "correct": false,
+        "why": "A scaler touches the numeric columns, not the categories."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8wqp8wx",
+    "version": 1,
+    "section": "a-checklist",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A lapse model suddenly scores 0.994. What is the first suspect?",
+    "choices": [
+      {
+        "text": "The algorithm, which must be a better one",
+        "correct": false,
+        "why": "Predicting people 90 days ahead is not that easy for any algorithm."
+      },
+      {
+        "text": "The random seed",
+        "correct": false,
+        "why": "A seed moves a score by a little, not to nearly perfect."
+      },
+      {
+        "text": "The test set, which must be too small to trust",
+        "correct": false,
+        "why": "A small set is noisy in both directions, not suspiciously perfect."
+      },
+      {
+        "text": "The data",
+        "correct": true,
+        "why": "Right. A score that good is a symptom: look for a leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmx5e764",
+    "version": 1,
+    "section": "a-checklist",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the leak it catches.",
+    "pairs": [
+      {
+        "left": "Could the value have been computed on the cutoff date?",
+        "right": "a column from today's table"
+      },
+      {
+        "left": "Is any member on both sides?",
+        "right": "the same member twice"
+      },
+      {
+        "left": "Has every label's window closed?",
+        "right": "unfinished labels"
+      },
+      {
+        "left": "Was anything fitted before the split?",
+        "right": "preprocessing that saw the test"
+      }
+    ],
+    "right_distractors": [
+      "a model with too many features"
+    ]
+  },
+  {
+    "id": "ex-9f5k1zrm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A churn feature is called orders_total and comes from the customer summary rebuilt nightly. How would you check it for leakage in one query?",
+    "choices": [
+      {
+        "text": "Compare it with the orders on or before each row's cutoff",
+        "correct": true,
+        "why": "Right. Any row where it is larger counts orders from the future."
+      },
+      {
+        "text": "Count how many rows have a null orders_total",
+        "correct": false,
+        "why": "Nulls are a different problem."
+      },
+      {
+        "text": "Check that its average is the same in training and test",
+        "correct": false,
+        "why": "A leaky column can have the same average in both."
+      },
+      {
+        "text": "Drop it and see whether the score falls",
+        "correct": false,
+        "why": "Any useful feature lowers the score when dropped; that proves nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tn4yz9zr",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an honest evaluation in order.",
+    "items": [
+      "build features as of each cutoff",
+      "drop rows whose label window is open",
+      "choose the model on the validation cutoff",
+      "score it once on the later test cutoff"
+    ]
+  },
+  {
+    "id": "ex-zgq5ey81",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which leak in this lesson is the one a data engineer causes most often?",
+    "choices": [
+      {
+        "text": "Overfitting a deep tree",
+        "correct": false,
+        "why": "Overfitting is a modelling problem, and not a leak."
+      },
+      {
+        "text": "A feature read from a table as it is today",
+        "correct": true,
+        "why": "Right. Warehouse tables are built for the present."
+      },
+      {
+        "text": "Looking at the test set twice",
+        "correct": false,
+        "why": "That is the tuner's habit, not the platform's."
+      },
+      {
+        "text": "Choosing four groups for k-means",
+        "correct": false,
+        "why": "That is a choice, not a leak."
+      }
+    ]
+  }
+]
