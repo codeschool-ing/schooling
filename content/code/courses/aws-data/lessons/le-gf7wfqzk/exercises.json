@@ -1,0 +1,505 @@
+[
+  {
+    "id": "ex-szajygx9",
+    "version": 1,
+    "section": "the-scan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The filtered scan for 1 October returned 738 items out of 34,100. What does AWS charge it for?",
+    "hint": "When does the filter run?",
+    "choices": [
+      {
+        "text": "The 738 items it returned",
+        "correct": false,
+        "why": "That would be true if the filter ran before the read. It runs after."
+      },
+      {
+        "text": "Every item it read, the whole table, as the unfiltered scan",
+        "correct": true,
+        "why": "Right: 364.5 read units either way."
+      },
+      {
+        "text": "Nothing, because a filtered scan is free when it uses `--select COUNT`",
+        "correct": false,
+        "why": "`COUNT` leaves the items out of the answer; DynamoDB still reads and charges every one."
+      },
+      {
+        "text": "One page, since the answer is under 1 MB",
+        "correct": false,
+        "why": "Pages are measured on what is read, not on what comes back; there were three."
+      }
+    ]
+  },
+  {
+    "id": "ex-sv0w5xcj",
+    "version": 1,
+    "section": "the-scan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe-table` answered `TableSizeBytes` 0 for a table of 34,100 items. What is the right conclusion?",
+    "hint": "Who produced that number?",
+    "choices": [
+      {
+        "text": "The items are empty apart from their keys, which `TableSizeBytes` does not count",
+        "correct": false,
+        "why": "The program measured almost 3 MB of them. An empty item still has its key bytes."
+      },
+      {
+        "text": "moto measures nothing; AWS refreshes it every few hours",
+        "correct": true,
+        "why": "Right. On either side it is not a way to watch a table grow."
+      },
+      {
+        "text": "The table is in on-demand mode, which reports a size only when provisioned",
+        "correct": false,
+        "why": "The billing mode does not change what `describe-table` reports."
+      }
+    ]
+  },
+  {
+    "id": "ex-15828wk5",
+    "version": 1,
+    "section": "the-scan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An eventually consistent scan page read 12,288 bytes of items. How many read units does it cost?",
+    "hint": "Blocks of 4 KB, rounded up, and half a unit per block for an eventually consistent read.",
+    "value": 1.5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xmtqwv0k",
+    "version": 1,
+    "section": "the-scan",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The 364.5-unit scan runs every five minutes for a 30-day month, at 0.1875 dollars per million read units. How many dollars is that, to the cent?",
+    "hint": "Count the scans first: 12 an hour.",
+    "value": 0.59,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-zvzb5597",
+    "version": 1,
+    "section": "gsi",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A query on the table `quitanda` filters on `order_day`, and an index `by-day` exists. Does DynamoDB use the index?",
+    "hint": "Is there a planner?",
+    "choices": [
+      {
+        "text": "Yes, when the index would read fewer items",
+        "correct": false,
+        "why": "That is a planner's judgement, and DynamoDB makes none."
+      },
+      {
+        "text": "Only for an eventually consistent read, since the index is one",
+        "correct": false,
+        "why": "Consistency has nothing to do with it; the request decides."
+      },
+      {
+        "text": "No: a read uses an index only when the request names it",
+        "correct": true,
+        "why": "Right. `--index-name by-day` is what makes it a read of the index."
+      },
+      {
+        "text": "Yes, after the backfill has finished copying the table",
+        "correct": false,
+        "why": "The backfill makes the index usable, not automatic."
+      }
+    ]
+  },
+  {
+    "id": "ex-18tgwa8x",
+    "version": 1,
+    "section": "gsi",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each projection to what an item of the index carries.",
+    "hint": "The table's keys always travel.",
+    "pairs": [
+      {
+        "left": "`KEYS_ONLY`",
+        "right": "The index's keys and the table's"
+      },
+      {
+        "left": "`INCLUDE` with `total_cents`",
+        "right": "Both sets of keys and `total_cents`"
+      },
+      {
+        "left": "`ALL`",
+        "right": "The whole item"
+      }
+    ],
+    "right_distractors": [
+      "Only the index's keys, without the table's"
+    ]
+  },
+  {
+    "id": "ex-bfhktvq9",
+    "version": 1,
+    "section": "gsi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An app writes an order and immediately queries `by-day` with `--consistent-read` to show it. What happens?",
+    "hint": "How does a write reach a global index?",
+    "choices": [
+      {
+        "text": "The query waits until the index has the order, and then answers",
+        "correct": false,
+        "why": "There is no waiting mode; the request is refused."
+      },
+      {
+        "text": "It is refused: a global index is only eventually consistent",
+        "correct": true,
+        "why": "Right. moto refused it with the same message AWS uses."
+      },
+      {
+        "text": "It answers, at twice the read units",
+        "correct": false,
+        "why": "Double units buy strong consistency on a table, never on a global index."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1e0prjq",
+    "version": 1,
+    "section": "gsi",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does a global secondary index add to Quitanda's bill? Choose every one.",
+    "hint": "Think of every place the copy lives and every time it changes.",
+    "choices": [
+      {
+        "text": "A write in the index for every write to an item the index holds",
+        "correct": true,
+        "why": "Yes: the 10,029 orders would cost 10,029 write units more to load."
+      },
+      {
+        "text": "Storage for the projected items, with some overhead per item",
+        "correct": true,
+        "why": "Yes, at the table's price per GB."
+      },
+      {
+        "text": "Two index writes when an update changes `order_day`",
+        "correct": true,
+        "why": "Yes: the old entry is removed and the new one inserted."
+      },
+      {
+        "text": "A write in the index for every order line",
+        "correct": false,
+        "why": "Lines have no `order_day`, so they are never in the index."
+      },
+      {
+        "text": "A charge for each query of the table that does not use the index",
+        "correct": false,
+        "why": "A read of the table never touches an index."
+      }
+    ]
+  },
+  {
+    "id": "ex-3a526awq",
+    "version": 1,
+    "section": "sparse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the index `pending` hold 722 items and not 34,100?",
+    "hint": "What does an item need to be copied into an index?",
+    "choices": [
+      {
+        "text": "Because it is `KEYS_ONLY`, which keeps only the latest items",
+        "correct": false,
+        "why": "A projection decides which attributes travel, not which items."
+      },
+      {
+        "text": "Because only 722 items carry `pending_since`",
+        "correct": true,
+        "why": "Right. An index holds the items that have its key, and only those."
+      },
+      {
+        "text": "Because the backfill stopped at 722 on moto",
+        "correct": false,
+        "why": "The filtered scan of the table found the same 722, so the index is complete."
+      },
+      {
+        "text": "Because a global index holds at most one item per partition key value",
+        "correct": false,
+        "why": "Index keys need not be unique; all 722 share one `pending_since`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c7xbnyz",
+    "version": 1,
+    "section": "sparse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After order o-10009 was delivered, the index `pending` held 721 items. What removed it from the index?",
+    "hint": "Look at the update expression.",
+    "choices": [
+      {
+        "text": "A delete sent to the index by the program",
+        "correct": false,
+        "why": "Nothing writes to an index directly; there is no API for it."
+      },
+      {
+        "text": "A nightly job that DynamoDB runs on every sparse index",
+        "correct": false,
+        "why": "It happened in the same write, not later."
+      },
+      {
+        "text": "The update's `REMOVE`, which took the item out in the same write",
+        "correct": true,
+        "why": "Right. Once the attribute was gone, the item no longer qualified: the state is the attribute, and the index follows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrtw9zs6",
+    "version": 1,
+    "section": "sparse",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index whose key attribute most items do not carry is called a ___ index.",
+    "hint": "It has entries for few of the items.",
+    "blanks": [
+      {
+        "accept": [
+          "sparse"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9fm9rteg",
+    "version": 1,
+    "section": "pages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program reads pages of a filtered scan and stops at the first page with `Count` 0. What is wrong?",
+    "hint": "What does an empty page mean in a filtered scan?",
+    "choices": [
+      {
+        "text": "Nothing, because an empty page always means the table has been read",
+        "correct": false,
+        "why": "An empty page means only that nothing in those items matched."
+      },
+      {
+        "text": "Only a page without `LastEvaluatedKey` is the end",
+        "correct": true,
+        "why": "Right. An empty page can still carry `LastEvaluatedKey`, and the loop stops only on the missing key."
+      },
+      {
+        "text": "`Count` is always 0 in moto, so the test must use `ScannedCount`",
+        "correct": false,
+        "why": "moto reported real counts in every capture of this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zt8v5hx",
+    "version": 1,
+    "section": "pages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`scan --limit 100` with a filter on 1 October returned `Count` 5 and `ScannedCount` 100. What does `--limit` count?",
+    "hint": "Which of the two numbers is 100?",
+    "choices": [
+      {
+        "text": "The items read before the filter",
+        "correct": true,
+        "why": "Right, which is why a filtered page can come back short."
+      },
+      {
+        "text": "The items returned after the filter, so only five orders exist that day",
+        "correct": false,
+        "why": "The day has 738 orders; the limit stopped the reading at 100 items."
+      },
+      {
+        "text": "Kilobytes of data, up to the 1 MB page",
+        "correct": false,
+        "why": "The 1 MB is the server's limit; `--limit` counts items."
+      },
+      {
+        "text": "Read units, so the page stopped when 100 had been spent",
+        "correct": false,
+        "why": "Units are what a page costs, not what ends it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f952a7n0",
+    "version": 1,
+    "section": "pages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To read the next page, the request sends back the previous answer's `LastEvaluatedKey` as `___`.",
+    "hint": "The parameter says \"start after this key\".",
+    "blanks": [
+      {
+        "accept": [
+          "ExclusiveStartKey",
+          "--exclusive-start-key"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gmv2f1nc",
+    "version": 1,
+    "section": "lsi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What can a local secondary index give that a global one cannot?",
+    "hint": "Where does a local index live?",
+    "choices": [
+      {
+        "text": "Strongly consistent reads, because it lives with the items it sorts and is written with them",
+        "correct": true,
+        "why": "Right. The second query asked for `--consistent-read` and got it."
+      },
+      {
+        "text": "A partition key of its own",
+        "correct": false,
+        "why": "That is the global index; a local one keeps the table's partition key."
+      },
+      {
+        "text": "Being added after the table holds data",
+        "correct": false,
+        "why": "The reverse: a local index exists only if it was in `create-table`."
+      },
+      {
+        "text": "No limit on the size of an item collection",
+        "correct": false,
+        "why": "A local index is what brings the 10 GB limit with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k3fnzmb",
+    "version": 1,
+    "section": "lsi",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of sensor readings is keyed on `device_id` and `reading_time`, with a local index sorting each device's readings by temperature. Readings are never deleted. What will eventually happen?",
+    "hint": "Which limit does a local index bring?",
+    "choices": [
+      {
+        "text": "The index stops being consistent once it passes a size",
+        "correct": false,
+        "why": "Consistency does not depend on size; the failure is a refused write."
+      },
+      {
+        "text": "Reads of that device slow down, but writes carry on",
+        "correct": false,
+        "why": "It is the writes that stop."
+      },
+      {
+        "text": "Writes for that device fail at 10 GB",
+        "correct": true,
+        "why": "Right: once its readings and their index copies reach 10 GB, `ItemCollectionSizeLimitExceededException`. A global index would have had no such limit."
+      },
+      {
+        "text": "DynamoDB moves the old readings to a second partition key",
+        "correct": false,
+        "why": "DynamoDB never rewrites keys; a collection belongs to one partition key value."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttj8vw40",
+    "version": 1,
+    "section": "lsi",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda decides, a year in, that it wants a local index on `total_cents`. What does that take?",
+    "hint": "Which command could add it?",
+    "choices": [
+      {
+        "text": "An `update-table` with `--local-secondary-indexes`",
+        "correct": false,
+        "why": "`update-table` has no such parameter."
+      },
+      {
+        "text": "A new table created with the index, and every item copied into it",
+        "correct": true,
+        "why": "Right, which is why a global index, addable any day, is the usual answer."
+      },
+      {
+        "text": "A backfill, started from the console",
+        "correct": false,
+        "why": "Backfills build global indexes added later; a local one cannot be added at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfcrbjrt",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, put the life of a new global index on a table that already holds items in order.",
+    "hint": "moto skips the middle.",
+    "items": [
+      "`update-table` with a `Create` in `--global-secondary-index-updates`",
+      "The index is `CREATING` and the table is backfilled into it",
+      "The index turns `ACTIVE`",
+      "A query names it with `--index-name`"
+    ]
+  },
+  {
+    "id": "ex-x12yx2t6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Dispatch needs \"orders not yet delivered, oldest first\". Quitanda stores `pending_since` only on open orders, with a timestamp. Which read is cheapest?",
+    "hint": "Which items does each read have to touch?",
+    "choices": [
+      {
+        "text": "A scan of the table filtered on `attribute_exists(pending_since)`",
+        "correct": false,
+        "why": "It finds them by reading all 34,100 items."
+      },
+      {
+        "text": "A query on a local index sorted by `pending_since`",
+        "correct": false,
+        "why": "A local index is per customer; dispatch would need one query per customer, and the table would have to be rebuilt to get it."
+      },
+      {
+        "text": "A scan of a sparse global index, which reads only what is still open, and nothing else",
+        "correct": true,
+        "why": "Right. Every item it reads is an answer; to have them oldest first, a fixed partition key such as `OPEN` with `pending_since` as the sort key makes it a query."
+      },
+      {
+        "text": "A query on `by-day` for every day of the month",
+        "correct": false,
+        "why": "It reads every order of every day, delivered or not."
+      }
+    ]
+  }
+]
