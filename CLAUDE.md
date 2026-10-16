@@ -579,7 +579,12 @@ a value read twice could judge a paper by one number and record another.
 
 **How long a paper is** is declared beside it, for the same reason and with a different worry at
 each end: a short paper is quicker to sit and easier to get lucky on, a long one measures better
-and is abandoned more. A pool smaller than the number is still asked in full.
+and is abandoned more. A pool smaller than the number is still asked in full. **It is two
+declarations, one per scope** (A-14): `exam.questions` draws a course paper, 20 of about 100
+inside 5 to 60, and `exam.questions.track` draws a track's final, 30 of 150 inside 15 to 60 —
+because a track is 12 to 15 courses, and a paper the course's length asks under two questions of
+each and measures luck rather than the track. For as long as there was one number, every track
+final drew twenty out of a pool written for thirty.
 
 **A pass is never undone.** Sitting it again and failing does not unmake the day somebody knew
 the material, for the same reason a finished section never un-finishes (A-05).

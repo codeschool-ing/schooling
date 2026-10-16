@@ -206,6 +206,18 @@ try {
         + `sit them${seen ? ` ("${seen.text}")` : ''}.`);
       continue;
     }
+    /* AND ITS LENGTH, BY THE TRACK'S OWN NUMBER. A track's final draws thirty
+       where a course draws twenty (A-14), and the school says each — so a card
+       reading the course's field would promise one paper and lead to another,
+       which is the course check above one scope along. */
+    const paper = school.trackExamQuestions > 0
+      ? Math.min(t.examPool, school.trackExamQuestions) : t.examPool;
+    const said = named(seen.text);
+    if (said !== null && said !== paper) {
+      say(`${t.slug}'s exam card names ${said} question(s); the final will hold ${paper} — `
+        + `${t.examPool} in the pool, ${school.trackExamQuestions || 'no'} drawn by this `
+        + "school for a track, and a pool under the draw is asked in full.");
+    }
     /* FOLLOWED BY ITS HREF, which is what pressing it does. A click races the
        track screen, which repaints the card after the graph has measured itself
        and leaves the element that was clicked detached.
@@ -246,7 +258,7 @@ try {
 
   console.log(`${withExam.length} course(s) with an exam offer it, ${Math.min(without.length, 3)} `
     + 'without one say so, every card names the length of the paper it leads to, and '
-    + `${finals.length} track final(s) are asked for by their own card`);
+    + `${finals.length} track final(s) are asked for by their own card, at their own length`);
 } finally {
   await browser.close();
 }
