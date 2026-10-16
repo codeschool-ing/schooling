@@ -41,24 +41,24 @@
     "hint": "Unbound: the object comes from the argument.",
     "choices": [
       {
-        "text": "`() -> String.toUpperCase()`",
-        "correct": false,
-        "why": "There is no static `toUpperCase` to call without a string."
-      },
-      {
         "text": "`s -> s.toUpperCase()`",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "`s -> String.toUpperCase(s)`",
+        "text": "`() -> String.toUpperCase()`",
         "correct": false,
-        "why": "`toUpperCase` is an instance method, not a static one taking a string."
+        "why": "There is no static `toUpperCase` to call without a string."
       },
       {
         "text": "`(a, b) -> a.toUpperCase(b)`",
         "correct": false,
         "why": "`toUpperCase` takes no string argument."
+      },
+      {
+        "text": "`s -> String.toUpperCase(s)`",
+        "correct": false,
+        "why": "`toUpperCase` is an instance method, not a static one taking a string."
       }
     ]
   },
@@ -73,6 +73,11 @@
     "hint": "`+` on a string would have joined.",
     "choices": [
       {
+        "text": "It counted the characters and added one",
+        "correct": false,
+        "why": "That would print 3."
+      },
+      {
         "text": "It returned the string `\"42\"`, and Java converted it",
         "correct": false,
         "why": "A string plus 1 prints `421`."
@@ -86,11 +91,6 @@
         "text": "It returned a reference to the method",
         "correct": false,
         "why": "`apply` runs the method and returns its result."
-      },
-      {
-        "text": "It counted the characters and added one",
-        "correct": false,
-        "why": "That would print 3."
       }
     ]
   },
@@ -110,11 +110,6 @@
         "why": "Both are built through `invokedynamic`."
       },
       {
-        "text": "Yes, because the method is inlined at compile time",
-        "correct": false,
-        "why": "`javac` inlines neither."
-      },
-      {
         "text": "No: the choice is about reading",
         "correct": true,
         "why": "Right. The JVM treats them alike."
@@ -123,6 +118,11 @@
         "text": "No, it is slower, because it is looked up by name at every call",
         "correct": false,
         "why": "The lookup happens once, when the object is built."
+      },
+      {
+        "text": "Yes, because the method is inlined at compile time",
+        "correct": false,
+        "why": "`javac` inlines neither."
       }
     ]
   },
@@ -142,14 +142,14 @@
         "why": "That is `String::length`, which still needs a string."
       },
       {
-        "text": "`Supplier<Integer>`",
-        "correct": true,
-        "why": "Right: nothing in, a length out."
-      },
-      {
         "text": "`Consumer<String>`",
         "correct": false,
         "why": "A consumer returns nothing; `length` returns an `int`."
+      },
+      {
+        "text": "`Supplier<Integer>`",
+        "correct": true,
+        "why": "Right: nothing in, a length out."
       },
       {
         "text": "`Predicate<String>`",
@@ -174,6 +174,11 @@
         "why": "Right: `compare(a, b)` becomes `a.compareToIgnoreCase(b)`."
       },
       {
+        "text": "`compareToIgnoreCase` has a hidden two-argument version",
+        "correct": false,
+        "why": "There is one version; the receiver supplies the other string."
+      },
+      {
         "text": "The second argument is ignored, and only the first is compared",
         "correct": false,
         "why": "It is what `a` is compared with."
@@ -182,11 +187,6 @@
         "text": "Java calls the method twice, once per argument",
         "correct": false,
         "why": "One comparison, one call."
-      },
-      {
-        "text": "`compareToIgnoreCase` has a hidden two-argument version",
-        "correct": false,
-        "why": "There is one version; the receiver supplies the other string."
       }
     ]
   },
@@ -206,6 +206,11 @@
         "why": "It had not been called before the change."
       },
       {
+        "text": "`length` on a reference counts words, not characters",
+        "correct": false,
+        "why": "Same method, same meaning: 4 is the length of `\"Dune\"`."
+      },
+      {
         "text": "References cannot see static fields",
         "correct": false,
         "why": "It read the field, once, when it was made."
@@ -214,11 +219,6 @@
         "text": "One read `current` at creation, the other at each `get`",
         "correct": true,
         "why": "Right. A bound reference fixes its object up front."
-      },
-      {
-        "text": "`length` on a reference counts words, not characters",
-        "correct": false,
-        "why": "Same method, same meaning: 4 is the length of `\"Dune\"`."
       }
     ]
   },
@@ -233,14 +233,14 @@
     "hint": "Look at the line number in the stack trace.",
     "choices": [
       {
-        "text": "Both fail on the line that makes them",
-        "correct": false,
-        "why": "The lambda was made without complaint."
-      },
-      {
         "text": "The lambda only when called; the reference where it is made",
         "correct": true,
         "why": "Right, at `Objects.requireNonNull`."
+      },
+      {
+        "text": "The reference only when called; the lambda where it is made",
+        "correct": false,
+        "why": "The other way round."
       },
       {
         "text": "Neither fails until `get` is called",
@@ -248,9 +248,9 @@
         "why": "The reference failed at line 17, before any `get`."
       },
       {
-        "text": "The reference only when called; the lambda where it is made",
+        "text": "Both fail on the line that makes them",
         "correct": false,
-        "why": "The other way round."
+        "why": "The lambda was made without complaint."
       }
     ]
   },
@@ -270,6 +270,11 @@
         "why": "Declaration order plays no part."
       },
       {
+        "text": "It is a compile error when a class has two constructors",
+        "correct": false,
+        "why": "The target type resolves it."
+      },
+      {
         "text": "The one with fewer parameters",
         "correct": false,
         "why": "It meant the two-argument one as a `BiFunction`."
@@ -278,11 +283,6 @@
         "text": "Whichever the target type's method matches",
         "correct": true,
         "why": "Right: `Function<String, Book>` picks one, `BiFunction<String, Integer, Book>` the other."
-      },
-      {
-        "text": "It is a compile error when a class has two constructors",
-        "correct": false,
-        "why": "The target type resolves it."
       }
     ]
   },
@@ -316,14 +316,14 @@
     "hint": "What does `computeIfAbsent` pass to the function?",
     "choices": [
       {
-        "text": "`ArrayList` cannot hold `Integer` values",
-        "correct": false,
-        "why": "It holds any object."
-      },
-      {
         "text": "An `int` key fits `ArrayList(int)`",
         "correct": true,
         "why": "Right. With `String` keys no constructor matches, so it does not compile."
+      },
+      {
+        "text": "`Integer` keys are compared with `==`",
+        "correct": false,
+        "why": "Maps compare keys with `equals`."
       },
       {
         "text": "`computeIfAbsent` only accepts lambdas",
@@ -331,9 +331,9 @@
         "why": "It accepts any `Function`, references included."
       },
       {
-        "text": "`Integer` keys are compared with `==`",
+        "text": "`ArrayList` cannot hold `Integer` values",
         "correct": false,
-        "why": "Maps compare keys with `equals`."
+        "why": "It holds any object."
       }
     ]
   },
@@ -348,14 +348,14 @@
     "hint": "It fits in two ways.",
     "choices": [
       {
-        "text": "`Integer` has no `toString` method",
-        "correct": false,
-        "why": "It has two, which is the problem."
-      },
-      {
         "text": "References cannot return a `String`",
         "correct": false,
         "why": "`String::toUpperCase` returns one."
+      },
+      {
+        "text": "`Integer` has no `toString` method",
+        "correct": false,
+        "why": "It has two, which is the problem."
       },
       {
         "text": "Static `toString(int)` and instance `toString()` both fit",
@@ -380,6 +380,21 @@
     "hint": "A reference only passes along the arguments it receives.",
     "choices": [
       {
+        "text": "`n -> n % 2 == 0`",
+        "correct": false,
+        "why": "No: not a method call."
+      },
+      {
+        "text": "`b -> b.author().name()`",
+        "correct": false,
+        "why": "No: two calls in a row."
+      },
+      {
+        "text": "`() -> new HashMap<>()`",
+        "correct": true,
+        "why": "Yes: `HashMap::new`."
+      },
+      {
         "text": "`x -> Math.abs(x)`",
         "correct": true,
         "why": "Yes: `Math::abs`."
@@ -388,21 +403,6 @@
         "text": "`s -> s.substring(2)`",
         "correct": false,
         "why": "No: the `2` is not an argument."
-      },
-      {
-        "text": "`() -> new HashMap<>()`",
-        "correct": true,
-        "why": "Yes: `HashMap::new`."
-      },
-      {
-        "text": "`b -> b.author().name()`",
-        "correct": false,
-        "why": "No: two calls in a row."
-      },
-      {
-        "text": "`n -> n % 2 == 0`",
-        "correct": false,
-        "why": "No: not a method call."
       }
     ]
   },
@@ -417,14 +417,9 @@
     "hint": "Give it a name.",
     "choices": [
       {
-        "text": "Turn it into an anonymous class, which suits long bodies better",
+        "text": "Leave it: length does not matter in a lambda",
         "correct": false,
-        "why": "That adds ceremony and no name."
-      },
-      {
-        "text": "A private method, passed as `this::isWorthShipping`",
-        "correct": true,
-        "why": "Right: one readable line, and a method you can test alone."
+        "why": "Lesson 1 called it a method that has not been given a name yet."
       },
       {
         "text": "Split it into several smaller lambdas in a row",
@@ -432,9 +427,14 @@
         "why": "Lesson 5 combines small ones, but the advice here is a named method."
       },
       {
-        "text": "Leave it: length does not matter in a lambda",
+        "text": "A private method, passed as `this::isWorthShipping`",
+        "correct": true,
+        "why": "Right: one readable line, and a method you can test alone."
+      },
+      {
+        "text": "Turn it into an anonymous class, which suits long bodies better",
         "correct": false,
-        "why": "Lesson 1 called it a method that has not been given a name yet."
+        "why": "That adds ceremony and no name."
       }
     ]
   },
@@ -470,9 +470,9 @@
         "why": "That orders by length, and `\"Bob\"` is shorter than `\"anna\"`."
       },
       {
-        "text": "`String::compareTo`",
+        "text": "`String::equalsIgnoreCase`",
         "correct": false,
-        "why": "Case-sensitive: `\"Bob\"` comes before `\"anna\"`, since capitals sort first."
+        "why": "That answers `boolean`, and a `Comparator` must answer an `int`."
       },
       {
         "text": "`String::compareToIgnoreCase`",
@@ -480,9 +480,9 @@
         "why": "Right, as `Unbound.java` sorted its authors."
       },
       {
-        "text": "`String::equalsIgnoreCase`",
+        "text": "`String::compareTo`",
         "correct": false,
-        "why": "That answers `boolean`, and a `Comparator` must answer an `int`."
+        "why": "Case-sensitive: `\"Bob\"` comes before `\"anna\"`, since capitals sort first."
       }
     ]
   }

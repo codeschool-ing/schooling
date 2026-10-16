@@ -29,20 +29,20 @@
     "hint": "Não ligada: o objeto vem do argumento.",
     "choices": [
       {
-        "text": "`() -> String.toUpperCase()`",
-        "why": "Não há `toUpperCase` estático para chamar sem uma string."
-      },
-      {
         "text": "`s -> s.toUpperCase()`",
         "why": "Isso."
       },
       {
-        "text": "`s -> String.toUpperCase(s)`",
-        "why": "`toUpperCase` é método de instância, não estático recebendo uma string."
+        "text": "`() -> String.toUpperCase()`",
+        "why": "Não há `toUpperCase` estático para chamar sem uma string."
       },
       {
         "text": "`(a, b) -> a.toUpperCase(b)`",
         "why": "`toUpperCase` não recebe string como argumento."
+      },
+      {
+        "text": "`s -> String.toUpperCase(s)`",
+        "why": "`toUpperCase` é método de instância, não estático recebendo uma string."
       }
     ]
   },
@@ -50,6 +50,10 @@
     "prompt": "`parse.apply(\"42\") + 1` imprimiu `43`. O que isso diz sobre `Integer::parseInt` como `Function<String, Integer>`?",
     "hint": "`+` com uma string teria concatenado.",
     "choices": [
+      {
+        "text": "Contou os caracteres e somou um",
+        "why": "Isso imprimiria 3."
+      },
       {
         "text": "Devolveu a string `\"42\"`, e o Java a converteu",
         "why": "Uma string mais 1 imprime `421`."
@@ -61,10 +65,6 @@
       {
         "text": "Devolveu uma referência ao método",
         "why": "`apply` roda o método e devolve o resultado."
-      },
-      {
-        "text": "Contou os caracteres e somou um",
-        "why": "Isso imprimiria 3."
       }
     ]
   },
@@ -77,16 +77,16 @@
         "why": "Os dois são construídos pelo `invokedynamic`."
       },
       {
-        "text": "Sim, porque o método é embutido na compilação",
-        "why": "O `javac` não embute nenhum dos dois."
-      },
-      {
         "text": "Não: a escolha é sobre leitura",
         "why": "Isso. A JVM trata os dois igual."
       },
       {
         "text": "Não, é mais lenta, porque é procurada pelo nome a cada chamada",
         "why": "A busca acontece uma vez, quando o objeto é construído."
+      },
+      {
+        "text": "Sim, porque o método é embutido na compilação",
+        "why": "O `javac` não embute nenhum dos dois."
       }
     ]
   },
@@ -99,12 +99,12 @@
         "why": "Essa é `String::length`, que ainda precisa de uma string."
       },
       {
-        "text": "`Supplier<Integer>`",
-        "why": "Isso: nada entra, sai um tamanho."
-      },
-      {
         "text": "`Consumer<String>`",
         "why": "Um consumer não devolve nada; `length` devolve um `int`."
+      },
+      {
+        "text": "`Supplier<Integer>`",
+        "why": "Isso: nada entra, sai um tamanho."
       },
       {
         "text": "`Predicate<String>`",
@@ -121,16 +121,16 @@
         "why": "Isso: `compare(a, b)` vira `a.compareToIgnoreCase(b)`."
       },
       {
+        "text": "`compareToIgnoreCase` tem uma versão oculta de dois argumentos",
+        "why": "Há uma versão; o receptor fornece a outra string."
+      },
+      {
         "text": "O segundo argumento é ignorado, e só o primeiro é comparado",
         "why": "É com ele que `a` é comparado."
       },
       {
         "text": "O Java chama o método duas vezes, uma por argumento",
         "why": "Uma comparação, uma chamada."
-      },
-      {
-        "text": "`compareToIgnoreCase` tem uma versão oculta de dois argumentos",
-        "why": "Há uma versão; o receptor fornece a outra string."
       }
     ]
   },
@@ -143,16 +143,16 @@
         "why": "Ela não tinha sido chamada antes da mudança."
       },
       {
+        "text": "`length` numa referência conta palavras, não caracteres",
+        "why": "Mesmo método, mesmo significado: 4 é o tamanho de `\"Dune\"`."
+      },
+      {
         "text": "Referências não enxergam campos estáticos",
         "why": "Ela leu o campo, uma vez, quando foi feita."
       },
       {
         "text": "Uma leu `current` na criação, o outro a cada `get`",
         "why": "Isso. Uma referência ligada fixa o objeto de antemão."
-      },
-      {
-        "text": "`length` numa referência conta palavras, não caracteres",
-        "why": "Mesmo método, mesmo significado: 4 é o tamanho de `\"Dune\"`."
       }
     ]
   },
@@ -161,20 +161,20 @@
     "hint": "Veja o número da linha no stack trace.",
     "choices": [
       {
-        "text": "Os dois falham na linha que os cria",
-        "why": "O lambda foi feito sem reclamação."
-      },
-      {
         "text": "O lambda só ao ser chamado; a referência onde é feita",
         "why": "Isso, no `Objects.requireNonNull`."
+      },
+      {
+        "text": "A referência só ao ser chamada; o lambda onde é feito",
+        "why": "É o contrário."
       },
       {
         "text": "Nenhum falha até `get` ser chamado",
         "why": "A referência falhou na linha 17, antes de qualquer `get`."
       },
       {
-        "text": "A referência só ao ser chamada; o lambda onde é feito",
-        "why": "É o contrário."
+        "text": "Os dois falham na linha que os cria",
+        "why": "O lambda foi feito sem reclamação."
       }
     ]
   },
@@ -187,16 +187,16 @@
         "why": "A ordem de declaração não conta."
       },
       {
+        "text": "É erro de compilação quando uma classe tem dois construtores",
+        "why": "O tipo-alvo resolve."
+      },
+      {
         "text": "O que tem menos parâmetros",
         "why": "Significou o de dois argumentos como `BiFunction`."
       },
       {
         "text": "O que combinar com o método do tipo-alvo",
         "why": "Isso: `Function<String, Book>` escolhe um, `BiFunction<String, Integer, Book>` o outro."
-      },
-      {
-        "text": "É erro de compilação quando uma classe tem dois construtores",
-        "why": "O tipo-alvo resolve."
       }
     ]
   },
@@ -216,20 +216,20 @@
     "hint": "O que `computeIfAbsent` passa para a função?",
     "choices": [
       {
-        "text": "`ArrayList` não guarda valores `Integer`",
-        "why": "Ele guarda qualquer objeto."
-      },
-      {
         "text": "Uma chave `int` serve em `ArrayList(int)`",
         "why": "Isso. Com chaves `String` nenhum construtor combina, então nem compila."
+      },
+      {
+        "text": "Chaves `Integer` são comparadas com `==`",
+        "why": "Mapas comparam chaves com `equals`."
       },
       {
         "text": "`computeIfAbsent` só aceita lambdas",
         "why": "Ele aceita qualquer `Function`, referências incluídas."
       },
       {
-        "text": "Chaves `Integer` são comparadas com `==`",
-        "why": "Mapas comparam chaves com `equals`."
+        "text": "`ArrayList` não guarda valores `Integer`",
+        "why": "Ele guarda qualquer objeto."
       }
     ]
   },
@@ -238,12 +238,12 @@
     "hint": "Ela serve de dois jeitos.",
     "choices": [
       {
-        "text": "`Integer` não tem método `toString`",
-        "why": "Tem dois, e esse é o problema."
-      },
-      {
         "text": "Referências não podem devolver `String`",
         "why": "`String::toUpperCase` devolve uma."
+      },
+      {
+        "text": "`Integer` não tem método `toString`",
+        "why": "Tem dois, e esse é o problema."
       },
       {
         "text": "O `toString(int)` estático e o `toString()` de instância servem",
@@ -260,24 +260,24 @@
     "hint": "Uma referência só repassa os argumentos que recebe.",
     "choices": [
       {
-        "text": "`x -> Math.abs(x)`",
-        "why": "Sim: `Math::abs`."
-      },
-      {
-        "text": "`s -> s.substring(2)`",
-        "why": "Não: o `2` não é argumento."
-      },
-      {
-        "text": "`() -> new HashMap<>()`",
-        "why": "Sim: `HashMap::new`."
+        "text": "`n -> n % 2 == 0`",
+        "why": "Não: não é chamada de método."
       },
       {
         "text": "`b -> b.author().name()`",
         "why": "Não: duas chamadas seguidas."
       },
       {
-        "text": "`n -> n % 2 == 0`",
-        "why": "Não: não é chamada de método."
+        "text": "`() -> new HashMap<>()`",
+        "why": "Sim: `HashMap::new`."
+      },
+      {
+        "text": "`x -> Math.abs(x)`",
+        "why": "Sim: `Math::abs`."
+      },
+      {
+        "text": "`s -> s.substring(2)`",
+        "why": "Não: o `2` não é argumento."
       }
     ]
   },
@@ -286,20 +286,20 @@
     "hint": "Dê um nome a ele.",
     "choices": [
       {
-        "text": "Transformá-lo numa classe anônima, que combina melhor com corpos longos",
-        "why": "Isso acrescenta cerimônia e nenhum nome."
-      },
-      {
-        "text": "Um método privado, passado como `this::isWorthShipping`",
-        "why": "Isso: uma linha legível, e um método que se testa sozinho."
+        "text": "Deixar como está: tamanho não importa num lambda",
+        "why": "A aula 1 o chamou de método que ainda não ganhou nome."
       },
       {
         "text": "Dividi-lo em vários lambdas menores em sequência",
         "why": "A aula 5 combina lambdas pequenos, mas o conselho aqui é um método com nome."
       },
       {
-        "text": "Deixar como está: tamanho não importa num lambda",
-        "why": "A aula 1 o chamou de método que ainda não ganhou nome."
+        "text": "Um método privado, passado como `this::isWorthShipping`",
+        "why": "Isso: uma linha legível, e um método que se testa sozinho."
+      },
+      {
+        "text": "Transformá-lo numa classe anônima, que combina melhor com corpos longos",
+        "why": "Isso acrescenta cerimônia e nenhum nome."
       }
     ]
   },
@@ -322,16 +322,16 @@
         "why": "Isso ordena por tamanho, e `\"Bob\"` é mais curto que `\"anna\"`."
       },
       {
-        "text": "`String::compareTo`",
-        "why": "Sensível a maiúsculas: `\"Bob\"` vem antes de `\"anna\"`, porque maiúsculas vêm primeiro."
+        "text": "`String::equalsIgnoreCase`",
+        "why": "Isso responde `boolean`, e um `Comparator` precisa responder um `int`."
       },
       {
         "text": "`String::compareToIgnoreCase`",
         "why": "Isso, como `Unbound.java` ordenou os autores."
       },
       {
-        "text": "`String::equalsIgnoreCase`",
-        "why": "Isso responde `boolean`, e um `Comparator` precisa responder um `int`."
+        "text": "`String::compareTo`",
+        "why": "Sensível a maiúsculas: `\"Bob\"` vem antes de `\"anna\"`, porque maiúsculas vêm primeiro."
       }
     ]
   }

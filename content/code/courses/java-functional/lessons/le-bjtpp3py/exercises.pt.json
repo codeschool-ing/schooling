@@ -4,20 +4,20 @@
     "hint": "Olhe os parâmetros e o tipo de retorno.",
     "choices": [
       {
-        "text": "É genérico, declarado com `<T>`",
-        "why": "`select` é genérico, mas essa é outra propriedade."
-      },
-      {
         "text": "Recebe ou devolve uma função",
         "why": "Isso: uma interface funcional como parâmetro ou retorno."
       },
       {
-        "text": "Chama a si mesmo numa entrada menor até chegar a um caso base",
-        "why": "Isso é recursão."
-      },
-      {
         "text": "Roda em mais de uma thread",
         "why": "Não há nada de threads envolvido."
+      },
+      {
+        "text": "É genérico, declarado com `<T>`",
+        "why": "`select` é genérico, mas essa é outra propriedade."
+      },
+      {
+        "text": "Chama a si mesmo numa entrada menor até chegar a um caso base",
+        "why": "Isso é recursão."
       }
     ]
   },
@@ -34,12 +34,12 @@
         "why": "Isso."
       },
       {
-        "text": "As duas são escritas por quem chama a cada vez",
-        "why": "Aí não haveria nada a reaproveitar."
-      },
-      {
         "text": "`select` é dono de tudo; o lambda é só um rótulo",
         "why": "O lambda é o teste que roda para cada item."
+      },
+      {
+        "text": "As duas são escritas por quem chama a cada vez",
+        "why": "Aí não haveria nada a reaproveitar."
       }
     ]
   },
@@ -47,6 +47,10 @@
     "prompt": "Uma regra passada a `select` imprime uma linha cada vez que é chamada. Quantas linhas vai imprimir?",
     "hint": "Quem decide quando o lambda roda?",
     "choices": [
+      {
+        "text": "Nenhuma: `select` suprime a saída das regras",
+        "why": "Ele chama a regra como foi escrita."
+      },
       {
         "text": "Uma, quando o lambda é escrito",
         "why": "Escrevê-lo não executa nada."
@@ -58,10 +62,6 @@
       {
         "text": "O número que `select` decidir: aqui, uma por item",
         "why": "Isso. O efeito acontece tantas vezes quanto o método decidir chamar."
-      },
-      {
-        "text": "Nenhuma: `select` suprime a saída das regras",
-        "why": "Ele chama a regra como foi escrita."
       }
     ]
   },
@@ -70,20 +70,20 @@
     "hint": "Olhe o tipo de retorno.",
     "choices": [
       {
-        "text": "Os livros com 450 páginas ou mais",
-        "why": "Ele não tem livros para olhar; devolve um teste."
+        "text": "O número de páginas, 450, embrulhado num `Integer`",
+        "why": "O número é capturado dentro, não devolvido."
       },
       {
         "text": "Um `Predicate<Book>` que lembra o 450",
         "why": "Isso: um teste com o número capturado."
       },
       {
-        "text": "`true`, porque 450 é no mínimo 0",
-        "why": "Ele devolve um lambda, não um `boolean`."
+        "text": "Os livros com 450 páginas ou mais",
+        "why": "Ele não tem livros para olhar; devolve um teste."
       },
       {
-        "text": "O número de páginas, 450, embrulhado num `Integer`",
-        "why": "O número é capturado dentro, não devolvido."
+        "text": "`true`, porque 450 é no mínimo 0",
+        "why": "Ele devolve um lambda, não um `boolean`."
       }
     ]
   },
@@ -97,20 +97,20 @@
     "hint": "Quando cada `AtomicInteger` foi feito?",
     "choices": [
       {
-        "text": "Cada chamada a `orderNumbers` fez o seu contador",
-        "why": "Isso, e cada closure capturou um diferente."
-      },
-      {
-        "text": "`AtomicInteger` dá um valor separado a cada thread",
-        "why": "Uma thread rodou isto; os contadores são objetos separados."
-      },
-      {
         "text": "Os prefixos são strings diferentes, e o contador é indexado por eles",
         "why": "Não há mapa de contadores, só um por closure."
       },
       {
+        "text": "Cada chamada a `orderNumbers` fez o seu contador",
+        "why": "Isso, e cada closure capturou um diferente."
+      },
+      {
         "text": "`Supplier` zera o estado depois de cada `get`",
         "why": "`lumen` foi 1, 2 e depois 3."
+      },
+      {
+        "text": "`AtomicInteger` dá um valor separado a cada thread",
+        "why": "Uma thread rodou isto; os contadores são objetos separados."
       }
     ]
   },
@@ -119,16 +119,16 @@
     "hint": "A regra é sobre a variável.",
     "choices": [
       {
-        "text": "Atômicos estão isentos da regra de efetivamente final",
-        "why": "Nenhum tipo está isento."
+        "text": "`next` sempre aponta para o mesmo objeto; só esse objeto muda",
+        "why": "Isso. `count++` reatribui a própria variável."
       },
       {
         "text": "`incrementAndGet` roda fora do lambda",
         "why": "Roda dentro, a cada `get`."
       },
       {
-        "text": "`next` sempre aponta para o mesmo objeto; só esse objeto muda",
-        "why": "Isso. `count++` reatribui a própria variável."
+        "text": "Atômicos estão isentos da regra de efetivamente final",
+        "why": "Nenhum tipo está isento."
       },
       {
         "text": "Lambdas devolvidos por um método seguem regras mais frouxas",
@@ -180,20 +180,20 @@
     "hint": "Mesmo argumento, mesma resposta, e nada mais que importe.",
     "choices": [
       {
-        "text": "O quadrado de um número",
-        "why": "Sim."
-      },
-      {
         "text": "O preço atual de um livro, lido de um banco de dados",
         "why": "Não: o preço muda, e o cache guardaria o antigo."
       },
       {
-        "text": "O autor de um título, de uma tabela fixa",
-        "why": "Sim, como o `authorOf`."
+        "text": "O quadrado de um número",
+        "why": "Sim."
       },
       {
         "text": "A data de hoje formatada para uma página de rosto",
         "why": "Não: amanhã ainda diria hoje."
+      },
+      {
+        "text": "O autor de um título, de uma tabela fixa",
+        "why": "Sim, como o `authorOf`."
       }
     ]
   },
@@ -201,6 +201,10 @@
     "prompt": "Por que `Strategies.java` recusa um nome de regra desconhecido em vez de usar `getOrDefault(name, cents -> cents)`?",
     "hint": "O que um erro de digitação imprimiria?",
     "choices": [
+      {
+        "text": "O padrão seria mais lento que um erro",
+        "why": "Velocidade não é o motivo."
+      },
       {
         "text": "`getOrDefault` não aceita um lambda como padrão",
         "why": "Aceita qualquer valor do tipo do mapa."
@@ -212,10 +216,6 @@
       {
         "text": "Um `TreeMap` lança exceção numa chave ausente, então o programa não tem escolha",
         "why": "`get` devolve `null` numa chave ausente."
-      },
-      {
-        "text": "O padrão seria mais lento que um erro",
-        "why": "Velocidade não é o motivo."
       }
     ]
   },
@@ -246,10 +246,6 @@
     "hint": "Quando uma regra precisa de nome.",
     "choices": [
       {
-        "text": "Manter o mapa e pôr os extras em comentários",
-        "why": "Comentários não dão métodos nem estado a uma estratégia."
-      },
-      {
         "text": "Um mapa de mapas, um por método",
         "why": "Isso espalha uma estratégia por vários lugares."
       },
@@ -260,6 +256,10 @@
       {
         "text": "Um lambda por estratégia que devolve um `Object[]` com os extras",
         "why": "Isso esconde a estrutura que os extras têm."
+      },
+      {
+        "text": "Manter o mapa e pôr os extras em comentários",
+        "why": "Comentários não dão métodos nem estado a uma estratégia."
       }
     ]
   },

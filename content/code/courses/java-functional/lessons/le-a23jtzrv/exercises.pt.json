@@ -1,0 +1,298 @@
+{
+  "ex-ckwxa5ht": {
+    "prompt": "Com `addOne = x -> x + 1` e `doubleIt = x -> x * 2`, quanto `addOne.andThen(doubleIt).apply(5)` devolve?",
+    "hint": "`andThen` roda o primeiro primeiro."
+  },
+  "ex-kj73r5zr": {
+    "prompt": "E `addOne.compose(doubleIt).apply(5)`?",
+    "hint": "`compose` roda o argumento primeiro."
+  },
+  "ex-abcrv9sy": {
+    "prompt": "`length` é uma `Function<String, Integer>` e `lower` uma `Function<String, String>`. Por que `length.andThen(lower)` é recusado?",
+    "hint": "Cada junta é conferida.",
+    "choices": [
+      {
+        "text": "`lower` precisa ser escrito com `compose`",
+        "why": "`compose` rodaria `lower` primeiro, outra função."
+      },
+      {
+        "text": "`lower` recebe uma string, não um número",
+        "why": "Isso: cada tipo de saída tem de ser o próximo tipo de entrada."
+      },
+      {
+        "text": "`andThen` só junta funções do mesmo tipo",
+        "why": "`strip.andThen(lower).andThen(length)` mudou de tipo e compilou."
+      },
+      {
+        "text": "Uma cadeia pode ter no máximo dois passos",
+        "why": "`Compose.java` encadeou três."
+      }
+    ]
+  },
+  "ex-bvf7zdxc": {
+    "prompt": "Dois valores `UnaryOperator<String>` são juntados com `andThen`. Qual é o tipo do resultado?",
+    "hint": "Onde o `andThen` foi declarado?",
+    "choices": [
+      {
+        "text": "`UnaryOperator<String>`",
+        "why": "O método devolve o que `Function` declara."
+      },
+      {
+        "text": "`BinaryOperator<String>`",
+        "why": "Esse recebe duas entradas; o juntado ainda recebe uma."
+      },
+      {
+        "text": "`Supplier<String>`",
+        "why": "Ele ainda recebe uma string."
+      },
+      {
+        "text": "`Function<String, String>`",
+        "why": "Isso: `andThen` é herdado de `Function`."
+      }
+    ]
+  },
+  "ex-7npv8x72": {
+    "prompt": "`noisy(\"cheap\", cheap).and(noisy(\"doorstop\", doorstop)).test(dune)` imprimiu uma linha antes de `false`. Por que só uma?",
+    "hint": "Dune não é barato.",
+    "choices": [
+      {
+        "text": "`doorstop` rodou primeiro, em silêncio",
+        "why": "`doorstop` nunca rodou."
+      },
+      {
+        "text": "O `and` parou no primeiro `false`",
+        "why": "Isso: curto-circuito, como `&&`."
+      },
+      {
+        "text": "As duas linhas foram juntadas pelo `println`",
+        "why": "Só uma chamada aconteceu."
+      },
+      {
+        "text": "`noisy` imprime só para o primeiro predicado de uma cadeia",
+        "why": "Ele imprime sempre que roda; o segundo nunca rodou."
+      }
+    ]
+  },
+  "ex-j1ev1gdz": {
+    "prompt": "Um teste lê um campo, o outro consulta um banco de dados. Em `a.and(b)`, qual deve ser o `a`?",
+    "hint": "O `and` pode nunca chamar o `b`.",
+    "choices": [
+      {
+        "text": "O campo",
+        "why": "Isso: quando ele diz não, a consulta é pulada."
+      },
+      {
+        "text": "Tanto faz: os dois rodam sempre",
+        "why": "O `and` faz curto-circuito."
+      },
+      {
+        "text": "O que foi declarado primeiro na classe",
+        "why": "A ordem na classe não importa; a ordem no `and` importa."
+      },
+      {
+        "text": "A consulta ao banco, para a resposta sair sempre atualizada",
+        "why": "Aí toda chamada paga a consulta, mesmo quando o campo já diz não."
+      }
+    ]
+  },
+  "ex-nvps525f": {
+    "prompt": "`lines.stream().filter(Predicate.___(String::isBlank))` mantém só as linhas que têm texto.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "not"
+        ]
+      }
+    ]
+  },
+  "ex-h7myrvbe": {
+    "prompt": "Por que `Comparator.comparing(Book::author).thenComparing(Book::year, Comparator.reverseOrder())` ordena?",
+    "hint": "Leia da esquerda para a direita.",
+    "choices": [
+      {
+        "text": "Autor; dentro de um autor, do mais novo",
+        "why": "Isso, como o primeiro bloco da saída mostrou."
+      },
+      {
+        "text": "Ano, do mais novo, e depois autor nos empates",
+        "why": "A primeira chave é o autor."
+      },
+      {
+        "text": "Autor e ano somados",
+        "why": "As chaves são comparadas em sequência, nunca combinadas."
+      },
+      {
+        "text": "Autor ao contrário, depois ano",
+        "why": "Só a chave do ano é invertida."
+      }
+    ]
+  },
+  "ex-v3hs6d5n": {
+    "prompt": "Levar o `reversed()` para o fim da cadeia pôs Herbert antes de Austen. O que ele inverteu?",
+    "hint": "Ele é chamado no comparator montado até ali.",
+    "choices": [
+      {
+        "text": "Só o autor, já que anos não podem ser invertidos",
+        "why": "Qualquer chave pode ser invertida."
+      },
+      {
+        "text": "Só o ano, a chave logo antes dele",
+        "why": "Aí Austen ainda viria primeiro."
+      },
+      {
+        "text": "As duas chaves: autor e ano",
+        "why": "Isso. Os anos ainda parecem do mais novo porque a ordem deles era do mais antigo antes."
+      },
+      {
+        "text": "A própria lista, depois de ordenada",
+        "why": "Ele devolve um comparator novo; não toca na lista."
+      }
+    ]
+  },
+  "ex-v8txexx6": {
+    "prompt": "Três livros têm `series == null`. O que `Comparator.nullsLast(...)` acrescenta?",
+    "hint": "Sem ele, a primeira comparação de um `null` falha.",
+    "choices": [
+      {
+        "text": "Troca `null` por uma string vazia",
+        "why": "Não muda valores; decide uma ordem."
+      },
+      {
+        "text": "Ordena por último os livros sem série",
+        "why": "Isso."
+      },
+      {
+        "text": "Tira os livros sem série",
+        "why": "Os cinco livros foram impressos."
+      },
+      {
+        "text": "Ordena ao contrário para o `null` ficar por último",
+        "why": "Os dois livros de Dune ficaram em ordem crescente de ano."
+      }
+    ]
+  },
+  "ex-z7zcpg6d": {
+    "prompt": "Por que usar `comparingInt(Book::year)` em vez de `comparing(Book::year)`?",
+    "hint": "Aula 2, seção 04.",
+    "choices": [
+      {
+        "text": "Compara valores `int` sem embrulhar",
+        "why": "Isso: `ToIntFunction`, sem objetos `Integer`."
+      },
+      {
+        "text": "`comparing` não ordena números",
+        "why": "Ordena, embrulhando-os."
+      },
+      {
+        "text": "É o único que aceita uma referência a método",
+        "why": "Os dois aceitam `Book::year`."
+      },
+      {
+        "text": "Ordena em ordem decrescente por padrão",
+        "why": "Ordena crescente, como `comparing`."
+      }
+    ]
+  },
+  "ex-ht2086zs": {
+    "prompt": "Por que `fold` começa por `Function.identity()` e não pelo primeiro passo?",
+    "hint": "O que uma lista de zero passos deve fazer?",
+    "choices": [
+      {
+        "text": "`identity()` é mais rápido que qualquer passo real",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O primeiro passo precisa rodar duas vezes",
+        "why": "Cada passo roda uma vez."
+      },
+      {
+        "text": "`andThen` não pode ser chamado num lambda",
+        "why": "`strip.andThen(lower)` foi chamado num."
+      },
+      {
+        "text": "Zero passos então deixam a entrada passar",
+        "why": "Isso: nenhum caso especial para zero passos."
+      }
+    ]
+  },
+  "ex-5y95d0nj": {
+    "prompt": "Ponha a limpeza de `\"  Cem Anos de   Solidão \"` na ordem em que `STEPS` a aplica.",
+    "hint": "A ordem da lista.",
+    "items": [
+      "aparar as pontas",
+      "espremer sequências de espaços",
+      "baixar a caixa",
+      "tirar os acentos"
+    ]
+  },
+  "ex-k66604x2": {
+    "prompt": "Um laço aplicando cada passo a uma string dá as mesmas respostas. O que dobrar numa `Function` só acrescenta?",
+    "hint": "Algo que você pode nomear e passar.",
+    "choices": [
+      {
+        "text": "O pipeline vira um valor para guardar, passar e testar",
+        "why": "Isso."
+      },
+      {
+        "text": "Deixa os passos rodarem em qualquer ordem",
+        "why": "A ordem é fixada pela lista."
+      },
+      {
+        "text": "Dispensa o `Locale.ROOT`",
+        "why": "Os passos são os mesmos."
+      },
+      {
+        "text": "Velocidade: a função dobrada roda os quatro passos no mesmo instante",
+        "why": "Os passos ainda rodam um depois do outro."
+      }
+    ]
+  },
+  "ex-m6p61gbt": {
+    "prompt": "Ligue cada combinador ao que seu resultado faz.",
+    "hint": "Seções 02 a 04.",
+    "pairs": [
+      {
+        "left": "`f.andThen(g)`",
+        "right": "roda `f`, depois `g` no resultado"
+      },
+      {
+        "left": "`f.compose(g)`",
+        "right": "roda `g`, depois `f` no resultado"
+      },
+      {
+        "left": "`p.negate()`",
+        "right": "responde o oposto de `p`"
+      },
+      {
+        "left": "`c1.andThen(c2)` on `Consumer`",
+        "right": "entrega o mesmo valor aos dois"
+      }
+    ],
+    "right_distractors": [
+      "roda `f` e `g` ao mesmo tempo em duas threads"
+    ]
+  },
+  "ex-g8vp3h86": {
+    "prompt": "Os livros devem sair por preço, do mais barato, e preços iguais por título. Que comparator faz isso?",
+    "hint": "Uma chave, uma chave numérica e um desempate.",
+    "choices": [
+      {
+        "text": "`comparingLong(Book::priceCents).reversed()`",
+        "why": "O mais caro primeiro, e sem desempate."
+      },
+      {
+        "text": "`comparing(Book::title).thenComparingLong(Book::priceCents)`",
+        "why": "Título primeiro, o preço só desempata."
+      },
+      {
+        "text": "`comparingLong(Book::priceCents).thenComparing(Book::title).reversed()`",
+        "why": "`reversed()` põe o mais caro primeiro."
+      },
+      {
+        "text": "`comparingLong(Book::priceCents).thenComparing(Book::title)`",
+        "why": "Isso."
+      }
+    ]
+  }
+}

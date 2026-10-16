@@ -10,24 +10,24 @@
     "hint": "Count one kind of method.",
     "choices": [
       {
-        "text": "The `@FunctionalInterface` annotation on it",
-        "correct": false,
-        "why": "The annotation only asks the compiler to check; an interface without it can still qualify."
-      },
-      {
-        "text": "Exactly one abstract method",
-        "correct": true,
-        "why": "Right. That is the whole definition."
-      },
-      {
         "text": "Living in the package `java.util.function`",
         "correct": false,
         "why": "`Comparator`, `Runnable` and your own `PriceRule` qualify from elsewhere."
       },
       {
+        "text": "The `@FunctionalInterface` annotation on it",
+        "correct": false,
+        "why": "The annotation only asks the compiler to check; an interface without it can still qualify."
+      },
+      {
         "text": "Having no default or static methods at all",
         "correct": false,
         "why": "Those are allowed; `Comparator` has more than a dozen."
+      },
+      {
+        "text": "Exactly one abstract method",
+        "correct": true,
+        "why": "Right. That is the whole definition."
       }
     ]
   },
@@ -42,14 +42,9 @@
     "hint": "`TwoMethods.java` printed two errors.",
     "choices": [
       {
-        "text": "Nothing: the lambdas still compile, and `label` returns `null`",
+        "text": "Only the lambdas fail, and the interface compiles",
         "correct": false,
-        "why": "A lambda can only fill one method; the code stops compiling."
-      },
-      {
-        "text": "An error appears at the interface itself, as well as at each lambda",
-        "correct": true,
-        "why": "Right. The annotation puts the error where the mistake was made."
+        "why": "That is what happens without the annotation."
       },
       {
         "text": "The compiler generates a default body for `label`",
@@ -57,9 +52,14 @@
         "why": "It never invents bodies."
       },
       {
-        "text": "Only the lambdas fail, and the interface compiles",
+        "text": "An error appears at the interface itself, as well as at each lambda",
+        "correct": true,
+        "why": "Right. The annotation puts the error where the mistake was made."
+      },
+      {
+        "text": "Nothing: the lambdas still compile, and `label` returns `null`",
         "correct": false,
-        "why": "That is what happens without the annotation."
+        "why": "A lambda can only fill one method; the code stops compiling."
       }
     ]
   },
@@ -74,24 +74,24 @@
     "hint": "Only abstract methods that need a body from the lambda count.",
     "choices": [
       {
-        "text": "`default String describe() { ... }`",
-        "correct": true,
-        "why": "Yes: it has a body."
-      },
-      {
         "text": "`static PriceRule none() { ... }`",
         "correct": true,
         "why": "Yes: it belongs to the interface."
       },
       {
-        "text": "`boolean equals(Object o);`",
-        "correct": true,
-        "why": "Yes: every object already has a body for it."
-      },
-      {
         "text": "`String label();`",
         "correct": false,
         "why": "No: a second abstract method."
+      },
+      {
+        "text": "`default String describe() { ... }`",
+        "correct": true,
+        "why": "Yes: it has a body."
+      },
+      {
+        "text": "`boolean equals(Object o);`",
+        "correct": true,
+        "why": "Yes: every object already has a body for it."
       }
     ]
   },
@@ -137,11 +137,6 @@
     "hint": "It has to decide, for each element, whether to remove it.",
     "choices": [
       {
-        "text": "A `Function`, to turn each element into its replacement",
-        "correct": false,
-        "why": "Nothing is replaced; elements are kept or removed."
-      },
-      {
         "text": "A `Consumer`, to hand it each element as it is removed",
         "correct": false,
         "why": "A consumer returns nothing, so it could not say which to remove."
@@ -150,6 +145,11 @@
         "text": "A `Predicate`, to test each element",
         "correct": true,
         "why": "Right. `true` removes it."
+      },
+      {
+        "text": "A `Function`, to turn each element into its replacement",
+        "correct": false,
+        "why": "Nothing is replaced; elements are kept or removed."
       },
       {
         "text": "A `Supplier`, to provide the elements to remove",
@@ -169,14 +169,14 @@
     "hint": "A recipe, not a value.",
     "choices": [
       {
-        "text": "Each call runs the body again and builds a new list",
-        "correct": true,
-        "why": "Right."
-      },
-      {
         "text": "The second call cleared the list the first one filled",
         "correct": false,
         "why": "The first list still printed full; nothing cleared it."
+      },
+      {
+        "text": "Each call runs the body again and builds a new list",
+        "correct": true,
+        "why": "Right."
       },
       {
         "text": "A `Supplier` keeps the value it returned and copies it",
@@ -225,6 +225,11 @@
         "why": "That would be `IntFunction<String>`."
       },
       {
+        "text": "Two `int` values in, a `String` out",
+        "correct": false,
+        "why": "Two inputs would say `Bi` in the name."
+      },
+      {
         "text": "A `String` in, an `int` out",
         "correct": true,
         "why": "Right, with `applyAsInt`."
@@ -233,11 +238,6 @@
         "text": "A `String` in, an `Integer` object out",
         "correct": false,
         "why": "The point of the family is that the `int` is never boxed."
-      },
-      {
-        "text": "Two `int` values in, a `String` out",
-        "correct": false,
-        "why": "Two inputs would say `Bi` in the name."
       }
     ]
   },
@@ -252,11 +252,6 @@
     "hint": "What a type argument must be.",
     "choices": [
       {
-        "text": "`Predicate<Integer>` cannot test negative numbers",
-        "correct": false,
-        "why": "It tests any `Integer`."
-      },
-      {
         "text": "`IntPredicate` runs on several processors",
         "correct": false,
         "why": "Nothing about it is parallel."
@@ -265,6 +260,11 @@
         "text": "It takes an `int` without boxing it into an object",
         "correct": true,
         "why": "Right. Generics need objects, so `Predicate<Integer>` boxes each number."
+      },
+      {
+        "text": "`Predicate<Integer>` cannot test negative numbers",
+        "correct": false,
+        "why": "It tests any `Integer`."
       },
       {
         "text": "Older code used it before generics were added in Java 5",
@@ -302,6 +302,11 @@
         "why": "Integers are exact."
       },
       {
+        "text": "`==` is undefined for wrapper types and answers at random",
+        "correct": false,
+        "why": "It is defined: it compares references, and the answer is repeatable."
+      },
+      {
         "text": "They are two objects, and `==` compares references",
         "correct": true,
         "why": "Right. Boxing made two `Integer` objects."
@@ -310,11 +315,6 @@
         "text": "1000 does not fit in an `Integer`",
         "correct": false,
         "why": "It fits easily."
-      },
-      {
-        "text": "`==` is undefined for wrapper types and answers at random",
-        "correct": false,
-        "why": "It is defined: it compares references, and the answer is repeatable."
       }
     ]
   },
@@ -329,11 +329,6 @@
     "hint": "Whose method is the lambda's body?",
     "choices": [
       {
-        "text": "`main` is not allowed to throw checked exceptions",
-        "correct": false,
-        "why": "It can; `OwnInterface.java`'s `main` does."
-      },
-      {
         "text": "The body is `apply`, which declares no exceptions",
         "correct": true,
         "why": "Right. It runs whenever `apply` is called, not inside `main`."
@@ -347,6 +342,11 @@
         "text": "`Files.readString` is not allowed inside a lambda",
         "correct": false,
         "why": "Any method may be called; the problem is the exception."
+      },
+      {
+        "text": "`main` is not allowed to throw checked exceptions",
+        "correct": false,
+        "why": "It can; `OwnInterface.java`'s `main` does."
       }
     ]
   },
@@ -361,9 +361,9 @@
     "hint": "Wrapping is not hiding.",
     "choices": [
       {
-        "text": "It is slower than throwing",
+        "text": "The compiler rejects a `catch` inside a lambda",
         "correct": false,
-        "why": "Speed is not the objection."
+        "why": "`unchecked` has one, and compiles."
       },
       {
         "text": "Empty strings cannot be returned from a `Function`",
@@ -376,9 +376,9 @@
         "why": "Right. `UncheckedIOException` keeps the failure and its cause."
       },
       {
-        "text": "The compiler rejects a `catch` inside a lambda",
+        "text": "It is slower than throwing",
         "correct": false,
-        "why": "`unchecked` has one, and compiles."
+        "why": "Speed is not the objection."
       }
     ]
   },
@@ -420,11 +420,6 @@
     "hint": "Nothing is built until somebody asks.",
     "choices": [
       {
-        "text": "A `Supplier` lets the method change the report",
-        "correct": false,
-        "why": "It could change a `Report` it was given just as well."
-      },
-      {
         "text": "Building the report is slow, and not every call needs one",
         "correct": true,
         "why": "Right. The method calls `get` only if it needs one."
@@ -433,6 +428,11 @@
         "text": "A `Supplier` is smaller in memory than the object",
         "correct": false,
         "why": "Size is not the reason given."
+      },
+      {
+        "text": "A `Supplier` lets the method change the report",
+        "correct": false,
+        "why": "It could change a `Report` it was given just as well."
       },
       {
         "text": "`Report` is a checked exception",
