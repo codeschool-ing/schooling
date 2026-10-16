@@ -29,7 +29,7 @@ def draw(s, t):
     # acks=1
     s.line(L - 2, 110, P + 2, 130, stroke="var(--phosphor-dim)", arrow=True)
     s.circle(P, 130, 4, fill="var(--phosphor-dim)")
-    s.text(P - 12, 130, t("acks=1: answered"), size=10, anchor="end", fill="var(--phosphor-dim)")
+    s.text(P - 12, 130, t("acks=1: answered"), size=10, anchor="end", fill="var(--paper-dim)")
     # followers fetch
     for x, y in ((A, 150), (B, 160)):
         s.line(x - 2, y, L + 2, y, stroke="var(--paper-dim)", sw=1, arrow=True)
