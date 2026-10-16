@@ -66,6 +66,7 @@ KUSTOMIZE=v5.8.3
 HELM=v4.3.0
 VAULT=2.1.2
 ESO=v1.3.2
+ESO_CHART=1.3.2
 GITEA=gitea/gitea:28.1.0-rootless
 REGISTRY=registry:3.1.2
 
@@ -650,6 +651,7 @@ stage9() {
   shown "$L9/sealed-secrets.md" 'apps/bulletin/base/deployment.yaml' > apps/bulletin/base/deployment.yaml
   sed -i 's#^- \.\./base$#- ../base\n- token.yaml#' apps/bulletin/staging/kustomization.yaml
   sed -i 's/^spec:$/spec:\n  dependsOn:\n  - name: sealed-secrets/' clusters/lab/staging.yaml
+  sed -i 's/-skip HelmRelease,OCIRepository /-skip HelmRelease,OCIRepository,SealedSecret /' /home/ana/setup/validate.sh
   git add apps clusters
   commit_at 2026-10-10T01:10:00-03:00 -m "staging: a sealed token"
   merge staging-token "staging: a sealed token"
@@ -666,7 +668,7 @@ p = '/home/ana/setup/validate.sh'
 s = open(p).read()
 old = [l for l in s.split('\n') if l.startswith('  elif ! kubeconform')][0]
 new = """  elif ! awk '/^sops:/ { s = 1; next } /^[^ ]/ { s = 0 } !s' "$work/out.yaml" |
-       kubeconform -strict -summary -skip HelmRelease,OCIRepository -kubernetes-version 1.37.0; then"""
+       kubeconform -strict -summary -skip HelmRelease,OCIRepository,SealedSecret -kubernetes-version 1.37.0; then"""
 open(p, 'w').write(s.replace(old, new))
 PY
   kubectl -n flux-system create secret generic sops-age --from-file=age.agekey=/home/ana/.config/sops/age/keys.txt >/dev/null
@@ -709,7 +711,48 @@ PY
   vault policy write bulletin-production /home/ana/vault/bulletin-production.hcl >/dev/null
   vault write auth/kubernetes/role/bulletin-production bound_service_account_names=bulletin \
     bound_service_account_namespaces=production policies=bulletin-production ttl=10m >/dev/null
-  for i in $(seq 90); do curl -s localhost:8080 | grep -q 'token: sha256' && curl -s localhost:8081 | grep -q 'token: sha256' && break; sleep 2; done
+  for i in $(seq 300); do curl -s localhost:8080 | grep -q 'token: sha256' && curl -s localhost:8081 | grep -q 'token: sha256' && break; sleep 2; done
+  cd /home/ana
+}
+
+L10=$LAB/lessons/le-zc6mj40j
+
+# The state at the end of lesson 10, on top of stage9: the External Secrets
+# Operator installed from its chart in the lab's registry, and production's
+# token read from Vault by an ExternalSecret instead of the SOPS file.
+stage10() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local f i
+  cd /home/ana/setup
+  curl -fsSLO https://github.com/external-secrets/external-secrets/releases/download/helm-chart-$ESO_CHART/external-secrets-$ESO_CHART.tgz
+  helm push external-secrets-$ESO_CHART.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
+  cd /home/ana/fleet
+  git switch --quiet -c external-secrets
+  mkdir -p infrastructure/external-secrets
+  for f in namespace.yaml release.yaml kustomization.yaml; do
+    shown "$L10/installing.md" "infrastructure/external-secrets/$f" > "infrastructure/external-secrets/$f"
+  done
+  sed 's/sealed-secrets/external-secrets/g' clusters/lab/sealed-secrets.yaml > clusters/lab/external-secrets.yaml
+  git add infrastructure clusters
+  commit_at 2026-10-10T02:00:00-03:00 -m "external-secrets: the operator, $ESO_CHART"
+  merge external-secrets "external-secrets: the operator, $ESO_CHART"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 150); do flux get helmreleases -n external-secrets 2>/dev/null | grep -q True && break; sleep 2; done
+  kubectl -n external-secrets wait --for=condition=Available deployment --all --timeout=180s >/dev/null
+  git switch --quiet -c production-vault
+  shown "$L10/production-from-vault.md" 'apps/bulletin/production/vault.yaml' > apps/bulletin/production/vault.yaml
+  sed -i 's/-skip HelmRelease,OCIRepository,SealedSecret /-skip HelmRelease,OCIRepository,SealedSecret,SecretStore,ExternalSecret /' /home/ana/setup/validate.sh
+  sed -i 's/^- token.sops.yaml$/- vault.yaml/' apps/bulletin/production/kustomization.yaml
+  git rm --quiet apps/bulletin/production/token.sops.yaml
+  git add apps
+  commit_at 2026-10-10T02:10:00-03:00 -m "production: the token comes from Vault"
+  merge production-vault "production: the token comes from Vault"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 120); do
+    kubectl -n production get externalsecret bulletin-token -o jsonpath='{.status.conditions[0].reason}' 2>/dev/null | grep -q SecretSynced && break
+    sleep 2
+  done
   cd /home/ana
 }
 
@@ -758,6 +801,6 @@ down() {
 
 case "${1:-}" in
   merge) shift; merge "$@" ;;
-  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7|stage8|stage9) "$1" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7|stage8|stage9|stage10) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac
