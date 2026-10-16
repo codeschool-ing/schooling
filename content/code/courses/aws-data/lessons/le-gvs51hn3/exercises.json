@@ -1,0 +1,577 @@
+[
+  {
+    "id": "ex-nk1q0tdx",
+    "version": 1,
+    "section": "mpp",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of a provisioned Redshift cluster does an SQL client connect to?",
+    "hint": "One part plans the query and gathers the answers.",
+    "choices": [
+      {
+        "text": "Each compute node, in turn",
+        "correct": false,
+        "why": "The compute nodes take their work from the leader; a client never talks to them."
+      },
+      {
+        "text": "The leader node",
+        "correct": true,
+        "why": "Right. It parses, plans and compiles the SQL, and gathers what the slices return."
+      },
+      {
+        "text": "The slice that holds the rows the query wants",
+        "correct": false,
+        "why": "Every slice holds a share of every table, and only the leader knows how to combine them."
+      },
+      {
+        "text": "Redshift Managed Storage, in S3",
+        "correct": false,
+        "why": "Managed storage holds the blocks; it answers no SQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j7nb0ne",
+    "version": 1,
+    "section": "mpp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query reads three columns of a twenty-column table. What does columnar storage save it?",
+    "hint": "Each column is written in blocks of its own.",
+    "choices": [
+      {
+        "text": "Nothing, since Redshift reads whole rows and drops the unwanted columns afterwards",
+        "correct": false,
+        "why": "That is how a row store reads; Redshift writes each column apart precisely to avoid it."
+      },
+      {
+        "text": "It reads the three columns from the leader's memory",
+        "correct": false,
+        "why": "The leader holds no table data; the slices read the blocks."
+      },
+      {
+        "text": "The blocks of the other seventeen columns",
+        "correct": true,
+        "why": "Right. Only the three columns' blocks are read; the rest stay on disk."
+      },
+      {
+        "text": "It reads every column, but each one compressed",
+        "correct": false,
+        "why": "Compression is real and is a second saving; the first is not reading the other columns at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3zzbbht",
+    "version": 1,
+    "section": "mpp",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Through moto, `get-statement-result` answers a `SELECT` on a table nobody created with three rows holding a street and a city. What does that show?",
+    "hint": "Was there ever a table called `orders`?",
+    "choices": [
+      {
+        "text": "That Redshift fills a new database with sample rows",
+        "correct": false,
+        "why": "A new Redshift database is empty, and the query would fail naming the missing table."
+      },
+      {
+        "text": "That a table called `orders` already existed in the cluster",
+        "correct": false,
+        "why": "There is no cluster to hold one; and the rows have no date and no count, which the query asked for."
+      },
+      {
+        "text": "That moto hands back its own sample answer and runs no SQL",
+        "correct": true,
+        "why": "Right. The same three rows come back whatever the statement says."
+      },
+      {
+        "text": "That the Data API cached the result of another account's query",
+        "correct": false,
+        "why": "Nothing is shared between accounts; moto imitates one account and invents the rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-81cw9nfb",
+    "version": 1,
+    "section": "mpp",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An RA3 cluster grows from two nodes to three. Which of these change? Choose all that apply.",
+    "hint": "Compute and storage are priced apart on RA3.",
+    "choices": [
+      {
+        "text": "The number of slices sharing each query's work",
+        "correct": true,
+        "why": "Yes. Each `ra3.xlplus` node brings two more."
+      },
+      {
+        "text": "The hourly compute price of the cluster",
+        "correct": true,
+        "why": "Yes. Nodes are billed per node-hour."
+      },
+      {
+        "text": "The amount of data the cluster stores",
+        "correct": false,
+        "why": "The data is in managed storage, and adding compute does not change it."
+      },
+      {
+        "text": "The price per GB-month of managed storage",
+        "correct": false,
+        "why": "That is a separate line of the sheet, 0.043, whatever the node count."
+      }
+    ]
+  },
+  {
+    "id": "ex-0535xs6c",
+    "version": 1,
+    "section": "distribution",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each distribution style to the table it suits.",
+    "hint": "One of the right-hand options is about sort keys.",
+    "pairs": [
+      {
+        "left": "`AUTO`",
+        "right": "Any table, until you know its joins better than the statistics do"
+      },
+      {
+        "left": "`EVEN`",
+        "right": "A large table with no dominant join"
+      },
+      {
+        "left": "`KEY`",
+        "right": "Two large tables joined on one column"
+      },
+      {
+        "left": "`ALL`",
+        "right": "A small table every report joins"
+      }
+    ],
+    "right_distractors": [
+      "A table filtered mostly by date ranges"
+    ]
+  },
+  {
+    "id": "ex-0gpqgxny",
+    "version": 1,
+    "section": "distribution",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A model puts 10,000 rows on 4 slices and the fullest slice gets 6,000 of them. What is its ratio to the mean, the `max/mean` that `slices.py` prints? Give two decimal places.",
+    "hint": "The mean is the rows divided by the slices.",
+    "value": 2.4,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-y3b4zh3z",
+    "version": 1,
+    "section": "distribution",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To avoid the skew `c-01` causes, Quitanda keys `orders` on `order_id` and keeps `customers` keyed on `customer_id`. What does a join of the two on `customer_id` now cost?",
+    "hint": "An order sits next to its customer only if both hashed to the same slice.",
+    "choices": [
+      {
+        "text": "Nothing extra, because both tables are `KEY`-distributed",
+        "correct": false,
+        "why": "They are keyed on different columns, so matching rows rarely share a slice."
+      },
+      {
+        "text": "About three rows in four move to another slice before the join runs",
+        "correct": true,
+        "why": "Right. The model moved 7,449 of 10,000, what a hash that ignores the join column gives with four slices."
+      },
+      {
+        "text": "The skew moves to `customers`, which now holds `c-01`'s orders",
+        "correct": false,
+        "why": "`customers` holds one row for `c-01`; orders are not stored in it."
+      },
+      {
+        "text": "The join is refused until both tables share a key",
+        "correct": false,
+        "why": "Redshift runs any join; a mismatch costs movement, not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-7s37m5ka",
+    "version": 1,
+    "section": "distribution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `stores` declared `DISTSTYLE ALL` in `orders.sql`?",
+    "hint": "How big is it, and who joins it?",
+    "choices": [
+      {
+        "text": "`ALL` keeps its rows sorted by `store_id`",
+        "correct": false,
+        "why": "Order is the sort key's job; `ALL` is about where the rows live."
+      },
+      {
+        "text": "It is tiny and every report joins it, so a copy on each node means no join with it moves a row",
+        "correct": true,
+        "why": "Right. The cost, a write per node on every load, is nothing at forty rows."
+      },
+      {
+        "text": "A `SMALLINT` key column requires `ALL`",
+        "correct": false,
+        "why": "The type of a column does not dictate the style."
+      },
+      {
+        "text": "`ALL` deals its rows out evenly across the slices",
+        "correct": false,
+        "why": "That is `EVEN`. `ALL` puts a full copy on every node."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjctf50k",
+    "version": 1,
+    "section": "sort-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`orders` has `COMPOUND SORTKEY (dt, customer_id)`. Which of these filters lets the zone maps skip the most blocks?",
+    "hint": "Look at the first column of the key, and at what `zonemaps.py` printed.",
+    "choices": [
+      {
+        "text": "`customer_id = 'c-17'`",
+        "correct": false,
+        "why": "The second column helps only within each value of the first; the model read 36 of 40 blocks."
+      },
+      {
+        "text": "`dt = '2026-10-05'`",
+        "correct": true,
+        "why": "Right. A filter on the leading column read 2 of 40 blocks in the model."
+      },
+      {
+        "text": "Both equally, since both columns are in the key",
+        "correct": false,
+        "why": "Equal weight is what an interleaved key aims at; a compound key favours its first column."
+      },
+      {
+        "text": "Neither, because zone maps need an index",
+        "correct": false,
+        "why": "Zone maps are kept for every block and need no index; they need sorted rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mbezsd5",
+    "version": 1,
+    "section": "sort-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is an interleaved sort key a poor fit for Quitanda's `orders` table?",
+    "hint": "What do the values of `dt` do over time?",
+    "choices": [
+      {
+        "text": "An interleaved key can hold one column, and `orders` needs two",
+        "correct": false,
+        "why": "It holds several columns and weighs them equally; that is its whole point."
+      },
+      {
+        "text": "Interleaved keys cannot be combined with `DISTKEY`",
+        "correct": false,
+        "why": "Distribution and sort order are independent choices."
+      },
+      {
+        "text": "`dt` only ever grows, so new rows crowd into one corner of the order and the table keeps needing an expensive `VACUUM REINDEX`",
+        "correct": true,
+        "why": "Right. AWS's documentation advises against interleaving a date or an identity column."
+      },
+      {
+        "text": "Interleaved keys sort only the unsorted region at the end",
+        "correct": false,
+        "why": "The unsorted region exists under any sort key; it is not what interleaving changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxd2153a",
+    "version": 1,
+    "section": "sort-keys",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The smallest and largest value of a column in each block, kept in memory so a filter can skip the block, is that block's zone ___.",
+    "hint": "Two words, the first already given.",
+    "blanks": [
+      {
+        "accept": [
+          "map"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e023ez62",
+    "version": 1,
+    "section": "serverless",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Redshift Serverless, what does the namespace hold?",
+    "hint": "One of the two things is what the warehouse is, the other what it runs on.",
+    "choices": [
+      {
+        "text": "The capacity in RPUs and the network it sits in",
+        "correct": false,
+        "why": "That is the workgroup."
+      },
+      {
+        "text": "The history of the queries that have run",
+        "correct": false,
+        "why": "Neither name is for history; the namespace is the data and who may use it."
+      },
+      {
+        "text": "The compute nodes and their slices",
+        "correct": false,
+        "why": "Serverless has no nodes for you to see; capacity is in RPUs, and it is the workgroup's."
+      },
+      {
+        "text": "The databases, tables, users and their storage",
+        "correct": true,
+        "why": "Right. A workgroup can be replaced and the namespace's data does not move."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywc7g2fq",
+    "version": 1,
+    "section": "serverless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Serverless workgroup has a base capacity of 8 RPUs, and no query ran between 22:00 and 07:00. What did those nine hours cost in compute?",
+    "hint": "When is an RPU-hour billed?",
+    "choices": [
+      {
+        "text": "8 RPUs × 9 hours at the RPU-hour price",
+        "correct": false,
+        "why": "The base is what a query starts with, not a charge for existing."
+      },
+      {
+        "text": "Nothing, as compute is billed only while queries run",
+        "correct": true,
+        "why": "Right. Storage is still billed, at the managed storage rate."
+      },
+      {
+        "text": "128 RPUs × 9 hours, the default base",
+        "correct": false,
+        "why": "The base was set to 8, and no base is billed while idle."
+      },
+      {
+        "text": "One minute for each hour, the 60-second minimum",
+        "correct": false,
+        "why": "The minimum applies each time compute starts, and it never started."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfp8gevy",
+    "version": 1,
+    "section": "serverless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Serverless setting keeps an expensive query from running up an expensive month?",
+    "hint": "Redshift scales above the base while a heavy query runs.",
+    "choices": [
+      {
+        "text": "The base capacity",
+        "correct": false,
+        "why": "The base is where a query starts; Redshift scales above it."
+      },
+      {
+        "text": "The maximum capacity",
+        "correct": true,
+        "why": "Right. It is the ceiling on how far Redshift scales."
+      },
+      {
+        "text": "The namespace's storage quota",
+        "correct": false,
+        "why": "Storage is a small line; the RPU-hours are what an expensive query runs up."
+      },
+      {
+        "text": "The 60-second minimum per start",
+        "correct": false,
+        "why": "That is a billing rule, not a setting, and it sets a floor rather than a ceiling."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1bt3sk4",
+    "version": 1,
+    "section": "the-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By the sheet, an `ra3.xlplus` node costs 1.731 USD an hour. What is the compute of a three-node cluster for a 30-day month of 720 hours, in USD? Give two decimal places.",
+    "hint": "Nodes × price × hours.",
+    "value": 3738.96,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-6nddwjkt",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's analysts now work 6 hours a day at 32 RPUs. In a 30-day month, which costs less in compute: Serverless, or the two-node `ra3.xlplus` cluster at 2,492.64 USD?",
+    "hint": "An hour at 32 RPUs is 19.1232 USD.",
+    "choices": [
+      {
+        "text": "Serverless, which bills only the hours that are used",
+        "correct": false,
+        "why": "It does, and six of them a day come to 3,442.18 USD, above the cluster."
+      },
+      {
+        "text": "They come to the same, because both bill by the hour",
+        "correct": false,
+        "why": "They bill different hours: the cluster every hour it exists, Serverless every hour it works."
+      },
+      {
+        "text": "The cluster",
+        "correct": true,
+        "why": "Right. 19.1232 × 6 × 30 is 3,442.18 USD; the line falls at about 4.34 hours a day."
+      },
+      {
+        "text": "Serverless, because storage is cheaper there",
+        "correct": false,
+        "why": "Storage is 0.043 per GB-month in both, so it does not move the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-46eq4d7a",
+    "version": 1,
+    "section": "the-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Redshift Spectrum query scans 0.4 TB of files in S3. What does it cost by the sheet?",
+    "hint": "Spectrum is billed like Athena.",
+    "choices": [
+      {
+        "text": "0.24 USD, at the RPU-hour price",
+        "correct": false,
+        "why": "That multiplies by the Serverless price; Spectrum is billed by the data scanned."
+      },
+      {
+        "text": "5.00 USD, one TB being the smallest unit billed",
+        "correct": false,
+        "why": "The price is per TB, and a fraction of a TB costs that fraction."
+      },
+      {
+        "text": "Nothing, since the files are already paid for as S3 storage",
+        "correct": false,
+        "why": "Storing and scanning are separate charges."
+      },
+      {
+        "text": "2.00 USD",
+        "correct": true,
+        "why": "Right. 0.4 × 5.00."
+      }
+    ]
+  },
+  {
+    "id": "ex-07qpxv1x",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of a query on a provisioned cluster in order.",
+    "hint": "The leader appears twice.",
+    "items": [
+      "The client sends the SQL to the leader node on port 5439",
+      "The leader plans the query and compiles it into code",
+      "Every slice scans its share, skipping the blocks its zone maps rule out",
+      "The leader gathers what the slices returned and sends the answer"
+    ]
+  },
+  {
+    "id": "ex-kqp23xme",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Since a restaurant chain became a customer, every report on `orders` is slower, and `SVV_TABLE_INFO` shows a high `skew_rows` for it. What is the likeliest cause, and the fix?",
+    "hint": "`skew_rows` compares the fullest slice with the emptiest.",
+    "choices": [
+      {
+        "text": "The sort key has gone unsorted; run `VACUUM SORT ONLY`",
+        "correct": false,
+        "why": "Unsorted rows widen zone maps; they do not put more rows on one slice."
+      },
+      {
+        "text": "The base capacity is too low; raise it",
+        "correct": false,
+        "why": "Base capacity is Serverless; this is a cluster whose rows are unevenly shared."
+      },
+      {
+        "text": "`DISTKEY (customer_id)` meets one dominant customer; redistribute on a column without one, or `EVEN`",
+        "correct": true,
+        "why": "Right. One slice holds the chain's orders and every scan waits for it."
+      },
+      {
+        "text": "Spectrum is scanning CSV; convert the files to Parquet",
+        "correct": false,
+        "why": "`orders` is a table in the warehouse, not files in S3."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9f6hanx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these were measured in this lesson, rather than taken from AWS's documentation? Choose all that apply.",
+    "hint": "Two things ran: moto, and two Python models.",
+    "choices": [
+      {
+        "text": "In the model, a key on `customer_id` put 5,420 of 10,000 rows on one slice",
+        "correct": true,
+        "why": "Yes, `slices.py` printed it."
+      },
+      {
+        "text": "moto leaves a Data API statement `STARTED`",
+        "correct": true,
+        "why": "Yes, five seconds after it was sent."
+      },
+      {
+        "text": "An `ra3.xlplus` node has two slices",
+        "correct": false,
+        "why": "That is AWS's documentation; moto runs no nodes to count."
+      },
+      {
+        "text": "`DS_BCAST_INNER` copies a whole table to every node",
+        "correct": false,
+        "why": "From the documentation of `EXPLAIN`; no plan was produced here."
+      },
+      {
+        "text": "Serverless bills per second with a 60-second minimum",
+        "correct": false,
+        "why": "Documented by AWS; moto could not even create a namespace."
+      }
+    ]
+  }
+]
