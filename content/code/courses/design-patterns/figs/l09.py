@@ -38,3 +38,41 @@ def fold():
            size=10, fill='--amber', italic=True)
     return f, T('Each state is the one before it with one event applied. Nothing below the line is stored, so any of it can be worked out again, up to any version.',
                 'Cada estado é o anterior com um evento aplicado. Nada abaixo da linha é guardado, então qualquer parte pode ser calculada de novo, até qualquer versão.')
+
+
+@figure('l09-snapshot', 9)
+def snapshot():
+    f = Fig('l09-snapshot', 720, 250, T(
+        'Bia\'s stream drawn as a long bar of 10,003 events, from version 1 on the left to version '
+        '10,003 on the right. Above it, the rebuild without a snapshot: an arrow along the whole bar, '
+        'applying 10,002 events. A snapshot marks the state saved at version 10,002, near the right '
+        'end. Below the bar, the rebuild with the snapshot: it loads the saved state and applies only '
+        'the one event after it, FinePaid. The events are all still in the store either way.',
+        'O stream da Bia desenhado como uma barra longa de 10.003 eventos, da versão 1 à esquerda à '
+        'versão 10.003 à direita. Acima, a reconstrução sem snapshot: uma seta ao longo da barra '
+        'inteira, aplicando 10.002 eventos. Um snapshot marca o estado salvo na versão 10.002, perto '
+        'da ponta direita. Abaixo da barra, a reconstrução com o snapshot: ela carrega o estado salvo '
+        'e aplica só o evento seguinte, FinePaid. Os eventos continuam todos no store de qualquer jeito.'))
+    f.text(40, 30, T('without a snapshot: fold from version 1, 10,002 events',
+                     'sem snapshot: dobrar desde a versão 1, 10.002 eventos'),
+           size=10.5, anchor='start')
+    f.arrow([(40, 48), (640, 48)], stroke='--paper-dim', width=1.4)
+    f.rect(40, 100, 640, 34, stroke='--phosphor', fill='--panel', rx=2)
+    for i in range(1, 40):
+        x = 40 + i * 16
+        if x < 640:
+            f.line(x, 100, x, 134, stroke='--wire', width=0.8)
+    f.text(40, 150, 'v1', size=9.5, mono=True, anchor='start', fill='--paper-dim')
+    f.text(680, 150, 'v10003', size=9.5, mono=True, anchor='end', fill='--paper-dim')
+    f.rect(642, 64, 30, 26, stroke='--amber', fill='--panel', rx=2)
+    f.text(657, 77, 'S', size=10, mono=True, fill='--amber', weight='600')
+    f.line(657, 90, 657, 100, stroke='--amber', width=1.3)
+    f.text(630, 77, T('snapshot at v10002', 'snapshot na v10002'), size=10, fill='--amber', anchor='end')
+    f.arrow([(657, 176), (676, 176)], stroke='--amber', width=1.4)
+    f.text(640, 200, T('with the snapshot: load the state, fold 1 event', 'com o snapshot: carregar o estado, dobrar 1 evento'),
+           size=10.5, anchor='end', fill='--amber')
+    f.text(360, 232, T('the events are all still there; the snapshot is a cache of a fold',
+                       'os eventos continuam todos lá; o snapshot é um cache de uma dobra'),
+           size=10, fill='--paper-dim', italic=True)
+    return f, T('A snapshot saves the folded state at a version, so a rebuild starts there and applies only what came after.',
+                'Um snapshot salva o estado dobrado numa versão, para a reconstrução começar dali e aplicar só o que veio depois.')

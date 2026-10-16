@@ -57,7 +57,7 @@ test_a_month_with_nobody_late (__main__.ReportCharacterisation.test_a_month_with
 test_the_march_report (__main__.ReportCharacterisation.test_the_march_report) ... ok
 
 ----------------------------------------------------------------------
-Ran 3 tests in 0.000s
+Ran 3 tests in 0.001s
 
 OK
 ```
@@ -89,7 +89,7 @@ test_a_month_with_nobody_late (__main__.ReportCharacterisation.test_a_month_with
 test_the_march_report (__main__.ReportCharacterisation.test_the_march_report) ... ok
 
 ----------------------------------------------------------------------
-Ran 3 tests in 0.000s
+Ran 3 tests in 0.001s
 
 OK
 ```

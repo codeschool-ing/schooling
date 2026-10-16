@@ -51,7 +51,11 @@ for day, kind, data in history:
 
 ```
 ana@laptop:~/patterns/events$ python3 state_only.py
-placeholder
+state: {'bia': 350}
+2026-03-19  CopyReturned  owed 150  {'member': 'bia', 'copy': 'C3', 'fine': 150}
+2026-03-23  CopyReturned  owed 400  {'member': 'bia', 'copy': 'C1', 'fine': 250}
+2026-03-24  FinePaid      owed 300  {'member': 'bia', 'amount': 100}
+2026-03-25  FineCorrected owed 350  {'member': 'bia', 'amount': 50, 'reason': 'wrong due date on C1'}
 ```
 
 Both halves agree: Bia owes 350 cents. Only one of them can say why. The first half has a number
@@ -76,6 +80,6 @@ would see a number with no story.
 This is how accountants have worked for centuries, and the comparison is exact: a ledger is
 append-only, a wrong entry is corrected by a new entry, and the balance is the sum of the lines.
 Lesson 8 already had the write model publish events; event sourcing keeps those events as the only
-record, and the rest of this lesson builds what that requires: a store that refuses edits, a way to
+record. The rest of this lesson builds what that requires: a store that refuses edits, a way to
 rebuild state, read models fed from the history, and a plan for the day the events have to change
 shape.

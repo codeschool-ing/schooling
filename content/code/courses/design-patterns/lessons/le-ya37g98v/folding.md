@@ -26,7 +26,10 @@ the state it gets is the only state there is.
 
 ```
 ana@laptop:~/patterns/events$ python3 fold.py
-placeholder
+now:       (Member(name='Bia', loans=('C1',), owed=150), 4)
+version 2: Member(name='Bia', loans=('C3',), owed=0)
+refused: Bia owes 150 cents
+now:       (Member(name='Bia', loans=('C1', 'C4'), owed=0), 6)
 ```
 
 After four events Bia holds C1 and owes 150 cents, at version 4. Folding only the first two gives her

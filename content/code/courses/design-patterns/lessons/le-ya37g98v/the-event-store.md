@@ -28,7 +28,12 @@ data: delete one and some member's balance changes silently.
 
 ```
 ana@laptop:~/patterns/events$ python3 store.py
-placeholder
+{'type': 'MemberJoined', 'name': 'Bia', 'on': '2026-03-01'}
+{'type': 'CopyLent', 'copy': 'C3', 'title': 'T2', 'due': '2026-03-16'}
+{'type': 'CopyReturned', 'copy': 'C3', 'on': '2026-03-19', 'fine': 150}
+version: 3
+refused: member-bia is past version 2
+refused: events are append-only
 ```
 
 The three events come back in order, as dictionaries with their type. Bia's stream is at version 3.
