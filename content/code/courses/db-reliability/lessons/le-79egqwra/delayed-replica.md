@@ -6,7 +6,9 @@ version: 1
 Every standby so far copies a mistake as faithfully as everything else; lesson 11 called that the
 replicated `DELETE`. A **delayed replica** keeps a window open: `recovery_min_apply_delay` makes it
 receive the log at once and apply each transaction only after the delay has passed. Two minutes here,
-so that the lesson does not wait long; an hour or more in practice. Set it on `standby1`:
+so that the lesson does not wait long; an hour or more in practice. In the figure of the first section
+the delayed replica hangs from the primary on its own; this lab has two standbys, so the delay goes
+on `standby1`, which also feeds `standby2`, and that difference shows in a moment. Set it:
 
 ```
 ana@vm:~$ sudo -u postgres psql -p 5434 -c "ALTER SYSTEM SET recovery_min_apply_delay = '2min'" -c 'SELECT pg_reload_conf()'
@@ -76,7 +78,7 @@ delete and then the reinsert, and arrive at the same rows as the primary.
 ## What it costs, and what it does not cover
 
 - The delayed replica is **useless for failover**: promoting it means waiting the whole delay for it to
-  catch up, or giving up the last hour. It is a third standby, not one of the two.
+  catch up, or giving up the last hour. It is an extra standby, never the one a failover uses.
 - It holds an hour of log, on its disk and, through its slot, on the primary's.
 - It covers a mistake noticed **within the delay**. One noticed tomorrow needs lesson 6's
   point-in-time recovery from the archive, which is still the backstop under everything.
