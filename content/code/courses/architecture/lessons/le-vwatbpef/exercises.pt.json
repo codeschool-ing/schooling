@@ -1,0 +1,656 @@
+{
+  "ex-wtfp1s3x": {
+    "prompt": "O servidor de banco da Quitanda é rápido o bastante, mas perderia tudo se o disco falhasse. Do que ele precisa?",
+    "hint": "O problema é falha, não tamanho.",
+    "choices": [
+      {
+        "text": "Replicação",
+        "why": "Isso: uma cópia em outro lugar sobrevive ao disco."
+      },
+      {
+        "text": "Sharding, para cada parte ser menor",
+        "why": "Um shard perdido continua perdido."
+      },
+      {
+        "text": "Uma máquina maior com mais núcleos",
+        "why": "Uma máquina maior falha do mesmo jeito."
+      },
+      {
+        "text": "Um cache na frente dele",
+        "why": "Um cache guarda o que foi lido, não tudo."
+      }
+    ]
+  },
+  "ex-x79cqerk": {
+    "prompt": "Por que a replicação não ajuda quando as escritas não cabem mais numa máquina?",
+    "hint": "Para onde cada escrita tem de ir?",
+    "choices": [
+      {
+        "text": "Porque réplicas não respondem leituras",
+        "why": "Respondem, e é nisso que ajudam."
+      },
+      {
+        "text": "Toda escrita ainda tem de chegar a toda cópia",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque a replicação só funciona dentro de um data center",
+        "why": "Réplicas podem ficar longe."
+      },
+      {
+        "text": "Porque as cópias têm de ser síncronas",
+        "why": "Cópias assíncronas também recebem toda escrita."
+      }
+    ]
+  },
+  "ex-3kaz61vf": {
+    "prompt": "Qual é a ordem de costume dos passos conforme um sistema cresce?",
+    "hint": "Falhas não esperam o tamanho.",
+    "choices": [
+      {
+        "text": "Fazer sharding primeiro, depois replicar os shards",
+        "why": "Sharding é o último recurso."
+      },
+      {
+        "text": "Escalar para cima, fazer sharding, e replicar só quando grande",
+        "why": "Falhas vêm antes do tamanho."
+      },
+      {
+        "text": "Replicar cedo, escalar para cima, sharding por último",
+        "why": "Isso."
+      },
+      {
+        "text": "Fazer sharding e replicar juntos desde o primeiro dia",
+        "why": "É pagar por um tamanho que ninguém tem ainda."
+      }
+    ]
+  },
+  "ex-b84c9g1g": {
+    "prompt": "Associe cada arranjo ao jeito como as escritas funcionam nele.",
+    "hint": "Um deles não tem líder nenhum.",
+    "pairs": [
+      {
+        "left": "líder único",
+        "right": "uma cópia recebe toda escrita e a transmite às outras"
+      },
+      {
+        "left": "vários líderes",
+        "right": "várias cópias recebem escritas e as trocam"
+      },
+      {
+        "left": "sem líder",
+        "right": "o cliente escreve em várias cópias, com quóruns"
+      }
+    ]
+  },
+  "ex-5rsgty35": {
+    "prompt": "O que é split brain?",
+    "hint": "Acontece no failover.",
+    "choices": [
+      {
+        "text": "Um standby que ficou muito atrás do primário",
+        "why": "Isso é atraso."
+      },
+      {
+        "text": "Dois líderes aceitando escritas ao mesmo tempo",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma tabela dividida em dois shards",
+        "why": "Isso é sharding."
+      },
+      {
+        "text": "Um cluster em que todo nó falhou",
+        "why": "Nada está dividido ali."
+      }
+    ]
+  },
+  "ex-f1egm8gg": {
+    "prompt": "O que `synchronous_standby_names = 'ANY 1 (s1, s2)'` compra em relação a um único standby síncrono?",
+    "hint": "O que acontece quando um standby está lento?",
+    "choices": [
+      {
+        "text": "Escritas deixam de esperar qualquer standby",
+        "why": "Esperam um."
+      },
+      {
+        "text": "Todo commit é copiado para os dois standbys antes de retornar",
+        "why": "Só uma confirmação é esperada."
+      },
+      {
+        "text": "Um standby lento ou morto não para as escritas",
+        "why": "Isso: o outro confirma."
+      },
+      {
+        "text": "Leituras são espalhadas pelos dois standbys",
+        "why": "Essa é uma decisão separada."
+      }
+    ]
+  },
+  "ex-0vgg81pz": {
+    "prompt": "No `pg_stat_replication`, que posição diz o que um leitor do standby consegue ver?",
+    "hint": "Recebido não é aplicado.",
+    "choices": [
+      {
+        "text": "`sent_lsn`",
+        "why": "Enviado nem foi gravado ainda."
+      },
+      {
+        "text": "`flush_lsn`",
+        "why": "No disco, ainda não aplicado."
+      },
+      {
+        "text": "`replay_lsn`",
+        "why": "Isso."
+      },
+      {
+        "text": "`write_lsn`",
+        "why": "Gravado, não aplicado."
+      }
+    ]
+  },
+  "ex-2ehgakfs": {
+    "prompt": "Com a reaplicação pausada, `replay_lag` mostrava 0,28 segundo e o standby estava 15 MB atrás. Por que `replay_lag` enganava?",
+    "hint": "É o atraso de quê?",
+    "choices": [
+      {
+        "text": "Descreve a última mudança aplicada, e fica parado",
+        "why": "Isso."
+      },
+      {
+        "text": "É medido em bytes, então não mostra tempo",
+        "why": "É um tempo; a diferença em bytes é outra coluna."
+      },
+      {
+        "text": "O relógio do primário tinha se afastado do relógio do standby",
+        "why": "Nada estava errado com relógio nenhum."
+      },
+      {
+        "text": "Só conta os standbys que são síncronos",
+        "why": "O standby do laboratório era assíncrono e foi mostrado."
+      }
+    ]
+  },
+  "ex-8yk6ff6g": {
+    "prompt": "Um painel desenha o atraso de toda linha do `pg_stat_replication`, e a linha está reta em zero. O que ela ainda pode esconder?",
+    "hint": "O que acontece com a linha de um standby que se desconecta?",
+    "choices": [
+      {
+        "text": "Um standby reaplicando mudanças rápido demais",
+        "why": "Esse problema não existe."
+      },
+      {
+        "text": "Um primário com conexões de cliente demais",
+        "why": "Não tem a ver com esta visão."
+      },
+      {
+        "text": "Atraso no standby síncrono",
+        "why": "Um standby conectado tem linha e mostra o atraso."
+      },
+      {
+        "text": "Um standby que se desconectou, e não tem linha",
+        "why": "Isso: nenhuma linha é o alarme."
+      }
+    ]
+  },
+  "ex-c8a1f5b5": {
+    "prompt": "Que medida responde \"quanto um failover assíncrono perderia agora\"?",
+    "hint": "Perdido quer dizer que nunca saiu do primário.",
+    "choices": [
+      {
+        "text": "A coluna `replay_lag` do standby, em segundos",
+        "why": "Recebido e não reaplicado não está perdido."
+      },
+      {
+        "text": "O que o primário gravou além do `sent_lsn`",
+        "why": "Isso."
+      },
+      {
+        "text": "`now() - pg_last_xact_replay_timestamp()` no standby",
+        "why": "Isso é quão velhas são as leituras."
+      },
+      {
+        "text": "O número de linhas de cada lado",
+        "why": "Linhas não são como o WAL é medido."
+      }
+    ]
+  },
+  "ex-raya6x9z": {
+    "prompt": "Por que um cluster de dois nós não é melhor que um para continuar disponível?",
+    "hint": "Qual é a maioria de dois?",
+    "choices": [
+      {
+        "text": "Dois nós não conseguem replicar um para o outro",
+        "why": "Conseguem."
+      },
+      {
+        "text": "Dois nós sempre elegem dois líderes",
+        "why": "A regra da maioria impede isso."
+      },
+      {
+        "text": "A maioria de dois são os dois",
+        "why": "Isso."
+      },
+      {
+        "text": "O segundo nó só atende leituras",
+        "why": "Pode ser uma réplica completa."
+      }
+    ]
+  },
+  "ex-kdw3qmyq": {
+    "prompt": "Quantos nós um cluster de consenso precisa para sobreviver a duas falhas simultâneas?",
+    "hint": "2f + 1.",
+    "unit": "nós"
+  },
+  "ex-4ga5jztb": {
+    "prompt": "O que um quarto nó acrescenta a um cluster de consenso de três nós?",
+    "hint": "Maioria de quatro.",
+    "choices": [
+      {
+        "text": "Tolerância a uma segunda falha",
+        "why": "A maioria de quatro é três, então ainda uma."
+      },
+      {
+        "text": "Custo, e nenhuma tolerância a mais",
+        "why": "Isso."
+      },
+      {
+        "text": "Escritas mais rápidas, já que há mais votantes",
+        "why": "Cada escrita espera mais máquinas."
+      },
+      {
+        "text": "Proteção contra split brain que os três não davam",
+        "why": "Três já impedem isso."
+      }
+    ]
+  },
+  "ex-bnk68knx": {
+    "prompt": "Por que dois grupos numa partição nunca conseguem eleger um líder cada um sob a regra da maioria?",
+    "hint": "Conte.",
+    "choices": [
+      {
+        "text": "Porque o líder sempre fica com o data center maior",
+        "why": "A localização não é a regra."
+      },
+      {
+        "text": "Porque eleições ficam desligadas durante uma partição",
+        "why": "O lado da maioria ainda elege."
+      },
+      {
+        "text": "Porque cada nó vota em si mesmo",
+        "why": "Isso produziria muitos líderes."
+      },
+      {
+        "text": "Dois grupos não podem ter cada um mais da metade dos nós",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-qynh1r8e": {
+    "prompt": "Com o nó 2 parado, por que escritas com `acks=all` ainda deram certo?",
+    "hint": "Conte as réplicas em dia.",
+    "choices": [
+      {
+        "text": "Restavam duas réplicas em dia, o mínimo",
+        "why": "Isso."
+      },
+      {
+        "text": "`acks=all` ignora nós que pararam",
+        "why": "Espera a lista em dia, que encolheu."
+      },
+      {
+        "text": "O nó 1 sozinho recebeu todas as escritas por um tempo",
+        "why": "Duas cópias foram gravadas."
+      },
+      {
+        "text": "O produtor mudou sem avisar para `acks=1`",
+        "why": "Ele não mudou."
+      }
+    ]
+  },
+  "ex-fn6a1prs": {
+    "prompt": "Com dois de três nós parados, o que `NOT_ENOUGH_REPLICAS` significava?",
+    "hint": "Olhe `Isr` e `min.insync.replicas`.",
+    "choices": [
+      {
+        "text": "O tópico tinha sido apagado pela parada",
+        "why": "Ele ainda era descrito."
+      },
+      {
+        "text": "As configurações do produtor estavam erradas para três nós",
+        "why": "O mesmo comando funcionou com um nó fora."
+      },
+      {
+        "text": "O líder da partição estava num nó parado",
+        "why": "O nó 1 liderava toda partição."
+      },
+      {
+        "text": "Restava uma réplica em dia, abaixo do mínimo",
+        "why": "Isso: o Kafka recusou em vez de guardar uma cópia."
+      }
+    ]
+  },
+  "ex-yc22b1zm": {
+    "prompt": "O mesmo produtor com `acks=1` foi aceito com um nó restante. Qual é o risco?",
+    "hint": "Quantos discos guardam a mensagem?",
+    "choices": [
+      {
+        "text": "A mensagem pode ser entregue duas vezes",
+        "why": "Essa é outra promessa."
+      },
+      {
+        "text": "Só um disco guarda uma escrita confirmada",
+        "why": "Isso."
+      },
+      {
+        "text": "Ela vai ser rejeitada depois, quando os nós voltarem",
+        "why": "Escritas aceitas ficam."
+      },
+      {
+        "text": "Consumidores não conseguem lê-la até os nós voltarem",
+        "why": "Ela foi lida de volta."
+      }
+    ]
+  },
+  "ex-2m0y7ygt": {
+    "prompt": "No cluster Kafka do laboratório, o que usa a regra da maioria?",
+    "hint": "Os dados usam a lista em dia.",
+    "choices": [
+      {
+        "text": "A replicação dos dados de cada partição",
+        "why": "Essa usa a lista de réplicas em dia."
+      },
+      {
+        "text": "O producer de console",
+        "why": "Ele só envia."
+      },
+      {
+        "text": "Os controladores, entre si",
+        "why": "Isso."
+      },
+      {
+        "text": "O grupo de consumidores",
+        "why": "É coordenado por um broker."
+      }
+    ]
+  },
+  "ex-cqaehnpw": {
+    "prompt": "Por que a data do pedido costuma ser uma chave de shard ruim para pedidos?",
+    "hint": "Para onde vão os pedidos de hoje?",
+    "choices": [
+      {
+        "text": "Datas não podem passar por hash",
+        "why": "Podem."
+      },
+      {
+        "text": "Todo pedido novo cai num shard, um ponto quente",
+        "why": "Isso."
+      },
+      {
+        "text": "Espalha os pedidos de um cliente por igual demais",
+        "why": "Não é esse o motivo."
+      },
+      {
+        "text": "Pedidos velhos nunca mais podem ser lidos",
+        "why": "Podem, do shard deles."
+      }
+    ]
+  },
+  "ex-typcjzs8": {
+    "prompt": "Por que `order 1234` perguntou aos dois shards, enquanto `customer c-7` perguntou a um?",
+    "hint": "O que decide o shard?",
+    "choices": [
+      {
+        "text": "O pedido 1234 estava gravado nos dois shards",
+        "why": "Estava só no shard 0."
+      },
+      {
+        "text": "Buscas por id são sempre enviadas a todos por segurança",
+        "why": "O roteador só não tinha como escolher."
+      },
+      {
+        "text": "Só o cliente decide o shard",
+        "why": "Isso."
+      },
+      {
+        "text": "O shard 1 não tinha índice no id",
+        "why": "Os dois têm chave primária no id."
+      }
+    ]
+  },
+  "ex-v92xr8g5": {
+    "prompt": "Do que o sharding por hash abre mão, comparado com o sharding por faixa?",
+    "hint": "Vizinhos.",
+    "choices": [
+      {
+        "text": "Uma distribuição uniforme das chaves entre os shards",
+        "why": "Isso é o que o hash dá."
+      },
+      {
+        "text": "A capacidade de acrescentar mais shards depois",
+        "why": "Os dois podem acrescentar shards."
+      },
+      {
+        "text": "Manter chaves vizinhas no mesmo shard",
+        "why": "Isso."
+      },
+      {
+        "text": "Buscas por uma chave indo para um shard só",
+        "why": "Uma busca por chave é um shard nos dois casos."
+      }
+    ]
+  },
+  "ex-n3csd29j": {
+    "prompt": "Por que `top --naive` pôs a farinha em terceiro com 614 unidades?",
+    "hint": "Onde a farinha estava no shard 1?",
+    "choices": [
+      {
+        "text": "O shard 1 não tinha pedidos de farinha",
+        "why": "Tinha 376 unidades."
+      },
+      {
+        "text": "A farinha era a quarta no shard 1, então o `LIMIT 3` cortou a farinha daquele shard",
+        "why": "Isso."
+      },
+      {
+        "text": "O roteador somou errado os números dos shards",
+        "why": "A soma estava certa; as entradas estavam incompletas."
+      },
+      {
+        "text": "O hash pôs a farinha nos dois shards duas vezes",
+        "why": "Produtos não são divididos em shards."
+      }
+    ]
+  },
+  "ex-qb7t4wh0": {
+    "prompt": "Como um roteador deveria calcular a média de `units` entre shards?",
+    "hint": "Uma média de médias.",
+    "choices": [
+      {
+        "text": "Fazer a média das médias dos shards",
+        "why": "Errado a não ser que os shards tenham o mesmo tamanho."
+      },
+      {
+        "text": "Perguntar só ao maior shard",
+        "why": "Isso ignora os outros."
+      },
+      {
+        "text": "Pegar a mediana das médias dos shards",
+        "why": "Ainda ignora os tamanhos."
+      },
+      {
+        "text": "Coletar somas e contagens, depois dividir",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-dz3rx2w9": {
+    "prompt": "Os clientes estão divididos por id. Por que não dá mais para confiar em `UNIQUE (email)`?",
+    "hint": "O que cada shard vê?",
+    "choices": [
+      {
+        "text": "Cada shard confere só as próprias linhas",
+        "why": "Isso."
+      },
+      {
+        "text": "O PostgreSQL remove restrições únicas de tabelas com sharding",
+        "why": "A restrição ainda funciona, por shard."
+      },
+      {
+        "text": "E-mails passam por hash e perdem a unicidade",
+        "why": "O hash do id não mexe no e-mail."
+      },
+      {
+        "text": "O roteador grava todo cliente nos dois shards",
+        "why": "Grava cada um em um."
+      }
+    ]
+  },
+  "ex-sjw3f7ye": {
+    "prompt": "Onde \"produtos mais vendidos do mês\" deveria ser respondido, em geral, num sistema com sharding?",
+    "hint": "Perguntas sobre todo mundo.",
+    "choices": [
+      {
+        "text": "No shard com mais pedidos",
+        "why": "Um shard é parte da resposta."
+      },
+      {
+        "text": "Rodando-a em todo shard a cada visualização de página",
+        "why": "Certo, e o jeito mais caro."
+      },
+      {
+        "text": "Numa cópia feita para leitura",
+        "why": "Isso."
+      },
+      {
+        "text": "Em lugar nenhum: sistemas com sharding não conseguem responder",
+        "why": "Conseguem, com um custo."
+      }
+    ]
+  },
+  "ex-y8n6f6d1": {
+    "prompt": "No laboratório, quantos dos 40 clientes mudam de shard quando o roteador vai de 2 shards para 3?",
+    "hint": "`moves 3`.",
+    "unit": "clientes"
+  },
+  "ex-brqbakye": {
+    "prompt": "Por que o Kafka faz você escolher o número de partições de um tópico de antemão?",
+    "hint": "O que se move quando um nó é acrescentado?",
+    "choices": [
+      {
+        "text": "Partições não ganham réplicas depois de terem sido criadas",
+        "why": "A replicação é separada."
+      },
+      {
+        "text": "Partições inteiras se movem; chaves nunca mudam de partição",
+        "why": "Isso."
+      },
+      {
+        "text": "Mais partições deixam toda escrita mais lenta",
+        "why": "Não é esse o motivo."
+      },
+      {
+        "text": "Consumidores leem uma partição cada, para sempre",
+        "why": "A atribuição muda com o grupo."
+      }
+    ]
+  },
+  "ex-vcxyxxwm": {
+    "prompt": "Com hashing consistente e N máquinas, mais ou menos que parte das chaves se move quando uma máquina é acrescentada?",
+    "hint": "A máquina nova assume as chaves entre ela e a vizinha.",
+    "choices": [
+      {
+        "text": "Cerca de dois terços",
+        "why": "Isso é o módulo, indo de 2 para 3."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "A máquina nova tem de pegar algumas."
+      },
+      {
+        "text": "Cerca de 1/N",
+        "why": "Isso."
+      },
+      {
+        "text": "Metade, seja qual for N",
+        "why": "Isso só vale perto de N = 1."
+      }
+    ]
+  },
+  "ex-g1k5cn62": {
+    "prompt": "O que bancos de SQL distribuído como CockroachDB e Spanner pagam para manter transações entre shards?",
+    "hint": "Toda faixa roda consenso.",
+    "choices": [
+      {
+        "text": "Abrem mão do SQL",
+        "why": "Eles o mantêm."
+      },
+      {
+        "text": "Latência: toda escrita espera uma maioria",
+        "why": "Isso."
+      },
+      {
+        "text": "Não conseguem replicar",
+        "why": "Cada faixa é replicada."
+      },
+      {
+        "text": "Uma chave de shard que tem de ser escolhida à mão para cada tabela",
+        "why": "Eles dividem faixas automaticamente."
+      }
+    ]
+  },
+  "ex-ds99nt65": {
+    "prompt": "O que a aula recomenda para a Quitanda hoje?",
+    "hint": "A primeira linha da tabela.",
+    "choices": [
+      {
+        "text": "Citus, para estar pronta para sharding",
+        "why": "Sharding responde a uma medição que ninguém fez."
+      },
+      {
+        "text": "Spanner, para transações entre regiões",
+        "why": "A Quitanda é uma loja."
+      },
+      {
+        "text": "Cassandra, pelas escritas",
+        "why": "As escritas estão longe do limite."
+      },
+      {
+        "text": "Um PostgreSQL e um standby",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-5c743fy8": {
+    "prompt": "Ponha em ordem os passos para mover uma partição para uma máquina nova.",
+    "hint": "Copiar, continuar copiando, trocar, apagar.",
+    "items": [
+      "Copiar os dados da partição para a máquina nova",
+      "Continuar copiando as mudanças feitas durante a cópia",
+      "Trocar o roteador para a máquina nova naquela partição",
+      "Apagar a cópia antiga"
+    ]
+  },
+  "ex-15ssmg7w": {
+    "prompt": "As páginas do catálogo da Quitanda estão lentas porque o banco único está ocupado respondendo leituras; as escritas são poucas. Qual é a primeira coisa a tentar?",
+    "hint": "Que limite é este, volume de escritas ou de leituras?",
+    "choices": [
+      {
+        "text": "Fazer sharding do catálogo por produto",
+        "why": "Escritas não são o problema, e toda consulta muda."
+      },
+      {
+        "text": "Acrescentar uma réplica de leitura para o catálogo",
+        "why": "Isso, aceitando que as leituras dela podem estar um instante atrasadas."
+      },
+      {
+        "text": "Levar o banco para um cluster de consenso de cinco nós",
+        "why": "Consenso deixa escritas mais lentas, não leituras mais baratas."
+      },
+      {
+        "text": "Tornar o standby síncrono",
+        "why": "Isso deixa as escritas lentas e não muda nada para as leituras."
+      }
+    ]
+  }
+}

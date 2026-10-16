@@ -1,0 +1,473 @@
+{
+  "ex-8pwnfd78": {
+    "prompt": "Depois de cada linha da cópia ser atualizada uma vez e passar pelo vacuum, a tabela tinha 130 MB em vez de 66 MB. O que há nos 64 MB a mais?",
+    "hint": "O VACUUM já tinha rodado.",
+    "choices": [
+      {
+        "text": "Versões mortas esperando o próximo VACUUM",
+        "why": "O VACUUM já tinha rodado; o pgstattuple depois contou 0 tuplas mortas."
+      },
+      {
+        "text": "Uma segunda cópia dos índices, que o VACUUM guarda para rollback",
+        "why": "Os índices são medidos à parte, em 75 MB; o arquivo da própria tabela não guarda índice."
+      },
+      {
+        "text": "Espaço livre",
+        "why": "Isso. As versões antigas foram liberadas e o espaço ficou dentro do arquivo."
+      },
+      {
+        "text": "Write-ahead log do UPDATE",
+        "why": "O WAL mora em pg_wal, não no arquivo da tabela."
+      }
+    ]
+  },
+  "ex-25jxr7bp": {
+    "prompt": "Apagar os 100.000 ids mais altos e rodar o vacuum deixou a cópia em 130 MB; apagar os 100.000 seguintes a levou a 117 MB. Por que a diferença?",
+    "hint": "O VACUUM só corta uma cauda grande o bastante.",
+    "choices": [
+      {
+        "text": "O primeiro DELETE ainda não tinha feito commit",
+        "why": "O psql faz commit de cada comando sozinho; as linhas apagadas estavam mortas antes do VACUUM."
+      },
+      {
+        "text": "O segundo VACUUM rodou como VACUUM FULL",
+        "why": "Os dois eram VACUUM simples; um FULL teria levado a tabela a cerca de 52 MB."
+      },
+      {
+        "text": "Só a segunda exclusão alcançou linhas guardadas no começo do arquivo",
+        "why": "Só páginas vazias no fim do arquivo são cortadas; o começo do arquivo nunca é devolvido por um VACUUM simples."
+      },
+      {
+        "text": "A primeira cauda tinha menos de 1.000 páginas e menos de um dezesseis avos da tabela",
+        "why": "Isso. Cortar exige uma breve trava exclusiva, e o VACUUM só a toma para uma cauda acima de um desses limites."
+      }
+    ]
+  },
+  "ex-pkzg1529": {
+    "prompt": "Qual destes NÃO é um custo de uma tabela que é metade espaço livre?",
+    "hint": "Pense no que lê o arquivo inteiro, e no que lê só linhas.",
+    "choices": [
+      {
+        "text": "Varreduras sequenciais também leem o espaço vazio",
+        "why": "Leem: uma varredura sequencial lê toda página."
+      },
+      {
+        "text": "Os backups o copiam",
+        "why": "Um backup de arquivos copia o arquivo, espaço vazio incluído."
+      },
+      {
+        "text": "O disco o guarda e o sistema operacional não pode usá-lo",
+        "why": "Isso é exatamente o que o bloat custa a um disco."
+      },
+      {
+        "text": "Resultados de consulta errados",
+        "why": "Isso. Espaço livre não guarda linhas, então o bloat nunca muda uma resposta; ele só custa leitura e armazenamento."
+      }
+    ]
+  },
+  "ex-8wg3ffj8": {
+    "prompt": "Que `free_percent` o `pgstattuple` informou para a cópia inchada? Responda com o inteiro mais próximo.",
+    "hint": "Um pouco mais da metade.",
+    "unit": "%"
+  },
+  "ex-wwxd3vv6": {
+    "prompt": "O `pgstattuple_approx` respondeu com `scanned_percent` 0 e uma contagem de 902.407 para uma tabela com 800.000. Por que a contagem errou?",
+    "hint": "Ele não leu páginas. De onde veio o número?",
+    "choices": [
+      {
+        "text": "De estatísticas tiradas antes do último DELETE",
+        "why": "Isso. A contagem vem da estimativa do planejador, que era mais velha que o delete."
+      },
+      {
+        "text": "Ele conta tuplas mortas como vivas",
+        "why": "Não havia tuplas mortas; o VACUUM tinha rodado."
+      },
+      {
+        "text": "A amostra de algumas páginas aleatórias caiu por acaso em páginas mais cheias",
+        "why": "Ele varreu 0% da tabela; não houve amostra nenhuma."
+      },
+      {
+        "text": "O pg_repack ainda não tinha rodado",
+        "why": "O pg_repack muda o arquivo, não como uma estimativa é feita."
+      }
+    ]
+  },
+  "ex-xnpjydre": {
+    "prompt": "A estimativa de uma ferramenta de monitoramento informa 12% de bloat numa tabela carregada em massa ontem à noite e nunca atualizada. Qual é a leitura mais provável?",
+    "hint": "Lembre da linha de `orders`.",
+    "choices": [
+      {
+        "text": "A carga deixou versões mortas para trás",
+        "why": "Uma carga de inserções deixa linhas vivas, não mortas."
+      },
+      {
+        "text": "A tabela precisa de VACUUM FULL hoje à noite",
+        "why": "Nada foi medido ainda; reconstruir pela palavra de uma estimativa compra uma trava exclusiva por nada."
+      },
+      {
+        "text": "O erro da própria estimativa; meça com o pgstattuple antes de agir",
+        "why": "Isso. Em orders, que não tem bloat, a mesma conta mostrou cerca de um décimo da tabela como desperdício."
+      },
+      {
+        "text": "O fill factor da tabela foi reduzido durante a carga",
+        "why": "Nada no cenário mudou um fill factor; o erro de preenchimento da estimativa explica o número sozinho."
+      }
+    ]
+  },
+  "ex-bw820h6s": {
+    "prompt": "Por que rodar o `pgstattuple` numa tabela de 500 GB numa hora tranquila?",
+    "hint": "Como ele conseguiu uma resposta exata?",
+    "choices": [
+      {
+        "text": "Ele trava a tabela contra escritas",
+        "why": "Ele só lê, com a trava que qualquer SELECT toma."
+      },
+      {
+        "text": "Ele reescreve a tabela para contá-la",
+        "why": "Isso é o VACUUM FULL. O pgstattuple não escreve nada."
+      },
+      {
+        "text": "Ele lê toda página pelos shared buffers",
+        "why": "Isso. Exato significa uma varredura completa, e 500 GB de leitura competem com a aplicação."
+      },
+      {
+        "text": "Ele precisa de reinício do servidor para carregar",
+        "why": "O CREATE EXTENSION pgstattuple funcionou sem reinício."
+      }
+    ]
+  },
+  "ex-k28q040j": {
+    "prompt": "Qual coluna do `pgstatindex` é o número que pede ação no bloat de índice?",
+    "hint": "Quão cheias estão as folhas?",
+    "choices": [
+      {
+        "text": "leaf_fragmentation",
+        "why": "orders_customer_id está perto de 50 sem bloat nenhum; fragmentação é detalhe."
+      },
+      {
+        "text": "tree_level",
+        "why": "A profundidade cresce devagar com o tamanho e diz pouco sobre espaço desperdiçado."
+      },
+      {
+        "text": "root_block_no",
+        "why": "É onde fica a página raiz, não quão cheio algo está."
+      },
+      {
+        "text": "avg_leaf_density",
+        "why": "Isso. A chave primária da cópia em 45 contra 90 da original é o bloat."
+      }
+    ]
+  },
+  "ex-syx33cv9": {
+    "prompt": "`orders_created_at` está com 78% de densidade de folha embora `orders` nunca tenha sido atualizada. O que isso diz?",
+    "hint": "Como as chaves dele chegaram?",
+    "choices": [
+      {
+        "text": "Está inchado e deveria passar por reindex",
+        "why": "Nada morto há nele; inserções fora de ordem dividem folhas e elas se acomodam abaixo de 90."
+      },
+      {
+        "text": "O fill factor dele foi definido em 78",
+        "why": "Ninguém definiu; o padrão de uma B-tree é 90."
+      },
+      {
+        "text": "Que 90% é a régua errada aqui",
+        "why": "Isso. Compare um índice com o mesmo índice sem bloat, não com um número fixo."
+      },
+      {
+        "text": "O pgstatindex não lê colunas de timestamp",
+        "why": "Ele lê qualquer B-tree; o tipo da coluna é irrelevante."
+      }
+    ]
+  },
+  "ex-8cjk8dce": {
+    "prompt": "Um `UPDATE` muda só `status`, que nenhum índice cobre, numa tabela cujas páginas têm bastante espaço livre. O que acontece com os índices da tabela?",
+    "hint": "HOT.",
+    "choices": [
+      {
+        "text": "Nada: o update é HOT",
+        "why": "Isso. A versão nova fica na mesma página e nenhum índice é tocado, que é o espaço que um fillfactor menor na tabela compra."
+      },
+      {
+        "text": "Todo índice ganha uma entrada nova",
+        "why": "Esse é o caso não HOT: sem espaço na página, ou uma coluna indexada mudou."
+      },
+      {
+        "text": "Só a chave primária ganha uma entrada nova",
+        "why": "Um update não HOT toca todos os índices, e um HOT não toca nenhum."
+      },
+      {
+        "text": "Os índices são reconstruídos no próximo VACUUM",
+        "why": "O VACUUM remove entradas mortas; ele nunca reconstrói um índice."
+      }
+    ]
+  },
+  "ex-z4azkb16": {
+    "prompt": "Enquanto `VACUUM FULL orders_copy` rodava, um `SELECT count(*)` simples na cópia esperou. Por qual trava ele esperava?",
+    "hint": "Leia a coluna granted.",
+    "choices": [
+      {
+        "text": "AccessExclusiveLock",
+        "why": "Essa é a que o VACUUM FULL tinha, concedida."
+      },
+      {
+        "text": "ShareLock",
+        "why": "Essas linhas pertenciam às construções de índice dentro da reconstrução."
+      },
+      {
+        "text": "AccessShareLock",
+        "why": "Isso: a trava mais fraca que existe, e mesmo assim conflita com a AccessExclusiveLock que o VACUUM FULL mantém."
+      },
+      {
+        "text": "Uma trava de linha na primeira linha",
+        "why": "Uma contagem não toma travas de linha; ela esperou na tabela."
+      }
+    ]
+  },
+  "ex-3tr9ew2t": {
+    "prompt": "Ligue cada fato à ferramenta a que pertence.",
+    "hint": "Uma vem embutida, a outra é instalada.",
+    "pairs": [
+      {
+        "left": "Mantém ACCESS EXCLUSIVE do começo ao fim",
+        "right": "VACUUM FULL"
+      },
+      {
+        "left": "Precisa de chave primária ou índice único não nulo",
+        "right": "pg_repack"
+      },
+      {
+        "left": "Libera espaço para reúso sem devolvê-lo",
+        "right": "VACUUM simples"
+      }
+    ],
+    "right_distractors": [
+      "REINDEX"
+    ]
+  },
+  "ex-4b3hvxfk": {
+    "prompt": "Um disco está 95% cheio, e a maior parte é uma tabela inchada. Por que o `VACUUM FULL` pode não conseguir resolver?",
+    "hint": "Quando o arquivo antigo é removido?",
+    "choices": [
+      {
+        "text": "Ele recusa tabelas acima de um limite de tamanho",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Ele precisa que o WAL guarde a tabela inteira antes, então enche o pg_wal em outro disco",
+        "why": "O problema é neste disco: os arquivos antigo e novo coexistem até a troca."
+      },
+      {
+        "text": "O arquivo novo é escrito antes de o antigo sair",
+        "why": "Isso. Ele precisa de espaço para a cópia compacta e os índices dela enquanto os inchados ainda existem; o pg_repack tem a mesma necessidade."
+      },
+      {
+        "text": "Ele precisa do servidor parado",
+        "why": "Ele rodou num servidor no ar; só trava a tabela."
+      }
+    ]
+  },
+  "ex-wfwvx01t": {
+    "prompt": "Você inicia o `pg_repack` numa tabela movimentada ao meio-dia. Um relatório mantém uma transação nessa tabela desde as 11:00. O que acontece na troca?",
+    "hint": "A troca precisa de uma breve trava exclusiva.",
+    "choices": [
+      {
+        "text": "A troca acontece, já que o pg_repack só precisa de AccessShareLock",
+        "why": "Ele mantém AccessShareLock enquanto copia; a troca ainda precisa da trava exclusiva por um instante."
+      },
+      {
+        "text": "Ele termina a troca na hora e o relatório lê o arquivo novo",
+        "why": "Uma trava exclusiva não pode ser concedida enquanto o relatório segura a tabela."
+      },
+      {
+        "text": "Ele espera, as consultas fazem fila atrás dele, e depois de 60 s ele cancela o relatório",
+        "why": "Isso, por padrão. O --no-kill-backend o faz desistir em vez disso."
+      },
+      {
+        "text": "Ele cai para VACUUM FULL",
+        "why": "O pg_repack não tem esse plano B."
+      }
+    ]
+  },
+  "ex-qkn0xj8v": {
+    "prompt": "Ponha o trabalho do pg_repack em ordem.",
+    "hint": "Exclusiva nas duas pontas, compartilhada no meio.",
+    "items": [
+      "Uma breve trava exclusiva para montar o trigger",
+      "Copiar as linhas para uma tabela nova enquanto o trigger registra as alterações",
+      "Construir os índices na tabela nova",
+      "Reaplicar as alterações registradas",
+      "Uma breve trava exclusiva para trocar os arquivos"
+    ],
+    "trap": "As alterações são reaplicadas antes da troca, então nada escrito durante a cópia se perde."
+  },
+  "ex-bedmz2ze": {
+    "prompt": "Depois de uma reconstrução para 52 MB, três rodadas atualizando um quinto das linhas deixaram a cópia em 63 MB, 63 MB e 63 MB. O que são 63 MB?",
+    "hint": "A segunda e a terceira rodadas não a aumentaram.",
+    "choices": [
+      {
+        "text": "O tamanho de trabalho dela",
+        "why": "Isso. Reconstruir de volta para 52 MB só duraria até a próxima rodada de updates."
+      },
+      {
+        "text": "Bloat que a próxima reconstrução deveria remover de vez",
+        "why": "Espaço reaproveitado rodada após rodada é o formato saudável, não bloat a remover."
+      },
+      {
+        "text": "Um limite que o autovacuum impõe",
+        "why": "Nada limita o tamanho; o reúso do espaço liberado o manteve estável."
+      },
+      {
+        "text": "O tamanho dos índices",
+        "why": "Os índices foram medidos ao lado, em 56 a 57 MB."
+      }
+    ]
+  },
+  "ex-86pxhe57": {
+    "prompt": "Quais destes justificam reconstruir uma tabela inchada? Marque todos que se aplicam.",
+    "hint": "O movimento algum dia vai usar o espaço?",
+    "choices": [
+      {
+        "text": "Um preenchimento único a dobrou",
+        "why": "Sim. O espaço não vai ser reaproveitado no ritmo em que foi criado."
+      },
+      {
+        "text": "O disco está acabando agora",
+        "why": "Sim, se houver espaço para a cópia nova enquanto ela é construída."
+      },
+      {
+        "text": "O percentual livre dela está estável há meses",
+        "why": "Espaço livre estável está sendo reaproveitado; uma reconstrução cresceria de novo."
+      },
+      {
+        "text": "Ela voltou ao mesmo tamanho poucos dias depois da última reconstrução",
+        "why": "É o tamanho de trabalho dela dizendo isso."
+      },
+      {
+        "text": "As varreduras sequenciais dela leem páginas quase vazias",
+        "why": "Sim, quando o pgstattuple confirma."
+      }
+    ]
+  },
+  "ex-9ahxb5tn": {
+    "prompt": "Para deixar um décimo de cada página vazio e os updates poderem ficar na mesma página, defina o ___ da tabela em 90.",
+    "hint": "Um parâmetro de armazenamento definido com ALTER TABLE ... SET.",
+    "blanks": [
+      {
+        "accept": [
+          "fillfactor"
+        ]
+      }
+    ]
+  },
+  "ex-f0psem5w": {
+    "prompt": "Uma tabela `events` de 400 GB tem 60% de espaço livre segundo o pgstattuple, depois de uma limpeza de dois anos de linhas antigas. A aplicação insere 1 GB por dia. Qual é o movimento certo?",
+    "hint": "Quanto tempo o movimento levaria para reaproveitar 240 GB?",
+    "choices": [
+      {
+        "text": "Deixar: as inserções vão reaproveitar o espaço",
+        "why": "A 1 GB por dia, 240 GB levam a maior parte de um ano. Este é o caso único."
+      },
+      {
+        "text": "Rodar VACUUM, que devolve o espaço livre",
+        "why": "Um VACUUM simples só devolve uma cauda vazia; o espaço livre está espalhado pelo arquivo."
+      },
+      {
+        "text": "Rodar VACUUM FULL no horário comercial",
+        "why": "Isso bloqueia toda consulta em events pelo tempo de copiar 160 GB."
+      },
+      {
+        "text": "Rodar o pg_repack, com espaço para a cópia de 160 GB",
+        "why": "Isso. Uma limpeza é única, e o pg_repack mantém a tabela usável enquanto os 160 GB vivos são copiados."
+      }
+    ]
+  },
+  "ex-p6w8pawb": {
+    "prompt": "Depois do `pg_repack` os índices da cópia tinham 31 MB; uma rodada atualizando um quinto das linhas os levou a 56 MB, enquanto a tabela só cresceu de 52 MB para 63 MB. Por que os índices cresceram tanto mais?",
+    "hint": "Folhas recém-construídas estão 90% cheias.",
+    "choices": [
+      {
+        "text": "O pg_repack constrói índices sem fill factor",
+        "why": "Foram construídos com o padrão de 90%, como os do VACUUM FULL."
+      },
+      {
+        "text": "O trigger que o pg_repack deixou para trás escreve entradas extras de índice",
+        "why": "O trigger é removido na troca; nada do pg_repack fica na tabela."
+      },
+      {
+        "text": "Updates não HOT acrescentaram entradas a folhas cheias, que se dividiram",
+        "why": "Isso. Cada versão nova precisou de uma entrada em todo índice, e uma folha cheia se divide em duas páginas meio cheias."
+      },
+      {
+        "text": "O VACUUM não rodou nos índices",
+        "why": "O VACUUM rodou a cada rodada; o tamanho ficou perto de 56 MB nas duas rodadas seguintes."
+      }
+    ]
+  },
+  "ex-ard4js0g": {
+    "prompt": "A lição 14 mostrou uma tabela inchada por uma sessão parada numa transação por um dia. Você roda o `pg_repack` antes de encerrar essa sessão. O que obtém?",
+    "hint": "Quais versões a cópia precisa manter?",
+    "choices": [
+      {
+        "text": "Uma espera na troca, e nenhuma correção duradoura",
+        "why": "Isso. Encerre a sessão primeiro: enquanto ela segurar o horizonte, versões mortas se acumulam de novo, seja o que for reconstruído."
+      },
+      {
+        "text": "Uma tabela compacta, já que o pg_repack ignora snapshots",
+        "why": "Ele não os ignora; e a sessão segura a tabela, então a troca nem consegue a trava."
+      },
+      {
+        "text": "Um erro de que a tabela não tem chave primária",
+        "why": "Nada no cenário remove a chave; o snapshot preso é o problema."
+      },
+      {
+        "text": "A sessão parada é encerrada automaticamente pelo pg_repack antes de a cópia começar",
+        "why": "O pg_repack só cancela consultas conflitantes nas esperas por trava, depois de um tempo limite."
+      }
+    ]
+  },
+  "ex-xf0bh9hx": {
+    "prompt": "Enquanto o `pg_repack` copiava as linhas, que trava ele mantinha em `orders_copy`?",
+    "hint": "O UPDATE de outro terminal passou direto.",
+    "choices": [
+      {
+        "text": "AccessExclusiveLock durante toda a cópia, solta só no fim",
+        "why": "Esse é o jeito do VACUUM FULL. O pg_repack só toma a trava exclusiva por um instante em cada ponta."
+      },
+      {
+        "text": "Nenhuma trava",
+        "why": "O pg_locks mostrou AccessShareLock mantida pelas sessões dele."
+      },
+      {
+        "text": "AccessShareLock, como um SELECT",
+        "why": "Isso, mais um SIReadLock por copiar em SERIALIZABLE. Nenhuma das duas bloqueia leituras ou escritas."
+      },
+      {
+        "text": "ShareLock, que permite leituras e bloqueia escritas",
+        "why": "Uma ShareLock teria feito o UPDATE esperar; ele levou poucos milissegundos."
+      }
+    ]
+  },
+  "ex-ab61qvd9": {
+    "prompt": "Um job noturno apaga 1% das linhas mais antigas de `events`, e a aplicação insere mais ou menos o mesmo número de linhas novas por dia. O arquivo da tabela vai continuar crescendo?",
+    "hint": "Para onde vão as linhas novas depois que o VACUUM roda?",
+    "choices": [
+      {
+        "text": "Sim, 1% por dia, já que o VACUUM não devolve nada",
+        "why": "O VACUUM não devolve nada ao sistema operacional, mas o espaço liberado é reaproveitado pelas próximas inserções."
+      },
+      {
+        "text": "Não, porque o DELETE encolhe o arquivo na hora",
+        "why": "Um DELETE só marca versões como mortas; o arquivo fica como estava."
+      },
+      {
+        "text": "Não, depois do vacuum o espaço liberado recebe as linhas novas",
+        "why": "Isso. O mapa de espaço livre manda as inserções para o espaço que as exclusões deixaram, e o tamanho se estabiliza."
+      },
+      {
+        "text": "Sim, a menos que o job também rode VACUUM FULL toda noite",
+        "why": "Um VACUUM FULL toda noite travaria a tabela toda noite por nada; o VACUUM simples e o reúso mantêm o tamanho estável."
+      }
+    ]
+  }
+}

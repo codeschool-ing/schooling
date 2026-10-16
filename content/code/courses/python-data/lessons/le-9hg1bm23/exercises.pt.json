@@ -1,0 +1,435 @@
+{
+  "ex-wf40nxja": {
+    "prompt": "O que um array NumPy guarda que uma lista Python de floats não guarda?",
+    "hint": "Onde ficam os próprios números?",
+    "choices": [
+      {
+        "text": "Os próprios números, lado a lado, todos de um tipo",
+        "why": "Isso. Uma lista guarda referências a objetos separados."
+      },
+      {
+        "text": "Nomes de colunas",
+        "why": "Um array não tem; o pandas os acrescenta."
+      },
+      {
+        "text": "Um ponteiro para cada objeto `float` do Python",
+        "why": "Isso é o que a lista guarda."
+      },
+      {
+        "text": "O arquivo de origem de onde foi lido, para poder recarregá-lo",
+        "why": "Nada disso é guardado."
+      }
+    ]
+  },
+  "ex-1wmz6yx4": {
+    "prompt": "`rain.nbytes` deu 2920 para 365 leituras. Quantos bytes ocupa cada leitura?",
+    "hint": "2920 ÷ 365."
+  },
+  "ex-rffbtjx4": {
+    "prompt": "`genfromtxt` leu uma coluna de chuva com seis campos vazios. Em que esses campos viraram?",
+    "hint": "Um float consegue guardar um valor que não é número.",
+    "choices": [
+      {
+        "text": "0.0",
+        "why": "Isso faria seis dias secos de seis dias desconhecidos."
+      },
+      {
+        "text": "Um erro que impediu o arquivo de carregar",
+        "why": "O arquivo carregou; `shape` deu `(365, 2)`."
+      },
+      {
+        "text": "`nan`",
+        "why": "Isso; `np.isnan(rain).sum()` contou 6."
+      },
+      {
+        "text": "O `None` do Python, que transforma o array inteiro em objetos",
+        "why": "O dtype continuou `float64`."
+      }
+    ]
+  },
+  "ex-0s04g61p": {
+    "prompt": "Por que `np.isnan(rain).sum()` é uma contagem de dias faltantes?",
+    "hint": "O que somar booleanos faz?",
+    "choices": [
+      {
+        "text": "`sum` pula os `nan` e conta o resto",
+        "why": "Ele soma um array de `True`/`False`, não a chuva."
+      },
+      {
+        "text": "`True` vale 1 e `False` vale 0",
+        "why": "Isso."
+      },
+      {
+        "text": "`isnan` devolve as posições dos faltantes, e `sum` soma as posições",
+        "why": "Devolve booleanos, um por valor."
+      },
+      {
+        "text": "`sum` num array float sempre devolve uma contagem",
+        "why": "Devolve um total."
+      }
+    ]
+  },
+  "ex-fbywc7s9": {
+    "prompt": "Qual é o dtype de `np.array([14, \"20\"])`?",
+    "hint": "Uma string na lista.",
+    "choices": [
+      {
+        "text": "`int64`, com a string convertida",
+        "why": "O NumPy não converte texto em número aqui."
+      },
+      {
+        "text": "`object`",
+        "why": "Ele achou um tipo que cabe os dois: texto."
+      },
+      {
+        "text": "Um tipo de string, `<U21`",
+        "why": "Isso, e nenhuma aritmética funciona nele."
+      },
+      {
+        "text": "Levanta um `TypeError` porque a lista é misturada",
+        "why": "O NumPy não recusa lista misturada."
+      }
+    ]
+  },
+  "ex-ncx2kab9": {
+    "prompt": "O formato de um array unidimensional de cinco números se escreve `(5___)`.",
+    "hint": "Uma tupla de um precisa de um caractere.",
+    "blanks": [
+      {
+        "accept": [
+          ","
+        ]
+      }
+    ]
+  },
+  "ex-jms4a6av": {
+    "prompt": "Você precisa de 11 valores igualmente espaçados de 0 a 1, com as duas pontas. Qual chamada é a segura?",
+    "hint": "Uma recebe uma contagem; outra, um passo.",
+    "choices": [
+      {
+        "text": "`np.arange(0, 1, 0.1)`",
+        "why": "Deixa o fim de fora, e um passo float pode dar um elemento a mais ou a menos."
+      },
+      {
+        "text": "`np.linspace(0, 1, 11)`",
+        "why": "Isso: uma contagem de pontos, fim incluído."
+      },
+      {
+        "text": "`np.zeros(11) + 0.1`",
+        "why": "Onze cópias de 0,1."
+      },
+      {
+        "text": "`np.arange(0, 1.1, 0.1)`, esticando o fim para pegar o 1.0",
+        "why": "Continua um passo float: se o último valor cai onde você queria depende do arredondamento."
+      }
+    ]
+  },
+  "ex-znm8wxa1": {
+    "prompt": "Por que `np.arange(24).reshape(5, 5)` falha?",
+    "hint": "Multiplique o formato novo.",
+    "choices": [
+      {
+        "text": "reshape só aceita formatos com `-1`",
+        "why": "`reshape(4, 6)` funcionou."
+      },
+      {
+        "text": "Formatos quadrados exigem array float",
+        "why": "Formato e dtype são independentes."
+      },
+      {
+        "text": "O array precisa ser copiado antes",
+        "why": "Copiar não muda o tamanho."
+      },
+      {
+        "text": "25 elementos não cabem em 24",
+        "why": "Isso: o produto do formato tem de ser igual ao tamanho."
+      }
+    ]
+  },
+  "ex-hfw2rz6j": {
+    "prompt": "`np.array([127], dtype=np.int8) + 5` dá o quê?",
+    "hint": "Oito bits, com sinal.",
+    "choices": [
+      {
+        "text": "`array([132])`, promovido para um tipo mais largo",
+        "why": "No NumPy 2 o tipo do array vence."
+      },
+      {
+        "text": "`OverflowError`",
+        "why": "5 cabe em int8; só o resultado transborda, e isso dá a volta."
+      },
+      {
+        "text": "`array([-124], dtype=int8)`, dando a volta",
+        "why": "Isso, em silêncio."
+      },
+      {
+        "text": "`array([127])`, travado no máximo",
+        "why": "Inteiros dão a volta; não travam no máximo."
+      }
+    ]
+  },
+  "ex-4y3pca22": {
+    "prompt": "`x = np.array([0.1, 0.2]); x.sum() == 0.3` dá `False`. Qual é o teste certo?",
+    "hint": "Dentro de uma tolerância.",
+    "choices": [
+      {
+        "text": "`np.isclose(x.sum(), 0.3)`",
+        "why": "Isso."
+      },
+      {
+        "text": "`x.sum() is 0.3`",
+        "why": "`is` compara identidade, o que é pior."
+      },
+      {
+        "text": "`round(x.sum()) == 0.3`",
+        "why": "`round` sem casas dá 0."
+      },
+      {
+        "text": "`x.astype(int).sum() == 0`",
+        "why": "Truncar para inteiros joga os valores fora."
+      }
+    ]
+  },
+  "ex-nqbh6k01": {
+    "prompt": "`np.array([-0.7]).astype(int)` dá um array de um valor. Qual?",
+    "hint": "A truncagem vai em direção ao zero."
+  },
+  "ex-759704bm": {
+    "prompt": "Uma coluna float com alguns `nan` é convertida com `astype(int)`. O que você recebe?",
+    "hint": "O NumPy avisa, e não recusa.",
+    "choices": [
+      {
+        "text": "Um `ValueError`, e nenhum array",
+        "why": "Não levanta; avisa."
+      },
+      {
+        "text": "Os `nan` viram 0",
+        "why": "Viram um inteiro sem significado; aqui o menor int64."
+      },
+      {
+        "text": "Um `RuntimeWarning`, e inteiros sem significado onde estavam os `nan`",
+        "why": "Isso. Mantenha uma coluna com buracos como float."
+      },
+      {
+        "text": "Um array de `object` com `nan` e inteiros",
+        "why": "O dtype é int64."
+      }
+    ]
+  },
+  "ex-axf49ak8": {
+    "prompt": "No NumPy 2, `np.array([14, 20, 12], dtype=np.uint8) + 300` levanta `OverflowError`. No NumPy 1 dava `[314 320 312]`. O que mudou?",
+    "hint": "Valor ou tipo?",
+    "choices": [
+      {
+        "text": "O NumPy 2 abandonou o `uint8`",
+        "why": "O array foi criado com ele."
+      },
+      {
+        "text": "Agora o tipo do array decide, e não o valor do número Python",
+        "why": "Isso: NEP 50."
+      },
+      {
+        "text": "Inteiros do Python agora são de 8 bits",
+        "why": "Os inteiros do Python não mudaram."
+      },
+      {
+        "text": "Somar um escalar não é mais permitido",
+        "why": "`docks.astype(np.int64) + 300` funcionou."
+      }
+    ]
+  },
+  "ex-rzmzvjh8": {
+    "prompt": "A última linha de uma célula é `docks.max()` e a saída é `np.uint8(20)`. Há algo errado?",
+    "hint": "A representação de um número no NumPy 2.",
+    "choices": [
+      {
+        "text": "Não: o NumPy 2 mostra o tipo do escalar na representação",
+        "why": "Isso; o valor é 20."
+      },
+      {
+        "text": "Sim: o máximo voltou como array",
+        "why": "É um escalar, mostrado com o tipo."
+      },
+      {
+        "text": "Sim: o valor transbordou",
+        "why": "20 cabe em uint8."
+      },
+      {
+        "text": "Não, mas quer dizer que o notebook roda o NumPy 1",
+        "why": "O NumPy 1 imprimia `20`."
+      }
+    ]
+  },
+  "ex-90tmtgsw": {
+    "prompt": "Um código antigo contava com o NumPy 1 alargar um tipo inteiro pequeno quando preciso. Qual a correção robusta?",
+    "hint": "Diga o que você quer dizer.",
+    "choices": [
+      {
+        "text": "Fixar o NumPy 1 para sempre",
+        "why": "Isso adia o problema e bloqueia toda atualização."
+      },
+      {
+        "text": "Capturar `OverflowError` e tentar de novo com `float`",
+        "why": "Isso esconde a decisão num tratador de exceção."
+      },
+      {
+        "text": "Escolher o dtype explicitamente",
+        "why": "Isso, com `astype` ou `dtype=`."
+      },
+      {
+        "text": "Usar listas Python em vez de arrays para números pequenos",
+        "why": "Isso abre mão de tudo para que o array serve."
+      }
+    ]
+  },
+  "ex-q10n08r5": {
+    "prompt": "`hours` é um array 4 × 6 de `int64` em ordem C. Por que os strides são `(48, 8)`?",
+    "hint": "Bytes até a próxima linha, bytes até a próxima coluna.",
+    "choices": [
+      {
+        "text": "48 é o número de elementos e 8 o de linhas",
+        "why": "São 24 elementos e 4 linhas."
+      },
+      {
+        "text": "Uma linha são seis números de 8 bytes; a próxima coluna é um",
+        "why": "Isso."
+      },
+      {
+        "text": "O NumPy completa cada linha até 48 bytes por alinhamento",
+        "why": "Seis int64 são exatamente 48 bytes; sem enchimento."
+      },
+      {
+        "text": "Strides são sempre (48, 8) em arrays 2-D",
+        "why": "Dependem do formato e do dtype."
+      }
+    ]
+  },
+  "ex-7d2esdpy": {
+    "prompt": "Quanto custa `hours.T` num array de cem milhões de elementos?",
+    "hint": "O que uma transposição muda?",
+    "choices": [
+      {
+        "text": "Uma cópia de todos os 800 MB",
+        "why": "Nada é copiado."
+      },
+      {
+        "text": "Tempo proporcional ao número de linhas",
+        "why": "Nenhum elemento é tocado."
+      },
+      {
+        "text": "Quase nada: troca os strides",
+        "why": "Isso; é uma view."
+      },
+      {
+        "text": "Falha: transposições exigem array contíguo, o que um grande raramente é",
+        "why": "Funciona em qualquer array."
+      }
+    ]
+  },
+  "ex-tv1xmmpn": {
+    "prompt": "Associe cada operação num array `a` ao que ela dá.",
+    "hint": "Descrever ou calcular?",
+    "pairs": [
+      {
+        "left": "`a[2:5]`",
+        "right": "Uma view"
+      },
+      {
+        "left": "`a[a > 10]`",
+        "right": "Uma cópia"
+      },
+      {
+        "left": "`a.T`",
+        "right": "Uma view, com strides trocados"
+      },
+      {
+        "left": "`a + 1`",
+        "right": "Um array novo de valores calculados"
+      }
+    ],
+    "right_distractors": [
+      "Um erro"
+    ]
+  },
+  "ex-gs0cd7hz": {
+    "prompt": "`week = rain[:7]; week[0] = 5.0`. Quanto vale `weather[0, 0]` agora?",
+    "hint": "`rain` é uma coluna de `weather`.",
+    "choices": [
+      {
+        "text": "5.0",
+        "why": "Isso: os três compartilham os bytes."
+      },
+      {
+        "text": "0.0, o valor original",
+        "why": "Uma fatia é uma view, não uma cópia."
+      },
+      {
+        "text": "`nan`, já que a view foi desligada",
+        "why": "Nada desliga uma view."
+      },
+      {
+        "text": "Levanta erro: views são só de leitura",
+        "why": "Views podem ser escritas."
+      }
+    ]
+  },
+  "ex-b7jx49gq": {
+    "prompt": "Qual chamada diz se dois arrays usam algum dos mesmos bytes?",
+    "hint": "É uma pergunta que você faz em vez de raciocinar.",
+    "choices": [
+      {
+        "text": "`a is b`",
+        "why": "Duas views são objetos diferentes sobre os mesmos bytes."
+      },
+      {
+        "text": "`a == b`",
+        "why": "Isso compara valores, elemento a elemento."
+      },
+      {
+        "text": "`a.flags[\"C_CONTIGUOUS\"]`",
+        "why": "Isso é sobre disposição, não compartilhamento."
+      },
+      {
+        "text": "`np.shares_memory(a, b)`",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-d5e1y6jx": {
+    "prompt": "Ordene estes dtypes do menor número de bytes por elemento ao maior.",
+    "hint": "O número no nome são bits.",
+    "items": [
+      "`int8`",
+      "`float32`",
+      "`int64`",
+      "`<U21`"
+    ],
+    "trap": "`<U21` parece curto e guarda até 21 caracteres de 4 bytes cada."
+  },
+  "ex-6hx8yvra": {
+    "prompt": "Quais destes mudam um array em silêncio, sem erro? Escolha todos os que se aplicam.",
+    "hint": "O NumPy escolhe velocidade em vez de conferência.",
+    "choices": [
+      {
+        "text": "Uma soma em int8 que passa de 127",
+        "why": "Sim: dá a volta."
+      },
+      {
+        "text": "Escrever numa fatia de outro array",
+        "why": "Sim: o original muda."
+      },
+      {
+        "text": "`astype(int)` em 29,9",
+        "why": "Sim: trunca para 29."
+      },
+      {
+        "text": "`reshape(5, 5)` em 24 elementos",
+        "why": "Não: isso levanta `ValueError`."
+      },
+      {
+        "text": "array `uint8` + 300 no NumPy 2",
+        "why": "Não: isso levanta `OverflowError`."
+      }
+    ]
+  }
+}

@@ -1,0 +1,540 @@
+[
+  {
+    "id": "ex-1vkc8r5h",
+    "version": 1,
+    "section": "antipatterns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are these antipatterns invisible on a developer's laptop?",
+    "hint": "Where is the database?",
+    "choices": [
+      {
+        "text": "Laptops have faster disks than servers",
+        "correct": false,
+        "why": "Disks were not the cost."
+      },
+      {
+        "text": "The database is on the same machine",
+        "correct": true,
+        "why": "Right: round trips cost almost nothing."
+      },
+      {
+        "text": "ORMs behave differently in development",
+        "correct": false,
+        "why": "The same code runs."
+      },
+      {
+        "text": "Laptops do not run PostgreSQL",
+        "correct": false,
+        "why": "They do."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyg2qgwz",
+    "version": 1,
+    "section": "antipatterns",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each antipattern to what the code does.",
+    "hint": "Too often, too much, too heavy.",
+    "pairs": [
+      {
+        "left": "chatty I/O",
+        "right": "many small requests where one would do"
+      },
+      {
+        "left": "extraneous fetching",
+        "right": "fetches more data than it uses"
+      },
+      {
+        "left": "busy database",
+        "right": "makes the database repeat or do work it need not"
+      }
+    ]
+  },
+  {
+    "id": "ex-h8wxsdqp",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `latency.py` stand in for?",
+    "hint": "A millisecond each way.",
+    "choices": [
+      {
+        "text": "A slow disk on the database server",
+        "correct": false,
+        "why": "It delays the network, not the disk."
+      },
+      {
+        "text": "A database under heavy load",
+        "correct": false,
+        "why": "The database itself is untouched."
+      },
+      {
+        "text": "The network between two zones",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A slow Python driver",
+        "correct": false,
+        "why": "The driver is unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-x987d411",
+    "version": 1,
+    "section": "chatty-io",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many queries did `history-n1` send for customer c-7?",
+    "hint": "One plus one per order.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-pzt55nyr",
+    "version": 1,
+    "section": "chatty-io",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where did most of `history-n1`'s 45 milliseconds go?",
+    "hint": "Each query was tiny.",
+    "choices": [
+      {
+        "text": "Executing the queries in PostgreSQL",
+        "correct": false,
+        "why": "Each ran in well under a millisecond."
+      },
+      {
+        "text": "Round trips",
+        "correct": true,
+        "why": "Right: ten of them."
+      },
+      {
+        "text": "Converting rows to Python objects",
+        "correct": false,
+        "why": "There were 45 small rows."
+      },
+      {
+        "text": "Starting the container",
+        "correct": false,
+        "why": "The timer starts at the first query."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9vg6z1n",
+    "version": 1,
+    "section": "chatty-io",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does an ORM usually produce an N+1 query?",
+    "hint": "When is a relation loaded?",
+    "choices": [
+      {
+        "text": "By joining every table on every query",
+        "correct": false,
+        "why": "That is the opposite."
+      },
+      {
+        "text": "By caching too aggressively",
+        "correct": false,
+        "why": "A cache reduces queries."
+      },
+      {
+        "text": "Lazy loading",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "By retrying failed queries",
+        "correct": false,
+        "why": "Not the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a3z61zy",
+    "version": 1,
+    "section": "chatty-io",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fix keeps two queries but removes the N?",
+    "hint": "`ANY`.",
+    "choices": [
+      {
+        "text": "A join",
+        "correct": false,
+        "why": "That makes it one query."
+      },
+      {
+        "text": "`WHERE order_id = ANY(...)` with all the ids",
+        "correct": true,
+        "why": "Right: eager loading."
+      },
+      {
+        "text": "A bigger connection pool",
+        "correct": false,
+        "why": "The queries stay sequential."
+      },
+      {
+        "text": "An index on `orders.customer`",
+        "correct": false,
+        "why": "Speeds the first query, not the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-c510e1nz",
+    "version": 1,
+    "section": "extraneous-fetching",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `SELECT *` bring back that the catalogue list never shows?",
+    "hint": "20 KB per product.",
+    "choices": [
+      {
+        "text": "The prices",
+        "correct": false,
+        "why": "The list shows them."
+      },
+      {
+        "text": "Extra products",
+        "correct": false,
+        "why": "The same fifty."
+      },
+      {
+        "text": "The descriptions",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The order history",
+        "correct": false,
+        "why": "Not in that table."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7qsy0tw",
+    "version": 1,
+    "section": "extraneous-fetching",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Roughly how many times more bytes did `catalogue-star` move than `catalogue-columns`?",
+    "hint": "1,000,775 ÷ 775.",
+    "value": 1291,
+    "tolerance": 20,
+    "unit": "times"
+  },
+  {
+    "id": "ex-hm1dk1qw",
+    "version": 1,
+    "section": "extraneous-fetching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do some teams forbid `SELECT *` in application code?",
+    "hint": "Next year's column.",
+    "choices": [
+      {
+        "text": "It is slower to parse",
+        "correct": false,
+        "why": "Parsing is not the cost."
+      },
+      {
+        "text": "PostgreSQL warns about it",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "It breaks when a column is renamed",
+        "correct": false,
+        "why": "Named columns break too."
+      },
+      {
+        "text": "A future large column sneaks in",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-64x4cc0s",
+    "version": 1,
+    "section": "busy-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `pg_stat_statements` show about the front page?",
+    "hint": "Calls.",
+    "choices": [
+      {
+        "text": "The query was missing an index",
+        "correct": false,
+        "why": "It showed counts and time, not plans."
+      },
+      {
+        "text": "One answer, 100 runs",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The query returned wrong rows",
+        "correct": false,
+        "why": "The rows were right."
+      },
+      {
+        "text": "The proxy was the bottleneck",
+        "correct": false,
+        "why": "It does not see the proxy."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9ymg1qq",
+    "version": 1,
+    "section": "busy-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a one-minute cache acceptable for the best sellers?",
+    "hint": "Thirty days.",
+    "choices": [
+      {
+        "text": "Caches are always acceptable",
+        "correct": false,
+        "why": "Not for a price at checkout."
+      },
+      {
+        "text": "A minute-old answer looks the same to a visitor",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The database cannot compute it faster",
+        "correct": false,
+        "why": "It is fast; the problem is repetition."
+      },
+      {
+        "text": "PostgreSQL caches it anyway",
+        "correct": false,
+        "why": "It ran the query a hundred times."
+      }
+    ]
+  },
+  {
+    "id": "ex-vatmyg1m",
+    "version": 1,
+    "section": "busy-database",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did `Rows Removed by Filter: 7996` say?",
+    "hint": "Four rows were wanted.",
+    "choices": [
+      {
+        "text": "The query deleted 7,996 rows",
+        "correct": false,
+        "why": "It is a read."
+      },
+      {
+        "text": "7,996 rows failed a constraint",
+        "correct": false,
+        "why": "Not a constraint."
+      },
+      {
+        "text": "It read every item to find four",
+        "correct": true,
+        "why": "Right: no index."
+      },
+      {
+        "text": "The filter is wrong",
+        "correct": false,
+        "why": "It returned the right four."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9j7tyxv",
+    "version": 1,
+    "section": "busy-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should formatting JSON or text not be done in the database?",
+    "hint": "Which CPU is scarcest?",
+    "choices": [
+      {
+        "text": "Its CPU is scarcest",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SQL cannot produce JSON",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "It is not allowed by the LGPD",
+        "correct": false,
+        "why": "Not a legal matter."
+      },
+      {
+        "text": "The result cannot be indexed",
+        "correct": false,
+        "why": "Not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-3p0vjynt",
+    "version": 1,
+    "section": "finding-them",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each measurement to the antipattern it finds.",
+    "hint": "Count, size, time.",
+    "pairs": [
+      {
+        "left": "queries per request",
+        "right": "chatty I/O"
+      },
+      {
+        "left": "bytes per request",
+        "right": "extraneous fetching"
+      },
+      {
+        "left": "database time per query",
+        "right": "busy database"
+      }
+    ]
+  },
+  {
+    "id": "ex-qysnetzt",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does an N+1 look in a trace?",
+    "hint": "Many identical spans.",
+    "choices": [
+      {
+        "text": "One very long span",
+        "correct": false,
+        "why": "That is a slow query."
+      },
+      {
+        "text": "A comb of identical database spans",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A span with an error",
+        "correct": false,
+        "why": "N+1 is not an error."
+      },
+      {
+        "text": "No database spans at all",
+        "correct": false,
+        "why": "There are many."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1t2z2ff",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is improper instantiation?",
+    "hint": "Connection set-up every time.",
+    "choices": [
+      {
+        "text": "Creating objects in the wrong module",
+        "correct": false,
+        "why": "Not the meaning."
+      },
+      {
+        "text": "Starting too many containers",
+        "correct": false,
+        "why": "Not the meaning."
+      },
+      {
+        "text": "A class with too many constructors",
+        "correct": false,
+        "why": "Not the meaning."
+      },
+      {
+        "text": "A new client per request",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jf19fr91",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the usual first hour with a busy database in order.",
+    "hint": "Rank, explain, fix, measure again.",
+    "items": [
+      "Rank queries by total time in `pg_stat_statements`",
+      "Run `EXPLAIN ANALYZE` on the top ones",
+      "Add the index, cache or read model they need",
+      "Measure again"
+    ]
+  },
+  {
+    "id": "ex-96gnjx5f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's basket page takes 2 seconds in production and 40 ms on a laptop, and the code has not changed. What is the most likely cause?",
+    "hint": "What is different between the two?",
+    "choices": [
+      {
+        "text": "Production's Python is older",
+        "correct": false,
+        "why": "Version differences rarely cost 50 times."
+      },
+      {
+        "text": "Chatty I/O over a real network",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The page renders larger images",
+        "correct": false,
+        "why": "Images do not reach the server time."
+      },
+      {
+        "text": "Logging is turned on in production",
+        "correct": false,
+        "why": "Not enough for 2 seconds."
+      }
+    ]
+  }
+]

@@ -1,0 +1,614 @@
+[
+  {
+    "id": "ex-s3509sdb",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is allocated once, when the server starts, and shared by every process?",
+    "hint": "Look at which one is a postmaster parameter.",
+    "choices": [
+      {
+        "text": "work_mem",
+        "correct": false,
+        "why": "Taken per sort or hash, inside one process, and given back afterwards."
+      },
+      {
+        "text": "maintenance_work_mem",
+        "correct": false,
+        "why": "Taken by one maintenance operation in one process."
+      },
+      {
+        "text": "shared_buffers",
+        "correct": true,
+        "why": "Right. 128 MB by default, sized at start and kept until the server stops."
+      },
+      {
+        "text": "temp_buffers",
+        "correct": false,
+        "why": "A session's own cache for its temporary tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-rb7ve290",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shared_memory_size` is 143 MB while `shared_buffers` is 128 MB. What is the difference?",
+    "hint": "The shared segment holds more than pages.",
+    "choices": [
+      {
+        "text": "The work_mem of the connections open at the moment",
+        "correct": false,
+        "why": "work_mem is private to each process and is not part of the shared segment."
+      },
+      {
+        "text": "Lock tables, WAL buffers and other bookkeeping",
+        "correct": true,
+        "why": "Right. The buffers are most of the segment, not all of it."
+      },
+      {
+        "text": "The operating system's page cache for the data files",
+        "correct": false,
+        "why": "That belongs to the kernel and is counted in buff/cache, not by PostgreSQL."
+      },
+      {
+        "text": "Rounding: 128 MB is shown in binary and 143 in decimal units",
+        "correct": false,
+        "why": "Both are in the same unit; 15 MB is real memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ttaxzbd",
+    "version": 1,
+    "section": "two-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each parameter to what it is.",
+    "hint": "Shared, private, maintenance, or no memory at all.",
+    "pairs": [
+      {
+        "left": "shared_buffers",
+        "right": "one cache of pages for every process"
+      },
+      {
+        "left": "work_mem",
+        "right": "the ceiling for one sort or hash"
+      },
+      {
+        "left": "maintenance_work_mem",
+        "right": "the ceiling for one index build or vacuum"
+      },
+      {
+        "left": "effective_cache_size",
+        "right": "an estimate for the planner, allocating nothing"
+      }
+    ]
+  },
+  {
+    "id": "ex-djsn8vqe",
+    "version": 1,
+    "section": "shared-buffers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `shared_buffers` at 128 MB, a parallel `count(*)` read all 8334 pages of `orders`. How many of them were in the cache afterwards?",
+    "hint": "Three processes, a ring of 32 each.",
+    "value": 96,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-c3py9nc2",
+    "version": 1,
+    "section": "shared-buffers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did a 65 MB table not stay in a 128 MB cache after being read in full?",
+    "hint": "Compare the table with a quarter of the cache.",
+    "choices": [
+      {
+        "text": "The cache was already full of system catalogues",
+        "correct": false,
+        "why": "16127 of 16384 buffers were unused after the restart."
+      },
+      {
+        "text": "count(*) reads the index instead of the table",
+        "correct": false,
+        "why": "The plan said Parallel Seq Scan on orders, 8334 pages read."
+      },
+      {
+        "text": "The pages were evicted as soon as the query ended",
+        "correct": false,
+        "why": "Nothing evicts pages at the end of a query; with 1 GB of cache all 8334 stayed."
+      },
+      {
+        "text": "A big sequential scan gets a small ring of buffers",
+        "correct": true,
+        "why": "Right. Larger than a quarter of shared_buffers, so 32 buffers per process, to protect other tables' pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jps6rx1",
+    "version": 1,
+    "section": "shared-buffers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Buffers: shared read=8238` and yet the query took a fraction of a second. Where did the 8238 pages come from?",
+    "hint": "read means not in shared_buffers. It does not say from where.",
+    "choices": [
+      {
+        "text": "From the disk, which is very fast on this machine",
+        "correct": false,
+        "why": "They never reached the disk: the kernel had them cached."
+      },
+      {
+        "text": "From another backend's private memory",
+        "correct": false,
+        "why": "Backends do not share private memory; shared pages live in shared_buffers."
+      },
+      {
+        "text": "The operating system's page cache",
+        "correct": true,
+        "why": "Right. The second cache under PostgreSQL's own; a read there is a copy in memory."
+      },
+      {
+        "text": "From the write-ahead log",
+        "correct": false,
+        "why": "The WAL is read in recovery, not to answer queries."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2nbr73c",
+    "version": 1,
+    "section": "shared-buffers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the usual advice start shared_buffers at about a quarter of memory rather than most of it?",
+    "hint": "There is a second cache.",
+    "choices": [
+      {
+        "text": "The kernel's page cache needs memory too, and holds much of the same data",
+        "correct": true,
+        "why": "Right. Memory given to one cache is taken from the other, and processes need private memory as well."
+      },
+      {
+        "text": "PostgreSQL refuses values above 25%",
+        "correct": false,
+        "why": "It accepts far more; 25% is advice, not a limit."
+      },
+      {
+        "text": "Larger caches make every query slower",
+        "correct": false,
+        "why": "The documentation says above 40% rarely helps, not that it harms every query."
+      },
+      {
+        "text": "Linux limits shared memory to a quarter of RAM",
+        "correct": false,
+        "why": "No such limit stopped 1 GB here; the rule comes from the double caching."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2pz4f28",
+    "version": 1,
+    "section": "work-mem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In EXPLAIN ANALYZE, which line says a sort spilled to temporary files?",
+    "hint": "Look at the Sort Method.",
+    "choices": [
+      {
+        "text": "Sort Method: quicksort  Memory: 63639kB",
+        "correct": false,
+        "why": "That sort fitted in memory, with work_mem at 100MB."
+      },
+      {
+        "text": "Sort Method: top-N heapsort  Memory: 25kB",
+        "correct": false,
+        "why": "A sort that kept only five rows, in memory."
+      },
+      {
+        "text": "Sort Method: external merge  Disk: 21632kB",
+        "correct": true,
+        "why": "Right. Sorted in pieces, written to disk, merged."
+      },
+      {
+        "text": "Batches: 1  Memory Usage: 4881kB",
+        "correct": false,
+        "why": "A hash in one batch fitted; more batches would mean a spill."
+      }
+    ]
+  },
+  {
+    "id": "ex-10rahn05",
+    "version": 1,
+    "section": "work-mem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The HashAggregate used 4881 kB in a single batch with `work_mem` at 4 MB. How did it fit?",
+    "hint": "One multiplier applies to hashes only.",
+    "choices": [
+      {
+        "text": "work_mem is per query, and the sort above used only 25 kB",
+        "correct": false,
+        "why": "Each step has its own allowance; nothing is shared between them."
+      },
+      {
+        "text": "hash_mem_multiplier is 2, so a hash gets 8 MB",
+        "correct": true,
+        "why": "Right. Hashes cost more to spill, so they get twice the allowance."
+      },
+      {
+        "text": "The limit is checked only at the end of the operation",
+        "correct": false,
+        "why": "A sort over the limit spilled while running; the hash simply had a larger limit."
+      },
+      {
+        "text": "4881 kB is less than 4 MB in binary units",
+        "correct": false,
+        "why": "4 MB is 4096 kB; 4881 is more."
+      }
+    ]
+  },
+  {
+    "id": "ex-bv324qqh",
+    "version": 1,
+    "section": "work-mem",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To give one session room for a big sort without changing anybody else, run ___ work_mem = '100MB'; in that session.",
+    "hint": "The SQL command for a session's own value.",
+    "blanks": [
+      {
+        "accept": [
+          "SET"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kk2jdvyz",
+    "version": 1,
+    "section": "work-mem",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sort spilled 21632 kB to disk with 4 MB, yet did not fit until work_mem was well above 21 MB. Why?",
+    "hint": "Compare what a row costs on disk and in memory.",
+    "choices": [
+      {
+        "text": "The temporary files are compressed",
+        "correct": false,
+        "why": "They are not compressed; they are just more compact than the in-memory form."
+      },
+      {
+        "text": "In memory each row carries pointers and headers",
+        "correct": true,
+        "why": "Right. The in-memory sort took 63639 kB, about three times the files."
+      },
+      {
+        "text": "The parallel workers each needed a copy of the rows",
+        "correct": false,
+        "why": "This plan had no Gather: one process did the sort."
+      },
+      {
+        "text": "work_mem is counted in 8 kB pages, not kilobytes",
+        "correct": false,
+        "why": "pg_settings gave its unit as kB."
+      }
+    ]
+  },
+  {
+    "id": "ex-czxyyk5s",
+    "version": 1,
+    "section": "maintenance-work-mem",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these uses maintenance_work_mem rather than work_mem?",
+    "hint": "Not a query.",
+    "choices": [
+      {
+        "text": "SELECT … ORDER BY",
+        "correct": false,
+        "why": "A query's sort uses work_mem."
+      },
+      {
+        "text": "SELECT … GROUP BY",
+        "correct": false,
+        "why": "A HashAggregate uses work_mem times hash_mem_multiplier."
+      },
+      {
+        "text": "A hash join",
+        "correct": false,
+        "why": "Also a query step, also work_mem."
+      },
+      {
+        "text": "CREATE INDEX",
+        "correct": true,
+        "why": "Right, along with VACUUM and adding a foreign key."
+      }
+    ]
+  },
+  {
+    "id": "ex-pj2v24dv",
+    "version": 1,
+    "section": "maintenance-work-mem",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The build at 1 MB wrote a 20070400-byte temporary file; the build at 64 MB wrote none. Both took about half a second. What does that show?",
+    "hint": "Where did the 19 MB go?",
+    "choices": [
+      {
+        "text": "maintenance_work_mem has no effect on CREATE INDEX",
+        "correct": false,
+        "why": "It decided whether the sort spilled: a file at 1 MB, none at 64 MB."
+      },
+      {
+        "text": "The second build reused the first one's sorted file",
+        "correct": false,
+        "why": "The file is deleted when the operation ends, and the index was dropped."
+      },
+      {
+        "text": "Index builds always run in parallel, hiding the cost",
+        "correct": false,
+        "why": "max_parallel_maintenance_workers was 0: one process each time."
+      },
+      {
+        "text": "Spilling is cheap while the file stays in the page cache",
+        "correct": true,
+        "why": "Right. On a machine where it reaches the disk, the gap grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-cs1vy3w7",
+    "version": 1,
+    "section": "maintenance-work-mem",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "maintenance_work_mem is 1GB on a 4 GB machine. Three autovacuum workers run while somebody builds an index. How much memory may those four take?",
+    "hint": "autovacuum_work_mem is -1. And vacuum has a cap of its own in 16.",
+    "choices": [
+      {
+        "text": "1 GB, shared among the four",
+        "correct": false,
+        "why": "It is per operation: each worker and the build get their own."
+      },
+      {
+        "text": "64 MB each, because autovacuum ignores maintenance_work_mem",
+        "correct": false,
+        "why": "-1 means autovacuum uses maintenance_work_mem."
+      },
+      {
+        "text": "Only the index build, since autovacuum pauses during it",
+        "correct": false,
+        "why": "Autovacuum works on other tables at the same time."
+      },
+      {
+        "text": "Up to 4 GB: each takes its own",
+        "correct": true,
+        "why": "Right. Vacuum caps at 1 GB, and so does this setting: four allowances, the whole machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-h78cz58j",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SET effective_cache_size = '1TB'` was accepted on a 15 GB machine. What did it change?",
+    "hint": "It allocates nothing.",
+    "choices": [
+      {
+        "text": "It reserved a terabyte of swap for the session",
+        "correct": false,
+        "why": "free showed no swap, and the parameter allocates nothing."
+      },
+      {
+        "text": "It enlarged shared_buffers for this session",
+        "correct": false,
+        "why": "shared_buffers is postmaster: no session can change it."
+      },
+      {
+        "text": "The planner's estimate of what is cached",
+        "correct": true,
+        "why": "Right. It is a belief the planner uses for index costs, nothing more."
+      },
+      {
+        "text": "Nothing, because the value exceeds the memory",
+        "correct": false,
+        "why": "It took effect for the session; SHOW printed 1TB. It just is not true."
+      }
+    ]
+  },
+  {
+    "id": "ex-ysm3khgv",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 4 GB machine: shared_buffers 1024 MB, 512 MB for the system, 1024 MB of page cache kept, 100 connections with two operations each. What work_mem, in MB, does the course's arithmetic give, rounded to a whole number?",
+    "hint": "(4096 − 1024 − 512 − 1024) ÷ 200.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-6chxw6cw",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query with two hash joins and a sort runs with two parallel helpers. How many times work_mem may it use, at most, by the course's count?",
+    "hint": "Three processes; a hash counts twice.",
+    "value": 15,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1wp8afge",
+    "version": 1,
+    "section": "the-arithmetic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backend is killed by Linux's out-of-memory killer. What does the postmaster do?",
+    "hint": "It cannot trust shared memory any more.",
+    "choices": [
+      {
+        "text": "Ends every connection and restarts",
+        "correct": true,
+        "why": "Right. One runaway query becomes an outage for everybody."
+      },
+      {
+        "text": "Starts a replacement for that one backend and carries on",
+        "correct": false,
+        "why": "A killed process may have left shared memory inconsistent, so all go."
+      },
+      {
+        "text": "Lowers work_mem automatically for every session",
+        "correct": false,
+        "why": "The server changes no setting by itself."
+      },
+      {
+        "text": "Nothing; the client sees an error and reconnects",
+        "correct": false,
+        "why": "Every other client sees an error too, because they are all disconnected."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqmeg2dc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard opens the same 120 MB report twenty times at once on the 4 GB virtual machine with work_mem 8MB. What runs out first?",
+    "hint": "20 × 120 MB, against the 1536 MB share.",
+    "choices": [
+      {
+        "text": "shared_buffers, which the reports fill with their sorts",
+        "correct": false,
+        "why": "Sorts use private memory; shared_buffers stays 1 GB whatever they do."
+      },
+      {
+        "text": "max_connections, at twenty",
+        "correct": false,
+        "why": "max_connections is 100; twenty connections are well inside it."
+      },
+      {
+        "text": "Nothing: work_mem caps the total at 8 MB per connection",
+        "correct": false,
+        "why": "It caps each step, never a connection's total."
+      },
+      {
+        "text": "The page cache, then free memory",
+        "correct": true,
+        "why": "Right. 2400 MB is more than the share for sorts and hashes; the kernel gives up cache first."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjgbb8v9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the course's memory budget in order.",
+    "hint": "Shared cache first, the division last.",
+    "items": [
+      "give shared_buffers a quarter of memory",
+      "set aside memory for the system and processes",
+      "keep a quarter for the page cache",
+      "divide what is left by connections × operations"
+    ],
+    "trap": "Dividing before the shares are taken out sizes work_mem against memory that is already spoken for."
+  },
+  {
+    "id": "ex-8fg5fkyr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After raising shared_buffers from 128 MB to 1 GB, the second count of orders went from read=8238 to hit=8334, and the time barely changed. What explains that?",
+    "hint": "Where were the pages before?",
+    "choices": [
+      {
+        "text": "The page cache already served the misses",
+        "correct": true,
+        "why": "Right. On a machine whose data does not fit in memory, the hits would save real reads."
+      },
+      {
+        "text": "The extra memory went to work_mem instead",
+        "correct": false,
+        "why": "shared_buffers and work_mem are separate; the restart grew only the shared segment."
+      },
+      {
+        "text": "A count reads no pages, so the cache is irrelevant",
+        "correct": false,
+        "why": "It read all 8334 pages, as the Buffers line shows."
+      },
+      {
+        "text": "The parallel workers bypass shared_buffers",
+        "correct": false,
+        "why": "They read through it: hit=8334 counts their pages too."
+      }
+    ]
+  },
+  {
+    "id": "ex-796kjhrt",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value of the course's budget for the 15 GB recording machine.",
+    "hint": "A quarter, the division, three quarters, four allowances.",
+    "pairs": [
+      {
+        "left": "shared_buffers",
+        "right": "3840MB"
+      },
+      {
+        "left": "work_mem",
+        "right": "32MB"
+      },
+      {
+        "left": "effective_cache_size",
+        "right": "11GB"
+      },
+      {
+        "left": "maintenance_work_mem",
+        "right": "512MB"
+      }
+    ],
+    "right_distractors": [
+      "8MB"
+    ]
+  }
+]

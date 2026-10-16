@@ -1,0 +1,542 @@
+{
+  "ex-pv8rgzkq": {
+    "prompt": "No teorema CAP, o que significa o C?",
+    "hint": "Não é o C do ACID.",
+    "choices": [
+      {
+        "text": "Uma transação deixa o banco obedecendo às suas restrições",
+        "why": "Essa é a consistência do ACID."
+      },
+      {
+        "text": "Toda leitura vê a última escrita, como se houvesse uma cópia só",
+        "why": "Isso: linearizabilidade."
+      },
+      {
+        "text": "Todo nó roda a mesma versão do software",
+        "why": "Versões não têm nada a ver."
+      },
+      {
+        "text": "Os dados têm backup consistente toda noite",
+        "why": "Backups não são o assunto do teorema."
+      }
+    ]
+  },
+  "ex-d157cy5f": {
+    "prompt": "Dito com precisão, o que o teorema diz que um nó precisa fazer durante uma partição?",
+    "hint": "Recusar, ou responder e arriscar...",
+    "choices": [
+      {
+        "text": "Desligar até a partição acabar",
+        "why": "Desligar é um jeito de recusar, não a única escolha."
+      },
+      {
+        "text": "Eleger um líder novo de cada lado",
+        "why": "Esse é o comportamento de um algoritmo, não o teorema."
+      },
+      {
+        "text": "Recusar o que não consegue responder corretamente, ou responder e arriscar estar errado",
+        "why": "Isso: abrir mão do A, ou do C."
+      },
+      {
+        "text": "Manter consistência e disponibilidade esperando mais",
+        "why": "Esperar para sempre é recusar."
+      }
+    ]
+  },
+  "ex-t5gk9vb1": {
+    "prompt": "Ligue cada letra do CAP ao que ela significa no teorema.",
+    "hint": "A tabela da primeira seção.",
+    "pairs": [
+      {
+        "left": "C",
+        "right": "toda leitura vê a escrita mais recente"
+      },
+      {
+        "left": "A",
+        "right": "toda requisição a um nó de pé recebe uma resposta que não é erro"
+      },
+      {
+        "left": "P",
+        "right": "o sistema funciona quando mensagens entre nós se perdem"
+      }
+    ],
+    "right_distractors": [
+      "as respostas chegam em até 100 ms"
+    ]
+  },
+  "ex-4qvvfa9k": {
+    "prompt": "Por que um sistema distribuído não pode escolher abrir mão do P?",
+    "hint": "Uma partição é um recurso ou um evento?",
+    "choices": [
+      {
+        "text": "Porque o P é o mais barato dos três de oferecer",
+        "why": "Custo não é o argumento."
+      },
+      {
+        "text": "A partição acontece, escolha ele o que for",
+        "why": "Isso. A única escolha é o que ele faz quando uma acontece."
+      },
+      {
+        "text": "Porque a prova do teorema o supõe e mais nada",
+        "why": "O ponto é sobre redes, não provas."
+      },
+      {
+        "text": "Pode, rodando todos os nós num data center só",
+        "why": "Um data center ainda tem switches, pausas e nós sobrecarregados."
+      }
+    ]
+  },
+  "ex-8krxkw2g": {
+    "prompt": "Um nó para de responder por oito segundos durante uma pausa de coleta de lixo e depois continua. O que os outros nós viveram?",
+    "hint": "Eles conseguem distinguir um par lento de uma rede quebrada?",
+    "choices": [
+      {
+        "text": "Nada incomum; uma pausa não é uma falha",
+        "why": "Para eles foi silêncio, exatamente como uma partição parece."
+      },
+      {
+        "text": "Uma queda, que eles conseguem separar de uma partição",
+        "why": "Eles não separam nenhum desses até um timeout."
+      },
+      {
+        "text": "Uma partição, até onde conseguiam ver",
+        "why": "Isso. Silêncio parece igual, qualquer que seja a causa."
+      },
+      {
+        "text": "Uma mensagem de erro de rede do nó pausado",
+        "why": "Um nó pausado não manda nada."
+      }
+    ]
+  },
+  "ex-k894tfrt": {
+    "prompt": "O que um sistema \"CA\" descreve de fato?",
+    "hint": "Quantas máquinas?",
+    "choices": [
+      {
+        "text": "Um cluster que nunca tem problemas de rede",
+        "why": "Nenhum cluster consegue prometer isso."
+      },
+      {
+        "text": "Uma máquina só, sem pares",
+        "why": "Isso, como um servidor PostgreSQL sozinho."
+      },
+      {
+        "text": "Um sistema consistente e disponível durante partições",
+        "why": "É o que o teorema descarta."
+      },
+      {
+        "text": "Um banco em nuvem vendido com garantia de alta disponibilidade",
+        "why": "Uma garantia em contrato não é uma propriedade do CAP."
+      }
+    ]
+  },
+  "ex-q30t4b0c": {
+    "prompt": "O que o standby respondeu quando lhe pediram um UPDATE?",
+    "hint": "Uma cópia decide.",
+    "choices": [
+      {
+        "text": "Atualizou a sua cópia e passou a mudança ao primário",
+        "why": "Um standby nunca recebe escritas."
+      },
+      {
+        "text": "Atualizou só a sua cópia, e as duas divergiram",
+        "why": "O standby recusou."
+      },
+      {
+        "text": "Um erro: transação somente leitura",
+        "why": "Isso. Aceita leituras e recusa escritas."
+      },
+      {
+        "text": "Repassou o UPDATE ao primário automaticamente",
+        "why": "O PostgreSQL não repassa escritas de um standby."
+      }
+    ]
+  },
+  "ex-43tkxgax": {
+    "prompt": "Como o standby do laboratório mantém a cópia atualizada?",
+    "hint": "Olhe o `pg_stat_replication` e o comando do standby.",
+    "choices": [
+      {
+        "text": "Copia o banco inteiro com `pg_basebackup` a cada minuto",
+        "why": "O `pg_basebackup` roda uma vez, no começo."
+      },
+      {
+        "text": "Recebe e reaplica o WAL do primário",
+        "why": "Isso, depois de uma cópia inicial."
+      },
+      {
+        "text": "A aplicação escreve cada mudança nos dois servidores",
+        "why": "A aplicação escreve só no primário."
+      },
+      {
+        "text": "Os dois servidores dividem um volume em disco",
+        "why": "Cada um tem o seu volume, `primary` e `standby`."
+      }
+    ]
+  },
+  "ex-eq1h7r4q": {
+    "prompt": "Com replicação síncrona e o standby desconectado, o que aconteceu com o UPDATE?",
+    "hint": "Olhe o `wait_event`.",
+    "choices": [
+      {
+        "text": "Esperou em `SyncRep`, e o cliente desistiu",
+        "why": "Isso. O primário não terminaria uma escrita que não conseguia copiar."
+      },
+      {
+        "text": "Falhou na hora com um erro dizendo que o standby sumiu",
+        "why": "Não houve erro; houve uma espera."
+      },
+      {
+        "text": "Deu certo no primário e ficou visível para outras sessões",
+        "why": "As outras sessões ainda viam 12."
+      },
+      {
+        "text": "Foi aplicado só no standby",
+        "why": "O standby estava inalcançável e recusa escritas de qualquer jeito."
+      }
+    ]
+  },
+  "ex-4cryyvhr": {
+    "prompt": "Que código de saída o `timeout 5` informou quando matou o cliente que esperava?",
+    "hint": "A linha depois da atualização.",
+    "unit": "código de saída"
+  },
+  "ex-wpkm6qv5": {
+    "prompt": "O cliente desistiu depois de cinco segundos. Quando a rede voltou, os dois servidores mostravam 11. Qual é a lição?",
+    "hint": "No que o cliente acreditou, e o que era verdade?",
+    "choices": [
+      {
+        "text": "A atualização se perdeu, como o cliente supôs",
+        "why": "Os dois servidores mostram a atualização aplicada."
+      },
+      {
+        "text": "O standby aplicou a mudança por conta própria",
+        "why": "O primário terminou a transação que esperava."
+      },
+      {
+        "text": "Replicação síncrona perde escritas durante uma partição",
+        "why": "Não perdeu esta; atrasou."
+      },
+      {
+        "text": "A venda deu certo embora o cliente achasse que falhou; um retry precisa de chave de idempotência",
+        "why": "Isso. A incerteza da aula 2, de novo."
+      }
+    ]
+  },
+  "ex-7cnhvq6d": {
+    "prompt": "No PostgreSQL, os standbys que precisam confirmar um commit são nomeados pela configuração ___.",
+    "hint": "Começa com `synchronous_standby`, e o laboratório a definiu como `'*'`.",
+    "blanks": [
+      {
+        "accept": [
+          "synchronous_standby_names"
+        ]
+      }
+    ]
+  },
+  "ex-dg5gvc32": {
+    "prompt": "Durante a partição com replicação assíncrona, o que uma leitura do standby devolveu?",
+    "hint": "O primário dizia 10.",
+    "choices": [
+      {
+        "text": "Um erro, porque o standby não alcançava o primário",
+        "why": "O standby continuou respondendo leituras."
+      },
+      {
+        "text": "11, um valor que não era mais verdade",
+        "why": "Isso: disponível, e desatualizado."
+      },
+      {
+        "text": "10, porque perguntou ao primário antes",
+        "why": "Ele não alcança o primário durante a partição."
+      },
+      {
+        "text": "Nada até a rede voltar",
+        "why": "Respondeu na hora."
+      }
+    ]
+  },
+  "ex-9rc3zeye": {
+    "prompt": "O primário é destruído enquanto a replicação assíncrona está dois segundos atrasada, e o standby é promovido. O que se perde?",
+    "hint": "O que o primário tinha confirmado e ainda não tinha mandado?",
+    "choices": [
+      {
+        "text": "Nada, porque o standby reaplica tudo ao ser promovido",
+        "why": "Ele só consegue reaplicar o que recebeu."
+      },
+      {
+        "text": "Só as transações não confirmadas",
+        "why": "As confirmadas dos últimos dois segundos também se perdem."
+      },
+      {
+        "text": "O banco inteiro desde o último backup",
+        "why": "O standby tem tudo até o atraso."
+      },
+      {
+        "text": "Escritas que os clientes ouviram como gravadas, dos últimos dois segundos",
+        "why": "Isso: até o atraso de replicação."
+      }
+    ]
+  },
+  "ex-f8dtzh71": {
+    "prompt": "Ligue cada situação a como a replicação síncrona se comporta.",
+    "hint": "A coluna da esquerda da tabela.",
+    "pairs": [
+      {
+        "left": "uma escrita durante uma partição",
+        "right": "espera, talvez para sempre"
+      },
+      {
+        "left": "uma leitura do standby durante uma partição",
+        "right": "o mesmo valor do primário"
+      },
+      {
+        "left": "o primário perdido de vez",
+        "right": "nada do que um cliente ouviu se perde"
+      },
+      {
+        "left": "uma escrita sem partição",
+        "right": "uma ida e volta a mais"
+      }
+    ],
+    "right_distractors": [
+      "o standby recebe escritas"
+    ]
+  },
+  "ex-978hcfdt": {
+    "prompt": "O que o \"senão\" do PACELC acrescenta ao CAP?",
+    "hint": "Quando não há partição...",
+    "choices": [
+      {
+        "text": "Uma terceira escolha durante partições",
+        "why": "O senão é sobre o tempo sem partição."
+      },
+      {
+        "text": "Sem partição, a troca é latência ou consistência",
+        "why": "Isso, e é feita em toda requisição."
+      },
+      {
+        "text": "Partições podem ser evitadas com engenharia suficiente",
+        "why": "O PACELC supõe que acontecem."
+      },
+      {
+        "text": "A latência é irrelevante quando a rede funciona",
+        "why": "O laboratório mediu o contrário."
+      }
+    ]
+  },
+  "ex-gh1gdxsj": {
+    "prompt": "Por que 500 commits foram mais lentos com replicação síncrona quando nada estava quebrado?",
+    "hint": "O que cada commit espera?",
+    "choices": [
+      {
+        "text": "O primário grava cada mudança duas vezes no próprio disco",
+        "why": "A espera extra é pelo standby."
+      },
+      {
+        "text": "O modo síncrono desliga o cache do PostgreSQL",
+        "why": "O cache não muda."
+      },
+      {
+        "text": "Cada commit espera a confirmação do standby",
+        "why": "Isso: uma ida e volta por commit, todo dia."
+      },
+      {
+        "text": "O standby ficou sobrecarregado pelo teste",
+        "why": "Ele só reaplicou as mudanças; a espera foi a ida e volta."
+      }
+    ]
+  },
+  "ex-02k7nvg1": {
+    "prompt": "Onde ficam o etcd e o ZooKeeper, e por quê?",
+    "hint": "Que falha eles existem para impedir?",
+    "choices": [
+      {
+        "text": "Disponibilidade nas duas metades, para ficarem rápidos",
+        "why": "Escolhem consistência de propósito."
+      },
+      {
+        "text": "Latência sem partições, disponibilidade com elas",
+        "why": "Esse é o canto ao estilo do Cassandra."
+      },
+      {
+        "text": "Não replicam, então o CAP não se aplica",
+        "why": "Replicam para uma maioria em toda escrita."
+      },
+      {
+        "text": "Consistência nas duas metades: dois líderes ao mesmo tempo é a falha que impedem",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-7qy9qsbf": {
+    "prompt": "O PostgreSQL do laboratório foi CP e depois AP em dez minutos. Que leitura errada isso refuta?",
+    "hint": "Uma propriedade do produto?",
+    "choices": [
+      {
+        "text": "Que o CAP só vale para bancos NoSQL",
+        "why": "Refuta outra ideia, sobre produtos."
+      },
+      {
+        "text": "Que CP ou AP é uma propriedade do produto",
+        "why": "Isso. É uma propriedade de como é configurado e usado."
+      },
+      {
+        "text": "Que partições são raras",
+        "why": "Partições serem raras é verdade; o laboratório não testou isso."
+      },
+      {
+        "text": "Que replicação é mais lenta do que um servidor sozinho",
+        "why": "Esse é o ponto do PACELC, não uma leitura errada."
+      }
+    ]
+  },
+  "ex-x078pk64": {
+    "prompt": "Um servidor PostgreSQL sozinho garante uma chave estrangeira em toda transação. Ele é \"consistente\" no sentido do CAP, do ACID, ou dos dois?",
+    "hint": "Com uma cópia, toda leitura vê a última escrita.",
+    "choices": [
+      {
+        "text": "Só ACID: a consistência do CAP precisa de várias réplicas",
+        "why": "Uma cópia devolve trivialmente a última escrita."
+      },
+      {
+        "text": "Só CAP: chaves estrangeiras não fazem parte do ACID",
+        "why": "Restrições são exatamente a consistência do ACID."
+      },
+      {
+        "text": "Os dois, mas por motivos diferentes",
+        "why": "Isso: as restrições valem, e com uma cópia toda leitura é a mais recente."
+      },
+      {
+        "text": "Nenhum, até um standby ser acrescentado",
+        "why": "Um standby acrescenta um jeito de ser inconsistente no CAP, não o contrário."
+      }
+    ]
+  },
+  "ex-k1vg9hj7": {
+    "prompt": "Com N = 5 réplicas e W = 3, qual é o menor R que garante que toda leitura se cruze com toda escrita?",
+    "hint": "R + W > N.",
+    "unit": "réplicas"
+  },
+  "ex-kkxcp9fc": {
+    "prompt": "N = 3, W = 1, R = 1. Do que essa configuração abre mão?",
+    "hint": "R + W > N?",
+    "choices": [
+      {
+        "text": "Disponibilidade: qualquer réplica fora para tudo",
+        "why": "Uma réplica basta para cada requisição."
+      },
+      {
+        "text": "Latência: toda requisição espera as três",
+        "why": "Cada requisição espera uma."
+      },
+      {
+        "text": "A garantia de que uma leitura vê a última escrita",
+        "why": "Isso. 1 + 1 não é maior que 3."
+      },
+      {
+        "text": "Durabilidade: a escrita nunca é guardada",
+        "why": "É guardada em pelo menos uma réplica."
+      }
+    ]
+  },
+  "ex-tkyjh2rp": {
+    "prompt": "Com N = 3, W = 3 e R = 1, o que acontece com as escritas quando uma réplica está fora?",
+    "hint": "Quantas precisam confirmar?",
+    "choices": [
+      {
+        "text": "Dão certo nas outras duas",
+        "why": "São exigidas três confirmações."
+      },
+      {
+        "text": "Falham",
+        "why": "Isso: leituras rápidas, pagas com escritas frágeis."
+      },
+      {
+        "text": "São guardadas e lidas da réplica ausente depois",
+        "why": "A réplica ausente não consegue guardar nada."
+      },
+      {
+        "text": "Viram leituras automaticamente",
+        "why": "Escritas não mudam de tipo."
+      }
+    ]
+  },
+  "ex-48egwj76": {
+    "prompt": "Que operação da Quitanda a aula põe do lado da consistência?",
+    "hint": "Uma resposta errada aqui custa dinheiro.",
+    "choices": [
+      {
+        "text": "Mostrar as fotos do catálogo",
+        "why": "A foto de ontem custa pouco."
+      },
+      {
+        "text": "Mostrar \"restam 12\" na página do produto",
+        "why": "Um número aproximado está bem ali."
+      },
+      {
+        "text": "Guardar a cesta de um cliente",
+        "why": "Uma cesta que mostra um item removido por um instante é um custo pequeno."
+      },
+      {
+        "text": "Tirar unidades do estoque no checkout",
+        "why": "Isso. Dois clientes comprando o último pacote é o erro a evitar."
+      }
+    ]
+  },
+  "ex-0xe3c13q": {
+    "prompt": "Por que a aula diz que \"recusar\" muitas vezes custa menos do que parece, num pagamento?",
+    "hint": "Quem percebe cada erro, e quando?",
+    "choices": [
+      {
+        "text": "Pagamentos recusados são tentados de novo automaticamente pelo banco",
+        "why": "Quem tenta de novo é o cliente, não o banco."
+      },
+      {
+        "text": "Recusar é de graça na tabela de preços de todo provedor",
+        "why": "Preço não é o argumento."
+      },
+      {
+        "text": "Uma falha visível é tentada de novo agora; uma cobrança dupla é achada semanas depois",
+        "why": "Isso."
+      },
+      {
+        "text": "Clientes preferem erros a páginas lentas",
+        "why": "A comparação é entre um erro e uma cobrança errada."
+      }
+    ]
+  },
+  "ex-padnw8y5": {
+    "prompt": "Ponha o experimento de replicação síncrona do laboratório em ordem.",
+    "hint": "Configurar, cortar, escrever, olhar, curar.",
+    "items": [
+      "Definir `synchronous_standby_names` e recarregar",
+      "Desconectar o standby da rede",
+      "Rodar o UPDATE com `timeout 5`",
+      "Ver a espera em `SyncRep`",
+      "Reconectar, e os dois servidores mostram 11"
+    ]
+  },
+  "ex-c6xpqtyt": {
+    "prompt": "As duas lojas da Quitanda dividem o estoque de café por dois nós de banco, um em cada loja, ligados pela internet. A ligação cai num sábado de manhã. O que o projeto precisa ter decidido antes?",
+    "hint": "Cada loja ainda consegue vender; cada uma ainda consegue estar certa?",
+    "choices": [
+      {
+        "text": "Nada; a replicação acompanha quando a ligação voltar",
+        "why": "As duas lojas podem vender o último pacote enquanto isso."
+      },
+      {
+        "text": "O relógio de que loja vale",
+        "why": "Relógios não decidem quem pode vender."
+      },
+      {
+        "text": "Se cada loja continua vendendo e aceita vender demais, ou para de vender café durante o corte",
+        "why": "Isso: disponibilidade ou consistência, decidida por operação."
+      },
+      {
+        "text": "Quantos retries permitir por venda",
+        "why": "Retries não atravessam uma ligação quebrada."
+      }
+    ]
+  }
+}

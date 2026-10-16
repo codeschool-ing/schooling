@@ -1,0 +1,680 @@
+[
+  {
+    "id": "ex-v1whmrkn",
+    "version": 1,
+    "section": "no-distributed-commit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the checkout not be one transaction once it spans three services?",
+    "hint": "Who owns each database?",
+    "choices": [
+      {
+        "text": "Transactions are slower than sagas",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Each service owns its database",
+        "correct": true,
+        "why": "Right: none can roll back another's."
+      },
+      {
+        "text": "HTTP does not allow transactions",
+        "correct": false,
+        "why": "The protocol is not the reason."
+      },
+      {
+        "text": "PostgreSQL limits transactions to one table",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-yevdr0vk",
+    "version": 1,
+    "section": "no-distributed-commit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is two-phase commit rarely used between services?",
+    "hint": "What do participants hold while they wait?",
+    "choices": [
+      {
+        "text": "It cannot guarantee atomicity",
+        "correct": false,
+        "why": "That is what it guarantees."
+      },
+      {
+        "text": "It was removed from PostgreSQL",
+        "correct": false,
+        "why": "`PREPARE TRANSACTION` exists."
+      },
+      {
+        "text": "Locks held while waiting",
+        "correct": true,
+        "why": "Right, and many systems do not speak it."
+      },
+      {
+        "text": "It needs a message broker",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-dny9p0ed",
+    "version": 1,
+    "section": "no-distributed-commit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a saga?",
+    "hint": "Garcia-Molina and Salem, 1987.",
+    "choices": [
+      {
+        "text": "A transaction that spans several databases at once",
+        "correct": false,
+        "why": "That is two-phase commit."
+      },
+      {
+        "text": "Local transactions, each with a compensation",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A long log of every event in a system",
+        "correct": false,
+        "why": "That is closer to event sourcing."
+      },
+      {
+        "text": "A queue that retries until every step succeeds",
+        "correct": false,
+        "why": "Not what it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-d9rkamys",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes payments decline a card in the lab?",
+    "hint": "Read `charge`.",
+    "choices": [
+      {
+        "text": "An amount over 5,000 cents",
+        "correct": false,
+        "why": "The amount is not checked."
+      },
+      {
+        "text": "A city shipping does not serve",
+        "correct": false,
+        "why": "That fails shipping."
+      },
+      {
+        "text": "A card ending in 0002",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A second charge for the same order",
+        "correct": false,
+        "why": "Not checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bqkd7ja",
+    "version": 1,
+    "section": "orchestration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When shipping failed for o-3, which compensations ran, and in what order?",
+    "hint": "Reverse order of the steps done.",
+    "choices": [
+      {
+        "text": "Release stock, then refund",
+        "correct": false,
+        "why": "That is the forward order."
+      },
+      {
+        "text": "Refund, then release stock",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only the refund",
+        "correct": false,
+        "why": "The reservation was released too."
+      },
+      {
+        "text": "Cancel the delivery, refund, release",
+        "correct": false,
+        "why": "There was no delivery to cancel."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnd6acy0",
+    "version": 1,
+    "section": "orchestration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a real orchestrator write each step to a database?",
+    "hint": "Think about a crash between charge and schedule.",
+    "choices": [
+      {
+        "text": "So the services can read the plan",
+        "correct": false,
+        "why": "The services never read it."
+      },
+      {
+        "text": "Because HTTP calls are not logged",
+        "correct": false,
+        "why": "Logging is not the point."
+      },
+      {
+        "text": "To make the steps run faster",
+        "correct": false,
+        "why": "It makes them a little slower."
+      },
+      {
+        "text": "So it can resume after a crash",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tr3wetja",
+    "version": 1,
+    "section": "orchestration",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each product to how it runs a saga.",
+    "hint": "Code, state machine, diagram.",
+    "pairs": [
+      {
+        "left": "Temporal",
+        "right": "workflows written as ordinary code, replayed after a crash"
+      },
+      {
+        "left": "AWS Step Functions",
+        "right": "a state machine described in JSON"
+      },
+      {
+        "left": "Camunda",
+        "right": "BPMN diagrams"
+      }
+    ]
+  },
+  {
+    "id": "ex-j8eq56nf",
+    "version": 1,
+    "section": "compensations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How is a compensation different from a rollback?",
+    "hint": "o-3's bank statement.",
+    "choices": [
+      {
+        "text": "It is a new action; the original still happened",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "Speed is not the difference."
+      },
+      {
+        "text": "It erases the original from the database",
+        "correct": false,
+        "why": "Nothing is erased."
+      },
+      {
+        "text": "It runs only inside one service's transaction",
+        "correct": false,
+        "why": "It is a step of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gzbxr4e",
+    "version": 1,
+    "section": "compensations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `release` and `refund` be idempotent?",
+    "hint": "They will be retried.",
+    "choices": [
+      {
+        "text": "So that they can run in parallel",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "A retried compensation must not undo twice",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because HTTP requires it for POST",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "To make them cheaper",
+        "correct": false,
+        "why": "Cost is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjvhhdkn",
+    "version": 1,
+    "section": "compensations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should a step that cannot be undone, like sending an e-mail, go?",
+    "hint": "After the pivot.",
+    "choices": [
+      {
+        "text": "First, so it is done early",
+        "correct": false,
+        "why": "Then a later failure cannot unsend it."
+      },
+      {
+        "text": "Before the payment",
+        "correct": false,
+        "why": "A declined card would leave the e-mail sent."
+      },
+      {
+        "text": "After the step that decides the outcome",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In a separate saga with no compensations",
+        "correct": false,
+        "why": "The order still matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmx1k6ak",
+    "version": 1,
+    "section": "compensations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the checkout reserve stock before charging, and charge before shipping?",
+    "hint": "How hard is each to undo?",
+    "choices": [
+      {
+        "text": "Alphabetical order of the services",
+        "correct": false,
+        "why": "Not a reason."
+      },
+      {
+        "text": "Each service needs the previous one's answer",
+        "correct": false,
+        "why": "They need only the order."
+      },
+      {
+        "text": "Shipping is the slowest step",
+        "correct": false,
+        "why": "Speed is not the criterion."
+      },
+      {
+        "text": "Cheapest to undo first",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mscn3nb",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was o-5 refused?",
+    "hint": "Who held the bags?",
+    "choices": [
+      {
+        "text": "The shelf was empty all along",
+        "correct": false,
+        "why": "There were two bags."
+      },
+      {
+        "text": "o-4 held both bags",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Its card was declined",
+        "correct": false,
+        "why": "It never reached payment."
+      },
+      {
+        "text": "Shipping does not serve its city",
+        "correct": false,
+        "why": "It never reached shipping."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bvh50v3",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which property of a transaction does a saga lack?",
+    "hint": "ACD.",
+    "choices": [
+      {
+        "text": "Atomicity",
+        "correct": false,
+        "why": "It completes or is compensated."
+      },
+      {
+        "text": "Durability",
+        "correct": false,
+        "why": "Each step commits durably."
+      },
+      {
+        "text": "Isolation",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Consistency",
+        "correct": false,
+        "why": "It keeps each service consistent."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8v9jde9",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without the reservation, what could have gone wrong between o-4 and o-5?",
+    "hint": "The opposite of what happened.",
+    "choices": [
+      {
+        "text": "o-5 would have been refused anyway",
+        "correct": false,
+        "why": "There was coffee for it."
+      },
+      {
+        "text": "Both cards would have been declined",
+        "correct": false,
+        "why": "Cards are independent."
+      },
+      {
+        "text": "Nothing; reservations only add delay",
+        "correct": false,
+        "why": "They prevent overselling."
+      },
+      {
+        "text": "Two customers sold the same coffee",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-map4qzqh",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does a shop keep the cost of a semantic lock small?",
+    "hint": "Time.",
+    "choices": [
+      {
+        "text": "Lock the whole shelf for every order",
+        "correct": false,
+        "why": "That makes it worse."
+      },
+      {
+        "text": "Hold the reservation as briefly as possible",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reserve when the item enters the basket",
+        "correct": false,
+        "why": "That holds it far longer."
+      },
+      {
+        "text": "Never release reservations",
+        "correct": false,
+        "why": "Then stock is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-0789a5s6",
+    "version": 1,
+    "section": "choreography",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the choreographed saga, what does `place.py` do?",
+    "hint": "Read it.",
+    "choices": [
+      {
+        "text": "Calls each service in turn",
+        "correct": false,
+        "why": "That is `saga.py`."
+      },
+      {
+        "text": "Publishes `OrderPlaced` and exits",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Waits for `ShippingScheduled`",
+        "correct": false,
+        "why": "It exits at once."
+      },
+      {
+        "text": "Runs the compensations",
+        "correct": false,
+        "why": "The services do."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxywxwr5",
+    "version": 1,
+    "section": "choreography",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did you find out what happened to o-7?",
+    "hint": "Nothing printed it.",
+    "choices": [
+      {
+        "text": "Asked the orchestrator",
+        "correct": false,
+        "why": "There is none."
+      },
+      {
+        "text": "Read `place.py`'s output",
+        "correct": false,
+        "why": "It only said OrderPlaced."
+      },
+      {
+        "text": "Joined the services' logs in time order",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Queried the broker",
+        "correct": false,
+        "why": "The broker keeps no history."
+      }
+    ]
+  },
+  {
+    "id": "ex-je4d6h4d",
+    "version": 1,
+    "section": "choreography",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does adding a loyalty step look like in the choreography?",
+    "hint": "Who would change?",
+    "choices": [
+      {
+        "text": "Change every service to call it",
+        "correct": false,
+        "why": "No service changes."
+      },
+      {
+        "text": "Change `place.py`",
+        "correct": false,
+        "why": "It only publishes the first event."
+      },
+      {
+        "text": "A new listener",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Add a step to `saga.py`",
+        "correct": false,
+        "why": "That is the orchestrated version."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jv32mnr",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does the lesson recommend orchestration over choreography?",
+    "hint": "Steps, branches, compensations.",
+    "choices": [
+      {
+        "text": "Whenever a broker is available",
+        "correct": false,
+        "why": "Not the criterion."
+      },
+      {
+        "text": "Only for two steps or fewer",
+        "correct": false,
+        "why": "The opposite."
+      },
+      {
+        "text": "Never; choreography is always simpler",
+        "correct": false,
+        "why": "It is harder to follow as it grows."
+      },
+      {
+        "text": "With more than three or four steps",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7rtckya",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property to the style it belongs to.",
+    "hint": "Where does the plan live?",
+    "pairs": [
+      {
+        "left": "the plan is in one place",
+        "right": "orchestration"
+      },
+      {
+        "left": "a step is added by a new listener",
+        "right": "choreography"
+      },
+      {
+        "left": "state of an order from one record",
+        "right": "orchestration, again"
+      },
+      {
+        "left": "no single point of failure",
+        "right": "choreography, again"
+      }
+    ]
+  },
+  {
+    "id": "ex-634asb07",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the choreography of o-7 in order.",
+    "hint": "Read the sorted logs.",
+    "items": [
+      "`OrderPlaced`",
+      "`StockReserved`",
+      "`PaymentCharged`",
+      "`ShippingFailed`",
+      "`PaymentRefunded`",
+      "`StockReleased`"
+    ]
+  },
+  {
+    "id": "ex-h67b2916",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A refund in Quitanda's saga sometimes fails permanently because the payment gateway closed the customer's card. What should the design do?",
+    "hint": "A compensation must not fail for good.",
+    "choices": [
+      {
+        "text": "Ignore it; the stock was released",
+        "correct": false,
+        "why": "The customer is owed money."
+      },
+      {
+        "text": "Retry the refund every minute forever",
+        "correct": false,
+        "why": "It will never succeed."
+      },
+      {
+        "text": "A step that cannot fail for good, like store credit",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Roll back the original charge in the gateway's database",
+        "correct": false,
+        "why": "Nobody can roll back another's database."
+      }
+    ]
+  }
+]

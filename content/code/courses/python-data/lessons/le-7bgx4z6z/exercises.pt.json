@@ -1,0 +1,350 @@
+{
+  "ex-98wan7gy": {
+    "prompt": "`trips[trips[\"plan\"] == \"day\"]` seleciona o quê?",
+    "hint": "Uma Series booleana dentro dos colchetes.",
+    "choices": [
+      {
+        "text": "A coluna chamada `plan`",
+        "why": "Um nome faria isso, não uma máscara."
+      },
+      {
+        "text": "As linhas de passe diário",
+        "why": "Isso: uma máscara seleciona linhas."
+      },
+      {
+        "text": "Uma coluna booleana acrescentada à tabela",
+        "why": "Nada é acrescentado."
+      },
+      {
+        "text": "Um erro: colchetes só aceitam nomes",
+        "why": "Aceitam máscaras e fatias também."
+      }
+    ]
+  },
+  "ex-k2p0w47s": {
+    "prompt": "Por que a aula guarda os colchetes puros só para escolher uma coluna pelo nome?",
+    "hint": "O que decide o comportamento deles?",
+    "choices": [
+      {
+        "text": "Porque são mais lentos que `loc`",
+        "why": "Velocidade não é o argumento."
+      },
+      {
+        "text": "Porque o pandas 3 os desaconselhou para linhas",
+        "why": "Ainda funcionam; o problema é lê-los."
+      },
+      {
+        "text": "A linha não diz qual de três coisas faz",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque não selecionam mais de uma coluna",
+        "why": "Uma lista de nomes seleciona várias."
+      }
+    ]
+  },
+  "ex-73avhvv6": {
+    "prompt": "`weather.loc[\"2025-03-20\":\"2025-03-22\", \"rain_mm\"]` devolve quantos valores?",
+    "hint": "Fatias de rótulos são fechadas.",
+    "choices": [
+      {
+        "text": "Dois",
+        "why": "O rótulo do fim entra."
+      },
+      {
+        "text": "Três",
+        "why": "Isso."
+      },
+      {
+        "text": "Um",
+        "why": "É uma faixa de dias."
+      },
+      {
+        "text": "Nenhum: o `loc` não fatia datas guardadas como texto",
+        "why": "Ele fatia rótulos ordenados de qualquer tipo."
+      }
+    ]
+  },
+  "ex-ancjb967": {
+    "prompt": "O que faz `weather.loc[\"2025-02-30\"]`?",
+    "hint": "O rótulo não existe.",
+    "choices": [
+      {
+        "text": "Devolve a data mais próxima",
+        "why": "O `loc` nunca adivinha."
+      },
+      {
+        "text": "Devolve uma linha vazia de `NaN`",
+        "why": "Ele recusa em vez disso."
+      },
+      {
+        "text": "Levanta `KeyError`",
+        "why": "Isso."
+      },
+      {
+        "text": "Devolve 1º de março",
+        "why": "Aqui rótulos não são datas; nada avança."
+      }
+    ]
+  },
+  "ex-cb94cqqr": {
+    "prompt": "Qual linha seleciona a chuva dos dias com mais de 20 mm e mais de 31 graus?",
+    "hint": "Cada condição entre parênteses, `&` no meio.",
+    "choices": [
+      {
+        "text": "`weather.loc[(weather[\"rain_mm\"] > 20) & (weather[\"temp_max\"] > 31), \"rain_mm\"]`",
+        "why": "Isso."
+      },
+      {
+        "text": "`weather.loc[weather[\"rain_mm\"] > 20 and weather[\"temp_max\"] > 31, \"rain_mm\"]`",
+        "why": "`and` em Series levanta o erro de ambiguidade."
+      },
+      {
+        "text": "`weather.iloc[(weather[\"rain_mm\"] > 20) & (weather[\"temp_max\"] > 31), \"rain_mm\"]`",
+        "why": "`iloc` recebe posições, não nome de coluna."
+      },
+      {
+        "text": "`weather[\"rain_mm\"].loc[20:31]`",
+        "why": "Isso fatia rótulos, não valores."
+      }
+    ]
+  },
+  "ex-796e63gh": {
+    "prompt": "`day` são as viagens de passe diário. Por que `day.loc[3]` pode falhar enquanto `day.iloc[3]` funciona?",
+    "hint": "Rótulos sobrevivem a um filtro.",
+    "choices": [
+      {
+        "text": "`loc` só aceita strings",
+        "why": "Aceita qualquer rótulo."
+      },
+      {
+        "text": "O rótulo 3 sumiu; a posição 3, não",
+        "why": "Isso."
+      },
+      {
+        "text": "`day` é uma cópia, e cópias não têm rótulos",
+        "why": "Elas mantêm os rótulos originais."
+      },
+      {
+        "text": "`iloc` procura na tabela original",
+        "why": "Ele conta linhas de `day`."
+      }
+    ]
+  },
+  "ex-g575t8pg": {
+    "prompt": "`trips.iloc[::10000, 0]` devolve os ids de quantas viagens, de 33.337?",
+    "hint": "Posições 0, 10000, 20000, …"
+  },
+  "ex-6g5jva25": {
+    "prompt": "Qual linha põe 1200 em `price_cents` para os passes diários e muda o próprio `trips`?",
+    "hint": "Um loc, à esquerda.",
+    "choices": [
+      {
+        "text": "`trips[trips[\"plan\"] == \"day\"][\"price_cents\"] = 1200`",
+        "why": "Encadeado: escreve numa cópia."
+      },
+      {
+        "text": "`trips[\"price_cents\"][trips[\"plan\"] == \"day\"] = 1200`",
+        "why": "Encadeado também, ao contrário."
+      },
+      {
+        "text": "`trips.loc[trips[\"plan\"] == \"day\", \"price_cents\"] = 1200`",
+        "why": "Isso."
+      },
+      {
+        "text": "`trips.query(\"plan == 'day'\")[\"price_cents\"] = 1200`",
+        "why": "`query` devolve uma tabela nova."
+      }
+    ]
+  },
+  "ex-2e1862ct": {
+    "prompt": "O que `trips.assign(price_reais=...)` faz com `trips`?",
+    "hint": "Ele devolve algo.",
+    "choices": [
+      {
+        "text": "Acrescenta a coluna a `trips`",
+        "why": "`trips` não ganhou coluna."
+      },
+      {
+        "text": "Nada: devolve uma tabela nova",
+        "why": "Isso."
+      },
+      {
+        "text": "Troca `trips` por uma cópia",
+        "why": "O nome continua apontando para o original."
+      },
+      {
+        "text": "Levanta um aviso sobre cópias",
+        "why": "Nenhum aviso."
+      }
+    ]
+  },
+  "ex-8whb2gz6": {
+    "prompt": "No pandas 3, `day = trips[trips[\"plan\"] == \"day\"]; day[\"note\"] = \"x\"`. O que acontece?",
+    "hint": "Toda seleção se comporta como cópia.",
+    "choices": [
+      {
+        "text": "`day` e `trips` ganham a coluna",
+        "why": "`trips` fica intacto."
+      },
+      {
+        "text": "Um `SettingWithCopyWarning`, e nada muda",
+        "why": "O pandas 3 não dá esse aviso, e `day` muda."
+      },
+      {
+        "text": "Só `day` muda",
+        "why": "Isso."
+      },
+      {
+        "text": "Um erro, já que seleções são só de leitura",
+        "why": "Podem mudar; só são separadas."
+      }
+    ]
+  },
+  "ex-e22drbcp": {
+    "prompt": "No pandas 3, `trips[\"bike\"][mask] = \"e-bike\"` imprime `ChainedAssignmentError`. Quantas linhas de `trips` mudaram?",
+    "hint": "Onde a atribuição caiu?",
+    "choices": [
+      {
+        "text": "Nenhuma",
+        "why": "Isso: caiu num objeto jogado fora."
+      },
+      {
+        "text": "Todas as elétricas, com um aviso",
+        "why": "Isso era o pandas 2."
+      },
+      {
+        "text": "Só a primeira",
+        "why": "Nenhuma mudou."
+      },
+      {
+        "text": "Depende de a tabela ter sido copiada antes",
+        "why": "No pandas 3 a atribuição encadeada nunca funciona."
+      }
+    ]
+  },
+  "ex-vf9mjsyw": {
+    "prompt": "`plan = trips[\"plan\"]; plan.iloc[0] = \"changed\"`. No pandas 3, quanto vale `trips.loc[0, \"plan\"]`?",
+    "hint": "A Series não é mais uma janela.",
+    "choices": [
+      {
+        "text": "`\"changed\"`",
+        "why": "Isso era o pandas 2."
+      },
+      {
+        "text": "`\"day\"`, sem mudar",
+        "why": "Isso."
+      },
+      {
+        "text": "`NaN`",
+        "why": "Nada se perde."
+      },
+      {
+        "text": "Levanta `ChainedAssignmentError`",
+        "why": "Isto não é encadeado: muda só `plan`."
+      }
+    ]
+  },
+  "ex-nfwvr31q": {
+    "prompt": "Um notebook antigo contava com `df[col][mask] = v` para corrigir valores. Rodado no pandas 3, o que diz que a correção sumiu?",
+    "hint": "Leia os avisos.",
+    "choices": [
+      {
+        "text": "Uma exceção que para o notebook",
+        "why": "É um aviso; o notebook segue."
+      },
+      {
+        "text": "Nada",
+        "why": "O pandas 3 avisa para esse padrão."
+      },
+      {
+        "text": "Um `ChainedAssignmentError`",
+        "why": "Isso."
+      },
+      {
+        "text": "Um `SettingWithCopyWarning`",
+        "why": "O pandas 3 o aposentou."
+      }
+    ]
+  },
+  "ex-vc84c96p": {
+    "prompt": "Qual mudança do pandas 2 para o 3 é silenciosa, sem aviso na nova versão?",
+    "hint": "Experimento C.",
+    "choices": [
+      {
+        "text": "Atribuição encadeada deixar de escrever",
+        "why": "O pandas 3 avisa com ChainedAssignmentError."
+      },
+      {
+        "text": "Uma Series selecionada deixar de editar a tabela",
+        "why": "Isso: o pandas 3 não imprime nada."
+      },
+      {
+        "text": "Colunas novas numa tabela filtrada",
+        "why": "Mesmo resultado nos dois."
+      },
+      {
+        "text": "Atribuições com `loc`",
+        "why": "Funcionam igual nos dois."
+      }
+    ]
+  },
+  "ex-2aa599t9": {
+    "prompt": "Dentro de `trips.query(...)`, como você se refere a uma variável `station` do notebook?",
+    "hint": "Um prefixo.",
+    "choices": [
+      {
+        "text": "`$station`",
+        "why": "Não é a sintaxe do query."
+      },
+      {
+        "text": "`{station}`",
+        "why": "Essa é a sintaxe de f-string, e o query não é uma."
+      },
+      {
+        "text": "`@station`",
+        "why": "Isso."
+      },
+      {
+        "text": "`station`, puro",
+        "why": "Um nome puro é lido como coluna."
+      }
+    ]
+  },
+  "ex-v4wa62et": {
+    "prompt": "Ordene a reescrita de uma linha antiga `df[\"bike\"][df[\"bike\"] == \"electric\"] = \"e-bike\"`.",
+    "hint": "Achar, reescrever, conferir.",
+    "items": [
+      "Rodar o notebook no pandas 3",
+      "Ler o `ChainedAssignmentError` e a linha dele",
+      "Reescrever como um `df.loc[máscara, \"bike\"] = …`",
+      "Contar as linhas mudadas para confirmar o efeito"
+    ],
+    "trap": "Reescrever antes de rodar só acha as linhas de que você já desconfiava."
+  },
+  "ex-gw56esq0": {
+    "prompt": "Associe cada expressão ao que ela seleciona.",
+    "hint": "Rótulos, posições, máscaras.",
+    "pairs": [
+      {
+        "left": "`df.loc[\"S07\"]`",
+        "right": "Toda linha com rótulo S07"
+      },
+      {
+        "left": "`df.iloc[-1]`",
+        "right": "A última linha"
+      },
+      {
+        "left": "`df.loc[máscara, [\"a\", \"b\"]]`",
+        "right": "As linhas que casam, duas colunas"
+      },
+      {
+        "left": "`df.iloc[:3, :2]`",
+        "right": "As três primeiras linhas, duas primeiras colunas"
+      }
+    ],
+    "right_distractors": [
+      "A linha de rótulo -1"
+    ]
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "ex-p5etw94p": {
+    "prompt": "O que cada chamada de `trips.apply(minutes_of, axis=1)` recebe?",
+    "hint": "`axis=1` quer dizer linhas.",
+    "choices": [
+      {
+        "text": "Uma coluna, como Series",
+        "why": "Isso é `axis=0`."
+      },
+      {
+        "text": "Uma linha, como uma Series nova",
+        "why": "Isso: montada a cada chamada."
+      },
+      {
+        "text": "O DataFrame inteiro",
+        "why": "Uma linha por chamada."
+      },
+      {
+        "text": "Um array NumPy com os valores da linha",
+        "why": "O pandas entrega uma Series."
+      }
+    ]
+  },
+  "ex-5zjvvcp5": {
+    "prompt": "A versão por linha levou uns 330 ms e a por colunas menos de 1 ms. O que faz a maior parte da diferença?",
+    "hint": "Quantas vezes o Python roda?",
+    "choices": [
+      {
+        "text": "A versão por colunas pula as bicicletas perdidas",
+        "why": "As duas dão os mesmos valores, `NaN` incluído."
+      },
+      {
+        "text": "Datetimes são lentos de subtrair de qualquer forma",
+        "why": "A subtração de colunas é rápida."
+      },
+      {
+        "text": "Python e uma Series por linha, 33.337 vezes",
+        "why": "Isso."
+      },
+      {
+        "text": "O `%timeit` roda a versão por linha mais vezes",
+        "why": "Ele informa uma média por execução."
+      }
+    ]
+  },
+  "ex-j1f09em8": {
+    "prompt": "O que perguntar antes de escrever `apply(..., axis=1)`?",
+    "hint": "Se a resposta for sim, colunas resolvem.",
+    "choices": [
+      {
+        "text": "O cálculo é o mesmo para toda linha?",
+        "why": "Isso: então escreva em colunas."
+      },
+      {
+        "text": "A tabela cabe na memória?",
+        "why": "Já cabe."
+      },
+      {
+        "text": "A função tem nome?",
+        "why": "Um nome não a deixa rápida."
+      },
+      {
+        "text": "Há mais colunas que linhas?",
+        "why": "Não é a pergunta."
+      }
+    ]
+  },
+  "ex-6n335m1e": {
+    "prompt": "`trips[\"plan\"].map({\"annual\": \"subscriber\"})`. O que acontece com os passes diários?",
+    "hint": "Eles não estão no dicionário.",
+    "choices": [
+      {
+        "text": "Continuam `day`",
+        "why": "Isso é o que o `replace` faz."
+      },
+      {
+        "text": "Um `KeyError` nomeia a chave faltante",
+        "why": "Nada falha."
+      },
+      {
+        "text": "Eles viram `NaN`",
+        "why": "Isso, em silêncio."
+      },
+      {
+        "text": "Viram `subscriber` também",
+        "why": "Só `annual` é mapeado."
+      }
+    ]
+  },
+  "ex-kcnrmgv0": {
+    "prompt": "Você precisa corrigir três erros de grafia conhecidos numa coluna e deixar todos os outros valores como estão. Que chamada?",
+    "hint": "Qual deixa passar valores desconhecidos?",
+    "choices": [
+      {
+        "text": "`map` com um dicionário dos três",
+        "why": "Todo outro valor viraria `NaN`."
+      },
+      {
+        "text": "`replace` com um dicionário dos três",
+        "why": "Isso."
+      },
+      {
+        "text": "`apply` com um `if` para cada um",
+        "why": "Funciona, devagar, e o `replace` diz isso numa chamada."
+      },
+      {
+        "text": "`astype(\"category\")`",
+        "why": "Isso mantém os erros como categorias."
+      }
+    ]
+  },
+  "ex-tcg6f31v": {
+    "prompt": "Qual destes, dado ao `map`, o torna um laço em Python?",
+    "hint": "Uma consulta ou uma chamada?",
+    "choices": [
+      {
+        "text": "Um dicionário",
+        "why": "Isso é uma consulta."
+      },
+      {
+        "text": "Uma Series indexada pelas chaves",
+        "why": "Também é uma consulta."
+      },
+      {
+        "text": "Outra coluna da mesma tabela",
+        "why": "Uma Series de novo: consulta pelo índice."
+      },
+      {
+        "text": "Uma função",
+        "why": "Isso: chamada uma vez por valor."
+      }
+    ]
+  },
+  "ex-1b4d89gx": {
+    "prompt": "`trips[\"end_station\"].map(names)` tem quantos `NaN`, se `names` cobre as 20 estações?",
+    "hint": "A estação final já faltava em algumas viagens."
+  },
+  "ex-b0r94ass": {
+    "prompt": "Na função `band`, por que `pd.isna(m)` vem primeiro?",
+    "hint": "Quanto dá `nan < 10`?",
+    "choices": [
+      {
+        "text": "Senão uma duração faltante acaba `\"long\"`",
+        "why": "Isso: toda comparação com `nan` é `False`."
+      },
+      {
+        "text": "É mais rápido testar primeiro",
+        "why": "A ordem importa para a correção aqui."
+      },
+      {
+        "text": "O `np.select` exige isso primeiro",
+        "why": "A função veio antes do `np.select`."
+      },
+      {
+        "text": "`nan < 10` levanta erro",
+        "why": "Dá `False`, em silêncio."
+      }
+    ]
+  },
+  "ex-82ejw3ed": {
+    "prompt": "As faixas são intervalos de um número: abaixo de 10, de 10 a 30, 30 ou mais. Que chamada serve melhor, e mantém as faixas em ordem?",
+    "hint": "Ela devolve uma categórica.",
+    "choices": [
+      {
+        "text": "`np.where`",
+        "why": "Só duas escolhas, a não ser aninhado."
+      },
+      {
+        "text": "`Series.apply` com uma função",
+        "why": "Um laço, e o resultado é texto comum."
+      },
+      {
+        "text": "`pd.cut`",
+        "why": "Isso."
+      },
+      {
+        "text": "`Series.map` com um dicionário",
+        "why": "Um dicionário mapeia valores, não intervalos."
+      }
+    ]
+  },
+  "ex-csqk2j8h": {
+    "prompt": "`pd.cut(trips[\"minutes\"], bins=[0, 10, 30, np.inf], right=False, ...)`. Onde cai uma viagem de exatamente 10 minutos?",
+    "hint": "`right=False` inclui a borda da esquerda.",
+    "choices": [
+      {
+        "text": "`short`",
+        "why": "`short` para logo abaixo de 10."
+      },
+      {
+        "text": "`normal`",
+        "why": "Isso: [10, 30)."
+      },
+      {
+        "text": "`NaN`: 10 está numa borda",
+        "why": "Bordas pertencem a uma faixa."
+      },
+      {
+        "text": "`long`",
+        "why": "Essa começa em 30."
+      }
+    ]
+  },
+  "ex-82bfpx7n": {
+    "prompt": "`by_day.median()` levou 0,8 ms e `by_day.agg(lambda s: s.median())` 26 ms. O que a lenta faz 365 vezes?",
+    "hint": "Uma por grupo.",
+    "choices": [
+      {
+        "text": "Ordena a tabela inteira",
+        "why": "Não ordena nada."
+      },
+      {
+        "text": "Chama uma função Python",
+        "why": "Isso: uma vez por dia."
+      },
+      {
+        "text": "Lê o CSV de novo",
+        "why": "Os dados estão na memória."
+      },
+      {
+        "text": "Calcula outra mediana",
+        "why": "O `equals` disse que batem."
+      }
+    ]
+  },
+  "ex-jby9w6bf": {
+    "prompt": "O custo de um `lambda` no `agg` cresce com o quê?",
+    "hint": "Por estação foram uns dois milissegundos.",
+    "choices": [
+      {
+        "text": "O número de colunas",
+        "why": "Uma coluna foi agregada."
+      },
+      {
+        "text": "O número de linhas, qualquer que seja o agrupamento",
+        "why": "As mesmas linhas custam pouco em 20 grupos."
+      },
+      {
+        "text": "O tamanho do `lambda`",
+        "why": "Curto ou longo, é uma chamada por grupo."
+      },
+      {
+        "text": "O número de grupos",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-jpt6mf16": {
+    "prompt": "Por que o `apply` serve para a maior sequência seca de cada mês?",
+    "hint": "Quantas chamadas, e uma expressão de colunas diria isso?",
+    "choices": [
+      {
+        "text": "Porque chuva é uma coluna float",
+        "why": "O tipo não é o motivo."
+      },
+      {
+        "text": "O `apply` é rápido no `groupby`",
+        "why": "É o caminho lento; aqui roda doze vezes."
+      },
+      {
+        "text": "Cada dia depende dos anteriores, e roda doze vezes",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque a tabela do tempo não tem faltantes",
+        "why": "Tem seis."
+      }
+    ]
+  },
+  "ex-mkyfdw42": {
+    "prompt": "O que `summary.map(lambda v: f\"{v:.1f} min\")` devolve?",
+    "hint": "Olhe a f-string.",
+    "choices": [
+      {
+        "text": "Os mesmos números, arredondados",
+        "why": "Viram texto."
+      },
+      {
+        "text": "Uma Series com os nomes das colunas",
+        "why": "Trabalha célula a célula."
+      },
+      {
+        "text": "Um erro: `map` é só para Series",
+        "why": "DataFrames também têm `map`."
+      },
+      {
+        "text": "Uma tabela de texto para exibir",
+        "why": "Isso: formate no fim."
+      }
+    ]
+  },
+  "ex-bbmqatkd": {
+    "prompt": "Associe cada tarefa à ferramenta que esta aula recomenda.",
+    "hint": "Consulta, condições, intervalos, grupos.",
+    "pairs": [
+      {
+        "left": "Códigos de estação para nomes",
+        "right": "`map` com uma Series"
+      },
+      {
+        "left": "Perdida, curta, normal ou longa",
+        "right": "`np.select`"
+      },
+      {
+        "left": "Intervalos de um número, em ordem",
+        "right": "`pd.cut`"
+      },
+      {
+        "left": "Viagem mediana por dia",
+        "right": "`groupby(...).median()`"
+      }
+    ],
+    "right_distractors": [
+      "`apply(..., axis=1)`"
+    ]
+  },
+  "ex-km6xyzt8": {
+    "prompt": "Ordene os passos de trocar um `apply` lento num notebook.",
+    "hint": "Guarde a resposta antiga para conferir a nova.",
+    "items": [
+      "Guardar o resultado do `apply` como referência",
+      "Escrever a expressão de colunas",
+      "Conferir que os dois dão os mesmos valores",
+      "Cronometrar os dois com `%timeit`"
+    ],
+    "trap": "Uma resposta mais rápida não vale nada até se mostrar que é a mesma resposta."
+  }
+}

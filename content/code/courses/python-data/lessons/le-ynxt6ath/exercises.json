@@ -1,0 +1,545 @@
+[
+  {
+    "id": "ex-fscf09gz",
+    "version": 1,
+    "section": "csv-options",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `read_csv` get each column's type from?",
+    "hint": "A CSV is text.",
+    "choices": [
+      {
+        "text": "From a header line that declares the types",
+        "correct": false,
+        "why": "A CSV header holds names only."
+      },
+      {
+        "text": "From a guess based on the column's values",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From the file's extension",
+        "correct": false,
+        "why": "The extension says nothing about columns."
+      },
+      {
+        "text": "From the first row only",
+        "correct": false,
+        "why": "It looks at all the values."
+      }
+    ]
+  },
+  {
+    "id": "ex-1p2ayxbq",
+    "version": 1,
+    "section": "csv-options",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column of dock counts comes back from `read_csv` as `str`. What is the likeliest cause?",
+    "hint": "One value spoils the column.",
+    "choices": [
+      {
+        "text": "The numbers are too large for int64",
+        "correct": false,
+        "why": "Dock counts are small."
+      },
+      {
+        "text": "The file uses Windows line endings",
+        "correct": false,
+        "why": "`read_csv` handles those."
+      },
+      {
+        "text": "A `-` for some missing values",
+        "correct": true,
+        "why": "Right: pass it in `na_values`."
+      },
+      {
+        "text": "pandas 3 reads every column as text",
+        "correct": false,
+        "why": "`trip_id` came back as int64."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmywnzdt",
+    "version": 1,
+    "section": "csv-options",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To turn the text columns `started_at` and `ended_at` into datetimes while reading, pass them to `parse____`.",
+    "hint": "The second half of the argument's name.",
+    "blanks": [
+      {
+        "accept": [
+          "dates"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r6hggzt7",
+    "version": 1,
+    "section": "csv-options",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `parse_dates`, what is in `ended_at` for a bike that never came back?",
+    "hint": "A datetime's missing value.",
+    "choices": [
+      {
+        "text": "An empty string",
+        "correct": false,
+        "why": "The column is datetimes now."
+      },
+      {
+        "text": "The start time, copied",
+        "correct": false,
+        "why": "Nothing is copied."
+      },
+      {
+        "text": "`1970-01-01`",
+        "correct": false,
+        "why": "That would be a fake date."
+      },
+      {
+        "text": "`NaT`",
+        "correct": true,
+        "why": "Right: not a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3fqsdda",
+    "version": 1,
+    "section": "a-brazilian-csv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A file saved by a spreadsheet in Portuguese is read with `pd.read_csv(path)` and no options. What happens?",
+    "hint": "It splits at commas.",
+    "choices": [
+      {
+        "text": "An error about the separator",
+        "correct": false,
+        "why": "There is no error; that is the danger."
+      },
+      {
+        "text": "A table of the wrong shape, silently",
+        "correct": true,
+        "why": "Right: one column and a two-level index here."
+      },
+      {
+        "text": "The right table, since pandas detects the locale",
+        "correct": false,
+        "why": "It assumes the English convention."
+      },
+      {
+        "text": "The right columns with numbers as text",
+        "correct": false,
+        "why": "That is what `sep=\";\"` alone gives."
+      }
+    ]
+  },
+  {
+    "id": "ex-s96fbg0y",
+    "version": 1,
+    "section": "a-brazilian-csv",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call reads a file with `;` between columns and `,` as the decimal point?",
+    "hint": "Two conventions, two arguments.",
+    "choices": [
+      {
+        "text": "`pd.read_csv(path, sep=\";\")`",
+        "correct": false,
+        "why": "The numbers stay text."
+      },
+      {
+        "text": "`pd.read_csv(path, decimal=\",\")`",
+        "correct": false,
+        "why": "The columns do not split."
+      },
+      {
+        "text": "`pd.read_csv(path, sep=\";\", decimal=\",\")`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`pd.read_csv(path, encoding=\"latin-1\")`",
+        "correct": false,
+        "why": "That is about characters, not separators."
+      }
+    ]
+  },
+  {
+    "id": "ex-hray7yf0",
+    "version": 1,
+    "section": "a-brazilian-csv",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Praça` arrives as `PraÃ§a`. What is wrong?",
+    "hint": "Bytes and characters.",
+    "choices": [
+      {
+        "text": "The separator",
+        "correct": false,
+        "why": "Separators do not change letters."
+      },
+      {
+        "text": "The decimal setting",
+        "correct": false,
+        "why": "That affects numbers only."
+      },
+      {
+        "text": "The file is corrupted beyond repair",
+        "correct": false,
+        "why": "The bytes are fine; the reading is wrong."
+      },
+      {
+        "text": "The encoding",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-78evcf2m",
+    "version": 1,
+    "section": "excel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pd.read_excel(path, sheet_name=None)` return?",
+    "hint": "Every sheet.",
+    "choices": [
+      {
+        "text": "A dict of DataFrames keyed by sheet name",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The first sheet only",
+        "correct": false,
+        "why": "That is the default, `sheet_name=0`."
+      },
+      {
+        "text": "An error, since a sheet must be named",
+        "correct": false,
+        "why": "`None` means all."
+      },
+      {
+        "text": "One DataFrame with every sheet stacked",
+        "correct": false,
+        "why": "They stay separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk7pmyg8",
+    "version": 1,
+    "section": "excel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these survives the trip from an Excel workbook into a DataFrame?",
+    "hint": "A DataFrame holds values.",
+    "choices": [
+      {
+        "text": "A cell's colour",
+        "correct": false,
+        "why": "Formatting has nowhere to go."
+      },
+      {
+        "text": "The formula in a total cell",
+        "correct": false,
+        "why": "Only its value is read."
+      },
+      {
+        "text": "Numbers, as numbers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A chart on the sheet",
+        "correct": false,
+        "why": "Charts are lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-93hetx0g",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`read_json` turned `started_at` into a datetime but left `start_station` as text. Why?",
+    "hint": "It reads the column names.",
+    "choices": [
+      {
+        "text": "JSON stores dates with a type marker",
+        "correct": false,
+        "why": "JSON has no date type."
+      },
+      {
+        "text": "The values of `start_station` were invalid",
+        "correct": false,
+        "why": "They are fine text."
+      },
+      {
+        "text": "It guesses dates from `_at` names",
+        "correct": true,
+        "why": "Right: a guess from the name."
+      },
+      {
+        "text": "`orient=\"records\"` converts dates",
+        "correct": false,
+        "why": "The orient decides the layout, not types."
+      }
+    ]
+  },
+  {
+    "id": "ex-2svga0h4",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which function turns nested JSON objects into columns with dotted names?",
+    "hint": "It normalises.",
+    "choices": [
+      {
+        "text": "`pd.read_json`",
+        "correct": false,
+        "why": "It reads; nested objects stay as dicts."
+      },
+      {
+        "text": "`pd.json_normalize`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`DataFrame.explode`",
+        "correct": false,
+        "why": "That turns list elements into rows."
+      },
+      {
+        "text": "`pd.DataFrame.from_records` with `nested=True`",
+        "correct": false,
+        "why": "There is no such argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3pakxpb",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table with a datetime column is saved to CSV and to Parquet, then both are read back with no options. Which comes back with the datetime?",
+    "hint": "Which format stores types?",
+    "choices": [
+      {
+        "text": "Both",
+        "correct": false,
+        "why": "The CSV gives text."
+      },
+      {
+        "text": "Only the Parquet file",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only the CSV, since dates are text anyway",
+        "correct": false,
+        "why": "Text is exactly the loss."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "Parquet keeps it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2ynrf3v",
+    "version": 1,
+    "section": "parquet",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The trips were 2,267,957 bytes as CSV and 834,853 as Parquet. What percentage of the CSV's size is the Parquet file? Give a whole number.",
+    "hint": "834853 ÷ 2267957 × 100.",
+    "value": 37,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-nnnxftq9",
+    "version": 1,
+    "section": "parquet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can `read_parquet(path, columns=[...])` skip the other columns when `read_csv(path, usecols=[...])` cannot?",
+    "hint": "How is each file laid out?",
+    "choices": [
+      {
+        "text": "Parquet files are always small",
+        "correct": false,
+        "why": "Size is not the reason."
+      },
+      {
+        "text": "`usecols` reads every column and drops the others afterwards in Python",
+        "correct": false,
+        "why": "It parses only the named ones, but must still scan every line."
+      },
+      {
+        "text": "Its file is laid out by column",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "pyarrow is written in C",
+        "correct": false,
+        "why": "So is the CSV parser."
+      }
+    ]
+  },
+  {
+    "id": "ex-9be2dg68",
+    "version": 1,
+    "section": "sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pd.read_sql(\"SELECT plan, bike, COUNT(*) …\", con)` returned four rows. What is the advantage over loading all trips and counting in pandas?",
+    "hint": "Where did the counting happen?",
+    "choices": [
+      {
+        "text": "Only the answer crossed into Python",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SQL counts more accurately than pandas",
+        "correct": false,
+        "why": "Both count exactly."
+      },
+      {
+        "text": "The database converts the times to datetimes",
+        "correct": false,
+        "why": "SQLite returned them as text."
+      },
+      {
+        "text": "`read_sql` caches the table for next time",
+        "correct": false,
+        "why": "Nothing is cached."
+      }
+    ]
+  },
+  {
+    "id": "ex-rw42dtk5",
+    "version": 1,
+    "section": "sql",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why pass a station code with `params=[\"S07\"]` instead of writing it into the SQL with an f-string?",
+    "hint": "Think of a value with a quote in it, from a user.",
+    "choices": [
+      {
+        "text": "f-strings are slower",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "SQLite cannot read strings in queries",
+        "correct": false,
+        "why": "It can; the issue is building them."
+      },
+      {
+        "text": "`params` converts the result's types",
+        "correct": false,
+        "why": "It only passes values in."
+      },
+      {
+        "text": "The value cannot rewrite the query",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6afx8x6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each format to what it keeps.",
+    "hint": "Text, partly, mostly, fully.",
+    "pairs": [
+      {
+        "left": "CSV",
+        "right": "Nothing but text"
+      },
+      {
+        "left": "JSON Lines",
+        "right": "Numbers and text; dates by name-guessing"
+      },
+      {
+        "left": "Parquet",
+        "right": "Every column's dtype"
+      },
+      {
+        "left": "Excel",
+        "right": "Numbers and dates, not formatting"
+      }
+    ],
+    "right_distractors": [
+      "Formulas, recalculated by pandas"
+    ]
+  },
+  {
+    "id": "ex-db66cd1v",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these fail silently, giving a wrong table with no error? Choose all that apply.",
+    "hint": "Wrong shape, wrong types.",
+    "choices": [
+      {
+        "text": "Reading a semicolon file with default options",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A `-` for missing values, not in `na_values`",
+        "correct": true,
+        "why": "Yes: the column becomes text."
+      },
+      {
+        "text": "Writing datetimes to CSV and reading them back",
+        "correct": true,
+        "why": "Yes: they come back as text."
+      },
+      {
+        "text": "Reading a sheet name that does not exist",
+        "correct": false,
+        "why": "No: that raises an error."
+      }
+    ]
+  }
+]

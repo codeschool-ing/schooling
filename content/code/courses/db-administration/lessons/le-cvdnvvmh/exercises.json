@@ -1,0 +1,699 @@
+[
+  {
+    "id": "ex-fg98jpms",
+    "version": 1,
+    "section": "what-a-checkpoint-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a checkpoint do?",
+    "hint": "After one, the dirty count was 0 and grep found the row in the table's file.",
+    "choices": [
+      {
+        "text": "Copies the data directory to a backup",
+        "correct": false,
+        "why": "Nothing is copied anywhere. Backups belong to db-reliability."
+      },
+      {
+        "text": "Writes every dirty page to its file and records where recovery would start",
+        "correct": true,
+        "why": "Right. After it, the log written before its redo point is no longer needed."
+      },
+      {
+        "text": "Commits every transaction still open, so that none of them is lost in a crash",
+        "correct": false,
+        "why": "A checkpoint never decides a transaction's fate; open transactions stay open."
+      },
+      {
+        "text": "Flushes the WAL buffers, which COMMIT leaves in memory",
+        "correct": false,
+        "why": "COMMIT flushes its own log records before returning. A checkpoint is about table pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-trc38s18",
+    "version": 1,
+    "section": "what-a-checkpoint-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_controldata` shows a REDO location that is earlier than the checkpoint location. Why are they different?",
+    "hint": "The log keeps growing while the pages are written.",
+    "choices": [
+      {
+        "text": "The checkpoint starts at one and writes its record at the other",
+        "correct": true,
+        "why": "Right. Changes made while pages were written are covered by replaying from the start point."
+      },
+      {
+        "text": "The REDO location belongs to the previous checkpoint",
+        "correct": false,
+        "why": "Both lines describe the latest checkpoint: the first is where it started, the second where it ended."
+      },
+      {
+        "text": "One is in the log, the other in the table files",
+        "correct": false,
+        "why": "Both are positions in the log. Table files have no LSN of their own in pg_control."
+      },
+      {
+        "text": "A replica moved the REDO location back",
+        "correct": false,
+        "why": "This server had no replica; the gap is how every checkpoint works."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bmzaax8",
+    "version": 1,
+    "section": "what-a-checkpoint-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a `checkpoint complete` line to what it reports.",
+    "hint": "One is pages, one is segments, one is log, one is the disk.",
+    "pairs": [
+      {
+        "left": "wrote 15324 buffers",
+        "right": "dirty pages written to their files"
+      },
+      {
+        "left": "20 recycled",
+        "right": "old segments renamed for reuse"
+      },
+      {
+        "left": "distance=331151 kB",
+        "right": "log written since the previous checkpoint"
+      },
+      {
+        "left": "sync=0.160 s",
+        "right": "time waiting for the disk to confirm"
+      }
+    ],
+    "right_distractors": [
+      "transactions committed during the checkpoint"
+    ]
+  },
+  {
+    "id": "ex-spvxk6ee",
+    "version": 1,
+    "section": "what-a-checkpoint-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after the `CHECKPOINT` command, the dirty count in `pg_buffercache` was 0. A minute later on a busy server it is 3000. What does that mean?",
+    "hint": "Commits keep changing pages in memory.",
+    "choices": [
+      {
+        "text": "3000 pages changed since then",
+        "correct": true,
+        "why": "Right. Each is safe in the log and waits for the next checkpoint or the background writer."
+      },
+      {
+        "text": "The checkpoint failed",
+        "correct": false,
+        "why": "It reported checkpoint complete and the count did reach 0. New changes came after it."
+      },
+      {
+        "text": "Those 3000 commits are at risk until the next checkpoint",
+        "correct": false,
+        "why": "Their log records reached the disk at COMMIT. Dirty pages are rebuilt from the log after a crash."
+      },
+      {
+        "text": "shared_buffers is too small and must be raised",
+        "correct": false,
+        "why": "Dirty pages are normal work, not a sign of memory pressure."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvegmnat",
+    "version": 1,
+    "section": "checkpoint-settings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The log shows `checkpoint starting: wal`. What started that checkpoint?",
+    "hint": "The other routine kind says time.",
+    "choices": [
+      {
+        "text": "checkpoint_timeout running out",
+        "correct": false,
+        "why": "That one is logged as time."
+      },
+      {
+        "text": "Somebody typing CHECKPOINT",
+        "correct": false,
+        "why": "The command is logged as immediate force wait."
+      },
+      {
+        "text": "The walwriter filling the WAL buffers",
+        "correct": false,
+        "why": "The walwriter flushes buffers; it never starts a checkpoint."
+      },
+      {
+        "text": "Enough log written since the last one",
+        "correct": true,
+        "why": "Right. A little under half of max_wal_size, by the server's arithmetic."
+      }
+    ]
+  },
+  {
+    "id": "ex-93yre6g7",
+    "version": 1,
+    "section": "checkpoint-settings",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `max_wal_size` at 64MB, how many checkpoints did `pg_stat_bgwriter` count as `checkpoints_req` during the 40,000-transaction run?",
+    "hint": "None of them were timed.",
+    "value": 14,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rb3xper1",
+    "version": 1,
+    "section": "checkpoint-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `max_wal_size = 1GB` and the default completion target, roughly how much log is written between two checkpoints forced by WAL?",
+    "hint": "At 64MB the distance was 32780 kB.",
+    "choices": [
+      {
+        "text": "Around 500 MB",
+        "correct": true,
+        "why": "Right. A little under half, as 32 MB was for 64 MB."
+      },
+      {
+        "text": "1 GB, the setting itself",
+        "correct": false,
+        "why": "The whole cycle has to fit in max_wal_size, so the trigger comes earlier."
+      },
+      {
+        "text": "80 MB, the min_wal_size",
+        "correct": false,
+        "why": "min_wal_size is the floor kept for recycling, not a trigger."
+      },
+      {
+        "text": "16 MB, one segment per checkpoint",
+        "correct": false,
+        "why": "A segment is the unit of the files, not of the checkpoint interval."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbtn9bz7",
+    "version": 1,
+    "section": "checkpoint-settings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server's log carries `checkpoints are occurring too frequently` every few minutes during the nightly import, and never by day. What is the fitting change?",
+    "hint": "The HINT names it; think about what it costs.",
+    "choices": [
+      {
+        "text": "Raise checkpoint_warning so the message stops",
+        "correct": false,
+        "why": "That silences the alarm and leaves the extra WAL and page images in place."
+      },
+      {
+        "text": "Raise max_wal_size, with disk room for it",
+        "correct": true,
+        "why": "Right. Fewer forced checkpoints during the import, paid for in pg_wal space and recovery time."
+      },
+      {
+        "text": "Lower checkpoint_timeout to spread the load",
+        "correct": false,
+        "why": "More timed checkpoints add to the problem; these are already forced by the log."
+      },
+      {
+        "text": "Turn log_checkpoints off during the import",
+        "correct": false,
+        "why": "The checkpoints still happen; you would only stop seeing them."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7csy900",
+    "version": 1,
+    "section": "full-page-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same 40,000 transactions wrote 461 MB of WAL with 14 checkpoints and 224 MB with none. Where did most of the difference come from?",
+    "hint": "Compare wal_records and wal_fpi.",
+    "choices": [
+      {
+        "text": "The checkpoint records themselves",
+        "correct": false,
+        "why": "Fourteen small records are nothing beside 237 MB."
+      },
+      {
+        "text": "More transactions committed in the first run, which the checkpoints sped up",
+        "correct": false,
+        "why": "Both ran exactly 40,000: -t 10000 for each of four clients."
+      },
+      {
+        "text": "Full-page images, taken again after each checkpoint",
+        "correct": true,
+        "why": "Right. Records barely moved; images more than doubled, 59334 against 27489."
+      },
+      {
+        "text": "The dirty pages the checkpoints wrote into the log",
+        "correct": false,
+        "why": "Checkpoints write pages to the table files, not into the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-vmnteywc",
+    "version": 1,
+    "section": "full-page-writes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants `full_page_writes = off` on an ext4 server to halve its WAL. What is the argument against?",
+    "hint": "What repairs a page torn by a power cut?",
+    "choices": [
+      {
+        "text": "A torn page would be left corrupt, with nothing to repair it",
+        "correct": true,
+        "why": "Right. Recovery would apply small records onto a half-written page, and nothing would report it."
+      },
+      {
+        "text": "Replicas stop working without the images",
+        "correct": false,
+        "why": "Replicas replay records either way; the danger is to the primary's own pages after a power cut."
+      },
+      {
+        "text": "The server refuses to start with it off",
+        "correct": false,
+        "why": "It starts happily, which is the danger: nothing complains until a torn page is read."
+      },
+      {
+        "text": "It saves nothing, because the images are compressed",
+        "correct": false,
+        "why": "wal_compression is off by default, and the images were most of the extra volume."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2r97wk9",
+    "version": 1,
+    "section": "full-page-writes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The run at the default `max_wal_size` still took 27489 page images with no checkpoint during it. Why any at all?",
+    "hint": "What ran just before it?",
+    "choices": [
+      {
+        "text": "Every update records an image regardless of checkpoints",
+        "correct": false,
+        "why": "Then the images would equal the updates; 27489 is far below the row changes made."
+      },
+      {
+        "text": "The background writer adds images as it writes pages",
+        "correct": false,
+        "why": "Images ride with a page's first change, not with writing the page out."
+      },
+      {
+        "text": "It began right after a CHECKPOINT",
+        "correct": true,
+        "why": "Right. Every page it touched was changed for the first time since that checkpoint, once."
+      },
+      {
+        "text": "pgbench forces a full-page write at the end of each transaction",
+        "correct": false,
+        "why": "pgbench only sends SQL; it has no say in what the log records."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsr0f0kq",
+    "version": 1,
+    "section": "crash-recovery",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After a crash of the server process, what is the first thing to do?",
+    "hint": "The lesson's server repaired itself.",
+    "choices": [
+      {
+        "text": "Restore last night's backup",
+        "correct": false,
+        "why": "That throws away every commit since the backup, which recovery would have kept."
+      },
+      {
+        "text": "Run pg_resetwal so it starts cleanly",
+        "correct": false,
+        "why": "That discards the log recovery needs, which is how a recoverable server becomes a corrupt one."
+      },
+      {
+        "text": "Start it again, and read what its log says",
+        "correct": true,
+        "why": "Right. Recovery replays from the redo point by itself and says so line by line."
+      },
+      {
+        "text": "Delete postmaster.pid and the oldest segments in pg_wal",
+        "correct": false,
+        "why": "Nothing needed deleting; the segments are the material recovery replays."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzmdyzk0",
+    "version": 1,
+    "section": "crash-recovery",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Recovery logged `invalid record length at 0/535AA2E0: expected at least 24, got 0`. What does that line mean?",
+    "hint": "It is a LOG line, and every recovery ends with one like it.",
+    "choices": [
+      {
+        "text": "A segment is corrupt and data was lost",
+        "correct": false,
+        "why": "The count of acks matched the client's list exactly. Nothing was lost."
+      },
+      {
+        "text": "Recovery reached the end of the log",
+        "correct": true,
+        "why": "Right. The next bytes were zeros, never written, so replay stopped there."
+      },
+      {
+        "text": "A record was too short and was skipped",
+        "correct": false,
+        "why": "Recovery never skips a record and carries on; it stops at the first one that is not valid."
+      },
+      {
+        "text": "The kill interrupted pg_waldump",
+        "correct": false,
+        "why": "pg_waldump was not running; this is the server reading its own log at start-up."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vny89pz",
+    "version": 1,
+    "section": "crash-recovery",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the crash, the client's `acked.txt` ends at 13003. Which result of `SELECT max(id), count(*) FROM acks` would show a broken guarantee?",
+    "hint": "A commit can reach the disk before its reply reaches the client.",
+    "choices": [
+      {
+        "text": "13002 and 13002",
+        "correct": true,
+        "why": "Right. A commit the client was told about is missing, which a correctly configured server never does."
+      },
+      {
+        "text": "13003 and 13003",
+        "correct": false,
+        "why": "That is what the lesson got: every confirmed commit present."
+      },
+      {
+        "text": "13004 and 13004",
+        "correct": false,
+        "why": "One more is fine: that commit reached the disk and its reply died with the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h5st7v7",
+    "version": 1,
+    "section": "crash-recovery",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines a start-up after a crash writes in order.",
+    "hint": "It notices, replays, finds the end, checkpoints, opens.",
+    "items": [
+      "database system was not properly shut down; automatic recovery in progress",
+      "redo starts at 0/420F91E0",
+      "invalid record length at 0/535AA2E0: expected at least 24, got 0",
+      "checkpoint starting: end-of-recovery immediate wait",
+      "database system is ready to accept connections"
+    ],
+    "trap": "Connections are accepted only after the end-of-recovery checkpoint, not as soon as replay ends."
+  },
+  {
+    "id": "ex-bxhjx1sy",
+    "version": 1,
+    "section": "fsync-and-synchronous-commit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `synchronous_commit = off`, what does a crash lose?",
+    "hint": "The walwriter flushes every wal_writer_delay.",
+    "choices": [
+      {
+        "text": "Nothing, because the walwriter flushes before the crash",
+        "correct": false,
+        "why": "A crash does not wait for the walwriter's next wake-up."
+      },
+      {
+        "text": "The last fraction of a second of commits",
+        "correct": true,
+        "why": "Right. Those transactions are absent as a whole; the database stays consistent."
+      },
+      {
+        "text": "Every change since the last checkpoint",
+        "correct": false,
+        "why": "Everything flushed to the log survives; only the unflushed tail goes."
+      },
+      {
+        "text": "Random pages, leaving the tables corrupt",
+        "correct": false,
+        "why": "That is fsync = off. The write-ahead order still holds with synchronous_commit off."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxqaqrks",
+    "version": 1,
+    "section": "fsync-and-synchronous-commit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lesson not demonstrate `fsync = off` corrupting the database with `kill -9`?",
+    "hint": "What survives a kill of the server's processes?",
+    "choices": [
+      {
+        "text": "kill -9 is refused while fsync is off",
+        "correct": false,
+        "why": "The kernel delivers SIGKILL whatever the server's settings."
+      },
+      {
+        "text": "fsync = off needs a restart, and the lab could not restart",
+        "correct": false,
+        "why": "The server restarted in the crash section. The obstacle is what a kill leaves behind."
+      },
+      {
+        "text": "PostgreSQL 16 ignores fsync = off",
+        "correct": false,
+        "why": "It obeys it, which is exactly the danger."
+      },
+      {
+        "text": "The operating system's cache survives the kill and is written out later",
+        "correct": true,
+        "why": "Right. Only a power cut or a kernel crash loses that cache, which is why fsync = off passes ordinary tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb6wmc66",
+    "version": 1,
+    "section": "fsync-and-synchronous-commit",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To skip the wait for the disk in one transaction only, write `SET ___ synchronous_commit = off;` after BEGIN.",
+    "hint": "It lasts until the end of the transaction.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-etq63qvw",
+    "version": 1,
+    "section": "fsync-and-synchronous-commit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lesson measured about twice the throughput with `synchronous_commit = off`. On a server whose disk takes ten times longer to confirm a flush, what would you expect?",
+    "hint": "What does a commit wait for when the setting is on?",
+    "choices": [
+      {
+        "text": "A wider gap",
+        "correct": true,
+        "why": "Right. With the setting on, each commit waits for that slow flush; off, it does not wait at all."
+      },
+      {
+        "text": "The same ratio, since the setting does the same thing",
+        "correct": false,
+        "why": "The ratio is set by the cost of the wait the setting removes, and that cost grew."
+      },
+      {
+        "text": "A smaller gap, because slow disks gain less",
+        "correct": false,
+        "why": "It runs the other way: the slower the flush, the more there is to save by not waiting for it."
+      },
+      {
+        "text": "No difference, because pgbench is limited by the processors",
+        "correct": false,
+        "why": "The lesson's run already showed the flush mattered, by halving latency."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2mpvhwz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each setting, when turned off, to what a crash can cost.",
+    "hint": "One loses a moment, one loses the guarantee, one loses a repair.",
+    "pairs": [
+      {
+        "left": "synchronous_commit",
+        "right": "the last fraction of a second of acknowledged commits"
+      },
+      {
+        "left": "fsync",
+        "right": "anything, since nothing orders writes to disk"
+      },
+      {
+        "left": "full_page_writes",
+        "right": "a page torn by a power cut stays corrupt"
+      }
+    ],
+    "right_distractors": [
+      "nothing, it only changes logging"
+    ]
+  },
+  {
+    "id": "ex-mb31e6ef",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application inserts page-view events and also records payments. Throughput on the events is the problem. Which change keeps every guarantee the payments need?",
+    "hint": "A setting can be made for one transaction.",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM SET synchronous_commit = off",
+        "correct": false,
+        "why": "That weakens every commit on the server, the payments' included."
+      },
+      {
+        "text": "fsync = off during business hours",
+        "correct": false,
+        "why": "That risks corrupting the whole database, payments included, on a power cut."
+      },
+      {
+        "text": "full_page_writes = off, but only for the table that holds the events",
+        "correct": false,
+        "why": "It is not a per-table setting, and it removes the torn-page repair everywhere."
+      },
+      {
+        "text": "SET LOCAL synchronous_commit = off in the event transactions",
+        "correct": true,
+        "why": "Right. The events trade a moment of loss for speed; payments still wait for the disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-q19brgtj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Raising `max_wal_size` from 1GB to 16GB on a busy server makes which of these worse?",
+    "hint": "Fewer checkpoints, more log between them.",
+    "choices": [
+      {
+        "text": "The volume of full-page images written to the log each hour",
+        "correct": false,
+        "why": "Fewer checkpoints mean fewer images; this improves."
+      },
+      {
+        "text": "The time recovery takes after a crash",
+        "correct": true,
+        "why": "Right. More log since the last checkpoint means more to replay."
+      },
+      {
+        "text": "How often checkpoints_req climbs",
+        "correct": false,
+        "why": "Forced checkpoints become rarer, not more frequent."
+      },
+      {
+        "text": "How long each COMMIT waits",
+        "correct": false,
+        "why": "COMMIT waits for its own log flush, which max_wal_size does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjf58ve2",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Ubuntu, the program that prints pg_control, including the latest checkpoint's REDO location, is /usr/lib/postgresql/16/bin/___.",
+    "hint": "The file's name, then data.",
+    "blanks": [
+      {
+        "accept": [
+          "pg_controldata"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z4ssgvd2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server crashed at 10:00. Its last checkpoint completed at 09:58, and the one before at 09:53. From which point does recovery replay?",
+    "hint": "pg_control names the latest checkpoint record; that record names a position.",
+    "choices": [
+      {
+        "text": "The record of the 09:58 checkpoint",
+        "correct": false,
+        "why": "Changes made while that checkpoint wrote pages lie before its record, so replay starts earlier."
+      },
+      {
+        "text": "The redo point of the 09:58 checkpoint",
+        "correct": true,
+        "why": "Right. Where that checkpoint started; everything before it is already in the table files."
+      },
+      {
+        "text": "The redo point of the 09:53 checkpoint",
+        "correct": false,
+        "why": "Only the latest checkpoint matters once it has completed."
+      },
+      {
+        "text": "The oldest segment file that is still present in pg_wal",
+        "correct": false,
+        "why": "Old segments may still sit there, recycled; recovery goes by the redo point, not by the files present."
+      }
+    ]
+  }
+]

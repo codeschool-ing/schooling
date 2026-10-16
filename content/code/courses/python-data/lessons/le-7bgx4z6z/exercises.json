@@ -1,0 +1,510 @@
+[
+  {
+    "id": "ex-98wan7gy",
+    "version": 1,
+    "section": "square-brackets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`trips[trips[\"plan\"] == \"day\"]` selects what?",
+    "hint": "A boolean Series inside the brackets.",
+    "choices": [
+      {
+        "text": "The column named `plan`",
+        "correct": false,
+        "why": "A name would do that, not a mask."
+      },
+      {
+        "text": "The day-pass rows",
+        "correct": true,
+        "why": "Right: a mask selects rows."
+      },
+      {
+        "text": "A boolean column added to the table",
+        "correct": false,
+        "why": "Nothing is added."
+      },
+      {
+        "text": "An error: brackets take names only",
+        "correct": false,
+        "why": "They accept masks and slices too."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2p0w47s",
+    "version": 1,
+    "section": "square-brackets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson keep plain brackets only for picking a column by name?",
+    "hint": "What decides their behaviour?",
+    "choices": [
+      {
+        "text": "Because they are slower than `loc`",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Because pandas 3 deprecated them for rows",
+        "correct": false,
+        "why": "They still work; the issue is reading them."
+      },
+      {
+        "text": "The line does not say which of three things it does",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because they cannot select more than one column",
+        "correct": false,
+        "why": "A list of names selects several."
+      }
+    ]
+  },
+  {
+    "id": "ex-73avhvv6",
+    "version": 1,
+    "section": "loc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`weather.loc[\"2025-03-20\":\"2025-03-22\", \"rain_mm\"]` returns how many values?",
+    "hint": "Label slices are closed.",
+    "choices": [
+      {
+        "text": "Two",
+        "correct": false,
+        "why": "The end label is included."
+      },
+      {
+        "text": "Three",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One",
+        "correct": false,
+        "why": "It is a range of days."
+      },
+      {
+        "text": "None: `loc` cannot slice dates stored as text",
+        "correct": false,
+        "why": "It slices sorted labels of any kind."
+      }
+    ]
+  },
+  {
+    "id": "ex-ancjb967",
+    "version": 1,
+    "section": "loc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `weather.loc[\"2025-02-30\"]` do?",
+    "hint": "The label does not exist.",
+    "choices": [
+      {
+        "text": "Returns the nearest date",
+        "correct": false,
+        "why": "`loc` never guesses."
+      },
+      {
+        "text": "Returns an empty row of `NaN`",
+        "correct": false,
+        "why": "It refuses instead."
+      },
+      {
+        "text": "Raises `KeyError`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Returns 1 March",
+        "correct": false,
+        "why": "Labels are not dates here; nothing rolls over."
+      }
+    ]
+  },
+  {
+    "id": "ex-cb94cqqr",
+    "version": 1,
+    "section": "loc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line selects the rain of the days with more than 20 mm and more than 31 degrees?",
+    "hint": "Each condition in parentheses, `&` between.",
+    "choices": [
+      {
+        "text": "`weather.loc[(weather[\"rain_mm\"] > 20) & (weather[\"temp_max\"] > 31), \"rain_mm\"]`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`weather.loc[weather[\"rain_mm\"] > 20 and weather[\"temp_max\"] > 31, \"rain_mm\"]`",
+        "correct": false,
+        "why": "`and` on Series raises the ambiguity error."
+      },
+      {
+        "text": "`weather.iloc[(weather[\"rain_mm\"] > 20) & (weather[\"temp_max\"] > 31), \"rain_mm\"]`",
+        "correct": false,
+        "why": "`iloc` takes positions, not a column name."
+      },
+      {
+        "text": "`weather[\"rain_mm\"].loc[20:31]`",
+        "correct": false,
+        "why": "That slices labels, not values."
+      }
+    ]
+  },
+  {
+    "id": "ex-796e63gh",
+    "version": 1,
+    "section": "iloc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`day` is the day-pass trips. Why can `day.loc[3]` fail while `day.iloc[3]` works?",
+    "hint": "Labels survive a filter.",
+    "choices": [
+      {
+        "text": "`loc` only accepts strings",
+        "correct": false,
+        "why": "It accepts any label."
+      },
+      {
+        "text": "Label 3 is gone; position 3 is not",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`day` is a copy, and copies have no labels",
+        "correct": false,
+        "why": "They keep the original labels."
+      },
+      {
+        "text": "`iloc` searches the original table",
+        "correct": false,
+        "why": "It counts rows of `day`."
+      }
+    ]
+  },
+  {
+    "id": "ex-g575t8pg",
+    "version": 1,
+    "section": "iloc",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`trips.iloc[::10000, 0]` returns the ids of how many trips, out of 33,337?",
+    "hint": "Positions 0, 10000, 20000, …",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6g5jva25",
+    "version": 1,
+    "section": "setting-values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line sets `price_cents` to 1200 for day passes and changes `trips` itself?",
+    "hint": "One loc, on the left.",
+    "choices": [
+      {
+        "text": "`trips[trips[\"plan\"] == \"day\"][\"price_cents\"] = 1200`",
+        "correct": false,
+        "why": "Chained: it writes to a copy."
+      },
+      {
+        "text": "`trips[\"price_cents\"][trips[\"plan\"] == \"day\"] = 1200`",
+        "correct": false,
+        "why": "Chained too, the other way round."
+      },
+      {
+        "text": "`trips.loc[trips[\"plan\"] == \"day\", \"price_cents\"] = 1200`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`trips.query(\"plan == 'day'\")[\"price_cents\"] = 1200`",
+        "correct": false,
+        "why": "`query` returns a new table."
+      }
+    ]
+  },
+  {
+    "id": "ex-2e1862ct",
+    "version": 1,
+    "section": "setting-values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `trips.assign(price_reais=...)` do to `trips`?",
+    "hint": "It returns something.",
+    "choices": [
+      {
+        "text": "Adds the column to `trips`",
+        "correct": false,
+        "why": "`trips` gained no column."
+      },
+      {
+        "text": "Nothing: it returns a new table",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Replaces `trips` with a copy",
+        "correct": false,
+        "why": "The name still points to the original."
+      },
+      {
+        "text": "Raises a warning about copies",
+        "correct": false,
+        "why": "No warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-8whb2gz6",
+    "version": 1,
+    "section": "copy-on-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In pandas 3, `day = trips[trips[\"plan\"] == \"day\"]; day[\"note\"] = \"x\"`. What happens?",
+    "hint": "Every selection behaves as a copy.",
+    "choices": [
+      {
+        "text": "Both `day` and `trips` get the column",
+        "correct": false,
+        "why": "`trips` is untouched."
+      },
+      {
+        "text": "A `SettingWithCopyWarning`, and nothing changes",
+        "correct": false,
+        "why": "pandas 3 gives no such warning, and `day` does change."
+      },
+      {
+        "text": "Only `day` changes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An error, since selections are read-only",
+        "correct": false,
+        "why": "They can be changed; they are just separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-e22drbcp",
+    "version": 1,
+    "section": "copy-on-write",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under pandas 3, `trips[\"bike\"][mask] = \"e-bike\"` prints `ChainedAssignmentError`. How many rows of `trips` changed?",
+    "hint": "Where did the assignment land?",
+    "choices": [
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: it landed in a thrown-away object."
+      },
+      {
+        "text": "All the electric ones, with a warning",
+        "correct": false,
+        "why": "That was pandas 2."
+      },
+      {
+        "text": "Only the first",
+        "correct": false,
+        "why": "None changed."
+      },
+      {
+        "text": "It depends on whether the table was copied first",
+        "correct": false,
+        "why": "In pandas 3 chained assignment never works."
+      }
+    ]
+  },
+  {
+    "id": "ex-vf9mjsyw",
+    "version": 1,
+    "section": "copy-on-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`plan = trips[\"plan\"]; plan.iloc[0] = \"changed\"`. In pandas 3, what is `trips.loc[0, \"plan\"]`?",
+    "hint": "The Series is not a window any more.",
+    "choices": [
+      {
+        "text": "`\"changed\"`",
+        "correct": false,
+        "why": "That was pandas 2."
+      },
+      {
+        "text": "`\"day\"`, unchanged",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`NaN`",
+        "correct": false,
+        "why": "Nothing is lost."
+      },
+      {
+        "text": "It raises `ChainedAssignmentError`",
+        "correct": false,
+        "why": "This is not chained: it changes `plan` only."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfwvr31q",
+    "version": 1,
+    "section": "the-old-warning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An old notebook relied on `df[col][mask] = v` to fix values. Run under pandas 3, what tells you the fix is gone?",
+    "hint": "Read the warnings.",
+    "choices": [
+      {
+        "text": "An exception that stops the notebook",
+        "correct": false,
+        "why": "It is a warning; the notebook runs on."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "pandas 3 does warn for this pattern."
+      },
+      {
+        "text": "A `ChainedAssignmentError`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `SettingWithCopyWarning`",
+        "correct": false,
+        "why": "pandas 3 retired it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc84c96p",
+    "version": 1,
+    "section": "the-old-warning",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which change from pandas 2 to 3 is silent, with no warning in either direction?",
+    "hint": "Experiment C.",
+    "choices": [
+      {
+        "text": "Chained assignment no longer writing",
+        "correct": false,
+        "why": "pandas 3 warns with ChainedAssignmentError."
+      },
+      {
+        "text": "A selected Series no longer editing its table",
+        "correct": true,
+        "why": "Right: pandas 3 prints nothing."
+      },
+      {
+        "text": "New columns on a filtered table",
+        "correct": false,
+        "why": "Same result in both."
+      },
+      {
+        "text": "`loc` assignments",
+        "correct": false,
+        "why": "They work the same in both."
+      }
+    ]
+  },
+  {
+    "id": "ex-2aa599t9",
+    "version": 1,
+    "section": "query",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Inside `trips.query(...)`, how do you refer to a notebook variable `station`?",
+    "hint": "A prefix.",
+    "choices": [
+      {
+        "text": "`$station`",
+        "correct": false,
+        "why": "Not query's syntax."
+      },
+      {
+        "text": "`{station}`",
+        "correct": false,
+        "why": "That is f-string syntax, and query is not an f-string."
+      },
+      {
+        "text": "`@station`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`station`, bare",
+        "correct": false,
+        "why": "A bare name is read as a column."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4wa62et",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the rewrite of an old line `df[\"bike\"][df[\"bike\"] == \"electric\"] = \"e-bike\"`.",
+    "hint": "Find, rewrite, check.",
+    "items": [
+      "Run the notebook under pandas 3",
+      "Read the `ChainedAssignmentError` and its line",
+      "Rewrite it as one `df.loc[mask, \"bike\"] = …`",
+      "Count the changed rows to confirm the effect"
+    ],
+    "trap": "Rewriting before running finds only the lines you already suspected."
+  },
+  {
+    "id": "ex-gw56esq0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each expression to what it selects.",
+    "hint": "Labels, positions, masks.",
+    "pairs": [
+      {
+        "left": "`df.loc[\"S07\"]`",
+        "right": "Every row labelled S07"
+      },
+      {
+        "left": "`df.iloc[-1]`",
+        "right": "The last row"
+      },
+      {
+        "left": "`df.loc[mask, [\"a\", \"b\"]]`",
+        "right": "The matching rows, two columns"
+      },
+      {
+        "left": "`df.iloc[:3, :2]`",
+        "right": "The first three rows, first two columns"
+      }
+    ],
+    "right_distractors": [
+      "The row labelled -1"
+    ]
+  }
+]

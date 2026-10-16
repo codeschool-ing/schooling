@@ -1,0 +1,867 @@
+[
+  {
+    "id": "ex-jn9cx5w3",
+    "version": 1,
+    "section": "queues-and-logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to a message in a queue once its consumer acknowledges it?",
+    "hint": "Work to be done.",
+    "choices": [
+      {
+        "text": "The broker deletes it, since the work is done",
+        "correct": true,
+        "why": "Right. The queue's model is work, and finished work is not kept."
+      },
+      {
+        "text": "It stays for the seven-day retention",
+        "correct": false,
+        "why": "That is the log's behaviour."
+      },
+      {
+        "text": "It moves to the next consumer in the group, so it is read twice",
+        "correct": false,
+        "why": "In a queue each message goes to one consumer."
+      },
+      {
+        "text": "It is copied to every other queue bound to the exchange",
+        "correct": false,
+        "why": "Copies are made when the message is published, not acknowledged."
+      }
+    ]
+  },
+  {
+    "id": "ex-frnwy83x",
+    "version": 1,
+    "section": "queues-and-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An analytics team wants to read last month's `OrderPlaced` events, which three services have already processed. Which broker model makes that possible?",
+    "hint": "Which one keeps messages after they are read?",
+    "choices": [
+      {
+        "text": "A queue, if the analytics team declares its own queue now",
+        "correct": false,
+        "why": "A queue declared now receives only what is published from now on."
+      },
+      {
+        "text": "A log, with retention covering a month",
+        "correct": true,
+        "why": "Right. A new reader can start from the oldest retained message."
+      },
+      {
+        "text": "Either, since both keep messages until every consumer has read them",
+        "correct": false,
+        "why": "A queue deletes on acknowledgement."
+      },
+      {
+        "text": "Neither; past events are gone in both",
+        "correct": false,
+        "why": "A log keeps them for its retention period."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdz8bvkq",
+    "version": 1,
+    "section": "queues-and-logs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each statement to the model it describes.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "the broker tracks each message's state",
+        "right": "a queue"
+      },
+      {
+        "left": "the broker tracks each reader's offset",
+        "right": "a log"
+      },
+      {
+        "left": "SQS and Service Bus queues",
+        "right": "queues, like RabbitMQ"
+      },
+      {
+        "left": "Kinesis and Event Hubs",
+        "right": "logs, like Kafka"
+      }
+    ],
+    "right_distractors": [
+      "neither model"
+    ]
+  },
+  {
+    "id": "ex-camta4d6",
+    "version": 1,
+    "section": "the-brokers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, how many mebibytes did the Kafka container use at rest, rounded to the nearest whole number?",
+    "hint": "The `docker stats` line for kafka.",
+    "value": 266,
+    "tolerance": 1,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-gqtwhr7z",
+    "version": 1,
+    "section": "the-brokers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `docker compose up -d` start the two brokers and not the `tools` service?",
+    "hint": "Look at the line under `tools` in `compose.yaml`.",
+    "choices": [
+      {
+        "text": "The tools image failed to build",
+        "correct": false,
+        "why": "It builds; it is simply not started by `up`."
+      },
+      {
+        "text": "Compose starts at most two services at a time",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "It is in a profile, which `up` skips",
+        "correct": true,
+        "why": "Right. `docker compose run tools …` builds and runs it when a script is needed."
+      },
+      {
+        "text": "It depends on Kafka, which is not ready yet",
+        "correct": false,
+        "why": "It depends on RabbitMQ, and that is not why it is left out."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xj5m7sr",
+    "version": 1,
+    "section": "rabbitmq-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In RabbitMQ, where does a publisher send a message?",
+    "hint": "Never to a queue.",
+    "choices": [
+      {
+        "text": "Straight to the queue of the service that needs it",
+        "correct": false,
+        "why": "A publisher never sends to a queue."
+      },
+      {
+        "text": "To the consumer, which forwards it to its queue",
+        "correct": false,
+        "why": "Consumers read from queues; they do not forward."
+      },
+      {
+        "text": "To an exchange, with a routing key",
+        "correct": true,
+        "why": "Right. Bindings decide which queues get a copy."
+      },
+      {
+        "text": "To a partition chosen by the hash of its key",
+        "correct": false,
+        "why": "That is Kafka's model."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyp3w0rg",
+    "version": 1,
+    "section": "rabbitmq-model",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each exchange type to what it delivers to.",
+    "hint": "The second table.",
+    "pairs": [
+      {
+        "left": "direct",
+        "right": "queues bound with exactly the routing key"
+      },
+      {
+        "left": "topic",
+        "right": "queues whose pattern matches, with * and #"
+      },
+      {
+        "left": "fanout",
+        "right": "every bound queue, whatever the key"
+      }
+    ],
+    "right_distractors": [
+      "the queue with the fewest messages"
+    ]
+  },
+  {
+    "id": "ex-js2e2961",
+    "version": 1,
+    "section": "rabbitmq-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue is bound to a topic exchange with `order.*`. Which routing key does NOT reach it?",
+    "hint": "`*` is exactly one word.",
+    "choices": [
+      {
+        "text": "`order.placed`",
+        "correct": false,
+        "why": "One word after `order.`, so it matches."
+      },
+      {
+        "text": "`order.refunded`",
+        "correct": false,
+        "why": "One word after `order.`, so it matches."
+      },
+      {
+        "text": "`order.item.added`",
+        "correct": true,
+        "why": "Right. That is two words after `order.`; `order.#` would match it."
+      },
+      {
+        "text": "`order.cancelled`",
+        "correct": false,
+        "why": "One word after `order.`, so it matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1mdnxwz",
+    "version": 1,
+    "section": "rabbitmq-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda adds a loyalty service that must receive every order. What changes in RabbitMQ, and what changes in the publisher?",
+    "hint": "Who creates queues and bindings?",
+    "choices": [
+      {
+        "text": "A new exchange for loyalty, and the publisher sends to both",
+        "correct": false,
+        "why": "One exchange serves every interested queue."
+      },
+      {
+        "text": "A new queue and binding; nothing in the publisher",
+        "correct": true,
+        "why": "Right. The publisher knows only the exchange."
+      },
+      {
+        "text": "Nothing in RabbitMQ; the publisher adds a third routing key",
+        "correct": false,
+        "why": "Without a queue bound, the messages would go nowhere."
+      },
+      {
+        "text": "The e-mail queue is shared with loyalty, so they compete for messages",
+        "correct": false,
+        "why": "Competing consumers would each get some orders, not all."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6sf53f7",
+    "version": 1,
+    "section": "rabbitmq-in-practice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two orders were published before any queue existed. What became of them?",
+    "hint": "The list of queues afterwards.",
+    "choices": [
+      {
+        "text": "They waited in the exchange until the queues were declared",
+        "correct": false,
+        "why": "An exchange holds no messages."
+      },
+      {
+        "text": "They were dropped, and the publisher was never told",
+        "correct": true,
+        "why": "Right. No binding matched, so they went nowhere."
+      },
+      {
+        "text": "They were rejected, and `publish.py` raised an error",
+        "correct": false,
+        "why": "`publish.py` printed them as published."
+      },
+      {
+        "text": "They were delivered to the first consumer that connected",
+        "correct": false,
+        "why": "Messages that were dropped reach nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-81g0spfz",
+    "version": 1,
+    "section": "rabbitmq-in-practice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `publish.py 6 7`, how many messages did the warehouse queue hold?",
+    "hint": "Four nobody had read, plus six.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-zqjkewyf",
+    "version": 1,
+    "section": "rabbitmq-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two consumers shared the warehouse queue. What did the output show about order?",
+    "hint": "Look at orders 9 and 10.",
+    "choices": [
+      {
+        "text": "The orders were handled strictly in the order they were published",
+        "correct": false,
+        "why": "Order 10 was printed before order 9."
+      },
+      {
+        "text": "Order 10 was handled and printed before order 9",
+        "correct": true,
+        "why": "Right. Competing consumers do not keep the order of the queue."
+      },
+      {
+        "text": "Each consumer handled every order, once each",
+        "correct": false,
+        "why": "Each order was handled by one consumer."
+      },
+      {
+        "text": "One consumer handled them all and the other none",
+        "correct": false,
+        "why": "The two hostnames alternate in the output."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p42d6hh",
+    "version": 1,
+    "section": "rabbitmq-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `prefetch_count=1` change for the two warehouse consumers?",
+    "hint": "How many unacknowledged messages may each hold?",
+    "choices": [
+      {
+        "text": "Each message is delivered to both consumers",
+        "correct": false,
+        "why": "That would be two queues, not two consumers."
+      },
+      {
+        "text": "Messages are delivered in strict order",
+        "correct": false,
+        "why": "It does not make two workers keep order."
+      },
+      {
+        "text": "One message at a time each, the next after the ack",
+        "correct": true,
+        "why": "Right, so the work spreads instead of piling on whoever connected first."
+      },
+      {
+        "text": "Only one consumer may be connected at a time",
+        "correct": false,
+        "why": "Both were connected and both worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8taqvjm",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What decides which partition a Kafka message is written to?",
+    "hint": "The producer hashes something.",
+    "choices": [
+      {
+        "text": "The consumer group that will read it",
+        "correct": false,
+        "why": "Producers do not know which groups will read."
+      },
+      {
+        "text": "Its key",
+        "correct": true,
+        "why": "Right: the same key, the same partition."
+      },
+      {
+        "text": "The partition with the fewest messages at that moment",
+        "correct": false,
+        "why": "Placement follows the key, not the load."
+      },
+      {
+        "text": "A binding pattern on the topic",
+        "correct": false,
+        "why": "Kafka has no bindings."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5tky7y1",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer group has four consumers reading a topic with three partitions. What does the fourth consumer do?",
+    "hint": "A partition is read by one consumer of a group.",
+    "choices": [
+      {
+        "text": "It waits idle until another one leaves",
+        "correct": true,
+        "why": "Right. Parallelism is capped by the number of partitions."
+      },
+      {
+        "text": "Reads a copy of every partition, as a backup",
+        "correct": false,
+        "why": "A group divides partitions; it does not copy them."
+      },
+      {
+        "text": "Shares partition 0 with another consumer",
+        "correct": false,
+        "why": "A partition is read by one consumer of a group at a time."
+      },
+      {
+        "text": "Creates a fourth partition for itself",
+        "correct": false,
+        "why": "Consumers cannot create partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v5vbm2c",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Exactly which ordering does Kafka promise?",
+    "hint": "Within what, and across what?",
+    "choices": [
+      {
+        "text": "The order of the whole topic, for every consumer",
+        "correct": false,
+        "why": "Across partitions there is no order."
+      },
+      {
+        "text": "The order of each consumer group's reads",
+        "correct": false,
+        "why": "The promise is about partitions, not groups."
+      },
+      {
+        "text": "The order of the producer's clock timestamps",
+        "correct": false,
+        "why": "Timestamps play no part in placement."
+      },
+      {
+        "text": "Within a partition, and none across partitions",
+        "correct": true,
+        "why": "Right. Choosing the key decides what is kept in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kq6g0n0",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The position of a message within its partition, starting at 0, is called its ___.",
+    "hint": "Each consumer group stores one per partition.",
+    "blanks": [
+      {
+        "accept": [
+          "offset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9bapy03p",
+    "version": 1,
+    "section": "kafka-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, why did the consumer print ana's orders before bruno's order 2, although order 2 was produced before order 3?",
+    "hint": "Which partitions are they in?",
+    "choices": [
+      {
+        "text": "Kafka sorts messages by key before delivering them",
+        "correct": false,
+        "why": "There is no sorting; the partitions are read one after the other."
+      },
+      {
+        "text": "The producer sent order 3 first by mistake",
+        "correct": false,
+        "why": "The producer sent them in the order of the input."
+      },
+      {
+        "text": "They are in different partitions, and nothing orders across them",
+        "correct": true,
+        "why": "Right. Within each partition the order held."
+      },
+      {
+        "text": "Order 2 was lost and written again later",
+        "correct": false,
+        "why": "Nothing was lost; offsets 0 to 2 of partition 2 are all there."
+      }
+    ]
+  },
+  {
+    "id": "ex-d41jes6k",
+    "version": 1,
+    "section": "kafka-in-practice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the two extra orders, what was the email group's total lag across the three partitions?",
+    "hint": "Add the LAG column.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-dsaz3t8g",
+    "version": 1,
+    "section": "kafka-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group's lag on one topic grows by a few hundred messages every hour. What does that say?",
+    "hint": "Steady or falling, against growing.",
+    "choices": [
+      {
+        "text": "The topic is losing messages",
+        "correct": false,
+        "why": "The messages are there; the group is behind them."
+      },
+      {
+        "text": "The producer is sending duplicates",
+        "correct": false,
+        "why": "Lag counts unread messages, not duplicates."
+      },
+      {
+        "text": "The retention period is too long",
+        "correct": false,
+        "why": "Retention does not change how fast a group reads."
+      },
+      {
+        "text": "The consumers are not keeping up",
+        "correct": true,
+        "why": "Right, and the oldest unread message gets older by the minute."
+      }
+    ]
+  },
+  {
+    "id": "ex-pq0kmhp6",
+    "version": 1,
+    "section": "kafka-in-practice",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each column of `kafka-consumer-groups --describe` to what it means.",
+    "hint": "The paragraph after the capture.",
+    "pairs": [
+      {
+        "left": "CURRENT-OFFSET",
+        "right": "where the group will read next"
+      },
+      {
+        "left": "LOG-END-OFFSET",
+        "right": "where the next message will be written"
+      },
+      {
+        "left": "LAG",
+        "right": "how many messages the group has not read"
+      }
+    ],
+    "right_distractors": [
+      "how many consumers are in the group"
+    ]
+  },
+  {
+    "id": "ex-48yrxsd1",
+    "version": 1,
+    "section": "replaying",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The new group `warehouse` read the topic from the beginning. How many messages did it read?",
+    "hint": "Five, then two more.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-42dxp8td",
+    "version": 1,
+    "section": "replaying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the `warehouse` group's reading do to the `email` group?",
+    "hint": "Groups read independently.",
+    "choices": [
+      {
+        "text": "It moved the email group's offsets to the end",
+        "correct": false,
+        "why": "Each group stores its own offsets."
+      },
+      {
+        "text": "It removed the messages the email group had not read yet",
+        "correct": false,
+        "why": "Reading removes nothing from a log."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Each group has its own position in the same log."
+      },
+      {
+        "text": "It doubled the email group's lag",
+        "correct": false,
+        "why": "Lag depends only on the email group's position and the log's end."
+      }
+    ]
+  },
+  {
+    "id": "ex-j75gf54k",
+    "version": 1,
+    "section": "replaying",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The e-mail service fixed a bug and its group's offsets were reset to the earliest. What must be true of the e-mail consumer before that is safe?",
+    "hint": "It will act on old messages as if they were new.",
+    "choices": [
+      {
+        "text": "Its consumers must be running while the offsets are reset",
+        "correct": false,
+        "why": "The tool refuses to reset a group with active consumers."
+      },
+      {
+        "text": "The topic must have only one partition",
+        "correct": false,
+        "why": "Resetting works on any number of partitions."
+      },
+      {
+        "text": "Running twice on one message must be safe",
+        "correct": true,
+        "why": "Right, idempotency, which is lesson 7."
+      },
+      {
+        "text": "The producer must send the messages again",
+        "correct": false,
+        "why": "The messages are still in the log; nothing is sent again."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9mce87p",
+    "version": 1,
+    "section": "managed-queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer of an SQS queue takes 45 seconds to handle a message, and the visibility timeout is 30 seconds. What happens?",
+    "hint": "What does the message do when the timeout passes before it is deleted?",
+    "choices": [
+      {
+        "text": "SQS waits for the consumer to finish, however long it takes",
+        "correct": false,
+        "why": "The timeout does not wait for anyone."
+      },
+      {
+        "text": "The message is deleted after 30 seconds as failed",
+        "correct": false,
+        "why": "It becomes visible again rather than deleted."
+      },
+      {
+        "text": "The consumer is disconnected from the queue for good",
+        "correct": false,
+        "why": "Nothing disconnects it; the message simply reappears."
+      },
+      {
+        "text": "It reappears, and another consumer handles it too",
+        "correct": true,
+        "why": "Right. The timeout must be longer than the slowest normal handling."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1vcdmgh",
+    "version": 1,
+    "section": "managed-queues",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The queue where messages go after failing a set number of times, for a person to look at, is called a ___ queue.",
+    "hint": "Letters nobody can deliver.",
+    "blanks": [
+      {
+        "accept": [
+          "dead-letter",
+          "dead letter",
+          "deadletter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pn3e3k5x",
+    "version": 1,
+    "section": "managed-queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these keeps order within a group of messages, the way a key does in Kafka?",
+    "hint": "A FIFO queue and its message groups.",
+    "choices": [
+      {
+        "text": "An SQS standard queue",
+        "correct": false,
+        "why": "Standard queues make no promise of order."
+      },
+      {
+        "text": "An SQS FIFO queue",
+        "correct": true,
+        "why": "Right, per message group."
+      },
+      {
+        "text": "A RabbitMQ fanout exchange",
+        "correct": false,
+        "why": "An exchange routes; it does not order."
+      },
+      {
+        "text": "Any dead-letter queue",
+        "correct": false,
+        "why": "A dead-letter queue holds failures; order is not its job."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgtrbvqr",
+    "version": 1,
+    "section": "choosing-a-broker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the lesson, what is the first question in choosing a broker?",
+    "hint": "Before any product name.",
+    "choices": [
+      {
+        "text": "Are the messages work to be done or a record of what happened?",
+        "correct": true,
+        "why": "Right. The answer picks a family."
+      },
+      {
+        "text": "Which broker has the most stars on GitHub?",
+        "correct": false,
+        "why": "Popularity says nothing about fit."
+      },
+      {
+        "text": "Which language are the services written in?",
+        "correct": false,
+        "why": "Both brokers have clients for every common language."
+      },
+      {
+        "text": "How many messages per second will there be on the first day?",
+        "correct": false,
+        "why": "Volume matters later; the model comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-83361cwr",
+    "version": 1,
+    "section": "choosing-a-broker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Quitanda put its order events in a log and its pick list in a queue?",
+    "hint": "Who wants the orders later, and who wants a pick list replayed?",
+    "choices": [
+      {
+        "text": "Logs are faster for small messages and queues for large ones",
+        "correct": false,
+        "why": "Size is not the reason given."
+      },
+      {
+        "text": "The warehouse team only knows RabbitMQ",
+        "correct": false,
+        "why": "The reason is in the messages, not the team."
+      },
+      {
+        "text": "A system may only run one broker of each kind",
+        "correct": false,
+        "why": "Running both is normal; that is not the reason."
+      },
+      {
+        "text": "Orders will be read again by readers not yet written; picks are work, retried per item",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-j34e9ncr",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the pieces a RabbitMQ message passes through in order, from the publisher to the consumer.",
+    "hint": "Exchange, binding, queue.",
+    "items": [
+      "The publisher sends it with a routing key",
+      "The exchange compares the key with its bindings",
+      "Each matching queue stores a copy",
+      "A consumer takes it and acknowledges it"
+    ]
+  },
+  {
+    "id": "ex-z1mjwa4n",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The fraud team, created this month, needs every `OrderPlaced` from the past week to train a model. Orders go through RabbitMQ today. What does the lesson suggest?",
+    "hint": "Which model keeps messages for readers that come later?",
+    "choices": [
+      {
+        "text": "Bind a new queue for fraud; it will receive last week's orders",
+        "correct": false,
+        "why": "A queue receives only what is published after it is bound."
+      },
+      {
+        "text": "Publish orders to a log as well, with retention long enough",
+        "correct": true,
+        "why": "Right. A new group can then start from the past."
+      },
+      {
+        "text": "Ask the e-mail service to forward its queue to fraud",
+        "correct": false,
+        "why": "The e-mail queue's messages were deleted when acknowledged."
+      },
+      {
+        "text": "Reset the RabbitMQ queue's offsets to last week",
+        "correct": false,
+        "why": "Queues have no offsets to reset."
+      }
+    ]
+  }
+]
