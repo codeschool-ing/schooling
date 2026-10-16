@@ -126,7 +126,7 @@ desaparecimento paga por ele em tempo, e isso é motivo para conferir um só ond
 
 ## O que torna um estado passageiro
 
-O aviso é o caso mais simples, e o mesmo formato aparece sempre que uma página mostra algo a caminho
+O aviso é o caso mais simples. O mesmo formato aparece sempre que uma página mostra algo a caminho
 de outra coisa: um rótulo *Salvando…*, um spinner, o destaque numa linha que mudou, um banner que se
 fecha sozinho, a lista de duas frutas que a página de busca mostrou por um instante na aula 3. Três
 hábitos mantêm o teste do lado certo deles.

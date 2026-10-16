@@ -91,8 +91,8 @@ failed test. The last line is the check.
 Playwright writes the loop for you in two places, and lesson 10 named both. A **web-first
 assertion**, `expect(locator).toHaveText(...)` and its relatives, is an explicit wait whose
 condition is the assertion itself. Its timeout is five seconds by default. Its interval is not a
-fixed number: the installed code checks once at once, then again after 100, 250, 500 and 1000 ms,
-and every second after that, so a quick answer is seen quickly and a slow one does not cost a
+fixed number. The installed code checks immediately, then again after 100, 250, 500 and 1000 ms,
+and every second after that: a quick answer is seen quickly, and a slow one does not cost a
 request every few milliseconds. That arithmetic is the count in every call log: one look, then
 looks at 100, 350 and 850 ms, then one a second, makes the *9 ×* lesson 3 printed in five seconds.
 

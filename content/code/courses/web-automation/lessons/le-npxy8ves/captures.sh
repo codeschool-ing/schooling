@@ -62,6 +62,11 @@ run 'time for i in $(seq 20); do node --test --test-reporter=tap unit/total.test
 run 'time npx playwright test tests/basket-api.spec.js --repeat-each 20 --workers 1 --reporter=dot'
 run 'time npx playwright test tests/basket-ui.spec.js --repeat-each 20 --workers 1 --reporter=dot'
 
+block repeat-workers
+run 'npx playwright test tests/basket-api.spec.js --repeat-each 3 --workers 1 --reporter=json > /tmp/run.json'
+run 'grep -o "\"workerIndex\": [0-9]*" /tmp/run.json'
+as_ana 'rm -f /tmp/run.json'
+
 block defect-format
 cp app/public/app.js /tmp/l21-app.js
 sed -i 's|money.format(basket.total / 100)|money.format(basket.total)|' app/public/app.js

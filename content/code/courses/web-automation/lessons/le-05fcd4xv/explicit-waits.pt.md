@@ -91,9 +91,9 @@ O teste não tem `assert`, e não precisa: **uma espera que estoura lança um er
 O Playwright escreve o laço por você em dois lugares, e a aula 10 deu nome aos dois. Uma **asserção
 web-first**, `expect(locator).toHaveText(...)` e suas parentes, é uma espera explícita cuja condição
 é a própria asserção. O tempo limite dela é de cinco segundos por padrão. O intervalo não é um
-número fixo: o código instalado confere uma vez na hora, depois de novo após 100, 250, 500 e
-1000 ms, e daí a cada segundo, então uma resposta rápida é vista rápido e uma lenta não custa uma
-consulta a cada poucos milissegundos. Essa conta é a contagem de todo registro de chamadas: uma
+número fixo. O código instalado confere na hora, depois de novo após 100, 250, 500 e 1000 ms, e
+daí a cada segundo: uma resposta rápida é vista rápido, e uma lenta não custa uma consulta a cada
+poucos milissegundos. Essa conta é a contagem de todo registro de chamadas: uma
 olhada, depois olhadas aos 100, 350 e 850 ms, depois uma por segundo, dá os *9 ×* que a aula 3
 imprimiu em cinco segundos.
 

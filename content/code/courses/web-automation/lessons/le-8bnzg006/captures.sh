@@ -40,6 +40,9 @@ stage 22 || exit 1
 P=$REPO_DEFAULT
 cd "$P" || exit 1
 nocolor() { sed 's/\x1b\[[0-9;]*m//g'; }
+# Not a capture: a record that nobody changed the project during this run.
+sums() { find . -path ./node_modules -prune -o -path ./test-results -prune -o -path ./playwright-report -prune -o -name report.json -prune -o -path ./evidence/visual.spec.js-snapshots -prune -o -type f -print | sort | xargs md5sum; }
+sums > /tmp/l22-before.md5
 
 VIS="npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'"
 OVF="npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'"
@@ -96,3 +99,5 @@ block suite-5
 run "for i in 1 2 3 4 5; do npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)|^    tests/'; done" | nocolor
 block suite-why
 run "npx playwright test | grep -E 'using [0-9]+ workers|^  [0-9]+\) |Expected:|Received:'" | nocolor
+sums > /tmp/l22-after.md5
+diff /tmp/l22-before.md5 /tmp/l22-after.md5 > /tmp/lab/L22.integrity && echo "project unchanged during the run" > /tmp/lab/L22.integrity

@@ -56,8 +56,8 @@ test('any function is a condition', async () => {
 ```
 
 Run both Selenium files of this lesson together. `node --test` runs each file in a process of its
-own, at the same time unless told otherwise, and both files put a banana in the one shared basket,
-so `--test-concurrency=1` runs them one after the other:
+own, at the same time unless told otherwise. Both files put a banana in the one shared basket, so
+`--test-concurrency=1` runs them one after the other:
 
 ```
 ana@laptop:~/quitanda$ node --test --test-concurrency=1 --test-reporter=tap selenium/ssr.test.js selenium/conditions.test.js

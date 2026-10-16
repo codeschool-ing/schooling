@@ -56,7 +56,7 @@ test('any function is a condition', async () => {
 ```
 
 Rode juntos os dois arquivos Selenium desta aula. O `node --test` roda cada arquivo num processo
-próprio, ao mesmo tempo se ninguém disser o contrário, e os dois arquivos põem uma banana na mesma
+próprio, ao mesmo tempo se ninguém disser o contrário. Os dois arquivos põem uma banana na mesma
 cesta compartilhada, então `--test-concurrency=1` os roda um depois do outro:
 
 ```

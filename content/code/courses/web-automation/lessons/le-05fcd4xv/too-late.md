@@ -127,9 +127,9 @@ pays for it in time, which is a reason to check one only where it matters.
 
 ## What makes a state fleeting
 
-The toast is the plainest case, and the same shape turns up wherever a page shows something on
-the way to something else: a *Saving…* label, a spinner, a highlight on a changed row, a banner
-that closes itself, the two-fruit list the search page showed for a moment in lesson 3. Three
+The toast is the plainest case. The same shape turns up wherever a page shows something on the
+way to something else: a *Saving…* label, a spinner, a highlight on a changed row, a banner that
+closes itself, the two-fruit list the search page showed for a moment in lesson 3. Three
 habits keep a test on the right side of them.
 
 - **Assert a fleeting state immediately after its cause**, with nothing slow in between, not even
