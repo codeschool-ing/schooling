@@ -60,7 +60,7 @@ exit 1
 
 Five addresses answer, and **one does not**: 5434, the standby the reporting team was told to use,
 from lessons 11 to 15, which the cluster of lessons 16 to 19 replaced. The check found in a moment
-what a person would have found at the worst one, typing the address from the page and wondering whether the
+what a person would have found at the worst possible moment, typing the address from the page and wondering whether the
 problem was them. Run it from the same scheduler as lesson 13's `lagcheck.sh`, and treat its failure
 the same way: a message to whoever owns the runbook, because a wrong page is a defect, not a typo.
 
