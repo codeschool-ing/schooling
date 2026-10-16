@@ -89,7 +89,14 @@ same customer from a second terminal. The number at the end of each line is the 
 `-w` asks `curl` to print:
 
 ```
-%%CAP curl-users%%
+ana@laptop:~/quitanda$ curl -s -w ' %{http_code}\n' -X POST -H 'Content-Type: application/json' -d '{"name":"maria"}' http://localhost:3000/api/users
+{"name":"maria"} 201
+ana@laptop:~/quitanda$ curl -s -w ' %{http_code}\n' -X POST -H 'Content-Type: application/json' -d '{"name":"maria"}' http://localhost:3000/api/users
+{"error":"maria already exists"} 409
+ana@laptop:~/quitanda$ curl -s -w '%{http_code}\n' -X DELETE 'http://localhost:3000/api/users?name=maria'
+204
+ana@laptop:~/quitanda$ curl -s -w ' %{http_code}\n' -X POST -H 'Content-Type: application/json' -d '{"name":"maria"}' http://localhost:3000/api/users
+{"name":"maria"} 201
 ```
 
 The second request is refused, the `DELETE` answers `204` with no body, and after it the name is
@@ -115,7 +122,20 @@ test('a new customer can sign up', async ({ page }) => {
 Stop any shop you have running and run it twice:
 
 ```
-%%CAP fixed-fresh%%
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/signup.spec.js:3:1 › a new customer can sign up (205ms)
+
+  1 passed (1.7s)
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/signup.spec.js:3:1 › a new customer can sign up (217ms)
+
+  1 passed (1.5s)
 ```
 
 **Green twice, and the reason is not the test.** Lesson 1's configuration has a `webServer` block:
@@ -130,7 +150,48 @@ Lesson 1 had you leave `npm start` running in a second terminal to look at the s
 that is exactly the situation. With the shop running there, the same two runs:
 
 ```
-%%CAP fixed-reused%%
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/signup.spec.js:3:1 › a new customer can sign up (236ms)
+
+  1 passed (1.2s)
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 tests/signup.spec.js:3:1 › a new customer can sign up (5.2s)
+
+
+  1) tests/signup.spec.js:3:1 › a new customer can sign up ─────────────────────────────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByRole('status')
+    Expected: "Welcome, maria"
+    Received: "maria already exists"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByRole('status')
+        9 × locator resolved to <p role="status">maria already exists</p>
+          - unexpected value "maria already exists"
+
+
+      5 |   await page.getByLabel('Name').fill('maria');
+      6 |   await page.getByRole('button', { name: 'Create account' }).click();
+    > 7 |   await expect(page.getByRole('status')).toHaveText('Welcome, maria');
+        |                                          ^
+      8 | });
+      9 |
+        at /home/ana/quitanda/tests/signup.spec.js:7:42
+
+    Error Context: test-results/signup-a-new-customer-can-sign-up/error-context.md
+
+  1 failed
+    tests/signup.spec.js:3:1 › a new customer can sign up ──────────────────────────────────────────
 ```
 
 The first run created Maria in the shop that stays up. The second asked for her again and got the

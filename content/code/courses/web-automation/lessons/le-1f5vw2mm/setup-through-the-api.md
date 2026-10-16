@@ -52,10 +52,19 @@ test('ten customers through the API', async ({ request }) => {
 ```
 
 ```
-%%CAP setup-cost%%
+ana@laptop:~/quitanda$ npx playwright test tests/setup-cost.spec.js
+
+Running 2 tests using 1 worker
+
+form: 1492 ms for 10
+  ✓  1 tests/setup-cost.spec.js:6:1 › ten customers through the form (1.6s)
+API: 57 ms for 10
+  ✓  2 tests/setup-cost.spec.js:18:1 › ten customers through the API (65ms)
+
+  2 passed (2.9s)
 ```
 
-@@COST@@ **And this is the most favourable case for the form** that you will ever measure: one
+Ten customers took 1492 ms through the form and 57 ms through the API: about 26 times as long, nearly all of it pages loading and a browser waiting for them. **And this is the most favourable case for the form** that you will ever measure: one
 field, one button, a page with no images, a server in memory on the same machine. A real sign-up
 has more fields, a confirmation and a slower server, and the gap grows with each of them. The time
 the test runner prints beside each test includes starting its context, which is why it is a little
@@ -96,7 +105,14 @@ test('a name that is taken is refused', async ({ page, request }) => {
 ```
 
 ```
-%%CAP signup-v3%%
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/signup.spec.js:8:1 › a new customer can sign up (226ms)
+  ✓  2 tests/signup.spec.js:16:1 › a name that is taken is refused (184ms)
+
+  2 passed (1.9s)
 ```
 
 **Check the setup's answer.** The line `expect(created.status()).toBe(201)` looks fussy and is the

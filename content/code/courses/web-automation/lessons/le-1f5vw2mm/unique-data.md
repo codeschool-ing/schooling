@@ -35,7 +35,26 @@ at the same time in two worker processes, which is what two tests in a real suit
 run it again:
 
 ```
-%%CAP names%%
+ana@laptop:~/quitanda$ npx playwright test tests/names.spec.js --repeat-each 2 --workers 2
+
+Running 2 tests using 2 workers
+
+worker 0  test 5cb21a92ffec044e7e47-b870072407ed43c8a900  time 1792112954542  uuid fd9cf333-f069-4ea1-8863-59d91e640ae5
+worker 1  test 5cb21a92ffec044e7e47-887d21061a9cc03c31e7  time 1792112954553  uuid f7b7440f-93a7-4f0c-8438-48e3e4cdca64
+  ✓  1 tests/names.spec.js:5:1 › four ways to make a name (5ms)
+  ✓  2 tests/names.spec.js:5:1 › four ways to make a name (4ms)
+
+  2 passed (1.2s)
+ana@laptop:~/quitanda$ npx playwright test tests/names.spec.js --repeat-each 2 --workers 2
+
+Running 2 tests using 2 workers
+
+worker 1  test 5cb21a92ffec044e7e47-887d21061a9cc03c31e7  time 1792112956989  uuid 276092ff-84d4-4071-8c90-831666385646
+worker 0  test 5cb21a92ffec044e7e47-b870072407ed43c8a900  time 1792112957002  uuid e1035f6a-bfa9-429d-8db2-ee798dca09cd
+  ✓  1 tests/names.spec.js:5:1 › four ways to make a name (5ms)
+  ✓  2 tests/names.spec.js:5:1 › four ways to make a name (5ms)
+
+  2 passed (1.2s)
 ```
 
 Read it column by column.
@@ -44,7 +63,7 @@ Read it column by column.
 |---|---|---|---|
 | `testInfo.workerIndex` | yes, while they run | **no**: 0 and 1 come back every run | which worker, nothing about the test |
 | `testInfo.testId` | yes, even for two copies of one test | **no**: the same two ids come back | which test made the data, if you keep a map |
-| `Date.now()` | almost: the two copies were 13 ms apart, and could have shared a millisecond | yes, the clock moves on | **when** it was made, which helps when reading a database later |
+| `Date.now()` | almost: the two copies were 11 and 13 ms apart, and could have shared a millisecond | yes, the clock moves on | **when** it was made, which helps when reading a database later |
 | `randomUUID()` | yes | yes | nothing; it is noise to a person |
 
 The first two are built for a different job. `workerIndex` exists so that each worker can have a
@@ -84,7 +103,20 @@ test('a new customer can sign up', async ({ page }) => {
 With the shop left running, which was the condition that failed before, twice:
 
 ```
-%%CAP unique-twice%%
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/signup.spec.js:8:1 › a new customer can sign up (200ms)
+
+  1 passed (1.3s)
+ana@laptop:~/quitanda$ npx playwright test tests/signup.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/signup.spec.js:8:1 › a new customer can sign up (225ms)
+
+  1 passed (1.2s)
 ```
 
 **The expected greeting is built from the same variable as the name typed.** That line is the one

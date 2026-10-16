@@ -1,0 +1,609 @@
+[
+ {
+  "id": "ex-gqd0behs",
+  "version": 1,
+  "section": "the-fixed-name",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With no shop running, the sign-up test that types `maria` passes twice in a row. Why does the second run not get `409`?",
+  "hint": "Look at what the configuration does when nothing answers on port 3000.",
+  "choices": [
+   {
+    "text": "The browser context of the first run was thrown away",
+    "correct": false,
+    "why": "Contexts hold cookies and storage; the customer lives in the shop's memory, which a context never touches."
+   },
+   {
+    "text": "Each run's `webServer` started an empty shop",
+    "correct": true,
+    "why": "Right. With nothing on port 3000, Playwright starts a shop for the run and stops it after, so Maria is always the first."
+   },
+   {
+    "text": "`afterEach` deleted Maria",
+    "correct": false,
+    "why": "That version of the file has no `afterEach` at all."
+   },
+   {
+    "text": "The shop only refuses a name that is typed in a browser window it has seen already",
+    "correct": false,
+    "why": "The server refuses the name whatever sends it; `curl` got the same `409`."
+   }
+  ]
+ },
+ {
+  "id": "ex-zk5hyt5r",
+  "version": 1,
+  "section": "the-fixed-name",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Against a shop left running, the second run fails: expected *Welcome, maria*, received *maria already exists*. What is wrong?",
+  "choices": [
+   {
+    "text": "The shop: it should let two customers share a name",
+    "correct": false,
+    "why": "Two accounts with one name would be the defect; the refusal is correct behaviour."
+   },
+   {
+    "text": "The test, which needs a name nobody has used",
+    "correct": true,
+    "why": "Right. It assumed it was the first ever to sign up Maria, and history proved it wrong."
+   },
+   {
+    "text": "Nothing: a retry turns it green",
+    "correct": false,
+    "why": "Maria is still there on the next run; this failure repeats every time the shop is reused."
+   },
+   {
+    "text": "The locator, which found the wrong paragraph",
+    "correct": false,
+    "why": "It found the only status paragraph and read the server's honest answer."
+   }
+  ]
+ },
+ {
+  "id": "ex-77t8f3dc",
+  "version": 1,
+  "section": "unique-data",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each source of a unique name to its weakness, as the two captured runs show it.",
+  "pairs": [
+   {
+    "left": "`testInfo.workerIndex`",
+    "right": "0 and 1 come back on every run"
+   },
+   {
+    "left": "`testInfo.testId`",
+    "right": "The same id for the same test, run after run"
+   },
+   {
+    "left": "`Date.now()`",
+    "right": "Two workers can land on one millisecond"
+   },
+   {
+    "left": "`randomUUID()`",
+    "right": "Tells a person reading the failure nothing"
+   }
+  ]
+ },
+ {
+  "id": "ex-e2zpdvk4",
+  "version": 1,
+  "section": "unique-data",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test fills the form with `newName('maria')` and then expects the status to read `Welcome, maria`. What happens?",
+  "choices": [
+   {
+    "text": "It passes, since the name begins with maria",
+    "correct": false,
+    "why": "`toHaveText` with a string compares the whole text, and the tail is part of it."
+   },
+   {
+    "text": "It fails: the greeting names the random tail too",
+    "correct": true,
+    "why": "Right. The expected text has to be built from the same variable as the name typed."
+   },
+   {
+    "text": "It gets a 409 on the second run",
+    "correct": false,
+    "why": "The name is new every run, so there is no conflict; the mismatch is in the expectation."
+   },
+   {
+    "text": "Playwright refuses to compare text that came from a variable",
+    "correct": false,
+    "why": "It compares any string; this one is simply the wrong string."
+   }
+  ]
+ },
+ {
+  "id": "ex-fhrre895",
+  "version": 1,
+  "section": "unique-data",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A suite gives every test unique names for everything it creates. Which of these does that still leave exposed?",
+  "choices": [
+   {
+    "text": "A sign-up test that types a name nobody has used",
+    "correct": false,
+    "why": "That is exactly the case unique data protects."
+   },
+   {
+    "text": "A refusal test whose customer comes from the API",
+    "correct": false,
+    "why": "It creates its own customer with a unique name, so nobody else can take or delete it."
+   },
+   {
+    "text": "A test of the one basket the shop keeps",
+    "correct": true,
+    "why": "Right. There is no basket to make unique, only the basket, and other tests write to it."
+   },
+   {
+    "text": "A test that creates two customers in a row",
+    "correct": false,
+    "why": "Two unique names are as safe as one."
+   }
+  ]
+ },
+ {
+  "id": "ex-zfxyy2f7",
+  "version": 1,
+  "section": "setup-through-the-api",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the captured run, ten customers through the form took 1492 ms and through the API 57 ms. How many times longer did the form take? Round to the nearest whole number.",
+  "hint": "Divide the first number by the second.",
+  "value": 26,
+  "tolerance": 1
+ },
+ {
+  "id": "ex-f72fz9yc",
+  "version": 1,
+  "section": "setup-through-the-api",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the refusal test check `expect(created.status()).toBe(201)` before opening the page?",
+  "choices": [
+   {
+    "text": "So a broken setup fails at the setup, by name",
+    "correct": true,
+    "why": "Right. Without it the test would fail later, at the greeting, blaming a form that is fine."
+   },
+   {
+    "text": "Because `request.post` throws on any answer below 300",
+    "correct": false,
+    "why": "It throws on none of them; a `409` or `404` comes back as an ordinary response, which is why the check exists."
+   },
+   {
+    "text": "It makes the request faster",
+    "correct": false,
+    "why": "Reading a status costs nothing and saves nothing; it changes what a failure says."
+   },
+   {
+    "text": "Playwright demands an assertion before every navigation",
+    "correct": false,
+    "why": "No such rule exists; the check is the author's choice."
+   }
+  ]
+ },
+ {
+  "id": "ex-pycxzg4h",
+  "version": 1,
+  "section": "setup-through-the-api",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A real sign-up form also sends a welcome e-mail; `POST /api/users` does not. A test checks that a new customer can open the page that lists their e-mails. How should its setup make the customer?",
+  "choices": [
+   {
+    "text": "Through the API, because a setup always goes there",
+    "correct": false,
+    "why": "Not when the API leaves out what the test depends on: this customer would have no e-mail to list."
+   },
+   {
+    "text": "By a path that leaves the same thing the form does",
+    "correct": true,
+    "why": "Right. The form, or an API call that also sends the e-mail; compare what each path leaves before trusting it."
+   },
+   {
+    "text": "By copying a real customer who has e-mails",
+    "correct": false,
+    "why": "Real customers' data never goes into tests; the next sections say why."
+   },
+   {
+    "text": "Any way, since setup is not the subject of the test",
+    "correct": false,
+    "why": "The setup is not the subject, but its result is what the subject needs."
+   }
+  ]
+ },
+ {
+  "id": "ex-e5dw63jg",
+  "version": 1,
+  "section": "cleanup",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A test fails at its last assertion. Does its `afterEach` run?",
+  "choices": [
+   {
+    "text": "No, a failure skips the hooks",
+    "correct": false,
+    "why": "Skipping cleanup on failure would leave data exactly when tests go wrong; Playwright runs it."
+   },
+   {
+    "text": "Yes, passed or failed",
+    "correct": true,
+    "why": "Right. It also ran after Ctrl+C. What it cannot survive is the process being killed."
+   },
+   {
+    "text": "Only with `--retries` set to one or more",
+    "correct": false,
+    "why": "Retries decide whether the test runs again, not whether its hooks run."
+   },
+   {
+    "text": "Only in serial mode",
+    "correct": false,
+    "why": "Serial mode changes ordering and skipping between tests, not `afterEach` after a failure."
+   }
+  ]
+ },
+ {
+  "id": "ex-1fppf8r4",
+  "version": 1,
+  "section": "cleanup",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put in order what happened when the run was ended by `SIGKILL`.",
+  "items": [
+   "The test creates `joao` through the API",
+   "The runner and its workers are killed",
+   "`afterEach` never starts, and the shop keeps `joao`",
+   "The next request for `joao` gets `409`"
+  ],
+  "trap": "With Ctrl+C instead, the third step does not happen: Playwright runs `afterEach` before it stops."
+ },
+ {
+  "id": "ex-zggv052c",
+  "version": 1,
+  "section": "cleanup",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A reset at the ___ of a test does not care how the last run ended; a delete at the ___ never runs if the process is killed.",
+  "hint": "One cleans before the test looks, the other after it finishes.",
+  "blanks": [
+   {
+    "accept": [
+     "start",
+     "beginning"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   },
+   {
+    "accept": [
+     "end",
+     "finish"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-f8zrts2m",
+  "version": 1,
+  "section": "cleanup",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team points its suite at the company's shared staging environment, and adds a `beforeEach` that calls a reset endpoint there. What goes wrong first?",
+  "choices": [
+   {
+    "text": "It wipes everybody else's data",
+    "correct": true,
+    "why": "Right. A reset is global: it puts everything back, including what belongs to everybody else."
+   },
+   {
+    "text": "Tests with unique names start colliding",
+    "correct": false,
+    "why": "Unique names do not collide whatever the reset does; the damage falls on other people's data."
+   },
+   {
+    "text": "The reset is slower than the tests",
+    "correct": false,
+    "why": "Speed is not the problem; what it deletes is."
+   },
+   {
+    "text": "Nothing, since staging is a test environment",
+    "correct": false,
+    "why": "A shared test environment is the reused shop at a larger scale, with people in it."
+   }
+  ]
+ },
+ {
+  "id": "ex-r123bc01",
+  "version": 1,
+  "section": "shared-state",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Run with `--fully-parallel --workers 2`, both basket tests reset in `beforeEach` and both fail. Why did the resets not help?",
+  "choices": [
+   {
+    "text": "The resets did not reach the server",
+    "correct": false,
+    "why": "They did, and each emptied the basket at its moment; the trouble came after."
+   },
+   {
+    "text": "Each worker's clicks landed in the other's basket after its reset",
+    "correct": true,
+    "why": "Right. A reset is safe only when nothing writes between it and the last assertion."
+   },
+   {
+    "text": "Two workers share one browser context",
+    "correct": false,
+    "why": "Each worker has its own browser and each test its own context; the basket is on the server."
+   },
+   {
+    "text": "`--fully-parallel` skips the hooks",
+    "correct": false,
+    "why": "The hooks ran in both workers; that is why there were two resets."
+   }
+  ]
+ },
+ {
+  "id": "ex-kqg04dr5",
+  "version": 1,
+  "section": "shared-state",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`basket-data.spec.js` declares serial mode, and its two tests pass. In the same run, with two workers, `banana.spec.js` fails with a count of 2. What does that show?",
+  "choices": [
+   {
+    "text": "Serial mode is broken in this version of Playwright",
+    "correct": false,
+    "why": "It did what it promises: the file's own tests ran in order in one worker."
+   },
+   {
+    "text": "The banana test has a defect of its own",
+    "correct": false,
+    "why": "It passes alone and with `--workers 1`; it failed only beside the other file."
+   },
+   {
+    "text": "Serial mode orders one file, and the basket is shared by all files",
+    "correct": true,
+    "why": "Right. Another file in another worker still writes to the same basket."
+   },
+   {
+    "text": "Two workers were too many for this machine",
+    "correct": false,
+    "why": "The machine coped; the count was wrong because of the data, not the load."
+   }
+  ]
+ },
+ {
+  "id": "ex-081873kh",
+  "version": 1,
+  "section": "shared-state",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What removes the basket problem for good, so that basket tests can run in parallel?",
+  "choices": [
+   {
+    "text": "Resetting before every click",
+    "correct": false,
+    "why": "It narrows the window and never closes it, and each reset can wipe the other test's basket."
+   },
+   {
+    "text": "A basket per visitor",
+    "correct": true,
+    "why": "Right. A fresh context would then get an empty basket of its own; the tester asks for it with the evidence."
+   },
+   {
+    "text": "Serial mode in every file",
+    "correct": false,
+    "why": "Each file would still run beside the others in other workers."
+   },
+   {
+    "text": "A unique name for each basket",
+    "correct": false,
+    "why": "The shop has no way to make a second basket, so there is nothing to name."
+   }
+  ]
+ },
+ {
+  "id": "ex-04xhvh7s",
+  "version": 1,
+  "section": "personal-data",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A generated customer needs an e-mail address. Which one does the lesson recommend?",
+  "choices": [
+   {
+    "text": "`maria.silva@gmail.com`, because it looks real",
+    "correct": false,
+    "why": "A plausible address at a real provider may belong to somebody, and a welcome e-mail would reach them."
+   },
+   {
+    "text": "`maria-3f1c7a02@example.com`",
+    "correct": true,
+    "why": "Right. `example.com` is reserved for examples and delivers to nobody."
+   },
+   {
+    "text": "The address of a real customer, copied from production",
+    "correct": false,
+    "why": "That is the one source the lesson rules out."
+   },
+   {
+    "text": "No address, so the field is left empty",
+    "correct": false,
+    "why": "Then the form refuses it, and the test checks nothing about e-mail."
+   }
+  ]
+ },
+ {
+  "id": "ex-zb5d1dam",
+  "version": 1,
+  "section": "personal-data",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A tester argues: *the test environment is internal, so a copy of last week's customers is safe there.* Which fact from the lesson answers that best?",
+  "choices": [
+   {
+    "text": "Test data travels into traces, artefacts and reports",
+    "correct": true,
+    "why": "Right. And the environment is less protected than production, and the LGPD follows the data there."
+   },
+   {
+    "text": "Copies of databases are too slow to load",
+    "correct": false,
+    "why": "Speed is not the argument; where the data ends up is."
+   },
+   {
+    "text": "Real data makes tests fail more often",
+    "correct": false,
+    "why": "The tests might pass happily; the harm is to the people in the data."
+   },
+   {
+    "text": "Internal environments are never backed up",
+    "correct": false,
+    "why": "Whether they are backed up is beside the point; the copy itself is the problem."
+   }
+  ]
+ },
+ {
+  "id": "ex-zbcy5em6",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The sign-up test with the fixed name `maria` is green on the build server every night for months, where `CI` is set. What changes the day it goes red?",
+  "choices": [
+   {
+    "text": "A run against an environment that keeps data",
+    "correct": true,
+    "why": "Right. With `CI` set a fresh shop starts every run; a persistent environment brings history back."
+   },
+   {
+    "text": "Playwright is upgraded to a version that changes `webServer`",
+    "correct": false,
+    "why": "The failure is a `409` from the shop, which no upgrade explains."
+   },
+   {
+    "text": "The test turns flaky as the suite grows older",
+    "correct": false,
+    "why": "Once Maria exists it fails every time; nothing about it is random."
+   },
+   {
+    "text": "The build server starts running out of memory at night",
+    "correct": false,
+    "why": "That would kill the run, not produce *maria already exists*."
+   }
+  ]
+ },
+ {
+  "id": "ex-eycjcrvw",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test creates an order for a unique customer, then asserts that the shop's orders page says *1 order today*. It passes alone and fails in the full suite. What should change?",
+  "choices": [
+   {
+    "text": "Give the customer a longer random tail",
+    "correct": false,
+    "why": "The customer was already unique; the count includes everybody's orders."
+   },
+   {
+    "text": "Assert on this customer's own order, not the shop's total",
+    "correct": true,
+    "why": "Right. A global count is shared state; the test's own data is the part nobody else can change."
+   },
+   {
+    "text": "Delete the order in `afterEach`",
+    "correct": false,
+    "why": "Tidying after does nothing about other tests' orders arriving during this one."
+   },
+   {
+    "text": "Add `--retries 2` to the command",
+    "correct": false,
+    "why": "A retry may land on a quieter moment and hide the problem without fixing it."
+   }
+  ]
+ },
+ {
+  "id": "ex-txdn7mst",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each symptom to the cause this lesson found for it.",
+  "pairs": [
+   {
+    "left": "Green on a fresh shop, red on the second run against a reused one",
+    "right": "A fixed name in the test"
+   },
+   {
+    "left": "Red after a build job was cancelled, until somebody cleans by hand",
+    "right": "Cleanup that only runs at the end"
+   },
+   {
+    "left": "Green alone, red beside another file in another worker",
+    "right": "State on the server that every test shares"
+   },
+   {
+    "left": "Fifty red tests for one broken form",
+    "right": "Setup done through the screen"
+   }
+  ]
+ },
+ {
+  "id": "ex-852g9htr",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which arrangement does the lesson end the cleanup section on?",
+  "choices": [
+   {
+    "text": "Unique data, a tidy delete at the end, a fresh environment where possible",
+    "correct": true,
+    "why": "Right. Each covers what the others cannot, and the reset is kept for data that cannot be unique."
+   },
+   {
+    "text": "A reset before every test, everywhere",
+    "correct": false,
+    "why": "On a shared environment or in a parallel run, a global reset destroys other people's data."
+   },
+   {
+    "text": "A delete at the end of every test, and nothing else",
+    "correct": false,
+    "why": "That is the one that fails when a run is killed."
+   },
+   {
+    "text": "Fixed names, cleaned by hand after each run",
+    "correct": false,
+    "why": "Cleaning by hand is a step somebody forgets; the next run then fails."
+   }
+  ]
+ }
+]

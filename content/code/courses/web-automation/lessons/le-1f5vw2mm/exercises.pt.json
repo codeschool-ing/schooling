@@ -1,0 +1,413 @@
+{
+ "ex-gqd0behs": {
+  "prompt": "Sem loja rodando, o teste de cadastro que digita `maria` passa duas vezes seguidas. Por que a segunda execução não recebe `409`?",
+  "hint": "Veja o que a configuração faz quando nada responde na porta 3000.",
+  "choices": [
+   {
+    "text": "O contexto de navegador da primeira execução foi descartado",
+    "why": "Contextos guardam cookies e armazenamento; o cliente vive na memória da loja, que um contexto não toca."
+   },
+   {
+    "text": "O `webServer` de cada execução iniciou uma loja vazia",
+    "why": "Certo. Sem nada na porta 3000, o Playwright inicia uma loja para a execução e a encerra depois, então a Maria é sempre a primeira."
+   },
+   {
+    "text": "O `afterEach` apagou a Maria",
+    "why": "Essa versão do arquivo não tem `afterEach` nenhum."
+   },
+   {
+    "text": "A loja só recusa um nome digitado numa janela de navegador que ela já viu",
+    "why": "O servidor recusa o nome venha de onde vier; o `curl` recebeu o mesmo `409`."
+   }
+  ]
+ },
+ "ex-zk5hyt5r": {
+  "prompt": "Contra uma loja deixada rodando, a segunda execução falha: esperava *Welcome, maria*, recebeu *maria already exists*. O que está errado?",
+  "choices": [
+   {
+    "text": "A loja: ela deveria deixar dois clientes dividirem um nome",
+    "why": "Duas contas com um nome seriam o defeito; a recusa é o comportamento correto."
+   },
+   {
+    "text": "O teste, que precisa de um nome que ninguém usou",
+    "why": "Certo. Ele supôs ser o primeiro a cadastrar a Maria, e a história provou o contrário."
+   },
+   {
+    "text": "Nada: uma nova tentativa deixa verde",
+    "why": "A Maria continua lá na próxima execução; essa falha se repete toda vez que a loja é reaproveitada."
+   },
+   {
+    "text": "O localizador, que achou o parágrafo errado",
+    "why": "Ele achou o único parágrafo de status e leu a resposta honesta do servidor."
+   }
+  ]
+ },
+ "ex-77t8f3dc": {
+  "prompt": "Ligue cada fonte de nome único à sua fraqueza, como as duas execuções capturadas mostram.",
+  "pairs": [
+   {
+    "left": "`testInfo.workerIndex`",
+    "right": "0 e 1 voltam a cada execução"
+   },
+   {
+    "left": "`testInfo.testId`",
+    "right": "O mesmo id para o mesmo teste, execução após execução"
+   },
+   {
+    "left": "`Date.now()`",
+    "right": "Dois workers podem cair no mesmo milissegundo"
+   },
+   {
+    "left": "`randomUUID()`",
+    "right": "Não diz nada a quem lê a falha"
+   }
+  ]
+ },
+ "ex-e2zpdvk4": {
+  "prompt": "Um teste preenche o formulário com `newName('maria')` e depois espera que o status diga `Welcome, maria`. O que acontece?",
+  "choices": [
+   {
+    "text": "Passa, já que o nome começa com maria",
+    "why": "O `toHaveText` com string compara o texto inteiro, e a cauda faz parte dele."
+   },
+   {
+    "text": "Falha: a saudação inclui a cauda aleatória",
+    "why": "Certo. O texto esperado tem que ser montado com a mesma variável do nome digitado."
+   },
+   {
+    "text": "Recebe 409 na segunda execução",
+    "why": "O nome é novo a cada execução, então não há conflito; o erro está na expectativa."
+   },
+   {
+    "text": "O Playwright se recusa a comparar texto vindo de uma variável",
+    "why": "Ele compara qualquer string; esta é só a string errada."
+   }
+  ]
+ },
+ "ex-fhrre895": {
+  "prompt": "Uma suíte dá a cada teste nomes únicos para tudo o que ele cria. O que isso ainda deixa exposto?",
+  "choices": [
+   {
+    "text": "Um teste de cadastro que digita um nome que ninguém usou",
+    "why": "Esse é justamente o caso que os dados únicos protegem."
+   },
+   {
+    "text": "Um teste de recusa cujo cliente vem da API",
+    "why": "Ele cria o próprio cliente com nome único, então ninguém mais pode tomá-lo ou apagá-lo."
+   },
+   {
+    "text": "Um teste da única cesta que a loja guarda",
+    "why": "Certo. Não há cesta para tornar única, só a cesta, e outros testes escrevem nela."
+   },
+   {
+    "text": "Um teste que cria dois clientes seguidos",
+    "why": "Dois nomes únicos são tão seguros quanto um."
+   }
+  ]
+ },
+ "ex-zfxyy2f7": {
+  "prompt": "Na execução capturada, dez clientes pelo formulário levaram 1492 ms e pela API 57 ms. Quantas vezes mais o formulário levou? Arredonde para o inteiro mais próximo.",
+  "hint": "Divida o primeiro número pelo segundo."
+ },
+ "ex-f72fz9yc": {
+  "prompt": "Por que o teste da recusa confere `expect(created.status()).toBe(201)` antes de abrir a página?",
+  "choices": [
+   {
+    "text": "Para que uma preparação quebrada falhe nela mesma, com nome",
+    "why": "Certo. Sem ela, o teste falharia depois, na saudação, culpando um formulário que está bom."
+   },
+   {
+    "text": "Porque o `request.post` lança erro em qualquer resposta abaixo de 300",
+    "why": "Não lança em nenhuma; um `409` ou `404` volta como resposta comum, e é por isso que a verificação existe."
+   },
+   {
+    "text": "Deixa a requisição mais rápida",
+    "why": "Ler um status não custa nem economiza nada; muda o que a falha diz."
+   },
+   {
+    "text": "O Playwright exige uma verificação antes de cada navegação",
+    "why": "Essa regra não existe; a verificação é escolha de quem escreve."
+   }
+  ]
+ },
+ "ex-pycxzg4h": {
+  "prompt": "Um formulário de cadastro real também envia um e-mail de boas-vindas; o `POST /api/users` não. Um teste verifica que um cliente novo consegue abrir a página que lista seus e-mails. Como a preparação deve criar o cliente?",
+  "choices": [
+   {
+    "text": "Pela API, porque preparação sempre vai por lá",
+    "why": "Não quando a API deixa de fora aquilo de que o teste depende: esse cliente não teria e-mail para listar."
+   },
+   {
+    "text": "Por um caminho que deixa o mesmo que o formulário deixa",
+    "why": "Certo. O formulário, ou uma chamada que também envie o e-mail; compare o que cada caminho deixa antes de confiar."
+   },
+   {
+    "text": "Copiando um cliente real que tem e-mails",
+    "why": "Dados de clientes reais nunca entram em testes; as próximas seções dizem por quê."
+   },
+   {
+    "text": "De qualquer jeito, já que a preparação não é o assunto",
+    "why": "A preparação não é o assunto, mas o resultado dela é o que o assunto precisa."
+   }
+  ]
+ },
+ "ex-e5dw63jg": {
+  "prompt": "Um teste falha na última verificação. O `afterEach` dele roda?",
+  "choices": [
+   {
+    "text": "Não, uma falha pula os ganchos",
+    "why": "Pular a limpeza na falha deixaria dados justamente quando os testes dão errado; o Playwright a roda."
+   },
+   {
+    "text": "Sim, passando ou falhando",
+    "why": "Certo. Também rodou depois do Ctrl+C. O que ela não sobrevive é o processo ser morto."
+   },
+   {
+    "text": "Só com `--retries` igual a um ou mais",
+    "why": "As novas tentativas decidem se o teste roda de novo, não se os ganchos rodam."
+   },
+   {
+    "text": "Só no modo serial",
+    "why": "O modo serial muda a ordem e o pulo entre testes, não o `afterEach` depois de uma falha."
+   }
+  ]
+ },
+ "ex-1fppf8r4": {
+  "prompt": "Ponha em ordem o que aconteceu quando a execução foi encerrada por `SIGKILL`.",
+  "items": [
+   "O teste cria `joao` pela API",
+   "O executor e seus workers são mortos",
+   "O `afterEach` nunca começa, e a loja fica com `joao`",
+   "O próximo pedido de `joao` recebe `409`"
+  ],
+  "trap": "Com Ctrl+C em vez disso, o terceiro passo não acontece: o Playwright roda o `afterEach` antes de parar."
+ },
+ "ex-zggv052c": {
+  "prompt": "Um reinício no ___ do teste não se importa com como a última execução terminou; um delete no ___ nunca roda se o processo for morto.",
+  "hint": "Um limpa antes de o teste olhar, o outro depois que ele termina.",
+  "blanks": [
+   {
+    "accept": [
+     "começo",
+     "início"
+    ]
+   },
+   {
+    "accept": [
+     "fim",
+     "final"
+    ]
+   }
+  ]
+ },
+ "ex-f8zrts2m": {
+  "prompt": "Uma equipe aponta a suíte para o ambiente de staging compartilhado da empresa e acrescenta um `beforeEach` que chama ali um endpoint de reinício. O que dá errado primeiro?",
+  "choices": [
+   {
+    "text": "Apaga os dados de todos os outros",
+    "why": "Certo. Um reinício é global: devolve tudo ao início, inclusive o que é dos outros."
+   },
+   {
+    "text": "Testes com nomes únicos começam a colidir",
+    "why": "Nomes únicos não colidem, faça o reinício o que fizer; o estrago cai nos dados dos outros."
+   },
+   {
+    "text": "O reinício é mais lento que os testes",
+    "why": "Velocidade não é o problema; o que ele apaga é."
+   },
+   {
+    "text": "Nada, já que staging é ambiente de teste",
+    "why": "Um ambiente de teste compartilhado é a loja reaproveitada em escala maior, com gente dentro."
+   }
+  ]
+ },
+ "ex-r123bc01": {
+  "prompt": "Rodando com `--fully-parallel --workers 2`, os dois testes da cesta reiniciam no `beforeEach` e os dois falham. Por que os reinícios não ajudaram?",
+  "choices": [
+   {
+    "text": "Os reinícios não chegaram ao servidor",
+    "why": "Chegaram, e cada um esvaziou a cesta no seu instante; o problema veio depois."
+   },
+   {
+    "text": "Os cliques de cada worker caíram na cesta do outro depois do reinício",
+    "why": "Certo. Um reinício só é seguro quando nada escreve entre ele e a última verificação."
+   },
+   {
+    "text": "Dois workers dividem um contexto de navegador",
+    "why": "Cada worker tem seu navegador e cada teste seu contexto; a cesta está no servidor."
+   },
+   {
+    "text": "O `--fully-parallel` pula os ganchos",
+    "why": "Os ganchos rodaram nos dois workers; por isso houve dois reinícios."
+   }
+  ]
+ },
+ "ex-kqg04dr5": {
+  "prompt": "O `basket-data.spec.js` declara o modo serial, e seus dois testes passam. Na mesma execução, com dois workers, o `banana.spec.js` falha com contagem 2. O que isso mostra?",
+  "choices": [
+   {
+    "text": "O modo serial está quebrado nesta versão do Playwright",
+    "why": "Fez o que promete: os testes do próprio arquivo rodaram em ordem num worker."
+   },
+   {
+    "text": "O teste da banana tem um defeito próprio",
+    "why": "Passa sozinho e com `--workers 1`; só falhou ao lado do outro arquivo."
+   },
+   {
+    "text": "O modo serial ordena um arquivo, e a cesta é de todos",
+    "why": "Certo. Outro arquivo em outro worker ainda escreve na mesma cesta."
+   },
+   {
+    "text": "Dois workers eram demais para esta máquina",
+    "why": "A máquina deu conta; a contagem errou por causa dos dados, não da carga."
+   }
+  ]
+ },
+ "ex-081873kh": {
+  "prompt": "O que acaba de vez com o problema da cesta, para que os testes da cesta rodem em paralelo?",
+  "choices": [
+   {
+    "text": "Reiniciar antes de cada clique",
+    "why": "Estreita a janela e nunca a fecha, e cada reinício pode apagar a cesta do outro teste."
+   },
+   {
+    "text": "Uma cesta por visitante",
+    "why": "Certo. Um contexto novo receberia então uma cesta vazia só dele; quem testa pede com as evidências."
+   },
+   {
+    "text": "Modo serial em todo arquivo",
+    "why": "Cada arquivo ainda rodaria ao lado dos outros em outros workers."
+   },
+   {
+    "text": "Um nome único para cada cesta",
+    "why": "A loja não tem como criar uma segunda cesta, então não há o que nomear."
+   }
+  ]
+ },
+ "ex-04xhvh7s": {
+  "prompt": "Um cliente gerado precisa de um endereço de e-mail. Qual a aula recomenda?",
+  "choices": [
+   {
+    "text": "`maria.silva@gmail.com`, porque parece real",
+    "why": "Um endereço plausível num provedor real pode ser de alguém, e um e-mail de boas-vindas chegaria."
+   },
+   {
+    "text": "`maria-3f1c7a02@example.com`",
+    "why": "Certo. O `example.com` é reservado para exemplos e não entrega para ninguém."
+   },
+   {
+    "text": "O endereço de um cliente real, copiado da produção",
+    "why": "Essa é justamente a fonte que a aula descarta."
+   },
+   {
+    "text": "Nenhum, deixando o campo vazio",
+    "why": "Aí o formulário recusa, e o teste não verifica nada sobre e-mail."
+   }
+  ]
+ },
+ "ex-zb5d1dam": {
+  "prompt": "Alguém que testa argumenta: *o ambiente de teste é interno, então uma cópia dos clientes da semana passada fica segura ali.* Que fato da aula responde melhor?",
+  "choices": [
+   {
+    "text": "Dado de teste viaja para rastros, artefatos e relatos",
+    "why": "Certo. E o ambiente é menos protegido que a produção, e a LGPD acompanha os dados até lá."
+   },
+   {
+    "text": "Cópias de banco são lentas demais para carregar",
+    "why": "Velocidade não é o argumento; para onde os dados vão é."
+   },
+   {
+    "text": "Dados reais fazem os testes falharem mais",
+    "why": "Os testes passariam tranquilos; o dano é para as pessoas nos dados."
+   },
+   {
+    "text": "Ambientes internos nunca têm cópia de segurança",
+    "why": "Ter ou não cópia de segurança é irrelevante; a cópia em si é o problema."
+   }
+  ]
+ },
+ "ex-zbcy5em6": {
+  "prompt": "O teste de cadastro com o nome fixo `maria` fica verde no servidor de build toda noite por meses, onde `CI` está definida. O que muda no dia em que fica vermelho?",
+  "choices": [
+   {
+    "text": "Uma execução num ambiente que guarda dados",
+    "why": "Certo. Com `CI` definida, uma loja nova sobe a cada execução; um ambiente persistente traz a história de volta."
+   },
+   {
+    "text": "O Playwright é atualizado para uma versão que muda o `webServer`",
+    "why": "A falha é um `409` da loja, que nenhuma atualização explica."
+   },
+   {
+    "text": "O teste fica instável conforme a suíte envelhece",
+    "why": "Depois que a Maria existe, ele falha toda vez; nada nele é aleatório."
+   },
+   {
+    "text": "O servidor de build começa a ficar sem memória à noite",
+    "why": "Isso mataria a execução, não produziria *maria already exists*."
+   }
+  ]
+ },
+ "ex-eycjcrvw": {
+  "prompt": "Um teste cria um pedido para um cliente único e então verifica que a página de pedidos da loja diz *1 order today*. Passa sozinho e falha na suíte completa. O que deve mudar?",
+  "choices": [
+   {
+    "text": "Dar ao cliente uma cauda aleatória mais longa",
+    "why": "O cliente já era único; a contagem inclui os pedidos de todo mundo."
+   },
+   {
+    "text": "Verificar o pedido deste cliente, e não o total da loja",
+    "why": "Certo. Uma contagem global é estado compartilhado; os dados do próprio teste são a parte que ninguém muda."
+   },
+   {
+    "text": "Apagar o pedido no `afterEach`",
+    "why": "Arrumar depois não impede que pedidos de outros testes cheguem durante este."
+   },
+   {
+    "text": "Pôr `--retries 2` no comando",
+    "why": "Uma nova tentativa pode cair num momento mais calmo e esconder o problema sem resolver."
+   }
+  ]
+ },
+ "ex-txdn7mst": {
+  "prompt": "Ligue cada sintoma à causa que esta aula encontrou para ele.",
+  "pairs": [
+   {
+    "left": "Verde numa loja nova, vermelho na segunda execução contra uma reaproveitada",
+    "right": "Um nome fixo no teste"
+   },
+   {
+    "left": "Vermelho depois que um job de build foi cancelado, até alguém limpar à mão",
+    "right": "Limpeza que só roda no fim"
+   },
+   {
+    "left": "Verde sozinho, vermelho ao lado de outro arquivo em outro worker",
+    "right": "Estado no servidor que todo teste divide"
+   },
+   {
+    "left": "Cinquenta testes vermelhos para um formulário quebrado",
+    "right": "Preparação feita pela tela"
+   }
+  ]
+ },
+ "ex-852g9htr": {
+  "prompt": "Com que arranjo a aula fecha a seção sobre limpeza?",
+  "choices": [
+   {
+    "text": "Dados únicos, um delete no fim, ambiente novo onde der",
+    "why": "Certo. Cada um cobre o que os outros não cobrem, e o reinício fica para dados que não podem ser únicos."
+   },
+   {
+    "text": "Um reinício antes de cada teste, em todo lugar",
+    "why": "Num ambiente compartilhado ou numa execução paralela, um reinício global destrói dados alheios."
+   },
+   {
+    "text": "Um delete no fim de cada teste, e mais nada",
+    "why": "Esse é o que falha quando a execução é morta."
+   },
+   {
+    "text": "Nomes fixos, limpos à mão depois de cada execução",
+    "why": "Limpar à mão é um passo que alguém esquece; aí a próxima execução falha."
+   }
+  ]
+ }
+}
