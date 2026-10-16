@@ -19,11 +19,11 @@ exatamente dessa fila.
 
 As constantes saem de propósito, e com elas vai a resposta para "lento para quem?". No `market`, o
 vendedor 1 tem um quarto de todos os pedidos e os outros 999 dividem o resto: uma consulta de
-painel para o vendedor 1 lê centenas de vezes mais linhas que uma para o vendedor 42, e o placar as
+painel para o vendedor 1 lê centenas de vezes mais linhas que uma para o vendedor 42. O placar as
 guarda como um comando só, com uma média só. As colunas `stddev_exec_time` e `max_exec_time` são a
 pista de que uma média está escondendo duas populações; o log, que guarda os valores, é como você
-descobre quais. Por isso o `seller-dashboard.sql` da carga sorteia o vendedor de 2 a 1000 e deixa
-o vendedor 1 de fora: a aula 7 trata do que esse vendedor faz com as estimativas do planejador.
+descobre quais. Por isso o `seller-dashboard.sql` da carga sorteia o vendedor de 2 a 1000 e deixa o
+vendedor 1 de fora: a aula 7 trata do que esse vendedor faz com as estimativas do planejador.
 
 ## Esquece
 
@@ -59,7 +59,7 @@ lidos dele só são comparáveis se contam a partir do mesmo momento.
 ## Não vê a máquina
 
 O placar diz que um comando leu 1181 páginas do sistema operacional; não diz se vieram do cache
-do sistema operacional na memória ou do disco, o que a aula 1 seção 06 mostrou poder ser um fator
+do sistema operacional na memória ou do disco. A aula 1 seção 06 mostrou que isso pode ser um fator
 de três ou mais. Também não vê um backup rodando ao mesmo tempo, ou outro programa na mesma máquina
 tomando os processadores. Para o terceiro suspeito você olha a própria máquina, como fazem as aulas
 16 e 23.
@@ -70,6 +70,6 @@ Um comando que nunca rodou não está nele. Uma aplicação que desiste depois d
 mostra um erro tem uma reclamação e talvez nenhuma linha, se o servidor cancelou o comando antes de
 terminar. E uma aplicação que roda cem consultas minúsculas para desenhar uma página — o formato
 N+1 que a aula 11 do `sql-databases` descreveu — aparece como um comando barato com um `calls`
-enorme, que ordenar pelo total só põe no alto se o total for grande. **Leia `calls` além do
-tempo**: um comando barato chamado cem vezes por página é um problema de desenho, e nenhum índice
-o faz sumir.
+enorme. Ordenar pelo total só o põe no alto se o total for grande. **Leia `calls` além do tempo**:
+um comando barato chamado cem vezes por página é um problema de desenho, e nenhum índice o faz
+sumir.

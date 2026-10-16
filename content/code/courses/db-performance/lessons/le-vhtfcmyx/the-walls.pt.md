@@ -53,7 +53,7 @@ que pede a centésima primeira conexão é recusado com um erro, não colocado n
 de por que aumentar o número é a resposta errada, e a aula 10 do `db-administration`, da própria
 configuração. Como parede, é a mais próxima numa aplicação movimentada: uma queda do pooler de
 conexões, um deploy que dobra o número de processos da aplicação, ou uma consulta lenta que mantém
-todas as conexões ocupadas, e as cem acabam em segundos.
+todas as conexões ocupadas. Qualquer um desses esgota as cem em segundos.
 
 ## O contador de transações
 
@@ -66,7 +66,7 @@ passada de congelamento nas tabelas que precisam, haja ou não outro motivo. E s
 poucos milhões de dois bilhões, o servidor se recusaria a começar qualquer transação nova até um
 vacuum manual alcançar.
 
-É a parede que quase nunca chega, porque o autovacuum é feito para impedi-la, e a de pior
+É a parede que quase nunca chega, porque o autovacuum é feito para impedi-la. É também a de pior
 consequência quando chega, porque a cura leva o tempo de ler o banco inteiro. O que a faz chegar é
 algo impedindo o `VACUUM` de congelar: uma transação esquecida aberta por dias, de que trata a aula
 15, ou um slot de replicação que ninguém está lendo.
@@ -78,12 +78,12 @@ As colunas identity do `market` tiram números de sequências, e cada uma tem um
 - `customers`, `products` e `sellers` usam `integer`, cujo teto é 2147483647;
 - `orders` e `events` usam `bigint`, cujo teto é nove quintilhões.
 
-Um `pct_used` de `0.0093` para clientes está longe de tudo, e o `orders_id_seq` em 2016623 está acima
-dos dois milhões de pedidos que o `market.sql` fez — as compras das execuções da carga desta própria
-aula, na seção anterior, também pegaram números, e uma sequência nunca devolve um número, nem quando
-a linha é apagada ou a transação é desfeita. Uma tabela que insere e apaga muito gasta a sequência
-bem mais depressa do que a contagem de linhas sugere, e é assim que uma chave `integer` chega ao
-teto numa tabela com alguns milhares de linhas.
+Um `pct_used` de `0.0093` para clientes está longe de tudo, e o `orders_id_seq` em 2016623 está
+acima dos dois milhões de pedidos que o `market.sql` fez. As compras das execuções da carga desta
+própria aula, na seção anterior, também pegaram números. Uma sequência nunca devolve um número, nem
+quando a linha é apagada ou a transação é desfeita. Uma tabela que insere e apaga muito gasta a
+sequência bem mais depressa do que a contagem de linhas sugere. É assim que uma chave `integer`
+chega ao teto numa tabela com alguns milhares de linhas.
 
 O conserto, trocar uma chave de `integer` para `bigint`, reescreve a tabela e todo índice que a
 menciona, e numa tabela grande essa é a queda que você queria evitar. **É uma mudança para fazer
@@ -94,7 +94,7 @@ com anos de antecedência**, e por isso vale ler o teto agora.
 `total_cents` é `integer`, então nenhum pedido sozinho pode passar de 2147483647 centavos — 21
 milhões de reais. O maior é **50499**, então essa é uma parede que a loja não vai encontrar. A mesma
 conta feita numa coluna que soma em vez de registrar, como um total acumulado por vendedor, dá um
-resultado bem diferente, e uma coluna `integer` que estoura faz falhar o `INSERT` que a cruzou, com um
+resultado bem diferente. Uma coluna `integer` que estoura faz falhar o `INSERT` que a cruzou, com um
 erro, em produção.
 
 ## O disco

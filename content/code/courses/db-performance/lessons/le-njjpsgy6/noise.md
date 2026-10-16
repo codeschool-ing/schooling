@@ -24,10 +24,9 @@ Lay each script's three runs out as a range, before and after:
 
 Three readings, three verdicts.
 
-**The customer's order list really did get faster.** Its worst after is better than its best
-before, and the gap between the two ranges, about 0.04 milliseconds, is larger than the spread
-inside either. The server's own mean, from 0.107 to 0.089, agrees. That is as close to proof as three
-runs give.
+**The customer's order list really did get faster.** Its worst after is better than its best before.
+The gap between the two ranges, about 0.04 milliseconds, is larger than the spread inside either.
+The server's own mean, from 0.107 to 0.089, agrees. That is as close to proof as three runs give.
 
 **The writes cannot see the new index.** The before spans 0.64 milliseconds, from 8.156 to 8.794, and
 the after sits inside it. If the index made each purchase slower, the difference is smaller than

@@ -20,8 +20,8 @@ Os números do próprio servidor, da seção do antes e depois: 0,107 milissegun
 | num dia, nesse ritmo | 10 ms × 86 400 ≈ 900 s, quinze minutos |
 
 Quinze minutos de servidor por dia parece alguma coisa. Espalhado pelo dia, é um processador um por
-cento menos ocupado — o que só importa se faltar tempo de processador ao servidor, e o joelho da
-curva da aula 23 é onde essa pergunta se responde.
+cento menos ocupado. Isso só importa se faltar tempo de processador ao servidor, e o joelho da curva
+da aula 23 é onde essa pergunta se responde.
 
 E o que cada pessoa ganha são **0,046 milissegundo** a menos numa página que abre, a diferença entre
 as medianas do pgbench. Ninguém vê isso. Uma pessoa percebe uma demora de cerca de um décimo de
@@ -47,7 +47,7 @@ para **11,26**, cerca de 24 milissegundos por chamada, e o painel rodava umas 36
 | economizado por segundo | cerca de 10 ms | cerca de 870 ms |
 
 **O índice do vendedor devolveu quase um processador inteiro; este devolve um centésimo de um.** As
-duas mudanças parecem iguais numa revisão de código — uma linha de `CREATE INDEX` cada, as duas
+duas mudanças parecem iguais numa revisão de código: uma linha de `CREATE INDEX` cada, as duas
 deixando uma consulta mais rápida, as duas justificadas por um plano. A diferença só aparece quando
 a economia é multiplicada pela frequência com que a consulta roda, que é a mesma lição que o placar
 deu na aula 2: **o que importa é o total, não a melhora por execução.**

@@ -6,7 +6,7 @@ version: 1
 Um alerta é a promessa de que alguém vai ser acordado a tempo. A maioria dos alertas de capacidade
 quebra essa promessa do mesmo jeito: dispara num **percentual**. "Disco acima de 80%" parece
 prudente e não diz nada sobre tempo. Num disco que levou cinco anos para chegar a 80%, é um aviso
-para o orçamento do próximo trimestre; num que foi de 50% a 80% desde segunda-feira, o banco vai
+para o orçamento do próximo trimestre. Num que foi de 50% a 80% desde segunda-feira, o banco vai
 parar antes de alguém ler o e-mail.
 
 **O que um alerta deve medir é o tempo que resta**: a distância até a parede, dividida pela
@@ -59,18 +59,19 @@ Time: 162.050 ms
 EXIT 0
 ```
 
-Tudo está longe da parede num banco que roda há uma tarde, e é por isso que vale lê-lo agora: os
+Tudo está longe da parede num banco que roda há uma tarde, e é por isso que vale lê-lo agora. Os
 números com que você vai comparar depois têm de ser anotados enquanto são entediantes. O
 `transaction id age` é medido contra dois bilhões, o ponto em que o servidor recusa transações
-novas, e não contra os 200 milhões em que o autovacuum entra — um alerta nesse aqui é sobre se o
+novas, e não contra os 200 milhões em que o autovacuum entra. Um alerta nesse aqui é sobre se o
 congelamento está acompanhando, e o que importa é a tendência.
 
 ## De foto para tendência
 
 Uma execução do `capacity.sql` é uma foto. O alerta precisa de duas fotos e do tempo entre elas, o
-que quer dizer guardá-las: uma tabela num banco que não é o vigiado, preenchida por uma tarefa de
-hora em hora, ou o sistema de monitoração que a sua empresa já tem, que quase certamente consegue
-rodar uma consulta num horário e guardar o que volta. Então a regra para cada parede é a mesma conta:
+que quer dizer guardá-las. Um jeito é uma tabela num banco que não é o vigiado, preenchida por uma
+tarefa de hora em hora. O outro é o sistema de monitoração que a sua empresa já tem, que quase
+certamente consegue rodar uma consulta num horário e guardar o que volta. Então a regra para cada
+parede é a mesma conta:
 
 ```localised
 tempo que resta  =  (limite − usado agora)  ÷  (crescimento por dia)
@@ -87,16 +88,16 @@ margem**. Essa última parte é o que torna cada limite diferente:
 | uma sequência `integer` | migrar a chave para `bigint` | um ano |
 
 O ano da sequência não é erro de digitação. Mudar o tipo de uma chave reescreve a tabela e tudo o
-que se refere a ela, e fazer isso com calma exige planejamento, testes e uma janela de manutenção: um
-alerta que desse um mês de aviso seria um alerta que não deu aviso nenhum.
+que se refere a ela, e fazer isso com calma exige planejamento, testes e uma janela de manutenção.
+Um alerta que desse um mês de aviso seria um alerta que não deu aviso nenhum.
 
 ## Dois alertas que não são sobre paredes
 
 O joelho da seção de folga não é uma parede, e precisa de outro alerta. **Alerte na latência que os
 usuários veem** — o percentil 95 ou 99 das requisições da aplicação — em vez de em quão ocupado o
-servidor está, porque o servidor rodava a nove décimos da taxa máxima quando as transações mais
-lentas já esperavam dois terços de segundo. E alerte na **mudança**, não só no nível: uma consulta que
-levava 10 milissegundos ontem e 40 hoje ainda não bateu em nada, e é o primeiro sinal de estatísticas
+servidor está. O servidor rodava a nove décimos da taxa máxima quando as transações mais lentas já
+esperavam dois terços de segundo. E alerte na **mudança**, não só no nível: uma consulta que levava
+10 milissegundos ontem e 40 hoje ainda não bateu em nada. É o primeiro sinal de estatísticas
 ficando velhas (aula 6) ou de uma tabela crescendo além do ponto em que o plano dela fazia sentido
 (aula 4).
 

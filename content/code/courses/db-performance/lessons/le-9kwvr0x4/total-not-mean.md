@@ -23,11 +23,11 @@ market=# SELECT calls, round(total_exec_time) AS total_ms, round(mean_exec_time:
 Time: 3.643 ms
 ```
 
-Three statements are **98% of everything the server did** in that minute — 45, 32 and 21 percent —
-and every other statement the application sent, including the customer's order list that ran 27489
-times, shares what is left. That is the usual shape, and it is the most useful fact in this
-lesson: the work of making a database faster is almost never spread across the application. It sits
-in two or three statements, and the tally names them.
+Three statements are **98% of everything the server did** in that minute: 45, 32 and 21 percent.
+Every other statement the application sent, including the customer's order list that ran 27489
+times, shares what is left. That is the usual shape, and it is the most useful fact in this lesson:
+the work of making a database faster is almost never spread across the application. It sits in two
+or three statements, and the tally names them.
 
 The query column is cut at fifty characters to fit the screen. The three at the top are the tag
 search on `products`, the operations screen's count of pending orders, and the seller dashboard's
@@ -50,8 +50,8 @@ Time: 3.758 ms
 ```
 
 The same three, in a different order, and a different story. Sorted by the mean, the count of
-pending orders is the obvious villain: **221 milliseconds a run**, six or seven times the other two. Sorted by
-the total, it is second, because it runs 540 times while the tag search runs 5497.
+pending orders is the obvious villain: **221 milliseconds a run**, six or seven times the other two.
+Sorted by the total, it is second, because it runs 540 times while the tag search runs 5497.
 
 Neither order is wrong; they answer different questions. The **mean** says how long one person
 waits. The **total** says how much of the server a statement takes away from everybody else, and
@@ -94,9 +94,9 @@ Time: 2.286 ms
 
 `calls` times `mean_exec_time` is `total_exec_time`: 2164 runs at 35.5 milliseconds each, 76.8
 seconds of the server in one minute. The spread is the first thing worth reading. The fastest run
-took **12 milliseconds and the slowest 116**, nearly ten times as long, and the standard deviation of
-14.8 against a mean of 35.5 says that this was not one unlucky run but a statement whose cost depends
-on which seller it was asked about. Some sellers have more December orders than others.
+took **12 milliseconds and the slowest 116**, nearly ten times as long. The standard deviation of
+14.8 against a mean of 35.5 says that this was not one unlucky run but a statement whose cost
+depends on which seller it was asked about. Some sellers have more December orders than others.
 
 The two page counters say where the data came from: **7276882 pages found in memory** and 1181
 read from outside it. Pages are 8 kB each, so that is close to 60 GB of page reads in a minute, for a

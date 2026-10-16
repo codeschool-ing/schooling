@@ -3,9 +3,10 @@ title: The first fix, and the way back
 version: 1
 ---
 
-The tally named three statements. Two of them need lessons still to come: the tag search is lesson 8's,
-where the obvious index turns out not to be the best one, and the pending count wants an index on a
-small part of a table (lesson 9). The third one can be fixed today, with what lesson 1 showed you.
+The tally named three statements. Two of them need lessons still to come. The tag search is lesson
+8's, where the obvious index turns out not to be the best one, and the pending count wants an index
+on a small part of a table (lesson 9). The third one can be fixed today, with what lesson 1 showed
+you.
 
 The seller dashboard asks for one seller's December orders. `orders` has an index on `placed_at`,
 so the server can find December quickly:
@@ -126,9 +127,9 @@ Compare the seller dashboard's row with the one before the fix:
 ```
 
 **About a third of the time per run, and two thirds of its share of the server given back.** The
-measurement was taken the same way both times — same workload, same minute, same machine, tally
-reset before each — which is what makes the two columns comparable. Change two things at once, or
-measure the after differently from the before, and the table means nothing.
+measurement was taken the same way both times: same workload, same minute, same machine, tally reset
+before each. That is what makes the two columns comparable. Change two things at once, or measure
+the after differently from the before, and the table means nothing.
 
 Notice what did not change. The tag search and the pending count are still at the top, larger now
 in share because the total shrank around them. And the overall rate barely moved, from 912 to 972

@@ -18,11 +18,11 @@ front of the server rather than inside it. Lesson 16 is about exactly that queue
 
 The constants are taken out on purpose, and with them goes the answer to "slow for whom?". In
 `market`, seller 1 has a quarter of all orders and the other 999 share the rest: a dashboard query
-for seller 1 reads hundreds of times more rows than one for seller 42, and the tally stores them
-as one statement with one mean. The `stddev_exec_time` and `max_exec_time` columns are the hint
-that a mean is hiding two populations; the log, which keeps the values, is how you find which.
-That is why the workload's `seller-dashboard.sql` draws its seller from 2 to 1000 and leaves seller
-1 out: lesson 7 is about what that one seller does to the planner's estimates.
+for seller 1 reads hundreds of times more rows than one for seller 42. The tally stores them as one
+statement with one mean. The `stddev_exec_time` and `max_exec_time` columns are the hint that a mean
+is hiding two populations; the log, which keeps the values, is how you find which. That is why the
+workload's `seller-dashboard.sql` draws its seller from 2 to 1000 and leaves seller 1 out: lesson 7
+is about what that one seller does to the planner's estimates.
 
 ## It forgets
 
@@ -59,8 +59,8 @@ read from it are comparable only if they count from the same moment.
 ## It does not see the machine
 
 The tally says a statement read 1181 pages from the operating system; it does not say whether
-those came from the operating system's cache in memory or from the disk, which lesson 1 section 06
-showed can be a factor of three or more. Nor does it see a backup running at the same time, or
+those came from the operating system's cache in memory or from the disk. Lesson 1 section 06 showed
+that this can be a factor of three or more. Nor does it see a backup running at the same time, or
 another program on the same machine taking the processors. For the third suspect you look at the
 machine itself, which lessons 16 and 23 do.
 
@@ -69,7 +69,7 @@ machine itself, which lessons 16 and 23 do.
 A statement that never ran is not in it. An application that gives up after two seconds and shows
 an error has a complaint and possibly no row at all, if the server cancelled the statement before
 it finished. And an application that runs a hundred tiny queries to draw one page — the N+1 shape
-`sql-databases` lesson 11 described — shows up as one cheap statement with a very large `calls`,
-which sorting by total puts near the top only if the total is large. **Read `calls` as well as
-time**: a cheap statement called a hundred times per page is a design problem, and no index will
-make it go away.
+`sql-databases` lesson 11 described — shows up as one cheap statement with a very large `calls`.
+Sorting by total puts it near the top only if the total is large. **Read `calls` as well as time**:
+a cheap statement called a hundred times per page is a design problem, and no index will make it go
+away.

@@ -3,10 +3,10 @@ title: O primeiro conserto, e o caminho de volta
 version: 1
 ---
 
-O placar apontou três comandos. Dois deles dependem de aulas que ainda vêm: a busca por etiqueta é da
-aula 8, onde o índice óbvio acaba não sendo o melhor, e a contagem de pendentes quer um índice
-sobre uma parte pequena de uma tabela (aula 9). O terceiro dá para consertar hoje,
-com o que a aula 1 mostrou.
+O placar apontou três comandos. Dois deles dependem de aulas que ainda vêm. A busca por etiqueta é
+da aula 8, onde o índice óbvio acaba não sendo o melhor, e a contagem de pendentes quer um índice
+sobre uma parte pequena de uma tabela (aula 9). O terceiro dá para consertar hoje, com o que a aula
+1 mostrou.
 
 O painel do vendedor pede os pedidos de dezembro de um vendedor. `orders` tem um índice em
 `placed_at`, então o servidor acha dezembro depressa:
@@ -126,9 +126,9 @@ Compare a linha do painel do vendedor com a de antes do conserto:
 ```
 
 **Cerca de um terço do tempo por execução, e dois terços da fatia dele no servidor devolvidos.** A
-medida foi tomada do mesmo jeito nas duas vezes — mesma carga, mesmo minuto, mesma máquina, placar
-zerado antes de cada uma —, e é isso que torna as duas colunas comparáveis. Mude duas coisas de uma
-vez, ou meça o depois de um jeito diferente do antes, e a tabela não significa nada.
+medida foi tomada do mesmo jeito nas duas vezes: mesma carga, mesmo minuto, mesma máquina, placar
+zerado antes de cada uma. É isso que torna as duas colunas comparáveis. Mude duas coisas de uma vez,
+ou meça o depois de um jeito diferente do antes, e a tabela não significa nada.
 
 Repare no que não mudou. A busca por etiqueta e a contagem de pendentes continuam no alto, maiores
 agora em fatia porque o total encolheu em volta delas. E a taxa geral mal se mexeu, de 912 para 972

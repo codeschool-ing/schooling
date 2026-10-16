@@ -38,7 +38,7 @@ ana@vm:~$ sudo systemctl start postgresql
 
 `psql` looked for the server's socket file, which is how two programs on one computer talk, and
 there was none, because the server is not running. `pg_lsclusters` says so in its fourth column:
-`down`. The transcript stopped it on purpose; on your machine, the usual cause is that the virtual
+`down`. The transcript stopped it on purpose. On your machine, the usual cause is that the virtual
 machine was restarted and the service did not come back, or that a setting you changed stopped
 it from starting. `sudo systemctl start postgresql` starts it, and if it goes straight back to
 `down`, the last lines of the log file in the last column say why:
@@ -88,6 +88,6 @@ worth checking:
 ## When none of these is it
 
 Copy the whole error, starting at the line that says `ERROR` or `FATAL`, and search for it in
-quotes. PostgreSQL's messages are fixed sentences, so somebody has met yours before; the part in
-quotes after it — a role, a table, a file — is the part that is specific to you, and is usually
+quotes. PostgreSQL's messages are fixed sentences, so somebody has met yours before. The part in
+quotes after it, a role, a table or a file, is the part that is specific to you, and it is usually
 where the answer is.

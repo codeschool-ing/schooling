@@ -32,7 +32,7 @@ Time: 511.996 ms
 ```
 
 From 77177 orders in January to 107780 in December: the shop is growing, and not by a fixed
-percentage — the months go up by roughly the same **two to three thousand orders** each, with
+percentage. The months go up by roughly the same **two to three thousand orders** each, with
 February's dip because February is short. That is a linear trend, and a linear trend is the easy
 kind: next December is about another 30 thousand orders a month higher. A shop growing by a
 percentage, doubling every year, would curve upwards on the same table, and the forecast below would
@@ -62,7 +62,7 @@ Time: 3.596 ms
 
 **130 bytes per order** and 91 per order line, counting each table's indexes along with it. That is
 the number to multiply by: it includes the row itself, the bookkeeping PostgreSQL keeps on every
-row, the free space inside pages, and every index — which is why it is more than the five columns of
+row, the free space inside pages, and every index. That is why it is more than the five columns of
 an order would suggest. Measured on the table as it is, it already includes whatever indexes the
 application has built, and it changes when somebody adds another.
 
@@ -96,6 +96,6 @@ a different `Avail`, and the same sum works on it.
 
 "If nothing else changes" is doing a lot of work in that sentence, and the next three sections are
 about what it hides. Write-ahead log, temporary files from a large sort, a copy made by a lesson
-like `market_base`, and a backup written to the same disk all take space that grows with the
-database without being rows in it. A forecast on rows is a lower bound; the alert in this lesson's
-last section is what keeps it honest.
+like `market_base`, and a backup written to the same disk all take space. It grows with the database
+without being rows in it. A forecast on rows is a lower bound; the alert in this lesson's last
+section is what keeps it honest.

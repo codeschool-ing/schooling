@@ -13,8 +13,8 @@ A linha `Time:` é medida pelo `psql`, do seu lado: do momento em que enviou o c
 que a resposta inteira chegou. Então ela inclui o trabalho do servidor, a viagem pela conexão e o
 tempo de receber as linhas. Na sua máquina virtual a viagem não é nada, porque o `psql` e o
 servidor estão no mesmo computador. Entre uma aplicação num prédio e um banco em outro, a viagem é
-uma parte grande de toda consulta curta — e é por isso que o número do próprio servidor para a
-mesma consulta, que a aula 3 lê, é menor do que este.
+uma parte grande de toda consulta curta. É por isso que o número do próprio servidor para a mesma
+consulta, que a aula 3 lê, é menor do que este.
 
 ## A mesma consulta, três vezes
 
@@ -104,9 +104,9 @@ Time: 0.598 ms
 
 **128 MB**, que é o padrão do Ubuntu e foi escolhido para funcionar em qualquer computador, não
 para ser rápido no seu. A aula 6 do `db-administration` é a conta para dimensioná-lo. Este curso o
-deixa quieto quase sempre, de propósito: o banco é dez vezes maior que esse cache, então a
-diferença entre memória e disco continua visível, e um tempo na sua máquina e um numa transcrição
-diferem por motivos que você sabe nomear.
+deixa quieto quase sempre, de propósito: o banco é dez vezes maior que esse cache, então a diferença
+entre memória e disco continua visível. Um tempo na sua máquina e um numa transcrição diferem por
+motivos que você sabe nomear.
 
 Seus tempos não vão bater com estes. O que deve bater é o **formato** — qual consulta é mais
 rápida, por mais ou menos quantas vezes, e qual execução foi fria. Quando o formato discorda,

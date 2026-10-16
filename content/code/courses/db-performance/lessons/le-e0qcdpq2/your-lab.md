@@ -23,7 +23,7 @@ options out, as the three paths below say.
 
 A **virtual machine** is a whole computer simulated inside yours, with its own operating system,
 that you can break and throw away without touching anything else. That matters more here than in
-most courses: you will change server settings, fill the disk on purpose, start two hundred
+most courses. You will change server settings, fill the disk on purpose, start two hundred
 connections at once and kill processes, and none of it should happen on the computer you work on.
 
 The program that runs the machine is a **hypervisor**:
@@ -44,8 +44,8 @@ The steps, once:
    from there.
 
 **What it costs your computer:** 4 GB of memory while the machine runs, so the computer needs 8 GB
-or more to stay comfortable, and about 10 GB of disk once the course's database is loaded and a
-few lessons have made copies of it. With less memory, give the machine 2 GB: everything still
+or more to stay comfortable. It also takes about 10 GB of disk once the course's database is loaded
+and a few lessons have made copies of it. With less memory, give the machine 2 GB: everything still
 works and every query is slower, which is a lesson of its own (lesson 1 section 06 shows why).
 
 > **Your prompt will not say `ana@vm`.** In this course `ana` is the user and `vm` is the machine;
@@ -55,8 +55,8 @@ works and every query is slower, which is a lesson of its own (lesson 1 section 
 
 If your computer **already runs Ubuntu or Debian**, you can skip the virtual machine: every
 command in this course works on it as printed. It is the cheapest path in memory, and it costs
-something the virtual machine does not — the experiments in lessons 15, 16 and 23 load the
-computer you are working on, and a server setting left behind stays behind.
+something the virtual machine does not. The experiments in lessons 15, 16 and 23 load the computer
+you are working on, and a server setting left behind stays behind.
 
 On **macOS** (Postgres.app or `brew install postgresql@16`) and **Windows** (the installer
 linked from postgresql.org) you get the same PostgreSQL 16 and the same SQL. What does not match

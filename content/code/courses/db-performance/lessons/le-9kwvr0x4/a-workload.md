@@ -86,12 +86,12 @@ tag-search.sql
 
 ## A minute of traffic
 
-`pgbench` takes the files with `-f`, each with a **weight** after `@`: out of every hundred
+`pgbench` takes the files with `-f`, each with a **weight** after `@`. Out of every hundred
 transactions, fifty are a customer's order list, twenty-five an order page, ten tag searches, ten
 purchases, four seller dashboards and one refresh of the operations screen. The other options say
-how hard to push: `-c 8` is eight clients at once, `-j 4` runs them on four threads, `-T 60` for sixty
-seconds, `-P 20` prints progress every twenty, and `-n` skips the clean-up `pgbench` would otherwise
-try to do on its own benchmark tables, which `market` does not have:
+how hard to push. `-c 8` is eight clients at once, `-j 4` runs them on four threads, `-T 60` for
+sixty seconds and `-P 20` prints progress every twenty. `-n` skips the clean-up `pgbench` would
+otherwise try to do on its own benchmark tables, which `market` does not have:
 
 ```
 ana@vm:~/workload$ pgbench -n -c 8 -j 4 -T 60 -P 20 -f customer-orders.sql@50 -f order-page.sql@25 -f tag-search.sql@10 -f place-order.sql@10 -f seller-dashboard.sql@4 -f pending-count.sql@1 market
@@ -165,9 +165,9 @@ milliseconds, the tag search and the dashboard in the tens, the pending count in
 
 The weights are not measured from a real shop. They are a guess at a plausible one: many cheap
 reads, a few expensive ones, a trickle of writes. That is good enough to give the tally a realistic
-picture to show you, and it is the reason lesson 22 spends a whole section on what makes a
-workload **representative** — the day you need to measure a change that matters, a guessed workload
-is the first thing to replace.
+picture to show you. It is also why lesson 22 spends a whole section on what makes a workload
+**representative**: the day you need to measure a change that matters, a guessed workload is the
+first thing to replace.
 
 Two of the scripts change the database. `place-order.sql` inserts an order and a line and updates
 the total in one transaction, which is what makes the writes in this workload real writes, with

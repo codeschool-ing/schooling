@@ -89,8 +89,8 @@ termos mais simples. O que faltava era estrutura. Sem índice em `seller_id`, o 
 os pedidos do vendedor 42 é ler todos eles, e um índice transformou dois milhões de linhas lidas em
 1532.
 
-O índice foi apagado de novo no fim. É de propósito: a aula 2 encontra esse mesmo índice que falta
-de fora, do jeito que você encontraria no trabalho, a partir do que a aplicação está fazendo com o
+O índice foi apagado de novo no fim. É de propósito. A aula 2 encontra esse mesmo índice que falta
+de fora, do jeito que você encontraria no trabalho: a partir do que a aplicação está fazendo com o
 servidor, e não de alguém que já sabe a resposta.
 
 Repare também no terceiro número. **Construir o índice levou 1154 milissegundos**, e cada pedido
@@ -101,7 +101,7 @@ aula 11 trata dos que custam mais do que economizam.
 
 O terceiro suspeito é o que nenhuma consulta e nenhum índice consertam. A mesma contagem sobre as
 cinco milhões de linhas de pedido leva **435 milissegundos** quando a tabela tem de vir do disco e
-cerca de **170** quando já está na memória — mesma consulta, mesmo plano, mesmas linhas, no mesmo
+cerca de **170** quando já está na memória. Mesma consulta, mesmo plano, mesmas linhas, mesmo
 computador. Nada no banco mudou entre as duas; só onde os bytes estavam. A próxima seção desmonta
 essa medida, porque ela é também o motivo de um tempo sozinho não provar nada.
 
@@ -110,5 +110,5 @@ essa medida, porque ela é também o motivo de um tempo sozinho não provar nada
 Vistos de fora, os três eram "uma consulta lenta". Por dentro, eram uma pergunta feita nos termos
 errados, uma estrutura que faltava e dados que não estavam na memória, e **cada conserto não teria
 feito nada pelos outros dois**. O resto deste curso é, em grande parte, sobre distinguir os três
-depressa, e a primeira ferramenta para isso não é um conserto — é a lista da próxima aula de quais
+depressa, e a primeira ferramenta para isso não é um conserto. É a lista da próxima aula de quais
 consultas custam mais ao servidor.

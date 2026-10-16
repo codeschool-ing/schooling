@@ -9,10 +9,10 @@ question is **where the server's time goes**, and for that you need a record of 
 ran, which no single person watching a terminal has.
 
 PostgreSQL can keep that record. The extension `pg_stat_statements` watches every statement the
-server executes and adds it to a running tally: how many times it ran, how long it took in total,
-the fastest and the slowest, how many rows it returned, how many pages it read. `sql-databases`
-lesson 10 switched it on for a moment; this course leaves it on for good, because almost every
-lesson from here starts by asking it something.
+server executes and adds it to a running tally. For each one it keeps how many times it ran, how
+long it took in total, the fastest and the slowest, how many rows it returned, how many pages it
+read. `sql-databases` lesson 10 switched it on for a moment; this course leaves it on for good,
+because almost every lesson from here starts by asking it something.
 
 ## Switching it on
 

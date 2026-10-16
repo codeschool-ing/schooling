@@ -6,7 +6,7 @@ version: 1
 An alert is a promise that somebody will be woken up in time. Most capacity alerts break that
 promise in the same way: they fire on a **percentage**. "Disk above 80%" sounds prudent and says
 nothing about time. On a disk that took five years to reach 80%, it is a notice for next quarter's
-budget; on one that went from 50% to 80% since Monday, the database will stop before anybody reads
+budget. On one that went from 50% to 80% since Monday, the database will stop before anybody reads
 the e-mail.
 
 **What an alert should measure is the time left**: how far the thing is from its wall, divided by
@@ -61,17 +61,18 @@ EXIT 0
 ```
 
 Everything is far from its wall on a database that has been running for an afternoon, and that is
-the point of reading it now: the numbers you will compare against later have to be written down
+the point of reading it now. The numbers you will compare against later have to be written down
 while they are boring. `transaction id age` is measured against two billion, the point where the
-server refuses new transactions, rather than against the 200 million where autovacuum steps in —
-an alert on that one is about whether freezing is keeping up, and the trend is what matters.
+server refuses new transactions, rather than against the 200 million where autovacuum steps in. An
+alert on that one is about whether freezing is keeping up, and the trend is what matters.
 
 ## Turning a snapshot into a trend
 
 One run of `capacity.sql` is a snapshot. The alert needs two snapshots and the time between them,
-which means keeping them: a table in a database that is not the one being watched, filled by a job
-every hour, or the monitoring system your company already has, which almost certainly can run a
-query on a schedule and store what comes back. Then the rule for each wall is the same sum:
+which means keeping them. One way is a table in a database that is not the one being watched, filled
+by a job every hour. The other is the monitoring system your company already has, which almost
+certainly can run a query on a schedule and store what comes back. Then the rule for each wall is
+the same sum:
 
 ```localised
 time left  =  (limit − used now)  ÷  (growth per day)
@@ -88,18 +89,18 @@ last clause is what makes each threshold different:
 | an `integer` sequence | migrate the key to `bigint` | a year |
 
 The sequence's year is not a typo. Changing a key's type rewrites the table and everything that
-refers to it, and doing that calmly takes planning, testing and a maintenance window: an alert
-that gave a month's notice would be an alert that gave no notice at all.
+refers to it, and doing that calmly takes planning, testing and a maintenance window. An alert that
+gave a month's notice would be an alert that gave no notice at all.
 
 ## Two alerts that are not about walls
 
 The knee from the headroom section is not a wall, and it needs a different alert. **Alert on the
-latency users see** — the 95th or 99th percentile of the application's requests — rather than on
-how busy the server is, because the server was running at nine tenths of its maximum rate when the
-slowest transactions were already waiting two thirds of a second. And alert on **change**, not only on
-level: a query that took 10 milliseconds yesterday and 40 today has not hit anything yet, and it
-is the first sign of the statistics going stale (lesson 6) or a table growing past the point where
-its plan made sense (lesson 4).
+latency users see** — the 95th or 99th percentile of the application's requests — rather than on how
+busy the server is. The server was running at nine tenths of its maximum rate when the slowest
+transactions were already waiting two thirds of a second. And alert on **change**, not only on
+level: a query that took 10 milliseconds yesterday and 40 today has not hit anything yet. It is the
+first sign of the statistics going stale (lesson 6) or a table growing past the point where its plan
+made sense (lesson 4).
 
 `db-reliability` lesson 13 alerts on replication lag the same way, and `db-administration` lesson
 14 on autovacuum falling behind. What they share with this lesson is the rule: **an alert is worth

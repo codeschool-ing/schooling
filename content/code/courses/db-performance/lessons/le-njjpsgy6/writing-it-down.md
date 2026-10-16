@@ -4,8 +4,8 @@ version: 1
 ---
 
 The decision was no. What remains is to undo the change in a way that leaves the next person
-better off than if it had never been made — which means removing it **and** keeping what was
-learnt, because the same index will be proposed again by somebody who reads the same textbook.
+better off than if it had never been made. That means removing it **and** keeping what was learnt,
+because the same index will be proposed again by somebody who reads the same textbook.
 
 ## Keep the definition before you drop
 
@@ -26,8 +26,8 @@ EXIT 0
 
 `pg_get_indexdef` prints the exact statement that would rebuild the index, as the server stores it:
 the schema, the method and the column order. Copy it into the record below before the `DROP`. An
-index removed without its definition is an index nobody can put back quickly on the day it turns
-out somebody did need it — and lesson 11 showed that "nobody uses it" is a claim with exceptions.
+index removed without its definition is an index nobody can put back quickly on the day it turns out
+somebody did need it. Lesson 11 showed that "nobody uses it" is a claim with exceptions.
 
 The drop itself took **76 milliseconds** and an `ACCESS EXCLUSIVE` lock on `orders` for that time,
 which on a quiet virtual machine is nothing. On a busy table, `DROP INDEX CONCURRENTLY` does the same
@@ -36,8 +36,8 @@ safely.
 
 ## A record of the change
 
-Every optimisation, kept or not, is worth one short record where the team keeps its decisions — a
-ticket, a file in the repository beside the migrations, a page of the runbook `db-administration`
+Every optimisation, kept or not, is worth one short record where the team keeps its decisions: a
+ticket, a file in the repository beside the migrations, or a page of the runbook `db-administration`
 lesson 24 is about. Six lines are enough, and each of them is there because its absence has cost
 somebody a day:
 

@@ -4,7 +4,7 @@ version: 1
 ---
 
 A decisão foi não. O que falta é desfazer a mudança de um jeito que deixe a próxima pessoa em
-situação melhor do que se ela nunca tivesse sido feita — o que quer dizer removê-la **e** guardar o
+situação melhor do que se ela nunca tivesse sido feita. Isso quer dizer removê-la **e** guardar o
 que se aprendeu, porque o mesmo índice vai ser proposto de novo por alguém que leu o mesmo livro.
 
 ## Guarde a definição antes de apagar
@@ -27,7 +27,7 @@ EXIT 0
 O `pg_get_indexdef` imprime o comando exato que reconstruiria o índice, como o servidor o guarda: o
 esquema, o método e a ordem das colunas. Copie-o para o registro abaixo antes do `DROP`. Um índice
 removido sem a definição é um índice que ninguém consegue repor depressa no dia em que se descobre
-que alguém precisava dele — e a aula 11 mostrou que "ninguém usa" é uma afirmação com exceções.
+que alguém precisava dele. A aula 11 mostrou que "ninguém usa" é uma afirmação com exceções.
 
 O próprio drop levou **76 milissegundos** e uma trava `ACCESS EXCLUSIVE` em `orders` durante esse
 tempo, o que numa máquina virtual quieta não é nada. Numa tabela movimentada, `DROP INDEX
@@ -36,10 +36,10 @@ de fazer isso com segurança.
 
 ## Um registro da mudança
 
-Toda otimização, mantida ou não, merece um registro curto onde a equipe guarda as decisões — um
-chamado, um arquivo no repositório ao lado das migrações, uma página do runbook de que trata a aula
-24 do `db-administration`. Seis linhas bastam, e cada uma está ali porque a falta dela já custou um
-dia a alguém:
+Toda otimização, mantida ou não, merece um registro curto onde a equipe guarda as decisões: um
+chamado, um arquivo no repositório ao lado das migrações, ou uma página do runbook de que trata a
+aula 24 do `db-administration`. Seis linhas bastam, e cada uma está ali porque a falta dela já
+custou um dia a alguém:
 
 ```localised
 mudança    CREATE INDEX orders_customer_placed_idx ON public.orders USING btree (customer_id, placed_at DESC)

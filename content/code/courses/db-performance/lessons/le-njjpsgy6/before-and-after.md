@@ -5,8 +5,8 @@ version: 1
 
 Every lesson in this course has ended with something faster. This one starts with a change that
 looks just as sensible as the others, and asks the question the others took for granted: **was it
-worth doing?** Not "did the query get faster" — it will — but whether what it gave back is more
-than what it costs, measured rather than felt.
+worth doing?** Not whether the query got faster, because it will. The question is whether what it
+gave back is more than what it costs, measured rather than felt.
 
 The candidate is the busiest statement in lesson 2's workload, a customer's list of their last ten
 orders. Half of every hundred transactions are this one. Here is its plan as `market` stands:
@@ -46,7 +46,7 @@ change that gets made on a Friday afternoon because it is obviously right.
 ## Measure the before, three times
 
 One run of anything is noise (lesson 1 section 06). So the before is three runs of the whole
-workload, thirty seconds each, cut down to the two scripts that matter — the one the change is for,
+workload, thirty seconds each, cut down to the two scripts that matter: the one the change is for,
 and the one that writes to `orders` and will pay for any new index:
 
 ```

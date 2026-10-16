@@ -23,10 +23,10 @@ market=# SELECT calls, round(total_exec_time) AS total_ms, round(mean_exec_time:
 Time: 3.643 ms
 ```
 
-Três comandos são **98% de tudo o que o servidor fez** naquele minuto — 45, 32 e 21 por cento —, e
-todos os outros comandos que a aplicação mandou, inclusive a lista de pedidos do cliente, que rodou
-27489 vezes, dividem o que sobra. Esse é o formato comum, e é o fato mais útil desta aula: o trabalho
-de deixar um banco mais rápido quase nunca está espalhado pela aplicação. Ele está em dois ou três
+Três comandos são **98% de tudo o que o servidor fez** naquele minuto: 45, 32 e 21 por cento. Todos
+os outros comandos que a aplicação mandou, inclusive a lista de pedidos do cliente, que rodou 27489
+vezes, dividem o que sobra. Esse é o formato comum, e é o fato mais útil desta aula: o trabalho de
+deixar um banco mais rápido quase nunca está espalhado pela aplicação. Ele está em dois ou três
 comandos, e o placar diz quais.
 
 A coluna da consulta está cortada em cinquenta caracteres para caber na tela. Os três do alto são a
@@ -61,7 +61,8 @@ por hora, e uma lista ordenada pela média nunca o mostraria.
 
 Então a regra que este curso segue é: **ache os candidatos pelo total, depois leia a média deles**
 para saber o que consertar um daria a cada usuário. A busca por etiqueta ganha nos dois critérios, o
-que a torna o primeiro alvo por qualquer medida. A aula 8 é onde ela é consertada, e o conserto não é o índice que você adivinharia.
+que a torna o primeiro alvo por qualquer medida. A aula 8 é onde ela é consertada, e o conserto não
+é o índice que você adivinharia.
 
 ## Uma linha, lida inteira
 
@@ -94,7 +95,7 @@ Time: 2.286 ms
 
 `calls` vezes `mean_exec_time` é `total_exec_time`: 2164 execuções de 35,5 milissegundos cada, 76,8
 segundos do servidor num minuto. O espalhamento é a primeira coisa que vale ler. A execução mais
-rápida levou **12 milissegundos e a mais lenta, 116**, quase dez vezes mais, e o desvio-padrão de
+rápida levou **12 milissegundos e a mais lenta, 116**, quase dez vezes mais. O desvio-padrão de
 14,8 contra uma média de 35,5 diz que não foi uma execução azarada, e sim um comando cujo custo
 depende de qual vendedor foi perguntado. Alguns vendedores têm mais pedidos em dezembro que outros.
 

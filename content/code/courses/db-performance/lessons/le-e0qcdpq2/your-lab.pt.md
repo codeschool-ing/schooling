@@ -23,7 +23,7 @@ elimina algumas opções, como dizem os três caminhos abaixo.
 
 Uma **máquina virtual** é um computador inteiro simulado dentro do seu, com sistema operacional
 próprio, que você pode quebrar e jogar fora sem mexer em mais nada. Aqui isso pesa mais do que na
-maioria dos cursos: você vai mudar configurações do servidor, encher o disco de propósito, abrir
+maioria dos cursos. Você vai mudar configurações do servidor, encher o disco de propósito, abrir
 duzentas conexões de uma vez e matar processos, e nada disso deve acontecer no computador em que
 você trabalha.
 
@@ -46,8 +46,8 @@ Os passos, uma vez só:
    dali.
 
 **O que custa ao seu computador:** 4 GB de memória enquanto a máquina roda, então o computador
-precisa de 8 GB ou mais para ficar confortável, e uns 10 GB de disco depois que o banco do curso
-estiver carregado e algumas aulas tiverem feito cópias dele. Com menos memória, dê 2 GB à
+precisa de 8 GB ou mais para ficar confortável. Também ocupa uns 10 GB de disco depois que o banco
+do curso estiver carregado e algumas aulas tiverem feito cópias dele. Com menos memória, dê 2 GB à
 máquina: tudo continua funcionando e toda consulta fica mais lenta, o que já é uma lição (a aula 1
 seção 06 mostra por quê).
 
@@ -57,9 +57,9 @@ seção 06 mostra por quê).
 ## Instalado direto no seu computador
 
 Se o seu computador **já roda Ubuntu ou Debian**, dá para pular a máquina virtual: todo comando
-deste curso funciona nele como está impresso. É o caminho mais barato em memória, e custa algo que
-a máquina virtual não custa — os experimentos das aulas 15, 16 e 23 carregam o computador em que
-você está trabalhando, e uma configuração do servidor esquecida fica esquecida.
+deste curso funciona nele como está impresso. É o caminho mais barato em memória, e custa algo que a
+máquina virtual não custa. Os experimentos das aulas 15, 16 e 23 carregam o computador em que você
+está trabalhando, e uma configuração do servidor esquecida fica esquecida.
 
 No **macOS** (Postgres.app ou `brew install postgresql@16`) e no **Windows** (o instalador
 indicado em postgresql.org) você tem o mesmo PostgreSQL 16 e o mesmo SQL. O que não bate é tudo

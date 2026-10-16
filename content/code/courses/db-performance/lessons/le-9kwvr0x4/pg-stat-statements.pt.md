@@ -9,10 +9,10 @@ pergunta é **para onde vai o tempo do servidor**, e para isso é preciso um reg
 ele rodou, que ninguém olhando um terminal tem.
 
 O PostgreSQL consegue manter esse registro. A extensão `pg_stat_statements` observa cada comando
-que o servidor executa e o soma a um placar corrente: quantas vezes rodou, quanto tempo levou no
-total, o mais rápido e o mais lento, quantas linhas devolveu, quantas páginas leu. A aula 10 do
-`sql-databases` a ligou por um momento; este curso a deixa ligada de vez, porque quase toda aula
-daqui em diante começa perguntando algo a ela.
+que o servidor executa e o soma a um placar corrente. Para cada um, guarda quantas vezes rodou,
+quanto tempo levou no total, o mais rápido e o mais lento, quantas linhas devolveu, quantas páginas
+leu. A aula 10 do `sql-databases` a ligou por um momento; este curso a deixa ligada de vez, porque
+quase toda aula daqui em diante começa perguntando algo a ela.
 
 ## Ligando
 

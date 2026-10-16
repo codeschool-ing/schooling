@@ -5,13 +5,13 @@ version: 1
 
 `pg_stat_statements` adds runs together, and adding is what makes it good at finding where the
 time goes. It is also what makes it blind to a single event. A statement whose mean is 9
-milliseconds may have had one run that took two seconds at 03:12 last night, and the tally keeps
-that only as one more contribution to `max_exec_time`, with no time, no parameters and no session
+milliseconds may have had one run that took two seconds at 03:12 last night. The tally keeps that
+only as one more contribution to `max_exec_time`, with no time, no parameters and no session
 attached.
 
-For that, the server's **log** is the other half. The setting `log_min_duration_statement` makes
-the server write a line for every statement that takes longer than a threshold, with the moment it
-finished, the process that ran it, the role and the database, and the statement **with its real
+For that, the server's **log** is the other half. The setting `log_min_duration_statement` makes the
+server write a line for every statement that takes longer than a threshold. The line has the moment
+it finished, the process that ran it, the role and the database, and the statement **with its real
 values**. It needs no restart — a reload is enough, because the setting can change while the server
 runs:
 
@@ -42,18 +42,18 @@ ana@vm:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
 
 The file is cut where `tail` cut it. The first two lines are the end of a longer entry: one run of
 the seller dashboard that crossed 50 milliseconds, written as the application sent it, over several
-lines, **with the seller it was for** — `seller_id = 21` — where `pg_stat_statements` would only
-ever say `$2`. The last two are the operations screen's count, at 101 and 125 milliseconds, from two
-different processes, the numbers in square brackets, seventeen milliseconds apart. That is the shape
-the tally cannot show: **two people refreshed the same screen at the same moment, and each paid
-the full price**.
+lines. It comes **with the seller it was for**, `seller_id = 21`, where `pg_stat_statements` would
+only ever say `$2`. The last two are the operations screen's count, at 101 and 125 milliseconds,
+from two different processes, the numbers in square brackets, seventeen milliseconds apart. That is
+the shape the tally cannot show: **two people refreshed the same screen at the same moment, and each
+paid the full price**.
 
 ## Choosing the threshold
 
 The threshold is a trade between what you catch and what it costs. Every line is a write to a file
-on the same disk as the database, and a threshold of zero logs every statement, which on a server
-doing a thousand a second is a thousand lines a second and a measurable slowdown of its own. Two
-settings are common in practice:
+on the same disk as the database. A threshold of zero logs every statement, which on a server doing
+a thousand a second is a thousand lines a second and a measurable slowdown of its own. Two settings
+are common in practice:
 
 - **a few hundred milliseconds to a second** on a busy production server, to catch the outliers and
   nothing else;
@@ -80,7 +80,7 @@ They answer different questions, and the mistake is to use one for the other's:
 | did my fix make this statement cheaper? | `pg_stat_statements`, reset before and read after |
 
 The log answers with **evidence about one run**: a time, a process, the exact values. The tally
-answers with **arithmetic over all of them**. A third tool sits between them: the `auto_explain` extension
-writes a slow statement's **plan** into the same log, so that the evidence includes what the server
-decided to do. A plan is what lesson 3 teaches you to read, and that is the moment it becomes
-useful.
+answers with **arithmetic over all of them**. A third tool sits between them: the `auto_explain`
+extension writes a slow statement's **plan** into the same log, so that the evidence includes what
+the server decided to do. A plan is what lesson 3 teaches you to read, and that is the moment it
+becomes useful.

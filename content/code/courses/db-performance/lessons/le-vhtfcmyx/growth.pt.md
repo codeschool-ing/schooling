@@ -32,11 +32,11 @@ Time: 511.996 ms
 ```
 
 De 77177 pedidos em janeiro para 107780 em dezembro: a loja está crescendo, e não por um percentual
-fixo — os meses sobem mais ou menos os mesmos **dois a três mil pedidos** cada, com a queda de
+fixo. Os meses sobem mais ou menos os mesmos **dois a três mil pedidos** cada, com a queda de
 fevereiro porque fevereiro é curto. Isso é uma tendência linear, e tendência linear é o tipo fácil:
 o próximo dezembro fica uns 30 mil pedidos por mês acima. Uma loja crescendo por percentual,
-dobrando todo ano, faria uma curva para cima na mesma tabela, e a previsão abaixo teria de ser
-feita com essa curva em vez de uma reta.
+dobrando todo ano, faria uma curva para cima na mesma tabela, e a previsão abaixo teria de ser feita
+com essa curva em vez de uma reta.
 
 Dois avisos sobre ler uma tabela assim. **Um mês não é uma unidade de trabalho**: um fim de semana
 de Black Friday pode carregar os pedidos de um mês em três dias, e um banco que aguenta o mês médio
@@ -62,7 +62,7 @@ Time: 3.596 ms
 
 **130 bytes por pedido** e 91 por linha de pedido, contando os índices de cada tabela junto. Esse é
 o número pelo qual multiplicar: ele inclui a própria linha, a contabilidade que o PostgreSQL guarda
-em cada linha, o espaço livre dentro das páginas e cada índice — por isso é mais do que as cinco
+em cada linha, o espaço livre dentro das páginas e cada índice. Por isso é mais do que as cinco
 colunas de um pedido sugeririam. Medido na tabela como ela está, já inclui os índices que a
 aplicação criou, e muda quando alguém acrescenta outro.
 
@@ -94,6 +94,6 @@ a mesma conta funciona nele.
 
 "Se nada mais mudar" faz muito trabalho nessa frase, e as próximas três seções tratam do que ele
 esconde. O log de escrita antecipada (WAL), arquivos temporários de uma ordenação grande, uma cópia
-feita por uma aula como o `market_base` e um backup gravado no mesmo disco ocupam espaço que cresce
-com o banco sem serem linhas dele. Uma previsão feita com linhas é um limite inferior; o alerta da
+feita por uma aula como o `market_base` e um backup gravado no mesmo disco ocupam espaço. Ele cresce
+com o banco sem ser feito de linhas. Uma previsão feita com linhas é um limite inferior; o alerta da
 última seção desta aula é o que a mantém honesta.

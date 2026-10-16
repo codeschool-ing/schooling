@@ -5,13 +5,14 @@ version: 1
 
 O `pg_stat_statements` soma execuções, e somar é o que o faz bom em achar para onde vai o tempo. É
 também o que o deixa cego para um evento isolado. Um comando com média de 9 milissegundos pode ter
-tido uma execução que levou dois segundos às 03:12 da madrugada, e o placar guarda isso só como mais
+tido uma execução que levou dois segundos às 03:12 da madrugada. O placar guarda isso só como mais
 uma contribuição para `max_exec_time`, sem hora, sem parâmetros e sem sessão.
 
-Para isso, o **log** do servidor é a outra metade. A configuração `log_min_duration_statement` faz
-o servidor escrever uma linha para cada comando que demora mais que um limite, com o momento em que
-terminou, o processo que o rodou, o papel e o banco, e o comando **com os valores de verdade**. Não
-precisa de reinício — um reload basta, porque a configuração pode mudar com o servidor rodando:
+Para isso, o **log** do servidor é a outra metade. A configuração `log_min_duration_statement` faz o
+servidor escrever uma linha para cada comando que demora mais que um limite. A linha traz o momento
+em que terminou, o processo que o rodou, o papel e o banco, e o comando **com os valores de
+verdade**. Não precisa de reinício — um reload basta, porque a configuração pode mudar com o
+servidor rodando:
 
 ```
 market=# ALTER SYSTEM SET log_min_duration_statement = '50ms';
@@ -40,16 +41,16 @@ ana@vm:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
 
 O arquivo está cortado onde o `tail` cortou. As duas primeiras linhas são o fim de uma entrada
 mais longa: uma execução do painel do vendedor que passou de 50 milissegundos, escrita como a
-aplicação a enviou, em várias linhas, **com o vendedor para quem era** — `seller_id = 21` —, onde o
-`pg_stat_statements` só diria `$2`. As duas últimas são a contagem da tela de operações, com 101 e
-125 milissegundos, de dois processos diferentes, os números entre colchetes, com dezessete
+aplicação a enviou, em várias linhas. Ela vem **com o vendedor para quem era**, `seller_id = 21`,
+onde o `pg_stat_statements` só diria `$2`. As duas últimas são a contagem da tela de operações, com
+101 e 125 milissegundos, de dois processos diferentes, os números entre colchetes, com dezessete
 milissegundos de distância. Esse é o formato que o placar não consegue mostrar: **duas pessoas
 atualizaram a mesma tela no mesmo momento, e cada uma pagou o preço inteiro**.
 
 ## Escolhendo o limite
 
 O limite é uma troca entre o que você pega e o que custa. Cada linha é uma escrita num arquivo no
-mesmo disco do banco, e um limite zero registra todo comando, o que, num servidor fazendo mil por
+mesmo disco do banco. Um limite zero registra todo comando, o que, num servidor fazendo mil por
 segundo, são mil linhas por segundo e uma lentidão mensurável por si só. Duas escolhas são comuns
 na prática:
 

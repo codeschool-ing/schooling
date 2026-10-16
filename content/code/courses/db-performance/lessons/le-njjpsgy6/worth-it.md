@@ -20,8 +20,8 @@ times a second. So:
 | over a day at that rate | 10 ms × 86 400 ≈ 900 s, fifteen minutes |
 
 Fifteen minutes of server time a day sounds like something. Spread over a day it is one processor
-one per cent less busy — which matters only if the server is short of processor time, and the knee
-in lesson 23's curve is where that question is answered.
+one per cent less busy. That matters only if the server is short of processor time, and the knee in
+lesson 23's curve is where that question is answered.
 
 And what each person gets is **0.046 milliseconds** off a page they open, the difference between
 the pgbench medians. Nobody can see that. A human notices a delay of around a tenth of a second; this
@@ -46,7 +46,7 @@ Lesson 2's index on `seller_id` took the seller dashboard from a mean of **35.49
 | saved per second | about 10 ms | about 870 ms |
 
 **The seller index gave back nearly a whole processor; this one gives back a hundredth of one.**
-The two changes look the same in a code review — one `CREATE INDEX` line each, both making a
+The two changes look the same in a code review: one `CREATE INDEX` line each, both making a
 query faster, both justified by a plan. The difference only appears when the saving is multiplied by
 how often the query runs, which is the same lesson the tally taught in lesson 2: **it is the total
 that matters, not the improvement per run.**

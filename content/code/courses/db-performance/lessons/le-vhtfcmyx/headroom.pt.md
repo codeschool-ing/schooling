@@ -67,8 +67,8 @@ esperar.
 ```
 
 Esse formato tem nome na teoria das filas, e você não precisa da teoria para usá-lo. Quando os
-pedidos chegam em momentos aleatórios, alguns chegam juntos; os que chegam com o servidor ocupado
-esperam; e quanto mais perto o servidor está de totalmente ocupado, mais vezes uma chegada o encontra
+pedidos chegam em momentos aleatórios, alguns chegam juntos, e os que chegam com o servidor ocupado
+esperam. Quanto mais perto o servidor está de totalmente ocupado, mais vezes uma chegada o encontra
 ocupado e mais longa a fila que ela encontra. A espera cresce devagar no começo e depois sem limite
 conforme a taxa se aproxima do máximo. **O joelho da curva é onde a folga acaba**, e nesta máquina e
 nesta carga ele fica em algum lugar entre 600 e 900 por segundo — entre metade e quatro quintos do
@@ -77,8 +77,8 @@ máximo.
 ## A média esconde quem esperou
 
 A média é o resumo mais gentil de uma latência, e o menos útil perto do joelho. Para ver o que os
-usuários mais lentos viram, o `pgbench` pode registrar a latência de cada transação com `-l`, e este
-script lê o registro e imprime três percentis — a latência abaixo da qual ficaram metade, noventa e
+usuários mais lentos viram, o `pgbench` pode registrar a latência de cada transação com `-l`. Este
+script lê o registro e imprime três percentis: a latência abaixo da qual ficaram metade, noventa e
 cinco e noventa e nove de cada cem transações:
 
 ```sh

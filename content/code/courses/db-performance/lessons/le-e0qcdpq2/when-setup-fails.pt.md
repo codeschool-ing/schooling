@@ -38,7 +38,7 @@ ana@vm:~$ sudo systemctl start postgresql
 
 O `psql` procurou o arquivo de socket do servidor, que é como dois programas no mesmo computador
 conversam, e não havia nenhum, porque o servidor não está rodando. O `pg_lsclusters` diz isso na
-quarta coluna: `down`. A transcrição o parou de propósito; na sua máquina, a causa comum é a
+quarta coluna: `down`. A transcrição o parou de propósito. Na sua máquina, a causa comum é a
 máquina virtual ter reiniciado e o serviço não ter voltado, ou uma configuração que você mudou ter
 impedido a partida. `sudo systemctl start postgresql` o liga, e se ele voltar direto para `down`,
 as últimas linhas do arquivo de log na última coluna dizem por quê:
@@ -88,6 +88,6 @@ conferência:
 ## Quando não é nenhum desses
 
 Copie o erro inteiro, a partir da linha que diz `ERROR` ou `FATAL`, e pesquise-o entre aspas. As
-mensagens do PostgreSQL são frases fixas, então alguém já encontrou a sua; a parte entre aspas
-depois dela — um papel, uma tabela, um arquivo — é a parte que é específica do seu caso, e
-costuma ser onde está a resposta.
+mensagens do PostgreSQL são frases fixas, então alguém já encontrou a sua. A parte entre aspas
+depois dela, um papel, uma tabela ou um arquivo, é a parte específica do seu caso, e costuma ser
+onde está a resposta.

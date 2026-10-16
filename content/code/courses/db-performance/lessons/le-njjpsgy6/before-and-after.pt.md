@@ -4,9 +4,9 @@ version: 1
 ---
 
 Toda aula deste curso terminou com algo mais rápido. Esta começa com uma mudança que parece tão
-sensata quanto as outras, e faz a pergunta que as outras deram como certa: **valeu a pena?** Não "a
-consulta ficou mais rápida" — vai ficar —, mas se o que ela devolveu é maior do que o que custa,
-medido em vez de sentido.
+sensata quanto as outras, e faz a pergunta que as outras deram como certa: **valeu a pena?** Não se
+a consulta ficou mais rápida, porque vai ficar. A pergunta é se o que ela devolveu é maior do que o
+que custa, medido em vez de sentido.
 
 O candidato é o comando mais movimentado da carga da aula 2, a lista dos últimos dez pedidos de um
 cliente. Metade de cada cem transações é este. Este é o plano dele com o `market` como está:
@@ -46,8 +46,8 @@ tarde porque é obviamente certa.
 ## Meça o antes, três vezes
 
 Uma execução de qualquer coisa é ruído (aula 1 seção 06). Então o antes são três execuções da carga
-inteira, trinta segundos cada, cortadas nos dois scripts que importam — o que a mudança quer
-ajudar, e o que grava em `orders` e vai pagar por qualquer índice novo:
+inteira, trinta segundos cada, cortadas nos dois scripts que importam: o que a mudança quer ajudar,
+e o que grava em `orders` e vai pagar por qualquer índice novo:
 
 ```
 ana@vm:~/workload$ pgbench -n -c 8 -j 4 -T 30 -f customer-orders.sql@50 -f order-page.sql@25 -f tag-search.sql@10 -f place-order.sql@10 -f seller-dashboard.sql@4 -f pending-count.sql@1 market | sed -n -e '/^tps/p' -e '/customer-orders/,/stddev/p' -e '/place-order/,/stddev/p' | grep -v -e weight -e failed

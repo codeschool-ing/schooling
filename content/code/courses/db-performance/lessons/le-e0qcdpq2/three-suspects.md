@@ -89,9 +89,9 @@ in the simplest terms. What was missing is structure. With no index on `seller_i
 to find seller 42's orders is to read all of them, and an index turned two million rows read
 into 1532.
 
-The index was dropped again at the end. That is deliberate: lesson 2 finds this same missing
-index from the outside, the way you would at work, from what the application is doing to the
-server, rather than from somebody who already knows the answer.
+The index was dropped again at the end. That is deliberate. Lesson 2 finds this same missing index
+from the outside, the way you would at work: from what the application is doing to the server,
+rather than from somebody who already knows the answer.
 
 Notice the third number too. **Building the index took 1154 milliseconds**, and every order
 written from then on would pay a little more to keep it up to date. An index is not free, and
@@ -101,7 +101,7 @@ lesson 11 is about the ones that cost more than they save.
 
 The third suspect is the one no query and no index can fix. The same count over the five million
 order lines takes **435 milliseconds** when the table has to come from the disk and about **170**
-when it is already in memory — same query, same plan, same rows, on the same computer. Nothing in
+when it is already in memory. Same query, same plan, same rows, same computer. Nothing in
 the database changed between the two; only where the bytes were. The next section takes that
 measurement apart, because it is also the reason one timing on its own proves nothing.
 
@@ -110,5 +110,5 @@ measurement apart, because it is also the reason one timing on its own proves no
 From outside, each of the three was "a slow query". From inside they were a question asked in the
 wrong terms, a structure that was missing and data that was not in memory, and **each fix would
 have done nothing for the other two**. The rest of this course is mostly about telling them apart
-quickly, and the first tool for that is not a fix at all — it is the next lesson's list of which
+quickly, and the first tool for that is not a fix at all. It is the next lesson's list of which
 queries cost the server the most.

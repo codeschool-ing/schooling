@@ -23,10 +23,10 @@ Ponha as três execuções de cada script como uma faixa, antes e depois:
 
 Três leituras, três veredictos.
 
-**A lista de pedidos do cliente ficou mesmo mais rápida.** O pior depois é melhor que o melhor antes,
-e a distância entre as duas faixas, cerca de 0,04 milissegundo, é maior que o espalhamento dentro de
-cada uma. A média do próprio servidor, de 0,107 para 0,089, concorda. É o mais perto de uma prova que
-três execuções dão.
+**A lista de pedidos do cliente ficou mesmo mais rápida.** O pior depois é melhor que o melhor
+antes. A distância entre as duas faixas, cerca de 0,04 milissegundo, é maior que o espalhamento
+dentro de cada uma. A média do próprio servidor, de 0,107 para 0,089, concorda. É o mais perto de
+uma prova que três execuções dão.
 
 **As escritas não enxergam o índice novo.** O antes vai de 8,156 a 8,794, uma faixa de 0,64
 milissegundo, e o depois cabe dentro dela. Se o índice deixou cada compra mais lenta, a diferença é

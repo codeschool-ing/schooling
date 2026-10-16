@@ -66,8 +66,8 @@ everybody wait.
 ```
 
 That shape has a name in queueing theory, and you do not need the theory to use it. When requests
-arrive at random moments, some arrive together; the ones that come while the server is busy wait;
-and the closer the server is to fully busy, the more often an arrival finds it busy and the longer
+arrive at random moments, some arrive together, and the ones that come while the server is busy
+wait. The closer the server is to fully busy, the more often an arrival finds it busy and the longer
 the queue it finds. The waiting grows slowly at first and then without limit as the rate approaches
 the maximum. **The knee in the curve is where headroom ends**, and on this machine and workload it
 is somewhere between 600 and 900 a second — between half and four fifths of the maximum.
@@ -75,9 +75,9 @@ is somewhere between 600 and 900 a second — between half and four fifths of th
 ## The average hides the people who waited
 
 The average is the kindest summary of a latency, and the least useful one near the knee. To see
-what the slowest users saw, `pgbench` can log every transaction's latency with `-l`, and this
-script reads the log and prints three percentiles — the latency that half, ninety-five and
-ninety-nine out of every hundred transactions came in under:
+what the slowest users saw, `pgbench` can log every transaction's latency with `-l`. This script
+reads the log and prints three percentiles: the latency that half, ninety-five and ninety-nine out
+of every hundred transactions came in under:
 
 ```sh
 cat > ~/workload/percentiles.sh <<'SH'

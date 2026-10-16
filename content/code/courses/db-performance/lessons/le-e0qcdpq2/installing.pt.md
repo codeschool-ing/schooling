@@ -32,8 +32,8 @@ ana@vm:~$ createdb market
 ```
 
 `createuser` e `createdb` não imprimem nada quando funcionam. `--superuser` deixa o seu papel
-mudar as configurações do servidor, o que este curso faz em quase toda aula — certo numa máquina
-que é só sua, e errado em qualquer servidor de que outras pessoas dependam.
+mudar as configurações do servidor, o que este curso faz em quase toda aula. Isso é certo numa
+máquina que é só sua, e errado em qualquer servidor de que outras pessoas dependam.
 
 ## O banco, inventado a partir de uma semente fixa
 
@@ -207,10 +207,10 @@ psql market -v ON_ERROR_STOP=1 -f market.sql
 ```
 
 O `ON_ERROR_STOP` faz o `psql` parar no primeiro comando que falhar, em vez de relatar o erro e
-seguir para o próximo — o que, para um arquivo que cria tabelas e depois as preenche, é a
-diferença entre uma falha clara e um banco montado pela metade. Leva alguns minutos. Cada comando
-informa o que fez ao terminar, e o último `INSERT` grava cinco milhões de linhas. Esta é a carga
-inteira, cronometrada com o `time` do shell:
+seguir para o próximo. Para um arquivo que cria tabelas e depois as preenche, essa é a diferença
+entre uma falha clara e um banco montado pela metade. Leva alguns minutos. Cada comando informa o
+que fez ao terminar, e o último `INSERT` grava cinco milhões de linhas. Esta é a carga inteira,
+cronometrada com o `time` do shell:
 
 ```
 ana@vm:~$ time psql market -v ON_ERROR_STOP=1 -f market.sql
@@ -291,10 +291,10 @@ Time: 1.903 ms
 ```
 
 **1334 MB** em disco, a maior parte em eventos e linhas de pedido. São umas dez vezes os 128 MB
-que o PostgreSQL reserva para si de fábrica, e a ideia é essa: parte do que você pedir vai ter de
+que o PostgreSQL reserva para si de fábrica, e a ideia é essa. Parte do que você pedir vai ter de
 vir do disco, e a diferença é uma das coisas que este curso mede.
 
-Duas das contagens de linhas estão um pouco erradas — `4999908` eventos onde o arquivo gravou
+Duas das contagens de linhas estão um pouco erradas — `4999827` eventos onde o arquivo gravou
 cinco milhões — e isso não é defeito da carga. A coluna vem de `reltuples`, que é a **estimativa**
 do próprio servidor de quantas linhas uma tabela tem, mantida em dia por `VACUUM` e `ANALYZE` a
 partir de uma amostra. É o número com que o planejador trabalha, e a aula 6 trata do que acontece
@@ -311,7 +311,7 @@ uma cópia dele, enquanto tem exatamente o que o `market.sql` fez, para poder se
 ana@vm:~$ createdb -T market market_base
 ```
 
-`-T` nomeia um **modelo** (*template*): o banco novo começa como uma cópia, arquivo por arquivo,
-do `market`, o que leva segundos em vez dos minutos de carregá-lo de novo, e dobra o espaço que o
-curso ocupa no disco. A aula 2 transforma o caminho de volta num script de três linhas, e daí em
-diante uma aula que muda as linhas avisa e diz quando rodá-lo.
+`-T` nomeia um **modelo** (*template*): o banco novo começa como uma cópia, arquivo por arquivo, do
+`market`. Isso leva segundos em vez dos minutos de carregá-lo de novo, e dobra o espaço que o curso
+ocupa no disco. A aula 2 transforma o caminho de volta num script de três linhas, e daí em diante
+uma aula que muda as linhas avisa e diz quando rodá-lo.

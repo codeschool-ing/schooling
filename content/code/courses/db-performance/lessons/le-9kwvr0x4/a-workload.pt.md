@@ -85,11 +85,11 @@ tag-search.sql
 
 ## Um minuto de tráfego
 
-O `pgbench` recebe os arquivos com `-f`, cada um com um **peso** depois do `@`: de cada cem
+O `pgbench` recebe os arquivos com `-f`, cada um com um **peso** depois do `@`. De cada cem
 transações, cinquenta são a lista de pedidos de um cliente, vinte e cinco uma página de pedido, dez
 buscas por etiqueta, dez compras, quatro painéis de vendedor e uma atualização da tela de operações.
-As outras opções dizem com que força empurrar: `-c 8` são oito clientes ao mesmo tempo, `-j 4` os
-roda em quatro threads, `-T 60` por sessenta segundos, `-P 20` imprime o progresso a cada vinte, e
+As outras opções dizem com que força empurrar. `-c 8` são oito clientes ao mesmo tempo, `-j 4` os
+roda em quatro threads, `-T 60` por sessenta segundos e `-P 20` imprime o progresso a cada vinte.
 `-n` pula a limpeza que o `pgbench` tentaria fazer nas tabelas do benchmark dele, que o `market` não
 tem:
 
@@ -165,8 +165,8 @@ milissegundos, a busca por etiqueta e o painel nas dezenas, a contagem de penden
 
 Os pesos não foram medidos numa loja real. São um palpite sobre uma loja plausível: muitas leituras
 baratas, algumas caras, um fio de escritas. Isso basta para dar ao placar um quadro realista para
-mostrar, e é o motivo de a aula 22 dedicar uma seção inteira ao que torna uma carga
-**representativa** — no dia em que você precisar medir uma mudança que importa, uma carga de palpite
+mostrar. É também o motivo de a aula 22 dedicar uma seção inteira ao que torna uma carga
+**representativa**: no dia em que você precisar medir uma mudança que importa, uma carga de palpite
 é a primeira coisa a trocar.
 
 Dois dos scripts mudam o banco. O `place-order.sql` insere um pedido e uma linha e atualiza o total

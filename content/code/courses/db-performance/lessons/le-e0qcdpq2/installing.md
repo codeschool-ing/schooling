@@ -32,8 +32,8 @@ ana@vm:~$ createdb market
 ```
 
 `createuser` and `createdb` print nothing when they work. `--superuser` lets your role change
-the server's settings, which this course does in almost every lesson — right on a machine that
-is yours alone, and wrong on any server somebody else depends on.
+the server's settings, which this course does in almost every lesson. That is right on a machine
+that is yours alone, and wrong on any server somebody else depends on.
 
 ## The database, made up from a fixed seed
 
@@ -206,11 +206,11 @@ the lessons that follow need them:
 psql market -v ON_ERROR_STOP=1 -f market.sql
 ```
 
-`ON_ERROR_STOP` makes `psql` stop at the first statement that fails, instead of reporting the
-error and carrying on with the next one — which, for a file that creates tables and then fills
-them, is the difference between a clear failure and a half-built database. It takes a few
-minutes. Each statement reports what it did as it finishes, and the last `INSERT`
-writes five million rows. Here is the whole load, timed with the shell's `time`:
+`ON_ERROR_STOP` makes `psql` stop at the first statement that fails, instead of reporting the error
+and carrying on with the next one. For a file that creates tables and then fills them, that is the
+difference between a clear failure and a half-built database. It takes a few minutes. Each statement
+reports what it did as it finishes, and the last `INSERT` writes five million rows. Here is the
+whole load, timed with the shell's `time`:
 
 ```
 ana@vm:~$ time psql market -v ON_ERROR_STOP=1 -f market.sql
@@ -291,10 +291,10 @@ Time: 1.903 ms
 ```
 
 **1334 MB** on disk, most of it events and order lines. That is about ten times the 128 MB
-PostgreSQL keeps for itself out of the box, which is the point: some of what you ask for will have
+PostgreSQL keeps for itself out of the box, and that is the point. Some of what you ask for will have
 to come from the disk, and the difference is one of the things this course measures.
 
-Two of the row counts are a little off — `4999908` events where the file wrote five million — and
+Two of the row counts are a little off — `4999827` events where the file wrote five million — and
 that is not a fault in the load. The column comes from `reltuples`, which is the server's own
 **estimate** of how many rows a table has, kept up to date by `VACUUM` and `ANALYZE` from a
 sample. It is the number the planner works with, and lesson 6 is about what happens when it is far
@@ -311,7 +311,7 @@ it now, while it holds exactly what `market.sql` made, so that you can always co
 ana@vm:~$ createdb -T market market_base
 ```
 
-`-T` names a **template**: the new database starts as a file-by-file copy of `market`, which takes
-seconds rather than the minutes of loading it again, and doubles the space the course uses on
-disk. Lesson 2 turns the way back into a three-line script, and from then on a lesson that changes
-the rows says so and tells you when to run it.
+`-T` names a **template**: the new database starts as a file-by-file copy of `market`. That takes
+seconds rather than the minutes of loading it again, and doubles the space the course uses on disk.
+Lesson 2 turns the way back into a three-line script, and from then on a lesson that changes the
+rows says so and tells you when to run it.

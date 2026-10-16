@@ -13,8 +13,8 @@ The `Time:` line is measured by `psql`, on your side: from the moment it sent th
 moment the whole answer had arrived. So it includes the server's work, the trip across the
 connection and the time to receive the rows. On your virtual machine the trip is nothing, because
 `psql` and the server are on the same computer. Between an application in one building and a
-database in another, the trip is a large part of every short query — which is why the server's
-own figure for the same query, which lesson 3 reads, is smaller than this one.
+database in another, the trip is a large part of every short query. That is why the server's own
+figure for the same query, which lesson 3 reads, is smaller than this one.
 
 ## The same query, three times
 
@@ -104,9 +104,9 @@ Time: 0.598 ms
 
 **128 MB**, which is Ubuntu's default and was chosen to start on any computer, not to be fast on
 yours. `db-administration` lesson 6 is the arithmetic for sizing it. This course leaves it alone
-almost everywhere, on purpose: the database is ten times bigger than that cache, so the
-difference between memory and disk stays visible, and a timing on your machine and one in a
-transcript differ for reasons you can name.
+almost everywhere, on purpose: the database is ten times bigger than that cache, so the difference
+between memory and disk stays visible. A timing on your machine and one in a transcript differ for
+reasons you can name.
 
 Your timings will not match these. What should match is their **shape** — which query is faster,
 by roughly how many times, and which run was cold. When the shape disagrees, look for what you did
