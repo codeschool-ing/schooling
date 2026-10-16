@@ -5,7 +5,7 @@ version: 1
 
 O Zombie.js chegou ao npm em 2011 com uma promessa no subtítulo: "Insanely fast, headless
 full-stack testing using Node.js", testes absurdamente rápidos, sem janela, usando Node.js. Durante
-anos foi o que um desenvolvedor Node queria dizer com testar uma página sem navegador. **Hoje é uma
+anos foi uma resposta comum, no Node, para testar uma página sem navegador. **Hoje é uma
 ferramenta para reconhecer num projeto antigo, não para começar um**, e o registro do npm diz por
 quê antes de qualquer código rodar.
 

@@ -6,8 +6,8 @@ version: 1
 O argumento a favor de um navegador simulado sempre foi a velocidade, e ele foi feito quando
 iniciar um navegador de verdade levava segundos e pedia uma tela. **Meça antes de acreditar.** A
 mesma verificação, abrir a página inicial e esperar os oito cards, dez vezes no jsdom e dez vezes
-no Chromium. O Chromium é iniciado uma vez e cada página ganha uma aba nova, que é como um worker do
-Playwright roda um arquivo. Salve-o como `simulated/timing.mjs`:
+no Chromium. O Chromium é iniciado uma vez e cada página ganha uma aba nova, perto de como um worker do
+Playwright mantém um navegador para muitos testes. Salve-o como `simulated/timing.mjs`:
 
 ```javascript
 // The same check, ten times in each: open /, wait for eight cards.
@@ -58,8 +58,8 @@ chromium: 10 pages in 1699 ms
 **O jsdom foi umas duas vezes mais rápido, não dez.** Dez páginas levaram 729 ms no jsdom contra
 1643 ms no Chromium, e 852 contra 1699 na segunda vez: uma diferença de menos de um décimo de
 segundo por página. O próprio Chromium iniciou em 76 e 95 ms. A partida de vários segundos que os
-navegadores simulados foram escritos para evitar não existe mais; um navegador headless num laptop
-inicia mais rápido do que uma pessoa consegue perceber. Em quinhentas verificações de página a
+navegadores simulados foram escritos para evitar não existe mais: nesta máquina, um navegador
+headless iniciou em menos de um décimo de segundo. Em quinhentas verificações de página a
 diferença daria uns três quartos de minuto, o que vale alguma coisa numa suíte que roda muitas
 vezes por dia e não vale nada para uma verificação que não consegue mais falhar.
 

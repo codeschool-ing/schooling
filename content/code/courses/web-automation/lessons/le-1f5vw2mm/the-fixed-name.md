@@ -206,8 +206,8 @@ some of them:
 - **it depends on history.** The test has no defect you can see by reading it. It fails because of
   a run that happened earlier, possibly somebody else's;
 - **it depends on the environment.** The same file is green with a fresh shop and red with a
-  reused one. On a build server, where `CI` is set and a fresh shop starts every time, it would
-  pass for months, then fail on the first day somebody pointed the suite at a shared test
+  reused one. On a build server, where `CI` is set, a fresh shop starts every time and it would
+  pass for months. It would fail on the first day somebody pointed the suite at a shared test
   environment whose database is never emptied;
 - **retrying does not help.** Maria is still there on the third run. Lesson 14 calls a test that
   fails *sometimes* flaky; this one fails every time once the conditions are met, which makes it

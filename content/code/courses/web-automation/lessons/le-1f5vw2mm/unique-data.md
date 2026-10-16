@@ -67,8 +67,7 @@ Read it column by column.
 | `randomUUID()` | yes | yes | nothing; it is noise to a person |
 
 The first two are built for a different job. `workerIndex` exists so that each worker can have a
-resource of its own, an account or a database, kept for that worker; Playwright's documentation
-uses it that way. `testId` names the test, and is stable on purpose so that reports can follow a
+resource of its own, such as an account or a database kept for that worker alone. `testId` names the test, and is stable on purpose so that reports can follow a
 test across runs. **Both are unique in space and repeat in time**, so a name made from either alone
 fails exactly as `maria` did, on the second run against a shop that stays up.
 

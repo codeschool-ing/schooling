@@ -67,8 +67,7 @@ Leia coluna por coluna.
 | `randomUUID()` | sim | sim | nada; para uma pessoa, é ruído |
 
 Os dois primeiros foram feitos para outro trabalho. O `workerIndex` existe para que cada worker
-tenha um recurso só seu, uma conta ou um banco, guardado para aquele worker; a documentação do
-Playwright o usa assim. O `testId` dá nome ao teste, e é estável de propósito, para que os
+tenha um recurso só seu, como uma conta ou um banco guardado só para aquele worker. O `testId` dá nome ao teste, e é estável de propósito, para que os
 relatórios sigam um teste entre execuções. **Os dois são únicos no espaço e se repetem no tempo**,
 então um nome feito só de um deles falha exatamente como `maria` falhou, na segunda execução
 contra uma loja que continua de pé.

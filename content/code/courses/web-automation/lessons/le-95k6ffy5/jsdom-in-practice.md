@@ -4,7 +4,7 @@ version: 1
 ---
 
 **jsdom is the DOM and the HTML standard, implemented in JavaScript for Node.** No browser is
-behind it. It is the one simulated browser in wide use today, and most people run it second-hand:
+behind it. It is the simulated browser you are most likely to meet, and most people run it second-hand:
 Jest's `jsdom` test environment is a package, `jest-environment-jsdom`, built on it.
 
 ```

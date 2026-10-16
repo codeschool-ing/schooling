@@ -57,19 +57,19 @@
   "prompt": "O `visit` do Zombie chamou o callback com 0 cards, e dois segundos depois havia 8. O que isso mostra?",
   "choices": [
    {
-    "text": "A loja desenhou os cards duas vezes",
+    "text": "A loja desenhou a lista duas vezes, vazia na primeira",
     "why": "Houve um desenho só; ele aconteceu depois do callback, quando `/api/products` respondeu."
    },
    {
-    "text": "A ideia de página carregada do Zombie não incluía a requisição de que os cards precisam",
+    "text": "Para ele, carregado não incluía a requisição dos cards",
     "why": "Certo. O log dele disse que o laço de eventos estava vazio antes de o `GET /api/products` sair."
    },
    {
-    "text": "O Zombie não consegue rodar o `app.js`",
+    "text": "O Zombie não roda o `app.js`, então outra coisa os desenhou",
     "why": "Rodou: oito cards apareceram dois segundos depois, desenhados por esse script."
    },
    {
-    "text": "O servidor demorou na primeira requisição",
+    "text": "O servidor demorou a responder a primeira requisição da página",
     "why": "As requisições foram rápidas; só começaram depois de o Zombie já ter chamado o callback."
    }
   ]
@@ -78,19 +78,19 @@
   "prompt": "O que o `npm view` mostrou sobre o estado do Zombie.js?",
   "choices": [
    {
-    "text": "Uma versão no mês passado, construída sobre o jsdom 30",
+    "text": "Uma versão no mês passado, construída sobre o mesmo jsdom 30 desta aula",
     "why": "A versão mais nova é a 6.1.4, e ela fixa o jsdom 11.12.0."
    },
    {
-    "text": "Que foi removido do npm",
+    "text": "Que foi removido do npm e não instala mais",
     "why": "Ele continua lá e continua instalando, com uma tela de avisos de obsolescência."
    },
    {
-    "text": "A última versão, 6.1.4, saiu em novembro de 2018 e fixa o jsdom 11.12.0",
+    "text": "Última versão em 2018, com jsdom 11.12.0",
     "why": "Certo. Dezenove versões maiores do jsdom atrás, com um `request` obsoleto por baixo."
    },
    {
-    "text": "É mantido pela equipe do Playwright",
+    "text": "Que a equipe por trás do Playwright o mantém agora",
     "why": "Os mantenedores são os próprios autores, e nada foi publicado desde 2018."
    }
   ]
@@ -149,7 +149,7 @@
     "why": "Certo. Passar no HtmlUnit é passar no Rhino e no DOM do HtmlUnit, não no JavaScriptCore e no WebKit do Safari."
    },
    {
-    "text": "Que o defeito é do Safari, não da página",
+    "text": "Que o defeito está no Safari, e não na página",
     "why": "A suíte nunca rodou no Safari, então não tem evidência de onde está a falha."
    },
    {
@@ -172,7 +172,7 @@
   "prompt": "Um script abre a loja com `runScripts: 'dangerously'` e deixa de fora `resources: 'usable'`. O que acontece?",
   "choices": [
    {
-    "text": "O jsdom se recusa a iniciar sem as duas opções",
+    "text": "O jsdom se recusa a iniciar se as duas opções não vierem juntas",
     "why": "Cada opção é independente; o jsdom inicia sem problema com qualquer uma."
    },
    {
@@ -184,7 +184,7 @@
     "why": "Certo. Sem ela o jsdom não carrega nenhum sub-recurso, scripts em `<script src>` incluídos."
    },
    {
-    "text": "Os scripts embutidos falham e os externos rodam",
+    "text": "Os scripts embutidos falham enquanto os externos rodam normalmente",
     "why": "É o contrário: os embutidos rodam, e os externos não são buscados."
    }
   ]
@@ -193,19 +193,19 @@
   "prompt": "O primeiro `simulated/home.mjs` terminou com `ReferenceError: fetch is not defined`, embora o Node 22 tenha `fetch`. Por quê?",
   "choices": [
    {
-    "text": "O `fetch` do Node precisa de uma flag na versão 22",
+    "text": "O `fetch` do Node ainda precisa de uma flag experimental na versão 22",
     "why": "O Node 22 tem `fetch` sem flag; o próprio `shop.mjs` o chama."
    },
    {
-    "text": "O servidor da loja não aceita requisições do jsdom",
+    "text": "O servidor da loja recusa requisições que não venham de um navegador",
     "why": "Nenhuma requisição foi enviada; o erro veio antes."
    },
    {
-    "text": "O `app.js` rodou na janela do jsdom, que não tem `fetch` próprio",
+    "text": "A janela da página é a do jsdom, e ela não tem `fetch`",
     "why": "Certo. Os globais da página são do jsdom, não do Node, e o jsdom 30.1.2 não implementa `fetch`."
    },
    {
-    "text": "O Node em uso é mais velho do que o jsdom 30.1.2 suporta",
+    "text": "O Node em uso é mais velho que as versões que o jsdom 30.1.2 suporta",
     "why": "O npm avisou sobre o 22.22.0, mas o script corrigido rodou nesse mesmo Node sem erro."
    }
   ]
@@ -239,19 +239,19 @@
   "prompt": "Acima de 600 pixels o botão Menu tem `display: none`. O `click()` do jsdom nele mudou `aria-expanded` para true. Por que conseguiu?",
   "choices": [
    {
-    "text": "O jsdom não sabia que o botão estava escondido",
+    "text": "O jsdom não sabia que o CSS escondia o botão",
     "why": "Sabia: o `getComputedStyle` informou `display` como `none` uma linha antes."
    },
    {
-    "text": "O `click()` dele manda o evento direto ao elemento, sem ponteiro que caia em algum lugar",
+    "text": "O `click()` dele vai direto ao elemento, sem ponteiro",
     "why": "Certo. Nada pergunta se o elemento está visível, coberto ou com tamanho zero; o clique do Playwright pergunta as três coisas."
    },
    {
-    "text": "A media query o escondia só em celulares",
+    "text": "A media query do `style.css` o esconde em celulares e em nenhum outro lugar",
     "why": "Acima de 600 pixels ele fica escondido para todos; o Chromium se recusou a clicar com 1280."
    },
    {
-    "text": "O jsdom esperou o botão ficar visível",
+    "text": "O jsdom esperou o botão ficar visível e então clicou nele",
     "why": "O jsdom não espera sozinho, e o botão nunca ficou visível."
    }
   ]
@@ -302,11 +302,11 @@
   "prompt": "Qual destas verificações poderia passar de um teste de Playwright para um teste no jsdom sem perder nada?",
   "choices": [
    {
-    "text": "Nada na página inicial é mais largo que uma janela de 390 pixels",
+    "text": "Nada na página inicial é mais largo que uma janela de celular de 390 pixels",
     "why": "Largura pede layout; o jsdom responderia 0 e passaria."
    },
    {
-    "text": "O botão Menu abre a navegação num celular",
+    "text": "O botão Menu abre e fecha a navegação quando a tela é de celular",
     "why": "Depende de uma media query e de um clique que uma pessoa consegue dar, e o jsdom não modela nenhum dos dois."
    },
    {
@@ -314,7 +314,7 @@
     "why": "Certo. Ele lê a árvore que o servidor mandou, que é idêntica nos dois."
    },
    {
-    "text": "A busca mostra os resultados depois que a última requisição responde",
+    "text": "A busca mostra os resultados só depois que a última requisição responde",
     "why": "A corrida da aula 3 depende de requisições de verdade numa página de verdade; por um shim ela testaria o shim."
    }
   ]
@@ -335,7 +335,7 @@
     "why": "O rótulo está no DOM, e o jsdom o lê como qualquer navegador."
    },
    {
-    "text": "Que o teste precisava de uma espera maior",
+    "text": "Que o teste precisava de uma espera maior para o banner sumir sozinho",
     "why": "Nenhuma espera ajuda: o banner nunca sai, e o jsdom nunca pergunta onde as coisas estão."
    }
   ]

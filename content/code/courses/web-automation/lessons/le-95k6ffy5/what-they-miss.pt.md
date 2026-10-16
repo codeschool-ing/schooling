@@ -64,8 +64,8 @@ after clicking Search: /
 
 Leia as cinco primeiras linhas juntas. **O jsdom conhece a regra e não consegue aplicá-la**: ele
 casou `min-width: 24rem` com a cesta e até converteu para 384px, e depois informa a cesta com 0 de
-largura e a página com 0 de largura. O `innerWidth` é 1024 porque é o número que o jsdom sempre
-informa, não porque alguma coisa foi diagramada nele. Então a verificação da aula 7 passa: 0 não é
+largura e a página com 0 de largura. O `innerWidth` é 1024 porque é o número que o jsdom informa
+por padrão, não porque alguma coisa foi diagramada nele. Então a verificação da aula 7 passa: 0 não é
 mais que 360. A mesma página falhou nela no Chromium, com 400.
 
 **É o pior resultado que um teste pode dar: verde numa página quebrada.** Nada na saída avisa.

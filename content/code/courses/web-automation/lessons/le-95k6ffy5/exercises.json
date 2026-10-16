@@ -89,22 +89,22 @@
   "prompt": "Zombie's `visit` called back with 0 cards, and two seconds later there were 8. What does that show?",
   "choices": [
    {
-    "text": "The shop drew the cards twice",
+    "text": "The shop drew the list twice, empty the first time",
     "correct": false,
     "why": "There was one drawing; it happened after the callback, when `/api/products` answered."
    },
    {
-    "text": "Zombie's idea of a loaded page did not include the request the cards need",
+    "text": "Its idea of loaded left out the request for the cards",
     "correct": true,
     "why": "Right. Its log said the event loop was empty before `GET /api/products` went out."
    },
    {
-    "text": "Zombie cannot run `app.js`",
+    "text": "Zombie cannot run `app.js`, so something else drew them",
     "correct": false,
     "why": "It ran it: eight cards appeared two seconds later, drawn by that script."
    },
    {
-    "text": "The server was slow on the first request",
+    "text": "The server was slow to answer the first request of the page",
     "correct": false,
     "why": "The requests were fast; they simply started after Zombie had already called back."
    }
@@ -120,22 +120,22 @@
   "prompt": "What did `npm view` show about the state of Zombie.js?",
   "choices": [
    {
-    "text": "A release last month, built on jsdom 30",
+    "text": "A release last month, built on the same jsdom 30 as this lesson",
     "correct": false,
     "why": "The newest release is 6.1.4, and it pins jsdom 11.12.0."
    },
    {
-    "text": "That it was removed from npm",
+    "text": "That it was removed from npm and no longer installs",
     "correct": false,
     "why": "It is still there and still installs, with a screen of deprecation warnings."
    },
    {
-    "text": "Its last release, 6.1.4, came out in November 2018 and pins jsdom 11.12.0",
+    "text": "Last release 2018, pinning jsdom 11.12.0",
     "correct": true,
     "why": "Right. Nineteen major versions of jsdom behind, with a deprecated `request` underneath."
    },
    {
-    "text": "It is maintained by the Playwright team",
+    "text": "That the team behind Playwright maintains it now",
     "correct": false,
     "why": "Its maintainers are its own authors, and nothing has been published since 2018."
    }
@@ -258,7 +258,7 @@
   "prompt": "A script opens the shop with `runScripts: 'dangerously'` and leaves out `resources: 'usable'`. What happens?",
   "choices": [
    {
-    "text": "jsdom refuses to start without both options",
+    "text": "jsdom refuses to start unless both options are given together",
     "correct": false,
     "why": "Each option is independent; jsdom starts happily with either."
    },
@@ -273,7 +273,7 @@
     "why": "Right. Without it jsdom loads no subresource, scripts in `<script src>` included."
    },
    {
-    "text": "The inline scripts fail and the external ones run",
+    "text": "The inline scripts fail while the external ones run as usual",
     "correct": false,
     "why": "It is the other way round: inline scripts run, and external ones are not fetched."
    }
@@ -289,22 +289,22 @@
   "prompt": "The first `simulated/home.mjs` ended with `ReferenceError: fetch is not defined`, although Node 22 has `fetch`. Why?",
   "choices": [
    {
-    "text": "Node's `fetch` needs a flag on version 22",
+    "text": "Node's `fetch` still needs an experimental flag on version 22",
     "correct": false,
     "why": "Node 22 has `fetch` with no flag; `shop.mjs` itself calls it."
    },
    {
-    "text": "The shop's server does not allow requests from jsdom",
+    "text": "The shop's server refuses requests that do not come from a browser",
     "correct": false,
     "why": "No request was sent; the error came before any."
    },
    {
-    "text": "`app.js` ran in jsdom's window, which has no `fetch` of its own",
+    "text": "The page's window is jsdom's, and it has no `fetch`",
     "correct": true,
     "why": "Right. The page's globals are jsdom's, not Node's, and jsdom 30.1.2 implements no `fetch`."
    },
    {
-    "text": "The Node in use is older than jsdom 30.1.2 supports",
+    "text": "The Node in use is older than the versions jsdom 30.1.2 supports",
     "correct": false,
     "why": "npm did warn about 22.22.0, but the fixed script ran on that same Node without an error."
    }
@@ -363,22 +363,22 @@
   "prompt": "Above 600 pixels the Menu button is `display: none`. jsdom's `click()` on it set `aria-expanded` to true. Why could it?",
   "choices": [
    {
-    "text": "jsdom did not know the button was hidden",
+    "text": "jsdom did not know that the stylesheet hid the button",
     "correct": false,
     "why": "It knew: `getComputedStyle` reported `display` as `none` one line earlier."
    },
    {
-    "text": "Its `click()` sends the event straight to the element, with no pointer to land anywhere",
+    "text": "Its `click()` goes straight to the element, with no pointer",
     "correct": true,
     "why": "Right. Nothing asks whether the element is visible, covered or zero-sized; Playwright's click asks all three."
    },
    {
-    "text": "The media query hid it only on phones",
+    "text": "The media query in `style.css` hides it on phones and nowhere else",
     "correct": false,
     "why": "Above 600 pixels it is hidden for everyone; Chromium refused to click it at 1280."
    },
    {
-    "text": "jsdom waited until the button became visible",
+    "text": "jsdom waited until the button became visible, then clicked it",
     "correct": false,
     "why": "jsdom has no auto-waiting, and the button never became visible."
    }
@@ -456,12 +456,12 @@
   "prompt": "Which of these checks could move from a Playwright test to a jsdom test without losing anything?",
   "choices": [
    {
-    "text": "Nothing on the home page is wider than a 390-pixel window",
+    "text": "Nothing on the home page is wider than a phone's 390-pixel window",
     "correct": false,
     "why": "Width needs layout; jsdom would answer 0 and pass."
    },
    {
-    "text": "The Menu button opens the navigation on a phone",
+    "text": "The Menu button opens and closes the navigation on a narrow phone",
     "correct": false,
     "why": "It depends on a media query and on a click a person can make, neither of which jsdom models."
    },
@@ -471,7 +471,7 @@
     "why": "Right. It reads the tree the server sent, which is identical in both."
    },
    {
-    "text": "Search shows its results after the last request answers",
+    "text": "Search shows its results only after the last of its requests answers",
     "correct": false,
     "why": "Lesson 3's race depends on real requests in a real page; through a shim it would test the shim."
    }
@@ -492,7 +492,7 @@
     "why": "The banner works perfectly; the trouble is where it is drawn."
    },
    {
-    "text": "That the Pay button is under something, which only layout can know",
+    "text": "That the Pay button is under something, which only layout knows",
     "correct": true,
     "why": "Right. jsdom's click goes straight to the element; a pointer lands on whatever is on top."
    },
@@ -502,7 +502,7 @@
     "why": "The label is in the DOM, and jsdom reads it like any browser."
    },
    {
-    "text": "That the test needed a longer wait",
+    "text": "That the test needed a longer wait for the banner to go away by itself",
     "correct": false,
     "why": "No wait helps: the banner never moves, and jsdom never asks where things are."
    }

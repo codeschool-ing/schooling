@@ -4,8 +4,8 @@ version: 1
 ---
 
 **O jsdom é o DOM e o padrão HTML, implementados em JavaScript para o Node.** Não há navegador
-por trás dele. É o único navegador simulado em uso amplo hoje, e a maioria das pessoas o roda de
-segunda mão: o ambiente de testes `jsdom` do Jest é um pacote, `jest-environment-jsdom`, construído
+por trás dele. É o navegador simulado que você tem mais chance de encontrar, e a maioria das pessoas o
+roda de segunda mão: o ambiente de testes `jsdom` do Jest é um pacote, `jest-environment-jsdom`, construído
 sobre ele.
 
 ```

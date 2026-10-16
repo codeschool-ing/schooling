@@ -4,7 +4,7 @@ version: 1
 ---
 
 Zombie.js went on npm in 2011 with a promise in its subtitle: "Insanely fast, headless full-stack
-testing using Node.js". For years it was what a Node developer meant by testing a page without a
+testing using Node.js". For years it was a common answer, in Node, to testing a page without a
 browser. **Today it is a tool to recognise in an old project, not one to start with**, and the
 registry says why before any code runs.
 

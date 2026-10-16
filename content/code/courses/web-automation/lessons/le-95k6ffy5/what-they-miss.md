@@ -64,7 +64,7 @@ after clicking Search: /
 
 Read the first five lines together. **jsdom knows the rule and cannot apply it**: it matched
 `min-width: 24rem` to the basket and even converted it to 384px, and then reports the basket as 0
-wide and the page as 0 wide. `innerWidth` is 1024 because that is the number jsdom always reports,
+wide and the page as 0 wide. `innerWidth` is 1024 because that is the number jsdom reports by default,
 not because anything was laid out in it. So lesson 7's check passes: 0 is not more than 360. The
 same page failed it in Chromium at 400.
 

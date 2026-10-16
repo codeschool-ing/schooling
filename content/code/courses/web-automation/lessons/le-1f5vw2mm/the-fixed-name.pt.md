@@ -206,9 +206,9 @@ delas:
 - **depende da história.** O teste não tem defeito que se veja lendo o código. Falha por causa de
   uma execução anterior, talvez de outra pessoa;
 - **depende do ambiente.** O mesmo arquivo fica verde com uma loja nova e vermelho com uma
-  reaproveitada. Num servidor de build, onde `CI` está definida e uma loja nova sobe toda vez, ele
-  passaria por meses, e falharia no primeiro dia em que alguém apontasse a suíte para um ambiente
-  de teste compartilhado cujo banco nunca é esvaziado;
+  reaproveitada. Num servidor de build, onde `CI` está definida, uma loja nova sobe toda vez e ele
+  passaria por meses. Falharia no primeiro dia em que alguém apontasse a suíte para um ambiente de
+  teste compartilhado cujo banco nunca é esvaziado;
 - **repetir não adianta.** A Maria continua lá na terceira execução. A aula 14 chama de instável o
   teste que falha *de vez em quando*; este falha toda vez que as condições se cumprem, o que o
   torna mais fácil de diagnosticar e igualmente fácil de interpretar errado.

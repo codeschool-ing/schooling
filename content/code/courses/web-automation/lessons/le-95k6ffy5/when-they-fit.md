@@ -6,7 +6,8 @@ version: 1
 The case for a simulated browser has always been speed, and the case was made when starting a
 real one took seconds and a display. **Measure it before believing it.** The same check, open the
 home page and wait for the eight cards, ten times in jsdom and ten times in Chromium. Chromium is
-launched once and each page gets a fresh tab, which is how a Playwright worker runs a file. Save it
+launched once and each page gets a fresh tab, close to how a Playwright worker keeps one browser
+for many tests. Save it
 as `simulated/timing.mjs`:
 
 ```javascript
@@ -58,8 +59,8 @@ chromium: 10 pages in 1699 ms
 **jsdom was about twice as fast, not ten times.** Ten pages took 729 ms in jsdom against 1643 ms
 in Chromium, and 852 against 1699 the second time: a difference of under a tenth of a second a
 page. Chromium itself started in 76 and 95 ms. The seconds-long start that simulated browsers were
-written to avoid is not there any more; a headless browser on a laptop starts faster than a person
-can notice. Over five hundred page checks the gap would come to around three quarters of a
+written to avoid is not there any more: on this machine, a headless browser started in under a
+tenth of a second. Over five hundred page checks the gap would come to around three quarters of a
 minute, which is worth something in a suite run many times a day and nothing at all for a check
 that can no longer fail.
 
