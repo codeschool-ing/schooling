@@ -53,5 +53,9 @@ serve() {
   lab as "cd $(dir) && $ENVS && setsid bash -c '$2' </dev/null >/tmp/$1.log 2>&1 & echo \$! > /tmp/$1.pid"
   sleep "${WAIT:-3}"
 }
-stop() { lab as "kill -- -\$(cat /tmp/$1.pid) 2>/dev/null; sleep 1; rm -f /tmp/$1.pid" || true; }
+stop() {
+  lab as "p=\$(cat /tmp/$1.pid 2>/dev/null) || exit 0; kill -- -\$p 2>/dev/null
+    for i in 1 2 3 4 5 6 7 8 9 10; do kill -0 -- -\$p 2>/dev/null || break; sleep 0.5; done
+    kill -9 -- -\$p 2>/dev/null; rm -f /tmp/$1.pid" || true
+}
 block() { printf '##### %s\n' "$1"; }
