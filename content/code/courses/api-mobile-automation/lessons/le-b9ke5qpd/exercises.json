@@ -1,0 +1,654 @@
+[
+  {
+    "id": "ex-pebctgvh",
+    "version": 1,
+    "section": "architecture",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test calls $('id=example.tickets:id/refresh').click() against Tickets on the emulator. Which program performs the tap on the screen?",
+    "hint": "Four pieces, and only one of them is on the device.",
+    "choices": [
+      {
+        "text": "The Appium server, on your computer",
+        "correct": false,
+        "why": "The server receives the request and hands it to the driver; it never touches the screen."
+      },
+      {
+        "text": "The driver's own app on the device",
+        "correct": true,
+        "why": "Right. The UiAutomator2 driver installs a small server app there, and that app acts through Google's UiAutomator."
+      },
+      {
+        "text": "WebdriverIO, which sends the tap through adb",
+        "correct": false,
+        "why": "WebdriverIO speaks HTTP to the server and knows nothing of adb."
+      },
+      {
+        "text": "Tickets, which reads the test's request",
+        "correct": false,
+        "why": "Tickets has no idea it is being tested; nothing in its code listens for a test."
+      }
+    ]
+  },
+  {
+    "id": "ex-6247hcg3",
+    "version": 1,
+    "section": "architecture",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of an Appium run to what it is.",
+    "hint": "The table of section 02.",
+    "pairs": [
+      {
+        "left": "WebdriverIO",
+        "right": "a client library, in the test's own process"
+      },
+      {
+        "left": "appium",
+        "right": "a Node program listening on port 4723"
+      },
+      {
+        "left": "UiAutomator2",
+        "right": "the Android driver, a plug-in of the server"
+      },
+      {
+        "left": "WebDriverAgent",
+        "right": "what the iOS driver puts on the device"
+      }
+    ],
+    "right_distractors": [
+      "the app under test, rebuilt for testing"
+    ]
+  },
+  {
+    "id": "ex-98r4x91w",
+    "version": 1,
+    "section": "architecture",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says: Appium speaks one protocol for both platforms, so our Android suite will run against the iOS app once platformName says iOS. What is wrong with that?",
+    "hint": "What does a locator name, on each platform?",
+    "choices": [
+      {
+        "text": "iOS does not use WebDriver, so the requests change",
+        "correct": false,
+        "why": "The requests are the same; the XCUITest driver answers WebDriver like UiAutomator2 does."
+      },
+      {
+        "text": "Nothing, apart from automationName",
+        "correct": false,
+        "why": "The capabilities are the smaller half; the elements are named differently on each platform."
+      },
+      {
+        "text": "The elements have different names on iOS unless both apps were built to agree",
+        "correct": true,
+        "why": "Right. A resource id is Android's; iOS has accessibility identifiers, set separately by the developers."
+      },
+      {
+        "text": "The suite needs Appium's iOS client library",
+        "correct": false,
+        "why": "There is no separate iOS client; the same WebdriverIO drives both."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dx05q2b",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson start the server with npx appium --address 127.0.0.1?",
+    "hint": "What did 0.0.0.0 mean in the first start?",
+    "choices": [
+      {
+        "text": "So that the emulator can reach the server",
+        "correct": false,
+        "why": "The emulator never connects to Appium; the driver reaches the device through adb."
+      },
+      {
+        "text": "Because Appium will not start without one",
+        "correct": false,
+        "why": "It started without one in the same section, on every interface."
+      },
+      {
+        "text": "To make each request reach the server faster",
+        "correct": false,
+        "why": "Loopback is quick, but the reason in the section is who can reach the server at all."
+      },
+      {
+        "text": "So nobody else on the network can open sessions",
+        "correct": true,
+        "why": "Right. On 0.0.0.0 anybody who reaches port 4723 could install apps and read the screen."
+      }
+    ]
+  },
+  {
+    "id": "ex-z536pjrn",
+    "version": 1,
+    "section": "installing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On its first run, before JAVA_HOME was set, how many required fixes did the UiAutomator2 doctor report?",
+    "hint": "The summary line that grep kept.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bhpvy6t8",
+    "version": 1,
+    "section": "a-session-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You install the fake driver while the server is running, and the first session for it answers: Could not find a driver for automationName 'Fake'. What fixes it?",
+    "hint": "When does the server look at its drivers?",
+    "choices": [
+      {
+        "text": "Installing the driver again with npm install -g",
+        "correct": false,
+        "why": "It is installed in the project already; a global copy is a second place for the version to live."
+      },
+      {
+        "text": "Restarting the server",
+        "correct": true,
+        "why": "Right. The server loads its drivers when it starts, so one installed later is not there yet."
+      },
+      {
+        "text": "Writing appium:automationName with the prefix",
+        "correct": false,
+        "why": "A missing prefix gives invalid argument, before any driver is looked for."
+      },
+      {
+        "text": "Running npx appium driver doctor fake",
+        "correct": false,
+        "why": "The doctor checks what a driver needs on the computer; it does not load the driver into a running server."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy2k23pz",
+    "version": 1,
+    "section": "a-session-by-hand",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the requests of the session in section 04 in the order a test sends them.",
+    "hint": "Nothing can be found before there is a session, and nothing clicked before it is found.",
+    "items": [
+      "POST /session with the capabilities",
+      "POST /session/{id}/element with a strategy and a value",
+      "POST /session/{id}/element/{element}/click",
+      "GET /session/{id}/source",
+      "DELETE /session/{id}"
+    ]
+  },
+  {
+    "id": "ex-1t1bw12n",
+    "version": 1,
+    "section": "a-session-by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The capabilities {\"platformName\":\"Fake\",\"automationName\":\"Fake\"} were refused with invalid argument. Why?",
+    "hint": "Which of the two names does the W3C define?",
+    "choices": [
+      {
+        "text": "automationName has no appium: prefix",
+        "correct": true,
+        "why": "Right. platformName is standard; anything else needs a vendor's prefix, and Appium refuses it without."
+      },
+      {
+        "text": "platformName needs the appium: prefix as well",
+        "correct": false,
+        "why": "platformName is defined by the W3C, so it is written without a prefix."
+      },
+      {
+        "text": "The fake driver had not been installed yet",
+        "correct": false,
+        "why": "That gives a different error, about finding no driver; the names were refused before any driver was looked for."
+      },
+      {
+        "text": "The body has to be sent as a form, not as JSON",
+        "correct": false,
+        "why": "WebDriver bodies are JSON, and the request that worked sent JSON too."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzsjtq6f",
+    "version": 1,
+    "section": "a-session-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A find answers no such element with the status 404. What, exactly, does that tell you?",
+    "hint": "When did the server look?",
+    "choices": [
+      {
+        "text": "The app has no element with that id",
+        "correct": false,
+        "why": "It may have one that was not drawn yet, or one on another screen, like remind."
+      },
+      {
+        "text": "The session ended before the find arrived",
+        "correct": false,
+        "why": "An ended session answers invalid session id, as section 04 showed after the DELETE."
+      },
+      {
+        "text": "Nothing on the screen matched at that moment",
+        "correct": true,
+        "why": "Right, and nothing more. Whether it would have appeared a second later is what a wait finds out."
+      },
+      {
+        "text": "The driver does not know the id strategy",
+        "correct": false,
+        "why": "An unknown strategy is a different error; id is the first one every driver answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztgdymcj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test crashed after creating its session and before sending DELETE. The next test, on the same real phone, waits and fails to start its session. What is the likeliest cause?",
+    "hint": "What does the DELETE free?",
+    "choices": [
+      {
+        "text": "The crash uninstalled the app from the phone",
+        "correct": false,
+        "why": "A crashed client cannot reach the phone at all; it only stopped talking to the server."
+      },
+      {
+        "text": "adb forgets a device after a failed test",
+        "correct": false,
+        "why": "adb knows nothing about tests; it keeps listing the device."
+      },
+      {
+        "text": "The Appium server stops after any crashed client",
+        "correct": false,
+        "why": "The server kept running; a client crashing is invisible to it until the session times out."
+      },
+      {
+        "text": "The old session is still open and holds the phone",
+        "correct": true,
+        "why": "Right. Until the idle timeout closes it, the device is busy with a session nobody is using."
+      }
+    ]
+  },
+  {
+    "id": "ex-qv7gms8s",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the test ask boxoffice for sh-103's seats instead of expecting the text 4 seats left?",
+    "hint": "What happens to sh-103's seats when somebody places an order?",
+    "choices": [
+      {
+        "text": "The seats left depend on which tests ran before",
+        "correct": true,
+        "why": "Right. Four is true after a restart and false after an order, while screen and API must agree either way."
+      },
+      {
+        "text": "Appium cannot read a number from the screen",
+        "correct": false,
+        "why": "getText reads any text, digits included."
+      },
+      {
+        "text": "Tickets rounds the seats it shows",
+        "correct": false,
+        "why": "Tickets prints seatsLeft as boxoffice sent it; Shows.kt does no arithmetic on it."
+      },
+      {
+        "text": "To make the test finish sooner",
+        "correct": false,
+        "why": "The extra request costs time; it is there for correctness."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwt10ywf",
+    "version": 1,
+    "section": "first-test",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the recorded run with no device, how many seconds did the UiAutomator2 driver wait for a device on each attempt before giving up?",
+    "hint": "The message gives it in milliseconds.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-hj5xre5j",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The driver gave up on finding a device after 20 seconds, yet the recorded run took 85 seconds to fail. Where did the rest go?",
+    "hint": "Count the timestamped lines.",
+    "choices": [
+      {
+        "text": "node:test ran the failing test four times",
+        "correct": false,
+        "why": "node:test ran the hook once; the report shows one test, failed in its hook."
+      },
+      {
+        "text": "WebdriverIO asked for the session three more times",
+        "correct": true,
+        "why": "Right. It retries a session that fails to start, about twenty seconds each; connectionRetryCount: 0 stops that."
+      },
+      {
+        "text": "adb needed a minute to start its own server",
+        "correct": false,
+        "why": "adb starts in a moment; the driver was asking it again and again for a device that was not there."
+      },
+      {
+        "text": "The test waited for boxoffice, which was not running",
+        "correct": false,
+        "why": "The fetch to boxoffice comes after the session, and the test never reached it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf9zfe27",
+    "version": 1,
+    "section": "locators-and-waits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the model, $('~Refresh').isExisting() printed false, although the refresh button is there. Why?",
+    "hint": "What does ~ ask for on Android?",
+    "choices": [
+      {
+        "text": "Accessibility id is a strategy for iOS apps and has no meaning on Android",
+        "correct": false,
+        "why": "On Android it means the content description; it works on both platforms."
+      },
+      {
+        "text": "Nothing in it has that description",
+        "correct": true,
+        "why": "Right. ~ asks for an accessibility name, and the model, like Tickets, gives none."
+      },
+      {
+        "text": "~ needs the package name in front, like id=",
+        "correct": false,
+        "why": "The package goes in front of a resource id, not of a description."
+      },
+      {
+        "text": "The button is hidden in the model",
+        "correct": false,
+        "why": "Only the banner and the error line are hidden; the button was found by id and clicked."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgrhadxp",
+    "version": 1,
+    "section": "locators-and-waits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons the lesson puts XPath last on Android?",
+    "hint": "One reason is about change, one about cost.",
+    "choices": [
+      {
+        "text": "It describes positions, which move when the layout does",
+        "correct": true,
+        "why": "Right. A designer who adds a row breaks every path that counted rows."
+      },
+      {
+        "text": "The device has to write out the whole screen as XML to answer it",
+        "correct": true,
+        "why": "Right. UiAutomator has no XPath of its own, so the whole tree is built and searched."
+      },
+      {
+        "text": "UiAutomator2 does not accept XPath at all",
+        "correct": false,
+        "why": "It accepts it; the XPath of section 06 found the third row on the model, and UiAutomator2 answers the same strategy."
+      },
+      {
+        "text": "An XPath cannot name a resource id",
+        "correct": false,
+        "why": "//*[@resource-id='…'] does; it is still slower than asking for the id directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y6nvbcw",
+    "version": 1,
+    "section": "locators-and-waits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test does await driver.pause(5000) before tapping the third row. It passes on your emulator and fails on the slower CI device about one run in five. What is the fix?",
+    "hint": "What is the test actually waiting for?",
+    "choices": [
+      {
+        "text": "Raise the pause to fifteen seconds",
+        "correct": false,
+        "why": "It fails less and wastes fifteen seconds on every run, and a slower day breaks it again."
+      },
+      {
+        "text": "Retry the whole test when it fails",
+        "correct": false,
+        "why": "A retry hides the race instead of removing it, and doubles the time of a real failure."
+      },
+      {
+        "text": "Wait for a row to be displayed, with a deadline",
+        "correct": true,
+        "why": "Right. It returns the moment the list is drawn, on any device, and fails with a message when it is not."
+      },
+      {
+        "text": "Add an implicit wait of thirty seconds as well as the pause",
+        "correct": false,
+        "why": "Two layers of waiting multiply, and the pause still wastes five seconds every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmj1qc4m",
+    "version": 1,
+    "section": "locators-and-waits",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To wait until a progress indicator has gone, WebdriverIO's waitForDisplayed takes the option { ___: true }.",
+    "hint": "It turns the condition the other way round.",
+    "blanks": [
+      {
+        "accept": [
+          "reverse"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ja2zr2bs",
+    "version": 1,
+    "section": "page-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the check that the seats equal what boxoffice reports belong?",
+    "hint": "Who decides what the answer should be?",
+    "choices": [
+      {
+        "text": "Inside ShowScreen.seats(), so every test gets it",
+        "correct": false,
+        "why": "Then every test that reads the seats carries one test's expectation, including tests that expect something else."
+      },
+      {
+        "text": "In ListScreen.open(), right after the tap",
+        "correct": false,
+        "why": "The list screen knows how to open a show, not what any test expects to find there."
+      },
+      {
+        "text": "In the test itself, beside its other checks",
+        "correct": true,
+        "why": "Right. The screen answers seats(); the test decides what the answer must be."
+      },
+      {
+        "text": "In a helper that every screen object calls before it returns",
+        "correct": false,
+        "why": "That is an assertion inside the screens again, one level further away."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j17xj81",
+    "version": 1,
+    "section": "page-objects",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A developer renames the resource id title to show_title. What do screen objects save you?",
+    "hint": "How many times is the id written?",
+    "choices": [
+      {
+        "text": "The rename is found by WebdriverIO without any change",
+        "correct": false,
+        "why": "Nothing finds a renamed id on its own; a changed id is a changed locator."
+      },
+      {
+        "text": "Editing every test: only the screen classes change",
+        "correct": true,
+        "why": "Right. The id is written once, in the screens, and the tests never mention it."
+      },
+      {
+        "text": "Running the tests on the emulator at all",
+        "correct": false,
+        "why": "Screen objects change how the code is arranged, not where it runs."
+      },
+      {
+        "text": "The tests stop depending on Tickets's ids",
+        "correct": false,
+        "why": "They still depend on them, through the screens; that is why the screens change."
+      }
+    ]
+  },
+  {
+    "id": "ex-dk7s4e90",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session request answers Could not find a connected Android device in 20000ms, and the emulator window is open in front of you. What do you check first?",
+    "hint": "Who told the driver there was no device?",
+    "choices": [
+      {
+        "text": "curl localhost:4723/status",
+        "correct": false,
+        "why": "It says the server is ready, which it was; it says nothing about devices."
+      },
+      {
+        "text": "npx appium driver doctor uiautomator2",
+        "correct": false,
+        "why": "The doctor checks the SDK and Java on the computer, which were fine; it never asks for a device."
+      },
+      {
+        "text": "adb devices",
+        "correct": true,
+        "why": "Right. The driver asks adb, so adb's answer is the one to see; an empty list means kill-server and look again."
+      },
+      {
+        "text": "The capabilities, for a missing prefix",
+        "correct": false,
+        "why": "A missing prefix is refused at once as invalid argument, before any device is looked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dxs8kp0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each error to the piece it points at.",
+    "hint": "Section 02's four pieces, plus the locator.",
+    "pairs": [
+      {
+        "left": "All non-standard capabilities should have a vendor prefix",
+        "right": "the capabilities the client sent"
+      },
+      {
+        "left": "Could not find a driver for automationName",
+        "right": "the drivers the server loaded"
+      },
+      {
+        "left": "Could not find a connected Android device",
+        "right": "the device, as adb sees it"
+      },
+      {
+        "left": "no such element",
+        "right": "the locator, at that moment"
+      }
+    ],
+    "right_distractors": [
+      "boxoffice's API"
+    ]
+  },
+  {
+    "id": "ex-1m7nj5te",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The WebdriverIO script of section 06 ran cleanly against the fake driver and found every element it looked for by id. What has that proved about Tickets?",
+    "hint": "Where did the elements come from?",
+    "choices": [
+      {
+        "text": "That Tickets has those resource ids",
+        "correct": false,
+        "why": "The ids came from a model written by hand; Tickets could have been renamed since."
+      },
+      {
+        "text": "Nothing about the app; only that client, server and protocol work together",
+        "correct": true,
+        "why": "Right. The fake driver is a stand-in, and the model is only as true as whoever wrote it."
+      },
+      {
+        "text": "That the list of Tickets loads within three seconds",
+        "correct": false,
+        "why": "Nothing loaded; the model is an XML file read from disk."
+      },
+      {
+        "text": "That the same script will pass on the emulator",
+        "correct": false,
+        "why": "On the emulator it needs a built APK, a device and the real screen, none of which the fake had."
+      }
+    ]
+  },
+  {
+    "id": "ex-2k3q892j",
+    "version": 1,
+    "section": "installing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the setup of section 03 in the order that makes each step succeed.",
+    "hint": "The doctor needs the driver, and the server loads drivers when it starts.",
+    "items": [
+      "npm install --save-dev --save-exact appium@3.8.0 webdriverio@9.32.0",
+      "npx appium driver install uiautomator2@8.7.0",
+      "set JAVA_HOME, then npx appium driver doctor uiautomator2",
+      "npx appium --address 127.0.0.1",
+      "curl -s localhost:4723/status"
+    ]
+  }
+]
