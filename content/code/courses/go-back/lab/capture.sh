@@ -27,7 +27,7 @@ quiet() { lab exec "$1" "$2" >/dev/null 2>&1 || true; }
 put() { lab put "$1"; }
 show() { python3 "$FENCE" "$1" "$2" | lab put "$3"; }
 project() { lab project "$1" "$2"; }
-block() { printf '##### %s\n' "$1"; }
+block() { printf '\n##### %s\n' "$1"; }
 
 SERVER_PID=
 serve() {
