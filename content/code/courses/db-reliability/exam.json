@@ -1,0 +1,2697 @@
+[
+  {
+    "id": "ex-3paqx778",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A nightly job reports success every night. What does that prove about the backup?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "That the data can be restored",
+        "correct": false,
+        "why": "Only a restore proves that."
+      },
+      {
+        "text": "That the copy is complete",
+        "correct": false,
+        "why": "Nothing in an exit code says what the file holds."
+      },
+      {
+        "text": "That a program exited without complaining",
+        "correct": true,
+        "why": "Right: a statement about the job, not about the data."
+      },
+      {
+        "text": "That the copy is off-site",
+        "correct": false,
+        "why": "Where it lives is lesson 9's question."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qg43cfs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`pg_dump shop | gzip > shop.sql.gz` exits 0 although `pg_dump` failed. Why?",
+    "hint": "A pipeline's exit status.",
+    "choices": [
+      {
+        "text": "The pipeline reports gzip's status",
+        "correct": true,
+        "why": "Right: without pipefail, the last command's status is the pipeline's."
+      },
+      {
+        "text": "pg_dump never reports errors",
+        "correct": false,
+        "why": "It printed one and exited non-zero."
+      },
+      {
+        "text": "gzip repairs truncated input",
+        "correct": false,
+        "why": "gzip compresses whatever it was given."
+      },
+      {
+        "text": "The shell ignores stderr",
+        "correct": false,
+        "why": "Exit statuses are not on stderr."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfsvcx4v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which check catches a backup that holds the wrong database?",
+    "hint": "Lesson 1's three conditions.",
+    "choices": [
+      {
+        "text": "The file's size",
+        "correct": false,
+        "why": "A wrong database can be the right size."
+      },
+      {
+        "text": "The exit status",
+        "correct": false,
+        "why": "The job succeeded at dumping the wrong thing."
+      },
+      {
+        "text": "The file's timestamp",
+        "correct": false,
+        "why": "It was written tonight, and is still wrong."
+      },
+      {
+        "text": "A restore",
+        "correct": true,
+        "why": "Right: and questions only real data answers; counts and dates the live system can be compared with."
+      }
+    ]
+  },
+  {
+    "id": "ex-ege7nsnc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A logical dump of `shop` is restored on a brand-new server and fails on ownership. What was missing?",
+    "hint": "What lives outside every database.",
+    "choices": [
+      {
+        "text": "The indexes",
+        "correct": false,
+        "why": "A dump carries their definitions."
+      },
+      {
+        "text": "The roles",
+        "correct": true,
+        "why": "Right: the roles: globals, from pg_dumpall --globals-only; roles are not in any database's dump."
+      },
+      {
+        "text": "The WAL",
+        "correct": false,
+        "why": "A logical restore needs no WAL."
+      },
+      {
+        "text": "The sequences",
+        "correct": false,
+        "why": "A dump carries sequences and their values."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkkmk08x",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 2's 268 MB database took 7.3 seconds to restore. Restoring scales with the data. Roughly how many hours for a 1 TB database at the same rate (1 TB = 1,000,000 MB), to the nearest hour?",
+    "hint": "1,000,000 / 268 × 7.3 seconds.",
+    "value": 8,
+    "tolerance": 0.6,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-9w0jngz7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A dump made with `pg_dump -F___` can be restored selectively, one table at a time, with `pg_restore`.",
+    "hint": "The custom format's letter.",
+    "blanks": [
+      {
+        "accept": [
+          "c"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c3g61t5c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is an atomic snapshot of the whole data directory a usable backup of a running PostgreSQL?",
+    "hint": "As if the power had been cut.",
+    "choices": [
+      {
+        "text": "PostgreSQL pauses all writes during a snapshot",
+        "correct": false,
+        "why": "It does not know a snapshot is happening."
+      },
+      {
+        "text": "It is crash-consistent",
+        "correct": true,
+        "why": "Right: PostgreSQL recovers from it as from a power cut."
+      },
+      {
+        "text": "Snapshots skip open files",
+        "correct": false,
+        "why": "They copy blocks, whatever is open."
+      },
+      {
+        "text": "It includes a pg_dump",
+        "correct": false,
+        "why": "It is a copy of the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys2v5tz6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Data and WAL are on two volumes, snapshotted one after the other. What is the risk?",
+    "hint": "Every file from the same moment.",
+    "choices": [
+      {
+        "text": "The snapshot is too large",
+        "correct": false,
+        "why": "Size is not the problem."
+      },
+      {
+        "text": "The WAL is not needed",
+        "correct": false,
+        "why": "Recovery needs it."
+      },
+      {
+        "text": "Snapshots cannot hold WAL",
+        "correct": false,
+        "why": "They hold whatever is on the volume."
+      },
+      {
+        "text": "They are from two moments",
+        "correct": true,
+        "why": "Right: only a group snapshot taken atomically is crash-consistent."
+      }
+    ]
+  },
+  {
+    "id": "ex-vh8qx10n",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each copy with what it is.",
+    "hint": "Lessons 2 and 3.",
+    "pairs": [
+      {
+        "left": "pg_dump",
+        "right": "Rows and definitions, as SQL or a custom archive"
+      },
+      {
+        "left": "pg_basebackup",
+        "right": "A copy of the files of the whole cluster"
+      },
+      {
+        "left": "A volume snapshot",
+        "right": "Blocks at one instant, crash-consistent if atomic"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the roles only"
+    ]
+  },
+  {
+    "id": "ex-m0jbm0ze",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`archive_command` starts failing. What does the database do first?",
+    "hint": "Lesson 4's when-archiving-fails.",
+    "choices": [
+      {
+        "text": "Nothing visible; it keeps the segments",
+        "correct": true,
+        "why": "Right: no query fails while pg_wal fills."
+      },
+      {
+        "text": "Refuses writes at once",
+        "correct": false,
+        "why": "Only much later, when the disk is full."
+      },
+      {
+        "text": "Sends an e-mail",
+        "correct": false,
+        "why": "PostgreSQL sends no e-mail."
+      },
+      {
+        "text": "Switches to a slot",
+        "correct": false,
+        "why": "Archiving and slots are separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwfwk7xn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a quiet database, why might the last hour of changes exist only on the server?",
+    "hint": "A segment that is not full.",
+    "choices": [
+      {
+        "text": "Quiet databases do not write WAL",
+        "correct": false,
+        "why": "Every change writes WAL."
+      },
+      {
+        "text": "The archive is only read at night",
+        "correct": false,
+        "why": "It is written whenever a segment closes."
+      },
+      {
+        "text": "The current segment has not been archived",
+        "correct": true,
+        "why": "Right: archive_timeout closes it after a set time."
+      },
+      {
+        "text": "Checkpoints delete it",
+        "correct": false,
+        "why": "They recycle archived segments only."
+      }
+    ]
+  },
+  {
+    "id": "ex-snrwbky9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "How many MB of archive space does every closed WAL segment cost, however little is in it?",
+    "hint": "The default segment size.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-0f58jd1s",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`archive____` closes the current segment after a set time if anything was written to it.",
+    "hint": "The setting from lesson 4's quiet hour.",
+    "blanks": [
+      {
+        "accept": [
+          "_timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-72atzzxz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`pgbackrest verify` printed nothing and exited 0, with a damaged backup in the repository. What does the lesson's nightly job do instead?",
+    "hint": "The report is the result.",
+    "choices": [
+      {
+        "text": "Trusts the exit code",
+        "correct": false,
+        "why": "The exit code was 0 with a damaged backup."
+      },
+      {
+        "text": "Runs verify twice",
+        "correct": false,
+        "why": "Twice gives the same silence."
+      },
+      {
+        "text": "Compares file sizes",
+        "correct": false,
+        "why": "Sizes do not reveal a damaged file."
+      },
+      {
+        "text": "Reads its report",
+        "correct": true,
+        "why": "Right: reads the verbose report, accepting only status: ok; --verbose --output=text, and only an exact ok passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-8trxtkqe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does `repo1-retention-full=2` keep?",
+    "hint": "Two of something, and what depends on them.",
+    "choices": [
+      {
+        "text": "Two days of backups",
+        "correct": false,
+        "why": "Retention here counts full backups, not days."
+      },
+      {
+        "text": "Two copies of each file",
+        "correct": false,
+        "why": "It counts backups."
+      },
+      {
+        "text": "Two full backups",
+        "correct": true,
+        "why": "Right: with what depends on them; and the WAL needed to recover them."
+      },
+      {
+        "text": "Two repositories",
+        "correct": false,
+        "why": "Repositories are repo1, repo2."
+      }
+    ]
+  },
+  {
+    "id": "ex-49v7epp2",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each pgBackRest backup type with what it copies.",
+    "hint": "Lesson 5's backup-types.",
+    "pairs": [
+      {
+        "left": "full",
+        "right": "Every file"
+      },
+      {
+        "left": "diff",
+        "right": "Files changed since the last full"
+      },
+      {
+        "left": "incr",
+        "right": "Files changed since the last backup of any type"
+      }
+    ],
+    "right_distractors": [
+      "Only the WAL"
+    ]
+  },
+  {
+    "id": "ex-bsqve8wj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A PITR to just before transaction 742 refused to start: recovery ended before the target was reached. Why?",
+    "hint": "Where was 742?",
+    "choices": [
+      {
+        "text": "Its segment had not been archived yet",
+        "correct": true,
+        "why": "Right: it was in the segment the primary was still writing."
+      },
+      {
+        "text": "742 was a SELECT",
+        "correct": false,
+        "why": "SELECTs do not get a target of their own like this."
+      },
+      {
+        "text": "--target-exclusive is wrong",
+        "correct": false,
+        "why": "It is how to stop before the transaction."
+      },
+      {
+        "text": "The backup was too new",
+        "correct": false,
+        "why": "The backup was from before."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwg2pz27",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a recovery that stops before the end of the log start?",
+    "hint": "A segment name changes.",
+    "choices": [
+      {
+        "text": "A new database",
+        "correct": false,
+        "why": "It is the same cluster, on a new history."
+      },
+      {
+        "text": "A new timeline",
+        "correct": true,
+        "why": "Right: with a .history file recording the fork."
+      },
+      {
+        "text": "A replication slot",
+        "correct": false,
+        "why": "Recovery creates no slot."
+      },
+      {
+        "text": "A logical dump",
+        "correct": false,
+        "why": "Recovery is physical."
+      }
+    ]
+  },
+  {
+    "id": "ex-jhccqx81",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why use `--target-action=pause` for a PITR?",
+    "hint": "Look before you commit to it.",
+    "choices": [
+      {
+        "text": "To make recovery faster",
+        "correct": false,
+        "why": "Pausing makes nothing faster."
+      },
+      {
+        "text": "To keep the old primary running",
+        "correct": false,
+        "why": "It acts on the restored server."
+      },
+      {
+        "text": "To check the data before ending recovery",
+        "correct": true,
+        "why": "Right: promote only when the rows are right."
+      },
+      {
+        "text": "Because the target is required to pause",
+        "correct": false,
+        "why": "It is a choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-r85fmk7w",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put a point-in-time recovery from pgBackRest in order.",
+    "hint": "Lesson 6.",
+    "items": [
+      "Find the moment just before the mistake",
+      "Restore a base backup with a target",
+      "Let it replay the archive and pause",
+      "Check the rows",
+      "Promote, or move the target"
+    ],
+    "trap": "Promoting before checking makes the wrong history permanent."
+  },
+  {
+    "id": "ex-bfan2yxp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Backups are kept for 14 days. Why must restore drills run more often than that?",
+    "hint": "The longest a broken backup goes unnoticed.",
+    "choices": [
+      {
+        "text": "Good copies expire first",
+        "correct": true,
+        "why": "Right: A failure found later has expired every good copy; the drill interval must be shorter than retention."
+      },
+      {
+        "text": "Drills free disk space",
+        "correct": false,
+        "why": "They use space, briefly."
+      },
+      {
+        "text": "pgBackRest requires it",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Auditors ask for it weekly",
+        "correct": false,
+        "why": "The reason is arithmetic, not audit."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ts0034s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does a restore drill measure, besides that it worked?",
+    "hint": "A stopwatch.",
+    "choices": [
+      {
+        "text": "How large the dump was",
+        "correct": false,
+        "why": "Size is a detail; time is the number."
+      },
+      {
+        "text": "How many tables there are",
+        "correct": false,
+        "why": "That is checked, not measured."
+      },
+      {
+        "text": "The primary's CPU",
+        "correct": false,
+        "why": "The drill runs elsewhere."
+      },
+      {
+        "text": "How long it took",
+        "correct": true,
+        "why": "Right: the RTO actually achieved."
+      }
+    ]
+  },
+  {
+    "id": "ex-rr8y50zs",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 7's script appends each drill's result to `~/drills.___`, one line per drill.",
+    "hint": "A spreadsheet-friendly format.",
+    "blanks": [
+      {
+        "accept": [
+          "csv"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g7gh8r0t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is RPO?",
+    "hint": "Points backwards from the incident.",
+    "choices": [
+      {
+        "text": "How long recovery may take",
+        "correct": false,
+        "why": "That is RTO."
+      },
+      {
+        "text": "How much data",
+        "correct": true,
+        "why": "Right: as time, may be lost; \"at most five minutes of orders\"."
+      },
+      {
+        "text": "How often backups run",
+        "correct": false,
+        "why": "That is a schedule that serves the RPO."
+      },
+      {
+        "text": "How many replicas exist",
+        "correct": false,
+        "why": "That is a design."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tev9hzc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The business first answers \"none and none\" for RPO and RTO. What should follow?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Building synchronous replication everywhere",
+        "correct": false,
+        "why": "That is spending before deciding."
+      },
+      {
+        "text": "Costing each answer",
+        "correct": true,
+        "why": "Right: until a number gets signed; none and none has a price nobody pays."
+      },
+      {
+        "text": "Ignoring the answer",
+        "correct": false,
+        "why": "The answer starts a conversation."
+      },
+      {
+        "text": "Picking numbers yourself",
+        "correct": false,
+        "why": "The business signs them."
+      }
+    ]
+  },
+  {
+    "id": "ex-392cp0vj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which protects against a wrong `DELETE`, a replica or a backup with PITR?",
+    "hint": "Lesson 8's two numbers.",
+    "choices": [
+      {
+        "text": "The replica",
+        "correct": false,
+        "why": "It copies the mistake within milliseconds."
+      },
+      {
+        "text": "Both equally",
+        "correct": false,
+        "why": "Only one has the moment before."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "PITR does."
+      },
+      {
+        "text": "The backup with PITR",
+        "correct": true,
+        "why": "Right: a replica replays the delete."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mnhhtc0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Archiving every 5 minutes with archive_timeout, and the primary lost. At most how many minutes of changes are lost if the last segment was never closed?",
+    "hint": "The timeout.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-5g2wk0be",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does 3-2-1 ask for?",
+    "hint": "Copies, media, places.",
+    "choices": [
+      {
+        "text": "Three copies, two media, one off-site",
+        "correct": true,
+        "why": "Right: and lesson 10 adds one immutable, zero errors."
+      },
+      {
+        "text": "Three servers, two standbys, one primary",
+        "correct": false,
+        "why": "That is a cluster, not a backup rule."
+      },
+      {
+        "text": "Three backups a day",
+        "correct": false,
+        "why": "It counts copies, not runs."
+      },
+      {
+        "text": "Three days of retention",
+        "correct": false,
+        "why": "It is about places, not time."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7n1yekk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The second repository is encrypted and its key lived only in the first repository's machine, now lost. What is left?",
+    "hint": "Every byte is there.",
+    "choices": [
+      {
+        "text": "A working copy",
+        "correct": false,
+        "why": "Without the key it cannot even list its backups."
+      },
+      {
+        "text": "A copy readable with pgBackRest's default key",
+        "correct": false,
+        "why": "There is no default key."
+      },
+      {
+        "text": "Unreadable data",
+        "correct": true,
+        "why": "Right: the data is unreadable to anybody; the key must live where losing the backups does not lose it."
+      },
+      {
+        "text": "The WAL, unencrypted",
+        "correct": false,
+        "why": "The archive is encrypted too."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm6wwbfe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What did `chattr +i` on the off-site copy show?",
+    "hint": "Even root.",
+    "choices": [
+      {
+        "text": "It encrypted the files",
+        "correct": false,
+        "why": "chattr changes attributes, not contents."
+      },
+      {
+        "text": "It made the backup faster",
+        "correct": false,
+        "why": "Speed is unaffected."
+      },
+      {
+        "text": "It moved the files off-site",
+        "correct": false,
+        "why": "It changes nothing about where they are."
+      },
+      {
+        "text": "Even root could not delete it",
+        "correct": true,
+        "why": "Right: root and pgBackRest's expire could not delete it; immutability stops mistakes and scripts too."
+      }
+    ]
+  },
+  {
+    "id": "ex-sq78q25r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why is `chattr +i` on the same machine not real immutability?",
+    "hint": "Who can remove the flag?",
+    "choices": [
+      {
+        "text": "The flag expires after a day",
+        "correct": false,
+        "why": "It stays until removed."
+      },
+      {
+        "text": "Only ext4 supports it",
+        "correct": false,
+        "why": "Support is not the weakness."
+      },
+      {
+        "text": "Root there clears the flag",
+        "correct": true,
+        "why": "Right: root on that machine clears the flag; real immutability lives where the attacker's credentials do not reach."
+      },
+      {
+        "text": "It slows down writes",
+        "correct": false,
+        "why": "Performance is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytj2k41n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A restore to just before the ransomware ran brought back a superuser `maint_svc` the intruder had created earlier. What does that teach?",
+    "hint": "The clean point.",
+    "choices": [
+      {
+        "text": "The intrusion came earlier",
+        "correct": true,
+        "why": "Right: the moment before the damage is not the moment before the intrusion; audit the restored database before letting anything connect."
+      },
+      {
+        "text": "PITR is broken",
+        "correct": false,
+        "why": "It restored exactly what was asked."
+      },
+      {
+        "text": "Superusers survive every restore",
+        "correct": false,
+        "why": "This one was in the data at that moment."
+      },
+      {
+        "text": "The backups were encrypted too",
+        "correct": false,
+        "why": "The backups were fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-1khy8rdp",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Put lesson 10's recovery from ransomware in order.",
+    "hint": "Isolate first, reconnect last.",
+    "items": [
+      "Isolate the affected machines",
+      "Preserve a copy of what is there",
+      "Find a clean place to restore into",
+      "Find a clean copy and check it",
+      "Restore, then audit",
+      "Change every credential, then reconnect"
+    ],
+    "trap": "Changing credentials before isolating lets the intruder watch the new ones arrive."
+  },
+  {
+    "id": "ex-1m2x9rca",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What should the off-site repository's credentials have in common with the production servers'?",
+    "hint": "Another credential.",
+    "choices": [
+      {
+        "text": "The same administrator account",
+        "correct": false,
+        "why": "Then one stolen account deletes both."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: whoever holds production's must not be able to delete the backups."
+      },
+      {
+        "text": "The same SSH key",
+        "correct": false,
+        "why": "Same problem."
+      },
+      {
+        "text": "The same password manager entry",
+        "correct": false,
+        "why": "Same problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hf5gc2n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What is a physical standby, in terms of earlier lessons?",
+    "hint": "Lesson 6's recovery, without a target.",
+    "choices": [
+      {
+        "text": "A nightly dump reloaded",
+        "correct": false,
+        "why": "That is logical."
+      },
+      {
+        "text": "A snapshot every minute",
+        "correct": false,
+        "why": "Snapshots are instants."
+      },
+      {
+        "text": "A never-ending recovery",
+        "correct": true,
+        "why": "Right: A base backup that never stops recovering; it replays the log as it arrives."
+      },
+      {
+        "text": "A second primary",
+        "correct": false,
+        "why": "It is read-only until promoted."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww3hpxvf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A standby with a slot has been stopped for a week. What happens on the primary?",
+    "hint": "The slot holds log.",
+    "choices": [
+      {
+        "text": "pg_wal grows",
+        "correct": true,
+        "why": "Right: pg_wal grows, unless the slot is capped; max_slot_wal_keep_size, at the cost of losing the slot."
+      },
+      {
+        "text": "Nothing; slots expire",
+        "correct": false,
+        "why": "Slots never expire by themselves."
+      },
+      {
+        "text": "The primary stops",
+        "correct": false,
+        "why": "Only when the disk fills."
+      },
+      {
+        "text": "The slot is moved to the archive",
+        "correct": false,
+        "why": "Slots do not archive."
+      }
+    ]
+  },
+  {
+    "id": "ex-j09qfk4d",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`max_slot_wal____size` caps how much log a replication slot may hold.",
+    "hint": "Keep.",
+    "blanks": [
+      {
+        "accept": [
+          "_keep_"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6xf8xa8m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After its slot was lost, how did lesson 13's standby avoid a rebuild?",
+    "hint": "Another source of old segments.",
+    "choices": [
+      {
+        "text": "It skipped the missing segments",
+        "correct": false,
+        "why": "A standby cannot skip log."
+      },
+      {
+        "text": "pg_rewind",
+        "correct": false,
+        "why": "That is for a diverged old primary."
+      },
+      {
+        "text": "A new slot recreated them",
+        "correct": false,
+        "why": "A slot cannot recreate removed log."
+      },
+      {
+        "text": "The archive supplied them",
+        "correct": true,
+        "why": "Right: restore_command fetched them from the archive; then it streamed again."
+      }
+    ]
+  },
+  {
+    "id": "ex-42ns2vqf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With `synchronous_commit = on` and a synchronous standby, when does a commit return?",
+    "hint": "Written, flushed, replayed.",
+    "choices": [
+      {
+        "text": "When the primary has flushed it",
+        "correct": false,
+        "why": "That is local."
+      },
+      {
+        "text": "When the standby has flushed it",
+        "correct": true,
+        "why": "Right: remote_apply would also wait for replay."
+      },
+      {
+        "text": "When the standby has replayed it",
+        "correct": false,
+        "why": "That is remote_apply."
+      },
+      {
+        "text": "At once",
+        "correct": false,
+        "why": "That is off."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mbv0e1n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`synchronous_standby_names = 'standby1'` and standby1 dies. What is the honest description of that configuration?",
+    "hint": "Or the database stops.",
+    "choices": [
+      {
+        "text": "Every commit is on two servers, always",
+        "correct": false,
+        "why": "It is on two servers, or not committed at all."
+      },
+      {
+        "text": "Two servers, or no writes",
+        "correct": true,
+        "why": "Right: an outage of the standby is an outage of the primary."
+      },
+      {
+        "text": "It falls back to async",
+        "correct": false,
+        "why": "PostgreSQL never does that by itself."
+      },
+      {
+        "text": "The standby is optional",
+        "correct": false,
+        "why": "It is required for every commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-72ng6btw",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A loop commits 36,000 rows one at a time against a synchronous standby 50 ms away. How many minutes does the waiting add?",
+    "hint": "36,000 × 0.05 s, then minutes.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-s0ba8n05",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which setting survives the loss of one of two synchronous standbys?",
+    "hint": "Lesson 12's quorum.",
+    "choices": [
+      {
+        "text": "'standby1'",
+        "correct": false,
+        "why": "That stops when standby1 is gone."
+      },
+      {
+        "text": "ANY 2 (standby1, standby2)",
+        "correct": false,
+        "why": "That needs both."
+      },
+      {
+        "text": "An empty list",
+        "correct": false,
+        "why": "That is asynchronous, not synchronous."
+      },
+      {
+        "text": "ANY 1 (standby1, standby2)",
+        "correct": true,
+        "why": "Right: either standby confirms."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9kyqftg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A session waiting on `SyncRep` is cancelled. What did its client get?",
+    "hint": "insert.log.",
+    "choices": [
+      {
+        "text": "A warning",
+        "correct": true,
+        "why": "Right: then INSERT 0 1; success, on a row the standby may not have."
+      },
+      {
+        "text": "An error, and no row",
+        "correct": false,
+        "why": "The row was committed locally."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The connected client was told."
+      },
+      {
+        "text": "A rollback",
+        "correct": false,
+        "why": "A commit cannot be rolled back."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rqjvm81",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Nobody has written for an hour. `now() - pg_last_xact_replay_timestamp()` on the standby says one hour. Is the standby behind?",
+    "hint": "Compare positions.",
+    "choices": [
+      {
+        "text": "Yes, by an hour",
+        "correct": false,
+        "why": "On an idle primary, the replay is current."
+      },
+      {
+        "text": "Yes, by one segment",
+        "correct": false,
+        "why": "Positions were equal in the lesson."
+      },
+      {
+        "text": "Not necessarily",
+        "correct": true,
+        "why": "Right: it measures the time since the last transaction."
+      },
+      {
+        "text": "It cannot be known",
+        "correct": false,
+        "why": "Comparing LSNs tells."
+      }
+    ]
+  },
+  {
+    "id": "ex-647kg6qb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why does a check that lists standbys more than 64 MB behind miss a dead standby?",
+    "hint": "pg_stat_replication.",
+    "choices": [
+      {
+        "text": "64 MB is too high",
+        "correct": false,
+        "why": "Any threshold misses a missing row."
+      },
+      {
+        "text": "pg_wal_lsn_diff ignores dead standbys",
+        "correct": false,
+        "why": "There is nothing to compute it on."
+      },
+      {
+        "text": "The check needs a slot",
+        "correct": false,
+        "why": "The view is what lacks the row."
+      },
+      {
+        "text": "A dead standby has no row",
+        "correct": true,
+        "why": "Right: start from the standbys that should exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0kft140",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put reading your own write from a standby in order.",
+    "hint": "Lesson 13.",
+    "items": [
+      "Commit on the primary",
+      "Read pg_current_wal_lsn() on the primary",
+      "Ask the standby if its replay passed it",
+      "Read there if so, or from the primary"
+    ],
+    "trap": "Reading the position before committing gives a position before the write."
+  },
+  {
+    "id": "ex-avtbm3x9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`write_lag` and `flush_lag` are tiny; `replay_lag` is minutes. Where is the problem?",
+    "hint": "The log arrives.",
+    "choices": [
+      {
+        "text": "The network",
+        "correct": false,
+        "why": "write_lag would be large."
+      },
+      {
+        "text": "The primary's disk",
+        "correct": false,
+        "why": "Not in these columns."
+      },
+      {
+        "text": "On the standby's replay",
+        "correct": true,
+        "why": "Right: paused, slow, or waiting on a query."
+      },
+      {
+        "text": "The archive",
+        "correct": false,
+        "why": "Streaming does not use it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0jyc7ht",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which kind of replication can copy from PostgreSQL 16 to 17?",
+    "hint": "Rows, not bytes.",
+    "choices": [
+      {
+        "text": "Logical",
+        "correct": true,
+        "why": "Right: it decodes the log into row changes."
+      },
+      {
+        "text": "Physical",
+        "correct": false,
+        "why": "Physical needs the same major version."
+      },
+      {
+        "text": "Cascading",
+        "correct": false,
+        "why": "That is physical, from a standby."
+      },
+      {
+        "text": "Synchronous",
+        "correct": false,
+        "why": "That is a mode, not a kind that crosses versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbv4hz74",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A column is added on the publisher first. What happens to the subscription?",
+    "hint": "DDL is not replicated.",
+    "choices": [
+      {
+        "text": "It adds the column",
+        "correct": false,
+        "why": "Subscriptions copy rows, not DDL."
+      },
+      {
+        "text": "It stops",
+        "correct": true,
+        "why": "Right: and its slot holds the log; add columns on the subscriber first."
+      },
+      {
+        "text": "It drops the new column's values",
+        "correct": false,
+        "why": "It refuses the row instead."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The worker fails and retries."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrs2kyq3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Put an upgrade by logical replication's switch in order.",
+    "hint": "Lesson 14's last section.",
+    "items": [
+      "Stop the writes",
+      "Wait until the slot is 0 bytes behind",
+      "Move the sequences past the old maximum",
+      "Disable the subscription",
+      "Point the application at the new version"
+    ],
+    "trap": "Sequences moved before writes stop can be overtaken."
+  },
+  {
+    "id": "ex-m28zkbwd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After the switch to 17, the first insert collides with order 1. What was forgotten?",
+    "hint": "Not a row.",
+    "choices": [
+      {
+        "text": "The primary key",
+        "correct": false,
+        "why": "It was copied with the schema."
+      },
+      {
+        "text": "The publication",
+        "correct": false,
+        "why": "It worked."
+      },
+      {
+        "text": "The sequence",
+        "correct": true,
+        "why": "Right: logical replication does not copy sequences."
+      },
+      {
+        "text": "The slot",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcjmga1r",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put lesson 15's three questions before a promotion in order.",
+    "hint": "Gone, data, twice.",
+    "items": [
+      "Is the primary really gone?",
+      "How much does the standby have?",
+      "Will anything promote a second time?"
+    ],
+    "trap": "Asking about data first can promote beside a live primary."
+  },
+  {
+    "id": "ex-h3smwjeg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After a failover, the old primary reboots. Why does it come back as a primary?",
+    "hint": "What is in its data directory?",
+    "choices": [
+      {
+        "text": "Nothing in it says anything happened",
+        "correct": true,
+        "why": "Right: no standby.signal, so it starts as what it was."
+      },
+      {
+        "text": "It reads the new timeline and promotes",
+        "correct": false,
+        "why": "It never looks at the other server."
+      },
+      {
+        "text": "Its slot tells it to",
+        "correct": false,
+        "why": "Slots do not decide roles."
+      },
+      {
+        "text": "pg_ctlcluster promotes it",
+        "correct": false,
+        "why": "It simply starts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qp64t0n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`pg_rewind` refused: neither checksums nor `wal_log_hints`. When must one of them be on?",
+    "hint": "Before.",
+    "choices": [
+      {
+        "text": "Just before the rewind",
+        "correct": false,
+        "why": "The divergent changes were already logged without it."
+      },
+      {
+        "text": "Only on the new primary",
+        "correct": false,
+        "why": "Either may be the old primary next time."
+      },
+      {
+        "text": "Never; rewind does not need them",
+        "correct": false,
+        "why": "It refused without them."
+      },
+      {
+        "text": "Before the failure",
+        "correct": true,
+        "why": "Right: it makes the log written from then on usable."
+      }
+    ]
+  },
+  {
+    "id": "ex-420sjy8h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On Ubuntu, `pg_rewind` failed at its first step without `--config-file`. Why?",
+    "hint": "Where is postgresql.conf?",
+    "choices": [
+      {
+        "text": "pg_rewind is not installed",
+        "correct": false,
+        "why": "It ran and failed."
+      },
+      {
+        "text": "In /etc/postgresql",
+        "correct": true,
+        "why": "Right: not in the data directory, where its single-user recovery looked."
+      },
+      {
+        "text": "The source server was down",
+        "correct": false,
+        "why": "It connected."
+      },
+      {
+        "text": "The target was a standby",
+        "correct": false,
+        "why": "It was the old primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpfdfqc6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes a switchover lose nothing?",
+    "hint": "A clean shutdown.",
+    "choices": [
+      {
+        "text": "Synchronous replication is turned on",
+        "correct": false,
+        "why": "Not needed for a clean switchover."
+      },
+      {
+        "text": "The standby gets the last checkpoint",
+        "correct": true,
+        "why": "Right: the primary waits for standbys to get its last checkpoint; then the standby has every byte."
+      },
+      {
+        "text": "pg_rewind runs first",
+        "correct": false,
+        "why": "No rewind is needed."
+      },
+      {
+        "text": "The application is stopped",
+        "correct": false,
+        "why": "Helpful, not what guarantees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g9mcyebj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Sequences log values ahead in batches. In the lesson, how many ids were skipped between 50001 and 50034?",
+    "hint": "Between, not counting either.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "ids"
+  },
+  {
+    "id": "ex-efr6xty2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a Patroni cluster, which node is the primary?",
+    "hint": "One key.",
+    "choices": [
+      {
+        "text": "The one with the lowest port",
+        "correct": false,
+        "why": "Ports do not decide."
+      },
+      {
+        "text": "The first one started",
+        "correct": false,
+        "why": "Only at bootstrap."
+      },
+      {
+        "text": "The one with most data",
+        "correct": false,
+        "why": "Lag only limits who may run for it."
+      },
+      {
+        "text": "The one holding the leader key",
+        "correct": true,
+        "why": "Right: and only while it renews it."
+      }
+    ]
+  },
+  {
+    "id": "ex-en3hcm8p",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With `ttl: 30` and `loop_wait: 10`, at most how many seconds can pass between a leader's last renewal and its key expiring?",
+    "hint": "The ttl.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-eq61h0kc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "etcd, a single member, stops. The PostgreSQL servers are healthy. What happens to writes without failsafe mode?",
+    "hint": "A leader that cannot renew.",
+    "choices": [
+      {
+        "text": "They stop: the leader demotes itself",
+        "correct": true,
+        "why": "Right: one etcd is a single point of failure for writes."
+      },
+      {
+        "text": "They continue on the leader",
+        "correct": false,
+        "why": "Only with failsafe mode, and all members answering."
+      },
+      {
+        "text": "A replica takes over",
+        "correct": false,
+        "why": "Nobody can take a key from a store that is down."
+      },
+      {
+        "text": "They go to all three nodes",
+        "correct": false,
+        "why": "There is never more than one primary by design."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmcnm1gv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The killed leader's Patroni starts again. What does it do?",
+    "hint": "It reads the key first.",
+    "choices": [
+      {
+        "text": "Promotes itself",
+        "correct": false,
+        "why": "The key names another node."
+      },
+      {
+        "text": "Waits for an operator",
+        "correct": false,
+        "why": "It acts on its own."
+      },
+      {
+        "text": "Rewinds and rejoins as a replica",
+        "correct": true,
+        "why": "Right: it saw another leader."
+      },
+      {
+        "text": "Deletes its data",
+        "correct": false,
+        "why": "pg_rewind was enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvzk89hx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`patronictl ... ___ --leader pg3 --candidate pg1 --force` moves the leader on purpose.",
+    "hint": "Planned, not after a failure.",
+    "blanks": [
+      {
+        "accept": [
+          "switchover"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9q6s0ka6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The leader's Patroni is frozen and its PostgreSQL keeps running. What happens?",
+    "hint": "The key expires.",
+    "choices": [
+      {
+        "text": "The cluster stops",
+        "correct": false,
+        "why": "Another node takes the key."
+      },
+      {
+        "text": "PostgreSQL stops with it",
+        "correct": false,
+        "why": "It is a separate process."
+      },
+      {
+        "text": "Nothing changes",
+        "correct": false,
+        "why": "The key expires and a replica promotes."
+      },
+      {
+        "text": "Two primaries",
+        "correct": true,
+        "why": "Right: until Patroni wakes; then its writes are rewound away."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xmm0ngq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What happened to the order the frozen old primary confirmed?",
+    "hint": "pg_rewind's job.",
+    "choices": [
+      {
+        "text": "Copied to the new leader",
+        "correct": false,
+        "why": "Nothing copies it."
+      },
+      {
+        "text": "Kept in a conflict table",
+        "correct": false,
+        "why": "There is none."
+      },
+      {
+        "text": "Discarded by the rewind",
+        "correct": true,
+        "why": "Right: unreported; a confirmed write, silently lost."
+      },
+      {
+        "text": "Still on the old primary",
+        "correct": false,
+        "why": "The rewind removed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t15c3dtm",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each fence with how it stops an old primary.",
+    "hint": "Lesson 17's table.",
+    "pairs": [
+      {
+        "left": "Watchdog",
+        "right": "Reboots the machine when Patroni stops resetting it"
+      },
+      {
+        "left": "STONITH",
+        "right": "Powers the machine off from outside"
+      },
+      {
+        "left": "Synchronous replication",
+        "right": "Leaves it unable to confirm a commit"
+      }
+    ],
+    "right_distractors": [
+      "Drops its replication slot"
+    ]
+  },
+  {
+    "id": "ex-sne378rn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does `watchdog: mode: required` matter?",
+    "hint": "Found at start-up.",
+    "choices": [
+      {
+        "text": "No device, no leadership",
+        "correct": true,
+        "why": "Right: a missing watchdog is found before a failover."
+      },
+      {
+        "text": "It speeds up failover",
+        "correct": false,
+        "why": "It changes nothing about timing."
+      },
+      {
+        "text": "It replaces etcd",
+        "correct": false,
+        "why": "It is a fence, not a store."
+      },
+      {
+        "text": "It makes Patroni restart PostgreSQL",
+        "correct": false,
+        "why": "It reboots the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnf7zk3y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why can't PostgreSQL simply accept a thousand connections?",
+    "hint": "One of these per connection.",
+    "choices": [
+      {
+        "text": "The protocol forbids it",
+        "correct": false,
+        "why": "It is a configured limit."
+      },
+      {
+        "text": "Each is a process with its own memory",
+        "correct": true,
+        "why": "Right: they compete instead of working."
+      },
+      {
+        "text": "Ports run out",
+        "correct": false,
+        "why": "One port serves all."
+      },
+      {
+        "text": "Licences",
+        "correct": false,
+        "why": "PostgreSQL has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-cp9cg0q7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In transaction mode, one client's `SET statement_timeout = '1ms'` cancelled another client's query. Why?",
+    "hint": "Where does session state live?",
+    "choices": [
+      {
+        "text": "PgBouncer broadcast it",
+        "correct": false,
+        "why": "It copies nothing."
+      },
+      {
+        "text": "statement_timeout is global",
+        "correct": false,
+        "why": "SET is per session."
+      },
+      {
+        "text": "It stayed on the pooled server connection",
+        "correct": true,
+        "why": "Right: use SET LOCAL inside transactions."
+      },
+      {
+        "text": "The second client inherited the first's role",
+        "correct": false,
+        "why": "Roles are unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-00q9xn7a",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each pool mode with what it breaks.",
+    "hint": "Lesson 18's table.",
+    "pairs": [
+      {
+        "left": "session",
+        "right": "Nothing"
+      },
+      {
+        "left": "transaction",
+        "right": "Session state such as SET and PREPARE"
+      },
+      {
+        "left": "statement",
+        "right": "Transactions of more than one statement"
+      }
+    ],
+    "right_distractors": [
+      "Replication"
+    ]
+  },
+  {
+    "id": "ex-ns17971x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In session mode, why did an extra query wait almost two seconds?",
+    "hint": "Who holds the connections?",
+    "choices": [
+      {
+        "text": "Sessions hold connections",
+        "correct": true,
+        "why": "Right: clients hold a connection for their whole session; it waited for a session to end, not a transaction."
+      },
+      {
+        "text": "Session mode is slower per query",
+        "correct": false,
+        "why": "Queries run at the same speed."
+      },
+      {
+        "text": "DISCARD ALL takes two seconds",
+        "correct": false,
+        "why": "It is quick."
+      },
+      {
+        "text": "PgBouncer restarted",
+        "correct": false,
+        "why": "It reloaded on SIGHUP without restarting."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2mcpzge",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which connection string reaches the primary among three hosts with no proxy?",
+    "hint": "libpq.",
+    "choices": [
+      {
+        "text": "host=primary",
+        "correct": false,
+        "why": "That name is just an address."
+      },
+      {
+        "text": "sslmode=require",
+        "correct": false,
+        "why": "Encryption, not role."
+      },
+      {
+        "text": "dbname=primary",
+        "correct": false,
+        "why": "That names a database."
+      },
+      {
+        "text": "Hosts and ports listed",
+        "correct": true,
+        "why": "Right: target_session_attrs=read-write; it keeps the first that accepts writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-xspqfp4b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "How does HAProxy know which node is the primary?",
+    "hint": "Patroni's REST API.",
+    "choices": [
+      {
+        "text": "It reads etcd",
+        "correct": false,
+        "why": "It asks each Patroni."
+      },
+      {
+        "text": "It checks /primary on each node",
+        "correct": true,
+        "why": "Right: 200 on the leader, 503 elsewhere."
+      },
+      {
+        "text": "It tries a write on each",
+        "correct": false,
+        "why": "It runs an HTTP check."
+      },
+      {
+        "text": "It is configured by hand after each failover",
+        "correct": false,
+        "why": "Then it would not follow failovers."
+      }
+    ]
+  },
+  {
+    "id": "ex-9am8hhtn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What can no proxy, VIP or connection string carry to a new primary?",
+    "hint": "held.log.",
+    "choices": [
+      {
+        "text": "New connections",
+        "correct": false,
+        "why": "Those are exactly what they redirect."
+      },
+      {
+        "text": "An open connection",
+        "correct": true,
+        "why": "Right: the session lived in a process on the old primary."
+      },
+      {
+        "text": "The data",
+        "correct": false,
+        "why": "Replication carries that."
+      },
+      {
+        "text": "The leader key",
+        "correct": false,
+        "why": "That stays in etcd."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9kesxmp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An order failed with \"connection lost\". What makes retrying it safe?",
+    "hint": "Was it committed?",
+    "choices": [
+      {
+        "text": "Retrying at once, many times",
+        "correct": false,
+        "why": "That hammers a new primary and can duplicate."
+      },
+      {
+        "text": "Using a longer timeout",
+        "correct": false,
+        "why": "It does not answer whether it committed."
+      },
+      {
+        "text": "Retrying on a replica",
+        "correct": false,
+        "why": "Replicas refuse writes."
+      },
+      {
+        "text": "A key chosen by the application",
+        "correct": true,
+        "why": "Right: a retry with the same key cannot duplicate it."
+      }
+    ]
+  },
+  {
+    "id": "ex-grxdzjy5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is DNS slow to move the application after a failover?",
+    "hint": "Somebody kept the answer.",
+    "choices": [
+      {
+        "text": "Cached answers",
+        "correct": true,
+        "why": "Right: answers are cached for the TTL or longer; resolvers and runtimes alike."
+      },
+      {
+        "text": "DNS records are read-only",
+        "correct": false,
+        "why": "They can be changed."
+      },
+      {
+        "text": "The new primary has no IP",
+        "correct": false,
+        "why": "It has one."
+      },
+      {
+        "text": "libpq ignores DNS",
+        "correct": false,
+        "why": "It resolves names."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvz54ytc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is a standby in another continent asynchronous?",
+    "hint": "Round trips.",
+    "choices": [
+      {
+        "text": "Asynchronous standbys copy less",
+        "correct": false,
+        "why": "They copy the same log."
+      },
+      {
+        "text": "Distance breaks streaming",
+        "correct": false,
+        "why": "Streaming works at any distance."
+      },
+      {
+        "text": "Every commit would wait",
+        "correct": true,
+        "why": "Right: A synchronous one would add its round trip to every commit; a tenth of a second or more each time."
+      },
+      {
+        "text": "Patroni forbids it",
+        "correct": false,
+        "why": "Latency forbids it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzdmhsmy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A report on a standby was cancelled by `conflict with recovery`. Which setting keeps it running, and at whose cost?",
+    "hint": "The primary keeps the rows.",
+    "choices": [
+      {
+        "text": "synchronous_commit, at the cost of latency",
+        "correct": false,
+        "why": "Unrelated to conflicts."
+      },
+      {
+        "text": "max_connections, at the cost of memory",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "archive_timeout, at the cost of disk",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "hot_standby_feedback",
+        "correct": true,
+        "why": "Right: at the cost of bloat on the primary; the primary's VACUUM keeps the rows the report needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw9sqjnp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A delayed replica of one hour. A table is dropped at 10:00 and noticed at 10:20. What now?",
+    "hint": "Pause first.",
+    "choices": [
+      {
+        "text": "Promote it at once",
+        "correct": false,
+        "why": "Promotion is not needed to read it."
+      },
+      {
+        "text": "Restore from the archive",
+        "correct": false,
+        "why": "Possible, and slower than the delayed replica."
+      },
+      {
+        "text": "Pause its replay and copy the table out",
+        "correct": true,
+        "why": "Right: within the hour, the replica still has it."
+      },
+      {
+        "text": "Nothing can be done",
+        "correct": false,
+        "why": "The delay is exactly for this."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ndtg8wt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did the cascaded standby lose customer 7's orders while the delayed one had them?",
+    "hint": "What does a cascade forward?",
+    "choices": [
+      {
+        "text": "Received log is forwarded at once",
+        "correct": true,
+        "why": "Right: the cascaded standby has no delay of its own."
+      },
+      {
+        "text": "The cascade is faster hardware",
+        "correct": false,
+        "why": "Same machine."
+      },
+      {
+        "text": "The delayed replica ignored the delete",
+        "correct": false,
+        "why": "It was waiting to apply it."
+      },
+      {
+        "text": "The cascade reads the primary",
+        "correct": false,
+        "why": "It reads the delayed standby."
+      }
+    ]
+  },
+  {
+    "id": "ex-8cn0x9f7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which tools protect against which failure? Choose all that are correct.",
+    "hint": "Lessons 6, 11 and 20.",
+    "choices": [
+      {
+        "text": "A delayed replica, against a mistake noticed within the delay",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "PITR from the archive, against a mistake noticed tomorrow",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A synchronous standby, against a wrong DELETE",
+        "correct": false,
+        "why": "It replays the delete at once."
+      },
+      {
+        "text": "A standby in another region, against losing a region",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7emv6rj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "How many minutes a month (30 days) of downtime does 99.9% allow, to the nearest minute?",
+    "hint": "00:43:12.",
+    "value": 43,
+    "tolerance": 0.5,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-dhpbee7h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a provider's SLA credit pay?",
+    "hint": "Whose revenue?",
+    "choices": [
+      {
+        "text": "Your lost revenue",
+        "correct": false,
+        "why": "Credits are a share of the bill."
+      },
+      {
+        "text": "A share of the provider's bill",
+        "correct": true,
+        "why": "Right: not the orders you did not take."
+      },
+      {
+        "text": "A free restore",
+        "correct": false,
+        "why": "Not what credits are."
+      },
+      {
+        "text": "A new instance",
+        "correct": false,
+        "why": "Not what credits are."
+      }
+    ]
+  },
+  {
+    "id": "ex-fksxcap2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a managed service, which backup is completely yours?",
+    "hint": "Same account, same credentials.",
+    "choices": [
+      {
+        "text": "The automatic snapshots",
+        "correct": false,
+        "why": "They live in the same account."
+      },
+      {
+        "text": "The read replica",
+        "correct": false,
+        "why": "It copies mistakes."
+      },
+      {
+        "text": "A dump kept elsewhere",
+        "correct": true,
+        "why": "Right: A logical dump stored outside the account; where the account's credentials do not reach."
+      },
+      {
+        "text": "The retention window",
+        "correct": false,
+        "why": "It is a setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2ft50e9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which are still your responsibility on a managed service? Choose all that are correct.",
+    "hint": "The last row of lesson 21's table.",
+    "choices": [
+      {
+        "text": "A wrong DELETE",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A leaked password",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Restarting the failed host",
+        "correct": false,
+        "why": "The provider runs the hosts."
+      },
+      {
+        "text": "The application reconnecting after a failover",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dqj5spd",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the parts of an incident in order.",
+    "hint": "Lesson 22.",
+    "items": [
+      "Detect",
+      "Decide",
+      "Communicate",
+      "Write it up"
+    ],
+    "trap": "The write-up waits until it is over."
+  },
+  {
+    "id": "ex-x6n7mg6m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes an incident message trustworthy?",
+    "hint": "Three rules.",
+    "choices": [
+      {
+        "text": "Facts and kept appointments",
+        "correct": true,
+        "why": "Right: facts, no guessed cause, and the next update kept; and no promised time to recovery nobody measured."
+      },
+      {
+        "text": "Technical detail",
+        "correct": false,
+        "why": "Use the readers' words."
+      },
+      {
+        "text": "A promised recovery time",
+        "correct": false,
+        "why": "Never one nobody has measured."
+      },
+      {
+        "text": "Waiting until everything is known",
+        "correct": false,
+        "why": "Early and repeated beats complete."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vrds37q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why build the timeline from logs, not memory?",
+    "hint": "Order.",
+    "choices": [
+      {
+        "text": "Logs are shorter",
+        "correct": false,
+        "why": "They are longer."
+      },
+      {
+        "text": "Memory is not allowed",
+        "correct": false,
+        "why": "Accounts matter; the times come from logs."
+      },
+      {
+        "text": "Logs assign blame",
+        "correct": false,
+        "why": "Write-ups are blameless."
+      },
+      {
+        "text": "Memory reorders",
+        "correct": true,
+        "why": "Right: memory reorders events into what made sense; logs have the times."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xhk3c1t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 22's 30 seconds without orders split into about 27 for the key and 3 for HAProxy. Which change shortens the first part, and at what risk?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Faster HAProxy checks, at no risk",
+        "correct": false,
+        "why": "That is the three seconds."
+      },
+      {
+        "text": "A shorter ttl",
+        "correct": true,
+        "why": "Right: easier to fool with a slow primary; and each knob has its own risk."
+      },
+      {
+        "text": "More replicas, at no risk",
+        "correct": false,
+        "why": "Replica count does not change the wait."
+      },
+      {
+        "text": "Synchronous replication",
+        "correct": false,
+        "why": "It decides what is lost, not how long."
+      }
+    ]
+  },
+  {
+    "id": "ex-22gg61fk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which is an action in a write-up?",
+    "hint": "Owner and date.",
+    "choices": [
+      {
+        "text": "Be more careful",
+        "correct": false,
+        "why": "A wish."
+      },
+      {
+        "text": "Add a connect timeout to the app",
+        "correct": true,
+        "why": "Right: by Ana, by the 30th; a change, an owner, a date."
+      },
+      {
+        "text": "Remember the ttl",
+        "correct": false,
+        "why": "Nothing changes."
+      },
+      {
+        "text": "Find who did it",
+        "correct": false,
+        "why": "Blameless."
+      }
+    ]
+  },
+  {
+    "id": "ex-ts05qgbs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why must a rehearsal refuse to start with a node already down?",
+    "hint": "How many can be lost?",
+    "choices": [
+      {
+        "text": "Patroni cannot fail over with two",
+        "correct": false,
+        "why": "It can; the risk is after."
+      },
+      {
+        "text": "HAProxy needs three",
+        "correct": false,
+        "why": "It routes to what is up."
+      },
+      {
+        "text": "The script cannot count",
+        "correct": false,
+        "why": "The plan forbids it."
+      },
+      {
+        "text": "It would become the incident",
+        "correct": true,
+        "why": "Right: killing the leader would leave one node."
+      }
+    ]
+  },
+  {
+    "id": "ex-vk7qbmq0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The first version of `rehearsal.sh` met the lag `unknown` and carried on. What is the lesson?",
+    "hint": "A guard that fails open.",
+    "choices": [
+      {
+        "text": "A check must stop on what it cannot read",
+        "correct": true,
+        "why": "Right: \"I do not know\" can only mean stop."
+      },
+      {
+        "text": "Python should not be used in shell scripts",
+        "correct": false,
+        "why": "The problem was the failure mode, not the language."
+      },
+      {
+        "text": "Lag is not worth checking",
+        "correct": false,
+        "why": "It is one of the criteria."
+      },
+      {
+        "text": "patronictl's JSON is unreliable",
+        "correct": false,
+        "why": "It reported the truth: unknown."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf08h7z5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A connection hung for minutes behind HAProxy after the leader died. What bounds that wait?",
+    "hint": "Lesson 23's finding.",
+    "choices": [
+      {
+        "text": "A larger timeout client in HAProxy",
+        "correct": false,
+        "why": "That lengthens it."
+      },
+      {
+        "text": "A shorter ttl",
+        "correct": false,
+        "why": "That changes when the failover happens, not the hung client."
+      },
+      {
+        "text": "A connect timeout in the client",
+        "correct": true,
+        "why": "Right: PGCONNECT_TIMEOUT, or the driver's equivalent."
+      },
+      {
+        "text": "synchronous_commit = off",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-a88q0zw6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is the runbook's first page a script?",
+    "hint": "The state changes.",
+    "choices": [
+      {
+        "text": "It fixes problems",
+        "correct": false,
+        "why": "It only looks."
+      },
+      {
+        "text": "Scripts are shorter",
+        "correct": false,
+        "why": "Length is not the point."
+      },
+      {
+        "text": "Nobody reads text",
+        "correct": false,
+        "why": "People read; the facts change."
+      },
+      {
+        "text": "It is right every time it runs",
+        "correct": true,
+        "why": "Right: a page about state goes stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-46mf7tb1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`runbook-check.sh` found 5434 not answering. What kind of finding is that?",
+    "hint": "A wrong page.",
+    "choices": [
+      {
+        "text": "A typo to ignore",
+        "correct": false,
+        "why": "Somebody would type it at the worst moment."
+      },
+      {
+        "text": "Proof the cluster is down",
+        "correct": false,
+        "why": "Only that address is."
+      },
+      {
+        "text": "A defect",
+        "correct": true,
+        "why": "Right: A defect, sent to the runbook's owner; as lagcheck.sh's failures are."
+      },
+      {
+        "text": "A reason to restart 5434",
+        "correct": false,
+        "why": "Nothing there needs to run; the page is wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qaqa3st",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Where must a copy of the runbook live?",
+    "hint": "Not with what it describes.",
+    "choices": [
+      {
+        "text": "Outside every system it describes",
+        "correct": true,
+        "why": "Right: a wiki on the failed database cannot be read."
+      },
+      {
+        "text": "On the primary",
+        "correct": false,
+        "why": "Lost with it."
+      },
+      {
+        "text": "Only in the author's head",
+        "correct": false,
+        "why": "That is the problem the runbook solves."
+      },
+      {
+        "text": "In etcd",
+        "correct": false,
+        "why": "etcd holds a few keys, not documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-1z4d7enq",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these does a runbook-address check NOT catch? Choose all that are correct.",
+    "hint": "It reads addresses and asks them.",
+    "choices": [
+      {
+        "text": "A step with no address in it",
+        "correct": true,
+        "why": "Right: invisible to it."
+      },
+      {
+        "text": "A wrong order of steps",
+        "correct": true,
+        "why": "Right: only following it finds that."
+      },
+      {
+        "text": "An address nothing answers on",
+        "correct": false,
+        "why": "That is exactly what it catches."
+      },
+      {
+        "text": "A command that no longer works",
+        "correct": true,
+        "why": "Right: only a rehearsal finds that."
+      }
+    ]
+  },
+  {
+    "id": "ex-syzhywy5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Which pair covers both losing a server and a wrong `DELETE`?",
+    "hint": "Machines and data.",
+    "choices": [
+      {
+        "text": "Two standbys",
+        "correct": false,
+        "why": "Both replay the delete."
+      },
+      {
+        "text": "Standby plus PITR",
+        "correct": true,
+        "why": "Right: A standby and point-in-time recovery; replication for machines, the archive for data."
+      },
+      {
+        "text": "Nightly dumps only",
+        "correct": false,
+        "why": "Hours of data and hours of restore."
+      },
+      {
+        "text": "A synchronous standby and a quorum",
+        "correct": false,
+        "why": "Still copies of every mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-kf9vaxns",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these are claims until tested? Choose all that are correct.",
+    "hint": "Lesson 1, for everything.",
+    "choices": [
+      {
+        "text": "A backup",
+        "correct": true,
+        "why": "Right: until restored."
+      },
+      {
+        "text": "A failover",
+        "correct": true,
+        "why": "Right: until rehearsed."
+      },
+      {
+        "text": "A runbook",
+        "correct": true,
+        "why": "Right: until somebody else follows it."
+      },
+      {
+        "text": "A restore watched to succeed and timed",
+        "correct": false,
+        "why": "That is the test itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q2pmq2c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An RPO of seconds and an RTO of minutes for a shop with one region. Which design fits best?",
+    "hint": "Lessons 8, 12, 16 and 19.",
+    "choices": [
+      {
+        "text": "Nightly dumps to another region",
+        "correct": false,
+        "why": "Hours of loss, hours of restore."
+      },
+      {
+        "text": "One standby, synchronous, promoted by hand",
+        "correct": false,
+        "why": "Its loss stops writes, and a manual promotion misses minutes."
+      },
+      {
+        "text": "Patroni with a near synchronous quorum",
+        "correct": true,
+        "why": "Right: a proxy, and PITR; fast automatic failover, little loss, and the archive under it."
+      },
+      {
+        "text": "A delayed replica only",
+        "correct": false,
+        "why": "Useless for failover."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9w8dsb4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which statements about an asynchronous standby are true? Choose all that are correct.",
+    "hint": "Lessons 11 to 13.",
+    "choices": [
+      {
+        "text": "It can lose the last commits on a failover",
+        "correct": true,
+        "why": "Right: whatever it had not received."
+      },
+      {
+        "text": "Its failure does not stop writes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It protects against a wrong DELETE",
+        "correct": false,
+        "why": "It replays it."
+      },
+      {
+        "text": "Its lag should be watched",
+        "correct": true,
+        "why": "Right: lesson 13's lagcheck.sh."
+      }
+    ]
+  }
+]
