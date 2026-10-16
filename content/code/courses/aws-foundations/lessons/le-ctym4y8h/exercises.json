@@ -1,0 +1,596 @@
+[
+  {
+    "id": "ex-c3dvrrjn",
+    "version": 1,
+    "section": "one-api",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of a SigV4 request carries proof of who sent it?",
+    "hint": "One header, with several fields.",
+    "choices": [
+      {
+        "text": "The body, which contains the secret key encoded",
+        "correct": false,
+        "why": "The secret is never in the request. The body here held only `Action` and `Version`."
+      },
+      {
+        "text": "The `User-Agent`, which names the client",
+        "correct": false,
+        "why": "It says which program built the request, and anybody can write any value in it."
+      },
+      {
+        "text": "The `Authorization` header, with the signature",
+        "correct": true,
+        "why": "Right. It carries the key id, the scope, the signed headers and the signature."
+      },
+      {
+        "text": "The `X-Amz-Date`, which only AWS can produce",
+        "correct": false,
+        "why": "The client writes the date itself; what makes it count is that it is signed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4w83kxf1",
+    "version": 1,
+    "section": "one-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does AWS check a signature if the secret is never sent?",
+    "hint": "Both sides can do the same arithmetic.",
+    "choices": [
+      {
+        "text": "It decrypts the signature with the access key id",
+        "correct": false,
+        "why": "A signature is a keyed hash, not something to decrypt, and the id is public."
+      },
+      {
+        "text": "It asks the client to send the secret on a second, encrypted connection",
+        "correct": false,
+        "why": "There is one request and no second channel; the secret stays on the client."
+      },
+      {
+        "text": "From its own copy, it signs again and compares",
+        "correct": true,
+        "why": "Right. Same canonical request, same derived key, same result, or the request is refused."
+      },
+      {
+        "text": "It trusts any signature from a known key id",
+        "correct": false,
+        "why": "Then the id, which is printed everywhere, would be enough to act as the user."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pafnz2z",
+    "version": 1,
+    "section": "one-api",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of making a SigV4 signature.",
+    "hint": "The request is reduced first; the key is applied last.",
+    "items": [
+      "spell the request canonically",
+      "hash the canonical request",
+      "build the string to sign with the date and scope",
+      "sign it with the key derived from the secret",
+      "put the signature in `Authorization`"
+    ],
+    "trap": "The string to sign contains the hash, so the hash has to exist first."
+  },
+  {
+    "id": "ex-fqgmvvzm",
+    "version": 1,
+    "section": "one-api",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the signing key derived from the secret, the date, the region and the service, rather than being the secret itself?",
+    "hint": "What can a derived key be used for?",
+    "choices": [
+      {
+        "text": "Because the secret is too short to sign with",
+        "correct": false,
+        "why": "Forty characters is plenty for an HMAC. Length is not the reason."
+      },
+      {
+        "text": "So that a stolen copy is worth one day, in one place, for one API",
+        "correct": true,
+        "why": "Right. The secret never meets a request directly, and each derived key is narrow."
+      },
+      {
+        "text": "So that moto can sign requests without knowing the secret",
+        "correct": false,
+        "why": "The server checks signatures, it does not make them, and moto here checks nothing."
+      },
+      {
+        "text": "So that the same signature works in every region",
+        "correct": false,
+        "why": "The opposite: the region is in the derivation, so a signature for one region fails in another."
+      }
+    ]
+  },
+  {
+    "id": "ex-gs87macb",
+    "version": 1,
+    "section": "one-api",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`curl` signs a request for STS in São Paulo with `--aws-sigv4 \"aws:amz:___:sts\"`.",
+    "hint": "The lab's region.",
+    "blanks": [
+      {
+        "accept": [
+          "sa-east-1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a5gjdvej",
+    "version": 1,
+    "section": "one-api",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl --aws-sigv4` against moto returned an answer. Why does that not prove the signature was right?",
+    "hint": "What does moto check before lesson 7's switch?",
+    "choices": [
+      {
+        "text": "moto here answers unsigned calls too",
+        "correct": true,
+        "why": "Right. In AWS, or in moto with checking on, a wrong signature is refused."
+      },
+      {
+        "text": "Because `curl` signs only two headers, which AWS ignores",
+        "correct": false,
+        "why": "Signing fewer headers is allowed; `SignedHeaders` says which, and those are checked."
+      },
+      {
+        "text": "Because XML answers are never signed",
+        "correct": false,
+        "why": "Answers are not signed in any format; the question is whether the request was."
+      },
+      {
+        "text": "Because `test:test` is moto's administrator key",
+        "correct": false,
+        "why": "moto has no administrator key; `test` is a placeholder it accepts while it checks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tba5h688",
+    "version": 1,
+    "section": "protocols-and-sdks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each service from the lesson to the protocol its request showed.",
+    "hint": "Look at where the action was named.",
+    "pairs": [
+      {
+        "left": "STS",
+        "right": "query: `Action=` in a form"
+      },
+      {
+        "left": "Organizations",
+        "right": "JSON: an `X-Amz-Target` header"
+      },
+      {
+        "left": "S3",
+        "right": "REST-XML: a `PUT` to the bucket's path"
+      }
+    ],
+    "right_distractors": [
+      "SOAP: an XML envelope"
+    ]
+  },
+  {
+    "id": "ex-xc5xs07s",
+    "version": 1,
+    "section": "protocols-and-sdks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `Version=2011-06-15` in an STS request name?",
+    "hint": "Every service has one, and it is a date.",
+    "choices": [
+      {
+        "text": "Which edition of STS's interface it speaks",
+        "correct": true,
+        "why": "Right. EC2's is `2016-11-15`, S3's `2006-03-01`; new operations arrive under the same date."
+      },
+      {
+        "text": "The version of the AWS CLI that sent it",
+        "correct": false,
+        "why": "The CLI is 2.37.4 and says so in its `User-Agent`. The date belongs to the service."
+      },
+      {
+        "text": "The day the credentials were created",
+        "correct": false,
+        "why": "The credentials' date is in the signature's scope, and it is today's."
+      },
+      {
+        "text": "The oldest client STS still accepts",
+        "correct": false,
+        "why": "It names the API, not a client; old clients keep working because the version keeps them."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6f2e6kx",
+    "version": 1,
+    "section": "protocols-and-sdks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A tool builds `POST /` with `Action=CreateBucket` in a form body and sends it, correctly signed, to S3. What happens?",
+    "hint": "A signature does not choose the protocol.",
+    "choices": [
+      {
+        "text": "S3 creates the bucket, since the signature is valid",
+        "correct": false,
+        "why": "A valid signature on a request S3 does not understand is still a request S3 does not understand."
+      },
+      {
+        "text": "Refused: in S3, creating a bucket is a `PUT` to its path",
+        "correct": true,
+        "why": "Right. The query form is EC2's, IAM's and STS's dialect, not S3's."
+      },
+      {
+        "text": "S3 translates it to the REST form and carries on",
+        "correct": false,
+        "why": "No service translates between protocols; that is what the SDK is for, on the client side."
+      },
+      {
+        "text": "It goes to STS instead, which owns `Action=` requests",
+        "correct": false,
+        "why": "The endpoint decides the service, and the request went to S3's."
+      }
+    ]
+  },
+  {
+    "id": "ex-sp1gax3f",
+    "version": 1,
+    "section": "protocols-and-sdks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was boto3 already in the lab when this lesson started?",
+    "hint": "Read the `Required-by` line.",
+    "choices": [
+      {
+        "text": "Because the AWS CLI installed it in `~/.local`",
+        "correct": false,
+        "why": "CLI v2 carries its own Python and botocore inside its install; this boto3 is in the venv."
+      },
+      {
+        "text": "Because Ubuntu ships it with Python",
+        "correct": false,
+        "why": "`which python3` pointed at the venv, and the package lives there, not in the system."
+      },
+      {
+        "text": "Because `env.sh` downloads it on every `source`",
+        "correct": false,
+        "why": "`env.sh` sets variables and activates the venv; it downloads nothing."
+      },
+      {
+        "text": "It is one of moto's dependencies",
+        "correct": true,
+        "why": "Right. `pip show` named moto as what requires it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6dq1ma6",
+    "version": 1,
+    "section": "protocols-and-sdks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-check.py` names no key and no endpoint, yet it reached moto signed as the test keys. How?",
+    "hint": "The SDK and the command line share a library.",
+    "choices": [
+      {
+        "text": "boto3 reads `~/aws/env.sh` itself",
+        "correct": false,
+        "why": "It knows nothing of that file; it reads the variables the file exported."
+      },
+      {
+        "text": "`Config` in the program sets them",
+        "correct": false,
+        "why": "`Config` set the region and the retries; credentials and the endpoint came from elsewhere."
+      },
+      {
+        "text": "From the environment, via botocore",
+        "correct": true,
+        "why": "Right. botocore walks lesson 10's chain and reads the endpoint variable, as the command line does."
+      },
+      {
+        "text": "moto accepts unsigned calls from Python",
+        "correct": false,
+        "why": "The calls were signed; the `Arn` came back because the keys were found in the environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-034vvjg2",
+    "version": 1,
+    "section": "protocols-and-sdks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many pages did the boto3 paginator walk to count moto's 1544 AWS-managed policies?",
+    "hint": "The same as the command line in lesson 25.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "pages"
+  },
+  {
+    "id": "ex-6dba47s8",
+    "version": 1,
+    "section": "retries-and-the-console",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A call that always fails ended with `reached max retries: 2`. How many requests reached the service?",
+    "hint": "Retries come after the first attempt.",
+    "choices": [
+      {
+        "text": "Two",
+        "correct": false,
+        "why": "Two is the number of retries. The first attempt is not a retry."
+      },
+      {
+        "text": "Three",
+        "correct": true,
+        "why": "Right. `amz-sdk-request` counted `attempt=1`, then `attempt=2; max=3` and `attempt=3; max=3`."
+      },
+      {
+        "text": "One, retried inside the service",
+        "correct": false,
+        "why": "Retries are the client's: each is a new request, and `--debug` saw each one sent."
+      },
+      {
+        "text": "Four, since the command line adds a final check",
+        "correct": false,
+        "why": "There is no extra request; with `AWS_MAX_ATTEMPTS=1` the count was exactly one."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvk7scpq",
+    "version": 1,
+    "section": "retries-and-the-console",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the delays between retries random rather than fixed?",
+    "hint": "Think of a thousand clients failing in the same second.",
+    "choices": [
+      {
+        "text": "Because the service tells each client how long to wait",
+        "correct": false,
+        "why": "The client picks the delay, as the `Retry needed` lines showed, with nothing from the service."
+      },
+      {
+        "text": "To hide the retries from CloudTrail",
+        "correct": false,
+        "why": "Each retry is a request like any other, recorded or refused like any other."
+      },
+      {
+        "text": "To spread out clients that failed together",
+        "correct": true,
+        "why": "Right. The wait doubles from a small base, and the random part spreads the crowd out."
+      },
+      {
+        "text": "Because moto's errors arrive at random times",
+        "correct": false,
+        "why": "moto failed at once every time; the randomness was the client's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r5213eg",
+    "version": 1,
+    "section": "retries-and-the-console",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does an SDK in `standard` mode retry, as AWS documents it? Choose all that apply.",
+    "hint": "A retry has to have a chance of succeeding.",
+    "choices": [
+      {
+        "text": "`ThrottlingException`",
+        "correct": true,
+        "why": "Right. Throttling is the failure retries exist for."
+      },
+      {
+        "text": "An internal error from the service, HTTP 500",
+        "correct": true,
+        "why": "Right. That is what the transcript retried twice."
+      },
+      {
+        "text": "`AccessDenied`",
+        "correct": false,
+        "why": "A refusal by policy will be the same refusal on the next attempt."
+      },
+      {
+        "text": "A malformed parameter",
+        "correct": false,
+        "why": "The same wrong request fails the same way; only fixing it helps."
+      },
+      {
+        "text": "`TooManyRequestsException`",
+        "correct": true,
+        "why": "Right. It is another service's name for being throttled."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqcw3ajx",
+    "version": 1,
+    "section": "retries-and-the-console",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A user can see EC2 in the console but the launch button answers `AccessDenied`. What does that say?",
+    "hint": "What did the button send?",
+    "choices": [
+      {
+        "text": "Its policies allow `DescribeInstances` only",
+        "correct": true,
+        "why": "Right. The console is a client: the same policy decides the same call, clicked or typed."
+      },
+      {
+        "text": "That the console needs a separate console permission to launch",
+        "correct": false,
+        "why": "There is no console permission. The button sent `RunInstances`, judged like any other call."
+      },
+      {
+        "text": "That the console is broken, since the command line would work",
+        "correct": false,
+        "why": "The command line, signed by the same identity, gets the same `AccessDenied`."
+      },
+      {
+        "text": "That the console uses an older API version",
+        "correct": false,
+        "why": "Versions do not change permissions; the action's name is what the policy matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1hrk570",
+    "version": 1,
+    "section": "retries-and-the-console",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which service records every call, from the console, the command line, an SDK or `curl`?",
+    "hint": "Lesson 12 searched it by key id.",
+    "choices": [
+      {
+        "text": "IAM, in the credential report",
+        "correct": false,
+        "why": "The report lists users and keys, not calls."
+      },
+      {
+        "text": "STS, in the answer to `get-caller-identity`",
+        "correct": false,
+        "why": "That answer says who is calling now; it keeps no history."
+      },
+      {
+        "text": "The console's own activity page",
+        "correct": false,
+        "why": "It would miss every call not made from the console, which is most of them."
+      },
+      {
+        "text": "AWS CloudTrail, which keeps each client's `User-Agent`",
+        "correct": true,
+        "why": "Right. Each record says who, from where, when and what, with the client's `User-Agent`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6pj0w4m7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job that lists every object in a large bucket fails a few times a month with `SlowDown`. What should change?",
+    "hint": "`SlowDown` is S3's word for being throttled.",
+    "choices": [
+      {
+        "text": "Run it at a different hour and hope the limit is higher then",
+        "correct": false,
+        "why": "The limit is per account and prefix, not per hour, and hope is not a retry."
+      },
+      {
+        "text": "Wrap it in a loop that retries at once until it succeeds",
+        "correct": false,
+        "why": "Retrying without waiting is what makes throttling worse, for this job and for the account."
+      },
+      {
+        "text": "Leave retrying to the SDK: backoff, more attempts, or `adaptive` mode",
+        "correct": true,
+        "why": "Right. Backoff with jitter is designed for exactly this, and `adaptive` also lowers the client's rate."
+      },
+      {
+        "text": "Ask AWS to remove the throttling for the bucket",
+        "correct": false,
+        "why": "Limits protect the service for everybody; a client is expected to back off."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7kr5t0g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to call AWS from a language with no AWS SDK. What does the lesson suggest?",
+    "hint": "Every client builds the same thing.",
+    "choices": [
+      {
+        "text": "Sign the HTTPS requests by hand, as `curl` did",
+        "correct": true,
+        "why": "Right. SigV4 plus the right protocol is the whole contract; retries and pages then become theirs to write."
+      },
+      {
+        "text": "It cannot be done: the API only accepts the official SDKs",
+        "correct": false,
+        "why": "`curl` called STS with no SDK at all; the service sees only a signed request."
+      },
+      {
+        "text": "Drive the console with a browser automation tool",
+        "correct": false,
+        "why": "That goes through a client whose screens change on AWS's schedule, to reach the same API."
+      },
+      {
+        "text": "Put an access key in the request's body",
+        "correct": false,
+        "why": "The secret never travels; it signs. A key in a body is a leaked key."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsrw5qe3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws --debug` showed `'X-Amz-Target': b'AWSOrganizationsV20161128.CreateOrganization'`. What do the parts tell you?",
+    "hint": "Service, version, action.",
+    "choices": [
+      {
+        "text": "The account, the region and the user who called",
+        "correct": false,
+        "why": "Those are in the credentials and the signature's scope, not in the target."
+      },
+      {
+        "text": "That Organizations speaks the query protocol",
+        "correct": false,
+        "why": "Query names the action in the body; a target header is the JSON protocol."
+      },
+      {
+        "text": "Service, API version and action, in JSON's way",
+        "correct": true,
+        "why": "Right. The body was JSON, the path `/`, and the header said what to do."
+      },
+      {
+        "text": "The date the organisation was created",
+        "correct": false,
+        "why": "It is the API's version date, the same in every account's requests."
+      }
+    ]
+  }
+]
