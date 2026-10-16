@@ -1,0 +1,296 @@
+{
+  "ex-5xjwhf4z": {
+    "prompt": "O que o CDK entrega à AWS no fim?",
+    "hint": "O programa roda na sua máquina.",
+    "choices": [
+      {
+        "text": "O programa JavaScript, que a AWS executa para criar recursos",
+        "why": "A AWS nunca roda o seu programa; ela recebe o que o programa imprimiu."
+      },
+      {
+        "text": "Um plano do Terraform convertido para JSON",
+        "why": "O CDK da AWS gera CloudFormation, não Terraform."
+      },
+      {
+        "text": "Uma lista de chamadas de API que a CLI faz uma a uma",
+        "why": "As chamadas são feitas pelo CloudFormation a partir do template, não pela CLI."
+      },
+      {
+        "text": "Um template do CloudFormation",
+        "why": "Certo. A síntese escreve um template, e o CloudFormation o implanta."
+      }
+    ]
+  },
+  "ex-bhj42qd3": {
+    "prompt": "Ligue cada nível de construct do CDK ao que ele é.",
+    "hint": "De um recurso sem nada acrescentado a vários serviços numa chamada.",
+    "pairs": [
+      {
+        "left": "Nível 1, como CfnBucket",
+        "right": "Um recurso do template um para um, nada acrescentado"
+      },
+      {
+        "left": "Nível 2, como s3.Bucket",
+        "right": "Um tipo de recurso com padrões e opções nomeadas"
+      },
+      {
+        "left": "Nível 3, um padrão",
+        "right": "Um arranjo de vários serviços a partir de uma chamada"
+      }
+    ],
+    "right_distractors": [
+      "Uma stack implantada em outra conta"
+    ]
+  },
+  "ex-81pxkktz": {
+    "prompt": "Por que a versão CDK do grupo de logs não conseguiria repetir o erro dos 15 dias que o cfn-lint pegou na lição 4?",
+    "hint": "Veja como a retenção é escrita no app.js.",
+    "choices": [
+      {
+        "text": "O CDK roda o cfn-lint durante a síntese",
+        "why": "Não roda; a proteção está no tipo, antes de qualquer linter."
+      },
+      {
+        "text": "O moto recusaria 15 dias no deploy",
+        "why": "O moto recusa muito pouco, e nada chegou a ele aqui."
+      },
+      {
+        "text": "A retenção é uma enumeração",
+        "why": "Certo. logs.RetentionDays tem um membro por período válido, e 15 não é um deles."
+      },
+      {
+        "text": "O JavaScript não permite números ímpares nesse campo",
+        "why": "Sete dias é ímpar e válido; o que importa é a lista de períodos."
+      }
+    ]
+  },
+  "ex-r9ethmkv": {
+    "prompt": "O app pediu quatro recursos e o template tem também uma política de bucket. De onde ela veio?",
+    "hint": "Uma opção do bucket.",
+    "choices": [
+      {
+        "text": "Do cdk bootstrap",
+        "why": "O bootstrap cria a stack do toolkit, não os recursos desta stack."
+      },
+      {
+        "text": "De enforceSSL: true",
+        "why": "Certo. Essa única opção se expande numa política de bucket inteira."
+      },
+      {
+        "text": "Da ação SNS do alarme",
+        "why": "Uma ação de alarme escreve AlarmActions, não uma política de bucket."
+      },
+      {
+        "text": "De blockPublicAccess",
+        "why": "Isso vira uma propriedade do próprio bucket, PublicAccessBlockConfiguration."
+      }
+    ]
+  },
+  "ex-dn3j4hae": {
+    "prompt": "Uma refatoração move o construct `Uploads` para dentro de um construct novo chamado `Storage`. O que o próximo change set vai mostrar para o bucket?",
+    "hint": "Como o id lógico é derivado?",
+    "choices": [
+      {
+        "text": "Um Add para um id lógico novo e um Remove para o antigo",
+        "why": "Certo. O caminho, e com ele o hash, mudou; para o CloudFormation é um bucket novo."
+      },
+      {
+        "text": "Nada: o bucket mantém o nome, então nada muda",
+        "why": "O id lógico vem do caminho, e o caminho mudou."
+      },
+      {
+        "text": "Um Modify sem substituição",
+        "why": "O CloudFormation vê um id lógico diferente, que é outro recurso."
+      },
+      {
+        "text": "Um erro, porque o CDK se recusa a mover constructs",
+        "why": "O CDK os move sem reclamar, e por isso o change set precisa ser lido."
+      }
+    ]
+  },
+  "ex-1m4nywfz": {
+    "prompt": "O comando do CDK que roda o programa e escreve o template, sem contatar a AWS, é `cdk ___`.",
+    "hint": "Abreviação de synthesize.",
+    "blanks": [
+      {
+        "accept": [
+          "synth"
+        ]
+      }
+    ]
+  },
+  "ex-42xzde44": {
+    "prompt": "O `app.js` tinha 37 linhas e o `template.yaml`, 84. Quantas linhas a síntese acrescentou além das do programa?",
+    "hint": "Uma subtração."
+  },
+  "ex-gvkt29am": {
+    "prompt": "O que o `cdk bootstrap` cria numa conta?",
+    "hint": "Do que um deploy precisa antes do template?",
+    "choices": [
+      {
+        "text": "A própria stack da aplicação, criada antes e pronta para atualizar depois",
+        "why": "A stack da aplicação vem do cdk deploy; o bootstrap prepara a conta."
+      },
+      {
+        "text": "Uma stack CDKToolkit, com armazenamento e papéis",
+        "why": "Certo. Os deploys enviam assets para lá e assumem esses papéis, e um parâmetro registra a versão."
+      },
+      {
+        "text": "Uma cópia do node_modules no S3",
+        "why": "A biblioteca fica na sua máquina; só o template e os assets são enviados."
+      },
+      {
+        "text": "Um usuário IAM com chaves de acesso para a CLI",
+        "why": "O bootstrap cria papéis para os deploys, nunca um usuário com chaves estáticas."
+      }
+    ]
+  },
+  "ex-dbmsdyy6": {
+    "prompt": "O moto informou `CREATE_COMPLETE` para a stack do CDK, mas três recursos voltaram como `None`. Qual é a conclusão certa?",
+    "hint": "Separe o que o template diz do que um serviço fez.",
+    "choices": [
+      {
+        "text": "O template está errado e a política deve ser reescrita à mão",
+        "why": "O template está certo; o moto pulou recursos que ele não cria."
+      },
+      {
+        "text": "A stack também ficará completa na AWS, então nada precisa ser conferido",
+        "why": "A resposta do moto não diz nada sobre a da AWS; esse é o ponto da seção."
+      },
+      {
+        "text": "O CDK os pulou porque a conta não estava com bootstrap",
+        "why": "O CDK os escreveu no template; quem não os criou foi o moto."
+      },
+      {
+        "text": "Um status diz pouco: teste o próprio template",
+        "why": "Certo. O moto informou sucesso sobre o que não fez, então as decisões são testadas no template."
+      }
+    ]
+  },
+  "ex-82bybn7y": {
+    "prompt": "Antes de o `cdk deploy` executar uma mudança, o que ele mostra e pergunta por padrão?",
+    "hint": "Mudanças que ampliam acesso.",
+    "choices": [
+      {
+        "text": "Novas declarações de IAM e regras de security group",
+        "why": "Certo. A ampliação de acesso é confirmada antes de o change set rodar."
+      },
+      {
+        "text": "Cada propriedade de cada recurso",
+        "why": "Isso seria o cdk diff inteiro; o deploy pergunta sobre a parte relevante para segurança."
+      },
+      {
+        "text": "O custo mensal dos recursos novos",
+        "why": "O CDK não conhece preços; uma estimativa de custo é outra ferramenta."
+      },
+      {
+        "text": "Nada; ele executa na hora",
+        "why": "Por padrão ele para em mudanças relevantes para segurança e pergunta."
+      }
+    ]
+  },
+  "ex-yn037rqs": {
+    "prompt": "Do que `Template.fromStack` precisa para rodar?",
+    "hint": "Ele sintetiza na memória.",
+    "choices": [
+      {
+        "text": "Uma conta com bootstrap",
+        "why": "Nada é implantado; nenhuma conta participa."
+      },
+      {
+        "text": "Só o Node.js e a biblioteca",
+        "why": "Certo. Ele monta o template na memória e o confere ali."
+      },
+      {
+        "text": "O moto rodando na porta 4567",
+        "why": "O teste não chama API nenhuma."
+      },
+      {
+        "text": "Acesso à rede para baixar o template",
+        "why": "O template é produzido localmente a partir do programa."
+      }
+    ]
+  },
+  "ex-5w3fczvt": {
+    "prompt": "`hasResourceProperties` recebe só `PolicyDocument.Statement` com uma declaração correspondente. A política real tem uma segunda declaração também. O teste passa?",
+    "hint": "arrayWith e objectLike permitem mais.",
+    "choices": [
+      {
+        "text": "Não, porque os arrays têm tamanhos diferentes",
+        "why": "Match.arrayWith só exige que os itens dados estejam presentes."
+      },
+      {
+        "text": "Só se a segunda declaração também for um Deny",
+        "why": "O conteúdo da declaração extra nem é conferido."
+      },
+      {
+        "text": "Depende da ordem das declarações",
+        "why": "arrayWith encontra os itens onde quer que estejam."
+      },
+      {
+        "text": "Sim: declarações e propriedades extras são permitidas",
+        "why": "Certo. O teste fixa a decisão, não a política inteira."
+      }
+    ]
+  },
+  "ex-hndsr3rg": {
+    "prompt": "Quais destas coisas valem um teste fino na stack da loja? Marque todas as que se aplicam.",
+    "hint": "Decisões fáceis de desfazer e caras de perder.",
+    "choices": [
+      {
+        "text": "O bucket recusa HTTP sem TLS",
+        "why": "Sim. Uma linha a remove, e nada mais perceberia."
+      },
+      {
+        "text": "O bucket é mantido quando a stack é excluída",
+        "why": "Sim. Perdê-lo perde os uploads dos clientes."
+      },
+      {
+        "text": "O hash exato do id lógico do bucket",
+        "why": "Não. Isso é o que um snapshot fixa, e muda com refatorações inofensivas."
+      },
+      {
+        "text": "O alarme avisa o tópico",
+        "why": "Sim. Um alarme que não avisa ninguém não é alarme."
+      },
+      {
+        "text": "A ordem das chaves no template",
+        "why": "Não. A ordem não significa nada para o CloudFormation."
+      }
+    ]
+  },
+  "ex-7bmxmj8f": {
+    "prompt": "Ponha os passos de uma mudança no CDK até a AWS na ordem em que uma esteira cuidadosa os executa.",
+    "hint": "Teste o que escreveu antes de alguém ver o que muda.",
+    "trap": "Testar depois de implantar é o deslize: o teste existe para impedir o deploy.",
+    "items": [
+      "Rodar os testes sobre o template sintetizado",
+      "Sintetizar o template no build",
+      "Criar um change set a partir do template",
+      "Uma pessoa aprova o change set",
+      "Executar o change set"
+    ]
+  },
+  "ex-a53br1a4": {
+    "prompt": "Uma atualização da biblioteca muda o que o `enforceSSL` escreve. Que prática percebe antes da produção?",
+    "hint": "O template é onde a mudança aparece.",
+    "choices": [
+      {
+        "text": "Fixar a biblioteca para sempre para ela nunca mudar",
+        "why": "Uma biblioteca congelada para sempre perde correções; a mudança precisa ser vista, não evitada."
+      },
+      {
+        "text": "Ler o template novo e o change set dele",
+        "why": "Certo. Mais o teste fino, que falha se a decisão se perder."
+      },
+      {
+        "text": "Implantar no moto e conferir o status da stack",
+        "why": "O moto informou completo enquanto pulava justamente a política em questão."
+      },
+      {
+        "text": "Rodar o cdk bootstrap de novo",
+        "why": "O bootstrap prepara a conta; não lê nada do template do app."
+      }
+    ]
+  }
+}
