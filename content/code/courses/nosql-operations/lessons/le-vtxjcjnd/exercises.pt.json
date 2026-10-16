@@ -1,0 +1,410 @@
+{
+  "ex-j2fp3taz": {
+    "prompt": "Sem índice em `customer`, quantos documentos o servidor leu para devolver os 82 pedidos da Ana?",
+    "choices": [
+      {
+        "text": "Todos os 100.000",
+        "why": "Isso: COLLSCAN, totalDocsExamined 100000."
+      },
+      {
+        "text": "82, porque ele para quando os tem",
+        "why": "Ele não tem como saber que achou todos até olhar cada documento."
+      },
+      {
+        "text": "Cerca de metade, em média, já que os pedidos estão em ordem aleatória",
+        "why": "Isso valeria para achar um documento; achar todos exige ler cada um."
+      },
+      {
+        "text": "Nenhum: o índice de _id é usado em toda consulta",
+        "why": "O índice de _id só ajuda consultas em _id."
+      }
+    ]
+  },
+  "ex-f74aa0j8": {
+    "prompt": "Duas execuções do mesmo explain dão `ms: 21` e `ms: 34`, e os mesmos `keys` e `docs`. Quais números você deve comparar para julgar um índice?",
+    "choices": [
+      {
+        "text": "Os milissegundos, porque são o que o usuário sente",
+        "why": "Eles variam de uma execução para outra e dependem do que mais a máquina está fazendo."
+      },
+      {
+        "text": "O número de estágios: menos estágios quer dizer um plano mais rápido",
+        "why": "COLLSCAN sozinho é um estágio e o plano mais lento da aula."
+      },
+      {
+        "text": "keys e docs contra returned",
+        "why": "Isso. As contagens são as mesmas a cada execução e mostram o trabalho que o plano faz."
+      },
+      {
+        "text": "A média dos milissegundos de várias execuções, medida no notebook",
+        "why": "A média dos tempos de um notebook ocioso ainda esconde como o trabalho cresce com os dados."
+      }
+    ]
+  },
+  "ex-f9h0s33e": {
+    "prompt": "O que o plano `FETCH <- IXSCAN` diz que aconteceu?",
+    "choices": [
+      {
+        "text": "O servidor leu a coleção inteira e depois o índice",
+        "why": "Ler a coleção inteira é COLLSCAN; ele não aparece."
+      },
+      {
+        "text": "O índice respondeu sozinho, sem ler documento",
+        "why": "Isso é um plano coberto, PROJECTION_COVERED <- IXSCAN, com docs 0."
+      },
+      {
+        "text": "Documentos foram buscados pela rede em outro servidor",
+        "why": "FETCH lê documentos do armazenamento deste servidor."
+      },
+      {
+        "text": "Entradas de índice achadas, depois seus documentos abertos",
+        "why": "Isso. A lista se lê de fora para dentro: IXSCAN alimentou FETCH."
+      }
+    ]
+  },
+  "ex-4bw2jrge": {
+    "prompt": "Por que o gerador da aula usa uma função aleatória escrita à mão em vez de `Math.random()`?",
+    "choices": [
+      {
+        "text": "`Math.random()` não está disponível no mongosh",
+        "why": "Está; o problema é que ele dá uma sequência diferente a cada execução."
+      },
+      {
+        "text": "Para toda execução, em qualquer máquina, gerar os mesmos pedidos",
+        "why": "Isso. Mesma semente, mesma sequência: os seus 82 e 4.044 batem com os da aula."
+      },
+      {
+        "text": "Um gerador com semente é mais rápido para 100.000 documentos",
+        "why": "Velocidade não é o motivo; reprodutibilidade é."
+      },
+      {
+        "text": "`Math.random()` produziria valores de _id duplicados",
+        "why": "O _id é o contador do laço, não um número aleatório."
+      }
+    ]
+  },
+  "ex-g4pedw8v": {
+    "prompt": "Com o índice em `customer`, quantas entradas de índice (`keys`) a consulta pelos pedidos da Ana leu?",
+    "unit": "entradas"
+  },
+  "ex-vtadvn3e": {
+    "prompt": "Só com `{ status: 1 }`, os vinte pedidos pendentes mais novos vieram de `SORT <- FETCH <- IXSCAN` lendo 4.044 documentos. Por que tantos para vinte?",
+    "choices": [
+      {
+        "text": "Eles não estão em ordem de data nele, então todos são ordenados",
+        "why": "Isso. Um SORT bloqueante lê toda a entrada antes de devolver o primeiro resultado."
+      },
+      {
+        "text": "O limit(20) é aplicado antes de o índice ser lido",
+        "why": "Um limite só consegue parar uma varredura cuja saída já está na ordem certa."
+      },
+      {
+        "text": "Os pedidos pendentes estão espalhados por todos os meses",
+        "why": "Estão, mas o índice achou exatamente os 4.044 pendentes; o problema é a ordem deles."
+      },
+      {
+        "text": "O índice de status é multikey",
+        "why": "status é uma string simples, não um array."
+      }
+    ]
+  },
+  "ex-g3zttap1": {
+    "prompt": "Para pedidos pendentes de março, `{ ordered_at: -1, status: 1 }` leu 8.574 chaves e `{ status: 1, ordered_at: -1 }` leu 339. O que explica a diferença?",
+    "choices": [
+      {
+        "text": "O primeiro índice é maior no disco, então cada entrada custa mais para ler",
+        "why": "Ele é maior, mas não é o tamanho que fez a varredura ler mais entradas."
+      },
+      {
+        "text": "O hint desliga as otimizações do planejador",
+        "why": "As duas consultas usaram hint; a diferença está nos índices."
+      },
+      {
+        "text": "O primeiro campo decide quais entradas ficam juntas",
+        "why": "Isso. A varredura lê o trecho contínuo que o primeiro campo permite, e depois filtra."
+      },
+      {
+        "text": "Datas decrescentes são mais lentas de percorrer que crescentes",
+        "why": "Os dois índices têm ordered_at decrescente."
+      }
+    ]
+  },
+  "ex-r59gemq7": {
+    "prompt": "Pela regra igualdade, ordenação, intervalo, ordene os campos de um índice para `find({ customer: c, total: { $gte: 1000 } }).sort({ ordered_at: -1 })`.",
+    "items": [
+      "customer",
+      "ordered_at",
+      "total"
+    ],
+    "trap": "total antes de ordered_at traria de volta um estágio SORT."
+  },
+  "ex-yz5r1v5b": {
+    "prompt": "Com `{ status: 1, ordered_at: -1, total: 1 }` a consulta por pedidos pendentes grandes leu 73 chaves para devolver 20, algumas indesejadas. Por que esse é o plano melhor que o que lê exatamente as 1.139 entradas que casam?",
+    "choices": [
+      {
+        "text": "Porque um campo de intervalo posto por último nunca é lido",
+        "why": "Ele é lido em cada chave; ele filtra sem bagunçar a ordem."
+      },
+      {
+        "text": "Porque um estágio SORT não roda sobre decimais",
+        "why": "O SORT era em ordered_at, e rodou no outro plano."
+      },
+      {
+        "text": "Não é; ler só as chaves que casam sempre ganha",
+        "why": "O outro plano leu 1.139 chaves e depois ordenou todas."
+      },
+      {
+        "text": "A varredura para em vinte, sem ordenação",
+        "why": "Isso. Ler todos os que casam e ordená-los custa mais que pular algumas chaves indesejadas."
+      }
+    ]
+  },
+  "ex-v2akaayq": {
+    "prompt": "Depois que `{ status: 1, ordered_at: -1 }` existe, quanto vale `{ status: 1 }`?",
+    "choices": [
+      {
+        "text": "Ele ainda é necessário para consultas só em status",
+        "why": "Um prefixo de índice composto atende essas consultas."
+      },
+      {
+        "text": "Pouco: o prefixo do composto faz o trabalho dele, e este só custa",
+        "why": "Isso. É o índice redundante que o $indexStats mostraria sem uso."
+      },
+      {
+        "text": "Ele deixa o índice composto mais rápido",
+        "why": "Índices não se ajudam; cada um é uma estrutura separada."
+      },
+      {
+        "text": "Ele é exigido para o índice composto ser construído",
+        "why": "Um índice composto não precisa de índice de um campo ao lado."
+      }
+    ]
+  },
+  "ex-r4drq7kw": {
+    "prompt": "A ordem dos campos num índice composto segue igualdade, depois ___, depois intervalo.",
+    "blanks": [
+      {
+        "accept": [
+          "ordenação",
+          "ordenacao"
+        ]
+      }
+    ]
+  },
+  "ex-jk7m8drd": {
+    "prompt": "Com `{ customer: 1, ordered_at: -1, total: 1 }`, por que `find({ customer: \"ana@example.com\" }, { ordered_at: 1, total: 1 })` leu 82 documentos?",
+    "hint": "O que volta a menos que seja excluído?",
+    "choices": [
+      {
+        "text": "`_id` voltou, e ele não está nesse índice",
+        "why": "Isso. Um campo fora do índice e cada documento precisa ser aberto."
+      },
+      {
+        "text": "Porque a ordenação era num campo decrescente",
+        "why": "A versão coberta ordenou do mesmo jeito e não leu documentos."
+      },
+      {
+        "text": "Porque decimais não podem ser devolvidos de um índice",
+        "why": "A consulta coberta devolveu total a partir do índice."
+      },
+      {
+        "text": "Porque projeções sempre precisam do documento",
+        "why": "A primeira consulta tinha projeção e docs: 0."
+      }
+    ]
+  },
+  "ex-enxcs4qf": {
+    "prompt": "Todos os outros índices de `orders` tinham 100.000 entradas. Quantas tinha `items.sku_1`?",
+    "hint": "keysPerIndex, do validate().",
+    "unit": "entradas"
+  },
+  "ex-787r2mh0": {
+    "prompt": "Existe um índice `{ tags: 1, sizes: 1 }` numa coleção cujos documentos têm `tags` como array e `sizes` como número. Chega um documento novo com os dois como arrays. O que acontece?",
+    "choices": [
+      {
+        "text": "Ele é guardado, e o índice ganha uma entrada por par de elementos",
+        "why": "Esse crescimento é exatamente o que o servidor se recusa a fazer."
+      },
+      {
+        "text": "Ele é guardado, e fica fora do índice",
+        "why": "Um documento fora do índice sumiria das consultas que o usam; o servidor recusa em vez disso."
+      },
+      {
+        "text": "O insert é recusado",
+        "why": "Isso. Um índice composto pode ter no máximo um campo de array por documento, verificado a cada escrita."
+      },
+      {
+        "text": "O índice é removido automaticamente",
+        "why": "Índices nunca são removidos por uma escrita."
+      }
+    ]
+  },
+  "ex-y3pnh6s9": {
+    "prompt": "O índice em `items.sku` achou 42.139 pedidos contendo o monitor. Por que ele vale pouco para essa consulta?",
+    "choices": [
+      {
+        "text": "Índices multikey são mais lentos que uma varredura da coleção",
+        "why": "Não são mais lentos em geral; esse valor só não é seletivo."
+      },
+      {
+        "text": "SKUs dentro de arrays só são indexados depois de um reinício",
+        "why": "O índice atendeu a consulta na hora."
+      },
+      {
+        "text": "A consulta precisava de um plano coberto",
+        "why": "Um índice multikey não cobre uma consulta no campo do array de qualquer forma."
+      },
+      {
+        "text": "Ele casa com quase metade dos pedidos, e a maioria é lida de todo jeito",
+        "why": "Isso. Índices compensam quando um valor separa uma fatia pequena, como 82 de 100.000."
+      }
+    ]
+  },
+  "ex-w7701jck": {
+    "prompt": "Os mesmos 100.000 documentos levaram 1.294 ms para inserir com um índice e 3.080 ms com nove. O que isso mede?",
+    "choices": [
+      {
+        "text": "Que inserts são lentos no MongoDB em geral",
+        "why": "A primeira execução é a base; a diferença são os índices."
+      },
+      {
+        "text": "Mais oito estruturas a atualizar por documento",
+        "why": "Isso. Cada documento virou nove entradas de índice em vez de uma."
+      },
+      {
+        "text": "O tempo que o mongosh gastou montando o array de documentos",
+        "why": "O array foi montado antes de o cronômetro começar."
+      },
+      {
+        "text": "Um atraso de rede entre o mongosh e o servidor",
+        "why": "As duas execuções passaram pela mesma conexão com os mesmos documentos."
+      }
+    ]
+  },
+  "ex-7b6apjv9": {
+    "prompt": "Uma consulta por pedidos pagos rodou com `hint(\"pending_by_date\")`, um índice parcial de pedidos pendentes. Devolveu 0; sem o hint, 20. O que isso mostra?",
+    "choices": [
+      {
+        "text": "Forçá-lo deu uma resposta curta e nenhum erro",
+        "why": "Isso. O índice só guarda pendentes, então percorrê-lo não acha pagos."
+      },
+      {
+        "text": "O hint foi ignorado e a consulta deu erro",
+        "why": "Nenhum erro foi levantado; o hint foi obedecido."
+      },
+      {
+        "text": "Não havia pedidos pagos na coleção",
+        "why": "A consulta sem o hint devolveu 20 deles."
+      },
+      {
+        "text": "Índices parciais devolvem resultados em ordem aleatória",
+        "why": "A ordem é a do índice; o problema é o que ele contém."
+      }
+    ]
+  },
+  "ex-r6w6ayhx": {
+    "prompt": "Por que uma aplicação ainda confere a data da sessão quando a coleção de sessões tem um índice TTL de 300 segundos?",
+    "choices": [
+      {
+        "text": "O índice TTL só apaga no reinício",
+        "why": "A captura viu uma remoção em setenta segundos, sem reinício."
+      },
+      {
+        "text": "Índices TTL funcionam em strings, não em datas",
+        "why": "Eles funcionam em campos de data."
+      },
+      {
+        "text": "A remoção roda por minuto, e as expiradas ficam um tempo",
+        "why": "Isso. O índice TTL mantém a coleção pequena; o código impõe o limite."
+      },
+      {
+        "text": "O índice apaga sessões assim que são criadas",
+        "why": "s-new ficou; só a sessão que passou do limite foi embora."
+      }
+    ]
+  },
+  "ex-jg33rm2p": {
+    "prompt": "Associe cada opção de índice ao que ela faz.",
+    "hint": "Um comportamento não pertence a nenhuma delas.",
+    "pairs": [
+      {
+        "left": "unique: true",
+        "right": "recusa um segundo documento com a mesma chave"
+      },
+      {
+        "left": "partialFilterExpression",
+        "right": "indexa só os documentos que casam com um filtro"
+      },
+      {
+        "left": "expireAfterSeconds",
+        "right": "apaga documentos cuja data passou do limite"
+      }
+    ],
+    "right_distractors": [
+      "comprime os documentos para os quais o índice aponta"
+    ]
+  },
+  "ex-69213ed6": {
+    "prompt": "`createIndex({ customer: 1, status: 1 }, { unique: true })` falhou em `orders`. O que precisa acontecer antes de ele dar certo?",
+    "choices": [
+      {
+        "text": "Nada: tente de novo com background: true",
+        "why": "O modo de construir o índice não muda o que ele proibiria."
+      },
+      {
+        "text": "O índice não único em customer precisa ser removido antes",
+        "why": "Outros índices não o bloqueiam; os dados bloqueiam."
+      },
+      {
+        "text": "A coleção precisa de um validador antes",
+        "why": "Um validador confere tipos; unicidade é trabalho do índice."
+      },
+      {
+        "text": "As duplicatas existentes precisam ser resolvidas",
+        "why": "Isso. A construção citou a primeira que achou; uma regra única não pode existir sobre dados que a quebram."
+      }
+    ]
+  },
+  "ex-gn292rqy": {
+    "prompt": "Uma tela lista os pedidos de um cliente por `status`, os mais novos primeiro, vinte por vez: `find({ customer: c, status: s }).sort({ ordered_at: -1 }).limit(20)`. Que índice sozinho a atende sem estágio SORT?",
+    "choices": [
+      {
+        "text": "`{ ordered_at: -1, customer: 1, status: 1 }`",
+        "why": "Ordenação primeiro espalha os pedidos do cliente pelo índice inteiro, como no exemplo de março."
+      },
+      {
+        "text": "`{ customer: 1, status: 1, ordered_at: -1 }`",
+        "why": "Isso: os dois campos de igualdade, em qualquer ordem, depois o de ordenação."
+      },
+      {
+        "text": "`{ customer: 1, ordered_at: -1 }` mais `{ status: 1 }`",
+        "why": "Uma consulta usa um índice aqui; status seria filtrado buscando documentos."
+      },
+      {
+        "text": "`{ customer: 1, ordered_at: -1, status: 1 }`",
+        "why": "Evita o SORT mas lê todos os status do cliente; campos de igualdade vêm antes da ordenação."
+      }
+    ]
+  },
+  "ex-ce2kxyx7": {
+    "prompt": "Quais destes são motivos para remover um índice? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "$indexStats não mostra operações depois de uma semana de tráfego real",
+        "why": "Sim: custa escrita e memória e não atende nada."
+      },
+      {
+        "text": "Outro índice começa pelos mesmos campos na mesma ordem",
+        "why": "Sim: o prefixo do mais longo responde às mesmas consultas."
+      },
+      {
+        "text": "Ele é maior que o índice de _id da coleção",
+        "why": "Tamanho sozinho não diz nada; os índices de três campos eram os maiores e os mais úteis."
+      },
+      {
+        "text": "Ele é único, e a aplicação já confere duplicatas",
+        "why": "Duas verificações simultâneas não veem duplicata; só o índice faz a regra valer."
+      }
+    ]
+  }
+}
