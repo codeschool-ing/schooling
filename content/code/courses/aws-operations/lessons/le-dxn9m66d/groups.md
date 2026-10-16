@@ -4,7 +4,7 @@ version: 1
 ---
 
 CloudWatch Logs keeps lines in **log groups**, one per application or component, and inside each group
-in **log streams**, one per source: a container, an instance, a function's execution environment. The
+in log streams, one per source: a container, an instance, a function's execution environment. The
 group is where the decisions are made: who may read it, how long it keeps lines, what is extracted
 from them. Create the shop API's group and look at it:
 

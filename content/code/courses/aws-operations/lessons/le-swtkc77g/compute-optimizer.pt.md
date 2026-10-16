@@ -17,7 +17,7 @@ O moto não tem Compute Optimizer nenhum, então o que vem a seguir é da docume
 
 ## O que ele diz
 
-Cada recurso recebe um **achado** e até três **recomendações**:
+Cada recurso recebe um **achado** e até três recomendações:
 
 | achado | significado |
 |---|---|

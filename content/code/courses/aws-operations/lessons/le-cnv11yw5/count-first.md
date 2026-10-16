@@ -87,7 +87,7 @@ produced by this lab, a request counted by `login-rate` and let through reads:
 ```
 
 `terminatingRuleId` is what decided it, and here that was the default action. The rule being tried is
-in `nonTerminatingMatchingRules`. A Logs Insights query over a week of these, counting the addresses
-`login-rate` would have blocked, is lesson 9's tool on WAF's data, and the list it prints is what the
-team reads before switching `Count` to `Block`: a list of strangers is a rule ready to block, and a list
-with the office's address in it is a limit set too low.
+in `nonTerminatingMatchingRules`. A Logs Insights query over a week of these, counting the addresses `login-rate` would have blocked, is
+lesson 9's tool on WAF's data. The list it prints is what the team reads before switching `Count` to
+`Block`: a list of strangers is a rule ready to block, and a list with the office's address in it is a
+limit set too low.

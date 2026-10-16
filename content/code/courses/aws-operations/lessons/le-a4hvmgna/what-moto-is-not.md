@@ -44,7 +44,7 @@ at all. That lesson shows it.
 Nothing in this course needs a real AWS account, and nothing in it is easier with one. **If you open
 one anyway**, `aws-foundations` lesson 1 has the section on doing it safely, and the order is the
 part to remember: protect the root user with a second factor, then create a budget with an alert,
-**before** anything else. The free tier is one possibility for a small bill, never a promise: what
+before anything else. The free tier is one possibility for a small bill, never a promise: what
 it covers changes, and a forgotten resource is billed whether or not you meant to keep it. Those
 steps cannot be recorded without an account, so they were not run for this course and no transcript
 of them is shown.

@@ -14,8 +14,8 @@ of three types: `String`, `StringList`, and `SecureString`, which is encrypted w
 parameters are free, up to 10,000 of them and 4 KB each. Advanced parameters hold up to 8 KB, accept
 expiry policies, and cost a monthly fee each.
 
-**Secrets Manager** keeps **secrets**: encrypted values, usually a small JSON document, with
-**versions labelled by stage** and a built-in way to **rotate** them, run a function that changes the
+Secrets Manager keeps secrets: encrypted values, usually a small JSON document, with
+**versions labelled by stage** and a built-in way to rotate them, run a function that changes the
 password in the database and in the secret together. It can generate passwords, replicate a secret to
 other regions, and carry a resource policy saying who may read it. Every secret costs a monthly fee,
 and so do the calls.
@@ -41,10 +41,10 @@ AWSSystemsManager, sa-east-1, published 2026-10-08
   SAE1-PS-Param-Processed-Tier2            0.000005 USD per API Request $0.05 per 10,000 Parameter API Interaction_Higher throughput in South America (Sao Paulo)
 ```
 
-**40 cents a month per secret, and 5 cents per 10,000 calls.** Parameter Store prints no line for a
-standard parameter because it has none; the lines it prints are the advanced tier, 5 cents a month per
-parameter (the program shows its hourly rate), and the higher-throughput setting, which charges 5 cents
-per 10,000 calls for every parameter once it is switched on. An encrypted value, in either store, also
+**40 cents a month per secret, and 5 cents per 10,000 calls.** Parameter Store prints no line for a standard parameter because it has none. The lines it prints are the
+advanced tier, 5 cents a month per parameter (the program shows its hourly rate), and the
+higher-throughput setting, which charges 5 cents per 10,000 calls for every parameter once it is
+switched on. An encrypted value, in either store, also
 costs the KMS calls that decrypt it, which lesson 18 prices.
 
 So the shop's six secrets cost 2.40 USD a month to keep. What they cost to read depends entirely on how

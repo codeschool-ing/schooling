@@ -3,7 +3,7 @@ title: Cost Categories, e dividir o que ninguém pode possuir
 version: 1
 ---
 
-Tags agrupam recursos. **Cost Categories** agrupam **custos**: um conjunto de regras, avaliadas em ordem,
+Tags agrupam recursos. **Cost Categories** agrupam custos: um conjunto de regras, avaliadas em ordem,
 que põem cada linha da conta num valor com nome, por tag, por conta, por serviço, por tipo de uso, ou por
 outra categoria. A primeira regra que casa decide; uma linha que nenhuma regra casa recebe o **valor
 padrão**. A categoria então aparece no Cost Explorer e no CUR como se fosse mais uma coluna.
@@ -44,13 +44,13 @@ ativada, uma categoria não se aplica ao passado. O moto a guarda e não lista n
 
 Leia as regras contra o mês do `bill.py`:
 
-- as três regras de tag põem **433,05** USD em `checkout`, **432,04** em `api`, **231,34** em `platform`;
+- as três regras de tag põem **433,05** USD em `checkout`, 432,04 em `api`, 231,34 em `platform`;
 - a transferência de dados, **180,00**, casa com `shared`;
 - as linhas sem tag, **249,19**, não casam com nada e caem em `unallocated`.
 
-A **regra de divisão** (*split charge*) então divide `shared` entre as três equipes **na proporção dos
-custos de cada uma**, 1.096,43 USD no total: checkout fica com 433,05 / 1.096,43 dos 180, **71,09**; api
-**70,93**; platform **37,98**. Cada equipe agora vê uma parte da transferência de dados que o tráfego dela,
+A regra de divisão (*split charge*) então divide `shared` entre as três equipes **na proporção dos
+custos de cada uma**, 1.096,43 USD no total: checkout fica com 433,05 / 1.096,43 dos 180, 71,09; api
+70,93; platform 37,98. Cada equipe agora vê uma parte da transferência de dados que o tráfego dela,
 mais ou menos, causou. `PROPORTIONAL` é um de três métodos; `EVEN` divide em partes iguais, e `FIXED` usa
 porcentagens que a equipe escreve.
 

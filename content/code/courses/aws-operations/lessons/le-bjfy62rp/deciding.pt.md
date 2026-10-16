@@ -21,10 +21,9 @@ awswaf, sa-east-1, published 2026-09-14
 
 O primeiro comando é a linha de transferência de dados: além da transferência de saída de sempre, **cada
 gigabyte que um balanceador protegido envia** paga 0,05 USD, nos primeiros 100 TB do mês. A assinatura
-em si não é uma linha de São Paulo, porque pertence à organização e não a uma região; ela está no arquivo
+em si não é uma linha de São Paulo, porque pertence à organização e não a uma região. Ela está no arquivo
 `aws-other` da oferta, que o `price.py` não lê, então o segundo comando a lê com `curl` e `jq`, guardando
-as linhas sobre a assinatura: **3.000 USD por mês pela primeira assinatura**, e nada pelas seguintes, já
-que uma assinatura cobre todas as contas de uma organização que paga numa única conta. A terceira linha é
+as linhas sobre a assinatura: **3.000 USD por mês pela primeira assinatura**, e nada pelas seguintes. Uma assinatura cobre todas as contas de uma organização que paga numa única conta. A terceira linha é
 o preço de requisição do WAF para um recurso protegido, zero no nível base.
 
 ## Os números da loja

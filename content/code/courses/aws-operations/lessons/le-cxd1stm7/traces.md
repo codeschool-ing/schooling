@@ -15,7 +15,7 @@ across every service it touches**, and says where its time went.
 
 The vocabulary is small:
 
-- a **trace** is one request's whole journey, with one **trace id** shared by every part;
+- a **trace** is one request's whole journey, with one trace id shared by every part;
 - a **segment** is the part one service handled, from the moment the request arrived to the moment it
   answered;
 - a **subsegment** is a piece of a segment: a database query, a call to another service, a block of

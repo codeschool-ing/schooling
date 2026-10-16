@@ -4,7 +4,7 @@ version: 1
 ---
 
 O CloudWatch Logs guarda linhas em **grupos de logs**, um por aplicação ou componente, e dentro de
-cada grupo em **streams de log**, um por origem: um contêiner, uma instância, o ambiente de execução de
+cada grupo em streams de log, um por origem: um contêiner, uma instância, o ambiente de execução de
 uma função. O grupo é onde as decisões são tomadas: quem pode lê-lo, por quanto tempo guarda linhas, o
 que é extraído delas. Crie o grupo da API da loja e olhe para ele:
 

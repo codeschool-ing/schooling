@@ -25,7 +25,7 @@ para um registro; o Inspector é a contínua.
 
 O Security Hub é duas coisas. Um **verificador**: roda controles de padrões como o Foundational Security
 Best Practices da AWS e o benchmark do CIS contra a configuração da conta, e escreve um achado para cada
-falha, um bucket aberto ao público, uma trilha sem validação. E um **agregador**: os achados do GuardDuty,
+falha, um bucket aberto ao público, uma trilha sem validação. E um agregador: os achados do GuardDuty,
 do Inspector e de outros produtos chegam lá num único formato, o **AWS Security Finding Format**, ASFF,
 então há uma fila para ler em vez de três.
 

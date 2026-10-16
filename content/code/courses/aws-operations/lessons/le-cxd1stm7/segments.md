@@ -4,7 +4,7 @@ version: 1
 ---
 
 A service instrumented for X-Ray sends a **segment** for each request it handles: a JSON document
-with the trace id, its own id, a name, a start and an end, and **subsegments** for the work it waited
+with the trace id, its own id, a name, a start and an end, and subsegments for the work it waited
 on. There are no services in this lab, so the program below writes the two segments the shop's
 checkout would produce, the API's and the payments service's, and sends them as the X-Ray SDK or a
 collector would. Its durations are fixed; the structure is the real one.
@@ -78,8 +78,8 @@ from all of them: a box per service, a line per call, coloured by errors. moto d
 
 ## What instrumentation does for you
 
-Nobody writes segments by hand. An SDK or an agent in each service creates the segment when a request
-arrives, a subsegment around each call it makes through an instrumented client (HTTP, the AWS SDK, a
-database driver), and **propagates the context**: it adds the trace id and the current span's id to the
-outgoing request's header, and the next service's SDK reads them and writes its segment as a child. The
+Nobody writes segments by hand. An SDK or an agent in each service creates the segment when a request arrives, and a subsegment around
+each call it makes through an instrumented client (HTTP, the AWS SDK, a database driver). It also
+**propagates the context**: it adds the trace id and the current span's id to the outgoing request's
+header, and the next service's SDK reads them and writes its segment as a child. The
 two shared variables in `trace.py` stand for that header.

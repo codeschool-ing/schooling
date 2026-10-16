@@ -57,8 +57,8 @@ commit  plan USD  on demand USD  total USD  unused plan  saved
 
 Read the last column. **Committing to six, the fewest that ever run at once, saves the most: 22%.** Every
 instance committed above the floor is used in some hours and idle in others, and the idle hours are paid
-anyway: at eight, 14% of the plan is unused and the saving falls to 17%; at ten it is 8%; at fourteen,
-the working-hours level, the commitment costs **more** than paying on demand for everything. The average
+anyway. At eight, 14% of the plan is unused and the saving falls to 17%; at ten it is 8%. At fourteen,
+the working-hours level, the commitment costs more than paying on demand for everything. The average
 here is 8.8 instances, and committing to the average would have saved less than committing to the floor.
 
 ## The arithmetic behind it

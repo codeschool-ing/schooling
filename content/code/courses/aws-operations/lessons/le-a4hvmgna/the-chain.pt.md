@@ -15,7 +15,7 @@ assunto da lição 3. O que os une é um bucket.
 
 ## A esteira passa arquivos, não programas
 
-Cada ação de uma esteira recebe **artefatos de entrada** e produz **artefatos de saída**, e um
+Cada ação de uma esteira recebe **artefatos de entrada** e produz artefatos de saída, e um
 artefato é um arquivo zip no bucket de artefatos da esteira. A ação de origem zipa o commit e o grava
 lá como `src`. A ação de build recebe `src`, o CodeBuild o descompacta no seu contêiner, roda o build
 e zipa o que o build declarou como saída em `image`. A ação de deploy recebe `image`. **Nada passa de

@@ -8,8 +8,8 @@ distribution or a few other front doors, and reads each request before the appli
 address, its path, its headers, its body. It is what lesson 10's alarms on 5xx errors cannot be, a way
 to refuse a request rather than to notice the damage it did.
 
-What WAF runs is a **web ACL**, a list of **rules** in priority order, and each rule is a **statement**
-that a request matches or not, with an **action** for the requests that match:
+What WAF runs is a **web ACL**, a list of rules in priority order, and each rule is a statement
+that a request matches or not, with an action for the requests that match:
 
 | action | what happens to a matching request |
 |---|---|

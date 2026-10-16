@@ -100,7 +100,7 @@ roda o serviço mais ocupado numa máquina pequena demais.
 ## O que este programa não vê
 
 **Memória não é uma métrica que o EC2 informa.** CPU, rede e disco vêm do hipervisor; a memória está
-dentro do sistema operacional, e o CloudWatch só a tem se o **agente do CloudWatch** a publicar de dentro
+dentro do sistema operacional, e o CloudWatch só a tem se o agente do CloudWatch a publicar de dentro
 da instância. Sem ele, qualquer rightsizing, o do Compute Optimizer inclusive, decide só pela CPU e pode
 recomendar um tamanho em que a memória da carga não cabe. É a primeira coisa a instalar antes de confiar
 numa recomendação para baixo.

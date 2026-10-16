@@ -4,7 +4,7 @@ version: 1
 ---
 
 A page that nobody answers is worse than no page at all, because everybody believes it was handled.
-**Escalation** is the rule for what happens next: if the person paged has not **acknowledged** within a
+**Escalation** is the rule for what happens next: if the person paged has not acknowledged within a
 set time, the next person is paged, and so on up a short ladder.
 
 ```schooling-figure

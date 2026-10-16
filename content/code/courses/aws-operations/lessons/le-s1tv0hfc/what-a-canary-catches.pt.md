@@ -28,8 +28,7 @@ linear 10%/min      new version           60  after minute 2
 
 Leia primeiro a terceira linha. **Um canário vigiado por um alarme no serviço inteiro falhou 500
 requisições, mais do que liberar tudo de uma vez.** Com 10% do tráfego, um release que falha 20% das
-requisições leva a taxa de erro do serviço a exatamente 2%, que não está acima do limite, então o
-alarme fica quieto nos cinco minutos do canário, o deploy passa tudo, e aí leva mais dois minutos
+requisições leva a taxa de erro do serviço a exatamente 2%, que não está acima do limite. O alarme fica quieto nos cinco minutos do canário, o deploy passa tudo, e aí leva mais dois minutos
 para disparar. O canário diluiu o próprio sinal por dez e o alarme não conseguiu vê-lo.
 
 A quarta linha é o mesmo canário com o alarme **só na versão nova**: 40 requisições falhadas,

@@ -3,7 +3,7 @@ title: A esteira, e o papel que a recusou
 version: 1
 ---
 
-Uma esteira é uma lista de **estágios**, cada um uma lista de **ações**, e ela é escrita em JSON. A da
+Uma esteira é uma lista de **estágios**, cada um uma lista de ações, e ela é escrita em JSON. A da
 loja tem quatro estágios: pegar o código, construí-lo, esperar que uma pessoa aprove, implantar no ECS.
 
 ```json

@@ -25,7 +25,7 @@ deploy's restart. Three bad minutes out of five is a pattern, and the alarm fire
 not on the noise. M equal to N, 5 of 5, waits for a perfect run of bad minutes and misses an outage
 that flickers; M of 1 fires on every blip.
 
-An alarm is always in one of three states: **`OK`**, **`ALARM`** and **`INSUFFICIENT_DATA`**, which
+An alarm is always in one of three states: **`OK`**, `ALARM` and `INSUFFICIENT_DATA`, which
 means the alarm cannot tell, because the data it needs is not there. It notifies on a **change** of
 state, not on every period spent in one, so an alarm in `ALARM` for an hour sends one message, plus
 one more when it returns to `OK`.

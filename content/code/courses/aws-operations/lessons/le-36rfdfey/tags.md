@@ -20,7 +20,7 @@ a service control policy can refuse to create a resource without them; both are 
 the lab does not have.
 
 **A tag counts for cost only after it is activated, and only from then on.** In the billing console, or
-with `update-cost-allocation-tags-status`, a key is made a **cost allocation tag**, and from that moment
+with `update-cost-allocation-tags-status`, a key is made a cost allocation tag, and from that moment
 the bill and Cost Explorer can group by it. **Activation is not retroactive**: last month's costs were
 recorded without the tag and stay that way. A team that activates `owner` in March sees owners from March,
 which is the reason to activate the keys on the day the list is written, not the day somebody asks.

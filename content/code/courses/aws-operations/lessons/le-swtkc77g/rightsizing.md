@@ -99,7 +99,7 @@ on a machine that is too small.
 ## What this program does not see
 
 **Memory is not a metric EC2 reports.** CPU, network and disk come from the hypervisor; memory is inside
-the operating system, and CloudWatch has it only if the **CloudWatch agent** publishes it from the
+the operating system, and CloudWatch has it only if the CloudWatch agent publishes it from the
 instance. Without it, any rightsizing, Compute Optimizer's included, decides on CPU alone and can
 recommend a size the workload's memory will not fit. That is the first thing to install before trusting a
 recommendation down.

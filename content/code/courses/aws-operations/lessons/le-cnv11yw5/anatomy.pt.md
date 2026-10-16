@@ -8,8 +8,8 @@ Gateway, de uma distribuição do CloudFront ou de algumas outras portas de entr
 antes da aplicação: o endereço, o caminho, os cabeçalhos, o corpo. É o que os alarmes de erros 5xx da
 lição 10 não conseguem ser, um jeito de recusar uma requisição em vez de notar o estrago que ela fez.
 
-O que o WAF executa é um **web ACL**, uma lista de **regras** em ordem de prioridade, e cada regra é uma
-**instrução** (*statement*) com que uma requisição casa ou não, com uma **ação** para as que casam:
+O que o WAF executa é um **web ACL**, uma lista de regras em ordem de prioridade, e cada regra é uma
+instrução (*statement*) com que uma requisição casa ou não, com uma ação para as que casam:
 
 | ação | o que acontece com uma requisição que casa |
 |---|---|

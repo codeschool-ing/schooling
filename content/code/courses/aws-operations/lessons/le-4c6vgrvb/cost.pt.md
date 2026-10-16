@@ -15,7 +15,7 @@ awskms, sa-east-1, published 2026-09-11
   sa-east-1-KMS-Requests                   0.000003 USD per Requests   $0.03 per 10000 KMS requests in South America (Sao Paulo)
 ```
 
-**Uma chave gerenciada pelo cliente custa 1 USD por mês**, e a linha diz por **versão de chave**: cada
+**Uma chave gerenciada pelo cliente custa 1 USD por mês**, e a linha diz por versão de chave: cada
 rotação acrescenta uma versão. A AWS documenta que a primeira e a segunda rotação somam uma mensalidade
 cada e as seguintes não somam nada, então uma chave rotacionada todo ano custa 1, depois 2, depois 3 USD
 por mês, e fica em 3. Chaves gerenciadas pela AWS, `aws/ssm` e as outras, não têm mensalidade.

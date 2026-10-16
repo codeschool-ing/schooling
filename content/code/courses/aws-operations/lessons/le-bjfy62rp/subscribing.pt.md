@@ -38,7 +38,7 @@ ana@laptop:~/aws/shield$ aws shield describe-subscription --query 'Subscription.
 ```
 
 A segunda linha são os termos da assinatura. Começa agora, termina em um ano, o compromisso é de
-**31.536.000 segundos**, que são 365 dias, e ela **se renova sozinha** a menos que alguém desligue isso.
+**31.536.000 segundos**, que são 365 dias, e ela se renova sozinha a menos que alguém desligue isso.
 Com uma assinatura, um recurso é protegido ao ser nomeado:
 
 ```

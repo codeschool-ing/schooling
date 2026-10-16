@@ -40,7 +40,7 @@ and applied by ECR every day.
 }
 ```
 
-Each rule **selects** images and **expires** what it selected. The first selects untagged images,
+Each rule **selects** images and expires what it selected. The first selects untagged images,
 which is what a mutable tag leaves behind when it moves, and expires those pushed more than seven
 days ago. The second selects images with a tag starting with `dev-` and keeps the 30 newest,
 expiring the rest. Images that match neither rule, such as `1.4.0` and the commit-tagged images, are

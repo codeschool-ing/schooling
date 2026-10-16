@@ -32,7 +32,7 @@ the resource and evidence. A few of the types worth recognising, from AWS's docu
 | `Policy:IAMUser/RootCredentialUsage` | the root user was used |
 | `Discovery:S3/AnomalousBehavior` | an unusual pattern of listing and reading S3, for this principal |
 
-Severity is a number in bands: **low** below 4, **medium** from 4 to 6.9, **high** from 7. The first row
+Severity is a number in bands: **low** below 4, medium from 4 to 6.9, high from 7. The first row
 is high and urgent, because a credential that left its instance is in somebody else's hands now. The
 third is low and constant: every instance with an open port on the internet is probed all day.
 

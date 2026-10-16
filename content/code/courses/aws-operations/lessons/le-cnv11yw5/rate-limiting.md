@@ -7,8 +7,8 @@ A rate-based rule counts requests and acts on whoever sends too many. The shop's
 
 - **count by** `IP`, the address the request came from;
 - **over** a window of 300 seconds;
-- **only** requests whose path starts with `/login`, the **scope-down statement**;
-- **block** an address once it has sent more than **100** of them in the window.
+- **only** requests whose path starts with `/login`, the scope-down statement;
+- **block** an address once it has sent more than 100 of them in the window.
 
 A person logging in sends a handful of requests. A program trying a list of stolen passwords sends
 thousands, and a limit of a hundred in five minutes stops it while leaving every person alone. The
@@ -47,9 +47,9 @@ request.
 
 ## Where a rate limit belongs
 
-Keep rate-based rules **after** the IP set and **before** the managed group, as the shop's are: the IP
-set is certain and decides first, and a request from an address already over its limit is refused
-before the managed rules look at it, so its log record names the rate rule as the reason, which is the
-record the team will want to read. A rate rule for the whole site, with no
+Keep rate-based rules **after** the IP set and before the managed group, as the shop's are. The IP set is
+certain and decides first. A request from an address already over its limit is then refused before the
+managed rules look at it, so its log record names the rate rule as the reason, which is the record the
+team will want to read. A rate rule for the whole site, with no
 scope-down and a generous limit of a few thousand, is a common second one: it costs one rule and
 catches a single address hammering everything.

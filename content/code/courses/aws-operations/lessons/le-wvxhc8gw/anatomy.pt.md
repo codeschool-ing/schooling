@@ -5,7 +5,7 @@ version: 1
 
 Uma métrica do CloudWatch é uma série de números ao longo do tempo, e a imagem comum dela para aí: um
 nome, como `Orders`, e os valores. **O nome é um terço da identidade.** Uma métrica é identificada pelo
-**namespace**, pelo **nome** e pelas **dimensões** juntos, e mudar qualquer um dos três faz uma métrica
+namespace, pelo nome e pelas dimensões juntos, e mudar qualquer um dos três faz uma métrica
 diferente, com histórico próprio e linha própria na fatura.
 
 ```schooling-figure
@@ -66,7 +66,7 @@ expressão `SEARCH`, nunca algo que o CloudWatch faz sozinho.
 ## Resolução e retenção
 
 Um ponto publicado com a **resolução padrão** é guardado por minuto; com `--storage-resolution 1`,
-**alta resolução**, por segundo, o que custa mais para alarmar. O CloudWatch depois guarda menos
+alta resolução, por segundo, o que custa mais para alarmar. O CloudWatch depois guarda menos
 detalhe conforme os dados envelhecem, que é o comportamento documentado da AWS e não algo executado
 aqui:
 

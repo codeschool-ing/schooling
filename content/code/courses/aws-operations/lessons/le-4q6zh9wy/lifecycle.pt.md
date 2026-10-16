@@ -40,7 +40,7 @@ e aplicadas pelo ECR todo dia.
 }
 ```
 
-Cada regra **seleciona** imagens e **expira** o que selecionou. A primeira seleciona imagens sem tag,
+Cada regra **seleciona** imagens e expira o que selecionou. A primeira seleciona imagens sem tag,
 que é o que uma tag mutável deixa para trás quando muda de lugar, e expira as enviadas há mais de sete
 dias. A segunda seleciona imagens com uma tag começando por `dev-` e mantém as 30 mais novas,
 expirando o resto. Imagens que nenhuma das regras seleciona, como `1.4.0` e as imagens com tag de

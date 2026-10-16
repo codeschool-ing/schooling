@@ -6,7 +6,7 @@ version: 1
 An image carries an operating system's packages and a language's libraries, and some of them have
 published vulnerabilities. **ECR can look**, and it does it two ways. **Basic scanning** checks the
 operating system's packages against public vulnerability databases, when the image is pushed or when
-asked, and costs nothing. **Enhanced scanning** hands the repository to Amazon Inspector, which also
+asked, and costs nothing. Enhanced scanning hands the repository to Amazon Inspector, which also
 reads the language packages (the Python wheels, the npm modules) and, more importantly, **scans
 again whenever a new vulnerability is published**, so an image that was clean on Monday can have a
 finding on Thursday without anybody pushing anything.

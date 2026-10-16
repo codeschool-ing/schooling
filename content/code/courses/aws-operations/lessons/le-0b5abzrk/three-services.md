@@ -24,7 +24,7 @@ vulnerable thing is reachable from the internet and an exploit is publicly avail
 
 Security Hub is two things. A **checker**: it runs controls from standards such as AWS's Foundational
 Security Best Practices and the CIS benchmark against the account's configuration, and writes a finding
-for each failure, a bucket open to the public, a trail without validation. And an **aggregator**: the
+for each failure, a bucket open to the public, a trail without validation. And an aggregator: the
 findings of GuardDuty, Inspector and other products arrive there in one format, the **AWS Security
 Finding Format**, ASFF, so there is one queue to read instead of three.
 

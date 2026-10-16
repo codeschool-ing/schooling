@@ -67,8 +67,8 @@ for i, minute in enumerate(minutes):
 ```
 
 The four treatments differ only in what a minute with no data counts as: **`notBreaching`** counts it
-as good, **`breaching`** as bad, **`missing`** leaves it out (and with nothing left, the state is
-`INSUFFICIENT_DATA`), **`ignore`** keeps the alarm in the state it was in. The times printed are UTC.
+as good, `breaching` as bad, `missing` leaves it out (and with nothing left, the state is
+`INSUFFICIENT_DATA`), `ignore` keeps the alarm in the state it was in. The times printed are UTC.
 
 ## The alarm that went quiet when the service died
 

@@ -17,7 +17,7 @@ moto has no Compute Optimizer at all, so what follows is from AWS's documentatio
 
 ## What it says
 
-Each resource gets a **finding** and up to three **recommendations**:
+Each resource gets a **finding** and up to three recommendations:
 
 | finding | meaning |
 |---|---|

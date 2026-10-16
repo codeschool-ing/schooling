@@ -6,7 +6,7 @@ version: 1
 AWS runs the same idea as `spike.py` as a service: **Cost Anomaly Detection**, part of Billing and Cost
 Management, free to use. A **monitor** says what to watch: every AWS service separately, the most common
 choice; or one account, a cost category of lesson 24, or a cost allocation tag. A **subscription** says who
-hears about it, by e-mail or SNS, immediately, daily or weekly, and above what **impact**, in dollars or as a
+hears about it, by e-mail or SNS, immediately, daily or weekly, and above what impact, in dollars or as a
 percentage of the expected spend. Instead of a median, it learns each monitor's pattern, weekdays and
 weekends included, and reports the root cause it can see: the service, the account, the region and the
 usage type that moved.
@@ -34,8 +34,8 @@ works for a team the size of the shop's:
 | budget, actual | above 100% before the 20th | page |
 | `EstimatedCharges` rate | three times the usual pace | page |
 
-The two pages that matter most are the ones the table puts there for a reason: **a service nobody uses
-appearing on the bill** is the signature of a stolen credential, instances in a region the team never
-uses, and it is lesson 19's GuardDuty finding seen from the other side; and **a bill growing three times
-faster than usual** is a loop, a leak or an attack, whichever lesson it belongs to. In both cases the bill
+Two of the pages are there for a reason. **A service nobody uses appearing on the bill** is the signature of a stolen
+credential, instances in a region the team never uses: lesson 19's GuardDuty finding, seen from the other
+side. A bill growing three times faster than usual is a loop, a leak or an attack, whichever lesson it
+belongs to. In both cases the bill
 noticed first, and it should not be the last to.

@@ -28,10 +28,9 @@ required-owner	REQUIRED_TAGS	ACTIVE
 s3-public-read	S3_BUCKET_PUBLIC_READ_PROHIBITED	ACTIVE
 ```
 
-As duas regras estão `ACTIVE`. Uma regra é **disparada** de um de dois jeitos: por uma **mudança de
-configuração** num recurso do seu escopo, que é o que as duas fazem, então um bucket é julgado minutos
-depois de ser mudado; ou **periodicamente**, a cada uma a vinte e quatro horas, para regras sobre coisas
-que não são a configuração de um recurso, como se o CloudTrail está ligado na conta.
+As duas regras estão `ACTIVE`. Uma regra é **disparada** de um de dois jeitos. Uma regra disparada por mudança de configuração, como as
+duas, julga um bucket minutos depois de ele mudar. Uma regra periódica roda a cada uma a vinte e quatro
+horas, para coisas que não são a configuração de um recurso, como se o CloudTrail está ligado na conta.
 
 O moto conhece os nomes das regras gerenciadas, e recusa uma que não existe, como a AWS:
 

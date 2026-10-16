@@ -9,13 +9,13 @@ AWS, e o desconto é o maior que a AWS oferece em computação: até uns 60% par
 próxima seção lê na lista de preços. Há dois instrumentos, e eles convergiram no preço sem deixar de ser
 diferentes no que cobrem.
 
-**Reserved Instances**, RIs, são um compromisso com um **tipo de instância numa região**: uma `m7g.large`,
+Reserved Instances, RIs, são um compromisso com um **tipo de instância numa região**: uma `m7g.large`,
 Linux, em São Paulo, por um ou três anos. A cada hora, se uma instância dessas está rodando, ela é cobrada
 na taxa reservada. Uma RI **standard** é a mais barata e não pode ser trocada por outra família; uma
-**convertible** pode ser trocada por outra de valor igual ou maior, e custa mais. RIs existem para o EC2, e
+convertible pode ser trocada por outra de valor igual ou maior, e custa mais. RIs existem para o EC2, e
 numa forma própria para RDS, ElastiCache, OpenSearch e Redshift.
 
-**Savings Plans** são um compromisso com **um número de dólares por hora**, por um ou três anos: *vamos
+Savings Plans são um compromisso com **um número de dólares por hora**, por um ou três anos: *vamos
 gastar pelo menos 2,50 USD por hora em computação*. A cada hora, o uso elegível é cobrado nas taxas do plano
 até o compromisso se esgotar, e o resto sob demanda. Dois tipos importam:
 
@@ -24,8 +24,8 @@ até o compromisso se esgotar, e o resto sob demanda. Dois tipos importam:
 | **Compute Savings Plan** | EC2 de qualquer família, tamanho, região e sistema operacional; Fargate; Lambda | acompanha a carga, para Graviton, para contêineres, para outra região |
 | **EC2 Instance Savings Plan** | uma família de instâncias numa região, `m7g` em São Paulo, qualquer tamanho | como uma RI standard, mas tamanhos e sistemas operacionais mudam livremente |
 
-Cada tipo é comprado **sem adiantamento**, com **adiantamento parcial** ou com **pagamento total
-adiantado**; pagar antes compra um pouco mais de desconto.
+Cada tipo é comprado **sem adiantamento**, com adiantamento parcial ou com pagamento total
+adiantado; pagar antes compra um pouco mais de desconto.
 
 ## O que não muda
 

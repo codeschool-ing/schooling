@@ -5,7 +5,7 @@ version: 1
 
 Budgets look at the month. The second instrument is a metric: **`EstimatedCharges`**, in the namespace
 `AWS/Billing`, the month-to-date estimate of the bill in US dollars, updated several times a day. It is
-published only in **`us-east-1`**, whatever region the account uses, and only after **billing alerts** are
+published only in **`us-east-1`**, whatever region the account uses, and only after billing alerts are
 turned on once in the billing preferences. An alarm on it is an alarm like lesson 10's:
 
 ```

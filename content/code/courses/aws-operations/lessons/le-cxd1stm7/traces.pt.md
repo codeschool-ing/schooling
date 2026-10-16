@@ -15,7 +15,7 @@ segue uma requisição por cada serviço que ela toca**, e diz para onde foi o t
 
 O vocabulário é pequeno:
 
-- um **trace** é a jornada inteira de uma requisição, com um **id de trace** compartilhado por todas as
+- um **trace** é a jornada inteira de uma requisição, com um id de trace compartilhado por todas as
   partes;
 - um **segmento** é a parte que um serviço tratou, do momento em que a requisição chegou ao momento em
   que ele respondeu;

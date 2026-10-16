@@ -4,12 +4,12 @@ version: 1
 ---
 
 O CloudTrail, da lição 20, registra **o que foi pedido**. O AWS Config registra **como as coisas são**:
-para cada recurso que ele suporta, um **item de configuração**, um retrato das configurações do recurso,
+para cada recurso que ele suporta, um item de configuração, um retrato das configurações do recurso,
 das tags e das relações, escrito cada vez que o recurso muda. Em ordem, os itens são a história do recurso,
 e a pergunta que eles respondem é a que o CloudTrail não responde: *como era este bucket na terça passada,
 antes de alguém mudá-lo?*
 
-O Config fica desligado até um **gravador** (*recorder*) ser criado e iniciado, com um **canal de entrega**
+O Config fica desligado até um **gravador** (*recorder*) ser criado e iniciado, com um canal de entrega
 nomeando o bucket para onde vão os retratos e os arquivos de histórico. Trabalhe em `~/aws/config`
 (`mkdir -p ~/aws/config && cd ~/aws/config`):
 

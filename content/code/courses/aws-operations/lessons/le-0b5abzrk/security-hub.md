@@ -79,7 +79,7 @@ sh-2	MEDIUM	CloudTrail log file validation is off
 ```
 
 On AWS every finding also gets a **workflow status**, `NEW` until somebody sets it to `NOTIFIED`,
-`SUPPRESSED` or `RESOLVED`, and a **record state**, `ACTIVE` until the producer archives it. moto sets
+`SUPPRESSED` or `RESOLVED`, and a record state, `ACTIVE` until the producer archives it. moto sets
 neither, and does not have `batch-update-findings`, the call that moves a finding through its workflow.
 
 ## The filter that is not applied

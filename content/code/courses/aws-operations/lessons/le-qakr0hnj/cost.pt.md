@@ -16,7 +16,7 @@ AWSConfig, sa-east-1, published 2026-09-11
 ```
 
 O Config cobra pelos **itens de configuração gravados**, 0,003 USD cada com gravação contínua, e pelas
-**avaliações de regra**, 0,001 USD cada nas primeiras 100.000 do mês e menos depois; as avaliações de
+avaliações de regra, 0,001 USD cada nas primeiras 100.000 do mês e menos depois; as avaliações de
 conformance pack têm as mesmas faixas. A **gravação diária**, a segunda linha, grava no máximo um item por
 recurso por dia a 0,012 USD.
 

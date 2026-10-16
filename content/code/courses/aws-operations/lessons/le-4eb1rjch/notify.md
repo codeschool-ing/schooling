@@ -4,7 +4,7 @@ version: 1
 ---
 
 An alarm's state changes in silence unless it has **actions**. The usual action is to publish to an SNS
-**topic**, and the topic delivers to every **subscription** it has: an email address, an SMS number, an
+**topic**, and the topic delivers to every subscription it has: an email address, an SMS number, an
 HTTPS endpoint of a paging service, a queue, a Lambda function. The shop's alarm already names the
 topic `shop-oncall` for both `ALARM` and `OK`, so the person paged also learns when it is over.
 

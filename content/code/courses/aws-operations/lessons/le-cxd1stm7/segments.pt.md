@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um serviço instrumentado para o X-Ray manda um **segmento** para cada requisição que trata: um
-documento JSON com o id do trace, o id próprio, um nome, um início e um fim, e **subsegmentos** para o
+documento JSON com o id do trace, o id próprio, um nome, um início e um fim, e subsegmentos para o
 trabalho que esperou. Não há serviços neste laboratório, então o programa abaixo escreve os dois
 segmentos que o checkout da loja produziria, o da API e o do serviço de pagamentos, e os manda como o
 SDK do X-Ray ou um coletor mandaria. As durações dele são fixas; a estrutura é a real.
@@ -80,8 +80,7 @@ moto não desenha nenhum dos dois.
 
 ## O que a instrumentação faz por você
 
-Ninguém escreve segmentos à mão. Um SDK ou um agente em cada serviço cria o segmento quando uma
-requisição chega, um subsegmento em volta de cada chamada que ele faz por um cliente instrumentado
-(HTTP, o SDK da AWS, um driver de banco), e **propaga o contexto**: acrescenta o id do trace e o id do
+Ninguém escreve segmentos à mão. Um SDK ou um agente em cada serviço cria o segmento quando uma requisição chega, e um subsegmento em volta de cada chamada que ele faz por um
+cliente instrumentado (HTTP, o SDK da AWS, um driver de banco). Ele também **propaga o contexto**: acrescenta o id do trace e o id do
 trecho atual ao cabeçalho da requisição de saída, e o SDK do próximo serviço os lê e escreve o segmento
 dele como filho. As duas variáveis compartilhadas em `trace.py` representam esse cabeçalho.

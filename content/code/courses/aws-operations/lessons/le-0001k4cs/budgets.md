@@ -58,10 +58,9 @@ enough to act. A budget with only an actual notification at 100% says, on the 30
 see on the 1st.
 
 moto keeps the budget and both notifications, and its actual spend is 0, because there is no spend: no
-notification will ever be sent from here. On AWS the spend is updated several times a day, and a budget
-notification goes to e-mail addresses or to an SNS topic, and from the topic to the routes of lesson 14:
-the forecast alert to a ticket, and a budget for the whole account crossing its actual at 100% early in
-the month to a page.
+notification will ever be sent from here. On AWS the spend is updated several times a day, and a budget notification goes to e-mail addresses or
+to an SNS topic. From the topic it follows the routes of lesson 14: the forecast alert to a ticket, and
+the whole account's actual spend passing 100% early in the month to a page.
 
 The topic is in `us-east-1`, which is not a slip: the billing metric of the next section exists only
 there, and an alarm can notify only a topic in its own region, so one topic there serves both.

@@ -96,7 +96,7 @@ Three findings, each with the line it is on:
   could be given another value; with the default, AWS would refuse the log group at creation, after
   everything before it was made.
 - **W3011**: `DeletionPolicy: Retain` keeps the bucket when the stack is deleted, but not when an
-  update **replaces** it; that needs `UpdateReplacePolicy` as well. The template is valid and the data
+  update replaces it; that needs `UpdateReplacePolicy` as well. The template is valid and the data
   is not safe.
 - **E1020**: `!Ref AlertTopicName` refers to nothing. The linter lists what it could refer to.
 

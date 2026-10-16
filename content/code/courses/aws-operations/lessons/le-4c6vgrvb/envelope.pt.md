@@ -3,9 +3,9 @@ title: Criptografia de envelope, para qualquer coisa maior
 version: 1
 ---
 
-O jeito de a AWS cifrar um terabyte com uma chave que só aceita 4 KB é a **criptografia de envelope**: o
-KMS cria uma **chave de dados** nova, a entrega ao programa duas vezes, uma pura e uma cifrada com a chave
-KMS, e o programa cifra os dados ele mesmo com a pura, guarda a cifrada ao lado do resultado e esquece a
+O jeito de a AWS cifrar um terabyte com uma chave que só aceita 4 KB é a **criptografia de envelope**. O
+KMS cria uma chave de dados nova e a entrega ao programa duas vezes, uma pura e uma cifrada com a chave
+KMS. O programa cifra os dados ele mesmo com a pura, guarda a cifrada ao lado do resultado e esquece a
 pura. O S3, o EBS e o RDS fazem exatamente isso em cada objeto, volume e banco, e um programa também pode,
 em `~/aws/kms/envelope.py`:
 

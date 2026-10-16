@@ -30,7 +30,7 @@ aws: [ERROR]: An error occurred (500) when calling the GetSavingsPlansPurchaseRe
 ```
 
 O moto lista ofertas de reserved instance de `m7g.large` com preços que ele **inventa**, e inventa de novo
-a cada execução: as três acima são as primeiras de dezenas que ele listou, um prazo de um ano em segundos,
+a cada execução. As três acima são as primeiras de dezenas que ele listou: um prazo de um ano em segundos,
 um preço adiantado e um por hora, para uma instância cujo preço real de um ano com pagamento total
 adiantado a seção anterior leu como 659 USD. É por isso que este curso só tira preços da lista de preços. E
 ele não tem recomendações, nem o serviço de Savings Plans, nem relatórios de utilização, então os

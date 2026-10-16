@@ -5,7 +5,7 @@ version: 1
 
 A CloudWatch metric is a series of numbers over time, and the common picture of it stops there: a
 name, like `Orders`, and its values. **The name is a third of the identity.** A metric is identified by
-its **namespace**, its **name** and its **dimensions** together, and changing any one of the three
+its namespace, its name and its dimensions together, and changing any one of the three
 makes a different metric, with its own history and its own line on the bill.
 
 ```schooling-figure
@@ -66,7 +66,7 @@ empty. Adding metrics up across a dimension is something you ask for, with metri
 ## Resolution and retention
 
 A data point published with the default **standard resolution** is stored per minute; with
-`--storage-resolution 1`, **high resolution**, per second, which costs more to alarm on. CloudWatch then
+`--storage-resolution 1`, high resolution, per second, which costs more to alarm on. CloudWatch then
 keeps less detail as data ages, which is AWS's documented behaviour rather than anything run here:
 
 | age of the data | smallest period available |

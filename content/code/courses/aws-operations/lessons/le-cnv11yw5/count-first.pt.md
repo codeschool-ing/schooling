@@ -88,6 +88,5 @@ produzido por este laboratório, uma requisição contada por `login-rate` e lib
 
 `terminatingRuleId` é o que a decidiu, e aqui foi a ação padrão. A regra sendo testada está em
 `nonTerminatingMatchingRules`. Uma consulta do Logs Insights sobre uma semana desses registros, contando
-os endereços que `login-rate` teria bloqueado, é a ferramenta da lição 9 sobre os dados do WAF, e a lista
-que ela imprime é o que a equipe lê antes de trocar `Count` por `Block`: uma lista de desconhecidos é uma
+os endereços que `login-rate` teria bloqueado, é a ferramenta da lição 9 sobre os dados do WAF. A lista que ela imprime é o que a equipe lê antes de trocar `Count` por `Block`: uma lista de desconhecidos é uma
 regra pronta para bloquear, e uma lista com o endereço do escritório é um limite baixo demais.

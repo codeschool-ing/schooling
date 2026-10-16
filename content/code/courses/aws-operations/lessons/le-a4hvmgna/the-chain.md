@@ -15,7 +15,7 @@ version to the next, and is the subject of lesson 3. What joins them is a bucket
 
 ## The pipeline passes files, not programs
 
-Each action of a pipeline takes **input artifacts** and produces **output artifacts**, and an
+Each action of a pipeline takes **input artifacts** and produces output artifacts, and an
 artifact is a zip file in the pipeline's artifact bucket. The source action zips the commit and
 writes it there as `src`. The build action is handed `src`, CodeBuild unpacks it into its
 container, runs the build, and zips whatever the build named as its output into `image`. The deploy

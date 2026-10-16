@@ -6,7 +6,7 @@ version: 1
 A stack knows what it created and with which properties. It does not know what happened afterwards.
 Somebody lowers the log retention in the console at two in the morning, to stop a cost, and goes to
 bed. **The template still says 14 days, the stack still says 14 days, and the log group keeps one.**
-That difference is **drift**, and the next update of the stack may silently put 14 back, or fail,
+That difference is drift, and the next update of the stack may silently put 14 back, or fail,
 depending on the property.
 
 The lab plays the person in the console with one command:
@@ -25,8 +25,8 @@ aws: [ERROR]: Unable to parse response (syntax error: line 1, column 0), invalid
 ```
 
 moto fails with an internal error. On AWS, `detect-stack-drift` starts a comparison and returns an
-id; `describe-stack-resource-drifts` then lists each resource as **`IN_SYNC`**, **`MODIFIED`**,
-**`DELETED`** or **`NOT_CHECKED`**, and for a modified one, each property with its expected and actual
+id; `describe-stack-resource-drifts` then lists each resource as **`IN_SYNC`**, `MODIFIED`,
+`DELETED` or `NOT_CHECKED`, and for a modified one, each property with its expected and actual
 value. For this stack it would show `WebLogs` as `MODIFIED`, with `RetentionInDays` expected 14 and
 actually 1. Not every resource type supports drift detection, and a property the template does not
 set is not compared at all, which is what `NOT_CHECKED` and silence mean.

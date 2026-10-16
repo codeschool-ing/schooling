@@ -4,12 +4,12 @@ version: 1
 ---
 
 CloudTrail, lesson 20, records **what was asked**. AWS Config records **what things are**: for every
-resource it supports, a **configuration item**, a snapshot of the resource's settings, its tags and its
+resource it supports, a configuration item, a snapshot of the resource's settings, its tags and its
 relationships, written each time the resource changes. Put in order, the items are the resource's
 history, and the question they answer is the one CloudTrail cannot: *what did this bucket look like last
 Tuesday, before somebody changed it?*
 
-Config is off until a **recorder** is created and started, with a **delivery channel** naming the bucket
+Config is off until a **recorder** is created and started, with a delivery channel naming the bucket
 the snapshots and history files go to. Work in `~/aws/config` (`mkdir -p ~/aws/config && cd ~/aws/config`):
 
 ```

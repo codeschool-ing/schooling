@@ -38,7 +38,7 @@ ana@laptop:~/aws/shield$ aws shield describe-subscription --query 'Subscription.
 ```
 
 The second line is the subscription's terms. It starts now, ends in a year, the commitment is
-**31,536,000 seconds**, which is 365 days, and it **renews by itself** unless somebody turns that off.
+**31,536,000 seconds**, which is 365 days, and it renews by itself unless somebody turns that off.
 With a subscription, a resource is protected by naming it:
 
 ```

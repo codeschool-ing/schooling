@@ -20,11 +20,11 @@ awswaf, sa-east-1, published 2026-09-14
 ```
 
 The first command is the data transfer line: on top of the usual data transfer out, **every gigabyte a
-protected load balancer sends** pays 0.05 USD, for the first 100 TB in a month. The subscription itself
-is not a São Paulo line, because it belongs to the organisation rather than to a region; it is in the
-offer's `aws-other` file, which `price.py` does not read, so the second command reads it with `curl` and
-`jq`, keeping the lines about the subscription: **3,000 USD a month for the first subscription**, and nothing for further ones, since one
-subscription covers every account of an organisation that pays through one bill. The third line is the
+protected load balancer sends** pays 0.05 USD, for the first 100 TB in a month. The subscription itself is not a São Paulo line, because it belongs to the organisation rather than to a
+region. It is in the offer's `aws-other` file, which `price.py` does not read, so the second command
+reads it with `curl` and `jq`, keeping the lines about the subscription: **3,000 USD a month for the
+first subscription**, and nothing for further ones. One subscription covers every account of an
+organisation that pays through one bill. The third line is the
 WAF request price for a protected resource, zero in the base tier.
 
 ## The shop's numbers

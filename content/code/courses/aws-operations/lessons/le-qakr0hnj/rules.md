@@ -28,10 +28,10 @@ required-owner	REQUIRED_TAGS	ACTIVE
 s3-public-read	S3_BUCKET_PUBLIC_READ_PROHIBITED	ACTIVE
 ```
 
-Both rules are `ACTIVE`. A rule is **triggered** in one of two ways: on a **configuration change** to a
-resource in its scope, which is what both of these do, so a bucket is judged within minutes of being
-changed; or **periodically**, every one to twenty-four hours, for rules about things that are not a
-resource's configuration, such as whether CloudTrail is on in the account.
+Both rules are `ACTIVE`. A rule is **triggered** in one of two ways. A rule triggered by a configuration change, as both of these
+are, judges a bucket within minutes of its being changed. A periodic rule runs every one to twenty-four
+hours, for things that are not a resource's configuration, such as whether CloudTrail is on in the
+account.
 
 moto knows the managed rules' names, and refuses one that does not exist, as AWS does:
 

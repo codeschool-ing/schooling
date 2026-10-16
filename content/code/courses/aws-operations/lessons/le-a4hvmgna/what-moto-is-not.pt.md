@@ -44,7 +44,7 @@ no moto, como uma política que não nomeia segredo nenhum. Aquela lição mostr
 Nada neste curso precisa de uma conta AWS de verdade, e nada nele fica mais fácil com uma. **Se você
 abrir uma mesmo assim**, a lição 1 de `aws-foundations` tem a seção sobre fazer isso com segurança, e
 a ordem é a parte para lembrar: proteja o usuário root com um segundo fator, depois crie um
-orçamento com alerta, **antes** de qualquer outra coisa. O free tier é uma possibilidade para uma
+orçamento com alerta, antes de qualquer outra coisa. O free tier é uma possibilidade para uma
 conta pequena, nunca uma promessa: o que ele cobre muda, e um recurso esquecido é cobrado quer você
 quisesse mantê-lo ou não. Esses passos não podem ser gravados sem uma conta, então não foram
 executados para este curso e nenhuma transcrição deles aparece aqui.

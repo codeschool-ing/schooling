@@ -6,7 +6,7 @@ version: 1
 Orçamentos olham o mês. O segundo instrumento é uma métrica: **`EstimatedCharges`**, no namespace
 `AWS/Billing`, a estimativa da conta no mês até agora em dólares americanos, atualizada várias vezes ao
 dia. Ela só é publicada em **`us-east-1`**, qualquer que seja a região que a conta usa, e só depois que os
-**alertas de cobrança** são ligados uma vez nas preferências de cobrança. Um alarme sobre ela é um alarme
+alertas de cobrança são ligados uma vez nas preferências de cobrança. Um alarme sobre ela é um alarme
 como os da lição 10:
 
 ```

@@ -4,7 +4,7 @@ version: 1
 ---
 
 O estado de um alarme muda em silêncio a menos que ele tenha **ações**. A ação comum é publicar num
-**tópico** do SNS, e o tópico entrega a cada **assinatura** que tem: um e-mail, um número de SMS, um
+**tópico** do SNS, e o tópico entrega a cada assinatura que tem: um e-mail, um número de SMS, um
 endpoint HTTPS de um serviço de plantão, uma fila, uma função Lambda. O alarme da loja já nomeia o
 tópico `shop-oncall` para `ALARM` e para `OK`, então quem é chamado também fica sabendo quando acabou.
 

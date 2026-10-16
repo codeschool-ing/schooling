@@ -6,7 +6,7 @@ version: 1
 Uma imagem carrega os pacotes de um sistema operacional e as bibliotecas de uma linguagem, e alguns
 deles têm vulnerabilidades publicadas. **O ECR pode olhar**, e faz isso de dois jeitos. A **varredura
 básica** confere os pacotes do sistema operacional contra bases públicas de vulnerabilidades, quando
-a imagem é enviada ou quando alguém pede, e não custa nada. A **varredura avançada** entrega o
+a imagem é enviada ou quando alguém pede, e não custa nada. A varredura avançada entrega o
 repositório ao Amazon Inspector, que também lê os pacotes de linguagem (as wheels do Python, os
 módulos do npm) e, mais importante, **varre de novo sempre que uma vulnerabilidade nova é
 publicada**, então uma imagem limpa na segunda pode ter um achado na quinta sem ninguém enviar nada.

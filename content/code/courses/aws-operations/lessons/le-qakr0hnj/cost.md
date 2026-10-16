@@ -16,7 +16,7 @@ AWSConfig, sa-east-1, published 2026-09-11
 ```
 
 Config charges for **configuration items recorded**, 0.003 USD each with continuous recording, and for
-**rule evaluations**, 0.001 USD each for the first 100,000 a month and less after; conformance pack
+rule evaluations, 0.001 USD each for the first 100,000 a month and less after; conformance pack
 evaluations have the same tiers. **Daily recording**, the second line, records at most one item per
 resource per day at 0.012 USD.
 

@@ -96,7 +96,7 @@ Três achados, cada um com a linha em que está:
   receber outro valor; com o padrão, a AWS recusaria o grupo de logs na criação, depois de tudo antes
   dele já ter sido feito.
 - **W3011**: `DeletionPolicy: Retain` mantém o bucket quando a stack é excluída, mas não quando uma
-  atualização o **substitui**; para isso precisa também de `UpdateReplacePolicy`. O template é válido
+  atualização o substitui; para isso precisa também de `UpdateReplacePolicy`. O template é válido
   e os dados não estão seguros.
 - **E1020**: `!Ref AlertTopicName` não se refere a nada. O linter lista o que poderia ser referido.
 

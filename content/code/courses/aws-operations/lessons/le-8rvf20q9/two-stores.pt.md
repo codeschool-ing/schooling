@@ -14,8 +14,8 @@ O **Parameter Store**, parte do Systems Manager, guarda valores com nome numa hi
 chave do KMS. Parâmetros standard são grátis, até 10.000 deles e 4 KB cada. Parâmetros advanced guardam
 até 8 KB, aceitam políticas de expiração e custam uma mensalidade cada.
 
-O **Secrets Manager** guarda **segredos**: valores criptografados, geralmente um pequeno documento JSON,
-com **versões rotuladas por estágio** e um jeito pronto de **rotacioná-los**, rodar uma função que muda a
+O Secrets Manager guarda segredos: valores criptografados, geralmente um pequeno documento JSON,
+com **versões rotuladas por estágio** e um jeito pronto de rotacioná-los, rodar uma função que muda a
 senha no banco e no segredo ao mesmo tempo. Ele gera senhas, replica um segredo para outras regiões e
 aceita uma política de recurso dizendo quem pode lê-lo. Todo segredo custa uma mensalidade, e as chamadas
 também.
@@ -41,8 +41,8 @@ AWSSystemsManager, sa-east-1, published 2026-10-08
   SAE1-PS-Param-Processed-Tier2            0.000005 USD per API Request $0.05 per 10,000 Parameter API Interaction_Higher throughput in South America (Sao Paulo)
 ```
 
-**40 centavos por mês por segredo, e 5 centavos por 10.000 chamadas.** O Parameter Store não imprime linha
-para um parâmetro standard porque ele não tem; as linhas que imprime são do nível advanced, 5 centavos por
+**40 centavos por mês por segredo, e 5 centavos por 10.000 chamadas.** O Parameter Store não imprime linha para um parâmetro standard porque ele não tem. As linhas que imprime
+são do nível advanced, 5 centavos por
 mês por parâmetro (o programa mostra o valor por hora), e da configuração de vazão maior, que cobra 5
 centavos por 10.000 chamadas de todo parâmetro depois de ligada. Um valor criptografado, em qualquer dos
 dois cofres, também custa as chamadas ao KMS que o decifram, que a lição 18 calcula.

@@ -3,7 +3,7 @@ title: Cost Categories, and dividing what nobody can own
 version: 1
 ---
 
-Tags group resources. **Cost Categories** group **costs**: a set of rules, evaluated in order, that put
+Tags group resources. **Cost Categories** group costs: a set of rules, evaluated in order, that put
 every line of the bill into a named value, by tag, by account, by service, by usage type, or by another
 category. The first rule that matches decides; a line no rule matches gets the **default value**. The
 category then appears in Cost Explorer and in the CUR as if it were one more column.
@@ -44,13 +44,13 @@ activated tag, a category is not applied to the past. moto keeps it and lists no
 
 Read the rules against `bill.py`'s month:
 
-- the three tag rules put **433.05** USD in `checkout`, **432.04** in `api`, **231.34** in `platform`;
+- the three tag rules put **433.05** USD in `checkout`, 432.04 in `api`, 231.34 in `platform`;
 - the data transfer, **180.00**, matches `shared`;
 - the untagged lines, **249.19**, match nothing and fall to `unallocated`.
 
-The **split charge rule** then divides `shared` among the three teams **in proportion to their own costs**,
-1,096.43 USD in all: checkout gets 433.05 / 1,096.43 of the 180, **71.09**; api **70.93**; platform
-**37.98**. Each team now sees a share of the data transfer that its traffic, roughly, caused.
+The split charge rule then divides `shared` among the three teams **in proportion to their own costs**,
+1,096.43 USD in all: checkout gets 433.05 / 1,096.43 of the 180, 71.09; api 70.93; platform
+37.98. Each team now sees a share of the data transfer that its traffic, roughly, caused.
 `PROPORTIONAL` is one of three methods; `EVEN` splits equally, and `FIXED` uses percentages the team
 writes down.
 

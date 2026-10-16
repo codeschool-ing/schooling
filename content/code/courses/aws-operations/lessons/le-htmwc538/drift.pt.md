@@ -6,7 +6,7 @@ version: 1
 Uma stack sabe o que criou e com quais propriedades. Ela não sabe o que aconteceu depois. Alguém baixa
 a retenção dos logs no console às duas da manhã, para segurar um custo, e vai dormir. **O template
 ainda diz 14 dias, a stack ainda diz 14 dias, e o grupo de logs guarda um.** Essa diferença é o
-**drift**, e a próxima atualização da stack pode pôr 14 de volta em silêncio, ou falhar, dependendo da
+drift, e a próxima atualização da stack pode pôr 14 de volta em silêncio, ou falhar, dependendo da
 propriedade.
 
 O laboratório faz o papel da pessoa no console com um comando:
@@ -25,8 +25,8 @@ aws: [ERROR]: Unable to parse response (syntax error: line 1, column 0), invalid
 ```
 
 O moto falha com um erro interno. Na AWS, `detect-stack-drift` inicia uma comparação e devolve um id;
-`describe-stack-resource-drifts` então lista cada recurso como **`IN_SYNC`**, **`MODIFIED`**,
-**`DELETED`** ou **`NOT_CHECKED`**, e, para um modificado, cada propriedade com o valor esperado e o
+`describe-stack-resource-drifts` então lista cada recurso como **`IN_SYNC`**, `MODIFIED`,
+`DELETED` ou `NOT_CHECKED`, e, para um modificado, cada propriedade com o valor esperado e o
 real. Para esta stack ele mostraria `WebLogs` como `MODIFIED`, com `RetentionInDays` esperado 14 e
 real 1. Nem todo tipo de recurso suporta detecção de drift, e uma propriedade que o template não define
 não é comparada, que é o que `NOT_CHECKED` e o silêncio significam.

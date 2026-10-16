@@ -5,7 +5,7 @@ version: 1
 
 Tracing every request of a busy service costs money, network and a little latency, and most of those
 traces would show the same thing. **X-Ray samples**: it records a fixed number of requests per second,
-the **reservoir**, and a percentage of the rest, the **rate**. The default rule, as AWS documents it, is
+the reservoir, and a percentage of the rest, the rate. The default rule, as AWS documents it, is
 a reservoir of one request per second and a rate of 5%.
 
 At 200 requests per second, the default records 1 + 5% of the other 199, about 10.95 traces a second:

@@ -4,7 +4,7 @@ version: 1
 ---
 
 Um chamado que ninguém atende é pior que nenhum chamado, porque todo mundo acredita que ele foi tratado.
-**Escalonamento** é a regra do que acontece em seguida: se a pessoa chamada não **reconheceu** dentro de
+**Escalonamento** é a regra do que acontece em seguida: se a pessoa chamada não reconheceu dentro de
 um tempo definido, a próxima pessoa é chamada, e assim por diante, subindo uma escada curta.
 
 ```schooling-figure

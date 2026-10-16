@@ -25,7 +25,7 @@ tentativas, o reinício de um deploy. Três minutos ruins em cinco são um padr�
 padrão e não no ruído. M igual a N, 5 de 5, espera uma sequência perfeita de minutos ruins e perde uma
 queda que pisca; M de 1 dispara em toda piscada.
 
-Um alarme está sempre num de três estados: **`OK`**, **`ALARM`** e **`INSUFFICIENT_DATA`**, que
+Um alarme está sempre num de três estados: **`OK`**, `ALARM` e `INSUFFICIENT_DATA`, que
 significa que o alarme não consegue dizer, porque o dado de que precisa não está lá. Ele avisa numa
 **mudança** de estado, não a cada período passado num deles, então um alarme em `ALARM` por uma hora
 manda uma mensagem, mais uma quando volta a `OK`.

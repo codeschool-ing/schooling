@@ -3,7 +3,7 @@ title: An indicator, counted from what customers see
 version: 1
 ---
 
-Lesson 10's alarms ask whether something is wrong right now. A **service level objective** asks a
+Lesson 10's alarms ask whether something is wrong right now. A service level objective asks a
 different question: over a month, **was the service as reliable as we promised, and how much room is
 left?** It begins with an indicator, and the common mistake is to pick one that is easy to measure
 rather than one customers feel. CPU at 40% is easy; nobody has ever left a shop because of it.

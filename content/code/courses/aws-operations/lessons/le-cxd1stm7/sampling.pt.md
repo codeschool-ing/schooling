@@ -5,7 +5,7 @@ version: 1
 
 Registrar cada requisição de um serviço movimentado custa dinheiro, rede e um pouco de latência, e a
 maioria desses traces mostraria a mesma coisa. **O X-Ray amostra**: registra um número fixo de
-requisições por segundo, o **reservatório**, e uma porcentagem do resto, a **taxa**. A regra padrão,
+requisições por segundo, o reservatório, e uma porcentagem do resto, a taxa. A regra padrão,
 como a AWS documenta, tem reservatório de uma requisição por segundo e taxa de 5%.
 
 A 200 requisições por segundo, o padrão registra 1 + 5% das outras 199, uns 10,95 traces por segundo:

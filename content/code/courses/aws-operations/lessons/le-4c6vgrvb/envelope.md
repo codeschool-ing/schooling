@@ -3,10 +3,10 @@ title: Envelope encryption, for anything larger
 version: 1
 ---
 
-The way AWS encrypts a terabyte with a key that only takes 4 KB is **envelope encryption**: KMS makes a
-fresh **data key**, gives it to the program twice, once in plain and once encrypted under the KMS key,
-and the program encrypts the data itself with the plain one, keeps the encrypted one beside the result,
-and forgets the plain one. S3, EBS and RDS do exactly this on every object, volume and database, and a
+The way AWS encrypts a terabyte with a key that only takes 4 KB is **envelope encryption**. KMS makes a
+fresh data key and gives it to the program twice, once in plain and once encrypted under the KMS key.
+The program encrypts the data itself with the plain one, keeps the encrypted one beside the result, and
+forgets the plain one. S3, EBS and RDS do exactly this on every object, volume and database, and a
 program can too, in `~/aws/kms/envelope.py`:
 
 ```schooling-example

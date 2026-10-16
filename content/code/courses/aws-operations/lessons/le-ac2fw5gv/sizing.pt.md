@@ -56,9 +56,8 @@ commit  plan USD  on demand USD  total USD  unused plan  saved
 ```
 
 Leia a última coluna. **Comprometer seis, o menor número que roda ao mesmo tempo, economiza mais: 22%.**
-Cada instância comprometida acima do piso é usada em algumas horas e fica ociosa em outras, e as horas
-ociosas são pagas assim mesmo: com oito, 14% do plano fica sem uso e a economia cai para 17%; com dez, para
-8%; com catorze, o nível do horário de trabalho, o compromisso custa **mais** que pagar tudo sob demanda. A
+Cada instância comprometida acima do piso é usada em algumas horas e fica ociosa em outras, e as horas ociosas são pagas assim mesmo. Com oito, 14% do plano fica sem uso e a economia cai para 17%;
+com dez, para 8%. Com catorze, o nível do horário de trabalho, o compromisso custa mais que pagar tudo sob demanda. A
 média aqui é 8,8 instâncias, e comprometer a média teria economizado menos que comprometer o piso.
 
 ## A conta por trás

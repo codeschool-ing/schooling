@@ -15,7 +15,7 @@ awskms, sa-east-1, published 2026-09-11
   sa-east-1-KMS-Requests                   0.000003 USD per Requests   $0.03 per 10000 KMS requests in South America (Sao Paulo)
 ```
 
-**One customer managed key is 1 USD a month**, and the line says per **key version**: each rotation adds
+**One customer managed key is 1 USD a month**, and the line says per key version: each rotation adds
 a version. AWS documents that the first and second rotations each add a month's fee and later ones add
 nothing, so a key rotated every year costs 1, then 2, then 3 USD a month, and stays at 3. AWS managed
 keys, `aws/ssm` and the rest, have no monthly fee.

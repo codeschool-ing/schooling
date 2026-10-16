@@ -32,7 +32,7 @@ o recurso e as evidências. Alguns tipos que vale reconhecer, da documentação 
 | `Policy:IAMUser/RootCredentialUsage` | o usuário root foi usado |
 | `Discovery:S3/AnomalousBehavior` | um padrão incomum de listagem e leitura no S3, para este principal |
 
-A severidade é um número em faixas: **baixa** abaixo de 4, **média** de 4 a 6,9, **alta** a partir de 7. A
+A severidade é um número em faixas: **baixa** abaixo de 4, média de 4 a 6,9, alta a partir de 7. A
 primeira linha é alta e urgente, porque uma credencial que saiu da instância está nas mãos de outra pessoa
 agora. A terceira é baixa e constante: toda instância com porta aberta na internet é sondada o dia todo.
 

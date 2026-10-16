@@ -7,9 +7,9 @@ Uma regra por taxa conta requisições e age sobre quem manda demais. A `login-r
 
 - **contar por** `IP`, o endereço de onde a requisição veio;
 - **numa** janela de 300 segundos;
-- **só** requisições cujo caminho começa com `/login`, a **instrução de escopo** (*scope-down
+- **só** requisições cujo caminho começa com `/login`, a instrução de escopo (*scope-down
   statement*);
-- **bloquear** um endereço quando ele passou de **100** delas na janela.
+- **bloquear** um endereço quando ele passou de 100 delas na janela.
 
 Uma pessoa fazendo login manda um punhado de requisições. Um programa testando uma lista de senhas
 roubadas manda milhares, e um limite de cem em cinco minutos o para sem incomodar pessoa nenhuma. O
@@ -48,8 +48,8 @@ a cada requisição.
 
 ## Onde fica um limite de taxa
 
-Ponha regras por taxa **depois** do conjunto de IPs e **antes** do grupo gerenciado, como as da loja: o
-conjunto de IPs é certo e decide primeiro, e uma requisição de um endereço já acima do limite é recusada
+Ponha regras por taxa **depois** do conjunto de IPs e antes do grupo gerenciado, como as da loja. O conjunto de IPs é certo e decide primeiro. Uma requisição de um endereço já acima do
+limite é então recusada
 antes de as regras gerenciadas olharem para ela, então o registro no log dela nomeia a regra de taxa como
 o motivo, que é o registro que a equipe vai querer ler. Uma regra de taxa para o site inteiro, sem escopo
 e com um limite generoso de alguns milhares, é uma segunda regra comum: custa uma regra e pega um único

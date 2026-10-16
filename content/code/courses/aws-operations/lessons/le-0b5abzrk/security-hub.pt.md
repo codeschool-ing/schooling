@@ -80,7 +80,7 @@ sh-2	MEDIUM	CloudTrail log file validation is off
 ```
 
 Na AWS todo achado também ganha um **status de workflow**, `NEW` até alguém mudá-lo para `NOTIFIED`,
-`SUPPRESSED` ou `RESOLVED`, e um **record state**, `ACTIVE` até quem o produziu arquivá-lo. O moto não
+`SUPPRESSED` ou `RESOLVED`, e um record state, `ACTIVE` até quem o produziu arquivá-lo. O moto não
 define nenhum dos dois, e não tem `batch-update-findings`, a chamada que move um achado pelo workflow.
 
 ## O filtro que não é aplicado

@@ -3,7 +3,7 @@ title: The pipeline, and the role that refused it
 version: 1
 ---
 
-A pipeline is a list of **stages**, each a list of **actions**, and it is written down as JSON. The
+A pipeline is a list of **stages**, each a list of actions, and it is written down as JSON. The
 shop's has four stages: take the source, build it, wait for a person to approve, deploy to ECS.
 
 ```json
