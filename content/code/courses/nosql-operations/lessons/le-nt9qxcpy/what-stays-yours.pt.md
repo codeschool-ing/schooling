@@ -47,6 +47,6 @@ precisa.
 Um banco gerenciado é alcançável por uma rede que não é sua, por padrão de mais lugares que os
 contêineres deste curso, que não tinham porta publicada nenhuma. **As três configurações que o mantêm
 privado** existem em todo provedor com nomes diferentes: o banco alcançável só pela sua rede privada
-(um peering de VPC ou um endpoint privado), e não pela internet; TLS obrigatório em toda conexão; e
+(um peering de VPC ou um endpoint privado), e não pela internet. TLS obrigatório em toda conexão. E
 uma conta por aplicação e por pessoa, cada uma com o mínimo de que precisa, para que uma senha vazada
 abra uma porta só. O provedor grava um log de auditoria de quem se conectou; lê-lo é com você.

@@ -20,8 +20,8 @@ multiplique pelo tamanho dos dados e dos backups, e o primeiro número do plano 
 **Copiar não é instantâneo, e as escritas não param para esperar.** O caminho mais simples é o que
 a aula 11 usou: um dump de um lado, um restore do outro, com a aplicação parada no meio para que nada
 seja escrito no lado antigo depois do dump. A aritmética é o plano. Um dump que lê a 50 MB/s leva
-cerca de 5,6 horas para um terabyte, antes do restore e da construção dos índices; uma loja que pode
-fechar por uma noite consegue isso, e uma que não pode precisa do outro caminho, replicar
+cerca de 5,6 horas para um terabyte, antes do restore e da construção dos índices. Uma loja que pode
+fechar por uma noite consegue isso. Uma que não pode precisa do outro caminho, replicar
 continuamente para o lugar novo e trocar em minutos, que é um projeto por si só. Meça a sua própria
 taxa de dump e restore num teste, em vez de confiar nos 50 deste parágrafo.
 

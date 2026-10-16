@@ -45,7 +45,7 @@ number goes into the runbook, and it is the number the next section's exit plan 
 A managed database is reachable over a network you do not own, by default from more places than
 the containers of this course, which had no published port at all. **The three settings that keep
 it private** are on every provider under different names: the database reachable only from your
-private network (a VPC peering or a private endpoint) rather than from the internet; TLS required
-on every connection; and an account per application and per person, each with the least it needs,
+private network (a VPC peering or a private endpoint) rather than from the internet. TLS required
+on every connection. And an account per application and per person, each with the least it needs,
 so that a leaked password opens one door. The provider writes an audit log of who connected; reading
 it is yours.

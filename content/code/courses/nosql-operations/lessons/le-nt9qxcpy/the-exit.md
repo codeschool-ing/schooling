@@ -21,7 +21,7 @@ by the size of the data and of its backups, and the first number of the exit pla
 one lesson 11 used: a dump on one side, a restore on the other, with the application stopped in
 between so that nothing is written to the old side after the dump. The arithmetic is the plan. A
 dump that reads at 50 MB/s takes about 5.6 hours for a terabyte, before the restore and its index
-builds; a shop that can be closed for a night can do that, and one that cannot needs the other
+builds. A shop that can be closed for a night can do that. One that cannot needs the other
 route, replicating continuously into the new place and switching over in minutes, which is a
 project of its own. Measure your own dump and restore rate in a drill rather than trusting this
 paragraph's 50.
