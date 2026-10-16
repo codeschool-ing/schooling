@@ -1,0 +1,373 @@
+{
+  "ex-93ayyprv": {
+    "prompt": "Um programa chama `purchases.cache()`. Quando a cópia é preenchida?",
+    "hint": "O `cache()` é uma ação?",
+    "choices": [
+      {
+        "text": "Pela primeira ação que calcula `purchases`",
+        "why": "Isso. O `cache()` só marca o DataFrame."
+      },
+      {
+        "text": "Quando a aplicação termina",
+        "why": "É quando ele é descartado."
+      },
+      {
+        "text": "Na hora, antes de o `cache()` retornar",
+        "why": "Esse é o `CACHE TABLE` do SQL, não o `cache()`."
+      },
+      {
+        "text": "Na segunda ação sobre ele",
+        "why": "A primeira ação o enche; a segunda o lê."
+      }
+    ]
+  },
+  "ex-fmapyky3": {
+    "prompt": "Com cache, as tarefas da primeira ação trabalharam 20,0 segundos no total, e sem ele 15,2. Qual foi o trabalho a mais?",
+    "hint": "O que mais ela fez além de contar?",
+    "choices": [
+      {
+        "text": "Ela também montou a cópia em cache",
+        "why": "Isso. O primeiro uso paga pela cópia."
+      },
+      {
+        "text": "Um DataFrame em cache é lido linha a linha",
+        "why": "O cache é colunar, e estava sendo enchido, não lido."
+      },
+      {
+        "text": "O cache desligou a execução adaptativa daquela consulta",
+        "why": "Ele não muda nada na execução adaptativa."
+      },
+      {
+        "text": "O cache passou todos os dados pelo driver antes",
+        "why": "Cada executor guarda as próprias partições."
+      }
+    ]
+  },
+  "ex-40c2thc5": {
+    "prompt": "Sem cache cada ação custa 6 segundos. Com cache, a primeira custa 8 e cada uma das seguintes 1. A partir de quantas ações o cache sai mais barato no total?",
+    "hint": "Compare 6n com 8 + (n − 1)."
+  },
+  "ex-0y9f6ms8": {
+    "prompt": "Ligue cada nível de armazenamento ao que acontece com uma partição que não cabe na memória.",
+    "hint": "Um deles não guarda nada.",
+    "pairs": [
+      {
+        "left": "`MEMORY_AND_DISK`",
+        "right": "Vai para o disco local do executor"
+      },
+      {
+        "left": "`MEMORY_ONLY`",
+        "right": "É recalculada toda vez que é preciso"
+      },
+      {
+        "left": "`MEMORY_AND_DISK_2`",
+        "right": "Vai para o disco, em dois executores"
+      }
+    ],
+    "right_distractors": [
+      "É mandada para o driver"
+    ]
+  },
+  "ex-ahg0t4nh": {
+    "prompt": "Em `MEMORY_ONLY`, três de 45 partições não couberam. Por que contar de novo levou 8,6 segundos em vez de menos de dois?",
+    "hint": "De onde vieram essas três na segunda vez?",
+    "choices": [
+      {
+        "text": "O Spark gravou as três que faltavam no disco antes",
+        "why": "Em `MEMORY_ONLY` nada vai para o disco."
+      },
+      {
+        "text": "A segunda contagem apagou o cache inteiro e começou de novo",
+        "why": "42 partições continuaram em cache."
+      },
+      {
+        "text": "Foram lidas dos arquivos de novo",
+        "why": "Isso. Uma partição não guardada é recalculada toda vez."
+      },
+      {
+        "text": "Partições na memória são mais lentas que em disco",
+        "why": "A memória é a parte rápida."
+      }
+    ]
+  },
+  "ex-6qs5j94y": {
+    "prompt": "Por que os cliques em cache ocuparam menos memória que os 396 MB de arquivos Parquet?",
+    "hint": "Em que forma o cache de um DataFrame guarda as linhas?",
+    "choices": [
+      {
+        "text": "Parte da cópia foi para os discos dos executores sem ser reportada",
+        "why": "A página reportou 0,0 MiB em disco."
+      },
+      {
+        "text": "O Spark os guarda no seu próprio formato colunar comprimido",
+        "why": "Isso. Não como um objeto por linha."
+      },
+      {
+        "text": "O cache descarta linhas duplicadas",
+        "why": "Um cache nunca muda as linhas."
+      },
+      {
+        "text": "Só as colunas de que o `count` precisava foram mantidas no cache",
+        "why": "Um cache guarda todas as colunas do DataFrame."
+      }
+    ]
+  },
+  "ex-1k7g45ec": {
+    "prompt": "Quais destes são bons candidatos a cache? Escolha todos que se aplicam.",
+    "hint": "Usado mais de uma vez, e caro de fazer.",
+    "choices": [
+      {
+        "text": "Os cliques crus, logo após a leitura, para uma consulta",
+        "why": "Um uso, e a leitura do Parquet já é barata."
+      },
+      {
+        "text": "Os links lidos por toda iteração de um loop",
+        "why": "Sim. É a seção 04."
+      },
+      {
+        "text": "O resultado de um join que três relatórios leem",
+        "why": "Sim. O join é economizado duas vezes."
+      },
+      {
+        "text": "Um DataFrame gravado em Parquet uma vez e nunca mais lido",
+        "why": "Um uso: o cache só soma o seu custo."
+      }
+    ]
+  },
+  "ex-2etw166t": {
+    "prompt": "Um cache que estava completo há um minuto agora tem partições faltando, e nenhum erro apareceu. O que mais provavelmente aconteceu?",
+    "hint": "A memória de armazenamento é dividida com algo.",
+    "choices": [
+      {
+        "text": "Os arquivos Parquet mudaram por baixo",
+        "why": "O Spark não vigia os arquivos."
+      },
+      {
+        "text": "Tarefas em execução precisaram desse espaço para trabalhar",
+        "why": "Isso. Elas expulsaram primeiro as partições usadas há mais tempo."
+      },
+      {
+        "text": "O driver as gravou no diretório de checkpoint",
+        "why": "Checkpoints só acontecem quando pedidos."
+      },
+      {
+        "text": "O cache expira depois de sessenta segundos",
+        "why": "Um cache não tem limite de tempo."
+      }
+    ]
+  },
+  "ex-mdhhgsb3": {
+    "prompt": "Em SQL, `CACHE ___ TABLE purchases AS SELECT ...` espera a primeira consulta para encher a cópia, como o `cache()` faz.",
+    "hint": "O contrário de ansioso, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "LAZY"
+        ]
+      }
+    ]
+  },
+  "ex-aqjzpz2d": {
+    "prompt": "No `pagerank.py`, o que fica no cluster e o que volta ao driver a cada iteração?",
+    "hint": "Qual tem milhões de linhas e qual tem 3.000 números?",
+    "choices": [
+      {
+        "text": "Os dois ficam, e nada volta até o fim",
+        "why": "Essa é a versão da seção 06, com um plano que cresce."
+      },
+      {
+        "text": "Os dois voltam ao driver a cada iteração",
+        "why": "Os links nunca saem do cluster."
+      },
+      {
+        "text": "Os links ficam; os ranks voltam",
+        "why": "Isso. Estado pequeno no driver, dados grandes e fixos em cache."
+      },
+      {
+        "text": "Os ranks ficam; os links voltam",
+        "why": "Os links são demais para o driver."
+      }
+    ]
+  },
+  "ex-6t3eatw2": {
+    "prompt": "Ponha em ordem uma iteração do `pagerank.py`.",
+    "hint": "Começa no driver e termina nele.",
+    "items": [
+      "Transformar os ranks num DataFrame",
+      "Juntar os links aos ranks pelo livro de origem",
+      "Somar o que cada livro de destino recebe",
+      "Coletar as somas e amortecê-las em ranks novos"
+    ]
+  },
+  "ex-47f5ewj6": {
+    "prompt": "Depois que morre um executor com partições em cache, o que faz a ação seguinte?",
+    "hint": "O driver ainda sabe como cada partição foi feita.",
+    "choices": [
+      {
+        "text": "Falha, porque dado em cache não pode ser refeito",
+        "why": "Só um checkpoint local não tem de onde refazer."
+      },
+      {
+        "text": "Recalcula todas as partições, em cache ou não",
+        "why": "Só as que faltam: 14,6 s, não os 37,6 do início."
+      },
+      {
+        "text": "Recalcula as que faltam pela linhagem",
+        "why": "Isso, e as guarda de novo."
+      },
+      {
+        "text": "Espera o executor voltar com a sua memória",
+        "why": "Um executor novo começa vazio."
+      }
+    ]
+  },
+  "ex-jdbmfe9p": {
+    "prompt": "Para manter cada partição em cache em dois executores, use o nível `MEMORY_AND_DISK___`.",
+    "hint": "Um sufixo de dois caracteres.",
+    "blanks": [
+      {
+        "accept": [
+          "_2"
+        ]
+      }
+    ]
+  },
+  "ex-bb2gqqt5": {
+    "prompt": "O plano tinha 291 linhas depois de cinco iterações e 576 depois de dez. Quantas linhas cada iteração acrescentou?",
+    "hint": "Cinco iterações entre as duas."
+  },
+  "ex-4zwcbp6t": {
+    "prompt": "O que custa uma linhagem muito longa? Escolha todos que se aplicam.",
+    "hint": "Três lugares foram citados.",
+    "choices": [
+      {
+        "text": "Mais espaço em disco no diretório de checkpoint",
+        "why": "Uma linhagem é um plano, não arquivos."
+      },
+      {
+        "text": "Tempo de planejamento a cada ação",
+        "why": "Sim. O plano inteiro é analisado toda vez."
+      },
+      {
+        "text": "Recálculo mais longo depois de uma falha",
+        "why": "Sim. Uma partição perdida pode precisar de todos os passos anteriores."
+      },
+      {
+        "text": "Um estouro de pilha no driver, a partir de certa profundidade",
+        "why": "Sim, com um erro que não aponta linha nenhuma do programa."
+      }
+    ]
+  },
+  "ex-wet664xz": {
+    "prompt": "Por que o Spark avisa sobre um diretório de checkpoint no sistema de arquivos local?",
+    "hint": "Quem grava e quem lê de volta?",
+    "choices": [
+      {
+        "text": "Checkpoints precisam ser criptografados",
+        "why": "Nada aqui é sobre criptografia."
+      },
+      {
+        "text": "Discos locais são lentos demais para checkpoints",
+        "why": "A velocidade não é o motivo."
+      },
+      {
+        "text": "Executores de outras máquinas não conseguiriam lê-lo",
+        "why": "Isso. O lugar dele é o HDFS ou um object store."
+      },
+      {
+        "text": "Um diretório local enche mais depressa que um no HDFS",
+        "why": "O espaço não é o motivo."
+      }
+    ]
+  },
+  "ex-c2v8k2dj": {
+    "prompt": "Ligue cada chamada ao que vale para ela.",
+    "hint": "Só um sobrevive a um executor perdido.",
+    "pairs": [
+      {
+        "left": "`checkpoint()`",
+        "right": "Grava em armazenamento compartilhado e sobrevive a um executor perdido"
+      },
+      {
+        "left": "`localCheckpoint()`",
+        "right": "Corta o plano, e um executor perdido derruba o job"
+      },
+      {
+        "left": "`cache()`",
+        "right": "Mantém o plano, e refaz o que se perde"
+      }
+    ],
+    "right_distractors": [
+      "Grava o próprio plano num arquivo"
+    ]
+  },
+  "ex-abq4ejxp": {
+    "prompt": "Por que guardar em cache os cliques crus logo depois do `read.parquet` costuma ser uma troca ruim?",
+    "hint": "O que o cache economizaria?",
+    "choices": [
+      {
+        "text": "Um DataFrame em cache não pode ser filtrado",
+        "why": "Pode, como qualquer outro."
+      },
+      {
+        "text": "O cache seria gravado nos arquivos Parquet",
+        "why": "Um cache mora nos executores."
+      },
+      {
+        "text": "Economiza só uma leitura que o Parquet já torna barata",
+        "why": "Isso, e guarda todas as colunas para isso."
+      },
+      {
+        "text": "O Spark se recusa a guardar em cache uma tabela lida de arquivos",
+        "why": "Esta aula guardou exatamente isso."
+      }
+    ]
+  },
+  "ex-qbbytyr5": {
+    "prompt": "Ligue cada sintoma à mudança que ele pede.",
+    "hint": "Leia o que cada um diz sobre memória, tempo ou plano.",
+    "pairs": [
+      {
+        "left": "Cada iteração de um loop relê a mesma entrada dos arquivos",
+        "right": "Pôr a entrada em cache antes do loop"
+      },
+      {
+        "left": "Cada iteração demora mais, embora o trabalho por iteração seja o mesmo",
+        "right": "Fazer checkpoint a cada poucas iterações"
+      },
+      {
+        "left": "Uma ordenação despeja em disco desde que o programa passou a guardar tudo em cache",
+        "right": "Liberar o que não se usa mais"
+      },
+      {
+        "left": "Uma tabela em cache de 40 colunas é lida por consultas que usam 3",
+        "right": "Selecionar as 3 colunas antes do cache"
+      }
+    ],
+    "right_distractors": [
+      "Subir o spark.sql.shuffle.partitions"
+    ]
+  },
+  "ex-xzrak0kq": {
+    "prompt": "Um resultado em cache levou uma hora para ser calculado, é lido vinte vezes, e perdê-lo para um executor morto atrasaria um relatório. Qual nível serve?",
+    "hint": "O que uma segunda cópia compra?",
+    "choices": [
+      {
+        "text": "`MEMORY_ONLY`",
+        "why": "Uma partição que não cabe é recalculada a cada leitura."
+      },
+      {
+        "text": "`localCheckpoint()`",
+        "why": "Um executor perdido derrubaria o job de vez."
+      },
+      {
+        "text": "`MEMORY_AND_DISK_2`",
+        "why": "Isso. Um executor perdido custa uma consulta, não uma hora."
+      },
+      {
+        "text": "`DISK_ONLY`",
+        "why": "Uma cópia, então um executor perdido ainda custa a hora."
+      }
+    ]
+  }
+}

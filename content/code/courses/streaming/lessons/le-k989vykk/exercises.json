@@ -1,0 +1,711 @@
+[
+  {
+    "id": "ex-k1259ebp",
+    "version": 1,
+    "section": "what-an-event-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is an event, in the sense of this lesson?",
+    "choices": [
+      {
+        "text": "Reserve one copy of bk-03 for this customer",
+        "correct": false,
+        "why": "That is a command: it is addressed to one system and it is allowed to fail."
+      },
+      {
+        "text": "Recife has six copies of bk-03",
+        "correct": false,
+        "why": "That is state, a snapshot that is overwritten the moment it changes."
+      },
+      {
+        "text": "One copy of bk-03 was sold",
+        "correct": true,
+        "why": "Right. Past tense, already happened, and nobody is asked to do anything."
+      },
+      {
+        "text": "Send the receipt for sale nat-000002 to the customer by email",
+        "correct": false,
+        "why": "An instruction to one system to act is a command, whatever it is about."
+      }
+    ]
+  },
+  {
+    "id": "ex-73p5764r",
+    "version": 1,
+    "section": "what-an-event-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A shop's system only keeps a table saying how many copies of each book it has now. What is lost that a list of events would have kept?",
+    "choices": [
+      {
+        "text": "The current number of copies of each book",
+        "correct": false,
+        "why": "That is exactly what the table keeps."
+      },
+      {
+        "text": "How the number got there: which sales, deliveries and counts, and when",
+        "correct": true,
+        "why": "Right. State answers how many now and forgets how we got here."
+      },
+      {
+        "text": "Nothing, because the table and the events say the same thing",
+        "correct": false,
+        "why": "State is rebuilt from events, never the other way round."
+      },
+      {
+        "text": "The prices",
+        "correct": false,
+        "why": "A table of stock could carry prices too; what it cannot carry is its own history."
+      }
+    ]
+  },
+  {
+    "id": "ex-pryj5ecj",
+    "version": 1,
+    "section": "what-an-event-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A thin event carries only the sale's id, and the loyalty system looks the rest up in the shop's database. It handles a sale that was stuck on a till for two hours, and the price changed in between. What does it see?",
+    "choices": [
+      {
+        "text": "The price the customer paid",
+        "correct": false,
+        "why": "The database holds the row as it is now, not as it was when the sale was rung up."
+      },
+      {
+        "text": "An error, because the event is too old",
+        "correct": false,
+        "why": "Nothing refuses it; the lookup works and returns today's row."
+      },
+      {
+        "text": "Today's price, which the sale never charged",
+        "correct": true,
+        "why": "Right. A thin event makes every reader depend on what the source says now."
+      },
+      {
+        "text": "Both prices, because the database keeps a history of every change it has made",
+        "correct": false,
+        "why": "A table keeps its current rows; a history of changes is what a log is."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wm57xgv",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A reader of a log reads records 0 to 9. What happens to those ten records?",
+    "choices": [
+      {
+        "text": "They stay where they are, for every reader",
+        "correct": true,
+        "why": "Right. Reading moves the reader's own place and changes nothing in the log."
+      },
+      {
+        "text": "They are deleted, because they have been delivered to a reader",
+        "correct": false,
+        "why": "That is what a queue does. A log keeps what was written."
+      },
+      {
+        "text": "They are marked as read, and from then on the other readers skip them",
+        "correct": false,
+        "why": "The log does not know who read what; each reader keeps its own place."
+      },
+      {
+        "text": "They move to the end of the log, behind the newer records",
+        "correct": false,
+        "why": "Nothing in a log ever moves; offsets are for good."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gg4st7w",
+    "version": 1,
+    "section": "the-log",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A log has records at offsets 0 to 41. What offset will the next appended record get?",
+    "value": 42,
+    "tolerance": 0,
+    "unit": "offset"
+  },
+  {
+    "id": "ex-m845ekw1",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In minilog.py, where is the information about how far the loyalty reader has read?",
+    "choices": [
+      {
+        "text": "In a field written into each record of the log",
+        "correct": false,
+        "why": "Records are never edited after they are appended."
+      },
+      {
+        "text": "In a file of its own beside the log, holding the next offset",
+        "correct": true,
+        "why": "Right. demo.log.loyalty, one per reader, and the log knows nothing about it."
+      },
+      {
+        "text": "Nowhere: every read starts again from offset 0",
+        "correct": false,
+        "why": "The second read of the stock reader printed nothing, so something remembered."
+      },
+      {
+        "text": "In the log's first line",
+        "correct": false,
+        "why": "The first line is record 0, a sale like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zskghhk",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "minilog.py prints a record and then writes the reader's place. The program is killed between the two. What happens on the next read?",
+    "hint": "Which file holds the old number?",
+    "choices": [
+      {
+        "text": "The record is skipped",
+        "correct": false,
+        "why": "Skipping would need the place written before the record was printed."
+      },
+      {
+        "text": "Nothing different from a normal run",
+        "correct": false,
+        "why": "The place file still holds the old offset, so the reader starts there."
+      },
+      {
+        "text": "The record is printed again",
+        "correct": true,
+        "why": "Right. Doing the work before recording the place costs a duplicate after a crash."
+      },
+      {
+        "text": "The log is corrupted and refuses to open",
+        "correct": false,
+        "why": "The log file was not being written; only the reader's place was."
+      }
+    ]
+  },
+  {
+    "id": "ex-809hyqfd",
+    "version": 1,
+    "section": "the-log",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Kafka, the position a reader has recorded for itself in a partition is called a committed ___.",
+    "hint": "The same word as a record's position.",
+    "blanks": [
+      {
+        "accept": [
+          "offset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7acezv4x",
+    "version": 1,
+    "section": "state-from-the-log",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "balance.py prints 6 for Recife. Where was that number stored before the program ran?",
+    "choices": [
+      {
+        "text": "In the last line of stock.log, which holds the latest stock",
+        "correct": false,
+        "why": "The last line is a sale of one copy; the 6 is worked out from all eight lines."
+      },
+      {
+        "text": "In a table that balance.py saves and updates on every run of the program",
+        "correct": false,
+        "why": "balance.py starts from an empty dictionary every time."
+      },
+      {
+        "text": "In the place file of the stock reader",
+        "correct": false,
+        "why": "A place file holds an offset, not a stock."
+      },
+      {
+        "text": "Nowhere; it is computed from the events each time",
+        "correct": true,
+        "why": "Right. The table is the fold of the log, done again on each run."
+      }
+    ]
+  },
+  {
+    "id": "ex-t46xngmt",
+    "version": 1,
+    "section": "state-from-the-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The stock system had a bug for a week: it subtracted deliveries instead of adding them. The events of that week are still in the log. How is the stock put right?",
+    "choices": [
+      {
+        "text": "Fix apply and fold the log again from the start",
+        "correct": true,
+        "why": "Right. With the log kept, the table is a cache that is rebuilt."
+      },
+      {
+        "text": "Edit the delivery events so that their quantities are negative",
+        "correct": false,
+        "why": "Events are not edited, and the deliveries were right; the code was wrong."
+      },
+      {
+        "text": "Count every shelf again, since the week's numbers are gone for good",
+        "correct": false,
+        "why": "They are gone only in a system that kept nothing but the table."
+      },
+      {
+        "text": "Delete the week from the log",
+        "correct": false,
+        "why": "That throws away the very events that rebuild the right numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-hekhyhj9",
+    "version": 1,
+    "section": "state-from-the-log",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each idea to what it means.",
+    "pairs": [
+      {
+        "left": "a table",
+        "right": "a stream folded up, latest value per key"
+      },
+      {
+        "left": "a stream",
+        "right": "a table's changes, in order"
+      },
+      {
+        "left": "a fold",
+        "right": "walking a list while carrying one value"
+      },
+      {
+        "left": "a trace line",
+        "right": "one change to one row"
+      }
+    ],
+    "right_distractors": [
+      "a copy of the log on another machine"
+    ]
+  },
+  {
+    "id": "ex-7kq7da7y",
+    "version": 1,
+    "section": "why-order-matters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The Recife stock count reaches the log after the morning's sales instead of before them. What did balance.py print for Recife?",
+    "choices": [
+      {
+        "text": "An error about the order of the events",
+        "correct": false,
+        "why": "Nothing in the fold checks order. That is the danger."
+      },
+      {
+        "text": "6, the same as before",
+        "correct": false,
+        "why": "6 came from the right order. The count, applied last, replaced it."
+      },
+      {
+        "text": "4, which looks plausible and is wrong",
+        "correct": true,
+        "why": "Right. The shelf as it was at 08:50, applied at the end of the morning."
+      },
+      {
+        "text": "−1",
+        "correct": false,
+        "why": "−1 appeared in the middle of the trace, not at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-18wrv5vs",
+    "version": 1,
+    "section": "why-order-matters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A shelf is counted at 5. Then 2 copies are sold and 4 are received. If the count arrives last instead of first, what stock does the fold end with?",
+    "hint": "What does a count do to the number before it?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-q71c79bf",
+    "version": 1,
+    "section": "why-order-matters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which pair of events gives the same stock whichever order they arrive in?",
+    "choices": [
+      {
+        "text": "A count of 4 and a sale of 1",
+        "correct": false,
+        "why": "3 one way, 4 the other: the count replaces the number."
+      },
+      {
+        "text": "A delivery of 6 and a sale of 2",
+        "correct": true,
+        "why": "Right. Adding and subtracting commute; +4 either way."
+      },
+      {
+        "text": "A count of 4 and a delivery of 6",
+        "correct": false,
+        "why": "10 one way, 4 the other."
+      },
+      {
+        "text": "Two counts with different numbers",
+        "correct": false,
+        "why": "Whichever comes last wins, so the order decides the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-gm9faz9f",
+    "version": 1,
+    "section": "order-per-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Rearranging stock.log so that all of Olinda's events come first left the result unchanged. Why?",
+    "choices": [
+      {
+        "text": "balance.py sorts the events by time before folding",
+        "correct": false,
+        "why": "It reads them in the order of the file, as the trace shows."
+      },
+      {
+        "text": "The order inside each shop was kept",
+        "correct": true,
+        "why": "Right. No Olinda event touches Recife's row, so only each shop's own order counts."
+      },
+      {
+        "text": "grep puts lines back in their original order",
+        "correct": false,
+        "why": "It printed every Olinda line before every other line, which is a new order."
+      },
+      {
+        "text": "Olinda's events all commute with each other",
+        "correct": false,
+        "why": "Olinda's count does not commute with its sale; their order was simply kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjc10nr1",
+    "version": 1,
+    "section": "order-per-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a single total order over every event limit how much a log takes per second?",
+    "choices": [
+      {
+        "text": "Every write has to go through the one place that decides the order",
+        "correct": true,
+        "why": "Right. Or two places agree on each write, which is a round trip per event."
+      },
+      {
+        "text": "Hashing every key takes time that grows with the number of events in the log",
+        "correct": false,
+        "why": "A hash costs nanoseconds; it is how order per key avoids the limit."
+      },
+      {
+        "text": "Records kept in order take more disk than records kept in any order",
+        "correct": false,
+        "why": "Order costs no bytes; it costs coordination."
+      },
+      {
+        "text": "Readers have to read every record twice",
+        "correct": false,
+        "why": "Readers are not involved; the limit is on the writing side."
+      }
+    ]
+  },
+  {
+    "id": "ex-qd6scceh",
+    "version": 1,
+    "section": "order-per-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The tills key their events by shop. A transfer moves five copies of bk-03 from Recife to Olinda. What keeps it in order with both shops' other events?",
+    "choices": [
+      {
+        "text": "One event keyed by recife, since the copies leave from there",
+        "correct": false,
+        "why": "It is then in order with Recife's events and with none of Olinda's."
+      },
+      {
+        "text": "One event keyed by the book, which both shops share",
+        "correct": false,
+        "why": "A different key means a different place, in order with neither shop."
+      },
+      {
+        "text": "One event with no key, so that it reaches everybody",
+        "correct": false,
+        "why": "With no key it keeps order with nothing at all."
+      },
+      {
+        "text": "Two events, one per shop, each keyed by its own shop",
+        "correct": true,
+        "why": "Right. Each shop's row gets its own event, in order with that shop's sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-61cjv4dv",
+    "version": 1,
+    "section": "order-per-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Kafka's promise about order: within one ___, records are read in the order they were written.",
+    "blanks": [
+      {
+        "accept": [
+          "partition"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qpyjkzmk",
+    "version": 1,
+    "section": "the-log-as-integration",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A recommendations system is built a year after the tills started writing to the log. What does it get?",
+    "choices": [
+      {
+        "text": "Only the sales written from the moment it first connects to the log",
+        "correct": false,
+        "why": "That is a queue. A new log reader starts wherever it chooses."
+      },
+      {
+        "text": "Every sale the log still holds, from its first offset",
+        "correct": true,
+        "why": "Right, as far back as the log has kept them, which lesson 3 sets."
+      },
+      {
+        "text": "Copies the tills send again",
+        "correct": false,
+        "why": "The tills know nothing about readers, new or old."
+      },
+      {
+        "text": "A summary table of the past year, built by the log instead of the events",
+        "correct": false,
+        "why": "The log holds events; a table is something a reader builds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ee2rcm9s",
+    "version": 1,
+    "section": "the-log-as-integration",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six tills each call five systems directly. How many connections is that? (With a log it would be eleven.)",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-10dh51er",
+    "version": 1,
+    "section": "the-log-as-integration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Image resizing: each uploaded image has to be resized once, by whichever worker is free, and nobody will ever need the request again. Which fits better?",
+    "choices": [
+      {
+        "text": "A log, since every worker reads every message",
+        "correct": false,
+        "why": "Every worker reading every image would resize each one many times."
+      },
+      {
+        "text": "A log, so the requests are kept for replay",
+        "correct": false,
+        "why": "Nobody needs them again; keeping them buys nothing here."
+      },
+      {
+        "text": "A queue: each message goes to one free worker and is deleted when done",
+        "correct": true,
+        "why": "Right. Work done once by whoever is free is a queue's job."
+      },
+      {
+        "text": "Neither: the uploader calls one worker directly",
+        "correct": false,
+        "why": "Then the uploader has to know which worker is free, and wait when none is."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6g18p64",
+    "version": 1,
+    "section": "designing-events",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which event name follows the advice of this lesson?",
+    "choices": [
+      {
+        "text": "update-stock",
+        "correct": false,
+        "why": "An instruction to one reader: a command in disguise."
+      },
+      {
+        "text": "book-sold",
+        "correct": true,
+        "why": "Right. Past tense, and it names the fact that happened."
+      },
+      {
+        "text": "sale-updated",
+        "correct": false,
+        "why": "Past tense, but it says only that something changed, not what."
+      },
+      {
+        "text": "send-receipt",
+        "correct": false,
+        "why": "An order to do something, with one intended reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-h03htkjr",
+    "version": 1,
+    "section": "designing-events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every event need an id written by whoever created it?",
+    "choices": [
+      {
+        "text": "Kafka refuses to store a message that has no id field in its value",
+        "correct": false,
+        "why": "Kafka accepts any bytes; the id is for the readers."
+      },
+      {
+        "text": "The offset already identifies it, and an id would only repeat it",
+        "correct": false,
+        "why": "A duplicate sent twice gets two offsets, so the offset cannot spot it."
+      },
+      {
+        "text": "Duplicates happen, and the id spots a second copy",
+        "correct": true,
+        "why": "Right. Two identical sales in one second differ only by their ids."
+      },
+      {
+        "text": "It sorts the events in time",
+        "correct": false,
+        "why": "Time is a separate field, at; ids are not timestamps."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8zcr902",
+    "version": 1,
+    "section": "designing-events",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The tills' sale has these fields: sale, shop, book, qty, cents, at. Which of this lesson's rules does it already meet? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A unique id",
+        "correct": true,
+        "why": "Yes: sale, such as nat-000002."
+      },
+      {
+        "text": "The time it happened, inside",
+        "correct": true,
+        "why": "Yes: at, from the till's clock."
+      },
+      {
+        "text": "A declared shape or version",
+        "correct": false,
+        "why": "Missing; lesson 6 adds it."
+      },
+      {
+        "text": "A type field naming the event",
+        "correct": false,
+        "why": "There is none; the topic sales names it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x56z8a0x",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a reader in minilog.py in the order the code does them.",
+    "items": [
+      "read the offset from its place file, or start at 0",
+      "open the log and skip records before that offset",
+      "print each record from there to the end",
+      "write the next offset to its place file"
+    ]
+  },
+  {
+    "id": "ex-evzvgg27",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A system keeps the stock of every book per shop and must never show a number that did not exist. Its events come from tills keyed by shop. Which change would break that?",
+    "choices": [
+      {
+        "text": "Keying by shop and book together, one key per row of the stock table",
+        "correct": false,
+        "why": "Every row still gets all of its events in one log, in order."
+      },
+      {
+        "text": "Sending events with no key, so they are spread over the logs",
+        "correct": true,
+        "why": "Right. A shop's count and sales then sit in different logs with no order between them."
+      },
+      {
+        "text": "Adding a new reader that starts from offset 0",
+        "correct": false,
+        "why": "Readers do not change the log or each other."
+      },
+      {
+        "text": "Writing events in fat form instead of thin",
+        "correct": false,
+        "why": "Fat or thin is about what an event carries, not its order."
+      }
+    ]
+  }
+]

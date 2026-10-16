@@ -1,0 +1,588 @@
+{
+  "ex-b74x93qe": {
+    "prompt": "Por que as aulas 1 e 2 conseguiram ler `data/raw/clicks` de um caminho local?",
+    "hint": "Onde estavam todos os executores?",
+    "choices": [
+      {
+        "text": "O master serve o arquivo aos workers",
+        "why": "O master distribui núcleos e nunca toca nos dados."
+      },
+      {
+        "text": "Todo executor estava na única máquina que tinha o arquivo",
+        "why": "Isso. Num cluster de verdade cada worker olharia no próprio disco e não acharia nada."
+      },
+      {
+        "text": "O Spark copia um arquivo local para todo worker antes da primeira tarefa, e cada um acha a sua cópia",
+        "why": "Não copia; cada executor abre o caminho onde está rodando."
+      },
+      {
+        "text": "Arquivos compactados são legíveis de qualquer máquina",
+        "why": "A compressão muda o tamanho, não onde o arquivo está."
+      }
+    ]
+  },
+  "ex-4yzatx09": {
+    "prompt": "Ligue cada jeito de guardar um lake ao que ele é.",
+    "hint": "Um mora nas máquinas que calculam; o outro é um serviço em outro lugar.",
+    "pairs": [
+      {
+        "left": "HDFS",
+        "right": "Arquivos espalhados pelos discos das próprias máquinas do cluster"
+      },
+      {
+        "left": "Um object store",
+        "right": "Um serviço separado, acessado pela rede"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia dos dados na memória do driver"
+    ]
+  },
+  "ex-ashktvez": {
+    "prompt": "O que o namenode guarda?",
+    "hint": "Ele responde 'onde está este arquivo?' sem tocar num disco.",
+    "choices": [
+      {
+        "text": "Os dados dos arquivos pequenos, e os metadados dos grandes",
+        "why": "O tamanho não muda nada; o namenode nunca guarda conteúdo."
+      },
+      {
+        "text": "O registro de cada job que leu um arquivo",
+        "why": "Isso não é assunto do HDFS."
+      },
+      {
+        "text": "Uma cópia de cada bloco, por segurança",
+        "why": "Os datanodes guardam todas as cópias; o namenode nenhuma."
+      },
+      {
+        "text": "Só metadados",
+        "why": "Isso: a árvore, os blocos de cada arquivo e onde está cada cópia. Nenhum dado."
+      }
+    ]
+  },
+  "ex-c9956ghm": {
+    "prompt": "Ordene os passos de ler um arquivo do HDFS.",
+    "hint": "O namenode é consultado primeiro e nunca carrega os dados.",
+    "items": [
+      "O cliente pergunta ao namenode que blocos formam o arquivo",
+      "O namenode responde com os datanodes que guardam cada bloco",
+      "O cliente lê cada bloco direto de um datanode"
+    ]
+  },
+  "ex-72w1j92v": {
+    "prompt": "Quantos blocos de 128 MB um arquivo de 1 GB (1.024 MB) ocupa no HDFS?",
+    "hint": "Divida."
+  },
+  "ex-6f2jyjbn": {
+    "prompt": "Quando um cliente escreve um bloco, como as três cópias são feitas?",
+    "hint": "O cliente manda o bloco uma vez só.",
+    "choices": [
+      {
+        "text": "Por um pipeline: de datanode para datanode",
+        "why": "Isso. O primeiro passa ao segundo conforme chega, e o segundo ao terceiro."
+      },
+      {
+        "text": "Uma cópia agora e duas de madrugada",
+        "why": "A escrita termina quando os três têm o bloco."
+      },
+      {
+        "text": "O cliente manda três vezes, uma para cada datanode",
+        "why": "Isso triplicaria o tráfego do cliente; o pipeline evita."
+      },
+      {
+        "text": "O namenode copia depois da escrita",
+        "why": "O namenode nunca carrega dados."
+      }
+    ]
+  },
+  "ex-c6dyxx6k": {
+    "prompt": "Por que o HDFS é um disco ruim para rodar um banco transacional?",
+    "hint": "O que não dá para fazer com um arquivo depois de escrito?",
+    "choices": [
+      {
+        "text": "Os blocos dele são pequenos demais para páginas de banco",
+        "why": "São enormes, 128 MB; o tamanho não é o problema."
+      },
+      {
+        "text": "O namenode recusa arquivos abertos por muito tempo",
+        "why": "Não há essa regra; o obstáculo é a mudança no lugar."
+      },
+      {
+        "text": "Arquivos não podem ser editados no lugar",
+        "why": "Isso. Um banco reescreve páginas o tempo todo; o HDFS só cria, acrescenta e apaga."
+      },
+      {
+        "text": "Ele guarda uma cópia só de cada bloco, arriscado demais para um banco",
+        "why": "Ele guarda três."
+      }
+    ]
+  },
+  "ex-43863cts": {
+    "prompt": "Por que a instalação põe só o `bin` do Hadoop no path, e não o `sbin`?",
+    "hint": "O Spark também tem um `sbin`.",
+    "choices": [
+      {
+        "text": "O Hadoop não tem diretório `sbin` na versão 3.5.0, só `bin` e `etc`",
+        "why": "Tem, com o `start-all.sh` dentro."
+      },
+      {
+        "text": "O `sbin` guarda programas que só o usuário root pode rodar no Ubuntu, então fica fora do path",
+        "why": "Os scripts do `sbin` do Hadoop rodam como qualquer usuário."
+      },
+      {
+        "text": "Para economizar memória",
+        "why": "O path não custa memória."
+      },
+      {
+        "text": "Os dois projetos trazem um `start-all.sh`, e o segundo ganharia calado",
+        "why": "Isso. Um conflito de nomes no path escolhe um em silêncio."
+      }
+    ]
+  },
+  "ex-wrn42t28": {
+    "prompt": "Por que o laboratório roda quatro datanodes e não três, com replicação três?",
+    "hint": "Depois de perder um, para onde iria a terceira cópia?",
+    "choices": [
+      {
+        "text": "Para escrever quatro vezes mais rápido",
+        "why": "Os quatro dividem um disco aqui; o motivo é o exercício de falha."
+      },
+      {
+        "text": "Para que, perdendo um, sobrem três para guardar três cópias",
+        "why": "Isso. Com três datanodes, perder um deixa a terceira cópia sem lugar."
+      },
+      {
+        "text": "Um datanode por worker do Spark, mais um que o namenode precisa para os próprios metadados",
+        "why": "O namenode não precisa de datanode próprio."
+      },
+      {
+        "text": "O HDFS exige número par de datanodes para cada bloco ter um par do lado oposto",
+        "why": "Não há essa regra."
+      }
+    ]
+  },
+  "ex-pkkr846x": {
+    "prompt": "A Ana roda `sh hdfs.sh setup` uma segunda vez e inicia tudo. O log de um datanode diz `Incompatible clusterIDs`. O que aconteceu?",
+    "hint": "O que a formatação dá ao sistema de arquivos?",
+    "choices": [
+      {
+        "text": "Dois datanodes receberam a mesma porta",
+        "why": "Isso falha como endereço já em uso."
+      },
+      {
+        "text": "O namenode ficou sem memória",
+        "why": "Nada aqui é grande o bastante para isso."
+      },
+      {
+        "text": "A nova formatação deu ao namenode uma identidade nova que os datanodes não reconhecem",
+        "why": "Isso. Apague o `~/hdfs`, depois faça setup e start de novo."
+      },
+      {
+        "text": "O Java 17 é novo demais para o Hadoop",
+        "why": "A primeira instalação rodou no mesmo Java."
+      }
+    ]
+  },
+  "ex-5j4xesam": {
+    "prompt": "O arquivo do ano tem 1.291.239.322 bytes e um bloco tem 134.217.728. Quantos blocos ele ocupa?",
+    "hint": "Arredonde para cima: o último bloco guarda o que sobra."
+  },
+  "ex-s4hg2cdy": {
+    "prompt": "Dez blocos com replicação três: quantas cópias de bloco estão nos discos dos datanodes?",
+    "hint": "Multiplique."
+  },
+  "ex-3b43z3at": {
+    "prompt": "Para que serve o pequeno arquivo `.meta` ao lado de cada arquivo de bloco?",
+    "hint": "Ele é conferido em toda leitura.",
+    "choices": [
+      {
+        "text": "A lista dos outros datanodes com cópias",
+        "why": "Isso é metadado, e o namenode o guarda."
+      },
+      {
+        "text": "Os checksums do bloco",
+        "why": "Isso. Um bloco danificado é percebido e lido de outra cópia."
+      },
+      {
+        "text": "O nome do arquivo a que o bloco pertence",
+        "why": "Datanodes não sabem nomes de arquivo; o namenode sabe."
+      },
+      {
+        "text": "Uma cópia compactada do bloco",
+        "why": "Ele é minúsculo; guarda checksums."
+      }
+    ]
+  },
+  "ex-hdbvhhsb": {
+    "prompt": "Por que o HDFS põe a segunda e a terceira cópias de um bloco num rack diferente do da primeira?",
+    "hint": "Qual é o jeito mais comum de perder várias máquinas de uma vez?",
+    "choices": [
+      {
+        "text": "Para um rack sem energia não levar todas as cópias",
+        "why": "Isso. Máquinas de um rack dividem energia e switch."
+      },
+      {
+        "text": "Um rack só pode guardar uma cópia de cada bloco, por uma regra que o HDFS impõe com qualquer replicação",
+        "why": "A segunda e a terceira dividem um rack."
+      },
+      {
+        "text": "Para espalhar a memória do namenode",
+        "why": "A posição não muda o que o namenode guarda."
+      },
+      {
+        "text": "Leituras de outro rack são mais rápidas, porque o switch de cada rack é dividido por menos máquinas",
+        "why": "Costumam ser mais lentas; a regra é sobre sobreviver."
+      }
+    ]
+  },
+  "ex-3y4ebme2": {
+    "prompt": "Por que o namenode espera antes de copiar os blocos de um datanode calado?",
+    "hint": "Quanto custa copiar, e o que mais o silêncio pode querer dizer?",
+    "choices": [
+      {
+        "text": "Ele não tem como saber que blocos estavam lá",
+        "why": "Ele sabe exatamente, pelos relatórios de blocos."
+      },
+      {
+        "text": "Silêncio não prova morte, e copiar custa ao cluster inteiro",
+        "why": "Isso. Copiar terabytes por um datanode que volta um minuto depois seria desperdício."
+      },
+      {
+        "text": "Um cliente precisa pedir o reparo",
+        "why": "Ninguém pediu; o namenode fez sozinho."
+      },
+      {
+        "text": "Primeiro os blocos precisam ser lidos do datanode morto",
+        "why": "As cópias saem dos sobreviventes, não do morto."
+      }
+    ]
+  },
+  "ex-gphrj7z4": {
+    "prompt": "Quando o datanode 2 morreu, o arquivo ficou com cópias faltando mas continuou legível o tempo todo. Por quê?",
+    "hint": "Quantas cópias cada bloco afetado ainda tinha?",
+    "choices": [
+      {
+        "text": "Cada bloco afetado ainda tinha duas",
+        "why": "Isso. Ler precisa de uma."
+      },
+      {
+        "text": "O namenode serviu os blocos que faltavam",
+        "why": "O namenode não guarda dados."
+      },
+      {
+        "text": "O Spark tinha o arquivo em cache na memória",
+        "why": "Nenhum job rodava; o HDFS sozinho o manteve legível."
+      },
+      {
+        "text": "O datanode 2 não tinha blocos daquele arquivo",
+        "why": "Ele tinha sete dos dez, por isso sete ficaram faltando."
+      }
+    ]
+  },
+  "ex-4g24rzs5": {
+    "prompt": "Se as três máquinas que guardam um bloco falham juntas, o `fsck` reporta o arquivo como ___.",
+    "hint": "O bloco sumiu.",
+    "blanks": [
+      {
+        "accept": [
+          "corrupt",
+          "corrompido"
+        ]
+      }
+    ]
+  },
+  "ex-2s2b99kn": {
+    "prompt": "Sete blocos de 128 MB foram copiados para restaurar a replicação. Cerca de quantos MB se moveram?",
+    "hint": "Multiplique.",
+    "unit": "MB"
+  },
+  "ex-xaph5ved": {
+    "prompt": "O mesmo petabyte em arquivos de 1 MB em vez de 1 GB. O que cresce, e onde?",
+    "hint": "Os dados não ficaram maiores.",
+    "choices": [
+      {
+        "text": "Nada que importe",
+        "why": "Decide se o namenode dá conta."
+      },
+      {
+        "text": "O espaço em disco dos datanodes, umas mil vezes",
+        "why": "O uso de disco fica mais ou menos igual; os bytes são os mesmos."
+      },
+      {
+        "text": "O número de cópias de cada bloco",
+        "why": "A replicação continua três."
+      },
+      {
+        "text": "Os objetos na memória do namenode",
+        "why": "Isso. Cerca de 2 bilhões de objetos em vez de 9 milhões."
+      }
+    ]
+  },
+  "ex-d658j40v": {
+    "prompt": "Por que o Spark vai ler mais devagar os 365 arquivos diários do que o arquivo de dez blocos, com os mesmos eventos?",
+    "hint": "O custo por tarefa da aula 2.",
+    "choices": [
+      {
+        "text": "365 tarefas minúsculas pagam cada uma o custo fixo",
+        "why": "Isso. Dez tarefas de um bloco inteiro gastam o tempo lendo."
+      },
+      {
+        "text": "Arquivos diários são guardados com menos cópias",
+        "why": "A replicação é três nos dois."
+      },
+      {
+        "text": "O Spark não lê gzip",
+        "why": "A aula 1 os leu sem problema."
+      },
+      {
+        "text": "O namenode recusa mais de 100 arquivos por job",
+        "why": "Não há esse limite."
+      }
+    ]
+  },
+  "ex-w3jq8wdg": {
+    "prompt": "Um job que lê muitos arquivos pequenos e os reescreve como poucos grandes se chama ___.",
+    "hint": "Apertar junto.",
+    "blanks": [
+      {
+        "accept": [
+          "compaction",
+          "compactação",
+          "compactacao"
+        ]
+      }
+    ]
+  },
+  "ex-65fk8gg0": {
+    "prompt": "O estágio 1 do `hdfs_count.py` rodou dez tarefas, todas `NODE_LOCAL`. O que isso quer dizer?",
+    "hint": "Onde estava o bloco de cada tarefa?",
+    "choices": [
+      {
+        "text": "As tarefas rodaram dentro do namenode, o processo que sabe onde cada bloco está guardado",
+        "why": "Tarefas rodam em executores."
+      },
+      {
+        "text": "Cada uma leu o bloco de um disco da própria máquina",
+        "why": "Isso. Nenhum bloco atravessou a rede."
+      },
+      {
+        "text": "Cada uma leu os dados da memória do executor, onde um estágio anterior do mesmo job os deixara",
+        "why": "Isso é `PROCESS_LOCAL`, aula 9."
+      },
+      {
+        "text": "Os dados foram copiados ao driver antes",
+        "why": "O driver nunca recebeu os blocos."
+      }
+    ]
+  },
+  "ex-hzz6h6tj": {
+    "prompt": "Ordene os níveis de localidade do Spark do melhor para o pior.",
+    "hint": "Da memória a qualquer lugar.",
+    "items": [
+      "PROCESS_LOCAL",
+      "NODE_LOCAL",
+      "RACK_LOCAL",
+      "ANY"
+    ]
+  },
+  "ex-566256yk": {
+    "prompt": "Sem o `dfs.datanode.hostname`, toda tarefa de leitura rodou como `ANY` numa máquina só. Por quê?",
+    "hint": "Como o Spark decide que duas coisas estão na mesma máquina?",
+    "choices": [
+      {
+        "text": "O arquivo era grande demais para ler localmente",
+        "why": "O tamanho não tem nada a ver com localidade."
+      },
+      {
+        "text": "Os executores estavam ocupados, então o Spark desistiu de esperar",
+        "why": "Nem um executor ocioso combinaria com `localhost`."
+      },
+      {
+        "text": "O HDFS proíbe leituras locais por padrão",
+        "why": "Nada proibiu; o Spark não reconheceu o host."
+      },
+      {
+        "text": "O Spark compara nomes, e `localhost` não era `127.0.0.1`",
+        "why": "Isso. A mesma máquina, dois nomes, e a localidade desligada em silêncio."
+      }
+    ]
+  },
+  "ex-659j89cf": {
+    "prompt": "Como se renomeia um objeto num object store?",
+    "hint": "Não existe renomear.",
+    "choices": [
+      {
+        "text": "Editando a chave no lugar com uma requisição de metadados, deixando os bytes onde estão",
+        "why": "Nada num objeto é editado no lugar."
+      },
+      {
+        "text": "Com uma requisição de renomear, que o armazenamento cumpre sem mover um byte do objeto",
+        "why": "A API do S3 não tem."
+      },
+      {
+        "text": "Copiar sob a chave nova, depois apagar a antiga",
+        "why": "Isso. Duas requisições, e a cópia move cada byte."
+      },
+      {
+        "text": "Movendo o diretório dele",
+        "why": "Não há diretórios, só chaves."
+      }
+    ]
+  },
+  "ex-esksjc2w": {
+    "prompt": "O `s3_demo.py` listou 31 'pastas'. O que elas eram de fato?",
+    "hint": "O que o `Delimiter` fez?",
+    "choices": [
+      {
+        "text": "Objetos vazios com nome terminando em barra",
+        "why": "Algumas ferramentas criam, mas este programa não."
+      },
+      {
+        "text": "Buckets",
+        "why": "Havia um bucket, o `pontofinal-lake`."
+      },
+      {
+        "text": "Diretórios criados pelo `create_bucket`",
+        "why": "Um bucket nasce vazio; não há diretórios nele."
+      },
+      {
+        "text": "Prefixos de chave, agrupados até a próxima barra",
+        "why": "Isso. Nenhum objeto pasta existe."
+      }
+    ]
+  },
+  "ex-dmc2st91": {
+    "prompt": "Mover 50.000 objetos um a um, como o `s3_demo.py` moveu 31, exige quantas requisições?",
+    "hint": "Duas por objeto."
+  },
+  "ex-yg6ef5yk": {
+    "prompt": "Um job levado do HDFS para um object store, sem mudança, escreve 10.000 arquivos. O que dá errado no fim?",
+    "hint": "Os movimentos do committer.",
+    "choices": [
+      {
+        "text": "Cada movimento vira uma cópia, devagar, e enquanto isso leitores veem metade do resultado",
+        "why": "Isso. Lento e não atômico, e nenhum erro avisa."
+      },
+      {
+        "text": "Falha, porque object stores recusam diretórios temporários",
+        "why": "Roda; o problema é mais silencioso que uma falha."
+      },
+      {
+        "text": "Os arquivos são escritos com uma cópia em vez de três",
+        "why": "O provedor guarda as suas próprias cópias."
+      },
+      {
+        "text": "Nada, já que só o caminho muda",
+        "why": "O caminho é a única mudança no código, não no comportamento."
+      }
+    ]
+  },
+  "ex-fm10b02b": {
+    "prompt": "Como um formato de tabela faz uma escrita aparecer de uma vez num object store?",
+    "hint": "Ele nunca renomeia.",
+    "choices": [
+      {
+        "text": "Ele renomeia os arquivos mais rápido que o Hadoop",
+        "why": "Ele nem renomeia."
+      },
+      {
+        "text": "Ele trava o bucket durante a escrita",
+        "why": "Object stores não têm trava de bucket."
+      },
+      {
+        "text": "Ele grava todos os dados num único objeto",
+        "why": "Os dados ficam em muitos arquivos; só o commit é um."
+      },
+      {
+        "text": "Um pequeno arquivo de commit lista os arquivos da tabela",
+        "why": "Isso. Escrever um arquivo é atômico em qualquer lugar."
+      }
+    ]
+  },
+  "ex-gkq63nsy": {
+    "prompt": "Que coluna é uma boa partição para os cliques?",
+    "hint": "Poucos valores, e o que as consultas filtram.",
+    "choices": [
+      {
+        "text": "`day`",
+        "why": "Isso. 365 valores, e quase toda pergunta cita um período."
+      },
+      {
+        "text": "`visitor_id`",
+        "why": "Dois milhões de valores: dois milhões de diretórios de arquivos minúsculos."
+      },
+      {
+        "text": "`event_id`",
+        "why": "Único por linha, a pior escolha possível."
+      },
+      {
+        "text": "`ts`, ao segundo",
+        "why": "Mais de trinta milhões de valores num ano."
+      }
+    ]
+  },
+  "ex-tx6m92pq": {
+    "prompt": "Ligue cada camada de um lake ao que ela guarda.",
+    "hint": "Cru, limpo, respondido.",
+    "pairs": [
+      {
+        "left": "Bronze",
+        "right": "Os dados como chegaram, nunca editados"
+      },
+      {
+        "left": "Silver",
+        "right": "Os mesmos dados, limpos e tipados"
+      },
+      {
+        "left": "Gold",
+        "right": "Tabelas feitas para perguntas"
+      }
+    ],
+    "right_distractors": [
+      "Backups do namenode"
+    ]
+  },
+  "ex-v9rd77dg": {
+    "prompt": "Uma equipe desliga o cluster toda noite para economizar. Onde os dados devem morar, e por quê?",
+    "hint": "Onde o HDFS guarda os bytes?",
+    "choices": [
+      {
+        "text": "Num object store: o HDFS mora nos discos do próprio cluster",
+        "why": "Isso. Desligue as máquinas e o HDFS some; o object store fica."
+      },
+      {
+        "text": "Tanto faz; a replicação a protege com o cluster desligado",
+        "why": "A replicação é entre as máquinas do cluster, que estão desligadas."
+      },
+      {
+        "text": "No HDFS, porque é mais rápido de ler",
+        "why": "Velocidade não ajuda dados que sumiram com as máquinas."
+      },
+      {
+        "text": "No disco do driver",
+        "why": "O disco de uma máquina é o problema de onde a aula partiu."
+      }
+    ]
+  },
+  "ex-xctcwxky": {
+    "prompt": "Ligue cada operação ao que ela custa no HDFS e num object store.",
+    "hint": "Qual delas move bytes?",
+    "pairs": [
+      {
+        "left": "Renomear um arquivo de 1 GB no HDFS",
+        "right": "Uma mudança na memória do namenode"
+      },
+      {
+        "left": "Renomear um objeto de 1 GB",
+        "right": "Uma cópia de cada byte, depois um delete"
+      },
+      {
+        "left": "Listar os arquivos de um dia",
+        "right": "Uma requisição por chaves com um prefixo, num object store"
+      }
+    ],
+    "right_distractors": [
+      "Nada, em nenhum dos dois"
+    ]
+  }
+}

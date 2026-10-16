@@ -1,0 +1,448 @@
+{
+  "ex-34sebkv9": {
+    "prompt": "A regra pede ___ cópias dos dados, em dois tipos de armazenamento, com uma delas em outro lugar.",
+    "hint": "Contando a que está em produção.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "três",
+          "tres"
+        ]
+      }
+    ]
+  },
+  "ex-4m02zfs6": {
+    "prompt": "Uma equipe copia os seus backups para uma segunda região da mesma conta de nuvem. Que evento ainda leva as duas cópias?",
+    "hint": "O que as duas regiões têm em comum?",
+    "choices": [
+      {
+        "text": "Um disco falhando na primeira região",
+        "why": "A cópia da segunda região está em outros discos, completamente."
+      },
+      {
+        "text": "Um incêndio no data center da primeira região",
+        "why": "É a isso que uma segunda região sobrevive."
+      },
+      {
+        "text": "A conta ser comprometida ou encerrada",
+        "why": "Isso. As duas regiões respondem à mesma conta e às mesmas credenciais."
+      },
+      {
+        "text": "Uma queda de rede entre os usuários e a primeira região",
+        "why": "Os dados não são destruídos; e a segunda região é alcançável separadamente."
+      }
+    ]
+  },
+  "ex-7e5k6fy3": {
+    "prompt": "Contra o que protege um repositório no mesmo servidor que o banco?",
+    "hint": "Que falhas deixam o disco do servidor intacto?",
+    "choices": [
+      {
+        "text": "Erros pequenos, como uma tabela apagada",
+        "why": "Isso. É uma conveniência para restaurações rápidas, não uma cópia que sobrevive ao servidor."
+      },
+      {
+        "text": "Um incêndio no prédio",
+        "why": "O incêndio leva o servidor e o repositório juntos."
+      },
+      {
+        "text": "Uma senha de administrador roubada",
+        "why": "Quem tem a senha consegue apagar o repositório local primeiro."
+      },
+      {
+        "text": "Uma falha no disco do servidor",
+        "why": "O repositório está nesse disco, ou pelo menos nessa máquina."
+      }
+    ]
+  },
+  "ex-r0gjdyq4": {
+    "prompt": "Com dois repositórios configurados, para onde vai um `pgbackrest --stanza=main backup` simples?",
+    "hint": "Arquivamento e backups se comportam de forma diferente.",
+    "choices": [
+      {
+        "text": "Para os dois repositórios",
+        "why": "Os segmentos arquivados vão para os dois; um backup vai para um."
+      },
+      {
+        "text": "Para o repositório que tiver mais espaço",
+        "why": "O pgBackRest não escolhe por espaço."
+      },
+      {
+        "text": "Para o repo2, por ser criptografado",
+        "why": "A criptografia não muda o padrão."
+      },
+      {
+        "text": "Para o repo1, a menos que --repo indique outro",
+        "why": "Isso. A rotina noturna precisa de um segundo comando de backup para o repo2."
+      }
+    ]
+  },
+  "ex-6zmc0t1s": {
+    "prompt": "O `backup` simples desta lição fez no repo1 um incremental de algumas centenas de bytes. Por que tão pequeno?",
+    "hint": "O que já havia no repo1?",
+    "choices": [
+      {
+        "text": "Porque o repo2 já tinha ficado com o full",
+        "why": "Cada repositório tem a sua própria cadeia; o full do repo2 não conta para o repo1."
+      },
+      {
+        "text": "Quase nada mudou desde o full da lição 5 no repo1",
+        "why": "Isso. Um incremental copia só o que mudou, e quase nada tinha mudado."
+      },
+      {
+        "text": "Porque a criptografia o comprime",
+        "why": "O repo1 não é criptografado, e criptografia não encolhe dados."
+      },
+      {
+        "text": "Porque incrementais pulam os arquivos de dados",
+        "why": "Eles copiam os arquivos de dados que mudaram; não havia nenhum."
+      }
+    ]
+  },
+  "ex-hr4dj5ny": {
+    "prompt": "Por que nesta lição o `/etc/pgbackrest.conf` passa a ter dono root, grupo postgres e modo 640?",
+    "hint": "O que ele guarda agora?",
+    "choices": [
+      {
+        "text": "O pgBackRest se recusa a ler um arquivo que outros podem escrever",
+        "why": "O motivo é o que o arquivo guarda, não uma regra da ferramenta."
+      },
+      {
+        "text": "Ele agora guarda um segredo",
+        "why": "Isso: a senha do repositório. O postgres tem que lê-la; mais ninguém deveria."
+      },
+      {
+        "text": "Para que o root rode backups sem sudo",
+        "why": "Os backups rodam como postgres."
+      },
+      {
+        "text": "Porque o repo2 está em outra máquina",
+        "why": "O lugar do repo2 não muda quem pode ler o arquivo."
+      }
+    ]
+  },
+  "ex-c2cjyk1w": {
+    "prompt": "O que o `file` informou para a cópia de `PG_VERSION.zst` no repo2?",
+    "hint": "O repo2 é criptografado.",
+    "choices": [
+      {
+        "text": "Zstandard compressed data",
+        "why": "Essa era a cópia no repo1."
+      },
+      {
+        "text": "ASCII text",
+        "why": "Nem a cópia simples é texto; ela é comprimida."
+      },
+      {
+        "text": "empty",
+        "why": "O arquivo não está vazio; está criptografado."
+      },
+      {
+        "text": "openssl enc'd data with salted password",
+        "why": "Isso. Sem a senha, é ruído."
+      }
+    ]
+  },
+  "ex-qdsx1gmq": {
+    "prompt": "Depois que o repo1 foi apagado, o que o `info` disse sobre os dois repositórios?",
+    "hint": "status: mixed.",
+    "choices": [
+      {
+        "text": "repo1 missing stanza path, repo2 ok",
+        "why": "Isso. O repositório sobrevivente ainda lista o seu backup."
+      },
+      {
+        "text": "Os dois com erro",
+        "why": "O repo2 não foi tocado e informou ok."
+      },
+      {
+        "text": "Nada, porque o info lê o repo1 e mais nada",
+        "why": "O info informa sobre cada repositório configurado."
+      },
+      {
+        "text": "repo1 ok, porque o arquivo de WAL ainda estava lá",
+        "why": "Os diretórios de arquivo e de backup dele foram removidos."
+      }
+    ]
+  },
+  "ex-mtj3eeyb": {
+    "prompt": "Com o repo1 fora do ar, quantas tentativas de arquivamento falhas o `pg_stat_archiver` contou para o segmento seguinte?",
+    "hint": "failed_count.",
+    "unit": "tentativas"
+  },
+  "ex-1ykn0179": {
+    "prompt": "Por que é certo que o envio conte como falho enquanto um repositório ainda recebeu o segmento?",
+    "hint": "Quem precisa ficar sabendo?",
+    "choices": [
+      {
+        "text": "Porque um segmento em um repositório é inútil",
+        "why": "Ele é útil; o repo2 consegue restaurar com ele."
+      },
+      {
+        "text": "Porque o PostgreSQL não consegue arquivar duas vezes",
+        "why": "Ele arquiva uma vez por segmento; o pgBackRest o manda para cada repositório."
+      },
+      {
+        "text": "Para que alguém seja avisado",
+        "why": "Isso: o servidor tenta de novo e os alertas disparam enquanto falta uma cópia. Informar sucesso esconderia a perda de um repositório inteiro."
+      },
+      {
+        "text": "Para que o repo2 também seja marcado como quebrado",
+        "why": "O repo2 continuou saudável."
+      }
+    ]
+  },
+  "ex-c6gq0zg8": {
+    "prompt": "O que restaurar a partir do repo2 mudou no comando de restauração, comparado com a lição 5?",
+    "hint": "Uma opção.",
+    "choices": [
+      {
+        "text": "Outra ferramenta, porque o repo2 é criptografado",
+        "why": "O mesmo pgbackrest restore; ele descriptografa no caminho."
+      },
+      {
+        "text": "Um passo de descriptografia manual antes",
+        "why": "O pgBackRest descriptografa com a senha que está na configuração dele."
+      },
+      {
+        "text": "Restaurar o arquivo de WAL à parte",
+        "why": "A restauração busca os segmentos pelo restore_command, como antes."
+      },
+      {
+        "text": "--repo=2",
+        "why": "Isso. Um segundo repositório que precisa de um procedimento diferente é uma segunda coisa para dar errado."
+      }
+    ]
+  },
+  "ex-6n6jhy1z": {
+    "prompt": "Com a senha errada por um caractere, o que o pgBackRest conseguiu fazer com o repo2?",
+    "hint": "Ele não conseguiu ler nem um arquivo.",
+    "choices": [
+      {
+        "text": "Restaurar os arquivos e falhar no arquivamento",
+        "why": "Ele não conseguiu ler o backup.info, a lista de backups."
+      },
+      {
+        "text": "Restaurar, devagar, testando chaves",
+        "why": "AES com uma senha longa e aleatória não se quebra na tentativa."
+      },
+      {
+        "text": "Nada: nem listar os backups",
+        "why": "Isso. Cada byte está lá e nenhum deles serve para nada."
+      },
+      {
+        "text": "Ler as partes não criptografadas",
+        "why": "Tudo no repo2 é criptografado, os arquivos de info incluídos."
+      }
+    ]
+  },
+  "ex-w04751g7": {
+    "prompt": "Onde deve ficar guardada a senha de um repositório offsite criptografado?",
+    "hint": "Ela tem que sobreviver à perda do servidor do banco.",
+    "choices": [
+      {
+        "text": "Num cofre confiável, acessível a mais de uma pessoa",
+        "why": "Isso, e testada por um ensaio que restaura usando a cópia guardada."
+      },
+      {
+        "text": "No pgbackrest.conf do servidor do banco, e só lá",
+        "why": "Aí perder o servidor perde a chave, e os backups junto."
+      },
+      {
+        "text": "No repositório, ao lado dos backups",
+        "why": "Aí quem tem os backups tem a chave."
+      },
+      {
+        "text": "Decorada pelo administrador",
+        "why": "A memória de uma pessoa é a falha de que trata a lição 24."
+      }
+    ]
+  },
+  "ex-t0wdaxyj": {
+    "prompt": "Como um ensaio prova que a senha anotada no cofre é a certa?",
+    "hint": "De onde a máquina do ensaio tira a configuração?",
+    "choices": [
+      {
+        "text": "Comparando a senha com a que está no pgbackrest.conf",
+        "why": "Isso compara duas strings, e é o passo que as pessoas pulam."
+      },
+      {
+        "text": "Restaurando numa máquina configurada com a cópia do cofre",
+        "why": "Isso. Um ensaio rodado com uma cópia da configuração antiga não prova nada sobre o cofre."
+      },
+      {
+        "text": "Rodando o pgbackrest verify",
+        "why": "O verify usa a senha que a configuração tiver."
+      },
+      {
+        "text": "Descriptografando um arquivo à mão",
+        "why": "Melhor que nada, e ainda não é uma restauração."
+      }
+    ]
+  },
+  "ex-jeycw5nq": {
+    "prompt": "Com o full offsite marcado com `chattr +i`, o que fez o `pgbackrest expire --set`?",
+    "hint": "Ele apaga pelo sistema de arquivos, como qualquer outro.",
+    "choices": [
+      {
+        "text": "Removeu o backup, porque o pgBackRest roda como postgres",
+        "why": "A flag recusa o postgres e o root do mesmo jeito."
+      },
+      {
+        "text": "Removeu a flag e depois o backup",
+        "why": "Só o root muda a flag, e o pgBackRest não tenta."
+      },
+      {
+        "text": "Falhou no primeiro arquivo que não conseguiu remover",
+        "why": "Isso. A retenção, um script com bug e um atacante como postgres são barrados do mesmo jeito."
+      },
+      {
+        "text": "Moveu o backup para o repo1",
+        "why": "O expire nunca move backups."
+      }
+    ]
+  },
+  "ex-f2a2kn9n": {
+    "prompt": "Contra o que o `chattr +i` na mesma máquina deixa de proteger?",
+    "hint": "Quem tirou a flag na lição?",
+    "choices": [
+      {
+        "text": "Um atacante que tem root nessa máquina",
+        "why": "Isso. O root tira a flag com um comando."
+      },
+      {
+        "text": "Um script de limpeza com o caminho errado",
+        "why": "É contra isso que ele protege."
+      },
+      {
+        "text": "O próprio expire do pgBackRest",
+        "why": "Ele barrou o expire, como a lição mostrou."
+      },
+      {
+        "text": "Um erro de digitação de um administrador",
+        "why": "É o caso que ele resolve melhor."
+      }
+    ]
+  },
+  "ex-nky7cpwn": {
+    "prompt": "Os backups no repo2 ficam imutáveis por 90 dias, e o `repo2-retention-full` mantém 4 fulls semanais. O que acontece?",
+    "hint": "Quatro fulls semanais são umas quatro semanas.",
+    "choices": [
+      {
+        "text": "Nada: imutabilidade e retenção são independentes",
+        "why": "A retenção apaga pelo sistema de arquivos, que a flag recusa."
+      },
+      {
+        "text": "Os backups ficam 90 dias e depois expiram sem erro",
+        "why": "O expire tenta muito antes, e falha a cada vez até lá."
+      },
+      {
+        "text": "O pgBackRest sobe a retenção para 90 dias sozinho",
+        "why": "Ele não lê as flags do sistema de arquivos."
+      },
+      {
+        "text": "O expire falha toda noite por uns dois meses",
+        "why": "Isso. Uma rotina noturna que sempre falha é uma que ninguém lê; os dois períodos têm que combinar."
+      }
+    ]
+  },
+  "ex-1ngcrxhj": {
+    "prompt": "Relacione cada tipo de proteção com o que ela barra.",
+    "hint": "Quem tem o poder de desfazê-la?",
+    "pairs": [
+      {
+        "left": "chattr +i no próprio disco do servidor de backup",
+        "right": "Erros, não o root daquela máquina"
+      },
+      {
+        "left": "Object lock em modo compliance",
+        "right": "A remoção por qualquer credencial antes da data"
+      },
+      {
+        "left": "Uma fita numa prateleira",
+        "right": "Qualquer ataque pela rede"
+      }
+    ],
+    "right_distractors": [
+      "Alguém lendo os dados"
+    ]
+  },
+  "ex-4yjhbm7b": {
+    "prompt": "O que muda um servidor de backup que puxa do servidor do banco?",
+    "hint": "Para que lado apontam as credenciais?",
+    "choices": [
+      {
+        "text": "Os backups ficam mais rápidos",
+        "why": "Velocidade não é o objetivo de puxar."
+      },
+      {
+        "text": "Um invasor ali não alcança as cópias",
+        "why": "Isso: o servidor do banco não tem como entrar nos backups. Um servidor do banco comprometido consegue danificar o banco e mais nada."
+      },
+      {
+        "text": "O banco dispensa o archive_command",
+        "why": "O log ainda tem que ser coletado; o que muda é a direção do acesso."
+      },
+      {
+        "text": "A criptografia deixa de ser necessária",
+        "why": "O armazenamento do servidor de backup ainda merece criptografia."
+      }
+    ]
+  },
+  "ex-zh26p4r4": {
+    "prompt": "A credencial do servidor do banco para o bucket offsite pode escrever objetos novos e mais nada. Como os dados antigos chegam a ser apagados?",
+    "hint": "Outra pessoa faz isso.",
+    "choices": [
+      {
+        "text": "Não são; o bucket cresce para sempre",
+        "why": "Isso seria um problema de custo, e a lição diz quem apaga."
+      },
+      {
+        "text": "Pela credencial de outra pessoa",
+        "why": "Isso: uma regra de ciclo de vida no bucket, ou uma rotina separada com a sua própria credencial. A remoção é tirada da máquina que um atacante alcançaria primeiro."
+      },
+      {
+        "text": "Pelo servidor do banco, com sudo",
+        "why": "sudo no servidor não acrescenta permissões no bucket."
+      },
+      {
+        "text": "Pelo pgbackrest expire, com a mesma credencial",
+        "why": "Essa credencial não consegue apagar, e esse é o ponto."
+      }
+    ]
+  },
+  "ex-n554vwbv": {
+    "prompt": "Ponha os passos de um ataque típico de ransomware a um banco na ordem contra a qual esta lição alerta.",
+    "hint": "O que o atacante remove antes de se mostrar?",
+    "items": [
+      "Obter uma credencial no servidor do banco",
+      "Apagar todo backup que essa credencial alcança",
+      "Criptografar ou destruir o banco",
+      "Pedir pagamento"
+    ],
+    "trap": "Os backups vão primeiro, porque uma vítima com um backup restaurável não paga; e é por isso que a cópia que importa é a que essa credencial não alcança."
+  },
+  "ex-5va3cddj": {
+    "prompt": "Perguntam a você se o shop tem um backup offsite. O repo2 está em outro provedor, criptografado, e é escrito pelo pgBackRest no servidor do banco com uma chave que consegue apagar. Qual é a resposta honesta?",
+    "hint": "Faça a segunda pergunta da lição.",
+    "choices": [
+      {
+        "text": "Sim: está em outro lugar, em outro armazenamento",
+        "why": "Ele sobrevive à falha do servidor, não à pessoa que toma o servidor."
+      },
+      {
+        "text": "Não, porque é criptografado",
+        "why": "A criptografia é boa e não decide onde uma cópia está."
+      },
+      {
+        "text": "Sim, desde que a senha esteja num cofre",
+        "why": "A senha protege a leitura, não a remoção."
+      },
+      {
+        "text": "Só pela metade: um invasor naquele host o apaga",
+        "why": "Isso: offsite, sim; fora do alcance das credenciais do servidor, não. Qualquer um com aquele servidor consegue apagá-lo antes de tocar no banco."
+      }
+    ]
+  }
+}

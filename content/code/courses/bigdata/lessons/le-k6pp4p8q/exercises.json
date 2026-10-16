@@ -1,0 +1,736 @@
+[
+  {
+    "id": "ex-5wadj20k",
+    "version": 1,
+    "section": "jobs-stages-tasks",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order from largest to smallest unit of work.",
+    "hint": "An action starts the largest one.",
+    "items": [
+      "Job",
+      "Stage",
+      "Task"
+    ]
+  },
+  {
+    "id": "ex-0jfrjznd",
+    "version": 1,
+    "section": "jobs-stages-tasks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does Spark cut a job into stages?",
+    "hint": "Lesson 6: every `Exchange`.",
+    "choices": [
+      {
+        "text": "Every 128 MB of input",
+        "correct": false,
+        "why": "That sizes partitions, not stages."
+      },
+      {
+        "text": "At every shuffle",
+        "correct": true,
+        "why": "Right. A stage is a chain of narrow steps between shuffles."
+      },
+      {
+        "text": "At every file the job reads, one stage per file",
+        "correct": false,
+        "why": "Files become tasks of one stage."
+      },
+      {
+        "text": "At every transformation written in the program",
+        "correct": false,
+        "why": "Narrow transformations chain inside one stage."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvxv7t90",
+    "version": 1,
+    "section": "jobs-stages-tasks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stage's line says 19.4 task-seconds. Why can the stage have taken much less on the clock?",
+    "hint": "How many tasks run at once?",
+    "choices": [
+      {
+        "text": "The REST interface rounds times up to the nearest ten seconds",
+        "correct": false,
+        "why": "It reports milliseconds."
+      },
+      {
+        "text": "Half of it was the driver's time",
+        "correct": false,
+        "why": "Task time is executor time."
+      },
+      {
+        "text": "It includes the next stage",
+        "correct": false,
+        "why": "Each stage has its own line."
+      },
+      {
+        "text": "Three tasks ran at a time",
+        "correct": true,
+        "why": "Right. The number is a sum over tasks, not a duration."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjp60peb",
+    "version": 1,
+    "section": "partitions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "365 files of 1.1 MB, each counted as 4 MB more, packed into partitions of 128 MB. About how many partitions?",
+    "hint": "Total the counted sizes, then divide.",
+    "value": 15,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-z4b8hn1r",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Spark count each file as 4 MB larger than it is when packing partitions?",
+    "hint": "Is an empty file free to read?",
+    "choices": [
+      {
+        "text": "Opening a file has a cost of its own",
+        "correct": true,
+        "why": "Right. Without it, a partition could hold thousands of tiny files."
+      },
+      {
+        "text": "To leave room for compression",
+        "correct": false,
+        "why": "Compression is already in the file's size."
+      },
+      {
+        "text": "HDFS blocks are rounded up",
+        "correct": false,
+        "why": "These files are on a local disk."
+      },
+      {
+        "text": "Parquet files have a 4 MB header",
+        "correct": false,
+        "why": "Their footer is a few kilobytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9wk65tn",
+    "version": 1,
+    "section": "partitions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each moment to what decides the number of partitions.",
+    "hint": "Three places, three rules.",
+    "pairs": [
+      {
+        "left": "Reading Parquet files",
+        "right": "spark.sql.files.maxPartitionBytes"
+      },
+      {
+        "left": "After a shuffle",
+        "right": "spark.sql.shuffle.partitions"
+      },
+      {
+        "left": "When the program asks",
+        "right": "repartition(n) or coalesce(n)"
+      }
+    ],
+    "right_distractors": [
+      "spark.executor.memory"
+    ]
+  },
+  {
+    "id": "ex-9va0ce33",
+    "version": 1,
+    "section": "narrow-and-wide",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are wide transformations? Choose all that apply.",
+    "hint": "Wide needs rows from every partition.",
+    "choices": [
+      {
+        "text": "`filter`",
+        "correct": false,
+        "why": "Narrow: each partition is filtered on its own."
+      },
+      {
+        "text": "`groupBy`",
+        "correct": true,
+        "why": "Yes. Each key's rows can be anywhere."
+      },
+      {
+        "text": "`orderBy`",
+        "correct": true,
+        "why": "Yes. A global order moves rows between partitions."
+      },
+      {
+        "text": "`withColumn`",
+        "correct": false,
+        "why": "Narrow: a new column from the same row."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rsh82ch",
+    "version": 1,
+    "section": "narrow-and-wide",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program filters, selects, filters again and adds a column. How many stages does that part need?",
+    "hint": "All four are narrow.",
+    "choices": [
+      {
+        "text": "One, as a single pass",
+        "correct": true,
+        "why": "Right. Narrow steps chain inside one task."
+      },
+      {
+        "text": "None until the program writes",
+        "correct": false,
+        "why": "When it runs, it is one stage."
+      },
+      {
+        "text": "Two, one per filter",
+        "correct": false,
+        "why": "Filters are narrow."
+      },
+      {
+        "text": "Four, one per step",
+        "correct": false,
+        "why": "Stages are cut at shuffles, not at steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgewc1g3",
+    "version": 1,
+    "section": "narrow-and-wide",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a broadcast join not end a stage on the large side?",
+    "hint": "Where does each task find the rows it joins with?",
+    "choices": [
+      {
+        "text": "The join happens on the driver",
+        "correct": false,
+        "why": "It happens in every task."
+      },
+      {
+        "text": "Each task has its own copy of the small side",
+        "correct": true,
+        "why": "Right. No row of the large side has to move."
+      },
+      {
+        "text": "The large side is sorted first",
+        "correct": false,
+        "why": "Sorting is the sort-merge join's way."
+      },
+      {
+        "text": "Broadcasts are not counted as stages by the interface",
+        "correct": false,
+        "why": "It is a real difference, not a counting choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-m68xrxdv",
+    "version": 1,
+    "section": "the-shuffle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Grouping by kind shuffled almost nothing; grouping by visitor shuffled 34.6 MiB. What made the difference?",
+    "hint": "What does partial counting shrink?",
+    "choices": [
+      {
+        "text": "The visitor column is wider",
+        "correct": false,
+        "why": "A few bytes wider; the count of keys is what matters."
+      },
+      {
+        "text": "The second grouping read more rows",
+        "correct": false,
+        "why": "Both read 24 million."
+      },
+      {
+        "text": "The number of distinct keys",
+        "correct": true,
+        "why": "Right. Four keys shrink to four rows a task; 1.7 million do not."
+      },
+      {
+        "text": "The first was a broadcast",
+        "correct": false,
+        "why": "Neither joined anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8z0sn8p",
+    "version": 1,
+    "section": "the-shuffle",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a shuffle cost? Choose all that apply.",
+    "hint": "Write, fetch, merge.",
+    "choices": [
+      {
+        "text": "A write to HDFS with three copies",
+        "correct": false,
+        "why": "That was MapReduce between jobs; shuffle files are local."
+      },
+      {
+        "text": "Network, for the fetches",
+        "correct": true,
+        "why": "Yes, on a real cluster."
+      },
+      {
+        "text": "Memory, to merge what was fetched",
+        "correct": true,
+        "why": "Yes, spilling if it does not fit."
+      },
+      {
+        "text": "Local disk, for the map side's files",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn9gnxkd",
+    "version": 1,
+    "section": "the-shuffle",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 10-gigabit network moves about 1.2 GB a second. How many seconds does a 36 GB shuffle need just to cross it?",
+    "hint": "Divide.",
+    "value": 30,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-5a6d9fx2",
+    "version": 1,
+    "section": "shuffle-files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where are a shuffle's files kept?",
+    "hint": "Not HDFS.",
+    "choices": [
+      {
+        "text": "In HDFS, with three copies",
+        "correct": false,
+        "why": "Shuffles never go to HDFS."
+      },
+      {
+        "text": "In `~/spark-events`",
+        "correct": false,
+        "why": "That holds the event logs."
+      },
+      {
+        "text": "On each executor's own local disk, under `/tmp`",
+        "correct": true,
+        "why": "Right, under `spark.local.dir`."
+      },
+      {
+        "text": "In the driver's memory",
+        "correct": false,
+        "why": "The driver never sees shuffle data."
+      }
+    ]
+  },
+  {
+    "id": "ex-m81kkdvw",
+    "version": 1,
+    "section": "shuffle-files",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A shuffle with 15 map tasks left how many files on disk, counting data, index and checksum?",
+    "hint": "Three per task.",
+    "value": 45,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mpfk6frn",
+    "version": 1,
+    "section": "shuffle-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An executor dies after the map side of a shuffle finished. What must happen before the reduce side can read?",
+    "hint": "Where were that executor's shuffle files?",
+    "choices": [
+      {
+        "text": "The whole job restarts",
+        "correct": false,
+        "why": "Only the lost map outputs are recomputed."
+      },
+      {
+        "text": "Nothing; HDFS has copies",
+        "correct": false,
+        "why": "Shuffle files are not in HDFS."
+      },
+      {
+        "text": "The driver sends its copy",
+        "correct": false,
+        "why": "The driver has none."
+      },
+      {
+        "text": "Its map tasks run again",
+        "correct": true,
+        "why": "Right. Their output died with its disk, and the lineage rebuilds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvnjnqb5",
+    "version": 1,
+    "section": "shuffle-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With adaptive execution on, how should `spark.sql.shuffle.partitions` be set?",
+    "hint": "AQE can merge, not split.",
+    "choices": [
+      {
+        "text": "For the largest shuffle",
+        "correct": true,
+        "why": "Right. AQE merges down; it cannot split up."
+      },
+      {
+        "text": "To the number of cores exactly",
+        "correct": false,
+        "why": "Too low for large shuffles, and AQE cannot raise it."
+      },
+      {
+        "text": "To 1, so AQE decides everything",
+        "correct": false,
+        "why": "AQE would have one partition to work with."
+      },
+      {
+        "text": "It no longer matters at all",
+        "correct": false,
+        "why": "It is the ceiling AQE merges down from."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpmn2te9",
+    "version": 1,
+    "section": "shuffle-partitions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With adaptive execution off, how many reduce tasks did the grouping by visitor run?",
+    "hint": "The default shuffle partitions.",
+    "value": 200,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jwtwpat2",
+    "version": 1,
+    "section": "executor-memory",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An executor has 2,048 MiB of heap. With 300 MiB reserved and a fraction of 0.6, how many MiB does Spark get for execution and storage?",
+    "hint": "(heap − 300) × 0.6.",
+    "value": 1048.8,
+    "tolerance": 0.5,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-vr5rxy30",
+    "version": 1,
+    "section": "executor-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does *unified* mean in Spark's unified memory?",
+    "hint": "Two uses, one region.",
+    "choices": [
+      {
+        "text": "Driver and executors use the same settings",
+        "correct": false,
+        "why": "They have separate settings."
+      },
+      {
+        "text": "The heap and the overhead are one",
+        "correct": false,
+        "why": "Overhead is outside the heap."
+      },
+      {
+        "text": "All executors share one pool of memory across machines",
+        "correct": false,
+        "why": "Each executor's memory is its own."
+      },
+      {
+        "text": "Execution and storage share one region",
+        "correct": true,
+        "why": "Right. Each can borrow what the other is not using."
+      }
+    ]
+  },
+  {
+    "id": "ex-259bccrc",
+    "version": 1,
+    "section": "executor-memory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A YARN container of an 8 GB executor is killed for exceeding its memory, though the heap was not full. Where is the likeliest excess?",
+    "hint": "What lives outside the heap?",
+    "choices": [
+      {
+        "text": "The 300 MiB reserve",
+        "correct": false,
+        "why": "It is inside the heap and fixed."
+      },
+      {
+        "text": "Overhead, or the Python workers",
+        "correct": true,
+        "why": "Right. Neither shows in the heap's numbers."
+      },
+      {
+        "text": "The driver's memory",
+        "correct": false,
+        "why": "The driver is a different process."
+      },
+      {
+        "text": "The storage half of unified memory",
+        "correct": false,
+        "why": "That is inside the heap."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yms3q33",
+    "version": 1,
+    "section": "spilling",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a task's data does not fit in execution memory, Spark writes part of it to disk and carries on: a ___.",
+    "hint": "Like a full glass.",
+    "blanks": [
+      {
+        "accept": [
+          "spill"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3wq0mppg",
+    "version": 1,
+    "section": "spilling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sort with 3 partitions spilled heavily and still finished before the one with 200. Why?",
+    "hint": "What did the 200 tasks each pay?",
+    "choices": [
+      {
+        "text": "Spilling makes sorting faster",
+        "correct": false,
+        "why": "It adds work; the other run added more."
+      },
+      {
+        "text": "Three partitions mean three times more memory",
+        "correct": false,
+        "why": "Memory per task is the same."
+      },
+      {
+        "text": "Spilling cost less than 200 tasks",
+        "correct": true,
+        "why": "Right. Spilling is a cost to weigh, not a failure."
+      },
+      {
+        "text": "The second run reused the first one's files",
+        "correct": false,
+        "why": "Each was a fresh query."
+      }
+    ]
+  },
+  {
+    "id": "ex-86bbak6m",
+    "version": 1,
+    "section": "spilling",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the fixes for a stage that spills too much, in the order the lesson suggests trying them.",
+    "hint": "Cheapest first.",
+    "items": [
+      "More partitions",
+      "Fewer columns before the wide step",
+      "More memory per task"
+    ]
+  },
+  {
+    "id": "ex-dxetqaxj",
+    "version": 1,
+    "section": "the-driver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is running the driver out of memory worse than an executor spilling?",
+    "hint": "What can the driver fall back on?",
+    "choices": [
+      {
+        "text": "Executors have more memory than drivers by design",
+        "correct": false,
+        "why": "Either can be given any size."
+      },
+      {
+        "text": "The driver's memory is shared with the master",
+        "correct": false,
+        "why": "They are separate processes."
+      },
+      {
+        "text": "Its death ends the application",
+        "correct": true,
+        "why": "Right. Lesson 2's one unrecoverable failure."
+      },
+      {
+        "text": "It is not worse; both retry",
+        "correct": false,
+        "why": "Nothing retries a dead driver."
+      }
+    ]
+  },
+  {
+    "id": "ex-8m9k9t9b",
+    "version": 1,
+    "section": "the-driver",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job ends with `rows = df.collect()` on 50 GB and fails. What is the right fix?",
+    "hint": "Who should hold the result?",
+    "choices": [
+      {
+        "text": "Raise the driver's memory to 64 GB",
+        "correct": false,
+        "why": "It moves the limit; the data still does not belong there."
+      },
+      {
+        "text": "Call `collect` twice",
+        "correct": false,
+        "why": "Twice the trouble."
+      },
+      {
+        "text": "Write it with `write.parquet` instead",
+        "correct": true,
+        "why": "Right. Each executor writes its own partitions."
+      },
+      {
+        "text": "Raise `spark.driver.maxResultSize` to 64 GB",
+        "correct": false,
+        "why": "The guard would pass and the driver die."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcwpberx",
+    "version": 1,
+    "section": "history-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a failed job from last night need the history server to be examined?",
+    "hint": "Where did its driver's page go?",
+    "choices": [
+      {
+        "text": "Failed jobs write no event log",
+        "correct": false,
+        "why": "They write it up to the moment they fail."
+      },
+      {
+        "text": "The master deletes failed applications",
+        "correct": false,
+        "why": "It keeps a summary; the detail was in the driver."
+      },
+      {
+        "text": "The history server reruns the job",
+        "correct": false,
+        "why": "It only reads the logs."
+      },
+      {
+        "text": "Its interface died with it",
+        "correct": true,
+        "why": "Right. The event log is what remains."
+      }
+    ]
+  },
+  {
+    "id": "ex-rst7zx79",
+    "version": 1,
+    "section": "history-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which port does the history server answer?",
+    "hint": "Five digits.",
+    "value": 18080,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-m8ff30t4",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each stage report to the most likely problem.",
+    "hint": "Read the columns: tasks, shuffle, spill.",
+    "pairs": [
+      {
+        "left": "200 tasks reading 0.2 MiB each",
+        "right": "Too many shuffle partitions"
+      },
+      {
+        "left": "3 tasks, most of their input spilled",
+        "right": "Too few partitions for the memory"
+      },
+      {
+        "left": "A large shuffle write from a grouping",
+        "right": "A key with very many values"
+      },
+      {
+        "left": "maxResultSize exceeded",
+        "right": "Too much data brought to the driver"
+      }
+    ]
+  },
+  {
+    "id": "ex-54ge8019",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query reads the clicks, filters purchases, joins the books by broadcast, groups by category and sorts. How many stages, ignoring adaptive execution and the broadcast's own job?",
+    "hint": "Count the shuffles and add one.",
+    "value": 3,
+    "tolerance": 0
+  }
+]

@@ -1,0 +1,594 @@
+[
+  {
+    "id": "ex-6phspw98",
+    "version": 1,
+    "section": "four-predictions",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each loss to the summary of the target it aims at.",
+    "hint": "Absolute error and squared error aim at different middles.",
+    "pairs": [
+      {
+        "left": "`squared_error`",
+        "right": "The mean"
+      },
+      {
+        "left": "`absolute_error`",
+        "right": "The median"
+      },
+      {
+        "left": "`quantile` at 0.9",
+        "right": "The 90th percentile"
+      }
+    ],
+    "right_distractors": [
+      "The mode"
+    ]
+  },
+  {
+    "id": "ex-kpam4d2a",
+    "version": 1,
+    "section": "four-predictions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`errors.py` ranks `boost_absolute` first by MAE and the line first by RMSE. What does that tell you?",
+    "hint": "Each metric measures a different kind of mistake.",
+    "choices": [
+      {
+        "text": "The line overfits",
+        "correct": false,
+        "why": "Nothing in the table shows overfitting."
+      },
+      {
+        "text": "One of the two metrics has a bug in scikit-learn",
+        "correct": false,
+        "why": "Both are correct; they measure different things."
+      },
+      {
+        "text": "The test months are too short for either metric to be trusted",
+        "correct": false,
+        "why": "1,540 deliveries is plenty; the disagreement is about what is measured."
+      },
+      {
+        "text": "They reward different mistakes",
+        "correct": true,
+        "why": "Yes. MAE weighs every minute alike; RMSE weighs the big misses most."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm92cwn9",
+    "version": 1,
+    "section": "mae",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five deliveries took 30, 32, 35, 40 and 120 minutes. What total absolute error does a guess of 40 give?",
+    "hint": "10 + 8 + 5 + 0 + 80.",
+    "value": 103,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-3e4rys3e",
+    "version": 1,
+    "section": "mae",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is MAE the easiest of the four metrics to explain to a logistics manager?",
+    "hint": "Look at its unit.",
+    "choices": [
+      {
+        "text": "It is in minutes",
+        "correct": true,
+        "why": "Yes. \"Off by five minutes\" needs no translation."
+      },
+      {
+        "text": "It ignores the deliveries that went wrong",
+        "correct": false,
+        "why": "It counts every delivery in proportion to its error."
+      },
+      {
+        "text": "It is always the smallest of the four numbers",
+        "correct": false,
+        "why": "Being small is not being clear, and MAPE and R² are on other scales."
+      },
+      {
+        "text": "It is the default metric that `HistGradientBoostingRegressor` uses when fitting",
+        "correct": false,
+        "why": "The default loss is squared error."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7vq4xrc",
+    "version": 1,
+    "section": "mae",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The MAE is smallest when every prediction is the ___ of the truth for that kind of case.",
+    "hint": "Half above, half below.",
+    "blanks": [
+      {
+        "accept": [
+          "median"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wm1tksxj",
+    "version": 1,
+    "section": "rmse",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In squared error, how many errors of 10 minutes weigh as much as one error of 60 minutes?",
+    "hint": "3,600 / 100.",
+    "value": 36,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-b0429hq0",
+    "version": 1,
+    "section": "rmse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without the deliveries more than 30 minutes off, the line's RMSE falls from 14.25 to 4.58. What does that show?",
+    "hint": "About 3% of rows.",
+    "choices": [
+      {
+        "text": "The stuck deliveries should be deleted from the data before fitting any model",
+        "correct": false,
+        "why": "They happen; deleting them hides real delays from the promise."
+      },
+      {
+        "text": "Those 46 deliveries make up most of the RMSE",
+        "correct": true,
+        "why": "Yes. Squaring hands the metric to the few big misses."
+      },
+      {
+        "text": "RMSE was computed wrongly",
+        "correct": false,
+        "why": "It is the same formula on fewer rows."
+      },
+      {
+        "text": "The line is a poor model",
+        "correct": false,
+        "why": "Its MAE without them is 3.76 minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-t58gx9b4",
+    "version": 1,
+    "section": "rmse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "RMSE is 14.43 and MAE is 5.02 for the same model. What does the gap say?",
+    "hint": "When would the two be equal?",
+    "choices": [
+      {
+        "text": "The model is biased towards being late",
+        "correct": false,
+        "why": "Neither metric keeps the sign of the error."
+      },
+      {
+        "text": "RMSE uses the training months and MAE the test months",
+        "correct": false,
+        "why": "Both use the same test predictions."
+      },
+      {
+        "text": "The errors have a heavy tail",
+        "correct": true,
+        "why": "Yes. With errors of similar size the two would be close."
+      },
+      {
+        "text": "The model is three times worse than it looks",
+        "correct": false,
+        "why": "Both are true descriptions of the same errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvkah74t",
+    "version": 1,
+    "section": "mape",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A delivery of 20 minutes was predicted at 25. What is its absolute percentage error, in percent?",
+    "hint": "5 / 20.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-xm1qwx92",
+    "version": 1,
+    "section": "mape",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does choosing a model by MAPE pull it towards predicting too little?",
+    "hint": "What is the most an under-prediction can cost?",
+    "choices": [
+      {
+        "text": "Percentages are smaller for long deliveries",
+        "correct": false,
+        "why": "True, but that does not set a direction."
+      },
+      {
+        "text": "MAPE is fitted by squared error",
+        "correct": false,
+        "why": "MAPE is a metric, not a loss anybody fitted here."
+      },
+      {
+        "text": "MAPE ignores errors below the truth",
+        "correct": false,
+        "why": "It counts them; it just caps them at 100%."
+      },
+      {
+        "text": "Predicting low costs at most 100%; predicting high has no ceiling",
+        "correct": true,
+        "why": "Yes. The division makes the two sides unequal."
+      }
+    ]
+  },
+  {
+    "id": "ex-18d6mdm4",
+    "version": 1,
+    "section": "mape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On which target is MAPE meaningless?",
+    "hint": "Divide by the truth.",
+    "choices": [
+      {
+        "text": "Units of one product sold per day, zero on most days",
+        "correct": true,
+        "why": "Yes. A truth of zero makes the division undefined."
+      },
+      {
+        "text": "The price of a box in reais",
+        "correct": false,
+        "why": "Prices are well away from zero."
+      },
+      {
+        "text": "Monthly revenue of a large shop",
+        "correct": false,
+        "why": "Large and never zero; MAPE works there."
+      },
+      {
+        "text": "Delivery minutes, which on these test months are never below 15",
+        "correct": false,
+        "why": "No truth near zero, so the division is safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3ffn8my",
+    "version": 1,
+    "section": "r-squared",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A constant guess of 60 minutes scored R² = −0.732. What does a negative R² mean?",
+    "hint": "Compared with what?",
+    "choices": [
+      {
+        "text": "A calculation error",
+        "correct": false,
+        "why": "R² has no lower limit; negative is legitimate."
+      },
+      {
+        "text": "Worse than predicting the test rows' mean",
+        "correct": true,
+        "why": "Yes. Its squared errors exceed those of the mean."
+      },
+      {
+        "text": "The model predicts the opposite of the truth",
+        "correct": false,
+        "why": "A constant predicts nothing at all, in either direction."
+      },
+      {
+        "text": "The data has more deliveries above 60 minutes than below",
+        "correct": false,
+        "why": "Most deliveries are below 60."
+      }
+    ]
+  },
+  {
+    "id": "ex-29x9b7dt",
+    "version": 1,
+    "section": "r-squared",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The line's R² is 0.397 with the stuck deliveries and 0.870 without them. Why is that a weakness of R²?",
+    "hint": "Did the model change?",
+    "choices": [
+      {
+        "text": "It shows the line is overfitted",
+        "correct": false,
+        "why": "Nothing here compares training and test."
+      },
+      {
+        "text": "R² should be computed on training rows",
+        "correct": false,
+        "why": "Training rows would flatter the model."
+      },
+      {
+        "text": "The same model gets very different scores depending on the rows asked about",
+        "correct": true,
+        "why": "Yes. R² mixes the model's errors with the spread of the data."
+      },
+      {
+        "text": "The stuck deliveries are fake",
+        "correct": false,
+        "why": "They are real delays nobody could predict."
+      }
+    ]
+  },
+  {
+    "id": "ex-tks3rsdf",
+    "version": 1,
+    "section": "direction",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`boost_absolute` predicts the median. Roughly what share of its promises would you expect to be late, in percent?",
+    "hint": "By definition of the median.",
+    "value": 50,
+    "tolerance": 2,
+    "unit": "%"
+  },
+  {
+    "id": "ex-g43aj464",
+    "version": 1,
+    "section": "direction",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The average of truth minus prediction, keeping the sign, is called the ___ of the model.",
+    "hint": "Section 07.",
+    "blanks": [
+      {
+        "accept": [
+          "bias"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q9de1b2r",
+    "version": 1,
+    "section": "direction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the line late only 26.6% of the time when shown as a promise?",
+    "hint": "Where does the mean sit here?",
+    "choices": [
+      {
+        "text": "It has the best MAE of the four models",
+        "correct": false,
+        "why": "`boost_absolute` has the best MAE."
+      },
+      {
+        "text": "It was designed as a cautious promise",
+        "correct": false,
+        "why": "Nobody designed it for promises; it fits the mean."
+      },
+      {
+        "text": "Linear models are biased towards early arrivals",
+        "correct": false,
+        "why": "Its bias is almost zero."
+      },
+      {
+        "text": "The mean sits above the median on this data",
+        "correct": true,
+        "why": "Yes. The tail pulls the mean up, which happens to help."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnk875df",
+    "version": 1,
+    "section": "promises",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A late minute costs three times an early minute. Which quantile should the promise model predict? Two decimal places.",
+    "hint": "3 / (3 + 1).",
+    "value": 0.75,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-bvk1y1hf",
+    "version": 1,
+    "section": "promises",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the quantile models from `promise.py` by how often they were late, most often first.",
+    "hint": "A higher quantile promises more time.",
+    "items": [
+      "0.5",
+      "0.8",
+      "0.9",
+      "0.95"
+    ]
+  },
+  {
+    "id": "ex-gy25bj9n",
+    "version": 1,
+    "section": "promises",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Even the 0.95 model is more than ten minutes late on 2.9% of deliveries. Why?",
+    "hint": "Which deliveries are those?",
+    "choices": [
+      {
+        "text": "They are the stuck vans, which no column predicts",
+        "correct": true,
+        "why": "Yes. A flat tyre is not in the data."
+      },
+      {
+        "text": "The test months are rainier than training",
+        "correct": false,
+        "why": "Rain is a column the model reads."
+      },
+      {
+        "text": "Quantile regression ignores the largest errors when it fits",
+        "correct": false,
+        "why": "It weighs every late minute by 0.95."
+      },
+      {
+        "text": "The quantile was set too low for this data",
+        "correct": false,
+        "why": "Raising it further would make every promise absurd to cover a few vans."
+      }
+    ]
+  },
+  {
+    "id": "ex-2df58b4r",
+    "version": 1,
+    "section": "promises",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the 0.9 quantile model on the test months? Choose all that apply.",
+    "hint": "Read `promise.py`'s 0.90 row.",
+    "choices": [
+      {
+        "text": "It promised about 7 minutes more than the median model",
+        "correct": true,
+        "why": "Yes, 48.4 against 41.4."
+      },
+      {
+        "text": "It has the best MAE",
+        "correct": false,
+        "why": "Leaning late costs MAE; the median model wins that."
+      },
+      {
+        "text": "It was late on 13.7% of deliveries",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "It was late on exactly 10% of deliveries",
+        "correct": false,
+        "why": "The quantile is approximate on new months."
+      }
+    ]
+  },
+  {
+    "id": "ex-1e2q3r3f",
+    "version": 1,
+    "section": "which-error",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pair did Feira em Casa end up using?",
+    "hint": "Two questions, two models.",
+    "choices": [
+      {
+        "text": "Whichever model has the highest R² each month",
+        "correct": false,
+        "why": "R² is the RMSE in disguise and answers neither question."
+      },
+      {
+        "text": "The 0.9 quantile in the app; `boost_absolute` for planning",
+        "correct": true,
+        "why": "Yes. A promise and a typical time are different questions."
+      },
+      {
+        "text": "The line for everything",
+        "correct": false,
+        "why": "It is neither the typical time nor a promise."
+      },
+      {
+        "text": "`boost_absolute` in the app, because it has the best MAE",
+        "correct": false,
+        "why": "It is late half the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjqpqtq7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague reports \"MAE 5.0 minutes\" for a delivery promise model. What should be added before anybody ships it?",
+    "hint": "What does MAE throw away?",
+    "choices": [
+      {
+        "text": "The MAPE, because managers like percentages",
+        "correct": false,
+        "why": "MAPE also discards the sign, and it likes predicting low."
+      },
+      {
+        "text": "The R², so a statistician can judge it",
+        "correct": false,
+        "why": "R² says nothing about lateness."
+      },
+      {
+        "text": "The bias and the share of deliveries that arrive late",
+        "correct": true,
+        "why": "Yes. A median model with a fine MAE is late half the time."
+      },
+      {
+        "text": "The RMSE, since it is stricter",
+        "correct": false,
+        "why": "It is stricter about big misses, not about direction."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6da8nmf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The logistics team wants the typical delivery time for routing. Which loss should the model be fitted with?",
+    "hint": "Typical means half above, half below.",
+    "choices": [
+      {
+        "text": "`squared_error`, the default for every regression problem anybody will meet",
+        "correct": false,
+        "why": "The default aims at the mean, which the tail pulls up."
+      },
+      {
+        "text": "`quantile` at 0.95",
+        "correct": false,
+        "why": "That is a cautious promise, not the typical time."
+      },
+      {
+        "text": "Whichever gives the highest R²",
+        "correct": false,
+        "why": "R² rewards the mean, like squared error."
+      },
+      {
+        "text": "`absolute_error`",
+        "correct": true,
+        "why": "Yes. It aims at the median."
+      }
+    ]
+  }
+]

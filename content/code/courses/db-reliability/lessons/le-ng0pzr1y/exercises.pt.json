@@ -1,0 +1,383 @@
+{
+  "ex-e92cvyhj": {
+    "prompt": "Relacione cada termo com o que ele mede.",
+    "hint": "Para trás a partir do incidente, ou para a frente?",
+    "pairs": [
+      {
+        "left": "RPO",
+        "right": "Quão longe para trás pode estar o último momento recuperável"
+      },
+      {
+        "left": "RTO",
+        "right": "Quanto tempo até o sistema voltar a ser usável"
+      },
+      {
+        "left": "archive_timeout",
+        "right": "O máximo que uma mudança espera num servidor parado antes de ser arquivada"
+      }
+    ],
+    "right_distractors": [
+      "Quantos backups ficam guardados no repositório"
+    ]
+  },
+  "ex-f29rsg7q": {
+    "prompt": "Por que a lição diz que \"nada e nada\" não é um requisito?",
+    "hint": "O que acontece com uma meta que ninguém consegue cumprir?",
+    "choices": [
+      {
+        "text": "Porque o PostgreSQL proíbe perda zero",
+        "why": "Perda zero quando um servidor se perde é possível, com replicação síncrona; ela tem um preço."
+      },
+      {
+        "text": "Porque RPO e RTO são definidos pela ferramenta de backup",
+        "why": "São decisões do negócio; a ferramenta decide o que é entregue."
+      },
+      {
+        "text": "Foi dito antes de qualquer pessoa ver o preço",
+        "why": "Isso. Uma meta que ninguém consegue cumprir é ignorada, o que é o mesmo que não ter meta."
+      },
+      {
+        "text": "Porque num banco de dados só o RTO importa",
+        "why": "Os dois importam, e para falhas diferentes."
+      }
+    ]
+  },
+  "ex-9yw7rs35": {
+    "prompt": "Por que um RPO é dado em tempo (\"cinco minutos de pedidos\") e não em bytes de log?",
+    "hint": "Quem tem que entendê-lo?",
+    "choices": [
+      {
+        "text": "Tempo é a medida que o negócio sabe pesar",
+        "why": "Isso. Cinco minutos de pedidos são um número de vendas; 300 MB de log não dizem nada a eles."
+      },
+      {
+        "text": "Porque o tamanho do log não pode ser medido",
+        "why": "Pode; a lição 4 mediu com LSNs."
+      },
+      {
+        "text": "Porque o PostgreSQL arquiva por timer, nunca por tamanho",
+        "why": "Segmentos são fechados quando enchem, e o archive_timeout acrescenta um timer."
+      },
+      {
+        "text": "Porque tempo é sempre menor que bytes",
+        "why": "São unidades diferentes e não dá para compará-las."
+      }
+    ]
+  },
+  "ex-ch2t61h3": {
+    "prompt": "Uma equipe tem uma réplica um segundo atrás do primário e diz que o RPO dela é de um segundo. Para qual falha isso está errado?",
+    "hint": "O que uma réplica faz com um DELETE equivocado?",
+    "choices": [
+      {
+        "text": "O disco do primário falhar",
+        "why": "Nesse caso, a réplica tem tudo até um segundo atrás."
+      },
+      {
+        "text": "O servidor do primário ficar sem energia",
+        "why": "De novo, a réplica tem quase tudo."
+      },
+      {
+        "text": "Um corte de rede entre os usuários e o primário",
+        "why": "Nenhum dado se perde; os usuários não conseguem chegar a ele, o que é assunto de RTO."
+      },
+      {
+        "text": "Um DELETE equivocado",
+        "why": "Isso. A réplica copia o DELETE em até um segundo; para essa falha, a réplica não oferece ponto de recuperação nenhum."
+      }
+    ]
+  },
+  "ex-tzds1q47": {
+    "prompt": "Por que o `rpo.sql` corta o `last_archived_wal` nos primeiros 24 caracteres?",
+    "hint": "O que um backup arquiva além de segmentos?",
+    "choices": [
+      {
+        "text": "Porque nomes de segmento com mais de 24 caracteres estão corrompidos",
+        "why": "Não estão corrompidos; são outro tipo de arquivo."
+      },
+      {
+        "text": "Um arquivo de histórico de backup veio por último",
+        "why": "Isso: logo depois de um backup, o último arquivo arquivado é um arquivo de histórico de backup cujo nome tem um sufixo. O pg_split_walfile_name recusa esse nome, e foi assim que a primeira versão da consulta falhou."
+      },
+      {
+        "text": "Para tirar a timeline do nome",
+        "why": "A timeline são os oito primeiros caracteres, e eles ficam."
+      },
+      {
+        "text": "Para deixar a consulta mais rápida",
+        "why": "Velocidade não entra nisso."
+      }
+    ]
+  },
+  "ex-4fja67w9": {
+    "prompt": "Num servidor parado sem `archive_timeout`, o `since_last_archive` mostra 40 minutos e o `not_yet_archived`, alguns kilobytes. Quanto custaria uma falha de disco agora?",
+    "hint": "Esses kilobytes estão só neste servidor.",
+    "choices": [
+      {
+        "text": "Nada, porque alguns kilobytes são desprezíveis",
+        "why": "Alguns kilobytes podem ser vários pedidos; o tamanho deles não diz nada sobre o valor."
+      },
+      {
+        "text": "As mudanças dos últimos 40 minutos",
+        "why": "Isso. Tudo o que foi escrito desde o último segmento arquivado existe só aqui."
+      },
+      {
+        "text": "Exatamente um segmento de 16 MB",
+        "why": "A perda é o que foi escrito, alguns kilobytes, espalhados por 40 minutos."
+      },
+      {
+        "text": "Tudo desde o último backup full",
+        "why": "O arquivo cobre tudo até 40 minutos atrás."
+      }
+    ]
+  },
+  "ex-t42sjtvm": {
+    "prompt": "Com `archive_timeout = '60s'`, que RPO um servidor tranquilo alcança para a perda do disco?",
+    "hint": "Lição 4.",
+    "choices": [
+      {
+        "text": "Zera a perda",
+        "why": "Uma mudança ainda pode esperar até o timeout."
+      },
+      {
+        "text": "Nada, porque servidores parados nunca perdem dados",
+        "why": "Um servidor parado pode segurar um pedido por horas sem arquivá-lo."
+      },
+      {
+        "text": "Dobra a retenção",
+        "why": "Retenção é outra configuração."
+      },
+      {
+        "text": "Cerca de um minuto, mais o envio",
+        "why": "Isso: a perda fica limitada a cerca de um minuto mais o tempo de envio. Um segmento com qualquer mudança é fechado e arquivado dentro do minuto."
+      }
+    ]
+  },
+  "ex-qgd30rrn": {
+    "prompt": "Ponha as partes do tempo fora do ar de uma recuperação na ordem em que acontecem.",
+    "hint": "Não dá para restaurar o que ninguém percebeu.",
+    "items": [
+      "Perceber que algo está errado",
+      "Decidir restaurar, e até onde",
+      "Copiar os arquivos de volta",
+      "Reaplicar o log",
+      "Conferir a cópia e reconectar a aplicação"
+    ],
+    "trap": "A detecção e a decisão vêm primeiro e muitas vezes são as mais longas; a cópia e a reaplicação são o que o ensaio mede; ninguém trabalha até a cópia ser conferida e a aplicação apontar para ela."
+  },
+  "ex-5fntj5a3": {
+    "prompt": "Uma restauração passa a maior parte do tempo reaplicando uma semana de log. Que alavanca encurta isso mais diretamente?",
+    "hint": "Uma restauração parte do backup mais recente de qualquer tipo.",
+    "choices": [
+      {
+        "text": "Backups mais frequentes, como um diferencial diário",
+        "why": "Isso. A restauração passa a reaplicar no máximo um dia de log, não sete."
+      },
+      {
+        "text": "Uma rede mais rápida entre o repositório e o servidor",
+        "why": "Isso acelera a cópia; a reaplicação é limitada por aplicar o log."
+      },
+      {
+        "text": "Um archive_timeout mais longo",
+        "why": "Isso muda o RPO num servidor parado, não a reaplicação."
+      },
+      {
+        "text": "Guardar mais backups full",
+        "why": "Mais backups antigos não encurtam a reaplicação a partir do mais recente."
+      }
+    ]
+  },
+  "ex-7g46ajk0": {
+    "prompt": "O negócio precisa de perda zero de dados se o servidor primário for destruído. Qual é a única alavanca que entrega isso?",
+    "hint": "Todas as outras deixam uma brecha.",
+    "choices": [
+      {
+        "text": "archive_timeout de um segundo",
+        "why": "Um segundo é pouco e ainda não é zero, e enche o arquivo de segmentos vazios."
+      },
+      {
+        "text": "Um receptor por streaming com --synchronous",
+        "why": "O servidor não espera por ele a menos que alguém mande, então um commit ainda pode se perder."
+      },
+      {
+        "text": "Replicação síncrona",
+        "why": "Isso. Todo commit espera um segundo servidor; esse é o preço."
+      },
+      {
+        "text": "Backups full de hora em hora",
+        "why": "Backups limitam a perda a um intervalo; eles nunca a zeram."
+      }
+    ]
+  },
+  "ex-dc40y2bq": {
+    "prompt": "Qual das alavancas de RPO da lição protege contra um DELETE equivocado?",
+    "hint": "Quais delas copiam cada mudança o mais rápido que conseguem?",
+    "choices": [
+      {
+        "text": "Uma réplica, porque é uma segunda cópia",
+        "why": "Ela copia o DELETE também, em até um segundo."
+      },
+      {
+        "text": "Replicação síncrona",
+        "why": "Ela copia o DELETE com mais fidelidade ainda."
+      },
+      {
+        "text": "Um receptor por streaming",
+        "why": "Ele recebe o DELETE como recebe o resto, o que não é problema: a reaplicação pode parar antes dele, mas o receptor sozinho não faz nada."
+      },
+      {
+        "text": "Nenhuma: quem protege é a recuperação para um ponto no tempo",
+        "why": "Isso. Um erro pede uma cópia que você consiga parar antes do erro, e isso é PITR a partir de base backups e do arquivo."
+      }
+    ]
+  },
+  "ex-n0ddsar8": {
+    "prompt": "Em incidentes reais, que parte do tempo fora do ar muitas vezes é mais longa que a própria restauração?",
+    "hint": "A parte antes do primeiro comando.",
+    "choices": [
+      {
+        "text": "Copiar os arquivos de volta",
+        "why": "O ensaio mede isso, e costuma ser a parte mais curta."
+      },
+      {
+        "text": "Reaplicar o log",
+        "why": "É longa num banco movimentado, e mensurável; a parte humana é a que surpreende."
+      },
+      {
+        "text": "Perceber, decidir e achar a pessoa certa",
+        "why": "Isso. Alertas, um runbook e ensaio são as alavancas para esses minutos."
+      },
+      {
+        "text": "Comprimir o backup",
+        "why": "A compressão acontece na hora do backup, não durante o incidente."
+      }
+    ]
+  },
+  "ex-yggyy6fe": {
+    "prompt": "Por que o acordo tem uma coluna para a pessoa que concordou com cada número?",
+    "hint": "Quem decide no dia?",
+    "choices": [
+      {
+        "text": "Essa pessoa é quem escolhe no dia",
+        "why": "Isso: ela decide entre uma restauração rápida e um reparo cuidadoso. Alguém tem que aceitar a perda, sabendo o preço de fazer melhor."
+      },
+      {
+        "text": "Só para a trilha de auditoria",
+        "why": "A trilha de auditoria é útil; a coluna existe porque essa pessoa decide durante o incidente."
+      },
+      {
+        "text": "Porque uma equipe não tem como assinar",
+        "why": "Equipes conseguem concordar; o que importa é uma pessoa com autoridade para aceitar a perda."
+      },
+      {
+        "text": "Para o DBA não levar a culpa",
+        "why": "Culpa não é o ponto; autoridade é."
+      }
+    ]
+  },
+  "ex-qj492jv6": {
+    "prompt": "Por que o acordo registra quando cada número foi medido pela última vez?",
+    "hint": "O que acontece com um RTO à medida que os dados crescem?",
+    "choices": [
+      {
+        "text": "Porque a lei exige uma data em todo documento",
+        "why": "A data está lá pelo motivo de engenharia."
+      },
+      {
+        "text": "Porque o RTO cresce com os dados",
+        "why": "Isso. A data diz quanto confiar no número."
+      },
+      {
+        "text": "Porque o RPO muda toda noite",
+        "why": "O RPO é definido pelo esquema; o RTO se deteriora com o crescimento."
+      },
+      {
+        "text": "Para saber quando apagar backups antigos",
+        "why": "A retenção tem a sua própria configuração."
+      }
+    ]
+  },
+  "ex-9qmz6xs3": {
+    "prompt": "Relacione cada meta com o esquema mais barato da lição que a cumpre.",
+    "hint": "A curva de custo.",
+    "pairs": [
+      {
+        "left": "RPO de um dia",
+        "right": "Um dump toda noite"
+      },
+      {
+        "left": "RPO de um minuto",
+        "right": "Arquivamento com archive_timeout"
+      },
+      {
+        "left": "RPO zero quando um servidor se perde",
+        "right": "Replicação síncrona"
+      },
+      {
+        "left": "RTO de alguns minutos",
+        "right": "Um standby pronto para ser promovido"
+      }
+    ],
+    "right_distractors": [
+      "Um backup full semanal sem arquivo"
+    ]
+  },
+  "ex-356ph8mh": {
+    "prompt": "Quarenta segundos e três pedidos depois do backup, quantos kB de log existiam só no servidor?",
+    "hint": "not_yet_archived.",
+    "unit": "kB"
+  },
+  "ex-pjdbjsdv": {
+    "prompt": "O ensaio reaplicou uns 2411 MB de log em 55,3 segundos. Isso dá mais ou menos quantos MB por segundo?",
+    "hint": "Divida e arredonde.",
+    "unit": "MB/s"
+  },
+  "ex-ta1k720j": {
+    "prompt": "Um banco escreve 20 GB de log por dia e faz só um backup full semanal. A 44 MB/s de reaplicação, mais ou menos quantos minutos leva reaplicar seis dias de log? (1 GB = 1024 MB.)",
+    "hint": "6 × 20 × 1024 MB, dividido por 44, depois por 60.",
+    "unit": "minutos"
+  },
+  "ex-k66qj0je": {
+    "prompt": "Por que a taxa de reaplicação deve ser medida no hardware que vai fazer a restauração?",
+    "hint": "Quem reaplica o log no dia?",
+    "choices": [
+      {
+        "text": "Porque o servidor em produção não consegue reaplicar o próprio log",
+        "why": "Ele faz isso depois de toda queda; a questão é qual máquina restaura."
+      },
+      {
+        "text": "Porque o arquivo só pode ser lido a partir do servidor de restauração",
+        "why": "Qualquer servidor configurado consegue lê-lo."
+      },
+      {
+        "text": "A máquina define a taxa de reaplicação",
+        "why": "Isso: a taxa depende da máquina que aplica o log. Um servidor de restauração menor reaplica mais devagar, e a promessa é sobre esse servidor."
+      },
+      {
+        "text": "Porque a reaplicação é mais rápida num dia tranquilo",
+        "why": "O dia também importa, mas esse é o outro cuidado."
+      }
+    ]
+  },
+  "ex-t9rfbevx": {
+    "prompt": "O RTO acordado para o banco de pedidos é de uma hora. O último ensaio levou 40 minutos da restauração à prova, e foi rodado num domingo tranquilo. Qual é a conclusão honesta?",
+    "hint": "O que o ensaio deixa de fora, e em que dia ele foi medido?",
+    "choices": [
+      {
+        "text": "Ainda não está provado: meça num dia movimentado e some os minutos humanos",
+        "why": "Isso. Quarenta minutos de máquina num dia tranquilo dizem pouco sobre uma hora no pior dia."
+      },
+      {
+        "text": "A promessa é cumprida com vinte minutos de folga",
+        "why": "O ensaio deixa de fora perceber, decidir e reconectar, e um dia movimentado reaplica mais log."
+      },
+      {
+        "text": "A promessa está quebrada, porque 40 é perto de 60",
+        "why": "Perto não é quebrado; o que falta é a evidência para o pior dia."
+      },
+      {
+        "text": "O RTO deveria subir para duas horas, por via das dúvidas",
+        "why": "Mudar a promessa é legítimo, mas só depois de medir o que o esquema realmente faz."
+      }
+    ]
+  }
+}

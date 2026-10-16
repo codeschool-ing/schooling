@@ -1,0 +1,194 @@
+{
+  "ex-fmrtr3vb": {
+    "prompt": "O que é split-brain?",
+    "hint": "Conte os primários.",
+    "choices": [
+      { "text": "Uma réplica atrasada demais para receber um failover", "why": "Isso é atraso, lição 13." },
+      { "text": "Um standby que perdeu o slot de replicação", "why": "Esse é o slot perdido da lição 11." },
+      { "text": "Dois servidores recebendo escritas, cada um como primário", "why": "Isso. Um banco de dados, duas histórias." },
+      { "text": "Dois membros do etcd que discordam sobre uma chave", "why": "O etcd se recusa a responder em vez de discordar." }
+    ]
+  },
+  "ex-p9k4a6s7": {
+    "prompt": "Em que premissa se apoia a proteção do Patroni contra dois primários?",
+    "hint": "Perceber exige um processo rodando.",
+    "choices": [
+      { "text": "Que o líder antigo perceba", "why": "Isso. Que um líder incapaz de renovar perceba e pare, e perceber exige um processo que esteja rodando." },
+      { "text": "Que o etcd fique de pé", "why": "A lição 16 mostrou o que o Patroni faz quando ele falha." },
+      { "text": "Que as réplicas acompanhem", "why": "O maximum_lag_on_failover cuida do atraso." },
+      { "text": "Que a rede entre os nós se mantenha", "why": "Uma partição é um dos casos que ela trata, quando o processo roda." }
+    ]
+  },
+  "ex-s7y1n60b": {
+    "prompt": "Associe cada evento a como ele para o gerenciador mas não o banco de dados.",
+    "hint": "Pausa, partição, queda.",
+    "pairs": [
+      { "left": "Uma máquina virtual suspensa pelo host", "right": "Todo processo congelado, retomado depois sem saber de nada" },
+      { "left": "Um corte entre o primário e o etcd", "right": "O primário ainda alcançável por algumas aplicações" },
+      { "left": "O processo do Patroni morto", "right": "O PostgreSQL, um processo separado, continua atendendo" }
+    ],
+    "right_distractors": [
+      "O disco cheio de WAL"
+    ]
+  },
+  "ex-eqbx9q0j": {
+    "prompt": "O que o `pkill -STOP` faz com o processo que ele encontra?",
+    "hint": "Não é KILL.",
+    "choices": [
+      { "text": "Para o processo de forma limpa, como o pg_ctl stop", "why": "O SIGSTOP não é um pedido de desligamento; o processo não faz coisa alguma." },
+      { "text": "Mata o processo depois de um prazo", "why": "Ele não morre; volta a rodar com SIGCONT." },
+      { "text": "Reinicia o processo", "why": "Nada é reiniciado." },
+      { "text": "Congela o processo onde ele está", "why": "Isso. Até o SIGCONT, ele não roda nada e mantém tudo." }
+    ]
+  },
+  "ex-khzefzaj": {
+    "prompt": "Depois que a chave expirou e o `pg2` se promoveu, o que era o PostgreSQL do `pg1`?",
+    "hint": "pg_is_in_recovery().",
+    "choices": [
+      { "text": "Uma réplica do pg2", "why": "Nada o rebaixou: o Patroni dele estava congelado." },
+      { "text": "Ainda um primário, recebendo escritas", "why": "Isso. f, e o pedido 50001 entrou." },
+      { "text": "Parado", "why": "Ele respondeu a consultas." },
+      { "text": "Só leitura, esperando o Patroni", "why": "Ele aceitou um INSERT." }
+    ]
+  },
+  "ex-ceb65qvq": {
+    "prompt": "Durante o congelamento, quantos servidores confirmaram um pedido novo?",
+    "hint": "50001 e 50029.",
+    "unit": "servidores"
+  },
+  "ex-2q2mph13": {
+    "prompt": "Quando o Patroni do `pg1` foi descongelado, o que aconteceu com o pedido 50001?",
+    "hint": "O trabalho do pg_rewind.",
+    "choices": [
+      { "text": "Foi copiado para o pg2", "why": "Nada copia as escritas do primário antigo." },
+      { "text": "Descartado, sem aviso", "why": "Isso. O rewind o jogou fora; confirmado para a aplicação, depois sumiu." },
+      { "text": "Ficou numa tabela de conflitos", "why": "O PostgreSQL não tem uma." },
+      { "text": "Foi reaplicado no pg2 pelo slot", "why": "O slot leva log do líder para a réplica, não no sentido contrário." }
+    ]
+  },
+  "ex-re6e0jgh": {
+    "prompt": "Por que a lição chama isso de pior que uma indisponibilidade?",
+    "hint": "O que o monitoramento mostra?",
+    "choices": [
+      { "text": "Leva mais tempo para reparar", "why": "O cluster se reparou sozinho em segundos." },
+      { "text": "Para as escritas por completo", "why": "As escritas continuaram nos dois servidores." },
+      { "text": "Quebra os slots de replicação", "why": "Os slots estavam bem." },
+      { "text": "Perda silenciosa", "why": "Isso. Uma escrita confirmada sumiu; ninguém fica sabendo, até um cliente com comprovante perguntar." }
+    ]
+  },
+  "ex-kpjdxpw6": {
+    "prompt": "O que teria mantido um jeito de recuperar o pedido 50001?",
+    "hint": "Antes de voltar ao cluster.",
+    "choices": [
+      { "text": "Uma cópia dos dados antes", "why": "Isso. O rewind remove a história divergente; uma cópia a guarda." },
+      { "text": "Um ttl maior", "why": "Isso atrasa o failover; não guarda a escrita." },
+      { "text": "max_slot_wal_keep_size", "why": "Isso limita um slot; não salva escritas divergentes." },
+      { "text": "Reiniciar o etcd antes de o rewind rodar", "why": "O etcd não guarda linhas." }
+    ]
+  },
+  "ex-4fk0mtzs": {
+    "prompt": "Garantir que o primário antigo não consiga mais escrever antes que um novo seja promovido se chama ___.",
+    "hint": "Como a cerca em volta de um campo, em inglês.",
+    "blanks": [
+      { "accept": ["fencing"] }
+    ]
+  },
+  "ex-njzmmgpb": {
+    "prompt": "Associe cada tipo de fencing a como ele para o primário antigo.",
+    "hint": "Timer, energia, rede, commit.",
+    "pairs": [
+      { "left": "Watchdog", "right": "O kernel reinicia a máquina quando o Patroni para de zerar um timer" },
+      { "left": "STONITH", "right": "A máquina é desligada pela interface de gerenciamento dela" },
+      { "left": "Fencing de rede", "right": "A porta ou o endereço dele é cortado de cada caminho" },
+      { "left": "Replicação síncrona", "right": "Ele não consegue confirmar um commit sem o standby dele" }
+    ],
+    "right_distractors": [
+      "O slot de replicação é removido"
+    ]
+  },
+  "ex-bxbxnf4r": {
+    "prompt": "Quando o Patroni faz o watchdog disparar?",
+    "hint": "Antes ou depois de a chave expirar?",
+    "choices": [
+      { "text": "Assim que o etcd para de responder", "why": "Ele dispara quando o Patroni para de zerá-lo, seja qual for o motivo." },
+      { "text": "Depois que o novo líder é promovido", "why": "Isso deixaria dois primários no meio-tempo." },
+      { "text": "Alguns segundos antes de a chave dele poder expirar", "why": "Isso. Assim a máquina cai antes que outro nó consiga pegar a chave." },
+      { "text": "Uma vez por dia, como teste", "why": "Ele dispara quando não é zerado." }
+    ]
+  },
+  "ex-d6wddac7": {
+    "prompt": "O que o `watchdog: mode: required` faz num nó sem dispositivo de watchdog?",
+    "hint": "Descoberto na inicialização, não durante um failover.",
+    "choices": [
+      { "text": "Usa um timer de software no lugar", "why": "required quer dizer que o dispositivo precisa estar lá." },
+      { "text": "Reinicia a máquina na hora", "why": "Ele recusa a liderança; não reinicia." },
+      { "text": "Nada; required é só um aviso", "why": "automatic é o modo tolerante." },
+      { "text": "Recusa a liderança ao nó", "why": "Isso. Um dispositivo ausente é descoberto antes de fazer diferença." }
+    ]
+  },
+  "ex-93gw82g2": {
+    "prompt": "Contra o que o `softdog` não consegue proteger?",
+    "hint": "Onde ele roda?",
+    "choices": [
+      { "text": "Um processo do Patroni congelado", "why": "É exatamente isso que ele cobre." },
+      { "text": "Uma queda do PostgreSQL", "why": "Uma queda do PostgreSQL não é risco de split-brain; o Patroni cuida dela." },
+      { "text": "Um kernel travado", "why": "Isso. Ele é um timer dentro do mesmo kernel; um watchdog de hardware cobre esse caso." },
+      { "text": "Um disco cheio", "why": "Esse não é o trabalho dele, e não é onde ele falha." }
+    ]
+  },
+  "ex-s8q03d73": {
+    "prompt": "O que o STONITH custa e o watchdog não?",
+    "hint": "Quem segura o interruptor?",
+    "choices": [
+      { "text": "Credenciais de desligar", "why": "Isso. Algo capaz de desligar um servidor de banco de dados, e a dependência de essa interface responder." },
+      { "text": "O reboot de uma máquina lenta", "why": "O watchdog também custa isso." },
+      { "text": "Um standby síncrono", "why": "Esse é o custo do último fence." },
+      { "text": "Um segundo etcd", "why": "Não tem relação." }
+    ]
+  },
+  "ex-29gatpwj": {
+    "prompt": "O que o `synchronous_mode` do Patroni gerencia por você?",
+    "hint": "A configuração da lição 12.",
+    "choices": [
+      { "text": "O ttl da chave de líder", "why": "O ttl não tem relação." },
+      { "text": "synchronous_standby_names", "why": "Isso. Ele escolhe uma réplica e configura o líder para esperar por ela." },
+      { "text": "Os slots de replicação", "why": "Isso é o use_slots." },
+      { "text": "O dispositivo de watchdog", "why": "Isso é a seção do watchdog." }
+    ]
+  },
+  "ex-zda8vkqn": {
+    "prompt": "Por que o primário antigo congelado não conseguiu confirmar o insert?",
+    "hint": "Quem era o standby síncrono dele?",
+    "choices": [
+      { "text": "O disco dele estava cheio", "why": "Nada encheu." },
+      { "text": "O etcd recusou o commit", "why": "O etcd não está no caminho do commit." },
+      { "text": "O standby dele tinha saído", "why": "Isso. O synchronous_standby_names dizia pg3, e o pg3 agora era o líder." },
+      { "text": "O Patroni bloqueou a porta", "why": "O Patroni estava congelado e não fez nada." }
+    ]
+  },
+  "ex-44ez5wj5": {
+    "prompt": "Que status de saída o `timeout 10 psql …` informou no primário antigo?",
+    "hint": "O status do próprio timeout.",
+    "unit": ""
+  },
+  "ex-tv4mkdw7": {
+    "prompt": "Que risco sobra com a replicação síncrona como único fence?",
+    "hint": "O cancel da lição 12.",
+    "choices": [
+      { "text": "Um cancel confirmando uma linha local", "why": "Isso. O commit já é local, e um cancel diz INSERT 0 1 ao cliente." },
+      { "text": "O primário antigo recebe e confirma escritas", "why": "Ele não consegue confirmá-las; esse é o fence." },
+      { "text": "O novo primário recusa escritas", "why": "Ele recebeu escritas normalmente." },
+      { "text": "O ttl para de funcionar", "why": "O ttl não é afetado." }
+    ]
+  },
+  "ex-x8whrqxw": {
+    "prompt": "O cluster Patroni de uma equipe roda em máquinas virtuais que um host pode suspender para snapshots. Que mudança ataca exatamente esse risco?",
+    "hint": "Uma máquina suspensa é um Patroni congelado.",
+    "choices": [
+      { "text": "Um max_slot_wal_keep_size maior", "why": "Isso é sobre disco, não sobre dois primários." },
+      { "text": "Três membros no etcd", "why": "Isso cobre falha do etcd, não o líder congelando." },
+      { "text": "Um loop_wait mais longo", "why": "Isso torna a falha mais lenta de perceber." },
+      { "text": "Um watchdog em modo required em cada nó", "why": "Isso. Um Patroni congelado para de zerar o timer e a máquina reinicia antes de a chave expirar." }
+    ]
+  }
+}

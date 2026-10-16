@@ -1,0 +1,529 @@
+[
+  {
+    "id": "ex-q0vz7r6m",
+    "version": 1,
+    "section": "weights",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Payment weights: boleto −0.08, card −0.56. How much does paying by boleto add to the log-odds compared with card? Two decimal places.",
+    "hint": "Read them against each other.",
+    "value": 0.48,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-dwnkfvsr",
+    "version": 1,
+    "section": "weights",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "All three payment weights are negative. What follows?",
+    "hint": "No value dropped.",
+    "choices": [
+      {
+        "text": "Payment does not matter to churn",
+        "correct": false,
+        "why": "Boleto differs from card by 0.48."
+      },
+      {
+        "text": "Paying in any way lowers the chance of leaving",
+        "correct": false,
+        "why": "They share a constant with the intercept."
+      },
+      {
+        "text": "The model is broken and must be refitted",
+        "correct": false,
+        "why": "This is normal with one column per value."
+      },
+      {
+        "text": "Only their differences mean anything",
+        "correct": true,
+        "why": "Yes. Read a category's weights against each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n8z3ae2",
+    "version": 1,
+    "section": "weights",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`rating_90d` has weight −0.46 and `unhappy` +0.31. Why can neither alone say how much ratings matter?",
+    "hint": "Two columns, one idea.",
+    "choices": [
+      {
+        "text": "They share one idea",
+        "correct": true,
+        "why": "Yes. Read them together."
+      },
+      {
+        "text": "Ratings are missing for some subscribers",
+        "correct": false,
+        "why": "True, and not the reason."
+      },
+      {
+        "text": "`unhappy` is not scaled",
+        "correct": false,
+        "why": "Every number goes through the scaler."
+      },
+      {
+        "text": "Weights are not in log-odds",
+        "correct": false,
+        "why": "They are."
+      }
+    ]
+  },
+  {
+    "id": "ex-z176et7z",
+    "version": 1,
+    "section": "importance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A column of random numbers ranked second by impurity importance. Why?",
+    "hint": "How many places to split?",
+    "choices": [
+      {
+        "text": "It had no missing values",
+        "correct": false,
+        "why": "Gaps were filled with −1 everywhere."
+      },
+      {
+        "text": "Many values give trees many lucky splits",
+        "correct": true,
+        "why": "Yes. And impurity is earned on the training rows."
+      },
+      {
+        "text": "The noise was secretly related to churn",
+        "correct": false,
+        "why": "It was drawn at random; permutation shows it is worth nothing."
+      },
+      {
+        "text": "Random forests always rank new columns high",
+        "correct": false,
+        "why": "`coin` is new too and ranked low."
+      }
+    ]
+  },
+  {
+    "id": "ex-758dr92y",
+    "version": 1,
+    "section": "importance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does permutation importance measure a column?",
+    "hint": "Shuffle and re-score.",
+    "choices": [
+      {
+        "text": "By counting how often trees split on it",
+        "correct": false,
+        "why": "That is closer to impurity importance."
+      },
+      {
+        "text": "By refitting the model without it",
+        "correct": false,
+        "why": "That is a different, slower method."
+      },
+      {
+        "text": "By the score lost when it is shuffled on test rows",
+        "correct": true,
+        "why": "Yes. A column the model ignores costs nothing to shuffle."
+      },
+      {
+        "text": "By its correlation with the label",
+        "correct": false,
+        "why": "That ignores the model entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-khr2tfyz",
+    "version": 1,
+    "section": "importance",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Impurity importance is biased towards columns with many distinct ___.",
+    "hint": "noise had 38,628 of them.",
+    "blanks": [
+      {
+        "accept": [
+          "values"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9v822zfb",
+    "version": 1,
+    "section": "partial-dependence",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Partial dependence gave 0.209 at a rating of 3.4 and 0.054 at 3.8. By how much did the average chance fall? Three decimal places.",
+    "hint": "Subtract.",
+    "value": 0.155,
+    "tolerance": 0.0005
+  },
+  {
+    "id": "ex-b4jn9546",
+    "version": 1,
+    "section": "partial-dependence",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of computing one point of a partial dependence curve.",
+    "hint": "Set, predict, average.",
+    "items": [
+      "Copy the test rows",
+      "Set the column to one value in every row",
+      "Ask the model for each row's chance",
+      "Average the chances"
+    ]
+  },
+  {
+    "id": "ex-rh4wmykf",
+    "version": 1,
+    "section": "partial-dependence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a partial dependence curve mislead at its extremes?",
+    "hint": "A rating of 3 beside perfect deliveries.",
+    "choices": [
+      {
+        "text": "It only works for linear models",
+        "correct": false,
+        "why": "It worked here on boosted trees."
+      },
+      {
+        "text": "It uses the training rows",
+        "correct": false,
+        "why": "`pdp.py` uses the test rows."
+      },
+      {
+        "text": "Averages are always biased upwards",
+        "correct": false,
+        "why": "Nothing biases them upwards."
+      },
+      {
+        "text": "Impossible rows",
+        "correct": true,
+        "why": "Yes. The model is guessing about a place it never saw."
+      }
+    ]
+  },
+  {
+    "id": "ex-844std3t",
+    "version": 1,
+    "section": "shap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does SHAP promise about one row's values?",
+    "hint": "Additive.",
+    "choices": [
+      {
+        "text": "Base value plus all of them is the prediction",
+        "correct": true,
+        "why": "Yes. In log-odds for a boosted classifier."
+      },
+      {
+        "text": "They say what would happen if the company acted",
+        "correct": false,
+        "why": "They explain the model, not actions."
+      },
+      {
+        "text": "They rank columns by permutation",
+        "correct": false,
+        "why": "That is a different method."
+      },
+      {
+        "text": "They are all positive",
+        "correct": false,
+        "why": "A value can pull the prediction down."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpt8tg5k",
+    "version": 1,
+    "section": "shap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Permutation importance and mean |SHAP| disagree a little lower down the ranking. What is the difference in what they measure?",
+    "hint": "Score or predictions?",
+    "choices": [
+      {
+        "text": "SHAP uses the training rows",
+        "correct": false,
+        "why": "Here it used the test rows."
+      },
+      {
+        "text": "Permutation: the score. SHAP: how far predictions move",
+        "correct": true,
+        "why": "Yes. A column can move predictions without improving them."
+      },
+      {
+        "text": "They measure the same thing with different noise",
+        "correct": false,
+        "why": "They answer different questions."
+      },
+      {
+        "text": "Permutation ignores categories by design",
+        "correct": false,
+        "why": "`importances.py` simply left them out."
+      }
+    ]
+  },
+  {
+    "id": "ex-047gtc45",
+    "version": 1,
+    "section": "one-subscriber",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A row's base value is −3.50 and its SHAP values sum to +5.52. What is its log-odds output? Two decimal places.",
+    "hint": "Base plus the sum.",
+    "value": 2.02,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-sfhnbwsn",
+    "version": 1,
+    "section": "one-subscriber",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The subscriber's rating contributed +2.86. Would raising their rating lower their chance of leaving by that much?",
+    "hint": "Symptom or dial?",
+    "choices": [
+      {
+        "text": "Yes, SHAP values are effects",
+        "correct": false,
+        "why": "They describe the model, not interventions."
+      },
+      {
+        "text": "Only if the model is refitted",
+        "correct": false,
+        "why": "Refitting does not make it causal."
+      },
+      {
+        "text": "No; the rating is a symptom of the boxes",
+        "correct": true,
+        "why": "Yes. Changing the rating would not change the boxes."
+      },
+      {
+        "text": "Yes, but only by half",
+        "correct": false,
+        "why": "No fraction of it is an effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6g0b5xd",
+    "version": 1,
+    "section": "monthly-plan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do `plan_weekly` and `plan_fortnightly` push monthly subscribers' chances up?",
+    "hint": "Zeros where others get a negative weight.",
+    "choices": [
+      {
+        "text": "Monthly subscribers leave more",
+        "correct": false,
+        "why": "The model has no labels for them yet."
+      },
+      {
+        "text": "The encoder maps monthly to weekly",
+        "correct": false,
+        "why": "It gives zeros in both columns."
+      },
+      {
+        "text": "The weights were fitted on 2026",
+        "correct": false,
+        "why": "They were fitted on churn.csv."
+      },
+      {
+        "text": "They miss a weight",
+        "correct": true,
+        "why": "Yes. An artefact of the encoding."
+      }
+    ]
+  },
+  {
+    "id": "ex-emy8ejyk",
+    "version": 1,
+    "section": "monthly-plan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the +0.94 gap, the two plan columns add +0.36 and +0.28. What share of the gap is that, in percent, to the nearest whole number?",
+    "hint": "0.64 / 0.94.",
+    "value": 68,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-xfx38pqt",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A manager wants to cut churn by prompting happy customers to rate their boxes, since rating is the most important column. What happens?",
+    "hint": "Column or cause?",
+    "choices": [
+      {
+        "text": "Ratings rise and churn stays put",
+        "correct": true,
+        "why": "Yes. And the model starts misjudging those customers."
+      },
+      {
+        "text": "Nothing changes in the data",
+        "correct": false,
+        "why": "The ratings change."
+      },
+      {
+        "text": "The model refuses to score them",
+        "correct": false,
+        "why": "It scores them, wrongly."
+      },
+      {
+        "text": "Churn falls, as the model predicts",
+        "correct": false,
+        "why": "The boxes are unchanged, so churn is too."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc09ydbt",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would measure what a credit actually does to a subscriber?",
+    "hint": "Lesson 11's 30%.",
+    "choices": [
+      {
+        "text": "A deeper model",
+        "correct": false,
+        "why": "Depth does not create causal evidence."
+      },
+      {
+        "text": "A random half gets it; compare",
+        "correct": true,
+        "why": "Yes. An experiment."
+      },
+      {
+        "text": "Permutation importance of tenure",
+        "correct": false,
+        "why": "That says nothing about credits."
+      },
+      {
+        "text": "The credit's SHAP value",
+        "correct": false,
+        "why": "The credit is not even a column."
+      }
+    ]
+  },
+  {
+    "id": "ex-0j2ckgqr",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What are this lesson's tools good for? Choose all that apply.",
+    "hint": "Three verbs.",
+    "choices": [
+      {
+        "text": "Checking the model learned recognisable shapes",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Proving what causes churn",
+        "correct": false,
+        "why": "That needs an experiment."
+      },
+      {
+        "text": "Telling a caller why a subscriber was chosen",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Debugging odd behaviour on new data",
+        "correct": true,
+        "why": "Yes, the monthly plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2gjbbv6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the tool that answers it.",
+    "hint": "Why this one, how much, what shape.",
+    "pairs": [
+      {
+        "left": "Why was this subscriber chosen?",
+        "right": "SHAP values for that row"
+      },
+      {
+        "left": "How much does the score depend on a column?",
+        "right": "Permutation importance"
+      },
+      {
+        "left": "What shape did the model learn for a column?",
+        "right": "Partial dependence"
+      }
+    ],
+    "right_distractors": [
+      "Impurity importance"
+    ]
+  },
+  {
+    "id": "ex-p8rnn1fr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which importance belongs in a report to managers?",
+    "hint": "Measured where it should be.",
+    "choices": [
+      {
+        "text": "Impurity, since it comes free",
+        "correct": false,
+        "why": "It ranked random noise second."
+      },
+      {
+        "text": "The raw logistic weights of every category",
+        "correct": false,
+        "why": "Category weights only mean something against each other."
+      },
+      {
+        "text": "Permutation, on the test rows",
+        "correct": true,
+        "why": "Yes. Measured on unseen rows, in AUC."
+      },
+      {
+        "text": "Whichever ranks the expected column first",
+        "correct": false,
+        "why": "That is choosing the answer first."
+      }
+    ]
+  }
+]

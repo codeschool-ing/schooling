@@ -1,0 +1,425 @@
+{
+  "ex-pehrh0zx": {
+    "prompt": "O que a replicação lógica envia para o servidor que recebe?",
+    "hint": "Decodificado do log.",
+    "choices": [
+      {
+        "text": "O write-ahead log, byte a byte",
+        "why": "Isso é replicação física."
+      },
+      {
+        "text": "Um pg_dump novo do banco a cada minuto",
+        "why": "Nada passa por dump depois da primeira cópia das linhas."
+      },
+      {
+        "text": "Mudanças de linha das tabelas publicadas",
+        "why": "Isso. Inserts, updates e deletes, decodificados do write-ahead log."
+      },
+      {
+        "text": "Cópias dos arquivos de dados alterados",
+        "why": "Arquivos são físicos; a replicação lógica envia linhas."
+      }
+    ]
+  },
+  "ex-bbtdgn9g": {
+    "prompt": "Associe cada propriedade ao tipo de replicação que ela descreve.",
+    "hint": "Um de cada par pertence a cada tipo.",
+    "pairs": [
+      {
+        "left": "Copia o cluster inteiro como arquivos",
+        "right": "Física"
+      },
+      {
+        "left": "Deixa a cópia rodar outra versão major",
+        "right": "Lógica"
+      },
+      {
+        "left": "Copia as definições de tabela à medida que mudam",
+        "right": "Física, como parte dos arquivos"
+      },
+      {
+        "left": "Deixa a cópia aceitando escritas",
+        "right": "Lógica, um servidor comum"
+      }
+    ],
+    "right_distractors": [
+      "Nenhuma das duas, nunca"
+    ]
+  },
+  "ex-ysbpyzvm": {
+    "prompt": "Por que um standby físico precisa rodar a mesma versão major que o primário?",
+    "hint": "O que exatamente ele recebe?",
+    "choices": [
+      {
+        "text": "O log está no formato daquela versão",
+        "why": "Isso. Ele reaplica arquivos e log escritos por aquela versão, e outra versão lê outro formato."
+      },
+      {
+        "text": "O protocolo de replicação confere uma licença",
+        "why": "Não existe conferência de licença."
+      },
+      {
+        "text": "Slots existem só na versão mais nova",
+        "why": "Slots existem desde a versão 9.4."
+      },
+      {
+        "text": "Porque senão standbys não executam consultas",
+        "why": "Aceitar consultas não tem nada a ver com a versão ser a mesma."
+      }
+    ]
+  },
+  "ex-fy3dswxw": {
+    "prompt": "O servidor que oferece tabelas é o publisher; o servidor que as recebe por meio de uma subscription é o ___.",
+    "hint": "O substantivo que vem de subscription.",
+    "blanks": [
+      {
+        "accept": [
+          "subscriber",
+          "assinante"
+        ]
+      }
+    ]
+  },
+  "ex-fm9c0mmq": {
+    "prompt": "Do que o publisher precisou antes que a decodificação lógica funcionasse?",
+    "hint": "Uma configuração, e um restart.",
+    "choices": [
+      {
+        "text": "Um slot de replicação criado à mão",
+        "why": "A subscription criou o slot dela sozinha."
+      },
+      {
+        "text": "archive_mode = on",
+        "why": "A replicação lógica faz streaming; ela não precisa do arquivo."
+      },
+      {
+        "text": "Um segundo diretório de dados",
+        "why": "O publisher é o mesmo servidor."
+      },
+      {
+        "text": "wal_level = logical",
+        "why": "Isso. O padrão, replica, não carrega o suficiente para reconstruir linhas."
+      }
+    ]
+  },
+  "ex-1bsw08sy": {
+    "prompt": "Por que o `replicator` recebeu `SELECT` nas duas tabelas?",
+    "hint": "Como uma subscription começa?",
+    "choices": [
+      {
+        "text": "Senão a replicação lógica roda como superusuário",
+        "why": "Ela roda como o papel da connection string."
+      },
+      {
+        "text": "Para a primeira cópia das linhas delas",
+        "why": "Isso. Uma subscription começa com uma cópia simples de cada tabela, que precisa de acesso de leitura."
+      },
+      {
+        "text": "SELECT inclui o direito REPLICATION",
+        "why": "São direitos separados."
+      },
+      {
+        "text": "Sem ele a publicação não pode ser criada",
+        "why": "A publicação foi criada antes do grant."
+      }
+    ]
+  },
+  "ex-0xr98nan": {
+    "prompt": "O que precisa existir no subscriber antes do `CREATE SUBSCRIPTION`?",
+    "hint": "Uma subscription nunca cria uma.",
+    "choices": [
+      {
+        "text": "Os papéis do publisher",
+        "why": "O schema foi carregado sem donos, então nenhum papel foi necessário."
+      },
+      {
+        "text": "As tabelas, com as suas colunas",
+        "why": "Isso. O schema é copiado antes; as linhas vão para tabelas que já existem."
+      },
+      {
+        "text": "Um standby físico do publisher",
+        "why": "O subscriber é um servidor independente."
+      },
+      {
+        "text": "Um slot no subscriber",
+        "why": "O slot é criado no publisher."
+      }
+    ]
+  },
+  "ex-05qnyd21": {
+    "prompt": "Associe cada opção do `pg_dump` usada na cópia do schema ao que ela deixa de fora.",
+    "hint": "Três coisas que pertencem ao publisher.",
+    "pairs": [
+      {
+        "left": "--schema-only",
+        "right": "As linhas"
+      },
+      {
+        "left": "--no-owner",
+        "right": "Donos que nomeiam papéis que o 17 não tem"
+      },
+      {
+        "left": "--no-privileges",
+        "right": "Grants para esses papéis"
+      },
+      {
+        "left": "--no-publications",
+        "right": "A própria publicação"
+      }
+    ],
+    "right_distractors": [
+      "Os índices"
+    ]
+  },
+  "ex-zcc62gwa": {
+    "prompt": "Por que a lição roda `chmod 600 ~/.pgpass`?",
+    "hint": "Quem mais consegue lê-lo?",
+    "choices": [
+      {
+        "text": "O Docker não lê arquivos com outras permissões",
+        "why": "O Docker nunca o lê; quem lê é o psql."
+      },
+      {
+        "text": "O PostgreSQL 17 exige isso",
+        "why": "Quem confere é o cliente."
+      },
+      {
+        "text": "Para criptografar as senhas nele",
+        "why": "O chmod muda permissões; o arquivo continua em texto puro."
+      },
+      {
+        "text": "O psql ignora um arquivo que outros leem",
+        "why": "Isso. Ele se recusa a usar um arquivo com permissões mais frouxas."
+      }
+    ]
+  },
+  "ex-v6k3zbyb": {
+    "prompt": "A subscription criou um slot no publisher. O que isso significa se o subscriber parar por uma semana?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "O publisher guarda cada byte de log para ele",
+        "why": "Isso. Como um slot físico, ele segura o log até o subscriber consumi-lo, a menos que haja um limite."
+      },
+      {
+        "text": "O slot é removido depois de uma hora",
+        "why": "Slots nunca são removidos sozinhos."
+      },
+      {
+        "text": "O subscriber se atualiza a partir do arquivo",
+        "why": "Uma subscription lógica lê do slot, não do arquivo."
+      },
+      {
+        "text": "Nada; slots lógicos não seguram log",
+        "why": "Eles seguram exatamente como os slots físicos."
+      }
+    ]
+  },
+  "ex-vx4xam3q": {
+    "prompt": "`ALTER TABLE orders ADD COLUMN note` rodou no publisher, e depois um insert a usou. O que aconteceu no 17?",
+    "hint": "O log do docker.",
+    "choices": [
+      {
+        "text": "A coluna foi acrescentada automaticamente",
+        "why": "DDL não é replicado."
+      },
+      {
+        "text": "A linha chegou sem a sua note",
+        "why": "O subscriber recusou a linha; nada chegou."
+      },
+      {
+        "text": "O apply falhou: missing replicated column",
+        "why": "Isso. A subscription parou e tentou de novo, e nada mais chegou."
+      },
+      {
+        "text": "O publisher recusou o ALTER",
+        "why": "O publisher não faz ideia do que os subscribers dele guardam."
+      }
+    ]
+  },
+  "ex-1ycz3reb": {
+    "prompt": "Uma release acrescenta uma coluna a uma tabela replicada. Ponha os passos na ordem que nunca para a subscription.",
+    "hint": "Quem precisa estar pronto para recebê-la?",
+    "items": [
+      "Acrescentar a coluna no subscriber",
+      "Acrescentar a coluna no publisher",
+      "Fazer o deploy da aplicação que a escreve"
+    ],
+    "trap": "Acrescentar no publisher primeiro foi o que parou a subscription na lição."
+  },
+  "ex-9xkzpfjj": {
+    "prompt": "Enquanto a subscription falhava por causa da coluna que faltava, o que o slot no publisher estava fazendo?",
+    "hint": "active: f.",
+    "choices": [
+      {
+        "text": "Descartando o log que não conseguia entregar",
+        "why": "Um slot nunca descarta o que o consumidor dele não confirmou."
+      },
+      {
+        "text": "Mandando as linhas para o arquivo no lugar",
+        "why": "Slots não arquivam."
+      },
+      {
+        "text": "Nada; uma subscription que falha remove o slot",
+        "why": "O slot fica até alguém removê-lo."
+      },
+      {
+        "text": "Segurando todo o log da mudança que falhou em diante",
+        "why": "Isso. 336 bytes ali, um disco cheio num servidor movimentado."
+      }
+    ]
+  },
+  "ex-me2dbr3b": {
+    "prompt": "O 17 tem todos os 50.002 pedidos, mas o primeiro insert nele falhou com `Key (id)=(1) already exists`. Por quê?",
+    "hint": "O valor de uma sequência é uma linha?",
+    "choices": [
+      {
+        "text": "Os ids foram replicados como texto",
+        "why": "Eles são bigint nos dois servidores."
+      },
+      {
+        "text": "A chave primária não foi copiada",
+        "why": "Foi, pelo dump do schema, e foi ela que levantou o erro."
+      },
+      {
+        "text": "Sequências não são replicadas",
+        "why": "Isso. As linhas chegaram com os ids preenchidos, e a sequência em si nunca saiu do 1."
+      },
+      {
+        "text": "A versão 17 reinicia as sequências",
+        "why": "Nada reiniciou; ela nunca foi avançada."
+      }
+    ]
+  },
+  "ex-wxajmy3g": {
+    "prompt": "O shop tem 1000 clientes distribuídos igualmente entre quatro cidades. Quantas linhas a subscription de `recife_pub` recebeu?",
+    "hint": "Um quarto.",
+    "unit": "linhas"
+  },
+  "ex-z4grtf04": {
+    "prompt": "Qual recurso limita uma publicação aos clientes de uma cidade?",
+    "hint": "Desde o PostgreSQL 15.",
+    "choices": [
+      {
+        "text": "Um filtro de linhas na publicação",
+        "why": "Isso. Uma cláusula WHERE na tabela, FOR TABLE customers WHERE (city = 'Recife')."
+      },
+      {
+        "text": "Uma view no subscriber",
+        "why": "O subscriber continuaria recebendo cada linha."
+      },
+      {
+        "text": "Um banco separado por cidade no publisher",
+        "why": "Possível, e muito mais trabalho do que um filtro."
+      },
+      {
+        "text": "Row-level security",
+        "why": "Isso restringe consultas, não o que é publicado."
+      }
+    ]
+  },
+  "ex-scmxfdf9": {
+    "prompt": "Onde uma subscription lógica aparece para o `lagcheck.sh` da lição 13?",
+    "hint": "Ela também é um WAL sender no publisher.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum; ela precisa de outra verificação",
+        "why": "Ela aparece na mesma view."
+      },
+      {
+        "text": "No pg_stat_replication, pelo nome dela",
+        "why": "Isso. O application_name é o nome da subscription."
+      },
+      {
+        "text": "Só no pg_stat_subscription do subscriber",
+        "why": "Essa é a view do subscriber; o publisher tem a sua própria linha."
+      },
+      {
+        "text": "Só no pg_replication_slots",
+        "why": "O slot está lá, e há também uma linha no pg_stat_replication."
+      }
+    ]
+  },
+  "ex-4v1z2ea4": {
+    "prompt": "Ponha a troca do upgrade em ordem.",
+    "hint": "As escritas param primeiro; a aplicação muda por último.",
+    "items": [
+      "Parar as escritas no 16",
+      "Esperar até o slot estar 0 bytes atrás",
+      "Mover cada sequência no 17 para além do maior valor do 16",
+      "Desabilitar a subscription",
+      "Apontar a aplicação para o 17"
+    ],
+    "trap": "Mover as sequências antes de as escritas pararem abre espaço para um id que o 16 distribua depois."
+  },
+  "ex-3vy7h0d5": {
+    "prompt": "O maior id de pedido no 16 era 50002, e a sequência foi ajustada para isso mais 1000. Que id o primeiro pedido no 17 recebeu?",
+    "hint": "O setval define o último valor usado."
+  },
+  "ex-jac8rrez": {
+    "prompt": "Por que mover a sequência para o maior id mais mil, em vez de para o maior id?",
+    "hint": "O que pode acontecer entre ler o máximo e mover?",
+    "choices": [
+      {
+        "text": "Sequências só aceitam números redondos",
+        "why": "Qualquer valor funciona."
+      },
+      {
+        "text": "O PostgreSQL 17 reserva mil ids",
+        "why": "Ele não reserva nada."
+      },
+      {
+        "text": "Uma margem barata para um insert que escapou",
+        "why": "Isso. Buracos nos ids não custam nada; uma colisão para a aplicação."
+      },
+      {
+        "text": "Para tornar reconhecíveis os ids vindos do 17",
+        "why": "Isso é um efeito colateral, não o motivo."
+      }
+    ]
+  },
+  "ex-17wcx11m": {
+    "prompt": "Depois da troca, o que a lição diz para fazer com o 16?",
+    "hint": "O caminho de volta.",
+    "choices": [
+      {
+        "text": "Mantê-lo, intocado, por enquanto",
+        "why": "Isso. Até o 17 merecer confiança, ele é o caminho de volta."
+      },
+      {
+        "text": "Removê-lo logo para liberar o disco",
+        "why": "Aí um problema no 17 não tem caminho de volta."
+      },
+      {
+        "text": "Transformá-lo num standby do 17",
+        "why": "Um standby físico precisa rodar a mesma versão."
+      },
+      {
+        "text": "Fazê-lo assinar o 17 de imediato",
+        "why": "Possível como passo posterior, não é o que a lição diz."
+      }
+    ]
+  },
+  "ex-e20cjd8x": {
+    "prompt": "Qual tarefa precisa de replicação lógica em vez de um standby físico?",
+    "hint": "Versão, parte dos dados, ou aceitar escrita.",
+    "choices": [
+      {
+        "text": "Fazer failover em segundos se o primário morrer",
+        "why": "É exatamente para isso que serve um standby físico."
+      },
+      {
+        "text": "Manter uma cópia byte a byte de cada banco",
+        "why": "Isso é físico."
+      },
+      {
+        "text": "Ler relatórios de uma cópia somente leitura",
+        "why": "Um standby físico atende leituras."
+      },
+      {
+        "text": "Levar o shop da versão 16 para a 17 em minutos",
+        "why": "Isso. Só a replicação lógica atravessa versões major."
+      }
+    ]
+  }
+}

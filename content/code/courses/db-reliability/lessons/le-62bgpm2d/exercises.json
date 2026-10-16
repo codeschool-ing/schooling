@@ -1,0 +1,638 @@
+[
+  {
+    "id": "ex-tn39n2r1",
+    "version": 1,
+    "section": "why-a-tool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of a home-made backup script does the lesson single out as the one people get wrong?",
+    "hint": "It shows up months later, as a recovery that stops.",
+    "choices": [
+      {
+        "text": "Compressing the files before they are copied",
+        "correct": false,
+        "why": "Compression is easy to add and easy to see working; its absence costs space, not data."
+      },
+      {
+        "text": "Running pg_basebackup with the right options every night",
+        "correct": false,
+        "why": "That part is one command and fails loudly when it fails."
+      },
+      {
+        "text": "Deleting old log that kept backups still need",
+        "correct": true,
+        "why": "Right. Retention has to know which segments each kept backup depends on; deleting by age leaves a gap nobody sees."
+      },
+      {
+        "text": "Choosing a name for the directory the backups are kept in",
+        "correct": false,
+        "why": "Nothing depends on the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9ar1r24",
+    "version": 1,
+    "section": "why-a-tool",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With pgBackRest taking and verifying the backups, what is still true?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "A backup is a claim until it is restored",
+        "correct": true,
+        "why": "Right. The tool makes better copies; only a restore says they work."
+      },
+      {
+        "text": "Restoring is no longer necessary, because every file is checksummed and checked",
+        "correct": false,
+        "why": "A checksum proves the bytes did not change, not that a server starts on them or that the data is right."
+      },
+      {
+        "text": "Retention has to be done by hand with find and rm",
+        "correct": false,
+        "why": "pgBackRest's expire does retention, with its dependencies."
+      },
+      {
+        "text": "The archive_command from lesson 4 has to stay as it was",
+        "correct": false,
+        "why": "pgBackRest replaces it with archive-push."
+      }
+    ]
+  },
+  {
+    "id": "ex-z40h5s3j",
+    "version": 1,
+    "section": "setting-up",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each pgBackRest word with what it means.",
+    "hint": "One is a place, one is a server's backups inside it.",
+    "pairs": [
+      {
+        "left": "repository",
+        "right": "Where backups and archived log are kept"
+      },
+      {
+        "left": "stanza",
+        "right": "One server's backups, under a name you choose"
+      },
+      {
+        "left": "archive-push",
+        "right": "The command archive_command runs for each segment"
+      },
+      {
+        "left": "check",
+        "right": "Proves a segment travels from the server to the repository"
+      }
+    ],
+    "right_distractors": [
+      "The copy of the data directory a restore starts from"
+    ]
+  },
+  {
+    "id": "ex-jsdv3xwq",
+    "version": 1,
+    "section": "setting-up",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every pgBackRest command in the lesson start with `sudo -u postgres`?",
+    "hint": "Who owns the data directory?",
+    "choices": [
+      {
+        "text": "pgBackRest refuses to run for anyone with a password",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "The repository is on another machine that only knows postgres",
+        "correct": false,
+        "why": "The repository is a local directory here."
+      },
+      {
+        "text": "ana is not allowed to connect to the database",
+        "correct": false,
+        "why": "ana is a superuser; the restriction is about files, not connections."
+      },
+      {
+        "text": "It has to read the data directory, which postgres owns",
+        "correct": true,
+        "why": "Right. pgBackRest runs as the user the server's files belong to."
+      }
+    ]
+  },
+  {
+    "id": "ex-egqbvqd7",
+    "version": 1,
+    "section": "setting-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `pgbackrest check` prove that `stanza-create` does not?",
+    "hint": "It waits for something to arrive.",
+    "choices": [
+      {
+        "text": "That the configuration file has no typing mistakes in it",
+        "correct": false,
+        "why": "A typing mistake would usually fail stanza-create too; check proves more than parsing."
+      },
+      {
+        "text": "That archiving works end to end",
+        "correct": true,
+        "why": "Right: a segment switched on the server reaches the repository through archive_command."
+      },
+      {
+        "text": "That every backup in the repository can be restored",
+        "correct": false,
+        "why": "check takes no backup and restores nothing."
+      },
+      {
+        "text": "That the server has data checksums enabled",
+        "correct": false,
+        "why": "It does not test that."
+      }
+    ]
+  },
+  {
+    "id": "ex-chndscas",
+    "version": 1,
+    "section": "backup-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an incremental copy that a differential does not?",
+    "hint": "Since when?",
+    "choices": [
+      {
+        "text": "Everything, like a full",
+        "correct": false,
+        "why": "That is a full backup."
+      },
+      {
+        "text": "What changed since any last backup",
+        "correct": true,
+        "why": "Right. A differential copies everything changed since the last full."
+      },
+      {
+        "text": "Only the write-ahead log",
+        "correct": false,
+        "why": "Both copy data files; the log is archived continuously anyway."
+      },
+      {
+        "text": "Rows inserted, but not rows updated",
+        "correct": false,
+        "why": "pgBackRest works on files; it knows nothing about rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nyzpj1x",
+    "version": 1,
+    "section": "backup-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One new order made the incremental backup copy 4.5 MB. Why so much for one row?",
+    "hint": "By default, what is the unit pgBackRest compares?",
+    "choices": [
+      {
+        "text": "Every incremental copies at least one full segment of log",
+        "correct": false,
+        "why": "Segments are archived separately; the 4.5 MB is data files."
+      },
+      {
+        "text": "Compression was switched off for the incremental",
+        "correct": false,
+        "why": "The repository size was 817.9 KB; it was compressed."
+      },
+      {
+        "text": "The incremental copied the differential's files again",
+        "correct": false,
+        "why": "It refers to them; it does not copy them again."
+      },
+      {
+        "text": "A changed file is copied whole",
+        "correct": true,
+        "why": "Right. The row went into the orders file, and without repo-block the unit is the file, so one changed row copies the 3 MB table and its indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq8r9ac5",
+    "version": 1,
+    "section": "backup-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To restore an incremental taken on Thursday, what has to be intact?",
+    "hint": "Read its backup reference list.",
+    "choices": [
+      {
+        "text": "The full, every backup between, and the incremental",
+        "correct": true,
+        "why": "Right. Every link in the chain is one more thing that has to be intact."
+      },
+      {
+        "text": "The incremental alone",
+        "correct": false,
+        "why": "An incremental holds only what changed; the rest comes from the backups it refers to."
+      },
+      {
+        "text": "The incremental and the last full",
+        "correct": false,
+        "why": "That is enough for a differential. An incremental also needs whatever it was taken after."
+      },
+      {
+        "text": "Every backup in the repository",
+        "correct": false,
+        "why": "Only the chain it refers to; other fulls are irrelevant to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b5f3m429",
+    "version": 1,
+    "section": "backup-types",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the three kinds of backup from the one that copies most to the one that copies least, for a database changed a little every day and backed up daily.",
+    "hint": "Each copies what changed since a different point.",
+    "items": [
+      "full",
+      "differential, late in the week",
+      "incremental"
+    ],
+    "trap": "A full copies everything; a differential everything since the full, which grows through the week; an incremental only since yesterday's backup."
+  },
+  {
+    "id": "ex-wnnp76qg",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `repo1-retention-full=2`, a third full backup finished. What did `expire` remove?",
+    "hint": "It works in sets.",
+    "choices": [
+      {
+        "text": "Only the oldest full backup's files",
+        "correct": false,
+        "why": "Its differential and incremental depended on it and went with it."
+      },
+      {
+        "text": "Archived segments older than a week",
+        "correct": false,
+        "why": "pgBackRest decides by dependency, not by age."
+      },
+      {
+        "text": "That full's whole set, and its log",
+        "correct": true,
+        "why": "Right: the oldest full, the backups that depended on it, then the segments no remaining backup needs."
+      },
+      {
+        "text": "Nothing, because three is within two fulls plus a margin",
+        "correct": false,
+        "why": "There is no margin: two means two."
+      }
+    ]
+  },
+  {
+    "id": "ex-d37k17ay",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's own script deletes archived segments older than seven days, and keeps two weekly full backups. What breaks?",
+    "hint": "How old is the older full on Saturday?",
+    "choices": [
+      {
+        "text": "No harm: seven days of log covers a weekly backup",
+        "correct": false,
+        "why": "The older full is up to fourteen days old, and it needs every segment since its start."
+      },
+      {
+        "text": "The newer full cannot be restored at all",
+        "correct": false,
+        "why": "The newer full's log is recent and is kept."
+      },
+      {
+        "text": "The repository runs out of space",
+        "correct": false,
+        "why": "It deletes more, not less."
+      },
+      {
+        "text": "A recovery that stops at a silent gap",
+        "correct": true,
+        "why": "Right. Recovery from the older full stops at the gap, and nothing reports it: the backup is kept and its log is not, which is the failure retention-by-dependency avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-3epp87mf",
+    "version": 1,
+    "section": "retention",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fulls are taken every Sunday and two are kept. On Saturday evening, about how many days ago is the oldest moment you can restore?",
+    "hint": "Last Sunday's full and the one before.",
+    "value": 13,
+    "tolerance": 1,
+    "unit": "days"
+  },
+  {
+    "id": "ex-twfg9x8a",
+    "version": 1,
+    "section": "verify",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In pgBackRest 2.50, what exit status does `verify` give when it finds a damaged file?",
+    "hint": "The capture ran echo $? after it.",
+    "choices": [
+      {
+        "text": "1, like any failing command",
+        "correct": false,
+        "why": "That is what one would expect, and it is not what it does."
+      },
+      {
+        "text": "2, meaning a warning",
+        "correct": false,
+        "why": "It printed 0."
+      },
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right. It exits with 0 whatever it finds; only the report says what happened."
+      },
+      {
+        "text": "It does not exit until the damage is repaired",
+        "correct": false,
+        "why": "It finished in under a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty0cz2b2",
+    "version": 1,
+    "section": "verify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job runs `pgbackrest verify --output=text` and treats empty output as success. Why is that wrong?",
+    "hint": "Look at what the plain verify printed on a healthy repository and on a damaged one.",
+    "choices": [
+      {
+        "text": "It makes silence the pass, and a pass has to be something said",
+        "correct": true,
+        "why": "Right. The job accepts only the line status: ok from the full report; anything else, silence included, is a failure."
+      },
+      {
+        "text": "Empty output means verify did not run",
+        "correct": false,
+        "why": "It ran; it simply prints nothing without --verbose when all is well."
+      },
+      {
+        "text": "A job is never allowed to read a command's output",
+        "correct": false,
+        "why": "Reading the report is exactly the fix."
+      },
+      {
+        "text": "--output=text is not a valid option",
+        "correct": false,
+        "why": "It is valid; it just is not enough without --verbose."
+      }
+    ]
+  },
+  {
+    "id": "ex-ent8gdge",
+    "version": 1,
+    "section": "verify",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many files did `verify` check in each full backup?",
+    "hint": "total files checked.",
+    "value": 1271,
+    "tolerance": 0,
+    "unit": "files"
+  },
+  {
+    "id": "ex-feh9y0s5",
+    "version": 1,
+    "section": "verify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backup fails verification. What does the lesson do with it?",
+    "hint": "Can a checksum mismatch be repaired?",
+    "choices": [
+      {
+        "text": "Repairs the file from the live server",
+        "correct": false,
+        "why": "The file is the server's state at backup time; the live server's is a different moment."
+      },
+      {
+        "text": "Removes it with expire --set and takes a new full",
+        "correct": true,
+        "why": "Right. A failing backup cannot be fixed, only replaced."
+      },
+      {
+        "text": "Leaves it, because the other full is still valid",
+        "correct": false,
+        "why": "A known-bad backup in the repository is one somebody may restore from."
+      },
+      {
+        "text": "Runs verify again until it passes",
+        "correct": false,
+        "why": "The damage does not go away by asking again."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q5v3a85",
+    "version": 1,
+    "section": "restoring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A restore test is made without `--archive-mode=off`, on a server whose `archive_command` pushes to the same stanza. What goes wrong?",
+    "hint": "The copy carries the original's settings.",
+    "choices": [
+      {
+        "text": "The restore refuses to start",
+        "correct": false,
+        "why": "It starts; that is the problem."
+      },
+      {
+        "text": "The live server stops archiving",
+        "correct": false,
+        "why": "It carries on, and its archive is now mixed with the copy's."
+      },
+      {
+        "text": "Two histories end up in one archive",
+        "correct": true,
+        "why": "Right. The copy pushes its own log into the live server's stanza, from a different history: two servers' log under one name, and the next recovery could replay the wrong one."
+      },
+      {
+        "text": "Nothing, because the copy has a different port",
+        "correct": false,
+        "why": "The stanza is chosen by archive_command, not by the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-k670rb01",
+    "version": 1,
+    "section": "restoring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `restore_command`, written by pgBackRest into the restored copy, do?",
+    "hint": "It is the reverse of archive_command.",
+    "choices": [
+      {
+        "text": "Fetches archived segments from the repository when recovery asks",
+        "correct": true,
+        "why": "Right. That is what lets the copy replay past the end of the backup."
+      },
+      {
+        "text": "Restores the copy again every time the server starts",
+        "correct": false,
+        "why": "It runs only during recovery, one segment at a time."
+      },
+      {
+        "text": "Pushes the copy's segments back to the repository",
+        "correct": false,
+        "why": "That would be archive_command, and it was turned off."
+      },
+      {
+        "text": "Checks the copy against the live server",
+        "correct": false,
+        "why": "Nothing in recovery compares with the live server; the report did that."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtrrhgmd",
+    "version": 1,
+    "section": "the-job",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The nightly job is in the postgres crontab and exits with 1 when verify fails. What is still missing?",
+    "hint": "What if the job stops running at all?",
+    "choices": [
+      {
+        "text": "A second crontab line to run it twice",
+        "correct": false,
+        "why": "Running it twice does not tell anybody it failed."
+      },
+      {
+        "text": "set -x, so every command is printed",
+        "correct": false,
+        "why": "Printing commands helps debugging, not noticing."
+      },
+      {
+        "text": "A --type=full on every run",
+        "correct": false,
+        "why": "That changes cost, not whether anybody notices failures."
+      },
+      {
+        "text": "Something that alerts on a failure, and on a night with no run",
+        "correct": true,
+        "why": "Right. On a machine with no mail set up, cron's output goes nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fexbvg2",
+    "version": 1,
+    "section": "the-job",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The nightly script counts the verify as a pass only if the report contains the exact line `status: ___`.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "ok"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-phq8k14t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The newest full backup has one damaged file, and two incrementals were taken after it. What does the full verify report say about them?",
+    "hint": "What does an incremental take from its full?",
+    "choices": [
+      {
+        "text": "They are valid, because their own files are intact",
+        "correct": false,
+        "why": "They refer to the damaged file in the full; a restore from them would use it."
+      },
+      {
+        "text": "They are invalid too",
+        "correct": true,
+        "why": "Right. The job's report listed the full and both incrementals as invalid: one damaged file, three unusable backups."
+      },
+      {
+        "text": "They are not checked, because verify only reads fulls",
+        "correct": false,
+        "why": "It checked all of them."
+      },
+      {
+        "text": "They are deleted automatically by expire",
+        "correct": false,
+        "why": "Nothing is deleted until somebody decides to."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yaq3wkw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database changes heavily all day. Which rhythm keeps restores depending on few backups while keeping nightly copies small?",
+    "hint": "Count what a Friday restore needs in each case.",
+    "choices": [
+      {
+        "text": "One full a month and an incremental each night",
+        "correct": false,
+        "why": "A restore late in the month needs the full and up to thirty incrementals, all intact."
+      },
+      {
+        "text": "A full weekly and a differential nightly",
+        "correct": true,
+        "why": "Right. Any night's restore needs exactly two backups."
+      },
+      {
+        "text": "Only incrementals, after a single first full",
+        "correct": false,
+        "why": "The chain grows for ever, and so does what a restore depends on."
+      },
+      {
+        "text": "A full every night and nothing else",
+        "correct": false,
+        "why": "That keeps restores simple and makes every nightly copy as big as the database."
+      }
+    ]
+  }
+]

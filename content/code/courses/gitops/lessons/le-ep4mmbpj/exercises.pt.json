@@ -1,0 +1,1007 @@
+{
+  "ex-yypsht31": {
+    "prompt": "Que componente do Argo CD escreve no cluster?",
+    "choices": [
+      {
+        "text": "O application controller",
+        "why": "Isso. Ele compara e aplica, e é a única parte com acesso de escrita."
+      },
+      {
+        "text": "O API server por trás da CLI",
+        "why": "Ele atende a CLI e a interface web e pede ao controller que aja."
+      },
+      {
+        "text": "O Redis, o cache compartilhado",
+        "why": "É um cache para os outros dois."
+      },
+      {
+        "text": "O repo server, que gera os manifestos",
+        "why": "Ele clona e gera, e não tem credencial nenhuma do cluster."
+      }
+    ]
+  },
+  "ex-t0ebs4hk": {
+    "prompt": "Por que importa que o repo server não tenha credenciais do cluster?",
+    "choices": [
+      {
+        "text": "O Gitea proíbe",
+        "why": "O Gitea não sabe nada dos componentes do Argo CD."
+      },
+      {
+        "text": "Ele seria mais lento com credenciais",
+        "why": "Credenciais não afetam a velocidade de geração."
+      },
+      {
+        "text": "Ele guarda manifestos no Redis, que é público",
+        "why": "O Redis fica dentro do cluster e não é público."
+      },
+      {
+        "text": "Ele gera o que um repositório pedir, confiável ou não",
+        "why": "Isso. Um chart ou plugin malicioso chega primeiro ao repo server, e não acha chave ali."
+      }
+    ]
+  },
+  "ex-ns6pz76d": {
+    "prompt": "Uma ___ do Argo CD é uma seta de um lugar no Git para um lugar no cluster.",
+    "blanks": [
+      {
+        "accept": [
+          "Application"
+        ]
+      }
+    ]
+  },
+  "ex-dxm51kzs": {
+    "prompt": "Por que a aula aplica o Argo CD com --server-side?",
+    "choices": [
+      {
+        "text": "Sem ele, as imagens vêm do quay.io",
+        "why": "Os nomes de imagem vêm da kustomization, não do modo de apply."
+      },
+      {
+        "text": "O apply do servidor é o que define um namespace",
+        "why": "Nesta aula o Kustomize define o namespace."
+      },
+      {
+        "text": "O apply do cliente não lê uma URL",
+        "why": "O Kustomize baixa a URL de qualquer forma."
+      },
+      {
+        "text": "As CRDs dele são grandes demais para a anotação que o apply do cliente guarda",
+        "why": "Isso. Um apply do cliente guarda o objeto inteiro numa anotação, que tem limite de tamanho."
+      }
+    ]
+  },
+  "ex-y27jd4rk": {
+    "prompt": "A kustomization cita o install.yaml na v3.5.4. O que fixar a versão garante?",
+    "choices": [
+      {
+        "text": "Downloads mais rápidos do GitHub",
+        "why": "O tamanho é o mesmo de qualquer jeito."
+      },
+      {
+        "text": "A mesma URL sempre dá os mesmos bytes",
+        "why": "Isso. Uma atualização vira uma mudança de uma linha, revisada."
+      },
+      {
+        "text": "A instalação pula as CRDs",
+        "why": "As CRDs fazem parte do install.yaml em qualquer versão."
+      },
+      {
+        "text": "O Argo CD se atualiza em cada sincronização",
+        "why": "Fixar faz o contrário; nada se atualiza sozinho."
+      }
+    ]
+  },
+  "ex-df16pas1": {
+    "prompt": "O que o argocd login --core muda no funcionamento do comando?",
+    "choices": [
+      {
+        "text": "Ele desliga o application controller",
+        "why": "O controller continua rodando; a CLI só lê os objetos dele direto."
+      },
+      {
+        "text": "Ele entra como o usuário admin com a senha gerada",
+        "why": "Esse é o login normal, pelo API server."
+      },
+      {
+        "text": "Ele usa o seu kubeconfig no lugar",
+        "why": "Isso. Sem senha, port-forward ou ingress, ao preço de precisar de acesso ao cluster."
+      },
+      {
+        "text": "Ele instala os componentes centrais no cluster",
+        "why": "Instalar foi o kubectl apply; o login não muda nada no cluster."
+      }
+    ]
+  },
+  "ex-fj45bdnn": {
+    "prompt": "Que permissão do Gitea a conta argocd tem no fleet?",
+    "choices": [
+      {
+        "text": "admin",
+        "why": "Nada neste curso dá admin a uma conta de máquina."
+      },
+      {
+        "text": "write",
+        "why": "Essa é a do Bruno e a do ci, que enviam branches."
+      },
+      {
+        "text": "owner",
+        "why": "Só a Ana é dona do fleet."
+      },
+      {
+        "text": "read",
+        "why": "Isso. O Argo CD nunca faz push, abre ou aprova nada."
+      }
+    ]
+  },
+  "ex-w04g8w6n": {
+    "prompt": "Onde o argocd repo add guardou o token?",
+    "choices": [
+      {
+        "text": "Num Secret, no cluster",
+        "why": "Isso. Um repositório é um Secret com o rótulo argocd.argoproj.io/secret-type: repository."
+      },
+      {
+        "text": "No ~/.git-credentials da sua máquina",
+        "why": "Esse arquivo é do Git, para os seus pushes."
+      },
+      {
+        "text": "No Gitea, ao lado da conta argocd",
+        "why": "O Gitea guarda os tokens dele; o Argo CD guarda a cópia dele no cluster."
+      },
+      {
+        "text": "No spec da Application",
+        "why": "A Application cita a URL do repositório, nunca as credenciais."
+      }
+    ]
+  },
+  "ex-qcq6mx2w": {
+    "prompt": "Um colega propõe commitar o YAML do Secret do repositório no fleet para a montagem ficar toda no Git. O que está errado?",
+    "choices": [
+      {
+        "text": "O Kustomize tiraria o rótulo",
+        "why": "O Kustomize mantém rótulos."
+      },
+      {
+        "text": "O Gitea recusa arquivos YAML com tokens",
+        "why": "O Gitea guarda o que for enviado."
+      },
+      {
+        "text": "O Argo CD pula os Secrets que acha no Git",
+        "why": "Ele aplica qualquer manifesto, Secrets inclusive; esse é o perigo."
+      },
+      {
+        "text": "base64 é codificação, não cifra",
+        "why": "Isso. A aula 9 mostra como guardá-lo no Git cifrado."
+      }
+    ]
+  },
+  "ex-cd3vw8pe": {
+    "prompt": "A primeira Application informou OutOfSync embora os manifestos combinassem com o que estava publicado. Por quê?",
+    "choices": [
+      {
+        "text": "A tag de imagem no Git era mais nova",
+        "why": "O Git e o cluster diziam 1.0."
+      },
+      {
+        "text": "O reconcile.sh tinha mudado as réplicas",
+        "why": "O diff não mostrou linha de réplicas."
+      },
+      {
+        "text": "O namespace tinha sido apagado",
+        "why": "A saúde era Healthy; os objetos estavam todos lá."
+      },
+      {
+        "text": "Faltava a anotação de rastreamento",
+        "why": "Isso. O diff mostrou só argocd.argoproj.io/tracking-id."
+      }
+    ]
+  },
+  "ex-xjzdg8a5": {
+    "prompt": "O que a anotação de rastreamento torna possível e o laço da aula 1 não fazia?",
+    "choices": [
+      {
+        "text": "Podar o que saiu do Git",
+        "why": "Isso. Objetos que levam o id e não estão mais no Git podem ser achados e apagados."
+      },
+      {
+        "text": "Gerar com Kustomize",
+        "why": "O repo server gera, com ou sem objetos rastreados."
+      },
+      {
+        "text": "Rodar sem credenciais do cluster",
+        "why": "O controller continua precisando delas para aplicar."
+      },
+      {
+        "text": "Ler um repositório privado",
+        "why": "Isso pede credenciais, não uma anotação."
+      }
+    ]
+  },
+  "ex-w4pvp5r1": {
+    "prompt": "Por que a aula manda parar o reconcile.sh antes de criar a Application?",
+    "choices": [
+      {
+        "text": "O Argo CD não sobe com o laço rodando",
+        "why": "O Argo CD não sabe que o laço existe."
+      },
+      {
+        "text": "Dois escritores disputariam um objeto",
+        "why": "Isso. Mesmo lendo o mesmo repositório, dois escritores competem e confundem quem é dono."
+      },
+      {
+        "text": "O reconcile.sh apagaria a Application",
+        "why": "Ele só aplica a pasta staging."
+      },
+      {
+        "text": "O laço usa o token do argocd",
+        "why": "Ele usava as credenciais da Ana."
+      }
+    ]
+  },
+  "ex-z7sgzpva": {
+    "prompt": "Ligue cada combinação de sincronização e saúde ao que costuma querer dizer.",
+    "pairs": [
+      {
+        "left": "Synced, Healthy",
+        "right": "O objetivo"
+      },
+      {
+        "left": "OutOfSync, Healthy",
+        "right": "Uma mudança ainda não aplicada, ou desvio"
+      },
+      {
+        "left": "Synced, Degraded",
+        "right": "O Git aplicado fielmente, e errado"
+      },
+      {
+        "left": "OutOfSync, Degraded",
+        "right": "Errado nas duas frentes"
+      }
+    ],
+    "right_distractors": [
+      "O próprio Argo CD caiu"
+    ]
+  },
+  "ex-8bqxrq14": {
+    "prompt": "O staging fica Synced e Degraded depois de um merge. Onde está o defeito, mais provavelmente?",
+    "choices": [
+      {
+        "text": "No que o repositório diz",
+        "why": "Isso. O Argo CD aplicou fielmente; o erro está no Git, como a imagem que faltava na aula 2."
+      },
+      {
+        "text": "Na proteção de branch do Gitea",
+        "why": "A proteção governa merges, não pods rodando."
+      },
+      {
+        "text": "No controller do Argo CD",
+        "why": "Um controller falhando deixaria a aplicação OutOfSync ou Unknown."
+      },
+      {
+        "text": "No cache do repo server",
+        "why": "Um cache velho mostra a revisão errada, não um objeto degradado."
+      }
+    ]
+  },
+  "ex-a0qj8vvq": {
+    "prompt": "Depois de uma sincronização, de onde vem a resposta para 'qual commit o staging está rodando?'",
+    "choices": [
+      {
+        "text": "Do commit mais novo da main",
+        "why": "A main pode ter andado desde a última sincronização."
+      },
+      {
+        "text": "Do status da Application",
+        "why": "Isso. Ele registra a revisão que aplicou."
+      },
+      {
+        "text": "Da tag da imagem",
+        "why": "A tag cita uma imagem, não um commit do fleet."
+      },
+      {
+        "text": "Da lista de pull requests do Gitea",
+        "why": "Isso diz o que entrou, não o que foi aplicado."
+      }
+    ]
+  },
+  "ex-zh1tpv1c": {
+    "prompt": "O que a política prune: true, selfHeal: true acrescenta à sincronização automática? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Sincronizar quando o cluster se desvia do Git",
+        "why": "Isso. Isso é o selfHeal."
+      },
+      {
+        "text": "Apagar objetos que sumiram do Git",
+        "why": "Isso. Isso é o prune."
+      },
+      {
+        "text": "Voltar atrás quando um pod fica Degraded",
+        "why": "Nada volta atrás pela saúde; o Argo CD aplica o Git."
+      },
+      {
+        "text": "Olhar o Git com mais frequência que a cada três minutos",
+        "why": "O intervalo é outra configuração, ou um webhook."
+      }
+    ]
+  },
+  "ex-7x8eyv32": {
+    "prompt": "Por padrão, a cada quantos minutos o Argo CD olha um repositório atrás de commits novos?",
+    "unit": "minutos"
+  },
+  "ex-a8gscwvr": {
+    "prompt": "Logo depois do merge, o argocd app get ainda mostrava a revisão antiga. O que o fez ver a nova na hora?",
+    "choices": [
+      {
+        "text": "argocd app get --refresh",
+        "why": "Isso. Ele pede ao Argo CD que olhe agora, e a política automática sincronizou na mesma passada."
+      },
+      {
+        "text": "argocd app sync com --prune",
+        "why": "Sincronizar aplica o que o Argo CD já gerou; precisa de um refresh antes."
+      },
+      {
+        "text": "Reiniciar o repo server",
+        "why": "Funcionaria uma hora, e não foi o que a aula fez."
+      },
+      {
+        "text": "Enviar o commit uma segunda vez",
+        "why": "Um segundo push do mesmo commit não muda nada."
+      }
+    ]
+  },
+  "ex-mearhkxs": {
+    "prompt": "Com o prune ligado, alguém apaga o staging/bulletin.yaml por engano e isso entra. O que acontece?",
+    "choices": [
+      {
+        "text": "Nada até alguém sincronizar à mão",
+        "why": "A política é automática."
+      },
+      {
+        "text": "Só o Service sai",
+        "why": "Todo objeto do arquivo apagado sai."
+      },
+      {
+        "text": "Os objetos são apagados no cluster",
+        "why": "Isso. Arquivo fora do Git é objeto fora do cluster; a revisão é a proteção."
+      },
+      {
+        "text": "O Argo CD recusa uma geração vazia",
+        "why": "Isso protege contra um caminho que some, não contra um arquivo apagado dentro dele."
+      }
+    ]
+  },
+  "ex-1jttahsc": {
+    "prompt": "Por que o Argo CD desfez a escala manual mais rápido que o laço da aula 1?",
+    "choices": [
+      {
+        "text": "O kubectl scale é mais lento com o Argo CD",
+        "why": "O kubectl valeu na hora; o Argo CD desfez."
+      },
+      {
+        "text": "O intervalo dele é menor que quinze segundos",
+        "why": "O intervalo dele para o Git é de três minutos."
+      },
+      {
+        "text": "Ele reage a eventos, não a um cronômetro",
+        "why": "Isso. O selfHeal não espera o cronômetro do Git."
+      },
+      {
+        "text": "Ele consulta o cluster a cada segundo",
+        "why": "Ele observa; não consulta o cluster num cronômetro."
+      }
+    ]
+  },
+  "ex-fmfkh1x4": {
+    "prompt": "Um autoscaler é dono do replicas de um Deployment. Qual é a resposta certa mais estreita?",
+    "choices": [
+      {
+        "text": "Apagar o autoscaler",
+        "why": "Ele é o dono certo do replicas; o Git é o errado."
+      },
+      {
+        "text": "Ignorar o objeto Deployment inteiro",
+        "why": "A imagem, as probes e o resto ficariam sem reconciliação."
+      },
+      {
+        "text": "Ignorar esse único campo, e respeitar isso ao sincronizar",
+        "why": "Isso. Um campo, um tipo: o buraco tem a largura exata do dono."
+      },
+      {
+        "text": "Desligar o selfHeal da Application inteira",
+        "why": "Isso abre mão de todos os outros campos também."
+      }
+    ]
+  },
+  "ex-evcyrzz7": {
+    "prompt": "Sem a opção de sincronização ___=true, uma sincronização ainda sobrescreveria um campo que o ignoreDifferences só esconde da comparação.",
+    "blanks": [
+      {
+        "accept": [
+          "RespectIgnoreDifferences"
+        ]
+      }
+    ]
+  },
+  "ex-g32as5cw": {
+    "prompt": "Por que o argocd app rollback se recusou a rodar no staging?",
+    "choices": [
+      {
+        "text": "O histórico guarda uma entrada",
+        "why": "Ele listou várias entradas."
+      },
+      {
+        "text": "A Ana não tem permissão para voltar atrás",
+        "why": "Com --core ela tem as credenciais de administradora do cluster."
+      },
+      {
+        "text": "A revisão antiga foi apagada do Gitea",
+        "why": "O Git guarda todo commit; nada foi apagado."
+      },
+      {
+        "text": "O auto-sync estava ligado e o desfaria",
+        "why": "Isso. Um rollback fora do Git é desvio por definição."
+      }
+    ]
+  },
+  "ex-sx1ag7cz": {
+    "prompt": "Por padrão, quantas sincronizações o histórico de uma Application guarda?"
+  },
+  "ex-ettfa0hk": {
+    "prompt": "Depois do app de apps, o que fica fora do Git?",
+    "choices": [
+      {
+        "text": "Toda Application menos a do staging, ainda na sua máquina",
+        "why": "Todas vivem em fleet/argocd/ agora."
+      },
+      {
+        "text": "Absolutamente nada",
+        "why": "Algo precisa existir antes que o agente leia o Git."
+      },
+      {
+        "text": "Os manifestos do staging",
+        "why": "Eles sempre estiveram no fleet."
+      },
+      {
+        "text": "A instalação do Argo CD e o root.yaml",
+        "why": "Isso. É o bootstrap, e o objetivo é mantê-lo em dois arquivos."
+      }
+    ]
+  },
+  "ex-y0vpbqe9": {
+    "prompt": "Com a Application root no lugar, como uma aplicação nova é acrescentada ao cluster?",
+    "choices": [
+      {
+        "text": "Editando o root.yaml",
+        "why": "O root.yaml aponta para a pasta; ele não lista aplicações."
+      },
+      {
+        "text": "Um pull request que acrescenta o arquivo dela em fleet/argocd/",
+        "why": "Isso. A root aplica o que estiver nessa pasta."
+      },
+      {
+        "text": "kubectl apply da Application na sua máquina",
+        "why": "Isso é o que a root substituiu."
+      },
+      {
+        "text": "argocd app create na linha de comando",
+        "why": "Funciona, e deixa a aplicação fora do Git."
+      }
+    ]
+  },
+  "ex-a0zfs6qm": {
+    "prompt": "Ligue cada lista do AppProject ao que ela permite.",
+    "pairs": [
+      {
+        "left": "sourceRepos",
+        "right": "Quais repositórios podem ser lidos"
+      },
+      {
+        "left": "destinations",
+        "right": "Quais namespaces de quais clusters"
+      },
+      {
+        "left": "clusterResourceWhitelist",
+        "right": "Quais objetos fora de um namespace"
+      }
+    ],
+    "right_distractors": [
+      "Quais usuários podem entrar"
+    ]
+  },
+  "ex-vecpyqg2": {
+    "prompt": "Uma Application do projeto bulletin aponta para o kube-system. Quando ela é barrada?",
+    "choices": [
+      {
+        "text": "Não é barrada; o kube-system é permitido por padrão",
+        "why": "Só destinos listados são permitidos neste projeto."
+      },
+      {
+        "text": "Antes de qualquer sincronização, quando o controller a valida",
+        "why": "Isso. A própria Application é recusada, com o projeto citado."
+      },
+      {
+        "text": "Durante a sincronização, objeto por objeto",
+        "why": "Ela nem chega a sincronizar."
+      },
+      {
+        "text": "Só depois que alguém a rejeita na interface web",
+        "why": "A regra é aplicada pelo controller, não por uma pessoa."
+      }
+    ]
+  },
+  "ex-e5afsgz8": {
+    "prompt": "O repositório de uma Application não pode ser lido. Por que o status de sincronização é Unknown e não OutOfSync?",
+    "choices": [
+      {
+        "text": "Unknown quer dizer que a Application foi apagada",
+        "why": "Uma Application apagada não tem status nenhum."
+      },
+      {
+        "text": "O cluster está inalcançável",
+        "why": "O cluster estava bem; o problema era o repositório."
+      },
+      {
+        "text": "O Argo CD esconde falhas atrás do Unknown",
+        "why": "A condição ComparisonError diz exatamente o que aconteceu."
+      },
+      {
+        "text": "Nada foi gerado, então não há o que comparar",
+        "why": "Isso. OutOfSync é resultado de uma comparação, e não houve comparação."
+      }
+    ]
+  },
+  "ex-0mj4xecr": {
+    "prompt": "Por que o Argo CD não poda tudo quando o caminho de uma Application deixa de existir?",
+    "choices": [
+      {
+        "text": "Uma geração vazia é tratada como erro",
+        "why": "Isso. Um caminho sumido é informado como erro, e os objetos ficam."
+      },
+      {
+        "text": "A poda precisa de alguém confirmando cada objeto",
+        "why": "A poda é automática quando a política diz."
+      },
+      {
+        "text": "Objetos fora do caminho mantêm os tracking ids",
+        "why": "Mantêm de qualquer jeito; a proteção é sobre a geração."
+      },
+      {
+        "text": "O Git se recusa a apagar uma pasta",
+        "why": "Pastas são apagadas como qualquer arquivo."
+      }
+    ]
+  },
+  "ex-q4pdkpcw": {
+    "prompt": "Ordene o que aconteceu quando a mensagem do staging mudou nesta aula.",
+    "items": [
+      "O pull request entra",
+      "O argocd app get ainda mostra a revisão antiga",
+      "O argocd app get --refresh acha o commit novo",
+      "A política automática sincroniza",
+      "O curl mostra a mensagem nova"
+    ],
+    "trap": "O Argo CD não sabe do merge até olhar, e só sincroniza o que viu."
+  },
+  "ex-t0t5tjcp": {
+    "prompt": "Um chart que você não controla define o replicas, um autoscaler também define, e o selfHeal não para de brigar. O que deve mudar, e onde?",
+    "choices": [
+      {
+        "text": "O cluster: escalar à mão depois de cada sincronização",
+        "why": "Toda sincronização, ou autocorreção, desfaria."
+      },
+      {
+        "text": "A Application, no Git: ignorar esse único campo",
+        "why": "Isso. O chart não muda, então a Application estreita o que compara, por um pull request."
+      },
+      {
+        "text": "O autoscaler: apagá-lo para o Git vencer",
+        "why": "Aí a carga não decide nada, o que anula ter um."
+      },
+      {
+        "text": "O Argo CD: desligar o selfHeal de vez",
+        "why": "Isso abre mão da correção de desvio em toda aplicação."
+      }
+    ]
+  },
+  "ex-nptrp7t2": {
+    "prompt": "O que o Redis faz numa instalação do Argo CD?",
+    "choices": [
+      {
+        "text": "Guarda as credenciais do repositório",
+        "why": "Elas são Secrets no namespace argocd."
+      },
+      {
+        "text": "Guarda as Applications",
+        "why": "Applications são objetos do Kubernetes."
+      },
+      {
+        "text": "Executa as sincronizações",
+        "why": "Quem faz isso é o application controller."
+      },
+      {
+        "text": "Guarda em cache renderizações e estado vivo entre comparações",
+        "why": "Isso. Para uma comparação não clonar e renderizar tudo de novo."
+      }
+    ]
+  },
+  "ex-6w4f2w7q": {
+    "prompt": "O kubectl apply sem --server-side recusa os manifestos do Argo CD. Por quê?",
+    "choices": [
+      {
+        "text": "O apply do cliente não cria namespaces",
+        "why": "Cria."
+      },
+      {
+        "text": "O cluster bloqueia o apply do cliente",
+        "why": "Nada o bloqueia em geral."
+      },
+      {
+        "text": "Os CRDs passam do tamanho da anotação que o apply do cliente guarda",
+        "why": "Isso. O apply do servidor não guarda essa anotação."
+      },
+      {
+        "text": "Os manifestos não são YAML válido",
+        "why": "São válidos; só grandes demais para a anotação."
+      }
+    ]
+  },
+  "ex-gk5xsh2r": {
+    "prompt": "O token do Argo CD no Gitea vaza. O que alguém consegue fazer com ele?",
+    "choices": [
+      {
+        "text": "Mudar o cluster",
+        "why": "O token alcança o Gitea, não o cluster."
+      },
+      {
+        "text": "Ler o fleet",
+        "why": "Isso. Ele tem read:repository e mais nada."
+      },
+      {
+        "text": "Fazer push na main",
+        "why": "O token não escreve, e a main é protegida de todo jeito."
+      },
+      {
+        "text": "Aprovar pull requests",
+        "why": "Aprovar exige permissão de escrita."
+      }
+    ]
+  },
+  "ex-yv2wth4n": {
+    "prompt": "Numa Application, o que significa destination.server https://kubernetes.default.svc?",
+    "choices": [
+      {
+        "text": "Um cluster na internet pública",
+        "why": "É o endereço interno do API server."
+      },
+      {
+        "text": "O servidor Gitea",
+        "why": "O Gitea é a origem, não o destino."
+      },
+      {
+        "text": "O registry",
+        "why": "Registries nunca são destino."
+      },
+      {
+        "text": "O cluster em que o próprio Argo CD roda",
+        "why": "Isso. Outros clusters são registrados pelo endereço."
+      }
+    ]
+  },
+  "ex-4hxycp62": {
+    "prompt": "Associe cada combinação ao que ela costuma significar.",
+    "pairs": [
+      {
+        "left": "Synced e Healthy",
+        "right": "O Git descreve o que roda, e funciona"
+      },
+      {
+        "left": "OutOfSync e Healthy",
+        "right": "O Git mudou e nada aplicou ainda"
+      },
+      {
+        "left": "Synced e Degraded",
+        "right": "O Git foi aplicado, e o que ele diz não funciona"
+      }
+    ],
+    "right_distractors": [
+      "O próprio Argo CD caiu"
+    ]
+  },
+  "ex-68fmpgz4": {
+    "prompt": "O que encurta a espera de três minutos entre um merge e o Argo CD percebê-lo?",
+    "choices": [
+      {
+        "text": "Um revisionHistoryLimit menor",
+        "why": "Isso limita o histórico, não a consulta."
+      },
+      {
+        "text": "Um webhook do servidor Git a cada push",
+        "why": "Isso. A espera cai para um ou dois segundos."
+      },
+      {
+        "text": "Ligar o selfHeal",
+        "why": "O selfHeal reage ao cluster, não ao Git."
+      },
+      {
+        "text": "Mais réplicas do repo server",
+        "why": "O intervalo de consulta não é questão de capacidade."
+      }
+    ]
+  },
+  "ex-67tnaktw": {
+    "prompt": "Por que o Argo CD desfaz um scale manual mais rápido que o loop da aula 1?",
+    "choices": [
+      {
+        "text": "Ele consulta a cada segundo",
+        "why": "Ele não consulta o cluster num timer curto."
+      },
+      {
+        "text": "Ele observa os objetos e reage à mudança como evento",
+        "why": "Isso. O loop só percebia na próxima passada do timer."
+      },
+      {
+        "text": "Ele trava o Deployment",
+        "why": "Nada é travado."
+      },
+      {
+        "text": "O kubectl pergunta ao Argo CD antes de escalar",
+        "why": "O kubectl só fala com o API server."
+      }
+    ]
+  },
+  "ex-yz1pqzbz": {
+    "prompt": "Com a sincronização automática desligada, o argocd app rollback funciona. Em que estado ele deixa?",
+    "choices": [
+      {
+        "text": "Synced, e a revisão antiga vira a main",
+        "why": "A main não muda."
+      },
+      {
+        "text": "Degraded, até uma nova sincronização",
+        "why": "A saúde depende dos objetos, não do rollback."
+      },
+      {
+        "text": "Synced, com o Git reescrito",
+        "why": "O Argo CD nunca escreve no Git."
+      },
+      {
+        "text": "OutOfSync até o Git ser corrigido",
+        "why": "Isso. Honesto, e a correção continua sendo no Git."
+      }
+    ]
+  },
+  "ex-at9zmnfh": {
+    "prompt": "Depois do app of apps, o que ainda fica fora do Git?",
+    "choices": [
+      {
+        "text": "Os manifestos do staging",
+        "why": "Eles sempre estiveram no Git."
+      },
+      {
+        "text": "Toda Application",
+        "why": "Todas estão em argocd/ agora."
+      },
+      {
+        "text": "O root.yaml e a instalação do Argo CD",
+        "why": "Isso. O bootstrap, reduzido a dois arquivos."
+      },
+      {
+        "text": "Nada",
+        "why": "Algo precisa existir antes de o agente ler o Git."
+      }
+    ]
+  },
+  "ex-vbnvk512": {
+    "prompt": "O projeto bulletin permite só Namespace entre os tipos de escopo de cluster. O que seria recusado?",
+    "choices": [
+      {
+        "text": "Um Service na produção",
+        "why": "Tem namespace, num destino permitido."
+      },
+      {
+        "text": "Um ClusterRole",
+        "why": "Isso. De escopo de cluster e fora da lista."
+      },
+      {
+        "text": "O Namespace staging",
+        "why": "Namespace está na lista."
+      },
+      {
+        "text": "Um Deployment no staging",
+        "why": "Tem namespace, num destino permitido."
+      }
+    ]
+  },
+  "ex-m556gqa8": {
+    "prompt": "O que o API server do Argo CD faz quando você pede um sync?",
+    "choices": [
+      {
+        "text": "Pede ao controller",
+        "why": "Isso. Ele mesmo não aplica nada."
+      },
+      {
+        "text": "Gera o Kustomize",
+        "why": "Esse é o trabalho do repo server."
+      },
+      {
+        "text": "Clona o repositório",
+        "why": "Esse é o trabalho do repo server."
+      },
+      {
+        "text": "Aplica os manifestos",
+        "why": "Esse é o trabalho do controller."
+      }
+    ]
+  },
+  "ex-zchgxnty": {
+    "prompt": "O que é uma Application?",
+    "choices": [
+      {
+        "text": "Uma imagem de contêiner",
+        "why": "Imagens ficam dentro dos manifestos."
+      },
+      {
+        "text": "Uma instalação do Argo CD",
+        "why": "Uma instalação tem muitas."
+      },
+      {
+        "text": "Um repositório Git",
+        "why": "Várias Applications podem ler um."
+      },
+      {
+        "text": "Uma seta do Git ao cluster",
+        "why": "Isso. Repositório, revisão, caminho, namespace."
+      }
+    ]
+  },
+  "ex-v94qmshs": {
+    "prompt": "Por que a kustomization nomeia v3.5.4 na URL de instalação?",
+    "choices": [
+      {
+        "text": "O Kustomize não baixa a mais recente",
+        "why": "Ele baixa qualquer URL."
+      },
+      {
+        "text": "O Argo CD recusa arquivos sem versão",
+        "why": "Ele não confere."
+      },
+      {
+        "text": "O GitHub exige",
+        "why": "Qualquer URL funciona."
+      },
+      {
+        "text": "Mesma versão, mesmos bytes",
+        "why": "Isso. Um upgrade é uma mudança de uma linha."
+      }
+    ]
+  },
+  "ex-s2sw1wyq": {
+    "prompt": "Depois de instalar o Argo CD, quanta memória o contêiner do control plane usava?",
+    "choices": [
+      {
+        "text": "1.306GiB",
+        "why": "Isso. Como o docker stats mostrou."
+      },
+      {
+        "text": "15.72GiB",
+        "why": "Esse é o limite, a memória da máquina."
+      },
+      {
+        "text": "66.81MiB",
+        "why": "Esse é o registry."
+      },
+      {
+        "text": "104.2MiB",
+        "why": "Esse é o Gitea."
+      }
+    ]
+  },
+  "ex-21smhvhk": {
+    "prompt": "Que escopo tem o token do Argo CD no Gitea?",
+    "choices": [
+      {
+        "text": "read:repository",
+        "why": "Isso. Ele nunca faz push."
+      },
+      {
+        "text": "write:user",
+        "why": "Ele não muda configurações."
+      },
+      {
+        "text": "admin",
+        "why": "Ele não precisa de nada parecido."
+      },
+      {
+        "text": "write:repository",
+        "why": "Ele não escreve nada."
+      }
+    ]
+  },
+  "ex-4nmq18yp": {
+    "prompt": "Antes do primeiro sync, por que o Argo CD diz OutOfSync para objetos que o Git não mudou?",
+    "choices": [
+      {
+        "text": "Estão sem saúde",
+        "why": "Estão Healthy."
+      },
+      {
+        "text": "Ainda sem a anotação de rastreio",
+        "why": "Isso. Nada foi sincronizado ainda."
+      },
+      {
+        "text": "A imagem está errada",
+        "why": "O diff mostra só a anotação."
+      },
+      {
+        "text": "O repositório está inacessível",
+        "why": "Ele leu o repositório."
+      }
+    ]
+  },
+  "ex-z3hpm50a": {
+    "prompt": "De onde vem a resposta a 'qual commit o staging está rodando?'",
+    "choices": [
+      {
+        "text": "Do commit mais novo da main",
+        "why": "A main pode estar à frente do cluster."
+      },
+      {
+        "text": "Do controller que o aplicou",
+        "why": "Isso. Registrado, não adivinhado."
+      },
+      {
+        "text": "Dos labels dos pods",
+        "why": "Eles não trazem revisão."
+      },
+      {
+        "text": "De quem fez o último merge",
+        "why": "Pessoas não registram isso."
+      }
+    ]
+  },
+  "ex-ha6vbvqb": {
+    "prompt": "Por que prune e selfHeal vêm desligados por padrão?",
+    "choices": [
+      {
+        "text": "Só funcionam com Helm",
+        "why": "Funcionam com qualquer fonte."
+      },
+      {
+        "text": "Precisam de licença",
+        "why": "Fazem parte do Argo CD."
+      },
+      {
+        "text": "São lentos",
+        "why": "A velocidade não é o motivo."
+      },
+      {
+        "text": "Eles apagam e sobrescrevem",
+        "why": "Isso. Quem começa escolhe ligar."
+      }
+    ]
+  },
+  "ex-hyzvjs82": {
+    "prompt": "Sem política de sync, o que o Argo CD faz com um commit novo?",
+    "choices": [
+      {
+        "text": "Só informa",
+        "why": "Isso. Aplicar é um comando."
+      },
+      {
+        "text": "Apaga os objetos antigos",
+        "why": "Isso pede prune."
+      },
+      {
+        "text": "Recusa o commit",
+        "why": "Ele nunca mexe no Git."
+      },
+      {
+        "text": "Aplica na hora",
+        "why": "Isso pede automated."
+      }
+    ]
+  }
+}

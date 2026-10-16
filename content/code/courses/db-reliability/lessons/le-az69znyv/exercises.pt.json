@@ -1,0 +1,219 @@
+{
+  "ex-97r33tha": {
+    "prompt": "Quais são as duas unidades em que se mede o atraso de replicação?",
+    "hint": "Uma distância, e uma duração.",
+    "choices": [
+      { "text": "Linhas e transações por segundo", "why": "O pg_stat_replication não informa nenhuma das duas." },
+      { "text": "Segmentos arquivados e segmentos faltando", "why": "Isso descreve o arquivo, não o atraso de um standby." },
+      { "text": "Bytes de log, e segundos", "why": "Isso. Bytes dizem quanto log há entre o standby e o primário; segundos dizem quão antiga é uma mudança quando chega." },
+      { "text": "Checkpoints e restart points", "why": "Isso é sobre recuperação de crash, não sobre atraso." }
+    ]
+  },
+  "ex-r70tqfty": {
+    "prompt": "Qual expressão dá quantos bytes um standby está atrás?",
+    "hint": "Subtraia duas posições.",
+    "choices": [
+      { "text": "pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)", "why": "Isso. A posição do primário menos a posição reaplicada do standby, em bytes." },
+      { "text": "now() - replay_lag", "why": "Isso mistura um timestamp com um intervalo e não mede distância alguma." },
+      { "text": "pg_size_pretty(replay_lag)", "why": "replay_lag é um tempo, não um tamanho." },
+      { "text": "count(*) FROM pg_stat_replication", "why": "Isso conta standbys." }
+    ]
+  },
+  "ex-n35awawt": {
+    "prompt": "Associe cada medida à pergunta que ela responde.",
+    "hint": "Perdido, desatualizado, lento.",
+    "pairs": [
+      { "left": "Bytes de atraso do replay_lsn", "right": "Quanto log uma promoção teria que reaplicar ou perder" },
+      { "left": "replay_lag", "right": "Quão antiga pode ser uma leitura no standby" },
+      { "left": "write_lag e flush_lag", "right": "Quão lentos são a rede e o disco do standby" }
+    ],
+    "right_distractors": [
+      "Quantos standbys estão conectados"
+    ]
+  },
+  "ex-m7aqjnsj": {
+    "prompt": "`write_lag` e `flush_lag` estão abaixo de um milissegundo; `replay_lag` está em quarenta segundos. Onde está o problema?",
+    "hint": "O log chega; ele é aplicado?",
+    "choices": [
+      { "text": "Na rede entre os dois servidores", "why": "O write_lag seria grande se o log demorasse a chegar." },
+      { "text": "No disco do primário", "why": "O disco do primário não aparece nessas três colunas." },
+      { "text": "No arquivo", "why": "O streaming não passa pelo arquivo." },
+      { "text": "No standby, que não está reaplicando", "why": "Isso. O log chega e fica parado sem ser reaplicado; o replay está pausado, lento ou bloqueado no standby." }
+    ]
+  },
+  "ex-q2pgk7yq": {
+    "prompt": "Ninguém escreve no primário há uma hora. O que as colunas `_lag` mostram?",
+    "hint": "Quando foi feita a última medida?",
+    "choices": [
+      { "text": "Uma hora, já que nada foi reaplicado", "why": "Elas não contam o tempo desde a última mudança." },
+      { "text": "A última medida delas", "why": "Isso. Elas guardam o valor da última mudança enviada e não crescem enquanto nada acontece." },
+      { "text": "NULL, assim que o primário fica ocioso", "why": "Na lição elas mantiveram os milissegundos enquanto ocioso." },
+      { "text": "Zero, já que o standby está em dia", "why": "Elas mostraram os milissegundos anteriores, não zero." }
+    ]
+  },
+  "ex-37mqzxb1": {
+    "prompt": "Num primário ocioso, `now() - pg_last_xact_replay_timestamp()` no standby foi de 0,6 para 21 segundos. Quão atrás estava o standby?",
+    "hint": "Compare as posições que ele imprimiu.",
+    "choices": [
+      { "text": "Vinte e um segundos", "why": "Isso é o tempo desde a última transação, não atraso." },
+      { "text": "Nada atrás", "why": "Isso. O recebido, o reaplicado e a posição do primário eram o mesmo LSN." },
+      { "text": "Cerca de um segmento", "why": "As posições eram idênticas." },
+      { "text": "Desconhecido sem o pg_stat_replication", "why": "As posições do próprio standby e a do primário responderam." }
+    ]
+  },
+  "ex-m5mr44ch": {
+    "prompt": "Que regra a lição tira das duas medidas no primário ocioso?",
+    "hint": "Um tipo de medida nunca erra quando nada acontece.",
+    "choices": [
+      { "text": "Alertar só em horário comercial", "why": "Isso esconde a noite em que uma indisponibilidade começa." },
+      { "text": "Medir o atraso só no standby", "why": "A visão do primário deu a resposta certa aqui." },
+      { "text": "Gravar uma linha de heartbeat por segundo, para o tempo funcionar", "why": "Um heartbeat é uma técnica real, mas não é a conclusão da lição." },
+      { "text": "Comparar posições; usar o tempo ao lado delas", "why": "Isso. Bytes de atraso está certo num primário ocioso, e um tempo só tem sentido quando algo se move." }
+    ]
+  },
+  "ex-7qdpf2c5": {
+    "prompt": "O replay estava pausado e o pedido 50001 foi feito no primário. O que uma consulta no standby encontrou?",
+    "hint": "O log estava lá; ele foi aplicado?",
+    "choices": [
+      { "text": "Pedido nenhum", "why": "Isso. count 0, uma leitura desatualizada." },
+      { "text": "O pedido, pelo log recebido", "why": "Log recebido não fica visível até ser reaplicado." },
+      { "text": "Um erro, já que o replay estava pausado", "why": "Um standby pausado continua respondendo consultas, a partir do seu passado." },
+      { "text": "Metade das colunas do pedido", "why": "Uma linha é reaplicada inteira ou não é." }
+    ]
+  },
+  "ex-sa8evb6n": {
+    "prompt": "Por que uma leitura desatualizada é pior que uma página lenta para uma loja?",
+    "hint": "O que o cliente faz em seguida?",
+    "choices": [
+      { "text": "Mostra preços errados", "why": "Ela mostra dados antigos, que aqui são um pedido que falta." },
+      { "text": "O primário fica lento", "why": "Leituras no standby não tocam o primário." },
+      { "text": "O cliente não vê o pedido e o faz de novo", "why": "Isso. A loja lê do passado e o cliente age com base nele." },
+      { "text": "O standby cai", "why": "Nada cai; ele responde a partir do passado." }
+    ]
+  },
+  "ex-nv22veaf": {
+    "prompt": "Ponha em ordem os passos da aplicação para ler a própria escrita num standby.",
+    "hint": "Escrever, lembrar onde, conferir, ler.",
+    "items": [
+      "Fazer o commit da escrita no primário",
+      "Pedir ao primário o pg_current_wal_lsn()",
+      "Perguntar ao standby se o pg_last_wal_replay_lsn() chegou lá",
+      "Ler do standby se der t, senão do primário"
+    ],
+    "trap": "Pedir a posição antes do commit daria uma posição que o commit já ultrapassou."
+  },
+  "ex-kdk5q2ny": {
+    "prompt": "Além de comparar posições, que dois jeitos de ler as próprias escritas a lição cita?",
+    "hint": "Um custa uma leitura no primário; o outro custa todo commit.",
+    "choices": [
+      { "text": "Um statement_timeout maior; ou um slot maior", "why": "Nenhum dos dois deixa o standby em dia." },
+      { "text": "Pausar o replay; ou um dump noturno", "why": "Pausar deixa as leituras mais desatualizadas." },
+      { "text": "synchronous_commit = off; ou um segundo standby", "why": "off deixa tudo mais rápido e menos seguro, e um segundo standby fica igualmente desatualizado." },
+      { "text": "O primário após uma escrita; ou remote_apply", "why": "Isso. O primeiro é simples; o segundo faz cada commit esperar o replay do standby." }
+    ]
+  },
+  "ex-0ep4h4tt": {
+    "prompt": "Num standby, `pg_last_wal_____lsn()` devolve a posição até a qual o log foi aplicado aos seus dados.",
+    "hint": "A palavra que a lição 11 usou para aplicar o log.",
+    "blanks": [
+      { "accept": ["replay"] }
+    ]
+  },
+  "ex-fga9yg1h": {
+    "prompt": "A verificação lista os standbys mais de 64 MB atrás e alerta quando devolve uma linha. O único standby para. O que ela informa?",
+    "hint": "O que o pg_stat_replication guarda sobre ele?",
+    "choices": [
+      { "text": "standby1, já que está infinitamente atrás", "why": "Um standby desconectado está ausente da view." },
+      { "text": "Um erro, já que o standby está inacessível", "why": "A consulta roda no primário e dá certo." },
+      { "text": "Nada: um standby ausente não tem linha", "why": "Isso. Sem linha, sem alerta, exit 0, no pior atraso que existe." },
+      { "text": "Uma linha com atraso NULL", "why": "Não há linha alguma." }
+    ]
+  },
+  "ex-4maykyk5": {
+    "prompt": "Por que o `lagcheck.sh` recebe os nomes dos standbys como argumentos?",
+    "hint": "O que ele não tem como saber de outro jeito?",
+    "choices": [
+      { "text": "Para notar um que falta", "why": "Isso. Um standby que sumiu é invisível a não ser que alguém tenha anotado que ele deveria estar lá." },
+      { "text": "O psql precisa deles para conectar", "why": "Ele se conecta só ao primário." },
+      { "text": "Para consultar a porta de cada standby", "why": "Ele lê a view do primário." },
+      { "text": "Pelos nomes dos slots", "why": "Ele filtra por application_name, não por slot." }
+    ]
+  },
+  "ex-vbhnr9zm": {
+    "prompt": "`SELECT max(pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)) > 67108864 FROM pg_stat_replication` sem nenhum standby conectado devolve o quê?",
+    "hint": "max sobre zero linhas.",
+    "choices": [
+      { "text": "false", "why": "max sobre nenhuma linha é NULL, e NULL > qualquer coisa é NULL." },
+      { "text": "NULL, que alerta algum trata como verdadeiro", "why": "Isso. A comparação é desconhecida e o alerta fica quieto." },
+      { "text": "true", "why": "Nada é comparado para dar true." },
+      { "text": "Um erro", "why": "Agregações sobre conjuntos vazios são válidas." }
+    ]
+  },
+  "ex-qhhzdp38": {
+    "prompt": "O `lagcheck.sh` informou `BEHIND by 45096800 bytes`. Cerca de quantos MB são isso (1 MB = 1048576 bytes), arredondado para o número inteiro mais próximo?",
+    "hint": "Divida.",
+    "unit": "MB"
+  },
+  "ex-hzn7ywk8": {
+    "prompt": "Por que a verificação de atraso não deve rodar só no agendador do próprio primário?",
+    "hint": "Qual noite importa mais?",
+    "choices": [
+      { "text": "Ela precisa de um superusuário", "why": "Onde ela roda não muda o papel que ela usa." },
+      { "text": "O cron não roda scripts de shell", "why": "Roda." },
+      { "text": "Ela morre com o primário", "why": "Isso. Na noite em que a máquina do primário some, ninguém fica sabendo do standby." },
+      { "text": "O primário está ocupado", "why": "A verificação são duas consultas pequenas." }
+    ]
+  },
+  "ex-3qb2jc4m": {
+    "prompt": "Por que o pgBackRest se recusou a buscar segmentos para o standby no começo?",
+    "hint": "Leia o erro dele.",
+    "choices": [
+      { "text": "O pg1-path dele era o diretório de dados do main", "why": "Isso. O standby é outro diretório, e o --pg1-path diz ao archive-get qual." },
+      { "text": "O arquivo tinha sido apagado", "why": "O info listou o arquivo até o segmento ...14." },
+      { "text": "O usuário do standby não conseguia ler o repositório", "why": "Os dois rodam como postgres." },
+      { "text": "O restore_command exige um restart", "why": "Ele foi mudado com um reload, que funcionou." }
+    ]
+  },
+  "ex-0064edja": {
+    "prompt": "Depois da correção, o que o standby fez com os segmentos que faltavam ao seu slot perdido?",
+    "hint": "Três linhas do log dele.",
+    "choices": [
+      { "text": "Esperou um base backup novo", "why": "Nada foi reconstruído." },
+      { "text": "Pulou-os e fez streaming a partir da posição atual", "why": "Um standby não pode pular log; seria outro banco." },
+      { "text": "Pediu ao primário que os recriasse", "why": "O primário os removeu e não consegue gerá-los de novo." },
+      { "text": "Restaurou-os do arquivo, e depois fez streaming", "why": "Isso. Do ...12 ao ...14 pelo arquivo, depois streaming a partir de onde o arquivo terminava." }
+    ]
+  },
+  "ex-ambhf1y6": {
+    "prompt": "Associe cada mecanismo ao que ele dá a um standby.",
+    "hint": "Perto, longe, limitado.",
+    "pairs": [
+      { "left": "O slot", "right": "Log recente guardado no pg_wal do primário" },
+      { "left": "O arquivo", "right": "Cada segmento, guardado em outro lugar" },
+      { "left": "max_slot_wal_keep_size", "right": "Um limite para o slot não encher o disco do primário" }
+    ],
+    "right_distractors": [
+      "Uma cópia de cada consulta que o standby rodou"
+    ]
+  },
+  "ex-52hds5j8": {
+    "prompt": "Depois que o standby voltou pelo arquivo, o slot mostrava `wal_status: unreserved`, mesmo depois de um checkpoint. O que a lição sugere vigiar em vez disso?",
+    "hint": "Dois números, das lições 11 e 13.",
+    "choices": [
+      { "text": "Nada; recriar o slot toda noite", "why": "Isso joga fora o log para o qual o slot existe." },
+      { "text": "Quanto o slot retém, e o atraso", "why": "Isso. A palavra continuou estranha; as quantidades é que dizem que algo está errado." },
+      { "text": "O tamanho do arquivo de log do standby", "why": "Isso mede o logging, não a replicação." },
+      { "text": "O wal_status, com um alerta em unreserved", "why": "Ele continuaria disparando com um standby saudável." }
+    ]
+  },
+  "ex-dd9afsyg": {
+    "prompt": "Uma aplicação lê as páginas de pedidos de um standby assíncrono, e clientes relatam pedidos que somem por alguns segundos. O que resolve com o menor custo?",
+    "hint": "Só algumas leituras precisam estar em dia.",
+    "choices": [
+      { "text": "Tornar o standby síncrono com remote_apply", "why": "Funciona, e todo commit da loja paga por isso." },
+      { "text": "Ler do primário os pedidos do próprio cliente", "why": "Isso, ou conferir o LSN antes. Só as leituras das próprias escritas precisam estar em dia." },
+      { "text": "Baixar o max_slot_wal_keep_size", "why": "Isso diz respeito ao disco do primário, não à atualidade dos dados." },
+      { "text": "Reiniciar o standby a cada hora", "why": "Isso o faz ficar ainda mais atrás." }
+    ]
+  }
+}

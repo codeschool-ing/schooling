@@ -1,0 +1,371 @@
+{
+  "ex-vtczf5ma": {
+    "prompt": "O `noise.py` termina conferindo que os gradientes dos lotes, pesados pelo tamanho, dão na média o gradiente do conjunto inteiro. Por que isso importa para o SGD?",
+    "hint": "Pense em muitos passos, e não em um.",
+    "choices": [
+      {
+        "text": "Prova que cada gradiente de lote aponta exatamente morro abaixo",
+        "why": "Nenhum lote apontou: os cossenos foram de 0,354 a 0,868, nunca 1."
+      },
+      {
+        "text": "Quer dizer que o tamanho do lote pode ser qualquer um sem efeito",
+        "why": "A média não diz nada sobre o ruído de cada passo, e o tamanho do lote muda isso; a aula 6 mede."
+      },
+      {
+        "text": "Os erros de passos isolados se cancelam ao longo de muitos passos",
+        "why": "Certo. A estimativa é não enviesada, então o que sobra depois de muitos passos ruidosos é a descida que a aula 2 fazia."
+      },
+      {
+        "text": "Mostra que a rede terminou de aprender",
+        "why": "Nenhum passo foi dado no `noise.py`; os pesos foram os iniciais o tempo todo."
+      }
+    ]
+  },
+  "ex-t0jbfb55": {
+    "prompt": "O gradiente do lote 3 teve cosseno de 0,354 com o do conjunto inteiro. O que um passo pequeno contra ele faz com a perda do conjunto de treino inteiro?",
+    "hint": "Qual o sinal do cosseno?",
+    "choices": [
+      {
+        "text": "Aumenta, porque 0,354 é uma estimativa ruim",
+        "why": "Ruim não é morro acima. Só um cosseno negativo apontaria morro acima para o conjunto inteiro."
+      },
+      {
+        "text": "Baixa, menos do que um passo ao longo do gradiente exato baixaria",
+        "why": "Certo. Um cosseno positivo quer dizer que a direção ainda desce para o conjunto inteiro, só que não pelo caminho mais íngreme."
+      },
+      {
+        "text": "Nada, já que a perda depende só do lote",
+        "why": "Os pesos são os mesmos para todas as imagens, então um passo para um lote mexe na perda de todas."
+      },
+      {
+        "text": "Não dá para saber sem calcular o gradiente inteiro",
+        "why": "O cosseno foi calculado contra o gradiente inteiro, e o sinal dele já responde."
+      }
+    ]
+  },
+  "ex-xdxhqk10": {
+    "prompt": "O `fit` corta as 1.077 imagens de treino em lotes de 32. Quantos passos ele dá numa época?",
+    "hint": "O último lote é menor que os outros, e ainda conta.",
+    "unit": "passos"
+  },
+  "ex-6qq7y3m2": {
+    "prompt": "No `bowl.py`, por que a descida do gradiente simples não escapa do arrasto em `x` usando uma taxa de 0,03?",
+    "hint": "Multiplique `y` por 1 − 100 × taxa.",
+    "choices": [
+      {
+        "text": "Uma taxa maior deixaria o arrasto em `x` mais lento",
+        "why": "Ao longo de `x` o fator é 1 − taxa, então uma taxa maior o deixa mais rápido ali."
+      },
+      {
+        "text": "A taxa é fixada pelo gradiente e não pode ser mudada",
+        "why": "A taxa é uma configuração que o programa escolhe; `descend` a recebe como argumento."
+      },
+      {
+        "text": "De través `y` seria multiplicado por −2 a cada passo e cresceria",
+        "why": "Certo. Acima de 0,02 a direção íngreme diverge, então ela limita a taxa para todas as direções."
+      },
+      {
+        "text": "É preciso momentum antes de qualquer taxa acima de 0,019 ser permitida",
+        "why": "O limite é 0,02, dado pela parede íngreme, e o momentum não o tira da descida simples."
+      }
+    ]
+  },
+  "ex-7qcs4wcs": {
+    "prompt": "Um vale tem a perda 0,5 × (x² + 400 y²). Qual é a maior taxa de aprendizado com que a descida do gradiente simples não cresce de través, ao longo de `y`?",
+    "hint": "Cada passo multiplica `y` por 1 − 400 × taxa. Quando esse fator chega a −1?"
+  },
+  "ex-bt2wnk96": {
+    "prompt": "Comparado com a descida simples na mesma taxa, o que o momentum não conseguiu melhorar no `bowl.py`?",
+    "hint": "Compare as duas colunas de `y` no passo 40.",
+    "choices": [
+      {
+        "text": "O balanço de través, que ele deixou maior",
+        "why": "Certo: 0,122 contra 0,015 no passo 40. Todo o ganho foi ao longo do chão."
+      },
+      {
+        "text": "A distância do ponto mais baixo depois de 40 passos",
+        "why": "Essa foi a que mais melhorou: 0,316 contra 4,643."
+      },
+      {
+        "text": "O avanço em `x` nos primeiros 14 passos",
+        "why": "No passo 14 o momentum estava em -0,229 e a descida simples em -7,645."
+      },
+      {
+        "text": "A maior taxa que a direção íngreme permite",
+        "why": "Os dois rodaram na mesma taxa de 0,019, então a taxa não era o que se comparava."
+      }
+    ]
+  },
+  "ex-xm2mgwga": {
+    "prompt": "O Adam com taxa de 0,001 encontra um parâmetro com gradiente estável de 100 e outro com gradiente estável de 0,01. Quanto cada um anda por passo?",
+    "hint": "Olhe a coluna Adam do `adam_steps.py`.",
+    "choices": [
+      {
+        "text": "0,1 e 0,00001",
+        "why": "Isso é o SGD simples com a mesma taxa, a primeira linha que o programa imprimiu."
+      },
+      {
+        "text": "0,001 cada um",
+        "why": "Certo. Com um gradiente estável, `m_hat` dividido pela raiz de `v_hat` dá 1, então o passo é a taxa."
+      },
+      {
+        "text": "0,003162 cada um, e depois crescendo",
+        "why": "Essa é a coluna sem correção, os passos que o Adam daria sem a correção de viés."
+      },
+      {
+        "text": "0,1 e 0,001",
+        "why": "Nenhum dos dois mantém um passo proporcional ao gradiente no Adam."
+      }
+    ]
+  },
+  "ex-jcfmndrj": {
+    "prompt": "Como seriam os primeiros passos do Adam sem a divisão por `1 - beta ** t`?",
+    "hint": "Depois de um passo, `m` guarda um décimo do gradiente e `v` um milésimo do quadrado dele.",
+    "choices": [
+      {
+        "text": "Pequenos demais, porque as duas médias corridas começam em zero e enchem devagar",
+        "why": "As duas são pequenas demais, mas `v` mais ainda, e ela fica sob uma raiz no denominador."
+      },
+      {
+        "text": "Iguais, já que a correção se cancela na razão",
+        "why": "Só se cancelaria se `beta1` e `beta2` fossem iguais; com 0,9 e 0,999 não são."
+      },
+      {
+        "text": "Várias vezes a taxa, de 0,003162 até 0,005797 no passo 5",
+        "why": "Certo. A média dos quadrados fica mais atrasada, então a razão sem correção sai grande demais."
+      },
+      {
+        "text": "Zero, até `t` passar de 1.000",
+        "why": "`m` deixa de ser zero depois do primeiro gradiente, e o passo também."
+      }
+    ]
+  },
+  "ex-hwznjbmc": {
+    "prompt": "No Adam, o peso A sempre recebe um gradiente de 0,000001, enquanto o gradiente do peso B tem tamanho médio 5 mas troca de sinal ao acaso. Qual tende a andar mais por passo?",
+    "hint": "O que `m` faz com sinais, e o que `v` faz com tamanhos?",
+    "choices": [
+      {
+        "text": "B, porque o gradiente dele é cinco milhões de vezes maior",
+        "why": "O tamanho é dividido fora pela raiz de `v`; é esse o objetivo do Adam."
+      },
+      {
+        "text": "A, porque o gradiente dele mantém o sinal",
+        "why": "Certo. A razão de A fica perto de 1 e ele anda mais ou menos a taxa; o `m` de B se cancela perto de zero enquanto `v` fica grande."
+      },
+      {
+        "text": "Os dois andam a taxa, já que o Adam ignora o gradiente",
+        "why": "O Adam ignora a escala do gradiente, não o sinal: o terceiro parâmetro do `adam_steps.py` andou uma fração da taxa."
+      },
+      {
+        "text": "Nenhum: um gradiente abaixo de `eps` é tratado como zero",
+        "why": "`eps` é 1e-8, bem abaixo de 0,000001, e só protege uma divisão."
+      }
+    ]
+  },
+  "ex-8bdahgdp": {
+    "prompt": "Por que os otimizadores do `optim.py` escrevem `p -= self.lr * g` em vez de `p = p - self.lr * g`?",
+    "hint": "De onde vêm os arrays de `self.params`?",
+    "choices": [
+      {
+        "text": "É mais rápido, e os resultados são iguais de qualquer jeito",
+        "why": "Os resultados diferem: a segunda forma deixaria os pesos da rede como estavam."
+      },
+      {
+        "text": "Para mudar os arrays da própria rede, e não uma cópia nova",
+        "why": "Certo. `p` é o próprio `W` ou `b` da camada, e só uma mudança no lugar chega até ele."
+      },
+      {
+        "text": "Porque o NumPy recusa subtrair arrays de formatos diferentes",
+        "why": "`p` e `g` têm o mesmo formato, então as duas formas calculam."
+      },
+      {
+        "text": "Para zerar o gradiente antes da próxima passada para trás",
+        "why": "Nada aqui zera um gradiente: o `Linear.backward` o sobrescreve."
+      }
+    ]
+  },
+  "ex-94a5nh44": {
+    "prompt": "Na primeira época do `train.py` a perda de treino é 1,2015 e a de validação 0,3860. O que explica a diferença?",
+    "hint": "Em que momento da época cada uma é medida?",
+    "choices": [
+      {
+        "text": "As imagens de validação por acaso são dígitos mais fáceis que as de treino",
+        "why": "A divisão é um embaralhamento aleatório dos mesmos dados; nada torna um conjunto mais fácil."
+      },
+      {
+        "text": "A rede já está com sobreajuste nas imagens de treino depois de uma única época",
+        "why": "Sobreajuste aparece ao contrário: perda de treino abaixo da de validação."
+      },
+      {
+        "text": "A perda de treino faz a média de lotes tirados com os pesos ainda ruins",
+        "why": "Certo. A validação é medida uma vez, no fim da época, com os pesos com que ela terminou."
+      },
+      {
+        "text": "O momentum soma a velocidade dele à perda de treino",
+        "why": "A velocidade muda os pesos; a perda é calculada só pelo `softmax_cross_entropy`."
+      }
+    ]
+  },
+  "ex-qf1khx2t": {
+    "prompt": "Toda classe do `optim.py` oferece um método, que o `fit` chama uma vez por lote depois da passada para trás. O nome dele é ___.",
+    "hint": "É o mesmo nome que os otimizadores do PyTorch usam.",
+    "blanks": [
+      {
+        "accept": [
+          "step",
+          "step()",
+          "opt.step()",
+          "opt.step"
+        ]
+      }
+    ]
+  },
+  "ex-zmj4nt5r": {
+    "prompt": "No `sweep.py`, qual escolha mexeu mais na acurácia de validação final?",
+    "hint": "Compare a variação ao longo de uma linha com a variação entre as melhores células das linhas.",
+    "choices": [
+      {
+        "text": "O otimizador: o Adam ganhou do SGD em todas as taxas",
+        "why": "O SGD ganhou do Adam de 0,1 para cima, e o melhor do SGD, 0,981, ficou acima dos 0,969 do Adam."
+      },
+      {
+        "text": "A taxa, por uns 87 pontos contra uns um",
+        "why": "Certo. Ao longo de uma linha a taxa foi do acaso ao topo; as melhores células das três linhas foram 0,981, 0,978 e 0,969."
+      },
+      {
+        "text": "Nenhuma: toda execução terminou a um ponto das outras",
+        "why": "Várias execuções terminaram no acaso, perto de 0,1."
+      },
+      {
+        "text": "O número de épocas, que diferia entre as linhas",
+        "why": "Toda execução teve 20 épocas."
+      }
+    ]
+  },
+  "ex-tedfsy9x": {
+    "prompt": "Um colega treinou bem uma rede com SGD simples em 0,5, trocou para o Adam mantendo 0,5, e a acurácia caiu para o acaso. O que ele deve fazer primeiro?",
+    "hint": "O que a taxa do Adam mede?",
+    "choices": [
+      {
+        "text": "Voltar para o SGD, já que o Adam não serve para esta rede",
+        "why": "Nada testou o Adam ainda, só uma taxa que pertence a outro otimizador."
+      },
+      {
+        "text": "Pôr um agendamento cosseno e manter 0,5 como a taxa máxima do agendamento",
+        "why": "Um agendamento passa a maior parte das épocas perto da taxa máxima; ele não substitui achar a taxa."
+      },
+      {
+        "text": "Varrer a taxa do Adam, com fator de umas três vezes, bem abaixo de 0,5",
+        "why": "Certo. A taxa do Adam é mais ou menos um tamanho de passo, e o pico dela na varredura foi em 0,03."
+      },
+      {
+        "text": "Manter a taxa em 0,5 e treinar por muito mais épocas até a rede se recuperar",
+        "why": "Alta demais falha de repente; mais épocas numa taxa que quebrou a rede não a consertam."
+      }
+    ]
+  },
+  "ex-y8xe7vm2": {
+    "prompt": "Ponha os três otimizadores em ordem da taxa de aprendizado em que cada um teve o pico no `sweep.py`, da menor taxa para a maior.",
+    "hint": "O pico do momentum é um décimo do SGD simples.",
+    "items": [
+      "Adam",
+      "Momentum",
+      "SGD"
+    ]
+  },
+  "ex-v9rxgaq3": {
+    "prompt": "Por que o decaimento em degraus ganhou dos outros agendamentos para o Adam com taxa máxima de 0,1?",
+    "hint": "Compare as taxas dele com as boas taxas do Adam na varredura.",
+    "choices": [
+      {
+        "text": "Porque uma queda brusca da taxa sempre treina melhor que uma queda suave",
+        "why": "Nada aqui mostra isso em geral; uma semente de uma rede não pode."
+      },
+      {
+        "text": "As épocas finais rodaram em 0,01 e 0,001, que a varredura achou boas",
+        "why": "Certo. O cosseno ficou acima de 0,01 até a época 17, então a maior parte da execução dele foi alta demais."
+      },
+      {
+        "text": "Porque começou com aquecimento",
+        "why": "O decaimento em degraus começou em 0,1 desde a época 1; só o `warmup_cosine` aquece."
+      },
+      {
+        "text": "Porque usou um embaralhamento diferente dos outros três",
+        "why": "As quatro execuções usaram `seed=epoch`, então viram os mesmos lotes na mesma ordem."
+      }
+    ]
+  },
+  "ex-dyc11x5r": {
+    "prompt": "Ligue cada agendamento do `schedules.py` ao que ele faz com a taxa.",
+    "hint": "Leia a tabela que ele imprimiu, coluna por coluna.",
+    "pairs": [
+      {
+        "left": "`step_decay`",
+        "right": "divide por dez em épocas fixas"
+      },
+      {
+        "left": "`cosine`",
+        "right": "a desliza para baixo ao longo de meia onda até perto de zero"
+      },
+      {
+        "left": "`warmup_cosine`",
+        "right": "sobe até o topo em três épocas, depois desliza para baixo"
+      },
+      {
+        "left": "`constant`",
+        "right": "a mantém no topo"
+      }
+    ],
+    "right_distractors": [
+      "a baixa quando a perda de validação para de melhorar"
+    ]
+  },
+  "ex-3j2ma1bd": {
+    "prompt": "Quais destas as execuções desta aula mostraram? Escolha todas as que valem.",
+    "hint": "Cada verdadeira tem uma captura por trás.",
+    "choices": [
+      {
+        "text": "Um gradiente de lote apontou morro abaixo para o conjunto inteiro, mesmo discordando da direção dele",
+        "why": "Certo: todo cosseno foi positivo, de 0,354 a 0,868."
+      },
+      {
+        "text": "A mesma configuração do Adam deu 0,894 e 0,950 com embaralhamentos diferentes",
+        "why": "Certo: a varredura e o agendamento constante diferem só na ordem dos lotes."
+      },
+      {
+        "text": "O momentum amorteceu o zigue-zague de través",
+        "why": "Ele balançou por mais tempo: 0,122 no passo 40 contra 0,015 da descida simples."
+      },
+      {
+        "text": "A taxa padrão do Adam, 0,001, foi a melhor dele na varredura",
+        "why": "Deu 0,933; 0,03 deu 0,969."
+      },
+      {
+        "text": "A melhor taxa do SGD simples foi mais de dez vezes a do Adam",
+        "why": "Certo: 1 contra 0,03, e as duas taxas medem coisas diferentes."
+      }
+    ]
+  },
+  "ex-nbyh14va": {
+    "prompt": "Uma execução com taxa constante chegou a uma boa acurácia, mas a perda de validação continua subindo e descendo na mesma medida nas últimas dez épocas. Qual mudança esta aula indica primeiro?",
+    "hint": "Que tipo de ruído não encolhe perto do fundo?",
+    "choices": [
+      {
+        "text": "Trocar o otimizador de momentum para Adam",
+        "why": "O otimizador mexeu nos resultados uns um ponto na varredura, e os passos do Adam também tremem com taxa fixa."
+      },
+      {
+        "text": "Aumentar a taxa para os pesos deixarem a tremedeira para trás",
+        "why": "Um passo maior aumenta a tremedeira em volta do mínimo, não diminui."
+      },
+      {
+        "text": "Pôr momentum com `beta` de 0,99 para suavizar",
+        "why": "Uma bola mais pesada passa do ponto e balança por mais tempo, como o `bowl.py` mostrou com 0,9."
+      },
+      {
+        "text": "Baixar a taxa nas épocas finais com um agendamento",
+        "why": "Certo. O ruído de lote continua enquanto o gradiente encolhe, então passos finais menores deixam os pesos se acomodarem."
+      }
+    ]
+  }
+}

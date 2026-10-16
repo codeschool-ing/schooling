@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-93ayyprv",
+    "version": 1,
+    "section": "computing-twice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program calls `purchases.cache()`. When is the copy filled?",
+    "hint": "Is `cache()` an action?",
+    "choices": [
+      {
+        "text": "By the first action that computes `purchases`",
+        "correct": true,
+        "why": "Right. `cache()` only marks the DataFrame."
+      },
+      {
+        "text": "When the application ends",
+        "correct": false,
+        "why": "That is when it is dropped."
+      },
+      {
+        "text": "At once, before `cache()` returns",
+        "correct": false,
+        "why": "That is SQL's `CACHE TABLE`, not `cache()`."
+      },
+      {
+        "text": "At the second action on it",
+        "correct": false,
+        "why": "The first action fills it; the second reads it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmapyky3",
+    "version": 1,
+    "section": "computing-twice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a cache, the first action's tasks worked 20.0 seconds in total, and without one 15.2. What was the extra work?",
+    "hint": "What else did it do besides counting?",
+    "choices": [
+      {
+        "text": "It also built the cached copy",
+        "correct": true,
+        "why": "Right. The first use pays for the copy."
+      },
+      {
+        "text": "A cached DataFrame is read row by row",
+        "correct": false,
+        "why": "The cache is columnar, and it was being filled, not read."
+      },
+      {
+        "text": "The cache switched off adaptive execution for that query",
+        "correct": false,
+        "why": "It changes nothing about adaptive execution."
+      },
+      {
+        "text": "The cache moved all the data through the driver first",
+        "correct": false,
+        "why": "Each executor caches its own partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-40c2thc5",
+    "version": 1,
+    "section": "computing-twice",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without a cache each action costs 6 seconds. With one, the first costs 8 and each later one 1. From how many actions is the cache cheaper in total?",
+    "hint": "Compare 6n with 8 + (n − 1).",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0y9f6ms8",
+    "version": 1,
+    "section": "storage-levels",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each storage level to what happens to a partition that does not fit in memory.",
+    "hint": "One of them keeps nothing.",
+    "pairs": [
+      {
+        "left": "`MEMORY_AND_DISK`",
+        "right": "It goes to the executor's local disk"
+      },
+      {
+        "left": "`MEMORY_ONLY`",
+        "right": "It is recomputed every time it is needed"
+      },
+      {
+        "left": "`MEMORY_AND_DISK_2`",
+        "right": "It goes to disk, on two executors"
+      }
+    ],
+    "right_distractors": [
+      "It is sent to the driver"
+    ]
+  },
+  {
+    "id": "ex-ahg0t4nh",
+    "version": 1,
+    "section": "storage-levels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At `MEMORY_ONLY`, three of 45 partitions did not fit. Why did counting again take 8.6 seconds instead of under two?",
+    "hint": "Where did those three come from the second time?",
+    "choices": [
+      {
+        "text": "Spark wrote the missing three to disk first",
+        "correct": false,
+        "why": "At `MEMORY_ONLY` nothing goes to disk."
+      },
+      {
+        "text": "The second count cleared the whole cache and started it again",
+        "correct": false,
+        "why": "42 partitions stayed cached."
+      },
+      {
+        "text": "They were read from the files again",
+        "correct": true,
+        "why": "Right. A partition not kept is recomputed every time."
+      },
+      {
+        "text": "Partitions in memory are slower than on disk",
+        "correct": false,
+        "why": "Memory is the fast part."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qs5j94y",
+    "version": 1,
+    "section": "storage-levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the cached clicks take less memory than their 396 MB of Parquet files?",
+    "hint": "In what form does a DataFrame's cache keep rows?",
+    "choices": [
+      {
+        "text": "Part of the copy went to the executors' disks without being reported",
+        "correct": false,
+        "why": "The page reported 0.0 MiB on disk."
+      },
+      {
+        "text": "Spark caches them in its own compressed columnar form",
+        "correct": true,
+        "why": "Right. Not as one object per row."
+      },
+      {
+        "text": "The cache drops duplicate rows",
+        "correct": false,
+        "why": "A cache never changes the rows."
+      },
+      {
+        "text": "Only the columns that `count` needed were kept in the cache",
+        "correct": false,
+        "why": "A cache holds every column of the DataFrame."
+      }
+    ]
+  },
+  {
+    "id": "ex-1k7g45ec",
+    "version": 1,
+    "section": "what-to-cache",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good candidates for a cache? Choose all that apply.",
+    "hint": "Used more than once, and expensive to make.",
+    "choices": [
+      {
+        "text": "The raw clicks, straight after the read, for one query",
+        "correct": false,
+        "why": "One use, and Parquet's read is already cheap."
+      },
+      {
+        "text": "The links read by every iteration of a loop",
+        "correct": true,
+        "why": "Yes. That is section 04."
+      },
+      {
+        "text": "A join's result that three reports read",
+        "correct": true,
+        "why": "Yes. The join is saved twice."
+      },
+      {
+        "text": "A DataFrame written to Parquet once and never read again",
+        "correct": false,
+        "why": "One use: the cache only adds its cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-2etw166t",
+    "version": 1,
+    "section": "what-to-cache",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cache that was complete a minute ago now has missing partitions, and no error was raised. What most likely happened?",
+    "hint": "Storage memory is shared with something.",
+    "choices": [
+      {
+        "text": "The Parquet files changed underneath",
+        "correct": false,
+        "why": "Spark does not watch the files."
+      },
+      {
+        "text": "Running tasks needed that memory for their work",
+        "correct": true,
+        "why": "Right. They evicted the least recently used partitions first."
+      },
+      {
+        "text": "The driver wrote them to the checkpoint directory",
+        "correct": false,
+        "why": "Checkpoints only happen when asked for."
+      },
+      {
+        "text": "The cache expires after sixty seconds",
+        "correct": false,
+        "why": "A cache has no time limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdhhgsb3",
+    "version": 1,
+    "section": "what-to-cache",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In SQL, `CACHE ___ TABLE purchases AS SELECT ...` waits for the first query to fill the copy, as `cache()` does.",
+    "hint": "The opposite of eager.",
+    "blanks": [
+      {
+        "accept": [
+          "LAZY"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-aqjzpz2d",
+    "version": 1,
+    "section": "an-iterative-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `pagerank.py`, what stays on the cluster and what goes back to the driver each iteration?",
+    "hint": "Which is millions of rows and which is 3,000 numbers?",
+    "choices": [
+      {
+        "text": "Both stay, and nothing returns until the end",
+        "correct": false,
+        "why": "That is section 06's version, with a growing plan."
+      },
+      {
+        "text": "Both come back to the driver every iteration",
+        "correct": false,
+        "why": "The links never leave the cluster."
+      },
+      {
+        "text": "The links stay; the ranks come back",
+        "correct": true,
+        "why": "Right. Small state in the driver, large invariant data cached."
+      },
+      {
+        "text": "The ranks stay; the links come back",
+        "correct": false,
+        "why": "The links are far too many for the driver."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t3eatw2",
+    "version": 1,
+    "section": "an-iterative-loop",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one iteration of `pagerank.py` in order.",
+    "hint": "It starts in the driver and ends there.",
+    "items": [
+      "Turn the ranks into a DataFrame",
+      "Join the links to the ranks by source book",
+      "Sum what each destination book receives",
+      "Collect the sums and damp them into new ranks"
+    ]
+  },
+  {
+    "id": "ex-47f5ewj6",
+    "version": 1,
+    "section": "losing-a-cached-partition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After an executor holding cached partitions dies, what does the next action do?",
+    "hint": "The driver still knows how each partition was made.",
+    "choices": [
+      {
+        "text": "Fails, because cached data cannot be rebuilt",
+        "correct": false,
+        "why": "Only a local checkpoint has nothing to rebuild from."
+      },
+      {
+        "text": "Recomputes every partition, cached or not",
+        "correct": false,
+        "why": "Only the missing ones: 14.6 s, not the first 37.6."
+      },
+      {
+        "text": "Recomputes the missing ones from their lineage",
+        "correct": true,
+        "why": "Right, and caches them again."
+      },
+      {
+        "text": "Waits for the executor to come back with its memory",
+        "correct": false,
+        "why": "A new executor starts empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdbmfe9p",
+    "version": 1,
+    "section": "losing-a-cached-partition",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To keep every cached partition on two executors, persist with the level `MEMORY_AND_DISK___`.",
+    "hint": "A suffix of two characters.",
+    "blanks": [
+      {
+        "accept": [
+          "_2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bb2gqqt5",
+    "version": 1,
+    "section": "lineage",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan had 291 lines after five iterations and 576 after ten. How many lines did each iteration add?",
+    "hint": "Five iterations between the two.",
+    "value": 57,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4zwcbp6t",
+    "version": 1,
+    "section": "lineage",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does a very long lineage cost? Choose all that apply.",
+    "hint": "Three places were named.",
+    "choices": [
+      {
+        "text": "More disk space in the checkpoint directory",
+        "correct": false,
+        "why": "A lineage is a plan, not files."
+      },
+      {
+        "text": "Planning time at every action",
+        "correct": true,
+        "why": "Yes. The whole plan is analysed each time."
+      },
+      {
+        "text": "Longer recomputation after a failure",
+        "correct": true,
+        "why": "Yes. A lost partition may need every earlier step."
+      },
+      {
+        "text": "A stack overflow in the driver, past some depth",
+        "correct": true,
+        "why": "Yes, with an error that names no line of the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-wet664xz",
+    "version": 1,
+    "section": "checkpointing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Spark warn about a checkpoint directory on the local filesystem?",
+    "hint": "Who writes it and who reads it back?",
+    "choices": [
+      {
+        "text": "Checkpoints must be encrypted",
+        "correct": false,
+        "why": "Nothing here is about encryption."
+      },
+      {
+        "text": "Local disks are too slow for checkpoints",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Other machines' executors could not read it back",
+        "correct": true,
+        "why": "Right. It belongs on HDFS or an object store."
+      },
+      {
+        "text": "A local directory fills up faster than one in HDFS would",
+        "correct": false,
+        "why": "Space is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2v8k2dj",
+    "version": 1,
+    "section": "checkpointing",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each call to what is true of it.",
+    "hint": "Only one survives a lost executor.",
+    "pairs": [
+      {
+        "left": "`checkpoint()`",
+        "right": "Writes to shared storage and survives a lost executor"
+      },
+      {
+        "left": "`localCheckpoint()`",
+        "right": "Cuts the plan, and a lost executor fails the job"
+      },
+      {
+        "left": "`cache()`",
+        "right": "Keeps the plan, and rebuilds what is lost"
+      }
+    ],
+    "right_distractors": [
+      "Writes the plan itself to a file"
+    ]
+  },
+  {
+    "id": "ex-abq4ejxp",
+    "version": 1,
+    "section": "when-not-to-cache",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is caching the raw clicks straight after `read.parquet` usually a poor trade?",
+    "hint": "What would the cache save?",
+    "choices": [
+      {
+        "text": "A cached DataFrame cannot be filtered",
+        "correct": false,
+        "why": "It can, like any other."
+      },
+      {
+        "text": "The cache would be written to the Parquet files",
+        "correct": false,
+        "why": "A cache lives in the executors."
+      },
+      {
+        "text": "It saves only a read that Parquet already makes cheap",
+        "correct": true,
+        "why": "Right, and holds every column to do it."
+      },
+      {
+        "text": "Spark refuses to cache a table read from files",
+        "correct": false,
+        "why": "This lesson cached exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbbytyr5",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to the change it calls for.",
+    "hint": "Read what each one says about memory, time or plan.",
+    "pairs": [
+      {
+        "left": "Every iteration of a loop rereads the same input from files",
+        "right": "Cache the input before the loop"
+      },
+      {
+        "left": "Each iteration takes longer, though the work per iteration is the same",
+        "right": "Checkpoint every few iterations"
+      },
+      {
+        "left": "A sort spills since the program started caching everything",
+        "right": "Unpersist what is no longer used"
+      },
+      {
+        "left": "A cached table of 40 columns is read by queries using 3",
+        "right": "Select the 3 columns before caching"
+      }
+    ],
+    "right_distractors": [
+      "Raise spark.sql.shuffle.partitions"
+    ]
+  },
+  {
+    "id": "ex-xzrak0kq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cached result took an hour to compute, is read twenty times, and losing it to a dead executor would delay a report. Which level fits?",
+    "hint": "What does a second copy buy?",
+    "choices": [
+      {
+        "text": "`MEMORY_ONLY`",
+        "correct": false,
+        "why": "A partition that does not fit is recomputed every read."
+      },
+      {
+        "text": "`localCheckpoint()`",
+        "correct": false,
+        "why": "A lost executor would fail the job outright."
+      },
+      {
+        "text": "`MEMORY_AND_DISK_2`",
+        "correct": true,
+        "why": "Right. A lost executor costs a lookup, not an hour."
+      },
+      {
+        "text": "`DISK_ONLY`",
+        "correct": false,
+        "why": "One copy, so a lost executor still costs the hour."
+      }
+    ]
+  }
+]

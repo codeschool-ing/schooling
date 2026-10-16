@@ -1,0 +1,2486 @@
+[
+  {
+    "id": "ex-emxe119e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In this course, what makes data \"big\"?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Data that arrives every second from many sources",
+        "correct": false,
+        "why": "That is a stream, which may be small."
+      },
+      {
+        "text": "More than a terabyte of files on disk",
+        "correct": false,
+        "why": "It is not a size."
+      },
+      {
+        "text": "Any data kept in Parquet",
+        "correct": false,
+        "why": "A format says nothing about size."
+      },
+      {
+        "text": "One machine runs out of something",
+        "correct": true,
+        "why": "Right: memory, disk or time."
+      }
+    ]
+  },
+  {
+    "id": "ex-d89cj3jr",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the three ways a machine runs out, from the most sudden to the one that decides most real cases.",
+    "hint": "Lesson 1.",
+    "items": [
+      "Memory",
+      "Disk",
+      "Time"
+    ]
+  },
+  {
+    "id": "ex-tbatd0pd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did splitting the pairs into sixteen files by a hash of the visitor let the count fit in 163 MB?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Duplicates were dropped while splitting the data",
+        "correct": false,
+        "why": "Nothing was dropped."
+      },
+      {
+        "text": "The hash compressed the visitor ids into numbers",
+        "correct": false,
+        "why": "The ids were kept as they were."
+      },
+      {
+        "text": "Each visitor's pairs were in one file",
+        "correct": true,
+        "why": "Right, so each file could be counted alone."
+      },
+      {
+        "text": "Sixteen files are read in parallel by sixteen cores",
+        "correct": false,
+        "why": "They were read one at a time."
+      }
+    ]
+  },
+  {
+    "id": "ex-aa3tfane",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why was bucket file 09 larger than the other fifteen?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "It was compressed with a weaker codec",
+        "correct": false,
+        "why": "They were all written the same way."
+      },
+      {
+        "text": "It was the last file and got the remainder",
+        "correct": false,
+        "why": "A hash has no remainder file."
+      },
+      {
+        "text": "Its visitors bought more books than the others",
+        "correct": false,
+        "why": "The difference was one visitor."
+      },
+      {
+        "text": "It held the crawler",
+        "correct": true,
+        "why": "Right: one visitor with four events in a hundred."
+      }
+    ]
+  },
+  {
+    "id": "ex-expjf7mb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why consider scaling up before scaling out?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Clusters cannot read Parquet files",
+        "correct": false,
+        "why": "They read little else."
+      },
+      {
+        "text": "A single machine never fails",
+        "correct": false,
+        "why": "It fails, and takes everything with it."
+      },
+      {
+        "text": "A bigger machine has no upper limit at all",
+        "correct": false,
+        "why": "It does; scaling out has none."
+      },
+      {
+        "text": "It needs no change to the program",
+        "correct": true,
+        "why": "Right. A cluster brings coordination costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-98xt85b3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "visitors.py peaked at 2.3 GB and buckets.py at 163 MB. Roughly how many times less memory did the split need? Round to a whole number.",
+    "hint": "2.3 GB is about 2,355 MB.",
+    "value": 14,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-sxdm8pag",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The lab's standalone cluster has one master and ___ workers of one core each.",
+    "hint": "Lesson 1.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "three"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h9f6dhn5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A stage of 31 tasks runs on a cluster with 3 cores. How many waves does it take?",
+    "hint": "Round up.",
+    "value": 11,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wpvj7kby",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which loss does a running Spark job not survive?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "One executor among three",
+        "correct": false,
+        "why": "Its tasks run again elsewhere."
+      },
+      {
+        "text": "One worker of three, mid-job",
+        "correct": false,
+        "why": "The job finished on two."
+      },
+      {
+        "text": "The driver",
+        "correct": true,
+        "why": "Right. It holds the plan and the results."
+      },
+      {
+        "text": "The master, after the job has started",
+        "correct": false,
+        "why": "Running executors carry on without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wfktx2c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What does Spark assume about a task when it retries it after an executor is lost?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "The data it read has been deleted",
+        "correct": false,
+        "why": "The input is still where it was."
+      },
+      {
+        "text": "The lost executor will come back with its memory",
+        "correct": false,
+        "why": "A new one starts empty."
+      },
+      {
+        "text": "Running it again gives the same result",
+        "correct": true,
+        "why": "Right. A task with side effects breaks that."
+      },
+      {
+        "text": "The driver kept a copy of its output",
+        "correct": false,
+        "why": "Output lives on executors."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyf8fegs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why did speculation never launch the copy of the straggler in this lab?",
+    "hint": "Where would the copy have to run?",
+    "choices": [
+      {
+        "text": "A copy never runs on the original's host, and there was one host",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Python tasks cannot be copied",
+        "correct": false,
+        "why": "Any task can be."
+      },
+      {
+        "text": "Speculation is off in Spark 4",
+        "correct": false,
+        "why": "It was switched on for the test."
+      },
+      {
+        "text": "The straggler finished first",
+        "correct": false,
+        "why": "It was marked speculatable and still no copy ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcb4n0tq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A second application on the standalone cluster shows `WAITING` with zero cores. Why?",
+    "hint": "The standalone master's one policy.",
+    "choices": [
+      {
+        "text": "It asked for more memory than a worker has",
+        "correct": false,
+        "why": "That would fail, not wait."
+      },
+      {
+        "text": "The master was restarting at that moment",
+        "correct": false,
+        "why": "The master was fine."
+      },
+      {
+        "text": "Python applications wait for Java ones to finish",
+        "correct": false,
+        "why": "Language does not matter."
+      },
+      {
+        "text": "The first took every core",
+        "correct": true,
+        "why": "Right: first come, first served."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp2cktvc",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each standalone role to what it does.",
+    "hint": "Lesson 2.",
+    "pairs": [
+      {
+        "left": "Master",
+        "right": "Keeps the list of workers and hands out cores"
+      },
+      {
+        "left": "Worker",
+        "right": "Offers a machine's cores and starts executors"
+      },
+      {
+        "left": "Driver",
+        "right": "Plans the job and schedules its tasks"
+      }
+    ],
+    "right_distractors": [
+      "Stores the blocks of the input"
+    ]
+  },
+  {
+    "id": "ex-mt9k3zdg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A 1.2 GB file is stored in HDFS with 128 MB blocks and three replicas. How many block copies are there?",
+    "hint": "Ten blocks.",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4c2mkzj1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why are many small files a problem for HDFS in particular?",
+    "hint": "Where is the metadata kept?",
+    "choices": [
+      {
+        "text": "Datanodes refuse files under 128 MB",
+        "correct": false,
+        "why": "Any size is accepted."
+      },
+      {
+        "text": "The namenode keeps every file and block in memory",
+        "correct": true,
+        "why": "Right. The data did not grow; the metadata did."
+      },
+      {
+        "text": "Small files cannot be replicated",
+        "correct": false,
+        "why": "They are, like any other."
+      },
+      {
+        "text": "Each file needs its own datanode",
+        "correct": false,
+        "why": "A datanode holds many."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzr51t6e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why does an object store's missing rename matter for jobs that write output?",
+    "hint": "How did the classic commit finish a job?",
+    "choices": [
+      {
+        "text": "Renames cost money per byte",
+        "correct": false,
+        "why": "There is no rename to pay for."
+      },
+      {
+        "text": "Object stores cannot hold Parquet files",
+        "correct": false,
+        "why": "They hold any bytes."
+      },
+      {
+        "text": "Spark cannot list a bucket",
+        "correct": false,
+        "why": "It lists by prefix."
+      },
+      {
+        "text": "Committing by renaming becomes a slow copy that is not atomic",
+        "correct": true,
+        "why": "Right. Readers can see half an output."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jje8vze",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The lab first recorded every HDFS task as `ANY`. What does that locality level mean?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "The task read a replica in the same rack",
+        "correct": false,
+        "why": "That is `RACK_LOCAL`."
+      },
+      {
+        "text": "Spark could not match the task to its block's host",
+        "correct": true,
+        "why": "Right. The names did not agree."
+      },
+      {
+        "text": "The block was corrupt and read again",
+        "correct": false,
+        "why": "Nothing was corrupt."
+      },
+      {
+        "text": "The data was already in the executor's memory",
+        "correct": false,
+        "why": "That is `PROCESS_LOCAL`."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdq2famq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A directory named `day=2025-03-14` holds files whose `day` column is that value; the column is called a ___ column and is not stored in the files.",
+    "hint": "Hive gave the word its meaning.",
+    "blanks": [
+      {
+        "accept": [
+          "partition"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-63erzn85",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Order a lake's layers from the data as it arrived to tables built for questions.",
+    "hint": "Lesson 3.",
+    "items": [
+      "Raw (bronze)",
+      "Silver",
+      "Gold"
+    ]
+  },
+  {
+    "id": "ex-43ndtvfe",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put a MapReduce job's steps in order.",
+    "hint": "Lesson 4.",
+    "items": [
+      "Map each record to key-value pairs",
+      "Partition the pairs by key",
+      "Sort and merge each reducer's input",
+      "Reduce each key's values"
+    ]
+  },
+  {
+    "id": "ex-2dzettx7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "When is it correct to use the reducer as a combiner?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Only when there is a single reducer",
+        "correct": false,
+        "why": "The number of reducers does not matter."
+      },
+      {
+        "text": "When reducing in pieces gives the same answer",
+        "correct": true,
+        "why": "Right: sums and counts, not medians."
+      },
+      {
+        "text": "Always, since combiners only save bytes",
+        "correct": false,
+        "why": "A median of medians is wrong."
+      },
+      {
+        "text": "When the mapper is written in Java",
+        "correct": false,
+        "why": "Language does not matter."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2cvvmg8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Counting events by kind, what did the combiner do to the shuffle?",
+    "hint": "223,679,952 bytes before.",
+    "choices": [
+      {
+        "text": "Cut it to 684 bytes",
+        "correct": true,
+        "why": "Right: a few partial counts per map task."
+      },
+      {
+        "text": "Left it the same but made it faster",
+        "correct": false,
+        "why": "The bytes fell."
+      },
+      {
+        "text": "Doubled it with extra partial results",
+        "correct": false,
+        "why": "Partial counts are tiny."
+      },
+      {
+        "text": "Halved it, to about 112 MB",
+        "correct": false,
+        "why": "Far more than half."
+      }
+    ]
+  },
+  {
+    "id": "ex-0a2a9kt5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a map-side join need that a reduce-side join does not?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "A small side that fits in each mapper",
+        "correct": true,
+        "why": "Right. Spark calls it a broadcast join."
+      },
+      {
+        "text": "Both inputs sorted by the join key",
+        "correct": false,
+        "why": "That is a merge join's need."
+      },
+      {
+        "text": "Input in HDFS rather than on a local disk",
+        "correct": false,
+        "why": "Either works."
+      },
+      {
+        "text": "Exactly one reducer",
+        "correct": false,
+        "why": "It needs no reducer for the join."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cz5dqmn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why could the two-step MapReduce histogram not go faster than about a minute?",
+    "hint": "What sits between the two jobs?",
+    "choices": [
+      {
+        "text": "The first job's output is written to disk and read back",
+        "correct": true,
+        "why": "Right. Spark keeps it in memory."
+      },
+      {
+        "text": "MapReduce allows one job per hour",
+        "correct": false,
+        "why": "No such limit."
+      },
+      {
+        "text": "Python is slower than Java",
+        "correct": false,
+        "why": "Both jobs paid the same disk round trip."
+      },
+      {
+        "text": "The histogram needs a single reducer",
+        "correct": false,
+        "why": "Reducers were not the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcd1fyf3",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A job moved 224 MB through the shuffle to produce 58 bytes of answer. About how many million times larger was the shuffle than the answer? Round to a whole number.",
+    "hint": "224,000,000 ÷ 58.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-j3vjcw18",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A program defines a filter and a `select` and nothing else. What has Spark read?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "The first partition, to check the schema",
+        "correct": false,
+        "why": "Parquet's footer gives the schema."
+      },
+      {
+        "text": "Nothing yet",
+        "correct": true,
+        "why": "Right. Transformations wait for an action."
+      },
+      {
+        "text": "The columns named in the select",
+        "correct": false,
+        "why": "Nothing runs before an action."
+      },
+      {
+        "text": "Every file, into the driver's memory",
+        "correct": false,
+        "why": "Nothing goes to the driver."
+      }
+    ]
+  },
+  {
+    "id": "ex-cs70vh01",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What did letting Spark infer the CSV schema cost?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Wrong answers in the count",
+        "correct": false,
+        "why": "The answers matched."
+      },
+      {
+        "text": "A second executor per worker",
+        "correct": false,
+        "why": "Executors were the same."
+      },
+      {
+        "text": "A full read of the text before the real job",
+        "correct": true,
+        "why": "Right: 1.3 GB read twice."
+      },
+      {
+        "text": "Nothing, since inference uses the first line",
+        "correct": false,
+        "why": "It read every line."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4jn4269",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is a Python UDF slower than a built-in function?",
+    "hint": "Where does each run?",
+    "choices": [
+      {
+        "text": "Python functions run on the driver only",
+        "correct": false,
+        "why": "They run on executors, in Python workers."
+      },
+      {
+        "text": "Rows travel to a Python process and back",
+        "correct": true,
+        "why": "Right. A built-in runs in the executor's JVM."
+      },
+      {
+        "text": "UDFs disable every optimisation of the query",
+        "correct": false,
+        "why": "Only those that need to see inside them."
+      },
+      {
+        "text": "UDFs are compiled again for every row",
+        "correct": false,
+        "why": "They are serialised once."
+      }
+    ]
+  },
+  {
+    "id": "ex-s49wrxps",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Purchases per device were asked three ways. Which are true? Choose all that apply.",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "SQL needs a different cluster",
+        "correct": false,
+        "why": "Same session, same cluster."
+      },
+      {
+        "text": "The DataFrame and SQL versions share one optimiser",
+        "correct": true,
+        "why": "Yes: Catalyst."
+      },
+      {
+        "text": "The RDD version was optimised by Catalyst",
+        "correct": false,
+        "why": "RDD code runs as written."
+      },
+      {
+        "text": "All three gave the same answer",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-v40r5m8a",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "`count`, `collect` and `write` are ___: they make Spark run the plan.",
+    "hint": "The opposite of transformations.",
+    "blanks": [
+      {
+        "accept": [
+          "actions",
+          "action"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h2hrffcb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the plans Spark makes of one query.",
+    "hint": "explain(\"extended\").",
+    "items": [
+      "Parsed",
+      "Analysed",
+      "Optimised",
+      "Physical"
+    ]
+  },
+  {
+    "id": "ex-e59tbhzs",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each optimisation to what it skips.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "Column pruning",
+        "right": "Columns the query does not use"
+      },
+      {
+        "left": "Partition pruning",
+        "right": "Directories ruled out by the filter"
+      },
+      {
+        "left": "Predicate pushdown",
+        "right": "Row groups whose ranges rule out the filter"
+      }
+    ],
+    "right_distractors": [
+      "Executors that are idle"
+    ]
+  },
+  {
+    "id": "ex-693sw1y8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The same day chosen by a Python function opened all 365 files. Why?",
+    "hint": "What can the planner see?",
+    "choices": [
+      {
+        "text": "The function returned the wrong day",
+        "correct": false,
+        "why": "The answer was the same."
+      },
+      {
+        "text": "Python cannot read partition columns",
+        "correct": false,
+        "why": "It read them, after opening every file."
+      },
+      {
+        "text": "The planner cannot see inside it",
+        "correct": true,
+        "why": "Right, so it cannot prune with it."
+      },
+      {
+        "text": "Adaptive execution was switched off",
+        "correct": false,
+        "why": "It was on, and does not prune files."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdzjrvdb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "What can adaptive execution change while a query runs? Choose all that apply.",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "Turn a sort-merge join into a broadcast join",
+        "correct": true,
+        "why": "Yes, when a side turns out small."
+      },
+      {
+        "text": "Choose which files to read",
+        "correct": false,
+        "why": "That is decided before the scan starts."
+      },
+      {
+        "text": "Rewrite a Python function as a built-in",
+        "correct": false,
+        "why": "Nothing rewrites a UDF."
+      },
+      {
+        "text": "Merge small shuffle partitions",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-50zgpjkz",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A side estimated under `spark.sql.autoBroadcastJoinThreshold`, ___ MB by default, is broadcast.",
+    "hint": "Lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "10"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wx4e3szk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Where is a job cut into stages?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Wherever a file ends",
+        "correct": false,
+        "why": "Files become tasks."
+      },
+      {
+        "text": "At each executor's memory limit",
+        "correct": false,
+        "why": "Memory sets spilling, not stages."
+      },
+      {
+        "text": "At every line of the program that transforms data",
+        "correct": false,
+        "why": "Narrow steps chain inside one stage."
+      },
+      {
+        "text": "At each shuffle",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1svgctj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "An executor has a 768 MiB heap. Spark reserves 300 MiB and gives 60% of the rest to execution and storage. How many MiB is that?",
+    "hint": "(768 − 300) × 0.6.",
+    "value": 280.8,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-cfjeese7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 7's sort spilled most of its data to disk and still finished. What does spilling trade?",
+    "hint": "Executors spill; the driver does not.",
+    "choices": [
+      {
+        "text": "Correctness for speed",
+        "correct": false,
+        "why": "The answer stays right."
+      },
+      {
+        "text": "Network for compression",
+        "correct": false,
+        "why": "It is memory for disk."
+      },
+      {
+        "text": "Time for not failing",
+        "correct": true,
+        "why": "Right. A task that spills is slower, not dead."
+      },
+      {
+        "text": "The driver's memory for the executor's",
+        "correct": false,
+        "why": "Spill goes to local disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-zty9f08d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does `spark.driver.maxResultSize` protect?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "The driver, from a collect too large for it",
+        "correct": true,
+        "why": "Right. It turns a crash into an error."
+      },
+      {
+        "text": "The history server, from long logs",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "Executors, from spilling too much",
+        "correct": false,
+        "why": "Spill has its own memory."
+      },
+      {
+        "text": "The disk, from shuffle files",
+        "correct": false,
+        "why": "It limits results, not files."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h0skwkn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Grouping 24 million events by kind shuffled almost nothing. Why?",
+    "hint": "Lesson 4's combiner, in Spark.",
+    "choices": [
+      {
+        "text": "Adaptive execution skipped the shuffle entirely",
+        "correct": false,
+        "why": "The shuffle happened, small."
+      },
+      {
+        "text": "Kinds are stored in a separate file",
+        "correct": false,
+        "why": "They are a column of the clicks."
+      },
+      {
+        "text": "Each task sent partial counts",
+        "correct": true,
+        "why": "Right: four rows per task."
+      },
+      {
+        "text": "The grouping ran on the driver",
+        "correct": false,
+        "why": "It ran on the executors."
+      }
+    ]
+  },
+  {
+    "id": "ex-yab9rvwy",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each transformation to its kind.",
+    "hint": "Wide needs rows from every partition.",
+    "pairs": [
+      {
+        "left": "`filter`",
+        "right": "Narrow"
+      },
+      {
+        "left": "`groupBy`",
+        "right": "Wide"
+      }
+    ],
+    "right_distractors": [
+      "Cached"
+    ]
+  },
+  {
+    "id": "ex-qx5z595h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In a shuffle join keyed by visitor, why does one task get far more rows than the rest?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Its executor was given more memory",
+        "correct": false,
+        "why": "Rows follow the key's hash."
+      },
+      {
+        "text": "That task happened to be scheduled before the rest",
+        "correct": false,
+        "why": "Start order does not assign rows."
+      },
+      {
+        "text": "It read the largest input file",
+        "correct": false,
+        "why": "It read a shuffle partition."
+      },
+      {
+        "text": "A hot visitor's rows hash to the same task",
+        "correct": true,
+        "why": "Right. A hash cannot split one key."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm04kzrm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The skewed join's median task read 760 KiB and its largest 3,236 KiB. About how many times the median is that? Round to one decimal.",
+    "hint": "Divide.",
+    "value": 4.3,
+    "tolerance": 0.1
+  },
+  {
+    "id": "ex-18j2p90d",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each join strategy to when Spark picks it.",
+    "hint": "Lesson 8.",
+    "pairs": [
+      {
+        "left": "Broadcast hash join",
+        "right": "A side estimated under the threshold, or hinted"
+      },
+      {
+        "left": "Sort-merge join",
+        "right": "Two large sides joined by equality"
+      },
+      {
+        "left": "Broadcast nested loop join",
+        "right": "A condition with no equality in it"
+      }
+    ],
+    "right_distractors": [
+      "Two sides already in the same file"
+    ]
+  },
+  {
+    "id": "ex-n6xk4xwc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`F.broadcast(clicks)` on 24 million rows failed with \"Not enough memory to build and broadcast the table\". Which process ran out?",
+    "hint": "Who builds the table?",
+    "choices": [
+      {
+        "text": "The worker that ran the first task",
+        "correct": false,
+        "why": "Workers start executors; the build is the driver's."
+      },
+      {
+        "text": "The master, which hands out the cores",
+        "correct": false,
+        "why": "It holds no data."
+      },
+      {
+        "text": "The driver",
+        "correct": true,
+        "why": "Right. It collects the side and builds the hash table."
+      },
+      {
+        "text": "The history server",
+        "correct": false,
+        "why": "It reads logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfvksjgr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With eight salts the hot task shrank, yet the job took 44.5 s against 26.3 s. What did salting cost?",
+    "hint": "What grew eight times?",
+    "choices": [
+      {
+        "text": "Computing an extra hash for each of the events",
+        "correct": false,
+        "why": "Cheap next to a shuffle."
+      },
+      {
+        "text": "Turning adaptive execution off for the join",
+        "correct": false,
+        "why": "It was off in both runs."
+      },
+      {
+        "text": "Shuffling the small side eight times over",
+        "correct": true,
+        "why": "Right: 13.8 million visitor rows."
+      },
+      {
+        "text": "A different, wrong total",
+        "correct": false,
+        "why": "The answer was the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp838g88",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What does adaptive execution do to a skewed partition in a sort-merge join?",
+    "hint": "`skew=true`.",
+    "choices": [
+      {
+        "text": "Moves the partition to the driver to finish it there",
+        "correct": false,
+        "why": "Nothing goes to the driver."
+      },
+      {
+        "text": "Splits it, pairing each piece with the other side",
+        "correct": true,
+        "why": "Right: 203 tasks instead of 200."
+      },
+      {
+        "text": "Drops the hot key and reports it in the log",
+        "correct": false,
+        "why": "No row is dropped."
+      },
+      {
+        "text": "Doubles that executor's memory",
+        "correct": false,
+        "why": "Memory is fixed at start."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9r05ysa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What is the difference between `coalesce(4)` and `repartition(4)`?",
+    "hint": "Which one shuffles?",
+    "choices": [
+      {
+        "text": "`coalesce` merges partitions without a shuffle",
+        "correct": true,
+        "why": "Right. `repartition` shuffles into equal parts."
+      },
+      {
+        "text": "`coalesce` sorts each partition and `repartition` does not",
+        "correct": false,
+        "why": "Neither sorts."
+      },
+      {
+        "text": "`repartition` is for Parquet output",
+        "correct": false,
+        "why": "It works on any DataFrame."
+      },
+      {
+        "text": "They are two names for one operation",
+        "correct": false,
+        "why": "They behave differently."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3zmftcs",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A grouping with adaptive execution off and `spark.sql.shuffle.partitions` at 200 is written to Parquet. How many files does it write?",
+    "hint": "One per task.",
+    "value": 200,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ab69xga0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "After `df.cache()`, when is the copy made?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "When the driver runs short of memory and needs to free some",
+        "correct": false,
+        "why": "Unrelated."
+      },
+      {
+        "text": "Immediately, before the next line runs",
+        "correct": false,
+        "why": "That is SQL's `CACHE TABLE`."
+      },
+      {
+        "text": "During the first action that computes it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "When the application ends",
+        "correct": false,
+        "why": "The cache is dropped then."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1z010ch",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At `MEMORY_ONLY`, what happens to a partition that does not fit?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The job fails with an out-of-memory error",
+        "correct": false,
+        "why": "It carries on, slower."
+      },
+      {
+        "text": "It is written to the executor's local disk",
+        "correct": false,
+        "why": "That is `MEMORY_AND_DISK`."
+      },
+      {
+        "text": "Another executor keeps it",
+        "correct": false,
+        "why": "Only `_2` levels replicate."
+      },
+      {
+        "text": "It is recomputed when needed",
+        "correct": true,
+        "why": "Right. It is simply not kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wczd6aj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the PageRank loop, what made caching the links worth it?",
+    "hint": "Ten iterations.",
+    "choices": [
+      {
+        "text": "Caching sped up the first iteration",
+        "correct": false,
+        "why": "The first one paid for the copy."
+      },
+      {
+        "text": "Without it the loop failed on the third pass",
+        "correct": false,
+        "why": "It ran, slowly."
+      },
+      {
+        "text": "The ranks were too large to keep on the driver",
+        "correct": false,
+        "why": "3,000 numbers fit easily."
+      },
+      {
+        "text": "Each iteration read the same expensive links",
+        "correct": true,
+        "why": "Right: about 35 s to 10 s per iteration."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2yvat1n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What did `checkpoint()` do to the loop's plan of 1,146 lines?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Kept it in the driver's cache, unchanged",
+        "correct": false,
+        "why": "The plan was replaced, not cached."
+      },
+      {
+        "text": "Replaced it with a read of saved files",
+        "correct": true,
+        "why": "Right: four lines."
+      },
+      {
+        "text": "Compressed it so that the driver could hold it",
+        "correct": false,
+        "why": "It cut it."
+      },
+      {
+        "text": "Sent it to the history server",
+        "correct": false,
+        "why": "Unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-1w4xq7nt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "What does `localCheckpoint()` give up compared with `checkpoint()`?",
+    "hint": "Where does it write?",
+    "choices": [
+      {
+        "text": "Cutting the lineage of the plan",
+        "correct": false,
+        "why": "It cuts it too."
+      },
+      {
+        "text": "Working with DataFrames as well as RDDs",
+        "correct": false,
+        "why": "It works with them."
+      },
+      {
+        "text": "Speed",
+        "correct": false,
+        "why": "It is the faster one."
+      },
+      {
+        "text": "Surviving a lost executor",
+        "correct": true,
+        "why": "Right. Its blocks live in the executors."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5nhbsjq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "All seven columns of the clicks took 284.7 MiB cached, and three columns 51.4 MiB. What percentage of the space did the three columns take? Round to a whole number.",
+    "hint": "51.4 ÷ 284.7.",
+    "value": 18,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-bs39ggc2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A cached partition lost with its executor is rebuilt from its ___, the steps that made it.",
+    "hint": "Lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "lineage"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tg3wgzx5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does a columnar file suit analytical queries?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "It needs no footer",
+        "correct": false,
+        "why": "The footer is central to it."
+      },
+      {
+        "text": "Rows can be updated in place, without a rewrite",
+        "correct": false,
+        "why": "Columnar files are rewritten, not edited."
+      },
+      {
+        "text": "Each row is stored twice, once per layout",
+        "correct": false,
+        "why": "Once."
+      },
+      {
+        "text": "A query reads just the columns it names",
+        "correct": true,
+        "why": "Right, and alike values compress well."
+      }
+    ]
+  },
+  {
+    "id": "ex-mywvwjdg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why did `TIMESTAMP_MICROS` and version 2 pages shrink the timestamp column from 532 KiB to 4.2 KiB?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The timestamps were rounded down to the second",
+        "correct": false,
+        "why": "No precision was lost."
+      },
+      {
+        "text": "Duplicate rows were dropped",
+        "correct": false,
+        "why": "Every row remained."
+      },
+      {
+        "text": "64-bit integers allow delta encoding",
+        "correct": true,
+        "why": "Right, which v2 pages add. `INT96` allows neither."
+      },
+      {
+        "text": "zstd has a special mode for timestamp columns",
+        "correct": false,
+        "why": "A codec only sees bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6rgzv50",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What lets a reader skip a Parquet row group without reading it?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Each column's minimum and maximum",
+        "correct": true,
+        "why": "Right, kept in the footer."
+      },
+      {
+        "text": "The file's name and its directory",
+        "correct": false,
+        "why": "Names say nothing about values."
+      },
+      {
+        "text": "A cached copy of the file",
+        "correct": false,
+        "why": "Skipping happens before any read."
+      },
+      {
+        "text": "The codec chosen when the file was written",
+        "correct": false,
+        "why": "Codecs do not filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2d9vwmy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Sorting each day by book in small row groups made the files 25% larger. Which column grew the most, and why?",
+    "hint": "Where is a dictionary kept?",
+    "choices": [
+      {
+        "text": "`book_id`, because sorted values compress badly",
+        "correct": false,
+        "why": "It shrank to a quarter."
+      },
+      {
+        "text": "`visitor_id`, repeated in a dictionary per row group",
+        "correct": true,
+        "why": "Right: 156.6 to 448.7 KiB."
+      },
+      {
+        "text": "`kind`, which gained new values",
+        "correct": false,
+        "why": "Still four kinds."
+      },
+      {
+        "text": "`device`, which the sort scattered across the row groups of a day",
+        "correct": false,
+        "why": "It barely changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pavc3hg",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each way of writing January to its size.",
+    "hint": "Lesson 10's table.",
+    "pairs": [
+      {
+        "left": "Parquet, Snappy",
+        "right": "33.0 MiB"
+      },
+      {
+        "left": "Parquet, zstd",
+        "right": "19.6 MiB"
+      },
+      {
+        "left": "Parquet v2, zstd, micros",
+        "right": "7.2 MiB"
+      }
+    ],
+    "right_distractors": [
+      "120.0 MiB"
+    ]
+  },
+  {
+    "id": "ex-qtj0539n",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "ORC is the default file format of ___, whose transactional tables require it.",
+    "hint": "Lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "Hive"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ncd55917",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which filter does a bloom filter on `visitor_id` speed up?",
+    "hint": "Minimum and maximum say nothing for a random id.",
+    "choices": [
+      {
+        "text": "`visitor_id IS NOT NULL`",
+        "correct": false,
+        "why": "Null counts are in the footer already."
+      },
+      {
+        "text": "`visitor_id > 'v5'`",
+        "correct": false,
+        "why": "A range needs min and max."
+      },
+      {
+        "text": "`visitor_id = 'v1234567'`",
+        "correct": true,
+        "why": "Right: an equality."
+      },
+      {
+        "text": "`kind = 'view'`",
+        "correct": false,
+        "why": "Another column."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxvaq41s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What turns a directory of Parquet files into a Delta, Iceberg or Hudi table?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "A database server in front of the files",
+        "correct": false,
+        "why": "The log is files beside the data."
+      },
+      {
+        "text": "A file format of its own, replacing Parquet",
+        "correct": false,
+        "why": "The data files stay Parquet."
+      },
+      {
+        "text": "Sorted file names",
+        "correct": false,
+        "why": "Order is not the point."
+      },
+      {
+        "text": "A log of commits naming the table's files",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx0enffx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "How was the second attempt at appending February to the Delta table kept from doubling it?",
+    "hint": "Two write options.",
+    "choices": [
+      {
+        "text": "The first writer held a lock on the table until it finished",
+        "correct": false,
+        "why": "Delta takes no locks."
+      },
+      {
+        "text": "Spark refused a second job",
+        "correct": false,
+        "why": "The job ran; the write did nothing."
+      },
+      {
+        "text": "Delta compared the new rows with the table's",
+        "correct": false,
+        "why": "No rows were compared."
+      },
+      {
+        "text": "Its `txnAppId` and `txnVersion` were in the log",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc13c99s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After `VACUUM ... RETAIN 0 HOURS`, why could version 0 no longer be read?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Versions expire after a minute",
+        "correct": false,
+        "why": "They last as long as their files."
+      },
+      {
+        "text": "Its files were deleted",
+        "correct": true,
+        "why": "Right, though the log still listed it."
+      },
+      {
+        "text": "OPTIMIZE had renamed it to a later version",
+        "correct": false,
+        "why": "OPTIMIZE adds a commit."
+      },
+      {
+        "text": "The log was rewritten without that version",
+        "correct": false,
+        "why": "The log keeps its commits."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1j474h4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What did Iceberg's `days(ts)` partitioning let a query filtered on `ts` do?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Read a `day` column stored in each data file",
+        "correct": false,
+        "why": "No `day` column is written."
+      },
+      {
+        "text": "Skip other days' files with no partition named",
+        "correct": true,
+        "why": "Right: 2 read, 58 skipped."
+      },
+      {
+        "text": "Read the files without the catalogue",
+        "correct": false,
+        "why": "The catalogue found the table."
+      },
+      {
+        "text": "Merge two days into one file",
+        "correct": false,
+        "why": "Nothing was merged."
+      }
+    ]
+  },
+  {
+    "id": "ex-9c1y19h0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What makes a Hudi write an upsert rather than an append?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "Writing each batch to a directory of its own",
+        "correct": false,
+        "why": "Same table, same directory."
+      },
+      {
+        "text": "Sorting the batch by date",
+        "correct": false,
+        "why": "Order is not the mechanism."
+      },
+      {
+        "text": "A record key, plus a field to order versions",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Choosing merge on read instead of copy on write for the table",
+        "correct": false,
+        "why": "The table was copy on write and still upserted."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mkc6bah",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each table format to its first concern.",
+    "hint": "Where each one came from.",
+    "pairs": [
+      {
+        "left": "Delta Lake",
+        "right": "Transactions for Spark on files"
+      },
+      {
+        "left": "Apache Iceberg",
+        "right": "Tables of millions of files, for many engines"
+      },
+      {
+        "left": "Apache Hudi",
+        "right": "Frequent upserts and incremental reads"
+      }
+    ],
+    "right_distractors": [
+      "Compressing CSV"
+    ]
+  },
+  {
+    "id": "ex-7thcpkj7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Delta takes no locks: a writer checks for conflicts only when it commits. This is called ___ concurrency.",
+    "hint": "The opposite of pessimistic.",
+    "blanks": [
+      {
+        "accept": [
+          "optimistic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g8x3a4yj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In YARN cluster mode, where does a Spark driver run?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "On the machine where spark-submit was typed",
+        "correct": false,
+        "why": "That is client mode."
+      },
+      {
+        "text": "In the ApplicationMaster's container",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Inside the ResourceManager",
+        "correct": false,
+        "why": "It decides; it runs no drivers."
+      },
+      {
+        "text": "In the history server",
+        "correct": false,
+        "why": "It reads finished logs."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j6wy71p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With queues of 70% and 30%, maximum capacity equal to capacity, what did the analysts' job find when it arrived?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Half of the nightly job's containers, taken back for it",
+        "correct": false,
+        "why": "No preemption was configured."
+      },
+      {
+        "text": "Nothing free until the nightly job had finished",
+        "correct": false,
+        "why": "That is what queues prevent."
+      },
+      {
+        "text": "The whole cluster to itself",
+        "correct": false,
+        "why": "Its maximum was 30%."
+      },
+      {
+        "text": "Its own 30% free",
+        "correct": true,
+        "why": "Right, while the nightly job used its 70%."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgszf2nx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Of Hive, which part does nearly every engine still use?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Its web interface for writing queries",
+        "correct": false,
+        "why": "Not the lasting part."
+      },
+      {
+        "text": "Its metastore of tables",
+        "correct": true,
+        "why": "Right: names, locations and partitions."
+      },
+      {
+        "text": "Its MapReduce execution engine",
+        "correct": false,
+        "why": "Replaced long ago."
+      },
+      {
+        "text": "A storage format it invented",
+        "correct": false,
+        "why": "Hive used others' formats."
+      }
+    ]
+  },
+  {
+    "id": "ex-j9f5zr7m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why did the HBase row key start with the visitor and not the time?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Visitor ids are shorter than times",
+        "correct": false,
+        "why": "Length was not the reason."
+      },
+      {
+        "text": "HBase cannot store a time inside a row key",
+        "correct": false,
+        "why": "The time was in the key, second."
+      },
+      {
+        "text": "To make a count of the table faster",
+        "correct": false,
+        "why": "A count scans everything regardless."
+      },
+      {
+        "text": "To spread writes over regions",
+        "correct": true,
+        "why": "Right, and to keep a visitor's events together. Time first makes a hotspot."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8hs4ght",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On YARN, every map task of the streaming job counted as rack-local instead of data-local. Why, on one machine?",
+    "hint": "What does each daemon call the machine?",
+    "choices": [
+      {
+        "text": "YARN does not place streaming tasks by data",
+        "correct": false,
+        "why": "It does when names agree."
+      },
+      {
+        "text": "The blocks were on another rack",
+        "correct": false,
+        "why": "There is one machine."
+      },
+      {
+        "text": "The daemons used different names for the host",
+        "correct": true,
+        "why": "Right: `lab` for the NodeManager, `127.0.0.1` for the datanodes."
+      },
+      {
+        "text": "The blocks had a replication factor of one, so no copy was close",
+        "correct": false,
+        "why": "One copy on the same machine is as close as it gets."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hdc4t0x",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each Hadoop piece to what took its place in new work.",
+    "hint": "Lesson 12.",
+    "pairs": [
+      {
+        "left": "MapReduce",
+        "right": "Spark"
+      },
+      {
+        "left": "YARN",
+        "right": "Kubernetes"
+      },
+      {
+        "left": "HDFS, in the cloud",
+        "right": "Object storage"
+      }
+    ],
+    "right_distractors": [
+      "CSV"
+    ]
+  },
+  {
+    "id": "ex-3pqzprsb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On Kubernetes, what does the Spark driver do that a YARN ApplicationMaster did?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Asks for executors and deletes them at the end",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Builds the container image",
+        "correct": false,
+        "why": "That is done before submitting."
+      },
+      {
+        "text": "Sets the namespace's quota",
+        "correct": false,
+        "why": "An administrator does."
+      },
+      {
+        "text": "Keeps the input data in its own volume for the executors",
+        "correct": false,
+        "why": "An object store does."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekmxg8zp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With dynamic allocation and shuffle tracking but no timeout, why were idle executors kept?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The idle timeout was left unset",
+        "correct": false,
+        "why": "It was 15 seconds."
+      },
+      {
+        "text": "The driver was still busy",
+        "correct": false,
+        "why": "It was sleeping."
+      },
+      {
+        "text": "A standalone cluster does not release executors",
+        "correct": false,
+        "why": "It did with a timeout."
+      },
+      {
+        "text": "They held shuffle files",
+        "correct": true,
+        "why": "Right, which a later query might need."
+      }
+    ]
+  },
+  {
+    "id": "ex-35qq5zwc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does a Spark Connect client send to the server?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The data files it wants read",
+        "correct": false,
+        "why": "The server reads its own paths."
+      },
+      {
+        "text": "An unresolved plan, over gRPC",
+        "correct": true,
+        "why": "Right. The server analyses and runs it."
+      },
+      {
+        "text": "A pickled pandas DataFrame",
+        "correct": false,
+        "why": "Rows come back as Arrow batches."
+      },
+      {
+        "text": "Java bytecode compiled for the executors",
+        "correct": false,
+        "why": "The client has no Java."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5f6ykxd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "On Kubernetes, a team's ceiling of cores and memory is a ResourceQuota on its ___.",
+    "hint": "The nearest thing to a YARN queue.",
+    "blanks": [
+      {
+        "accept": [
+          "namespace"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ntppacv3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Moving a Spark job to a managed service mostly changes what?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "How Catalyst plans the query",
+        "correct": false,
+        "why": "The same."
+      },
+      {
+        "text": "The layout of the Parquet files",
+        "correct": false,
+        "why": "The same files."
+      },
+      {
+        "text": "Who installs and repairs the cluster",
+        "correct": true,
+        "why": "Right. The job runs the same."
+      },
+      {
+        "text": "Whether a skewed key slows down a sort-merge join",
+        "correct": false,
+        "why": "It still does."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcjjsymk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "How can the stages of a job be read after its driver has exited?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "From each executor's stderr",
+        "correct": false,
+        "why": "The history server is the place."
+      },
+      {
+        "text": "From the master's page of finished applications",
+        "correct": false,
+        "why": "It has no stages."
+      },
+      {
+        "text": "They are gone with the driver",
+        "correct": false,
+        "why": "The event log keeps them."
+      },
+      {
+        "text": "From the history server",
+        "correct": true,
+        "why": "Right. It reads the event log."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bbm75rh",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order the report's fixes by how much time each saved in the lab, most first.",
+    "hint": "57.4, 30.3, 25.4 and 2.1 seconds.",
+    "items": [
+      "Adaptive execution",
+      "A built-in function",
+      "Parquet instead of CSV",
+      "Allowing the broadcast"
+    ]
+  },
+  {
+    "id": "ex-g7ww4xck",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did DuckDB answer the report about twenty times faster than tuned Spark on the lab?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "DuckDB kept the files in a cache from an earlier run",
+        "correct": false,
+        "why": "It keeps no cache between runs."
+      },
+      {
+        "text": "Spark was left misconfigured",
+        "correct": false,
+        "why": "It was the tuned version."
+      },
+      {
+        "text": "DuckDB read fewer rows",
+        "correct": false,
+        "why": "Its totals matched."
+      },
+      {
+        "text": "On one machine, Spark's coordination is overhead",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4bdcs8x",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At US$0.20 a machine-hour, what does a cluster of 5 machines kept on for a 30-day month cost, in dollars?",
+    "hint": "5 × 24 × 30 × 0.20.",
+    "value": 720,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sfdtyj82",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The same 5 machines exist only for a 30-minute job once a day for 30 days. What do they cost, in dollars, at US$0.20 a machine-hour?",
+    "hint": "5 × 0.5 × 30 × 0.20.",
+    "value": 15,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kt1jn43q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Tasks spill everywhere, and the partitions are already right. What is the cheaper way to give each task more memory?",
+    "hint": "Lesson 14's table.",
+    "choices": [
+      {
+        "text": "More memory for the driver",
+        "correct": false,
+        "why": "Tasks run on executors."
+      },
+      {
+        "text": "Half the cores per executor on the same machines",
+        "correct": false,
+        "why": "It doubles the machines needed."
+      },
+      {
+        "text": "Turning spilling off",
+        "correct": false,
+        "why": "Tasks would fail instead."
+      },
+      {
+        "text": "A memory-optimised type, same cores",
+        "correct": true,
+        "why": "Right: about 30% more, not double."
+      }
+    ]
+  },
+  {
+    "id": "ex-j16kke2z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "By the course's measurements, when does a cluster earn its overhead?",
+    "hint": "Lessons 1 and 14.",
+    "choices": [
+      {
+        "text": "When the job is written in Python rather than in Scala",
+        "correct": false,
+        "why": "Language does not decide it."
+      },
+      {
+        "text": "As soon as a query joins more than one table",
+        "correct": false,
+        "why": "The number of tables says nothing."
+      },
+      {
+        "text": "When one machine cannot finish in time",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Once the data is stored as Parquet",
+        "correct": false,
+        "why": "Format is not size."
+      }
+    ]
+  },
+  {
+    "id": "ex-t2xdsp96",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which belong to tuning a slow job as lesson 14 did it? Choose all that apply.",
+    "hint": "Measure, change one thing, measure.",
+    "choices": [
+      {
+        "text": "Change one thing per run",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Read the stages of the finished job",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Change all settings at once to save time",
+        "correct": false,
+        "why": "Then nothing says which mattered."
+      },
+      {
+        "text": "Double every executor's memory first",
+        "correct": false,
+        "why": "Measure before resizing."
+      }
+    ]
+  },
+  {
+    "id": "ex-knpd89a2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "`sha512sum -c` on the Spark download prints something other than `OK`. What does that say?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The release is newer than the checksum file, which is harmless",
+        "correct": false,
+        "why": "Both name the same version."
+      },
+      {
+        "text": "Spark is already installed",
+        "correct": false,
+        "why": "It checks a file, not an installation."
+      },
+      {
+        "text": "The file is damaged; download it again",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Java 17 is missing",
+        "correct": false,
+        "why": "The checksum knows nothing of Java."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssp4f5m6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does the lab set `SPARK_LOCAL_IP=127.0.0.1`?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "So the history server can read the logs of other machines on the network",
+        "correct": false,
+        "why": "It reads a local directory."
+      },
+      {
+        "text": "To make shuffles faster",
+        "correct": false,
+        "why": "The address does not change their speed."
+      },
+      {
+        "text": "So no other computer can reach the cluster",
+        "correct": true,
+        "why": "Right. Every process listens on the loopback address."
+      },
+      {
+        "text": "Because Spark refuses to start on a named host",
+        "correct": false,
+        "why": "It starts, with a warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-33p6txqk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Each worker offers 1024 MB and `spark.executor.memory` is 768m. How many megabytes of a worker's offer does the executor's heap leave?",
+    "hint": "Subtract.",
+    "value": 256,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qh03b588",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In an object store, what is \"listing the directory\" `raw/clicks/`?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Opening a folder that the store made on the first upload",
+        "correct": false,
+        "why": "Keys only look like paths."
+      },
+      {
+        "text": "Reading a directory object",
+        "correct": false,
+        "why": "There is none."
+      },
+      {
+        "text": "Asking a namenode",
+        "correct": false,
+        "why": "That is HDFS."
+      },
+      {
+        "text": "Asking for the keys that start with `raw/clicks/`",
+        "correct": true,
+        "why": "Right. No directory exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-vje09kyb",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Moving January's 31 objects to `archive/` in the object store took how many requests?",
+    "hint": "A copy and a delete each.",
+    "value": 62,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6akgk5dp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Renaming a file in HDFS took 2.8 seconds whatever its size. Where did the time go?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Rewriting the file's checksums under the new name",
+        "correct": false,
+        "why": "Checksums belong to blocks."
+      },
+      {
+        "text": "Copying the blocks",
+        "correct": false,
+        "why": "No block moves."
+      },
+      {
+        "text": "Starting Java",
+        "correct": true,
+        "why": "Right. The rename is one entry in the namenode's memory."
+      },
+      {
+        "text": "Waiting for every datanode to agree",
+        "correct": false,
+        "why": "Datanodes are not asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-xq76dms2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The report took 131.1 s with all four mistakes and 15.9 s with them fixed. How many times faster is that? Round to one decimal.",
+    "hint": "Divide.",
+    "value": 8.2,
+    "tolerance": 0.1
+  },
+  {
+    "id": "ex-vwtwem38",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "DuckDB answered the report in 0.8 s. What would make Spark the right tool after all?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Input stored in Parquet rather than CSV files",
+        "correct": false,
+        "why": "DuckDB read the same Parquet."
+      },
+      {
+        "text": "A need for SQL",
+        "correct": false,
+        "why": "DuckDB is SQL."
+      },
+      {
+        "text": "A report with more than one join",
+        "correct": false,
+        "why": "DuckDB joins too."
+      },
+      {
+        "text": "Data or work past one machine",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqk1jy16",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "When one datanode died, `fsck` reported 7 under-replicated blocks, 70.0% of the file's blocks. How many blocks does the file have?",
+    "hint": "7 ÷ 0.7.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-h1s0nagp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "An object store has no ___: a new name for an object is a copy followed by a delete.",
+    "hint": "What HDFS does in one request.",
+    "blanks": [
+      {
+        "accept": [
+          "rename"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1hp2fqmj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does dynamic allocation change about a job's executors?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Their memory grows when a task spills",
+        "correct": false,
+        "why": "Memory is fixed at start."
+      },
+      {
+        "text": "Their number follows the work waiting",
+        "correct": true,
+        "why": "Right: added when tasks wait, released when idle."
+      },
+      {
+        "text": "They move to whichever machine holds the input blocks",
+        "correct": false,
+        "why": "Executors do not move."
+      },
+      {
+        "text": "They share one JVM",
+        "correct": false,
+        "why": "Each is its own process."
+      }
+    ]
+  }
+]

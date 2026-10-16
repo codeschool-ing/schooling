@@ -1,0 +1,373 @@
+{
+  "ex-nyw5v3fe": {
+    "prompt": "No `qkv.py`, a busca rígida devolveu 20 e a suave, 24,04. Por que o resultado suave é maior?",
+    "hint": "Olhe os pesos que a softmax deu às quatro chaves.",
+    "choices": [
+      {
+        "text": "A softmax arredondou os pesos para cima",
+        "why": "Os pesos impressos somam 1,0; nada foi arredondado para lado nenhum."
+      },
+      {
+        "text": "Todo valor contribuiu, ponderado pelo quanto a sua chave combinou",
+        "why": "Certo. Pesos de 0,232 no 30 e 0,172 no 40 puxam mais que 0,172 no 10, então o resultado fica acima de 20."
+      },
+      {
+        "text": "A consulta combinou melhor com a terceira chave",
+        "why": "Ela teve nota 0,9 contra a segunda chave e 0,3 contra a terceira; a segunda venceu."
+      },
+      {
+        "text": "A busca suave soma um viés próprio a cada resultado que ela devolve",
+        "why": "Não há viés nela: o resultado são os pesos vezes os valores, e mais nada."
+      }
+    ]
+  },
+  "ex-exnf4twf": {
+    "prompt": "Por que a atenção mistura todos os valores com uma softmax em vez de devolver o valor da chave que mais combina?",
+    "hint": "Pense no que o treino precisa de cada passo do cálculo.",
+    "choices": [
+      {
+        "text": "Escolher a melhor chave é mais lento que uma softmax num processador",
+        "why": "O `argmax` é barato. Não é a velocidade que o descarta."
+      },
+      {
+        "text": "A softmax faz da saída uma distribuição de probabilidade sobre as quatro chaves",
+        "why": "Os pesos somam 1, mas a saída é uma mistura de vetores de valor, não uma distribuição."
+      },
+      {
+        "text": "Escolher uma chave não tem gradiente, então não se aprende para onde olhar",
+        "why": "Certo. A busca suave deu um gradiente para a consulta; o `argmax` não muda nada até o vencedor pular."
+      },
+      {
+        "text": "Várias chaves poderiam empatar como a melhor, e um empate não tem vencedor a devolver",
+        "why": "Empates são raros com números reais, e uma regra para desempatar seria fácil. O motivo é o gradiente."
+      }
+    ]
+  },
+  "ex-zynv5mcj": {
+    "prompt": "Uma consulta e uma chave têm cada uma 256 features aleatórias com dispersão 1. Que dispersão, aproximadamente, têm os seus produtos escalares, antes de qualquer escala?",
+    "hint": "O `attention.py` mediu 2,01, 7,95 e 22,59 nas larguras 4, 64 e 512."
+  },
+  "ex-hm7qdfwn": {
+    "prompt": "No `attention.py`, a linha 2 dos pesos é quase plana: 0,258, 0,265, 0,171, 0,307. O que isso diz sobre a saída do segundo token?",
+    "hint": "Cada linha da saída são os pesos da sua linha vezes os valores.",
+    "choices": [
+      {
+        "text": "É zero, porque nenhuma chave combinou",
+        "why": "Pesos que somam 1 não dão zero sozinhos: a saída é uma mistura dos valores."
+      },
+      {
+        "text": "Fica perto da média simples dos quatro valores",
+        "why": "Certo. Com pesos quase iguais, a mistura é quase uma média."
+      },
+      {
+        "text": "É quase todo o quarto valor, o maior peso",
+        "why": "0,307 é menos de um terço. Compare com a linha 1, onde 0,741 numa chave faz mesmo a saída ser quase toda aquele valor."
+      },
+      {
+        "text": "É igual ao valor do próprio segundo token",
+        "why": "O peso nele mesmo é 0,265; um token só devolve o próprio valor quando esse peso é 1."
+      }
+    ]
+  },
+  "ex-1fgrca1e": {
+    "prompt": "Um colega tira a divisão por √d de um modelo cujas cabeças têm largura 1.024. O que acontece no começo do treino?",
+    "hint": "Calcule a dispersão das notas nessa largura e pense na softmax.",
+    "choices": [
+      {
+        "text": "Nada muda, já que o Adam reescala o gradiente de cada parâmetro para um tamanho parecido",
+        "why": "O Adam reescala por parâmetro, mas não devolve uma inclinação que a softmax já achatou perto de zero."
+      },
+      {
+        "text": "As notas encolhem e todo peso fica quase igual",
+        "why": "O contrário: sem a divisão as notas crescem, com dispersão de cerca de 32 aqui."
+      },
+      {
+        "text": "Cada softmax põe quase todo o peso numa chave e devolve pouco gradiente",
+        "why": "Certo. Na largura 512 o maior peso já levava 0,948; em 1.024 as notas se espalham ainda mais."
+      },
+      {
+        "text": "O modelo treina melhor, porque a sua atenção já é aguda logo no primeiro passo",
+        "why": "Aguda antes do treino é aguda ao acaso, em chaves que nada escolheu ainda."
+      }
+    ]
+  },
+  "ex-fz6awga6": {
+    "prompt": "Por que as notas mascaradas viram menos infinito em vez de 0?",
+    "hint": "O que a softmax faz com uma nota 0?",
+    "choices": [
+      {
+        "text": "exp(−∞) é 0, então esses pesos somem; uma nota 0 ainda recebe peso",
+        "why": "Certo. A exponencial de 0 é 1, então uma nota zerada ainda levaria uma parte da linha."
+      },
+      {
+        "text": "Uma nota 0 faria a linha somar mais de 1 depois de passar pela softmax",
+        "why": "A softmax sempre divide pelo total da linha, então toda linha soma 1 quaisquer que sejam as notas."
+      },
+      {
+        "text": "Menos infinito deixa o gradiente maior para os tokens anteriores",
+        "why": "Os pesos mascarados são exatamente 0 e não devolvem nada; os gradientes dos tokens anteriores vêm dos seus próprios pesos."
+      },
+      {
+        "text": "O 0 é reservado para tokens de preenchimento no PyTorch",
+        "why": "O PyTorch não reserva nenhum valor de nota; o preenchimento é mascarado do mesmo jeito, com menos infinito."
+      }
+    ]
+  },
+  "ex-sw5jv570": {
+    "prompt": "Um modelo lê uma avaliação de produto inteira e depois diz se ela é positiva. A sua atenção deve usar máscara causal?",
+    "hint": "A máscara existe para uma situação. É esta?",
+    "choices": [
+      {
+        "text": "Sim, ou cada token copia o rótulo do seguinte",
+        "why": "Há um rótulo para a avaliação inteira, não um por token, então não há nada adiante para copiar."
+      },
+      {
+        "text": "Sim, já que todo bloco transformer precisa da máscara",
+        "why": "O BERT e o modelo de lembrar desta aula não usam nenhuma. A máscara pertence a uma tarefa, não ao bloco."
+      },
+      {
+        "text": "Não: o texto inteiro está lá antes da resposta",
+        "why": "Certo. A máscara serve para prever o que ainda não foi visto, e esta tarefa não é isso."
+      },
+      {
+        "text": "Não, porque uma máscara só funciona com uma cabeça",
+        "why": "Uma máscara se aplica a todas as cabeças igualmente; o motivo para dispensá-la aqui é a tarefa."
+      }
+    ]
+  },
+  "ex-68b8k5mk": {
+    "prompt": "Quantos parâmetros tem o `nn.MultiheadAttention(64, 8)`, contando os vieses?",
+    "hint": "Quatro matrizes de d por d e quatro vetores de viés de d. O número de cabeças não entra.",
+    "unit": "parâmetros"
+  },
+  "ex-6cwsdc8b": {
+    "prompt": "Uma camada de largura 16 passa de 1 cabeça para 4. O que muda?",
+    "hint": "O `heads.py` contou as duas.",
+    "choices": [
+      {
+        "text": "Ela tem quatro vezes mais parâmetros, um conjunto para cada cabeça",
+        "why": "As duas contaram 1.088. As projeções têm o mesmo tamanho, só cortadas de outro jeito."
+      },
+      {
+        "text": "Cada cabeça faz a atenção com 4 das 16 features e a sua softmax",
+        "why": "Certo: quatro conjuntos de pesos independentes das mesmas projeções, pelos mesmos parâmetros."
+      },
+      {
+        "text": "Cada cabeça vê um quarto diferente dos tokens, e somente esse quarto",
+        "why": "Toda cabeça vê todo token; o que se divide são as features."
+      },
+      {
+        "text": "As notas são divididas por √16 em vez de √4",
+        "why": "Ao contrário: com 4 cabeças cada cabeça tem largura 4 e divide por √4."
+      }
+    ]
+  },
+  "ex-wdw3tcjh": {
+    "prompt": "Uma atenção sem posições somadas recebe cinco tokens e depois os mesmos cinco em outra ordem. Como se comparam as duas saídas?",
+    "hint": "A primeira linha que o `positions.py` imprimiu.",
+    "choices": [
+      {
+        "text": "Não têm relação, já que toda nota muda",
+        "why": "Cada par de tokens se encontra com a mesma nota de antes, onde quer que os dois estejam."
+      },
+      {
+        "text": "São idênticas, linha a linha, na ordem original",
+        "why": "Cada token mantém a sua saída, então as linhas se movem com os tokens."
+      },
+      {
+        "text": "As mesmas linhas, embaralhadas do mesmo jeito que a entrada",
+        "why": "Certo, e o `allclose` imprimiu `True`. Para a atenção, uma sequência sem posições é um conjunto."
+      },
+      {
+        "text": "As mesmas linhas, em ordem inversa",
+        "why": "Elas seguem exatamente o embaralhamento, qualquer que tenha sido; inverter é só um embaralhamento entre muitos."
+      }
+    ]
+  },
+  "ex-zevg880p": {
+    "prompt": "Um modelo com uma tabela aprendida de 50 posições recebe uma sequência de 60 tokens. O que acontece?",
+    "hint": "De onde viria o vetor da posição 55?",
+    "choices": [
+      {
+        "text": "Ele extrapola a partir do padrão das últimas linhas",
+        "why": "Uma tabela aprendida é uma lista de linhas sem fórmula por trás, então não há o que extrapolar."
+      },
+      {
+        "text": "A busca falha com `IndexError`: não há linha para essas posições",
+        "why": "Certo, como o `positions.py` mostrou. Uma codificação senoidal as calcularia, embora o modelo continue nunca as tendo visto."
+      },
+      {
+        "text": "O PyTorch lê os 50 primeiros tokens e descarta o resto sem avisar",
+        "why": "O `nn.Embedding` confere os índices e levantou um erro; nada foi descartado."
+      },
+      {
+        "text": "As posições 51 a 60 reaproveitam as linhas 1 a 10",
+        "why": "Nada dá a volta; pedir a linha 55 de uma tabela de 50 é um erro."
+      }
+    ]
+  },
+  "ex-7g205apk": {
+    "prompt": "Com a codificação senoidal, o produto escalar de duas posições depende só da ___ entre elas.",
+    "hint": "As posições 0 e 3, 10 e 13, e 27 e 30 deram todas 5,543.",
+    "blanks": [
+      {
+        "accept": [
+          "distância",
+          "diferença",
+          "separação"
+        ]
+      }
+    ]
+  },
+  "ex-46bwa6z7": {
+    "prompt": "Ponha em ordem os passos de um bloco transformer com a norm primeiro, da entrada à saída.",
+    "hint": "Duas metades, e cada uma termina somando de volta o que entrou nela.",
+    "items": [
+      "A primeira layer norm",
+      "Atenção entre todos os tokens",
+      "Somar de volta a entrada do bloco",
+      "A segunda layer norm",
+      "O MLP, em cada token sozinho",
+      "Somar de volta a entrada da segunda metade"
+    ]
+  },
+  "ex-2ann9f0q": {
+    "prompt": "No bloco do `block.py`, com largura 32 e um MLP de 128, qual parte tem a maior parte dos parâmetros?",
+    "hint": "Duas matrizes de 32 por 128 contra quatro de 32 por 32.",
+    "choices": [
+      {
+        "text": "A atenção, com as suas quatro projeções",
+        "why": "4.224 de 12.704: cerca de um terço."
+      },
+      {
+        "text": "O MLP",
+        "why": "Certo: 8.352 de 12.704, dois terços, em qualquer largura com um MLP quatro vezes mais largo."
+      },
+      {
+        "text": "As duas layer norms, que têm pesos para cada token",
+        "why": "Elas têm um gamma e um beta por feature, não por token: 128 ao todo."
+      },
+      {
+        "text": "Têm mais ou menos o mesmo, já que atenção e MLP têm largura 32",
+        "why": "O MLP tem largura 128 por dentro, e é lá que estão os seus pesos."
+      }
+    ]
+  },
+  "ex-57bp4ycv": {
+    "prompt": "Com o orçamento da aula 14, o transformer chegou a 1,000 no comprimento 50 e a LSTM a 0,144. O que explica a diferença?",
+    "hint": "O que o `where.py` encontrou a última posição fazendo?",
+    "choices": [
+      {
+        "text": "O transformer tinha mais parâmetros",
+        "why": "Ele tinha 10.728 contra 21.640 do modelo LSTM, metade."
+      },
+      {
+        "text": "O transformer foi treinado por mais passos",
+        "why": "Os mesmos 3.000 passos, os mesmos lotes, as mesmas sementes; só a medida extra em 250 era nova."
+      },
+      {
+        "text": "A posição 1 está a um passo da última, em qualquer comprimento",
+        "why": "Certo. As cabeças dele puseram até 0,999 na posição 1; a LSTM precisava carregá-la por 49 reescritas."
+      },
+      {
+        "text": "A máscara causal o impediu de se distrair com símbolos posteriores",
+        "why": "Ele não tinha máscara: só a última posição é lida, e nada vem depois dela."
+      }
+    ]
+  },
+  "ex-xvra0tp0": {
+    "prompt": "Sem posições, o mesmo modelo chegou a 0,171 no comprimento 50. Por que isso fica acima do 0,125 de chutar?",
+    "hint": "O que um modelo consegue aprender de um conjunto de símbolos sem ordem?",
+    "choices": [
+      {
+        "text": "Alguma informação de posição ainda vaza pelo embedding",
+        "why": "O embedding de símbolo é o mesmo em toda posição; o embaralhamento mostrou que a atenção não acrescenta nenhuma."
+      },
+      {
+        "text": "É ruído, dentro da dispersão do chute",
+        "why": "As quatro medidas ficaram acima de 0,125, de 0,162 a 0,182: uma diferença estável, não uma oscilação."
+      },
+      {
+        "text": "A resposta está entre os símbolos presentes, e ele vê quais há",
+        "why": "Certo. Um conjunto de símbolos estreita um pouco o chute; sem ordem ele não sabe qual veio primeiro."
+      },
+      {
+        "text": "Algumas sequências de teste também apareceram no treino",
+        "why": "O conjunto de teste vem de um gerador próprio; e o mesmo modelo com posições mostra que decorar não é a questão."
+      }
+    ]
+  },
+  "ex-b3ndfp8e": {
+    "prompt": "Quais destas são verdadeiras sobre a atenção montada nesta aula? Escolha todas as que forem.",
+    "hint": "Cada uma foi impressa por um dos programas da aula.",
+    "choices": [
+      {
+        "text": "Cada linha de pesos de atenção soma 1",
+        "why": "Certo: a softmax corre ao longo de cada linha."
+      },
+      {
+        "text": "Quatro cabeças têm tantos parâmetros quanto uma, na mesma largura",
+        "why": "Certo: 1.088 as duas, no `heads.py`."
+      },
+      {
+        "text": "Sem posições, a atenção ainda distingue o primeiro token do último",
+        "why": "Embaralhar a entrada só embaralhou a saída; nada distingue o primeiro do último."
+      },
+      {
+        "text": "O transformer precisou de mais parâmetros que o modelo LSTM para resolver o comprimento 50",
+        "why": "Ele tinha 10.728 contra 21.640 do modelo LSTM, cerca de metade."
+      },
+      {
+        "text": "Com a máscara causal, trocar o último token deixa as saídas anteriores inalteradas",
+        "why": "Certo: elas se moveram 0,000 e a última 0,535."
+      }
+    ]
+  },
+  "ex-vpdg84m5": {
+    "prompt": "Ligue cada parte da atenção ao que ela faz.",
+    "hint": "A imagem do dicionário da primeira seção.",
+    "pairs": [
+      {
+        "left": "consulta",
+        "right": "o que um token procura"
+      },
+      {
+        "left": "chave",
+        "right": "o que um token oferece para ser encontrado"
+      },
+      {
+        "left": "valor",
+        "right": "o que um token entrega quando é encontrado"
+      },
+      {
+        "left": "máscara causal",
+        "right": "esconde todo token que vem depois"
+      }
+    ],
+    "right_distractors": [
+      "normaliza cada token pelas suas próprias features"
+    ]
+  },
+  "ex-7e86v050": {
+    "prompt": "Um texto cresce de 500 tokens para 2.000. Quanto cresce o número de pesos de atenção numa cabeça?",
+    "hint": "Os pesos são uma tabela com uma linha por consulta e uma coluna por chave.",
+    "choices": [
+      {
+        "text": "Quatro vezes, como o texto",
+        "why": "Isso seria um peso por token. A tabela tem uma linha e uma coluna por token."
+      },
+      {
+        "text": "Dezesseis vezes",
+        "why": "Certo: 500 por 500 vira 2.000 por 2.000, quatro vezes em cada direção."
+      },
+      {
+        "text": "Nada; o número de pesos depende da largura d",
+        "why": "As matrizes de projeção dependem de d. Os pesos de atenção dependem do comprimento."
+      },
+      {
+        "text": "Duas vezes, já que só metade sobrevive à máscara causal",
+        "why": "A máscara zera cerca de metade, mas a tabela ainda é calculada no tamanho inteiro, e cresce dezesseis vezes."
+      }
+    ]
+  }
+}

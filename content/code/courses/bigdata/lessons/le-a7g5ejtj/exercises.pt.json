@@ -1,0 +1,421 @@
+{
+  "ex-v2vtz1na": {
+    "prompt": "Por que uma tarefa do join leu todos os 960.905 eventos do robô?",
+    "hint": "Como um shuffle escolhe a partição de uma linha?",
+    "choices": [
+      {
+        "text": "Os eventos do robô estavam todos num arquivo",
+        "why": "Eles estão espalhados pelos arquivos de todos os dias."
+      },
+      {
+        "text": "Eles têm uma só chave, e uma chave cai numa partição",
+        "why": "Isso. O hash não consegue dividir um valor só."
+      },
+      {
+        "text": "O Spark manda a maior chave para a primeira tarefa",
+        "why": "A partição vem do hash da chave, não do tamanho."
+      },
+      {
+        "text": "A execução adaptativa juntou todas as partições dele numa só",
+        "why": "A execução adaptativa estava desligada no skew.py."
+      }
+    ]
+  },
+  "ex-z4xh87mv": {
+    "prompt": "Por que a execução especulativa não salva um estágio preso por uma partição desbalanceada?",
+    "hint": "O que a cópia da tarefa teria de ler?",
+    "choices": [
+      {
+        "text": "Uma cópia tem os mesmos dados a processar",
+        "why": "Isso. A tarefa é lenta pelos dados, não pela máquina."
+      },
+      {
+        "text": "A especulação é desligada para joins",
+        "why": "Ela vale para qualquer estágio."
+      },
+      {
+        "text": "A cópia sobrescreveria a saída da primeira tarefa",
+        "why": "O Spark fica com a que terminar primeiro."
+      },
+      {
+        "text": "Cópias só são lançadas para tarefas de map",
+        "why": "Tarefas de reduce também podem ser copiadas."
+      }
+    ]
+  },
+  "ex-sfa15520": {
+    "prompt": "A tarefa mediana leu 123.862 linhas e a maior 1.086.798. Quantas vezes a mediana a maior leu? Arredonde para o inteiro mais próximo.",
+    "hint": "Divida."
+  },
+  "ex-q5znkpxe": {
+    "prompt": "Quais destes costumam criar uma chave quente? Escolha todos que se aplicam.",
+    "hint": "Três tipos foram citados.",
+    "choices": [
+      {
+        "text": "Um robô ou uma checagem de monitoramento",
+        "why": "Sim. É o `v0000000`."
+      },
+      {
+        "text": "Um cliente muito grande",
+        "why": "Sim. Os dados estão certos e a distribuição é o negócio."
+      },
+      {
+        "text": "Uma chave guardada como texto em vez de número",
+        "why": "O tipo não muda quantas linhas têm o mesmo valor."
+      },
+      {
+        "text": "Um `NULL` ou `unknown` escrito onde faltava um valor",
+        "why": "Sim. Toda linha sem nada a dizer o compartilha."
+      }
+    ]
+  },
+  "ex-gg66jr07": {
+    "prompt": "A chave quente é um robô cujos eventos nenhum relatório usa. Qual é a cura mais simples?",
+    "hint": "As linhas deveriam estar no job?",
+    "choices": [
+      {
+        "text": "Salgar a chave do join com oito valores",
+        "why": "Funciona, e custa uma cópia do lado pequeno por linhas que ninguém quer."
+      },
+      {
+        "text": "Filtrar as linhas dele antes do join",
+        "why": "Isso. O desbalanceamento vai embora com as linhas."
+      },
+      {
+        "text": "Subir o `spark.sql.shuffle.partitions` para 2.000",
+        "why": "Uma chave ainda cai numa partição."
+      },
+      {
+        "text": "Dar mais memória aos executores",
+        "why": "A tarefa continua tão longa quanto antes."
+      }
+    ]
+  },
+  "ex-4tm5w3pr": {
+    "prompt": "Ligue cada estratégia de join ao que ela move.",
+    "hint": "Duas delas embaralham os dois lados.",
+    "pairs": [
+      {
+        "left": "Broadcast hash join",
+        "right": "O lado pequeno, inteiro, para cada executor"
+      },
+      {
+        "left": "Sort-merge join",
+        "right": "Os dois lados por chave, e depois uma ordenação de cada partição"
+      },
+      {
+        "left": "Shuffle hash join",
+        "right": "Os dois lados por chave, e depois uma tabela hash por partição"
+      }
+    ],
+    "right_distractors": [
+      "Nada: cada lado fica onde foi lido"
+    ]
+  },
+  "ex-vcddj93a": {
+    "prompt": "Por que o sort-merge join é o padrão do Spark para duas tabelas grandes?",
+    "hint": "O que acontece quando uma partição é maior que a memória?",
+    "choices": [
+      {
+        "text": "A ordenação dele despeja em disco, então nenhum lado precisa caber na memória",
+        "why": "Isso. Uma tabela hash não tem para onde ir quando é grande demais."
+      },
+      {
+        "text": "Ele move menos linhas pela rede do que qualquer outra",
+        "why": "Ele embaralha os dois lados; um broadcast move bem menos."
+      },
+      {
+        "text": "Ele não precisa de shuffle em nenhum lado",
+        "why": "Ele embaralha os dois."
+      },
+      {
+        "text": "É a única que trata uma condição de intervalo",
+        "why": "Joins só de intervalo usam um nested loop."
+      }
+    ]
+  },
+  "ex-r0112bws": {
+    "prompt": "Na API de DataFrame, `clicks.join(F.___(books), \"book_id\")` pede ao Spark que copie os livros para cada tarefa.",
+    "hint": "O nome da própria estratégia.",
+    "blanks": [
+      {
+        "accept": [
+          "broadcast"
+        ]
+      }
+    ]
+  },
+  "ex-zhfnq7qh": {
+    "prompt": "O planejador fez broadcast dos visitantes quando a consulta usava só `visitor_id`, e não quando usava também `first_day`. Por quê?",
+    "hint": "Pelo que ele ajusta a estimativa de tamanho?",
+    "choices": [
+      {
+        "text": "Datas não podem ficar numa tabela hash de broadcast",
+        "why": "Qualquer coluna pode."
+      },
+      {
+        "text": "Um join com uma segunda condição não pode ter broadcast",
+        "why": "Condições a mais são aplicadas depois do casamento."
+      },
+      {
+        "text": "A execução adaptativa trocou de volta",
+        "why": "Os dois planos eram os primeiros do planejador."
+      },
+      {
+        "text": "A coluna a mais levou a estimativa de tamanho acima de 10 MB",
+        "why": "Isso. A estimativa é ajustada às colunas usadas."
+      }
+    ]
+  },
+  "ex-ba6gc1kg": {
+    "prompt": "Por que um broadcast join não sofre com o robô?",
+    "hint": "Onde ficam os eventos do robô?",
+    "choices": [
+      {
+        "text": "Ele descarta chaves com mais de um milhão de linhas",
+        "why": "Nenhum join descarta linhas que casam."
+      },
+      {
+        "text": "O robô cabe no driver",
+        "why": "O que vai em broadcast são os visitantes, não os eventos."
+      },
+      {
+        "text": "O lado grande nunca é embaralhado por chave",
+        "why": "Isso. Cada tarefa junta as linhas que leu com a tabela inteira."
+      },
+      {
+        "text": "Ele salga toda chave automaticamente antes do join",
+        "why": "Não precisa de sal, porque não há shuffle desse lado."
+      }
+    ]
+  },
+  "ex-nt1zbp06": {
+    "prompt": "Onde o lado do broadcast precisa caber na memória? Escolha todos que se aplicam.",
+    "hint": "Ele é pago duas vezes.",
+    "choices": [
+      {
+        "text": "No driver, que o coleta e monta a tabela",
+        "why": "Sim. Foi aí que o too_big.py falhou."
+      },
+      {
+        "text": "No history server",
+        "why": "Ele só lê logs de eventos."
+      },
+      {
+        "text": "No master, que o entrega aos workers",
+        "why": "O master distribui cores, não dados."
+      },
+      {
+        "text": "Em cada executor, que guarda uma cópia inteira",
+        "why": "Sim, enquanto o join roda."
+      }
+    ]
+  },
+  "ex-44zmbnp7": {
+    "prompt": "Um job noturno falha com \"Not enough memory to build and broadcast the table\" depois de um hint. Qual é a correção?",
+    "hint": "Qual saída mantém os outros broadcasts?",
+    "choices": [
+      {
+        "text": "Pôr `spark.sql.autoBroadcastJoinThreshold` em -1 no cluster inteiro",
+        "why": "Desliga os broadcasts que estavam ajudando."
+      },
+      {
+        "text": "Subir o `spark.sql.broadcastTimeout`",
+        "why": "A falha foi memória, não tempo."
+      },
+      {
+        "text": "Dobrar `spark.driver.memory` e rodar de novo",
+        "why": "Muda a parede de lugar sem tirá-la."
+      },
+      {
+        "text": "Trocar esse hint por `hint(\"merge\")`",
+        "why": "Isso. Corrige aquele join e deixa o resto em paz."
+      }
+    ]
+  },
+  "ex-26xvm7dk": {
+    "prompt": "Uma tabela de 1,7 milhão de visitantes é salgada com 8 valores para todo visitante. Quantos milhões de linhas tem o lado salgado dos visitantes?",
+    "hint": "Uma cópia por sal."
+  },
+  "ex-892xbf1w": {
+    "prompt": "Por que o sal vem de um hash do `event_id` e não de `rand()`?",
+    "hint": "O que acontece quando uma tarefa roda uma segunda vez?",
+    "choices": [
+      {
+        "text": "Um hash espalha a chave quente melhor que o acaso",
+        "why": "Os dois a espalham mais ou menos igual."
+      },
+      {
+        "text": "Uma tarefa repetida recebe os mesmos sais da primeira vez",
+        "why": "Isso. Um sal aleatório poderia mandar uma linha para outro lugar na repetição."
+      },
+      {
+        "text": "O `rand()` não é permitido dentro de um join",
+        "why": "É permitido; o problema é que ele muda."
+      },
+      {
+        "text": "O `rand()` não consegue produzir inteiros",
+        "why": "O resultado dele pode ser escalado e arredondado."
+      }
+    ]
+  },
+  "ex-nnfqdhx1": {
+    "prompt": "O sal cortou a maior tarefa para menos de um terço. Por que o job demorou mais?",
+    "hint": "O que cresceu oito vezes?",
+    "choices": [
+      {
+        "text": "O lado dos visitantes foi copiado oito vezes e embaralhado",
+        "why": "Isso. Neste laboratório isso custou mais que a tarefa quente."
+      },
+      {
+        "text": "Calcular um hash para cada um dos eventos é mais lento que o join",
+        "why": "Um hash por linha é barato perto de um shuffle."
+      },
+      {
+        "text": "O join salgado deu outra resposta",
+        "why": "A resposta foi a mesma."
+      },
+      {
+        "text": "O sal desliga o sort-merge join",
+        "why": "O plano ainda era um sort-merge join."
+      }
+    ]
+  },
+  "ex-gdedhgem": {
+    "prompt": "Por que a execução adaptativa deixou em paz a partição quente deste laboratório nas configurações padrão?",
+    "hint": "Duas condições precisam valer juntas.",
+    "choices": [
+      {
+        "text": "O tratamento de skew só roda em clusters de mais de uma máquina",
+        "why": "Ele rodou aqui quando os limites foram baixados."
+      },
+      {
+        "text": "O join era um broadcast, sem partições para dividir",
+        "why": "O broadcast estava desligado."
+      },
+      {
+        "text": "A execução adaptativa só divide partições de um `groupBy`",
+        "why": "É o contrário: joins, não agrupamentos."
+      },
+      {
+        "text": "Ela tinha menos de 256 MB e menos de cinco vezes a mediana",
+        "why": "Isso. 3.236 KiB contra uma mediana de 760."
+      }
+    ]
+  },
+  "ex-shffg6py": {
+    "prompt": "Depois da execução, a linha do join no plano dizia `SortMergeJoin(___=true)`, que é a execução adaptativa dizendo que dividiu uma partição.",
+    "hint": "O assunto da aula, numa palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "skew"
+        ]
+      }
+    ]
+  },
+  "ex-f4yz7497": {
+    "prompt": "Ligue cada chamada ao que ela faz.",
+    "hint": "Só uma delas evita um shuffle.",
+    "pairs": [
+      {
+        "left": "`coalesce(4)`",
+        "right": "Junta partições vizinhas sem shuffle"
+      },
+      {
+        "left": "`repartition(4)`",
+        "right": "Distribui as linhas em rodízio, em partições iguais"
+      },
+      {
+        "left": "`repartition(\"device\")`",
+        "right": "Põe todas as linhas de um valor numa partição"
+      }
+    ],
+    "right_distractors": [
+      "Ordena cada partição pela chave"
+    ]
+  },
+  "ex-9t9bm71t": {
+    "prompt": "Por que o `coalesce(1)` antes de uma escrita pode ser mais lento que o `repartition(1)`?",
+    "hint": "Sem shuffle, onde termina o estágio?",
+    "choices": [
+      {
+        "text": "Ele escreve um arquivo por partição de entrada",
+        "why": "Ele escreve um arquivo."
+      },
+      {
+        "text": "O trabalho antes dele também roda como uma tarefa",
+        "why": "Isso. Nenhum shuffle os separa, então o estágio inteiro tem uma tarefa."
+      },
+      {
+        "text": "Ele ordena os dados antes",
+        "why": "Nenhuma das duas ordena."
+      },
+      {
+        "text": "Ele faz shuffle duas vezes",
+        "why": "Ele não faz shuffle nenhum."
+      }
+    ]
+  },
+  "ex-sd2demyj": {
+    "prompt": "Uma escrita faz `repartition(50)` e depois `partitionBy(\"day\")` em 31 dias, com linhas de todos os dias em cada tarefa. Quantos arquivos ela escreve?",
+    "hint": "Cada tarefa escreve em todo diretório para o qual tem linhas."
+  },
+  "ex-n8ggwac1": {
+    "prompt": "Qual escreve um arquivo por diretório de dia?",
+    "hint": "Junte cada dia numa tarefa primeiro.",
+    "choices": [
+      {
+        "text": "`repartition(\"day\")`, depois `partitionBy(\"day\")`",
+        "why": "Isso. Todas as linhas de um dia estão numa tarefa."
+      },
+      {
+        "text": "`partitionBy(\"day\")` logo depois da leitura dos arquivos",
+        "why": "Uma partição lida pode ter vários dias, e um dia pode cruzar partições."
+      },
+      {
+        "text": "`repartition(31)`, depois `partitionBy(\"day\")`",
+        "why": "As linhas são distribuídas em rodízio, então cada tarefa tem todos os dias."
+      },
+      {
+        "text": "`maxRecordsPerFile` em 31",
+        "why": "Isso limita linhas por arquivo, e faz muito mais arquivos."
+      }
+    ]
+  },
+  "ex-c67mnrzk": {
+    "prompt": "Ligue cada situação à primeira cura a tentar.",
+    "hint": "Pergunte primeiro se o lado pequeno cabe na memória.",
+    "pairs": [
+      {
+        "left": "Um join desbalanceado cujo lado pequeno tem 30 MB",
+        "right": "Fazer broadcast do lado pequeno"
+      },
+      {
+        "left": "A chave quente é `NULL` e nenhum relatório precisa dessas linhas",
+        "right": "Filtrar as linhas antes do join"
+      },
+      {
+        "left": "Duas tabelas grandes, um cliente quente, Spark 4 com as configurações padrão",
+        "right": "Deixar a execução adaptativa dividir a partição"
+      },
+      {
+        "left": "Uma escrita particionada deixou 1.500 arquivos de 30 KiB",
+        "right": "Reparticionar antes pela coluna de partição"
+      }
+    ],
+    "right_distractors": [
+      "Subir o spark.sql.shuffle.partitions"
+    ]
+  },
+  "ex-76xm0t0h": {
+    "prompt": "Ponha em ordem os passos de salgar um join desbalanceado.",
+    "hint": "O lado grande recebe o sal antes de o lado pequeno ser copiado.",
+    "items": [
+      "Achar a chave quente contando linhas por chave",
+      "Acrescentar um sal de um hash a cada linha do lado grande",
+      "Copiar o lado pequeno uma vez por valor de sal",
+      "Fazer o join pela chave e pelo sal juntos"
+    ]
+  }
+}

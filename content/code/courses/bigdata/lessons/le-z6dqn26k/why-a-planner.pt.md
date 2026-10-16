@@ -1,0 +1,35 @@
+---
+title: Você diz o quê, o planejador decide como
+version: 1
+---
+
+**Um programa DataFrame ou uma consulta SQL não diz como calcular a resposta, e é para isso que se
+escreve desse jeito.** Ele diz que linhas, que colunas e o que fazer com elas. Transformar isso em
+tarefas, shuffles e leituras de arquivo é trabalho do *Catalyst*, o planejador de consultas do
+Spark, e as decisões que ele toma são a maior parte da diferença entre um job que leva um minuto e um
+que leva uma hora.
+
+O Catalyst trabalha em quatro passos, e o `explain` imprime o resultado de cada um:
+
+1. **Interpretar.** A consulta vira uma árvore de operações, o *plano lógico interpretado*. Os nomes
+   ainda são só nomes: o Catalyst ainda não sabe se `book_id` existe.
+2. **Analisar.** Cada nome é procurado no esquema dos dados, cada tipo é conferido, e a árvore vira o
+   *plano lógico analisado*. Uma coluna com nome errado falha aqui, antes de qualquer dado ser lido.
+3. **Otimizar.** Regras reescrevem a árvore numa equivalente e mais barata: filtros levados o mais
+   perto possível dos dados, colunas que ninguém usa descartadas, constantes calculadas uma vez. O
+   resultado é o *plano lógico otimizado*. Ele ainda diz o quê, não como.
+4. **Planejar fisicamente.** Cada operação lógica recebe uma implementação: que tipo de join, que tipo
+   de agregação, onde ficam os shuffles. Esse é o *plano físico*, o que roda, e boa parte dele é
+   compilada em código Java no último momento.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" data-fig=\"l06-catalyst\" aria-label=\"O planejador em cinco passos. Um programa DataFrame ou uma consulta SQL é interpretado num plano lógico, analisado contra o esquema num plano analisado, reescrito por regras num plano otimizado e recebe implementações como plano físico. Enquanto o job roda, a execução adaptativa olha cada shuffle terminado e replaneja o que vem depois.\"><defs><marker id=\"st-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"st-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"10.0\" y=\"60.0\" width=\"110.0\" height=\"56.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"65.0\" y=\"88.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">DataFrame ou SQL</text><path d=\"M122.0 88.0 L138.0 88.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#st-ah-paper-dim)\"></path><rect x=\"140.0\" y=\"60.0\" width=\"130.0\" height=\"56.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"205.0\" y=\"80.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">interpretado</text><text x=\"205.0\" y=\"97.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">nomes como texto</text><path d=\"M267.0 88.0 L283.0 88.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#st-ah-paper-dim)\"></path><rect x=\"285.0\" y=\"60.0\" width=\"130.0\" height=\"56.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"350.0\" y=\"80.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">analisado</text><text x=\"350.0\" y=\"97.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">nomes conferidos</text><path d=\"M412.0 88.0 L428.0 88.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#st-ah-paper-dim)\"></path><rect x=\"430.0\" y=\"60.0\" width=\"130.0\" height=\"56.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"495.0\" y=\"80.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">otimizado</text><text x=\"495.0\" y=\"97.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">regras reescrevem</text><path d=\"M557.0 88.0 L573.0 88.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" fill=\"none\" marker-end=\"url(#st-ah-paper-dim)\"></path><rect x=\"575.0\" y=\"60.0\" width=\"130.0\" height=\"56.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"640.0\" y=\"80.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">físico</text><text x=\"640.0\" y=\"97.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">joins, shuffles</text><text x=\"352.0\" y=\"40.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">o quê</text><text x=\"645.0\" y=\"40.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">como</text><path d=\"M645 116 L645 170 L560 170\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M560 182 L645 182 L645 120\" stroke=\"var(--amber)\" stroke-width=\"1.3\" fill=\"none\" stroke-dasharray=\"4 3\" marker-end=\"url(#st-ah-amber)\"></path><text x=\"548.0\" y=\"176.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">durante a execução: replaneja após cada shuffle</text></svg>", "caption": "Três planos dizem o quê; o quarto diz como, e a execução adaptativa continua revisando-o conforme os estágios terminam.", "same": ["joins, shuffles"]}
+```
+
+**Um programa RDD pula os quatro.** Um `filter(lambda ...)` é uma função que o Spark precisa rodar
+como está, em cada linha, na ordem escrita. Por isso a versão RDD da aula 5 foi a mais lenta: nenhum
+passo dela podia ser movido, fundido ou pulado, porque o Catalyst não enxergava nenhum.
+
+Desde o Spark 3 há um quinto passo, que acontece enquanto o job roda: a **execução adaptativa de
+consultas** olha o que os primeiros estágios produziram de fato e replaneja o resto. A seção 10
+mostra ela mudando um plano depois que o planejador já tinha terminado.

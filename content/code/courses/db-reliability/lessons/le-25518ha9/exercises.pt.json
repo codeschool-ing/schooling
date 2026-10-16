@@ -1,0 +1,210 @@
+{
+  "ex-nz3tpz5w": {
+    "prompt": "Quanto custa um backup a frio (parar o servidor, copiar o diretório, subir de novo)?",
+    "hint": "O que o servidor está fazendo enquanto o cp roda?",
+    "choices": [
+      { "text": "A consistência, já que os arquivos são copiados um depois do outro", "why": "Com o servidor parado nada muda durante a cópia, então todo arquivo é do mesmo momento." },
+      { "text": "O write-ahead log, que uma cópia a frio deixa para trás no servidor", "why": "A cópia levou o pg_wal também: 689 dos seus 991 MB." },
+      { "text": "Uma indisponibilidade enquanto a cópia durar", "why": "Isso. A cópia é perfeita, e ninguém consegue usar o banco enquanto ela é feita." },
+      { "text": "Nada; é a versão grátis de um base backup", "why": "Custa a única coisa que a maioria dos bancos não pode dispensar: ficar fora do ar." }
+    ]
+  },
+  "ex-hbc1fvb7": {
+    "prompt": "A cópia a frio tinha 991 MB. Quantos desses megabytes eram o diretório `pg_wal`?",
+    "hint": "O segundo du.",
+    "unit": "MB"
+  },
+  "ex-fspfcxjk": {
+    "prompt": "Alguém faz backup de um servidor ocupado com um `cp -a` do diretório de dados, e a cópia sobe sem erros. O que pode estar errado com ela?",
+    "hint": "Quando cada arquivo foi copiado?",
+    "choices": [
+      { "text": "Cada arquivo é de um momento diferente", "why": "Isso. Sem o log escrito durante a cópia, nada conserta os arquivos até virarem um momento só." },
+      { "text": "Nada: uma cópia que sobe limpa é consistente", "why": "Ela subiu porque a recuperação de queda não achou nada que reconhecesse como errado. Isso não é o mesmo que consistente." },
+      { "text": "Os arquivos são do usuário errado e o servidor vai recusá-los", "why": "O cp -a preserva donos e permissões, e o cenário diz que ela subiu." },
+      { "text": "Faltam os índices, porque o cp os pula", "why": "O cp copia todo arquivo; os índices estão lá, talvez apontando para linhas que não estão." }
+    ]
+  },
+  "ex-5rhwrj6x": {
+    "prompt": "Do que uma recuperação de queda precisaria para consertar uma cópia feita com `cp` num servidor rodando?",
+    "hint": "O servidor já escreve isso.",
+    "choices": [
+      { "text": "Uma lista de quais arquivos o cp copiou primeiro", "why": "A ordem sozinha não diz nada à recuperação sobre o que mudou nesse meio-tempo." },
+      { "text": "Uma segunda cópia tirada logo depois da primeira", "why": "Duas cópias inconsistentes não fazem uma consistente." },
+      { "text": "Os checksums de cada arquivo no momento em que a cópia começou", "why": "Checksums dizem se os bytes mudaram, não o que fazer a respeito." },
+      { "text": "Todo o log escrito durante a cópia, e um pouco antes", "why": "Isso. Esse trecho de write-ahead log é o que o pg_basebackup coleta e para onde o backup_label aponta." }
+    ]
+  },
+  "ex-m1wmy6xr": {
+    "prompt": "Ponha os passos de `pg_basebackup -X stream -c fast` na ordem em que ele os relatou.",
+    "hint": "A posição no log vem de um checkpoint.",
+    "items": [
+      "Esperar um checkpoint",
+      "Anotar o ponto de início do write-ahead log",
+      "Copiar os arquivos enquanto um receptor coleta o log",
+      "Anotar o ponto final e escrever o manifesto"
+    ],
+    "trap": "O checkpoint fixa o ponto de onde a recuperação parte; os arquivos são copiados enquanto o log chega em stream; o ponto final diz até onde a recuperação tem que ir."
+  },
+  "ex-zj102rnf": {
+    "prompt": "Por que o `-c fast` não é o padrão do `pg_basebackup`?",
+    "hint": "O que um checkpoint imediato faz num servidor ocupado?",
+    "choices": [
+      { "text": "Ele pula o checkpoint, o que torna o backup inseguro", "why": "Ele pede o checkpoint imediatamente; não o pula." },
+      { "text": "Uma rajada de escritas que um servidor ocupado sente", "why": "Isso. O padrão espalha as escritas do checkpoint, e o backup espera por ele em vez disso." },
+      { "text": "Ele só funciona com -X stream", "why": "Os dois são independentes; o -c escolhe o checkpoint, o -X, o log." },
+      { "text": "Ele gera um backup sem manifesto", "why": "O manifesto é escrito de qualquer jeito." }
+    ]
+  },
+  "ex-5tm2n4sq": {
+    "prompt": "O que o `backup_label` diz ao servidor que sobe na cópia?",
+    "hint": "A primeira linha dele.",
+    "choices": [
+      { "text": "Quem tirou o backup, quando e por quê, para registro", "why": "A linha LABEL é um nome. O que importa para o servidor é a posição de início." },
+      { "text": "Onde a recuperação deve começar no log", "why": "Isso. O servidor reaplica a partir de START WAL LOCATION em vez de confiar no arquivo de controle." },
+      { "text": "Quais bancos o backup contém", "why": "Um base backup contém todos; o label não lista bancos." },
+      { "text": "A senha do papel que o tirou", "why": "Não há senha nenhuma nele." }
+    ]
+  },
+  "ex-em38x2eg": {
+    "prompt": "Com `-X ___`, o `pg_basebackup` coleta o write-ahead log por uma segunda conexão enquanto os arquivos são copiados.",
+    "hint": "A palavra para o jeito como uma réplica recebe o log.",
+    "blanks": [
+      { "accept": ["stream"] }
+    ]
+  },
+  "ex-3bq4yf3v": {
+    "prompt": "Uma linha de texto foi acrescentada a `global/pg_control` no backup. Como o `pg_verifybackup` percebeu?",
+    "hint": "Olhe o erro dele.",
+    "choices": [
+      { "text": "O servidor se recusou a subir na cópia", "why": "O pg_verifybackup nunca sobe um servidor; ele lê os arquivos." },
+      { "text": "Ele leu o pg_control e achou um estado inválido", "why": "Ele não interpreta o arquivo; compara-o com o que o manifesto diz." },
+      { "text": "O write-ahead log não batia mais com o arquivo", "why": "O erro citou o tamanho do arquivo, não o log." },
+      { "text": "O tamanho diferia do que o manifesto tinha", "why": "Isso. 8201 bytes em disco contra 8192 registrados quando o servidor o mandou." }
+    ]
+  },
+  "ex-xkrdm7dh": {
+    "prompt": "Um base backup passa no `pg_verifybackup`. O que isso estabeleceu?",
+    "hint": "Os bytes de quem são comparados com os de quem?",
+    "choices": [
+      { "text": "Os bytes são os que o servidor mandou", "why": "Isso, e o log de que a cópia precisa também está lá. Uma classe de falha foi descartada; uma restauração continua sendo a única prova de que funciona." },
+      { "text": "Que o banco lá dentro está livre de corrupção", "why": "Uma página danificada no servidor é copiada fielmente e passa na verificação sem problema." },
+      { "text": "Que um servidor vai subir nele e responder a consultas", "why": "Só subir um estabelece isso." },
+      { "text": "Que ele bate com o servidor vivo como está agora", "why": "Ele é comparado com o manifesto escrito quando foi tirado, não com o servidor de hoje." }
+    ]
+  },
+  "ex-vgaxq527": {
+    "prompt": "Por que o `pg_verifybackup` é digitado como `/usr/lib/postgresql/16/bin/pg_verifybackup`?",
+    "hint": "Onde o Ubuntu põe os programas menos comuns do PostgreSQL?",
+    "choices": [
+      { "text": "Porque ele tem que rodar como root", "why": "Ele rodou como ana. O caminho completo diz respeito a onde o programa está, não a quem o roda." },
+      { "text": "Porque o nome é igual ao de outro programa", "why": "Nenhum outro programa tem esse nome." },
+      { "text": "O Ubuntu o deixa fora do PATH", "why": "Isso. O Ubuntu embrulha as ferramentas comuns em /usr/bin e deixa o resto em /usr/lib/postgresql/16/bin." },
+      { "text": "Porque a versão 16 o renomeou", "why": "Ele tem esse nome desde o PostgreSQL 13." }
+    ]
+  },
+  "ex-591k0pwk": {
+    "prompt": "Uma restauração copia o base backup para o diretório de dados e o entrega ao postgres, mas pula o `chmod 700`. O que acontece?",
+    "hint": "O PostgreSQL é exigente quanto a quem pode ler os arquivos dele.",
+    "choices": [
+      { "text": "O servidor sobe, e qualquer um na máquina consegue ler os dados", "why": "O PostgreSQL confere as permissões do diretório ao subir e recusa em vez de rodar exposto." },
+      { "text": "O servidor sobe só para leitura até as permissões serem corrigidas", "why": "Esse modo não existe; ele não sobe." },
+      { "text": "Nada; o cp -a já as acertou", "why": "O backup foi escrito por ana com permissões comuns; a restauração tem que apertá-las." },
+      { "text": "O servidor se recusa a subir, e diz por quê no log", "why": "Isso. Um diretório de dados legível por outros é recusado, e o log cita as permissões." }
+    ]
+  },
+  "ex-saqhkv94": {
+    "prompt": "Qual linha do log diz que a cópia restaurada virou um único momento consistente?",
+    "hint": "Antes dela, a cópia ainda está sendo consertada.",
+    "choices": [
+      { "text": "`database system is ready to accept connections`", "why": "Essa vem depois, após o checkpoint; a consistência foi alcançada antes dela." },
+      { "text": "`checkpoint starting: end-of-recovery immediate wait`", "why": "Esse checkpoint vem depois da recuperação; não marca a consistência." },
+      { "text": "`consistent recovery state reached at 0/2D000100`", "why": "Isso. Reaplicar até o ponto final do backup é o que torna a cópia consistente." },
+      { "text": "`redo starts at`, a primeira linha de replay", "why": "É ali que o conserto começa, não onde ele termina." }
+    ]
+  },
+  "ex-0n89bx21": {
+    "prompt": "Restaurar o base backup não precisou de `createdb`, de arquivo de globais nem de papéis criados antes. Por quê?",
+    "hint": "Onde os papéis ficam em disco?",
+    "choices": [
+      { "text": "Os papéis estão no diretório de dados, e a cópia os levou", "why": "Isso. O servidor inteiro volta: papéis, todos os bancos e os donos deles." },
+      { "text": "O pg_basebackup faz o dump dos globais por você", "why": "Ele não faz dump de nada. Copia arquivos, e os papéis são arquivos como todo o resto." },
+      { "text": "O servidor de restauração já tinha os mesmos papéis da lição 2", "why": "O diretório de dados dele foi apagado e substituído; nada dele sobreviveu." },
+      { "text": "Restaurações físicas ignoram os donos por completo", "why": "Os donos voltam exatamente como estavam, porque os arquivos do catálogo são copiados." }
+    ]
+  },
+  "ex-3fg5w4rv": {
+    "prompt": "É tirado um snapshot de armazenamento do único volume que guarda o diretório de dados e o log de um servidor rodando. Em que estado ele está?",
+    "hint": "Como se algo tivesse acontecido naquele instante.",
+    "choices": [
+      { "text": "Inconsistente, como um cp de um servidor rodando", "why": "Um cp lê os arquivos em momentos diferentes; um snapshot captura todos num só." },
+      { "text": "Crash-consistent: como depois de um corte de energia, do qual o PostgreSQL se recupera", "why": "Isso. Todo arquivo é do mesmo instante, e o log conserta o resto ao subir." },
+      { "text": "Limpo, como se o servidor tivesse sido desligado", "why": "Nada foi descarregado nem fechado; é o estado depois de uma queda, não depois de um desligamento." },
+      { "text": "Inutilizável sem pg_backup_start", "why": "Um único snapshot atômico é seguro sem ele; o log faz a recuperação de queda funcionar." }
+    ]
+  },
+  "ex-700tz0rd": {
+    "prompt": "Os dados e o write-ahead log ficam em dois discos na nuvem. Um script tira snapshot de um e depois do outro, 400 ms mais tarde. Qual é o problema, e a correção?",
+    "hint": "Uma queda, ou duas?",
+    "choices": [
+      { "text": "Nenhum: 400 ms é curto demais para importar", "why": "Qualquer escrita nesses 400 ms faz o log descrever uma história que a cópia dos dados não tem." },
+      { "text": "O snapshot do log é desnecessário; tire só o do volume de dados", "why": "Sem o log, a recuperação de queda não tem com que consertar os dados." },
+      { "text": "São duas quedas em dois momentos; tire os snapshots como um grupo atômico", "why": "Isso, ou envolva os snapshots em pg_backup_start e pg_backup_stop e guarde o label." },
+      { "text": "Rodar fsfreeze nos dois volumes faz a diferença sumir", "why": "O fsfreeze deixa cada volume limpo por conta própria; não transforma dois snapshots num instante só." }
+    ]
+  },
+  "ex-y44re1f0": {
+    "prompt": "Por que um snapshot da sua máquina virtual rodando não é um backup no sentido deste curso, embora o PostgreSQL se recuperasse dele?",
+    "hint": "Onde o snapshot mora?",
+    "choices": [
+      { "text": "Ele mora no computador que protege", "why": "Isso. Um disco que falha ou uma máquina apagada leva os dois. A lição 9 trata disso." },
+      { "text": "Porque ele não é crash-consistent", "why": "Ele é: o disco inteiro é um volume, capturado num instante." },
+      { "text": "Porque o PostgreSQL não lê o formato de um hipervisor", "why": "Restaurar o snapshot devolve o disco à máquina; o PostgreSQL nunca vê formato nenhum." },
+      { "text": "Porque é tirado com frequência demais para ser útil", "why": "A frequência não é a questão; o lugar é." }
+    ]
+  },
+  "ex-1241qase": {
+    "prompt": "Quantos segundos o `pg_basebackup` levou para o servidor inteiro de 318 MB?",
+    "hint": "A linha real.",
+    "unit": "segundos"
+  },
+  "ex-1vxdhjk4": {
+    "prompt": "Por que a restauração física não ficou mais lenta com o número de índices, como a restauração lógica da lição 2?",
+    "hint": "O que aconteceu com os índices em cada uma?",
+    "choices": [
+      { "text": "A restauração física pulou os índices e os reconstruiu depois", "why": "Nada é reconstruído depois; os índices chegam como arquivos prontos." },
+      { "text": "Base backups comprimem índices melhor do que dumps", "why": "A compressão não é a diferença. Um dump nem contém índices, só os comandos para montá-los." },
+      { "text": "O servidor de restauração tinha mais memória para ordenar", "why": "As duas restaurações rodaram na mesma máquina." },
+      { "text": "Os índices voltaram como arquivos, já montados", "why": "Isso. O tempo dela depende dos bytes e do disco, não do que precisa ser reconstruído." }
+    ]
+  },
+  "ex-tctz93pg": {
+    "prompt": "Qual destas coisas um base backup de um servidor PostgreSQL 16 NÃO consegue fazer? Marque todas as que se aplicam.",
+    "hint": "Pense em versão, alcance e estrago.",
+    "choices": [
+      { "text": "Subir no PostgreSQL 17", "why": "Isso. Uma cópia física só sobe na mesma versão major." },
+      { "text": "Restaurar uma tabela sem restaurar o servidor", "why": "Isso. Recuperar uma tabela significa antes restaurar o servidor inteiro em outro lugar." },
+      { "text": "Restaurar todos os bancos do servidor de uma vez", "why": "É exatamente o que ele faz: o servidor inteiro volta." },
+      { "text": "Detectar uma página danificada copiada do servidor", "why": "Isso. Os bytes batem com o manifesto; o estrago vem junto sem ninguém comentar." }
+    ]
+  },
+  "ex-p2h6btyt": {
+    "prompt": "Um base backup é tirado toda noite às 02:00. Um disco falha às 18:00. Quantos dados se perdem?",
+    "hint": "Um base backup continua sendo um momento.",
+    "choices": [
+      { "text": "Nada, porque um base backup copia o log também", "why": "Ele copia o log escrito durante o backup, que termina um minuto depois das 02:00." },
+      { "text": "Dezesseis horas, como com um dump noturno", "why": "Isso. Mais rápido de restaurar, mesma perda. A lição 4 guarda o log no meio-tempo." },
+      { "text": "Só os minutos que o backup levou", "why": "Tudo depois do ponto final do backup fica fora dele." },
+      { "text": "Oito horas, metade do intervalo", "why": "Não existe meio-termo: o backup guarda 02:00 e nada depois." }
+    ]
+  },
+  "ex-paefc6fw": {
+    "prompt": "Uma equipe guarda só base backups, verificados toda noite com `pg_verifybackup`. Um bug numa controladora de disco vem danificando em silêncio páginas de uma tabela há uma semana. O que eles encontram no dia em que precisam restaurar?",
+    "hint": "O que uma cópia física faz com o estrago, e o que a verificação confere?",
+    "choices": [
+      { "text": "Uma cópia limpa de antes de o estrago começar", "why": "Só se ainda guardarem um backup com mais de uma semana, e nada nas verificações deles teria dito qual." },
+      { "text": "Sete cópias aprovadas, todas com o estrago", "why": "Isso. Um dump teria falhado nas páginas ruins; manter os dois tipos é como uma falha aparece em um deles." },
+      { "text": "A verificação falhando toda noite por uma semana, sem ninguém notar", "why": "A verificação compara a cópia com o que o servidor mandou, que batia. Ela passou toda noite." },
+      { "text": "Uma restauração que se recusa a subir", "why": "Uma página de tabela danificada não impede um servidor de subir; ela aparece quando a tabela é lida." }
+    ]
+  }
+}

@@ -1,0 +1,391 @@
+{
+  "ex-hx67p7jy": {
+    "prompt": "Uma camada recorrente criada com `batch_first=True` lê um tensor de formato `(32, 50, 16)`. O que é o 50?",
+    "hint": "Lote, tempo, atributos.",
+    "choices": [
+      {
+        "text": "O número de sequências no lote",
+        "why": "Esse é o primeiro eixo, 32, quando o lote vem primeiro."
+      },
+      {
+        "text": "O tamanho do estado que a camada guarda",
+        "why": "O tamanho do estado é o `hidden_size` da camada, uma configuração dela e não um eixo da entrada."
+      },
+      {
+        "text": "O número de atributos em cada passo",
+        "why": "Os atributos são o último eixo, 16 aqui, por exemplo a largura de um embedding."
+      },
+      {
+        "text": "Quantos passos tem cada sequência",
+        "why": "Certo: o eixo do meio é o tempo, então cada uma das 32 sequências tem 50 passos de 16 atributos."
+      }
+    ]
+  },
+  "ex-kmf4a32t": {
+    "prompt": "Por que a camada densa do `shapes.py` falhou numa sequência de 9 passos depois de funcionar numa de 6?",
+    "hint": "Conte os pesos dela por posição.",
+    "choices": [
+      {
+        "text": "A tabela de embedding não tinha linha para os símbolos novos",
+        "why": "A sequência nova usou os mesmos oito símbolos; o embedding funcionou e devolveu `(4, 9, 3)`."
+      },
+      {
+        "text": "Ela tem pesos para 18 entradas, e 9 passos achatados dão 27",
+        "why": "Certo: o erro dizia `4x27 and 18x10`. Uma camada densa tem um peso por posição, então uma sequência mais longa tem posições que ela não lê."
+      },
+      {
+        "text": "Uma camada densa recusa entrada `int64`",
+        "why": "Ela nunca viu inteiros: o embedding já os tinha transformado em floats."
+      },
+      {
+        "text": "Nove passos passam do tamanho do lote, que é 4",
+        "why": "Lote e comprimento são eixos separados; um não limita o outro."
+      }
+    ]
+  },
+  "ex-rgq5b10c": {
+    "prompt": "O `nn.Embedding(8, 3)` recebe o símbolo 4. O que ele devolve?",
+    "hint": "Compare as duas linhas que o `shapes.py` imprimiu para o passo 0.",
+    "choices": [
+      {
+        "text": "Um vetor de oito com um 1 na posição 4",
+        "why": "Isso é um vetor one-hot. O embedding devolve três números, a largura com que foi criado."
+      },
+      {
+        "text": "O número 4 escalado para entre 0 e 1",
+        "why": "O tamanho de um símbolo não quer dizer nada, então escalá-lo inventaria uma ordem; o embedding não faz isso."
+      },
+      {
+        "text": "A linha 4 de uma tabela aprendida, de 8 linhas por 3 colunas",
+        "why": "Certo: o `shapes.py` imprimiu os mesmos três números para o passo embutido e para `embed.weight[4]`."
+      },
+      {
+        "text": "Três números aleatórios sorteados de novo a cada chamada",
+        "why": "A tabela é sorteada uma vez, na criação, e depois treinada como qualquer peso; o mesmo símbolo recebe a mesma linha."
+      }
+    ]
+  },
+  "ex-6b1y7wdb": {
+    "prompt": "Quantos parâmetros tem a `nn.RNN(input_size=4, hidden_size=10)`? Ela guarda dois vieses, como a camada da aula.",
+    "hint": "`W_ih` é estado por entrada, `W_hh` estado por estado, e cada viés tem o tamanho do estado.",
+    "unit": "parâmetros"
+  },
+  "ex-ypvgf5xm": {
+    "prompt": "Um modelo prevê, depois de cada caractere de um texto, qual caractere vem a seguir. Qual das duas saídas da `nn.RNN` a camada final dele deve ler?",
+    "hint": "Ele precisa de uma resposta em cada passo, não uma por sequência.",
+    "choices": [
+      {
+        "text": "`out`",
+        "why": "Certo: `out` guarda o estado depois de cada passo, então a camada pode prever em cada um, como o etiquetador da aula."
+      },
+      {
+        "text": "`h_last`, que resume a sequência inteira",
+        "why": "Isso dá uma previsão por sequência, o que serve a um classificador. Aqui cada posição precisa da sua."
+      },
+      {
+        "text": "Só o primeiro passo de `out`, antes de o estado encher",
+        "why": "O primeiro estado viu um caractere; as previsões dos passos seguintes precisam dos estados seguintes."
+      },
+      {
+        "text": "Nenhuma: prever o próximo caractere pede uma camada densa por posição",
+        "why": "Esse é o problema do comprimento fixo que a camada recorrente resolve; um conjunto de pesos lê todos os passos."
+      }
+    ]
+  },
+  "ex-63en47jq": {
+    "prompt": "Por que a mesma `nn.RNN` lê uma sequência de 40 passos depois de ser criada para uma de 4?",
+    "hint": "Em que lugar da fórmula aparece a posição?",
+    "choices": [
+      {
+        "text": "Ela completa toda sequência até um comprimento máximo definido na criação",
+        "why": "Nenhum comprimento é dado quando a camada é criada; os 50 parâmetros dela não mencionam um."
+      },
+      {
+        "text": "O PyTorch acrescenta pesos para os passos extras",
+        "why": "A contagem continua em 50; nada é acrescentado quando a sequência cresce."
+      },
+      {
+        "text": "Os pesos são do passo e servem a todos",
+        "why": "Certo: o laço aplica `W_ih` e `W_hh` em todo `t`, então o comprimento é só o número de voltas."
+      },
+      {
+        "text": "Ela lê os 4 últimos passos e ignora o resto",
+        "why": "`out` tinha 40 estados, um por passo, então todos os passos foram lidos."
+      }
+    ]
+  },
+  "ex-kpghxn4n": {
+    "prompt": "No `bptt.py`, por que o gradiente da RNN é 2.9e-14 para a entrada 49 passos atrás?",
+    "hint": "O que acontece com o gradiente em cada passo da volta?",
+    "choices": [
+      {
+        "text": "É um produto de 49 fatores, cada um um pouco abaixo de 1",
+        "why": "Certo: cada passo para trás multiplica por `W_hh` e pela inclinação do `tanh`, e cinquenta disso dão um número perto de zero."
+      },
+      {
+        "text": "A primeira entrada era um número aleatório menor que a última",
+        "why": "O gradiente mede quanto a saída depende da entrada, não o tamanho da entrada."
+      },
+      {
+        "text": "O autograd para de acompanhar depois de 20 passos",
+        "why": "Ele acompanha os 50; o valor a 30 passos, 1.2e-08, é pequeno e não zero."
+      },
+      {
+        "text": "O `float32` arredonda gradientes muito pequenos para esse valor",
+        "why": "O `float32` representa números bem menores que esse; o encolhimento veio da aritmética, não do arredondamento."
+      }
+    ]
+  },
+  "ex-0jm073g2": {
+    "prompt": "A RNN de um colega treina por algumas centenas de passos e então a perda vira `nan` num único passo. Que mudança responde a isso?",
+    "hint": "O gradiente que encolhe tem uma imagem espelhada.",
+    "choices": [
+      {
+        "text": "Uma sequência mais longa, para o gradiente ter mais caminho para encolher",
+        "why": "O comprimento muda até onde o produto vai; não põe teto num gradiente que já cresceu."
+      },
+      {
+        "text": "Cortar o comprimento do gradiente antes de cada passo",
+        "why": "Certo: um `nan` repentino é o caso da explosão, e o `clip_grad_norm_` limita o tamanho do passo mantendo a direção."
+      },
+      {
+        "text": "Tirar o `tanh`, para nada achatar o estado",
+        "why": "Sem o `tanh` nada limita o estado, e um produto que cresce cresce mais rápido."
+      },
+      {
+        "text": "Treinar por menos passos com a mesma taxa",
+        "why": "Parar antes esconde a falha sem consertar o passo que jogou os pesos longe."
+      }
+    ]
+  },
+  "ex-3wvp4w3b": {
+    "prompt": "Rodar o algoritmo da aula 3 sobre uma RNN desenrolada em uma camada por passo da sequência se chama retropropagação no ___.",
+    "hint": "Os passos de uma sequência acontecem ao longo de um eixo.",
+    "blanks": [
+      {
+        "accept": [
+          "tempo"
+        ]
+      }
+    ]
+  },
+  "ex-9qjpfgx1": {
+    "prompt": "O que permite a uma LSTM levar um gradiente por muitos passos onde uma RNN o perde?",
+    "hint": "Olhe a linha que atualiza o `c`.",
+    "choices": [
+      {
+        "text": "Ela tem quatro vezes os parâmetros de uma RNN com os mesmos tamanhos de entrada e estado",
+        "why": "Mais parâmetros não mudam o produto na volta; o caminho muda."
+      },
+      {
+        "text": "O `tanh` dela é trocado por uma sigmoid",
+        "why": "Ela tem os dois, e a inclinação da sigmoid é menor que a do `tanh`, o que encolheria o gradiente mais rápido."
+      },
+      {
+        "text": "De um estado da célula ao seguinte o gradiente só encontra a porta de esquecimento",
+        "why": "Certo: `c = f * c0 + i * g` não tem matriz nem `tanh` entre `c0` e `c`, então uma porta perto de 1 o deixa passar."
+      },
+      {
+        "text": "Ela guarda uma cópia de cada entrada",
+        "why": "A memória dela são dois vetores de tamanho fixo, como o único da RNN; nada cresce com o comprimento."
+      }
+    ]
+  },
+  "ex-9pxkn4tn": {
+    "prompt": "O `bptt.py lstm` imprimiu 1.6e-11 a 49 passos e o `bptt.py lstm 3` imprimiu 2.9e-02. O que o par mostra?",
+    "hint": "A segunda execução mudou um viés, não a arquitetura.",
+    "choices": [
+      {
+        "text": "A LSTM guarda gradientes desde o início; a primeira deu azar",
+        "why": "As duas usaram a semente 0; a diferença é o viés, e uma LSTM nova perdeu o gradiente quase tão rápido quanto a RNN."
+      },
+      {
+        "text": "Um viés maior aumenta todo gradiente, em qualquer camada",
+        "why": "O viés agiu pela porta de esquecimento, o único fator no caminho do estado da célula; numa RNN não existe porta assim."
+      },
+      {
+        "text": "A porta de saída estava fechada na primeira execução",
+        "why": "A segunda execução mudou só o viés da porta de esquecimento; a porta de saída era a mesma nas duas."
+      },
+      {
+        "text": "O caminho existe, e uma porta de esquecimento aberta é o que o usa",
+        "why": "Certo: com as portas em torno de 0,95 a mesma camada passou nove ordens de grandeza a mais de gradiente. O treino tem de abri-las, ou um viés tem de começá-las abertas."
+      }
+    ]
+  },
+  "ex-v2xfvcj9": {
+    "prompt": "Ligue cada parte de um passo de LSTM ao que ela faz.",
+    "hint": "`c = f * c0 + i * g` e `h = o * tanh(c)`.",
+    "pairs": [
+      {
+        "left": "porta de esquecimento `f`",
+        "right": "multiplica o que o estado da célula já guarda"
+      },
+      {
+        "left": "porta de entrada `i`",
+        "right": "multiplica o que este passo propõe acrescentar"
+      },
+      {
+        "left": "candidato `g`",
+        "right": "o conteúdo novo, passado por um `tanh`"
+      },
+      {
+        "left": "porta de saída `o`",
+        "right": "decide quanto do estado da célula aparece como `h`"
+      }
+    ],
+    "right_distractors": [
+      "multiplica o estado por `W_hh` na volta"
+    ]
+  },
+  "ex-cbkfwbtv": {
+    "prompt": "No comprimento 20 a RNN terminou em 0,482 e a LSTM em 1,000, com os mesmos dados e passos. O que explica a diferença?",
+    "hint": "A resposta fica 19 passos antes da pergunta.",
+    "choices": [
+      {
+        "text": "O gradiente da resposta chega ao primeiro símbolo pelo estado da célula da LSTM",
+        "why": "Certo: o gradiente da RNN chega 19 passos atrás fraco, e por isso ela ainda estava subindo, e o viés de esquecimento +1 da LSTM manteve o caminho aberto."
+      },
+      {
+        "text": "A LSTM viu mais sequências de treino",
+        "why": "As duas sortearam 3.000 lotes de 64 do mesmo gerador com a mesma semente."
+      },
+      {
+        "text": "O estado de 64 números da RNN é pequeno demais para guardar os três bits do primeiro símbolo",
+        "why": "Os dois estados têm 64 números, muito mais que três bits; a RNN falhou em aprender a guardá-los, não em caber."
+      },
+      {
+        "text": "O conjunto de teste favoreceu a LSTM",
+        "why": "Eram as mesmas 1.000 sequências para as duas, sorteadas da semente 1234."
+      }
+    ]
+  },
+  "ex-rfz8fy9k": {
+    "prompt": "A LSTM terminou em 0,144 no comprimento 50, onde o acaso é 0,125. O que essa execução sustenta?",
+    "hint": "Uma execução, 3.000 passos, 1.000 sequências de teste.",
+    "choices": [
+      {
+        "text": "Uma LSTM não aprende esta tarefa no comprimento 50",
+        "why": "A execução testou um orçamento e uma configuração; mais passos ou outra taxa não foram testados, então ela não mostra um limite da célula."
+      },
+      {
+        "text": "A LSTM começou a aprender e chegaria a 1,000 com mais passos",
+        "why": "0,144 contra 0,125 em 1.000 sequências é pouco o bastante para ser ruído, e nenhuma execução mediu mais passos."
+      },
+      {
+        "text": "Com este orçamento ela não aprendeu",
+        "why": "Certo: essa é a afirmação inteira que a aula faz. O resto pediria mais execuções."
+      },
+      {
+        "text": "A RNN foi o melhor modelo no comprimento 50",
+        "why": "Ela terminou em 0,118, no acaso como a LSTM; nenhuma aprendeu a tarefa."
+      }
+    ]
+  },
+  "ex-9yj5ma0h": {
+    "prompt": "Se `SYMBOLS` no `seqtask.py` fosse 10 em vez de 8, que acurácia um modelo que chuta teria na tarefa de lembrar?",
+    "hint": "O acaso com oito símbolos era 0,125."
+  },
+  "ex-zhdgbzgw": {
+    "prompt": "O `timing.py` leu 3.200 símbolos como 64 sequências de 50 e como uma sequência de 3.200. O que a comparação isolou?",
+    "hint": "Mesmos símbolos, mesma camada, mesmas multiplicações.",
+    "choices": [
+      {
+        "text": "O custo da memória maior que uma sequência longa pede",
+        "why": "As duas execuções guardam o mesmo número de estados; a diferença é como os passos estão arrumados."
+      },
+      {
+        "text": "A velocidade de quatro threads contra uma",
+        "why": "O programa fixa uma thread para as duas linhas, então as threads são as mesmas dos dois lados."
+      },
+      {
+        "text": "O custo da passada para trás",
+        "why": "Só a passada para a frente foi medida, sob `torch.no_grad()`."
+      },
+      {
+        "text": "A arrumação: 50 passos com 64 linhas contra 3.200 passos com uma",
+        "why": "Certo: a aritmética era idêntica e a sequência única levou 3,9 vezes mais, porque os passos dela rodam um depois do outro."
+      }
+    ]
+  },
+  "ex-jky63z0x": {
+    "prompt": "O teclado de um celular sugere a próxima palavra a cada letra digitada, gastando pouca memória. Por que uma rede recorrente ainda serve a ele?",
+    "hint": "Quanto custa um símbolo a mais para uma RNN?",
+    "choices": [
+      {
+        "text": "Ela treina mais rápido que um transformer em textos longos",
+        "why": "Treinar em textos longos é onde ela é mais lenta: os passos rodam um depois do outro."
+      },
+      {
+        "text": "Cada letra custa um passo, e só o estado é guardado",
+        "why": "Certo: o custo por passo é constante, na letra 10 como na letra 10.000, que é o que uma entrada que chega aos pedaços quer."
+      },
+      {
+        "text": "O estado dela cresce com o texto, então ela não esquece nada",
+        "why": "O estado tem tamanho fixo; isso é ao mesmo tempo o limite dela e, aqui, a vantagem."
+      },
+      {
+        "text": "Um celular não tem processador que rode produtos de matrizes",
+        "why": "Todo modelo aqui é produto de matrizes; um celular os roda, e a questão é quantos e com quanta memória."
+      }
+    ]
+  },
+  "ex-6fd27hzv": {
+    "prompt": "Ponha um passo de uma LSTM na ordem em que é calculado.",
+    "hint": "O `lstm_step.py`, de cima para baixo.",
+    "items": [
+      "uma soma da entrada e da saída anterior pelos pesos",
+      "corte em quatro blocos: três sigmoids e um `tanh`",
+      "novo estado da célula: esquecimento vezes o antigo, mais entrada vezes candidato",
+      "nova saída: porta de saída vezes `tanh` do estado da célula"
+    ]
+  },
+  "ex-rs0hsyd2": {
+    "prompt": "Quais destas afirmações valem para as camadas recorrentes desta aula? Escolha todas as que valem.",
+    "hint": "Parâmetros, caminhos e passos.",
+    "choices": [
+      {
+        "text": "O número de parâmetros delas não depende do comprimento da sequência",
+        "why": "Certo: os pesos pertencem ao passo, 50 para a RNN quer ela leia 4 passos ou 40."
+      },
+      {
+        "text": "Uma LSTM tem quatro vezes os parâmetros de uma RNN com os mesmos tamanhos",
+        "why": "Certo: 200 contra 50, porque ela calcula quatro blocos onde a RNN calcula um."
+      },
+      {
+        "text": "Uma LSTM recém-criada passa gradientes 50 passos para trás quase sem perda",
+        "why": "Nova, ela imprimiu 1.6e-11 a 49 passos; só com o viés de esquecimento aumentado ela manteve 2.9e-02."
+      },
+      {
+        "text": "Os passos de uma sequência são calculados um depois do outro",
+        "why": "Certo: cada um precisa do estado que o anterior escreveu, que é o que o `timing.py` mediu."
+      },
+      {
+        "text": "Cortar o gradiente cura o gradiente que encolhe com a distância",
+        "why": "O corte limita um gradiente que cresceu; um gradiente de 1e-14 não tem nada a limitar."
+      }
+    ]
+  },
+  "ex-6qgvtkj6": {
+    "prompt": "Você precisa classificar sequências de 500 leituras de sensor, em que o evento que decide a classe fica perto do começo. Antes de treinar uma LSTM nelas, o que esta aula diz para verificar primeiro?",
+    "hint": "Até onde a LSTM da aula alcançou com o orçamento dela?",
+    "choices": [
+      {
+        "text": "Se as leituras cabem em `int64`",
+        "why": "Leituras de sensor são atributos, floats entregues direto; `int64` é para símbolos que vão para um embedding."
+      },
+      {
+        "text": "Se o lote de sequências é maior que os 500 passos de cada uma delas",
+        "why": "Lote e comprimento são eixos separados e nenhum precisa ser maior."
+      },
+      {
+        "text": "Se `batch_first=True` dobra a velocidade",
+        "why": "Muda a ordem dos eixos que a camada espera, não o trabalho que ela faz."
+      },
+      {
+        "text": "Se o gradiente chega 500 passos atrás, com um teste como o `bptt.py`",
+        "why": "Certo: a LSTM da aula não aprendeu um fato a 50 passos com o orçamento dela, então um fato a 500 é o risco a medir antes de gastar um treino."
+      }
+    ]
+  }
+}

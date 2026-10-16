@@ -1,0 +1,831 @@
+[
+  {
+    "id": "ex-ty1jtxtg",
+    "version": 1,
+    "section": "this-course",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this course's lab, what is staged rather than real?",
+    "hint": "Think about what the three workers share.",
+    "choices": [
+      {
+        "text": "The query plans, which are drawn by the course",
+        "correct": false,
+        "why": "No. Every plan in the course is printed by Spark itself."
+      },
+      {
+        "text": "The network between the workers, which is the machine's own memory",
+        "correct": true,
+        "why": "Right. The processes, the shuffle files and the retries are real; only the slowness of a real network is missing."
+      },
+      {
+        "text": "The workers, which are threads inside the master",
+        "correct": false,
+        "why": "No. Each worker is a separate Java process with its own memory."
+      },
+      {
+        "text": "The data moving between workers, which Spark skips on one machine",
+        "correct": false,
+        "why": "No. The data is serialised, written and read back by another process exactly as on a large cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-3g9a87r4",
+    "version": 1,
+    "section": "this-course",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab's clickstream is 243 MB compressed. Why does the course still use it to teach clusters?",
+    "hint": "What does the lesson promise to do where size changes the conclusion?",
+    "choices": [
+      {
+        "text": "A small data set makes the timings representative of a large one",
+        "correct": false,
+        "why": "The opposite. Small data hides the overhead that matters at scale, which is why the lesson warns about fast runs."
+      },
+      {
+        "text": "243 MB is already more than Spark can process on one machine",
+        "correct": false,
+        "why": "No. The lesson processes it on one machine in about a minute."
+      },
+      {
+        "text": "Mechanisms do not change with size; costs are computed on paper",
+        "correct": true,
+        "why": "Yes. Plans, stages, shuffles and spills behave the same; only their cost scales, and that is computed on paper."
+      },
+      {
+        "text": "Compression makes 243 MB of text equivalent to about a terabyte of raw events",
+        "correct": false,
+        "why": "No. Unpacked it is 1.3 GB, nowhere near a terabyte."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nha44ww",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course recommend a virtual machine for the lab?",
+    "hint": "Think about what the cluster starts and what later lessons install.",
+    "choices": [
+      {
+        "text": "It contains the cluster, and Hadoop goes away with it",
+        "correct": true,
+        "why": "Right. Both reasons are about containment, not about speed."
+      },
+      {
+        "text": "Spark refuses to start outside a virtual machine",
+        "correct": false,
+        "why": "No. The installed path runs the same commands on Ubuntu or WSL 2."
+      },
+      {
+        "text": "The online path stops working after lesson 2",
+        "correct": false,
+        "why": "It covers some lessons and not others, but that is not why a virtual machine is recommended."
+      },
+      {
+        "text": "A virtual machine runs Java faster than the computer it is running on",
+        "correct": false,
+        "why": "No. It shares that computer's processors and memory, and adds a little overhead."
+      }
+    ]
+  },
+  {
+    "id": "ex-dp2wx06g",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `sha512sum -c spark-4.1.3-bin-hadoop3.tgz.sha512` establish?",
+    "hint": "It compares two things.",
+    "choices": [
+      {
+        "text": "That the file is the one published",
+        "correct": true,
+        "why": "Yes. It recomputes the checksum and compares it with the published one."
+      },
+      {
+        "text": "That the archive unpacks without errors into a directory named after its version",
+        "correct": false,
+        "why": "Not directly. It checks the bytes, and a correct archive happens to unpack."
+      },
+      {
+        "text": "That Java 17 is installed",
+        "correct": false,
+        "why": "No. `java -version` answers that."
+      },
+      {
+        "text": "That Spark can reach the master",
+        "correct": false,
+        "why": "No. Nothing is running yet when the checksum is checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbhvvtj9",
+    "version": 1,
+    "section": "the-lab",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The line `echo '. ~/.sparkrc' >> ~/.bashrc` makes every new ___ read the file that puts Spark on the path.",
+    "hint": "Where you type commands.",
+    "blanks": [
+      {
+        "accept": [
+          "terminal",
+          "shell",
+          "bash"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9g9dd405",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `SPARK_LOCAL_IP=127.0.0.1` in `spark-env.sh` buy the lab?",
+    "hint": "127.0.0.1 is the machine's own address.",
+    "choices": [
+      {
+        "text": "It gives each worker one core and one gigabyte of memory to offer",
+        "correct": false,
+        "why": "No. `SPARK_WORKER_CORES` does that."
+      },
+      {
+        "text": "Only the machine itself reaches the cluster",
+        "correct": true,
+        "why": "Right. The price is that a browser on another computer needs a tunnel."
+      },
+      {
+        "text": "The workers run faster on the loopback address",
+        "correct": false,
+        "why": "No. The address changes who can connect, not how fast the work goes."
+      },
+      {
+        "text": "It turns on the record of every job",
+        "correct": false,
+        "why": "No. `spark.eventLog.enabled` does that, in `spark-defaults.conf`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ev5vfeb3",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each configuration file to what reads it.",
+    "hint": "One is read when the cluster starts, one when a job is submitted, one whenever Spark logs.",
+    "pairs": [
+      {
+        "left": "spark-env.sh",
+        "right": "The scripts that start the master and the workers"
+      },
+      {
+        "left": "spark-defaults.conf",
+        "right": "Every program submitted to the cluster"
+      },
+      {
+        "left": "log4j2.properties",
+        "right": "The logging library, to decide what to print"
+      }
+    ],
+    "right_distractors": [
+      "The operating system at boot"
+    ]
+  },
+  {
+    "id": "ex-np9kpv7y",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the lab's `spark-env.sh`, how many cores does the whole cluster offer to jobs?",
+    "hint": "Workers times cores per worker.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-sggbzbt1",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana restarts her virtual machine and submits a job straight away. What happens?",
+    "hint": "Does the cluster start with the machine?",
+    "choices": [
+      {
+        "text": "It waits forever for workers",
+        "correct": false,
+        "why": "That is a master with no workers. Here there is no master at all, and the job gives up."
+      },
+      {
+        "text": "It runs on the driver alone, more slowly",
+        "correct": false,
+        "why": "No. With `spark.master` set, the job insists on the cluster."
+      },
+      {
+        "text": "It runs normally, because the master starts with the machine",
+        "correct": false,
+        "why": "No. Nothing in the lab registers the cluster as a service."
+      },
+      {
+        "text": "It fails: nothing restarted the master",
+        "correct": true,
+        "why": "Yes. The scripts were run by hand, and a restart ends those processes."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5evy56e",
+    "version": 1,
+    "section": "the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `generate.py` draw every value from `xxhash64` of the row number instead of a random number?",
+    "hint": "What should your data have in common with Ana's?",
+    "choices": [
+      {
+        "text": "Because Spark has no random function",
+        "correct": false,
+        "why": "It has `rand`. The program avoids it on purpose."
+      },
+      {
+        "text": "So every machine writes the same rows",
+        "correct": true,
+        "why": "Right. Your numbers can then be compared with the transcripts."
+      },
+      {
+        "text": "So the visitor ids cannot be traced to real people",
+        "correct": false,
+        "why": "The data is synthetic either way. The hash is about getting the same rows each time."
+      },
+      {
+        "text": "Because a hash is faster than a random number",
+        "correct": false,
+        "why": "Speed is not the reason; repeatability is."
+      }
+    ]
+  },
+  {
+    "id": "ex-hvxfphc3",
+    "version": 1,
+    "section": "the-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ls data/raw/clicks | wc -l` prints 366 for a year of 365 days. What is the extra entry for?",
+    "hint": "Spark writes it when a job finishes.",
+    "choices": [
+      {
+        "text": "It marks the output as finished",
+        "correct": true,
+        "why": "Yes. `_SUCCESS` is empty; its existence is the message."
+      },
+      {
+        "text": "It holds the books table, written by the same job",
+        "correct": false,
+        "why": "No. The books are under `data/raw/books`."
+      },
+      {
+        "text": "It holds the events with no date",
+        "correct": false,
+        "why": "Every event has a date; the generator spreads them over 2025."
+      },
+      {
+        "text": "2025 was a leap year",
+        "correct": false,
+        "why": "No. 2025 has 365 days."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ytaydvc",
+    "version": 1,
+    "section": "the-data",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "About what percentage of all events belong to the crawler, `v0000000`?",
+    "hint": "Look at the threshold in the generator.",
+    "value": 4,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-b0eqcqfk",
+    "version": 1,
+    "section": "setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job prints `Initial job has not accepted any resources` every fifteen seconds. Which is the likely cause?",
+    "hint": "The job reached somebody, and that somebody had nothing to give.",
+    "choices": [
+      {
+        "text": "The download of Spark was damaged",
+        "correct": false,
+        "why": "A damaged archive fails at `sha512sum -c` or at `tar`, long before a job."
+      },
+      {
+        "text": "The master is not running",
+        "correct": false,
+        "why": "That fails differently: `Failed to connect to master`, then the job gives up."
+      },
+      {
+        "text": "No worker has room for the job",
+        "correct": true,
+        "why": "Right. The master accepted the job and has nothing to hand it."
+      },
+      {
+        "text": "`~/.sparkrc` was not read in this terminal",
+        "correct": false,
+        "why": "Then `spark-submit` itself would not be found."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxchgdwm",
+    "version": 1,
+    "section": "setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to what to do about it.",
+    "hint": "Each comes from a different step of the setup.",
+    "pairs": [
+      {
+        "left": "spark-4.1.3-bin-hadoop3.tgz: FAILED",
+        "right": "Download the release again"
+      },
+      {
+        "left": "spark-submit: command not found",
+        "right": "Read ~/.sparkrc in this terminal"
+      },
+      {
+        "left": "All masters are unresponsive! Giving up.",
+        "right": "Start the master and the workers"
+      }
+    ],
+    "right_distractors": [
+      "Install a newer Java"
+    ]
+  },
+  {
+    "id": "ex-9jzyxer0",
+    "version": 1,
+    "section": "setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your computer can give the virtual machine only 4 GB. What does the lesson suggest?",
+    "hint": "Fewer of something, not smaller.",
+    "choices": [
+      {
+        "text": "Use the online path for the whole course",
+        "correct": false,
+        "why": "The online path cannot run the cluster lessons."
+      },
+      {
+        "text": "Skip the cluster and run every job in local mode",
+        "correct": false,
+        "why": "Then the lessons about workers, shuffles and failures have nothing to show."
+      },
+      {
+        "text": "Two workers, and fewer events if needed",
+        "correct": true,
+        "why": "Yes. Everything still runs; the counts of workers and tasks change."
+      },
+      {
+        "text": "Give each worker 256 MB",
+        "correct": false,
+        "why": "A worker smaller than `spark.executor.memory` can host no executor, and jobs wait forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5k53jzq",
+    "version": 1,
+    "section": "three-limits",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three limits by how suddenly they arrive when data grows, most sudden first.",
+    "hint": "One kills the program with no warning; one only makes the result late.",
+    "items": [
+      "Memory",
+      "Disk",
+      "Time"
+    ]
+  },
+  {
+    "id": "ex-76sdard2",
+    "version": 1,
+    "section": "three-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 200 MB a second, how many minutes does one machine take to read 1 TB (1,000,000 MB)? Round to the nearest minute.",
+    "hint": "Seconds first, then divide by 60.",
+    "value": 83,
+    "tolerance": 1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-fea8qksa",
+    "version": 1,
+    "section": "three-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do a hundred machines read 1 TB a hundred times faster than one?",
+    "hint": "Where is each machine's share stored?",
+    "choices": [
+      {
+        "text": "Each machine reads all of it, and the fastest wins",
+        "correct": false,
+        "why": "That would take as long as one machine."
+      },
+      {
+        "text": "The network is faster than a disk",
+        "correct": false,
+        "why": "A network is usually slower than local memory, and the gain does not come from it."
+      },
+      {
+        "text": "A cluster compresses data a hundred times better",
+        "correct": false,
+        "why": "Compression is the same on one machine or many."
+      },
+      {
+        "text": "Each reads its share from its own disk",
+        "correct": true,
+        "why": "Right. The disks work in parallel; no single disk is a hundred times faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz2437jq",
+    "version": 1,
+    "section": "out-of-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`visitors.py` read 243 MB of compressed files and peaked at 2.3 GB. Why so much more?",
+    "hint": "What does Python hold for every visitor in every set?",
+    "choices": [
+      {
+        "text": "Python keeps a copy of every row it has read",
+        "correct": false,
+        "why": "Only the visitor ids in the sets are kept; each row is dropped after use."
+      },
+      {
+        "text": "Millions of objects of dozens of bytes each",
+        "correct": true,
+        "why": "Yes. In-memory structures are far larger than the bytes on disk."
+      },
+      {
+        "text": "The program loads every file into memory before reading it",
+        "correct": false,
+        "why": "No. It reads each file line by line; the sets are what grow."
+      },
+      {
+        "text": "gzip needs ten times the file size to decompress",
+        "correct": false,
+        "why": "gzip streams with a small, fixed buffer."
+      }
+    ]
+  },
+  {
+    "id": "ex-4f4w9xvb",
+    "version": 1,
+    "section": "out-of-memory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes replacing the sets with a more compact structure so that `visitors.py` fits in 1 GB. What does the lesson say about that kind of fix?",
+    "hint": "What happens next year, when the data doubles?",
+    "choices": [
+      {
+        "text": "It cannot work, because Python has no compact structures",
+        "correct": false,
+        "why": "It may well work this year. The objection is about what happens as the data grows."
+      },
+      {
+        "text": "It is unnecessary, because `ulimit` will be removed in production",
+        "correct": false,
+        "why": "The limit stands in for a real machine's memory, which does exist in production."
+      },
+      {
+        "text": "It moves the wall without removing it, because the program still holds every visitor at once",
+        "correct": true,
+        "why": "Right. The footprint still grows with the data, only more slowly."
+      },
+      {
+        "text": "It is the right fix, because the program has a bug",
+        "correct": false,
+        "why": "The program is correct; it gives the right answer on a larger machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vgc73sf",
+    "version": 1,
+    "section": "out-of-memory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do the parentheses in `(ulimit -v 1000000; time python3 visitors.py)` do?",
+    "hint": "Where does the limit apply?",
+    "choices": [
+      {
+        "text": "Run the two commands in parallel",
+        "correct": false,
+        "why": "They run in order, one after the other."
+      },
+      {
+        "text": "Make the limit permanent for the user",
+        "correct": false,
+        "why": "The opposite: they keep it from reaching your shell at all."
+      },
+      {
+        "text": "Group the output of both into one file",
+        "correct": false,
+        "why": "Nothing is redirected to a file here."
+      },
+      {
+        "text": "A subshell, so the limit ends with it",
+        "correct": true,
+        "why": "Yes. Your own shell keeps no limit afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-r11xsnbm",
+    "version": 1,
+    "section": "split-by-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `buckets.py` choose a file with `zlib.crc32` rather than Python's built-in `hash()`?",
+    "hint": "Would the same visitor land in the same file on the next run?",
+    "choices": [
+      {
+        "text": "`hash()` cannot hash a string",
+        "correct": false,
+        "why": "It can; the value is just different in every process."
+      },
+      {
+        "text": "`crc32` spreads the visitors more evenly than any other hash",
+        "correct": false,
+        "why": "The spread was even, but that is not the reason; a stable result is."
+      },
+      {
+        "text": "`hash()` of a string changes from one run of Python to the next",
+        "correct": true,
+        "why": "Right. Within one run it would still work; across runs, or across machines, the split would not agree."
+      },
+      {
+        "text": "`crc32` makes the files smaller",
+        "correct": false,
+        "why": "The hash only chooses the file; the pairs written are the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2gt94dj",
+    "version": 1,
+    "section": "split-by-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bucket 09 is 28 MB while the other fifteen are about 17 MB. What makes it larger?",
+    "hint": "Visitors were spread evenly; events were not.",
+    "choices": [
+      {
+        "text": "`crc32` sends more visitors to file 09",
+        "correct": false,
+        "why": "The visitors were spread evenly; the extra weight is one visitor's events."
+      },
+      {
+        "text": "It holds the crawler",
+        "correct": true,
+        "why": "Yes. One heavy key makes its whole part heavy."
+      },
+      {
+        "text": "It holds book 1, the bestseller",
+        "correct": false,
+        "why": "The split is by visitor, so a book's events are spread over all sixteen."
+      },
+      {
+        "text": "It was written last and holds what was left over",
+        "correct": false,
+        "why": "All sixteen are written together, in one pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz2ryy4s",
+    "version": 1,
+    "section": "split-by-key",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the three steps of a distributed job in order.",
+    "hint": "The split comes before the work it makes possible.",
+    "items": [
+      "Split by key, so the same key lands in the same part",
+      "Work on each part on its own",
+      "Combine the partial results"
+    ]
+  },
+  {
+    "id": "ex-y3xwpkth",
+    "version": 1,
+    "section": "split-by-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Sending every record to the part its key decides is what Spark calls a ___.",
+    "hint": "One word, borrowed from cards.",
+    "blanks": [
+      {
+        "accept": [
+          "shuffle"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xwfp6fa0",
+    "version": 1,
+    "section": "scale-up-or-out",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the lab, the Spark version of the question took 74 seconds and the single-core Python one about 68. What did the cluster buy?",
+    "hint": "Not time. Think about what never happened in the Spark run.",
+    "choices": [
+      {
+        "text": "A three times faster run, hidden by a slow disk",
+        "correct": false,
+        "why": "The disk was the same for both. Three cores did not make it faster here."
+      },
+      {
+        "text": "Nothing; Spark is slower at every size",
+        "correct": false,
+        "why": "Past the point where one machine copes, Spark runs where the Python program cannot run at all."
+      },
+      {
+        "text": "A more accurate count of visitors",
+        "correct": false,
+        "why": "All three programs printed exactly the same numbers."
+      },
+      {
+        "text": "No step held the whole set, and the same code runs unchanged on far more data and machines",
+        "correct": true,
+        "why": "Right. At this size the overhead is the whole job; the gain is capacity."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j6p3zhj",
+    "version": 1,
+    "section": "scale-up-or-out",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each statement to the way of scaling it describes.",
+    "hint": "One changes nothing in the program; the other changes almost everything around it.",
+    "pairs": [
+      {
+        "left": "Your program runs unchanged, on a larger machine",
+        "right": "Scaling up"
+      },
+      {
+        "left": "Data is split and moved between machines",
+        "right": "Scaling out"
+      },
+      {
+        "left": "There is a largest size, and growth passes it",
+        "right": "The limit of scaling up"
+      }
+    ],
+    "right_distractors": [
+      "The limit of scaling out"
+    ]
+  },
+  {
+    "id": "ex-bec1e9tk",
+    "version": 1,
+    "section": "scale-up-or-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report over 25 GB of Parquet runs out of memory on an 8 GB laptop. Which step does the lesson put first?",
+    "hint": "Before changing anything, find out something.",
+    "choices": [
+      {
+        "text": "Rewrite the report in Spark",
+        "correct": false,
+        "why": "A rewrite before a measurement is a guess."
+      },
+      {
+        "text": "Rent a Spark cluster",
+        "correct": false,
+        "why": "That is the last item on the list, after cheaper options."
+      },
+      {
+        "text": "Measure the peak",
+        "correct": true,
+        "why": "Yes. Every later choice depends on how far from the limit it is."
+      },
+      {
+        "text": "Convert the files to CSV",
+        "correct": false,
+        "why": "CSV is larger and slower to read than Parquet; lesson 10 measures it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8m4f994",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job counts sales per shop, and Ponto Final has seven shops. It reads 2 TB of order lines. Which limit is it most likely to hit on one machine?",
+    "hint": "How much does the job need to hold while it reads?",
+    "choices": [
+      {
+        "text": "Time, because it must read 2 TB but only ever holds seven totals",
+        "correct": true,
+        "why": "Right. Seven running totals fit anywhere; reading 2 TB is what takes hours."
+      },
+      {
+        "text": "None; one machine reads 2 TB in seconds",
+        "correct": false,
+        "why": "At 2 GB a second it takes about seventeen minutes, and at 200 MB about three hours."
+      },
+      {
+        "text": "Memory, because 2 TB does not fit in memory",
+        "correct": false,
+        "why": "The job never holds the 2 TB, only seven numbers."
+      },
+      {
+        "text": "Disk, because the result is as large as the input",
+        "correct": false,
+        "why": "The result is seven rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4nn6f0j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Split by book instead of by visitor, could `buckets.py` still add the sixteen counts to get the number of different visitors per book?",
+    "hint": "Where would a book's visitors be?",
+    "choices": [
+      {
+        "text": "No, because the split must always be by the column being counted",
+        "correct": false,
+        "why": "Splitting by the grouping key works too, and it is what Spark usually does."
+      },
+      {
+        "text": "Yes: each book would be whole in one file",
+        "correct": true,
+        "why": "Right. Any split works if everything one answer needs lands in one part."
+      },
+      {
+        "text": "Yes, but only if the crawler is removed first",
+        "correct": false,
+        "why": "The crawler would make one file larger, not the answer wrong."
+      },
+      {
+        "text": "No, because a visitor would be counted in several files",
+        "correct": false,
+        "why": "A visitor would appear in several files, but always for different books, so no count is doubled."
+      }
+    ]
+  }
+]

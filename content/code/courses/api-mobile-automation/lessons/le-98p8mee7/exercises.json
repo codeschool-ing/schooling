@@ -1,0 +1,700 @@
+[
+  {
+    "id": "ex-nv4br685",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How do you cancel the order ord-1001 in boxoffice?",
+    "hint": "The address names the thing; the method says what to do with it.",
+    "choices": [
+      {
+        "text": "POST /v1/orders/ord-1001/cancel",
+        "correct": false,
+        "why": "That puts a verb in the path, the function-name picture of an API; boxoffice has no such address."
+      },
+      {
+        "text": "DELETE /v1/orders/ord-1001",
+        "correct": true,
+        "why": "Right. The order is a resource at its own address, and DELETE is the verb."
+      },
+      {
+        "text": "GET /v1/cancelOrder?id=ord-1001",
+        "correct": false,
+        "why": "A GET must not change anything, and the path names an action rather than a resource."
+      },
+      {
+        "text": "PUT /v1/orders/ord-1001 with a body saying the status is cancelled",
+        "correct": false,
+        "why": "Some APIs work that way; boxoffice's table of addresses gives PUT to nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vxgjs83",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You read ord-1001 with a token and get 200. The next request, to the same address from the same terminal, carries no token. What does boxoffice answer?",
+    "hint": "What does the server keep between two requests?",
+    "choices": [
+      {
+        "text": "200, since it recognises the client of the request before",
+        "correct": false,
+        "why": "That is the logged-in website picture; boxoffice keeps no memory of the conversation."
+      },
+      {
+        "text": "200 until the token's fifteen minutes run out",
+        "correct": false,
+        "why": "The token's life only matters for requests that carry it; this one carries nothing."
+      },
+      {
+        "text": "401, no bearer token",
+        "correct": true,
+        "why": "Right. Each request is judged on what it carries, and this one carries no credentials."
+      },
+      {
+        "text": "404, because without a token the order does not exist",
+        "correct": false,
+        "why": "boxoffice checks the token first and answers 401 before it looks for the order."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g9e3g7m",
+    "version": 1,
+    "section": "resources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does statelessness make an API easier to test than a sequence of screens?",
+    "hint": "What does the answer to a request depend on?",
+    "choices": [
+      {
+        "text": "A request stands alone, and its answer depends only on it and the data",
+        "correct": true,
+        "why": "Right. No earlier request has to be replayed to reach the state a test needs."
+      },
+      {
+        "text": "The server forgets its data between requests, so no test can affect another",
+        "correct": false,
+        "why": "The server forgets the conversation, not the data: an order created stays created, which is lesson 12's problem."
+      },
+      {
+        "text": "Nothing is stored, so every answer comes back faster",
+        "correct": false,
+        "why": "Speed is not what statelessness buys a test; independence is."
+      },
+      {
+        "text": "After the first request, a test no longer needs a token",
+        "correct": false,
+        "why": "The opposite: every request needs its token, because nothing carries over."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1dewzh0",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test runs `jq '.payment == null'` on an order to prove that the order has no payment field. What is wrong with that test?",
+    "hint": "Run it on an order where the field exists with the value null.",
+    "choices": [
+      {
+        "text": "jq raises an error when a field is missing, so the test crashes",
+        "correct": false,
+        "why": "jq answers null for a missing field, quietly; that is the trouble."
+      },
+      {
+        "text": "Missing and null are the same thing in JSON",
+        "correct": false,
+        "why": "They are different: one says nothing was sent, the other says the value is empty."
+      },
+      {
+        "text": "It passes for a field present with null too",
+        "correct": true,
+        "why": "Right. Only `has(\"payment\")` tells the two cases apart."
+      },
+      {
+        "text": "jq compares null only with ===, which it does not have",
+        "correct": false,
+        "why": "jq's == compares null correctly; the comparison works, it just asks the wrong question."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg9x68mv",
+    "version": 1,
+    "section": "json",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In JSON a field that is ___ has not been sent at all, which is not the same as a field sent with the value null.",
+    "hint": "The opposite of present.",
+    "blanks": [
+      {
+        "accept": [
+          "missing",
+          "absent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hz1fhgpb",
+    "version": 1,
+    "section": "json",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An order is for 3 seats of sh-103, whose price_cents is 6500. What should its total_cents be?",
+    "hint": "Whole cents, multiplied.",
+    "value": 19500,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-19d3cmtz",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An API sends `\"starts_at\": \"2026-11-08T18:00:00\"`, with no offset. An app on a phone set to UTC and one on a phone set to São Paulo time both show it. What happens?",
+    "hint": "Section 03 read the same text under two values of TZ.",
+    "choices": [
+      {
+        "text": "Both treat it as São Paulo time, since that is where the theatre is",
+        "correct": false,
+        "why": "Nothing in the text says São Paulo; each phone fills in its own zone."
+      },
+      {
+        "text": "Both refuse it, because ISO 8601 requires an offset",
+        "correct": false,
+        "why": "ISO 8601 allows a local time with no offset; the parse succeeds, and that is the danger."
+      },
+      {
+        "text": "Both read it as UTC and agree",
+        "correct": false,
+        "why": "That was not what happened in section 03: the reading depended on the machine's zone."
+      },
+      {
+        "text": "They read two moments three hours apart",
+        "correct": true,
+        "why": "Right. Without an offset, the same text means a different instant on each machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-8k3zx4sh",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another API sends order ids as numbers, such as 9007199254740993, and its JavaScript app keeps opening order 9007199254740992. What fixes it at the source?",
+    "hint": "What can a JavaScript number hold exactly?",
+    "choices": [
+      {
+        "text": "Declare the id as a 64-bit integer in the JSON",
+        "correct": false,
+        "why": "JSON has no integer types to declare; every number is just a number, and the app still reads floating point."
+      },
+      {
+        "text": "Send the id as a JSON string",
+        "correct": true,
+        "why": "Right. A string is never converted to a number, so no digit can change."
+      },
+      {
+        "text": "Have the app add one to every id it receives",
+        "correct": false,
+        "why": "That fixes one id by luck and breaks every id that was exact."
+      },
+      {
+        "text": "Send it with a decimal point, as 9007199254740993.0",
+        "correct": false,
+        "why": "2.0 and 2 are the same JSON number; the decimal point changes nothing about precision."
+      }
+    ]
+  },
+  {
+    "id": "ex-xc60d1bg",
+    "version": 1,
+    "section": "json",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does boxoffice send prices as `\"price_cents\": 8000` rather than `\"price\": 80.00`?",
+    "hint": "What did 80.10 times 3 print?",
+    "choices": [
+      {
+        "text": "JSON cannot carry a decimal point",
+        "correct": false,
+        "why": "It can: 0.1 is valid JSON. The trouble is how it is read."
+      },
+      {
+        "text": "Whole cents are exact, and fractions of reais read as binary floating point are not",
+        "correct": true,
+        "why": "Right. 80.10 times 3 came out as 240.29999999999998."
+      },
+      {
+        "text": "A whole number takes fewer bytes on the network",
+        "correct": false,
+        "why": "8000 and 80.00 are about the same size; size is not the reason."
+      },
+      {
+        "text": "The bank that takes the payments refuses decimals",
+        "correct": false,
+        "why": "boxoffice charges locally in the lab; the choice is about arithmetic, not a bank's rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkfjs1gc",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "openapi.yaml says unknown fields are refused, and boxoffice accepts them. What does a tester conclude?",
+    "hint": "Who decides which one is wrong?",
+    "choices": [
+      {
+        "text": "The code is right, because the code is what runs",
+        "correct": false,
+        "why": "Then every test would pass forever; the contract is what was promised."
+      },
+      {
+        "text": "One of the two is wrong, and the disagreement is a finding to report",
+        "correct": true,
+        "why": "Right. The team may fix the code or the document; the tester's job is to make the disagreement visible."
+      },
+      {
+        "text": "Nothing, since documents always lag behind code",
+        "correct": false,
+        "why": "That is the belief the section asks you to drop: a lagging contract is itself a defect."
+      },
+      {
+        "text": "The document is right, so the code is a defect",
+        "correct": false,
+        "why": "Sometimes the document is the one that is wrong; the team decides, with the finding in front of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qz7y9g99",
+    "version": 1,
+    "section": "the-contract",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of openapi.yaml to what it holds.",
+    "hint": "The section's walk through the order operation.",
+    "pairs": [
+      {
+        "left": "paths",
+        "right": "every address, and what each method does there"
+      },
+      {
+        "left": "components",
+        "right": "the pieces several paths share"
+      },
+      {
+        "left": "responses",
+        "right": "the answers allowed, keyed by status code"
+      },
+      {
+        "left": "requestBody",
+        "right": "what the client may send in the body"
+      }
+    ],
+    "right_distractors": [
+      "the server's source code"
+    ]
+  },
+  {
+    "id": "ex-fx6m0vyn",
+    "version": 1,
+    "section": "the-contract",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An endpoint answers 500 to a request the contract describes, and the body is a perfectly shaped Problem. Does the answer honour the contract?",
+    "hint": "Is the shape of the body the whole promise?",
+    "choices": [
+      {
+        "text": "Yes, because the body has every field Problem requires",
+        "correct": false,
+        "why": "The shape is half the promise; the status code has to be one the operation lists."
+      },
+      {
+        "text": "No: 500 is not among the codes it lists",
+        "correct": true,
+        "why": "Right. A code missing from the list is one the client was told it would never see."
+      },
+      {
+        "text": "Yes: every contract allows a 5xx whenever the server fails",
+        "correct": false,
+        "why": "This one lists 502 and 504 for the payment provider, and no 500 anywhere."
+      },
+      {
+        "text": "Only if its detail explains what failed",
+        "correct": false,
+        "why": "detail is for people; it cannot make an unlisted code a listed one."
+      }
+    ]
+  },
+  {
+    "id": "ex-11rhr48n",
+    "version": 1,
+    "section": "errors",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which fields of a problem details body should a program decide on?",
+    "hint": "Which ones are written for people?",
+    "choices": [
+      {
+        "text": "status",
+        "correct": true,
+        "why": "Right. It repeats the status code inside the body."
+      },
+      {
+        "text": "type",
+        "correct": true,
+        "why": "Right. It names the kind of problem, for programs to tell kinds apart."
+      },
+      {
+        "text": "detail",
+        "correct": false,
+        "why": "It is a sentence for a person, and its wording will change one day."
+      },
+      {
+        "text": "title",
+        "correct": false,
+        "why": "A short summary for people; programs should use the type it summarises."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0z40ptv",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test checks that every response's content-type starts with `application/json`. What happens when it runs against boxoffice's errors?",
+    "hint": "Section 05 printed the label with curl's -w.",
+    "choices": [
+      {
+        "text": "It passes, because problem+json is a kind of JSON",
+        "correct": false,
+        "why": "It is JSON, but the text `application/problem+json` does not start with `application/json`."
+      },
+      {
+        "text": "It fails only on the token endpoint",
+        "correct": false,
+        "why": "The token endpoint is the one place errors are labelled application/json."
+      },
+      {
+        "text": "It fails on the problem errors",
+        "correct": true,
+        "why": "Right. They say application/problem+json, and the check should accept that label."
+      },
+      {
+        "text": "It fails on every response, errors and successes alike",
+        "correct": false,
+        "why": "Successful answers are labelled application/json and pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdxe970d",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The token endpoint answers `{\"error\":\"invalid_client\"}`, not problem details. Is that a defect?",
+    "hint": "Which standard governs that endpoint, and what does the contract say?",
+    "choices": [
+      {
+        "text": "No: OAuth prescribes that shape there, and the contract says so",
+        "correct": true,
+        "why": "Right. A second shape is fine when it is documented; OAuth client libraries expect this one."
+      },
+      {
+        "text": "Yes: every error of an API must follow RFC 9457",
+        "correct": false,
+        "why": "RFC 9457 is a choice an API makes; OAuth's token endpoint has its own required shape."
+      },
+      {
+        "text": "Yes, because it is labelled application/json",
+        "correct": false,
+        "why": "That label matches its body exactly; the label is not the problem."
+      },
+      {
+        "text": "No, since an endpoint may answer errors in any shape",
+        "correct": false,
+        "why": "An undocumented shape would be a defect; this one is fine because it is written down."
+      }
+    ]
+  },
+  {
+    "id": "ex-7awmh915",
+    "version": 1,
+    "section": "cases-from-the-contract",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The contract says seats is an integer from 1 to 6. Which of these values are boundary cases for that rule?",
+    "hint": "The values on each side of each edge.",
+    "choices": [
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right: just below the lowest valid value."
+      },
+      {
+        "text": "1",
+        "correct": true,
+        "why": "Right: the lowest valid value."
+      },
+      {
+        "text": "3",
+        "correct": false,
+        "why": "A fine value for the valid class, and on no edge."
+      },
+      {
+        "text": "6",
+        "correct": true,
+        "why": "Right: the highest valid value."
+      },
+      {
+        "text": "7",
+        "correct": true,
+        "why": "Right: just above the highest valid value."
+      },
+      {
+        "text": "120",
+        "correct": false,
+        "why": "That is the size of the show, a different rule; for this one it is just another value above 6."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjmm2brq",
+    "version": 1,
+    "section": "cases-from-the-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "boxoffice answered `{\"show_id\":\"sh-101\",\"seats\":2.0}` with 201. What should the report say?",
+    "hint": "How many numbers are 2 and 2.0 in JSON?",
+    "choices": [
+      {
+        "text": "Defect: a decimal was accepted where the contract says integer",
+        "correct": false,
+        "why": "2.0 is not a decimal in any sense JSON knows; it is the number 2, which the rule allows."
+      },
+      {
+        "text": "Nothing: it is the integer 2",
+        "correct": true,
+        "why": "Right. The case passed, and reporting it would cost credibility."
+      },
+      {
+        "text": "Defect: it should have answered 400, because the body is malformed",
+        "correct": false,
+        "why": "The body is valid JSON; 400 is for a body that cannot be read at all."
+      },
+      {
+        "text": "Defect: the reply shows seats as 2, not as the 2.0 that was sent",
+        "correct": false,
+        "why": "Both spell the same number, so the reply did not change the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bs60pnz",
+    "version": 1,
+    "section": "cases-from-the-contract",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps from a contract clause to a defect report in order.",
+    "hint": "The expected answer comes before the request is sent.",
+    "items": [
+      "read a clause of the contract",
+      "derive the cases it gives, each with its expected answer",
+      "send each case",
+      "compare each answer with the one expected",
+      "write up the request, the answer, the clause and the transcript"
+    ]
+  },
+  {
+    "id": "ex-36axk6rm",
+    "version": 1,
+    "section": "cases-from-the-contract",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "boxoffice ignored the price_cents field it was sent and charged the real price. Why is accepting the field silently still a risk?",
+    "hint": "Think about the program that sent it.",
+    "choices": [
+      {
+        "text": "A later version of boxoffice may charge the price the client sent",
+        "correct": false,
+        "why": "That would be a different defect; the risk exists today, with the code as it is."
+      },
+      {
+        "text": "The extra field makes the JSON invalid",
+        "correct": false,
+        "why": "The JSON is valid; only the contract forbids the field."
+      },
+      {
+        "text": "Each unknown field slows the server down",
+        "correct": false,
+        "why": "An ignored field costs nothing measurable; the risk is a misunderstanding."
+      },
+      {
+        "text": "The client believes its field was obeyed",
+        "correct": true,
+        "why": "Right. A 201 tells it everything went through, including what was ignored."
+      }
+    ]
+  },
+  {
+    "id": "ex-fff05y0b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The body `null` got a 500 whose body carried no stack trace. A colleague says that makes the answer acceptable. What do you reply?",
+    "hint": "Section 05 listed four checks for an error, in order.",
+    "choices": [
+      {
+        "text": "Agreed: an error that leaks nothing meets the contract",
+        "correct": false,
+        "why": "Not leaking is the fourth check; the first, the status code, already failed."
+      },
+      {
+        "text": "The leak check passed, and the code check failed: it should be a 4xx",
+        "correct": true,
+        "why": "Right. A 500 blames the server for a client's mistake and invites a useless retry."
+      },
+      {
+        "text": "Agreed, because null is not valid JSON, so any answer will do",
+        "correct": false,
+        "why": "null is a complete, valid JSON document; it is just not an object."
+      },
+      {
+        "text": "Disagreed: the body should have carried the trace, to help the client",
+        "correct": false,
+        "why": "The trace belongs in the server's log; sending it to clients is the leak the fourth check forbids."
+      }
+    ]
+  },
+  {
+    "id": "ex-87dp68ph",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new endpoint takes `?row=` with a letter from A to P. Following section 06, which set of cases do you send for row?",
+    "hint": "Edges, the wrong kind of value, and the parameter left out.",
+    "choices": [
+      {
+        "text": "Every letter from A to P, one request each",
+        "correct": false,
+        "why": "Sixteen cases in one class, and none outside it: the edges are where limits break."
+      },
+      {
+        "text": "A and P only, since the rest behave alike",
+        "correct": false,
+        "why": "Those are the valid edges; the values just outside them, and the wrong kinds, are missing."
+      },
+      {
+        "text": "A, P, the letters just outside them, a digit, and no row",
+        "correct": true,
+        "why": "Right. Both edges from each side, a value of the wrong kind, and the parameter missing."
+      },
+      {
+        "text": "A random letter on each run, so that over time all are covered",
+        "correct": false,
+        "why": "A test whose input changes every run cannot be compared from one run to the next, and it skips the edges."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4f037xw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each case from section 06 to what it showed.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "price_cents added to the body",
+        "right": "201 where the contract says 422"
+      },
+      {
+        "left": "null as the body",
+        "right": "500 where the contract allows only 4xx"
+      },
+      {
+        "left": "date=8-11-2026",
+        "right": "an empty 200 where the contract says 400"
+      },
+      {
+        "left": "seats: 2.0",
+        "right": "201, as promised"
+      }
+    ],
+    "right_distractors": [
+      "415, because the type was wrong"
+    ]
+  },
+  {
+    "id": "ex-vwxrhb05",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test of `GET /v1/orders/ord-1001` passes when it runs after the other tests and fails when it runs first, on a freshly started boxoffice. Which statement explains it?",
+    "hint": "Statelessness is about the conversation. What else does the server hold?",
+    "choices": [
+      {
+        "text": "boxoffice remembers the token of the test that ran before",
+        "correct": false,
+        "why": "No request inherits anything from the one before; the token has to be in every request."
+      },
+      {
+        "text": "The order exists only if an earlier request created it",
+        "correct": true,
+        "why": "Right. Statelessness covers the conversation, not the data; lesson 12 deals with tests that share data."
+      },
+      {
+        "text": "A REST API answers differently depending on the order of requests",
+        "correct": false,
+        "why": "Its answers depend on the data, not on the order; the order matters here only because of what got created."
+      },
+      {
+        "text": "The first request after a restart is always refused",
+        "correct": false,
+        "why": "A fresh boxoffice answers its first request like any other; what is missing is the order."
+      }
+    ]
+  }
+]

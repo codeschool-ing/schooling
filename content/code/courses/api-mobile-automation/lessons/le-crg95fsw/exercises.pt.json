@@ -1,0 +1,480 @@
+{
+  "ex-hvahz0h9": {
+    "prompt": "O que uma chave de API diz ao servidor?",
+    "hint": "Quem mais poderia ter a mesma string?",
+    "choices": [
+      {
+        "text": "Qual pessoa está fazendo a requisição",
+        "why": "Todo mundo que tem a string parece igual para o servidor; uma chave não distingue pessoas."
+      },
+      {
+        "text": "Qual programa está chamando",
+        "why": "Certo. Qualquer pessoa ou script que a tenha é o mesmo chamador."
+      },
+      {
+        "text": "Por quanto tempo o chamador pode continuar usando a API",
+        "why": "Uma chave não tem expiração própria; isso é o que um token acrescenta."
+      },
+      {
+        "text": "Quais pedidos o chamador fez",
+        "why": "A chave do boxoffice abre um relatório de vendas e não sabe nada de pedidos."
+      }
+    ]
+  },
+  "ex-a2q4n9tk": {
+    "prompt": "O relatório de vendas, pedido sem chave, respondeu 401 com um corpo de problema. Por que a lição ainda chama isso de defeito?",
+    "hint": "Compare os cabeçalhos dele com os do 401 dos pedidos.",
+    "choices": [
+      {
+        "text": "Uma chave ausente deveria ser 400, já que a requisição está incompleta",
+        "why": "Credencial ausente é exatamente para o que serve o 401."
+      },
+      {
+        "text": "Deveria ser 403, porque o chamador não é da equipe",
+        "why": "O 403 é para um chamador que o servidor conhece; sem chave, ele não conhece ninguém."
+      },
+      {
+        "text": "Falta o cabeçalho www-authenticate que todo 401 precisa ter",
+        "why": "Certo. A RFC 9110 exige um em todo 401, e os pedidos mandam o deles."
+      },
+      {
+        "text": "O corpo conta a um estranho o nome do cabeçalho a mandar",
+        "why": "Dizer o nome do cabeçalho tudo bem; o segredo é a chave, não onde ela vai."
+      }
+    ]
+  },
+  "ex-6x7e0b3j": {
+    "prompt": "Por que uma API deveria recusar a chave na query string, mesmo quando a chave está certa?",
+    "hint": "Veja o que o próprio log do boxoffice imprimiu.",
+    "choices": [
+      {
+        "text": "Cabeçalhos viajam criptografados e endereços não",
+        "why": "Sobre HTTPS os dois vão criptografados; o vazamento acontece depois da chegada."
+      },
+      {
+        "text": "Endereços vão para logs por padrão; cabeçalhos não",
+        "why": "Certo. O log do boxoffice imprimiu a chave em texto puro."
+      },
+      {
+        "text": "Uma URL não consegue levar os caracteres de que uma chave é feita",
+        "why": "Qualquer chave pode ser escrita numa URL; possibilidade não é o problema."
+      },
+      {
+        "text": "Uma query string é lida só pelo navegador, nunca pelo servidor",
+        "why": "O servidor a lê; o filtro por data do boxoffice é um parâmetro de query."
+      }
+    ]
+  },
+  "ex-09swdtyr": {
+    "prompt": "Ligue cada campo da resposta de token ao que ele diz.",
+    "hint": "A tabela da seção 03.",
+    "pairs": [
+      {
+        "left": "access_token",
+        "right": "a própria credencial"
+      },
+      {
+        "left": "token_type",
+        "right": "como mandá-la"
+      },
+      {
+        "left": "expires_in",
+        "right": "quantos segundos ela vive"
+      },
+      {
+        "left": "scope",
+        "right": "o que ela pode fazer"
+      }
+    ],
+    "right_distractors": [
+      "o segredo do cliente, para a próxima requisição"
+    ]
+  },
+  "ex-rds3vp69": {
+    "prompt": "Por que uma resposta de token precisa trazer `cache-control: no-store`?",
+    "hint": "Quem mais fica entre o programa e o servidor?",
+    "choices": [
+      {
+        "text": "Para o token expirar mais cedo",
+        "why": "A expiração é definida pelo exp dentro do token; o cache não a muda."
+      },
+      {
+        "text": "Para o cliente esquecer o token depois de uma requisição",
+        "why": "O cabeçalho fala com caches; o cliente guarda e reusa o token de propósito."
+      },
+      {
+        "text": "Para toda requisição buscar um token novo",
+        "why": "Um cliente busca um token quando o antigo está perto de expirar, não em toda requisição."
+      },
+      {
+        "text": "Para nenhum cache guardar um token válido e entregá-lo a outra pessoa",
+        "why": "Certo. O OAuth exige isso no endpoint de token, RFC 6749 §5.1."
+      }
+    ]
+  },
+  "ex-n2jka7jj": {
+    "prompt": "A resposta de token disse \"expires_in\":900. Quantos minutos vive um token do boxoffice?",
+    "hint": "O campo está em segundos.",
+    "unit": "minutos"
+  },
+  "ex-yekt8wm5": {
+    "prompt": "Que afirmação sobre um JWT como o do boxoffice é verdadeira?",
+    "hint": "Uma linha de Node o decodificou.",
+    "choices": [
+      {
+        "text": "O payload é criptografado com o segredo do servidor",
+        "why": "Ele é assinado, não criptografado; o segredo só faz a assinatura."
+      },
+      {
+        "text": "Qualquer um que o tenha consegue ler as claims",
+        "why": "Certo. O cabeçalho e o payload são base64url, legíveis por qualquer um."
+      },
+      {
+        "text": "Só o endpoint de token consegue decodificar o cabeçalho",
+        "why": "O cabeçalho foi decodificado na sua máquina sem segredo nenhum."
+      },
+      {
+        "text": "A assinatura esconde o escopo do cliente",
+        "why": "O escopo está no payload à vista; a assinatura o protege de mudança, não de leitura."
+      }
+    ]
+  },
+  "ex-frk5312p": {
+    "prompt": "O token do auditor, com o escopo reescrito para incluir orders:write e a assinatura intocada, é mandado como pedido. O que volta, e por quê?",
+    "hint": "O que o boxoffice confere primeiro, a assinatura ou as claims?",
+    "choices": [
+      {
+        "text": "403, porque o cliente auditor não pode escrever",
+        "why": "Isso exigiria confiar nas claims primeiro; a conferência da assinatura vem antes."
+      },
+      {
+        "text": "201, porque o escopo agora diz que ele pode escrever",
+        "why": "Essa é a falha que o teste existe para pegar, e o boxoffice não a tem."
+      },
+      {
+        "text": "401 bad signature: a assinatura não bate mais",
+        "why": "Certo. O token editado é recusado antes de as claims serem lidas."
+      },
+      {
+        "text": "401 token expired, porque editar um token zera o exp",
+        "why": "O exp ficou intocado; só o escopo mudou."
+      }
+    ]
+  },
+  "ex-szv5fgrm": {
+    "prompt": "Um token buscado antes de o boxoffice reiniciar ainda criou um pedido depois. O que isso diz sobre retirar um token?",
+    "hint": "Como o boxoffice decide que um token é válido?",
+    "choices": [
+      {
+        "text": "Ele vale até o próprio exp, então tokens devem ter vida curta",
+        "why": "Certo. A validade é recalculada a partir do segredo e do relógio; nada lista tokens para remover."
+      },
+      {
+        "text": "Reiniciar o servidor é o jeito de retirar todo token",
+        "why": "A captura mostrou o contrário: o token antigo funcionou depois de reiniciar."
+      },
+      {
+        "text": "O boxoffice salvou os tokens em disco e os recarregou",
+        "why": "O boxoffice não guarda nada em disco; os pedidos sumiram no mesmo reinício."
+      },
+      {
+        "text": "Tokens são conferidos contra a lista de tokens emitidos do endpoint de token",
+        "why": "Não há lista; a assinatura é recalculada com o segredo."
+      }
+    ]
+  },
+  "ex-h69wkmr5": {
+    "prompt": "Ponha em ordem os passos do teste de expiração.",
+    "hint": "A duração é encurtada antes de o token existir.",
+    "items": [
+      "iniciar o boxoffice com TOKEN_TTL=5",
+      "buscar um token",
+      "usá-lo na hora e esperar 201",
+      "esperar seis segundos",
+      "usá-lo de novo e esperar 401 token expired"
+    ]
+  },
+  "ex-f0rq95sq": {
+    "prompt": "O token válido do auditor tenta criar um pedido. O que o boxoffice responde?",
+    "hint": "O servidor sabe quem está pedindo.",
+    "choices": [
+      {
+        "text": "401, porque o auditor não pode criar",
+        "why": "O 401 é para um chamador que o servidor não conhece; este token é válido."
+      },
+      {
+        "text": "403 insufficient_scope",
+        "why": "Certo. Chamador conhecido, ato recusado, e o cabeçalho diz que escopo faltou."
+      },
+      {
+        "text": "404, porque o auditor não enxerga pedidos",
+        "why": "O 404 veio de ler o pedido de outro cliente, não de criar um."
+      },
+      {
+        "text": "422, porque o corpo não é válido para um auditor",
+        "why": "O corpo é o mesmo que o ci-tests mandou com sucesso; o escopo é conferido antes do corpo."
+      }
+    ]
+  },
+  "ex-826ww67j": {
+    "prompt": "O auditor, com escopo orders:read, recebe 404 para o ord-1001, que o ci-tests criou. O que o relatório deveria dizer?",
+    "hint": "O código está errado, ou o requisito não está claro?",
+    "choices": [
+      {
+        "text": "Que é um defeito, porque a resposta deve ser 403",
+        "why": "O 403 confirmaria que o pedido existe; o 404 é um jeito deliberado de não entregar nada."
+      },
+      {
+        "text": "Nada, porque o ord-1001 já tinha sido cancelado",
+        "why": "Ele só foi cancelado no fim da seção, depois dessas requisições."
+      },
+      {
+        "text": "Perguntar se era isso mesmo o que se pretendia",
+        "why": "Certo. O código é coerente; se ele bate com a intenção é pergunta para os donos do requisito."
+      },
+      {
+        "text": "Que o token do auditor tinha expirado",
+        "why": "Um token expirado recebe 401, não 404."
+      }
+    ]
+  },
+  "ex-177whpec": {
+    "prompt": "O boxoffice responde `Authorization: bearer <um token válido>` com 401 no bearer token. Qual o seu veredito?",
+    "hint": "RFC 9110, §11.1.",
+    "choices": [
+      {
+        "text": "Correto: valores de cabeçalho diferenciam maiúsculas",
+        "why": "O token diferencia; o nome do esquema antes dele não."
+      },
+      {
+        "text": "Correto: o cliente deveria ter escrito o token em maiúsculas",
+        "why": "O token era exatamente o que funcionou; só a palavra do esquema mudou."
+      },
+      {
+        "text": "Um defeito: o nome do esquema não diferencia maiúsculas",
+        "why": "Certo. bearer e Bearer são o mesmo esquema, e a correção é um toLowerCase()."
+      },
+      {
+        "text": "Um defeito: um cabeçalho malformado deveria receber 400",
+        "why": "O cabeçalho está bem formado; o servidor só o leu errado."
+      }
+    ]
+  },
+  "ex-0gkbyjkv": {
+    "prompt": "Quais destas requisições o boxoffice respondeu com 401?",
+    "hint": "401 quer dizer que a credencial faltou ou não é do tipo que esta porta aceita.",
+    "choices": [
+      {
+        "text": "a chave da equipe num pedido",
+        "why": "Certo. Os pedidos querem um token bearer, então a chave não conta."
+      },
+      {
+        "text": "o token do ci-tests no relatório de vendas",
+        "why": "Certo. O relatório quer a chave dele, e um token não é uma."
+      },
+      {
+        "text": "o auditor criando um pedido",
+        "why": "Esse foi 403: o chamador é conhecido e o ato recusado."
+      },
+      {
+        "text": "o auditor lendo o ord-1001",
+        "why": "Esse foi 404: o pedido não é do auditor."
+      },
+      {
+        "text": "uma requisição sem token lendo um pedido",
+        "why": "Certo. Nenhuma credencial é o 401 mais simples."
+      }
+    ]
+  },
+  "ex-05met9sr": {
+    "prompt": "Por que um app num celular faz as pessoas entrarem sem um segredo de cliente?",
+    "hint": "O que é um pacote Android?",
+    "choices": [
+      {
+        "text": "O OAuth proíbe segredos de cliente em todo tipo de cliente",
+        "why": "Servidores guardam segredos legitimamente, como o ci-tests; só clientes públicos ficam sem."
+      },
+      {
+        "text": "Todo usuário leva consigo uma cópia do conteúdo do app",
+        "why": "Certo. Um segredo de que todo usuário tem cópia não é segredo."
+      },
+      {
+        "text": "O segredo expiraria sempre que o app fosse atualizado",
+        "why": "Segredos não expiram com versões do app; o problema é a extração."
+      },
+      {
+        "text": "Celulares não conseguem mandar um segredo por HTTPS",
+        "why": "Conseguem; o problema é guardá-lo, não mandá-lo."
+      }
+    ]
+  },
+  "ex-v6bt8hpe": {
+    "prompt": "Outro app no celular intercepta o authorization code no passo 4. Por que ele não consegue um token com isso?",
+    "hint": "O que o passo 5 manda que nunca passou pelo navegador?",
+    "choices": [
+      {
+        "text": "O code é criptografado para só o app certo conseguir lê-lo",
+        "why": "O code não é criptografado para ninguém; o que o protege é um segundo valor."
+      },
+      {
+        "text": "O code só funciona a partir do endereço de rede do próprio celular",
+        "why": "Nada no fluxo amarra um code a um endereço; o verifier o amarra ao app."
+      },
+      {
+        "text": "Falta a ele o verifier cujo SHA-256 é o challenge",
+        "why": "Certo. O challenge passou pelo navegador; o verifier nunca saiu do app."
+      },
+      {
+        "text": "Codes expiram antes que outro app tenha tempo de usá-los",
+        "why": "Codes têm vida curta, mas minutos sobram para outro app; o que o impede é o PKCE."
+      }
+    ]
+  },
+  "ex-ytjk9nvd": {
+    "prompt": "Ligue cada verificação de um servidor de autorização à resposta que ela espera.",
+    "hint": "A tabela no fim da seção 06.",
+    "pairs": [
+      {
+        "left": "o mesmo code trocado duas vezes",
+        "right": "a segunda troca recusada"
+      },
+      {
+        "left": "um code trocado com outro verifier",
+        "right": "recusada, invalid_grant"
+      },
+      {
+        "left": "um redirect_uri diferente em um caractere",
+        "right": "recusado, e nenhum redirecionamento para ele"
+      },
+      {
+        "left": "um state que o app nunca mandou",
+        "right": "o app ignora a resposta"
+      }
+    ],
+    "right_distractors": [
+      "um token, com um aviso no log"
+    ]
+  },
+  "ex-1ktbe2yc": {
+    "prompt": "Depois que o boxoffice foi iniciado com --env-file=.env, o TOKEN buscado antes recebeu 401 bad signature. Por quê?",
+    "hint": "A seção 04 mostrou que só reiniciar não fazia isso.",
+    "choices": [
+      {
+        "text": "Todo reinício invalida os tokens emitidos antes dele",
+        "why": "O token da seção 04 funcionou depois de um reinício simples; o que mudou aqui foi o segredo."
+      },
+      {
+        "text": "O token expirou enquanto o .env era escrito",
+        "why": "A expiração dá token expired, e aqui disse bad signature."
+      },
+      {
+        "text": "O servidor agora confere assinaturas com outro segredo",
+        "why": "Certo. A assinatura recalculada difere, então o token é recusado."
+      },
+      {
+        "text": "O Node não conseguiu ler o .env, então recusa todo token",
+        "why": "Um token novo do mesmo servidor seria aceito; só o antigo falha."
+      }
+    ]
+  },
+  "ex-0hjb434p": {
+    "prompt": "Um colega fez commit do .env com o segredo de assinatura, percebeu uma hora depois e removeu o commit. O que mais precisa acontecer?",
+    "hint": "Quem pode ter copiado o repositório nessa hora?",
+    "choices": [
+      {
+        "text": "Nada; sem o commit o segredo volta a estar seguro",
+        "why": "Todo clone feito nessa hora ainda o tem."
+      },
+      {
+        "text": "Pôr o .env no .gitignore, o que o remove do histórico",
+        "why": "O .gitignore impede um arquivo de ser adicionado; não faz nada com o que já foi commitado."
+      },
+      {
+        "text": "Trocar o segredo, em todo lugar onde é usado",
+        "why": "Certo. Trate-o como vazado; um segredo novo torna inútil toda cópia do antigo."
+      },
+      {
+        "text": "Deixar o repositório privado por uma semana",
+        "why": "Cópias feitas enquanto ele era legível não são afetadas pela visibilidade de agora."
+      }
+    ]
+  },
+  "ex-esj89tqz": {
+    "prompt": "Um pipeline busca um token com curl e roda os passos com `bash -x`. O segredo do cliente está registrado no sistema de CI como segredo. O que o log vai mostrar?",
+    "hint": "Que valor foi registrado, e qual foi produzido durante a execução?",
+    "choices": [
+      {
+        "text": "Nada sensível, porque o CI esconde todo cabeçalho Authorization",
+        "why": "Ele esconde valores registrados, onde quer que apareçam; não analisa cabeçalhos."
+      },
+      {
+        "text": "O token legível, e o outro valor substituído por asteriscos",
+        "why": "Certo. O token foi buscado durante a execução, então nada o esconde a menos que o passo o mascare."
+      },
+      {
+        "text": "Os dois às claras, já que o bash -x passa por cima de todo mascaramento",
+        "why": "O mascaramento se aplica à saída do log, inclusive ao que o bash -x imprime."
+      },
+      {
+        "text": "O token, mas ele é inofensivo depois que a execução termina",
+        "why": "Ele vale até o exp, quinze minutos no boxoffice, e o log é guardado muito mais tempo."
+      }
+    ]
+  },
+  "ex-qmfm741t": {
+    "prompt": "O teatro acrescenta GET /v1/reports/daily, protegido pelo mesmo X-Api-Key. Que conjunto de testes decorre desta lição?",
+    "hint": "A seção 02 tinha três requisições e mais duas verificações.",
+    "choices": [
+      {
+        "text": "A chave certa devolve 200 e um relatório",
+        "why": "Um teste do caminho feliz não diz nada sobre quem mais entra."
+      },
+      {
+        "text": "Uma chave errada esperando 403, e a certa esperando 200",
+        "why": "Uma chave errada deixa o chamador desconhecido, o que é 401; e falta o caso sem chave."
+      },
+      {
+        "text": "Sem chave, errada e certa; a chave na query recusada; www-authenticate no 401",
+        "why": "Certo. As três requisições, a verificação de vazamento e o cabeçalho que o relatório esqueceu."
+      },
+      {
+        "text": "Um token do ci-tests e um do auditor, cada um esperando 200",
+        "why": "Tokens não são a chave; os dois deveriam receber 401 num endereço protegido por chave."
+      }
+    ]
+  },
+  "ex-bwra3t82": {
+    "prompt": "Uma biblioteca cliente busca um token novo e tenta de novo sempre que recebe um 403. O que há de errado nisso?",
+    "hint": "Qual seria o escopo do token novo?",
+    "choices": [
+      {
+        "text": "Um 403 recusa o cliente, e um token novo com o mesmo escopo é recusado de novo",
+        "why": "Certo. Buscar de novo serve para um 401; um 403 precisa de mais escopo ou de outro cliente."
+      },
+      {
+        "text": "Nada, já que um 403 significa que o token expirou",
+        "why": "Expiração é um 401 com token expired; um 403 vem com um token válido."
+      },
+      {
+        "text": "Deveria tentar de novo no 404, que é o que erros de escopo devolvem",
+        "why": "O erro de escopo do boxoffice é 403 insufficient_scope; o 404 dele esconde pedidos de outros clientes."
+      },
+      {
+        "text": "Só o tempo: deveria esperar alguns segundos antes",
+        "why": "Esperar não muda o escopo do token; a nova tentativa falha por mais que espere."
+      }
+    ]
+  },
+  "ex-fgnystz1": {
+    "prompt": "Como o boxoffice não consegue retirar um JWT antes do exp, a escolha segura é dar aos tokens uma duração ___.",
+    "hint": "Quinze minutos em vez de um mês.",
+    "blanks": [
+      {
+        "accept": [
+          "curta",
+          "pequena"
+        ]
+      }
+    ]
+  }
+}

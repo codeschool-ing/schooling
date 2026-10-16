@@ -1,0 +1,447 @@
+[
+  {
+    "id": "ex-7xqmxgfy",
+    "version": 1,
+    "section": "the-slow-report",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of the report's mistakes to what it cost.",
+    "hint": "Each comes from an earlier lesson.",
+    "pairs": [
+      {
+        "left": "Reading gzipped CSV",
+        "right": "Parsing every line of text and every column"
+      },
+      {
+        "left": "A Python function for the month",
+        "right": "A trip to a Python worker for each row"
+      },
+      {
+        "left": "2,000 fixed shuffle partitions",
+        "right": "Thousands of tasks reading almost nothing"
+      }
+    ],
+    "right_distractors": [
+      "Spilling every row to disk"
+    ]
+  },
+  {
+    "id": "ex-v2mw017d",
+    "version": 1,
+    "section": "reading-a-finished-job",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did `history.py` get the stages of a job whose driver had already exited?",
+    "hint": "Lesson 7's server.",
+    "choices": [
+      {
+        "text": "The master's web page on port 8080",
+        "correct": false,
+        "why": "The master lists applications, not stages."
+      },
+      {
+        "text": "The executors, which keep their stages",
+        "correct": false,
+        "why": "They do not keep a record."
+      },
+      {
+        "text": "The history server, from the event log",
+        "correct": true,
+        "why": "Right. The log was written as the job ran."
+      },
+      {
+        "text": "The Parquet footers",
+        "correct": false,
+        "why": "Footers describe files, not jobs."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgyvycps",
+    "version": 1,
+    "section": "reading-a-finished-job",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stage took 10 seconds of wall time and 30 seconds of task time. On average, how many tasks ran at once?",
+    "hint": "Divide task time by wall time.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0ywph2xr",
+    "version": 1,
+    "section": "reading-a-finished-job",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stage has large task time, little input, no shuffle and no spill. What is it most likely doing?",
+    "hint": "Nothing in the byte columns stands out.",
+    "choices": [
+      {
+        "text": "Waiting for a skewed partition in a join",
+        "correct": false,
+        "why": "Skew shows in a shuffle-reading stage."
+      },
+      {
+        "text": "Running out of memory",
+        "correct": false,
+        "why": "That would show as spill or a failure."
+      },
+      {
+        "text": "Writing a broadcast table",
+        "correct": false,
+        "why": "A broadcast is small and quick."
+      },
+      {
+        "text": "Slow work per row, such as a Python function",
+        "correct": true,
+        "why": "Right. The time is in the rows, not the bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-g54t4s9x",
+    "version": 1,
+    "section": "one-fix-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which single fix saved the most time in this lab?",
+    "hint": "Look at the table's last column.",
+    "choices": [
+      {
+        "text": "Adaptive execution instead of 2,000 partitions",
+        "correct": true,
+        "why": "Right: 57.4 seconds."
+      },
+      {
+        "text": "A built-in function instead of Python",
+        "correct": false,
+        "why": "30.3 seconds."
+      },
+      {
+        "text": "Parquet instead of CSV",
+        "correct": false,
+        "why": "25.4 seconds."
+      },
+      {
+        "text": "Allowing the broadcast",
+        "correct": false,
+        "why": "2.1 seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-hmv9pzar",
+    "version": 1,
+    "section": "one-fix-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why change one thing per run when tuning?",
+    "hint": "What would four changes at once tell you?",
+    "choices": [
+      {
+        "text": "To keep the answer from changing",
+        "correct": false,
+        "why": "None of the fixes changes the answer."
+      },
+      {
+        "text": "To know which change mattered",
+        "correct": true,
+        "why": "Right. The broadcast here saved two seconds."
+      },
+      {
+        "text": "Each change needs its own cluster",
+        "correct": false,
+        "why": "The same cluster ran all five."
+      },
+      {
+        "text": "Spark rejects more than one new setting per run",
+        "correct": false,
+        "why": "It accepts any number."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0gz8zeh",
+    "version": 1,
+    "section": "duckdb",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was DuckDB about twenty times faster than tuned Spark on this lab? Choose all that apply.",
+    "hint": "What does Spark do that one process need not?",
+    "choices": [
+      {
+        "text": "No JVM and no executors to start",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "No shuffle between processes",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "It read different, smaller files",
+        "correct": false,
+        "why": "It read the same silver files."
+      },
+      {
+        "text": "It skipped the purchases filter",
+        "correct": false,
+        "why": "Its totals matched Spark's exactly."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t1pj0s0",
+    "version": 1,
+    "section": "duckdb",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `report_duckdb.py` read the timestamps through `timezone('UTC', ts)` before cutting them into months?",
+    "hint": "What is stored in the files?",
+    "choices": [
+      {
+        "text": "DuckDB rounds timestamps to the hour",
+        "correct": false,
+        "why": "It keeps them to the microsecond."
+      },
+      {
+        "text": "Parquet stores dates as text",
+        "correct": false,
+        "why": "Lesson 10: they are integers."
+      },
+      {
+        "text": "DuckDB counts months from zero",
+        "correct": false,
+        "why": "It counts them like everybody."
+      },
+      {
+        "text": "They are instants in UTC, not local",
+        "correct": true,
+        "why": "Right, and São Paulo's months begin three hours later than UTC's."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgef34r0",
+    "version": 1,
+    "section": "what-an-hour-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster of 10 machines runs a 30-minute job once a day for 30 days, and exists only while the job runs. How many machine-hours is that?",
+    "hint": "10 × 0.5 × 30.",
+    "value": 150,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-j92p2d30",
+    "version": 1,
+    "section": "what-an-hour-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes it possible to delete a cluster after each job without losing data?",
+    "hint": "Where is the data?",
+    "choices": [
+      {
+        "text": "Spark caches the tables between jobs",
+        "correct": false,
+        "why": "A cache dies with the application."
+      },
+      {
+        "text": "HDFS replicates every block three times",
+        "correct": false,
+        "why": "HDFS is on the cluster's own disks."
+      },
+      {
+        "text": "The data lives in an object store",
+        "correct": true,
+        "why": "Right. Nothing was on the cluster."
+      },
+      {
+        "text": "Checkpoints are written to the driver",
+        "correct": false,
+        "why": "And the driver goes with the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-3qvzv77r",
+    "version": 1,
+    "section": "what-an-hour-costs",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A notebook holds 4 executors for 8 hours and computes for 2 of them. At US$0.05 per executor-hour, how many dollars are spent on idle executors in that day?",
+    "hint": "4 × 6 idle hours × 0.05.",
+    "value": 1.2,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-1ja0v3rb",
+    "version": 1,
+    "section": "sizing-executors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Halving each executor's cores doubles the memory per task. What does it do to the cost of running 40 tasks at once?",
+    "hint": "How many machines does it take?",
+    "choices": [
+      {
+        "text": "It doubles, because twice the machines are needed",
+        "correct": true,
+        "why": "Right. A memory-optimised type is usually cheaper."
+      },
+      {
+        "text": "It cannot be known without a run",
+        "correct": false,
+        "why": "It is arithmetic: machines times price."
+      },
+      {
+        "text": "It stays the same, because memory comes free with the cloud",
+        "correct": false,
+        "why": "Memory comes with the machine you pay for."
+      },
+      {
+        "text": "It halves, because each machine does less",
+        "correct": false,
+        "why": "The work is the same; the machines are more."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2sdstnh",
+    "version": 1,
+    "section": "sizing-executors",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put lesson 7's fixes for spilling in the order to try them, cheapest first.",
+    "hint": "More partitions cost nothing.",
+    "items": [
+      "More partitions",
+      "Fewer columns before the wide step",
+      "More memory per task"
+    ]
+  },
+  {
+    "id": "ex-jjyff4x4",
+    "version": 1,
+    "section": "sizing-executors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One task in two hundred spills. What does that call for?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "A different file format",
+        "correct": false,
+        "why": "The format is not what spilled."
+      },
+      {
+        "text": "Twice the memory on every executor",
+        "correct": false,
+        "why": "That pays 200 times for one task."
+      },
+      {
+        "text": "A fix for skew",
+        "correct": true,
+        "why": "Right. Memory for every task would pay for one."
+      },
+      {
+        "text": "Turning spilling off",
+        "correct": false,
+        "why": "Then the task would fail instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz3fnw5k",
+    "version": 1,
+    "section": "when-to-use-a-cluster",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does a cluster earn its overhead? Choose all that apply.",
+    "hint": "Past what one machine gets through in the time there is.",
+    "choices": [
+      {
+        "text": "A join of two tables too large for one machine",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A report of 120 rows from a small table",
+        "correct": false,
+        "why": "Output size says nothing; input does."
+      },
+      {
+        "text": "Terabytes to scan every night",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A 400 MB table read once a day",
+        "correct": false,
+        "why": "DuckDB did that in a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ctnby1q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of tuning a slow job in order.",
+    "hint": "Measure before and after.",
+    "items": [
+      "Read its stages from the history server",
+      "Pick the stage with the most task time",
+      "Change one thing about it",
+      "Run again and compare"
+    ]
+  },
+  {
+    "id": "ex-142ktgy0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each waste to what removes it.",
+    "hint": "Four lessons, four answers.",
+    "pairs": [
+      {
+        "left": "A cluster kept on all month for one job a day",
+        "right": "A cluster per job, data in an object store"
+      },
+      {
+        "left": "Executors held through idle hours",
+        "right": "Dynamic allocation"
+      },
+      {
+        "left": "A job eight times slower than it needs",
+        "right": "Tuning, one fix at a time"
+      },
+      {
+        "left": "400 MB of data on a cluster",
+        "right": "One machine and DuckDB"
+      }
+    ],
+    "right_distractors": [
+      "More shuffle partitions"
+    ]
+  }
+]

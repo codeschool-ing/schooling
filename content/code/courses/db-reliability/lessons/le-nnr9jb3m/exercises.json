@@ -1,0 +1,465 @@
+[
+  {
+    "id": "ex-wyxbks8n",
+    "version": 1,
+    "section": "why-rehearse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why kill a healthy primary on purpose?",
+    "hint": "Lesson 1's claim, for failovers.",
+    "choices": [
+      {
+        "text": "To clear the WAL",
+        "correct": false,
+        "why": "A rehearsal has nothing to do with the WAL's size."
+      },
+      {
+        "text": "Because Patroni needs it to work",
+        "correct": false,
+        "why": "Patroni works without rehearsals; you just do not know that it does."
+      },
+      {
+        "text": "To choose its time",
+        "correct": true,
+        "why": "Right: to choose when the first real failover happens, on a day when finding a problem costs nothing."
+      },
+      {
+        "text": "To test the backups",
+        "correct": false,
+        "why": "That is lesson 7's drill."
+      }
+    ]
+  },
+  {
+    "id": "ex-11zksedb",
+    "version": 1,
+    "section": "why-rehearse",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each finding a rehearsal can make with the lesson it echoes.",
+    "hint": "Settings, reconnection, alerts, names.",
+    "pairs": [
+      {
+        "left": "A setting right on two nodes and wrong on the third",
+        "right": "Lesson 15's ALTER SYSTEM"
+      },
+      {
+        "left": "An application that keeps a stale address",
+        "right": "Lesson 19's switch"
+      },
+      {
+        "left": "An alert that never fires",
+        "right": "Lesson 13's lag check"
+      },
+      {
+        "left": "A runbook naming a renamed server",
+        "right": "Lesson 24's runbook"
+      }
+    ],
+    "right_distractors": [
+      "A slot holding too much log"
+    ]
+  },
+  {
+    "id": "ex-t936bbmn",
+    "version": 1,
+    "section": "the-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the expectation written down as a number before the rehearsal?",
+    "hint": "Compared with what?",
+    "choices": [
+      {
+        "text": "So that the result can surprise you",
+        "correct": true,
+        "why": "Right: a result compared with nothing confirms whatever happened."
+      },
+      {
+        "text": "Because auditors require it",
+        "correct": false,
+        "why": "The reason is the comparison, not an audit."
+      },
+      {
+        "text": "To set the ttl",
+        "correct": false,
+        "why": "The ttl is configuration, not the expectation."
+      },
+      {
+        "text": "So the rehearsal can be skipped next time",
+        "correct": false,
+        "why": "It is repeated on a schedule."
+      }
+    ]
+  },
+  {
+    "id": "ex-6je5bqb0",
+    "version": 1,
+    "section": "the-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a rehearsal refuse to start on a cluster missing a node?",
+    "hint": "How many failures can it absorb?",
+    "choices": [
+      {
+        "text": "Patroni refuses with two nodes",
+        "correct": false,
+        "why": "It would fail over; the risk is what follows."
+      },
+      {
+        "text": "HAProxy needs three servers",
+        "correct": false,
+        "why": "It routes to however many are up."
+      },
+      {
+        "text": "The script cannot count to two",
+        "correct": false,
+        "why": "The script counts fine; the plan forbids it."
+      },
+      {
+        "text": "Killing the leader would leave one node",
+        "correct": true,
+        "why": "Right: then the rehearsal is the incident."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h80qvqk",
+    "version": 1,
+    "section": "the-plan",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the rehearsal's plan in the order it is used.",
+    "hint": "Paper first, failure in the middle.",
+    "items": [
+      "Write down what is expected",
+      "Check the abort criteria",
+      "Cause the failure and measure",
+      "Take the way back",
+      "Compare the results with the expectation"
+    ],
+    "trap": "Checking the abort criteria after causing the failure is checking too late."
+  },
+  {
+    "id": "ex-128x1j3g",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `rehearsal.sh` read the cluster's state from?",
+    "hint": "A format option.",
+    "choices": [
+      {
+        "text": "The etcd keys directly",
+        "correct": false,
+        "why": "It asks patronictl, which reads etcd."
+      },
+      {
+        "text": "patronictl list -f json",
+        "correct": true,
+        "why": "Right: parsed by a few lines of Python."
+      },
+      {
+        "text": "HAProxy's status page",
+        "correct": false,
+        "why": "That shows routing, not lag."
+      },
+      {
+        "text": "pg_stat_replication on each node",
+        "correct": false,
+        "why": "patronictl summarises that."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygb4ms1n",
+    "version": 1,
+    "section": "the-script",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`export PG___ = 5` makes every libpq connection give up after five seconds.",
+    "hint": "The environment variable for connect_timeout.",
+    "blanks": [
+      {
+        "accept": [
+          "CONNECT_TIMEOUT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yt8pt2xh",
+    "version": 1,
+    "section": "stopped-at-the-door",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first version of the script met the lag `unknown` and kept going. Why is that worse than having no check?",
+    "hint": "What does a check that passes make people believe?",
+    "choices": [
+      {
+        "text": "It is slower",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "It is believed",
+        "correct": true,
+        "why": "Right: and it guards nothing; a guard that fails open reports a healthy run on a broken cluster."
+      },
+      {
+        "text": "It uses more memory",
+        "correct": false,
+        "why": "Memory is not the issue."
+      },
+      {
+        "text": "It needs root",
+        "correct": false,
+        "why": "It ran as ana."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qw0s5hg",
+    "version": 1,
+    "section": "stopped-at-the-door",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lag, in MB, does the fixed script count for a replica whose lag it cannot read?",
+    "hint": "A number that can only stop it.",
+    "value": 999,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-g4gkssqk",
+    "version": 1,
+    "section": "stopped-at-the-door",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `pg3` stopped, what did the rehearsal do?",
+    "hint": "Read its first line.",
+    "choices": [
+      {
+        "text": "Killed pg1 anyway",
+        "correct": false,
+        "why": "That is what the first version effectively risked."
+      },
+      {
+        "text": "Started pg3",
+        "correct": false,
+        "why": "Starting nodes is not its job before the run."
+      },
+      {
+        "text": "Waited for pg3 to come back",
+        "correct": false,
+        "why": "It refuses, it does not wait."
+      },
+      {
+        "text": "It refused",
+        "correct": true,
+        "why": "Right: printed ABORT and exited 1 before touching anything; two healthy members out of three."
+      }
+    ]
+  },
+  {
+    "id": "ex-hb61743b",
+    "version": 1,
+    "section": "the-run",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The leader was killed at 03:14:10 and the first order after the failure succeeded at 03:14:41. How many seconds without orders?",
+    "hint": "Subtract.",
+    "value": 31,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-q0y584qg",
+    "version": 1,
+    "section": "the-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "16 orders were reported `ok` and the table gained 16 rows. What does that confirm?",
+    "hint": "Told saved, saved.",
+    "choices": [
+      {
+        "text": "The counts agree",
+        "correct": true,
+        "why": "Right: no order reported as saved went missing, as the plan expected."
+      },
+      {
+        "text": "The failover took 16 seconds",
+        "correct": false,
+        "why": "It took about 31."
+      },
+      {
+        "text": "pg1 kept 16 orders",
+        "correct": false,
+        "why": "pg1 rejoined as a replica."
+      },
+      {
+        "text": "HAProxy sent 16 orders to each node",
+        "correct": false,
+        "why": "All went to the primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-zhhxgbdx",
+    "version": 1,
+    "section": "the-run",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did the first run of the rehearsal find?",
+    "hint": "It never finished.",
+    "choices": [
+      {
+        "text": "Patroni did not promote anybody",
+        "correct": false,
+        "why": "It promoted a new leader as usual."
+      },
+      {
+        "text": "orders.sh deleted rows",
+        "correct": false,
+        "why": "It only inserts."
+      },
+      {
+        "text": "A connection that never ended",
+        "correct": true,
+        "why": "Right: left waiting with no server behind it, held open by HAProxy for up to its 30-minute timeout, with no limit in psql."
+      },
+      {
+        "text": "etcd lost the leader key permanently",
+        "correct": false,
+        "why": "etcd worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf272tyr",
+    "version": 1,
+    "section": "the-run",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the hung connection worse for a real application than for the rehearsal?",
+    "hint": "Threads and pools.",
+    "choices": [
+      {
+        "text": "It corrupts the database",
+        "correct": false,
+        "why": "The database is fine."
+      },
+      {
+        "text": "It makes HAProxy crash",
+        "correct": false,
+        "why": "HAProxy kept running."
+      },
+      {
+        "text": "It has no effect on applications",
+        "correct": false,
+        "why": "Applications hold workers on connections."
+      },
+      {
+        "text": "Workers run out after recovery",
+        "correct": true,
+        "why": "Right: stuck connections exhaust the workers after the failover ends; the shop goes down after the database has recovered."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgjh2baq",
+    "version": 1,
+    "section": "afterwards",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of making rehearsals more real in the lesson's order.",
+    "hint": "From what loses nothing to production.",
+    "items": [
+      "A switchover",
+      "A killed leader in a test environment",
+      "The same with the real application and traffic",
+      "A killed leader in production, at an agreed time"
+    ],
+    "trap": "Each step is only safe once the one before has passed."
+  },
+  {
+    "id": "ex-0q938mv2",
+    "version": 1,
+    "section": "afterwards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A rehearsal found nothing wrong. What happens to its results?",
+    "hint": "Evidence for the next one.",
+    "choices": [
+      {
+        "text": "They are discarded, since nothing failed",
+        "correct": false,
+        "why": "Nothing failing is a result."
+      },
+      {
+        "text": "The next rehearsal is cancelled",
+        "correct": false,
+        "why": "It is repeated on a schedule."
+      },
+      {
+        "text": "Kept as a baseline",
+        "correct": true,
+        "why": "Right: written down as evidence; the next rehearsal is compared with them."
+      },
+      {
+        "text": "Patroni's ttl is raised",
+        "correct": false,
+        "why": "Nothing suggests a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-13axy8x1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants its first rehearsal to be a killed leader in production next Monday. What does the lesson suggest instead?",
+    "hint": "The order of steps.",
+    "choices": [
+      {
+        "text": "Start smaller, and build up",
+        "correct": true,
+        "why": "Right: a switchover first, then a killed leader in a test environment; each step earns the next."
+      },
+      {
+        "text": "Skip the abort criteria to save time",
+        "correct": false,
+        "why": "They are what keeps it a rehearsal."
+      },
+      {
+        "text": "Do it without telling anybody, to make it realistic",
+        "correct": false,
+        "why": "Everybody affected is told before and after."
+      },
+      {
+        "text": "Rehearse only the backups",
+        "correct": false,
+        "why": "Restores have their own drill; the failover still needs one."
+      }
+    ]
+  }
+]

@@ -1,0 +1,536 @@
+[
+  {
+    "id": "ex-2cg9m0gc",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does storing a table column by column make cheaper? Choose all that apply.",
+    "hint": "Think of a query naming 3 columns of 40.",
+    "choices": [
+      {
+        "text": "Reading one whole row",
+        "correct": false,
+        "why": "It visits every column's run."
+      },
+      {
+        "text": "Reading a few columns of a wide table",
+        "correct": true,
+        "why": "Yes. The other columns are not touched."
+      },
+      {
+        "text": "Adding one row at a time",
+        "correct": false,
+        "why": "That means rewriting the file."
+      },
+      {
+        "text": "Compressing the data",
+        "correct": true,
+        "why": "Yes. Values of one column look alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz261bn3",
+    "version": 1,
+    "section": "inside-a-parquet-file",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the parts of a Parquet file from largest to smallest.",
+    "hint": "A page is the unit that is compressed.",
+    "items": [
+      "File",
+      "Row group",
+      "Column chunk",
+      "Page"
+    ]
+  },
+  {
+    "id": "ex-nggt66n6",
+    "version": 1,
+    "section": "inside-a-parquet-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a Parquet reader open the footer before anything else?",
+    "hint": "What does the footer record for every column chunk?",
+    "choices": [
+      {
+        "text": "The footer holds the first row group's data",
+        "correct": false,
+        "why": "It holds metadata only."
+      },
+      {
+        "text": "It contains the decryption key",
+        "correct": false,
+        "why": "Nothing here is encrypted."
+      },
+      {
+        "text": "The file is compressed backwards from the end",
+        "correct": false,
+        "why": "Pages are compressed one by one."
+      },
+      {
+        "text": "It says where each chunk is and what values it holds",
+        "correct": true,
+        "why": "Right. From it the reader decides what to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwdwtf6b",
+    "version": 1,
+    "section": "inside-a-parquet-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the silver layer's file, why did `kind` take 16 KiB and `ts` 532?",
+    "hint": "How many different values does each have?",
+    "choices": [
+      {
+        "text": "Strings are stored more compactly than timestamps in every format",
+        "correct": false,
+        "why": "`visitor_id` is a string and took 157 KiB."
+      },
+      {
+        "text": "`ts` is compressed with a weaker codec than `kind`",
+        "correct": false,
+        "why": "Both were Snappy."
+      },
+      {
+        "text": "`kind` has four values; `ts` differs in every row",
+        "correct": true,
+        "why": "Right. A dictionary shrinks the first and cannot help the second."
+      },
+      {
+        "text": "`ts` is stored twice, once per row group",
+        "correct": false,
+        "why": "That file had one row group."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wcxhh2c",
+    "version": 1,
+    "section": "why-silver-is-larger",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changes took January from 33.0 MiB to 7.2? Choose all that apply.",
+    "hint": "Three changes, all made when writing.",
+    "choices": [
+      {
+        "text": "Version 2 pages",
+        "correct": true,
+        "why": "Yes: 14.4 to 7.2."
+      },
+      {
+        "text": "Sorting the rows by book",
+        "correct": false,
+        "why": "That made the files larger."
+      },
+      {
+        "text": "zstd instead of Snappy",
+        "correct": true,
+        "why": "Yes: 33.0 to 19.6."
+      },
+      {
+        "text": "Timestamps as `TIMESTAMP_MICROS`",
+        "correct": true,
+        "why": "Yes: 19.6 to 14.4."
+      }
+    ]
+  },
+  {
+    "id": "ex-719wkazb",
+    "version": 1,
+    "section": "why-silver-is-larger",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why was the gzipped CSV smaller than Spark's default Parquet?",
+    "hint": "Compare the codecs, not the formats.",
+    "choices": [
+      {
+        "text": "Parquet stores every value twice, once in the footer",
+        "correct": false,
+        "why": "The footer holds sizes and ranges, not values."
+      },
+      {
+        "text": "Snappy trades size for speed; gzip is stronger",
+        "correct": true,
+        "why": "Right. Parquet with gzip was close to the CSV."
+      },
+      {
+        "text": "A columnar file cannot be compressed",
+        "correct": false,
+        "why": "It is compressed page by page."
+      },
+      {
+        "text": "CSV files have no header row",
+        "correct": false,
+        "why": "These have one, and it is tiny."
+      }
+    ]
+  },
+  {
+    "id": "ex-kskv09gx",
+    "version": 1,
+    "section": "encodings",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the timestamps only shrink once they were written as `TIMESTAMP_MICROS` and with version 2 pages?",
+    "hint": "Which types does delta binary packing accept?",
+    "choices": [
+      {
+        "text": "zstd only compresses integers",
+        "correct": false,
+        "why": "A codec only sees bytes."
+      },
+      {
+        "text": "Version 1 pages cannot hold timestamps",
+        "correct": false,
+        "why": "The silver layer's v1 pages held them."
+      },
+      {
+        "text": "`INT96` timestamps lose their time zone",
+        "correct": false,
+        "why": "Size, not correctness, was the issue."
+      },
+      {
+        "text": "Delta encoding needs integers, and comes with v2",
+        "correct": true,
+        "why": "Right. `INT96` is not an integer type it accepts."
+      }
+    ]
+  },
+  {
+    "id": "ex-f45151rw",
+    "version": 1,
+    "section": "encodings",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each encoding to what it stores.",
+    "hint": "One of them stores differences.",
+    "pairs": [
+      {
+        "left": "`DELTA_BINARY_PACKED`",
+        "right": "The first value, then each difference from the one before"
+      },
+      {
+        "left": "`RLE_DICTIONARY`",
+        "right": "Each distinct value once, and a small number per row"
+      },
+      {
+        "left": "`PLAIN`",
+        "right": "The values one after another"
+      }
+    ],
+    "right_distractors": [
+      "The values sorted, with their row numbers"
+    ]
+  },
+  {
+    "id": "ex-0v6j89b7",
+    "version": 1,
+    "section": "encodings",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A column of 65,754 timestamps takes 164.3 KiB after delta encoding and before compression. About how many bits per row is that? (1 KiB = 8,192 bits)",
+    "hint": "164.3 × 8,192 ÷ 65,754.",
+    "value": 20.5,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-77n8rq8c",
+    "version": 1,
+    "section": "row-group-skipping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could the silver layer skip no row group for `book_id >= 2900`?",
+    "hint": "What range does each day's footer give for `book_id`?",
+    "choices": [
+      {
+        "text": "Parquet cannot skip row groups on an integer column",
+        "correct": false,
+        "why": "The sorted copy skipped them on the same column."
+      },
+      {
+        "text": "The filter was applied by a Python function",
+        "correct": false,
+        "why": "It was a plain column comparison."
+      },
+      {
+        "text": "Every row group ran from book 1 to 3000",
+        "correct": true,
+        "why": "Right. No range ruled the filter out."
+      },
+      {
+        "text": "The files were compressed with Snappy",
+        "correct": false,
+        "why": "Statistics do not depend on the codec."
+      }
+    ]
+  },
+  {
+    "id": "ex-npm9pwjd",
+    "version": 1,
+    "section": "row-group-skipping",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the sorted copy, how many million rows did the scan hand on for the rare books? Round to a whole number.",
+    "hint": "Against 24 for the silver layer.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yb13v1q1",
+    "version": 1,
+    "section": "row-group-skipping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rows read fell 24 times, but the time only from 5.4 to 5.1 seconds. Why?",
+    "hint": "What did both scans still have to do for every file?",
+    "choices": [
+      {
+        "text": "Both still opened 365 files and read their footers",
+        "correct": true,
+        "why": "Right. Sorting does not touch that cost."
+      },
+      {
+        "text": "Skipped row groups are read anyway and thrown away",
+        "correct": false,
+        "why": "Skipped means not read."
+      },
+      {
+        "text": "The cluster cached the silver layer in between",
+        "correct": false,
+        "why": "Nothing was cached."
+      },
+      {
+        "text": "The sorted copy was read without its statistics",
+        "correct": false,
+        "why": "It used them to skip row groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktvrbm35",
+    "version": 1,
+    "section": "what-sorting-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the sorted copy with fifteen row groups, why did `visitor_id` nearly triple in size?",
+    "hint": "Where is a dictionary kept?",
+    "choices": [
+      {
+        "text": "Sorting by book duplicated the visitors",
+        "correct": false,
+        "why": "The rows are the same."
+      },
+      {
+        "text": "Visitor ids lost their dictionary encoding entirely",
+        "correct": false,
+        "why": "The footer still lists a dictionary."
+      },
+      {
+        "text": "The codec was changed for that column",
+        "correct": false,
+        "why": "Every column was Snappy."
+      },
+      {
+        "text": "Each row group keeps its own dictionary",
+        "correct": true,
+        "why": "Right. A visitor in ten row groups is spelled out ten times."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4c46qjr",
+    "version": 1,
+    "section": "what-sorting-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column should a table usually be sorted by within its partitions?",
+    "hint": "Which questions should get fast?",
+    "choices": [
+      {
+        "text": "The largest column on disk",
+        "correct": false,
+        "why": "Sorting by it may shrink it, and help no query."
+      },
+      {
+        "text": "The one most queries filter on",
+        "correct": true,
+        "why": "Right, unless it is already the partition column."
+      },
+      {
+        "text": "The first column of the schema",
+        "correct": false,
+        "why": "Position means nothing to a reader."
+      },
+      {
+        "text": "The one with the most distinct values",
+        "correct": false,
+        "why": "That is about the data, not about the questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tr1bgck",
+    "version": 1,
+    "section": "orc",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where Parquet has row groups, ORC has ___.",
+    "hint": "Like the bands on a flag.",
+    "blanks": [
+      {
+        "accept": [
+          "stripes",
+          "stripe"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ssf9qng1",
+    "version": 1,
+    "section": "orc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team's lake is read by Spark, DuckDB and a cloud warehouse, through lesson 11's table formats. Which file format fits?",
+    "hint": "Which one is those tools' default?",
+    "choices": [
+      {
+        "text": "Avro",
+        "correct": false,
+        "why": "Avro stores rows, not columns."
+      },
+      {
+        "text": "ORC, because it came out smaller here",
+        "correct": false,
+        "why": "The bytes rarely decide it; the rest of the system does."
+      },
+      {
+        "text": "Parquet",
+        "correct": true,
+        "why": "Right. It is their default and the table formats' default."
+      },
+      {
+        "text": "Gzipped CSV",
+        "correct": false,
+        "why": "CSV is for arriving, not for staying."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg1j68zb",
+    "version": 1,
+    "section": "orc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When does a bloom filter on a column pay off?",
+    "hint": "What can it answer that minimum and maximum cannot?",
+    "choices": [
+      {
+        "text": "For range filters on a sorted column",
+        "correct": false,
+        "why": "Minimum and maximum already serve those."
+      },
+      {
+        "text": "For equality filters on a column whose ranges say nothing",
+        "correct": true,
+        "why": "Right, such as a visitor id."
+      },
+      {
+        "text": "For columns with four distinct values",
+        "correct": false,
+        "why": "Every row group would hold them all."
+      },
+      {
+        "text": "For every column, at no cost",
+        "correct": false,
+        "why": "It costs space in every file."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrhd90nt",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each problem to the change in how the data is written.",
+    "hint": "Each came from a section of this lesson.",
+    "pairs": [
+      {
+        "left": "Files twice the size of the gzipped CSV",
+        "right": "A stronger codec than Snappy"
+      },
+      {
+        "left": "A timestamp column that will not shrink",
+        "right": "`TIMESTAMP_MICROS` and version 2 pages"
+      },
+      {
+        "left": "Every query filters on a column and skips nothing",
+        "right": "Sort by that column within partitions"
+      },
+      {
+        "left": "Equality lookups on a random id read every row group",
+        "right": "A bloom filter on that column"
+      }
+    ],
+    "right_distractors": [
+      "More shuffle partitions"
+    ]
+  },
+  {
+    "id": "ex-emk7j5cv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table is written once a night and read by fifty reports a day. Where should effort go?",
+    "hint": "Which side happens more often?",
+    "choices": [
+      {
+        "text": "Nowhere, because the codec decides it all",
+        "correct": false,
+        "why": "Codec, types, page format and sort order all mattered."
+      },
+      {
+        "text": "Into each report, filtering after reading everything",
+        "correct": false,
+        "why": "Fifty times the work the write could have saved."
+      },
+      {
+        "text": "Into caching the raw CSV in memory",
+        "correct": false,
+        "why": "Lesson 9: that saves only a read."
+      },
+      {
+        "text": "Into the write, to make every read cheaper",
+        "correct": true,
+        "why": "Right. It is paid once and saved fifty times."
+      }
+    ]
+  }
+]

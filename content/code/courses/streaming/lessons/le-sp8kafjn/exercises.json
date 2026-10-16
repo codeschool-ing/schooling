@@ -1,0 +1,616 @@
+[
+  {
+    "id": "ex-ngkk4tyb",
+    "version": 1,
+    "section": "when-is-it-complete",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A processor emits each window two minutes after it ends by its own clock. What goes wrong when the topic is replayed the next day?",
+    "choices": [
+      {
+        "text": "Nothing, as long as the processor's clock is synchronised with NTP",
+        "correct": false,
+        "why": "A correct clock still measures the replay's moment, which has nothing to do with the events."
+      },
+      {
+        "text": "The windows close at moments unrelated to the events, so results differ",
+        "correct": true,
+        "why": "Right. That is processing time, with lesson 9's flaw: the answer depends on when it ran."
+      },
+      {
+        "text": "Every window is emitted twice, once for the original run and once for the replay",
+        "correct": false,
+        "why": "A replay starts fresh; the problem is which events each window contains."
+      },
+      {
+        "text": "The replay is refused by Kafka",
+        "correct": false,
+        "why": "Kafka is glad to be read again; that is what a log is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cqs31e5",
+    "version": 1,
+    "section": "when-is-it-complete",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a processor actually know that lets it estimate how far time has got?",
+    "choices": [
+      {
+        "text": "The time of the wall clock where it runs",
+        "correct": false,
+        "why": "That is processing time, which says nothing about the events."
+      },
+      {
+        "text": "How many events each partition will send",
+        "correct": false,
+        "why": "Nothing tells it that in advance."
+      },
+      {
+        "text": "The event times it has already seen",
+        "correct": true,
+        "why": "Right. They move forward, unevenly, and they are the raw material of the watermark."
+      },
+      {
+        "text": "A signal each till sends when it has finished a minute",
+        "correct": false,
+        "why": "No till sends one; Natal's did not even say it was holding sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7f1jcs8",
+    "version": 1,
+    "section": "when-is-it-complete",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A processor's assertion \"I do not expect any more events older than this time\" is called a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "watermark"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-svped7hd",
+    "version": 1,
+    "section": "watermarks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The latest event time seen is 09:12:30 and the bound is 2 minutes. How many seconds after 09:10:00 is the watermark?",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-9f6ht93a",
+    "version": 1,
+    "section": "watermarks",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bound 3 minutes. Event times arrive in this order: 10:00:00, 10:04:00, 10:02:00, 10:06:30, 10:05:00. How many minutes after 10:00 is the watermark after the last one?",
+    "hint": "The latest seen is not the last to arrive.",
+    "value": 3.5,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-9vt4e3q4",
+    "version": 1,
+    "section": "watermarks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sale from 09:08:50 arrives after one from 09:13:05. Why does the watermark not move back?",
+    "choices": [
+      {
+        "text": "Old sales are discarded before the watermark sees them",
+        "correct": false,
+        "why": "Whether it is discarded depends on the watermark; the watermark comes first."
+      },
+      {
+        "text": "It would reopen windows already emitted",
+        "correct": true,
+        "why": "Right. It is the latest time seen, and that is still 09:13:05."
+      },
+      {
+        "text": "The watermark only uses the first event of each window",
+        "correct": false,
+        "why": "It uses the latest event time seen, whatever its window."
+      },
+      {
+        "text": "Kafka sorts the partition before the processor reads it",
+        "correct": false,
+        "why": "A partition is in arrival order; nothing sorts it."
+      }
+    ]
+  },
+  {
+    "id": "ex-06s3ksmx",
+    "version": 1,
+    "section": "watermarks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "When is a perfect watermark, one that is never wrong, possible?",
+    "choices": [
+      {
+        "text": "When the bound is larger than the longest delay any event has ever had",
+        "correct": false,
+        "why": "Any bound can be beaten by a source that holds events longer, as Natal did."
+      },
+      {
+        "text": "When the topic uses LogAppendTime",
+        "correct": false,
+        "why": "That makes the stamp the broker's, but the event time inside can still be out of order."
+      },
+      {
+        "text": "When the processor runs on the same machine as the broker",
+        "correct": false,
+        "why": "Where it runs says nothing about the order of the events."
+      },
+      {
+        "text": "When a source writes its events in order, with no buffering",
+        "correct": true,
+        "why": "Right. Then it knows how far it has got; real systems almost never are like that."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6mg3fhq",
+    "version": 1,
+    "section": "watermark-in-action",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `watermark.py` with a 2-minute bound, after which sale number are the windows 09:00 and 09:05 emitted?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "sale"
+  },
+  {
+    "id": "ex-jnrqxe7d",
+    "version": 1,
+    "section": "watermark-in-action",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no lateness, sale 8 (09:08:50) is dropped. The watermark when it arrived was 09:11:05. Why is it too late?",
+    "choices": [
+      {
+        "text": "It happened more than two minutes before the latest sale",
+        "correct": false,
+        "why": "That alone would not drop it; what matters is whether its window has been passed."
+      },
+      {
+        "text": "Its window ended at 09:10, and the watermark had passed that",
+        "correct": true,
+        "why": "Right. The window was emitted and, with no lateness, forgotten."
+      },
+      {
+        "text": "Natal's sales go to the late topic, whatever the watermark says",
+        "correct": false,
+        "why": "Natal's sales 2 and 5 were counted normally."
+      },
+      {
+        "text": "The watermark moved back when it arrived",
+        "correct": false,
+        "why": "It never moves back."
+      }
+    ]
+  },
+  {
+    "id": "ex-h93h071h",
+    "version": 1,
+    "section": "watermark-in-action",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a 2-minute bound and no lateness, how many cents does the program report for the window 09:05 to 09:10?",
+    "hint": "Sales 4 and 5; sale 8 is dropped.",
+    "value": 12390,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-sq2c1dzk",
+    "version": 1,
+    "section": "watermark-in-action",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does sale 6 make the program emit two windows at once?",
+    "choices": [
+      {
+        "text": "It belongs to both windows",
+        "correct": false,
+        "why": "Tumbling windows do not overlap; sale 6 is in 09:10 to 09:15."
+      },
+      {
+        "text": "The program emits windows in pairs, the earlier of the two first",
+        "correct": false,
+        "why": "Sale 10 emits one."
+      },
+      {
+        "text": "It moves the watermark six minutes, past two windows' ends",
+        "correct": true,
+        "why": "Right. From 09:04:20 to 09:10:30."
+      },
+      {
+        "text": "It is the first sale of a new hour, so every open window is closed",
+        "correct": false,
+        "why": "It is from 09:12; the hour has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxa9dvvj",
+    "version": 1,
+    "section": "allowed-lateness",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 5 minutes of lateness, sale 8 updates the 09:05 window. Sale 11 (09:04:30) is still dropped. Why?",
+    "choices": [
+      {
+        "text": "Its window ended at 09:05, so it was forgotten when the watermark passed 09:10",
+        "correct": true,
+        "why": "Right. When it arrived the watermark was 09:19:00."
+      },
+      {
+        "text": "Lateness applies only to the window being emitted at that moment",
+        "correct": false,
+        "why": "It applies to every window, counted from each one's end."
+      },
+      {
+        "text": "A window can be updated only once",
+        "correct": false,
+        "why": "There is no such limit; any number of late sales may update a kept window."
+      },
+      {
+        "text": "Natal's sales are excluded from late updates",
+        "correct": false,
+        "why": "Sale 8 is also Natal's, and it was counted."
+      }
+    ]
+  },
+  {
+    "id": "ex-14wr58z6",
+    "version": 1,
+    "section": "allowed-lateness",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Late updates go to a reader that appends each result as a new row and sums the column. What happens to the 09:05 window?",
+    "choices": [
+      {
+        "text": "Nothing, because the second result replaces the first",
+        "correct": false,
+        "why": "Replacing is what an upsert does; an append keeps both."
+      },
+      {
+        "text": "Sales 4 and 5 are counted twice",
+        "correct": true,
+        "why": "Right. There are two rows for one window, and the sum adds both."
+      },
+      {
+        "text": "Sale 8 is lost",
+        "correct": false,
+        "why": "It is in the second row; the trouble is the first row is still there too."
+      },
+      {
+        "text": "The processor refuses to emit an update to an appending reader",
+        "correct": false,
+        "why": "The processor does not know how its output is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-tybmp4kv",
+    "version": 1,
+    "section": "allowed-lateness",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five-minute tumbling windows and 30 minutes of allowed lateness. How many extra windows per key are kept open at any moment because of the lateness?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "windows"
+  },
+  {
+    "id": "ex-d03tnv2g",
+    "version": 1,
+    "section": "allowed-lateness",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each engine's setting to what it decides.",
+    "pairs": [
+      {
+        "left": "Flink's bounded out-of-orderness",
+        "right": "when a window is first emitted"
+      },
+      {
+        "left": "Flink's allowedLateness",
+        "right": "how long an emitted window is kept for updates"
+      },
+      {
+        "left": "Kafka Streams' grace period",
+        "right": "both: the window accepts records until stream time passes end plus grace"
+      },
+      {
+        "left": "Flink's sideOutputLateData",
+        "right": "where events too late for any window go"
+      }
+    ],
+    "right_distractors": [
+      "how many partitions a topic has"
+    ]
+  },
+  {
+    "id": "ex-we7s64cd",
+    "version": 1,
+    "section": "late-data-elsewhere",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does sending late sales to their own topic give you that dropping them does not?",
+    "choices": [
+      {
+        "text": "They are counted in the window after all",
+        "correct": false,
+        "why": "The window is gone; the topic is a record, not a way back in."
+      },
+      {
+        "text": "The processor runs faster",
+        "correct": false,
+        "why": "Producing a record costs about the same as dropping it."
+      },
+      {
+        "text": "The watermark moves back to include them",
+        "correct": false,
+        "why": "It never moves back."
+      },
+      {
+        "text": "A trail of them, to count and inspect",
+        "correct": true,
+        "why": "Right. Late data stops being invisible."
+      }
+    ]
+  },
+  {
+    "id": "ex-qftjqt3q",
+    "version": 1,
+    "section": "late-data-elsewhere",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The number of late events per hour on the late topic jumps a hundredfold one afternoon. What is the most likely reading?",
+    "choices": [
+      {
+        "text": "The bound is too large and should be shortened",
+        "correct": false,
+        "why": "A bound too large produces fewer late events, not more."
+      },
+      {
+        "text": "Kafka lost the watermark",
+        "correct": false,
+        "why": "Kafka does not hold the watermark; the processor computes it."
+      },
+      {
+        "text": "A till, a network or a clock went wrong",
+        "correct": true,
+        "why": "Right. A bound that fits produces a steady trickle; a jump is a change in the stream."
+      },
+      {
+        "text": "Sales doubled that afternoon",
+        "correct": false,
+        "why": "Twice the sales would give twice the late events, not a hundred times."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9s54ag3",
+    "version": 1,
+    "section": "choosing-the-bound",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the measured day, 292 of 360 sales had a distance of 0, 311 were within 60 seconds and 322 within 120. How many sales does raising the bound from 1 minute to 2 minutes save from being late?",
+    "value": 11,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-ejxaewas",
+    "version": 1,
+    "section": "choosing-the-bound",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "p85 of the distance is 40 seconds and p90 is 1,847 seconds. What does the jump say about choosing the bound?",
+    "choices": [
+      {
+        "text": "Use the p90, half an hour, since 90% is the usual target",
+        "correct": false,
+        "why": "That makes every result wait half an hour to catch a few of Natal's held sales."
+      },
+      {
+        "text": "Use the average distance",
+        "correct": false,
+        "why": "The average mixes the two populations and fits neither."
+      },
+      {
+        "text": "Pick a bound just past the first group; the gap means the second needs other tools",
+        "correct": true,
+        "why": "Right. Lateness, a late topic and the nightly batch handle the hours-late group."
+      },
+      {
+        "text": "Use no bound at all, since most sales arrive in order",
+        "correct": false,
+        "why": "With no bound, every slow delivery of seconds becomes late."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s6bcxnd",
+    "version": 1,
+    "section": "choosing-the-bound",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a 6-minute bound instead of 2, what did the twelve sales gain and lose?",
+    "choices": [
+      {
+        "text": "Gained nothing, lost latency",
+        "correct": false,
+        "why": "Sale 8 was counted, which it was not with 2 minutes."
+      },
+      {
+        "text": "Sale 8 counted; the 09:05 window emitted four sales later",
+        "correct": true,
+        "why": "Right. Completeness bought with latency."
+      },
+      {
+        "text": "Both late sales were counted, and the windows were emitted at the same moments",
+        "correct": false,
+        "why": "Sale 11 was still dropped, and the windows waited longer."
+      },
+      {
+        "text": "Lost sale 8, gained speed",
+        "correct": false,
+        "why": "It is the other way round: a larger bound waits longer and loses less."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dc131w3",
+    "version": 1,
+    "section": "idle-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a processor take the LOWEST of its partitions' watermarks?",
+    "choices": [
+      {
+        "text": "A lagging partition still has earlier events to deliver",
+        "correct": true,
+        "why": "Right. There is no order between partitions, so time has only got as far as the slowest."
+      },
+      {
+        "text": "The lowest is cheaper to compute",
+        "correct": false,
+        "why": "Any of them is one comparison; the reason is correctness."
+      },
+      {
+        "text": "Kafka requires it",
+        "correct": false,
+        "why": "Kafka has no watermark; the processor chooses the rule."
+      },
+      {
+        "text": "To emit results as early as possible",
+        "correct": false,
+        "why": "The lowest is the latest to emit, not the earliest."
+      }
+    ]
+  },
+  {
+    "id": "ex-kk8czsv9",
+    "version": 1,
+    "section": "idle-sources",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Three partitions have latest event times 09:21:00, 09:12:30 and 09:17:45. With a 2-minute bound, how many minutes after 09:00 is the watermark?",
+    "value": 10.5,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-0k1az7te",
+    "version": 1,
+    "section": "idle-sources",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A topic has 12 partitions and Ponto Final's five shops as keys. A Flink job with no idleness setting reads it and never emits a window. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "The bound is too small for the shops, so every sale is dropped as late",
+        "correct": false,
+        "why": "A small bound emits early and drops more; it does not stop emission."
+      },
+      {
+        "text": "Partitions with no key hold the minimum watermark at nothing",
+        "correct": true,
+        "why": "Right. Five keys reach at most five of twelve partitions; the rest are empty."
+      },
+      {
+        "text": "Twelve partitions are too many for Flink to track one watermark each",
+        "correct": false,
+        "why": "Flink reads thousands; the trouble is that some are empty."
+      },
+      {
+        "text": "The shops' clocks are wrong",
+        "correct": false,
+        "why": "Wrong clocks give wrong windows, not none at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyz2vkf9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to the 09:05 to 09:10 window (bound 2 minutes, lateness 5) in order.",
+    "items": [
+      "Sales 4 and 5 are counted in it",
+      "Sale 6 moves the watermark past 09:10, and it is emitted with two sales",
+      "Sale 8 arrives late and updates it to three sales",
+      "Sale 10 moves the watermark past 09:15, and it is forgotten"
+    ]
+  },
+  {
+    "id": "ex-m5e7y1qc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final wants sales per five minutes on a dashboard that upserts, plus exact daily totals for accounting. Which design fits the lesson?",
+    "choices": [
+      {
+        "text": "A bound of four hours, so that every number on the dashboard is exact and no batch is needed",
+        "correct": false,
+        "why": "Every window would wait four hours; that is the batch, without its completeness."
+      },
+      {
+        "text": "No watermark, and the dashboard reads the topic by arrival time",
+        "correct": false,
+        "why": "That is lesson 9's wrong column."
+      },
+      {
+        "text": "A short bound with lateness, late sales to a topic, and the nightly batch for the totals",
+        "correct": true,
+        "why": "Right. Fast and nearly right on the dashboard, exact the next morning in the books."
+      },
+      {
+        "text": "Emit each window once and drop late sales silently",
+        "correct": false,
+        "why": "Silent drops make the accounting wrong with no trail."
+      }
+    ]
+  }
+]

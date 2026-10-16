@@ -1,0 +1,445 @@
+{
+  "ex-3ycmbrgd": {
+    "prompt": "Numa requisição SOAP 1.1 sobre HTTP, onde fica o nome da operação?",
+    "hint": "Toda requisição vai para o mesmo endereço com o mesmo método.",
+    "choices": [
+      {
+        "text": "No caminho, como /invoice/IssueInvoice",
+        "why": "O serviço tem um endereço só, /invoice, para toda operação."
+      },
+      {
+        "text": "No método HTTP",
+        "why": "O método é POST para toda operação, então ele não as distingue."
+      },
+      {
+        "text": "No SOAPAction e no primeiro elemento do Body",
+        "why": "Certo. O cabeçalho a nomeia para o roteamento do servidor, e o Body a guarda com os argumentos."
+      },
+      {
+        "text": "No elemento Header do envelope",
+        "why": "O Header leva assinaturas, tokens e ids de rastreio, e é opcional."
+      }
+    ]
+  },
+  "ex-phn3cze5": {
+    "prompt": "Um serviço SOAP 1.1 responde HTTP 500. O que só o status diz a quem testa?",
+    "hint": "Olhe o faultcode antes de decidir quem falhou.",
+    "choices": [
+      {
+        "text": "Que o serviço caiu enquanto tratava a requisição",
+        "why": "Uma queda é uma causa; um erro do cliente recebe o mesmo 500 no SOAP 1.1."
+      },
+      {
+        "text": "Que a requisição estava malformada",
+        "why": "Essa é uma causa, e o status não diz qual; o faultcode diz."
+      },
+      {
+        "text": "Que vem uma falha, e nada sobre de quem",
+        "why": "Certo. O SOAP 1.1 responde toda falha com 500; soap:Client ou soap:Server carrega a culpa."
+      },
+      {
+        "text": "Que o serviço fala SOAP 1.2, e não 1.1",
+        "why": "O 1.2 também usa 500 para falhas do receptor; o status não diz nada sobre a versão."
+      }
+    ]
+  },
+  "ex-rdk8bagt": {
+    "prompt": "Ligue cada parte de uma mensagem SOAP ao que ela guarda.",
+    "hint": "Uma é opcional, uma é obrigatória, uma só aparece quando algo deu errado.",
+    "pairs": [
+      {
+        "left": "Envelope",
+        "right": "o elemento mais externo, cujo namespace dá a versão"
+      },
+      {
+        "left": "Header",
+        "right": "opcional: uma assinatura, um token, um id de rastreio"
+      },
+      {
+        "left": "Body",
+        "right": "obrigatório: a operação ou a resposta dela"
+      },
+      {
+        "left": "Fault",
+        "right": "o erro, com de quem é a culpa"
+      }
+    ],
+    "right_distractors": [
+      "o endereço para onde a mensagem é mandada"
+    ]
+  },
+  "ex-bqwj2xwt": {
+    "prompt": "Por que a lição dá a você um substituto em vez de mandar você ao ambiente de homologação da NF-e?",
+    "hint": "O que a homologação ainda pede?",
+    "choices": [
+      {
+        "text": "A homologação emite documentos fiscais de verdade",
+        "why": "Ela existe para que uma nota ali não tenha valor fiscal."
+      },
+      {
+        "text": "Até a homologação pede o certificado digital de uma empresa",
+        "why": "Certo. O notebook de um estudante não tem nem o cadastro nem o certificado."
+      },
+      {
+        "text": "Os serviços da NF-e mudaram para REST e JSON",
+        "why": "A lição os descreve como SOAP com XML assinado."
+      },
+      {
+        "text": "O curl não consegue mandar um envelope SOAP a um serviço real",
+        "why": "A seção 05 mostra que o curl manda um envelope como qualquer outro corpo."
+      }
+    ]
+  },
+  "ex-zgjn7sp6": {
+    "prompt": "O app de um banco fala JSON com o backend, e o backend chama um sistema central SOAP. Onde quem testa a API do app tem mais chance de encontrar o SOAP?",
+    "hint": "Quem manda os envelopes?",
+    "choices": [
+      {
+        "text": "No tráfego do celular, como envelopes que o app manda",
+        "why": "O app manda JSON; os envelopes saem do backend."
+      },
+      {
+        "text": "Em lugar nenhum: a camada JSON o esconde de todo teste",
+        "why": "As falhas dele ainda decidem se a chamada JSON dá certo, então um teste as encontra."
+      },
+      {
+        "text": "Atrás da API, como uma dependência",
+        "why": "Certo. As respostas dele decidem a resposta JSON, e o que o backend faz com uma falha é um teste."
+      },
+      {
+        "text": "Nas telas do app, que desenham o XML",
+        "why": "As telas desenham o que o backend mandou, e isso é JSON."
+      }
+    ]
+  },
+  "ex-c5j2cxnw": {
+    "prompt": "Ponha as partes de um documento WSDL 1.1 na ordem em que a lição as lê, do endereço até as formas exatas.",
+    "hint": "De baixo para cima.",
+    "items": [
+      "service",
+      "binding",
+      "portType",
+      "message",
+      "types"
+    ]
+  },
+  "ex-jked3488": {
+    "prompt": "Que requisição quebra os próprios tipos do WSDL, antes de qualquer regra escrita no código do serviço?",
+    "hint": "Leia a parte types, não o código.",
+    "choices": [
+      {
+        "text": "Um buyerTaxId de três dígitos",
+        "why": "O schema o chama de string e nada mais; a regra dos 11 dígitos só está no código."
+      },
+      {
+        "text": "Um amountCents igual a 0",
+        "why": "Certo. positiveInteger começa em 1, então 0 é inválido pelo próprio contrato."
+      },
+      {
+        "text": "Um orderId ord-1001 com um elemento Header a mais no envelope",
+        "why": "O Header é opcional e fica fora dos tipos da operação; esta requisição é válida."
+      },
+      {
+        "text": "Um amountCents de 19500 para três lugares",
+        "why": "19500 é um inteiro positivo, que é o que o tipo pede."
+      }
+    ]
+  },
+  "ex-c0decjqp": {
+    "prompt": "A regra de que buyerTaxId tem 11 dígitos mora no código do serviço e não no WSDL. Por que vale levar isso a quem cuida do contrato?",
+    "hint": "Quem monta requisições a partir do WSDL, e o que sabe?",
+    "choices": [
+      {
+        "text": "Porque uma regra no código nunca é aplicada",
+        "why": "Ela é aplicada: a seção 05 recebeu uma falha soap:Client para um CPF curto."
+      },
+      {
+        "text": "Porque o XML Schema não tem como dizer que uma string tem exatamente onze dígitos",
+        "why": "Tem: uma faceta pattern na string diria isso, então a lacuna é uma escolha."
+      },
+      {
+        "text": "Porque clientes feitos a partir do WSDL vão mandar valores que o código recusa",
+        "why": "Certo. O contrato promete uma string, o código exige 11 dígitos, e só uma execução descobre."
+      },
+      {
+        "text": "Porque o SoapUI se recusa a mandar qualquer valor que o schema do WSDL não descreve",
+        "why": "O SoapUI manda o que você digita; a asserção Schema Compliance confere respostas."
+      }
+    ]
+  },
+  "ex-z0c1jjxf": {
+    "prompt": "Por que a lição manda o envelope com --data-binary em vez de -d?",
+    "hint": "O que o -d faz com as quebras de linha de um arquivo?",
+    "choices": [
+      {
+        "text": "O -d não consegue ler o corpo de um arquivo",
+        "why": "O -d também lê um arquivo com @; ele tira as quebras de linha."
+      },
+      {
+        "text": "Ele manda o arquivo byte a byte",
+        "why": "Certo. O -d tira as quebras de linha, e um documento assinado não sobrevive a isso."
+      },
+      {
+        "text": "Ele define o content-type como text/xml por você",
+        "why": "A lição define o content-type ela mesma com -H; o --data-binary não."
+      },
+      {
+        "text": "O -d mandaria a requisição como um GET ao serviço",
+        "why": "O -d manda um POST, como o --data-binary."
+      }
+    ]
+  },
+  "ex-tfprqzh8": {
+    "prompt": "Que status HTTP o substituto deu ao envelope rotulado application/soap+xml?",
+    "hint": "Ele recusou antes de ler o envelope."
+  },
+  "ex-3rmp9qry": {
+    "prompt": "Quais destes são defeitos na resposta do substituto ao envelope sem amountCents?",
+    "hint": "Dois deles; uma coisa que parece errada é regra do SOAP 1.1.",
+    "choices": [
+      {
+        "text": "O faultcode é soap:Server para um erro do cliente",
+        "why": "Certo. A requisição quebrou o contrato, então cabia soap:Client."
+      },
+      {
+        "text": "O status HTTP é 500",
+        "why": "O SOAP 1.1 responde toda falha com 500; o CPF curto também o recebeu, corretamente."
+      },
+      {
+        "text": "A faultstring repete um erro interno de JavaScript",
+        "why": "Certo. Ela conta a um estranho em que o serviço foi escrito e nada sobre a requisição."
+      },
+      {
+        "text": "A resposta é um envelope, não texto puro",
+        "why": "Uma falha deve mesmo ser um envelope com um Fault no Body."
+      }
+    ]
+  },
+  "ex-25mxsg3q": {
+    "prompt": "O CPF curto recebeu HTTP 500 e soap:Client. O 500 é um defeito?",
+    "hint": "A regra da lição 1 era sobre REST.",
+    "choices": [
+      {
+        "text": "Sim: um erro do cliente tem de receber um 4xx, como disse a lição 1",
+        "why": "Isso vale para REST; o SOAP 1.1 tem regra própria para falhas."
+      },
+      {
+        "text": "Sim: o SOAP 1.1 quer 400 para falhas Client",
+        "why": "400 para falha de quem manda é o binding do SOAP 1.2; o 1.1 usa 500 para todas."
+      },
+      {
+        "text": "Não: 500 quer dizer que foi aceita com um aviso",
+        "why": "500 quer dizer que vem uma falha; nada foi aceito."
+      },
+      {
+        "text": "Não: toda falha SOAP 1.1 é um 500, seja de quem for a culpa",
+        "why": "Certo. soap:Client diz que a requisição estava errada, que é a resposta correta."
+      }
+    ]
+  },
+  "ex-m0cpba4y": {
+    "prompt": "O xmllint --xpath '//invoiceNumber' imprime \"XPath set is empty\" embora o elemento esteja na resposta. Por quê?",
+    "hint": "Olhe o xmlns em IssueInvoiceResponse.",
+    "choices": [
+      {
+        "text": "O // procura só nos filhos da raiz",
+        "why": "O // procura no documento inteiro, em qualquer profundidade."
+      },
+      {
+        "text": "O elemento se chama InvoiceNumber, com I maiúsculo, e não invoiceNumber",
+        "why": "A resposta escreve invoiceNumber; o nome bate."
+      },
+      {
+        "text": "Ele tem namespace, e um nome sem prefixo quer dizer nenhum",
+        "why": "Certo. O xmlns padrão põe todo elemento dentro dele em urn:example:invoice:v1."
+      },
+      {
+        "text": "O xmllint lê só a primeira linha do que chega pela entrada padrão",
+        "why": "Ele lê o documento inteiro; a chamada imprimiu o faultcode de linhas mais fundas."
+      }
+    ]
+  },
+  "ex-wr849dpj": {
+    "prompt": "A função ___() do XPath dá a tag de um elemento sem o prefixo, então ela casa com o número da nota seja qual for o namespace.",
+    "hint": "A lição a escreveu entre colchetes.",
+    "blanks": [
+      {
+        "accept": [
+          "local-name"
+        ]
+      }
+    ]
+  },
+  "ex-8c8yajrg": {
+    "prompt": "Que código de saída o bash soap/check.sh deu, o número em que um pipeline para?",
+    "hint": "O echo $? o imprimiu depois da execução."
+  },
+  "ex-a60q509j": {
+    "prompt": "Por que //faultcode acha o código da falha quando //invoiceNumber não achou nada?",
+    "hint": "Que elementos o SOAP 1.1 põe num namespace?",
+    "choices": [
+      {
+        "text": "Porque o valor dele, soap:Client, tem prefixo",
+        "why": "O prefixo no valor é texto; o XPath casa pelo nome do próprio elemento."
+      },
+      {
+        "text": "Porque o SOAP 1.1 deixa o faultcode sem namespace",
+        "why": "Certo. Um nome sem prefixo quer dizer sem namespace, e o faultcode não tem nenhum."
+      },
+      {
+        "text": "Porque o xmllint trata falhas como caso especial",
+        "why": "O xmllint não sabe nada de SOAP; ele lê XML."
+      },
+      {
+        "text": "Porque falhas são documentos menores, então o XPath alcança todo elemento delas",
+        "why": "O tamanho não muda nada; o // alcança qualquer profundidade nos dois."
+      }
+    ]
+  },
+  "ex-vtgb86bh": {
+    "prompt": "Que asserção do SoapUI confere cada elemento de uma resposta contra os tipos do WSDL?",
+    "hint": "A que não tem linha no soap/check.sh.",
+    "choices": [
+      {
+        "text": "XPath Match",
+        "why": "Ela confere uma expressão contra um valor."
+      },
+      {
+        "text": "Not SOAP Fault",
+        "why": "Ela confere só que a resposta não é uma falha."
+      },
+      {
+        "text": "Contains",
+        "why": "Ela procura um trecho de texto em qualquer lugar da resposta."
+      },
+      {
+        "text": "Schema Compliance",
+        "why": "Certo. Ela lê o XML Schema do WSDL e confere a resposta inteira contra ele."
+      }
+    ]
+  },
+  "ex-xt7sqnhf": {
+    "prompt": "Ligue cada verificação do soap/check.sh à asserção do SoapUI que faz o mesmo trabalho.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "o status é 200",
+        "right": "Valid HTTP Status Codes"
+      },
+      {
+        "left": "o boolean do elemento Fault é false",
+        "right": "Not SOAP Fault"
+      },
+      {
+        "left": "string(//faultcode) é soap:Client",
+        "right": "XPath Match"
+      },
+      {
+        "left": "os casos negativos esperam uma falha",
+        "right": "SOAP Fault"
+      }
+    ],
+    "right_distractors": [
+      "Schema Compliance"
+    ]
+  },
+  "ex-b9wmhtje": {
+    "prompt": "Num projeto do SoapUI feito a partir do WSDL, por que ninguém digita o cabeçalho SOAPAction?",
+    "hint": "Que parte do WSDL guarda a ação?",
+    "choices": [
+      {
+        "text": "Porque o SoapUI fala SOAP 1.2, que não tem esse cabeçalho",
+        "why": "O SoapUI fala a versão que o binding declara, e esta é 1.1."
+      },
+      {
+        "text": "Ele vem do binding",
+        "why": "Certo. O soapAction de cada operação está no binding, e o SoapUI o lê."
+      },
+      {
+        "text": "Porque o substituto ignora o cabeçalho de qualquer jeito",
+        "why": "Ele o exige: uma requisição sem ele recebeu uma falha soap:Client."
+      },
+      {
+        "text": "Porque o MockService o acrescenta",
+        "why": "Um MockService responde requisições; ele não as manda."
+      }
+    ]
+  },
+  "ex-4j6tqshj": {
+    "prompt": "O boxoffice chama o serviço de notas depois de cada pagamento, repete três vezes toda falha soap:Server e desiste na hora com soap:Client. Com o defeito que você achou, o que acontece com uma chamada mandada sem valor?",
+    "hint": "Que faultcode essa requisição recebe?",
+    "choices": [
+      {
+        "text": "Falha na hora, porque um campo ausente é erro do cliente",
+        "why": "É o que deveria acontecer; o defeito faz o serviço responder soap:Server no lugar."
+      },
+      {
+        "text": "Dá certo numa nova tentativa, já que falhas do servidor passam",
+        "why": "O mesmo envelope dispara o mesmo erro toda vez; nada muda entre as tentativas."
+      },
+      {
+        "text": "É repetida três vezes, falhando em todas",
+        "why": "Certo. A falha culpa o serviço, então quem chama repete uma requisição que não tem como dar certo."
+      },
+      {
+        "text": "Recebe uma nota com valor 0",
+        "why": "Nenhuma nota é emitida; o serviço falha antes de chegar lá."
+      }
+    ]
+  },
+  "ex-e4a4f0xh": {
+    "prompt": "Os testes SOAP de um colega conferem só o status HTTP, 200 para requisições válidas e 500 para inválidas. Que defeito desta lição passaria por eles?",
+    "hint": "Duas falhas com o mesmo status e culpas diferentes.",
+    "choices": [
+      {
+        "text": "Um pedido válido respondido com uma falha",
+        "why": "Uma falha é um 500, então o teste que espera 200 falharia e o pegaria."
+      },
+      {
+        "text": "Um valor ausente respondido com soap:Server",
+        "why": "Certo. As duas falhas são 500, então só o faultcode distingue o defeito."
+      },
+      {
+        "text": "Um CPF curto que foi aceito com um número de nota",
+        "why": "Uma requisição aceita é um 200, então o teste que espera 500 o pegaria."
+      },
+      {
+        "text": "Nenhum: no SOAP, o código de status carrega o veredito inteiro",
+        "why": "No SOAP 1.1 toda falha divide o mesmo status, então ele não carrega o veredito."
+      }
+    ]
+  },
+  "ex-aezp339g": {
+    "prompt": "Outro serviço responde a um envelope sem um campo obrigatório com HTTP 400 e o código de falha env:Sender. O que quem testa conclui?",
+    "hint": "Que versão usa Sender, e que status ela dá a uma falha de quem manda?",
+    "choices": [
+      {
+        "text": "Correto: no SOAP 1.2, falha de quem manda é 400",
+        "why": "Certo. Sender e 400 são a resposta do 1.2 a uma requisição errada."
+      },
+      {
+        "text": "Um defeito, porque uma falha SOAP tem de ser 500",
+        "why": "Essa é a regra do 1.1; env:Sender diz que este serviço fala 1.2."
+      },
+      {
+        "text": "Um defeito: o código deveria dizer soap:Client",
+        "why": "Client é o nome do 1.1; o 1.2 o rebatizou de Sender."
+      },
+      {
+        "text": "O serviço é uma API REST que calha de devolver XML",
+        "why": "env:Sender dentro de um Fault é vocabulário do SOAP 1.2."
+      }
+    ]
+  },
+  "ex-6mmyk6ns": {
+    "prompt": "Você recebe o endereço de um serviço SOAP que nunca viu. Ponha os passos de uma primeira sessão de testes em ordem.",
+    "hint": "Cada passo precisa de algo que o anterior achou.",
+    "items": [
+      "buscar o WSDL com ?wsdl",
+      "ler o binding para a versão e cada SOAPAction",
+      "ler os types para cada campo e seu tipo",
+      "mandar um envelope válido e conferir a resposta",
+      "mandar envelopes que quebram uma regra cada e conferir o faultcode"
+    ]
+  }
+}

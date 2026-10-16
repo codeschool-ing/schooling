@@ -1,0 +1,2202 @@
+{
+  "ex-wwwxw68e": {
+    "prompt": "O CI de um time roda kubectl apply na produção depois de cada merge. Que princípio do GitOps isso quebra?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Nenhum; isto é GitOps",
+        "why": "Push a partir do CI é exatamente o que o GitOps inverte."
+      },
+      {
+        "text": "Puxado",
+        "why": "Isso. O pipeline empurra, segurando as chaves do cluster."
+      },
+      {
+        "text": "Declarativo",
+        "why": "Os manifestos ainda podem ser declarativos."
+      },
+      {
+        "text": "Versionado e imutável",
+        "why": "Os manifestos ainda podem estar no Git."
+      }
+    ]
+  },
+  "ex-vj7znac6": {
+    "prompt": "Alguém escala o staging para cinco à mão, com um reconciliador aplicando a cada quinze segundos. O que acontece?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Fica em cinco até o próximo commit",
+        "why": "O reconciliador aplica a cada passada, não a cada commit."
+      },
+      {
+        "text": "O reconciliador para com um conflito",
+        "why": "Aplicar é idempotente; não há conflito."
+      },
+      {
+        "text": "O Git é atualizado para cinco",
+        "why": "Nada escreve o estado do cluster de volta no Git."
+      },
+      {
+        "text": "Volta ao número que está no Git",
+        "why": "Isso. Aplicar de novo restaura o campo que mudou."
+      }
+    ]
+  },
+  "ex-jqf6dmyh": {
+    "prompt": "Um Service é apagado do Git, e um loop com kubectl apply -f continua aplicando o diretório. O que acontece com o Service?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Fica, órfão",
+        "why": "Isso. O kubectl apply -f só conhece os arquivos que recebeu."
+      },
+      {
+        "text": "É recriado a partir de um cache do cluster",
+        "why": "Esse cache não existe."
+      },
+      {
+        "text": "O loop para com erro",
+        "why": "Ele aplica o que sobrou e não diz nada."
+      },
+      {
+        "text": "É apagado na próxima passada",
+        "why": "Isso exige um registro do que foi aplicado: a poda."
+      }
+    ]
+  },
+  "ex-nmnztvr7": {
+    "prompt": "Um pod com localhost:5001/bulletin:1.0 falha com 'connection refused' em 127.0.0.1:5001. O que foi pulado?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Criar o namespace",
+        "why": "Isso falharia antes, no apply."
+      },
+      {
+        "text": "Onde localhost:5001 realmente está",
+        "why": "Isso. Dentro do nó, localhost é o nó."
+      },
+      {
+        "text": "Enviar a imagem",
+        "why": "Imagem faltando dá 'not found'."
+      },
+      {
+        "text": "Instalar o kubectl",
+        "why": "O kubectl não participa do download."
+      }
+    ]
+  },
+  "ex-1rghf384": {
+    "prompt": "Qual destes é GitOps, pelos quatro princípios?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Todo merge publicado pelo CI",
+        "why": "Isso é deploy contínuo por push."
+      },
+      {
+        "text": "Um agente no cluster aplicando a main",
+        "why": "Isso. Declarado, versionado, puxado e reconciliado."
+      },
+      {
+        "text": "Um job noturno que aplica a main",
+        "why": "Empurrado de fora, uma vez por noite."
+      },
+      {
+        "text": "YAML no Git, aplicado de um laptop quando preciso",
+        "why": "Empurrado, e só quando alguém lembra."
+      }
+    ]
+  },
+  "ex-h8xdbyav": {
+    "prompt": "O Bruno aprovou; a Ana envia mais um commit e tenta o merge. O que a regra de proteção faz?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Faz o merge se a checagem estiver verde",
+        "why": "A aprovação continua faltando."
+      },
+      {
+        "text": "Pede à Ana que aprove o próprio commit",
+        "why": "A aprovação dela nunca conta."
+      },
+      {
+        "text": "Faz o merge: uma aprovação vale para o pull request",
+        "why": "Não com o descarte de aprovações velhas ligado."
+      },
+      {
+        "text": "Recusa: a aprovação foi descartada",
+        "why": "Isso. O Bruno aprovou uma versão que não é mais a do merge."
+      }
+    ]
+  },
+  "ex-tvb1cx1d": {
+    "prompt": "Uma mudança que entrou quebrou o staging. Qual é a correção GitOps?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "kubectl rollout undo",
+        "why": "A próxima passada aplica a main de novo."
+      },
+      {
+        "text": "Um force-push da main para antes do merge",
+        "why": "Histórico que pode ser reescrito não é registro."
+      },
+      {
+        "text": "Um commit de revert",
+        "why": "Isso. A correção vai onde está a verdade."
+      },
+      {
+        "text": "Pausar o agente e corrigir à mão",
+        "why": "Ninguém acompanha a diferença depois."
+      }
+    ]
+  },
+  "ex-dyv3swx1": {
+    "prompt": "Um autoscaler é dono de replicas, e o manifesto no Git também diz replicas: 2. Qual é a correção limpa?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Apagar o autoscaler",
+        "why": "Isso tira o motivo de ele existir."
+      },
+      {
+        "text": "Subir replicas no Git até o máximo do autoscaler",
+        "why": "Continuariam brigando abaixo do máximo."
+      },
+      {
+        "text": "Desligar o reconciliador para esse deployment",
+        "why": "Isso abre mão de todo outro campo também."
+      },
+      {
+        "text": "Tirar replicas do manifesto",
+        "why": "Isso. Um dono por campo."
+      }
+    ]
+  },
+  "ex-5vw63d02": {
+    "prompt": "Por que o validate.sh reporta como um usuário ci à parte, e não como a Ana?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "O token da Ana não alcança a API",
+        "why": "Alcança; fez todo o resto."
+      },
+      {
+        "text": "Para ninguém a confundir com uma pessoa",
+        "why": "Isso. O status diz quem afirmou."
+      },
+      {
+        "text": "Status exigem um administrador",
+        "why": "O usuário ci não é um."
+      },
+      {
+        "text": "O Gitea proíbe usuários de postar status",
+        "why": "Qualquer usuário com escrita pode."
+      }
+    ]
+  },
+  "ex-98bawx3j": {
+    "prompt": "O que cabe num caminho de emergência?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Compartilhar a senha do administrador",
+        "why": "Ninguém sabe depois quem usou."
+      },
+      {
+        "text": "Uma conta nomeada, registrada, revisada depois",
+        "why": "Isso. Pula a espera, nunca o registro."
+      },
+      {
+        "text": "Editar o cluster e commitar na semana seguinte",
+        "why": "O agente desfaz no meio-tempo."
+      },
+      {
+        "text": "Desligar a proteção do branch por uma noite",
+        "why": "Isso é uma regra enfraquecida em silêncio."
+      }
+    ]
+  },
+  "ex-awwd93jh": {
+    "prompt": "Uma Application está Synced e Degraded. Onde está o problema?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "No que o repositório diz",
+        "why": "Isso. O Argo CD aplicou fielmente, e não funciona."
+      },
+      {
+        "text": "No servidor Git",
+        "why": "Synced quer dizer que o Git foi lido e aplicado."
+      },
+      {
+        "text": "Na rede entre o Argo CD e o Git",
+        "why": "Aí não estaria Synced."
+      },
+      {
+        "text": "No controller do Argo CD",
+        "why": "Ele fez o trabalho dele."
+      }
+    ]
+  },
+  "ex-y3kaqz29": {
+    "prompt": "Com prune: true, um arquivo é apagado de argocd/ por engano e entra no merge. O que acontece?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "O Argo CD pede confirmação",
+        "why": "Ele poda sem perguntar."
+      },
+      {
+        "text": "Nada até alguém sincronizar à mão",
+        "why": "A sincronização automática está ligada."
+      },
+      {
+        "text": "A Application dele é apagada",
+        "why": "Isso. A revisão é o que fica no caminho."
+      },
+      {
+        "text": "O arquivo volta do histórico do Argo CD",
+        "why": "O Argo CD nunca escreve no Git."
+      }
+    ]
+  },
+  "ex-00xd5hjp": {
+    "prompt": "Um pull request acrescenta uma Application no projeto bulletin que publica em kube-system. O que acontece?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "O Gitea recusa o merge",
+        "why": "O Gitea não lê projetos do Argo CD."
+      },
+      {
+        "text": "Publica no staging no lugar",
+        "why": "O Argo CD não redireciona."
+      },
+      {
+        "text": "O Argo CD recusa o destino",
+        "why": "Isso. A lista permitida do projeto diz isso."
+      },
+      {
+        "text": "Publica, já que a revisão passou",
+        "why": "O projeto é conferido independentemente da revisão."
+      }
+    ]
+  },
+  "ex-w1ywe0yh": {
+    "prompt": "Que permissão do Gitea a conta do Argo CD precisa no fleet?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "owner",
+        "why": "Muito além do que ler exige."
+      },
+      {
+        "text": "admin",
+        "why": "Nada no Argo CD precisa de administração."
+      },
+      {
+        "text": "read",
+        "why": "Isso. Ele nunca envia nem aprova."
+      },
+      {
+        "text": "write",
+        "why": "Ele nunca escreve."
+      }
+    ]
+  },
+  "ex-bz45ymch": {
+    "prompt": "Por que o argocd app rollback é recusado com a sincronização automática ligada?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Rollback exige a interface web",
+        "why": "A CLI faz rollback com a automação desligada."
+      },
+      {
+        "text": "A próxima sincronização desfaz",
+        "why": "Isso. Um rollback fora do Git é drift."
+      },
+      {
+        "text": "Precisa da aprovação do Bruno",
+        "why": "O Argo CD não sabe nada de revisores."
+      },
+      {
+        "text": "O histórico foi podado",
+        "why": "O histórico guarda dez sincronizações."
+      }
+    ]
+  },
+  "ex-d44mjq7r": {
+    "prompt": "As mudanças pararam de chegar, e todo Kustomization diz READY True. O que conferir primeiro?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "A proteção de branch do Gitea",
+        "why": "Ela não impede uma busca."
+      },
+      {
+        "text": "Os pods",
+        "why": "Rodam a última coisa aplicada."
+      },
+      {
+        "text": "O registry de imagens",
+        "why": "Nada novo foi pedido a ele."
+      },
+      {
+        "text": "O GitRepository",
+        "why": "Isso. Uma fonte que não busca deixa tudo abaixo velho."
+      }
+    ]
+  },
+  "ex-y4c8zbx8": {
+    "prompt": "O intervalo do Flux é 10m e ninguém chama flux reconcile. Como acaba um scale manual?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Em até dez minutos",
+        "why": "Isso. O Flux reaplica no intervalo."
+      },
+      {
+        "text": "Em segundos, como o selfHeal do Argo CD",
+        "why": "O kustomize controller do Flux não observa."
+      },
+      {
+        "text": "Nunca, até o próximo commit",
+        "why": "O intervalo reaplica independentemente de commits."
+      },
+      {
+        "text": "Quando o webhook disparar",
+        "why": "O webhook é sobre pushes no Git."
+      }
+    ]
+  },
+  "ex-r11sadyh": {
+    "prompt": "Por que este curso fez o bootstrap do Flux à mão em vez de flux bootstrap?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O jeito manual instala menos controladores",
+        "why": "Os mesmos controladores são instalados."
+      },
+      {
+        "text": "Ele faz push numa main protegida",
+        "why": "Isso. O commit passou por um pull request."
+      },
+      {
+        "text": "O flux bootstrap exige conta de nuvem",
+        "why": "Não exige."
+      },
+      {
+        "text": "O flux bootstrap não suporta o Gitea",
+        "why": "Ele suporta vários servidores."
+      }
+    ]
+  },
+  "ex-4ybfq0v1": {
+    "prompt": "Um Kustomization está suspenso há uma semana. Qual é o problema?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Nada; o suspend não afeta a aplicação",
+        "why": "Ele para a aplicação."
+      },
+      {
+        "text": "O Flux apaga objetos suspensos depois de uma semana",
+        "why": "Nada é apagado."
+      },
+      {
+        "text": "A fonte para de buscar",
+        "why": "As fontes continuam buscando."
+      },
+      {
+        "text": "O cluster deixou de ser GitOps em silêncio",
+        "why": "Isso. Mudanças que entram são buscadas e não aplicadas."
+      }
+    ]
+  },
+  "ex-vppybr13": {
+    "prompt": "O Argo CD é desinstalado. O que deve acontecer com o acesso dele ao Gitea no mesmo dia?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "É revogado",
+        "why": "Isso. Uma credencial esquecida é uma porta que ninguém vigia."
+      },
+      {
+        "text": "Nada; tokens expiram sozinhos",
+        "why": "Estes não."
+      },
+      {
+        "text": "Fica, caso o Argo CD volte",
+        "why": "Aí ninguém lembra que ele existe."
+      },
+      {
+        "text": "É dado ao Flux",
+        "why": "O Flux ganha conta e token próprios."
+      }
+    ]
+  },
+  "ex-cv11z0m8": {
+    "prompt": "No layout deste curso, o que é uma promoção para a produção?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Um flux reconcile na produção",
+        "why": "Isso só aplica o que já está lá."
+      },
+      {
+        "text": "Uma tag no repositório fleet",
+        "why": "Tags marcam o código da aplicação."
+      },
+      {
+        "text": "Um pull request de uma linha na produção",
+        "why": "Isso. O diff é a release em trânsito."
+      },
+      {
+        "text": "Um merge do branch de staging",
+        "why": "Ambientes são diretórios, não branches."
+      }
+    ]
+  },
+  "ex-mgesx08a": {
+    "prompt": "Os arquivos do staging vão para apps/bulletin/staging, e o mesmo Kustomization passa a ler esse caminho. O que acontece com os pods?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Nada; não são recriados",
+        "why": "Isso. Mesmo dono, caminho novo."
+      },
+      {
+        "text": "São podados e criados de novo",
+        "why": "Só se outro Kustomization os assumisse."
+      },
+      {
+        "text": "São escalados para zero durante a mudança",
+        "why": "Nada os escala."
+      },
+      {
+        "text": "Reiniciam uma vez para ler o caminho novo",
+        "why": "Pods não conhecem caminhos no Git."
+      }
+    ]
+  },
+  "ex-qsnt64tm": {
+    "prompt": "O CODEOWNERS nomeia o Bruno para a produção. Sem block_on_official_review_requests, o que ele faz?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Pede a revisão dele",
+        "why": "Isso. Um pedido não é uma exigência."
+      },
+      {
+        "text": "Torna a aprovação dele obrigatória",
+        "why": "Isso exige a opção de bloqueio."
+      },
+      {
+        "text": "Nada, sem o GitHub",
+        "why": "O Gitea o lê."
+      },
+      {
+        "text": "Bloqueia todo outro revisor",
+        "why": "Outros ainda podem aprovar."
+      }
+    ]
+  },
+  "ex-d7z70ewc": {
+    "prompt": "Onde fica a interface entre o repositório da aplicação e o fleet?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "No webhook do Gitea",
+        "why": "O webhook avisa o Flux, não o outro repositório."
+      },
+      {
+        "text": "Na imagem",
+        "why": "Isso. O CI a publica; o fleet a referencia."
+      },
+      {
+        "text": "Num branch compartilhado",
+        "why": "Não compartilham branches."
+      },
+      {
+        "text": "Na API do cluster",
+        "why": "Nenhum dos dois fala com ela."
+      }
+    ]
+  },
+  "ex-x3m8ajf0": {
+    "prompt": "A mensagem do staging muda no configMapGenerator. O que o cluster vê?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Um erro, porque o ConfigMap antigo existe",
+        "why": "Antigo e novo convivem até a poda."
+      },
+      {
+        "text": "O mesmo ConfigMap, atualizado no lugar",
+        "why": "O nome leva um hash do conteúdo."
+      },
+      {
+        "text": "Um ConfigMap novo; pods trocados",
+        "why": "Isso. Hash novo é nome novo e template novo."
+      },
+      {
+        "text": "Nada até os pods serem apagados",
+        "why": "A mudança no template dispara o rollout."
+      }
+    ]
+  },
+  "ex-yn8n8ejz": {
+    "prompt": "O alvo de um patch tem erro de digitação. O kubectl kustomize e o kubeconform passam. O que impede que chegue à produção?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "O Flux, que recusa patches sem alvo",
+        "why": "O Flux monta a mesma saída."
+      },
+      {
+        "text": "Uma afirmação sobre a saída",
+        "why": "Isso. Só ela sabe o que o patch devia fazer."
+      },
+      {
+        "text": "Nada consegue",
+        "why": "Uma afirmação sobre a saída consegue."
+      },
+      {
+        "text": "kubeconform -strict",
+        "why": "Passou; a saída era válida."
+      }
+    ]
+  },
+  "ex-wexh2ese": {
+    "prompt": "Seu time escreve um serviço e instala um banco de dados escrito por outros. O que a aula recomenda?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Kustomize num, Helm no outro",
+        "why": "Isso. Kustomize para o que você escreve, Helm para o que instala."
+      },
+      {
+        "text": "Nenhum; YAML simples por ambiente",
+        "why": "Essa é a duplicação que a aula remove."
+      },
+      {
+        "text": "Helm para os dois",
+        "why": "Um chart é um custo para o seu serviço pequeno."
+      },
+      {
+        "text": "Kustomize para os dois",
+        "why": "Você manteria os manifestos do banco sozinho."
+      }
+    ]
+  },
+  "ex-m9eehakc": {
+    "prompt": "Que comando mostra os releases que o helm controller do Flux instalou?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "helm list -n preview",
+        "why": "Isso. São releases comuns do Helm."
+      },
+      {
+        "text": "kubectl kustomize",
+        "why": "Ele gera Kustomize, não releases do Helm."
+      },
+      {
+        "text": "argocd app list",
+        "why": "O Argo CD saiu, e não faz releases do Helm."
+      },
+      {
+        "text": "flux get sources git",
+        "why": "Isso lista fontes Git."
+      }
+    ]
+  },
+  "ex-wdxepa78": {
+    "prompt": "A produção cita o bulletin por digest, e alguém envia uma imagem nova para a tag 1.1. O que a produção roda?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Nada; o digest vira inválido",
+        "why": "O manifest antigo continua existindo."
+      },
+      {
+        "text": "O que o staging rodar",
+        "why": "Cada ambiente cita a própria referência."
+      },
+      {
+        "text": "A imagem nova, no próximo download",
+        "why": "A produção não baixa pela tag."
+      },
+      {
+        "text": "Os mesmos bytes de antes",
+        "why": "Isso. Um digest não se move."
+      }
+    ]
+  },
+  "ex-0vz1jz0m": {
+    "prompt": "Um processo de retenção vai apagar manifests. Qual precisa ser a entrada dele?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Tudo o que o Git referencia",
+        "why": "Isso. Inclusive o que os charts geram."
+      },
+      {
+        "text": "As tags enviadas neste mês",
+        "why": "Idade não diz nada sobre uso."
+      },
+      {
+        "text": "A lista de manifests sem tag do registry",
+        "why": "Um digest no Git pode citar um manifest sem tag."
+      },
+      {
+        "text": "Nada; o registry recusa apagar o que está em uso",
+        "why": "Ele aceita sem perguntar."
+      }
+    ]
+  },
+  "ex-y4y9x3nv": {
+    "prompt": "O CI enviou o bulletin 1.3. Sem ninguém editar o fleet, como ele chega ao staging?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Por um pull request revisado",
+        "why": "Isso. Só o merge muda o staging."
+      },
+      {
+        "text": "O Flux aplica a tag nova direto",
+        "why": "A automação escreve no Git, não no cluster."
+      },
+      {
+        "text": "Não chega, nunca",
+        "why": "A automação o propõe."
+      },
+      {
+        "text": "O registry avisa o kubelet",
+        "why": "Aqui registries não avisam ninguém."
+      }
+    ]
+  },
+  "ex-3wh5cj17": {
+    "prompt": "Do que um repositório proxy num gerenciador de repositórios protege uma empresa?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "De servidores Git lentos",
+        "why": "É sobre artefatos, não Git."
+      },
+      {
+        "text": "Dos erros dos próprios desenvolvedores",
+        "why": "Um proxy guarda pacotes dos outros."
+      },
+      {
+        "text": "De commits sem assinatura",
+        "why": "Ele não sabe nada de commits."
+      },
+      {
+        "text": "Mudanças na origem",
+        "why": "Isso. A empresa guarda a própria cópia."
+      }
+    ]
+  },
+  "ex-15xaw28x": {
+    "prompt": "Por que uma imagem é assinada pelo digest e nunca pela tag?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O cosign não resolve tags",
+        "why": "Ele as resolve ao verificar."
+      },
+      {
+        "text": "Uma tag se move; um digest não",
+        "why": "Isso. Um digest é um conjunto fixo de bytes."
+      },
+      {
+        "text": "Digests são mais curtos",
+        "why": "São mais longos."
+      },
+      {
+        "text": "Registries recusam assinaturas em tags",
+        "why": "Guardam o que receberem."
+      }
+    ]
+  },
+  "ex-p1xqzrnw": {
+    "prompt": "Um pull request revisado e aprovado cita um chart sem assinatura. O que a preview roda?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Nada; o release é desinstalado",
+        "why": "O Flux não desinstala nada numa recusa."
+      },
+      {
+        "text": "O chart do caminho no Git de novo",
+        "why": "A fonte agora é o OCIRepository."
+      },
+      {
+        "text": "O chart sem assinatura, porque a revisão passou",
+        "why": "A verificação não depende da revisão."
+      },
+      {
+        "text": "O último chart assinado",
+        "why": "Isso. O Flux recusa a fonte e fica com o que tinha."
+      }
+    ]
+  },
+  "ex-6e19h9ey": {
+    "prompt": "O Flux verifica o chart da preview. O que ainda roda sem conferência?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Os templates do chart",
+        "why": "Vêm dentro do chart verificado."
+      },
+      {
+        "text": "O próprio OCIRepository",
+        "why": "É ele que verifica."
+      },
+      {
+        "text": "Os valores do HelmRelease",
+        "why": "Estão no Git, revisados."
+      },
+      {
+        "text": "A imagem de um Deployment",
+        "why": "Isso. O kubelet a baixa; quem confere é a admissão."
+      }
+    ]
+  },
+  "ex-07fxht4k": {
+    "prompt": "O que a assinatura keyless põe no lugar da chave privada de longa duração?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "A chave do próprio registry",
+        "why": "O registry não assina nada."
+      },
+      {
+        "text": "Um certificado de vida curta",
+        "why": "Isso. Emitido pelo Fulcio, registrado no Rekor."
+      },
+      {
+        "text": "Um arquivo de checksum",
+        "why": "Um checksum não prova identidade."
+      },
+      {
+        "text": "Uma senha digitada a cada assinatura",
+        "why": "Ainda não há segredo duradouro para digitar."
+      }
+    ]
+  },
+  "ex-y8n4843w": {
+    "prompt": "A chave privada do cosign vaza. O que vem primeiro?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Apagar as assinaturas no registry",
+        "why": "Quem tem a chave assina de novo."
+      },
+      {
+        "text": "Trocar as credenciais do registry",
+        "why": "A chave assina; o registry é outro assunto."
+      },
+      {
+        "text": "Desligar a verificação até resolver",
+        "why": "Essa é a resposta errada para toda falha."
+      },
+      {
+        "text": "Tirar a chave pública de todo lugar",
+        "why": "Isso. Depois reassinar ou reconstruir o que ela assinou."
+      }
+    ]
+  },
+  "ex-ws31a2cx": {
+    "prompt": "Por que o princípio diz 'versionado e imutável' e não só 'versionado'?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Para o Git poder ser trocado por um registry",
+        "why": "Os dois o satisfazem; nenhum é exigido por ele."
+      },
+      {
+        "text": "Para ninguém poder mudar a configuração nunca",
+        "why": "Mudanças são versões novas, não edições das antigas."
+      },
+      {
+        "text": "Para uma versão significar uma coisa para sempre",
+        "why": "Isso. Um hash de commit nomeia exatamente uma árvore."
+      },
+      {
+        "text": "Para o cluster não poder se afastar do Git de jeito nenhum",
+        "why": "Drift é tratado pela reconciliação, não pela imutabilidade."
+      }
+    ]
+  },
+  "ex-xk81c6vz": {
+    "prompt": "Num arranjo de pull, qual é a única credencial que sai do cluster?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Um token de leitura do repositório",
+        "why": "Isso. O agente lê; nada fora guarda as chaves do cluster."
+      },
+      {
+        "text": "Um token de cluster-admin para o servidor Git",
+        "why": "O servidor Git nunca toca o cluster."
+      },
+      {
+        "text": "O kubeconfig do sistema de CI",
+        "why": "O CI não fala mais com o cluster."
+      },
+      {
+        "text": "As credenciais de push do registry",
+        "why": "Essas são do CI, e só alcançam o registry."
+      }
+    ]
+  },
+  "ex-y4n68bf2": {
+    "prompt": "Os pods estão Running mas o curl localhost:8080 é recusado. Qual é a causa provável?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "A imagem nunca foi enviada",
+        "why": "Aí os pods não estariam Running."
+      },
+      {
+        "text": "O registry caiu",
+        "why": "A imagem já tinha sido baixada."
+      },
+      {
+        "text": "Falta o mapeamento de porta",
+        "why": "Isso. O extraPortMappings só existe na criação."
+      },
+      {
+        "text": "O Docker precisa de sudo",
+        "why": "O Docker respondeu; os pods rodam."
+      }
+    ]
+  },
+  "ex-tdvdjb9x": {
+    "prompt": "O que o kubectl diff mostra que o git diff não consegue?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Quem escreveu a mudança",
+        "why": "Isso é o git log."
+      },
+      {
+        "text": "Se o YAML é válido",
+        "why": "Quem confere isso é o kubeconform."
+      },
+      {
+        "text": "O efeito no objeto vivo",
+        "why": "Isso. Inclusive drift e padrões preenchidos."
+      },
+      {
+        "text": "Que revisor aprovou",
+        "why": "Isso está no pull request."
+      }
+    ]
+  },
+  "ex-3q9fbz0z": {
+    "prompt": "A Ana aprova o próprio pull request. O que a regra de proteção conta?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Isso. Só conta alguém que não seja o autor."
+      },
+      {
+        "text": "Meia aprovação",
+        "why": "Aprovações não são frações."
+      },
+      {
+        "text": "Uma aprovação se a checagem estiver verde",
+        "why": "A checagem é uma exigência à parte."
+      },
+      {
+        "text": "Uma aprovação, já que ela é administradora",
+        "why": "Ser administradora não ajuda."
+      }
+    ]
+  },
+  "ex-9vj8jh80": {
+    "prompt": "Como o Argo CD sabe quais objetos do cluster são dele?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Uma lista guardada no Redis",
+        "why": "O Redis é cache, não o registro."
+      },
+      {
+        "text": "A hora em que foram criados",
+        "why": "Hora não diz nada sobre dono."
+      },
+      {
+        "text": "Uma anotação de rastreio",
+        "why": "Isso. Ela nomeia a Application dona."
+      },
+      {
+        "text": "O namespace em que estão",
+        "why": "Vários donos podem dividir um namespace."
+      }
+    ]
+  },
+  "ex-4yxn99em": {
+    "prompt": "Qual componente do Argo CD roda o que um repositório pedir para gerar, e por que isso importa?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "O Redis, que guarda a saída em cache",
+        "why": "Ele só guarda em cache."
+      },
+      {
+        "text": "O API server, que serve a interface web",
+        "why": "Ele não gera nada."
+      },
+      {
+        "text": "O application controller, que aplica o resultado",
+        "why": "Ele aplica, mas não gera."
+      },
+      {
+        "text": "O repo server, que não tem credenciais do cluster",
+        "why": "Isso. Gerar entrada não confiável nunca toca as chaves do cluster."
+      }
+    ]
+  },
+  "ex-qm8e5k09": {
+    "prompt": "O webhook do Gitea parou de chegar. O que ainda leva um merge ao staging?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O Argo CD",
+        "why": "Ele foi removido."
+      },
+      {
+        "text": "A automação de imagens",
+        "why": "Ela propõe tags de imagem, não merges."
+      },
+      {
+        "text": "Nada até o webhook ser consertado",
+        "why": "O GitRepository ainda busca a cada minuto."
+      },
+      {
+        "text": "Os intervalos",
+        "why": "Isso. Ficam como rede de segurança."
+      }
+    ]
+  },
+  "ex-xwjksyd4": {
+    "prompt": "Qual é a interface de usuário do Flux?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "Um painel web",
+        "why": "O Flux não tem."
+      },
+      {
+        "text": "Um API server próprio com usuários",
+        "why": "Isso é o Argo CD."
+      },
+      {
+        "text": "O servidor Git",
+        "why": "O Git guarda o estado desejado, não o status do Flux."
+      },
+      {
+        "text": "A API do Kubernetes",
+        "why": "Isso. Lida com kubectl e flux."
+      }
+    ]
+  },
+  "ex-aest43ta": {
+    "prompt": "Por que não um branch por ambiente?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Branches não podem ser protegidos",
+        "why": "Podem."
+      },
+      {
+        "text": "Um merge leva tudo",
+        "why": "Isso. Inclusive o que era só do staging."
+      },
+      {
+        "text": "O Git não aguenta muitos branches",
+        "why": "Aguenta milhares."
+      },
+      {
+        "text": "O Flux não segue um branch",
+        "why": "Ele segue qualquer branch."
+      }
+    ]
+  },
+  "ex-fzctfrs0": {
+    "prompt": "O Kustomization da produção tem dependsOn no staging. Um commit quebra o staging e muda a produção. O que acontece com a produção?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Espera",
+        "why": "Isso. Só reconcilia enquanto o staging está pronto."
+      },
+      {
+        "text": "Aplica mesmo assim",
+        "why": "O dependsOn a segura."
+      },
+      {
+        "text": "Copia o estado do staging",
+        "why": "O dependsOn ordena; não copia."
+      },
+      {
+        "text": "Volta ao commit anterior",
+        "why": "O Flux não reverte."
+      }
+    ]
+  },
+  "ex-jc8nxz5q": {
+    "prompt": "O que uma base do Kustomize contém?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Só o namespace",
+        "why": "A base não nomeia namespace."
+      },
+      {
+        "text": "O que todo ambiente compartilha",
+        "why": "Isso. Sem namespace, sem tag, sem mensagem."
+      },
+      {
+        "text": "As configurações da produção",
+        "why": "A produção é um overlay."
+      },
+      {
+        "text": "Templates com lacunas",
+        "why": "Isso é o Helm."
+      }
+    ]
+  },
+  "ex-01nyqjtd": {
+    "prompt": "O que o required num template do Helm faz quando falta o valor?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Pede o valor interativamente",
+        "why": "O Helm não pergunta."
+      },
+      {
+        "text": "Pula o template",
+        "why": "Ele falha a geração inteira."
+      },
+      {
+        "text": "Usa uma string vazia",
+        "why": "É isso que ele evita."
+      },
+      {
+        "text": "Para a geração com uma mensagem",
+        "why": "Isso. Antes de algo chegar ao cluster."
+      }
+    ]
+  },
+  "ex-eear7p21": {
+    "prompt": "Qual é o digest para o qual a tag bulletin:1.1 resolve?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "O da própria tag",
+        "why": "Uma tag não tem digest próprio."
+      },
+      {
+        "text": "O da primeira camada",
+        "why": "As camadas estão dois níveis abaixo."
+      },
+      {
+        "text": "O do index",
+        "why": "Isso. O documento do topo cobre todo byte abaixo dele."
+      },
+      {
+        "text": "O da config",
+        "why": "A config é listada pelo manifest."
+      }
+    ]
+  },
+  "ex-21ntwpxm": {
+    "prompt": "Que defesa torna impossível, e não só improvável, uma tag de versão movida?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Imutabilidade de tags no registry",
+        "why": "Forte, mas depende do registry aplicar."
+      },
+      {
+        "text": "Uma regra do time",
+        "why": "Só tão forte quanto o CI que a aplica."
+      },
+      {
+        "text": "Um digest no Git",
+        "why": "Isso. Ninguém move o hash do próprio conteúdo."
+      },
+      {
+        "text": "Usar a tag latest",
+        "why": "A latest se move por definição."
+      }
+    ]
+  },
+  "ex-ed66xahp": {
+    "prompt": "Um atacante troca um binário e o arquivo de checksum na página de release. O que ainda o pega?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "HTTPS",
+        "why": "O HTTPS protege a transferência, não a origem."
+      },
+      {
+        "text": "sha256sum --check",
+        "why": "Ele compara com o arquivo trocado."
+      },
+      {
+        "text": "Baixar duas vezes",
+        "why": "Os dois downloads trazem o arquivo trocado."
+      },
+      {
+        "text": "Uma checagem de assinatura",
+        "why": "Isso. Ele não assina com a chave de quem publica."
+      }
+    ]
+  },
+  "ex-zmv0hw4k": {
+    "prompt": "Que checagem prova que o estado desejado não foi alterado entre a máquina do autor e o servidor?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O título do pull request",
+        "why": "É texto."
+      },
+      {
+        "text": "A proteção de branch",
+        "why": "Ela controla quem faz merge, não o que o commit contém."
+      },
+      {
+        "text": "O campo de autor",
+        "why": "Qualquer um escreve qualquer nome ali."
+      },
+      {
+        "text": "Uma assinatura no commit",
+        "why": "Isso. Feita com uma chave que só o autor tem."
+      }
+    ]
+  },
+  "ex-ywpafd83": {
+    "prompt": "O YAML de um Secret com data.token: YS1zdGFnaW5nLXRva2Vu está num pull request. O que fica exposto?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Nada; o valor está cifrado",
+        "why": "Base64 é codificação, não criptografia."
+      },
+      {
+        "text": "Só o tamanho do token",
+        "why": "O valor inteiro se decodifica."
+      },
+      {
+        "text": "Só o nome do Secret",
+        "why": "O valor está ali, codificado."
+      },
+      {
+        "text": "O token",
+        "why": "Isso. O base64 -d o desfaz sem chave."
+      }
+    ]
+  },
+  "ex-h81azsec": {
+    "prompt": "Um SealedSecret selado para o staging é aplicado na produção. O que o controlador faz?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O devolve ao staging",
+        "why": "O controlador não move nada."
+      },
+      {
+        "text": "O sela de novo para a produção",
+        "why": "Não consegue; nunca viu o texto em claro."
+      },
+      {
+        "text": "Recusa abri-lo",
+        "why": "Isso. Nome e namespace fazem parte do selo."
+      },
+      {
+        "text": "Cria o Secret na produção",
+        "why": "É exatamente isso que o escopo impede."
+      }
+    ]
+  },
+  "ex-0myahk4f": {
+    "prompt": "Por que fazer backup das chaves do controlador do Sealed Secrets fora do cluster?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O Flux as lê do Git",
+        "why": "Elas nunca podem ir para o Git."
+      },
+      {
+        "text": "Chaves novas não abrem selos antigos",
+        "why": "Isso. Chaves novas não abrem nada já commitado."
+      },
+      {
+        "text": "O controlador as apaga todo mês",
+        "why": "Ele acrescenta chaves; guarda as antigas."
+      },
+      {
+        "text": "O kubeseal precisa delas para selar",
+        "why": "Selar só precisa do certificado público."
+      }
+    ]
+  },
+  "ex-ek4yk40g": {
+    "prompt": "O que um pull request que muda um Secret cifrado com SOPS mostra a quem revisa?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O valor antigo e o novo",
+        "why": "Os dois são texto cifrado."
+      },
+      {
+        "text": "Qual chave mudou",
+        "why": "Isso. Valores cifrados; chaves legíveis."
+      },
+      {
+        "text": "Só que o arquivo mudou",
+        "why": "As chaves de dentro também aparecem."
+      },
+      {
+        "text": "Nada",
+        "why": "A estrutura continua legível."
+      }
+    ]
+  },
+  "ex-wma2s4x8": {
+    "prompt": "O validate.sh reprova um arquivo SOPS com \"additional properties 'sops' not allowed\". Qual é a correção certa?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Pular Secrets de vez",
+        "why": "A forma de um Secret ainda vale conferir."
+      },
+      {
+        "text": "Tirar o bloco sops antes",
+        "why": "Isso. A checagem nunca precisa da chave."
+      },
+      {
+        "text": "Dar a chave age ao CI",
+        "why": "Cada um que tem a chave é mais um leitor."
+      },
+      {
+        "text": "Tirar o -strict de todo arquivo",
+        "why": "Isso enfraquece todas as outras checagens."
+      }
+    ]
+  },
+  "ex-q66kayk6": {
+    "prompt": "Qual segredo deste curso não pode vir do Git, e por quê?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O cosign.pub",
+        "why": "É público e está no Git."
+      },
+      {
+        "text": "O token do staging",
+        "why": "Vem do Git, selado."
+      },
+      {
+        "text": "A chave privada age",
+        "why": "Isso. Ela abre o resto."
+      },
+      {
+        "text": "O token da produção",
+        "why": "Veio do Git, cifrado, e depois do Vault."
+      }
+    ]
+  },
+  "ex-1yrmbdkv": {
+    "prompt": "Por que o curso roda o servidor real do Vault em vez de vault server -dev?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O modo dev exige licença",
+        "why": "Faz parte do mesmo binário."
+      },
+      {
+        "text": "O modo dev não guarda segredos",
+        "why": "Guarda, em memória."
+      },
+      {
+        "text": "Ele esconde o selo",
+        "why": "Isso. Fica em memória e sempre destrancado."
+      },
+      {
+        "text": "O modo dev não escuta na 8200",
+        "why": "Escuta na 8200."
+      }
+    ]
+  },
+  "ex-hyrhcwrr": {
+    "prompt": "O Vault reiniciou durante a noite e toda leitura falha. O que falta?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Um token root novo",
+        "why": "O token está bem; o armazenamento é que está selado."
+      },
+      {
+        "text": "Chaves de destrancamento",
+        "why": "Isso. Ou o destrancamento automático com um serviço de chaves."
+      },
+      {
+        "text": "Um operator init novo",
+        "why": "O init roda uma vez e é recusado de novo."
+      },
+      {
+        "text": "O volume raft",
+        "why": "Ele sobreviveu ao reinício."
+      }
+    ]
+  },
+  "ex-ysrzwexv": {
+    "prompt": "Um pod do staging entra no Vault com o role bulletin-production. O que acontece?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "Um token com a política da produção",
+        "why": "Só para o namespace e a conta que o role liga."
+      },
+      {
+        "text": "Um token root",
+        "why": "Logins do Kubernetes nunca dão root."
+      },
+      {
+        "text": "Recusado",
+        "why": "Isso. O role nomeia só a ServiceAccount da produção."
+      },
+      {
+        "text": "Um token sem política",
+        "why": "O Vault recusa o login de vez."
+      }
+    ]
+  },
+  "ex-aqz7g67q": {
+    "prompt": "Uma política dá read em secret/bulletin/production, e as leituras dessa entrada falham. O que está errado?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "A entrada precisa de número de versão",
+        "why": "Leituras pegam a versão atual."
+      },
+      {
+        "text": "Políticas não podem dar read",
+        "why": "read é uma capacidade."
+      },
+      {
+        "text": "A autenticação Kubernetes não lê KV",
+        "why": "Lê o que a política permitir."
+      },
+      {
+        "text": "Devia dizer secret/data/...",
+        "why": "Isso. A versão 2 do motor põe data/ no caminho."
+      }
+    ]
+  },
+  "ex-n2n6370g": {
+    "prompt": "Com o External Secrets Operator, o que o Git guarda do token da produção?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Nada sobre ele",
+        "why": "O ExternalSecret está no Git."
+      },
+      {
+        "text": "Uma referência",
+        "why": "Isso. Qual segredo, e de onde."
+      },
+      {
+        "text": "O token, selado",
+        "why": "Esse é o staging."
+      },
+      {
+        "text": "O token, cifrado",
+        "why": "Esse era o arquivo SOPS, agora removido."
+      }
+    ]
+  },
+  "ex-vzjt5kt9": {
+    "prompt": "Como o operador entra no Vault para o cofre da produção?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Como a própria ServiceAccount, com acesso total",
+        "why": "O cofre nomeia o bulletin."
+      },
+      {
+        "text": "Como a ServiceAccount bulletin",
+        "why": "Isso. Ele pede ao Kubernetes um token para ela."
+      },
+      {
+        "text": "Com um token num Secret",
+        "why": "Nenhum foi criado."
+      },
+      {
+        "text": "Com o token root",
+        "why": "Ele não tem credencial própria no Vault."
+      }
+    ]
+  },
+  "ex-w7eave7n": {
+    "prompt": "Um valor novo é posto no Vault. O que reinicia na produção?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O operador",
+        "why": "Ele lê no próprio ritmo."
+      },
+      {
+        "text": "Todo pod",
+        "why": "O volume do Secret se atualiza no lugar."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O arquivo no pod muda nas próximas sincronizações."
+      },
+      {
+        "text": "O Flux",
+        "why": "Nada mudou no Git."
+      }
+    ]
+  },
+  "ex-edcp3spc": {
+    "prompt": "Um programa lê o token de uma variável de ambiente vinda do Secret. O valor muda no Vault. Quando o programa o vê?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "No próximo reinício",
+        "why": "Isso. Variáveis de ambiente são fixas na subida."
+      },
+      {
+        "text": "No próximo pedido",
+        "why": "Só um programa que relê um arquivo faz isso."
+      },
+      {
+        "text": "Nunca",
+        "why": "Um reinício o pega."
+      },
+      {
+        "text": "Em um minuto",
+        "why": "Isso vale para um arquivo montado, não para uma variável."
+      }
+    ]
+  },
+  "ex-qfqr9gfp": {
+    "prompt": "O Vault está selado. O que acontece com o Secret que o operador escreveu?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "É apagado",
+        "why": "O operador não o apaga."
+      },
+      {
+        "text": "Fica com o último valor",
+        "why": "Isso. Os pods seguem; as mudanças param."
+      },
+      {
+        "text": "É esvaziado",
+        "why": "Nada o esvazia."
+      },
+      {
+        "text": "É trocado pelo valor do SOPS",
+        "why": "Esse arquivo saiu."
+      }
+    ]
+  },
+  "ex-7ygfca8r": {
+    "prompt": "Com identidade de carga, o que a nuvem confere quando um pod pede credenciais?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O IP do pod",
+        "why": "Endereços não provam nada."
+      },
+      {
+        "text": "O token que o cluster assinou",
+        "why": "Isso. Com as chaves que o cluster publicou."
+      },
+      {
+        "text": "Uma chave de acesso guardada no cluster",
+        "why": "É isso que a identidade de carga elimina."
+      },
+      {
+        "text": "Uma senha no SecretStore",
+        "why": "Nenhum dos três cofres tem uma."
+      }
+    ]
+  },
+  "ex-37ceh4sj": {
+    "prompt": "Por que um time escolheria o Secrets Store CSI Driver em vez do operador?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Pods sobem com o cofre fora do ar",
+        "why": "O contrário: eles não conseguem montar."
+      },
+      {
+        "text": "Funciona com variáveis de ambiente",
+        "why": "Só sincronizando um Secret, o que abre mão do ponto."
+      },
+      {
+        "text": "Nenhum Secret no etcd",
+        "why": "Isso. O valor só cai no volume do pod."
+      },
+      {
+        "text": "Não precisa de identidade",
+        "why": "Ele entra como o pod."
+      }
+    ]
+  },
+  "ex-w5sc3mcd": {
+    "prompt": "Por que o curso envia o chart do operador para o próprio registry primeiro?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Para baixar de um lugar seu",
+        "why": "Isso. O trabalho de um gerenciador de repositórios, em miniatura."
+      },
+      {
+        "text": "O Flux só lê charts do Gitea",
+        "why": "O Flux lê registries OCI."
+      },
+      {
+        "text": "Para mudar a versão do chart",
+        "why": "A versão continua 1.3.2."
+      },
+      {
+        "text": "O Helm não lê releases do GitHub",
+        "why": "Lê um arquivo baixado sem problema."
+      }
+    ]
+  },
+  "ex-qzg0q72a": {
+    "prompt": "Uma aplicação recebe a senha do banco pelo engine de banco de dados do Vault. O que acontece com a conta quando o lease acaba?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "A senha volta à original",
+        "why": "Cada conta tem senha própria, e some."
+      },
+      {
+        "text": "O Vault a apaga",
+        "why": "Isso. O prazo do role a encerra."
+      },
+      {
+        "text": "Fica até alguém rotacionar",
+        "why": "Ninguém precisa; esse é o ponto."
+      },
+      {
+        "text": "O PostgreSQL a desativa por um dia",
+        "why": "O Vault a remove."
+      }
+    ]
+  },
+  "ex-n771vzae": {
+    "prompt": "Uma credencial dinâmica do banco aparece num log colado. O que a encerra na hora?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Rotacionar a senha root",
+        "why": "Isso muda a conta do próprio Vault, não esta."
+      },
+      {
+        "text": "Apagar o ExternalSecret",
+        "why": "A conta no banco continuaria."
+      },
+      {
+        "text": "Esperar a hora passar",
+        "why": "Isso a deixa funcionando até lá."
+      },
+      {
+        "text": "Revogar o lease dela",
+        "why": "Isso. A limpeza roda na hora."
+      }
+    ]
+  },
+  "ex-7dn71k7e": {
+    "prompt": "Depois de database/rotate-root, quem conhece a senha do administrador do banco?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O ambiente do contêiner do PostgreSQL",
+        "why": "Ele ainda diz o valor inicial, que não funciona mais."
+      },
+      {
+        "text": "Só o Vault",
+        "why": "Isso. Ninguém digitou a nova."
+      },
+      {
+        "text": "Toda aplicação com um role",
+        "why": "Elas recebem contas próprias."
+      },
+      {
+        "text": "Quem rodou a primeira configuração",
+        "why": "Conhece a antiga, que não funciona mais."
+      }
+    ]
+  },
+  "ex-4z3sakdz": {
+    "prompt": "Numa rotação planejada do token do image-bot, por que o antigo é revogado por último?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O novo precisa do antigo",
+        "why": "São independentes."
+      },
+      {
+        "text": "O Gitea permite um token por conta",
+        "why": "Permite vários."
+      },
+      {
+        "text": "Ainda não há nada de errado com ele",
+        "why": "Isso. Revogar cedo só causa interrupção."
+      },
+      {
+        "text": "O Flux guarda o token antigo",
+        "why": "O Flux lê o Secret que recebe."
+      }
+    ]
+  },
+  "ex-qx95r4yj": {
+    "prompt": "O token do image-bot foi publicado. Qual o primeiro passo?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Reescrever o histórico de fleet",
+        "why": "O token nunca esteve no Git."
+      },
+      {
+        "text": "Ler os logs de auditoria",
+        "why": "Faça isso quando ele não puder mais ser usado."
+      },
+      {
+        "text": "Revogá-lo",
+        "why": "Isso. Depois de um vazamento a ordem se inverte."
+      },
+      {
+        "text": "Fazer um token novo",
+        "why": "O vazado continua funcionando enquanto isso."
+      }
+    ]
+  },
+  "ex-438w3072": {
+    "prompt": "Uma senha foi commitada em fleet e removida no commit seguinte. O que é verdade?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Só o Flux podia lê-la",
+        "why": "Qualquer um com o repositório podia."
+      },
+      {
+        "text": "Deve ser tratada como lida",
+        "why": "Isso. Revogue e substitua."
+      },
+      {
+        "text": "Juntar os commits a remove de todo lugar",
+        "why": "Os clones existentes a mantêm."
+      },
+      {
+        "text": "Sumiu depois do push",
+        "why": "O commit anterior ainda a tem."
+      }
+    ]
+  },
+  "ex-grht4rs3": {
+    "prompt": "O que serviceAccountName numa Kustomization do Flux muda?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Com que permissões os objetos dela são aplicados",
+        "why": "Isso. O controlador se passa por aquela conta."
+      },
+      {
+        "text": "Com qual conta os pods rodam",
+        "why": "Isso é campo do Deployment."
+      },
+      {
+        "text": "Quem pode fazer merge no caminho dela",
+        "why": "Isso é tarefa do servidor Git."
+      },
+      {
+        "text": "Qual conta baixa o repositório",
+        "why": "Isso é o secretRef da fonte."
+      }
+    ]
+  },
+  "ex-70r4rxsm": {
+    "prompt": "staging é aplicado por uma conta ligada a admin em staging. Um commit aprovado acrescenta um ClusterRoleBinding ao caminho de staging. O que acontece?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O binding é criado",
+        "why": "Não com as permissões daquela conta."
+      },
+      {
+        "text": "A aplicação do Flux é recusada",
+        "why": "Isso. A conta não pode criá-lo."
+      },
+      {
+        "text": "O kubeconform recusa o merge",
+        "why": "O YAML é válido."
+      },
+      {
+        "text": "O Flux pula esse objeto",
+        "why": "A aplicação inteira para."
+      }
+    ]
+  },
+  "ex-6bnt27es": {
+    "prompt": "O que o ClusterRole admin do Kubernetes permite quando ligado por um RoleBinding?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Só leitura",
+        "why": "Isso é o view."
+      },
+      {
+        "text": "Quase tudo dentro de um namespace",
+        "why": "Isso. Nada fora dele."
+      },
+      {
+        "text": "Criar namespaces",
+        "why": "Namespaces ficam fora de qualquer namespace."
+      },
+      {
+        "text": "Tudo no cluster",
+        "why": "Isso é o cluster-admin."
+      }
+    ]
+  },
+  "ex-z9gftn9h": {
+    "prompt": "Que par descreve rotação e menor privilégio?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Por quanto tempo, e quanto",
+        "why": "Isso. São independentes."
+      },
+      {
+        "text": "Cifrado, e assinado",
+        "why": "Essas são as aulas 8 e 9."
+      },
+      {
+        "text": "Quem, e quando",
+        "why": "Isso é auditoria."
+      },
+      {
+        "text": "Onde, e por quê",
+        "why": "Nenhum dos dois."
+      }
+    ]
+  },
+  "ex-xn9ck40r": {
+    "prompt": "Qual registro diz qual conta leu o token de produção no Vault na terça?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O log de auditoria do API server",
+        "why": "Vê pedidos ao Kubernetes, não ao Vault."
+      },
+      {
+        "text": "O log de auditoria do Vault",
+        "why": "Isso. Ele nomeia o role e a ServiceAccount."
+      },
+      {
+        "text": "Os eventos do Flux",
+        "why": "O Flux nunca lê o token."
+      },
+      {
+        "text": "O pull request",
+        "why": "Descreve mudanças, não leituras."
+      }
+    ]
+  },
+  "ex-ajn53q1e": {
+    "prompt": "Produção foi escalada à mão e o Flux a corrigiu há uma hora. Onde se acha quem fez isso?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "No log de auditoria do API server",
+        "why": "Isso. O único registro de uma mudança fora do Git."
+      },
+      {
+        "text": "Nos eventos do Flux",
+        "why": "Dizem que o Flux corrigiu algo, não quem mudou."
+      },
+      {
+        "text": "No histórico do Git",
+        "why": "Nada foi commitado."
+      },
+      {
+        "text": "Em managedFields",
+        "why": "O Flux retomou o campo, então a entrada voltou a ser dele."
+      }
+    ]
+  },
+  "ex-mh4rs9a5": {
+    "prompt": "Uma página de commit no Gitea mostra um status do notification controller do Flux. O que ele acrescenta ao status do validate.sh?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Que o commit foi assinado",
+        "why": "Assinaturas o Git confere."
+      },
+      {
+        "text": "Que a imagem foi assinada",
+        "why": "Isso é a verificação de fonte do Flux."
+      },
+      {
+        "text": "Que o commit foi revisado",
+        "why": "Revisões ficam no pull request."
+      },
+      {
+        "text": "Que o commit foi aplicado, e onde",
+        "why": "Isso. Implantado, não só checado."
+      }
+    ]
+  },
+  "ex-n59fcz0r": {
+    "prompt": "Uma política de auditoria registra tudo em RequestResponse. Qual o problema?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O API server recusa a política",
+        "why": "Ele aceita."
+      },
+      {
+        "text": "As leituras não são registradas",
+        "why": "Seriam, todas."
+      },
+      {
+        "text": "Os valores dos Secrets vão para o log",
+        "why": "Isso. Secrets ficam em Metadata."
+      },
+      {
+        "text": "O Flux para de funcionar",
+        "why": "O Flux não é afetado."
+      }
+    ]
+  },
+  "ex-wmt3tfy7": {
+    "prompt": "kubectl scale mudou um Deployment há um minuto, antes da próxima passada do Flux. O que managedFields mostra?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O kubectl é dono de spec.replicas",
+        "why": "Isso. O último a escrever o campo."
+      },
+      {
+        "text": "Nada; precisa de política de auditoria",
+        "why": "Está sempre ligado."
+      },
+      {
+        "text": "O Flux é dono de todo campo",
+        "why": "O kubectl definiu replicas por último."
+      },
+      {
+        "text": "O nome da pessoa",
+        "why": "Nomeia o cliente."
+      }
+    ]
+  },
+  "ex-ptnta747": {
+    "prompt": "Por que o log de auditoria do Vault pode ir para um serviço de logs compartilhado?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Os valores nele são HMACs",
+        "why": "Isso. Não cópias dos segredos."
+      },
+      {
+        "text": "É cifrado com o token root",
+        "why": "É hash, não cifra."
+      },
+      {
+        "text": "Só registra falhas",
+        "why": "Registra todo pedido."
+      },
+      {
+        "text": "Só registra caminhos",
+        "why": "Registra identidades também."
+      }
+    ]
+  },
+  "ex-esfp0x1j": {
+    "prompt": "Qual salto liga uma imagem em execução a um commit no repositório da aplicação?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Os eventos do Flux",
+        "why": "Nomeiam a revisão de fleet."
+      },
+      {
+        "text": "A proveniência da imagem",
+        "why": "Isso. Ela registra a revisão de onde foi construída."
+      },
+      {
+        "text": "A lista de tags do registry",
+        "why": "Tags são nomes, não origens."
+      },
+      {
+        "text": "Os labels do Deployment",
+        "why": "Não dizem nada sobre o build."
+      }
+    ]
+  },
+  "ex-snky3vdh": {
+    "prompt": "Qual o último passo que o curso dá com o token root do Vault?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Ele é revogado",
+        "why": "Isso. Um novo precisa das chaves de unseal."
+      },
+      {
+        "text": "Ele vai para um Secret",
+        "why": "Isso o espalharia."
+      },
+      {
+        "text": "Ele é entregue ao Flux",
+        "why": "O Flux nunca fala com o Vault."
+      },
+      {
+        "text": "Ele é rotacionado todo mês",
+        "why": "É revogado, não rotacionado."
+      }
+    ]
+  },
+  "ex-vdsxnbkh": {
+    "prompt": "Por que o código da aplicação e o fleet ficam em dois repositórios?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Para esconder os manifestos dos desenvolvedores",
+        "why": "Os dois são legíveis."
+      },
+      {
+        "text": "O Git não guarda YAML e Go juntos",
+        "why": "Guarda."
+      },
+      {
+        "text": "Pessoas diferentes mudam cada um, em ritmos diferentes",
+        "why": "Isso. Um build empurra código; uma revisão promove."
+      },
+      {
+        "text": "O Flux lê só uma pasta por repositório",
+        "why": "Lê qualquer caminho."
+      }
+    ]
+  },
+  "ex-4cvef3h8": {
+    "prompt": "Uma Kustomization tem dependsOn para um nome que nenhuma Kustomization tem. O que o Flux faz?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Cria a Kustomization que falta",
+        "why": "O Flux nunca inventa objetos."
+      },
+      {
+        "text": "Recusa aplicar, nomeando a dependência que falta",
+        "why": "Isso. Ready False, dependency not found."
+      },
+      {
+        "text": "Apaga a Kustomization",
+        "why": "Nada é apagado."
+      },
+      {
+        "text": "Aplica, ignorando o campo",
+        "why": "A dependência a bloqueia."
+      }
+    ]
+  },
+  "ex-fn35ebjd": {
+    "prompt": "Por que um configMapGenerator acrescenta um hash ao nome do ConfigMap?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Porque o Kubernetes exige sufixos únicos",
+        "why": "Não exige."
+      },
+      {
+        "text": "Para dois ambientes nunca dividirem um",
+        "why": "Os namespaces já os separam."
+      },
+      {
+        "text": "Para cifrar os valores",
+        "why": "Um hash no nome não cifra nada."
+      },
+      {
+        "text": "Para uma mudança reiniciar os pods",
+        "why": "Isso. O Deployment aponta para um nome novo."
+      }
+    ]
+  },
+  "ex-ra65ptzs": {
+    "prompt": "O que gerar um chart no Git, em vez de no agente, dá a quem revisa?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Menos arquivos para revisar",
+        "why": "Acrescenta a saída gerada."
+      },
+      {
+        "text": "Upgrades automáticos do chart",
+        "why": "Nada se atualiza sozinho."
+      },
+      {
+        "text": "Charts assinados",
+        "why": "Gerar não tem nada a ver com assinar."
+      },
+      {
+        "text": "Os objetos exatos no diff",
+        "why": "Isso. Ao custo de commitar arquivos gerados."
+      }
+    ]
+  },
+  "ex-vfhhn9qe": {
+    "prompt": "Duas imagens dividem uma camada base. Quantas cópias dela o registry guarda?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Nenhuma até alguém baixar",
+        "why": "O push as guarda."
+      },
+      {
+        "text": "Uma por imagem",
+        "why": "Digests iguais são o mesmo blob."
+      },
+      {
+        "text": "Uma",
+        "why": "Isso. As camadas são guardadas pelo digest."
+      },
+      {
+        "text": "Uma por tag",
+        "why": "Tags apontam para manifestos, não camadas."
+      }
+    ]
+  },
+  "ex-739737g8": {
+    "prompt": "Num gerenciador de repositórios, para que serve um repositório hosted?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Segredos",
+        "why": "Isso é um cofre de segredos."
+      },
+      {
+        "text": "Código-fonte",
+        "why": "Isso é o servidor Git."
+      },
+      {
+        "text": "Artefatos que a empresa constrói",
+        "why": "Isso. O proxy é para artefatos dos outros."
+      },
+      {
+        "text": "Cópias de pacotes públicos",
+        "why": "Isso é um proxy."
+      }
+    ]
+  },
+  "ex-2bhm7b6f": {
+    "prompt": "O que um ClusterSecretStore permite e um SecretStore não?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Escrever no Git",
+        "why": "Nenhum escreve no Git."
+      },
+      {
+        "text": "Entrar sem identidade",
+        "why": "Os dois precisam de uma."
+      },
+      {
+        "text": "Uso a partir de todo namespace",
+        "why": "Isso. O que também é o risco dele."
+      },
+      {
+        "text": "Ler vários cofres de uma vez",
+        "why": "Cada um é um cofre."
+      }
+    ]
+  },
+  "ex-zhn0ce0s": {
+    "prompt": "O Vault foi selado há um minuto, e o SecretStore da produção ainda diz Valid. Por quê?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O operador guarda as respostas do Vault",
+        "why": "Ele pediu, e o login falhou."
+      },
+      {
+        "text": "Um cofre é conferido no próprio ritmo",
+        "why": "Isso. O ExternalSecret mostra o erro antes."
+      },
+      {
+        "text": "Um Vault selado ainda aceita logins",
+        "why": "O login voltou 503."
+      },
+      {
+        "text": "Valid quer dizer que o YAML está certo",
+        "why": "É a conferência do operador sobre o cofre."
+      }
+    ]
+  },
+  "ex-ht65zdr5": {
+    "prompt": "Por que a política de auditoria descarta os leases primeiro?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "O Flux precisa que não sejam registrados",
+        "why": "O Flux não liga."
+      },
+      {
+        "text": "O API server não consegue registrá-los",
+        "why": "Consegue."
+      },
+      {
+        "text": "São frequentes e não dizem nada",
+        "why": "Isso. Todo controlador os renova."
+      },
+      {
+        "text": "Guardam segredos",
+        "why": "Não guardam nada secreto."
+      }
+    ]
+  },
+  "ex-mv0rkg27": {
+    "prompt": "Um Alert lista eventSources com kind Kustomization e name '*'. O que é reportado?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Eventos de toda Kustomization do namespace dele",
+        "why": "Isso. O curinga vale para o tipo."
+      },
+      {
+        "text": "Só os eventos do flux-system",
+        "why": "O nome é curinga."
+      },
+      {
+        "text": "Eventos de todo objeto do Flux",
+        "why": "Só Kustomizations."
+      },
+      {
+        "text": "Só falhas",
+        "why": "A severidade é outro campo."
+      }
+    ]
+  }
+}

@@ -1,0 +1,415 @@
+{
+  "ex-jcgfkvrx": {
+    "prompt": "A venda de um produtor é gravada pelo líder, mas a confirmação se perde. O que o produtor sabe?",
+    "choices": [
+      {
+        "text": "Que a venda foi gravada, já que o líder nunca falha em silêncio",
+        "why": "Ele não recebeu nada, então não distingue uma resposta perdida de uma gravação perdida."
+      },
+      {
+        "text": "Nada: gravada e não confirmada parece nunca gravada",
+        "why": "Isso. É o primeiro vão, e tentar de novo pode gravar duas vezes."
+      },
+      {
+        "text": "Que a venda se perdeu, porque não veio resposta",
+        "why": "Ela pode muito bem estar em disco; o que se perdeu foi a resposta."
+      },
+      {
+        "text": "Em que offset ela foi gravada",
+        "why": "O offset vem na resposta, que nunca chegou."
+      }
+    ]
+  },
+  "ex-pnyzfz7x": {
+    "prompt": "Ligue cada ordem de passos ao que uma queda entre eles causa.",
+    "pairs": [
+      {
+        "left": "commit, depois processar",
+        "right": "as mensagens interrompidas nunca são processadas"
+      },
+      {
+        "left": "processar, depois commit",
+        "right": "as mensagens interrompidas são processadas de novo"
+      },
+      {
+        "left": "produzir, confirmação perdida, nova tentativa",
+        "right": "a mensagem pode ser gravada duas vezes"
+      }
+    ],
+    "right_distractors": [
+      "a mensagem se corrompe em disco"
+    ]
+  },
+  "ex-hdj6jkwp": {
+    "prompt": "Por que um consumidor cujo processamento grava em outro tópico do Kafka consegue fechar o vão, enquanto um que grava no PostgreSQL não consegue do mesmo jeito?",
+    "choices": [
+      {
+        "text": "O PostgreSQL é mais lento que o Kafka, então não acompanha uma transação",
+        "why": "Velocidade não tem nada a ver com duas gravações dividirem uma transação."
+      },
+      {
+        "text": "O Kafka guarda mensagens por mais tempo",
+        "why": "Retenção não é o ponto; atomicidade é."
+      },
+      {
+        "text": "Lá os dois passos são gravações no Kafka, então uma transação segura os dois",
+        "why": "Isso. A saída e o commit do offset podem dividir uma transação do Kafka; uma linha de banco não."
+      },
+      {
+        "text": "O PostgreSQL não pode ser lido por um consumidor",
+        "why": "A pergunta é sobre gravar nele, não ler."
+      }
+    ]
+  },
+  "ex-qe92vpf8": {
+    "prompt": "Um consumidor no modo no máximo uma vez lê lotes de dez de 50 vendas e cai depois de processar a 25ª. No reinício ele processa o resto. Quantas vendas nunca são processadas?",
+    "hint": "O terceiro lote foi confirmado antes de ser processado.",
+    "unit": "vendas"
+  },
+  "ex-cbr2zqtx": {
+    "prompt": "Depois da queda no máximo uma vez, o arquivo tem 45 ids diferentes. Como alguém descobriria que faltam cinco vendas?",
+    "choices": [
+      {
+        "text": "O consumidor imprime um erro para cada uma",
+        "why": "Ele não imprimiu nada sobre elas: foram confirmadas como tratadas."
+      },
+      {
+        "text": "O Kafka as marca como não lidas",
+        "why": "O offset confirmado diz que foram lidas."
+      },
+      {
+        "text": "Só contando contra o tópico",
+        "why": "Isso. Uma perda é silenciosa; o arquivo só fica mais curto."
+      },
+      {
+        "text": "O arquivo tem linhas em branco onde elas estariam",
+        "why": "Nada é escrito para uma venda que nunca é processada."
+      }
+    ]
+  },
+  "ex-2g8n33fr": {
+    "prompt": "Qual destes combina melhor com no máximo uma vez?",
+    "choices": [
+      {
+        "text": "Pagamentos a fornecedores",
+        "why": "Um pagamento perdido não pode passar em silêncio; isso pede pelo menos uma vez com deduplicação."
+      },
+      {
+        "text": "Uma amostra de visualizações alimentando um painel aproximado",
+        "why": "Isso. Alguns eventos perdidos mudam pouco, e uma duplicata o distorceria do mesmo jeito."
+      },
+      {
+        "text": "O estoque mostrado no site",
+        "why": "Cada venda perdida deixa o estoque errado para sempre."
+      },
+      {
+        "text": "O envio noturno de toda venda ao contador, para a declaração de impostos",
+        "why": "A contabilidade precisa de toda venda."
+      }
+    ]
+  },
+  "ex-c607tt1g": {
+    "prompt": "As mesmas 50 vendas, lotes de dez, queda depois de processar a 25ª, mas no modo pelo menos uma vez. Quantas vendas são processadas duas vezes?",
+    "hint": "O último commit foi depois do segundo lote.",
+    "unit": "vendas"
+  },
+  "ex-2hz2bpp1": {
+    "prompt": "Depois dessa queda e do reinício no pelo menos uma vez, quantas linhas o arquivo de saída tem para as 50 vendas?",
+    "unit": "linhas"
+  },
+  "ex-mqq58854": {
+    "prompt": "Um consumidor captura toda exceção do processamento, registra no log e segue em frente, depois confirma o lote. Que garantia ele realmente tem?",
+    "choices": [
+      {
+        "text": "Pelo menos uma vez, já que confirma depois de processar",
+        "why": "A mensagem que falhou é coberta pelo commit e nunca é tentada de novo."
+      },
+      {
+        "text": "Exatamente uma vez",
+        "why": "Nada torna o efeito atômico com o commit."
+      },
+      {
+        "text": "Nenhuma para as que falharam: elas somem",
+        "why": "Isso. Ele as fez sumir de propósito; o lugar delas é um tópico de dead-letter."
+      },
+      {
+        "text": "No máximo uma vez, mas só durante rebalanceamentos",
+        "why": "Rebalanceamentos não têm nada a ver com exceções engolidas."
+      }
+    ]
+  },
+  "ex-k0qy3yzn": {
+    "prompt": "Por que pelo menos uma vez é a escolha usual, e não no máximo uma vez?",
+    "choices": [
+      {
+        "text": "É mais rápido",
+        "why": "A ordem do commit muda resultados, não velocidade de forma relevante."
+      },
+      {
+        "text": "Uma duplicata é visível a um leitor que guarda ids; uma perda não deixa rastro",
+        "why": "Isso. Escolha a falha que tem conserto, e conserte-a lá na frente."
+      },
+      {
+        "text": "O Kafka se recusa a rodar no máximo uma vez",
+        "why": "A ordem de duas chamadas no consumidor decide; o Kafka permite as duas."
+      },
+      {
+        "text": "Na prática nunca produz duplicatas",
+        "why": "A execução desta lição produziu cinco."
+      }
+    ]
+  },
+  "ex-mmmhyzzw": {
+    "prompt": "Um programa Python usa confluent-kafka e não define nada sobre idempotência. O produtor dele é idempotente?",
+    "choices": [
+      {
+        "text": "Sim, como em todo cliente desde o Kafka 3.0",
+        "why": "Esse padrão é do cliente Java; a librdkafka tem o próprio."
+      },
+      {
+        "text": "Não: a librdkafka usa false por padrão",
+        "why": "Isso. O dump mostra producerId -1 no lote do tills.py."
+      },
+      {
+        "text": "Sim, sempre que acks=all",
+        "why": "acks=all é exigido pela idempotência, não é a mesma coisa."
+      },
+      {
+        "text": "Só em tópicos com uma partição",
+        "why": "O número de partições não tem nada a ver com a configuração do produtor."
+      }
+    ]
+  },
+  "ex-kjnzynfj": {
+    "prompt": "Num dump do log, um lote de um produtor sem idempotência mostra `producerId: ___`.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ]
+      }
+    ]
+  },
+  "ex-fj9xnnqd": {
+    "prompt": "Um produtor idempotente cai depois de mandar uma venda e, no reinício, manda a mesma venda de novo. O que acontece?",
+    "choices": [
+      {
+        "text": "O broker a recusa, porque a sequência já foi gravada",
+        "why": "O programa reiniciado tem um PID novo, então as sequências recomeçam."
+      },
+      {
+        "text": "Ela é gravada duas vezes",
+        "why": "Isso. A idempotência protege novas tentativas dentro de uma sessão do produtor, não reenvios depois de um reinício."
+      },
+      {
+        "text": "O produtor se recusa a começar até o PID antigo expirar",
+        "why": "Um produtor idempotente começa com um PID novo na hora."
+      },
+      {
+        "text": "O Kafka junta as duas num registro só",
+        "why": "O Kafka nunca junta registros pelo conteúdo."
+      }
+    ]
+  },
+  "ex-6typ6eg3": {
+    "prompt": "Quais configurações vêm com enable.idempotence=true na librdkafka? Escolha todas que se aplicam.",
+    "choices": [
+      {
+        "text": "acks=all",
+        "why": "Sim: uma configuração com acks=1 é recusada."
+      },
+      {
+        "text": "No máximo cinco requisições em trânsito por conexão",
+        "why": "Sim: mais que isso é recusado."
+      },
+      {
+        "text": "Novas tentativas sem limite dentro de message.timeout.ms",
+        "why": "Sim: tentar de novo é seguro quando as sequências são conferidas."
+      },
+      {
+        "text": "isolation.level=read_committed",
+        "why": "Essa é uma configuração do consumidor, sobre transações."
+      },
+      {
+        "text": "Um transactional.id",
+        "why": "Só transações precisam de um; a idempotência funciona sem ele."
+      }
+    ]
+  },
+  "ex-wddk51my": {
+    "prompt": "Uma transação de cinco vendas é abortada. O que acontece com os cinco registros?",
+    "choices": [
+      {
+        "text": "Eles nunca são gravados no log",
+        "why": "Eles são gravados na hora; o dump os mostrou nos offsets 6 a 10."
+      },
+      {
+        "text": "Eles são apagados do log pelo abort",
+        "why": "Um log só anexa; um abort acrescenta um marcador."
+      },
+      {
+        "text": "Ficam no log, escondidos de leitores read_committed",
+        "why": "Isso. Um leitor read_uncommitted ainda os vê."
+      },
+      {
+        "text": "Eles vão para um tópico de dead-letter para alguém olhar depois",
+        "why": "O Kafka não move nada; tópicos de dead-letter são gravados por programas."
+      }
+    ]
+  },
+  "ex-jm7pzy40": {
+    "prompt": "Duas transações de cinco registros cada vão para um tópico vazio de uma partição, uma confirmada e uma abortada. Qual é o offset final da partição depois?",
+    "hint": "Cada transação termina com um marcador que ocupa um offset.",
+    "unit": "offset"
+  },
+  "ex-z481mgmq": {
+    "prompt": "Um consumidor Java com configurações padrão lê um tópico gravado pelo eos_copy.py. O que ele vê?",
+    "choices": [
+      {
+        "text": "Só registros confirmados, como todo consumidor",
+        "why": "O padrão do Java é read_uncommitted."
+      },
+      {
+        "text": "Nada até definir um transactional.id",
+        "why": "Essa é uma configuração do produtor."
+      },
+      {
+        "text": "As cópias abortadas também",
+        "why": "Isso. Ele contaria 22 onde 20 foram confirmadas."
+      },
+      {
+        "text": "Um erro, já que tópicos transacionais precisam de consumidores especiais",
+        "why": "Qualquer consumidor os lê; o nível de isolamento decide o que ele vê."
+      }
+    ]
+  },
+  "ex-54gad8fm": {
+    "prompt": "Um consumidor que não pode ver registros abortados define `isolation.level` como ___.",
+    "blanks": [
+      {
+        "accept": [
+          "read_committed"
+        ]
+      }
+    ]
+  },
+  "ex-x3heg0yr": {
+    "prompt": "No eos_copy.py, como a posição do consumidor chega ao __consumer_offsets?",
+    "choices": [
+      {
+        "text": "Pelo commit automático, a cada cinco segundos",
+        "why": "O commit automático está desligado."
+      },
+      {
+        "text": "Por `consumer.commit()` depois de cada lote",
+        "why": "O programa nunca chama commit."
+      },
+      {
+        "text": "Dentro da transação do produtor",
+        "why": "Isso. A saída e os offsets são confirmados juntos."
+      },
+      {
+        "text": "Não chega; a posição só fica na memória do consumidor até ele fechar",
+        "why": "O offset do grupo era 55 no fim."
+      }
+    ]
+  },
+  "ex-bz9962gc": {
+    "prompt": "O eos_copy.py caiu depois de ler 25 vendas em lotes de dez. De qual offset o reinício leu?",
+    "unit": "offset"
+  },
+  "ex-rkq6qb7c": {
+    "prompt": "Por que uma contagem read_committed de big-sales bate exatamente com a origem, enquanto uma read_uncommitted tem duas a mais?",
+    "choices": [
+      {
+        "text": "As duas cópias do lote abortado ficam no log, escondidas só de leitores confirmados",
+        "why": "Isso. O abort as marca; não as remove."
+      },
+      {
+        "text": "O reinício copiou duas vendas duas vezes",
+        "why": "As cópias do reinício foram confirmadas uma vez; as extras são as abortadas."
+      },
+      {
+        "text": "O produtor idempotente acrescentou dois registros",
+        "why": "O idempotent.py gravou em sales, e eram vendas pequenas."
+      },
+      {
+        "text": "read_uncommitted conta os marcadores de transação",
+        "why": "Marcadores nunca são entregues às aplicações."
+      }
+    ]
+  },
+  "ex-he9bkjwd": {
+    "prompt": "O eos_copy.py também manda um e-mail por venda grande. Depois de uma queda e reinício, o que acontece com os e-mails do lote abortado?",
+    "choices": [
+      {
+        "text": "São cancelados pelo abort",
+        "why": "Um e-mail não pode ser desenviado; o abort só esconde registros do Kafka."
+      },
+      {
+        "text": "São enviados de novo",
+        "why": "Isso. O efeito está fora da transação."
+      },
+      {
+        "text": "Ficam retidos até a transação confirmar",
+        "why": "Nada segura um e-mail; ele saiu quando o envio foi chamado."
+      },
+      {
+        "text": "O Kafka os manda pelo programa",
+        "why": "O Kafka não tem papel no envio de e-mail."
+      }
+    ]
+  },
+  "ex-zq5f45ed": {
+    "prompt": "O que \"efeito exatamente uma vez\" quer dizer fora do Kafka, no sentido honesto que a lição dá?",
+    "choices": [
+      {
+        "text": "Toda mensagem é entregue exatamente uma vez",
+        "why": "A entrega continua pelo menos uma vez; o que fica exato é o efeito."
+      },
+      {
+        "text": "Um commit em duas fases une o Kafka e o banco",
+        "why": "O Kafka não oferece um, por bons motivos."
+      },
+      {
+        "text": "Duplicatas chegam, e o resultado é como se cada uma viesse uma vez",
+        "why": "Isso. O lado que recebe tolera repetições."
+      },
+      {
+        "text": "As transações do Kafka se estendem a qualquer banco que as suporte",
+        "why": "Elas cobrem só gravações no Kafka."
+      }
+    ]
+  },
+  "ex-892bds25": {
+    "prompt": "Ponha em ordem os passos de um lote do eos_copy.py.",
+    "items": [
+      "consumir até dez vendas",
+      "begin_transaction",
+      "produzir as vendas grandes em big-sales",
+      "send_offsets_to_transaction com a posição do consumidor",
+      "commit_transaction"
+    ]
+  },
+  "ex-zxr3nv93": {
+    "prompt": "O consumidor de uma equipe lê vendas e insere linhas no PostgreSQL. Eles ligam enable.idempotence e transações no produtor e esperam nenhuma linha duplicada. O que deixaram escapar?",
+    "choices": [
+      {
+        "text": "Nada: essas duas configurações tornam o pipeline exatamente uma vez",
+        "why": "Elas cobrem gravações no Kafka; o insert no banco fica fora."
+      },
+      {
+        "text": "A repetição fica entre a linha e o commit do offset, fora de qualquer transação do Kafka",
+        "why": "Isso. É a lição 8."
+      },
+      {
+        "text": "Precisam de mais partições",
+        "why": "Partições não mudam o vão entre efeito e commit."
+      },
+      {
+        "text": "O PostgreSQL precisa mudar para read_committed",
+        "why": "Essa é uma configuração do consumidor Kafka, e não chega ao banco."
+      }
+    ]
+  }
+}
