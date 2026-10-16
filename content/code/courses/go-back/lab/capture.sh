@@ -16,14 +16,18 @@
 #   stop                send SIGTERM to that process group and wait for it
 #   block NAME          a separator in the output, for the author to find
 #
+# PRELUDE, when a script sets it, runs before every command of `on` and `quiet`
+# and is not printed: it is what ana's ~/.profile holds by then, such as the
+# DATABASE_URL lesson 6 section 02 has her export there.
+#
 # Recorded on Ubuntu 24.04 with go1.27.1 linux/amd64, TZ=America/Sao_Paulo.
 
 LAB_SH=${LAB_SH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lab.sh}
 FENCE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fence.py
 PORT=${PORT:-8080}
 lab() { bash "$LAB_SH" "$@"; }
-on() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; lab exec "$d" "$*" 2>&1 || true; }
-quiet() { lab exec "$1" "$2" >/dev/null 2>&1 || true; }
+on() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; lab exec "$d" "${PRELUDE:+$PRELUDE; }$*" 2>&1 || true; }
+quiet() { lab exec "$1" "${PRELUDE:+$PRELUDE; }$2" >/dev/null 2>&1 || true; }
 put() { lab put "$1"; }
 show() { python3 "$FENCE" "$1" "$2" | lab put "$3"; }
 project() { lab project "$1" "$2"; }
