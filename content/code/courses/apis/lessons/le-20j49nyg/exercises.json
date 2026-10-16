@@ -1,0 +1,925 @@
+[
+  {
+    "id": "ex-413tcwbx",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which threat is this lesson's way of storing passwords built against?",
+    "hint": "Think of who has the most time.",
+    "choices": [
+      {
+        "text": "Somebody with a copy of the users table, offline",
+        "correct": true,
+        "why": "Right. They can test guesses offline for as long as they like, and none of it passes through your login code."
+      },
+      {
+        "text": "A stranger trying passwords at the login route",
+        "correct": false,
+        "why": "That one is real too, and lesson 12 limits it. Here the threat is a copy of the table, where no route is involved."
+      },
+      {
+        "text": "A user who forgets their password",
+        "correct": false,
+        "why": "Forgetting is a support problem. The storage decision is about what a leak gives away."
+      },
+      {
+        "text": "Traffic read on its way between client and server",
+        "correct": false,
+        "why": "That is what HTTPS defends, in lesson 13. A hash in the database does nothing for a password in transit."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmah4jb8",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team encrypts every password with AES and keeps the key in the API's configuration file. A backup of the server's disk leaks. What does it give away?",
+    "hint": "Where does the key live?",
+    "choices": [
+      {
+        "text": "Nothing, because AES has not been broken",
+        "correct": false,
+        "why": "AES does not need breaking: the key is in the same backup, and decrypting with it is the normal use."
+      },
+      {
+        "text": "Hashes that still have to be guessed one by one",
+        "correct": false,
+        "why": "Encryption is not hashing. What is stored comes back whole with the key, with no guessing."
+      },
+      {
+        "text": "Every password",
+        "correct": true,
+        "why": "Right. The program that checks logins needs the key, so it sits with the program, and the backup takes both."
+      },
+      {
+        "text": "Only the passwords of users logged in at the time",
+        "correct": false,
+        "why": "The backup holds every stored row, logged in or not, and the key opens all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq1grk0n",
+    "version": 1,
+    "section": "what-goes-wrong",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what the column holds to what a leaked table gives away.",
+    "hint": "Two of them give everything; the difference is when.",
+    "pairs": [
+      {
+        "left": "the password itself",
+        "right": "every password, at once"
+      },
+      {
+        "left": "the password, encrypted",
+        "right": "every password, once the key leaks too"
+      },
+      {
+        "left": "SHA-256 of the password",
+        "right": "the likely passwords, cheaply"
+      },
+      {
+        "left": "a salted Argon2id hash",
+        "right": "each password at a cost per guess, per account"
+      }
+    ],
+    "right_distractors": [
+      "no password, whatever was chosen"
+    ]
+  },
+  {
+    "id": "ex-1bh1cz7f",
+    "version": 1,
+    "section": "why-fast-is-bad",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is SHA-256 the wrong function for storing passwords?",
+    "hint": "Look at the first row of hashrate.py.",
+    "choices": [
+      {
+        "text": "Its output can be reversed with enough computing",
+        "correct": false,
+        "why": "A hash is one-way, and nobody reverses SHA-256. Guessing and comparing is the problem, not reversal."
+      },
+      {
+        "text": "It is fast",
+        "correct": true,
+        "why": "Right. It is built to be as fast as hardware allows, which makes every guess against a leaked table cheap."
+      },
+      {
+        "text": "Its 256-bit output is too short to stay unique",
+        "correct": false,
+        "why": "256 bits is plenty for uniqueness. Two passwords colliding is not how a leak goes wrong."
+      },
+      {
+        "text": "It was broken and withdrawn as a standard",
+        "correct": false,
+        "why": "SHA-256 is a current standard and fine for fingerprinting data. Its speed is the trouble here."
+      }
+    ]
+  },
+  {
+    "id": "ex-pst0x6pq",
+    "version": 1,
+    "section": "why-fast-is-bad",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's run, SHA-256 computed 1,101,475.6 hashes a second and bcrypt at cost 10 computed 16.0. How many times faster was SHA-256? Answer to the nearest thousand.",
+    "hint": "Divide one rate by the other.",
+    "value": 68842,
+    "tolerance": 1000,
+    "unit": "times"
+  },
+  {
+    "id": "ex-d29crpw3",
+    "version": 1,
+    "section": "why-fast-is-bad",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says: a graphics card would compute every row of hashrate.py thousands of times faster, so the comparison is meaningless. What is the best reply?",
+    "hint": "What does a graphics card have little of per guess?",
+    "choices": [
+      {
+        "text": "Graphics cards cannot compute password hashes at all",
+        "correct": false,
+        "why": "They can; they are what people use against leaked tables. The question is how much they gain."
+      },
+      {
+        "text": "Python already runs as fast as any hardware can",
+        "correct": false,
+        "why": "One Python loop on one core is far slower than dedicated hardware, as the lesson says."
+      },
+      {
+        "text": "Only the SHA-256 row would get any faster on such a card",
+        "correct": false,
+        "why": "Every row gets faster on dedicated hardware. They do not all gain by the same factor."
+      },
+      {
+        "text": "The ratio carries over, and the memory-hard rows gain the least",
+        "correct": true,
+        "why": "Right. Each guess in flight needs its own block of memory for scrypt and Argon2id, which is what such hardware is short of."
+      }
+    ]
+  },
+  {
+    "id": "ex-13cxnb58",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is a password's salt kept?",
+    "hint": "It is not a secret.",
+    "choices": [
+      {
+        "text": "In a file outside the database that only the server can read",
+        "correct": false,
+        "why": "That describes a pepper, which is secret and the same for every row. A salt is neither."
+      },
+      {
+        "text": "Nowhere: it is worked out from the user's name each time",
+        "correct": false,
+        "why": "A salt derived from the name is predictable, and the same on every site, which defeats its purpose."
+      },
+      {
+        "text": "In the row, beside the hash",
+        "correct": true,
+        "why": "Right. bcrypt and Argon2id even write it inside the stored string; its job is to be unique, not hidden."
+      },
+      {
+        "text": "In the session cookie of the user's browser",
+        "correct": false,
+        "why": "The server needs the salt to check a password, including from a new browser, so it keeps it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fyjgy99b",
+    "version": 1,
+    "section": "salt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two rows of an unsalted SHA-256 users table hold the same hash. What does that tell whoever reads the leak?",
+    "hint": "The same input always gives the same SHA-256.",
+    "choices": [
+      {
+        "text": "The two users chose the same password",
+        "correct": true,
+        "why": "Right. That is a leak on its own, and one table computed in advance answers both rows."
+      },
+      {
+        "text": "Nothing, until one of the hashes is reversed",
+        "correct": false,
+        "why": "No reversal is needed: equal hashes of the same function mean equal inputs."
+      },
+      {
+        "text": "The two hashes collided by chance",
+        "correct": false,
+        "why": "A chance collision in SHA-256 is not something anybody has ever seen. Equal passwords are the explanation."
+      },
+      {
+        "text": "One account was created as a copy of the other",
+        "correct": false,
+        "why": "The hash depends on the password alone, not on how the account was made."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdnqwxy0",
+    "version": 1,
+    "section": "salt",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a random salt per password achieve? Choose all that apply.",
+    "hint": "Separate what makes rows different from what makes a guess slow.",
+    "choices": [
+      {
+        "text": "A table of hashes computed in advance stops working",
+        "correct": true,
+        "why": "Right. It would need an entry for every possible salt."
+      },
+      {
+        "text": "Each guess against a single row takes longer",
+        "correct": false,
+        "why": "Salted SHA-256 still ran at more than a million a second. The cost per guess is the cost factor's job."
+      },
+      {
+        "text": "Two users with one password get different hashes",
+        "correct": true,
+        "why": "Right. The two bcrypt strings for `sunshine` showed it."
+      },
+      {
+        "text": "A hash cannot be checked without a secret key",
+        "correct": false,
+        "why": "The salt is public and sits in the row. A secret key is what a pepper adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-450x7khj",
+    "version": 1,
+    "section": "bcrypt",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "bcrypt reads at most ___ bytes of a password and ignores the rest.",
+    "hint": "The two passwords in the transcript agreed on that many `a`.",
+    "blanks": [
+      {
+        "accept": [
+          "72"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bxkehj57",
+    "version": 1,
+    "section": "bcrypt",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One bcrypt hash at cost 10 took 62.651 ms on the lab machine. About how many milliseconds would one hash at cost 13 take there?",
+    "hint": "Each step of the cost doubles the work.",
+    "value": 501,
+    "tolerance": 40,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-zzz36eyq",
+    "version": 1,
+    "section": "bcrypt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A user registers with a long passphrase in Portuguese, full of accented letters, on a service using Ubuntu's bcrypt 3.2.2. What happens to the part after its 72nd byte?",
+    "hint": "Bytes, not characters, and this version says nothing.",
+    "choices": [
+      {
+        "text": "The library raises an error and registration fails",
+        "correct": false,
+        "why": "This version does not refuse; the transcript's `True` shows the extra bytes were simply dropped."
+      },
+      {
+        "text": "Nothing is lost, since the limit counts 72 letters",
+        "correct": false,
+        "why": "The limit counts bytes, and `canção` was 6 characters and 8 bytes."
+      },
+      {
+        "text": "It is ignored, silently",
+        "correct": true,
+        "why": "Right. Anything after it can be changed and the password still verifies."
+      },
+      {
+        "text": "The accented letters are replaced by question marks before hashing",
+        "correct": false,
+        "why": "The bytes are hashed as UTF-8, accents included. The issue is how many of them are read."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmqy9jxc",
+    "version": 1,
+    "section": "bcrypt",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To let bcrypt take long passwords, a team runs each password through plain SHA-256 first and gives the result to bcrypt. What does OWASP's sheet say about that?",
+    "hint": "The sheet's formula has two more ingredients.",
+    "choices": [
+      {
+        "text": "It is the fix the sheet recommends, exactly as the team wrote it",
+        "correct": false,
+        "why": "The sheet calls a plain pre-hash dangerous. Its formula keys the hash and encodes it."
+      },
+      {
+        "text": "Use an HMAC with a secret key, then base64, before bcrypt",
+        "correct": true,
+        "why": "Right: `bcrypt(base64(hmac-sha384(password, pepper)))`, with the pepper kept out of the database."
+      },
+      {
+        "text": "Raise the cost to 14 instead, which lifts the limit",
+        "correct": false,
+        "why": "The cost changes the time, not how many bytes are read; 72 stays 72 at every cost."
+      },
+      {
+        "text": "Change the prefix from `$2b$` to `$2y$`",
+        "correct": false,
+        "why": "The prefix names a version of the algorithm. No version reads more than 72 bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-bt22r1hk",
+    "version": 1,
+    "section": "scrypt",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each scrypt setting to what it controls.",
+    "hint": "One of the right-hand descriptions is `dklen`, which is not on the left.",
+    "pairs": [
+      {
+        "left": "`N`",
+        "right": "how many blocks, a power of two"
+      },
+      {
+        "left": "`r`",
+        "right": "the size of a block, 128 × r bytes"
+      },
+      {
+        "left": "`p`",
+        "right": "how many independent runs"
+      },
+      {
+        "left": "`maxmem`",
+        "right": "the memory ceiling for one call"
+      }
+    ],
+    "right_distractors": [
+      "how many bytes of hash come back"
+    ]
+  },
+  {
+    "id": "ex-0ybw6vsp",
+    "version": 1,
+    "section": "scrypt",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many MiB does one scrypt hash need with `N=2^16` and `r=8`?",
+    "hint": "128 × r × N bytes.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-t966qzpe",
+    "version": 1,
+    "section": "scrypt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say `hashlib.scrypt` is the harder one to use correctly in a new system?",
+    "hint": "Compare what it returns with a bcrypt string.",
+    "choices": [
+      {
+        "text": "It is not memory-hard, so hardware runs it cheaply",
+        "correct": false,
+        "why": "It is the memory-hard one; the peak grew from 29 to 141 MiB with N."
+      },
+      {
+        "text": "It returns bare bytes and leaves the rest to you",
+        "correct": true,
+        "why": "Right. The salt, the parameters and the comparison are yours to handle, and each is a place for a mistake that a test with the right password never shows."
+      },
+      {
+        "text": "It gives different results on two different machines",
+        "correct": false,
+        "why": "Same password, salt and settings give the same bytes everywhere, or nothing could verify."
+      },
+      {
+        "text": "It cannot be given a salt, so equal passwords collide",
+        "correct": false,
+        "why": "It takes `salt=` as an argument; the transcript passed one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6f9c85k4",
+    "version": 1,
+    "section": "argon2id",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the string `$argon2id$v=19$m=19456,t=2,p=1$…`, the value of `m` is a quantity of memory measured in ___.",
+    "hint": "19456 of them make 19 MiB.",
+    "blanks": [
+      {
+        "accept": [
+          "KiB",
+          "kibibytes"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5hsnz0hz",
+    "version": 1,
+    "section": "argon2id",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `m=19456` unchanged, `p` goes from 1 to 8. What happens to the memory one hash uses?",
+    "hint": "OWASP's sheet warns about reading this parameter wrong.",
+    "choices": [
+      {
+        "text": "It is multiplied by eight, to 152 MiB in total",
+        "correct": false,
+        "why": "That is the misreading the sheet warns about: `p` is not a multiplier."
+      },
+      {
+        "text": "It is divided by eight",
+        "correct": false,
+        "why": "The total stays `m`; each lane gets an eighth of it, which is not the same thing."
+      },
+      {
+        "text": "It doubles, since lanes come in pairs",
+        "correct": false,
+        "why": "Lanes do not come in pairs; `m` alone sets the total."
+      },
+      {
+        "text": "It stays at 19 MiB, split into eight lanes",
+        "correct": true,
+        "why": "Right. `m` is the total, and `p` only decides how many lanes share it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4sw1bct",
+    "version": 1,
+    "section": "choosing-parameters",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for choosing Argon2id parameters in order.",
+    "hint": "A published minimum comes first, the code last.",
+    "items": [
+      "Start from OWASP's minimum, `m=19456 t=2 p=1`",
+      "Measure on a machine like the one that serves logins",
+      "Raise `m`, then `t`, until a hash takes what a login can spend",
+      "Multiply the memory by the logins expected at once",
+      "Write the result in one place and let old hashes upgrade at login"
+    ],
+    "trap": "Measuring on a laptop and copying the number to the server chooses for the wrong machine."
+  },
+  {
+    "id": "ex-mzskbgsa",
+    "version": 1,
+    "section": "choosing-parameters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Logins use `m=65536`. The server expects 40 logins at the same moment. How many MiB do the hashes need at that moment?",
+    "hint": "65536 KiB is 64 MiB.",
+    "value": 2560,
+    "tolerance": 0,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-kj6hcad0",
+    "version": 1,
+    "section": "choosing-parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "OWASP's sheet says its five Argon2id settings give an equal level of defence. On the lab machine they took between 28.368 and 102.377 ms. What should you conclude?",
+    "hint": "Defence and time are two different measurements.",
+    "choices": [
+      {
+        "text": "The fastest setting is weaker and should be avoided",
+        "correct": false,
+        "why": "The sheet rates them equal; a faster setting on one machine is not a weaker one."
+      },
+      {
+        "text": "The sheet is wrong, because time is what defence means",
+        "correct": false,
+        "why": "Memory is part of the cost too, and memory is what hardware running guesses side by side lacks."
+      },
+      {
+        "text": "Equal defence is not equal time, so measure on your own server",
+        "correct": true,
+        "why": "Right. Pick among them, or above them, by what one login can spend on the machine that runs it."
+      },
+      {
+        "text": "The lab machine is faulty and its numbers can be ignored",
+        "correct": false,
+        "why": "Different settings stress memory and passes differently; the spread is ordinary."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n5xxaj6",
+    "version": 1,
+    "section": "store-and-verify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `memory_cost` changed from 19456 to 47104, why did Ana's old hash still verify?",
+    "hint": "Where did `verify` get `m` from?",
+    "choices": [
+      {
+        "text": "`check_needs_rehash` converted the old hash first",
+        "correct": false,
+        "why": "It runs after a successful verify, and it cannot convert anything without the password."
+      },
+      {
+        "text": "Argon2id ignores the memory setting when it verifies",
+        "correct": false,
+        "why": "It uses the memory setting; it uses the stored one, `m=19456`."
+      },
+      {
+        "text": "The `sed` command rewrote the stored rows too",
+        "correct": false,
+        "why": "`sed` edited `passwords.py` and nothing in `shelf.db`."
+      },
+      {
+        "text": "`verify` read the parameters from the stored string",
+        "correct": true,
+        "why": "Right. Each row says how it was made, so old rows keep working while new ones use the new numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-gktccazx",
+    "version": 1,
+    "section": "store-and-verify",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the parameters change in `passwords.py`, which accounts end up with hashes made the new way?",
+    "hint": "The rehash needs something only a login provides.",
+    "choices": [
+      {
+        "text": "All of them, the next time the program starts",
+        "correct": false,
+        "why": "Starting the program does not have anybody's password, and a hash cannot be remade without it."
+      },
+      {
+        "text": "Those whose owners next log in correctly",
+        "correct": true,
+        "why": "Right. Only then is the password in hand. An account nobody uses keeps its old hash."
+      },
+      {
+        "text": "None, until a database migration rewrites them",
+        "correct": false,
+        "why": "A migration has no passwords either. Login does the upgrade, row by row."
+      },
+      {
+        "text": "Those whose owners fail a login",
+        "correct": false,
+        "why": "A failed login has a wrong password in hand, and `login` returns before the rehash."
+      }
+    ]
+  },
+  {
+    "id": "ex-tj7jc1ez",
+    "version": 1,
+    "section": "store-and-verify",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `login` in `passwords.py` does in order, for a correct password.",
+    "hint": "The rehash comes after the answer is known.",
+    "items": [
+      "Look up the row for the name",
+      "Verify the password against the stored string",
+      "Ask whether the stored parameters differ from `HASHER`'s",
+      "Store a new hash if they do",
+      "Return `True`"
+    ],
+    "trap": "Checking for a rehash before verifying would rehash whatever was typed, right or wrong."
+  },
+  {
+    "id": "ex-bqf6a1r3",
+    "version": 1,
+    "section": "pepper-and-layers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of this lesson to what it is.",
+    "hint": "Public or secret, per row or shared.",
+    "pairs": [
+      {
+        "left": "salt",
+        "right": "public, and different in every row"
+      },
+      {
+        "left": "pepper",
+        "right": "secret, shared by every row, kept outside the database"
+      },
+      {
+        "left": "decoy hash",
+        "right": "what an unknown name is checked against"
+      },
+      {
+        "left": "cost factor",
+        "right": "what makes one guess take longer"
+      }
+    ],
+    "right_distractors": [
+      "what lets a forgotten password be read back"
+    ]
+  },
+  {
+    "id": "ex-j5jj2zf1",
+    "version": 1,
+    "section": "pepper-and-layers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does NIST SP 800-63B ask of the passwords a service accepts? Choose all that apply.",
+    "hint": "Length and the blocklist stayed; composition and expiry went.",
+    "choices": [
+      {
+        "text": "A digit, a capital letter and a symbol in each",
+        "correct": false,
+        "why": "Composition rules are exactly what it tells services not to impose."
+      },
+      {
+        "text": "At least 15 characters when it is the only factor",
+        "correct": true,
+        "why": "Right, and 8 when it is one of two factors."
+      },
+      {
+        "text": "A forced change every 90 days",
+        "correct": false,
+        "why": "It says not to force periodic changes, only a change when there is evidence of compromise."
+      },
+      {
+        "text": "Refusal of those known to be breached",
+        "correct": true,
+        "why": "Right. A blocklist of common and breached passwords is required."
+      },
+      {
+        "text": "Room for at least 64 characters",
+        "correct": true,
+        "why": "Right: a maximum of at least 64, so passphrases fit."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wby3ftc",
+    "version": 1,
+    "section": "pepper-and-layers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the k-anonymity check against Have I Been Pwned, what does the service receive?",
+    "hint": "Count the characters in the URL.",
+    "choices": [
+      {
+        "text": "The whole SHA-1 of the password",
+        "correct": false,
+        "why": "A whole hash of a common password identifies it at once. Only part of it is sent."
+      },
+      {
+        "text": "The password itself, over HTTPS",
+        "correct": false,
+        "why": "HTTPS protects the trip, not what the receiver learns. The design sends far less."
+      },
+      {
+        "text": "Five hex characters",
+        "correct": true,
+        "why": "Right: the first five of the SHA-1, shared by hundreds of passwords. Your server compares the other 35."
+      },
+      {
+        "text": "The Argon2id string stored in the row",
+        "correct": false,
+        "why": "That string is salted and unique to the row; no list could contain it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5y4wny6c",
+    "version": 1,
+    "section": "pepper-and-layers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every stored hash depends on the pepper, so replacing it means each user has to choose a new ___.",
+    "hint": "What does the user type at login?",
+    "blanks": [
+      {
+        "accept": [
+          "password",
+          "passphrase"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0q9xs1z8",
+    "version": 1,
+    "section": "login-defences",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `login` check an unknown name against `DECOY`?",
+    "hint": "Compare the bars in the figure.",
+    "choices": [
+      {
+        "text": "So a missing account takes as long as a wrong password",
+        "correct": true,
+        "why": "Right. Without it the reply would come back in under a millisecond and give the name away."
+      },
+      {
+        "text": "So that unknown names can be registered on the spot",
+        "correct": false,
+        "why": "Nothing is registered at login; the result is `False` either way."
+      },
+      {
+        "text": "To slow down users who mistype their own name",
+        "correct": false,
+        "why": "Slowing people down is not the aim; matching the time of a wrong password is."
+      },
+      {
+        "text": "To keep a spare hash ready for the next registration",
+        "correct": false,
+        "why": "The decoy is never stored for anyone; it exists only to be checked against."
+      }
+    ]
+  },
+  {
+    "id": "ex-ejgby7t2",
+    "version": 1,
+    "section": "login-defences",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team pastes a fixed decoy string, made with `m=19456`, into the code, and a year later raises `HASHER` to `m=262144`. What goes wrong?",
+    "hint": "`verify` uses the parameters written in the string it is given.",
+    "choices": [
+      {
+        "text": "Unknown names answer faster than wrong passwords again",
+        "correct": true,
+        "why": "Right. The decoy still costs a `m=19456` hash while real rows grow towards `m=262144`, so the two times drift apart."
+      },
+      {
+        "text": "Every existing user is locked out",
+        "correct": false,
+        "why": "Existing rows verify with their own stored parameters, decoy or no decoy."
+      },
+      {
+        "text": "The decoy starts matching real passwords",
+        "correct": false,
+        "why": "It is a hash of a random string, whatever its parameters."
+      },
+      {
+        "text": "Nothing, since the decoy's timing does not depend on `m`",
+        "correct": false,
+        "why": "Time grows with `m`: 40.003 ms at 19456 against 871.884 ms at 262144 in the lesson's run."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbj2pdqm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these by how many hashes a second the lab machine computed, fastest first.",
+    "hint": "One of them is not a password hash at all.",
+    "items": [
+      "SHA-256",
+      "Argon2id, `m=19456 t=2 p=1`",
+      "bcrypt, cost 10",
+      "bcrypt, cost 12",
+      "scrypt, `N=2^17 r=8 p=1`"
+    ],
+    "trap": "OWASP's minimums are not equal in time: scrypt's was the slowest row of the six."
+  },
+  {
+    "id": "ex-hd91mvx8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is it about a bcrypt or Argon2id hash that lets a team raise the cost later without anybody resetting a password?",
+    "hint": "Old rows have to keep verifying.",
+    "choices": [
+      {
+        "text": "A pepper",
+        "correct": false,
+        "why": "A pepper is the one thing that cannot change without every user resetting."
+      },
+      {
+        "text": "A salt per user, stored in the row beside each hash",
+        "correct": false,
+        "why": "The salt makes rows differ; it says nothing about which cost made them."
+      },
+      {
+        "text": "A decoy hash, checked whenever a name does not exist",
+        "correct": false,
+        "why": "The decoy hides which names exist. It plays no part in upgrading."
+      },
+      {
+        "text": "The parameters written into each stored string",
+        "correct": true,
+        "why": "Right. `verify` reads them back, each row verifies with its own, and `check_needs_rehash` upgrades it at the next correct login."
+      }
+    ]
+  },
+  {
+    "id": "ex-vztbhyct",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A leaked users table holds strings like `$argon2id$v=19$m=19456,t=2,p=1$…`, with no pepper. Which statements are true? Choose all that apply.",
+    "hint": "The salt is in the string; the cost is per guess.",
+    "choices": [
+      {
+        "text": "Every guess against a row costs a full Argon2id hash",
+        "correct": true,
+        "why": "Right: 19 MiB and two passes for every single guess."
+      },
+      {
+        "text": "The salt has to be found before any guess can be tested",
+        "correct": false,
+        "why": "The salt is the fourth field of the string, in plain sight."
+      },
+      {
+        "text": "A guess tested against one row says nothing about another",
+        "correct": true,
+        "why": "Right. Each row has its own salt, so each is its own job."
+      },
+      {
+        "text": "Common passwords can be looked up in a table computed in advance",
+        "correct": false,
+        "why": "A table computed in advance would need an entry for every salt; the per-row salt is what defeats it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9wr41wj",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A secret HMAC ___ kept outside the database means that a leaked copy of the table, on its own, cannot test a single guess.",
+    "hint": "It is what `openssl dgst -hmac` was given.",
+    "blanks": [
+      {
+        "accept": [
+          "key",
+          "pepper"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

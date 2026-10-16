@@ -1,0 +1,893 @@
+[
+  {
+    "id": "ex-hdgye17r",
+    "version": 1,
+    "section": "why-limit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which client is behind most runaway traffic to an API, according to this lesson?",
+    "hint": "The lesson names the wall-against-attackers picture as the smaller part.",
+    "choices": [
+      {
+        "text": "A customer's program with a bug in it",
+        "correct": true,
+        "why": "Right. A loop with the wrong exit condition or an app retrying every failure at once means no harm and does the same damage."
+      },
+      {
+        "text": "An attacker scanning for weak endpoints",
+        "correct": false,
+        "why": "Attackers exist, and the lesson calls them the smaller part of the problem."
+      },
+      {
+        "text": "A search engine crawling the documentation pages",
+        "correct": false,
+        "why": "Crawlers read web pages; the traffic in question is to the API, from programs that use it."
+      },
+      {
+        "text": "The API itself, calling its own database too often",
+        "correct": false,
+        "why": "That is a performance problem inside the service; a rate limit is about what clients send it."
+      }
+    ]
+  },
+  {
+    "id": "ex-x00150sk",
+    "version": 1,
+    "section": "why-limit",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each reason for limiting to what the limit is measured in.",
+    "hint": "One reason is about right now, one about clients against each other, one about money.",
+    "pairs": [
+      {
+        "left": "protecting the service",
+        "right": "requests per second, and how many run at once"
+      },
+      {
+        "left": "fairness between clients",
+        "right": "an allowance per client"
+      },
+      {
+        "left": "cost",
+        "right": "a quota per day or month, often per plan"
+      }
+    ],
+    "right_distractors": [
+      "one counter shared by the whole API"
+    ]
+  },
+  {
+    "id": "ex-awf4qvcz",
+    "version": 1,
+    "section": "who-is-the-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An office of 300 people reaches the internet through one public IPv4 address. An API limits each IP address to 100 requests a minute. One person in the office starts a script that sends 100 a minute. What happens?",
+    "hint": "Count who shares the counter.",
+    "choices": [
+      {
+        "text": "Only the script is refused, because the API tells the people apart",
+        "correct": false,
+        "why": "Behind NAT every connection arrives from the same address; by address there is nobody to tell apart."
+      },
+      {
+        "text": "The whole office shares one allowance, and the script uses it",
+        "correct": true,
+        "why": "Right. A limit per address treats the office as one client, and the script used up its minute."
+      },
+      {
+        "text": "Nothing, since 100 a minute is within the limit",
+        "correct": false,
+        "why": "It is within the limit for one person; the counter is the address, and everyone else is on it too."
+      },
+      {
+        "text": "The API switches that address to a limit per API key",
+        "correct": false,
+        "why": "A limiter keyed by address has no key to switch to; choosing the key is a design decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-vq3nsmfp",
+    "version": 1,
+    "section": "who-is-the-client",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An API with no proxy in front of it limits clients by the address in their `X-Forwarded-For` header. What can a client that wants unlimited requests do?",
+    "hint": "Who wrote that header?",
+    "choices": [
+      {
+        "text": "Put a made-up value in it, a new one each time",
+        "correct": true,
+        "why": "Right. Each made-up address gets a fresh counter. The header can be trusted only when the API's own proxy wrote it."
+      },
+      {
+        "text": "Nothing: the header is set by the operating system",
+        "correct": false,
+        "why": "curl set it in the lesson because it was told to; it is text in the request like any header."
+      },
+      {
+        "text": "Remove the header, which makes the API refuse it",
+        "correct": false,
+        "why": "An API that reads a missing header gets no address at all; whether it refuses is up to its code, and removing it gains nothing a forged one would not."
+      },
+      {
+        "text": "Connect over IPv6 so that the header is not sent",
+        "correct": false,
+        "why": "The header is sent whatever the transport; IPv6 matters to limits by connection address."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jt1yzqd",
+    "version": 1,
+    "section": "who-is-the-client",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Behind a proxy, every connection arrives from the proxy, and the client's address travels in the `___` header.",
+    "hint": "It was forged against rest.py in the lesson.",
+    "blanks": [
+      {
+        "accept": [
+          "X-Forwarded-For"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wb8sc70h",
+    "version": 1,
+    "section": "fixed-window",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A fixed window allows 100 requests per minute, with windows aligned to the clock. What is the largest number of requests it accepts from one client within two seconds?",
+    "hint": "Two seconds can straddle a boundary.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-rwv2986p",
+    "version": 1,
+    "section": "fixed-window",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do fixed windows aligned to the clock produce a spike of traffic at the start of each window?",
+    "hint": "Think of all clients at once, not one.",
+    "choices": [
+      {
+        "text": "The server restarts its counters, and restarting is slow",
+        "correct": false,
+        "why": "Setting a count to zero is one assignment; the spike comes from clients."
+      },
+      {
+        "text": "All counters reset together, and the refused clients all retry then",
+        "correct": true,
+        "why": "Right. The same instant frees every client, so the waiting ones arrive together."
+      },
+      {
+        "text": "Clients are given a larger allowance in the first second of a window",
+        "correct": false,
+        "why": "The allowance is the same throughout the window; nothing favours its first second."
+      },
+      {
+        "text": "Clocks on different clients disagree by a second",
+        "correct": false,
+        "why": "Disagreeing clocks would spread the retries out, the opposite of a spike."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmedzq2z",
+    "version": 1,
+    "section": "fixed-window",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "For which limit is a fixed window a reasonable choice despite its edge?",
+    "hint": "Where does double for a moment do no harm?",
+    "choices": [
+      {
+        "text": "Login attempts per minute on one account",
+        "correct": false,
+        "why": "A small limit where exactness matters; the lesson suggests a sliding log there."
+      },
+      {
+        "text": "Requests per second to an expensive search",
+        "correct": false,
+        "why": "Double the rate for a second is exactly the overload the limit exists to stop."
+      },
+      {
+        "text": "A daily quota",
+        "correct": true,
+        "why": "Right. Spending the end of Monday's quota and the start of Tuesday's back to back is still two days' worth."
+      },
+      {
+        "text": "Concurrent requests that one client may have running",
+        "correct": false,
+        "why": "That is a count of requests in progress, not per period, so there is no window to choose."
+      }
+    ]
+  },
+  {
+    "id": "ex-adhk397m",
+    "version": 1,
+    "section": "sliding-window",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sliding window counter with windows of 10 seconds: the previous window held 6 requests, the current one has 4 so far, and it is 3 seconds into the current window. What is the estimate?",
+    "hint": "How much of the previous window is still inside the last ten seconds?",
+    "value": 8.2,
+    "tolerance": 0.05,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-1t8dp6ta",
+    "version": 1,
+    "section": "sliding-window",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each limiter to what it stores per client.",
+    "hint": "One of them is exact and pays in memory.",
+    "pairs": [
+      {
+        "left": "sliding log",
+        "right": "the time of every accepted request in the window"
+      },
+      {
+        "left": "sliding window counter",
+        "right": "this window's count and the previous one's"
+      },
+      {
+        "left": "fixed window",
+        "right": "the window's number and its count"
+      },
+      {
+        "left": "token bucket",
+        "right": "a number of tokens and when it last looked"
+      }
+    ],
+    "right_distractors": [
+      "a queue of requests waiting to be passed on"
+    ]
+  },
+  {
+    "id": "ex-j47fcyzc",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket holds up to 20 tokens and refills at 2 a second. It is empty, and a request that costs 5 is refused. What does `Retry-After` say, computed the way `limits.py` computes it?",
+    "hint": "Missing tokens over the rate, then whole seconds.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-zzp6r6dj",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A key with a bucket of 10, refilled at 1 a second, sends nothing for an hour. How many tokens does its next request find?",
+    "hint": "The refill stops somewhere.",
+    "choices": [
+      {
+        "text": "3,600, one for each second of quiet",
+        "correct": false,
+        "why": "That is the refill without the capacity; the bucket overflows after ten seconds."
+      },
+      {
+        "text": "1, since the bucket refills one at a time",
+        "correct": false,
+        "why": "It gains one per second for as long as it has room, which is ten seconds from empty."
+      },
+      {
+        "text": "Ten: the bucket stops at its capacity",
+        "correct": true,
+        "why": "Right. The refill adds what the elapsed time is worth, up to the capacity."
+      },
+      {
+        "text": "None until a timer next ticks for that key",
+        "correct": false,
+        "why": "Nothing ticks: the tokens are worked out from the time when the request arrives."
+      }
+    ]
+  },
+  {
+    "id": "ex-nv1af86e",
+    "version": 1,
+    "section": "token-bucket",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client that has been quiet sends six requests at once to a limit with room for ten. What does it see from a token bucket, and from a leaky bucket used as a queue?",
+    "hint": "One of them refuses nothing here and the other delays.",
+    "choices": [
+      {
+        "text": "Both answer all six at once, since six is under ten",
+        "correct": false,
+        "why": "The token bucket does; the queue passes them on at its drain rate, so some wait."
+      },
+      {
+        "text": "Bucket: all six at once. Queue: six, spaced at the drain rate",
+        "correct": true,
+        "why": "Right. Capacity lets the burst through the token bucket; the queue turns the same burst into delay."
+      },
+      {
+        "text": "One answered at once from each, and the other five refused",
+        "correct": false,
+        "why": "That would be a limit of one at a time; both have room for ten."
+      },
+      {
+        "text": "Five refused by the token bucket; the queue accepts all six at once",
+        "correct": false,
+        "why": "It is the other way round: the bucket has the tokens, and the queue is the one that spaces them."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgf7edf3",
+    "version": 1,
+    "section": "the-limiter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A refusal from `limits.py` carries `RateLimit: \"burst\";r=0;t=1`. What does it say?",
+    "hint": "`r` is what is left, `t` is a number of seconds.",
+    "choices": [
+      {
+        "text": "The burst policy has been used once, and allows one request per second",
+        "correct": false,
+        "why": "Those are what `RateLimit-Policy` states, with `q` and `w`; `RateLimit` says what is left."
+      },
+      {
+        "text": "The key is blocked for good",
+        "correct": false,
+        "why": "Nothing in the headers is permanent; `t=1` is a second."
+      },
+      {
+        "text": "Retry exactly once, one second from now, or the key is suspended",
+        "correct": false,
+        "why": "`t` is a window, not a count of retries, and nothing here suspends a key."
+      },
+      {
+        "text": "No units left in the burst policy now, and at least one more within a second",
+        "correct": true,
+        "why": "Right. It agrees with `Retry-After: 1` on the same answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-7twd45sx",
+    "version": 1,
+    "section": "the-limiter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`limits.py` charges the bucket before it looks at the path, so a request for `/nothing` costs a unit and gets a `404`. Why charge for an address that does not exist?",
+    "hint": "What would a client be able to send for free otherwise?",
+    "choices": [
+      {
+        "text": "Otherwise a stream of 404s would be free",
+        "correct": true,
+        "why": "Right. The server still does work for each one, and a limit with a free path around it limits nothing."
+      },
+      {
+        "text": "A 404 costs the database more than a 200 does",
+        "correct": false,
+        "why": "In `limits.py` an unknown path never opens a query that finds a row; the reason is the free path."
+      },
+      {
+        "text": "HTTP requires every response to carry RateLimit headers",
+        "correct": false,
+        "why": "The RateLimit fields are a draft, and no standard requires them on any response."
+      },
+      {
+        "text": "So that a client learns which addresses exist by watching its tokens",
+        "correct": false,
+        "why": "The order does the reverse: every request costs the same, whatever the address."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gwgc0q4",
+    "version": 1,
+    "section": "the-limiter",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a client rely on, across APIs, when it is being limited? Choose all that apply.",
+    "hint": "Which are standards, and which are a draft or a habit?",
+    "choices": [
+      {
+        "text": "The status `429 Too Many Requests`",
+        "correct": true,
+        "why": "Right. It has been a standard status since 2012."
+      },
+      {
+        "text": "The names `RateLimit-Policy` and `RateLimit`",
+        "correct": false,
+        "why": "They come from an Internet-Draft that can still change, and many APIs do not send them."
+      },
+      {
+        "text": "The `Retry-After` header, when it is present",
+        "correct": true,
+        "why": "Right. HTTP itself defines it, and it takes precedence over any other hint."
+      },
+      {
+        "text": "`X-RateLimit-Reset` being a number of seconds",
+        "correct": false,
+        "why": "Some APIs send seconds, others a time on the clock; the name promises neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5gs8r1s",
+    "version": 1,
+    "section": "a-burst",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The free key has just had ten requests accepted and five refused, with a bucket of 10 refilled at 1 a second. It waits three seconds and sends five more at once. How many are accepted?",
+    "hint": "What did three seconds of quiet put back?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-1kfh00r4",
+    "version": 1,
+    "section": "a-burst",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the burst of fifteen, `daily r=` stopped at 4990 while five more requests were refused. Why?",
+    "hint": "Look at the order of the checks in `admit`.",
+    "choices": [
+      {
+        "text": "The daily quota is counted once a minute",
+        "correct": false,
+        "why": "It is counted on every request; a refused one simply spends nothing."
+      },
+      {
+        "text": "Refusals are taken from the bucket and not from the day",
+        "correct": false,
+        "why": "The bucket refused them and lost nothing either: `take` spends only when it says yes."
+      },
+      {
+        "text": "The `daily` counter lives in another process on the machine",
+        "correct": false,
+        "why": "Both counters are in `LIMITS`, in the same process."
+      },
+      {
+        "text": "Units leave both counters only when both say yes",
+        "correct": true,
+        "why": "Right. The quota is checked without spending, then the bucket takes, then the quota takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-eeznmcqr",
+    "version": 1,
+    "section": "a-burst",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Thirty requests, a tenth of a second apart, timed to start one second before a ten-second window ends. The fixed window accepted 20 and the token bucket 12, though both allow ten per ten seconds on average. Where did the bucket's two extra come from?",
+    "hint": "Ten were saved up; count what the three seconds added.",
+    "choices": [
+      {
+        "text": "From the window boundary, which the bucket also resets at",
+        "correct": false,
+        "why": "The bucket has no windows; the clock passing a multiple of ten does nothing to it."
+      },
+      {
+        "text": "From the refill: about one token a second during the run",
+        "correct": true,
+        "why": "Right. Ten were in the bucket at the start, and the refill brought one back each second after."
+      },
+      {
+        "text": "From a timing error in `burst.py`, which sent them twice",
+        "correct": false,
+        "why": "`burst.py` sends each request once and prints each answer; the lines are the server's decisions."
+      },
+      {
+        "text": "From the daily quota, which lends tokens to the bucket",
+        "correct": false,
+        "why": "The two are checked side by side and never lend to each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ddesgpt",
+    "version": 1,
+    "section": "backoff",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`polite.py` gets no answer at all from the server. Put what it does in order.",
+    "hint": "The ceiling doubles each time.",
+    "items": [
+      "Wait a random time up to 0.5 s",
+      "Wait a random time up to 1 s",
+      "Wait a random time up to 2 s",
+      "Wait a random time up to 4 s",
+      "Give up after the fifth try"
+    ],
+    "trap": "Waiting the longest first is backwards: a server that blinked is retried quickly, and one that stays down is asked less and less often."
+  },
+  {
+    "id": "ex-6ec76rnr",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A thousand clients fail at the same moment and all back off exponentially, waiting exactly 0.5, 1 and 2 seconds with no jitter. What does the server see?",
+    "hint": "The waits are identical for every client.",
+    "choices": [
+      {
+        "text": "Spikes as tall as the first, at 0.5, 1.5 and 3.5 s",
+        "correct": true,
+        "why": "Right. Clients that failed together retry together, and each retry is a spike as tall as the first."
+      },
+      {
+        "text": "A steady trickle of retries, since the waits double",
+        "correct": false,
+        "why": "Doubling spaces the spikes further apart; it does not split one."
+      },
+      {
+        "text": "No retries, because exponential backoff gives up at once",
+        "correct": false,
+        "why": "It gives up after a few tries, not before the first retry."
+      },
+      {
+        "text": "One retry per client spread over the next second",
+        "correct": false,
+        "why": "That spreading is what jitter does, and these clients have none."
+      }
+    ]
+  },
+  {
+    "id": "ex-99czj938",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`polite.py` gets a `404` and returns it at once instead of retrying. Why is that right?",
+    "hint": "Which failures can a wait fix?",
+    "choices": [
+      {
+        "text": "A 404 carries no `Retry-After`, so there is nothing to wait for",
+        "correct": false,
+        "why": "Silence carries none either, and that is retried; the reason is what a 404 means."
+      },
+      {
+        "text": "Retrying a 404 counts against the daily quota twice",
+        "correct": false,
+        "why": "Each retry costs one unit like any request; that is a cost, not the reason it fails."
+      },
+      {
+        "text": "Sending the same wrong request again gets the same answer",
+        "correct": true,
+        "why": "Right. A 4xx says the request is the problem, and waiting does not change the request."
+      },
+      {
+        "text": "The server stops answering a key that repeats a 404",
+        "correct": false,
+        "why": "`limits.py` keeps answering; it charges a unit each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-24j8j2qg",
+    "version": 1,
+    "section": "quotas-and-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The trial key has a daily quota of 20 units. A search costs 5 and reading a book costs 1. Today it has made 2 searches and read 6 books. How many more books can it read today?",
+    "hint": "Spend the searches first.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "books"
+  },
+  {
+    "id": "ex-mt5fnrnv",
+    "version": 1,
+    "section": "quotas-and-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The trial key, searching every five seconds, is refused on its fifth search while `burst r=9`. `Retry-After` is a number in the tens of thousands. What refused it?",
+    "hint": "Nine tokens is plenty for a search.",
+    "choices": [
+      {
+        "text": "The bucket, which needs 10 tokens for a search",
+        "correct": false,
+        "why": "A search costs 5, and nine were there."
+      },
+      {
+        "text": "The daily quota, until midnight UTC",
+        "correct": true,
+        "why": "Right. Four searches spent its twenty units, and the day starts again at midnight."
+      },
+      {
+        "text": "The fixed window of `limits.py window`",
+        "correct": false,
+        "why": "The server was running with the bucket; the long wait belongs to the day."
+      },
+      {
+        "text": "A ban, for searching too often",
+        "correct": false,
+        "why": "There is no ban in `limits.py`; the answer says which limit and when it resets."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8719jdq",
+    "version": 1,
+    "section": "many-servers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Four copies of `limits.py` run behind a round-robin load balancer, each with its own bucket of 10 in memory. A client with a full allowance sends a burst. How many requests can be accepted before the first refusal?",
+    "hint": "Two copies allowed twenty in the lesson.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-4v0y19ve",
+    "version": 1,
+    "section": "many-servers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two copies share counters in one store. Each reads the bucket (\"1 token left\"), then writes it back as 0, in two separate steps. What can go wrong?",
+    "hint": "Interleave the two copies.",
+    "choices": [
+      {
+        "text": "The store refuses the second write, so one request fails with an error",
+        "correct": false,
+        "why": "Two plain writes of 0 both succeed; nothing in them conflicts."
+      },
+      {
+        "text": "The token is lost, and the client gets one request fewer than its limit",
+        "correct": false,
+        "why": "The error goes the other way: two requests are served on one token."
+      },
+      {
+        "text": "Both read 1 before either writes, so one token serves two requests",
+        "correct": true,
+        "why": "Right. The check and the update have to be one operation in the store, as `LOCK` makes them in one process."
+      },
+      {
+        "text": "Nothing, as long as the two copies run on the same machine",
+        "correct": false,
+        "why": "Two processes on one machine interleave just the same; the lock in each protects only its own threads."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7s9n5py",
+    "version": 1,
+    "section": "many-servers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shared store behind the limiter goes down. If the limiter refuses every request until it comes back, what has the outage become?",
+    "hint": "Who is refused?",
+    "choices": [
+      {
+        "text": "Nothing visible: clients retry and succeed later",
+        "correct": false,
+        "why": "Every client is refused for as long as the store is down, which is visible to all of them."
+      },
+      {
+        "text": "A period with no limit at all",
+        "correct": false,
+        "why": "That is the other choice, allowing everything while the store is down."
+      },
+      {
+        "text": "A smaller limit, divided between the copies",
+        "correct": false,
+        "why": "Dividing the limit is a design chosen in advance, not what refusing everything does."
+      },
+      {
+        "text": "An outage of the whole API",
+        "correct": true,
+        "why": "Right. The store is down, and every request is refused because of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yy718phq",
+    "version": 1,
+    "section": "beyond-requests",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request over a limit to the status it is answered with.",
+    "hint": "One of them is a size, one a rate.",
+    "pairs": [
+      {
+        "left": "a body larger than the API accepts",
+        "right": "413"
+      },
+      {
+        "left": "the eleventh login attempt in a minute",
+        "right": "429"
+      },
+      {
+        "left": "a query nested deeper than allowed",
+        "right": "400"
+      }
+    ],
+    "right_distractors": [
+      "401"
+    ]
+  },
+  {
+    "id": "ex-sgfnvy15",
+    "version": 1,
+    "section": "beyond-requests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Login attempts are counted per account as well as per address. Which guessing does the count per account catch that the count per address misses?",
+    "hint": "Spread the guesses out.",
+    "choices": [
+      {
+        "text": "One account, guessed from many addresses",
+        "correct": true,
+        "why": "Right. Each address stays under its limit, and the account counter still adds them all up."
+      },
+      {
+        "text": "Guesses from one address at many accounts",
+        "correct": false,
+        "why": "That is the case the address counter does catch: one address, one counter."
+      },
+      {
+        "text": "Guesses sent slowly, one every minute",
+        "correct": false,
+        "why": "Slow guesses stay under both counters; making each guess expensive is lesson 10's part."
+      },
+      {
+        "text": "Guesses that use the right password",
+        "correct": false,
+        "why": "A right password is a successful login, not guessing; the counter is about failures."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qmye9fg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `limits.py` does with one request in order.",
+    "hint": "The database comes last.",
+    "items": [
+      "Answer 401 if the key is missing or unknown",
+      "Work out the cost from the path",
+      "Check the daily quota without spending",
+      "Take the cost from the bucket",
+      "Read the database and answer"
+    ],
+    "trap": "Reading the database before the limit means a refused request has already cost what the limit was there to save."
+  },
+  {
+    "id": "ex-e2736zjd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An API documents \"10 requests per 10 seconds per key\", and one key gets 20 accepted within two seconds. Which explanations fit? Choose all that apply.",
+    "hint": "Two of this lesson's sections each produced exactly twenty.",
+    "choices": [
+      {
+        "text": "A fixed window, and the requests straddled a boundary",
+        "correct": true,
+        "why": "Right. Ten at the end of one window and ten at the start of the next."
+      },
+      {
+        "text": "A token bucket of 10 refilled at 1 a second, on one server",
+        "correct": false,
+        "why": "In two seconds that bucket allows its ten plus about two, as the edge run showed."
+      },
+      {
+        "text": "Two copies behind a load balancer, each counting in its own memory",
+        "correct": true,
+        "why": "Right. Each copy saw ten requests and had ten tokens for them."
+      },
+      {
+        "text": "The client ignored `Retry-After`",
+        "correct": false,
+        "why": "Ignoring it earns refusals, not acceptances; the server decides what is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4p50vff",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new endpoint renders a PDF and takes about fifty times as long as reading a book. Clients already have a bucket and a daily quota. What does this lesson suggest?",
+    "hint": "Search already had this problem.",
+    "choices": [
+      {
+        "text": "Leave it at one unit, since the rate limit already counts every request",
+        "correct": false,
+        "why": "Counted as one, a client that only renders PDFs costs the server fifty times what its count says."
+      },
+      {
+        "text": "Limit it by IP address so that the key's allowance is untouched",
+        "correct": false,
+        "why": "Addresses are the weak key, and the cost would still land on the same server."
+      },
+      {
+        "text": "Put it behind a separate API with no limit, so it never takes from the books",
+        "correct": false,
+        "why": "An endpoint with no limit is the hole OWASP's API4:2023 names."
+      },
+      {
+        "text": "Give it a cost in units from the same bucket and quota, measured from what it takes",
+        "correct": true,
+        "why": "Right. The way `limits.py` charges a search five, with the weight taken from measurement."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kvpbvfn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A free key with a full bucket (10 tokens, refilled at 1 a second) makes one search, which costs 5, and immediately asks for 7 books, one unit each. How many of the 7 are accepted?",
+    "hint": "Immediately means the refill adds almost nothing.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-065jzwkj",
+    "version": 1,
+    "section": "backoff",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When a refusal carries no `Retry-After`, a client backs off exponentially and picks each wait at random below the ceiling, which is called ___.",
+    "hint": "It spreads the retries of clients that failed together.",
+    "blanks": [
+      {
+        "accept": [
+          "jitter",
+          "full jitter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

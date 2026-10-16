@@ -1,0 +1,734 @@
+{
+  "ex-6dzxsd3d": {
+    "prompt": "Você deu a um app de leitura a sua senha da loja, e agora quer impedir que ele use sua conta. Quanto isso custa?",
+    "hint": "Uma senha é a mesma chave para todo mundo que a tem.",
+    "choices": [
+      {
+        "text": "Pouca coisa: você revoga o token próprio do app na página de configurações da conta da loja",
+        "why": "Isso é o que a delegação dá. Com senha não existe um token só do app para revogar."
+      },
+      {
+        "text": "Desinstalar o app, o que apaga a senha",
+        "why": "O app pode tê-la guardado no próprio servidor, e desinstalar não chega lá."
+      },
+      {
+        "text": "Uma senha nova, o que também corta todo outro app que tinha a antiga",
+        "why": "Certo. A senha é a única alavanca, e puxá-la para de uma vez tudo o que a tinha."
+      },
+      {
+        "text": "Esperar alguns minutos até o acesso do app expirar sozinho, como os tokens expiram",
+        "why": "Access tokens expiram; uma senha não, então o app continua funcionando até ela mudar."
+      }
+    ]
+  },
+  "ex-4y2fbta3": {
+    "prompt": "Ligue cada papel do OAuth a quem o representa no laboratório desta aula.",
+    "hint": "Um arquivo faz dois deles.",
+    "pairs": [
+      {
+        "left": "dono do recurso",
+        "right": "Ana, o único usuário que o `idp.py` conhece"
+      },
+      {
+        "left": "cliente",
+        "right": "`shelf-web`, que você interpreta com o `curl`"
+      },
+      {
+        "left": "servidor de autorização",
+        "right": "`/authorize` e `/token`"
+      },
+      {
+        "left": "servidor de recursos",
+        "right": "`/books/stock` e `/userinfo`"
+      }
+    ],
+    "right_distractors": [
+      "o histórico do navegador"
+    ]
+  },
+  "ex-atp6kcyg": {
+    "prompt": "Por que o OAuth confia menos no navegador do que em qualquer outra parte de um fluxo?",
+    "hint": "Pense em quem mais vê o que passa por ele.",
+    "choices": [
+      {
+        "text": "Ele roda o código do cliente, então guarda o segredo do cliente",
+        "why": "O segredo de um app web fica no servidor do app; o navegador nunca o recebe."
+      },
+      {
+        "text": "Extensões, histórico e logs veem o que passa por ele",
+        "why": "Certo. Por isso nada do que o navegador carrega basta sozinho."
+      },
+      {
+        "text": "Ele não consegue manter um cookie entre o redirecionamento e o callback",
+        "why": "Consegue; o cookie de sessão do cliente sobrevive ao fluxo inteiro. O problema é quem mais lê os endereços."
+      },
+      {
+        "text": "Ele é o dono do recurso, e donos nunca são confiáveis",
+        "why": "A pessoa é a dona do recurso; o navegador só leva mensagens por ela."
+      }
+    ]
+  },
+  "ex-wkn7pt7v": {
+    "prompt": "Ponha o fluxo authorization code em ordem.",
+    "hint": "A metade do navegador vem primeiro.",
+    "items": [
+      "O cliente redireciona o navegador para `/authorize`",
+      "A pessoa entra e concorda no servidor de autorização",
+      "O navegador volta ao callback com um código e o `state`",
+      "O cliente confere o `state`",
+      "O cliente troca o código em `/token`",
+      "O cliente chama a API com o access token"
+    ],
+    "trap": "Trocar o código antes de conferir o `state` deixa entrar um código da sessão de outra pessoa."
+  },
+  "ex-ym7z374j": {
+    "prompt": "Por que o servidor de autorização manda um código pelo navegador, e não o próprio access token?",
+    "hint": "Onde os endereços de redirecionamento vão parar?",
+    "choices": [
+      {
+        "text": "Um código é curto o bastante para caber num endereço, e um token inteiro não",
+        "why": "Tokens cabem em endereços; o grant implicit os punha lá. A questão é quem lê o endereço."
+      },
+      {
+        "text": "Um token expiraria antes de o navegador terminar de seguir o redirecionamento",
+        "why": "Um token dura minutos, e um redirecionamento leva milissegundos."
+      },
+      {
+        "text": "O navegador tem onde guardar um código, mas não tem onde guardar um token",
+        "why": "O navegador guarda qualquer um dos dois; armazenamento não é a questão."
+      },
+      {
+        "text": "Endereços vazam, e um código vazado não serve sem a segunda requisição",
+        "why": "Certo. O código funciona uma vez, por um minuto, e só com as credenciais do cliente e o verifier."
+      }
+    ]
+  },
+  "ex-bpbza4ra": {
+    "prompt": "Um cliente está cadastrado como `https://app.example`, e o servidor de autorização aceita qualquer `redirect_uri` que comece com essa string. Que endereço poderia então receber um código?",
+    "hint": "Leia a comparação como string, não como URL.",
+    "choices": [
+      {
+        "text": "`https://app.example.other.test/cb`, em outro host",
+        "why": "Certo. O prefixo bate e o host é outro. Por isso a comparação tem de ser exata."
+      },
+      {
+        "text": "Só `https://app.example/cb`, já que o host de uma URL tem de bater",
+        "why": "Uma checagem de prefixo compara caracteres e não sabe nada de hosts."
+      },
+      {
+        "text": "Nenhum, porque o código só é emitido depois de o cliente enviar o segredo",
+        "why": "O segredo é conferido em `/token`, depois de o código já ter sido enviado."
+      },
+      {
+        "text": "`http://app.example/cb`, porque o esquema é ignorado",
+        "why": "`http://` não começa com `https://`, então este falha no prefixo."
+      }
+    ]
+  },
+  "ex-97mxfvzd": {
+    "prompt": "O `pkce.py` imprimiu um verifier de 64 caracteres. Quantos caracteres tem o challenge S256 dele?",
+    "hint": "Um SHA-256 tem 32 bytes, seja qual for a entrada.",
+    "unit": "caracteres"
+  },
+  "ex-5pjxj7nh": {
+    "prompt": "O `idp.py` não dá código a menos que a requisição leve `code_challenge_method=___`.",
+    "hint": "O outro método envia o próprio verifier.",
+    "blanks": [
+      {
+        "accept": [
+          "S256"
+        ]
+      }
+    ]
+  },
+  "ex-2wh2vfjg": {
+    "prompt": "Um app web num servidor já envia o segredo do cliente para `/token`. O que o PKCE acrescenta para ele?",
+    "hint": "Pense num código que chega na sessão errada.",
+    "choices": [
+      {
+        "text": "Nada; o PKCE foi escrito para clientes públicos e só vale para eles",
+        "why": "A RFC 9700 pede que todo cliente o use, e o rascunho do OAuth 2.1 o exige."
+      },
+      {
+        "text": "Ele substitui o segredo do cliente, e o app deixa de guardar segredo em qualquer lugar",
+        "why": "Os dois protegem coisas diferentes, e um cliente confidencial mantém ambos."
+      },
+      {
+        "text": "Um código enfiado na sessão de outra pessoa falha no verifier daquela sessão",
+        "why": "Certo. O segredo prova qual cliente pede; o verifier prova de qual entrada o código veio."
+      },
+      {
+        "text": "Ele cifra o código no redirecionamento, e o navegador não consegue lê-lo no caminho",
+        "why": "O código viaja aberto no endereço; o PKCE acrescenta uma prova em `/token`, não cifragem."
+      }
+    ]
+  },
+  "ex-5t02hdrj": {
+    "prompt": "Qual destas o `idp.py` faz e nenhum servidor de autorização de verdade faz?",
+    "hint": "É o único atalho que deixa o `curl` conduzi-lo.",
+    "choices": [
+      {
+        "text": "Assina todo token que emite com RS256 e uma chave RSA de 2048 bits",
+        "why": "RS256 é o que a maioria dos servidores reais usa."
+      },
+      {
+        "text": "Recusa um `redirect_uri` que não conhece, sem redirecionar o navegador",
+        "why": "Todo servidor de autorização correto faz isso."
+      },
+      {
+        "text": "Publica sua chave pública num endereço JWKS para APIs e clientes",
+        "why": "Essa é a forma padrão do OpenID Connect de distribuir chaves."
+      },
+      {
+        "text": "Responde `/authorize` na hora, por uma usuária sempre conectada e que concorda",
+        "why": "Certo. Um de verdade mostra uma página de entrada e uma tela de consentimento que a pessoa pode recusar."
+      }
+    ]
+  },
+  "ex-z5dh64kb": {
+    "prompt": "Por que o `idp-key.pem` é gravado com permissão `0600`?",
+    "hint": "O que alguém faria com uma cópia dele?",
+    "choices": [
+      {
+        "text": "O Python se recusa a carregar uma chave que outros leem",
+        "why": "O Python a carrega com qualquer permissão; a restrição é para pessoas."
+      },
+      {
+        "text": "Quem a lê assina tokens que toda API confiante aceita",
+        "why": "Certo. A chave privada é toda a autoridade do servidor."
+      },
+      {
+        "text": "O endpoint JWKS serve este arquivo, então ele não pode mudar",
+        "why": "O JWKS leva só a metade pública, montada a partir da chave em memória."
+      },
+      {
+        "text": "Para que todo reinício gere uma chave nova",
+        "why": "Permissões decidem quem a lê; o programa reaproveita a mesma chave a cada início."
+      }
+    ]
+  },
+  "ex-a8sj2ppq": {
+    "prompt": "Você pede `/books/stock` sem cabeçalho `Authorization`. O que o `idp.py` responde?",
+    "hint": "A API ainda não sabe quem você é.",
+    "choices": [
+      {
+        "text": "403, porque sem token não há escopo",
+        "why": "403 é para um token válido sem o escopo; aqui não há token nenhum."
+      },
+      {
+        "text": "401, com `WWW-Authenticate: Bearer`",
+        "why": "Certo. O cabeçalho diz ao cliente que tipo de credencial trazer."
+      },
+      {
+        "text": "302 para `/authorize`",
+        "why": "Uma API responde com um status; mandar o navegador entrar é tarefa do cliente."
+      },
+      {
+        "text": "400, porque a requisição está malformada",
+        "why": "A requisição está bem formada; só falta uma credencial."
+      }
+    ]
+  },
+  "ex-26gq7138": {
+    "prompt": "Você troca um código pela segunda vez, com o verifier certo e o segredo certo. O que acontece?",
+    "hint": "Quando o `idp.py` tira um código da tabela?",
+    "choices": [
+      {
+        "text": "200 e um conjunto novo de tokens",
+        "why": "Isso tornaria um código copiado tão bom quanto o original, toda vez."
+      },
+      {
+        "text": "200 e os mesmos tokens da primeira troca",
+        "why": "O servidor não guarda registro dos tokens que emitiu para um código."
+      },
+      {
+        "text": "401 `invalid_client`, porque o segredo já foi usado",
+        "why": "Um segredo de cliente pode ser usado quantas vezes for; é o código que funciona uma vez."
+      },
+      {
+        "text": "400 `invalid_grant`",
+        "why": "Certo. A primeira troca tirou o código da tabela, então agora ele é desconhecido."
+      }
+    ]
+  },
+  "ex-pkdd2c2r": {
+    "prompt": "A maioria dos erros em `/authorize` volta ao callback do cliente com `error=`. Por que um `redirect_uri` não cadastrado recebe um 400 do próprio `idp.py`?",
+    "hint": "Para qual endereço iria o redirecionamento?",
+    "choices": [
+      {
+        "text": "O endereço é o que está em dúvida, e redirecionar mandaria recado a quem estiver lá",
+        "why": "Certo. Os outros erros podem voltar porque se sabe que o endereço é do cliente."
+      },
+      {
+        "text": "Um 302 leva um código no endereço, mas não tem espaço para um erro",
+        "why": "A recusa `invalid_scope` foi um 302 levando `error=invalid_scope`."
+      },
+      {
+        "text": "O callback chamaria `/authorize` de novo, e o navegador entraria em laço",
+        "why": "Um callback não chama `/authorize`; nada entra em laço."
+      },
+      {
+        "text": "O OAuth proíbe redirecionar em qualquer tipo de erro de `/authorize`, não só neste",
+        "why": "Proíbe neste caso; os outros redirecionam, como o laboratório mostrou."
+      }
+    ]
+  },
+  "ex-b0gmqamg": {
+    "prompt": "Um token com `openid email` pede `/books/stock`. O que volta?",
+    "hint": "O token é legítimo e está no prazo.",
+    "choices": [
+      {
+        "text": "401 `invalid_token`",
+        "why": "Assinatura, emissor, audiência e prazo passam; não há nada de errado com o token em si."
+      },
+      {
+        "text": "200, já que qualquer token válido lê o estoque",
+        "why": "O endpoint precisa de `books:read`, e esse token nunca o recebeu."
+      },
+      {
+        "text": "403 `insufficient_scope`, citando `books:read`",
+        "why": "Certo. Token válido sem o escopo é 403, e o `WWW-Authenticate` diz o que faltou."
+      },
+      {
+        "text": "400 `invalid_scope`",
+        "why": "Isso é o `/authorize` recusando um pedido; uma API responde 401 ou 403."
+      }
+    ]
+  },
+  "ex-6hdj4f0c": {
+    "prompt": "O que o escopo de um access token decide?",
+    "hint": "A aula 11 trata da outra metade.",
+    "choices": [
+      {
+        "text": "Para qual cliente o token foi emitido, e em nome de quem",
+        "why": "Isso é o `client_id`, outra claim."
+      },
+      {
+        "text": "Exatamente o que a pessoa tem permissão de fazer dentro da API",
+        "why": "A API ainda aplica suas regras; uma conta banida não abre nada, seja qual for o escopo."
+      },
+      {
+        "text": "Por quanto tempo o token vale",
+        "why": "Isso é o `exp`, e o `expires_in` na resposta."
+      },
+      {
+        "text": "Um limite superior, que as regras da própria API estreitam mais",
+        "why": "Certo. Um escopo é o que o cliente pediu e a pessoa aceitou: um limite superior, e só."
+      }
+    ]
+  },
+  "ex-twk79787": {
+    "prompt": "O servidor de autorização pode conceder menos do que foi pedido, então o cliente lê o campo ___ da resposta de token.",
+    "hint": "Era `books:read openid profile` no primeiro fluxo.",
+    "blanks": [
+      {
+        "accept": [
+          "scope",
+          "`scope`"
+        ]
+      }
+    ]
+  },
+  "ex-spaxgp0q": {
+    "prompt": "Ligue cada conferência de um ID token ao que ela impede.",
+    "hint": "Cada uma fecha uma porta diferente.",
+    "pairs": [
+      {
+        "left": "a assinatura, com a chave que o `kid` indica",
+        "right": "um token que qualquer um escreveu"
+      },
+      {
+        "left": "`aud` é este cliente",
+        "right": "um token emitido para outro"
+      },
+      {
+        "left": "o `nonce` é o que este cliente enviou",
+        "right": "um ID token reaproveitado de uma entrada anterior"
+      },
+      {
+        "left": "o `exp` não passou",
+        "right": "um token guardado e usado depois"
+      }
+    ],
+    "right_distractors": [
+      "uma pessoa que digitou a senha errada"
+    ]
+  },
+  "ex-57hnm3wn": {
+    "prompt": "Um app autentica pessoas chamando uma API com qualquer access token que receba e lendo o id de usuário que a API devolve. O que há de errado nisso?",
+    "hint": "Quem mais teria um access token da mesma pessoa?",
+    "choices": [
+      {
+        "text": "Access tokens expiram rápido demais para manter alguém conectado durante uma sessão inteira",
+        "why": "O app manteria a própria sessão depois da entrada; a validade não é o defeito."
+      },
+      {
+        "text": "O token de outro app para essa pessoa também funciona, e esse app entra como ela",
+        "why": "Certo. A audiência de um access token é a API, e nada nele diz qual app deveria aceitá-lo. A de um ID token é o app."
+      },
+      {
+        "text": "Nada de errado, desde que a API confira a assinatura de cada token",
+        "why": "A assinatura prova que o token é legítimo, não que foi emitido para este app."
+      },
+      {
+        "text": "O id de usuário muda para cada cliente, então não identifica ninguém em particular",
+        "why": "A API devolve o mesmo sujeito qualquer que seja o token; é isso que torna o defeito explorável."
+      }
+    ]
+  },
+  "ex-njjbmeyf": {
+    "prompt": "O documento de discovery do OpenID Connect fica em `/.well-known/___` abaixo do emissor.",
+    "hint": "O `check_token.py` o lê primeiro.",
+    "blanks": [
+      {
+        "accept": [
+          "openid-configuration"
+        ]
+      }
+    ]
+  },
+  "ex-fspm683m": {
+    "prompt": "O `check_token.py` recusou o access token, com a audiência `shelf-web`, dizendo `Audience doesn't match`. O que havia no `aud` do token?",
+    "hint": "Para quem um access token é emitido?",
+    "choices": [
+      {
+        "text": "`shelf-web`, com outro emissor",
+        "why": "Emissor diferente tem erro próprio; este é sobre a audiência."
+      },
+      {
+        "text": "Nada, porque access tokens não levam audiência",
+        "why": "Os access tokens do `idp.py` levam uma, e a conferência a leu."
+      },
+      {
+        "text": "`shelf-api`",
+        "why": "Certo. Conferido com `shelf-api`, o mesmo token passou e mostrou o escopo."
+      },
+      {
+        "text": "O nonce que o cliente enviou em `/authorize`",
+        "why": "O nonce vai no ID token, nunca no `aud`."
+      }
+    ]
+  },
+  "ex-0wtnc0cw": {
+    "prompt": "Com rotação, um refresh token que já foi trocado volta a `/token`. O que o `idp.py` faz?",
+    "hint": "Ele não sabe qual portador é o app de verdade.",
+    "choices": [
+      {
+        "text": "Recusa-o e deixa o substituto funcionando",
+        "why": "Aí o ladrão pode ser quem tem o substituto. O servidor encerra os dois."
+      },
+      {
+        "text": "Aceita-o mais uma vez, já que valia um instante atrás",
+        "why": "Um refresh token rotacionado funciona uma vez; esse é todo o mecanismo."
+      },
+      {
+        "text": "Recusa-o e encerra o grant inteiro, substituto incluído",
+        "why": "Certo. Os dois portadores perdem, e a pessoa entra de novo."
+      },
+      {
+        "text": "Revoga todo access token já emitido naquele grant",
+        "why": "Não consegue: o primeiro access token ainda abriu a lista de estoque, porque a API não pergunta a ninguém."
+      }
+    ]
+  },
+  "ex-n59cgd4m": {
+    "prompt": "Os access tokens do `idp.py` duram 300 segundos. Um cliente trabalha por uma hora, renovando sempre que um token acaba. Quantos access tokens ele usa nessa hora, contando o primeiro?",
+    "hint": "Uma hora tem 3600 segundos.",
+    "unit": "tokens"
+  },
+  "ex-hqnrvx4k": {
+    "prompt": "Um app de página única precisa manter uma pessoa conectada por dias. Que arranjo a aula prefere?",
+    "hint": "O melhor lugar para o token é aquele que os scripts da página não alcançam.",
+    "choices": [
+      {
+        "text": "O segredo do cliente no JavaScript do app, para autenticar cada renovação",
+        "why": "Um segredo embutido em JavaScript está em toda cópia; um cliente público não tem segredo que mereça o nome."
+      },
+      {
+        "text": "Um refresh token no `localStorage`, rotacionado a cada uso",
+        "why": "A aula só aceita isso se o navegador precisar guardá-lo. A resposta preferida o mantém fora do navegador."
+      },
+      {
+        "text": "O refresh token no endereço depois do `#`, para nunca chegar a um servidor",
+        "why": "É onde o grant implicit punha tokens, e o histórico e os logs o leem."
+      },
+      {
+        "text": "Um pequeno servidor do próprio app os guarda, e o navegador recebe um cookie",
+        "why": "Certo. Um backend for frontend guarda o refresh token onde nenhum script da página o lê."
+      }
+    ]
+  },
+  "ex-mhks1rdf": {
+    "prompt": "Quais destes estavam na resposta do `idp.py` a um pedido `client_credentials`? Marque todos que se aplicam.",
+    "hint": "Uma máquina sempre pode pedir de novo, e ninguém entrou.",
+    "choices": [
+      {
+        "text": "`access_token`",
+        "why": "Certo. É o objetivo do pedido."
+      },
+      {
+        "text": "`refresh_token`",
+        "why": "O cliente pode repetir o pedido; um refresh token seria uma segunda credencial protegendo nada."
+      },
+      {
+        "text": "`expires_in`",
+        "why": "Certo. 300, como todo access token deste servidor."
+      },
+      {
+        "text": "`id_token`",
+        "why": "Ninguém entrou, então não há ninguém para um ID token descrever."
+      }
+    ]
+  },
+  "ex-v4y2mx4b": {
+    "prompt": "Um job noturno, sem nenhuma pessoa envolvida, pede um token a `/token` com `grant_type=___`.",
+    "hint": "Duas palavras ligadas por sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "client_credentials"
+        ]
+      }
+    ]
+  },
+  "ex-31p4pj1k": {
+    "prompt": "Uma ferramenta de suporte usa client credentials para mudar o endereço de clientes por eles. O que isso faz de errado?",
+    "hint": "Olhe o `sub` de um token de máquina.",
+    "choices": [
+      {
+        "text": "Toda mudança fica registrada como da ferramenta, e nenhum log diz para quem",
+        "why": "Certo. O `sub` do token é o cliente, e todo registro dali em diante erra sobre quem."
+      },
+      {
+        "text": "O servidor de autorização recusa, já que client credentials não levam escopo",
+        "why": "Tokens de client credentials levam escopo; o `idp.py` concedeu `books:read`."
+      },
+      {
+        "text": "Cada cliente precisa consentir numa tela antes de cada mudança",
+        "why": "Não há consentimento nenhum neste grant; isso é parte do problema."
+      },
+      {
+        "text": "O token expira antes de a mudança chegar ao banco de dados e ser salva",
+        "why": "Cinco minutos sobram para uma requisição."
+      }
+    ]
+  },
+  "ex-g92thz97": {
+    "prompt": "Por que a RFC 9700 diz que o grant implicit não deve ser usado?",
+    "hint": "Onde ele punha o token?",
+    "choices": [
+      {
+        "text": "Ele precisa da senha do usuário, digitada no formulário do próprio app",
+        "why": "Esse é o grant password. O implicit usava o mesmo redirecionamento do fluxo de código."
+      },
+      {
+        "text": "Ele punha o access token no redirecionamento, onde logs e o histórico o leem",
+        "why": "Certo. O canal da frente levava o próprio token, e também não havia refresh token."
+      },
+      {
+        "text": "Ele não levava escopos, então todo token que devolvia abria a conta inteira",
+        "why": "Carregava escopos como qualquer outro grant."
+      },
+      {
+        "text": "Ele exige um segredo de cliente, que o navegador não tem como guardar",
+        "why": "Não exigia segredo; isso é parte de por que foi feito para navegadores."
+      }
+    ]
+  },
+  "ex-ambt1jgx": {
+    "prompt": "O app de um tutorial antigo envia a senha do usuário para `/token` com `grant_type=password`. O que o `idp.py` responde?",
+    "hint": "Não é um grant que este servidor conheça.",
+    "choices": [
+      {
+        "text": "200 com um access token e sem refresh token",
+        "why": "Era o que o grant devolvia; este servidor não o oferece."
+      },
+      {
+        "text": "401 `invalid_client`",
+        "why": "O cliente se autenticou certo; o que foi recusado é o tipo de grant."
+      },
+      {
+        "text": "400 `unsupported_grant_type`",
+        "why": "Certo, com `password is not offered here`."
+      },
+      {
+        "text": "302 para o callback com um erro",
+        "why": "`/token` é uma requisição direta e nunca redireciona."
+      }
+    ]
+  },
+  "ex-sjq3f08p": {
+    "prompt": "Ponha em ordem uma entrada SAML com o binding POST pelo navegador.",
+    "hint": "Os dois servidores nunca conversam diretamente.",
+    "items": [
+      "O navegador pede uma página ao provedor de serviço",
+      "O provedor de serviço redireciona o navegador com um `SAMLRequest`",
+      "A pessoa entra no provedor de identidade",
+      "O provedor de identidade devolve um formulário com a asserção assinada",
+      "O navegador envia a asserção ao provedor de serviço",
+      "O provedor de serviço a confere e abre uma sessão"
+    ],
+    "trap": "A asserção chega ao provedor de serviço pelo navegador, nunca direto do provedor de identidade."
+  },
+  "ex-2t358xpz": {
+    "prompt": "O `xmlsec1` imprimiu `OK` para uma asserção. Quais destas o provedor de serviço ainda precisa conferir por conta própria? Marque todas que se aplicam.",
+    "hint": "O `xmlsec1` confere assinaturas e não sabe nada de SAML.",
+    "choices": [
+      {
+        "text": "Que o digest do elemento assinado bate",
+        "why": "Isso faz parte do que o `OK` relatou."
+      },
+      {
+        "text": "Que o `Audience` cita este provedor de serviço",
+        "why": "Certo. Uma asserção para outra aplicação também tem assinatura válida."
+      },
+      {
+        "text": "Que a hora atual está entre `NotBefore` e `NotOnOrAfter`",
+        "why": "Certo. A asserção do laboratório estava fora da janela e ainda assim deu `OK`."
+      },
+      {
+        "text": "Que o `ID` da asserção não foi visto antes",
+        "why": "Certo. Senão a mesma asserção pode ser enviada duas vezes."
+      },
+      {
+        "text": "Que o valor da assinatura decodifica como base64",
+        "why": "Verificá-la exigiu decodificá-la; o `OK` cobre isso."
+      }
+    ]
+  },
+  "ex-r26knef9": {
+    "prompt": "Ligue cada termo do SAML ao equivalente mais próximo no OpenID Connect.",
+    "hint": "Os papéis se correspondem mesmo que os formatos não.",
+    "pairs": [
+      {
+        "left": "provedor de identidade",
+        "right": "o servidor de autorização"
+      },
+      {
+        "left": "provedor de serviço",
+        "right": "o cliente"
+      },
+      {
+        "left": "asserção",
+        "right": "o ID token"
+      },
+      {
+        "left": "metadados",
+        "right": "o discovery e o JWKS"
+      }
+    ],
+    "right_distractors": [
+      "o refresh token"
+    ]
+  },
+  "ex-3ex8br02": {
+    "prompt": "Os funcionários de uma empresa entram numa ferramenta que ela comprou, pelo provedor de identidade da empresa, e o navegador envia um documento XML assinado à ferramenta. Que protocolo é esse?",
+    "hint": "Só um deles fala XML.",
+    "choices": [
+      {
+        "text": "OpenID Connect",
+        "why": "Também autentica pessoas, mas com um JWT, não XML."
+      },
+      {
+        "text": "OAuth 2.0 client credentials",
+        "why": "Nenhuma pessoa entra com client credentials."
+      },
+      {
+        "text": "SAML 2.0",
+        "why": "Certo. Uma asserção enviada pelo navegador é o binding POST do SAML."
+      },
+      {
+        "text": "PKCE",
+        "why": "O PKCE é uma proteção dentro do fluxo de código do OAuth, não um protocolo próprio."
+      }
+    ]
+  },
+  "ex-022bfyjp": {
+    "prompt": "No seu primeiro emprego, uma equipe pede que você acrescente \"Entrar com o Google\" a um app web. Qual é a sua parte, segundo esta aula?",
+    "hint": "Outra pessoa roda o servidor de autorização.",
+    "choices": [
+      {
+        "text": "Escrever um servidor de autorização como o `idp.py`, mas reforçado para uso em produção",
+        "why": "O Google é o servidor de autorização; escrever um é exatamente o que a aula diz para não fazer."
+      },
+      {
+        "text": "Configurar direito uma biblioteca e o provedor, e as conferências que ela faz",
+        "why": "Certo. A configuração e essas conferências são onde as integrações dão errado."
+      },
+      {
+        "text": "Guardar as senhas do Google dos usuários, com hash como a aula 10 descreve",
+        "why": "O app nunca vê uma senha do Google; esse é o sentido da delegação."
+      },
+      {
+        "text": "Aceitar o access token do Google como prova de quem entrou",
+        "why": "Essa é a confusão que a seção de OpenID Connect recusou; a prova é o ID token."
+      }
+    ]
+  },
+  "ex-4e146dpj": {
+    "prompt": "Ponha em ordem o que um cliente faz com um ID token antes de confiar nele.",
+    "hint": "Ele não confere uma assinatura antes de ter a chave.",
+    "items": [
+      "Ler o documento de discovery para achar o `jwks_uri`",
+      "Buscar a chave que o `kid` do token indica",
+      "Verificar a assinatura, aceitando só RS256",
+      "Conferir `iss`, `aud` e `exp`",
+      "Comparar o `nonce` com o que enviou",
+      "Autenticar a pessoa"
+    ],
+    "trap": "Ler as claims antes de conferir a assinatura é ler o que qualquer um poderia ter escrito."
+  },
+  "ex-yry9t664": {
+    "prompt": "Um grant é revogado às 10:07:00 porque um refresh token voltou duas vezes. O access token mais novo do ladrão foi emitido às 10:05:00 e dura 300 segundos. Por quantos segundos depois da revogação ele ainda abre uma API que confere só a assinatura e o horário?",
+    "hint": "Revogar o grant não alcança um token que a API confere sozinha.",
+    "unit": "segundos"
+  },
+  "ex-tq4p4hhm": {
+    "prompt": "Um app de celular usa o fluxo de código com PKCE e não tem segredo de cliente. Outro app no celular recebe o redirecionamento e o código. O que o impede?",
+    "hint": "Qual valor nunca passou pelo redirecionamento?",
+    "choices": [
+      {
+        "text": "A conferência do `state` pelo servidor de autorização, na volta",
+        "why": "Quem confere o `state` é o cliente que o enviou, não o servidor de autorização."
+      },
+      {
+        "text": "Falta o verifier, que nunca saiu do app verdadeiro",
+        "why": "Certo. O challenge que ele pode ter visto não se transforma de volta no verifier."
+      },
+      {
+        "text": "A comparação do `redirect_uri` que o `/token` faz",
+        "why": "O outro app recebeu o redirecionamento no endereço cadastrado, então essa comparação passa."
+      },
+      {
+        "text": "Nada; um cliente sem segredo não tem proteção nenhuma",
+        "why": "Essa era a situação antes da RFC 7636; o PKCE existe exatamente para este cliente."
+      }
+    ]
+  },
+  "ex-f5mz9q6d": {
+    "prompt": "Você revisa uma integração OAuth. Quais destes achados são defeitos? Marque todos que se aplicam.",
+    "hint": "Dois deles são o que esta aula recomenda.",
+    "choices": [
+      {
+        "text": "Um `redirect_uri` cadastrado com curinga",
+        "why": "Certo. Só a comparação exata mantém códigos longe de endereços que o cliente não controla."
+      },
+      {
+        "text": "Access tokens que expiram em cinco minutos",
+        "why": "Esse é o formato recomendado: access tokens curtos, renovados."
+      },
+      {
+        "text": "O grant password ligado",
+        "why": "Certo. A RFC 9700 diz que ele não deve ser usado."
+      },
+      {
+        "text": "Refresh tokens rotacionados a cada uso",
+        "why": "A rotação é o que deixa o servidor perceber uma cópia roubada."
+      },
+      {
+        "text": "O app autentica usuários lendo o access token",
+        "why": "Certo. Autenticar é tarefa do ID token, conferido em `aud` e `nonce`."
+      }
+    ]
+  }
+}

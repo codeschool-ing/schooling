@@ -1,0 +1,673 @@
+[
+  {
+    "id": "ex-m3p19my1",
+    "version": 1,
+    "section": "measures-vs-columns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between a calculated column and a measure in the data model?",
+    "hint": "One of them is stored; the other is worked out when a pivot table asks.",
+    "choices": [
+      {
+        "text": "A column is stored per row; a measure is worked out per cell",
+        "correct": true,
+        "why": "Right. That is why a measure can be a ratio that is correct at every level, totals included."
+      },
+      {
+        "text": "A measure is a column whose formula happens to be written in DAX",
+        "correct": false,
+        "why": "Calculated columns are written in DAX too. The difference is when and over what they are computed."
+      },
+      {
+        "text": "A column can only ever hold text, and a measure can only hold numbers",
+        "correct": false,
+        "why": "Calculated columns can hold numbers; Revenue is one kind of numeric column."
+      },
+      {
+        "text": "Columns live on the sheet and measures live in the model",
+        "correct": false,
+        "why": "Calculated columns live in the model as well, added in the Power Pivot window."
+      }
+    ]
+  },
+  {
+    "id": "ex-ey909pqn",
+    "version": 1,
+    "section": "measures-vs-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is not part of a pivot cell's filter context?",
+    "hint": "The context is filters, and the grand total is not a sum of the rows.",
+    "choices": [
+      {
+        "text": "The cell's row label",
+        "correct": false,
+        "why": "It is: in the Cerrado row, Products is filtered to Cerrado."
+      },
+      {
+        "text": "A slicer connected to the pivot table",
+        "correct": false,
+        "why": "It is: every connected slicer or timeline adds a filter."
+      },
+      {
+        "text": "The values of the cells above it",
+        "correct": true,
+        "why": "Right. A measure never adds up the cells above it; even the grand total is computed from its own context."
+      },
+      {
+        "text": "The cell's column label",
+        "correct": false,
+        "why": "It is: in the 2025 column, Calendar is filtered to 2025."
+      }
+    ]
+  },
+  {
+    "id": "ex-40apcadj",
+    "version": 1,
+    "section": "measures-vs-columns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds a calculated column to Sales holding each sale's margin as a percentage, and drags it into Values. The grand total says 4,649.8%. What went wrong?",
+    "hint": "What does a pivot table do with a column in Values?",
+    "choices": [
+      {
+        "text": "The percentage format multiplied every value by one hundred, twice over",
+        "correct": false,
+        "why": "Formatting does not change values. The total really is the sum of 108 percentages."
+      },
+      {
+        "text": "It summed 108 per-row percentages",
+        "correct": true,
+        "why": "Right. A ratio has to be computed at the level of the cell, as a measure: total margin divided by total revenue, 41.0%."
+      },
+      {
+        "text": "The relationship to Products is missing, so the costs are wrong",
+        "correct": false,
+        "why": "A missing relationship would make RELATED fail. The number here is a sum of ratios, which is wrong even with every cost right."
+      },
+      {
+        "text": "Calculated columns cannot use RELATED",
+        "correct": false,
+        "why": "They can, and that is how the column got each sale's cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5dapkz4",
+    "version": 1,
+    "section": "measures-vs-columns",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the measure `Margin %` show in the grand total of a pivot table on the whole model? Answer in percent, to one decimal place.",
+    "hint": "Total margin divided by total revenue, not an average of 108 rows.",
+    "value": 41.0,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-7btaxvtc",
+    "version": 1,
+    "section": "measures-vs-columns",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The set of filters that applies to one pivot cell, from its labels, the Filters area and its slicers, is called its filter ___.",
+    "hint": "One word; the lesson's name for what surrounds a cell.",
+    "blanks": [
+      {
+        "accept": [
+          "context"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sh44ebkn",
+    "version": 1,
+    "section": "basic-measures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By channel, `Customers Buying` shows 1, 1 and 10, and its grand total shows 11. Which is right?",
+    "hint": "Who bought in more than one channel?",
+    "choices": [
+      {
+        "text": "The rows; the total should be 12, and the model has a bug",
+        "correct": false,
+        "why": "Adding the rows would count C00 twice: it bought online and in the shop."
+      },
+      {
+        "text": "Both: C00 is one customer in each of two rows and once in the total",
+        "correct": true,
+        "why": "Right. A distinct count is computed from the total's own context, and a total equal to the sum of the rows would be the bug."
+      },
+      {
+        "text": "Neither: DISTINCTCOUNT ignores C00 because its city is empty",
+        "correct": false,
+        "why": "The city is in Customers; DISTINCTCOUNT counts codes in Sales, and C00 is one of them."
+      },
+      {
+        "text": "The total; the rows are wrong because a customer can only belong to one channel",
+        "correct": false,
+        "why": "Nothing ties a customer to one channel. C00 really did buy in two."
+      }
+    ]
+  },
+  {
+    "id": "ex-87rqffq1",
+    "version": 1,
+    "section": "basic-measures",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Average Price` show in the grand total, in reais per bag, to two decimal places?",
+    "hint": "Total revenue divided by bags sold.",
+    "value": 87.13,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-9t47h7qv",
+    "version": 1,
+    "section": "basic-measures",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each DAX function to what it does in a measure.",
+    "hint": "Section 03 introduced five functions; four are here.",
+    "pairs": [
+      {
+        "left": "`SUM`",
+        "right": "Adds up one column over the cell's rows"
+      },
+      {
+        "left": "`COUNTROWS`",
+        "right": "Counts the rows of a table"
+      },
+      {
+        "left": "`DISTINCTCOUNT`",
+        "right": "Counts the different values of a column"
+      },
+      {
+        "left": "`DIVIDE`",
+        "right": "Divides, and answers blank rather than an error on zero"
+      }
+    ],
+    "right_distractors": [
+      "Counts the cells of a column holding a number"
+    ]
+  },
+  {
+    "id": "ex-94meqnr6",
+    "version": 1,
+    "section": "basic-measures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `Total Cost` written with `SUMX` rather than `SUM`?",
+    "hint": "Is there a column holding the cost of each sale?",
+    "choices": [
+      {
+        "text": "SUM cannot add whole numbers, only decimal ones such as prices",
+        "correct": false,
+        "why": "SUM adds Bags, which are whole numbers."
+      },
+      {
+        "text": "Nothing holds bags times cost; SUMX works it out per row",
+        "correct": true,
+        "why": "Right. RELATED brings each sale's cost from Products, and SUMX adds the products of the multiplication."
+      },
+      {
+        "text": "SUMX is faster than SUM when a table is as small as the Sales table",
+        "correct": false,
+        "why": "Speed is not the reason; SUM simply has nothing to add here."
+      },
+      {
+        "text": "SUM only works on the Revenue column",
+        "correct": false,
+        "why": "SUM works on any numeric column, Bags included."
+      }
+    ]
+  },
+  {
+    "id": "ex-755hk4fw",
+    "version": 1,
+    "section": "basic-measures",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Gross Margin` by year shows R$ 14,300 for 2025. Why might that number be wrong even though every formula is right?",
+    "hint": "Where does the cost come from, and when was it true?",
+    "choices": [
+      {
+        "text": "Because Gross Margin should have been a calculated column",
+        "correct": false,
+        "why": "A column would give the same arithmetic per row. The problem is in the data, not the form."
+      },
+      {
+        "text": "Because DIVIDE rounds the margin to whole reais",
+        "correct": false,
+        "why": "Gross Margin does not divide anything; it subtracts."
+      },
+      {
+        "text": "Because the 2025 sales are costed at today's unit cost",
+        "correct": true,
+        "why": "Right. Products holds one current cost per product, so the 2025 margin rests on an assumption; a dated cost would need its own table."
+      },
+      {
+        "text": "Because the calendar is not marked as the date table",
+        "correct": false,
+        "why": "Marking matters to the period functions. A margin by year only needs the relationship to Calendar."
+      }
+    ]
+  },
+  {
+    "id": "ex-w28p84vy",
+    "version": 1,
+    "section": "calculate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `Sales[Channel]` in Rows, `Online Revenue` shows 11,143 in the `Shop` row as well. Why?",
+    "hint": "What does a filter inside CALCULATE do to the cell's filter on the same column?",
+    "choices": [
+      {
+        "text": "The relationship between Sales and Calendar is missing",
+        "correct": false,
+        "why": "Channel is a column of Sales; no relationship is involved in this filter."
+      },
+      {
+        "text": "The Shop row has no sales, so it shows the total",
+        "correct": false,
+        "why": "Shop has 23 sales, worth R$ 1,620."
+      },
+      {
+        "text": "Online replaces the row's Shop filter",
+        "correct": true,
+        "why": "Right. A filter on a column inside CALCULATE replaces the cell's filter on that column; KEEPFILTERS would intersect them."
+      },
+      {
+        "text": "CALCULATE always ignores every filter of the cell",
+        "correct": false,
+        "why": "It keeps every filter it does not touch: with years in Rows, it gives each year's online revenue."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6rdw3j2",
+    "version": 1,
+    "section": "calculate",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the table of `Channel Share` by channel and year, what does the `Online` row show for 2026, in percent, to one decimal place?",
+    "hint": "Online revenue of 2026 divided by all revenue of 2026.",
+    "value": 26.9,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-p8bdm6hm",
+    "version": 1,
+    "section": "calculate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Channel Share` is rewritten with `ALL(Sales)` in place of `ALL(Sales[Channel])`. With channels in Rows and years in Columns, what does the 2026 column now add up to?",
+    "hint": "ALL on a table removes every filter that reaches it, years included.",
+    "choices": [
+      {
+        "text": "Still 100%, because the rows are the same channels",
+        "correct": false,
+        "why": "Each 2026 cell is now divided by all the revenue of both years, so the column no longer closes at 100%."
+      },
+      {
+        "text": "The share of 2026 in all revenue, about a third",
+        "correct": true,
+        "why": "Right. The denominator lost the year filter too, so it is R$ 51,494 in every cell; 15,943 of it is 2026."
+      },
+      {
+        "text": "Nothing: ALL(Sales) is an error",
+        "correct": false,
+        "why": "It is valid DAX; it just removes more than you meant."
+      },
+      {
+        "text": "Exactly 50%, because there are two years",
+        "correct": false,
+        "why": "The years are not equal: 2026 has half a year of sales."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sj1zzgt",
+    "version": 1,
+    "section": "calculate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `CALCULATE([Total Revenue], KEEPFILTERS(Sales[Channel] = \"Online\"))` show in the `Shop` row?",
+    "hint": "KEEPFILTERS adds the new filter to the cell's own.",
+    "choices": [
+      {
+        "text": "11,143, the online revenue",
+        "correct": false,
+        "why": "That is what the version without KEEPFILTERS shows, because it replaces the filter."
+      },
+      {
+        "text": "1,620, the shop's own revenue in that row",
+        "correct": false,
+        "why": "The Online filter is still applied; it is added, not ignored."
+      },
+      {
+        "text": "Nothing: the row comes out blank",
+        "correct": true,
+        "why": "Right. Shop and Online at once leaves no sales, so the measure is blank in that row."
+      },
+      {
+        "text": "51,494, the grand total of all sales",
+        "correct": false,
+        "why": "No filter was removed; the cell is narrowed, not widened."
+      }
+    ]
+  },
+  {
+    "id": "ex-254jz9hb",
+    "version": 1,
+    "section": "time-intelligence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The year's row for 2026 shows `Revenue YoY %` of −55.2%. Why is that number misleading?",
+    "hint": "How many months of sales does each side of the comparison hold?",
+    "choices": [
+      {
+        "text": "SAMEPERIODLASTYEAR only works on months, not on years",
+        "correct": false,
+        "why": "It works on any set of dates; here it moved all of 2026 to all of 2025, exactly as defined."
+      },
+      {
+        "text": "Six months of 2026 are compared with twelve of 2025",
+        "correct": true,
+        "why": "Right. The calendar runs to 31 December, so the year's dates are all of 2026, and last year is all of 2025. Like for like, it is −10.4%."
+      },
+      {
+        "text": "Revenue fell by more than half, and the number is simply bad news",
+        "correct": false,
+        "why": "Compared month for month, the first half fell 10.4%. The 55.2% compares what happened with what has not."
+      },
+      {
+        "text": "DIVIDE rounds percentages below −50% down",
+        "correct": false,
+        "why": "DIVIDE does not round; the format decides the decimals."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjcqg705",
+    "version": 1,
+    "section": "time-intelligence",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a slicer on `Calendar[Month]` set to 1 to 6, what does `Revenue YoY %` show for 2026? Answer in percent, to one decimal place, with its sign.",
+    "hint": "15,943 against 17,789.",
+    "value": -10.4,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-sp8strgr",
+    "version": 1,
+    "section": "time-intelligence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the month-by-month table for 2026, July to December show −100.0%. What does that mean?",
+    "hint": "Which of the two measures is blank in those months?",
+    "choices": [
+      {
+        "text": "Café Serra lost all its customers in July",
+        "correct": false,
+        "why": "Nothing was lost: the months have not happened in the data."
+      },
+      {
+        "text": "Those months have no sales yet, and last year's do",
+        "correct": true,
+        "why": "Right. Total Revenue is blank there and Revenue LY is not, so the growth is a blank less last year, over last year."
+      },
+      {
+        "text": "The calendar has no rows for the months July to December 2026",
+        "correct": false,
+        "why": "It has every day to 31 December; that is why the months appear at all."
+      },
+      {
+        "text": "DIVIDE returned an error, shown as −100%",
+        "correct": false,
+        "why": "DIVIDE never shows an error; it answers blank when the divisor is blank."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xg43qpq",
+    "version": 1,
+    "section": "time-intelligence",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order how the model works out `Revenue LY` in the March 2026 row.",
+    "hint": "From the cell's dates to a sum of sales.",
+    "items": [
+      "The cell's dates are the days of March 2026",
+      "SAMEPERIODLASTYEAR moves them back to March 2025",
+      "CALCULATE puts those dates in place of the cell's",
+      "The filter flows from Calendar into Sales",
+      "Total Revenue adds up the sales left, 3,060"
+    ],
+    "trap": "The sales of 2026 are never moved: only the calendar's dates are, and the relationship does the rest."
+  },
+  {
+    "id": "ex-p6cy1eqg",
+    "version": 1,
+    "section": "time-intelligence",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why must the rows of a pivot table using `Revenue LY` come from `Calendar` rather than from `Sales[Date]`?",
+    "hint": "What do the period functions move?",
+    "choices": [
+      {
+        "text": "Because Sales[Date] is stored as text in the model",
+        "correct": false,
+        "why": "It is a Date column; lesson 15 section 04 checked the type."
+      },
+      {
+        "text": "The functions move the calendar's dates",
+        "correct": true,
+        "why": "Right. A row label from Sales[Date] gives SAMEPERIODLASTYEAR nothing to move."
+      },
+      {
+        "text": "Because a pivot table cannot use a column of a fact table in Rows",
+        "correct": false,
+        "why": "It can, as Sales[Channel] does. The point is specific to period functions."
+      },
+      {
+        "text": "Because Sales[Date] has more rows than Calendar",
+        "correct": false,
+        "why": "It has fewer: 108 days with sales against 730."
+      }
+    ]
+  },
+  {
+    "id": "ex-r06mr1ca",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `SUMIFS` checks `Revenue LY` in the 2026 cell with a slicer on months 1 to 6?",
+    "hint": "Last year's first half, named outright.",
+    "choices": [
+      {
+        "text": "Sales from 1 January 2026 up to but not including 1 July 2026",
+        "correct": false,
+        "why": "That is Total Revenue for the first half of 2026, the other side of the comparison."
+      },
+      {
+        "text": "Sales from 1 January 2025 up to but not including 1 July 2025",
+        "correct": true,
+        "why": "Right: 17,789. The measure has to arrive at the same rows by moving the dates of 2026."
+      },
+      {
+        "text": "All sales of 2025",
+        "correct": false,
+        "why": "That would check the year's row without the slicer, 35,551."
+      },
+      {
+        "text": "Sales from 1 January 2026 up to but not including 1 April 2026",
+        "correct": false,
+        "why": "That checks Revenue YTD for March 2026."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8g7kwe1",
+    "version": 1,
+    "section": "checking",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `=COUNTIFS(Sales!B2:B109,\">=\"&DATE(2026,1,1))` return on your data?",
+    "hint": "It should equal Sales Count in the 2026 column.",
+    "value": 36,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3hwtxeye",
+    "version": 1,
+    "section": "checking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In another workbook, `Total Revenue` by `Calendar[Year]` adds up to less than its own grand total, and the grand total matches `=SUM` of the column. What is the likeliest cause?",
+    "hint": "The grand total does not need the calendar; the years do.",
+    "choices": [
+      {
+        "text": "DISTINCTCOUNT was used instead of SUM",
+        "correct": false,
+        "why": "Total Revenue is a SUM; a distinct count would not be close to the column's sum at all."
+      },
+      {
+        "text": "A slicer is still set on the pivot table",
+        "correct": false,
+        "why": "A slicer would lower the grand total too, and it matches the column."
+      },
+      {
+        "text": "Some sales have dates that match no calendar row",
+        "correct": true,
+        "why": "Right: a time in the date, or a day outside the calendar. Those sales count in the grand total and land in no year."
+      },
+      {
+        "text": "The calendar was marked as the date table twice",
+        "correct": false,
+        "why": "Marking is a setting, not a copy; doing it again changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-92m0jnz8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question a manager asks to the measure of this lesson that answers it.",
+    "hint": "Each measure was defined in sections 03 to 05.",
+    "pairs": [
+      {
+        "left": "How much have we sold so far this year?",
+        "right": "`Revenue YTD`"
+      },
+      {
+        "left": "What part of our revenue is online?",
+        "right": "`Channel Share`"
+      },
+      {
+        "left": "How many different customers bought?",
+        "right": "`Customers Buying`"
+      },
+      {
+        "left": "What did we get for a bag, on average?",
+        "right": "`Average Price`"
+      }
+    ],
+    "right_distractors": [
+      "`Revenue LY`"
+    ]
+  },
+  {
+    "id": "ex-dbsz9tvs",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong in the model as measures rather than as columns? Choose all that apply.",
+    "hint": "Would it go in Rows, or does it have to be right at every level of a pivot table?",
+    "choices": [
+      {
+        "text": "Margin %",
+        "correct": true,
+        "why": "A ratio must be computed per cell; as a column it sums to nonsense."
+      },
+      {
+        "text": "Customers Buying",
+        "correct": true,
+        "why": "A distinct count is computed from each cell's own context and does not add up across rows."
+      },
+      {
+        "text": "Month name",
+        "correct": false,
+        "why": "That is something to group by, so it is a column of Calendar."
+      },
+      {
+        "text": "Revenue YoY %",
+        "correct": true,
+        "why": "It compares two measures per cell, and only a measure can move the cell's dates."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfs3n50r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "It is July 2026 and the owner of Café Serra asks how this year's revenue compares with last year's. Which answer does the lesson support?",
+    "hint": "Compare the same months.",
+    "choices": [
+      {
+        "text": "Down 55.2%, the year's row of Revenue YoY %",
+        "correct": false,
+        "why": "That compares six months with twelve. It is a number the model produced, and not an answer to the question."
+      },
+      {
+        "text": "Up 21.4%, January's growth",
+        "correct": false,
+        "why": "One month is not the year, and the second quarter fell."
+      },
+      {
+        "text": "It cannot be answered until the year is over in December",
+        "correct": false,
+        "why": "It can, for the months both years have."
+      },
+      {
+        "text": "Down 10.4%, half year against half year",
+        "correct": true,
+        "why": "Right: R$ 15,943 against R$ 17,789, with a slicer on months 1 to 6, and a SUMIFS agrees with the 17,789."
+      }
+    ]
+  }
+]
