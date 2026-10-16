@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""render TPL_DIR LESSON_DIR [CAPTURES_OUT]
+
+Copies every file of TPL_DIR into LESSON_DIR, replacing a line that is only
+  %%FILE path%%   with the file /tmp/lab/q/path (its last newline dropped)
+  %%CAP name%%    with the block `##### name` of CAPTURES_OUT
+A %%CAP%% with no capture output yet is left as it is, so a first render can
+build the project before the captures exist. Exit 1 if anything is left
+unresolved when CAPTURES_OUT was given."""
+import re, sys, pathlib
+tpl, out = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+caps = {}
+if len(sys.argv) > 3:
+    name = None
+    for line in pathlib.Path(sys.argv[3]).read_text().split("\n"):
+        m = re.match(r"^##### (\S+)$", line)
+        if m:
+            name = m.group(1); caps[name] = []
+        elif name:
+            caps[name].append(line)
+    caps = {k: "\n".join(v).rstrip("\n") for k, v in caps.items()}
+src = pathlib.Path("/tmp/lab/q")
+left = []
+for f in sorted(tpl.iterdir()):
+    if f.is_dir(): continue
+    lines = []
+    for line in f.read_text().split("\n"):
+        m = re.match(r"^%%(FILE|CAP) (\S+)%%$", line)
+        if not m:
+            lines.append(line); continue
+        kind, arg = m.groups()
+        if kind == "FILE":
+            lines.append((src / arg).read_text().rstrip("\n"))
+        elif arg in caps:
+            lines.append(caps[arg])
+        else:
+            lines.append(line); left.append(f"{f.name}: {arg}")
+    (out / f.name).write_text("\n".join(lines))
+if left and len(sys.argv) > 3:
+    print("unresolved:", *left, sep="\n  "); sys.exit(1)

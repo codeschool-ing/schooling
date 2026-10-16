@@ -1,0 +1,406 @@
+{
+ "ex-k16szz7y": {
+  "prompt": "O que é um worker do Playwright?",
+  "choices": [
+   {
+    "text": "Uma aba que o executor abre dentro de um navegador compartilhado",
+    "why": "Cada worker tem um navegador próprio; abas de um mesmo navegador dividiriam muito mais do que os workers dividem."
+   },
+   {
+    "text": "Um processo Node separado que roda arquivos inteiros num navegador próprio",
+    "why": "Certo. O executor entrega arquivos inteiros a cada worker, e o worker abre o próprio navegador para eles."
+   },
+   {
+    "text": "Uma thread dentro do executor que divide a memória dele",
+    "why": "Workers são processos, não threads; não dividem memória nenhuma com o executor nem entre si."
+   },
+   {
+    "text": "Uma máquina separada no CI que roda um shard",
+    "why": "Esse é o papel de um shard. Os workers rodam todos numa máquina só."
+   }
+  ]
+ },
+ "ex-gkxe33yg": {
+  "prompt": "Um notebook tem 12 processadores lógicos. O `playwright.config.js` não define `workers` e a linha de comando não tem `--workers`. Quantos workers o `npx playwright test` abre, no máximo?",
+  "hint": "O padrão é uma porcentagem de `os.cpus().length`, arredondada para baixo.",
+  "unit": "workers"
+ },
+ "ex-x6w4p2x5": {
+  "prompt": "Três arquivos de teste, doze testes ao todo, rodam com `--workers 4`. O resumo diz *using 3 workers*. Por que não quatro?",
+  "choices": [
+   {
+    "text": "O Playwright deixa um worker livre para a loja",
+    "why": "A loja é aberta pelo `webServer`, na árvore de processos do próprio executor; nenhum worker é reservado para ela."
+   },
+   {
+    "text": "Quatro é mais do que metade dos quatro processadores, então é cortado",
+    "why": "Metade dos processadores é só o padrão; `--workers 4` passa por cima dele e é obedecido."
+   },
+   {
+    "text": "A unidade distribuída é o arquivo, e havia três arquivos",
+    "why": "Certo. Sem `fullyParallel`, os testes de um arquivo ficam juntos num worker; o `--fully-parallel` usou os quatro."
+   },
+   {
+    "text": "Um worker caiu ao abrir e não foi substituído",
+    "why": "Todos os testes passaram e nada caiu; a conta foi decidida antes de qualquer worker abrir."
+   }
+  ]
+ },
+ "ex-8brrt8e2": {
+  "prompt": "Um arquivo cria um cliente no primeiro teste e confere a página dele no segundo. Alguém põe `fullyParallel: true` na configuração inteira. Qual o resultado provável?",
+  "choices": [
+   {
+    "text": "Nada muda, porque testes de um arquivo sempre dividem um worker",
+    "why": "Esse é o padrão, e o `fullyParallel` é justamente a opção que acaba com ele."
+   },
+   {
+    "text": "O Playwright percebe a dependência e mantém os dois testes em ordem",
+    "why": "O Playwright não enxerga o que um teste deixa para o outro; só a configuração do próprio arquivo pode dizer isso."
+   },
+   {
+    "text": "A execução se recusa a começar até o arquivo ser marcado como serial",
+    "why": "Nada verifica isso; a execução começa e a falha chega depois."
+   },
+   {
+    "text": "Cada teste vira uma unidade solta, e a ordem escrita se perde",
+    "why": "Certo. Cada teste vira uma unidade de trabalho, então a ordem em que o arquivo foi escrito deixa de valer; `mode: 'serial'` mantém esse arquivo junto."
+   }
+  ]
+ },
+ "ex-yn96b80m": {
+  "prompt": "Duas execuções da mesma suíte com quatro workers, com um minuto de diferença, falham em testes diferentes. O que isso diz sobre a causa?",
+  "choices": [
+   {
+    "text": "A causa mudou, então há dois defeitos a achar",
+    "why": "A causa, uma loja compartilhada, foi a mesma nas duas vezes; só mudou quais testes se sobrepuseram."
+   },
+   {
+    "text": "Os testes que falham são instáveis por si e precisam de novas tentativas",
+    "why": "Sozinhos, com um worker, todos passaram; falham pelo que outros testes fizeram."
+   },
+   {
+    "text": "A máquina era lenta demais para quatro workers",
+    "why": "Os erros são contagens erradas, `Received: \"2\"`, e não tempo esgotado numa página lenta."
+   },
+   {
+    "text": "Quais testes perdem depende de quais dividem o mesmo segundo",
+    "why": "Certo. As vítimas seguem o tempo de cada execução; a cesta compartilhada continua lá."
+   }
+  ]
+ },
+ "ex-ha49jvdh": {
+  "prompt": "Todo teste da cesta começa com `request.post('/api/reset')` num `beforeEach`. Por que isso não o protege com quatro workers?",
+  "choices": [
+   {
+    "text": "O reset é assíncrono e ninguém espera por ele",
+    "why": "Ele é esperado; a cesta está mesmo vazia quando o teste continua."
+   },
+   {
+    "text": "Ele esvazia a loja num momento, e o teste segue supondo que ela ficou assim",
+    "why": "Certo. O teste supõe que a loja fica vazia até a asserção, e nada garante isso."
+   },
+   {
+    "text": "Cada worker tem a própria cópia da loja, então o reset chega na errada",
+    "why": "Há uma loja só, aberta uma vez pelo `webServer`; esse é todo o problema."
+   },
+   {
+    "text": "Os resets são pulados quando os testes rodam em paralelo",
+    "why": "Rodam toda vez, e cada um ainda pode esvaziar a cesta de outro teste no meio."
+   }
+  ]
+ },
+ "ex-rqjsyy4s": {
+  "prompt": "Um teste sobre a oferta e um teste que cadastra um cliente novo nunca mexem na cesta. Por que, nesta loja, ainda assim podem quebrar um ao outro, ou um teste da cesta?",
+  "choices": [
+   {
+    "text": "O `reset()` esvazia os três de uma vez",
+    "why": "Certo. Qualquer teste que reinicia apaga os três, e foi assim que o `cache.spec.js:7` leu a oferta antiga da manga depois de publicar uma nova."
+   },
+   {
+    "text": "Os dois rodam na mesma porta, e uma porta atende um teste por vez",
+    "why": "Um servidor numa porta atende muitas requisições ao mesmo tempo; o problema é o estado compartilhado, não a porta."
+   },
+   {
+    "text": "Contextos de navegador dividem cookies entre workers",
+    "why": "A aula 10 mostrou que contextos não dividem cookies; a loja nem define nenhum."
+   },
+   {
+    "text": "Não podem; só testes da cesta colidem",
+    "why": "As execuções com quatro workers também fizeram falhar um teste de oferta, o `cache.spec.js:7`."
+   }
+  ]
+ },
+ "ex-dk3ncvz2": {
+  "prompt": "O `turns.config.js` lista os arquivos que deixam a loja em paz, e não os que mexem nela. O que essa escolha compra quando alguém acrescenta um arquivo de teste novo no mês que vem?",
+  "choices": [
+   {
+    "text": "O arquivo novo roda em paralelo, então a suíte continua rápida",
+    "why": "É o que a outra lista faria, e é assim que um arquivo não classificado que reinicia a cesta deixa execuções vermelhas."
+   },
+   {
+    "text": "O Playwright se recusa a rodar um arquivo que não está em lista nenhuma",
+    "why": "O `testIgnore` manda todo arquivo fora da lista para o segundo projeto; nada é recusado."
+   },
+   {
+    "text": "Ele espera a vez até alguém conferi-lo",
+    "why": "Certo. Uma lista de arquivos seguros falha fechada: esquecer de classificar custa tempo, não um resultado errado."
+   },
+   {
+    "text": "Nada: as duas listas são equivalentes",
+    "why": "Elas concordam nos arquivos de hoje e discordam em todo arquivo escrito depois."
+   }
+  ]
+ },
+ "ex-erkvm9p8": {
+  "prompt": "No segundo `turns.config.js`, a linha que põe o projeto um-de-cada-vez numa fase própria, depois do outro projeto, é `___: ['parallel'],`.",
+  "hint": "É a propriedade que nomeia um projeto que precisa terminar antes.",
+  "blanks": [
+   {
+    "accept": [
+     "dependencies"
+    ]
+   }
+  ]
+ },
+ "ex-d59pnrh4": {
+  "prompt": "Com `workers: 1` no projeto um-de-cada-vez e sem `dependencies`, uma execução com oito workers abriu três arquivos dele de uma vez. O que o dispatcher do Playwright 1.56 conta antes de entregar um arquivo assim?",
+  "choices": [
+   {
+    "text": "Os arquivos desse projeto que já terminaram",
+    "why": "Arquivos terminados não importam para um teto do que roda ao mesmo tempo."
+   },
+   {
+    "text": "Os processos ocupados que já rodam arquivos dele",
+    "why": "Certo. Um worker sendo trocado a partir do `parallel` está ocupado mas ainda conta como `parallel`, então vários podem receber arquivos um-de-cada-vez juntos."
+   },
+   {
+    "text": "Os processadores ociosos naquele momento",
+    "why": "O dispatcher nunca olha os processadores; a quantidade de workers foi decidida no início."
+   },
+   {
+    "text": "Os testes do arquivo, e recusa arquivos com mais de um",
+    "why": "O `workers` de um projeto limita workers, não testes por arquivo."
+   }
+  ]
+ },
+ "ex-mdrjyadz": {
+  "prompt": "Por que acrescentar workers não leva a execução do `turns.config.js` abaixo do tempo da fase um-de-cada-vez?",
+  "choices": [
+   {
+    "text": "Essa fase roda os testes um depois do outro, num worker só",
+    "why": "Certo. O total dela é um piso; workers a mais só aceleram a fase `parallel`."
+   },
+   {
+    "text": "O Playwright ignora `--workers` quando a configuração tem projetos",
+    "why": "O resumo ainda dizia *using 4 workers* e *using 8 workers*; o total é obedecido."
+   },
+   {
+    "text": "A loja só responde uma requisição por vez",
+    "why": "A loja respondeu quatro workers ao mesmo tempo em toda execução vermelha; esse foi o problema."
+   },
+   {
+    "text": "A dependência faz todo teste esperar pelo teste mais lento da suíte",
+    "why": "Ela faz um projeto esperar o outro, uma vez; não amarra cada teste ao mais lento."
+   }
+  ]
+ },
+ "ex-17yjp3bb": {
+  "prompt": "Como o Playwright decide quais testes vão para o `--shard=2/3`?",
+  "choices": [
+   {
+    "text": "Pelas durações da última execução, para cada shard levar o mesmo tempo",
+    "why": "Ele não guarda durações entre execuções; os três shards aqui levaram tempos diferentes."
+   },
+   {
+    "text": "Ao acaso, com uma semente tirada do número do shard",
+    "why": "O corte é determinístico: a mesma suíte lista os mesmos testes para um shard toda vez."
+   },
+   {
+    "text": "Contando testes, distribuindo grupos inteiros em ordem",
+    "why": "Certo. O `filterForShard` divide a contagem de testes pelos shards e nunca parte um grupo, que é um arquivo inteiro, a menos que seja totalmente paralelo."
+   },
+   {
+    "text": "Pelo nome do arquivo, em ordem alfabética, um terço dos arquivos para cada",
+    "why": "Arquivos não são o que se conta; um arquivo só importa como um grupo que nunca é partido."
+   }
+  ]
+ },
+ "ex-ep92j40k": {
+  "prompt": "Um dos três shards de uma execução no CI é sempre o mais lento, e a lista dele mostra um arquivo cujos testes esperam vários segundos cada. O que ajuda sem máquinas novas?",
+  "choices": [
+   {
+    "text": "Dividi-lo, ou marcá-lo como totalmente paralelo",
+    "why": "Certo. Um arquivo é distribuído inteiro, então arrasta o shard dele; grupos menores espalham a espera."
+   },
+   {
+    "text": "Rodar esse shard com `--retries 2`",
+    "why": "Novas tentativas repetem falhas; deixam um shard lento mais lento, nunca mais rápido."
+   },
+   {
+    "text": "Renomear o arquivo para ele cair em outro shard",
+    "why": "Isso muda o arquivo lento para outro shard, que passa a ser o lento."
+   },
+   {
+    "text": "Usar o `merge-reports`, que equilibra os shards ao juntá-los",
+    "why": "Ele só lê os zips prontos num relatório; os shards já rodaram."
+   }
+  ]
+ },
+ "ex-j1w00r4c": {
+  "prompt": "Ponha em ordem uma execução no CI com três shards, das tarefas começando até o relatório único.",
+  "items": [
+   "Três tarefas rodam cada uma `npx playwright test --shard=N/3` com o reporter blob",
+   "Cada tarefa guarda o zip que o reporter blob escreveu",
+   "Uma última tarefa junta os três zips numa pasta",
+   "O `npx playwright merge-reports` transforma a pasta num relatório"
+  ],
+  "trap": "A junção não pode começar antes de o shard mais lento escrever o zip dele."
+ },
+ "ex-6ym9ygyq": {
+  "prompt": "Dividida em três shards com o `turns.config.js`, em que o `one-at-a-time` depende do `parallel`, o relatório juntado contou 121 testes para uma suíte de 61. Por quê?",
+  "choices": [
+   {
+    "text": "O reporter blob gravou cada resultado duas vezes",
+    "why": "Cada zip tinha o que o shard dele rodou; os shards rodaram mesmo 42, 40 e 39 testes."
+   },
+   {
+    "text": "Cada shard repetiu a dependência",
+    "why": "Certo. Depois do filtro de shards, o Playwright acrescenta de volta, inteiro, todo projeto de que um escolhido depende: 30 testes em cada máquina."
+   },
+   {
+    "text": "O `merge-reports` conta as novas tentativas de testes que falharam",
+    "why": "Nada falhou e nada foi repetido; todos os shards ficaram verdes."
+   },
+   {
+    "text": "Três shards de 61 testes sempre somam mais de 61",
+    "why": "Divididos em dois comandos com `--no-deps`, as mesmas três máquinas rodaram exatamente 61."
+   }
+  ]
+ },
+ "ex-310qanvf": {
+  "prompt": "Uma suíte Selenium roda oito testes ao mesmo tempo contra um grid standalone que ofereceu quatro vagas de Chrome. O que acontece com os outros quatro?",
+  "choices": [
+   {
+    "text": "Falham com um erro dizendo que não há vaga livre",
+    "why": "O grid não os recusa; é para isso que existe a fila dele."
+   },
+   {
+    "text": "O nó abre mais quatro vagas, uma por teste",
+    "why": "As vagas são fixadas quando o nó sobe; o `--max-sessions` as muda, não a demanda."
+   },
+   {
+    "text": "Esperam na fila de sessões até uma vaga se liberar",
+    "why": "Certo. A execução então leva mais ou menos o que levaria com quatro ao mesmo tempo."
+   },
+   {
+    "text": "Dividem os quatro navegadores, dois testes por navegador",
+    "why": "Uma sessão é um navegador para um teste; ninguém divide uma."
+   }
+  ]
+ },
+ "ex-a8x6an7f": {
+  "prompt": "Ligue cada opção ao que ela limita.",
+  "pairs": [
+   {
+    "left": "`--workers`",
+    "right": "quantos workers do Playwright rodam ao mesmo tempo"
+   },
+   {
+    "left": "`--test-concurrency`",
+    "right": "quantos arquivos de teste o `node --test` roda ao mesmo tempo"
+   },
+   {
+    "left": "`--max-sessions`",
+    "right": "quantas sessões de navegador um nó do grid aceita ao mesmo tempo"
+   },
+   {
+    "left": "`--shard`",
+    "right": "que fatia de uma suíte Playwright esta máquina roda"
+   }
+  ]
+ },
+ "ex-ctzdc8g2": {
+  "prompt": "Na curva, passar de quatro para oito workers no notebook de quatro processadores deixou a execução mais lenta. O que mais cresceu nesse caminho?",
+  "choices": [
+   {
+    "text": "O número de testes, porque cada worker roda a suíte de novo",
+    "why": "Toda execução teve os mesmos testes; os workers os dividem, não os repetem."
+   },
+   {
+    "text": "A memória ocupada e o tempo de processador gasto no mesmo trabalho",
+    "why": "Certo. Cada worker soma a memória de um navegador, e acima de quatro os processadores são repartidos e alternados."
+   },
+   {
+    "text": "O tempo que cada teste espera a loja responder",
+    "why": "Esperar é o que workers a mais preenchem; o custo que cresceu foi memória e tempo de processador."
+   },
+   {
+    "text": "Nada mensurável: a diferença foi ruído",
+    "why": "A memória mais que quadruplicou de um para oito workers; isso não é ruído."
+   }
+  ]
+ },
+ "ex-fqtgsbtj": {
+  "prompt": "O `measure.sh` soma a memória residente de cada processo. Por que o pico dele exagera o que a máquina perdeu?",
+  "choices": [
+   {
+    "text": "Ele conta a memória de processos que já tinham saído",
+    "why": "Um processo que saiu não está no `ps`; só a árvore viva é somada."
+   },
+   {
+    "text": "Ele mede em kilobytes e arredonda para megabytes",
+    "why": "A aritmética do shell divide e arredonda para baixo; o arredondamento é mínimo de qualquer jeito."
+   },
+   {
+    "text": "Páginas compartilhadas contam uma vez por processo",
+    "why": "Certo. Uma página compartilhada está residente em vários processos e é somada uma vez por processo; o número serve para comparar execuções."
+   },
+   {
+    "text": "Ele também conta a memória que `ps` e `awk` usam ao amostrar",
+    "why": "Esses rodam sob o script, não sob o comando medido, então ficam fora da árvore."
+   }
+  ]
+ },
+ "ex-w3gfxztk": {
+  "prompt": "Uma máquina de CI tem 2 processadores. Um colega põe `workers: 8` nela para acelerar a suíte, depois de ela ter rodado bem com oito workers num notebook de 16 threads. O que esta aula prevê?",
+  "choices": [
+   {
+    "text": "O mesmo ganho que no notebook, já que a suíte é a mesma",
+    "why": "O ganho veio de processadores que a máquina de CI não tem."
+   },
+   {
+    "text": "Nenhuma mudança, porque o Playwright limita os workers ao número de processadores",
+    "why": "Só o padrão é uma fração dos processadores; um número explícito é obedecido."
+   },
+   {
+    "text": "Uma execução mais lenta e com mais memória ocupada, e talvez tempo esgotado",
+    "why": "Certo. Oito navegadores em dois processadores esperam a vez segurando memória; meça naquela máquina e escolha a quantidade em que o tempo para de cair."
+   },
+   {
+    "text": "Uma recusa a começar, porque oito é mais que os processadores",
+    "why": "Nada verifica isso; oito workers abrem e disputam."
+   }
+  ]
+ },
+ "ex-h8055t98": {
+  "prompt": "A loja finalmente ganha uma cesta por visitante, guardada num cookie. O que deve acontecer com o `turns.config.js`?",
+  "choices": [
+   {
+    "text": "Mantê-lo, porque dividir uma loja é sempre arriscado",
+    "why": "O risco era uma cesta para todos; com uma cesta por contexto, os testes da cesta param de colidir."
+   },
+   {
+    "text": "Pôr todos os arquivos em `leavesTheShopAlone` sem olhar",
+    "why": "A oferta e os clientes continuam compartilhados, e um reset ainda os esvazia para todo mundo."
+   },
+   {
+    "text": "Apagar o projeto um-de-cada-vez, como diz o comentário, quando nada compartilhado sobrar",
+    "why": "Certo. O comentário diz o motivo do custo, então o custo vai embora com o motivo; a oferta e o reset ainda precisam ser conferidos antes."
+   },
+   {
+    "text": "Subir o `workers` dele de 1 para 4",
+    "why": "Isso mantém o projeto e a fase dele; a ideia era deixar de precisar deles."
+   }
+  ]
+ }
+}

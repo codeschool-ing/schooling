@@ -1,0 +1,604 @@
+[
+ {
+  "id": "ex-k16szz7y",
+  "version": 1,
+  "section": "workers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is a Playwright worker?",
+  "choices": [
+   {
+    "text": "A tab the runner opens inside one shared browser",
+    "correct": false,
+    "why": "Each worker has a browser of its own; tabs in one browser would share far more than workers do."
+   },
+   {
+    "text": "A separate Node process that runs whole files in a browser of its own",
+    "correct": true,
+    "why": "Right. The runner hands each worker whole files, and the worker launches its own browser for them."
+   },
+   {
+    "text": "A thread inside the runner that shares its memory",
+    "correct": false,
+    "why": "Workers are processes, not threads; they share nothing in memory with the runner or each other."
+   },
+   {
+    "text": "A separate machine in CI that runs one shard",
+    "correct": false,
+    "why": "That is a shard's job. Workers all run on one machine."
+   }
+  ]
+ },
+ {
+  "id": "ex-gkxe33yg",
+  "version": 1,
+  "section": "workers",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A laptop has 12 logical processors. `playwright.config.js` sets no `workers` and the command line has no `--workers`. How many workers does `npx playwright test` start, at most?",
+  "hint": "The default is a percentage of `os.cpus().length`, rounded down.",
+  "value": 6,
+  "tolerance": 0,
+  "unit": "workers"
+ },
+ {
+  "id": "ex-x6w4p2x5",
+  "version": 1,
+  "section": "workers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Three test files, twelve tests between them, are run with `--workers 4`. The summary says *using 3 workers*. Why not four?",
+  "choices": [
+   {
+    "text": "Playwright keeps one worker free for the shop",
+    "correct": false,
+    "why": "The shop is started by `webServer` in the runner's own process tree; no worker is set aside for it."
+   },
+   {
+    "text": "Four is more than half of the four processors, so it is cut",
+    "correct": false,
+    "why": "Half the processors is only the default; `--workers 4` overrides it and is obeyed."
+   },
+   {
+    "text": "The unit handed out is a file, and there were three files",
+    "correct": true,
+    "why": "Right. Without `fullyParallel` a file's tests stay together in one worker; `--fully-parallel` used all four."
+   },
+   {
+    "text": "One worker crashed while starting and was not replaced",
+    "correct": false,
+    "why": "Every test passed and nothing crashed; the count was decided before any worker started."
+   }
+  ]
+ },
+ {
+  "id": "ex-8brrt8e2",
+  "version": 1,
+  "section": "workers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A file creates a customer in its first test and checks the customer's page in its second. Somebody adds `fullyParallel: true` to the whole configuration. What is the likely result?",
+  "choices": [
+   {
+    "text": "Nothing changes, because tests in one file always share a worker",
+    "correct": false,
+    "why": "That is the default, and `fullyParallel` is exactly the setting that ends it."
+   },
+   {
+    "text": "Playwright notices the dependency and keeps the two tests in order",
+    "correct": false,
+    "why": "Playwright cannot see what one test leaves for another; only the file's own configuration can say it."
+   },
+   {
+    "text": "The run refuses to start until the file is marked serial",
+    "correct": false,
+    "why": "Nothing checks this; the run starts and the failure arrives later."
+   },
+   {
+    "text": "Each test becomes its own unit, and the written order is lost",
+    "correct": true,
+    "why": "Right. Each test becomes its own unit of work, so the order the file was written in no longer holds; `mode: 'serial'` keeps that file together."
+   }
+  ]
+ },
+ {
+  "id": "ex-yn96b80m",
+  "version": 1,
+  "section": "what-breaks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Two four-worker runs of the same suite, a minute apart, fail on different tests. What does that say about the cause?",
+  "choices": [
+   {
+    "text": "The cause moved, so there are two defects to find",
+    "correct": false,
+    "why": "The cause, one shared shop, was the same both times; only which tests overlapped changed."
+   },
+   {
+    "text": "The failing tests are flaky on their own and need retries",
+    "correct": false,
+    "why": "Alone, with one worker, every one of them passed; they fail because of what other tests did."
+   },
+   {
+    "text": "The machine was too slow for four workers",
+    "correct": false,
+    "why": "The errors are wrong counts, `Received: \"2\"`, not timeouts on a slow page."
+   },
+   {
+    "text": "Which tests lose depends on which ones share a second",
+    "correct": true,
+    "why": "Right. The victims follow the timing of each run; the shared basket stays put."
+   }
+  ]
+ },
+ {
+  "id": "ex-ha49jvdh",
+  "version": 1,
+  "section": "what-breaks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Every basket test starts with `request.post('/api/reset')` in a `beforeEach`. Why does that not protect it under four workers?",
+  "choices": [
+   {
+    "text": "The reset is asynchronous and is not awaited",
+    "correct": false,
+    "why": "It is awaited; the basket really is empty when the test goes on."
+   },
+   {
+    "text": "It empties the shop at one moment, and the test goes on assuming it",
+    "correct": true,
+    "why": "Right. The test assumes the shop stays empty until its assertion, and nothing makes it so."
+   },
+   {
+    "text": "Each worker has its own copy of the shop, so the reset reaches the wrong one",
+    "correct": false,
+    "why": "There is one shop, started once by `webServer`; that is the whole problem."
+   },
+   {
+    "text": "Resets are skipped when tests run in parallel",
+    "correct": false,
+    "why": "They run every time, and each one can also empty somebody else's basket halfway through."
+   }
+  ]
+ },
+ {
+  "id": "ex-rqjsyy4s",
+  "version": 1,
+  "section": "what-breaks",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test about the offer and a test that signs up a new customer never touch the basket. Why can they still break each other, or a basket test, in this shop?",
+  "choices": [
+   {
+    "text": "`reset()` empties all three at once",
+    "correct": true,
+    "why": "Right. Any test that resets wipes all three, which is how `cache.spec.js:7` read the old mango offer after posting a new one."
+   },
+   {
+    "text": "Both run on the same port, and a port serves one test at a time",
+    "correct": false,
+    "why": "A server on one port answers many requests at once; the shared state is the problem, not the port."
+   },
+   {
+    "text": "Browser contexts share cookies between workers",
+    "correct": false,
+    "why": "Lesson 10 showed contexts share no cookies; the shop sets none anyway."
+   },
+   {
+    "text": "They cannot; only basket tests collide",
+    "correct": false,
+    "why": "The four-worker runs failed an offer test too, `cache.spec.js:7`."
+   }
+  ]
+ },
+ {
+  "id": "ex-dk3ncvz2",
+  "version": 1,
+  "section": "taking-turns",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`turns.config.js` lists the files that leave the shop alone, not the files that touch it. What does that choice buy when somebody adds a new test file next month?",
+  "choices": [
+   {
+    "text": "The new file runs in parallel, so the suite stays fast",
+    "correct": false,
+    "why": "That is what the other list would do, and it is how an unclassified file that resets the basket turns runs red."
+   },
+   {
+    "text": "Playwright refuses to run a file that is on neither list",
+    "correct": false,
+    "why": "`testIgnore` sends every unlisted file to the second project; nothing is refused."
+   },
+   {
+    "text": "It waits its turn until somebody checks it",
+    "correct": true,
+    "why": "Right. A list of safe files fails closed: forgetting to classify costs time, not a wrong result."
+   },
+   {
+    "text": "Nothing: the two lists are equivalent",
+    "correct": false,
+    "why": "They agree on today's files and disagree on every file written later."
+   }
+  ]
+ },
+ {
+  "id": "ex-erkvm9p8",
+  "version": 1,
+  "section": "taking-turns",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the second `turns.config.js`, the line that puts the one-at-a-time project in a phase of its own, after the other project, reads `___: ['parallel'],`.",
+  "hint": "It is the property that names a project which must finish first.",
+  "blanks": [
+   {
+    "accept": [
+     "dependencies"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-d59pnrh4",
+  "version": 1,
+  "section": "taking-turns",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "With `workers: 1` on the one-at-a-time project and no `dependencies`, an eight-worker run started three of its files at once. What does Playwright 1.56's dispatcher count before handing out such a file?",
+  "choices": [
+   {
+    "text": "The files of that project already finished",
+    "correct": false,
+    "why": "Finished files do not matter to a ceiling on what runs at once."
+   },
+   {
+    "text": "Busy processes already running its files",
+    "correct": true,
+    "why": "Right. A worker being swapped over from `parallel` is busy but still counted as `parallel`, so several can be handed one-at-a-time files together."
+   },
+   {
+    "text": "The processors that are idle at that moment",
+    "correct": false,
+    "why": "The dispatcher never looks at processors; the worker count was decided at the start."
+   },
+   {
+    "text": "The tests in the file, and it refuses files with more than one",
+    "correct": false,
+    "why": "A project's `workers` limits workers, not tests per file."
+   }
+  ]
+ },
+ {
+  "id": "ex-mdrjyadz",
+  "version": 1,
+  "section": "taking-turns",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does adding more workers not bring the `turns.config.js` run below the time of its one-at-a-time phase?",
+  "choices": [
+   {
+    "text": "That phase runs its tests one after another in a single worker",
+    "correct": true,
+    "why": "Right. Its total is a floor; extra workers can only speed up the `parallel` phase."
+   },
+   {
+    "text": "Playwright ignores `--workers` when a configuration has projects",
+    "correct": false,
+    "why": "The summary still said *using 4 workers* and *using 8 workers*; the total is obeyed."
+   },
+   {
+    "text": "The shop answers only one request at a time",
+    "correct": false,
+    "why": "The shop answered four workers at once in every red run; that was the trouble."
+   },
+   {
+    "text": "The dependency makes every test wait for the slowest test of the suite",
+    "correct": false,
+    "why": "It makes one project wait for the other, once; it does not tie each test to the slowest one."
+   }
+  ]
+ },
+ {
+  "id": "ex-17yjp3bb",
+  "version": 1,
+  "section": "sharding",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "How does Playwright decide which tests go into `--shard=2/3`?",
+  "choices": [
+   {
+    "text": "By the durations of the last run, so each shard takes the same time",
+    "correct": false,
+    "why": "It keeps no durations between runs; the three shards here took different times."
+   },
+   {
+    "text": "At random, with a seed taken from the shard number",
+    "correct": false,
+    "why": "The cut is deterministic: the same suite lists the same tests for a shard every time."
+   },
+   {
+    "text": "By counting tests, dealing out whole groups in order",
+    "correct": true,
+    "why": "Right. `filterForShard` divides the test count by the shards and never splits a group, which is a whole file unless it is fully parallel."
+   },
+   {
+    "text": "By file name, alphabetically, a third of the files each",
+    "correct": false,
+    "why": "Files are not what is counted; a file matters only as a group that is never split."
+   }
+  ]
+ },
+ {
+  "id": "ex-ep92j40k",
+  "version": 1,
+  "section": "sharding",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "One shard of a three-shard CI run is always the slowest, and its list shows one file whose tests each wait several seconds. What helps without new machines?",
+  "choices": [
+   {
+    "text": "Splitting it, or marking it fully parallel",
+    "correct": true,
+    "why": "Right. A file is dealt out whole, so it pulls its shard along; smaller groups spread the wait."
+   },
+   {
+    "text": "Running that shard with `--retries 2`",
+    "correct": false,
+    "why": "Retries rerun failures; they make a slow shard slower, never faster."
+   },
+   {
+    "text": "Renaming the file so it sorts into another shard",
+    "correct": false,
+    "why": "It moves the slow file to another shard, which then becomes the slow one."
+   },
+   {
+    "text": "Using `merge-reports`, which balances the shards when it merges them",
+    "correct": false,
+    "why": "It only reads finished zip files into one report; the shards have already run."
+   }
+  ]
+ },
+ {
+  "id": "ex-j1w00r4c",
+  "version": 1,
+  "section": "sharding",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put a three-shard CI run in order, from the jobs starting to the single report.",
+  "items": [
+   "Three jobs each run `npx playwright test --shard=N/3` with the blob reporter",
+   "Each job saves the zip its blob reporter wrote",
+   "A last job collects the three zips into one folder",
+   "`npx playwright merge-reports` turns the folder into one report"
+  ],
+  "trap": "The merge cannot start before the slowest shard has written its zip."
+ },
+ {
+  "id": "ex-6ym9ygyq",
+  "version": 1,
+  "section": "sharding",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Sharded three ways with `turns.config.js`, where `one-at-a-time` depends on `parallel`, the merged report counted 121 tests for a suite of 61. Why?",
+  "choices": [
+   {
+    "text": "The blob reporter wrote every result twice",
+    "correct": false,
+    "why": "Each zip held what its shard ran; the shards really ran 42, 40 and 39 tests."
+   },
+   {
+    "text": "Each shard reran the dependency",
+    "correct": true,
+    "why": "Right. After the shard filter, Playwright adds back every project a picked one depends on, whole: 30 tests on each machine."
+   },
+   {
+    "text": "`merge-reports` counts the retries of failed tests",
+    "correct": false,
+    "why": "Nothing failed and nothing was retried; every shard was green."
+   },
+   {
+    "text": "Three shards of 61 tests always add up to more than 61",
+    "correct": false,
+    "why": "Split as two commands with `--no-deps`, the same three machines ran exactly 61."
+   }
+  ]
+ },
+ {
+  "id": "ex-310qanvf",
+  "version": 1,
+  "section": "selenium-and-the-grid-in-parallel",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A Selenium suite runs eight tests at once against a standalone grid that offered four Chrome slots. What happens to the other four?",
+  "choices": [
+   {
+    "text": "They fail with an error saying there is no free slot",
+    "correct": false,
+    "why": "The grid does not refuse them; that is what its queue is for."
+   },
+   {
+    "text": "The node opens four more slots, one per test",
+    "correct": false,
+    "why": "The slots are fixed when the node starts; `--max-sessions` changes them, not demand."
+   },
+   {
+    "text": "They wait in the session queue until a slot is released",
+    "correct": true,
+    "why": "Right. The run then takes about as long as it would with four at once."
+   },
+   {
+    "text": "They share the four browsers, two tests per browser",
+    "correct": false,
+    "why": "A session is one browser for one test; nothing shares one."
+   }
+  ]
+ },
+ {
+  "id": "ex-a8x6an7f",
+  "version": 1,
+  "section": "selenium-and-the-grid-in-parallel",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each setting to what it limits.",
+  "pairs": [
+   {
+    "left": "`--workers`",
+    "right": "how many Playwright workers run at once"
+   },
+   {
+    "left": "`--test-concurrency`",
+    "right": "how many test files `node --test` runs at once"
+   },
+   {
+    "left": "`--max-sessions`",
+    "right": "how many browser sessions a grid node accepts at once"
+   },
+   {
+    "left": "`--shard`",
+    "right": "which slice of a Playwright suite this machine runs"
+   }
+  ]
+ },
+ {
+  "id": "ex-ctzdc8g2",
+  "version": 1,
+  "section": "the-cost",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the curve, going from four workers to eight on the four-processor laptop made the run slower. What grew the most along the way?",
+  "choices": [
+   {
+    "text": "The number of tests, because each worker runs the suite again",
+    "correct": false,
+    "why": "Every run had the same tests; workers share them out, they do not repeat them."
+   },
+   {
+    "text": "The memory held and the processor time spent on the same work",
+    "correct": true,
+    "why": "Right. Each worker adds a browser's memory, and past four the processors are shared out and switched between."
+   },
+   {
+    "text": "The time each test waits for the shop to answer",
+    "correct": false,
+    "why": "Waiting is what extra workers fill; the cost that grew was memory and processor time."
+   },
+   {
+    "text": "Nothing measurable: the difference was noise",
+    "correct": false,
+    "why": "Memory more than quadrupled from one worker to eight; that is not noise."
+   }
+  ]
+ },
+ {
+  "id": "ex-fqtgsbtj",
+  "version": 1,
+  "section": "the-cost",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "`measure.sh` adds up every process's resident memory. Why is its peak an overstatement of what the machine lost?",
+  "choices": [
+   {
+    "text": "It counts the memory of processes that had already exited",
+    "correct": false,
+    "why": "A process that exited is not in `ps`; only the living tree is added."
+   },
+   {
+    "text": "It measures in kilobytes and rounds up to megabytes",
+    "correct": false,
+    "why": "Shell arithmetic divides and rounds down; the rounding is tiny either way."
+   },
+   {
+    "text": "Shared pages are counted once per process",
+    "correct": true,
+    "why": "Right. A shared page is resident in several processes and is added once per process; the figure is for comparing runs."
+   },
+   {
+    "text": "It also counts the memory `ps` and `awk` use while sampling",
+    "correct": false,
+    "why": "Those run under the script, not under the measured command, so they are outside the tree."
+   }
+  ]
+ },
+ {
+  "id": "ex-w3gfxztk",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A CI machine has 2 processors. A teammate sets `workers: 8` there to make the suite faster, after it ran well with eight workers on a 16-thread laptop. What does this lesson predict?",
+  "choices": [
+   {
+    "text": "The same speed-up as on the laptop, since the suite is the same",
+    "correct": false,
+    "why": "The gain came from processors the CI machine does not have."
+   },
+   {
+    "text": "No change, because Playwright caps workers at the processor count",
+    "correct": false,
+    "why": "Only the default is a share of the processors; an explicit number is obeyed."
+   },
+   {
+    "text": "A slower run that holds more memory, and possibly timeouts",
+    "correct": true,
+    "why": "Right. Eight browsers on two processors wait for turns while holding memory; measure on that machine and pick the count where time stops falling."
+   },
+   {
+    "text": "A refusal to start, because eight is more than the processors",
+    "correct": false,
+    "why": "Nothing checks it; eight workers start and compete."
+   }
+  ]
+ },
+ {
+  "id": "ex-h8055t98",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The shop finally gets a basket per visitor, kept by a cookie. What should happen to `turns.config.js`?",
+  "choices": [
+   {
+    "text": "Keep it, because sharing a shop is always risky",
+    "correct": false,
+    "why": "The risk was one basket for everybody; with a basket per context the basket tests no longer collide."
+   },
+   {
+    "text": "Move every file into `leavesTheShopAlone` without looking",
+    "correct": false,
+    "why": "The offer and the customers are still shared, and a reset still empties them for everyone."
+   },
+   {
+    "text": "Delete the one-at-a-time project, as its comment says, once nothing shared is left",
+    "correct": true,
+    "why": "Right. The comment names the reason for the cost, so the cost goes when the reason does; the offer and the reset are still to check first."
+   },
+   {
+    "text": "Raise its `workers` from 1 to 4",
+    "correct": false,
+    "why": "That keeps the project and its phase; the point was to stop needing them."
+   }
+  ]
+ }
+]

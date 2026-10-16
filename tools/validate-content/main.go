@@ -793,6 +793,10 @@ var allowedOutsideTheFont = map[rune]string{
 		"when it gives up (`✗ context deadline exceeded`). IBM Plex Mono has no U+2717 at all (it " +
 		"has U+2713, which the terminal cut carries). It opens the line after the indentation and " +
 		"nothing below is aligned to the column it ends in",
+	'\u2718': "Playwright's list reporter opens the line of a failed test with it, as it opens a " +
+		"passing one with U+2713, which the terminal cut carries; IBM Plex Mono has no U+2718 " +
+		"at all. It opens a line and nothing is aligned to what follows it, and a capture is " +
+		"pasted byte for byte, so the alternative is a transcript that is not the one printed",
 }
 
 // coverage is the set of code points the interface declares a face for.

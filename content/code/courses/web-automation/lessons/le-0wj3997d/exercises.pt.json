@@ -1,0 +1,374 @@
+{
+ "ex-3y6aeaw8": {
+  "prompt": "Por padrão, o que `page.goto()` espera antes de retornar?",
+  "choices": [
+   {
+    "text": "Toda requisição que a página vai fazer, inclusive as que os scripts enviam",
+    "why": "As requisições que um script faz depois que a página fica pronta não entram no que o `goto` espera; essa é justamente a lacuna desta aula."
+   },
+   {
+    "text": "O evento `load` do navegador",
+    "why": "Certo. O documento e os arquivos que ele nomeia chegaram; os dados que um script busca depois talvez não."
+   },
+   {
+    "text": "O primeiro elemento com texto ser desenhado",
+    "why": "O `goto` nem olha o conteúdo; ele espera um evento do navegador."
+   },
+   {
+    "text": "Meio segundo fixo depois que o endereço responde",
+    "why": "Não há atraso fixo no `goto`; ele espera um evento, leve o tempo que levar."
+   }
+  ]
+ },
+ "ex-d2stpx7s": {
+  "prompt": "O `at-load.mjs` segura os produtos por 500 ms, e o `goto` retorna com uma lista de 0 produtos. O que mudou na página?",
+  "choices": [
+   {
+    "text": "O script agora roda antes de o HTML chegar",
+    "why": "A ordem de documento e script é a mesma nas duas execuções; só a resposta dos produtos chega depois."
+   },
+   {
+    "text": "O evento `load` deixa de disparar",
+    "why": "Ele dispara nas duas execuções, e na segunda dispara bem antes de os produtos chegarem."
+   },
+   {
+    "text": "Nada; só uma resposta chegou mais tarde",
+    "why": "Certo. A página é a mesma, e a corrida entre o `load` e os produtos teve outro vencedor."
+   },
+   {
+    "text": "A lista foi apagada pelo roteamento",
+    "why": "O roteamento só atrasa a resposta; a lista estava vazia porque nada a tinha preenchido ainda."
+   }
+  ]
+ },
+ "ex-j5mm71wx": {
+  "prompt": "Uma página que pede dados ao servidor sem sair da página, e sem o navegador esperar essa resposta para dar a página como pronta, os carrega de forma ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "assíncrona",
+     "assincrona"
+    ]
+   }
+  ]
+ },
+ "ex-f6x82sz5": {
+  "prompt": "A rota de busca espera `max(0, 900 - 150 * tamanho)` milissegundos. Quanto ela espera antes de responder `pap`?",
+  "unit": "ms"
+ },
+ "ex-80wfysmr": {
+  "prompt": "Na página de busca, o que `aria-busy=\"true\"` na lista diz a um teste?",
+  "choices": [
+   {
+    "text": "Que a lista está vazia agora",
+    "why": "A lista pode ter uma resposta anterior e ainda estar ocupada; na velocidade de um robô ela mostra Papaya enquanto ocupada."
+   },
+   {
+    "text": "Que ainda falta resposta",
+    "why": "Certo. O script o liga quando uma pergunta sai e o desliga quando nenhuma está pendente."
+   },
+   {
+    "text": "Que o servidor está sobrecarregado",
+    "why": "A página não vê a carga do servidor; só sabe que as suas requisições não tiveram resposta."
+   },
+   {
+    "text": "Que a página mostra o resultado certo",
+    "why": "Não diz nada sobre certo ou errado, só se ainda vêm respostas."
+   }
+  ]
+ },
+ "ex-9kmjvst5": {
+  "prompt": "`papaya` é digitado sem pausa entre as teclas. Ponha estas respostas na ordem em que chegam à página.",
+  "items": [
+   "a resposta a `papaya`",
+   "a resposta a `papa`",
+   "a resposta a `pa`",
+   "a resposta a `p`"
+  ],
+  "trap": "A ordem das perguntas é a oposta: o servidor segura mais uma pergunta curta."
+ },
+ "ex-ssan6521": {
+  "prompt": "Depois que `papaya` é digitado na velocidade de um robô, a lista para em três frutas. Por que essas três?",
+  "choices": [
+   {
+    "text": "São as frutas cujo nome contém `p`, a última resposta a chegar",
+    "why": "Certo. A resposta a `p` é a mais segurada, chega por último e substitui a lista."
+   },
+   {
+    "text": "O servidor ignora toda letra depois da primeira que recebe numa busca",
+    "why": "A resposta a `papaya` tinha só Papaya; o servidor buscou a palavra inteira."
+   },
+   {
+    "text": "A página soma todas as respostas na lista",
+    "why": "O `replaceChildren` substitui a lista a cada vez; nada se acumula."
+   },
+   {
+    "text": "São as primeiras respostas que chegam",
+    "why": "A primeira a chegar é a resposta a `papaya`, com uma fruta só."
+   }
+  ]
+ },
+ "ex-vx7f844v": {
+  "prompt": "Alguém digita `papaya` com 300 ms entre as teclas. Pela regra do servidor, em que a lista termina?",
+  "choices": [
+   {
+    "text": "Três frutas, como sem pausa",
+    "why": "Acima de 150 ms por tecla, cada resposta chega depois da anterior, então a última é a de `papaya`."
+   },
+   {
+    "text": "Duas frutas, da resposta a `pa`",
+    "why": "`pa` sai 300 ms depois de `p` e espera 150 ms menos, então é respondida depois de `p` e antes das outras."
+   },
+   {
+    "text": "Só Papaya, a resposta certa",
+    "why": "Certo. Cada pergunta sai 300 ms depois da anterior e é segurada só 150 ms menos, então as respostas chegam em ordem."
+   },
+   {
+    "text": "Nada, porque as requisições expiram",
+    "why": "Nenhuma requisição espera mais de 750 ms, e nada na página desiste de uma."
+   }
+  ]
+ },
+ "ex-tzpjh054": {
+  "prompt": "Por que o teste que usa `fill` passa numa página que mostra três frutas a quem digita rápido?",
+  "choices": [
+   {
+    "text": "O `fill` espera a rede ficar quieta",
+    "why": "O `fill` não espera a rede; o teste passa porque houve uma requisição só."
+   },
+   {
+    "text": "O `fill` cancela as requisições anteriores",
+    "why": "Não há requisições anteriores para cancelar: o `fill` muda o valor uma vez."
+   },
+   {
+    "text": "Uma mudança, então uma requisição",
+    "why": "Certo. Um evento `input`, uma resposta, e o defeito nunca tem chance."
+   },
+   {
+    "text": "O `fill` digita mais devagar que uma pessoa",
+    "why": "Ele nem digita tecla por tecla; isso é o `pressSequentially`."
+   }
+  ]
+ },
+ "ex-ns372s9e": {
+  "prompt": "O teste que dorme 500 ms passou. O que essa aprovação diz sobre a página?",
+  "choices": [
+   {
+    "text": "Que a busca está correta",
+    "why": "A página passou a mostrar três frutas; o teste olhou antes disso e parou."
+   },
+   {
+    "text": "Só que aos 500 ms a lista tinha uma fruta",
+    "why": "Certo. Um sleep mede um momento, e este caiu antes das respostas atrasadas."
+   },
+   {
+    "text": "Que o servidor respondeu a todas as requisições",
+    "why": "Aos 500 ms as respostas a `pa` e `p` ainda não tinham chegado."
+   },
+   {
+    "text": "Que 500 ms é a duração certa para esta página",
+    "why": "Nenhuma duração é certa: um segundo deu o veredito oposto na mesma página."
+   }
+  ]
+ },
+ "ex-1t9cyxpr": {
+  "prompt": "Quais destes testes da página de busca dão um veredito que depende do tempo e não da página? Marque todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "Digitar tecla por tecla e ler `count()` logo em seguida",
+    "why": "Certo. Lê antes de qualquer resposta, então falha seja o que for que a página mostraria."
+   },
+   {
+    "text": "Digitar tecla por tecla, dormir 500 ms e ler `count()`",
+    "why": "Certo. O veredito depende de onde os 500 ms caem entre as respostas."
+   },
+   {
+    "text": "Digitar tecla por tecla, esperar `aria-busy=\"false\"` e conferir a lista",
+    "why": "Espera a página dizer que terminou, então lê o estado final em qualquer velocidade."
+   },
+   {
+    "text": "Digitar tecla por tecla, dormir um segundo e ler `count()`",
+    "why": "Certo. Falhou nesta máquina, e num servidor mais lento poderia cair antes da última resposta e passar."
+   }
+  ]
+ },
+ "ex-kwezp65p": {
+  "prompt": "Ligue cada maneira de esperar ao que ela espera.",
+  "pairs": [
+   {
+    "left": "`page.waitForTimeout(500)`",
+    "right": "Um tempo, faça a página o que fizer"
+   },
+   {
+    "left": "`expect(list).toHaveCount(1)`",
+    "right": "A lista ter um item, em qualquer momento"
+   },
+   {
+    "left": "`page.waitForResponse(...)`",
+    "right": "O servidor responder uma requisição"
+   },
+   {
+    "left": "`toHaveAttribute('aria-busy', 'false')`",
+    "right": "A página dizer que nenhuma resposta está pendente"
+   }
+  ]
+ },
+ "ex-rffpe0r6": {
+  "prompt": "Qual a diferença entre `expect(await list.count()).toBe(1)` e `await expect(list).toHaveCount(1)`?",
+  "choices": [
+   {
+    "text": "Nenhuma; a segunda é só um jeito mais curto de escrever a primeira",
+    "why": "A primeira conta uma vez; a segunda pergunta de novo e de novo até ser verdade ou o tempo acabar."
+   },
+   {
+    "text": "A primeira repete até ser verdade e a segunda conta uma vez",
+    "why": "É o contrário: `toHaveCount` num localizador é a que repete."
+   },
+   {
+    "text": "A segunda repete até a contagem ser 1 ou o tempo acabar",
+    "why": "Certo. Uma asserção web-first continua perguntando à página, então uma resposta lenta não a reprova."
+   },
+   {
+    "text": "A segunda também espera a rede ficar ociosa",
+    "why": "Ela observa o localizador, não a rede; nesta página passou com respostas ainda a caminho."
+   }
+  ]
+ },
+ "ex-3bjne74t": {
+  "prompt": "Um teste espera `aria-busy=\"false\"` ANTES de digitar, depois digita e confere a lista na hora. Na página de busca, o que acontece?",
+  "choices": [
+   {
+    "text": "Funciona, já que a espera é a condição certa",
+    "why": "A condição só serve se for falsa até a página terminar, e antes de digitar ela já é verdadeira."
+   },
+   {
+    "text": "A espera passa na hora e a conferência lê a lista cedo demais",
+    "why": "Certo. O HTML começa com `aria-busy=\"false\"`, então a espera se cumpre antes de qualquer pergunta."
+   },
+   {
+    "text": "A espera nunca termina, porque o atributo começa em `true`",
+    "why": "Na página de busca ele começa em `false`; é a lista da página inicial que começa em `true`."
+   },
+   {
+    "text": "O Playwright não deixa um teste esperar nada antes de uma ação",
+    "why": "Nada impede; por isso escolher a condição é trabalho de quem escreve."
+   }
+  ]
+ },
+ "ex-x55hzjvb": {
+  "prompt": "Um teste está marcado com `test.fail()` e o defeito que ele descreve é corrigido. O que o Playwright relata na execução seguinte?",
+  "choices": [
+   {
+    "text": "Uma aprovação, igual a toda execução antes da correção",
+    "why": "Relatava aprovação enquanto o teste falhava; agora o teste passa, o contrário do declarado."
+   },
+   {
+    "text": "Uma falha: deveria falhar, mas passou",
+    "why": "Certo. A anotação agora está errada, e apagá-la é a correção."
+   },
+   {
+    "text": "Um teste pulado",
+    "why": "Isso é o `test.skip()`, que nem roda o teste."
+   },
+   {
+    "text": "Nada, já que testes com anotação não são executados",
+    "why": "O `test.fail()` roda o teste toda vez, e por isso é o preferido aqui."
+   }
+  ]
+ },
+ "ex-zc3rtbbv": {
+  "prompt": "Por que a falha do teste de busca é um defeito da loja e não um teste instável?",
+  "choices": [
+   {
+    "text": "Porque falha em toda execução, do mesmo jeito, por um motivo na página",
+    "why": "Certo. Instável quer dizer às vezes, por um motivo fora do que se testa; isto é sempre, e a página está errada."
+   },
+   {
+    "text": "Porque usa `pressSequentially`",
+    "why": "O método é como o teste chega ao defeito, não o que faz dele um defeito."
+   },
+   {
+    "text": "Porque uma pessoa digitando devagar não o vê",
+    "why": "Isso explica por que passou despercebido à mão, não por que a culpa é da página."
+   },
+   {
+    "text": "Porque leva mais de cinco segundos",
+    "why": "O tempo vem da asserção repetindo antes de desistir; não é o motivo."
+   }
+  ]
+ },
+ "ex-11f5vwan": {
+  "prompt": "A página de busca deixa de carregar. O que o teste marcado com `test.fail()` relata?",
+  "choices": [
+   {
+    "text": "Uma falha, porque a página está quebrada",
+    "why": "Ele falha, como declarado, então conta como aprovação: a anotação aceita qualquer falha."
+   },
+   {
+    "text": "Uma aprovação: falhou, como declarado",
+    "why": "Certo. Essa é a fraqueza da anotação: ela não distingue o defeito conhecido de um novo."
+   },
+   {
+    "text": "Um teste pulado",
+    "why": "Nada o pula; ele roda e falha no primeiro passo."
+   },
+   {
+    "text": "Um erro dizendo que a anotação está errada",
+    "why": "O Playwright só reclama da anotação quando o teste passa."
+   }
+  ]
+ },
+ "ex-ga91c0ze": {
+  "prompt": "Uma página de filtros recarrega uma tabela a cada caixa marcada e põe `aria-busy` na tabela enquanto espera. Um teste marca três caixas depressa. O que ele deve esperar antes de conferir as linhas?",
+  "choices": [
+   {
+    "text": "A resposta à terceira requisição",
+    "why": "As duas primeiras respostas ainda podem chegar depois e substituir a tabela, como `p` fez."
+   },
+   {
+    "text": "Dois segundos, por segurança",
+    "why": "Um palpite sobre a velocidade do servidor; falha no dia em que ele for mais lento que o palpite."
+   },
+   {
+    "text": "O `aria-busy` da tabela voltar a `false`",
+    "why": "Certo. Ele só fica falso quando nenhuma resposta está pendente, então as linhas são as finais."
+   },
+   {
+    "text": "A tabela ter ao menos uma linha",
+    "why": "Uma linha de uma resposta antiga já satisfaz isso, e a tabela ainda pode mudar."
+   }
+  ]
+ },
+ "ex-0tk7jp9r": {
+  "prompt": "O método do Playwright que digita uma tecla de cada vez, para a página ver um evento `input` por tecla, é ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "pressSequentially",
+     "pressSequentially()"
+    ]
+   }
+  ]
+ },
+ "ex-2n4q0sxm": {
+  "prompt": "Um desenvolvedor responde ao seu relato com \"comigo funciona\". Que evidência responde melhor a isso?",
+  "choices": [
+   {
+    "text": "Uma captura da lista com três frutas",
+    "why": "Mostra o resultado, mas não como chegar nele; o desenvolvedor vai digitar devagar e ver Papaya."
+   },
+   {
+    "text": "A saída do `race.mjs` e o teste que falha",
+    "why": "Certo. Os dois o reproduzem na velocidade de um robô toda vez, e o registro mostra as respostas chegando ao contrário."
+   },
+   {
+    "text": "Um pedido para digitar mais rápido",
+    "why": "Aponta na direção certa e não prova nada; uma pessoa não digita na velocidade de um robô quando quer."
+   },
+   {
+    "text": "Uma segunda execução do teste com `fill`",
+    "why": "Esse teste passa: uma requisição, nenhuma corrida, nada a mostrar."
+   }
+  ]
+ }
+}

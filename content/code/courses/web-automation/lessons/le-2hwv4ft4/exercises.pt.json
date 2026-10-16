@@ -1,0 +1,372 @@
+{
+ "ex-ypkwdqv3": {
+  "prompt": "Onde roda o código de um teste do Cypress?",
+  "choices": [
+   {
+    "text": "Num processo Node que manda cada passo ao navegador por HTTP",
+    "why": "Esse é o arranjo do Selenium na aula 8: o teste do lado de fora, um driver levando cada comando."
+   },
+   {
+    "text": "Como script numa página dentro do navegador",
+    "why": "Certo. O executor é uma página do próprio Cypress, o spec roda nela, e a aplicação fica num frame ao lado."
+   },
+   {
+    "text": "No servidor do Cypress, que lê a página pelo proxy",
+    "why": "O servidor fica no caminho da rede, mas os comandos do teste rodam no navegador, não ao lado dele."
+   },
+   {
+    "text": "Numa segunda aba que observa a aba da aplicação",
+    "why": "Há uma aba só: o executor e a aplicação são frames da mesma janela."
+   }
+  ]
+ },
+ "ex-86m4h54d": {
+  "prompt": "Um teste precisa trocar uma das funções da loja por um stub enquanto a página roda. Por que isso é direto no Cypress?",
+  "choices": [
+   {
+    "text": "O proxy reescreve a função dentro de `app.js` quando o arquivo é servido",
+    "why": "O proxy vê requisições, mas um stub troca uma função viva na página; isso pede o `window` da página, que o spec já compartilha."
+   },
+   {
+    "text": "Copia a função por um socket e devolve uma nova",
+    "why": "Esse é o modelo de fora, e uma função não sobrevive a ser copiada como mensagem."
+   },
+   {
+    "text": "O spec divide o navegador com a página, então o `window` dela está ao alcance",
+    "why": "Certo. `cy.window()` entrega o objeto da própria página, e `cy.stub()` troca uma função nele."
+   },
+   {
+    "text": "O Electron permite e os outros navegadores recusam",
+    "why": "Funciona igual no Chrome e no Firefox; o que torna isso possível é onde o teste roda, não qual navegador."
+   }
+  ]
+ },
+ "ex-7cjheznz": {
+  "prompt": "Ligue cada peça à sua função.",
+  "pairs": [
+   {
+    "left": "o executor",
+    "right": "Carrega o spec como script na sua página"
+   },
+   {
+    "left": "o servidor do Cypress",
+    "right": "Fica entre o navegador e a rede"
+   },
+   {
+    "left": "o frame da aplicação",
+    "right": "Contém a loja sob teste"
+   },
+   {
+    "left": "chromedriver",
+    "right": "Leva um comando do Selenium ao Chrome"
+   }
+  ]
+ },
+ "ex-5rtt6b09": {
+  "prompt": "O `npm install` terminou sem erro, e `npx cypress --version` imprime `Cypress binary version: not installed`. O que aconteceu?",
+  "choices": [
+   {
+    "text": "O npm falhou em silêncio e precisa rodar de novo com `--force`",
+    "why": "O npm fez a metade dele; o binário é um download separado que vem depois, e é ele que falta."
+   },
+   {
+    "text": "O pacote está instalado e o binário não",
+    "why": "Certo. A primeira linha dá a versão do pacote; a segunda diz que o download nunca chegou."
+   },
+   {
+    "text": "O `package.json` fixa uma versão que não existe",
+    "why": "Aí o próprio npm teria falhado; ele imprimiu a versão do pacote, 16.1.1."
+   },
+   {
+    "text": "É preciso instalar um navegador antes do Cypress",
+    "why": "O binário traz o próprio navegador, o Electron; nada precisa vir antes."
+   }
+  ]
+ },
+ "ex-0fe592sf": {
+  "prompt": "Você atualiza o pacote `cypress` para uma versão mais nova. Agora `npx cypress verify` diz que nenhuma versão está instalada, embora você tenha baixado um binário no mês passado. Por quê?",
+  "choices": [
+   {
+    "text": "Atualizar um pacote esvazia os caches da pasta pessoal",
+    "why": "O binário antigo continua no cache; só está na pasta da versão antiga."
+   },
+   {
+    "text": "O binário ficava em `node_modules`, que o npm substituiu",
+    "why": "Ele fica fora do projeto, numa pasta de cache no seu diretório pessoal."
+   },
+   {
+    "text": "O cache guarda cada lançamento numa pasta, e o novo procura na dele",
+    "why": "Certo. O caminho na mensagem termina no número da versão; versão nova pede download novo."
+   },
+   {
+    "text": "O `verify` precisa de rede a cada vez que roda",
+    "why": "Ele inicia o binário local; a rede só é necessária para baixar um."
+   }
+  ]
+ },
+ "ex-gqnj2v1w": {
+  "prompt": "Para instalar o pacote sem o download, como faria um servidor de build que só roda Playwright, defina `CYPRESS_INSTALL_BINARY` como ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "0"
+    ]
+   }
+  ]
+ },
+ "ex-5yp69sjr": {
+  "prompt": "Vindo do Playwright, um aluno roda `npx cypress run` sem iniciar a loja antes, e todo teste falha ao carregar a página. Que diferença ele deixou passar?",
+  "choices": [
+   {
+    "text": "O `baseUrl` precisa nomear `127.0.0.1` em vez de `localhost`",
+    "why": "Qualquer um dos nomes chega à loja quando ela está rodando; aqui nada está rodando."
+   },
+   {
+    "text": "O Cypress nunca inicia a aplicação; ela deve estar rodando",
+    "why": "Certo. O `webServer` do Playwright inicia a loja; o Cypress não tem esse passo, então é preciso `npm start` em outro terminal."
+   },
+   {
+    "text": "`supportFile: false` desliga a parte do Cypress que inicia servidores",
+    "why": "O arquivo de suporte guarda comandos compartilhados; não tem nada a ver com iniciar a aplicação."
+   },
+   {
+    "text": "Os specs precisam ficar em `tests/`, ao lado dos do Playwright",
+    "why": "O `specPattern` aponta o Cypress para `cypress/e2e/`, e os specs foram achados; quem falhou foi a página."
+   }
+  ]
+ },
+ "ex-6kpj7e7n": {
+  "prompt": "Um teste diz `const count = cy.get('[data-testid=basket-count]');` e depois `count.text()`. O que acontece?",
+  "choices": [
+   {
+    "text": "`count` guarda o elemento depois que a página carrega",
+    "why": "Nada carregou ainda: a chamada só pôs um comando na fila e devolveu a corrente na hora."
+   },
+   {
+    "text": "Um `TypeError`, antes de qualquer comando rodar",
+    "why": "Certo. `count` é uma corrente, que não tem `text()`, e a função de teste ainda está escrevendo a fila."
+   },
+   {
+    "text": "Funciona, mas só depois de esperar até quatro segundos pelo elemento",
+    "why": "Os quatro segundos são dos comandos na fila; esta linha roda fora dela, na hora."
+   },
+   {
+    "text": "Funciona se a linha começar com `await`",
+    "why": "Comandos não são promessas, pela própria documentação do Cypress; o `await` não espera nada de útil."
+   }
+  ]
+ },
+ "ex-x9w8yynb": {
+  "prompt": "Ponha em ordem o que acontece no primeiro teste de `shop.cy.js`, depois do `beforeEach`.",
+  "items": [
+   "A função de teste roda e enfileira os comandos",
+   "O Cypress acha o título com `cy.contains`",
+   "`cy.get` não acha itens, e é tentado de novo",
+   "Os produtos chegam e os oito itens são achados"
+  ],
+  "trap": "Nada da fila roda enquanto a função de teste ainda está rodando: enfileirar vem primeiro, sempre."
+ },
+ "ex-q5gyxbhg": {
+  "prompt": "Pelas definições de tipos, por quantos milissegundos um `should` continua tentando antes de falhar, se ninguém mudar o `defaultCommandTimeout`?",
+  "unit": "ms"
+ },
+ "ex-7yez313g": {
+  "prompt": "Qual destes é repetido junto com o `should` que vem depois dele?",
+  "choices": [
+   {
+    "text": "`.click()`",
+    "why": "Uma ação espera o elemento poder ser clicado e clica uma vez; repeti-la poria uma segunda banana."
+   },
+   {
+    "text": "`cy.get('#products li')`",
+    "why": "Certo. `cy.get` é uma consulta, e consultas rodam de novo com a asserção até ela passar."
+   },
+   {
+    "text": "`cy.visit('/')`",
+    "why": "Carrega a página uma vez e espera o carregamento; não é uma consulta."
+   },
+   {
+    "text": "`cy.request('POST', '/api/reset')`",
+    "why": "Mandar o reinício duas vezes seria uma segunda requisição com efeito; ele é mandado uma vez."
+   }
+  ]
+ },
+ "ex-c9d0j0g4": {
+  "prompt": "Num servidor de teste lento, a requisição por trás do Add to basket leva três segundos para responder. O teste clica e depois verifica a contagem com `should('have.text', '1')`. O que acontece?",
+  "choices": [
+   {
+    "text": "Falha, porque o clique é repetido e põe duas",
+    "why": "Ações não são repetidas; só a consulta antes da asserção."
+   },
+   {
+    "text": "Falha, porque o `should` verifica uma vez, logo depois do clique",
+    "why": "O `should` repete até passar ou acabar o tempo; é para isso que serve a fila."
+   },
+   {
+    "text": "Passa: a verificação continua tentando, e três segundos cabem em quatro",
+    "why": "Certo. A contagem mostra 0 por três segundos, depois 1, bem antes de acabarem os quatro segundos padrão."
+   },
+   {
+    "text": "Só passa com um `cy.wait(3000)` antes da verificação",
+    "why": "A repetição já cobre isso, e uma espera fixa seria o hábito que a seção 05 substitui."
+   }
+  ]
+ },
+ "ex-hp3sm19h": {
+  "prompt": "Um teste escreve `cy.visit('/')`, depois `cy.intercept('GET', '/api/products').as('products')`, depois `cy.wait('@products')`. O que dá errado?",
+  "choices": [
+   {
+    "text": "Nada: o Cypress move toda rota para o início do teste",
+    "why": "A fila mantém a ordem escrita; a rota só existe a partir do próprio passo."
+   },
+   {
+    "text": "Os produtos foram pedidos antes de a rota existir",
+    "why": "Certo. A página pede assim que o script roda, durante a visita; declare a rota antes."
+   },
+   {
+    "text": "Um alias precisa ser declarado antes, em `cypress.config.js`",
+    "why": "O `.as()` dá nome à rota no próprio teste; a configuração não sabe nada dele."
+   },
+   {
+    "text": "`cy.wait` com alias serve para requisições POST",
+    "why": "Espera qualquer método que a rota combine; o primeiro teste de `network.cy.js` espera um GET."
+   }
+  ]
+ },
+ "ex-z9wxjp9n": {
+  "prompt": "Todo teste de uma suíte simula `/api/products`. Depois a loja renomeia `price` para `cents` nessa resposta. O que os testes relatam?",
+  "choices": [
+   {
+    "text": "Falham, porque o Cypress compara cada stub com a resposta real",
+    "why": "Um stub substitui a resposta; o servidor real nunca é consultado, então não há o que comparar."
+   },
+   {
+    "text": "Todos continuam passando",
+    "why": "Certo. Testam a página contra uma cópia da resposta de ontem, e por isso alguns testes não devem simular."
+   },
+   {
+    "text": "Falham na próxima execução, quando o stub é atualizado",
+    "why": "O corpo está escrito no arquivo de teste e só muda quando alguém o edita."
+   },
+   {
+    "text": "O Cypress imprime um aviso de que o stub está velho",
+    "why": "Nada no Cypress sabe o que o servidor real devolve hoje."
+   }
+  ]
+ },
+ "ex-0qfd0vfg": {
+  "prompt": "Você precisa verificar que a loja mostra a lista como ocupada enquanto os produtos carregam, em toda execução. Num notebook esse estado dura alguns milissegundos. O que funciona?",
+  "choices": [
+   {
+    "text": "Rodar o teste muitas e muitas vezes e ficar com a execução que por acaso pegou o momento",
+    "why": "Um teste que passa por sorte é o teste instável da aula 14; vai perder o momento em outros dias."
+   },
+   {
+    "text": "`cy.wait(100)` depois da visita, e então verificar",
+    "why": "A essa altura a lista normalmente já carregou; uma espera fixa chuta um momento que não enxerga."
+   },
+   {
+    "text": "Segurar a resposta com `delay` no `cy.intercept` e verificar o `aria-busy`",
+    "why": "Certo. O estado dura o que o stub mandar, então a verificação o encontra em toda execução."
+   },
+   {
+    "text": "Verificar o `aria-busy` antes do `cy.visit`",
+    "why": "Antes da visita não há página nenhuma no frame, ocupada ou não."
+   }
+  ]
+ },
+ "ex-r7460y7c": {
+  "prompt": "Na captura de `origins.mjs`, o script da própria página foi barrado no frame de `127.0.0.1` e o Playwright leu o título dele. Por que a diferença?",
+  "choices": [
+   {
+    "text": "O Playwright desliga a política de mesma origem em toda página que abre",
+    "why": "A política estava ligada: o script dentro do mesmo navegador foi barrado. O Playwright apenas não perguntava como script na página."
+   },
+   {
+    "text": "Ele pergunta pelo protocolo de depuração do navegador, de fora da página",
+    "why": "Certo. A regra vale para scripts numa página, e um driver fora do navegador não é um."
+   },
+   {
+    "text": "O frame não tinha terminado de carregar quando o script perguntou",
+    "why": "O script esperou o `load` de cada frame, e o frame da mesma origem respondeu na hora."
+   },
+   {
+    "text": "`127.0.0.1` é outro servidor, diferente de `localhost`",
+    "why": "Mesmo servidor, mesma loja; o navegador compara o texto da origem, e os textos diferem."
+   }
+  ]
+ },
+ "ex-8v82882r": {
+  "prompt": "O login de uma loja acontece num provedor de identidade em outro domínio, e o teste precisa voltar logado. Do que o teste do Cypress precisa?",
+  "choices": [
+   {
+    "text": "Nada a mais: o proxy dele transforma todo domínio numa origem só",
+    "why": "O proxy dá ao executor a origem da aplicação; um segundo domínio continua sendo uma segunda origem."
+   },
+   {
+    "text": "Os passos do login dentro de `cy.origin`, valores passados por `args`",
+    "why": "Certo. A função roda na outra origem e, como é enviada para lá como texto, não alcança variável nenhuma em volta."
+   },
+   {
+    "text": "Uma segunda aba aberta para a página do provedor, e fechada depois do login",
+    "why": "Um teste do Cypress conduz uma aba; não há segunda para abrir."
+   },
+   {
+    "text": "Não dá: um teste do Cypress fica num domínio a vida toda",
+    "why": "Essa crença já fez sentido; o `cy.origin` existe exatamente para este caso."
+   }
+  ]
+ },
+ "ex-3rhc6e8e": {
+  "prompt": "Pela documentação, qual destes o `cypress run --browser` não conduz?",
+  "choices": [
+   {
+    "text": "Firefox",
+    "why": "O Firefox está na lista, ao lado da família do Chrome."
+   },
+   {
+    "text": "Edge",
+    "why": "O Edge faz parte da família do Chrome que a documentação lista."
+   },
+   {
+    "text": "Safari",
+    "why": "Certo. Há um experimento com WebKit atrás de uma configuração, e WebKit não é o Safari."
+   },
+   {
+    "text": "Electron",
+    "why": "O Electron é o padrão; vem dentro do binário."
+   }
+  ]
+ },
+ "ex-2wvsthg2": {
+  "prompt": "Um checkout abre o provedor de pagamento numa aba nova, e os clientes da loja usam sobretudo Safari em iPhones. Em quais limites do Cypress isso esbarra? Marque todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "Um teste conduz uma aba",
+    "why": "Certo. A aba do provedor fica fora de alcance; o teste só pode verificar para onde o link aponta."
+   },
+   {
+    "text": "O Safari não está entre os navegadores que ele conduz",
+    "why": "Certo. O motor que esses clientes usam é o que o Cypress só oferece como experimento, e o Safari, de jeito nenhum."
+   },
+   {
+    "text": "Ele não consegue responder a requisição de pagamento com um stub",
+    "why": "Simular uma requisição é o que o `cy.intercept` faz; o problema não está aí."
+   },
+   {
+    "text": "Ele não roda sem janela",
+    "why": "O `cypress run` é headless por padrão, no Electron."
+   }
+  ]
+ },
+ "ex-m8rz8dgr": {
+  "prompt": "Ponha em ordem uma primeira sessão do Cypress no seu computador.",
+  "items": [
+   "`npm install`, que traz o pacote e depois o binário",
+   "`npx cypress verify`, para provar que o binário inicia",
+   "`npm start` num terminal",
+   "`npx cypress run` em outro"
+  ],
+  "trap": "O Cypress não inicia a loja, então ela tem de estar rodando antes da execução, e nada roda antes da instalação."
+ }
+}

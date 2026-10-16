@@ -1,0 +1,556 @@
+[
+ {
+  "id": "ex-ypkwdqv3",
+  "version": 1,
+  "section": "inside-the-browser",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Where does the code of a Cypress test run?",
+  "choices": [
+   {
+    "text": "In a Node process that sends each step to the browser over HTTP",
+    "correct": false,
+    "why": "That is Selenium's arrangement in lesson 8: the test outside, a driver carrying each command in."
+   },
+   {
+    "text": "As a script in a page inside the browser",
+    "correct": true,
+    "why": "Right. The runner is a page of Cypress's own, the spec runs in it, and the application sits in a frame beside it."
+   },
+   {
+    "text": "In the Cypress server, which reads the page through its proxy",
+    "correct": false,
+    "why": "The server stands in the network path, but the test's commands run in the browser, not beside it."
+   },
+   {
+    "text": "In a second tab that watches the application's tab",
+    "correct": false,
+    "why": "There is one tab: the runner and the application are frames of the same window."
+   }
+  ]
+ },
+ {
+  "id": "ex-86m4h54d",
+  "version": 1,
+  "section": "inside-the-browser",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test needs to replace one of the shop's functions with a stub while the page runs. Why is that direct in Cypress?",
+  "choices": [
+   {
+    "text": "Its proxy rewrites the function inside `app.js` as the file is served",
+    "correct": false,
+    "why": "The proxy sees requests, but a stub replaces a live function in the page; that needs the page's `window`, which the spec already shares."
+   },
+   {
+    "text": "It copies the function across a socket and sends a new one back",
+    "correct": false,
+    "why": "That is the outside model, and a function does not survive being copied as a message."
+   },
+   {
+    "text": "The spec shares the browser with the page, so its `window` is in reach",
+    "correct": true,
+    "why": "Right. `cy.window()` hands over the page's own object, and `cy.stub()` replaces a function on it."
+   },
+   {
+    "text": "Electron allows it and other browsers refuse",
+    "correct": false,
+    "why": "It works the same in Chrome and Firefox; what makes it possible is where the test runs, not which browser."
+   }
+  ]
+ },
+ {
+  "id": "ex-7cjheznz",
+  "version": 1,
+  "section": "inside-the-browser",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each piece to its job.",
+  "pairs": [
+   {
+    "left": "the runner",
+    "right": "Loads the spec as a script on its page"
+   },
+   {
+    "left": "the Cypress server",
+    "right": "Stands between the browser and the network"
+   },
+   {
+    "left": "the application's frame",
+    "right": "Holds the shop under test"
+   },
+   {
+    "left": "chromedriver",
+    "right": "Carries a Selenium command into Chrome"
+   }
+  ]
+ },
+ {
+  "id": "ex-5rtt6b09",
+  "version": 1,
+  "section": "installing",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`npm install` finished with no error, and `npx cypress --version` prints `Cypress binary version: not installed`. What happened?",
+  "choices": [
+   {
+    "text": "npm failed in silence and has to be run again with `--force`",
+    "correct": false,
+    "why": "npm did its half; the binary is a separate download that came after it, and that is what is missing."
+   },
+   {
+    "text": "The package is installed and its binary is not",
+    "correct": true,
+    "why": "Right. The first line names the package's version; the second says the download never arrived."
+   },
+   {
+    "text": "`package.json` pins a version that does not exist",
+    "correct": false,
+    "why": "Then npm itself would have failed; it printed the package version, 16.1.1."
+   },
+   {
+    "text": "A browser has to be installed before Cypress",
+    "correct": false,
+    "why": "The binary brings its own browser, Electron; nothing has to come first."
+   }
+  ]
+ },
+ {
+  "id": "ex-0fe592sf",
+  "version": 1,
+  "section": "installing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "You upgrade the `cypress` package to a newer version. `npx cypress verify` now says no version is installed, though you downloaded a binary last month. Why?",
+  "choices": [
+   {
+    "text": "Upgrading a package empties the caches in the home folder",
+    "correct": false,
+    "why": "The old binary is still in the cache; it is simply in the old version's folder."
+   },
+   {
+    "text": "The binary lived in `node_modules`, which npm replaced",
+    "correct": false,
+    "why": "It lives outside the project, in a cache folder in your home directory."
+   },
+   {
+    "text": "The cache keeps one folder per release, and the new release looks in its own",
+    "correct": true,
+    "why": "Right. The path in the message ends in the version number; a new version means a new download."
+   },
+   {
+    "text": "`verify` needs the network each time it runs",
+    "correct": false,
+    "why": "It starts the local binary; the network is only needed to download one."
+   }
+  ]
+ },
+ {
+  "id": "ex-gqnj2v1w",
+  "version": 1,
+  "section": "installing",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To install the package and skip its download, as a build server running only Playwright would, set `CYPRESS_INSTALL_BINARY` to ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "0"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-5yp69sjr",
+  "version": 1,
+  "section": "installing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Coming from Playwright, a student runs `npx cypress run` without starting the shop first, and every test fails to load the page. What is the difference they missed?",
+  "choices": [
+   {
+    "text": "`baseUrl` has to name `127.0.0.1` instead of `localhost`",
+    "correct": false,
+    "why": "Either name reaches the shop when it is running; here nothing is running."
+   },
+   {
+    "text": "Cypress never starts the application; it must be running",
+    "correct": true,
+    "why": "Right. Playwright's `webServer` starts the shop; Cypress has no such step, so it takes `npm start` in another terminal."
+   },
+   {
+    "text": "`supportFile: false` turns off the part of Cypress that starts servers",
+    "correct": false,
+    "why": "The support file holds shared commands; it has nothing to do with starting the application."
+   },
+   {
+    "text": "The specs must live in `tests/`, beside Playwright's",
+    "correct": false,
+    "why": "`specPattern` points Cypress at `cypress/e2e/`, and the specs were found; it was the page that failed."
+   }
+  ]
+ },
+ {
+  "id": "ex-6kpj7e7n",
+  "version": 1,
+  "section": "a-first-spec",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test says `const count = cy.get('[data-testid=basket-count]');` and then `count.text()`. What happens?",
+  "choices": [
+   {
+    "text": "`count` holds the element once the page has loaded",
+    "correct": false,
+    "why": "Nothing has loaded yet: the call only queued a command, and returned the chain at once."
+   },
+   {
+    "text": "A `TypeError`, before any command has run",
+    "correct": true,
+    "why": "Right. `count` is a chain, which has no `text()`, and the test function is still writing the queue."
+   },
+   {
+    "text": "It works, but only after waiting up to four seconds for the element",
+    "correct": false,
+    "why": "The four seconds belong to commands in the queue; this line runs outside it, at once."
+   },
+   {
+    "text": "It works if the line starts with `await`",
+    "correct": false,
+    "why": "Commands are not promises, by Cypress's own documentation; `await` waits for nothing useful."
+   }
+  ]
+ },
+ {
+  "id": "ex-x9w8yynb",
+  "version": 1,
+  "section": "a-first-spec",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what happens in the first test of `shop.cy.js` in order, after `beforeEach`.",
+  "items": [
+   "The test function runs and queues its commands",
+   "Cypress finds the heading with `cy.contains`",
+   "`cy.get` finds no items, and is tried again",
+   "The products arrive and the eight items are found"
+  ],
+  "trap": "Nothing in the queue runs while the test function is still running: queuing comes first, every time."
+ },
+ {
+  "id": "ex-q5gyxbhg",
+  "version": 1,
+  "section": "a-first-spec",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "By the type definitions, how many milliseconds does a `should` keep retrying before it fails, if nobody changes `defaultCommandTimeout`?",
+  "value": 4000,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-7yez313g",
+  "version": 1,
+  "section": "a-first-spec",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these is retried together with the `should` that follows it?",
+  "choices": [
+   {
+    "text": "`.click()`",
+    "correct": false,
+    "why": "An action waits until the element can be clicked, then clicks once; repeating it would add a second banana."
+   },
+   {
+    "text": "`cy.get('#products li')`",
+    "correct": true,
+    "why": "Right. `cy.get` is a query, and queries are run again with the assertion until it passes."
+   },
+   {
+    "text": "`cy.visit('/')`",
+    "correct": false,
+    "why": "It loads the page once and waits for it to load; it is not a query."
+   },
+   {
+    "text": "`cy.request('POST', '/api/reset')`",
+    "correct": false,
+    "why": "Sending the reset twice would be a second request with an effect; it is sent once."
+   }
+  ]
+ },
+ {
+  "id": "ex-c9d0j0g4",
+  "version": 1,
+  "section": "a-first-spec",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "On a slow test server, the request behind Add to basket takes three seconds to answer. The test clicks, then checks the count with `should('have.text', '1')`. What happens?",
+  "choices": [
+   {
+    "text": "It fails, because the click is repeated and adds two",
+    "correct": false,
+    "why": "Actions are not retried; only the query before the assertion is."
+   },
+   {
+    "text": "It fails, because `should` checks once, right after the click",
+    "correct": false,
+    "why": "`should` retries until it passes or the time runs out; that is what the queue is for."
+   },
+   {
+    "text": "It passes: the check keeps trying, and three seconds is inside four",
+    "correct": true,
+    "why": "Right. The count reads 0 for three seconds, then 1, well before the default four seconds run out."
+   },
+   {
+    "text": "It passes only with a `cy.wait(3000)` before the check",
+    "correct": false,
+    "why": "The retry already covers it, and a fixed sleep would be the habit section 05 replaces."
+   }
+  ]
+ },
+ {
+  "id": "ex-hp3sm19h",
+  "version": 1,
+  "section": "intercept",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test writes `cy.visit('/')`, then `cy.intercept('GET', '/api/products').as('products')`, then `cy.wait('@products')`. What goes wrong?",
+  "choices": [
+   {
+    "text": "Nothing: Cypress moves every route to the start of the test",
+    "correct": false,
+    "why": "The queue keeps the order you wrote; the route exists only from its own step on."
+   },
+   {
+    "text": "The products were asked for before the route existed",
+    "correct": true,
+    "why": "Right. The page asks as soon as its script runs, during the visit; declare the route first."
+   },
+   {
+    "text": "An alias has to be declared beforehand, in `cypress.config.js`",
+    "correct": false,
+    "why": "`.as()` names the route in the test itself; the configuration knows nothing of it."
+   },
+   {
+    "text": "`cy.wait` with an alias is meant for POST requests",
+    "correct": false,
+    "why": "It waits for any method the route matches; the first test of `network.cy.js` waits for a GET."
+   }
+  ]
+ },
+ {
+  "id": "ex-z9wxjp9n",
+  "version": 1,
+  "section": "intercept",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Every test in a suite stubs `/api/products`. The shop then renames `price` to `cents` in that answer. What do the tests report?",
+  "choices": [
+   {
+    "text": "They fail, because Cypress compares each stub with the real answer",
+    "correct": false,
+    "why": "A stub replaces the answer; the real server is never asked, so there is nothing to compare."
+   },
+   {
+    "text": "They all keep passing",
+    "correct": true,
+    "why": "Right. They test the page against a copy of yesterday's answer, which is why some tests must not stub."
+   },
+   {
+    "text": "They fail on the next run, when the stub is refreshed",
+    "correct": false,
+    "why": "The body is written in the test file and changes only when somebody edits it."
+   },
+   {
+    "text": "Cypress prints a warning that the stub is stale",
+    "correct": false,
+    "why": "Nothing in Cypress knows what the real server returns today."
+   }
+  ]
+ },
+ {
+  "id": "ex-0qfd0vfg",
+  "version": 1,
+  "section": "intercept",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "You must check that the shop shows its list as busy while the products load, on every run. On a laptop that state lasts a few milliseconds. What works?",
+  "choices": [
+   {
+    "text": "Run the test many times over and keep whichever run happened to catch the moment",
+    "correct": false,
+    "why": "A test that passes by luck is the flaky test lesson 14 is about; it will miss the moment on other days."
+   },
+   {
+    "text": "`cy.wait(100)` after the visit, then check",
+    "correct": false,
+    "why": "By then the list has usually loaded; a fixed sleep guesses at a moment it cannot see."
+   },
+   {
+    "text": "Hold the answer back with `delay` in `cy.intercept`, then check `aria-busy`",
+    "correct": true,
+    "why": "Right. The state lasts as long as the stub says, so the check meets it on every run."
+   },
+   {
+    "text": "Check `aria-busy` before `cy.visit`",
+    "correct": false,
+    "why": "Before the visit there is no page in the frame at all, busy or not."
+   }
+  ]
+ },
+ {
+  "id": "ex-r7460y7c",
+  "version": 1,
+  "section": "limits",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the `origins.mjs` capture, the page's own script was refused the `127.0.0.1` frame and Playwright read its title. Why the difference?",
+  "choices": [
+   {
+    "text": "Playwright switches off the same-origin policy for every page it launches",
+    "correct": false,
+    "why": "The policy was on: the script inside the same browser was refused. Playwright simply was not asking as a script on the page."
+   },
+   {
+    "text": "It asks through the browser's debugging protocol, from outside the page",
+    "correct": true,
+    "why": "Right. The rule binds scripts on a page, and a driver outside the browser is not one."
+   },
+   {
+    "text": "The frame had not finished loading when the script asked",
+    "correct": false,
+    "why": "The script waited for each frame's `load`, and the same-origin frame answered at once."
+   },
+   {
+    "text": "`127.0.0.1` is a different server from `localhost`",
+    "correct": false,
+    "why": "Same server, same shop; the browser compares the text of the origin, and the texts differ."
+   }
+  ]
+ },
+ {
+  "id": "ex-8v82882r",
+  "version": 1,
+  "section": "limits",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A shop's sign-in happens on an identity provider at another domain, and the test must come back signed in. What does the Cypress test need?",
+  "choices": [
+   {
+    "text": "Nothing extra: its proxy turns every domain into one origin",
+    "correct": false,
+    "why": "The proxy gives the runner the application's origin; a second domain is still a second origin."
+   },
+   {
+    "text": "The sign-in steps inside `cy.origin`, values passed in through `args`",
+    "correct": true,
+    "why": "Right. The function runs in the other origin, and as it is sent there as text, it reaches no variable around it."
+   },
+   {
+    "text": "A second tab opened for the provider's page, then closed once signed in",
+    "correct": false,
+    "why": "A Cypress test drives one tab; there is no second one to open."
+   },
+   {
+    "text": "It cannot be done: a Cypress test stays on one domain for its whole life",
+    "correct": false,
+    "why": "That was a belief worth holding once; `cy.origin` exists for exactly this case."
+   }
+  ]
+ },
+ {
+  "id": "ex-3rhc6e8e",
+  "version": 1,
+  "section": "limits",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "By its documentation, which of these can `cypress run --browser` not drive?",
+  "choices": [
+   {
+    "text": "Firefox",
+    "correct": false,
+    "why": "Firefox is on the list, beside the Chrome family."
+   },
+   {
+    "text": "Edge",
+    "correct": false,
+    "why": "Edge is part of the Chrome family the documentation lists."
+   },
+   {
+    "text": "Safari",
+    "correct": true,
+    "why": "Right. There is a WebKit experiment behind a setting, and WebKit is not Safari."
+   },
+   {
+    "text": "Electron",
+    "correct": false,
+    "why": "Electron is the default; it ships inside the binary."
+   }
+  ]
+ },
+ {
+  "id": "ex-2wvsthg2",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A checkout opens the payment provider in a new tab, and the client's customers mostly use Safari on iPhones. Which limits of Cypress does this meet? Choose all that apply.",
+  "choices": [
+   {
+    "text": "A test drives one tab",
+    "correct": true,
+    "why": "Right. The provider's tab is out of reach; the test can only check where the link points."
+   },
+   {
+    "text": "Safari is not among the browsers it drives",
+    "correct": true,
+    "why": "Right. The engine those customers use is the one Cypress offers only as an experiment, and Safari not at all."
+   },
+   {
+    "text": "It cannot answer the payment request with a stub",
+    "correct": false,
+    "why": "Stubbing a request is what `cy.intercept` does; this is not where the trouble is."
+   },
+   {
+    "text": "It cannot run without a window",
+    "correct": false,
+    "why": "`cypress run` is headless by default, in Electron."
+   }
+  ]
+ },
+ {
+  "id": "ex-m8rz8dgr",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put a first Cypress session on your own computer in order.",
+  "items": [
+   "`npm install`, which fetches the package and then the binary",
+   "`npx cypress verify`, to prove the binary starts",
+   "`npm start` in one terminal",
+   "`npx cypress run` in another"
+  ],
+  "trap": "Cypress does not start the shop, so it has to be running before the run, and nothing runs before the install."
+ }
+]

@@ -1,0 +1,163 @@
+---
+title: What breaks a locator
+version: 1
+---
+
+**A locator breaks when it leans on something that changes for reasons that have nothing to do
+with what the test checks.** The test then fails on a page that works, somebody spends an
+afternoon finding out that nothing is wrong, and the next red result is believed a little less.
+Four kinds of handle change that way all the time: values the page generates, positions,
+classes that exist for styling, and long chains that need every step to hold.
+
+## A value the page generates
+
+The card's `id` looks like the best handle there is. It is unique on the page, a selector for it
+is ten characters long, and the Elements panel shows it on the first line. Ask for the Banana card
+again, then for `#card-4821`, the example lesson 1 gave, and then for any `id` that starts the
+way these do:
+
+```
+ana@laptop:~/quitanda$ node count.mjs '[data-testid="product-banana"]' '#card-4821' '[id^="card-"]'
+  1  [data-testid="product-banana"]
+       <li class="card" id="card-7541" data-testid="product-banana"><h2>Banana</h2>
+           <p class="price">R$&nbsp;5,90 <small>/ dozen</small></p>
+           <button type="button">Add to basket</button></li>
+  0  #card-4821
+  8  [id^="card-"]
+```
+
+The Banana card has a different `id` from the one printed at the start of this lesson, and the
+example finds nothing. `app.js` draws the number with `Math.random()` every time the page loads. Frameworks do the same thing for
+their own reasons: a component library that numbers its fields, a styling tool that names classes
+after a hash of their rules. **Anything a program made up while drawing the page is a value the
+next drawing can make up differently.**
+
+## A test that leans on the wrong things
+
+Three tests of the Banana card, each by a handle somebody could reasonably pick. The first copies
+the `id` from the Elements panel. The second takes the first card in the list. The third does the
+same after a few lines of JavaScript, run inside the page, have put another card at the top of the
+list: that is what the shop would look like the day a new fruit came into season. Save it as
+`tests/locators.spec.js`:
+
+```javascript
+import { test, expect } from '@playwright/test';
+
+test('banana, by the id the Elements panel showed', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#card-4821 h2')).toHaveText('Banana');
+});
+
+test('banana, by its position', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#products > li:nth-child(1) h2')).toHaveText('Banana');
+});
+
+test('banana, by its position, after one more fruit', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#products[aria-busy="false"]').waitFor();
+  // What the shop's next release might do: one more card, at the top.
+  await page.locator('#products').evaluate((list) => {
+    list.insertAdjacentHTML('afterbegin', '<li class="card"><h2>Jabuticaba</h2></li>');
+  });
+  await expect(page.locator('#products > li:nth-child(1) h2')).toHaveText('Banana');
+});
+```
+
+Run that file alone, by name:
+
+```
+ana@laptop:~/quitanda$ npx playwright test tests/locators.spec.js
+
+Running 3 tests using 1 worker
+
+  ✘  1 tests/locators.spec.js:3:1 › banana, by the id the Elements panel showed (5.1s)
+  ✓  2 tests/locators.spec.js:8:1 › banana, by its position (214ms)
+  ✘  3 tests/locators.spec.js:13:1 › banana, by its position, after one more fruit (5.2s)
+
+
+  1) tests/locators.spec.js:3:1 › banana, by the id the Elements panel showed ──────────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#card-4821 h2')
+    Expected: "Banana"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#card-4821 h2')
+
+
+      3 | test('banana, by the id the Elements panel showed', async ({ page }) => {
+      4 |   await page.goto('/');
+    > 5 |   await expect(page.locator('#card-4821 h2')).toHaveText('Banana');
+        |                                               ^
+      6 | });
+      7 |
+      8 | test('banana, by its position', async ({ page }) => {
+        at /home/ana/quitanda/tests/locators.spec.js:5:47
+
+    Error Context: test-results/locators-banana-by-the-id-the-Elements-panel-showed/error-context.md
+
+  2) tests/locators.spec.js:13:1 › banana, by its position, after one more fruit ───────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('#products > li:nth-child(1) h2')
+    Expected: "Banana"
+    Received: "Jabuticaba"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#products > li:nth-child(1) h2')
+        9 × locator resolved to <h2>Jabuticaba</h2>
+          - unexpected value "Jabuticaba"
+
+
+      18 |     list.insertAdjacentHTML('afterbegin', '<li class="card"><h2>Jabuticaba</h2></li>');
+      19 |   });
+    > 20 |   await expect(page.locator('#products > li:nth-child(1) h2')).toHaveText('Banana');
+         |                                                                ^
+      21 | });
+      22 |
+        at /home/ana/quitanda/tests/locators.spec.js:20:64
+
+    Error Context: test-results/locators-banana-by-its-position-after-one-more-fruit/error-context.md
+
+  2 failed
+    tests/locators.spec.js:3:1 › banana, by the id the Elements panel showed ───────────────────────
+    tests/locators.spec.js:13:1 › banana, by its position, after one more fruit ────────────────────
+  1 passed (13.0s)
+```
+
+**The first test never passed, not even once.** The `id` it copied was right for the page in your
+browser, at the moment you looked; the run opened a fresh page, which drew a fresh number. Playwright
+waited the five seconds an assertion waits by default and reported `element(s) not found`. The message
+reads like a missing card, and the card is there.
+
+**The second test passed, and the third is the same locator.** On the page as it is, the first
+card is the Banana. With one more card at the top, the locator still finds exactly one heading, it
+is simply the wrong one, and Playwright says so: expected `Banana`, received `Jabuticaba`. Nobody
+broke the Banana card. A locator by position tests the order of the list, whether or not the
+order is what the test is about.
+
+## Classes for styling, and long chains
+
+The other two kinds do not need a demonstration to be believed. **A class like `.price` exists for
+the stylesheet**, and whoever next redesigns the card can rename it, split it into two or move it
+to the `small`, with no change anybody would call a defect. A test that leans on it has made the
+designer's naming part of what it checks. **A long chain**, `main > ul#products > li.card > p.price`,
+needs each of its steps to hold at once, so it breaks when any one of them changes, and the more
+steps it has the more often that is.
+
+## The other way to be wrong
+
+A locator can also be wrong in the direction that does not turn anything red. `contains(., "5,90")`
+in the previous section found two prices. A test that read the first of them would be checking the
+Banana by the luck of the order, and the day the Cashew moved up it would check the wrong price,
+and could pass. **A locator that matches more than you meant hides a defect instead of reporting
+one**, which is worse than a false alarm, because nobody investigates a green run. The next
+section is about a tool that refuses to guess.

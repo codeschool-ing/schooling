@@ -1,0 +1,366 @@
+{
+ "ex-rsescb1g": {
+  "prompt": "Três testes esperam, cada um, por um botão que uma troca de nome removeu, e o tempo limite padrão de um teste é 30 segundos. Rodando com um worker, quantos segundos a execução gasta antes de relatar as três falhas?",
+  "unit": "s"
+ },
+ "ex-v9g68waw": {
+  "prompt": "Depois que o botão virou *Add to cart*, os três testes duplicados falharam embora a loja funcionasse. O que estava errado de fato?",
+  "choices": [
+   {
+    "text": "Cada teste guardava a sua cópia de um fato sobre o markup",
+    "why": "Certo. O fato mudou uma vez, e cada cópia dele falhou separadamente; o conserto são quatro edições em três lugares."
+   },
+   {
+    "text": "Os localizadores eram frágeis, e papel e nome deviam ter sido classes CSS",
+    "why": "Papel e nome são os localizadores que a aula 2 recomenda, e uma classe pode ser renomeada com a mesma facilidade. O localizador estava bom; estava escrito três vezes."
+   },
+   {
+    "text": "Os testes rodaram em paralelo e viram as bananas uns dos outros",
+    "why": "Eles rodaram com um worker, um depois do outro, e nenhum chegou a pôr nada na cesta."
+   },
+   {
+    "text": "Nada: uma suíte vermelha depois de mudar o markup é um defeito achado",
+    "why": "A loja continuava funcionando, então não havia defeito a achar. A suíte relatou o próprio conhecimento ficando velho."
+   }
+  ]
+ },
+ "ex-fpje8dzv": {
+  "prompt": "O que um page object guarda, no sentido do padrão usado nesta aula?",
+  "choices": [
+   {
+    "text": "Uma lista de strings de seletores usada pelos testes",
+    "why": "Isso muda as strings de lugar e mantém o problema: os testes ainda dizem *clique neste botão* e ainda repetem ações de vários passos."
+   },
+   {
+    "text": "Os resultados esperados de todos os testes da página",
+    "why": "As expectativas ficam nos testes; a seção 05 explica por quê."
+   },
+   {
+    "text": "O que um cliente faz e vê numa página, com os seus localizadores",
+    "why": "Certo. Comportamento nas palavras do cliente, e o conhecimento de onde as coisas estão por trás dele."
+   },
+   {
+    "text": "O seu próprio navegador, para que cada teste fique isolado",
+    "why": "Ele recebe o `page` do teste e não inicia nada; o isolamento vem do contexto que o Playwright dá a cada teste."
+   }
+  ]
+ },
+ "ex-b5791fmy": {
+  "prompt": "Com o `ShopPage` no lugar, o botão é renomeado e os três testes falham de novo. Para onde os stack traces apontam primeiro?",
+  "choices": [
+   {
+    "text": "Para a linha de cada teste que põe uma fruta",
+    "why": "A linha do teste aparece também, abaixo, como o passo em andamento; o primeiro quadro é onde o botão é nomeado."
+   },
+   {
+    "text": "Para o `app/public/app.js`, onde o texto mudou",
+    "why": "O Playwright não sabe nada do código da loja; ele relata onde o código de teste estava esperando."
+   },
+   {
+    "text": "Para lugar nenhum: um timeout não traz stack trace",
+    "why": "A captura mostra um: o call log, depois o trecho em `shop-page.js:14`, depois a linha da spec."
+   },
+   {
+    "text": "Para a linha 14 de `pages/shop-page.js`",
+    "why": "Certo. `ShopPage.addToBasket` é o único lugar que nomeia *Add to basket*, então uma edição ali faz os três passarem."
+   }
+  ]
+ },
+ "ex-m910gba9": {
+  "prompt": "Um colega se preocupa porque `basketCount()` cria um localizador novo a cada chamada, antes de a página desenhar qualquer coisa. O que acontece?",
+  "choices": [
+   {
+    "text": "Acha o elemento uma vez e fica velho quando o cabeçalho é redesenhado",
+    "why": "É assim que se comporta um handle de elemento guardado. Um localizador não guarda elemento nenhum."
+   },
+   {
+    "text": "Nada é buscado até o uso, e a busca olha o estado daquele instante",
+    "why": "Certo. Um localizador é uma descrição resolvida a cada uso, então criá-lo cedo ou muitas vezes não custa nada."
+   },
+   {
+    "text": "Lança um erro, porque a contagem é desenhada depois dos produtos",
+    "why": "Criar um localizador nunca olha a página, então ainda não há motivo para erro."
+   },
+   {
+    "text": "Cada chamada deixa o teste lento, então deve ser feita uma vez no construtor",
+    "why": "Criar um localizador não faz trabalho nenhum no navegador; qualquer dos dois lugares serve."
+   }
+  ]
+ },
+ "ex-xw35gaz1": {
+  "prompt": "Ponha as camadas em ordem, da que menos sabe do HTML até o próprio HTML.",
+  "items": [
+   "o teste: `shop.addToBasket('banana')`",
+   "o page object, `ShopPage`",
+   "o componente, `ProductCard`",
+   "o localizador: `getByRole('button', { name })`",
+   "o elemento no DOM"
+  ],
+  "trap": "Uma mudança no markup entra por baixo e deveria parar nos localizadores."
+ },
+ "ex-q9tmh8fh": {
+  "prompt": "O `ProductCard` é construído a partir de um localizador raiz. O que isso traz?",
+  "choices": [
+   {
+    "text": "Testes mais rápidos, já que o cartão é localizado uma vez só",
+    "why": "Os localizadores são resolvidos a cada uso, seja de onde partirem; o ganho é de escopo, não de velocidade."
+   },
+   {
+    "text": "O modo estrito não pode mais reclamar de oito botões",
+    "why": "O escopo evita as oito correspondências, mas isso é efeito colateral: o encadeamento a partir do cartão já fazia isso na aula 2, sem classe."
+   },
+   {
+    "text": "Uma classe serve a qualquer cartão, em qualquer página",
+    "why": "Certo. Todo localizador dentro dele parte da raiz, e é por isso que o cartão da goiaba passou em `/` e em `/ssr`."
+   },
+   {
+    "text": "Um cartão pode ser conferido sem a página carregar",
+    "why": "Toda conferência ainda roda contra uma página carregada; o componente só decide onde olhar nela."
+   }
+  ]
+ },
+ "ex-4p34hmwy": {
+  "prompt": "Uma equipe dá a todo page object um pai `BasePage` com o cabeçalho. Uma nova página de pagamento não tem cabeçalho, mas tem uma barra de progresso. O que dá errado?",
+  "choices": [
+   {
+    "text": "Herda métodos de cabeçalho que não pode oferecer de verdade",
+    "why": "Certo. Guardar as partes como campos deixa cada página ter exatamente as partes que desenha, e dizer isso no construtor."
+   },
+   {
+    "text": "Nada, desde que a página de pagamento sobrescreva os métodos do cabeçalho",
+    "why": "Sobrescrever para fazer o quê? A página continua oferecendo um cabeçalho que não tem; a classe mente sobre a página."
+   },
+   {
+    "text": "Os testes falham na hora, porque `extends` exige todos os métodos",
+    "why": "O JavaScript não exige nada disso; os métodos herdados ficam lá até alguém chamar um."
+   },
+   {
+    "text": "A barra de progresso precisa entrar no `BasePage` também",
+    "why": "É o caminho para toda página herdar todas as partes; aumenta o problema em vez de resolvê-lo."
+   }
+  ]
+ },
+ "ex-cetwvpse": {
+  "prompt": "Com a resposta da cesta segurada por 200 ms, `expect(await shop.basket.itemCount()).toBe(1)` falhou cinco vezes em cinco. Por quê?",
+  "choices": [
+   {
+    "text": "O `Number()` transformou o texto em `NaN`",
+    "why": "Toda falha recebeu `0`, um número; o texto era um dígito, só que o errado."
+   },
+   {
+    "text": "O `toBe` compara objetos por referência, não por valor",
+    "why": "Para números o `toBe` compara os valores; `0` simplesmente não é `1`."
+   },
+   {
+    "text": "A rota impediu a requisição de chegar ao servidor",
+    "why": "A rota atrasa e depois deixa seguir; o teste com poll, na mesma rota, viu a contagem chegar a 1."
+   },
+   {
+    "text": "A contagem foi lida uma vez, antes de a resposta redesenhá-la",
+    "why": "Certo. `textContent()` é uma foto, e um `expect` comum sobre um valor nunca pergunta de novo."
+   }
+  ]
+ },
+ "ex-z2kc4b0z": {
+  "prompt": "Qual versão da contagem deixa o teste manter as asserções que repetem do Playwright?",
+  "choices": [
+   {
+    "text": "`async itemCount()` devolvendo `Number(await count.textContent())`",
+    "why": "É a foto que falhou cinco vezes em cinco; só um poll em volta dela repete."
+   },
+   {
+    "text": "`basketCount()` devolvendo o localizador",
+    "why": "Certo. `expect(locator).toHaveText('1')` lê de novo até bater ou o tempo acabar."
+   },
+   {
+    "text": "`checkCount(n)`, com o `expect` dentro do page object",
+    "why": "Ela pode repetir, mas esconde a expectativa e serve a um teste só; a repetição nunca foi do page object."
+   },
+   {
+    "text": "Um getter que guarda o primeiro texto que lê",
+    "why": "Guardar torna a foto permanente: o teste compararia para sempre a contagem de antes do clique."
+   }
+  ]
+ },
+ "ex-9tb76eds": {
+  "prompt": "Um teste confere o que a loja mostra quando os produtos não carregam. O `open()` do page object termina esperando um cartão de produto visível. O que essa asserção faz com este teste?",
+  "choices": [
+   {
+    "text": "Faz falhar dentro do `open()`, antes de ele olhar o erro",
+    "why": "Certo. Esse é o argumento contra asserções em page objects: a pré-condição da maioria dos testes é o assunto deste."
+   },
+   {
+    "text": "Torna-o mais confiável, já que confirma que a página abriu",
+    "why": "Ela confirma o contrário do que este teste prepara; o page object decidiu o que *carregou* quer dizer para todos."
+   },
+   {
+    "text": "Nada, porque asserções dentro de classes não repetem",
+    "why": "Um `expect` sobre um localizador repete onde quer que esteja escrito."
+   },
+   {
+    "text": "Faz passar, já que o `open()` roda antes do corpo do teste",
+    "why": "Uma falha em qualquer lugar que o teste espere, num page object ou numa fixture, faz o teste falhar."
+   }
+  ]
+ },
+ "ex-b487hzj3": {
+  "prompt": "Para acrescentar uma fixture sua, como `shop`, você chama `test.___ ({ shop: async ({ page }, use) => { … } })` e exporta o resultado.",
+  "blanks": [
+   {
+    "accept": [
+     "extend"
+    ]
+   }
+  ]
+ },
+ "ex-ahq23ha9": {
+  "prompt": "Na fixture `shop`, onde vai o código que tem de rodar depois do teste?",
+  "choices": [
+   {
+    "text": "Num `afterEach` que o arquivo de fixtures exporta",
+    "why": "Uma fixture carrega a própria limpeza; não precisa de nada fora dela."
+   },
+   {
+    "text": "Antes de `use`, porque o executor inverte a ordem",
+    "why": "O código antes de `use` é preparação e roda primeiro; nada é invertido."
+   },
+   {
+    "text": "Em lugar nenhum: fixtures não fazem limpeza",
+    "why": "O próprio `page` é uma fixture que fecha a página depois de cada teste."
+   },
+   {
+    "text": "Depois de `await use(shop)`, que retorna quando o teste termina",
+    "why": "Certo. O teste roda enquanto `use` espera; o que vem depois é a limpeza."
+   }
+  ]
+ },
+ "ex-1xc8zcft": {
+  "prompt": "Os testes do cartão pedem `page` e não `shop`, numa suíte em que o arquivo de fixtures define `shop`. O que a fixture `shop` faz por eles?",
+  "choices": [
+   {
+    "text": "Limpa a cesta primeiro, como para todo outro teste",
+    "why": "As fixtures são preparadas sob demanda; um teste que não nomeia uma não paga por ela."
+   },
+   {
+    "text": "Abre a loja, e depois o `goto` deles a carrega de novo",
+    "why": "Nenhuma carga de página acontece por eles; só o `goto` deles roda."
+   },
+   {
+    "text": "Nada, já que importam `test` de `@playwright/test` e nunca a nomeiam",
+    "why": "Certo. Nem a importação nem o argumento a mencionam, então ela nunca é construída para eles."
+   },
+   {
+    "text": "Quebra-os, porque toda spec tem de importar o `test` estendido",
+    "why": "Os dois objetos `test` funcionam lado a lado; a execução aprovou os cinco."
+   }
+  ]
+ },
+ "ex-0gnsrxfk": {
+  "prompt": "Ligue cada método de page object ao que há de errado com ele.",
+  "pairs": [
+   {
+    "left": "`clickAddButtonOnBananaCard()`",
+    "right": "tem o nome do markup, então muda quando o markup muda"
+   },
+   {
+    "left": "`addToBasket()` terminando em `waitForTimeout(2000)`",
+    "right": "uma espera de que um teste precisou, paga por todos"
+   },
+   {
+    "left": "`isInBasket()` devolvendo `false` de um `catch`",
+    "right": "uma falha transformada num valor que talvez ninguém confira"
+   },
+   {
+    "left": "um `AppPage` com métodos para todas as páginas",
+    "right": "várias classes fingindo ser uma"
+   }
+  ]
+ },
+ "ex-cmgsdqdg": {
+  "prompt": "O `basketCount()` tem uma linha. Por que esta aula o mantém e chama `click(locator)` de embrulho inútil?",
+  "choices": [
+   {
+    "text": "Métodos de uma linha servem enquanto houver menos de cinco",
+    "why": "Nenhuma contagem decide isso; a aula não fala de limite nenhum."
+   },
+   {
+    "text": "O nome diz o que o cliente vê, não onde fica",
+    "why": "Certo. Um redesenho move a contagem e o nome continua verdadeiro; `click(locator)` só renomeia `locator.click()`."
+   },
+   {
+    "text": "Um método que devolve localizador não pode ser embrulho",
+    "why": "O `getBasketCountSpan()` também devolve um, e tem o nome do markup."
+   },
+   {
+    "text": "É usado por três testes, e o `click` por nenhum",
+    "why": "Número de usos não salva um nome que repete o widget; um embrulho popular continua sendo um segundo vocabulário."
+   }
+  ]
+ },
+ "ex-mqq4r5ex": {
+  "prompt": "Quando esta aula diz que um page object deve ser escrito?",
+  "choices": [
+   {
+    "text": "Antes do primeiro teste, para os testes terem o que chamar",
+    "why": "Escrito primeiro, ele adivinha quais passos se repetem, e erra."
+   },
+   {
+    "text": "Quando uma mudança de markup quebrar um teste pela primeira vez",
+    "why": "Esperar a quebra é pagar a duplicação uma vez antes de tirá-la; o sinal é a própria repetição."
+   },
+   {
+    "text": "Só para páginas com mais de um componente",
+    "why": "O primeiro page object da loja não tinha componente nenhum, e se pagou."
+   },
+   {
+    "text": "Quando os testes repetem um passo, movendo só o que se repete",
+    "why": "Certo. Esta aula partiu de três testes que se repetiam."
+   }
+  ]
+ },
+ "ex-rhda4yew": {
+  "prompt": "A página de busca da aula 3 ganha um `SearchPage`. Um teste digita `papaya` e confere a lista. Que método o page object deve oferecer para o resultado?",
+  "choices": [
+   {
+    "text": "`results()` devolvendo o localizador de `#results li`",
+    "why": "Certo. O teste pode esperar o `aria-busy` e depois fazer a asserção sobre o localizador, que repete."
+   },
+   {
+    "text": "`async resultNames()` devolvendo os textos da lista na hora",
+    "why": "Uma foto, lida enquanto as respostas ainda chegam; naquela página ela corre exatamente como a contagem correu aqui."
+   },
+   {
+    "text": "`expectOnlyPapaya()`, que faz a asserção dentro do page object",
+    "why": "Isso esconde a expectativa e serve a um teste; a próxima busca precisa de outro método."
+   },
+   {
+    "text": "`waitAndRead()`, dormindo um segundo antes de ler",
+    "why": "A aula 3 mediu essa pausa: depois de um segundo ela leu a resposta velha de *p*, três frutas."
+   }
+  ]
+ },
+ "ex-qm16k2e6": {
+  "prompt": "Quais destes pertencem a um page object ou a um dos seus componentes? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "O test id `product-banana` e o nome acessível do botão",
+    "why": "Sim. Onde as coisas estão na página é exatamente para o que o page object existe."
+   },
+   {
+    "text": "Um método `addToBasket(id)` que clica no botão do cartão",
+    "why": "Sim. Uma ação nas palavras do cliente, com os localizadores por trás."
+   },
+   {
+    "text": "A expectativa de que duas frutas dão dois itens",
+    "why": "Esse é o próprio caso de teste, e fica no teste, onde quem lê consegue vê-lo."
+   },
+   {
+    "text": "O `POST /api/reset` que esvazia a cesta",
+    "why": "Preparar o mundo é preparação; nesta aula ela mora na fixture `shop`, não na página."
+   }
+  ]
+ },
+ "ex-k2jmy4m9": {
+  "prompt": "Uma suíte de 30 testes clica em *Add to basket* em cada teste, escrito por extenso, uma vez por teste. O botão é renomeado. Quantas linhas precisam mudar se a suíte usar um page object cujo `ProductCard` nomeia o botão?"
+ }
+}

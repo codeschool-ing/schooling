@@ -1,0 +1,380 @@
+{
+ "ex-xhrmmyzz": {
+  "prompt": "O teste de `/ssr` falhou com um sleep de um segundo e passou com dois. Do que a versão que passa ainda depende?",
+  "choices": [
+   {
+    "text": "De nada: dois segundos cobrem com folga o segundo e meio do script",
+    "why": "Dois segundos cobrem o atraso medido naquela máquina. Um servidor mais ocupado, que entregue o script depois, a derruba de novo."
+   },
+   {
+    "text": "O script chegar em até dois segundos em toda máquina onde o teste rodar",
+    "why": "Certo. O número continua sendo um palpite sobre velocidade, só que mais generoso."
+   },
+   {
+    "text": "O número de workers",
+    "why": "Um worker só manteve a cesta compartilhada fora dos tempos; não tem nada a ver com quando o script chega."
+   },
+   {
+    "text": "A cesta estar vazia antes",
+    "why": "O reset faz a contagem começar em 0, o que toda versão precisa; o sleep é a parte que adivinha."
+   }
+  ]
+ },
+ "ex-1e4jab9h": {
+  "prompt": "Com os sleeps, os quatro testes levaram 1,3 s, 1,8 s, 2,7 s e 1,1 s. Com condições, levaram 0,2 s, 0,27 s, 2,1 s e 0,14 s. Quantos segundos as condições economizaram nos quatro testes?",
+  "hint": "Some cada coluna e subtraia.",
+  "unit": "s"
+ },
+ "ex-4peehmzf": {
+  "prompt": "Por que o teste de `/ssr` continuou lento depois que os sleeps saíram, enquanto os outros três ficaram rápidos?",
+  "choices": [
+   {
+    "text": "A asserção dele tem um tempo limite padrão maior",
+    "why": "Os quatro usam o mesmo padrão de cinco segundos; nenhum chegou nele."
+   },
+   {
+    "text": "A própria página leva um segundo e meio para funcionar",
+    "why": "Certo. Uma condição espera o quanto a página precisa, e esta página precisa disso."
+   },
+   {
+    "text": "Esperar um atributo é mais lento de conferir que esperar um texto",
+    "why": "Cada conferência leva milissegundos; o tempo vai em esperar o script, não em conferir."
+   },
+   {
+    "text": "Um sleep esquecido no teste",
+    "why": "A versão final não tem sleep nenhum; os 2,1 s dela são o atraso da própria página."
+   }
+  ]
+ },
+ "ex-1st5kh27": {
+  "prompt": "Com uma espera implícita de cinco segundos, um teste acha o botão da banana em `/ssr` e clica 144 ms depois de a página carregar. O que acontece?",
+  "choices": [
+   {
+    "text": "O clique espera até o botão funcionar",
+    "why": "A espera implícita vale para achar elementos, não para clicar num que já foi achado."
+   },
+   {
+    "text": "O clique se perde; a cesta fica em 0",
+    "why": "Certo. O botão existia, então a espera terminou na hora, e o tratador dele não tinha chegado."
+   },
+   {
+    "text": "O `findElement` espera os cinco segundos inteiros antes",
+    "why": "Ele volta assim que algo casa; a execução achou o botão em 30 ms."
+   },
+   {
+    "text": "O Selenium lança erro, porque o botão não está pronto",
+    "why": "Nada no botão diz que ele não está pronto; está habilitado e visível, e o clique é entregue a uma página que o ignora."
+   }
+  ]
+ },
+ "ex-a9thw8xc": {
+  "prompt": "Uma equipe quer que a espera implícita cubra \"a mensagem de erro some depois da correção\". Por que ela não consegue?",
+  "choices": [
+   {
+    "text": "Ela é limitada a cinco segundos",
+    "why": "A duração é a que a sessão definir; o limite está no que ela espera, não em quanto tempo."
+   },
+   {
+    "text": "Ela só funciona com CSS, e a mensagem pede XPath",
+    "why": "A espera implícita vale para qualquer localizador, XPath incluído, como a contagem no script mostrou."
+   },
+   {
+    "text": "Ela espera algo casar, nunca um casamento sumir",
+    "why": "Certo. Ela repete até um localizador achar algo; uma ausência não encerra nada e custa o tempo inteiro."
+   },
+   {
+    "text": "Mensagens são desenhadas por scripts, e ela ignora o que scripts acrescentam",
+    "why": "Ela achou os cartões na aula 8, que um script desenha; procura na página como ela está a cada tentativa."
+   }
+  ]
+ },
+ "ex-487an1r6": {
+  "prompt": "Uma sessão tem espera implícita de 5000 ms. `driver.wait(until.elementLocated(...), 1000)` espera um elemento que nunca aparece. Mais ou menos quantos milissegundos passam até ele desistir, pela execução desta seção?",
+  "hint": "A espera explícita só olha o relógio depois que cada chamada à condição volta.",
+  "unit": "ms"
+ },
+ "ex-smaewstv": {
+  "prompt": "O que faz `driver.wait(until.elementLocated(By.css('.done')))`, sem segundo argumento, se `.done` nunca aparece?",
+  "choices": [
+   {
+    "text": "Falha depois de cinco segundos",
+    "why": "Cinco segundos é o padrão da asserção do Playwright; no `selenium-webdriver` o padrão é 0."
+   },
+   {
+    "text": "Falha na hora, já que o tempo é zero",
+    "why": "Zero não quer dizer sem espera aqui; o código o trata como sem limite."
+   },
+   {
+    "text": "Usa a espera implícita como tempo limite",
+    "why": "As duas configurações são separadas; com a implícita no padrão, nada encerraria o laço."
+   },
+   {
+    "text": "Pergunta a cada 200 ms, para sempre",
+    "why": "Certo. Um tempo de 0, o padrão, quer dizer sem limite, então passe sempre um."
+   }
+  ]
+ },
+ "ex-g135k7bs": {
+  "prompt": "Ligue cada espera ao que ela confere.",
+  "pairs": [
+   {
+    "left": "`until.elementTextIs(el, 'x')`",
+    "right": "um elemento já achado tem um certo texto"
+   },
+   {
+    "left": "`until.elementLocated(locator)`",
+    "right": "algo casa com o localizador"
+   },
+   {
+    "left": "`locator.waitFor({ state: 'hidden' })`",
+    "right": "o elemento está ausente ou invisível"
+   },
+   {
+    "left": "`expect(locator).toHaveCount(8)`",
+    "right": "o número de casamentos é exatamente oito"
+   }
+  ]
+ },
+ "ex-garfhev4": {
+  "prompt": "Um teste do Playwright espera um `<span class=\"ready\">` escondido com `await page.locator('.ready').waitFor()`. O span é acrescentado, escondido por CSS. O que acontece?",
+  "choices": [
+   {
+    "text": "Volta assim que o span está na página",
+    "why": "Esse é o estado `attached`; sem estado, o `waitFor` espera `visible`."
+   },
+   {
+    "text": "Estoura o tempo: por padrão espera `visible`",
+    "why": "Certo. Um marcador escondido por CSS nunca fica visível; `{ state: 'attached' }` resolve."
+   },
+   {
+    "text": "Lança erro na hora, porque elementos escondidos não podem ser localizados",
+    "why": "Elementos escondidos podem ser achados; o `waitFor` continua conferindo o estado até o tempo acabar."
+   },
+   {
+    "text": "Confere o texto do span em vez disso",
+    "why": "O `waitFor` nunca olha texto; espera um de quatro estados."
+   }
+  ]
+ },
+ "ex-d10wj1sm": {
+  "prompt": "Por que o `settled` exige a linha da contagem preenchida, além do `aria-busy` em `\"false\"`?",
+  "choices": [
+   {
+    "text": "O `aria-busy` já é `\"false\"` antes da primeira tecla",
+    "why": "Certo. Sozinho ele pode ser verdade cedo demais; a linha da contagem fica vazia até uma resposta ser desenhada."
+   },
+   {
+    "text": "O `aria-busy` não pode ser lido de dentro da página",
+    "why": "A função o lê com `getAttribute`, dentro da página, como qualquer atributo."
+   },
+   {
+    "text": "Para o teste digitado passar apesar do defeito",
+    "why": "Ele ainda falha, nas três frutas; a condição o faz falhar rápido e com honestidade."
+   },
+   {
+    "text": "O `waitForFunction` precisa de no mínimo duas condições",
+    "why": "Ele aceita qualquer função que devolva um valor; uma condição serviria se uma bastasse."
+   }
+  ]
+ },
+ "ex-n69w69rn": {
+  "prompt": "Ligue cada coisa a esperar com a forma do Playwright que combina com ela.",
+  "pairs": [
+   {
+    "left": "um valor em `window` que a página define",
+    "right": "`page.waitForFunction`"
+   },
+   {
+    "left": "uma linha que o servidor grava no banco",
+    "right": "`expect.poll`"
+   },
+   {
+    "left": "dois textos da página que precisam concordar",
+    "right": "`expect(...).toPass`"
+   },
+   {
+    "left": "o texto de um elemento",
+    "right": "`expect(locator).toHaveText`"
+   }
+  ]
+ },
+ "ex-8p53b9fs": {
+  "prompt": "Um teste põe `await button.click(); expect(await count.textContent()).toBe('1');` dentro de `expect(async () => {...}).toPass()` em `/ssr`. O que há de errado?",
+  "choices": [
+   {
+    "text": "O `toPass` não pode ter `await` dentro",
+    "why": "O bloco é uma função assíncrona; usar `await` dentro é o caso normal."
+   },
+   {
+    "text": "Nada, já que repete até o clique funcionar",
+    "why": "Repete, sim, e cada repetição clica de novo; uma resposta lenta pode pôr uma segunda banana."
+   },
+   {
+    "text": "Cada repetição clica de novo, e um clique posterior o aprova",
+    "why": "Certo. Deixe ações fora do `toPass`; o bloco deve só ler. Ele também esconderia que os primeiros cliques foram ignorados."
+   },
+   {
+    "text": "O `toPass` espera cinco segundos antes da primeira tentativa",
+    "why": "Tenta na hora e depois em intervalos crescentes; cinco segundos não entram nisso."
+   }
+  ]
+ },
+ "ex-hx3htrnw": {
+  "prompt": "Um teste define `test.setTimeout(1000)` e depois espera com uma asserção de tempo próprio de 5000 ms. A condição nunca vale. Com o que a falha abre?",
+  "choices": [
+   {
+    "text": "`Timeout: 5000ms`, da asserção",
+    "why": "O relógio da asserção nunca é alcançado; o de fora acaba quatro segundos antes."
+   },
+   {
+    "text": "`Test timeout of 1000ms exceeded`",
+    "why": "Certo. O relógio do teste acabou primeiro; o registro de chamadas ainda cita os 5000 ms da asserção."
+   },
+   {
+    "text": "`page.goto: Timeout 1000ms exceeded`",
+    "why": "A navegação terminou; o tempo acabou durante a asserção."
+   },
+   {
+    "text": "Passa quando a página fica pronta, depois de 1,5 s",
+    "why": "Nenhum passo sobrevive ao relógio do teste; com um segundo o teste acabou."
+   }
+  ]
+ },
+ "ex-ba4gwj67": {
+  "prompt": "No Playwright instalado, o `actionTimeout` tem padrão ___ , o que quer dizer que um clique não tem limite próprio.",
+  "blanks": [
+   {
+    "accept": [
+     "0",
+     "zero"
+    ]
+   }
+  ]
+ },
+ "ex-czyby8gs": {
+  "prompt": "Um teste que confere a lista de produtos passa a falhar depois de uma versão, com `Received: 0` após 5000 ms. Um colega aumenta o tempo dele para 10 s e ele passa, levando 7 s. O que a mudança fez?",
+  "choices": [
+   {
+    "text": "Consertou um teste instável que só falhava em máquinas ocupadas",
+    "why": "Falhava toda vez, na mesma linha, porque a página ficou mais lenta; isso é mudança na loja, não ruído."
+   },
+   {
+    "text": "Nada: o tempo limite só importa quando um teste falha",
+    "why": "Ele decide que respostas contam como corretas; com 10 s, uma página vazia por seis segundos agora passa."
+   },
+   {
+    "text": "Fez a suíte aceitar uma página que ficou seis segundos mais lenta",
+    "why": "Certo. A falha era o único aviso da lentidão; se seis segundos são aceitáveis é questão de desempenho."
+   },
+   {
+    "text": "Passou a espera da asserção para o relógio do teste",
+    "why": "A espera continua sendo da asserção; só a duração mudou."
+   }
+  ]
+ },
+ "ex-tcz5ceja": {
+  "prompt": "O teste do aviso falhou depois de 12,4 s com `Received: \"\"`. O que mudaria se o tempo da asserção subisse para 60 s?",
+  "choices": [
+   {
+    "text": "Passaria numa máquina lenta",
+    "why": "O aviso esvazia dois segundos depois do clique em qualquer máquina; olhar mais é olhar mais tempo o parágrafo vazio."
+   },
+   {
+    "text": "Só quanto tempo o teste leva para falhar",
+    "why": "Certo. O texto sumiu antes de a asserção começar, e nenhuma espera o traz de volta."
+   },
+   {
+    "text": "Veria o texto na primeira olhada",
+    "why": "A primeira olhada vem depois do sleep de dois segundos, quando o texto já sumiu."
+   },
+   {
+    "text": "O teste seria cortado pelo tempo do teste",
+    "why": "Verdade para 60 s contra o padrão de 30 segundos, e ainda falharia; a causa continua sendo a ordem."
+   }
+  ]
+ },
+ "ex-deejb502": {
+  "prompt": "Ponha em ordem os passos do teste do aviso consertado.",
+  "items": [
+   "Abrir a página inicial",
+   "Clicar em Add to basket na banana",
+   "Esperar o aviso dizer Added Banana",
+   "Esperar a contagem da cesta ser 1",
+   "Esperar o aviso ficar vazio de novo"
+  ],
+  "trap": "Conferir a contagem antes do aviso é seguro para a contagem e tira a janela do aviso."
+ },
+ "ex-wdb027sk": {
+  "prompt": "Uma página mostra *Salvando…* por uns 300 ms depois de um clique, e então *Salvo*. Qual teste é o correto?",
+  "choices": [
+   {
+    "text": "Esperar 300 ms e depois esperar *Salvando…* ter sumido",
+    "why": "O sleep adivinha a duração e não confere nada de que o usuário precisa."
+   },
+   {
+    "text": "Esperar *Salvo*, sem sleep antes",
+    "why": "Certo. *Salvo* dura, então uma asserção web-first pode esperá-lo o quanto salvar levar."
+   },
+   {
+    "text": "Esperar *Salvando…* com tempo de 10 s, depois *Salvo*",
+    "why": "Um tempo maior não pega um rótulo de 300 ms que já sumiu; só falha mais tarde."
+   },
+   {
+    "text": "Definir uma espera implícita para *Salvo* ser achado quando aparecer",
+    "why": "O elemento que tem o texto existe o tempo todo; a espera implícita o acharia na hora e leria *Salvando…*."
+   }
+  ]
+ },
+ "ex-hpt4ymvy": {
+  "prompt": "Uma suíte Selenium define espera implícita de 10 s e usa `driver.wait(..., 15000)` em toda parte. Uma espera que deveria falhar com 15 s às vezes leva uns 20. Seguindo a documentação do Selenium, qual é o conserto?",
+  "choices": [
+   {
+    "text": "Baixar as explícitas para 5 s, para a soma dar 15",
+    "why": "As duas não se somam de jeito fixo; o resultado depende de quantas vezes a condição chama `findElements`."
+   },
+   {
+    "text": "Subir a implícita para 15 s, para empatar",
+    "why": "Isso faz cada chamada à condição travar mais tempo, e o atraso piora."
+   },
+   {
+    "text": "Deixar a implícita em 0 e manter as explícitas",
+    "why": "Certo. A documentação diz para não misturar; com a implícita em 0, cada espera termina perto do próprio tempo."
+   },
+   {
+    "text": "Baixar o intervalo de consulta para 50 ms",
+    "why": "O atraso está dentro de uma chamada travada, não entre chamadas; consultar mais rápido não o encurta."
+   }
+  ]
+ },
+ "ex-4tjjhwq0": {
+  "prompt": "No `selenium-webdriver`, o `driver.wait` pergunta de novo à condição a cada ___ milissegundos, a não ser que um quarto argumento diga outra coisa.",
+  "blanks": [
+   {
+    "accept": [
+     "200"
+    ]
+   }
+  ]
+ },
+ "ex-p7jtcqs4": {
+  "prompt": "O `playwright.config.js` de uma suíte define `actionTimeout: 10000` em `use`. Um clique num botão que nunca aparece agora falha depois de quanto tempo, e por que isso é melhor?",
+  "choices": [
+   {
+    "text": "Depois de 30 s, como antes; quem decide é o tempo do teste",
+    "why": "A ação agora tem relógio próprio, mais curto que o do teste, então acaba antes."
+   },
+   {
+    "text": "Aos 10 s, e a mensagem cita `locator.click`",
+    "why": "Certo. Falha antes e diz `locator.click: Timeout 10000ms exceeded`, em vez de gastar o teste inteiro."
+   },
+   {
+    "text": "Depois de 5 s, porque asserções e ações dividem relógio",
+    "why": "Não dividem: cinco segundos são das asserções, e as ações não tinham limite próprio."
+   },
+   {
+    "text": "Na hora, já que o botão não existe",
+    "why": "Ausente agora pode querer dizer presente depois; o Playwright continua procurando até um relógio acabar."
+   }
+  ]
+ }
+}
