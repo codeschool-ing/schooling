@@ -1,0 +1,489 @@
+[
+  {
+    "id": "ex-zrg8wen0",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each reference with its kind.",
+    "hint": "What is written before the `::`?",
+    "pairs": [
+      {
+        "left": "`Integer::parseInt`",
+        "right": "static"
+      },
+      {
+        "left": "`shop::equals`",
+        "right": "bound"
+      },
+      {
+        "left": "`String::toUpperCase`",
+        "right": "unbound"
+      },
+      {
+        "left": "`ArrayList::new`",
+        "right": "constructor"
+      }
+    ],
+    "right_distractors": [
+      "anonymous"
+    ]
+  },
+  {
+    "id": "ex-1ckv9ap2",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which lambda does `String::toUpperCase` stand for?",
+    "hint": "Unbound: the object comes from the argument.",
+    "choices": [
+      {
+        "text": "`() -> String.toUpperCase()`",
+        "correct": false,
+        "why": "There is no static `toUpperCase` to call without a string."
+      },
+      {
+        "text": "`s -> s.toUpperCase()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`s -> String.toUpperCase(s)`",
+        "correct": false,
+        "why": "`toUpperCase` is an instance method, not a static one taking a string."
+      },
+      {
+        "text": "`(a, b) -> a.toUpperCase(b)`",
+        "correct": false,
+        "why": "`toUpperCase` takes no string argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvk7c09a",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`parse.apply(\"42\") + 1` printed `43`. What does that tell you about `Integer::parseInt` as a `Function<String, Integer>`?",
+    "hint": "`+` on a string would have joined.",
+    "choices": [
+      {
+        "text": "It returned the string `\"42\"`, and Java converted it",
+        "correct": false,
+        "why": "A string plus 1 prints `421`."
+      },
+      {
+        "text": "It returned a number, which `+ 1` added to",
+        "correct": true,
+        "why": "Right: the `int` from `parseInt`, boxed to `Integer`."
+      },
+      {
+        "text": "It returned a reference to the method",
+        "correct": false,
+        "why": "`apply` runs the method and returns its result."
+      },
+      {
+        "text": "It counted the characters and added one",
+        "correct": false,
+        "why": "That would print 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqq0hk9t",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Is a method reference faster than the equivalent lambda?",
+    "hint": "How each becomes an object.",
+    "choices": [
+      {
+        "text": "Yes, because no `invokedynamic` is needed",
+        "correct": false,
+        "why": "Both are built through `invokedynamic`."
+      },
+      {
+        "text": "Yes, because the method is inlined at compile time",
+        "correct": false,
+        "why": "`javac` inlines neither."
+      },
+      {
+        "text": "No: the choice is about reading",
+        "correct": true,
+        "why": "Right. The JVM treats them alike."
+      },
+      {
+        "text": "No, it is slower, because it is looked up by name at every call",
+        "correct": false,
+        "why": "The lookup happens once, when the object is built."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3gmqctg",
+    "version": 1,
+    "section": "bound-and-unbound",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`String title = \"Dune\";` What is the shape of `title::length`?",
+    "hint": "The string is already chosen.",
+    "choices": [
+      {
+        "text": "`Function<String, Integer>`",
+        "correct": false,
+        "why": "That is `String::length`, which still needs a string."
+      },
+      {
+        "text": "`Supplier<Integer>`",
+        "correct": true,
+        "why": "Right: nothing in, a length out."
+      },
+      {
+        "text": "`Consumer<String>`",
+        "correct": false,
+        "why": "A consumer returns nothing; `length` returns an `int`."
+      },
+      {
+        "text": "`Predicate<String>`",
+        "correct": false,
+        "why": "`length` returns no `boolean`."
+      }
+    ]
+  },
+  {
+    "id": "ex-shc4r20x",
+    "version": 1,
+    "section": "bound-and-unbound",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can `String::compareToIgnoreCase`, which takes one string, be a `Comparator<String>`, whose `compare` takes two?",
+    "hint": "Unbound references take their object from somewhere.",
+    "choices": [
+      {
+        "text": "The first argument is the object",
+        "correct": true,
+        "why": "Right: `compare(a, b)` becomes `a.compareToIgnoreCase(b)`."
+      },
+      {
+        "text": "The second argument is ignored, and only the first is compared",
+        "correct": false,
+        "why": "It is what `a` is compared with."
+      },
+      {
+        "text": "Java calls the method twice, once per argument",
+        "correct": false,
+        "why": "One comparison, one call."
+      },
+      {
+        "text": "`compareToIgnoreCase` has a hidden two-argument version",
+        "correct": false,
+        "why": "There is one version; the receiver supplies the other string."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4rvbsbp",
+    "version": 1,
+    "section": "bound-and-unbound",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `Bound.java`, the reference printed 4 and the lambda printed 29 after `current` changed. Why?",
+    "hint": "When is `current` read, in each?",
+    "choices": [
+      {
+        "text": "The reference cached the result of its first call",
+        "correct": false,
+        "why": "It had not been called before the change."
+      },
+      {
+        "text": "References cannot see static fields",
+        "correct": false,
+        "why": "It read the field, once, when it was made."
+      },
+      {
+        "text": "One read `current` at creation, the other at each `get`",
+        "correct": true,
+        "why": "Right. A bound reference fixes its object up front."
+      },
+      {
+        "text": "`length` on a reference counts words, not characters",
+        "correct": false,
+        "why": "Same method, same meaning: 4 is the length of `\"Dune\"`."
+      }
+    ]
+  },
+  {
+    "id": "ex-prncarzn",
+    "version": 1,
+    "section": "bound-and-unbound",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`current` is `null`. Where does each of these fail: `() -> current.length()` and `current::length`?",
+    "hint": "Look at the line number in the stack trace.",
+    "choices": [
+      {
+        "text": "Both fail on the line that makes them",
+        "correct": false,
+        "why": "The lambda was made without complaint."
+      },
+      {
+        "text": "The lambda only when called; the reference where it is made",
+        "correct": true,
+        "why": "Right, at `Objects.requireNonNull`."
+      },
+      {
+        "text": "Neither fails until `get` is called",
+        "correct": false,
+        "why": "The reference failed at line 17, before any `get`."
+      },
+      {
+        "text": "The reference only when called; the lambda where it is made",
+        "correct": false,
+        "why": "The other way round."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgwcdfvy",
+    "version": 1,
+    "section": "constructors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book` has a one-argument and a two-argument constructor. Which one does `Book::new` mean?",
+    "hint": "The text is the same both times.",
+    "choices": [
+      {
+        "text": "Always the one declared first",
+        "correct": false,
+        "why": "Declaration order plays no part."
+      },
+      {
+        "text": "The one with fewer parameters",
+        "correct": false,
+        "why": "It meant the two-argument one as a `BiFunction`."
+      },
+      {
+        "text": "Whichever the target type's method matches",
+        "correct": true,
+        "why": "Right: `Function<String, Book>` picks one, `BiFunction<String, Integer, Book>` the other."
+      },
+      {
+        "text": "It is a compile error when a class has two constructors",
+        "correct": false,
+        "why": "The target type resolves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-29b1kh2a",
+    "version": 1,
+    "section": "constructors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`titles.toArray(String[]___)` builds a `String[]` of the right size from a list.",
+    "hint": "A constructor reference for an array.",
+    "blanks": [
+      {
+        "accept": [
+          "::new"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w7whe0s4",
+    "version": 1,
+    "section": "constructors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `map.computeIfAbsent(key, ArrayList::new)` misbehave with `Integer` keys and not with `String` keys?",
+    "hint": "What does `computeIfAbsent` pass to the function?",
+    "choices": [
+      {
+        "text": "`ArrayList` cannot hold `Integer` values",
+        "correct": false,
+        "why": "It holds any object."
+      },
+      {
+        "text": "An `int` key fits `ArrayList(int)`",
+        "correct": true,
+        "why": "Right. With `String` keys no constructor matches, so it does not compile."
+      },
+      {
+        "text": "`computeIfAbsent` only accepts lambdas",
+        "correct": false,
+        "why": "It accepts any `Function`, references included."
+      },
+      {
+        "text": "`Integer` keys are compared with `==`",
+        "correct": false,
+        "why": "Maps compare keys with `equals`."
+      }
+    ]
+  },
+  {
+    "id": "ex-e09k1xt7",
+    "version": 1,
+    "section": "when-a-lambda-reads-better",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `Integer::toString` refused as a `Function<Integer, String>`?",
+    "hint": "It fits in two ways.",
+    "choices": [
+      {
+        "text": "`Integer` has no `toString` method",
+        "correct": false,
+        "why": "It has two, which is the problem."
+      },
+      {
+        "text": "References cannot return a `String`",
+        "correct": false,
+        "why": "`String::toUpperCase` returns one."
+      },
+      {
+        "text": "Static `toString(int)` and instance `toString()` both fit",
+        "correct": true,
+        "why": "Right, and the compiler will not guess."
+      },
+      {
+        "text": "`Function` needs a `Supplier` for its output",
+        "correct": false,
+        "why": "A `Function` returns its output directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-070gy9be",
+    "version": 1,
+    "section": "when-a-lambda-reads-better",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these lambdas can be written as a method reference? Choose all that apply.",
+    "hint": "A reference only passes along the arguments it receives.",
+    "choices": [
+      {
+        "text": "`x -> Math.abs(x)`",
+        "correct": true,
+        "why": "Yes: `Math::abs`."
+      },
+      {
+        "text": "`s -> s.substring(2)`",
+        "correct": false,
+        "why": "No: the `2` is not an argument."
+      },
+      {
+        "text": "`() -> new HashMap<>()`",
+        "correct": true,
+        "why": "Yes: `HashMap::new`."
+      },
+      {
+        "text": "`b -> b.author().name()`",
+        "correct": false,
+        "why": "No: two calls in a row."
+      },
+      {
+        "text": "`n -> n % 2 == 0`",
+        "correct": false,
+        "why": "No: not a method call."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrzqp0t4",
+    "version": 1,
+    "section": "when-a-lambda-reads-better",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A lambda passed to `filter` has grown to twenty lines. What does the lesson suggest?",
+    "hint": "Give it a name.",
+    "choices": [
+      {
+        "text": "Turn it into an anonymous class, which suits long bodies better",
+        "correct": false,
+        "why": "That adds ceremony and no name."
+      },
+      {
+        "text": "A private method, passed as `this::isWorthShipping`",
+        "correct": true,
+        "why": "Right: one readable line, and a method you can test alone."
+      },
+      {
+        "text": "Split it into several smaller lambdas in a row",
+        "correct": false,
+        "why": "Lesson 5 combines small ones, but the advice here is a named method."
+      },
+      {
+        "text": "Leave it: length does not matter in a lambda",
+        "correct": false,
+        "why": "Lesson 1 called it a method that has not been given a name yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-hk1vgrv8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these from the reference with no object at all to the one that builds a new object each call.",
+    "hint": "Static, bound, unbound, constructor: the figure's order.",
+    "items": [
+      "`Integer::parseInt`",
+      "`shop::equals`",
+      "`String::toUpperCase`",
+      "`ArrayList::new`"
+    ]
+  },
+  {
+    "id": "ex-962jxhbr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`List<String> names` must be sorted with `names.sort(...)` so that `\"anna\"` comes before `\"Bob\"`. Which argument does it?",
+    "hint": "An unbound reference with two strings.",
+    "choices": [
+      {
+        "text": "`Comparator.comparing(String::length)`",
+        "correct": false,
+        "why": "That orders by length, and `\"Bob\"` is shorter than `\"anna\"`."
+      },
+      {
+        "text": "`String::compareTo`",
+        "correct": false,
+        "why": "Case-sensitive: `\"Bob\"` comes before `\"anna\"`, since capitals sort first."
+      },
+      {
+        "text": "`String::compareToIgnoreCase`",
+        "correct": true,
+        "why": "Right, as `Unbound.java` sorted its authors."
+      },
+      {
+        "text": "`String::equalsIgnoreCase`",
+        "correct": false,
+        "why": "That answers `boolean`, and a `Comparator` must answer an `int`."
+      }
+    ]
+  }
+]
