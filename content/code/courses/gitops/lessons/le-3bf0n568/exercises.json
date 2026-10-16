@@ -987,5 +987,315 @@
         "why": "It would hold a password in clear."
       }
     ]
+  },
+  {
+    "id": "ex-aqr17k8n",
+    "version": 1,
+    "section": "why-rotate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vault's unseal key and root token leak. What can the holder reach?",
+    "choices": [
+      {
+        "text": "Nothing without the cluster",
+        "correct": false,
+        "why": "Vault answers anybody with the token."
+      },
+      {
+        "text": "Everything Vault holds",
+        "correct": true,
+        "why": "Right. That is why the root token is revoked in lesson 12."
+      },
+      {
+        "text": "Only sealed data",
+        "correct": false,
+        "why": "Unsealed is what the key does."
+      },
+      {
+        "text": "Only production's token",
+        "correct": false,
+        "why": "That is the bulletin role's reach."
+      }
+    ]
+  },
+  {
+    "id": "ex-hv31sxz1",
+    "version": 1,
+    "section": "why-rotate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What could somebody do with vault-auth's long-lived token?",
+    "choices": [
+      {
+        "text": "Unseal Vault",
+        "correct": false,
+        "why": "Unsealing needs the unseal key."
+      },
+      {
+        "text": "Ask the API server about any token",
+        "correct": true,
+        "why": "Right. It is the token reviewer's credential."
+      },
+      {
+        "text": "Read every Secret in the cluster",
+        "correct": false,
+        "why": "Token review is all it was granted."
+      },
+      {
+        "text": "Push to fleet",
+        "correct": false,
+        "why": "It is a Kubernetes token, not a Gitea one."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wf6mg4q",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which identity in the table may do anything in Vault?",
+    "choices": [
+      {
+        "text": "The Vault root token",
+        "correct": true,
+        "why": "Right. Lesson 12 revokes it."
+      },
+      {
+        "text": "image-bot",
+        "correct": false,
+        "why": "It is a Gitea account."
+      },
+      {
+        "text": "Flux's Gitea account",
+        "correct": false,
+        "why": "It reads fleet."
+      },
+      {
+        "text": "bulletin in production",
+        "correct": false,
+        "why": "It may read one path."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jka96yq",
+    "version": 1,
+    "section": "least-privilege",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is cluster-admin reasonable for flux-system's Kustomization?",
+    "choices": [
+      {
+        "text": "It installs controllers and CRDs",
+        "correct": true,
+        "why": "Right. That needs cluster-wide power."
+      },
+      {
+        "text": "It never changes",
+        "correct": false,
+        "why": "It changes with every Flux upgrade."
+      },
+      {
+        "text": "It applies the application",
+        "correct": false,
+        "why": "The environments do that."
+      },
+      {
+        "text": "Flux refuses to run without it",
+        "correct": false,
+        "why": "Other Kustomizations run with less."
+      }
+    ]
+  },
+  {
+    "id": "ex-agn9zq2j",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the last step after a leak?",
+    "choices": [
+      {
+        "text": "Restart the cluster",
+        "correct": false,
+        "why": "Nothing calls for that."
+      },
+      {
+        "text": "Delete the Git history",
+        "correct": false,
+        "why": "Clones already have it."
+      },
+      {
+        "text": "Revoke it",
+        "correct": false,
+        "why": "That is the first."
+      },
+      {
+        "text": "Record the cause",
+        "correct": true,
+        "why": "Right. So step 1 is not needed again for that reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-79bypwfe",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does step 3, finding what a leaked credential was used for, look?",
+    "choices": [
+      {
+        "text": "The pull request that made it",
+        "correct": false,
+        "why": "It predates the leak."
+      },
+      {
+        "text": "The credential itself",
+        "correct": false,
+        "why": "It does not record its use."
+      },
+      {
+        "text": "The rotation procedure",
+        "correct": false,
+        "why": "That is how to replace it."
+      },
+      {
+        "text": "The records of lesson 12",
+        "correct": true,
+        "why": "Right. Gitea, the API server, Vault."
+      }
+    ]
+  },
+  {
+    "id": "ex-1be5fkt1",
+    "version": 1,
+    "section": "when-it-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A leaked token was in a public fork for a day. Rewriting fleet's history is proposed. What does it fix?",
+    "choices": [
+      {
+        "text": "Nothing about the leak",
+        "correct": true,
+        "why": "Right. The fork and every clone keep it."
+      },
+      {
+        "text": "The leak, in the fork",
+        "correct": false,
+        "why": "The fork is somebody else's."
+      },
+      {
+        "text": "The token's permissions",
+        "correct": false,
+        "why": "Git knows nothing of them."
+      },
+      {
+        "text": "The leak, everywhere",
+        "correct": false,
+        "why": "Copies outside the repository are untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7b90ve8",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every account Vault creates names who asked. Why does that help?",
+    "choices": [
+      {
+        "text": "It lets the account outlive the lease",
+        "correct": false,
+        "why": "It goes when the lease ends."
+      },
+      {
+        "text": "Logins trace to requests",
+        "correct": true,
+        "why": "Right. No shared password hides who it was."
+      },
+      {
+        "text": "It makes passwords stronger",
+        "correct": false,
+        "why": "The name is not the password."
+      },
+      {
+        "text": "PostgreSQL requires it",
+        "correct": false,
+        "why": "Any name would do."
+      }
+    ]
+  },
+  {
+    "id": "ex-baq69nr6",
+    "version": 1,
+    "section": "dynamic-credentials",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Vault is down and nobody knows a database password. What is the way in?",
+    "choices": [
+      {
+        "text": "An old dynamic account",
+        "correct": false,
+        "why": "Its lease ended it."
+      },
+      {
+        "text": "There is none",
+        "correct": false,
+        "why": "The administration path remains."
+      },
+      {
+        "text": "initial-password",
+        "correct": false,
+        "why": "Vault rotated it away."
+      },
+      {
+        "text": "The database's own administration path",
+        "correct": true,
+        "why": "Right. Deliberate and audited."
+      }
+    ]
+  },
+  {
+    "id": "ex-yt6df3p2",
+    "version": 1,
+    "section": "rotating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What differs between rotating the age key and rotating image-bot's token?",
+    "choices": [
+      {
+        "text": "Whether the old one is revoked",
+        "correct": false,
+        "why": "Both end with the revocation."
+      },
+      {
+        "text": "The order of the steps",
+        "correct": false,
+        "why": "It is the same for every static credential."
+      },
+      {
+        "text": "Where step 2 has to reach",
+        "correct": true,
+        "why": "Right. The order stays the same."
+      },
+      {
+        "text": "Whether a check is needed",
+        "correct": false,
+        "why": "Both check before revoking."
+      }
+    ]
   }
 ]
