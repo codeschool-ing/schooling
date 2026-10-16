@@ -1,0 +1,539 @@
+[
+ {
+  "id": "ex-a0pcsxdk",
+  "version": 1,
+  "section": "signals",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A metric says 3% of bookings failed in the last five minutes. What can that metric not tell you?",
+  "hint": "It was aggregated before it was stored.",
+  "choices": [
+   {
+    "text": "Which bookings they were",
+    "correct": true,
+    "why": "Right. A count of a million costs the same as a count of ten because the individual events are gone; the log keeps them."
+   },
+   {
+    "text": "Whether the share of failures is going up or down",
+    "correct": false,
+    "why": "It can: compare the same number over time, which is what a time series is for."
+   },
+   {
+    "text": "How many bookings were attempted in that time",
+    "correct": false,
+    "why": "It can: that is the rate, the R of RED."
+   },
+   {
+    "text": "How long the bookings took, as a percentile",
+    "correct": false,
+    "why": "A duration histogram answers that, within the width of a bucket."
+   }
+  ]
+ },
+ {
+  "id": "ex-s8qvab14",
+  "version": 1,
+  "section": "signals",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each letter of RED and USE to what it measures.",
+  "hint": "RED looks at a service from its caller's side; USE looks at a resource.",
+  "pairs": [
+   {
+    "left": "Rate",
+    "right": "requests answered per second"
+   },
+   {
+    "left": "Duration",
+    "right": "how long each request took"
+   },
+   {
+    "left": "Utilisation",
+    "right": "how busy the resource is"
+   },
+   {
+    "left": "Saturation",
+    "right": "how much work is queued waiting for it"
+   }
+  ],
+  "right_distractors": [
+   "how much each request cost the company"
+  ]
+ },
+ {
+  "id": "ex-gssep2hj",
+  "version": 1,
+  "section": "signals",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "boxoffice's machine sits at 40% CPU while bookings queue behind booking_lock. What does a USE check that looks only at the hardware report?",
+  "hint": "Is the lock a resource?",
+  "choices": [
+   {
+    "text": "A saturated processor, from the queue of bookings",
+    "correct": false,
+    "why": "The queue is on the lock, not on the processors; at 40% the processors are not saturated."
+   },
+   {
+    "text": "A healthy machine, with spare capacity",
+    "correct": true,
+    "why": "Right, and it is wrong. The lock is a resource too, saturated while the processors idle; USE has to be applied to it."
+   },
+   {
+    "text": "A high error rate on the booking route",
+    "correct": false,
+    "why": "Errors in RED are failed requests; queued bookings still succeed, slowly."
+   },
+   {
+    "text": "Nothing, since USE only applies to disks and networks",
+    "correct": false,
+    "why": "USE applies to processors and memory too, and to anything work waits for."
+   }
+  ]
+ },
+ {
+  "id": "ex-3k420yz6",
+  "version": 1,
+  "section": "signals",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does observed.py send the request id back to the client in a header, and not only write it into the log?",
+  "hint": "Who needs to quote it later?",
+  "choices": [
+   {
+    "text": "Prometheus reads the header to count requests",
+    "correct": false,
+    "why": "Prometheus reads /metrics and never sees a response to a customer."
+   },
+   {
+    "text": "The browser needs it to keep the session open",
+    "correct": false,
+    "why": "Sessions are a cookie's job; the id identifies one request, not a user."
+   },
+   {
+    "text": "So a caller quotes it and the one log line is found",
+    "correct": true,
+    "why": "Right. A complaint, a ticket or a failed synthetic check that carries the id leads straight to its line among millions."
+   },
+   {
+    "text": "HTTP/1.1 requires an id on every response",
+    "correct": false,
+    "why": "No HTTP version requires one; X-Request-Id is a convention."
+   }
+  ]
+ },
+ {
+  "id": "ex-3v3djqj0",
+  "version": 1,
+  "section": "signals",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A checkout crosses twenty services and is slow. Which signal shows that the time went in the fourth one?",
+  "hint": "Spans nest.",
+  "choices": [
+   {
+    "text": "The request counter of the first service",
+    "correct": false,
+    "why": "A count says how many, and nothing about where the time went."
+   },
+   {
+    "text": "The processor utilisation of every host",
+    "correct": false,
+    "why": "A slow service may be waiting on something with its processor idle."
+   },
+   {
+    "text": "The log of the last service in the chain",
+    "correct": false,
+    "why": "It knows its own time; without a shared id it cannot place itself among the other nineteen."
+   },
+   {
+    "text": "A trace",
+    "correct": true,
+    "why": "Right. Each service adds a span with its duration, and the long one stands out."
+   }
+  ]
+ },
+ {
+  "id": "ex-7krhk90t",
+  "version": 1,
+  "section": "products",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each product to the job it started with.",
+  "hint": "The table at the top of the section.",
+  "pairs": [
+   {
+    "left": "New Relic",
+    "right": "an agent inside the application timing each transaction"
+   },
+   {
+    "left": "Grafana",
+    "right": "graphs drawn over data stored elsewhere"
+   },
+   {
+    "left": "Kibana",
+    "right": "searching log lines indexed in Elasticsearch"
+   },
+   {
+    "left": "Sentry",
+    "right": "exceptions grouped with their stack traces"
+   },
+   {
+    "left": "Datadog",
+    "right": "metrics from an agent on every host"
+   }
+  ],
+  "right_distractors": [
+   "generating load against a staging server"
+  ]
+ },
+ {
+  "id": "ex-wf4d1eve",
+  "version": 1,
+  "section": "products",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A colleague says \"our metrics are in Grafana\". What is the more exact statement?",
+  "hint": "What does Grafana store by itself?",
+  "choices": [
+   {
+    "text": "Grafana draws them from a source such as Prometheus",
+    "correct": true,
+    "why": "Right. Prometheus, Loki, a SQL database: the data lives there, and Grafana draws the answers."
+   },
+   {
+    "text": "They are in Grafana's own time-series database",
+    "correct": false,
+    "why": "Grafana stores dashboards, not the series; it queries a data source."
+   },
+   {
+    "text": "They are in the k6 results, which Grafana Labs owns and keeps",
+    "correct": false,
+    "why": "Grafana Labs owns k6, but k6 is a load generator, not where production metrics live."
+   },
+   {
+    "text": "They are in the application's own log file",
+    "correct": false,
+    "why": "A log is a different signal; a metrics dashboard does not read raw log lines."
+   }
+  ]
+ },
+ {
+  "id": "ex-zwm5a8xb",
+  "version": 1,
+  "section": "products",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A team moves from one vendor to another and its services already emit OpenTelemetry. What still has to be rewritten?",
+  "hint": "OpenTelemetry standardises how data is produced and sent.",
+  "choices": [
+   {
+    "text": "The instrumentation inside each one of the services",
+    "correct": false,
+    "why": "That is what OpenTelemetry spares them; the collector's destination changes instead."
+   },
+   {
+    "text": "The dashboards and alerts in the old query language",
+    "correct": true,
+    "why": "Right. An alert written in one vendor's query language does not move to another's."
+   },
+   {
+    "text": "The wire protocol the collector uses to send data onwards",
+    "correct": false,
+    "why": "OTLP is the standard part; the five products publish ways to take it in."
+   },
+   {
+    "text": "The applications' HTTP endpoints",
+    "correct": false,
+    "why": "Monitoring does not change what the application serves to its users."
+   }
+  ]
+ },
+ {
+  "id": "ex-sj58tgw8",
+  "version": 1,
+  "section": "observed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does observed.py label requests with the route /shows/{id} instead of the path /shows/990?",
+  "hint": "Every distinct set of labels is a series Prometheus stores.",
+  "choices": [
+   {
+    "text": "Prometheus refuses labels that contain digits",
+    "correct": false,
+    "why": "Label values may hold any text; the problem is how many distinct ones there are."
+   },
+   {
+    "text": "The show id is personal data and must stay out of metrics",
+    "correct": false,
+    "why": "A show id identifies a play, not a person; the reason is the number of series."
+   },
+   {
+    "text": "So one endpoint is one series, not one per show",
+    "correct": true,
+    "why": "Right. A thousand shows would make a thousand series of one endpoint, and a stranger typing ids could make more."
+   },
+   {
+    "text": "So the path can be read back out of the log",
+    "correct": false,
+    "why": "The log keeps the full path anyway, in its own field."
+   }
+  ]
+ },
+ {
+  "id": "ex-cqw2aa3d",
+  "version": 1,
+  "section": "observed",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Without guarded, what would a request that raises an exception inside app.py leave in the metrics and the log?",
+  "hint": "Where are the count and the log line written?",
+  "choices": [
+   {
+    "text": "A 500 in both, written by the HTTP server itself",
+    "correct": false,
+    "why": "The standard library's server closes the connection; it does not answer 500 on the handler's behalf."
+   },
+   {
+    "text": "A count with status 0, and a line with no status",
+    "correct": false,
+    "why": "There is no code path that records a status 0; nothing is recorded at all."
+   },
+   {
+    "text": "A line in the log, but no count in the metrics",
+    "correct": false,
+    "why": "Both are written in the same method, after the answer, so they fail together."
+   },
+   {
+    "text": "Nothing in either, since send was never called",
+    "correct": true,
+    "why": "Right. The count and the log line are both written in send, so the failure an operator most needs would be invisible."
+   }
+  ]
+ },
+ {
+  "id": "ex-7tgfwbgp",
+  "version": 1,
+  "section": "observed",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a Prometheus histogram, the bucket that counts every request, however long it took, is labelled le=\"___\".",
+  "hint": "It is the last bucket, and the largest bound there is.",
+  "blanks": [
+   {
+    "accept": [
+     "+Inf",
+     "Inf",
+     "+infinity"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-gm2nn1qs",
+  "version": 1,
+  "section": "prometheus",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The error-ratio query printed nothing at all. What does that mean here?",
+  "hint": "PromQL divides series, not numbers.",
+  "choices": [
+   {
+    "text": "No 5xx has happened, so there is no series to divide",
+    "correct": true,
+    "why": "Right. With no series on top there is no result; or vector(0) writes the zero in."
+   },
+   {
+    "text": "Prometheus failed to reach boxoffice",
+    "correct": false,
+    "why": "up said 1 for boxoffice; a failed scrape shows there, not as an empty division."
+   },
+   {
+    "text": "The error ratio was exactly zero",
+    "correct": false,
+    "why": "A zero prints as 0, as the second query shows; this printed no series."
+   },
+   {
+    "text": "The query had a syntax error, which curl hid",
+    "correct": false,
+    "why": "A syntax error comes back as an error object, and the same expression worked with or vector(0)."
+   }
+  ]
+ },
+ {
+  "id": "ex-h12402e8",
+  "version": 1,
+  "section": "prometheus",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "k6 reported http_req_failed at 3.00% while Prometheus counted no 5xx. Why do they disagree?",
+  "hint": "Look at what the 67 failures were.",
+  "choices": [
+   {
+    "text": "Prometheus loses the requests that arrive between two of its scrapes",
+    "correct": false,
+    "why": "Counters only grow; a scrape reads the total, so nothing between scrapes is lost."
+   },
+   {
+    "text": "k6 counts every 4xx as failed, including the 409 refusals",
+    "correct": true,
+    "why": "Right. Refusing a seat already sold is correct behaviour; which statuses count as errors is a decision."
+   },
+   {
+    "text": "k6 abandoned the slowest requests once they had taken 40 ms",
+    "correct": false,
+    "why": "k6's default timeout is far longer, and the log shows 67 answers of 409."
+   },
+   {
+    "text": "The node exporter's errors were added in",
+    "correct": false,
+    "why": "The query reads only boxoffice_requests_total; the exporter's series are separate."
+   }
+  ]
+ },
+ {
+  "id": "ex-cqp3ma1m",
+  "version": 1,
+  "section": "prometheus",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "963 requests to /shows/{id} were counted. Counting from the fastest, which request is the 95th percentile, rounded up?",
+  "hint": "95% of 963.",
+  "value": 915,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-jdtbf84v",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Prometheus put the p95 of /shows/{id} at 58 ms and k6 put the p95 of all requests at 140 ms. A colleague says Prometheus is wrong. What is the best reply?",
+  "hint": "Who timed what, and where?",
+  "choices": [
+   {
+    "text": "Prometheus is right and k6's numbers include its own overhead, so they can be ignored",
+    "correct": false,
+    "why": "What the client waited is what a customer feels; it is not overhead to ignore."
+   },
+   {
+    "text": "k6 is right, because a histogram's estimate is always too low",
+    "correct": false,
+    "why": "The estimate can fall either way inside its bucket; that does not explain a factor of two."
+   },
+   {
+    "text": "Both are right: one route timed in the server, against every route timed at the client",
+    "correct": true,
+    "why": "Right. Different operations, measured at different places, including about 40 ms spent outside the application."
+   },
+   {
+    "text": "Neither: percentiles from two tools cannot be compared",
+    "correct": false,
+    "why": "They can, once both measure the same operation at the same place."
+   }
+  ]
+ },
+ {
+  "id": "ex-38n6fjt3",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put in order the path a booking takes from happening to being a number in your terminal.",
+  "hint": "Prometheus asks; the application only answers.",
+  "items": [
+   "observed.py adds one to a counter",
+   "/metrics shows the new total",
+   "Prometheus scrapes it and stores a point",
+   "rate() turns the points into requests per second",
+   "promql.sh prints the answer with jq"
+  ]
+ },
+ {
+  "id": "ex-79tbz1yr",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Someone adds a label customer to boxoffice_requests_total so that each customer's requests can be counted. What goes wrong?",
+  "hint": "Think about cardinality, and about what a metric is kept for.",
+  "choices": [
+   {
+    "text": "Nothing, as long as Prometheus has enough disk to spare",
+    "correct": false,
+    "why": "The cost is memory and query time per series, and the privacy problem does not shrink with disk."
+   },
+   {
+    "text": "rate() stops working on counters that carry more than one label",
+    "correct": false,
+    "why": "rate() works on any counter; every label just makes more series for it to compute."
+   },
+   {
+    "text": "The counter turns into a histogram",
+    "correct": false,
+    "why": "A label does not change a metric's type."
+   },
+   {
+    "text": "One series per customer, and personal data kept for months",
+    "correct": true,
+    "why": "Right. Fifty thousand customers are fifty thousand series, and an identifier sits in a store nobody cleans. A per-customer question belongs to the log."
+   }
+  ]
+ },
+ {
+  "id": "ex-56j5ca68",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these belong in the structured log line of a booking? Choose every one that does.",
+  "hint": "What would an investigation need, and what would a leaked log expose?",
+  "choices": [
+   {
+    "text": "the request id",
+    "correct": true,
+    "why": "Yes: it joins the line to the complaint and to the trace."
+   },
+   {
+    "text": "the status and the duration in milliseconds",
+    "correct": true,
+    "why": "Yes: they are what RED counts, kept per event."
+   },
+   {
+    "text": "the customer's card number, to trace payments",
+    "correct": false,
+    "why": "Never: logs are copied and kept longer than the database. The payment provider holds the card."
+   },
+   {
+    "text": "the route, as a template like /shows/{id}",
+    "correct": true,
+    "why": "Yes: it lets the line be grouped with the others of its endpoint."
+   },
+   {
+    "text": "the session token, to replay the request",
+    "correct": false,
+    "why": "No: whoever reads the log could act as that customer."
+   }
+  ]
+ }
+]

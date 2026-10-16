@@ -1,0 +1,2719 @@
+[
+  {
+    "id": "ex-y1hv44k5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A report is slow. Before changing anything, what does the course's first lesson tell you to do?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Add an index on every column in its WHERE clause",
+        "correct": false,
+        "why": "That is a fix for one suspect applied before knowing which."
+      },
+      {
+        "text": "Double the server's memory",
+        "correct": false,
+        "why": "A bigger machine does nothing for a query that reads too much."
+      },
+      {
+        "text": "Rewrite it as a stored procedure",
+        "correct": false,
+        "why": "Moving the SQL changes nothing about which suspect it is."
+      },
+      {
+        "text": "Name the suspect first",
+        "correct": true,
+        "why": "Right: the fixes do not transfer, so the suspect comes first."
+      }
+    ]
+  },
+  {
+    "id": "ex-wey2rstd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The first run of a query after a restart takes 435 ms, the next two 167 and 208 ms. Which statement about these numbers is right?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "The first was cold; the gap between the other two is noise",
+        "correct": true,
+        "why": "Right: the restart and dropped cache made the first read from the disk."
+      },
+      {
+        "text": "The plan changed between the first run and the second",
+        "correct": false,
+        "why": "Same query, same plan, same rows; only where the bytes were changed."
+      },
+      {
+        "text": "The third run shows the query is getting slower over time",
+        "correct": false,
+        "why": "41 ms between two warm runs is the noise the lesson measured."
+      },
+      {
+        "text": "The average, 270 ms, is the number to quote",
+        "correct": false,
+        "why": "A cold run mixed into warm ones is exactly what not to average."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvx91mb5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does `WHERE date(placed_at) = '2025-06-01'` not use the index on `placed_at`?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "June has too many orders",
+        "correct": false,
+        "why": "The day held 2801 orders out of two million."
+      },
+      {
+        "text": "The index lists placed_at, not its date",
+        "correct": true,
+        "why": "Right: ask in the index's own terms, a range of placed_at."
+      },
+      {
+        "text": "Indexes cannot be used for dates",
+        "correct": false,
+        "why": "The range on placed_at used it in 1.3 ms."
+      },
+      {
+        "text": "The table is too small for an index to be worth it",
+        "correct": false,
+        "why": "It has two million rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecqcnzwa",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`market` takes 1334 MB and `shared_buffers` is 128 MB. Roughly how many times bigger is the database than PostgreSQL's own cache? Round to the nearest whole number.",
+    "hint": "Divide.",
+    "value": 10,
+    "tolerance": 0.5,
+    "unit": "times"
+  },
+  {
+    "id": "ex-ypjfedec",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which `pg_stat_statements` sort finds the statements worth fixing first?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "By total_exec_time, then read the mean",
+        "correct": true,
+        "why": "Right: candidates by total, then the mean says what each user gains."
+      },
+      {
+        "text": "By calls, most frequent first",
+        "correct": false,
+        "why": "A frequent statement can be almost free."
+      },
+      {
+        "text": "By queryid",
+        "correct": false,
+        "why": "queryid is an identifier, not a cost."
+      },
+      {
+        "text": "By mean_exec_time, slowest first",
+        "correct": false,
+        "why": "The mean says how long one user waits, not what the server spends."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cwcwwsf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does `pg_stat_statements` store `WHERE customer_id = $1` instead of each customer's number?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "To hide customers' data from the DBA",
+        "correct": false,
+        "why": "Hiding is a side effect; the reason is grouping."
+      },
+      {
+        "text": "So a million calls with different values are one row",
+        "correct": true,
+        "why": "Right: one statement, one row, a large count."
+      },
+      {
+        "text": "Because the server never sees the values",
+        "correct": false,
+        "why": "It executes them, and the log can record them."
+      },
+      {
+        "text": "To save the time spent parsing",
+        "correct": false,
+        "why": "It is about the record, not about parsing."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3nj6b27",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A tally shows one statement at 0.1 ms called 30 000 times a minute and another at 200 ms called once an hour. You can halve either. Which gives the server more time back?",
+    "hint": "Lesson 2. Multiply.",
+    "choices": [
+      {
+        "text": "Neither, because both are under a second",
+        "correct": false,
+        "why": "What matters is the total, not each run."
+      },
+      {
+        "text": "The 200 ms one",
+        "correct": false,
+        "why": "Halving it saves 100 ms an hour."
+      },
+      {
+        "text": "The 0.1 ms one, by far",
+        "correct": true,
+        "why": "Right: 0.05 ms × 30 000 a minute is 1.5 s every minute."
+      },
+      {
+        "text": "They are about the same",
+        "correct": false,
+        "why": "One is seconds a minute, the other milliseconds an hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqsqcytx",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the loop the course repeats in order.",
+    "hint": "Lesson 2.",
+    "items": [
+      "Reset the tally",
+      "Run the workload and read the tally by total",
+      "Change one thing",
+      "Reset the tally again",
+      "Run the same workload for the same time and compare"
+    ],
+    "trap": "Each measurement needs its own clean start, and the change sits between two identical measurements."
+  },
+  {
+    "id": "ex-fhaszzfz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which question needs the log rather than `pg_stat_statements`?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "How many times the dashboard ran today",
+        "correct": false,
+        "why": "calls answers that."
+      },
+      {
+        "text": "The dashboard's mean time",
+        "correct": false,
+        "why": "mean_exec_time is exactly that."
+      },
+      {
+        "text": "Which statement costs the server the most",
+        "correct": false,
+        "why": "That is the tally sorted by total."
+      },
+      {
+        "text": "Which seller one slow dashboard run was for",
+        "correct": true,
+        "why": "Right: the log keeps the values."
+      }
+    ]
+  },
+  {
+    "id": "ex-z1wa2m0r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At 900 transactions a second the average latency was 29 ms; at 1050 it was 133 ms, with a maximum of 1099. What is the right reading?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "The server is near the knee of the curve",
+        "correct": true,
+        "why": "Right: a sixth more work, four and a half times the latency."
+      },
+      {
+        "text": "The disk is failing at higher rates",
+        "correct": false,
+        "why": "Nothing points at the disk; this is queueing."
+      },
+      {
+        "text": "1050 is above the maximum, so the run is invalid",
+        "correct": false,
+        "why": "1050 is below 1099."
+      },
+      {
+        "text": "Latency grows in proportion to load",
+        "correct": false,
+        "why": "It grows slowly and then suddenly, not in proportion."
+      }
+    ]
+  },
+  {
+    "id": "ex-eh4vjger",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A table grows by 2 GB a month and its disk has 50 GB free. How many months until it is full, if nothing else changes?",
+    "hint": "Lesson 23.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "months"
+  },
+  {
+    "id": "ex-bymhk2qs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why should an alert on an `integer` key's sequence fire about a year before it runs out, while a disk alert can fire weeks ahead?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Sequences grow faster than disks",
+        "correct": false,
+        "why": "How fast they grow is measured separately for each."
+      },
+      {
+        "text": "The disk alert is always ignored anyway",
+        "correct": false,
+        "why": "Nothing in the lesson says so."
+      },
+      {
+        "text": "Sequences are more important than disks",
+        "correct": false,
+        "why": "The difference is the fix, not importance."
+      },
+      {
+        "text": "The fix, moving the key to bigint, rewrites the table and needs planning",
+        "correct": true,
+        "why": "Right: the alert's lead time is the fix's duration plus a margin."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyrhw49z",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these are walls that `capacity.sql` reads from inside the database? Choose all that apply.",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "The age of the oldest unfrozen transaction id",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each sequence against its maximum",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Free space on the disk",
+        "correct": false,
+        "why": "The database cannot see it; df can."
+      },
+      {
+        "text": "Connections against max_connections",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-20e613qx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new index made a query 0.018 ms faster per call; the write latency before and after overlapped entirely. What may you conclude about its cost on writes?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "That it has none",
+        "correct": false,
+        "why": "Not shown is not zero."
+      },
+      {
+        "text": "Nothing: the measurement was too coarse",
+        "correct": true,
+        "why": "Right: the cost has to be measured another way, in space and per write."
+      },
+      {
+        "text": "That writes became faster",
+        "correct": false,
+        "why": "Overlapping ranges show no direction."
+      },
+      {
+        "text": "That it doubled the cost of writes",
+        "correct": false,
+        "why": "A doubling would show far outside the range."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tjyda69",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A change saves 2 ms per call on a statement that runs 50 times a second. How many seconds of server time does it save per hour?",
+    "hint": "Lesson 24.",
+    "value": 360,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-7bgtap85",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two runs before a change gave 1134 and 1151 transactions a second; two after gave 1200 and 1116. What is the verdict under the lesson's rule?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "A loss of 3%",
+        "correct": false,
+        "why": "That picks the opposite pair."
+      },
+      {
+        "text": "Exactly no change",
+        "correct": false,
+        "why": "Overlap means not shown, not proven equal."
+      },
+      {
+        "text": "Not shown: the ranges overlap",
+        "correct": true,
+        "why": "Right: more or longer runs are the way to find out."
+      },
+      {
+        "text": "A 6% improvement",
+        "correct": false,
+        "why": "That picks the best after against the worst before."
+      }
+    ]
+  },
+  {
+    "id": "ex-5krtsa3m",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Before dropping an index, keep the statement that rebuilds it, which the function named `pg_get_` followed by ___ prints.",
+    "hint": "Lesson 24.",
+    "blanks": [
+      {
+        "accept": [
+          "indexdef"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-38wb6tjw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which join method fits a handful of outer rows with an index on the inner table's join column?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Nested loop",
+        "correct": true,
+        "why": "Right: one index lookup per outer row is cheap when the rows are few."
+      },
+      {
+        "text": "Hash join",
+        "correct": false,
+        "why": "Building a hash of the whole inner table costs more than a few lookups."
+      },
+      {
+        "text": "Merge join",
+        "correct": false,
+        "why": "Sorting both sides is wasted on a handful of rows."
+      },
+      {
+        "text": "Cross join",
+        "correct": false,
+        "why": "That is every pair, not a join method the planner picks."
+      }
+    ]
+  },
+  {
+    "id": "ex-28smsp9f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A hash join shows `Batches: 8` with `work_mem` at 1MB and `Batches: 1` at 32MB. What does a batch count above 1 mean?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "Eight indexes were used",
+        "correct": false,
+        "why": "A hash join uses no index for the join itself."
+      },
+      {
+        "text": "The hash spilled past work_mem",
+        "correct": true,
+        "why": "Right: whether that is slower has to be measured, and in the lesson one batch was not the fastest."
+      },
+      {
+        "text": "The join ran on eight parallel workers",
+        "correct": false,
+        "why": "Workers are shown separately; batches are about memory."
+      },
+      {
+        "text": "The join was repeated eight times",
+        "correct": false,
+        "why": "That would be loops."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgexxs40",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The planner chose a hash join at 1392 ms over a merge join that ran in 171 ms, with row estimates within 1%. What was the wrong input?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "work_mem was too large",
+        "correct": false,
+        "why": "Memory decides batches, not which method wins here."
+      },
+      {
+        "text": "The statistics were stale",
+        "correct": false,
+        "why": "Fresh statistics gave estimates within 1%."
+      },
+      {
+        "text": "random_page_cost",
+        "correct": true,
+        "why": "Right: with 1.1 the planner picked the merge; the estimates were never the problem."
+      },
+      {
+        "text": "The row estimates",
+        "correct": false,
+        "why": "They were within 1%."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgcr49at",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "As the number of customers in a join grows, put the methods the lesson saw the planner choose in order.",
+    "hint": "Lesson 5.",
+    "items": [
+      "Nested loop, for ten customers",
+      "Nested loop, for a thousand",
+      "Hash join, for twenty thousand"
+    ],
+    "trap": "Per-row lookups win while the outer side is small; a hash wins once building it is cheaper than that many lookups."
+  },
+  {
+    "id": "ex-kfsmkbqt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In `cost=0.43..68618.43`, what is the first number?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "The cost before the node hands up its first row",
+        "correct": true,
+        "why": "Right: the startup cost; the second is the total."
+      },
+      {
+        "text": "The milliseconds the node will take to start",
+        "correct": false,
+        "why": "Costs are in the planner's own units, not milliseconds."
+      },
+      {
+        "text": "The fraction of the table it reads",
+        "correct": false,
+        "why": "That is not what a cost is."
+      },
+      {
+        "text": "The cost of the cheapest alternative plan",
+        "correct": false,
+        "why": "A plan shows only the chosen plan's costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqhjsgkf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An inner node shows `actual time=0.012..0.012 rows=1 loops=25000`. What did it cost in all?",
+    "hint": "Lesson 3. The times are per loop.",
+    "choices": [
+      {
+        "text": "Nothing: loops count retries that were discarded",
+        "correct": false,
+        "why": "Every loop did real work."
+      },
+      {
+        "text": "About 0.012 ms",
+        "correct": false,
+        "why": "That is one loop; there were 25000."
+      },
+      {
+        "text": "About 300 ms and 25000 rows",
+        "correct": true,
+        "why": "Right: times and rows are averages per loop, so multiply."
+      },
+      {
+        "text": "About 25 seconds",
+        "correct": false,
+        "why": "0.012 × 25000 is 300 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5e1rpxb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why wrap `EXPLAIN ANALYZE UPDATE …` in `BEGIN` and `ROLLBACK`?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "To make the timings more accurate",
+        "correct": false,
+        "why": "The transaction does not change the measurement."
+      },
+      {
+        "text": "Because UPDATE plans are only shown inside a transaction",
+        "correct": false,
+        "why": "Plain EXPLAIN UPDATE shows the plan without running it."
+      },
+      {
+        "text": "ANALYZE really runs the statement",
+        "correct": true,
+        "why": "Right: the rows are changed, and the rollback undoes it."
+      },
+      {
+        "text": "EXPLAIN refuses to run outside a transaction",
+        "correct": false,
+        "why": "It runs anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9b7hdnm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A table has `relpages` 1000 and `reltuples` 100000. With `seq_page_cost` 1 and `cpu_tuple_cost` 0.01, what total cost does a plain sequential scan with no condition print?",
+    "hint": "Lesson 3. Pages times one, plus rows times 0.01.",
+    "value": 2000,
+    "tolerance": 0,
+    "unit": "cost units"
+  },
+  {
+    "id": "ex-7dm6tyd8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "You want to know whether a rewritten report does less work, on a shared server whose cache changes all day. What do you compare?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Execution Time of one run each",
+        "correct": false,
+        "why": "Timings move with the cache and the neighbours."
+      },
+      {
+        "text": "The pages touched, hit plus read, at the top node",
+        "correct": true,
+        "why": "Right: the count of pages does not depend on where they were found."
+      },
+      {
+        "text": "The cost on the top line",
+        "correct": false,
+        "why": "Two different queries' costs are not comparable that way."
+      },
+      {
+        "text": "The number of nodes in the plan",
+        "correct": false,
+        "why": "A longer plan can do less work."
+      }
+    ]
+  },
+  {
+    "id": "ex-xckpqbap",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Seller 42 is not on `most_common_vals` for `orders.seller_id`. How is its count estimated?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "As one row, the default for unknown values",
+        "correct": false,
+        "why": "The estimate was 1491."
+      },
+      {
+        "text": "The leftover share, split evenly",
+        "correct": true,
+        "why": "Right: 0.7382 of the table over 990 values, 1491 rows."
+      },
+      {
+        "text": "From the histogram of seller_id",
+        "correct": false,
+        "why": "The lesson's arithmetic uses the list and n_distinct."
+      },
+      {
+        "text": "It is read from the index",
+        "correct": false,
+        "why": "Estimates come from pg_statistic, not by reading the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ccde64b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Curitiba is 0.0685 of customers and PR is 0.0685. Without extended statistics, what does the planner expect for `city = 'Curitiba' AND state = 'PR'`?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "Too many: it adds the fractions",
+        "correct": false,
+        "why": "AND multiplies; it does not add."
+      },
+      {
+        "text": "Zero, because the two conditions conflict",
+        "correct": false,
+        "why": "They do not conflict; they agree."
+      },
+      {
+        "text": "Far too few: it multiplies the fractions",
+        "correct": true,
+        "why": "Right: 938 expected, while every Curitiba customer is in PR."
+      },
+      {
+        "text": "Exactly the right number",
+        "correct": false,
+        "why": "Independence is wrong for two columns that say one thing."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3f24e36",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "With `default_statistics_target` at 100, how many rows does ANALYZE sample from a table?",
+    "hint": "Lesson 7.",
+    "value": 30000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-j7f10e3g",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each `pg_stats` field to what it describes.",
+    "hint": "Lesson 7.",
+    "pairs": [
+      {
+        "left": "`most_common_vals`",
+        "right": "the values frequent enough to be listed"
+      },
+      {
+        "left": "`histogram_bounds`",
+        "right": "bucket edges holding equal numbers of rows"
+      },
+      {
+        "left": "`n_distinct`",
+        "right": "how many different values, or a negative fraction"
+      },
+      {
+        "left": "`correlation`",
+        "right": "how closely physical order follows the column's order"
+      }
+    ],
+    "right_distractors": [
+      "how often the column is updated"
+    ]
+  },
+  {
+    "id": "ex-enj4kvwt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A table of readings has `sensor_id` and `site_id`, and each sensor belongs to one site. `WHERE site_id = 7 AND sensor_id = 70` is estimated at 3 rows and returns 4000. What fixes the estimate?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "VACUUM FULL",
+        "correct": false,
+        "why": "Rewriting the table changes nothing about the assumption."
+      },
+      {
+        "text": "A bigger default_statistics_target on both columns",
+        "correct": false,
+        "why": "Better single-column numbers are still multiplied as if independent."
+      },
+      {
+        "text": "An index on both columns",
+        "correct": false,
+        "why": "An index speeds the read but does not change the estimate."
+      },
+      {
+        "text": "Extended statistics on the pair, then ANALYZE",
+        "correct": true,
+        "why": "Right: dependencies tell the planner sensor fixes site."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv7kfbnm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A month of orders (4.5% of the table) gets an index scan and a hundred customers (0.05%) get a bitmap scan. What explains it?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "customer_id has no index",
+        "correct": false,
+        "why": "The bitmap scan used orders_customer_id_idx."
+      },
+      {
+        "text": "The month was cached and the customers were not",
+        "correct": false,
+        "why": "Plans are chosen from statistics, not from what is cached."
+      },
+      {
+        "text": "Correlation: the month's rows share pages",
+        "correct": true,
+        "why": "Right: placed_at follows the physical order; customer_id does not."
+      },
+      {
+        "text": "The planner always prefers bitmaps for small results",
+        "correct": false,
+        "why": "A month is the larger result and got the index scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg8p5egq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A bitmap heap scan shows `Heap Blocks: exact=635 lossy=16032` and a large `Rows Removed by Index Recheck`. What happened?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "The index is corrupt",
+        "correct": false,
+        "why": "Lossy pages are a memory limit, not damage."
+      },
+      {
+        "text": "The table needs ANALYZE",
+        "correct": false,
+        "why": "Statistics do not decide how big the bitmap may grow."
+      },
+      {
+        "text": "Another session held a lock on those pages",
+        "correct": false,
+        "why": "Reads do not wait on page locks like that."
+      },
+      {
+        "text": "The bitmap outgrew `work_mem`",
+        "correct": true,
+        "why": "Right: every row on a lossy page has to be checked again."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7qbkrrd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A colleague puts `SET enable_seqscan = off` in the application's connection setup because one report got faster. What is the course's verdict?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "Fine, as long as the report is the most important query",
+        "correct": false,
+        "why": "It changes every query on those connections."
+      },
+      {
+        "text": "Wrong: every query loses its right sequential scans, and the real misestimate stays",
+        "correct": true,
+        "why": "Right: the setting is for comparing plans, never a fix."
+      },
+      {
+        "text": "Wrong only because it needs a restart",
+        "correct": false,
+        "why": "It is a session setting; that is not the problem."
+      },
+      {
+        "text": "Fine, because the planner ignores it when a scan is cheaper",
+        "correct": false,
+        "why": "It adds a large penalty to every sequential scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h40rhsj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`CREATE INDEX ON orders (placed_at) WHERE status = 'pending'`. Which query can use it?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "`count(*)` of all orders",
+        "correct": false,
+        "why": "The index holds only the pending ones."
+      },
+      {
+        "text": "`count(*) WHERE status = 'pending'`",
+        "correct": true,
+        "why": "Right: the query's condition implies the index's."
+      },
+      {
+        "text": "`count(*) WHERE status <> 'pending'`",
+        "correct": false,
+        "why": "Those are exactly the rows the index leaves out."
+      },
+      {
+        "text": "`count(*) WHERE status = $1`, generic plan, run with 'pending'",
+        "correct": false,
+        "why": "A generic plan must cover every status."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1ygknat",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does PostgreSQL refuse `CREATE INDEX ON orders (date(placed_at))`?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "placed_at already has an index",
+        "correct": false,
+        "why": "A column may have several indexes."
+      },
+      {
+        "text": "Dates cannot be indexed",
+        "correct": false,
+        "why": "The AT TIME ZONE expression was indexed."
+      },
+      {
+        "text": "It depends on the TimeZone setting",
+        "correct": true,
+        "why": "Right: it is not IMMUTABLE, so an index could hold answers that change."
+      },
+      {
+        "text": "Functions cannot appear in an index",
+        "correct": false,
+        "why": "lower(email) was indexed in the same lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-44aha9nt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "The full index on `status` was 13 MB and the partial one for pending orders 176 kB. About how many times smaller is the partial one? (1 MB = 1024 kB, round to the nearest ten)",
+    "hint": "Lesson 9.",
+    "value": 80,
+    "tolerance": 10,
+    "unit": "times"
+  },
+  {
+    "id": "ex-qeykenyw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A plan says `Index Only Scan` with `Heap Fetches: 87062` out of about a hundred thousand rows. How should you read it?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "As mostly an ordinary index scan",
+        "correct": true,
+        "why": "Right: most rows still went to the table, because their pages were not all-visible."
+      },
+      {
+        "text": "As a fast plan, because the node's name says so",
+        "correct": false,
+        "why": "The name is the plan's intention; Heap Fetches is what happened."
+      },
+      {
+        "text": "As a corrupted visibility map",
+        "correct": false,
+        "why": "Recent changes clear bits; nothing is corrupt."
+      },
+      {
+        "text": "As a sign the index is missing a column",
+        "correct": false,
+        "why": "A missing column would rule out an index-only scan altogether."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ed0bw7j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What sets a page's bit in the visibility map, and what clears it?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "CREATE INDEX sets it; DROP INDEX clears it",
+        "correct": false,
+        "why": "The map belongs to the table, not to an index."
+      },
+      {
+        "text": "VACUUM sets it; a row change clears it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "ANALYZE sets it; a read clears it",
+        "correct": false,
+        "why": "ANALYZE samples; reads change nothing."
+      },
+      {
+        "text": "A checkpoint sets it; a restart clears it",
+        "correct": false,
+        "why": "Neither is what moves those bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwz4y6rw",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Columns a query only returns, and never searches or sorts on, go after the key in an ___ clause.",
+    "hint": "Lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "INCLUDE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sacy90pj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An `ALTER TABLE` waits behind a long `SELECT`, and every new `SELECT` on the table waits behind the `ALTER`. What is the defence the lesson names?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Raising max_connections",
+        "correct": false,
+        "why": "More connections join the same queue."
+      },
+      {
+        "text": "Running the ALTER with NOWAIT on every SELECT",
+        "correct": false,
+        "why": "NOWAIT is for row locks in SELECT FOR UPDATE."
+      },
+      {
+        "text": "Running VACUUM first",
+        "correct": false,
+        "why": "VACUUM does not release anybody's lock."
+      },
+      {
+        "text": "`lock_timeout` of a few seconds, and retry",
+        "correct": true,
+        "why": "Right: a short wait that gives up keeps the queue from forming."
+      }
+    ]
+  },
+  {
+    "id": "ex-1f0tf6ev",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A finance report uses `FOR UPDATE SKIP LOCKED` \"so that it never waits\". What is wrong?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Locked rows are silently skipped",
+        "correct": true,
+        "why": "Right: SKIP LOCKED is for a job queue, where any free row will do."
+      },
+      {
+        "text": "SKIP LOCKED only works on primary keys",
+        "correct": false,
+        "why": "It works on any rows the query locks."
+      },
+      {
+        "text": "Reports cannot take row locks",
+        "correct": false,
+        "why": "Any query can."
+      },
+      {
+        "text": "It makes the report wait longer",
+        "correct": false,
+        "why": "It makes it wait less, at the price of missing rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xdc6sjy",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of a deadlock between two windows in order.",
+    "hint": "Lesson 12.",
+    "items": [
+      "Window A updates order 1",
+      "Window B updates order 2",
+      "Window A asks for order 2 and waits",
+      "Window B asks for order 1 and waits",
+      "After deadlock_timeout, one of them is cancelled"
+    ],
+    "trap": "Each must hold one row before asking for the other's; detection only runs after the timeout."
+  },
+  {
+    "id": "ex-cbx66tcz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A customer cancels an order, the page reloads from a replica 10 seconds behind, and the order shows as still open. What property was broken?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Isolation between two transactions",
+        "correct": false,
+        "why": "The problem is a copy behind, not two transactions colliding."
+      },
+      {
+        "text": "The replica's indexes",
+        "correct": false,
+        "why": "The replica has the same indexes; it was behind."
+      },
+      {
+        "text": "Reading your own writes",
+        "correct": true,
+        "why": "Right: the fix waits for the replica to replay past the write's LSN, or reads the primary."
+      },
+      {
+        "text": "Durability",
+        "correct": false,
+        "why": "The cancel was committed on the primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4hwqrbp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team turns on `hot_standby_feedback` so a six-hour export on the replica stops failing. A week later the primary's busiest tables have grown. Why?",
+    "hint": "Lessons 15 and 20.",
+    "choices": [
+      {
+        "text": "The replica sends its own writes back to the primary",
+        "correct": false,
+        "why": "A standby writes nothing."
+      },
+      {
+        "text": "Feedback doubles the WAL the primary writes",
+        "correct": false,
+        "why": "It sends a horizon, not data."
+      },
+      {
+        "text": "The export copies the tables into the primary",
+        "correct": false,
+        "why": "Nothing is copied back."
+      },
+      {
+        "text": "It holds back VACUUM on the primary",
+        "correct": true,
+        "why": "Right: the replica's snapshot now holds the primary's horizon."
+      }
+    ]
+  },
+  {
+    "id": "ex-wq45ejrb",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Without feedback, a long query on the replica was cancelled with `canceling statement due to conflict with ___`.",
+    "hint": "Lesson 20.",
+    "blanks": [
+      {
+        "accept": [
+          "recovery"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6vjgxwd1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a plan read from the bottom, where does the misestimate that matters start?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "At any join",
+        "correct": false,
+        "why": "A join usually inherits its inputs' errors."
+      },
+      {
+        "text": "At the lowest node where estimated and actual rows part",
+        "correct": true,
+        "why": "Right: the nodes above it only inherit the error."
+      },
+      {
+        "text": "At the top node, which has the biggest numbers",
+        "correct": false,
+        "why": "The top only shows the sum of what went wrong below."
+      },
+      {
+        "text": "At the slowest node",
+        "correct": false,
+        "why": "Slowness can be a consequence of an estimate made lower down."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vkk6ms7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "After 300,000 orders were imported with autovacuum off, at about how many changed rows would autoanalyze have run on `orders` (2,000,000 rows, threshold 50, scale factor 0.1)?",
+    "hint": "Lesson 6. Threshold plus factor times rows.",
+    "value": 200050,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-nq85jf45",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After a bulk import of pending orders, `status = 'pending'` was estimated at 7590 and returned 307,319, and the plan became a long nested loop. What fixed it, and what prevents it next time?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "An index on status, so the scan is cheap",
+        "correct": false,
+        "why": "An index does not change the estimate the plan was built on."
+      },
+      {
+        "text": "VACUUM FULL, so the table is compact again",
+        "correct": false,
+        "why": "Rewriting the table does not refresh the statistics."
+      },
+      {
+        "text": "More work_mem, so the plan fits in memory",
+        "correct": false,
+        "why": "Memory changes a spill, not the estimate."
+      },
+      {
+        "text": "ANALYZE, now and after each bulk load",
+        "correct": true,
+        "why": "Right: the old fraction of pending rows was the stale part."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz926097",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Which index type answers `tags @> ARRAY['kitchen']` on `products`?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "GIN",
+        "correct": true,
+        "why": "Right: for each tag, the rows that contain it."
+      },
+      {
+        "text": "A B-tree on tags",
+        "correct": false,
+        "why": "A B-tree orders whole arrays; it cannot look inside one."
+      },
+      {
+        "text": "Hash",
+        "correct": false,
+        "why": "Hash answers only = on the whole value."
+      },
+      {
+        "text": "BRIN",
+        "correct": false,
+        "why": "BRIN keeps a minimum and a maximum per range of pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-7aezhdba",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A BRIN index on `events.at` worked and one on `events.customer_id` took 445 ms for one customer. Which statistic told the difference in advance?",
+    "hint": "Lessons 7 and 8.",
+    "choices": [
+      {
+        "text": "most_common_freqs",
+        "correct": false,
+        "why": "Frequencies say how often, not where."
+      },
+      {
+        "text": "n_distinct",
+        "correct": false,
+        "why": "How many values there are does not say how they are laid out."
+      },
+      {
+        "text": "correlation",
+        "correct": true,
+        "why": "Right: near 1 for at, about zero for customer_id."
+      },
+      {
+        "text": "null_frac",
+        "correct": false,
+        "why": "Nulls are not what made it slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a1pzx3f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A `LIKE 'user42@%'` on a column with a unique B-tree gets a sequential scan. What is the cause?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Unique indexes are only for constraints, never for reads",
+        "correct": false,
+        "why": "The planner reads unique indexes like any other."
+      },
+      {
+        "text": "The table needs VACUUM before the index is trusted",
+        "correct": false,
+        "why": "Vacuum does not decide whether an index can answer LIKE."
+      },
+      {
+        "text": "The collation; it needs `text_pattern_ops`",
+        "correct": true,
+        "why": "Right: under another collation the index's order is not a character order."
+      },
+      {
+        "text": "LIKE can never use an index, whatever the pattern",
+        "correct": false,
+        "why": "With text_pattern_ops the same LIKE used one."
+      }
+    ]
+  },
+  {
+    "id": "ex-48z6cmfs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why does an index that no query reads still cost something on a table that takes writes?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The planner wastes time considering it on every read",
+        "correct": false,
+        "why": "Planning cost exists, but the lesson measured the writes."
+      },
+      {
+        "text": "It is rebuilt every night",
+        "correct": false,
+        "why": "Nothing rebuilds indexes on a schedule by itself."
+      },
+      {
+        "text": "It locks the table while unused",
+        "correct": false,
+        "why": "An unused index takes no locks."
+      },
+      {
+        "text": "Every write updates it too",
+        "correct": true,
+        "why": "Right: in the lesson the log per order nearly doubled with the leftovers."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjx547ex",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "An index shows `idx_scan = 0` on the primary. Which of these could still mean it is needed? Choose all that apply.",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "The counters were reset two days ago and a report runs monthly",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Reports run on a read replica",
+        "correct": true,
+        "why": "Right: each server counts its own scans."
+      },
+      {
+        "text": "It backs a unique constraint",
+        "correct": true,
+        "why": "Right: it is used on every insert, without a scan."
+      },
+      {
+        "text": "Its table is large",
+        "correct": false,
+        "why": "Size says nothing about whether it is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-aqa7rm53",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A busy `payments` table has an unread index on `status`, and every payment's status changes. What does dropping it give back besides space?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "A smaller primary key",
+        "correct": false,
+        "why": "The primary key is a separate index."
+      },
+      {
+        "text": "HOT updates, which skip writing every index",
+        "correct": true,
+        "why": "Right: an indexed column changing rules HOT out."
+      },
+      {
+        "text": "Faster reads of payments by id",
+        "correct": false,
+        "why": "The id lookup uses the primary key either way."
+      },
+      {
+        "text": "Nothing: an unread index costs only space",
+        "correct": false,
+        "why": "It costs every update that changes status."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mh7npnn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A session opened `REPEATABLE READ`, read a table and went idle for an hour while another updated it constantly. What did VACUUM do meanwhile?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Removed them, because the idle session had not written",
+        "correct": false,
+        "why": "A reader's snapshot holds the horizon too."
+      },
+      {
+        "text": "Waited for a lock on the table",
+        "correct": false,
+        "why": "VACUUM does not wait on readers' locks."
+      },
+      {
+        "text": "Left the dead versions in place",
+        "correct": true,
+        "why": "Right: the horizon held, and the table grew."
+      },
+      {
+        "text": "Cancelled the idle session",
+        "correct": false,
+        "why": "VACUUM never cancels sessions."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkkx0z7a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What happens when `idle_in_transaction_session_timeout` fires?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "The transaction is committed",
+        "correct": false,
+        "why": "Nothing is committed on its behalf."
+      },
+      {
+        "text": "A warning is written and the session goes on",
+        "correct": false,
+        "why": "It ends the session."
+      },
+      {
+        "text": "Only the current statement is cancelled",
+        "correct": false,
+        "why": "That is statement_timeout, and an idle session is running none."
+      },
+      {
+        "text": "The session ends with FATAL",
+        "correct": true,
+        "why": "Right: the whole session, not only the transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4w4a2sp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Deleting October from the plain `events` table wrote about 251 MB of WAL; detaching and dropping October's partition wrote 55 kB. Roughly how many times more did the DELETE write? Round to the nearest thousand.",
+    "hint": "Lesson 17. 1 MB = 1024 kB.",
+    "value": 5000,
+    "tolerance": 500,
+    "unit": "times"
+  },
+  {
+    "id": "ex-ksy2vz8f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why must the primary key of a table partitioned by `at` include `at`?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Because partitions cannot have indexes otherwise",
+        "correct": false,
+        "why": "Partitions can have any index; uniqueness is the issue."
+      },
+      {
+        "text": "Each partition checks only its own rows",
+        "correct": true,
+        "why": "Right: without the key column, two months could hold the same id."
+      },
+      {
+        "text": "Because timestamps are faster to index",
+        "correct": false,
+        "why": "Speed is not the reason; correctness is."
+      },
+      {
+        "text": "It is a convention, not a rule",
+        "correct": false,
+        "why": "The CREATE TABLE in the lesson failed without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5jvzva8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A nightly `DELETE` of rows older than 90 days on a 400 GB log table takes an hour and makes replicas fall behind. What does the course suggest?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Add an index on the date column",
+        "correct": false,
+        "why": "The DELETE still writes every row it removes."
+      },
+      {
+        "text": "VACUUM FULL after each DELETE",
+        "correct": false,
+        "why": "That adds a full rewrite and a lock."
+      },
+      {
+        "text": "Run the DELETE in smaller batches during the day",
+        "correct": false,
+        "why": "That spreads the same work and the same log over the day."
+      },
+      {
+        "text": "Partition by day and drop old days",
+        "correct": true,
+        "why": "Right: dropping a partition writes almost nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfz8z8q5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which kind of load is the reason sharding exists, because replicas cannot absorb it?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Reads",
+        "correct": false,
+        "why": "Replicas and caches spread reads."
+      },
+      {
+        "text": "Reports",
+        "correct": false,
+        "why": "Reports are reads, served by a replica."
+      },
+      {
+        "text": "Backups",
+        "correct": false,
+        "why": "Backups are not why anybody shards."
+      },
+      {
+        "text": "Writes",
+        "correct": true,
+        "why": "Right: every copy has to apply every write."
+      }
+    ]
+  },
+  {
+    "id": "ex-bawkbnaf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Split by `seller_id % 4`, what percentage of all orders landed on the shard holding seller 1? Use one decimal place.",
+    "hint": "Lesson 19.",
+    "value": 43.7,
+    "tolerance": 0.1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-qkn2nn6j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two shards are backed up one after the other each night, an hour apart. What does a restore of both lose that one database's restore would not?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "The sequences of both shards",
+        "correct": false,
+        "why": "Sequences are restored with each shard."
+      },
+      {
+        "text": "Nothing, if both backups succeeded",
+        "correct": false,
+        "why": "They come back at two different moments."
+      },
+      {
+        "text": "A single moment: cross-shard transactions come back cut in half",
+        "correct": true,
+        "why": "Right: one shard holds what the other has not seen."
+      },
+      {
+        "text": "The indexes, which are not backed up",
+        "correct": false,
+        "why": "Indexes come back with the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-xgcmxfb9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "During a lock incident a dashboard of `active` queries over five seconds shows nothing. Why?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The waits are shorter than five seconds",
+        "correct": false,
+        "why": "The waiters would show if the filter included them; the root would not."
+      },
+      {
+        "text": "Locks are only visible in the log",
+        "correct": false,
+        "why": "pg_locks shows them live."
+      },
+      {
+        "text": "The root is idle in transaction, which the filter hides",
+        "correct": true,
+        "why": "Right: the session holding everybody up is running nothing."
+      },
+      {
+        "text": "pg_stat_activity is empty during lock waits",
+        "correct": false,
+        "why": "The waiters are listed, with wait_event_type Lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4h6marg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why does cancelling the waiting session a user complains about not end a blocking chain?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Cancelling never works on a waiting session",
+        "correct": false,
+        "why": "It cancels the wait; it does not remove the cause."
+      },
+      {
+        "text": "The cancelled session restarts its statement automatically",
+        "correct": false,
+        "why": "Nothing restarts it; the application may."
+      },
+      {
+        "text": "Cancelling escalates the lock to the whole table",
+        "correct": false,
+        "why": "Locks are not escalated in PostgreSQL."
+      },
+      {
+        "text": "The root still holds its lock",
+        "correct": true,
+        "why": "Right: act on the root, which blocks somebody and waits for nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-04011jwf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does `pg_cancel_backend` do to a session that is idle in a transaction?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Nothing visible: it has no statement running to cancel",
+        "correct": true,
+        "why": "Right: pg_terminate_backend ends the session and rolls the transaction back."
+      },
+      {
+        "text": "It commits the transaction",
+        "correct": false,
+        "why": "Nothing is ever committed on a session's behalf."
+      },
+      {
+        "text": "It ends the session",
+        "correct": false,
+        "why": "That is pg_terminate_backend."
+      },
+      {
+        "text": "It releases its locks but keeps the transaction",
+        "correct": false,
+        "why": "Locks last until the transaction ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tvz9j3j",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "In `pg_locks`, the column that tells a held lock from one somebody is waiting for is `___`.",
+    "hint": "Lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "granted"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-camsegqz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two sessions under READ COMMITTED each read a price of 9290, add 100 in the application and write it back. The price ends at 9390. What fixes it without changing the isolation level?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Committing each transaction faster, before the other reads",
+        "correct": false,
+        "why": "The window shrinks; the lost update stays possible."
+      },
+      {
+        "text": "Running VACUUM between the two",
+        "correct": false,
+        "why": "VACUUM has nothing to do with lost updates."
+      },
+      {
+        "text": "Add 100 in SQL, or read with FOR UPDATE",
+        "correct": true,
+        "why": "Right: the arithmetic happens on the current row, or the second reader waits."
+      },
+      {
+        "text": "An index on the price column, so the write is quicker",
+        "correct": false,
+        "why": "Indexes do not order concurrent writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-w17cvky9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Under REPEATABLE READ, a session's UPDATE fails with `could not serialize access due to concurrent update`. What must the application do?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Retry only the failed UPDATE",
+        "correct": false,
+        "why": "The snapshot is still old; the whole transaction must start again."
+      },
+      {
+        "text": "Ignore it; the row was updated anyway",
+        "correct": false,
+        "why": "It was not; the transaction is aborted."
+      },
+      {
+        "text": "Switch the whole server to SERIALIZABLE",
+        "correct": false,
+        "why": "That raises more of these errors, not fewer."
+      },
+      {
+        "text": "Roll back and run the whole transaction again",
+        "correct": true,
+        "why": "Right: the retry belongs around the unit of work, not one statement."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5xc6kzk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two sessions each check that a customer has no pending order and then insert one. REPEATABLE READ let both in; SERIALIZABLE stopped the second with 40001. What is this anomaly called?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Write skew",
+        "correct": true,
+        "why": "Right: each read was true when made, and the writes together break the rule."
+      },
+      {
+        "text": "A dirty read",
+        "correct": false,
+        "why": "PostgreSQL never shows uncommitted data."
+      },
+      {
+        "text": "A deadlock",
+        "correct": false,
+        "why": "Nobody waited for anybody."
+      },
+      {
+        "text": "A lost update",
+        "correct": false,
+        "why": "No row was written twice; two new rows were inserted."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wm1gtjg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Under READ COMMITTED, the read-modify-write pgbench run committed 55,802 bumps but added only 37,821. How many were lost?",
+    "hint": "Lesson 14.",
+    "value": 17981,
+    "tolerance": 0,
+    "unit": "bumps"
+  },
+  {
+    "id": "ex-2nm6gd3k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Throughput rose from 489 to about 1400 transactions a second up to 16 clients and then stayed flat to 90, while latency climbed to 61 ms. What does raising `max_connections` to 500 buy?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Lower latency for every client",
+        "correct": false,
+        "why": "Latency rose with clients."
+      },
+      {
+        "text": "Nothing at all, because the setting is ignored",
+        "correct": false,
+        "why": "It takes effect after a restart; it just does not help."
+      },
+      {
+        "text": "More waiting, not more throughput",
+        "correct": true,
+        "why": "Right: past the flat part, each new client only queues."
+      },
+      {
+        "text": "About five times the throughput",
+        "correct": false,
+        "why": "The curve was already flat at 16 clients."
+      }
+    ]
+  },
+  {
+    "id": "ex-69244xvh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Through PgBouncer in transaction mode, 200 clients ran while the server saw 9 connections. What does a client lose in that mode?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Transactions: each statement commits on its own",
+        "correct": false,
+        "why": "A transaction stays on one server connection to the end."
+      },
+      {
+        "text": "Authentication",
+        "correct": false,
+        "why": "Clients still authenticate."
+      },
+      {
+        "text": "Nothing; transaction mode is identical to a direct connection",
+        "correct": false,
+        "why": "Anything that outlives a transaction can break."
+      },
+      {
+        "text": "Session state, such as a SET",
+        "correct": true,
+        "why": "Right: the lesson showed it happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-snvq4fxh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Pool sizes of 2, 4, 8, 16 and 32 server connections were measured on the four-processor lab machine, and above 8 the differences were within the noise. What should set a pool's size?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "A measurement on the server it serves",
+        "correct": true,
+        "why": "Right: a rule of thumb starts the search; the curve ends it."
+      },
+      {
+        "text": "The number of application clients",
+        "correct": false,
+        "why": "That is what the pool exists to decouple from."
+      },
+      {
+        "text": "max_connections minus three",
+        "correct": false,
+        "why": "That is a ceiling, not a good size."
+      },
+      {
+        "text": "Always 100",
+        "correct": false,
+        "why": "The lab measured nothing gained above 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7s4dx9c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "On a table partitioned by `at`, which condition lets the planner prune partitions?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "`customer_id = 42`",
+        "correct": false,
+        "why": "Not the partition key."
+      },
+      {
+        "text": "A range on at itself",
+        "correct": true,
+        "why": "Right: the key, compared directly, names the partitions."
+      },
+      {
+        "text": "`date(at) = '2025-11-15'`",
+        "correct": false,
+        "why": "A function on the key reads every partition."
+      },
+      {
+        "text": "`extract(month FROM at) = 11`",
+        "correct": false,
+        "why": "Also a function on the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-yn0jna32",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A prepared statement with a generic plan shows `Subplans Removed: 3`. When were those partitions removed?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "When the partitions were created",
+        "correct": false,
+        "why": "Pruning is per query."
+      },
+      {
+        "text": "By VACUUM, overnight",
+        "correct": false,
+        "why": "VACUUM has nothing to do with pruning."
+      },
+      {
+        "text": "At execution, once the parameter's value was known",
+        "correct": true,
+        "why": "Right: run-time pruning."
+      },
+      {
+        "text": "At planning, from the literal in the SQL",
+        "correct": false,
+        "why": "A generic plan has no literal, only $1."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv8763sb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With 365 daily partitions, planning grew from about 1 ms to about 30 ms, and even a pruned query planned slower. What is the lesson for choosing a partition size?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "More partitions are always faster",
+        "correct": false,
+        "why": "The measurement says the opposite for planning."
+      },
+      {
+        "text": "Daily partitions are required for pruning",
+        "correct": false,
+        "why": "Monthly partitions pruned in the lesson."
+      },
+      {
+        "text": "Planning time does not matter on a server",
+        "correct": false,
+        "why": "30 ms per query is more than most of the workload's queries take to run."
+      },
+      {
+        "text": "No finer than the removal you need",
+        "correct": true,
+        "why": "Right: monthly if you drop months."
+      }
+    ]
+  },
+  {
+    "id": "ex-6942k8bh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In cache-aside, who fills the cache?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The application, after a miss",
+        "correct": true,
+        "why": "Right: it reads the database and stores the answer with a TTL."
+      },
+      {
+        "text": "The database, on every write",
+        "correct": false,
+        "why": "The database knows nothing about the cache."
+      },
+      {
+        "text": "The cache, by polling the database",
+        "correct": false,
+        "why": "Redis does not read PostgreSQL on its own."
+      },
+      {
+        "text": "A nightly job",
+        "correct": false,
+        "why": "Cache-aside fills on demand."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sh2j1r7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A seller's dashboard is cached for 60 seconds. A new order arrives at second 10. What do readers see until second 60?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Nothing, because the key is deleted on write",
+        "correct": false,
+        "why": "Only if the application invalidates it; a TTL alone does not."
+      },
+      {
+        "text": "The old count: the TTL is the staleness the cache allows",
+        "correct": true,
+        "why": "Right: in the lesson the cache said 91 while the database said 92."
+      },
+      {
+        "text": "The new count, because Redis watches the table",
+        "correct": false,
+        "why": "Nothing tells Redis about the order."
+      },
+      {
+        "text": "An error until the key expires",
+        "correct": false,
+        "why": "The stale value is served without complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrm2j8ta",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The application deletes a key on every write, yet a stale value sometimes comes back and stays. How?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The TTL resets the deleted key",
+        "correct": false,
+        "why": "A TTL only removes keys."
+      },
+      {
+        "text": "PostgreSQL replays the old value into Redis",
+        "correct": false,
+        "why": "The database never writes to the cache."
+      },
+      {
+        "text": "A slow reader re-caches the old value",
+        "correct": true,
+        "why": "Right: the lesson forced that interleaving and guarded it with a per-key version."
+      },
+      {
+        "text": "Redis ignores DEL under load",
+        "correct": false,
+        "why": "DEL always runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-sry5nz7w",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "When a hot key expired, 50 concurrent requests made 50 database queries; with single flight they made how many?",
+    "hint": "Lesson 21.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-07jq3be9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why did `REFRESH MATERIALIZED VIEW CONCURRENTLY` fail until an index was added?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "It needs a unique index to match old rows with new ones",
+        "correct": true,
+        "why": "Right: a concurrent refresh computes a diff, row by row."
+      },
+      {
+        "text": "Materialized views cannot be refreshed without any index",
+        "correct": false,
+        "why": "A plain REFRESH worked without one."
+      },
+      {
+        "text": "CONCURRENTLY needs superuser",
+        "correct": false,
+        "why": "The error was about the index, not privileges."
+      },
+      {
+        "text": "The view was too large",
+        "correct": false,
+        "why": "Size is not the condition."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmrrv2cn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "With `default_statistics_target` at 100, how many rows does ANALYZE put in its sample of a five-million-row table?",
+    "hint": "Lesson 6.",
+    "value": 30000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-t1n1jxzn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After an import, `reltuples` still said 2,000,000, yet the plan estimated the table at 2.3 million rows. Where did the planner get the larger number?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "From autoanalyze, which ran during the import",
+        "correct": false,
+        "why": "It was switched off, and last_autoanalyze stayed empty."
+      },
+      {
+        "text": "From n_live_tup in pg_stat_user_tables",
+        "correct": false,
+        "why": "The planner reads pg_class and the file size, not the activity counters."
+      },
+      {
+        "text": "From the table's current size in pages",
+        "correct": true,
+        "why": "Right: it scales reltuples by the real page count, so the count is right and the mix is stale."
+      },
+      {
+        "text": "From a quick count it runs when reltuples looks old",
+        "correct": false,
+        "why": "The planner never counts rows to plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhsp098v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Sort planned for 7590 rows received 307,319. What happened to it?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "It spilled to disk as an external merge",
+        "correct": true,
+        "why": "Right: 7216 kB written, memory planned for an estimate spent on the actual."
+      },
+      {
+        "text": "The planner stopped and replanned it with the right count",
+        "correct": false,
+        "why": "A plan is fixed once execution starts."
+      },
+      {
+        "text": "It sorted only the first 7590 rows",
+        "correct": false,
+        "why": "Every row is sorted; the estimate only sized the memory."
+      },
+      {
+        "text": "It failed with an out-of-memory error",
+        "correct": false,
+        "why": "A sort that outgrows its memory spills; it does not fail."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kvfz7bh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In `pg_locks`, which column separates a lock that is held from one that is being waited for?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "`mode`",
+        "correct": false,
+        "why": "mode says which kind of lock, held or not."
+      },
+      {
+        "text": "`locktype`",
+        "correct": false,
+        "why": "locktype says what is locked: a relation, a tuple, a transaction id."
+      },
+      {
+        "text": "`granted`",
+        "correct": true,
+        "why": "Right: t for held, f for waiting, and the f rows are the problem."
+      },
+      {
+        "text": "`pid`",
+        "correct": false,
+        "why": "pid says whose lock it is, not whether it was given."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5epmmtq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a blocking graph built from `pg_blocking_pids`, which session is the root?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "The session running the longest statement",
+        "correct": false,
+        "why": "The lesson's root was running no statement at all: idle in transaction."
+      },
+      {
+        "text": "The one that has waited longest",
+        "correct": false,
+        "why": "The longest waiter is a victim; the root waits for nobody."
+      },
+      {
+        "text": "One that blocks others and waits for nobody",
+        "correct": true,
+        "why": "Right: an empty blocked_by, and its pid inside somebody else's."
+      },
+      {
+        "text": "The one with the highest pid, since it arrived last",
+        "correct": false,
+        "why": "pids say nothing about who blocks whom."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6sxr86y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A session inside a long transaction is stuck in a lock wait, and you cancel its statement with `pg_cancel_backend`. Which locks does it still hold?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Every lock its transaction took, until it rolls back",
+        "correct": true,
+        "why": "Right: which is why terminating may be needed after all."
+      },
+      {
+        "text": "Only row locks; table locks are released at once",
+        "correct": false,
+        "why": "Locks of every kind are released at the end of the transaction, not before."
+      },
+      {
+        "text": "None: cancelling ends the transaction",
+        "correct": false,
+        "why": "Cancelling fails the statement; the transaction stays open until the client rolls back."
+      },
+      {
+        "text": "Only the lock it was waiting for",
+        "correct": false,
+        "why": "It never had that one; it was waiting for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c585gyxz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "With `log_lock_waits = on` and the default `deadlock_timeout`, after how many milliseconds does a waiting session write its first `still waiting` line?",
+    "hint": "Lesson 13.",
+    "value": 1000,
+    "tolerance": 50,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-fe48mmvb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "What does PostgreSQL start on the server for each client connection?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "A thread inside one shared server process",
+        "correct": false,
+        "why": "PostgreSQL forks a process per connection, not a thread."
+      },
+      {
+        "text": "A whole operating-system process",
+        "correct": true,
+        "why": "Right: one per session, visible in ps."
+      },
+      {
+        "text": "Nothing until the first query arrives",
+        "correct": false,
+        "why": "The process exists, idle, from the moment the client connects."
+      },
+      {
+        "text": "A slot in PgBouncer",
+        "correct": false,
+        "why": "PgBouncer is a separate program the lesson adds; PostgreSQL knows nothing of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qr0n6mqf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Ninety clients completed 1481 transactions a second. By Little's law, what was the average latency, in milliseconds?",
+    "hint": "Clients divided by throughput.",
+    "value": 60.8,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-a35c7xsf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Through PgBouncer with `default_pool_size = 8`, 200 clients connected. How many server connections did PostgreSQL see?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "100, the server's max_connections",
+        "correct": false,
+        "why": "The pool never opens more than its size."
+      },
+      {
+        "text": "Four, one per processor",
+        "correct": false,
+        "why": "Processors are where the curve bends; the pool size set the count."
+      },
+      {
+        "text": "200, one per client",
+        "correct": false,
+        "why": "That is a direct connection; the pool shares eight."
+      },
+      {
+        "text": "Eight; the rest waited in the pooler",
+        "correct": true,
+        "why": "Right: 192 clients waited in the pooler instead of the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8t6qz36",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Three application servers each run PgBouncer with `default_pool_size = 30` against one database with `max_connections = 100` on four processors. What does the lesson say is wrong?",
+    "hint": "Add the pools up.",
+    "choices": [
+      {
+        "text": "PgBouncer cannot run on more than one server",
+        "correct": false,
+        "why": "It can; the problem is the sum of the pools."
+      },
+      {
+        "text": "Ninety busy connections only add waiting, with little room left",
+        "correct": true,
+        "why": "Right: past the bend, more connections add waiting, not throughput."
+      },
+      {
+        "text": "Each pool should be 100 to match max_connections",
+        "correct": false,
+        "why": "That would ask for 300 connections from a server that allows 100."
+      },
+      {
+        "text": "Nothing: three pools of 30 are within 100",
+        "correct": false,
+        "why": "They fit, with ten left for migrations and incidents, and far past the bend."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pc1ye7q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a table partitioned by month on `at`, why does `WHERE date(at) = '2025-11-10'` read every partition?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Pruning only works with prepared statements",
+        "correct": false,
+        "why": "A literal range on at pruned to one partition in psql."
+      },
+      {
+        "text": "It is not a range of `at`, so the bounds cannot rule anything out",
+        "correct": true,
+        "why": "Right: the bounds are values of at, and a function of at is not at."
+      },
+      {
+        "text": "November's partition had no index",
+        "correct": false,
+        "why": "Pruning uses the partition bounds, not indexes."
+      },
+      {
+        "text": "Statistics on the partitions were stale",
+        "correct": false,
+        "why": "Pruning compares bounds; statistics do not enter into it."
+      }
+    ]
+  },
+  {
+    "id": "ex-87a6dxn8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An `Append` in a plan shows `Subplans Removed: 3`. What happened?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Three workers were not launched",
+        "correct": false,
+        "why": "Workers appear as Workers Launched; subplans are partitions."
+      },
+      {
+        "text": "Three partitions were empty",
+        "correct": false,
+        "why": "Empty partitions are scanned like any other unless pruned."
+      },
+      {
+        "text": "Three partitions were dropped when execution started",
+        "correct": true,
+        "why": "Right: the plan covered them all and pruned once the value was known."
+      },
+      {
+        "text": "The planner removed three indexes it judged useless",
+        "correct": false,
+        "why": "Plans never remove indexes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sn9yanh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To make a prepared statement use one plan for every value from its first execution, set `plan_cache_mode` to ___.",
+    "hint": "A setting value with two underscores inside it.",
+    "blanks": [
+      {
+        "accept": [
+          "force_generic_plan"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dr2z3hy7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Counting one day of events took 216.7 ms on the plain `events` table and 48.3 ms on `events_by_month`. About how many times faster was the partitioned table? One decimal.",
+    "hint": "Divide.",
+    "value": 4.5,
+    "tolerance": 0.2,
+    "unit": "times"
+  },
+  {
+    "id": "ex-49dy5f64",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In cache-aside, what does the application do on a cache miss?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Asks the database, stores the answer with a TTL, returns it",
+        "correct": true,
+        "why": "Right: the cache fills only with answers somebody asked for."
+      },
+      {
+        "text": "Returns an empty result and lets the cache warm up later",
+        "correct": false,
+        "why": "The user gets the real answer on a miss, from the database."
+      },
+      {
+        "text": "Asks the cache server to fetch it from the database",
+        "correct": false,
+        "why": "Redis knows nothing about the database; the application fetches."
+      },
+      {
+        "text": "Writes every row of the table into the cache",
+        "correct": false,
+        "why": "That is preloading, not cache-aside."
+      }
+    ]
+  },
+  {
+    "id": "ex-9n8tdrt5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Of 5000 dashboard requests through the lesson's cache, how many reached the database?",
+    "hint": "Lesson 21.",
+    "value": 200,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-pjn8g8aj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With a 60-second TTL and no invalidation, how long is a change invisible to readers on average?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Exactly sixty seconds, every time",
+        "correct": false,
+        "why": "That is the worst case; a change can land just before an entry expires."
+      },
+      {
+        "text": "Until the next restart of the cache",
+        "correct": false,
+        "why": "The TTL ends each entry long before any restart."
+      },
+      {
+        "text": "Not at all, because Redis watches the table",
+        "correct": false,
+        "why": "Redis never sees the database's writes."
+      },
+      {
+        "text": "About thirty seconds",
+        "correct": true,
+        "why": "Right: half the TTL on average, the whole TTL at worst."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p1mfda1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Fifty requests for one missing key ran the count fifty times, each taking about 1.3 s instead of 55 ms. What fixes the stampede, as the lesson built it?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "One caller takes a lock with SET NX and queries; the rest wait and reread",
+        "correct": true,
+        "why": "Right: single flight, one count instead of fifty."
+      },
+      {
+        "text": "More processors for the database",
+        "correct": false,
+        "why": "Fifty identical counts would still run; they would only queue less."
+      },
+      {
+        "text": "Deleting the key on every write",
+        "correct": false,
+        "why": "That makes misses more frequent, and each one can stampede."
+      },
+      {
+        "text": "A longer TTL on the key",
+        "correct": false,
+        "why": "The stampede happens at the miss, whatever the TTL."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhcnhkrb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why is pgbench's built-in TPC-B-like test not a measurement of your application?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "It runs its own tables and statements, not yours",
+        "correct": true,
+        "why": "Right: it measures the server on somebody else's workload."
+      },
+      {
+        "text": "It only runs for a fixed ten seconds",
+        "correct": false,
+        "why": "Its duration is whatever -T says."
+      },
+      {
+        "text": "It cannot run with more than one client",
+        "correct": false,
+        "why": "It takes -c like any pgbench run."
+      },
+      {
+        "text": "It writes nothing, so it is only a read test",
+        "correct": false,
+        "why": "It updates three tables and inserts into a fourth."
+      }
+    ]
+  },
+  {
+    "id": "ex-wq8m100g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Where should the weights of a benchmark's scripts come from?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "From the size of the tables each one reads",
+        "correct": false,
+        "why": "Size says nothing about frequency."
+      },
+      {
+        "text": "From the call counts in pg_stat_statements",
+        "correct": true,
+        "why": "Right: the tally says how often each statement really runs."
+      },
+      {
+        "text": "From the mean time of each statement",
+        "correct": false,
+        "why": "The mean says how slow, not how often."
+      },
+      {
+        "text": "Equal weights, to be fair to every script",
+        "correct": false,
+        "why": "A real application is not evenly mixed."
+      }
+    ]
+  },
+  {
+    "id": "ex-6jc26c99",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A closed-loop run gave 6.5 ms; the same workload offered at a fixed 900 a second with `-R` gave 17.1 ms, 13.0 of it schedule lag. Which number describes what users would see at that rate?",
+    "hint": "Lessons 22 and 23.",
+    "choices": [
+      {
+        "text": "4.1 ms, after taking the lag out",
+        "correct": false,
+        "why": "The lag is part of what a user waits."
+      },
+      {
+        "text": "Neither: -R makes results meaningless",
+        "correct": false,
+        "why": "-R is what makes the arrival pattern realistic."
+      },
+      {
+        "text": "17.1 ms: users arrive on their own schedule and wait",
+        "correct": true,
+        "why": "Right: a closed loop never sends the next request until the last returns, so it hides the queue."
+      },
+      {
+        "text": "6.5 ms, the server's real speed",
+        "correct": false,
+        "why": "That is what a client that politely waits sees, not arriving users."
+      }
+    ]
+  },
+  {
+    "id": "ex-34ggne4a",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Three runs after a fresh copy gave 1157, 1434 and 1311 transactions a second, and the first was discarded as warm-up. By how many percent do the other two differ, relative to the lower one? Round to the nearest whole number.",
+    "hint": "Lesson 22. (1434 − 1311) ÷ 1311.",
+    "value": 9,
+    "tolerance": 0.5,
+    "unit": "%"
+  }
+]

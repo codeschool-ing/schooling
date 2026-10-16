@@ -1,0 +1,361 @@
+{
+ "ex-e9tzykfp": {
+  "prompt": "Por que rodar um script do k6 não precisa de Node.js nem de `npm install`?",
+  "hint": "Que tipo de programa é o k6?",
+  "choices": [
+   {
+    "text": "O k6 baixa o Node.js na primeira vez que um script roda",
+    "why": "Nada é baixado; o único arquivo do pacote é a ferramenta inteira."
+   },
+   {
+    "text": "Os scripts são compilados para Go antes de o k6 rodá-los",
+    "why": "O JavaScript é interpretado dentro do k6; não vira código-fonte em Go."
+   },
+   {
+    "text": "O k6 é um programa Go com um motor de JavaScript próprio dentro",
+    "why": "Certo. O script roda dentro do próprio k6, então o arquivo único do pacote é tudo."
+   },
+   {
+    "text": "O Ubuntu 24.04 traz um runtime de JavaScript na base",
+    "why": "Os pacotes da base da aula 1 não têm runtime de JavaScript, e o k6 não usaria um."
+   }
+  ]
+ },
+ "ex-g5xhwsxh": {
+  "prompt": "Cinco usuários virtuais em laço mandam uma requisição cada e depois dormem 1 s. Se toda resposta levasse 250 ms, quantas requisições por segundo os cinco mandariam no total?",
+  "hint": "Uma iteração dura a resposta mais o sono."
+ },
+ "ex-gkage1wq": {
+  "prompt": "O que o `-q` muda em `k6 run -q k6/first.js`?",
+  "hint": "Compare uma execução com e sem ele.",
+  "choices": [
+   {
+    "text": "Esconde o logo e a linha de progresso que o k6 redesenha enquanto roda",
+    "why": "Certo. O resumo do fim do teste é o mesmo com ou sem ele."
+   },
+   {
+    "text": "Encurta o resumo para mostrar os limites e os checks, sem as outras linhas",
+    "why": "O resumo mantém todas as linhas; só sai o que é impresso durante a execução."
+   },
+   {
+    "text": "Desliga os checks para a execução ficar mais rápida",
+    "why": "Os checks rodam como sempre; o `-q` é sobre o terminal, não sobre o teste."
+   },
+   {
+    "text": "Roda o teste em segundo plano",
+    "why": "O comando continua preso ao terminal até o teste acabar."
+   }
+  ]
+ },
+ "ex-jnyb3kr0": {
+  "prompt": "Um colega põe `const shows = http.get(BASE + '/shows').json();` no nível de cima do script, fora de qualquer função. O que acontece quando o script roda?",
+  "hint": "Código de inicialização.",
+  "choices": [
+   {
+    "text": "É mandada uma vez por iteração e contada em `http_reqs`",
+    "why": "Isso seria a função padrão. O nível de cima é código de inicialização."
+   },
+   {
+    "text": "O k6 para com um erro antes de qualquer carga, e sai com 107",
+    "why": "Certo. A inicialização não pode mandar requisições; dados necessários antes da carga ficam no setup()."
+   },
+   {
+    "text": "É mandada uma vez, pelo primeiro usuário virtual, e a resposta é compartilhada por todos",
+    "why": "A inicialização roda para cada usuário virtual, e de qualquer forma o k6 recusa uma requisição ali."
+   },
+   {
+    "text": "É mandada por cada usuário virtual antes da carga, e fica fora do resumo",
+    "why": "Um palpite razoável sobre a inicialização, mas o k6 recusa a requisição em vez de mandá-la."
+   }
+  ]
+ },
+ "ex-tjjtjdxy": {
+  "prompt": "Por que o script acrescenta o 409 aos status esperados com `http.setResponseCallback`?",
+  "hint": "O que um 409 quer dizer na bilheteria?",
+  "choices": [
+   {
+    "text": "O 409 é o assento ocupado, uma resposta certa que não é falha",
+    "why": "Certo. Sem isso, cada assento recusado subiria o `http_req_failed` sem nada ter dado errado."
+   },
+   {
+    "text": "Para o k6 repetir a reserva com outro assento",
+    "why": "O k6 não repete; o callback só decide o que conta como falha."
+   },
+   {
+    "text": "Para as respostas 409 ficarem mais rápidas",
+    "why": "O callback muda como as respostas são contadas, não como o servidor responde."
+   },
+   {
+    "text": "Porque o k6 trata uma resposta 4xx como pane do script e interrompe o teste",
+    "why": "O k6 conta um status inesperado em `http_req_failed` e segue em frente."
+   }
+  ]
+ },
+ "ex-7wwvwk6f": {
+  "prompt": "Ligue cada peça de um cenário do k6 ao que ela decide.",
+  "hint": "As notas ao lado de `options`.",
+  "pairs": [
+   {
+    "left": "constant-vus",
+    "right": "um número fixo de usuários, cada um repetindo assim que termina"
+   },
+   {
+    "left": "constant-arrival-rate",
+    "right": "uma taxa de novas iterações por segundo, mantida por uma duração"
+   },
+   {
+    "left": "ramping-arrival-rate",
+    "right": "uma taxa de novas iterações que passa por estágios"
+   },
+   {
+    "left": "maxVUs",
+    "right": "quantos usuários o k6 pode ter ocupados antes de descartar iterações"
+   }
+  ],
+  "right_distractors": [
+   "quantas vezes uma requisição que falhou é repetida"
+  ]
+ },
+ "ex-dnxn68bh": {
+  "prompt": "A bilheteria começa a responder `GET /shows/{id}` com um 200 cujo corpo não tem o campo `left`. Com o script como está, o que a execução informa?",
+  "hint": "Qual dos dois mecanismos olha o corpo?",
+  "choices": [
+   {
+    "text": "O `http_req_failed` passa de 1%, então a execução termina com código 99",
+    "why": "O status é 200, um esperado, então nenhuma requisição conta como falha."
+   },
+   {
+    "text": "Um xis em `seats left is a number`, e a execução sai com 0",
+    "why": "Certo. Um check conta a falha, e nenhum limite vigia os checks."
+   },
+   {
+    "text": "O k6 para o cenário no primeiro corpo errado e sai com código 107",
+    "why": "Um check nunca para nada; ele é contado e a iteração continua."
+   },
+   {
+    "text": "Nada",
+    "why": "O check enxerga: ele imprime um xis com o número de falhas."
+   }
+  ]
+ },
+ "ex-a6v4ny8v": {
+  "prompt": "Na chave de limite `http_req_duration{name:booking}`, a parte entre chaves fica só com as requisições que carregam essa ___.",
+  "hint": "Definida com `tags:` nos parâmetros da requisição.",
+  "blanks": [
+   {
+    "accept": [
+     "tag",
+     "tags",
+     "etiqueta"
+    ]
+   }
+  ]
+ },
+ "ex-z2wz5rsp": {
+  "prompt": "Por que a requisição de navegação leva `tags: { name: 'show' }` se o endereço já diz qual espetáculo ela pede?",
+  "hint": "Há vinte espetáculos à venda.",
+  "choices": [
+   {
+    "text": "Sem tag o k6 deixa a requisição de fora do resumo e de todos os limites",
+    "why": "Requisições sem tag são contadas como qualquer outra, pelo endereço."
+   },
+   {
+    "text": "A tag manda o nome ao servidor como cabeçalho",
+    "why": "As tags ficam dentro do k6; o servidor nunca as vê."
+   },
+   {
+    "text": "Ela dá nome ao passo da jornada para quem lê o script numa revisão de código",
+    "why": "O `group('browse', …)` já faz isso; a tag tem uma função nas métricas."
+   },
+   {
+    "text": "Os vinte endereços passam a contar como uma só requisição nas métricas",
+    "why": "Certo. Um nome junta `/shows/981` a `/shows/1000` numa linha em vez de vinte."
+   }
+  ]
+ },
+ "ex-hhpmajaj": {
+  "prompt": "O `k6 run` termina com `exit 99`. O que esse código diz?",
+  "hint": "A linha logo acima dele.",
+  "choices": [
+   {
+    "text": "O script tem um erro de sintaxe",
+    "why": "Um erro no script para o k6 antes da carga, com outro código: 107 nesta aula."
+   },
+   {
+    "text": "Algum limite foi ultrapassado",
+    "why": "Certo. 99 é o código do k6 para limites ultrapassados, digam o que disserem as outras linhas."
+   },
+   {
+    "text": "Um check falhou em mais de 1% das iterações",
+    "why": "Checks não definem o código de saída, a não ser que um limite os vigie."
+   },
+   {
+    "text": "O servidor parou de responder no meio",
+    "why": "Conexões recusadas apareceriam em `http_req_failed`; 99 é sobre limites."
+   }
+  ]
+ },
+ "ex-js2pngpc": {
+  "prompt": "Na execução a 30 jornadas por segundo, `http_req_failed` ficou em 0.00% e os 801 checks passaram, e mesmo assim a execução reprovou. Por quê?",
+  "hint": "O que a bilheteria fez com cada requisição?",
+  "choices": [
+   {
+    "text": "O k6 acabou contando as respostas 409 como falha",
+    "why": "Aí o `http_req_failed` não estaria em 0.00%."
+   },
+   {
+    "text": "Toda resposta veio certa e atrasada, e os limites de tempo foram ultrapassados",
+    "why": "Certo. Lento não é erro, e é por isso que o requisito leva também um limite de tempo."
+   },
+   {
+    "text": "As 260 iterações descartadas são contadas como requisições com falha pelo limite",
+    "why": "Uma iteração descartada não manda nada, então não acrescenta requisição a métrica nenhuma."
+   },
+   {
+    "text": "Checks que passam fazem o k6 sair com 99",
+    "why": "Checks aprovados não mexem no código de saída."
+   }
+  ]
+ },
+ "ex-s754wzc0": {
+  "prompt": "O resumo de uma execução por taxa de chegada mostra `dropped_iterations: 260`. O que concluir antes de ler qualquer percentil?",
+  "hint": "Quem começa uma iteração nesse executor?",
+  "choices": [
+   {
+    "text": "260 requisições falharam e ficaram fora de `http_req_failed`",
+    "why": "Iterações descartadas não mandaram requisição, então não havia o que falhar."
+   },
+   {
+    "text": "O servidor recusou 260 conexões",
+    "why": "Os descartes acontecem dentro do k6, que não tinha usuário virtual livre para começá-las."
+   },
+   {
+    "text": "A execução aplicou menos carga do que a escrita no script",
+    "why": "Certo. O k6 ficou sem usuários virtuais, então os percentis descrevem um teste mais leve."
+   },
+   {
+    "text": "260 iterações foram repetidas depois de um timeout",
+    "why": "O k6 não repete nada; uma iteração descartada só não começa."
+   }
+  ]
+ },
+ "ex-j72x731s": {
+  "prompt": "Quais destes fazem o `k6 run` terminar com um código de saída diferente de zero? Escolha todos os que se aplicam.",
+  "hint": "Quais mecanismos decidem o código de saída?",
+  "choices": [
+   {
+    "text": "O percentil 95 de `http_req_duration` passa do limite em `thresholds`",
+    "why": "Certo. Um limite ultrapassado é o código de saída 99."
+   },
+   {
+    "text": "`checks: ['rate>0.99']` está em `thresholds`, e 5% dos checks falham",
+    "why": "Certo. Com um limite sobre eles, checks que falham decidem o resultado."
+   },
+   {
+    "text": "Um check falha em 5% das iterações e nenhum limite fala de checks",
+    "why": "Sem um limite, um check que falha é uma contagem no resumo e o código de saída fica 0."
+   },
+   {
+    "text": "Algumas reservas respondem 409, que o callback de resposta lista como esperado",
+    "why": "Um status esperado é um sucesso, então não mexe em métrica de falha nenhuma."
+   }
+  ]
+ },
+ "ex-nrheshwk": {
+  "prompt": "Por que o resumo imprime uma linha `{ name:booking }` sob `http_req_duration` e nenhuma para `{ name:show }`?",
+  "hint": "O que no script fala de `name:booking`?",
+  "choices": [
+   {
+    "text": "Só requisições POST ganham uma linha própria",
+    "why": "O método não tem nada a ver; quem decide é um limite."
+   },
+   {
+    "text": "Um limite cita `name:booking`, e nenhum cita `name:show`",
+    "why": "Certo. O k6 imprime a linha de uma tag quando um limite pergunta por ela."
+   },
+   {
+    "text": "As requisições de espetáculo foram rápidas demais para medir à parte",
+    "why": "Foram medidas; ninguém pediu para vê-las à parte."
+   },
+   {
+    "text": "Os grupos escondem as tags das requisições de dentro",
+    "why": "Grupos e tags são coisas separadas, e o resumo completo mostra os dois."
+   }
+  ]
+ },
+ "ex-nan05ka2": {
+  "prompt": "Ponha as fases de uma requisição numa conexão já aberta na ordem em que acontecem, com os nomes do resumo completo.",
+  "hint": "Escrever, esperar, ler.",
+  "items": [
+   "http_req_sending",
+   "http_req_waiting",
+   "http_req_receiving"
+  ]
+ },
+ "ex-xhsc72zk": {
+  "prompt": "Um requisito novo diz: \"o checkout termina em até 2 s no percentil 95 a 20 pedidos por segundo\". Qual cenário o testa como está escrito?",
+  "hint": "A carga é um número de pessoas ou uma taxa?",
+  "choices": [
+   {
+    "text": "`constant-vus` com 20 usuários, cada um dormindo um segundo entre requisições",
+    "why": "Isso dá umas 20 por segundo só enquanto as respostas são instantâneas; quando ficam lentas, a taxa cai."
+   },
+   {
+    "text": "`constant-arrival-rate` a 20 por segundo, com `maxVUs` suficiente para nenhuma ser descartada",
+    "why": "Certo. O requisito é uma taxa, e uma taxa de chegada a mantém por mais lentas que fiquem as respostas."
+   },
+   {
+    "text": "`ramping-arrival-rate` de 1 a 200 por segundo",
+    "why": "Isso procura o ponto de quebra; o requisito nomeia uma carga a manter."
+   },
+   {
+    "text": "`constant-vus` com 20 usuários e sem sono",
+    "why": "Cada usuário espera a resposta, então a taxa depende do servidor, não do requisito."
+   }
+  ]
+ },
+ "ex-js0k3ehx": {
+  "prompt": "Uma execução com `vus: 50` e `duration: '10m'` passa no limite `p(95)<200`. O resumo também mostra `http_reqs` a 12 por segundo, quando o time esperava umas 40. Qual a leitura mais provável?",
+  "hint": "Quem dita o ritmo com usuários virtuais em laço?",
+  "choices": [
+   {
+    "text": "O teste vale, porque quem decide é o limite",
+    "why": "O limite se manteve numa carga que ninguém pediu, então o veredito responde a outra pergunta."
+   },
+   {
+    "text": "O k6 é lento demais para mandar 40 requisições por segundo",
+    "why": "O k6 mandou o que os usuários pediram; cada usuário estava esperando o servidor."
+   },
+   {
+    "text": "As respostas ficaram lentas, os usuários em laço mandaram menos e o teste aliviou",
+    "why": "Certo. O laço fechado baixou a carga, e o percentil descreve o teste mais leve."
+   },
+   {
+    "text": "Metade das requisições falhou e ficou fora de `http_reqs`",
+    "why": "Requisições que falham continuam contadas em `http_reqs`."
+   }
+  ]
+ },
+ "ex-d4dagnf0": {
+  "prompt": "Um passo do pipeline roda `k6 run -q load.js` e o job continua verde, embora o time saiba que a taxa de erro subiu para 30%. O script confere toda resposta com `check`, e a única entrada em `thresholds` é `http_req_duration: ['p(95)<500']`. O que falta?",
+  "hint": "O que reprova a execução quando as requisições falham rápido?",
+  "choices": [
+   {
+    "text": "A opção `-q`, que esconde as falhas do pipeline",
+    "why": "O `-q` esconde só a barra de progresso; o código de saída é o mesmo."
+   },
+   {
+    "text": "Um limite sobre `http_req_failed` ou sobre a taxa de `checks`",
+    "why": "Certo. Erros rápidos mantêm a duração baixa, e checks sozinhos nunca definem o código de saída."
+   },
+   {
+    "text": "Um `group` em volta de cada requisição",
+    "why": "Grupos organizam o resumo e não decidem nada."
+   },
+   {
+    "text": "Um `sleep` na função padrão",
+    "why": "O tempo de reflexão muda a carga, não o que conta como falha."
+   }
+  ]
+ }
+}

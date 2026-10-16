@@ -1,0 +1,826 @@
+[
+  {
+    "id": "ex-b39avawx",
+    "version": 1,
+    "section": "four-questions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question about the lapse model takes longest to answer?",
+    "choices": [
+      {
+        "text": "Was it right?",
+        "correct": true,
+        "why": "Right. It waits 90 days for the outcomes."
+      },
+      {
+        "text": "Is the service answering?",
+        "correct": false,
+        "why": "The status of each request says so within seconds."
+      },
+      {
+        "text": "How fast is it?",
+        "correct": false,
+        "why": "Every request's time is logged as it happens."
+      },
+      {
+        "text": "What is it saying tonight?",
+        "correct": false,
+        "why": "That is known the next morning, by comparing nights."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8dfyfnp",
+    "version": 1,
+    "section": "four-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service answers every request in five milliseconds with status 200. What does that say about the model?",
+    "choices": [
+      {
+        "text": "That its probabilities are calibrated against outcomes",
+        "correct": false,
+        "why": "Calibration needs outcomes."
+      },
+      {
+        "text": "Nothing about whether its scores are right",
+        "correct": true,
+        "why": "Right. Speed and status are a service's questions, not the model's."
+      },
+      {
+        "text": "That its inputs have not drifted",
+        "correct": false,
+        "why": "Drifted inputs are answered just as fast."
+      },
+      {
+        "text": "That it was trained on enough data",
+        "correct": false,
+        "why": "The training says nothing at request time."
+      }
+    ]
+  },
+  {
+    "id": "ex-q07rycvd",
+    "version": 1,
+    "section": "four-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson check tonight's scores against last week's, when only outcomes say whether the model is right?",
+    "choices": [
+      {
+        "text": "Outcomes are never collected for this model",
+        "correct": false,
+        "why": "They are; the report card reads them."
+      },
+      {
+        "text": "Last week's scores were checked by a person",
+        "correct": false,
+        "why": "Nobody checked them; they are only a reference."
+      },
+      {
+        "text": "It answers months before the outcomes do",
+        "correct": true,
+        "why": "Right. The early check stands in for the late one."
+      },
+      {
+        "text": "Comparing scores is cheaper than serving them",
+        "correct": false,
+        "why": "Cost is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rghgs62",
+    "version": 1,
+    "section": "logging-requests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the middleware in serve.py do with every request?",
+    "choices": [
+      {
+        "text": "Refuses the ones without a member id",
+        "correct": false,
+        "why": "FastAPI's type check does that."
+      },
+      {
+        "text": "Caches the answer for the next request",
+        "correct": false,
+        "why": "Nothing is cached."
+      },
+      {
+        "text": "Sends the probability to MLflow",
+        "correct": false,
+        "why": "It writes a file; MLflow is not involved."
+      },
+      {
+        "text": "Times it and logs a line of JSON",
+        "correct": true,
+        "why": "Right. Time, path, status, milliseconds, probability, version."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnj6rtp0",
+    "version": 1,
+    "section": "logging-requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the probability computed in the route reach the middleware's log line?",
+    "choices": [
+      {
+        "text": "Through request.state",
+        "correct": true,
+        "why": "Right. A refused request never sets it, and logs null."
+      },
+      {
+        "text": "Through a global variable",
+        "correct": false,
+        "why": "Concurrent requests would overwrite each other."
+      },
+      {
+        "text": "The middleware parses the response body",
+        "correct": false,
+        "why": "It never reads the body."
+      },
+      {
+        "text": "The route writes its own log line",
+        "correct": false,
+        "why": "Only the middleware writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7gv76x2",
+    "version": 1,
+    "section": "logging-requests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the log keep the 404s as well as the answers?",
+    "choices": [
+      {
+        "text": "404s are the slowest requests the service answers",
+        "correct": false,
+        "why": "They are the fastest: one row read, no prediction."
+      },
+      {
+        "text": "Without them the error rate means nothing",
+        "correct": true,
+        "why": "Right. Whatever is not recorded cannot be counted."
+      },
+      {
+        "text": "FastAPI cannot skip them",
+        "correct": false,
+        "why": "The middleware could filter anything."
+      },
+      {
+        "text": "The model learns from them",
+        "correct": false,
+        "why": "Nothing here trains on the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwatn468",
+    "version": 1,
+    "section": "logging-requests",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A file with one JSON object on each line is in a format called JSON ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Lines"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-svssk67f",
+    "version": 1,
+    "section": "under-load",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does latency.py not count a 404 as an error?",
+    "choices": [
+      {
+        "text": "404s are too rare to matter",
+        "correct": false,
+        "why": "A third of the load test's answers were 404s."
+      },
+      {
+        "text": "urllib hides them",
+        "correct": false,
+        "why": "load.py counts them."
+      },
+      {
+        "text": "It is a correct refusal",
+        "correct": true,
+        "why": "Right. Errors are 500 and above."
+      },
+      {
+        "text": "They are written to a different file",
+        "correct": false,
+        "why": "They are in requests.log with the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptr8pj5j",
+    "version": 1,
+    "section": "under-load",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the load test the mean was 68.7 ms and the median 81.3 ms. Why is the mean below the median?",
+    "choices": [
+      {
+        "text": "The slowest requests were dropped",
+        "correct": false,
+        "why": "Every request is in the log."
+      },
+      {
+        "text": "The median is computed on fewer requests",
+        "correct": false,
+        "why": "Both read the same 2,000 lines."
+      },
+      {
+        "text": "pandas rounds the mean down",
+        "correct": false,
+        "why": "Rounding moves a tenth, not twelve milliseconds."
+      },
+      {
+        "text": "Fast refusals pull it down",
+        "correct": true,
+        "why": "Right. Two kinds of request, and the mean describes neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-ad4cqrw5",
+    "version": 1,
+    "section": "under-load",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run of 2,000 requests eight at a time, what was p99, in milliseconds?",
+    "value": 140.6,
+    "tolerance": 0.1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-fr79bfg5",
+    "version": 1,
+    "section": "percentiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a p95 of 120 ms mean?",
+    "choices": [
+      {
+        "text": "95 requests in 100 took under 120 ms",
+        "correct": true,
+        "why": "Right. And 5 in 100 took longer."
+      },
+      {
+        "text": "The average request took 120 ms",
+        "correct": false,
+        "why": "That is the mean, a different number."
+      },
+      {
+        "text": "95% of the time the service was up and answering",
+        "correct": false,
+        "why": "That would be availability, not latency."
+      },
+      {
+        "text": "The slowest request took 120 ms",
+        "correct": false,
+        "why": "That is the max."
+      }
+    ]
+  },
+  {
+    "id": "ex-0dzfh708",
+    "version": 1,
+    "section": "percentiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sending sixteen requests at once instead of one lowered the throughput from 163 to 88 a second. Why?",
+    "choices": [
+      {
+        "text": "The online store locks under load",
+        "correct": false,
+        "why": "Reads from SQLite are not the bottleneck here."
+      },
+      {
+        "text": "Predictions queue in one process",
+        "correct": true,
+        "why": "Right. Past saturation, more traffic is only queueing."
+      },
+      {
+        "text": "The network was saturated",
+        "correct": false,
+        "why": "Everything ran on one machine."
+      },
+      {
+        "text": "load.py sends slower with more threads",
+        "correct": false,
+        "why": "The service's own log shows the waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-karbqc0t",
+    "version": 1,
+    "section": "percentiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does running uvicorn with --workers 4 buy, and what does it cost?",
+    "choices": [
+      {
+        "text": "Faster single requests, for nothing",
+        "correct": false,
+        "why": "One request alone is no faster."
+      },
+      {
+        "text": "A model four times as accurate as before",
+        "correct": false,
+        "why": "Workers change nothing the model says."
+      },
+      {
+        "text": "Parallel predictions, for more memory",
+        "correct": true,
+        "why": "Right. Each worker holds its own copy of the model."
+      },
+      {
+        "text": "Fewer 404s, for slower answers",
+        "correct": false,
+        "why": "404s come from the online store."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zrzwbwx",
+    "version": 1,
+    "section": "percentiles",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the latency figures of the run at sixteen at once from smallest to largest.",
+    "items": [
+      "mean",
+      "p50",
+      "p95",
+      "p99",
+      "max"
+    ]
+  },
+  {
+    "id": "ex-2nrmn2bh",
+    "version": 1,
+    "section": "watching-the-scores",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does watch.py compare tonight's scores and inputs with?",
+    "choices": [
+      {
+        "text": "The test set of lesson 5",
+        "correct": false,
+        "why": "It reads the 28 days before the night."
+      },
+      {
+        "text": "What members did afterwards",
+        "correct": false,
+        "why": "That is the report card's job, 90 days later."
+      },
+      {
+        "text": "A fixed table written by marketing",
+        "correct": false,
+        "why": "Nothing in it is written by hand."
+      },
+      {
+        "text": "The four weeks before it",
+        "correct": true,
+        "why": "Right. The recent past is the reference."
+      }
+    ]
+  },
+  {
+    "id": "ex-63ekhw1p",
+    "version": 1,
+    "section": "watching-the-scores",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does watch.py compare the median of each input rather than its mean?",
+    "choices": [
+      {
+        "text": "Odd members barely move it",
+        "correct": true,
+        "why": "Right. A few odd members do not raise an alarm."
+      },
+      {
+        "text": "pandas cannot average integers",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The mean would be the same every night",
+        "correct": false,
+        "why": "It moves more than the median, not less."
+      },
+      {
+        "text": "The model was trained on medians",
+        "correct": false,
+        "why": "It was trained on each member's values."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zncr102",
+    "version": 1,
+    "section": "watching-the-scores",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these would watch.py raise an alarm for? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "a channel value never seen in the four weeks before",
+        "correct": true,
+        "why": "Right. The encoder would turn it into zeros silently."
+      },
+      {
+        "text": "a night with 40% fewer members scored",
+        "correct": true,
+        "why": "Right. The count may move 10%."
+      },
+      {
+        "text": "a mean probability of 0.18 against 0.174",
+        "correct": false,
+        "why": "Inside the 25% band."
+      },
+      {
+        "text": "one member with a very large spend",
+        "correct": false,
+        "why": "The median does not notice one member."
+      }
+    ]
+  },
+  {
+    "id": "ex-q3y4sx5n",
+    "version": 1,
+    "section": "watching-the-scores",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "watch.py exits with status 1 on an alarm. Why does that matter more than the printed lines?",
+    "choices": [
+      {
+        "text": "Status 1 deletes tonight's scores",
+        "correct": false,
+        "why": "It deletes nothing."
+      },
+      {
+        "text": "Schedulers act on it",
+        "correct": true,
+        "why": "Right. Nobody reads printed lines at 2:30 in the morning."
+      },
+      {
+        "text": "Python prints nothing without it",
+        "correct": false,
+        "why": "The lines print either way."
+      },
+      {
+        "text": "MLflow records the exit status",
+        "correct": false,
+        "why": "MLflow is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsmc6911",
+    "version": 1,
+    "section": "a-broken-night",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After spend_180d was multiplied by 100, what did score_batch.py report?",
+    "choices": [
+      {
+        "text": "A type error in the spend column",
+        "correct": false,
+        "why": "Every value was still a number."
+      },
+      {
+        "text": "That the snapshot was missing",
+        "correct": false,
+        "why": "The snapshot was there, wrong."
+      },
+      {
+        "text": "Success: 3,355 members scored",
+        "correct": true,
+        "why": "Right. Nothing was malformed, so nothing failed."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "It printed its usual line."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qkents0",
+    "version": 1,
+    "section": "a-broken-night",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the broken night, what mean probability of lapsing did the model give?",
+    "value": 0.001,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-gqm5ka1d",
+    "version": 1,
+    "section": "a-broken-night",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which two earlier properties made the repair a single command line?",
+    "choices": [
+      {
+        "text": "The registry alias and the champion's calibration",
+        "correct": false,
+        "why": "Neither was involved in the repair."
+      },
+      {
+        "text": "DVC's cache and Git's history",
+        "correct": false,
+        "why": "The repair did not touch either."
+      },
+      {
+        "text": "The online store and the web service",
+        "correct": false,
+        "why": "The batch path uses neither."
+      },
+      {
+        "text": "Rebuildable snapshots and a batch that replaces",
+        "correct": true,
+        "why": "Right. Lessons 6 and 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-9e054rsh",
+    "version": 1,
+    "section": "the-report-card",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does report_card.py refuse the night of 28 February?",
+    "choices": [
+      {
+        "text": "Its 90 days end after the data does",
+        "correct": true,
+        "why": "Right. A member with no purchase yet may not have come back yet."
+      },
+      {
+        "text": "No scores were stored for that night",
+        "correct": false,
+        "why": "3,355 were."
+      },
+      {
+        "text": "The model version changed that night",
+        "correct": false,
+        "why": "Version 1 scored it."
+      },
+      {
+        "text": "February has too few days",
+        "correct": false,
+        "why": "The calendar is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgznxfj8",
+    "version": 1,
+    "section": "the-report-card",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The report card for 30 November matched lesson 5's test to the last digit. What did that prove?",
+    "choices": [
+      {
+        "text": "That the model has not degraded",
+        "correct": false,
+        "why": "It is the same night it was tested on: nothing could have degraded."
+      },
+      {
+        "text": "That the card computes correctly",
+        "correct": true,
+        "why": "Right. A monitor that disagrees with a trusted number has a bug."
+      },
+      {
+        "text": "That version 2 is worse",
+        "correct": false,
+        "why": "Version 2 was not scored that night."
+      },
+      {
+        "text": "That the labels are wrong",
+        "correct": false,
+        "why": "The two computations agreed."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7qv8816",
+    "version": 1,
+    "section": "the-report-card",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lapsed members were among the top 300 scores on 30 November 2025?",
+    "value": 190,
+    "tolerance": 0,
+    "unit": "members"
+  },
+  {
+    "id": "ex-gk89efta",
+    "version": 1,
+    "section": "cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson measure a deployment by what it holds and for how long?",
+    "choices": [
+      {
+        "text": "Prices per prediction are fixed by law",
+        "correct": false,
+        "why": "No law sets them."
+      },
+      {
+        "text": "Memory is the only cost a model has",
+        "correct": false,
+        "why": "Processor time counts too."
+      },
+      {
+        "text": "Machines are billed by the hour",
+        "correct": true,
+        "why": "Right. The service holds its memory at three in the morning too."
+      },
+      {
+        "text": "The batch uses no memory",
+        "correct": false,
+        "why": "It uses some, for four seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-61tzqp9k",
+    "version": 1,
+    "section": "cost",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each deployment to how much of the month it holds its machine.",
+    "pairs": [
+      {
+        "left": "batch",
+        "right": "about two minutes"
+      },
+      {
+        "left": "service, one worker",
+        "right": "720 hours of about 330 MB"
+      },
+      {
+        "left": "service, four workers",
+        "right": "720 hours of about 1.3 GB"
+      }
+    ],
+    "right_distractors": [
+      "one hour, on the first of the month"
+    ]
+  },
+  {
+    "id": "ex-b6sfjer1",
+    "version": 1,
+    "section": "alerts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these should wake somebody at night for the lapse model?",
+    "choices": [
+      {
+        "text": "A watch alarm on tonight's scores",
+        "correct": false,
+        "why": "The list goes out monthly; it can wait for the morning."
+      },
+      {
+        "text": "A report card a little lower than last month's",
+        "correct": false,
+        "why": "That is a ticket for the morning."
+      },
+      {
+        "text": "A new member joining",
+        "correct": false,
+        "why": "That is normal traffic."
+      },
+      {
+        "text": "The service answering with errors",
+        "correct": true,
+        "why": "Right. Members feel that now."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7c00sg8",
+    "version": 1,
+    "section": "alerts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What goes wrong when alert thresholds are set too tight?",
+    "choices": [
+      {
+        "text": "People learn to ignore them",
+        "correct": true,
+        "why": "Right. And then the real one is ignored too."
+      },
+      {
+        "text": "Real problems slip past unnoticed",
+        "correct": false,
+        "why": "That is what loose thresholds do."
+      },
+      {
+        "text": "The service slows down",
+        "correct": false,
+        "why": "Checking a threshold costs nothing measurable."
+      },
+      {
+        "text": "The model retrains itself",
+        "correct": false,
+        "why": "Nothing here retrains on an alert."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0daynqb",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the nightly chain in the order the cron line runs it.",
+    "items": [
+      "take tonight's snapshot",
+      "score every member",
+      "compare with the four weeks before",
+      "let marketing read the scores"
+    ]
+  },
+  {
+    "id": "ex-7vc17q7j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team watches only latency and error rate for its lapse service. Which failure from this lesson would they miss?",
+    "choices": [
+      {
+        "text": "The service crashing",
+        "correct": false,
+        "why": "Errors would show it."
+      },
+      {
+        "text": "A load that multiplied spend by 100",
+        "correct": true,
+        "why": "Right. Fast, error-free and wrong about everybody."
+      },
+      {
+        "text": "p99 rising under load",
+        "correct": false,
+        "why": "Latency would show it."
+      },
+      {
+        "text": "A request for a member with no features",
+        "correct": false,
+        "why": "That is a logged 404."
+      }
+    ]
+  }
+]

@@ -1,0 +1,533 @@
+{
+  "ex-m3ggxegp": {
+    "prompt": "Antes do OpenTelemetry, quanto custava a uma equipe mudar de fornecedor de monitoramento?",
+    "choices": [
+      {
+        "text": "Trocar o balanceador na frente dos serviços",
+        "why": "O balanceador não tem nada a ver com isso."
+      },
+      {
+        "text": "Nada, já que todo fornecedor já lia o mesmo formato na rede",
+        "why": "Não havia formato comum; foi isso que o OTLP virou."
+      },
+      {
+        "text": "Um banco novo para os rastros",
+        "why": "O armazenamento era do fornecedor; o código é que custava."
+      },
+      {
+        "text": "Reescrever a instrumentação de cada serviço",
+        "why": "Certo. O código que registra estava preso ao produto que guardava."
+      }
+    ]
+  },
+  "ex-3mpjmje6": {
+    "prompt": "Qual destes não faz parte do OpenTelemetry?",
+    "choices": [
+      {
+        "text": "Nomes combinados de atributos como http.route",
+        "why": "Essas são as convenções semânticas dele."
+      },
+      {
+        "text": "Um armazenamento de rastros",
+        "why": "Certo. Armazenamento e telas são do Jaeger, do Tempo ou de um fornecedor."
+      },
+      {
+        "text": "Um protocolo para mandar telemetria, o OTLP",
+        "why": "O OTLP é o protocolo dele."
+      },
+      {
+        "text": "Um Collector que recebe, processa e encaminha telemetria",
+        "why": "O Collector é uma das partes dele."
+      }
+    ]
+  },
+  "ex-hqbddvmm": {
+    "prompt": "Todo serviço poderia mandar spans direto ao Jaeger. Por que pôr um Collector no meio?",
+    "choices": [
+      {
+        "text": "O Collector desenha as páginas de rastros",
+        "why": "O Jaeger as desenha."
+      },
+      {
+        "text": "O Jaeger recusa OTLP mandado por um SDK",
+        "why": "O Jaeger aceita OTLP; o laboratório só passa pelo Collector."
+      },
+      {
+        "text": "Sem ele, cada pedido esperaria seus spans serem guardados",
+        "why": "O SDK já manda em segundo plano, com Collector ou sem."
+      },
+      {
+        "text": "É o único lugar que muda quando o back end muda",
+        "why": "Certo, e onde amostragem e remoção de atributos são configuradas uma vez."
+      }
+    ]
+  },
+  "ex-rfckfnzd": {
+    "prompt": "O que transforma os spans de um rastro numa árvore?",
+    "choices": [
+      {
+        "text": "O id do pai que cada span leva",
+        "why": "Certo. O da raiz é vazio."
+      },
+      {
+        "text": "A ordem em que os spans chegam ao Jaeger",
+        "why": "Os spans chegam em qualquer ordem; a seção 07 mostra lotes que os misturam."
+      },
+      {
+        "text": "O nome do serviço no recurso de cada span",
+        "why": "Um serviço tem muitos spans em muitos níveis."
+      },
+      {
+        "text": "Os horários de início, ordenados pelo Jaeger",
+        "why": "O tempo ordena irmãos; não diz quem é pai de quem."
+      }
+    ]
+  },
+  "ex-fe1zdf5t": {
+    "prompt": "Ligue cada span de uma venda ao tipo dele.",
+    "pairs": [
+      {
+        "left": "POST /events/{id}/tickets, na bilheteria",
+        "right": "SERVER"
+      },
+      {
+        "left": "charge, a chamada ao payments",
+        "right": "CLIENT"
+      },
+      {
+        "left": "sign, trabalho dentro da bilheteria",
+        "right": "INTERNAL"
+      }
+    ]
+  },
+  "ex-6sng5knn": {
+    "prompt": "O que o propagate.extract(self.headers) faz no payments.py?",
+    "choices": [
+      {
+        "text": "Lê o span de quem chamou no cabeçalho, para que o span do payments vire filho dele",
+        "why": "Certo. É assim que um rastro atravessa um processo."
+      },
+      {
+        "text": "Copia os spans da bilheteria para a memória do payments",
+        "why": "Só uma identidade viaja, nunca os spans do outro lado."
+      },
+      {
+        "text": "Manda o span pronto ao Collector",
+        "why": "O processador de lotes faz isso."
+      },
+      {
+        "text": "Confere o número do cartão do pedido",
+        "why": "Lê contexto de rastreamento, nada da venda."
+      }
+    ]
+  },
+  "ex-pt9r9088": {
+    "prompt": "Como o payments vai para um contêiner sem um Dockerfile próprio?",
+    "choices": [
+      {
+        "text": "A imagem da bilheteria, com outro comando",
+        "why": "Certo: o compose.yaml define command como python payments.py."
+      },
+      {
+        "text": "É baixado como imagem pronta de um registro",
+        "why": "É construído do mesmo Dockerfile."
+      },
+      {
+        "text": "Roda na máquina do laboratório fora do Docker",
+        "why": "É um serviço no compose.yaml."
+      },
+      {
+        "text": "O Compose gera um",
+        "why": "O Compose constrói o que recebe."
+      }
+    ]
+  },
+  "ex-rfdfby3w": {
+    "prompt": "Por que os spans da venda se aninham sob o span do pedido sem ids passados à mão?",
+    "choices": [
+      {
+        "text": "Um span começado dentro do bloco with de outro vira filho dele",
+        "why": "Certo. O span aberto é o atual."
+      },
+      {
+        "text": "O Jaeger aninha os spans que se sobrepõem no tempo ao desenhar a página",
+        "why": "O Jaeger usa ids de pai, não sobreposições."
+      },
+      {
+        "text": "Eles dividem a rota como atributo",
+        "why": "Atributos descrevem; não ligam."
+      },
+      {
+        "text": "O tracer dá a todo span de uma thread o mesmo pai",
+        "why": "Aí sign e charge seriam irmãos do pedido."
+      }
+    ]
+  },
+  "ex-0awgv3qb": {
+    "prompt": "Por que a venda chama o payments antes de abrir a transação?",
+    "choices": [
+      {
+        "text": "O OpenTelemetry recusa um span CLIENT dentro de um span de banco",
+        "why": "Spans de qualquer tipo podem se aninhar."
+      },
+      {
+        "text": "Para não segurar a trava da linha durante uma chamada lenta",
+        "why": "Certo. A aula 1 mostrou o que custa uma trava segurada na linha quente."
+      },
+      {
+        "text": "A transação senão seria lida da réplica",
+        "why": "Escritas vão para o primário de qualquer jeito."
+      },
+      {
+        "text": "O payments precisa do número do assento antes",
+        "why": "Ele não recebe assento nenhum."
+      }
+    ]
+  },
+  "ex-h79j9a7y": {
+    "prompt": "O que uma biblioteca de instrumentação para o psycopg acrescentaria?",
+    "choices": [
+      {
+        "text": "Spans dentro dos processos do próprio PostgreSQL",
+        "why": "Ela envolve as chamadas do cliente no serviço."
+      },
+      {
+        "text": "Um substituto do Collector dentro do banco",
+        "why": "Ela roda no serviço, ao lado do SDK."
+      },
+      {
+        "text": "Consultas mais rápidas",
+        "why": "Ela registra; não ajusta."
+      },
+      {
+        "text": "Um span por consulta, sem código em cada tratador",
+        "why": "Certo. O mesmo tipo de span que os feitos à mão."
+      }
+    ]
+  },
+  "ex-tknqtrpj": {
+    "prompt": "No collector.yaml, o que o processador batch faz?",
+    "choices": [
+      {
+        "text": "Escreve uma linha de log por span",
+        "why": "O exportador debug escreve uma por lote."
+      },
+      {
+        "text": "Guarda um rastro em dez",
+        "why": "Isso é amostragem, seção 10."
+      },
+      {
+        "text": "Monta os spans de cada rastro numa árvore antes de encaminhá-la ao Jaeger",
+        "why": "O Jaeger monta as árvores."
+      },
+      {
+        "text": "Agrupa spans por até um segundo antes de passá-los adiante",
+        "why": "Certo: menos pedidos, maiores, ao Jaeger."
+      }
+    ]
+  },
+  "ex-17jyyzfk": {
+    "prompt": "Ponha em ordem o caminho de um span, do código que o cria à página que o mostra.",
+    "items": [
+      "o bloco with termina no app.py",
+      "o processador de lotes o junta",
+      "o exportador OTLP manda o lote para a porta 4318",
+      "o processador batch do Collector o agrupa",
+      "o Jaeger o guarda"
+    ]
+  },
+  "ex-9jj77jx6": {
+    "prompt": "A equipe troca o Jaeger por um serviço de rastros hospedado. O que muda?",
+    "choices": [
+      {
+        "text": "O formato do cabeçalho traceparent",
+        "why": "É um padrão do W3C, sem fornecedor."
+      },
+      {
+        "text": "Os exportadores no collector.yaml",
+        "why": "Certo. Os serviços continuam mandando OTLP ao Collector."
+      },
+      {
+        "text": "O nome de todo span, para combinar com as convenções do fornecedor",
+        "why": "Os nomes seguem as convenções do OpenTelemetry, que os fornecedores leem."
+      },
+      {
+        "text": "O telemetry.py, nos dois serviços, e as imagens deles",
+        "why": "Eles mandam ao Collector, cujo endereço fica."
+      }
+    ]
+  },
+  "ex-5aw5j2qz": {
+    "prompt": "Na primeira venda, o charge começou em 0,1 ms e o span do payments em 14,7 ms. O que era esse intervalo?",
+    "choices": [
+      {
+        "text": "O UPDATE esperando a trava da linha",
+        "why": "O UPDATE veio depois da cobrança, em 54,4 ms."
+      },
+      {
+        "text": "O payments cobrando o cartão",
+        "why": "Esse é o span de 23,2 ms do próprio payments."
+      },
+      {
+        "text": "Conectar e mandar: trabalho que os spans de nenhum serviço cobrem",
+        "why": "Certo. Um minuto depois o mesmo intervalo foi de 1,8 ms."
+      },
+      {
+        "text": "O Collector segurando o span para o lote",
+        "why": "O lote acontece depois de os spans terminarem; não muda os horários deles."
+      }
+    ]
+  },
+  "ex-jwqswh7p": {
+    "prompt": "A primeira venda levou 68,6 ms e a cobrança 38,3 ms. Que porcentagem da venda foi a cobrança? Arredonde para um número inteiro.",
+    "hint": "38,3 ÷ 68,6 × 100.",
+    "unit": "%"
+  },
+  "ex-6qxbwwv6": {
+    "prompt": "As linhas do debug do Collector mostraram lotes de 6 e 3 spans, e a árvore da venda tinha 6. Por que não batem?",
+    "choices": [
+      {
+        "text": "Cada lote é um rastro, e havia dois rastros em andamento",
+        "why": "Lotes não são cortados por rastro."
+      },
+      {
+        "text": "O exportador debug conta serviços em vez de spans",
+        "why": "Ele imprime os dois, como resource spans e spans."
+      },
+      {
+        "text": "O Collector descartou três spans da venda",
+        "why": "O Jaeger tinha os seis."
+      },
+      {
+        "text": "Um lote leva os spans que chegaram naquele segundo",
+        "why": "Certo. O Collector encaminha spans; o Jaeger monta rastros."
+      }
+    ]
+  },
+  "ex-frjz44pg": {
+    "prompt": "A leitura levou 14,5 ms e o SELECT 13,9 ms. O que isso diz que um histograma não diria?",
+    "choices": [
+      {
+        "text": "Que a consulta foi quase a leitura toda",
+        "why": "Certo: para onde foi o tempo de um pedido."
+      },
+      {
+        "text": "Que leituras são rápidas no percentil 95",
+        "why": "Isso foi o que o histograma disse."
+      },
+      {
+        "text": "Quantas leituras houve naquele minuto",
+        "why": "Um contador diz isso."
+      },
+      {
+        "text": "Que a réplica está atrasada em relação ao primário",
+        "why": "A duração de uma consulta não diz nada do atraso."
+      }
+    ]
+  },
+  "ex-2zpx6c67": {
+    "prompt": "Os rastros param num serviço e recomeçam como novos depois dele. Qual a causa mais provável?",
+    "choices": [
+      {
+        "text": "O armazenamento do Jaeger está cheio",
+        "why": "Isso perde spans, não o elo entre eles."
+      },
+      {
+        "text": "O timeout do lote do Collector é curto demais",
+        "why": "O lote não muda ids."
+      },
+      {
+        "text": "Os dois serviços usam linguagens diferentes",
+        "why": "O cabeçalho é o mesmo em toda linguagem."
+      },
+      {
+        "text": "Algo no meio perde o traceparent",
+        "why": "Certo: um proxy, uma fila ou um cliente escrito à mão."
+      }
+    ]
+  },
+  "ex-7tdsvta6": {
+    "prompt": "Em 00-5bd86167ca0ed7a647e37c1ebe501aac-b78031cb62daec0c-03, o campo b78031cb62daec0c é o id do ___.",
+    "blanks": [
+      {
+        "accept": [
+          "pai",
+          "span pai"
+        ]
+      }
+    ]
+  },
+  "ex-hzsdnnyn": {
+    "prompt": "Uma chamada chega ao payments com flags 00, o bit de amostrado desligado. O que o payments faz com o span dele?",
+    "choices": [
+      {
+        "text": "Registra, porque o payments decide sozinho com a própria proporção",
+        "why": "Amostradores baseados no pai seguem a decisão do pai."
+      },
+      {
+        "text": "Recusa o pedido",
+        "why": "A amostragem não afeta a resposta."
+      },
+      {
+        "text": "Registra e começa um rastro novo",
+        "why": "Ele continua o id de rastro de quem chamou."
+      },
+      {
+        "text": "Não o registra, seguindo a decisão de quem chamou",
+        "why": "Certo, com o amostrador baseado no pai. Um rastro é guardado ou descartado inteiro."
+      }
+    ]
+  },
+  "ex-axqn0nz0": {
+    "prompt": "Um cliente mandou o próprio traceparent à bilheteria. Com o id de rastro de quem o Jaeger guardou a venda?",
+    "choices": [
+      {
+        "text": "O do cliente, 0af7651916cd43dd8448eb211c80319c",
+        "why": "Certo. A bilheteria continuou o rastro que recebeu."
+      },
+      {
+        "text": "O que o nginx acrescenta a cada pedido que encaminha",
+        "why": "O nginx não está instrumentado aqui e não acrescenta nada."
+      },
+      {
+        "text": "Um novo, gerado pela bilheteria",
+        "why": "Ela continua os rastros que recebe."
+      },
+      {
+        "text": "Um novo, gerado pelo payments",
+        "why": "O payments continua o da bilheteria."
+      }
+    ]
+  },
+  "ex-qk053v8z": {
+    "prompt": "O que liga uma linha de log ao rastro dela?",
+    "choices": [
+      {
+        "text": "O id do rastro escrito na linha",
+        "why": "Certo. Os mesmos 32 dígitos com que o Jaeger o guarda."
+      },
+      {
+        "text": "A hora dela, comparada com o início do span",
+        "why": "Centenas de pedidos dividem um milissegundo."
+      },
+      {
+        "text": "O nome da cópia que a escreveu",
+        "why": "Uma cópia atende muitos pedidos."
+      },
+      {
+        "text": "A rota e o status, que identificam um pedido",
+        "why": "Milhares de pedidos dividem rota e status."
+      }
+    ]
+  },
+  "ex-sgbwnk4v": {
+    "prompt": "O que é um exemplar?",
+    "choices": [
+      {
+        "text": "Um rastro de amostra que o Jaeger guarda por operação",
+        "why": "Exemplares moram com as métricas."
+      },
+      {
+        "text": "Uma linha de log copiada para um span como evento",
+        "why": "Isso é um evento de span."
+      },
+      {
+        "text": "O primeiro pedido depois de reiniciar",
+        "why": "Não é um termo daqui."
+      },
+      {
+        "text": "Um id de rastro preso a uma observação de um histograma",
+        "why": "Certo: de um percentil lento a um pedido lento."
+      }
+    ]
+  },
+  "ex-r6bf3640": {
+    "prompt": "Por que a amostragem na cabeça guarda ou descarta um rastro inteiro, e não alguns spans?",
+    "choices": [
+      {
+        "text": "O Jaeger recusa rastros incompletos",
+        "why": "Ele guarda os spans que chegarem."
+      },
+      {
+        "text": "Os serviços seguintes leem a decisão nas flags do traceparent",
+        "why": "Certo. Meio rastro é uma árvore com buracos."
+      },
+      {
+        "text": "Cada span é amostrado com o mesmo número aleatório",
+        "why": "A decisão é tomada uma vez, pelo primeiro serviço."
+      },
+      {
+        "text": "O Collector descarta o resto de um rastro quando vê um buraco",
+        "why": "O Collector aqui não amostra nada."
+      }
+    ]
+  },
+  "ex-0agm34fa": {
+    "prompt": "Com parentbased_traceidratio em 0,1, cerca de quantas de 200 leituras devem ser rastreadas?",
+    "hint": "A captura teve 22.",
+    "unit": "rastros"
+  },
+  "ex-kmbczmrb": {
+    "prompt": "Do que a amostragem na cauda precisa que a amostragem na cabeça não precisa?",
+    "choices": [
+      {
+        "text": "Todo span de um rastro num Collector, guardado até ele decidir",
+        "why": "Certo: memória, e roteamento pelo id do rastro."
+      },
+      {
+        "text": "Um amostrador em cada serviço",
+        "why": "A amostragem na cabeça é a dos serviços."
+      },
+      {
+        "text": "Uma proporção abaixo de 1%",
+        "why": "As políticas dela são sobre erros e latência."
+      },
+      {
+        "text": "Um cabeçalho do W3C próprio",
+        "why": "Ela decide no Collector; nenhum cabeçalho entra."
+      }
+    ]
+  },
+  "ex-ddckg0z1": {
+    "prompt": "Os rastros são amostrados a 1%. O que acontece com o contador de pedidos da aula 7?",
+    "choices": [
+      {
+        "text": "Conta um pedido em cem",
+        "why": "Métricas não são amostradas."
+      },
+      {
+        "text": "Para de ser atualizado até o amostrador ser desligado de novo",
+        "why": "O amostrador não sabe nada de métricas."
+      },
+      {
+        "text": "Continua contando todo pedido",
+        "why": "Certo. A amostragem vale para rastros, não para métricas."
+      },
+      {
+        "text": "Conta duas vezes os rastreados",
+        "why": "Rastrear e contar são separados."
+      }
+    ]
+  },
+  "ex-s68aa9g9": {
+    "prompt": "As vendas estão lentas no percentil 95, e os spans do próprio payments são rápidos. Onde olhar em seguida no rastro de uma venda lenta?",
+    "choices": [
+      {
+        "text": "Nos intervalos entre os spans da bilheteria e os do payments",
+        "why": "Certo. Tempo que nenhum span cobre é conexão e rede."
+      },
+      {
+        "text": "No tamanho do lote do Collector",
+        "why": "O lote não atrasa um pedido."
+      },
+      {
+        "text": "No contador de pedidos",
+        "why": "Ele diz quantos, não onde."
+      },
+      {
+        "text": "No span do payments de novo, com muito mais amostras que antes",
+        "why": "Ele já estava rápido."
+      }
+    ]
+  }
+}

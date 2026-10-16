@@ -1,0 +1,438 @@
+{
+  "ex-6042q97h": {
+    "prompt": "Num projeto relacional, o que paga por guardar cada fato num único lugar?",
+    "choices": [
+      {
+        "text": "Joins e um planejador, na leitura",
+        "why": "Isso. Eles respondem perguntas que ninguém listou, então o esquema nunca precisa conhecê-las."
+      },
+      {
+        "text": "Disco mais barato, que torna dados duplicados desnecessários",
+        "why": "Disco barato, se algo, favorece a duplicação; não é o que faz a normalização funcionar."
+      },
+      {
+        "text": "Chaves estrangeiras, que copiam cada fato para as tabelas que o usam",
+        "why": "Uma chave estrangeira aponta para o fato; ela não copia nada."
+      },
+      {
+        "text": "Transações, que deixam toda consulta rápida",
+        "why": "Transações protegem escritas; elas não respondem perguntas novas."
+      }
+    ]
+  },
+  "ex-2rathwtd": {
+    "prompt": "Qual é o primeiro erro mais comum quando uma equipe projeta para um armazenamento NoSQL?",
+    "choices": [
+      {
+        "text": "Duplicar dados antes de medir se as leituras precisam disso",
+        "why": "Duplicar de propósito é a ferramenta da aula 4; o erro que a seção aponta é o oposto."
+      },
+      {
+        "text": "Copiar o esquema relacional e fazer os joins na aplicação",
+        "why": "Isso. Mantém o custo da normalização e joga fora os joins que pagavam por ela."
+      },
+      {
+        "text": "Escolher um armazenamento sem esquema nenhum",
+        "why": "Um esquema existe de qualquer jeito (aula 6); o erro é sobre como os dados são divididos."
+      },
+      {
+        "text": "Listar toda consulta antes de criar uma única coleção ou tabela",
+        "why": "Esse é o método que a aula recomenda, não o erro."
+      }
+    ]
+  },
+  "ex-brtwt6gx": {
+    "prompt": "Por que os armazenamentos deste curso abrem mão dos joins, ou os tornam caros?",
+    "hint": "Onde ficam os dados deles?",
+    "choices": [
+      {
+        "text": "Porque as linguagens de consulta deles foram criadas antes de os joins existirem",
+        "why": "Joins são mais antigos que os três produtos."
+      },
+      {
+        "text": "Porque não mantêm índices que um join pudesse usar",
+        "why": "O MongoDB tem um sistema completo de índices, aula 7; o obstáculo está em outro lugar."
+      },
+      {
+        "text": "Porque um join entre máquinas custa idas à rede por linha",
+        "why": "Isso. Um armazenamento feito para responder de uma partição não pode também prometer combinar quaisquer duas sob demanda."
+      },
+      {
+        "text": "Porque um join quebraria a consistência eventual",
+        "why": "Consistência é o assunto da aula 5; o custo aqui é a distância entre máquinas."
+      }
+    ]
+  },
+  "ex-mwax8z8h": {
+    "prompt": "Na tabela de padrões de acesso da loja, qual coluna decide a chave sob a qual os dados são guardados?",
+    "choices": [
+      {
+        "text": "O que a aplicação já sabe quando pergunta",
+        "why": "Isso. Um código de produto, um cliente, um número de pedido: o valor em mãos é a chave."
+      },
+      {
+        "text": "O que ela quer de volta",
+        "why": "Isso decide a unidade guardada junta, não como ela é achada."
+      },
+      {
+        "text": "A taxa esperada",
+        "why": "A taxa decide quanto pagar por uma pergunta, não a sua chave."
+      },
+      {
+        "text": "A ordem em que as linhas voltam, mais nova primeiro ou não",
+        "why": "A ordem é mantida dentro do que a chave acha; ela não escolhe a chave."
+      }
+    ]
+  },
+  "ex-6kkpyfkx": {
+    "prompt": "\"Meus pedidos\" quer os pedidos de um cliente do mais novo ao mais velho, dez por vez. Como um armazenamento responde sem ordenar na leitura?",
+    "choices": [
+      {
+        "text": "Guardando a resposta ordenada em cache na aplicação",
+        "why": "Um cache ainda precisou ordenar uma vez, e fica velho a cada pedido."
+      },
+      {
+        "text": "Guardando as linhas nessa ordem",
+        "why": "Isso. A ordem de clustering do Cassandra é exatamente isso, nas próximas seções."
+      },
+      {
+        "text": "Ordenando pelo número do pedido, que cresce com o tempo de qualquer jeito",
+        "why": "Isso continua sendo uma ordenação na leitura, sobre todos os pedidos do cliente."
+      },
+      {
+        "text": "Lendo só o pedido mais recente e seguindo ligações para trás",
+        "why": "Dez leituras encadeadas uma após a outra são o caminho lento, não a solução."
+      }
+    ]
+  },
+  "ex-6d1rdj0s": {
+    "prompt": "\"Pedidos acima de 500 para revisar fraude\" começa de nada que a aplicação saiba. Num armazenamento que responde por chave, quais são as opções?",
+    "choices": [
+      {
+        "text": "Uma busca por chave, já que todo pedido tem id",
+        "why": "Os ids dos pedidos acima de 500 são justamente o que ninguém sabe ainda."
+      },
+      {
+        "text": "Nenhuma: uma pergunta assim precisa ir antes para um banco relacional",
+        "why": "Um data warehouse é uma opção, não a única; uma estrutura montada de antemão também serve."
+      },
+      {
+        "text": "Uma varredura, ou uma estrutura feita antes",
+        "why": "Isso. Algumas vezes por dia uma varredura pode ser aceitável; milhares por minuto, não."
+      },
+      {
+        "text": "Um índice na chave, que deixa qualquer condição rápida",
+        "why": "Um índice na chave ajuda buscas por chave, e a condição é sobre o total."
+      }
+    ]
+  },
+  "ex-683bfw1a": {
+    "prompt": "Ponha em ordem o começo de um projeto por padrão de acesso.",
+    "items": [
+      "Anotar toda pergunta que a aplicação vai fazer",
+      "Para cada uma, anotar o que ela já sabe e o que quer de volta",
+      "Ordenar as perguntas pela taxa esperada",
+      "Escolher a chave e a unidade que respondem cada uma"
+    ],
+    "trap": "Nenhuma coleção ou tabela existe até o último passo."
+  },
+  "ex-02swzywh": {
+    "prompt": "Quais destes argumentam a favor de embutir um dado dentro do documento pai? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Ele é lido junto com o pai",
+        "why": "Isso: uma leitura devolve os dois."
+      },
+      {
+        "text": "O tamanho dele é limitado",
+        "why": "Isso: um pedido tem um punhado de linhas, não uma lista sem fim."
+      },
+      {
+        "text": "Ele pertence ao pai e a mais nada",
+        "why": "Isso: uma linha de pedido não tem vida fora do pedido."
+      },
+      {
+        "text": "Muitos pais o compartilham, e ele muda por conta própria",
+        "why": "Esse é o cliente, e isso pede uma referência."
+      },
+      {
+        "text": "Ele continua crescendo enquanto o pai existir",
+        "why": "Crescimento sem limite encontra o limite de 16 MB, como a transcrição mostrou."
+      }
+    ]
+  },
+  "ex-5qd653x1": {
+    "prompt": "Por que o pedido guarda só o e-mail da cliente, e lê o resto de `customers`?",
+    "choices": [
+      {
+        "text": "Porque o MongoDB não consegue aninhar um documento dentro de outro",
+        "why": "As linhas do pedido são documentos aninhados; aninhar não é o obstáculo."
+      },
+      {
+        "text": "Porque ela é compartilhada por muitos pedidos e muda sozinha",
+        "why": "Isso. Embuti-la significaria uma cópia por pedido para manter em dia, o assunto da aula 4."
+      },
+      {
+        "text": "Porque um endereço de e-mail é o único campo que um índice pode usar",
+        "why": "Qualquer campo pode ser indexado (aula 7)."
+      },
+      {
+        "text": "Porque um documento só pode ter um nível de campos",
+        "why": "Isso é um hash do Redis; um documento pode aninhar."
+      }
+    ]
+  },
+  "ex-9d86srhy": {
+    "prompt": "O segundo `$push` de uma string de 9 MB foi recusado com `BSONObj size ... is invalid`. Em que estado fica o documento da cliente Ana depois?",
+    "choices": [
+      {
+        "text": "Guarda metade da segunda string, cortada no limite",
+        "why": "Uma atualização se aplica inteira ou não se aplica; nada é cortado."
+      },
+      {
+        "text": "Foi apagado, porque ficou inválido",
+        "why": "O último `findOne` o devolveu, com nome e cidade intactos."
+      },
+      {
+        "text": "Foi movido para um segundo documento que continua o primeiro",
+        "why": "O MongoDB nunca divide um documento; esse projeto cabe à aplicação."
+      },
+      {
+        "text": "Inalterado: o segundo push nunca aconteceu",
+        "why": "Isso. A recusa é limpa, e a próxima escrita que o fizer crescer também será recusada."
+      }
+    ]
+  },
+  "ex-58a4a0sn": {
+    "prompt": "Um documento de produto embute toda avaliação, e uma avaliação ocupa cerca de 2.048 bytes. Cerca de quantas avaliações cabem antes do limite de 16 MiB (16.777.216 bytes) do MongoDB?",
+    "hint": "Divida, e ignore os campos do próprio produto.",
+    "unit": "avaliações"
+  },
+  "ex-neypvesk": {
+    "prompt": "Um blog guarda cada post como um documento. A maioria recebe uma dúzia de comentários, e alguns populares recebem dezenas de milhares. Onde os comentários devem ficar?",
+    "hint": "A lista é limitada?",
+    "choices": [
+      {
+        "text": "Embutidos no post, já que são lidos com ele",
+        "why": "Lidos juntos, sim, mas não limitados: os posts populares são os que bateriam no limite."
+      },
+      {
+        "text": "Numa coleção própria, cada um referenciando o seu post",
+        "why": "Isso. Uma lista sem limite é uma referência, seja qual for o caso típico."
+      },
+      {
+        "text": "Embutidos, com o post dividido num novo documento cada vez que enche",
+        "why": "Possível como padrão deliberado, mas é maquinaria da aplicação, e a regra da seção aponta para outro lado."
+      },
+      {
+        "text": "No Redis, porque o MongoDB não comporta tantos documentos pequenos",
+        "why": "Uma coleção comporta milhões de documentos pequenos sem problema."
+      }
+    ]
+  },
+  "ex-mnzwcwzq": {
+    "prompt": "Com `PRIMARY KEY ((customer), ordered_at)` e `CLUSTERING ORDER BY (ordered_at DESC)`, o que `... WHERE customer = 'ana@example.com' LIMIT 2` devolve?",
+    "choices": [
+      {
+        "text": "Os dois pedidos mais antigos da Ana",
+        "why": "DESC guarda o mais novo primeiro, e o LIMIT pega do topo."
+      },
+      {
+        "text": "Dois pedidos quaisquer da Ana, sem ordem definida",
+        "why": "Dentro de uma partição a ordem é definida pelas colunas de clustering."
+      },
+      {
+        "text": "Os dois pedidos mais novos da Ana",
+        "why": "Isso: o monitor de outubro, depois o pedido 1001 de setembro."
+      },
+      {
+        "text": "Os dois pedidos mais novos da tabela inteira",
+        "why": "O `WHERE` nomeia uma partição; o resto da tabela não é lido."
+      }
+    ]
+  },
+  "ex-f5vzwzm2": {
+    "prompt": "Por que o Cassandra recusa `ORDER BY ordered_at DESC` sem um cliente no `WHERE`?",
+    "choices": [
+      {
+        "text": "Porque só existe ordem dentro de uma partição",
+        "why": "Isso. Ordenar a tabela inteira exigiria lê-la toda, e é isso que a recusa evita."
+      },
+      {
+        "text": "Porque DESC não é permitido numa coluna de timestamp",
+        "why": "A tabela foi criada com `ordered_at DESC`; a coluna está ok."
+      },
+      {
+        "text": "Porque LIMIT e ORDER BY não podem aparecer no mesmo comando",
+        "why": "Podem, uma vez restrita a chave de partição, como o erro diz."
+      },
+      {
+        "text": "Porque a tabela só tem um nó de onde ler",
+        "why": "A mesma recusa acontece em cem nós."
+      }
+    ]
+  },
+  "ex-6c1pv3nw": {
+    "prompt": "O pedido 1014 foi inserido com o mesmo cliente e o mesmo `ordered_at` do pedido 1013. O que o Cassandra fez?",
+    "hint": "Já existe uma linha com essa chave primária?",
+    "choices": [
+      {
+        "text": "Recusou o insert com um erro de chave duplicada",
+        "why": "Não houve erro: o Cassandra não tem essa verificação num insert comum."
+      },
+      {
+        "text": "Manteve as duas linhas, já que os ids de pedido diferem",
+        "why": "`order_id` não fazia parte da chave, então as duas linhas tinham a mesma identidade."
+      },
+      {
+        "text": "Sobrescreveu o pedido 1013 com o 1014, em silêncio",
+        "why": "Isso. Um insert é um upsert; a correção é uma chave que torne cada pedido único."
+      },
+      {
+        "text": "Moveu o 1014 para o milissegundo seguinte para mantê-lo único",
+        "why": "O Cassandra nunca muda um valor que você gravou."
+      }
+    ]
+  },
+  "ex-sgw3wkv8": {
+    "prompt": "Acrescentar `order_id` depois de `ordered_at` na chave primária a torna uma segunda coluna de ___, então dois pedidos feitos no mesmo instante são duas linhas.",
+    "hint": "Ela ordena as linhas dentro da partição.",
+    "blanks": [
+      {
+        "accept": [
+          "clustering"
+        ]
+      }
+    ]
+  },
+  "ex-zy301pyg": {
+    "prompt": "Em `HGETALL cart:ana@example.com`, onde está a \"consulta\"?",
+    "choices": [
+      {
+        "text": "Num índice secundário no campo de cliente",
+        "why": "Não há campo nem índice; a chave é tudo o que existe."
+      },
+      {
+        "text": "No nome da chave, montado a partir do que a aplicação sabe",
+        "why": "Isso. A aplicação monta o nome a partir da cliente da sessão e pede exatamente essa chave."
+      },
+      {
+        "text": "No prefixo `cart:`, que o Redis usa para agrupar chaves numa tabela",
+        "why": "Para o Redis os dois-pontos são um caractere comum; não há tabelas."
+      },
+      {
+        "text": "Nos campos do hash, que o servidor pesquisa",
+        "why": "`HGETALL` devolve todos os campos; nada é pesquisado."
+      }
+    ]
+  },
+  "ex-k6q9zmf2": {
+    "prompt": "No laboratório, `KEYS cart:*` sobre um milhão de chaves levou cerca de 139 ms. Por que isso é um problema num Redis de produção?",
+    "choices": [
+      {
+        "text": "Porque devolve as chaves numa ordem aleatória",
+        "why": "A ordem não é o problema; o tempo que o servidor gasta é."
+      },
+      {
+        "text": "Porque o Redis roda um comando por vez, então todo outro cliente espera por ele",
+        "why": "Isso. Durante esses 139 ms nenhuma atualização de cesta e nenhuma leitura de sessão é atendida."
+      },
+      {
+        "text": "Porque apaga as chaves que encontra",
+        "why": "O `KEYS` só as lista."
+      },
+      {
+        "text": "Porque perde as chaves acrescentadas enquanto roda",
+        "why": "Nada é acrescentado enquanto ele roda, já que nada mais roda."
+      }
+    ]
+  },
+  "ex-7pzvx9b8": {
+    "prompt": "`SCAN 0 MATCH cart:* COUNT 1000` respondeu `512` e uma lista vazia. O que isso significa?",
+    "choices": [
+      {
+        "text": "Que não há cesta nenhuma no banco",
+        "why": "O `KEYS` e o `--scan` acharam uma; esta fatia só não tinha nenhuma."
+      },
+      {
+        "text": "Que 512 cestas combinaram e ficaram fora da resposta",
+        "why": "512 é um cursor, não uma contagem."
+      },
+      {
+        "text": "Esta fatia não tinha nada; continue do 512",
+        "why": "Isso. Ela termina quando o cursor volta como 0."
+      },
+      {
+        "text": "Que o padrão está errado, já que o `MATCH` precisa de aspas",
+        "why": "O mesmo padrão achou a cesta pelo `--scan`."
+      }
+    ]
+  },
+  "ex-ack8e60f": {
+    "prompt": "Associe cada pergunta da loja à estrutura que esta aula montou para ela.",
+    "hint": "Uma estrutura não responde nenhuma.",
+    "pairs": [
+      {
+        "left": "mostrar um pedido",
+        "right": "um documento, com as linhas embutidas"
+      },
+      {
+        "left": "meus pedidos, do mais novo",
+        "right": "uma partição por cliente, clustering DESC"
+      },
+      {
+        "left": "mostrar e mudar a cesta",
+        "right": "um hash sob cart: e o e-mail"
+      },
+      {
+        "left": "mostrar o nome da cliente ao lado do pedido",
+        "right": "uma segunda leitura, por referência"
+      }
+    ],
+    "right_distractors": [
+      "KEYS sobre todas as chaves"
+    ]
+  },
+  "ex-r3d7r7yf": {
+    "prompt": "Um ano depois do lançamento, o armazém pede todo pedido com status \"pago\" no Cassandra. Quanto isso custa, segundo a abordagem por padrão de acesso?",
+    "choices": [
+      {
+        "text": "Nada: `ALLOW FILTERING` na tabela existente responde",
+        "why": "Responde lendo toda partição em todo nó, a cada pedido."
+      },
+      {
+        "text": "Uma ordenação secundária, acrescentada a `orders_by_customer` com `ALTER TABLE`",
+        "why": "A ordem de clustering não pode ser alterada, e continuaria sendo por cliente."
+      },
+      {
+        "text": "Uma tabela nova feita para essa pergunta, preenchida com todo pedido gravado antes de ela existir",
+        "why": "Isso. A pergunta nova é uma estrutura nova mais um preenchimento retroativo, e a aula 4 mantém as duas em dia."
+      },
+      {
+        "text": "Um join entre `orders_by_customer` e uma tabela de status",
+        "why": "O Cassandra não tem joins."
+      }
+    ]
+  },
+  "ex-ft37d2mq": {
+    "prompt": "A loja passa a precisar de \"toda cesta aberta\" a cada visualização de uma página administrativa. O que a seção recomenda em vez do `SCAN`?",
+    "choices": [
+      {
+        "text": "Rodar `KEYS cart:*`, já que há poucas cestas",
+        "why": "O `KEYS` percorre toda chave, sessões inclusive, por menos cestas que existam."
+      },
+      {
+        "text": "Um set com as chaves das cestas, atualizado com cada cesta, para a pergunta ter chave própria",
+        "why": "Isso. Uma pergunta frequente ganha uma estrutura; uma varredura a cada página significa que falta uma chave."
+      },
+      {
+        "text": "Um `SCAN` com `COUNT` maior, para terminar numa chamada",
+        "why": "Um COUNT enorme transforma o SCAN de novo numa pausa longa, que é o KEYS outra vez."
+      },
+      {
+        "text": "Mover as sessões para outro Redis para a varredura ter menos a ler",
+        "why": "Menor, mas ainda uma varredura a cada página."
+      }
+    ]
+  }
+}

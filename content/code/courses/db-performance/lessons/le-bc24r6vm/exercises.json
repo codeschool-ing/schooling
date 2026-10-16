@@ -1,0 +1,645 @@
+[
+  {
+    "id": "ex-x4hshdv1",
+    "version": 1,
+    "section": "table-locks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which table lock does a plain `SELECT` take on the table it reads?",
+    "hint": "Row 1 of the matrix.",
+    "choices": [
+      {
+        "text": "None: readers in PostgreSQL never lock anything",
+        "correct": false,
+        "why": "Readers take no row locks, but window B saw AccessShareLock on orders and all four of its indexes."
+      },
+      {
+        "text": "ACCESS SHARE",
+        "correct": true,
+        "why": "Right: the weakest mode, which conflicts only with ACCESS EXCLUSIVE."
+      },
+      {
+        "text": "ROW SHARE, on each row it returns",
+        "correct": false,
+        "why": "ROW SHARE is a table mode, taken by SELECT … FOR UPDATE or FOR SHARE, not by a plain read."
+      },
+      {
+        "text": "SHARE, which lets other readers in and keeps writers out",
+        "correct": false,
+        "why": "That is what CREATE INDEX takes; a SELECT that blocked writers would make every report stop the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0718ct0",
+    "version": 1,
+    "section": "table-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Window A has an open transaction that updated one order. Which of these, typed in window B, waits for it?",
+    "hint": "ROW EXCLUSIVE is column 3.",
+    "choices": [
+      {
+        "text": "`UPDATE` of a different order",
+        "correct": false,
+        "why": "Two ROW EXCLUSIVE locks do not conflict, and different rows do not either: it went through in under 3 ms."
+      },
+      {
+        "text": "`SELECT count(*) FROM orders`",
+        "correct": false,
+        "why": "ACCESS SHARE does not conflict with ROW EXCLUSIVE; readers go ahead."
+      },
+      {
+        "text": "`CREATE INDEX` on `orders`",
+        "correct": true,
+        "why": "Right: CREATE INDEX takes SHARE, which conflicts with ROW EXCLUSIVE; it waited 8985 ms in the lesson."
+      },
+      {
+        "text": "`VACUUM orders`",
+        "correct": false,
+        "why": "VACUUM takes SHARE UPDATE EXCLUSIVE, which does not conflict with ROW EXCLUSIVE."
+      }
+    ]
+  },
+  {
+    "id": "ex-ed61vj7r",
+    "version": 1,
+    "section": "table-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a transaction that ran one `SELECT` an hour ago and is still open matter to a later `ALTER TABLE`?",
+    "hint": "When are locks given back?",
+    "choices": [
+      {
+        "text": "Its ACCESS SHARE lasts until the transaction ends",
+        "correct": true,
+        "why": "Right: locks are collected and released together at COMMIT or ROLLBACK, so the ALTER waits for the whole transaction."
+      },
+      {
+        "text": "It does not: the SELECT finished, so its lock was released when the rows came back",
+        "correct": false,
+        "why": "Nothing is released early; the lock outlives the statement and lasts as long as the transaction."
+      },
+      {
+        "text": "Its snapshot keeps the ALTER from seeing the table",
+        "correct": false,
+        "why": "Snapshots decide which row versions are visible; the wait comes from the lock."
+      },
+      {
+        "text": "It holds row locks on every row it read",
+        "correct": false,
+        "why": "A plain SELECT locks no rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-431k5bbj",
+    "version": 1,
+    "section": "table-locks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job runs `CREATE INDEX` on a 400-million-row table, and the shop's checkout times out until it finishes. What would have kept checkout working?",
+    "hint": "Which mode does each form take?",
+    "choices": [
+      {
+        "text": "Running it inside a transaction so it can be rolled back",
+        "correct": false,
+        "why": "A transaction changes nothing about the SHARE lock it holds while building."
+      },
+      {
+        "text": "Setting `lock_timeout` on the job",
+        "correct": false,
+        "why": "lock_timeout limits the wait to get the lock; once granted, the build still blocks writes for its whole length."
+      },
+      {
+        "text": "Building it `CONCURRENTLY`",
+        "correct": true,
+        "why": "Right: SHARE UPDATE EXCLUSIVE lets INSERT and UPDATE through, which plain CREATE INDEX's SHARE does not."
+      },
+      {
+        "text": "Running ANALYZE first",
+        "correct": false,
+        "why": "Statistics have nothing to do with the lock the build takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9v66csr2",
+    "version": 1,
+    "section": "table-locks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many table lock modes does PostgreSQL have?",
+    "hint": "The rows of the matrix.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "modes"
+  },
+  {
+    "id": "ex-a07h6h0b",
+    "version": 1,
+    "section": "row-locks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Window A has updated order 1 and not committed. What does a plain `SELECT status FROM orders WHERE id = 1` in window B do?",
+    "hint": "Readers and row locks.",
+    "choices": [
+      {
+        "text": "Waits until window A commits",
+        "correct": false,
+        "why": "A plain read is never blocked by a row lock."
+      },
+      {
+        "text": "Fails with `could not obtain lock`",
+        "correct": false,
+        "why": "That error came from FOR UPDATE NOWAIT, not from a plain read."
+      },
+      {
+        "text": "Shows window A's change, since it is already in the table",
+        "correct": false,
+        "why": "Uncommitted changes are invisible to other transactions; it read delivered."
+      },
+      {
+        "text": "Answers at once with the old value",
+        "correct": true,
+        "why": "Right: it read `delivered`, the version from before window A's update."
+      }
+    ]
+  },
+  {
+    "id": "ex-qjba0n0s",
+    "version": 1,
+    "section": "row-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Window B waited 7085 ms on `SELECT status … FOR UPDATE` and then read `shipped`, not `delivered`. Why that value?",
+    "hint": "When is the row read?",
+    "choices": [
+      {
+        "text": "It reads the row once the lock is granted, after window A's commit",
+        "correct": true,
+        "why": "Right: after window A committed, so it sees the committed change, which is what makes FOR UPDATE then UPDATE safe."
+      },
+      {
+        "text": "Window B's transaction had started after window A committed",
+        "correct": false,
+        "why": "Window B began its transaction before the commit; it was waiting when window A committed."
+      },
+      {
+        "text": "FOR UPDATE always reads the newest uncommitted version",
+        "correct": false,
+        "why": "No read sees another transaction's uncommitted change."
+      },
+      {
+        "text": "The SELECT was run twice by psql",
+        "correct": false,
+        "why": "psql sent it once; the server waited and then read."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y0w2akn",
+    "version": 1,
+    "section": "row-locks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten packing stations run `UPDATE … WHERE id IN (SELECT … LIMIT 3 FOR UPDATE)` at the same time. What happens without `SKIP LOCKED`?",
+    "hint": "Window B in the lesson.",
+    "choices": [
+      {
+        "text": "Two stations get the same three orders",
+        "correct": false,
+        "why": "The lock prevents that; window B re-read and took the next three."
+      },
+      {
+        "text": "One station works at a time, the rest in line",
+        "correct": true,
+        "why": "Right: window B waited 7495 ms for window A's rows before taking the next three."
+      },
+      {
+        "text": "Nine get a deadlock error",
+        "correct": false,
+        "why": "They wait in the same direction, so no cycle forms."
+      },
+      {
+        "text": "The statement fails because LIMIT is not allowed with FOR UPDATE",
+        "correct": false,
+        "why": "It ran in the lesson and returned three ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypfwj014",
+    "version": 1,
+    "section": "row-locks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A finance report uses `FOR UPDATE SKIP LOCKED` 'so that it never waits'. What is wrong with it?",
+    "hint": "What does SKIP LOCKED leave out?",
+    "choices": [
+      {
+        "text": "SKIP LOCKED works only inside an UPDATE",
+        "correct": false,
+        "why": "It works on any SELECT … FOR UPDATE or FOR SHARE."
+      },
+      {
+        "text": "It locks the whole table for the report's duration",
+        "correct": false,
+        "why": "It locks the rows it returns and takes ROW SHARE on the table, which blocks almost nothing."
+      },
+      {
+        "text": "Rows others have locked are silently left out of its totals",
+        "correct": true,
+        "why": "Right: SKIP LOCKED is an inconsistent view on purpose, made for queues; a report built on it is wrong whenever writes are happening."
+      },
+      {
+        "text": "It makes the report deadlock with every writer",
+        "correct": false,
+        "why": "Skipping never waits, so it cannot be part of a wait cycle."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4tr7fap",
+    "version": 1,
+    "section": "row-locks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SELECT … FOR UPDATE ___` raises an error at once instead of waiting when the row is locked.",
+    "hint": "One word, the opposite of waiting.",
+    "blanks": [
+      {
+        "accept": [
+          "NOWAIT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tf0h5aqs",
+    "version": 1,
+    "section": "the-queue",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the three-window experiment, what was window C's `SELECT` actually waiting for?",
+    "hint": "Its lock does not conflict with window A's.",
+    "choices": [
+      {
+        "text": "Window A's ACCESS SHARE",
+        "correct": false,
+        "why": "Two ACCESS SHARE locks do not conflict; window A alone would not have stopped it."
+      },
+      {
+        "text": "Window B's ALTER",
+        "correct": true,
+        "why": "Right: a request is granted only if it conflicts with nobody holding the lock and nobody already queued."
+      },
+      {
+        "text": "A row lock on order 2",
+        "correct": false,
+        "why": "Nobody had touched order 2 in that experiment."
+      },
+      {
+        "text": "The disk",
+        "correct": false,
+        "why": "One row by primary key is a fraction of a millisecond; 12 seconds was a lock wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7n3sqx8",
+    "version": 1,
+    "section": "the-queue",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did window C wait to read one order behind the waiting `ALTER TABLE`?",
+    "hint": "Its Time: line.",
+    "value": 12,
+    "tolerance": 0.5,
+    "unit": "s"
+  },
+  {
+    "id": "ex-7vt5sxwk",
+    "version": 1,
+    "section": "the-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the server not let a new reader jump past a waiting `ALTER TABLE` when the reader conflicts with nothing that is held?",
+    "hint": "Think of a busy table with readers arriving all the time.",
+    "choices": [
+      {
+        "text": "Because readers are slower than writers",
+        "correct": false,
+        "why": "Speed has nothing to do with the queue rule."
+      },
+      {
+        "text": "Because the reader would see the half-altered table",
+        "correct": false,
+        "why": "The ALTER has not started; it is still waiting for its lock."
+      },
+      {
+        "text": "Because ACCESS SHARE conflicts with every other mode",
+        "correct": false,
+        "why": "It conflicts only with ACCESS EXCLUSIVE."
+      },
+      {
+        "text": "The ALTER would never get in: some reader would always hold the table",
+        "correct": true,
+        "why": "Right: the queue is what stops a strong lock starving, and the price is that everyone behind it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhx0m7mn",
+    "version": 1,
+    "section": "the-queue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration adds a column to `orders` at 10:00 with `SET lock_timeout = '2s'` and fails with `canceling statement due to lock timeout`. What should the deploy do next?",
+    "hint": "The timeout did its job; the change still has to happen.",
+    "choices": [
+      {
+        "text": "Raise lock_timeout to an hour so it cannot fail",
+        "correct": false,
+        "why": "That brings back the outage: an hour in the queue with every query behind it."
+      },
+      {
+        "text": "Try again shortly, in a loop, keeping the short timeout",
+        "correct": true,
+        "why": "Right: each attempt costs the application at most two seconds, and one of them gets in once the long transaction ends."
+      },
+      {
+        "text": "Use statement_timeout instead, which is stricter",
+        "correct": false,
+        "why": "statement_timeout would also cut off the slow reports; it does not target the wait for a lock."
+      },
+      {
+        "text": "Restart the server to clear every lock, then run the migration",
+        "correct": false,
+        "why": "A restart is an outage for everybody to solve a two-second wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2yn8zq1",
+    "version": 1,
+    "section": "advisory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pg_try_advisory_lock(42)` return when another session already holds lock 42?",
+    "hint": "The try in the name.",
+    "choices": [
+      {
+        "text": "It waits until the other session releases it",
+        "correct": false,
+        "why": "That is pg_advisory_lock without try, which window B then ran and waited 6434 ms."
+      },
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "It returns a boolean; nothing is raised."
+      },
+      {
+        "text": "`f`, at once",
+        "correct": true,
+        "why": "Right: try never waits; it answers t or f."
+      },
+      {
+        "text": "The process id of the session that holds it",
+        "correct": false,
+        "why": "It returns only whether this session got the lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-aje8v7d9",
+    "version": 1,
+    "section": "advisory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an advisory lock better than a `status = 'running'` row for making sure a nightly job runs once?",
+    "hint": "What happens when the worker crashes halfway?",
+    "choices": [
+      {
+        "text": "A crash releases the lock but not the row",
+        "correct": true,
+        "why": "Right: nothing can be left behind, so the next night's run is never blocked by a dead worker."
+      },
+      {
+        "text": "Advisory locks are faster to write",
+        "correct": false,
+        "why": "Speed is not the argument; a row update takes a millisecond too."
+      },
+      {
+        "text": "A status row cannot be read by other workers",
+        "correct": false,
+        "why": "Any worker can read the row; the trouble is a row nobody clears after a crash."
+      },
+      {
+        "text": "Advisory locks survive a server restart",
+        "correct": false,
+        "why": "They do not survive; they belong to sessions, and a restart ends every session."
+      }
+    ]
+  },
+  {
+    "id": "ex-7cbjmwee",
+    "version": 1,
+    "section": "advisory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application behind a transaction-mode pooler takes `pg_advisory_lock(7)` in one transaction and unlocks it in the next. Jobs start getting stuck. What is the likely cause?",
+    "hint": "Who owns a session-level lock?",
+    "choices": [
+      {
+        "text": "Advisory locks are disabled behind poolers",
+        "correct": false,
+        "why": "The pooler does not disable them; it changes which connection holds them."
+      },
+      {
+        "text": "The number 7 is reserved by PostgreSQL",
+        "correct": false,
+        "why": "No numbers are reserved; the meaning is entirely the application's."
+      },
+      {
+        "text": "The unlock ran on another connection",
+        "correct": true,
+        "why": "Right: a session-level lock belongs to one connection, and the pooler gave the next transaction a different one; transaction-level locks avoid it."
+      },
+      {
+        "text": "Two transactions cannot use one lock number",
+        "correct": false,
+        "why": "They can, one after the other; that is the normal use."
+      }
+    ]
+  },
+  {
+    "id": "ex-hetwh3z0",
+    "version": 1,
+    "section": "deadlocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did window B's statement fail after almost exactly 1001 ms?",
+    "hint": "A setting with a one-second default.",
+    "choices": [
+      {
+        "text": "lock_timeout, which the lesson had set to one second",
+        "correct": false,
+        "why": "That was set to two seconds, in another window, in section 04; the error here was deadlock detected."
+      },
+      {
+        "text": "A waiting session only checks for a deadlock after `deadlock_timeout`",
+        "correct": true,
+        "why": "Right: checking on every wait would be expensive, so the check runs once the wait reaches one second."
+      },
+      {
+        "text": "The update took one second to find the row",
+        "correct": false,
+        "why": "Finding one row by primary key takes a fraction of a millisecond."
+      },
+      {
+        "text": "psql gives up on any statement after one second of silence from the server",
+        "correct": false,
+        "why": "psql waits indefinitely; earlier waits in this lesson lasted over 13 seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdy937x2",
+    "version": 1,
+    "section": "deadlocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both windows run `SELECT id FROM orders WHERE id IN (…) ORDER BY id FOR UPDATE` before updating orders 1 and 2. Why can no deadlock form?",
+    "hint": "Who holds what while waiting?",
+    "choices": [
+      {
+        "text": "FOR UPDATE takes a table lock that serialises the two",
+        "correct": false,
+        "why": "It takes ROW SHARE, which does not conflict with itself; the order of the row locks is what matters."
+      },
+      {
+        "text": "deadlock_timeout is disabled for SELECT",
+        "correct": false,
+        "why": "No such exception exists."
+      },
+      {
+        "text": "The IN list is sorted by the server",
+        "correct": false,
+        "why": "The list order does not matter; the ORDER BY decides the order the rows are locked in."
+      },
+      {
+        "text": "Both take order 1 first",
+        "correct": true,
+        "why": "Right: window B waited on order 1 before locking anything, so no cycle could close."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyc4jc4s",
+    "version": 1,
+    "section": "deadlocks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the lesson's deadlock in the order they happened.",
+    "hint": "Each window takes one order first.",
+    "items": [
+      "Window A updates order 1",
+      "Window B updates order 2",
+      "Window A asks for order 2 and waits",
+      "Window B asks for order 1 and waits",
+      "After one second, window B's check finds the cycle and its statement fails"
+    ],
+    "trap": "Window A's update of order 2 finishes only after window B's transaction has failed and released it."
+  },
+  {
+    "id": "ex-k4frsmav",
+    "version": 1,
+    "section": "deadlocks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each error or symptom to what causes it.",
+    "hint": "Sections 03, 04 and 06.",
+    "pairs": [
+      {
+        "left": "`could not obtain lock on row`",
+        "right": "FOR UPDATE NOWAIT on a row somebody holds"
+      },
+      {
+        "left": "`canceling statement due to lock timeout`",
+        "right": "a lock not granted within lock_timeout"
+      },
+      {
+        "left": "`deadlock detected`",
+        "right": "two transactions waiting for each other"
+      },
+      {
+        "left": "a one-row SELECT taking 12 seconds",
+        "right": "a request queued behind a waiting ACCESS EXCLUSIVE"
+      }
+    ],
+    "right_distractors": [
+      "a missing index on the column"
+    ]
+  },
+  {
+    "id": "ex-hnbcbjza",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are habits the lesson recommends for a schema change on a busy table? Choose all that apply.",
+    "hint": "Sections 04 and 06.",
+    "choices": [
+      {
+        "text": "Set lock_timeout to a few seconds first",
+        "correct": true,
+        "why": "Right: it takes the ALTER out of the queue before the queue hurts."
+      },
+      {
+        "text": "Retry in a loop when it times out",
+        "correct": true,
+        "why": "Right: each attempt costs a short hiccup, and one gets in."
+      },
+      {
+        "text": "Look for long transactions before starting",
+        "correct": true,
+        "why": "Right: they are what the ALTER would queue behind."
+      },
+      {
+        "text": "Run it inside a long transaction with the data fix, so both happen together",
+        "correct": false,
+        "why": "A long transaction holds ACCESS EXCLUSIVE for its whole length, the opposite of what you want."
+      },
+      {
+        "text": "Raise deadlock_timeout so the ALTER is not cancelled",
+        "correct": false,
+        "why": "deadlock_timeout decides when cycles are checked; it does nothing for a queue."
+      }
+    ]
+  }
+]

@@ -1,0 +1,529 @@
+[
+ {
+  "id": "ex-3v785446",
+  "version": 1,
+  "section": "artillery",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the first phase, `arrivalRate: 1` and `rampTo: 3` over `duration: 5`. What happens?",
+  "hint": "Arrivals, not users inside.",
+  "choices": [
+   {
+    "text": "New visitors arrive at a rate rising from 1 to 3 a second over 5 seconds",
+    "correct": true,
+    "why": "Right. Each visitor runs the flow once and leaves."
+   },
+   {
+    "text": "Three visitors loop over the flow for 5 seconds, each starting again when it ends",
+    "correct": false,
+    "why": "That would be a closed model; Artillery's phases count arrivals."
+   },
+   {
+    "text": "One request a second, then three",
+    "correct": false,
+    "why": "The rate is of visitors, and each sends two requests."
+   },
+   {
+    "text": "The test waits through 5 seconds of warm-up before the first visitor arrives",
+    "correct": false,
+    "why": "The phase is load from its first second."
+   }
+  ]
+ },
+ {
+  "id": "ex-qqs8c4cq",
+  "version": 1,
+  "section": "artillery",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does the `capture` under the first `get` do for the booking that follows?",
+  "hint": "`$.id` is a path into the answer.",
+  "choices": [
+   {
+    "text": "It saves the whole answer to a file for the report",
+    "correct": false,
+    "why": "Nothing is written to a file; the value goes into a variable."
+   },
+   {
+    "text": "It puts the answer's `id` into `show`",
+    "correct": true,
+    "why": "Right. `{{ show }}` in the POST is that captured value."
+   },
+   {
+    "text": "It checks that the answer was a 200",
+    "correct": false,
+    "why": "Capturing reads a value; it asserts nothing about the status."
+   },
+   {
+    "text": "It records the response time under the name `show`",
+    "correct": false,
+    "why": "Times are recorded for every request anyway; `capture` reads the body."
+   }
+  ]
+ },
+ {
+  "id": "ex-t2em6dxq",
+  "version": 1,
+  "section": "artillery",
+  "type": "cloze",
+  "difficulty": "easy",
+  "prompt": "In an Artillery scenario, the 95th percentile limit and `maxErrorRate` sit under the key ___ inside `config`.",
+  "hint": "The plugin named just above it.",
+  "blanks": [
+   {
+    "accept": [
+     "ensure"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-sf267sxs",
+  "version": 1,
+  "section": "artillery",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A journey needs a booking body computed from a list of seats the test reads at start-up. Where does that logic go in Artillery?",
+  "hint": "YAML describes; what computes?",
+  "choices": [
+   {
+    "text": "Into the YAML, as a loop under `flow`",
+    "correct": false,
+    "why": "YAML has no way to compute a body; that is where it runs out."
+   },
+   {
+    "text": "A JavaScript file named in `config.processor`",
+    "correct": true,
+    "why": "Right. The test then becomes two files in two languages."
+   },
+   {
+    "text": "Into a second YAML file under `phases`",
+    "correct": false,
+    "why": "Phases decide arrivals, not request bodies."
+   },
+   {
+    "text": "Nowhere, since Artillery sends bodies exactly as written",
+    "correct": false,
+    "why": "It can, through a processor function."
+   }
+  ]
+ },
+ {
+  "id": "ex-x8fq029f",
+  "version": 1,
+  "section": "artillery-run",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Every booking starts answering 500, and the scenario is unchanged. What does the `Checks` block of the Artillery run say?",
+  "hint": "What does Artillery call an error?",
+  "choices": [
+   {
+    "text": "`fail: maxErrorRate < 1`, because half the requests failed",
+    "correct": false,
+    "why": "A 500 is an answer, and Artillery's errors are requests with no answer."
+   },
+   {
+    "text": "Both checks `ok`, with the 500s visible only under `http.codes.500`",
+    "correct": true,
+    "why": "Right. A rule about status codes has to be written into `ensure` on its own."
+   },
+   {
+    "text": "`fail` on the 95th percentile, because a 500 is slow",
+    "correct": false,
+    "why": "A 500 is often fast; nothing ties it to the time rule."
+   },
+   {
+    "text": "No `Checks` block at all",
+    "correct": false,
+    "why": "The block is printed whenever `ensure` is in the file."
+   }
+  ]
+ },
+ {
+  "id": "ex-82xcahfd",
+  "version": 1,
+  "section": "artillery-run",
+  "type": "numeric",
+  "difficulty": "easy",
+  "prompt": "The summary says `http.requests: 112`, and each visitor's flow sends one GET and one POST. How many visitors completed the journey?",
+  "hint": "`vusers.completed`.",
+  "value": 56,
+  "tolerance": 0,
+  "unit": "visitors",
+  "drillable": true
+ },
+ {
+  "id": "ex-3fk9xm31",
+  "version": 1,
+  "section": "artillery-run",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `--overrides` do in `artillery run boxoffice.yml --overrides '{…}'`?",
+  "hint": "The file was not edited.",
+  "choices": [
+   {
+    "text": "Replaces part of `config` for this run, from JSON on the command line",
+    "correct": true,
+    "why": "Right. The p95 rule became 5 ms without touching the YAML."
+   },
+   {
+    "text": "Runs the scenario twice and keeps the second result",
+    "correct": false,
+    "why": "It changes the configuration, and the run happens once."
+   },
+   {
+    "text": "Writes the report to a JSON file",
+    "correct": false,
+    "why": "That is `--output`."
+   },
+   {
+    "text": "Skips the checks in `ensure`",
+    "correct": false,
+    "why": "The checks ran, and one of them failed."
+   }
+  ]
+ },
+ {
+  "id": "ex-rvat0qdy",
+  "version": 1,
+  "section": "artillery-run",
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each line of Artillery's summary to what it counts.",
+  "hint": "The table under the summary.",
+  "pairs": [
+   {
+    "left": "http.codes.409",
+    "right": "answers saying the seat was already taken"
+   },
+   {
+    "left": "vusers.created",
+    "right": "visitors that arrived during the phases"
+   },
+   {
+    "left": "vusers.failed",
+    "right": "visitors whose journey stopped on a request with no answer"
+   },
+   {
+    "left": "vusers.session_length",
+    "right": "how long one whole journey took"
+   }
+  ],
+  "right_distractors": [
+   "visitors still waiting in line when the test ended"
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-h9tvkssj",
+  "version": 1,
+  "section": "vegeta",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `tee results.bin` add to `vegeta attack … | vegeta report`?",
+  "hint": "Look at the next command in the lesson.",
+  "choices": [
+   {
+    "text": "It makes the attack faster",
+    "correct": false,
+    "why": "It copies the stream; the attack runs the same."
+   },
+   {
+    "text": "It turns the binary results into text",
+    "correct": false,
+    "why": "The file holds the same binary results `report` reads."
+   },
+   {
+    "text": "A copy to report again later, in any form, with nothing sent",
+    "correct": true,
+    "why": "Right. The histogram was made from that file."
+   },
+   {
+    "text": "It sends the requests to a second server",
+    "correct": false,
+    "why": "It writes to a file; nothing is sent anywhere."
+   }
+  ]
+ },
+ {
+  "id": "ex-9gxe4vq2",
+  "version": 1,
+  "section": "vegeta",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "At `-rate=300` the report says `rate 300.16` and `throughput 135.39`. What does the gap mean?",
+  "hint": "Sent against answered.",
+  "choices": [
+   {
+    "text": "Vegeta could not send faster than 135 a second",
+    "correct": false,
+    "why": "It sent at 300.16; the rate column says so."
+   },
+   {
+    "text": "The box office answered fewer than were sent, and the rest waited or timed out",
+    "correct": true,
+    "why": "Right. An open generator keeps sending, so the backlog shows up in the times."
+   },
+   {
+    "text": "Half the requests were cached",
+    "correct": false,
+    "why": "Nothing here caches; every answer came from the box office."
+   },
+   {
+    "text": "Vegeta drops the requests it fails to send on time and leaves them out of the rate",
+    "correct": false,
+    "why": "It starts more workers to keep the rate; nothing was dropped."
+   }
+  ]
+ },
+ {
+  "id": "ex-k2pgjpy5",
+  "version": 1,
+  "section": "vegeta",
+  "type": "ordering",
+  "difficulty": "easy",
+  "prompt": "Put the steps of the lesson's Vegeta pipeline in the order the data flows.",
+  "hint": "From what to send to what came back.",
+  "items": [
+   "echo writes the target",
+   "vegeta attack sends at the rate",
+   "tee keeps a copy of the results",
+   "vegeta report prints them"
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-8w60jj3n",
+  "version": 1,
+  "section": "vegeta",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Vegeta's `Latencies` line reads `[min, mean, 50, 90, 95, 99, max]`. Which value holds lesson 1's requirement?",
+  "hint": "Count the brackets.",
+  "choices": [
+   {
+    "text": "The second, the mean",
+    "correct": false,
+    "why": "The requirement names a percentile, not the mean."
+   },
+   {
+    "text": "The fifth, the 95th percentile",
+    "correct": true,
+    "why": "Right. 60.875 ms in the run at 50 a second."
+   },
+   {
+    "text": "The last, the maximum",
+    "correct": false,
+    "why": "The maximum is one request; the requirement is about 95 in 100."
+   },
+   {
+    "text": "The third, the median",
+    "correct": false,
+    "why": "The median is the 50th percentile; the requirement asks for the 95th."
+   }
+  ]
+ },
+ {
+  "id": "ex-afkx2dmj",
+  "version": 1,
+  "section": "vegeta",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these are true of Vegeta as the lesson runs it? Choose every one that applies.",
+  "hint": "An attack is a rate and a duration.",
+  "choices": [
+   {
+    "text": "It keeps sending at the rate even when answers are slow",
+    "correct": true,
+    "why": "Right. It starts more workers to hold the rate."
+   },
+   {
+    "text": "It has no think time and no notion of a user",
+    "correct": true,
+    "why": "Right. There are targets, a rate and a duration."
+   },
+   {
+    "text": "Its users wait for each answer before the next request",
+    "correct": false,
+    "why": "That is a closed model, and Vegeta has no users."
+   },
+   {
+    "text": "A crossed threshold makes `vegeta attack` exit with a non-zero code",
+    "correct": false,
+    "why": "Vegeta has no thresholds; a script around the report has to decide."
+   }
+  ]
+ },
+ {
+  "id": "ex-pz50vn2t",
+  "version": 1,
+  "section": "six-tools",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of the six tools has no built-in way to turn a percentile limit into a failed run?",
+  "hint": "Look at the last column of the table.",
+  "choices": [
+   {
+    "text": "k6",
+    "correct": false,
+    "why": "k6 has `thresholds` and exits with 99."
+   },
+   {
+    "text": "Artillery",
+    "correct": false,
+    "why": "Artillery has `ensure` and exits with 1."
+   },
+   {
+    "text": "Gatling",
+    "correct": false,
+    "why": "Gatling has `assertions`, and the build fails."
+   },
+   {
+    "text": "Vegeta",
+    "correct": true,
+    "why": "Right. Its report is read, or parsed by a script that decides."
+   }
+  ]
+ },
+ {
+  "id": "ex-50bn6kjn",
+  "version": 1,
+  "section": "six-tools",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A requirement says \"200 people with the booking page open, each acting every few seconds\". Which pair of tools writes that load most directly?",
+  "hint": "People inside at once, not arrivals a second.",
+  "choices": [
+   {
+    "text": "Vegeta and Artillery",
+    "correct": false,
+    "why": "Both write arrivals a second: an open model."
+   },
+   {
+    "text": "Gatling's `injectOpen` and k6's arrival rate",
+    "correct": false,
+    "why": "Both count arrivals, not people inside."
+   },
+   {
+    "text": "Locust and JMeter",
+    "correct": true,
+    "why": "Right. Both model users that loop with a wait: a closed model."
+   },
+   {
+    "text": "Vegeta and Gatling's `injectOpen`",
+    "correct": false,
+    "why": "Both keep a rate whatever the server does."
+   }
+  ]
+ },
+ {
+  "id": "ex-1nfxsn6f",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team writes Python and wants two things in its pipeline: the booking journey under load, and a check that `GET /shows/{id}` holds 50 requests a second. Which pair fits the lesson's advice?",
+  "hint": "Two tools, chosen by who reads them and by the model each question names.",
+  "choices": [
+   {
+    "text": "JMeter for both, edited in its window",
+    "correct": false,
+    "why": "A plan nobody on a Python team reviews, and a closed model for a rate question."
+   },
+   {
+    "text": "Locust for the journey, and Vegeta with a script that reads its report for the rate",
+    "correct": true,
+    "why": "Right. Python the team reads, and an open tool for a question stated as a rate."
+   },
+   {
+    "text": "Vegeta for both",
+    "correct": false,
+    "why": "Vegeta has no journeys: no flow, no capture, no think time."
+   },
+   {
+    "text": "Gatling for the journey and Locust for the rate",
+    "correct": false,
+    "why": "A Java test on a Python team, and a closed tool for an open question."
+   }
+  ]
+ },
+ {
+  "id": "ex-1wteh96s",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Against the same box office, Vegeta at 300 a second reports a median of 2.413 s, while a closed tool with 10 looping users reports a median near 60 ms. Which number describes visitors who arrive 300 a second?",
+  "hint": "Who kept arriving while the box office was behind?",
+  "choices": [
+   {
+    "text": "The closed tool's, because its ten users measured each answer carefully",
+    "correct": false,
+    "why": "It measured what its ten users met, and they slowed down with the server."
+   },
+   {
+    "text": "Neither, since the two disagree",
+    "correct": false,
+    "why": "They answer different questions; one of them is this one."
+   },
+   {
+    "text": "The average of the two",
+    "correct": false,
+    "why": "Averaging a rate question with a users question describes no load at all."
+   },
+   {
+    "text": "Vegeta's, because it kept sending at the rate and timed the waiting",
+    "correct": true,
+    "why": "Right. Visitors who arrive regardless wait in line, and only the open run counted that."
+   }
+  ]
+ },
+ {
+  "id": "ex-eep7mbyh",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague adds Vegeta to the pipeline as `echo … | vegeta attack -rate=50 -duration=60s | vegeta report`, and the job is green on a day the 95th percentile reached 900 ms. Why?",
+  "hint": "What decides a job's colour?",
+  "choices": [
+   {
+    "text": "No step compares the numbers with a limit, so the exit code stays 0",
+    "correct": true,
+    "why": "Right. A step has to read the report, for example with `-type=json` and `jq`, and exit non-zero."
+   },
+   {
+    "text": "Sixty seconds is too short a run for Vegeta to collect a 95th percentile at all",
+    "correct": false,
+    "why": "The time was measured; nobody judged it."
+   },
+   {
+    "text": "Vegeta drops slow requests from its report",
+    "correct": false,
+    "why": "Slow answers are in the percentiles; timeouts are in the error set."
+   },
+   {
+    "text": "The pipeline reads only the last line",
+    "correct": false,
+    "why": "The pipeline reads the exit code, and it was 0."
+   }
+  ]
+ }
+]

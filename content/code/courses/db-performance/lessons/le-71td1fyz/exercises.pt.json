@@ -1,0 +1,461 @@
+{
+  "ex-vcn0n4x7": {
+    "prompt": "Você digita `EXPLAIN DELETE FROM order_lines WHERE order_id = 7;` e mais nada. O que acontece com as linhas do pedido 7?",
+    "hint": "O EXPLAIN puro planeja; não executa.",
+    "choices": [
+      {
+        "text": "São apagadas primeiro, e o plano é impresso depois, como registro",
+        "why": "Isso é o EXPLAIN ANALYZE. O EXPLAIN puro para depois de planejar."
+      },
+      {
+        "text": "Nada: o plano é impresso e as quatro linhas continuam lá",
+        "why": "Isso: a aula contou depois e achou as quatro."
+      },
+      {
+        "text": "Ficam travadas até você dar commit",
+        "why": "Nada rodou, então nenhuma linha foi tocada nem travada."
+      },
+      {
+        "text": "O PostgreSQL se recusa a planejar um comando que escreve",
+        "why": "Ele planejou: `Delete on order_lines` acima de uma varredura de índice."
+      }
+    ]
+  },
+  "ex-8ssw7kwb": {
+    "prompt": "Os dez pedidos mais antigos: `Limit (cost=0.43..0.77)` sobre `Index Scan using orders_placed_at_idx (cost=0.43..68618.43 rows=2000000)`. Por que o total do Limit é tão menor que o da varredura?",
+    "hint": "Quem para de pedir linhas, e depois de quantas?",
+    "choices": [
+      {
+        "text": "O índice é menor que a tabela, então lê-lo custa menos",
+        "why": "O total da própria varredura já precifica o índice; o Limit fica muito abaixo até disso."
+      },
+      {
+        "text": "O custo do próprio Limit fica separado do total do filho",
+        "why": "Custos são acumulados; o Limit cobra uma fração do filho, não zero."
+      },
+      {
+        "text": "Ele para após dez linhas e paga 10/2000000 dela",
+        "why": "Isso: 0.43 + 68618 × 10 / 2000000 é o 0.77, e funciona porque o custo inicial da varredura é baixo."
+      },
+      {
+        "text": "Um plano em cache foi reaproveitado",
+        "why": "Nada nos custos depende de cache; eles são calculados toda vez."
+      }
+    ]
+  },
+  "ex-pm3r8mrx": {
+    "prompt": "Ordenando por `total_cents` sem índice, o `Sort` mostra `cost=79886.28..84886.28` acima de um `Seq Scan` cujo total é `36667.00`. Por que o custo inicial da ordenação é maior que tudo abaixo dele?",
+    "hint": "A última linha lida poderia ser a primeira a sair?",
+    "choices": [
+      {
+        "text": "A ordenação é precificada em milissegundos, a varredura em páginas",
+        "why": "Todo nó usa a mesma unidade; é isso que permite somá-los."
+      },
+      {
+        "text": "A ordenação grava a tabela em disco antes, então paga em dobro",
+        "why": "Esta ordenação rodou em 26 kB de memória; nada foi para o disco."
+      },
+      {
+        "text": "Porque o LIMIT acima dele força uma ordenação completa",
+        "why": "O LIMIT fica acima; o custo inicial da ordenação é o mesmo com ou sem ele."
+      },
+      {
+        "text": "Precisa ler toda a entrada antes",
+        "why": "Isso: o custo inteiro da varredura, mais o de ordenar, é pago antes da primeira linha."
+      }
+    ]
+  },
+  "ex-k3hfdzpc": {
+    "prompt": "Em `rows=11 width=29`, o 29 é o tamanho médio de uma linha que o nó passa para cima, medido em ___.",
+    "hint": "Uma unidade de armazenamento, não de tempo.",
+    "blanks": [
+      {
+        "accept": [
+          "bytes",
+          "byte"
+        ]
+      }
+    ]
+  },
+  "ex-etatfgqr": {
+    "prompt": "Uma consulta roda `WHERE EXISTS (…)`, então só importa a primeira linha da subconsulta. O plano A da subconsulta custa `5.00..9000.00`; o plano B custa `2000.00..2500.00`. Qual combina melhor, e por quê?",
+    "hint": "Qual dos dois números o EXISTS paga?",
+    "choices": [
+      {
+        "text": "A, porque o EXISTS se contenta com o começo, e o de A é barato",
+        "why": "Isso: o custo inicial é o que um consumidor da primeira linha paga, e o de A é 5 contra 2000."
+      },
+      {
+        "text": "B, porque o total dele é menor",
+        "why": "O total é o preço de todas as linhas; o EXISTS pede uma."
+      },
+      {
+        "text": "Qualquer um: custos só se comparam pelo total",
+        "why": "A seção mostrou o planejador pesando o custo inicial sempre que só as primeiras linhas importam."
+      },
+      {
+        "text": "B, porque custo inicial alto indica índice",
+        "why": "Custo inicial alto indica algo que precisa terminar antes, como uma ordenação ou um hash."
+      }
+    ]
+  },
+  "ex-n1p9er5q": {
+    "prompt": "Ponha os nós do painel do vendedor na ordem em que começam a produzir linhas, do primeiro ao último.",
+    "hint": "O mais recuado roda primeiro.",
+    "items": [
+      "Bitmap Index Scan on orders_seller_id_idx",
+      "Bitmap Index Scan on orders_placed_at_idx",
+      "BitmapAnd",
+      "Bitmap Heap Scan on orders",
+      "Sort",
+      "GroupAggregate"
+    ],
+    "trap": "Ler de cima para baixo põe o GroupAggregate primeiro, e ele é o último passo."
+  },
+  "ex-m7kh68zv": {
+    "prompt": "No plano dos pedidos do cliente 4242, o `Bitmap Heap Scan` tem custo total de 47.80 e o único filho dele, o `Bitmap Index Scan`, 4.51. Qual é o custo próprio da varredura da tabela?",
+    "hint": "Os custos incluem os dos filhos.",
+    "unit": "unidades de custo"
+  },
+  "ex-pfc3g3dk": {
+    "prompt": "O planejador esperava 1491 pedidos do vendedor 42 e 106093 de dezembro, e 79 para os dois. Como ele chegou a 79?",
+    "hint": "Duas frações de dois milhões.",
+    "choices": [
+      {
+        "text": "Contou os pedidos de dezembro do vendedor 42 quando o índice foi criado",
+        "why": "Um índice não guarda contagens de combinações; o planejador as calcula."
+      },
+      {
+        "text": "Multiplicou as duas frações, tratando-as como independentes",
+        "why": "Isso: 2000000 × (1491/2000000) × (106093/2000000) dá 79,1."
+      },
+      {
+        "text": "Pegou a menor estimativa e dividiu por vinte",
+        "why": "Não existe essa regra; 1491 / 20 dar perto de 79 é coincidência."
+      },
+      {
+        "text": "Rodou a consulta uma vez durante o planejamento",
+        "why": "O planejador nunca roda a consulta; é isso que torna o EXPLAIN puro seguro."
+      }
+    ]
+  },
+  "ex-nebbkv70": {
+    "prompt": "O plano de um relatório tem a linha do topo em `cost=0.00..52000.00`. Um Hash Join no meio tem total de 51000, e os dois filhos dele, totais de 900 e 49000. Onde você deve olhar primeiro?",
+    "hint": "Subtraia, nó a nó.",
+    "choices": [
+      {
+        "text": "O nó do topo, porque ele tem o maior custo de todos",
+        "why": "A linha do topo contém o custo de todos os nós; a parte própria dele aqui é 1000."
+      },
+      {
+        "text": "O Hash Join, já que 51000 é quase o plano todo",
+        "why": "A parte própria dele é 51000 − 900 − 49000, ou seja, 1100."
+      },
+      {
+        "text": "O filho de 49000, e subtrair abaixo",
+        "why": "Isso: ele carrega a maior parte do custo, e você segue subtraindo para baixo até a parte própria de um nó ser grande."
+      },
+      {
+        "text": "O de 900, o mais barato",
+        "why": "Consertá-lo economizaria no máximo 900 de 52000."
+      }
+    ]
+  },
+  "ex-th9zf6bt": {
+    "prompt": "Ligue cada linha de detalhe ao que ela diz.",
+    "hint": "Quais foram pagas linha a linha?",
+    "pairs": [
+      {
+        "left": "`Index Cond`",
+        "right": "só as entradas de índice que batem foram lidas"
+      },
+      {
+        "left": "`Filter`",
+        "right": "cada linha foi lida, depois conferida, e algumas foram jogadas fora"
+      },
+      {
+        "left": "`Recheck Cond`",
+        "right": "as linhas nas páginas marcadas são conferidas de novo"
+      },
+      {
+        "left": "`Sort Key`",
+        "right": "a ordem em que o nó põe as linhas"
+      }
+    ],
+    "right_distractors": [
+      "o número de vezes que o nó rodou"
+    ]
+  },
+  "ex-nsj90g9z": {
+    "prompt": "Uma varredura de índice interna mostra `actual time=0.012..0.012 rows=1 loops=25000`. Mais ou menos quantos milissegundos ela levou no total?",
+    "hint": "Por loop, e depois multiplique.",
+    "unit": "ms"
+  },
+  "ex-g4rttkcc": {
+    "prompt": "O `Parallel Seq Scan` da contagem dos pendentes mostra `actual time=68.112..68.407 rows=2440 loops=3`. Ao que equivaleu a varredura?",
+    "hint": "Os três processos se revezaram?",
+    "choices": [
+      {
+        "text": "2440 linhas em uns 205 ms de espera",
+        "why": "As duas metades erram: as linhas são por processo e os tempos se sobrepuseram."
+      },
+      {
+        "text": "Umas 7320 linhas em uns 205 ms",
+        "why": "As linhas se multiplicam, mas os três rodaram lado a lado, então o tempo não."
+      },
+      {
+        "text": "2440 linhas em uns 68 ms de espera",
+        "why": "2440 é a média por processo; eram três."
+      },
+      {
+        "text": "Umas 7320 linhas em 68 ms",
+        "why": "Isso: três processos ao mesmo tempo, então as linhas somam e a espera não. A contagem simples diz 7319."
+      }
+    ]
+  },
+  "ex-5ez8vz6y": {
+    "prompt": "Você quer o plano real de um `UPDATE` grande numa cópia dos dados de produção, sem ficar com as mudanças. O que você digita?",
+    "hint": "O ANALYZE executa o comando.",
+    "choices": [
+      {
+        "text": "`BEGIN;`, depois `EXPLAIN ANALYZE UPDATE …;`, depois `ROLLBACK;`",
+        "why": "Isso: o update roda de verdade e o rollback o desfaz."
+      },
+      {
+        "text": "`EXPLAIN ANALYZE UPDATE …;` sozinho",
+        "why": "Isso atualiza as linhas e mantém a mudança."
+      },
+      {
+        "text": "`EXPLAIN UPDATE …;`, que mostra os mesmos números",
+        "why": "O EXPLAIN puro não tem tempos nem linhas reais."
+      },
+      {
+        "text": "`EXPLAIN (ANALYZE, BUFFERS) UPDATE …;`",
+        "why": "O BUFFERS acrescenta contagens de páginas; o update ainda roda e fica."
+      }
+    ]
+  },
+  "ex-apfydhn7": {
+    "prompt": "Uma consulta que devolve um milhão de linhas de pedido mostra `Execution Time: 225.431 ms`, e o `psql` cronometrou a mesma consulta em 1138 ms. O que está na diferença?",
+    "hint": "O que o EXPLAIN ANALYZE faz com o resultado?",
+    "choices": [
+      {
+        "text": "O tempo de planejamento, que o Execution Time deixa de fora",
+        "why": "O planejamento levou 0,749 ms aqui."
+      },
+      {
+        "text": "Mandar as linhas ao cliente, o que o plano não conta",
+        "why": "Isso: o EXPLAIN ANALYZE descarta as linhas em vez de enviá-las."
+      },
+      {
+        "text": "O custo de medir do ANALYZE",
+        "why": "Medir deixa o número do plano maior, não menor."
+      },
+      {
+        "text": "Um cache frio na segunda execução",
+        "why": "A consulta real rodou depois do plano, com as mesmas páginas recém-lidas."
+      }
+    ]
+  },
+  "ex-e0d6c1qj": {
+    "prompt": "Dos dez pedidos mais baratos rodados com EXPLAIN ANALYZE (última linha do Seq Scan em 224,847 ms, primeira linha do Sort em 415,264 ms), quais afirmações são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Os tempos incluem os filhos.",
+    "choices": [
+      {
+        "text": "Os 415 ms da ordenação incluem os 225 da varredura",
+        "why": "Certo: o tempo de um nó contém o dos filhos."
+      },
+      {
+        "text": "A ordenação não pôde entregar nada antes de a varredura terminar",
+        "why": "Certo: é o custo inicial dela ficando visível."
+      },
+      {
+        "text": "A ordenação guardou só dez linhas na memória",
+        "why": "Certo: top-N heapsort, 26 kB."
+      },
+      {
+        "text": "A consulta levou 415 + 225 = 640 ms no total",
+        "why": "Somá-los conta a varredura duas vezes; o Execution Time foi 415."
+      },
+      {
+        "text": "A varredura rodou dez vezes, uma por linha que o Limit queria",
+        "why": "loops=1 em todos os nós."
+      }
+    ]
+  },
+  "ex-hng9x648": {
+    "prompt": "Num plano, o que `shared read=380` diz sobre essas 380 páginas?",
+    "hint": "De quem é a memória, e de quem não é?",
+    "choices": [
+      {
+        "text": "Vieram do disco",
+        "why": "Não necessariamente: o sistema operacional pode ter respondido do cache dele."
+      },
+      {
+        "text": "Foram lidas uma vez e logo em seguida gravadas de volta",
+        "why": "Ler uma página não a grava; gravações são contadas à parte."
+      },
+      {
+        "text": "Fora dos shared buffers; pedidas ao sistema",
+        "why": "Isso: onde o sistema as achou é outra pergunta, que o tempo de E/S responde."
+      },
+      {
+        "text": "Já estavam na memória do próprio PostgreSQL",
+        "why": "Isso é o `shared hit`."
+      }
+    ]
+  },
+  "ex-vsyw7gwm": {
+    "prompt": "Rodada duas vezes seguidas, a contagem dos pendentes leu 16589 páginas e depois 16493 de novo, enquanto a segunda execução do painel achou todas as páginas na memória. Por que a contagem não manteve as páginas?",
+    "hint": "O que protege as páginas de todas as outras consultas de uma varredura grande?",
+    "choices": [
+      {
+        "text": "Os shared buffers estavam cheios das páginas do painel",
+        "why": "O painel usou 380 páginas de mais de dezesseis mil disponíveis."
+      },
+      {
+        "text": "Workers paralelos não podem usar os shared buffers",
+        "why": "Usam; o plano mostra `shared hit=174` na mesma varredura."
+      },
+      {
+        "text": "O reinício entre as execuções os esvaziou",
+        "why": "As duas execuções foram na mesma sessão, sem reinício entre elas."
+      },
+      {
+        "text": "Uma varredura grande usa um anel próprio",
+        "why": "Isso: uma tabela maior que um quarto dos shared buffers é varrida através de um anel de 256 kB."
+      }
+    ]
+  },
+  "ex-fc0byyx0": {
+    "prompt": "Duas execuções de uma consulta mostram `shared read=16493`. Uma levou 352 ms, a outra 60 ms. O que diz quais leituras vieram do disco?",
+    "hint": "Um ajuste acrescenta uma linha por nó.",
+    "choices": [
+      {
+        "text": "A linha `I/O Timings` que o `track_io_timing` acrescenta: 876 ms contra 44",
+        "why": "Isso: uma leitura demorada é o disco; uma rápida é o cache do sistema."
+      },
+      {
+        "text": "A razão entre hit e read",
+        "why": "As duas execuções têm quase as mesmas contagens; contagens não enxergam o cache do sistema."
+      },
+      {
+        "text": "O Planning Time",
+        "why": "O planejamento lê o catálogo, não a tabela."
+      },
+      {
+        "text": "A linha `Heap Blocks`",
+        "why": "Essa linha é das varreduras bitmap e conta páginas, não de onde vieram."
+      }
+    ]
+  },
+  "ex-0cvfwpkp": {
+    "prompt": "Você reescreve a consulta de um relatório e quer saber se a versão nova trabalha menos. O servidor é compartilhado e o cache muda o dia todo. O que você compara?",
+    "hint": "Que número não mudou entre as execuções fria e quente?",
+    "choices": [
+      {
+        "text": "O Execution Time de uma única execução de cada uma das versões",
+        "why": "Uma execução de cada mede tanto o cache quanto a consulta."
+      },
+      {
+        "text": "As páginas tocadas, hit mais read, no nó do topo de cada",
+        "why": "Isso: 380 páginas fria e 380 quente. A contagem de páginas é o trabalho, seja o que for que o cache tinha."
+      },
+      {
+        "text": "Os custos estimados",
+        "why": "Custos são previsões; não dizem nada do que a versão nova fez de verdade."
+      },
+      {
+        "text": "Só as contagens de `shared read`",
+        "why": "Leituras mudam com o cache; uma página que era read vira hit."
+      }
+    ]
+  },
+  "ex-vdyq220w": {
+    "prompt": "`seq_page_cost` vale 1. O que significa esse 1?",
+    "hint": "Todo outro preço é relativo a alguma coisa.",
+    "choices": [
+      {
+        "text": "Um milissegundo de tempo para cada página lida",
+        "why": "Custo não é tempo; não há taxa de câmbio para milissegundos."
+      },
+      {
+        "text": "Uma página lida para cada consulta que roda",
+        "why": "É um preço por página lida, não uma contagem."
+      },
+      {
+        "text": "Um kilobyte de dados lido lá do disco rígido",
+        "why": "Páginas têm 8 kB, e o ajuste é um preço, não um tamanho."
+      },
+      {
+        "text": "A unidade contra a qual tudo é medido",
+        "why": "Isso: random_page_cost 4 e cpu_tuple_cost 0.01 são múltiplos e frações dele."
+      }
+    ]
+  },
+  "ex-9ke8frbk": {
+    "prompt": "`customers` tem `relpages` 2283 e `reltuples` 200000. Com os preços padrão, que custo total o planejador imprime para `EXPLAIN SELECT * FROM customers WHERE state = 'SP'`, uma varredura sequencial simples?",
+    "hint": "Páginas, linhas e um operador por linha.",
+    "unit": "unidades de custo"
+  },
+  "ex-c2khy148": {
+    "prompt": "O plano da contagem dos pendentes custou 41683.51 e levou 176 ms. O plano de outra consulta custa 83000. Quanto tempo ela vai levar?",
+    "hint": "Existe uma taxa de câmbio?",
+    "choices": [
+      {
+        "text": "O custo não sabe dizer: custos comparam planos de uma consulta, não tempos entre consultas",
+        "why": "Isso: o mesmo custo leva mais a frio e menos num disco mais rápido; só rodando você sabe."
+      },
+      {
+        "text": "Uns 350 ms, o dobro",
+        "why": "Isso supõe uma taxa fixa entre custo e tempo, que a aula diz não existir."
+      },
+      {
+        "text": "Uns 83 ms, um por mil",
+        "why": "Não há conversão fixa de unidades de custo para milissegundos."
+      },
+      {
+        "text": "176 ms, o mesmo",
+        "why": "Nada sugere que os dois levem o mesmo tempo, também."
+      }
+    ]
+  },
+  "ex-369cftbz": {
+    "prompt": "`order_lines` tem `relpages` 31848 e `reltuples` 4999992. Que custo total o `EXPLAIN SELECT * FROM order_lines` imprime, com os preços padrão?",
+    "hint": "Sem condição, então sem custo de operador.",
+    "unit": "unidades de custo"
+  },
+  "ex-5b8j91dt": {
+    "prompt": "Numa sessão você faz `SET cpu_operator_cost = 0.005` e pede `EXPLAIN SELECT * FROM orders WHERE total_cents > 0` (16667 páginas, 2000000 linhas, sem plano paralelo). Que total ele imprime?",
+    "hint": "Só o preço da condição mudou.",
+    "choices": [
+      {
+        "text": "41667.00, exatamente como era antes da mudança",
+        "why": "Esse total usava 0.0025 por comparação."
+      },
+      {
+        "text": "36667.00, a varredura sem preço de condição",
+        "why": "Essa é a varredura sem condição nenhuma."
+      },
+      {
+        "text": "46667.00: a condição agora custa 10000",
+        "why": "Isso: 16667 + 20000 + 2000000 × 0.005."
+      },
+      {
+        "text": "56667.00, como quando um preço dobrou",
+        "why": "Isso foi dobrar o cpu_tuple_cost, que precifica linhas, não operadores."
+      }
+    ]
+  },
+  "ex-wdm92249": {
+    "prompt": "O hábito que a seção sobre páginas deixa: rodar `EXPLAIN (ANALYZE, ___)` em vez da primeira opção sozinha.",
+    "hint": "A opção que conta páginas.",
+    "blanks": [
+      {
+        "accept": [
+          "BUFFERS"
+        ]
+      }
+    ]
+  }
+}

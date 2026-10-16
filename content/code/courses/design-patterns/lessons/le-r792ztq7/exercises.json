@@ -1,0 +1,573 @@
+[
+ {
+  "id": "ex-fe7nszmh",
+  "version": 1,
+  "section": "acid",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In reserve.py, why did move_hold leave Bia with no place in the queue?",
+  "choices": [
+   {
+    "text": "The foreign key deleted her hold when the insert named a member who does not exist",
+    "correct": false,
+    "why": "A foreign key refuses the bad row; it deleted nothing. The delete was the program's own statement."
+   },
+   {
+    "text": "The delete was committed before the insert failed",
+    "correct": true,
+    "why": "Right. With no transaction around them, each statement is committed on its own, so the failure could only undo itself."
+   },
+   {
+    "text": "SQLite does not support transactions in a database held in memory",
+    "correct": false,
+    "why": "It does: move_hold_atomically ran against the same kind of database and rolled back."
+   },
+   {
+    "text": "The CHECK on place refused her place number",
+    "correct": false,
+    "why": "Her place was 1, which the CHECK accepts; the error printed was about the foreign key."
+   }
+  ]
+ },
+ {
+  "id": "ex-sz4yxnqa",
+  "version": 1,
+  "section": "acid",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each ACID letter to where the section finds it, or misses it, in reserve.py.",
+  "pairs": [
+   {
+    "left": "Atomicity",
+    "right": "ROLLBACK put the delete back"
+   },
+   {
+    "left": "Consistency",
+    "right": "the foreign key refused m-009"
+   },
+   {
+    "left": "Durability",
+    "right": "absent, because the database lives in memory"
+   },
+   {
+    "left": "Isolation",
+    "right": "not shown until the next section"
+   }
+  ]
+ },
+ {
+  "id": "ex-fd22yh02",
+  "version": 1,
+  "section": "acid",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Go function calls db.Exec(\"BEGIN\"), then the delete and the insert, then db.Exec(\"COMMIT\"), all on a *sql.DB. What is wrong?",
+  "choices": [
+   {
+    "text": "Nothing; database/sql notices the BEGIN and keeps the following calls inside it",
+    "correct": false,
+    "why": "It does not parse your SQL; it hands each call whatever connection the pool has free."
+   },
+   {
+    "text": "Each call gets whichever pooled connection is free, outside the transaction",
+    "correct": true,
+    "why": "Right. A transaction belongs to one connection, which is why BeginTx returns a Tx to run the statements on."
+   },
+   {
+    "text": "Go has no way to run BEGIN as SQL",
+    "correct": false,
+    "why": "Exec will send it; the problem is which connection receives it and which receives the next call."
+   }
+  ]
+ },
+ {
+  "id": "ex-bydsxajq",
+  "version": 1,
+  "section": "isolation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first run of desks.py ends with available=0 and loans=2. What happened?",
+  "choices": [
+   {
+    "text": "Desk B wrote a count worked out from a value desk A had already changed",
+    "correct": true,
+    "why": "Right. Both read 1 and both wrote 1 - 1; the second write replaced the first. That is the lost update."
+   },
+   {
+    "text": "SQLite dropped desk A's UPDATE because two connections wrote at once",
+    "correct": false,
+    "why": "Both UPDATEs ran in turn, in one thread. Nothing was dropped; desk B simply wrote the same 0."
+   },
+   {
+    "text": "An insert into loans failed silently",
+    "correct": false,
+    "why": "Both inserts succeeded; that is why there are two loans."
+   }
+  ]
+ },
+ {
+  "id": "ex-1rvp82bn",
+  "version": 1,
+  "section": "isolation",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Three desks follow the no_transaction pattern on a title with 2 copies: all three read first, then each writes seen - 1 and records a loan. What does available say at the end?",
+  "hint": "Every desk saw the same number.",
+  "value": 1,
+  "tolerance": 0,
+  "unit": "copies"
+ },
+ {
+  "id": "ex-hetp26ba",
+  "version": 1,
+  "section": "isolation",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The lend of desks.py, read then write, runs inside one transaction on a PostgreSQL left at its default level. Two desks overlap. What happens?",
+  "choices": [
+   {
+    "text": "The second desk gets database is locked, as in the plain_begin run",
+    "correct": false,
+    "why": "That is SQLite, which is serializable. PostgreSQL defaults to read committed."
+   },
+   {
+    "text": "PostgreSQL aborts the second transaction with a serialization error",
+    "correct": false,
+    "why": "That needs REPEATABLE READ or higher; the default level lets the second UPDATE through."
+   },
+   {
+    "text": "The update is lost, unless the read says FOR UPDATE",
+    "correct": true,
+    "why": "Right. Read committed waits for the first UPDATE and then applies the second over it."
+   },
+   {
+    "text": "Nothing goes wrong: any transaction serialises its own reads and writes",
+    "correct": false,
+    "why": "A transaction groups its own statements; whether it is shielded from another one is the isolation level's business."
+   }
+  ]
+ },
+ {
+  "id": "ex-6nsy9nbz",
+  "version": 1,
+  "section": "unit-of-work",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Caio's first visit in uow.py calls uow.lend and leaves the with block. Why is nothing written?",
+  "choices": [
+   {
+    "text": "SQLite refused the loan because the basket held a single title",
+    "correct": false,
+    "why": "No SQL ran at all: lend only appends to a list."
+   },
+   {
+    "text": "Only commit writes, and __exit__ throws away what was never committed",
+    "correct": true,
+    "why": "Right. Forgetting commit writes nothing, which is the safe way round to forget."
+   },
+   {
+    "text": "Dom Casmurro had no copy left by then",
+    "correct": false,
+    "why": "The stock still showed 2 after Bia's refused basket."
+   }
+  ]
+ },
+ {
+  "id": "ex-7tsyb96e",
+  "version": 1,
+  "section": "unit-of-work",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put in order what happens inside commit for Bia's basket of Dom Casmurro, Vidas Secas and Iracema.",
+  "items": [
+   "BEGIN IMMEDIATE takes the write lock",
+   "Dom Casmurro and Vidas Secas are counted down and their loans inserted",
+   "The UPDATE for Iracema changes zero rows",
+   "NoCopyLeft is raised",
+   "ROLLBACK undoes the two loans already applied"
+  ],
+  "trap": "The first two loans do reach the database inside the transaction; the rollback is what keeps them from being seen."
+ },
+ {
+  "id": "ex-tj3qmgj6",
+  "version": 1,
+  "section": "unit-of-work",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Instead of a unit of work, checkout calls a lend_one helper that commits after each title. Bia asks for three titles and the third has no copy. What does she leave with?",
+  "choices": [
+   {
+    "text": "Nothing, because the error rolls the whole checkout back",
+    "correct": false,
+    "why": "There is nothing left to roll back: each of the first two was committed when lend_one finished."
+   },
+   {
+    "text": "The first two titles",
+    "correct": true,
+    "why": "Right. Each commit ended its own transaction, so the basket was lent in pieces."
+   },
+   {
+    "text": "All three, with the stock of the third going below zero",
+    "correct": false,
+    "why": "The conditional UPDATE refuses when no copy is left; that part still works."
+   },
+   {
+    "text": "Only the third, which the database kept as the latest change",
+    "correct": false,
+    "why": "The third is the one that failed; it is the only title she cannot have."
+   }
+  ]
+ },
+ {
+  "id": "ex-8t6ddgz6",
+  "version": 1,
+  "section": "cap",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the CP run of branches.py, the link is down. Why does Centro still lend the copy to Bia?",
+  "choices": [
+   {
+    "text": "It is the primary, so its count is the truth",
+    "correct": true,
+    "why": "Right. CP refuses on the side that cannot be sure, and the primary can be."
+   },
+   {
+    "text": "CP mode only refuses after the link has been down for some time",
+    "correct": false,
+    "why": "There is no timer in the program; Vila Madalena refuses at once."
+   },
+   {
+    "text": "Bia asked first, and the first request in a partition is always accepted",
+    "correct": false,
+    "why": "Order is not the rule. Had Caio asked at Vila Madalena first, he would still have been refused."
+   }
+  ]
+ },
+ {
+  "id": "ex-v3tewjep",
+  "version": 1,
+  "section": "cap",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Somebody sums up CAP as \"pick two of the three\". What does the section say is wrong with that?",
+  "choices": [
+   {
+    "text": "There are four properties, not three",
+    "correct": false,
+    "why": "CAP has three letters; the misreading is about what choosing means."
+   },
+   {
+    "text": "Every real system must give up availability",
+    "correct": false,
+    "why": "The AP run gives up consistency instead; both answers exist."
+   },
+   {
+    "text": "A partition is not optional; the choice exists only while one is happening",
+    "correct": true,
+    "why": "Right. You cannot choose to skip partitions, so the real choice is what each side does during one."
+   },
+   {
+    "text": "It is right, but only for databases with more than two nodes",
+    "correct": false,
+    "why": "The library has two branches and the choice is just as real there."
+   }
+  ]
+ },
+ {
+  "id": "ex-5avzcq65",
+  "version": 1,
+  "section": "cap",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The literature's name for CAP's C, every read seeing the most recent write as if there were one copy, is ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "linearizability",
+     "linearisability"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-t6gvavsh",
+  "version": 1,
+  "section": "pacelc",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In latency.py, ONE_WAY_MS is changed to 80 and LOCAL_MS stays 3. How long does Bia wait in sync mode, in milliseconds?",
+  "hint": "The confirmation has to come back as well.",
+  "value": 163,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-6ef2ew87",
+  "version": 1,
+  "section": "pacelc",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the async run, a read from the replica at 40 ms says 16 March. What is that?",
+  "choices": [
+   {
+    "text": "A partition: the replica cannot be reached",
+    "correct": false,
+    "why": "Nothing is broken in the program; the change is simply still on its way."
+   },
+   {
+    "text": "Eventual consistency: a stale read with no failure anywhere",
+    "correct": true,
+    "why": "Right. It is the everyday price of telling Bia \"done\" after 3 ms."
+   },
+   {
+    "text": "A lost update, like the first run of desks.py",
+    "correct": false,
+    "why": "Nothing was overwritten: at 80 ms the replica shows 30 March."
+   },
+   {
+    "text": "A bug in the replica, which should have applied the change first",
+    "correct": false,
+    "why": "The replica cannot have a change that has not reached it; 55 ms of travel is the design."
+   }
+  ]
+ },
+ {
+  "id": "ex-k8ev9kcy",
+  "version": 1,
+  "section": "pacelc",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A store answers reads from the nearest replica when the network is healthy, and refuses writes on the side cut off from the primary during a partition. Which PACELC label fits?",
+  "choices": [
+   {
+    "text": "PA/EL",
+    "correct": false,
+    "why": "Refusing on the cut-off side is choosing C during a partition, not A."
+   },
+   {
+    "text": "PC/EL",
+    "correct": true,
+    "why": "Right. C when partitioned, latency otherwise: the two halves of the tree are chosen separately."
+   },
+   {
+    "text": "PC/EC",
+    "correct": false,
+    "why": "Answering from the nearest replica, without waiting, is the L side of Else."
+   },
+   {
+    "text": "PA/EC",
+    "correct": false,
+    "why": "Both halves are the other way round."
+   }
+  ]
+ },
+ {
+  "id": "ex-ap8e89b6",
+  "version": 1,
+  "section": "choosing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which library operation does the section accept at any branch while the link is down?",
+  "choices": [
+   {
+    "text": "Lending the last copy, as long as each branch keeps a record",
+    "correct": false,
+    "why": "Keeping a record is what led to two loans for one copy in the AP run."
+   },
+   {
+    "text": "Placing a hold",
+    "correct": true,
+    "why": "Right. A queue ordered by arrival time settles the conflict by rule, without a person."
+   },
+   {
+    "text": "Paying a fine, since the amount is known in advance",
+    "correct": false,
+    "why": "Money taken twice needs a refund, which is a person repairing it; fines go to the primary."
+   }
+  ]
+ },
+ {
+  "id": "ex-sw5vksah",
+  "version": 1,
+  "section": "choosing",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these operations does the section send to the primary and pay for consistency? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Lending the last copy",
+    "correct": true,
+    "why": "Right. Two members promised one book is a mistake a person has to repair."
+   },
+   {
+    "text": "Showing \"available\" in the online catalogue",
+    "correct": false,
+    "why": "A few seconds stale harms nobody; it reads from a replica or lesson 8's read model."
+   },
+   {
+    "text": "Paying a fine",
+    "correct": true,
+    "why": "Right. Money, and every ACID letter with it."
+   },
+   {
+    "text": "Counting \"popular this week\"",
+    "correct": false,
+    "why": "A count off by a few is harmless; the section gives it no transaction at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-ddytv14w",
+  "version": 1,
+  "section": "choosing",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A new operation: a member rates a book from 1 to 5, and the page shows the average. The link between branches goes down. What does the section's test suggest?",
+  "choices": [
+   {
+    "text": "Accept at both branches and merge the ratings when the link returns",
+    "correct": true,
+    "why": "Right. Every rating counts once whichever branch heard it, so a rule settles it and nobody has to be phoned."
+   },
+   {
+    "text": "Refuse at Vila Madalena, as for lending the last copy",
+    "correct": false,
+    "why": "Lending is refused because only a person can repair two loans for one copy; two ratings conflict with nothing."
+   },
+   {
+    "text": "Run every rating inside BEGIN IMMEDIATE at the primary, so no rating is lost",
+    "correct": false,
+    "why": "That buys consistency nobody needs and makes every rating wait behind the loans."
+   }
+  ]
+ },
+ {
+  "id": "ex-0zf7x972",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each problem from this lesson to the tool that answered it.",
+  "pairs": [
+   {
+    "left": "A hold moved halfway and lost",
+    "right": "a transaction with ROLLBACK"
+   },
+   {
+    "left": "Two desks lend one copy",
+    "right": "the conditional UPDATE"
+   },
+   {
+    "left": "A helper commits in the middle of a checkout",
+    "right": "a unit of work"
+   },
+   {
+    "left": "A replica shows the old due date after \"done\"",
+    "right": "synchronous replication"
+   }
+  ]
+ },
+ {
+  "id": "ex-cvfy0gev",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Each branch in the AP run has data that satisfies every constraint, yet the two disagree. Which statement is true?",
+  "choices": [
+   {
+    "text": "The run breaks ACID, because two loans exist for one copy",
+    "correct": false,
+    "why": "Each branch's own transactions were valid; no single database broke a rule it was given."
+   },
+   {
+    "text": "Both Cs fail, since they are the same property seen from two sides",
+    "correct": false,
+    "why": "They are different properties; the section tables them apart for this reason."
+   },
+   {
+    "text": "ACID's C holds on each node; CAP's C fails between them",
+    "correct": true,
+    "why": "Right. Valid data per node, and copies that disagree: the two letters measure different things."
+   },
+   {
+    "text": "Neither C applies, because the network was down",
+    "correct": false,
+    "why": "A partition is exactly when CAP's C is decided, and ACID applies on each node regardless."
+   }
+  ]
+ },
+ {
+  "id": "ex-r3e5hm75",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The online catalogue reads \"available: 1\" from a replica. A member sees it, walks to the desk, and the copy has just gone out. What should the library do about it?",
+  "choices": [
+   {
+    "text": "Move the catalogue to synchronous reads from the primary",
+    "correct": false,
+    "why": "Even a current page goes stale the moment the member stands up; the cost would buy nothing at the desk."
+   },
+   {
+    "text": "Nothing: the page traded consistency for latency, and the desk still checks at the primary",
+    "correct": true,
+    "why": "Right. The lend itself is where consistency is paid for, and it refused correctly."
+   },
+   {
+    "text": "Treat it as a lost update and add BEGIN IMMEDIATE to the page",
+    "correct": false,
+    "why": "Nothing was overwritten; a read was simply old. A lock on a read path would make every page view queue."
+   },
+   {
+    "text": "Hold the copy for anyone who has the page open",
+    "correct": false,
+    "why": "That turns every page view into a write at the primary, the most expensive choice in the table."
+   }
+  ]
+ },
+ {
+  "id": "ex-rh0rs4b4",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the conditional UPDATE, the program reads the cursor's ___ to learn whether a copy was actually taken.",
+  "blanks": [
+   {
+    "accept": [
+     "rowcount",
+     "cursor.rowcount",
+     "cur.rowcount"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

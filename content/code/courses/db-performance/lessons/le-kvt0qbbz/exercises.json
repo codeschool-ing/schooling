@@ -1,0 +1,525 @@
+[
+  {
+    "id": "ex-andn04n6",
+    "version": 1,
+    "section": "the-ratio",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the estimated and actual `rows` of a node the most useful pair in a plan?",
+    "hint": "What were the planner's choices made for?",
+    "choices": [
+      {
+        "text": "Every choice was made for the estimate",
+        "correct": true,
+        "why": "Right: scan, join and memory were all planned for the estimated rows."
+      },
+      {
+        "text": "Because the actual rows decide how much the query is billed",
+        "correct": false,
+        "why": "Nothing is billed per row; the point is what the plan was built for."
+      },
+      {
+        "text": "Because the estimate is always within 10% when the plan is good",
+        "correct": false,
+        "why": "A plan can be fine with a ratio of two; the pair tells you what to look at."
+      },
+      {
+        "text": "Because EXPLAIN without ANALYZE prints only those two",
+        "correct": false,
+        "why": "Without ANALYZE there is no actual count at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfr45ywd",
+    "version": 1,
+    "section": "the-ratio",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the Curitiba join, the Nested Loop showed 9380 estimated against 135,717 actual. Why is it not the node to fix?",
+    "hint": "Read from the bottom.",
+    "choices": [
+      {
+        "text": "Because nested loops never misestimate",
+        "correct": false,
+        "why": "It showed a ratio of 14.5; the question is where that came from."
+      },
+      {
+        "text": "The scan below it was already 14.5 times off",
+        "correct": true,
+        "why": "Right: the join only multiplied wrong rows by ten orders each."
+      },
+      {
+        "text": "Because the join's own estimate was within 10%",
+        "correct": false,
+        "why": "9380 against 135,717 is far outside 10%."
+      },
+      {
+        "text": "Because the index on orders.customer_id was missing",
+        "correct": false,
+        "why": "The plan used orders_customer_id_idx."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jtp34yz",
+    "version": 1,
+    "section": "the-ratio",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A node with `loops=13578` shows `rows=11` estimated and `rows=10` actual. What do you conclude?",
+    "hint": "Both numbers are per loop.",
+    "choices": [
+      {
+        "text": "This node is 1357 times off",
+        "correct": false,
+        "why": "Both figures are per loop, so they compare directly: 11 against 10."
+      },
+      {
+        "text": "Its per-loop estimate is right; the count of loops is the problem",
+        "correct": true,
+        "why": "Right: it ran 13,578 times because the node below misjudged its rows."
+      },
+      {
+        "text": "The node returned 10 rows in total",
+        "correct": false,
+        "why": "10 per loop over 13,578 loops is about 135,000."
+      },
+      {
+        "text": "The planner forgot to multiply by loops",
+        "correct": false,
+        "why": "Per-loop figures are how EXPLAIN prints them; nothing was forgotten."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy38jmx6",
+    "version": 1,
+    "section": "the-ratio",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Seq Scan on customers: 938 estimated, 13,578 actual. What is the ratio of actual to estimated, to one decimal?",
+    "hint": "Divide actual by estimated.",
+    "value": 14.5,
+    "tolerance": 0.2,
+    "unit": "times"
+  },
+  {
+    "id": "ex-20t87mbn",
+    "version": 1,
+    "section": "stale-statistics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which column of `pg_stat_user_tables` says how old a table's statistics are, in rows?",
+    "hint": "It was 300000 after the import.",
+    "choices": [
+      {
+        "text": "n_live_tup",
+        "correct": false,
+        "why": "That counts live rows, not changes since ANALYZE."
+      },
+      {
+        "text": "last_autoanalyze",
+        "correct": false,
+        "why": "That is a time, and it was empty."
+      },
+      {
+        "text": "n_mod_since_analyze",
+        "correct": true,
+        "why": "Right: rows inserted, updated or deleted since the last ANALYZE."
+      },
+      {
+        "text": "reltuples",
+        "correct": false,
+        "why": "reltuples is in pg_class and is the row count ANALYZE wrote down."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw2fxb1t",
+    "version": 1,
+    "section": "stale-statistics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the import the planner estimated 7590 pending orders, not 6600. Where did the larger number come from?",
+    "hint": "reltuples said 2,000,000, but the table had 19,167 pages.",
+    "choices": [
+      {
+        "text": "Autoanalyze ran halfway through the import",
+        "correct": false,
+        "why": "It was switched off, and last_autoanalyze was empty."
+      },
+      {
+        "text": "The pending fraction was re-sampled",
+        "correct": false,
+        "why": "The fraction stayed 0.0033; nothing re-sampled it."
+      },
+      {
+        "text": "The new rows were counted at insert time",
+        "correct": false,
+        "why": "The planner does not count rows; it scales by pages."
+      },
+      {
+        "text": "Rows scaled by the table's real size in pages",
+        "correct": true,
+        "why": "Right: 2.3 million rows times the old 0.0033."
+      }
+    ]
+  },
+  {
+    "id": "ex-ewjswt6w",
+    "version": 1,
+    "section": "stale-statistics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job loads a day of readings into a table of 500 million rows and then runs a report on that day. The report is slow on some nights. What does this lesson point to first?",
+    "hint": "When was the last photograph taken?",
+    "choices": [
+      {
+        "text": "Add an index on the reading's value",
+        "correct": false,
+        "why": "Nothing says an index is missing; the plan may be built for yesterday's data."
+      },
+      {
+        "text": "Run ANALYZE right after the load",
+        "correct": true,
+        "why": "Right: at 0.1 the table waits for 50 million changes before autoanalyze."
+      },
+      {
+        "text": "Turn off autovacuum on the table during the load",
+        "correct": false,
+        "why": "That is what keeps statistics stale; the lesson did it only to watch the gap."
+      },
+      {
+        "text": "Raise default_statistics_target for the whole server",
+        "correct": false,
+        "why": "A bigger sample taken yesterday still misses today's rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqrem6zy",
+    "version": 1,
+    "section": "the-cascade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the stale plan, why did the Sort spill 7216 kB to disk?",
+    "hint": "What was it planned for?",
+    "choices": [
+      {
+        "text": "Sorting text always uses the disk",
+        "correct": false,
+        "why": "Before the import the same sort ran in 493 kB of memory."
+      },
+      {
+        "text": "It was planned for 7590 rows and got 307,319",
+        "correct": true,
+        "why": "Right: memory planned for an estimate is spent on the actual."
+      },
+      {
+        "text": "The disk was faster than memory at that moment",
+        "correct": false,
+        "why": "Disk is never chosen for speed; it is where a sort goes when memory runs out."
+      },
+      {
+        "text": "work_mem had been lowered by the import",
+        "correct": false,
+        "why": "An INSERT does not change settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-awt9wh8r",
+    "version": 1,
+    "section": "the-cascade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the stale plan reach `sellers` through a Nested Loop with Memoize?",
+    "hint": "How many lookups did the planner expect?",
+    "choices": [
+      {
+        "text": "Because sellers has no primary key",
+        "correct": false,
+        "why": "It used sellers_pkey."
+      },
+      {
+        "text": "Because Memoize is always used for small tables",
+        "correct": false,
+        "why": "After ANALYZE the same small table was hashed instead."
+      },
+      {
+        "text": "It expected only seven thousand cheap lookups",
+        "correct": true,
+        "why": "Right: it then ran 307,319 times."
+      },
+      {
+        "text": "Because the hash join on customers used all the memory",
+        "correct": false,
+        "why": "Memory is planned per node; the choice came from the row estimate."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j0k0f7k",
+    "version": 1,
+    "section": "the-cascade",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The operations query took 663 ms with stale statistics and 464 ms after ANALYZE. About what percentage faster was it after?",
+    "hint": "(663 − 464) ÷ 663.",
+    "value": 30,
+    "tolerance": 2,
+    "unit": "%"
+  },
+  {
+    "id": "ex-jav1x7fs",
+    "version": 1,
+    "section": "the-cascade",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the stale plan's nodes from where the error started to where it ended, following the rows upwards.",
+    "hint": "Rows flow from the bottom.",
+    "items": [
+      "Seq Scan on orders",
+      "Hash Join with customers",
+      "Nested Loop with Memoize into sellers",
+      "Sort, external merge",
+      "GroupAggregate"
+    ],
+    "trap": "The scan is where the wrong number starts."
+  },
+  {
+    "id": "ex-n78jm6d1",
+    "version": 1,
+    "section": "the-cascade",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan shows a Hash Join at the top with ratio 50, a Nested Loop below it with ratio 50, and an Index Scan at the bottom with ratio 1. Where should you look?",
+    "hint": "Find the lowest node where the two part.",
+    "choices": [
+      {
+        "text": "At the Hash Join, since it is the slowest node",
+        "correct": false,
+        "why": "Time includes children; the top is where errors arrive, not where they start."
+      },
+      {
+        "text": "At the Index Scan, since it is at the bottom",
+        "correct": false,
+        "why": "Its ratio is 1: its estimate was right."
+      },
+      {
+        "text": "At the Nested Loop, the first to disagree",
+        "correct": true,
+        "why": "Right: the join's own estimate, often its selectivity, is where the error begins."
+      },
+      {
+        "text": "Nowhere: a ratio of 50 is normal for joins",
+        "correct": false,
+        "why": "Fifty means the plan was built for a different amount of data."
+      }
+    ]
+  },
+  {
+    "id": "ex-szaht7ec",
+    "version": 1,
+    "section": "what-analyze-reads",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default settings, how many rows does ANALYZE put in its sample of `events`, a table of five million rows?",
+    "hint": "300 × default_statistics_target.",
+    "choices": [
+      {
+        "text": "All five million",
+        "correct": false,
+        "why": "It scanned 30000 of 65432 pages and sampled 30,000 rows."
+      },
+      {
+        "text": "One percent, 50,000",
+        "correct": false,
+        "why": "The sample size does not depend on the table's size."
+      },
+      {
+        "text": "30,000",
+        "correct": true,
+        "why": "Right: the same as for orders, and for any table bigger than that."
+      },
+      {
+        "text": "100, the statistics target",
+        "correct": false,
+        "why": "The target is multiplied by 300 to give the sample."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9q855np",
+    "version": 1,
+    "section": "what-analyze-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ANALYZE VERBOSE events` reported `2292530 live rows` on the pages it read and `5000161 estimated total rows`. Where does the second number go?",
+    "hint": "The planner starts every plan from it.",
+    "choices": [
+      {
+        "text": "Into pg_class.reltuples",
+        "correct": true,
+        "why": "Right: the row count every estimate is scaled from."
+      },
+      {
+        "text": "Into pg_stat_user_tables.n_live_tup only, for monitoring",
+        "correct": false,
+        "why": "The planner uses it, through reltuples."
+      },
+      {
+        "text": "Nowhere; it is printed and discarded",
+        "correct": false,
+        "why": "It is stored in the catalogue."
+      },
+      {
+        "text": "Into the most_common_freqs of every column",
+        "correct": false,
+        "why": "Frequencies are fractions; the total is stored once for the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyfya7sz",
+    "version": 1,
+    "section": "what-analyze-reads",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `autovacuum_analyze_threshold` 50 and `autovacuum_analyze_scale_factor` 0.1, how many changed rows does a table with `reltuples` of 2,000,000 need before autoanalyze runs?",
+    "hint": "threshold + scale factor × rows.",
+    "value": 200050,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-tav3982x",
+    "version": 1,
+    "section": "what-analyze-reads",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Autovacuum re-analyses a table when the rows changed since the last ANALYZE exceed a threshold plus the ___ factor times the table's rows.",
+    "hint": "0.1 by default; ALTER TABLE can lower it per table.",
+    "blanks": [
+      {
+        "accept": [
+          "scale"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qt8x0sw9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line to what it tells you about the statistics.",
+    "hint": "All from this lesson's transcripts.",
+    "pairs": [
+      {
+        "left": "`n_mod_since_analyze | 300000`",
+        "right": "the statistics predate 300,000 changes"
+      },
+      {
+        "left": "`rows=7590 … rows=307319`",
+        "right": "this node's estimate is 40 times low"
+      },
+      {
+        "left": "`30000 rows in sample`",
+        "right": "ANALYZE read a sample, not the table"
+      },
+      {
+        "left": "`Sort Method: external merge  Disk: 7216kB`",
+        "right": "memory was planned for fewer rows"
+      }
+    ],
+    "right_distractors": [
+      "the index is missing"
+    ]
+  },
+  {
+    "id": "ex-jc6syv96",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these can leave a table's statistics describing data it no longer holds? Choose all that apply.",
+    "hint": "The photograph is taken by ANALYZE.",
+    "choices": [
+      {
+        "text": "A bulk load queried before autoanalyze runs",
+        "correct": true,
+        "why": "Right: the window section 05 described."
+      },
+      {
+        "text": "autovacuum_enabled = off on the table",
+        "correct": true,
+        "why": "Right: then only a manual ANALYZE refreshes it."
+      },
+      {
+        "text": "A huge table changing below its 10% scale factor",
+        "correct": true,
+        "why": "Right: a rare status turned common may stay under the threshold."
+      },
+      {
+        "text": "Running ANALYZE right after a load",
+        "correct": false,
+        "why": "That is the fix, not a cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sqvymcs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Fresh statistics, and still a scan estimated at 900 rows returns 14,000. ANALYZE changes nothing. What is the lesson's next step?",
+    "hint": "Two causes of a wrong estimate were named.",
+    "choices": [
+      {
+        "text": "Run ANALYZE again until the sample is luckier",
+        "correct": false,
+        "why": "A fresh sample of correlated columns gives the same product."
+      },
+      {
+        "text": "Force a hash join with planner settings",
+        "correct": false,
+        "why": "That overrules the choice instead of fixing the number."
+      },
+      {
+        "text": "Turn autovacuum off on the table",
+        "correct": false,
+        "why": "That makes statistics staler, not better."
+      },
+      {
+        "text": "Suspect correlated columns, lesson 7's subject",
+        "correct": true,
+        "why": "Right: Curitiba and PR were 14.5 times off with fresh statistics."
+      }
+    ]
+  }
+]

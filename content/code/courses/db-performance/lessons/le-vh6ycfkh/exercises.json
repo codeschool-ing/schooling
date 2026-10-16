@@ -1,0 +1,577 @@
+[
+  {
+    "id": "ex-p3cbcrmk",
+    "version": 1,
+    "section": "nested-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a `Nested Loop`, which child runs once per row of the other?",
+    "hint": "Outer and inner.",
+    "choices": [
+      {
+        "text": "The first child printed",
+        "correct": false,
+        "why": "That is the outer side; it runs once."
+      },
+      {
+        "text": "The second child printed, the inner side",
+        "correct": true,
+        "why": "Right: in customer 4242's join it shows loops=10, one per order."
+      },
+      {
+        "text": "Whichever child has an index",
+        "correct": false,
+        "why": "Both children can use indexes; the position decides which repeats."
+      },
+      {
+        "text": "Neither: both run once and are compared row by row",
+        "correct": false,
+        "why": "That describes a merge join."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0m5j70j",
+    "version": 1,
+    "section": "nested-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The inner index scan shows `rows=2 loops=10` and `Buffers: shared hit=15 read=25`. How many pages did all ten lookups touch together?",
+    "hint": "Buffers are not averages.",
+    "choices": [
+      {
+        "text": "400: 40 per loop times 10",
+        "correct": false,
+        "why": "Buffers are already summed over the loops; only times and rows are per loop."
+      },
+      {
+        "text": "40 in all, about 4 per lookup",
+        "correct": true,
+        "why": "Right: unlike rows and times, the buffer counts are totals."
+      },
+      {
+        "text": "20, one per row returned",
+        "correct": false,
+        "why": "Each lookup walked index levels too; the count is 40."
+      },
+      {
+        "text": "25, since the 15 hits were not touched",
+        "correct": false,
+        "why": "A hit is a page touched in memory; it counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-mb54cp38",
+    "version": 1,
+    "section": "nested-loop",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An inner index scan takes about 0.022 ms per loop. Roughly how many milliseconds would 100000 outer rows cost in lookups alone?",
+    "hint": "Per loop, times loops.",
+    "value": 2200,
+    "tolerance": 100,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-ek856fe4",
+    "version": 1,
+    "section": "nested-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nested loop's outer child shows `rows=12` estimated and `rows=95000` actual, and its inner index scan `loops=95000`. What is the cause to chase first?",
+    "hint": "Which number was the loop chosen on?",
+    "choices": [
+      {
+        "text": "The index on the inner side is missing",
+        "correct": false,
+        "why": "It exists: the inner side is an index scan."
+      },
+      {
+        "text": "The outer estimate, 12 against 95000",
+        "correct": true,
+        "why": "Right: the join was right for 12 rows; the estimate was wrong."
+      },
+      {
+        "text": "work_mem is too small to hold the loop",
+        "correct": false,
+        "why": "A nested loop holds no hash table; work_mem does not limit it."
+      },
+      {
+        "text": "Parallel plans were switched off for the session",
+        "correct": false,
+        "why": "Parallelism would split the work, not change the 95000 lookups."
+      }
+    ]
+  },
+  {
+    "id": "ex-dztm3cbz",
+    "version": 1,
+    "section": "hash-join",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which input of a hash join is read into the hash table?",
+    "hint": "The child under `Hash`.",
+    "choices": [
+      {
+        "text": "The bigger one, so the probes are fewer",
+        "correct": false,
+        "why": "The opposite: hashing the bigger side costs more memory and more batches."
+      },
+      {
+        "text": "Always the left table of the SQL",
+        "correct": false,
+        "why": "The planner picks the side; customers were hashed though written second."
+      },
+      {
+        "text": "The smaller, by the estimate",
+        "correct": true,
+        "why": "Right: 200000 customers rather than two million orders."
+      },
+      {
+        "text": "Both, into one table",
+        "correct": false,
+        "why": "One side builds, the other probes."
+      }
+    ]
+  },
+  {
+    "id": "ex-va98s7xy",
+    "version": 1,
+    "section": "hash-join",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `Hash` node shows `Batches: 2  Memory Usage: 5966kB` and the join `temp read=3262 written=3262`. What does that say?",
+    "hint": "Memory allowed is work_mem times a multiplier.",
+    "choices": [
+      {
+        "text": "It did not fit, and part went to disk",
+        "correct": true,
+        "why": "Right: the hash outgrew its memory, and about 25 MB went to temporary files and back."
+      },
+      {
+        "text": "Two processes built the hash in parallel",
+        "correct": false,
+        "why": "Batches are parts of one hash, not workers; parallel plans were off."
+      },
+      {
+        "text": "The join ran twice over the same input",
+        "correct": false,
+        "why": "loops=1; the batches are passes over split data."
+      },
+      {
+        "text": "Shared buffers were full at the time",
+        "correct": false,
+        "why": "Temp files belong to work_mem, not to shared buffers."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsw9dtd6",
+    "version": 1,
+    "section": "hash-join",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `work_mem` at 32 MB the customers' hash fitted in one batch and the query took 1401 ms; at 1 MB it took 8 batches and 943 ms. What should you conclude before raising `work_mem` on the server?",
+    "hint": "Did the spill cost what the planner thought?",
+    "choices": [
+      {
+        "text": "More memory makes hash joins slower, so lower it on the server",
+        "correct": false,
+        "why": "One query on one warm machine does not show a rule in either direction."
+      },
+      {
+        "text": "The timings are wrong because ANALYZE adds overhead",
+        "correct": false,
+        "why": "All three paid the same overhead."
+      },
+      {
+        "text": "Batches above 1 must be removed whatever they cost",
+        "correct": false,
+        "why": "Here removing them bought nothing; they are a cost to measure, not a verdict."
+      },
+      {
+        "text": "Batches are a cost to measure, and here the spill was cheap",
+        "correct": true,
+        "why": "Right: the temp files stayed in the OS cache; measure, and weigh every connection's share."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9y3qafs",
+    "version": 1,
+    "section": "hash-join",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A hash may use `work_mem` times `hash_mem_multiplier`, which is ___ by default.",
+    "hint": "SHOW printed it.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "two"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g3m9d9nw",
+    "version": 1,
+    "section": "merge-join",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a merge join need from its two inputs?",
+    "hint": "Two lists merged by hand.",
+    "choices": [
+      {
+        "text": "Sorted on the join key",
+        "correct": true,
+        "why": "Right: then each is walked once, together."
+      },
+      {
+        "text": "An index on each table's primary key, whatever the join",
+        "correct": false,
+        "why": "Order is what it needs; an index is only one way to get it."
+      },
+      {
+        "text": "Small enough for work_mem",
+        "correct": false,
+        "why": "That is the hash join's need."
+      },
+      {
+        "text": "The same number of rows on each side",
+        "correct": false,
+        "why": "200000 orders met 500001 lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvrc9cqk",
+    "version": 1,
+    "section": "merge-join",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The merge join's index scan of `order_lines` shows `rows=500001` although the table has five million. Why?",
+    "hint": "Both sides arrive in order.",
+    "choices": [
+      {
+        "text": "The statistics were stale",
+        "correct": false,
+        "why": "Estimates were close; rows= here is what was read."
+      },
+      {
+        "text": "It stopped past order 200000",
+        "correct": true,
+        "why": "Right: one row past the last match ended the join."
+      },
+      {
+        "text": "Only half a million lines have an order",
+        "correct": false,
+        "why": "Every line has an order; the other lines belong to later orders."
+      },
+      {
+        "text": "An index-only scan returns one row per page",
+        "correct": false,
+        "why": "It returns every matching entry."
+      }
+    ]
+  },
+  {
+    "id": "ex-arj8tant",
+    "version": 1,
+    "section": "merge-join",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner chose a hash join (1392 ms) over a merge join (171 ms), with estimates within 1% of the truth. Setting `random_page_cost = 1.1` made it pick the merge. What do you take from that?",
+    "hint": "Rows were right; something else was priced wrong.",
+    "choices": [
+      {
+        "text": "Put enable_hashjoin = off in the configuration",
+        "correct": false,
+        "why": "That forces every join and leaves the wrong price in place."
+      },
+      {
+        "text": "Run ANALYZE so the estimates improve",
+        "correct": false,
+        "why": "The estimates were already right: 504377 against 500000."
+      },
+      {
+        "text": "A price was wrong, not a row count",
+        "correct": true,
+        "why": "Right: random_page_cost overcharges index reads on this cached machine; measure it and set it once in the configuration."
+      },
+      {
+        "text": "Merge joins are always faster than hash joins",
+        "correct": false,
+        "why": "Only when the inputs are already in order; here they were."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg6prxc9",
+    "version": 1,
+    "section": "why-this-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Joining customers to their orders, the planner used a nested loop for 10 and 1000 customers and a hash join for 20000. What changed between them?",
+    "hint": "Only the range changed.",
+    "choices": [
+      {
+        "text": "The indexes available",
+        "correct": false,
+        "why": "The same indexes existed for all three."
+      },
+      {
+        "text": "The expected number of outer rows",
+        "correct": true,
+        "why": "Right: the loop's cost grows with them and the hash join's barely does."
+      },
+      {
+        "text": "The work_mem setting",
+        "correct": false,
+        "why": "It was the default in all three."
+      },
+      {
+        "text": "The order of the tables in the SQL",
+        "correct": false,
+        "why": "The SQL was the same apart from the number."
+      }
+    ]
+  },
+  {
+    "id": "ex-htc01cv4",
+    "version": 1,
+    "section": "why-this-one",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 1000 customers the planner expected 1027 outer rows and priced one inner lookup at 36.75. Roughly what is the nested loop's cost, before the small extras?",
+    "hint": "Outer rows times one lookup.",
+    "value": 37742,
+    "tolerance": 200,
+    "unit": "cost units"
+  },
+  {
+    "id": "ex-yjr56mgf",
+    "version": 1,
+    "section": "why-this-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the hash join for 20000 customers, why are the customers the hashed side?",
+    "hint": "Which table holds fewer rows?",
+    "choices": [
+      {
+        "text": "20000 rows make a smaller table than two million",
+        "correct": true,
+        "why": "Right: the planner hashes the side it expects to be smaller."
+      },
+      {
+        "text": "customers is written first in the query",
+        "correct": false,
+        "why": "Written order does not decide; estimates do."
+      },
+      {
+        "text": "orders has no index the hash can use",
+        "correct": false,
+        "why": "A hash join uses no index on either side."
+      },
+      {
+        "text": "A hash join may only hash a table with a primary key",
+        "correct": false,
+        "why": "Any input can be hashed; keys play no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-vz23422n",
+    "version": 1,
+    "section": "why-this-one",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each warning sign to the join it belongs to.",
+    "hint": "The last table of the lesson.",
+    "pairs": [
+      {
+        "left": "`loops` in the thousands where few were expected",
+        "right": "nested loop"
+      },
+      {
+        "left": "`Batches` above 1",
+        "right": "hash join"
+      },
+      {
+        "left": "a `Sort` in front of each input",
+        "right": "merge join"
+      }
+    ],
+    "right_distractors": [
+      "bitmap heap scan"
+    ]
+  },
+  {
+    "id": "ex-3kw1yy32",
+    "version": 1,
+    "section": "why-this-one",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A join is slow. Put these steps in the order the lesson teaches you to take them.",
+    "hint": "Rows before methods.",
+    "items": [
+      "Run EXPLAIN (ANALYZE, BUFFERS) on it",
+      "Compare estimated and actual rows on the join's children, from the bottom",
+      "If the estimates hold, force the rejected method to compare",
+      "Question the price list or the indexes, not the join"
+    ],
+    "trap": "Forcing a method first skips the question of whether the estimate was the cause."
+  },
+  {
+    "id": "ex-w4f7zzfx",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the three join methods? Choose all that apply.",
+    "hint": "The side-by-side table.",
+    "choices": [
+      {
+        "text": "A nested loop's cost grows with the outer rows",
+        "correct": true,
+        "why": "Right: rows times one lookup."
+      },
+      {
+        "text": "A hash join reads each side once",
+        "correct": true,
+        "why": "Right: build once, probe once."
+      },
+      {
+        "text": "A merge join's output comes out sorted on the key",
+        "correct": true,
+        "why": "Right: an ORDER BY on it costs nothing extra."
+      },
+      {
+        "text": "A hash join needs an index on the join column",
+        "correct": false,
+        "why": "It uses no index."
+      },
+      {
+        "text": "A merge join cannot stop before the end of either input",
+        "correct": false,
+        "why": "It stopped at order 200000 in the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsjpzexv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report joins a 300-row `regions` table to a 40-million-row `sales` table on `region_id`, with no filter, and `sales` has an index on `region_id`. Which method do you expect, and why?",
+    "hint": "Every sales row is wanted.",
+    "choices": [
+      {
+        "text": "A nested loop over the regions, using the index on sales",
+        "correct": false,
+        "why": "300 lookups would together fetch all 40 million rows in index order, the slow way."
+      },
+      {
+        "text": "A merge join, because region_id is indexed",
+        "correct": false,
+        "why": "Only one side is in order, and the 40 million would have to be walked through the index."
+      },
+      {
+        "text": "A hash join on the 300 regions",
+        "correct": true,
+        "why": "Right: the 300 regions are hashed in memory and sales is read once, in order."
+      },
+      {
+        "text": "No join: the planner reads both and filters",
+        "correct": false,
+        "why": "A join needs one of the three methods."
+      }
+    ]
+  },
+  {
+    "id": "ex-gntpjctf",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For 20000 customers the planner priced the nested loop at about 19989 × 36.75 and printed the hash join at 42973.20. How many times dearer was the loop, to the nearest whole number?",
+    "hint": "Multiply, then divide.",
+    "value": 17,
+    "tolerance": 1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-5d39dzh6",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a hash join, the child printed under the `Hash` node is the ___ side: read whole into memory before the other side is touched.",
+    "hint": "Two phases: one of them comes first.",
+    "blanks": [
+      {
+        "accept": [
+          "build"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n27rjxqp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nested loop's inner side is a `Seq Scan` with `loops=5000`. What is most likely missing?",
+    "hint": "What would let each loop find its rows without reading the table?",
+    "choices": [
+      {
+        "text": "More work_mem for the loop to use",
+        "correct": false,
+        "why": "A nested loop holds no hash table; memory does not change what each loop reads."
+      },
+      {
+        "text": "An index on the inner join column",
+        "correct": true,
+        "why": "Right: without one, the whole inner table is read once per outer row."
+      },
+      {
+        "text": "A fresh ANALYZE of the outer table",
+        "correct": false,
+        "why": "Statistics might change the choice, but the 5000 full scans point at the access path."
+      },
+      {
+        "text": "Parallel workers for the inner side",
+        "correct": false,
+        "why": "Splitting each scan still reads the table 5000 times."
+      }
+    ]
+  }
+]

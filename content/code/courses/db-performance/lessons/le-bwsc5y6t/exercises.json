@@ -1,0 +1,579 @@
+[
+  {
+    "id": "ex-efz86ctq",
+    "version": 1,
+    "section": "plan-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A count of one day of November on `events_by_month` showed one scan, on `events_2025_11`. What did the planner do?",
+    "hint": "It compared two things it had.",
+    "choices": [
+      {
+        "text": "Read the other months and found nothing",
+        "correct": false,
+        "why": "They were not in the plan at all, so they were never opened."
+      },
+      {
+        "text": "Compared bounds and kept November",
+        "correct": true,
+        "why": "Right: that is plan-time pruning, from the values written in the query."
+      },
+      {
+        "text": "Used an index on `at`",
+        "correct": false,
+        "why": "There is no index on at; inside November it was a sequential scan."
+      },
+      {
+        "text": "Asked the statistics which month is busiest",
+        "correct": false,
+        "why": "Statistics estimate rows; pruning uses the bounds."
+      }
+    ]
+  },
+  {
+    "id": "ex-s2qncvc3",
+    "version": 1,
+    "section": "plan-time",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Counting one day took 216.7 ms on `events` and how many milliseconds on `events_by_month`?",
+    "hint": "The second EXPLAIN ANALYZE in the section.",
+    "value": 48.3,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-f2rr0d69",
+    "version": 1,
+    "section": "plan-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WHERE at >= '2025-12-20'` kept two partitions. Which ones, and why two?",
+    "hint": "Which intervals can hold an instant after the 20th of December?",
+    "choices": [
+      {
+        "text": "November and December, the two nearest",
+        "correct": false,
+        "why": "November ends before the 20th of December, so nothing in it can match."
+      },
+      {
+        "text": "December and January",
+        "correct": true,
+        "why": "Right: both intervals overlap 'from the 20th of December on'."
+      },
+      {
+        "text": "December only, plus a copy of the plan",
+        "correct": false,
+        "why": "January's interval also overlaps the condition, empty or not."
+      },
+      {
+        "text": "October and December, the ones with most rows",
+        "correct": false,
+        "why": "Row counts play no part; only the bounds do."
+      }
+    ]
+  },
+  {
+    "id": "ex-v0afze4z",
+    "version": 1,
+    "section": "plan-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard always asks for the last 90 days, and the table holds exactly 90 days partitioned by month. What will pruning save it?",
+    "hint": "It pays in proportion to what it skips.",
+    "choices": [
+      {
+        "text": "About two thirds, as for the one-day query",
+        "correct": false,
+        "why": "The day query skipped two months; this one needs all of them."
+      },
+      {
+        "text": "All of the reading, because pruning replaces the scan",
+        "correct": false,
+        "why": "Pruning chooses partitions; the surviving ones are still read."
+      },
+      {
+        "text": "Almost nothing",
+        "correct": true,
+        "why": "Right: every partition overlaps the 90 days, and it still pays the overhead lesson 17 measured."
+      },
+      {
+        "text": "Half, because the planner prunes every other month",
+        "correct": false,
+        "why": "The planner keeps every partition whose interval overlaps; there is no alternating."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf3f9d9r",
+    "version": 1,
+    "section": "run-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Subplans Removed: 3` under an `Append` tell you?",
+    "hint": "It never appears with plan-time pruning.",
+    "choices": [
+      {
+        "text": "Three partitions were dropped when execution started",
+        "correct": true,
+        "why": "Right: the plan was built for all four and pruned at run time."
+      },
+      {
+        "text": "Three partitions were deleted from the table",
+        "correct": false,
+        "why": "Nothing is deleted; they were left out of this execution."
+      },
+      {
+        "text": "The planner removed three useless joins",
+        "correct": false,
+        "why": "There is no join here; the subplans are partition scans."
+      },
+      {
+        "text": "Three workers did not start",
+        "correct": false,
+        "why": "Workers Launched said 2, as planned."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3495ht9",
+    "version": 1,
+    "section": "run-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a prepared statement under a generic plan need run-time pruning?",
+    "hint": "What does the planner see instead of a date?",
+    "choices": [
+      {
+        "text": "Prepared statements disable pruning at planning to save memory",
+        "correct": false,
+        "why": "Nothing is disabled; there is simply no value to compare yet."
+      },
+      {
+        "text": "The planner sees `$1`, not a date",
+        "correct": true,
+        "why": "Right: the plan must work for any value, so the bounds are compared when $1 arrives."
+      },
+      {
+        "text": "Generic plans are always slower and need help",
+        "correct": false,
+        "why": "The pruned generic plan read one month, the same work as the custom one."
+      },
+      {
+        "text": "The driver sends the date after the query has finished",
+        "correct": false,
+        "why": "The value arrives with EXECUTE, before execution starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-nevzsb74",
+    "version": 1,
+    "section": "run-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the subquery plan, October and November say `(never executed)` and January shows an actual time. Why the difference?",
+    "hint": "Compare each interval with the last order's day.",
+    "choices": [
+      {
+        "text": "January is empty, so it is always executed",
+        "correct": false,
+        "why": "Being empty does not decide it; its interval does."
+      },
+      {
+        "text": "October and November were pruned at planning",
+        "correct": false,
+        "why": "They are in the plan; plan-time pruning would have left them out entirely."
+      },
+      {
+        "text": "January's interval could still hold rows after the cut-off",
+        "correct": true,
+        "why": "Right: only partitions entirely before $1 were skipped."
+      },
+      {
+        "text": "The workers ran out before reaching October",
+        "correct": false,
+        "why": "Skipped partitions are a decision about bounds, not about workers."
+      }
+    ]
+  },
+  {
+    "id": "ex-gczkf78x",
+    "version": 1,
+    "section": "run-time",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Setting `plan_cache_mode = ___` makes a prepared statement use one plan for every value from its first execution.",
+    "hint": "The value the lesson used.",
+    "blanks": [
+      {
+        "accept": [
+          "force_generic_plan"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bjne452s",
+    "version": 1,
+    "section": "ignored",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `WHERE date(at) = '2025-11-10'` read all four partitions?",
+    "hint": "What are the bounds made of?",
+    "choices": [
+      {
+        "text": "Because `date()` is slow",
+        "correct": false,
+        "why": "Its speed is not the issue; it hides the range from the planner."
+      },
+      {
+        "text": "It is not a range of `at`",
+        "correct": true,
+        "why": "Right: the bounds are values of at, and a function of at is not at."
+      },
+      {
+        "text": "Because November's partition was locked",
+        "correct": false,
+        "why": "Nothing held a lock; the plan simply contained all four."
+      },
+      {
+        "text": "Because the statistics on `at` were stale",
+        "correct": false,
+        "why": "Statistics do not decide which partitions are in the plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-3c1tw8xe",
+    "version": 1,
+    "section": "ignored",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which rewrite of `WHERE at::date = '2025-11-10'` lets the planner prune?",
+    "hint": "Put the column alone on one side.",
+    "choices": [
+      {
+        "text": "`WHERE date(at) = '2025-11-10'`",
+        "correct": false,
+        "why": "Still a function of at; it read all four partitions."
+      },
+      {
+        "text": "`WHERE at >= '2025-11-10' AND at < '2025-11-11'`",
+        "correct": true,
+        "why": "Right: a range on the column itself, which section 02 pruned to November."
+      },
+      {
+        "text": "`WHERE extract(day FROM at) = 10`",
+        "correct": false,
+        "why": "A function of at again, and it matches the 10th of every month."
+      },
+      {
+        "text": "`WHERE to_char(at, 'YYYY-MM-DD') = '2025-11-10'`",
+        "correct": false,
+        "why": "A string made from at is no more prunable than date(at)."
+      }
+    ]
+  },
+  {
+    "id": "ex-ftdxmjrk",
+    "version": 1,
+    "section": "ignored",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Customer 42's events on `events_by_month` gave an `Append` with an index scan per month. What would the same query give on a table with twelve monthly partitions?",
+    "hint": "Does the condition say which month?",
+    "choices": [
+      {
+        "text": "One scan, because the planner learns which month holds the customer",
+        "correct": false,
+        "why": "The planner learns nothing from earlier runs; customer_id says nothing about months."
+      },
+      {
+        "text": "Twelve probes",
+        "correct": true,
+        "why": "Right: a condition on another column visits every partition."
+      },
+      {
+        "text": "An error, as the key is missing from the query",
+        "correct": false,
+        "why": "Queries without the key run fine; they just cannot prune."
+      },
+      {
+        "text": "Four, because only four months have rows",
+        "correct": false,
+        "why": "Empty partitions are still in the plan; January was scanned though empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-55gmf9y9",
+    "version": 1,
+    "section": "ignored",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these conditions on `events_by_month` can be pruned? Choose all that apply.",
+    "hint": "The key, alone, against values.",
+    "choices": [
+      {
+        "text": "`at >= '2025-12-20'`",
+        "correct": true,
+        "why": "Right: it kept December and January."
+      },
+      {
+        "text": "`at >= $1 AND at < $1 + interval '1 day'` in a prepared statement",
+        "correct": true,
+        "why": "Right: at run time, with Subplans Removed."
+      },
+      {
+        "text": "`at >= (SELECT max(placed_at) FROM orders) - interval '1 day'`",
+        "correct": true,
+        "why": "Right: during execution, the skipped months marked never executed."
+      },
+      {
+        "text": "`extract(month FROM at) = 11`",
+        "correct": false,
+        "why": "A function of at; all four partitions were read."
+      },
+      {
+        "text": "`customer_id = 42`",
+        "correct": false,
+        "why": "Not the key; every partition was probed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pn07abc",
+    "version": 1,
+    "section": "too-many",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Planning customer 42's query took about 1 ms on `events_by_month`. How long on `events_by_day`?",
+    "hint": "Planning Time in the grep.",
+    "choices": [
+      {
+        "text": "About the same, since the data is the same",
+        "correct": false,
+        "why": "The time goes into the plan, which has 365 children instead of four."
+      },
+      {
+        "text": "About 30 ms",
+        "correct": true,
+        "why": "Right: 30.3 and 32.5 ms, around thirty times as long."
+      },
+      {
+        "text": "Under 1 ms, because the partitions are smaller",
+        "correct": false,
+        "why": "Smaller partitions do not make planning cheaper; more of them make it dearer."
+      },
+      {
+        "text": "Several seconds",
+        "correct": false,
+        "why": "It was tens of milliseconds, not seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-cc97tty5",
+    "version": 1,
+    "section": "too-many",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The one-day query on `events_by_day` read one partition, yet planning took 3.2 ms against 0.6 on the monthly table. Why?",
+    "hint": "Pruning itself is work.",
+    "choices": [
+      {
+        "text": "The day partition had no statistics",
+        "correct": false,
+        "why": "The file ran VACUUM ANALYZE on every partition."
+      },
+      {
+        "text": "It pruned at run time instead",
+        "correct": false,
+        "why": "The plan named one partition; it was pruned at planning."
+      },
+      {
+        "text": "Pruning still looks at every partition's bounds",
+        "correct": true,
+        "why": "Right: finding the survivors means looking at 365 sets of bounds."
+      },
+      {
+        "text": "Daily partitions are planned in a loop by the DO block",
+        "correct": false,
+        "why": "The DO block only created the tables; it plays no part in planning."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwtfvfdt",
+    "version": 1,
+    "section": "too-many",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query that spends 30 ms planning runs 1,000 times a second. How many processor-seconds a second does planning alone need?",
+    "hint": "Milliseconds times runs, in seconds.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-zmdy8c18",
+    "version": 1,
+    "section": "too-many",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three questions the lesson asks before choosing a partition count.",
+    "hint": "Start with why the table is partitioned at all.",
+    "items": [
+      "What is the slice that ages?",
+      "What do the queries that cannot prune cost?",
+      "What do the queries that can prune gain?"
+    ],
+    "trap": "The slice comes first because dropping old data is the job; the other two weigh the price of each extra partition against its gain."
+  },
+  {
+    "id": "ex-j5kd7yap",
+    "version": 1,
+    "section": "partitionwise",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`enable_partitionwise_join` produced four per-month joins for `events_by_month` with itself, but one join for `events_by_month` with `events_by_day`. Why?",
+    "hint": "What has to match between the two tables?",
+    "choices": [
+      {
+        "text": "The daily table has more rows",
+        "correct": false,
+        "why": "Both hold the same five million rows."
+      },
+      {
+        "text": "The setting only works on a table joined with itself",
+        "correct": false,
+        "why": "It works for any two tables partitioned the same way."
+      },
+      {
+        "text": "Months against days leave no pairs of matching bounds",
+        "correct": true,
+        "why": "Right: partition-by-partition joins need the same key and the same bounds."
+      },
+      {
+        "text": "events_by_day has no primary key",
+        "correct": false,
+        "why": "The file added one, on (id, at)."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqyz7f5n",
+    "version": 1,
+    "section": "partitionwise",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each plan detail to what it shows.",
+    "hint": "Four ways a plan shows partitions.",
+    "pairs": [
+      {
+        "left": "one partition under the `Append` for a literal date",
+        "right": "pruning at planning"
+      },
+      {
+        "left": "`Subplans Removed: 3`",
+        "right": "pruning when execution starts"
+      },
+      {
+        "left": "`(never executed)` on a partition",
+        "right": "pruning during execution"
+      },
+      {
+        "left": "a `Partial HashAggregate` per partition",
+        "right": "partitionwise aggregation"
+      }
+    ],
+    "right_distractors": [
+      "a partition dropped from the table"
+    ]
+  },
+  {
+    "id": "ex-vekps37m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report filters `WHERE created_at::date BETWEEN '2026-01-01' AND '2026-01-31'` on a table partitioned by month on `created_at`, and reads all 36 partitions. What is the fix?",
+    "hint": "Section 04.",
+    "choices": [
+      {
+        "text": "Add an index on `created_at::date`",
+        "correct": false,
+        "why": "An index helps inside each partition; it does not let the planner skip any."
+      },
+      {
+        "text": "Partition by day instead",
+        "correct": false,
+        "why": "The condition would still be a function of the key, and the plan would have more partitions."
+      },
+      {
+        "text": "Turn on enable_partitionwise_aggregate",
+        "correct": false,
+        "why": "That changes how the partitions read are aggregated, not which are read."
+      },
+      {
+        "text": "A range on `created_at` itself",
+        "correct": true,
+        "why": "Right: `created_at >= '2026-01-01' AND created_at < '2026-02-01'` prunes to one month."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5g6t03p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application's query is pruned to one month when typed in `psql` with a literal date. Through the application's driver, which prepares statements, what do you expect to see in `EXPLAIN (ANALYZE) EXECUTE`?",
+    "hint": "After five executions.",
+    "choices": [
+      {
+        "text": "Every partition scanned, since prepared statements cannot prune",
+        "correct": false,
+        "why": "They prune at run time; the lesson's EXECUTE read one month."
+      },
+      {
+        "text": "A generic plan with `Subplans Removed`",
+        "correct": true,
+        "why": "Right: the same month read, pruned when execution starts."
+      },
+      {
+        "text": "An error about the missing date",
+        "correct": false,
+        "why": "The date arrives with EXECUTE; nothing is missing."
+      },
+      {
+        "text": "Exactly the psql plan, with the date written in",
+        "correct": false,
+        "why": "A generic plan shows $1, not the date."
+      }
+    ]
+  }
+]

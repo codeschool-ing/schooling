@@ -1,0 +1,456 @@
+{
+  "ex-bxgdk4hj": {
+    "prompt": "Que tipo de carga é o motivo de existir o sharding, porque cópias do banco não conseguem absorvê-la?",
+    "hint": "Pense no que toda cópia precisa receber.",
+    "choices": [
+      {
+        "text": "Escritas",
+        "why": "Isso: toda cópia precisa aplicar toda escrita, então só dividir os dados as espalha."
+      },
+      {
+        "text": "Leituras de linhas recentes",
+        "why": "Leituras se espalham por réplicas e caches; é para isso que servem as aulas 20 e 21."
+      },
+      {
+        "text": "Relatórios que leem dados antigos uma vez por ano",
+        "why": "Isso são leituras, e arquivamento ou um warehouse dão conta."
+      },
+      {
+        "text": "Conexões abertas demais vindas da aplicação",
+        "why": "Isso é problema de pooling, aula 16, e um servidor só dá conta depois do pool."
+      }
+    ]
+  },
+  "ex-54t7a03x": {
+    "prompt": "O primário de uma equipe está com 90% de processador, e os três comandos do topo no `pg_stat_statements` são um `SELECT` com varredura sequencial, um relatório e uma busca. Eles propõem sharding. O que a aula diz que vem antes?",
+    "hint": "Veja que tipo de comando está no topo.",
+    "choices": [
+      {
+        "text": "Dividir pela coluna que a busca filtra, já que é a mais frequente",
+        "why": "Sharding responde a volume de escrita; estes são leituras, e os planos são o primeiro suspeito."
+      },
+      {
+        "text": "Consertar as três consultas, depois réplicas ou cache para as leituras",
+        "why": "Isso: a carga é de leituras rodando planos ruins, os itens mais baratos da lista."
+      },
+      {
+        "text": "Comprar a maior máquina disponível e parar de medir",
+        "why": "Uma máquina maior está na lista, mas depois das consultas, e medir nunca para."
+      },
+      {
+        "text": "Particionar por hash a tabela do relatório",
+        "why": "Particionar por hash não ajuda um relatório que lê tudo; os planos vêm primeiro."
+      }
+    ]
+  },
+  "ex-249417wk": {
+    "prompt": "No `market`, 2023 tem 221610 dos 2000000 pedidos e é lido poucas vezes por ano. O que tirar essas linhas da tabela quente compra?",
+    "hint": "A aula chama isso de arquivamento.",
+    "choices": [
+      {
+        "text": "Escritas mais rápidas, porque cada pedido agora vai para dois lugares",
+        "why": "Arquivar move linhas antigas uma vez; pedidos novos continuam indo para uma tabela."
+      },
+      {
+        "text": "Nada mensurável, já que linhas não lidas não custam nada",
+        "why": "Elas ainda custam memória de índice, tempo de vacuum e tempo de restore."
+      },
+      {
+        "text": "Uma parte ativa cerca de um nono menor, e o ganho cresce a cada ano",
+        "why": "Isso: 221610 é cerca de 11% dos pedidos, e cada ano soma mais um ano velho."
+      },
+      {
+        "text": "Um segundo servidor para mandar os relatórios",
+        "why": "Isso é uma réplica; arquivar é sobre onde moram as linhas antigas."
+      }
+    ]
+  },
+  "ex-ra2xaa63": {
+    "prompt": "Uma empresa precisa manter os dados de clientes brasileiros no Brasil e os de alemães na Alemanha, e o banco dela é pequeno e rápido. O sharding se justifica?",
+    "hint": "A aula cita um segundo motivo que não é velocidade.",
+    "choices": [
+      {
+        "text": "Não, porque sharding é sempre e só para volume de escrita",
+        "why": "A aula cita a residência dos dados como segundo motivo, com a mesma mecânica."
+      },
+      {
+        "text": "Sim, com o país como chave de shard escolhida pela lei",
+        "why": "Isso: o motivo para pagar a conta é legal, não de desempenho."
+      },
+      {
+        "text": "Não, uma réplica de leitura em cada país basta",
+        "why": "Uma réplica guarda todas as linhas, então dados alemães ficariam no Brasil também."
+      },
+      {
+        "text": "Sim, porque um banco pequeno é sempre mais rápido quando dividido",
+        "why": "Dividir acrescenta idas pela rede; um banco pequeno não ganha velocidade com isso."
+      }
+    ]
+  },
+  "ex-wdfhbds8": {
+    "prompt": "Ordene estes passos do que tentar primeiro ao que tentar por último, como a aula os classifica pelo custo.",
+    "hint": "Mudar o que a aplicação sabe é o mais caro.",
+    "items": [
+      "Consertar as consultas que dominam o placar",
+      "Passar para uma máquina maior",
+      "Particionar a tabela grande no mesmo servidor",
+      "Dividir a tabela em shards entre servidores"
+    ],
+    "trap": "Sharding antes de consertar as consultas espalha três planos ruins por vários servidores."
+  },
+  "ex-b1e2txvd": {
+    "prompt": "Dividido por `seller_id % 4`, que porcentagem de todos os pedidos cai no shard que guarda o vendedor 1?",
+    "hint": "O quarto do vendedor 1 mais um quarto de todos os outros.",
+    "unit": "%"
+  },
+  "ex-dvq7ryf0": {
+    "prompt": "Por que acrescentar shards não cura o shard quente quando a chave é `seller_id`?",
+    "hint": "Em quantos shards podem morar as linhas de um vendedor?",
+    "choices": [
+      {
+        "text": "Toda linha do vendedor 1 vai para o mesmo shard, quantos houver",
+        "why": "Isso: um valor não se divide por uma função desse valor, então um quarto fica junto."
+      },
+      {
+        "text": "O PostgreSQL limita uma tabela particionada por hash a quatro partições, e recusa a quinta",
+        "why": "Não existe esse limite; o módulo pode ser qualquer número."
+      },
+      {
+        "text": "Mais shards quer dizer mais idas pela rede em toda consulta",
+        "why": "Vale para consultas espalhadas, mas não é por isso que o shard do vendedor 1 continua quente."
+      },
+      {
+        "text": "Os pedidos do vendedor 1 são gravados em ordem de tempo",
+        "why": "A ordem em que as linhas são gravadas não tem nada a ver com o shard para onde vão."
+      }
+    ]
+  },
+  "ex-bpq4y6tv": {
+    "prompt": "A carga da aula 2 é 50% listas de pedidos do cliente e 4% painéis de vendedor. Por que isso define a chave como `customer_id`, além da divisão igual?",
+    "hint": "Quais consultas ficam num shard só com cada chave?",
+    "choices": [
+      {
+        "text": "Porque os painéis de vendedor param de funcionar de vez quando a tabela é dividida por cliente",
+        "why": "Eles continuam funcionando; se espalham por todos os shards e custam mais."
+      },
+      {
+        "text": "Porque as escritas são roteadas por vendedor",
+        "why": "A escrita de um pedido vai para um shard com qualquer das chaves."
+      },
+      {
+        "text": "Metade do tráfego cita a chave e fica num shard; só os 4% se espalham",
+        "why": "Isso: a chave deve ser a coluna pela qual a maior parte do tráfego já filtra."
+      },
+      {
+        "text": "Porque ids de cliente são números menores que ids de vendedor, e o hash fica mais uniforme",
+        "why": "O tamanho dos números é irrelevante; ids de cliente são na verdade maiores."
+      }
+    ]
+  },
+  "ex-r8y456y2": {
+    "prompt": "Dividir `order_lines` pela mesma chave de `orders`, para que um join entre elas rode dentro de um servidor, se chama ___.",
+    "hint": "Uma palavra para morar no mesmo lugar.",
+    "blanks": [
+      {
+        "accept": [
+          "colocalização",
+          "colocalizacao",
+          "co-localização"
+        ]
+      }
+    ]
+  },
+  "ex-7xtw9x6e": {
+    "prompt": "Ligue cada jeito de rotear uma chave a um servidor ao que ele custa.",
+    "hint": "Cada um tem uma fraqueza que a aula cita.",
+    "pairs": [
+      {
+        "left": "hash",
+        "right": "uniforme, e cego ao que os valores significam"
+      },
+      {
+        "left": "faixa",
+        "right": "uma faixa esquenta quando as chaves novas são todas altas"
+      },
+      {
+        "left": "diretório",
+        "right": "uma consulta a mais em toda requisição"
+      }
+    ],
+    "right_distractors": [
+      "uma linha só pode se mover junto com a tabela inteira"
+    ]
+  },
+  "ex-fbcjgst6": {
+    "prompt": "Uma plataforma de vídeo pensa em dividir comentários por `video_id`. Um vídeo em mil viraliza e recebe a maior parte dos comentários do dia. O que a aula prevê?",
+    "hint": "Compare com o vendedor 1.",
+    "choices": [
+      {
+        "text": "Roteamento por faixa evitaria isso",
+        "why": "Nenhuma função de roteamento divide um valor; o problema é a chave."
+      },
+      {
+        "text": "Um shard quente: os comentários do vídeo viral caem todos num servidor",
+        "why": "Isso: é o formato do vendedor 1, um único valor grande o bastante para encher um servidor."
+      },
+      {
+        "text": "Uma distribuição igual, porque há muitos vídeos",
+        "why": "Muitos valores não ajudam quando um deles carrega a maior parte das escritas."
+      },
+      {
+        "text": "Nada, até haver cem shards",
+        "why": "Com cem shards o vídeo viral continua em um deles."
+      }
+    ]
+  },
+  "ex-16c9m27s": {
+    "prompt": "No `EXPLAIN (VERBOSE)` do coordenador, o que mostra a linha `Remote SQL`?",
+    "hint": "É sobre o que atravessa a conexão.",
+    "choices": [
+      {
+        "text": "O comando que o shard vai rodar, como o coordenador o manda",
+        "why": "Isso: é como se vê se um WHERE ou um GROUP BY viaja até o shard."
+      },
+      {
+        "text": "O plano que o shard escolheu",
+        "why": "O shard planeja do lado dele; o coordenador só mostra o que manda."
+      },
+      {
+        "text": "O SQL que a aplicação digitou, sem mudança",
+        "why": "Ele é reescrito por shard, muitas vezes com menos colunas ou sem agregação."
+      },
+      {
+        "text": "Um registro das linhas que voltaram pela conexão enquanto a consulta rodava",
+        "why": "EXPLAIN sem ANALYZE não roda nada, então nenhuma linha voltou."
+      }
+    ]
+  },
+  "ex-mkn7eemn": {
+    "prompt": "`SELECT count(*) FROM sharded_orders WHERE seller_id = 42` levou 262 ms e a mesma contagem para o cliente 42 levou 39 ms. O que o plano mostra para o vendedor?",
+    "hint": "Vendedor não é a chave.",
+    "choices": [
+      {
+        "text": "Um Foreign Scan, no shard que guarda o vendedor 42",
+        "why": "Os pedidos do vendedor 42 estão nos dois shards, porque a divisão é por cliente."
+      },
+      {
+        "text": "Nenhum WHERE no SQL remoto: toda linha volta",
+        "why": "O WHERE viaja; cada shard filtra, mas lê a tabela inteira para isso."
+      },
+      {
+        "text": "Uma varredura sequencial dos pedidos do próprio coordenador",
+        "why": "O coordenador não guarda linha de pedido em sharded_orders."
+      },
+      {
+        "text": "Um Append sobre os dois shards, cada um recebendo o mesmo WHERE",
+        "why": "Isso: a consulta se espalha, e cada shard varre sem índice em seller_id."
+      }
+    ]
+  },
+  "ex-0ngt9vcz": {
+    "prompt": "Por que `GROUP BY status` sobre os shards levou 2961 ms contra 565 ms local, mesmo com `enable_partitionwise_aggregate`?",
+    "hint": "Cada shard guarda parte de cada status.",
+    "choices": [
+      {
+        "text": "Porque status é uma coluna de texto, e o coordenador não tem como contar texto num servidor remoto",
+        "why": "Agrupar por customer_id foi empurrado; o tipo não é o problema."
+      },
+      {
+        "text": "Dois milhões de valores atravessaram o fio, já que o PostgreSQL 16 não manda contagens parciais",
+        "why": "Isso: só um agrupamento pela chave, em que a contagem de cada shard é final, rodou nos shards."
+      },
+      {
+        "text": "Porque o coordenador não tinha sido analisado, então supôs que os shards estavam vazios e planejou mal a consulta",
+        "why": "Ele foi analisado depois da carga; o plano ainda puxou as linhas."
+      },
+      {
+        "text": "Porque o shard1 guarda mais pedidos que o shard2",
+        "why": "Eles guardam 995080 e 1004920, quase igual, e o shard2 guarda um pouco mais."
+      }
+    ]
+  },
+  "ex-ycbfqfqv": {
+    "prompt": "Quantos pedidos têm o id 1 depois do `INSERT` do pedido 1 para o cliente 3 pelo coordenador?",
+    "hint": "O INSERT foi roteado pelo cliente, não pelo id.",
+    "unit": "pedidos"
+  },
+  "ex-kx5tadns": {
+    "prompt": "Os dois COMMITs da seção imprimem o mesmo erro de chave duplicada. O que torna o primeiro pior que o segundo?",
+    "hint": "Veja o que ficou no shard1 depois.",
+    "choices": [
+      {
+        "text": "O primeiro deixou o pedido 2000001 confirmado no shard1 embora o coordenador relatasse falha",
+        "why": "Isso: o shard1 confirmou antes de o shard2 recusar, então meia transação sobreviveu."
+      },
+      {
+        "text": "O primeiro desfez os dois shards, enquanto o segundo deixou confirmadas no shard2 as linhas que gravou",
+        "why": "É o contrário: o segundo não deixou nada, o primeiro deixou uma linha."
+      },
+      {
+        "text": "O primeiro foi mais lento",
+        "why": "Tempo não é o problema; uma metade confirmada é."
+      },
+      {
+        "text": "O primeiro usou commit em duas fases e o segundo não",
+        "why": "O postgres_fdw no PostgreSQL 16 não usa commit em duas fases em nenhum."
+      }
+    ]
+  },
+  "ex-q6z6hj3g": {
+    "prompt": "Quais destes uma tabela `orders` única dava e os dois shards da seção não deram? Marque todos os que se aplicam.",
+    "hint": "Três coisas pararam de funcionar.",
+    "choices": [
+      {
+        "text": "Um índice único em `id`",
+        "why": "Certo: o PostgreSQL o recusa numa tabela com partições estrangeiras."
+      },
+      {
+        "text": "Uma transação que confirma em todo lugar ou em lugar nenhum",
+        "why": "Certo: um shard confirmou e o outro recusou."
+      },
+      {
+        "text": "Uma agregação barata agrupada por qualquer coluna",
+        "why": "Certo: agrupar por status puxou dois milhões de valores pelo fio."
+      },
+      {
+        "text": "Encaminhar um INSERT para o lugar certo",
+        "why": "O roteamento funcionou: cada pedido foi para o shard do hash do seu cliente."
+      },
+      {
+        "text": "Uma consulta de um cliente que lê um shard só",
+        "why": "Isso funcionou: o cliente 42 foi podado para um Foreign Scan."
+      }
+    ]
+  },
+  "ex-0z7dh6dv": {
+    "prompt": "Indo de 2 shards por hash para 4, quanto de `orders` precisa se mudar?",
+    "hint": "A captura contou 999306.",
+    "choices": [
+      {
+        "text": "Cerca de um quarto",
+        "why": "999306 de 2000000 é metade, não um quarto."
+      },
+      {
+        "text": "Nada, porque os shards antigos ficam com as linhas",
+        "why": "Cada shard antigo entrega metade das linhas a um novo."
+      },
+      {
+        "text": "Cerca de metade",
+        "why": "Isso: 999306 de 2000000, enquanto a aplicação continua gravando."
+      },
+      {
+        "text": "Tudo, porque todo hash muda",
+        "why": "O hash de uma chave não muda; só qual resto é tomado."
+      }
+    ]
+  },
+  "ex-yf4xeq82": {
+    "prompt": "Depois de `ALTER TABLE orders ADD COLUMN coupon text` rodar nos dois shards, o coordenador ainda dizia `column \"coupon\" does not exist`. Por quê?",
+    "hint": "Quem descreve os shards para o coordenador?",
+    "choices": [
+      {
+        "text": "O ALTER nos shards ainda não tinha sido confirmado quando o coordenador rodou a sua consulta",
+        "why": "Cada psql -c confirma sozinho; os shards tinham a coluna."
+      },
+      {
+        "text": "Uma tabela estrangeira não pode ganhar colunas",
+        "why": "O ALTER TABLE no coordenador acrescentou, e a consulta funcionou."
+      },
+      {
+        "text": "Os shards guardaram a definição antiga por um minuto",
+        "why": "Os shards estavam certos; o coordenador estava desatualizado."
+      },
+      {
+        "text": "As tabelas estrangeiras dele descrevem os shards como eram, até ele ser alterado também",
+        "why": "Isso: uma mudança de esquema é um comando por shard mais um no coordenador."
+      }
+    ]
+  },
+  "ex-z78wp208": {
+    "prompt": "Por que equipes que fazem sharding muitas vezes criam 64 shards lógicos em 2 máquinas?",
+    "hint": "Pense no dia em que chega a terceira máquina.",
+    "choices": [
+      {
+        "text": "Um servidor novo passa a receber pedaços inteiros em vez de linhas com hash novo",
+        "why": "Isso: um shard lógico se move intacto, e nenhuma linha precisa de hash novo."
+      },
+      {
+        "text": "O PostgreSQL precisa de uma partição por processador",
+        "why": "Não existe essa regra."
+      },
+      {
+        "text": "Shards menores eliminam o shard quente",
+        "why": "Uma chave quente fica num shard, por menores que sejam os shards."
+      },
+      {
+        "text": "Torna atômicas as transações entre shards",
+        "why": "Atomicidade exige commit em duas fases, não mais shards."
+      }
+    ]
+  },
+  "ex-zdf8dxxd": {
+    "prompt": "Dois shards têm backup toda noite às 02:00, um depois do outro, e cada backup leva uma hora. Tenta-se restaurar os dois. Qual é a preocupação da aula?",
+    "hint": "Duas fotografias, dois momentos.",
+    "choices": [
+      {
+        "text": "O segundo backup vai ser duas vezes maior",
+        "why": "Tamanho não é o problema; o momento que cada um mostra é."
+      },
+      {
+        "text": "Restaurar os dois vai levar pelo menos duas horas, mais do que a janela de manutenção da madrugada",
+        "why": "A duração importa, mas o ponto da aula é a consistência entre shards."
+      },
+      {
+        "text": "Os shards voltam em momentos diferentes, com transações entre shards cortadas ao meio",
+        "why": "Isso: um restore consistente exige todos os shards recuperados no mesmo instante a partir do WAL arquivado."
+      },
+      {
+        "text": "Backups de um banco dividido em shards são impossíveis",
+        "why": "São possíveis; exigem coordenação entre shards."
+      }
+    ]
+  },
+  "ex-kh1rafsy": {
+    "prompt": "Ligue cada esquema de ids de uma tabela dividida ao seu custo.",
+    "hint": "A tabela da seção 05.",
+    "pairs": [
+      {
+        "left": "um UUID",
+        "right": "índices maiores, inserções por todo o índice"
+      },
+      {
+        "left": "sequências intercaladas",
+        "right": "o número de shards gravado nos ids"
+      },
+      {
+        "left": "um alocador central",
+        "right": "um ponto único de que toda escrita depende"
+      }
+    ],
+    "right_distractors": [
+      "ids que dois shards podem entregar duas vezes"
+    ]
+  },
+  "ex-bq0pqaze": {
+    "prompt": "Uma equipe usa Citus e escolheu `seller_id` como coluna de distribuição dos pedidos. Um quarto dos pedidos é de um vendedor. O que o Citus muda no problema?",
+    "hint": "A aula lista o que o Citus carrega e o que não carrega.",
+    "choices": [
+      {
+        "text": "Ele divide os pedidos do vendedor grande entre vários workers automaticamente",
+        "why": "Uma coluna de distribuição manda um valor para um shard; o Citus não divide um valor."
+      },
+      {
+        "text": "Ele troca a coluna de distribuição para customer_id quando detecta desequilíbrio",
+        "why": "O Citus nunca escolhe a chave; a equipe escolhe."
+      },
+      {
+        "text": "Torna atômicas as transações entre shards, e o shard quente continua",
+        "why": "Isso: commit em duas fases está na lista dele; escolher a chave não."
+      },
+      {
+        "text": "Elimina a necessidade de uma chave de shard",
+        "why": "Toda tabela distribuída tem uma coluna de distribuição."
+      }
+    ]
+  }
+}

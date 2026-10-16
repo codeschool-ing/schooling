@@ -1,0 +1,753 @@
+[
+  {
+    "id": "ex-tszpzk8p",
+    "version": 1,
+    "section": "why-it-stops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which lock do most ALTER TABLE forms take?",
+    "choices": [
+      {
+        "text": "ACCESS EXCLUSIVE",
+        "correct": true,
+        "why": "Right. It conflicts with everything, reads included."
+      },
+      {
+        "text": "ACCESS SHARE, the lock of an ordinary SELECT",
+        "correct": false,
+        "why": "That is the weakest."
+      },
+      {
+        "text": "No lock",
+        "correct": false,
+        "why": "Every statement on a table takes a lock."
+      },
+      {
+        "text": "ROW EXCLUSIVE, the same lock an INSERT takes on the table it writes",
+        "correct": false,
+        "why": "That is the writers' lock; schema changes need the strongest."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcvph8tc",
+    "version": 1,
+    "section": "why-it-stops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lesson names two things that make a schema change dangerous on a busy table. Which pair?",
+    "choices": [
+      {
+        "text": "The version of PostgreSQL and the speed of the disk",
+        "correct": false,
+        "why": "They change the numbers, not the mechanism."
+      },
+      {
+        "text": "The number of replicas",
+        "correct": false,
+        "why": "Replicas follow the change; they do not block it."
+      },
+      {
+        "text": "The size of the migration file and the number of indexes",
+        "correct": false,
+        "why": "Neither decides how long the table is blocked."
+      },
+      {
+        "text": "The lock it needs, and the work it does while holding it",
+        "correct": true,
+        "why": "Right. Waiting for the lock and holding it during a rewrite both stop writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4zzy5p8",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the capture, four INSERTs waited although their lock does not conflict with the long transaction. Why?",
+    "choices": [
+      {
+        "text": "The disk was busy with the count",
+        "correct": false,
+        "why": "pg_stat_activity showed them waiting on a Lock."
+      },
+      {
+        "text": "PostgreSQL pauses all writes during any schema change, as a safety measure, until the change commits",
+        "correct": false,
+        "why": "It is the queue, not a global pause; with lock_timeout the sales flowed again."
+      },
+      {
+        "text": "The long transaction had locked every row of the table",
+        "correct": false,
+        "why": "It only read; a SELECT takes ACCESS SHARE, not row locks."
+      },
+      {
+        "text": "Their lock conflicts with the ALTER waiting ahead of them",
+        "correct": true,
+        "why": "Right. Locks are granted in order; a request that conflicts with a waiting one waits too."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr7y5xcd",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did the ALTER TABLE ADD COLUMN report in the lock-queue capture, rounded to one decimal place?",
+    "value": 18.1,
+    "tolerance": 0.05,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-cwte5b1p",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What turned a two-millisecond change into an eighteen-second stall?",
+    "choices": [
+      {
+        "text": "The replica refusing to apply the change",
+        "correct": false,
+        "why": "Nothing in the capture involves the replica."
+      },
+      {
+        "text": "A long transaction already holding a lock on the table",
+        "correct": true,
+        "why": "Right. The change waited for it, and everyone waited for the change."
+      },
+      {
+        "text": "The column's default value, which had to be written into every row",
+        "correct": false,
+        "why": "The column had none; it was catalogue-only."
+      },
+      {
+        "text": "Too many sales arriving at once for one processor to keep up with",
+        "correct": false,
+        "why": "Four workers is light load."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2d9d3jg",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the events of the lock queue as they happened.",
+    "items": [
+      "A long transaction reads the table",
+      "ALTER TABLE asks for ACCESS EXCLUSIVE and waits",
+      "New INSERTs queue behind the ALTER",
+      "The long transaction commits and the queue drains"
+    ]
+  },
+  {
+    "id": "ex-5qc8bz9q",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does SET lock_timeout = '2s' do to the ALTER TABLE that follows it?",
+    "choices": [
+      {
+        "text": "It gives up after 2 s",
+        "correct": true,
+        "why": "Right, and nothing changes."
+      },
+      {
+        "text": "It runs for at most 2 s",
+        "correct": false,
+        "why": "That is statement_timeout."
+      },
+      {
+        "text": "It cancels the long transaction after 2 s so that the ALTER can have the lock",
+        "correct": false,
+        "why": "It gives up its own statement; it never cancels anyone else."
+      },
+      {
+        "text": "It retries every 2 s",
+        "correct": false,
+        "why": "Retrying is the tool's job, not the setting's."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cb2223b",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With lock_timeout at 2 s, the slowest sale took about 1.2 s. Why not 2 s?",
+    "choices": [
+      {
+        "text": "The long transaction ended early, releasing its lock before the timeout",
+        "correct": false,
+        "why": "It slept twenty seconds."
+      },
+      {
+        "text": "lock_timeout halves the wait for writers",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "The sales started a second after the ALTER began waiting",
+        "correct": true,
+        "why": "Right. They waited from their start until the ALTER gave up."
+      },
+      {
+        "text": "load.py rounds latencies down",
+        "correct": false,
+        "why": "It prints one decimal of milliseconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-phfkkq41",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which setting would have ended, after a set time, the forgotten BEGIN of section 03?",
+    "choices": [
+      {
+        "text": "lock_timeout",
+        "correct": false,
+        "why": "That limits waiting for a lock."
+      },
+      {
+        "text": "idle_in_transaction_session_timeout",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "deadlock_timeout",
+        "correct": false,
+        "why": "That decides when deadlock checks run."
+      },
+      {
+        "text": "statement_timeout",
+        "correct": false,
+        "why": "An idle session is running no statement."
+      }
+    ]
+  },
+  {
+    "id": "ex-6e3g3e98",
+    "version": 1,
+    "section": "rewrites",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After ADD COLUMN printed_at timestamptz DEFAULT clock_timestamp(), the filenode changed from 16395 to 16418. What does that show?",
+    "choices": [
+      {
+        "text": "The column was stored in a separate table",
+        "correct": false,
+        "why": "Columns live in the table's rows."
+      },
+      {
+        "text": "The table was moved to another disk",
+        "correct": false,
+        "why": "Same tablespace, new file."
+      },
+      {
+        "text": "A rewrite",
+        "correct": true,
+        "why": "Right: every row needed its own value."
+      },
+      {
+        "text": "An index was added",
+        "correct": false,
+        "why": "An index has its own filenode; the table's changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-9j28qjp9",
+    "version": 1,
+    "section": "rewrites",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did ADD COLUMN printed boolean NOT NULL DEFAULT false take 2 ms on two million rows?",
+    "choices": [
+      {
+        "text": "The column was added only to the replica",
+        "correct": false,
+        "why": "Schema changes go to the primary."
+      },
+      {
+        "text": "The table was empty at that moment, because the earlier rewrite had moved its rows",
+        "correct": false,
+        "why": "It had two million rows."
+      },
+      {
+        "text": "A constant default is kept in the catalogue, so no row is written",
+        "correct": true,
+        "why": "Right, since PostgreSQL 11."
+      },
+      {
+        "text": "Booleans take no space",
+        "correct": false,
+        "why": "They take a byte; the point is that none is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-va27tffc",
+    "version": 1,
+    "section": "rewrites",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each change to how long it holds ACCESS EXCLUSIVE on a large table.",
+    "pairs": [
+      {
+        "left": "add a nullable column",
+        "right": "an instant"
+      },
+      {
+        "left": "add a column with a volatile default",
+        "right": "a full rewrite"
+      },
+      {
+        "left": "SET NOT NULL with no valid check",
+        "right": "a full scan"
+      },
+      {
+        "left": "change int to bigint",
+        "right": "a rewrite and its indexes rebuilt"
+      }
+    ]
+  },
+  {
+    "id": "ex-96dfgfv6",
+    "version": 1,
+    "section": "indexes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a plain CREATE INDEX block while it builds?",
+    "choices": [
+      {
+        "text": "Writes to the table",
+        "correct": true,
+        "why": "Right. It holds SHARE, which lets reads through."
+      },
+      {
+        "text": "Other databases",
+        "correct": false,
+        "why": "Locks are per table."
+      },
+      {
+        "text": "Nothing, because indexes are built in the background by a separate process",
+        "correct": false,
+        "why": "That is CONCURRENTLY, and even it is not a background job."
+      },
+      {
+        "text": "Reads of the table",
+        "correct": false,
+        "why": "SHARE does not conflict with ACCESS SHARE."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5hd6wrn",
+    "version": 1,
+    "section": "indexes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "CREATE INDEX CONCURRENTLY took 5.1 s instead of 4.4 s. Where did the extra time go?",
+    "choices": [
+      {
+        "text": "Writing the index twice, once for reads and once for the writes that arrived",
+        "correct": false,
+        "why": "It is built once, then caught up."
+      },
+      {
+        "text": "Waiting for the sales to stop",
+        "correct": false,
+        "why": "Sales went on at their normal rate."
+      },
+      {
+        "text": "Locking each row",
+        "correct": false,
+        "why": "It takes no row locks."
+      },
+      {
+        "text": "A second pass, and waits",
+        "correct": true,
+        "why": "Right. Slower to build, invisible to writers."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9gf3azv",
+    "version": 1,
+    "section": "indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A CREATE UNIQUE INDEX CONCURRENTLY fails on a duplicate. What is left behind, and what do you do?",
+    "choices": [
+      {
+        "text": "A locked table until a restart",
+        "correct": false,
+        "why": "No lock is held after the failure."
+      },
+      {
+        "text": "Nothing; a failed build cleans up",
+        "correct": false,
+        "why": "A concurrent build leaves the invalid index."
+      },
+      {
+        "text": "A valid index without uniqueness",
+        "correct": false,
+        "why": "It is marked INVALID, not demoted."
+      },
+      {
+        "text": "An invalid index that slows writes; drop it concurrently and build again",
+        "correct": true,
+        "why": "Right. It serves no query and costs every write."
+      }
+    ]
+  },
+  {
+    "id": "ex-gfney7qp",
+    "version": 1,
+    "section": "expand-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a rename done in several steps rather than one ALTER TABLE … RENAME?",
+    "choices": [
+      {
+        "text": "RENAME needs the replica to be stopped",
+        "correct": false,
+        "why": "Replicas apply it like any change."
+      },
+      {
+        "text": "RENAME rewrites the table and its indexes under the strongest lock, which takes hours",
+        "correct": false,
+        "why": "Rename is catalogue-only and instant."
+      },
+      {
+        "text": "During a deploy, old and new versions of the program run together",
+        "correct": true,
+        "why": "Right. A one-step rename breaks whichever version did not expect it."
+      },
+      {
+        "text": "PostgreSQL forbids renaming a column that has data",
+        "correct": false,
+        "why": "It allows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bnwssrf",
+    "version": 1,
+    "section": "expand-contract",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of expand and contract in order.",
+    "items": [
+      "Add the new column",
+      "Deploy a version that writes both",
+      "Backfill the old rows",
+      "Deploy a version that reads the new column",
+      "Stop writing the old column and drop it"
+    ]
+  },
+  {
+    "id": "ex-rtz12kaw",
+    "version": 1,
+    "section": "expand-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which step of expand and contract does the lesson say people skip?",
+    "choices": [
+      {
+        "text": "Reading the new column, the step where the program switches over",
+        "correct": false,
+        "why": "That is the point of the exercise; it is not the one forgotten."
+      },
+      {
+        "text": "Expand",
+        "correct": false,
+        "why": "Nothing works without it."
+      },
+      {
+        "text": "Backfill",
+        "correct": false,
+        "why": "Skipping it leaves NULLs that the next step trips on."
+      },
+      {
+        "text": "Contract",
+        "correct": true,
+        "why": "Right. An old column every version writes and none reads is the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6vk241s",
+    "version": 1,
+    "section": "backfill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the backfill procedure COMMIT after each batch?",
+    "choices": [
+      {
+        "text": "To make the procedure faster, since smaller transactions are cheaper to commit",
+        "correct": false,
+        "why": "The commits and pauses make it slower, on purpose."
+      },
+      {
+        "text": "PostgreSQL limits a transaction to 50 000 rows",
+        "correct": false,
+        "why": "No such limit."
+      },
+      {
+        "text": "Because the sales need the same rows",
+        "correct": false,
+        "why": "Sales insert new rows."
+      },
+      {
+        "text": "Short locks, small bursts of log",
+        "correct": true,
+        "why": "Right, and an interrupted run keeps what it finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjbp1sjk",
+    "version": 1,
+    "section": "backfill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a backfill, the replica's replay_lag keeps growing. What does the lesson say to change?",
+    "choices": [
+      {
+        "text": "Increase the batch size so that it finishes sooner",
+        "correct": false,
+        "why": "Bigger batches are bigger bursts of log."
+      },
+      {
+        "text": "Lengthen the pause between batches",
+        "correct": true,
+        "why": "Right. The replica needs time to apply each batch."
+      },
+      {
+        "text": "Run the backfill on the replica",
+        "correct": false,
+        "why": "Replicas refuse writes."
+      },
+      {
+        "text": "Switch to one UPDATE",
+        "correct": false,
+        "why": "That is one huge burst."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm2fj00k",
+    "version": 1,
+    "section": "backfill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With batch = 50 000 and two million rows, about how many batches does backfill_gate run?",
+    "value": 40,
+    "tolerance": 1,
+    "unit": "batches"
+  },
+  {
+    "id": "ex-3gh5hnve",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why add CHECK (gate IS NOT NULL) NOT VALID and then VALIDATE it, instead of SET NOT NULL directly?",
+    "choices": [
+      {
+        "text": "SET NOT NULL is not allowed on a column that was added later with ALTER TABLE",
+        "correct": false,
+        "why": "It is allowed; the cost is the scan under the strongest lock."
+      },
+      {
+        "text": "NOT VALID constraints are faster to check on new rows",
+        "correct": false,
+        "why": "New rows are checked the same way."
+      },
+      {
+        "text": "The scan runs under a weaker lock",
+        "correct": true,
+        "why": "Right. SET NOT NULL then finds the valid check and skips its own scan."
+      },
+      {
+        "text": "VALIDATE fixes the rows that are NULL",
+        "correct": false,
+        "why": "It only checks; it fails if one is NULL."
+      }
+    ]
+  },
+  {
+    "id": "ex-v336gkgp",
+    "version": 1,
+    "section": "constraints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "SET NOT NULL skipped its scan and still took 1.1 s. What was it waiting for?",
+    "choices": [
+      {
+        "text": "The VALIDATE that had just finished",
+        "correct": false,
+        "why": "It had committed; nothing of it was left."
+      },
+      {
+        "text": "A scan of the table",
+        "correct": false,
+        "why": "The valid check made it skip the scan."
+      },
+      {
+        "text": "An autovacuum on the table, cancelled after deadlock_timeout",
+        "correct": true,
+        "why": "Right. The log said canceling autovacuum task."
+      },
+      {
+        "text": "The replica",
+        "correct": false,
+        "why": "Nothing in the capture waits on the replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-194s90b6",
+    "version": 1,
+    "section": "constraints",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A constraint added with the words NOT ___ checks new rows only, until it is validated.",
+    "blanks": [
+      {
+        "accept": [
+          "VALID"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cw1bsx54",
+    "version": 1,
+    "section": "migrations-as-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call a down migration dangerous in production?",
+    "choices": [
+      {
+        "text": "Migration tools refuse them",
+        "correct": false,
+        "why": "Most support them."
+      },
+      {
+        "text": "Dropped data stays gone",
+        "correct": true,
+        "why": "Right. A mistake is fixed with a new migration."
+      },
+      {
+        "text": "They are slower than forward migrations, because the database has to replay the history",
+        "correct": false,
+        "why": "Speed is not the problem; lost data is."
+      },
+      {
+        "text": "They run without a transaction",
+        "correct": false,
+        "why": "That is not the reason given."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ya6bn68",
+    "version": 1,
+    "section": "migrations-as-code",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which item of the checklist does the lesson say teams skip?",
+    "choices": [
+      {
+        "text": "Setting lock_timeout",
+        "correct": false,
+        "why": "Important, and not the one named."
+      },
+      {
+        "text": "Building indexes concurrently, even on small tables where it changes nothing",
+        "correct": false,
+        "why": "Not the one named."
+      },
+      {
+        "text": "Writing the migration in a file",
+        "correct": false,
+        "why": "Teams do that."
+      },
+      {
+        "text": "Timing it on a copy of production, at production's size",
+        "correct": true,
+        "why": "Right. It would have caught everything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-ytd0p5sd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team must add a required column with a value computed from two others, on a table of 300 million rows. Which plan follows the lesson?",
+    "choices": [
+      {
+        "text": "Stop the box office for the night",
+        "correct": false,
+        "why": "The lesson is how not to."
+      },
+      {
+        "text": "One ALTER TABLE with a DEFAULT computed from the two columns",
+        "correct": false,
+        "why": "A default cannot read other columns, and a volatile one would rewrite the table."
+      },
+      {
+        "text": "Add it NOT NULL with a constant default, then fix the values in one UPDATE",
+        "correct": false,
+        "why": "The single UPDATE is the burst section 08 avoids."
+      },
+      {
+        "text": "Add it nullable, write it from new code, backfill in batches, then NOT VALID check, validate, SET NOT NULL",
+        "correct": true,
+        "why": "Right: every step short under the strong lock."
+      }
+    ]
+  }
+]

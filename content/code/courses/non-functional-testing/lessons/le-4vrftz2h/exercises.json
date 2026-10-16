@@ -1,0 +1,535 @@
+[
+ {
+  "id": "ex-pq14n0hg",
+  "version": 1,
+  "section": "synthetic",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Since midnight the DNS record for the box office points at the wrong address. What do lesson 22's metrics show?",
+  "hint": "Where are those metrics counted?",
+  "choices": [
+   {
+    "text": "A quiet night: the requests never arrive",
+    "correct": true,
+    "why": "Right. The server counts what it answers; requests sent elsewhere leave nothing to count."
+   },
+   {
+    "text": "A rise in 5xx answers on every route",
+    "correct": false,
+    "why": "A 5xx is something the server answered; here it answers nothing."
+   },
+   {
+    "text": "up dropping to 0 for the boxoffice job",
+    "correct": false,
+    "why": "Prometheus scrapes 127.0.0.1 directly and still reaches the process, so up stays at 1."
+   },
+   {
+    "text": "A spike of requests from the wrong address",
+    "correct": false,
+    "why": "The customers' requests go to the wrong machine, not to this one from somewhere odd."
+   }
+  ]
+ },
+ {
+  "id": "ex-vnc5h5gp",
+  "version": 1,
+  "section": "synthetic",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does real-user monitoring see and a synthetic check does not?",
+  "hint": "One of them walks only the journey somebody wrote.",
+  "choices": [
+   {
+    "text": "An outage at 04:00 with nobody using the site",
+    "correct": false,
+    "why": "That is the synthetic check's strength; real-user data is silent when nobody is there."
+   },
+   {
+    "text": "Slow pages on phones in one country",
+    "correct": true,
+    "why": "Right. Those devices and that network are not anything the probe uses."
+   },
+   {
+    "text": "The same journey timed identically every minute",
+    "correct": false,
+    "why": "Repeatability is what the probe has and real traffic lacks."
+   },
+   {
+    "text": "A booking that answers 201 in 916 ms",
+    "correct": false,
+    "why": "The probe caught exactly that in this lesson."
+   }
+  ]
+ },
+ {
+  "id": "ex-fv6z5nwf",
+  "version": 1,
+  "section": "synthetic",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Runscope's checks ended up inside BlazeMeter after two changes of owner. What does that history argue for?",
+  "hint": "Who owns the format your checks are written in?",
+  "choices": [
+   {
+    "text": "Never using a hosted product for anything",
+    "correct": false,
+    "why": "Hosted checks give you regions you do not own; the point is keeping the definitions portable."
+   },
+   {
+    "text": "Load testing and monitoring being the same activity",
+    "correct": false,
+    "why": "The two products were put side by side; that says nothing about the activities being one."
+   },
+   {
+    "text": "Checks kept as files in your own repository",
+    "correct": true,
+    "why": "Right. A probe in a file moves with you; checks in a product's format move when the product does."
+   },
+   {
+    "text": "Buying from the largest vendor available",
+    "correct": false,
+    "why": "Runscope was bought by large vendors; that is what moved it."
+   }
+  ]
+ },
+ {
+  "id": "ex-dsf4884v",
+  "version": 1,
+  "section": "probe",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "GET /shows answers 200 with an empty list. Which of the probe's three checks catches it?",
+  "hint": "The status was a success.",
+  "choices": [
+   {
+    "text": "The status",
+    "correct": false,
+    "why": "200 is the status it wanted."
+   },
+   {
+    "text": "The time",
+    "correct": false,
+    "why": "An empty list comes back fast."
+   },
+   {
+    "text": "None of the three",
+    "correct": false,
+    "why": "The body check exists for exactly this."
+   },
+   {
+    "text": "The body",
+    "correct": true,
+    "why": "Right: the probe refuses an empty list with \"no show on sale\"."
+   }
+  ]
+ },
+ {
+  "id": "ex-7vf7mt6k",
+  "version": 1,
+  "section": "probe",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the probe try another seat after a 409, instead of failing?",
+  "hint": "What does a 409 say about the box office?",
+  "choices": [
+   {
+    "text": "Somebody real has that seat",
+    "correct": true,
+    "why": "Right. Failing on it would page somebody for a correct refusal."
+   },
+   {
+    "text": "A 409 is a server failure the probe should hide",
+    "correct": false,
+    "why": "It is not a failure at all: a real customer has the seat."
+   },
+   {
+    "text": "urllib turns every 409 into a timeout",
+    "correct": false,
+    "why": "urllib raises HTTPError, which call() turns back into the status 409."
+   },
+   {
+    "text": "The probe's thresholds do not apply to bookings",
+    "correct": false,
+    "why": "Bookings have a limit of their own, 500 ms."
+   }
+  ]
+ },
+ {
+  "id": "ex-q2068pc6",
+  "version": 1,
+  "section": "probe",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why are the probe's limits per request looser than a 95th-percentile requirement would be?",
+  "hint": "One request against a distribution.",
+  "choices": [
+   {
+    "text": "urllib adds a fixed cost of its own to every request it sends",
+    "correct": false,
+    "why": "The client's time is what a customer waits; the reason is variation, not a constant."
+   },
+   {
+    "text": "One unlucky request is not a failure of the system",
+    "correct": true,
+    "why": "Right. One slow request in twenty is inside a p95 requirement and would still fail a tight probe."
+   },
+   {
+    "text": "Production is always slower than the lab it was tested in",
+    "correct": false,
+    "why": "Not a rule; and the limit is about one request against a distribution."
+   },
+   {
+    "text": "Percentiles do not apply in production",
+    "correct": false,
+    "why": "They apply everywhere; lesson 22 computed them from production-style metrics."
+   }
+  ]
+ },
+ {
+  "id": "ex-ezberk5j",
+  "version": 1,
+  "section": "probe",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the probe's exit code for?",
+  "hint": "Who reads it?",
+  "choices": [
+   {
+    "text": "To count how many seats the journey managed to book",
+    "correct": false,
+    "why": "It says pass or fail, nothing about how many."
+   },
+   {
+    "text": "To report how long the slowest of the three steps took",
+    "correct": false,
+    "why": "The times are in the printed line; the code is only 0 or 1."
+   },
+   {
+    "text": "To say pass or fail without the line being read",
+    "correct": true,
+    "why": "Right. 0 or 1 is what a loop, cron or lesson 24's alerting can act on."
+   },
+   {
+    "text": "To release booking_lock on the server",
+    "correct": false,
+    "why": "The probe is another process; it cannot touch the server's lock."
+   }
+  ]
+ },
+ {
+  "id": "ex-hdvggdms",
+  "version": 1,
+  "section": "schedule",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A probe runs every 60 seconds and somebody is told after two failed checks in a row. An outage starts just after a check. About how many minutes pass before somebody is told, at worst?",
+  "hint": "The figure of the schedule.",
+  "value": 2,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-e9bezbh0",
+  "version": 1,
+  "section": "schedule",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Under slow.py every answer was a 200 or a 201. Why would an alert on the 5xx ratio have said nothing?",
+  "hint": "What failed: the answer or the wait?",
+  "choices": [
+   {
+    "text": "Prometheus does not scrape slow.py",
+    "correct": false,
+    "why": "slow.py serves the same /metrics as observed.py."
+   },
+   {
+    "text": "The probe's own requests are left out of the ratio",
+    "correct": false,
+    "why": "They are counted like any other; none of them was a 5xx."
+   },
+   {
+    "text": "A 201 counts as an error in the 5xx query",
+    "correct": false,
+    "why": "status=~\"5..\" matches only 500 to 599."
+   },
+   {
+    "text": "The booking succeeded, just in 916 ms",
+    "correct": true,
+    "why": "Right. Slowness is a duration problem; an error ratio cannot see it."
+   }
+  ]
+ },
+ {
+  "id": "ex-jzhw8bdy",
+  "version": 1,
+  "section": "schedule",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Of the five fields at the start of a crontab line, the first one is the ___.",
+  "hint": "The order runs from the smallest unit to the day of the week.",
+  "blanks": [
+   {
+    "accept": [
+     "minute",
+     "minutes"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-7gebzbpv",
+  "version": 1,
+  "section": "schedule",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why is watch -n 60 python3 probe.py not a monitor?",
+  "hint": "What happens when you close the terminal?",
+  "choices": [
+   {
+    "text": "It keeps no history and dies with its terminal",
+    "correct": true,
+    "why": "Right. Good for looking while you work; cron runs with no terminal and keeps the results."
+   },
+   {
+    "text": "It cannot run Python programs",
+    "correct": false,
+    "why": "It runs any command; that is not the problem."
+   },
+   {
+    "text": "Sixty seconds is too short an interval for a production check",
+    "correct": false,
+    "why": "One minute is the usual interval for a production check."
+   },
+   {
+    "text": "It hides the probe's exit code from the screen it draws",
+    "correct": false,
+    "why": "The exit code was never on the screen; the issue is where the results go."
+   }
+  ]
+ },
+ {
+  "id": "ex-nbsfb0v4",
+  "version": 1,
+  "section": "production",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The probe books once a minute and nobody cleans up. What happens to the box office?",
+  "hint": "1,440 bookings a day, into the same table.",
+  "choices": [
+   {
+    "text": "Nothing, since the probe's bookings are marked",
+    "correct": false,
+    "why": "A mark lets you find them; it does not give the seats back."
+   },
+   {
+    "text": "The first show sells out; then every check fails",
+    "correct": true,
+    "why": "Right. The monitor causes the outage it reports, and real customers lose those seats first."
+   },
+   {
+    "text": "The bookings slow down because of booking_lock",
+    "correct": false,
+    "why": "One booking a minute is nothing next to the lock's 25 a second."
+   },
+   {
+    "text": "SQLite refuses rows from a customer that is not a person",
+    "correct": false,
+    "why": "The database stores any string as a customer."
+   }
+  ]
+ },
+ {
+  "id": "ex-qwxthp2a",
+  "version": 1,
+  "section": "production",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each pattern of results to where it points.",
+  "hint": "The figure of three regions, and the slow version.",
+  "pairs": [
+   {
+    "left": "every region fails",
+    "right": "the service itself"
+   },
+   {
+    "left": "only Frankfurt fails",
+    "right": "the network path from that region"
+   },
+   {
+    "left": "201, but over the time limit",
+    "right": "a dependency that became slow"
+   },
+   {
+    "left": "probes pass, one browser's users cannot pay",
+    "right": "a path no probe walks"
+   }
+  ],
+  "right_distractors": [
+   "the probe's own clock"
+  ]
+ },
+ {
+  "id": "ex-wekynfjd",
+  "version": 1,
+  "section": "production",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What is the better way to clean up a probe's bookings in production?",
+  "hint": "Who should need write access to the sales table?",
+  "choices": [
+   {
+    "text": "An operator runs DELETE at a prompt whenever they remember",
+    "correct": false,
+    "why": "That is what was done in the lab, and it is exactly what not to do in production."
+   },
+   {
+    "text": "Leave them, and subtract the probe from every report",
+    "correct": false,
+    "why": "The seats are still gone, and every report has to remember."
+   },
+   {
+    "text": "A reviewed job or endpoint for the test customer",
+    "correct": true,
+    "why": "Right. Nobody needs write access to the sales table, and the cleanup keeps pace with the probe."
+   },
+   {
+    "text": "Stop the probe once a week to let the seats free up",
+    "correct": false,
+    "why": "Stopping it frees nothing; the bookings stay until deleted."
+   }
+  ]
+ },
+ {
+  "id": "ex-s7t7sexn",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The probe runs on the server's own machine and is green all night, yet customers report that the site will not open. What should change first?",
+  "hint": "What lies between a customer and 127.0.0.1?",
+  "choices": [
+   {
+    "text": "Tighten the thresholds from 300 and 500 down to 100 ms",
+    "correct": false,
+    "why": "The probe is fast and green; a tighter limit still never leaves the machine."
+   },
+   {
+    "text": "Run the same probe at ten-second intervals instead of one minute",
+    "correct": false,
+    "why": "More checks of the same path from the same place see the same thing."
+   },
+   {
+    "text": "Add a body check to the listing step",
+    "correct": false,
+    "why": "It already has one, and it passes on the machine itself."
+   },
+   {
+    "text": "Probe the public address, from outside, from several regions",
+    "correct": true,
+    "why": "Right. DNS, certificates, the balancer and the network are only crossed by a check that starts where customers are."
+   }
+  ]
+ },
+ {
+  "id": "ex-62b4ye49",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the probe's run in order, from start to what a scheduler sees.",
+  "hint": "The journey first, then the verdict.",
+  "items": [
+   "GET /shows, checked for status, body and time",
+   "GET /shows/{id} of the first show",
+   "POST /bookings as synthetic-probe",
+   "one line saying PASS or FAIL",
+   "exit code 0 or 1"
+  ]
+ },
+ {
+  "id": "ex-0qd0we3n",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team has a synthetic check every minute and no real-user monitoring. Which failure will they hear about from a customer first?",
+  "hint": "Which of these does the scripted journey not walk?",
+  "choices": [
+   {
+    "text": "Accented searches finding nothing",
+    "correct": true,
+    "why": "Right. The probe never searches, so only a person meets it, unless RUM or the error ratio shows it."
+   },
+   {
+    "text": "The server stopping at 04:00 with nobody on the site",
+    "correct": false,
+    "why": "The next check fails within a minute."
+   },
+   {
+    "text": "Payments taking 900 ms each, all afternoon",
+    "correct": false,
+    "why": "The booking step's time limit fails on it, as it did here."
+   },
+   {
+    "text": "GET /shows answering with an empty list",
+    "correct": false,
+    "why": "The body check refuses an empty list."
+   }
+  ]
+ },
+ {
+  "id": "ex-k6nrsvwq",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these would the probe from this lesson catch? Choose every one it would.",
+  "hint": "It lists, opens the first show and books.",
+  "choices": [
+   {
+    "text": "the server not running",
+    "correct": true,
+    "why": "Yes: connection refused, exit 1."
+   },
+   {
+    "text": "a booking that takes 916 ms",
+    "correct": true,
+    "why": "Yes: over its 500 ms limit."
+   },
+   {
+    "text": "the search route failing with 500",
+    "correct": false,
+    "why": "No: the journey never searches."
+   },
+   {
+    "text": "an empty list of shows answered with 200",
+    "correct": true,
+    "why": "Yes: the body check refuses it."
+   },
+   {
+    "text": "the last show on sale having a broken page",
+    "correct": false,
+    "why": "No: it only opens the first show."
+   }
+  ]
+ }
+]

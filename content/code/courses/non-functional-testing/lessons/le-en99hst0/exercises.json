@@ -1,0 +1,515 @@
+[
+ {
+  "id": "ex-8jjb8yg9",
+  "version": 1,
+  "section": "installing",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why is a load test run with jmeter -n rather than from the GUI?",
+  "hint": "What else is using the processor while the GUI is open?",
+  "choices": [
+   {
+    "text": "The GUI cannot send HTTP requests",
+    "correct": false,
+    "why": "It can; the GUI runs the same samplers, which is how a plan is debugged."
+   },
+   {
+    "text": "Non-GUI mode sends requests over a faster protocol",
+    "correct": false,
+    "why": "Both modes send the same HTTP; the difference is what else the process is doing."
+   },
+   {
+    "text": "Drawing samples takes resources from the threads",
+    "correct": true,
+    "why": "Right. The window competes with the virtual users, and the result partly measures the window."
+   },
+   {
+    "text": "The GUI ignores the timers in the plan",
+    "correct": false,
+    "why": "Timers run in both modes."
+   }
+  ]
+ },
+ {
+  "id": "ex-x0n3q2wt",
+  "version": 1,
+  "section": "installing",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the JMeter GUI the right tool for?",
+  "hint": "One or two users, and every response visible.",
+  "choices": [
+   {
+    "text": "Building a plan and debugging it with a user or two",
+    "correct": true,
+    "why": "Right. Its listeners show each request and response, which is what debugging needs."
+   },
+   {
+    "text": "Running the final load test so the graphs update live",
+    "correct": false,
+    "why": "Live graphs during a load run take resources from the threads being measured."
+   },
+   {
+    "text": "Starting the workers of a distributed test",
+    "correct": false,
+    "why": "Workers run jmeter-server, which has no window."
+   },
+   {
+    "text": "Measuring the system under test from inside the VM",
+    "correct": false,
+    "why": "The VM has no desktop, so the GUI runs on your own computer."
+   }
+  ]
+ },
+ {
+  "id": "ex-cb4xpq46",
+  "version": 1,
+  "section": "the-test-plan",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each family of JMeter element to what it does.",
+  "hint": "The table at the top of \"A test plan, element by element\".",
+  "pairs": [
+   {
+    "left": "thread group",
+    "right": "the virtual users: how many, how fast, how long"
+   },
+   {
+    "left": "sampler",
+    "right": "sends one request and records one sample"
+   },
+   {
+    "left": "config element",
+    "right": "sets up defaults, variables or data for the samplers"
+   },
+   {
+    "left": "assertion",
+    "right": "marks a sample failed when its response is wrong"
+   },
+   {
+    "left": "timer",
+    "right": "waits before a sampler runs"
+   }
+  ],
+  "right_distractors": [
+   "sends the plan to the remote workers"
+  ]
+ },
+ {
+  "id": "ex-10540jaa",
+  "version": 1,
+  "section": "the-test-plan",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The think timer sits at the thread group's level and runs before both samplers. Where would you put it so that only GET /shows/{id} waits?",
+  "hint": "Scope is the tree.",
+  "choices": [
+   {
+    "text": "Under the test plan, above the thread group",
+    "correct": false,
+    "why": "Higher in the tree widens the scope: it would apply to every sampler of every thread group."
+   },
+   {
+    "text": "After the second sampler, at the same level",
+    "correct": false,
+    "why": "Position among siblings does not narrow the scope; at that level it still applies to both."
+   },
+   {
+    "text": "Inside the HTTP Request Defaults",
+    "correct": false,
+    "why": "A config element is not a parent of the samplers, so nothing under it reaches them."
+   },
+   {
+    "text": "Inside that sampler, beside the assertion",
+    "correct": true,
+    "why": "Right. An element inside a sampler applies to that sampler alone."
+   }
+  ]
+ },
+ {
+  "id": "ex-ectp0kjv",
+  "version": 1,
+  "section": "the-test-plan",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does the CSV Data Set Config in this plan do each time a thread needs a show?",
+  "hint": "shareMode.all and recycle.",
+  "choices": [
+   {
+    "text": "Gives every thread its own copy of the file to read from the top",
+    "correct": false,
+    "why": "That is a per-thread share mode; shareMode.all makes the threads take turns at one file."
+   },
+   {
+    "text": "Reads the next line of one shared file into show",
+    "correct": true,
+    "why": "Right. Threads take turns, and at the end of the file it starts again from the top."
+   },
+   {
+    "text": "Picks a random line of the file",
+    "correct": false,
+    "why": "It reads in order; a random id would need a function such as __Random instead."
+   },
+   {
+    "text": "Reads the whole file into one variable",
+    "correct": false,
+    "why": "One line per use, into the variable named in variableNames."
+   }
+  ]
+ },
+ {
+  "id": "ex-y02m34gq",
+  "version": 1,
+  "section": "the-test-plan",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The thread group reads its size with __P, so adding -J___=40 to the command runs forty threads.",
+  "hint": "The first argument inside __P(…,20).",
+  "blanks": [
+   {
+    "accept": [
+     "users"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-tsd2zyfn",
+  "version": 1,
+  "section": "the-test-plan",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Ten threads carry a Constant Throughput Timer set to 600 samples a minute, and the server slows until every sample takes 3 seconds. What rate does the test send?",
+  "hint": "The timer only ever waits.",
+  "choices": [
+   {
+    "text": "600 a minute, because the timer holds the rate",
+    "correct": false,
+    "why": "The timer can delay a thread, never speed it up; ten threads at 3 s each cannot reach ten a second."
+   },
+   {
+    "text": "Near 200 a minute, all that ten 3 s loops allow",
+    "correct": true,
+    "why": "Right. 10 / 3 s is about 3.3 a second. The test is still closed underneath."
+   },
+   {
+    "text": "None, because the timer stops threads that fall behind",
+    "correct": false,
+    "why": "It does not stop threads; it just has no waiting left to remove."
+   },
+   {
+    "text": "1,200 a minute, as the timer makes up the lost time",
+    "correct": false,
+    "why": "There is no catching up in a closed model: a thread sends again only after its last answer."
+   }
+  ]
+ },
+ {
+  "id": "ex-k3f1h5hv",
+  "version": 1,
+  "section": "a-non-gui-run",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the difference between a summary + line and a summary = line?",
+  "hint": "One is a period, one is a total.",
+  "choices": [
+   {
+    "text": "+ is for successes and = for the whole including errors",
+    "correct": false,
+    "why": "Both lines count errors, in their Err column."
+   },
+   {
+    "text": "+ is the controller and = the workers",
+    "correct": false,
+    "why": "Both appear in a run on one machine, with no workers at all."
+   },
+   {
+    "text": "+ is printed by the GUI and = by non-GUI mode",
+    "correct": false,
+    "why": "Both are printed by the summariser in non-GUI mode."
+   },
+   {
+    "text": "+ covers the last period, = the run so far",
+    "correct": true,
+    "why": "Right. The last = line is the whole run."
+   }
+  ]
+ },
+ {
+  "id": "ex-x4mv5bng",
+  "version": 1,
+  "section": "a-non-gui-run",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Twenty threads think for a uniform random 1 to 2 seconds before each request, and the responses take a few milliseconds. About how many requests a second should they send?",
+  "hint": "Lesson 3: X = N / (R + Z), with Z the mean of the timer.",
+  "value": 13.3,
+  "tolerance": 0.2,
+  "unit": "requests/s"
+ },
+ {
+  "id": "ex-4x93q7ka",
+  "version": 1,
+  "section": "a-non-gui-run",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does a plan meant for load runs carry no listeners?",
+  "hint": "What does View Results Tree keep?",
+  "choices": [
+   {
+    "text": "-l writes each sample to disk and holds none in memory",
+    "correct": true,
+    "why": "Right. The .jtl is the listener for a load run, and everything else is built from it afterwards."
+   },
+   {
+    "text": "Listeners are only allowed inside a sampler",
+    "correct": false,
+    "why": "Listeners can sit at any level; scope decides which samples they hear."
+   },
+   {
+    "text": "Listeners slow the server under test",
+    "correct": false,
+    "why": "They run in the generator, and it is the generator they slow."
+   },
+   {
+    "text": "Non-GUI mode refuses to load a plan that has one",
+    "correct": false,
+    "why": "It loads them; they cost memory and processor time during the run."
+   }
+  ]
+ },
+ {
+  "id": "ex-vp9xqvdw",
+  "version": 1,
+  "section": "a-non-gui-run",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "JMeter already marks a 404 as a failed sample. What does the Response Assertion add?",
+  "hint": "A server can answer 200 and still be wrong.",
+  "choices": [
+   {
+    "text": "It makes failed samples faster to record",
+    "correct": false,
+    "why": "Assertions add checking work; they do not speed recording up."
+   },
+   {
+    "text": "It retries the request when the status is wrong",
+    "correct": false,
+    "why": "Assertions check; nothing in them sends a request again."
+   },
+   {
+    "text": "It catches a 200 whose body is wrong",
+    "correct": true,
+    "why": "Right. An empty list or an error page served as success passes the status check and fails the assertion."
+   },
+   {
+    "text": "It counts the 404s separately from other errors",
+    "correct": false,
+    "why": "All failed samples count as errors together; the message says which check failed."
+   }
+  ]
+ },
+ {
+  "id": "ex-88k5tz8c",
+  "version": 1,
+  "section": "a-non-gui-run",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a line of the .jtl, what does the Latency column measure?",
+  "hint": "Compare it with elapsed.",
+  "choices": [
+   {
+    "text": "The time spent opening the connection",
+    "correct": false,
+    "why": "That is the Connect column."
+   },
+   {
+    "text": "The time to the first byte of the answer",
+    "correct": true,
+    "why": "Right. elapsed runs on to the last byte."
+   },
+   {
+    "text": "The time the server reported in Server-Timing",
+    "correct": false,
+    "why": "JMeter does not read that header; it times from the client."
+   },
+   {
+    "text": "The wait the timer added before the request",
+    "correct": false,
+    "why": "Timer delays are not part of a sample's time."
+   }
+  ]
+ },
+ {
+  "id": "ex-6skryxfg",
+  "version": 1,
+  "section": "distributed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A distributed run uses -Jusers=10 on the controller, and the workers start twenty threads each. Why?",
+  "hint": "Which machine does -J set a property on?",
+  "choices": [
+   {
+    "text": "The workers ignore properties of every kind",
+    "correct": false,
+    "why": "They read properties sent with -G, and their own -J at start-up."
+   },
+   {
+    "text": "Distributed mode doubles the users on purpose",
+    "correct": false,
+    "why": "Each worker runs exactly what its properties say; nothing doubles."
+   },
+   {
+    "text": "The ramp-up overrides the user count",
+    "correct": false,
+    "why": "The ramp spreads the start of the threads; it does not set how many."
+   },
+   {
+    "text": "-J stayed on the controller, so the default of 20 ran",
+    "correct": true,
+    "why": "Right. -G sends a property to the workers; -J sets it only where it is typed."
+   }
+  ]
+ },
+ {
+  "id": "ex-htv1p5x2",
+  "version": 1,
+  "section": "distributed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A worker was started in a directory with no shows.csv. What happens when the controller starts the test?",
+  "hint": "What travels from the controller, and what does not?",
+  "choices": [
+   {
+    "text": "It finds no data file and records no samples",
+    "correct": true,
+    "why": "Right. The plan travels; the data file is read from the worker's own disk, and there was none."
+   },
+   {
+    "text": "The controller sends its own copy of the file",
+    "correct": false,
+    "why": "Only the plan and the -G properties are sent; files stay where they are."
+   },
+   {
+    "text": "The worker downloads the file from the box office",
+    "correct": false,
+    "why": "Nothing in JMeter fetches a data file over HTTP."
+   },
+   {
+    "text": "The other worker's copy is shared over RMI",
+    "correct": false,
+    "why": "Workers do not talk to each other, only to the controller."
+   }
+  ]
+ },
+ {
+  "id": "ex-xyfbw1ms",
+  "version": 1,
+  "section": "distributed",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "jmeter-server refuses to start with \"Cannot start. nft is a loopback address.\" What fixes it?",
+  "hint": "Which address does the worker tell the controller?",
+  "choices": [
+   {
+    "text": "Turning off RMI encryption with server.rmi.ssl.disable",
+    "correct": false,
+    "why": "Encryption is a separate setting; the message is about the address."
+   },
+   {
+    "text": "Starting the worker as root with sudo",
+    "correct": false,
+    "why": "Privilege does not change which address the hostname resolves to."
+   },
+   {
+    "text": "Setting java.rmi.server.hostname to 127.0.0.1 or a real IP",
+    "correct": true,
+    "why": "Right. The hostname resolved to 127.0.1.1, and this tells RMI which address to hand out instead."
+   },
+   {
+    "text": "Choosing a server_port above 1099",
+    "correct": false,
+    "why": "Any port gives the same error; it is the address that is refused."
+   }
+  ]
+ },
+ {
+  "id": "ex-9pm1we9f",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The controller runs this lesson's plan with -R naming three workers and -Gusers=40. How many virtual users reach the box office?",
+  "hint": "Each worker runs the whole plan.",
+  "value": 120,
+  "tolerance": 0,
+  "unit": "users"
+ },
+ {
+  "id": "ex-f0gsjpyt",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of a distributed JMeter run in order.",
+  "hint": "Data first, report last.",
+  "items": [
+   "give each worker its own copy of the data file",
+   "start jmeter-server on each worker",
+   "run jmeter -n with -R and -G on the controller",
+   "the workers send their samples back to one .jtl",
+   "build the HTML report from the .jtl"
+  ]
+ },
+ {
+  "id": "ex-t2zq9m42",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Run from the GUI with View Results Tree open, 500 users give a 95th percentile of 900 ms. The same plan in non-GUI mode with -l gives 120 ms. Which describes the box office?",
+  "hint": "Which run was also measuring JMeter?",
+  "choices": [
+   {
+    "text": "The GUI run, because it watched every response",
+    "correct": false,
+    "why": "Watching every response is the cost: the window and the tree slowed the generator, and the times include that."
+   },
+   {
+    "text": "The non-GUI run",
+    "correct": true,
+    "why": "Right. With nothing held in memory and nothing drawn, the generator kept out of the measurement."
+   },
+   {
+    "text": "Neither, as percentiles cannot compare two runs",
+    "correct": false,
+    "why": "Two runs of the same plan can be compared by percentile; here one of them measured the tool."
+   },
+   {
+    "text": "The mean of the two, about 510 ms",
+    "correct": false,
+    "why": "Averaging a good measurement with a contaminated one gives a number that describes neither."
+   }
+  ]
+ }
+]

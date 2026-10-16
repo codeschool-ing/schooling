@@ -1,0 +1,423 @@
+{
+  "ex-1am52pxg": {
+    "prompt": "O que um arquivo `.metadata.json` num diretório do `mongodump` guarda sobre os índices da coleção?",
+    "choices": [
+      {
+        "text": "As definições deles",
+        "why": "Isso. O índice em si é construído de novo a partir dos documentos em todo restore."
+      },
+      {
+        "text": "Os arquivos de índice, comprimidos para o restore não precisar construí-los",
+        "why": "Algumas centenas de bytes não guardam um índice sobre 100.000 pedidos; só a descrição está lá."
+      },
+      {
+        "text": "Nada: índices não fazem parte de um dump",
+        "why": "O restore imprimiu `restoring indexes ... from metadata`, então as definições viajam."
+      },
+      {
+        "text": "Quantas vezes cada índice foi usado desde que o servidor subiu",
+        "why": "Estatísticas de uso não entram no backup; pertencem ao servidor em execução."
+      }
+    ]
+  },
+  "ex-93zdd55w": {
+    "prompt": "Por que o servidor desta aula precisou ser um replica set, mesmo com um membro só?",
+    "choices": [
+      {
+        "text": "Porque o `mongodump` se recusa a conectar num servidor avulso",
+        "why": "Um dump simples funciona num servidor avulso; a opção que precisa de mais é o `--oplog`."
+      },
+      {
+        "text": "Porque o `--oplog` lê o oplog, e só um membro de replica set mantém um",
+        "why": "Isso. É o único motivo; nada aqui precisa de uma segunda cópia."
+      },
+      {
+        "text": "Porque um volume nomeado só pode ser montado por um replica set",
+        "why": "Volumes não se importam com o que roda neles; a cópia do snapshot rodou avulsa."
+      },
+      {
+        "text": "Porque o MongoDB 8.0 roda todo servidor como replica set",
+        "why": "O `mongo` da aula 1 era um servidor avulso."
+      }
+    ]
+  },
+  "ex-zg4hm9nk": {
+    "prompt": "Um dump sem `--oplog` copiou `payments` às 20:15:11.762 e terminou `orders` às 20:15:12.073, enquanto escritas continuavam. O que há de errado em restaurá-lo assim?",
+    "hint": "Quando cada coleção era verdadeira?",
+    "choices": [
+      {
+        "text": "Nada, porque um dump trava o banco enquanto roda",
+        "why": "Os pagamentos continuaram chegando durante o dump; nada foi travado."
+      },
+      {
+        "text": "Os pedidos ficariam sem os índices",
+        "why": "As definições de índice viajam com ou sem `--oplog`."
+      },
+      {
+        "text": "Cada coleção reflete um momento diferente, então o restore mostra um estado que nunca existiu",
+        "why": "Isso. `--oplog` e `--oplogReplay` levam todas as coleções ao fim do dump."
+      },
+      {
+        "text": "O arquivo ficaria grande demais para copiar com `docker cp`",
+        "why": "Tamanho não tem nada a ver; o problema é o tempo."
+      }
+    ]
+  },
+  "ex-nxxzrbq1": {
+    "prompt": "Para restaurar um dump feito com `--oplog` até o momento em que ele terminou, o `mongorestore` recebe a opção `--___`.",
+    "hint": "Reaplique o que foi gravado.",
+    "blanks": [
+      {
+        "accept": [
+          "oplogReplay"
+        ]
+      }
+    ]
+  },
+  "ex-1ae3b28b": {
+    "prompt": "Por que o `db.fsyncLock()` rodou antes do `tar` do volume?",
+    "choices": [
+      {
+        "text": "Para nenhum arquivo mudar enquanto a cópia era feita",
+        "why": "Isso. Uma cópia arquivo por arquivo de um servidor mudando pode ser um estado que nunca existiu."
+      },
+      {
+        "text": "Para o `tar` conseguir ler arquivos do usuário `mongodb` dentro do volume",
+        "why": "O contêiner descartável rodou como root e os leria de qualquer jeito; a trava trata de mudança."
+      },
+      {
+        "text": "Para a cópia deixar os índices de fora e sair menor",
+        "why": "O snapshot levou os índices; por isso tinha quase seis vezes o tamanho do dump."
+      },
+      {
+        "text": "Para os clientes serem desconectados antes do backup",
+        "why": "Os clientes continuam conectados; as escritas deles esperam."
+      }
+    ]
+  },
+  "ex-ttyhp68e": {
+    "prompt": "O arquivo do snapshot tinha 4.687.568 bytes e o do dump 810.350 bytes. Quantas vezes maior é o snapshot? Uma casa decimal."
+  },
+  "ex-7ktqs0fr": {
+    "prompt": "Num replica set de três, onde devem ir a trava e a cópia dos arquivos, e por quê?",
+    "choices": [
+      {
+        "text": "No primário, já que ele tem os dados mais novos",
+        "why": "Travar o primário para toda escrita da aplicação durante a cópia."
+      },
+      {
+        "text": "Nos três ao mesmo tempo, para as cópias concordarem",
+        "why": "Com todos os membros travados nada pode ser gravado, que é a interrupção que se quer evitar."
+      },
+      {
+        "text": "Num secundário: o primário segue trabalhando e o secundário se atualiza depois",
+        "why": "Isso, pelo oplog, quando é destravado."
+      },
+      {
+        "text": "Em lugar nenhum: num replica set os arquivos podem ser copiados sem trava",
+        "why": "Os arquivos de cada membro mudam enquanto ele roda, com replica set ou sem."
+      }
+    ]
+  },
+  "ex-0kedk93q": {
+    "prompt": "A cópia do snapshot foi iniciada sem `--replSet`. Por quê?",
+    "choices": [
+      {
+        "text": "Ela cita `mongo:27017` como único membro, e a cópia não é ele",
+        "why": "Isso. Iniciada avulsa, ela lê os arquivos, e o log diz que eles pertencem a um conjunto."
+      },
+      {
+        "text": "Um snapshot descarta a configuração do replica set, então não há conjunto para entrar",
+        "why": "A linha do log mostra que a configuração continua nos arquivos."
+      },
+      {
+        "text": "Um servidor avulso sobe mais rápido",
+        "why": "Velocidade não é o motivo; identidade é."
+      },
+      {
+        "text": "`--replSet` não pode ser combinado com um volume nomeado",
+        "why": "O servidor original usou os dois."
+      }
+    ]
+  },
+  "ex-6171e759": {
+    "prompt": "Associe cada trabalho à ferramenta ou opção desta aula que o faz.",
+    "hint": "Uma ferramenta não faz nenhum deles.",
+    "pairs": [
+      {
+        "left": "grava documentos e definições de índice",
+        "right": "mongodump"
+      },
+      {
+        "left": "leva todas as coleções de um dump a um único momento",
+        "right": "--oplogReplay"
+      },
+      {
+        "left": "faz os arquivos de dados ficarem parados enquanto são copiados",
+        "right": "db.fsyncLock()"
+      },
+      {
+        "left": "restaura um snapshot",
+        "right": "iniciar um mongod sobre os arquivos"
+      }
+    ],
+    "right_distractors": [
+      "refineCollectionShardKey"
+    ]
+  },
+  "ex-khcftnv2": {
+    "prompt": "Uma coleção de 400 GB com seis índices precisa voltar até uma hora depois de um desastre. Qual backup pode prometer isso, e como você saberia?",
+    "hint": "Qual restore faz trabalho proporcional a dados vezes índices?",
+    "choices": [
+      {
+        "text": "O dump, porque é menor e copia mais rápido",
+        "why": "Copiar é a metade barata; inserir 400 GB e construir seis índices é a cara."
+      },
+      {
+        "text": "Qualquer um, já que os dois restauraram 100.000 pedidos em uns dois segundos",
+        "why": "Com 100.000 pedidos tudo é rápido; os dois escalam de jeitos diferentes."
+      },
+      {
+        "text": "Um snapshot é o mais provável, e só um restore cronometrado daquele tamanho decide",
+        "why": "Isso. O raciocínio aponta para o snapshot; o exercício é o que transforma isso em promessa."
+      },
+      {
+        "text": "Nenhum, porque o MongoDB não restaura nada acima de 100 GB",
+        "why": "Não existe esse limite; a questão é o tempo."
+      }
+    ]
+  },
+  "ex-zd2fpqt6": {
+    "prompt": "Por que um `mongodump` feito pelo `mongos` não representa um único momento do cluster shardeado?",
+    "choices": [
+      {
+        "text": "Cada shard é copiado no próprio ritmo e não há um oplog único para reaplicar",
+        "why": "Isso, e por isso o `--oplog` não está disponível ali."
+      },
+      {
+        "text": "O `mongos` guarda documentos velhos em cache e os devolve durante o dump",
+        "why": "O `mongos` não guarda nada; ele roteia."
+      },
+      {
+        "text": "O balancer apaga chunks enquanto são despejados",
+        "why": "Mover dados é outro risco; o problema principal é não haver momento comum entre shards."
+      },
+      {
+        "text": "O config server recusa leituras durante um dump",
+        "why": "Não recusa; o dump o lê como qualquer outro servidor."
+      }
+    ]
+  },
+  "ex-fned068x": {
+    "prompt": "Qual das duas cópias guarda o oplog e o journal?",
+    "choices": [
+      {
+        "text": "O dump, dentro do arquivo",
+        "why": "O dump guarda só as entradas do oplog escritas durante o dump, não o oplog do servidor."
+      },
+      {
+        "text": "O snapshot de arquivos",
+        "why": "Isso: ele copia tudo em `/data/db`."
+      },
+      {
+        "text": "Os dois, já que cada um restaurou todas as coleções com todos os índices",
+        "why": "O dump reconstruiu os índices; não levou os arquivos do servidor."
+      },
+      {
+        "text": "Nenhum, porque isso é recriado sempre que um servidor sobe",
+        "why": "O snapshot os levou, o que explica em parte por que era maior."
+      }
+    ]
+  },
+  "ex-vdm3pt5x": {
+    "prompt": "Depois do restore, `payments` tinha 142 documentos e o original 500. O que a diferença mede?",
+    "choices": [
+      {
+        "text": "Um restore que falhou na metade",
+        "why": "O log informou 0 falhas e toda outra coleção bateu."
+      },
+      {
+        "text": "As escritas feitas depois do fim do dump, que nenhum backup feito ali conteria",
+        "why": "Isso. É o que um restore perde, e diz com que frequência os backups precisam rodar."
+      },
+      {
+        "text": "Pagamentos que a reaplicação do oplog aplicou duas vezes",
+        "why": "Aplicar entradas não deixa menos documentos; o restore tem menos, não mais."
+      },
+      {
+        "text": "Documentos que o `mongodump` pulou porque a coleção estava travada enquanto ele rodava",
+        "why": "Nada estava travado durante o dump."
+      }
+    ]
+  },
+  "ex-h91kw7er": {
+    "prompt": "Por que o exercício restaura num contêiner que nunca viu a loja?",
+    "choices": [
+      {
+        "text": "Porque o `mongorestore` se recusa a gravar num banco que já existe",
+        "why": "Ele grava em bancos existentes; é exatamente isso que esconderia um backup quebrado."
+      },
+      {
+        "text": "Para nada que já esteja lá fazer o restore parecer melhor do que é",
+        "why": "Isso. Uma coleção já presente poderia passar numa verificação em que o backup sozinho falharia."
+      },
+      {
+        "text": "Para ter uma versão mais nova do MongoDB",
+        "why": "Os dois usam `mongo:8.0`."
+      },
+      {
+        "text": "Porque o volume do original continua travado",
+        "why": "Ele foi destravado logo depois da cópia."
+      }
+    ]
+  },
+  "ex-ghrrvdtf": {
+    "prompt": "Em que ordem o `mongorestore --oplogReplay` fez o trabalho?",
+    "choices": [
+      {
+        "text": "Índices, depois documentos, depois o oplog",
+        "why": "Construir índices primeiro deixaria todo insert mais lento; o log os mostra por último."
+      },
+      {
+        "text": "Documentos, depois as entradas do oplog, depois os índices",
+        "why": "Isso: `finished restoring`, `applied 26 oplog entries`, `restoring indexes`."
+      },
+      {
+        "text": "O oplog primeiro, para os documentos já chegarem atualizados",
+        "why": "As entradas são reaplicadas sobre os documentos, então os documentos vêm antes."
+      },
+      {
+        "text": "Os três ao mesmo tempo, uma coleção de cada vez",
+        "why": "O log mostra três fases sobre todas as coleções."
+      }
+    ]
+  },
+  "ex-ayc9pfvs": {
+    "prompt": "Ponha em ordem o exercício de restore.",
+    "items": [
+      "Iniciar um servidor que nunca viu os dados",
+      "Copiar o arquivo para dentro dele",
+      "Rodar `mongorestore --oplogReplay`",
+      "Comparar contagens e índices com a origem",
+      "Registrar o tempo e cada diferença"
+    ],
+    "trap": "Uma comparação precisa de algo restaurado para comparar."
+  },
+  "ex-ayke2b1q": {
+    "prompt": "Os dados do contêiner `mongo` sobrevivem ao `docker rm` porque moram num ___ nomeado.",
+    "hint": "`-v mongo-data:/data/db`",
+    "blanks": [
+      {
+        "accept": [
+          "volume"
+        ]
+      }
+    ]
+  },
+  "ex-0bkyb65v": {
+    "prompt": "Quais destas valem para os dois backups desta aula? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "O restore do dump construiu os índices a partir dos documentos",
+        "why": "Isso: `restoring indexes ... from metadata`."
+      },
+      {
+        "text": "O snapshot foi feito enquanto o servidor continuava aceitando escritas",
+        "why": "As escritas ficaram bloqueadas pelo `fsyncLock` durante a cópia."
+      },
+      {
+        "text": "O dump guardou pagamentos gravados enquanto rodava, graças ao oplog",
+        "why": "Isso: 119 copiados, 142 depois da reaplicação."
+      },
+      {
+        "text": "Qualquer um dos arquivos, guardado dentro do contêiner, sobrevive a `docker rm -f mongo`",
+        "why": "Um arquivo dentro de um contêiner vai junto com ele; por isso o arquivo foi copiado para fora."
+      }
+    ]
+  },
+  "ex-ng39hm60": {
+    "prompt": "Uma equipe roda `mongodump` toda noite e nunca restaurou nenhum. O que ela sabe de fato?",
+    "choices": [
+      {
+        "text": "Que consegue se recuperar de qualquer desastre",
+        "why": "Um backup que ninguém restaurou não mostrou que pode ser restaurado."
+      },
+      {
+        "text": "Que um comando rodou",
+        "why": "Isso, e nada sobre se os dados voltam, ou quanto tempo leva."
+      },
+      {
+        "text": "Quanto tempo um restore leva, pela duração do próprio dump",
+        "why": "A duração de um dump diz pouco sobre um restore que também constrói cada índice."
+      },
+      {
+        "text": "Que os índices estão seguros, já que os metadados estão no dump",
+        "why": "As definições estão lá; se elas constroem, e em quanto tempo, não foi testado."
+      }
+    ]
+  },
+  "ex-4afckp4f": {
+    "prompt": "Uma loja pode perder no máximo quinze minutos de pedidos. O que isso decide sobre os dumps dela?",
+    "hint": "O que mediu o 142 contra 500?",
+    "choices": [
+      {
+        "text": "Cada dump precisa terminar em menos de quinze minutos",
+        "why": "A duração importa menos que o intervalo entre um backup e o seguinte."
+      },
+      {
+        "text": "Os dumps precisam usar `--gzip`",
+        "why": "Compressão muda o tamanho, não o que se perde."
+      },
+      {
+        "text": "Nada, já que o `--oplog` já torna um dump sem perdas",
+        "why": "Ele torna o dump consistente no fim; escritas depois disso continuam perdidas."
+      },
+      {
+        "text": "Um backup precisa se completar pelo menos a cada quinze minutos",
+        "why": "Isso. O que um restore perde é tudo o que foi gravado depois do fim do último backup."
+      }
+    ]
+  },
+  "ex-6wb601gr": {
+    "prompt": "Por que o snapshot foi gravado por um contêiner descartável e não por `docker exec` no próprio contêiner do servidor?",
+    "choices": [
+      {
+        "text": "Para o arquivo cair na VM, fora do contêiner do servidor",
+        "why": "Isso. Um backup guardado dentro do contêiner que ele protege se perde com ele."
+      },
+      {
+        "text": "O contêiner do servidor não tem um `tar` próprio para montar o arquivo",
+        "why": "Os dois rodam a mesma imagem, `mongo:8.0`, que tem `tar`."
+      },
+      {
+        "text": "O `docker exec` não roda dentro de um contêiner enquanto o `fsyncLock` segura as escritas",
+        "why": "O `docker exec` rodou o `fsyncUnlock` enquanto a trava valia."
+      },
+      {
+        "text": "Um contêiner descartável copia mais rápido",
+        "why": "A velocidade é a mesma; a questão é onde o arquivo vai parar."
+      }
+    ]
+  },
+  "ex-knhpbekn": {
+    "prompt": "Por que o arquivo foi copiado para fora do contêiner com `docker cp` logo depois do dump?",
+    "choices": [
+      {
+        "text": "Para comprimi-lo",
+        "why": "O `--gzip` já o tinha comprimido."
+      },
+      {
+        "text": "Um backup dentro do contêiner que ele protege some com ele",
+        "why": "Isso. `docker rm -f mongo` levaria o servidor e o único backup juntos."
+      },
+      {
+        "text": "Porque o `mongorestore` só consegue ler arquivos do disco da VM, nunca de um contêiner",
+        "why": "Ele rodou dentro de um contêiner, lendo `/tmp/shop.archive.gz` ali."
+      },
+      {
+        "text": "Porque o arquivo é apagado automaticamente assim que o dump termina",
+        "why": "Ele fica onde foi gravado até algo removê-lo."
+      }
+    ]
+  }
+}

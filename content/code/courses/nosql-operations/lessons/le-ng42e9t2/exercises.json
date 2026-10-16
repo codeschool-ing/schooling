@@ -1,0 +1,555 @@
+[
+  {
+    "id": "ex-6ey5khcm",
+    "version": 1,
+    "section": "hinted-handoff",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `c3` stopped, two writes at `QUORUM` succeed. What does the coordinator `c1` do about `c3`'s copy?",
+    "choices": [
+      {
+        "text": "Keeps them as hints, to replay for c3",
+        "correct": true,
+        "why": "Right: a file in c1's hints directory, replayed and deleted once c3 was back."
+      },
+      {
+        "text": "Nothing; c3 gets the data at the next repair only",
+        "correct": false,
+        "why": "Repair would fix it too, but hints come first and cost less."
+      },
+      {
+        "text": "Refuses the writes until c3 is back",
+        "correct": false,
+        "why": "QUORUM needs two of three, and had them."
+      },
+      {
+        "text": "Writes c3's copy to c2 instead, permanently",
+        "correct": false,
+        "why": "Placement never changes because a node is down."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmnaqbrn",
+    "version": 1,
+    "section": "hinted-handoff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hint file on `c1` was named `1fe37605-9cd6-…-2.hints`. What did the first part of the name identify?",
+    "choices": [
+      {
+        "text": "The table the writes belonged to",
+        "correct": false,
+        "why": "Hints are kept per target node, not per table."
+      },
+      {
+        "text": "The coordinator that stored the hint",
+        "correct": false,
+        "why": "The file is on the coordinator already; the name says whom it is for."
+      },
+      {
+        "text": "A checksum of the two updates",
+        "correct": false,
+        "why": "It matched the host ID in nodetool status."
+      },
+      {
+        "text": "c3's host ID",
+        "correct": true,
+        "why": "Right: the same ID nodetool status showed on the DN line."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7hp3gs4",
+    "version": 1,
+    "section": "hinted-handoff",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`nodetool getmaxhintwindow` printed `10800000 ms`. How many hours is that?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-g5wtk6ve",
+    "version": 1,
+    "section": "hinted-handoff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While the hint file was in the directory, `nodetool listpendinghints` said there were none. What does the lesson take from that?",
+    "choices": [
+      {
+        "text": "The hints had already been delivered to c3",
+        "correct": false,
+        "why": "c3 was stopped; the log line about delivery came after it started."
+      },
+      {
+        "text": "Trust the directory, not the tool",
+        "correct": true,
+        "why": "Right. A tool that says nothing is easy to believe during an incident."
+      },
+      {
+        "text": "Hinted handoff was switched off on c1",
+        "correct": false,
+        "why": "statushandoff said it was running, and the file was written and replayed."
+      },
+      {
+        "text": "The file was a leftover from an earlier run",
+        "correct": false,
+        "why": "It carried c3's host ID and was replayed when c3 returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsv0tqyw",
+    "version": 1,
+    "section": "hinted-handoff",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In which of these cases does a replica end up behind with no hint to fix it? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The node was down for five hours, with the default window",
+        "correct": true,
+        "why": "Right: past three hours no hints are kept."
+      },
+      {
+        "text": "The node was down for ten minutes",
+        "correct": false,
+        "why": "Well inside the window; its hints replay."
+      },
+      {
+        "text": "The coordinator holding the hints was lost too",
+        "correct": true,
+        "why": "Right: the hints lived on it."
+      },
+      {
+        "text": "A live replica dropped a write under load",
+        "correct": true,
+        "why": "Right: it was never marked down."
+      },
+      {
+        "text": "The write was at ALL",
+        "correct": false,
+        "why": "A write at ALL fails with a node down, so there is nothing to hint."
+      }
+    ]
+  },
+  {
+    "id": "ex-9av8nczq",
+    "version": 1,
+    "section": "read-repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the traced read at `ALL`, the coordinator asked `c3` for data and `c2` for a digest. What is a digest?",
+    "choices": [
+      {
+        "text": "The commit log entries for the row",
+        "correct": false,
+        "why": "The commit log is never sent to answer a read."
+      },
+      {
+        "text": "A summary of the replica's SSTables",
+        "correct": false,
+        "why": "It is about one query's answer, not the files."
+      },
+      {
+        "text": "The replica's Merkle tree for the range",
+        "correct": false,
+        "why": "Merkle trees belong to repair, not to reads."
+      },
+      {
+        "text": "A hash of the replica's answer, sent instead of the data",
+        "correct": true,
+        "why": "Right. Equal digests mean equal answers; a mismatch triggers the full read."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2m5d9y7",
+    "version": 1,
+    "section": "read-repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `Digest mismatch`, what did the client receive, and what happened to `c3`?",
+    "choices": [
+      {
+        "text": "An error, and c3 was marked down",
+        "correct": false,
+        "why": "The read succeeded; a mismatch is repaired, not reported."
+      },
+      {
+        "text": "The value 5 from c3, which then sent it to the others",
+        "correct": false,
+        "why": "The newest value wins, and that was 4."
+      },
+      {
+        "text": "The value 4, and c3 received a read-repair mutation",
+        "correct": true,
+        "why": "Right: READ_REPAIR_RSP came back from c3."
+      },
+      {
+        "text": "Both values, for the application to choose",
+        "correct": false,
+        "why": "Cassandra resolves by timestamp and returns one value."
+      }
+    ]
+  },
+  {
+    "id": "ex-05yg60kq",
+    "version": 1,
+    "section": "read-repair",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A row was deleted while one replica was down, and nobody ever reads that row again. Will read repair ever fix the stale replica?",
+    "choices": [
+      {
+        "text": "Yes, at the next compaction",
+        "correct": false,
+        "why": "Compaction is local and compares nothing between replicas."
+      },
+      {
+        "text": "No: only rows that are read ever get fixed by it",
+        "correct": true,
+        "why": "Right. That is why repair exists, and why deletes depend on it."
+      },
+      {
+        "text": "Yes, because read repair also runs in the background every hour",
+        "correct": false,
+        "why": "There is no background read repair in 5.0; read_repair_chance was removed in 4.0."
+      },
+      {
+        "text": "No, because deletes are never read-repaired",
+        "correct": false,
+        "why": "A tombstone is read-repaired like any value, when a read compares replicas."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1bytnaa",
+    "version": 1,
+    "section": "read-repair",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The table setting that makes the client wait until a read repair is written has the value ___.",
+    "blanks": [
+      {
+        "accept": [
+          "BLOCKING"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r07d4w9s",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does repair build Merkle trees instead of sending every row to compare?",
+    "choices": [
+      {
+        "text": "Only Merkle trees carry tombstones",
+        "correct": false,
+        "why": "Tombstones are streamed like any data."
+      },
+      {
+        "text": "Merkle trees take up less space on disk than the SSTables do",
+        "correct": false,
+        "why": "They are built in memory for the repair, not stored as data."
+      },
+      {
+        "text": "Trees let repair skip reading the data",
+        "correct": false,
+        "why": "Building the tree reads the data: that is the validation compaction."
+      },
+      {
+        "text": "Equal hashes settle whole slices without sending them",
+        "correct": true,
+        "why": "Right. The comparison costs hashes, and the streaming costs only the differences."
+      }
+    ]
+  },
+  {
+    "id": "ex-43sm0pap",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The full repair of `shop` reported `orders_by_customer` out of sync on every pair of nodes, though no node had been down while it was written. Why?",
+    "choices": [
+      {
+        "text": "Hinted handoff had replayed the orders twice",
+        "correct": false,
+        "why": "A duplicate write is idempotent and leaves hashes equal."
+      },
+      {
+        "text": "Its SAI index had diverged between nodes",
+        "correct": false,
+        "why": "This lesson's staged table has no index; the difference is the rows."
+      },
+      {
+        "text": "The ALTER raised copies to three and moved none of the old rows",
+        "correct": true,
+        "why": "Right. This was the repair lesson 17's warning asked for."
+      },
+      {
+        "text": "Clustering order differs per node",
+        "correct": false,
+        "why": "It is part of the schema, the same everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvxz2yf4",
+    "version": 1,
+    "section": "repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After an incremental repair, `tablestats` showed `Percent repaired: 100.0`. What does the next incremental repair of that table read?",
+    "choices": [
+      {
+        "text": "Every SSTable again, since repaired data is compared too",
+        "correct": false,
+        "why": "That is a full repair; the incremental one skips stamped SSTables."
+      },
+      {
+        "text": "Only SSTables without a Repaired at stamp, written since",
+        "correct": true,
+        "why": "Right. That is the saving, and also why a full repair is still run now and then."
+      },
+      {
+        "text": "Nothing, until gc_grace_seconds expires",
+        "correct": false,
+        "why": "Incremental repair has no such wait."
+      },
+      {
+        "text": "The commit log of each replica",
+        "correct": false,
+        "why": "Repair works on SSTables, never on the commit log."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvh2nayk",
+    "version": 1,
+    "section": "repair",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line from the repair log to what it meant.",
+    "pairs": [
+      {
+        "left": "Requesting merkle trees",
+        "right": "the coordinator asked each replica to hash its range"
+      },
+      {
+        "left": "Created 2 sync tasks",
+        "right": "two pairs of replicas disagreed and must exchange data"
+      },
+      {
+        "left": "Created 0 sync tasks",
+        "right": "every tree was equal"
+      },
+      {
+        "left": "is fully synced",
+        "right": "the table's replicas agree after the repair"
+      }
+    ],
+    "right_distractors": [
+      "hints were replayed"
+    ]
+  },
+  {
+    "id": "ex-51z01p1b",
+    "version": 1,
+    "section": "repair",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a repair session in order.",
+    "items": [
+      "Ask every replica for a Merkle tree of the range",
+      "Each replica reads its data and builds the tree",
+      "Compare the trees and create sync tasks for differing slices",
+      "Stream the differing slices between replicas"
+    ]
+  },
+  {
+    "id": "ex-vqra7et3",
+    "version": 1,
+    "section": "scheduling-repair",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table's `gc_grace_seconds` is 432000. Within how many days must every replica be repaired?",
+    "hint": "A day is 86400 seconds.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-rmfbfand",
+    "version": 1,
+    "section": "scheduling-repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a schedule usually run `nodetool repair -pr` on every node rather than plain `nodetool repair`?",
+    "choices": [
+      {
+        "text": "-pr is the only form that repairs tombstones",
+        "correct": false,
+        "why": "Both forms carry tombstones; -pr is about how much work is repeated."
+      },
+      {
+        "text": "-pr covers each range once",
+        "correct": true,
+        "why": "Right. With three copies that is a third of the work."
+      },
+      {
+        "text": "-pr runs without reading data",
+        "correct": false,
+        "why": "It still builds Merkle trees from the data."
+      },
+      {
+        "text": "Plain repair is refused on more than one node",
+        "correct": false,
+        "why": "It runs; it repeats work."
+      }
+    ]
+  },
+  {
+    "id": "ex-brb76nw4",
+    "version": 1,
+    "section": "scheduling-repair",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Repair has silently failed for three weeks and someone finally fixes the job. What does the lesson say to expect from its first successful run?",
+    "choices": [
+      {
+        "text": "Deleted rows coming back, copied from stale replicas",
+        "correct": true,
+        "why": "Right. The cost of a stopped repair is paid on the day it is fixed."
+      },
+      {
+        "text": "A quick run, since there has been little to repair",
+        "correct": false,
+        "why": "Three weeks of drift is more work, not less."
+      },
+      {
+        "text": "A refusal, because repair cannot run after gc_grace_seconds",
+        "correct": false,
+        "why": "Repair runs at any time; it just cannot restore purged tombstones."
+      },
+      {
+        "text": "Lost writes, since repair keeps the oldest version",
+        "correct": false,
+        "why": "Repair keeps the newest timestamp."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rr3sjsm",
+    "version": 1,
+    "section": "scheduling-repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should a repair alert watch, according to the lesson?",
+    "choices": [
+      {
+        "text": "Only repair commands that end with an error",
+        "correct": false,
+        "why": "A repair that never starts never errors."
+      },
+      {
+        "text": "The read repair count of the busiest table",
+        "correct": false,
+        "why": "Read repair covers only what is read."
+      },
+      {
+        "text": "The number of hint files on each coordinator",
+        "correct": false,
+        "why": "Hints say a node is down, not that repair has run."
+      },
+      {
+        "text": "The age of each node's last good repair",
+        "correct": true,
+        "why": "Right. It fires for a job that broke as well as one that fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5ynwfa4",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mechanism to what it misses.",
+    "pairs": [
+      {
+        "left": "hinted handoff",
+        "right": "a node down longer than max_hint_window"
+      },
+      {
+        "left": "read repair",
+        "right": "rows nobody reads"
+      },
+      {
+        "left": "repair",
+        "right": "nothing, if it runs within gc_grace_seconds"
+      }
+    ],
+    "right_distractors": [
+      "writes at QUORUM"
+    ]
+  },
+  {
+    "id": "ex-ch23gmrp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's cluster has never run repair, and reads at `QUORUM` have always looked right. Which statement fits this lesson?",
+    "choices": [
+      {
+        "text": "Correct QUORUM reads prove the replicas agree",
+        "correct": false,
+        "why": "Read repair fixes what is read; unread rows and stale copies stay behind."
+      },
+      {
+        "text": "Some deletes are now beyond repair",
+        "correct": true,
+        "why": "Right. The first repair they run could bring some of them back."
+      },
+      {
+        "text": "Hints have kept every replica up to date",
+        "correct": false,
+        "why": "Hints have limits, and a live replica that dropped a write never gets one."
+      },
+      {
+        "text": "Incremental repair runs on its own by default",
+        "correct": false,
+        "why": "The 5.0.9 node logged that auto-repair is disabled."
+      }
+    ]
+  }
+]

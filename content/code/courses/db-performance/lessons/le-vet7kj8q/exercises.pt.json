@@ -1,0 +1,415 @@
+{
+  "ex-qjj14qa0": {
+    "prompt": "`pgbench -c 8 -j 4 -T 30 bench` relata 3980 tps, e a carga da aula 2 na mesma máquina roda a cerca de um terço disso. Qual é a velocidade real do servidor?",
+    "hint": "Um benchmark mede um servidor rodando alguma coisa.",
+    "choices": [
+      {
+        "text": "3980, já que o teste embutido é o padrão",
+        "why": "É uma carga padrão, não a sua; o número dela não diz nada sobre o marketplace."
+      },
+      {
+        "text": "Os dois, cada um para a sua carga",
+        "why": "Isso: um benchmark mede um servidor rodando uma carga, nunca um servidor sozinho."
+      },
+      {
+        "text": "O menor, porque é o pior caso",
+        "why": "Nenhum é pior caso; respondem a perguntas diferentes."
+      },
+      {
+        "text": "A média dos dois, uns 2600",
+        "why": "A média de duas cargas não descreve nenhuma."
+      }
+    ]
+  },
+  "ex-5jh2p7h9": {
+    "prompt": "Por que o teste embutido com `-s 10` mede em parte espera por travas, e não a velocidade do servidor?",
+    "hint": "Conte as linhas de pgbench_branches.",
+    "choices": [
+      {
+        "text": "Toda transação toca uma de dez linhas",
+        "why": "Isso: dez linhas de agência para oito clientes; a escala define o número delas, e a disputa junto."
+      },
+      {
+        "text": "O pgbench pega uma trava de tabela antes de cada execução",
+        "why": "Ele roda comandos comuns; as esperas vêm de travas de linha em linhas disputadas."
+      },
+      {
+        "text": "O `-i` deixa as tabelas sem chave primária",
+        "why": "A saída da inicialização termina com `creating primary keys...`."
+      },
+      {
+        "text": "Ele roda VACUUM nas tabelas durante o teste",
+        "why": "Ele faz vacuum uma vez antes de começar, não durante."
+      }
+    ]
+  },
+  "ex-kveasjsj": {
+    "prompt": "Um colega cria um índice em `orders(status)` e roda de novo `pgbench -c 8 -T 30 bench` para ver se a loja ficou mais rápida. O que o número vai dizer?",
+    "hint": "Que tabelas o teste embutido toca?",
+    "choices": [
+      {
+        "text": "Se a contagem de pendentes ficou mais rápida",
+        "why": "O teste embutido nunca consulta orders."
+      },
+      {
+        "text": "Quanto o índice deixa as escritas mais lentas",
+        "why": "As escritas dele vão para tabelas pgbench_, onde o índice não está."
+      },
+      {
+        "text": "Se o índice foi criado corretamente",
+        "why": "Um benchmark não confere um índice que nunca usa."
+      },
+      {
+        "text": "Nada: roda nas próprias tabelas",
+        "why": "Isso: ele roda em bench, nas tabelas pgbench_; só a carga da loja mostra o índice."
+      }
+    ]
+  },
+  "ex-dxyyr0gf": {
+    "prompt": "De onde devem vir os pesos dos scripts de um benchmark?",
+    "hint": "Algo que o servidor já conta.",
+    "choices": [
+      {
+        "text": "Das contagens de chamadas do pg_stat_statements numa hora de pico",
+        "why": "Isso: a fração de chamadas de cada script é o peso dele."
+      },
+      {
+        "text": "Pesos iguais, para ser justo com todo script",
+        "why": "Justiça não é o objetivo; a mistura real é."
+      },
+      {
+        "text": "Do total_exec_time, para que os comandos lentos contem mais no peso",
+        "why": "Tempo é o resultado a medir, não a mistura a reproduzir."
+      },
+      {
+        "text": "Do que os desenvolvedores esperam",
+        "why": "Os pesos da aula 2 eram esse tipo de palpite."
+      }
+    ]
+  },
+  "ex-ejmyawwe": {
+    "prompt": "Por que o `weights.sql` conta o `place-order.sql` só pelo primeiro `INSERT`?",
+    "hint": "Quantos comandos uma compra envia?",
+    "choices": [
+      {
+        "text": "O UPDATE não é registrado pelo pg_stat_statements",
+        "why": "É registrado; a contagem da aula 2 o listou."
+      },
+      {
+        "text": "Os INSERT são o comando mais lento do script",
+        "why": "O COMMIT levou a maior parte do tempo; velocidade não é o motivo."
+      },
+      {
+        "text": "Uma compra contaria várias vezes",
+        "why": "Isso: um comando por script, para cada transação contar uma vez."
+      },
+      {
+        "text": "BEGIN e COMMIT pertencem a outro script",
+        "why": "Eles pertencem à mesma compra."
+      }
+    ]
+  },
+  "ex-jxts0zsb": {
+    "prompt": "O painel do vendedor rodou a 887 tps com `random(2, 1000)` e a 525 tps com `random_zipfian(1, 1000, 1.07)`. O que mudou?",
+    "hint": "O SQL é idêntico.",
+    "choices": [
+      {
+        "text": "A amostragem zipfian custa mais processador no pgbench",
+        "why": "As linhas \\set custam um milésimo de milissegundo."
+      },
+      {
+        "text": "Quais vendedores foram consultados",
+        "why": "Isso: o vendedor grande, agora consultado com frequência, tem muito mais linhas de dezembro para contar."
+      },
+      {
+        "text": "A segunda execução estava fria",
+        "why": "As duas rodaram em sequência num servidor quente."
+      },
+      {
+        "text": "Um índice deixou de ser usado",
+        "why": "Mesmo comando, mesmos índices; as linhas diferem."
+      }
+    ]
+  },
+  "ex-exqv7bfw": {
+    "prompt": "Numa contagem de uma hora de pico, o comando que identifica um script tem 6728 chamadas de 66875 contadas para os seis scripts. Que peso, em porcentagem com uma casa decimal, ele recebe?",
+    "hint": "A fração das chamadas.",
+    "unit": "%"
+  },
+  "ex-s15hph3e": {
+    "prompt": "Que linha de um relatório do pgbench você deve conferir antes de confiar nos outros números?",
+    "hint": "Uma execução em que transações falharam mediu outra coisa.",
+    "choices": [
+      {
+        "text": "`tps`",
+        "why": "A vazão de uma execução com falhas conta trabalho que não era a sua carga."
+      },
+      {
+        "text": "`initial connection time`",
+        "why": "Ela fica fora do tps e raramente importa."
+      },
+      {
+        "text": "`number of failed transactions`",
+        "why": "Isso: zero falhas primeiro, depois leia o resto."
+      },
+      {
+        "text": "`scaling factor`",
+        "why": "Para scripts próprios é só 1 e não significa nada."
+      }
+    ]
+  },
+  "ex-9p3873aa": {
+    "prompt": "Uma execução relata `latency average = 6.465 ms` e `latency stddev = 22.826 ms`. O que isso diz?",
+    "hint": "A latência não pode ficar abaixo de zero.",
+    "choices": [
+      {
+        "text": "A medição falhou e deve ser jogada fora",
+        "why": "É uma carga mista normal; os números estão certos."
+      },
+      {
+        "text": "Algumas lentas puxam a média",
+        "why": "Isso: a maioria é rápida; os blocos por script mostram leituras de 1 ms e uma contagem de 198 ms."
+      },
+      {
+        "text": "As transações típicas levam entre 0 e 29 ms",
+        "why": "Uma leitura simétrica do desvio não serve para uma dispersão assimétrica."
+      },
+      {
+        "text": "O servidor alternou segundos rápidos e lentos",
+        "why": "As linhas de progresso mexeram uns 10%, não um fator de três."
+      }
+    ]
+  },
+  "ex-cexq6dmy": {
+    "prompt": "Com `-r`, o script de compra mostra o `COMMIT` com 6.939 ms dos seus 9.368. Para onde vai esse tempo?",
+    "hint": "O que tem de ser verdade quando o COMMIT retorna?",
+    "choices": [
+      {
+        "text": "Esperar o registro chegar ao disco",
+        "why": "Isso: um commit espera a gravação ficar durável, e nenhum índice muda isso."
+      },
+      {
+        "text": "Conferir de novo cada chave estrangeira",
+        "why": "As chaves estrangeiras são conferidas pelos próprios INSERT aqui."
+      },
+      {
+        "text": "As linhas \\set do pgbench",
+        "why": "Elas custam um milésimo de milissegundo cada."
+      },
+      {
+        "text": "Reconstruir todos os índices de orders",
+        "why": "Os índices são atualizados durante o INSERT, não reconstruídos no commit."
+      }
+    ]
+  },
+  "ex-wf6vhrap": {
+    "prompt": "A opção do `pgbench` que imprime uma linha de vazão e latência a cada poucos segundos durante a execução é `-___`.",
+    "hint": "Progresso.",
+    "blanks": [
+      {
+        "accept": [
+          "P"
+        ]
+      }
+    ]
+  },
+  "ex-1bptzx9m": {
+    "prompt": "Por que um benchmark de dez segundos pode relatar um número enganoso?",
+    "hint": "Compare com as linhas de progresso.",
+    "choices": [
+      {
+        "text": "O pgbench precisa de um minuto para iniciar todas as threads e clientes",
+        "why": "As conexões levaram 8,7 ms."
+      },
+      {
+        "text": "Dez segundos são um intervalo de progresso, e eles variaram 10%",
+        "why": "Isso: relata o intervalo em que caiu, e perde o checkpoint ocasional."
+      },
+      {
+        "text": "O servidor recusa execuções curtas",
+        "why": "Nada as recusa; essa é a armadilha."
+      },
+      {
+        "text": "O tps não pode ser calculado com menos de trinta segundos",
+        "why": "Pode; só é menos confiável."
+      }
+    ]
+  },
+  "ex-smrbkj1h": {
+    "prompt": "`time pgbench … -T 30` em quatro processadores imprimiu `user 0m0.711s` e `sys 0m0.384s`. Que porcentagem do tempo de processador disponível na execução o pgbench usou, com uma casa decimal?",
+    "hint": "Disponível: 4 × 30 segundos.",
+    "unit": "%"
+  },
+  "ex-s3wzpm9p": {
+    "prompt": "Por que os benchmarks deste curso quase não tocam o disco depois do primeiro minuto?",
+    "hint": "Compare dois números do bloco de tamanhos.",
+    "choices": [
+      {
+        "text": "O pgbench lê de uma cópia na própria memória",
+        "why": "O pgbench envia SQL; o servidor lê os dados."
+      },
+      {
+        "text": "Os shared_buffers guardam o banco inteiro",
+        "why": "Eles têm 128 MB; quem guarda é o cache do sistema."
+      },
+      {
+        "text": "Os dados cabem na memória livre",
+        "why": "Isso: 1352 MB contra 14 GB; tudo cabe no cache do sistema, o que uma produção maior que a memória não consegue."
+      },
+      {
+        "text": "A carga só lê, então nada é gravado",
+        "why": "O place-order.sql escreve toda vez que roda."
+      }
+    ]
+  },
+  "ex-6tdmz4dm": {
+    "prompt": "Uma execução em laço fechado relata 6,5 ms de latência média a 1234 tps. A mesma carga com `-R 900` relata 17,1 ms, com 13,0 ms de schedule lag. Que latência um relatório sobre usuários deve citar, e por quê?",
+    "hint": "Quem espera quando o servidor está ocupado?",
+    "choices": [
+      {
+        "text": "6,5 ms, medida na vazão maior",
+        "why": "O laço fechado nunca enviou as transações que teriam ficado na fila."
+      },
+      {
+        "text": "17,1 menos 13,0, o tempo de fato gasto no servidor",
+        "why": "Usuários sentem a espera da vez também."
+      },
+      {
+        "text": "Nenhuma: só o tps importa para usuários",
+        "why": "Usuários sentem latência, não vazão."
+      },
+      {
+        "text": "17,1 ms: a espera conta para usuários",
+        "why": "Isso: usuários chegam de todo jeito, e uma taxa fixa conta a fila que o laço fechado esconde."
+      }
+    ]
+  },
+  "ex-smkj4xgr": {
+    "prompt": "Ligue cada armadilha ao sinal dela numa execução.",
+    "hint": "Um sinal cada.",
+    "pairs": [
+      {
+        "left": "curta demais",
+        "right": "intervalos de progresso que diferem tanto quanto a mudança medida"
+      },
+      {
+        "left": "fria",
+        "right": "a primeira execução de uma série é a mais baixa"
+      },
+      {
+        "left": "cliente na mesma máquina",
+        "right": "o tempo user e sys do próprio pgbench"
+      },
+      {
+        "left": "laço fechado",
+        "right": "latência que cai quando se oferece mais carga"
+      }
+    ],
+    "right_distractors": [
+      "Heap Blocks: lossy"
+    ]
+  },
+  "ex-9bf8f86n": {
+    "prompt": "Três execuções depois de uma cópia nova deram 1157, 1434 e 1311 tps. Por que o 1157 é jogado fora?",
+    "hint": "O que ainda não tinha acontecido antes dela?",
+    "choices": [
+      {
+        "text": "É o mais baixo, e resultados baixos são pessimistas",
+        "why": "Descartar por valor é escolher; ele é descartado pela posição."
+      },
+      {
+        "text": "Ela pagou para esquentar um banco recém-copiado",
+        "why": "Isso: a primeira execução de uma série é aquecimento, seja qual for o número."
+      },
+      {
+        "text": "A primeira execução do pgbench sempre inclui o vacuum",
+        "why": "Estas execuções usaram -n, sem vacuum."
+      },
+      {
+        "text": "O script de reset ainda estava rodando",
+        "why": "Ele já tinha terminado; a saída foi impressa antes da execução."
+      }
+    ]
+  },
+  "ex-g7a2x92r": {
+    "prompt": "Depois do aquecimento, duas execuções deram 1311 e 1434 tps. Uma mudança então mexe o número em 5%. O que foi mostrado?",
+    "hint": "Compare a mudança com a dispersão.",
+    "choices": [
+      {
+        "text": "Uma melhora de 5%",
+        "why": "O mesmo banco se mexeu 9% entre duas execuções."
+      },
+      {
+        "text": "Uma piora de 5%",
+        "why": "A direção não foi mostrada, tanto quanto o tamanho."
+      },
+      {
+        "text": "Nada ainda: 5% está dentro de um ruído de 9%",
+        "why": "Isso: são precisas mais execuções, ou mais longas, ou um efeito maior; a aula 24 decide."
+      },
+      {
+        "text": "Que o benchmark está quebrado",
+        "why": "Ruído é normal; um benchmark sem ele seria suspeito."
+      }
+    ]
+  },
+  "ex-p0m7a9xa": {
+    "prompt": "Ponha os passos de uma série de benchmark em ordem.",
+    "hint": "Estado primeiro, números por último.",
+    "items": [
+      "Restaurar os dados a um estado conhecido",
+      "Rodar uma vez e descartar",
+      "Rodar o mesmo comando pelo menos três vezes",
+      "Informar a mediana e a faixa, com o comando"
+    ],
+    "trap": "Informar antes de descartar o aquecimento põe uma execução fria na média."
+  },
+  "ex-t8ky2e9w": {
+    "prompt": "Quais destas deixam um benchmark mais parecido com a produção? Marque todas as que se aplicam.",
+    "hint": "As quatro frentes que uma carga reproduz, e as armadilhas.",
+    "choices": [
+      {
+        "text": "Pesos das contagens de chamadas do pg_stat_statements",
+        "why": "Certo: a mistura real."
+      },
+      {
+        "text": "Parâmetros sorteados com a assimetria que os dados têm",
+        "why": "Certo: o painel caiu de 887 para 525 tps com ela."
+      },
+      {
+        "text": "Uma cópia dos dados do tamanho da produção",
+        "why": "Certo: senão mede um banco em cache."
+      },
+      {
+        "text": "O teste embutido tipo TPC-B numa escala maior",
+        "why": "Um banco maior ainda é um banco."
+      },
+      {
+        "text": "A execução mais curta que dê um número",
+        "why": "Execuções curtas relatam o intervalo em que caem."
+      }
+    ]
+  },
+  "ex-mxdp1cvd": {
+    "prompt": "Uma equipe testa um servidor novo com a carga da aula 2: 10 segundos, uma execução, cliente no servidor, uma cópia de 2 GB de um banco de 400 GB. Relata 30% mais tps que o servidor antigo. Qual é a objeção mais forte?",
+    "hint": "Que armadilha muda o que está sendo medido, e não só a precisão?",
+    "choices": [
+      {
+        "text": "Uma cópia de 2 GB cabe na memória; 400 GB não",
+        "why": "Isso: o disco de que 400 GB precisam nunca foi medido. As outras acrescentam ruído; esta mede outro sistema."
+      },
+      {
+        "text": "Uma execução é ruidosa",
+        "why": "Verdade, e uma diferença de 30% talvez sobreviva; o tamanho da cópia não some com repetição."
+      },
+      {
+        "text": "O pgbench rodando no servidor rouba tempo de processador",
+        "why": "Menos de um por cento para esta carga."
+      },
+      {
+        "text": "Dez segundos perdem checkpoints",
+        "why": "Uma falha real, mas menor que medir um banco em cache."
+      }
+    ]
+  }
+}

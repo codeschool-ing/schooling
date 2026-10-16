@@ -1,0 +1,58 @@
+---
+title: O curso numa página
+version: 1
+---
+
+**Este curso começou com um cliente de sessenta anos cobrado pelo preço cheio, e desde então tratou de uma pergunta:
+como um time chega a saber que o seu software é bom o bastante, e como o torna assim?** Vinte e duas aulas depois, eis
+a resposta que o curso foi construindo, na ordem em que a construiu.
+
+## Qualidade é algo que um time faz
+
+- **Qualidade é adequação às pessoas que usam o produto**, vários tipos de pessoas com necessidades diferentes, e as
+  características da ISO 25010 são uma lista do que elas podem precisar (aulas 1 e 2).
+- **Prevenir é mais barato que detectar, e detectar é mais barato quanto mais cedo acontece.** Uma pergunta feita
+  sobre uma frase custa uma resposta; o mesmo defeito achado por um cliente custa dinheiro e confiança (aulas 1 e 3).
+- **O teste fornece informação, não garantias.** Acha defeitos, não consegue provar que eles não existem, e o trabalho
+  de quem testa é evidência, não suspeita (aulas 4 e 5).
+- **Quem testa não é o guardião do *não pode entregar*.** A qualidade é do time todo, e a contribuição particular de
+  quem testa são as perguntas, os casos em que ninguém pensou, e a honestidade sobre o que não se sabe (aula 5).
+
+## Técnicas para achar o que está errado
+
+- Casos de **caixa-preta** vêm da regra: partições, bordas, combinações, e as entradas que ninguém mencionou (aula 6).
+  Verificações de **caixa-branca** olham o código, e a cobertura mede o que rodou, não o que foi conferido (aula 7). O
+  teste de **caixa-cinza** usa o que se sabe do lado de dentro para mirar testes do lado de fora (aula 8).
+
+## Jeitos de trabalhar
+
+- A **cascata** e o **modelo V** põem o teste no fim e pagam a curva de custo inteira (aula 9). O desenvolvimento
+  **iterativo** encurta o laço (aula 10). Os métodos **ágeis** encurtam o laço o bastante para o teste precisar ser
+  contínuo, e lhe dão lugares para acontecer: os eventos e a definição de pronto do Scrum, os limites e as políticas do
+  Kanban, as práticas do XP, o System Team do SAFe (aulas 11 a 14).
+- **TDD, BDD e ATDD** põem os testes antes do código, em três níveis: a unidade de quem desenvolve, uma linguagem
+  compartilhada, os exemplos combinados da história (aulas 15 a 17).
+
+## Julgamento
+
+- A **análise de causa raiz** pergunta por que um defeito foi possível, para o próximo não ser (aula 18).
+- **Um oráculo** é como quem testa sabe que um resultado está certo, e todo oráculo pode estar errado (aula 19).
+- **Priorizar** gasta o tempo limitado onde está o risco, e diz em voz alta o que ficou de fora (aula 20).
+- **Critérios de entrada e de saída** levam decisões para momentos calmos e põem a decisão de entrega com quem responde
+  por ela (aula 21).
+- **Métricas** respondem perguntas, ou viram teatro (aula 22).
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 680 220\" role=\"img\" data-fig=\"l22-course\" aria-label=\"O curso em quatro grupos. Qualidade, aulas 1 a 5: prevenir e detectar, a curva de custo, evidência e não suspeita, o time todo. Técnicas, aulas 6 a 8: caixa-preta, caixa-branca, caixa-cinza. Jeitos de trabalhar, aulas 9 a 17: cascata e V, iterativo e ágil, Scrum, Kanban, XP e SAFe, e TDD, BDD e ATDD. Julgamento, aulas 18 a 22: causas raiz, oráculos, prioridades, entrada e saída, métricas.\"><rect x=\"10.0\" y=\"10.0\" width=\"158.0\" height=\"200.0\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"89.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--amber)\">qualidade</text><text x=\"89.0\" y=\"46.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1–5</text><rect x=\"20.0\" y=\"60.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"89.0\" y=\"72.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">prevenir e detectar</text><rect x=\"20.0\" y=\"89.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"89.0\" y=\"101.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">a curva de custo</text><rect x=\"20.0\" y=\"118.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"89.0\" y=\"130.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">evidência, não suspeita</text><rect x=\"20.0\" y=\"147.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"89.0\" y=\"159.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">o time todo</text><rect x=\"178.0\" y=\"10.0\" width=\"158.0\" height=\"200.0\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"257.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">técnicas</text><text x=\"257.0\" y=\"46.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">6–8</text><rect x=\"188.0\" y=\"60.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"257.0\" y=\"72.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">caixa-preta</text><rect x=\"188.0\" y=\"89.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"257.0\" y=\"101.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">caixa-branca</text><rect x=\"188.0\" y=\"118.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"257.0\" y=\"130.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">caixa-cinza</text><rect x=\"346.0\" y=\"10.0\" width=\"158.0\" height=\"200.0\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">jeitos de trabalhar</text><text x=\"425.0\" y=\"46.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">9–17</text><rect x=\"356.0\" y=\"60.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"72.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">cascata e V</text><rect x=\"356.0\" y=\"89.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"101.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">iterativo e ágil</text><rect x=\"356.0\" y=\"118.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"130.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">Scrum, Kanban, XP, SAFe</text><rect x=\"356.0\" y=\"147.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"425.0\" y=\"159.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">TDD, BDD, ATDD</text><rect x=\"514.0\" y=\"10.0\" width=\"158.0\" height=\"200.0\" rx=\"6\" fill=\"var(--ink)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"593.0\" y=\"30.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--amber)\">julgamento</text><text x=\"593.0\" y=\"46.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">18–22</text><rect x=\"524.0\" y=\"60.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"593.0\" y=\"72.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">causas raiz</text><rect x=\"524.0\" y=\"89.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"593.0\" y=\"101.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">oráculos</text><rect x=\"524.0\" y=\"118.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"593.0\" y=\"130.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">prioridades</text><rect x=\"524.0\" y=\"147.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"593.0\" y=\"159.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">entrada e saída</text><rect x=\"524.0\" y=\"176.0\" width=\"138.0\" height=\"24.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"593.0\" y=\"188.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"8.5\" fill=\"var(--paper)\">métricas</text></svg>", "caption": "Vinte e duas aulas, quatro grupos. O primeiro e o último são julgamento; o meio é aquilo com que o julgamento trabalha.", "same": ["Scrum, Kanban, XP, SAFe", "TDD, BDD, ATDD"]}
+```
+
+## O que vem a seguir
+
+O curso `manual-testing` leva a metade prática deste mais longe: planos de teste, casos de teste que outra pessoa
+consegue rodar sem fazer uma pergunta, técnicas de projeto como tabelas de decisão e transições de estado, os tipos de
+teste do smoke à aceitação, e relatos de defeito com severidade e prioridade. Tudo ali supõe o vocabulário deste curso,
+e acima de tudo a sua postura: que o trabalho de quem testa é garantir que ninguém entregue sem saber o que está
+entregando, e que os melhores defeitos são os prevenidos por uma pergunta feita cedo o bastante.
+
+A Lia continua no Cine Aurora. Na segunda começa o próximo ciclo, a verificação de relações está nos critérios de
+entrada, e a Joana tem uma ideia nova para o quadro de preços. A Lia já tem quatro perguntas sobre ela.

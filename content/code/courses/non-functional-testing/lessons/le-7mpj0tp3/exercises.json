@@ -1,0 +1,466 @@
+[
+ {
+  "id": "ex-mbakapkm",
+  "version": 1,
+  "section": "two-models",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a closed model, what decides how many requests a second the test sends?",
+  "hint": "Nobody writes the rate down in a closed model.",
+  "choices": [
+   {
+    "text": "A rate of requests a second written in the script",
+    "correct": false,
+    "why": "That is the open model. A closed test states users and think time, and the rate comes out of them."
+   },
+   {
+    "text": "Users, think time and response time",
+    "correct": true,
+    "why": "Right. Each user sends one request per loop, and the loop lasts the response plus the think time."
+   },
+   {
+    "text": "The length of the ramp-up",
+    "correct": false,
+    "why": "The ramp decides how fast the users start, not how often each one sends once started."
+   },
+   {
+    "text": "The number of processors on the generator",
+    "correct": false,
+    "why": "A generator with spare processors still waits for each answer before the next request."
+   }
+  ]
+ },
+ {
+  "id": "ex-j9m870mn",
+  "version": 1,
+  "section": "two-models",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The server under a closed test slows from 20 ms to two seconds a request. What happens to the load the test offers?",
+  "hint": "What is every virtual user doing while it waits?",
+  "choices": [
+   {
+    "text": "It stays the same, since the user count did not change",
+    "correct": false,
+    "why": "The users are the same, and each one now sends far less often, because it waits for every answer."
+   },
+   {
+    "text": "It rises, because the users retry the slow requests",
+    "correct": false,
+    "why": "Nothing in a closed loop retries; it waits, then thinks, then sends the next one."
+   },
+   {
+    "text": "It moves to an open model on its own",
+    "correct": false,
+    "why": "The model is a property of the generator, and it does not change mid-run."
+   },
+   {
+    "text": "It falls, as each user waits longer",
+    "correct": true,
+    "why": "Right. The users slow down with the server, so the test asks for less exactly when the server struggles."
+   }
+  ]
+ },
+ {
+  "id": "ex-sh0rc2p0",
+  "version": 1,
+  "section": "two-models",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these systems is modelled best by a closed workload?",
+  "hint": "Does anybody new arrive while the system is slow?",
+  "choices": [
+   {
+    "text": "Eight workers draining a job queue",
+    "correct": true,
+    "why": "Right. The population is fixed at eight, and none of them starts a job before finishing the last."
+   },
+   {
+    "text": "The box office when a popular show goes on sale",
+    "correct": false,
+    "why": "People at a sale arrive whether or not the server has answered the people before them."
+   },
+   {
+    "text": "A news site in the minutes after a big headline",
+    "correct": false,
+    "why": "Readers arriving from a headline do not wait for each other: an open arrival rate."
+   },
+   {
+    "text": "A public API called by thousands of unrelated clients",
+    "correct": false,
+    "why": "Unrelated clients arrive independently, which is the open model."
+   }
+  ]
+ },
+ {
+  "id": "ex-eda7jt20",
+  "version": 1,
+  "section": "two-models",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A closed test with too few users reports a public site as slow but error-free, while a real crowd brings it down. What went wrong in the test?",
+  "hint": "Coordinated omission.",
+  "choices": [
+   {
+    "text": "The users thought for too long between requests",
+    "correct": false,
+    "why": "Long think time lowers the rate, but the defect is that the rate fell further when the server slowed."
+   },
+   {
+    "text": "The ramp-up was too slow to reach the load",
+    "correct": false,
+    "why": "A slow ramp delays the load; it does not remove it once the users are running."
+   },
+   {
+    "text": "The slowdown stopped the users sending the requests that would have exposed it",
+    "correct": true,
+    "why": "Right. Generator and server coordinated without meaning to, and the missing requests were the slow ones."
+   },
+   {
+    "text": "The site had a cache the crowd did not hit",
+    "correct": false,
+    "why": "Possible on some site, and nothing in the description points to it; the model explains it on its own."
+   }
+  ]
+ },
+ {
+  "id": "ex-ghd8kbk2",
+  "version": 1,
+  "section": "virtual-users",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A hundred virtual users with no think time sent 140 requests a second to the box office. What did that run measure?",
+  "hint": "How much would a hundred people reading each page for four seconds ask for?",
+  "choices": [
+   {
+    "text": "The load that a hundred real people would put on the server",
+    "correct": false,
+    "why": "A hundred people thinking four seconds each ask for about 25 a second, not 140."
+   },
+   {
+    "text": "How much the server could finish, whatever was asked",
+    "correct": true,
+    "why": "Right. With no pause, every user resends the moment it is answered, so the server sets the rate."
+   },
+   {
+    "text": "The arrival rate of the ten o'clock sale",
+    "correct": false,
+    "why": "The sale is an arrival rate worked out from people and visits; this run has no people in it."
+   },
+   {
+    "text": "The capacity of the load generator",
+    "correct": false,
+    "why": "The generator kept a hundred requests in flight; it was waiting on the server, not the other way round."
+   }
+  ]
+ },
+ {
+  "id": "ex-y6eadq5p",
+  "version": 1,
+  "section": "virtual-users",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A virtual user is paced at one iteration every 10 seconds, and an iteration's requests take 3 seconds. How many seconds does it sleep before the next iteration?",
+  "hint": "Pacing is measured from start to start.",
+  "value": 7,
+  "tolerance": 0,
+  "unit": "s"
+ },
+ {
+  "id": "ex-5cgxr6qs",
+  "version": 1,
+  "section": "virtual-users",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does a load test ramp its users up instead of starting them all at once?",
+  "hint": "Two hundred users starting in the same instant send what?",
+  "choices": [
+   {
+    "text": "Because generators refuse to start many threads together",
+    "correct": false,
+    "why": "A generator can start them together; it is the result that suffers."
+   },
+   {
+    "text": "To make the test run for longer",
+    "correct": false,
+    "why": "The length of the run is set separately; the ramp is measured apart from it."
+   },
+   {
+    "text": "So the test does not open with a burst nobody asked for",
+    "correct": true,
+    "why": "Right. A start in one instant is a spike, and it would describe itself instead of the load being tested."
+   },
+   {
+    "text": "So the think time can be shorter",
+    "correct": false,
+    "why": "Think time is a property of the users, and the ramp does not change it."
+   }
+  ]
+ },
+ {
+  "id": "ex-ydwyfefa",
+  "version": 1,
+  "section": "virtual-users",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Think time is counted from the end of an answer; pacing is counted from the ___ of one iteration to the ___ of the next.",
+  "hint": "Pacing does not care how long the answer took.",
+  "blanks": [
+   {
+    "accept": [
+     "start",
+     "beginning"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   },
+   {
+    "accept": [
+     "start",
+     "beginning"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-vtvqeycs",
+  "version": 1,
+  "section": "littles-law",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Requests arrive at a server at 50 a second and each spends 0.2 seconds inside it. On average, how many requests are inside at once?",
+  "hint": "L = λ × W.",
+  "value": 10,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-hpahpjzd",
+  "version": 1,
+  "section": "littles-law",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Thirty virtual users think for 2.9 seconds each, and the server answers in 0.1 seconds. How many requests a second do they send?",
+  "hint": "N = X × (R + Z), solved for X.",
+  "value": 10,
+  "tolerance": 0,
+  "unit": "requests/s"
+ },
+ {
+  "id": "ex-vkmgbrmf",
+  "version": 1,
+  "section": "littles-law",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Little's law is written with means, in a course that warns against the mean. Why is the mean right here?",
+  "hint": "What kind of statement is the law?",
+  "choices": [
+   {
+    "text": "Because percentiles are not defined for a queue",
+    "correct": false,
+    "why": "Percentiles of time in a queue exist and are useful; they are just not what the law relates."
+   },
+   {
+    "text": "Because the box office is too small to need a percentile",
+    "correct": false,
+    "why": "Size has nothing to do with it; the law holds for any stable system."
+   },
+   {
+    "text": "Because lesson 8 says the mean is right for throughput",
+    "correct": false,
+    "why": "Lesson 8 is about reading response times; the reason here is the law's own."
+   },
+   {
+    "text": "Because the law is an identity about totals",
+    "correct": true,
+    "why": "Right. Totals divided by time give means, and the identity holds between those means exactly."
+   }
+  ]
+ },
+ {
+  "id": "ex-v0nhm9rv",
+  "version": 1,
+  "section": "the-sale",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Five people for every one of the 300 seats arrive in the first minute, and each visit is five requests. How many requests a second does the site receive in that minute?",
+  "hint": "People a second, times requests a person.",
+  "value": 125,
+  "tolerance": 0,
+  "unit": "requests/s"
+ },
+ {
+  "id": "ex-dmvfk875",
+  "version": 1,
+  "section": "the-sale",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the sale's split by operation matter more than its total of 100 requests a second?",
+  "hint": "Are all five requests of a visit the same cost?",
+  "choices": [
+   {
+    "text": "The show page is the costly read and the booking takes a lock",
+    "correct": true,
+    "why": "Right. 60 a second of the expensive read and 20 of the locked write are two different tests."
+   },
+   {
+    "text": "Totals are not allowed in a requirement",
+    "correct": false,
+    "why": "A total can go in a requirement; it just hides which operation will fail first."
+   },
+   {
+    "text": "The list of shows is cached by the browser",
+    "correct": false,
+    "why": "Nothing in the box office says so, and the list is the cheapest of the three anyway."
+   },
+   {
+    "text": "Every operation needs its own load generator",
+    "correct": false,
+    "why": "One generator can send all three; the split is about what each costs the server."
+   }
+  ]
+ },
+ {
+  "id": "ex-g6k79b59",
+  "version": 1,
+  "section": "the-sale",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The model said 240 users thinking 4 s would send 60 requests a second, and the box office received 59.9. What else had to be true for the two to agree?",
+  "hint": "Look at R in the output.",
+  "choices": [
+   {
+    "text": "That the ramp lasted exactly ten seconds",
+    "correct": false,
+    "why": "The ramp only decides when measurement starts; any length would give the same steady rate."
+   },
+   {
+    "text": "That the requests went to one show",
+    "correct": false,
+    "why": "Any show page costs about the same; the agreement does not depend on which."
+   },
+   {
+    "text": "That the server kept up, so R stayed small",
+    "correct": true,
+    "why": "Right. At 18.2 ms the response time added almost nothing to the 4 s loop; a slow server would have cut the rate."
+   },
+   {
+    "text": "That no other test was running on the machine at the time",
+    "correct": false,
+    "why": "Other work makes the numbers noisier, and the arithmetic agreed with it present."
+   }
+  ]
+ },
+ {
+  "id": "ex-v59455wn",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps from a crowd to a number of virtual users in order.",
+  "hint": "The order of \"The ten o'clock sale, as a number\".",
+  "items": [
+   "estimate how many people arrive, and when",
+   "divide by the time to get people a second",
+   "multiply by the requests each visit makes",
+   "split the rate by operation",
+   "multiply by response time plus think time"
+  ]
+ },
+ {
+  "id": "ex-j4w9mhdc",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test sized at 101 users and 2 s of think time, to offer 50 requests a second, reports 25 a second and no errors, with responses near 2 s. What does it tell you about the requirement of 50 a second?",
+  "hint": "Was 50 a second ever offered?",
+  "choices": [
+   {
+    "text": "It was met, since no request failed",
+    "correct": false,
+    "why": "No request failed because only 25 a second were sent; the requirement asks about 50."
+   },
+   {
+    "text": "Nothing, since 50 a second was never offered",
+    "correct": true,
+    "why": "Right. 101 / (2 + 2) is about 25. Run it as an arrival rate, or size it for the real R, to ask the question."
+   },
+   {
+    "text": "That the server's capacity is 50 requests a second",
+    "correct": false,
+    "why": "It answered 25 a second at about 2 s each; nothing here shows it carrying 50."
+   },
+   {
+    "text": "That the think time should be raised to compensate",
+    "correct": false,
+    "why": "Longer think time would send even less; the users were already the limit."
+   }
+  ]
+ },
+ {
+  "id": "ex-ta3d3yj7",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A closed test must offer 30 requests a second, with 5 seconds of think time and responses of 0.5 seconds. How many virtual users does it need?",
+  "hint": "N = X × (R + Z).",
+  "value": 165,
+  "tolerance": 1,
+  "unit": "users"
+ },
+ {
+  "id": "ex-g44c0vn3",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each term to what it means.",
+  "hint": "Two of them are about time between requests.",
+  "pairs": [
+   {
+    "left": "think time",
+    "right": "the pause from an answer to the next request"
+   },
+   {
+    "left": "pacing",
+    "right": "a fixed interval from one iteration's start to the next"
+   },
+   {
+    "left": "ramp-up",
+    "right": "the period over which the users are started"
+   },
+   {
+    "left": "virtual user",
+    "right": "a loop that sends, waits, thinks and sends again"
+   },
+   {
+    "left": "arrival rate",
+    "right": "requests a second, whether or not earlier ones were answered"
+   }
+  ],
+  "right_distractors": [
+   "the time the server spends on one request"
+  ]
+ }
+]

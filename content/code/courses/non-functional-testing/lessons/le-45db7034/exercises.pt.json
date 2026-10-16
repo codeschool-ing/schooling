@@ -1,0 +1,327 @@
+{
+ "ex-8ft3s1vj": {
+  "prompt": "Que pergunta a autorização responde?",
+  "hint": "A autenticação vem antes.",
+  "choices": [
+   {
+    "text": "Quem é esta pessoa, e como foi que ela provou isso?",
+    "why": "Isso é autenticação: uma senha ou um token identifica quem chama."
+   },
+   {
+    "text": "A senha está guardada com sal?",
+    "why": "Uma questão de armazenamento; não diz nada sobre o que quem está logado pode fazer."
+   },
+   {
+    "text": "Quem chama tem permissão para isto?",
+    "why": "Certo. A pergunta é feita de novo a cada requisição, sobre um registro ou uma ação."
+   },
+   {
+    "text": "A sessão já venceu, ou ainda continua viva agora?",
+    "why": "A expiração decide se quem chama ainda está identificado, o que é o lado da autenticação."
+   }
+  ]
+ },
+ "ex-13e8vnjf": {
+  "prompt": "Ligue cada teste ao tipo de escalonamento que ele confere.",
+  "hint": "Para o lado ou para cima.",
+  "pairs": [
+   {
+    "left": "bia pede a reserva de ana",
+    "right": "horizontal"
+   },
+   {
+    "left": "ana pede a lista da equipe",
+    "right": "vertical"
+   },
+   {
+    "left": "uma conta da equipe pede a lista da equipe",
+    "right": "o controle"
+   }
+  ],
+  "right_distractors": [
+   "autenticação"
+  ]
+ },
+ "ex-26x5k92x": {
+  "prompt": "O account.py responde ao pedido de bia pela reserva de ana e ao pedido por uma reserva inexistente com o mesmo 404. Por que esse desenho é razoável?",
+  "hint": "O que duas respostas diferentes contariam a um estranho?",
+  "choices": [
+   {
+    "text": "Duas respostas revelariam quais reservas existem",
+    "why": "Certo. Uma recusa que parece ausência não conta nada a um estranho sobre outros clientes."
+   },
+   {
+    "text": "Um 404 é mais rápido de calcular que um 403",
+    "why": "Os dois são uma linha de status; a velocidade não é o motivo."
+   },
+   {
+    "text": "O HTTP proíbe um 403 para um recurso de outra pessoa",
+    "why": "O HTTP permite; um 403 para os dois é a outra escolha razoável."
+   },
+   {
+    "text": "O framework de teste não distingue um 403 de um 404",
+    "why": "O unittest compara códigos de status exatamente; ele os distingue."
+   }
+  ]
+ },
+ "ex-0cse6shj": {
+  "prompt": "Por que o teste vertical também pede a lista da equipe com uma conta da equipe, que recebe 200?",
+  "hint": "Um teste que só confere recusas passa em quê?",
+  "choices": [
+   {
+    "text": "Contas da equipe vencem mais rápido e precisam ser renovadas",
+    "why": "As sessões duram o mesmo para todo papel no account.py."
+   },
+   {
+    "text": "Para criar o papel da equipe, que nenhuma rota concede",
+    "why": "O papel é concedido no banco antes da requisição; a requisição só lê a lista."
+   },
+   {
+    "text": "Porque 403 não é uma resposta válida para um cliente",
+    "why": "403 é exatamente a resposta que o cliente tem de receber."
+   },
+   {
+    "text": "Sem isso, uma rota quebrada para todos ainda passaria",
+    "why": "Certo. O 200 é o controle: prova que a recusa é a verificação de papel, e não uma rota morta."
+   }
+  ]
+ },
+ "ex-mep0k192": {
+  "prompt": "O que o account.py faz com um token válido posto no endereço em vez do cabeçalho?",
+  "hint": "A transcrição responde 401.",
+  "choices": [
+   {
+    "text": "Aceita, mas grava um aviso no log",
+    "why": "Ele não aceita: a requisição é tratada como anônima."
+   },
+   {
+    "text": "É ignorado: anônima, então 401",
+    "why": "Certo. Um endereço é copiado em históricos, logs e cabeçalhos Referer."
+   },
+   {
+    "text": "Move o token para um cookie na próxima requisição",
+    "why": "Nada disso acontece; o token na URL simplesmente não é lido."
+   },
+   {
+    "text": "Encerra a sessão, porque o token ficou exposto",
+    "why": "Uma ideia razoável, mas não é o que o account.py faz: o cabeçalho continuou funcionando até o logout."
+   }
+  ]
+ },
+ "ex-9gwx91rf": {
+  "prompt": "Um botão de logout apaga o token no navegador mas deixa a linha da sessão no servidor. O que vê quem clicou, e o que está errado?",
+  "hint": "Quem mais pode ter uma cópia do token?",
+  "choices": [
+   {
+    "text": "Uma página de erro, porque o servidor rejeita o logout",
+    "why": "Nada falha de forma visível; é isso que torna o defeito fácil de ir para produção."
+   },
+   {
+    "text": "Nada errado, já que o token guardado no navegador é a única cópia que existe",
+    "why": "Cópias acabam em logs, proxies e outros aparelhos; o servidor tem de esquecê-lo."
+   },
+   {
+    "text": "Uma tela de saída, enquanto qualquer cópia do token ainda abre a conta",
+    "why": "Certo. Parece idêntico a um logout de verdade, e é por isso que a aula 16 o testa com uma requisição depois do logout."
+   },
+   {
+    "text": "Um login mais lento na próxima vez",
+    "why": "A velocidade do login não tem relação com sessões antigas sobreviverem."
+   }
+  ]
+ },
+ "ex-e1ckwe37": {
+  "prompt": "Ligue cada marca do cookie ao que ela faz.",
+  "hint": "A linha Set-Cookie da seção.",
+  "pairs": [
+   {
+    "left": "HttpOnly",
+    "right": "mantém o cookie longe do JavaScript da página"
+   },
+   {
+    "left": "SameSite=Lax",
+    "right": "deixa-o de fora de formulários enviados por outro site"
+   },
+   {
+    "left": "Secure",
+    "right": "manda-o só por HTTPS"
+   },
+   {
+    "left": "Max-Age=1800",
+    "right": "deixa o navegador esquecê-lo depois de meia hora"
+   }
+  ],
+  "right_distractors": [
+   "criptografa o valor do cookie"
+  ]
+ },
+ "ex-3z6dvycx": {
+  "prompt": "Por que a marca Secure está ausente do cookie do account.py no laboratório?",
+  "hint": "O que o serviço fala com 127.0.0.1?",
+  "choices": [
+   {
+    "text": "O laboratório fala HTTP simples, onde não seria mandado",
+    "why": "Certo. Atrás de HTTPS, numa implantação real, ela vai em todo cookie de sessão."
+   },
+   {
+    "text": "Porque o HttpOnly já implica Secure em todo cookie",
+    "why": "HttpOnly e Secure são marcas independentes."
+   },
+   {
+    "text": "Porque o SameSite=Lax torna a marca Secure desnecessária",
+    "why": "O SameSite trata de quais sites o mandam, não do canal."
+   },
+   {
+    "text": "Porque o http.server do Python não consegue defini-la",
+    "why": "O Python consegue; o motivo é o laboratório em HTTP simples."
+   }
+  ]
+ },
+ "ex-qt18j02q": {
+  "prompt": "Quantos segundos dura uma sessão do account.py quando ACCOUNT_SESSION_SECONDS não está definida?",
+  "hint": "SESSION_SECONDS."
+ },
+ "ex-s81h62bw": {
+  "prompt": "ana, bia e sam escolheram a mesma senha, e os três hashes guardados não têm nada em comum. Por quê?",
+  "hint": "Olhe a segunda coluna.",
+  "choices": [
+   {
+    "text": "O scrypt soma a hora atual a cada hash",
+    "why": "O scrypt é determinístico para uma senha e um sal; o que muda é o sal."
+   },
+   {
+    "text": "O banco criptografa cada linha com uma chave diferente",
+    "why": "Não há criptografia; é um hash lento com sal."
+   },
+   {
+    "text": "O SQLite embaralha colunas de texto ao guardá-las",
+    "why": "O SQLite guarda o que recebe, byte a byte."
+   },
+   {
+    "text": "Cada conta tem o seu próprio sal aleatório",
+    "why": "Certo. Sem ele, uma senha descoberta abriria todas as contas que a compartilham."
+   }
+  ]
+ },
+ "ex-0qqmfxp7": {
+  "prompt": "Por que um token de sessão pode ser guardado como um SHA-256 simples quando uma senha precisa de scrypt?",
+  "hint": "Quem escolheu o token?",
+  "choices": [
+   {
+    "text": "Tokens são mais curtos que senhas",
+    "why": "O tamanho não é a questão; 32 bytes aleatórios é mais que a maioria das senhas."
+   },
+   {
+    "text": "Bytes aleatórios que ninguém escolheu: nada a chutar",
+    "why": "Certo. Um hash lento protege segredos chutáveis; um token aleatório não é chutável."
+   },
+   {
+    "text": "O SHA-256 é mais lento que o scrypt",
+    "why": "Ele é bem mais rápido; é por isso que seria errado para uma senha."
+   },
+   {
+    "text": "Tokens são apagados no logout, então não precisam de proteção",
+    "why": "Tokens vivos ficam na tabela; uma cópia dela não pode abrir contas."
+   }
+  ]
+ },
+ "ex-dkh32wja": {
+  "prompt": "O login responde a uma senha errada e a um nome desconhecido com o mesmo 401 e a mesma frase, mas o nome desconhecido volta em 0,2 ms e a senha errada em 45 ms. O que isso vaza, e o que corrige?",
+  "hint": "O relógio diz o que as palavras não dizem.",
+  "choices": [
+   {
+    "text": "Nada, já que status e corpo são idênticos",
+    "why": "O tempo sozinho diz a um estranho quais nomes têm conta."
+   },
+   {
+    "text": "A própria senha; criptografar o corpo da resposta",
+    "why": "Nenhuma senha vaza de uma diferença de tempo desse tipo."
+   },
+   {
+    "text": "Quais nomes têm conta; conferir nomes desconhecidos contra um hash isca",
+    "why": "Certo. O account.py roda o mesmo scrypt lento contra DECOY, então os dois custam o mesmo."
+   },
+   {
+    "text": "O sal; guardar os sais em outra tabela",
+    "why": "O sal nunca sai do servidor; o vazamento é se a conta existe."
+   }
+  ]
+ },
+ "ex-v2p8cerz": {
+  "prompt": "Depois de cinco logins errados seguidos, o account.py recusa até a senha certa e responde com o status ___.",
+  "hint": "Too Many Requests.",
+  "blanks": [
+   {
+    "accept": [
+     "429"
+    ]
+   }
+  ]
+ },
+ "ex-ep2m7kdh": {
+  "prompt": "Um time põe em produção um limite de cinco logins errados por nome. Uma semana depois, uma cliente reclama que fica bloqueada toda manhã, embora nunca erre a senha. O que a aula diz que explica isso?",
+  "hint": "Quem mais pode digitar o nome dela?",
+  "choices": [
+   {
+    "text": "Alguém chuta errado no nome dela de propósito",
+    "why": "Certo. Um limite por nome deixa qualquer um bloquear qualquer um, e por isso serviços reais também limitam por endereço, desaceleram ou pedem um segundo fator."
+   },
+   {
+    "text": "O navegador dela salva a senha errada toda noite",
+    "why": "Aí seria ela errando; a reclamação é que ela nunca erra."
+   },
+   {
+    "text": "A validade da sessão é curta demais",
+    "why": "A expiração a desloga; não recusa o login dela."
+   },
+   {
+    "text": "O scrypt falha com a carga da manhã e a bloqueia",
+    "why": "Um hash lento deixa o login mais lento, não recusado com bloqueio."
+   }
+  ]
+ },
+ "ex-kvv2x619": {
+  "prompt": "Com a linha que termina em # role check comentada, exatamente um dos nove testes de sessão reprova. O que isso diz sobre a suíte?",
+  "hint": "A aula 16 fez o mesmo com a verificação de dono.",
+  "choices": [
+   {
+    "text": "Os outros oito testes são inúteis",
+    "why": "Eles guardam outras defesas; cada um responde pela sua linha."
+   },
+   {
+    "text": "A verificação de papel não é necessária, pois oito testes passam",
+    "why": "O teste que reprova é exatamente a recusa que sumiu."
+   },
+   {
+    "text": "A suíte é instável e deve ser rodada duas vezes",
+    "why": "A falha é determinística e aponta uma linha."
+   },
+   {
+    "text": "Cada teste responde por uma defesa, então a falha a nomeia",
+    "why": "Certo. Quem quebra fica sabendo qual defesa quebrou, na primeira linha."
+   }
+  ]
+ },
+ "ex-vtr7737d": {
+  "prompt": "Qual destes é escalonamento horizontal na bilheteria?",
+  "hint": "O mesmo papel, os dados de outra pessoa.",
+  "choices": [
+   {
+    "text": "Um cliente listando todas as reservas pela rota da equipe",
+    "why": "Um papel que o cliente não tem: isso é vertical."
+   },
+   {
+    "text": "Um cliente cancelando a reserva de outro cliente",
+    "why": "Certo. O mesmo papel alcançando para o lado o registro de outra pessoa."
+   },
+   {
+    "text": "Um estranho entrando com uma senha chutada",
+    "why": "Isso é uma falha de autenticação, não de autorização."
+   },
+   {
+    "text": "Alguém da equipe lendo a lista da equipe",
+    "why": "Isso é permitido: é o controle do teste."
+   }
+  ]
+ }
+}

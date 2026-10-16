@@ -1,0 +1,645 @@
+[
+  {
+    "id": "ex-zf8204e0",
+    "version": 1,
+    "section": "the-horizon",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an `UPDATE` do to the row it changes, in PostgreSQL?",
+    "hint": "Think about what VACUUM is for.",
+    "choices": [
+      {
+        "text": "Overwrites the row in place, inside its page",
+        "correct": false,
+        "why": "That is what the section says PostgreSQL never does; readers would lose the version they are entitled to."
+      },
+      {
+        "text": "Writes a new version and leaves the old one behind",
+        "correct": true,
+        "why": "Right: the old version stays until VACUUM may remove it."
+      },
+      {
+        "text": "Moves the row to the end of the table and frees its old place at once",
+        "correct": false,
+        "why": "The old place is not free until nobody can see the old version."
+      },
+      {
+        "text": "Locks the whole table until it commits",
+        "correct": false,
+        "why": "An UPDATE locks the rows it changes, not the table; and that is a different subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtftcxgp",
+    "version": 1,
+    "section": "the-horizon",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`VACUUM VERBOSE` reports `1 are dead but not yet removable` and `removable cutoff: 1098934, which was 2 XIDs old`. What is the cutoff?",
+    "hint": "Who is still allowed to read the old version?",
+    "choices": [
+      {
+        "text": "The number of the transaction that made the dead version",
+        "correct": false,
+        "why": "That was the UPDATE, which came after the cutoff; the cutoff belongs to the oldest snapshot."
+      },
+      {
+        "text": "The last transaction VACUUM itself ran",
+        "correct": false,
+        "why": "VACUUM does not take a transaction number for this; the cutoff comes from other sessions."
+      },
+      {
+        "text": "The horizon: the oldest snapshot still in use",
+        "correct": true,
+        "why": "Right: in the lesson it was Session A's, and nothing after it could be removed."
+      },
+      {
+        "text": "How many rows the table had when VACUUM started",
+        "correct": false,
+        "why": "That is the `remain` count on the line above."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hvbt7gn",
+    "version": 1,
+    "section": "the-horizon",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Session A opened `REPEATABLE READ`, read the sum of prices, and sat idle while Session B raised product 7's price. What did Session A's second sum show, and why?",
+    "hint": "The two totals in the transcript.",
+    "choices": [
+      {
+        "text": "A hundred cents more, because Session B committed",
+        "correct": false,
+        "why": "That is what READ COMMITTED would show; REPEATABLE READ keeps its first snapshot."
+      },
+      {
+        "text": "The same total, from the old row version",
+        "correct": true,
+        "why": "Right: that is why VACUUM could not remove the old version while the transaction was open."
+      },
+      {
+        "text": "An error, because the row changed under it",
+        "correct": false,
+        "why": "A read never fails for that; a conflicting write at REPEATABLE READ is lesson 14's subject."
+      },
+      {
+        "text": "It waited until Session B's transaction finished",
+        "correct": false,
+        "why": "Readers do not wait for writers; that is what the versions are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5ky69ts",
+    "version": 1,
+    "section": "the-horizon",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these hold the horizon back while they last? Choose all that apply.",
+    "hint": "One of them takes a new snapshot for every statement.",
+    "choices": [
+      {
+        "text": "An idle transaction that has updated a row",
+        "correct": true,
+        "why": "Right: its own transaction number is in backend_xid, and every later version waits on it."
+      },
+      {
+        "text": "A report query that has been running for twenty minutes",
+        "correct": true,
+        "why": "Right: a running statement keeps its snapshot until it ends."
+      },
+      {
+        "text": "An idle REPEATABLE READ transaction that has read a table",
+        "correct": true,
+        "why": "Right: that is Session A."
+      },
+      {
+        "text": "An idle READ COMMITTED transaction that has only read",
+        "correct": false,
+        "why": "It lets go of each snapshot when its statement ends, and the finder query did not list it."
+      },
+      {
+        "text": "A connection with no transaction open",
+        "correct": false,
+        "why": "With no transaction there is no snapshot and no transaction number to hold anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hnrcx9m",
+    "version": 1,
+    "section": "bloat",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With Session A holding the horizon, thirty seconds of the pricing robot took `products` from 5544 kB to how many megabytes?",
+    "hint": "The size query after the second run.",
+    "value": 19,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-gfcr9eet",
+    "version": 1,
+    "section": "bloat",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `products` almost the same size after the robot's first thirty seconds, with nothing else open?",
+    "hint": "Where did the new versions go?",
+    "choices": [
+      {
+        "text": "The robot updated too few rows to matter",
+        "correct": false,
+        "why": "It made 141981 updates, as many as in the second run."
+      },
+      {
+        "text": "Autovacuum rewrote the table while the robot ran",
+        "correct": false,
+        "why": "Autovacuum does not rewrite tables, and the lesson credits page tidying, not autovacuum."
+      },
+      {
+        "text": "UPDATE writes in place when the price is an integer",
+        "correct": false,
+        "why": "Every UPDATE makes a new version, whatever the type."
+      },
+      {
+        "text": "Dead versions were cleared as pages filled",
+        "correct": true,
+        "why": "Right: the horizon was free to move, so the dead versions did not pile up."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxqrk9ve",
+    "version": 1,
+    "section": "bloat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 2's tag search took 14.5 ms before and 21.1 ms while Session A was open, although it never touched Session A. What made it slower?",
+    "hint": "It is a sequential scan.",
+    "choices": [
+      {
+        "text": "It waited for Session A's lock on `products`",
+        "correct": false,
+        "why": "Session A only read; a read takes no lock that blocks another read."
+      },
+      {
+        "text": "It read more than three times as many pages",
+        "correct": true,
+        "why": "Right: the table grew from about 5 MB to 19 MB, and a sequential scan reads every page."
+      },
+      {
+        "text": "The robot's updates changed the plan to an index scan",
+        "correct": false,
+        "why": "There is no index that answers the tag search; lesson 8 adds one."
+      },
+      {
+        "text": "The processors were busy with the robot at the same moment",
+        "correct": false,
+        "why": "The search was timed after the robot stopped, and it stayed slow after the commit too."
+      }
+    ]
+  },
+  {
+    "id": "ex-py30x000",
+    "version": 1,
+    "section": "bloat",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After Session A committed, `VACUUM` removed all 139519 dead versions. What happened to the table's size?",
+    "hint": "Where does the freed space go?",
+    "choices": [
+      {
+        "text": "It went back to about 5 MB",
+        "correct": false,
+        "why": "It stayed at 19 MB; VACUUM does not hand space back except empty pages at the end."
+      },
+      {
+        "text": "It stayed at 19 MB, with the space free for new versions",
+        "correct": true,
+        "why": "Right: giving it back takes a rewrite such as VACUUM FULL, which db-administration covers."
+      },
+      {
+        "text": "It doubled, because VACUUM writes a copy first",
+        "correct": false,
+        "why": "Plain VACUUM works in place; it is VACUUM FULL that writes a new copy."
+      },
+      {
+        "text": "It shrank to the size of the live rows' pages only",
+        "correct": false,
+        "why": "The live rows are spread all over the 19 MB, so nothing at the end was empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-ym4kgmy2",
+    "version": 1,
+    "section": "bloat",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job holds one `REPEATABLE READ` transaction open for three hours to export a consistent copy, while a queue table is updated all night. In the morning the queue holds 2,000 rows and its screen is slow. What is the likeliest reason?",
+    "hint": "The export never reads the queue.",
+    "choices": [
+      {
+        "text": "The queue's rows are locked by the export",
+        "correct": false,
+        "why": "An export only reads, and it does not lock rows against updates."
+      },
+      {
+        "text": "2,000 rows is too many for that queue screen",
+        "correct": false,
+        "why": "2,000 rows is small; the size of the table behind them is what grew."
+      },
+      {
+        "text": "Dead versions VACUUM could not remove",
+        "correct": true,
+        "why": "Right: the horizon is the database's, so the export held back VACUUM on a table it never read."
+      },
+      {
+        "text": "Autovacuum was switched off by the export",
+        "correct": false,
+        "why": "Autovacuum ran; it simply could not remove versions newer than the horizon."
+      }
+    ]
+  },
+  {
+    "id": "ex-4frkb8cq",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `idle_in_transaction_session_timeout` do when it fires?",
+    "hint": "Read the severity in the transcript.",
+    "choices": [
+      {
+        "text": "Cancels the statement that is running",
+        "correct": false,
+        "why": "There is no statement running; that is statement_timeout's job."
+      },
+      {
+        "text": "Ends the whole session, with FATAL",
+        "correct": true,
+        "why": "Right: the transaction is rolled back and the connection closed."
+      },
+      {
+        "text": "Commits the open transaction so nothing is lost",
+        "correct": false,
+        "why": "It never commits; committing half a transaction is what transactions exist to prevent."
+      },
+      {
+        "text": "Writes a warning to the log and keeps waiting",
+        "correct": false,
+        "why": "It acts: the session ended in the transcript."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1yxvr8h",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report runs one 40-minute `SELECT` every night and holds the horizon the whole time. Which setting would stop it?",
+    "hint": "What is its state in pg_stat_activity?",
+    "choices": [
+      {
+        "text": "`idle_in_transaction_session_timeout`, set to ten minutes",
+        "correct": false,
+        "why": "The report is active, not idle; this setting never touches it."
+      },
+      {
+        "text": "`max_connections`, lowered to the number of reports",
+        "correct": false,
+        "why": "That limits how many sessions connect, not how long one runs."
+      },
+      {
+        "text": "`statement_timeout`, set for the report's role",
+        "correct": true,
+        "why": "Right: it cancels a statement that runs too long, with an ERROR."
+      },
+      {
+        "text": "`max_prepared_transactions`, set to zero",
+        "correct": false,
+        "why": "That only concerns two-phase commit, and zero is already the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-2y2gpaep",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A checkout does `BEGIN`, updates the order, calls a payment provider that answers in two seconds, then commits. What does the lesson recommend?",
+    "hint": "Which of the three shapes is it?",
+    "choices": [
+      {
+        "text": "Call the provider outside the transaction, before or after it",
+        "correct": true,
+        "why": "Right: keep in the transaction only the statements that must succeed or fail together."
+      },
+      {
+        "text": "Set idle_in_transaction_session_timeout to one second",
+        "correct": false,
+        "why": "That would end every correct checkout halfway, with FATAL."
+      },
+      {
+        "text": "Switch the transaction to REPEATABLE READ",
+        "correct": false,
+        "why": "The level does not shorten the wait; a transaction that wrote holds the horizon at any level."
+      },
+      {
+        "text": "Run VACUUM after each order",
+        "correct": false,
+        "why": "VACUUM cannot remove what the open transactions still hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-n682f52z",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To give every new session on `market` a one-minute limit on idle transactions, you run `ALTER ___ market SET idle_in_transaction_session_timeout = '1min';`.",
+    "hint": "The setting is attached to an object, not to a session.",
+    "blanks": [
+      {
+        "accept": [
+          "DATABASE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-epmxhmaf",
+    "version": 1,
+    "section": "idle-in-transaction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team sets `idle_in_transaction_session_timeout = '2s'` for the whole server after an incident. What is the first thing likely to break?",
+    "hint": "Who has legitimate idle gaps longer than that?",
+    "choices": [
+      {
+        "text": "Nothing; correct code is never idle for two seconds",
+        "correct": false,
+        "why": "A correct transaction can wait on a person, a slow network or a migration step."
+      },
+      {
+        "text": "Every running query longer than two seconds",
+        "correct": false,
+        "why": "Running queries are active, not idle; this setting does not touch them."
+      },
+      {
+        "text": "Autovacuum, which cannot run with a timeout set",
+        "correct": false,
+        "why": "Autovacuum is not an idle client transaction."
+      },
+      {
+        "text": "Correct transactions with longer pauses, ended with FATAL",
+        "correct": true,
+        "why": "Right: the value has to sit above the longest idle gap a correct transaction has."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxfcd2hb",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `oldest.sql` sort by the age in transactions rather than by how long the transaction has been open?",
+    "hint": "What makes a held horizon expensive?",
+    "choices": [
+      {
+        "text": "Because `xact_start` is empty for idle sessions",
+        "correct": false,
+        "why": "It is filled for any open transaction; the finder printed open_for from it."
+      },
+      {
+        "text": "It follows the writes, and so the damage",
+        "correct": true,
+        "why": "Right: an old transaction on an idle server costs little; a young one on a busy server costs a lot."
+      },
+      {
+        "text": "Because the clock on a server is not reliable",
+        "correct": false,
+        "why": "The clock is fine; it just measures time, not dead versions."
+      },
+      {
+        "text": "Because age() is faster to compute",
+        "correct": false,
+        "why": "Speed is not the reason; both are trivial."
+      }
+    ]
+  },
+  {
+    "id": "ex-ja28xynn",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the finder's output, one row has a number under `xid` and nothing under `xmin`. What kind of session is it?",
+    "hint": "A transaction only gets a number of its own when it does one thing.",
+    "choices": [
+      {
+        "text": "A REPEATABLE READ transaction that has only read",
+        "correct": false,
+        "why": "That one had a snapshot (xmin) and no number of its own."
+      },
+      {
+        "text": "A statement that is still running",
+        "correct": false,
+        "why": "A running statement has a snapshot, so xmin is filled."
+      },
+      {
+        "text": "An idle transaction that has written something",
+        "correct": true,
+        "why": "Right: the UPDATE gave it a transaction number, and idle it holds no snapshot."
+      },
+      {
+        "text": "A connection outside any transaction",
+        "correct": false,
+        "why": "With no transaction it would have neither column, and the finder would not list it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwwepp9f",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`~/oldest.sql` returns no rows, and yet `VACUUM VERBOSE` still reports a cutoff millions of transactions old. Where do you look next?",
+    "hint": "Some holders have no row in pg_stat_activity.",
+    "choices": [
+      {
+        "text": "`pg_stat_user_tables`, for the dead rows",
+        "correct": false,
+        "why": "That shows the symptom, not who is holding the horizon."
+      },
+      {
+        "text": "`pg_locks`, for a lock on the table",
+        "correct": false,
+        "why": "A lock does not hold the horizon; a transaction or a slot does."
+      },
+      {
+        "text": "The server log, for the last checkpoint",
+        "correct": false,
+        "why": "Checkpoints have nothing to do with which versions VACUUM may remove."
+      },
+      {
+        "text": "`pg_prepared_xacts` and `pg_replication_slots`",
+        "correct": true,
+        "why": "Right: a forgotten prepared transaction or a slot nobody reads holds the horizon with no session."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dd1e4bz",
+    "version": 1,
+    "section": "finding-them",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each holder of the horizon to the setting or action that ends it.",
+    "hint": "Two of them are timeouts, and two are not sessions at all.",
+    "pairs": [
+      {
+        "left": "a session idle in a transaction",
+        "right": "`idle_in_transaction_session_timeout`"
+      },
+      {
+        "left": "a statement running for an hour",
+        "right": "`statement_timeout`"
+      },
+      {
+        "left": "a forgotten prepared transaction",
+        "right": "`ROLLBACK PREPARED`"
+      },
+      {
+        "left": "a replication slot nobody reads",
+        "right": "dropping the slot"
+      }
+    ],
+    "right_distractors": [
+      "`VACUUM FULL`"
+    ]
+  },
+  {
+    "id": "ex-4wmyg1a2",
+    "version": 1,
+    "section": "finding-them",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the finder's output, how many transactions old were the three sessions holding the horizon?",
+    "hint": "The xid_age column.",
+    "value": 30733,
+    "tolerance": 0,
+    "unit": "transactions"
+  },
+  {
+    "id": "ex-y81drs89",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the experiment of the bloat section in the order it was run.",
+    "hint": "The baseline comes before anything is held.",
+    "items": [
+      "Measure the table's size and the tag search",
+      "Run the robot with nothing else open",
+      "Open Session A and leave it idle",
+      "Run the robot again for the same thirty seconds",
+      "Commit Session A and run VACUUM"
+    ],
+    "trap": "Without the first run, there is nothing to compare the held run against; without the commit, VACUUM cannot remove anything."
+  },
+  {
+    "id": "ex-z6k9nwpf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monitoring alert fires when any session has been `idle in transaction` for more than five minutes. A developer's `psql` sat in `BEGIN` all weekend on a server that received no writes, and the alert fired. How much bloat did that transaction cause?",
+    "hint": "Dead versions come from writes.",
+    "choices": [
+      {
+        "text": "A weekend's worth, in every table of the database",
+        "correct": false,
+        "why": "Without writes there were no dead versions to keep; the clock alone makes none."
+      },
+      {
+        "text": "Almost none: nothing was written",
+        "correct": true,
+        "why": "Right: which is why the lesson alerts on age in transactions rather than on time alone."
+      },
+      {
+        "text": "Exactly the size of the tables it read",
+        "correct": false,
+        "why": "Reading makes no copies at all."
+      },
+      {
+        "text": "It cannot be known until VACUUM FULL is run",
+        "correct": false,
+        "why": "VACUUM VERBOSE and n_dead_tup answer it without rewriting anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-hreht4wh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is the correct order of fixes when `oldest.sql` lists a writer, a REPEATABLE READ reader and a running report, all of the same age?",
+    "hint": "One of them holds something besides the horizon.",
+    "choices": [
+      {
+        "text": "The report first, because it is active",
+        "correct": false,
+        "why": "Being active is not what makes it urgent; the writer also holds locks."
+      },
+      {
+        "text": "The writer first, then look again",
+        "correct": true,
+        "why": "Right: and the next oldest becomes the horizon as soon as the first goes."
+      },
+      {
+        "text": "All three at once with a server restart",
+        "correct": false,
+        "why": "A restart ends everybody's work to end three transactions."
+      },
+      {
+        "text": "None, because VACUUM will catch up on its own",
+        "correct": false,
+        "why": "VACUUM cannot pass the horizon however often it runs."
+      }
+    ]
+  }
+]
