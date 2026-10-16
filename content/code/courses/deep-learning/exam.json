@@ -2431,5 +2431,136 @@
         "why": "`cnn.py` has no dropout, and boosting tied the CNN on the digits in place."
       }
     ]
+  },
+  {
+    "id": "ex-qcnx1a4f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A language model is trained to predict the next token. How does the causal mask let one forward pass over 1,000 tokens train it on 1,000 predictions?",
+    "hint": "What can position 10 see, and what does it predict?",
+    "choices": [
+      {
+        "text": "It runs the 1,000 positions one after another, each reusing the previous state",
+        "correct": false,
+        "why": "That is the recurrent network's loop. With a mask, every position is computed in the same matrix products."
+      },
+      {
+        "text": "Every position is blind to what follows it, so all of them train in parallel",
+        "correct": true,
+        "why": "Right. No position sees the token it predicts, so all 1,000 targets are honest in the same pass."
+      },
+      {
+        "text": "It hides half the tokens at random, and the model predicts the hidden ones",
+        "correct": false,
+        "why": "The mask is a fixed triangle, decided by position, not a random choice of tokens."
+      },
+      {
+        "text": "It divides the scores by √d so that 1,000 tokens fit in memory",
+        "correct": false,
+        "why": "The division keeps the softmax from saturating; it has nothing to do with the mask or with memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz551079",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "How many parameters does `nn.TransformerEncoderLayer(64, nhead=4, dim_feedforward=256)` have? Attention has four 64 by 64 matrices with biases, the MLP goes 64 to 256 to 64 with biases, and each of the two layer norms has a gamma and a beta.",
+    "hint": "16,640 for attention, then the MLP, then 4 × 64 for the norms.",
+    "value": 49984,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-812b035r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A model built only from attention layers, with no positional information, reads \"the dog bit the man\". What does it make of \"the man bit the dog\"?",
+    "hint": "Shuffle the input of attention and see what happens to the output.",
+    "choices": [
+      {
+        "text": "The opposite meaning, since the subject changed",
+        "correct": false,
+        "why": "To see that the subject changed, it would need to know which word came first."
+      },
+      {
+        "text": "Nothing at all: the sentence is too short for attention",
+        "correct": false,
+        "why": "Length is not the issue; attention works on four tokens as on a thousand."
+      },
+      {
+        "text": "The same outputs, only in a different order",
+        "correct": true,
+        "why": "Right. Without positions a sequence is a set, and both sentences are the same set."
+      },
+      {
+        "text": "A different result for every word, since every score changes",
+        "correct": false,
+        "why": "Each pair of words meets with the same score wherever the two sit."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdd4bbz4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A head has queries and keys 64 wide. By what number are its scores divided before the softmax, and why?",
+    "hint": "The spread of a dot product of random vectors grows with their width.",
+    "choices": [
+      {
+        "text": "By 64, so the scores average out over the features",
+        "correct": false,
+        "why": "Dividing by d would shrink the spread to about 1/8 and flatten every softmax."
+      },
+      {
+        "text": "By 8, so the scores keep a spread near 1",
+        "correct": true,
+        "why": "Right: the spread is about √64 = 8, and dividing by it keeps the softmax from saturating before training."
+      },
+      {
+        "text": "By 4, the number of heads",
+        "correct": false,
+        "why": "The scale depends on the width of the vectors multiplied, not on how many heads there are."
+      },
+      {
+        "text": "By nothing: the softmax already normalises the scores",
+        "correct": false,
+        "why": "The softmax makes the weights sum to 1, but large scores still make them nearly one-hot."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8xtbe1j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "With lesson 14's budget, a one-block transformer reached 1.000 at length 50 where the LSTM reached 0.144. What does that result NOT establish?",
+    "hint": "What kind of task is naming the first symbol?",
+    "choices": [
+      {
+        "text": "That the last position can read the first one directly",
+        "correct": false,
+        "why": "That was measured: the heads put up to 0.999 of their weight on position 1."
+      },
+      {
+        "text": "That the transformer needed fewer parameters here",
+        "correct": false,
+        "why": "That was measured too: 10,728 against 21,640."
+      },
+      {
+        "text": "That positions were necessary for this task",
+        "correct": false,
+        "why": "Without them the same model stayed at 0.171, so that was measured as well."
+      },
+      {
+        "text": "That transformers are better at language in general",
+        "correct": true,
+        "why": "Right. A one-hop recall task favours attention by design and says nothing about language."
+      }
+    ]
   }
 ]

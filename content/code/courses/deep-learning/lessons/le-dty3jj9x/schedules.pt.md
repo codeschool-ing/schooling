@@ -104,7 +104,7 @@ Qual agendamento usar é sobretudo convenção, e vale conhecer as convenções:
   dez duas vezes conforme o treino andava, e a aula 12 é sobre essas redes.
 - **O cosseno** não tem nada a escolher além do comprimento, e é por isso que virou um padrão comum.
 - **Aquecimento seguido de decaimento** é como transformers são treinados, porque os primeiros passos
-  do Adam numa rede nova e profunda são os menos confiáveis. A aula 15 monta um.
+  do Adam numa rede nova e profunda são os menos confiáveis. A aula 15 monta um transformer.
 - **Baixar a taxa quando a perda de validação para de melhorar** reage à execução em vez de seguir um
   plano. O PyTorch chama isso de `ReduceLROnPlateau`.
 

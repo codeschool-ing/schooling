@@ -1738,5 +1738,98 @@
         "why": "O `cnn.py` não tem dropout, e o boosting empatou com a CNN nos dígitos no lugar."
       }
     ]
+  },
+  "ex-qcnx1a4f": {
+    "prompt": "Um modelo de linguagem é treinado para prever o próximo token. Como a máscara causal permite que uma passada para a frente sobre 1.000 tokens o treine em 1.000 previsões?",
+    "hint": "O que a posição 10 consegue ver, e o que ela prevê?",
+    "choices": [
+      {
+        "text": "Ela roda as 1.000 posições uma depois da outra, cada uma reaproveitando o estado anterior",
+        "why": "Esse é o laço da rede recorrente. Com a máscara, toda posição é calculada nos mesmos produtos de matrizes."
+      },
+      {
+        "text": "Cada posição é cega ao que vem depois dela, então todas treinam em paralelo",
+        "why": "Certo. Nenhuma posição vê o token que prevê, então os 1.000 alvos são honestos na mesma passada."
+      },
+      {
+        "text": "Ela esconde metade dos tokens ao acaso, e o modelo prevê os escondidos",
+        "why": "A máscara é um triângulo fixo, decidido pela posição, não uma escolha aleatória de tokens."
+      },
+      {
+        "text": "Ela divide as notas por √d para que 1.000 tokens caibam na memória",
+        "why": "A divisão evita que a softmax sature; não tem nada a ver com a máscara nem com memória."
+      }
+    ]
+  },
+  "ex-zz551079": {
+    "prompt": "Quantos parâmetros tem o `nn.TransformerEncoderLayer(64, nhead=4, dim_feedforward=256)`? A atenção tem quatro matrizes de 64 por 64 com vieses, o MLP vai de 64 a 256 a 64 com vieses, e cada uma das duas layer norms tem um gamma e um beta.",
+    "hint": "16.640 para a atenção, depois o MLP, depois 4 × 64 para as norms.",
+    "unit": "parâmetros"
+  },
+  "ex-812b035r": {
+    "prompt": "Um modelo feito só de camadas de atenção, sem informação de posição, lê \"o cachorro mordeu o homem\". O que ele entende de \"o homem mordeu o cachorro\"?",
+    "hint": "Embaralhe a entrada da atenção e veja o que acontece com a saída.",
+    "choices": [
+      {
+        "text": "O sentido oposto, já que o sujeito mudou",
+        "why": "Para ver que o sujeito mudou, ele precisaria saber qual palavra veio primeiro."
+      },
+      {
+        "text": "Nada: a frase é curta demais para a atenção",
+        "why": "O comprimento não é o problema; a atenção funciona em quatro tokens como em mil."
+      },
+      {
+        "text": "As mesmas saídas, só em outra ordem",
+        "why": "Certo. Sem posições, uma sequência é um conjunto, e as duas frases são o mesmo conjunto."
+      },
+      {
+        "text": "Um resultado diferente para cada palavra, já que toda nota muda",
+        "why": "Cada par de palavras se encontra com a mesma nota onde quer que as duas estejam."
+      }
+    ]
+  },
+  "ex-fdd4bbz4": {
+    "prompt": "Uma cabeça tem consultas e chaves de largura 64. Por qual número as suas notas são divididas antes da softmax, e por quê?",
+    "hint": "A dispersão de um produto escalar de vetores aleatórios cresce com a largura deles.",
+    "choices": [
+      {
+        "text": "Por 64, para que as notas virem uma média das features",
+        "why": "Dividir por d encolheria a dispersão para cerca de 1/8 e achataria toda softmax."
+      },
+      {
+        "text": "Por 8, para a dispersão ficar perto de 1",
+        "why": "Certo: a dispersão é cerca de √64 = 8, e dividir por ela evita que a softmax sature antes do treino."
+      },
+      {
+        "text": "Por 4, o número de cabeças",
+        "why": "A escala depende da largura dos vetores multiplicados, não de quantas cabeças existem."
+      },
+      {
+        "text": "Por nada: a softmax já normaliza as notas",
+        "why": "A softmax faz os pesos somarem 1, mas notas grandes ainda os deixam quase só num."
+      }
+    ]
+  },
+  "ex-w8xtbe1j": {
+    "prompt": "Com o orçamento da aula 14, um transformer de um bloco chegou a 1,000 no comprimento 50, onde a LSTM chegou a 0,144. O que esse resultado NÃO estabelece?",
+    "hint": "Que tipo de tarefa é dizer o primeiro símbolo?",
+    "choices": [
+      {
+        "text": "Que a última posição consegue ler a primeira diretamente",
+        "why": "Isso foi medido: as cabeças puseram até 0,999 do seu peso na posição 1."
+      },
+      {
+        "text": "Que o transformer precisou de menos parâmetros aqui",
+        "why": "Isso também foi medido: 10.728 contra 21.640."
+      },
+      {
+        "text": "Que as posições eram necessárias para esta tarefa",
+        "why": "Sem elas o mesmo modelo ficou em 0,171, então isso também foi medido."
+      },
+      {
+        "text": "Que transformers vencem em tarefas de linguagem",
+        "why": "Certo. Uma tarefa de lembrar de um salto favorece a atenção por construção e não diz nada sobre linguagem."
+      }
+    ]
   }
 }

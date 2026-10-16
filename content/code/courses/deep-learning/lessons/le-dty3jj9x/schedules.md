@@ -103,7 +103,7 @@ Which schedule to use is mostly convention, and the conventions are worth knowin
   training went on, and lesson 12 is about those networks.
 - **Cosine** has nothing to choose but its length, which is why it is a common default now.
 - **Warm-up followed by a decay** is how transformers are trained, because Adam's first steps on a
-  fresh, deep network are the least reliable ones. Lesson 15 builds one.
+  fresh, deep network are the least reliable ones. Lesson 15 builds a transformer.
 - **Lowering the rate when the validation loss stops improving** reacts to the run instead of
   following a plan. PyTorch calls it `ReduceLROnPlateau`.
 
