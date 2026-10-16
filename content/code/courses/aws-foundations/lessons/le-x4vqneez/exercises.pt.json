@@ -1,0 +1,445 @@
+{
+  "ex-3mv4tff1": {
+    "prompt": "`aws configure set region us-east-1 --profile lab` escreveu a região em qual arquivo?",
+    "hint": "Um arquivo é só para segredos.",
+    "choices": [
+      {
+        "text": "`~/.aws/config`, sob `[profile lab]`",
+        "why": "Isso. Tudo o que não é chave vai para lá: região, saída, role, processo."
+      },
+      {
+        "text": "`~/.aws/credentials`, ao lado das chaves do perfil",
+        "why": "Esse arquivo guarda chaves e mais nada, e é isso que deixa o outro ser compartilhado."
+      },
+      {
+        "text": "`~/aws/env.sh`, que todo terminal lê",
+        "why": "O `env.sh` é um arquivo do próprio curso e a linha de comando nunca escreve nele."
+      },
+      {
+        "text": "Nenhum: o `configure set` muda só o terminal atual",
+        "why": "O `cat ~/.aws/config` mostrou a linha depois. Uma variável é que seria só do terminal."
+      }
+    ]
+  },
+  "ex-r35axmv1": {
+    "prompt": "Como o perfil `lab` é escrito como cabeçalho de seção em cada um dos dois arquivos?",
+    "hint": "O perfil padrão é o único escrito igual nos dois.",
+    "choices": [
+      {
+        "text": "`[lab]` nos dois arquivos",
+        "why": "Isso vale só para o `credentials`. No `config`, um nome solto é como se escreve `[default]` e mais nada."
+      },
+      {
+        "text": "`[profile lab]` nos dois arquivos",
+        "why": "O prefixo `profile` é do `config`; o `credentials` usa o nome simples."
+      },
+      {
+        "text": "`[profile lab]` no `config` e `[lab]` no `credentials`",
+        "why": "Isso. Os dois `cat` da transcrição mostraram exatamente isso."
+      },
+      {
+        "text": "`[sso-session lab]` no `config` e `[lab]` no `credentials`",
+        "why": "`sso-session` é uma seção de login, compartilhada por perfis; não é um perfil."
+      }
+    ]
+  },
+  "ex-3518vjxr": {
+    "prompt": "O perfil `lab` diz `region = us-east-1`, e o `env.sh` exporta `AWS_DEFAULT_REGION=sa-east-1`. Que região o `aws ec2 describe-availability-zones --profile lab` consulta?",
+    "hint": "Qual camada está mais perto?",
+    "choices": [
+      {
+        "text": "`sa-east-1`, porque a variável vence o arquivo",
+        "why": "Isso. A primeira resposta foi `sa-east-1a`; só com `env -u AWS_DEFAULT_REGION` a região do perfil passou."
+      },
+      {
+        "text": "`us-east-1`, porque o `--profile` tem precedência sobre o ambiente em toda configuração",
+        "why": "O `--profile` tira as chaves do ambiente, não a região dele. A exceção é só sobre credenciais."
+      },
+      {
+        "text": "As duas, uma depois da outra",
+        "why": "Um comando vai para uma região. As configurações decidem qual; elas não se combinam."
+      },
+      {
+        "text": "Nenhuma: a linha de comando recusa quando duas regiões estão definidas",
+        "why": "Conflitos são o caso normal, e a ordem das camadas os resolve sem dizer nada."
+      }
+    ]
+  },
+  "ex-29cydqmm": {
+    "prompt": "Ordene os lugares de onde uma região pode vir, do que vence ao que é usado por último.",
+    "hint": "Duas variáveis, e uma vence a outra.",
+    "items": [
+      "`--region` no comando",
+      "`AWS_REGION`",
+      "`AWS_DEFAULT_REGION`",
+      "`region =` no perfil"
+    ],
+    "trap": "`AWS_REGION` vence `AWS_DEFAULT_REGION` quando as duas existem, e as duas vencem o arquivo."
+  },
+  "ex-f8gh0d6h": {
+    "prompt": "`aws configure ___ region --profile lab` imprimiu `us-east-1`.",
+    "hint": "A metade de leitura do `set`.",
+    "blanks": [
+      {
+        "accept": [
+          "get"
+        ]
+      }
+    ]
+  },
+  "ex-r6fgxp4k": {
+    "prompt": "A loja quer que os perfis de todo desenvolvedor sejam os mesmos. Por que separar `config` de `credentials` torna isso seguro de arranjar?",
+    "hint": "O que pode ser copiado por aí, e o que não pode?",
+    "choices": [
+      {
+        "text": "Porque o `config` é cifrado e o `credentials` não",
+        "why": "Os dois são texto simples. A segurança vem do que cada um guarda."
+      },
+      {
+        "text": "Porque a linha de comando ignora o `credentials` quando o `config` existe",
+        "why": "Os dois são lidos; o `--profile lab` da transcrição pegou as chaves do `credentials` com o `config` presente."
+      },
+      {
+        "text": "Porque perfis no `config` não conseguem nomear uma conta",
+        "why": "Conseguem: `role_arn` e `sso_account_id` nomeiam uma."
+      },
+      {
+        "text": "O `config` não tem segredos; as chaves ficam",
+        "why": "Isso. Um `config` compartilhado com perfis de role e `sso_session` nem precisa de arquivo `credentials`."
+      }
+    ]
+  },
+  "ex-jp3e6se3": {
+    "prompt": "`AWS_PROFILE=lab aws configure list` mostra o perfil `lab` mas `env` na coluna `TYPE` das chaves. Por quê?",
+    "hint": "A cadeia da lição 10, e o que uma variável faz com ela.",
+    "choices": [
+      {
+        "text": "O provedor `env` vem primeiro, e o `AWS_PROFILE` o deixa na cadeia",
+        "why": "Isso. As chaves de teste que o `env.sh` exportou responderam antes de o arquivo do perfil ser olhado."
+      },
+      {
+        "text": "Porque o perfil `lab` não tem chaves próprias",
+        "why": "Ele tem; o `--profile lab` as leu do `shared-credentials-file` um instante depois."
+      },
+      {
+        "text": "Porque o `AWS_PROFILE` só é lido pelos SDKs, não pela linha de comando",
+        "why": "A linha de comando o leu: a linha `profile` diz `lab`, vindo de `AWS_PROFILE`."
+      },
+      {
+        "text": "Porque o `configure list` sempre informa o ambiente, seja o que for usado",
+        "why": "Com `--profile` ele informou `shared-credentials-file`. Ele informa o que seria usado."
+      }
+    ]
+  },
+  "ex-7m63jpba": {
+    "prompt": "No perfil `staging`, o que `source_profile = lab` nomeia?",
+    "hint": "Assumir uma role exige credenciais próprias.",
+    "choices": [
+      {
+        "text": "A conta em que a role mora",
+        "why": "A conta está dentro do `role_arn`. O `source_profile` é sobre quem pede."
+      },
+      {
+        "text": "Um perfil de reserva se a role não puder ser assumida",
+        "why": "Não há reserva: se o `AssumeRole` falha, o comando falha."
+      },
+      {
+        "text": "O perfil cujas credenciais chamam `sts:AssumeRole`",
+        "why": "Isso. As chaves de `lab` assinaram o `AssumeRole`, e as credenciais temporárias da role assinaram o comando."
+      },
+      {
+        "text": "O perfil cuja região e saída são herdadas",
+        "why": "Configurações não são herdadas: `staging` imprimiu tabela porque ele próprio diz `output = table`."
+      }
+    ]
+  },
+  "ex-1jqepcyt": {
+    "prompt": "`credential_process = sh ~/aws/lab-creds.sh` falha com `cannot open ~/aws/lab-creds.sh`, embora o arquivo esteja lá. Por quê?",
+    "hint": "Quem expande o `~`?",
+    "choices": [
+      {
+        "text": "Porque o script não é executável",
+        "why": "Ele é rodado como argumento do `sh`, que não exige bit de execução. O caminho em si é o problema."
+      },
+      {
+        "text": "Porque o `credential_process` só aceita programas Python",
+        "why": "Qualquer programa que imprima o JSON serve; a versão que funciona roda o mesmo script `sh`."
+      },
+      {
+        "text": "Porque as chaves do ambiente impediram o processo de iniciar",
+        "why": "Com `--profile` essas chaves estão fora da cadeia, e o processo iniciou: foi o `sh` que imprimiu o erro."
+      },
+      {
+        "text": "O comando não é rodado por um shell, então o `~` chega ao `sh` sem expandir",
+        "why": "Isso. `sh -c \"sh ~/aws/lab-creds.sh\"` entrega a linha a um shell, que a expande."
+      }
+    ]
+  },
+  "ex-pq1wywn1": {
+    "prompt": "Ligue cada configuração de um perfil de role ao que ela faz.",
+    "hint": "Duas apareceram na transcrição, duas no parágrafo seguinte.",
+    "pairs": [
+      {
+        "left": "`role_arn`",
+        "right": "a role a assumir"
+      },
+      {
+        "left": "`source_profile`",
+        "right": "o perfil que a assume"
+      },
+      {
+        "left": "`credential_source`",
+        "right": "usar o ambiente ou os metadados no lugar"
+      },
+      {
+        "left": "`mfa_serial`",
+        "right": "pedir um código antes"
+      }
+    ],
+    "right_distractors": [
+      "a região em que a role mora"
+    ]
+  },
+  "ex-0ae27jxe": {
+    "prompt": "O que acontece se você apagar os arquivos `.json` em `~/.aws/cli/cache/`?",
+    "hint": "Eles são uma cópia de algo que a linha de comando consegue de novo.",
+    "choices": [
+      {
+        "text": "O perfil `staging` para de funcionar até ser escrito de novo",
+        "why": "O perfil mora em `~/.aws/config`. O cache só economiza uma chamada."
+      },
+      {
+        "text": "Nada quebra: o próximo comando assume a role de novo",
+        "why": "Isso. Eles guardam as credenciais temporárias da role até vencerem, para evitar um `AssumeRole` por comando."
+      },
+      {
+        "text": "As chaves de `lab` se perdem",
+        "why": "Elas estão em `~/.aws/credentials`, que o cache nunca toca."
+      },
+      {
+        "text": "Toda sessão aberta com a role é revogada na conta",
+        "why": "Apagar um arquivo local não muda nada na AWS; as credenciais só deixam de ser guardadas aqui."
+      }
+    ]
+  },
+  "ex-17x2yar2": {
+    "prompt": "De quem são as credenciais que a linha de comando no AWS CloudShell usa?",
+    "hint": "Não há nada a configurar.",
+    "choices": [
+      {
+        "text": "Uma chave criada para o CloudShell quando ele é aberto pela primeira vez",
+        "why": "Nenhuma chave é criada. O CloudShell toma emprestada a sessão de quem o abriu."
+      },
+      {
+        "text": "As do usuário raiz da conta",
+        "why": "Só quem entrou como raiz teria a raiz. Todo mundo recebe a própria identidade."
+      },
+      {
+        "text": "O que o `~/.aws/credentials` guarda no seu laptop",
+        "why": "O CloudShell roda do lado da AWS e nunca vê os arquivos do seu laptop."
+      },
+      {
+        "text": "As da sessão do console que o abriu",
+        "why": "Isso. Elas acabam quando essa sessão acaba, e a pessoa age como ela mesma."
+      }
+    ]
+  },
+  "ex-atw5nb54": {
+    "prompt": "Quais destes um perfil pode usar para conseguir credenciais? Marque todos os que se aplicam.",
+    "hint": "A seção termina com uma lista de quatro.",
+    "choices": [
+      {
+        "text": "Chaves em `~/.aws/credentials`",
+        "why": "Isso. O perfil `lab`, lido como `shared-credentials-file`."
+      },
+      {
+        "text": "Uma role assumida com as credenciais de outro perfil",
+        "why": "Isso. `role_arn` e `source_profile`, como o `staging` faz."
+      },
+      {
+        "text": "Um programa nomeado em `credential_process`",
+        "why": "Isso. A saída JSON dele são as credenciais, informadas como `custom-process`."
+      },
+      {
+        "text": "Um login pelo Identity Center, com `sso_session`",
+        "why": "Isso. O perfil da lição 11, preenchido pelo `aws sso login`."
+      },
+      {
+        "text": "Uma página web cujo endereço está no perfil",
+        "why": "Nenhuma configuração busca credenciais numa página. O portal de acesso é aberto por uma pessoa, não por um perfil."
+      }
+    ]
+  },
+  "ex-45s4zcgy": {
+    "prompt": "Um filtro `--query` em `aws iam list-policies --scope AWS` guarda as dezesseis políticas cujo nome começa com `AmazonS3`. Quanto o IAM enviou?",
+    "hint": "Onde o `--query` é avaliado?",
+    "choices": [
+      {
+        "text": "Só as dezesseis políticas que o filtro pegou",
+        "why": "Isso é o que um `--filters` do lado do servidor faria. O `--query` roda depois de a resposta chegar."
+      },
+      {
+        "text": "Só os nomes, já que a consulta não pediu mais nada",
+        "why": "A API devolve registros inteiros de política; a projeção para nomes acontece localmente."
+      },
+      {
+        "text": "Toda política; o filtro rodou localmente",
+        "why": "Isso. O JMESPath é avaliado pela linha de comando sobre a resposta inteira, então a listagem custa o mesmo."
+      },
+      {
+        "text": "Uma página de 100 políticas",
+        "why": "A linha de comando seguiu todos os marcadores, como as 16 requisições no `--debug` mostraram."
+      }
+    ]
+  },
+  "ex-jjm7h0vz": {
+    "prompt": "Um script de shell separa a resposta da linha de comando com `cut`. Que `--output` serve a ele?",
+    "hint": "Valores separados por tabulação.",
+    "choices": [
+      {
+        "text": "`table`, já que as colunas se alinham",
+        "why": "As bordas e o preenchimento são para olhos; o `cut` os receberia como parte de todo valor."
+      },
+      {
+        "text": "`text`",
+        "why": "Isso. Um valor por coluna separada por tabulação, de preferência depois de um `--query` que fixa a ordem."
+      },
+      {
+        "text": "`yaml`, que é o mais fácil de ler",
+        "why": "Fácil para pessoas, ruim para o `cut`: chaves e valores dividem cada linha."
+      },
+      {
+        "text": "`json`, passado por `cut -d:`",
+        "why": "JSON é para um parser de JSON como o `jq`; separá-lo nos dois-pontos quebra no primeiro valor aninhado."
+      }
+    ]
+  },
+  "ex-gmv7b2a0": {
+    "prompt": "`aws ec2 run-instances … --dry-run` imprime um erro e sai com 254. O que isso diz?",
+    "hint": "Leia o código do erro, não o código de saída.",
+    "choices": [
+      {
+        "text": "Que a imagem não existe em `sa-east-1`",
+        "why": "Uma imagem inexistente é outro erro. Este diz que a requisição teria dado certo."
+      },
+      {
+        "text": "Que a instância foi ligada e depois parada",
+        "why": "Nada foi ligado: o `describe-instances` contou 0 reservas depois."
+      },
+      {
+        "text": "`DryRunOperation`: permitida, e nada criado",
+        "why": "Isso. Um dry run recusado é `UnauthorizedOperation`, então um script os distingue pelo código."
+      },
+      {
+        "text": "Que o `--dry-run` não é suportado pelo `run-instances`",
+        "why": "Ele é uma das chamadas em que o EC2 o aceita; o erro é como um dry run bem-sucedido responde."
+      }
+    ]
+  },
+  "ex-b2h2wkbm": {
+    "prompt": "O moto guarda 1544 políticas gerenciadas pela AWS, e o `ListPolicies` devolve 100 por chamada. Quantas requisições a linha de comando manda para listar todas?",
+    "hint": "Arredonde para cima.",
+    "unit": "requisições"
+  },
+  "ex-wq3tjkad": {
+    "prompt": "Qual a diferença entre `--page-size 500` e `--max-items 500` numa listagem de 1544 políticas?",
+    "hint": "Uma muda as requisições, a outra a resposta.",
+    "choices": [
+      {
+        "text": "`--page-size` pede páginas maiores e imprime as 1544; `--max-items` imprime 500 e um token",
+        "why": "Isso. O token deixa o `--starting-token` continuar de onde o `--max-items` parou."
+      },
+      {
+        "text": "Nenhuma: as duas devolvem 500 políticas",
+        "why": "O `--page-size 500` ainda devolveu as 1544, em 4 requisições em vez de 16."
+      },
+      {
+        "text": "`--page-size` filtra no servidor; `--max-items` filtra localmente",
+        "why": "Nenhuma filtra. Uma define quanto cada requisição pede, a outra onde a resposta impressa para."
+      },
+      {
+        "text": "`--max-items` é o nome antigo de `--page-size`",
+        "why": "As duas existem lado a lado e fazem coisas diferentes, como as duas transcrições mostraram."
+      }
+    ]
+  },
+  "ex-4t0j546q": {
+    "prompt": "Numa expressão JMESPath, uma string literal como `AmazonS3` é escrita entre ___, cada uma escapada com barra invertida dentro das aspas duplas do shell.",
+    "hint": "O mesmo caractere que o shell usa para substituição de comando.",
+    "blanks": [
+      {
+        "accept": [
+          "crases",
+          "crase",
+          "acentos graves"
+        ]
+      }
+    ]
+  },
+  "ex-fwks5a6k": {
+    "prompt": "Com o `env.sh` lido, a `ana` quer que todo comando de um terminal rode como o perfil `staging` sem digitar `--profile`. O que ela digita?",
+    "hint": "Uma variável sozinha perde para as chaves do ambiente.",
+    "choices": [
+      {
+        "text": "`export AWS_PROFILE=staging`",
+        "why": "As chaves de teste que o `env.sh` exportou ainda responderiam primeiro, como `AWS_PROFILE=lab` mostrou."
+      },
+      {
+        "text": "`unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY` e depois `export AWS_PROFILE=staging`",
+        "why": "Isso. Sem as chaves, o perfil é a primeira coisa que a cadeia acha, e o endpoint continua apontado para o moto."
+      },
+      {
+        "text": "`aws configure set default.profile staging`",
+        "why": "Essa configuração não existe, e as chaves do ambiente venceriam qualquer arquivo de todo jeito."
+      },
+      {
+        "text": "Editar o `env.sh` para tirar as chaves em toda lição",
+        "why": "Funcionaria aqui e quebraria toda outra lição, que depende dessas chaves."
+      }
+    ]
+  },
+  "ex-n6ygmf0y": {
+    "prompt": "O script de um colega roda `aws ec2 describe-vpcs --output table` e tira o id da VPC com `awk`. Ele quebra quando uma VPC ganha uma tag. Qual o jeito mais robusto?",
+    "hint": "Peça exatamente o campo, num formato feito para programas.",
+    "choices": [
+      {
+        "text": "Manter a tabela e alargar o padrão do `awk`",
+        "why": "O desenho da tabela segue os dados, então a próxima mudança quebra o padrão mais largo também."
+      },
+      {
+        "text": "Mudar para `--output yaml` e buscar `VpcId:`",
+        "why": "Melhor que a tabela, e ainda uma busca em texto que um campo aninhado pode confundir."
+      },
+      {
+        "text": "`--query \"Vpcs[].VpcId\" --output text`",
+        "why": "Isso. A consulta fixa o campo e a ordem, e o `text` entrega ao shell valores simples."
+      },
+      {
+        "text": "Acrescentar `--no-paginate` para a tabela ter menos linhas",
+        "why": "Menos páginas não é menos colunas, e ainda descarta em silêncio as VPCs depois da primeira página."
+      }
+    ]
+  },
+  "ex-abpmrcbe": {
+    "prompt": "Um laptop não tem `env.sh`, tem `AWS_PROFILE=staging` exportado, e o perfil `staging` com `role_arn` e `source_profile = lab`. Quais credenciais assinam o `aws s3 ls`?",
+    "hint": "Desta vez não há chaves no ambiente.",
+    "choices": [
+      {
+        "text": "As chaves de `lab`, já que são as únicas de longo prazo",
+        "why": "Elas assinam o `AssumeRole`. O comando em si é assinado com o que ele devolve."
+      },
+      {
+        "text": "As do serviço de metadados da instância, na base da cadeia",
+        "why": "A cadeia para na primeira resposta, e o perfil responde muito antes do provedor de metadados."
+      },
+      {
+        "text": "Nenhuma: o `AWS_PROFILE` é ignorado sem `--profile`",
+        "why": "Ele só perde para chaves que o ambiente já fornece; aqui não há nenhuma."
+      },
+      {
+        "text": "Credenciais temporárias da role em `role_arn`, obtidas com as chaves de `lab`",
+        "why": "Isso. Sem nada no ambiente, o `AWS_PROFILE` decide, e a role do perfil é assumida e guardada no cache."
+      }
+    ]
+  }
+}
