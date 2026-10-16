@@ -8,7 +8,7 @@ roda em Java, e um broker num notebook é um Kafka completo: tópicos, partiçõ
 consumidores se comportam exatamente como no MSK, com uma máquina em vez de três. O que um broker só
 não consegue mostrar é a replicação, que é o assunto da próxima seção, e ela diz onde.
 
-Primeiro o Java, depois a versão, que tem cerca de 130 MB, em `~/aws`:
+O terminal é o da lição 1: o moto rodando no terminal dele e as quatro linhas de "O seu laboratório, em resumo" da lição 1 digitadas neste; o moto só é preciso da seção sobre o MSK em diante. Primeiro o Java, depois a versão, que tem cerca de 130 MB, em `~/aws`:
 
 ```sh
 sudo apt-get install -y openjdk-21-jre-headless

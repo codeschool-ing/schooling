@@ -8,7 +8,7 @@ on Java, and one broker on a laptop is a complete Kafka: topics, partitions, off
 groups behave exactly as they do on MSK, with one machine instead of three. What one broker cannot
 show is replication, which is the next section's subject, and it says where.
 
-Java first, then the release, which is about 130 MB, into `~/aws`:
+The terminal is the one from lesson 1: moto running in its own terminal and the four lines of lesson 1's "Your lab, in brief" typed in this one; moto is needed only from the section on MSK on. Java first, then the release, which is about 130 MB, into `~/aws`:
 
 ```sh
 sudo apt-get install -y openjdk-21-jre-headless
