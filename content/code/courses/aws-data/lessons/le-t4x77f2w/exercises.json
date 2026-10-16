@@ -1,0 +1,553 @@
+[
+  {
+    "id": "ex-3aq33mgc",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Kinesis term from lesson 20 to its Kafka counterpart.",
+    "hint": "One Kafka word on the right has no Kinesis counterpart here.",
+    "pairs": [
+      {
+        "left": "stream",
+        "right": "topic"
+      },
+      {
+        "left": "shard",
+        "right": "partition"
+      },
+      {
+        "left": "sequence number",
+        "right": "offset"
+      },
+      {
+        "left": "checkpoint kept by the Kinesis Client Library",
+        "right": "committed offset of a consumer group"
+      }
+    ],
+    "right_distractors": [
+      "compaction"
+    ]
+  },
+  {
+    "id": "ex-hf7yjtew",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic has three partitions and the group `fraud` has two running members. How are the partitions read?",
+    "hint": "Within a group, a partition has one reader.",
+    "choices": [
+      {
+        "text": "Both members read all three partitions, and each record is processed twice",
+        "correct": false,
+        "why": "That is what two different groups do; members of one group share the partitions."
+      },
+      {
+        "text": "One member reads two partitions and the other reads one",
+        "correct": true,
+        "why": "Right. Each partition goes to exactly one member, and a rebalance moves them when a member joins or leaves."
+      },
+      {
+        "text": "The members take records in turn from every partition",
+        "correct": false,
+        "why": "Records of one partition are never split between members, or their order would be lost."
+      },
+      {
+        "text": "Only one member reads; the other waits until the first one fails",
+        "correct": false,
+        "why": "With three partitions and two members both get work; an idle member happens only when members outnumber partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ya1saer",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda raises a topic from 3 partitions to 4 while producers keep writing, and `c-17`, on partition 1 of 3, maps to partition 3 of 4. What happens to the order of its records?",
+    "hint": "The partition is murmur2(key) modulo the partition count.",
+    "choices": [
+      {
+        "text": "Nothing: Kafka keeps the lineage, as Kinesis does after a reshard",
+        "correct": false,
+        "why": "Kinesis records parents and children; Kafka keeps no lineage between partitions."
+      },
+      {
+        "text": "Old and new records sit in two partitions, with no order between them",
+        "correct": true,
+        "why": "Right. The modulus changed, and nothing links the two partitions, so a reader may see the new records first."
+      },
+      {
+        "text": "Kafka moves `c-17`'s old records into the new partition",
+        "correct": false,
+        "why": "Existing records never move between partitions."
+      },
+      {
+        "text": "The topic refuses writes until consumers have read the old partitions",
+        "correct": false,
+        "why": "Adding partitions does not pause producers."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wefsdg9",
+    "version": 1,
+    "section": "kafka-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a topic with `cleanup.policy=compact` keep?",
+    "hint": "It turns a topic into something like a table.",
+    "choices": [
+      {
+        "text": "Every record for seven days, compressed",
+        "correct": false,
+        "why": "Compaction is not compression; it is about keys."
+      },
+      {
+        "text": "Only the records that no consumer group has read yet",
+        "correct": false,
+        "why": "Kafka never deletes by what has been read."
+      },
+      {
+        "text": "At least the latest record for every key",
+        "correct": true,
+        "why": "Right: the current address of every customer, kept for as long as the topic exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y3xnms1",
+    "version": 1,
+    "section": "a-broker-of-your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`kafka-consumer-groups.sh --describe` shows CURRENT-OFFSET 1 and LOG-END-OFFSET 2 for a partition. What is the lag, and what does it mean?",
+    "hint": "Subtract.",
+    "choices": [
+      {
+        "text": "1: one record the group has not read",
+        "correct": true,
+        "why": "Right. In the lab it was 1 on every partition after three more events were sent."
+      },
+      {
+        "text": "2: the group must read two more records before it is current",
+        "correct": false,
+        "why": "The committed offset is the next one to read; 2 − 1 is one record."
+      },
+      {
+        "text": "3: the sum of the two numbers",
+        "correct": false,
+        "why": "Lag is the difference between the end of the log and the committed offset."
+      },
+      {
+        "text": "1: one consumer is missing from the group to read it",
+        "correct": false,
+        "why": "Lag counts records, not members."
+      }
+    ]
+  },
+  {
+    "id": "ex-qd5v20jq",
+    "version": 1,
+    "section": "a-broker-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The console consumer of the group `fraud` exited after reading four records. Three more were sent, and a new consumer in the same group was started without `--from-beginning`. What did it read?",
+    "hint": "Where is the group's position kept?",
+    "choices": [
+      {
+        "text": "All seven, because a new process starts from the beginning",
+        "correct": false,
+        "why": "The group's committed offsets are on the broker; a new member carries on from them."
+      },
+      {
+        "text": "Nothing, because it starts at the end of the log",
+        "correct": false,
+        "why": "That happens to a group with no committed offsets; this one had them."
+      },
+      {
+        "text": "Exactly the three new records",
+        "correct": true,
+        "why": "Right. It carried on from the offsets the group had committed."
+      },
+      {
+        "text": "The four old records again, then the three new ones",
+        "correct": false,
+        "why": "Replaying needs a reset of the group's offsets, which came later."
+      }
+    ]
+  },
+  {
+    "id": "ex-kt5zn47n",
+    "version": 1,
+    "section": "a-broker-of-your-own",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To make the group `fraud` read its topic again from the start, the lab ran `kafka-consumer-groups.sh` with `--reset-offsets --to-___ --execute`.",
+    "hint": "The opposite of latest.",
+    "blanks": [
+      {
+        "accept": [
+          "earliest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6kqtezyp",
+    "version": 1,
+    "section": "a-broker-of-your-own",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A topic has `retention.ms` of seven days. Why can a partition still hold a record that is eight days old?",
+    "hint": "What does retention delete?",
+    "choices": [
+      {
+        "text": "Retention counts from the moment the record was last read",
+        "correct": false,
+        "why": "Reading changes nothing in Kafka's log."
+      },
+      {
+        "text": "Retention deletes whole segments, and its segment also holds younger records",
+        "correct": true,
+        "why": "Right. A segment goes only when all of it is past the limit."
+      },
+      {
+        "text": "`retention.bytes` overrides `retention.ms` when both are set",
+        "correct": false,
+        "why": "Whichever is reached first applies; neither keeps a record longer."
+      },
+      {
+        "text": "A consumer group with lag holds the record back from deletion",
+        "correct": false,
+        "why": "Kafka deletes regardless of lag; a group that falls behind loses records."
+      }
+    ]
+  },
+  {
+    "id": "ex-nexbqvp2",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Creating a topic with replication factor 3 on the single broker failed. Why?",
+    "hint": "Each copy lives on a different broker.",
+    "choices": [
+      {
+        "text": "Each copy needs its own broker, and there was one",
+        "correct": true,
+        "why": "Right; the message said \"only 1 broker(s) are registered\"."
+      },
+      {
+        "text": "Kafka 4 dropped replication in favour of KRaft, its new metadata mode",
+        "correct": false,
+        "why": "KRaft replaced ZooKeeper for metadata; replication of partitions is unchanged."
+      },
+      {
+        "text": "The disk had no room for three copies",
+        "correct": false,
+        "why": "The refusal was about brokers, not space."
+      },
+      {
+        "text": "`min.insync.replicas` was 1",
+        "correct": false,
+        "why": "That setting decides when writes are refused, not how many copies may exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-jr2965hj",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Replication factor 3 across three zones, `acks=all`, and `min.insync.replicas` of 2. Two zones fail. What happens to writes?",
+    "hint": "How many in-sync replicas are left?",
+    "choices": [
+      {
+        "text": "They continue on the one remaining copy",
+        "correct": false,
+        "why": "That would accept writes on a single copy, which the setting of 2 exists to refuse."
+      },
+      {
+        "text": "They are refused until a second replica is in sync again",
+        "correct": true,
+        "why": "Right. With one in-sync replica left, below the minimum of 2, the partition stops taking writes rather than risk losing them."
+      },
+      {
+        "text": "Kafka creates two new replicas in the surviving zone and carries on",
+        "correct": false,
+        "why": "Kafka does not re-replicate on its own to restore the factor."
+      },
+      {
+        "text": "Writes succeed, and the records are lost when the zones return",
+        "correct": false,
+        "why": "The writes are not accepted in the first place."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6htyr6w",
+    "version": 1,
+    "section": "replication",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of an MSK cluster? Choose all that apply.",
+    "hint": "Separate what AWS manages from what stays yours, and what is billed.",
+    "choices": [
+      {
+        "text": "Traffic between its brokers for replication is not billed",
+        "correct": true,
+        "why": "Right; AWS does not charge for it."
+      },
+      {
+        "text": "A producer in one zone writing to a leader in another pays the zone-crossing price",
+        "correct": true,
+        "why": "Right, in each direction."
+      },
+      {
+        "text": "The replication factor of each topic is chosen by AWS and cannot be changed",
+        "correct": false,
+        "why": "It is a Kafka setting and stays yours; MSK only sets defaults."
+      },
+      {
+        "text": "The number of brokers is a multiple of the number of zones",
+        "correct": true,
+        "why": "Right; MSK places them evenly."
+      }
+    ]
+  },
+  {
+    "id": "ex-8edht1sp",
+    "version": 1,
+    "section": "msk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto answered `create-cluster` with `CREATING` and `describe-cluster` with a `ZookeeperConnectString` of `zookeeper.example.com:2181`. What can a program connect to?",
+    "hint": "What did `get-bootstrap-brokers` return?",
+    "choices": [
+      {
+        "text": "To `zookeeper.example.com:2181`, once the state reaches `ACTIVE`",
+        "correct": false,
+        "why": "That host is a placeholder that does not exist, and the state never changes in moto."
+      },
+      {
+        "text": "Nothing: moto runs no broker, and `get-bootstrap-brokers` failed with a 500",
+        "correct": true,
+        "why": "Right. The MSK half of the lesson is the API's shape; the behaviour was seen on the local broker."
+      },
+      {
+        "text": "To `localhost:9092`, where moto starts a broker for each cluster",
+        "correct": false,
+        "why": "That port was the real Kafka of the earlier section, started by hand."
+      },
+      {
+        "text": "To any of the three subnets given",
+        "correct": false,
+        "why": "A subnet is not an address to connect to, and `subnet-a` is not even a subnet id."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bhxzevx",
+    "version": 1,
+    "section": "msk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda wants a topic kept for six months on a provisioned MSK cluster without buying large broker disks. What fits?",
+    "hint": "Older segments can live somewhere other than the brokers.",
+    "choices": [
+      {
+        "text": "Tiered storage, which moves older segments off the brokers",
+        "correct": true,
+        "why": "Right, at a lower price per GB. The brokers keep the recent part, and a long retention stops needing large disks."
+      },
+      {
+        "text": "Lowering the brokers' storage after the topic is created, to keep costs down",
+        "correct": false,
+        "why": "Broker storage can be raised and never lowered."
+      },
+      {
+        "text": "`cleanup.policy=compact`",
+        "correct": false,
+        "why": "Compaction keeps the latest record per key and drops the history six months asks for."
+      },
+      {
+        "text": "MSK Serverless, which keeps records with no limit",
+        "correct": false,
+        "why": "Serverless documents a cap on how long records are kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmfbznkf",
+    "version": 1,
+    "section": "msk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does MSK Connect run?",
+    "hint": "A framework of ready-made connectors.",
+    "choices": [
+      {
+        "text": "A VPN between your datacentre and the cluster, for clients outside AWS",
+        "correct": false,
+        "why": "That is Site-to-Site VPN, in `aws-foundations`; Connect moves data, not packets."
+      },
+      {
+        "text": "Kafka Connect: connectors that move data in and out of Kafka",
+        "correct": true,
+        "why": "Right: a database's change log into a topic, or a topic into S3."
+      },
+      {
+        "text": "The brokers' KRaft controllers, which keep the cluster's metadata",
+        "correct": false,
+        "why": "MSK runs those in every cluster; Connect is a separate service."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1g8qx86",
+    "version": 1,
+    "section": "kinesis-or-msk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For 20 GB a day, the provisioned MSK cluster cost 850.41 a month and Kinesis 170.10. What makes the difference?",
+    "hint": "Which line is there before a byte is written?",
+    "choices": [
+      {
+        "text": "MSK charges three times for every record because of replication",
+        "correct": false,
+        "why": "Replication traffic is not billed; the three copies cost disk, which is 114.00 of it."
+      },
+      {
+        "text": "The zone-crossing traffic",
+        "correct": false,
+        "why": "That line was 24.00."
+      },
+      {
+        "text": "The brokers: 712.41 a month whatever the traffic",
+        "correct": true,
+        "why": "Right. At 20 GB a day they carry a small fraction of what they could."
+      },
+      {
+        "text": "Kinesis retention is free for seven days",
+        "correct": false,
+        "why": "Seven days cost 87.60 on the Kinesis side."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tcqqf7v",
+    "version": 1,
+    "section": "kinesis-or-msk",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose Kinesis costs 8.51 per GB a day of traffic and nothing fixed, and the MSK cluster 712.41 fixed plus 6.90 per GB a day. At how many GB a day do they cost the same? Round to the nearest whole number.",
+    "hint": "Solve 8.51 × v = 712.41 + 6.90 × v.",
+    "value": 442,
+    "tolerance": 1,
+    "unit": "GB a day"
+  },
+  {
+    "id": "ex-h6897ncv",
+    "version": 1,
+    "section": "kinesis-or-msk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which situation argues for MSK even at Quitanda's modest volume?",
+    "hint": "Price is not the only column of the comparison.",
+    "choices": [
+      {
+        "text": "The team wants no servers to look after",
+        "correct": false,
+        "why": "That argues for Kinesis, which has no brokers."
+      },
+      {
+        "text": "A fraud check needs each order's events in order",
+        "correct": false,
+        "why": "Both order per key; Kinesis does it per shard."
+      },
+      {
+        "text": "The consumers are Lambda functions and a Firehose copy to S3",
+        "correct": false,
+        "why": "Those are AWS's own integrations, and they sit with Kinesis."
+      },
+      {
+        "text": "Services already written for Kafka clients and Connect",
+        "correct": true,
+        "why": "Right. Kafka itself is the requirement, and rewriting them for Kinesis costs more than the brokers."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j2ggggc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps of running and reading the local Kafka broker of this lesson.",
+    "hint": "Nothing can be created before the broker runs, and it cannot run unformatted.",
+    "items": [
+      "Extract the release into `~/aws`",
+      "Format the log directory with a cluster id",
+      "Start `kafka-server-start.sh` in a third terminal",
+      "Create the topic `orders` with three partitions",
+      "Send keyed records with the console producer",
+      "Read them in the group `fraud` and describe its lag"
+    ]
+  },
+  {
+    "id": "ex-wvpnxr5r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which retention can Kafka offer that Kinesis Data Streams cannot?",
+    "hint": "Kinesis expires records by age, up to a year.",
+    "choices": [
+      {
+        "text": "A retention of seven days",
+        "correct": false,
+        "why": "Kinesis keeps up to 365 days, seven included."
+      },
+      {
+        "text": "The latest record per key, kept for as long as the topic exists",
+        "correct": true,
+        "why": "Right: compaction, which Kinesis has no equivalent of."
+      },
+      {
+        "text": "A retention of 24 hours",
+        "correct": false,
+        "why": "That is Kinesis's default."
+      },
+      {
+        "text": "Retention that waits until every group has read a record",
+        "correct": false,
+        "why": "Neither deletes by what was read."
+      }
+    ]
+  }
+]

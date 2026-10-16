@@ -110,7 +110,7 @@ export default async function course({ id }) {
          when no school has answered. */
       examCard({
         key: exam.key, href: '#/course/' + esc(courseAddress(id)) + '/exam', scope: 'course',
-        count: examPaper(c.examPool) || exam.items.length, progress: p.pct,
+        count: examPaper(c.examPool, 'course') || exam.items.length, progress: p.pct,
         ready: courseExamOffered(id),
       }) +
 

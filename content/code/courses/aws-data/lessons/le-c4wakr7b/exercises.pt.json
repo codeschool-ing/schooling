@@ -1,0 +1,358 @@
+{
+  "ex-4mmd9rgr": {
+    "prompt": "O que um delivery stream faz que um data stream do Kinesis não faz?",
+    "hint": "Um deles precisa de um programa consumidor.",
+    "choices": [
+      {
+        "text": "Mantém os registros em ordem por chave de partição",
+        "why": "Essa é a promessa do data stream, por shard."
+      },
+      {
+        "text": "Escreve o que recebe no S3, sem código seu",
+        "why": "Isso. Ele junta os registros em buffers e escreve cada buffer como um objeto."
+      },
+      {
+        "text": "Guarda registros por até 365 dias, para poderem ser reprocessados",
+        "why": "Essa é a maior retenção de um data stream; um delivery stream não guarda nada para reprocessar."
+      },
+      {
+        "text": "Deixa vários consumidores lerem os mesmos registros ao mesmo tempo, cada um no seu ritmo",
+        "why": "Vários leitores é o que um data stream oferece; um delivery stream tem um destino."
+      }
+    ]
+  },
+  "ex-6t3bwx2p": {
+    "prompt": "Um objeto escrito a partir do `batch.json` mostra `{...}{...}` numa linha só. Por que o Athena não consegue lê-lo como dois pedidos?",
+    "hint": "O que o Firehose pôs entre os dois registros?",
+    "choices": [
+      {
+        "text": "O moto corrompeu os bytes; a AWS teria escrito JSON válido",
+        "why": "Essa parte o moto faz fielmente: por padrão o Firehose concatena os registros exatamente assim."
+      },
+      {
+        "text": "O Athena só lê Parquet",
+        "why": "O Athena lê linhas de JSON; o problema é que não há duas linhas."
+      },
+      {
+        "text": "Por padrão o Firehose não põe delimitador, e os registros não traziam quebra de linha",
+        "why": "Isso. O produtor termina cada registro com `\\n`, ou um processador acrescenta uma."
+      },
+      {
+        "text": "O `put-record-batch` embrulha os registros num array JSON que o Athena rejeita",
+        "why": "Nenhum array foi escrito; os bytes foram só emendados."
+      }
+    ]
+  },
+  "ex-5h43w5qd": {
+    "prompt": "Às 13:10 em São Paulo, o Firehose escreveu um objeto em `raw/orders/2026/10/16/16/`. O que é o `16` antes do nome do objeto?",
+    "hint": "São Paulo está três horas atrás do UTC.",
+    "choices": [
+      {
+        "text": "A hora em UTC",
+        "why": "Isso. A parte datada padrão é a hora UTC de chegada, 16 para as 13 de São Paulo."
+      },
+      {
+        "text": "O dia do mês, repetido",
+        "why": "O dia é o `16` antes dele; a última parte é a hora."
+      },
+      {
+        "text": "O número do buffer escrito naquele dia, contando a partir do primeiro",
+        "why": "O Firehose não numera buffers na chave; o nome do objeto traz uma hora e um sufixo aleatório."
+      },
+      {
+        "text": "O tamanho do objeto em megabytes",
+        "why": "A chave só traz a data; o tamanho é metadado do objeto."
+      }
+    ]
+  },
+  "ex-pwb1h0td": {
+    "prompt": "No laboratório, três chamadas a um delivery stream com dicas de 64 MB e 300 segundos produziram três objetos em um segundo. Quantos a AWS teria escrito?",
+    "hint": "O moto não faz buffer.",
+    "choices": [
+      {
+        "text": "Três, um por chamada, já que cada chamada é uma requisição",
+        "why": "Esse é o comportamento do moto; a AWS junta as chamadas num buffer."
+      },
+      {
+        "text": "Quatro, um por registro",
+        "why": "O Firehose não escreve um objeto por registro, a não ser que cada registro encha um buffer sozinho."
+      },
+      {
+        "text": "Um, depois de acabar o intervalo, com os quatro registros",
+        "why": "Isso. Algumas centenas de bytes estão longe de 64 MB, então os 300 segundos escrevem o buffer."
+      },
+      {
+        "text": "Nenhum até chegarem 64 MB",
+        "why": "O intervalo escreve um buffer que não encheu; é para isso que ele existe."
+      }
+    ]
+  },
+  "ex-yrvpxw2n": {
+    "prompt": "Um delivery stream quieto nunca enche o buffer de 64 MB, e o intervalo dele é de 600 segundos. Quantos objetos ele escreve num dia?",
+    "hint": "Um dia são 86.400 segundos, e o intervalo escreve todo buffer.",
+    "unit": "objetos"
+  },
+  "ex-51478422": {
+    "prompt": "O moto aceitou um delivery stream com `SizeInMBs` 500 e `IntervalInSeconds` 5000 e respondeu `ACTIVE`. O que se conclui?",
+    "hint": "A AWS documenta as faixas.",
+    "choices": [
+      {
+        "text": "Esses valores funcionam na AWS, que também os aceita",
+        "why": "Um sucesso do moto quer dizer que a requisição estava bem formada; esses valores estão fora das faixas da AWS."
+      },
+      {
+        "text": "A AWS os recusa: estão fora das faixas que ela documenta",
+        "why": "Isso: o tamanho vai até 128 MB e o intervalo até 900 segundos. A recusa não foi rodada aqui."
+      },
+      {
+        "text": "O moto os arredondou para baixo até o máximo e manteve o stream",
+        "why": "O `describe-delivery-stream` devolveu 500 e 5000, sem mudança."
+      }
+    ]
+  },
+  "ex-596xz0mc": {
+    "prompt": "Um stream quieto escreve 288 objetos de 3,5 MB por dia no lago, e os leitores podem esperar quinze minutos pelos dados. Qual é a primeira mudança?",
+    "hint": "Que condição escreve esses buffers?",
+    "choices": [
+      {
+        "text": "Subir o tamanho para 128 MB",
+        "why": "O tamanho nunca é atingido hoje; um tamanho maior não muda nada enquanto o intervalo escreve todo buffer."
+      },
+      {
+        "text": "Subir o intervalo para 900 segundos, para 96 objetos de cerca de 10,4 MB",
+        "why": "Isso. O intervalo é o que os escreve, e quinze minutos é o atraso que os leitores aceitam."
+      },
+      {
+        "text": "Ligar o particionamento dinâmico, que junta buffers pequenos",
+        "why": "Ele divide o stream em mais buffers, cada um menor."
+      },
+      {
+        "text": "Ligar o GZIP",
+        "why": "A compressão deixa o mesmo número de objetos ainda menor."
+      }
+    ]
+  },
+  "ex-7e96e2hg": {
+    "prompt": "Na AWS, o `Prefix` de um delivery stream é `raw/orders-dt/dt=!{timestamp:yyyy-MM-dd}/`. O que vem entre esse prefixo e o nome do objeto?",
+    "hint": "A regra documentada depende de o prefixo usar uma expressão de timestamp.",
+    "choices": [
+      {
+        "text": "Nada: o Firehose não acrescenta parte datada depois de uma expressão de timestamp",
+        "why": "Isso. O moto acrescentou `2026/10/16/16/` mesmo assim, o que é do moto e não da AWS."
+      },
+      {
+        "text": "A hora UTC, `2026/10/16/16/`, que o Firehose acrescenta depois de todo prefixo",
+        "why": "Foi o que o moto fez; a AWS só acrescenta quando o prefixo não tem expressão de timestamp."
+      },
+      {
+        "text": "O texto literal `!{timestamp:yyyy-MM-dd}`, guardado como foi escrito",
+        "why": "Na AWS a expressão é avaliada, para `2026-10-16`; texto foi o que o moto deixou."
+      },
+      {
+        "text": "A chave de partição do registro",
+        "why": "Um delivery stream alimentado direto não tem chave de partição; valores dos registros pedem particionamento dinâmico."
+      }
+    ]
+  },
+  "ex-kkecdx12": {
+    "prompt": "Com particionamento dinâmico ligado e um prefixo `store=!{partitionKeyFromQuery:store}/`, para onde vai na AWS um registro sem o campo `store`?",
+    "hint": "Ele não pode ir para uma pasta com o nome de um valor que não tem.",
+    "choices": [
+      {
+        "text": "Para `store=null/`",
+        "why": "O Firehose não cria pasta para um valor ausente."
+      },
+      {
+        "text": "É descartado em silêncio",
+        "why": "O prefixo de erro existe para que uma falha não seja um silêncio."
+      },
+      {
+        "text": "Para o prefixo de erro",
+        "why": "Isso, com `!{firehose:error-output-type}` dizendo por quê."
+      },
+      {
+        "text": "Para `store=pinheiros/`, a primeira loja vista",
+        "why": "Cada registro é particionado pelo próprio valor, nunca pelo de outro."
+      }
+    ]
+  },
+  "ex-n50pp4zr": {
+    "prompt": "Por que o id do cliente é uma chave ruim para particionamento dinâmico dos pedidos da Quitanda, embora seja uma boa chave de partição para o stream do Kinesis?",
+    "hint": "Cada valor distinto ganha um buffer próprio.",
+    "choices": [
+      {
+        "text": "O jq não consegue ler um campo com hífen no valor",
+        "why": "O jq lê qualquer valor de string."
+      },
+      {
+        "text": "Ids de cliente são dados pessoais e não podem aparecer numa chave",
+        "why": "Um id opaco como `c-17` é o que o lago já usa como chave; o problema aqui é a contagem."
+      },
+      {
+        "text": "Dezenas de milhares de buffers, cada um escrito quase vazio pelo intervalo: objetos minúsculos",
+        "why": "Isso. Um shard precisa de muitas chaves para espalhar; um layout de pastas precisa de poucos valores para continuar grande."
+      },
+      {
+        "text": "O Kinesis e o Firehose calculam o hash da chave de jeitos diferentes, então clientes caem na pasta errada",
+        "why": "O particionamento dinâmico não calcula hash; usa o próprio valor."
+      }
+    ]
+  },
+  "ex-72w3awzb": {
+    "prompt": "Um objeto escrito por um stream com `CompressionFormat` `GZIP` no moto começa com os bytes `{\"order_id\"`. O que isso mostra?",
+    "hint": "Um arquivo gzip começa com `037 213`.",
+    "choices": [
+      {
+        "text": "Que o moto guardou os bytes sem comprimir",
+        "why": "Isso. O moto guarda a configuração e não comprime nada."
+      },
+      {
+        "text": "Que o GZIP só comprime objetos acima de 5 MB",
+        "why": "Não existe esse limite; na AWS todo objeto seria comprimido."
+      },
+      {
+        "text": "Que o `aws s3 cp` descomprimiu o objeto na descida",
+        "why": "O `aws s3 cp` copia os bytes como estão guardados."
+      }
+    ]
+  },
+  "ex-jqnmkakf": {
+    "prompt": "Quais destas a AWS precisa para a conversão de formato de registro para Parquet? Marque todas as que se aplicam.",
+    "hint": "De onde vem o esquema, e o que a entrada pode ser?",
+    "choices": [
+      {
+        "text": "Uma tabela no Glue Data Catalog que dá as colunas",
+        "why": "Isso; o stream lê o esquema dela."
+      },
+      {
+        "text": "Registros em JSON",
+        "why": "Isso; JSON é a entrada que a conversão aceita."
+      },
+      {
+        "text": "`CompressionFormat` como `GZIP`",
+        "why": "Fica `UNCOMPRESSED`; o Parquet comprime por dentro, aqui com `SNAPPY`."
+      },
+      {
+        "text": "Uma função Lambda que escreve o Parquet",
+        "why": "A conversão é do próprio Firehose; nenhuma função entra."
+      },
+      {
+        "text": "Um buffer de pelo menos 64 MB",
+        "why": "Isso; a AWS fixa esse mínimo quando a conversão está ligada."
+      }
+    ]
+  },
+  "ex-3fvsy1zp": {
+    "prompt": "Uma Lambda de transformação também soma o total de cada pedido a um acumulado num banco. O que pode dar errado?",
+    "hint": "O que o Firehose faz com um lote cuja chamada estourou o tempo?",
+    "choices": [
+      {
+        "text": "O Firehose recusa funções que escrevem num banco",
+        "why": "O Firehose não vê o que uma função faz por dentro."
+      },
+      {
+        "text": "Nada: cada registro chega à função uma vez",
+        "why": "Um lote que falhou ou estourou o tempo é tentado de novo, então um registro pode chegar duas vezes à função."
+      },
+      {
+        "text": "Um lote tentado de novo soma os mesmos pedidos ao acumulado outra vez",
+        "why": "Isso. O efeito colateral acontece uma vez por tentativa; a lição 23 é sobre deixá-lo seguro."
+      },
+      {
+        "text": "Registros marcados `Dropped` são somados duas vezes",
+        "why": "`Dropped` só deixa um registro fora do S3; não diz nada sobre o que a função fez."
+      }
+    ]
+  },
+  "ex-q7n3m5ev": {
+    "prompt": "No laboratório, um registro posto no stream `orders` do Kinesis nunca chegou ao delivery stream que o tem como origem. O que vale na AWS?",
+    "hint": "O moto guarda a origem na configuração e não lê nada.",
+    "choices": [
+      {
+        "text": "O mesmo: o Firehose só lê uma origem do Kinesis quando uma chamada pede",
+        "why": "Na AWS ele lê o stream continuamente, como consumidor."
+      },
+      {
+        "text": "O Firehose o lê continuamente, e recusa qualquer `PutRecord` mandado direto a ele",
+        "why": "Isso. O moto inverteu as duas metades, então o par foi configurado e não observado."
+      },
+      {
+        "text": "Os registros só chegam ao S3 depois de acabar o período de retenção do stream",
+        "why": "O Firehose lê conforme os registros chegam, e depois os junta no buffer."
+      }
+    ]
+  },
+  "ex-8b5tpzkw": {
+    "prompt": "Um produtor manda ao Firehose 2 milhões de registros por dia de 1 KB cada, por 30 dias. Cada registro é cobrado arredondado para 5 KB, a 0,05800 USD por GB ingerido. Quanto custa a ingestão do mês, em USD? Considere 1 GB como 1.000.000 KB.",
+    "hint": "2 milhões × 5 KB por dia, depois 30 dias.",
+    "unit": "USD"
+  },
+  "ex-sq20vyyn": {
+    "prompt": "Por que juntar cinco eventos num registro reduziu a ingestão do Firehose de 174,00 para 34,80 por mês?",
+    "hint": "Qual é o menor tamanho pelo qual um registro é cobrado?",
+    "choices": [
+      {
+        "text": "O mínimo cobrado de 5 KB agora vai cheio, onde antes quatro quintos sobravam",
+        "why": "Isso. Os bytes enviados não mudaram; o arredondamento parou de desperdiçar quatro quintos de cada registro."
+      },
+      {
+        "text": "O Firehose comprime registros maiores",
+        "why": "Nada foi comprimido; o tamanho cobrado caiu por causa do arredondamento."
+      },
+      {
+        "text": "Menos registros querem dizer menos objetos no S3, e objetos são o que o Firehose cobra",
+        "why": "Os objetos vêm dos buffers, não dos registros, e a conta do S3 é separada."
+      },
+      {
+        "text": "Lotes de cinco caem numa faixa de preço mais barata",
+        "why": "A primeira faixa vai até 500 TB; os dois casos estão nela."
+      }
+    ]
+  },
+  "ex-f3zsx9dc": {
+    "prompt": "Os registros que o Firehose não consegue entregar como configurado são escritos sob o ___, que pode nomear a falha com `!{firehose:error-output-type}`.",
+    "hint": "É uma chave da configuração do destino, ao lado de `Prefix`.",
+    "blanks": [
+      {
+        "accept": [
+          "ErrorOutputPrefix",
+          "prefixo de erro"
+        ]
+      }
+    ]
+  },
+  "ex-sfv2h93p": {
+    "prompt": "Ponha em ordem o que acontece na AWS com um evento de pedido mandado a um delivery stream que converte para Parquet e particiona por loja.",
+    "hint": "A loja tem de ser lida antes de o registro entrar num buffer.",
+    "items": [
+      "O produtor manda o registro, terminado em quebra de linha",
+      "A consulta `jq` lê o `store` dele",
+      "O registro espera no buffer daquela loja",
+      "O buffer chega a 128 MB ou 900 segundos",
+      "O buffer é convertido para Parquet com o esquema da tabela do Glue",
+      "O objeto é escrito em `store=<valor>/dt=<data>/`"
+    ]
+  },
+  "ex-hmhyhpfj": {
+    "prompt": "O único uso da Quitanda para um stream de eventos novo é uma cópia no S3, legível em quinze minutos. O que serve melhor?",
+    "hint": "Que metade do par da lição 20 ficaria sem leitor?",
+    "choices": [
+      {
+        "text": "Um data stream do Kinesis com 7 dias de retenção, lido por um programa que escreve no S3",
+        "why": "Isso reconstrói o Firehose à mão e paga uma retenção que ninguém lê."
+      },
+      {
+        "text": "Um delivery stream alimentado direto, com intervalo de 900 segundos",
+        "why": "Isso. Sem outro consumidor, o data stream na frente acrescentaria custo e nenhum leitor."
+      },
+      {
+        "text": "Um data stream do Kinesis na frente de um delivery stream, pela ordem",
+        "why": "Nada aqui precisa de ordem por chave, e os objetos intercalam shards de qualquer jeito."
+      },
+      {
+        "text": "Um delivery stream com intervalo de 60 segundos, para os dados chegarem o quanto antes",
+        "why": "Quinze minutos eram permitidos; sessenta segundos fazem quinze vezes os objetos à toa."
+      }
+    ]
+  }
+}

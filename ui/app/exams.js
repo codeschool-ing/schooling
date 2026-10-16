@@ -114,12 +114,12 @@ export const examReady = (exam) => exam.items.length >= MIN_QUESTIONS;
    here; what changed is that a school now answers for itself. */
 export function courseExamOffered(courseId) {
   if (!api.examOnServer()) return examReady(courseExam(courseId));
-  return examPaper((courseById(courseId) || {}).examPool) >= MIN_QUESTIONS;
+  return examPaper((courseById(courseId) || {}).examPool, 'course') >= MIN_QUESTIONS;
 }
 
 export function trackExamOffered(track, option) {
   if (!api.examOnServer()) return examReady(trackExam(track, option));
-  return examPaper(track && track.examPool) >= MIN_QUESTIONS;
+  return examPaper(track && track.examPool, 'track') >= MIN_QUESTIONS;
 }
 
 /* HOW LONG THE PAPER WILL ACTUALLY BE, which is the smaller of the two numbers.
@@ -132,10 +132,14 @@ export function trackExamOffered(track, option) {
 
    WITH NO DRAW IT IS THE POOL. A school that has not said how long a paper is
    has not said the pool is shorter either, so the honest reading of silence is
-   the whole set. */
-export const examPaper = (pool) => {
+   the whole set.
+
+   THE SCOPE IS AN ARGUMENT because a course paper and a track's final are two
+   numbers (A-14): twenty and thirty as shipped. A track card asking the
+   course's number would promise twenty and lead to thirty. */
+export const examPaper = (pool, scope) => {
   const held = typeof pool === 'number' && pool > 0 ? pool : 0;
-  const draw = examDraw();
+  const draw = examDraw(scope);
   return draw > 0 ? Math.min(held, draw) : held;
 };
 
@@ -147,8 +151,9 @@ export const examPaper = (pool) => {
 
    ZERO MEANS THE SERVER DID NOT SAY, and the card then names no length rather
    than inventing one. A wrong number here is a promise the paper breaks. */
-export const examDraw = () => {
-  const said = source.school && source.school.examQuestions;
+export const examDraw = (scope) => {
+  const field = scope === 'track' ? 'trackExamQuestions' : 'examQuestions';
+  const said = source.school && source.school[field];
   return typeof said === 'number' && said > 0 ? said : 0;
 };
 

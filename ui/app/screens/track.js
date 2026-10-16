@@ -37,7 +37,7 @@ export default async function track() {
     const exam = trackExam(t, activeOption);
     return examCard({
       key: exam.key, href: '#/track/exam', scope: 'track',
-      count: examPaper(t.examPool) || exam.items.length, progress: trackProgress(t).pct,
+      count: examPaper(t.examPool, 'track') || exam.items.length, progress: trackProgress(t).pct,
       /* The school's answer, for the reason written out in `course.js`: the
          draw above happens in the browser against a bank that is empty here.
          For as long as no track had a final this card was right by accident,

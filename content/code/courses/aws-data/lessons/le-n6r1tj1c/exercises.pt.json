@@ -1,0 +1,455 @@
+{
+  "ex-j5sv9mfy": {
+    "prompt": "Por que uma política de bucket não consegue esconder a coluna `phone` do `part-0.csv` dos analistas?",
+    "hint": "Qual é a menor coisa que o S3 entrega?",
+    "choices": [
+      {
+        "text": "Políticas de bucket não nomeiam prefixos, só o bucket inteiro",
+        "why": "Conseguem; `curated/orders/*` é um recurso perfeitamente válido. O problema está abaixo do prefixo."
+      },
+      {
+        "text": "A coluna está dentro do objeto, e o S3 concede objetos inteiros",
+        "why": "Isso. O `aws s3 cp` devolveu as quatro colunas, porque o objeto é a unidade que o S3 conhece."
+      },
+      {
+        "text": "O S3 esconde colunas de arquivos Parquet e lê CSV inteiro",
+        "why": "O S3 não sabe nada do formato; um arquivo Parquet é um objeto como qualquer outro."
+      },
+      {
+        "text": "A coluna de telefone é criptografada com uma chave KMS própria",
+        "why": "Nada na lição criptografa uma coluna; o arquivo é CSV simples."
+      }
+    ]
+  },
+  "ex-jswp6v3a": {
+    "prompt": "Só com IAM e sem Lake Formation, o que o papel de um analista precisa ter permitido para o Athena consultar uma tabela? Marque todas as que se aplicam.",
+    "hint": "Dois serviços, que não sabem nada um do outro.",
+    "choices": [
+      {
+        "text": "`glue:GetTable` no banco e na tabela",
+        "why": "Sim. Sem isso o Athena não descobre o que a tabela é."
+      },
+      {
+        "text": "`s3:GetObject` no prefixo da tabela",
+        "why": "Sim. Sem isso a consulta falha no primeiro arquivo."
+      },
+      {
+        "text": "`lakeformation:GetDataAccess`",
+        "why": "Isso pertence ao caminho pelo Lake Formation, em que a permissão no S3 é a que deixa de existir."
+      },
+      {
+        "text": "`s3:PutObject` no prefixo da tabela",
+        "why": "Ler não precisa de permissão de escrita; ela é do pipeline que grava os arquivos."
+      }
+    ]
+  },
+  "ex-g3x126ma": {
+    "prompt": "Só com IAM, qual é o remendo de sempre para manter uma coluna longe de um time?",
+    "hint": "Nada no IAM consegue esconder uma coluna.",
+    "choices": [
+      {
+        "text": "Um `Deny` na coluna, escrito na política de bucket",
+        "why": "Uma política de bucket nomeia buckets e chaves; não há coluna para negar."
+      },
+      {
+        "text": "Uma lista das colunas permitidas na política de IAM do papel",
+        "why": "O IAM não tem condição que alcance o interior de um objeto."
+      },
+      {
+        "text": "Uma segunda cópia da tabela, sem a coluna",
+        "why": "Isso, e uma segunda cópia é uma segunda coisa para manter em dia, pagar e proteger."
+      },
+      {
+        "text": "Renomear a coluna para o time não adivinhar",
+        "why": "Uma coluna renomeada continua no arquivo, e o arquivo continua sendo lido inteiro."
+      }
+    ]
+  },
+  "ex-zekjvgxd": {
+    "prompt": "O que registrar `s3://quitanda-curated-prod/curated` no Lake Formation faz?",
+    "hint": "Pense nas credenciais que um motor recebe.",
+    "choices": [
+      {
+        "text": "Copia os arquivos para o armazenamento do próprio Lake Formation",
+        "why": "Nada se move e nada é copiado; os arquivos ficam no bucket."
+      },
+      {
+        "text": "Cria uma tabela do Glue para cada prefixo sob o caminho",
+        "why": "Isso é trabalho de crawler, na lição 16; esta lição escreveu a tabela à mão."
+      },
+      {
+        "text": "Deixa o Lake Formation entregar credenciais do caminho",
+        "why": "Isso. Com `--use-service-linked-role` esse papel é um que a AWS cria para isso."
+      },
+      {
+        "text": "Torna o caminho legível a quem tiver uma concessão, direto pelo S3",
+        "why": "O S3 não consulta o Lake Formation; as concessões são conferidas pelos motores que perguntam."
+      }
+    ]
+  },
+  "ex-5m3xbrtm": {
+    "prompt": "Depois de o `put-data-lake-settings` ser mandado só com `DataLakeAdmins`, o que tinha acontecido com as duas concessões padrão a `IAM_ALLOWED_PRINCIPALS`?",
+    "hint": "Compare as duas respostas do `get-data-lake-settings`.",
+    "choices": [
+      {
+        "text": "Foram mantidas, porque a chamada mescla nas configurações",
+        "why": "A segunda resposta não tem concessão padrão nenhuma; a chamada não mescla."
+      },
+      {
+        "text": "Passaram ao novo administrador",
+        "why": "O administrador pode conceder qualquer coisa, e não guarda cópia dos padrões."
+      },
+      {
+        "text": "Viraram concessões por coluna em toda tabela",
+        "why": "Nada foi convertido; elas só não estavam no documento novo."
+      },
+      {
+        "text": "Sumiram: a chamada substitui o documento inteiro",
+        "why": "Isso. Na AWS, deixá-las de fora é como as tabelas novas deixam de ser entregues ao IAM."
+      }
+    ]
+  },
+  "ex-4cc99fy8": {
+    "prompt": "O analista tem `SELECT` em `order_id`, `customer_id`, `total_cents` e `dt`, e nada mais. Na AWS, o que um `SELECT * FROM curated.orders` devolve no Athena?",
+    "hint": "O Athena remove o que a concessão não cobre.",
+    "choices": [
+      {
+        "text": "Todas as colunas, já que `*` não é nome de coluna",
+        "why": "A concessão vale sobre o que é devolvido, seja como for que a consulta escreve."
+      },
+      {
+        "text": "As quatro colunas concedidas, sem `phone`",
+        "why": "Isso. Uma consulta que nomeia `phone` é recusada, e o `*` devolve o resto."
+      },
+      {
+        "text": "Só `order_id`, a primeira coluna da concessão",
+        "why": "As quatro colunas concedidas podem ser lidas; a ordem delas na concessão não importa."
+      },
+      {
+        "text": "Um erro, porque `*` inclui uma coluna que o analista não pode ler",
+        "why": "Nomear `phone` explicitamente é recusado; o `*` é estreitado às colunas concedidas."
+      }
+    ]
+  },
+  "ex-ejc46982": {
+    "prompt": "Ponha em ordem os passos de uma consulta do Athena numa tabela do Lake Formation.",
+    "hint": "O motor pergunta antes de ler.",
+    "items": [
+      "O analista manda a consulta ao Athena",
+      "O Athena pede ao Lake Formation acesso à tabela, como o analista",
+      "O Lake Formation confere as concessões e devolve credenciais temporárias",
+      "O Athena lê os arquivos do S3 com essas credenciais",
+      "O Athena devolve ao analista só as colunas concedidas"
+    ]
+  },
+  "ex-4xp720sy": {
+    "prompt": "No moto, toda concessão desta lição deu certo e o `get-temporary-glue-table-credentials` respondeu 404. O que isso diz sobre o que o analista poderia ler na AWS?",
+    "hint": "Quem, neste laboratório, pergunta alguma coisa ao Lake Formation?",
+    "choices": [
+      {
+        "text": "Que o analista seria recusado, já que nenhuma credencial pode ser entregue",
+        "why": "O 404 é uma chamada que o moto não implementa, não uma recusa que a AWS daria."
+      },
+      {
+        "text": "Que o analista leria tudo, já que nada foi imposto",
+        "why": "Nada foi imposto porque nada perguntou; isso não diz nada sobre a AWS."
+      },
+      {
+        "text": "Nada em nenhum sentido: o moto guarda as concessões, e nada pergunta",
+        "why": "Isso. Um sucesso do moto quer dizer que a requisição estava bem formada."
+      },
+      {
+        "text": "Que as concessões estão certas, já que o moto aceitou todas",
+        "why": "O moto também aceitou uma concessão numa tabela que não existe."
+      }
+    ]
+  },
+  "ex-akchp2rr": {
+    "prompt": "O Lake Formation está ligado. `orders` tem a concessão por coluna dos analistas e também o `ALL` padrão a `IAM_ALLOWED_PRINCIPALS`. A política de IAM dos analistas permite o Athena, o catálogo e o bucket. Na AWS, o que eles leem?",
+    "hint": "O que esse grupo quer dizer?",
+    "choices": [
+      {
+        "text": "As quatro colunas concedidas, como a concessão por coluna diz",
+        "why": "Com `IAM_ALLOWED_PRINCIPALS` tendo `ALL`, quem decide é o IAM, e o IAM permite todas as colunas."
+      },
+      {
+        "text": "As cinco, já que a decisão fica com o IAM",
+        "why": "Isso. A concessão por coluna não vale até essa concessão ser revogada."
+      },
+      {
+        "text": "Nada, porque as duas concessões se contradizem",
+        "why": "Concessões se somam; não se anulam."
+      },
+      {
+        "text": "Só as colunas com a tag `internal`",
+        "why": "Nenhuma concessão por tag foi dada aos analistas."
+      }
+    ]
+  },
+  "ex-t32egv4a": {
+    "prompt": "Qual ordem de passos passa `orders` para o Lake Formation sem quebrar uma consulta no caminho?",
+    "hint": "Entre os dois passos, qual porta está aberta?",
+    "choices": [
+      {
+        "text": "Revogar `IAM_ALLOWED_PRINCIPALS` na tabela, depois conceder aos usuários no Lake Formation",
+        "why": "Entre os dois, a porta do IAM fechou e a do Lake Formation não abriu, então toda consulta falha."
+      },
+      {
+        "text": "Conceder aos usuários no Lake Formation, depois revogar `IAM_ALLOWED_PRINCIPALS` na tabela",
+        "why": "Isso. A porta nova abre antes de a velha fechar."
+      },
+      {
+        "text": "Cancelar o registro do local, depois conceder aos usuários",
+        "why": "Sem local registrado o Lake Formation nem consegue entregar credenciais para a tabela."
+      },
+      {
+        "text": "Remover as políticas de IAM dos usuários, depois revogar `IAM_ALLOWED_PRINCIPALS`",
+        "why": "Eles continuam precisando do Athena e do catálogo no IAM; é a permissão no S3 que sai."
+      }
+    ]
+  },
+  "ex-4xt4dept": {
+    "prompt": "Toda concessão do Lake Formation em `orders` está certa e `IAM_ALLOWED_PRINCIPALS` foi revogado, mas o papel de um script ainda tem `s3:GetObject` em `quitanda-curated-prod/curated/*`. O que o script consegue ler?",
+    "hint": "Com qual serviço o `aws s3 cp` fala?",
+    "choices": [
+      {
+        "text": "Só as colunas em que tem concessão, já que o local está registrado",
+        "why": "O registro deixa o Lake Formation entregar credenciais; o S3 continua respondendo às próprias permissões."
+      },
+      {
+        "text": "Nada, já que um local registrado recusa leituras diretas",
+        "why": "O S3 nunca ouviu falar do Lake Formation; uma leitura direta é julgada pelo IAM e pela política de bucket."
+      },
+      {
+        "text": "Todas as colunas, com `aws s3 cp`: o S3 nunca consulta o Lake Formation",
+        "why": "Isso. A segunda metade de assumir um lake é tirar essa permissão."
+      },
+      {
+        "text": "Só os arquivos das tabelas em que tem `SELECT`",
+        "why": "O S3 não sabe nada de tabelas nem de `SELECT`."
+      }
+    ]
+  },
+  "ex-rmzjda53": {
+    "prompt": "No modo de acesso ___, um local registrado continua respeitando as permissões do IAM para todo mundo, enquanto os principais incluídos um por um são julgados pelas concessões do Lake Formation.",
+    "hint": "É o jeito suave de migrar um lake que muitos times usam.",
+    "blanks": [
+      {
+        "accept": [
+          "híbrido",
+          "hibrido",
+          "hybrid"
+        ]
+      }
+    ]
+  },
+  "ex-5wnv82ny": {
+    "prompt": "`orders` tem a tag `sensitivity=internal`, e a coluna `phone` tem `sensitivity=pii`. Um analista recebe `SELECT` na expressão `sensitivity=internal`. Na AWS, o que o analista consegue ler?",
+    "hint": "Uma coluna pode substituir a tag que herda.",
+    "choices": [
+      {
+        "text": "Todas as colunas, já que a tabela é `internal`",
+        "why": "`phone` recebeu um valor próprio para a mesma chave, então não é `internal`."
+      },
+      {
+        "text": "Só `phone`",
+        "why": "Essa é justamente a coluna que a expressão não cobre."
+      },
+      {
+        "text": "Nada, já que uma coluna precisa de uma concessão própria",
+        "why": "Uma concessão por tag cobre todo recurso cujas tags combinam, colunas incluídas."
+      },
+      {
+        "text": "Todas as colunas de `orders` menos `phone`",
+        "why": "Isso. A tag da tabela desce para quatro colunas, e `phone` tem `pii`."
+      }
+    ]
+  },
+  "ex-xe45wxzf": {
+    "prompt": "Na semana que vem o pipeline cria uma tabela e põe nela a tag `sensitivity=internal`. O que precisa ser feito antes de o papel de atendimento conseguir lê-la?",
+    "hint": "O atendimento recebeu uma expressão, não uma tabela.",
+    "choices": [
+      {
+        "text": "Nada: a concessão por tag que existe já a cobre",
+        "why": "Isso. Esse é o objetivo das tags, e também o motivo de rotular ser uma permissão sensível."
+      },
+      {
+        "text": "Uma concessão na tabela nova para o papel de atendimento",
+        "why": "Essa seria a concessão por tabela que as tags existem para substituir."
+      },
+      {
+        "text": "Rodar a concessão por tag de novo",
+        "why": "A expressão é avaliada contra as tags como estão; não precisa ser repetida."
+      },
+      {
+        "text": "Registrar de novo o local da tabela",
+        "why": "Um local é registrado uma vez, para toda tabela sob ele."
+      }
+    ]
+  },
+  "ex-6g91mz7s": {
+    "prompt": "Por que a permissão de atribuir LF-tags é tão sensível quanto os próprios dados?",
+    "hint": "As concessões seguem as tags.",
+    "choices": [
+      {
+        "text": "Toda atribuição de tag é cobrada",
+        "why": "A tabela de preços não tem linha nenhuma para permissões do Lake Formation."
+      },
+      {
+        "text": "Uma tag, depois de atribuída, nunca pode ser mudada",
+        "why": "Tags podem ser mudadas, como `phone` substituindo o valor da tabela mostrou; isso é o perigo, não a segurança."
+      },
+      {
+        "text": "As tags são gravadas nos objetos do S3 e viajam com as cópias",
+        "why": "As LF-tags moram no catálogo, não nos arquivos."
+      },
+      {
+        "text": "Quem rotula uma tabela decide quais concessões por tag a cobrem, e portanto quem a lê",
+        "why": "Isso. Rotular uma tabela como `pii` por engano a entrega ao atendimento na hora."
+      }
+    ]
+  },
+  "ex-1q722w1x": {
+    "prompt": "Na AWS, o `support-filter.json` aplicado às três linhas do `part-0.csv` deixa o atendimento ver algumas linhas e algumas colunas. Quantas células, linhas vezes colunas, ele deixa passar?",
+    "hint": "Conte os clientes do filtro de linhas e os nomes em `ColumnNames`."
+  },
+  "ex-qv2pv5hm": {
+    "prompt": "Qual comando lista toda concessão do Lake Formation para uma auditoria?",
+    "hint": "Ele foi rodado com `--output table`.",
+    "choices": [
+      {
+        "text": "`aws iam list-policies`",
+        "why": "Essas são políticas de IAM; as concessões do Lake Formation não estão entre elas."
+      },
+      {
+        "text": "`aws glue get-tables`",
+        "why": "Isso lista as tabelas, não quem pode lê-las."
+      },
+      {
+        "text": "`aws lakeformation list-permissions`",
+        "why": "Isso. Sem filtro é toda concessão, e um `--query` a torna legível."
+      },
+      {
+        "text": "`aws s3api get-bucket-policy`",
+        "why": "A política de bucket é o lado do S3; não tem concessão de tabela nem de coluna."
+      }
+    ]
+  },
+  "ex-gabfae6p": {
+    "prompt": "O moto aceitou uma concessão em `ordres`, uma tabela que não existe, e o Glue diz que ela não está lá. O que isso mostra?",
+    "hint": "Alguma coisa comparou a concessão com o catálogo?",
+    "choices": [
+      {
+        "text": "O Lake Formation cria uma tabela na primeira concessão",
+        "why": "O Glue continua respondendo que `ordres` não existe."
+      },
+      {
+        "text": "O moto guarda concessões e não confere nenhuma contra o catálogo",
+        "why": "Isso. O moto não impõe nada do Lake Formation."
+      },
+      {
+        "text": "O Lake Formation e o Glue usam catálogos separados na AWS",
+        "why": "O Lake Formation concede sobre o próprio Glue Data Catalog."
+      },
+      {
+        "text": "A concessão fica reservada para quando alguém criar `ordres`, de propósito",
+        "why": "Nada na lição descreve concessões reservadas; é um erro de digitação que foi guardado."
+      }
+    ]
+  },
+  "ex-re42h1mj": {
+    "prompt": "Quais destas coisas estão na lista de quem defende? Marque todas as que se aplicam.",
+    "hint": "Cada uma fecha uma porta que a lição mostrou aberta.",
+    "choices": [
+      {
+        "text": "Conceder a papéis em vez de a usuários individuais",
+        "why": "Sim. As pessoas entram e saem sem deixar concessões para trás."
+      },
+      {
+        "text": "Tirar o acesso direto ao S3 dos principais que leem por um motor",
+        "why": "Sim. Senão o `aws s3 cp` lê todas as colunas."
+      },
+      {
+        "text": "Alertar em `GrantPermissions` para a tag `pii`",
+        "why": "Sim. Um novo leitor de telefones é notado no dia em que aparece."
+      },
+      {
+        "text": "Manter `IAM_ALLOWED_PRINCIPALS` nas tabelas sensíveis como reserva",
+        "why": "Enquanto ele tiver `ALL`, as concessões por coluna daquela tabela não valem."
+      },
+      {
+        "text": "Dar a todo analista a permissão de atribuir tags",
+        "why": "Quem rotula decide quem lê; essa permissão é concedida com tanto cuidado quanto os dados."
+      }
+    ]
+  },
+  "ex-te7zesan": {
+    "prompt": "Ligue cada sintoma à sua causa.",
+    "hint": "Cada um é uma porta que a lição nomeou.",
+    "pairs": [
+      {
+        "left": "Analistas veem `phone` apesar da concessão por coluna",
+        "right": "`IAM_ALLOWED_PRINCIPALS` ainda tem `ALL` na tabela"
+      },
+      {
+        "left": "Toda consulta numa tabela falha depois de uma mudança",
+        "right": "A concessão do IAM foi revogada antes de existir qualquer concessão do Lake Formation"
+      },
+      {
+        "left": "O atendimento não consegue ler uma tabela nova",
+        "right": "Ela não tem tag que combine com a expressão do atendimento"
+      },
+      {
+        "left": "Um script lê todas as colunas com `aws s3 cp`",
+        "right": "O papel dele mantém `s3:GetObject` no local registrado"
+      }
+    ],
+    "right_distractors": [
+      "O Athena leu mais bytes do que a consulta precisava"
+    ]
+  },
+  "ex-zev0mwv0": {
+    "prompt": "A Quitanda quer que o time de atendimento de cada bairro veja telefones só dos clientes daquele bairro. Qual recurso do Lake Formation faz isso?",
+    "hint": "Algumas linhas e algumas colunas ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Uma LF-tag `pii` na coluna `phone`, concedida a cada time",
+        "why": "Uma tag cobre a coluna inteira, para toda linha."
+      },
+      {
+        "text": "Um filtro de dados em linhas e colunas, concedido a cada time",
+        "why": "Isso. Linhas e colunas juntas são células, e o filtro é o que estreita uma concessão a elas."
+      },
+      {
+        "text": "Uma concessão por coluna em `phone` para todo papel de atendimento",
+        "why": "Isso mostra `phone` de todo cliente, não só do bairro."
+      },
+      {
+        "text": "Uma política de bucket no prefixo de cada bairro no bucket curado",
+        "why": "Os arquivos são particionados por dia, não por bairro, e o S3 concede arquivos inteiros."
+      }
+    ]
+  },
+  "ex-m3gkb046": {
+    "prompt": "Qual destas chamadas falhou com 404 no moto, de modo que a lição não conseguiu rodá-la?",
+    "hint": "Um tipo de permissão foi descrito inteiramente a partir da documentação.",
+    "choices": [
+      {
+        "text": "`register-resource`",
+        "why": "Deu certo, e o `list-resources` mostrou o local."
+      },
+      {
+        "text": "`create-lf-tag`",
+        "why": "Deu certo; a tag foi depois posta na tabela e numa coluna."
+      },
+      {
+        "text": "`grant-permissions` numa `LFTagPolicy`",
+        "why": "Deu certo e apareceu no `list-permissions`."
+      },
+      {
+        "text": "`create-data-cells-filter`",
+        "why": "Isso. A filtragem por linha e por célula foi ensinada a partir da documentação da AWS."
+      }
+    ]
+  }
+}

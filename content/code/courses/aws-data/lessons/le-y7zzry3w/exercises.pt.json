@@ -1,0 +1,339 @@
+{
+  "ex-dteh114a": {
+    "prompt": "O que um stream do DynamoDB guarda?",
+    "hint": "Pense no que é acrescentado a ele, e por quanto tempo.",
+    "choices": [
+      {
+        "text": "Uma cópia da tabela, atualizada a cada 24 horas",
+        "why": "Ele guarda mudanças, não itens, e começa vazio quando é ligado."
+      },
+      {
+        "text": "As requisições que falharam, guardadas até alguém lê-las",
+        "why": "Escritas que falharam não mudam nada e não deixam registro; e nada espera por um leitor."
+      },
+      {
+        "text": "Toda mudança num item, na ordem dele, por 24 horas",
+        "why": "Isso, na ordem de cada item. Depois de um dia o registro some, lido ou não."
+      },
+      {
+        "text": "Toda leitura e escrita, para auditoria",
+        "why": "Leituras não mudam nada, então nunca aparecem."
+      }
+    ]
+  },
+  "ex-f93t0dyb": {
+    "prompt": "O stream foi ligado numa tabela vazia; depois o `seed.py` escreveu 30 itens, e três mudanças puseram uma linha, atualizaram um pedido e apagaram quatro itens. Quantos registros o stream guarda?",
+    "hint": "Um registro por escrita que mudou um item."
+  },
+  "ex-2x4nktb2": {
+    "prompt": "Na AWS, um leitor vê `MODIFY o-10007` antes de `INSERT o-10003`, embora o insert tenha acontecido antes. O stream está quebrado?",
+    "hint": "Sobre o que é a garantia de ordem?",
+    "choices": [
+      {
+        "text": "Não: a ordem vale por item, não entre shards",
+        "why": "Isso. Dois itens em dois shards podem ser lidos em qualquer ordem, e o shard único do moto esconde isso."
+      },
+      {
+        "text": "Sim: os registros saem na ordem dos números de sequência",
+        "why": "Números de sequência ordenam um shard, não o stream inteiro."
+      },
+      {
+        "text": "Sim, a menos que os dois pedidos sejam do mesmo cliente",
+        "why": "A garantia é por item, e estes são dois itens."
+      }
+    ]
+  },
+  "ex-dpstnksz": {
+    "prompt": "Um stream é ligado numa tabela que já tem um milhão de itens. O que o primeiro leitor pode saber sobre esses itens?",
+    "hint": "Quando um registro é escrito?",
+    "choices": [
+      {
+        "text": "Tudo, a partir de `TRIM_HORIZON`",
+        "why": "`TRIM_HORIZON` é o registro mais antigo guardado, e o mais antigo é a primeira mudança depois que o stream começou."
+      },
+      {
+        "text": "Só as chaves, como registros `KEYS_ONLY`",
+        "why": "Não existe registro para um item que não mudou, qualquer que seja o tipo de visão."
+      },
+      {
+        "text": "As últimas 24 horas do histórico deles",
+        "why": "O stream não existia nessas horas, então não registrou nada."
+      },
+      {
+        "text": "Nada até que mudem",
+        "why": "Isso. Um stream começa vazio; um consumidor que precisa dos itens existentes começa por um scan da tabela."
+      }
+    ]
+  },
+  "ex-z5rydm5c": {
+    "prompt": "Ligue cada tipo de visão ao que um registro `MODIFY` dele carrega.",
+    "hint": "Os nomes dizem.",
+    "pairs": [
+      {
+        "left": "`KEYS_ONLY`",
+        "right": "a chave"
+      },
+      {
+        "left": "`NEW_IMAGE`",
+        "right": "o item depois da mudança"
+      },
+      {
+        "left": "`OLD_IMAGE`",
+        "right": "o item antes da mudança"
+      },
+      {
+        "left": "`NEW_AND_OLD_IMAGES`",
+        "right": "o item antes e depois"
+      }
+    ]
+  },
+  "ex-bf94yk3r": {
+    "prompt": "Por que o `totals.py` precisa de `NEW_AND_OLD_IMAGES` e não de `NEW_IMAGE`?",
+    "hint": "Quanto um `MODIFY` muda um total?",
+    "choices": [
+      {
+        "text": "Porque a mudança é o novo menos o antigo, e precisa dos dois",
+        "why": "Isso: 4079 menos 2489, e só a imagem antiga diz como o pedido era. Sem ela o consumidor teria de lembrar ele mesmo de todo total."
+      },
+      {
+        "text": "Porque registros `NEW_IMAGE` não têm `eventID`",
+        "why": "Todo registro tem `eventID`, qualquer que seja a visão."
+      },
+      {
+        "text": "Porque um `REMOVE` não chegaria a um stream `NEW_IMAGE`",
+        "why": "Ele chegaria, sem imagem, então o valor seria desconhecido; a visão muda o que um registro carrega, não quais registros existem."
+      }
+    ]
+  },
+  "ex-a7t6xt98": {
+    "prompt": "A equipe quer trocar um stream ligado de `NEW_AND_OLD_IMAGES` para `KEYS_ONLY` para economizar espaço. Na AWS, o que isso exige, e qual é o risco?",
+    "hint": "O tipo de visão de um stream ligado não pode ser trocado.",
+    "choices": [
+      {
+        "text": "Um `update-table` com o novo tipo de visão, aplicado aos registros dali em diante",
+        "why": "Essa é a requisição que o moto e a AWS recusam."
+      },
+      {
+        "text": "Nada: os registros são cortados para as chaves quando lidos",
+        "why": "Um registro carrega o que o stream estava configurado para carregar quando foi escrito."
+      },
+      {
+        "text": "Recriar a tabela, já que o tipo de visão faz parte do esquema de chave",
+        "why": "O esquema de chave não muda; só o stream é trocado."
+      },
+      {
+        "text": "Um stream novo, com outro ARN, para onde os consumidores têm de ir",
+        "why": "Isso: o antigo é desligado e um novo é ligado. Um consumidor deixado no stream antigo o vê acabar, e no novo não há nada de antes de ele começar."
+      }
+    ]
+  },
+  "ex-jvavg632": {
+    "prompt": "Por que os totais moram em `quitanda-totals` e não como mais um item em `quitanda`?",
+    "hint": "O que escrever um total em `quitanda` acrescentaria ao stream dela?",
+    "choices": [
+      {
+        "text": "Cada total escrito ali cairia no stream que ele lê",
+        "why": "Isso: cada total escrito ali seria mais uma mudança no stream. Um consumidor que escreve na própria fonte lê de volta as próprias escritas e tem de pulá-las."
+      },
+      {
+        "text": "Porque uma tabela só pode guardar um tipo de item",
+        "why": "A lição 9 pôs três tipos numa tabela."
+      },
+      {
+        "text": "Porque transações não podem abranger dois itens de uma tabela",
+        "why": "Podem; até cem itens, entre tabelas ou dentro de uma."
+      }
+    ]
+  },
+  "ex-xydrwqdd": {
+    "prompt": "Depois que o `totals.py` rodou, uma query somou os pedidos de c-17 direto da tabela e deu 27569. Para que serve essa comparação?",
+    "hint": "Qual número dá para confiar sem o stream?",
+    "choices": [
+      {
+        "text": "Para mostrar que o stream contou as linhas também",
+        "why": "O consumidor pula as linhas; a query soma só pedidos."
+      },
+      {
+        "text": "Para atualizar a tabela de totais, que a query escreve",
+        "why": "Uma query não escreve nada."
+      },
+      {
+        "text": "Para achar um consumidor que perdeu ou dobrou um registro, perguntando aos próprios dados",
+        "why": "Isso. Um total corrente nunca comparado com a fonte é um número que ninguém garante."
+      },
+      {
+        "text": "Para pagar menos, já que a query é mais barata que o stream",
+        "why": "Ler o histórico em toda tela é o que o total existe para evitar."
+      }
+    ]
+  },
+  "ex-a57g042k": {
+    "prompt": "Um iterador de shard do tipo `___` começa no registro mais antigo que o stream ainda guarda.",
+    "hint": "É o oposto de `LATEST`.",
+    "blanks": [
+      {
+        "accept": [
+          "TRIM_HORIZON"
+        ]
+      }
+    ]
+  },
+  "ex-vwnzgfab": {
+    "prompt": "A execução ingênua levou c-17 de 275,69 para 551,38 reais. Onde estava a duplicata?",
+    "hint": "Quantas vezes cada mudança está no stream?",
+    "choices": [
+      {
+        "text": "Na leitura, não no stream",
+        "why": "Isso: os mesmos registros foram lidos e somados de novo. Nada disse ao consumidor ingênuo que ele já os tinha aplicado."
+      },
+      {
+        "text": "No stream, que repetiu cada registro",
+        "why": "Cada mudança está no stream exatamente uma vez."
+      },
+      {
+        "text": "No moto, cujo `TRIM_HORIZON` dobra os registros",
+        "why": "As duas execuções leram as mesmas onze mudanças."
+      },
+      {
+        "text": "Na tabela, que guardava todo pedido duas vezes",
+        "why": "A query ainda somou 27569 para c-17."
+      }
+    ]
+  },
+  "ex-erg1qtdp": {
+    "prompt": "Um consumidor soma a mudança primeiro e depois escreve o marcador, em duas chamadas separadas. O que dá errado?",
+    "hint": "Imagine-o parando entre as duas.",
+    "choices": [
+      {
+        "text": "Nada, desde que o marcador seja escrito em algum momento",
+        "why": "Se ele parar antes de escrevê-lo, a próxima execução soma a mudança de novo."
+      },
+      {
+        "text": "O marcador é recusado porque o total já existe",
+        "why": "A condição do marcador é sobre o marcador, não sobre o total."
+      },
+      {
+        "text": "Se ele parar no meio, a próxima execução conta aquela duas vezes",
+        "why": "Isso: uma parada entre as duas deixa uma mudança somada sem marcador. Marcador e soma numa transação é o que faz o conserto valer."
+      }
+    ]
+  },
+  "ex-ehkh1krj": {
+    "prompt": "Quais destas são verdade sobre um event source mapping do Lambda num stream do DynamoDB? Escolha todas.",
+    "hint": "Pense num registro que falha num lote de cem.",
+    "choices": [
+      {
+        "text": "Um lote que falhou é repetido desde o primeiro registro",
+        "why": "Sim, e é daí que vêm as duplicatas."
+      },
+      {
+        "text": "Enquanto um lote é repetido, os registros seguintes do shard esperam",
+        "why": "Sim, para manter a ordem de cada item."
+      },
+      {
+        "text": "`--bisect-batch-on-function-error` divide um lote que falha para isolar o registro ruim",
+        "why": "Sim."
+      },
+      {
+        "text": "`--maximum-retry-attempts` garante que nenhum registro seja pulado",
+        "why": "O contrário: quando as tentativas acabam, o registro é pulado, e deve ir para algum lugar onde alguém veja."
+      }
+    ]
+  },
+  "ex-xf6977t9": {
+    "prompt": "O `expires_at` de um carrinho passou há uma hora, na AWS. Uma leitura ainda pode devolvê-lo?",
+    "hint": "Quando o TTL apaga?",
+    "choices": [
+      {
+        "text": "Não: o TTL apaga no segundo escrito no atributo",
+        "why": "Ele apaga em segundo plano, tipicamente em dias, não no momento."
+      },
+      {
+        "text": "Sim, até a remoção em segundo plano chegar a ele",
+        "why": "Isso, e é por isso que as leituras filtram por `expires_at`. O moto nem chega a apagá-lo, que é o caso extremo da mesma regra."
+      },
+      {
+        "text": "Não, porque itens vencidos são escondidos das leituras na hora",
+        "why": "Nada os esconde; até serem apagados, são lidos como qualquer item."
+      }
+    ]
+  },
+  "ex-eve0f161": {
+    "prompt": "Um consumidor precisa tratar um cliente esvaziando o carrinho de forma diferente de um carrinho que venceu. O que no registro do stream diferencia os dois?",
+    "hint": "Quem fez a remoção?",
+    "choices": [
+      {
+        "text": "O nome do evento: `EXPIRE` em vez de `REMOVE`",
+        "why": "Os dois são `REMOVE`; não existe evento `EXPIRE`."
+      },
+      {
+        "text": "A imagem antiga ausente",
+        "why": "Um `REMOVE` do TTL traz a imagem antiga como qualquer outro."
+      },
+      {
+        "text": "O número de sequência, que é menor",
+        "why": "Números de sequência ordenam registros; não dizem nada sobre quem os escreveu."
+      },
+      {
+        "text": "Um `userIdentity` que nomeia o serviço",
+        "why": "Isso: `dynamodb.amazonaws.com`, presente só nas remoções por TTL."
+      }
+    ]
+  },
+  "ex-5414s8xn": {
+    "prompt": "Uma equipe passa o consumidor do DynamoDB Streams para o Kinesis Data Streams for DynamoDB, pelo ano de retenção. O que o consumidor agora precisa fazer que antes não precisava?",
+    "hint": "Quais duas garantias o Kinesis não dá?",
+    "choices": [
+      {
+        "text": "Ordenar por tempo e tirar duplicatas",
+        "why": "Isso, usando `ApproximateCreationDateTime` e as chaves. As duplicatas do próprio consumidor, de novas tentativas, já eram trabalho dele."
+      },
+      {
+        "text": "Nada: os dois serviços entregam cada mudança uma vez, em ordem",
+        "why": "No Kinesis, os registros de um item podem chegar fora de ordem e mais de uma vez."
+      },
+      {
+        "text": "Ler a tabela com um scan a cada 24 horas",
+        "why": "O ano de retenção é o motivo da mudança; lá nada vence em 24 horas."
+      }
+    ]
+  },
+  "ex-r00asjb6": {
+    "prompt": "Na AWS, ponha em ordem o caminho de uma mudança num pedido, da escrita até o total corrente.",
+    "hint": "O registro existe antes de alguém lê-lo.",
+    "items": [
+      "Um `update-item` muda o total do pedido",
+      "Um registro `MODIFY` entra no shard do item",
+      "O Lambda consulta o shard e monta um lote",
+      "A função confere o marcador do registro",
+      "A diferença é somada ao total do cliente"
+    ]
+  },
+  "ex-p4fj0e6j": {
+    "prompt": "Um consumidor parou por um bug na sexta à noite e foi consertado no sábado à meia-noite, 30 horas depois. Ele recomeça de `TRIM_HORIZON`. Em que estado ficam os totais?",
+    "hint": "Quanto tempo um registro fica?",
+    "choices": [
+      {
+        "text": "Corretos, porque `TRIM_HORIZON` começa onde ele parou",
+        "why": "Ele começa no registro mais antigo ainda guardado, que tem 24 horas."
+      },
+      {
+        "text": "Faltam seis horas de mudanças, que só a tabela devolve",
+        "why": "Isso. As primeiras seis horas venceram sem ser lidas; um scan dos pedidos é o único caminho de volta."
+      },
+      {
+        "text": "Dobrados, porque o recomeço lê tudo de novo",
+        "why": "Com marcadores, as mudanças relidas são puladas; o problema são as que não estão mais lá."
+      },
+      {
+        "text": "Corretos, porque a AWS pausa as 24 horas enquanto nenhum consumidor lê",
+        "why": "A retenção corre lendo alguém ou não."
+      }
+    ]
+  },
+  "ex-et7dbsz3": {
+    "prompt": "Um leitor seu consulta dois shards quatro vezes por segundo cada, o mês inteiro de 30 dias. Além da franquia gratuita, quantos dólares de leituras de stream dá?",
+    "hint": "Chamadas num mês, a 0,30 dólar por milhão.",
+    "unit": "USD"
+  }
+}

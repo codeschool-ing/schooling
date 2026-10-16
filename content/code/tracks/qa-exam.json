@@ -1,0 +1,3744 @@
+[
+  {
+    "id": "ex-5fd6b76w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Testing an online shop, you are signed in as one customer. `GET /orders/ord-2044`, another customer's order, answers `404`. `GET /orders/ord-9999`, which does not exist, also answers `404`, and your own order answers `200`. Do you report the first `404` as a defect?",
+    "hint": "Web and Internet Fundamentals, lesson 6; Information Security Fundamentals, lesson 8.",
+    "choices": [
+      {
+        "text": "Yes: the server knows who you are, so its refusal has to be `403`.",
+        "correct": false,
+        "why": "A `403` would confirm the order exists; one `404` for both is a deliberate way of not saying so."
+      },
+      {
+        "text": "Yes: you may not see that order, so the right code is `401`.",
+        "correct": false,
+        "why": "`401` says the server does not know who is asking, and here it does."
+      },
+      {
+        "text": "No: the same answer for both hides which orders exist.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Yes: a `404` on another customer's order is the insecure direct object reference flaw.",
+        "correct": false,
+        "why": "That flaw answers `200` and shows the order; any refusal means the check ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5xh58xs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A shop's offer page gets its price from a response sent with `Cache-Control: max-age=3600`. Customers who opened it in the morning still see the old price after an afternoon change. Your Playwright test changes the price through the API, opens the page and passes. Why does it pass?",
+    "hint": "Web and Internet Fundamentals, lesson 7; Web Test Automation, lesson 4.",
+    "choices": [
+      {
+        "text": "Each test runs in a new, empty context, so it only ever plays a first visit.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Playwright switches the HTTP cache off in every test, as the *Disable cache* box does.",
+        "correct": false,
+        "why": "It has no such setting; the cache is on, and empty only because the context is new."
+      },
+      {
+        "text": "The test's browser revalidated its copy with `If-None-Match`, and the server answered with the new price.",
+        "correct": false,
+        "why": "Inside `max-age` a kept copy is used without asking, and a new context has no copy to revalidate."
+      },
+      {
+        "text": "The server sends `max-age` only to browsers it has seen before.",
+        "correct": false,
+        "why": "The header is the same for everybody; what differs is whether a browser already holds a fresh copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-3v8t7j2s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Testing checkout, you press reload on the order confirmation page, the browser asks to resend the form, and a second order appears. The `POST` was answered with the confirmation page itself. Which fix does lesson 6 give?",
+    "hint": "Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "Answer the `POST` with a `307` to the confirmation page.",
+        "correct": false,
+        "why": "`307` keeps the method, so the browser would post the form again to the new address."
+      },
+      {
+        "text": "Send the order form as a `GET`, which is safe to repeat.",
+        "correct": false,
+        "why": "Placing an order changes something, and if it changes something it is not a `GET`."
+      },
+      {
+        "text": "Answer the `POST` with a `308` to that page, so the move is remembered.",
+        "correct": false,
+        "why": "`308` is permanent and also keeps the method, so the form is still posted again."
+      },
+      {
+        "text": "Answer the `POST` with a `303` pointing at the confirmation page.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8659c08z",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The requirement reads *Largest Contentful Paint at most 2.5 s at the 75th percentile of real visits*. A teammate opens the page on her office laptop, on fibre, with *Disable cache* ticked in the network panel and no throttling. It loads in 0.9 s, and she marks the requirement as met. What is wrong with that evidence? Choose all that apply.",
+    "hint": "Web and Internet Fundamentals, lesson 11; Non-functional Testing, lesson 10.",
+    "choices": [
+      {
+        "text": "Her connection is fast and close to the server, and few visitors have one like it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Turning the cache off made the page look faster than visitors see it.",
+        "correct": false,
+        "why": "It works the other way: every file is fetched again, as on a first visit."
+      },
+      {
+        "text": "One load in a lab cannot say what three visits in four were like for real people.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The network panel times single requests and cannot time a whole page.",
+        "correct": false,
+        "why": "Its foot reports when `DOMContentLoaded` and `load` happened for the whole page."
+      },
+      {
+        "text": "With the cache off every load is a first visit, which is not the visit most people have.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ev2npwe",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Analytics, a test tool and two retired features have left cookies on a shop's own domain that add up to 3 kilobytes. The product page makes 40 requests, all to that same domain. By lesson 7's arithmetic, how many kilobytes of uploads do those cookies add to one load of the page?",
+    "hint": "Web and Internet Fundamentals, lesson 7.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "KB"
+  },
+  {
+    "id": "ex-2qpg82kf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A bug report says that, behind the CDN, the home page comes up in English for some Brazilian visitors and in Portuguese for others, depending on who loaded it first. The server picks the language from Accept-Language. By lesson 6, the response is missing one header, whose name is ___.",
+    "hint": "Web and Internet Fundamentals, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "Vary"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d5546bgj",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A staging service sits behind a proxy, and four failed requests came back with four codes. Match each code to what it tells you about where the failure is.",
+    "hint": "Web and Internet Fundamentals, lesson 6.",
+    "pairs": [
+      {
+        "left": "`500`",
+        "right": "the application threw an error and nothing caught it"
+      },
+      {
+        "left": "`502`",
+        "right": "the service behind the proxy answered with nonsense"
+      },
+      {
+        "left": "`503`",
+        "right": "the server is up and deliberately not serving, overloaded or in maintenance"
+      },
+      {
+        "left": "`504`",
+        "right": "the service behind the proxy never answered at all"
+      }
+    ]
+  },
+  {
+    "id": "ex-44j31nzk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Thursday night, an open defect still charges some customers the wrong price, and the exit criteria say no high or critical defect may be open in prices. The fix is planned for next sprint, and Rafael asks Lia to mark the defect medium so Friday's table is green. What should she do?",
+    "hint": "Software Quality Fundamentals, lesson 21; Manual Testing and Test Management, lesson 15.",
+    "choices": [
+      {
+        "text": "Lower it, because a fix planned for next sprint means the defect no longer has to be dealt with soon.",
+        "correct": false,
+        "why": "That is priority, how soon it is fixed; severity is the harm, and the harm has not changed."
+      },
+      {
+        "text": "Refuse to let Friday's release go out until the price is fixed and tested again.",
+        "correct": false,
+        "why": "The release is Joana's call; the tester's part is a report that says plainly which criterion is not met."
+      },
+      {
+        "text": "Keep the severity and report the criterion as not met, so Joana decides knowingly.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lower it and add a line to the summary saying it was lowered to meet the criterion.",
+        "correct": false,
+        "why": "The table still turns green on a severity no new fact supports, which is the quiet downgrade lesson 21 rules out."
+      }
+    ]
+  },
+  {
+    "id": "ex-28ewny56",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lia gives an assistant the original `tickets.py` and nothing else, and asks for tests of `price`. Every test it writes passes, one of them expecting `price(60, False, \"thu\", \"20:00\")` to be 3600. What were those expected values checked against?",
+    "hint": "AI in Development, lesson 4; Software Quality Fundamentals, lesson 19.",
+    "choices": [
+      {
+        "text": "Joana's rule, which the assistant read from the `if` lines where each of her sentences was turned into code.",
+        "correct": false,
+        "why": "An `if` says what the program does, and `age > 60` is the defect, not the rule."
+      },
+      {
+        "text": "An implicit oracle, since a test that passes shows nothing crashed.",
+        "correct": false,
+        "why": "An implicit oracle needs no expected value; these tests carry expected values, read off the code."
+      },
+      {
+        "text": "A human oracle: the model has read how cinemas price their tickets.",
+        "correct": false,
+        "why": "It was given one file and wrote down what that file does; nothing it was given said that sixty pays half."
+      },
+      {
+        "text": "The code itself, like a price list printed by the same program: they show it agrees with itself.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh028g8z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 7's seven cases make every line of `price` run. A mutation tool changes `age > 60` to `age >= 60` and runs the same seven cases against it. What happens, and what does that tell Lia?",
+    "hint": "Software Quality Fundamentals, lesson 7; Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "It survives: no case is sixty, so the suite cannot tell the two lines apart.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The sixty-one case kills it, because that is the case that runs the changed line.",
+        "correct": false,
+        "why": "Sixty-one pays half under both lines; a case that runs a line is not a case at its boundary."
+      },
+      {
+        "text": "Coverage of `tickets.py` drops, so the report shows the gap before the cases finish.",
+        "correct": false,
+        "why": "The mutant has the same lines, and the cases run them the same way; coverage cannot see the change."
+      },
+      {
+        "text": "It is killed, because with every line already run, any change to a line makes one of the seven cases give a different price.",
+        "correct": false,
+        "why": "A mutant dies only when some case's answer changes; between the two lines only sixty differs, and no case is sixty."
+      }
+    ]
+  },
+  {
+    "id": "ex-12ckq4s3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Playwright test of the seat map fails 3 times in 20 runs with two workers and passes 20 of 20 with one worker. Nothing in the shop or the test was edited between runs. By lesson 4's method, what has Lia learnt so far?",
+    "hint": "Software Quality Fundamentals, lesson 4; Web Test Automation, lesson 14.",
+    "choices": [
+      {
+        "text": "The defect is not real, since it goes away every time the test is run on its own with one worker.",
+        "correct": false,
+        "why": "A failure that will not always reproduce means a condition has not been found yet, not that nothing happened."
+      },
+      {
+        "text": "What differs between failing and passing runs is what ran beside the test, so shared state is the next hypothesis.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The seat map itself is broken, because a test that has failed even once in twenty runs has already found a defect in the page.",
+        "correct": false,
+        "why": "Passing alone and failing together points first at two tests sharing data, not at the page."
+      },
+      {
+        "text": "The wait is too short, and a longer timeout in the test will settle it.",
+        "correct": false,
+        "why": "Nothing in the counts is about time; the number of workers is the one change that moved the rate."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vzfmj3e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lia finds that the order history page can show one customer another customer's orders. Joana hears the evidence and decides to ship on Friday and fix it next sprint. What does lesson 5 say Lia does next?",
+    "hint": "Software Quality Fundamentals, lesson 5.",
+    "choices": [
+      {
+        "text": "Record what was known and decided, then help reduce the risk, since the decision was Joana's.",
+        "correct": false,
+        "why": "That fits a commercial trade-off; exposed personal data is a risk that belongs to somebody outside the room."
+      },
+      {
+        "text": "Takes it to whoever in the company answers for personal data, because that risk is not Joana's to accept on the company's behalf.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Holds the release back herself, because her approval is what lets a build ship.",
+        "correct": false,
+        "why": "That is the gate lesson 5 argues against; escalation goes to a person who answers for the risk, not to a veto."
+      },
+      {
+        "text": "Accepts it: once the owner has weighed the evidence, the decision is complete.",
+        "correct": false,
+        "why": "That holds for risks the owner can weigh; a legal duty to protect data is not one a team can accept for the company."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kh1pyq1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 7 counted the combinations through `price`: matinée or not, student or not, child, adult or over sixty, and Wednesday or not. Joana adds one more yes-or-no condition, a public holiday, independent of the others. Counted the same way, how many combinations are there now?",
+    "hint": "Software Quality Fundamentals, lesson 7.",
+    "value": 48,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-6fy64zbw",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each way Lia judged a result to the kind of oracle it is.",
+    "hint": "Software Quality Fundamentals, lesson 19.",
+    "pairs": [
+      {
+        "left": "Célia says at once that a family never pays that much at the counter",
+        "right": "human"
+      },
+      {
+        "left": "the program prints a traceback when the session time is left out",
+        "right": "implicit"
+      },
+      {
+        "left": "a 9:30 ticket costs more than the 11:00 one on the same day",
+        "right": "consistency"
+      },
+      {
+        "left": "an agreed row of the Scenario Outline says 60 pays R$ 18,00",
+        "right": "specified"
+      },
+      {
+        "left": "last month's version of the program, run on the same inputs",
+        "right": "reference"
+      }
+    ]
+  },
+  {
+    "id": "ex-n8qyn3w2",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these belong in Cine Aurora's definition of done rather than in the acceptance criteria of one story? Choose all that apply.",
+    "hint": "Software Quality Fundamentals, lesson 12.",
+    "choices": [
+      {
+        "text": "A student at a matinée pays R$ 14,00.",
+        "correct": false,
+        "why": "That is what one story, students pay half, has to do: an acceptance criterion."
+      },
+      {
+        "text": "The code has been reviewed by another developer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The automated checks for everything built before still pass.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A customer of 60 pays R$ 18,00 at an evening session.",
+        "correct": false,
+        "why": "That is an example for the story about older customers, not a bar every story clears."
+      },
+      {
+        "text": "Someone has explored it for half an hour beyond its criteria.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8z4z7y4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "relations.py cannot say what a 9:30 ticket should cost, but it can prove that the 9:30 and 11:00 prices cannot both be right. Lesson 19 calls a check like that a ___ oracle.",
+    "hint": "Software Quality Fundamentals, lesson 19.",
+    "blanks": [
+      {
+        "accept": [
+          "partial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vg8mezap",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps Lia took, from Célia's complaint about the Sunday family to a report Rafael could act on, in order.",
+    "hint": "Software Quality Fundamentals, lesson 4.",
+    "items": [
+      "write down what was observed, apart from what was inferred",
+      "list every explanation that fits the evidence",
+      "run the commands whose results tell the explanations apart",
+      "open `tickets.py` at the line the evidence points to",
+      "cut it down to the smallest set of commands that shows it"
+    ],
+    "trap": "The code is not where she starts: she builds evidence first, so it survives being shown to the person who wrote it."
+  },
+  {
+    "id": "ex-nnw4tng5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Booking Hamlet with `quantity=two` answers `500` and a traceback. Rui says that is fair, because the customer typed a word. By the status code, who is holding the problem, and what should the customer have got?",
+    "hint": "Manual Testing and Test Management, lesson 4; Web and Internet Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "The customer: `500` is the code for input the caller got wrong, so the page around it is all that needs a fix.",
+        "correct": false,
+        "why": "Input the caller got wrong is a `4xx`; a `500` says something threw and nobody caught it."
+      },
+      {
+        "text": "The server: a `5xx` says it broke, and a word in the box gets a sentence saying what is wrong.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Too early to say: a status says nothing about fault until somebody reads the server's log line.",
+        "correct": false,
+        "why": "The first digit already names who holds the problem; the log line ties the report to a moment."
+      },
+      {
+        "text": "The browser: it let a word into a box meant for digits, so the form is what has to stop it.",
+        "correct": false,
+        "why": "The box accepts anything and curl skips the form; R7 asks the server to answer wrong input with a sentence."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcvkv1ae",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The theatre keeps its defects as GitHub issues. Rui's pull request for the traceback says `Closes #31` and is merged into the main branch on Monday. The build carrying it reaches the test environment on Wednesday. Where does that leave #31, by lesson 16's lifecycle?",
+    "hint": "Manual Testing and Test Management, lesson 16; Git and Teamwork: Version Control, Review and Process, lesson 8.",
+    "choices": [
+      {
+        "text": "Ready for retest, which is Ana's cue to run the reproduction again.",
+        "correct": false,
+        "why": "Ready for retest needs a build with the fix in the test environment, and that arrives on Wednesday."
+      },
+      {
+        "text": "Still open: `Closes #31` just adds a link, and the issue waits until a tester closes it.",
+        "correct": false,
+        "why": "GitHub closes the issue by itself when the pull request is merged into the main branch."
+      },
+      {
+        "text": "Verified, since the review of the pull request counts as the retest.",
+        "correct": false,
+        "why": "A review reads the change; a retest runs the report's reproduction on a build that contains it."
+      },
+      {
+        "text": "Closed already, two days before anybody could retest the fix.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjr3hryh",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A masked copy of production keeps `accounts` and `orders`, and `orders` names its customer by name, masked the same way. Débora Barbosa has 2 orders and Daniel Bezerra has 3, and both names become `D***** B******`. How many rows does joining `accounts` to `orders` on the masked name return for those two customers?",
+    "hint": "Manual Testing and Test Management, lesson 20; Relational Databases and SQL, lesson 5.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-z6hd5nhh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Ana proves the student regression by sending rule 7 to 1.0 on port 8001 and to 1.1 on port 8000. As an oracle, what is 1.0 in that comparison, and what can it not show her?",
+    "hint": "Manual Testing and Test Management, lesson 10; Software Quality Fundamentals, lesson 19.",
+    "choices": [
+      {
+        "text": "A reference oracle, blind to any defect the two versions share, like the refund of a used order.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A specified oracle, since 1.0 is the expected result the regression case was written from.",
+        "correct": false,
+        "why": "A specified oracle is a written rule such as R5; 1.0 is another implementation of the same thing."
+      },
+      {
+        "text": "A consistency oracle, so it also flags the used-order refund, where the versions differ.",
+        "correct": false,
+        "why": "Both versions accept that refund, so comparing them shows agreement and no defect."
+      },
+      {
+        "text": "An implicit oracle: whatever 1.1 does differently from 1.0 is wrong in any program.",
+        "correct": false,
+        "why": "Implicit oracles catch crashes and tracebacks; a difference from 1.0 can be a fix, as six tickets showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4jynq69",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To save a case, Ana signs up with an empty name and the password `abc`. The form answers \"Name must be 1 to 40 characters.\" and she marks both invalid partitions as tested. What is wrong with her record?",
+    "hint": "Manual Testing and Test Management, lesson 4.",
+    "choices": [
+      {
+        "text": "Nothing: one refusal sentence covers every invalid value the request carried.",
+        "correct": false,
+        "why": "boxoffice stops at the first thing it finds wrong, so a refusal speaks for one value and not the rest."
+      },
+      {
+        "text": "An empty name sits in a valid partition, so the password was the one value tested.",
+        "correct": false,
+        "why": "R2 refuses an empty name; it is one of the two invalid name partitions."
+      },
+      {
+        "text": "Nothing shows the password was checked: the first wrong value stops the checks before it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "She needed `member@example.org`, because the password is checked after an existing account is found.",
+        "correct": false,
+        "why": "That address adds a third invalid value, an e-mail already taken, and hides even more."
+      }
+    ]
+  },
+  {
+    "id": "ex-a43ywt8n",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each stand-in to the kind of test double lesson 13 would call it.",
+    "hint": "Manual Testing and Test Management, lesson 13.",
+    "pairs": [
+      {
+        "left": "A mail server that answers \"accepted\" to every message and does nothing else",
+        "right": "a stub"
+      },
+      {
+        "left": "A `send` that sends nothing, and that the test asks afterwards which address it was given",
+        "right": "a mock"
+      },
+      {
+        "left": "An in-memory store of orders that really keeps and returns them until the test ends",
+        "right": "a fake"
+      },
+      {
+        "left": "`BOXOFFICE_NOW=2026-10-10T19:30:00-03:00`, set when the server starts",
+        "right": "a fake clock"
+      }
+    ]
+  },
+  {
+    "id": "ex-5xzsp1r0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "The manager answers Ana's question about R5: half price is per ticket, and the student shows a card at the door. Put the three changes in the order lesson 6 says they travel, first first.",
+    "hint": "Manual Testing and Test Management, lesson 6.",
+    "items": [
+      "R5 is rewritten so that it carries the answer",
+      "the cases that cite R5 are changed",
+      "boxoffice's price rule is changed, and the changed cases check it"
+    ],
+    "trap": "Changing the code first leaves the cases checking the old rule; changing the cases before R5 makes them cite a rule nobody has written."
+  },
+  {
+    "id": "ex-sz6z8t00",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "The theatre adds a state, expired, and an event, expire, which moves a reserved order to expired and does nothing from any other state. R6's other transitions stay as they are. How many dashes does the new state table have?",
+    "hint": "Manual Testing and Test Management, lesson 5.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-a5wy64km",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Ana restarts boxoffice with the clock a day and an hour later, and Dora's first link is refused. Before believing it, she repeats the steps with the clock where it was, so that only the time differs. Lesson 22 calls that second run the ___.",
+    "hint": "Manual Testing and Test Management, lesson 22.",
+    "blanks": [
+      {
+        "accept": [
+          "control",
+          "the control",
+          "control run",
+          "a control"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-29fn5rq3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ana has one exploratory session to place on boxoffice 1.3. Which of these are places where lesson 11 says exploration pays most? Choose all that apply.",
+    "hint": "Manual Testing and Test Management, lesson 11.",
+    "choices": [
+      {
+        "text": "Counter sales until curtain-up, new in 1.3, with no cases written for it yet",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The eight discount rules, rerun on 1.3 because the price is risk A",
+        "correct": false,
+        "why": "That is a regression check with its expected results written; what a session finds cannot be rerun next week."
+      },
+      {
+        "text": "The order states, where three defects turned up in the last release",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The Shows list, whose scripted cases pass and which draws no complaints",
+        "correct": false,
+        "why": "Passing cases call for exploration where complaints keep arriving; here none do."
+      }
+    ]
+  },
+  {
+    "id": "ex-d0dtej2b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "You are choosing the regression suite for the bakery's `v1.1`, and one source of the impact analysis is the change itself: the commits that are in `v1.1` and not in `v1.0`, with the merge commits left out. Which command lists them?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 12; Manual Testing and Test Management, lesson 10.",
+    "choices": [
+      {
+        "text": "`git log --oneline --no-merges v1.0 v1.1`",
+        "correct": false,
+        "why": "With a space instead of `..`, the log lists every commit reachable from either tag, which is the whole history."
+      },
+      {
+        "text": "`git log --oneline --no-merges --grep v1.1`",
+        "correct": false,
+        "why": "`--grep` searches commit messages, and a tag is not written in any message, so it finds nothing."
+      },
+      {
+        "text": "`git log --oneline --no-merges v1.0..v1.1`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`git diff --stat v1.0 v1.1`",
+        "correct": false,
+        "why": "A diff compares the two ends file by file; it does not show the separate commits between them, and their messages are what say what changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c9rrv2m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Defect #23 is marked fixed, and staging runs the release tagged `v1.1`. Before the retest you find the fix with `git log --oneline --grep \"#23\"` and run `git tag --contains` on its commit. It prints nothing. What follows?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 12; Manual Testing and Test Management, lesson 9.",
+    "choices": [
+      {
+        "text": "No tag includes the fix yet, so checking on `v1.1` would fail for a reason that has nothing to do with it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The fix is live: the ticket closed when its pull request was merged.",
+        "correct": false,
+        "why": "A ticket closes at the merge, before any tag or deploy; closed is not released."
+      },
+      {
+        "text": "Retest on `v1.1` anyway, and reopen the defect if it fails again.",
+        "correct": false,
+        "why": "A failure there says which build you are on, not whether the fix works; first make sure the build contains the change."
+      },
+      {
+        "text": "The output is empty because `--contains` lists only tags made with `-a`.",
+        "correct": false,
+        "why": "It names every tag whose history includes the commit, and empty means no tag does."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jrkk630",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "To keep a log, Ana's workflow on `ubuntu-latest` runs Bruno's check as `- run: ./check-links.sh | tee links.log`, with no `shell:` line. Her branch links two files that were never committed, and the script prints two `missing:` lines. With what exit status does that step end, the number the run is judged by?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17; Automated Testing and CI/CD, lesson 5.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jc96f34r",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Testing the bakery's site, you find a price on the menu that looks wrong. Before reporting it, you want to know whether somebody set it on purpose, and why. Put the steps in order.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lessons 3 and 12.",
+    "items": [
+      "Run `git blame menu.html` and note the commit on that line",
+      "Open that commit with `git show` and read its message",
+      "Follow the `Refs #23` at the end of the message",
+      "Read Bruno's account of the problem on the ticket"
+    ],
+    "trap": "Blame starts from a line that exists now, so it comes first; the ticket is reached last, through the number the commit message carries."
+  },
+  {
+    "id": "ex-4y57rtyp",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Each defect below works on one machine and fails on another. Match each to the reading that would have shown the difference.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 17; Manual Testing and Test Management, lesson 21.",
+    "pairs": [
+      {
+        "left": "A picture appears on the author's laptop and is absent from a fresh clone",
+        "right": "`git status --short`"
+      },
+      {
+        "left": "The code relies on a feature that arrived in 3.12, and the server has 3.10",
+        "right": "`python3 --version`"
+      },
+      {
+        "left": "Booking closes three hours early on the rented server and not on the laptop",
+        "right": "`date`"
+      },
+      {
+        "left": "Nobody is sure the server answering is the new build",
+        "right": "`curl -s http://127.0.0.1:8000/health`"
+      }
+    ],
+    "right_distractors": [
+      "`grep PRETTY_NAME /etc/os-release`"
+    ]
+  },
+  {
+    "id": "ex-emqnsnmd",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A customer says the cheese roll's price was right in v1.0 and is wrong now. To check the claim against the earlier build, you put menu.html on disk as it was at that tag, with no branch moved and no commit made: git restore ___=v1.0 menu.html.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Manual Testing and Test Management, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "--source"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-54m5qybq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Bruno's pull request was merged an hour ago, and since then `main` is red: every branch started from it fails the same test. Bruno is on a plane, and you have push rights. What do you do first?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 4; Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "Run `git reset --hard HEAD~1` on `main` and push, so his commit is gone from the history.",
+        "correct": false,
+        "why": "Everybody already has that commit; rewriting a shared branch leaves their copies disagreeing with it. Reset is for commits only you have."
+      },
+      {
+        "text": "Leave it for Bruno when he lands, since whoever broke it fixes it, and keep merging meanwhile.",
+        "correct": false,
+        "why": "Fixing a red main comes before new work, because every new failure hides behind the old one, and anybody may revert."
+      },
+      {
+        "text": "Change the failing test to expect what the code now does, so the run turns green.",
+        "correct": false,
+        "why": "That makes the check agree with the break instead of catching it."
+      },
+      {
+        "text": "Undo his commit with `git revert` and push that.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dvqq1q5p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A report of March's orders filters with `WHERE created_at BETWEEN '2026-03-01' AND '2026-03-31'`, and `created_at` is a timestamp. Testing the edge of the period, you add an order placed at `2026-03-31 14:00`. What does the report do with it?",
+    "hint": "Manual Testing and Test Management, lesson 4; Relational Databases and SQL, lesson 4.",
+    "choices": [
+      {
+        "text": "Leaves it out, since the upper bound is midnight at the start of the 31st.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Shows it, because `BETWEEN` is inclusive at both ends.",
+        "correct": false,
+        "why": "Inclusive of `2026-03-31 00:00:00`, which is what a bare date stands for; 14:00 is past it."
+      },
+      {
+        "text": "Refuses the query: a bare date cannot be compared with a timestamp column.",
+        "correct": false,
+        "why": "The comparison runs; the date is read as midnight and the row is dropped without a word."
+      },
+      {
+        "text": "Leaves it out, along with every order from 1 March, as `BETWEEN` excludes both of its bounds.",
+        "correct": false,
+        "why": "`BETWEEN` includes both bounds; the trap is what the upper one means on a timestamp."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nzmaxgn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The orders-per-customer screen runs `SELECT c.name, count(*) FROM customers c LEFT JOIN orders o ON o.customer_id = c.id GROUP BY c.id, c.name`. You test it with one customer from each partition of order count: none, one and several. Which partition exposes a defect, and how?",
+    "hint": "Manual Testing and Test Management, lesson 4; Relational Databases and SQL, lesson 6.",
+    "choices": [
+      {
+        "text": "Several: the join repeats the customer once per order, so `count(*)` on that customer comes out doubled.",
+        "correct": false,
+        "why": "One row per order is the count wanted here; the multiplication bites a second one-to-many join, or a sum of the customer's own columns."
+      },
+      {
+        "text": "None: that customer vanishes from the screen, because the join finds no partner.",
+        "correct": false,
+        "why": "A `LEFT JOIN` keeps the unmatched customer, with nulls in the right-hand columns."
+      },
+      {
+        "text": "No partition: `count(*)` counts every row of the group, which is right.",
+        "correct": false,
+        "why": "It counts rows, and the customer with no orders still has one row, made of nulls."
+      },
+      {
+        "text": "None: that customer shows 1, since the row of nulls is counted; `count(o.id)` gives 0.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkkw8gnb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The order service retries failures on its own, both towards the payment provider and towards its database. Which of these is it right to send again? Choose all that apply.",
+    "hint": "API and Mobile Automation, lesson 13; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "A `503` from the provider, after a short random wait.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "SQLSTATE `23505` while writing the order's row into `orders`.",
+        "correct": false,
+        "why": "A unique violation means the row really is a duplicate; another attempt inserts it again."
+      },
+      {
+        "text": "SQLSTATE `40001` at `COMMIT`, running the transaction again from `BEGIN`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `422` from the provider for an order of seven seats.",
+        "correct": false,
+        "why": "The request itself is wrong, and it fails the same way on every try."
+      }
+    ]
+  },
+  {
+    "id": "ex-fs3xteej",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The suite shares one PostgreSQL, and a fixture opens a transaction before each test and rolls it back afterwards. After a run, the rows written by the test of `place_order` are still there. That function opens a connection of its own with the driver's defaults. Why did they survive?",
+    "hint": "Automated Testing and CI/CD, lesson 3; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "PostgreSQL keeps rolled-back rows on disk until the next `VACUUM` runs.",
+        "correct": false,
+        "why": "Rolled-back changes are visible to nobody; rows you can still read were committed."
+      },
+      {
+        "text": "A rollback undoes the last statement of a test, and the earlier ones stay.",
+        "correct": false,
+        "why": "A rollback discards the whole transaction; a savepoint is what undoes part of one."
+      },
+      {
+        "text": "The fixture's transaction runs at `READ COMMITTED`, which lets uncommitted rows persist.",
+        "correct": false,
+        "why": "An isolation level decides what others see, not whether a discarded write survives."
+      },
+      {
+        "text": "Autocommit is on there, so every statement was committed the moment it ran.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s7q7nxb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "CI runs the integration tests on SQLite and production runs PostgreSQL. A test asserts that inserting `'three'` into `order_lines.quantity`, declared `INTEGER NOT NULL CHECK (quantity > 0)`, is refused. It fails in CI. What is the right reading?",
+    "hint": "Automated Testing and CI/CD, lesson 1; Relational Databases and SQL, lesson 12.",
+    "choices": [
+      {
+        "text": "The schema CI builds has lost its `CHECK`, since production refuses that very insert.",
+        "correct": false,
+        "why": "The check is there and passed: in SQLite a text value compares as greater than any number."
+      },
+      {
+        "text": "SQLite stored the text, and there `'three' > 0` is true.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The test is flaky, depending on what earlier tests left behind in the database they share.",
+        "correct": false,
+        "why": "SQLite gives each test a file of its own here, and the insert is accepted on every run."
+      },
+      {
+        "text": "The assertion is wrong: an engine refuses a string in an integer column when the row is read back, not at the insert.",
+        "correct": false,
+        "why": "PostgreSQL and MySQL both refuse it at the insert, with `invalid input syntax` and error 1366."
+      }
+    ]
+  },
+  {
+    "id": "ex-b78mr8wt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A checkout transaction runs at `SERIALIZABLE` and, between `BEGIN` and `COMMIT`, calls the payment provider to charge the card. The commit fails with `40001`, the retry helper runs the transaction again, and the second attempt succeeds. How many times was the customer charged?",
+    "hint": "Relational Databases and SQL, lesson 8; API and Mobile Automation, lesson 13.",
+    "choices": [
+      {
+        "text": "Once: the rollback after `40001` undid everything the first attempt did.",
+        "correct": false,
+        "why": "The database rolled back its own work; it has no view of a call to another system."
+      },
+      {
+        "text": "Twice, unless each attempt sent the provider the same key for that one purchase.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Once, because `SERIALIZABLE` runs the two attempts one after the other.",
+        "correct": false,
+        "why": "Serial order is about transactions in the database; the charge happened outside it, on both attempts."
+      },
+      {
+        "text": "Twice, and a key would not help, since the second attempt is a separate transaction.",
+        "correct": false,
+        "why": "The client picks the key for one intention and sends it on every attempt; the provider replays the first answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-1d7rwgtt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A defect report says the count of unpaid orders looks low. `orders` holds 50 rows: 20 with `status = 'paid'`, 25 with `status = 'pending'` and 5 whose `status` is null. What number does `SELECT count(*) FROM orders WHERE status <> 'paid'` return?",
+    "hint": "Relational Databases and SQL, lesson 4.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-24qz3mqq",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Order 7 has three lines, with quantities 1, 2 and 4, and two payments, of 50 and 30. A report runs `SELECT o.id, sum(l.quantity), sum(p.amount) FROM orders o JOIN order_lines l ON l.order_id = o.id JOIN payments p ON p.order_id = o.id GROUP BY o.id`. What does it show as `sum(p.amount)` for order 7?",
+    "hint": "Relational Databases and SQL, lesson 5.",
+    "value": 240,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-vq05362p",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To check which customers have placed no order, lesson 5 recommends the shape that stays correct with nulls in the data or without them: SELECT c.name FROM customers c WHERE ___ (SELECT 1 FROM orders o WHERE o.customer_id = c.id);",
+    "hint": "Relational Databases and SQL, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "NOT EXISTS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3mejjex0",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You have to cancel a customer's placed orders by hand on the test server, and you have just typed `BEGIN`. Put the rest in the order lesson 8 teaches.",
+    "hint": "Relational Databases and SQL, lesson 8.",
+    "items": [
+      "Run the condition as a `SELECT` and note which rows come back",
+      "Change the verb to `UPDATE`, leaving the `WHERE` exactly as it was",
+      "Read the count it reports against the rows you noted",
+      "`COMMIT` if they agree, `ROLLBACK` if they do not"
+    ],
+    "trap": "Writing the `UPDATE` first and looking afterwards: a write does not rerun, and the rows have already changed by the time you can see the count."
+  },
+  {
+    "id": "ex-ag0qghk5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Each report below gives a plausible wrong answer and no error. Match each symptom to the mistake behind it.",
+    "hint": "Relational Databases and SQL, lesson 5.",
+    "pairs": [
+      {
+        "left": "The list of every customer with their March orders drops those who did not order in March",
+        "right": "A condition on the right-hand table of a `LEFT JOIN`, written in `WHERE`"
+      },
+      {
+        "left": "The list of customers who never ordered comes back empty",
+        "right": "`NOT IN` over a subquery whose column holds a null"
+      },
+      {
+        "left": "The total of credit limits is far above what the customers table adds up to",
+        "right": "A join that repeats each customer once per order"
+      },
+      {
+        "left": "The customers who never ordered include some who have orders",
+        "right": "An anti-join testing a nullable column with `IS NULL`"
+      }
+    ],
+    "right_distractors": [
+      "`DISTINCT` removing rows the join duplicated"
+    ]
+  },
+  {
+    "id": "ex-zgp89ync",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Testing the sign-in, you type `x' OR '1'='1` into the e-mail field and are signed in as somebody else. The query is built with the language's string formatting and handed to the ORM's `raw()`. Which change does lesson 11 accept as the fix?",
+    "hint": "Relational Databases and SQL, lesson 11.",
+    "choices": [
+      {
+        "text": "Reject any e-mail that contains a quote before it reaches the query.",
+        "correct": false,
+        "why": "The value is still placed in the text; lesson 11 makes no exception for a value you checked."
+      },
+      {
+        "text": "Declare the e-mail column `UNIQUE`, so the sign-in matches one row at most.",
+        "correct": false,
+        "why": "`OR '1'='1'` matches every row whatever the constraint; the defect is a value read as code."
+      },
+      {
+        "text": "Keep the formatting and run the built string through `PREPARE` and `EXECUTE`.",
+        "correct": false,
+        "why": "If the value is already in the text when it is prepared, the shape it fixes includes the `OR`."
+      },
+      {
+        "text": "Pass the e-mail to `raw()` as a parameter.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebcx5z8t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The order form's copies field is `<input id=\"copies\" name=\"copies\" type=\"number\" min=\"1\" max=\"5\" value=\"1\">`. You run two-value boundary analysis in the browser: 1 and 5 are sent, while 0 and 6 are stopped by the browser and no request goes out. What have you learnt about where the server draws its two lines?",
+    "hint": "Manual Testing and Test Management, lesson 4; HTML and CSS, lesson 3.",
+    "choices": [
+      {
+        "text": "Both lines are right, since the field turned away exactly the two values outside the range.",
+        "correct": false,
+        "why": "The browser turned them away; the server never saw 0 or 6, and the browser's check can be switched off by anybody."
+      },
+      {
+        "text": "Little until 3 is tried too, because a value from the middle shows how the whole partition behaves.",
+        "correct": false,
+        "why": "A representative says nothing about the edges, and the edges are where an off-by-one hides."
+      },
+      {
+        "text": "Nothing about 0 and 6: they need sending again past the browser, from a `novalidate` copy of the page or a command-line tool.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The upper line is off by one, because a value inside the range should never get a refusal.",
+        "correct": false,
+        "why": "6 is outside `max=\"5\"`; the browser refused it correctly, and that is a fact about the browser, not about the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-033vzrb7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On the reserve page, `page.getByRole('button', { name: 'Reserve (div)' }).click()` times out without finding anything, although the control is on screen as `<div class=\"button\" onclick=\"reserve()\">Reserve (div)</div>`. A colleague suggests `page.locator('.button')` so the test goes green. What do you do?",
+    "hint": "HTML and CSS, lesson 2; Web Test Automation, lesson 2.",
+    "choices": [
+      {
+        "text": "Report a defect: Tab never reaches it, and the tree calls it text.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Take `.button`: it matches the element on screen, and a class is the shortest stable handle the page offers.",
+        "correct": false,
+        "why": "A styling class changes with a redesign, and the green run would hide a control a keyboard user cannot reach."
+      },
+      {
+        "text": "Raise the timeout, because the control is drawn by a script and arrives after the locator gives up.",
+        "correct": false,
+        "why": "It is in the HTML from the start; no wait gives a `<div>` the role of a button."
+      },
+      {
+        "text": "Switch to `getByText('Reserve (div)')`, which finds the same words a customer reads.",
+        "correct": false,
+        "why": "It would find the text and pass, while the page still has a button nobody using a keyboard or a screen reader can press."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nk9cb4m",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The newsletter form has `<label for=\"name\">Your name</label> <input id=\"name\" name=\"name\">`, `<label>Email <input name=\"email\" type=\"email\"></label>` and `<input name=\"city\" placeholder=\"City\">`. Which Playwright locators find the third field? Choose all that apply.",
+    "hint": "HTML and CSS, lesson 3; Web Test Automation, lesson 2.",
+    "choices": [
+      {
+        "text": "`page.getByRole('textbox', { name: 'City' })`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`page.locator('#city')`",
+        "correct": false,
+        "why": "`city` is the field's `name`, what the server receives; it has no `id` for `#` to find."
+      },
+      {
+        "text": "`page.getByTestId('city')`",
+        "correct": false,
+        "why": "Nothing on the field carries a `data-testid`."
+      },
+      {
+        "text": "`page.getByPlaceholder('City')`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-98aeyy0j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "For a test that checks the note on the events page, a colleague who writes the stylesheet proposes `#events article.event p.note` as the locator, arguing that its specificity of (1,2,2) makes it the most reliable choice. What is wrong with the argument?",
+    "hint": "HTML and CSS, lesson 5; Web Test Automation, lesson 2.",
+    "choices": [
+      {
+        "text": "Nothing: a higher specificity means a selector can match fewer elements, so it is the safest.",
+        "correct": false,
+        "why": "Specificity weighs a rule against other rules; it says nothing about how many elements match, and `.note` alone already finds one."
+      },
+      {
+        "text": "That number decides which CSS rule wins; to a test, each step is a promise the page has to keep.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The count is wrong: an id inside a chain scores as a class, so it is (0,3,2).",
+        "correct": false,
+        "why": "An id counts in the first number wherever it stands; the count is right, and still beside the point."
+      },
+      {
+        "text": "It should be cut to `#events .note`, which keeps the same specificity while taking fewer steps to get there.",
+        "correct": false,
+        "why": "`#events .note` is (1,1,0); the reason to cut is fewer promises, not keeping the score."
+      }
+    ]
+  },
+  {
+    "id": "ex-ynrpc0bz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each thing found on the booking page during an accessibility pass to the WCAG success criterion it fails.",
+    "hint": "HTML and CSS, lesson 11; Non-functional Testing, lesson 14.",
+    "pairs": [
+      {
+        "left": "The name field has `tabindex=\"1\"`, so Tab reaches it before the site's navigation",
+        "right": "2.4.3 Focus Order"
+      },
+      {
+        "left": "`*:focus { outline: none; }` with nothing drawn in its place",
+        "right": "2.4.7 Focus Visible"
+      },
+      {
+        "left": "A fixed bar at the bottom of the window covers the link just reached with Tab",
+        "right": "2.4.11 Focus Not Obscured (Minimum)"
+      },
+      {
+        "left": "At 320 CSS pixels wide, the whole page scrolls sideways",
+        "right": "1.4.10 Reflow"
+      }
+    ],
+    "right_distractors": [
+      "2.1.1 Keyboard",
+      "2.4.1 Bypass Blocks"
+    ]
+  },
+  {
+    "id": "ex-9b07g36a",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "The shop's picture has `srcset=\"shelves-480.png 480w, shelves-960.png 960w, shelves-1600.png 1600w\"` and `sizes=\"(min-width: 800px) 50vw, 100vw\"`. You open it in Chromium on a window 1024 wide with a device pixel ratio of 2. Going by the choice Chromium made in all five of lesson 4's runs, how wide, in pixels, is the file you expect the Network panel to list?",
+    "hint": "HTML and CSS, lesson 4.",
+    "value": 1600,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-9jgqyk6h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A bug report says: \"The opening-hours page is completely blank, and the browser tab shows a very long title full of angle brackets.\" Which mistake in the HTML fits both symptoms?",
+    "hint": "HTML and CSS, lesson 1.",
+    "choices": [
+      {
+        "text": "The page has no `<!doctype html>`, so it is drawn in quirks mode.",
+        "correct": false,
+        "why": "Quirks mode looks almost right, a few pixels off here and there; it does not empty the page."
+      },
+      {
+        "text": "The file was saved as ISO-8859-1 while it declares `utf-8`.",
+        "correct": false,
+        "why": "That draws a replacement character where an accented letter should be, and leaves the rest of the page alone."
+      },
+      {
+        "text": "A `<b>` was never closed in the first paragraph.",
+        "correct": false,
+        "why": "The parser closes it and reopens it in the next paragraph: the page shows, with more of it bold."
+      },
+      {
+        "text": "`<title>` has no closing tag.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtn823g1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Testing the opening-hours page, you see no caption above the table. The Elements panel shows `<caption class=\"visually-hidden\">Opening hours</caption>`, drawn as a box 1 pixel by 1. What do you report?",
+    "hint": "HTML and CSS, lesson 7.",
+    "choices": [
+      {
+        "text": "A defect: the caption should be hidden with `display: none`, which leaves no 1-pixel box on the page.",
+        "correct": false,
+        "why": "`display: none` takes it out of the accessibility tree as well, and the table loses its name."
+      },
+      {
+        "text": "Nothing: the tree still names the table, and hiding it only from the screen is the intent.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A defect: screen readers skip any element smaller than the 24-pixel minimum target size.",
+        "correct": false,
+        "why": "Target size is about controls somebody presses; the tree names the table from a 1-by-1 caption."
+      },
+      {
+        "text": "A defect: the caption belongs outside the table as a heading, where everybody can read it.",
+        "correct": false,
+        "why": "A heading above a table does not name it; `<caption>` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-qbx3z4zc",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A browser set up for Brazil draws the pick-up field, <input name=\"pickup\" type=\"date\">, as 08/10/2026 after Ana picks 8 October 2026 from its calendar. In the request the form sends, the pair for that field is pickup=___.",
+    "hint": "HTML and CSS, lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "2026-10-08"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-va8frcyp",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Five rules set `color` on the same note and you want to know, before opening DevTools, which one specificity favours. Put the selectors in order of specificity, lowest first.",
+    "hint": "HTML and CSS, lesson 5.",
+    "items": [
+      "`:where(#events .event) p`",
+      "`main article p`",
+      "`.note`",
+      "`.event p.note`",
+      "`#events p`"
+    ],
+    "trap": "Compare the ids first, then the classes, then the element names, and never add them up: three element names lose to one class, and `:where()` counts zero whatever is inside it."
+  },
+  {
+    "id": "ex-mb005btx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "axe reports no violations on the events page, where two different links both read *Click here*. The developer asks you to sign the page off as accessible. What do you answer?",
+    "hint": "HTML and CSS, lesson 2.",
+    "choices": [
+      {
+        "text": "Sign it off: axe ran the WCAG 2.2 AA rules, the level most laws point to.",
+        "correct": false,
+        "why": "A machine checks only part of what is wrong with a page; published estimates run from about a third to about a half."
+      },
+      {
+        "text": "The links are fine: read in the flow of their paragraphs they make sense, and that is how a screen reader meets them.",
+        "correct": false,
+        "why": "Screen reader users often pull up a list of the links on a page, and there the two read the same and say nothing."
+      },
+      {
+        "text": "Not yet: axe accepts *Click here* as a name, and a list of the links reads it twice.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Not yet: run axe again with its best-practice rules switched on, which report two links with the same text.",
+        "correct": false,
+        "why": "The run already included axe's best practices, and it accepted *Click here*; this is a check for a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbg8fzmz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "The holiday notice is `position: absolute; inset: 0; margin: auto; width: 300px; height: 200px; box-sizing: border-box`, inside an overlay with `position: fixed; inset: 0`. You check it on a window 1280 wide and 720 tall. At what x, in pixels, should the notice's left edge be?",
+    "hint": "HTML and CSS, lesson 7.",
+    "value": 490,
+    "tolerance": 0,
+    "unit": "px"
+  },
+  {
+    "id": "ex-cvt04h06",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A teammate copies lesson 16's `withRetries`, makes it pass `{ method: \"POST\", … }` through to `getJSON`, and uses it to add a book whose title is empty. What happens?",
+    "hint": "JavaScript, lesson 16; API and Mobile Automation, lesson 13.",
+    "choices": [
+      {
+        "text": "One request: `fetch` resolves on a 422, so the loop's `catch` never runs.",
+        "correct": false,
+        "why": "That is bare `fetch`; `getJSON` turns any status outside 200 to 299 into a thrown `Error`."
+      },
+      {
+        "text": "Two requests: the server sees the same body again and replays its first answer.",
+        "correct": false,
+        "why": "A server replays an answer for a repeated idempotency key, and none was sent."
+      },
+      {
+        "text": "Four requests, each answered 422, and then the error reaches the caller.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Four requests and up to four saved books, because a repeated `POST` creates again each time it is sent.",
+        "correct": false,
+        "why": "A 422 is a refusal before anything is saved; the harm is four tries at an answer that cannot change."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvnp26g5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Playwright test calls `page.getByLabel('Fruit').pressSequentially('papaya');` with no `await`, then on the next line awaits the count of `#results li`. What does that count measure?",
+    "hint": "JavaScript, lesson 14; Web Test Automation, lesson 3.",
+    "choices": [
+      {
+        "text": "The list at a moment when the typing has barely begun.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The list after the last key, since Playwright finishes one action before the next line runs.",
+        "correct": false,
+        "why": "Only `await` makes the test wait; without it the typing is started and the next line runs at once."
+      },
+      {
+        "text": "Nothing: a call to an `async` method without `await` stops the file with a `SyntaxError`.",
+        "correct": false,
+        "why": "Leaving out `await` is valid code, which is exactly why the mistake is easy to make."
+      },
+      {
+        "text": "The final list of three fruit, since every answer is in before a count can run.",
+        "correct": false,
+        "why": "Answers were still landing hundreds of milliseconds after the typing ended; the count comes long before."
+      }
+    ]
+  },
+  {
+    "id": "ex-5v7831c7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To speed up the pipeline, a teammate caches `node_modules` between runs, keyed on a hash of `package-lock.json`. The next step is `npm ci`, and the runs take as long as before. Why?",
+    "hint": "JavaScript, lesson 21; Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "The key is too loose: a hash of the lockfile changes on every commit.",
+        "correct": false,
+        "why": "The lockfile changes only when a dependency does; a hash of the pinning file is the right kind of key."
+      },
+      {
+        "text": "`npm ci` empties that folder first and installs everything again, so the restored copy is discarded each time.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`npm ci` stops with `EUSAGE` when it finds a `node_modules` it did not create.",
+        "correct": false,
+        "why": "`EUSAGE` is what it says when `package.json` and the lockfile disagree; an existing folder it removes."
+      },
+      {
+        "text": "The key should be the operating system alone, so every branch shares one copy.",
+        "correct": false,
+        "why": "A key on the system alone restores stale packages after a pin changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv3kjf58",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A CI step runs `node seed.mjs`, which loads test data inside `try { … } catch {}` and then prints `seeded`. The step is green, and the browser tests after it fail because the data is missing. Why was the step green?",
+    "hint": "JavaScript, lesson 17; Web Test Automation, lesson 14.",
+    "choices": [
+      {
+        "text": "The job reads the log, and the last line it saw was `seeded`.",
+        "correct": false,
+        "why": "A job reads the exit code, not the text; the text only misled whoever read the log."
+      },
+      {
+        "text": "The load ran in a callback, and a `try` cannot catch what a callback throws later.",
+        "correct": false,
+        "why": "Uncaught, it would have ended the process with code 1 and a red step; green means something caught it."
+      },
+      {
+        "text": "The CI service ran the step again, and a passing retry hides the failure.",
+        "correct": false,
+        "why": "Nothing was retried; one run ended with code 0 because the error never left the script."
+      },
+      {
+        "text": "The empty `catch` swallowed the error, so the script ended with exit code 0, which is the number the job reads.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-er16wqs0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A test sends `POST /v1/orders` with `signal: AbortSignal.timeout(2000)` and gets a `TimeoutError`. What may it conclude about the order?",
+    "hint": "JavaScript, lesson 16; API and Mobile Automation, lesson 13.",
+    "choices": [
+      {
+        "text": "It was not created: the abort cancelled the work on the server too.",
+        "correct": false,
+        "why": "Aborting stops the waiting on this side and cannot undo what the server already did."
+      },
+      {
+        "text": "It failed, so the test can send the same `POST` again straight away.",
+        "correct": false,
+        "why": "Without an idempotency key, repeating a request that may have worked can create a second order."
+      },
+      {
+        "text": "Nothing yet: it may have been saved, so ask the server for its state.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It was created, since a `TimeoutError` is raised once the server has answered late.",
+        "correct": false,
+        "why": "A `TimeoutError` means no answer arrived in time; it says nothing about what the server did."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxymqpgc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The contract says an order's `coupon` field is always present, holding a code or `null`. The client sends `JSON.stringify({ seats: 2, coupon: input.coupon })`, and for a customer with no coupon `input.coupon` is `undefined`. What does the server receive?",
+    "hint": "JavaScript, lesson 16; API and Mobile Automation, lesson 2.",
+    "choices": [
+      {
+        "text": "`{\"seats\":2,\"coupon\":null}`, which the contract allows.",
+        "correct": false,
+        "why": "`stringify` writes `null` for `NaN`; a field holding `undefined` is left out."
+      },
+      {
+        "text": "`{\"seats\":2}`, a body with no `coupon` field in it at all.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`{\"seats\":2,\"coupon\":\"undefined\"}`, with the word written out as a string.",
+        "correct": false,
+        "why": "A template string would print that word; JSON has no way to write `undefined` and drops the field."
+      },
+      {
+        "text": "Nothing: `stringify` throws on a field whose value is `undefined`, before any request is made.",
+        "correct": false,
+        "why": "It throws nothing; the field disappears without a warning, which is why a test checks that it is present."
+      }
+    ]
+  },
+  {
+    "id": "ex-b05p6hzf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A ticket says the shelf page looks right, but the console shows `Uncaught TypeError: Cannot read properties of undefined (reading 'title')`. Paused on the exception, the scope shows `i = 3`, `book = undefined` and `books = Array(3)`. What is the defect?",
+    "hint": "JavaScript, lesson 22.",
+    "choices": [
+      {
+        "text": "The API sent a book without a `title`, and the page needs a fallback for it.",
+        "correct": false,
+        "why": "`book` itself is `undefined`, not a book missing a field: index 3 is past the three books."
+      },
+      {
+        "text": "`fetch` resolved before the body arrived, so the list was empty.",
+        "correct": false,
+        "why": "`books` holds three items at the pause; `await res.json()` waited for the whole body."
+      },
+      {
+        "text": "None a user would notice, since all three books are on the screen and only the console complains.",
+        "correct": false,
+        "why": "A throw abandons whatever the script was about to do next; the page looks right and is wrong."
+      },
+      {
+        "text": "The loop runs while `i <= books.length` and reads one book too many.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-rr3g1ge9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A test saves an object as JSON before a step and parses it back afterwards to compare. The object is `{ year: 1865, tags: [\"romance\"], added: new Date(Date.UTC(2026, 9, 6)), copiesBy: new Map([[\"ana\", 1]]), rating: NaN }`. Which fields come back different from what went in? Choose all that apply.",
+    "hint": "JavaScript, lesson 16.",
+    "choices": [
+      {
+        "text": "`year`",
+        "correct": false,
+        "why": "Numbers make the trip intact; only `NaN` and `Infinity` have no JSON spelling."
+      },
+      {
+        "text": "`added`, which comes back a string",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`tags`, an array of strings",
+        "correct": false,
+        "why": "Arrays and strings are part of what JSON is made of, so they come back as they went."
+      },
+      {
+        "text": "`copiesBy`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`rating`, now `null`",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-y6jnm60r",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 16's `withRetries(url, attempts = 4)` waits `100 * 2 ** (i - 1)` ms after each failed attempt, except the last, which it throws. Against a server that answers 503 to every request, how many milliseconds does it spend waiting before the error reaches the caller?",
+    "hint": "JavaScript, lesson 16.",
+    "value": 700,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-vs9a6qte",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Three copies of a file are requested at once from three mirrors: A rejects after 150 ms, B fulfils after 400 ms, C rejects after 250 ms. After how many milliseconds does `Promise.any` over the three settle?",
+    "hint": "JavaScript, lesson 14.",
+    "value": 400,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-2vccbp0a",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "A test helper is reduced to this:\n\n```javascript\nsetTimeout(() => console.log(\"timer\"), 0);\nasync function check() {\n  console.log(\"check starts\");\n  await null;\n  console.log(\"after await\");\n}\ncheck();\nconsole.log(\"last line\");\n```\n\nPut the four lines it prints in order.",
+    "hint": "JavaScript, lessons 13 and 14.",
+    "items": [
+      "`check starts`",
+      "`last line`",
+      "`after await`",
+      "`timer`"
+    ],
+    "trap": "The function's first line runs when it is called; only what follows `await` waits, as a microtask, and every microtask runs before the timer's task."
+  },
+  {
+    "id": "ex-4419yrm1",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A smoke check's request to staging must give up after five seconds instead of hanging the job, since fetch has no deadline of its own. The option it passes is { signal: AbortSignal.___(5000) }.",
+    "hint": "JavaScript, lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "timeout"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e98gwje6",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A test suite needs four things from groups of promises. Match each need with the combinator that does it.",
+    "hint": "JavaScript, lesson 14.",
+    "pairs": [
+      {
+        "left": "A report of which of five health endpoints answered, failures included",
+        "right": "`Promise.allSettled`"
+      },
+      {
+        "left": "The quickest copy of a file from three mirrors, ignoring the ones that are down",
+        "right": "`Promise.any`"
+      },
+      {
+        "left": "Every result in order, giving up at the first rejection",
+        "right": "`Promise.all`"
+      },
+      {
+        "left": "Whichever settles first, the real call or a timer that rejects",
+        "right": "`Promise.race`"
+      }
+    ]
+  },
+  {
+    "id": "ex-d1zcscdj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A tester who writes stylesheets needs Mango's heading and picks `main > ul#products > li.card:nth-child(2) > h2` over `[data-testid=\"product-mango\"] h2`, saying the first has higher specificity and so is the safer locator. Both match one element today. What is wrong with that reasoning?",
+    "hint": "Web Test Automation, lesson 2; HTML and CSS, lesson 5.",
+    "choices": [
+      {
+        "text": "Its specificity is lower than it looks: `:nth-child(2)` counts zero, like `:where()`.",
+        "correct": false,
+        "why": "A pseudo-class counts with the classes, in the middle number; only `:where()` counts zero."
+      },
+      {
+        "text": "Nothing, as long as it matches one element: a locator that finds exactly one thing on the page today is, by that fact, a stable one.",
+        "correct": false,
+        "why": "Both find one today; what differs is how many facts about the page each one needs to stay true."
+      },
+      {
+        "text": "Specificity decides between two style rules; a locator competes with none, and each extra step is a promise the page must keep.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The id is what makes it fragile, because an id is the part specificity compares last.",
+        "correct": false,
+        "why": "Ids are compared first; the fragile parts here are the long chain and the position."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dyys49r",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "On the search page, `papaya` typed fast leaves the list on three fruit, because the answer to `p` arrives last and is drawn. Which of these changes to `search.js` would stop an answer to an older question from replacing the list? Choose all that apply.",
+    "hint": "Web Test Automation, lesson 3; JavaScript, lesson 16.",
+    "choices": [
+      {
+        "text": "Give every request `{ signal: AbortSignal.timeout(1000) }`.",
+        "correct": false,
+        "why": "The answer to `p` takes about 750 ms, so a one-second limit lets it arrive and be drawn as before."
+      },
+      {
+        "text": "Keep the `AbortController` of the request in flight, and call its `abort()` when the next key starts a new one.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Put `await` in front of `results.replaceChildren(...)`, so the answers are drawn in the order their questions left.",
+        "correct": false,
+        "why": "`replaceChildren` returns nothing to wait for; the order of drawing is still the order of arrival."
+      },
+      {
+        "text": "Remember the text each request asked for, and drop the answer when the box no longer holds that text.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-v590zfxa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A CI job runs `npx playwright test --retries 2`, and today it printed `5 flaky` and `15 passed`. The team wants a run like that to block the merge, and still to show which tests passed only on a second attempt. What does that?",
+    "hint": "Web Test Automation, lesson 14; Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "Add `--fail-on-flaky-tests` to the same command.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: the CI already turns the job red when the summary has a flaky count in it.",
+        "correct": false,
+        "why": "The CI reads the step's exit status, not its output, and with retries this run exited 0."
+      },
+      {
+        "text": "Change it to `--retries 0`, so a test that fails once is counted as failed.",
+        "correct": false,
+        "why": "That blocks the merge, but with no second attempt nothing says which failures were flaky."
+      },
+      {
+        "text": "Raise it to `--retries 3`, so the flaky ones get one more chance to pass cleanly.",
+        "correct": false,
+        "why": "A third retry is the same coin tossed again, and the job still exits 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-exghg9cq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team's 300 browser checks take about a minute and a half on one worker, so developers stop running them after each change and run them once, before merging. Besides the machine minutes, what does that cost?",
+    "hint": "Web Test Automation, lesson 21; Software Quality Fundamentals, lesson 3.",
+    "choices": [
+      {
+        "text": "More false alarms, since a suite that runs less often fails more often each time it does run.",
+        "correct": false,
+        "why": "The chance of failing for no reason belongs to each run; running less often does not raise it."
+      },
+      {
+        "text": "Nothing more: the fix is the same edit whichever day the suite finds the defect.",
+        "correct": false,
+        "why": "The edit may be the same; what grows is what is built on the defect, who meets it and who remembers why."
+      },
+      {
+        "text": "The defects it finds move towards the requirements, the most expensive kind to fix.",
+        "correct": false,
+        "why": "When a suite runs changes when it finds a defect, not where the defect was made."
+      },
+      {
+        "text": "Each defect waits longer to be seen, and meanwhile more is built on it and less is remembered about why.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwc84pp8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A delivery-slot picker reached the test environment this morning. Nobody has used it yet, and its specification is two paragraphs. Your lead asks for browser tests of it by tonight. What do the two courses say to do first?",
+    "hint": "Web Test Automation, lesson 22; Manual Testing and Test Management, lesson 11.",
+    "choices": [
+      {
+        "text": "Record the main flows with `npx playwright codegen` now, and tidy the generated code once it passes.",
+        "correct": false,
+        "why": "A recording still writes down a guess: nobody has yet looked at what the right behaviour is."
+      },
+      {
+        "text": "A time-boxed exploratory session with a charter and notes, then automate what it shows matters.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Write the tests from the two paragraphs today, because the earliest test catches defects cheapest.",
+        "correct": false,
+        "why": "Before anybody has seen the feature, a test freezes a guess about the right answer."
+      },
+      {
+        "text": "Leave it untested until the design settles, since a test written now is maintained next month.",
+        "correct": false,
+        "why": "A feature still changing is tested by hand, not left alone; it is in front of you today."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x6ychyz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A sign-up test types the fixed name `maria`, and it has passed on every CI run for months. Pointed at the staging server, whose database nobody empties, it passes once and then fails with `Received: \"maria already exists\"`. The code is the same file in both places. What explains it?",
+    "hint": "Web Test Automation, lesson 15; Manual Testing and Test Management, lesson 21.",
+    "choices": [
+      {
+        "text": "Staging runs another build, and its sign-up route has a defect the CI build lacks.",
+        "correct": false,
+        "why": "The `409` is the shop answering correctly: a name that exists should be refused."
+      },
+      {
+        "text": "The staging runs have no retries; with `--retries 2` the next attempt would go green.",
+        "correct": false,
+        "why": "Maria is still there on every attempt, so a retry meets the same refusal."
+      },
+      {
+        "text": "The data is part of the environment: CI starts an empty shop for each run, and staging keeps the Maria of the run before.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "With `CI` set, Playwright skips the `webServer` block, so on CI the test never reached the form.",
+        "correct": false,
+        "why": "With `CI` set, Playwright starts a fresh shop every time; the test reached the form on each run."
+      }
+    ]
+  },
+  {
+    "id": "ex-c894bn8d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "So that two workers never collide, a test names its customer `maria-${testInfo.workerIndex}`. With the shop left running in another terminal, the suite runs twice in a row on two workers. What does the second run report?",
+    "hint": "Web Test Automation, lesson 15.",
+    "choices": [
+      {
+        "text": "The sign-up is refused with `409`: indices 0 and 1 return on every run.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A pass: each run hands its workers indices that no earlier run has used.",
+        "correct": false,
+        "why": "Worker indices repeat from run to run; they are unique between workers, not between runs."
+      },
+      {
+        "text": "A failure already on the first run, since both workers draw index 0.",
+        "correct": false,
+        "why": "Two workers running at once have different indices; that is what the index is for."
+      },
+      {
+        "text": "A pass, because Playwright starts a fresh, empty shop before each run.",
+        "correct": false,
+        "why": "Only when nothing answers on port 3000, or with `CI` set; here the running shop is reused."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnktd4yz",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A test in the gate fails now and then, and nobody knows why. Put the steps of lesson 14 in order, from suspecting it to trusting it again.",
+    "hint": "Web Test Automation, lesson 14.",
+    "items": [
+      "Move it into a folder the gate's configuration does not read",
+      "Run it with `--repeat-each 20` and write down how many attempts failed",
+      "Run the same twenty with `--workers 1` and compare the count",
+      "Fix the cause the comparison points to, and measure the rate again",
+      "Move it back into `tests/`"
+    ],
+    "trap": "Fixing first and measuring after is the usual slip: without the rate from before, twenty passes after the fix prove nothing about how rare the failure was."
+  },
+  {
+    "id": "ex-9vy7rrh6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On `/ssr` as lesson 6 first built it, a test waits with `await expect(button).toBeEnabled()` before clicking Banana's **Add to basket**, then expects the count to read `1`. What happens?",
+    "hint": "Web Test Automation, lesson 6.",
+    "choices": [
+      {
+        "text": "The wait holds until `ssr.js` has attached the handler, and the test passes in about two seconds.",
+        "correct": false,
+        "why": "Nothing about the button changes when its handler is attached, so there is nothing for the wait to see."
+      },
+      {
+        "text": "Playwright refuses to click, because its actionability checks find no handler on the button.",
+        "correct": false,
+        "why": "The checks look at visible, stable, enabled and uncovered; a handler is not among them."
+      },
+      {
+        "text": "The wait times out after five seconds, because the button stays disabled until `ssr.js` runs.",
+        "correct": false,
+        "why": "That is the page after the developers' fix; as first built, the buttons arrive enabled."
+      },
+      {
+        "text": "It passes at once, the click lands before `ssr.js` runs, and the count stays at `0`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kkz20dc",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In the app at /spa/, a click on Basket calls history.pushState and only then fetches the basket. A test follows the click with await page.___('**/spa/basket') and then reads Fruit in the heading, because that wait returns as soon as the address matches. Which method is it?",
+    "hint": "Web Test Automation, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "waitForURL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-j8c18dc4",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Each case below should not become an ordinary browser test. Match each one to what lesson 22 does instead.",
+    "hint": "Web Test Automation, lesson 22.",
+    "pairs": [
+      {
+        "left": "A CAPTCHA on the sign-up form",
+        "right": "Turn it off in the test environment, or use the provider's documented test keys"
+      },
+      {
+        "left": "Paying through the shop's card provider",
+        "right": "The provider's sandbox and its test cards"
+      },
+      {
+        "left": "A feature whose design changes next month",
+        "right": "Test it by hand until the design settles"
+      },
+      {
+        "left": "Whether the border is the right green",
+        "right": "A person looks; a test checks the facts underneath"
+      }
+    ],
+    "right_distractors": [
+      "Record it once and replay the recording on every push"
+    ]
+  },
+  {
+    "id": "ex-pm50ayj1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 21 counted the baskets the shop's eight products allow when each fruit can be in it none to three times. Suppose each can be in it none to two times instead. How many different baskets is that?",
+    "hint": "Web Test Automation, lesson 21.",
+    "value": 6561,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-pnht46ep",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 16's offline test points Tickets at `http://10.0.2.2:9`, where nothing on the computer listens, rather than at `10.255.255.1`, an address no machine on the network has. Tickets gives its connection five seconds. Why that choice?",
+    "hint": "API and Mobile Automation, lesson 16; Web and Internet Fundamentals, lesson 2.",
+    "choices": [
+      {
+        "text": "Both fail at once; `10.0.2.2` is used only because the network security file names it.",
+        "correct": false,
+        "why": "curl waited 5002 ms for the address nobody has; only the port with nothing behind it failed after 0 ms."
+      },
+      {
+        "text": "The private address is refused at once by a router, while port 9 makes Tickets wait out its read timeout.",
+        "correct": false,
+        "why": "It is the other way round: nothing ever says no to an address nobody has, and a port nobody claimed is refused at once."
+      },
+      {
+        "text": "A port nobody claimed is refused at once; an address nobody has never says no, so each load would wait five seconds.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Port 9 sends back an error status Tickets can show, and the private address sends nothing it can parse.",
+        "correct": false,
+        "why": "Nothing answers on port 9 at all: the computer refuses the connection, and no HTTP status is ever sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdvtyejf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your schema `order.json` was written from the answers of `POST /v1/orders`. An order cancelled with `DELETE` and then read back fails it: `/status must be equal to one of the allowed values: confirmed, declined, failed`. What do you do first?",
+    "hint": "API and Mobile Automation, lesson 10.",
+    "choices": [
+      {
+        "text": "Read `openapi.yaml` and the code's intent; both list `cancelled`, so the schema is what needs fixing.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "File a defect against boxoffice: its answer breaks the schema, and the schema is the contract.",
+        "correct": false,
+        "why": "The contract is `openapi.yaml`, which lists `cancelled`; this schema was written from the create path and never saw a cancel."
+      },
+      {
+        "text": "Remove the `enum` from `status`, so that a value nobody listed can no longer fail the test on a later run.",
+        "correct": false,
+        "why": "Then a status that really is wrong passes too; add the one value the contract names."
+      },
+      {
+        "text": "Stop checking cancelled orders, since `DELETE` answers `204` and sends back nothing a client reads.",
+        "correct": false,
+        "why": "The order is still read after a cancel, and its status is a promise the contract makes."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rf2ac84",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pipeline step takes the client secret from the repository's encrypted secrets, fetches a boxoffice token with it, and then calls the API under `bash -x` so that failures are easier to read. A teammate says the log is safe because GitHub masks secrets. Is it?",
+    "hint": "API and Mobile Automation, lesson 3; Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "Yes: GitHub hides every value shaped like a JWT, whichever step produced it.",
+        "correct": false,
+        "why": "Masking replaces the values registered as secrets, by exact match; it knows nothing about the shape of a token."
+      },
+      {
+        "text": "Yes: the token is encrypted, so the line `bash -x` prints is useless to anybody without the server's secret.",
+        "correct": false,
+        "why": "A JWT is signed, not encrypted: anybody can read its claims, and the string itself is what a caller sends after `Bearer`."
+      },
+      {
+        "text": "No, but only because the client secret appears; the token is short-lived and harmless in a log.",
+        "correct": false,
+        "why": "The client secret is registered, so it is masked; the token is what goes out whole, and it works for its whole lifetime."
+      },
+      {
+        "text": "No: the token was never registered, so `bash -x` prints it whole.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3wa70nr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "boxoffice will run as three copies sharing one database, and lesson 13's race is to be fixed with a table of idempotency keys. A developer proposes: begin a transaction, `SELECT` the key, and `INSERT` it as 'in progress' only if the `SELECT` found nothing. What do you say?",
+    "hint": "API and Mobile Automation, lesson 13; Relational Databases and SQL, lesson 8.",
+    "choices": [
+      {
+        "text": "It works: the transaction makes the check and the insert one step, so no other copy can slip between them.",
+        "correct": false,
+        "why": "Two transactions can each read 'no row' and each insert; a check-then-insert is write skew even inside a transaction."
+      },
+      {
+        "text": "Both find no row and both write one; declare the key unique and let the write itself be the claim.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It works at `REPEATABLE READ`, where each copy sees one consistent view of the whole table for the whole transaction.",
+        "correct": false,
+        "why": "Each view is consistent and correct when taken; neither shows the other's insert, so both copies claim the key."
+      },
+      {
+        "text": "Keep the keys in each copy's memory, as boxoffice does now, and claim them there before charging.",
+        "correct": false,
+        "why": "Memory belongs to one copy: a retry that reaches another copy finds nothing, which is why the claim needs a shared store."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ry5r9fv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 8's `seats.feature` buys seats of `sh-102` only on its `1` and `6` rows, so the 120 seats last seventeen runs. A row `| 3 | 201 |` is added at the end of its Examples. On a freshly started boxoffice, running only that feature again and again, how many runs in a row pass before one fails?",
+    "hint": "API and Mobile Automation, lesson 8.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-wtp3538q",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "boxoffice's tests run against the payments stub instead of the real provider. Which of these does the stub give the tests that the real provider cannot? Choose all that apply.",
+    "hint": "API and Mobile Automation, lesson 11.",
+    "choices": [
+      {
+        "text": "A decline, or an answer too late, at the moment a test asks for it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Proof that the provider really answers a charge with `201`",
+        "correct": false,
+        "why": "A stand-in proves that boxoffice handles the answers you wrote; how the provider answers is in its contract."
+      },
+      {
+        "text": "The charges boxoffice sent, with their amounts and idempotency keys",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A red run on the day the provider changes its answers",
+        "correct": false,
+        "why": "The stub goes on answering as it was written and every test stays green; a contract referee is what catches the change."
+      },
+      {
+        "text": "Runs that do not depend on the provider being up",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qhf3z4z",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A client of boxoffice gets each of these answers to `POST /v1/orders`. Match each one to what the client should do next, by lesson 13.",
+    "hint": "API and Mobile Automation, lesson 13.",
+    "pairs": [
+      {
+        "left": "`422` seats must be a whole number from 1 to 6",
+        "right": "Stop: the same request fails the same way every time"
+      },
+      {
+        "left": "`402` the payment was declined",
+        "right": "Stop and leave it to the person, whose decision it is"
+      },
+      {
+        "left": "`429` Too Many Requests",
+        "right": "Try again later, after the wait the server asks for"
+      },
+      {
+        "left": "`504` the payment provider did not answer in time",
+        "right": "Send it again with the same idempotency key, and treat the outcome as unknown until then"
+      }
+    ],
+    "right_distractors": [
+      "Send it again at once without a key, since no order was made"
+    ]
+  },
+  {
+    "id": "ex-y423gvcy",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of lesson 12's `run-integration.sh` in the order it runs them.",
+    "hint": "API and Mobile Automation, lesson 12.",
+    "items": [
+      "Refuse to go on if something already answers on port 8080 or 8090",
+      "Start the payments stub, and wait until `/__requests` answers",
+      "Start boxoffice with `PAYMENTS_URL` pointing at the stub, and wait until `/health` answers",
+      "Run every file matching `tests/*.test.mjs`, keeping its exit code",
+      "Print the failures and the summary, then exit with the code it kept"
+    ],
+    "trap": "The port check comes before anything starts, or a server left running would answer the health checks; and boxoffice needs the stub, so the stub has to answer first."
+  },
+  {
+    "id": "ex-jgscdbg5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Tickets reaches boxoffice from the emulator at http://10.0.2.2:8080. On a phone plugged in by USB, after adb reverse tcp:8080 tcp:8080, baseUrl in Shows.kt becomes http://___:8080. What goes in the blank?",
+    "hint": "API and Mobile Automation, lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "localhost"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pg6wdrxw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a show's screen, a person turns the reminder switch on and refuses notifications. The switch goes off and the line *Notifications are off for Tickets, so no reminder can be sent.* appears. Then they turn the phone sideways. What do they see, by lesson 21's reading of the code?",
+    "hint": "API and Mobile Automation, lesson 21.",
+    "choices": [
+      {
+        "text": "The same screen: Android keeps every view as it was across a rotation.",
+        "correct": false,
+        "why": "A rotation destroys the activity; a view saves what the person changed in it, not what the code set on it."
+      },
+      {
+        "text": "The permission dialog again, because the new activity asks for the permission as it starts.",
+        "correct": false,
+        "why": "`ShowActivity` asks only when the switch is turned on; nothing in `onCreate` asks."
+      },
+      {
+        "text": "The switch still off, and no longer the sentence that says why it is off.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An empty screen, because the title, time and price lived in memory and the rotation lost them.",
+        "correct": false,
+        "why": "They come from the intent, which the recreated activity receives again."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6mcgmqw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lighthouse names the slow page's `<img src=\"hero.png\">` as its largest contentful paint, at 13.1 s. To bring that down, a developer adds `loading=\"lazy\"` to the image, because it saved a lot of bytes on the site's long pages. What do you tell them?",
+    "hint": "Non-functional Testing, lesson 10; Web and Internet Fundamentals, lesson 10.",
+    "choices": [
+      {
+        "text": "Fine once it also has `width` and `height`, because the layout shift is what delayed its paint.",
+        "correct": false,
+        "why": "The missing size moves content, which is CLS; the paint waits for 2.4 MB of picture, and a lazy fetch starts it later still."
+      },
+      {
+        "text": "It makes it worse: the hero needs a lighter file, fetched early.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Good: a lazy image is left out of LCP, so the metric falls to the heading's paint.",
+        "correct": false,
+        "why": "LCP is when the largest thing in view is painted, whenever it arrives; fetching the hero later only delays that paint."
+      },
+      {
+        "text": "It changes nothing, since the 13.1 s comes from `slow.js` blocking the parser.",
+        "correct": false,
+        "why": "`slow.js` delays the first paint; most of the 13.1 s is 2.4 MB over the simulated 1.6 megabits a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x1r2xem",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "While tidying lesson 11's performance workflow, a teammate deletes `if: always()` from the step that uploads `perf/runs/`. On the next pull request, `bash perf/gate.sh /fast.html` exits 1. What does the team have to work with?",
+    "hint": "Non-functional Testing, lesson 11; Automated Testing and CI/CD, lesson 6.",
+    "choices": [
+      {
+        "text": "A red job with every report attached, since uploading files is a job of its own.",
+        "correct": false,
+        "why": "The upload is a step in the gate's own job, and the steps after a failing one are skipped unless they say otherwise."
+      },
+      {
+        "text": "A green job, because a job takes its result from its last step.",
+        "correct": false,
+        "why": "A step that exits non-zero fails the job, whatever comes after it."
+      },
+      {
+        "text": "A red job and the reports of the last run that passed, which are still sitting in `perf/runs/`.",
+        "correct": false,
+        "why": "`gate.sh` deletes the old reports before it starts, so a failed run is never judged or shown with an earlier one's."
+      },
+      {
+        "text": "A red job and no reports: the upload after the failing step was skipped.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-g43v39cq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After a migration, the gate prints `✓ 'p(95)<200' p(95)=33.4ms` and `✗ 'p(95)<9.8' p(95)=33.4ms`, and `EXPLAIN QUERY PLAN` for the seat count now says `SCAN bookings`. The developer argues that 33 ms is far inside 200 ms, so the baseline threshold should be loosened. What do you answer?",
+    "hint": "Non-functional Testing, lesson 11; Relational Databases and SQL, lesson 9.",
+    "choices": [
+      {
+        "text": "Keep it: with the index gone each request reads the whole table, a cost that grows with every booking until 200 ms fails too.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Agree: the requirement is the contract, and a baseline only matters once it has been crossed.",
+        "correct": false,
+        "why": "The baseline is there to catch an endpoint that got several times slower while still under 200 ms."
+      },
+      {
+        "text": "Record a new `baseline.json` from this run, since the migration changed the code on purpose.",
+        "correct": false,
+        "why": "A baseline refreshed from the slower version follows the regression instead of catching it."
+      },
+      {
+        "text": "Rerun it and keep the faster result, because one run is noise.",
+        "correct": false,
+        "why": "Ten times the baseline is not noise, and a gate takes the median of several runs, never the best one."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zpjz41n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On phones, the booking page's stylesheet gives the Show selector `order: -1` in a flex column, so it is drawn above the navigation links while the HTML keeps it after them. `tab.js` reaches every control and books the seat. What does the tester report?",
+    "hint": "Non-functional Testing, lesson 14; HTML and CSS, lesson 8.",
+    "choices": [
+      {
+        "text": "Nothing: every control is reached and the booking completes, so 2.1.1 Keyboard is met.",
+        "correct": false,
+        "why": "Reaching every control meets 2.1.1; the order they are reached in is a criterion of its own."
+      },
+      {
+        "text": "Give the selector `tabindex=\"1\"`, so that Tab reaches it first and matches the drawing.",
+        "correct": false,
+        "why": "A positive tabindex puts it in front of the whole page, skip link included, and is a defect of its own."
+      },
+      {
+        "text": "2.4.3 Focus Order: Tab follows the HTML, so the focus runs against the drawing.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Run axe at a phone's width, and accept the order if it reports no violation.",
+        "correct": false,
+        "why": "The audit gave `book2.html` zero violations with its focus order broken; a tab walk is what sees order."
+      }
+    ]
+  },
+  {
+    "id": "ex-xghv5rhe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`payment.env`, holding a working payment key, was committed and pushed last week. Today a teammate adds `*.env` to `.gitignore` and commits. The next push's `gitleaks git` still reports the key, and editing the file still shows ` M` in `git status --short`. What is the state?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 10; Non-functional Testing, lesson 18.",
+    "choices": [
+      {
+        "text": "The file left the repository with that commit, and the scanner is reading a cache that the next push clears.",
+        "correct": false,
+        "why": "An ignore rule does not untrack a file git already tracks, and the old commit still holds the key."
+      },
+      {
+        "text": "The key is dealt with, so its fingerprint goes into `.gitleaksignore` with a line saying so.",
+        "correct": false,
+        "why": "A fingerprint records a finding that was handled, which means rotated; this key still works."
+      },
+      {
+        "text": "Run `git filter-repo` to drop the file from every commit, then force-push; that removes the key.",
+        "correct": false,
+        "why": "Rewriting reaches none of the copies already made, and until the key is revoked it still opens the account."
+      },
+      {
+        "text": "The file is still tracked and the leaked key still works: revoke it, then untrack it.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-trhp62hm",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A new page exists only on staging, and the team has nothing about it but Lighthouse runs with the default settings. Which of these can those runs tell them? Choose all that apply.",
+    "hint": "Non-functional Testing, lesson 10.",
+    "choices": [
+      {
+        "text": "Its Total Blocking Time on the simulated phone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Its Interaction to Next Paint.",
+        "correct": false,
+        "why": "Nobody taps anything in a lab run, which is why Lighthouse reports TBT in its place."
+      },
+      {
+        "text": "Which element was its largest contentful paint.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether 75% of real visits see an LCP of 2.5 s or less.",
+        "correct": false,
+        "why": "That is field data, from real visitors, and a staging page has no traffic for CrUX to report."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezp8qr1p",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Twelve requests, sent one after another, took these times in milliseconds: 14, 22, 19, 95, 17, 31, 18, 210, 25, 20, 16, 41. By the nearest-rank method of lesson 8, what is their 90th percentile, in ms?",
+    "hint": "Non-functional Testing, lesson 8.",
+    "value": 95,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-774c5xwy",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A dependency scan reports an advisory against a library the box office uses. Put lesson 21's triage of that one finding in order.",
+    "hint": "Non-functional Testing, lesson 21.",
+    "items": [
+      "Collect the flaw's names in every database, and search by its CVE",
+      "Read the base score, then weigh it for where the library sits here",
+      "Look for the advisory's stated conditions in your own code",
+      "Decide whether the finding is wrong about your system at all"
+    ],
+    "trap": "The base score is where triage starts, not where it ends: reachability is checked after it, and a finding that is right about the library and unreachable is still a true positive."
+  },
+  {
+    "id": "ex-v1s66nts",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each thing a load test shows to the place lesson 9 says to look.",
+    "hint": "Non-functional Testing, lesson 9.",
+    "pairs": [
+      {
+        "left": "throughput flat, latency rising, processors idle",
+        "right": "a lock, a pool or a queue"
+      },
+      {
+        "left": "the client's time much larger than the server's",
+        "right": "the network, TCP or a proxy"
+      },
+      {
+        "left": "a tail near 1 s or 3 s",
+        "right": "connections dropped and retried"
+      },
+      {
+        "left": "the load tool's own process at its ceiling",
+        "right": "the generator, not the system"
+      }
+    ],
+    "right_distractors": [
+      "memory or disk"
+    ]
+  },
+  {
+    "id": "ex-0cdge3ec",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A skip link points at <main id=\"main\">. So that following it moves the keyboard focus there, and not only the scroll position, the <main> element gets tabindex=\"___\".",
+    "hint": "Non-functional Testing, lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-09a0jx07",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two days before a release, QA finds that the export page sends customer emails to anyone signed in. In the team chat the tech lead writes \"we accept that one, ship it\". By lesson 3, what would make this an acceptance rather than neglect?",
+    "hint": "Information Security Fundamentals, lesson 3.",
+    "choices": [
+      {
+        "text": "Listing it as a known issue in the release notes, so the decision is on record.",
+        "correct": false,
+        "why": "Written down is one of three conditions; nobody with authority signed it and nothing says when to look again."
+      },
+      {
+        "text": "A written decision signed by the person who owns the risk, with a date to review it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: a security defect that is already known has to be fixed before it ships.",
+        "correct": false,
+        "why": "Acceptance is a legitimate treatment when it is written, signed and dated."
+      },
+      {
+        "text": "The tech lead's message is enough, since IT understands the risk best of anybody on the team.",
+        "correct": false,
+        "why": "The owner of the asset decides on the residual risk, never IT on its own behalf."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xts5xa6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Exploratory testing found that ana, signed in, reads bruno's invoice by changing `/invoices/ana` to `/invoices/bruno` in the address. The fix hides the link to other people's invoices. How should the retest check it?",
+    "hint": "Information Security Fundamentals, lesson 8.",
+    "choices": [
+      {
+        "text": "Send that request with ana's credentials, as `curl` does, and expect `403`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Sign in as ana and confirm the link to bruno's invoice no longer appears on her page.",
+        "correct": false,
+        "why": "Hiding a button is not authorisation; the address can still be typed."
+      },
+      {
+        "text": "Sign out, ask for `/invoices/bruno`, and expect `401`.",
+        "correct": false,
+        "why": "That checks authentication, which was never broken; the flaw belongs to a signed-in user."
+      },
+      {
+        "text": "Sign in as bruno and check his own invoice still opens.",
+        "correct": false,
+        "why": "A fair regression check, but it never asks whether ana is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-196vd2zy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A dependency scan flags a flaw in one function of the `requests` version you pinned. A search shows your code never calls that function, and a teammate closes the finding as a false positive. Is that the right name for it?",
+    "hint": "Non-functional Testing, lesson 21; Information Security Fundamentals, lesson 11.",
+    "choices": [
+      {
+        "text": "Yes: a finding that cannot hurt this application is a false positive.",
+        "correct": false,
+        "why": "A false positive is wrong about your system; this one is right about the library you installed."
+      },
+      {
+        "text": "No, a false negative: the scanner missed that your code never reaches the function.",
+        "correct": false,
+        "why": "A false negative is a real problem that raised no alert; here an alert was raised."
+      },
+      {
+        "text": "No, a true negative, since nothing will happen in this deployment.",
+        "correct": false,
+        "why": "Negative means no alert, and the scanner did raise one."
+      },
+      {
+        "text": "No: it is right about that version, so it is a true positive with low priority.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpga3fdm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team's PostgreSQL primary has a streaming replica on another server, and the release checklist ticks \"backups\" because of it. A migration runs `DELETE FROM orders` with no `WHERE`. What does the replica hold a minute later?",
+    "hint": "Information Security Fundamentals, lesson 12; Relational Databases and SQL, lesson 12.",
+    "choices": [
+      {
+        "text": "Every order, because a replica is read-only and refuses deletes.",
+        "correct": false,
+        "why": "Read-only means clients cannot write to it; it still applies every change the primary makes."
+      },
+      {
+        "text": "No orders: it replays the primary's log, the deletion included.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every order until somebody promotes it with Patroni or repmgr, which happens only when the primary fails.",
+        "correct": false,
+        "why": "Promotion is about the primary dying; a deletion is an ordinary change and is replayed straight away."
+      },
+      {
+        "text": "The orders as of last night, since that is when it was last copied.",
+        "correct": false,
+        "why": "That describes a nightly backup; a streaming replica follows the primary continuously."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6x9gbbr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The shop's backup job printed nothing and exited without error every night from March to October, and left out the invoices folder all along. In the vocabulary of test oracles, what had been judging the job each night, and what is that blind to?",
+    "hint": "Information Security Fundamentals, lesson 12; Software Quality Fundamentals, lesson 19.",
+    "choices": [
+      {
+        "text": "A human oracle, ana, blind to what she has never seen.",
+        "correct": false,
+        "why": "Nobody looked at the archive until the restore test; no person judged it each night."
+      },
+      {
+        "text": "A consistency oracle, each night against the last, blind to a defect that is the same everywhere.",
+        "correct": false,
+        "why": "Nothing compared one night's archive with another's; the only verdict was the silence."
+      },
+      {
+        "text": "An implicit oracle, blind to whatever runs without complaint.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A reference oracle, the live data under `/srv/shop`, blind to defects it shares with the archive.",
+        "correct": false,
+        "why": "The live data came in with the restore test's `diff -r`, and it found the gap at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdvce9sg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A failed release takes the shop's checkout down. The checkout is worth R$ 30,000 to the business, one failure destroys a fifth of that value, and it happens twice a year. Testing every update on a staging copy first costs R$ 4,000 a year and brings failures down to one every two years. By lesson 3's arithmetic, how many reais a year is that control worth, after its own cost?",
+    "hint": "Information Security Fundamentals, lesson 3.",
+    "value": 5000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-2ptgn1vc",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "An acceptance criterion says the staff portal's login \"has two-factor authentication\". Which of these, each asked for after the password, meet it in lesson 9's sense? Choose all that apply.",
+    "hint": "Information Security Fundamentals, lesson 9.",
+    "choices": [
+      {
+        "text": "A code from an authenticator app on the employee's phone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A security question about the employee's first school",
+        "correct": false,
+        "why": "Something you know again, lost the same way as the password."
+      },
+      {
+        "text": "A fingerprint read by the laptop",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A check that the request comes from inside Brazil",
+        "correct": false,
+        "why": "Location is a signal that raises or lowers suspicion, not evidence of who somebody is."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1efmteh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "After a disk failure, the orders came back from the nightly backup and the last 20 hours of orders were gone. The owners had decided the business could lose at most 24 hours of orders. That loss is measured against one of the two recovery targets; its three-letter abbreviation is ___.",
+    "hint": "Information Security Fundamentals, lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "RPO"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nrewn5p5",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A product team asks which second factor to offer the administrators of its app. Put these in order from the weakest to the strongest, as lesson 9 ranks them.",
+    "hint": "Information Security Fundamentals, lesson 9.",
+    "items": [
+      "A code sent by SMS",
+      "A push approval in an app",
+      "A six-digit TOTP code",
+      "A security key or passkey"
+    ],
+    "trap": "SMS falls to a SIM swap and push to MFA fatigue; a TOTP code still works on a fake page within thirty seconds, while a key answers only to the real site's address."
+  },
+  {
+    "id": "ex-2sxnn7vk",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A rule alerts when one address fails to sign in three times in ten minutes. Match each week's event to its outcome.",
+    "hint": "Information Security Fundamentals, lesson 11.",
+    "pairs": [
+      {
+        "left": "It alerts on a sync tool that still holds last month's password",
+        "right": "false positive"
+      },
+      {
+        "left": "It stays silent while a guesser tries two passwords every ten minutes, all week",
+        "right": "false negative"
+      },
+      {
+        "left": "It alerts while the purple exercise's fast guesser is at work",
+        "right": "true positive"
+      },
+      {
+        "left": "It stays silent while a colleague mistypes once and then signs in",
+        "right": "true negative"
+      }
+    ]
+  },
+  {
+    "id": "ex-vxg4c820",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Playwright test in the merge gate fails about one run in four. The team lead adds `retries: 2` to the configuration, and the pipeline goes green on every run. What do the two courses have the team do instead?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Web Test Automation, lesson 14.",
+    "choices": [
+      {
+        "text": "Keep the retries: a test that passes on a later attempt has shown that the defect it reported was not in the page.",
+        "correct": false,
+        "why": "A retry changes the verdict reported, not the page: the failures become a flaky count under an exit code of 0."
+      },
+      {
+        "text": "Move it to a separate job that runs it many times, with an owner and a review date, until it is fixed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Raise the retries to three, so the rare run that fails every single attempt stops blocking everybody's merges.",
+        "correct": false,
+        "why": "If two retries are not enough, the third is the same coin tossed again."
+      },
+      {
+        "text": "Wrap it in `test.fail()`, so the gate expects the failure and stays meaningful.",
+        "correct": false,
+        "why": "`test.fail()` describes a test that fails every time; on the runs where the page behaves, it reports an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-msr2xqfm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Bruno's change reached `main`, and the CI run on it is red. Two teammates have already pulled it. Bruno wants to run `git reset --hard HEAD~1` and force-push `main` so the change disappears. What should happen instead?",
+    "hint": "Automated Testing and CI/CD, lesson 5; Git and Teamwork: Version Control, Review and Process, lesson 4.",
+    "choices": [
+      {
+        "text": "Leave `main` red and push the proper fix on top once Bruno has found the cause.",
+        "correct": false,
+        "why": "While main is red, every new branch starts from a broken base and new failures hide behind the old one."
+      },
+      {
+        "text": "Go ahead with the reset: a commit that broke the build has no place in the shared history.",
+        "correct": false,
+        "why": "The teammates already hold that commit; rewriting shared history leaves their copies disagreeing with main."
+      },
+      {
+        "text": "Skip the failing test in the next commit, so the run is green while Bruno investigates.",
+        "correct": false,
+        "why": "A skipped test reports nothing; main would look healthy while the broken behaviour stays in it."
+      },
+      {
+        "text": "Run `git revert` on it, which undoes it in a new commit on top.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy3fxf5m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A canary step sends 200 requests to the new release, and the team adds a rule: stop when the canary's p99 latency is above the baseline's. Why can that rule not be trusted at this step?",
+    "hint": "Non-functional Testing, lesson 8; Automated Testing and CI/CD, lesson 10.",
+    "choices": [
+      {
+        "text": "With 200 answers just two requests lie beyond the p99, so one slow request moves it; it takes about a thousand answers to put ten beyond it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Latency is judged on the mean, because a p99 ignores the slow few.",
+        "correct": false,
+        "why": "Backwards: the mean hides the slow few, and a high percentile is what shows them."
+      },
+      {
+        "text": "A p99 is held against a fixed limit, never against the baseline, which can be having a bad minute too.",
+        "correct": false,
+        "why": "Both sides meet the same traffic at the same time; a fixed limit passes bad releases and stops good ones."
+      },
+      {
+        "text": "A p99 can be computed only by tools that interpolate between values, such as k6.",
+        "correct": false,
+        "why": "The nearest-rank method computes it by sorting and counting; the methods differ, and both give a p99."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdhe8bqh",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A rule failing the build below 85% coverage went in, and the team's total rose from 81% to 90% in one week. Which of these would tell you whether the testing really got better? Choose all that apply.",
+    "hint": "Automated Testing and CI/CD, lesson 4; Software Quality Fundamentals, lesson 22.",
+    "choices": [
+      {
+        "text": "Run a mutation tool on the files the new tests reach, and see if old survivors are now killed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Compare the 90% with the figure the Java team's JaCoCo reported for the same quarter, to see which team tests better.",
+        "correct": false,
+        "why": "Tools count different units; a project is compared with itself over time, not with another tool's percentage."
+      },
+      {
+        "text": "Read what the new tests assert, and not only which lines they run.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Watch the escaped defects, area by area, over the next months.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Check that the total keeps rising every week from now on.",
+        "correct": false,
+        "why": "A number that always moves the right way is a sign of theatre; a higher total says more lines ran, not that more was checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpd4hhpj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On GitLab, the production carrier token is a CI/CD variable that is masked but not protected. Somebody pushes a new branch whose job sends the variable's value to an outside address. What stands in the way?",
+    "hint": "Automated Testing and CI/CD, lesson 9.",
+    "choices": [
+      {
+        "text": "Masking: the runner swaps the value for asterisks wherever the job uses it, not just in the log.",
+        "correct": false,
+        "why": "Masking edits the job's log by exact match; the job itself receives the real value."
+      },
+      {
+        "text": "The variable belongs to the default branch it was created on, so a new branch never sees it.",
+        "correct": false,
+        "why": "A variable belongs to the project; restricting it to protected branches and tags is what protected means."
+      },
+      {
+        "text": "Nothing: unprotected, it reaches every branch's pipeline, and masking touches the log alone.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The token is in an environment variable rather than an argument, so `ps` cannot show it.",
+        "correct": false,
+        "why": "That keeps it from other users of the machine; here the job that holds it is the one sending it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kt7hghq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Every matrix cell of a GitHub Actions workflow uploads junit.xml and its .coverage.* data as an artifact. Every job is green, and the coverage job combines nothing. The upload step lacks one input. Write it: ___: true.",
+    "hint": "Automated Testing and CI/CD, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "include-hidden-files"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s77p9mx3",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`shipquote` renames the `cents` column of its quotes table to `price_cents`, and every release along the way must survive a rollback. Put the releases in order.",
+    "hint": "Automated Testing and CI/CD, lesson 7.",
+    "items": [
+      "Add `price_cents` beside `cents`; old code ignores it",
+      "Write both columns, still reading `cents`",
+      "Copy the older rows' values into `price_cents`",
+      "Read `price_cents` instead of `cents`",
+      "Stop writing `cents`, and drop it in a later release"
+    ],
+    "trap": "Reading the new column before the older rows are copied shows those quotes with no price, and dropping `cents` early breaks any rollback to code that still reads it."
+  },
+  {
+    "id": "ex-btrbk8vt",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each kind of feature flag to how it is used and how long it should live.",
+    "hint": "Automated Testing and CI/CD, lesson 10.",
+    "pairs": [
+      {
+        "left": "release flag",
+        "right": "Hides a feature until it is ready; removed once everyone has it"
+      },
+      {
+        "left": "operational flag",
+        "right": "A kill switch for something fragile or costly; may stay for years"
+      },
+      {
+        "left": "experiment flag",
+        "right": "Splits customers between two versions; lasts as long as the comparison"
+      },
+      {
+        "left": "permission flag",
+        "right": "On for some customers by right, such as a paid plan"
+      }
+    ]
+  },
+  {
+    "id": "ex-pdp4ac2b",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A quote service has an objective of 99.9% of requests succeeding over 30 days, and it receives 1,200,000 requests in that window. A release failed 300 requests before it was stopped. What percentage of the error budget did it spend?",
+    "hint": "Automated Testing and CI/CD, lesson 11.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-7z04wjy3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Integration jobs from several pull requests run in parallel against one PostgreSQL. A test inserts a customer with the e-mail `test@example.org`, a column with a unique index, then asserts that `SELECT count(*) FROM customers` returns 1. It passes alone and fails at random in CI. What does the course change?",
+    "hint": "Automated Testing and CI/CD, lesson 3.",
+    "choices": [
+      {
+        "text": "`TRUNCATE` the customers table when the test starts, so the count begins at zero.",
+        "correct": false,
+        "why": "On a shared database that deletes another job's rows halfway through its run."
+      },
+      {
+        "text": "Have a factory generate each test's e-mail, and count the rows this test wrote.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Mark the test as flaky and let the pipeline retry it until it passes.",
+        "correct": false,
+        "why": "A retry hides the collision; the test still depends on who else is running."
+      },
+      {
+        "text": "Give the fixture `scope=\"session\"`, so one connection serves the whole run.",
+        "correct": false,
+        "why": "Scope decides how often the fixture is built; it does nothing about other jobs writing to the same tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-abjhjxb9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pull request's ticket says \"Refactor Cart so total() computes the subtotal once\". The assistant's diff keeps the subtotal in a variable inside `total()`, while `discount()` and `shipping()` still call `subtotal()`. The eight tests pass. What should your review say first?",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 13; AI in Development, lesson 3.",
+    "choices": [
+      {
+        "text": "Nothing blocking: the tests pass, so the behaviour is unchanged and the refactoring is finished.",
+        "correct": false,
+        "why": "Passing tests say the behaviour did not change; they cannot say the change did what was asked."
+      },
+      {
+        "text": "A nit about the local name `subtotal`, which matches the method it was read from.",
+        "correct": false,
+        "why": "Names come third in the reading order, and a change that misses its goal makes them irrelevant."
+      },
+      {
+        "text": "It misses what the ticket asked: the sum is still worked out several times.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ask for more tests first, because eight is too few to judge it.",
+        "correct": false,
+        "why": "More tests would pass too; the gap is between the change and the request, and only reading them side by side shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3vg3t7n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An assistant generated twelve tests for `shop/cart.py`. All pass, and `coverage report` shows the file at 100%, branches included. A run of the mutation script then prints `3 survived`. What do the two results say together?",
+    "hint": "AI in Development, lesson 4; Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "Those lines ran, and no test checks what three of them compute.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The mutation run is mistaken, because a fully covered file has no line left for a test to miss.",
+        "correct": false,
+        "why": "Coverage records that a line ran, not that a test checked its result."
+      },
+      {
+        "text": "The survivors sit on lines coverage never reached, and the 100% is 99% rounded up.",
+        "correct": false,
+        "why": "The survivors sit on lines that ran; they are gaps in the assertions, not in coverage."
+      },
+      {
+        "text": "Set `--fail-under=100` so the build fails until the survivors are killed.",
+        "correct": false,
+        "why": "That gate is already met here; only a test that checks a computed value kills a mutant."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ar887rc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In lesson 11, the host gave the model `get_order` and `issue_refund`, and an email talked it into a refund. Which change follows the principle of giving each task only the access it needs, and holds whatever the next email says?",
+    "hint": "AI in Development, lesson 11; Information Security Fundamentals, lesson 6.",
+    "choices": [
+      {
+        "text": "A sentence in the system prompt forbidding refunds, which the model reads before the email.",
+        "correct": false,
+        "why": "It is one more sentence in the same stream; whether the model obeys it is probability, not rule."
+      },
+      {
+        "text": "Keep both tools and log every refund call, so a person can reverse it in the morning.",
+        "correct": false,
+        "why": "That explains the damage after the money moved; any amount on any order is still reachable."
+      },
+      {
+        "text": "Switch to a larger model, which resists injected text better than `llama3.2:3b`.",
+        "correct": false,
+        "why": "Models resist some injected text and follow other text, and an attacker gets to retry."
+      },
+      {
+        "text": "Offer the drafting task `get_order` alone: a tool that is not offered cannot be called, however a request is worded.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-q36zzzes",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your team turns on an AI review bot for pull requests. A developer proposes changing the protection on `main` so that the bot's Approve counts as the one required approval. What should the team do instead?",
+    "hint": "AI in Development, lesson 4; Git and Teamwork: Version Control, Review and Process, lesson 8.",
+    "choices": [
+      {
+        "text": "Accept it for small pull requests, since the bot reads every one of those and people tend to skim them.",
+        "correct": false,
+        "why": "Reading every pull request is what the bot is good for; its approval is still a claim, small change or large."
+      },
+      {
+        "text": "Gate the merge on a person's review and the checks; the bot's comments inform that person.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Let the bot approve, and hide whichever of its findings turn out wrong.",
+        "correct": false,
+        "why": "Ignoring bot comments in silence teaches a team to ignore all of them; a wrong finding is answered on the pull request with the reason."
+      },
+      {
+        "text": "Make it one of two required approvals, so that a person still signs beside it.",
+        "correct": false,
+        "why": "Then a bot's claim still stands in for the second reviewer at the merge button."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpqce46y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Shipping is free when the cart's amount after the discount is at least `FREE_SHIPPING_FROM = 20000` cents. An assistant's list of edge cases for `shipping()` has an empty cart, one cent, a negative amount and a very large one. Which pair does two-value boundary analysis add?",
+    "hint": "Manual Testing and Test Management, lesson 4; AI in Development, lesson 4.",
+    "choices": [
+      {
+        "text": "200.00 and 200.01",
+        "correct": false,
+        "why": "Both are in the free partition; the line sits between 199.99 and 200.00."
+      },
+      {
+        "text": "199.99 and 200.00",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "150.00 and 250.00, one from the middle of each side",
+        "correct": false,
+        "why": "Middle values behave the same whether the code says `>=` or `>`; only the edge tells them apart."
+      },
+      {
+        "text": "199.00 and 200.00",
+        "correct": false,
+        "why": "For money the nearest neighbour is one cent, not one whole unit."
+      }
+    ]
+  },
+  {
+    "id": "ex-9n69tnys",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Lesson 3's suggested diff changed `discount()` to round each line's discount down on its own and add the results. A cart holds one mug at 1990 cents and one lamp at 2990 cents, with FRIENDS15 (15% off). How many cents does the changed `discount()` take off?",
+    "hint": "AI in Development, lesson 3.",
+    "value": 746,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-xnx19w4j",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "An injected email got the shop's assistant to issue a refund last night, and a token may have been exposed in the same conversation. Put lesson 11's response in order, first step first.",
+    "hint": "AI in Development, lesson 11.",
+    "items": [
+      "Flip the switch so every email goes to a person",
+      "Revoke the token that may have leaked",
+      "Reverse the refund and write to the customer",
+      "Add the approval step the refund call skipped",
+      "Add the email to the evaluation set"
+    ],
+    "trap": "Fixing the cause feels like the first job, but the damage is stopped and the leak revoked before anything else; the fix goes into the host after the undo, and the email joins the evaluation last."
+  },
+  {
+    "id": "ex-04sg4zvs",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A teammate proposes three property-based tests for the shop. Match each with where lesson 4 says properties come from.",
+    "hint": "AI in Development, lesson 4.",
+    "pairs": [
+      {
+        "left": "Exporting the orders to CSV and importing the file back gives the same orders",
+        "right": "A round trip"
+      },
+      {
+        "left": "Sorting the cart's lines by price keeps exactly the same lines",
+        "right": "An invariant"
+      },
+      {
+        "left": "The new cached price lookup agrees with the plain lookup it replaces",
+        "right": "Comparison with a simpler version"
+      }
+    ],
+    "right_distractors": [
+      "A characterisation of what the code does now"
+    ]
+  },
+  {
+    "id": "ex-bn0fsp3z",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "You are testing lesson 11's `redact()` before it ships, with customer messages that contain these. Which would reach the provider still readable? Choose all that apply.",
+    "hint": "AI in Development, lesson 11.",
+    "choices": [
+      {
+        "text": "A card number written `4111.1111.1111.1111`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A card number written `4111-1111-1111-1111`",
+        "correct": false,
+        "why": "The card pattern allows a space or a dash after each digit, so this one becomes `[CARD]`."
+      },
+      {
+        "text": "A CPF typed with no punctuation, `12345678909`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An address written `marta@example.com`",
+        "correct": false,
+        "why": "That is exactly the shape the `EMAIL` pattern catches."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j2dqfsz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Testing the step 7 version of loanbook from lesson 11, you send `curl -s -X POST localhost:8000/api/items/1/loan -d 'not json'` and nothing comes back. Which line belongs in your defect report as written?",
+    "hint": "Manual Testing and Test Management, lesson 15; The Portfolio Project: From Brief to Deploy, lesson 11.",
+    "choices": [
+      {
+        "text": "Actual: the server is down, so no request to it gets an answer.",
+        "correct": false,
+        "why": "That is how it looks to a user, not what happened: the log shows one request raising `JSONDecodeError` and the connection closed with no reply."
+      },
+      {
+        "text": "Suggested fix: move `json.loads` inside the `try`, so a malformed body becomes a 400.",
+        "correct": false,
+        "why": "A report that names the fix has started repairing a program its writer does not own; the traceback already points the developer to the line."
+      },
+      {
+        "text": "Expected: a 400 saying the body is not JSON, which the error table asks for a client's mistake.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Title: Lending is completely broken whenever somebody uses the loan route.",
+        "correct": false,
+        "why": "Lending works with a JSON body; a title names what fails and under what condition, with no adjectives."
+      }
+    ]
+  },
+  {
+    "id": "ex-05q2fjtj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "loanbook's seven tests ran in 0.003 seconds, and none of them noticed that a body which is not JSON made loanbook hang up on the request. By the layers of lesson 1 of the automated testing course, which test would have caught it?",
+    "hint": "Automated Testing and CI/CD, lesson 1; The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "Another unit test that calls `lend` with a borrower that is not valid JSON.",
+        "correct": false,
+        "why": "`lend` never sees the body; the parsing that failed is in the handler, which these tests never start."
+      },
+      {
+        "text": "A functional test sending that body to a running server.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An integration test against a real SQLite file instead of `:memory:`.",
+        "correct": false,
+        "why": "The database was never reached; the failure was in reading the request, before any query ran."
+      },
+      {
+        "text": "Not a test of ours: a malformed body is the client's mistake, so the client tests it.",
+        "correct": false,
+        "why": "Lesson 11 makes answering a client's mistake the server's job: a 400 and a sentence, not a dropped connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0c07pv0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "loanbook's phone layout is `@media (max-width: 36rem)`. A reader with low vision sets the browser's default text size to 20 pixels. What is the widest window, in pixels, at which that reader gets the phone layout?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 13; HTML and CSS, lesson 11.",
+    "value": 720,
+    "tolerance": 0,
+    "unit": "px"
+  },
+  {
+    "id": "ex-f9zkp1wv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "loanbook is tagged v1.0.0. Acting on its retrospective, the next two commits are fix(api): answer an unexpected error with 500 and feat(page): show a Loading row while the list arrives, and neither breaks anything. By Conventional Commits, the release that ships them is tagged ___.",
+    "hint": "Git and Teamwork: Version Control, Review and Process, lesson 11; The Portfolio Project: From Brief to Deploy, lesson 21.",
+    "blanks": [
+      {
+        "accept": [
+          "v1.1.0",
+          "1.1.0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9jjwzg3b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In lesson 12 Ana deletes the partial unique index, runs the suite, and `test_an_item_cannot_be_lent_twice` fails. In the terms of mutation testing, what was that, and what would it have meant if all seven tests had passed?",
+    "hint": "Automated Testing and CI/CD, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 12.",
+    "choices": [
+      {
+        "text": "A surviving mutant, because a test went red.",
+        "correct": false,
+        "why": "It is the other way round: a failing test kills the mutant, and one that every test passes has survived."
+      },
+      {
+        "text": "A coverage check: the red test proves the index's lines ran, and seven passes would have meant they did not.",
+        "correct": false,
+        "why": "Coverage says which lines ran; whether a test notices the code changing is what mutation measures."
+      },
+      {
+        "text": "A killed mutant; seven passes would have proved the index was not needed.",
+        "correct": false,
+        "why": "Passing would say the tests cannot see the rule go, not that it is safe to lose: lesson 5 shows Projector 2 lent twice without it."
+      },
+      {
+        "text": "A killed mutant; seven passes would have meant the suite cannot see the rule at all.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-emc8rhnh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Testing a list page, you stop the server and reload. The page shows the table's header and nothing else, exactly as it does with an empty database. Why is that a defect, by lesson 11?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 11.",
+    "choices": [
+      {
+        "text": "A teacher is told there is no equipment when the server is in fact down.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is the loading state: the request never came back, and a Loading line would cover it.",
+        "correct": false,
+        "why": "Loading is a request still on its way; a stopped server is the error state, which needs its own sentence."
+      },
+      {
+        "text": "It is not one: with no server there is no data, so an empty table is accurate.",
+        "correct": false,
+        "why": "An empty table claims there is nothing to lend, which is false; a failed request says nothing about the shelf."
+      },
+      {
+        "text": "The page should hide the table and show the server's traceback instead, so the cause is visible.",
+        "correct": false,
+        "why": "A bug goes to the log, not to the user; the page needs a sentence saying the server did not answer and to reload."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqtf8qq7",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each *done when* line of loanbook's brief to what checks it.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lessons 4 and 12.",
+    "pairs": [
+      {
+        "left": "A second loan of an item that is out is refused, with who has it.",
+        "right": "`test_an_item_cannot_be_lent_twice`"
+      },
+      {
+        "left": "A returned item shows as available straight away.",
+        "right": "`test_a_returned_item_can_be_lent_again`"
+      },
+      {
+        "left": "A loan is marked late the day after it is due.",
+        "right": "`test_a_loan_is_overdue_the_day_after_it_is_due`"
+      },
+      {
+        "left": "Marta can open it from the IT room and a teacher from a phone.",
+        "right": "a check by hand, with no unit test"
+      }
+    ],
+    "right_distractors": [
+      "`test_a_lent_item_shows_who_has_it`",
+      "`test_an_item_that_is_in_cannot_come_back`"
+    ]
+  },
+  {
+    "id": "ex-t1ddfba1",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put loanbook's first deploy on srv in the order lesson 15 does it.",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 15.",
+    "items": [
+      "Push `main` and the tags to a bare repository on srv",
+      "Clone it on srv and build the image with `podman build`",
+      "Copy the `.container` file into `/etc/containers/systemd/` and run `daemon-reload`",
+      "Start `loanbook` and ask `/healthz` from srv itself",
+      "Copy the Caddyfile and `reload` Caddy"
+    ],
+    "trap": "systemd can only start a service from an image that already exists, and Caddy is put in front of a service that already answers on `127.0.0.1:8000`."
+  },
+  {
+    "id": "ex-q7epc03a",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "After step 8, loanbook's log reads: `GET /api/nothing 404`, `POST /api/items/1/loan 400`, `POST /api/items/9/loan 404`, `POST /api/items/1/loan 400`, `POST /api/items/1/loan 201`, `POST /api/items/1/loan 409`, `POST /api/items/1/return 200`, `POST /api/items/1/return 409`. By lesson 11's table of whose mistake each answer is, how many of these eight requests were turned away for a client's or a user's mistake, rather than by a rule?",
+    "hint": "The Portfolio Project: From Brief to Deploy, lesson 11.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-3axcyfvr",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "You are writing the CV line for a project built the way loanbook was. Which of these numbers belong on it? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 4; The Portfolio Project: From Brief to Deploy, lesson 20.",
+    "choices": [
+      {
+        "text": "Seven tests, one of which fails when the index is removed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Handles a thousand users at once on a single small server.",
+        "correct": false,
+        "why": "Nothing was measured past one staffroom, as lesson 20's answer admits, and a number you cannot explain costs more than none."
+      },
+      {
+        "text": "Restarted on its own after being killed, with the eight items still there.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Cut late returns at the school by 40% in its first month.",
+        "correct": false,
+        "why": "There is no baseline and no measurement behind it; an interviewer will ask where it came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfbkc8r1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a live exercise you write a function that accepts an order of 1 to 6 tickets. Lesson 12's shape says to test it aloud with one normal case and one edge case. Which pair spends those two cases best?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 12; Manual Testing and Test Management, lesson 4.",
+    "choices": [
+      {
+        "text": "3 and then 4, so the ordinary path is shown working twice",
+        "correct": false,
+        "why": "Both come from the same partition, so the second asks the first one's question again."
+      },
+      {
+        "text": "3 and then 1000, because the value furthest from the range is the hardest test",
+        "correct": false,
+        "why": "Far from the line, *less than* and *less than or equal* behave alike; only a value on the edge tells them apart."
+      },
+      {
+        "text": "3 and then 6, a value from the middle and the largest one the rule allows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`two` and then `2.5`, what a customer types by mistake",
+        "correct": false,
+        "why": "Both sit in one invalid partition, and neither is the normal case."
+      }
+    ]
+  },
+  {
+    "id": "ex-aw1tbzhb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A take-home for a junior QA role asks you to test a booking form for three hours. You found two defects: a quantity of `two` answers a 500 traceback, and a refusal reads *cannot be useed*. What do you hand in? Choose all that apply.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 13; Manual Testing and Test Management, lesson 15.",
+    "choices": [
+      {
+        "text": "One report holding both, so the reviewer reads a single page",
+        "correct": false,
+        "why": "One fix closes that report, and the other defect is forgotten with it."
+      },
+      {
+        "text": "Two reports, one per defect, each with steps a stranger replays without asking",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A note saying what you did, what you chose and why, and what you would do with more time",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A line in the traceback report saying the `int()` call needs a try/except",
+        "correct": false,
+        "why": "That starts fixing a program you do not own, and a guess at the cause is wrong as often as right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctz7m4yb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your first task at a new job: the receipt page prints the order date month first, and your change prints it day first. The team uses Conventional Commits. Which first line fits the first thing you ship?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Git and Teamwork: Version Control, Review and Process, lesson 11.",
+    "choices": [
+      {
+        "text": "`fix(receipt): show the order date day first`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`fix: fix bug`",
+        "correct": false,
+        "why": "It is in the format and says nothing; a type is not a reason."
+      },
+      {
+        "text": "`feat(receipt): show the order date day first`",
+        "correct": false,
+        "why": "`feat` is for something new; a wrong date put right is a bug fixed."
+      },
+      {
+        "text": "`Fixed the date on the receipt page.`",
+        "correct": false,
+        "why": "A first line is an instruction with no full stop, and this team's lines start with a type."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjq4r3sa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In your second week as a junior QA, you realise the regression run you reported as complete yesterday skipped the checkout page. The release goes out this afternoon. What comes first?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 20; Software Quality Fundamentals, lesson 5.",
+    "choices": [
+      {
+        "text": "Test checkout quietly before anybody notices, and speak up if it fails",
+        "correct": false,
+        "why": "Silence while you fix it alone is what turns a small mistake into an incident."
+      },
+      {
+        "text": "Hold the release yourself until checkout has been tested",
+        "correct": false,
+        "why": "The decision to ship belongs to whoever owns the product; the tester brings information."
+      },
+      {
+        "text": "Raise it at your next one-to-one, where bad news goes early",
+        "correct": false,
+        "why": "The release is this afternoon; the person who needs to know is the one deciding it today."
+      },
+      {
+        "text": "Tell the product owner now that checkout was not tested, before the decision to ship is made",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdhdxeyk",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A CLT offer pays R$ 2,500 a month. With lesson 17's arithmetic, before tax and with twelve months billed, what monthly PJ invoice matches that CLT year, in reais?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 17.",
+    "value": 3000,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-t72qbzxm",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "An advert for a junior QA role has just caught your eye. Put lesson 8's routine for aiming the application in order.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 8.",
+    "items": [
+      "Read the advert for the work, the day-one needs and the nice-to-haves",
+      "Change the line under your name to the advert's words for the work",
+      "Choose five or six skills that match the day-one needs",
+      "Check that the top of the CV answers what you do and whether you have done it",
+      "Save it under a name, export the PDF, apply and add the row to the tracker"
+    ],
+    "trap": "Every later step uses the advert's words, so it is read first; the tracker row comes last because the application only exists once it is sent."
+  },
+  {
+    "id": "ex-5bj1d1wk",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Three processes each ended in a no, at a different stage. Match each stage to what lesson 19 says a rejection there usually means.",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 19.",
+    "pairs": [
+      {
+        "left": "After the screening call",
+        "right": "A practical mismatch: salary, contract, shift or location"
+      },
+      {
+        "left": "After the technical interview",
+        "right": "The exercise, the thinking aloud, or a stronger candidate that day"
+      },
+      {
+        "left": "After the final interview",
+        "right": "Close: somebody fitted slightly better, often for reasons you could not change"
+      }
+    ],
+    "right_distractors": [
+      "The CV or its aim, which is why nobody answered at all"
+    ]
+  },
+  {
+    "id": "ex-9rwkc828",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Interviewing for a junior QA role, you ask who you would go to when stuck. The answer: *you'd be our only tester; the developers hand everything to you, and nothing ships without your sign-off.* How do the two lessons read it?",
+    "hint": "From Study to Hired: CV, Interviews and the First 90 Days, lesson 16; Software Quality Fundamentals, lesson 5.",
+    "choices": [
+      {
+        "text": "A strong start: signing off releases is what a QA role is for, and it shows trust",
+        "correct": false,
+        "why": "That is the gate, which teaches developers to stop owning quality and lands everything on you late."
+      },
+      {
+        "text": "Two warnings: nobody to learn from, and a gate",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A good sign, since being independent from day one makes a junior learn faster",
+        "correct": false,
+        "why": "On a first job, independence from the start is the warning lesson 2 gives, not a perk."
+      },
+      {
+        "text": "Fine, provided the sign-off is in writing, so an escaped defect is not blamed on you",
+        "correct": false,
+        "why": "A written signature does not make the promise keepable; what the gate provides is somebody to blame."
+      }
+    ]
+  }
+]

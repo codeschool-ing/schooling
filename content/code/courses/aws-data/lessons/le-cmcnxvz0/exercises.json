@@ -1,0 +1,706 @@
+[
+  {
+    "id": "ex-qxmgk7k5",
+    "version": 1,
+    "section": "catalog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the Glue Data Catalog hold about Quitanda's orders?",
+    "hint": "Delete every object and look again.",
+    "choices": [
+      {
+        "text": "A copy of the Parquet files, kept in Glue's own storage for speed",
+        "correct": false,
+        "why": "The catalog keeps no data; the files stay in S3 and only there."
+      },
+      {
+        "text": "The columns, the location, the format and the partitions",
+        "correct": true,
+        "why": "Right: a description that every reader by name consults before reading a byte."
+      },
+      {
+        "text": "The results of the latest queries, kept for reuse",
+        "correct": false,
+        "why": "Athena writes results to an S3 prefix; the catalog never sees them."
+      },
+      {
+        "text": "An index of every `order_id`, for lookups",
+        "correct": false,
+        "why": "Nothing in the catalog knows a value inside a file; it refused a filter on `payment` for that reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pwp1yyc",
+    "version": 1,
+    "section": "catalog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody deletes every object under `s3://quitanda-curated-prod/orders/`. What happens to the table `orders` in the catalog?",
+    "hint": "Two facts in two services.",
+    "choices": [
+      {
+        "text": "It is deleted with the objects",
+        "correct": false,
+        "why": "S3 does not tell the catalog anything; the table stays."
+      },
+      {
+        "text": "It is marked deprecated straight away",
+        "correct": false,
+        "why": "Only a crawler with that delete behaviour marks tables, and only when it runs."
+      },
+      {
+        "text": "It rolls back to its previous version",
+        "correct": false,
+        "why": "Versions change only with `update-table`."
+      },
+      {
+        "text": "Nothing: it stays, and queries return no rows",
+        "correct": true,
+        "why": "Right. The description outlives the files it describes."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwmwyvjb",
+    "version": 1,
+    "section": "catalog",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a table to the question it answers.",
+    "hint": "Look at `orders-table.json`.",
+    "pairs": [
+      {
+        "left": "`Columns`",
+        "right": "What is in each file, with which type"
+      },
+      {
+        "left": "`Location`",
+        "right": "Which prefix holds the files"
+      },
+      {
+        "left": "`SerdeInfo` and the two formats",
+        "right": "How bytes become rows"
+      },
+      {
+        "left": "`PartitionKeys`",
+        "right": "Which columns come from the key"
+      }
+    ],
+    "right_distractors": [
+      "Who is allowed to read the table"
+    ]
+  },
+  {
+    "id": "ex-6jx4bs1a",
+    "version": 1,
+    "section": "catalog",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`orders-table.json` lists seven columns. Suppose a file in the location had only six. At what point would anybody find out?",
+    "hint": "What did `create-table` read?",
+    "choices": [
+      {
+        "text": "At `create-table`, which compares the columns with the files",
+        "correct": false,
+        "why": "It reads only the JSON it was sent; neither moto nor AWS opens a file."
+      },
+      {
+        "text": "When a query reads that file through the table",
+        "correct": true,
+        "why": "Right. A table is a claim about the files, and only a reader puts the two side by side."
+      },
+      {
+        "text": "At the next nightly check the catalog makes of every location",
+        "correct": false,
+        "why": "The catalog makes no such check."
+      },
+      {
+        "text": "When the file is written, because S3 validates Parquet",
+        "correct": false,
+        "why": "S3 stores bytes and does not know what format they are."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4h2rhcc",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does one partition of `orders` hold?",
+    "hint": "It is a row in the catalog.",
+    "choices": [
+      {
+        "text": "The day's Parquet file, copied in from S3 when the row is made",
+        "correct": false,
+        "why": "The file is in S3; the partition only says where."
+      },
+      {
+        "text": "A value of `dt` and a storage descriptor with its own location",
+        "correct": true,
+        "why": "Right, columns and format included, copied from the table when it was made."
+      },
+      {
+        "text": "The number of orders that day",
+        "correct": false,
+        "why": "The catalog does not count rows; a Parquet footer does."
+      },
+      {
+        "text": "A link to the partition of the day before, so they can be walked in order",
+        "correct": false,
+        "why": "Partitions are independent rows found by their values."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5bhvr6q",
+    "version": 1,
+    "section": "partitions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`batch-create-partition` takes up to 100 partitions per request. How many requests register a year of 365 daily partitions?",
+    "hint": "Round up.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8m2dqvby",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sent a second time, the batch answered with 31 errors and exit status 0. What should the nightly job that registers its day do about that?",
+    "hint": "What does the exit status say?",
+    "choices": [
+      {
+        "text": "Trust the exit status, which says the call succeeded",
+        "correct": false,
+        "why": "It was 0 with 31 failures inside the answer."
+      },
+      {
+        "text": "Read the `Errors` list and act on each entry",
+        "correct": true,
+        "why": "Right. `AlreadyExistsException` is harmless; any other code is a day not registered."
+      },
+      {
+        "text": "Delete every partition first, so that the batch never meets one",
+        "correct": false,
+        "why": "For the length of that window every query sees an empty table."
+      },
+      {
+        "text": "Retry the batch until the list of errors comes back empty",
+        "correct": false,
+        "why": "An existing partition fails the same way on every retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrdw8p7a",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`get-partitions --expression \"payment = 'pix'\"` was refused with `Invalid partition expression`. Why?",
+    "hint": "What does the catalog know about `payment`?",
+    "choices": [
+      {
+        "text": "moto does not evaluate partition expressions, whatever column they name",
+        "correct": false,
+        "why": "It evaluated the `dt BETWEEN` one and returned three rows."
+      },
+      {
+        "text": "It names a column inside the files, and the catalog knows only the keys",
+        "correct": true,
+        "why": "Right. The catalog knows values of `dt` and nothing of what the files hold."
+      },
+      {
+        "text": "The value has to be written in double quotes",
+        "correct": false,
+        "why": "The `dt` expression used single quotes and worked."
+      },
+      {
+        "text": "`pix` is not one of the values the table declares for `payment`, so nothing matches",
+        "correct": false,
+        "why": "A table declares types, not values."
+      }
+    ]
+  },
+  {
+    "id": "ex-tw0dgbej",
+    "version": 1,
+    "section": "partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partition for `2026-12-25` names a prefix that holds no objects. What does an Athena query for that day return?",
+    "hint": "Nothing ties the row to the files.",
+    "choices": [
+      {
+        "text": "An error saying that the location does not exist",
+        "correct": false,
+        "why": "A prefix is not a thing that exists or not; listing it finds nothing, and that is not an error."
+      },
+      {
+        "text": "The whole table, because the filter matched no files",
+        "correct": false,
+        "why": "The filter picked one partition; it does not fall back to all of them."
+      },
+      {
+        "text": "No rows, and no error",
+        "correct": true,
+        "why": "Right. An empty prefix is an empty answer, which is why a row with no files goes unnoticed."
+      },
+      {
+        "text": "Nothing, because the catalog refused to create that row",
+        "correct": false,
+        "why": "It accepted it; the capture listed `2026-12-25` straight after."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvw4bzyv",
+    "version": 1,
+    "section": "partitions",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these count as objects against the catalog's free million? Choose all that apply.",
+    "hint": "An object is something the catalog stores.",
+    "choices": [
+      {
+        "text": "The database `quitanda`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The partition for 2026-10-15",
+        "correct": true,
+        "why": "Yes, each of the 31."
+      },
+      {
+        "text": "Version 2 of the table",
+        "correct": true,
+        "why": "Yes: a version is a whole table description."
+      },
+      {
+        "text": "The Parquet file of 15 October",
+        "correct": false,
+        "why": "That is in S3, priced as S3 storage."
+      },
+      {
+        "text": "An Athena query that reads the table",
+        "correct": false,
+        "why": "A query makes requests, the other free million."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdwkrpm0",
+    "version": 1,
+    "section": "crawlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson's crawler set `UpdateBehavior=LOG` instead of the default?",
+    "hint": "What does the default do when a file disagrees with the table?",
+    "choices": [
+      {
+        "text": "A crawl that only logs its findings is billed at a lower DPU rate",
+        "correct": false,
+        "why": "The DPU-hour is the same; the setting decides what it writes."
+      },
+      {
+        "text": "`CRAWL_NEW_FOLDERS_ONLY` refuses to run with the default",
+        "correct": false,
+        "why": "The two settings are independent."
+      },
+      {
+        "text": "So one bad export cannot rewrite the table for every query",
+        "correct": true,
+        "why": "Right. With `UPDATE_IN_DATABASE` the change lands in the catalog the moment the crawl sees it."
+      },
+      {
+        "text": "The default deletes a table whose files changed",
+        "correct": false,
+        "why": "Deleting is the delete behaviour, and its default only marks a table deprecated."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns0pebcx",
+    "version": 1,
+    "section": "crawlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The crawler's schedule is `cron(30 3 * * ? *)`. What time is that in São Paulo, three hours behind UTC?",
+    "hint": "Glue writes schedules in UTC.",
+    "choices": [
+      {
+        "text": "03:30",
+        "correct": false,
+        "why": "That reads the expression as local time."
+      },
+      {
+        "text": "06:30",
+        "correct": false,
+        "why": "That adds the three hours instead of taking them away."
+      },
+      {
+        "text": "00:30",
+        "correct": true,
+        "why": "Right, which may be before the night's export has landed."
+      },
+      {
+        "text": "15:30",
+        "correct": false,
+        "why": "The 3 is the hour of a 24-hour clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-gb7fadrd",
+    "version": 1,
+    "section": "crawlers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A crawler runs over a prefix where one day's folder holds files with a different set of columns from the rest. What can it make of that?",
+    "hint": "It groups by how similar the schemas are.",
+    "choices": [
+      {
+        "text": "A table for each folder instead of one table with partitions",
+        "correct": true,
+        "why": "Right, unless it is told to keep a single schema for the path."
+      },
+      {
+        "text": "It refuses to run until the odd files are removed",
+        "correct": false,
+        "why": "A crawler does not refuse; it infers and writes what it inferred."
+      },
+      {
+        "text": "It rewrites the odd files to match the other folders",
+        "correct": false,
+        "why": "A crawler writes the catalog and never the data."
+      },
+      {
+        "text": "It skips that folder and leaves no trace of it in the catalog",
+        "correct": false,
+        "why": "Skipping silently is not what grouping does; differing schemas change how it groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-97qbdm6t",
+    "version": 1,
+    "section": "crawlers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A crawl is billed at 0.69 dollars per DPU-hour, per second, with a ten-minute minimum. A run takes 3 minutes on 2 DPUs. How many US cents does it cost?",
+    "hint": "The minimum applies before the DPUs multiply.",
+    "value": 23,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-k4sqs70w",
+    "version": 1,
+    "section": "crawlers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before it infers a schema, a crawler tries its ___ in order, each one saying whether a file is its format.",
+    "hint": "Custom ones can go first: a grok pattern, a delimiter of its own.",
+    "blanks": [
+      {
+        "accept": [
+          "classifiers",
+          "classifier"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5sy40hpz",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `update-table` adds `coupon`, what do the 31 partitions of October list as their columns?",
+    "hint": "What did each partition copy when it was made?",
+    "choices": [
+      {
+        "text": "The eight columns, since partitions follow the table",
+        "correct": false,
+        "why": "The capture shows 15 October still ending in `neighbourhood`."
+      },
+      {
+        "text": "The seven they were created with",
+        "correct": true,
+        "why": "Right. `update-table` changes the table and none of its partitions."
+      },
+      {
+        "text": "None: an update clears their columns until a crawl runs",
+        "correct": false,
+        "why": "Nothing is cleared; the partitions are untouched."
+      },
+      {
+        "text": "Whatever version 1 of the table says, read at query time",
+        "correct": false,
+        "why": "A partition holds its own copy, not a pointer to a version."
+      }
+    ]
+  },
+  {
+    "id": "ex-hebxn5yr",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`update-table --skip-archive` left a fourth version in moto. What does the flag do on AWS?",
+    "hint": "moto ignored it.",
+    "choices": [
+      {
+        "text": "It updates the table without archiving the previous description",
+        "correct": true,
+        "why": "Right, so the version count stays put; moto does not implement it."
+      },
+      {
+        "text": "It archives the table and skips the update",
+        "correct": false,
+        "why": "The update happens; what is skipped is the archive."
+      },
+      {
+        "text": "It deletes every earlier version to make room",
+        "correct": false,
+        "why": "Earlier versions are left alone."
+      },
+      {
+        "text": "It skips updating the partitions along with the table, which it otherwise does",
+        "correct": false,
+        "why": "`update-table` never updates partitions, with or without the flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4yc1v53",
+    "version": 1,
+    "section": "versions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Version 3 made `total_cents` a `double`, and you want the table back as it was in version 2. How?",
+    "hint": "A version is a whole description.",
+    "choices": [
+      {
+        "text": "Delete version 3, and the table falls back to version 2",
+        "correct": false,
+        "why": "The current description is the table itself, not an archived version to delete."
+      },
+      {
+        "text": "Run a crawler with `UpdateBehavior=LOG`",
+        "correct": false,
+        "why": "LOG only stops a crawler from changing the table; it restores nothing."
+      },
+      {
+        "text": "Rewrite the 31 partitions as `double`",
+        "correct": false,
+        "why": "That changes the partitions to match the mistake."
+      },
+      {
+        "text": "Send `update-table` with version 2's description",
+        "correct": true,
+        "why": "Right, which makes a version 4 equal to version 2: the history keeps the mistake and the undo."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kqr6q8x",
+    "version": 1,
+    "section": "evolution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ask.py` refused `coupon` although the file of 1 November has that column. Why?",
+    "hint": "Whose schema was in charge?",
+    "choices": [
+      {
+        "text": "The catalog's version 1 has no `coupon`",
+        "correct": false,
+        "why": "`ask.py` never reads the catalog; it lists S3."
+      },
+      {
+        "text": "PyArrow took the schema from the first file, 1 October",
+        "correct": true,
+        "why": "Right. The reader decided the schema, and it decided from October."
+      },
+      {
+        "text": "A column that holds nulls on most of its rows cannot be counted",
+        "correct": false,
+        "why": "`count(coupon)` counts the non-null values, which is what the union query did."
+      },
+      {
+        "text": "`coupons.py` wrote the column under another name",
+        "correct": false,
+        "why": "DuckDB found `coupon` in the same file once told to unite by name."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j16vqph",
+    "version": 1,
+    "section": "evolution",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the file of 2 November a total of exactly 52.00 reais is stored in `total_cents` as a `double`. Read with October's `int64` schema, what does it become?",
+    "hint": "The refusal came from a value with centavos.",
+    "choices": [
+      {
+        "text": "An error, as there was for the total of 265.68",
+        "correct": false,
+        "why": "The error came because 265.68 has a fraction to lose; 52.00 has none."
+      },
+      {
+        "text": "5,200 cents, converted correctly",
+        "correct": false,
+        "why": "Nothing multiplies by a hundred; the reader only changes the type."
+      },
+      {
+        "text": "52, read as fifty-two cents, with no error",
+        "correct": true,
+        "why": "Right: the silent case, a hundred times too small."
+      },
+      {
+        "text": "A null, because the two types disagree with each other",
+        "correct": false,
+        "why": "The value converts cleanly, so nothing becomes null."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1tv7ber",
+    "version": 1,
+    "section": "evolution",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `union_by_name = true`, what did DuckDB answer for the `coupon` of the 31 October rows?",
+    "hint": "60,725 orders, 5,982 with a coupon.",
+    "choices": [
+      {
+        "text": "An error, since that file has no such column",
+        "correct": false,
+        "why": "The error was the query without `union_by_name`."
+      },
+      {
+        "text": "NULL for every one of them",
+        "correct": true,
+        "why": "Right: lined up by name, a column a file lacks comes back empty."
+      },
+      {
+        "text": "The coupon of the matching order in November",
+        "correct": false,
+        "why": "A union lines up columns, not rows; nothing is matched across files."
+      },
+      {
+        "text": "An empty string in place of each coupon",
+        "correct": false,
+        "why": "`count(coupon)` counted 5,982, all from November, which an empty string would have raised."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmftzjcf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The raw CSV table is read by position. The export adds `channel` between `payment` and `neighbourhood`, and the table is updated to match. What do the old October files show?",
+    "hint": "Count the fields of an old line.",
+    "choices": [
+      {
+        "text": "Every column as before, with `channel` empty",
+        "correct": false,
+        "why": "That is what reading by name would give; by position the fields shift."
+      },
+      {
+        "text": "An error on every old line, which has one field too few",
+        "correct": false,
+        "why": "A short line is read with the missing field empty, not refused."
+      },
+      {
+        "text": "The old seventh field lands in the new column, and the last one is empty",
+        "correct": true,
+        "why": "Right. The seventh field lands in the seventh column, which is now `channel`."
+      },
+      {
+        "text": "Nothing, until a crawler updates the partitions",
+        "correct": false,
+        "why": "The files are readable at once; they are read wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-46fhn4x3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order a safe change of `total_cents` from cents to reais.",
+    "hint": "A type changes by adding a column.",
+    "items": [
+      "Add `total_reais` to the table with `update-table`",
+      "The export starts filling `total_reais` on new days",
+      "A job rewrites the old partitions with `total_reais`",
+      "Readers switch to `total_reais`, and `total_cents` goes"
+    ]
+  },
+  {
+    "id": "ex-d82wsd19",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the four ways to add partitions, which one needs no partition rows in the catalog at all?",
+    "hint": "Lesson 15 described it.",
+    "choices": [
+      {
+        "text": "`MSCK REPAIR TABLE`",
+        "correct": false,
+        "why": "It lists the prefix and writes the rows it finds missing."
+      },
+      {
+        "text": "A crawler with `CRAWL_NEW_FOLDERS_ONLY`",
+        "correct": false,
+        "why": "It writes rows for the new folders."
+      },
+      {
+        "text": "Partition projection",
+        "correct": true,
+        "why": "Right: Athena computes the keys from the table's properties."
+      },
+      {
+        "text": "`batch-create-partition` from the writer",
+        "correct": false,
+        "why": "That is writing the rows yourself."
+      }
+    ]
+  }
+]

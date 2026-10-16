@@ -1,0 +1,597 @@
+[
+  {
+    "id": "ex-9yhr0pxn",
+    "version": 1,
+    "section": "what-managed-means",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda moves its orders database to RDS. A report added on Monday reads the whole `orders` table every minute and the CPU sits at 95%. Who adds the missing index?",
+    "hint": "Which column of the table holds indexes?",
+    "choices": [
+      {
+        "text": "RDS, once its metrics show the CPU high for long enough",
+        "correct": false,
+        "why": "RDS reports the CPU; it never changes a schema, and an index is part of the schema."
+      },
+      {
+        "text": "Quitanda: indexes stay with whoever owns the schema",
+        "correct": true,
+        "why": "Right. Managed moves the operational work, and the schema, the queries and the indexes stay where they were."
+      },
+      {
+        "text": "AWS Support, as part of the managed service",
+        "correct": false,
+        "why": "Nothing in the managed list touches what is inside the database."
+      },
+      {
+        "text": "Nobody; the fix is a larger instance class",
+        "correct": false,
+        "why": "A bigger instance is the expensive way to hide a missing index, and the report still reads the whole table."
+      }
+    ]
+  },
+  {
+    "id": "ex-eg31n480",
+    "version": 1,
+    "section": "what-managed-means",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application on Quitanda's old server used a PostgreSQL extension compiled there by hand. What happens when the database moves to RDS?",
+    "hint": "Think about what the master user is, and whether there is a shell.",
+    "choices": [
+      {
+        "text": "It is copied across with the data by the migration",
+        "correct": false,
+        "why": "A dump carries the data and the schema, not the compiled library the extension needs on the server."
+      },
+      {
+        "text": "The master user installs it with `CREATE EXTENSION`",
+        "correct": false,
+        "why": "Only extensions on RDS's list can be created; the master user is in `rds_superuser`, not a real superuser."
+      },
+      {
+        "text": "It cannot be used unless RDS lists it",
+        "correct": true,
+        "why": "Right. No shell, no file system, and extensions only from the allowed list."
+      },
+      {
+        "text": "You log in over SSH and compile it again",
+        "correct": false,
+        "why": "An RDS instance offers no login to its operating system at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2kj4w982",
+    "version": 1,
+    "section": "what-managed-means",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does RDS do for you? Choose all that apply.",
+    "hint": "The left column is the work that is the same for every database.",
+    "choices": [
+      {
+        "text": "Apply operating system patches to the database server",
+        "correct": true,
+        "why": "Yes; you never see that operating system."
+      },
+      {
+        "text": "Take automated backups and keep them for the retention you set",
+        "correct": true,
+        "why": "Yes, up to 35 days; lesson 7 restores from them."
+      },
+      {
+        "text": "Rewrite a query that reads a million rows to return ten",
+        "correct": false,
+        "why": "Queries are the application's, on RDS as anywhere."
+      },
+      {
+        "text": "Choose how many connections the application opens",
+        "correct": false,
+        "why": "RDS sets a limit; what opens connections, and how many, is the application's design."
+      },
+      {
+        "text": "Replace the hardware when it fails",
+        "correct": true,
+        "why": "Yes; the machine is AWS's."
+      }
+    ]
+  },
+  {
+    "id": "ex-epqc89fz",
+    "version": 1,
+    "section": "the-engines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company wants Oracle Enterprise Edition on RDS and holds no Oracle licence. What can it do?",
+    "hint": "Look at the licence column for `oracle-ee`.",
+    "choices": [
+      {
+        "text": "Choose `license-included`, and pay Oracle's share inside the hourly price, as with SQL Server",
+        "correct": false,
+        "why": "That works for Standard Edition 2 and for SQL Server; Enterprise Edition is offered only as bring your own."
+      },
+      {
+        "text": "Get one from the vendor first, or run SE2 with the price covering it",
+        "correct": true,
+        "why": "Right. EE is bring-your-own only; SE2 can come with the licence in the price."
+      },
+      {
+        "text": "Nothing: Oracle does not run on RDS",
+        "correct": false,
+        "why": "Oracle is one of the five engines; the question is who pays for the licence."
+      },
+      {
+        "text": "Use Aurora, which runs Oracle with no licence",
+        "correct": false,
+        "why": "Aurora speaks PostgreSQL or MySQL, never Oracle."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc3ycpcd",
+    "version": 1,
+    "section": "the-engines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, an instance created without `--engine-version` came back as PostgreSQL 9.3.3. A colleague concludes RDS still creates 9.3 by default. What is wrong with that?",
+    "hint": "Whose default answered?",
+    "choices": [
+      {
+        "text": "Nothing; 9.3 is what RDS picks when no version is given",
+        "correct": false,
+        "why": "AWS picks its current default version; 9.3 is long gone from RDS."
+      },
+      {
+        "text": "9.3.3 is a minor version, and RDS only reports major ones",
+        "correct": false,
+        "why": "RDS reports the full version; the problem is whose default it is."
+      },
+      {
+        "text": "It is moto's old default; AWS picks its current one",
+        "correct": true,
+        "why": "Right. Name the version in every command so the result does not depend on who answered."
+      },
+      {
+        "text": "The default changes with the instance class",
+        "correct": false,
+        "why": "The class decides the machine, not the engine version."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw2c2gka",
+    "version": 1,
+    "section": "the-engines",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each `--engine` value to its licence on RDS.",
+    "hint": "One of them is not open source and has its licence in the hourly price.",
+    "pairs": [
+      {
+        "left": "`postgres`",
+        "right": "No licence: open source"
+      },
+      {
+        "left": "`sqlserver-se`",
+        "right": "Included in the hourly price"
+      },
+      {
+        "left": "`oracle-ee`",
+        "right": "Only a licence you already hold"
+      },
+      {
+        "left": "`db2-se`",
+        "right": "Your own licence, from IBM"
+      }
+    ],
+    "right_distractors": [
+      "Free for the first year, then included"
+    ]
+  },
+  {
+    "id": "ex-1jqkd745",
+    "version": 1,
+    "section": "an-instance",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In moto, `create-db-instance` answers `available` on the same second, with an endpoint on port 5432. What is behind that endpoint?",
+    "hint": "What did moto store?",
+    "choices": [
+      {
+        "text": "A PostgreSQL server that moto started in the background",
+        "correct": false,
+        "why": "moto starts no engine; the record has a status and an address and nothing listens."
+      },
+      {
+        "text": "Nothing: a record with a name nobody's DNS holds",
+        "correct": true,
+        "why": "Right. On AWS the same instance would take minutes to reach `available`, because a real machine starts."
+      },
+      {
+        "text": "A read-only copy of a sample database",
+        "correct": false,
+        "why": "moto ships no database at all."
+      },
+      {
+        "text": "The real RDS endpoint, reached through moto as a proxy",
+        "correct": false,
+        "why": "moto never talks to AWS; the lab runs with no account."
+      }
+    ]
+  },
+  {
+    "id": "ex-tappb2c5",
+    "version": 1,
+    "section": "an-instance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's instance lives in one zone. Why does its DB subnet group name subnets in two?",
+    "hint": "Think about lesson 7.",
+    "choices": [
+      {
+        "text": "AWS requires two zones, and the second is where a Multi-AZ standby would go",
+        "correct": true,
+        "why": "Right. The room for the standby is booked when the group is made."
+      },
+      {
+        "text": "The instance is split across both and reads from either",
+        "correct": false,
+        "why": "A Single-AZ instance runs in one zone, on one volume."
+      },
+      {
+        "text": "Each zone holds half of the 100 GiB volume",
+        "correct": false,
+        "why": "The volume is in the instance's zone; nothing is halved."
+      },
+      {
+        "text": "moto refuses a group with one subnet",
+        "correct": false,
+        "why": "The two-zone rule is AWS's, documented; moto checks far less."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8ej7bpr",
+    "version": 1,
+    "section": "an-instance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson create the instance with `--manage-master-user-password` rather than `--master-user-password`?",
+    "hint": "Where does a password typed on a command line end up?",
+    "choices": [
+      {
+        "text": "It makes the instance start faster",
+        "correct": false,
+        "why": "It changes where the secret lives, not how long the instance takes."
+      },
+      {
+        "text": "moto refuses a typed password",
+        "correct": false,
+        "why": "moto accepts either, even a password AWS would refuse as too short."
+      },
+      {
+        "text": "A typed password is stored in plain text inside the instance",
+        "correct": false,
+        "why": "Either way the engine stores a hash; the leak is on your side of the command."
+      },
+      {
+        "text": "The password goes to Secrets Manager and never into history",
+        "correct": true,
+        "why": "Right. RDS generates and rotates it, and the application reads it with a role; nobody types it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcpz3828",
+    "version": 1,
+    "section": "an-instance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto created a `db.banana.huge` without complaint. What does that tell you about a script that creates instances and passes against moto?",
+    "hint": "What does moto check, and what does AWS check?",
+    "choices": [
+      {
+        "text": "Only that the requests are well formed",
+        "correct": true,
+        "why": "Right. Whether a class exists for that engine and region is AWS's check, and moto does not make it."
+      },
+      {
+        "text": "That the class exists, since moto would have refused it",
+        "correct": false,
+        "why": "moto just accepted a class that does not exist."
+      },
+      {
+        "text": "That the script will work unchanged on AWS",
+        "correct": false,
+        "why": "A success from moto means the request was well formed, and no more."
+      },
+      {
+        "text": "Nothing: moto skips validation only for test-sized classes",
+        "correct": false,
+        "why": "There are no test-sized classes; moto checks the engine and little else."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0ywb5b8",
+    "version": 1,
+    "section": "parameter-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda raises `max_connections` in its parameter group with `ApplyMethod=pending-reboot`. When does the running engine use the new value?",
+    "hint": "It is a static parameter.",
+    "choices": [
+      {
+        "text": "At once, because the group is attached to the instance",
+        "correct": false,
+        "why": "A static parameter is read only when the engine starts."
+      },
+      {
+        "text": "At the next restart, planned or not; until then AWS marks it as waiting",
+        "correct": true,
+        "why": "Right. So the restart is scheduled like any other downtime."
+      },
+      {
+        "text": "Within five minutes, when RDS reloads the configuration of every instance using the group",
+        "correct": false,
+        "why": "Reloading works for dynamic parameters; `max_connections` sizes memory at start."
+      },
+      {
+        "text": "Never, until the instance moves to a new parameter group",
+        "correct": false,
+        "why": "The same group takes effect at the restart; no new group is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcyr76cn",
+    "version": 1,
+    "section": "parameter-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did the lesson create `quitanda-pg16` before the instance existed, instead of using `default.postgres16`?",
+    "hint": "Can a default group be changed?",
+    "choices": [
+      {
+        "text": "A default group cannot be changed; switching later needs a restart",
+        "correct": true,
+        "why": "Right. Naming its own group at creation spares the instance that restart."
+      },
+      {
+        "text": "Custom groups are cheaper than the default one, which is billed per instance",
+        "correct": false,
+        "why": "Parameter groups cost nothing either way."
+      },
+      {
+        "text": "The default group belongs to another account, AWS's, and yours cannot name it",
+        "correct": false,
+        "why": "It is in your account, and it is read-only."
+      },
+      {
+        "text": "An instance without a custom group gets no parameters at all",
+        "correct": false,
+        "why": "It gets the default group's values, which is the point of having one."
+      }
+    ]
+  },
+  {
+    "id": "ex-gedby0jg",
+    "version": 1,
+    "section": "parameter-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After changing a static parameter, moto shows `ParameterApplyStatus: in-sync`. What would AWS show, and why does moto differ?",
+    "hint": "moto keeps no running engine.",
+    "choices": [
+      {
+        "text": "`in-sync` too: a parameter group is applied when it is saved",
+        "correct": false,
+        "why": "A static parameter waits for a restart, and AWS shows that it is waiting."
+      },
+      {
+        "text": "`applying`, because AWS restarts the instance on its own",
+        "correct": false,
+        "why": "AWS never restarts for a parameter change; the restart is yours to schedule."
+      },
+      {
+        "text": "`pending-reboot`, since the engine still runs the old value",
+        "correct": true,
+        "why": "Right. moto has no engine to be out of step with, so it never shows the difference."
+      },
+      {
+        "text": "An error, because static parameters cannot be changed on RDS",
+        "correct": false,
+        "why": "They can; they take effect at the next restart."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzm1frnn",
+    "version": 1,
+    "section": "parameter-groups",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A parameter that a running engine reads again is called dynamic; one read only at start is called ___.",
+    "hint": "`max_connections` is one.",
+    "blanks": [
+      {
+        "accept": [
+          "static"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s1g4g8r1",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `db.m7g.large` PostgreSQL costs 0.221 USD an hour Single-AZ, and gp3 storage 0.219 per GB-month. What does it cost in a 730-hour month with 200 GiB? Give USD to two decimal places.",
+    "hint": "Instance hours times price, plus GiB times price.",
+    "value": 205.13,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-0ncarvct",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the price sheet, how does a Multi-AZ PostgreSQL `db.m7g.large` compare with the same Single-AZ instance?",
+    "hint": "Compare 0.442 with 0.221, and 0.438 with 0.219.",
+    "choices": [
+      {
+        "text": "About 10% more, for the replication traffic",
+        "correct": false,
+        "why": "The sheet says exactly double, for the instance and for the storage."
+      },
+      {
+        "text": "Double the instance, and the same storage",
+        "correct": false,
+        "why": "The storage doubles too: the standby has a volume of its own."
+      },
+      {
+        "text": "Exactly double, instance and storage both",
+        "correct": true,
+        "why": "Right. It is a second instance with a second volume in another zone."
+      },
+      {
+        "text": "The same; the standby is free until it is used",
+        "correct": false,
+        "why": "The standby runs every hour and is billed every hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehy5jz4f",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `db.m6i.large` running SQL Server Standard costs 1.087 USD an hour; a `db.m7g.large` running PostgreSQL costs 0.221. Both have 2 vCPU and 8 GiB. What is most of the difference?",
+    "hint": "Look at the licence column.",
+    "choices": [
+      {
+        "text": "The Intel processor of the `m6i`, against Graviton",
+        "correct": false,
+        "why": "Processor families differ by cents an hour, not by four times the price."
+      },
+      {
+        "text": "Microsoft's licence, billed by the hour",
+        "correct": true,
+        "why": "Right. The engine's licence is in the hourly price, every hour it runs."
+      },
+      {
+        "text": "Storage, since SQL Server needs more of it",
+        "correct": false,
+        "why": "Storage is billed separately per GiB; these are instance prices."
+      },
+      {
+        "text": "Backups, which SQL Server takes more often",
+        "correct": false,
+        "why": "Backups are RDS's and work the same for every engine."
+      }
+    ]
+  },
+  {
+    "id": "ex-gskwmvp9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of creating Quitanda's instance in the order the lesson needs them.",
+    "hint": "Each step names something the step before it made.",
+    "items": [
+      "Create the VPC and two subnets in two zones",
+      "Create the DB subnet group naming the two subnets",
+      "Create the instance, naming the groups and `--manage-master-user-password`",
+      "Change a static parameter, then restart the instance"
+    ]
+  },
+  {
+    "id": "ex-8r8txgnv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test database will not be needed for two months. Someone stops it to save money. What happens?",
+    "hint": "Two things a stopped instance does not stop.",
+    "choices": [
+      {
+        "text": "Nothing more is billed until it is started again",
+        "correct": false,
+        "why": "The storage is still billed while stopped."
+      },
+      {
+        "text": "It is deleted after seven days of being stopped, together with all of its backups",
+        "correct": false,
+        "why": "RDS starts it again after seven days; it deletes nothing."
+      },
+      {
+        "text": "Storage keeps being billed, and RDS starts it again on its own after seven days",
+        "correct": true,
+        "why": "Right. For two months, a snapshot and a deletion is the cheaper way."
+      },
+      {
+        "text": "The instance class is lowered to the smallest one",
+        "correct": false,
+        "why": "Stopping changes no class; the hourly charge for the machine simply stops."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd2z2635",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's functions open a new connection for every request and hit `max_connections`. Which fix fits what the lesson said?",
+    "hint": "Each PostgreSQL connection is a process with memory of its own.",
+    "choices": [
+      {
+        "text": "Put a pool such as RDS Proxy in front, so they share a few dozen connections",
+        "correct": true,
+        "why": "Right. Fewer connections, not a bigger number."
+      },
+      {
+        "text": "Raise `max_connections` to 5,000 in the parameter group",
+        "correct": false,
+        "why": "Each connection costs memory; thousands of them starve the cache the queries need."
+      },
+      {
+        "text": "Move to Multi-AZ, which doubles the connections",
+        "correct": false,
+        "why": "The standby takes no connections; it only waits."
+      },
+      {
+        "text": "Switch to MySQL, which has no limit",
+        "correct": false,
+        "why": "Every engine has a connection limit."
+      }
+    ]
+  }
+]

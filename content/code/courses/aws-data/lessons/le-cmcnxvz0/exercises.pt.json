@@ -1,0 +1,479 @@
+{
+  "ex-qxmgk7k5": {
+    "prompt": "O que o Glue Data Catalog guarda sobre os pedidos da Quitanda?",
+    "hint": "Apague todo objeto e olhe de novo.",
+    "choices": [
+      {
+        "text": "Uma cópia dos arquivos Parquet, no armazenamento do próprio Glue",
+        "why": "O catálogo não guarda dados; os arquivos ficam no S3 e só lá."
+      },
+      {
+        "text": "As colunas, o local, o formato e as partições",
+        "why": "Isso: uma descrição que todo leitor por nome consulta antes de ler um byte."
+      },
+      {
+        "text": "Os resultados das últimas consultas, guardados para reaproveitar",
+        "why": "O Athena grava resultados num prefixo do S3; o catálogo nunca os vê."
+      },
+      {
+        "text": "Um índice de todo `order_id`, para buscas",
+        "why": "Nada no catálogo conhece um valor dentro de um arquivo; foi por isso que recusou um filtro em `payment`."
+      }
+    ]
+  },
+  "ex-7pwp1yyc": {
+    "prompt": "Alguém apaga todo objeto sob `s3://quitanda-curated-prod/orders/`. O que acontece com a tabela `orders` no catálogo?",
+    "hint": "Dois fatos em dois serviços.",
+    "choices": [
+      {
+        "text": "É apagada junto com os objetos",
+        "why": "O S3 não avisa nada ao catálogo; a tabela fica."
+      },
+      {
+        "text": "É marcada como obsoleta na hora",
+        "why": "Só um crawler com esse comportamento de exclusão marca tabelas, e só quando roda."
+      },
+      {
+        "text": "Volta para a versão anterior",
+        "why": "Versões só mudam com `update-table`."
+      },
+      {
+        "text": "Nada: ela fica, e as consultas não devolvem linhas",
+        "why": "Isso. A descrição sobrevive aos arquivos que descreve."
+      }
+    ]
+  },
+  "ex-pwmwyvjb": {
+    "prompt": "Ligue cada parte de uma tabela à pergunta que ela responde.",
+    "hint": "Veja o `orders-table.json`.",
+    "pairs": [
+      {
+        "left": "`Columns`",
+        "right": "O que há em cada arquivo, com qual tipo"
+      },
+      {
+        "left": "`Location`",
+        "right": "Qual prefixo guarda os arquivos"
+      },
+      {
+        "left": "`SerdeInfo` e os dois formatos",
+        "right": "Como os bytes viram linhas"
+      },
+      {
+        "left": "`PartitionKeys`",
+        "right": "Quais colunas vêm da chave"
+      }
+    ],
+    "right_distractors": [
+      "Quem tem permissão para ler a tabela"
+    ]
+  },
+  "ex-6jx4bs1a": {
+    "prompt": "O `orders-table.json` lista sete colunas. Suponha que um arquivo no local tivesse só seis. Em que momento alguém descobriria?",
+    "hint": "O que o `create-table` leu?",
+    "choices": [
+      {
+        "text": "No `create-table`, que compara as colunas com os arquivos",
+        "why": "Ele lê só o JSON que recebeu; nem o moto nem a AWS abrem um arquivo."
+      },
+      {
+        "text": "Quando uma consulta lê aquele arquivo pela tabela",
+        "why": "Isso. Uma tabela é uma afirmação sobre os arquivos, e só um leitor põe os dois lado a lado."
+      },
+      {
+        "text": "Na próxima conferência noturna que o catálogo faz de todo local",
+        "why": "O catálogo não faz conferência nenhuma."
+      },
+      {
+        "text": "Quando o arquivo é gravado, porque o S3 valida Parquet",
+        "why": "O S3 guarda bytes e não sabe de que formato são."
+      }
+    ]
+  },
+  "ex-k4h2rhcc": {
+    "prompt": "O que uma partição de `orders` guarda?",
+    "hint": "É uma linha no catálogo.",
+    "choices": [
+      {
+        "text": "O arquivo Parquet do dia, copiado do S3 quando a linha é criada",
+        "why": "O arquivo está no S3; a partição só diz onde."
+      },
+      {
+        "text": "Um valor de `dt` e um storage descriptor com local próprio",
+        "why": "Isso, colunas e formato incluídos, copiados da tabela quando ela foi criada."
+      },
+      {
+        "text": "O número de pedidos daquele dia",
+        "why": "O catálogo não conta linhas; o rodapé do Parquet conta."
+      },
+      {
+        "text": "Um link para a partição do dia anterior, para percorrê-las em ordem",
+        "why": "Partições são linhas independentes, achadas pelos valores."
+      }
+    ]
+  },
+  "ex-p5bhvr6q": {
+    "prompt": "O `batch-create-partition` aceita até 100 partições por requisição. Quantas requisições registram um ano de 365 partições diárias?",
+    "hint": "Arredonde para cima."
+  },
+  "ex-8m2dqvby": {
+    "prompt": "Enviado uma segunda vez, o lote respondeu com 31 erros e código de saída 0. O que o job noturno que registra o próprio dia deve fazer quanto a isso?",
+    "hint": "O que o código de saída diz?",
+    "choices": [
+      {
+        "text": "Confiar no código de saída, que diz que a chamada deu certo",
+        "why": "Ele foi 0 com 31 falhas dentro da resposta."
+      },
+      {
+        "text": "Ler a lista `Errors` e agir sobre cada item",
+        "why": "Isso. `AlreadyExistsException` é inofensivo; qualquer outro código é um dia não registrado."
+      },
+      {
+        "text": "Apagar toda partição antes, para o lote nunca encontrar uma",
+        "why": "Durante essa janela toda consulta vê uma tabela vazia."
+      },
+      {
+        "text": "Repetir o lote até a lista de erros voltar vazia",
+        "why": "Uma partição existente falha igual em toda repetição."
+      }
+    ]
+  },
+  "ex-rrdw8p7a": {
+    "prompt": "`get-partitions --expression \"payment = 'pix'\"` foi recusado com `Invalid partition expression`. Por quê?",
+    "hint": "O que o catálogo sabe sobre `payment`?",
+    "choices": [
+      {
+        "text": "O moto não avalia expressões de partição, seja qual for a coluna que nomeiam",
+        "why": "Ele avaliou a de `dt BETWEEN` e devolveu três linhas."
+      },
+      {
+        "text": "Ela nomeia uma coluna de dentro dos arquivos, e o catálogo só conhece as chaves",
+        "why": "Isso. O catálogo conhece valores de `dt` e nada do que os arquivos guardam."
+      },
+      {
+        "text": "O valor precisa estar entre aspas duplas",
+        "why": "A expressão de `dt` usou aspas simples e funcionou."
+      },
+      {
+        "text": "`pix` não é um dos valores que a tabela declara para `payment`, então nada casa",
+        "why": "Uma tabela declara tipos, não valores."
+      }
+    ]
+  },
+  "ex-tw0dgbej": {
+    "prompt": "Uma partição de `2026-12-25` nomeia um prefixo sem objetos. O que uma consulta do Athena para esse dia devolve?",
+    "hint": "Nada amarra a linha aos arquivos.",
+    "choices": [
+      {
+        "text": "Um erro dizendo que o local não existe",
+        "why": "Um prefixo não é algo que existe ou não; listá-lo não acha nada, e isso não é erro."
+      },
+      {
+        "text": "A tabela inteira, porque o filtro não casou com arquivo nenhum",
+        "why": "O filtro escolheu uma partição; não recua para todas."
+      },
+      {
+        "text": "Nenhuma linha, e nenhum erro",
+        "why": "Isso. Um prefixo vazio é uma resposta vazia, e é por isso que uma linha sem arquivos passa despercebida."
+      },
+      {
+        "text": "Nada, porque o catálogo recusou criar essa linha",
+        "why": "Ele a aceitou; a captura listou `2026-12-25` logo depois."
+      }
+    ]
+  },
+  "ex-tvw4bzyv": {
+    "prompt": "Quais destes contam como objetos no milhão grátis do catálogo? Marque todos os que se aplicam.",
+    "hint": "Um objeto é algo que o catálogo guarda.",
+    "choices": [
+      {
+        "text": "O banco `quitanda`",
+        "why": "Sim."
+      },
+      {
+        "text": "A partição de 2026-10-15",
+        "why": "Sim, cada uma das 31."
+      },
+      {
+        "text": "A versão 2 da tabela",
+        "why": "Sim: uma versão é uma descrição de tabela inteira."
+      },
+      {
+        "text": "O arquivo Parquet de 15 de outubro",
+        "why": "Esse está no S3, cobrado como armazenamento do S3."
+      },
+      {
+        "text": "Uma consulta do Athena que lê a tabela",
+        "why": "Uma consulta faz requisições, o outro milhão grátis."
+      }
+    ]
+  },
+  "ex-vdwkrpm0": {
+    "prompt": "Por que o crawler desta lição usa `UpdateBehavior=LOG` em vez do padrão?",
+    "hint": "O que o padrão faz quando um arquivo discorda da tabela?",
+    "choices": [
+      {
+        "text": "Um crawl que só registra o que achou é cobrado a uma tarifa de DPU menor",
+        "why": "A DPU-hora é a mesma; a configuração decide o que ele grava."
+      },
+      {
+        "text": "`CRAWL_NEW_FOLDERS_ONLY` se recusa a rodar com o padrão",
+        "why": "As duas configurações são independentes."
+      },
+      {
+        "text": "Para uma exportação ruim não reescrever a tabela para toda consulta",
+        "why": "Isso. Com `UPDATE_IN_DATABASE` a mudança cai no catálogo no momento em que o crawl a vê."
+      },
+      {
+        "text": "O padrão apaga uma tabela cujos arquivos mudaram",
+        "why": "Apagar é o comportamento de exclusão, e o padrão dele só marca a tabela como obsoleta."
+      }
+    ]
+  },
+  "ex-ns0pebcx": {
+    "prompt": "O agendamento do crawler é `cron(30 3 * * ? *)`. Que horas são em São Paulo, três horas atrás do UTC?",
+    "hint": "O Glue escreve agendamentos em UTC.",
+    "choices": [
+      {
+        "text": "03:30",
+        "why": "Isso lê a expressão como hora local."
+      },
+      {
+        "text": "06:30",
+        "why": "Isso soma as três horas em vez de subtrair."
+      },
+      {
+        "text": "00:30",
+        "why": "Isso, o que pode ser antes de a exportação da noite chegar."
+      },
+      {
+        "text": "15:30",
+        "why": "O 3 é a hora num relógio de 24 horas."
+      }
+    ]
+  },
+  "ex-gb7fadrd": {
+    "prompt": "Um crawler roda sobre um prefixo onde a pasta de um dia tem arquivos com um conjunto de colunas diferente do resto. O que ele pode fazer disso?",
+    "hint": "Ele agrupa pela semelhança dos esquemas.",
+    "choices": [
+      {
+        "text": "Uma tabela por pasta em vez de uma tabela com partições",
+        "why": "Isso, a não ser que mandem manter um único esquema para o caminho."
+      },
+      {
+        "text": "Ele se recusa a rodar até os arquivos estranhos saírem",
+        "why": "Um crawler não recusa; deduz e grava o que deduziu."
+      },
+      {
+        "text": "Ele reescreve os arquivos estranhos para combinar com as outras pastas",
+        "why": "Um crawler grava o catálogo e nunca os dados."
+      },
+      {
+        "text": "Ele pula essa pasta e não deixa rastro dela no catálogo",
+        "why": "Pular em silêncio não é o que o agrupamento faz; esquemas diferentes mudam como ele agrupa."
+      }
+    ]
+  },
+  "ex-97qbdm6t": {
+    "prompt": "Um crawl é cobrado a 0,69 dólar por DPU-hora, por segundo, com mínimo de dez minutos. Uma execução leva 3 minutos com 2 DPUs. Quantos centavos de dólar ela custa?",
+    "hint": "O mínimo vale antes de multiplicar pelas DPUs."
+  },
+  "ex-k4sqs70w": {
+    "prompt": "Antes de deduzir um esquema, um crawler tenta seus ___ em ordem, cada um dizendo se um arquivo é do formato dele.",
+    "hint": "Os personalizados podem ir primeiro: um padrão grok, um delimitador próprio.",
+    "blanks": [
+      {
+        "accept": [
+          "classificadores",
+          "classificador"
+        ]
+      }
+    ]
+  },
+  "ex-5sy40hpz": {
+    "prompt": "Depois de o `update-table` acrescentar `coupon`, que colunas as 31 partições de outubro listam?",
+    "hint": "O que cada partição copiou quando foi criada?",
+    "choices": [
+      {
+        "text": "As oito colunas, já que as partições seguem a tabela",
+        "why": "A captura mostra 15 de outubro ainda terminando em `neighbourhood`."
+      },
+      {
+        "text": "As sete com que foram criadas",
+        "why": "Isso. O `update-table` muda a tabela e nenhuma das partições."
+      },
+      {
+        "text": "Nenhuma: uma atualização apaga as colunas delas até um crawl rodar",
+        "why": "Nada é apagado; as partições ficam intactas."
+      },
+      {
+        "text": "O que a versão 1 da tabela diz, lido na hora da consulta",
+        "why": "Uma partição guarda a própria cópia, não um ponteiro para uma versão."
+      }
+    ]
+  },
+  "ex-hebxn5yr": {
+    "prompt": "`update-table --skip-archive` deixou uma quarta versão no moto. O que a opção faz na AWS?",
+    "hint": "O moto a ignorou.",
+    "choices": [
+      {
+        "text": "Atualiza a tabela sem arquivar a descrição anterior",
+        "why": "Isso, então a contagem de versões não sobe; o moto não implementa isso."
+      },
+      {
+        "text": "Arquiva a tabela e pula a atualização",
+        "why": "A atualização acontece; o que é pulado é o arquivo."
+      },
+      {
+        "text": "Apaga toda versão anterior para abrir espaço",
+        "why": "As versões anteriores ficam como estão."
+      },
+      {
+        "text": "Pula a atualização das partições junto com a tabela, que ela faria de outro modo",
+        "why": "O `update-table` não atualiza partições, com ou sem a opção."
+      }
+    ]
+  },
+  "ex-f4yc1v53": {
+    "prompt": "A versão 3 deixou `total_cents` como `double`, e você quer a tabela de volta como na versão 2. Como?",
+    "hint": "Uma versão é uma descrição inteira.",
+    "choices": [
+      {
+        "text": "Apagar a versão 3, e a tabela volta para a versão 2",
+        "why": "A descrição atual é a própria tabela, não uma versão arquivada para apagar."
+      },
+      {
+        "text": "Rodar um crawler com `UpdateBehavior=LOG`",
+        "why": "LOG só impede um crawler de mudar a tabela; não restaura nada."
+      },
+      {
+        "text": "Reescrever as 31 partições como `double`",
+        "why": "Isso muda as partições para combinar com o erro."
+      },
+      {
+        "text": "Enviar `update-table` com a descrição da versão 2",
+        "why": "Isso, o que faz uma versão 4 igual à 2: o histórico guarda o erro e o desfazer."
+      }
+    ]
+  },
+  "ex-4kqr6q8x": {
+    "prompt": "O `ask.py` recusou `coupon` embora o arquivo de 1º de novembro tenha essa coluna. Por quê?",
+    "hint": "O esquema de quem estava no comando?",
+    "choices": [
+      {
+        "text": "A versão 1 do catálogo não tem `coupon`",
+        "why": "O `ask.py` nunca lê o catálogo; ele lista o S3."
+      },
+      {
+        "text": "O PyArrow tirou o esquema do primeiro arquivo, 1º de outubro",
+        "why": "Isso. O leitor decidiu o esquema, e decidiu a partir de outubro."
+      },
+      {
+        "text": "Uma coluna com nulos na maioria das linhas não pode ser contada",
+        "why": "`count(coupon)` conta os valores não nulos, que é o que a consulta com união fez."
+      },
+      {
+        "text": "O `coupons.py` gravou a coluna com outro nome",
+        "why": "O DuckDB achou `coupon` no mesmo arquivo quando mandado unir por nome."
+      }
+    ]
+  },
+  "ex-3j16vqph": {
+    "prompt": "No arquivo de 2 de novembro um total de exatamente 52,00 reais está em `total_cents` como `double`. Lido com o esquema `int64` de outubro, vira o quê?",
+    "hint": "A recusa veio de um valor com centavos.",
+    "choices": [
+      {
+        "text": "Um erro, como aconteceu com o total de 265,68 reais",
+        "why": "O erro veio porque 265,68 tem fração a perder; 52,00 não tem."
+      },
+      {
+        "text": "5.200 centavos, convertido corretamente",
+        "why": "Nada multiplica por cem; o leitor só muda o tipo."
+      },
+      {
+        "text": "52, lido como cinquenta e dois centavos, sem erro",
+        "why": "Isso: o caso silencioso, cem vezes pequeno demais."
+      },
+      {
+        "text": "Um nulo, porque os dois tipos discordam um do outro",
+        "why": "O valor converte sem problema, então nada vira nulo."
+      }
+    ]
+  },
+  "ex-g1tv7ber": {
+    "prompt": "Com `union_by_name = true`, o que o DuckDB respondeu para o `coupon` das linhas de 31 de outubro?",
+    "hint": "60.725 pedidos, 5.982 com cupom.",
+    "choices": [
+      {
+        "text": "Um erro, já que esse arquivo não tem essa coluna",
+        "why": "O erro foi a consulta sem `union_by_name`."
+      },
+      {
+        "text": "NULL para todas",
+        "why": "Isso: alinhada por nome, uma coluna que um arquivo não tem volta vazia."
+      },
+      {
+        "text": "O cupom do pedido correspondente de novembro",
+        "why": "Uma união alinha colunas, não linhas; nada é casado entre arquivos."
+      },
+      {
+        "text": "Uma string vazia no lugar de cada cupom",
+        "why": "`count(coupon)` contou 5.982, todos de novembro, o que uma string vazia teria aumentado."
+      }
+    ]
+  },
+  "ex-kmftzjcf": {
+    "prompt": "A tabela CSV raw é lida por posição. A exportação acrescenta `channel` entre `payment` e `neighbourhood`, e a tabela é atualizada para combinar. O que os arquivos antigos de outubro mostram?",
+    "hint": "Conte os campos de uma linha antiga.",
+    "choices": [
+      {
+        "text": "Toda coluna como antes, com `channel` vazio",
+        "why": "É o que a leitura por nome daria; por posição os campos se deslocam."
+      },
+      {
+        "text": "Um erro em toda linha antiga, que tem um campo a menos",
+        "why": "Uma linha curta é lida com o campo que falta vazio, não recusada."
+      },
+      {
+        "text": "O sétimo campo antigo cai na coluna nova, e a última fica vazia",
+        "why": "Isso. O sétimo campo cai na sétima coluna, que agora é `channel`."
+      },
+      {
+        "text": "Nada, até um crawler atualizar as partições",
+        "why": "Os arquivos são legíveis na hora; são lidos errado."
+      }
+    ]
+  },
+  "ex-46fhn4x3": {
+    "prompt": "Ponha em ordem uma mudança segura de `total_cents` de centavos para reais.",
+    "hint": "Um tipo muda acrescentando uma coluna.",
+    "items": [
+      "Acrescentar `total_reais` à tabela com `update-table`",
+      "A exportação começa a preencher `total_reais` nos dias novos",
+      "Um job reescreve as partições antigas com `total_reais`",
+      "Os leitores passam para `total_reais`, e `total_cents` sai"
+    ]
+  },
+  "ex-d82wsd19": {
+    "prompt": "Dos quatro jeitos de acrescentar partições, qual não precisa de linha de partição nenhuma no catálogo?",
+    "hint": "A lição 15 a descreveu.",
+    "choices": [
+      {
+        "text": "`MSCK REPAIR TABLE`",
+        "why": "Ele lista o prefixo e grava as linhas que acha faltando."
+      },
+      {
+        "text": "Um crawler com `CRAWL_NEW_FOLDERS_ONLY`",
+        "why": "Ele grava linhas para as pastas novas."
+      },
+      {
+        "text": "A projeção de partições",
+        "why": "Isso: o Athena calcula as chaves a partir das propriedades da tabela."
+      },
+      {
+        "text": "`batch-create-partition` de quem grava",
+        "why": "Isso é gravar as linhas você mesmo."
+      }
+    ]
+  }
+}

@@ -1,0 +1,346 @@
+{
+  "ex-9f66qtgz": {
+    "prompt": "Uma requisição `LIST` é cobrada por qual dos preços de requisição da tabela?",
+    "hint": "Leia o rótulo da primeira linha de requisição.",
+    "choices": [
+      {
+        "text": "O preço do `GET`, 0,00056 o milhar, já que uma listagem só lê",
+        "why": "Ela lê, e mesmo assim é cobrada junto com `PUT`, `COPY` e `POST`."
+      },
+      {
+        "text": "O preço do `PUT`, 0,00700 o milhar",
+        "why": "Isso. A linha da tabela é \"PUT, COPY, POST, LIST\"."
+      },
+      {
+        "text": "Nada: listar é de graça",
+        "why": "Só dados que entram são de graça."
+      },
+      {
+        "text": "Por GB de chaves devolvidas",
+        "why": "Uma requisição tem preço por requisição, seja o que for que devolva."
+      }
+    ]
+  },
+  "ex-cyc5t81r": {
+    "prompt": "O que a tabela cobra por dados que entram no S3 vindos da internet?",
+    "hint": "Leia a última linha do bloco de transferência.",
+    "choices": [
+      {
+        "text": "0,15000 por GB, o mesmo que sair",
+        "why": "Esse é o preço da primeira faixa de saída."
+      },
+      {
+        "text": "0,01000 por GB, como atravessar uma zona",
+        "why": "Esse é o preço entre zonas."
+      },
+      {
+        "text": "Nada, 0,00000",
+        "why": "Isso, e é por isso que um bucket enche barato e esvazia caro; as requisições `PUT` que o escrevem continuam cobradas."
+      },
+      {
+        "text": "Depende da classe de armazenamento em que se escreve",
+        "why": "A transferência de entrada tem um preço só, e a classe muda armazenamento e recuperação."
+      }
+    ]
+  },
+  "ex-jf1197s5": {
+    "prompt": "A 0,04050 USD por GB-mês e 0,00056 USD por 1.000 GETs, quantas requisições GET custam o mesmo que guardar 1 GB por um mês? Arredonde para o inteiro mais próximo.",
+    "hint": "Divida, depois multiplique por 1.000."
+  },
+  "ex-zs4a7wf7": {
+    "prompt": "De onde vêm as contagens de requisições das contas desta lição?",
+    "hint": "O moto não conta nada.",
+    "choices": [
+      {
+        "text": "Do log de requisições do moto",
+        "why": "O moto imprime uma linha por requisição e não mede nada; nenhum número daqui vem dele."
+      },
+      {
+        "text": "Da fatura da conta em que a lição foi gravada",
+        "why": "Não há conta nem fatura neste curso."
+      },
+      {
+        "text": "Do projeto: contagens escolhidas para descrevê-lo, multiplicadas pela tabela",
+        "why": "Isso. São contagens do projeto, não medições de algo que rodou."
+      },
+      {
+        "text": "De métricas do CloudWatch do bucket",
+        "why": "Elas existem na AWS, e nada neste laboratório as produz."
+      }
+    ]
+  },
+  "ex-568d9ree": {
+    "prompt": "O mês do painel dá 47,91 USD e os mesmos bytes em 123 arquivos custam 0,31. O que mudou entre os dois?",
+    "hint": "A coluna de armazenamento é idêntica.",
+    "choices": [
+      {
+        "text": "A classe de armazenamento",
+        "why": "As duas linhas usam o preço do Standard."
+      },
+      {
+        "text": "O número de requisições, já que uma requisição custa o mesmo seja qual for o tamanho",
+        "why": "Isso. Dois milhões de objetos lidos por dia contra 123 arquivos lidos por dia."
+      },
+      {
+        "text": "O número de bytes guardados",
+        "why": "Os dois guardam os mesmos 7,63 GB."
+      },
+      {
+        "text": "A transferência para fora",
+        "why": "As duas linhas não mandam nada para fora da região."
+      }
+    ]
+  },
+  "ex-xfyqptxx": {
+    "prompt": "Escrever 2.000.000 de objetos a 0,00700 USD por 1.000 requisições PUT custa quantos USD?",
+    "hint": "Dois mil milhares."
+  },
+  "ex-61egzz6p": {
+    "prompt": "Quais destes produzem muitos objetos pequenos? Marque todos os que se aplicam.",
+    "hint": "A lição cita três origens.",
+    "choices": [
+      {
+        "text": "Um gravador de stream que despeja o que chegou nos últimos segundos",
+        "why": "Sim: um arquivo por despejo."
+      },
+      {
+        "text": "Um prefixo por hora por cliente",
+        "why": "Sim: partições finas demais para os dados."
+      },
+      {
+        "text": "Um objeto por evento do aplicativo",
+        "why": "Sim: cômodo de escrever e ruinoso de ler."
+      },
+      {
+        "text": "Um job noturno compactando o dia em arquivos de 64 MB",
+        "why": "Essa é a cura, não a causa."
+      }
+    ]
+  },
+  "ex-z48vec4s": {
+    "prompt": "A Quitanda passa os eventos de 4 KB para o Glacier Instant Retrieval para economizar em armazenamento, e o painel continua lendo-os toda manhã. O que acontece com a conta?",
+    "hint": "Tamanho cobrado, e o preço de cada leitura.",
+    "choices": [
+      {
+        "text": "Cai, na proporção dos preços de armazenamento",
+        "why": "O armazenamento era 0,31 de 47,91; o que cresce são as leituras."
+      },
+      {
+        "text": "Sobe: cada evento cobrado como 128 KB, cada leitura mais cara",
+        "why": "Isso. Cada GET custa quase dezoito vezes mais, mais uma taxa por GB lido: objetos pequenos são castigados duas vezes por uma classe de arquivo."
+      },
+      {
+        "text": "Fica igual, já que uma requisição custa o mesmo em toda classe",
+        "why": "A tabela imprime 0,01000 por GET no Glacier Instant Retrieval contra 0,00056."
+      },
+      {
+        "text": "O painel para de funcionar até os eventos serem restaurados",
+        "why": "O Instant Retrieval não precisa de restauração; é lido em milissegundos."
+      }
+    ]
+  },
+  "ex-0getfbm4": {
+    "prompt": "Usando as quatro faixas (0,15000 nos primeiros 10.240 GB, 0,13800 nos 40.960 seguintes), quanto custa mandar 15.360 GB para a internet num mês, em USD?",
+    "hint": "10.240 ao primeiro preço, o resto ao segundo."
+  },
+  "ex-9q0zzkqp": {
+    "prompt": "Por que a linha do CloudFront do `reads.py` imprime um traço na transferência e no total?",
+    "hint": "A lista de preços de quem está faltando?",
+    "choices": [
+      {
+        "text": "Porque a transferência para o CloudFront é de graça, então não há o que imprimir",
+        "why": "De graça imprimiria 0,00; o traço é para um preço que a tabela não tem."
+      },
+      {
+        "text": "Porque a taxa de acerto do cache é desconhecida",
+        "why": "O programa supõe 95 em 100; a lacuna é um preço, não uma taxa."
+      },
+      {
+        "text": "Porque o preço de entrega do CloudFront está numa oferta que a tabela não lê",
+        "why": "Isso. A linha mostra a metade do S3 e deixa o resto sem preço em vez de chutado."
+      },
+      {
+        "text": "Porque o moto não implementa o CloudFront",
+        "why": "O programa nem usa o moto; ele multiplica preços por contagens."
+      }
+    ]
+  },
+  "ex-44jekjn0": {
+    "prompt": "Além da conta, o que pôr o CloudFront na frente do bucket de imagens muda?",
+    "hint": "Quem fala com a internet?",
+    "choices": [
+      {
+        "text": "O bucket pode ficar privado, legível só pelo CloudFront",
+        "why": "Isso. A internet fala com o CloudFront, e o bucket mantém o Block Public Access."
+      },
+      {
+        "text": "As imagens vão de vez para os pontos de presença, então o bucket pode ser esvaziado",
+        "why": "A borda guarda cópias; o bucket continua sendo a origem de onde ela busca."
+      },
+      {
+        "text": "O bucket precisa ficar público para o CloudFront lê-lo",
+        "why": "É o contrário: uma política de bucket deixa entrar o CloudFront e mais ninguém."
+      },
+      {
+        "text": "Nada além da conta",
+        "why": "A lição cita um segundo efeito que importa tanto quanto."
+      }
+    ]
+  },
+  "ex-5agw0zg7": {
+    "prompt": "Um job Spark numa zona de São Paulo lê 2 TB de um bucket do S3 em São Paulo, por um gateway endpoint. Que transferência ele paga?",
+    "hint": "O S3 é regional, e o endpoint é de graça.",
+    "choices": [
+      {
+        "text": "2.048 × 0,01000, por atravessar uma zona",
+        "why": "A tarifa de zona é entre recursos seus; o S3 é regional."
+      },
+      {
+        "text": "2.048 × 0,0930, pelo NAT gateway",
+        "why": "O endpoint manda o tráfego por fora do NAT gateway."
+      },
+      {
+        "text": "Nenhuma; só requisições",
+        "why": "Isso. Mesma região, por um endpoint gratuito."
+      },
+      {
+        "text": "2.048 × 0,15000, por sair do S3",
+        "why": "Esse preço é para sair da AWS para a internet."
+      }
+    ]
+  },
+  "ex-hnvn36c0": {
+    "prompt": "Um endpoint do tipo ___ para o S3 não custa nada e deixa máquinas numa sub-rede privada chegarem ao S3 sem cobrança por GB processado.",
+    "hint": "Não é um interface endpoint.",
+    "blanks": [
+      {
+        "accept": [
+          "gateway"
+        ]
+      }
+    ]
+  },
+  "ex-c3exbn2w": {
+    "prompt": "Um banco replica 500 GB por mês para um standby em outra zona. Por que a transferência dá 10,00 e não 5,00?",
+    "hint": "Leia o rótulo da linha de zona na tabela.",
+    "choices": [
+      {
+        "text": "O preço de zona dobra depois dos primeiros 250 GB",
+        "why": "O preço de zona não tem faixas na tabela."
+      },
+      {
+        "text": "Cada GB é cobrado ao sair de uma zona e de novo ao entrar na outra",
+        "why": "Isso. A linha diz \"each direction\": 500 × 0,01000 × 2."
+      },
+      {
+        "text": "O tráfego de replicação também paga ao NAT gateway a tarifa de cada GB",
+        "why": "Tráfego entre zonas de uma VPC não passa por NAT gateway."
+      },
+      {
+        "text": "O Multi-AZ sempre mantém dois standbys",
+        "why": "O exemplo tem um standby; o dobro vem da direção do preço."
+      }
+    ]
+  },
+  "ex-c8cz7y0z": {
+    "prompt": "Num bucket requester pays, quem paga o armazenamento?",
+    "hint": "Dois medidores mudam; um fica.",
+    "choices": [
+      {
+        "text": "Quem pede, na proporção do que lê",
+        "why": "Quem pede paga só requisições e transferência."
+      },
+      {
+        "text": "O dono",
+        "why": "Isso. O requester pays move requisições e transferência, não armazenamento."
+      },
+      {
+        "text": "Ninguém: o armazenamento é de graça num bucket assim",
+        "why": "O armazenamento é cobrado como em qualquer bucket."
+      },
+      {
+        "text": "A AWS, como parte do programa de dados abertos",
+        "why": "A lição não cita nada disso; o armazenamento fica com o dono."
+      }
+    ]
+  },
+  "ex-2fpemw0c": {
+    "prompt": "A Quitanda quer as imagens públicas de produtos num bucket requester pays, para que quem vê pague a transferência. Por que isso não funciona?",
+    "hint": "A quem o S3 cobraria uma requisição anônima?",
+    "choices": [
+      {
+        "text": "O requester pays só vale para as classes Glacier",
+        "why": "Vale para o bucket, seja qual for a classe."
+      },
+      {
+        "text": "O requester pays é limitado a 10 TB por mês de transferência por bucket",
+        "why": "Não há esse limite na lição; o obstáculo é a quem cobrar."
+      },
+      {
+        "text": "Requisições anônimas são recusadas, já que não há a quem cobrar",
+        "why": "Isso. Um bucket requester pays não pode servir o público também."
+      },
+      {
+        "text": "Imagens precisam ser servidas pelo CloudFront, não direto de um bucket",
+        "why": "Nada exige isso; é a regra do requester pays que impede."
+      }
+    ]
+  },
+  "ex-3mzwzcqj": {
+    "prompt": "Ligue cada caminho de um byte ao preço por GB na tabela.",
+    "hint": "Um deles é de graça, e um nem está nesta tabela.",
+    "pairs": [
+      {
+        "left": "Do S3 para a internet, primeiros 10 TB",
+        "right": "0,15000"
+      },
+      {
+        "left": "Do S3 para o CloudFront",
+        "right": "0,00000"
+      },
+      {
+        "left": "Entre duas zonas, em cada direção",
+        "right": "0,01000"
+      },
+      {
+        "left": "De São Paulo para us-east-1",
+        "right": "0,13800"
+      }
+    ],
+    "right_distractors": [
+      "0,04050"
+    ]
+  },
+  "ex-qjrbxag1": {
+    "prompt": "Ordene estes custos mensais da tabela do `reads.py`, do maior para o menor.",
+    "hint": "Transferência, depois requisições, depois armazenamento.",
+    "items": [
+      "A transferência das imagens para a internet",
+      "As requisições dos eventos, lidos todo dia",
+      "O armazenamento das imagens",
+      "O armazenamento dos eventos"
+    ]
+  },
+  "ex-cd6bx3t1": {
+    "prompt": "Das mudanças da lição, qual tira mais de uma conta pelo menor esforço, segundo a lição?",
+    "hint": "Nada quebra sem ela.",
+    "choices": [
+      {
+        "text": "Mudar o lago para us-east-1, onde os preços são menores",
+        "why": "Só a cópia dá 706,56, e os dados em geral precisam ficar no Brasil."
+      },
+      {
+        "text": "Um gateway endpoint para o S3",
+        "why": "Isso. Não custa nada e tirou 190,46 por mês de processamento do NAT no exemplo."
+      },
+      {
+        "text": "Requester pays em todo bucket que os próprios times da Quitanda leem",
+        "why": "As cobranças passariam entre contas da própria Quitanda e nada seria economizado."
+      },
+      {
+        "text": "Reescrever o painel para ler Parquet",
+        "why": "A compactação economiza em requisições e dá trabalho; a lição chama o endpoint de mudança mais barata."
+      }
+    ]
+  }
+}

@@ -1,0 +1,537 @@
+[
+  {
+    "id": "ex-4mmd9rgr",
+    "version": 1,
+    "section": "delivery-stream",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a delivery stream do that a Kinesis data stream does not?",
+    "hint": "One of them needs a consumer program.",
+    "choices": [
+      {
+        "text": "Keeps records in order per partition key",
+        "correct": false,
+        "why": "That is the data stream's promise, per shard."
+      },
+      {
+        "text": "Writes what it receives into S3, with no code of yours",
+        "correct": true,
+        "why": "Right. It gathers records into buffers and writes each buffer as an object."
+      },
+      {
+        "text": "Keeps records for up to 365 days, so that they can be replayed",
+        "correct": false,
+        "why": "That is a data stream's longest retention; a delivery stream keeps nothing to replay."
+      },
+      {
+        "text": "Lets several consumers read the same records at once, each at its own pace",
+        "correct": false,
+        "why": "Several readers is what a data stream offers; a delivery stream has one destination."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t3bwx2p",
+    "version": 1,
+    "section": "delivery-stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An object written from `batch.json` reads `{...}{...}` on one line. Why can Athena not read it as two orders?",
+    "hint": "What did Firehose put between the two records?",
+    "choices": [
+      {
+        "text": "moto corrupted the bytes; AWS would have written valid JSON",
+        "correct": false,
+        "why": "This part moto does faithfully: by default Firehose concatenates records exactly so."
+      },
+      {
+        "text": "Athena reads only Parquet",
+        "correct": false,
+        "why": "Athena reads JSON lines; the problem is that there are not two lines."
+      },
+      {
+        "text": "By default Firehose adds no delimiter, and the records carried no newline",
+        "correct": true,
+        "why": "Right. The producer ends each record with `\\n`, or a processor adds one."
+      },
+      {
+        "text": "`put-record-batch` wraps records in a JSON array that Athena rejects",
+        "correct": false,
+        "why": "No array was written; the bytes were simply joined."
+      }
+    ]
+  },
+  {
+    "id": "ex-5h43w5qd",
+    "version": 1,
+    "section": "delivery-stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 13:10 in São Paulo, Firehose wrote an object under `raw/orders/2026/10/16/16/`. What is the `16` before the object name?",
+    "hint": "São Paulo is three hours behind UTC.",
+    "choices": [
+      {
+        "text": "The hour in UTC",
+        "correct": true,
+        "why": "Right. The default dated part is the UTC hour of arrival, 16 for 13 in São Paulo."
+      },
+      {
+        "text": "The day of the month, repeated",
+        "correct": false,
+        "why": "The day is the `16` before it; the last part is the hour."
+      },
+      {
+        "text": "The number of the buffer written that day, counting from the first",
+        "correct": false,
+        "why": "Firehose numbers no buffers in the key; the object name carries a time and a random suffix."
+      },
+      {
+        "text": "The size of the object in megabytes",
+        "correct": false,
+        "why": "The key carries the date only; the size is the object's metadata."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwb1h0td",
+    "version": 1,
+    "section": "delivery-stream",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, three calls to a delivery stream with hints of 64 MB and 300 seconds produced three objects within a second. How many would AWS have written?",
+    "hint": "moto does not buffer.",
+    "choices": [
+      {
+        "text": "Three, one per call, since each call is a request",
+        "correct": false,
+        "why": "That is moto's behaviour; AWS buffers across calls."
+      },
+      {
+        "text": "Four, one per record",
+        "correct": false,
+        "why": "Firehose never writes an object per record unless each record fills a buffer alone."
+      },
+      {
+        "text": "One, after the interval ended, holding all four records",
+        "correct": true,
+        "why": "Right. A few hundred bytes are far from 64 MB, so the 300 seconds write the buffer."
+      },
+      {
+        "text": "None until 64 MB arrived",
+        "correct": false,
+        "why": "The interval writes a buffer that has not filled; that is what it is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrvpxw2n",
+    "version": 1,
+    "section": "buffering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A quiet delivery stream never fills its 64 MB buffer, and its interval is 600 seconds. How many objects does it write in a day?",
+    "hint": "A day is 86,400 seconds, and the interval writes every buffer.",
+    "value": 144,
+    "tolerance": 0,
+    "unit": "objects"
+  },
+  {
+    "id": "ex-51478422",
+    "version": 1,
+    "section": "buffering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted a delivery stream with `SizeInMBs` 500 and `IntervalInSeconds` 5000 and answered `ACTIVE`. What follows?",
+    "hint": "AWS documents the ranges.",
+    "choices": [
+      {
+        "text": "Those values work on AWS, which also accepts them",
+        "correct": false,
+        "why": "A success from moto means the request was well formed; these are outside AWS's ranges."
+      },
+      {
+        "text": "AWS refuses them: they are outside its documented ranges",
+        "correct": true,
+        "why": "Right: the size goes up to 128 MB and the interval up to 900 seconds. The refusal was not run here."
+      },
+      {
+        "text": "moto rounded them down to the maximum and kept the stream",
+        "correct": false,
+        "why": "`describe-delivery-stream` printed 500 and 5000 back, unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-596xz0mc",
+    "version": 1,
+    "section": "buffering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A quiet stream writes 288 objects of 3.5 MB a day into the lake, and the readers can wait fifteen minutes for data. What is the first change?",
+    "hint": "Which condition writes these buffers?",
+    "choices": [
+      {
+        "text": "Raise the size to 128 MB",
+        "correct": false,
+        "why": "The size is never reached now; a larger size changes nothing while the interval writes every buffer."
+      },
+      {
+        "text": "Raise the interval to 900 seconds, for 96 objects of about 10.4 MB",
+        "correct": true,
+        "why": "Right. The interval is what writes them, and fifteen minutes is the delay the readers accept."
+      },
+      {
+        "text": "Turn on dynamic partitioning, which merges small buffers",
+        "correct": false,
+        "why": "It splits the stream into more buffers, each smaller."
+      },
+      {
+        "text": "Turn on GZIP",
+        "correct": false,
+        "why": "Compression makes the same number of objects smaller still."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e96e2hg",
+    "version": 1,
+    "section": "prefixes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, a delivery stream's `Prefix` is `raw/orders-dt/dt=!{timestamp:yyyy-MM-dd}/`. What comes between that prefix and the object's name?",
+    "hint": "The documented rule depends on whether the prefix uses a timestamp expression.",
+    "choices": [
+      {
+        "text": "Nothing: Firehose adds no dated part after a timestamp expression",
+        "correct": true,
+        "why": "Right. moto added `2026/10/16/16/` anyway, which is moto's and not AWS's."
+      },
+      {
+        "text": "The UTC hour, `2026/10/16/16/`, which Firehose adds after every prefix",
+        "correct": false,
+        "why": "That is what moto did; AWS adds it only when the prefix has no timestamp expression."
+      },
+      {
+        "text": "The literal text `!{timestamp:yyyy-MM-dd}`, kept as it was written",
+        "correct": false,
+        "why": "On AWS the expression is evaluated, into `2026-10-16`; text is what moto left."
+      },
+      {
+        "text": "The partition key of the record",
+        "correct": false,
+        "why": "A delivery stream fed directly has no partition key; values from records need dynamic partitioning."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkecdx12",
+    "version": 1,
+    "section": "prefixes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With dynamic partitioning on and a prefix of `store=!{partitionKeyFromQuery:store}/`, where does a record with no `store` field go on AWS?",
+    "hint": "It cannot be put in a folder named after a value it lacks.",
+    "choices": [
+      {
+        "text": "Under `store=null/`",
+        "correct": false,
+        "why": "Firehose makes no folder for a missing value."
+      },
+      {
+        "text": "It is dropped silently",
+        "correct": false,
+        "why": "The error prefix exists so that a failure is not a silence."
+      },
+      {
+        "text": "Under the error output prefix",
+        "correct": true,
+        "why": "Right, with `!{firehose:error-output-type}` naming why."
+      },
+      {
+        "text": "Under `store=pinheiros/`, the first store seen",
+        "correct": false,
+        "why": "Each record is partitioned by its own value, never another record's."
+      }
+    ]
+  },
+  {
+    "id": "ex-n50pp4zr",
+    "version": 1,
+    "section": "prefixes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the customer id a bad key for dynamic partitioning of Quitanda's orders, although it is a good partition key for the Kinesis stream?",
+    "hint": "Each distinct value gets a buffer of its own.",
+    "choices": [
+      {
+        "text": "jq cannot read a field with a hyphen in its value",
+        "correct": false,
+        "why": "jq reads any string value."
+      },
+      {
+        "text": "Customer ids are personal data and may not appear in a key",
+        "correct": false,
+        "why": "An opaque id like `c-17` is what the lake already keys records by; the problem here is count."
+      },
+      {
+        "text": "Tens of thousands of buffers, each written nearly empty by the interval: tiny objects",
+        "correct": true,
+        "why": "Right. A shard needs many keys to spread; a folder layout needs few values to stay large."
+      },
+      {
+        "text": "Kinesis and Firehose hash the key differently, so customers end up in the wrong folder",
+        "correct": false,
+        "why": "Dynamic partitioning does not hash; it uses the value itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-72w3awzb",
+    "version": 1,
+    "section": "transform-and-convert",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An object written by a stream with `CompressionFormat` `GZIP` in moto starts with the bytes `{\"order_id\"`. What does that show?",
+    "hint": "A gzip file starts with `037 213`.",
+    "choices": [
+      {
+        "text": "That moto stored the bytes uncompressed",
+        "correct": true,
+        "why": "Right. moto keeps the configuration and compresses nothing."
+      },
+      {
+        "text": "That GZIP compresses only objects over 5 MB",
+        "correct": false,
+        "why": "There is no such threshold; on AWS every object would be compressed."
+      },
+      {
+        "text": "That `aws s3 cp` decompressed the object on the way down",
+        "correct": false,
+        "why": "`aws s3 cp` copies bytes as they are stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqnmkakf",
+    "version": 1,
+    "section": "transform-and-convert",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does AWS need for record format conversion to Parquet? Choose all that apply.",
+    "hint": "Where does the schema come from, and what may the input be?",
+    "choices": [
+      {
+        "text": "A table in the Glue Data Catalog that gives the columns",
+        "correct": true,
+        "why": "Right; the stream reads the schema from it."
+      },
+      {
+        "text": "Records in JSON",
+        "correct": true,
+        "why": "Right; JSON is the input conversion accepts."
+      },
+      {
+        "text": "`CompressionFormat` set to `GZIP`",
+        "correct": false,
+        "why": "It stays `UNCOMPRESSED`; Parquet compresses inside, here with `SNAPPY`."
+      },
+      {
+        "text": "A Lambda function that writes the Parquet",
+        "correct": false,
+        "why": "Conversion is Firehose's own; no function is involved."
+      },
+      {
+        "text": "A buffer of at least 64 MB",
+        "correct": true,
+        "why": "Right; AWS sets that minimum when conversion is on."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fvsy1zp",
+    "version": 1,
+    "section": "transform-and-convert",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A transformation Lambda also adds each order's total to a running sum in a database. What can go wrong?",
+    "hint": "What does Firehose do with a batch whose call timed out?",
+    "choices": [
+      {
+        "text": "Firehose refuses functions that write to a database",
+        "correct": false,
+        "why": "Firehose cannot see what a function does inside."
+      },
+      {
+        "text": "Nothing: each record reaches the function once",
+        "correct": false,
+        "why": "A failed or timed-out batch is retried, so a record can reach the function twice."
+      },
+      {
+        "text": "A retried batch adds the same orders to the sum again",
+        "correct": true,
+        "why": "Right. The side effect is performed once per attempt; lesson 23 is about making it safe."
+      },
+      {
+        "text": "Records marked `Dropped` are added twice",
+        "correct": false,
+        "why": "`Dropped` only keeps a record out of S3; it says nothing about what the function did."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7n3m5ev",
+    "version": 1,
+    "section": "source-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, a record put into the Kinesis stream `orders` never reached the delivery stream that names it as its source. What is true on AWS?",
+    "hint": "moto keeps the source in the configuration and reads nothing.",
+    "choices": [
+      {
+        "text": "The same: Firehose reads a Kinesis source only when asked with a call",
+        "correct": false,
+        "why": "On AWS it reads the stream continuously, as a consumer."
+      },
+      {
+        "text": "Firehose reads it continuously, and refuses any `PutRecord` sent straight to it",
+        "correct": true,
+        "why": "Right. moto got both halves the other way round, so the pairing was configured and not observed."
+      },
+      {
+        "text": "Records reach S3 only after the stream's retention period ends",
+        "correct": false,
+        "why": "Firehose reads as records arrive, then buffers them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8b5tpzkw",
+    "version": 1,
+    "section": "source-and-price",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A producer sends 2 million records a day of 1 KB each to Firehose for 30 days. Each record is billed rounded up to 5 KB, at 0.05800 USD per GB ingested. What is the month's ingestion, in USD? Take 1 GB as 1,000,000 KB.",
+    "hint": "2 million × 5 KB a day, then 30 days.",
+    "value": 17.4,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-sq20vyyn",
+    "version": 1,
+    "section": "source-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did packing five events into one record cut the Firehose ingestion from 174.00 to 34.80 a month?",
+    "hint": "What is the smallest size a record is billed at?",
+    "choices": [
+      {
+        "text": "The 5 KB billed minimum is now full, where four fifths of it was wasted",
+        "correct": true,
+        "why": "Right. The bytes sent did not change; the rounding stopped wasting four fifths of each record."
+      },
+      {
+        "text": "Firehose compresses larger records",
+        "correct": false,
+        "why": "Nothing was compressed; the billed size fell because of the rounding."
+      },
+      {
+        "text": "Fewer records mean fewer objects in S3, and objects are what Firehose bills",
+        "correct": false,
+        "why": "Objects come from buffers, not records, and the S3 bill is separate."
+      },
+      {
+        "text": "Batches of five go into the cheaper price tier",
+        "correct": false,
+        "why": "The first tier runs to 500 TB; both cases are in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3zsx9dc",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Records Firehose cannot deliver as configured are written under the ___, which may name the failure with `!{firehose:error-output-type}`.",
+    "hint": "It is a key of the destination configuration, next to `Prefix`.",
+    "blanks": [
+      {
+        "accept": [
+          "ErrorOutputPrefix",
+          "error output prefix",
+          "error prefix"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sfv2h93p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens on AWS to an order event sent to a delivery stream that converts to Parquet and partitions by store.",
+    "hint": "The store has to be read before the record can join a buffer.",
+    "items": [
+      "The producer sends the record, ending in a newline",
+      "The `jq` query reads its `store`",
+      "The record waits in that store's buffer",
+      "The buffer reaches 128 MB or 900 seconds",
+      "The buffer is converted to Parquet with the Glue table's schema",
+      "The object is written under `store=<value>/dt=<date>/`"
+    ]
+  },
+  {
+    "id": "ex-hmhyhpfj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's only use for a new event stream is a copy in S3, readable within fifteen minutes. What fits best?",
+    "hint": "Which half of lesson 20's pairing would have no reader?",
+    "choices": [
+      {
+        "text": "A Kinesis data stream with 7 days of retention, read by a program that writes S3",
+        "correct": false,
+        "why": "That rebuilds Firehose by hand and pays for retention nobody reads."
+      },
+      {
+        "text": "A delivery stream fed directly, with a 900-second interval",
+        "correct": true,
+        "why": "Right. With no other consumer, the data stream in front would add cost and no reader."
+      },
+      {
+        "text": "A Kinesis data stream in front of a delivery stream, for ordering",
+        "correct": false,
+        "why": "Nothing here needs per-key order, and objects interleave shards anyway."
+      },
+      {
+        "text": "A delivery stream with a 60-second interval, so the data arrives soonest",
+        "correct": false,
+        "why": "Fifteen minutes was allowed; sixty seconds makes fifteen times the objects for nothing."
+      }
+    ]
+  }
+]

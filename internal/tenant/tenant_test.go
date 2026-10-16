@@ -132,6 +132,9 @@ func seventy(context.Context) int { return 70 }
 // reason: the card names the length before any paper exists to carry it.
 func twenty(context.Context) int { return 20 }
 
+// thirty is how long a track's final is, a number of its own (A-14).
+func thirty(context.Context) int { return 30 }
+
 func twelve(context.Context) int { return 12 }
 
 // fivePerCent is the Pix discount as `cmd/api` hands it in, for the reason
@@ -145,7 +148,7 @@ func fivePerCent(context.Context) int { return 500 }
 func server(t *testing.T, pool *pgxpool.Pool) *httptest.Server {
 	t.Helper()
 	scoped := http.NewServeMux()
-	tenant.NewHandler(seventy, twenty, twelve, fivePerCent, offering(pool)).Routes(scoped)
+	tenant.NewHandler(seventy, twenty, thirty, twelve, fivePerCent, offering(pool)).Routes(scoped)
 
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", web.Chain(scoped, tenant.Resolve(tenant.NewStore(pool))))
@@ -343,7 +346,7 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	mux := http.NewServeMux()
 	// NOTHING PRICED, said by the seam answering an empty list — which is also
 	// what a deployment with no `billing` wired in looks like.
-	tenant.NewHandler(seventy, twenty, twelve, fivePerCent, nil).Routes(mux)
+	tenant.NewHandler(seventy, twenty, thirty, twelve, fivePerCent, nil).Routes(mux)
 
 	rec := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)
@@ -360,6 +363,31 @@ func TestASchoolWithNothingPricedNamesNoNumber(t *testing.T) {
 	}
 	if v, present := body["plans"]; present {
 		t.Errorf("a platform with nothing priced answered plans = %v", v)
+	}
+}
+
+/*
+A track's card and a course's card are told two lengths, because the papers are
+two decisions (A-14). One field for both was a track final promising the course
+paper's twenty and drawing thirty.
+*/
+func TestEachKindOfPaperIsToldItsOwnLength(t *testing.T) {
+	mux := http.NewServeMux()
+	tenant.NewHandler(seventy, twenty, thirty, twelve, fivePerCent, nil).Routes(mux)
+
+	rec := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodGet, "/api/v1/school", nil)
+	mux.ServeHTTP(rec, r.WithContext(tenant.Scoped(r.Context(), tenant.School{
+		Slug: "code", Name: "Code School", Accent: "#5b8cff",
+	})))
+
+	var body map[string]any
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatalf("the answer is not JSON: %v", err)
+	}
+	if body["examQuestions"] != float64(20) || body["trackExamQuestions"] != float64(30) {
+		t.Errorf("the school says a course paper is %v and a track's is %v, want 20 and 30",
+			body["examQuestions"], body["trackExamQuestions"])
 	}
 }
 

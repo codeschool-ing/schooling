@@ -1,0 +1,407 @@
+{
+  "ex-67a5pqfj": {
+    "prompt": "Por que esta lição pergunta pelo preço por último, e não primeiro?",
+    "hint": "Pense nos 9.00 por terabyte do Athena e na tela \"meus pedidos\".",
+    "choices": [
+      {
+        "text": "Porque o preço é a menos importante das seis",
+        "why": "Ele importa muito; só não dá para lê-lo antes de o workload dizer o que multiplicar."
+      },
+      {
+        "text": "Um preço só quer dizer algo quando o workload diz o que multiplicar",
+        "why": "Isso. Lido primeiro, o preço por terabyte do Athena teria incluído um store que o padrão de acesso exclui."
+      },
+      {
+        "text": "Porque a tabela de preços só cobre alguns stores",
+        "why": "Ela cobre todos os stores desta lição; a ordem é sobre raciocínio, não sobre dados."
+      },
+      {
+        "text": "Porque os serviços gerenciados custam todos mais ou menos o mesmo",
+        "why": "A comparação calculada achou 10,50 contra 338,25 para um workload."
+      }
+    ]
+  },
+  "ex-d63tc9rq": {
+    "prompt": "Ponha as seis perguntas na ordem em que esta lição as faz.",
+    "hint": "O formato do trabalho primeiro, a conta por último.",
+    "items": [
+      "Qual é o padrão de acesso?",
+      "Com que rapidez a resposta precisa chegar?",
+      "De que consistência o leitor precisa?",
+      "Qual o tamanho, e com que rapidez cresce?",
+      "Quem opera?",
+      "Quanto custa, neste workload?"
+    ]
+  },
+  "ex-n0h714p2": {
+    "prompt": "No checkout, a Quitanda mostra um saldo de fidelidade que precisa incluir os pontos que o cliente ganhou um segundo antes na mesma compra. Qual pergunta exclui responder isso a partir de um cache ou do warehouse?",
+    "hint": "Os dois ficam, por desenho, atrás da origem.",
+    "choices": [
+      {
+        "text": "Latência, já que um warehouse responde em segundos",
+        "why": "Vale para o warehouse, e um cache responde em menos de um milissegundo; o que exclui os dois é que nenhum vê a escrita recém-feita."
+      },
+      {
+        "text": "Escala, já que a fidelidade cresce a cada compra",
+        "why": "Os dados são pequenos; não é o tamanho que falha aqui."
+      },
+      {
+        "text": "Consistência",
+        "why": "Isso: o leitor precisa ver a última escrita, que o store de registro dá e as cópias dele não."
+      },
+      {
+        "text": "Preço, já que um cache custa dinheiro toda hora",
+        "why": "O preço vem por último e não é o que os desqualifica."
+      }
+    ]
+  },
+  "ex-fw860gqh": {
+    "prompt": "Uma equipe de três opera bem o Aurora e o S3. Uma funcionalidade nova precisa de uma consulta pequena por chave, umas 50 requisições por segundo, ao lado de dados que já estão no Aurora. Qual pergunta mais defende mantê-la no Aurora em vez de acrescentar o DynamoDB?",
+    "hint": "Conte os stores que a equipe opera.",
+    "choices": [
+      {
+        "text": "Escala: o DynamoDB não serve tão poucas quanto 50 requisições por segundo",
+        "why": "Ele serve qualquer taxa; cargas pequenas não são problema para ele."
+      },
+      {
+        "text": "Quem opera: um store a menos para operar",
+        "why": "Isso. A 50 por segundo uma consulta indexada é fácil para o Aurora, e a equipe evita um store novo para aprender e vigiar."
+      },
+      {
+        "text": "Preço: o Aurora é mais barato por requisição que o DynamoDB em todo caso",
+        "why": "A comparação calculada achou o contrário para um workload sozinho; o Aurora vence aqui porque já está pago."
+      },
+      {
+        "text": "Consistência: o DynamoDB não oferece leituras fortes",
+        "why": "Ele oferece leituras fortemente consistentes por requisição."
+      }
+    ]
+  },
+  "ex-584mchs5": {
+    "prompt": "Ligue cada workload ao ramo da árvore a que ele pertence.",
+    "hint": "Faça a primeira pergunta a cada um.",
+    "pairs": [
+      {
+        "left": "um carrinho lido e escrito pelo id do cliente muitas vezes por minuto",
+        "right": "DynamoDB"
+      },
+      {
+        "left": "contratos guardados por sete anos e quase nunca lidos",
+        "right": "S3"
+      },
+      {
+        "left": "um pedido, os itens e o estoque, tudo ou nada",
+        "right": "RDS ou Aurora"
+      },
+      {
+        "left": "um painel atualizado o dia todo por quarenta analistas",
+        "right": "Redshift"
+      }
+    ],
+    "right_distractors": [
+      "ElastiCache, como store de registro"
+    ]
+  },
+  "ex-95w38e1a": {
+    "prompt": "Por que o ElastiCache nunca é o store de registro nos desenhos desta lição?",
+    "hint": "O que acontece com os dados dele quando um nó reinicia?",
+    "choices": [
+      {
+        "text": "Ele é lento demais para escritas",
+        "why": "Ele é o store mais rápido do curso."
+      },
+      {
+        "text": "Só guarda dados até o despejo ou reinício",
+        "why": "Isso, o que faz dele uma cópia na frente de um store que guarda os dados de vez."
+      },
+      {
+        "text": "Ele custa mais por GB que qualquer banco",
+        "why": "Memória é cara, e não é por isso que ele não pode ser o registro."
+      },
+      {
+        "text": "Ele não pode ser lido por mais de uma aplicação",
+        "why": "Qualquer número de clientes lê um cache."
+      }
+    ]
+  },
+  "ex-qzzxb9v3": {
+    "prompt": "Uma verificação de fraude precisa dos pedidos feitos no último minuto. O analista a escreve contra o Redshift, que é carregado a cada hora. O que está errado?",
+    "hint": "Qual store sabe do último minuto?",
+    "choices": [
+      {
+        "text": "O Redshift não consegue filtrar por horário",
+        "why": "Ele filtra por horário muito bem, sobre os dados que tem."
+      },
+      {
+        "text": "A consulta precisa de uma chave de ordenação na data do pedido",
+        "why": "Uma chave de ordenação a deixa mais rápida sobre dados carregados; o último minuto ainda não foi carregado."
+      },
+      {
+        "text": "O Redshift responde como na última carga, e o \"agora\" mora no store de registro ou no stream",
+        "why": "Isso: o Aurora ou o stream do Kinesis sabem do último minuto; o warehouse fica sabendo dentro da hora."
+      },
+      {
+        "text": "Verificações de fraude precisam rodar no Athena",
+        "why": "O Athena lê o lake, que também fica atrás da origem."
+      }
+    ]
+  },
+  "ex-y2fwjw1d": {
+    "prompt": "Carrinhos funcionariam no Aurora. Por que a Quitanda os põe no DynamoDB?",
+    "hint": "Acesso por uma chave, picos e carrinhos abandonados.",
+    "choices": [
+      {
+        "text": "Uma chave, carga com picos, e expiração apagando carrinhos abandonados de graça",
+        "why": "Isso, e o banco do negócio fica livre de linhas que ninguém guarda."
+      },
+      {
+        "text": "O Aurora não consegue guardar a lista de produtos de um carrinho",
+        "why": "Uma tabela de itens de carrinho faz isso fácil."
+      },
+      {
+        "text": "Um carrinho precisa ser juntado ao estoque a cada leitura",
+        "why": "Se precisasse, isso defenderia o Aurora; nada o junta até ele virar pedido."
+      },
+      {
+        "text": "O DynamoDB é o store de registro dos pedidos",
+        "why": "Os pedidos moram no Aurora; um carrinho é copiado para lá quando vira um."
+      }
+    ]
+  },
+  "ex-8ywcj270": {
+    "prompt": "Um painel roda 300 consultas por dia no Athena, cada uma varrendo 20 GB, a 9,00 USD por terabyte. Quanto custa por dia, em USD?",
+    "hint": "20 GB são 0,02 TB."
+  },
+  "ex-z25sej9r": {
+    "prompt": "Cada consulta do painel varre 20 GB, 0,18 USD no Athena. Um workgroup do Redshift Serverless a 8 RPUs, ocupado dez horas, custa 47,81 por dia. Por volta de quantas consultas dessas por dia os dois custam o mesmo?",
+    "hint": "Divida o dia de Redshift pelo preço de uma consulta.",
+    "choices": [
+      {
+        "text": "Cerca de 27",
+        "why": "Isso divide por 1,8, dez vezes o preço de uma consulta."
+      },
+      {
+        "text": "Cerca de 500",
+        "why": "Com 500 o Athena custa 90,00, quase o dobro do workgroup."
+      },
+      {
+        "text": "Cerca de 2.656",
+        "why": "Isso divide por 0,018, um décimo do preço de uma consulta."
+      },
+      {
+        "text": "Cerca de 266",
+        "why": "Isso: 47,81 ÷ 0,18 = 265,6. Menos que isso, Athena; mais, Redshift."
+      }
+    ]
+  },
+  "ex-1aye2grt": {
+    "prompt": "A cópia de um pedido no lake e o Aurora discordam sobre o total dele. Qual está certo?",
+    "hint": "Um store de registro por fato.",
+    "choices": [
+      {
+        "text": "O lake, porque guarda toda mudança que o DMS capturou",
+        "why": "Ele é uma cópia derivada do Aurora, e uma cópia que discorda perdeu alguma coisa."
+      },
+      {
+        "text": "O que foi escrito mais recentemente",
+        "why": "Recência não é a regra; a cópia pode ser mais nova e ainda assim errada."
+      },
+      {
+        "text": "O Aurora, o store de registro",
+        "why": "Isso; o pipeline do lake é o que investigar."
+      },
+      {
+        "text": "Nenhum, até uma pessoa decidir",
+        "why": "O desenho já decidiu, ao nomear o store de registro."
+      }
+    ]
+  },
+  "ex-3rcb45ke": {
+    "prompt": "Qual parte do mês de 10,50 USD do DynamoDB para \"meus pedidos\" é a maior?",
+    "hint": "Olhe as três linhas da tabela.",
+    "choices": [
+      {
+        "text": "As 3.000.000 leituras",
+        "why": "Elas custam 0,56."
+      },
+      {
+        "text": "O armazenamento além dos primeiros 25 GB",
+        "why": "Isso: 9,38 dos 10,50."
+      },
+      {
+        "text": "As 600.000 escritas",
+        "why": "Elas também custam 0,56."
+      },
+      {
+        "text": "O índice secundário global criado sobre a data",
+        "why": "Não há: a data é a chave de ordenação."
+      }
+    ]
+  },
+  "ex-1a0q0aw3": {
+    "prompt": "Se a tela fosse aberta 1.000.000 de vezes por mês, cada uma uma consulta do Athena cobrada no mínimo de 10 MB, qual é o mínimo que as varreduras custam, a 9,00 USD por terabyte?",
+    "hint": "Um milhão vezes 10 MB, em terabytes."
+  },
+  "ex-5krm8h7t": {
+    "prompt": "Os pedidos da Quitanda já moram numa instância do Aurora que tem folga. Quanto acrescentar \"meus pedidos\" ali, como uma consulta indexada por abertura, soma à conta?",
+    "hint": "De que é feito o preço do Aurora?",
+    "choices": [
+      {
+        "text": "Mais 338,25 por mês, o preço que a seção calculou",
+        "why": "Esse é o preço de uma instância só para este workload; a instância já existe."
+      },
+      {
+        "text": "10,50, o mesmo do DynamoDB, já que as requisições são as mesmas",
+        "why": "O Aurora não cobra por requisição; cobra a instância."
+      },
+      {
+        "text": "Quase nada; a máquina já está paga",
+        "why": "Isso; no máximo algum I/O, que a tabela pôs em poucos dólares."
+      },
+      {
+        "text": "Os 270,00 mínimos, como o Athena cobraria",
+        "why": "Esse é o mínimo por consulta do Athena; o Aurora não tem."
+      }
+    ]
+  },
+  "ex-w824gf3p": {
+    "prompt": "Por que uma tabela `jobs` movimentada usada como fila no PostgreSQL fica mais lenta com o tempo?",
+    "hint": "O que uma alteração deixa para trás?",
+    "choices": [
+      {
+        "text": "O PostgreSQL limita uma tabela a um número de alterações por dia",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "`SKIP LOCKED` para de funcionar depois de mil linhas",
+        "why": "Ele funciona em qualquer tamanho; o problema são as linhas mortas em volta."
+      },
+      {
+        "text": "As consultas dos workers enchem o write-ahead log",
+        "why": "Leituras não escrevem WAL; as alterações escrevem, e o inchaço é na tabela."
+      },
+      {
+        "text": "Cada job terminado deixa uma linha morta, mais rápido do que o vacuum limpa",
+        "why": "Isso, e cada consulta passa a atravessá-las."
+      }
+    ]
+  },
+  "ex-9wpdttax": {
+    "prompt": "Uma tabela do DynamoDB com chave no id do pedido recebe o pedido de \"os pedidos do cliente c-17\". Sem índice, isso vira o quê?",
+    "hint": "A chave não é o cliente.",
+    "choices": [
+      {
+        "text": "Um `Query` pelo cliente, tão rápido quanto pelo id",
+        "why": "Um `Query` precisa da chave de partição, que aqui é o id do pedido."
+      },
+      {
+        "text": "Um `Scan` com filtro, lendo e cobrando todo item",
+        "why": "Isso: o filtro é aplicado depois da leitura, então a tabela inteira é paga."
+      },
+      {
+        "text": "Um erro até a tabela ser recriada com chave nova",
+        "why": "O DynamoDB permite o scan; ele só custa a tabela inteira."
+      },
+      {
+        "text": "Uma requisição que o DynamoDB responde do cache de itens recentes",
+        "why": "Não existe esse cache para atributos quaisquer."
+      }
+    ]
+  },
+  "ex-9yq3pfz5": {
+    "prompt": "Uma aplicação insere um pedido no Redshift duas vezes, com a mesma chave primária declarada. O que o Redshift faz?",
+    "hint": "Declarada não é imposta.",
+    "choices": [
+      {
+        "text": "Recusa a segunda inserção com violação de chave",
+        "why": "É o que faz um banco relacional que impõe chaves."
+      },
+      {
+        "text": "Mantém a linha mais nova e descarta a mais velha",
+        "why": "Ele mantém as duas; nada as junta."
+      },
+      {
+        "text": "Guarda as duas linhas",
+        "why": "Isso: as chaves dele são declaradas e não impostas, e esse é um dos motivos de as escritas de uma aplicação não pertencerem a ele."
+      },
+      {
+        "text": "Enfileira a segunda inserção até a primeira confirmar, e então a recusa",
+        "why": "Commits fazem fila, sim, e a segunda entra mesmo assim."
+      }
+    ]
+  },
+  "ex-p254j2h0": {
+    "prompt": "Uma consulta abre 500.000 objetos pequenos no S3. A 0,00056 USD por 1.000 requisições GET, quanto ela paga só em requisições, em USD?",
+    "hint": "500 milhares."
+  },
+  "ex-d6dw7ed8": {
+    "prompt": "Cada um de 800 entregadores manda uma posição a cada cinco segundos. O aplicativo mostra a última posição de cada entregador; a equipe de operações quer um mês de posições para análise de rotas. Que desenho serve aos dois?",
+    "hint": "Dois padrões de acesso: uma chave, agora; e toda a história.",
+    "choices": [
+      {
+        "text": "Uma tabela do Aurora com toda posição, consultada pela mais nova de cada entregador",
+        "why": "Quase 14 milhões de linhas por dia no banco do negócio, para responder a uma pergunta sobre uma linha por entregador."
+      },
+      {
+        "text": "O ponto mais novo de cada um no DynamoDB; o stream ao S3 para o Athena",
+        "why": "Isso: cada padrão de acesso no seu ramo, o stream alimentando os dois."
+      },
+      {
+        "text": "Redshift para os dois, carregado a cada cinco segundos",
+        "why": "Um warehouse carregado linha a linha é o terceiro antipadrão, e o aplicativo esperaria segundos."
+      },
+      {
+        "text": "Um objeto no S3 por posição, lido pelo aplicativo para achar o mais novo",
+        "why": "Milhões de arquivos minúsculos, e o aplicativo listando-os para achar o último."
+      }
+    ]
+  },
+  "ex-89k66693": {
+    "prompt": "Quais destes são antipadrões contra os quais esta lição avisa? Marque todos os que se aplicam.",
+    "hint": "Um store servindo um padrão de acesso para o qual não foi feito.",
+    "choices": [
+      {
+        "text": "Uma tabela `jobs` consultada a cada segundo pelos workers",
+        "why": "Sim: um banco como fila."
+      },
+      {
+        "text": "Uma tabela do DynamoDB cuja chave de partição é o status do pedido",
+        "why": "Sim: poucos valores, uma partição quente."
+      },
+      {
+        "text": "Uma aplicação escrevendo linhas soltas no Redshift",
+        "why": "Sim: um warehouse como store de aplicação."
+      },
+      {
+        "text": "O Firehose juntando eventos em arquivos maiores no S3",
+        "why": "Essa é a cura dos arquivos minúsculos."
+      },
+      {
+        "text": "ElastiCache na frente do Aurora para a página do catálogo",
+        "why": "Esse é o desenho dos workloads desta lição."
+      }
+    ]
+  },
+  "ex-94tdzc0s": {
+    "prompt": "Uma funcionalidade nova busca produtos por quaisquer palavras da descrição, ordenados por relevância, enquanto o cliente digita. O que a primeira pergunta diz à Quitanda?",
+    "hint": "Esse padrão de acesso está em algum ramo da árvore?",
+    "choices": [
+      {
+        "text": "Usar uma consulta `LIKE '%word%'` no Aurora, já que os produtos moram lá",
+        "why": "Um curinga no começo não usa índice e não ordena nada; é o store relacional forçado a um padrão que ele não serve."
+      },
+      {
+        "text": "Varrer a tabela do DynamoDB com filtro `contains`",
+        "why": "O segundo antipadrão, a cada tecla."
+      },
+      {
+        "text": "Rodar uma consulta do Athena a cada tecla",
+        "why": "Segundos por resposta e o mínimo de 10 MB por consulta."
+      },
+      {
+        "text": "É um padrão para o qual nenhum destes stores foi feito",
+        "why": "Isso: busca em texto pede um motor de busca, alimentado pelo store de registro, em vez de forçar um destes."
+      }
+    ]
+  }
+}

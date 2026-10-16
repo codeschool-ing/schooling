@@ -1,0 +1,335 @@
+{
+  "ex-szajygx9": {
+    "prompt": "O scan filtrado por 1º de outubro devolveu 738 itens de 34.100. Pelo que a AWS o cobra?",
+    "hint": "Quando o filtro roda?",
+    "choices": [
+      {
+        "text": "Os 738 itens que devolveu",
+        "why": "Isso seria verdade se o filtro rodasse antes da leitura. Ele roda depois."
+      },
+      {
+        "text": "Todo item que leu, a tabela inteira, como o scan sem filtro",
+        "why": "Isso: 364,5 unidades de leitura de um jeito ou de outro."
+      },
+      {
+        "text": "Nada, porque um scan filtrado é grátis quando usa `--select COUNT`",
+        "why": "`COUNT` tira os itens da resposta; o DynamoDB ainda lê e cobra cada um."
+      },
+      {
+        "text": "Uma página, já que a resposta tem menos de 1 MB",
+        "why": "Páginas são medidas pelo que é lido, não pelo que volta; foram três."
+      }
+    ]
+  },
+  "ex-sv0w5xcj": {
+    "prompt": "`describe-table` respondeu `TableSizeBytes` 0 para uma tabela de 34.100 itens. Qual é a conclusão certa?",
+    "hint": "Quem produziu esse número?",
+    "choices": [
+      {
+        "text": "Os itens estão vazios fora as chaves, que o `TableSizeBytes` não conta",
+        "why": "O programa mediu quase 3 MB deles. Um item vazio ainda tem os bytes da chave."
+      },
+      {
+        "text": "O moto não mede nada; a AWS o atualiza a cada tantas horas",
+        "why": "Isso. Em nenhum dos dois lados é um jeito de acompanhar a tabela crescer."
+      },
+      {
+        "text": "A tabela está no modo sob demanda, que só informa tamanho quando provisionada",
+        "why": "O modo de cobrança não muda o que o `describe-table` informa."
+      }
+    ]
+  },
+  "ex-15828wk5": {
+    "prompt": "Uma página de scan eventualmente consistente leu 12.288 bytes de itens. Quantas unidades de leitura ela custa?",
+    "hint": "Blocos de 4 KB, arredondados para cima, e meia unidade por bloco numa leitura eventualmente consistente."
+  },
+  "ex-xmtqwv0k": {
+    "prompt": "O scan de 364,5 unidades roda a cada cinco minutos num mês de 30 dias, a 0,1875 dólar por milhão de unidades de leitura. Quantos dólares dá, com centavos?",
+    "hint": "Conte os scans primeiro: 12 por hora.",
+    "unit": "USD"
+  },
+  "ex-zvzb5597": {
+    "prompt": "Uma query na tabela `quitanda` filtra por `order_day`, e existe um índice `by-day`. O DynamoDB usa o índice?",
+    "hint": "Existe um planejador?",
+    "choices": [
+      {
+        "text": "Sim, quando o índice leria menos itens",
+        "why": "Esse é o julgamento de um planejador, e o DynamoDB não faz nenhum."
+      },
+      {
+        "text": "Só numa leitura eventualmente consistente, já que o índice é assim",
+        "why": "A consistência não tem nada a ver; a requisição decide."
+      },
+      {
+        "text": "Não: uma leitura só usa um índice quando a requisição o nomeia",
+        "why": "Isso. `--index-name by-day` é o que torna a leitura uma leitura do índice."
+      },
+      {
+        "text": "Sim, depois que o backfill terminou de copiar a tabela",
+        "why": "O backfill deixa o índice utilizável, não automático."
+      }
+    ]
+  },
+  "ex-18tgwa8x": {
+    "prompt": "Ligue cada projeção ao que um item do índice carrega.",
+    "hint": "As chaves da tabela sempre vão junto.",
+    "pairs": [
+      {
+        "left": "`KEYS_ONLY`",
+        "right": "As chaves do índice e as da tabela"
+      },
+      {
+        "left": "`INCLUDE` com `total_cents`",
+        "right": "As duas chaves e `total_cents`"
+      },
+      {
+        "left": "`ALL`",
+        "right": "O item inteiro"
+      }
+    ],
+    "right_distractors": [
+      "Só as chaves do índice, sem as da tabela"
+    ]
+  },
+  "ex-bfhktvq9": {
+    "prompt": "Um app grava um pedido e logo consulta o `by-day` com `--consistent-read` para mostrá-lo. O que acontece?",
+    "hint": "Como uma escrita chega a um índice global?",
+    "choices": [
+      {
+        "text": "A query espera até o índice ter o pedido, e então responde",
+        "why": "Não existe modo de espera; a requisição é recusada."
+      },
+      {
+        "text": "É recusada: um índice global é só eventualmente consistente",
+        "why": "Isso. O moto recusou com a mesma mensagem que a AWS usa."
+      },
+      {
+        "text": "Responde, pelo dobro das unidades de leitura",
+        "why": "Unidades em dobro compram consistência forte numa tabela, nunca num índice global."
+      }
+    ]
+  },
+  "ex-p1e0prjq": {
+    "prompt": "O que destas coisas um índice secundário global acrescenta à conta da Quitanda? Escolha todas.",
+    "hint": "Pense em todo lugar onde a cópia mora e em toda vez que ela muda.",
+    "choices": [
+      {
+        "text": "Uma escrita no índice para cada escrita num item que o índice guarda",
+        "why": "Sim: os 10.029 pedidos custariam 10.029 unidades de escrita a mais para carregar."
+      },
+      {
+        "text": "Armazenamento dos itens projetados, com um acréscimo por item",
+        "why": "Sim, pelo preço por GB da tabela."
+      },
+      {
+        "text": "Duas escritas no índice quando um update muda `order_day`",
+        "why": "Sim: a entrada antiga sai e a nova entra."
+      },
+      {
+        "text": "Uma escrita no índice para cada linha de pedido",
+        "why": "Linhas não têm `order_day`, então nunca estão no índice."
+      },
+      {
+        "text": "Uma cobrança para cada query da tabela que não usa o índice",
+        "why": "Uma leitura da tabela nunca toca um índice."
+      }
+    ]
+  },
+  "ex-3a526awq": {
+    "prompt": "Por que o índice `pending` guarda 722 itens e não 34.100?",
+    "hint": "Do que um item precisa para ser copiado para um índice?",
+    "choices": [
+      {
+        "text": "Porque é `KEYS_ONLY`, que guarda só os itens mais recentes",
+        "why": "Uma projeção decide quais atributos vão, não quais itens."
+      },
+      {
+        "text": "Porque só 722 itens têm `pending_since`",
+        "why": "Isso. Um índice guarda os itens que têm a chave dele, e só esses."
+      },
+      {
+        "text": "Porque o backfill parou em 722 no moto",
+        "why": "O scan filtrado da tabela achou os mesmos 722, então o índice está completo."
+      },
+      {
+        "text": "Porque um índice global guarda no máximo um item por valor de chave de partição",
+        "why": "Chaves de índice não precisam ser únicas; os 722 dividem um `pending_since`."
+      }
+    ]
+  },
+  "ex-6c7xbnyz": {
+    "prompt": "Depois que o pedido o-10009 foi entregue, o índice `pending` ficou com 721 itens. O que o tirou do índice?",
+    "hint": "Olhe a expressão de update.",
+    "choices": [
+      {
+        "text": "Um delete mandado ao índice pelo programa",
+        "why": "Nada escreve direto num índice; não existe API para isso."
+      },
+      {
+        "text": "Um job noturno que o DynamoDB roda em todo índice esparso",
+        "why": "Aconteceu na mesma escrita, não depois."
+      },
+      {
+        "text": "O `REMOVE` do update, que tirou o item do índice na mesma escrita",
+        "why": "Isso. Sem o atributo, o item deixou de se qualificar: o estado é o atributo, e o índice o acompanha."
+      }
+    ]
+  },
+  "ex-jrtw9zs6": {
+    "prompt": "Um índice cuja chave a maioria dos itens não tem é chamado de índice ___.",
+    "hint": "Ele tem entradas para poucos itens.",
+    "blanks": [
+      {
+        "accept": [
+          "esparso"
+        ]
+      }
+    ]
+  },
+  "ex-9fm9rteg": {
+    "prompt": "Um programa lê páginas de um scan filtrado e para na primeira página com `Count` 0. O que está errado?",
+    "hint": "O que significa uma página vazia num scan filtrado?",
+    "choices": [
+      {
+        "text": "Nada, porque uma página vazia sempre quer dizer que a tabela foi lida",
+        "why": "Uma página vazia só quer dizer que nada naqueles itens casou."
+      },
+      {
+        "text": "Só uma página sem `LastEvaluatedKey` é o fim",
+        "why": "Isso. Uma página vazia ainda pode trazer `LastEvaluatedKey`, e o laço só para quando a chave falta."
+      },
+      {
+        "text": "`Count` é sempre 0 no moto, então o teste tem de usar `ScannedCount`",
+        "why": "O moto informou contagens reais em toda captura desta lição."
+      }
+    ]
+  },
+  "ex-2zt8v5hx": {
+    "prompt": "`scan --limit 100` com filtro em 1º de outubro devolveu `Count` 5 e `ScannedCount` 100. O que o `--limit` conta?",
+    "hint": "Qual dos dois números é 100?",
+    "choices": [
+      {
+        "text": "Os itens lidos antes do filtro",
+        "why": "Isso, e é por isso que uma página filtrada pode voltar curta."
+      },
+      {
+        "text": "Os itens devolvidos depois do filtro, então só existem cinco pedidos naquele dia",
+        "why": "O dia tem 738 pedidos; o limite parou a leitura em 100 itens."
+      },
+      {
+        "text": "Kilobytes de dados, até a página de 1 MB",
+        "why": "O 1 MB é o limite do servidor; `--limit` conta itens."
+      },
+      {
+        "text": "Unidades de leitura, então a página parou ao gastar 100",
+        "why": "Unidades são o que uma página custa, não o que a encerra."
+      }
+    ]
+  },
+  "ex-f952a7n0": {
+    "prompt": "Para ler a próxima página, a requisição devolve a `LastEvaluatedKey` da resposta anterior como `___`.",
+    "hint": "O parâmetro diz \"comece depois desta chave\".",
+    "blanks": [
+      {
+        "accept": [
+          "ExclusiveStartKey",
+          "--exclusive-start-key"
+        ]
+      }
+    ]
+  },
+  "ex-gmv2f1nc": {
+    "prompt": "O que um índice secundário local oferece que um global não oferece?",
+    "hint": "Onde mora um índice local?",
+    "choices": [
+      {
+        "text": "Leituras fortemente consistentes, porque mora com os itens que ordena e é escrito junto",
+        "why": "Isso. A segunda query pediu `--consistent-read` e conseguiu."
+      },
+      {
+        "text": "Uma chave de partição própria",
+        "why": "Esse é o índice global; o local mantém a chave de partição da tabela."
+      },
+      {
+        "text": "Ser criado depois que a tabela tem dados",
+        "why": "O contrário: um índice local só existe se estava no `create-table`."
+      },
+      {
+        "text": "Nenhum limite no tamanho de uma coleção de itens",
+        "why": "Um índice local é justamente o que traz o limite de 10 GB."
+      }
+    ]
+  },
+  "ex-4k3fnzmb": {
+    "prompt": "Uma tabela de leituras de sensores tem chave em `device_id` e `reading_time`, com um índice local que ordena as leituras de cada aparelho por temperatura. Leituras nunca são apagadas. O que vai acabar acontecendo?",
+    "hint": "Que limite um índice local traz?",
+    "choices": [
+      {
+        "text": "O índice deixa de ser consistente quando passa de um tamanho",
+        "why": "A consistência não depende de tamanho; a falha é uma escrita recusada."
+      },
+      {
+        "text": "As leituras daquele aparelho ficam lentas, mas as escritas continuam",
+        "why": "São as escritas que param."
+      },
+      {
+        "text": "As escritas do aparelho falham aos 10 GB",
+        "why": "Isso: quando as leituras e as cópias no índice chegam a 10 GB, `ItemCollectionSizeLimitExceededException`. Um índice global não teria esse limite."
+      },
+      {
+        "text": "O DynamoDB move as leituras antigas para uma segunda chave de partição",
+        "why": "O DynamoDB nunca reescreve chaves; uma coleção pertence a um valor de chave de partição."
+      }
+    ]
+  },
+  "ex-ttj8vw40": {
+    "prompt": "A Quitanda decide, depois de um ano, que quer um índice local em `total_cents`. O que isso exige?",
+    "hint": "Que comando poderia criá-lo?",
+    "choices": [
+      {
+        "text": "Um `update-table` com `--local-secondary-indexes`",
+        "why": "`update-table` não tem esse parâmetro."
+      },
+      {
+        "text": "Uma tabela nova criada com o índice, e todo item copiado para ela",
+        "why": "Isso, e é por isso que um índice global, que pode ser criado a qualquer dia, é a resposta comum."
+      },
+      {
+        "text": "Um backfill, iniciado pelo console",
+        "why": "Backfills constroem índices globais criados depois; um local não pode ser criado de jeito nenhum."
+      }
+    ]
+  },
+  "ex-dfcrbjrt": {
+    "prompt": "Na AWS, ponha em ordem a vida de um índice global novo numa tabela que já tem itens.",
+    "hint": "O moto pula o meio.",
+    "items": [
+      "`update-table` com um `Create` em `--global-secondary-index-updates`",
+      "O índice fica `CREATING` e a tabela é copiada para ele",
+      "O índice fica `ACTIVE`",
+      "Uma query o nomeia com `--index-name`"
+    ]
+  },
+  "ex-x12yx2t6": {
+    "prompt": "A expedição precisa de \"pedidos ainda não entregues, do mais antigo para o mais novo\". A Quitanda guarda `pending_since` só nos pedidos abertos, com um horário. Qual leitura é a mais barata?",
+    "hint": "Em quais itens cada leitura precisa tocar?",
+    "choices": [
+      {
+        "text": "Um scan da tabela filtrado por `attribute_exists(pending_since)`",
+        "why": "Acha os pedidos lendo os 34.100 itens."
+      },
+      {
+        "text": "Uma query num índice local ordenado por `pending_since`",
+        "why": "Um índice local é por cliente; a expedição precisaria de uma query por cliente, e a tabela teria de ser recriada para tê-lo."
+      },
+      {
+        "text": "Um scan de um índice global esparso, que só lê o que ainda está aberto, e mais nada",
+        "why": "Isso. Todo item que ele lê é uma resposta; para tê-los do mais antigo, uma chave de partição fixa como `OPEN` com `pending_since` como chave de ordenação transforma isso numa query."
+      },
+      {
+        "text": "Uma query no `by-day` para cada dia do mês",
+        "why": "Lê todo pedido de todo dia, entregue ou não."
+      }
+    ]
+  }
+}

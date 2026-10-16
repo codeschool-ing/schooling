@@ -880,6 +880,11 @@ func studies(money *rand.Rand, s shape, l *life, from, until, to time.Time, brow
 /*
 drawn is the paper: `exam.QuestionsPerAttempt` questions taken from the pool.
 
+	THE COURSE'S NUMBER, because what this command plants is a course exam —
+	every attempt it writes says `"scope": "course"`. A track's final draws
+	`exam.QuestionsPerTrackAttempt` instead (A-14), and a seeder that planted
+	one would have to take that number with it.
+
 	THE SHIPPED NUMBER AND NOT THE DEPLOYMENT'S, for the reason `enoughPeople`
 	already gives about the minimum sample: a seeder that read a console would
 	plant a different fixture on two machines running one command, and would

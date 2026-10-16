@@ -1,0 +1,590 @@
+[
+  {
+    "id": "ex-7t5s5ktv",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a reader have to read every line of a CSV file to get one column out of it?",
+    "hint": "Where does the fifth field of the next line start?",
+    "choices": [
+      {
+        "text": "CSV files are always compressed, and compressed text is read whole",
+        "correct": false,
+        "why": "The raw layer's CSV is plain text, and it was still read whole."
+      },
+      {
+        "text": "Nothing in the file says where a field starts",
+        "correct": true,
+        "why": "Right. Rows are written one after another, so a column can only be found by reading them."
+      },
+      {
+        "text": "S3 only returns whole objects to Athena",
+        "correct": false,
+        "why": "S3 serves ranges of an object; Parquet reads are ranges."
+      },
+      {
+        "text": "Its header is at the end of the file",
+        "correct": false,
+        "why": "The header is the first line, and it names columns without saying where they are."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxwgj24p",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Parquet with no compression at all took 24,667,617 bytes, against the CSV's 40,641,097, for the same orders. Where does that difference come from?",
+    "hint": "How is a number written in each?",
+    "choices": [
+      {
+        "text": "Parquet left out the columns nobody queries",
+        "correct": false,
+        "why": "Every column is there; the same totals came out of it."
+      },
+      {
+        "text": "Numbers stored as numbers, and repeated words as a dictionary",
+        "correct": true,
+        "why": "Right: four payment methods stored once each, with a small code per row."
+      },
+      {
+        "text": "PyArrow compressed it anyway, with its default codec, despite the setting",
+        "correct": false,
+        "why": "The layout asked for `none`, and Snappy took it down further, to 12,703,975."
+      },
+      {
+        "text": "The 96 small files of each day share one footer",
+        "correct": false,
+        "why": "That layout is the other one, and each of its files has a footer of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-keq4x02d",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a columnar file to what it is.",
+    "hint": "ORC uses other names for the same things.",
+    "pairs": [
+      {
+        "left": "Row group",
+        "right": "A block of rows; ORC calls it a stripe"
+      },
+      {
+        "left": "Column chunk",
+        "right": "One column inside one group, compressed on its own"
+      },
+      {
+        "left": "Footer",
+        "right": "Where every block starts and what values it holds"
+      },
+      {
+        "left": "Dictionary encoding",
+        "right": "Each repeated word stored once, with a code per row"
+      }
+    ],
+    "right_distractors": [
+      "A copy of the rows as text, for people to read"
+    ]
+  },
+  {
+    "id": "ex-e8hgf6t5",
+    "version": 1,
+    "section": "rows-and-columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ORC with zstd came out smaller than Parquet with zstd. What should a lake make of that?",
+    "hint": "Which decision mattered more?",
+    "choices": [
+      {
+        "text": "Move the whole lake to ORC, since ORC is always the smaller of the two formats",
+        "correct": false,
+        "why": "This is one comparison on one dataset; the next dataset may go the other way."
+      },
+      {
+        "text": "Keep both, so each engine reads the one it prefers",
+        "correct": false,
+        "why": "Two copies of the curated layer is twice the storage and two jobs to keep in step."
+      },
+      {
+        "text": "Little: both are good, and the decision that counted was columns over rows",
+        "correct": true,
+        "why": "Right. Pick the one your tools default to and stay with it."
+      },
+      {
+        "text": "ORC is smaller because it drops the footer",
+        "correct": false,
+        "why": "ORC has a footer and stripe statistics too; the reader fetched its tail in five requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9j3ejm0",
+    "version": 1,
+    "section": "codecs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The gzipped CSV read 8,421,323 bytes, all of them, for a question about two columns. Why all?",
+    "hint": "What did compression change, and what did it not?",
+    "choices": [
+      {
+        "text": "Compression shrank the read without making it selective",
+        "correct": true,
+        "why": "Right: still every column of every row, just fewer bytes to fetch."
+      },
+      {
+        "text": "Athena bills gzip files at their size once decompressed",
+        "correct": false,
+        "why": "Athena bills the bytes read from S3, which are the compressed ones."
+      },
+      {
+        "text": "ask.py cannot read a column of a gzipped file",
+        "correct": false,
+        "why": "No reader can: the format, not the program, has no columns."
+      },
+      {
+        "text": "The files were too small for the reader to skip any part",
+        "correct": false,
+        "why": "A 40 MB CSV was read whole too; size was not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t1kbhtz",
+    "version": 1,
+    "section": "codecs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A source sends a single 10 GB export a night, compressed with gzip. Why does that slow a Spark job down, whatever its number of workers?",
+    "hint": "Where does decompression have to start?",
+    "choices": [
+      {
+        "text": "Gzip is the slowest codec to decompress",
+        "correct": false,
+        "why": "Speed is not it; ten workers would share a slow codec if they could."
+      },
+      {
+        "text": "S3 limits a gzipped object to one reader at a time",
+        "correct": false,
+        "why": "S3 serves any number of readers; the format is what forbids sharing."
+      },
+      {
+        "text": "Workers cannot read CSV, only Parquet",
+        "correct": false,
+        "why": "Spark reads CSV; lesson 17's script read the raw layer."
+      },
+      {
+        "text": "A gzip file cannot be split, so one worker reads it all",
+        "correct": true,
+        "why": "Right: decompression starts at the beginning, so the others wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e9vgwnk",
+    "version": 1,
+    "section": "codecs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "zstd took the Parquet files from 24,667,617 bytes to 7,433,857, but the read for the payments question only from 6,481,669 to 4,280,951. Why did the read shrink less?",
+    "hint": "Which columns hold most of what compression removes?",
+    "choices": [
+      {
+        "text": "zstd compresses less well on the second and later reads of the same file",
+        "correct": false,
+        "why": "A file is compressed once, when written; reads do not change it."
+      },
+      {
+        "text": "Its columns were small already; the savings lay elsewhere",
+        "correct": true,
+        "why": "Right: `order_id` and `customer_id` shrank most, and the question touches neither."
+      },
+      {
+        "text": "The footers are not compressed, and they are most of what is read",
+        "correct": false,
+        "why": "The footers are a small part of either number; the columns are the difference."
+      },
+      {
+        "text": "DuckDB decompresses before counting",
+        "correct": false,
+        "why": "The count is of bytes read from S3, compressed."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8px1vvg",
+    "version": 1,
+    "section": "codecs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A file compressed with ___ cannot be split: decompressing it starts at the first byte, so one reader takes the whole file.",
+    "hint": "It is the codec the raw CSV was given.",
+    "blanks": [
+      {
+        "accept": [
+          "gzip",
+          "gz"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-73np1msb",
+    "version": 1,
+    "section": "codecs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The CSV month is 40,641,097 bytes and the Parquet month with zstd is 7,433,857. How many times smaller is the Parquet, to the nearest whole number?",
+    "hint": "Divide the two.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hcv0q1vp",
+    "version": 1,
+    "section": "row-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets a reader skip a row group without reading it?",
+    "hint": "It is in the footer.",
+    "choices": [
+      {
+        "text": "An index of every value, kept in the catalog",
+        "correct": false,
+        "why": "The catalog knows partitions, not values."
+      },
+      {
+        "text": "The smallest and largest value of each column chunk",
+        "correct": true,
+        "why": "Right: a group whose largest hour is 20 cannot match `hour >= 21`."
+      },
+      {
+        "text": "The row count of each group",
+        "correct": false,
+        "why": "A count says how many rows, not which values."
+      },
+      {
+        "text": "The partition key in the object's name",
+        "correct": false,
+        "why": "That skips whole files; groups are inside one file."
+      }
+    ]
+  },
+  {
+    "id": "ex-51peedqz",
+    "version": 1,
+    "section": "row-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shuffled groups read 7,261,486 bytes for the late-evening question, more than the 4,914,494 of one group a day. Why worse than having no small groups at all?",
+    "hint": "What did they skip, and what did they add?",
+    "choices": [
+      {
+        "text": "Shuffling broke the statistics, which are then ignored",
+        "correct": false,
+        "why": "The statistics are correct, 7 to 23 in every group; they just exclude nothing."
+      },
+      {
+        "text": "They skipped nothing and paid longer footers and worse compression",
+        "correct": true,
+        "why": "Right: every group spans the whole day, and a jumble compresses worse than runs."
+      },
+      {
+        "text": "A shuffled file has to be sorted again before it is read",
+        "correct": false,
+        "why": "Nothing is sorted at read time."
+      },
+      {
+        "text": "The shuffled layout has more rows",
+        "correct": false,
+        "why": "Same rows, in another order."
+      }
+    ]
+  },
+  {
+    "id": "ex-91nmzg88",
+    "version": 1,
+    "section": "row-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `groups` layout is sorted by hour. A query filters on `customer_id = 'c-17'`. How many of a day's twelve groups can the statistics skip?",
+    "hint": "What range of customers does each group cover?",
+    "choices": [
+      {
+        "text": "Eleven, since one customer orders at one particular time of day",
+        "correct": false,
+        "why": "Customers order at all hours, and the groups are cut by hour, not by customer."
+      },
+      {
+        "text": "Most of them, since `c-17` sits near the very start of the alphabet",
+        "correct": false,
+        "why": "Every group's range of ids starts near `c-1`, so `c-17` falls inside all of them."
+      },
+      {
+        "text": "Almost none: every group spans nearly all the customer ids",
+        "correct": true,
+        "why": "Right. Statistics help the column the rows are sorted by, and these are sorted by hour."
+      },
+      {
+        "text": "All twelve, because the partition key is `dt`",
+        "correct": false,
+        "why": "The partition skips other days; inside the day, nothing about `dt` helps."
+      }
+    ]
+  },
+  {
+    "id": "ex-gddfe7v8",
+    "version": 1,
+    "section": "row-groups",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the sorted file of 15 October, how many of the twelve row groups have a largest hour of 21 or more, and so have to be read for `hour >= 21`?",
+    "hint": "Read the right-hand column of `footer.py`.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xg93zf3d",
+    "version": 1,
+    "section": "row-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should the sorting that makes row-group statistics useful happen?",
+    "hint": "It costs nothing at query time.",
+    "choices": [
+      {
+        "text": "In each query, with an `ORDER BY` on the filtered column",
+        "correct": false,
+        "why": "A query's `ORDER BY` sorts its answer, after the reading is done."
+      },
+      {
+        "text": "In S3, which keeps objects sorted by key",
+        "correct": false,
+        "why": "S3 orders keys, not the rows inside an object."
+      },
+      {
+        "text": "In the catalog, as a property of the table",
+        "correct": false,
+        "why": "A property describes; it rearranges no rows."
+      },
+      {
+        "text": "In the job that writes the file",
+        "correct": true,
+        "why": "Right: sorted once when written, skipped on every read after."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3q1szqy",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `customer_id` a poor partition key for Quitanda's orders, though a question about one customer would open a single prefix?",
+    "hint": "Count the files a month would leave.",
+    "choices": [
+      {
+        "text": "39,979 tiny files, and nearly every question opens all of them",
+        "correct": true,
+        "why": "Right: 318 bytes of data a file, less than a footer."
+      },
+      {
+        "text": "A partition key cannot be a string",
+        "correct": false,
+        "why": "`dt` is a string."
+      },
+      {
+        "text": "The catalog refuses a table that has more than 10,000 partitions in it",
+        "correct": false,
+        "why": "That is not the limit that matters; the free million is a hundred times further."
+      },
+      {
+        "text": "Customer ids change whenever a customer moves house to a new address",
+        "correct": false,
+        "why": "An opaque id does not move with an address."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptt5ksq3",
+    "version": 1,
+    "section": "small-files",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the small-files layout the month question read 27,000,299 bytes, more than the 22,068,273 the layout holds. How can a read exceed the files?",
+    "hint": "How much does PyArrow fetch to find a footer?",
+    "choices": [
+      {
+        "text": "moto served each file twice by mistake",
+        "correct": false,
+        "why": "moto served what was asked; the reader asked twice."
+      },
+      {
+        "text": "Each file is under 64 KiB, so it was fetched whole, then its columns again",
+        "correct": true,
+        "why": "Right: per-file overhead larger than the data it wraps."
+      },
+      {
+        "text": "The listing of the 2,976 keys counts as bytes read, on top of the files",
+        "correct": false,
+        "why": "The counter starts after the listing; only reads are counted."
+      },
+      {
+        "text": "The 96 files of each day overlap, so that some of the orders are held twice",
+        "correct": false,
+        "why": "The slices do not overlap; the same four rows came out."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9t9gejc",
+    "version": 1,
+    "section": "small-files",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three years is 1,096 days. Kept as 96 files a day, read at two GET requests a file, how many requests does one question over all of it make?",
+    "hint": "Days times files times two.",
+    "value": 210432,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-y0j8ajjv",
+    "version": 1,
+    "section": "small-files",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these help against small files? Choose all that apply.",
+    "hint": "Fewer, larger files.",
+    "choices": [
+      {
+        "text": "A compaction job that rewrites each closed day into few large files",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A coarser partition key, `dt` rather than `customer_id`",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A writer that writes one file per day, as `etl.py` does",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A per-query cutoff on the workgroup",
+        "correct": false,
+        "why": "It stops a query; the files stay small."
+      },
+      {
+        "text": "Smaller row groups inside each file",
+        "correct": false,
+        "why": "That cuts files into more pieces, not fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdjmxrtd",
+    "version": 1,
+    "section": "two-decisions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which layout do the measurements recommend for Quitanda's curated orders?",
+    "hint": "Both decisions, together.",
+    "choices": [
+      {
+        "text": "ORC partitioned by `customer_id`, the smallest files",
+        "correct": false,
+        "why": "Small files are the problem, not the goal."
+      },
+      {
+        "text": "Gzipped CSV by `dt`, which everybody can open",
+        "correct": false,
+        "why": "It reads every column; that belongs in the raw layer."
+      },
+      {
+        "text": "Parquet by `dt` and `hour`, written as 96 files a day",
+        "correct": false,
+        "why": "That is the small-files line of the table."
+      },
+      {
+        "text": "Parquet by `dt`, one file a day, sorted by hour",
+        "correct": true,
+        "why": "Right, with zstd or Snappy."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrgnt9g4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put these layouts in order of the bytes the month question read from them, most first.",
+    "hint": "One columnar layout read more than the gzipped CSV.",
+    "items": [
+      "Plain CSV",
+      "Parquet in 96 files a day",
+      "CSV compressed with gzip",
+      "ORC with zstd"
+    ]
+  },
+  {
+    "id": "ex-6yc07a2j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A stream writes Quitanda's app clicks into `dt=` prefixes, one small file a minute, and analysts query them by day. What is the first fix?",
+    "hint": "1,440 files a day.",
+    "choices": [
+      {
+        "text": "Partition the clicks by minute as well, so that a query opens fewer files",
+        "correct": false,
+        "why": "A day would still be 1,440 files, in 1,440 prefixes."
+      },
+      {
+        "text": "A job that compacts each closed day into a few large Parquet files",
+        "correct": true,
+        "why": "Right: the queries open a few files a day instead of 1,440."
+      },
+      {
+        "text": "Raise the workgroup's cutoff so the queries stop failing",
+        "correct": false,
+        "why": "They are slow and costly, not cut off; the files stay small."
+      },
+      {
+        "text": "Write the clicks as CSV, so that every small file can simply be read whole",
+        "correct": false,
+        "why": "Small files are read whole already; CSV removes what columns saved."
+      }
+    ]
+  }
+]

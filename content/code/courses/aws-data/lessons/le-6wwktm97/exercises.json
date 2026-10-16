@@ -1,0 +1,578 @@
+[
+  {
+    "id": "ex-6xpn8k6m",
+    "version": 1,
+    "section": "multi-az",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda's reports make the orders database slow, so someone proposes turning on Multi-AZ. What will that change for the reports?",
+    "hint": "Can the standby be queried?",
+    "choices": [
+      {
+        "text": "Nothing: the standby takes no connections",
+        "correct": true,
+        "why": "Right. Multi-AZ is insurance against a failure, and commits get slightly slower, not faster."
+      },
+      {
+        "text": "They get faster, because reads are shared between the two zones",
+        "correct": false,
+        "why": "Every read still goes to the primary; the standby only receives writes."
+      },
+      {
+        "text": "They move to the standby automatically, leaving the primary to the shop",
+        "correct": false,
+        "why": "Nothing is ever routed to the standby until a failover makes it the primary."
+      },
+      {
+        "text": "They read data that is a few seconds old",
+        "correct": false,
+        "why": "That describes a read replica, which is asynchronous and readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h36z9eh",
+    "version": 1,
+    "section": "multi-az",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a Multi-AZ failover, what must Quitanda's application do to reach the database again?",
+    "hint": "The address of the instance is a DNS name.",
+    "choices": [
+      {
+        "text": "Switch its configuration to the standby's own endpoint",
+        "correct": false,
+        "why": "The standby has no endpoint of its own; the instance's name is moved to it."
+      },
+      {
+        "text": "Reconnect to the same name, which now points at the standby",
+        "correct": true,
+        "why": "Right. Which is why a client must not cache the DNS answer forever."
+      },
+      {
+        "text": "Wait for the old primary to be repaired, since RDS fails back automatically",
+        "correct": false,
+        "why": "The standby becomes the primary and a new standby is built; nothing waits for the old machine."
+      },
+      {
+        "text": "Nothing: open connections move across with the data",
+        "correct": false,
+        "why": "Every open connection breaks, and transactions in flight are rolled back."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4r6ycdh",
+    "version": 1,
+    "section": "multi-az",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, `reboot-db-instance --force-failover` succeeds and the instance stays in `sa-east-1a`. What can you conclude about your application's failover?",
+    "hint": "What did moto build when `--multi-az` was set?",
+    "choices": [
+      {
+        "text": "That it reconnects within the documented 60 to 120 seconds",
+        "correct": false,
+        "why": "Nothing was failed over, so nothing about reconnecting was measured."
+      },
+      {
+        "text": "That moto failed over and back again within the call",
+        "correct": false,
+        "why": "There is no standby in moto: `SecondaryAvailabilityZone` is `None`."
+      },
+      {
+        "text": "That failover is disabled on this instance and must be turned on",
+        "correct": false,
+        "why": "The instance is `MultiAZ: True`; moto simply models no standby."
+      },
+      {
+        "text": "Nothing; only a rehearsal on a real account measures it",
+        "correct": true,
+        "why": "Right. moto accepted the request and simulated none of what it asks for."
+      }
+    ]
+  },
+  {
+    "id": "ex-qabk2qdv",
+    "version": 1,
+    "section": "multi-az",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A PostgreSQL `db.m7g.large` is 0.442 USD an hour Multi-AZ and gp3 is 0.438 per GB-month Multi-AZ. What does a Multi-AZ instance with 50 GiB cost in a 730-hour month? Give USD to two decimal places.",
+    "hint": "730 × 0.442, plus 50 × 0.438.",
+    "value": 344.56,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-0k1gw6w3",
+    "version": 1,
+    "section": "multi-az-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a Multi-AZ DB cluster give Quitanda that a Multi-AZ instance does not?",
+    "hint": "Count the copies, and ask what each does while it waits.",
+    "choices": [
+      {
+        "text": "Two copies that answer reads, and a faster documented failover",
+        "correct": true,
+        "why": "Right. Two readers behind a reader endpoint, and a failover AWS documents as typically under 35 seconds."
+      },
+      {
+        "text": "Writes on all three instances at once",
+        "correct": false,
+        "why": "There is one writer; the readers receive its writes."
+      },
+      {
+        "text": "Support for every RDS engine, Oracle and SQL Server included",
+        "correct": false,
+        "why": "The cluster is for PostgreSQL and MySQL only."
+      },
+      {
+        "text": "Protection against a `DELETE` without a `WHERE`",
+        "correct": false,
+        "why": "Every copy receives the delete; only a backup undoes a mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8z6cfh6",
+    "version": 1,
+    "section": "multi-az-cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a Multi-AZ DB cluster a commit waits for one of the two readers, not both. What does that buy, and what does it cost?",
+    "hint": "Think about the slower reader.",
+    "choices": [
+      {
+        "text": "It buys nothing; both readers are always identical",
+        "correct": false,
+        "why": "The reader that did not acknowledge can be a moment behind."
+      },
+      {
+        "text": "A slow reader does not hold up commits, and a read from the reader endpoint may be slightly old",
+        "correct": true,
+        "why": "Right. The acknowledging reader has everything, which keeps failover safe."
+      },
+      {
+        "text": "Commits become asynchronous, so the cluster can lose transactions on failover",
+        "correct": false,
+        "why": "One reader always has every committed transaction, and that is the one failed over to."
+      },
+      {
+        "text": "Writes go to whichever reader answers first",
+        "correct": false,
+        "why": "Writes go to the writer; the readers only acknowledge."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzgbhyyc",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Someone runs `DELETE FROM orders` without a `WHERE` on the primary. What does the read replica hold a moment later?",
+    "hint": "A replica replays whatever the primary commits.",
+    "choices": [
+      {
+        "text": "The rows, since replicas ignore deletes",
+        "correct": false,
+        "why": "A replica replays every change, deletes included."
+      },
+      {
+        "text": "The rows until someone promotes it",
+        "correct": false,
+        "why": "Promotion stops future replication; the delete has already arrived."
+      },
+      {
+        "text": "No rows either: it replayed the delete",
+        "correct": true,
+        "why": "Right. A replica is not a backup; point-in-time recovery is what undoes this."
+      },
+      {
+        "text": "The rows, because it is a day behind",
+        "correct": false,
+        "why": "Replica lag is usually seconds, not a day, and it is not a safety margin."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqy1knrp",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer places an order and the confirmation page, which reads from a replica, says \"no orders yet\". What is the fix the lesson gives?",
+    "hint": "Which reads can afford to be a moment old?",
+    "choices": [
+      {
+        "text": "Add more replicas, so one of them is up to date",
+        "correct": false,
+        "why": "Every replica is asynchronous; more of them do not remove the lag."
+      },
+      {
+        "text": "Read from the primary on the page that follows a write",
+        "correct": true,
+        "why": "Right. Reports can be seconds old; a customer reading their own write cannot."
+      },
+      {
+        "text": "Make the replica synchronous with `--multi-az`",
+        "correct": false,
+        "why": "That flag adds a standby that cannot be read; the replica stays asynchronous."
+      },
+      {
+        "text": "Give the replica a larger instance class than the primary",
+        "correct": false,
+        "why": "A bigger replica can keep up better, and it is still behind by the time the change takes to arrive."
+      }
+    ]
+  },
+  {
+    "id": "ex-ec28qc16",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does promoting a read replica do, on AWS?",
+    "hint": "Can it be undone?",
+    "choices": [
+      {
+        "text": "It swaps the roles, so the old primary becomes the replica of the new one",
+        "correct": false,
+        "why": "The old primary learns to follow nothing; the link is simply cut."
+      },
+      {
+        "text": "It makes the replica synchronous until it is demoted",
+        "correct": false,
+        "why": "There is no demotion; promotion is one-way."
+      },
+      {
+        "text": "It cuts the link and makes a standalone instance that accepts writes",
+        "correct": true,
+        "why": "Right, and it cannot be reversed. moto accepted it and kept the link in its records."
+      },
+      {
+        "text": "It moves the primary's endpoint to the replica",
+        "correct": false,
+        "why": "The promoted instance keeps its own endpoint; moving names is what Multi-AZ failover does."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrwvmsjj",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A replica in us-east-1 receives the São Paulo primary's write-ahead log, 500 GB in a month, at 0.138 USD per GB. What does the transfer cost that month? Give USD to two decimal places.",
+    "hint": "Gigabytes times the price per gigabyte.",
+    "value": 69.0,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-wgg2thnr",
+    "version": 1,
+    "section": "read-replicas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, a replica was created from an instance with `--backup-retention-period 0`. Why would AWS refuse the same request?",
+    "hint": "What is a replica built from?",
+    "choices": [
+      {
+        "text": "Replicas need a Multi-AZ source",
+        "correct": false,
+        "why": "A Single-AZ instance can have replicas; it needs backups on."
+      },
+      {
+        "text": "Replicas start from a backup",
+        "correct": true,
+        "why": "Right. Retention of at least one day is AWS's condition, and moto does not check it."
+      },
+      {
+        "text": "Retention 0 makes the instance read-only",
+        "correct": false,
+        "why": "Retention decides backups, not whether the instance accepts writes."
+      },
+      {
+        "text": "A `db.t4g.micro` is too small to have replicas",
+        "correct": false,
+        "why": "The refusal is about backups, not the class."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n91wdy1",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda restores its orders database to 14:32 on Tuesday. Where is the restored data?",
+    "hint": "Does a restore rewind the instance?",
+    "choices": [
+      {
+        "text": "In `quitanda-orders`, rewound to 14:32",
+        "correct": false,
+        "why": "The original is left exactly as it was, mistake included."
+      },
+      {
+        "text": "In a snapshot that has to be restored again",
+        "correct": false,
+        "why": "The restore already produced an instance; there is no second step to a snapshot."
+      },
+      {
+        "text": "In a read replica of the original",
+        "correct": false,
+        "why": "A restored instance follows nothing; it is standalone."
+      },
+      {
+        "text": "In a new instance, at a new endpoint",
+        "correct": true,
+        "why": "Right. Somebody then copies rows back or points the application at it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnpnnw7w",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instance keeps 7 days of automated backups. Which restore can AWS perform?",
+    "hint": "Between the earliest restorable time and `LatestRestorableTime`.",
+    "choices": [
+      {
+        "text": "To three days ago at 14:32:10, to the second",
+        "correct": true,
+        "why": "Right. The day's snapshot plus the log replayed up to that second."
+      },
+      {
+        "text": "To ten days ago, from the oldest snapshot",
+        "correct": false,
+        "why": "Ten days is outside a seven-day window; moto accepted such a restore and AWS refuses it."
+      },
+      {
+        "text": "To the current second, including the last minute's writes",
+        "correct": false,
+        "why": "The latest restorable time trails by about five minutes, until the log reaches S3."
+      },
+      {
+        "text": "Only to the moment of a daily snapshot",
+        "correct": false,
+        "why": "The log between snapshots is what makes any second restorable."
+      }
+    ]
+  },
+  {
+    "id": "ex-zf0efnyz",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A restored instance comes up and the application servers cannot connect to it. Using what the lesson says AWS documents, what is the likely cause?",
+    "hint": "What did the restore command not name?",
+    "choices": [
+      {
+        "text": "A restore always takes a day before it accepts connections",
+        "correct": false,
+        "why": "It takes time to build, and then it is `available` like any instance."
+      },
+      {
+        "text": "It came up with the default security group, which does not let the servers in",
+        "correct": true,
+        "why": "Right. Name the security group and the parameter group in the restore command."
+      },
+      {
+        "text": "The master password was reset by the restore",
+        "correct": false,
+        "why": "The data, users included, is as it was at the restore point."
+      },
+      {
+        "text": "The servers still use the old endpoint, which now refuses them",
+        "correct": false,
+        "why": "The old endpoint still works and still serves the original instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt517592",
+    "version": 1,
+    "section": "point-in-time",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Between daily snapshots, RDS copies the engine's transaction ___ to S3 every five minutes.",
+    "hint": "It is what gets replayed during a restore.",
+    "blanks": [
+      {
+        "accept": [
+          "log",
+          "logs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wpgc4p37",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda deletes an instance that had automated backups and one manual snapshot. What is left afterwards, by AWS's default?",
+    "hint": "Which of the two belongs to the instance and which to the account?",
+    "choices": [
+      {
+        "text": "Both, until the retention period expires",
+        "correct": false,
+        "why": "Automated backups go with the instance unless you ask to keep them."
+      },
+      {
+        "text": "The manual snapshot only",
+        "correct": true,
+        "why": "Right. It belongs to the account and stays until somebody deletes it."
+      },
+      {
+        "text": "The automated backups only",
+        "correct": false,
+        "why": "It is the other way round: manual snapshots outlive the instance."
+      },
+      {
+        "text": "Nothing: a deleted instance takes all its backups",
+        "correct": false,
+        "why": "Manual snapshots are never deleted with the instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2apdbx0",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep a manual snapshot before a migration when point-in-time recovery already covers the last seven days?",
+    "hint": "What happens to the point in time after seven days?",
+    "choices": [
+      {
+        "text": "It is kept after the window moves on, until somebody deletes it",
+        "correct": true,
+        "why": "Right. And it survives the instance being deleted."
+      },
+      {
+        "text": "A snapshot restores faster, since it is replayed to the second",
+        "correct": false,
+        "why": "A snapshot has no log beside it; it is one moment and nothing after."
+      },
+      {
+        "text": "A manual snapshot is free, while automated backups are billed",
+        "correct": false,
+        "why": "Both are billed at the backup price beyond the allowance."
+      },
+      {
+        "text": "Automated backups cannot be restored into a new instance",
+        "correct": false,
+        "why": "A point-in-time restore does exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t1t3aph",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem to the copy that solves it.",
+    "hint": "One is about a machine, one about reads, one about a mistake, one about years.",
+    "pairs": [
+      {
+        "left": "A zone loses power",
+        "right": "A Multi-AZ standby"
+      },
+      {
+        "left": "Morning reports slow the shop",
+        "right": "A read replica"
+      },
+      {
+        "left": "A `DELETE` without a `WHERE` at 14:32",
+        "right": "A point-in-time restore"
+      },
+      {
+        "left": "The database must be kept for five years",
+        "right": "A manual snapshot"
+      }
+    ],
+    "right_distractors": [
+      "A larger instance class"
+    ]
+  },
+  {
+    "id": "ex-ktzj0yea",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of recovering from a `DELETE` without a `WHERE` in order, keeping the writes made since.",
+    "hint": "The original instance keeps running throughout.",
+    "items": [
+      "Find the time of the mistake",
+      "Restore to a point just before it, naming the security group and parameter group",
+      "Query the restored instance for the deleted rows",
+      "Insert them into the original, then delete the restored instance"
+    ]
+  },
+  {
+    "id": "ex-f9xykbgf",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto accept in this lesson that AWS would refuse? Choose all that apply.",
+    "hint": "Four numbers and conditions moto could have checked.",
+    "choices": [
+      {
+        "text": "A backup retention of 36 days",
+        "correct": true,
+        "why": "Yes; AWS's maximum is 35."
+      },
+      {
+        "text": "A restore to a time before the instance existed",
+        "correct": true,
+        "why": "Yes; AWS restores only inside the window."
+      },
+      {
+        "text": "A replica of an instance with backups off",
+        "correct": true,
+        "why": "Yes; AWS needs at least one day of retention."
+      },
+      {
+        "text": "A manual snapshot of a running instance",
+        "correct": false,
+        "why": "That is ordinary on AWS too."
+      },
+      {
+        "text": "A delete with `--skip-final-snapshot`",
+        "correct": false,
+        "why": "AWS accepts it when said out loud; what it refuses is a delete with neither flag."
+      }
+    ]
+  }
+]
