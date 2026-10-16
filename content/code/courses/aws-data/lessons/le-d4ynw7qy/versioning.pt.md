@@ -131,6 +131,5 @@ então não é um jeito de economizar com versões já guardadas; removê-las ex
 ou a regra de ciclo de vida da seção depois da próxima.
 
 **O moto jogou o histórico fora.** A listagem mostra só a versão `null`, e a versão mais antiga, cujo
-id o `get-object` de antes usou, agora dá `NoSuchVersion`. Isso é um defeito do moto 5.2.3 e o
-contrário do que o S3 faz, e é a direção perigosa de errar: um script de limpeza testado aqui
-pareceria ter apagado as versões antigas com a suspensão, e na AWS elas continuariam lá, e na conta.
+id o `get-object` de antes usou, agora dá `NoSuchVersion`. Isso é um defeito do moto 5.2.3, o
+contrário do que o S3 faz, e erra na direção perigosa. Um script de limpeza testado aqui pareceria ter apagado as versões antigas com a suspensão, e na AWS elas continuariam lá, e na conta.

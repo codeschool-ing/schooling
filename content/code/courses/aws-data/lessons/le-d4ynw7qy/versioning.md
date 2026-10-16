@@ -130,7 +130,7 @@ save money on versions already stored; removing those takes a `DELETE` per versi
 rule of the section after next.
 
 **moto threw the history away.** The listing shows only the `null` version, and the older version
-whose id the earlier `get-object` used is now `NoSuchVersion`. That is a defect of moto 5.2.3 and the
-opposite of what S3 does, and it is the dangerous direction to be wrong in: a cleanup script tested
-here would look as if suspension had deleted the old versions, and on AWS they would still be there,
-and on the bill.
+whose id the earlier `get-object` used is now `NoSuchVersion`. That is a defect of moto 5.2.3, the
+opposite of what S3 does, and it errs in the dangerous direction. A cleanup script tested here would
+look as if suspension had deleted the old versions, and on AWS they would still be there, and on the
+bill.
