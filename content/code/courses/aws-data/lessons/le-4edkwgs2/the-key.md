@@ -100,5 +100,4 @@ aws: [ERROR]: An error occurred (ValidationException) when calling the GetItem o
 **`get-item` needs the whole key, both halves.** With the partition key alone it is refused, because
 the table can hold many items under `CUSTOMER#c-17` and `get-item` returns exactly one. moto's message
 is a bare `Validation Exception`; AWS refuses the same request with a sentence about the key not
-matching the schema. Reading part of a collection is a different operation, `query`, and it is two
-sections on.
+matching the schema. Reading part of a collection is a different operation, `query`, and it is three sections on.

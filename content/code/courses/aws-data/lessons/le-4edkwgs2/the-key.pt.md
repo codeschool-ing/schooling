@@ -100,5 +100,4 @@ aws: [ERROR]: An error occurred (ValidationException) when calling the GetItem o
 **O `get-item` precisa da chave inteira, as duas metades.** Só com a chave de partição ele é recusado,
 porque a tabela pode ter muitos itens sob `CUSTOMER#c-17` e o `get-item` devolve exatamente um. A
 mensagem do moto é um `Validation Exception` seco; a AWS recusa a mesma requisição com uma frase sobre
-a chave não bater com o esquema. Ler parte de uma coleção é outra operação, a `query`, e ela vem duas
-seções adiante.
+a chave não bater com o esquema. Ler parte de uma coleção é outra operação, a `query`, e ela vem três seções adiante.
