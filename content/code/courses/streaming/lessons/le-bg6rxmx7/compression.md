@@ -14,7 +14,7 @@ offers four codecs: `gzip`, `snappy`, `lz4` and `zstd`. Compression can be set i
 the producer**, `compression.type` (`none` by default) makes the client compress each batch before
 sending it, which saves the network as well as the disk. **On the topic**, the setting of the same
 name makes the broker store batches in the codec it names, recompressing whatever arrives in another
-one; its default, `producer`, keeps whatever the producer sent, and its word for no compression is
+one. Its default, `producer`, keeps whatever the producer sent, and its word for no compression is
 `uncompressed`, not `none`. The measurement here uses the topic setting, because it needs no change
 to `tills.py`; the producer setting is what a real pipeline uses, and it was not measured here.
 

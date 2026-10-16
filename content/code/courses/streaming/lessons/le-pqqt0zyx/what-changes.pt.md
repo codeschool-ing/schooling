@@ -50,8 +50,8 @@ pago o dia inteiro. As lições 16 e 17 tratam das duas coisas.
 Há uma quinta pergunta que um batch responde ordenando, e um stream responde pela forma como guarda
 as coisas: *em que ordem isso aconteceu?* Um saque aplicado antes do depósito de que depende dá um
 saldo diferente dos mesmos dois eventos na ordem inversa. A resposta do Kafka é precisa e mais
-estreita do que se espera — a ordem é mantida **por chave, dentro de uma partição**, e em nenhum
-outro lugar — e é o assunto das lições 2 e 3.
+estreita do que se espera: a ordem é mantida **por chave, dentro de uma partição**, e em nenhum
+outro lugar. As lições 2 e 3 tratam disso.
 
 Nenhuma das quatro torna o streaming pior que o batch. Elas o tornam outro tipo de programa, cuja
 correção precisa ser argumentada em vez de suposta. A próxima seção é sobre quando vale a pena

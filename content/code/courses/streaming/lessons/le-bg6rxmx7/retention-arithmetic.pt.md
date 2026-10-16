@@ -101,5 +101,5 @@ Dynamic configs for topic sales-zstd are:
 604 800 000 milissegundos são sete dias. `retention.bytes` limita uma partição por tamanho, e quando
 as duas estão definidas vale o primeiro limite alcançado. De um jeito ou de outro **a remoção é por
 segmento** (lição 3): um segmento só vai embora quando a mensagem mais nova dele passou do limite,
-então uma partição guarda até um segmento a mais do que a aritmética diz, e com o segmento padrão de
-um gigabyte essa é uma folga real num tópico calmo.
+então uma partição guarda até um segmento a mais do que a aritmética diz. Com o segmento padrão de
+um gigabyte, essa é uma folga real num tópico calmo.

@@ -27,15 +27,15 @@ Processed a total of 3 messages
 
 Três mensagens para dois comandos, e cada uma diz uma coisa diferente:
 
-- **O update, offset 40**: `op` `u`, a linha nova no `after`, e o `before` é `null`. O WAL registrou
+- O update, no offset 40, tem `op` `u`, a linha nova no `after`, e `before` `null`. O WAL registrou
   a linha nova e nada sobre a antiga, então um leitor sabe que o Recife agora tem 2 exemplares e
   não consegue saber, pelo evento, que tinha 3.
-- **O delete, offset 41**: `op` `d`, o `after` é `null`, e o `before` tem a chave e **um `qty` de
+- O delete, no offset 41, tem `op` `d` e `after` `null`, e o `before` dele traz a chave e **um `qty` de
   0** — que não é o que a linha guardava. Com a configuração padrão, o WAL guarda só a chave de uma
   linha removida; o Debezium preenche as outras colunas, declaradas `NOT NULL`, com um valor de
   preenchimento. Um leitor que soma `before.qty` para saber o que foi removido obtém um número
   errado e nenhum erro.
-- **O offset 42 é um tombstone**: a mesma chave, e um valor `null`. Não é um segundo delete.
+- **O offset 42 é um tombstone**, a mesma chave, e um valor `null`. Não é um segundo delete.
 
 ## REPLICA IDENTITY
 

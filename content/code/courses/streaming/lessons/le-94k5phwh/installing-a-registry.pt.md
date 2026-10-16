@@ -58,8 +58,8 @@ ubuntu@stream:~/work$ until curl -s localhost:8080/apis/ccompat/v7/subjects; do 
 ```
 
 A linha do `until` pede a lista de subjects uma vez por segundo até alguém responder. `[]` é uma
-lista vazia: o registro está no ar e ainda não guarda nada. O seu shell também imprime um número
-de job e um id de processo quando você inicia algo com `&`, que não estão na transcrição e mudam a
+lista vazia: o registro está no ar e ainda não guarda nada. O seu shell também imprime um número de
+job e um id de processo quando você inicia algo com `&`, que não estão na transcrição e mudam a
 cada vez.
 
 **Em memória quer dizer que pará-lo esquece todos os esquemas.** É a troca certa para um
@@ -71,12 +71,12 @@ qualquer um escreve é um jeito de mudar o que todo consumidor acredita que uma 
 
 Duas coisas para saber antes da próxima seção:
 
-- **O endereço.** O Apicurio responde a API da Confluent em `/apis/ccompat/v7`, então todo
+- O Apicurio responde a API da Confluent em `/apis/ccompat/v7`, então todo
   cliente desta lição recebe `http://localhost:8080/apis/ccompat/v7` onde a documentação da
   Confluent escreveria `http://localhost:8081`.
-- **Ele não sobe sozinho**, como o cluster. Depois de reiniciar a máquina virtual, rode de novo a
+- Ele não sobe sozinho, como o cluster. Depois de reiniciar a máquina virtual, rode de novo a
   linha do `nohup`; os esquemas terão sumido, e os comandos da lição os registram de novo.
 
 Se o `until` ficar em loop por mais de um minuto, o motivo está no fim de
-`~/apicurio/registry.log`. O mais comum é outro programa na porta 8080, que
-`ss -ltnp | grep 8080` nomeia.
+`~/apicurio/registry.log`. O mais comum é outro programa na porta 8080, que `ss -ltnp | grep 8080`
+nomeia.

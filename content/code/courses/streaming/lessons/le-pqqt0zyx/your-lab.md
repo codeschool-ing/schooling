@@ -10,8 +10,8 @@ and nothing in the course needs one.
 The machine is one Linux computer running **Ubuntu 24.04 LTS**, with Java, Apache Kafka 4.3.1 and a
 Python environment on it. A real Kafka installation spreads over several servers; here the servers
 are processes on the same computer, each with its own port and its own directory. Everything that
-matters about Kafka still happens — data really is written to disk, copied between nodes and read
-back — and what is missing is only the separate hardware, which lesson 5 says what costs.
+matters about Kafka still happens: data is written to disk, copied between nodes and read back.
+What is missing is the separate hardware, and lesson 5 says what that costs.
 
 | path | what it is | what it costs your computer | the transcripts |
 |---|---|---|---|
@@ -19,9 +19,9 @@ back — and what is missing is only the separate hardware, which lesson 5 says 
 | installed | Ubuntu 24.04 as the system of a computer you can spare | nothing extra; Java, Kafka and later PostgreSQL and RabbitMQ stay on that computer | match as printed |
 | online | an Ubuntu 24.04 server rented by the hour from a cloud provider | nothing; the provider charges by the hour | match as printed |
 
-The sizes have room in them, and the room was measured. One Kafka node uses about 400 MB of
-memory; three of them, which lesson 5 runs, about 1.2 GB. The heaviest lessons are 12 and 13,
-where Spark or Flink run beside a broker, and they stay under 3 GB. On disk, Kafka is 135 MB to
+The sizes have room in them, and the room was measured. One Kafka node uses between about 360 and
+550 MB of memory, depending on what it is doing; three of them, which lesson 5 runs, about
+1.1 GB. The heaviest lessons are 12 and 13, where Spark or Flink run beside a broker, and they stay under 3 GB. On disk, Kafka is 135 MB to
 download, and by lesson 14 the whole course has installed under 3 GB. Multipass's own default
 disk, 5 GB, is too small once Spark and Flink arrive.
 

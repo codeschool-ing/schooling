@@ -50,7 +50,7 @@ pertence, e uma única venda no fim da manhã cria duas.
 
 A sobreposição multiplica trabalho e estado. Com tamanho de 60 minutos e avanço de 1 minuto, cada
 evento é somado a sessenta janelas, e sessenta janelas por chave ficam abertas a cada momento. Um
-motor com uma contagem corrente por janela paga sessenta vezes o que paga uma hora tumbling, e é
+motor com uma contagem corrente por janela paga sessenta vezes o que paga uma hora tumbling. É
 por isso que "a última hora, atualizada a cada segundo" costuma ser construída de outro jeito: uma
 janela tumbling de um minuto, e as últimas sessenta delas somadas quando alguém pergunta.
 

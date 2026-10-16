@@ -5,21 +5,21 @@ version: 1
 
 **An idempotent producer numbers its messages, and the broker refuses a number it has already
 written, so a retry after a lost acknowledgement cannot write a sale twice.** It closes the first
-of the two gaps, the one between a write and its acknowledgement, and it costs almost nothing:
-two numbers in each batch, which the broker keeps per partition.
+of the two gaps, the one between a write and its acknowledgement, and it costs almost nothing: two
+numbers in each batch, which the broker keeps per partition.
 
 The mechanism has two parts:
 
-- **a producer id**: when an idempotent producer starts, the cluster gives it a number of its own,
-  the PID, with an **epoch** beside it;
-- **a sequence number** for each batch, per partition, starting at 0 and growing by the number of
+- a producer id: when an idempotent producer starts, the cluster gives it a number of its own,
+  the PID, with an epoch beside it;
+- a sequence number for each batch, per partition, starting at 0 and growing by the number of
   messages in the batch.
 
 The leader remembers the last few sequence numbers it accepted from each PID on each partition. A
-retried batch arrives with a sequence it has already written: the leader answers *success*,
-because the data is there, and does not write it again. A batch that arrives with a sequence
-**ahead** of what it expects means one went missing in between, and it is refused, so the order
-inside a partition is kept even with several batches in flight.
+retried batch arrives with a sequence it has already written: the leader answers *success*, because
+the data is there, and does not write it again. A batch that arrives with a sequence **ahead** of
+what it expects means one went missing in between, and it is refused, so the order inside a
+partition is kept even with several batches in flight.
 
 ## Is it on?
 
@@ -36,9 +36,9 @@ Log starting offset: 0
 baseOffset: 0 lastOffset: 49 count: 50 baseSequence: -1 lastSequence: -1 producerId: -1 producerEpoch: -1 partitionLeaderEpoch: 0 isTransactional: false isControl: false deleteHorizonMs: OptionalLong.empty position: 0 CreateTime: 1792111518493 size: 6777 magic: 2 compresscodec: none crc: 855803453 isvalid: true
 ```
 
-Without `--print-data-log` the tool prints one line per batch, and `tills.py` sent its fifty
-sales as one batch. **`producerId: -1` and `baseSequence: -1`**: the broker had no way to tell a
-retry of that batch from a new one.
+Without `--print-data-log` the tool prints one line per batch, and `tills.py` sent its fifty sales
+as one batch. **`producerId: -1` and `baseSequence: -1`**: the broker had no way to tell a retry of
+that batch from a new one.
 
 Now five sales from a producer with one setting changed. Save it as `~/work/idempotent.py`:
 
@@ -66,26 +66,26 @@ baseOffset: 50 lastOffset: 54 count: 5 baseSequence: 0 lastSequence: 4 producerI
 
 The first line is the client waiting while a fresh cluster prepares the internal topic it keeps
 producer ids in; it retries on its own, and the line is a notice, not a failure. The batch it wrote
-sits at offsets 50 to 54 with **`producerId: 0`, `producerEpoch: 0` and sequences 0 to 4**. A
-retry of that batch would arrive with the same producer id and base sequence 0, and the leader
-would answer success without writing it again.
+sits at offsets 50 to 54 with **`producerId: 0`, `producerEpoch: 0` and sequences 0 to 4**. A retry
+of that batch would arrive with the same producer id and base sequence 0, and the leader would
+answer success without writing it again.
 
 ## What it changes, and what it does not
 
 Turning idempotence on also sets three other things, and librdkafka refuses a configuration that
-contradicts them: **`acks=all`**, because a sequence is only worth checking on a write that is
-safe; retries without limit inside `message.timeout.ms`; and at most five requests in flight per
-connection, the number the broker keeps sequences for.
+contradicts them. They are **`acks=all`**, because a sequence is only worth checking on a write
+that is safe; retries without limit inside `message.timeout.ms`; and at most five requests in
+flight per connection, the number the broker keeps sequences for.
 
 What it does not do is just as important:
 
-- **It is per producer session.** A program that crashes and starts again gets a new PID, so a
+- It is per producer session. A program that crashes and starts again gets a new PID, so a
   sale it sends again after the restart is a new message to the broker. Idempotence protects a
   retry inside one run, not a resend by a program that forgot what it had sent.
-- **It is per partition.** Sequences are counted per partition; nothing ties a write to one
+- It is per partition. Sequences are counted per partition; nothing ties a write to one
   partition to a write to another.
-- **It does nothing for the consumer's gap.** A consumer that processes twice still processes
+- It does nothing for the consumer's gap. A consumer that processes twice still processes
   twice.
 
-So set it, in every producer, unless there is a reason not to: there is no cost worth weighing.
-The restart and the consumer need the next two sections.
+So set it, in every producer, unless there is a reason not to: there is no cost worth weighing. The
+restart and the consumer need the next two sections.

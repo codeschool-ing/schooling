@@ -134,6 +134,6 @@ stock           sales           2          -               0               -    
 
 Two things about the numbers deserve suspicion. **The lag is measured from the last commit, not from
 the message being handled**, so it is up to a second stale here and up to five with the default
-interval; a consumer that never commits shows a lag that never moves even while it works. And a lag
+interval. A consumer that never commits shows a lag that never moves even while it works. And a lag
 of zero says the group has read everything, not that it handled it correctly. Leave the consumer
 running: the section on replay needs it.

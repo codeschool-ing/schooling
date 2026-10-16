@@ -83,7 +83,7 @@ ubuntu@stream:~/work$ psql pontofinal -c "SELECT slot_name, active, pg_size_pret
 
 O `behind` cai de 19 MB para 120 kB: o conector confirmou a posição dele. O `retained` continua em
 19 MB, porque é medido a partir do `restart_lsn`, o ponto mais antigo de onde o PostgreSQL pode
-precisar decodificar de novo, e ele acompanha a confirmação mais tarde; os arquivos de WAL atrás
+precisar decodificar de novo. Ele acompanha a confirmação mais tarde, e os arquivos de WAL atrás
 dele são removidos quando ele anda e o servidor chega ao próximo checkpoint. **Observe as duas
 colunas**: `behind` diz se o leitor está acompanhando, `retained` diz quanto o disco está pagando
 por ele.
@@ -115,7 +115,7 @@ ele perdeu se foram. A maioria das equipes escolhe essa troca, de propósito, co
 dimensionado para a pane da qual conseguem se recuperar.
 
 Mais uma configuração fecha a brecha que a recuperação mostrou. O slot só anda quando o conector
-confirma uma mudança que leu, então se as tabelas publicadas estão quietas enquanto outras estão
+confirma uma mudança que leu. Se as tabelas publicadas estão quietas enquanto outras estão
 movimentadas — a `stock` mudando uma vez por dia num banco que escreve a noite toda — o slot fica
 parado e o WAL cresce com o Connect rodando e saudável. O `heartbeat.interval.ms` do Debezium faz o
 conector confirmar a posição num intervalo de tempo, tenham as tabelas dele mudado ou não. Ele não

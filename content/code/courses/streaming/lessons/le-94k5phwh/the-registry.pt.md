@@ -15,8 +15,8 @@ acabam lendo o esquema errado:
 
 O nome do subject segue uma convenção, não uma regra: **o nome do tópico mais `-value`** para o
 esquema dos valores das mensagens, e `-key` para as chaves. O serializador Python deriva o nome do
-mesmo jeito, e é por isso que ela importa. Um subject por tópico quer dizer que toda mensagem de
-um tópico segue uma única série de versões, e a checagem de compatibilidade da penúltima seção é
+mesmo jeito, e é por isso que ela importa. Um subject por tópico quer dizer que toda mensagem de um
+tópico segue uma única série de versões, e a checagem de compatibilidade da penúltima seção é
 aplicada ao longo dessa série.
 
 ## Registrando um esquema
@@ -69,7 +69,7 @@ ubuntu@stream:~/work$ ./register.sh sales-avro-value sale.avsc
 O registro respondeu com o **id** do esquema, 1. O subject agora existe e a versão 1 dele guarda o
 esquema, que o segundo `curl` mostra com os três números lado a lado. Oferecer o mesmo esquema de
 novo não cria uma versão 2: o último comando recebeu o id 1 de volta, porque o registro reconhece
-um esquema que já tem, e é isso que permite a todo produtor de um tópico oferecer o seu esquema ao
+um esquema que já tem. É isso que permite a todo produtor de um tópico oferecer o seu esquema ao
 iniciar sem encher o subject de cópias.
 
 ## O que vai dentro de uma mensagem

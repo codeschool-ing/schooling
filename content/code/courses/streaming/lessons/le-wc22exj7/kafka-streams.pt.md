@@ -53,10 +53,12 @@ Comece com um cluster limpo e as mesmas duzentas vendas da lição 12. Antes, `.
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
+Created topic sales.
 ```
 
 ```
 ubuntu@stream:~/work$ python tills.py --count 200 --rate 0
+sent 200 sales to sales, the last one at 09:36:41
 ```
 
 O `javac` compila o arquivo contra todos os jars do diretório `libs` do Kafka. As aspas impedem o
@@ -64,6 +66,13 @@ shell de expandir o `*`, que o próprio Java expande:
 
 ```
 ubuntu@stream:~/work$ javac -cp "$HOME/kafka/libs/*" SalesPerShop.java
+Note: Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
 ```
 
 A nota é sobre processadores de anotações, que alguns jars do Kafka trazem e que este programa não
@@ -72,6 +81,11 @@ usa; é uma nota, não um erro, e o `SalesPerShop.class` já está ao lado do c�
 
 ```
 ubuntu@stream:~/work$ java -cp "$HOME/kafka/libs/*:." SalesPerShop a
+state: CREATED -> REBALANCING
+state: REBALANCING -> RUNNING
+tasks here: [0_0, 0_1, 0_2, 1_0, 1_1, 1_2]
+state: RUNNING -> PENDING_SHUTDOWN
+state: PENDING_SHUTDOWN -> NOT_RUNNING
 ```
 
 Ele entrou no grupo, recebeu seis tarefas e continuou rodando: três para a contagem por loja, uma
@@ -81,6 +95,14 @@ instrução de como transformá-las de volta em dígitos:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-per-book --from-beginning --formatter-property print.key=true --formatter-property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --timeout-ms 5000 2>/dev/null
+bk-01	23
+bk-04	28
+bk-02	24
+bk-06	22
+bk-05	23
+bk-03	25
+bk-07	26
+bk-08	29
 ```
 
 O `2>/dev/null` esconde duas linhas da saída de erro: o aviso sobre o novo protocolo de consumidor

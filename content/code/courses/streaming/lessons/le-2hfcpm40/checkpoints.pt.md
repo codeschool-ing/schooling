@@ -66,9 +66,9 @@ ubuntu@stream:~/work$ python spark_sales.py --mode update --checkpoint ~/spark/c
 lida na primeira vez que uma consulta roda, e depois disso quem manda é o checkpoint. Não havia
 nada depois do offset 159 para ler, então nenhum batch rodou.
 
-Agora chegam mais duas vendas, digitadas no produtor de console do Kafka em vez de virem do caixa:
-uma do Recife às 09:38, que pertence à janela de 09:35, e uma de Natal às 09:21, que está dezessete
-minutos atrás da venda mais recente que o Spark já viu:
+Agora chegam mais duas vendas, digitadas no produtor de console do Kafka em vez de virem do caixa.
+Uma é do Recife às 09:38 e pertence à janela de 09:35. A outra é de Natal às 09:21, bem antes da
+venda mais recente que o Spark já viu, que era das 09:36:41:
 
 ```
 ubuntu@stream:~/work$ printf '%s\n' 'recife|{"sale": "rec-000201", "shop": "recife", "book": "bk-03", "qty": 1, "cents": 2990, "at": "2026-03-02T09:38:00-03:00"}' 'natal|{"sale": "nat-000202", "shop": "natal", "book": "bk-01", "qty": 1, "cents": 3990, "at": "2026-03-02T09:21:00-03:00"}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic sales --reader-property parse.key=true --reader-property 'key.separator=|'
@@ -118,8 +118,8 @@ que medem o atraso a partir de um grupo de consumidores, que a lição 16 usa, n
 consulta Spark**; o Spark informa o próprio progresso, pelo status da consulta e pela página web na
 porta 4040.
 
-Duas consequências valem levar daqui. Um checkpoint pertence a uma consulta: apontar uma consulta
-alterada para um checkpoint antigo é um jeito de restaurar um estado que já não serve, e o guia do
-Spark lista quais mudanças ele aceita. E um checkpoint é a única cópia da posição e do estado da
-consulta, então **num cluster de verdade ele mora num armazenamento que sobrevive à máquina**, como
-o HDFS ou um object store, nunca no disco local de um nó que pode sumir.
+Um checkpoint pertence a uma consulta: apontar uma consulta alterada para um checkpoint antigo é um
+jeito de restaurar um estado que já não serve, e o guia do Spark lista quais mudanças ele aceita. E
+um checkpoint é a única cópia da posição e do estado da consulta, então **num cluster de verdade ele
+mora num armazenamento que sobrevive à máquina**, como o HDFS ou um object store, nunca no disco
+local de um nó que pode sumir.

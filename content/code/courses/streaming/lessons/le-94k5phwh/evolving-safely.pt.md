@@ -57,20 +57,20 @@ versão 2 e recebe `till` em toda venda, `unknown` nas dez escritas antes de o c
 **leitor novo em dados antigos**, a direção para trás. Os mesmos bytes, os mesmos totais, e cada
 leitor recebeu o formato que pediu.
 
-**Um tópico do Kafka não é migrado quando o seu esquema muda.** As dez mensagens antigas
-continuam escritas com a versão 1 e assim ficarão enquanto o tópico as guardar, e é por isso que os
-leitores precisam lidar com todas as versões ainda presentes no tópico, não só com a mais nova. A
-retenção, da lição 3, é o que decide até quando "todas as versões" vai para trás.
+**Um tópico do Kafka não é migrado quando o seu esquema muda.** As dez mensagens antigas continuam
+escritas com a versão 1 e assim ficarão enquanto o tópico as guardar, e é por isso que os leitores
+precisam lidar com todas as versões ainda presentes no tópico, não só com a mais nova. A retenção,
+da lição 3, é o que decide até quando "todas as versões" vai para trás.
 
 ## O Avro não é a única escolha
 
 O registro guarda outros dois tipos de esquema, com os mesmos subjects, ids e modos de
 compatibilidade:
 
-- **JSON Schema** mantém as mensagens em JSON, que pessoas e o `jq` conseguem ler, e acrescenta as
+- JSON Schema mantém as mensagens em JSON, que pessoas e o `jq` conseguem ler, e acrescenta as
   checagens que faltam ao JSON. Paga isso em tamanho: os nomes dos campos continuam em cada
   mensagem.
-- **Protocol Buffers** identifica os campos por **número** em vez de nome, então renomear é de
+- Protocol Buffers identifica os campos por **número** em vez de nome, então renomear é de
   graça e reaproveitar um número é o erro a evitar. É comum onde as mesmas mensagens também viajam
   por gRPC.
 

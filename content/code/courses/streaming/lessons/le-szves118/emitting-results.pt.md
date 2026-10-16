@@ -37,10 +37,10 @@ e a janela passa a ter três vendas e 21.380 centavos.**
 daquela janela. Nada se perde, e todo resultado é tão recente quanto pode ser. O custo cai em quem lê
 a saída: tem de tratá-la como atualizações de uma linha identificada pela janela, não como linhas
 novas, ou a janela das 09:05 é contada três vezes. Uma tabela num banco, escrita com upsert como a
-lição 8 descreveu, lê corretamente esse tipo de saída; um log de anexos ou um e-mail não.
+lição 8 descreveu, lê corretamente esse tipo de saída; um log que só acrescenta ou um e-mail não.
 
 **Emitir uma vez, quando a janela é final.** A saída é uma linha por janela, e quem lê pode tratá-la
-como um anexo. O custo cai no processador: ele precisa saber quando uma janela é final, e espera até
+como acréscimo. O custo cai no processador: ele precisa saber quando uma janela é final, e espera até
 lá, então os resultados chegam tarde. O Kafka Streams oferece isso com `suppress`, ou com a estratégia
 de emissão `onWindowClose`; o Spark chama as duas escolhas de modos de saída, update e append, que a
 lição 12 roda.
@@ -60,4 +60,5 @@ cada janela aberta é estado. As duas precisam, portanto, da mesma resposta para
 **como um processador decide que não vão chegar mais eventos para uma janela?** Ele não tem como
 saber; só pode estimar, pelos tempos de evento que já viu, até onde o tempo chegou, e aceitar que
 alguns eventos vão chegar depois da estimativa. Essa estimativa se chama watermark, e a lição 11
-constrói um e passa por ele as dez vendas desta lição e as atrasadas da lição 9.
+constrói um, passa por ele as dez vendas desta lição e mede o limite dele nas vendas atrasadas da
+lição 9.

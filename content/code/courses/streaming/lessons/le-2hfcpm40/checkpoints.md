@@ -65,9 +65,9 @@ ubuntu@stream:~/work$ python spark_sales.py --mode update --checkpoint ~/spark/c
 only read the first time a query runs, and after that the checkpoint wins. There was nothing past
 offset 159 to read, so no batch ran.
 
-Now two more sales arrive, typed into Kafka's console producer instead of coming from the till: one
-from Recife at 09:38, which belongs in the 09:35 window, and one from Natal at 09:21, which is
-seventeen minutes behind the latest sale Spark has seen:
+Now two more sales arrive, typed into Kafka's console producer instead of coming from the till. One
+is from Recife at 09:38 and belongs in the 09:35 window. The other is from Natal at 09:21, long
+before the latest sale Spark has seen, which was at 09:36:41:
 
 ```
 ubuntu@stream:~/work$ printf '%s\n' 'recife|{"sale": "rec-000201", "shop": "recife", "book": "bk-03", "qty": 1, "cents": 2990, "at": "2026-03-02T09:38:00-03:00"}' 'natal|{"sale": "nat-000202", "shop": "natal", "book": "bk-01", "qty": 1, "cents": 3990, "at": "2026-03-02T09:21:00-03:00"}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic sales --reader-property parse.key=true --reader-property 'key.separator=|'
@@ -115,8 +115,8 @@ because Spark assigns itself the partitions directly and never commits. **Tools 
 from a consumer group, which lesson 16 uses, see nothing of a Spark query**; Spark reports its own
 progress instead, through the query's status and the web page on port 4040.
 
-Two consequences are worth carrying away. A checkpoint belongs to one query: pointing a changed
-query at an old checkpoint is a way to restore state that no longer fits, and Spark's guide lists
-which changes it accepts. And a checkpoint is the only copy of the query's position and state, so
-**on a real cluster it lives on storage that outlives the machine**, such as HDFS or an object
-store, never on the local disk of a node that can disappear.
+A checkpoint belongs to one query: pointing a changed query at an old checkpoint is a way to restore
+state that no longer fits, and Spark's guide lists which changes it accepts. And a checkpoint is the
+only copy of the query's position and state, so **on a real cluster it lives on storage that
+outlives the machine**, such as HDFS or an object store, never on the local disk of a node that can
+disappear.

@@ -17,6 +17,21 @@
 . "$(dirname "$0")/../../lab/capture-lib.sh"
 L=$(cd "$(dirname "$0")" && pwd)
 
+# This lesson's programs, taken from its own .md exactly as `lab.sh files`
+# takes them (that command stops at the first broken draft of any lesson).
+extract() {
+  python3 - "$L" <<'PY'
+import glob, json, re, sys
+pat = re.compile(r"^[^\n]*`~/work/([\w.-]+)`[^\n]*:\n\n```([\w-]*)\n(.*?)^```$", re.S | re.M)
+for md in sorted(glob.glob(sys.argv[1] + "/*.md")):
+    if md.endswith(".pt.md"):
+        continue
+    for name, lang, body in pat.findall(open(md, encoding="utf-8").read()):
+        if lang == "schooling-example":
+            body = "\n".join(p["code"] for p in json.loads(body)["parts"]) + "\n"
+        sys.stdout.write(name + "\0" + body + "\0")
+PY
+}
 lab reset 1 >/dev/null 2>&1
 run '~/flink/bin/stop-cluster.sh >/dev/null 2>&1; rm -rf ~/streams-state ~/flink ~/flink-checkpoints ~/flink-savepoints ~/flink-2.2.1-bin-scala_2.12.tgz* ~/.flink-sql-history ~/work/*.class' >/dev/null
 while IFS= read -r -d '' name && IFS= read -r -d '' body; do

@@ -6,8 +6,8 @@ version: 1
 **As réplicas em sincronia, a ISR (*in-sync replicas*), são as réplicas que acompanharam o líder
 recentemente o bastante para merecer confiança com os dados dele.** Uma réplica que fica para trás
 é tirada da lista, e enquanto está fora ninguém espera por ela: o high watermark anda com as
-réplicas que continuam na lista, e uma escrita que precisa de todas as cópias precisa só das
-delas. Ela volta para a lista quando alcança o líder.
+réplicas que continuam na lista, e uma escrita que precisa de todas as cópias precisa só das delas.
+Ela volta para a lista quando alcança o líder.
 
 "Recentemente o bastante" é uma configuração, lida do broker:
 
@@ -18,9 +18,9 @@ ubuntu@stream:~/work$ kafka-configs.sh --bootstrap-server localhost:9092 --descr
 
 **Trinta segundos, e medidos em tempo, não em mensagens.** Um seguidor sai da ISR quando não esteve
 totalmente em dia com o líder em nenhum momento dos últimos trinta segundos. Versões antigas do
-Kafka também contavam quantas mensagens um seguidor estava atrás, o que tirava seguidores
-saudáveis sempre que chegava uma rajada de escritas; um limite de tempo só tira um seguidor que
-está de fato travado.
+Kafka também contavam quantas mensagens um seguidor estava atrás, o que tirava seguidores saudáveis
+sempre que chegava uma rajada de escritas; um limite de tempo só tira um seguidor que está de fato
+travado.
 
 ## Um nó que para sem morrer
 
@@ -43,10 +43,9 @@ mesmo padrão que o `cluster.sh` usa; um mais solto, como `node3` sozinho, poder
 próprio shell.
 
 O nó 3 saiu de todas as ISRs. A partição 2, de que ele era líder, agora tem o nó 1 como líder,
-porque um líder congelado não responde a ninguém e os controllers pararam de ter notícias dele. Toda
-partição ainda tem um líder e duas cópias em sincronia, o que basta para receber escritas sob
-`min.insync.replicas=2`,
-como explica a próxima seção.
+porque um líder congelado não responde a ninguém e os controllers pararam de ter notícias dele.
+Toda partição ainda tem um líder e duas cópias em sincronia, o que basta para receber escritas sob
+`min.insync.replicas=2`, como explica a próxima seção.
 
 Agora solte-o:
 
@@ -67,12 +66,11 @@ seção sobre um nó que morre mostra como a liderança retorna ao preferido.
 
 A ISR é a resposta a duas perguntas que toda escrita e toda falha fazem:
 
-- **Quem precisa ter um registro antes de ele contar como confirmado?** Cada membro da ISR. Não
+- Quem precisa ter um registro antes de ele contar como confirmado? Cada membro da ISR. Não
   toda réplica, ou um nó morto pararia todas as escritas; não só o líder, ou um registro
   confirmado poderia se perder junto com ele.
-- **Quem pode virar líder quando o líder cai?** Um membro da ISR, porque só deles se sabe que têm
-  todo registro confirmado. Escolher qualquer outro é a eleição não limpa de que trata uma seção
-  mais adiante nesta lição.
+- Quem pode virar líder quando o líder cai? Um membro da ISR, porque só deles se sabe que têm
+  todo registro confirmado. Escolher qualquer outro é a eleição não limpa de que trata a seção 08 desta lição.
 
 Uma ISR encolhendo é também o primeiro sinal de problema que um operador vê. Uma partição cuja ISR
 é menor que a lista de réplicas está **sub-replicada** (*under-replicated*), e a lição 16 põe isso

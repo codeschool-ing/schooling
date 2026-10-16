@@ -3,12 +3,12 @@ title: Exatamente uma vez dentro do Kafka: ler, escrever e confirmar numa transa
 version: 1
 ---
 
-**Um programa cuja entrada e saída são tópicos do Kafka pode ser exatamente uma vez, porque o offset
-que ele confirma pode ser gravado dentro da mesma transação que a saída.** O commit do consumidor é uma
-gravação em `__consumer_offsets`, um tópico comum, e `send_offsets_to_transaction` o acrescenta à
-transação do produtor. Então a saída e o registro de tê-la produzido são confirmados juntos, ou
-abortados juntos, e uma queda em qualquer ponto deixa um de dois estados: o lote feito e lembrado, ou
-nenhum dos dois.
+**Um programa cuja entrada e saída são tópicos do Kafka pode ser exatamente uma vez, porque o
+offset que ele confirma pode ser gravado dentro da mesma transação que a saída.** O commit do
+consumidor é uma gravação em `__consumer_offsets`, um tópico comum, e `send_offsets_to_transaction`
+o acrescenta à transação do produtor. Então a saída e o registro de tê-la produzido são confirmados
+juntos, ou abortados juntos, e uma queda em qualquer ponto deixa um de dois estados: o lote feito e
+lembrado, ou nenhum dos dois.
 
 É o padrão que o Kafka Streams roda com `processing.guarantee=exactly_once_v2`, e o sink Kafka do
 Flink no modo exatamente uma vez; a lição 13 apresenta os dois. Aqui está ele à mão, em Python.
@@ -51,8 +51,8 @@ O trabalho é pequeno de propósito: ler `sales` e copiar toda venda de 100,00 o
 }
 ```
 
-O tópico `sales` das seções anteriores ainda tem as cinquenta vendas, e as cinco do `idempotent.py`.
-Crie o tópico de saída, derrube a cópia depois de 25 vendas e rode de novo:
+O tópico `sales` das seções anteriores ainda tem as cinquenta vendas, e as cinco do
+`idempotent.py`. Crie o tópico de saída, derrube a cópia depois de 25 vendas e rode de novo:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic big-sales --partitions 1
@@ -85,11 +85,11 @@ eos-copy        sales           0          55              55              0    
 ```
 
 **Um leitor `read_committed` vê 20 cópias, e a origem tem exatamente 20 vendas grandes.** Nada
-perdido, nada duplicado. O log em si tem 22 registros: as duas cópias do lote abortado continuam nele,
-e um leitor `read_uncommitted` as conta. O offset confirmado do grupo é 55, o fim de `sales`, e ele
-chegou lá só pelas transações: o programa nunca chamou `commit`.
+perdido, nada duplicado. O log em si tem 22 registros: as duas cópias do lote abortado continuam
+nele, e um leitor `read_uncommitted` as conta. O offset confirmado do grupo é 55, o fim de `sales`,
+e ele chegou lá só pelas transações: o programa nunca chamou `commit`.
 
 Então a garantia tem um formato preciso. **Exatamente uma vez vale para leitores que leem dados
-confirmados**, e vale porque a saída e os offsets andaram juntos. Um consumidor lá na frente deixado
-no padrão do consumidor de console veria as duas cópias abortadas, que é o jeito mais comum de uma
-equipe descobrir que exatamente uma vez é uma propriedade da cadeia inteira e não de um programa.
+confirmados**, e vale porque a saída e os offsets andaram juntos. Um consumidor lá na frente
+deixado no padrão do consumidor de console veria as duas cópias abortadas, que é como uma equipe
+costuma descobrir que exatamente uma vez é uma propriedade da cadeia inteira e não de um programa.

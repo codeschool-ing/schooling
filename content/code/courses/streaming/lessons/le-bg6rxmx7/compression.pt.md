@@ -9,14 +9,14 @@ valores; cada timestamp divide a maior parte dos caracteres com o anterior. Um c
 num lote de centenas de vendas acha essas repetições e as guarda uma vez só.
 
 O Kafka comprime **um lote por vez**, nunca uma mensagem isolada, então o ganho depende de quantas
-mensagens dividem um lote, o que é mais um motivo para o batching do produtor (lição 4) importar. Ele
-oferece quatro codecs: `gzip`, `snappy`, `lz4` e `zstd`. A compressão pode ser definida em dois
+mensagens dividem um lote, o que é mais um motivo para o batching do produtor (lição 4) importar.
+Ele oferece quatro codecs: `gzip`, `snappy`, `lz4` e `zstd`. A compressão pode ser definida em dois
 lugares. **No produtor**, `compression.type` (`none` por padrão) faz o cliente comprimir cada lote
-antes de mandar, o que economiza a rede além do disco. **No tópico**, a configuração de mesmo nome faz
-o broker guardar os lotes no codec que ela indica, recomprimindo o que chegar em outro; o padrão
+antes de mandar, o que economiza a rede além do disco. **No tópico**, a configuração de mesmo nome
+faz o broker guardar os lotes no codec que ela indica, recomprimindo o que chegar em outro. O padrão
 dela, `producer`, mantém o que o produtor mandou, e a palavra dela para sem compressão é
-`uncompressed`, não `none`. A medição aqui usa a configuração do tópico, porque ela não exige mudar o
-`tills.py`; a do produtor é a que um pipeline de verdade usa, e ela não foi medida aqui.
+`uncompressed`, não `none`. A medição aqui usa a configuração do tópico, porque ela não exige mudar
+o `tills.py`; a do produtor é a que um pipeline de verdade usa, e ela não foi medida aqui.
 
 ## As mesmas vendas, quatro vezes
 

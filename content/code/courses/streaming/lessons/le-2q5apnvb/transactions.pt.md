@@ -3,15 +3,15 @@ title: Transações, e leitores que só veem o que foi confirmado
 version: 1
 ---
 
-**Uma transação do Kafka faz várias gravações, em quantas partições e tópicos forem, ficarem visíveis
-juntas ou nenhuma.** O produtor abre uma transação, grava, e depois a confirma ou aborta. As gravações
-chegam aos logs na hora, num caso ou no outro; o que o commit acrescenta é um **marcador** em cada
-partição dizendo que a transação terminou, e como. Um consumidor que pede para ler só dados
-confirmados segura a leitura até ver o marcador, e descarta o que um abort marcou.
+**Uma transação do Kafka faz várias gravações, em quantas partições e tópicos forem, ficarem
+visíveis juntas ou nenhuma.** O produtor abre uma transação, grava, e depois a confirma ou aborta.
+As gravações chegam aos logs na hora, num caso ou no outro; o que o commit acrescenta é um
+**marcador** em cada partição dizendo que a transação terminou, e como. Um consumidor que pede para
+ler só dados confirmados segura a leitura até ver o marcador, e descarta o que um abort marcou.
 
-Essa última frase corrige a ideia comum, em que uma gravação abortada nunca é gravada. Ela é gravada,
-ocupa os seus offsets e fica no log até a retenção removê-la. Se alguém a vê é uma propriedade do
-**leitor**, escolhida com `isolation.level`:
+Essa última frase corrige a ideia comum, em que uma gravação abortada nunca é gravada. Ela é
+gravada, ocupa os seus offsets e fica no log até a retenção removê-la. Se alguém a vê é uma
+propriedade do **leitor**, escolhida com `isolation.level`:
 
 | `isolation.level` | o que o consumidor recebe |
 |---|---|
@@ -20,17 +20,17 @@ ocupa os seus offsets e fica no log até a retenção removê-la. Se alguém a v
 
 Os consumidores Java e Python têm padrões opostos: o cliente Python, pela librdkafka, usa
 `read_committed`, enquanto o cliente Java e o consumidor de console construído sobre ele usam
-`read_uncommitted`. A execução abaixo usa o consumidor de console, então o padrão que você vê ali é o
-do Java.
+`read_uncommitted`. A execução abaixo usa o consumidor de console, então o padrão que você vê ali é
+o do Java.
 
 ## Um produtor com transactional id
 
 Um produtor transacional precisa de um **`transactional.id`**, um nome que fica igual entre
-reinícios. É assim que o cluster reconhece o mesmo produtor voltando: no `init_transactions` a nova
+reinícios. É assim que o cluster reconhece o mesmo produtor voltando. No `init_transactions` a nova
 instância recebe o id de produtor da antiga com uma época maior, qualquer transação que a antiga
-deixou aberta é abortada, e a antiga, se por acaso ainda estiver viva, é **cercada** (fenced): recusada
-na próxima gravação. Este programa grava duas transações de cinco vendas; a primeira é confirmada e a
-segunda abortada. Salve como `~/work/txn.py`:
+deixou aberta é abortada, e a antiga, se por acaso ainda estiver viva, é **cercada** (fenced):
+recusada na próxima gravação. Este programa grava duas transações de cinco vendas; a primeira é
+confirmada e a segunda abortada. Salve como `~/work/txn.py`:
 
 ```python
 """txn.py: two transactions of five sales each; the first is committed, the second aborted."""
@@ -54,9 +54,9 @@ for t, outcome in ((1, "committed"), (2, "aborted")):
     print(f"transaction {t}: 5 sales written, {outcome}")
 ```
 
-O `flush` antes do abort está ali para a demonstração: garante que as cinco vendas abortadas chegaram
-mesmo ao log, para você conseguir vê-las. Um programa de verdade aborta porque algo falhou, e o que
-tinha sido enviado até ali está no log do mesmo jeito.
+O `flush` antes do abort está ali para a demonstração: garante que as cinco vendas abortadas
+chegaram mesmo ao log, para você conseguir vê-las. Um programa de verdade aborta porque algo
+falhou, e o que tinha sido enviado até ali está no log do mesmo jeito.
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic ledger --partitions 1
@@ -97,13 +97,13 @@ baseOffset: 6 lastOffset: 10 count: 5 baseSequence: 5 lastSequence: 9 producerId
 baseOffset: 11 lastOffset: 11 count: 1 baseSequence: -1 lastSequence: -1 producerId: 1 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: true isControl: true deleteHorizonMs: OptionalLong.empty position: 1140 CreateTime: 1792111569035 size: 78 magic: 2 compresscodec: none crc: 2943571995 isvalid: true
 ```
 
-O consumidor de console lê `read_uncommitted` a não ser que alguém diga o contrário, e imprime as dez
-vendas, as abortadas inclusive. Com `--isolation-level read_committed` o mesmo comando imprime as
-cinco da transação confirmada e **as cinco abortadas não estão lá**.
+O consumidor de console lê `read_uncommitted` a não ser que alguém diga o contrário, e imprime as
+dez vendas, as abortadas inclusive. Com `--isolation-level read_committed` o mesmo comando imprime
+as cinco da transação confirmada e **as cinco abortadas não estão lá**.
 
 Os offsets mostram onde as transações deixaram as marcas. O offset final da partição é 12 para dez
-vendas, e o dump mostra por quê: os offsets 5 e 11 são lotes com **`isControl: true`**, os marcadores,
-o primeiro dizendo commit e o segundo abort. As vendas abortadas estão em disco nos offsets 6 a 10 com
-o mesmo id de produtor das confirmadas. Um leitor que não pede dados confirmados as lê como se nada
-tivesse acontecido, e é por isso que um consumidor de um tópico transacional precisa escolher o nível
-de isolamento de propósito.
+vendas, e o dump mostra por quê: os offsets 5 e 11 são lotes com **`isControl: true`**, os
+marcadores, o primeiro dizendo commit e o segundo abort. As vendas abortadas estão em disco nos
+offsets 6 a 10 com o mesmo id de produtor das confirmadas. Um leitor que não pede dados confirmados
+as lê como se nada tivesse acontecido, e é por isso que um consumidor de um tópico transacional
+precisa escolher o nível de isolamento de propósito.

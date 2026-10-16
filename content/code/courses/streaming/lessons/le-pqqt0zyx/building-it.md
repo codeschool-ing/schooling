@@ -5,8 +5,8 @@ version: 1
 
 Kafka arrives as a set of programs and no opinion about how to run them. A node needs a
 configuration file, a directory it owns, a one-time **format** of that directory and a command that
-starts it; three nodes need all of that three times, with ports that do not collide and a list
-of who votes in the cluster's elections. Typing it by hand is how a lab ends up in a state nobody
+starts it. Three nodes need all of that three times, with ports that do not collide and a list of
+who votes in the cluster's elections. Typing it by hand is how a lab ends up in a state nobody
 can explain, so the course does it with one script, which you save now and use in every lesson
 after this one.
 
@@ -31,7 +31,7 @@ Save this as `~/work/cluster.sh`:
     },
     {
       "code": "  for i in $(seq 1 \"$n\"); do\n    mkdir -p \"$DATA/node$i\"\n    cat > \"$DATA/node$i/server.properties\" <<CONF\nprocess.roles=broker,controller\nnode.id=$i\ncontroller.quorum.voters=$voters\nlisteners=PLAINTEXT://localhost:$((9091 + i)),CONTROLLER://localhost:$((9191 + i))\nadvertised.listeners=PLAINTEXT://localhost:$((9091 + i))\ncontroller.listener.names=CONTROLLER\ninter.broker.listener.name=PLAINTEXT\nlistener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT\nlog.dirs=$DATA/node$i/log\nnum.partitions=1\ndefault.replication.factor=$n\noffsets.topic.replication.factor=$n\ntransaction.state.log.replication.factor=$n\ntransaction.state.log.min.isr=1\nshare.coordinator.state.topic.replication.factor=$n\nshare.coordinator.state.topic.min.isr=1\ngroup.initial.rebalance.delay.ms=0\nCONF",
-      "note": "One configuration file per node. **Each node is both a broker, which stores data, and a controller, which keeps the cluster's metadata**; lesson 5 separates the two jobs. The replication factors follow the size of the cluster, so the topics Kafka creates for itself survive a lost node when there are three."
+      "note": "One configuration file per node. **Each node is both a broker, which stores data, and a controller, which keeps the cluster's metadata**; lesson 5 looks at the two jobs one at a time. The replication factors follow the size of the cluster, so the topics Kafka creates for itself survive a lost node when there are three."
     },
     {
       "code": "    \"$KAFKA\"/bin/kafka-storage.sh format -t \"$id\" -c \"$DATA/node$i/server.properties\" >/dev/null\n  done\n  echo \"new: $n node(s), cluster id $id\"\n}\n",

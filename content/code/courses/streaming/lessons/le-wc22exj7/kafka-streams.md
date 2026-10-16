@@ -53,10 +53,12 @@ Start from a clean cluster and the same two hundred sales as lesson 12. `./clust
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
+Created topic sales.
 ```
 
 ```
 ubuntu@stream:~/work$ python tills.py --count 200 --rate 0
+sent 200 sales to sales, the last one at 09:36:41
 ```
 
 `javac` compiles the file against every jar in Kafka's `libs` directory. The quotes keep the shell
@@ -64,6 +66,13 @@ from expanding the `*`, which Java expands itself:
 
 ```
 ubuntu@stream:~/work$ javac -cp "$HOME/kafka/libs/*" SalesPerShop.java
+Note: Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
 ```
 
 The note is about annotation processors, which some of Kafka's jars carry and which this program
@@ -73,6 +82,11 @@ is:
 
 ```
 ubuntu@stream:~/work$ java -cp "$HOME/kafka/libs/*:." SalesPerShop a
+state: CREATED -> REBALANCING
+state: REBALANCING -> RUNNING
+tasks here: [0_0, 0_1, 0_2, 1_0, 1_1, 1_2]
+state: RUNNING -> PENDING_SHUTDOWN
+state: PENDING_SHUTDOWN -> NOT_RUNNING
 ```
 
 It joined the group, was given six tasks, and went on running: three for the count per shop, one
@@ -82,6 +96,14 @@ turn them back into digits:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-per-book --from-beginning --formatter-property print.key=true --formatter-property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --timeout-ms 5000 2>/dev/null
+bk-01	23
+bk-04	28
+bk-02	24
+bk-06	22
+bk-05	23
+bk-03	25
+bk-07	26
+bk-08	29
 ```
 
 `2>/dev/null` hides two lines on standard error: the notice about the new consumer protocol from

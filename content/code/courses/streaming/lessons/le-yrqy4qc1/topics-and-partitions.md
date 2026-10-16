@@ -46,8 +46,8 @@ Topic: sales	TopicId: RSujK3biS5ihRVB5huS3Kw	PartitionCount: 3	ReplicationFactor
 	Topic: sales	Partition: 2	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
 ```
 
-The first line of the description is about the topic: an id Kafka gave it, which is how the
-cluster really knows it (the name can be reused after a delete; the id cannot), the number of
+The first line of the description is about the topic. It carries an id Kafka gave it, which is how
+the cluster knows it (the name can be reused after a delete; the id cannot). Then the number of
 partitions, and the **replication factor**, the number of copies of each partition. It is 1 here
 because there is one node to keep copies on. Then one line per partition, numbered from 0:
 

@@ -55,8 +55,8 @@ sent 360 sales to late, from 09:00:27 to 15:13:59; natal held 38 from 10:20 to 1
 ```
 
 Depois o mesmo pipeline da lição 9, com outro final: ele imprime a distância de cada venda, ordena,
-lê os percentis, em que p90 é a distância igual ou abaixo da qual estão 90 por cento das vendas, e
-conta quantas estão a até um minuto e a até dois:
+lê os percentis e conta quantas estão a até um minuto e a até dois. O p90 é a distância igual ou
+abaixo da qual estão 90 por cento das vendas:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 2>/dev/null \
@@ -89,7 +89,7 @@ Cobrir os últimos 10 por cento quer dizer esperar mais de três horas.
 | a maior distância | 360 de 360 | mais de três horas, o que é um batch |
 
 **Um limite de um ou dois minutos é o certo para estes caixas**, e é certo por causa do formato, não
-dos números: as entregas lentas terminam em 92 segundos e a próxima coisa é Natal, meia hora depois.
+dos números: as entregas lentas terminam em 92 segundos e a próxima coisa é Natal, quase catorze minutos atrás.
 Um limite em qualquer ponto desse vão pega o primeiro grupo e nada do segundo, então o menor limite
 depois do primeiro grupo é o melhor. O segundo grupo não é trabalho do limite. É para ele que servem o
 atraso permitido, o tópico de atrasadas e o batch noturno.

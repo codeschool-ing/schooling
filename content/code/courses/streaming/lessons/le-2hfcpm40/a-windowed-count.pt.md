@@ -4,9 +4,9 @@ version: 1
 ---
 
 A contagem que as lições 10 e 11 montaram à mão, vendas por janela de cinco minutos de tempo do
-evento com um watermark, são poucas linhas de Spark. **O que pede reflexão não é a consulta, é o
-modo de saída**: depois de cada batch, quais linhas da tabela de resultado partem para o sink. São
-três, e as mesmas duzentas vendas saem de cada um de um jeito.
+evento com um watermark, são poucas linhas de Spark. **A reflexão vai para o modo de saída**: depois
+de cada batch, quais linhas da tabela de resultado partem para o sink. São três, e as mesmas
+duzentas vendas saem de cada um de um jeito.
 
 O resto da lição roda um único programa com argumentos diferentes em vez de editá-lo. Salve-o como
 `~/work/spark_sales.py`:

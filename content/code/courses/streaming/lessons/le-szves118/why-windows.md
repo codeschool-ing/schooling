@@ -15,8 +15,8 @@ time, and a running total has forgotten where any stretch began. Subtracting one
 from an earlier one works until a late sale arrives and belongs to the earlier side.
 
 A window is a rule that, given an event's time, says which slices it belongs to. **Every window
-in this lesson is defined on event time**, the `at` inside the sale, for the reasons lesson 9 spent
-itself on: the slice "09:05 to 09:10" means sales that happened then, not sales that arrived then.
+in this lesson is defined on event time**, the `at` inside the sale, for the reasons lesson 9
+gave: the slice "09:05 to 09:10" means sales that happened then, not sales that arrived then.
 Lesson 9's `per_minute.py` already used one without the name: its buckets were windows of one
 minute, or of sixty.
 

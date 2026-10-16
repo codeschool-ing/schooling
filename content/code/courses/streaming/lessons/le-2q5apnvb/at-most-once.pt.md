@@ -5,13 +5,14 @@ version: 1
 
 **No máximo uma vez quer dizer que uma mensagem é processada uma vez ou nenhuma, e nunca duas.** O
 consumidor confirma os offsets do que leu antes de processar, então uma queda deixa o Kafka
-acreditando que as mensagens interrompidas foram tratadas. No reinício elas são puladas. Nada é feito
-duas vezes, e o preço é que algo pode nunca ser feito.
+acreditando que as mensagens interrompidas foram tratadas. No reinício elas são puladas. Nada é
+feito duas vezes, e o preço é que algo pode nunca ser feito.
 
 É a escolha certa mais vezes do que o nome sugere: um painel de vendas por minuto que perde cinco
-vendas numa queda fica errado por cinco vendas durante um minuto, e um painel que as conta duas vezes
-fica errado do mesmo jeito. Onde uma duplicata custa mais que um buraco, como numa métrica que dispara
-um alerta, numa amostra ou num log de cliques, no máximo uma vez sai mais barato e basta.
+vendas numa queda fica errado por cinco vendas durante um minuto, e um painel que as conta duas
+vezes fica errado do mesmo jeito. Onde uma duplicata custa mais que um buraco, como numa métrica
+que dispara um alerta, numa amostra ou num log de cliques, no máximo uma vez sai mais barato e
+basta.
 
 ## Um consumidor que dá para derrubar
 
@@ -59,8 +60,8 @@ ubuntu@stream:~/work$ python tills.py --count 50 --rate 0
 sent 50 sales to sales, the last one at 09:08:39
 ```
 
-Se `sales` ainda existir de uma lição anterior, comece de um cluster novo antes, com
-`./cluster.sh stop`, `./cluster.sh new 1` e `./cluster.sh start`.
+Se `sales` ainda existir de uma lição anterior, comece de um cluster novo antes, com `./cluster.sh
+stop`, `./cluster.sh new 1` e `./cluster.sh start`.
 
 ## Derrubando
 
@@ -78,10 +79,10 @@ ubuntu@stream:~/work$ sort processed-most.txt | uniq | wc -l
 ```
 
 A primeira execução leu dois lotes de dez, confirmando cada um antes de escrevê-lo, depois leu o
-terceiro lote, vendas 21 a 30, confirmou-o e caiu depois de escrever cinco delas. A segunda execução
-começou do offset confirmado, 30, e processou as últimas 20. **O arquivo tem 45 vendas, todas
-diferentes, de 50.** As vendas 26 a 30 nunca foram processadas, e nada na saída diz isso: o arquivo
-simplesmente tem cinco linhas a menos, e só uma contagem contra o tópico revela.
+terceiro lote, vendas 21 a 30, confirmou-o e caiu depois de escrever cinco delas. A segunda
+execução começou do offset confirmado, 30, e processou as últimas 20. **O arquivo tem 45 vendas,
+todas diferentes, de 50.** As vendas 26 a 30 nunca foram processadas, e nada na saída diz isso: o
+arquivo simplesmente tem cinco linhas a menos, e só uma contagem contra o tópico revela.
 
 Esse é todo o caráter do no máximo uma vez. Nenhuma duplicata, nunca, e uma perda do tamanho do que
 estava em andamento quando veio a queda, que aqui foi meio lote.

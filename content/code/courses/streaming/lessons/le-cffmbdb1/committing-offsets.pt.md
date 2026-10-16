@@ -5,8 +5,8 @@ version: 1
 
 **Um commit registra, para um grupo e uma partição, o offset que o grupo deve ler em seguida.** É o
 lugar do grupo no log, a mesma coisa que os arquivos de lugar do `minilog.py` guardavam na lição 2, e é
-a única coisa em que um consumidor que reinicia pode se basear. O que importa não é que os commits
-aconteçam, mas **quando, em relação ao trabalho**: um commit diz "tudo antes disto está feito", e se
+a única coisa em que um consumidor que reinicia pode se basear. **O que importa é quando um commit
+acontece, em relação ao trabalho**: um commit diz "tudo antes disto está feito", e se
 isso não for verdade no momento de uma queda, o reinício repete trabalho ou pula trabalho.
 
 O Kafka guarda os commits num tópico próprio, o `__consumer_offsets`:

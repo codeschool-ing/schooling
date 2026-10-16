@@ -35,15 +35,15 @@ Esta é uma venda como os caixas da lição 1 a enviam:
 
 Quatro tipos de campo aparecem em quase todo evento bem feito, e este tem três deles:
 
-- **Uma identidade.** `sale` dá nome a este evento e a nenhum outro. Quando o mesmo evento chega
+- Uma identidade. `sale` dá nome a este evento e a nenhum outro. Quando o mesmo evento chega
   duas vezes, e a lição 7 mostra que vai chegar, o id é como um leitor reconhece a segunda cópia.
-- **A hora em que aconteceu.** `at` é o instante em que o caixa registrou a venda, escrito pelo
+- A hora em que aconteceu. `at` é o instante em que o caixa registrou a venda, escrito pelo
   caixa. Não é quando o evento foi enviado, guardado ou lido; a lição 9 trata de manter essas horas
   separadas.
-- **Do que ele trata.** `shop` diz de quem é a venda, e é também a **chave** que o Kafka usa para
+- Do que ele trata. `shop` diz de quem é a venda, e é também a **chave** que o Kafka usa para
   decidir onde o evento é guardado. Escolher a chave é escolher quais eventos mantêm a ordem entre
   si, que é a última ideia desta lição.
-- **Uma versão.** Esta falta. Quando a forma de uma venda muda, o leitor precisa saber qual forma
+- Uma versão. Esta falta. Quando a forma de uma venda muda, o leitor precisa saber qual forma
   tem nas mãos, e a lição 6 acrescenta uma, com um schema.
 
 ## Magro e gordo

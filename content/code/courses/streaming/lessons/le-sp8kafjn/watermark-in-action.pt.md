@@ -114,6 +114,6 @@ aberta quando a lista acaba.
 Três janelas foram emitidas, cada uma uma vez, e cada uma num momento definido só por tempos de
 evento: rode de novo e elas saem nas mesmas linhas. Duas das doze vendas se perderam, 13.480 centavos
 que nunca chegaram a nenhum total. Se isso é aceitável não é uma propriedade do programa. Depende de
-para que servem os totais e do que mais pega essas duas vendas, que é o assunto das próximas três
-seções: manter as janelas abertas um pouco mais, mandar as vendas atrasadas para algum lugar em vez de
+para que servem os totais e do que mais pega essas duas vendas. As próximas três
+seções tratam disso: manter as janelas abertas um pouco mais, mandar as vendas atrasadas para algum lugar em vez de
 lugar nenhum, e escolher o limite por medição em vez de hábito.

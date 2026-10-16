@@ -98,8 +98,8 @@ Dynamic configs for topic sales-zstd are:
   retention.ms=604800000 sensitive=false synonyms={DYNAMIC_TOPIC_CONFIG:retention.ms=604800000}
 ```
 
-604 800 000 milliseconds is seven days. `retention.bytes` caps a partition by size instead, and
-when both are set the first limit reached wins. Either way **deletion is per segment** (lesson 3):
-a segment goes only when its newest message is past the limit, so a partition holds up to one
-segment more than the arithmetic says, and with the default segment of a gigabyte that is a real
-margin on a quiet topic.
+604 800 000 milliseconds is seven days. `retention.bytes` caps a partition by size instead, and when
+both are set the first limit reached wins. Either way **deletion is per segment** (lesson 3): a
+segment goes only when its newest message is past the limit, so a partition holds up to one segment
+more than the arithmetic says. With the default segment of a gigabyte, that is a real margin on a
+quiet topic.

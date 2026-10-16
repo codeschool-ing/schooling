@@ -108,5 +108,5 @@ the fix is to correct `apply` and fold again from offset 0.
 
 The reverse does not hold. From `recife bk-03 6` nobody can say whether that was 4 − 1 + 6 − 2 − 1
 or a fresh count of 6, or which sale happened when. **The events contain the state; the state does
-not contain the events.** The price of that is space, since the log grows with every sale while the
-table stays one row per book, and lesson 3 is where Kafka decides how much of a log to keep.
+not contain the events.** The price of that is space: the log grows with every sale while the table
+stays one row per book. Lesson 3 is where Kafka decides how much of a log to keep.

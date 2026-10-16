@@ -6,8 +6,8 @@ version: 1
 **Toda mensagem que o Debezium grava é um envelope: a linha antes, a linha depois, o que aconteceu,
 e onde no banco aconteceu.** As primeiras mensagens de `pf.public.stock` nem são mudanças. Quando um
 conector sobe com um slot vazio, ele tira um **snapshot**: lê toda linha que as tabelas publicadas
-têm, numa transação consistente, e grava cada uma como evento, para que um leitor do tópico comece
-com a tabela inteira e não só com o que mudar daqui em diante. Leia a primeira, e deixe o `jq`
+têm, numa transação consistente, e grava cada uma como evento. Assim um leitor do tópico começa
+com a tabela inteira, e não apenas com o que mudar daqui em diante. Leia a primeira, e deixe o `jq`
 organizá-la:
 
 ```

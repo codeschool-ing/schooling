@@ -46,9 +46,9 @@ Topic: sales	TopicId: RSujK3biS5ihRVB5huS3Kw	PartitionCount: 3	ReplicationFactor
 	Topic: sales	Partition: 2	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
 ```
 
-A primeira linha da descrição é sobre o tópico: um id que o Kafka deu a ele, que é como o cluster de
-fato o conhece (o nome pode ser reutilizado depois de um delete; o id não), o número de partições, e
-o **fator de replicação**, o número de cópias de cada partição. Ele é 1 aqui porque só há um nó para
+A primeira linha da descrição é sobre o tópico. Ela traz um id que o Kafka deu a ele, que é como o
+cluster o conhece (o nome pode ser reutilizado depois de um delete; o id não). Depois, o número de
+partições, e o **fator de replicação**, o número de cópias de cada partição. Ele é 1 aqui porque só há um nó para
 guardar cópias. Depois, uma linha por partição, numeradas a partir de 0:
 
 - **`Leader`** é o nó que guarda a partição e recebe as escritas e as leituras dela. O nó 1, para as

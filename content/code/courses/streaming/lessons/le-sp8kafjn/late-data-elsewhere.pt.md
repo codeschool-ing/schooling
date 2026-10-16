@@ -36,8 +36,8 @@ still open: 09:20:00 (2)
 ```
 
 As mesmas duas vendas de antes estão atrasadas demais, e desta vez a linha diz para onde foram. Cada
-uma foi enviada com o watermark para o qual perdeu, que é a prova que alguém vai querer depois: não só
-que ela atrasou, mas por quanto.
+uma foi enviada com o watermark para o qual perdeu, que é a prova que alguém vai querer depois: por quanto
+ela perdeu.
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-late --from-beginning --max-messages 2
@@ -62,5 +62,5 @@ Um tópico de vendas atrasadas só é útil se alguma coisa o lê. Três coisas 
   nos relógios mentirosos da lição 9, é uma pergunta sobre um aparelho, e o tópico de atrasadas é onde
   alguém a encontra.
 
-**O ponto é que o dado atrasado deixa de ser invisível.** Descartar e contar custam o mesmo ao
+**O dado atrasado deixa de ser invisível.** Descartar e contar custam o mesmo ao
 processador de stream, e só um dos dois deixa rastro.

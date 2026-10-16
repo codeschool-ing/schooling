@@ -9,12 +9,12 @@ janelas que existem são as que os próprios eventos definem.
 
 A pergunta que ela responde é a que as janelas hopping respondem de forma aproximada: qual o máximo
 que aconteceu em quaisquer cinco minutos? Uma janela hopping de cinco minutos avançando a cada minuto
-chegaria perto, e ainda perderia um surto das 09:01:20 às 09:06:20, já que nenhuma janela começa às
-09:01:20. Fazer o avanço de um segundo, ou de um milissegundo, chega mais perto e multiplica o custo.
+chegaria perto, e ainda perderia as quatro vendas das 09:03:55 às 09:08:50: a janela que começa às
+09:03 termina antes das 09:08:50, e a que começa às 09:04 começa depois das 09:03:55. Fazer o avanço de um segundo, ou de um milissegundo, chega mais perto e multiplica o custo.
 A janela sliding vira a pergunta ao contrário: só um momento em que um evento entra ou sai pode mudar
 o que está em "os últimos cinco minutos", então essas são as únicas janelas que vale calcular.
 
-Este programa calcula as janelas que **terminam** em cada venda: para cada venda em `t`, a janela de
+Este programa calcula as janelas que *terminam* em cada venda: para cada venda em `t`, a janela de
 `t − 5 minutos` até `t`, com todas as vendas dentro dela, **as duas bordas incluídas**:
 
 ```
@@ -33,10 +33,9 @@ window               sales   cents
 ```
 
 Dez janelas, uma por venda. As mais cheias têm quatro vendas, e são três: as janelas que terminam às
-09:05:00, às 09:06:20 e às 09:08:50. A que termina às 09:05:00 começa às 09:00:00 e contém a venda 1,
-das 09:00:40, além da venda 4 na própria borda: com as duas bordas dentro, uma venda exatamente cinco
-minutos depois de outra divide uma janela com ela, o que uma janela tumbling semiaberta não
-permitiria. **Inclusiva nas duas pontas é a definição do Kafka Streams**, e é a principal coisa a
+09:05:00, às 09:06:20 e às 09:08:50. A que termina às 09:05:00 começa às 09:00:00 e contém as vendas 1 a 4,
+com a venda 4 exatamente na borda final. As duas bordas ficam dentro, então uma venda na borda
+conta; a janela tumbling semiaberta `[09:00, 09:05)` deixa a venda 4 de fora. **Inclusiva nas duas pontas é a definição do Kafka Streams**, e é a principal coisa a
 conferir ao comparar as janelas sliding dele com as de qualquer outro.
 
 ```schooling-figure

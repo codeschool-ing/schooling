@@ -3,17 +3,16 @@ title: Avro, e ler com um esquema diferente do de quem escreveu
 version: 1
 ---
 
-**Avro é um formato binário em que nada pode ser escrito sem um esquema, e nada pode ser lido sem
-o esquema com que foi escrito.** O esquema é JSON: um registro com um nome e uma lista de campos,
-cada um com um tipo. Os dados não são JSON. São os valores um atrás do outro, sem nomes de campos
-e sem pontuação, na ordem em que o esquema os lista.
+**Avro é um formato binário em que nada pode ser escrito sem um esquema, e nada pode ser lido sem o
+esquema com que foi escrito.** O esquema é JSON: um registro com um nome e uma lista de campos,
+cada um com um tipo. Os dados não são JSON. São os valores um atrás do outro, sem nomes de campos e
+sem pontuação, na ordem em que o esquema os lista.
 
 Essa segunda metade é onde o Avro difere do que a maioria espera. Em JSON, `{"qty": 2}` diz a que
 campo o 2 pertence. Em Avro o 2 é só um número numa posição, e só o esquema diz que aquela posição
 é `qty`. Então um leitor com o esquema errado não recebe um campo faltando: recebe lixo, ou um
-erro. A resposta do Avro é fazer do **esquema de quem escreveu** algo que o leitor sempre tem, e
-deixar o leitor trazer **o seu próprio esquema** também, e então resolver a diferença entre os
-dois.
+erro. A resposta do Avro é fazer do **esquema de quem escreveu** algo que o leitor sempre tem. O
+leitor pode trazer também um esquema próprio, e o Avro resolve a diferença entre os dois.
 
 ## Uma venda, três esquemas
 
@@ -67,8 +66,8 @@ caracteres, `6e 61 74…`. Depois `0a`, um comprimento de cinco, e `natal`; mais
 
 ## O que a resolução faz
 
-Quando o esquema do leitor difere do de quem escreveu, o Avro casa os campos **pelo nome** e
-aplica uma lista curta de regras:
+Quando o esquema do leitor difere do de quem escreveu, o Avro casa os campos **pelo nome** e aplica
+uma lista curta de regras:
 
 | a diferença | o que acontece |
 |---|---|
@@ -86,10 +85,10 @@ satisfazer.
 A quarta linha é a renomeação de que o caixa da última seção precisava, feita do jeito certo: o
 leitor declara que `amount` antes se chamava `cents`. É também a regra que as pessoas lembram
 errado. Um alias é o conhecimento que o leitor tem do passado, então só ajuda um leitor que já foi
-atualizado; um leitor ainda na v1 que recebe uma mensagem escrita com a v2 procura `cents`, encontra
-`amount` e falha. Qual lado atualiza primeiro é uma pergunta com resposta, e as duas últimas
-seções desta lição a dão.
+atualizado; um leitor ainda na v1 que recebe uma mensagem escrita com a v2 procura `cents`,
+encontra `amount` e falha. Qual lado atualiza primeiro é uma pergunta com resposta, e as duas
+últimas seções desta lição a dão.
 
-A outra coisa que a execução mostra é o custo de carregar nomes. A mesma venda tem 82 bytes em
-JSON e 27 em Avro, porque o corpo Avro é os valores e nada mais. Num tópico de cem milhões de
-vendas, essa diferença é a maior parte do disco.
+A outra coisa que a execução mostra é o custo de carregar nomes. A mesma venda tem 82 bytes em JSON
+e 27 em Avro, porque o corpo Avro é os valores e nada mais. Num tópico de cem milhões de vendas,
+essa diferença é a maior parte do disco.

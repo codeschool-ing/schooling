@@ -63,9 +63,8 @@ Processed a total of 268 messages
 
 Stamped with eleven o'clock, at offsets 258 and 259, well past the 202 the search returned for one
 in the afternoon. **In a topic stamped with event time, the timestamps go backwards wherever a late
-event arrives**, and a search by time finds a position in the log, not a set of events: replaying
-from the 13:00 offset reads Natal's morning, and starting a little earlier misses none of it only by
-luck. Kafka's index copes with timestamps that go backwards, and the answer it gives is still "the
+event arrives.** A search by time finds a position in the log, not a set of events: replaying from
+the 13:00 offset reads Natal's morning too, because Natal's morning arrived after 13:00. Kafka's index copes with timestamps that go backwards, and the answer it gives is still "the
 first record stamped at or after this moment", which is exactly as useful as the order of the log
 allows. The search is the right tool for "replay what came in since the incident at 13:00", which
 is the question lesson 16 asks it.

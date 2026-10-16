@@ -52,6 +52,6 @@ In Flink the watermark is a special element that travels inside the stream, from
 through every operator, and an operator with several inputs forwards the lowest of their
 watermarks. Spark Structured Streaming computes one watermark per query from the latest event time
 seen, with the bound given by `withWatermark("at", "2 minutes")`, which lesson 12 uses. Kafka
-Streams keeps a **stream time** per task, the highest timestamp seen, and its **grace period** is
+Streams keeps a *stream time* per task, the highest timestamp seen, and its *grace period* is
 the bound: a window accepts records until stream time passes its end plus the grace. Three
 vocabularies, one idea: **the latest event time, minus a bound, moving only forward.**

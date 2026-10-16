@@ -35,14 +35,14 @@ This is a sale as the tills from lesson 1 send it:
 
 Four kinds of field turn up in almost every well-made event, and this one has three of them:
 
-- **An identity.** `sale` names this event and no other. When the same event arrives twice, and
+- An identity. `sale` names this event and no other. When the same event arrives twice, and
   lesson 7 shows that it will, the id is how a reader recognises the second copy.
-- **The time it happened.** `at` is the moment the till rang up the sale, written by the till.
+- The time it happened. `at` is the moment the till rang up the sale, written by the till.
   It is not when the event was sent, stored or read; lesson 9 is about keeping those apart.
-- **What it is about.** `shop` says whose sale it is, and it is also the **key** Kafka uses to
+- What it is about. `shop` says whose sale it is, and it is also the **key** Kafka uses to
   decide where the event is stored. Choosing the key is choosing which events keep their order,
   which is this lesson's last idea.
-- **A version.** This one is missing. When the shape of a sale changes, a reader needs to know
+- A version. This one is missing. When the shape of a sale changes, a reader needs to know
   which shape it is holding, and lesson 6 adds one with a schema.
 
 ## Thin and fat

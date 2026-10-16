@@ -50,8 +50,8 @@ around the clock. Lessons 16 and 17 are about both.
 There is a fifth question a batch answers by sorting, and a stream answers by how it stores
 things: *in what order did these happen?* A withdrawal applied before the deposit it depends on
 gives a different balance from the same two events the other way round. Kafka's answer is precise
-and narrower than people expect — order is kept **per key, inside one partition**, and nowhere else
-— and it is the subject of lessons 2 and 3.
+and narrower than people expect: order is kept **per key, inside one partition**, and nowhere else.
+Lessons 2 and 3 are about it.
 
 None of the four makes streaming worse than batch. They make it a different kind of program, one
 whose correctness has to be argued rather than assumed. The next section is about when that argument

@@ -11,8 +11,8 @@ inteira, incluindo toda chave que por acaso a divida. E quando o programa morre 
 partição que ele lia para junto.
 
 A origem comum não é malícia. É um caixa que perdeu uma atualização de software e ainda manda o
-formato antigo, um campo que era número no mês passado e agora é texto (a lição 6 é sobre evitar
-isso), uma mensagem cortada, ou um valor que nenhum caminho do código esperava.
+formato antigo, ou um campo que era número no mês passado e agora é texto, que é o que a lição 6
+ensina a evitar. É uma mensagem cortada, ou um valor que nenhum caminho do código esperava.
 
 ## Uma venda ruim
 

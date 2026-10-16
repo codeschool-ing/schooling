@@ -5,8 +5,8 @@ version: 1
 
 **Uma janela sobre o tempo do evento está completa quando todos os eventos que pertencem a ela
 chegaram, e nenhum programa que lê um stream consegue saber que isso aconteceu.** A lição 10 terminou
-nessa pergunta. Esta lição a responde do jeito que todo motor de stream responde: não com certeza,
-mas com uma regra explícita, mensurável e ajustável.
+nessa pergunta. Esta lição a responde do jeito que todo motor de stream responde, com uma regra
+explícita, mensurável e ajustável.
 
 Pegue a janela das 09:05 às 09:10 da lição 10. Às 09:10, pelos relógios das lojas, o tempo da janela
 acabou. Às 09:12 já chegaram vendas das 09:12, então a maior parte do stream seguiu em frente. E a
@@ -19,7 +19,7 @@ que estava segurando vendas.
 
 **Esperar o relógio da parede.** Emitir a janela das 09:05 às 09:12 pelo relógio do próprio
 processador, dois minutos depois que ela terminou. É simples e é tempo de processamento de novo, com
-todos os defeitos que a lição 9 listou: releia o tópico amanhã e toda janela fecha "dois minutos
+todos os defeitos que a lição 9 listou. Releia o tópico amanhã e toda janela fecha "dois minutos
 depois de terminar" num momento que não tem nada a ver com os eventos, então uma releitura dá
 respostas diferentes. E quando o próprio processador para por uma hora, toda janela que termina
 nessa hora fecha no instante em que ele volta, antes de os eventos que esperavam por ela terem sido

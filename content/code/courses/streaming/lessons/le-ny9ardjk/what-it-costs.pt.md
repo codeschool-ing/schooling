@@ -4,9 +4,9 @@ version: 1
 ---
 
 **Um fator de replicação 3 guarda cada byte três vezes, manda cada byte pela rede pelo menos três
-vezes, e só protege contra as falhas que as três cópias não compartilham.** As duas primeiras coisas
-são uma conta; a terceira é uma decisão de projeto que este laboratório, numa máquina só, não
-consegue demonstrar.
+vezes, e só protege contra as falhas que as três cópias não compartilham.** As duas primeiras
+coisas são uma conta; a terceira é uma decisão de projeto que este laboratório, numa máquina só,
+não consegue demonstrar.
 
 ## Disco e rede
 
@@ -16,11 +16,11 @@ todo. Toda conta de capacidade de um cluster Kafka tem o fator de replicação d
 faz essa conta para a Ponto Final.
 
 A rede é o custo menos óbvio. Cada registro atravessa a rede uma vez do produtor até o líder, e
-mais uma vez **para cada seguidor** que o busca, então um fator de replicação 3 põe duas cópias a
+mais uma vez **para cada seguidor** que o busca. Então um fator de replicação 3 põe duas cópias a
 mais de cada escrita no fio entre os brokers, antes de qualquer consumidor ler qualquer coisa. Um
-cluster espalhado por três data centers ou zonas de nuvem, que é onde um fator de replicação 3 se
-paga, paga esse tráfego ao preço do tráfego entre zonas, que nas nuvens públicas é cobrado e
-costuma ser o maior item de uma conta de streaming depois das próprias máquinas.
+fator de replicação 3 se paga num cluster espalhado por três data centers ou zonas de nuvem, e ali
+esse tráfego tem preço de tráfego entre zonas. As nuvens públicas o cobram, e ele costuma ser o
+maior item de uma conta de streaming depois das próprias máquinas.
 
 ## Domínios de falha
 
@@ -28,10 +28,10 @@ Três cópias protegem contra a perda de uma ou duas delas só se as três não 
 brokers num rack compartilham uma fonte de energia e um switch; três brokers numa zona de nuvem
 compartilham as quedas daquela zona. A configuração que os espalha é **`broker.rack`**: dê a cada
 broker o nome do seu rack ou zona, e o Kafka põe as réplicas de cada partição em racks diferentes
-quando cria um tópico. Com o `replica.selector.class` dos brokers apontando para o seletor do
-Kafka que conhece racks, os consumidores podem então receber **`client.rack`** para ler do
-seguidor na própria zona em vez de cruzar até o líder, a leitura em seguidores mencionada na seção
-sobre líderes e seguidores.
+quando cria um tópico. Com o `replica.selector.class` dos brokers apontando para o seletor do Kafka
+que conhece racks, os consumidores podem então receber **`client.rack`** para ler do seguidor na
+própria zona em vez de cruzar até o líder, a leitura em seguidores mencionada na seção sobre
+líderes e seguidores.
 
 **Nada neste laboratório é um domínio de falha de verdade.** Os três nós são três processos numa
 máquina virtual, com um disco e uma fonte de energia: perder a máquina perde os três. Toda falha

@@ -116,6 +116,5 @@ Not a bigger cluster. The fixes are all in the consumer:
   `consumer.pause()` keeps the member polling, and alive, without fetching more. It is more code,
   and it is what long-running work needs.
 
-The general rule is the one this whole section turns on: **a stream gives a slow consumer time, not
-forgiveness**. Lag absorbs a slow hour. A member that cannot keep its promise to poll is removed, and
-the removal itself is work the whole group pays for.
+**A stream gives a slow consumer time, not forgiveness.** Lag absorbs a slow hour. A member that
+cannot keep its promise to poll is removed, and the removal itself is work the whole group pays for.

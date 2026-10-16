@@ -3,8 +3,8 @@ title: Keeping the offset in the database
 version: 1
 ---
 
-**If the database stores, in the same transaction as each effect, the offset of the next message
-to read, then the database and the stream cannot disagree about how far the consumer has got.** On
+**If the database stores, in the same transaction as each effect, the offset of the next message to
+read, then the database and the stream cannot disagree about how far the consumer has got.** On
 start, the consumer reads that offset and seeks to it. A crash anywhere leaves either the effect
 and its offset, or neither, and the restart resumes exactly after the last effect. No sale is
 applied twice, and no table of ids is needed.
@@ -67,18 +67,17 @@ ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092
 Consumer group 'offset-sink' has no active members.
 ```
 
-The fifteen sales of the first run all came from partition 1, so after the crash the database
-held one row of `offsets`, saying partition 1 should resume at 15. **The restart read that and
-started partition 1 at 15**, and the other two from the beginning. It applied the remaining 25,
-and the stock is 729, as with the deduplicating sink, with no table of ids.
+The fifteen sales of the first run all came from partition 1, so after the crash the database held
+one row of `offsets`, saying partition 1 should resume at 15. **The restart read that and started
+partition 1 at 15**, and the other two from the beginning. It applied the remaining 25, and the
+stock is 729, as with the deduplicating sink, with no table of ids.
 
 `offsets` now says where to resume in each partition that had sales: 7 for partition 0 and 33 for
 partition 1; partition 2 received none of the forty. And the consumer group has **no committed
 offsets at all**: `kafka-consumer-groups.sh` has nothing to show beyond the fact that nobody is
 connected. Every tool that reads lag from the group sees nothing, which is the price of this
-design, and the reason some teams commit to the group as well, after the database, purely as a
-hint for monitoring. A hint that is wrong after a crash is harmless, because nothing reads it on
-start.
+design, and the reason some teams commit to the group as well, after the database, purely as a hint
+for monitoring. A hint that is wrong after a crash is harmless, because nothing reads it on start.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 220\" role=\"img\" aria-label=\"Three designs side by side. First, at least once: the database commits the effect, then Kafka is told the offset; a crash between the two repeats the sale. Second, deduplication: the effect and the sale's id commit together in the database, and a repeated sale is skipped because its id is there. Third, offsets in the sink: the effect and the next offset commit together in the database, the consumer starts from that offset, and Kafka's group offset is not used.\" data-fig=\"l8-offsets\"><defs><marker id=\"l8-offsets-ah-8343\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"120\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">at least once</text><text x=\"360\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">dedup by id</text><text x=\"600\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">offset in the sink</text><rect x=\"20\" y=\"40\" width=\"200\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"120\" y=\"58\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">database: stock - 2</text><rect x=\"20\" y=\"120\" width=\"200\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"120\" y=\"138\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">Kafka: commit offset</text><line x1=\"120\" y1=\"76\" x2=\"120\" y2=\"118\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" marker-end=\"url(#l8-offsets-ah-8343)\"></line><text x=\"128\" y=\"98\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">crash here repeats the sale</text><text x=\"120\" y=\"176\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">two commits</text><rect x=\"260\" y=\"40\" width=\"200\" height=\"70\" rx=\"4\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"360\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">one transaction</text><rect x=\"270\" y=\"64\" width=\"180\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"360\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">database: stock - 2, id</text><text x=\"360\" y=\"138\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">repeat: id found, skipped</text><rect x=\"500\" y=\"40\" width=\"200\" height=\"70\" rx=\"4\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"600\" y=\"54\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">one transaction</text><rect x=\"510\" y=\"64\" width=\"180\" height=\"36\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"600\" y=\"82\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">database: stock - 2, next offset</text><text x=\"600\" y=\"138\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">start: seek to stored offset</text></svg>", "caption": "Two commits leave a gap; putting the record of progress in the same transaction as the effect closes it, either as the event's id or as the offset."}

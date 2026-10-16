@@ -20,10 +20,12 @@ Compare the two strings, as you did for Kafka:
 
 ```
 ubuntu@stream:~$ sha512sum flink-2.2.1-bin-scala_2.12.tgz | cut -d" " -f1
+9beb619520a9b9a94d71e165f51c2c2bf67d180fee2a6f88a85b05f23b513efd12897669b6b8b000a7f16c8c8835c3bdb1e7b83133ef63056dc98a2a67105f60
 ```
 
 ```
 ubuntu@stream:~$ cut -d" " -f1 flink-2.2.1-bin-scala_2.12.tgz.sha512
+9beb619520a9b9a94d71e165f51c2c2bf67d180fee2a6f88a85b05f23b513efd12897669b6b8b000a7f16c8c8835c3bdb1e7b83133ef63056dc98a2a67105f60
 ```
 
 The `scala_2.12` in the name is the Scala version Flink's own internals were built with, and like
@@ -63,12 +65,22 @@ Check both landed:
 
 ```
 ubuntu@stream:~$ grep -n -E "size: |bind-address: localhost" ~/flink/conf/config.yaml
+60:      size: 1024m
+95:      size: 1024m
+173:  bind-address: localhost
+182:  # bind-address: localhost
 ```
+
+Lines 60 and 95 are the two sizes and line 173 is the new one. The last line was already in the
+file, behind a `#`: a comment, which Flink ignores.
 
 ## Starting it
 
 ```
 ubuntu@stream:~$ ~/flink/bin/start-cluster.sh
+Starting cluster.
+Starting standalonesession daemon on host stream.
+Starting taskexecutor daemon on host stream.
 ```
 
 Two daemons, a "standalone session", which is the JobManager, and a "task executor", the
@@ -76,6 +88,8 @@ TaskManager. They take a few seconds to open their ports:
 
 ```
 ubuntu@stream:~$ ss -ltn | grep -E ":8081|:6123"
+LISTEN 0      4096       127.0.0.1:6123       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8081       0.0.0.0:*          
 ```
 
 Port 6123 is how the TaskManager talks to the JobManager, and 8081 is the web page and the REST

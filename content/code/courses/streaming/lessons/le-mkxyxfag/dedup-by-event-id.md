@@ -3,24 +3,23 @@ title: Remembering which events were applied
 version: 1
 ---
 
-**A consumer can turn duplicates into nothing by recording the id of each event it applies, in
-the same database transaction as the effect, and skipping an event whose id is already
-recorded.** The two writes have to share the transaction. With the id written first and the effect
-second, a crash in between marks a sale as applied that never was; the other way round, a crash
-leaves a sale applied and not marked, and the next delivery applies it again.
+**A consumer can turn duplicates into nothing by recording the id of each event it applies, in the
+same database transaction as the effect, and skipping an event whose id is already recorded.** The
+two writes have to share the transaction. With the id written first and the effect second, a crash
+in between marks a sale as applied that never was; the other way round, a crash leaves a sale
+applied and not marked, and the next delivery applies it again.
 
-The id has to come from the event, which is what lesson 2 meant by giving every event an id of
-its own: here it is the `sale` field, `nat-000002` and so on, given by the till. An id made up by
-the consumer, or the offset in Kafka, would not do, because the same sale written twice by a
-producer that retried sits at two offsets.
+The id has to come from the event, which is what lesson 2 meant by giving every event an id of its
+own: here it is the `sale` field, `nat-000002` and so on, given by the till. An id made up by the
+consumer, or the offset in Kafka, would not do, because the same sale written twice by a producer
+that retried sits at two offsets.
 
 ## A sink for the stock
 
 This consumer keeps the stock of each book in `stock.db`, starting from a hundred copies of each,
 and subtracts every sale. With `--dedup` it also keeps the sale ids in a table `processed`. It
 commits the Kafka offset of each sale after the database has committed, so it delivers at least
-once, and `--crash-after` stops it dead between the two commits. Save it as
-`~/work/stock_sink.py`:
+once, and `--crash-after` stops it dead between the two commits. Save it as `~/work/stock_sink.py`:
 
 ```schooling-example
 {
@@ -51,8 +50,8 @@ once, and `--crash-after` stops it dead between the two commits. Save it as
 }
 ```
 
-The stock of the eight books starts at 800 copies in all, so the sum of `stock` after the
-consumer has run is 800 minus the copies sold. Make a fresh topic with forty sales:
+The stock of the eight books starts at 800 copies in all, so the sum of `stock` after the consumer
+has run is 800 minus the copies sold. Make a fresh topic with forty sales:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
@@ -79,9 +78,9 @@ ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
 (658,)
 ```
 
-The forty sales took 71 copies off the shelves: 800 became 729. **The replay took them again**,
-to 658, and every book's count is now wrong by the copies of its own sales. Both runs printed the
-same honest line; nothing in either one looks like an error.
+The forty sales took 71 copies off the shelves: 800 became 729. **The replay took them again**, to
+658, and every book's count is now wrong by the copies of its own sales. Both runs printed the same
+honest line; nothing in either one looks like an error.
 
 ## With them
 
@@ -104,9 +103,9 @@ The first run applied all forty and kept their ids; the replay found every id al
 
 ## And the crash it was built for
 
-The replay was a deliberate duplicate. The ordinary one comes from a crash between the two
-commits. Delete the database and the group's offsets, crash the sink after fifteen sales, and
-start it again:
+The replay was a deliberate duplicate. The ordinary one comes from a crash between the two commits.
+Delete the database and the group's offsets, crash the sink after fifteen sales, and start it
+again:
 
 ```
 ubuntu@stream:~/work$ rm stock.db
@@ -120,7 +119,7 @@ ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
 (729,)
 ```
 
-The crash came after the fifteenth sale's database transaction had committed and before its
-offset had been committed to Kafka. So the restart was handed that sale again, found its id in
+The crash came after the fifteenth sale's database transaction had committed and before its offset
+had been committed to Kafka. So the restart was handed that sale again, found its id in
 `processed`, and skipped it: **25 applied, 1 skipped, and the stock at 729**, the same as a run
 that never crashed. Without `--dedup`, that one sale would have been subtracted twice.

@@ -27,10 +27,14 @@ RocksDB guarda o estado de trabalho em disco local, para estados maiores que a m
 de verdade o diretório é um armazenamento compartilhado que sobrevive a uma máquina, a mesma regra
 do Spark.
 
-O diretório do job dentro de `~/flink-checkpoints` tem o id dele como nome, e guarda o último
-checkpoint concluído:
+Cada job ganha um diretório dentro de `~/flink-checkpoints`, com o id dele como nome, guardando o
+último checkpoint concluído. São dois, o do job cancelado e o do que está rodando:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ ls ~/flink-checkpoints
+1b14e9a9a838ec156cb32b72b8c46fd7
+28d4b45557a9e6ff9b7385f48a63751f
+```
 
 ## Um savepoint: parar de propósito
 
@@ -39,19 +43,40 @@ o substituem. Um **savepoint** é seu: o mesmo tipo de snapshot, tirado quando v
 até você apagar, e usado para parar um job e iniciá-lo de novo depois, após uma atualização do
 Flink, uma mudança no job ou uma mudança de cluster. O `flink stop` tira um e então para o job:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ ~/flink/bin/flink stop --savepointPath file:///home/ubuntu/flink-savepoints 1b14e9a9a838ec156cb32b72b8c46fd7
+Suspending job "1b14e9a9a838ec156cb32b72b8c46fd7" with a CANONICAL savepoint.
+Triggering stop-with-savepoint for job 1b14e9a9a838ec156cb32b72b8c46fd7.
+Waiting for response...
+Savepoint completed. Path: file:/home/ubuntu/flink-savepoints/savepoint-1b14e9-c3b0e303e01b
+```
 
 Enquanto ele está parado, chegam mais duas vendas, a do Recife da lição 12 às 09:38 e uma de Natal
 às 09:44, tardia o bastante para levar o watermark além de 09:40:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ printf '%s\n' 'recife|{"sale": "rec-000201", "shop": "recife", "book": "bk-03", "qty": 1, "cents": 2990, "at": "2026-03-02T09:38:00-03:00"}' 'natal|{"sale": "nat-000202", "shop": "natal", "book": "bk-01", "qty": 1, "cents": 3990, "at": "2026-03-02T09:44:00-03:00"}' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic sales --reader-property parse.key=true --reader-property 'key.separator=|'
+```
 
 Submeta o `sales.sql` de novo, desta vez dizendo ao cliente SQL, com `-D`, de onde restaurar o job.
 O caminho é o que o `flink stop` imprimiu:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ ~/flink/bin/sql-client.sh -Dexecution.state-recovery.path=file:/home/ubuntu/flink-savepoints/savepoint-1b14e9-c3b0e303e01b -f sales.sql 2>/dev/null | grep "Job ID"
+Job ID: 28f69093342b20db69c2b4a874f3c4c9
+```
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic flink-sales-per-window --from-beginning --timeout-ms 10000 2>/dev/null
+{"window_start":"2026-03-02 09:00:00","window_end":"2026-03-02 09:05:00","sales":30,"cents":337340}
+{"window_start":"2026-03-02 09:05:00","window_end":"2026-03-02 09:10:00","sales":28,"cents":241740}
+{"window_start":"2026-03-02 09:10:00","window_end":"2026-03-02 09:15:00","sales":28,"cents":204680}
+{"window_start":"2026-03-02 09:15:00","window_end":"2026-03-02 09:20:00","sales":29,"cents":240130}
+{"window_start":"2026-03-02 09:20:00","window_end":"2026-03-02 09:25:00","sales":23,"cents":209180}
+{"window_start":"2026-03-02 09:25:00","window_end":"2026-03-02 09:30:00","sales":25,"cents":237180}
+{"window_start":"2026-03-02 09:30:00","window_end":"2026-03-02 09:35:00","sales":24,"cents":172230}
+{"window_start":"2026-03-02 09:35:00","window_end":"2026-03-02 09:40:00","sales":14,"cents":137930}
+```
 
 As seis primeiras linhas são do job antigo. **As duas últimas são do job novo, e só podiam vir do
 savepoint**: 24 vendas na janela de 09:30 e 14 na de 09:35, as 13 contadas antes da parada mais a
@@ -64,16 +89,32 @@ cada janela uma segunda vez.
 
 O cluster agora são três processos Java, o nó Kafka e os dois do Flink:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ jps -l
+23783 kafka.Kafka
+31511 org.apache.flink.runtime.taskexecutor.TaskManagerRunner
+5466 jdk.jcmd/sun.tools.jps.Jps
+30894 org.apache.flink.runtime.entrypoint.StandaloneSessionClusterEntrypoint
+```
 
-@@fence@@
+```
+ubuntu@stream:~/work$ ps -o pid,rss,comm -u ubuntu --sort=-rss | head -4
+  PID   RSS COMMAND
+23783 395568 java
+27181 173508 java
+27940  4332 ps
+```
 
-O TaskManager, que roda o job, e o JobManager, que o coordena, ocupam cerca de 400 MB cada, e o nó
-Kafka mais ou menos o mesmo: **cerca de 1,2 GB para um broker e um pequeno cluster Flink**, dentro
+O TaskManager, que roda o job, ocupa cerca de 480 MB, o JobManager, que o coordena, cerca de 430 MB,
+e o nó Kafka cerca de 410 MB: **cerca de 1,3 GB para um broker e um pequeno cluster Flink**, dentro
 dos 4 GB da máquina virtual com espaço para o sistema operacional. Pare o job e o cluster quando
 terminar:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ ~/flink/bin/stop-cluster.sh
+Stopping taskexecutor daemon (pid: 31511) on host stream.
+Stopping standalonesession daemon (pid: 30894) on host stream.
+```
 
 Parar o cluster com o job ainda rodando cancela o job, e o próximo início dele começaria do
 `earliest-offset` da tabela, a não ser que recebesse um savepoint ou um checkpoint de onde

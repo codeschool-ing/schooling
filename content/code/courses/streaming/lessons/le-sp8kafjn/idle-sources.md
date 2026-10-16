@@ -110,5 +110,5 @@ sale delivers a late one, and the watermark, which only moves forward, does not 
 timeout should be longer than the normal quiet spells of the quietest source, which is one more
 distribution worth measuring. Spark sidesteps the question by keeping one watermark per query from
 the latest event time across all its input, which never stalls and drops more events when
-partitions run unevenly; Kafka Streams keeps a stream time per task from the highest timestamp it
+partitions run unevenly. Kafka Streams keeps a stream time per task from the highest timestamp it
 has seen. Neither is free, and lesson 13 compares them.

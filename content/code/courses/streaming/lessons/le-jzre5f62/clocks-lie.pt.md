@@ -13,7 +13,7 @@ Os jeitos de o relógio de um caixa dar errado são poucos e conhecidos:
 - **Ele deriva.** Um cristal barato adianta ou atrasa um ou dois segundos por dia. Deixado sozinho
   por um ano, um caixa fica minutos fora, e ninguém nota porque o cupom continua saindo.
 - **Ele zera.** Uma bateria de relógio morta e uma queda de energia, e o caixa liga achando que é
-  1º de janeiro de 2000, ou 1970. Cada venda que ele faz chega com um quarto de século de atraso.
+  1º de janeiro de 2000, ou 1970. Cada venda que ele faz chega com décadas de atraso.
 - **O fuso dele está errado.** Um caixa configurado em UTC que escreve a leitura com `-03:00` no fim
   afirma que cada venda aconteceu três horas depois do que de fato aconteceu, sempre, o dia todo.
 - **Alguém acerta na mão**, pelo relógio da parede, que está cinco minutos adiantado.

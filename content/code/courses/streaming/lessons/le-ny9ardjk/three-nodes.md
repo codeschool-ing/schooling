@@ -3,9 +3,9 @@ title: Three nodes, and a topic with three copies
 version: 1
 ---
 
-**Replication means each partition is stored on several nodes at once, so losing one node loses
-no data and stops nothing.** The number of copies is the topic's **replication factor**, chosen
-when the topic is made. Every lesson so far ran one node and a replication factor of 1, which is a
+**Replication means each partition is stored on several nodes at once, so losing one node loses no
+data and stops nothing.** The number of copies is the topic's **replication factor**, chosen when
+the topic is made. Every lesson so far ran one node and a replication factor of 1, which is a
 single copy on a single disk: one node down and the topic is gone until it comes back.
 
 This lesson runs three. `cluster.sh` from lesson 1 already knows how: stop the one-node cluster,
@@ -43,9 +43,9 @@ Topic: sales	TopicId: hBMADyrPSHqe-J4ZJkPq1A	PartitionCount: 3	ReplicationFactor
 	Topic: sales	Partition: 2	Leader: 3	Replicas: 3,1,2	Isr: 3,1,2	Elr: 	LastKnownElr: 
 ```
 
-The `describe` gives the topic's tools an address list rather than one address. Any node can
-answer for the whole cluster, and with two addresses a tool still finds the cluster when the node
-it would ask first is the one that is down, which happens on purpose later in this lesson.
+The `describe` gives the topic's tools an address list rather than one address. Any node can answer
+for the whole cluster, and with two addresses a tool still finds the cluster when the node it would
+ask first is the one that is down, which happens on purpose in section 06.
 
 Each partition's line has three columns this lesson is about:
 
@@ -76,5 +76,5 @@ ubuntu@stream:~/work$ ls -d ~/kafka-data/node*/log/sales-*
 /home/ubuntu/kafka-data/node3/log/sales-2
 ```
 
-Nine directories, three partitions times three copies. Which of them is the leader's is not
-visible on disk; a copy is a copy, and any of them can become the leader.
+Nine directories, three partitions times three copies. Which of them is the leader's is not visible
+on disk; a copy is a copy, and any of them can become the leader.

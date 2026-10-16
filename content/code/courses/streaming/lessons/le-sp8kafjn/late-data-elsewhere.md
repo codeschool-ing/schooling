@@ -36,8 +36,8 @@ still open: 09:20:00 (2)
 ```
 
 The same two sales as before are too late, and this time the line says where they went. Each was
-sent with the watermark it lost to, which is the evidence somebody will want later: not only that
-it was late, but by how much.
+sent with the watermark it lost to, which is the evidence somebody will want later: by how much
+it missed.
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-late --from-beginning --max-messages 2
@@ -62,5 +62,5 @@ A topic of late sales is useful only if something reads it. Three things usually
   lesson 9's lying clocks, is a question about a device, and the late topic is where somebody finds
   it.
 
-**The point is that late data stops being invisible.** Dropping it and counting it are the same
+**Late data stops being invisible.** Dropping it and counting it are the same
 cost to the stream processor, and only one of them leaves a trail.

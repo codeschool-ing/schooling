@@ -25,8 +25,8 @@ trip.
 
 Nothing in the batch is broken. It answers the question it was built for, *what sold yesterday*,
 perfectly. The question that went unanswered was **what is happening now**, and a pipeline that
-runs once a day cannot answer it at any price: run it every hour and the gap is an hour, every
-minute and the gap is a minute, and each step makes the pipeline more expensive without changing
+runs once a day cannot answer it at any price. Run it every hour and the gap is an hour; run it
+every minute and the gap is a minute. Each step makes the pipeline more expensive without changing
 its shape.
 
 ## How small can a batch get

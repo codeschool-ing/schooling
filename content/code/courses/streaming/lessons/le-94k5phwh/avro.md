@@ -3,17 +3,17 @@ title: Avro, and reading with a different schema from the writer's
 version: 1
 ---
 
-**Avro is a binary format in which nothing can be written without a schema, and nothing can be
-read without the schema it was written with.** The schema is JSON: a record with a name and a list
-of fields, each with a type. The data is not JSON. It is the values one after another, with no
-field names and no punctuation, in the order the schema lists them.
+**Avro is a binary format in which nothing can be written without a schema, and nothing can be read
+without the schema it was written with.** The schema is JSON: a record with a name and a list of
+fields, each with a type. The data is not JSON. It is the values one after another, with no field
+names and no punctuation, in the order the schema lists them.
 
 That second half is where Avro differs from what most people expect. In JSON, `{"qty": 2}` says
 which field the 2 belongs to. In Avro the 2 is just a number at a position, and only the schema
-says that position is `qty`. So a reader holding the wrong schema does not get a missing field:
-it gets nonsense, or an error. Avro's answer to that is to make the **writer's schema** something
-a reader always has, and to let the reader bring **its own schema** as well, and then work out
-the difference between the two.
+says that position is `qty`. So a reader holding the wrong schema does not get a missing field: it
+gets nonsense, or an error. Avro's answer is to make the **writer's schema** something a reader
+always has. The reader may bring a schema of its own as well, and Avro works out the difference
+between the two.
 
 ## One sale, three schemas
 
@@ -60,15 +60,15 @@ read with v2: {'sale': 'nat-000002', 'shop': 'natal', 'book': 'bk-08', 'qty': 2,
 read with v3: SchemaResolutionError No default value for field till in pontofinal.Sale
 ```
 
-The 27 bytes are worth reading once. `14` is the length of the first string, `nat-000002`, which
-is ten characters: Avro writes integers in a compact form in which ten becomes `14`. Then the ten
+The 27 bytes are worth reading once. `14` is the length of the first string, `nat-000002`, which is
+ten characters: Avro writes integers in a compact form in which ten becomes `14`. Then the ten
 characters, `6e 61 74…`. Then `0a`, a length of five, and `natal`; another five, and `bk-08`; `04`,
 which is the 2 of `qty`; and `f8 98 02`, which is 17980. **There is not one field name in it.**
 
 ## What resolution does
 
-When the reader's schema differs from the writer's, Avro matches the fields **by name** and
-applies a short list of rules:
+When the reader's schema differs from the writer's, Avro matches the fields **by name** and applies
+a short list of rules:
 
 | the difference | what happens |
 |---|---|
@@ -84,11 +84,10 @@ the other way: a field added without one is a field no old message can satisfy.
 
 The fourth row is the rename the last section's till needed, done properly: the reader declares
 that `amount` used to be `cents`. It is also the rule people remember wrongly. An alias is the
-reader's knowledge of the past, so it only helps a reader that has been upgraded; a reader still
-on v1 that receives a message written with v2 looks for `cents`, finds `amount`, and fails. Which
-side upgrades first is a question with an answer, and the last two sections of this lesson give
-it.
+reader's knowledge of the past, so it only helps a reader that has been upgraded; a reader still on
+v1 that receives a message written with v2 looks for `cents`, finds `amount`, and fails. Which side
+upgrades first is a question with an answer, and the last two sections of this lesson give it.
 
-The other thing the run shows is the cost of carrying names. The same sale is 82 bytes as JSON
-and 27 as Avro, because the Avro body is the values and nothing else. On a topic of a hundred
-million sales, that difference is most of the disk.
+The other thing the run shows is the cost of carrying names. The same sale is 82 bytes as JSON and
+27 as Avro, because the Avro body is the values and nothing else. On a topic of a hundred million
+sales, that difference is most of the disk.

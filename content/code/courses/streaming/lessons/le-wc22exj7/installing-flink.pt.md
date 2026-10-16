@@ -21,10 +21,12 @@ Compare as duas strings, como fez com o Kafka:
 
 ```
 ubuntu@stream:~$ sha512sum flink-2.2.1-bin-scala_2.12.tgz | cut -d" " -f1
+9beb619520a9b9a94d71e165f51c2c2bf67d180fee2a6f88a85b05f23b513efd12897669b6b8b000a7f16c8c8835c3bdb1e7b83133ef63056dc98a2a67105f60
 ```
 
 ```
 ubuntu@stream:~$ cut -d" " -f1 flink-2.2.1-bin-scala_2.12.tgz.sha512
+9beb619520a9b9a94d71e165f51c2c2bf67d180fee2a6f88a85b05f23b513efd12897669b6b8b000a7f16c8c8835c3bdb1e7b83133ef63056dc98a2a67105f60
 ```
 
 O `scala_2.12` no nome é a versão do Scala com que as partes internas do Flink foram compiladas, e,
@@ -64,12 +66,22 @@ A primeira linha muda os dois tamanhos de memória, e a segunda acrescenta uma l
 
 ```
 ubuntu@stream:~$ grep -n -E "size: |bind-address: localhost" ~/flink/conf/config.yaml
+60:      size: 1024m
+95:      size: 1024m
+173:  bind-address: localhost
+182:  # bind-address: localhost
 ```
+
+As linhas 60 e 95 são os dois tamanhos e a linha 173 é a nova. A última linha já estava no
+arquivo, atrás de um `#`: um comentário, que o Flink ignora.
 
 ## Subindo o cluster
 
 ```
 ubuntu@stream:~$ ~/flink/bin/start-cluster.sh
+Starting cluster.
+Starting standalonesession daemon on host stream.
+Starting taskexecutor daemon on host stream.
 ```
 
 São dois daemons, uma "standalone session", que é o JobManager, e um "task executor", o
@@ -77,6 +89,8 @@ TaskManager. Eles levam alguns segundos para abrir as portas:
 
 ```
 ubuntu@stream:~$ ss -ltn | grep -E ":8081|:6123"
+LISTEN 0      4096       127.0.0.1:6123       0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:8081       0.0.0.0:*          
 ```
 
 A porta 6123 é por onde o TaskManager fala com o JobManager, e a 8081 é a página web e a interface

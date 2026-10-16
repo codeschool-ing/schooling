@@ -26,14 +26,14 @@ Processed a total of 3 messages
 
 Three messages for two statements, and each one says something different:
 
-- **The update, offset 40**: `op` `u`, the new row in `after`, and `before` is `null`. The WAL
+- The update, at offset 40, has `op` `u`, the new row in `after`, and a `null` `before`. The WAL
   recorded the new row and nothing about the old one, so a reader knows Recife now has 2 copies and
   cannot tell from the event that it had 3.
-- **The delete, offset 41**: `op` `d`, `after` is `null`, and `before` has the key and **a `qty` of
+- The delete, at offset 41, has `op` `d` and a `null` `after`, and its `before` holds the key and **a `qty` of
   0** — which is not what the row held. With the default setting, the WAL keeps only the key of a
   deleted row; Debezium fills the other columns, declared `NOT NULL`, with a placeholder. A reader
   that sums `before.qty` to work out what was removed gets a wrong number and no error.
-- **Offset 42 is a tombstone**: the same key, and a value of `null`. It is not a second delete.
+- **Offset 42 is a tombstone**, the same key, and a value of `null`. It is not a second delete.
 
 ## REPLICA IDENTITY
 

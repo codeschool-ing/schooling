@@ -11,6 +11,13 @@ thing to look at:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --list
+__consumer_offsets
+sales
+sales-per-book
+sales-per-shop
+sales-per-shop-KSTREAM-AGGREGATE-STATE-STORE-0000000001-changelog
+sales-per-shop-KSTREAM-AGGREGATE-STATE-STORE-0000000006-changelog
+sales-per-shop-KSTREAM-AGGREGATE-STATE-STORE-0000000006-repartition
 ```
 
 Two of them are the output topics the program named. The other three nobody named:
@@ -41,6 +48,13 @@ The local copy is on disk, in the directory the program named, with one subdirec
 
 ```
 ubuntu@stream:~/work$ ls ~/streams-state/a/sales-per-shop
+0_0
+0_1
+0_2
+1_0
+1_1
+1_2
+kafka-streams-process-metadata
 ```
 
 `0_0` to `0_2` are the tasks of the first part of the topology, reading `sales`, and `1_0` to `1_2`
@@ -54,6 +68,11 @@ the second shell, then copy `b` in a third shell, opened the same way:
 
 ```
 ubuntu@stream:~/work$ java -cp "$HOME/kafka/libs/*:." SalesPerShop b
+state: CREATED -> REBALANCING
+state: REBALANCING -> RUNNING
+tasks here: [0_1, 1_0, 1_2]
+state: RUNNING -> PENDING_SHUTDOWN
+state: PENDING_SHUTDOWN -> NOT_RUNNING
 ```
 
 The two copies are members of one consumer group, `sales-per-shop`, the application id, and the
@@ -61,19 +80,32 @@ group gave the six tasks to two members:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group sales-per-shop --members
+
+GROUP           CONSUMER-ID                                                                                                      HOST            CLIENT-ID                                                                   #PARTITIONS     
+sales-per-shop  sales-per-shop-dabbbf81-17e6-434a-9c35-4fad4428eacd-StreamThread-1-consumer-89e5e53c-7058-41b1-94be-043b5b58b876 /127.0.0.1      sales-per-shop-dabbbf81-17e6-434a-9c35-4fad4428eacd-StreamThread-1-consumer 3               
+sales-per-shop  sales-per-shop-a7b61109-432f-48c5-9455-da5f975f2de0-StreamThread-1-consumer-37731bed-72e3-471a-9493-dccc05f6d825 /127.0.0.1      sales-per-shop-a7b61109-432f-48c5-9455-da5f975f2de0-StreamThread-1-consumer 3               
 ```
 
 Each member holds three partitions, and the program's own lines say which tasks:
 
 ```
 ubuntu@stream:~/work$ java -cp "$HOME/kafka/libs/*:." SalesPerShop a
+state: CREATED -> REBALANCING
+state: REBALANCING -> RUNNING
+tasks here: [0_0, 0_2, 1_1]
+state: RUNNING -> PENDING_SHUTDOWN
+state: PENDING_SHUTDOWN -> NOT_RUNNING
 ```
 
-Copy `a` began alone with all six, went back to rebalancing when `b` arrived, and came out of it
-with half. Nothing was copied between them by hand: a task that moves takes its count from the
-changelog topic. Stop both copies with Ctrl+C when you are done. While one copy was running alone,
-it was a Java process of about 200 MB beside the Kafka node:
+Copy `a` holds `0_0`, `0_2` and `1_1`, and copy `b` the other three; your split may differ, since
+the group decides it. Nothing was copied between them by hand: a task that moves to another copy
+takes its count from the changelog topic. Stop both copies with Ctrl+C when you are done. While
+copy `a` was running alone, it was a Java process of about 170 MB beside the Kafka node:
 
 ```
 ubuntu@stream:~/work$ ps -o pid,rss,comm -u ubuntu --sort=-rss | head -4
+  PID   RSS COMMAND
+31511 478416 java
+30894 429560 java
+23783 410488 java
 ```

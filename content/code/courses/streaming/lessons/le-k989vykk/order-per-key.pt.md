@@ -27,8 +27,8 @@ linha se moveu, dentro de uma chave, e a resposta ficou errada.
 ## Quanto custa uma ordem total
 
 Uma ordem única para todos os eventos exige um lugar único onde os eventos são postos em ordem: um
-arquivo, um processo, uma máquina por onde todo escritor tem de passar. É isso que o `minilog.py` é,
-e ele tem um teto: o log só aceita tantos eventos por segundo quanto esse lugar consegue anexar. Pôr
+arquivo, um processo, uma máquina por onde todo escritor tem de passar. É isso que o `minilog.py` é.
+E ele tem um teto: o log só aceita tantos eventos por segundo quanto esse lugar consegue anexar. Pôr
 uma segunda máquina não ajuda, a menos que as duas concordem, para cada evento, sobre qual veio
 primeiro, e esse acordo é uma ida e volta entre elas a cada escrita.
 

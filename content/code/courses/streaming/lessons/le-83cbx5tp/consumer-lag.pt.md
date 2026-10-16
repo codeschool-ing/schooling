@@ -135,6 +135,6 @@ stock           sales           2          -               0               -    
 
 Duas coisas nesses números merecem desconfiança. **O lag é medido a partir do último commit, não da
 mensagem sendo tratada**, então aqui ele está até um segundo desatualizado, e até cinco com o
-intervalo padrão; um consumidor que nunca confirma mostra um lag que nunca se move, mesmo enquanto
+intervalo padrão. Um consumidor que nunca confirma mostra um lag que nunca se move, mesmo enquanto
 trabalha. E lag zero diz que o grupo leu tudo, não que tratou tudo corretamente. Deixe o consumidor
 rodando: a seção sobre replay precisa dele.

@@ -3,10 +3,10 @@ title: Who upgrades first
 version: 1
 ---
 
-**Every compatibility mode is also an instruction about the order in which programs are
-upgraded**, and that instruction is the part teams forget. The registry checks the schemas; it
-cannot check that the consumers were redeployed before the producers, and a mode followed in the
-wrong order breaks a reader as surely as no mode at all.
+**Every compatibility mode is also an instruction about the order in which programs are upgraded**,
+and that instruction is the part teams forget. The registry checks the schemas; it cannot check
+that the consumers were redeployed before the producers, and a mode followed in the wrong order
+breaks a reader as surely as no mode at all.
 
 | mode | who upgrades first | why |
 |---|---|---|
@@ -19,9 +19,9 @@ wrong order breaks a reader as surely as no mode at all.
 ```
 
 The wrong picture is that `BACKWARD` lets you change the producer freely because the registry
-approved the schema. Approve a version 2 that removes a field under `BACKWARD`, deploy the
-producer first, and every consumer still on version 1 meets messages without a field it
-requires. The registry did its job; the deploy went the other way round.
+approved the schema. Approve a version 2 that removes a field under `BACKWARD`, deploy the producer
+first, and every consumer still on version 1 meets messages without a field it requires. The
+registry did its job; the deploy went the other way round.
 
 ## Both directions, on one topic
 
@@ -64,15 +64,14 @@ decides how long "every version" reaches back.
 
 ## Avro is not the only choice
 
-The registry stores two other kinds of schema, with the same subjects, ids and compatibility
-modes:
+The registry stores two other kinds of schema, with the same subjects, ids and compatibility modes:
 
-- **JSON Schema** keeps the messages as JSON, which people and `jq` can read, and adds the
+- JSON Schema keeps the messages as JSON, which people and `jq` can read, and adds the
   checks JSON lacks. It pays for that in size: the field names are still in every message.
-- **Protocol Buffers** identifies fields by **number** rather than name, so a rename is free and
+- Protocol Buffers identifies fields by **number** rather than name, so a rename is free and
   reusing a number is the mistake to avoid. It is common where the same messages also travel
   over gRPC.
 
-The choice between the three matters less than having one. The till in the first section did
-not fail because JSON is a bad format; it failed because nothing stood between a programmer's
-better name and every reader of the topic.
+The choice between the three matters less than having one. The till in the first section did not
+fail because JSON is a bad format; it failed because nothing stood between a programmer's better
+name and every reader of the topic.

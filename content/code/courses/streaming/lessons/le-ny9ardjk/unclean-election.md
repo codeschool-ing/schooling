@@ -3,18 +3,19 @@ title: Unclean leader election: available, or correct
 version: 1
 ---
 
-**When every replica in a partition's ISR is gone and only an out-of-date replica is left, Kafka
-can either wait for an in-sync one to come back, and the partition is unavailable until then, or
-make the out-of-date one leader, and lose every record it did not have.** Making it leader is an
-**unclean leader election**. It is off by default, `unclean.leader.election.enable=false`, and this
-section provokes the situation to show what the default protects.
+**When every replica in a partition's ISR is gone and only an out-of-date one is left, Kafka has
+two choices.** It can wait for an in-sync replica to come back, and the partition is unavailable
+until then. Or it can make the out-of-date one leader, and lose every record it did not have.
+Making it leader is an **unclean leader election**. It is off by default,
+`unclean.leader.election.enable=false`, and this section provokes the situation to show what the
+default protects.
 
 ## Setting up the loss
 
 The situation needs a partition whose last in-sync replica dies after the others. A topic with two
-replicas placed on nodes 2 and 3 by hand makes it easy to follow; `--replica-assignment 2:3`
-means one partition, with replicas on node 2 and node 3, node 2 first. Ten sales go in with both
-replicas in sync. Then node 3 dies, and ten more sales go in with node 2 alone, which
+replicas placed on nodes 2 and 3 by hand makes it easy to follow; `--replica-assignment 2:3` means
+one partition, with replicas on node 2 and node 3, node 2 first. Ten sales go in with both replicas
+in sync. Then node 3 dies, and ten more sales go in with node 2 alone, which
 `min.insync.replicas=1` on this topic allows:
 
 ```
@@ -56,11 +57,11 @@ out; consumers get nothing.
 ## Elr: the replicas that may still lead cleanly
 
 The two columns that were empty until now have filled in. **`Elr` is the list of Eligible Leader
-Replicas**, from KIP-966, which Kafka 4 brought in: replicas that left the ISR while it was
-already at or below `min.insync.replicas`, and so are known to hold every committed record. Node 2 is in it, because it was the last in-sync replica when the ISR lost
-it. When node 2 comes back, Kafka can make it leader cleanly and lose nothing. `LastKnownElr`
-keeps the last such list when even the Elr is empty, so an operator can see which node to bring
-back first.
+Replicas**, from KIP-966, which Kafka 4 brought in: replicas that left the ISR while it was already
+at or below `min.insync.replicas`, and so are known to hold every committed record. Node 2 is in
+it, because it was the last in-sync replica when the ISR lost it. When node 2 comes back, Kafka can
+make it leader cleanly and lose nothing. `LastKnownElr` keeps the last such list when even the Elr
+is empty, so an operator can see which node to bring back first.
 
 So the clean way out is to restart node 2. The unclean way is to tell Kafka to use what it has:
 
@@ -107,5 +108,5 @@ sensible choice: an outage is visible and ends, a hole in the data is silent and
 it on is defensible for data that is only worth anything fresh, such as positions of vehicles or
 metrics, where an hour of nothing is worse than a few lost points. Either way it is a decision per
 topic, `unclean.leader.election.enable` set with `kafka-configs.sh`, and the leader-election tool
-above is the same decision made once, by hand, by somebody who has decided the missing records
-are worth less than the outage.
+above is the same decision made once, by hand, by somebody who has decided the missing records are
+worth less than the outage.

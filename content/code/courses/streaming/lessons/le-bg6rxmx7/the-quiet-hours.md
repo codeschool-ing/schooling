@@ -59,6 +59,3 @@ So the answer is rarely all one or the other:
 - **Look at the bill monthly against the arithmetic.** A stream that costs more than its messages
   times their bytes times their days says that something else is growing: partitions nobody uses,
   consumer groups nobody reads, retention nobody chose.
-
-A stream that never sleeps is a decision, and like every other in this course it has a reason
-written beside it, or it is a default nobody has looked at.

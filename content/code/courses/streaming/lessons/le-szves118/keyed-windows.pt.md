@@ -3,8 +3,8 @@ title: Janelas por chave
 version: 1
 ---
 
-**Na prática uma janela quase nunca é sobre o stream inteiro: ela é por chave, então cada loja, ou
-cliente, ou livro, tem o próprio conjunto de janelas.** "Vendas a cada cinco minutos" é um painel que
+**Na prática uma janela quase nunca é sobre o stream inteiro: ela é por chave**, então cada loja,
+cliente ou livro tem o próprio conjunto de janelas. "Vendas a cada cinco minutos" é um painel que
 ninguém lê; "vendas a cada cinco minutos por loja" é o que o gerente regional abre.
 
 Janelas por chave são a mesma regra aplicada separadamente dentro de cada chave. Uma janela tumbling
@@ -72,7 +72,7 @@ reparticionamento, que a lição 13 lista entre os tópicos que uma aplicação 
 
 Cada janela aberta por chave é estado que o motor guarda até a janela terminar. Cinco lojas e janelas
 de cinco minutos são um punhado de contadores. Um milhão de clientes com sessões de trinta minutos é
-um milhão de entradas, e é por isso que os motores põem o estado das janelas num armazenamento
+um milhão de entradas. É por isso que os motores põem o estado das janelas num armazenamento
 embutido em disco em vez de na memória, e por isso que a lição 13 dedica uma seção a onde esse estado
 fica quando um trabalhador morre. O número a estimar antes de escolher uma janela é **chaves × janelas
 abertas por chave**, e os dois fatores vêm das escolhas desta lição.

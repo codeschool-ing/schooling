@@ -24,8 +24,8 @@ dados em que velocidade importa mais que cada registro, como métricas amostrada
 
 ## A outra metade: min.insync.replicas
 
-`acks=all` espera pela ISR, e a ISR pode encolher. Com fator de replicação 3 e dois nós fora do
-ar, a ISR é só o líder, e `acks=all` passa a querer dizer *o líder tem*, que é `acks=1` com um nome
+`acks=all` espera pela ISR, e a ISR pode encolher. Com fator de replicação 3 e dois nós fora do ar,
+a ISR é só o líder, e `acks=all` passa a querer dizer *o líder tem*, que é `acks=1` com um nome
 melhor. **`min.insync.replicas` é o piso**: a menor ISR com que o líder aceita uma escrita
 `acks=all`. Abaixo dela, o líder recusa a escrita com `NotEnoughReplicas` em vez de aceitá-la com
 cópias de menos.
@@ -38,8 +38,8 @@ continuam; todo registro confirmado está em pelo menos dois discos.
 
 Este programa manda vendas com um `acks` escolhido e conta as respostas: entregue, ou o nome do
 erro. Ele dá ao cliente os endereços dos três nós, para que comece por qualquer um que esteja no
-ar, e define `message.timeout.ms` em trinta segundos, o tempo que o cliente passa tentando de novo
-uma venda antes de desistir e informá-la como falha; o padrão é cinco minutos. Salve como
+ar. Também define `message.timeout.ms` em trinta segundos, o tempo que o cliente passa tentando de
+novo uma venda antes de desistir e informá-la como falha; o padrão é cinco minutos. Salve como
 `~/work/acks.py`:
 
 ```python
@@ -91,8 +91,8 @@ if args.acks != "0":
         print(f"partition {p}: offsets {min(o)} to {max(o)}")
 ```
 
-Os três valores funcionam enquanto os três nós estão no ar. Com `acks=0` não há resposta, então
-não há offset, e "entregue" só quer dizer "enviado":
+Os três valores funcionam enquanto os três nós estão no ar. Com `acks=0` não há resposta, então não
+há offset, e "entregue" só quer dizer "enviado":
 
 ```
 ubuntu@stream:~/work$ python acks.py --acks 0
@@ -127,7 +127,7 @@ dez vendas entregues com `acks=all`, nos offsets 269 a 278 da partição 1.
 ## Abaixo do piso
 
 Perder um segundo nó deste cluster também levaria a maioria dos seus controllers, o que é outra
-falha e assunto de uma seção mais adiante. Então, para ver a recusa, suba o piso: com
+falha e assunto da seção depois da próxima. Então, para ver a recusa, suba o piso: com
 `min.insync.replicas=3`, uma ISR de dois fica um abaixo.
 
 ```

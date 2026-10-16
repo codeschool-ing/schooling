@@ -60,8 +60,7 @@ desigual é o que uma amostra pequena dá. Mas quer dizer que um tópico de trê
 chaves, um tópico de duas. Os offsets contam dentro de cada partição, e é por isso que a mensagem de
 Caruaru está no offset 0 enquanto a de Natal está no 2.
 
-**A mesma chave vai para a mesma partição enquanto o número de partições não mudar**, e essa é a
-promessa inteira. Quem fez o hash foi o cliente: o cliente Python é construído sobre o librdkafka,
+**A mesma chave vai para a mesma partição enquanto o número de partições não mudar.** Quem fez o hash foi o cliente: o cliente Python é construído sobre o librdkafka,
 uma biblioteca em C, e o particionador padrão dele, `consistent_random`, calcula um CRC32 da chave.
 
 ## As ferramentas do próprio Kafka fazem outro hash

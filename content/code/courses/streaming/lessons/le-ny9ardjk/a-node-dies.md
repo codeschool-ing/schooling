@@ -106,16 +106,16 @@ Topic: sales	TopicId: hBMADyrPSHqe-J4ZJkPq1A	PartitionCount: 3	ReplicationFactor
 	Topic: sales	Partition: 2	Leader: 3	Replicas: 3,1,2	Isr: 1,2,3	Elr: 	LastKnownElr: 
 ```
 
-Partitions 1 and 2 had leaders other than their preferred ones: partition 2 since node 3 was
-frozen two sections ago, partition 1 since node 2 was killed. Both moved back, and each node leads
-one partition again.
+Partitions 1 and 2 had leaders other than their preferred ones: partition 2 since node 3 was frozen
+two sections ago, partition 1 since node 2 was killed. Both moved back, and each node leads one
+partition again.
 
 ## What it cost
 
 Nothing that was acknowledged. A hundred sales sent, a hundred delivered, at a hundred consecutive
 offsets, so none was written twice either. What the failure cost was **time**: for a few seconds
-the partition had no leader, and the sales sent in those seconds waited in the producer's memory.
-A consumer of the partition would have seen the same pause. That is the price of replication done
-right, and it is measured in seconds because the controllers wait a few seconds of silence before
-they declare a node dead: long enough not to fail over on every slow heartbeat, short enough that
-a till never notices.
+the partition had no leader, and the sales sent in those seconds waited in the producer's memory. A
+consumer of the partition would have seen the same pause. That is what replication costs when it
+works. It is measured in seconds because the controllers wait a few seconds of silence before they
+declare a node dead: long enough not to fail over on every slow heartbeat, short enough that a till
+never notices.

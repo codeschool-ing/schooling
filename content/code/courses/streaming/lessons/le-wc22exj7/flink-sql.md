@@ -64,6 +64,7 @@ is the job's id, so `grep` keeps that:
 
 ```
 ubuntu@stream:~/work$ ~/flink/bin/sql-client.sh -f sales.sql 2>/dev/null | grep "Job ID"
+Job ID: 28d4b45557a9e6ff9b7385f48a63751f
 ```
 
 The client has gone, and the job has not: it runs on the cluster now, and will until somebody
@@ -80,6 +81,11 @@ watermark. The job is running:
 
 ```
 ubuntu@stream:~/work$ ~/flink/bin/flink list
+Waiting for response...
+------------------ Running/Restarting Jobs -------------------
+15.10.2026 22:22:56 : 28d4b45557a9e6ff9b7385f48a63751f : insert-into_default_catalog.default_database.sales_per_window (RUNNING)
+--------------------------------------------------------------
+No scheduled jobs.
 ```
 
 The reason is lesson 11's idle source. Flink keeps **a watermark per partition** and moves the
@@ -93,7 +99,9 @@ The fix is to declare how long a partition may stay quiet before it stops counti
 with the id `flink list` printed:
 
 ```
-ubuntu@stream:~/work$ ~/flink/bin/flink cancel
+ubuntu@stream:~/work$ ~/flink/bin/flink cancel 28d4b45557a9e6ff9b7385f48a63751f
+Cancelling job 28d4b45557a9e6ff9b7385f48a63751f.
+Cancelled job 28d4b45557a9e6ff9b7385f48a63751f.
 ```
 
 Then add one line to the top of `sales.sql`, saying that a partition silent for five seconds is
@@ -105,10 +113,17 @@ ubuntu@stream:~/work$ sed -i "1i SET 'table.exec.source.idle-timeout' = '5 s';" 
 
 ```
 ubuntu@stream:~/work$ ~/flink/bin/sql-client.sh -f sales.sql 2>/dev/null | grep "Job ID"
+Job ID: 1b14e9a9a838ec156cb32b72b8c46fd7
 ```
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic flink-sales-per-window --from-beginning --timeout-ms 10000 2>/dev/null
+{"window_start":"2026-03-02 09:00:00","window_end":"2026-03-02 09:05:00","sales":30,"cents":337340}
+{"window_start":"2026-03-02 09:05:00","window_end":"2026-03-02 09:10:00","sales":28,"cents":241740}
+{"window_start":"2026-03-02 09:10:00","window_end":"2026-03-02 09:15:00","sales":28,"cents":204680}
+{"window_start":"2026-03-02 09:15:00","window_end":"2026-03-02 09:20:00","sales":29,"cents":240130}
+{"window_start":"2026-03-02 09:20:00","window_end":"2026-03-02 09:25:00","sales":23,"cents":209180}
+{"window_start":"2026-03-02 09:25:00","window_end":"2026-03-02 09:30:00","sales":25,"cents":237180}
 ```
 
 **Six windows, the same six as lesson 12's append mode**, with the same counts: 30 sales from

@@ -6,7 +6,7 @@ version: 1
 **Um log é uma sequência de registros que só cresce por uma ponta.** Cada registro recebe um
 número, o seu **offset**, que é a sua posição contando a partir de zero, e fica com ele enquanto
 existir. Ninguém insere no meio, ninguém edita, e ler um registro não o remove. Essa é a estrutura
-de dados inteira, e é sobre ela que o Kafka é construído.
+de dados inteira, e o Kafka é construído sobre ela.
 
 A palavra engana em duas direções. Para um programador, *log* é o texto que um servidor escreve
 sobre si mesmo, o `server.log`, em que alguém dá grep quando algo dá errado. Para muita gente que já

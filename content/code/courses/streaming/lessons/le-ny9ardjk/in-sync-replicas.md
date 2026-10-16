@@ -3,11 +3,10 @@ title: In-sync replicas: the copies that count
 version: 1
 ---
 
-**The in-sync replicas, the ISR, are the replicas that have kept up with the leader recently
-enough to be trusted with its data.** A replica that falls behind is taken out of the list, and
-while it is out, nothing waits for it: the high watermark moves with the replicas still in the
-list, and a write that needs all copies needs only theirs. It comes back into the list when it has
-caught up.
+**The in-sync replicas, the ISR, are the replicas that have kept up with the leader recently enough
+to be trusted with its data.** A replica that falls behind is taken out of the list, and while it
+is out, nothing waits for it: the high watermark moves with the replicas still in the list, and a
+write that needs all copies needs only theirs. It comes back into the list when it has caught up.
 
 "Recently enough" is one setting, read from the broker:
 
@@ -44,8 +43,9 @@ same pattern `cluster.sh` uses; a looser one, such as `node3` on its own, could 
 shell.
 
 Node 3 has left every ISR. Partition 2, whose leader it was, now has node 1 as leader, because a
-frozen leader answers nobody and the controllers stopped hearing from it. Every partition still has a
-leader and two copies in sync, which is enough to take writes under `min.insync.replicas=2`, as the next section explains.
+frozen leader answers nobody and the controllers stopped hearing from it. Every partition still has
+a leader and two copies in sync, which is enough to take writes under `min.insync.replicas=2`, as
+the next section explains.
 
 Now let it go:
 
@@ -66,12 +66,12 @@ the section on a node dying shows how leadership returns to the preferred one.
 
 The ISR is the answer to two questions every write and every failure asks:
 
-- **Who has to have a record before it counts as committed?** Every member of the ISR. Not every
+- Who has to have a record before it counts as committed? Every member of the ISR. Not every
   replica, or a dead node would stop all writes; not just the leader, or a committed record could
   be lost with it.
-- **Who may become leader when the leader goes?** A member of the ISR, because only they are
+- Who may become leader when the leader goes? A member of the ISR, because only they are
   known to have every committed record. Choosing anybody else is
-  the unclean election a later section of this lesson is about.
+  the unclean election that section 08 of this lesson is about.
 
 A shrinking ISR is also the first sign of trouble an operator sees. A partition whose ISR is
 smaller than its replica list is **under-replicated**, and lesson 16 puts that on the list of

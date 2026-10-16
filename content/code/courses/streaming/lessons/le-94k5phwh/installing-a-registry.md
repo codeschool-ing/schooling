@@ -3,16 +3,17 @@ title: Installing a schema registry
 version: 1
 ---
 
-A schema registry is a small web service with a database behind it. Producers ask it for an id
-when they write, consumers ask it for a schema when they read, and the schemas themselves are
-stored in it, numbered. **Kafka does not ship one**, and nothing in the broker knows a registry
-exists: as far as Kafka is concerned, a message is still a key and a value of bytes.
+A schema registry is a small web service with a database behind it. Producers ask it for an id when
+they write, consumers ask it for a schema when they read, and the schemas themselves are stored in
+it, numbered. **Kafka does not ship one**, and nothing in the broker knows a registry exists: as
+far as Kafka is concerned, a message is still a key and a value of bytes.
 
 The best-known registry is Confluent's, published under the Confluent Community License, which
-forbids offering it as a hosted service that competes with Confluent's own. This course uses **Apicurio Registry**, an Apache-licensed
-registry from Red Hat that also answers on Confluent's API, so the Python client you already
-have talks to it unchanged. Version 3.3.3 is one archive on Maven Central, the repository Java
-libraries are published to, and it runs on the Java you installed in lesson 1.
+forbids offering it as a hosted service that competes with Confluent's own. This course uses
+**Apicurio Registry**, an Apache-licensed registry from Red Hat that also answers on Confluent's
+API, so the Python client you already have talks to it unchanged. Version 3.3.3 is one archive on
+Maven Central, the repository Java libraries are published to, and it runs on the Java you
+installed in lesson 1.
 
 ## Getting it
 
@@ -34,8 +35,8 @@ dd081e0bb14bb94ac9806eb768667b10a7292a8a75a81cbbfec1c99d920bc35697fc5e567d74b7bf
 ```
 
 The archive has no directory of its own at the top, so make one and unpack into it. Then install
-the Avro side of the Python client. `confluent-kafka[avro]` brings the registry client and the
-Avro serialiser; the rest of the line pins what it pulls in, so your versions are the ones these
+the Avro side of the Python client. `confluent-kafka[avro]` brings the registry client and the Avro
+serialiser; the rest of the line pins what it pulls in, so your versions are the ones these
 transcripts were made with:
 
 ```sh
@@ -46,9 +47,9 @@ pip install "confluent-kafka[avro]==2.16.0" fastavro==1.13.1 avro==1.12.2 reques
 
 ## Starting it
 
-The registry is one Java program, `quarkus-run.jar`, and with no configuration it keeps its
-schemas **in memory** and listens on port 8080. Start it in the background with its output going
-to a file, and wait for it to answer:
+The registry is one Java program, `quarkus-run.jar`, and with no configuration it keeps its schemas
+**in memory** and listens on port 8080. Start it in the background with its output going to a file,
+and wait for it to answer:
 
 ```
 ubuntu@stream:~/work$ nohup java -jar ~/apicurio/quarkus-run.jar > ~/apicurio/registry.log 2>&1 &
@@ -56,26 +57,26 @@ ubuntu@stream:~/work$ until curl -s localhost:8080/apis/ccompat/v7/subjects; do 
 []
 ```
 
-The `until` line asks for the list of subjects once a second until something answers. `[]` is
-an empty list: the registry is up and holds nothing yet. Your shell also prints a job number and
-a process id when you start something with `&`, which are not in the transcript and differ every
+The `until` line asks for the list of subjects once a second until something answers. `[]` is an
+empty list: the registry is up and holds nothing yet. Your shell also prints a job number and a
+process id when you start something with `&`, which are not in the transcript and differ every
 time.
 
-**In memory means that stopping it forgets every schema.** That is the right trade for a lab,
-where a lesson registers what it needs, and the wrong one anywhere else: a registry that loses
-its schemas has turned every message written with them into bytes nobody can read. A real
-installation points it at a database, PostgreSQL or Kafka itself, with one setting each. It also
-puts it behind authentication, because a registry anybody can write to is a way to change what
-every consumer believes a message says.
+**In memory means that stopping it forgets every schema.** That is the right trade for a lab, where
+a lesson registers what it needs, and the wrong one anywhere else: a registry that loses its
+schemas has turned every message written with them into bytes nobody can read. A real installation
+points it at a database, PostgreSQL or Kafka itself, with one setting each. It also puts it behind
+authentication, because a registry anybody can write to is a way to change what every consumer
+believes a message says.
 
 Two things to know before the next section:
 
-- **The address.** Apicurio answers Confluent's API under `/apis/ccompat/v7`, so every client in
+- Apicurio answers Confluent's API under `/apis/ccompat/v7`, so every client in
   this lesson is given `http://localhost:8080/apis/ccompat/v7` where Confluent's documentation
   would write `http://localhost:8081`.
-- **It does not start on its own**, like the cluster. After a restart of the virtual machine run
+- It does not start on its own, like the cluster. After a restart of the virtual machine run
   the `nohup` line again; the schemas will be gone, and the lesson's commands register them
   again.
 
-If `until` loops for more than a minute, the reason is at the end of `~/apicurio/registry.log`.
-The usual one is another program on port 8080, which `ss -ltnp | grep 8080` names.
+If `until` loops for more than a minute, the reason is at the end of `~/apicurio/registry.log`. The
+usual one is another program on port 8080, which `ss -ltnp | grep 8080` names.

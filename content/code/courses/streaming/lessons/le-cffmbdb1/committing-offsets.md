@@ -5,8 +5,8 @@ version: 1
 
 **A commit records, for a group and a partition, the offset the group should read next.** It is the
 group's place in the log, the same thing `minilog.py`'s place files held in lesson 2, and it is the
-only thing a consumer that restarts has to go on. What matters is not that commits happen but
-**when, relative to the work**: a commit says "everything before this is done", and if it is not
+only thing a consumer that restarts has to go on. **What matters is when a commit happens, relative
+to the work**: a commit says "everything before this is done", and if it is not
 true at the moment of a crash, the restart either repeats work or skips it.
 
 Kafka keeps commits in a topic of its own, `__consumer_offsets`:

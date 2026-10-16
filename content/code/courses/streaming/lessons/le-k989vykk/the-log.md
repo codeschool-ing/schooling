@@ -5,8 +5,8 @@ version: 1
 
 **A log is a sequence of records that only ever grows at one end.** Each record gets a number, its
 **offset**, which is its position counting from zero, and keeps it for as long as it exists. Nobody
-inserts in the middle, nobody edits, and reading a record does not remove it. That is the whole
-data structure, and it is the one Kafka is built on.
+inserts in the middle, nobody edits, and reading a record does not remove it. That is the whole data
+structure, and Kafka is built on it.
 
 The word misleads people in two directions. To a programmer a *log* is the text a server writes
 about itself, `server.log`, which somebody greps when things go wrong. To many people who have used

@@ -53,8 +53,8 @@ The processor now emits the 09:05 window twice, and that is the "emit on every u
 - A reader that **upserts** by window replaces two with three, and the table is right. Lesson 8's
   idempotent writes are what make that safe to repeat.
 
-So allowed lateness is not free for the reader, and the choice belongs to whoever owns both ends:
-a dashboard that upserts can take hours of lateness; a feed of invoices that are sent once can take
+So allowed lateness is not free for the reader, and the choice belongs to whoever owns both ends.
+A dashboard that upserts can take hours of lateness; a feed of invoices that are sent once can take
 none, and needs its late events handled some other way.
 
 ## What it costs the processor

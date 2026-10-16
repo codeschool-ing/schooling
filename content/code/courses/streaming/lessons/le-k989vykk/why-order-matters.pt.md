@@ -22,7 +22,7 @@ recife  bk-03    4
 `tail -n +2` é toda linha a partir da segunda, e `head -1` é a primeira; os parênteses rodam os dois
 e mandam tudo para um arquivo só. Os oito eventos de `late.log` são os mesmos oito, byte a byte, e a
 resposta para o Recife é 4 em vez de 6. **Nada falhou e nada avisou.** 4 é um estoque plausível, e é
-exatamente o que a contagem disse às 08:50, e esse é o problema: é o estado da prateleira às 08:50,
+exatamente o que a contagem disse às 08:50. Esse é o problema: é o estado da prateleira às 08:50,
 aplicado no fim da manhã, apagando uma entrega e três vendas.
 
 O trace mostra como se chegou lá:

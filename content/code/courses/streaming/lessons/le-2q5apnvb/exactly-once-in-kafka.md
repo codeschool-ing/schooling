@@ -3,8 +3,8 @@ title: Exactly once inside Kafka: read, write and commit in one transaction
 version: 1
 ---
 
-**A program whose input and output are both Kafka topics can be exactly-once, because the offset
-it commits can be written inside the same transaction as its output.** The consumer's commit is a
+**A program whose input and output are both Kafka topics can be exactly-once, because the offset it
+commits can be written inside the same transaction as its output.** The consumer's commit is a
 write to `__consumer_offsets`, an ordinary topic, and `send_offsets_to_transaction` adds it to the
 producer's transaction. Then the output and the record of having produced it are committed
 together, or aborted together, and a crash at any point leaves one of two states: the batch done
@@ -85,13 +85,11 @@ eos-copy        sales           0          55              55              0    
 ```
 
 **A `read_committed` reader sees 20 copies, and the source holds exactly 20 big sales.** Nothing
-lost, nothing twice. The log itself holds 22 records: the two copies of the aborted batch are
-still in it, and a `read_uncommitted` reader counts them. The group's committed offset is 55, the
-end of `sales`, and it got there only through the transactions: the program never called
-`commit`.
+lost, nothing twice. The log itself holds 22 records: the two copies of the aborted batch are still
+in it, and a `read_uncommitted` reader counts them. The group's committed offset is 55, the end of
+`sales`, and it got there only through the transactions: the program never called `commit`.
 
-So the guarantee has a precise shape. **Exactly once holds for readers that read committed
-data**, and it holds because the output and the offsets moved together. A downstream consumer
-left at the console consumer's default would see the two aborted copies, which is the most
-common way a team discovers that exactly once is a property of the whole chain and not of one
-program.
+So the guarantee has a precise shape. **Exactly once holds for readers that read committed data**,
+and it holds because the output and the offsets moved together. A downstream consumer left at the
+console consumer's default would see the two aborted copies, which is how a team usually discovers
+that exactly once is a property of the whole chain and not of one program.

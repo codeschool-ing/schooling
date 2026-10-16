@@ -18,16 +18,16 @@ topic, and it decides what a producer's "delivered" is worth when a node dies a 
 ```
 
 **`acks=all` is the producer's default**, in the Java client since Kafka 3.0 and in librdkafka for
-longer, so a producer that sets nothing is already on the safe end. The other two exist
-for data where speed matters more than every record, such as metrics sampled every second.
+longer, so a producer that sets nothing is already on the safe end. The other two exist for data
+where speed matters more than every record, such as metrics sampled every second.
 
 ## The other half: min.insync.replicas
 
 `acks=all` waits for the ISR, and the ISR can shrink. With a replication factor of 3 and two nodes
-down, the ISR is the leader alone, and `acks=all` then means *the leader has it*, which is
-`acks=1` under a better name. **`min.insync.replicas` is the floor**: the smallest ISR with which
-the leader accepts an `acks=all` write. Below it, the leader refuses the write with
-`NotEnoughReplicas` instead of accepting it on too few copies.
+down, the ISR is the leader alone, and `acks=all` then means *the leader has it*, which is `acks=1`
+under a better name. **`min.insync.replicas` is the floor**: the smallest ISR with which the leader
+accepts an `acks=all` write. Below it, the leader refuses the write with `NotEnoughReplicas`
+instead of accepting it on too few copies.
 
 The usual production setting is the one this topic was made with: **replication factor 3 and
 `min.insync.replicas=2`**. One node can be lost, for a failure or for maintenance, and writes go
@@ -35,10 +35,10 @@ on; every acknowledged record is on at least two disks.
 
 ## Measuring it
 
-This program sends sales with a chosen `acks` and counts the answers: delivered, or the name of
-the error. It gives the client all three nodes' addresses, so it can start whichever is up, and
-sets `message.timeout.ms` to thirty seconds, the time the client keeps retrying a sale before it
-gives up and reports it failed; the default is five minutes. Save it as `~/work/acks.py`:
+This program sends sales with a chosen `acks` and counts the answers: delivered, or the name of the
+error. It gives the client all three nodes' addresses, so it can start whichever is up, and sets
+`message.timeout.ms` to thirty seconds, the time the client keeps retrying a sale before it gives
+up and reports it failed; the default is five minutes. Save it as `~/work/acks.py`:
 
 ```python
 """acks.py: send sales with a chosen acks, and count what the cluster answered.
@@ -89,8 +89,8 @@ if args.acks != "0":
         print(f"partition {p}: offsets {min(o)} to {max(o)}")
 ```
 
-All three values work while all three nodes are up. With `acks=0` there is no answer, so no
-offset, and "delivered" only means "sent":
+All three values work while all three nodes are up. With `acks=0` there is no answer, so no offset,
+and "delivered" only means "sent":
 
 ```
 ubuntu@stream:~/work$ python acks.py --acks 0
@@ -125,7 +125,7 @@ for two: ten sales delivered with `acks=all`, at offsets 269 to 278 of partition
 ## Below the floor
 
 Losing a second node of this cluster would also take a majority of its controllers, which is a
-different failure and the subject of a later section. So to see the refusal, raise the floor
+different failure and the subject of the section after next. So to see the refusal, raise the floor
 instead: with `min.insync.replicas=3`, an ISR of two is one short.
 
 ```

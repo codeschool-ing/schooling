@@ -9,12 +9,13 @@ multiples of anything. The windows that exist are the ones the events themselves
 
 The question it answers is the one hopping windows answer approximately: what is the most that
 happened in any five minutes? A hopping window of five minutes advancing every minute would get
-close, and would still miss a burst from 09:01:20 to 09:06:20, since no window starts at 09:01:20.
+close, and would still miss the four sales from 09:03:55 to 09:08:50: the window starting at 09:03
+ends before 09:08:50, and the one starting at 09:04 begins after 09:03:55.
 Making the advance a second, or a millisecond, gets closer and multiplies the cost. The sliding
 window turns the question round: only a moment when an event enters or leaves can change what is
 in "the last five minutes", so those are the only windows worth computing.
 
-This program computes the windows that **end** at each sale: for every sale at `t`, the window
+This program computes the windows that *end* at each sale: for every sale at `t`, the window
 from `t − 5 minutes` to `t`, with every sale in it, **both edges included**:
 
 ```
@@ -34,9 +35,8 @@ window               sales   cents
 
 Ten windows, one per sale. The busiest hold four sales, and there are three of them: the windows
 ending at 09:05:00, at 09:06:20 and at 09:08:50. The one ending at 09:05:00 starts at 09:00:00
-and holds sale 1 at 09:00:40 as well as sale 4 on its end: with both edges inside, a sale exactly
-five minutes after another shares a window with it, which a half-open tumbling window would not
-allow. **Inclusive at both ends is Kafka Streams' definition**, and it is the main thing to check
+and holds sales 1 to 4, with sale 4 sitting exactly on its end. Both edges are inside, so a sale on
+the edge counts; the half-open tumbling window `[09:00, 09:05)` leaves sale 4 out. **Inclusive at both ends is Kafka Streams' definition**, and it is the main thing to check
 when comparing its sliding windows with anybody else's.
 
 ```schooling-figure

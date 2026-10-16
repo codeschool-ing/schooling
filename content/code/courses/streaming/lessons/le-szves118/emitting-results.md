@@ -60,5 +60,5 @@ processor cannot keep every window open for ever, waiting for corrections, becau
 window is state. Both therefore need the same answer to the same question: **how does a processor
 decide that no more events will arrive for a window?** It cannot know; it can only estimate, from
 the event times it has seen, how far time has got, and accept that some events will arrive after
-the estimate. That estimate is called a watermark, and lesson 11 builds one and runs the ten sales
-of this lesson, and the late ones of lesson 9, through it.
+the estimate. That estimate is called a watermark, and lesson 11 builds one, runs the ten sales
+of this lesson through it, and measures its bound on the late sales of lesson 9.

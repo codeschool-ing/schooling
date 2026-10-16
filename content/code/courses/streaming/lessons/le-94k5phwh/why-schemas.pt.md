@@ -11,8 +11,8 @@ código que as lê. Enquanto os dois foram escritos no mesmo dia pela mesma pess
 
 A ideia errada é que o JSON resolve isso por ser autodescritivo. O JSON carrega os **nomes** dos
 campos em cada mensagem, o que não é o mesmo que carregar um acordo sobre eles. Um leitor que
-encontra um nome que não conhece o ignora, e um leitor que não encontra um nome que esperava
-recebe nada e segue em frente. Nada falha, e o problema é justamente esse.
+encontra um nome que não conhece o ignora, e um leitor que não encontra um nome que esperava recebe
+nada e segue em frente. Nada falha, e o problema é justamente esse.
 
 ## Um campo renomeado numa segunda-feira
 
@@ -65,8 +65,8 @@ olinda           330.80
 recife           531.30
 ```
 
-Agora os caixas são atualizados. O software novo está certo em tudo menos numa coisa: o
-programador achou `amount` um nome mais claro que `cents`. Salve como `~/work/till_v2.py`:
+Agora os caixas são atualizados. O software novo está certo em tudo menos numa coisa: o programador
+achou `amount` um nome mais claro que `cents`. Salve como `~/work/till_v2.py`:
 
 ```python
 """till_v2.py: five sales from the new till software, which calls the money `amount`."""
@@ -105,15 +105,15 @@ certa, o que faz o total parecer conferido.
 
 É esse o formato da falha que um esquema existe para evitar. O produtor e o consumidor nunca se
 encontraram; eles compartilhavam um **palpite** sobre como é uma venda, escrito em dois programas,
-e um deles mudou a sua metade. Uma queda teria sido melhor: alguém teria ido olhar. O relatório
-que vai para a gerente amanhã está errado, e nada no sistema sabe disso.
+e um deles mudou a sua metade. Uma queda teria sido melhor: alguém teria ido olhar. O relatório que
+vai para a gerente amanhã está errado, e nada no sistema sabe disso.
 
 ## Onde o acordo precisa morar
 
 O conserto não é um `.get` melhor. Um leitor que quebra na primeira venda sem `cents` pelo menos
-teria dito alguma coisa, e um leitor que tenta `cents`, depois `amount`, depois `price` só
-espalhou o palpite por mais lugares. O que faltava era uma **descrição escrita de uma venda**, que
-os dois lados usem e que não possa mudar sem que alguém confira a mudança contra os leitores. Essa
+teria dito alguma coisa, e um leitor que tenta `cents`, depois `amount`, depois `price` só espalhou
+o palpite por mais lugares. O que faltava era uma **descrição escrita de uma venda**, que os dois
+lados usem e que não possa mudar sem que alguém confira a mudança contra os leitores. Essa
 descrição é um **esquema**, e o resto desta lição é a maquinaria em volta de um:
 
 - um formato que não pode ser escrito sem esquema, o **Avro**, na próxima seção;
@@ -121,6 +121,6 @@ descrição é um **esquema**, e o resto desta lição é a maquinaria em volta 
   (*schema registry*);
 - uma regra que o registro aplica a cada versão nova antes de aceitá-la, a **compatibilidade**.
 
-A lição 2 disse que um evento deve carregar uma versão do próprio formato. Um registro é onde
-essas versões ficam guardadas, e o número que o produtor põe em cada mensagem é como um leitor
-encontra aquela com que a mensagem foi escrita.
+A lição 2 disse que um evento deve carregar uma versão do próprio formato. Um registro é onde essas
+versões ficam guardadas, e o número que o produtor põe em cada mensagem é como um leitor encontra
+aquela com que a mensagem foi escrita.

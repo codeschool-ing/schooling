@@ -3,17 +3,17 @@ title: The outbox: changing a database and announcing it, in one transaction
 version: 1
 ---
 
-**The outbox pattern writes the event a change should announce into a table of the same
-database, in the same transaction as the change, and a separate relay copies that table to
-Kafka.** It solves the problem on the other side of the stream: not a consumer applying events,
-but a program that changes its own data and has to tell everybody else.
+**The outbox pattern writes the event a change should announce into a table of the same database,
+in the same transaction as the change, and a separate relay copies that table to Kafka.** It solves
+the problem on the other side of the stream: not a consumer applying events, but a program that
+changes its own data and has to tell everybody else.
 
-The wrong way is the one that looks obvious, and lesson 14 opens with it: update the database,
-then produce to Kafka. A crash between the two leaves a change nobody hears about; produce first
-and a crash leaves an announcement of a change that never happened. It is lesson 7's gap again,
-between two systems that cannot share a transaction. The outbox removes one of the two systems
-from the moment that matters: **the change and the event are rows in the same database**, so they
-commit together or not at all.
+The wrong way is the one that looks obvious, and lesson 14 opens with it: update the database, then
+produce to Kafka. A crash between the two leaves a change nobody hears about; produce first and a
+crash leaves an announcement of a change that never happened. It is lesson 7's gap again, between
+two systems that cannot share a transaction. The outbox removes one of the two systems from the
+moment that matters: **the change and the event are rows in the same database**, so they commit
+together or not at all.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"Left, the program that restocks writes one database transaction containing two rows: the stock change and the event in the outbox table. Right, a separate relay reads unsent rows from the outbox, sends them to Kafka, waits for the acknowledgement, and only then marks them sent. A crash before the commit loses both rows together; a crash in the relay after Kafka's acknowledgement sends the event again, with the same id.\" data-fig=\"l8-outbox\"><defs><marker id=\"l8-outbox-ah-726\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper)\"></path></marker><marker id=\"l8-outbox-ah-8343\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker><marker id=\"l8-outbox-ah-0\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor-dim)\"></path></marker></defs><rect x=\"20\" y=\"30\" width=\"240\" height=\"130\" rx=\"4\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"140\" y=\"46\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--amber)\">one database transaction</text><rect x=\"40\" y=\"62\" width=\"200\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"140\" y=\"79\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">stock: bk-04 +10</text><rect x=\"40\" y=\"108\" width=\"200\" height=\"34\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"140\" y=\"125\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">outbox: restocked, id, sent = 0</text><rect x=\"330\" y=\"92\" width=\"110\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"385\" y=\"117\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">relay</text><line x1=\"240\" y1=\"125\" x2=\"328\" y2=\"117\" stroke=\"var(--paper-dim)\" stroke-width=\"1.2\" marker-end=\"url(#l8-outbox-ah-8343)\"></line><text x=\"294\" y=\"98\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">1  read unsent rows</text><rect x=\"560\" y=\"92\" width=\"140\" height=\"50\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"630\" y=\"117\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">Kafka: stock-events</text><line x1=\"440\" y1=\"110\" x2=\"558\" y2=\"110\" stroke=\"var(--paper)\" stroke-width=\"1.2\" marker-end=\"url(#l8-outbox-ah-726)\"></line><text x=\"500\" y=\"100\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">2  produce, wait for the ack</text><path d=\"M 385 142 Q 300 190 240 140\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\" marker-end=\"url(#l8-outbox-ah-0)\"></path><text x=\"320\" y=\"186\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">3  mark them sent</text><text x=\"560\" y=\"170\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">a crash here repeats step 2</text><line x1=\"470\" y1=\"125\" x2=\"470\" y2=\"160\" stroke=\"var(--amber)\" stroke-width=\"1\" stroke-dasharray=\"2 3\"></line></svg>", "caption": "The change and its event commit together. The relay delivers at least once, so the event carries an id for its readers to deduplicate."}
@@ -21,8 +21,8 @@ commit together or not at all.
 
 ## A restock, and its event
 
-When a delivery of books arrives at a shop, the stock goes up and an event `restocked` has to
-reach Kafka. This program does both halves, as two commands. Save it as `~/work/outbox.py`:
+When a delivery of books arrives at a shop, the stock goes up and an event `restocked` has to reach
+Kafka. This program does both halves, as two commands. Save it as `~/work/outbox.py`:
 
 ```schooling-example
 {
@@ -70,19 +70,19 @@ ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:909
 ```
 
 Each restock queued its event in the same transaction, and both rows of `outbox` say `sent` is 0;
-the ids are random, so yours differ. The first relay sent both, after the same first-time line
-from the client that lesson 7 showed, and marked them; **the second relay found nothing to send**.
-The topic holds the two events, each with the id it was given when the stock changed.
+the ids are random, so yours differ. The first relay sent both, after the same first-time line from
+the client that lesson 7 showed, and marked them; **the second relay found nothing to send**. The
+topic holds the two events, each with the id it was given when the stock changed.
 
 ## What the relay still owes
 
 The relay itself has lesson 7's gap: a crash after Kafka acknowledged and before the rows were
-marked sends those events again on the next run. **An outbox delivers at least once**, and that
-is why each event carries an id made when the change was made. A consumer of `stock-events`
-deduplicates by it, as this lesson's second section did with sale ids.
+marked sends those events again on the next run. **An outbox delivers at least once**, and that is
+why each event carries an id made when the change was made. A consumer of `stock-events`
+deduplicates by it, as the section on remembering applied events did with sale ids.
 
 Two practical points. The outbox grows, so sent rows are deleted after a while, the same question
-as the section on how long to remember an id. And a relay that polls a table is the simple version; the version used at
-scale reads the database's own change log instead of querying the table, so nothing polls and no
-event is missed between two queries. That is change data capture, and lesson 14 does it with
-Debezium.
+as the section on how long to remember an id. And a relay that polls a table is the simple version;
+the version used at scale reads the database's own change log instead of querying the table, so
+nothing polls and no event is missed between two queries. That is change data capture, and lesson
+14 does it with Debezium.

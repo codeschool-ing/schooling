@@ -54,8 +54,8 @@ lição 10, entrando pela porta dos fundos. Quem lê a saída precisa saber diss
 - Um leitor que faz **upsert** pela janela troca dois por três, e a tabela fica certa. As escritas
   idempotentes da lição 8 são o que torna seguro repetir isso.
 
-Então o atraso permitido não sai de graça para quem lê, e a escolha é de quem cuida das duas pontas:
-um painel que faz upsert aguenta horas de atraso permitido; um envio de notas fiscais que saem uma
+Então o atraso permitido não sai de graça para quem lê, e a escolha é de quem cuida das duas pontas.
+Um painel que faz upsert aguenta horas de atraso permitido; um envio de notas fiscais que saem uma
 vez só não aguenta nenhum, e precisa tratar os eventos atrasados de outro jeito.
 
 ## O que custa ao processador

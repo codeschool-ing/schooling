@@ -54,10 +54,11 @@ As duas primeiras linhas dão o nome do arquivo e o primeiro offset dele. A terc
 mensagem: é um **lote**, `baseOffset: 0 lastOffset: 760 count: 761`, que diz que 761 mensagens
 chegaram juntas, como um lote do produtor, e são guardadas juntas. **O Kafka guarda o que o produtor
 mandou, um lote de cada vez**, sem desmontá-lo, e isso explica boa parte da velocidade dele. Os campos
-`producerId: -1` e `isTransactional: false` estão vazios aqui e são preenchidos nas lições 7 e 8.
-Depois vêm as mensagens: cada uma com o seu offset, o seu `CreateTime` (a hora em que o produtor a
-criou, em milissegundos desde 1970, não o `at` da própria venda, uma diferença de que trata a lição
-9), a sua chave e o seu valor.
+`producerId: -1` e `isTransactional: false` estão vazios aqui e são preenchidos pelos produtores
+idempotentes e transacionais da lição 7.
+Depois vêm as mensagens, cada uma com o seu offset, o seu `CreateTime`, a sua chave e o seu valor. O
+`CreateTime` é a hora em que o produtor a criou, em milissegundos desde 1970, e não o `at` da
+própria venda, uma diferença de que trata a lição 9.
 
 ## Dentro do .index
 

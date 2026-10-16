@@ -14,7 +14,7 @@ próprio relógio no momento do `produce`, como fez o `tills.py`. Passe `timesta
 ele escreve esse valor, como faz o `late_tills.py`: por padrão o momento do envio, com `--stamp sold`
 o momento da venda. As duas escolhas se defendem. **Um produtor que carimba o tempo do evento faz o
 timestamp do registro significar tempo do evento**, o que permite que toda ferramenta que lê
-timestamps trabalhe em tempo do evento; um produtor que carimba o momento do envio mantém o timestamp
+timestamps trabalhe em tempo do evento. Um produtor que carimba o momento do envio mantém o timestamp
 perto da ordem do log. Um tópico com `LogAppendTime` tira a escolha do produtor de vez.
 
 ## Achando um lugar pelo tempo
@@ -64,9 +64,9 @@ Processed a total of 268 messages
 Carimbadas com as onze horas, nos offsets 258 e 259, bem depois do 202 que a busca devolveu para a
 uma da tarde.
 **Num tópico carimbado com o tempo do evento, os timestamps andam para trás onde quer que chegue um
-evento atrasado**, e uma busca por tempo acha uma posição no log, não um conjunto de eventos: reler a
-partir do offset das 13:00 lê a manhã de Natal, e começar um pouco antes só não perde nada dela por
-sorte. O índice do Kafka lida com timestamps que andam para trás, e a resposta que ele dá continua
+evento atrasado.** Uma busca por tempo acha uma posição no log, não um conjunto de eventos: reler a
+partir do offset das 13:00 lê também a manhã de Natal, porque a manhã de Natal chegou depois das
+13:00. O índice do Kafka lida com timestamps que andam para trás, e a resposta que ele dá continua
 sendo "o primeiro registro carimbado neste momento ou depois", que é exatamente tão útil quanto a
 ordem do log permite. A busca é a ferramenta certa para "reler o que entrou desde o incidente das
 13:00", que é a pergunta que a lição 16 faz a ela.

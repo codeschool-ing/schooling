@@ -4,10 +4,10 @@ version: 1
 ---
 
 **Se o banco guarda, na mesma transação de cada efeito, o offset da próxima mensagem a ler, então o
-banco e o stream não têm como discordar sobre até onde o consumidor chegou.** Ao começar, o consumidor
-lê esse offset e faz seek para ele. Uma queda em qualquer ponto deixa o efeito e o offset dele, ou
-nenhum dos dois, e o reinício continua exatamente depois do último efeito. Nenhuma venda é aplicada
-duas vezes, e não é preciso tabela de ids.
+banco e o stream não têm como discordar sobre até onde o consumidor chegou.** Ao começar, o
+consumidor lê esse offset e faz seek para ele. Uma queda em qualquer ponto deixa o efeito e o
+offset dele, ou nenhum dos dois, e o reinício continua exatamente depois do último efeito. Nenhuma
+venda é aplicada duas vezes, e não é preciso tabela de ids.
 
 Isso muda o que o commit do grupo de consumidores significa. Ele era o registro do progresso; agora
 não é usado, ou é usado só como uma **dica** para ferramentas como `kafka-consumer-groups.sh`
@@ -66,16 +66,16 @@ ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092
 Consumer group 'offset-sink' has no active members.
 ```
 
-As quinze vendas da primeira execução vieram todas da partição 1, então depois da queda o banco tinha
-uma linha em `offsets`, dizendo que a partição 1 deveria continuar em 15. **O reinício leu isso e
-começou a partição 1 em 15**, e as outras duas do início. Ele aplicou as 25 restantes, e o estoque é
-729, como no destino com deduplicação, sem tabela de ids.
+As quinze vendas da primeira execução vieram todas da partição 1, então depois da queda o banco
+tinha uma linha em `offsets`, dizendo que a partição 1 deveria continuar em 15. **O reinício leu
+isso e começou a partição 1 em 15**, e as outras duas do início. Ele aplicou as 25 restantes, e o
+estoque é 729, como no destino com deduplicação, sem tabela de ids.
 
-`offsets` agora diz onde continuar em cada partição que teve vendas: 7 para a partição 0 e 33 para a
-partição 1; a partição 2 não recebeu nenhuma das quarenta. E o grupo de consumidores **não tem offset
-confirmado nenhum**: `kafka-consumer-groups.sh` não tem nada a mostrar além de que ninguém está
-conectado. Toda ferramenta que lê o lag pelo grupo não vê nada, que é o preço deste desenho, e o
-motivo de algumas equipes também confirmarem no grupo, depois do banco, só como dica para
+`offsets` agora diz onde continuar em cada partição que teve vendas: 7 para a partição 0 e 33 para
+a partição 1; a partição 2 não recebeu nenhuma das quarenta. E o grupo de consumidores **não tem
+offset confirmado nenhum**: `kafka-consumer-groups.sh` não tem nada a mostrar além de que ninguém
+está conectado. Toda ferramenta que lê o lag pelo grupo não vê nada, que é o preço deste desenho, e
+o motivo de algumas equipes também confirmarem no grupo, depois do banco, só como dica para
 monitoramento. Uma dica errada depois de uma queda não faz mal, porque nada a lê ao começar.
 
 ```schooling-figure

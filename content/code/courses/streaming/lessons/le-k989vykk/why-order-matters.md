@@ -22,7 +22,7 @@ recife  bk-03    4
 `tail -n +2` is every line from the second, and `head -1` is the first; the parentheses run both
 and send them to one file. The eight events in `late.log` are the same eight, byte for byte, and
 the answer for Recife is 4 instead of 6. **Nothing failed and nothing warned.** 4 is a plausible
-stock, and it is exactly what the count said at 08:50, which is the problem: it is the state of
+stock, and it is exactly what the count said at 08:50. That is the problem: it is the state of
 the shelf at 08:50, applied at the end of the morning, wiping out a delivery and three sales.
 
 The trace shows how it got there:

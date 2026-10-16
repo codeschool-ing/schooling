@@ -37,8 +37,8 @@ still open: 09:10:00 (3), 09:20:00 (2)
 ```
 
 O watermark agora é segurado pela partição que estiver atrás. Depois da venda 10, a de Recife das
-09:21:00, a primeira partição chegou às 09:21, mas a mais recente da segunda ainda é a de Caruaru das
-09:12:30, então o watermark fica em 09:10:30 e a janela das 09:10, emitida na venda 10 com uma
+09:21:00, a primeira partição chegou às 09:21, mas a mais recente da segunda ainda é a de Caruaru, das
+09:12:30. O watermark fica em 09:10:30 e a janela das 09:10, emitida na venda 10 com uma
 partição, **continua aberta no fim**. Uma partição lenta custa latência para todo mundo.
 
 ```schooling-figure
@@ -109,5 +109,5 @@ venda antiga entrega uma venda atrasada, e o watermark, que só anda para a fren
 O tempo limite deveria ser maior que os períodos quietos normais da origem mais quieta, o que é mais
 uma distribuição que vale medir. O Spark contorna a questão mantendo um watermark por consulta a
 partir do tempo de evento mais recente em toda a entrada, o que nunca trava e descarta mais eventos
-quando as partições andam desiguais; o Kafka Streams mantém um stream time por tarefa a partir do
+quando as partições andam desiguais. O Kafka Streams mantém um stream time por tarefa a partir do
 maior timestamp que viu. Nenhum dos dois é de graça, e a lição 13 os compara.

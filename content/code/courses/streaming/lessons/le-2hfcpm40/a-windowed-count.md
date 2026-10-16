@@ -4,9 +4,9 @@ version: 1
 ---
 
 The count lessons 10 and 11 built by hand, sales per five-minute window of event time with a
-watermark, is a few lines of Spark. **What takes thought is not the query but the output mode**:
-after each batch, which rows of the result table leave for the sink. There are three, and the same
-two hundred sales come out of each one differently.
+watermark, is a few lines of Spark. **The thought goes into the output mode**: after each batch,
+which rows of the result table leave for the sink. There are three, and the same two hundred sales
+come out of each one differently.
 
 The rest of the lesson runs one program with different arguments rather than editing it. Save it
 as `~/work/spark_sales.py`:

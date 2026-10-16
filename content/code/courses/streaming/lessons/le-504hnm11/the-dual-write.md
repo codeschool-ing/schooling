@@ -41,9 +41,9 @@ are two places that write can go.
 | **the outbox** (lesson 8) | the change *and* an event row, in one database transaction | a relay that reads the outbox table and sends its rows |
 | **change data capture** | the change, and nothing else | a reader of the database's own log of changes |
 
-This lesson is about the second. **Change data capture (CDC) treats the database as the producer**:
-every committed `INSERT`, `UPDATE` and `DELETE` already goes into PostgreSQL's write-ahead log
-before the commit returns, so a program that reads that log sees every change, in commit order,
+This lesson is about the second. **Change data capture (CDC) treats the database as the producer.**
+Every committed `INSERT`, `UPDATE` and `DELETE` already goes into PostgreSQL's write-ahead log
+before the commit returns. A program that reads that log sees every change, in commit order,
 including the ones made by a script somebody ran at midnight and by programs that have never
 heard of Kafka.
 
@@ -52,7 +52,7 @@ slot with `test_decoding`, reads the changes as text with SQL and applies them t
 table. Here the reader is **Debezium**, a set of Kafka Connect connectors that do the same
 reading, keep their position safely, and write each change to a topic as a structured event.
 
-What CDC does not give you is worth saying before it gives you anything. **The events are row
+One limit comes first. **The events are row
 changes, not business facts.** `stock` lost one copy of `bk-02` in Recife; the event does not say
 it was a reservation, by whom or from which screen, because the table never knew. An outbox row
 can carry that, which is why the two techniques live side by side rather than one replacing the

@@ -42,8 +42,8 @@ Essa escrita pode ir para dois lugares.
 | **captura de mudanças (CDC)** | a mudança, e nada mais | um leitor do próprio log de mudanças do banco |
 
 Esta lição é sobre a segunda. **A captura de dados de mudança (CDC, *change data capture*) trata o
-banco como o produtor**: todo `INSERT`, `UPDATE` e `DELETE` confirmado já vai para o write-ahead
-log do PostgreSQL antes de o commit retornar, então um programa que lê esse log vê toda mudança, na
+banco como o produtor.** Todo `INSERT`, `UPDATE` e `DELETE` confirmado já vai para o write-ahead
+log do PostgreSQL antes de o commit retornar. Um programa que lê esse log vê toda mudança, na
 ordem dos commits, inclusive as feitas por um script que alguém rodou à meia-noite e por programas
 que nunca ouviram falar de Kafka.
 
@@ -52,7 +52,7 @@ com `test_decoding`, lê as mudanças como texto via SQL e as aplica numa tabela
 leitor é o **Debezium**, um conjunto de conectores do Kafka Connect que fazem a mesma leitura,
 guardam a sua posição com segurança e gravam cada mudança num tópico como um evento estruturado.
 
-Vale dizer o que a CDC não dá antes de ela dar qualquer coisa. **Os eventos são mudanças de linha,
+Um limite vem primeiro. **Os eventos são mudanças de linha,
 não fatos de negócio.** A `stock` perdeu um exemplar do `bk-02` no Recife; o evento não diz que foi
 uma reserva, nem de quem, nem de qual tela, porque a tabela nunca soube disso. Uma linha de outbox
 pode carregar essa informação, e é por isso que as duas técnicas convivem em vez de uma substituir

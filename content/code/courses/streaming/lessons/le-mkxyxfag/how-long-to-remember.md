@@ -3,12 +3,13 @@ title: How long to remember an id
 version: 1
 ---
 
-**A table of processed ids grows by one row per event, for ever, unless something deletes from
-it, and deleting from it reopens the door to the duplicates it was there to stop.** So every
-deduplication has a window, chosen or not: the length of time an id is remembered. A duplicate
-that arrives inside the window is caught; one that arrives after it is applied again.
+**A table of processed ids grows by one row per event, for ever, unless something deletes from it,
+and deleting from it reopens the door to the duplicates it was there to stop.** So every
+deduplication has a window, chosen or not: the length of time an id is remembered. A duplicate that
+arrives inside the window is caught; one that arrives after it is applied again.
 
-After the crash in the second section, the table held one row for every sale ever applied:
+After the crash in the section on remembering applied events, the table held one row for every sale
+ever applied:
 
 ```
 ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT count(*) FROM processed"
@@ -25,8 +26,8 @@ thousand times the traffic would hold 200 GB of ids and, worse, look one up on e
 
 ## Where duplicates actually come from
 
-The window should be as long as the longest delay with which a duplicate can still arrive, and
-that delay depends on what produces the duplicate:
+The window should be as long as the longest delay with which a duplicate can still arrive, and that
+delay depends on what produces the duplicate:
 
 | source of a duplicate | how late it can arrive |
 |---|---|
@@ -50,11 +51,11 @@ DELETE FROM processed WHERE applied_at < datetime('now', '-7 days');
 ```
 
 Run once a day, that keeps a week. Kept in memory instead of a table, the same idea is a set with
-an expiry, which is what stream processors do for their own deduplication, and a crash empties it
-unless it is checkpointed, which lesson 13 says how Flink does.
+an expiry, which is what stream processors do for their own deduplication. A crash empties that set
+unless it is checkpointed, and lesson 13 shows how Flink checkpoints its state.
 
 **The window is a risk you choose with numbers, not a detail.** A team that sets seven days should
 be able to say why no duplicate can arrive after seven days, and what happens if a backup older
-than that is restored. When that answer is weak, the stronger design is the one from the first
-section, writes that repeat harmlessly, which need no memory at all, or the previous section's,
-offsets in the database, which remember one number per partition instead of one per event.
+than that is restored. When that answer is weak, two designs are stronger. Writes that repeat
+harmlessly, from the section on writes that can be repeated, need no memory at all. Offsets in the
+database, from the previous section, remember one number per partition instead of one per event.

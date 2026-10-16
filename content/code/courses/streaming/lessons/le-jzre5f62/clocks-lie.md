@@ -13,7 +13,7 @@ The ways a till's clock goes wrong are few and well known:
 - **It drifts.** A cheap crystal gains or loses a second or two a day. Left alone for a year, a
   till is minutes out, and nobody notices because the receipt still prints.
 - **It resets.** A dead clock battery and a power cut, and the till boots believing it is 1 January
-  2000, or 1970. Every sale it makes is a quarter of a century late.
+  2000, or 1970. Every sale it makes is decades late.
 - **Its time zone is wrong.** A till set to UTC that writes its reading with `-03:00` on the end
   claims every sale happened three hours later than it did, consistently, all day.
 - **Somebody sets it by hand**, to the wall clock, which is itself five minutes fast.

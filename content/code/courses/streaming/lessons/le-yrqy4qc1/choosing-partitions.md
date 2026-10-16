@@ -62,7 +62,7 @@ Error while executing topic command : The topic shops currently has 4 partition(
 recorded positions in, and merging two of them would give both a new order and break every
 recorded offset, so Kafka does not offer it.
 
-So **choose the number on the day you create the topic**, with room to grow, because the ways to
-change it later are a migration: a new topic with the new number, every reader moved to it, and
+So **choose the number on the day you create the topic**, with room to grow. Changing it later means
+a migration: a new topic with the new number, every reader moved to it, and
 the old one kept until nobody needs it. Lesson 16 does that kind of move for another reason,
 reprocessing.

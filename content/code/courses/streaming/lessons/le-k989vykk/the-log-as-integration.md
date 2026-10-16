@@ -3,8 +3,8 @@ title: One write, many readers
 version: 1
 ---
 
-**A log lets one system write a fact once and lets any number of systems read it, each at its own
-pace, without the writer knowing who they are.** Lesson 1 said this is often the main reason a
+**A log lets one system write a fact once and any number of systems read it, each at its own pace.**
+The writer does not need to know who they are. Lesson 1 said this is often the main reason a
 company adopts Kafka, even for data nobody needs in a hurry. This section says why it works, and
 what it replaces.
 

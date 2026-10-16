@@ -71,7 +71,7 @@ total 13228
 
 O arquivo `.log` é o segmento, os bytes que o `kafka-log-dirs.sh` contou. `.index` e `.timeindex`
 mapeiam offsets e timestamps para posições dentro dele, que é como o reset por datetime da lição 16
-achou seus offsets; eles são criados já no tamanho pré-alocado, os 10 485 760 bytes que o `ls`
+achou seus offsets. Eles são criados já no tamanho pré-alocado, os 10 485 760 bytes que o `ls`
 mostra, e aparados quando o segmento fecha, então o tamanho deles num segmento ativo diz pouco. O
 `kafka-log-dirs.sh` não os conta. A lição 3 abriu esses arquivos com o `kafka-dump-log.sh`; aqui o
 ponto é só que **o `size` a multiplicar é o do arquivo `.log`**, que é exatamente o que a ferramenta

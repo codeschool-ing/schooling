@@ -6,8 +6,8 @@ version: 1
 **Every message Debezium writes is an envelope: the row before, the row after, what happened, and
 where in the database it happened.** The first ones in `pf.public.stock` are not changes at all.
 When a connector starts with an empty slot it takes a **snapshot**: it reads every row the
-published tables hold, in one consistent transaction, and writes each as an event, so a reader of
-the topic starts with the whole table rather than only with what changes from now on. Read the
+published tables hold, in one consistent transaction, and writes each as an event. A reader of
+the topic then starts with the whole table rather than only with what changes from now on. Read the
 first one, and let `jq` lay it out:
 
 ```

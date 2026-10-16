@@ -49,7 +49,7 @@ the windows it belongs to, and a single sale late in the morning creates two.
 
 Overlap multiplies work and state. With size 60 minutes and advance 1 minute, every event is
 added to sixty windows, and sixty windows per key are open at any moment. An engine with a
-running count per window pays sixty times what a tumbling hour pays, which is why "the last hour,
+running count per window pays sixty times what a tumbling hour pays. That is why "the last hour,
 updated every second" is usually built some other way: a tumbling window of a minute, and the
 last sixty of them added up when somebody asks.
 

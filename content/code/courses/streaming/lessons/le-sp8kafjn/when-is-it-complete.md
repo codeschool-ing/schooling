@@ -5,8 +5,8 @@ version: 1
 
 **A window over event time is complete when every event that belongs to it has arrived, and no
 program reading a stream can ever know that it has.** Lesson 10 ended on this question. This
-lesson answers it the way every stream engine does: not with certainty, but with a rule that is
-explicit, measurable and adjustable.
+lesson answers it the way every stream engine does, with a rule that is explicit, measurable and
+adjustable.
 
 Take the window from 09:05 to 09:10 of lesson 10. By 09:10, by the shops' clocks, the window's
 time is over. By 09:12, sales from 09:12 have arrived, so most of the stream has moved on. And

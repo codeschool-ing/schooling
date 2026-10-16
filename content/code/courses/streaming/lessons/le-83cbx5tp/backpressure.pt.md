@@ -116,6 +116,6 @@ Não um cluster maior. As correções estão todas no consumidor:
   `consumer.pause()` mantém o membro fazendo poll, e vivo, sem buscar mais. É mais código, e é o que
   trabalho demorado precisa.
 
-A regra geral é a que esta seção inteira defende: **um stream dá tempo a um consumidor lento, não
-perdão**. O lag absorve uma hora lenta. Um membro que não cumpre a promessa de fazer poll é removido,
-e a própria remoção é trabalho que o grupo inteiro paga.
+**Um stream dá tempo a um consumidor lento, não perdão.** O lag absorve uma hora lenta. Um membro
+que não cumpre a promessa de fazer poll é removido, e a própria remoção é trabalho que o grupo
+inteiro paga.

@@ -10,8 +10,8 @@ tempo todo perguntando ao líder *o que você tem depois do offset N?*, acrescen
 o que volta, e perguntando de novo.
 
 A ideia errada mais comum é um líder que empurra cada escrita para os seguidores e espera por eles
-antes de dizer qualquer coisa. Nada é empurrado: os seguidores puxam, no próprio ritmo, e o líder
-só fica sabendo até onde cada seguidor chegou pelo offset do fetch seguinte. É por isso que um
+antes de dizer qualquer coisa. Nada é empurrado: os seguidores puxam, no próprio ritmo. O líder só
+fica sabendo até onde cada seguidor chegou pelo offset do fetch seguinte. É por isso que um
 seguidor lento não atrasa ninguém, e que o líder sabe dizer, a qualquer momento, quais seguidores
 estão acompanhando.
 
@@ -34,11 +34,11 @@ ubuntu@stream:~/work$ wc -c ~/kafka-data/node*/log/sales-1/*.log
 ```
 
 As trezentas vendas foram para duas partições, 61 para a partição 0 e 239 para a partição 1, e
-nenhuma para a partição 2: as cinco lojas do caixa são as únicas chaves, e o cliente Python por
-acaso espalhou as cinco em duas das três partições, o que a lição 3 explica. O número interessante
-é o último. **O arquivo de segmento da partição 1 tem exatamente 32.443 bytes em cada um dos três
-nós**: os seguidores guardam uma cópia byte a byte do log do líder, não um resumo dele, e o
-cluster guarda o tópico três vezes.
+nenhuma para a partição 2. As cinco lojas do caixa são as únicas chaves, e o cliente Python por
+acaso espalhou as cinco em duas das três partições; a lição 3 explica como. O número interessante é
+o último. **O arquivo de segmento da partição 1 tem exatamente 32.443 bytes em cada um dos três
+nós**: os seguidores guardam uma cópia byte a byte do log do líder, não um resumo dele, e o cluster
+guarda o tópico três vezes.
 
 ## O que um consumidor pode ler
 
@@ -60,7 +60,7 @@ líder não tem.
 Os seguidores ficam sabendo do high watermark pelo líder, nas respostas aos seus fetches, e guardam
 a própria cópia dele, de modo que um seguidor que vira líder sabe onde terminam os dados
 confirmados. Os registros que ele tem acima desse ponto podem estar no disco dele e não no dos
-outros, e as eleições de líder das próximas seções desta lição tomam cuidado justamente com esses.
+outros, e as eleições de líder das seções 06 e 08 desta lição tomam cuidado justamente com esses.
 
 **Os líderes também atendem as leituras, por padrão.** Um consumidor da partição 1 conversa com o
 líder da partição 1, onde quer que ele esteja. Desde o Kafka 2.4 um consumidor pode ter permissão

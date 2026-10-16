@@ -60,8 +60,7 @@ is what a small sample gives. It does mean a topic with three partitions is, for
 with two. The offsets count up inside each partition, which is why Caruaru's message is at offset 0
 while Natal's is at 2.
 
-**The same key goes to the same partition for as long as the number of partitions does not
-change**, and that is the whole promise. The client did the hashing: the Python client is built on librdkafka, a
+**The same key goes to the same partition for as long as the number of partitions does not change.** The client did the hashing: the Python client is built on librdkafka, a
 library in C, and its default partitioner, `consistent_random`, takes a CRC32 of the key.
 
 ## Kafka's own tools hash differently

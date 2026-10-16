@@ -6,8 +6,8 @@ version: 1
 **Quando um líder morre, os controllers percebem que ele parou de mandar heartbeats, escolhem um
 novo líder entre a ISR da partição e avisam todos os nós; produtores e consumidores acham o novo
 líder pedindo metadados novos e seguem em frente.** A troca inteira leva segundos. O trabalho do
-produtor durante esses segundos é guardar as vendas que não conseguiu entregar e mandá-las de
-novo, o que ele faz sozinho, dentro do `message.timeout.ms`.
+produtor durante esses segundos é guardar as vendas que não conseguiu entregar e mandá-las de novo,
+o que ele faz sozinho, dentro do `message.timeout.ms`.
 
 Ache o líder da partição para onde vai a chave `recife`. Toda execução do `acks.py` até aqui a
 imprimiu: partição 1. O `describe` diz quem a lidera:
@@ -115,7 +115,7 @@ lidera uma partição de novo.
 Nada que tenha sido confirmado. Cem vendas enviadas, cem entregues, em cem offsets seguidos, então
 nenhuma foi gravada duas vezes também. O que a falha custou foi **tempo**: por alguns segundos a
 partição ficou sem líder, e as vendas enviadas nesses segundos esperaram na memória do produtor. Um
-consumidor da partição teria visto a mesma pausa. Esse é o preço da replicação bem feita, e ele se
-mede em segundos porque os controllers esperam alguns segundos de silêncio antes de declarar um nó
-morto: o bastante para não trocar de líder a cada heartbeat lento, pouco o bastante para que um
-caixa nunca perceba.
+consumidor da partição teria visto a mesma pausa. É isso que a replicação custa quando funciona. O
+custo se mede em segundos porque os controllers esperam alguns segundos de silêncio antes de
+declarar um nó morto: o bastante para não trocar de líder a cada heartbeat lento, pouco o bastante
+para que um caixa nunca perceba.

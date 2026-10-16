@@ -3,12 +3,12 @@ title: Eleição de líder não limpa: disponível ou correto
 version: 1
 ---
 
-**Quando toda réplica da ISR de uma partição se foi e só sobra uma réplica desatualizada, o Kafka
-pode esperar uma réplica em sincronia voltar, e a partição fica indisponível até lá, ou fazer da
-desatualizada a líder, e perder todo registro que ela não tinha.** Fazê-la líder é uma **eleição
-de líder não limpa** (*unclean leader election*). Ela vem desligada por padrão,
-`unclean.leader.election.enable=false`, e esta seção provoca a situação para mostrar o que o
-padrão protege.
+**Quando toda réplica da ISR de uma partição se foi e só sobra uma desatualizada, o Kafka tem duas
+escolhas.** Pode esperar uma réplica em sincronia voltar, e a partição fica indisponível até lá. Ou
+pode fazer da desatualizada a líder, e perder todo registro que ela não tinha. Fazê-la líder é uma
+**eleição de líder não limpa** (*unclean leader election*). Ela vem desligada por padrão,
+`unclean.leader.election.enable=false`, e esta seção provoca a situação para mostrar o que o padrão
+protege.
 
 ## Preparando a perda
 
@@ -51,17 +51,17 @@ acks=all: 1 _MSG_TIMED_OUT
 ```
 
 **`Leader: none`**: a partição está offline. O nó 3 está vivo e tem uma cópia, e o Kafka não vai
-usá-la, porque ela não está na ISR e não tem as últimas dez vendas. Produtores esperam e estouram
-o tempo; consumidores não recebem nada.
+usá-la, porque ela não está na ISR e não tem as últimas dez vendas. Produtores esperam e estouram o
+tempo; consumidores não recebem nada.
 
 ## Elr: as réplicas que ainda podem liderar sem perda
 
 As duas colunas que estavam vazias até agora se preencheram. **`Elr` é a lista de Eligible Leader
 Replicas**, do KIP-966, que o Kafka 4 trouxe: réplicas que saíram da ISR quando ela já estava no
-`min.insync.replicas` ou abaixo dele, e de que por isso se sabe que têm todo registro confirmado.
-O nó 2 está nela, porque era a última réplica em sincronia quando a ISR o perdeu. Quando o nó 2
-voltar, o Kafka pode fazê-lo líder de forma limpa e não perder nada. `LastKnownElr` guarda a
-última lista dessas quando até a Elr está vazia, para que um operador veja que nó trazer de volta
+`min.insync.replicas` ou abaixo dele, e de que por isso se sabe que têm todo registro confirmado. O
+nó 2 está nela, porque era a última réplica em sincronia quando a ISR o perdeu. Quando o nó 2
+voltar, o Kafka pode fazê-lo líder de forma limpa e não perder nada. `LastKnownElr` guarda a última
+lista dessas quando até a Elr está vazia, para que um operador veja que nó trazer de volta
 primeiro.
 
 Então a saída limpa é reiniciar o nó 2. A não limpa é mandar o Kafka usar o que tem:

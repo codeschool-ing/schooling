@@ -59,6 +59,3 @@ Então a resposta raramente é toda de um lado:
 - **Confira a conta todo mês contra a aritmética.** Um stream que custa mais que as mensagens dele
   vezes os bytes vezes os dias diz que outra coisa está crescendo: partições que ninguém usa, grupos
   de consumidores que ninguém lê, retenção que ninguém escolheu.
-
-Um stream que nunca dorme é uma decisão, e como todas as outras deste curso ele tem um motivo escrito
-ao lado, ou é um padrão que ninguém olhou.

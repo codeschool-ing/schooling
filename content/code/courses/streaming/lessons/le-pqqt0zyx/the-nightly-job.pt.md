@@ -24,8 +24,8 @@ perceber até o job noturno rodar — e até lá a cliente já fez a viagem.
 
 Nada no batch está quebrado. Ele responde a pergunta para a qual foi construído, *o que vendeu
 ontem*, perfeitamente. A pergunta que ficou sem resposta era **o que está acontecendo agora**, e um
-pipeline que roda uma vez por dia não consegue respondê-la a preço nenhum: rode a cada hora e o
-buraco é de uma hora, a cada minuto e o buraco é de um minuto, e cada passo deixa o pipeline mais
+pipeline que roda uma vez por dia não consegue respondê-la a preço nenhum. Rode a cada hora e o
+buraco é de uma hora; a cada minuto e o buraco é de um minuto. Cada passo deixa o pipeline mais
 caro sem mudar a forma dele.
 
 ## Quão pequeno um batch fica

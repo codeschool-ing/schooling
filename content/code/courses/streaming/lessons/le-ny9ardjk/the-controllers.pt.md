@@ -6,9 +6,9 @@ version: 1
 **Alguém precisa decidir quem lidera cada partição e quem está na ISR dela, e no Kafka 4 esse
 alguém é um pequeno grupo de controllers que decide por votação.** Os controllers guardam os
 metadados do cluster — tópicos, partições, líderes, ISRs, configurações — num log próprio,
-`__cluster_metadata`, o diretório que a lição 1 achou no disco. Um controller por vez é o
-**ativo** e escreve nesse log; os outros o copiam, e uma mudança conta quando a maioria deles a
-tem. O protocolo se chama KRaft, a versão do Kafka do Raft.
+`__cluster_metadata`, o diretório que a lição 1 achou no disco. Um controller por vez é o **ativo**
+e escreve nesse log; os outros o copiam, e uma mudança conta quando a maioria deles a tem. O
+protocolo se chama KRaft, a versão do Kafka do Raft.
 
 O Kafka antigo guardava os mesmos metadados num sistema à parte, o ZooKeeper. O Kafka 4.0 o
 removeu, então um cluster Kafka 4 é feito só de processos Kafka.
@@ -57,14 +57,14 @@ ubuntu@stream:~/work$ timeout 30 kafka-metadata-quorum.sh --bootstrap-server loc
 exit 124
 ```
 
-Os dois comandos não imprimiram nada e esperaram até o `timeout` encerrá-los, e o `timeout`
-informa isso com o código de saída 124.
+Os dois comandos não imprimiram nada e esperaram até o `timeout` encerrá-los, e o `timeout` informa
+isso com o código de saída 124.
 
 O nó 1 está rodando e a porta dele responde; o que ele não consegue é mudar o cluster. O `create`
 nunca recebeu resposta, e nenhuma liderança nem ISR pode mudar enquanto falta a maioria.
 
-**A cura é trazer de volta votantes suficientes para formar uma maioria**, não fazer o
-sobrevivente decidir sozinho:
+**A cura é trazer de volta votantes suficientes para formar uma maioria**, não fazer o sobrevivente
+decidir sozinho:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh start

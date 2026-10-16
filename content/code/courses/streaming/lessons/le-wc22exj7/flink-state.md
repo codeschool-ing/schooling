@@ -25,11 +25,13 @@ Java objects in the TaskManager's memory and writes the snapshot to the checkpoi
 RocksDB backend keeps the working state on local disk, for state larger than memory. In a real
 cluster the directory is shared storage that outlives a machine, the same rule as Spark's.
 
-The job's directory under `~/flink-checkpoints` is named after its id, and it holds the latest
-completed checkpoint:
+Each job gets a directory under `~/flink-checkpoints`, named after its id, holding its latest
+completed checkpoint. There are two, the cancelled job's and the running one's:
 
 ```
 ubuntu@stream:~/work$ ls ~/flink-checkpoints
+1b14e9a9a838ec156cb32b72b8c46fd7
+28d4b45557a9e6ff9b7385f48a63751f
 ```
 
 ## A savepoint: stopping on purpose
@@ -40,7 +42,11 @@ used to stop a job and start it again later, after an upgrade of Flink, a change
 move to another cluster. `flink stop` takes one and then stops the job:
 
 ```
-ubuntu@stream:~/work$ ~/flink/bin/flink stop --savepointPath file:///home/ubuntu/flink-savepoints
+ubuntu@stream:~/work$ ~/flink/bin/flink stop --savepointPath file:///home/ubuntu/flink-savepoints 1b14e9a9a838ec156cb32b72b8c46fd7
+Suspending job "1b14e9a9a838ec156cb32b72b8c46fd7" with a CANONICAL savepoint.
+Triggering stop-with-savepoint for job 1b14e9a9a838ec156cb32b72b8c46fd7.
+Waiting for response...
+Savepoint completed. Path: file:/home/ubuntu/flink-savepoints/savepoint-1b14e9-c3b0e303e01b
 ```
 
 While it is stopped, two more sales arrive, the Recife sale from lesson 12 at 09:38 and one from
@@ -54,11 +60,20 @@ Submit `sales.sql` again, this time telling the SQL client, with `-D`, where to 
 The path is the one `flink stop` printed:
 
 ```
-ubuntu@stream:~/work$ ~/flink/bin/sql-client.sh -Dexecution.state-recovery.path=
+ubuntu@stream:~/work$ ~/flink/bin/sql-client.sh -Dexecution.state-recovery.path=file:/home/ubuntu/flink-savepoints/savepoint-1b14e9-c3b0e303e01b -f sales.sql 2>/dev/null | grep "Job ID"
+Job ID: 28f69093342b20db69c2b4a874f3c4c9
 ```
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic flink-sales-per-window --from-beginning --timeout-ms 10000 2>/dev/null
+{"window_start":"2026-03-02 09:00:00","window_end":"2026-03-02 09:05:00","sales":30,"cents":337340}
+{"window_start":"2026-03-02 09:05:00","window_end":"2026-03-02 09:10:00","sales":28,"cents":241740}
+{"window_start":"2026-03-02 09:10:00","window_end":"2026-03-02 09:15:00","sales":28,"cents":204680}
+{"window_start":"2026-03-02 09:15:00","window_end":"2026-03-02 09:20:00","sales":29,"cents":240130}
+{"window_start":"2026-03-02 09:20:00","window_end":"2026-03-02 09:25:00","sales":23,"cents":209180}
+{"window_start":"2026-03-02 09:25:00","window_end":"2026-03-02 09:30:00","sales":25,"cents":237180}
+{"window_start":"2026-03-02 09:30:00","window_end":"2026-03-02 09:35:00","sales":24,"cents":172230}
+{"window_start":"2026-03-02 09:35:00","window_end":"2026-03-02 09:40:00","sales":14,"cents":137930}
 ```
 
 The first six lines are the old job's. **The last two are the new job's, and they could only come
@@ -74,19 +89,30 @@ The cluster is three Java processes now, the Kafka node and Flink's two:
 
 ```
 ubuntu@stream:~/work$ jps -l
+23783 kafka.Kafka
+31511 org.apache.flink.runtime.taskexecutor.TaskManagerRunner
+5466 jdk.jcmd/sun.tools.jps.Jps
+30894 org.apache.flink.runtime.entrypoint.StandaloneSessionClusterEntrypoint
 ```
 
 ```
 ubuntu@stream:~/work$ ps -o pid,rss,comm -u ubuntu --sort=-rss | head -4
+  PID   RSS COMMAND
+23783 395568 java
+27181 173508 java
+27940  4332 ps
 ```
 
-The TaskManager, which runs the job, and the JobManager, which coordinates it, hold about 400 MB
-each, and the Kafka node about the same: **about 1.2 GB for a broker and a small Flink cluster**,
+The TaskManager, which runs the job, holds about 480 MB, the JobManager, which coordinates it,
+about 430 MB, and the Kafka node about 410 MB: **about 1.3 GB for a broker and a small Flink
+cluster**,
 inside the virtual machine's 4 GB with room for the operating system. Stop the job and the cluster
 when you are done:
 
 ```
 ubuntu@stream:~/work$ ~/flink/bin/stop-cluster.sh
+Stopping taskexecutor daemon (pid: 31511) on host stream.
+Stopping standalonesession daemon (pid: 30894) on host stream.
 ```
 
 Stopping the cluster with the job still running cancels the job, and its next start would begin

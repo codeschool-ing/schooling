@@ -11,8 +11,8 @@ that happens to share it. And when the program dies on it, every other partition
 stops with it.
 
 The usual source is not malice. It is a till that missed a software update and still sends the old
-format, a field that was a number last month and is a string now (lesson 6 is about preventing that),
-a message cut short, or a value no code path expected.
+format, or a field that was a number last month and is a string now, which lesson 6 is about
+preventing. It is a message cut short, or a value no code path expected.
 
 ## One bad sale
 

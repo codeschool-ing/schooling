@@ -15,9 +15,10 @@ checkpoint nomeia os offsets, e lê-los de novo dá os mesmos registros. O sink 
 
 | sink | modos de saída | um batch escrito duas vezes |
 |---|---|---|
-| console, memória | os três | impresso ou guardado duas vezes; só para teste |
+| console | os três | impresso duas vezes; só para teste |
+| memória | append, complete | guardado duas vezes; só para teste |
 | arquivos (JSON, Parquet, CSV…) | só append | ignorado: um log dos batches concluídos decide o que os leitores veem |
-| Kafka | append, update | escrito duas vezes; at-least-once |
+| Kafka | os três | escrito duas vezes; at-least-once |
 | `foreachBatch` | os três | o que a sua função fizer com o id do batch que recebe |
 
 ## Kafka
@@ -96,18 +97,18 @@ ubuntu@stream:~/work$ cat ~/spark/out/part-*.json
 {"start":"09:05","end":"09:10","sales":28,"cents":241740}
 ```
 
-Três, não quatro: o watermark parou em 09:15:12, três minutos antes da última venda do caixa, então
+Três, não quatro: o watermark parou em 09:15:12, dois minutos antes da última venda do caixa, então
 a janela de 09:15 continua esperando, como as de 09:30 e 09:35 esperaram na seção 05.
 
 ## E o resto
 
 O `foreachBatch` entrega à sua função cada micro-batch como um DataFrame comum, com o número do
-batch. É assim que uma consulta escreve num banco de dados para o qual o Spark não tem sink, e o
+batch. É assim que uma consulta escreve num banco de dados para o qual o Spark não tem sink. O
 número do batch é o que torna isso seguro: guarde-o junto com as linhas, na mesma transação, e um
 batch repetido pode ser reconhecido e pulado, o padrão de offsets no sink da lição 8.
 
-Pare aqui e olhe a consulta inteira: uma fonte que pode ser relida, um checkpoint que diz o que foi
-lido, estado que sobrevive a um reinício, um watermark que descarta o que chega tarde demais, e um
-sink que ou tolera uma segunda cópia ou a recusa. **Nada disso foi escrito por você, e tudo foi
+A consulta inteira está à vista agora: uma fonte que pode ser relida, um checkpoint que diz o que
+foi lido, estado que sobrevive a um reinício, um watermark que descarta o que chega tarde demais, e
+um sink que ou tolera uma segunda cópia ou a recusa. **Nada disso foi escrito por você, e tudo foi
 escolhido por você**, que é a troca que um motor oferece. A lição 13 faz a mesma contagem em dois
 motores que escolhem diferente.

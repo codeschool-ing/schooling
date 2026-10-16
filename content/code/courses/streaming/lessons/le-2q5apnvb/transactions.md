@@ -3,15 +3,15 @@ title: Transactions, and readers that only see what was committed
 version: 1
 ---
 
-**A Kafka transaction makes several writes, to any number of partitions and topics, become
-visible together or not at all.** The producer opens a transaction, writes, and then commits or
-aborts it. The writes reach the logs straight away either way; what the commit adds is a
-**marker** in each partition saying the transaction ended, and how. A consumer that asks to read
-only committed data holds back until it has seen the marker, and drops what an abort marked.
+**A Kafka transaction makes several writes, to any number of partitions and topics, become visible
+together or not at all.** The producer opens a transaction, writes, and then commits or aborts it.
+The writes reach the logs straight away either way; what the commit adds is a **marker** in each
+partition saying the transaction ended, and how. A consumer that asks to read only committed data
+holds back until it has seen the marker, and drops what an abort marked.
 
 That last sentence corrects the usual picture, in which an aborted write is never written. It is
-written, takes up its offsets and stays in the log until retention removes it. Whether anybody
-sees it is a property of the **reader**, chosen with `isolation.level`:
+written, takes up its offsets and stays in the log until retention removes it. Whether anybody sees
+it is a property of the **reader**, chosen with `isolation.level`:
 
 | `isolation.level` | what the consumer is given |
 |---|---|
@@ -19,14 +19,14 @@ sees it is a property of the **reader**, chosen with `isolation.level`:
 | `read_committed` | committed transactions, and messages written outside any transaction |
 
 The Java and Python consumers default to opposite values: the Python client, through librdkafka,
-defaults to `read_committed`, while the Java client and the console consumer built on it default
-to `read_uncommitted`. The run below uses the console consumer, so the default you see there is
+defaults to `read_committed`, while the Java client and the console consumer built on it default to
+`read_uncommitted`. The run below uses the console consumer, so the default you see there is
 Java's.
 
 ## A producer with a transactional id
 
 A transactional producer needs a **`transactional.id`**, a name that stays the same across
-restarts. It is how the cluster recognises the same producer coming back: on `init_transactions`
+restarts. It is how the cluster recognises the same producer coming back. On `init_transactions`
 the new instance is given the old one's producer id with a higher epoch, any transaction the old
 one left open is aborted, and the old one, if it is somehow still alive, is **fenced**, refused on
 its next write. This program writes two transactions of five sales; the first is committed and the
@@ -97,13 +97,13 @@ baseOffset: 6 lastOffset: 10 count: 5 baseSequence: 5 lastSequence: 9 producerId
 baseOffset: 11 lastOffset: 11 count: 1 baseSequence: -1 lastSequence: -1 producerId: 1 producerEpoch: 0 partitionLeaderEpoch: 0 isTransactional: true isControl: true deleteHorizonMs: OptionalLong.empty position: 1140 CreateTime: 1792111569035 size: 78 magic: 2 compresscodec: none crc: 2943571995 isvalid: true
 ```
 
-The console consumer reads `read_uncommitted` unless told otherwise, and prints all ten sales,
-the aborted ones included. With `--isolation-level read_committed` the same command prints the
-five of the committed transaction and **the aborted five are not there**.
+The console consumer reads `read_uncommitted` unless told otherwise, and prints all ten sales, the
+aborted ones included. With `--isolation-level read_committed` the same command prints the five of
+the committed transaction and **the aborted five are not there**.
 
-The offsets show where the transactions left their marks. The partition's end offset is 12 for
-ten sales, and the dump shows why: offsets 5 and 11 are batches with **`isControl: true`**, the
-markers, the first saying commit and the second abort. The aborted sales are on disk at offsets
-6 to 10 with the same producer id as the committed ones. A reader that does not ask for
-committed data reads them as if nothing had happened, which is why a consumer of a
-transactional topic has to choose its isolation level on purpose.
+The offsets show where the transactions left their marks. The partition's end offset is 12 for ten
+sales, and the dump shows why: offsets 5 and 11 are batches with **`isControl: true`**, the
+markers, the first saying commit and the second abort. The aborted sales are on disk at offsets 6
+to 10 with the same producer id as the committed ones. A reader that does not ask for committed
+data reads them as if nothing had happened, which is why a consumer of a transactional topic has to
+choose its isolation level on purpose.

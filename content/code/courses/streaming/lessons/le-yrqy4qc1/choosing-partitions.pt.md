@@ -62,7 +62,7 @@ Error while executing topic command : The topic shops currently has 4 partition(
 posições, e juntar duas delas daria às duas uma ordem nova e quebraria todo offset registrado, então o
 Kafka não oferece isso.
 
-Então **escolha o número no dia em que criar o tópico**, com folga para crescer, porque os jeitos de
-mudá-lo depois são uma migração: um tópico novo com o número novo, todo leitor movido para ele, e o
+Então **escolha o número no dia em que criar o tópico**, com folga para crescer. Mudá-lo depois quer
+dizer uma migração: um tópico novo com o número novo, todo leitor movido para ele, e o
 antigo mantido até ninguém precisar dele. A lição 16 faz esse tipo de mudança por outro motivo, o
 reprocessamento.

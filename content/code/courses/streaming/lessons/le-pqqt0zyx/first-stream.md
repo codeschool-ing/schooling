@@ -120,6 +120,6 @@ Processed a total of 5 messages
 ```
 
 **The five sales are still there.** Reading them did not remove them, and a second reader, or the
-same one an hour later, gets them all again. That is the second thing that is different, and it is
-what lesson 2 builds on: Kafka is not a queue that hands each message to one taker and forgets it,
-but a log that keeps what was written for as long as it is told to.
+same one an hour later, gets them all again. That is the second thing that is different, and lesson
+2 builds on it. Kafka is not a queue that hands each message to one taker and forgets it. It is a
+log, and it keeps what was written for as long as it is told to.

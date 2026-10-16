@@ -3,8 +3,8 @@ title: Windows per key
 version: 1
 ---
 
-**In practice a window is almost never over the whole stream: it is per key, so every shop, or
-customer, or book, has its own set of windows.** "Sales per five minutes" is a dashboard nobody
+**In practice a window is almost never over the whole stream: it is per key**, so every shop,
+customer or book has its own set of windows. "Sales per five minutes" is a dashboard nobody
 reads; "sales per five minutes per shop" is the one the area manager opens.
 
 Keyed windows are the same rule applied separately inside each key. A tumbling window per shop
@@ -72,7 +72,7 @@ lesson 13 lists among the topics an application creates for itself.
 
 Every open window per key is state that the engine keeps until the window is finished. Five shops
 and five-minute windows is a handful of counters. A million customers with thirty-minute sessions
-is a million entries, which is why engines put window state in an embedded store on disk rather
+is a million entries. That is why engines put window state in an embedded store on disk rather
 than in memory, and why lesson 13 spends a section on where that state lives when a worker dies.
 The number to estimate before choosing a window is **keys × windows open per key**, and both
 factors come from the choices in this lesson.

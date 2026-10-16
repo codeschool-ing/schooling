@@ -111,5 +111,5 @@ a correção é consertar o `apply` e refazer o fold desde o offset 0.
 
 O contrário não vale. A partir de `recife bk-03 6` ninguém consegue dizer se foi 4 − 1 + 6 − 2 − 1
 ou uma contagem nova de 6, nem qual venda aconteceu quando. **Os eventos contêm o estado; o estado
-não contém os eventos.** O preço disso é espaço, já que o log cresce a cada venda enquanto a tabela
-continua com uma linha por livro, e a lição 3 é onde o Kafka decide quanto de um log guardar.
+não contém os eventos.** O preço disso é espaço: o log cresce a cada venda enquanto a tabela
+continua com uma linha por livro. A lição 3 é onde o Kafka decide quanto de um log guardar.

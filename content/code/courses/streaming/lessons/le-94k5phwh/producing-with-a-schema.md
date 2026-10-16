@@ -53,8 +53,8 @@ sent 10 sales to sales-avro as Avro
 
 ## What went over the wire
 
-The console consumer prints a message's value as it is, and `od` shows the bytes. One message,
-from the start of partition 0:
+The console consumer prints a message's value as it is, and `od` shows the bytes. One message, from
+the start of partition 0:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic sales-avro --partition 0 --offset 0 --max-messages 1 2>/dev/null | od -A d -t x1z
@@ -71,9 +71,9 @@ id; and from `14` on it is an Avro body like the one in the Avro section: `car-0
 `bk-04`. The last byte, `0a`, is not part of the message: it is the new line the console consumer
 prints after each value.
 
-Nothing in those bytes says *sale*, *shop* or *cents*. A program that has the id and can reach
-the registry can read them, and one that cannot has 59 bytes of noise, which is why the registry
-is as much a part of the pipeline as the brokers.
+Nothing in those bytes says *sale*, *shop* or *cents*. A program that has the id and can reach the
+registry can read them, and one that cannot has 59 bytes of noise, which is why the registry is as
+much a part of the pipeline as the brokers.
 
 ## The reader
 
@@ -113,6 +113,6 @@ olinda           109.80
 recife           141.80
 ```
 
-All ten sales were written with schema 1, the reader asked for the same fields, and the totals
-come out of an Avro topic as they did from JSON. The difference is invisible here, and shows the
-first time somebody changes the schema, which the next section does on purpose.
+All ten sales were written with schema 1, the reader asked for the same fields, and the totals come
+out of an Avro topic as they did from JSON. The difference is invisible here, and shows the first
+time somebody changes the schema, which the next section does on purpose.

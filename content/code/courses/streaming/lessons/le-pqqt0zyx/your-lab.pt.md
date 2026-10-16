@@ -10,8 +10,8 @@ nada no curso precisa de uma.
 A máquina é um computador Linux com **Ubuntu 24.04 LTS**, com Java, Apache Kafka 4.3.1 e um ambiente
 Python. Uma instalação real de Kafka se espalha por vários servidores; aqui os servidores são
 processos no mesmo computador, cada um com sua porta e seu diretório. Tudo o que importa no Kafka
-continua acontecendo — os dados são de fato gravados em disco, copiados entre nós e lidos de volta
-— e o que falta é só o hardware separado, cujo custo a lição 5 explica.
+continua acontecendo: os dados são gravados em disco, copiados entre nós e lidos de volta. O que
+falta é o hardware separado, e a lição 5 diz quanto isso custa.
 
 | caminho | o que é | quanto custa ao seu computador | as transcrições |
 |---|---|---|---|
@@ -19,9 +19,9 @@ continua acontecendo — os dados são de fato gravados em disco, copiados entre
 | instalado | Ubuntu 24.04 como sistema de um computador que você possa dedicar | nada a mais; Java, Kafka e depois PostgreSQL e RabbitMQ ficam nesse computador | batem como impressas |
 | online | um servidor Ubuntu 24.04 alugado por hora num provedor de nuvem | nada; o provedor cobra por hora | batem como impressas |
 
-Os tamanhos têm folga, e a folga foi medida. Um nó de Kafka usa cerca de 400 MB de memória; três
-deles, como na lição 5, cerca de 1,2 GB. As lições mais pesadas são a 12 e a 13, em que Spark ou
-Flink rodam ao lado de um broker, e elas ficam abaixo de 3 GB. Em disco, o Kafka são 135 MB de
+Os tamanhos têm folga, e a folga foi medida. Um nó de Kafka usa entre uns 360 e 550 MB de
+memória, conforme o que está fazendo; três deles, como na lição 5, cerca de 1,1 GB. As lições
+mais pesadas são a 12 e a 13, em que Spark ou Flink rodam ao lado de um broker, e elas ficam abaixo de 3 GB. Em disco, o Kafka são 135 MB de
 download, e até a lição 14 o curso inteiro instalou menos de 3 GB. O disco padrão do Multipass, de 5
 GB, fica pequeno quando Spark e Flink chegam.
 

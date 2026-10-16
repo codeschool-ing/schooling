@@ -5,13 +5,13 @@ version: 1
 
 **At most once means a message is processed once or not at all, and never twice.** The consumer
 commits the offsets of what it has read before it processes it, so a crash leaves Kafka believing
-the interrupted messages were handled. On the restart they are skipped. Nothing is ever done
-twice, and the price is that something may never be done.
+the interrupted messages were handled. On the restart they are skipped. Nothing is ever done twice,
+and the price is that something may never be done.
 
 It is the right choice more often than its name suggests: a dashboard of sales per minute that
 misses five sales in a crash is wrong by five sales for one minute, and a dashboard that counts
-them twice is wrong in the same way. Where a duplicate costs more than a gap, such as a metric
-that alerts somebody, a sample, or a log of clicks, at most once is cheaper and good enough.
+them twice is wrong in the same way. Where a duplicate costs more than a gap, such as a metric that
+alerts somebody, a sample, or a log of clicks, at most once is cheaper and good enough.
 
 ## A consumer that can be crashed
 
@@ -49,8 +49,8 @@ abruptly in the middle of a batch. Save it as `~/work/crash_consumer.py`:
 }
 ```
 
-The topic for this lesson has **one partition**, so the batches and the offsets are easy to
-follow. Make it and put fifty sales in it:
+The topic for this lesson has **one partition**, so the batches and the offsets are easy to follow.
+Make it and put fifty sales in it:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 1
@@ -59,8 +59,8 @@ ubuntu@stream:~/work$ python tills.py --count 50 --rate 0
 sent 50 sales to sales, the last one at 09:08:39
 ```
 
-If `sales` still exists from an earlier lesson, start from a fresh cluster first with
-`./cluster.sh stop`, `./cluster.sh new 1` and `./cluster.sh start`.
+If `sales` still exists from an earlier lesson, start from a fresh cluster first with `./cluster.sh
+stop`, `./cluster.sh new 1` and `./cluster.sh start`.
 
 ## Crashing it
 
@@ -79,9 +79,9 @@ ubuntu@stream:~/work$ sort processed-most.txt | uniq | wc -l
 
 The first run read two batches of ten, committing each before writing it, then read the third
 batch, sales 21 to 30, committed it, and crashed after writing five of them. The second run started
-from the committed offset, 30, and processed the last 20. **The file holds 45 sales, all
-different, out of 50.** Sales 26 to 30 were never processed, and nothing in the output says so:
-the file is simply five lines short, and only a count against the topic reveals it.
+from the committed offset, 30, and processed the last 20. **The file holds 45 sales, all different,
+out of 50.** Sales 26 to 30 were never processed, and nothing in the output says so: the file is
+simply five lines short, and only a count against the topic reveals it.
 
 That is the whole character of at most once. No duplicate, ever, and a loss as large as whatever
 was in flight when the crash came, which here was half a batch.

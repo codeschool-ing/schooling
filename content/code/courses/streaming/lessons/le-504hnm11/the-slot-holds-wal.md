@@ -84,7 +84,7 @@ ubuntu@stream:~/work$ psql pontofinal -c "SELECT slot_name, active, pg_size_pret
 
 `behind` drops from 19 MB to 120 kB: the connector has confirmed its position. `retained` is still
 19 MB, because it is measured from `restart_lsn`, the oldest point PostgreSQL may have to decode
-from again, and that follows the confirmation later; the WAL files behind it are removed once it
+from again. It follows the confirmation later, and the WAL files behind it are removed once it
 moves and the server reaches its next checkpoint. **Watch both columns**: `behind` says whether the
 reader is keeping up, `retained` says what the disk is paying for it.
 
@@ -115,7 +115,7 @@ gone. Most teams choose that trade, deliberately, with the limit sized to the ou
 recover from.
 
 One more setting closes the gap the catching-up showed. The slot only moves when the connector
-confirms a change it read, so if the published tables are quiet while others are busy — `stock`
+confirms a change it read. If the published tables are quiet while others are busy — `stock`
 changing once a day in a database that writes all night — the slot sits still and the WAL grows
 with Connect running and healthy. Debezium's `heartbeat.interval.ms` makes the connector confirm its
 position on a timer whether or not its tables changed. It is not set in this lab, which is why the

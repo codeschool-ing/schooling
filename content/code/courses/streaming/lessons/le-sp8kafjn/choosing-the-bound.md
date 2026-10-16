@@ -55,8 +55,8 @@ sent 360 sales to late, from 09:00:27 to 15:13:59; natal held 38 from 10:20 to 1
 ```
 
 Then the same pipeline as lesson 9's, with a different ending: it prints each sale's distance,
-sorts them, reads off the percentiles, where p90 is the distance that 90 per cent of sales are at
-or under, and counts how many are within a minute and within two:
+sorts them, reads off the percentiles and counts how many are within a minute and within two. The
+p90 is the distance that 90 per cent of sales are at or under:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 2>/dev/null \
@@ -89,7 +89,7 @@ last 10 per cent means waiting more than three hours.
 | the largest distance | 360 of 360 | over three hours, which is a batch |
 
 **A bound of a minute or two is right for these tills**, and it is right because of the shape, not
-the numbers: the slow deliveries end at 92 seconds and the next thing is Natal, half an hour later.
+the numbers: the slow deliveries end at 92 seconds and the next thing is Natal, almost fourteen minutes behind.
 A bound anywhere in the gap catches the first group and none of the second, so the shortest bound
 past the first group is the best one. The second group is not the bound's job. It is what allowed
 lateness, the late topic and the nightly batch are for.

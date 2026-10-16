@@ -53,10 +53,10 @@ The first two lines name the file and its first offset. The third is not a messa
 **batch**, `baseOffset: 0 lastOffset: 760 count: 761`, which says that 761 messages arrived
 together, as one batch from the producer, and are stored together. **Kafka stores what the
 producer sent, a batch at a time**, without unpacking it, and that is a large part of why it is
-fast. The `producerId: -1` and `isTransactional: false` fields are empty here and filled in
-lessons 7 and 8. Then the messages: each has its offset, its `CreateTime` (the time the producer
-created it, in milliseconds since 1970, not the sale's own `at`, a difference lesson 9 is about),
-its key and its value.
+fast. The `producerId: -1` and `isTransactional: false` fields are empty here and filled in by
+lesson 7's idempotent and transactional producers. Then the messages, each with its offset, its `CreateTime`, its key and its value.
+`CreateTime` is the time the producer created the message, in milliseconds since 1970, and not the
+sale's own `at`, a difference lesson 9 is about.
 
 ## Inside the .index
 

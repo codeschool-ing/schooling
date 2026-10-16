@@ -18,10 +18,10 @@ Os modos levam o nome da direção que protegem:
 | `FULL` | as duas coisas | acrescentar ou remover só campos com valor padrão |
 | `NONE` | nada é conferido | qualquer coisa |
 
-Cada um tem uma variante `_TRANSITIVE`, que confere a versão nova contra **todas** as anteriores
-em vez de só a última. A diferença aparece em três passos: remover um campo na versão 2 e
-devolvê-lo com outro tipo na versão 3 passa em duas checagens contra a versão anterior, e deixa a
-versão 3 incapaz de ler a versão 1.
+Cada um tem uma variante `_TRANSITIVE`, que confere a versão nova contra **todas** as anteriores em
+vez de só a última. A diferença aparece em três passos: remover um campo na versão 2 e devolvê-lo
+com outro tipo na versão 3 passa em duas checagens contra a versão anterior, e deixa a versão 3
+incapaz de ler a versão 1.
 
 ## O padrão não é o mesmo em todo lugar
 
@@ -36,9 +36,9 @@ ubuntu@stream:~/work$ curl -s -X PUT -H 'Content-Type: application/vnd.schemareg
 ```
 
 **`NONE` quer dizer que o registro que você iniciou nesta lição aceita qualquer mudança** até
-alguém dizer o contrário, e é por isso que a primeira coisa a fazer com um subject novo é definir
-o seu modo. O `PUT` acima definiu `BACKWARD` só para `sales-avro-value`; sem o nome do subject no
-fim do endereço, ele teria mudado o padrão de todos os subjects.
+alguém dizer o contrário, e é por isso que a primeira coisa a fazer com um subject novo é definir o
+seu modo. O `PUT` acima definiu `BACKWARD` só para `sales-avro-value`; sem o nome do subject no fim
+do endereço, ele teria mudado o padrão de todos os subjects.
 
 ## Uma mudança que ele aceita
 
@@ -72,8 +72,8 @@ ubuntu@stream:~/work$ curl -s localhost:8080/apis/ccompat/v7/subjects/sales-avro
 [1,2]
 ```
 
-**409, Conflict**, e o subject continua só com as versões 1 e 2. A mensagem nomeia o campo em que
-a checagem parou, `amount`, na posição 4 da lista de campos.
+**409, Conflict**, e o subject continua só com as versões 1 e 2. A mensagem nomeia o campo em que a
+checagem parou, `amount`, na posição 4 da lista de campos.
 
 Para o Avro, uma renomeação são duas mudanças: `cents` removido e `amount` acrescentado. Remover é
 permitido sob `BACKWARD`; acrescentar um campo **sem valor padrão** não é, porque um leitor no

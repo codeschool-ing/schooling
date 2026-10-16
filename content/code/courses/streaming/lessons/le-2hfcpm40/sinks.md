@@ -14,9 +14,10 @@ the offsets, and reading them again gives the same records. The sink is the half
 
 | sink | output modes | a batch written twice |
 |---|---|---|
-| console, memory | all three | printed or stored twice; for testing only |
+| console | all three | printed twice; for testing only |
+| memory | append, complete | stored twice; for testing only |
 | files (JSON, Parquet, CSV…) | append only | ignored: a log of finished batches decides what readers see |
-| Kafka | append, update | written twice; at-least-once |
+| Kafka | all three | written twice; at-least-once |
 | `foreachBatch` | all three | whatever your function does with the batch id it is given |
 
 ## Kafka
@@ -95,18 +96,18 @@ ubuntu@stream:~/work$ cat ~/spark/out/part-*.json
 {"start":"09:05","end":"09:10","sales":28,"cents":241740}
 ```
 
-Three, not four: the watermark stopped at 09:15:12, three minutes before the till's last sale, so
-the 09:15 window is still waiting, as the 09:30 and 09:35 windows did in section 05.
+Three, not four: the watermark stopped at 09:15:12, two minutes before the till's last sale, so the
+09:15 window is still waiting, as the 09:30 and 09:35 windows did in section 05.
 
 ## And the rest
 
-`foreachBatch` hands your function each micro-batch as an ordinary DataFrame, with its batch
-number. It is how a query writes to a database Spark has no sink for, and the batch number is what
-makes it safe: store it with the rows, in the same transaction, and a replayed batch can be
-recognised and skipped, the offsets-in-the-sink pattern of lesson 8.
+`foreachBatch` hands your function each micro-batch as an ordinary DataFrame, with its batch number.
+It is how a query writes to a database Spark has no sink for. The batch number is what makes it
+safe: store it with the rows, in the same transaction, and a replayed batch can be recognised and
+skipped, the offsets-in-the-sink pattern of lesson 8.
 
-Stop here and look back at the whole query: a source that can be replayed, a checkpoint that says
-what was read, state that survives a restart, a watermark that drops what is too late, and a sink
-that either tolerates a second copy or refuses it. **None of it was written by you, and all of it
-was chosen by you**, which is the trade an engine offers. Lesson 13 makes the same count in two
-engines that choose differently.
+The whole query is now in view: a source that can be replayed, a checkpoint that says what was read,
+state that survives a restart, a watermark that drops what is too late, and a sink that either
+tolerates a second copy or refuses it. **None of it was written by you, and all of it was chosen by
+you**, which is the trade an engine offers. Lesson 13 makes the same count in two engines that
+choose differently.

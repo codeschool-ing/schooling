@@ -19,7 +19,7 @@ depois*, é um evento, e um log serve. A maioria das outras perguntas sai dessa.
 | nenhum servidor para manter | SQS e SNS | o provedor os mantém e cobra por requisição |
 
 **A linha do trabalho lento é a que o pessoal esquece.** Um consumidor de Kafka confirma um offset,
-uma posição, então a ordem da partição é a unidade de progresso: uma mensagem que leva dez minutos
+uma posição, então a ordem da partição é a unidade de progresso. Uma mensagem que leva dez minutos
 segura tudo o que vem atrás dela naquela partição (a lição 16 chama isso de mensagem venenosa quando
 ela nunca termina). Uma fila confirma mensagem por mensagem, então a ordem em que um embalador
 termina não importa, e o próximo pedido vai para quem estiver livre.

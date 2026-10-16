@@ -113,6 +113,6 @@ open when the list ends.
 Three windows were emitted, each once, and each at a moment set by event times alone: run it again
 and they come out at the same lines. Two of the twelve sales were lost, 13,480 cents that never
 reached any total. Whether that is acceptable is not a property of the program. It depends on what
-the totals are for and what else catches the two sales, which is what the next three sections are
-about: keeping windows open a little longer, sending late sales somewhere instead of nowhere, and
+the totals are for and what else catches the two sales. The next three sections take that up:
+keeping windows open a little longer, sending late sales somewhere instead of nowhere, and
 choosing the bound from measurement instead of habit.

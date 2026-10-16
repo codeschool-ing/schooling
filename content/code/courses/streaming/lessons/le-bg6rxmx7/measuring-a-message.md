@@ -69,12 +69,12 @@ total 13228
 -rw-r--r-- 1 ubuntu ubuntu       43 Oct 10 17:11 partition.metadata
 ```
 
-The `.log` file is the segment, the bytes `kafka-log-dirs.sh` counted. `.index` and `.timeindex`
-map offsets and timestamps to positions in it, which is how lesson 16's reset by datetime found its
-offsets; they are created at their full preallocated size, the 10 485 760 bytes `ls` shows, and trimmed
-when the segment closes, so their size on a live segment says little. `kafka-log-dirs.sh` does not
-count them. Lesson 3 opened these files with `kafka-dump-log.sh`; here the point is only that **the
-`size` to multiply is the `.log` file's**, which is exactly what the tool reported.
+The `.log` file is the segment, the bytes `kafka-log-dirs.sh` counted. `.index` and `.timeindex` map
+offsets and timestamps to positions in it, which is how lesson 16's reset by datetime found its
+offsets. They are created at their full preallocated size, the 10 485 760 bytes `ls` shows, and
+trimmed when the segment closes, so their size on a live segment says little. `kafka-log-dirs.sh`
+does not count them. Lesson 3 opened these files with `kafka-dump-log.sh`; here the point is only
+that **the `size` to multiply is the `.log` file's**, which is exactly what the tool reported.
 
 Two cautions before the number goes into arithmetic. **It depends on the batch**: the tills sent as
 fast as they could, so the producer packed many sales per batch, and a producer sending one sale every

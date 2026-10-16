@@ -5,22 +5,21 @@ version: 1
 
 **Um consumidor consegue transformar duplicatas em nada registrando o id de cada evento que aplica,
 na mesma transação de banco do efeito, e pulando um evento cujo id já está registrado.** As duas
-gravações têm de dividir a transação. Com o id gravado primeiro e o efeito depois, uma queda no meio
-marca como aplicada uma venda que nunca foi; ao contrário, uma queda deixa uma venda aplicada e não
-marcada, e a próxima entrega a aplica de novo.
+gravações têm de dividir a transação. Com o id gravado primeiro e o efeito depois, uma queda no
+meio marca como aplicada uma venda que nunca foi; ao contrário, uma queda deixa uma venda aplicada
+e não marcada, e a próxima entrega a aplica de novo.
 
-O id tem de vir do evento, que é o que a lição 2 quis dizer ao dar a cada evento um id próprio: aqui é
-o campo `sale`, `nat-000002` e assim por diante, dado pelo caixa. Um id inventado pelo consumidor, ou
-o offset no Kafka, não serviriam, porque a mesma venda gravada duas vezes por um produtor que tentou
-de novo fica em dois offsets.
+O id tem de vir do evento, que é o que a lição 2 quis dizer ao dar a cada evento um id próprio:
+aqui é o campo `sale`, `nat-000002` e assim por diante, dado pelo caixa. Um id inventado pelo
+consumidor, ou o offset no Kafka, não serviriam, porque a mesma venda gravada duas vezes por um
+produtor que tentou de novo fica em dois offsets.
 
 ## Um destino para o estoque
 
 Este consumidor mantém o estoque de cada livro em `stock.db`, começando com cem cópias de cada, e
 subtrai cada venda. Com `--dedup` ele também guarda os ids das vendas numa tabela `processed`. Ele
 confirma no Kafka o offset de cada venda depois de o banco confirmar, então entrega pelo menos uma
-vez, e `--crash-after` o derruba entre os dois commits. Salve como
-`~/work/stock_sink.py`:
+vez, e `--crash-after` o derruba entre os dois commits. Salve como `~/work/stock_sink.py`:
 
 ```schooling-example
 {
@@ -61,13 +60,13 @@ ubuntu@stream:~/work$ python tills.py --count 40 --rate 0
 sent 40 sales to sales, the last one at 09:06:58
 ```
 
-Como na lição 7, um tópico `sales` que sobrou de uma lição anterior quer dizer começar de um cluster
-novo.
+Como na lição 7, um tópico `sales` que sobrou de uma lição anterior quer dizer começar de um
+cluster novo.
 
 ## Sem os ids
 
-Rode uma vez, depois releia o tópico, do jeito que uma equipe faz depois de corrigir um bug em outro
-consumidor do mesmo tópico, ou depois de restaurar este banco do backup da noite anterior:
+Rode uma vez, depois releia o tópico, do jeito que uma equipe faz depois de corrigir um bug em
+outro consumidor do mesmo tópico, ou depois de restaurar este banco do backup da noite anterior:
 
 ```
 ubuntu@stream:~/work$ python stock_sink.py
@@ -80,9 +79,9 @@ ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
 (658,)
 ```
 
-As quarenta vendas tiraram 71 cópias das prateleiras: 800 viraram 729. **A releitura tirou de novo**,
-para 658, e a contagem de cada livro agora está errada pelas cópias das próprias vendas. As duas
-execuções imprimiram a mesma linha honesta; nada em nenhuma delas parece um erro.
+As quarenta vendas tiraram 71 cópias das prateleiras: 800 viraram 729. **A releitura tirou de
+novo**, para 658, e a contagem de cada livro agora está errada pelas cópias das próprias vendas. As
+duas execuções imprimiram a mesma linha honesta; nada em nenhuma delas parece um erro.
 
 ## Com eles
 
@@ -105,8 +104,8 @@ A primeira execução aplicou as quarenta e guardou os ids; a releitura encontro
 
 ## E a queda para a qual ele foi feito
 
-A releitura foi uma duplicata de propósito. A comum vem de uma queda entre os dois commits. Apague o
-banco e os offsets do grupo, derrube o destino depois de quinze vendas e comece de novo:
+A releitura foi uma duplicata de propósito. A comum vem de uma queda entre os dois commits. Apague
+o banco e os offsets do grupo, derrube o destino depois de quinze vendas e comece de novo:
 
 ```
 ubuntu@stream:~/work$ rm stock.db
@@ -121,6 +120,6 @@ ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT sum(qty) FROM stock"
 ```
 
 A queda veio depois de a transação de banco da décima quinta venda ter sido confirmada e antes de o
-offset dela ser confirmado no Kafka. Então o reinício recebeu essa venda de novo, encontrou o id dela
-em `processed` e a pulou: **25 aplicadas, 1 pulada, e o estoque em 729**, igual a uma execução que
-nunca caiu. Sem `--dedup`, essa venda teria sido subtraída duas vezes.
+offset dela ser confirmado no Kafka. Então o reinício recebeu essa venda de novo, encontrou o id
+dela em `processed` e a pulou: **25 aplicadas, 1 pulada, e o estoque em 729**, igual a uma execução
+que nunca caiu. Sem `--dedup`, essa venda teria sido subtraída duas vezes.

@@ -119,6 +119,6 @@ Processed a total of 5 messages
 ```
 
 **As cinco vendas continuam lá.** Ler não as removeu, e um segundo leitor, ou o mesmo uma hora
-depois, recebe todas de novo. Essa é a segunda coisa diferente, e é nela que a lição 2 se apoia: o
-Kafka não é uma fila que entrega cada mensagem a um só interessado e a esquece, mas um log que
-guarda o que foi escrito pelo tempo que mandarem.
+depois, recebe todas de novo. Essa é a segunda coisa diferente, e a lição 2 se apoia nela. O
+Kafka não é uma fila que entrega cada mensagem a um só interessado e a esquece. É um log, e guarda o
+que foi escrito pelo tempo que mandarem.

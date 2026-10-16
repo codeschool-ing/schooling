@@ -3,8 +3,8 @@ title: Uma escrita, muitos leitores
 version: 1
 ---
 
-**Um log deixa um sistema escrever um fato uma vez e deixa qualquer número de sistemas lê-lo, cada um
-no seu ritmo, sem que quem escreve saiba quem eles são.** A lição 1 disse que esse costuma ser o
+**Um log deixa um sistema escrever um fato uma vez e qualquer número de sistemas lê-lo, cada um no
+seu ritmo.** Quem escreve não precisa saber quem eles são. A lição 1 disse que esse costuma ser o
 principal motivo de uma empresa adotar o Kafka, mesmo para dados de que ninguém precisa com pressa.
 Esta seção diz por que funciona, e o que isso substitui.
 

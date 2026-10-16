@@ -5,7 +5,7 @@ version: 1
 
 O Kafka chega como um conjunto de programas e nenhuma opinião sobre como rodá-los. Um nó precisa de
 um arquivo de configuração, de um diretório que seja dele, de uma **formatação** única desse
-diretório e de um comando que o inicie; três nós precisam de tudo isso três vezes, com portas que
+diretório e de um comando que o inicie. Três nós precisam de tudo isso três vezes, com portas que
 não colidam e uma lista de quem vota nas eleições do cluster. Digitar isso à mão é como um
 laboratório acaba num estado que ninguém consegue explicar, então o curso faz com um script, que
 você salva agora e usa em todas as lições depois desta.
@@ -31,7 +31,7 @@ Salve isto como `~/work/cluster.sh`:
     },
     {
       "code": "  for i in $(seq 1 \"$n\"); do\n    mkdir -p \"$DATA/node$i\"\n    cat > \"$DATA/node$i/server.properties\" <<CONF\nprocess.roles=broker,controller\nnode.id=$i\ncontroller.quorum.voters=$voters\nlisteners=PLAINTEXT://localhost:$((9091 + i)),CONTROLLER://localhost:$((9191 + i))\nadvertised.listeners=PLAINTEXT://localhost:$((9091 + i))\ncontroller.listener.names=CONTROLLER\ninter.broker.listener.name=PLAINTEXT\nlistener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT\nlog.dirs=$DATA/node$i/log\nnum.partitions=1\ndefault.replication.factor=$n\noffsets.topic.replication.factor=$n\ntransaction.state.log.replication.factor=$n\ntransaction.state.log.min.isr=1\nshare.coordinator.state.topic.replication.factor=$n\nshare.coordinator.state.topic.min.isr=1\ngroup.initial.rebalance.delay.ms=0\nCONF",
-      "note": "Um arquivo de configuração por nó. **Cada nó é ao mesmo tempo um broker, que guarda dados, e um controller, que mantém os metadados do cluster**; a lição 5 separa os dois papéis. Os fatores de replicação acompanham o tamanho do cluster, para que os tópicos que o Kafka cria para si sobrevivam à perda de um nó quando há três."
+      "note": "Um arquivo de configuração por nó. **Cada nó é ao mesmo tempo um broker, que guarda dados, e um controller, que mantém os metadados do cluster**; a lição 5 olha os dois papéis um de cada vez. Os fatores de replicação acompanham o tamanho do cluster, para que os tópicos que o Kafka cria para si sobrevivam à perda de um nó quando há três."
     },
     {
       "code": "    \"$KAFKA\"/bin/kafka-storage.sh format -t \"$id\" -c \"$DATA/node$i/server.properties\" >/dev/null\n  done\n  echo \"new: $n node(s), cluster id $id\"\n}\n",

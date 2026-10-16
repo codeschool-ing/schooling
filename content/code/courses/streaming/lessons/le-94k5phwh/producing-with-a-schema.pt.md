@@ -4,9 +4,9 @@ version: 1
 ---
 
 **Com um registro, o produtor não manda JSON e o consumidor não o interpreta: cada lado entrega os
-seus dicionários a um serializador, que os transforma no cabeçalho de cinco bytes e num corpo
-Avro, e de volta.** A parte Kafka do programa não muda nada. `produce` continua recebendo bytes;
-eles só vêm de outra função.
+seus dicionários a um serializador, que os transforma no cabeçalho de cinco bytes e num corpo Avro,
+e de volta.** A parte Kafka do programa não muda nada. `produce` continua recebendo bytes; eles só
+vêm de outra função.
 
 ## O caixa, em Avro
 
@@ -65,11 +65,11 @@ ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:909
 0000060
 ```
 
-O `od` imprime à esquerda a posição de cada linha, dezesseis bytes em hexadecimal, e os
-imprimíveis entre `>` e `<`. O primeiro byte é o mágico `00`, os quatro seguintes são
-`00 00 00 01`, o id; e de `14` em diante é um corpo Avro como o da seção sobre Avro: `car-000010`,
-`caruaru`, `bk-04`. O último byte, `0a`, não faz parte da mensagem: é a quebra de linha que o
-consumidor de console imprime depois de cada valor.
+O `od` imprime à esquerda a posição de cada linha, dezesseis bytes em hexadecimal, e os imprimíveis
+entre `>` e `<`. O primeiro byte é o mágico `00`, os quatro seguintes são `00 00 00 01`, o id; e de
+`14` em diante é um corpo Avro como o da seção sobre Avro: `car-000010`, `caruaru`, `bk-04`. O
+último byte, `0a`, não faz parte da mensagem: é a quebra de linha que o consumidor de console
+imprime depois de cada valor.
 
 Nada nesses bytes diz *sale*, *shop* ou *cents*. Um programa que tem o id e alcança o registro
 consegue lê-los, e um que não alcança tem 59 bytes de ruído, e é por isso que o registro faz parte
@@ -77,8 +77,8 @@ do pipeline tanto quanto os brokers.
 
 ## O leitor
 
-O consumidor é a imagem no espelho. Ele recebe um esquema próprio, o **esquema do leitor** da
-seção sobre Avro, e o desserializador busca no registro o esquema de quem escreveu, pelo id em cada
+O consumidor é a imagem no espelho. Ele recebe um esquema próprio, o **esquema do leitor** da seção
+sobre Avro, e o desserializador busca no registro o esquema de quem escreveu, pelo id em cada
 mensagem. Salve como `~/work/avro_read.py`:
 
 ```schooling-example
