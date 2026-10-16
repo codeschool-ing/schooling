@@ -1,0 +1,571 @@
+{
+  "ex-c9gqfv08": {
+    "prompt": "Qual é o formato de um middleware no estilo da biblioteca padrão do Go?",
+    "hint": "Ele recebe o handler a envolver.",
+    "choices": [
+      {
+        "text": "Um tipo que embute `http.ServeMux` e sobrescreve o método de roteamento dele",
+        "why": "Nenhum tipo de framework entra nisso; uma função de handler para handler é a ideia inteira."
+      },
+      {
+        "text": "Uma interface `Middleware` do `net/http`",
+        "why": "O `net/http` não declara essa interface."
+      },
+      {
+        "text": "`func(w http.ResponseWriter, r *http.Request) error`",
+        "why": "Isso é um handler que devolve erro, formato que alguns frameworks usam; ele não envolve nada."
+      },
+      {
+        "text": "`func(next http.Handler) http.Handler`",
+        "why": "Certo. Ele recebe `next` e devolve um handler que decide quando chamá-lo."
+      }
+    ]
+  },
+  "ex-93qd116e": {
+    "prompt": "No `wrap`, `h = announce(\"inner\")(h)` roda antes de `h = announce(\"outer\")(h)`. Qual linha o servidor imprime primeiro numa requisição?",
+    "hint": "Qual envoltório o servidor recebeu?",
+    "choices": [
+      {
+        "text": "`outer in`",
+        "why": "Certo. O último envoltório aplicado é o mais de fora, então roda primeiro e termina por último."
+      },
+      {
+        "text": "`inner in`",
+        "why": "O `inner` foi aplicado primeiro, então ficou dentro do `outer`."
+      },
+      {
+        "text": "`  the handler`, já que middlewares imprimem depois do handler",
+        "why": "Cada middleware imprime antes de chamar `next` e também depois."
+      },
+      {
+        "text": "Varia entre requisições, porque cada uma roda na própria goroutine",
+        "why": "Dentro de uma requisição as chamadas são aninhadas e ordenadas, como uma pilha de chamadas."
+      }
+    ]
+  },
+  "ex-f28s5geg": {
+    "prompt": "`curl localhost:8080/nothing` recebe um 404 do `wrap`. O que os dois middlewares imprimiram para ele?",
+    "hint": "Olhe a segunda metade da saída do servidor.",
+    "choices": [
+      {
+        "text": "Suas linhas de entrada e saída, em volta do 404 do mux",
+        "why": "Certo. Um middleware envolve tudo o que está dentro dele, inclusive respostas que ninguém escreveu."
+      },
+      {
+        "text": "Nada, porque nenhuma rota casou",
+        "why": "Eles envolvem o mux inteiro, inclusive o 404 dele."
+      },
+      {
+        "text": "Só `outer in` e `outer out`",
+        "why": "O `inner` também envolve o mux, então rodou também."
+      },
+      {
+        "text": "Um pânico, porque `next` é nil quando nada casa o caminho",
+        "why": "O `next` é o mux, que responde 404 sozinho."
+      }
+    ]
+  },
+  "ex-ygvgs2e9": {
+    "prompt": "`chain(mux, a, b)` monta o mesmo handler que `a(___(mux))`.",
+    "hint": "O primeiro middleware nomeado é o mais de fora.",
+    "blanks": [
+      {
+        "accept": [
+          "b"
+        ]
+      }
+    ]
+  },
+  "ex-8hgxw7np": {
+    "prompt": "Por que o `logRequests` passa ao handler um `statusRecorder` em vez do writer verdadeiro?",
+    "hint": "O que falta no `ResponseWriter`?",
+    "choices": [
+      {
+        "text": "Um writer não tem método para ler o status de volta",
+        "why": "Certo. O gravador anota o código ao passar, e o middleware o conhece depois."
+      },
+      {
+        "text": "Para impedir handlers de escrever cabeçalhos",
+        "why": "Tudo é repassado ao writer verdadeiro; nada é impedido."
+      },
+      {
+        "text": "Para guardar o corpo e escrever a linha de log antes de a resposta sair",
+        "why": "Nada fica guardado; a linha é escrita depois que o handler retorna."
+      },
+      {
+        "text": "Porque um `ResponseWriter` verdadeiro não é seguro numa goroutine de middleware",
+        "why": "Middleware e handler rodam na mesma goroutine, um chamando o outro."
+      }
+    ]
+  },
+  "ex-bffkhfqs": {
+    "prompt": "Um handler escreve um corpo e nunca chama `WriteHeader`. Que status o `statusRecorder` registra?",
+    "hint": "O que o writer verdadeiro vai mandar?",
+    "choices": [
+      {
+        "text": "0",
+        "why": "O `Write` define 200 quando nenhum status veio antes."
+      },
+      {
+        "text": "204, já que nenhum status foi escolhido",
+        "why": "204 quer dizer sem conteúdo, e havia corpo."
+      },
+      {
+        "text": "O que o handler teria escolhido se tivesse chamado `WriteHeader` antes da primeira escrita",
+        "why": "Nada adivinha intenções: a primeira escrita manda 200."
+      },
+      {
+        "text": "200",
+        "why": "Certo. Uma escrita sem status antes quer dizer 200, e o gravador anota exatamente isso."
+      }
+    ]
+  },
+  "ex-fm4fbh4k": {
+    "prompt": "O que se perderia se o `statusRecorder` não tivesse o método `Unwrap`?",
+    "hint": "Um envoltório esconde os métodos que o tipo dele não declara.",
+    "choices": [
+      {
+        "text": "Descarregar pelo `http.ResponseController`",
+        "why": "Certo. `Unwrap` é a convenção que ele segue para atravessar envoltórios, e a aula 13 precisa disso."
+      },
+      {
+        "text": "Nada; embutir já expõe todo método do writer verdadeiro",
+        "why": "Embutir expõe os três métodos da interface, não os extras do writer verdadeiro, como descarregar."
+      },
+      {
+        "text": "A contagem de bytes, já que o `Write` iria direto ao writer verdadeiro",
+        "why": "O `Write` conta os bytes; o `Unwrap` não tem papel nisso."
+      },
+      {
+        "text": "A duração da linha de log",
+        "why": "O relógio do middleware mede isso."
+      }
+    ]
+  },
+  "ex-m4610t5s": {
+    "prompt": "No log, quantos bytes o boxoffice mandou para `GET /events/9`?",
+    "hint": "O número antes do `B`.",
+    "unit": "bytes"
+  },
+  "ex-mtcwq5ye": {
+    "prompt": "Por que o log de acesso guarda o caminho mas não a query string nem os cabeçalhos?",
+    "hint": "Quem lê um log, e por quanto tempo ele é guardado?",
+    "choices": [
+      {
+        "text": "Segredos vazariam para ele",
+        "why": "Certo. Um token em `Authorization` ou um endereço numa query string ficariam num arquivo que muita gente lê por muito tempo."
+      },
+      {
+        "text": "Cabeçalhos não estão disponíveis depois que o handler retorna",
+        "why": "O `r.Header` continua lá; deixá-lo de fora é uma escolha."
+      },
+      {
+        "text": "Uma query string é longa demais para o `log.Printf`",
+        "why": "Tamanho não é o motivo; o que ela guarda é."
+      },
+      {
+        "text": "O mux os remove antes de o middleware ver a requisição",
+        "why": "O logger fica fora do mux e vê a requisição como ela chegou."
+      }
+    ]
+  },
+  "ex-tbaks5c4": {
+    "prompt": "Contra o `fragile`, que status de saída o `curl` reportou para `/boom`?",
+    "hint": "O código do curl para uma resposta vazia.",
+    "unit": ""
+  },
+  "ex-nz7vefrw": {
+    "prompt": "Sem middleware de recuperação, o que o `net/http` faz quando um handler entra em pânico?",
+    "hint": "O `fragile` continuou rodando?",
+    "choices": [
+      {
+        "text": "Registra, fecha a conexão, segue servindo",
+        "why": "Certo. O processo sobrevive; o cliente fica com uma resposta vazia."
+      },
+      {
+        "text": "O programa inteiro sai com status 2",
+        "why": "Isso é pânico fora de uma requisição; o `net/http` recupera pânicos de handler."
+      },
+      {
+        "text": "Ele manda um 500 com a mensagem do pânico no corpo",
+        "why": "O cliente não recebeu status nenhum, por isso o curl disse 52."
+      },
+      {
+        "text": "Ele roda o handler uma segunda vez, caso o pânico viesse de uma condição passageira",
+        "why": "Nada é repetido; repetir um bug é o mesmo bug."
+      }
+    ]
+  },
+  "ex-s4tkmh02": {
+    "prompt": "Lendo a pilha que o `fragile` imprimiu, onde está a linha que causou o pânico?",
+    "hint": "Leia de cima para baixo.",
+    "choices": [
+      {
+        "text": "A última linha, onde `net/http.(*Server).Serve` criou a goroutine",
+        "why": "Ali é onde a goroutine começou, longe do bug."
+      },
+      {
+        "text": "Em `runtime/panic.go`",
+        "why": "Ali é o runtime relatando o pânico."
+      },
+      {
+        "text": "Em `main.main.func1`, `main.go:13`",
+        "why": "Certo. O primeiro quadro do seu próprio código é a linha que escreveu no mapa nil."
+      },
+      {
+        "text": "No topo, em `net/http.(*conn).serve.func1`",
+        "why": "Esse é o código de recuperação dentro do `net/http`."
+      }
+    ]
+  },
+  "ex-4snb8g2x": {
+    "prompt": "Um handler inicia uma goroutine, e essa goroutine entra em pânico. O que o `recoverPanics` faz a respeito?",
+    "hint": "Onde o `recover` funciona?",
+    "choices": [
+      {
+        "text": "Ele o transforma num 500 como qualquer outro pânico",
+        "why": "O `recover` só vê pânicos da própria goroutine."
+      },
+      {
+        "text": "Ele registra a pilha e deixa a goroutine continuar",
+        "why": "Ele nunca vê o pânico, e uma goroutine em pânico não continua."
+      },
+      {
+        "text": "Nada, e o programa inteiro termina",
+        "why": "Certo. Uma goroutine iniciada por um handler tem de se proteger sozinha."
+      },
+      {
+        "text": "O `net/http` o recupera e fecha a conexão do cliente",
+        "why": "O `net/http` só recupera a goroutine em que roda o handler."
+      }
+    ]
+  },
+  "ex-q9tah80t": {
+    "prompt": "Por que o `recoverPanics` entra em pânico de novo quando o valor é `http.ErrAbortHandler`?",
+    "hint": "Quem entra em pânico com esse valor, e por quê?",
+    "choices": [
+      {
+        "text": "Porque o `recover` devolve nil para ele",
+        "why": "Ele devolve o valor; é assim que o middleware o reconhece."
+      },
+      {
+        "text": "Para derrubar o programa e um supervisor reiniciá-lo",
+        "why": "O `net/http` o pega na goroutine da conexão; o programa segue."
+      },
+      {
+        "text": "Ele marca um abandono deliberado",
+        "why": "Certo. Um 500 desfaria o abandono deliberado."
+      },
+      {
+        "text": "Já que ele marca um cliente que desconectou",
+        "why": "Um cliente desconectado cancela o contexto; esse valor é escolha do próprio handler."
+      }
+    ]
+  },
+  "ex-vwah0gw8": {
+    "prompt": "`curl -H 'Origin: https://elsewhere.example.net' localhost:8080/events/1` recebeu um 200 com o corpo inteiro. O que isso mostra?",
+    "hint": "Quem aplica o CORS?",
+    "choices": [
+      {
+        "text": "O middleware cors está quebrado",
+        "why": "Ele fez o trabalho dele: nenhum `Access-Control-Allow-Origin` para aquela origem."
+      },
+      {
+        "text": "CORS não é controle de acesso",
+        "why": "Certo. O que é privado precisa de autenticação."
+      },
+      {
+        "text": "O curl ignora o cabeçalho Origin",
+        "why": "Ele mandou; o servidor leu."
+      },
+      {
+        "text": "Origens desconhecidas podem ler toda resposta de `GET` por padrão",
+        "why": "Nenhum cabeçalho de permissão foi mandado para ela."
+      }
+    ]
+  },
+  "ex-3ydqsbed": {
+    "prompt": "Por que o `cors` acrescenta `Vary: Origin` a toda resposta, permitida ou não?",
+    "hint": "Pense num cache entre cliente e servidor.",
+    "choices": [
+      {
+        "text": "Navegadores recusam respostas sem ele",
+        "why": "Eles aceitam; o perigo está nos caches."
+      },
+      {
+        "text": "Ele diz ao navegador quais origens podem ler a resposta",
+        "why": "Isso é o `Access-Control-Allow-Origin`."
+      },
+      {
+        "text": "A resposta depende de um cabeçalho da requisição, então um cache não reusa a cópia de uma origem para outra",
+        "why": "Certo. Sem ele uma CDN ou o cache do navegador serviria a permissão errada."
+      },
+      {
+        "text": "Ele acelera o preflight",
+        "why": "O `Access-Control-Max-Age` faz isso."
+      }
+    ]
+  },
+  "ex-satkr757": {
+    "prompt": "Ligue cada cabeçalho da resposta do preflight ao que ele diz ao navegador.",
+    "hint": "Quatro cabeçalhos, quatro permissões.",
+    "pairs": [
+      {
+        "left": "`Access-Control-Allow-Origin`",
+        "right": "qual página pode ler a resposta"
+      },
+      {
+        "left": "`Access-Control-Allow-Methods`",
+        "right": "quais métodos a requisição verdadeira pode usar"
+      },
+      {
+        "left": "`Access-Control-Allow-Headers`",
+        "right": "quais cabeçalhos ela pode levar"
+      },
+      {
+        "left": "`Access-Control-Max-Age`",
+        "right": "por quanto tempo lembrar esta resposta"
+      }
+    ],
+    "right_distractors": [
+      "qual token a requisição tem de mandar"
+    ]
+  },
+  "ex-crchw3x1": {
+    "prompt": "Por quantos segundos um navegador pode lembrar a resposta do preflight do boxoffice?",
+    "hint": "`Access-Control-Max-Age`.",
+    "unit": "s"
+  },
+  "ex-9ncx7cwt": {
+    "prompt": "Por que o `cors` tem de responder o preflight antes de chegar ao `requireStaff`?",
+    "hint": "O que um navegador põe num preflight?",
+    "choices": [
+      {
+        "text": "O `requireStaff` é mais lento que o `cors`",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O navegador o manda sem token",
+        "why": "Certo. A requisição verdadeira nunca seria mandada."
+      },
+      {
+        "text": "Requisições `OPTIONS` pulam middleware",
+        "why": "Elas passam por todo middleware como qualquer outra requisição."
+      },
+      {
+        "text": "O mux admin responde `OPTIONS` com o relatório",
+        "why": "Só `GET /admin/report` está registrado lá."
+      }
+    ]
+  },
+  "ex-tpyrt9fw": {
+    "prompt": "Ligue cada requisição a `/admin/report` ao status que ela recebeu.",
+    "hint": "Quem está chamando, e pode?",
+    "pairs": [
+      {
+        "left": "sem cabeçalho `Authorization`",
+        "right": "401"
+      },
+      {
+        "left": "o token da portaria",
+        "right": "403"
+      },
+      {
+        "left": "o token do gerente",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "405"
+    ]
+  },
+  "ex-40xfbzsb": {
+    "prompt": "Qual a diferença entre o 401 e o 403 que o boxoffice manda?",
+    "hint": "Autenticação contra autorização.",
+    "choices": [
+      {
+        "text": "401: quem chama é desconhecido; 403: conhecido, sem permissão",
+        "why": "Certo. O token da portaria é verdadeiro, então a resposta dele é 403."
+      },
+      {
+        "text": "401 é para senha errada, 403 para cabeçalho ausente",
+        "why": "Os dois são quem chama desconhecido, e os dois receberam 401."
+      },
+      {
+        "text": "O 403 vem do middleware e o 401 do handler",
+        "why": "É o contrário: o middleware manda 401, o `salesReport` manda 403."
+      },
+      {
+        "text": "Nenhuma na prática; clientes tratam os dois igual",
+        "why": "Um pede credenciais, o outro diz que credenciais não vão ajudar."
+      }
+    ]
+  },
+  "ex-qwjym6zv": {
+    "prompt": "Por que o `requireStaff` compara tokens com `subtle.ConstantTimeCompare` em vez de `==`?",
+    "hint": "Onde o `==` para?",
+    "choices": [
+      {
+        "text": "`==` não funciona com strings lidas de cabeçalhos",
+        "why": "Funciona; ele vaza tempo."
+      },
+      {
+        "text": "É mais rápido para tokens longos",
+        "why": "Rapidez não é o ponto; tempo igual é."
+      },
+      {
+        "text": "`==` demora mais quanto mais do chute está certo",
+        "why": "Certo. Medido pela rede, isso guia o chute de um caractere por vez."
+      },
+      {
+        "text": "Para aceitar tokens que diferem só em maiúsculas",
+        "why": "Ele compara os bytes exatamente."
+      }
+    ]
+  },
+  "ex-7g4v818r": {
+    "prompt": "Por que a chave do contexto é `roleKey{}`, um tipo struct não exportado, e não a string `\"role\"`?",
+    "hint": "Quem mais põe valores no contexto de uma requisição?",
+    "choices": [
+      {
+        "text": "Strings não são permitidas como chaves de contexto",
+        "why": "São permitidas, e esse é o perigo."
+      },
+      {
+        "text": "Uma struct vazia deixa a busca mais rápida que uma string",
+        "why": "Velocidade não é o motivo; colisões são."
+      },
+      {
+        "text": "Porque o `context.WithValue` entra em pânico com chave string",
+        "why": "Ele aceita; ferramentas de análise avisam."
+      },
+      {
+        "text": "Nenhum outro pacote nomeia esse tipo, então nenhum lê ou sobrescreve o valor por acidente",
+        "why": "Certo. O `staffRole` é o único jeito de chegar a ele."
+      }
+    ]
+  },
+  "ex-h9yyaxn4": {
+    "prompt": "Por que o boxoffice lê os tokens de variáveis de ambiente e não de uma flag de linha de comando?",
+    "hint": "O que o `ps` mostra?",
+    "choices": [
+      {
+        "text": "Flags são limitadas a 16 caracteres",
+        "why": "Esse limite não existe."
+      },
+      {
+        "text": "O pacote `flag` não interpreta hexadecimal",
+        "why": "Um token é lido como string de qualquer jeito."
+      },
+      {
+        "text": "O `ps` mostra linhas de comando a todos",
+        "why": "Certo. Um segredo numa flag é um segredo à mostra."
+      },
+      {
+        "text": "Variáveis de ambiente são criptografadas pelo kernel",
+        "why": "Não são; elas só ficam fora da linha de comando."
+      }
+    ]
+  },
+  "ex-zx97m23q": {
+    "prompt": "Por que o `logRequests` é o middleware mais de fora no boxoffice?",
+    "hint": "O que o log precisa ver?",
+    "choices": [
+      {
+        "text": "É o mais barato, então vem primeiro",
+        "why": "Custo não é o argumento; o que ele vê é."
+      },
+      {
+        "text": "O `chain` exige um logger primeiro",
+        "why": "O `chain` aceita quaisquer middlewares em qualquer ordem."
+      },
+      {
+        "text": "Ele precisa ver toda resposta final: o 500 do `recoverPanics` e o 204 do `cors`",
+        "why": "Certo. O que ficasse fora dele responderia sem linha de log."
+      },
+      {
+        "text": "Senão um pânico dentro dele derrubaria o servidor",
+        "why": "O `net/http` recupera pânicos de handler de qualquer jeito; a ordem é sobre a linha de log."
+      }
+    ]
+  },
+  "ex-h9m1ys57": {
+    "prompt": "Uma rota nova `GET /admin/refunds` é acrescentada ao mux `admin` no mês que vem. O que a protege?",
+    "hint": "Onde o `requireStaff` é aplicado?",
+    "choices": [
+      {
+        "text": "A conferência de token na subárvore `/admin/`",
+        "why": "Certo. Todo caminho sob `/admin/` passa pelo `requireStaff` antes de o mux de dentro vê-lo."
+      },
+      {
+        "text": "Nada, até alguém envolver o handler novo",
+        "why": "A conferência fica na subárvore, não em cada handler."
+      },
+      {
+        "text": "O CORS, porque nomeia uma origem",
+        "why": "O CORS não protege nada no servidor."
+      },
+      {
+        "text": "O `recoverPanics`",
+        "why": "Ele transforma pânicos em 500; não confere ninguém."
+      }
+    ]
+  },
+  "ex-nw23eza0": {
+    "prompt": "`go run .` imprime `no staff tokens: set BOXOFFICE_MANAGER_TOKEN` e sai. Por que o boxoffice se recusa a iniciar?",
+    "hint": "O que seriam as rotas da equipe sem token?",
+    "choices": [
+      {
+        "text": "A porta 8080 está ocupada",
+        "why": "Essa mensagem é `address already in use`."
+      },
+      {
+        "text": "O token da portaria é obrigatório além do do gerente, e faltou",
+        "why": "Qualquer um basta; o laço fica com o que estiver definido."
+      },
+      {
+        "text": "O `go vet` falhou",
+        "why": "O `go vet` não imprimiu nada."
+      },
+      {
+        "text": "Nenhum token está definido",
+        "why": "Certo. Melhor uma recusa agora do que um 401 para decifrar depois."
+      }
+    ]
+  },
+  "ex-gh10wxhq": {
+    "prompt": "Ponha em ordem o código por onde passa uma requisição da equipe a `/admin/report`, do servidor ao handler.",
+    "hint": "O `chain` põe o primeiro middleware mais por fora.",
+    "items": [
+      "`logRequests`",
+      "`recoverPanics`",
+      "`cors`",
+      "o mux principal, casando `/admin/`",
+      "`requireStaff`",
+      "`salesReport`"
+    ],
+    "trap": "O `requireStaff` fica atrás do mux principal, só na subárvore."
+  },
+  "ex-jzc23ajx": {
+    "prompt": "Alguém troca a ordem para `chain(mux, recoverPanics, logRequests, cors(...))`. Um handler entra em pânico. O que muda?",
+    "hint": "O pânico desenrola por dentro do `logRequests` antes de chegar ao `recover`.",
+    "choices": [
+      {
+        "text": "O cliente recebe resposta vazia em vez de um 500",
+        "why": "O `recoverPanics` continua lá e ainda manda o 500."
+      },
+      {
+        "text": "Nada; a ordem dos middlewares é questão de gosto",
+        "why": "A tabela da seção 07 defende cada posição."
+      },
+      {
+        "text": "O pânico é registrado duas vezes",
+        "why": "O `recoverPanics` o registra uma vez; a linha de acesso é a que se perde."
+      },
+      {
+        "text": "A requisição fica sem linha de log, porque o pânico pula o código depois de `next.ServeHTTP` no logger",
+        "why": "Certo. O 500 ainda sai, e ninguém o registra."
+      }
+    ]
+  }
+}
