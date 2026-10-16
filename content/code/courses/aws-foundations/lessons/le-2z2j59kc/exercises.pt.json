@@ -1,0 +1,361 @@
+{
+  "ex-ym733c2t": {
+    "prompt": "Quantas VPCs uma conexão de peering liga?",
+    "hint": "É um par.",
+    "choices": [
+      {
+        "text": "Quantas aceitarem o pedido",
+        "why": "Um pedido nomeia uma VPC par, e uma VPC o aceita."
+      },
+      {
+        "text": "Exatamente duas",
+        "why": "Isso. Cada par a mais precisa de um peering próprio."
+      },
+      {
+        "text": "Toda VPC da região que divide a conta",
+        "why": "Contas e regiões não alargam um peering; ele continua um par, mesmo atravessando as duas."
+      },
+      {
+        "text": "Duas, mais qualquer VPC com peering com uma delas",
+        "why": "Isso o tornaria transitivo, que é justamente o que ele não é."
+      }
+    ]
+  },
+  "ex-rjrpy0nj": {
+    "prompt": "A produção tem peering com o staging e com a cópia na Virgínia. Alguém acrescenta uma rota na tabela do staging: `10.40.0.0/16` para o peering da produção. O que acontece com um pacote do staging para `10.40.0.5`?",
+    "hint": "Um peering carrega tráfego entre quais VPCs?",
+    "choices": [
+      {
+        "text": "Ele chega à Virgínia pelo peering da produção",
+        "why": "Isso seria roteamento transitivo, que o peering não faz, digam as rotas o que disserem."
+      },
+      {
+        "text": "Ele chega à Virgínia quando a produção acrescentar uma rota correspondente",
+        "why": "Nenhuma rota na produção faz um peering carregar tráfego que não seja entre as suas duas VPCs."
+      },
+      {
+        "text": "Ele é descartado: o peering só carrega staging para produção",
+        "why": "Isso. Staging e Virgínia precisam de um peering próprio, ou de um hub."
+      },
+      {
+        "text": "Ele vai para a internet, já que nenhuma rota casa",
+        "why": "Uma rota casa, a recém-acrescentada; o pacote vai ao peering e não é repassado."
+      }
+    ]
+  },
+  "ex-hrvfvha1": {
+    "prompt": "O moto aceitou um pedido de peering entre a produção e uma cópia com o mesmo `10.20.0.0/16`. O que a AWS faz?",
+    "hint": "Uma tabela de rotas conseguiria distinguir as duas?",
+    "choices": [
+      {
+        "text": "Recusa: os dois intervalos se sobrepõem",
+        "why": "Isso. Um endereço em `10.20.0.0/16` estaria nas duas VPCs, então nenhuma rota diria para qual delas vai um pacote."
+      },
+      {
+        "text": "Aceita, e a rota mais específica decide",
+        "why": "Os dois intervalos são o mesmo `/16`; não há nada mais específico para decidir."
+      },
+      {
+        "text": "Aceita se as duas VPCs estiverem em contas diferentes",
+        "why": "A sobreposição é sobre endereços, e contas não mudam endereços."
+      },
+      {
+        "text": "Aceita e traduz os endereços de um dos lados",
+        "why": "Peering não traduz nada. O PrivateLink é a ferramenta que não se importa com sobreposição."
+      }
+    ]
+  },
+  "ex-7b5ss1eq": {
+    "prompt": "O peering está `active` e as tabelas privadas da produção têm rota para `10.30.0.0/16`, mas a tabela do staging não tem nenhuma para `10.20.0.0/16`. Uma máquina em `app-a` abre uma conexão com o staging. O que acontece?",
+    "hint": "Siga a resposta.",
+    "choices": [
+      {
+        "text": "Funciona, já que uma rota de um lado basta para um peering",
+        "why": "Uma conexão precisa de pacotes nos dois sentidos, e cada sentido precisa da sua rota."
+      },
+      {
+        "text": "O pacote chega; a resposta não tem rota de volta",
+        "why": "Isso. O defeito clássico do peering: rotas dos dois lados."
+      },
+      {
+        "text": "O pacote nem sai da produção",
+        "why": "A rota da produção o manda ao peering, e ele chega ao staging."
+      },
+      {
+        "text": "A resposta volta pelo NAT gateway",
+        "why": "O staging não tem rota para `10.20.0.0/16`, e uma resposta para um endereço privado não voltaria pela internet."
+      }
+    ]
+  },
+  "ex-db5pqvep": {
+    "prompt": "A cópia noturna da produção para a VPC com peering na Virgínia soma 300 GB por mês. Pelo preço de saída de São Paulo da lição 1, quantos dólares por mês são?",
+    "hint": "Tráfego entre regiões, saindo de `sa-east-1`.",
+    "unit": "dólares"
+  },
+  "ex-srnvpr62": {
+    "prompt": "O que um Transit Gateway faz que o peering não faz?",
+    "hint": "É a palavra que o peering recusa.",
+    "choices": [
+      {
+        "text": "Liga VPCs cujos intervalos se sobrepõem",
+        "why": "Ele roteia entre intervalos, então a sobreposição é tão problema para ele quanto para o peering."
+      },
+      {
+        "text": "Roteia de forma transitiva entre os attachments",
+        "why": "Isso. Cada rede se liga uma vez, e as tabelas do hub decidem quem alcança quem."
+      },
+      {
+        "text": "Carrega tráfego sem cobrança por hora",
+        "why": "Esse é o peering. O hub custa 0,09 por hora por attachment."
+      },
+      {
+        "text": "Dispensa rotas nas tabelas de rotas das próprias VPCs ligadas",
+        "why": "Cada VPC ainda precisa de uma rota apontando para o hub."
+      }
+    ]
+  },
+  "ex-ann389vj": {
+    "prompt": "Ligue cada palavra do hub ao que ela decide.",
+    "hint": "Quatro palavras, quatro perguntas.",
+    "pairs": [
+      {
+        "left": "attachment",
+        "right": "uma rede ligada ao hub"
+      },
+      {
+        "left": "associação",
+        "right": "em que tabela do hub o tráfego de um attachment é procurado"
+      },
+      {
+        "left": "propagação",
+        "right": "que tabelas do hub aprendem o intervalo de um attachment"
+      },
+      {
+        "left": "rota estática",
+        "right": "um intervalo escrito à mão numa tabela do hub"
+      }
+    ],
+    "right_distractors": [
+      "o preço de um attachment por hora"
+    ]
+  },
+  "ex-5rg3vvha": {
+    "prompt": "No moto, a propagação ficou `enabled` para os dois attachments e a busca por rotas propagadas respondeu `[]`. O que a AWS teria listado?",
+    "hint": "Cada attachment propaga o intervalo da sua VPC.",
+    "choices": [
+      {
+        "text": "Nada também, até rotas estáticas serem acrescentadas",
+        "why": "A propagação é justamente o que torna rotas estáticas desnecessárias para VPCs ligadas."
+      },
+      {
+        "text": "`0.0.0.0/0` para cada attachment",
+        "why": "Um attachment de VPC propaga o intervalo da sua VPC, não uma rota padrão."
+      },
+      {
+        "text": "`10.20.0.0/16` e `10.30.0.0/16`, do tipo `propagated`",
+        "why": "Isso. O moto fica aquém ali, e por isso a lição escreveu as duas rotas como estáticas."
+      },
+      {
+        "text": "Cada sub-rede dos attachments como rota separada",
+        "why": "O intervalo propagado é o da VPC, uma rota por VPC."
+      }
+    ]
+  },
+  "ex-emanv105": {
+    "prompt": "O ambiente de teste não pode alcançar o de produção, e os dois precisam alcançar uma VPC comum de apoio. Que arranjo do hub diz isso?",
+    "hint": "A associação escolhe a tabela; as rotas da tabela decidem para onde o tráfego vai.",
+    "choices": [
+      {
+        "text": "Uma tabela padrão, com security groups recusando o outro lado",
+        "why": "Isso pode bloquear conexões, mas o hub ainda roteia todos para todos; o roteamento não diz isso."
+      },
+      {
+        "text": "Prod e staging numa tabela só com a rota das tools; as tools numa com as duas",
+        "why": "Isso. Cada um alcança as ferramentas, as ferramentas alcançam os dois, e nenhuma tabela dá ao staging rota para a produção."
+      },
+      {
+        "text": "Dois peerings para a VPC de ferramentas, e o hub para o resto",
+        "why": "Dá para montar, mas a questão pede o arranjo do hub, e dois sistemas de roteamento são mais difíceis de ler que um."
+      },
+      {
+        "text": "Desligar a propagação no attachment do staging",
+        "why": "Aí ninguém aprende o intervalo do staging, as ferramentas incluídas, e a produção ainda alcançaria o que a tabela dela tiver."
+      }
+    ]
+  },
+  "ex-ms8m5jc9": {
+    "prompt": "As tabelas privadas da produção tinham `10.30.0.0/16` para o peering. O que levou esse tráfego para o hub?",
+    "hint": "O destino continuou o mesmo.",
+    "choices": [
+      {
+        "text": "Ligar a VPC ao hub, o que reescreve as rotas dela",
+        "why": "Um attachment não muda nada nas tabelas da própria VPC."
+      },
+      {
+        "text": "Apagar o peering, depois do que o hub assume",
+        "why": "Apagá-lo deixaria a rota apontando para nada. O alvo precisa ser trocado."
+      },
+      {
+        "text": "`replace-route` com o hub como novo alvo",
+        "why": "Isso. Mesmo destino, alvo novo, uma tabela de cada vez; depois o peering é removido."
+      },
+      {
+        "text": "Uma segunda rota para `10.30.0.0/16`, que vence por ser mais nova",
+        "why": "Um destino, uma rota: uma segunda é recusada, e idade não decide nada."
+      }
+    ]
+  },
+  "ex-ckhxkdw0": {
+    "prompt": "Como o `shop-hub`, que pertence a uma conta, passa a ser usável pela conta `shop-staging`?",
+    "hint": "A seção nomeia o serviço que o compartilha.",
+    "choices": [
+      {
+        "text": "Por um peering entre as duas contas",
+        "why": "Peering liga VPCs, não contas, e não compartilha um hub."
+      },
+      {
+        "text": "Um compartilhamento no AWS Resource Access Manager",
+        "why": "Isso. A outra conta então liga a própria VPC ao hub compartilhado."
+      },
+      {
+        "text": "Copiando o hub para a outra conta",
+        "why": "Não há cópia; o hub continua um só, de uma conta."
+      },
+      {
+        "text": "Um endpoint service posto na frente do hub, como na lição 19",
+        "why": "Endpoint services compartilham um serviço atrás de um load balancer, não um roteador."
+      }
+    ]
+  },
+  "ex-nq8prm3q": {
+    "prompt": "Com os preços da lição e 730 horas, quantos dólares por mês custam quatro attachments de Transit Gateway, antes de qualquer gigabyte?",
+    "hint": "0,09 por hora cada.",
+    "unit": "dólares"
+  },
+  "ex-h7m8q6w2": {
+    "prompt": "Oito VPCs precisam se alcançar todas só com peering. Quantas conexões de peering são?",
+    "hint": "Cada par uma vez.",
+    "unit": "peerings"
+  },
+  "ex-d0bm16g4": {
+    "prompt": "Por que o `price.py` imprimiu seis linhas para `SAE1-TransitGateway-Hours`?",
+    "hint": "O segundo comando as listou.",
+    "choices": [
+      {
+        "text": "Seis faixas de uso mensal, cada uma mais barata",
+        "why": "Faixas têm intervalos e preços diferentes; estas vão todas de 0 a Inf a 0,09."
+      },
+      {
+        "text": "Uma linha por zona da região, e duas de sobra",
+        "why": "`sa-east-1` tem três zonas, e a lista precifica attachments, não zonas."
+      },
+      {
+        "text": "Um produto por tipo de attachment, todos ao mesmo preço",
+        "why": "Isso. VPC, VPN, Direct Connect, Connect, peering entre hubs e o concentrador de VPN."
+      },
+      {
+        "text": "Um defeito no `price.py`, que imprime cada linha seis vezes",
+        "why": "Ele imprimiu as linhas de peering uma vez cada; as seis são seis produtos na oferta."
+      }
+    ]
+  },
+  "ex-1nmnn45v": {
+    "prompt": "Três VPCs trocam tráfego pesado, uns 20 TB por mês no total, e todo par conversa. Nada precisa passar por uma VPC para chegar a outra. Qual sai mais barato, e por quê?",
+    "hint": "Conte os preços por gigabyte, não só as horas.",
+    "choices": [
+      {
+        "text": "Peering: nada por hora, e nada de 0,02 por gigabyte processado",
+        "why": "Isso. O hub cobraria 3 × 65,70 por mês e uns 20.480 × 0,02 ≈ 409,60 de processamento; o peering cobra só a travessia de zonas, que o tráfego do hub também paga."
+      },
+      {
+        "text": "O hub, já que processa tráfego pesado mais barato",
+        "why": "O processamento dele tem preço único, 0,02, sem faixas que caiam com o volume."
+      },
+      {
+        "text": "O hub, porque três peerings custam mais que três attachments",
+        "why": "Um peering não tem linha por hora; três deles não custam nada para ter."
+      },
+      {
+        "text": "Custam o mesmo, já que os dois pagam a travessia de zonas",
+        "why": "Os dois pagam a travessia; só o hub acrescenta horas e processamento por cima."
+      }
+    ]
+  },
+  "ex-rpd8a61t": {
+    "prompt": "Que mudança na rede da loja é o sinal para passar do peering para o hub?",
+    "hint": "Pense na lição 24.",
+    "choices": [
+      {
+        "text": "O tráfego entre produção e staging dobra",
+        "why": "Mais tráfego favorece o peering, que não cobra processamento."
+      },
+      {
+        "text": "Uma VPN do escritório que toda VPC precisa usar",
+        "why": "Isso. Alcançar o escritório por um attachment é roteamento transitivo, que só o hub faz."
+      },
+      {
+        "text": "Uma segunda região para a cópia de recuperação de desastre",
+        "why": "Um peering atravessa regiões, como mostra a própria cópia na Virgínia da lição."
+      },
+      {
+        "text": "Um security group novo para as máquinas do staging",
+        "why": "Filtros não mudam nada sobre qual ferramenta de ligação serve."
+      }
+    ]
+  },
+  "ex-3762g9e4": {
+    "prompt": "Ponha em ordem os passos de ligar produção e staging por peering.",
+    "hint": "Nada muda para um pacote até as duas tabelas nomearem o peering.",
+    "items": [
+      "conferir que os dois intervalos não se sobrepõem",
+      "pedir o peering a partir da produção",
+      "aceitá-lo do lado do staging",
+      "acrescentar rotas dos dois lados para o intervalo do outro"
+    ],
+    "trap": "Os intervalos vêm primeiro: a AWS recusa um pedido sobreposto, e a essa altura é tarde para mudar um intervalo."
+  },
+  "ex-7fxds7a9": {
+    "prompt": "Quais destes o moto mostrou diferente da AWS nesta lição? Marque todos os que se aplicam.",
+    "hint": "Dois são diferenças; dois são iguais nos dois.",
+    "choices": [
+      {
+        "text": "Ele aceitou um peering entre intervalos sobrepostos",
+        "why": "Isso. A AWS recusa."
+      },
+      {
+        "text": "Um peering novo espera aceite",
+        "why": "Os dois mostram `pending-acceptance` até o outro lado aceitar."
+      },
+      {
+        "text": "Ele não listou rotas propagadas",
+        "why": "Isso. A AWS listaria os intervalos das duas VPCs."
+      },
+      {
+        "text": "Ele associou os attachments à tabela padrão sozinho",
+        "why": "A AWS faz isso também, com os padrões com que o hub foi criado."
+      }
+    ]
+  },
+  "ex-pqdqr9y3": {
+    "prompt": "O staging precisa de uma API de leitura da produção, e a VPC do staging foi criada há muito tempo como `10.20.0.0/16`. Que caminho funciona sem renumerar nada?",
+    "hint": "Uma das ferramentas não liga para intervalos.",
+    "choices": [
+      {
+        "text": "Um peering, com rotas só para os endereços da API",
+        "why": "O próprio peering é recusado, porque os dois intervalos se sobrepõem."
+      },
+      {
+        "text": "Um Transit Gateway com uma rota estática para a API",
+        "why": "O hub também roteia entre intervalos, e o mesmo intervalo dos dois lados não lhe deixa por onde rotear."
+      },
+      {
+        "text": "PrivateLink: um endpoint service do lado da produção",
+        "why": "Isso. Lição 19: o staging vê uma interface na própria sub-rede, e nenhuma rota liga os intervalos."
+      },
+      {
+        "text": "Um peering entre regiões, que tolera sobreposição",
+        "why": "Atravessar regiões muda o preço, não a regra sobre intervalos sobrepostos."
+      }
+    ]
+  }
+}

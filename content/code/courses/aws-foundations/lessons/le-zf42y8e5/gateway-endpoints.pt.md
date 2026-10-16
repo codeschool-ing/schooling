@@ -148,9 +148,10 @@ ana@laptop:~/aws$ aws s3api delete-bucket-policy --bucket shop-backups
 ```
 
 **Na AWS esta política recusa todo pedido vindo do laptop**, porque nenhum deles veio pelo endpoint.
-O moto julgou os dois pedidos de objeto e recusou os dois com um 403 seco, onde a AWS responde
-`AccessDenied`. Ele deixou a listagem passar, que a AWS também recusaria. E ele recusaria do mesmo
-jeito um pedido vindo de dentro da VPC, já que no moto nada nunca passa por um endpoint. Então a
+O moto recusou os dois pedidos de objeto com um 403 seco, onde a AWS responde `AccessDenied`, mas
+**ele não julgou a condição**: o moto ignora o bloco `Condition` de uma política, então aplicou o
+Deny como se a condição não existisse, e recusaria do mesmo jeito um pedido vindo pelo endpoint.
+Ele também deixou a listagem passar, que a AWS recusaria. Então a
 transcrição mostra a forma da política e parte do efeito dela; o resto é comportamento documentado
 da AWS e não foi executado.
 

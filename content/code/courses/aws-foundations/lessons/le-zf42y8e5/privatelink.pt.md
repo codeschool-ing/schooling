@@ -71,11 +71,11 @@ ana@laptop:~/aws$ aws configure set profile.shop-staging.role_arn arn:aws:iam::$
 ana@laptop:~/aws$ aws configure set profile.shop-staging.credential_source Environment
 ana@laptop:~/aws$ aws configure set profile.shop-staging.role_session_name ana
 ana@laptop:~/aws$ aws --profile shop-staging sts get-caller-identity --query Account --output text
-123456789012
+321532293571
 ana@laptop:~/aws$ svpc=$(aws --profile shop-staging ec2 create-vpc --cidr-block 10.30.0.0/16 --query Vpc.VpcId --output text)
 ana@laptop:~/aws$ ssub=$(aws --profile shop-staging ec2 create-subnet --vpc-id $svpc --cidr-block 10.30.48.0/20 --availability-zone sa-east-1a --query Subnet.SubnetId --output text)
 ana@laptop:~/aws$ aws --profile shop-staging ec2 create-vpc-endpoint --vpc-id $svpc --vpc-endpoint-type Interface --service-name com.amazonaws.vpce.sa-east-1.$svc --subnet-ids $ssub --query "VpcEndpoint.[VpcEndpointId,State,OwnerId]" --output text
-vpce-c3c4d7229adbe07b4	available	123456789012
+vpce-d2da24b6a04de105b	available	321532293571
 ```
 
 **Na AWS esse endpoint agora estaria `pendingAcceptance`**, e não carregaria tráfego nenhum até a

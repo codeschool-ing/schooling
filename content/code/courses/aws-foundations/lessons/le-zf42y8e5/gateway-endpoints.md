@@ -145,9 +145,10 @@ ana@laptop:~/aws$ aws s3api delete-bucket-policy --bucket shop-backups
 ```
 
 **On AWS this policy refuses every request from the laptop**, because none of them came through the
-endpoint. moto judged the two object requests and refused both with a bare 403, where AWS answers
-`AccessDenied`. It let the listing through, which AWS would refuse as well. And it would refuse a
-request from inside the VPC just the same, since in moto nothing ever comes through an endpoint. So
+endpoint. moto refused the two object requests with a bare 403, where AWS answers `AccessDenied`, but
+**it did not judge the condition**: moto ignores a policy's `Condition` block, so it applied the
+Deny as if the condition were not there, and it would refuse a request through the endpoint just
+the same. It also let the listing through, which AWS would refuse. So
 the transcript shows the shape of the policy and part of its effect; the rest is AWS's documented
 behaviour and was not run.
 

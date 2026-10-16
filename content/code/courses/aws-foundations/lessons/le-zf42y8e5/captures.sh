@@ -16,7 +16,8 @@
 #     each command is a fresh bash, and `runv` carries the exported variables
 #     from one command to the next in a file;
 #   - the profile shop-staging is written into the lab's ~/.aws/config, as the
-#     student's is; it names this run's account number.
+#     student's is; it names this run's account number, and the file is put
+#     back as it was found when the capture exits.
 #
 # ONE COMMAND REACHES AWS ITSELF, with no key: price.py reads the public price
 # list (the VPC offer, already in ~/.cache/aws-prices after lesson 17).
@@ -40,7 +41,12 @@ GW="$HERE/gateway-endpoints.md"
 lab
 moto_fresh
 VARS=$(mktemp)
-trap 'moto_stop; rm -f "$VARS"' EXIT
+# the profile written below must not outlive the capture: the lab is left as
+# lesson 1 built it, so ~/.aws/config is put back as it was found
+CFG_SAVED=$(mktemp)
+if [ -e ~/.aws/config ]; then cp ~/.aws/config "$CFG_SAVED"; else rm -f "$CFG_SAVED"; fi
+restore_cfg() { if [ -e "$CFG_SAVED" ]; then mv "$CFG_SAVED" ~/.aws/config; else rm -f ~/.aws/config; fi; }
+trap 'moto_stop; rm -f "$VARS"; restore_cfg' EXIT
 runv() {
   printf 'ana@laptop:%s$ %s\n' "$PROMPT_DIR" "$*"
   bash -c "set -a; . '$VARS'; $*
