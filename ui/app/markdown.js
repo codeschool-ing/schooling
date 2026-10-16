@@ -31,19 +31,22 @@ function escapeHTML(s) {
     .replace(/"/g, '&quot;');
 }
 
-/* Inline markers, applied to text that is ALREADY escaped. The order matters:
-   code first, so that a backtick span containing an asterisk is not turned into
-   emphasis on its way past. */
+/* Inline markers, applied to text that is ALREADY escaped. Code spans are set
+   aside first and put back last, so that an asterisk inside one is never paired
+   with another as emphasis: wrapping them first was not enough, because the
+   emphasis rules still read what was inside the tags. */
 function inline(text) {
+  const codes = [];
   return text
-    .replace(/`([^`]+)`/g, (_, code) => `<code>${code}</code>`)
+    .replace(/`([^`]+)`/g, (_, code) => `\u0000${codes.push(code) - 1}\u0000`)
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/(^|[^*])\*([^*]+)\*/g, '$1<em>$2</em>')
     /* Only http(s) and fragments. A link is written by us, but `javascript:`
        arriving through a paste is the one shape of link worth refusing by
        construction rather than by review. */
     .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|#[^)\s]*)\)/g,
-      '<a href="$2" rel="noopener">$1</a>');
+      '<a href="$2" rel="noopener">$1</a>')
+    .replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${codes[i]}</code>`);
 }
 
 export function render(markdown) {

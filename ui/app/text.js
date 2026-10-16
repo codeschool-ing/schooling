@@ -55,8 +55,15 @@ export function counted(n, one, many) {
    marking up, or the markup would be escaped along with everything else and
    come out literal on screen. */
 export function formatted(s) {
+  /* A CODE SPAN IS SET ASIDE, NOT ONLY WRAPPED. Wrapping it first and running
+     the emphasis rules after left its contents in their path, so the `*` of
+     `s3:*` paired with the one in a later `*` on the same line and the text
+     between became italic, `<code>` tags and all — 120 spans in
+     aws-foundations alone, where `*` is half of IAM's vocabulary. The spans
+     are taken out, the rules run over what is left, and they go back last. */
+  const codes = [];
   return esc(s)
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/`([^`]+)`/g, (_, code) => `\u0000${codes.push(code) - 1}\u0000`)
     /* LAZY, AND ALLOWING ASTERISKS INSIDE, so that `**the two *jobs*.**` — bold
        with an italic within it, which lesson one writes — is one bold span
        rather than no match at all. `[^*]+` refused it, and then the italic rule
@@ -78,7 +85,8 @@ export function formatted(s) {
        the shape the content DOES write is `**a *b*.**`, which is correct here,
        and the day one is wanted is the day this becomes a parser rather than
        the day a third regular expression is added. */
-    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
+    .replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${codes[i]}</code>`);
 }
 
 /* ---------- copying the code ----------
