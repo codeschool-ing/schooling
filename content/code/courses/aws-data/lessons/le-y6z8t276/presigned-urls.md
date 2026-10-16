@@ -95,7 +95,7 @@ the limit, because the limit is S3's to enforce when the URL is used, not the co
 is made. None of S3's answers here was produced; they are AWS's documented behaviour.
 
 **So in this lab a presigned URL can show its shape and nothing about its safety.** The habits that
-make one safe come from the documentation and are cheap: the shortest expiry that does the job,
-minutes for a download a person clicks now and never days; a URL signed by a role with access to that
-one prefix and nothing else, so that a leaked URL is worth one prefix; and never a URL in a place that
-is kept, such as a ticket, a log or a commit, because the URL is the permission.
+make one safe come from the documentation, and they are cheap. Use the shortest expiry that does the
+job: minutes for a download a person clicks now, never days. Sign with a role that can read that one
+prefix and nothing else, so that a leaked URL is worth one prefix. And never put a URL in a place
+that is kept, such as a ticket, a log or a commit, because the URL is the permission.

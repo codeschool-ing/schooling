@@ -97,7 +97,7 @@ que o limite, porque o limite é do S3 aplicar quando a URL é usada, não da li
 feita. Nenhuma dessas respostas do S3 foi produzida aqui; são o comportamento documentado da AWS.
 
 **Então neste laboratório uma URL pré-assinada mostra a forma e nada sobre a segurança.** Os hábitos
-que a tornam segura vêm da documentação e são baratos: a menor expiração que resolve, minutos para um
-download que uma pessoa clica agora e nunca dias; uma URL assinada por um papel com acesso àquele
-prefixo e a nada mais, para que uma URL vazada valha um prefixo; e nunca uma URL num lugar que fica
+que a tornam segura vêm da documentação, e são baratos. Use a menor expiração que resolve: minutos
+para um download que uma pessoa clica agora, nunca dias. Assine com um papel que só lê aquele prefixo
+e mais nada, para que uma URL vazada valha um prefixo. E nunca ponha uma URL num lugar que fica
 guardado, como um chamado, um log ou um commit, porque a URL é a permissão.
