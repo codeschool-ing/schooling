@@ -1,0 +1,541 @@
+[
+  {
+    "id": "ex-72ptbr70",
+    "version": 1,
+    "section": "the-classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these classes answers a GET in milliseconds, with no restore first?",
+    "hint": "One archive class has \"instant\" in its name.",
+    "choices": [
+      {
+        "text": "Glacier Deep Archive",
+        "correct": false,
+        "why": "Deep Archive has to be restored first, and a restore takes up to 48 hours."
+      },
+      {
+        "text": "Glacier Flexible Retrieval, when read with the Expedited tier",
+        "correct": false,
+        "why": "Expedited is a restore that takes 1 to 5 minutes; the GET only works after it."
+      },
+      {
+        "text": "Glacier Instant Retrieval",
+        "correct": true,
+        "why": "Right. It is priced like an archive and read like Standard, with a fee per GB read."
+      },
+      {
+        "text": "None of the Glacier classes; only Standard",
+        "correct": false,
+        "why": "Standard-IA and Glacier Instant Retrieval are both read in milliseconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3w6ggzw",
+    "version": 1,
+    "section": "the-classes",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An object of 100 GB is written to Glacier Deep Archive (0.00320 USD per GB-month, 180 days minimum) and deleted after 30 days. Counting a month as 30 days, how many USD of storage is it billed in all?",
+    "hint": "It is billed for the minimum, not for the days it stayed.",
+    "value": 1.92,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-afwntcs1",
+    "version": 1,
+    "section": "the-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda keeps the only copy of its signed supplier contracts. Why is One Zone-IA the wrong class for them, even though they are rarely read?",
+    "hint": "Count the zones.",
+    "choices": [
+      {
+        "text": "It keeps the data in one zone, so losing that zone loses the contracts",
+        "correct": true,
+        "why": "Right. One Zone-IA fits data that can be produced again, never the only copy."
+      },
+      {
+        "text": "It is slower to read than Standard-IA",
+        "correct": false,
+        "why": "Both are read in milliseconds; the difference is where the copies live."
+      },
+      {
+        "text": "It refuses objects smaller than 128 KB",
+        "correct": false,
+        "why": "It accepts them and bills them as 128 KB, like Standard-IA."
+      },
+      {
+        "text": "It has a minimum duration of 180 days, which a contract kept for years would exceed anyway",
+        "correct": false,
+        "why": "Its minimum is 30 days; 180 is Deep Archive's. And a long minimum would not matter for data kept for years."
+      }
+    ]
+  },
+  {
+    "id": "ex-zshrvjem",
+    "version": 1,
+    "section": "the-classes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each class to its minimum storage duration.",
+    "hint": "Three classes share a minimum with another.",
+    "pairs": [
+      {
+        "left": "Standard",
+        "right": "No minimum"
+      },
+      {
+        "left": "Standard-IA",
+        "right": "30 days"
+      },
+      {
+        "left": "Glacier Instant Retrieval",
+        "right": "90 days"
+      },
+      {
+        "left": "Glacier Deep Archive",
+        "right": "180 days"
+      }
+    ],
+    "right_distractors": [
+      "365 days"
+    ]
+  },
+  {
+    "id": "ex-f10zjnn3",
+    "version": 1,
+    "section": "on-upload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program reads `StorageClass` from `head-object` and finds no such field in the answer. What class is the object in?",
+    "hint": "Compare the two `head-object` answers in the section.",
+    "choices": [
+      {
+        "text": "None yet: the class is assigned when the object is first read",
+        "correct": false,
+        "why": "Every object has a class from the moment it is written."
+      },
+      {
+        "text": "Standard",
+        "correct": true,
+        "why": "Right. `head-object` leaves the field out for Standard, and a program has to read the absence that way."
+      },
+      {
+        "text": "The bucket's default class, which `get-bucket-location` reports",
+        "correct": false,
+        "why": "There is no default class per bucket; the class is per object, and the call named reports a region."
+      },
+      {
+        "text": "Intelligent-Tiering, whose tier changes and so is not printed",
+        "correct": false,
+        "why": "An Intelligent-Tiering object prints `\"INTELLIGENT_TIERING\"`, as the section on it shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-cpq6kjr5",
+    "version": 1,
+    "section": "on-upload",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the API and in `--storage-class`, the archive class whose fastest restore takes 1 to 5 minutes is written `___`.",
+    "hint": "It kept its name when the product was renamed.",
+    "blanks": [
+      {
+        "accept": [
+          "GLACIER"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q8d994yx",
+    "version": 1,
+    "section": "on-upload",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda copies 2,000 objects onto themselves to move them from Standard-IA to Glacier Instant Retrieval, ten days after writing them. What does the copy cost beyond the new class's price?",
+    "hint": "Each copy is a request, and the old objects leave early.",
+    "choices": [
+      {
+        "text": "Nothing: a change of class is free and keeps the old object's age",
+        "correct": false,
+        "why": "The copy writes a new object; the `LastModified` moved in the section."
+      },
+      {
+        "text": "A restore fee for every object, since Glacier classes are written by restore",
+        "correct": false,
+        "why": "A restore is for reading an archived object, and Instant Retrieval has none."
+      },
+      {
+        "text": "90 days of Glacier Instant Retrieval, charged at once",
+        "correct": false,
+        "why": "The minimum is charged only if the object leaves early; nothing is charged in advance."
+      },
+      {
+        "text": "2,000 COPY requests, and the remaining 20 days of Standard-IA for each object",
+        "correct": true,
+        "why": "Right. A copy is priced like a PUT, and the objects left Standard-IA inside its 30-day minimum."
+      }
+    ]
+  },
+  {
+    "id": "ex-hkh42dy8",
+    "version": 1,
+    "section": "archived-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, `head-object` right after a Bulk restore from Deep Archive shows `ongoing-request=\"false\"`. What would S3 show at that moment?",
+    "hint": "How long does a Bulk restore from Deep Archive take?",
+    "choices": [
+      {
+        "text": "The same, because S3 restores small objects at once",
+        "correct": false,
+        "why": "The documented times do not depend on size; the restore is a job in a queue."
+      },
+      {
+        "text": "No `Restore` field, until the restore has been approved by the account's owner",
+        "correct": false,
+        "why": "There is no approval step; the field appears with the request."
+      },
+      {
+        "text": "`ongoing-request=\"true\"`, for up to 48 hours",
+        "correct": true,
+        "why": "Right. Every GET would keep failing with `InvalidObjectState` until it finished."
+      },
+      {
+        "text": "An error, because a Bulk restore cannot be asked of Deep Archive",
+        "correct": false,
+        "why": "Bulk is one of Deep Archive's two tiers; Expedited is the one it does not have."
+      }
+    ]
+  },
+  {
+    "id": "ex-afjfbf7a",
+    "version": 1,
+    "section": "archived-objects",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A restore job tested only against moto asks Deep Archive for the Expedited tier, and every test passes. What happens on AWS?",
+    "hint": "Look at the tiers the documentation lists for Deep Archive.",
+    "choices": [
+      {
+        "text": "S3 refuses the request: Deep Archive has only Standard and Bulk",
+        "correct": true,
+        "why": "Right. moto accepted a tier S3 does not offer, which is the lesson's point about a moto success."
+      },
+      {
+        "text": "It works and is ready in 1 to 5 minutes, at the Expedited price",
+        "correct": false,
+        "why": "Those are the Expedited times for Glacier Flexible Retrieval, not for Deep Archive."
+      },
+      {
+        "text": "S3 quietly downgrades it to Bulk",
+        "correct": false,
+        "why": "S3 does not change a tier for you; an invalid one is an error."
+      },
+      {
+        "text": "It works, since moto and S3 accept the same tiers",
+        "correct": false,
+        "why": "moto checks less than S3; its acceptance is not evidence of S3's."
+      }
+    ]
+  },
+  {
+    "id": "ex-0c2q852c",
+    "version": 1,
+    "section": "archived-objects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a restore from Deep Archive finishes, what does `StorageClass` say for the object?",
+    "hint": "The restore makes a temporary copy.",
+    "choices": [
+      {
+        "text": "`STANDARD`, until the days asked for run out",
+        "correct": false,
+        "why": "The object stays in its class; the readable copy is temporary and has no class of its own here."
+      },
+      {
+        "text": "`DEEP_ARCHIVE`",
+        "correct": true,
+        "why": "Right. To move it for good, restore it and then copy it onto itself in another class."
+      },
+      {
+        "text": "`GLACIER`, because the command line calls both archive classes that",
+        "correct": false,
+        "why": "The warning of `aws s3 cp` does; the API reports the real class, `DEEP_ARCHIVE`."
+      },
+      {
+        "text": "`RESTORED`",
+        "correct": false,
+        "why": "There is no such class; the state of a restore is in the `Restore` field."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pajn5dt",
+    "version": 1,
+    "section": "intelligent-tiering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to a 40 KB object written with `--storage-class INTELLIGENT_TIERING`?",
+    "hint": "There is a size below which the class does not watch.",
+    "choices": [
+      {
+        "text": "It is refused, being under the 128 KB minimum",
+        "correct": false,
+        "why": "It is accepted; the 128 KB line decides whether it is monitored, not whether it is stored."
+      },
+      {
+        "text": "It is billed as 128 KB, like in Standard-IA",
+        "correct": false,
+        "why": "That rule belongs to the IA classes and Glacier Instant Retrieval."
+      },
+      {
+        "text": "It stays in the frequent tier at Standard's price and pays no monitoring fee",
+        "correct": true,
+        "why": "Right. It is never moved, so the class gives it nothing and charges it nothing extra."
+      },
+      {
+        "text": "It moves to the infrequent tier after 30 days without a read",
+        "correct": false,
+        "why": "Only monitored objects move, and objects under 128 KB are not monitored."
+      }
+    ]
+  },
+  {
+    "id": "ex-x4crgsdp",
+    "version": 1,
+    "section": "intelligent-tiering",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda has 4 million objects of 1 MB each in Intelligent-Tiering. At 0.00250 USD per 1,000 objects a month, what is the monitoring fee for one month, in USD?",
+    "hint": "The fee is per object, whatever its size.",
+    "value": 10,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-a17qzcbk",
+    "version": 1,
+    "section": "intelligent-tiering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, `put-bucket-intelligent-tiering-configuration` failed with `IllegalLocationConstraintException`. What is the right reading?",
+    "hint": "What is that error normally about?",
+    "choices": [
+      {
+        "text": "moto does not implement the call, and the request reached the code that creates buckets",
+        "correct": true,
+        "why": "Right. It says nothing about Intelligent-Tiering on AWS, which this part of the lesson teaches from the documentation."
+      },
+      {
+        "text": "The bucket must be in us-east-1 to use the archive tiers",
+        "correct": false,
+        "why": "The error names a location, and that is a symptom of the routing; the archive tiers are available in São Paulo."
+      },
+      {
+        "text": "The configuration has a syntax error",
+        "correct": false,
+        "why": "A malformed argument is refused by the command line with `ParamValidation` before anything is sent."
+      },
+      {
+        "text": "The archive tiers need versioning on the bucket",
+        "correct": false,
+        "why": "They do not, and the error would name versioning if they did."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2gr2e0g",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Using the table, after how many full reads a year does a terabyte in Glacier Instant Retrieval cost more than the same terabyte in Standard?",
+    "hint": "101.99 for the year, 30.72 per full read, against 497.66.",
+    "choices": [
+      {
+        "text": "4",
+        "correct": false,
+        "why": "At four reads the reads cost more than its own storage, 122.88 against 101.99, and the total is still far below Standard."
+      },
+      {
+        "text": "13",
+        "correct": true,
+        "why": "Right. 101.99 + 13 × 30.72 = 501.35, just over 497.66; at 12 it is 470.63."
+      },
+      {
+        "text": "22",
+        "correct": false,
+        "why": "That is Standard-IA's break-even with Standard, at 10.24 a read."
+      },
+      {
+        "text": "It never does: an archive class is always cheaper",
+        "correct": false,
+        "why": "Its reads are the dearest in the table, so enough of them overtake Standard."
+      }
+    ]
+  },
+  {
+    "id": "ex-09p7ar8g",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `year.py` print a dash, not 0.00, for One Zone-IA's read?",
+    "hint": "Look at its entry in `PRICES`.",
+    "choices": [
+      {
+        "text": "One Zone-IA charges nothing to read",
+        "correct": false,
+        "why": "Then it would print 0.00, like Standard."
+      },
+      {
+        "text": "One Zone-IA objects cannot be read back",
+        "correct": false,
+        "why": "They are read in milliseconds, like Standard-IA."
+      },
+      {
+        "text": "Python cannot multiply by a price below 0.02",
+        "correct": false,
+        "why": "It multiplies Deep Archive's 0.00320 in the next row."
+      },
+      {
+        "text": "The sheet prints no retrieval price for it, and an unknown price is not zero",
+        "correct": true,
+        "why": "Right. `None` is a price the sheet does not have, and printing it as zero would be a guess dressed as a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4pfd4nx",
+    "version": 1,
+    "section": "a-terabyte-a-year",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dataset of 1 TB is read in full every week. Which class does the arithmetic of the section put it in?",
+    "hint": "Count 52 reads and compare with the break-evens.",
+    "choices": [
+      {
+        "text": "Standard-IA, the class for data that is read",
+        "correct": false,
+        "why": "52 reads at 10.24 add 532.48 to 271.56, far above Standard's 497.66."
+      },
+      {
+        "text": "Glacier Instant Retrieval, because it is read in milliseconds",
+        "correct": false,
+        "why": "Read in milliseconds, yes, at 30.72 a read: 52 of them are 1,597.44."
+      },
+      {
+        "text": "Standard",
+        "correct": true,
+        "why": "Right. Standard-IA breaks even at about 22 full reads a year, and 52 is far past it."
+      },
+      {
+        "text": "Deep Archive at bulk speed, the cheapest total in the table",
+        "correct": false,
+        "why": "The table's total is for one read; a weekly read could not wait 48 hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qhbwmk2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each kind of Quitanda data to the class that fits it.",
+    "hint": "Ask how often it is read and how soon it is needed.",
+    "pairs": [
+      {
+        "left": "Today's orders, read by every report",
+        "right": "Standard"
+      },
+      {
+        "left": "Order photos read only when a customer disputes a delivery, months later",
+        "right": "Glacier Instant Retrieval"
+      },
+      {
+        "left": "Audit exports kept seven years, requested with weeks of notice",
+        "right": "Glacier Deep Archive"
+      },
+      {
+        "left": "Thumbnails that can be made again from the originals",
+        "right": "One Zone-IA"
+      }
+    ],
+    "right_distractors": [
+      "Reduced Redundancy"
+    ]
+  },
+  {
+    "id": "ex-k6f13d29",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the classes by the price of keeping a GB for a month, cheapest first.",
+    "hint": "Deep Archive is the floor and Standard the ceiling.",
+    "items": [
+      "Glacier Deep Archive",
+      "Glacier Flexible Retrieval",
+      "Glacier Instant Retrieval",
+      "One Zone-IA",
+      "Standard-IA",
+      "Standard"
+    ]
+  },
+  {
+    "id": "ex-gbm1j7bz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants to archive 50 million click events of 2 KB each, one object per event. Which of these are real costs of that plan on AWS? Choose all that apply.",
+    "hint": "Think per object, not per gigabyte.",
+    "choices": [
+      {
+        "text": "In Glacier Instant Retrieval, each event is billed as 128 KB",
+        "correct": true,
+        "why": "Yes: 64 times its size."
+      },
+      {
+        "text": "In Deep Archive, each event carries 40 KB more than its own bytes",
+        "correct": true,
+        "why": "Yes: 32 KB at the archive price and 8 KB at Standard's."
+      },
+      {
+        "text": "50 million PUT requests to write them",
+        "correct": true,
+        "why": "Yes: one request per object written, whatever the class."
+      },
+      {
+        "text": "In Intelligent-Tiering, a monitoring fee on each event",
+        "correct": false,
+        "why": "Objects under 128 KB are not monitored and pay no fee; they stay at Standard's price."
+      }
+    ]
+  }
+]
