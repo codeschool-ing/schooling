@@ -1049,6 +1049,50 @@ def l13_k8s(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 14
+
+# Seconds of each run of report.py and of report_duckdb.py, from the run its
+# captures.sh records.
+L14_RUNS = [131.1, 105.7, 75.4, 18.0, 15.9, 0.8]
+
+
+@figure('l14-fixes', 14)
+def l14_fixes(lang):
+    t = {'en': dict(
+            label='Horizontal bars of the morning report\'s time. All four mistakes: 131.1 seconds. '
+                  'Parquet instead of CSV: 105.7. A built-in function instead of Python: 75.4. '
+                  'Adaptive execution: 18.0. Broadcast allowed: 15.9. The same report in DuckDB '
+                  'on one machine: 0.8.',
+            rows=['all four mistakes', 'Parquet, not CSV', 'built-in, not Python',
+                  'adaptive execution', 'broadcast allowed', 'DuckDB, one machine'],
+            x='seconds',
+            cap='Each fix one lesson\'s lesson, measured one at a time; and a single machine '
+                'faster than all of them.'),
+         'pt': dict(
+            label='Barras horizontais do tempo do relatório da manhã. Os quatro erros: 131,1 '
+                  'segundos. Parquet em vez de CSV: 105,7. Uma função embutida em vez de Python: '
+                  '75,4. Execução adaptativa: 18,0. Broadcast permitido: 15,9. O mesmo relatório no '
+                  'DuckDB numa máquina só: 0,8.',
+            rows=['os quatro erros', 'Parquet, não CSV', 'embutida, não Python',
+                  'execução adaptativa', 'broadcast permitido', 'DuckDB, uma máquina'],
+            x='segundos',
+            cap='Cada correção, a lição de uma aula, medida uma por vez; e uma máquina só mais '
+                'rápida que todas.')}[lang]
+    f = Fig('l14-fixes', 720, 280, t['label'])
+    p = Plot(f, 180, 20, 660, 236, 0, 140, 0, 6)
+    p.xaxis([0, 20, 40, 60, 80, 100, 120, 140], label=t['x'])
+    for i, (secs, name) in enumerate(zip(L14_RUNS, t['rows'])):
+        y = 26 + i * 35
+        duck = i == 5
+        f.rect(p.sx(0), y, max(p.sx(secs) - p.sx(0), 2), 24,
+               stroke='--amber' if duck else '--phosphor',
+               fill='--scan' if duck else '--phosphor-dim', rx=2)
+        f.text(170, y + 12, name, size=10, anchor='end')
+        f.text(p.sx(secs) + 6, y + 12, num(lang, secs) + ' s', size=9.5, anchor='start',
+               fill='--paper-dim', mono=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
