@@ -1,0 +1,509 @@
+[
+  {
+    "id": "ex-dteh114a",
+    "version": 1,
+    "section": "the-stream",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a DynamoDB stream hold?",
+    "hint": "Think of what is added to it, and for how long.",
+    "choices": [
+      {
+        "text": "A copy of the table, refreshed every 24 hours",
+        "correct": false,
+        "why": "It holds changes, not items, and it starts empty when it is switched on."
+      },
+      {
+        "text": "The requests that failed, kept until somebody reads them",
+        "correct": false,
+        "why": "Failed writes change nothing and leave no record; and nothing waits for a reader."
+      },
+      {
+        "text": "Every change to an item, for 24 hours",
+        "correct": true,
+        "why": "Right, in order for each item. After a day a record is gone, read or not."
+      },
+      {
+        "text": "Every read and write, for auditing",
+        "correct": false,
+        "why": "Reads change nothing, so they never appear."
+      }
+    ]
+  },
+  {
+    "id": "ex-f93t0dyb",
+    "version": 1,
+    "section": "the-stream",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The stream was enabled on an empty table; then `seed.py` wrote 30 items, and three changes put one line, updated one order and deleted four items. How many records does the stream hold?",
+    "hint": "One record per write that changed an item.",
+    "value": 36,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2x4nktb2",
+    "version": 1,
+    "section": "the-stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, a reader sees `MODIFY o-10007` before `INSERT o-10003`, though the insert happened first. Is the stream broken?",
+    "hint": "What is the ordering guarantee about?",
+    "choices": [
+      {
+        "text": "No: order is kept per item, not across shards",
+        "correct": true,
+        "why": "Right. Two items in two shards may be read in either order, and moto's single shard hides it."
+      },
+      {
+        "text": "Yes: records leave in the order of their sequence numbers",
+        "correct": false,
+        "why": "Sequence numbers order a shard, not the whole stream."
+      },
+      {
+        "text": "Yes, unless the two orders belong to the same customer",
+        "correct": false,
+        "why": "The guarantee is per item, and these are two items."
+      }
+    ]
+  },
+  {
+    "id": "ex-dpstnksz",
+    "version": 1,
+    "section": "the-stream",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stream is switched on for a table that already holds a million items. What can its first reader learn about those items?",
+    "hint": "When does a record get written?",
+    "choices": [
+      {
+        "text": "Everything, from `TRIM_HORIZON`",
+        "correct": false,
+        "why": "`TRIM_HORIZON` is the oldest record kept, and the oldest is the first change after the stream started."
+      },
+      {
+        "text": "Their keys only, as `KEYS_ONLY` records",
+        "correct": false,
+        "why": "No record exists for an item that has not changed, whatever the view type."
+      },
+      {
+        "text": "The last 24 hours of their history",
+        "correct": false,
+        "why": "The stream did not exist during those hours, so it recorded nothing."
+      },
+      {
+        "text": "Nothing until they change",
+        "correct": true,
+        "why": "Right. A stream starts empty; a consumer that needs the existing items starts from a scan of the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5rydm5c",
+    "version": 1,
+    "section": "view-types",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each view type to what a `MODIFY` record of it carries.",
+    "hint": "The names say it.",
+    "pairs": [
+      {
+        "left": "`KEYS_ONLY`",
+        "right": "the key"
+      },
+      {
+        "left": "`NEW_IMAGE`",
+        "right": "the item after the change"
+      },
+      {
+        "left": "`OLD_IMAGE`",
+        "right": "the item before the change"
+      },
+      {
+        "left": "`NEW_AND_OLD_IMAGES`",
+        "right": "the item before and after"
+      }
+    ]
+  },
+  {
+    "id": "ex-bf94yk3r",
+    "version": 1,
+    "section": "view-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `totals.py` need `NEW_AND_OLD_IMAGES` rather than `NEW_IMAGE`?",
+    "hint": "What does a `MODIFY` change a total by?",
+    "choices": [
+      {
+        "text": "Because the change is new minus old, and needs both",
+        "correct": true,
+        "why": "Right: 4079 minus 2489, and only the old image says what the order was. Without it the consumer must remember every total itself."
+      },
+      {
+        "text": "Because `NEW_IMAGE` records have no `eventID`",
+        "correct": false,
+        "why": "Every record has an `eventID`, whatever the view."
+      },
+      {
+        "text": "Because a `REMOVE` would not reach a `NEW_IMAGE` stream",
+        "correct": false,
+        "why": "It would arrive, with no image, so its amount would be unknown; the view changes what a record carries, not which records exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7t6xt98",
+    "version": 1,
+    "section": "view-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The team wants to switch an enabled stream from `NEW_AND_OLD_IMAGES` to `KEYS_ONLY` to save space. On AWS, what does it take, and what is the risk?",
+    "hint": "The view type of an enabled stream cannot be changed.",
+    "choices": [
+      {
+        "text": "An `update-table` with the new view type, applied to records from then on",
+        "correct": false,
+        "why": "That is the request moto and AWS both refuse."
+      },
+      {
+        "text": "Nothing: the records are trimmed to keys when they are read",
+        "correct": false,
+        "why": "A record carries what its stream was set to carry when it was written."
+      },
+      {
+        "text": "Recreating the table, since the view type is part of its key schema",
+        "correct": false,
+        "why": "The key schema is untouched; only the stream is replaced."
+      },
+      {
+        "text": "A new stream, with a new ARN, that consumers must be moved to",
+        "correct": true,
+        "why": "Right: the old one is disabled and a new one enabled. A consumer left reading the old stream sees it end, and nothing is in the new one from before it started."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvavg632",
+    "version": 1,
+    "section": "consumer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the totals live in `quitanda-totals` and not as one more item in `quitanda`?",
+    "hint": "What would writing a total into `quitanda` add to its stream?",
+    "choices": [
+      {
+        "text": "Each total would land in the stream it reads",
+        "correct": true,
+        "why": "Right: every total written there would be one more change in the stream. A consumer that writes into its own source reads its own writes back and has to skip them."
+      },
+      {
+        "text": "Because a table can hold only one kind of item",
+        "correct": false,
+        "why": "Lesson 9 put three kinds in one table."
+      },
+      {
+        "text": "Because transactions cannot span two items of one table",
+        "correct": false,
+        "why": "They can; up to a hundred items, across tables or within one."
+      }
+    ]
+  },
+  {
+    "id": "ex-xydrwqdd",
+    "version": 1,
+    "section": "consumer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `totals.py` ran, a query summed c-17's orders straight from the table and got 27569. What is that comparison for?",
+    "hint": "Which number can be trusted without the stream?",
+    "choices": [
+      {
+        "text": "To show that the stream counted the lines as well",
+        "correct": false,
+        "why": "The consumer skips lines; the query adds up orders only."
+      },
+      {
+        "text": "To refresh the totals table, which the query writes",
+        "correct": false,
+        "why": "A query writes nothing."
+      },
+      {
+        "text": "To find a consumer that missed or doubled a record, by asking the data itself",
+        "correct": true,
+        "why": "Right. A running total never compared with its source is a number nobody can vouch for."
+      },
+      {
+        "text": "To pay less, since the query is cheaper than the stream",
+        "correct": false,
+        "why": "Reading the history on every screen is what the total exists to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-a57g042k",
+    "version": 1,
+    "section": "consumer",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A shard iterator of type `___` starts at the oldest record the stream still keeps.",
+    "hint": "It is the opposite of `LATEST`.",
+    "blanks": [
+      {
+        "accept": [
+          "TRIM_HORIZON"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vwnzgfab",
+    "version": 1,
+    "section": "delivery",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The naive run took c-17 from 275.69 to 551.38 reais. Where was the duplicate?",
+    "hint": "How many times is each change in the stream?",
+    "choices": [
+      {
+        "text": "In the reading, not the stream",
+        "correct": true,
+        "why": "Right: the same records were read and added again. Nothing told the naive consumer it had applied them before."
+      },
+      {
+        "text": "In the stream, which repeated each record",
+        "correct": false,
+        "why": "Each change is in the stream exactly once."
+      },
+      {
+        "text": "In moto, whose `TRIM_HORIZON` doubles the records",
+        "correct": false,
+        "why": "Both runs read the same eleven changes."
+      },
+      {
+        "text": "In the table, which held every order twice",
+        "correct": false,
+        "why": "The query still summed 27569 for c-17."
+      }
+    ]
+  },
+  {
+    "id": "ex-erg1qtdp",
+    "version": 1,
+    "section": "delivery",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer adds the change first and then writes the marker, in two separate calls. What goes wrong?",
+    "hint": "Imagine it stopping between the two.",
+    "choices": [
+      {
+        "text": "Nothing, as long as the marker is written eventually",
+        "correct": false,
+        "why": "If it stops before writing it, the next run adds the change again."
+      },
+      {
+        "text": "The marker is refused because the total already exists",
+        "correct": false,
+        "why": "The marker's condition is about the marker, not the total."
+      },
+      {
+        "text": "If it stops in between, the next run counts that one twice",
+        "correct": true,
+        "why": "Right: a stop between the two leaves a change added with no marker. Marker and addition in one transaction is what makes the repair hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehkh1krj",
+    "version": 1,
+    "section": "delivery",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a Lambda event source mapping on a DynamoDB stream? Choose every one.",
+    "hint": "Think about one failing record in a batch of a hundred.",
+    "choices": [
+      {
+        "text": "A failed batch is retried from its first record",
+        "correct": true,
+        "why": "Yes, which is where the duplicates come from."
+      },
+      {
+        "text": "While a batch is retried, the shard's later records wait",
+        "correct": true,
+        "why": "Yes, to keep each item's order."
+      },
+      {
+        "text": "`--bisect-batch-on-function-error` splits a failing batch to isolate the bad record",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "`--maximum-retry-attempts` guarantees that no record is ever skipped",
+        "correct": false,
+        "why": "The opposite: when the tries run out, the record is skipped, and should be sent somewhere a person will see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xf6977t9",
+    "version": 1,
+    "section": "ttl-and-lambda",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cart's `expires_at` passed an hour ago, on AWS. Can a read still return it?",
+    "hint": "When does TTL delete?",
+    "choices": [
+      {
+        "text": "No: TTL deletes at the second written in the attribute",
+        "correct": false,
+        "why": "It deletes in the background, typically within days, not at the moment."
+      },
+      {
+        "text": "Yes, until the background deletion reaches it",
+        "correct": true,
+        "why": "Right, which is why reads filter on `expires_at`. moto never deletes it at all, which is the extreme case of the same rule."
+      },
+      {
+        "text": "No, because expired items are hidden from reads at once",
+        "correct": false,
+        "why": "Nothing hides them; until deleted they read like any other item."
+      }
+    ]
+  },
+  {
+    "id": "ex-eve0f161",
+    "version": 1,
+    "section": "ttl-and-lambda",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer must treat a customer emptying their cart differently from a cart that expired. What in the stream record tells them apart?",
+    "hint": "Who made the deletion?",
+    "choices": [
+      {
+        "text": "The event name: `EXPIRE` instead of `REMOVE`",
+        "correct": false,
+        "why": "Both are `REMOVE`; there is no `EXPIRE` event."
+      },
+      {
+        "text": "The missing old image",
+        "correct": false,
+        "why": "A TTL `REMOVE` carries the old image like any other."
+      },
+      {
+        "text": "Its sequence number, which is lower",
+        "correct": false,
+        "why": "Sequence numbers order records; they say nothing about who wrote them."
+      },
+      {
+        "text": "A `userIdentity` that names the service",
+        "correct": true,
+        "why": "Right: `dynamodb.amazonaws.com`, present only on TTL deletions."
+      }
+    ]
+  },
+  {
+    "id": "ex-5414s8xn",
+    "version": 1,
+    "section": "ttl-and-lambda",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its consumer from DynamoDB Streams to Kinesis Data Streams for DynamoDB, for the year of retention. What must the consumer now do that it did not have to before?",
+    "hint": "Which two guarantees does Kinesis not give?",
+    "choices": [
+      {
+        "text": "Order each item's records by time and drop duplicates in the stream itself",
+        "correct": true,
+        "why": "Right, using `ApproximateCreationDateTime` and the keys. The consumer's own duplicates, from retries, were already its job."
+      },
+      {
+        "text": "Nothing: both services deliver each change once, in order",
+        "correct": false,
+        "why": "In Kinesis, one item's records may arrive out of order and more than once."
+      },
+      {
+        "text": "Read the table with a scan every 24 hours",
+        "correct": false,
+        "why": "The year of retention is the reason to move; nothing expires at 24 hours there."
+      }
+    ]
+  },
+  {
+    "id": "ex-r00asjb6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, put the path of one change to an order in order, from the write to the running total.",
+    "hint": "The record exists before anybody reads it.",
+    "items": [
+      "An `update-item` changes the order's total",
+      "A `MODIFY` record is added to the item's shard",
+      "Lambda polls the shard and builds a batch",
+      "The function checks the record's marker",
+      "The difference is added to the customer's total"
+    ]
+  },
+  {
+    "id": "ex-p4fj0e6j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer was stopped by a bug on Friday evening and fixed on Saturday at midnight, 30 hours later. It restarts from `TRIM_HORIZON`. What is the state of the totals?",
+    "hint": "How long does a record stay?",
+    "choices": [
+      {
+        "text": "Correct, because `TRIM_HORIZON` starts where it stopped",
+        "correct": false,
+        "why": "It starts at the oldest record still kept, which is 24 hours old."
+      },
+      {
+        "text": "Six hours of changes are lost and must be rebuilt from the table",
+        "correct": true,
+        "why": "Right. The first six hours expired unread; a scan of the orders is the only way back."
+      },
+      {
+        "text": "Doubled, because the restart reads everything again",
+        "correct": false,
+        "why": "With markers the re-read changes are skipped; the problem is the ones that are no longer there."
+      },
+      {
+        "text": "Correct, because AWS pauses the 24 hours while no consumer reads",
+        "correct": false,
+        "why": "Retention runs whether or not anybody reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-et7dbsz3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reader of your own polls two shards four times a second each, all of a 30-day month. Beyond the free allowance, how many dollars of stream reads is that?",
+    "hint": "Calls in a month, at 0.30 dollars per million.",
+    "value": 6.22,
+    "tolerance": 0.01,
+    "unit": "USD"
+  }
+]
