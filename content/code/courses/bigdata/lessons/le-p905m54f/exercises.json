@@ -1,0 +1,811 @@
+[
+  {
+    "id": "ex-f6dhsex7",
+    "version": 1,
+    "section": "the-session",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does creating the `SparkSession` do?",
+    "hint": "It is the program's connection to the cluster.",
+    "choices": [
+      {
+        "text": "Reads the input files into memory",
+        "correct": false,
+        "why": "Nothing is read until an action asks for a result."
+      },
+      {
+        "text": "Connects the driver to the cluster and gets executors",
+        "correct": true,
+        "why": "Right. Everything after it goes through it."
+      },
+      {
+        "text": "Starts the master and the workers if they are down",
+        "correct": false,
+        "why": "Those are started by `start-master.sh` and `start-worker.sh`."
+      },
+      {
+        "text": "Compiles the Python program to Java",
+        "correct": false,
+        "why": "Python stays Python; the driver talks to its Java half."
+      }
+    ]
+  },
+  {
+    "id": "ex-wna22rm4",
+    "version": 1,
+    "section": "the-session",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a PySpark program to where it runs.",
+    "hint": "Functions passed to Spark travel.",
+    "pairs": [
+      {
+        "left": "The line `spark = SparkSession.builder…getOrCreate()`",
+        "right": "The driver"
+      },
+      {
+        "left": "The `lambda` inside a `filter`",
+        "right": "A Python process beside each executor"
+      },
+      {
+        "left": "The comparison in `where(\"kind = 'purchase'\")`",
+        "right": "The executor's Java process"
+      }
+    ],
+    "right_distractors": [
+      "The master"
+    ]
+  },
+  {
+    "id": "ex-g67bdzx8",
+    "version": 1,
+    "section": "the-session",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a notebook left open overnight slow other people's jobs?",
+    "hint": "What does an open session hold?",
+    "choices": [
+      {
+        "text": "It locks the files it has read",
+        "correct": false,
+        "why": "Reading locks nothing."
+      },
+      {
+        "text": "Its session keeps its executors",
+        "correct": true,
+        "why": "Right. Its share of the cluster stays taken."
+      },
+      {
+        "text": "The driver uploads the notebook to every worker",
+        "correct": false,
+        "why": "Nothing like that happens."
+      },
+      {
+        "text": "Notebooks rerun every cell every hour to keep the results fresh",
+        "correct": false,
+        "why": "They run a cell when you run it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3kzpcwc",
+    "version": 1,
+    "section": "rdds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Spark keep for an RDD, so that a lost partition can be rebuilt?",
+    "hint": "It is printed by `toDebugString`.",
+    "choices": [
+      {
+        "text": "A snapshot written to HDFS after each step",
+        "correct": false,
+        "why": "That is MapReduce's way; Spark avoids it."
+      },
+      {
+        "text": "Nothing; a lost partition fails the job",
+        "correct": false,
+        "why": "Lesson 2's job survived a lost executor."
+      },
+      {
+        "text": "A copy of every partition on another executor",
+        "correct": false,
+        "why": "Partitions are not stored by default; the recipe is kept."
+      },
+      {
+        "text": "Its lineage",
+        "correct": true,
+        "why": "Right. The recipe, from the files to the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-81m60gej",
+    "version": 1,
+    "section": "rdds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did `textFile` make 365 partitions, one per file, rather than splitting the larger files?",
+    "hint": "Can you start reading a gzip file in the middle?",
+    "choices": [
+      {
+        "text": "Spark makes one partition per file whatever the format",
+        "correct": false,
+        "why": "A large uncompressed file is split into many, as lesson 3's ten blocks were."
+      },
+      {
+        "text": "The `day=` directories forbid splitting",
+        "correct": false,
+        "why": "Directories have nothing to do with it."
+      },
+      {
+        "text": "There are 365 executors",
+        "correct": false,
+        "why": "There are three."
+      },
+      {
+        "text": "A gzip file cannot be split; one task reads it whole",
+        "correct": true,
+        "why": "Right. Lesson 10 meets formats that can be split."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjpaegy0",
+    "version": 1,
+    "section": "rdds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lineage, the RDD that marks the boundary between the map side and the reduce side is called ___RDD.",
+    "hint": "Lesson 4's word for that boundary.",
+    "blanks": [
+      {
+        "accept": [
+          "Shuffled"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-31aqw4h2",
+    "version": 1,
+    "section": "lazy-evaluation",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these are actions, that start a job? Choose all that apply.",
+    "hint": "An action needs a result.",
+    "choices": [
+      {
+        "text": "`filter(...)`",
+        "correct": false,
+        "why": "A transformation: it only adds a step."
+      },
+      {
+        "text": "`groupBy(...)`",
+        "correct": false,
+        "why": "A transformation too, however much work it will cause later."
+      },
+      {
+        "text": "`count()`",
+        "correct": true,
+        "why": "Yes. It needs a number."
+      },
+      {
+        "text": "`show()`",
+        "correct": true,
+        "why": "Yes. It needs rows to print."
+      },
+      {
+        "text": "`write.parquet(...)`",
+        "correct": true,
+        "why": "Yes. Writing needs every row."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpy1mx65",
+    "version": 1,
+    "section": "lazy-evaluation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`views.count()` ran twice. Why did the second call read every file again?",
+    "hint": "Is `views` a result or a recipe?",
+    "choices": [
+      {
+        "text": "The first count failed silently and had to be redone",
+        "correct": false,
+        "why": "Both printed the same correct number."
+      },
+      {
+        "text": "The second count had a different filter",
+        "correct": false,
+        "why": "Same `views`, same filter."
+      },
+      {
+        "text": "Spark rereads files whenever an hour has passed",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "`views` is a recipe; nothing was kept",
+        "correct": true,
+        "why": "Right. Two actions, two jobs, unless you ask to keep the data (lesson 9)."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmkteff1",
+    "version": 1,
+    "section": "lazy-evaluation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does laziness let Spark do that running each line at once would not?",
+    "hint": "When does Spark see the whole program?",
+    "choices": [
+      {
+        "text": "Skip actions the programmer did not mean",
+        "correct": false,
+        "why": "Every action runs."
+      },
+      {
+        "text": "See all the steps before running any",
+        "correct": true,
+        "why": "Right. It can fuse steps and read only what is needed."
+      },
+      {
+        "text": "Avoid the shuffle in every grouping",
+        "correct": false,
+        "why": "A grouping still needs its shuffle."
+      },
+      {
+        "text": "Use less disk for the input files",
+        "correct": false,
+        "why": "The input files are what they are."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw9gnh6f",
+    "version": 1,
+    "section": "dataframes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Read with only `header`, every column of the CSV came out as a string except `day`. Why `day`?",
+    "hint": "Where does `day` come from?",
+    "choices": [
+      {
+        "text": "Spark always reads the last column as a date",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "It is the only column with a header",
+        "correct": false,
+        "why": "Every column has a header name; none of the file's columns has a type."
+      },
+      {
+        "text": "It comes from the directory names",
+        "correct": true,
+        "why": "Right. Partition values are typed by Spark itself."
+      },
+      {
+        "text": "The generator wrote it as a date in the file",
+        "correct": false,
+        "why": "It is not in the files at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxkx1ptf",
+    "version": 1,
+    "section": "dataframes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can Spark optimise `where(F.col('kind') == 'purchase')` but not `filter(lambda line: ',purchase,' in line)`?",
+    "hint": "Which one can Spark read?",
+    "choices": [
+      {
+        "text": "A column expression is readable; a lambda is opaque",
+        "correct": true,
+        "why": "Right. Spark can reorder and push down what it can read."
+      },
+      {
+        "text": "The lambda reads a different file",
+        "correct": false,
+        "why": "Same data either way."
+      },
+      {
+        "text": "`where` is run on the driver",
+        "correct": false,
+        "why": "It runs on the executors, like everything else."
+      },
+      {
+        "text": "Lambdas are forbidden on DataFrames",
+        "correct": false,
+        "why": "They are allowed as UDFs, at a cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-6tfc43ph",
+    "version": 1,
+    "section": "schemas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `inferSchema` cost in `schema.py`?",
+    "hint": "What does Spark have to do to guess?",
+    "choices": [
+      {
+        "text": "Nothing; the guess comes from the header line",
+        "correct": false,
+        "why": "The header has names, not types."
+      },
+      {
+        "text": "Extra memory on the driver only",
+        "correct": false,
+        "why": "The cost is time, a whole extra pass over the data."
+      },
+      {
+        "text": "A full read of the input before the real job",
+        "correct": true,
+        "why": "Right. Tens of seconds on 1.3 GB, every time."
+      },
+      {
+        "text": "A read of the first ten rows",
+        "correct": false,
+        "why": "By default it reads everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-scj6b65z",
+    "version": 1,
+    "section": "schemas",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The guess made `event_id` an `integer` and the declaration made it `LONG`. Which is right, and why?",
+    "hint": "What happens when the id passes about 2.1 billion?",
+    "choices": [
+      {
+        "text": "`integer`, because the data says so",
+        "correct": false,
+        "why": "This year's data says so. Next year's may not."
+      },
+      {
+        "text": "Either; Spark converts automatically on overflow",
+        "correct": false,
+        "why": "It does not widen a column by itself."
+      },
+      {
+        "text": "`LONG`: the id will outgrow an `int`",
+        "correct": true,
+        "why": "Right. A guess only knows the data it saw."
+      },
+      {
+        "text": "`integer`: it is smaller and therefore faster",
+        "correct": false,
+        "why": "A wrong type is not a saving."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t6b1cq0",
+    "version": 1,
+    "section": "schemas",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a declared schema, `.option(\"mode\", \"___\")` stops the job at the first row that does not fit.",
+    "hint": "Fail, and fast.",
+    "blanks": [
+      {
+        "accept": [
+          "FAILFAST"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-svz9wqmx",
+    "version": 1,
+    "section": "python-udfs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the Python UDF slower than the built-in `hour`?",
+    "hint": "Where does each one run?",
+    "choices": [
+      {
+        "text": "Python's datetime gives a different hour",
+        "correct": false,
+        "why": "Both gave the same 24 hours."
+      },
+      {
+        "text": "Every row travels to a Python process and back",
+        "correct": true,
+        "why": "Right. Serialise, send, call, send back, 24 million times."
+      },
+      {
+        "text": "The UDF read the files twice",
+        "correct": false,
+        "why": "Each run read them once."
+      },
+      {
+        "text": "UDFs run on the driver",
+        "correct": false,
+        "why": "They run beside the executors."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a7vefgc",
+    "version": 1,
+    "section": "python-udfs",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the options for computing something Spark has no function for, from first to try to last.",
+    "hint": "Built-ins first; one row at a time last.",
+    "items": [
+      "A combination of built-in functions",
+      "A vectorised `pandas_udf`",
+      "A plain Python UDF"
+    ]
+  },
+  {
+    "id": "ex-hb1mx131",
+    "version": 1,
+    "section": "python-udfs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Besides time, what does a UDF cost the query?",
+    "hint": "Who can see inside it?",
+    "choices": [
+      {
+        "text": "It cannot be used inside `groupBy`",
+        "correct": false,
+        "why": "`udf.py` grouped by one."
+      },
+      {
+        "text": "It doubles the size of the output",
+        "correct": false,
+        "why": "The output is the same."
+      },
+      {
+        "text": "The planner is blind to what it does",
+        "correct": true,
+        "why": "Right. Lesson 6 shows a pushed-down filter lost to a UDF."
+      },
+      {
+        "text": "It forces the data into one partition",
+        "correct": false,
+        "why": "Partitions are unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-bfed5f5f",
+    "version": 1,
+    "section": "writing-parquet",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `to_parquet.py` add to the data that the raw CSV did not carry?",
+    "hint": "What did every reader have to supply before?",
+    "choices": [
+      {
+        "text": "The types, stored in the files",
+        "correct": true,
+        "why": "Right. A reader gets `ts` as a timestamp for free."
+      },
+      {
+        "text": "New events from the website",
+        "correct": false,
+        "why": "Same 24 million events."
+      },
+      {
+        "text": "A smaller size on disk",
+        "correct": false,
+        "why": "Here it came out larger, 396 MB against 243."
+      },
+      {
+        "text": "A partition for every visitor instead of every day",
+        "correct": false,
+        "why": "Still one per day."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkgbz83c",
+    "version": 1,
+    "section": "writing-parquet",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each write mode to what it does when the output already exists.",
+    "hint": "One of them is the default.",
+    "pairs": [
+      {
+        "left": "error",
+        "right": "Refuses, which is the default"
+      },
+      {
+        "left": "overwrite",
+        "right": "Replaces it"
+      },
+      {
+        "left": "append",
+        "right": "Adds files beside the old ones"
+      },
+      {
+        "left": "ignore",
+        "right": "Does nothing"
+      }
+    ]
+  },
+  {
+    "id": "ex-7agwa84w",
+    "version": 1,
+    "section": "writing-parquet",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job writes with `mode(\"append\")` and is run twice by mistake. What happens?",
+    "hint": "Append adds files.",
+    "choices": [
+      {
+        "text": "The second run fails because the files exist",
+        "correct": false,
+        "why": "That is `error` mode, not `append`."
+      },
+      {
+        "text": "That day's data is doubled, with no error",
+        "correct": true,
+        "why": "Right. Lesson 11's table formats are one cure."
+      },
+      {
+        "text": "Spark notices the duplicate rows and skips them",
+        "correct": false,
+        "why": "Append checks nothing."
+      },
+      {
+        "text": "The first run's files are replaced",
+        "correct": false,
+        "why": "That is `overwrite`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hrxr00k",
+    "version": 1,
+    "section": "spark-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `spark-sql`, what does ``parquet.`data/silver/books` `` mean?",
+    "hint": "No table was ever defined.",
+    "choices": [
+      {
+        "text": "A table called `books` in a database called `parquet`",
+        "correct": false,
+        "why": "There is no such database; `parquet` names the format."
+      },
+      {
+        "text": "The Parquet files at that path, used as a table",
+        "correct": true,
+        "why": "Right. A way to query files where a table name would go."
+      },
+      {
+        "text": "A view created by `to_parquet.py`",
+        "correct": false,
+        "why": "Views live only inside the program that made them."
+      },
+      {
+        "text": "A command to convert the books to Parquet",
+        "correct": false,
+        "why": "It only reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-vag28nyg",
+    "version": 1,
+    "section": "spark-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How long does a view made with `createOrReplaceTempView` last?",
+    "hint": "Temporary.",
+    "choices": [
+      {
+        "text": "As long as the session",
+        "correct": true,
+        "why": "Right. Names that outlive programs need a catalogue (lesson 12)."
+      },
+      {
+        "text": "One query",
+        "correct": false,
+        "why": "Any number of queries in the same session can use it."
+      },
+      {
+        "text": "Until the cluster is restarted",
+        "correct": false,
+        "why": "It dies with the program, long before."
+      },
+      {
+        "text": "Forever, in `spark-warehouse`",
+        "correct": false,
+        "why": "Nothing is written for a temporary view."
+      }
+    ]
+  },
+  {
+    "id": "ex-dhatrbv8",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the DataFrame and the SQL versions take the same time?",
+    "hint": "Who compiles both?",
+    "choices": [
+      {
+        "text": "Both happen to be short",
+        "correct": false,
+        "why": "Length of code does not decide speed."
+      },
+      {
+        "text": "SQL is translated into the RDD version",
+        "correct": false,
+        "why": "The RDD version was slower; SQL is not that."
+      },
+      {
+        "text": "The second one reused the first one's result",
+        "correct": false,
+        "why": "Nothing was cached; each read the files."
+      },
+      {
+        "text": "They compile to the same plan",
+        "correct": true,
+        "why": "Right. Two spellings, one planner, one plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtm1gqn1",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why was the RDD version the slowest of the three?",
+    "hint": "What are its filter and map made of?",
+    "choices": [
+      {
+        "text": "It read Parquet instead of CSV",
+        "correct": false,
+        "why": "It read the same CSV files."
+      },
+      {
+        "text": "It counted a different thing",
+        "correct": false,
+        "why": "All three answers were identical."
+      },
+      {
+        "text": "Its functions are Python, and every line goes to Python and back",
+        "correct": true,
+        "why": "Right. And to an RDD a line is a string, so no column can be skipped."
+      },
+      {
+        "text": "RDDs cannot use more than one executor",
+        "correct": false,
+        "why": "It ran on all three."
+      }
+    ]
+  },
+  {
+    "id": "ex-nndd9xzk",
+    "version": 1,
+    "section": "three-ways",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the API the lesson suggests.",
+    "hint": "Table-shaped questions do not need RDDs.",
+    "pairs": [
+      {
+        "left": "A report query read by analysts who know SQL",
+        "right": "SQL"
+      },
+      {
+        "left": "A pipeline whose columns are chosen at runtime",
+        "right": "The DataFrame API"
+      },
+      {
+        "left": "Records with no table shape at all",
+        "right": "The RDD"
+      }
+    ]
+  },
+  {
+    "id": "ex-kc6bbjbz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program reads the clicks, filters purchases, then calls `count()`, `show()` and `write.parquet()` on the result. How many times are the files read?",
+    "hint": "Count the actions.",
+    "choices": [
+      {
+        "text": "Four, counting the filter",
+        "correct": false,
+        "why": "The filter is a transformation and reads nothing itself."
+      },
+      {
+        "text": "Three, one per action",
+        "correct": true,
+        "why": "Right. Each action is a job, and nothing is kept between them."
+      },
+      {
+        "text": "Once, because Spark caches what it read",
+        "correct": false,
+        "why": "Not unless you ask, which is lesson 9."
+      },
+      {
+        "text": "Once, when the files are opened",
+        "correct": false,
+        "why": "Opening reads nothing; each action reads everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvcjyd26",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job reads CSV with `inferSchema` and computes a weekday with a Python UDF. Which change saves the most, and why?",
+    "hint": "Both measured costs apply here.",
+    "choices": [
+      {
+        "text": "Nothing; both costs are fixed",
+        "correct": false,
+        "why": "Both are avoidable and both scale with the data."
+      },
+      {
+        "text": "Both: a declared schema and the built-in `dayofweek`",
+        "correct": true,
+        "why": "Right. One removes a whole extra read, the other the trip to Python per row."
+      },
+      {
+        "text": "More executors and memory, keeping every line of the code as it is",
+        "correct": false,
+        "why": "Both costs grow with the data, and more executors only spread them."
+      },
+      {
+        "text": "Rewriting the job with RDDs",
+        "correct": false,
+        "why": "That keeps the Python per row and loses the planner."
+      }
+    ]
+  }
+]

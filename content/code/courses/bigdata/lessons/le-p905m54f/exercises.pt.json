@@ -1,0 +1,560 @@
+{
+  "ex-f6dhsex7": {
+    "prompt": "O que criar a `SparkSession` faz?",
+    "hint": "É a conexão do programa com o cluster.",
+    "choices": [
+      {
+        "text": "Lê os arquivos de entrada para a memória",
+        "why": "Nada é lido até uma ação pedir um resultado."
+      },
+      {
+        "text": "Liga o driver ao cluster e obtém executores",
+        "why": "Isso. Tudo depois passa por ela."
+      },
+      {
+        "text": "Inicia o master e os workers se estiverem parados",
+        "why": "Eles são iniciados pelo `start-master.sh` e pelo `start-worker.sh`."
+      },
+      {
+        "text": "Compila o programa Python para Java",
+        "why": "O Python continua Python; o driver conversa com a sua metade Java."
+      }
+    ]
+  },
+  "ex-wna22rm4": {
+    "prompt": "Ligue cada parte de um programa PySpark a onde ela roda.",
+    "hint": "Funções passadas ao Spark viajam.",
+    "pairs": [
+      {
+        "left": "A linha `spark = SparkSession.builder…getOrCreate()`",
+        "right": "O driver"
+      },
+      {
+        "left": "O `lambda` dentro de um `filter`",
+        "right": "Um processo Python ao lado de cada executor"
+      },
+      {
+        "left": "A comparação em `where(\"kind = 'purchase'\")`",
+        "right": "O processo Java do executor"
+      }
+    ],
+    "right_distractors": [
+      "O master"
+    ]
+  },
+  "ex-g67bdzx8": {
+    "prompt": "Por que um notebook esquecido aberto à noite pode atrasar os jobs de outras pessoas?",
+    "hint": "O que uma sessão aberta segura?",
+    "choices": [
+      {
+        "text": "Ele trava os arquivos que leu",
+        "why": "Ler não trava nada."
+      },
+      {
+        "text": "A sessão dele mantém os executores",
+        "why": "Isso. A fatia do cluster dele continua ocupada."
+      },
+      {
+        "text": "O driver envia o notebook a cada worker",
+        "why": "Nada disso acontece."
+      },
+      {
+        "text": "Notebooks rodam toda célula de novo a cada hora para manter os resultados frescos",
+        "why": "Eles rodam uma célula quando você a roda."
+      }
+    ]
+  },
+  "ex-k3kzpcwc": {
+    "prompt": "O que o Spark guarda de um RDD para que uma partição perdida possa ser refeita?",
+    "hint": "É impresso pelo `toDebugString`.",
+    "choices": [
+      {
+        "text": "Um retrato gravado no HDFS após cada passo",
+        "why": "Esse é o jeito do MapReduce; o Spark o evita."
+      },
+      {
+        "text": "Nada; uma partição perdida derruba o job",
+        "why": "O job da aula 2 sobreviveu a um executor perdido."
+      },
+      {
+        "text": "Uma cópia de cada partição em outro executor",
+        "why": "Partições não são guardadas por padrão; a receita é."
+      },
+      {
+        "text": "A linhagem",
+        "why": "Isso. A receita, dos arquivos ao resultado."
+      }
+    ]
+  },
+  "ex-81m60gej": {
+    "prompt": "Por que o `textFile` fez 365 partições, uma por arquivo, em vez de dividir os arquivos maiores?",
+    "hint": "Dá para começar a ler um gzip pelo meio?",
+    "choices": [
+      {
+        "text": "O Spark faz uma partição por arquivo seja qual for o formato",
+        "why": "Um arquivo grande sem compressão é dividido em muitas, como os dez blocos da aula 3."
+      },
+      {
+        "text": "Os diretórios `day=` proíbem divisão",
+        "why": "Diretórios não têm nada a ver com isso."
+      },
+      {
+        "text": "Há 365 executores",
+        "why": "Há três."
+      },
+      {
+        "text": "Um gzip não pode ser dividido; uma tarefa o lê inteiro",
+        "why": "Isso. A aula 10 encontra formatos que podem ser divididos."
+      }
+    ]
+  },
+  "ex-bjpaegy0": {
+    "prompt": "Na linhagem, o RDD que marca a fronteira entre o lado do map e o do reduce se chama ___RDD.",
+    "hint": "A palavra da aula 4 para essa fronteira.",
+    "blanks": [
+      {
+        "accept": [
+          "Shuffled"
+        ]
+      }
+    ]
+  },
+  "ex-31aqw4h2": {
+    "prompt": "Quais destas são ações, que iniciam um job? Escolha todas que se aplicam.",
+    "hint": "Uma ação precisa de um resultado.",
+    "choices": [
+      {
+        "text": "`filter(...)`",
+        "why": "Uma transformação: só acrescenta um passo."
+      },
+      {
+        "text": "`groupBy(...)`",
+        "why": "Também uma transformação, por mais trabalho que vá causar depois."
+      },
+      {
+        "text": "`count()`",
+        "why": "Sim. Precisa de um número."
+      },
+      {
+        "text": "`show()`",
+        "why": "Sim. Precisa de linhas para imprimir."
+      },
+      {
+        "text": "`write.parquet(...)`",
+        "why": "Sim. Escrever precisa de todas as linhas."
+      }
+    ]
+  },
+  "ex-hpy1mx65": {
+    "prompt": "O `views.count()` rodou duas vezes. Por que a segunda chamada leu todo arquivo de novo?",
+    "hint": "O `views` é um resultado ou uma receita?",
+    "choices": [
+      {
+        "text": "A primeira contagem falhou em silêncio e teve de ser refeita",
+        "why": "As duas imprimiram o mesmo número correto."
+      },
+      {
+        "text": "A segunda contagem tinha outro filtro",
+        "why": "Mesmo `views`, mesmo filtro."
+      },
+      {
+        "text": "O Spark relê os arquivos sempre que passa uma hora",
+        "why": "Não há essa regra."
+      },
+      {
+        "text": "O `views` é uma receita; nada foi guardado",
+        "why": "Isso. Duas ações, dois jobs, a menos que você peça para guardar os dados (aula 9)."
+      }
+    ]
+  },
+  "ex-jmkteff1": {
+    "prompt": "O que a preguiça permite ao Spark que rodar cada linha na hora não permitiria?",
+    "hint": "Quando o Spark vê o programa inteiro?",
+    "choices": [
+      {
+        "text": "Pular ações que quem programou não quis",
+        "why": "Toda ação roda."
+      },
+      {
+        "text": "Ver todos os passos antes de rodar algum",
+        "why": "Isso. Ele pode fundir passos e ler só o necessário."
+      },
+      {
+        "text": "Evitar o shuffle em todo agrupamento",
+        "why": "Um agrupamento ainda precisa do seu shuffle."
+      },
+      {
+        "text": "Usar menos disco para os arquivos de entrada",
+        "why": "Os arquivos de entrada são o que são."
+      }
+    ]
+  },
+  "ex-hw9gnh6f": {
+    "prompt": "Lido só com `header`, toda coluna do CSV saiu como string, menos `day`. Por que `day`?",
+    "hint": "De onde vem o `day`?",
+    "choices": [
+      {
+        "text": "O Spark sempre lê a última coluna como data",
+        "why": "Não há essa regra."
+      },
+      {
+        "text": "É a única coluna com cabeçalho",
+        "why": "Toda coluna tem nome no cabeçalho; nenhuma coluna do arquivo tem tipo."
+      },
+      {
+        "text": "Vem dos nomes dos diretórios",
+        "why": "Isso. Os valores de partição são tipados pelo próprio Spark."
+      },
+      {
+        "text": "O gerador a escreveu como data no arquivo",
+        "why": "Ela nem está nos arquivos."
+      }
+    ]
+  },
+  "ex-sxkx1ptf": {
+    "prompt": "Por que o Spark consegue otimizar `where(F.col('kind') == 'purchase')` mas não `filter(lambda line: ',purchase,' in line)`?",
+    "hint": "Qual dos dois o Spark consegue ler?",
+    "choices": [
+      {
+        "text": "Uma expressão de coluna é legível; um lambda é opaco",
+        "why": "Isso. O Spark consegue reordenar e empurrar o que consegue ler."
+      },
+      {
+        "text": "O lambda lê outro arquivo",
+        "why": "Os mesmos dados nos dois."
+      },
+      {
+        "text": "O `where` roda no driver",
+        "why": "Ele roda nos executores, como todo o resto."
+      },
+      {
+        "text": "Lambdas são proibidos em DataFrames",
+        "why": "São permitidos como UDFs, com um custo."
+      }
+    ]
+  },
+  "ex-6tfc43ph": {
+    "prompt": "O que o `inferSchema` custou no `schema.py`?",
+    "hint": "O que o Spark precisa fazer para adivinhar?",
+    "choices": [
+      {
+        "text": "Nada; o palpite vem da linha de cabeçalho",
+        "why": "O cabeçalho tem nomes, não tipos."
+      },
+      {
+        "text": "Memória extra só no driver, para guardar o esquema adivinhado",
+        "why": "O custo é tempo, uma passada extra inteira sobre os dados."
+      },
+      {
+        "text": "Uma leitura inteira da entrada antes do job de verdade",
+        "why": "Isso. Dezenas de segundos em 1,3 GB, toda vez."
+      },
+      {
+        "text": "Uma leitura das dez primeiras linhas",
+        "why": "Por padrão ele lê tudo."
+      }
+    ]
+  },
+  "ex-scj6b65z": {
+    "prompt": "O palpite fez o `event_id` virar `integer` e a declaração o fez `LONG`. Qual está certo, e por quê?",
+    "hint": "O que acontece quando o id passa de uns 2,1 bilhões?",
+    "choices": [
+      {
+        "text": "`integer`, porque os dados dizem isso",
+        "why": "Os dados deste ano dizem. Os do ano que vem talvez não."
+      },
+      {
+        "text": "Tanto faz; o Spark converte a coluna sozinho quando o valor estoura",
+        "why": "Ele não alarga uma coluna sozinho."
+      },
+      {
+        "text": "`LONG`: o id vai passar do tamanho de um `int`",
+        "why": "Isso. Um palpite só conhece os dados que viu."
+      },
+      {
+        "text": "`integer`: é menor e portanto mais rápido",
+        "why": "Um tipo errado não é economia."
+      }
+    ]
+  },
+  "ex-5t6b1cq0": {
+    "prompt": "Com um esquema declarado, `.option(\"mode\", \"___\")` para o job na primeira linha que não cabe.",
+    "hint": "Falhar, e rápido.",
+    "blanks": [
+      {
+        "accept": [
+          "FAILFAST"
+        ]
+      }
+    ]
+  },
+  "ex-svz9wqmx": {
+    "prompt": "Por que a UDF em Python foi mais lenta que o `hour` nativo?",
+    "hint": "Onde cada uma roda?",
+    "choices": [
+      {
+        "text": "O datetime do Python dá outra hora",
+        "why": "Os dois deram as mesmas 24 horas."
+      },
+      {
+        "text": "Cada linha viaja até um processo Python e volta",
+        "why": "Isso. Serializar, enviar, chamar, devolver, 24 milhões de vezes."
+      },
+      {
+        "text": "A UDF leu os arquivos duas vezes",
+        "why": "Cada execução os leu uma vez."
+      },
+      {
+        "text": "UDFs rodam no driver",
+        "why": "Elas rodam ao lado dos executores."
+      }
+    ]
+  },
+  "ex-8a7vefgc": {
+    "prompt": "Ordene as opções para calcular algo que o Spark não tem como função, da primeira a tentar à última.",
+    "hint": "Nativas primeiro; uma linha por vez por último.",
+    "items": [
+      "Uma combinação de funções nativas",
+      "Uma `pandas_udf` vetorizada",
+      "Uma UDF Python comum"
+    ]
+  },
+  "ex-hb1mx131": {
+    "prompt": "Além de tempo, o que uma UDF custa à consulta?",
+    "hint": "Quem consegue ver dentro dela?",
+    "choices": [
+      {
+        "text": "Não pode ser usada dentro de `groupBy`",
+        "why": "O `udf.py` agrupou por uma."
+      },
+      {
+        "text": "Dobra o tamanho da saída",
+        "why": "A saída é a mesma."
+      },
+      {
+        "text": "O planejador não sabe o que ela faz",
+        "why": "Isso. A aula 6 mostra um filtro empurrado perdido para uma UDF."
+      },
+      {
+        "text": "Força os dados para uma partição só",
+        "why": "As partições não mudam."
+      }
+    ]
+  },
+  "ex-bfed5f5f": {
+    "prompt": "O que o `to_parquet.py` acrescenta aos dados que o CSV cru não trazia?",
+    "hint": "O que todo leitor precisava fornecer antes?",
+    "choices": [
+      {
+        "text": "Os tipos, guardados nos arquivos",
+        "why": "Isso. Um leitor recebe o `ts` como timestamp de graça."
+      },
+      {
+        "text": "Eventos novos do site",
+        "why": "Os mesmos 24 milhões de eventos."
+      },
+      {
+        "text": "Um tamanho menor em disco",
+        "why": "Aqui saiu maior, 396 MB contra 243."
+      },
+      {
+        "text": "Uma partição por visitante",
+        "why": "Continua uma por dia."
+      }
+    ]
+  },
+  "ex-wkgbz83c": {
+    "prompt": "Ligue cada modo de escrita ao que ele faz quando a saída já existe.",
+    "hint": "Um deles é o padrão.",
+    "pairs": [
+      {
+        "left": "error",
+        "right": "Recusa, que é o padrão"
+      },
+      {
+        "left": "overwrite",
+        "right": "Substitui"
+      },
+      {
+        "left": "append",
+        "right": "Acrescenta arquivos ao lado dos antigos"
+      },
+      {
+        "left": "ignore",
+        "right": "Não faz nada"
+      }
+    ]
+  },
+  "ex-7agwa84w": {
+    "prompt": "Um job noturno escreve com `mode(\"append\")` e é rodado duas vezes por engano. O que acontece?",
+    "hint": "O append acrescenta arquivos.",
+    "choices": [
+      {
+        "text": "A segunda execução falha porque os arquivos existem",
+        "why": "Esse é o modo `error`, não o `append`."
+      },
+      {
+        "text": "Os dados daquele dia dobram, sem erro",
+        "why": "Isso. Os formatos de tabela da aula 11 são uma cura."
+      },
+      {
+        "text": "O Spark percebe as linhas duplicadas e as pula",
+        "why": "O append não confere nada."
+      },
+      {
+        "text": "Os arquivos da primeira execução são substituídos",
+        "why": "Esse é o `overwrite`."
+      }
+    ]
+  },
+  "ex-1hrxr00k": {
+    "prompt": "No `spark-sql`, o que quer dizer ``parquet.`data/silver/books` ``?",
+    "hint": "Nenhuma tabela jamais foi definida.",
+    "choices": [
+      {
+        "text": "Uma tabela `books` num banco chamado `parquet`",
+        "why": "Não existe esse banco; `parquet` nomeia o formato."
+      },
+      {
+        "text": "Os arquivos Parquet naquele caminho, usados como tabela",
+        "why": "Isso. Um jeito de consultar arquivos onde iria o nome de uma tabela."
+      },
+      {
+        "text": "Uma view criada pelo `to_parquet.py`",
+        "why": "Views só vivem dentro do programa que as criou."
+      },
+      {
+        "text": "Um comando para converter os livros do CSV para o formato Parquet",
+        "why": "Ele só lê."
+      }
+    ]
+  },
+  "ex-vag28nyg": {
+    "prompt": "Quanto dura uma view criada com `createOrReplaceTempView`?",
+    "hint": "Temporária.",
+    "choices": [
+      {
+        "text": "Enquanto durar a sessão",
+        "why": "Isso. Nomes que sobrevivem a programas precisam de um catálogo (aula 12)."
+      },
+      {
+        "text": "Uma consulta",
+        "why": "Quantas consultas quiser na mesma sessão podem usá-la."
+      },
+      {
+        "text": "Até o cluster ser reiniciado",
+        "why": "Ela morre com o programa, bem antes."
+      },
+      {
+        "text": "Para sempre, no `spark-warehouse`",
+        "why": "Nada é gravado para uma view temporária."
+      }
+    ]
+  },
+  "ex-dhatrbv8": {
+    "prompt": "Por que as versões DataFrame e SQL levaram o mesmo tempo?",
+    "hint": "Quem compila as duas?",
+    "choices": [
+      {
+        "text": "As duas por acaso são curtas",
+        "why": "O tamanho do código não decide a velocidade."
+      },
+      {
+        "text": "O SQL é traduzido para a versão RDD",
+        "why": "A versão RDD foi mais lenta; o SQL não é isso."
+      },
+      {
+        "text": "A segunda reaproveitou o resultado da primeira",
+        "why": "Nada ficou em cache; cada uma leu os arquivos."
+      },
+      {
+        "text": "Elas compilam para o mesmo plano",
+        "why": "Isso. Duas grafias, um planejador, um plano."
+      }
+    ]
+  },
+  "ex-mtm1gqn1": {
+    "prompt": "Por que a versão RDD foi a mais lenta das três?",
+    "hint": "Do que são feitos o filter e o map dela?",
+    "choices": [
+      {
+        "text": "Ele leu Parquet em vez de CSV",
+        "why": "Ele leu os mesmos arquivos CSV."
+      },
+      {
+        "text": "Ele contou outra coisa",
+        "why": "As três respostas foram idênticas."
+      },
+      {
+        "text": "As funções são Python, e cada linha vai ao Python e volta",
+        "why": "Isso. E para um RDD a linha é uma string, então nenhuma coluna pode ser pulada."
+      },
+      {
+        "text": "RDDs não usam mais de um executor",
+        "why": "Ele rodou nos três."
+      }
+    ]
+  },
+  "ex-nndd9xzk": {
+    "prompt": "Ligue cada situação à API que a aula sugere.",
+    "hint": "Perguntas em forma de tabela não precisam de RDDs.",
+    "pairs": [
+      {
+        "left": "Uma consulta de relatório lida por analistas que sabem SQL",
+        "right": "SQL"
+      },
+      {
+        "left": "Um pipeline cujas colunas são escolhidas em tempo de execução",
+        "right": "A API de DataFrame"
+      },
+      {
+        "left": "Registros sem nenhum formato de tabela",
+        "right": "O RDD"
+      }
+    ]
+  },
+  "ex-kc6bbjbz": {
+    "prompt": "Um programa lê os cliques, filtra as compras, e depois chama `count()`, `show()` e `write.parquet()` sobre o resultado. Quantas vezes os arquivos são lidos?",
+    "hint": "Conte as ações.",
+    "choices": [
+      {
+        "text": "Quatro, contando o filtro",
+        "why": "O filtro é uma transformação e não lê nada sozinho."
+      },
+      {
+        "text": "Três, uma por ação",
+        "why": "Isso. Cada ação é um job, e nada fica guardado entre eles."
+      },
+      {
+        "text": "Uma vez, porque o Spark guarda o que leu",
+        "why": "Não sem você pedir, que é a aula 9."
+      },
+      {
+        "text": "Uma vez, quando os arquivos são abertos",
+        "why": "Abrir não lê nada; cada ação lê tudo."
+      }
+    ]
+  },
+  "ex-jvcjyd26": {
+    "prompt": "Um job lê CSV com `inferSchema` e calcula o dia da semana com uma UDF Python. Que mudança economiza mais, e por quê?",
+    "hint": "Os dois custos medidos se aplicam aqui.",
+    "choices": [
+      {
+        "text": "Nada; os dois custos são fixos",
+        "why": "Os dois são evitáveis e crescem com os dados."
+      },
+      {
+        "text": "As duas: um esquema declarado e o `dayofweek` nativo",
+        "why": "Isso. Uma tira uma leitura extra inteira, a outra a viagem ao Python por linha."
+      },
+      {
+        "text": "Mais executores e memória, mantendo cada linha do código como está",
+        "why": "Os dois custos crescem com os dados, e mais executores só os espalham."
+      },
+      {
+        "text": "Reescrever o job com RDDs",
+        "why": "Isso mantém o Python por linha e perde o planejador."
+      }
+    ]
+  }
+}

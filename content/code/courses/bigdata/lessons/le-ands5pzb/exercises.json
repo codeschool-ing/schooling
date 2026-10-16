@@ -1,0 +1,565 @@
+[
+  {
+    "id": "ex-10t7z7gh",
+    "version": 1,
+    "section": "the-ecosystem",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Hadoop project to what mostly replaced it in new work.",
+    "hint": "Lessons 3, 4 and 13.",
+    "pairs": [
+      {
+        "left": "MapReduce",
+        "right": "Spark"
+      },
+      {
+        "left": "YARN",
+        "right": "Kubernetes"
+      },
+      {
+        "left": "HDFS in the cloud",
+        "right": "Object storage"
+      }
+    ],
+    "right_distractors": [
+      "Hive's metastore"
+    ]
+  },
+  {
+    "id": "ex-zad22zv7",
+    "version": 1,
+    "section": "yarn",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each YARN role to what it does.",
+    "hint": "One per cluster, one per machine, one per application.",
+    "pairs": [
+      {
+        "left": "ResourceManager",
+        "right": "Decides which application gets which resources"
+      },
+      {
+        "left": "NodeManager",
+        "right": "Starts containers on its machine"
+      },
+      {
+        "left": "ApplicationMaster",
+        "right": "Asks for containers and runs one application's tasks"
+      }
+    ],
+    "right_distractors": [
+      "Stores the blocks of files"
+    ]
+  },
+  {
+    "id": "ex-e5r5s44a",
+    "version": 1,
+    "section": "yarn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a YARN container?",
+    "hint": "What does a NodeManager start?",
+    "choices": [
+      {
+        "text": "A Docker image of the job",
+        "correct": false,
+        "why": "YARN containers need no image."
+      },
+      {
+        "text": "A process with fixed memory and cores",
+        "correct": true,
+        "why": "Right. Tasks and ApplicationMasters run in them."
+      },
+      {
+        "text": "A queue holding waiting applications",
+        "correct": false,
+        "why": "Queues hold shares, containers run work."
+      },
+      {
+        "text": "A directory in HDFS for a job's output",
+        "correct": false,
+        "why": "Output goes where the job writes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ykj3t3m",
+    "version": 1,
+    "section": "mapreduce-on-yarn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The streaming job took nearly twice as long on YARN as on the local runner. Why, on one machine?",
+    "hint": "What is each map task on YARN?",
+    "choices": [
+      {
+        "text": "Each task was a new Java process",
+        "correct": true,
+        "why": "Right. The local runner reused one process."
+      },
+      {
+        "text": "YARN ran the mapper twice for safety",
+        "correct": false,
+        "why": "Ten maps launched, ten blocks."
+      },
+      {
+        "text": "YARN reads HDFS through the network card",
+        "correct": false,
+        "why": "Every map read a block on the same machine."
+      },
+      {
+        "text": "The answer was computed on a different file",
+        "correct": false,
+        "why": "Same file, same four counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-t44p5mcj",
+    "version": 1,
+    "section": "mapreduce-on-yarn",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A 1.2 GB file in HDFS with 128 MB blocks: how many map tasks does MapReduce launch?",
+    "hint": "One per block.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1r2cmqnv",
+    "version": 1,
+    "section": "spark-on-yarn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In YARN cluster mode, why did the counts not appear in the terminal?",
+    "hint": "Where does the driver run?",
+    "choices": [
+      {
+        "text": "The job failed before printing",
+        "correct": false,
+        "why": "The log holds the four counts."
+      },
+      {
+        "text": "Spark on YARN discards standard output",
+        "correct": false,
+        "why": "It is kept in the container's log."
+      },
+      {
+        "text": "`print` only works in client mode",
+        "correct": false,
+        "why": "It works; it writes where the driver is."
+      },
+      {
+        "text": "It printed to a container's log",
+        "correct": true,
+        "why": "Right. `yarn logs` fetched it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3216ggwe",
+    "version": 1,
+    "section": "spark-on-yarn",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each deploy mode to where the driver runs.",
+    "hint": "Cluster mode outlives a closed laptop.",
+    "pairs": [
+      {
+        "left": "Client mode",
+        "right": "On the machine that ran spark-submit"
+      },
+      {
+        "left": "Cluster mode",
+        "right": "In the ApplicationMaster's container"
+      }
+    ],
+    "right_distractors": [
+      "On every executor at once"
+    ]
+  },
+  {
+    "id": "ex-dmntdd5b",
+    "version": 1,
+    "section": "spark-on-yarn",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An executor asks for 512 MB of heap and 256 MB of overhead, in a cluster that allocates in steps of 256 MB. How many MB is its container?",
+    "hint": "Heap plus overhead, rounded up to a step.",
+    "value": 768,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9hwakdr5",
+    "version": 1,
+    "section": "queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `maximum-capacity` equal to `capacity` for the nightly queue, what happens when the analysts are idle?",
+    "hint": "Can nightly borrow?",
+    "choices": [
+      {
+        "text": "Nightly takes the whole cluster",
+        "correct": false,
+        "why": "Its maximum is its 70%."
+      },
+      {
+        "text": "YARN shuts the idle queue down",
+        "correct": false,
+        "why": "Queues stay; only their use changes."
+      },
+      {
+        "text": "The analysts' share moves to the next day",
+        "correct": false,
+        "why": "Capacity is not saved up."
+      },
+      {
+        "text": "Their 30% sits idle",
+        "correct": true,
+        "why": "Right. That is the cap's cost, and preemption's reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5crmke8",
+    "version": 1,
+    "section": "queues",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When a queue that lent its idle share wants it back, the scheduler kills some of the borrower's containers. This is called ___.",
+    "hint": "It begins with pre-.",
+    "blanks": [
+      {
+        "accept": [
+          "preemption",
+          "pre-emption"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-chvqxqtv",
+    "version": 1,
+    "section": "the-metastore",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Hive's metastore hold for a table? Choose all that apply.",
+    "hint": "Everything but the data.",
+    "choices": [
+      {
+        "text": "Its location and format",
+        "correct": true,
+        "why": "Yes. That is why `by_name.py` needed no path."
+      },
+      {
+        "text": "Its partitions",
+        "correct": true,
+        "why": "Yes: 365 of them after `MSCK REPAIR TABLE`."
+      },
+      {
+        "text": "A copy of the rows",
+        "correct": false,
+        "why": "The rows stay in the files."
+      },
+      {
+        "text": "Statistics from `ANALYZE TABLE`",
+        "correct": true,
+        "why": "Yes, which the planner reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvp9g5gd",
+    "version": 1,
+    "section": "the-metastore",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Right after `CREATE TABLE ... LOCATION`, why was `MSCK REPAIR TABLE` still needed for the clicks?",
+    "hint": "What did the `CREATE` not register?",
+    "choices": [
+      {
+        "text": "The Parquet files were damaged",
+        "correct": false,
+        "why": "Nothing was wrong with them."
+      },
+      {
+        "text": "The data had to be copied into the warehouse",
+        "correct": false,
+        "why": "An external table copies nothing."
+      },
+      {
+        "text": "The `day=` partitions were not yet in the metastore",
+        "correct": true,
+        "why": "Right. It walks the directory and adds them."
+      },
+      {
+        "text": "The table's schema had to be typed by hand",
+        "correct": false,
+        "why": "It was inferred from the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9asna8g",
+    "version": 1,
+    "section": "the-metastore",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ANALYZE TABLE` reported 2,963 distinct books where there are 3,000. Why?",
+    "hint": "How does Spark count distinct values here?",
+    "choices": [
+      {
+        "text": "It counted only one partition",
+        "correct": false,
+        "why": "The books table is not partitioned."
+      },
+      {
+        "text": "Null values were counted as books",
+        "correct": false,
+        "why": "`num_nulls` was 0."
+      },
+      {
+        "text": "It uses HyperLogLog, an approximate sketch",
+        "correct": true,
+        "why": "Right: a few percent off, for little memory."
+      },
+      {
+        "text": "37 of the books were deleted by the metastore itself",
+        "correct": false,
+        "why": "The metastore never touches rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg58t5hj",
+    "version": 1,
+    "section": "the-metastore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a production metastore run as a service on PostgreSQL or MySQL?",
+    "hint": "How many processes can open the embedded Derby?",
+    "choices": [
+      {
+        "text": "Derby cannot store table names",
+        "correct": false,
+        "why": "It stored them here."
+      },
+      {
+        "text": "The data files must live inside the database",
+        "correct": false,
+        "why": "The files stay in the lake."
+      },
+      {
+        "text": "Embedded Derby admits one process at a time",
+        "correct": true,
+        "why": "Right, and many engines must share one catalogue."
+      },
+      {
+        "text": "Spark refuses to read Derby after a day",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-px4rb4bk",
+    "version": 1,
+    "section": "sql-over-jdbc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Spark's Thrift server let a business intelligence tool do?",
+    "hint": "JDBC.",
+    "choices": [
+      {
+        "text": "Read HDFS blocks directly",
+        "correct": false,
+        "why": "Spark reads the files behind the server."
+      },
+      {
+        "text": "Skip the metastore",
+        "correct": false,
+        "why": "It uses the metastore to find tables."
+      },
+      {
+        "text": "Write Spark programs without Python",
+        "correct": false,
+        "why": "It runs SQL, not programs."
+      },
+      {
+        "text": "Send SQL over JDBC and get rows back",
+        "correct": true,
+        "why": "Right, as `beeline` did."
+      }
+    ]
+  },
+  {
+    "id": "ex-01w3wjxa",
+    "version": 1,
+    "section": "hbase",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did HBase return one visitor's events at once but take seconds to count the table?",
+    "hint": "How are rows kept?",
+    "choices": [
+      {
+        "text": "HBase keeps only the last week in memory",
+        "correct": false,
+        "why": "Nothing here depends on dates."
+      },
+      {
+        "text": "The visitor's events were cached in the shell",
+        "correct": false,
+        "why": "It was the first query of that shell."
+      },
+      {
+        "text": "Rows are sorted by key, and a count reads them all",
+        "correct": true,
+        "why": "Right. A key prefix is a short range."
+      },
+      {
+        "text": "Counting runs on MapReduce",
+        "correct": false,
+        "why": "The shell's count is a plain scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-ney4b52r",
+    "version": 1,
+    "section": "hbase",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a row key that starts with the time a poor design?",
+    "hint": "Where does every new row land?",
+    "choices": [
+      {
+        "text": "HBase cannot sort timestamps",
+        "correct": false,
+        "why": "It sorts bytes; times sort fine."
+      },
+      {
+        "text": "Times are too long to be keys",
+        "correct": false,
+        "why": "Keys can be far longer."
+      },
+      {
+        "text": "Two rows could never share a time",
+        "correct": false,
+        "why": "They can, which is why an id is appended."
+      },
+      {
+        "text": "Every new row lands at the end, on one server",
+        "correct": true,
+        "why": "Right: a hotspot, lesson 8's skew in a database."
+      }
+    ]
+  },
+  {
+    "id": "ex-478k60ba",
+    "version": 1,
+    "section": "what-survived",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Hadoop idea to where it lives today.",
+    "hint": "The ideas outlived the programs.",
+    "pairs": [
+      {
+        "left": "Containers and queues",
+        "right": "Kubernetes pods and namespace quotas"
+      },
+      {
+        "left": "Map, shuffle by key, reduce",
+        "right": "Spark's stages"
+      },
+      {
+        "left": "A database of table names and locations",
+        "right": "Every engine's catalogue"
+      }
+    ],
+    "right_distractors": [
+      "CSV files"
+    ]
+  },
+  {
+    "id": "ex-fd29ymhs",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each need to the tool of this lesson that meets it.",
+    "hint": "One row, many rows, many teams, many users.",
+    "pairs": [
+      {
+        "left": "A website fetches one visitor's recent events",
+        "right": "HBase"
+      },
+      {
+        "left": "Two teams share one cluster without waiting on each other",
+        "right": "YARN queues"
+      },
+      {
+        "left": "Queries name tables instead of paths",
+        "right": "The Hive metastore"
+      },
+      {
+        "left": "A BI tool sends SQL to the cluster",
+        "right": "The Thrift server"
+      }
+    ],
+    "right_distractors": [
+      "HDFS replication"
+    ]
+  },
+  {
+    "id": "ex-jeze37q3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly Python job is started from a laptop that goes to sleep at midnight. How should it be submitted to YARN?",
+    "hint": "Where should the driver live?",
+    "choices": [
+      {
+        "text": "In client mode with more memory",
+        "correct": false,
+        "why": "The driver would still sleep with the laptop."
+      },
+      {
+        "text": "In cluster mode",
+        "correct": true,
+        "why": "Right. The driver lives on the cluster."
+      },
+      {
+        "text": "On the standalone cluster in cluster mode",
+        "correct": false,
+        "why": "Standalone cannot run Python drivers that way."
+      },
+      {
+        "text": "With `--num-executors 0`",
+        "correct": false,
+        "why": "No executors, no work."
+      }
+    ]
+  }
+]

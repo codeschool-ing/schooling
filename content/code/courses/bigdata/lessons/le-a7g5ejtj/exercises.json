@@ -1,0 +1,625 @@
+[
+  {
+    "id": "ex-v2vtz1na",
+    "version": 1,
+    "section": "what-skew-looks-like",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did one task of the join read all 960,905 of the crawler's events?",
+    "hint": "How does a shuffle choose a partition for a row?",
+    "choices": [
+      {
+        "text": "The crawler's events were all in one file",
+        "correct": false,
+        "why": "They are spread over every day's file."
+      },
+      {
+        "text": "They share one key, and one key hashes to one partition",
+        "correct": true,
+        "why": "Right. The hash cannot split a single value."
+      },
+      {
+        "text": "Spark sends the largest key to the first task",
+        "correct": false,
+        "why": "The partition comes from the key's hash, not its size."
+      },
+      {
+        "text": "Adaptive execution merged all of its partitions into one",
+        "correct": false,
+        "why": "Adaptive execution was off in skew.py."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4xh87mv",
+    "version": 1,
+    "section": "what-skew-looks-like",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does speculative execution not rescue a stage held up by a skewed partition?",
+    "hint": "What would the copy of the task have to read?",
+    "choices": [
+      {
+        "text": "A copy has the same data to get through",
+        "correct": true,
+        "why": "Right. The task is slow because of its data, not its machine."
+      },
+      {
+        "text": "Speculation is switched off for joins",
+        "correct": false,
+        "why": "It applies to any stage."
+      },
+      {
+        "text": "The copy would overwrite the first task's output",
+        "correct": false,
+        "why": "Spark keeps whichever finishes first."
+      },
+      {
+        "text": "Copies are only launched for map tasks",
+        "correct": false,
+        "why": "Reduce tasks can be copied too."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfa15520",
+    "version": 1,
+    "section": "what-skew-looks-like",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The median task read 123,862 rows and the largest 1,086,798. How many times the median did the largest read? Round to the nearest whole number.",
+    "hint": "Divide.",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-q5znkpxe",
+    "version": 1,
+    "section": "finding-the-hot-key",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these commonly make a hot key? Choose all that apply.",
+    "hint": "Three kinds were named.",
+    "choices": [
+      {
+        "text": "A crawler or monitoring check",
+        "correct": true,
+        "why": "Yes. That is `v0000000`."
+      },
+      {
+        "text": "One very large customer",
+        "correct": true,
+        "why": "Yes. The data is right and the distribution is the business."
+      },
+      {
+        "text": "A key stored as a string rather than a number",
+        "correct": false,
+        "why": "The type does not change how many rows share a value."
+      },
+      {
+        "text": "A `NULL` or `unknown` written where a value was missing",
+        "correct": true,
+        "why": "Yes. Every row with nothing to say shares it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gg66jr07",
+    "version": 1,
+    "section": "finding-the-hot-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hot key is a crawler whose events no report needs. What is the simplest cure?",
+    "hint": "Do the rows belong in the job at all?",
+    "choices": [
+      {
+        "text": "Salt the join key with eight values",
+        "correct": false,
+        "why": "That works, and costs a copy of the small side for rows nobody wants."
+      },
+      {
+        "text": "Filter its rows out before the join",
+        "correct": true,
+        "why": "Right. The skew goes with the rows."
+      },
+      {
+        "text": "Raise `spark.sql.shuffle.partitions` to 2,000",
+        "correct": false,
+        "why": "One key still lands in one partition."
+      },
+      {
+        "text": "Give the executors more memory",
+        "correct": false,
+        "why": "The task stays as long as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tm5w3pr",
+    "version": 1,
+    "section": "join-strategies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each join strategy to what it moves.",
+    "hint": "Two of them shuffle both sides.",
+    "pairs": [
+      {
+        "left": "Broadcast hash join",
+        "right": "The small side, whole, to every executor"
+      },
+      {
+        "left": "Sort-merge join",
+        "right": "Both sides by key, then a sort of each partition"
+      },
+      {
+        "left": "Shuffle hash join",
+        "right": "Both sides by key, then a hash table per partition"
+      }
+    ],
+    "right_distractors": [
+      "Nothing: each side stays where it was read"
+    ]
+  },
+  {
+    "id": "ex-vcddj93a",
+    "version": 1,
+    "section": "join-strategies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the sort-merge join Spark's default for two large tables?",
+    "hint": "What happens when a partition is bigger than memory?",
+    "choices": [
+      {
+        "text": "Its sort spills to disk, so no side must fit in memory",
+        "correct": true,
+        "why": "Right. A hash table has nowhere to go when it is too big."
+      },
+      {
+        "text": "It moves fewer rows across the network than any other",
+        "correct": false,
+        "why": "It shuffles both sides; a broadcast moves far less."
+      },
+      {
+        "text": "It needs no shuffle on either side",
+        "correct": false,
+        "why": "It shuffles both."
+      },
+      {
+        "text": "It is the only one that handles a range condition",
+        "correct": false,
+        "why": "Range-only joins use a nested loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0112bws",
+    "version": 1,
+    "section": "join-strategies",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the DataFrame API, `clicks.join(F.___(books), \"book_id\")` asks Spark to copy the books to every task.",
+    "hint": "The strategy's own name.",
+    "blanks": [
+      {
+        "accept": [
+          "broadcast"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zhfnq7qh",
+    "version": 1,
+    "section": "broadcast-join",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The planner broadcast the visitors when the query used only `visitor_id`, and not when it also used `first_day`. Why?",
+    "hint": "What does it scale its size estimate by?",
+    "choices": [
+      {
+        "text": "Dates cannot be held in a broadcast hash table",
+        "correct": false,
+        "why": "Any column can."
+      },
+      {
+        "text": "A join with a second condition cannot be broadcast",
+        "correct": false,
+        "why": "Extra conditions are applied after the match."
+      },
+      {
+        "text": "Adaptive execution switched it back",
+        "correct": false,
+        "why": "Both plans were the planner's first ones."
+      },
+      {
+        "text": "The extra column pushed the size estimate over 10 MB",
+        "correct": true,
+        "why": "Right. The estimate is scaled to the columns used."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba6gc1kg",
+    "version": 1,
+    "section": "broadcast-join",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a broadcast join not suffer from the crawler?",
+    "hint": "Where do the crawler's events stay?",
+    "choices": [
+      {
+        "text": "It drops keys with more than a million rows",
+        "correct": false,
+        "why": "No join drops matching rows."
+      },
+      {
+        "text": "The crawler fits in the driver",
+        "correct": false,
+        "why": "The visitors are what is broadcast, not the events."
+      },
+      {
+        "text": "The large side is never shuffled by key",
+        "correct": true,
+        "why": "Right. Each task joins the rows it read against the whole table."
+      },
+      {
+        "text": "It salts every key automatically before the join",
+        "correct": false,
+        "why": "It needs no salt, because there is no shuffle on that side."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt1zbp06",
+    "version": 1,
+    "section": "when-broadcast-hurts",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where must a broadcast side fit in memory? Choose all that apply.",
+    "hint": "It is paid for twice.",
+    "choices": [
+      {
+        "text": "In the driver, which collects it and builds the table",
+        "correct": true,
+        "why": "Yes. That is where too_big.py failed."
+      },
+      {
+        "text": "In the history server",
+        "correct": false,
+        "why": "It only reads event logs."
+      },
+      {
+        "text": "In the master, which hands it to the workers",
+        "correct": false,
+        "why": "The master hands out cores, not data."
+      },
+      {
+        "text": "In every executor, which keeps a whole copy",
+        "correct": true,
+        "why": "Yes, for as long as the join runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-44zmbnp7",
+    "version": 1,
+    "section": "when-broadcast-hurts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job fails with \"Not enough memory to build and broadcast the table\" after a hint. What is the fix?",
+    "hint": "Which way out keeps the other broadcasts?",
+    "choices": [
+      {
+        "text": "Set `spark.sql.autoBroadcastJoinThreshold` to -1 for the whole cluster",
+        "correct": false,
+        "why": "It switches off the broadcasts that were helping."
+      },
+      {
+        "text": "Raise `spark.sql.broadcastTimeout`",
+        "correct": false,
+        "why": "The failure was memory, not time."
+      },
+      {
+        "text": "Double `spark.driver.memory` and run it again",
+        "correct": false,
+        "why": "It moves the wall without removing it."
+      },
+      {
+        "text": "Replace that hint with `hint(\"merge\")`",
+        "correct": true,
+        "why": "Right. It fixes the one join and leaves the rest alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-26xvm7dk",
+    "version": 1,
+    "section": "salting",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A visitors table of 1.7 million rows is salted with 8 values for every visitor. How many million rows does the salted visitors side have?",
+    "hint": "One copy per salt.",
+    "value": 13.6,
+    "tolerance": 0.3
+  },
+  {
+    "id": "ex-892xbf1w",
+    "version": 1,
+    "section": "salting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is the salt taken from a hash of `event_id` rather than from `rand()`?",
+    "hint": "What happens when a task is run a second time?",
+    "choices": [
+      {
+        "text": "A hash spreads the hot key more evenly than chance",
+        "correct": false,
+        "why": "Both spread it about as evenly."
+      },
+      {
+        "text": "A retried task gets the same salts as the first try",
+        "correct": true,
+        "why": "Right. A random salt could send a row somewhere else on the retry."
+      },
+      {
+        "text": "`rand()` is not allowed inside a join",
+        "correct": false,
+        "why": "It is allowed; the problem is that it changes."
+      },
+      {
+        "text": "`rand()` cannot produce whole numbers",
+        "correct": false,
+        "why": "Its result can be scaled and rounded."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnfqdhx1",
+    "version": 1,
+    "section": "salting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Salting cut the largest task to under a third. Why did the job take longer?",
+    "hint": "What grew eight times?",
+    "choices": [
+      {
+        "text": "The visitors side was copied eight times and shuffled",
+        "correct": true,
+        "why": "Right. On this lab that cost more than the hot task did."
+      },
+      {
+        "text": "Computing a hash for every event is slower than the join",
+        "correct": false,
+        "why": "A hash per row is cheap next to a shuffle."
+      },
+      {
+        "text": "The salted join gave a different answer",
+        "correct": false,
+        "why": "The answer was the same."
+      },
+      {
+        "text": "Salting disables the sort-merge join",
+        "correct": false,
+        "why": "The plan was still a sort-merge join."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdedhgem",
+    "version": 1,
+    "section": "aqe-skew-join",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did adaptive execution leave this lab's hot partition alone at its default settings?",
+    "hint": "Two conditions must both hold.",
+    "choices": [
+      {
+        "text": "Skew handling only runs on clusters of more than one machine",
+        "correct": false,
+        "why": "It ran here once the thresholds were lowered."
+      },
+      {
+        "text": "The join was a broadcast, which has no partitions to split",
+        "correct": false,
+        "why": "Broadcasting was switched off."
+      },
+      {
+        "text": "Adaptive execution only splits partitions of a `groupBy`",
+        "correct": false,
+        "why": "It is the other way round: joins, not groupings."
+      },
+      {
+        "text": "It was under 256 MB and under five times the median",
+        "correct": true,
+        "why": "Right. 3,236 KiB against a median of 760."
+      }
+    ]
+  },
+  {
+    "id": "ex-shffg6py",
+    "version": 1,
+    "section": "aqe-skew-join",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the run, the join line of the plan read `SortMergeJoin(___=true)`, which is adaptive execution saying it split a partition.",
+    "hint": "The lesson's own subject, in one word.",
+    "blanks": [
+      {
+        "accept": [
+          "skew"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f4yz7497",
+    "version": 1,
+    "section": "repartition-and-coalesce",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call to what it does.",
+    "hint": "Only one of them avoids a shuffle.",
+    "pairs": [
+      {
+        "left": "`coalesce(4)`",
+        "right": "Merges neighbouring partitions without a shuffle"
+      },
+      {
+        "left": "`repartition(4)`",
+        "right": "Deals every row out in turn, into equal partitions"
+      },
+      {
+        "left": "`repartition(\"device\")`",
+        "right": "Puts every row of a value in one partition"
+      }
+    ],
+    "right_distractors": [
+      "Sorts every partition by its key"
+    ]
+  },
+  {
+    "id": "ex-9t9bm71t",
+    "version": 1,
+    "section": "repartition-and-coalesce",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can `coalesce(1)` before a write be slower than `repartition(1)`?",
+    "hint": "Without a shuffle, where does the stage end?",
+    "choices": [
+      {
+        "text": "It writes one file per input partition",
+        "correct": false,
+        "why": "It writes one file."
+      },
+      {
+        "text": "The work before it also runs as one task",
+        "correct": true,
+        "why": "Right. No shuffle separates them, so the whole stage has one task."
+      },
+      {
+        "text": "It sorts the data first",
+        "correct": false,
+        "why": "Neither call sorts."
+      },
+      {
+        "text": "It shuffles twice",
+        "correct": false,
+        "why": "It does not shuffle at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd2demyj",
+    "version": 1,
+    "section": "partitioning-on-write",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A write does `repartition(50)` and then `partitionBy(\"day\")` on 31 days, with rows of every day in every task. How many files does it write?",
+    "hint": "Each task writes into every directory it has rows for.",
+    "value": 1550,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n8ggwac1",
+    "version": 1,
+    "section": "partitioning-on-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which writes one file per day directory?",
+    "hint": "Gather each day into one task first.",
+    "choices": [
+      {
+        "text": "`repartition(\"day\")`, then `partitionBy(\"day\")`",
+        "correct": true,
+        "why": "Right. All of a day's rows are in one task."
+      },
+      {
+        "text": "`partitionBy(\"day\")` straight after reading the input files",
+        "correct": false,
+        "why": "A read partition can hold several days, and a day can span partitions."
+      },
+      {
+        "text": "`repartition(31)`, then `partitionBy(\"day\")`",
+        "correct": false,
+        "why": "Rows are dealt in turn, so each task holds every day."
+      },
+      {
+        "text": "`maxRecordsPerFile` set to 31",
+        "correct": false,
+        "why": "That caps rows per file, and makes many more files."
+      }
+    ]
+  },
+  {
+    "id": "ex-c67mnrzk",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each situation to the first cure to try.",
+    "hint": "Ask first whether the small side fits in memory.",
+    "pairs": [
+      {
+        "left": "A skewed join whose small side is 30 MB",
+        "right": "Broadcast the small side"
+      },
+      {
+        "left": "The hot key is `NULL` and no report needs those rows",
+        "right": "Filter the rows out before the join"
+      },
+      {
+        "left": "Two large tables, one hot customer, Spark 4 with default settings",
+        "right": "Let adaptive execution split the partition"
+      },
+      {
+        "left": "A partitioned write left 1,500 files of 30 KiB",
+        "right": "Repartition by the partition column first"
+      }
+    ],
+    "right_distractors": [
+      "Raise spark.sql.shuffle.partitions"
+    ]
+  },
+  {
+    "id": "ex-76xm0t0h",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of salting a skewed join in order.",
+    "hint": "The large side gets its salt before the small side is copied.",
+    "items": [
+      "Find the hot key by counting rows per key",
+      "Add a salt from a hash to every row of the large side",
+      "Copy the small side once per salt value",
+      "Join on the key and the salt together"
+    ]
+  }
+]
