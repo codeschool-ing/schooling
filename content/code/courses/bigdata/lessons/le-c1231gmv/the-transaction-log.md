@@ -18,7 +18,8 @@ files first, where no reader looks, and then creates the next file of the log, s
 `00000000000000000003.json`. If two writers race for the same number, the filesystem lets exactly one
 create it; the other finds the number taken, reads what changed, and retries as number 4 if the two
 did not conflict. Until the log file exists, the new data files are invisible; once it does, all of
-them are visible at once. This is *optimistic concurrency*: no locks, and a check at the end. HDFS and a local disk refuse to
+them are visible at once. This is *optimistic concurrency*: no locks, and a check at the end. HDFS
+and a local disk refuse to
 create a file that exists; on an object store Delta relies on the store's conditional writes, or on a
 coordinating service where the store has none.
 
@@ -48,5 +49,6 @@ total 136664
 ```
 
 `spark-submit --packages io.delta:delta-spark_2.13:4.3.1` would fetch Delta and what it needs from
-Maven Central by itself, and check for it again at the start of every run; the jars on disk make each run start the same way
+Maven Central by itself, and check for it again at the start of every run. The jars on disk make
+each run start the same way
 with no network, and `--jars` hands them to the driver and to every executor.

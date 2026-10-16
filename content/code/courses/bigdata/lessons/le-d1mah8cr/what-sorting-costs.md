@@ -23,6 +23,6 @@ and `ts` lost their order, so the codec found less to work with.
 **So a sort order is a choice about which questions get fast**, paid for in size and in every other
 column. The usual choice is the column most queries filter on that is not already a partition:
 here, perhaps the book, if the analysts' questions are about books. And the row group size is a
-choice between skipping finely and keeping dictionaries whole. 256 KB was chosen here to make a
-1 MB file hold several row groups; on real tables, with files of hundreds of megabytes, the default
+choice between skipping finely and keeping dictionaries whole. 256 KB was chosen here to make a 1 MB
+file hold several row groups. On real tables, with files of hundreds of megabytes, the default
 128 MB row group already gives a file several, and the problem of this section mostly goes away.

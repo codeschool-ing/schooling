@@ -12,7 +12,8 @@ the tills ever did, and the tools that coped with the orders stop coping with th
 
 The course runs on **Apache Spark**, the engine most companies use when data outgrows one machine,
 driven from Python. It goes through what Spark is built on as well, because a job is only tuned by
-somebody who knows what it turned into: the cluster and its scheduler (lesson 2), a filesystem
+somebody who knows what it turned into. That means the cluster and its scheduler (lesson 2), a
+filesystem
 spread over many disks (lesson 3), and MapReduce, the model Spark replaced (lesson 4). Then Spark
 itself, from the API to the plan it makes of your code (lessons 5 and 6), what happens when a job
 runs on many workers at once (lessons 7 to 9), and how the files underneath are laid out (lessons 10

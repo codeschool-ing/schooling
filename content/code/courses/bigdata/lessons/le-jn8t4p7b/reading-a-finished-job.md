@@ -43,9 +43,10 @@ stage  tasks  wall s  task s  input MiB  shuffle MiB  spill MiB  name
 ```
 
 **Read it from the top.** The slowest stage has 2,000 tasks between them reading under 10 MiB of
-shuffle: it is the sort-merge join, cut into the fixed 2,000 partitions, and it is also where the
+shuffle: it is the sort-merge join, cut into the fixed 2,000 partitions. It is also where the
 Python function ran on every purchase before the counts. 172.6 task-seconds, the most of any stage,
-and the second, third and fourth fixes are all about it. The next one read the raw CSV, all 239 MiB of gzipped text in
+and the second, third and fourth fixes are all about it. The next one read the raw CSV, all 239 MiB
+of gzipped text in
 14 tasks, for 57 task-seconds: the first fix. Two more stages of 2,000 tasks each follow, the final
 grouping and the sort of the result, every task reading almost nothing.
 

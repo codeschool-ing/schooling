@@ -72,7 +72,7 @@ troca, o cluster teve esses três cores livres por meio minuto.
 
 **Num cluster de verdade a resposta de costume é um serviço externo de shuffle**: um processo em cada
 máquina, fora dos executores, que serve os arquivos de shuffle deles depois que se foram, para que um
-executor possa ser liberado assim que fica ocioso. O YARN pode rodar um dentro de cada NodeManager; no
+executor possa ser liberado assim que fica ocioso. O YARN pode rodar um dentro de cada NodeManager. No
 Kubernetes, em que pods não dividem discos, o Spark conta com o shuffle tracking, com migrar os
 arquivos de shuffle para outros executores quando um é avisado de que vai sair, ou com um serviço de
 shuffle remoto, um sistema à parte que guarda dados de shuffle para o cluster inteiro.

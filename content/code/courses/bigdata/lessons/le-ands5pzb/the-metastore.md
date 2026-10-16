@@ -104,10 +104,10 @@ ana@lab:~/big$ spark-submit by_name.py 2>/dev/null
 ```
 
 **No path, no format, no schema in the program**, and the answer came from the files of one day. That
-is what a catalog is for: the people who write queries stop needing to know where the data is, and
+is what a catalogue is for: the people who write queries stop needing to know where the data is, and
 the people who move the data can do so by changing one row in the metastore.
 
 **The embedded Derby database admits one process at a time**, which is why a real metastore runs as
 a service of its own, the *Hive metastore server*, on a PostgreSQL or MySQL database, with every
-Spark, Trino and Hive client pointed at it by `hive.metastore.uris`. Lesson 11's Iceberg catalogs
+Spark, Trino and Hive client pointed at it by `hive.metastore.uris`. Lesson 11's Iceberg catalogues
 and AWS Glue speak the same protocol for the same reason.

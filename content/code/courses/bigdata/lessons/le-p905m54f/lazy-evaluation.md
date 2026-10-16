@@ -47,7 +47,8 @@ It was faster the second time because the operating system had the files in its 
 executors' Python processes were already running, not because Spark kept anything.
 
 **Laziness is what lets Spark plan.** When the action arrives, Spark sees every step at once, from
-the files to the result, and can choose how to run them: fuse the `filter` and the `map` into one
+the files to the result, and can choose how to run them. It can fuse the `filter` and the `map` into
+one
 pass, as the lineage in the last section showed, or, with a DataFrame, read only the columns the
 result needs. A program that ran each line as it was written would have to read everything at the
 first line, before knowing what the last would ask for.

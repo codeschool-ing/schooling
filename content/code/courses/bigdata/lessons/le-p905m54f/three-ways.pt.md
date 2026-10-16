@@ -46,7 +46,7 @@ DataFrame pagou 18,9 segundos por ser o primeiro a ler os arquivos com um esquem
 O DataFrame e o SQL levam o mesmo tempo porque são a mesma coisa: duas grafias de uma consulta,
 compiladas por um planejador num plano só. O RDD é mais lento pelo motivo da UDF da seção 07: o
 `filter` e o `map` dele são funções Python, então cada uma das 24 milhões de linhas vai do Java ao
-Python e volta, e o Spark não pôde deixar de ler coluna nenhuma, porque para um RDD uma linha é uma
+Python e volta. E o Spark não pôde deixar de ler coluna nenhuma, porque para um RDD uma linha é uma
 string e não uma linha de tabela com colunas.
 
 **Escolhendo entre eles**:

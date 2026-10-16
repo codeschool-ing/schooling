@@ -19,6 +19,7 @@ fitting on one machine; fourteen lessons later, the measurements say:
 
 **The habit the course has tried to teach is measuring before believing.** Every claim in it came
 with a number from a run you can repeat, including the ones that went against the lesson's own
-argument: the cures for skew that were slower here, the speculation that could not help on one
+argument. There were the cures for skew that were slower here, the speculation that could not help
+on one
 machine, the cluster that lost to a single process. A tuning guide, this one included, is a list of
 things worth trying; the stages of your own job are what say which one to try first.

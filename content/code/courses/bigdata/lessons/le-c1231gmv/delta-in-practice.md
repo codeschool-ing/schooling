@@ -76,7 +76,7 @@ _staged_commits
 there and wrote nothing. That is how a Delta job is made safe to retry, and it is the fix for this
 lesson's first section, as long as each run of the job brings its own number, the date it is for
 being the usual choice. The log itself is the numbered JSON files with a checksum beside each;
-`_staged_commits` is for tables whose commits go through a catalog service, and is empty here.
+`_staged_commits` is for tables whose commits go through a catalogue service, and is empty here.
 
 **The delete rewrote six files into three.** Parquet files cannot be edited, so `DELETE` read every
 file that held a row of `v0000000`, wrote new ones without those rows, and committed both lists: the

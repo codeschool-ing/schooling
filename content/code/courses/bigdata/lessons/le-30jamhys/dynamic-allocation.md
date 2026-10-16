@@ -72,7 +72,8 @@ cluster had those three cores free for half a minute in exchange.
 
 **On a real cluster the usual answer is an external shuffle service**: a process on each machine,
 outside the executors, that serves their shuffle files after they are gone, so an executor can be
-released as soon as it is idle. YARN can run one inside each NodeManager; on Kubernetes, where pods do
-not share disks, Spark relies on shuffle tracking, on migrating shuffle files to other executors when
+released as soon as it is idle. YARN can run one inside each NodeManager. On Kubernetes, where pods
+do not share disks, Spark relies on shuffle tracking, on migrating shuffle files to other executors
+when
 one is told to leave, or on a remote shuffle service, a separate system that holds shuffle data for
 the whole cluster.

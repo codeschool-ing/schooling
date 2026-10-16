@@ -38,8 +38,9 @@ changes of the last section were needed together.
 
 **Dictionary encoding stores each distinct value once, and each row as a small number pointing to
 it**, with runs of the same number stored as one run: `RLE_DICTIONARY`. It is what made `kind` and
-`device` cheap in the silver layer already. It does less for `visitor_id`, with many thousands of different
-visitors in a day, and nothing at all for a column with a different value in every row; Parquet then
+`device` cheap in the silver layer already. It does less for `visitor_id`, with many thousands of
+different
+visitors in a day, and nothing at all for a column with a different value in every row. Parquet then
 falls back to `PLAIN`, the values one after another, as it did for `ts` in the silver layer.
 
 **None of this needs the reader's help.** Each encoding is written in the footer, and any Parquet

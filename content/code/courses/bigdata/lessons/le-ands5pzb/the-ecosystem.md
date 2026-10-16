@@ -23,7 +23,7 @@ YARN, and around the three grew projects that each answered a complaint about Ma
 ```
 
 This lesson runs the three that a data engineer still meets: YARN, because a great many clusters
-still are YARN clusters; Hive's metastore, because almost every table catalog speaks its protocol;
+still are YARN clusters; Hive's metastore, because almost every table catalogue speaks its protocol;
 and HBase, because the problem it solves did not go away.
 
 The standalone cluster of lesson 1 and YARN would both hand out the same four cores, so the standalone

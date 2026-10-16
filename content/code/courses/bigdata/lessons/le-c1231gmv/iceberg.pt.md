@@ -92,9 +92,9 @@ v4.metadata.json
 version-hint.text
 ```
 
-Quatro versões dos metadados da tabela, a `v1` da criação e uma por commit; uma manifest list por
-snapshot, os arquivos `snap-`; os manifests para os quais elas apontam, os arquivos `-m`, todos em
-Avro; e o `version-hint.text`, o ponteiro que este catálogo de diretório mantém, que guarda o número
+Quatro versões dos metadados da tabela, a `v1` da criação e uma por commit. Uma manifest list por
+snapshot, os arquivos `snap-`, e os manifests para os quais elas apontam, os arquivos `-m`, todos em
+Avro. E o `version-hint.text`, o ponteiro que este catálogo de diretório mantém, que guarda o número
 da versão atual. **Catálogos de produção são serviços**: o metastore do Hive
 da aula 12, o AWS Glue, o Nessie, ou qualquer servidor que fale o protocolo de catálogo REST do
 Iceberg, que é o que deixa motores além do Spark acharem as mesmas tabelas e fazerem commits nelas.

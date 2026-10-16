@@ -6,10 +6,10 @@ version: 1
 **Iceberg came from Netflix, and its first concern was tables of millions of files**, where even
 listing a directory is too slow. Instead of a log replayed from the start, each commit writes a new
 *metadata file* that points to a *manifest list*, which points to *manifests*, which list data files
-with statistics for each. A catalog keeps one pointer per table, to the current metadata file, and a
+with statistics for each. A catalogue keeps one pointer per table, to the current metadata file, and a
 commit is swapping that pointer. Reading a table never lists a directory.
 
-Iceberg tables live in a *catalog*, and this program uses the simplest one, a directory. Save it as
+Iceberg tables live in a *catalogue*, and this program uses the simplest one, a directory. Save it as
 `~/big/iceberg_basics.py`:
 
 ```schooling-example
@@ -91,9 +91,10 @@ v4.metadata.json
 version-hint.text
 ```
 
-Four versions of the table's metadata, `v1` for the creation and one per commit; a manifest list per
-snapshot, the `snap-` files; the manifests they point to, the `-m` files, all of them Avro; and
-`version-hint.text`, the pointer this directory catalog keeps, which holds the number of the current
-version. **Production catalogs are services**: Hive's metastore of
-lesson 12, AWS Glue, Nessie, or any server speaking Iceberg's REST catalog protocol, which is what
+Four versions of the table's metadata, `v1` for the creation and one per commit. A manifest list per
+snapshot, the `snap-` files, and the manifests they point to, the `-m` files, all of them Avro. And
+`version-hint.text`, the pointer this directory catalogue keeps, which holds the number of the
+current
+version. **Production catalogues are services**: Hive's metastore of
+lesson 12, AWS Glue, Nessie, or any server speaking Iceberg's REST catalogue protocol, which is what
 lets engines other than Spark find and commit to the same tables.

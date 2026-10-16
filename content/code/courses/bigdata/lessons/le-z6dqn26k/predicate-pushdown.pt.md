@@ -11,7 +11,7 @@ decodificá-las.
 O Parquet registra o menor e o maior valor de cada coluna para cada *row group*, um bloco de linhas
 dentro de um arquivo. Um row group cujo `kind` vai de `cart` a `view` pode conter uma compra, então é
 lido; um row group cujos valores ficam todos fora do filtro é pulado inteiro. Isso só ajuda quando os
-valores estão agrupados: aqui os eventos de um dia estão em ordem de tempo e todo tipo aparece do
+valores estão agrupados. Aqui os eventos de um dia estão em ordem de tempo e todo tipo aparece do
 começo ao fim, então nenhum row group pôde ser descartado, e o scan de um dia entregou as 65.753
 linhas do dia para o `Filter` acima dele separar. A aula 10 ordena os dados e mede a diferença.
 

@@ -47,7 +47,7 @@ duas vezes. Foi mais rápido na segunda vez porque o sistema operacional tinha o
 os processos Python dos executores já estavam rodando, e não porque o Spark guardou alguma coisa.
 
 **A preguiça é o que deixa o Spark planejar.** Quando a ação chega, o Spark vê todos os passos de uma
-vez, dos arquivos ao resultado, e pode escolher como rodá-los: fundir o `filter` e o `map` numa
+vez, dos arquivos ao resultado, e pode escolher como rodá-los. Pode fundir o `filter` e o `map` numa
 passada só, como a linhagem da seção anterior mostrou, ou, com um DataFrame, ler só as colunas de que
 o resultado precisa. Um programa que rodasse cada linha na hora em que foi escrita teria de ler tudo
 na primeira linha, antes de saber o que a última ia pedir.

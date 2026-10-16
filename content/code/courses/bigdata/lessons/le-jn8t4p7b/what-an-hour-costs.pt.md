@@ -41,6 +41,6 @@ três minutos a mais de partida são quase um terço a mais.
 
 **E uma aplicação que segura o que não usa é o mesmo desperdício em escala menor**, a alocação dinâmica
 da aula 2. Uma sessão de notebook que mantém 10 executores por um dia de trabalho de 8 horas e calcula
-durante uma delas segura 70 horas de executor ociosas por dia; a um quarto de máquina cada, US$ 0,05 por
+durante uma delas segura 70 horas de executor ociosas por dia. A um quarto de máquina cada, US$ 0,05 por
 hora, são US$ 3,50 por dia para uma pessoa, e uma equipe de vinte paga isso todo dia útil. A medição da
 aula 13, executores liberados meio minuto depois de o trabalho parar, é esse custo removido.

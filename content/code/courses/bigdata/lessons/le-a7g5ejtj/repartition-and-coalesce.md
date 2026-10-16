@@ -64,9 +64,9 @@ right when the next step needs each key's rows together, and only then.
 
 Which one to use follows from what the next step needs:
 
-- **Fewer, larger partitions before a write, with no need for balance:** `coalesce`. It is free.
+- For fewer, larger partitions before a write, with no need for balance, `coalesce`. It is free.
   But `coalesce(1)` makes the whole stage before it run as one task, because there is no shuffle to
   separate them; when one file is truly wanted, `repartition(1)` keeps the work before it parallel.
-- **Even partitions, or more of them:** `repartition(n)`. `coalesce` can only reduce the number.
-- **Rows of a key together, for a write partitioned by that key or a repeated join on it:**
-  `repartition(column)`. Next section.
+- For even partitions, or more of them, `repartition(n)`. `coalesce` can only reduce the number.
+- For the rows of a key together, before a write partitioned by that key or a repeated join on
+  it, `repartition(column)`. Next section.

@@ -86,7 +86,7 @@ pagou mais de um minuto para calcular os links e encher a cópia, e cada uma das
 Os ranks nunca saíram do driver por muito tempo. 3.000 números cabem num dicionário Python, e
 mandá-los ao cluster a cada vez é barato; os links, milhões de linhas, são o que tem de ficar no
 cluster e ser calculado uma vez. Essa divisão, estado pequeno no driver e dados grandes e fixos em
-cache nos executores, é a forma da maior parte do trabalho iterativo no Spark, e é por isso que o
+cache nos executores, é a forma da maior parte do trabalho iterativo no Spark. É também por isso que o
 Spark existe: o artigo que apresentou os seus conjuntos de dados em 2012 mediu loops como este, o
 PageRank entre eles, contra o Hadoop.
 

@@ -67,5 +67,5 @@ versão de ontem, perde os seus arquivos quando a retenção é mais curta que o
 
 Mais duas coisas que o `OPTIMIZE` faz: o `ZORDER BY (visitor_id)` ordena os arquivos reescritos para
 que linhas com valores próximos nas colunas citadas fiquem nos mesmos arquivos, a ordenação da aula 10
-com mais de uma coluna ao mesmo tempo; e tabelas Delta podem ser configuradas para compactar
+com mais de uma coluna ao mesmo tempo. E tabelas Delta podem ser configuradas para compactar
 gravações pequenas na hora, o que troca uma gravação mais lenta por nunca acumular os arquivos.

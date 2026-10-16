@@ -65,11 +65,11 @@ juntas, e só então.
 
 Qual usar decorre do que o passo seguinte precisa:
 
-- **Menos partições, maiores, antes de uma escrita, sem precisar de equilíbrio:** `coalesce`. É de
+- Para menos partições, maiores, antes de uma escrita, sem precisar de equilíbrio, `coalesce`. É de
   graça. Mas o `coalesce(1)` faz o estágio inteiro antes dele rodar como uma tarefa, porque não há
   shuffle para separá-los; quando se quer mesmo um arquivo, o `repartition(1)` mantém paralelo o
   trabalho antes dele.
-- **Partições iguais, ou mais partições:** `repartition(n)`. O `coalesce` só consegue reduzir o
+- Para partições iguais, ou mais partições, `repartition(n)`. O `coalesce` só consegue reduzir o
   número.
-- **Linhas de uma chave juntas, para uma escrita particionada por essa chave ou um join repetido
-  nela:** `repartition(coluna)`. Próxima seção.
+- Para as linhas de uma chave juntas, antes de uma escrita particionada por essa chave ou de um join
+  repetido nela, `repartition(coluna)`. Próxima seção.

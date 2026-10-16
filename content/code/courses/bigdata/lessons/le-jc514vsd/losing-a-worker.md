@@ -47,7 +47,7 @@ start-worker.sh spark://localhost:7077
 ## What a lost machine takes with it
 
 Here the lost worker took only a task in progress. Two other things can live on a machine, and
-both are covered later:
+lessons 7 and 9 come back to them:
 
 - **Results of a finished stage, kept on that machine's disk for the next stage to read.** If they
   are lost, the tasks that made them have to run again too. Lesson 7 shows where these *shuffle

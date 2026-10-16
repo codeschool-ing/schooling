@@ -86,7 +86,7 @@ time of the join and the sum alone. The whole run took two and a half minutes.
 The ranks themselves never left the driver for long. 3,000 numbers fit in a Python dictionary, and
 sending them to the cluster each time is cheap; the links, millions of rows, are what has to stay
 on the cluster and be computed once. That division, small state in the driver and large invariant
-data cached on the executors, is the shape of most iterative work in Spark, and it is why Spark
+data cached on the executors, is the shape of most iterative work in Spark. It is also why Spark
 exists: the paper that introduced its datasets in 2012 measured loops like this one, PageRank among
 them, against Hadoop.
 

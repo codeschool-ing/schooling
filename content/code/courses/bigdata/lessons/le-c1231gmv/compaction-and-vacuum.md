@@ -66,5 +66,6 @@ when the retention is shorter than the job.
 
 Two more things `OPTIMIZE` can do: `ZORDER BY (visitor_id)` sorts the rewritten files so that rows
 with close values of the named columns share files, lesson 10's sorting with more than one column at
-once; and Delta tables can be set to compact small writes as they happen, which trades a slower write
+once. And Delta tables can be set to compact small writes as they happen, which trades a slower
+write
 for never accumulating the files in the first place.

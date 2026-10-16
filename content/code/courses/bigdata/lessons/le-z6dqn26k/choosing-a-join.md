@@ -89,7 +89,7 @@ two thousand times its input, because without knowing anything about the values 
 planner assumes the worst. For choosing a broadcast it only needs the small side, and that estimate
 is good; a planner that chose join orders from these numbers would choose badly. Spark has a
 *cost-based optimiser* for that, which uses column statistics computed by `ANALYZE TABLE` on tables
-in a catalog, and it is off by default. Lesson 12 meets the catalog.
+in a catalogue, and it is off by default. Lesson 12 meets the catalogue.
 
 **With the threshold set to -1, the same query becomes a `SortMergeJoin`**: both sides are shuffled
 by `book_id` into 200 partitions, each partition is sorted, and the two sorted streams are merged.

@@ -46,7 +46,7 @@ DataFrame paid 18.9 seconds there for being the first to read the files with a s
 The DataFrame and the SQL take the same time because they are the same thing: two spellings of one
 query, compiled by one planner into one plan. The RDD is slower for the reason the UDF of section 07
 was: its `filter` and its `map` are Python functions, so every one of 24 million lines goes from
-Java to Python and back, and Spark could not skip reading a single column, because to an RDD a line
+Java to Python and back. And Spark could not skip reading a single column, because to an RDD a line
 is a string and not a row with columns.
 
 **Choosing between them**:

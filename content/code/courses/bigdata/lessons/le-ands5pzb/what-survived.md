@@ -12,7 +12,7 @@ version: 1
   Spark asking for executors the same way.
 - **MapReduce's model** became Spark's stages: a map side, a shuffle by key, a reduce side, with the
   intermediate results kept in memory instead of written to HDFS between jobs.
-- **Hive's metastore** became the catalog of every engine, and its partitions the directories of every
+- **Hive's metastore** became the catalogue of every engine, and its partitions the directories of every
   lake. **HiveServer2** is the shape of every SQL endpoint over a lake.
 - **HBase** is still HBase, for the applications that need it, next to its cloud cousins built on the
   same Bigtable design.

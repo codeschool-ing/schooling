@@ -31,7 +31,8 @@ sys	0m2.381s
 
 **Purchases per category, joining the clicks to the books**, from files and nothing else: no
 database, no table definitions. The SQL is ordinary, and `parquet.` followed by a path in backticks
-is Spark's way of naming files where a table name would go. Spark counted 25 seconds for the query and the whole command took
+is Spark's way of naming files where a table name would go. Spark counted 25 seconds for the query
+and the whole command took
 43; the difference is starting an application and, the first time, a small database `spark-sql`
 creates in `~/big/metastore_db` to keep table definitions in. The `ObjectStore` warnings at the top
 come from that database, which is Hive's metastore, and lesson 12 is about it.
@@ -45,5 +46,5 @@ spark.sql("SELECT device, count(*) FROM clicks GROUP BY device").show()
 
 **A temporary view lives as long as the session that made it** and is visible to nobody else. For
 names that outlive one program, with their schema and location recorded somewhere every program can
-find, Spark needs a *catalog*. That is the Hive metastore of lesson 12, and the table formats of
-lesson 11 bring catalogs of their own.
+find, Spark needs a *catalogue*. That is the Hive metastore of lesson 12, and the table formats of
+lesson 11 bring catalogues of their own.

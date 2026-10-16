@@ -19,7 +19,8 @@ and that, like the lab's, the slow version takes eight times as long as the tune
 | slow, 80 minutes a morning | once a day | 10 × 8/6 = 13.3 | US$80 |
 
 **Seventy dollars a month is not why the report was fixed**; the analysts waiting over an hour every
-morning were. Tuning pays in money when the job is large or frequent: the same factor of eight on a job of
+morning were. Tuning pays in money when the job is large or frequent: the same factor of eight on a
+job of
 200 machines that runs hourly is the difference between US$4,800 and US$38,400 a month.
 
 **The cluster that is never switched off is the larger cost.** The same 10 machines kept running for
@@ -40,7 +41,8 @@ nearly a third more.
 
 **And an application that holds what it does not use is the same waste at a smaller scale**, lesson
 2's dynamic allocation. A notebook session that keeps 10 executors through an 8-hour working day and
-computes for one of those hours holds 70 executor-hours idle a day; at a quarter of a machine each,
-US$0.05 an hour, that is US$3.50 a day for one person, and a team of twenty pays it every working day.
+computes for one of those hours holds 70 executor-hours idle a day. At a quarter of a machine each,
+US$0.05 an hour, that is US$3.50 a day for one person, and a team of twenty pays it every working
+day.
 Lesson 13's measurement, executors released half a minute after the work stopped, is that cost
 removed.
