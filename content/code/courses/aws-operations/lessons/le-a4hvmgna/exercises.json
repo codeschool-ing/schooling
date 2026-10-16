@@ -1,0 +1,516 @@
+[
+  {
+    "id": "ex-9txxp64h",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A new terminal answers `aws sts get-caller-identity` with `InvalidClientTokenId`. What happened?",
+    "hint": "Who refuses a key made of the word test?",
+    "choices": [
+      {
+        "text": "moto rejected the key pair",
+        "correct": false,
+        "why": "moto accepts any credentials at all; it never answers with this error."
+      },
+      {
+        "text": "moto is not running in the other terminal",
+        "correct": false,
+        "why": "A stopped moto gives a connection error on localhost:4567, not a refused token."
+      },
+      {
+        "text": "The region sa-east-1 does not exist in moto",
+        "correct": false,
+        "why": "moto answers in sa-east-1; the transcripts were all recorded there."
+      },
+      {
+        "text": "It reached the real AWS, which refuses the key",
+        "correct": true,
+        "why": "Right. Without AWS_ENDPOINT_URL in that terminal the command line calls AWS, and AWS refuses the test key."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcnex3kp",
+    "version": 1,
+    "section": "environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You stopped moto last night and start it again this morning. What is still there from yesterday's practice?",
+    "hint": "Where does moto keep what it is told?",
+    "choices": [
+      {
+        "text": "Nothing: moto kept it all in memory",
+        "correct": true,
+        "why": "Right. moto forgets everything when it stops, which is why each lesson builds what it needs."
+      },
+      {
+        "text": "Everything, saved in ~/aws/venv",
+        "correct": false,
+        "why": "The virtual environment holds moto's program, not its data."
+      },
+      {
+        "text": "The buckets, but not the other resources",
+        "correct": false,
+        "why": "No service is kept: S3 in moto lives in the same memory as the rest."
+      },
+      {
+        "text": "Whatever the AWS account synchronised overnight",
+        "correct": false,
+        "why": "There is no AWS account in this course for anything to come from."
+      }
+    ]
+  },
+  {
+    "id": "ex-367f82g1",
+    "version": 1,
+    "section": "what-moto-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A call to `kms:Decrypt` succeeds against moto with a user whose policy should deny it. What does that prove?",
+    "hint": "What does moto check by default?",
+    "choices": [
+      {
+        "text": "That the policy is written correctly",
+        "correct": false,
+        "why": "moto did not read the policy at all; a wrong policy would have passed too."
+      },
+      {
+        "text": "That AWS would allow the same call",
+        "correct": false,
+        "why": "By default moto evaluates no IAM policy, so its answer says nothing about AWS's."
+      },
+      {
+        "text": "That the key is not scheduled for deletion",
+        "correct": false,
+        "why": "moto decrypts with a key pending deletion too; the course shows it."
+      },
+      {
+        "text": "Only that the request was well formed",
+        "correct": true,
+        "why": "Right. moto accepted the shape of the request; permission was never checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-nmdafyjd",
+    "version": 1,
+    "section": "what-moto-is-not",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does moto 5.2.3 actually do? Choose all that apply.",
+    "hint": "Storing and answering, yes; doing the work behind the answer, mostly no.",
+    "choices": [
+      {
+        "text": "Return the average of the data points you stored",
+        "correct": true,
+        "why": "Yes. Sums, averages, minima and maxima come back computed."
+      },
+      {
+        "text": "Move an alarm to ALARM when its metric crosses the threshold",
+        "correct": false,
+        "why": "No. moto never evaluates an alarm; its state changes only when you set it."
+      },
+      {
+        "text": "Create a stack from a CloudFormation template",
+        "correct": true,
+        "why": "Yes. Creating and deleting stacks works; change sets on updates and drift do not."
+      },
+      {
+        "text": "Run the commands of a buildspec",
+        "correct": false,
+        "why": "No. A build is marked successful with invented durations and nothing runs."
+      },
+      {
+        "text": "Report the price of a resource",
+        "correct": false,
+        "why": "No. moto has no prices; they come from AWS's public price list."
+      }
+    ]
+  },
+  {
+    "id": "ex-t275pfms",
+    "version": 1,
+    "section": "what-moto-is-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You decide to open a real AWS account to compare. What comes first, before anything is created?",
+    "hint": "Two protections, in a fixed order.",
+    "choices": [
+      {
+        "text": "Create an access key for the root user and save it in ~/aws",
+        "correct": false,
+        "why": "A root access key is the most dangerous credential an account has, and no file of this course should hold a real key."
+      },
+      {
+        "text": "A second factor on the root user, then a budget with an alert",
+        "correct": true,
+        "why": "Right. Protect the root user, then make sure a bill cannot grow unseen."
+      },
+      {
+        "text": "Point AWS_ENDPOINT_URL at the account",
+        "correct": false,
+        "why": "That variable is what sends requests to moto; with a real account you leave it unset."
+      },
+      {
+        "text": "Turn on the free tier so nothing is billed",
+        "correct": false,
+        "why": "The free tier is no switch and no promise: a forgotten resource is billed anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsz4crg5",
+    "version": 1,
+    "section": "prices",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 12,
+    "tolerance": 0.01,
+    "prompt": "A build runs 8 minutes on `build.general1.small` in São Paulo, at the list price of 0.005 USD a minute. The pipeline runs it 300 times in a month. What do the builds cost, before the free minutes?",
+    "hint": "Runs times minutes times price.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-yxfcdnyd",
+    "version": 1,
+    "section": "prices",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a line printed by `price.py`, what is `SAE1-Build-Min:Linux:g1.small`?",
+    "hint": "It is the name a bill uses.",
+    "choices": [
+      {
+        "text": "The usage type, named as on a bill",
+        "correct": true,
+        "why": "Right. The usage type is how the bill and the price list name the same line; SAE1 is São Paulo."
+      },
+      {
+        "text": "The build project's name in CodeBuild",
+        "correct": false,
+        "why": "The project is yours to name; this string is AWS's and the same for every account."
+      },
+      {
+        "text": "The image the build container runs",
+        "correct": false,
+        "why": "The image is aws/codebuild/standard:7.0 in the project; this names a machine size and its price."
+      },
+      {
+        "text": "The offer version the price was read from",
+        "correct": false,
+        "why": "The version is pinned inside price.py, and its date is printed in the first line."
+      }
+    ]
+  },
+  {
+    "id": "ex-ygy0hh77",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The build writes `report.html` next to `imagedefinitions.json`, but only lists the second under `artifacts`. Can the deploy action read `report.html`?",
+    "hint": "What travels between steps?",
+    "choices": [
+      {
+        "text": "Yes, because both actions share the build's container",
+        "correct": false,
+        "why": "Each action runs on its own; the build's container is gone when the build ends."
+      },
+      {
+        "text": "Yes, if the deploy action runs within an hour of the build",
+        "correct": false,
+        "why": "Time has nothing to do with it: the file was never put in the bucket."
+      },
+      {
+        "text": "No: only what the build listed is zipped into the bucket and passed on",
+        "correct": true,
+        "why": "Right. An unlisted file never leaves the build's container."
+      },
+      {
+        "text": "No, because the deploy action can read the registry only",
+        "correct": false,
+        "why": "The deploy action reads its input artifact from the bucket; the registry holds the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vgxbtt0",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Anyone in the company can open a pull request, and the build runs the repository's own buildspec. Which role is it most important to keep narrow?",
+    "hint": "Whose code does each role run?",
+    "choices": [
+      {
+        "text": "The pipeline's role, because it starts everything",
+        "correct": false,
+        "why": "The pipeline service runs AWS's code, not the repository's; the build runs whatever was committed."
+      },
+      {
+        "text": "The build's, since it runs what was committed",
+        "correct": true,
+        "why": "Right. A wide build role turns a pull request into a way to act in the account."
+      },
+      {
+        "text": "The deployment's role, because it touches production",
+        "correct": false,
+        "why": "It matters, but it runs a fixed AWS action; the build runs arbitrary commands."
+      },
+      {
+        "text": "None, as long as the artifact bucket is private",
+        "correct": false,
+        "why": "A private bucket does not limit what a build's credentials can do elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-pndh56yd",
+    "version": 1,
+    "section": "the-chain",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each service to the one job it does in the chain.",
+    "hint": "One job each, and one job that belongs to none of them.",
+    "pairs": [
+      {
+        "left": "CodePipeline",
+        "right": "Knows the order of the steps"
+      },
+      {
+        "left": "CodeBuild",
+        "right": "Runs commands in a fresh container"
+      },
+      {
+        "left": "CodeDeploy",
+        "right": "Moves traffic to the new version"
+      },
+      {
+        "left": "ECR",
+        "right": "Holds the image"
+      }
+    ],
+    "right_distractors": [
+      "Writes the application's code"
+    ]
+  },
+  {
+    "id": "ex-98y521ec",
+    "version": 1,
+    "section": "buildspec",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`docker build` fails in the `build` phase. The buildspec's `post_build` pushes the image and has no check. What happens next?",
+    "hint": "Which phase is skipped after a failure in build?",
+    "choices": [
+      {
+        "text": "The build stops at once and post_build never runs",
+        "correct": false,
+        "why": "That is what a failure in install or pre_build does; a failure in build still runs post_build."
+      },
+      {
+        "text": "post_build runs and pushes the image",
+        "correct": true,
+        "why": "Right. post_build runs with CODEBUILD_BUILD_SUCCEEDING set to 0, and without a check it publishes."
+      },
+      {
+        "text": "CodeBuild retries the build phase three times",
+        "correct": false,
+        "why": "Nothing is retried unless the buildspec asks for it."
+      },
+      {
+        "text": "The pipeline rolls the service back",
+        "correct": false,
+        "why": "The deploy stage never starts after a failed build; there is nothing to roll back."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxyyzzkw",
+    "version": 1,
+    "section": "buildspec",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `post_build`, the variable that is `0` when an earlier command of the build failed is CODEBUILD_BUILD____.",
+    "hint": "One word, in capitals, after BUILD_.",
+    "blanks": [
+      {
+        "accept": [
+          "SUCCEEDING"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tjx3dncy",
+    "version": 1,
+    "section": "buildspec",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto reports a build with every phase `SUCCEEDED`. What does that tell you about your buildspec?",
+    "hint": "What did moto run?",
+    "choices": [
+      {
+        "text": "That its tests passed",
+        "correct": false,
+        "why": "No test ran: there was no source and no tests directory in the lab."
+      },
+      {
+        "text": "That its YAML is valid for CodeBuild",
+        "correct": false,
+        "why": "moto never opened the file; a broken buildspec gets the same answer."
+      },
+      {
+        "text": "Nothing: moto ran none of it and invented the durations",
+        "correct": true,
+        "why": "Right. The phases add up to more than the build lasted; no command ran."
+      },
+      {
+        "text": "That docker build works with privilegedMode",
+        "correct": false,
+        "why": "There is no Docker in moto at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-v5rcnsz1",
+    "version": 1,
+    "section": "pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`create-pipeline` fails with *CodePipeline is not authorized to perform AssumeRole on role …/shop-build*. What is the fix?",
+    "hint": "Who does the role's trust policy name?",
+    "choices": [
+      {
+        "text": "Give the build's role the AdministratorAccess policy",
+        "correct": false,
+        "why": "Permissions are not the problem: the pipeline service is not allowed to assume the role at all."
+      },
+      {
+        "text": "Its own role, trusted by CodePipeline",
+        "correct": true,
+        "why": "Right. The build's role trusts CodeBuild only; the pipeline needs one whose trust policy names codepipeline.amazonaws.com."
+      },
+      {
+        "text": "Run the command again with the root user",
+        "correct": false,
+        "why": "The caller is not what failed; the service's right to wear the role is."
+      },
+      {
+        "text": "Create the pipeline first and the role afterwards",
+        "correct": false,
+        "why": "The service checks the role when the pipeline is created, so it has to exist and trust it first."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g93edxb",
+    "version": 1,
+    "section": "pipeline",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of the shop's pipeline in the order they run.",
+    "hint": "Evidence first, people second, production last.",
+    "items": [
+      "Source: the commit is zipped into src",
+      "Build: tests run and the image is pushed",
+      "Approve: a person approves or rejects",
+      "Deploy: ECS runs the image the artifact names"
+    ],
+    "trap": "Approval before the build is the slip: a person would approve something nobody has tested yet."
+  },
+  {
+    "id": "ex-p9vkg4g4",
+    "version": 1,
+    "section": "pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Five commits land in ten minutes on a pipeline in the default `SUPERSEDED` mode, while an earlier run waits at the manual approval. What reaches the approval?",
+    "hint": "A waiting run can be replaced.",
+    "choices": [
+      {
+        "text": "Five runs, queued one behind the other",
+        "correct": false,
+        "why": "That is QUEUED mode, which a V2 pipeline has to choose."
+      },
+      {
+        "text": "Only the first commit, and the other four are dropped for good",
+        "correct": false,
+        "why": "It is the older waiting runs that are superseded, not the newer ones."
+      },
+      {
+        "text": "The newest commit, superseding the runs that were waiting",
+        "correct": true,
+        "why": "Right. A newer run that reaches the same point replaces a waiting older one."
+      },
+      {
+        "text": "Five runs at once, in parallel",
+        "correct": false,
+        "why": "Runs that do not wait for each other is PARALLEL mode, not the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xdkd713",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "value": 6.2,
+    "tolerance": 0.01,
+    "prompt": "A V2 pipeline's run has a 5-minute build action and a 3-minute deploy action, and runs 400 times in a month in São Paulo at 0.002 USD per action minute. What do the action minutes cost, after the 100 free minutes?",
+    "hint": "Total action minutes, less 100, times the price.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-qp771s0w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deploy action needs to know which image to run. Where does it read that from?",
+    "hint": "The image and the artifact travel separately.",
+    "choices": [
+      {
+        "text": "From the image itself, which the build put in the artifact bucket",
+        "correct": false,
+        "why": "The image goes to the registry; the bucket holds a small file naming it."
+      },
+      {
+        "text": "From the latest tag in ECR",
+        "correct": false,
+        "why": "Deploying whatever latest points at is exactly what lesson 2 argues against."
+      },
+      {
+        "text": "From the pipeline's JSON definition",
+        "correct": false,
+        "why": "The definition names the file to read, not the image, which changes every run."
+      },
+      {
+        "text": "From imagedefinitions.json, the artifact the build wrote",
+        "correct": true,
+        "why": "Right. The file names the image URI, and ECS pulls that image from ECR."
+      }
+    ]
+  }
+]
