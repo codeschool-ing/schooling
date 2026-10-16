@@ -7,7 +7,9 @@ A lesson of this course is a notebook written as prose. Its cells are the fences
 `python` in the lesson's sections, in the order `lesson.json` gives the sections and the order
 each file gives its fences, and its outputs are the unlabelled fences that follow a cell with
 nothing but blank lines between them. A `schooling-example` whose language is `python` is a
-cell too: its parts joined are the code, and its `output` is what the cell printed.
+cell too: its parts joined are the code, and its `output` is what the cell printed. One that names a
+`file` is a program saved to disk and run from a terminal, not a cell, and it is left to the
+lesson's captures.sh.
 
     cells.py run LESSON_DIR RESULT.json     as the lab's user, in the project directory: start a
                                             kernel from the project's environment, run every
@@ -65,7 +67,7 @@ def cells_of(text):
                 out.append((m.group(2), None, None, "fence"))
         elif info == "schooling-example":
             block = json.loads(m.group(2))
-            if block.get("language") != "python":
+            if block.get("language") != "python" or "file" in block:
                 continue
             code = "".join(p["code"] for p in block["parts"])
             output = block.get("output")
