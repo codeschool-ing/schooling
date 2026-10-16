@@ -28,7 +28,13 @@ Há dois formatos de 16 bits em uso, e eles perdem coisas diferentes. Salve como
 ```
 
 ```
-PENDING precision
+ana@vm:~/dl$ python precision.py
+torch.float32   32 bits  largest 3.4e+38  smallest 1.18e-38  step after 1: 1.19e-07
+                1 + 0.001 = 1.001   70000 -> 70000   1e-6 * 1e-3 -> 1e-09
+torch.bfloat16  16 bits  largest 3.39e+38  smallest 1.18e-38  step after 1: 0.00781
+                1 + 0.001 = 1   70000 -> 70144   1e-6 * 1e-3 -> 9.97e-10
+torch.float16   16 bits  largest 6.55e+04  smallest 6.1e-05  step after 1: 0.000977
+                1 + 0.001 = 1.00098   70000 -> inf   1e-6 * 1e-3 -> 0
 ```
 
 **O bfloat16 mantém o alcance do float32 e abre mão da precisão.** O maior número dele é 3.39e+38, tão
@@ -70,13 +76,18 @@ dois jeitos. Salve como `~/dl/mixed.py`:
 ```
 
 ```
-PENDING mixed
+ana@vm:~/dl$ python mixed.py
+float32     1.9 s  val loss 0.1291  val acc 0.969  weights torch.float32, outputs torch.float32
+bfloat16    0.9 s  val loss 0.1322  val acc 0.969  weights torch.float32, outputs torch.bfloat16
 ```
 
 **A acurácia é a mesma, 0,969 dos dois jeitos**, e a perda de validação mudou na terceira casa, de 0,1291
 para 0,1322. Os pesos ficaram em `torch.float32` nas duas execuções, enquanto as saídas da rede saíram em
-`torch.bfloat16` com o autocast. Os segundos foram medidos enquanto outros programas dividiam os
-processadores, então leia-os como uma ordem: TIMESENTENCE
+`torch.bfloat16` com o autocast. Os segundos são os da máquina do curso e os
+seus vão ser diferentes, então leia-os como uma ordem: **o bfloat16 foi o mais rápido dos dois**, 0,9 s contra
+1,9 s. Isso depende do processador. Um que tem instruções para produtos em bfloat16, como o da máquina do
+curso, ganha com elas; um que não tem converte cada número para float32 e de volta, e pode sair mais
+lento. Cronometre os dois no seu antes de escolher.
 
 Numa placa de vídeo a resposta é outra, e é por causa dela que a precisão mista existe. As placas NVIDIA
 recentes têm unidades que multiplicam matrizes de 16 bits várias vezes mais rápido que as de 32, e cada
@@ -107,7 +118,11 @@ precise mudar. Salve como `~/dl/trap.py`:
 ```
 
 ```
-PENDING trap
+ana@vm:~/dl$ python trap.py
+epoch   1  train loss 2.3230  val loss 2.3281  val acc 0.039
+epoch   2  train loss 2.3230  val loss 2.3281  val acc 0.039
+epoch   3  train loss 2.3230  val loss 2.3281  val acc 0.039
+largest change in a first-layer weight: 0.2466
 ```
 
 **A perda de treino é 2,3230 nas três épocas, até a quarta casa**, e a acurácia fica em 0,039, enquanto

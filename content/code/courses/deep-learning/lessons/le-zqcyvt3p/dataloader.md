@@ -55,7 +55,7 @@ hands the list to a **collate function**. The default, `default_collate`, stacks
 one tensor and the labels into another, which is what the three-item call printed: `(3, 64)` and
 three labels. It only works when every item has the same shape. Photographs of different sizes,
 or sentences of different lengths, need a `collate_fn` of your own that pads or crops them to one
-size before stacking, and lessons 14 and 16 meet exactly that with sequences.
+size before stacking.
 
 ## Order
 

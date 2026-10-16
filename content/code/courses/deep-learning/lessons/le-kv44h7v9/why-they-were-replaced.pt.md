@@ -38,18 +38,18 @@ lê o mesmo número de símbolos dos dois jeitos, e depois sequências mais long
 
 ```
 ana@vm:~/dl$ python timing.py
-64 x   50 steps =  3200 symbols    1.9 ms  x1.0
- 1 x 3200 steps =  3200 symbols    4.5 ms  x2.4
-64 x  100 steps =  6400 symbols    3.7 ms  x1.9
-64 x  200 steps = 12800 symbols    6.7 ms  x3.6
+64 x   50 steps =  3200 symbols    1.7 ms  x1.0
+ 1 x 3200 steps =  3200 symbols    3.7 ms  x2.2
+64 x  100 steps =  6400 symbols    2.9 ms  x1.7
+64 x  200 steps = 12800 symbols    5.7 ms  x3.4
 ```
 
 Os tempos são os da máquina do curso e os seus vão ser outros; **o que se compara são as razões.** As duas
-primeiras linhas são os mesmos 3.200 símbolos, e lê-los como uma sequência de 3.200 passos levou 3,2 vezes
+primeiras linhas são os mesmos 3.200 símbolos, e lê-los como uma sequência de 3.200 passos levou 2,2 vezes
 o tempo de lê-los como 64 sequências de 50. As duas fizeram as mesmas multiplicações. A longa as fez 3.200
 vezes com uma linha cada, e o lote as fez 50 vezes com 64 linhas cada, e um produto maior sai mais barato
-que muitos pequenos. As duas últimas linhas mostram a outra metade: dobrar o comprimento dobrou o tempo,
-2,0 e depois 3,9 vezes a primeira linha, porque cada passo a mais é mais uma volta do laço.
+que muitos pequenos. As duas últimas linhas mostram a outra metade: o tempo cresceu com o comprimento, 1,7 e
+depois 3,4 vezes a primeira linha, porque cada passo a mais é mais uma volta do laço.
 
 Isso foi uma thread num processador. **Uma placa de vídeo deixa a diferença bem maior**, porque roda
 milhares de multiplicações de uma vez: o lote a ocupa, e uma única sequência longa deixa quase toda ela

@@ -76,7 +76,18 @@ tirá-lo devolve a rede antiga. Salve como `~/dl/adapt.py`, ao lado do `lora.py`
 ```
 
 ```
-PENDING adapt
+ana@vm:~/dl$ python adapt.py
+10 per class
+  rank  1 trains  901 parameters, val acc 0.772  0.872  0.778
+  rank  4 trains 2629 parameters, val acc 0.867  0.917  0.894
+  rank 16 trains 9541 parameters, val acc 0.906  0.906  0.911
+50 per class
+  rank  1 trains  901 parameters, val acc 0.889  0.900  0.900
+  rank  4 trains 2629 parameters, val acc 0.967  0.967  0.972
+  rank 16 trains 9541 parameters, val acc 0.967  0.967  0.972
+merged layer against adapter, largest difference: 8.58306884765625e-06
+0 to 4 with the adapter on:   0.950
+0 to 4 with the adapter off:  0.989
 ```
 
 ## O que o adaptador comprou

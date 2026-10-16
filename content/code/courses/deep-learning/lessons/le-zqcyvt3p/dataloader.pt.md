@@ -1,7 +1,12 @@
 ---
-title: dataloader
+title: O DataLoader: lotes, embaralhamento e colagem
 version: 1
 ---
+
+Um `DataLoader` pega um dataset e o transforma em algo que um laço `for` consegue percorrer, um lote
+por vez. **Tudo o que o `fit` fazia com `randperm` e fatiamento na aula 9 agora é trabalho dele**:
+escolher a ordem, cortá-la em lotes, pedir cada item ao dataset e empilhar os itens em tensores.
+Salve isto como `~/dl/batches.py`:
 
 ```schooling-example
 {
@@ -28,6 +33,42 @@ version: 1
 }
 ```
 
+```
+PENDING batches
+```
+
+## Lotes, e o curto no fim
+
+**Um lote são 32 itens empilhados numa nova primeira dimensão**: imagens `(32, 64)` e rótulos
+`(32,)`, os formatos que o `fit` recortava à mão. Uma época são 34 lotes, 33 de 32 imagens e um
+último de 21, que somam de volta 1.077. `drop_last=True` descarta o lote curto e deixa 33.
+
+O lote curto não faz mal para os dígitos, já que a perda é uma média sobre o que o lote tiver.
+O `drop_last` importa onde uma camada precisa de um lote cheio, ou onde um lote de um só exemplo
+quebraria algo, como a normalização em lote da aula 8 quebra quando tem um único exemplo para tirar
+a média. Com `shuffle=True`, as imagens descartadas são outras a cada época.
+
+## Colagem
+
+O carregador pede 32 itens ao dataset, um por um, recebe uma lista de 32 pares `(imagem, rótulo)` e
+entrega a lista a uma **função de colagem** (*collate*). A padrão, `default_collate`, empilha as
+imagens num tensor e os rótulos em outro, que é o que a chamada com três itens imprimiu: `(3, 64)` e
+três rótulos. Ela só funciona quando todo item tem o mesmo formato. Fotos de tamanhos diferentes, ou
+frases de comprimentos diferentes, precisam de uma `collate_fn` própria que as preencha ou corte para
+um tamanho só antes de empilhar.
+
+## Ordem
+
+Cada `iter(loader)` novo é uma época nova, com um embaralhamento novo: a época 2 começa com outros
+rótulos que a época 1. **Um gerador com semente fixa faz a sequência de embaralhamentos se repetir**
+de uma execução para a outra, como mostram as duas linhas `seed 0`, e uma semente diferente dá uma
+sequência diferente. É o mesmo trabalho que o `fit` da aula 9 dava ao próprio gerador.
+
+## A execução da aula 9, com um carregador
+
+O laço de treino quase não muda. Salve como `~/dl/ltrain.py`; ele usa o `mlp.py` e o `loop.py` da
+aula 9:
+
 ```schooling-example
 {
   "language": "python",
@@ -44,3 +85,14 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING ltrain
+```
+
+**As cinco linhas dentro do laço são as da aula 9, intactas**; só mudou de onde vêm os lotes. A
+execução chega a uma acurácia de validação de 0,956 e uma perda de 0,1464, contra 0,950 e 0,1461 da
+aula 9. Perto, e não igual, porque o carregador tira os embaralhamentos do gerador do seu próprio
+jeito, então a mesma semente dá outra sequência de lotes. As duas execuções são igualmente
+corretas. Nenhum dos números vale mais que o outro, e a aula 18 mede o quanto duas sementes de uma
+mesma configuração ficam distantes.

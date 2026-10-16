@@ -71,12 +71,12 @@ lstm  length 20   1.000  1.000  1.000
 rnn   length 50   0.122  0.136  0.118
 lstm  length 50   0.120  0.122  0.144
 
-real	1m17.545s
-user	1m16.646s
-sys	0m0.516s
+real	1m15.151s
+user	1m14.329s
+sys	0m0.537s
 ```
 
-Levou cerca de um minuto e meio na máquina do curso, uma thread para as seis execuções.
+As seis execuções levaram 1 minuto e 15 segundos na máquina do curso, numa thread.
 
 | comprimento | RNN depois de 3.000 passos | LSTM depois de 3.000 passos |
 | --- | --- | --- |

@@ -38,7 +38,11 @@ missing `zero_grad` turned into a bug. Here it is the tool. Save as `~/dl/accumu
 ```
 
 ```
-PENDING accumulate
+ana@vm:~/dl$ python accumulate.py
+38282 gradient entries, the largest 0.032093
+largest difference, one batch of 128 against four of 32: 5.12e-09
+equal to float32 rounding: True
+without the / 4: 4.0000 times the gradient
 ```
 
 **The two gradients are the same.** Out of 38,282 entries, the largest difference is 5.12e-09, against a
@@ -61,12 +65,12 @@ These lines are the pattern, not a program to run; `accumulate.py` above is thei
 
 ## What it costs, and where it differs
 
-**Accumulation saves memory and nothing else.** The arithmetic is the same as for the batch of 128, and
-the time is four batches of 32, which is at least the time of one batch of 128 and usually more, because
-each small batch pays the fixed costs of a step on its own. What is saved is the activations: the
+**Accumulation saves memory and nothing else.** The arithmetic is the same as for the batch of 128. The
+time is that of four batches of 32, at least the time of one batch of 128 and usually more, because each
+small batch pays the fixed costs of a step on its own. What is saved is the activations: the
 backward pass of each piece needs only that piece's 32 examples.
 
 It is exact for `cnn.py`, because nothing in that network looks across the examples of a batch. Lesson
-8's batch normalisation does: it normalises with the mean and the variance of the batch it is given, so
-four pieces of 32 are normalised with four different statistics, and the gradient is no longer the
-gradient of a batch of 128. Layer normalisation, which works inside each example, has no such problem.
+8's batch normalisation does: it normalises with the mean and the variance of the batch it is given.
+Four pieces of 32 are normalised with four different sets of statistics, and the gradient is no longer
+that of a batch of 128. Layer normalisation, which works inside each example, has no such problem.

@@ -1,7 +1,22 @@
 ---
-title: workers
+title: Workers, e a leitura em paralelo
 version: 1
 ---
+
+Com o padrão `num_workers=0`, o carregador monta cada lote dentro do próprio processo do programa de
+treino: o programa pede um lote, espera enquanto 32 imagens são entortadas uma depois da outra, e só
+então segue com o passo. **`num_workers=n` inicia n processos extras que montam lotes por conta
+própria**, cada um um lote inteiro por vez, e os mandam de volta ao processo principal. Enquanto o
+modelo trabalha num lote, os workers já estão entortando os próximos.
+
+Quantos workers fazem sentido depende de quantos processadores existem. O laboratório tem quatro:
+
+```
+PENDING workers
+```
+
+Salve isto como `~/dl/workers.py`. Ele lê o conjunto de treino entortado três vezes com cada
+configuração e não treina nada, então o que ele mede é só o carregador:
 
 ```schooling-example
 {
@@ -24,6 +39,35 @@ version: 1
 }
 ```
 
+```
+PENDING workers
+```
+
+**Dois workers leem uma época 2,1 vezes mais rápido que nenhum, e quatro workers 2,6 vezes**: de
+0,84 segundo no melhor caso para 0,39 e para 0,32. Quatro workers não são quatro vezes mais rápidos,
+porque a máquina tem quatro processadores e o processo principal também precisa de um deles, para
+receber os lotes. Passado o número de processadores livres, um worker extra só se reveza com os
+outros. São os tempos desta máquina no momento da execução; nos seus, os segundos vão ser outros, e
+o formato, mais workers mais rápido até os processadores acabarem, é o que esperar.
+
+**A primeira época é a mais lenta de cada linha**, e com workers ela também inclui iniciar os
+processos e entregar a cada um uma cópia do dataset. `persistent_workers=True` os mantém vivos depois disso; sem
+ele, toda época pagaria a partida de novo, o que é um custo real quando as épocas são curtas.
+
+**O carregador sozinho é um piso.** Uma época de treino não pode ser mais curta que o tempo de
+montar os seus lotes, por mais rápido que seja o modelo, então esse número é o primeiro a conhecer em
+qualquer configuração de treino. E numa máquina sem placa de vídeo, os workers disputam com o modelo
+os mesmos processadores, o que a próxima seção mede.
+
+## Cada worker é uma cópia
+
+Um worker é um processo separado, com a sua própria cópia do dataset e da transformação dentro dele.
+O PyTorch semeia de um jeito diferente, em cada worker, os geradores aleatórios que conhece: o dele,
+o módulo `random` do Python e o gerador global do NumPy. É por isso que o `Warp`, que sorteia com
+`torch.rand`, não precisou de nada. **Um objeto gerador seu é outra história**: ele é copiado para
+cada worker no estado em que estava, e todo worker passa a sortear os mesmos números. Salve como
+`~/dl/twins.py`:
+
 ```schooling-example
 {
   "language": "python",
@@ -44,3 +88,12 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING twins
+```
+
+Sem ajuda, o ruído do lote 0 e o do lote 1 começam com os mesmos três números: dois workers, uma
+sequência só de ruído, e um aumento de dados que se repete entre os lotes. Nada falha e nada avisa.
+O `reseed`, passado como `worker_init_fn`, dá à cópia de cada worker um gerador próprio, a partir da
+semente que o PyTorch escolheu para aquele worker, e os dois lotes se separam.

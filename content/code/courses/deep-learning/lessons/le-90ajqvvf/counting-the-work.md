@@ -35,7 +35,18 @@ training step of each. It needs the `digits.py` from lesson 1, the `tdigits.py` 
 ```
 
 ```
-PENDING work
+ana@vm:~/dl$ python work.py
+MLP: 2410 parameters
+  forward 4,736 FLOPs per example, 2.0 per parameter
+  training step 10,112 per example, 2.14 times the forward, 4.2 per parameter
+  30 epochs of 1,077 images: 0.33 GFLOPs
+  0.11 ms per batch of 32, 2.92 GFLOP/s
+CNN: 38282 parameters
+  forward 675,072 FLOPs per example, 17.6 per parameter
+  training step 2,006,784 per example, 2.97 times the forward, 52.4 per parameter
+  30 epochs of 1,077 images: 64.84 GFLOPs
+  1.65 ms per batch of 32, 39.03 GFLOP/s
+CNN against MLP: 198 times the arithmetic, 14.9 times the time
 ```
 
 **The MLP does 2.0 floating-point operations per parameter in the forward pass.** Each weight multiplies
@@ -64,9 +75,9 @@ rule is about dense layers, and a model built of something else needs its arithm
 
 ## Time does not follow the arithmetic, at this size
 
-The milliseconds are the course machine's, measured while other programs were sharing its four
-processors. Yours will differ, so **compare the ratios.** The CNN did 198 times the MLP's arithmetic and
-took TIMERATIO times as long.
+The milliseconds are the course machine's, and a clock reading moves with whatever else the machine
+is doing. Yours will differ, so **compare the ratios.** The CNN did 198 times the MLP's arithmetic and
+took 14.9 times as long.
 
 The reason is what happens around the arithmetic. Every step pays fixed costs whatever the size of the
 matrices: Python calls each layer, PyTorch checks shapes, picks a routine and allocates the outputs.

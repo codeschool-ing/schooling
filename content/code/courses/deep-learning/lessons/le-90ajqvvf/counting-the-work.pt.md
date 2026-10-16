@@ -35,7 +35,18 @@ cronometra um passo de treino de cada uma. Ele precisa, ao lado, do `digits.py` 
 ```
 
 ```
-PENDING work
+ana@vm:~/dl$ python work.py
+MLP: 2410 parameters
+  forward 4,736 FLOPs per example, 2.0 per parameter
+  training step 10,112 per example, 2.14 times the forward, 4.2 per parameter
+  30 epochs of 1,077 images: 0.33 GFLOPs
+  0.11 ms per batch of 32, 2.92 GFLOP/s
+CNN: 38282 parameters
+  forward 675,072 FLOPs per example, 17.6 per parameter
+  training step 2,006,784 per example, 2.97 times the forward, 52.4 per parameter
+  30 epochs of 1,077 images: 64.84 GFLOPs
+  1.65 ms per batch of 32, 39.03 GFLOP/s
+CNN against MLP: 198 times the arithmetic, 14.9 times the time
 ```
 
 **O MLP faz 2,0 operações de ponto flutuante por parâmetro na passada para a frente.** Cada peso
@@ -66,9 +77,9 @@ contada.
 
 ## O tempo não acompanha a aritmética, neste tamanho
 
-Os milissegundos são os da máquina do curso, medidos enquanto outros programas dividiam os quatro
-processadores dela. Os seus vão ser diferentes, então **compare as razões.** A CNN fez 198 vezes a
-aritmética do MLP e levou TIMERATIO vezes o tempo.
+Os milissegundos são os da máquina do curso, e uma leitura de relógio muda com o que mais a máquina
+estiver fazendo. Os seus vão ser diferentes, então **compare as razões.** A CNN fez 198 vezes a
+aritmética do MLP e levou 14,9 vezes o tempo.
 
 O motivo é o que acontece em volta da aritmética. Todo passo paga custos fixos, seja qual for o tamanho
 das matrizes: o Python chama cada camada, o PyTorch confere formas, escolhe uma rotina e aloca as saídas.

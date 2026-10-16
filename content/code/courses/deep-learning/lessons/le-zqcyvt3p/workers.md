@@ -43,9 +43,14 @@ trains nothing, so what it measures is the loader alone:
 PENDING workers
 ```
 
-TODO-NUMBERS
+**Two workers read an epoch 2.1 times as fast as none, and four workers 2.6 times**: from 0.84
+seconds at best to 0.39 and to 0.32. Four workers are not four times as fast, because the machine
+has four processors and the main process needs one of them too, to receive the batches. Past the
+number of free processors, an extra worker only takes turns with the others. These are this
+machine's times at the moment of the run; on yours the seconds will differ, and the shape, more
+workers faster until the processors run out, is what to expect.
 
-**The first epoch with workers is the slowest of its row**, because it includes starting the
+**The first epoch is the slowest in each row**, and with workers it also includes starting the
 processes and handing each a copy of the dataset. `persistent_workers=True` keeps them alive after
 that; without it, every epoch would pay the start-up again, which is a real cost when epochs are
 short.

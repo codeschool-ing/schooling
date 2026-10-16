@@ -1,7 +1,21 @@
 ---
-title: dataset
+title: Um Dataset responde a uma pergunta
 version: 1
 ---
+
+O `fit` da aula 9 guardava o conjunto de treino inteiro em dois tensores e recortava lotes deles
+com `order[start:start + batch_size]`. Isso funciona para 1.077 imagens de 64 números `float32`
+cada, que dão 275.712 bytes. **Deixa de funcionar no dia em que os dados são uma pasta de fotos**:
+um milhão de arquivos não cabe na memória, cada um precisa ser aberto e decodificado, e a maioria
+dos programas de treino ainda muda um pouco cada imagem antes de usá-la.
+
+O PyTorch divide esse trabalho em dois. Um **`Dataset`** sabe quantos itens existem e como produzir
+o item número `i`, e mais nada. Um **`DataLoader`**, assunto da próxima seção, decide quais itens
+vão juntos, em que ordem, e quem faz o trabalho. O dataset não sabe nada de lotes, e o carregador
+não sabe nada de arquivos.
+
+Eis o conjunto dos dígitos como um dataset. Salve como `~/dl/dset.py`; ele lê os números pelo
+`tdigits.py` da aula 9, e todo programa desta aula o importa:
 
 ```schooling-example
 {
@@ -19,6 +33,14 @@ version: 1
   ]
 }
 ```
+
+**Dois métodos são o contrato inteiro.** O `__len__` devolve 1.077 para o conjunto de treino, e o
+`__getitem__(i)` devolve uma imagem e o seu rótulo. De onde o item vem é assunto do próprio dataset:
+aqui é uma linha de um tensor que já está na memória, e numa pasta de fotos seria um arquivo aberto
+e decodificado na hora. O argumento `transform` é o lugar do trabalho feito em cada imagem quando
+ela é lida, e a seção sobre uma transformação lenta o preenche.
+
+Depois leia-o à mão, do jeito que um carregador vai ler. Salve como `~/dl/firstset.py`:
 
 ```schooling-example
 {
@@ -40,3 +62,17 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING firstset
+```
+
+O item 0 é uma imagem de 64 pixels, `float32`, com o rótulo 6: um item, não um lote. O
+`TensorDataset` do próprio PyTorch embrulha tensores que já estão na memória, e o item 0 dele é a
+mesma imagem, então para dados como os dígitos uma classe própria ainda não compra nada. Ela começa a
+se pagar quando o `__getitem__` tem trabalho a fazer. Pedir o item 1077 levanta `IndexError`, como
+uma lista faria.
+
+Esse tipo de dataset se chama **estilo mapa**: qualquer índice, em qualquer ordem. O PyTorch também
+tem um `IterableDataset`, que só entrega itens um depois do outro, para dados que chegam como um
+fluxo e não podem ser indexados. Tudo neste curso é estilo mapa.

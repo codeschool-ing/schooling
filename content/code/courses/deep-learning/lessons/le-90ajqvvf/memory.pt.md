@@ -45,7 +45,14 @@ Salve como `~/dl/memory.py`:
 ```
 
 ```
-PENDING memory
+ana@vm:~/dl$ python memory.py
+38282 parameters, 4 bytes each in float32
+by hand:  weights 153,128  gradients 153,128  Adam's two buffers 306,256  bytes
+by hand:  activations 18,992 bytes per example
+batch   32: activations kept for backward 607,748 bytes, 18,992 per example
+batch 1077: activations kept for backward 20,454,388 bytes, 18,992 per example
+measured: weights 153,128  gradients 153,128  Adam's two buffers 306,256  bytes
+a model of 7 billion parameters, by the same rule: 112 GB before one activation
 ```
 
 **A conta à mão e a medição batem até o byte**: 153.128 bytes de pesos, outro tanto de gradientes, e
@@ -54,8 +61,8 @@ exatamente a conta à mão.
 
 Num lote de 32, as ativações ocupam quase tanto quanto pesos, gradientes e buffers juntos. Num lote de
 1.077, ocupam 20.454.388 bytes, contra 153.128 dos pesos. **Numa rede tão pequena, a memória do treino é
-o lote**, e numa grande é tudo: a última linha aplica os 16 bytes por parâmetro a um modelo de 7 bilhões
-de parâmetros e chega a 112 GB antes de uma única ativação. Um modelo desse tamanho é treinado em várias
+o lote.** Numa grande, os parâmetros pesam tanto quanto: a última linha aplica os 16 bytes por parâmetro
+a um modelo de 7 bilhões e chega a 112 GB antes de uma única ativação. Um modelo desse tamanho é treinado em várias
 placas ao mesmo tempo, com os pesos, os gradientes e o estado do otimizador divididos entre elas.
 
 ## Fazendo caber

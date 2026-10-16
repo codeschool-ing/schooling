@@ -41,7 +41,22 @@ each. Save as `~/dl/depths.py`:
 ```
 
 ```
-PENDING depths
+ana@vm:~/dl$ python depths.py
+2 per class, 10 training images
+  scratch    trains 37957 parameters, val acc 0.850  0.833  0.828
+  head       trains   325 parameters, val acc 0.600  0.633  0.667
+  last block trains 33157 parameters, val acc 0.833  0.889  0.850
+  everything trains 37957 parameters, val acc 0.850  0.900  0.872
+10 per class, 50 training images
+  scratch    trains 37957 parameters, val acc 0.944  0.933  0.933
+  head       trains   325 parameters, val acc 0.683  0.689  0.672
+  last block trains 33157 parameters, val acc 0.894  0.906  0.911
+  everything trains 37957 parameters, val acc 0.917  0.928  0.933
+50 per class, 250 training images
+  scratch    trains 37957 parameters, val acc 0.972  0.972  0.983
+  head       trains   325 parameters, val acc 0.800  0.789  0.806
+  last block trains 33157 parameters, val acc 0.967  0.978  0.967
+  everything trains 37957 parameters, val acc 0.972  0.972  0.967
 ```
 
 ## What the table says

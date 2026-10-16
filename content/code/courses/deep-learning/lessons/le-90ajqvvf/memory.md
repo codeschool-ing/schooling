@@ -45,7 +45,14 @@ holds. Save as `~/dl/memory.py`:
 ```
 
 ```
-PENDING memory
+ana@vm:~/dl$ python memory.py
+38282 parameters, 4 bytes each in float32
+by hand:  weights 153,128  gradients 153,128  Adam's two buffers 306,256  bytes
+by hand:  activations 18,992 bytes per example
+batch   32: activations kept for backward 607,748 bytes, 18,992 per example
+batch 1077: activations kept for backward 20,454,388 bytes, 18,992 per example
+measured: weights 153,128  gradients 153,128  Adam's two buffers 306,256  bytes
+a model of 7 billion parameters, by the same rule: 112 GB before one activation
 ```
 
 **The count by hand and the measurement agree to the byte**: 153,128 bytes of weights, as many of
@@ -53,9 +60,9 @@ gradients, and 306,256 of Adam's buffers. The activations come to 18,992 bytes p
 sizes, which is the hand count exactly.
 
 At a batch of 32 the activations take nearly as much as the weights, gradients and buffers together. At
-a batch of 1,077 they take 20,454,388 bytes, against 153,128 for the weights. **For a network this small
-the memory of training is the batch**, and for a large one it is everything: the last line applies the
-16 bytes per parameter to a model of 7 billion parameters and gets 112 GB before a single activation. A
+a batch of 1,077 they take 20,454,388 bytes, against 153,128 for the weights. **For a network this small,
+the memory of training is the batch.** For a large one the parameters weigh as much: the last line
+applies the 16 bytes per parameter to a model of 7 billion and gets 112 GB before a single activation. A
 model of that size is trained on several cards at once, with its weights, gradients and optimiser state
 split between them.
 

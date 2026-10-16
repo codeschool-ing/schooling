@@ -35,7 +35,14 @@ lugar**, e usa a classe `LoRA` da seção anterior numa camada real do tamanho c
 ```
 
 ```
-PENDING sizes
+ana@vm:~/dl$ python sizes.py
+weights in the model: 6,738,415,616
+one attention projection: 16,777,216 frozen, rank 8 adds 65,536
+rank 8 on q and v in all 32 layers: 4,194,304 trainable, 0.062% of the model
+the adapter saved in 16 bits: 8 MiB
+the frozen weights in 32 bits:  25.1 GiB
+the frozen weights in 16 bits:  12.6 GiB
+the frozen weights in  4 bits:   3.1 GiB
 ```
 
 ## O que os números decidem

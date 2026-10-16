@@ -28,7 +28,13 @@ There are two 16-bit formats in use, and they lose different things. Save as `~/
 ```
 
 ```
-PENDING precision
+ana@vm:~/dl$ python precision.py
+torch.float32   32 bits  largest 3.4e+38  smallest 1.18e-38  step after 1: 1.19e-07
+                1 + 0.001 = 1.001   70000 -> 70000   1e-6 * 1e-3 -> 1e-09
+torch.bfloat16  16 bits  largest 3.39e+38  smallest 1.18e-38  step after 1: 0.00781
+                1 + 0.001 = 1   70000 -> 70144   1e-6 * 1e-3 -> 9.97e-10
+torch.float16   16 bits  largest 6.55e+04  smallest 6.1e-05  step after 1: 0.000977
+                1 + 0.001 = 1.00098   70000 -> inf   1e-6 * 1e-3 -> 0
 ```
 
 **bfloat16 keeps float32's range and gives up precision.** Its largest number is 3.39e+38, as large as
@@ -68,13 +74,18 @@ Save as `~/dl/mixed.py`:
 ```
 
 ```
-PENDING mixed
+ana@vm:~/dl$ python mixed.py
+float32     1.9 s  val loss 0.1291  val acc 0.969  weights torch.float32, outputs torch.float32
+bfloat16    0.9 s  val loss 0.1322  val acc 0.969  weights torch.float32, outputs torch.bfloat16
 ```
 
 **The accuracy is the same, 0.969 both ways**, and the validation loss moved in the third decimal,
 from 0.1291 to 0.1322. The weights stayed `torch.float32` in both runs, while the network's outputs came
-out in `torch.bfloat16` under autocast. The seconds were measured while other programs shared the
-processors, so read them as an ordering: TIMESENTENCE
+out in `torch.bfloat16` under autocast. The seconds are the course machine's and
+yours will differ, so read them as an ordering: **bfloat16 was the faster of the two**, 0.9 s against 1.9 s.
+That depends on the processor. One with instructions for bfloat16 products, like the course machine's,
+gains from them; one without converts every number to float32 and back, and can come out slower. Time
+both on yours before choosing.
 
 On a graphics card the answer is different, and it is the reason mixed precision exists. Recent NVIDIA
 cards have units that multiply 16-bit matrices several times faster than 32-bit ones, and every number
@@ -104,7 +115,11 @@ have to change. Save as `~/dl/trap.py`:
 ```
 
 ```
-PENDING trap
+ana@vm:~/dl$ python trap.py
+epoch   1  train loss 2.3230  val loss 2.3281  val acc 0.039
+epoch   2  train loss 2.3230  val loss 2.3281  val acc 0.039
+epoch   3  train loss 2.3230  val loss 2.3281  val acc 0.039
+largest change in a first-layer weight: 0.2466
 ```
 
 **The training loss is 2.3230 in all three epochs, to the fourth decimal**, and the accuracy stays at

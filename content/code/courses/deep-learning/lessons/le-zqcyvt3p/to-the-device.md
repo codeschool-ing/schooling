@@ -1,7 +1,13 @@
 ---
-title: to-the-device
+title: Moving the model and the batches to the device
 version: 1
 ---
+
+On a machine with a graphics card, the model's weights and every batch have to be in the card's
+memory before the card can compute with them. **The pattern is the same in nearly every training
+program**: choose the device once, move the model once, and move each batch as it arrives. Save
+this as `~/dl/todevice.py`; it trains lesson 9's MLP for one epoch and runs on this machine, where
+the device is the processor:
 
 ```schooling-example
 {
@@ -23,3 +29,48 @@ version: 1
   ]
 }
 ```
+
+```
+PENDING todevice
+```
+
+## The model once, the batches every time
+
+**`.to` on a module moves the module itself**; `.to` on a tensor returns a new tensor and leaves the
+original where it was. The last two lines show the difference with a dtype standing in for a
+device: the tensor is still `float32` after `x.to(float64)`, and the layer became `float64`. So
+`model.to(device)` on a line of its own works, and `xb.to(device)` on a line of its own does
+nothing that lasts. On a card, the next line then hands the model a batch that is still in the
+processor's memory, and PyTorch stops with an error naming two devices.
+
+The model is moved before the optimiser is made. PyTorch's documentation of `Module.cuda` asks for
+that order: it warns that the move makes the parameters different objects, and an optimiser made
+first would be holding the old ones.
+
+## Pinned memory and non_blocking
+
+A copy from the processor's memory to the card goes fastest from **pinned** memory: pages the
+operating system has promised not to move, which the card can read directly. `pin_memory=True`
+makes the loader put each batch there. On this machine there is no card to copy to, and PyTorch
+says so:
+
+```
+PENDING pinned
+```
+
+The warning and `pinned: False` are the whole effect. That is why `todevice.py` asks for pinning
+with `pin_memory=device.type == "cuda"`, which is `False` here and `True` on a card.
+
+`non_blocking=True` lets the processor start the copy and go on to the next line without waiting
+for it to finish. That is safe because the card runs the work it is given in order: the forward
+pass is queued behind the copy and reads a complete batch. **The processor uses the time it saved
+to ask the loader for the next batch**, which is the same overlap the workers bought, one level
+down. On the processor, both arguments change nothing, and the run above trained as it would have
+without them.
+
+## What changes on a card
+
+Nothing in the program. With a card and its driver, `torch.cuda.is_available()` answers `True`,
+the device becomes `cuda`, the model's 2,410 parameters go to the card's memory, pinning is asked
+for, and every batch is copied as it arrives. That run was not done for this course, which has no
+card; the program is written so that the same file runs on both.

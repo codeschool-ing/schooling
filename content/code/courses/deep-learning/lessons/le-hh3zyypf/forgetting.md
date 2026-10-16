@@ -40,7 +40,14 @@ goes. Save as `~/dl/forget.py`:
 ```
 
 ```
-PENDING forget
+ana@vm:~/dl$ python forget.py
+accuracy on 0 to 4 with base.pt's head put back, after epoch
+                           0      1      2      5     10     20     50    100   new task
+head only              0.989  0.989  0.989  0.989  0.989  0.989  0.989  0.989   0.667
+last block             0.989  0.994  0.989  0.972  0.989  0.972  0.950  0.944   0.900
+everything             0.989  0.994  0.978  0.950  0.978  0.956  0.939  0.939   0.917
+everything at 1e-2     0.989  0.839  0.856  0.417  0.828  0.250  0.311  0.294   0.922
+body 1e-4, head 1e-3   0.989  0.989  0.989  0.989  0.989  0.994  0.989  0.989   0.822
 ```
 
 The last column is the new task at the end of each run. It differs from the matching row of

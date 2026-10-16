@@ -12,13 +12,30 @@ e a CNN, 30 épocas cada: a comparação inteira da aula 11 num comando só. Pon
 e o shell informa quanto ele levou:
 
 ```
-PENDING compare
+ana@vm:~/dl$ time python compare.py
+dense, lesson 9: 2410 parameters
+epoch  10  train loss 0.3170  val loss 0.3068  val acc 0.922
+epoch  20  train loss 0.1661  val loss 0.2004  val acc 0.936
+epoch  30  train loss 0.1205  val loss 0.1461  val acc 0.950
+dense, 512 wide: 38410 parameters
+epoch  10  train loss 0.2126  val loss 0.2165  val acc 0.936
+epoch  20  train loss 0.1238  val loss 0.1642  val acc 0.944
+epoch  30  train loss 0.0921  val loss 0.1223  val acc 0.961
+convolutional: 38282 parameters
+epoch  10  train loss 0.1558  val loss 0.1291  val acc 0.969
+epoch  20  train loss 0.0249  val loss 0.1526  val acc 0.947
+epoch  30  train loss 0.0055  val loss 0.0776  val acc 0.978
+4800 of them in the two convolutions
+
+real	0m8.275s
+user	0m19.603s
+sys	0m0.647s
 ```
 
 `real` é o tempo no relógio, do início ao fim. `user` é tempo de processador, somado em todos os
 processadores que o programa usou, e é por isso que ele pode sair maior que o `real`: o PyTorch divide um
-produto grande entre os quatro processadores da máquina. Estes são os números da máquina do curso,
-medidos enquanto outros programas rodavam ao lado. Os seus vão ser diferentes.
+produto grande entre os quatro processadores da máquina. Estes são os números da máquina do curso, e
+os seus vão ser diferentes.
 
 ## Um preço é uma variável
 
@@ -47,10 +64,15 @@ Ponha o preço que lhe passarem no dia. Salve como `~/dl/bill.py`:
 Rode-o com os segundos da linha `real` acima, arredondados:
 
 ```
-PENDING bill
+ana@vm:~/dl$ python bill.py 8
+this run: 8 s = 0.0022 h, 0.0056 at 2.50 an hour
+6 x N x D = 5.88e+21 FLOPs
+4,083 card-hours, 10,208 at 2.50 an hour
+  on   8 cards:  21.3 days
+  on 256 cards:   0.7 days
 ```
 
-**A execução do curso custa PRICE a esse preço**, uma pequena fração de uma unidade, seja qual for a
+**A execução do curso custa 0,0056 a esse preço**, uma pequena fração de uma unidade, seja qual for a
 moeda. A segunda metade é a mesma conta para um modelo que precisa mesmo de orçamento, feita antes de
 treiná-lo, com a regra 6 × N × D da primeira seção. Um modelo de 7 bilhões de parâmetros treinado com 20
 tokens por parâmetro precisa de 5.88e+21 operações. Em placas que sustentam 40% de um pico de 1e15 por

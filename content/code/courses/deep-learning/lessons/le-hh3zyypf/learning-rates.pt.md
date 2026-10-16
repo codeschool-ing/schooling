@@ -40,7 +40,11 @@ andou, como fração do tamanho dela no `base.pt`. Salve como `~/dl/rates.py`:
 ```
 
 ```
-PENDING rates
+ana@vm:~/dl$ python rates.py
+one rate, 1e-2        val acc (first layer moved)  0.950 (0.40)  0.922 (0.38)  0.944 (0.32)
+one rate, 1e-3        val acc (first layer moved)  0.917 (0.18)  0.928 (0.16)  0.933 (0.16)
+one rate, 1e-4        val acc (first layer moved)  0.872 (0.04)  0.850 (0.03)  0.856 (0.04)
+body 1e-4, head 1e-3  val acc (first layer moved)  0.839 (0.04)  0.844 (0.04)  0.828 (0.04)
 ```
 
 ## Lendo os dois números juntos

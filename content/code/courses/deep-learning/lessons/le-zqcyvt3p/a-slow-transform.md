@@ -50,8 +50,8 @@ Now measure it. Save as `~/dl/slow.py`:
       "note": "The same index read twice. The transform runs at every read and draws new random numbers each time."
     },
     {
-      "code": "RAMP = \" .:-=+*#%@\"\n\n\ndef rows(picture):\n    \"\"\"A 32x32 picture as 16 lines of characters, two pixel rows to a line.\"\"\"\n    shades = picture.reshape(16, 2, 32).mean(dim=1).clamp(0, 1)\n    return [\"\".join(RAMP[int(v * 9.99)] for v in row) for row in shades]",
-      "note": "A picture in the terminal: each brightness from 0 to 1 becomes one of ten characters, from a space to `@`. Two pixel rows share a line because a character is about twice as tall as it is wide."
+      "code": "RAMP = \" .:-=+*#%█\"\n\n\ndef rows(picture):\n    \"\"\"A 32x32 picture as 16 lines of characters, two pixel rows to a line.\"\"\"\n    shades = picture.reshape(16, 2, 32).mean(dim=1).clamp(0, 1)\n    return [\"\".join(RAMP[int(v * 9.99)] for v in row) for row in shades]",
+      "note": "A picture in the terminal: each brightness from 0 to 1 becomes one of ten characters, from a space to a full block. Two pixel rows share a line because a character is about twice as tall as it is wide."
     },
     {
       "code": "original = plain[0][0].reshape(8, 8).repeat_interleave(4, dim=0).repeat_interleave(4, dim=1)\npanels = [rows(original), rows(warped[0][0][0]), rows(warped[0][0][0])]\nfor line in zip(*panels):\n    print(\"  \".join(line))",
@@ -65,8 +65,8 @@ Now measure it. Save as `~/dl/slow.py`:
 PENDING slow
 ```
 
-**Reading a plain image took 1.9 microseconds; reading a warped one took 758.8**, some four hundred
-times as long. Over the training set that is 0.002 seconds against 0.817 seconds for one pass, and
+**Reading a plain image took 2.1 microseconds; reading a warped one took 894.5**, some four hundred
+times as long. Over the training set that is 0.002 seconds against 0.963 seconds for one pass, and
 it is paid again in every epoch, because the transform runs inside `__getitem__`. These are times
 on one machine at one moment, and yours will differ: what carries over is the ratio, a transform
 costing hundreds of times what the read itself costs.

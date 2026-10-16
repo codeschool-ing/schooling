@@ -42,7 +42,20 @@ Save as `~/dl/freeze.py`:
 ```
 
 ```
-PENDING freeze
+ana@vm:~/dl$ python freeze.py
+0.weight  (16, 1, 3, 3)      144  requires_grad=False
+0.bias    (16,)               16  requires_grad=False
+2.weight  (32, 16, 3, 3)    4608  requires_grad=False
+2.bias    (32,)               32  requires_grad=False
+6.weight  (64, 512)        32768  requires_grad=True
+6.bias    (64,)               64  requires_grad=True
+8.weight  (5, 64)            320  requires_grad=True
+8.bias    (5,)                 5  requires_grad=True
+learns 33157 of 37957
+gradients after backward, in eval mode: ['6.weight', '6.bias', '8.weight', '8.bias']
+group 0: 2 tensors, lr 0.0001
+group 1: 2 tensors, lr 0.001
+changed by one step: [False, False, False, False, True, True, True, True]
 ```
 
 ## Reading the output
