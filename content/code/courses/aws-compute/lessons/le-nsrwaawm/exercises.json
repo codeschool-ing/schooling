@@ -1,0 +1,643 @@
+[
+  {
+    "id": "ex-4bzg83c8",
+    "version": 1,
+    "section": "what-concurrency-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Lambda's concurrency count?",
+    "hint": "Think of what one execution environment is doing at a given instant.",
+    "choices": [
+      {
+        "text": "The requests that arrive in one second, however long each takes",
+        "correct": false,
+        "why": "That is the request rate. Concurrency also depends on how long each request runs."
+      },
+      {
+        "text": "The threads one environment runs side by side to serve its requests",
+        "correct": false,
+        "why": "That is a web server's model. A Lambda environment serves one request at a time."
+      },
+      {
+        "text": "The requests in flight right now, one environment each",
+        "correct": true,
+        "why": "Right. Each request holds an environment for as long as it runs, and concurrency is how many are held."
+      },
+      {
+        "text": "The functions deployed in the account in that Region",
+        "correct": false,
+        "why": "The number of functions says nothing about how many requests are running."
+      }
+    ]
+  },
+  {
+    "id": "ex-39thmz1k",
+    "version": 1,
+    "section": "what-concurrency-is",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function receives 200 requests a second and each runs for 0.25 s. How many execution environments are busy at once, by Little's law?",
+    "hint": "Requests per second times seconds per request.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "environments"
+  },
+  {
+    "id": "ex-1abj37z9",
+    "version": 1,
+    "section": "what-concurrency-is",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function handles 80 requests a second at 0.15 s each. Its database slows down and every request now takes 1.5 s, at the same traffic. What is its concurrency now?",
+    "hint": "Only one of the two factors changed.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "environments"
+  },
+  {
+    "id": "ex-dznd4gpj",
+    "version": 1,
+    "section": "what-concurrency-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two simultaneous calls to the emulator both fail, and its log says ReserveFailed: AlreadyReserved. What does that show about Lambda on AWS?",
+    "hint": "The emulator is one environment. What would AWS do with the second request?",
+    "choices": [
+      {
+        "text": "That Lambda refuses a second request arriving while the first still runs",
+        "correct": false,
+        "why": "That is the emulator's limitation read as Lambda's. On AWS the second request gets a second environment."
+      },
+      {
+        "text": "That the Python handler is not thread-safe",
+        "correct": false,
+        "why": "The handler never ran twice. The refusal came from the emulator, before any code."
+      },
+      {
+        "text": "That one environment holds one request; Lambda would start a second",
+        "correct": true,
+        "why": "Right. The emulator has no second environment to start, which is exactly what Lambda does instead."
+      },
+      {
+        "text": "That the port Docker published accepts one connection at a time, which is a limit of Docker and not of Lambda",
+        "correct": false,
+        "why": "A published port accepts many connections. The log line is the emulator reserving its environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd85kdx6",
+    "version": 1,
+    "section": "what-concurrency-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By Little's law, the requests in flight equal the arrival rate multiplied by the ___ of each request.",
+    "hint": "How long it lasts.",
+    "blanks": [
+      {
+        "accept": [
+          "duration",
+          "time",
+          "latency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bz9mt3br",
+    "version": 1,
+    "section": "the-account-limit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the default concurrency limit of an AWS account for Lambda?",
+    "hint": "It is a pool, and it is shared.",
+    "choices": [
+      {
+        "text": "1,000 concurrent executions for each function, in every Region",
+        "correct": false,
+        "why": "The thousand is not per function: every function in the Region draws on the same pool."
+      },
+      {
+        "text": "1,000 requests a second for the account",
+        "correct": false,
+        "why": "That mixes the rate with concurrency. The pool counts requests in flight, and the rate allowed is ten times it."
+      },
+      {
+        "text": "None, because Lambda bills each environment it starts",
+        "correct": false,
+        "why": "Lambda does bill per use, and it also has a limit; the limit is what keeps a mistake small."
+      },
+      {
+        "text": "1,000 concurrent executions per Region, shared by all the account's functions",
+        "correct": true,
+        "why": "Right. One pool per account and Region, and a quota that Service Quotas can raise."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cypsbt1",
+    "version": 1,
+    "section": "the-account-limit",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way a function was invoked to what a throttle does to the request.",
+    "hint": "Who called, and does anybody hold the request?",
+    "pairs": [
+      {
+        "left": "API Gateway, synchronous",
+        "right": "The caller receives a 429 at once"
+      },
+      {
+        "left": "An S3 notification, asynchronous",
+        "right": "Lambda retries it from its internal queue for up to six hours"
+      },
+      {
+        "left": "An SQS event source mapping",
+        "right": "The message stays in the queue and returns after its visibility timeout"
+      },
+      {
+        "left": "A Kinesis event source mapping",
+        "right": "The shard waits behind the retried batch"
+      }
+    ],
+    "right_distractors": [
+      "The request waits in a line behind the busy environments"
+    ]
+  },
+  {
+    "id": "ex-k3dn33ec",
+    "version": 1,
+    "section": "the-account-limit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function runs for 4 ms and receives 15,000 requests a second, in an account with the default quota of 1,000 and nothing else running. What happens?",
+    "hint": "Work out the concurrency, then remember the second limit.",
+    "choices": [
+      {
+        "text": "Part of the traffic is throttled: the rate allowed is 10,000/s, and only 60 environments are busy",
+        "correct": true,
+        "why": "Right. 15,000 × 0.004 = 60 in flight is far below 1,000, but the rate allowed is ten times the quota."
+      },
+      {
+        "text": "Every request succeeds, because 60 environments are well inside the pool",
+        "correct": false,
+        "why": "The concurrency is right and the conclusion is not: Lambda also limits requests per second."
+      },
+      {
+        "text": "Every request above 1,000 a second is throttled, because the quota is 1,000",
+        "correct": false,
+        "why": "That reads the quota as a rate. It counts requests in flight, and the rate allowed is 10,000 a second."
+      },
+      {
+        "text": "Lambda queues what is over the limit and serves it a second later",
+        "correct": false,
+        "why": "Lambda does not queue a synchronous request; a throttle is an error returned to the caller."
+      }
+    ]
+  },
+  {
+    "id": "ex-q5fj4ens",
+    "version": 1,
+    "section": "the-account-limit",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the account's concurrency limit? Choose all that apply.",
+    "hint": "Think about who shares it and who enforces it.",
+    "choices": [
+      {
+        "text": "It is shared by every function in the account and Region",
+        "correct": true,
+        "why": "Right. One pool per account and Region."
+      },
+      {
+        "text": "A load test on one function can throttle the others",
+        "correct": true,
+        "why": "Right. They draw on the same thousand."
+      },
+      {
+        "text": "moto enforces it, so a script tested there shows where it bites",
+        "correct": false,
+        "why": "moto keeps no count of anything running and throttles nothing."
+      },
+      {
+        "text": "It is a quota that a request through Service Quotas raises",
+        "correct": true,
+        "why": "Right. It is a quota, not a wall."
+      },
+      {
+        "text": "It counts requests per second rather than requests in flight",
+        "correct": false,
+        "why": "It counts requests in flight; the rate is a separate limit of ten times the quota."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzjw4ym4",
+    "version": 1,
+    "section": "the-account-limit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An S3 notification invokes a function asynchronously and is throttled. What happens to the event?",
+    "hint": "Who is holding the event once S3 has handed it over?",
+    "choices": [
+      {
+        "text": "S3 receives the 429 and sends the notification again later",
+        "correct": false,
+        "why": "S3 handed the event to Lambda and is out of the picture; the retries are Lambda's."
+      },
+      {
+        "text": "It is dropped at once",
+        "correct": false,
+        "why": "It is kept and retried first. It is dropped only after the maximum age, and only if no destination is set."
+      },
+      {
+        "text": "Lambda holds it and retries for up to six hours, then uses the on-failure destination",
+        "correct": true,
+        "why": "Right. The asynchronous path absorbs a throttle quietly, which is why it can look like slowness."
+      },
+      {
+        "text": "It is moved into an SQS queue that S3 keeps for the bucket, and waits there until there is room",
+        "correct": false,
+        "why": "S3 keeps no queue for a bucket; the internal queue that holds the event belongs to Lambda."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gy5ejwf",
+    "version": 1,
+    "section": "reserved",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a reserved concurrency of 100 do for a function?",
+    "hint": "It is the same number seen from two sides.",
+    "choices": [
+      {
+        "text": "Starts 100 environments in advance and bills them by the second",
+        "correct": false,
+        "why": "That is provisioned concurrency. A reservation starts nothing and costs nothing."
+      },
+      {
+        "text": "Guarantees it 100, and lets it borrow from the unreserved pool above that",
+        "correct": false,
+        "why": "The reservation is also a ceiling: the 101st concurrent request is throttled."
+      },
+      {
+        "text": "Guarantees it 100 and caps it at 100, at no charge",
+        "correct": true,
+        "why": "Right. A floor and a ceiling at once, and one number on the function."
+      },
+      {
+        "text": "Caps it at 100 but does not protect it from the other functions",
+        "correct": false,
+        "why": "It does protect it: no other function can use the 100 reserved for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ch6gq1vk",
+    "version": 1,
+    "section": "reserved",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An account has the default pool of 1,000. checkout reserves 300 and orders reserves 250. What is the most a third function can reserve?",
+    "hint": "AWS keeps a floor of 100 unreserved.",
+    "value": 350,
+    "tolerance": 0,
+    "unit": "environments"
+  },
+  {
+    "id": "ex-3fvxfvcb",
+    "version": 1,
+    "section": "reserved",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function writes to a database that accepts 100 connections, and each environment holds one. A spike would start 300 environments. Which setting protects the database?",
+    "hint": "Which setting is a ceiling?",
+    "choices": [
+      {
+        "text": "A provisioned concurrency of 100",
+        "correct": false,
+        "why": "Provisioned concurrency is not a cap: requests above it are served by on-demand environments, which open more connections."
+      },
+      {
+        "text": "A request to raise the account's limit, so that the throttles stop",
+        "correct": false,
+        "why": "A larger pool lets more environments reach the database, which is the problem."
+      },
+      {
+        "text": "A reserved concurrency below 100 on that function, such as 80",
+        "correct": true,
+        "why": "Right. The 81st request is throttled before it reaches the database, and nothing is half done."
+      },
+      {
+        "text": "A reserved concurrency of 0 on every other function in the account",
+        "correct": false,
+        "why": "That stops every other function and leaves this one free to start 300 environments."
+      }
+    ]
+  },
+  {
+    "id": "ex-sf7fz1rx",
+    "version": 1,
+    "section": "reserved",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of giving a new function a reservation against moto in the order they have to happen.",
+    "hint": "Each step needs what the one before it made.",
+    "items": [
+      "Create the role with a trust policy for lambda.amazonaws.com",
+      "Zip the handler into orders.zip",
+      "Run create-function, naming the role and the zip",
+      "Run put-function-concurrency with 100",
+      "Read Concurrency back with get-function"
+    ],
+    "trap": "Zipping before creating the role also works; the role and the package both have to exist before create-function names them."
+  },
+  {
+    "id": "ex-qx8m6wfv",
+    "version": 1,
+    "section": "reserved",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto accepted a reserved concurrency of 2000 on a function. What does that tell you?",
+    "hint": "What does moto check, and what does it leave to AWS?",
+    "choices": [
+      {
+        "text": "That AWS allows a reservation above the pool when nothing else is running",
+        "correct": false,
+        "why": "AWS refuses any reservation that leaves less than 100 unreserved, busy or not."
+      },
+      {
+        "text": "That moto's account has a pool larger than the default",
+        "correct": false,
+        "why": "moto has no pool at all; it stores the number without comparing it with anything."
+      },
+      {
+        "text": "That the floor of 100 applies to accounts with several functions",
+        "correct": false,
+        "why": "The floor applies to every account. moto simply does not model it."
+      },
+      {
+        "text": "Only that the call is well formed; AWS would refuse the number",
+        "correct": true,
+        "why": "Right. moto answers like AWS and enforces much less, so a success here proves the shape of the call and nothing more."
+      }
+    ]
+  },
+  {
+    "id": "ex-c39xqtyb",
+    "version": 1,
+    "section": "provisioned",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is provisioned concurrency configured?",
+    "hint": "What Lambda keeps ready has to be code that cannot change under it.",
+    "choices": [
+      {
+        "text": "On $LATEST, so that it follows every update of the code",
+        "correct": false,
+        "why": "AWS refuses $LATEST, because it is the editable copy and can change under the ready environments."
+      },
+      {
+        "text": "On a version, or on an alias that points at one",
+        "correct": true,
+        "why": "Right. An alias is the usual choice, because a deployment moves it and the environments follow."
+      },
+      {
+        "text": "On the function as a whole, the way reserved concurrency is",
+        "correct": false,
+        "why": "A reservation is on the function; provisioned concurrency is on a qualifier, a version or an alias."
+      },
+      {
+        "text": "On the account, where every function in the Region shares it",
+        "correct": false,
+        "why": "There is no account-wide provisioned pool; it is set per version or alias and drawn from the concurrency pool."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpcn026j",
+    "version": 1,
+    "section": "provisioned",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four environments of 0.5 GB are kept ready for a month of 730 hours in sa-east-1, at 0.0000066372 USD per GB-second. What does keeping them ready cost, before a single request, in USD to the cent?",
+    "hint": "Environments × GB × seconds × price; 730 hours is 2,628,000 seconds.",
+    "value": 34.89,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-hgyr2z6v",
+    "version": 1,
+    "section": "provisioned",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function has 10 provisioned environments and 25 requests arrive at once. What happens to the other 15?",
+    "hint": "Provisioned concurrency is not a cap.",
+    "choices": [
+      {
+        "text": "They are throttled with a 429, because 10 is the limit",
+        "correct": false,
+        "why": "That treats provisioned as a ceiling. Only a reservation caps a function."
+      },
+      {
+        "text": "They are served by on-demand environments, each with a cold start",
+        "correct": true,
+        "why": "Right. Beyond the provisioned number Lambda starts ordinary environments, if the pool allows."
+      },
+      {
+        "text": "They wait in a line until one of the ten provisioned environments is free",
+        "correct": false,
+        "why": "Lambda does not queue a request behind a busy environment; it starts another."
+      },
+      {
+        "text": "Lambda adds 15 provisioned environments and bills them from that moment",
+        "correct": false,
+        "why": "The provisioned number changes only when you, or a scaling policy, change it."
+      }
+    ]
+  },
+  {
+    "id": "ex-56qy39h7",
+    "version": 1,
+    "section": "provisioned",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team in sa-east-1 wants provisioned concurrency on a function that is busy 90% of the time, to save money. Using the sheet of 16 October 2026, are they right?",
+    "hint": "Compare what provisioned saves per GB-second of running with what it charges per GB-second kept ready.",
+    "choices": [
+      {
+        "text": "Yes: articles put the break-even near 60% use, and 90% is above it",
+        "correct": false,
+        "why": "That figure is arithmetic on another Region's prices. On São Paulo's sheet there is no break-even."
+      },
+      {
+        "text": "Yes, but only above 95% use, where the discount on running catches up",
+        "correct": false,
+        "why": "The break-even works out at 562%, which no month reaches."
+      },
+      {
+        "text": "No: saving 0.0000011800 per GB-second run never repays 0.0000066372 per GB-second kept",
+        "correct": true,
+        "why": "Right. In sa-east-1 provisioned concurrency is bought for latency, at any level of use."
+      },
+      {
+        "text": "It makes no difference, because requests are billed the same on both",
+        "correct": false,
+        "why": "Requests do cancel out, and duration does not: provisioned adds a charge for every second kept ready."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9dm9svy",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these functions in order of concurrency, the smallest first.",
+    "hint": "Multiply each rate by its duration.",
+    "items": [
+      "500 requests a second at 20 ms",
+      "50 requests a second at 0.4 s",
+      "10 requests a second at 3 s",
+      "2 requests a second at 25 s"
+    ],
+    "trap": "The busiest function by requests a second is the least concurrent: 500 × 0.02 = 10."
+  },
+  {
+    "id": "ex-pr3grq7z",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting to what it is.",
+    "hint": "Which ones cost money, and which ones only draw a line?",
+    "pairs": [
+      {
+        "left": "Reserved concurrency",
+        "right": "A free floor and ceiling for one function"
+      },
+      {
+        "left": "Provisioned concurrency",
+        "right": "Environments initialised in advance, billed by the second"
+      },
+      {
+        "left": "The account limit",
+        "right": "The pool every function in the Region draws on"
+      },
+      {
+        "left": "The unreserved floor",
+        "right": "The 100 AWS keeps for functions without a reservation"
+      }
+    ],
+    "right_distractors": [
+      "A line that holds requests until an environment is free"
+    ]
+  },
+  {
+    "id": "ex-j9hqhwz5",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto 5.2.3 do in this lesson? Choose all that apply.",
+    "hint": "Two of them it did; the others it refused, ignored or does not have.",
+    "choices": [
+      {
+        "text": "Stored a reserved concurrency on a function",
+        "correct": true,
+        "why": "Right. put-function-concurrency and get-function both answered."
+      },
+      {
+        "text": "Refused a reservation larger than the pool",
+        "correct": false,
+        "why": "It accepted 2000 without comparing it with anything."
+      },
+      {
+        "text": "Published a version and created an alias pointing at it",
+        "correct": true,
+        "why": "Right. publish-version and create-alias both work in moto."
+      },
+      {
+        "text": "Configured ten provisioned environments behind an alias",
+        "correct": false,
+        "why": "PutProvisionedConcurrencyConfig answered with a 404 page: moto has not implemented it."
+      },
+      {
+        "text": "Printed the account's limits with get-account-settings",
+        "correct": false,
+        "why": "That operation is missing from moto too, and returned the same 404 page."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q9grvs2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a reserved concurrency of 0 do?",
+    "hint": "It is a ceiling as well as a floor.",
+    "choices": [
+      {
+        "text": "Removes the reservation and returns the function to the shared pool",
+        "correct": false,
+        "why": "That is delete-function-concurrency. A reservation of 0 is a ceiling of zero."
+      },
+      {
+        "text": "Throttles every request: the function stops, and is not deleted",
+        "correct": true,
+        "why": "Right. It is the switch for an incident or a function calling itself in a loop."
+      },
+      {
+        "text": "Lets the function use the whole unreserved pool",
+        "correct": false,
+        "why": "That is a function with no reservation at all; 0 is a reservation, and the smallest one."
+      },
+      {
+        "text": "Nothing, because AWS refuses a reservation smaller than 1",
+        "correct": false,
+        "why": "AWS accepts 0, and documents it as the way to stop a function's invocations."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwfptgw2",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On demand in sa-east-1, duration is 0.0000166667 USD per GB-second. A 512 MB function serves 3,000,000 requests of 200 ms each in a month. What is its duration charge, in USD to the cent?",
+    "hint": "512 MB is 0.5 GB; GB × seconds × requests × price.",
+    "value": 5.0,
+    "tolerance": 0.01,
+    "unit": "USD"
+  }
+]

@@ -1,0 +1,581 @@
+[
+  {
+    "id": "ex-18z7akck",
+    "version": 1,
+    "section": "data-exports",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does AWS put a CUR 2.0 export?",
+    "hint": "Nobody reads it for you.",
+    "choices": [
+      {
+        "text": "In Cost Explorer, as a new report on its screen",
+        "correct": false,
+        "why": "Cost Explorer draws its screens from the same data, but the export is files, delivered somewhere you query them."
+      },
+      {
+        "text": "As files in an S3 bucket you name",
+        "correct": true,
+        "why": "Right. Parquet or compressed CSV, under the bucket and prefix the export names, refreshed during the month."
+      },
+      {
+        "text": "Attached to the monthly invoice e-mail",
+        "correct": false,
+        "why": "The invoice is a summary. The report has a row per line of the bill, far too many for an attachment."
+      },
+      {
+        "text": "In a database AWS runs for the account",
+        "correct": false,
+        "why": "AWS delivers files; querying them, with Athena or anything else, is a separate choice you make."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7923j1d",
+    "version": 1,
+    "section": "data-exports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws bcm-data-exports create-export --export file://export.json` answers with a 500 in the lab. What does the run still show?",
+    "hint": "What did the command line do before sending?",
+    "choices": [
+      {
+        "text": "That the export was created and its first files are on the way",
+        "correct": false,
+        "why": "A 500 is a failure, and moto has no Data Exports at all; nothing was created."
+      },
+      {
+        "text": "That the field names match AWS's API; the values were not judged",
+        "correct": true,
+        "why": "Right. A misspelt field is refused with `Unknown parameter` before anything is sent, so the request reached moto."
+      },
+      {
+        "text": "That `PARQUET` is a format AWS accepts for exports",
+        "correct": false,
+        "why": "That comes from AWS's documentation. Nothing in the lab checked the value."
+      },
+      {
+        "text": "That the bucket `shop-logs` lacks a policy for the billing service",
+        "correct": false,
+        "why": "The bucket was never consulted: the 500 is moto lacking the whole service."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgw92ryc",
+    "version": 1,
+    "section": "data-exports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `INCLUDE_RESOURCES`, which question can the export no longer answer?",
+    "hint": "Which column does it add?",
+    "choices": [
+      {
+        "text": "Which account used a line",
+        "correct": false,
+        "why": "`line_item_usage_account_id` is there either way."
+      },
+      {
+        "text": "Which usage type a line is",
+        "correct": false,
+        "why": "`line_item_usage_type` does not depend on the option."
+      },
+      {
+        "text": "Which instance or gateway caused a line",
+        "correct": true,
+        "why": "Right. The option adds `line_item_resource_id`; without it a line says what and where, not which one."
+      },
+      {
+        "text": "What a line cost at its unblended rate",
+        "correct": false,
+        "why": "Cost is on every line, resource or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-4864q081",
+    "version": 1,
+    "section": "data-exports",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each CUR 2.0 column to what it holds.",
+    "hint": "Payer and user are different accounts.",
+    "pairs": [
+      {
+        "left": "`bill_payer_account_id`",
+        "right": "the account that pays"
+      },
+      {
+        "left": "`line_item_usage_account_id`",
+        "right": "the account that used it"
+      },
+      {
+        "left": "`line_item_usage_type`",
+        "right": "the exact thing, such as NAT gateway hours"
+      },
+      {
+        "left": "`resource_tags`",
+        "right": "the activated tags, as a map"
+      }
+    ],
+    "right_distractors": [
+      "the price list version"
+    ]
+  },
+  {
+    "id": "ex-jj2fgfta",
+    "version": 1,
+    "section": "data-exports",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop adds a new tag key, `cost-centre`, and activates it. What changes in a CUR 2.0 table compared with the older report?",
+    "hint": "One column, or a column per tag?",
+    "choices": [
+      {
+        "text": "A new column `resource_tags_user_cost_centre` appears, as before",
+        "correct": false,
+        "why": "That was the older report's shape. CUR 2.0 keeps one map column."
+      },
+      {
+        "text": "Nothing in the table's shape: the key appears inside `resource_tags`",
+        "correct": true,
+        "why": "Right. The map gains a key on the lines that carry it, and every query written before keeps working."
+      },
+      {
+        "text": "Every earlier line gains the key, back to the start of the year",
+        "correct": false,
+        "why": "Activation is not retroactive (lesson 13), and the tag must have been on the resource at the time."
+      },
+      {
+        "text": "The export must be deleted and created again to include it",
+        "correct": false,
+        "why": "Activated tags reach `resource_tags` without editing the export."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9fx5knr",
+    "version": 1,
+    "section": "data-exports",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three teams run containers on one EKS cluster of shared EC2 instances. What does split cost allocation data add to the report?",
+    "hint": "The instance is one line; the teams are three.",
+    "choices": [
+      {
+        "text": "A tag on each instance naming the team that used it most",
+        "correct": false,
+        "why": "Nothing is tagged by the option, and a single owner per instance is what it exists to avoid."
+      },
+      {
+        "text": "A separate bill for each Kubernetes namespace",
+        "correct": false,
+        "why": "There is still one bill. The option adds columns to the same report."
+      },
+      {
+        "text": "Columns that split each instance's cost",
+        "correct": true,
+        "why": "Right. The `split_line_item_*` columns divide it by the processor and memory each container reserved or used, so each team gets its share of a shared machine."
+      },
+      {
+        "text": "Nothing: containers are not in the Cost and Usage Report",
+        "correct": false,
+        "why": "The instances are, as lines; the option is what divides them among containers."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjvnpz8p",
+    "version": 1,
+    "section": "a-month-of-lines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where did the costs in `cur.csv` come from?",
+    "hint": "Read the docstring of `make_cur.py`.",
+    "choices": [
+      {
+        "text": "From moto, which kept a record of the lab's resources",
+        "correct": false,
+        "why": "moto bills nothing and has no report; the file was written by a program."
+      },
+      {
+        "text": "Made-up quantities times price-list rates from earlier lessons",
+        "correct": true,
+        "why": "Right. The rates were read in lessons 1, 13 and 14; the accounts, quantities, credit and tax are invented."
+      },
+      {
+        "text": "From a real export of the shop's management account",
+        "correct": false,
+        "why": "There is no AWS account behind the course, so there is no export to copy."
+      },
+      {
+        "text": "From AWS's sample report, published with the Data Exports documentation",
+        "correct": false,
+        "why": "The file is generated by the program in the lesson, line by line."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7cdsvcf",
+    "version": 1,
+    "section": "a-month-of-lines",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `cur.csv`, `SavingsPlanCoveredUsage` is 117.27 and `SavingsPlanNegation` is -117.27. What do the plan's three lines add up to, in dollars?",
+    "hint": "The two usage lines cancel; one line is left.",
+    "value": 79.68,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-823f43hq",
+    "version": 1,
+    "section": "a-month-of-lines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody totals only the lines of type `Usage` and reports 673.59 as the month. What is missing from that number?",
+    "hint": "Read the second query's table.",
+    "choices": [
+      {
+        "text": "Nothing; `Usage` is every charge",
+        "correct": false,
+        "why": "It is one type among six in the file; the plan, tax and credit are other types."
+      },
+      {
+        "text": "Only the tax, which is added at the end of the month",
+        "correct": false,
+        "why": "Tax is missing, and so are the plan's fee and the sandbox's credit."
+      },
+      {
+        "text": "The plan's fee, the tax and the credit",
+        "correct": true,
+        "why": "Right. Each is a line type of its own. All types together are the 806.60 the first query printed."
+      },
+      {
+        "text": "The instance covered by the plan, which `Usage` leaves out on purpose",
+        "correct": false,
+        "why": "Its covered usage and negation cancel anyway; what is missing is the fee that paid for it, plus tax and credit."
+      }
+    ]
+  },
+  {
+    "id": "ex-j081tp0m",
+    "version": 1,
+    "section": "a-month-of-lines",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ask.py` needs nothing installed because Python's own library carries ___, a whole SQL database in one module.",
+    "hint": "Its name is in the import.",
+    "blanks": [
+      {
+        "accept": [
+          "sqlite3",
+          "sqlite"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fstr47th",
+    "version": 1,
+    "section": "a-month-of-lines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ask.py` declares three columns `REAL` and every other column `TEXT`. What would go wrong if the money columns were text?",
+    "hint": "Think about sorting by the result.",
+    "choices": [
+      {
+        "text": "`sum` would refuse to run on them",
+        "correct": false,
+        "why": "SQLite converts text that looks like a number when it adds; the sum would run."
+      },
+      {
+        "text": "`9.5` would sort after `117.27`",
+        "correct": true,
+        "why": "Right. Values stored as text compare character by character. Declaring the column `REAL` keeps every comparison numeric."
+      },
+      {
+        "text": "The CSV would fail to load",
+        "correct": false,
+        "why": "Text loads anything; that is why it would load and then compare wrongly."
+      },
+      {
+        "text": "Negative costs would lose their minus sign",
+        "correct": false,
+        "why": "The sign is kept as a character in text, and as a sign in a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2bajgqz",
+    "version": 1,
+    "section": "who-spent-what",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Unblended, the web team's month is 376.55; amortised, 456.23. Where were the other 79.68 in the unblended view?",
+    "hint": "Which line carries no tag?",
+    "choices": [
+      {
+        "text": "In the data team, which uses the same instance type",
+        "correct": false,
+        "why": "The data team is 165.90 in both columns; nothing moved there."
+      },
+      {
+        "text": "In `(no team)`, on the plan's fee line, which has no tags",
+        "correct": true,
+        "why": "Right. Amortised moves the fee onto the covered line, which is tagged `web`, and the remainder drops by the same 79.68."
+      },
+      {
+        "text": "In the tax, which the query left out",
+        "correct": false,
+        "why": "Tax is excluded from both columns alike, so it cannot explain a difference between them."
+      },
+      {
+        "text": "Nowhere; amortised adds a charge AWS never made",
+        "correct": false,
+        "why": "The 79.68 was charged, as the plan's fee. Amortised only says whose it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh9zr717",
+    "version": 1,
+    "section": "who-spent-what",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The finance team asks two questions: what did we pay AWS this month, and what did each team's usage cost. Which column answers which?",
+    "hint": "One is about the invoice; one is about the hours.",
+    "choices": [
+      {
+        "text": "Amortised for both, because it is the honest one",
+        "correct": false,
+        "why": "Honest for teams. A prepaid year shows as a twelfth a month amortised, which is not what was paid that month."
+      },
+      {
+        "text": "Unblended for both, because it is what AWS charged",
+        "correct": false,
+        "why": "Per team it charges a shared commitment to nobody, and the team that used it looks free."
+      },
+      {
+        "text": "Amortised for the invoice, unblended for the teams",
+        "correct": false,
+        "why": "That is the pairing reversed: it would spread payments across months and leave the plan's fee untagged."
+      },
+      {
+        "text": "Unblended for the invoice, amortised for the teams",
+        "correct": true,
+        "why": "Right. Unblended is what was charged; amortised charges a commitment to the usage it covered."
+      }
+    ]
+  },
+  {
+    "id": "ex-z072bd14",
+    "version": 1,
+    "section": "who-spent-what",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Staging's usage is 227.06 dollars, of which 93.79 carries no `team` tag. What percentage is untagged, to the nearest whole number?",
+    "hint": "Untagged divided by usage, times 100.",
+    "value": 41,
+    "tolerance": 0.5,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-04dx0nk6",
+    "version": 1,
+    "section": "who-spent-what",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these must a showback or chargeback scheme decide by a written rule, because no tag will settle them? Choose all that apply.",
+    "hint": "The section names three.",
+    "choices": [
+      {
+        "text": "Who owns the untagged remainder",
+        "correct": true,
+        "why": "Right. The account's owner, or a split in proportion to what the teams claimed."
+      },
+      {
+        "text": "How tax and support are split",
+        "correct": true,
+        "why": "Right. They are shared lines, usually split in proportion to usage."
+      },
+      {
+        "text": "Which account an instance's hours belong to",
+        "correct": false,
+        "why": "That is a column, `line_item_usage_account_id`, on every line; it needs no rule."
+      },
+      {
+        "text": "Whether commitments are charged amortised to the usage they covered",
+        "correct": true,
+        "why": "Right. Otherwise the team that bought the plan for everybody looks expensive."
+      },
+      {
+        "text": "Which usage type a NAT gateway's hours are",
+        "correct": false,
+        "why": "AWS writes the usage type on the line; it is not the shop's to decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7pm7t3j",
+    "version": 1,
+    "section": "who-spent-what",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between showback and chargeback?",
+    "hint": "One moves money; one does not.",
+    "choices": [
+      {
+        "text": "Showback reports each team's cost; chargeback moves it into the team's budget",
+        "correct": true,
+        "why": "Right. Both need the same rules; chargeback makes every rule matter more, because money follows them."
+      },
+      {
+        "text": "Showback uses unblended cost; chargeback uses amortised",
+        "correct": false,
+        "why": "Either can use either column. The difference is what happens to the number, not how it is counted."
+      },
+      {
+        "text": "Showback is Cost Explorer; chargeback is the Cost and Usage Report",
+        "correct": false,
+        "why": "They are ways of using the answer, not tools for getting it."
+      },
+      {
+        "text": "Showback covers only tagged costs; chargeback covers the remainder",
+        "correct": false,
+        "why": "Both have to account for the untagged remainder, by a rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8mmyqrp",
+    "version": 1,
+    "section": "who-spent-what",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the size of a real organisation, which pair is the AWS way to query the report and draw it?",
+    "hint": "One runs SQL over S3; one draws dashboards.",
+    "choices": [
+      {
+        "text": "Cost Explorer and Budgets",
+        "correct": false,
+        "why": "They read the same data through fixed screens; neither queries the report's files."
+      },
+      {
+        "text": "Athena and QuickSight",
+        "correct": true,
+        "why": "Right. Athena runs SQL directly over the Parquet in S3; QuickSight draws dashboards from its answers. Neither was run here."
+      },
+      {
+        "text": "sqlite3 and `ask.py`, copied into the bucket",
+        "correct": false,
+        "why": "They are the lab's stand-ins on your own machine, not something AWS runs."
+      },
+      {
+        "text": "Cost Anomaly Detection and SNS",
+        "correct": false,
+        "why": "They watch patterns and send alerts; they do not query the report."
+      }
+    ]
+  },
+  {
+    "id": "ex-s66j95v7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what has to exist before a report can split September's costs by `team`.",
+    "hint": "The tag first, then billing, then the files, then the question.",
+    "items": [
+      "resources carry `team` while they run in September",
+      "the key `team` is activated in the management account",
+      "the export writes September's lines to the bucket",
+      "a query groups them by `resource_tags`"
+    ],
+    "trap": "Putting the activation before the tags is also possible in practice, but the key only appears in Billing once something carries it; the tag on the resource during the month is what nothing afterwards can supply."
+  },
+  {
+    "id": "ex-zcsmggym",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A real report shows 30% of production's usage untagged, mostly `SAE1-PublicIPv4:InUseAddress` and `USE1-APIRequest`. What is the first, cheapest step?",
+    "hint": "Some lines can be claimed by a rule faster than by tags.",
+    "choices": [
+      {
+        "text": "Delete every resource without a `team` tag",
+        "correct": false,
+        "why": "The addresses are in use by something running; deleting what is unowned is not the same as deleting what is unused."
+      },
+      {
+        "text": "Switch the report from unblended to amortised",
+        "correct": false,
+        "why": "Amortised moves commitments; these lines are on demand and would stay untagged."
+      },
+      {
+        "text": "Read them by usage type, then tag or assign each by rule",
+        "correct": true,
+        "why": "Right. Every untagged line names what it is; the remainder is unowned, not unknown, and the rule says whose it becomes."
+      },
+      {
+        "text": "Request a backfill so the tags apply to the past twelve months",
+        "correct": false,
+        "why": "A backfill applies an activation, not a tag the resources never carried."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gzmrs8j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query groups by `line_item_usage_account_id` and another by `bill_payer_account_id`. On a consolidated bill, what does the second one print?",
+    "hint": "Lesson 3: who receives the bill?",
+    "choices": [
+      {
+        "text": "The same three accounts as the first",
+        "correct": false,
+        "why": "The member accounts use; they do not pay. Only the first query splits by them."
+      },
+      {
+        "text": "One row: the management account, with the whole bill",
+        "correct": true,
+        "why": "Right. In `cur.csv` every line's payer is `123456789012`, as on a real consolidated bill."
+      },
+      {
+        "text": "An error, because the column is empty for member accounts",
+        "correct": false,
+        "why": "The column is filled on every line; for a member account it names the payer."
+      },
+      {
+        "text": "Each team, since teams are what pay",
+        "correct": false,
+        "why": "Teams are tags. The payer is an account."
+      }
+    ]
+  }
+]

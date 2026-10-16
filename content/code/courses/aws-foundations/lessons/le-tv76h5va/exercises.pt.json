@@ -1,0 +1,430 @@
+{
+  "ex-9makam24": {
+    "prompt": "Uma instância EC2 veste a role `shop-app` pelo profile. Um script antigo também deixou `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY` no ambiente da máquina. Com quais credenciais a linha de comando da AWS nessa máquina assina?",
+    "hint": "A cadeia para na primeira resposta.",
+    "choices": [
+      {
+        "text": "As da role, porque uma role sempre tem precedência sobre uma chave",
+        "why": "Nada põe uma role acima de uma chave. A ordem da cadeia decide, e o provedor de metadados é o último dela."
+      },
+      {
+        "text": "A chave do ambiente",
+        "why": "Isso. `env` é o primeiro provedor e respondeu, então a cadeia nunca chegou ao `iam-role`. A máquina agora age como o dono da chave, em silêncio."
+      },
+      {
+        "text": "Nenhuma: a linha de comando recusa quando dois provedores discordam",
+        "why": "A cadeia nunca compara provedores. Ela pega o primeiro que responde e não olha adiante."
+      },
+      {
+        "text": "As duas, juntas numa sessão só",
+        "why": "Uma requisição é assinada com um conjunto de credenciais. Não existe fusão de duas identidades."
+      }
+    ]
+  },
+  "ex-88m2n6sj": {
+    "prompt": "Ponha estes provedores na ordem em que o AWS CLI 2.37.4 os tentou na saída de `--debug` da lição.",
+    "hint": "Chaves digitadas primeiro, a rede por último.",
+    "items": [
+      "`env`",
+      "`assume-role-with-web-identity`",
+      "`shared-credentials-file`",
+      "`container-role`",
+      "`iam-role`"
+    ],
+    "trap": "`container-role` fica logo antes de `iam-role`, e o arquivo no seu diretório pessoal vem bem antes dos dois."
+  },
+  "ex-ktpzzzpv": {
+    "prompt": "`aws configure list` mostra `iam-role` na coluna `TYPE` e nada em `LOCATION`. De onde vieram as credenciais?",
+    "hint": "Não há arquivo para nomear.",
+    "choices": [
+      {
+        "text": "De `~/.aws/credentials`, sob um perfil chamado `iam-role`",
+        "why": "Esse provedor é o `shared-credentials-file`, e ele nomeia em `LOCATION` o arquivo que leu."
+      },
+      {
+        "text": "De `AWS_ROLE_ARN` no ambiente",
+        "why": "`AWS_ROLE_ARN` com um arquivo de token é o provedor de web identity, que o `configure list` mostra como `assume-role-with-web-identity`."
+      },
+      {
+        "text": "Do serviço de metadados da instância, por HTTP",
+        "why": "Isso. `iam-role` é o nome que o botocore dá ao provedor de metadados; as credenciais chegaram numa resposta HTTP, então não há localização para mostrar."
+      },
+      {
+        "text": "Da chave de acesso da própria role, criada junto com ela",
+        "why": "Uma role não tem chave de acesso própria. Quem a assume recebe credenciais temporárias, e esse é o ponto de uma role."
+      }
+    ]
+  },
+  "ex-xbvwzye0": {
+    "prompt": "O que o IMDSv2 exige que o IMDSv1 não exige?",
+    "hint": "Conte as requisições antes da primeira resposta.",
+    "choices": [
+      {
+        "text": "Uma chave de acesso, assinada em toda requisição ao serviço",
+        "why": "Nada no endereço de metadados é assinado. A instância ainda não tem chave; é isso que ela está pedindo."
+      },
+      {
+        "text": "Um token obtido por `PUT`, enviado em cada leitura",
+        "why": "Isso. O `PUT` leva um cabeçalho com a duração do token, e todo `GET` depois dele leva o token."
+      },
+      {
+        "text": "HTTPS em vez de HTTP simples",
+        "why": "As duas versões respondem HTTP simples em `169.254.169.254`. A diferença é o token, não o transporte."
+      },
+      {
+        "text": "O nome da role, dado no caminho",
+        "why": "As duas versões põem o nome da role no caminho, e as duas o respondem quando se pede a lista."
+      }
+    ]
+  },
+  "ex-0gv1bq26": {
+    "prompt": "Numa instância EC2, o serviço de metadados responde em `http://___/`.",
+    "hint": "Um endereço link-local, o mesmo em toda instância.",
+    "blanks": [
+      {
+        "accept": [
+          "169.254.169.254"
+        ]
+      }
+    ]
+  },
+  "ex-fy7j96kz": {
+    "prompt": "Num laptop sem credencial em lugar nenhum, `aws s3 ls` espera um instante antes de dizer `Unable to locate credentials`. Por que a espera?",
+    "hint": "Qual provedor não é um arquivo nem uma variável?",
+    "choices": [
+      {
+        "text": "Ela pergunta à AWS se existe uma conta para este computador",
+        "why": "Nenhum provedor pergunta à AWS sobre o computador. Sem credenciais não há com o que perguntar."
+      },
+      {
+        "text": "Ela tenta `env` de novo até as variáveis aparecerem",
+        "why": "Cada provedor é tentado uma vez. O ambiente é lido num instante e achado vazio."
+      },
+      {
+        "text": "O último provedor manda requisições ao endereço de metadados e espera uma resposta que nunca vem",
+        "why": "Isso. O `iam-role` faz requisições de rede, e fora do EC2 nada responde em `169.254.169.254`, então ele espera o tempo limite."
+      },
+      {
+        "text": "Ela baixa a lista de provedores antes de tentá-los",
+        "why": "A ordem vem embutida no botocore, que está dentro da linha de comando. Nada é baixado."
+      }
+    ]
+  },
+  "ex-bna1mskk": {
+    "prompt": "O que o `run-instances` recebe para dar a uma instância nova as permissões da role `shop-app`?",
+    "hint": "O console esconde um passo que a linha de comando não esconde.",
+    "choices": [
+      {
+        "text": "O ARN da role, passado como `--role-arn`",
+        "why": "O `run-instances` não tem essa opção. Uma role chega a uma instância dentro de um profile."
+      },
+      {
+        "text": "Uma chave de acesso da role, escrita no user data",
+        "why": "Uma role não tem chave, e uma chave no user data é uma chave que qualquer um na máquina lê. Nada nesta lição escreve uma."
+      },
+      {
+        "text": "Um instance profile que guarda a role",
+        "why": "Isso. `--iam-instance-profile Name=shop-app` nomeia o profile, e o profile guarda exatamente uma role."
+      },
+      {
+        "text": "Nada: toda instância pode assumir toda role cujo nome conhece",
+        "why": "A política de confiança de uma role decide quem pode assumi-la, e uma instância recebe só a role do seu profile."
+      }
+    ]
+  },
+  "ex-b2qs28hj": {
+    "prompt": "Que principal a política de confiança de uma role para instâncias EC2 nomeia?",
+    "hint": "O serviço que vai assumi-la.",
+    "choices": [
+      {
+        "text": "O id da instância, como `i-0ee42130b0c3e009d`",
+        "why": "Um id de instância não é um principal. O id aparece depois, como nome da sessão quando a role é assumida."
+      },
+      {
+        "text": "`{\"Service\": \"ec2.amazonaws.com\"}`",
+        "why": "Isso. O EC2 assume a role em nome da instância, então o serviço é o principal."
+      },
+      {
+        "text": "A raiz da conta, para que toda instância dela sirva",
+        "why": "Nomear a conta confia nos usuários e roles dela, não no EC2. A instância continuaria sem ter como assumi-la."
+      },
+      {
+        "text": "O ARN do instance profile",
+        "why": "O profile é um contêiner da role, não um principal que a assume."
+      }
+    ]
+  },
+  "ex-33amrtz9": {
+    "prompt": "A `bia` pode chamar `ec2:RunInstances`. O lançamento com `--iam-instance-profile Name=shop-app` falha com `AccessDenied`. O que falta a ela?",
+    "hint": "Entregar uma role a uma máquina é uma permissão à parte.",
+    "choices": [
+      {
+        "text": "`sts:AssumeRole` em `shop-app`",
+        "why": "Ela não assume a role; quem assume é o EC2. O que ela faz é entregá-la, e isso exige outra permissão."
+      },
+      {
+        "text": "`ec2:AssociateIamInstanceProfile`, que todo lançamento com profile também chama",
+        "why": "Essa ação troca ou acrescenta um profile numa instância existente. Um lançamento com profile é verificado por outra coisa."
+      },
+      {
+        "text": "`iam:PassRole` na role `shop-app`",
+        "why": "Isso. Sem ela, qualquer um que pode ligar máquinas ligaria uma vestindo a role mais poderosa da conta."
+      }
+    ]
+  },
+  "ex-9tnjxzma": {
+    "prompt": "Quais destas são regras do IMDSv2, como a AWS as documenta? Marque todas as que se aplicam.",
+    "hint": "Três das cinco estão na lista da seção.",
+    "choices": [
+      {
+        "text": "Uma leitura exige um token obtido com `PUT` e um cabeçalho próprio",
+        "why": "Isso. Uma requisição forjada por um parâmetro de URL costuma ser um `GET` e não consegue acrescentar o cabeçalho."
+      },
+      {
+        "text": "Um `PUT` com `X-Forwarded-For` não recebe token",
+        "why": "Isso. Esse cabeçalho é a marca de um proxy, então um proxy na instância não consegue pegar um token para outra pessoa."
+      },
+      {
+        "text": "A resposta com o token sai com um tempo de vida IP igual ao limite de saltos",
+        "why": "Isso. Com o padrão 1, ela morre depois de um salto e nunca alcança nada atrás de outro dispositivo de rede."
+      },
+      {
+        "text": "As credenciais voltam cifradas com a chave da própria instância",
+        "why": "Elas voltam em JSON simples, e é por isso que quem pode perguntar é a defesa inteira."
+      },
+      {
+        "text": "As aplicações na instância não conseguem mais ler os metadados",
+        "why": "Conseguem, com um token. O SDK na instância faz o `PUT` sozinho, como o `--debug` da lição mostrou."
+      }
+    ]
+  },
+  "ex-hjsy19ha": {
+    "prompt": "Depois de lançar com `HttpTokens=required`, um `curl` simples sem token ao endereço de metadados do moto responde `200`. O que essa medição estabelece?",
+    "hint": "Separe o que o moto guarda do que o moto aplica.",
+    "choices": [
+      {
+        "text": "Que `HttpTokens=required` só vale depois que a instância reinicia",
+        "why": "Não há instância para reiniciar no moto, e na AWS a configuração vale no lançamento. A causa é a imitação do moto."
+      },
+      {
+        "text": "Que o token também é opcional na AWS, diga a configuração o que disser",
+        "why": "Um resultado no moto não prova nada sobre a AWS. A AWS documenta um `401 Unauthorized` para exatamente esta requisição."
+      },
+      {
+        "text": "Que o `curl` mandou um token sem que pedissem",
+        "why": "O `curl` manda só os cabeçalhos que recebe, e nenhum foi dado."
+      },
+      {
+        "text": "Só que o moto registra a configuração sem aplicá-la",
+        "why": "Isso. O `describe-instances` mostra `required`, e o serviço de metadados do moto o ignora. O que a AWS recusa tem de vir da documentação dela."
+      }
+    ]
+  },
+  "ex-e8gmx1jd": {
+    "prompt": "Duas máquinas: um nó do EKS, cujos pods NÃO devem usar a role do nó, e uma instância só rodando a aplicação da loja no Docker, que DEVE usar a role da instância. Que limites de saltos servem?",
+    "hint": "Um contêiner numa bridge está um salto além da instância.",
+    "choices": [
+      {
+        "text": "1 no nó, 2 na instância com Docker",
+        "why": "Isso. Com 1 o token morre antes de chegar a um pod; com 2 ele alcança um contêiner na bridge."
+      },
+      {
+        "text": "2 no nó, 1 na instância com Docker",
+        "why": "É o inverso: os pods alcançariam a role do nó, e o contêiner não alcançaria a que precisa."
+      },
+      {
+        "text": "1 nas duas, já que um limite maior nunca é seguro",
+        "why": "Com 1 o contêiner da loja não recebe token e não consegue usar a role que deveria usar."
+      },
+      {
+        "text": "2 nas duas, já que contêineres ficam a um salto nos dois casos",
+        "why": "No nó, alcançar a role é exatamente o que deve falhar, então o salto extra é o buraco."
+      }
+    ]
+  },
+  "ex-pbf2pa0e": {
+    "prompt": "Quantas roles um instance profile pode guardar? O moto recusou a seguinte com `LimitExceeded`.",
+    "hint": "A cota citada no erro.",
+    "unit": "roles"
+  },
+  "ex-8qea908e": {
+    "prompt": "Numa política de confiança do IRSA, o que a condição em `...:sub` restringe?",
+    "hint": "Leia o valor: `system:serviceaccount:shop:checkout`.",
+    "choices": [
+      {
+        "text": "Qual cluster pode emitir tokens para a role",
+        "why": "O emissor é o principal `Federated`, o provedor registrado. `sub` é sobre a carga dentro dele."
+      },
+      {
+        "text": "Qual service account, em qual namespace, pode assumir a role",
+        "why": "Isso. Sem ela, todo pod do cluster com um token poderia virar a role."
+      },
+      {
+        "text": "Para quem o token é, que no IRSA é o STS",
+        "why": "Isso é o `aud`, a outra condição. As duas são verificações separadas sobre claims separadas."
+      },
+      {
+        "text": "Quanto tempo as credenciais devolvidas podem durar",
+        "why": "A duração é uma configuração da role e da requisição. Uma condição de confiança decide quem, não por quanto tempo."
+      }
+    ]
+  },
+  "ex-4d4fza4z": {
+    "prompt": "Por que `sts:AssumeRoleWithWebIdentity` é enviado sem assinatura?",
+    "hint": "O que o pod tem antes da chamada?",
+    "choices": [
+      {
+        "text": "Porque o STS é um serviço global e aceita chamadas sem assinatura de qualquer um",
+        "why": "Quase toda chamada ao STS é assinada, `AssumeRole` inclusive. Esta é a exceção, por um motivo que é dela."
+      },
+      {
+        "text": "O pod ainda não tem credencial da AWS; o token assinado é a prova",
+        "why": "Isso. O cluster assinou o token, e o STS confere essa assinatura em vez de uma da AWS."
+      },
+      {
+        "text": "Porque a política de confiança da role desliga a assinatura",
+        "why": "Uma política de confiança decide quem pode assumir a role. Ela não manda em como a requisição é enviada."
+      },
+      {
+        "text": "Para ganhar tempo, já que pods nascem com frequência",
+        "why": "Assinar custa microssegundos. O motivo é que não há com o que assinar."
+      }
+    ]
+  },
+  "ex-gqnhrakz": {
+    "prompt": "No laboratório, um token para `system:serviceaccount:other:intruder` conseguiu credenciais de `shop-checkout`, cuja política de confiança nomeia só `shop:checkout`. O que o leitor deve concluir?",
+    "hint": "Que parte da lição foi medida, e qual foi lida?",
+    "choices": [
+      {
+        "text": "Que `StringEquals` compara só o começo do valor",
+        "why": "`StringEquals` é uma comparação exata. A causa é que o moto nunca a avaliou."
+      },
+      {
+        "text": "Que a AWS deixa qualquer token passar até o provedor ser verificado",
+        "why": "A AWS recusa um token assim na política de confiança com `AccessDenied`. O laboratório não diz nada sobre a AWS aqui."
+      },
+      {
+        "text": "Que o moto não verifica nada sobre web identity, então a recusa é comportamento documentado da AWS",
+        "why": "Isso. Ele aceitou até uma role que não existe. O laboratório mostra como as credenciais viajam; o que o STS recusa vem da documentação da AWS."
+      },
+      {
+        "text": "Que a condição em `sub` deveria ficar na política de permissão da role",
+        "why": "Quem pode assumir uma role é a pergunta da política de confiança, e é lá que a condição fica."
+      }
+    ]
+  },
+  "ex-yfgwcmmz": {
+    "prompt": "Ligue cada jeito de dar uma role a uma carga ao principal que a política de confiança dela nomeia.",
+    "hint": "Três serviços e um provedor registrado.",
+    "pairs": [
+      {
+        "left": "um instance profile do EC2",
+        "right": "`ec2.amazonaws.com`"
+      },
+      {
+        "left": "uma task role do ECS",
+        "right": "`ecs-tasks.amazonaws.com`"
+      },
+      {
+        "left": "EKS Pod Identity",
+        "right": "`pods.eks.amazonaws.com`"
+      },
+      {
+        "left": "IRSA",
+        "right": "o provedor OIDC do cluster, como `Federated`"
+      }
+    ],
+    "right_distractors": [
+      "`eks.amazonaws.com`"
+    ]
+  },
+  "ex-kgew7d8g": {
+    "prompt": "A loja roda três clusters EKS e quer uma role, `shop-checkout`, usável pelo checkout em todos eles. Por que o Pod Identity torna isso mais simples que o IRSA?",
+    "hint": "Conte o que cada cluster acrescenta à política de confiança.",
+    "choices": [
+      {
+        "text": "As credenciais do Pod Identity nunca vencem, então nada precisa ser renovado entre clusters",
+        "why": "Elas vencem como toda credencial temporária. A simplificação está na política de confiança, não na duração."
+      },
+      {
+        "text": "O Pod Identity põe os clusters numa conta só automaticamente",
+        "why": "O Pod Identity não move clusters entre contas. Os três já estavam numa só."
+      },
+      {
+        "text": "A confiança nomeia um principal de serviço, o mesmo em todo cluster",
+        "why": "Isso. Com o IRSA cada cluster é mais um provedor a registrar e mais uma condição na política de confiança."
+      },
+      {
+        "text": "O IRSA proíbe uma role de ser assumida por mais de um cluster",
+        "why": "Ele permite, com um principal `Federated` e uma condição por cluster. É mais para escrever, não é proibido."
+      }
+    ]
+  },
+  "ex-2asxfm0f": {
+    "prompt": "No ECS, o agente serve as credenciais de uma task role em `169.254.170.___`, e o contêiner acha o caminho em `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI`.",
+    "hint": "Não é o endereço do agente do Pod Identity.",
+    "blanks": [
+      {
+        "accept": [
+          "2"
+        ]
+      }
+    ]
+  },
+  "ex-8skxs81g": {
+    "prompt": "O pipeline de deploy da loja roda num serviço de CI que dá a cada job um token OIDC assinado. Que arranjo desta lição o deixa fazer deploy sem nenhuma chave da AWS guardada?",
+    "hint": "O serviço de CI é um emissor, como um cluster.",
+    "choices": [
+      {
+        "text": "Um instance profile nas máquinas do serviço de CI",
+        "why": "Essas máquinas não estão na conta da loja, então a loja não pode dar um profile a elas."
+      },
+      {
+        "text": "Registrar o emissor do CI como provedor OIDC e fazer o `deployer` confiar nele, com uma condição em `sub` que nomeia o repositório",
+        "why": "Isso. É o mecanismo do IRSA com outro emissor: o token do job é trocado pela `deployer` via `AssumeRoleWithWebIdentity`."
+      },
+      {
+        "text": "Guardar uma chave como segredo do CI e trocá-la todo mês",
+        "why": "Isso é uma chave guardada, o que a pergunta exclui. A lição 12 a trata como último recurso."
+      },
+      {
+        "text": "Apontar `AWS_CONTAINER_CREDENTIALS_FULL_URI` para o serviço de CI",
+        "why": "O provedor de contêiner lê credenciais que alguém já tem. O serviço de CI tem um token, não credenciais da AWS."
+      }
+    ]
+  },
+  "ex-dhan2p1r": {
+    "prompt": "Ponha em ordem os passos do IRSA em execução, de um pod que nasce até a primeira chamada dele ao S3.",
+    "hint": "O token existe antes de alguém conferi-lo.",
+    "items": [
+      "o cluster escreve um token assinado no arquivo do pod",
+      "o SDK chama `AssumeRoleWithWebIdentity` com o token",
+      "o STS verifica a assinatura com as chaves do emissor",
+      "o STS avalia `sub` e `aud` na política de confiança",
+      "o pod assina uma chamada ao S3 com as credenciais"
+    ],
+    "trap": "A política de confiança só é avaliada para um token cuja assinatura já foi verificada."
+  },
+  "ex-kmg2np6v": {
+    "prompt": "Uma revisão acha um SSRF na pré-visualização de imagens da loja, numa instância onde o IMDSv1 ainda está ligado. Que mudança fecha o caminho até as credenciais da role?",
+    "hint": "A requisição forjada é um GET simples.",
+    "choices": [
+      {
+        "text": "Uma regra de security group recusando tráfego para `169.254.169.254`",
+        "why": "Security groups filtram a interface de rede da instância, e o serviço de metadados é alcançado sem passar por eles."
+      },
+      {
+        "text": "Apagar o instance profile",
+        "why": "Isso tira as credenciais do atacante e da aplicação da loja ao mesmo tempo, e ela deixa de ler `shop-assets`."
+      },
+      {
+        "text": "`modify-instance-metadata-options --http-tokens required`, e depois corrigir a pré-visualização",
+        "why": "Isso. Com tokens obrigatórios, um `GET` simples recebe `401`, e o SSRF em si ainda merece a sua correção."
+      },
+      {
+        "text": "Trocar a chave de acesso em `~/.aws/credentials` na instância",
+        "why": "Uma instância com profile não tem essa chave. As credenciais em risco vêm do serviço de metadados."
+      }
+    ]
+  }
+}

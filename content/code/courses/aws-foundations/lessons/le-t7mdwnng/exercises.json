@@ -1,0 +1,599 @@
+[
+  {
+    "id": "ex-wmg19326",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many route tables does one subnet use at a time?",
+    "hint": "Lesson 16 found the nine subnets using one without being told.",
+    "choices": [
+      {
+        "text": "As many as are associated with it, read in turn",
+        "correct": false,
+        "why": "A subnet is associated with one table at a time; associating another replaces the first."
+      },
+      {
+        "text": "One: the main table, unless another is associated",
+        "correct": true,
+        "why": "Right. A subnet with no association of its own uses the main table implicitly."
+      },
+      {
+        "text": "None, until one is associated",
+        "correct": false,
+        "why": "That would leave a new subnet unable to route even inside the VPC. The main table covers it from the start."
+      },
+      {
+        "text": "One for each zone the VPC spans",
+        "correct": false,
+        "why": "Zones do not have route tables; subnets do. The shop has one private table per zone because it chose to."
+      }
+    ]
+  },
+  {
+    "id": "ex-da3n2z50",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine in `app-b` sends a packet to `10.20.100.5`, a database in `data-a`, in another zone. Which route of `app-b`'s table carries it?",
+    "hint": "Which range is `10.20.100.5` inside?",
+    "choices": [
+      {
+        "text": "The NAT gateway of zone b, since `data-a` is in another zone",
+        "correct": false,
+        "why": "A NAT gateway is the way out of the VPC. Another zone of the same VPC is still inside it."
+      },
+      {
+        "text": "None: crossing zones needs a peering connection",
+        "correct": false,
+        "why": "Peering joins two VPCs (lesson 20). The zones of one VPC are joined by the `local` route."
+      },
+      {
+        "text": "`local`, which every table of the VPC carries",
+        "correct": true,
+        "why": "Right. `10.20.100.5` is inside `10.20.0.0/16`, and `local` covers every subnet of the VPC whatever its zone."
+      },
+      {
+        "text": "The internet gateway, out and back in",
+        "correct": false,
+        "why": "The packet never leaves the VPC: the `/16` is more specific than `0.0.0.0/0`, and `app-b` has no route to the internet gateway anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1pbc14y",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `17-routes.sh`, somebody fixes a problem quickly by adding `0.0.0.0/0` to the internet gateway in the MAIN route table. Today nothing changes. What has changed for next month?",
+    "hint": "Which subnets use the main table, today and later?",
+    "choices": [
+      {
+        "text": "The three public subnets get a second way out",
+        "correct": false,
+        "why": "They use the `public` table, associated by name; the main table does not apply to them."
+      },
+      {
+        "text": "A subnet created without an association is public from its first minute",
+        "correct": true,
+        "why": "Right. Every subnet has an explicit table today, so nothing moves now; a new one lands in the main table, which now opens onto the internet."
+      },
+      {
+        "text": "The private subnets start sending their traffic straight to the internet gateway",
+        "correct": false,
+        "why": "Each private subnet is associated with its zone's table, which still points at its NAT gateway."
+      },
+      {
+        "text": "Nothing, since AWS refuses a route to an internet gateway in the main table",
+        "correct": false,
+        "why": "AWS accepts it; the default VPC's main table carries exactly that route. That is why the habit of leaving it private matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-pa5mfmjm",
+    "version": 1,
+    "section": "route-tables",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The destination that contains every IPv4 address, and so the route a packet takes when nothing more specific matches, is written ___.",
+    "hint": "A prefix of length zero.",
+    "blanks": [
+      {
+        "accept": [
+          "0.0.0.0/0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-at16390q",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is true of an internet gateway?",
+    "hint": "Compare it with a NAT gateway on two points: zone and price.",
+    "choices": [
+      {
+        "text": "It lives in one zone, so it fails with that zone",
+        "correct": false,
+        "why": "That is the NAT gateway. AWS runs the internet gateway across every zone of the region."
+      },
+      {
+        "text": "It is charged by the hour, like a NAT gateway",
+        "correct": false,
+        "why": "An internet gateway has no hourly charge. What it carries is billed as data transfer."
+      },
+      {
+        "text": "It has no zone of its own and no hourly price",
+        "correct": true,
+        "why": "Right. One per VPC, run by AWS across the region, and the bill sees only the bytes."
+      },
+      {
+        "text": "It filters connections from outside, like a firewall",
+        "correct": false,
+        "why": "It translates and forwards. Filtering is the security group's and the network ACL's job, in lesson 18."
+      }
+    ]
+  },
+  {
+    "id": "ex-rv8wmw8j",
+    "version": 1,
+    "section": "route-tables",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the six private subnets not simply share the `public` table?",
+    "hint": "What would the internet gateway translate their addresses into?",
+    "choices": [
+      {
+        "text": "They have no public address for the gateway to use",
+        "correct": true,
+        "why": "Right. The internet gateway maps a machine's private address to its own public one; with none, the packet has no way to come back. And a database should not be one route from the internet."
+      },
+      {
+        "text": "A route table serves one subnet at most",
+        "correct": false,
+        "why": "The `public` table serves three subnets. A table can serve many; a subnet uses one."
+      },
+      {
+        "text": "A table cannot hold subnets of different tiers",
+        "correct": false,
+        "why": "Tiers are names in the shop's plan. A route table knows nothing about them."
+      },
+      {
+        "text": "The internet gateway accepts traffic from one zone only",
+        "correct": false,
+        "why": "It serves the whole VPC across every zone; that is why one table serves `public-a`, `public-b` and `public-c`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm0976x3",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `nat-a` created in `public-a` rather than in `app-a`, beside the machines it serves?",
+    "hint": "The gateway's own packets are routed too.",
+    "choices": [
+      {
+        "text": "A NAT gateway in a private subnet would be reachable from the internet",
+        "correct": false,
+        "why": "It is the other way round: in a private subnet it could not reach the internet at all."
+      },
+      {
+        "text": "Its own packets are routed by its subnet's table, and only the public one has a way out",
+        "correct": true,
+        "why": "Right. That is the second hop of the third packet: `public-a`'s table sends it to the internet gateway."
+      },
+      {
+        "text": "Public subnets are cheaper per hour",
+        "correct": false,
+        "why": "A subnet has no price. The NAT gateway costs the same 0.093 an hour wherever it sits."
+      },
+      {
+        "text": "AWS keeps the private subnets free for machines",
+        "correct": false,
+        "why": "There is no such rule; the reason is routing, not reservation."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6wt60a9",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A NAT gateway lets the shop's application call out and lets nobody call in. Why does nothing from outside get in?",
+    "hint": "Think about what the gateway knows when a packet arrives that nobody asked for.",
+    "choices": [
+      {
+        "text": "It inspects each packet and drops the dangerous ones",
+        "correct": false,
+        "why": "It inspects nothing. It is a translator, and the filters are lesson 18."
+      },
+      {
+        "text": "Its Elastic IP refuses inbound traffic",
+        "correct": false,
+        "why": "An address refuses nothing; it is a label. The reason is what the gateway can map the packet to."
+      },
+      {
+        "text": "It has no way to know which private machine an unsolicited packet is for",
+        "correct": true,
+        "why": "Right. A reply matches a connection somebody inside opened; a new connection from outside matches nothing, so it goes nowhere."
+      },
+      {
+        "text": "Its route table has no route back to the internet",
+        "correct": false,
+        "why": "It does: `public-a`'s table sends `0.0.0.0/0` to the internet gateway, which is how the shop's calls get out."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1zjjdy5",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine in `app-a` calls the payment provider at `198.51.100.7`. Put the steps of the packet's way out in order.",
+    "hint": "Two tables are read, one after the other.",
+    "items": [
+      "`private-a` matches `0.0.0.0/0` and sends it to `nat-a`",
+      "`nat-a` puts its own public address in place of the machine's",
+      "`public-a`'s table matches `0.0.0.0/0` and sends it to the internet gateway",
+      "the internet gateway hands it to the internet"
+    ],
+    "trap": "The address is swapped by the NAT gateway, so it happens between the two tables."
+  },
+  {
+    "id": "ex-d4bkc61h",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A route table holds `0.0.0.0/0` to `nat-a`, `192.168.0.0/16` to the virtual private gateway, and `192.168.4.0/24` to a peering connection, `pcx-…`. Where does a packet for `192.168.4.20` go?",
+    "hint": "Three routes contain the address. Compare their prefixes.",
+    "choices": [
+      {
+        "text": "To the virtual private gateway, the office's route",
+        "correct": false,
+        "why": "The `/16` contains the address, and so does a longer route. The longer one wins."
+      },
+      {
+        "text": "To the peering connection",
+        "correct": true,
+        "why": "Right. `192.168.4.0/24` is the most specific route that contains `192.168.4.20`; the order the routes were written in does not matter."
+      },
+      {
+        "text": "To `nat-a`, since `0.0.0.0/0` matches every address",
+        "correct": false,
+        "why": "It matches, and it is the shortest prefix there is, so it loses to any other route that matches."
+      },
+      {
+        "text": "Nowhere: two routes overlap, so the table is refused",
+        "correct": false,
+        "why": "Overlapping routes are allowed and normal; only two routes for the same destination are refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-646b2hfh",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the same table, a packet goes to `192.168.9.1`. What is the prefix length of the route that carries it?",
+    "hint": "Is it inside `192.168.4.0/24`?",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "bits"
+  },
+  {
+    "id": "ex-9aykafpa",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A private subnet's machines have IPv6 addresses and must reach the internet over IPv6 without being reachable from it. What does `::/0` point at?",
+    "hint": "IPv6 needs no translation.",
+    "choices": [
+      {
+        "text": "The zone's NAT gateway, as for IPv4",
+        "correct": false,
+        "why": "A NAT gateway translates private IPv4 addresses. An IPv6 address is already public and needs only a one-way door."
+      },
+      {
+        "text": "The internet gateway",
+        "correct": false,
+        "why": "That would make the subnet public over IPv6: connections could be opened to its machines from outside."
+      },
+      {
+        "text": "An egress-only internet gateway",
+        "correct": true,
+        "why": "Right. It lets connections out over IPv6 and none in, and it has no hourly charge."
+      },
+      {
+        "text": "The virtual private gateway, which keeps traffic private",
+        "correct": false,
+        "why": "A virtual private gateway is the VPC's end of a VPN to the office (lesson 24), not a way to the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-94xm1req",
+    "version": 1,
+    "section": "nat-gateways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto stored every route of the lesson. What does that prove about where a packet goes?",
+    "hint": "What does moto carry?",
+    "choices": [
+      {
+        "text": "That the path works, since moto would refuse a broken route",
+        "correct": false,
+        "why": "moto refuses some malformed requests, such as a duplicate destination, but it never sends a packet down a route."
+      },
+      {
+        "text": "Nothing: moto routes no packet",
+        "correct": true,
+        "why": "Right. On AWS, Reachability Analyzer checks a path from the configuration and Flow Logs record what moved; neither was run here."
+      },
+      {
+        "text": "That AWS would route the same way, because moto is AWS's code",
+        "correct": false,
+        "why": "moto is an independent open-source imitation of AWS's API, not AWS's code."
+      },
+      {
+        "text": "That the NAT gateway is up, since its state is `available`",
+        "correct": false,
+        "why": "The state is a field in a record. In moto there is no gateway behind it to be up or down."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pybq7f6",
+    "version": 1,
+    "section": "one-or-three",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the prices of the lesson and 730 hours in a month, how many dollars a month do TWO NAT gateways cost, each with its Elastic IP, before any traffic?",
+    "hint": "0.093 and 0.005 an hour, for each of two.",
+    "value": 143.08,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-48mt512q",
+    "version": 1,
+    "section": "one-or-three",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop moves from three NAT gateways to one shared one, with the same 200 GB a month going out. Which line of the bill does NOT change?",
+    "hint": "One of the three prices is per gigabyte, whatever the number of gateways.",
+    "choices": [
+      {
+        "text": "The hours of NAT gateway",
+        "correct": false,
+        "why": "Those fall from three gateways' worth to one: 203.67 a month to 67.89."
+      },
+      {
+        "text": "The hours of public IPv4 address, since each gateway kept its own",
+        "correct": false,
+        "why": "Two Elastic IPs go with the two gateways, so that line falls too."
+      },
+      {
+        "text": "The gigabytes processed by NAT",
+        "correct": true,
+        "why": "Right. 200 × 0.093 = 18.60 whether one gateway carries them or three share them."
+      },
+      {
+        "text": "The data transfer between zones",
+        "correct": false,
+        "why": "That one appears: zones b and c now cross into zone a for every gigabyte."
+      }
+    ]
+  },
+  {
+    "id": "ex-jyfmxbeg",
+    "version": 1,
+    "section": "one-or-three",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A different shop runs one shared NAT gateway, and 10 TB a month (10,240 GB) of its NAT traffic comes from the two zones without the gateway. On money alone, which arrangement is cheaper?",
+    "hint": "Compare the crossing at 0.02 a gigabyte with the 143.08 that two more gateways cost.",
+    "choices": [
+      {
+        "text": "The shared gateway, since a gateway costs more than any crossing",
+        "correct": false,
+        "why": "At this volume the crossing is 10,240 × 0.02 = 204.80 a month, more than the 143.08 the extra gateways cost."
+      },
+      {
+        "text": "One per zone: the crossing would cost 204.80 a month, more than 143.08",
+        "correct": true,
+        "why": "Right. The break-even was about 7,154 GB a month; 10,240 is past it, so three gateways win on money as well as on failure."
+      },
+      {
+        "text": "They cost the same, since processing is per gigabyte either way",
+        "correct": false,
+        "why": "Processing is the same either way, but the hours and the crossing are not, and they are what the comparison is about."
+      },
+      {
+        "text": "The shared gateway, because the crossing is free inside a region",
+        "correct": false,
+        "why": "Between two zones of a region is 0.01 a gigabyte each way, as lesson 1 measured. Only within one zone is it free."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds8g9qx7",
+    "version": 1,
+    "section": "one-or-three",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sharing one NAT gateway saves the shop about 140 dollars a month. Why does production still use three?",
+    "hint": "What happens to zones b and c when zone a fails?",
+    "choices": [
+      {
+        "text": "A failure of zone a would also cut b and c off from the internet",
+        "correct": true,
+        "why": "Right. The shop spread across zones to survive losing one; a shared gateway undoes that for every outbound call."
+      },
+      {
+        "text": "A NAT gateway carries traffic from its own zone only",
+        "correct": false,
+        "why": "It carries traffic from any subnet whose table points at it; the shared design depends on exactly that."
+      },
+      {
+        "text": "The crossing between zones would cost more than the gateways at 200 GB",
+        "correct": false,
+        "why": "At 200 GB the crossing is about 2.67 dollars a month. Money favours sharing; the reason is the failure."
+      },
+      {
+        "text": "AWS requires one NAT gateway per zone in production accounts",
+        "correct": false,
+        "why": "AWS requires nothing of the kind; staging shares one in the same organisation. It is the shop's decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-4mphwa3f",
+    "version": 1,
+    "section": "one-or-three",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each line of the price list to its price in São Paulo, from the offers the lesson read.",
+    "hint": "Two of them are the same number in different units.",
+    "pairs": [
+      {
+        "left": "`SAE1-NatGateway-Hours`",
+        "right": "0.093 per hour"
+      },
+      {
+        "left": "`SAE1-NatGateway-Bytes`",
+        "right": "0.093 per GB"
+      },
+      {
+        "left": "`SAE1-PublicIPv4:InUseAddress`",
+        "right": "0.005 per hour"
+      },
+      {
+        "left": "`SAE1-DataTransfer-Regional-Bytes`",
+        "right": "0.01 per GB, each way"
+      }
+    ],
+    "right_distractors": [
+      "0.138 per GB"
+    ]
+  },
+  {
+    "id": "ex-dvkpnhxy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After both scripts, somebody creates a subnet `cache-a` in zone a and associates nothing with it. Where can its machines send packets?",
+    "hint": "Which table does an unassociated subnet use, and what is in it now?",
+    "choices": [
+      {
+        "text": "To the internet through `nat-a`, like the other subnets of zone a",
+        "correct": false,
+        "why": "Being in zone a gives it nothing; `private-a` serves the subnets associated with it, and `cache-a` is not one."
+      },
+      {
+        "text": "To the internet through the internet gateway, since a new subnet starts public",
+        "correct": false,
+        "why": "A new subnet starts in the main table, and the shop's main table has no way out."
+      },
+      {
+        "text": "Inside the VPC and nowhere else",
+        "correct": true,
+        "why": "Right. It uses the main table, which holds only `local`. That is the safe default the lesson set up on purpose."
+      },
+      {
+        "text": "Nowhere, until a table is associated",
+        "correct": false,
+        "why": "The main table still gives it `local`, so it reaches every other subnet of the VPC."
+      }
+    ]
+  },
+  {
+    "id": "ex-vyfg142k",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these hold for the shop's VPC after `16-vpc.sh` and `17-routes.sh`? Choose all that apply.",
+    "hint": "The last transcript lists every table.",
+    "choices": [
+      {
+        "text": "One table, `public`, serves the three public subnets",
+        "correct": true,
+        "why": "Right. Three associations, and `0.0.0.0/0` to the internet gateway."
+      },
+      {
+        "text": "`app-b` reaches the internet through `nat-a`",
+        "correct": false,
+        "why": "`app-b` uses `private-b`, which points at `nat-b`. Nothing crosses a zone."
+      },
+      {
+        "text": "The main table serves no subnet",
+        "correct": true,
+        "why": "Right. Its single association is the marker that makes it main."
+      },
+      {
+        "text": "Each private table serves two subnets",
+        "correct": true,
+        "why": "Right. The zone's `app` and `data` subnets."
+      },
+      {
+        "text": "The private tables route `192.168.0.0/16` to the office",
+        "correct": false,
+        "why": "That route was added by hand to be read, and the script leaves it out."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhp2stzr",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine in `app-c` calls a payment provider. Its packet is routed first by `private-c`, which hands it to the NAT gateway called ___.",
+    "hint": "Each zone has its own, named after the zone's letter.",
+    "blanks": [
+      {
+        "accept": [
+          "nat-c"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

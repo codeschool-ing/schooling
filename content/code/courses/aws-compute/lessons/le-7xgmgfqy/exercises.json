@@ -1,0 +1,705 @@
+[
+  {
+    "id": "ex-zzwdhkhr",
+    "version": 1,
+    "section": "what-an-ami-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an AMI actually hold?",
+    "hint": "Where are the bytes of the disk?",
+    "choices": [
+      {
+        "text": "The disk itself, as one image file uploaded to S3",
+        "correct": false,
+        "why": "The bytes are in snapshots. The AMI is the record that names them."
+      },
+      {
+        "text": "The operating system's name and version",
+        "correct": false,
+        "why": "It carries far more: architecture, boot mode, root device and the block device mapping."
+      },
+      {
+        "text": "A stopped instance, kept so that it can be cloned",
+        "correct": false,
+        "why": "An AMI is made from an instance, but it is not one, and nothing in it is running or stopped."
+      },
+      {
+        "text": "A record of the machine, naming snapshots",
+        "correct": true,
+        "why": "Right. A launch makes a volume from each snapshot in the mapping."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfn6jbz1",
+    "version": 1,
+    "section": "what-an-ami-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why read /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 instead of writing the AMI id into a template?",
+    "hint": "What happens to the id every few weeks?",
+    "choices": [
+      {
+        "text": "The name stays put while the id changes",
+        "correct": true,
+        "why": "Right. The parameter moves and the template that reads it does not."
+      },
+      {
+        "text": "The parameter is cheaper to read than describe-images",
+        "correct": false,
+        "why": "Cost has nothing to do with it; both reads are free."
+      },
+      {
+        "text": "An AMI id cannot be written into a launch template",
+        "correct": false,
+        "why": "It can; it is simply a fact that stops being true."
+      },
+      {
+        "text": "The id is secret and only the parameter is public",
+        "correct": false,
+        "why": "Public image ids are visible to everybody through describe-images."
+      }
+    ]
+  },
+  {
+    "id": "ex-203s5vhr",
+    "version": 1,
+    "section": "what-an-ami-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old script finds Ubuntu with describe-images, a name filter of ubuntu/images/* and no --owners. What is the risk on AWS?",
+    "hint": "Who may publish a public image?",
+    "choices": [
+      {
+        "text": "It matches nothing, because a name filter needs an owner",
+        "correct": false,
+        "why": "A name filter works alone; that is the problem."
+      },
+      {
+        "text": "It sorts by CreationDate wrongly, as it did in moto",
+        "correct": false,
+        "why": "That is moto's dating. On AWS the date is real and the sort works."
+      },
+      {
+        "text": "It matches impostors' public images of that name",
+        "correct": true,
+        "why": "Right. Only the owner id says Canonical made it."
+      },
+      {
+        "text": "It returns images from every region at once",
+        "correct": false,
+        "why": "describe-images answers for one region, the one you are in."
+      }
+    ]
+  },
+  {
+    "id": "ex-kkddr5c1",
+    "version": 1,
+    "section": "what-an-ami-is",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The part of an AMI that becomes the new instance's disks is its block device ___.",
+    "hint": "Each entry names a snapshot.",
+    "blanks": [
+      {
+        "accept": [
+          "mapping",
+          "mappings"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sadkcxw8",
+    "version": 1,
+    "section": "what-an-ami-is",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto's record of the Amazon Linux 2023 image, which values are moto's rather than AWS's? Choose all that apply.",
+    "hint": "The structure is AWS's.",
+    "choices": [
+      {
+        "text": "A CreationDate of the moment moto started",
+        "correct": true,
+        "why": "moto dates every image it ships that way."
+      },
+      {
+        "text": "A 15 GB root of type standard",
+        "correct": true,
+        "why": "AWS's record maps an 8 GiB gp3 root."
+      },
+      {
+        "text": "DeleteOnTermination false on the root",
+        "correct": true,
+        "why": "AWS's image deletes its root with the instance."
+      },
+      {
+        "text": "Architecture x86_64",
+        "correct": false,
+        "why": "The name says x86_64 and so does AWS."
+      },
+      {
+        "text": "OwnerId 137112412989",
+        "correct": false,
+        "why": "That is Amazon's account, in moto and on AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-4k7zmxn1",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A volume already has one snapshot. What does the second snapshot of it store?",
+    "hint": "Think of the blocks.",
+    "choices": [
+      {
+        "text": "Only the blocks that changed since the first",
+        "correct": true,
+        "why": "Right, and it points back at the first for the rest."
+      },
+      {
+        "text": "Every block of the volume again, so that it stands alone",
+        "correct": false,
+        "why": "It stands alone without storing them again: AWS keeps the blocks it refers to."
+      },
+      {
+        "text": "The files that changed, as a list of paths",
+        "correct": false,
+        "why": "A snapshot knows blocks, not files."
+      },
+      {
+        "text": "No blocks yet; they are copied when the first is deleted",
+        "correct": false,
+        "why": "It stores its changed blocks the moment it is taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw2v4tnd",
+    "version": 1,
+    "section": "snapshots",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A volume has 80 GB written. A nightly snapshot is kept for 30 days and 2 GB change each day. At 0.068 USD per GB-month, what do the 30 snapshots cost a month, in USD?",
+    "hint": "The first stores what was written; each of the other 29 stores a day's change.",
+    "value": 9.38,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-jfbvsxv3",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Monday's snapshot is deleted. What happens to Tuesday's, which referred to Monday's for most of its blocks?",
+    "hint": "What does AWS free?",
+    "choices": [
+      {
+        "text": "It is damaged, and can no longer be restored",
+        "correct": false,
+        "why": "AWS never frees a block a later snapshot still needs."
+      },
+      {
+        "text": "AWS refuses to delete Monday's while Tuesday's exists",
+        "correct": false,
+        "why": "Any snapshot in a chain may be deleted. What refuses is a snapshot used by a registered AMI."
+      },
+      {
+        "text": "It is still whole: every block it needed is kept",
+        "correct": true,
+        "why": "Right. Only what was unique to Monday's is freed."
+      },
+      {
+        "text": "It becomes a full copy and its price doubles",
+        "correct": false,
+        "why": "The bill falls by what was unique to Monday's; nothing is copied."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqhph7cz",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "describe-snapshots shows VolumeSize 100 for both snapshots. What is that number?",
+    "hint": "Of what, exactly?",
+    "choices": [
+      {
+        "text": "What each snapshot stores, in GB",
+        "correct": false,
+        "why": "What a snapshot stores is never printed there; it shows on the bill."
+      },
+      {
+        "text": "The size of the volume the snapshot was taken from",
+        "correct": true,
+        "why": "Right. It is the same for every snapshot of that volume."
+      },
+      {
+        "text": "The percentage of the volume that has been copied so far",
+        "correct": false,
+        "why": "That is Progress, a different field."
+      },
+      {
+        "text": "moto's placeholder for a price in cents",
+        "correct": false,
+        "why": "No price appears in a snapshot's record, in moto or on AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbn39wwb",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A data volume in sa-east-1a has to be used by an instance in sa-east-1c. How is it moved?",
+    "hint": "A volume never leaves its zone; a snapshot belongs to the region.",
+    "choices": [
+      {
+        "text": "modify-volume, naming the new zone",
+        "correct": false,
+        "why": "modify-volume changes size, type and performance, never the zone."
+      },
+      {
+        "text": "copy-snapshot into sa-east-1c first, then create the volume there",
+        "correct": false,
+        "why": "copy-snapshot copies between regions. Inside one region the snapshot is already usable in every zone."
+      },
+      {
+        "text": "Attach it to the instance in sa-east-1c and let AWS move it",
+        "correct": false,
+        "why": "AWS refuses to attach a volume to an instance in another zone; lesson 3 shows moto does not."
+      },
+      {
+        "text": "Snapshot it, then create a volume from the snapshot in sa-east-1c",
+        "correct": true,
+        "why": "Right. The new volume is a separate one; the old can then be deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-06pd0rpr",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto made a 50 GB volume from a snapshot of a 100 GB volume. What does AWS do with that request?",
+    "hint": "Larger is allowed. Smaller?",
+    "choices": [
+      {
+        "text": "It creates it and drops the blocks past 50 GB",
+        "correct": false,
+        "why": "AWS never truncates a disk; it refuses the size."
+      },
+      {
+        "text": "It creates it if only 50 GB were written",
+        "correct": false,
+        "why": "What was written does not matter; the volume size does."
+      },
+      {
+        "text": "It creates it and shrinks the file system to fit",
+        "correct": false,
+        "why": "EBS does not touch the file system; it sees blocks."
+      },
+      {
+        "text": "It refuses every smaller size",
+        "correct": true,
+        "why": "Right. Shrinking is done inside the operating system, by copying files."
+      }
+    ]
+  },
+  {
+    "id": "ex-e7aj9ng4",
+    "version": 1,
+    "section": "your-own-image",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building an image of your own in order.",
+    "hint": "The image captures the instance at the moment it is made.",
+    "items": [
+      "Launch an instance from a published image",
+      "Install and configure the software",
+      "Run create-image, which reboots it and snapshots its volumes",
+      "Launch the machines from the new AMI id"
+    ],
+    "trap": "Running create-image before configuring captures the base image unchanged, with a new id."
+  },
+  {
+    "id": "ex-hssxv1hk",
+    "version": 1,
+    "section": "your-own-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does create-image do to the instance by default, before it takes the snapshots?",
+    "hint": "Why does --no-reboot exist?",
+    "choices": [
+      {
+        "text": "Terminates it, since its job is done",
+        "correct": false,
+        "why": "The instance survives; Packer terminates its own builder instance, create-image does not."
+      },
+      {
+        "text": "Stops it, and leaves it stopped",
+        "correct": false,
+        "why": "It comes back up; a reboot is not a stop."
+      },
+      {
+        "text": "Reboots it, so the file system is at rest",
+        "correct": true,
+        "why": "Right. Without it the image has the consistency of a power cut."
+      },
+      {
+        "text": "Nothing at all: the snapshot is taken while the instance runs, with every write since the boot still in memory",
+        "correct": false,
+        "why": "That is what --no-reboot asks for, and it is not the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-1gpp76ck",
+    "version": 1,
+    "section": "your-own-image",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database password was written into an image, which is then shared with two other accounts. What follows?",
+    "hint": "Where do the image's bytes end up?",
+    "choices": [
+      {
+        "text": "Nothing, because a shared image is read-only",
+        "correct": false,
+        "why": "Read-only still means readable: a launched instance has the whole disk."
+      },
+      {
+        "text": "Anyone launching it can read the password",
+        "correct": true,
+        "why": "Right. It is in every snapshot and every launch; fetch secrets at boot instead."
+      },
+      {
+        "text": "The password is removed automatically when the image is shared",
+        "correct": false,
+        "why": "EC2 knows nothing about the files on the disk."
+      },
+      {
+        "text": "Only the owner's account can read it, because the snapshots stay private",
+        "correct": false,
+        "why": "The other account launches volumes made from those snapshots, and reads them."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsjptcgq",
+    "version": 1,
+    "section": "your-own-image",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each name to what it is.",
+    "hint": "Two tools, a flag, a field, a habit.",
+    "pairs": [
+      {
+        "left": "EC2 Image Builder",
+        "right": "AWS's managed pipeline of recipes and components"
+      },
+      {
+        "left": "Packer",
+        "right": "A builder that launches, provisions and calls create-image"
+      },
+      {
+        "left": "--no-reboot",
+        "right": "An image with the consistency of a power cut"
+      },
+      {
+        "left": "SourceInstanceId",
+        "right": "The instance an image was made from"
+      },
+      {
+        "left": "golden image",
+        "right": "The standard image a team's machines start from"
+      }
+    ],
+    "right_distractors": [
+      "The date an image stops being listed"
+    ]
+  },
+  {
+    "id": "ex-vkqzyjtg",
+    "version": 1,
+    "section": "your-own-image",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An image does not change after it is made, so a fix is a new image with a new ___.",
+    "hint": "What a launch template names.",
+    "blanks": [
+      {
+        "accept": [
+          "id",
+          "AMI id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rz2k3e5g",
+    "version": 1,
+    "section": "sharing-and-retiring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An image is deregistered. What happens to the snapshot its mapping named?",
+    "hint": "AWS cannot know whether you meant to keep it.",
+    "choices": [
+      {
+        "text": "It always stays, billed until somebody deletes it",
+        "correct": true,
+        "why": "Right. Deregistering removes the record and leaves the blocks."
+      },
+      {
+        "text": "It is deleted together with the image",
+        "correct": false,
+        "why": "That is the half-right picture: the record goes and the blocks stay."
+      },
+      {
+        "text": "It moves to an archive tier for free",
+        "correct": false,
+        "why": "Nothing moves on its own, and no tier is free."
+      },
+      {
+        "text": "It becomes public, since it has no image left",
+        "correct": false,
+        "why": "A snapshot keeps its own permissions; it stays private."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk4q3nxh",
+    "version": 1,
+    "section": "sharing-and-retiring",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An account has 200 deregistered images whose 15 GB snapshots were never deleted, each stored whole. At 0.068 USD per GB-month, what do they cost a month, in USD?",
+    "hint": "Snapshots times size times price.",
+    "value": 204,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-ejm9jn5e",
+    "version": 1,
+    "section": "sharing-and-retiring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "delete-snapshot on the snapshot of a registered image: what answers, in moto and on AWS?",
+    "hint": "Here the two agree.",
+    "choices": [
+      {
+        "text": "A refusal, InvalidSnapshot.InUse",
+        "correct": true,
+        "why": "Right. The image goes first, then the snapshot."
+      },
+      {
+        "text": "The snapshot is deleted and the image is left with no disk",
+        "correct": false,
+        "why": "That is exactly what the refusal prevents."
+      },
+      {
+        "text": "The image is deregistered along with it",
+        "correct": false,
+        "why": "Neither deregisters anything on its own."
+      },
+      {
+        "text": "moto refuses it, and AWS deletes it",
+        "correct": false,
+        "why": "Both refuse; this is one place moto checks what AWS checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-vn8yt0g0",
+    "version": 1,
+    "section": "sharing-and-retiring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An image's deprecation date has passed. What does that change on AWS?",
+    "hint": "Nothing that depends on it breaks on the day.",
+    "choices": [
+      {
+        "text": "It is deregistered and its snapshots are deleted",
+        "correct": false,
+        "why": "Deprecation removes nothing; deregistering is a separate act."
+      },
+      {
+        "text": "Other accounts stop finding it in listings, and it still launches by id",
+        "correct": true,
+        "why": "Right. New users stop finding it; existing ones keep working."
+      },
+      {
+        "text": "Every launch of it fails with an error that names the date that passed",
+        "correct": false,
+        "why": "It still launches for anybody who has the id."
+      },
+      {
+        "text": "Running instances made from it are stopped",
+        "correct": false,
+        "why": "Nothing running is touched."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ksng8yy",
+    "version": 1,
+    "section": "sharing-and-retiring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An image encrypted with the default AWS-managed EBS key has to be launched from another account. What works?",
+    "hint": "That key is private to its account.",
+    "choices": [
+      {
+        "text": "A launch permission naming the other account, as for any image",
+        "correct": false,
+        "why": "The permission is granted, and the launch still fails: the other account cannot use the key."
+      },
+      {
+        "text": "Making the image public, which bypasses the key",
+        "correct": false,
+        "why": "An encrypted image cannot be made public, and publishing an image is its own risk."
+      },
+      {
+        "text": "Copy it under a customer-managed KMS key whose policy lets them use it, and share the copy",
+        "correct": true,
+        "why": "Right. The copy is the moment to choose the key."
+      },
+      {
+        "text": "Nothing: encrypted images can never leave their account",
+        "correct": false,
+        "why": "They can, with a key the other account is allowed to use."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8xszqg2",
+    "version": 1,
+    "section": "sharing-and-retiring",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An image is copied from sa-east-1 to us-east-1. Which of these are true? Choose all that apply.",
+    "hint": "Nothing links the two afterwards.",
+    "choices": [
+      {
+        "text": "The copy has an id of its own",
+        "correct": true,
+        "why": "An id means something in one region only."
+      },
+      {
+        "text": "Its snapshots are stored and billed in us-east-1",
+        "correct": true,
+        "why": "A copy is a separate image with separate snapshots."
+      },
+      {
+        "text": "Deregistering the original removes the copy",
+        "correct": false,
+        "why": "The copy stays."
+      },
+      {
+        "text": "A fix to the original reaches the copy",
+        "correct": false,
+        "why": "Nothing links them; fix both, or copy again."
+      },
+      {
+        "text": "The copy can be encrypted with a key named at copy time",
+        "correct": true,
+        "why": "--encrypted --kms-key-id does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhaw3r16",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A launch template names an image that was deregistered last week. When does somebody find out?",
+    "hint": "Running instances are not affected.",
+    "choices": [
+      {
+        "text": "At the moment the image was deregistered, by an error",
+        "correct": false,
+        "why": "Deregistering checks nothing that refers to the image."
+      },
+      {
+        "text": "Never, since the template keeps a copy of the image",
+        "correct": false,
+        "why": "A template holds the id, not the image."
+      },
+      {
+        "text": "When the running instances are stopped by AWS",
+        "correct": false,
+        "why": "Running instances carry on; their volumes already exist."
+      },
+      {
+        "text": "Only at the next launch from it, such as a scale-out",
+        "correct": true,
+        "why": "Right, which is usually the moment the extra machine was needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jc01876v",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the retirement of an old image in order.",
+    "hint": "The snapshot ids live in the mapping, which goes with the image.",
+    "items": [
+      "Set a deprecation date",
+      "Move the launch templates to the newer image",
+      "Read the snapshot ids from the image's mapping",
+      "Deregister the image",
+      "Delete the snapshots"
+    ],
+    "trap": "Deleting the snapshots first is refused while the image is registered, and deregistering before reading the mapping loses the ids."
+  },
+  {
+    "id": "ex-9q0wh11g",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A weekly snapshot is kept for 52 weeks. The volume had 50 GB written at the first one, and 5 GB change each week. At 0.068 USD per GB-month, what do the 52 snapshots cost a month, in USD, to the cent?",
+    "hint": "50 GB, then 51 snapshots of 5 GB.",
+    "value": 20.74,
+    "tolerance": 0.01,
+    "unit": "USD"
+  }
+]

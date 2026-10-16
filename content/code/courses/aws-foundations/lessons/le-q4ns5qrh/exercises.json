@@ -1,0 +1,631 @@
+[
+  {
+    "id": "ex-95ahhjf9",
+    "version": 1,
+    "section": "what-a-key-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which half of an access key may appear in a log or a ticket without harm?",
+    "hint": "One half names the key; the other signs with it.",
+    "choices": [
+      {
+        "text": "The secret access key, since it is never sent with a request",
+        "correct": false,
+        "why": "It is never sent because it is the part that signs. Whoever reads it can sign as the user."
+      },
+      {
+        "text": "The access key id, `AKIA…`",
+        "correct": true,
+        "why": "Right. It names the key and is in every request and every CloudTrail line; on its own it signs nothing."
+      },
+      {
+        "text": "Neither: both halves are equally secret",
+        "correct": false,
+        "why": "The id is not secret at all. Treating it as one makes a CloudTrail search impossible to share."
+      },
+      {
+        "text": "Either half, as long as the other stays hidden",
+        "correct": false,
+        "why": "The secret alone is enough to sign once the id is guessed or found, and the id is printed everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-kd37w1f2",
+    "version": 1,
+    "section": "what-a-key-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A secret access key is forty characters long. Why is that length no defence in practice?",
+    "hint": "How do keys reach attackers?",
+    "choices": [
+      {
+        "text": "Because AWS only checks the first sixteen characters",
+        "correct": false,
+        "why": "The whole secret goes into every signature. The length is real; it just protects against the wrong attacker."
+      },
+      {
+        "text": "Because modern hardware can try every forty-character string",
+        "correct": false,
+        "why": "Nothing can try them all. That is exactly why nobody attacks a key by guessing."
+      },
+      {
+        "text": "Because keys are copied from where they were written, never guessed",
+        "correct": true,
+        "why": "Right. A key found in a repository, an image or a log works whatever its length."
+      },
+      {
+        "text": "Because the id tells an attacker most of the secret",
+        "correct": false,
+        "why": "The id and the secret are independent strings. One says nothing about the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-znrap2x6",
+    "version": 1,
+    "section": "what-a-key-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each caller to what it should use instead of an access key.",
+    "hint": "The section's table of alternatives.",
+    "pairs": [
+      {
+        "left": "a person at a keyboard",
+        "right": "IAM Identity Center and `aws sso login`"
+      },
+      {
+        "left": "a program on EC2",
+        "right": "an instance profile"
+      },
+      {
+        "left": "a GitHub Actions pipeline",
+        "right": "its OIDC token, traded for a role"
+      },
+      {
+        "left": "an office server with a certificate",
+        "right": "IAM Roles Anywhere"
+      }
+    ],
+    "right_distractors": [
+      "a second access key, rotated monthly"
+    ]
+  },
+  {
+    "id": "ex-8wvqbnwz",
+    "version": 1,
+    "section": "what-a-key-is",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are ways keys leak, as the section describes them? Choose all that apply.",
+    "hint": "Three are copies made by ordinary tools.",
+    "choices": [
+      {
+        "text": "A `.env` committed once and removed in the next commit",
+        "correct": true,
+        "why": "Right. The first commit still holds it, and a public repository is scanned within minutes."
+      },
+      {
+        "text": "An image built with `COPY . .` from a directory holding `~/.aws`",
+        "correct": true,
+        "why": "Right. Every layer can be unpacked by anyone who can pull the image."
+      },
+      {
+        "text": "A CI job running with `set -x`",
+        "correct": true,
+        "why": "Right. The shell prints each command with its variables expanded, keys included, into the job's log."
+      },
+      {
+        "text": "An attacker trying secret strings until one signs correctly",
+        "correct": false,
+        "why": "Nobody leaks a key that way; the number of strings is far beyond any attempt."
+      },
+      {
+        "text": "AWS printing the secret in CloudTrail",
+        "correct": false,
+        "why": "CloudTrail records the key id. The secret is never sent, so AWS has nothing to print."
+      }
+    ]
+  },
+  {
+    "id": "ex-km7bp4z5",
+    "version": 1,
+    "section": "what-a-key-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer pushes a key to a public repository and removes it in a second push ten minutes later. What should happen to the key?",
+    "hint": "What does a commit keep?",
+    "choices": [
+      {
+        "text": "Nothing more: it was public for only ten minutes",
+        "correct": false,
+        "why": "Scanners read public pushes within minutes, and the first commit still holds the key after the second push."
+      },
+      {
+        "text": "Treat it as leaked: deactivate it, look at what it did, rotate",
+        "correct": true,
+        "why": "Right. The second push changed the latest version, not the history, and the key has to be assumed copied."
+      },
+      {
+        "text": "Rewrite the repository's history so the commit disappears, and keep the key",
+        "correct": false,
+        "why": "Rewriting history removes the evidence, not the copies already made of it."
+      },
+      {
+        "text": "Make the repository private",
+        "correct": false,
+        "why": "That stops future readers, not the ones who read it in those ten minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-cad3pt23",
+    "version": 1,
+    "section": "what-a-key-is",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many access keys may one IAM user have at the same time?",
+    "hint": "moto refused the next one with `LimitExceeded`.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "keys"
+  },
+  {
+    "id": "ex-3er4g5pn",
+    "version": 1,
+    "section": "rotation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of rotating `erp-sync`'s key in order.",
+    "hint": "Every step but the last can be undone.",
+    "items": [
+      "create the second key",
+      "move the program to the new key",
+      "check that the old key's last use stopped moving",
+      "make the old key `Inactive`",
+      "wait, then delete the old key"
+    ],
+    "trap": "Deleting comes last because it is the one step that cannot be taken back."
+  },
+  {
+    "id": "ex-mqdsnkyj",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the old key made `Inactive` and left for a while, rather than deleted as soon as the program has switched?",
+    "hint": "What happens to whatever still used it?",
+    "choices": [
+      {
+        "text": "Because a key cannot be deleted while it is `Active`",
+        "correct": false,
+        "why": "An active key can be deleted at once; the order is a choice, not a rule IAM enforces."
+      },
+      {
+        "text": "So a forgotten user fails while the key is recoverable",
+        "correct": true,
+        "why": "Right. `--status Active` undoes the switch-off in one command; nothing undoes a deletion."
+      },
+      {
+        "text": "Because AWS needs a week to remove the key from its systems",
+        "correct": false,
+        "why": "A deleted key stops working straight away, as moto showed with `InvalidAccessKeyId`."
+      },
+      {
+        "text": "So that the credential report has time to record the rotation",
+        "correct": false,
+        "why": "The report is generated on request and shows the change the next time it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-myh26rgm",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A day after the accounting system moved to the new key, the old key's `LastUsedDate` is still changing. What does it mean, and what comes next?",
+    "hint": "Who else holds the old pair?",
+    "choices": [
+      {
+        "text": "Nothing: the date updates on its own once a day",
+        "correct": false,
+        "why": "The date moves only when a request is signed with the key. Something signed with it."
+      },
+      {
+        "text": "The new key failed, so delete it and keep the old one",
+        "correct": false,
+        "why": "The new key's own date says whether it works. The old date moving says somebody else exists."
+      },
+      {
+        "text": "Another program uses it; find that before the switch-off",
+        "correct": true,
+        "why": "Right. Finding that user is the reason the old key was not deleted yet, and its CloudTrail lines say where it calls from."
+      },
+      {
+        "text": "The key has leaked, so delete the user",
+        "correct": false,
+        "why": "It may be a forgotten script rather than an intruder, and deleting the user removes both keys and the evidence."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4df9wnz",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, the old key uploaded successfully after `update-access-key --status Inactive`. What does that establish?",
+    "hint": "Recorded is not enforced.",
+    "choices": [
+      {
+        "text": "Only that moto records `Inactive` and goes on accepting the key",
+        "correct": true,
+        "why": "Right. AWS refuses every request signed with an inactive key, which is the failure the step exists to provoke."
+      },
+      {
+        "text": "That `Inactive` takes effect only after the next credential report",
+        "correct": false,
+        "why": "The report reads the state; it does not apply it. In AWS the refusal is immediate."
+      },
+      {
+        "text": "That an inactive key still works for S3 but not for other services",
+        "correct": false,
+        "why": "Nothing in the lab compared services, and AWS documents no such exception."
+      },
+      {
+        "text": "That the policy `upload-erp` overrides the key's status",
+        "correct": false,
+        "why": "A policy decides what a valid key may do. An inactive key is not valid at all in AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-dcfn5zyf",
+    "version": 1,
+    "section": "rotation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The credential report arrives in base64, so it is read with `aws iam get-credential-report --query Content --output text | base64 ___`.",
+    "hint": "The option that decodes.",
+    "blanks": [
+      {
+        "accept": [
+          "-d",
+          "--decode"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a8t2q7cw",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`key-ages.py` prints `old-report  key 1  400 days  last used N/A  ROTATE`. What should happen to that key?",
+    "hint": "Read the last-used column as well as the age.",
+    "choices": [
+      {
+        "text": "Rotate it, as the flag says",
+        "correct": false,
+        "why": "Rotating gives a key nobody uses a fresh replacement. The flag counts days; the empty last use says more."
+      },
+      {
+        "text": "Switch it off, wait, delete it; no new key",
+        "correct": true,
+        "why": "Right. A key never used in 400 days is a key to remove; switching it off first still catches a surprise."
+      },
+      {
+        "text": "Leave it: a key never used cannot leak",
+        "correct": false,
+        "why": "It can leak exactly like any other, and then its first use is the intruder's."
+      },
+      {
+        "text": "Attach the quarantine policy to it",
+        "correct": false,
+        "why": "Nothing says it leaked. The quarantine is for a key found in public, not for one that is merely old."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvcqpmh8",
+    "version": 1,
+    "section": "rotation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Past how many days does `key-ages.py` flag a key, the line the CIS benchmark and Security Hub's `IAM.3` draw?",
+    "hint": "The value of `LIMIT`.",
+    "value": 90,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-jb6bb787",
+    "version": 1,
+    "section": "limits-and-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `mfa-to-delete.json` use `BoolIfExists` rather than `Bool`?",
+    "hint": "What does a request signed with the key alone carry?",
+    "choices": [
+      {
+        "text": "Because `Bool` cannot compare against `false`",
+        "correct": false,
+        "why": "`Bool` compares against either value. The issue is a key that is not there at all."
+      },
+      {
+        "text": "Key-only requests lack that key, and `Bool` would miss them",
+        "correct": true,
+        "why": "Right. The deny would skip exactly the request it exists for; `IfExists` makes the absent key count as a match."
+      },
+      {
+        "text": "Because `IfExists` makes the policy apply in every region",
+        "correct": false,
+        "why": "Regions have nothing to do with it; `IfExists` is about a missing condition key."
+      },
+      {
+        "text": "Because moto only understands the `IfExists` forms",
+        "correct": false,
+        "why": "moto ignores conditions altogether, as the flipped test showed. The choice follows AWS's evaluation."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fd89nwh",
+    "version": 1,
+    "section": "limits-and-leaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the condition inverted to deny only requests that DO have MFA, moto still refused `dani`'s key-only delete. What follows?",
+    "hint": "In AWS that delete would have been allowed.",
+    "choices": [
+      {
+        "text": "That an explicit deny always wins, whatever its condition says",
+        "correct": false,
+        "why": "In AWS a deny applies only when its condition matches. This one did not, and AWS would allow the delete."
+      },
+      {
+        "text": "That `dani`'s key carries MFA without her knowing",
+        "correct": false,
+        "why": "A key never carries MFA; only a session from `get-session-token` with a code does."
+      },
+      {
+        "text": "That moto ignores the condition, so the first refusal proved nothing about it",
+        "correct": true,
+        "why": "Right. A deny with a condition denies always in moto; whether the MFA condition matches is AWS's documented behaviour."
+      },
+      {
+        "text": "That `AmazonS3FullAccess` leaves out `s3:DeleteObject` for buckets that hold backups",
+        "correct": false,
+        "why": "It does: `s3:*`. The refusal came from the inline deny, which moto applied unconditionally."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgeja0gf",
+    "version": 1,
+    "section": "limits-and-leaks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A key is found in a public gist. Put the response in order.",
+    "hint": "Stop it first; understand it before replacing it.",
+    "items": [
+      "deactivate the key",
+      "search CloudTrail for what the key id did",
+      "undo what it created, sessions included",
+      "give the program a new key and delete the old",
+      "find out how it leaked"
+    ],
+    "trap": "Rotating before investigating replaces the key while whatever the intruder made is still there."
+  },
+  {
+    "id": "ex-jqkz4ve1",
+    "version": 1,
+    "section": "limits-and-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "AWS attaches `AWSCompromisedKeyQuarantineV3` to a user whose key it found in public. What is still left to do?",
+    "hint": "A brake, not a cure.",
+    "choices": [
+      {
+        "text": "Nothing: the policy deactivates the key",
+        "correct": false,
+        "why": "It leaves the key active and denies a list of actions. The key still signs everything the list misses."
+      },
+      {
+        "text": "Only removing the policy once the user confirms it was a mistake",
+        "correct": false,
+        "why": "A key found in public is leaked whatever the user says. The policy is the start of the response."
+      },
+      {
+        "text": "Deactivating, investigating and rotating, as for any leaked key",
+        "correct": true,
+        "why": "Right. The quarantine blocks the costly and persistent actions; it undoes nothing and AWS still says to rotate."
+      },
+      {
+        "text": "Attaching version `V2` as well, since each version covers different services",
+        "correct": false,
+        "why": "A later version replaces an earlier one; stacking them adds nothing that the response needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6aya2w4",
+    "version": 1,
+    "section": "limits-and-leaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which tool refuses a commit containing an AWS key on the developer's own laptop, before any server sees it?",
+    "hint": "It installs hooks in the local repository.",
+    "choices": [
+      {
+        "text": "GitHub's push protection",
+        "correct": false,
+        "why": "Push protection refuses the push at GitHub, after the commit already exists on the laptop."
+      },
+      {
+        "text": "`git-secrets`, from AWS Labs",
+        "correct": true,
+        "why": "Right. Its hooks check each commit's changes against AWS's key patterns."
+      },
+      {
+        "text": "The credential report",
+        "correct": false,
+        "why": "The report lists keys that exist in IAM; it knows nothing of anybody's repository."
+      },
+      {
+        "text": "The `AWSCompromisedKeyQuarantineV3` policy",
+        "correct": false,
+        "why": "That is applied after a key is found in public, which is exactly what the question wants to prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8jzbg4t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's GitHub Actions deploy signs with an IAM user's key stored as a repository secret, and `key-ages.py` flags it at 200 days. What is the better fix?",
+    "hint": "Is this one of the cases where a key is unavoidable?",
+    "choices": [
+      {
+        "text": "Rotate it now and put a reminder every 90 days",
+        "correct": false,
+        "why": "That keeps a key where none is needed. A pipeline with an OIDC token is not on the last-resort list."
+      },
+      {
+        "text": "Trade the workflow's OIDC token for `deployer`; delete the key",
+        "correct": true,
+        "why": "Right. Lesson 10's web identity: short sessions, a `sub` condition naming the repository, and no secret to age."
+      },
+      {
+        "text": "Move the key from the repository's secrets to the organisation's",
+        "correct": false,
+        "why": "The key would then be readable by more repositories, not fewer, and just as old."
+      },
+      {
+        "text": "Require MFA on the user with a `BoolIfExists` condition",
+        "correct": false,
+        "why": "A pipeline has no phone to give a code. The condition would simply stop every deploy."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnkpr8wp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An alert says `erp-sync`'s current key appeared in a public paste an hour ago. Which command does `ana` type first?",
+    "hint": "Reversible, and immediate.",
+    "choices": [
+      {
+        "text": "`aws iam delete-user --user-name erp-sync`",
+        "correct": false,
+        "why": "IAM refuses to delete a user that still has keys and policies, and success would lose the record of what the key was."
+      },
+      {
+        "text": "`aws iam create-access-key --user-name erp-sync`",
+        "correct": false,
+        "why": "A new key keeps the program running, and leaves the leaked one working for the stranger meanwhile."
+      },
+      {
+        "text": "`aws iam update-access-key --user-name erp-sync --access-key-id … --status Inactive`",
+        "correct": true,
+        "why": "Right. It stops the key at once and can be reversed; the investigation and the rotation come after."
+      },
+      {
+        "text": "`aws iam generate-credential-report`",
+        "correct": false,
+        "why": "The report describes keys and stops none of them. It can wait until the key is off."
+      }
+    ]
+  },
+  {
+    "id": "ex-6851bdxm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to its step in a rotation.",
+    "hint": "Four steps, four commands.",
+    "pairs": [
+      {
+        "left": "`create-access-key`",
+        "right": "the second key"
+      },
+      {
+        "left": "`get-access-key-last-used`",
+        "right": "checking the old key went quiet"
+      },
+      {
+        "left": "`update-access-key --status Inactive`",
+        "right": "switching the old key off"
+      },
+      {
+        "left": "`delete-access-key`",
+        "right": "the step that cannot be undone"
+      }
+    ],
+    "right_distractors": [
+      "moving the program to the new key"
+    ]
+  },
+  {
+    "id": "ex-475vx5cf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the shop's callers, which one does the lesson leave with an access key, and why that one?",
+    "hint": "Outside AWS, with no certificate and no browser.",
+    "choices": [
+      {
+        "text": "`bia`, because developers need the command line every day",
+        "correct": false,
+        "why": "People have Identity Center and `aws sso login`, lesson 11. People are not on the list."
+      },
+      {
+        "text": "The web servers, because they read `shop-assets` constantly",
+        "correct": false,
+        "why": "They run on EC2 and wear `shop-app` through an instance profile, lesson 10."
+      },
+      {
+        "text": "`erp-sync`, the office's accounting system",
+        "correct": true,
+        "why": "Right. A program outside AWS that the shop cannot give a certificate to, calling on a schedule: the short list that is left."
+      },
+      {
+        "text": "The deploy pipeline, because CI runs outside AWS",
+        "correct": false,
+        "why": "It runs outside AWS and still has an OIDC token to trade for a role."
+      }
+    ]
+  }
+]

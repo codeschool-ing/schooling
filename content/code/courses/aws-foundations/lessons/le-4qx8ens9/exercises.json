@@ -1,0 +1,631 @@
+[
+  {
+    "id": "ex-1drhtyk0",
+    "version": 1,
+    "section": "root-and-users",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A real account's summary prints `AccountMFAEnabled: 0` and `AccountAccessKeysPresent: 1`. What does it say?",
+    "hint": "Both `Account…` lines are about one identity.",
+    "choices": [
+      {
+        "text": "No IAM user has MFA, and one of them has an access key",
+        "correct": false,
+        "why": "The users have lines of their own (`MFADevices`, and the key count per user). These two describe the root user."
+      },
+      {
+        "text": "The root user has no second factor and has an access key",
+        "correct": true,
+        "why": "Right, and it is the worst pair an audit finds: the identity no policy restricts, reachable with a key that has no second factor. A real account wants 1 and 0."
+      },
+      {
+        "text": "The console asks nobody for MFA, and the account's API needs one key",
+        "correct": false,
+        "why": "MFA is set per identity, not for the console as a whole, and the API needs no key of root's to work."
+      },
+      {
+        "text": "Nothing worth acting on: moto prints the same two numbers",
+        "correct": false,
+        "why": "moto prints 0 and 0 because it has no root at all. In a real account, a key on root is a finding."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5y8y9f2",
+    "version": 1,
+    "section": "root-and-users",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which ARN names the root user of the account `123456789012`?",
+    "hint": "The root user has no name of its own.",
+    "choices": [
+      {
+        "text": "`arn:aws:iam::123456789012:user/root`",
+        "correct": false,
+        "why": "That would be an IAM user somebody called `root`, an ordinary user with whatever policies it was given."
+      },
+      {
+        "text": "`arn:aws:sts::123456789012:root`",
+        "correct": false,
+        "why": "`sts` ARNs name sessions, such as `assumed-role/...`. The root user is an `iam` identity."
+      },
+      {
+        "text": "`arn:aws:iam::123456789012:root`",
+        "correct": true,
+        "why": "Right: the service, no region, the account, and `root` with no type before it."
+      },
+      {
+        "text": "`arn:aws:iam::123456789012:user/admin`",
+        "correct": false,
+        "why": "An administrator user is still an IAM user, and an IAM policy limits it. The root user is not one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-54bk5gfm",
+    "version": 1,
+    "section": "root-and-users",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The root password of one of the shop's member accounts may have leaked. Which control can stop that root user deleting buckets before the password is changed?",
+    "hint": "Root is above every policy inside its own account.",
+    "choices": [
+      {
+        "text": "An IAM policy with an explicit `Deny`, attached to the root user",
+        "correct": false,
+        "why": "No IAM policy can be attached to root, and none inside the account restricts it. That is what makes root root."
+      },
+      {
+        "text": "A service control policy, set by the organisation from outside the account",
+        "correct": true,
+        "why": "Right. An SCP limits every principal of a member account, root included; lesson 4 builds one."
+      },
+      {
+        "text": "A permission boundary on the root user",
+        "correct": false,
+        "why": "Boundaries are set on IAM users and roles. Root is neither, so there is nothing to set one on."
+      },
+      {
+        "text": "Taking the root user out of the administrators group",
+        "correct": false,
+        "why": "Root belongs to no group. Its permissions come from being root, not from a membership."
+      }
+    ]
+  },
+  {
+    "id": "ex-13s8qhm1",
+    "version": 1,
+    "section": "root-and-users",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The id of an IAM user's long-term access key begins with the four letters ___.",
+    "hint": "The transcript printed one beside `Active`.",
+    "blanks": [
+      {
+        "accept": [
+          "AKIA"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wg373b2g",
+    "version": 1,
+    "section": "root-and-users",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are long-term credentials of an IAM user? Choose all that apply.",
+    "hint": "Long-term means it lasts until somebody deletes it.",
+    "choices": [
+      {
+        "text": "A password made by `create-login-profile`",
+        "correct": true,
+        "why": "Right. The login profile is the console password, and it stays until it is deleted or changed."
+      },
+      {
+        "text": "The session token from `sts assume-role`",
+        "correct": false,
+        "why": "That belongs to a role session and expires with it, an hour by default."
+      },
+      {
+        "text": "An access key whose id begins `AKIA`",
+        "correct": true,
+        "why": "Right. An `AKIA` key works until somebody deactivates or deletes it, which is why lesson 12 calls it the last resort."
+      },
+      {
+        "text": "A token GitHub Actions gives a workflow",
+        "correct": false,
+        "why": "That token belongs to GitHub's run, not to any IAM user, and it is good for minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wrhs25b",
+    "version": 1,
+    "section": "root-and-users",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new colleague at the shop will never have an IAM user. Can she still work in the shop's accounts?",
+    "hint": "A principal is whatever signs the request.",
+    "choices": [
+      {
+        "text": "No: every request to AWS is signed with an IAM user's key",
+        "correct": false,
+        "why": "Requests are signed by role sessions all the time, with `ASIA` keys no user owns."
+      },
+      {
+        "text": "Only by signing in as the root user",
+        "correct": false,
+        "why": "Root is kept for a short list of account tasks; daily work as root is the thing to avoid."
+      },
+      {
+        "text": "Yes, through single sign-on, which ends in a role session",
+        "correct": true,
+        "why": "Right. A person signs in at the identity provider and works through a role; lesson 11 sets it up."
+      },
+      {
+        "text": "Yes, once she is added to the `developers` group",
+        "correct": false,
+        "why": "A group holds users, and she has none to add. Membership gives permissions; it does not sign anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-0k04afpt",
+    "version": 1,
+    "section": "groups-and-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A trust policy names `arn:aws:iam::123456789012:group/developers` as its principal. moto stored it. What does AWS do with it?",
+    "hint": "Is a group something that signs requests?",
+    "choices": [
+      {
+        "text": "Refuses the document, because a group is not a principal",
+        "correct": true,
+        "why": "Right. A group never makes a request, so it cannot be trusted to make one. Each member gets permission to assume the role instead."
+      },
+      {
+        "text": "Trusts every member of the group, now and in future",
+        "correct": false,
+        "why": "That is what the author hoped for, and the reason the mistake is common. AWS refuses the document instead."
+      },
+      {
+        "text": "Trusts the members the group had when the policy was saved",
+        "correct": false,
+        "why": "No snapshot of members is taken. The document is refused before anything is stored."
+      },
+      {
+        "text": "Accepts it, as moto did, since moto answers in AWS's format",
+        "correct": false,
+        "why": "moto is more lenient than AWS here. Its format is AWS's; its checks are fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-5f4evd4p",
+    "version": 1,
+    "section": "groups-and-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is true of an IAM role?",
+    "hint": "Think of what `create-access-key --user-name deployer` answered.",
+    "choices": [
+      {
+        "text": "It has an access key that AWS rotates every hour",
+        "correct": false,
+        "why": "A role owns no key at all. Each session gets a new temporary one, which is a different thing from rotation."
+      },
+      {
+        "text": "It has no credentials; each session gets temporary ones",
+        "correct": true,
+        "why": "Right. Assuming the role returns an `ASIA` key, a secret and a token that expire together."
+      },
+      {
+        "text": "It has a console password, set with `create-login-profile`",
+        "correct": false,
+        "why": "A login profile belongs to a user. People reach the console as a role through sign-in, not through a role's password."
+      },
+      {
+        "text": "It is a group of users with a trust policy added",
+        "correct": false,
+        "why": "A group signs nothing and has no trust policy. A role is an identity of its own, worn for a session."
+      }
+    ]
+  },
+  {
+    "id": "ex-s1ahzz8k",
+    "version": 1,
+    "section": "groups-and-roles",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each prefix to what it identifies in AWS.",
+    "hint": "Two are keys, two are identities.",
+    "pairs": [
+      {
+        "left": "`AKIA`",
+        "right": "a user's long-term access key"
+      },
+      {
+        "left": "`ASIA`",
+        "right": "a session's temporary access key"
+      },
+      {
+        "left": "`AROA`",
+        "right": "a role's unique id"
+      },
+      {
+        "left": "`AIDA`",
+        "right": "an IAM user's unique id"
+      }
+    ],
+    "right_distractors": [
+      "an account's root user"
+    ]
+  },
+  {
+    "id": "ex-2nxr8q9w",
+    "version": 1,
+    "section": "groups-and-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The audit log says a bucket was deleted by `arn:aws:sts::123456789012:assumed-role/deployer/session1`. What does that tell you about who did it?",
+    "hint": "Read the three parts after `assumed-role/`.",
+    "choices": [
+      {
+        "text": "An IAM user called `session1` deleted it",
+        "correct": false,
+        "why": "`session1` is the session name the caller chose. A user's ARN is `iam`, with `user/` in it."
+      },
+      {
+        "text": "The role acted by itself, with no caller behind it",
+        "correct": false,
+        "why": "A role never acts alone; it has no credentials until somebody assumes it."
+      },
+      {
+        "text": "Somebody who assumed `deployer`, under a name that identifies nobody",
+        "correct": true,
+        "why": "Right. The session name is the caller's choice, and `session1` throws away the one clue the ARN carries. `bia-deploy` would have kept it."
+      },
+      {
+        "text": "The root user, since the ARN belongs to `sts`",
+        "correct": false,
+        "why": "`sts` is the service that issues sessions; every role session's ARN is an `sts` ARN."
+      }
+    ]
+  },
+  {
+    "id": "ex-nqsb0hvn",
+    "version": 1,
+    "section": "groups-and-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bia's user is deleted by mistake and created again with the same name. A role's trust policy named her ARN, and now she is refused. Why?",
+    "hint": "The ARN is the same; something else is not.",
+    "choices": [
+      {
+        "text": "The recreated user has a different ARN",
+        "correct": false,
+        "why": "The ARN is built from the account and the name, and both are the same."
+      },
+      {
+        "text": "It now points at the old user's unique id, not the new one",
+        "correct": true,
+        "why": "Right. AWS turns the ARN into the old id when the user goes, so a new user with the old name inherits nothing. The policy has to be written again."
+      },
+      {
+        "text": "New users wait a day before any trust applies to them",
+        "correct": false,
+        "why": "There is no waiting period. The refusal comes from what the policy now names."
+      },
+      {
+        "text": "Trust policies are cached per role session for 24 hours",
+        "correct": false,
+        "why": "Nothing here is a cache. The trust policy itself changed when the user was deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-2q8pzezr",
+    "version": 1,
+    "section": "groups-and-roles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`create-role` printed `MaxSessionDuration: 3600`. How many minutes is the longest session the role gives by default?",
+    "hint": "The number is in seconds.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-hnwwn7wb",
+    "version": 1,
+    "section": "federation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody writes the deployer's trust policy with the `aud` condition and leaves out `sub`. What has the role been opened to?",
+    "hint": "Who else receives tokens from `token.actions.githubusercontent.com`?",
+    "choices": [
+      {
+        "text": "Nobody: without `sub` the condition fails and no token is accepted",
+        "correct": false,
+        "why": "A condition that is not written is not checked. The policy accepts whatever matches the lines that are there."
+      },
+      {
+        "text": "Every repository of the shop's own GitHub organisation",
+        "correct": false,
+        "why": "Nothing in the policy mentions the shop's organisation; only `sub` would. Strangers' repositories match as well."
+      },
+      {
+        "text": "Any workflow in any repository on GitHub",
+        "correct": true,
+        "why": "Right. They all get tokens from the same issuer with the same audience, so `sub` is the line that names the shop's repository and branch."
+      },
+      {
+        "text": "Only workflows that run on the `main` branch",
+        "correct": false,
+        "why": "The branch is part of `sub`, which was left out. Every branch of every repository matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-34f179zb",
+    "version": 1,
+    "section": "federation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `assume-role-with-web-identity` be sent with `--no-sign-request`?",
+    "hint": "What does the GitHub workflow hold before the call?",
+    "choices": [
+      {
+        "text": "The token is the credential; the caller has no AWS key yet",
+        "correct": true,
+        "why": "Right. The point of the call is to turn a provider's token into AWS credentials, so it cannot need AWS credentials first."
+      },
+      {
+        "text": "moto ignores signatures, and AWS needs this flag too",
+        "correct": false,
+        "why": "The call works unsigned against AWS for its own reason: the token proves who is asking."
+      },
+      {
+        "text": "To keep the secret key out of GitHub's logs",
+        "correct": false,
+        "why": "A signature never carries the secret. There is simply no key to sign with."
+      },
+      {
+        "text": "STS is a global service, and global services take unsigned calls",
+        "correct": false,
+        "why": "`AssumeRole` on the same service has to be signed. The difference is the call, not the service."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6vsmypy",
+    "version": 1,
+    "section": "federation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In this lesson, which of these did moto accept although AWS would refuse them? Choose all that apply.",
+    "hint": "Two refusals came from somewhere other than AWS's rules.",
+    "choices": [
+      {
+        "text": "A trust policy naming a group",
+        "correct": true,
+        "why": "Right. AWS refuses it as malformed; moto stored it."
+      },
+      {
+        "text": "A web identity token that was plainly made up",
+        "correct": true,
+        "why": "Right. AWS checks the signature against the provider's keys; moto handed out a session."
+      },
+      {
+        "text": "A SAML metadata document of 64 characters",
+        "correct": false,
+        "why": "That one never reached moto: the command line refused it for being under 1000 characters."
+      },
+      {
+        "text": "SAML metadata made of 1000 spaces",
+        "correct": true,
+        "why": "Right. moto does not parse the document; AWS refuses one it cannot read."
+      },
+      {
+        "text": "An access key for the role `deployer`",
+        "correct": false,
+        "why": "moto refused that, as AWS would: `create-access-key` found no user called `deployer`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycgy9hjz",
+    "version": 1,
+    "section": "federation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a GitHub Actions deployment through OIDC in order.",
+    "hint": "AWS checks the token before it reads the trust policy's conditions.",
+    "items": [
+      "the workflow asks GitHub for a token",
+      "it calls `AssumeRoleWithWebIdentity` with the token",
+      "AWS checks the signature against GitHub's published keys",
+      "AWS checks `aud` and `sub` against the trust policy",
+      "the workflow signs its requests with the `ASIA` key until it expires"
+    ],
+    "trap": "Putting the conditions first is the common slip: a condition is only worth reading on a token whose signature is already known to be GitHub's."
+  },
+  {
+    "id": "ex-cfem2na6",
+    "version": 1,
+    "section": "federation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop's company directory signs people in and exports an XML metadata document. Which kind of IAM provider does it become?",
+    "hint": "One of the two standards speaks XML.",
+    "choices": [
+      {
+        "text": "An OIDC provider, the same kind GitHub's is",
+        "correct": false,
+        "why": "OIDC carries JSON web tokens. An XML metadata document belongs to the other standard."
+      },
+      {
+        "text": "A SAML provider",
+        "correct": true,
+        "why": "Right. SAML 2.0 is the XML standard, and the role it reaches is assumed with `AssumeRoleWithSAML`."
+      },
+      {
+        "text": "A group whose members are synchronised from the directory",
+        "correct": false,
+        "why": "A group holds IAM users, and federation creates none. The directory stays the place people sign in."
+      },
+      {
+        "text": "An IAM user per person, each with an access key",
+        "correct": false,
+        "why": "That is the arrangement federation exists to avoid: long-term keys on AWS's side for people signed in elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-rnb6w08h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner's monitoring service runs in the partner's own AWS account and must read the shop's metrics. Which principal should the shop give it?",
+    "hint": "The partner already has identities of its own, in another account.",
+    "choices": [
+      {
+        "text": "An IAM user in the shop's account, with an access key sent to the partner",
+        "correct": false,
+        "why": "A long-term key in somebody else's hands is the arrangement lesson 12 calls the last resort, and here there is a better one."
+      },
+      {
+        "text": "A role in the shop's account, with the partner's account in its trust policy",
+        "correct": true,
+        "why": "Right. The partner signs in with its own identities and receives a temporary session; lesson 9 adds the external id that keeps the arrangement safe."
+      },
+      {
+        "text": "Membership of the `developers` group for the partner's root user",
+        "correct": false,
+        "why": "A group holds the shop's own IAM users, and nothing from another account can join one."
+      },
+      {
+        "text": "An OIDC provider in the shop's account for the partner's AWS account",
+        "correct": false,
+        "why": "An AWS account is not an OIDC issuer. Two AWS accounts trust each other through roles."
+      }
+    ]
+  },
+  {
+    "id": "ex-9be8gy66",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need to the principal the lesson recommends for it.",
+    "hint": "The table at the end of the federation section.",
+    "pairs": [
+      {
+        "left": "closing the account",
+        "right": "the root user, with MFA"
+      },
+      {
+        "left": "a pipeline outside AWS",
+        "right": "an OIDC provider and a role"
+      },
+      {
+        "left": "a person in the company",
+        "right": "single sign-on ending in a role session"
+      },
+      {
+        "left": "a program with no other way in",
+        "right": "an IAM user with a rotated access key"
+      }
+    ],
+    "right_distractors": [
+      "a group with a trust policy"
+    ]
+  },
+  {
+    "id": "ex-jcfak3dp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script on a laptop runs `aws sts get-caller-identity` and gets `arn:aws:iam::123456789012:user/caio`. What is it signing with?",
+    "hint": "A role session would have answered with an `sts` ARN.",
+    "choices": [
+      {
+        "text": "caio's console password",
+        "correct": false,
+        "why": "The command line never signs with a password. A password only opens the console."
+      },
+      {
+        "text": "A session of a role that caio assumed",
+        "correct": false,
+        "why": "A session answers with `arn:aws:sts::...:assumed-role/...`, not with `user/caio`."
+      },
+      {
+        "text": "The credentials of the `data` group caio belongs to",
+        "correct": false,
+        "why": "A group has no credentials; it would never appear as the caller."
+      },
+      {
+        "text": "An access key of the IAM user caio, an `AKIA` one",
+        "correct": true,
+        "why": "Right. A long-term key on a laptop: exactly the credential lessons 10 to 12 work to replace."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzegg5eg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In this lesson moto handed a session of `deployer` to a caller the trust policy did not name. What should you conclude about the trust policy?",
+    "hint": "What state was moto's checking in?",
+    "choices": [
+      {
+        "text": "That it is wrong, since AWS would have handed out the same session",
+        "correct": false,
+        "why": "AWS would have refused the caller. The session says something about moto's settings, not about the policy."
+      },
+      {
+        "text": "Nothing: moto's checking was off, so it judged no policy at all",
+        "correct": true,
+        "why": "Right. With checking off moto lets every call through; lesson 9 repeats the call with checking on, and the trust policy refuses."
+      },
+      {
+        "text": "That trust policies only apply to federated principals",
+        "correct": false,
+        "why": "The trust policy applies to every principal that assumes the role, users and sessions included."
+      },
+      {
+        "text": "That an `AWS` principal in a trust policy trusts the whole account",
+        "correct": false,
+        "why": "It names one user here. Trusting the account is written differently, and lesson 9 shows it."
+      }
+    ]
+  }
+]

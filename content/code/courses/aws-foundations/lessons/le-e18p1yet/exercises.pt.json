@@ -1,0 +1,422 @@
+{
+  "ex-448k4wcp": {
+    "prompt": "Duas contas têm cada uma um usuário do IAM chamado `bia`. Qual a relação entre os dois usuários?",
+    "hint": "Onde uma identidade do IAM existe?",
+    "choices": [
+      {
+        "text": "São um usuário só, já que o IAM é global",
+        "why": "O IAM é global entre as regiões de UMA conta. Ele não alcança outra conta."
+      },
+      {
+        "text": "Nenhuma: dois estranhos que dividem um nome",
+        "why": "Isso. Uma identidade existe dentro da sua conta, e um nome numa conta não significa nada na outra."
+      },
+      {
+        "text": "A criação do segundo foi recusada, então só o primeiro existe",
+        "why": "Nomes de usuário são únicos dentro de uma conta, não entre contas. Os dois foram criados."
+      },
+      {
+        "text": "Eles dividem a senha, mas cada um tem as suas permissões",
+        "why": "Nada é dividido entre eles, a senha inclusive. Cada conta guarda as suas identidades inteiras."
+      }
+    ]
+  },
+  "ex-ksqz82sb": {
+    "prompt": "Em `arn:aws:sns:sa-east-1:123456789012:shop-alerts`, que campo diz de quem é o tópico?",
+    "hint": "Conte os campos da esquerda: o primeiro é sempre `arn`.",
+    "choices": [
+      {
+        "text": "O segundo, `aws`",
+        "why": "Esse é a partição: que cópia da AWS, como `aws-cn` para a China. Toda conta nela divide o valor."
+      },
+      {
+        "text": "O quarto, `sa-east-1`",
+        "why": "A região diz onde o tópico mora, não quem é o dono. Milhares de contas têm tópicos lá."
+      },
+      {
+        "text": "O quinto, `123456789012`",
+        "why": "Isso. O campo da conta é o dono, e a primeira coisa a ler num ARN que alguém mostra."
+      },
+      {
+        "text": "O último, `shop-alerts`, já que nomes são únicos",
+        "why": "Um nome de tópico é único só dentro de uma conta e região. Outra conta pode ter o seu próprio `shop-alerts`."
+      }
+    ]
+  },
+  "ex-yxey382q": {
+    "prompt": "Uma política que alguém colou cita `arn:aws:s3:::shop-backups/*`. Que conta é dona do bucket, só pelo ARN?",
+    "hint": "Olhe o quarto e o quinto campos.",
+    "choices": [
+      {
+        "text": "A conta onde a política está anexada, que o ARN deixa implícita",
+        "why": "Um campo vazio não é abreviação de 'esta conta'. Um nome de bucket é global, então o ARN não carrega dono nenhum."
+      },
+      {
+        "text": "A conta de gerenciamento, já que o S3 é cobrado lá",
+        "why": "A fatura é consolidada na lição 3, mas a posse não. O bucket pertence à conta que o criou."
+      },
+      {
+        "text": "Não dá para saber: o ARN de um bucket não tem campo de conta",
+        "why": "Isso. Nomes de bucket são um só espaço de nomes para toda a AWS, então o ARN deixa a conta vazia. Achar o dono exige outra pergunta."
+      },
+      {
+        "text": "A conta `000000000000`, que o campo vazio representa",
+        "why": "Essa convenção não existe. O campo está vazio porque o nome do bucket não pertence a conta nenhuma."
+      }
+    ]
+  },
+  "ex-q9s26z04": {
+    "prompt": "O ARN de um usuário, como `arn:aws:iam::123456789012:user/bia`, deixa o campo de ___ vazio, porque o IAM é global dentro de uma conta.",
+    "hint": "O campo que é `sa-east-1` no ARN do tópico.",
+    "blanks": [
+      {
+        "accept": [
+          "região",
+          "regiao"
+        ]
+      }
+    ]
+  },
+  "ex-68drsxsx": {
+    "prompt": "Uma conta nova tem a sua VPC padrão em `sa-east-1` e a cota de cinco VPCs por região. Quantas chamadas `create-vpc` a mais a AWS aceita lá antes de recusar uma?",
+    "hint": "A VPC padrão conta.",
+    "unit": "VPCs"
+  },
+  "ex-esjv2xgg": {
+    "prompt": "O moto criou uma sexta VPC numa região cuja cota é cinco. O que isso diz sobre a AWS?",
+    "hint": "O que o moto faz com o valor de uma cota?",
+    "choices": [
+      {
+        "text": "Que a cota conta só as VPCs criadas à mão, e não a padrão",
+        "why": "A VPC padrão conta na AWS. O que quer que o moto tenha feito, não diz nada sobre como a AWS conta."
+      },
+      {
+        "text": "Nada: o moto guarda o número e nunca conta contra ele",
+        "why": "Isso. Na AWS o quinto `create-vpc` teria sido recusado com `VpcLimitExceeded`; essa parte não foi rodada."
+      },
+      {
+        "text": "Que uma cota ajustável sobe sozinha quando é alcançada",
+        "why": "Ajustável quer dizer que pode ser aumentada a pedido, para uma região de uma conta. Nada a aumenta sozinho."
+      },
+      {
+        "text": "Que a cota vale para a organização inteira, não para uma conta",
+        "why": "Cotas são por conta, e esta também por região. É por isso que uma segunda conta recomeça do padrão."
+      }
+    ]
+  },
+  "ex-086z3dfd": {
+    "prompt": "A `shop-prod` e a conta de gerenciamento têm cada uma uma VPC padrão com a faixa `172.31.0.0/16`. O que decorre disso?",
+    "hint": "Mesmos endereços, donos diferentes.",
+    "choices": [
+      {
+        "text": "São uma rede só vista de duas contas",
+        "why": "Elas têm ids diferentes e donos diferentes. A mesma faixa, duas redes."
+      },
+      {
+        "text": "A criação da segunda conta deveria ter falhado",
+        "why": "Toda conta ganha uma VPC padrão com essa faixa. Nada colide, porque nada as liga."
+      },
+      {
+        "text": "Nada as liga, e ligá-las depois exige faixas diferentes",
+        "why": "Isso. Um endereço só significa algo dentro da sua rede. Conectar duas redes com a mesma faixa é o motivo de a loja planejar `10.20.0.0/16`."
+      },
+      {
+        "text": "Máquinas nas duas contas já se alcançam pelo endereço",
+        "why": "Nada conecta as redes de duas contas até alguém fazer isso de propósito, o que as lições 19 e 20 fazem."
+      }
+    ]
+  },
+  "ex-vtccptrc": {
+    "prompt": "A `shop-prod` tenta criar o bucket `shop-assets`, que a conta de gerenciamento já tem. O que ela ouve?",
+    "hint": "De quem é o nome, do lado da `shop-prod`?",
+    "choices": [
+      {
+        "text": "`BucketAlreadyExists`",
+        "why": "Isso. Outra conta tem o nome, e a resposta não diz qual conta."
+      },
+      {
+        "text": "`BucketAlreadyOwnedByYou`, já que as duas contas estão numa organização",
+        "why": "Essa é a resposta para a conta dona do bucket. Uma organização não junta a posse."
+      },
+      {
+        "text": "Sucesso, porque a `shop-prod` não vê bucket com esse nome",
+        "why": "Não ver um bucket não libera o nome. Nomes de bucket são um só espaço de nomes para toda conta."
+      },
+      {
+        "text": "`AccessDenied`, citando a conta de gerenciamento como dona",
+        "why": "Não é questão de permissão, e a recusa nunca cita o dono: um estranho não pode descobrir de quem é um nome."
+      }
+    ]
+  },
+  "ex-m8aw5drt": {
+    "prompt": "As chaves `test` do `env.sh` pertencem à conta de gerenciamento. Como `aws --profile shop-prod ec2 describe-vpcs` acaba dentro da `shop-prod`?",
+    "hint": "Leia as três linhas do perfil.",
+    "choices": [
+      {
+        "text": "O perfil troca as chaves pela chave de acesso da própria `shop-prod`",
+        "why": "Nenhuma chave da `shop-prod` foi criada. O perfil cita uma role para assumir, não uma chave."
+      },
+      {
+        "text": "A conta de gerenciamento pode agir direto em qualquer conta-membro",
+        "why": "As credenciais dela agem só nela mesma. Alcançar uma conta-membro exige uma role lá que ela possa assumir."
+      },
+      {
+        "text": "A linha de comando assume a `OrganizationAccountAccessRole` com essas chaves, e usa as temporárias",
+        "why": "Isso. `credential_source = Environment` parte das chaves do ambiente, e `role_arn` cita a role cujas credenciais voltam."
+      },
+      {
+        "text": "`--profile` manda a requisição para outro endpoint, onde a `shop-prod` responde",
+        "why": "O endpoint continua o do moto, do `env.sh`. O que muda são as credenciais com que a requisição é assinada."
+      }
+    ]
+  },
+  "ex-1ndte0kf": {
+    "prompt": "Quais destes precisam ser únicos em toda a AWS, e não só dentro de uma conta? Marque todos os que se aplicam.",
+    "hint": "Três dos nomes da seção atravessam as paredes.",
+    "choices": [
+      {
+        "text": "O nome de um bucket do S3",
+        "why": "Isso. Um só espaço de nomes para toda conta, que o moto também aplica."
+      },
+      {
+        "text": "O alias de uma conta para o endereço de entrada",
+        "why": "Isso. A AWS recusa o mesmo alias a uma segunda conta; o moto deixa passar."
+      },
+      {
+        "text": "O nome de um usuário do IAM",
+        "why": "Único só dentro da conta. Duas contas podem ter cada uma uma `bia`."
+      },
+      {
+        "text": "O endereço de e-mail do usuário root",
+        "why": "Isso. Uma segunda conta com o mesmo endereço falha com `EMAIL_ALREADY_EXISTS` na AWS; o moto aceita."
+      },
+      {
+        "text": "A faixa de endereços de uma VPC",
+        "why": "As duas VPCs padrão da transcrição usam `172.31.0.0/16`. Uma faixa não é única em lugar nenhum."
+      }
+    ]
+  },
+  "ex-ks9e4rp6": {
+    "prompt": "O moto respondeu `create-account` com `SUCCEEDED` na hora. O que a AWS responde?",
+    "hint": "Uma conta leva algum tempo para a AWS montar.",
+    "choices": [
+      {
+        "text": "`SUCCEEDED` também, depois de o e-mail ser confirmado",
+        "why": "Nenhuma confirmação de e-mail fica entre a chamada e a resposta. A conta é feita em segundo plano."
+      },
+      {
+        "text": "`IN_PROGRESS`, e você consulta até o trabalho terminar",
+        "why": "Isso. A AWS monta a conta em segundo plano, e `describe-create-account-status` diz quando ficou pronta; o moto pula a espera."
+      },
+      {
+        "text": "Um handshake que a conta nova tem de aceitar",
+        "why": "Um handshake é como uma conta existente é convidada, na lição 3. Uma conta criada entra sem ele."
+      },
+      {
+        "text": "Uma chave de acesso para o usuário root da conta nova",
+        "why": "Nenhuma chave é criada para ninguém. O root novo nem senha tem."
+      }
+    ]
+  },
+  "ex-s5evxx47": {
+    "prompt": "Um pipeline cria uma VPC por pull request na conta que também roda a produção. Que falha a seção prevê?",
+    "hint": "O que os dois dividem?",
+    "choices": [
+      {
+        "text": "As VPCs de teste alcançam as máquinas da produção pelo endereço",
+        "why": "Duas VPCs não se ligam a não ser que alguém as ligue. A coisa dividida é um número, não uma rede."
+      },
+      {
+        "text": "O próximo deploy da produção é recusado porque os testes usaram a cota",
+        "why": "Isso. Cinco VPCs por região é contado para a conta inteira, então os testes gastam o que a produção precisa."
+      },
+      {
+        "text": "A fatura mostra as VPCs de teste sob a tag da produção",
+        "why": "Uma tag é o que o pipeline escrever; essa é outra falha. O ponto da seção aqui é a cota."
+      },
+      {
+        "text": "A AWS apaga a VPC mais antiga para abrir espaço",
+        "why": "A AWS nunca apaga um recurso para cumprir uma cota. Ela recusa o novo."
+      }
+    ]
+  },
+  "ex-6t2j4f1z": {
+    "prompt": "Por que a loja guarda os logs da `shop-prod` na `log-archive` e não na própria `shop-prod`?",
+    "hint": "Quem ia querer que os logs dissessem outra coisa?",
+    "choices": [
+      {
+        "text": "Armazenamento é mais barato numa conta sem cargas de trabalho",
+        "why": "Um gigabyte custa o mesmo em qualquer conta. O motivo é quem pode apagá-lo."
+      },
+      {
+        "text": "Um log só pode ser lido da conta que o escreveu",
+        "why": "O contrário: o ponto é lê-lo de um lugar que quem escreveu não controla."
+      },
+      {
+        "text": "Quem tomar a `shop-prod` poderia apagar a prova lá",
+        "why": "Isso. Um registro do que aconteceu tem de sobreviver às pessoas que ele registra, então mora atrás de outra parede."
+      },
+      {
+        "text": "A cota de grupos de log da produção acabaria",
+        "why": "Essa é a história da cota, de outra falha. Os logs são movidos pela segurança deles, não por espaço."
+      }
+    ]
+  },
+  "ex-ve6hh6ph": {
+    "prompt": "Ligue cada conta da loja ao que mora nela.",
+    "hint": "Uma linha da tabela cada.",
+    "pairs": [
+      {
+        "left": "gerenciamento",
+        "right": "a organização e a fatura"
+      },
+      {
+        "left": "`shop-staging`",
+        "right": "uma cópia da loja para testar versões"
+      },
+      {
+        "left": "`sandbox`",
+        "right": "experimentos, limpos regularmente"
+      },
+      {
+        "left": "`log-archive`",
+        "right": "uma cópia dos logs de toda conta"
+      }
+    ],
+    "right_distractors": [
+      "a loja que os clientes usam"
+    ]
+  },
+  "ex-s8bqxzsz": {
+    "prompt": "Uma desenvolvedora tem direitos de administrador no `sandbox` e roda um script que apaga toda máquina que encontrar. Qual o máximo que ele alcança?",
+    "hint": "Onde termina o raio de estrago?",
+    "choices": [
+      {
+        "text": "Toda conta da organização, já que ela é administradora",
+        "why": "Administrador é um conjunto de permissões dentro de uma conta. Ele para nas paredes dessa conta."
+      },
+      {
+        "text": "O `sandbox` e o `shop-staging`, que dividem desenvolvedores",
+        "why": "Dividir pessoas não junta duas contas. As credenciais dela no `sandbox` agem só lá."
+      },
+      {
+        "text": "As máquinas do `sandbox`",
+        "why": "Isso. Um erro alcança, no máximo, a conta onde aconteceu. É isso que a divisão compra."
+      },
+      {
+        "text": "Só as máquinas que ela mesma criou, qualquer que seja a conta",
+        "why": "Nada limita uma administradora aos recursos dela. Quem limita é a parede, não a autoria."
+      }
+    ]
+  },
+  "ex-jmdar8ye": {
+    "prompt": "Seis contas não custam nada para manter. O que a seção diz que elas custam?",
+    "hint": "Do que cada uma delas precisa?",
+    "choices": [
+      {
+        "text": "Uma mensalidade por conta quando a organização passa de cinco",
+        "why": "Não há taxa por conta em quantidade nenhuma. O custo está no trabalho."
+      },
+      {
+        "text": "A mesma base em cada uma, mantida igual",
+        "why": "Isso. Logs, barreiras, acesso e um orçamento em toda conta, que se afastam quando feitos à mão. As lições 3 a 5 automatizam isso."
+      },
+      {
+        "text": "Transferência de dados entre elas, cobrada por conta atravessada",
+        "why": "Os preços da lição 1 seguem zonas e regiões. Atravessar uma fronteira de conta não acrescenta nada a eles."
+      },
+      {
+        "text": "Um segundo plano de suporte para cada conta",
+        "why": "A seção não cita cobrança assim. O que toda conta precisa é a base, e um jeito de as pessoas entrarem."
+      }
+    ]
+  },
+  "ex-768ptj55": {
+    "prompt": "As três linhas de `configure set` escreveram o perfil `shop-prod` no arquivo `~/.aws/___`.",
+    "hint": "A transcrição o imprimiu com `cat`.",
+    "blanks": [
+      {
+        "accept": [
+          "config"
+        ]
+      }
+    ]
+  },
+  "ex-cdbeqvtj": {
+    "prompt": "Por que a conta de gerenciamento não guarda carga de trabalho, nem uma pequena?",
+    "hint": "A lição 4 torna o motivo preciso; a seção o cita.",
+    "choices": [
+      {
+        "text": "Recursos lá apareceriam duas vezes na fatura consolidada",
+        "why": "Cada recurso é cobrado uma vez, da conta que é dona dele, onde quer que essa conta fique."
+      },
+      {
+        "text": "As barreiras da organização não conseguem restringi-la",
+        "why": "Isso. Qualquer coisa rodando na conta de gerenciamento roda fora de toda regra que a organização define."
+      },
+      {
+        "text": "A AWS se recusa a criar recursos numa conta que gerencia outras",
+        "why": "A AWS permite; é por isso que tem de ser uma regra que a empresa mantém."
+      },
+      {
+        "text": "As cotas dela são divididas com toda conta-membro",
+        "why": "Cotas são por conta, as da conta de gerenciamento inclusive. Dividi-las não é o risco."
+      }
+    ]
+  },
+  "ex-992p6xxh": {
+    "prompt": "Uma política na `shop-staging` permite ler `arn:aws:sns:sa-east-1:218935875641:shop-alerts`. De que conta é esse tópico, se a `shop-prod` é `218935875641`?",
+    "hint": "A conta da própria política não importa; o ARN diz.",
+    "choices": [
+      {
+        "text": "Da `shop-prod`, então a política atravessa uma parede",
+        "why": "Isso. O quinto campo cita a `shop-prod`. Uma política no staging citando um recurso da produção é exatamente a linha a questionar."
+      },
+      {
+        "text": "Da `shop-staging`, já que é onde a política mora",
+        "why": "Onde uma política mora não muda de quem é um recurso. O ARN carrega o dono."
+      },
+      {
+        "text": "Da conta de gerenciamento, já que tópicos pertencem a ela",
+        "why": "A conta de gerenciamento é dona da organização, não dos tópicos dos membros."
+      },
+      {
+        "text": "De qualquer conta: nomes de tópico do SNS são globais como nomes de bucket",
+        "why": "Um nome de tópico é único só dentro de uma conta e região, e é por isso que o ARN dele tem campo de conta."
+      }
+    ]
+  },
+  "ex-jbgs3prb": {
+    "prompt": "Ponha os passos do laboratório desta lição na ordem que funciona, de um moto vazio até uma olhada dentro da `shop-prod`.",
+    "hint": "Cada passo precisa que o anterior exista.",
+    "items": [
+      "criar a organização",
+      "criar a conta `shop-prod`",
+      "escrever um perfil citando a `OrganizationAccountAccessRole` dela",
+      "rodar `describe-vpcs` com `--profile shop-prod`"
+    ],
+    "trap": "Escrever o perfil antes de a conta existir é o deslize comum: o `role_arn` dele precisa do número que o `create-account` devolve."
+  },
+  "ex-vhgpdep1": {
+    "prompt": "Uma start-up roda a produção e os experimentos dos desenvolvedores numa conta, separados por tags. Que mudança tira mais risco com menos trabalho?",
+    "hint": "Que parede um erro teria de atravessar?",
+    "choices": [
+      {
+        "text": "Escrever uma condição na tag `env` em toda política de desenvolvedor",
+        "why": "Esse é o arranjo que falha no dia em que um recurso fica sem a tag. Acrescenta cuidado, não uma parede."
+      },
+      {
+        "text": "Mudar a produção para outra região da mesma conta",
+        "why": "O IAM é global dentro da conta, então as permissões dos desenvolvedores seguem a produção até lá."
+      },
+      {
+        "text": "Pedir uma cota de VPC maior para os dois nunca competirem",
+        "why": "Isso trata um sintoma. Os experimentos ainda poderiam apagar a produção."
+      },
+      {
+        "text": "Mudar os experimentos para uma conta sandbox própria",
+        "why": "Isso. Uma conta separada põe uma parede entre os dois: identidades, cotas e a fatura se separam junto."
+      }
+    ]
+  }
+}

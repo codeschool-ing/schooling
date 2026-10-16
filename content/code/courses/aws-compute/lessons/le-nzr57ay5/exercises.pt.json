@@ -1,0 +1,405 @@
+{
+  "ex-hxgwm4rg": {
+    "prompt": "Dos quatro números que se leem num perfil de requisições, qual a conta do Lambda acompanha, com duração e memória fixas?",
+    "hint": "O Lambda paga por requisição e por GB-segundo de cada requisição.",
+    "choices": [
+      {
+        "text": "A hora de pico",
+        "why": "O pico dimensiona instâncias e tasks. Uma função soma ambientes conforme as requisições chegam e não paga nenhum adiantado."
+      },
+      {
+        "text": "O número de horas ociosas",
+        "why": "Horas ociosas não custam nada a uma função, então é nelas que ela ganha, mas não são elas que fazem a conta."
+      },
+      {
+        "text": "O volume",
+        "why": "Isso: quantas requisições chegam no mês. Com duração e memória fixas, a conta é o volume vezes um preço por requisição."
+      },
+      {
+        "text": "A hora do dia em que o tráfego começa",
+        "why": "Uma função custa o mesmo às 03:00 e às 15:00."
+      }
+    ]
+  },
+  "ex-smq0rar8": {
+    "prompt": "Um serviço recebe 20 requisições por segundo durante 12 horas por dia e nenhuma nas outras 12. No mês médio de 730 horas (30,42 dias), quantas requisições são, em milhões, com duas casas decimais?",
+    "hint": "Requisições por dia, depois vezes 730 / 24.",
+    "unit": "milhões de requisições"
+  },
+  "ex-7c7sfbfz": {
+    "prompt": "O perfil office carrega 59,13 milhões de requisições por mês, uma média de 22,5 por segundo. Por que a média é o número errado para dar preço a ele?",
+    "hint": "Quais dois números uma média achata?",
+    "choices": [
+      {
+        "text": "Esconde o pico de 60 e as 15 horas em silêncio",
+        "why": "Isso. Contêineres são dimensionados para o pico, e uma função e o App Runner aproveitam as horas em silêncio; dois serviços com a mesma média podem pedir respostas opostas."
+      },
+      {
+        "text": "A conta está errada: 59,13 milhões por mês dá mais perto de 60 por segundo",
+        "why": "A conta está certa: 59,13 milhões em 2.628.000 segundos dá 22,5. O problema é o que ela deixa de fora."
+      },
+      {
+        "text": "Médias são em requisições por segundo, e a AWS cobra por hora",
+        "why": "Unidades se convertem. O problema é o formato do dia, que nenhuma conversão traz de volta."
+      },
+      {
+        "text": "A média ignora a duração da requisição",
+        "why": "Nem a média nem o perfil carregam a duração; ela é o quarto número, lido à parte."
+      }
+    ]
+  },
+  "ex-9hhystmt": {
+    "prompt": "A concorrência, o número de requisições em andamento ao mesmo tempo, é a taxa de requisições multiplicada pela ___ delas.",
+    "hint": "A aula 16 usou a lei de Little: 60 por segundo a 100 ms cada são seis ao mesmo tempo.",
+    "blanks": [
+      {
+        "accept": [
+          "duração",
+          "duração média",
+          "latência"
+        ]
+      }
+    ]
+  },
+  "ex-shpcc0q2": {
+    "prompt": "Ligue cada número lido num perfil de requisições à parte da conta que ele move.",
+    "hint": "Que medidor ou que decisão de dimensionamento cada um alimenta?",
+    "pairs": [
+      {
+        "left": "o volume",
+        "right": "As requisições e os GB-segundos do Lambda"
+      },
+      {
+        "left": "o pico",
+        "right": "Quantas instâncias ou tasks precisam rodar"
+      },
+      {
+        "left": "as horas ociosas",
+        "right": "Onde o App Runner paga só a memória"
+      },
+      {
+        "left": "a duração",
+        "right": "Os GB-segundos, e quais timeouts se aplicam"
+      }
+    ],
+    "right_distractors": [
+      "O imposto da região"
+    ]
+  },
+  "ex-1bm0p6v6": {
+    "prompt": "Na tabela do compare.py, o App Runner é a opção mais barata para o perfil office, a 27,74 USD. O que o deixa mais barato ali do que no perfil steady?",
+    "hint": "Conte as horas sem nenhuma requisição.",
+    "choices": [
+      {
+        "text": "O office tem menos requisições no mês",
+        "why": "O App Runner não cobra por requisição; 59,13 contra 78,84 milhões não é o que move a coluna dele."
+      },
+      {
+        "text": "As 15 horas ociosas por dia pagam só a memória, e não o processador",
+        "why": "Isso. O steady não tem hora ociosa, então paga os dois medidores o dia todo: 56,94."
+      },
+      {
+        "text": "O App Runner aplica o preço de us-east-1 só durante o horário comercial",
+        "why": "O preço de us-east-1 vale igual para todas as linhas."
+      },
+      {
+        "text": "O pico de 60 é menor que o do perfil steady",
+        "why": "O pico do office, 60, é o maior dos dois; o steady roda a 30."
+      }
+    ]
+  },
+  "ex-ykkynh63": {
+    "prompt": "No compare.py, mude MS de 100 para 200 e mantenha o resto. Duas tasks de Fargate continuam custando 49,596 USD por mês; uma requisição agora custa 0,2 USD por milhão mais 0,1 GB-segundo a 0,0000133334. Em quantos milhões de requisições por mês o Lambda custa o mesmo que as duas tasks? Duas casas decimais.",
+    "hint": "Primeiro o preço por requisição, depois divida o mês das tasks por ele.",
+    "unit": "milhões de requisições"
+  },
+  "ex-aqkfa494": {
+    "prompt": "O EC2 mostra os mesmos 162,21 USD em todas as linhas da tabela do compare.py, e é a opção mais cara em três das quatro. O que a tabela está dizendo?",
+    "hint": "Quanto tráfego duas c7g.large atendem antes de ser preciso uma terceira?",
+    "choices": [
+      {
+        "text": "Que os preços do EC2 para São Paulo estão errados na tabela, altos demais para essa máquina",
+        "why": "O preço é o da tabela, 0,1111 por hora; não há nada errado nele."
+      },
+      {
+        "text": "Que instâncias não escalam, então o programa não consegue somar uma quando o tráfego cresce",
+        "why": "O programa dimensiona as instâncias hora a hora como todo o resto; até 400 por segundo, duas bastam."
+      },
+      {
+        "text": "Que um serviço pequeno não enche a menor instância que vale a pena rodar",
+        "why": "Isso. Duas máquinas de 2 vCPU são capacidade para 400 por segundo, e só o perfil busy as ocupa."
+      },
+      {
+        "text": "Que o EC2 cobra por requisição a uma tarifa maior que a do Lambda",
+        "why": "O EC2 cobra por hora, sejam quantas forem as requisições; é justamente por isso que o número não se mexe."
+      }
+    ]
+  },
+  "ex-x1xpnzby": {
+    "prompt": "Quais destes o compare.py deixa fora dos preços? Marque todas as que se aplicam.",
+    "hint": "Pense no que fica na frente da computação, e no que um contrato muda.",
+    "choices": [
+      {
+        "text": "O load balancer de que EC2 e Fargate precisam na frente",
+        "why": "O preço dele não está na tabela deste curso; a aula 22 de aws-foundations o calcula."
+      },
+      {
+        "text": "Os descontos de Savings Plans e de Reserved Instances",
+        "why": "A tabela tem só preços de lista sob demanda."
+      },
+      {
+        "text": "O preço do Lambda por milhão de requisições",
+        "why": "Está incluído: 0,2 USD por milhão, lido da tabela."
+      },
+      {
+        "text": "Os minutos que um grupo de auto scaling leva para reagir",
+        "why": "O programa dimensiona cada hora com perfeição, o que um grupo real nunca faz."
+      },
+      {
+        "text": "O preço da memória do Fargate",
+        "why": "Está incluído: 0,00612 USD por GB-hora em Arm, lido da tabela."
+      }
+    ]
+  },
+  "ex-2m4fapex": {
+    "prompt": "Com as suposições do compare.py, uma requisição roda 100 ms numa função de 512 MB em Arm. A 0,2 USD por milhão de requisições e 0,0000133334 USD por GB-segundo, quanto custa um milhão de requisições, em USD, com quatro casas decimais?",
+    "hint": "Uma requisição são 0,1 s × 0,5 GB de GB-segundos.",
+    "unit": "USD"
+  },
+  "ex-57tb5stg": {
+    "prompt": "Segundo a documentação da API para create-function, quanto tempo uma função Lambda comum pode rodar antes de ser parada?",
+    "hint": "O padrão é 3 segundos; a pergunta é o teto.",
+    "choices": [
+      {
+        "text": "29 segundos",
+        "why": "Esse é o timeout padrão de uma integração de REST API no API Gateway, não o da função."
+      },
+      {
+        "text": "900 segundos",
+        "why": "Isso: quinze minutos. Um job mais longo precisa ser dividido, ir para uma task ou ser orquestrado."
+      },
+      {
+        "text": "30 segundos",
+        "why": "Esse é o máximo que uma integração de HTTP API espera."
+      },
+      {
+        "text": "Uma hora, 3.600 segundos",
+        "why": "Nenhum limite assim está documentado para uma função comum; 900 segundos é o teto."
+      }
+    ]
+  },
+  "ex-c2fphtxt": {
+    "prompt": "Um endpoint de exportação leva 45 segundos para responder. A equipe quer colocá-lo no Lambda atrás de uma HTTP API. O que precisa mudar?",
+    "hint": "Qual limite é mais curto aqui, o da função ou o da integração?",
+    "choices": [
+      {
+        "text": "Nada; 45 segundos estão bem dentro dos quinze minutos do Lambda",
+        "why": "A função terminaria, mas a HTTP API para de esperar aos 30 segundos, e quem chamou recebe um erro."
+      },
+      {
+        "text": "Aumentar o timeout da integração da HTTP API para 60 segundos",
+        "why": "Uma integração de HTTP API permite 30 segundos no máximo. Só REST APIs, regionais ou privadas, passam de 29."
+      },
+      {
+        "text": "Transformá-la num job em fila, que o cliente busca depois",
+        "why": "Isso: aceitar o pedido, pôr o trabalho numa fila e deixar o cliente buscar o resultado. A requisição volta na hora, e os 45 segundos acontecem fora de qualquer timeout de integração."
+      },
+      {
+        "text": "Dar mais memória à função para ela responder dentro do limite",
+        "why": "Mais memória compra mais CPU e talvez encurte o tempo, mas nada diz que chega a 30 segundos; o desenho não deve depender disso."
+      }
+    ]
+  },
+  "ex-5b2f4rvc": {
+    "prompt": "A exportação de 45 segundos vira um job. Ponha os passos na ordem em que acontecem.",
+    "hint": "Quem chamou recebe resposta primeiro; o trabalho vem depois.",
+    "items": [
+      "A API aceita o pedido e responde com um id de job",
+      "Uma mensagem descrevendo a exportação entra numa fila",
+      "Um worker pega a mensagem e monta a exportação",
+      "O cliente pergunta pelo job e baixa o resultado"
+    ],
+    "trap": "Montar a exportação antes de responder é o endpoint síncrono de novo, e o limite de 30 segundos junto com ele."
+  },
+  "ex-jprsxtyk": {
+    "prompt": "O moto criou uma função com --timeout 901 e uma integração de HTTP API de 120.000 ms sem reclamar. O que você deve concluir?",
+    "hint": "Quem aplica um limite: a imitação ou o serviço?",
+    "choices": [
+      {
+        "text": "Que a AWS aumentou os dois limites, e o moto segue o modelo mais novo dela",
+        "why": "O próprio modelo da linha de comando ainda documenta 900 segundos e 30.000 ms. O moto apenas não confere."
+      },
+      {
+        "text": "Que os limites valem só em us-east-1",
+        "why": "Nada na documentação os amarra a uma região; o moto aceitaria os mesmos valores em qualquer lugar."
+      },
+      {
+        "text": "O moto pula essas verificações; a AWS recusa as duas",
+        "why": "Isso, e o limite precisa ser lido na documentação. Um limite que só se encontrou numa imitação é um limite que ainda não se encontrou."
+      },
+      {
+        "text": "Que a AWS CLI reescreveu os valores para valores válidos antes de enviá-los",
+        "why": "O moto devolveu 901 e 120000; os valores passaram sem mudança."
+      }
+    ]
+  },
+  "ex-w9eazz5r": {
+    "prompt": "O /tmp de uma função Lambda tem 512 MB por padrão e pode ser configurado até ___ MB, segundo a documentação da API.",
+    "hint": "Dez gigabytes, escritos em megabytes.",
+    "blanks": [
+      {
+        "accept": [
+          "10240",
+          "10.240",
+          "10 240"
+        ]
+      }
+    ]
+  },
+  "ex-5nbxbb01": {
+    "prompt": "Para o perfil da loja, o App Runner sai a 56,94 USD, o mesmo que no perfil steady. Por que ele não ganha nada com as noites tranquilas da loja?",
+    "hint": "Olhe a taxa entre a meia-noite e as 07:00.",
+    "choices": [
+      {
+        "text": "Não há silêncio: 2 requisições por segundo mantêm as instâncias ativas, e o processador é cobrado até o amanhecer",
+        "why": "Isso. Com noites em silêncio, o mesmo perfil custa 41,37."
+      },
+      {
+        "text": "O App Runner cobra por mês, seja qual for o tráfego",
+        "why": "Ele cobra memória e processador por hora; os 41,37 das noites em silêncio provam que o tráfego importa."
+      },
+      {
+        "text": "O pico de 80 da noite pede uma terceira instância o dia todo",
+        "why": "Duas instâncias atendem até 100 por segundo no programa, então 80 cabe nas duas que ele mantém."
+      },
+      {
+        "text": "O preço de us-east-1 do App Runner sobe à noite",
+        "why": "Há um preço por medidor, a qualquer hora."
+      }
+    ]
+  },
+  "ex-qks9ef55": {
+    "prompt": "O compare.py dá à loja 56,94 USD no App Runner com um fio de 2 por segundo à noite, e 41,37 USD com noites em silêncio. Quanto o fio custa por mês, em USD?",
+    "hint": "Uma subtração.",
+    "unit": "USD"
+  },
+  "ex-s533xbtg": {
+    "prompt": "Que número, escrito ao lado da decisão da loja, a reabriria em favor do Lambda?",
+    "hint": "A última linha do compare.py.",
+    "choices": [
+      {
+        "text": "Um pico noturno que passa de 100 requisições por segundo durante uma hora",
+        "why": "Um pico maior soma tasks e encarece os contêineres, mas não é o equilíbrio com o Lambda."
+      },
+      {
+        "text": "O tráfego médio ficando abaixo de umas 21,8 requisições por segundo",
+        "why": "Isso. Abaixo disso, uma função custa menos que as duas tasks que a loja mantém."
+      },
+      {
+        "text": "O tráfego crescendo na direção de 400 por segundo",
+        "why": "Isso a reabre em favor de instâncias com um Savings Plan, como mostra a linha busy."
+      },
+      {
+        "text": "O relatório passar de seis minutos",
+        "why": "O relatório decide onde o relatório roda, não onde a API roda."
+      }
+    ]
+  },
+  "ex-qkgacaj6": {
+    "prompt": "O relatório de vendas de seis minutos cabe nos quinze minutos do Lambda. Por que a loja o rodou como task agendada de Fargate?",
+    "hint": "O que já existe, e o que precisaria ser construído?",
+    "choices": [
+      {
+        "text": "O Lambda recusa jobs disparados por agendamento",
+        "why": "Um agendamento pode invocar uma função; é um uso comum dela."
+      },
+      {
+        "text": "Uma task de Fargate é grátis quando roda só uma vez por noite",
+        "why": "Ela é cobrada pelos minutos que roda, como toda task."
+      },
+      {
+        "text": "Reaproveita a imagem que a API já constrói, então nada novo precisa ser empacotado",
+        "why": "Isso. As duas funcionariam; a task não custa à loja empacotamento novo nem habilidade nova."
+      },
+      {
+        "text": "Seis minutos passam dos 30 segundos da HTTP API",
+        "why": "O relatório nem é chamado por uma API; esse limite não o alcança."
+      }
+    ]
+  },
+  "ex-chs1m812": {
+    "prompt": "Um receptor de webhooks recebe umas 5.000 chamadas por dia, em horas aleatórias, cada uma rodando 200 ms. Ninguém sabe quando vem a próxima. Para qual opção a aritmética desta aula aponta?",
+    "hint": "Volume, pico e horas ociosas: qual deles é grande aqui?",
+    "choices": [
+      {
+        "text": "Duas tasks de Fargate, pela disponibilidade",
+        "why": "Duas tasks custam 49,60 por mês para esperar 5.000 chamadas por dia; é pagar quase só por horas ociosas."
+      },
+      {
+        "text": "O App Runner, já que as instâncias dele dormem entre as chamadas",
+        "why": "Ele está fechado para novos clientes, e entre as chamadas ainda paga a memória de toda instância provisionada."
+      },
+      {
+        "text": "O Lambda",
+        "why": "Isso. Umas 152.000 requisições por mês custam centavos como funções; todas as outras opções pagam pelas horas em que ninguém chama."
+      },
+      {
+        "text": "Duas instâncias c7g.large, as menores que não são burstable",
+        "why": "São 162,21 por mês, a opção mais cara em todo perfil pequeno."
+      }
+    ]
+  },
+  "ex-6qp82494": {
+    "prompt": "Uma aplicação está saindo do EC2 para o Lambda. Quais dos hábitos dela precisam mudar antes da mudança? Marque todas as que se aplicam.",
+    "hint": "Quais supõem uma máquina que fica, um processo que fica, ou muito tempo?",
+    "choices": [
+      {
+        "text": "Guarda as sessões dos usuários na memória do processo",
+        "why": "Cada requisição concorrente pode cair num ambiente diferente, e um ambiente pode sumir."
+      },
+      {
+        "text": "Grava os arquivos enviados no disco local",
+        "why": "O /tmp dura um ambiente de execução; os arquivos precisam ir para o S3 ou o EFS."
+      },
+      {
+        "text": "Roda uma conciliação de vinte minutos toda noite",
+        "why": "Isso passa do limite de 900 segundos; precisa ser dividida ou ir para uma task."
+      },
+      {
+        "text": "Lê a configuração de variáveis de ambiente",
+        "why": "Funções também têm variáveis de ambiente; esse hábito viaja como está."
+      },
+      {
+        "text": "É escrita em Python",
+        "why": "Python é um runtime gerenciado do Lambda; a linguagem não é o obstáculo."
+      }
+    ]
+  },
+  "ex-9g9dhj3r": {
+    "prompt": "O perfil steady carrega 78,84 milhões de requisições por mês. Se cada requisição rodasse 50 ms em vez de 100, ainda em 512 MB e Arm (0,2 USD por milhão de requisições, 0,0000133334 USD por GB-segundo), quanto o Lambda custaria por mês, em USD, até o centavo?",
+    "hint": "Uma requisição agora são 0,05 s × 0,5 GB de GB-segundos.",
+    "unit": "USD"
+  },
+  "ex-2h9p60w1": {
+    "prompt": "Ponha as quatro opções do perfil nightly em ordem, da mais barata para a mais cara, como o compare.py as calculou.",
+    "hint": "Vinte e duas horas em silêncio por dia.",
+    "items": [
+      "Lambda, Arm",
+      "App Runner",
+      "Fargate, Arm",
+      "EC2 c7g.large"
+    ],
+    "trap": "Pôr o Fargate antes do App Runner esquece que o App Runner paga só memória nas horas em silêncio."
+  },
+  "ex-m54pj1nc": {
+    "prompt": "Anotar as requisições por segundo de cada hora de um dia comum dá o ___ de requisições do serviço.",
+    "hint": "Vinte e quatro números, um por hora.",
+    "blanks": [
+      {
+        "accept": [
+          "perfil"
+        ]
+      }
+    ]
+  }
+}

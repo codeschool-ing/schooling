@@ -1,0 +1,436 @@
+{
+  "ex-1drhtyk0": {
+    "prompt": "O resumo de uma conta real imprime `AccountMFAEnabled: 0` e `AccountAccessKeysPresent: 1`. O que ele diz?",
+    "hint": "As duas linhas `Account…` tratam de uma identidade só.",
+    "choices": [
+      {
+        "text": "Nenhum usuário do IAM tem MFA, e um deles tem chave de acesso",
+        "why": "Os usuários têm linhas próprias (`MFADevices`, e a contagem de chaves por usuário). Estas duas descrevem o usuário root."
+      },
+      {
+        "text": "O usuário root não tem segundo fator e tem uma chave de acesso",
+        "why": "Isso, e é o pior par que uma auditoria encontra: a identidade que nenhuma política restringe, alcançável com uma chave sem segundo fator. Uma conta real quer 1 e 0."
+      },
+      {
+        "text": "O console não pede MFA a ninguém, e a API da conta precisa de uma chave",
+        "why": "O MFA é definido por identidade, não para o console inteiro, e a API não precisa de chave do root para funcionar."
+      },
+      {
+        "text": "Nada que exija ação: o moto imprime os mesmos dois números",
+        "why": "O moto imprime 0 e 0 porque não tem root nenhum. Numa conta real, uma chave no root é um achado."
+      }
+    ]
+  },
+  "ex-k5y8y9f2": {
+    "prompt": "Qual ARN nomeia o usuário root da conta `123456789012`?",
+    "hint": "O usuário root não tem nome próprio.",
+    "choices": [
+      {
+        "text": "`arn:aws:iam::123456789012:user/root`",
+        "why": "Esse seria um usuário do IAM que alguém chamou de `root`, um usuário comum com as políticas que recebeu."
+      },
+      {
+        "text": "`arn:aws:sts::123456789012:root`",
+        "why": "ARNs do `sts` nomeiam sessões, como `assumed-role/...`. O usuário root é uma identidade do `iam`."
+      },
+      {
+        "text": "`arn:aws:iam::123456789012:root`",
+        "why": "Isso: o serviço, nenhuma região, a conta, e `root` sem tipo antes."
+      },
+      {
+        "text": "`arn:aws:iam::123456789012:user/admin`",
+        "why": "Um usuário administrador ainda é um usuário do IAM, e uma política do IAM o limita. O usuário root não é um deles."
+      }
+    ]
+  },
+  "ex-54bk5gfm": {
+    "prompt": "A senha root de uma das contas membro da loja pode ter vazado. Que controle impede esse usuário root de apagar buckets antes de a senha ser trocada?",
+    "hint": "O root está acima de toda política dentro da própria conta.",
+    "choices": [
+      {
+        "text": "Uma política do IAM com um `Deny` explícito, anexada ao usuário root",
+        "why": "Nenhuma política do IAM pode ser anexada ao root, e nenhuma dentro da conta o restringe. É isso que faz do root o root."
+      },
+      {
+        "text": "Uma service control policy, definida pela organização de fora da conta",
+        "why": "Isso. Uma SCP limita todo principal de uma conta membro, root incluído; a lição 4 monta uma."
+      },
+      {
+        "text": "Um limite de permissões no usuário root",
+        "why": "Limites se aplicam a usuários e roles do IAM. O root não é nenhum dos dois, então não há onde aplicar um."
+      },
+      {
+        "text": "Tirar o usuário root do grupo de administradores",
+        "why": "O root não pertence a grupo nenhum. As permissões dele vêm de ser root, não de uma filiação."
+      }
+    ]
+  },
+  "ex-13s8qhm1": {
+    "prompt": "O id da chave de acesso de longo prazo de um usuário do IAM começa com as quatro letras ___.",
+    "hint": "A transcrição imprimiu uma ao lado de `Active`.",
+    "blanks": [
+      {
+        "accept": [
+          "AKIA"
+        ]
+      }
+    ]
+  },
+  "ex-wg373b2g": {
+    "prompt": "Quais destes são credenciais de longo prazo de um usuário do IAM? Marque todos os que se aplicam.",
+    "hint": "Longo prazo quer dizer que dura até alguém apagar.",
+    "choices": [
+      {
+        "text": "Uma senha criada por `create-login-profile`",
+        "why": "Isso. O perfil de login é a senha do console, e fica até ser apagada ou trocada."
+      },
+      {
+        "text": "O token de sessão do `sts assume-role`",
+        "why": "Esse pertence a uma sessão de role e expira com ela, em uma hora por padrão."
+      },
+      {
+        "text": "Uma chave de acesso cujo id começa com `AKIA`",
+        "why": "Isso. Uma chave `AKIA` funciona até alguém desativá-la ou apagá-la, por isso a lição 12 a chama de último recurso."
+      },
+      {
+        "text": "Um token que o GitHub Actions dá a um workflow",
+        "why": "Esse token é da execução do GitHub, não de um usuário do IAM, e vale por minutos."
+      }
+    ]
+  },
+  "ex-6wrhs25b": {
+    "prompt": "Uma colega nova da loja nunca terá um usuário do IAM. Ela ainda consegue trabalhar nas contas da loja?",
+    "hint": "Um principal é quem assina a requisição.",
+    "choices": [
+      {
+        "text": "Não: toda requisição à AWS é assinada com a chave de um usuário do IAM",
+        "why": "Requisições são assinadas por sessões de role o tempo todo, com chaves `ASIA` que nenhum usuário possui."
+      },
+      {
+        "text": "Só entrando como o usuário root",
+        "why": "O root fica para uma lista curta de tarefas da conta; trabalhar todo dia como root é o que se evita."
+      },
+      {
+        "text": "Sim, por login único, que termina numa sessão de role",
+        "why": "Isso. A pessoa entra no provedor de identidade e trabalha por meio de uma role; a lição 11 monta isso."
+      },
+      {
+        "text": "Sim, depois de ser incluída no grupo `developers`",
+        "why": "Um grupo guarda usuários, e ela não tem um para incluir. A filiação dá permissões; não assina nada."
+      }
+    ]
+  },
+  "ex-0k04afpt": {
+    "prompt": "Uma política de confiança nomeia `arn:aws:iam::123456789012:group/developers` como principal. O moto a guardou. O que a AWS faz com ela?",
+    "hint": "Um grupo é algo que assina requisições?",
+    "choices": [
+      {
+        "text": "Recusa o documento, porque um grupo não é um principal",
+        "why": "Isso. Um grupo nunca faz uma requisição, então não há como confiar nele para fazer uma. Cada membro recebe permissão para assumir a role."
+      },
+      {
+        "text": "Confia em todo membro do grupo, agora e no futuro",
+        "why": "É o que o autor esperava, e o motivo de o erro ser comum. A AWS recusa o documento."
+      },
+      {
+        "text": "Confia nos membros que o grupo tinha quando a política foi salva",
+        "why": "Nenhuma foto dos membros é tirada. O documento é recusado antes de qualquer coisa ser guardada."
+      },
+      {
+        "text": "Aceita, como o moto aceitou, já que o moto responde no formato da AWS",
+        "why": "O moto é mais tolerante que a AWS aqui. O formato é o da AWS; as verificações são menos."
+      }
+    ]
+  },
+  "ex-5f4evd4p": {
+    "prompt": "Qual destas afirmações vale para uma role do IAM?",
+    "hint": "Pense no que `create-access-key --user-name deployer` respondeu.",
+    "choices": [
+      {
+        "text": "Tem uma chave de acesso que a AWS gira a cada hora",
+        "why": "Uma role não possui chave nenhuma. Cada sessão recebe uma temporária nova, o que é diferente de rotação."
+      },
+      {
+        "text": "Não tem credenciais; cada sessão recebe temporárias",
+        "why": "Isso. Assumir a role devolve uma chave `ASIA`, um segredo e um token que expiram juntos."
+      },
+      {
+        "text": "Tem senha de console, definida com `create-login-profile`",
+        "why": "Um perfil de login pertence a um usuário. Pessoas chegam ao console como role pelo login, não por uma senha da role."
+      },
+      {
+        "text": "É um grupo de usuários com uma política de confiança",
+        "why": "Um grupo não assina nada e não tem política de confiança. Uma role é uma identidade própria, vestida por uma sessão."
+      }
+    ]
+  },
+  "ex-s1ahzz8k": {
+    "prompt": "Ligue cada prefixo ao que ele identifica na AWS.",
+    "hint": "Dois são chaves, dois são identidades.",
+    "pairs": [
+      {
+        "left": "`AKIA`",
+        "right": "a chave de acesso de longo prazo de um usuário"
+      },
+      {
+        "left": "`ASIA`",
+        "right": "a chave de acesso temporária de uma sessão"
+      },
+      {
+        "left": "`AROA`",
+        "right": "o id único de uma role"
+      },
+      {
+        "left": "`AIDA`",
+        "right": "o id único de um usuário do IAM"
+      }
+    ],
+    "right_distractors": [
+      "o usuário root de uma conta"
+    ]
+  },
+  "ex-2nxr8q9w": {
+    "prompt": "O log de auditoria diz que um bucket foi apagado por `arn:aws:sts::123456789012:assumed-role/deployer/session1`. O que isso diz sobre quem fez?",
+    "hint": "Leia as três partes depois de `assumed-role/`.",
+    "choices": [
+      {
+        "text": "Um usuário do IAM chamado `session1` apagou",
+        "why": "`session1` é o nome de sessão que quem chamou escolheu. O ARN de um usuário é do `iam`, com `user/` nele."
+      },
+      {
+        "text": "A role agiu sozinha, sem ninguém por trás",
+        "why": "Uma role nunca age sozinha; ela não tem credenciais até alguém assumi-la."
+      },
+      {
+        "text": "Alguém que assumiu a `deployer`, com um nome que não identifica ninguém",
+        "why": "Isso. O nome da sessão é escolha de quem chama, e `session1` joga fora a única pista que o ARN carrega. `bia-deploy` a teria mantido."
+      },
+      {
+        "text": "O usuário root, já que o ARN é do `sts`",
+        "why": "O `sts` é o serviço que emite sessões; todo ARN de sessão de role é do `sts`."
+      }
+    ]
+  },
+  "ex-nqsb0hvn": {
+    "prompt": "O usuário da bia é apagado por engano e criado de novo com o mesmo nome. A política de confiança de uma role nomeava o ARN dela, e agora ela é recusada. Por quê?",
+    "hint": "O ARN é o mesmo; outra coisa não é.",
+    "choices": [
+      {
+        "text": "O usuário recriado tem outro ARN",
+        "why": "O ARN é feito da conta e do nome, e os dois são iguais."
+      },
+      {
+        "text": "Ela agora aponta para o id único do usuário antigo, não do novo",
+        "why": "Isso. A AWS troca o ARN pelo id antigo quando o usuário some, então um usuário novo com o nome antigo não herda nada. A política tem de ser escrita de novo."
+      },
+      {
+        "text": "Usuários novos esperam um dia antes de qualquer confiança valer",
+        "why": "Não há período de espera. A recusa vem do que a política agora nomeia."
+      },
+      {
+        "text": "Políticas de confiança ficam em cache por sessão durante 24 horas",
+        "why": "Nada aqui é cache. A própria política de confiança mudou quando o usuário foi apagado."
+      }
+    ]
+  },
+  "ex-2q8pzezr": {
+    "prompt": "O `create-role` imprimiu `MaxSessionDuration: 3600`. Quantos minutos tem a sessão mais longa que a role dá por padrão?",
+    "hint": "O número está em segundos.",
+    "unit": "minutos"
+  },
+  "ex-hnwwn7wb": {
+    "prompt": "Alguém escreve a política de confiança do deployer com a condição `aud` e deixa `sub` de fora. A role foi aberta para quem?",
+    "hint": "Quem mais recebe tokens de `token.actions.githubusercontent.com`?",
+    "choices": [
+      {
+        "text": "Ninguém: sem `sub` a condição falha e nenhum token é aceito",
+        "why": "Uma condição que não está escrita não é verificada. A política aceita o que bater com as linhas que estão lá."
+      },
+      {
+        "text": "Todo repositório da própria organização da loja no GitHub",
+        "why": "Nada na política menciona a organização da loja; só o `sub` mencionaria. Repositórios de estranhos também batem."
+      },
+      {
+        "text": "Qualquer workflow de qualquer repositório do GitHub",
+        "why": "Isso. Todos recebem tokens do mesmo emissor com a mesma audiência, então o `sub` é a linha que nomeia o repositório e o branch da loja."
+      },
+      {
+        "text": "Só workflows que rodam no branch `main`",
+        "why": "O branch faz parte do `sub`, que ficou de fora. Todo branch de todo repositório bate."
+      }
+    ]
+  },
+  "ex-34f179zb": {
+    "prompt": "Por que o `assume-role-with-web-identity` pode ser enviado com `--no-sign-request`?",
+    "hint": "O que o workflow do GitHub tem antes da chamada?",
+    "choices": [
+      {
+        "text": "O token é a credencial; quem chama ainda não tem chave da AWS",
+        "why": "Isso. O objetivo da chamada é transformar o token do provedor em credenciais da AWS, então ela não pode exigir credenciais da AWS antes."
+      },
+      {
+        "text": "O moto ignora assinaturas, e a AWS também exige essa opção",
+        "why": "A chamada funciona sem assinatura contra a AWS por um motivo próprio: o token prova quem está pedindo."
+      },
+      {
+        "text": "Para manter a chave secreta fora dos logs do GitHub",
+        "why": "Uma assinatura nunca leva o segredo. Simplesmente não há chave com que assinar."
+      },
+      {
+        "text": "O STS é um serviço global, e serviços globais aceitam chamadas sem assinatura",
+        "why": "O `AssumeRole` no mesmo serviço precisa ser assinado. A diferença está na chamada, não no serviço."
+      }
+    ]
+  },
+  "ex-n6vsmypy": {
+    "prompt": "Nesta lição, quais destes o moto aceitou embora a AWS os recusasse? Marque todos os que se aplicam.",
+    "hint": "Duas recusas vieram de outro lugar que não as regras da AWS.",
+    "choices": [
+      {
+        "text": "Uma política de confiança que nomeia um grupo",
+        "why": "Isso. A AWS a recusa como malformada; o moto a guardou."
+      },
+      {
+        "text": "Um token de identidade web claramente inventado",
+        "why": "Isso. A AWS confere a assinatura contra as chaves do provedor; o moto entregou uma sessão."
+      },
+      {
+        "text": "Um documento de metadados SAML de 64 caracteres",
+        "why": "Esse nunca chegou ao moto: a linha de comando o recusou por ter menos de 1000 caracteres."
+      },
+      {
+        "text": "Metadados SAML feitos de 1000 espaços",
+        "why": "Isso. O moto não interpreta o documento; a AWS recusa um que não consegue ler."
+      },
+      {
+        "text": "Uma chave de acesso para a role `deployer`",
+        "why": "O moto recusou isso, como a AWS faria: o `create-access-key` não achou usuário chamado `deployer`."
+      }
+    ]
+  },
+  "ex-ycgy9hjz": {
+    "prompt": "Ponha em ordem os passos de uma entrega do GitHub Actions por OIDC.",
+    "hint": "A AWS confere o token antes de ler as condições da política de confiança.",
+    "items": [
+      "o workflow pede um token ao GitHub",
+      "ele chama `AssumeRoleWithWebIdentity` com o token",
+      "a AWS confere a assinatura contra as chaves publicadas do GitHub",
+      "a AWS confere `aud` e `sub` contra a política de confiança",
+      "o workflow assina as requisições com a chave `ASIA` até ela expirar"
+    ],
+    "trap": "Pôr as condições primeiro é o deslize comum: uma condição só vale a pena ser lida num token cuja assinatura já se sabe ser do GitHub."
+  },
+  "ex-cfem2na6": {
+    "prompt": "O diretório da empresa da loja autentica as pessoas e exporta um documento de metadados XML. Que tipo de provedor do IAM ele vira?",
+    "hint": "Um dos dois padrões fala XML.",
+    "choices": [
+      {
+        "text": "Um provedor OIDC, do mesmo tipo do provedor do GitHub",
+        "why": "O OIDC carrega JSON web tokens. Um documento de metadados XML pertence ao outro padrão."
+      },
+      {
+        "text": "Um provedor SAML",
+        "why": "Isso. O SAML 2.0 é o padrão XML, e a role que ele alcança é assumida com `AssumeRoleWithSAML`."
+      },
+      {
+        "text": "Um grupo cujos membros são sincronizados a partir do diretório",
+        "why": "Um grupo guarda usuários do IAM, e a federação não cria nenhum. O diretório continua sendo o lugar onde as pessoas entram."
+      },
+      {
+        "text": "Um usuário do IAM por pessoa, cada um com uma chave de acesso",
+        "why": "É justamente o arranjo que a federação existe para evitar: chaves de longo prazo do lado da AWS para gente autenticada em outro lugar."
+      }
+    ]
+  },
+  "ex-rnb6w08h": {
+    "prompt": "O serviço de monitoramento de um parceiro roda na conta AWS do próprio parceiro e precisa ler as métricas da loja. Que principal a loja deve dar a ele?",
+    "hint": "O parceiro já tem identidades próprias, em outra conta.",
+    "choices": [
+      {
+        "text": "Um usuário do IAM na conta da loja, com uma chave de acesso enviada ao parceiro",
+        "why": "Uma chave de longo prazo nas mãos de outra pessoa é o arranjo que a lição 12 chama de último recurso, e aqui há um melhor."
+      },
+      {
+        "text": "Uma role na conta da loja, com a conta do parceiro na política de confiança",
+        "why": "Isso. O parceiro entra com as próprias identidades e recebe uma sessão temporária; a lição 9 acrescenta o external id que mantém o arranjo seguro."
+      },
+      {
+        "text": "Filiação ao grupo `developers` para o usuário root do parceiro",
+        "why": "Um grupo guarda os usuários do IAM da própria loja, e nada de outra conta entra num."
+      },
+      {
+        "text": "Um provedor OIDC na conta da loja para a conta AWS do parceiro",
+        "why": "Uma conta AWS não é um emissor OIDC. Duas contas AWS confiam uma na outra por meio de roles."
+      }
+    ]
+  },
+  "ex-9be8gy66": {
+    "prompt": "Ligue cada necessidade ao principal que a lição recomenda para ela.",
+    "hint": "A tabela no fim da seção de federação.",
+    "pairs": [
+      {
+        "left": "fechar a conta",
+        "right": "o usuário root, com MFA"
+      },
+      {
+        "left": "um pipeline fora da AWS",
+        "right": "um provedor OIDC e uma role"
+      },
+      {
+        "left": "uma pessoa da empresa",
+        "right": "login único terminando numa sessão de role"
+      },
+      {
+        "left": "um programa sem outra forma de entrar",
+        "right": "um usuário do IAM com chave de acesso girada"
+      }
+    ],
+    "right_distractors": [
+      "um grupo com política de confiança"
+    ]
+  },
+  "ex-jcfak3dp": {
+    "prompt": "Um script num notebook roda `aws sts get-caller-identity` e recebe `arn:aws:iam::123456789012:user/caio`. Com o que ele está assinando?",
+    "hint": "Uma sessão de role teria respondido com um ARN do `sts`.",
+    "choices": [
+      {
+        "text": "A senha de console do caio",
+        "why": "A linha de comando nunca assina com senha. A senha só abre o console."
+      },
+      {
+        "text": "Uma sessão de uma role que o caio assumiu",
+        "why": "Uma sessão responde com `arn:aws:sts::...:assumed-role/...`, não com `user/caio`."
+      },
+      {
+        "text": "As credenciais do grupo `data` a que o caio pertence",
+        "why": "Um grupo não tem credenciais; ele nunca apareceria como quem chama."
+      },
+      {
+        "text": "Uma chave de acesso do usuário do IAM caio, uma `AKIA`",
+        "why": "Isso. Uma chave de longo prazo num notebook: exatamente a credencial que as lições 10 a 12 trabalham para substituir."
+      }
+    ]
+  },
+  "ex-xzegg5eg": {
+    "prompt": "Nesta lição o moto entregou uma sessão da `deployer` a quem a política de confiança não nomeava. O que concluir sobre a política de confiança?",
+    "hint": "Em que estado estava a verificação do moto?",
+    "choices": [
+      {
+        "text": "Que ela está errada, já que a AWS teria entregado a mesma sessão",
+        "why": "A AWS teria recusado quem chamou. A sessão diz algo sobre a configuração do moto, não sobre a política."
+      },
+      {
+        "text": "Nada: a verificação do moto estava desligada, então ele não julgou política nenhuma",
+        "why": "Isso. Com a verificação desligada o moto deixa toda chamada passar; a lição 9 repete a chamada com a verificação ligada, e a política de confiança recusa."
+      },
+      {
+        "text": "Que políticas de confiança só valem para principais federados",
+        "why": "A política de confiança vale para todo principal que assume a role, usuários e sessões incluídos."
+      },
+      {
+        "text": "Que um principal `AWS` numa política de confiança confia na conta inteira",
+        "why": "Ele nomeia um usuário aqui. Confiar na conta se escreve de outro jeito, e a lição 9 mostra como."
+      }
+    ]
+  }
+}

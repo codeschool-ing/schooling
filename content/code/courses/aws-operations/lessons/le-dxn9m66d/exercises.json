@@ -1,0 +1,414 @@
+[
+  {
+    "id": "ex-c6m87nvh",
+    "version": 1,
+    "section": "groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What retention does a new log group get if nobody sets one?",
+    "hint": "The describe call answered None.",
+    "choices": [
+      {
+        "text": "Thirty days",
+        "correct": false,
+        "why": "Thirty is what the lab set by hand afterwards."
+      },
+      {
+        "text": "Fourteen days, like the free tier",
+        "correct": false,
+        "why": "There is no default of fourteen; there is no default at all."
+      },
+      {
+        "text": "One day, until a policy is set",
+        "correct": false,
+        "why": "Nothing is deleted until a policy says so."
+      },
+      {
+        "text": "Never expire",
+        "correct": true,
+        "why": "Right. Every line stays, and is billed every month."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cp7eded",
+    "version": 1,
+    "section": "groups",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 135,
+    "tolerance": 0.01,
+    "prompt": "The API writes 5 GB of logs a day. At 0.90 USD per GB ingested, what does ingestion cost in a 30-day month?",
+    "hint": "Gigabytes a month times the price.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-pky7w17q",
+    "version": 1,
+    "section": "groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Logs cost 0.90 USD per GB to ingest and 0.0408 USD per GB-month to store. Which change cuts the bill that grows by itself?",
+    "hint": "One cost is paid once, the other every month.",
+    "choices": [
+      {
+        "text": "Writing the same lines to two log groups",
+        "correct": false,
+        "why": "That doubles ingestion and storage alike."
+      },
+      {
+        "text": "Querying the logs less often with Insights",
+        "correct": false,
+        "why": "Queries are billed apart; they do not make storage grow."
+      },
+      {
+        "text": "A retention policy on the group",
+        "correct": true,
+        "why": "Right. Storage without retention grows every month; a policy caps it."
+      },
+      {
+        "text": "Moving the group to another region",
+        "correct": false,
+        "why": "The growth follows the group to any region."
+      }
+    ]
+  },
+  {
+    "id": "ex-xb1md11t",
+    "version": 1,
+    "section": "structured",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the shop's API write each request as a JSON object rather than a sentence?",
+    "hint": "Think of the next person who edits the message.",
+    "choices": [
+      {
+        "text": "JSON lines are cheaper to ingest",
+        "correct": false,
+        "why": "Ingestion is billed by size; JSON is usually larger."
+      },
+      {
+        "text": "Queries name fields instead of parsing prose",
+        "correct": true,
+        "why": "Right. A field survives an edit to the wording; a regular expression does not."
+      },
+      {
+        "text": "CloudWatch refuses lines that are not JSON",
+        "correct": false,
+        "why": "Any text is accepted; JSON is a choice."
+      },
+      {
+        "text": "JSON lines expire on their own",
+        "correct": false,
+        "why": "Retention is a property of the group, not of the line format."
+      }
+    ]
+  },
+  {
+    "id": "ex-j8brcxet",
+    "version": 1,
+    "section": "structured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The filter `{ $.status >= 500 }` matched all 300 lines in the lab. What is the right conclusion?",
+    "hint": "Compare with what the word filter did.",
+    "choices": [
+      {
+        "text": "moto ignores JSON patterns",
+        "correct": true,
+        "why": "Right. It applied the plain word and returned everything for the JSON pattern."
+      },
+      {
+        "text": "Every request failed",
+        "correct": false,
+        "why": "Only a handful had a status of 500 or more."
+      },
+      {
+        "text": "The pattern's syntax is wrong",
+        "correct": false,
+        "why": "It is valid CloudWatch syntax; AWS would apply it."
+      },
+      {
+        "text": "JSON patterns only work on numbers stored as strings",
+        "correct": false,
+        "why": "Numeric comparisons work on JSON numbers; that is what they are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-2svj3h4a",
+    "version": 1,
+    "section": "structured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`put-log-events` returns `rejectedLogEventsInfo` with events too old. What does that mean?",
+    "hint": "CloudWatch has a window for timestamps.",
+    "choices": [
+      {
+        "text": "They were stored and will expire sooner",
+        "correct": false,
+        "why": "Rejected means not stored."
+      },
+      {
+        "text": "The call failed and nothing was stored",
+        "correct": false,
+        "why": "The call succeeds; the other events are stored."
+      },
+      {
+        "text": "The retention policy deleted them on arrival",
+        "correct": false,
+        "why": "Retention deletes stored lines; these never were."
+      },
+      {
+        "text": "Those events were dropped and are not in the group",
+        "correct": true,
+        "why": "Right. Events older than 14 days are refused, and only this field says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-136az3dq",
+    "version": 1,
+    "section": "insights",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Logs Insights query, what does `|` do?",
+    "hint": "Each command works on the previous result.",
+    "choices": [
+      {
+        "text": "Separates alternatives, like OR",
+        "correct": false,
+        "why": "Alternatives go inside a filter; | chains commands."
+      },
+      {
+        "text": "Splits the query across log groups",
+        "correct": false,
+        "why": "Log groups are chosen when the query starts, not in the text."
+      },
+      {
+        "text": "Pipes one command's result into the next",
+        "correct": true,
+        "why": "Right. filter, then stats, then sort."
+      },
+      {
+        "text": "Marks a comment",
+        "correct": false,
+        "why": "It joins commands; it is not a comment."
+      }
+    ]
+  },
+  {
+    "id": "ex-1shf2mx0",
+    "version": 1,
+    "section": "insights",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 1.35,
+    "tolerance": 0.01,
+    "prompt": "Logs Insights costs 0.009 USD per GB scanned. What does one query over 150 GB cost?",
+    "hint": "Gigabytes times price.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-nrdccc98",
+    "version": 1,
+    "section": "insights",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An Insights query over a month of logs is too expensive to run every few minutes during an incident. What lowers its cost most?",
+    "hint": "What decides how much is scanned?",
+    "choices": [
+      {
+        "text": "A more selective filter command",
+        "correct": false,
+        "why": "Filtering happens after the scan; the bytes are read anyway."
+      },
+      {
+        "text": "Narrowing the time range",
+        "correct": true,
+        "why": "Right. The range decides what is scanned, and so what is billed."
+      },
+      {
+        "text": "Adding limit 10 at the end",
+        "correct": false,
+        "why": "limit cuts the output, not the scan."
+      },
+      {
+        "text": "Sorting by timestamp first",
+        "correct": false,
+        "why": "Order changes nothing about how much is read."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jhta0s5",
+    "version": 1,
+    "section": "insights",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the commands of the query \"which paths fail most\" in order.",
+    "hint": "Keep, group, order.",
+    "items": [
+      "filter status >= 500",
+      "stats count(*) as errors by path",
+      "sort errors desc"
+    ],
+    "trap": "Sorting before stats is the slip: there is no errors field to sort by yet."
+  },
+  {
+    "id": "ex-y2bcee6e",
+    "version": 1,
+    "section": "metric-filters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a metric filter do with a log line that matches its pattern?",
+    "hint": "Lines in, numbers out.",
+    "choices": [
+      {
+        "text": "Deletes the line to save storage",
+        "correct": false,
+        "why": "Lines are kept; the filter only reads them."
+      },
+      {
+        "text": "Sends the line to an email address",
+        "correct": false,
+        "why": "Notifications come from alarms, lesson 10, not from filters."
+      },
+      {
+        "text": "Adds a value to a metric",
+        "correct": true,
+        "why": "Right. Here, 1 to Shop/Errors5xx for each error line."
+      },
+      {
+        "text": "Copies the line to another log group",
+        "correct": false,
+        "why": "Copying lines out is a subscription filter's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-brkhpwm2",
+    "version": 1,
+    "section": "metric-filters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An alarm watches a metric made by a metric filter. A cleanup removes the log line the filter counts. What happens?",
+    "hint": "Nothing tells the cleanup that an alarm depended on the line.",
+    "choices": [
+      {
+        "text": "The filter fails and CloudWatch raises an error",
+        "correct": false,
+        "why": "A filter that matches nothing is not an error."
+      },
+      {
+        "text": "The alarm switches to the logs automatically",
+        "correct": false,
+        "why": "Alarms read metrics, not logs."
+      },
+      {
+        "text": "The metric goes quiet and the alarm goes blind",
+        "correct": true,
+        "why": "Right. With defaultValue 0 it even reports a calm zero."
+      },
+      {
+        "text": "The deployment that removed it is rolled back",
+        "correct": false,
+        "why": "No alarm fires, so nothing rolls back."
+      }
+    ]
+  },
+  {
+    "id": "ex-97we1k41",
+    "version": 1,
+    "section": "metric-filters",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "So that an alarm sees a quiet minute as zero instead of missing data, the metric filter sets `default___=0`.",
+    "hint": "The value used when no line matches.",
+    "blanks": [
+      {
+        "accept": [
+          "Value"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kv4sarjg",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each CloudWatch Logs feature to what it is for.",
+    "hint": "Store, ask, count, ship.",
+    "pairs": [
+      {
+        "left": "A retention policy",
+        "right": "Stopping storage from growing forever"
+      },
+      {
+        "left": "Logs Insights",
+        "right": "Asking a question across gigabytes"
+      },
+      {
+        "left": "A metric filter",
+        "right": "Turning matching lines into a number"
+      },
+      {
+        "left": "A subscription filter",
+        "right": "Sending lines to another service as they arrive"
+      }
+    ],
+    "right_distractors": [
+      "Encrypting lines with a customer key"
+    ]
+  },
+  {
+    "id": "ex-7b178ftc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Support wants each customer's request latency for complaints. Where should that live?",
+    "hint": "Lesson 8 counted what a customer dimension costs.",
+    "choices": [
+      {
+        "text": "A field in structured logs, queried on demand",
+        "correct": true,
+        "why": "Right. Billed by the gigabyte, asked only when somebody needs it."
+      },
+      {
+        "text": "A custom metric with a Customer dimension",
+        "correct": false,
+        "why": "That multiplies metrics by customers, into a huge bill."
+      },
+      {
+        "text": "A dashboard per customer",
+        "correct": false,
+        "why": "Dashboards draw metrics; it would need the same metrics."
+      },
+      {
+        "text": "A metric filter per customer",
+        "correct": false,
+        "why": "Each filter feeds a metric, so the count of metrics grows with customers."
+      }
+    ]
+  }
+]

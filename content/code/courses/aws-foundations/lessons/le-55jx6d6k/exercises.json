@@ -1,0 +1,591 @@
+[
+  {
+    "id": "ex-kd89b7ty",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a security group attached to?",
+    "hint": "It is why two machines in one subnet can have different rules.",
+    "choices": [
+      {
+        "text": "A subnet, like a route table",
+        "correct": false,
+        "why": "That is the network ACL. A security group judges each interface on its own, even between neighbours."
+      },
+      {
+        "text": "A network interface",
+        "correct": true,
+        "why": "Right. The interface a machine, a load balancer or a database talks through."
+      },
+      {
+        "text": "The VPC as a whole, at its edge",
+        "correct": false,
+        "why": "A group belongs to a VPC but filters nothing until an interface carries it."
+      },
+      {
+        "text": "The internet gateway, for traffic from outside",
+        "correct": false,
+        "why": "A gateway forwards and translates; it carries no group. Traffic between two machines inside never meets it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ennt4y0q",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`db-sg` has no outbound rule at all. Can the database still answer the application's queries?",
+    "hint": "What does stateful mean for a reply?",
+    "choices": [
+      {
+        "text": "No: a packet that leaves needs an outbound rule",
+        "correct": false,
+        "why": "That is how a network ACL behaves. A security group remembers the connections it let in."
+      },
+      {
+        "text": "Yes: the group is stateful, and replies leave",
+        "correct": true,
+        "why": "Right. The group is stateful. What the empty outbound list stops is the database opening a connection of its own."
+      },
+      {
+        "text": "Just when the default group is attached as well",
+        "correct": false,
+        "why": "A second group would add rules, but none is needed for replies; the first group already lets them out."
+      },
+      {
+        "text": "Within its own subnet alone",
+        "correct": false,
+        "why": "Subnets play no part in a security group's decision, and the application sits in another subnet anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xpa2dmp",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `app-sg` let in port 8080 from `alb-sg` rather than from `10.20.0.0/20`, the range of `public-a`?",
+    "hint": "What else has an address in `public-a`?",
+    "choices": [
+      {
+        "text": "A rule cannot name an address range inside the VPC",
+        "correct": false,
+        "why": "It can; the load balancer's own rule names a range. The question is what the range would let in."
+      },
+      {
+        "text": "References are checked faster",
+        "correct": false,
+        "why": "Speed is not the reason, and the lesson makes no claim about it."
+      },
+      {
+        "text": "The range would also admit the NAT gateway",
+        "correct": true,
+        "why": "Right. A reference means the load balancer whatever its addresses; a range means whatever happens to sit in it."
+      },
+      {
+        "text": "The load balancer has no address of its own in `public-a`",
+        "correct": false,
+        "why": "It has interfaces in the public subnets; the trouble is that it is not the only thing there."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtkb11we",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants everybody to reach the load balancer on 443 except `198.51.100.7`. Which change does it?",
+    "hint": "One of the two filters has no way to say no.",
+    "choices": [
+      {
+        "text": "A deny rule for that address in `alb-sg`, written before the allow",
+        "correct": false,
+        "why": "A security group holds only allows, and its rules are not ordered; there is no deny to write."
+      },
+      {
+        "text": "An inbound deny in the public subnets' network ACL, numbered below the allow for 443",
+        "correct": true,
+        "why": "Right. That is rule 90 in the shop's `public` network ACL; the packet is dropped before `alb-sg` sees it."
+      },
+      {
+        "text": "An outbound deny for that address in `alb-sg`, so that no reply reaches it",
+        "correct": false,
+        "why": "Outbound rules are allows too, and replies leave by themselves because the group is stateful."
+      },
+      {
+        "text": "Remove `0.0.0.0/0` from `alb-sg` and add the customers' addresses one by one",
+        "correct": false,
+        "why": "Nobody knows the customers' addresses in advance, and a group holds 60 inbound rules by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-x79tcvb7",
+    "version": 1,
+    "section": "security-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's default security group had no inbound rule. What does AWS's default security group allow in?",
+    "hint": "Machines left on the default can talk to each other.",
+    "choices": [
+      {
+        "text": "Nothing, as in moto",
+        "correct": false,
+        "why": "AWS's default has one inbound rule that moto leaves out."
+      },
+      {
+        "text": "SSH from anywhere, so that a first machine can be reached",
+        "correct": false,
+        "why": "No default rule opens a port to the internet; an SSH rule from anywhere is something people add, and regret."
+      },
+      {
+        "text": "All traffic from interfaces that carry the same group",
+        "correct": true,
+        "why": "Right. A rule whose source is the group itself, so members reach each other and nothing else reaches them."
+      },
+      {
+        "text": "All traffic from inside the VPC's range",
+        "correct": false,
+        "why": "The rule names the group, not the range: a machine elsewhere in the VPC without the default group is not let in."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbzcb5ew",
+    "version": 1,
+    "section": "security-groups",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`create-security-group` has just made `db-sg`. Which of these hold for it before any rule is added? Choose all that apply.",
+    "hint": "The transcript printed its one rule.",
+    "choices": [
+      {
+        "text": "It lets nothing in",
+        "correct": true,
+        "why": "Right. A new group has no inbound rule."
+      },
+      {
+        "text": "It lets every outbound connection out",
+        "correct": true,
+        "why": "Right. `True -1 0.0.0.0/0`: outbound, every protocol, everywhere."
+      },
+      {
+        "text": "It denies `198.51.100.7`",
+        "correct": false,
+        "why": "A security group denies nothing by name; that deny lives in the network ACL."
+      },
+      {
+        "text": "It filters the subnets of the data tier",
+        "correct": false,
+        "why": "It filters the interfaces that carry it, wherever they are, and none carries it yet."
+      },
+      {
+        "text": "It can hold only allow rules",
+        "correct": true,
+        "why": "Right. That is true of every security group."
+      }
+    ]
+  },
+  {
+    "id": "ex-snrybacz",
+    "version": 1,
+    "section": "network-acls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what order does a network ACL read its rules?",
+    "hint": "The numbers are the order.",
+    "choices": [
+      {
+        "text": "All together, and a deny anywhere wins",
+        "correct": false,
+        "why": "That is closer to how IAM judges a policy. A network ACL stops at the first rule that matches."
+      },
+      {
+        "text": "By number, lowest first; the first match decides",
+        "correct": true,
+        "why": "Right. Which is why the shop's deny is rule 90 and the allow for 443 is rule 100."
+      },
+      {
+        "text": "In the order the rules were created",
+        "correct": false,
+        "why": "Creation order plays no part; the number does. Steps of ten leave room to insert one between two others."
+      },
+      {
+        "text": "By number, highest first, so the `*` rule comes first",
+        "correct": false,
+        "why": "The `*` rule, 32767, is the last word: it denies only what nothing else matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-vepbf6nn",
+    "version": 1,
+    "section": "network-acls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network ACL's inbound rules are: 100 allows TCP 443 from `0.0.0.0/0`; 200 denies everything from `198.51.100.7/32`. Does `198.51.100.7` get through on port 443?",
+    "hint": "Read the rules the way the network ACL does.",
+    "choices": [
+      {
+        "text": "Yes: rule 100 matches first and allows it",
+        "correct": true,
+        "why": "Right. The deny is never reached for that packet. Numbering it below 100, as the shop's rule 90 is, is what makes it work."
+      },
+      {
+        "text": "No: a deny beats an allow wherever it sits",
+        "correct": false,
+        "why": "That is the rule for IAM policies, not for network ACLs, where the first match decides."
+      },
+      {
+        "text": "No: the more specific rule, the `/32`, wins",
+        "correct": false,
+        "why": "Longest prefix decides routes. A network ACL goes by rule number, whatever the prefixes."
+      },
+      {
+        "text": "It depends on the security group, which decides between the two",
+        "correct": false,
+        "why": "The network ACL decides on its own, before the security group sees the packet."
+      }
+    ]
+  },
+  {
+    "id": "ex-3558fqy0",
+    "version": 1,
+    "section": "network-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the `public` network ACL allow outbound TCP 1024 to 65535 to everywhere?",
+    "hint": "Where does the reply to a customer go?",
+    "choices": [
+      {
+        "text": "So that the load balancer can open connections to any server",
+        "correct": false,
+        "why": "Servers listen on low, well-known ports such as 443. High ports are where clients wait for replies."
+      },
+      {
+        "text": "Replies go to the client's ephemeral port",
+        "correct": true,
+        "why": "Right. The reply is a new packet to the network ACL, so it needs its own rule; AWS recommends the whole range from 1024."
+      },
+      {
+        "text": "Because AWS adds that rule to every network ACL it creates",
+        "correct": false,
+        "why": "A new network ACL has only the `*` rules. The shop wrote this one."
+      },
+      {
+        "text": "To let the security groups do their part",
+        "correct": false,
+        "why": "The security groups do not depend on it; the replies they let out would die at this edge without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pw3z9n52",
+    "version": 1,
+    "section": "network-acls",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`describe-network-acls` numbers the last rule of every network ACL, the one the console shows as `*`, as rule ___.",
+    "hint": "The transcript of the default network ACL printed it twice.",
+    "blanks": [
+      {
+        "accept": [
+          "32767"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tg02feb8",
+    "version": 1,
+    "section": "network-acls",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A network ACL remembers nothing about a connection, so a reply needs a rule of its own: the word for that property is ___.",
+    "hint": "The opposite of a security group's.",
+    "blanks": [
+      {
+        "accept": [
+          "stateless"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4gy10d8y",
+    "version": 1,
+    "section": "network-acls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto answered `[]` for the entries of a network ACL it had just created. What does a new custom network ACL let through on AWS?",
+    "hint": "Compare it with the default network ACL.",
+    "choices": [
+      {
+        "text": "Everything, like the default network ACL",
+        "correct": false,
+        "why": "The default allows everything because of its rule 100. A new one has no such rule."
+      },
+      {
+        "text": "Nothing until rules are added: it has only the `*` denies",
+        "correct": true,
+        "why": "Right. Which is why associating an empty new network ACL with a subnet cuts it off at once."
+      },
+      {
+        "text": "Inbound nothing, outbound everything, like a new security group",
+        "correct": false,
+        "why": "That is a new security group. A network ACL's two `*` rules deny in both directions."
+      },
+      {
+        "text": "Whatever the subnet's security groups allow",
+        "correct": false,
+        "why": "The two filters are independent, and subnets do not have security groups; interfaces do."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfz8v9fq",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer's packet reaches the load balancer, and the load balancer replies. Put the checks in the order they happen.",
+    "hint": "In, the subnet comes before the interface; out, the other way round.",
+    "items": [
+      "the `public` network ACL's inbound rules",
+      "`alb-sg`'s inbound rules",
+      "`alb-sg` lets the reply out, since it belongs to an allowed connection",
+      "the `public` network ACL's outbound rules"
+    ],
+    "trap": "The reply meets the security group before the network ACL, because the interface is inside the subnet."
+  },
+  {
+    "id": "ex-rzrgw6by",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the third walk the load balancer sends straight to the database on 5432. Which filter refuses it?",
+    "hint": "Every address check allowed it.",
+    "choices": [
+      {
+        "text": "The `public` network ACL, on the way out",
+        "correct": false,
+        "why": "Rule 120 outbound allows everything to `10.20.0.0/16`."
+      },
+      {
+        "text": "`data-a`'s network ACL, on the way in",
+        "correct": false,
+        "why": "`data-a` is on the default network ACL, which lets everything in."
+      },
+      {
+        "text": "`db-sg`, which trusts only interfaces carrying `app-sg`",
+        "correct": true,
+        "why": "Right. The load balancer carries `alb-sg`. The refusal is by identity, which no address rule could make."
+      },
+      {
+        "text": "`alb-sg`, which has no rule for 5432",
+        "correct": false,
+        "why": "`alb-sg`'s outbound rule allows everything; the refusal happens at the database's interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-s15n64dx",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before changing a rule, the shop wants AWS to say whether the load balancer could reach the database, and which rule would stop it, without sending traffic. Which tool is that?",
+    "hint": "One tool records what happened; the other reads the configuration.",
+    "choices": [
+      {
+        "text": "VPC Flow Logs",
+        "correct": false,
+        "why": "Flow Logs record connections that were attempted. With no traffic there is nothing for them to record."
+      },
+      {
+        "text": "VPC Reachability Analyzer",
+        "correct": true,
+        "why": "Right. It reads route tables, network ACLs and security groups between two points and names the blocking rule. Ten cents an analysis in São Paulo."
+      },
+      {
+        "text": "`describe-security-group-rules`",
+        "correct": false,
+        "why": "It lists rules; it does not combine them with routes and network ACLs into an answer about a path."
+      },
+      {
+        "text": "moto, since it stores every rule",
+        "correct": false,
+        "why": "moto stores the rules and filters nothing, so it cannot say whether a packet would pass."
+      }
+    ]
+  },
+  {
+    "id": "ex-n03mgvm3",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the price the lesson read for São Paulo, how many dollars do five Reachability Analyzer analyses cost?",
+    "hint": "One line of the VPC offer.",
+    "value": 0.5,
+    "tolerance": 0.001,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-zhewqhfe",
+    "version": 1,
+    "section": "packet-walks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody moves the data subnets onto a new network ACL with one inbound rule, 100 allowing TCP 5432 from `10.20.0.0/16`, and no outbound rule of its own. The application's queries stop working. Why?",
+    "hint": "The queries get in. What about the answers?",
+    "choices": [
+      {
+        "text": "`db-sg` refuses the queries, since the network ACL changed",
+        "correct": false,
+        "why": "The two filters are independent; `db-sg` still trusts `app-sg` exactly as before."
+      },
+      {
+        "text": "The inbound rule is wrong: 5432 must be allowed from `app-sg`",
+        "correct": false,
+        "why": "A network ACL cannot name a security group; an address range is what it takes, and this one is right."
+      },
+      {
+        "text": "The replies leave for the application's ephemeral ports, and the `*` rule denies them",
+        "correct": true,
+        "why": "Right. A network ACL is stateless: without an outbound rule for 1024 to 65535 towards the VPC, every reply dies at the edge of the data subnets."
+      },
+      {
+        "text": "A subnet cannot leave the default network ACL while machines run in it",
+        "correct": false,
+        "why": "Replacing the association works at any time, which is exactly how this outage could happen at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-47ndzvef",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each description to what it describes.",
+    "hint": "Two filters and two tools.",
+    "pairs": [
+      {
+        "left": "numbered allow and deny rules at a subnet's edge",
+        "right": "network ACL"
+      },
+      {
+        "left": "allow rules on an interface that can name another group",
+        "right": "security group"
+      },
+      {
+        "left": "a record per interface of each connection, with `ACCEPT` or `REJECT`",
+        "right": "VPC Flow Logs"
+      },
+      {
+        "left": "an answer about a path, read from the configuration",
+        "right": "Reachability Analyzer"
+      }
+    ],
+    "right_distractors": [
+      "NAT gateway"
+    ]
+  },
+  {
+    "id": "ex-ezg0ksyp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An engineer tidies the `public` network ACL and deletes inbound rule 110, TCP 1024 to 65535 from anywhere. Customers still reach the shop. What stops working?",
+    "hint": "Which connections in the public subnets are opened from the inside?",
+    "choices": [
+      {
+        "text": "Nothing, since replies to customers leave under the outbound rules",
+        "correct": false,
+        "why": "That covers the connections customers open. The NAT gateways open connections too, and their replies come in."
+      },
+      {
+        "text": "The application's calls out through NAT",
+        "correct": true,
+        "why": "Right. The NAT gateways sit in the public subnets; the payment provider's answers come back to ephemeral ports, which only rule 110 let in."
+      },
+      {
+        "text": "Customers on IPv6",
+        "correct": false,
+        "why": "The rules in question are IPv4, and the shop's customers reach it over IPv4."
+      },
+      {
+        "text": "The deny for `198.51.100.7`, which depended on rule 110",
+        "correct": false,
+        "why": "Rule 90 stands on its own: it is read first and matches that address whatever comes after."
+      }
+    ]
+  },
+  {
+    "id": "ex-dthnqncr",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab show about moto? Choose all that apply.",
+    "hint": "Three are about what it stores or refuses; two are about what it would have to carry.",
+    "choices": [
+      {
+        "text": "It refuses the same security group rule added twice",
+        "correct": true,
+        "why": "Right. `InvalidPermission.Duplicate`, as on AWS."
+      },
+      {
+        "text": "It dropped the packets from `198.51.100.7`",
+        "correct": false,
+        "why": "No packet existed to drop; the walk was reasoning from the rules."
+      },
+      {
+        "text": "Its default security group has no inbound rule",
+        "correct": true,
+        "why": "Right. AWS's has the rule that trusts the group itself."
+      },
+      {
+        "text": "A new network ACL in it starts with no rules at all",
+        "correct": true,
+        "why": "Right. AWS's starts with the two `*` denies."
+      },
+      {
+        "text": "It wrote a Flow Log of the load balancer's refused request",
+        "correct": false,
+        "why": "There was no request and no Flow Log; both belong to AWS, and neither was run."
+      }
+    ]
+  }
+]

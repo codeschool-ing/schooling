@@ -1,0 +1,647 @@
+[
+  {
+    "id": "ex-epf0nbz7",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the reason to put a Lambda function in a VPC?",
+    "hint": "Think of what the function cannot reach from outside.",
+    "choices": [
+      {
+        "text": "To protect it from connections coming from the internet",
+        "correct": false,
+        "why": "Nothing could connect to it in the first place: requests arrive through Lambda's service."
+      },
+      {
+        "text": "To make its calls to DynamoDB and S3 private and authorised",
+        "correct": false,
+        "why": "Those calls are authorised by IAM already, and a VPC only adds a network problem to them."
+      },
+      {
+        "text": "To reach something with only a private address",
+        "correct": true,
+        "why": "Right. A database in a private subnet is the commonest case."
+      },
+      {
+        "text": "To shorten its cold start, since the network is nearer",
+        "correct": false,
+        "why": "The VPC adds nothing to speed; since 2019 it no longer takes anything away either."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqhx2q8z",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these need the function to be in your VPC? Choose all that apply.",
+    "hint": "Private address, or public API with IAM?",
+    "choices": [
+      {
+        "text": "A PostgreSQL database in a private subnet",
+        "correct": true,
+        "why": "Right. It has only a private address."
+      },
+      {
+        "text": "A DynamoDB table",
+        "correct": false,
+        "why": "DynamoDB is a public API authorised by IAM."
+      },
+      {
+        "text": "An ElastiCache for Redis cluster",
+        "correct": true,
+        "why": "Right. It is reachable only inside its VPC."
+      },
+      {
+        "text": "An SQS queue",
+        "correct": false,
+        "why": "SQS is called with a signed request to a public endpoint."
+      },
+      {
+        "text": "An internal load balancer in front of private services",
+        "correct": true,
+        "why": "Right. An internal load balancer has private addresses only."
+      }
+    ]
+  },
+  {
+    "id": "ex-szbwm1p4",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function in a VPC cannot reach the internet, so a team moves it into a public subnet with a route to an internet gateway. What happens?",
+    "hint": "What does an interface need to use an internet gateway?",
+    "choices": [
+      {
+        "text": "Nothing changes: Lambda's interfaces never get a public address",
+        "correct": true,
+        "why": "Right. The route is there and the interfaces cannot use it; the way out is a NAT gateway or endpoints."
+      },
+      {
+        "text": "The function reaches the internet through the internet gateway",
+        "correct": false,
+        "why": "That works for an instance with a public address, and Lambda never gives its interfaces one."
+      },
+      {
+        "text": "The function becomes reachable from the internet as well as reaching out",
+        "correct": false,
+        "why": "Nothing connects to a function over the network, in any subnet."
+      },
+      {
+        "text": "AWS refuses public subnets for a function in a VPC",
+        "correct": false,
+        "why": "AWS accepts them; they just do not give the function the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh6tr7te",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function with no VPC configuration runs in a network that AWS owns, and from there it reaches the ___ and every public AWS endpoint.",
+    "hint": "What a private subnet takes away.",
+    "blanks": [
+      {
+        "accept": [
+          "internet"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p3abp96a",
+    "version": 1,
+    "section": "why-a-vpc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function reads a private RDS database and also sends e-mail through a public provider's HTTPS API. What does it need?",
+    "hint": "Two destinations, one private and one public.",
+    "choices": [
+      {
+        "text": "No VPC, because the e-mail API is public",
+        "correct": false,
+        "why": "Without the VPC it cannot reach the database, which has only a private address."
+      },
+      {
+        "text": "The VPC and an interface endpoint for the e-mail provider",
+        "correct": false,
+        "why": "Endpoints reach AWS services; a third party's public API needs the internet."
+      },
+      {
+        "text": "The VPC, and a route out through a NAT gateway",
+        "correct": true,
+        "why": "Right. The VPC for the database, a NAT gateway for the public API."
+      },
+      {
+        "text": "The VPC, with the function placed in a public subnet",
+        "correct": false,
+        "why": "A public subnet gives a Lambda function no internet, because its interfaces get no public address."
+      }
+    ]
+  },
+  {
+    "id": "ex-dswd06kw",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which two lists does a function's VPC configuration name?",
+    "hint": "SubnetIds and one more.",
+    "choices": [
+      {
+        "text": "The VPC and its route tables",
+        "correct": false,
+        "why": "The VPC is worked out from the subnets; route tables are the subnets' own."
+      },
+      {
+        "text": "The subnets and the Availability Zones to use in them",
+        "correct": false,
+        "why": "Each subnet already belongs to one zone, so naming the subnets names the zones."
+      },
+      {
+        "text": "The network interfaces and their private addresses",
+        "correct": false,
+        "why": "Lambda creates and owns the interfaces; you name where they go."
+      },
+      {
+        "text": "The subnets, and the security groups",
+        "correct": true,
+        "why": "Right. Where the interfaces go, and what they carry."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgaszfcm",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The database's security group should admit the function. Which rule is the right one?",
+    "hint": "The function's addresses are not yours to know.",
+    "choices": [
+      {
+        "text": "Port 5432 from 0.0.0.0/0, because the subnet is private",
+        "correct": false,
+        "why": "That admits everything that can reach the subnet, and private is a routing fact, not a permission."
+      },
+      {
+        "text": "Port 5432 from the function's security group, by its id",
+        "correct": true,
+        "why": "Right. It stays true whatever addresses the function's interfaces get."
+      },
+      {
+        "text": "Port 5432 from each environment's address, added as it starts",
+        "correct": false,
+        "why": "Environments do not have addresses of their own; they share Lambda's interfaces."
+      },
+      {
+        "text": "An inbound rule on the function's group, so the database can call back",
+        "correct": false,
+        "why": "Nothing connects to a function over the network; its group needs no inbound rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zmb0p0k",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto created a function whose VPC configuration named subnet-0000000000000000a, which does not exist. What would AWS do?",
+    "hint": "AWS looks things up before acting.",
+    "choices": [
+      {
+        "text": "Create it, and leave it Pending until the subnet exists",
+        "correct": false,
+        "why": "AWS looks the subnet up first and refuses the call when it is missing."
+      },
+      {
+        "text": "Refuse it: it looks the subnets and groups up first",
+        "correct": true,
+        "why": "Right. moto stores the ids without checking them, so its success proves the syntax only."
+      },
+      {
+        "text": "Create the function outside any VPC instead",
+        "correct": false,
+        "why": "AWS does not silently drop a configuration it was given."
+      },
+      {
+        "text": "Create the subnet for you",
+        "correct": false,
+        "why": "Lambda never creates network resources other than its own interfaces."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvft2v2a",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's function in a VPC in the order they have to happen.",
+    "hint": "Each one names what the one before it made.",
+    "items": [
+      "Create the VPC",
+      "Create two private subnets in two zones",
+      "Create the function's security group",
+      "Admit 5432 on the database's group from the function's group",
+      "Create the function with --vpc-config"
+    ],
+    "trap": "The database rule names the function's group, so that group must exist before it."
+  },
+  {
+    "id": "ex-kmdgfx8a",
+    "version": 1,
+    "section": "configuring-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On AWS, create-function with a VPC configuration fails with an InvalidParameterValueException about CreateNetworkInterface. What is missing?",
+    "hint": "Whose authority does Lambda use to make the interfaces?",
+    "choices": [
+      {
+        "text": "Your own user's permission to create interfaces",
+        "correct": false,
+        "why": "Lambda creates them with the function's execution role, not with your user."
+      },
+      {
+        "text": "A free address in each of the subnets named in the configuration",
+        "correct": false,
+        "why": "That would be a different error; this one names a permission."
+      },
+      {
+        "text": "EC2 network-interface permissions on the execution role",
+        "correct": true,
+        "why": "Right. The managed AWSLambdaVPCAccessExecutionRole, or a policy like vpc-access.json."
+      },
+      {
+        "text": "An inbound rule on the function's security group",
+        "correct": false,
+        "why": "The function's group needs no inbound rule, and the error is about IAM."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccyfvn28",
+    "version": 1,
+    "section": "hyperplane-enis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since 2019, when is the network interface a function in a VPC uses created?",
+    "hint": "It moved from the request to the deployment.",
+    "choices": [
+      {
+        "text": "During each cold start, one per environment",
+        "correct": false,
+        "why": "That was the arrangement before 2019, and the reason for the old advice."
+      },
+      {
+        "text": "When it is created or its VPC configuration changes",
+        "correct": true,
+        "why": "Right. One Hyperplane interface per subnet and security group, shared by every environment."
+      },
+      {
+        "text": "On the first invocation of each day",
+        "correct": false,
+        "why": "Nothing about it follows the calendar; it is made once and kept while used."
+      },
+      {
+        "text": "When you create it with ec2 create-network-interface",
+        "correct": false,
+        "why": "Lambda creates and owns it; you cannot even delete it yourself."
+      }
+    ]
+  },
+  {
+    "id": "ex-wjx7f28p",
+    "version": 1,
+    "section": "hyperplane-enis",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before 2019, a function scaled to 300 environments in one /24 subnet. AWS keeps 5 of the 256 addresses of every subnet. How many environments could not get an address?",
+    "hint": "Usable addresses first, and nothing else in the subnet.",
+    "value": 49,
+    "tolerance": 0,
+    "unit": "environments"
+  },
+  {
+    "id": "ex-2ms8bbyv",
+    "version": 1,
+    "section": "hyperplane-enis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function's subnets were changed a moment ago, and the pipeline invokes it at once. On AWS the invocation fails. Why?",
+    "hint": "What state is the function in while its interfaces are made?",
+    "choices": [
+      {
+        "text": "The cold start waits for an interface and the request times out",
+        "correct": false,
+        "why": "That was before 2019. Today the interfaces are made at configuration, not at cold start."
+      },
+      {
+        "text": "The new subnets have no route to the internet",
+        "correct": false,
+        "why": "Invoking a function does not use the function's subnets at all."
+      },
+      {
+        "text": "Lambda refuses invocations for an hour after a configuration change",
+        "correct": false,
+        "why": "There is no fixed delay; it waits for the interfaces, then becomes Active."
+      },
+      {
+        "text": "It is Pending while its interfaces are created",
+        "correct": true,
+        "why": "Right. The pipeline should wait for Active before invoking."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yb245v2",
+    "version": 1,
+    "section": "hyperplane-enis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A monthly report runs as a Lambda function in a VPC, invoked once a month. Every month its first invocation fails, and the next ones work. What is the likeliest cause?",
+    "hint": "What does Lambda do with interfaces nobody uses for weeks?",
+    "choices": [
+      {
+        "text": "Lambda reclaimed its idle interfaces, so it was Inactive until they were remade",
+        "correct": true,
+        "why": "Right. An idle function in a VPC is marked Inactive, and the first call after that fails while the interfaces come back."
+      },
+      {
+        "text": "Its cold start takes seconds because each environment gets its own interface",
+        "correct": false,
+        "why": "That was true before 2019, and it made calls slow rather than failed."
+      },
+      {
+        "text": "Its reserved concurrency is reset to 0 each month",
+        "correct": false,
+        "why": "Nothing resets a reservation on its own."
+      },
+      {
+        "text": "The NAT gateway sleeps when it has no traffic",
+        "correct": false,
+        "why": "A NAT gateway is billed and available every hour it exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7z5t5a8",
+    "version": 1,
+    "section": "hyperplane-enis",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem of the interfaces before 2019 to what it was.",
+    "hint": "One interface per environment, made at cold start.",
+    "pairs": [
+      {
+        "left": "The cold start",
+        "right": "Seconds spent creating and attaching an interface"
+      },
+      {
+        "left": "The subnet",
+        "right": "One address used per environment, until it ran out"
+      },
+      {
+        "left": "The account quota",
+        "right": "Interfaces shared with every EC2 instance in the Region"
+      }
+    ],
+    "right_distractors": [
+      "A public address assigned to each environment"
+    ]
+  },
+  {
+    "id": "ex-t4e7qzpd",
+    "version": 1,
+    "section": "the-way-out",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A NAT gateway costs 0.093 USD an hour in sa-east-1. What does one cost for a month of 730 hours, before any data, in USD to the cent?",
+    "hint": "Hourly price times 730.",
+    "value": 67.89,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-9w2n0jne",
+    "version": 1,
+    "section": "the-way-out",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two NAT gateways, one per zone, at 0.093 USD an hour and 0.093 USD per GB, carry 500 GB in a month of 730 hours. What is the month's bill for them, in USD to the cent?",
+    "hint": "Both gateways' hours, plus the data once.",
+    "value": 182.28,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-s7rf30m9",
+    "version": 1,
+    "section": "the-way-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function in private subnets reads and writes S3 heavily and calls nothing else outside. What is the cheapest way out?",
+    "hint": "One kind of endpoint is free.",
+    "choices": [
+      {
+        "text": "A NAT gateway per zone",
+        "correct": false,
+        "why": "That pays by the hour and by the gigabyte for traffic that has a free route."
+      },
+      {
+        "text": "An interface endpoint for S3 in each subnet",
+        "correct": false,
+        "why": "It works, and it is billed per hour per zone and per gigabyte; the gateway kind is not."
+      },
+      {
+        "text": "A gateway endpoint for S3",
+        "correct": true,
+        "why": "Right. No charge by the hour or by the gigabyte."
+      },
+      {
+        "text": "Moving the function to a public subnet",
+        "correct": false,
+        "why": "Lambda's interfaces get no public address, so that gives it nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwxgpe6f",
+    "version": 1,
+    "section": "the-way-out",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After creating a gateway endpoint for S3 and an interface endpoint for Secrets Manager, what did moto show?",
+    "hint": "Look at the route table and at the network interfaces.",
+    "choices": [
+      {
+        "text": "A route to the prefix list, and four interfaces, two for the endpoint and two for the function",
+        "correct": false,
+        "why": "The function had none: moto makes no interfaces for a function in a VPC."
+      },
+      {
+        "text": "A route to a pl- prefix list, and two interfaces, both the endpoint's",
+        "correct": true,
+        "why": "Right. The interface endpoint made one per subnet, and they were the only ones in the account."
+      },
+      {
+        "text": "No route at all, because moto does not model gateway endpoints",
+        "correct": false,
+        "why": "The route to the prefix list was in the table."
+      },
+      {
+        "text": "A route to 0.0.0.0/0 through the endpoint",
+        "correct": false,
+        "why": "A gateway endpoint routes the service's prefix list, never the whole internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ep46wka",
+    "version": 1,
+    "section": "the-way-out",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function in a VPC calls a payment provider on the internet and also downloads 300 GB a month from S3. What arrangement is cheapest?",
+    "hint": "One of the two destinations has a free route.",
+    "choices": [
+      {
+        "text": "A NAT gateway for both, since it is needed anyway",
+        "correct": false,
+        "why": "The gateway is needed for the provider, and the 300 GB to S3 would pay 0.093 each through it."
+      },
+      {
+        "text": "Interface endpoints for S3 and for the payment provider",
+        "correct": false,
+        "why": "A third party on the internet has no AWS endpoint; it needs the NAT gateway."
+      },
+      {
+        "text": "A gateway endpoint for S3 and nothing else",
+        "correct": false,
+        "why": "That carries S3, and leaves the payment provider unreachable."
+      },
+      {
+        "text": "A NAT gateway for the provider, and a gateway endpoint for S3",
+        "correct": true,
+        "why": "Right. The 300 GB to S3 stop paying the NAT gateway's data charge."
+      }
+    ]
+  },
+  {
+    "id": "ex-jck4xjr7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put these functions in order of what their way out costs, the cheapest first.",
+    "hint": "Nothing, free, priced per service, priced by the hour for everything.",
+    "items": [
+      "Talks only to its database",
+      "Also reads and writes S3",
+      "Also reads Secrets Manager and sends to SQS",
+      "Also calls a webhook on the internet"
+    ],
+    "trap": "The function that only talks to its database needs no way out at all, which costs nothing."
+  },
+  {
+    "id": "ex-158yswb2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way out to what it opens.",
+    "hint": "Everything, two services, or one each.",
+    "pairs": [
+      {
+        "left": "NAT gateway",
+        "right": "The whole internet, by the hour and by the gigabyte"
+      },
+      {
+        "left": "Gateway endpoint",
+        "right": "S3 and DynamoDB, at no charge"
+      },
+      {
+        "left": "Interface endpoint",
+        "right": "One AWS service, through an interface in each subnet"
+      }
+    ],
+    "right_distractors": [
+      "A public address for the function's interfaces"
+    ]
+  },
+  {
+    "id": "ex-5yvf0a0g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did moto do with the VpcConfig of the orders function?",
+    "hint": "Look at VpcId and at the network interfaces.",
+    "choices": [
+      {
+        "text": "Created two interfaces and returned the VPC of the subnets",
+        "correct": false,
+        "why": "It created none, and it returned a fixed vpc-123abc."
+      },
+      {
+        "text": "Stored it, answered vpc-123abc, and created no interface",
+        "correct": true,
+        "why": "Right. The configuration is a record in moto and nothing more."
+      },
+      {
+        "text": "Checked the subnets, and refused the ones that did not exist",
+        "correct": false,
+        "why": "It accepted a subnet that did not exist."
+      },
+      {
+        "text": "Left the function Pending until the interfaces were ready",
+        "correct": false,
+        "why": "The function was Active at once; Pending is AWS's behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0dj8bve",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function downloads 300 GB a month from S3 through a NAT gateway at 0.093 USD per GB. How much a month does a gateway endpoint for S3 save, in USD to the cent?",
+    "hint": "The gateway endpoint charges nothing for the data.",
+    "value": 27.9,
+    "tolerance": 0.01,
+    "unit": "USD"
+  }
+]

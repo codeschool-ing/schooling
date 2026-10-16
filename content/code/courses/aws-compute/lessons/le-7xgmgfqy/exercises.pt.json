@@ -1,0 +1,475 @@
+{
+  "ex-zzwdhkhr": {
+    "prompt": "O que uma AMI de fato guarda?",
+    "hint": "Onde ficam os bytes do disco?",
+    "choices": [
+      {
+        "text": "O próprio disco, como um arquivo de imagem enviado ao S3",
+        "why": "Os bytes ficam em snapshots. A AMI é o registro que os aponta."
+      },
+      {
+        "text": "O nome e a versão do sistema operacional",
+        "why": "Ela leva muito mais: arquitetura, modo de boot, dispositivo raiz e o mapeamento de blocos."
+      },
+      {
+        "text": "Uma instância parada, guardada para poder ser clonada",
+        "why": "Uma AMI é feita a partir de uma instância, mas não é uma, e nada nela está rodando ou parado."
+      },
+      {
+        "text": "Um registro da máquina, com snapshots",
+        "why": "Isso. Um launch cria um volume a partir de cada snapshot do mapeamento."
+      }
+    ]
+  },
+  "ex-jfn6jbz1": {
+    "prompt": "Por que ler /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 em vez de escrever o id da AMI num template?",
+    "hint": "O que acontece com o id a cada poucas semanas?",
+    "choices": [
+      {
+        "text": "O nome fica e o id muda",
+        "why": "Isso. O parâmetro anda e o template que o lê não."
+      },
+      {
+        "text": "O parâmetro é mais barato de ler que o describe-images",
+        "why": "O custo não tem nada a ver; as duas leituras são gratuitas."
+      },
+      {
+        "text": "Um id de AMI não pode ser escrito num launch template",
+        "why": "Pode; ele só é um fato que deixa de ser verdade."
+      },
+      {
+        "text": "O id é secreto e só o parâmetro é público",
+        "why": "Ids de imagens públicas são visíveis a todos pelo describe-images."
+      }
+    ]
+  },
+  "ex-203s5vhr": {
+    "prompt": "Um script antigo acha o Ubuntu com describe-images, um filtro de nome ubuntu/images/* e sem --owners. Qual é o risco na AWS?",
+    "hint": "Quem pode publicar uma imagem pública?",
+    "choices": [
+      {
+        "text": "Não casa com nada, porque um filtro de nome precisa de dono",
+        "why": "Um filtro de nome funciona sozinho; esse é o problema."
+      },
+      {
+        "text": "Ordena errado por CreationDate, como no moto",
+        "why": "Essa é a datação do moto. Na AWS a data é real e a ordenação funciona."
+      },
+      {
+        "text": "Casa com imagens públicas de impostores com esse nome",
+        "why": "Isso. Só o id do dono diz que foi a Canonical que a fez."
+      },
+      {
+        "text": "Devolve imagens de todas as regiões de uma vez",
+        "why": "O describe-images responde por uma região, aquela em que você está."
+      }
+    ]
+  },
+  "ex-kkddr5c1": {
+    "prompt": "A parte de uma AMI que vira os discos da instância nova é o ___ de dispositivos de bloco.",
+    "hint": "Cada entrada aponta um snapshot.",
+    "blanks": [
+      {
+        "accept": [
+          "mapeamento",
+          "mapeamentos"
+        ]
+      }
+    ]
+  },
+  "ex-sadkcxw8": {
+    "prompt": "No registro do moto para a imagem do Amazon Linux 2023, quais valores são do moto, e não da AWS? Marque todas as que se aplicam.",
+    "hint": "A estrutura é da AWS.",
+    "choices": [
+      {
+        "text": "Uma CreationDate do momento em que o moto iniciou",
+        "why": "O moto data assim toda imagem que traz."
+      },
+      {
+        "text": "Um raiz de 15 GB do tipo standard",
+        "why": "O registro da AWS mapeia um raiz gp3 de 8 GiB."
+      },
+      {
+        "text": "DeleteOnTermination false no raiz",
+        "why": "A imagem da AWS apaga o raiz junto com a instância."
+      },
+      {
+        "text": "Architecture x86_64",
+        "why": "O nome diz x86_64, e a AWS também."
+      },
+      {
+        "text": "OwnerId 137112412989",
+        "why": "Essa é a conta da Amazon, no moto e na AWS."
+      }
+    ]
+  },
+  "ex-4k7zmxn1": {
+    "prompt": "Um volume já tem um snapshot. O que o segundo snapshot dele guarda?",
+    "hint": "Pense nos blocos.",
+    "choices": [
+      {
+        "text": "Só os blocos que mudaram desde o primeiro",
+        "why": "Isso, e aponta para o primeiro para o resto."
+      },
+      {
+        "text": "Todos os blocos do volume de novo, para ficar independente",
+        "why": "Ele fica independente sem guardá-los de novo: a AWS mantém os blocos a que ele se refere."
+      },
+      {
+        "text": "Os arquivos que mudaram, como uma lista de caminhos",
+        "why": "Um snapshot conhece blocos, não arquivos."
+      },
+      {
+        "text": "Nenhum bloco ainda; eles são copiados quando o primeiro é apagado",
+        "why": "Ele guarda os blocos que mudaram no momento em que é tirado."
+      }
+    ]
+  },
+  "ex-sw2v4tnd": {
+    "prompt": "Um volume tem 80 GB escritos. Um snapshot por noite é guardado por 30 dias e 2 GB mudam a cada dia. A 0,068 USD por GB-mês, quanto custam os 30 snapshots por mês, em USD?",
+    "hint": "O primeiro guarda o que foi escrito; cada um dos outros 29 guarda a mudança de um dia.",
+    "unit": "USD"
+  },
+  "ex-jfbvsxv3": {
+    "prompt": "O snapshot de segunda é apagado. O que acontece com o de terça, que se referia ao de segunda para a maior parte dos blocos?",
+    "hint": "O que a AWS libera?",
+    "choices": [
+      {
+        "text": "Fica danificado, e não pode mais ser restaurado",
+        "why": "A AWS nunca libera um bloco de que um snapshot posterior ainda precisa."
+      },
+      {
+        "text": "A AWS se recusa a apagar o de segunda enquanto o de terça existir",
+        "why": "Qualquer snapshot de uma cadeia pode ser apagado. O que recusa é um snapshot usado por uma AMI registrada."
+      },
+      {
+        "text": "Continua inteiro: todo bloco de que precisava é mantido",
+        "why": "Isso. Só o que era exclusivo do de segunda é liberado."
+      },
+      {
+        "text": "Vira uma cópia completa e o preço dele dobra",
+        "why": "A conta cai pelo que era exclusivo do de segunda; nada é copiado."
+      }
+    ]
+  },
+  "ex-xqhph7cz": {
+    "prompt": "O describe-snapshots mostra VolumeSize 100 nos dois snapshots. Que número é esse?",
+    "hint": "De quê, exatamente?",
+    "choices": [
+      {
+        "text": "O que cada snapshot guarda, em GB",
+        "why": "O que um snapshot guarda nunca aparece ali; aparece na conta."
+      },
+      {
+        "text": "O tamanho do volume de onde o snapshot foi tirado",
+        "why": "Isso. É o mesmo para todo snapshot daquele volume."
+      },
+      {
+        "text": "A porcentagem do volume copiada até agora",
+        "why": "Esse é o Progress, outro campo."
+      },
+      {
+        "text": "O marcador de lugar do moto para um preço em centavos",
+        "why": "Nenhum preço aparece no registro de um snapshot, no moto ou na AWS."
+      }
+    ]
+  },
+  "ex-vbn39wwb": {
+    "prompt": "Um volume de dados em sa-east-1a precisa ser usado por uma instância em sa-east-1c. Como ele é movido?",
+    "hint": "Um volume nunca sai da zona; um snapshot pertence à região.",
+    "choices": [
+      {
+        "text": "modify-volume, citando a zona nova",
+        "why": "O modify-volume muda tamanho, tipo e desempenho, nunca a zona."
+      },
+      {
+        "text": "copy-snapshot para sa-east-1c primeiro, depois criar o volume lá",
+        "why": "O copy-snapshot copia entre regiões. Dentro de uma região o snapshot já serve em toda zona."
+      },
+      {
+        "text": "Anexá-lo à instância em sa-east-1c e deixar a AWS movê-lo",
+        "why": "A AWS se recusa a anexar um volume a uma instância em outra zona; a lição 3 mostra que o moto não."
+      },
+      {
+        "text": "Tirar um snapshot, depois criar um volume a partir dele em sa-east-1c",
+        "why": "Isso. O volume novo é outro; o antigo pode então ser apagado."
+      }
+    ]
+  },
+  "ex-06pd0rpr": {
+    "prompt": "O moto criou um volume de 50 GB a partir de um snapshot de um volume de 100 GB. O que a AWS faz com esse pedido?",
+    "hint": "Maior é permitido. Menor?",
+    "choices": [
+      {
+        "text": "Cria e descarta os blocos depois de 50 GB",
+        "why": "A AWS nunca trunca um disco; ela recusa o tamanho."
+      },
+      {
+        "text": "Cria, se só 50 GB tiverem sido escritos",
+        "why": "O que foi escrito não importa; o tamanho do volume importa."
+      },
+      {
+        "text": "Cria e diminui o sistema de arquivos para caber",
+        "why": "O EBS não mexe no sistema de arquivos; ele enxerga blocos."
+      },
+      {
+        "text": "Recusa todo tamanho menor",
+        "why": "Isso. Diminuir se faz dentro do sistema operacional, copiando arquivos."
+      }
+    ]
+  },
+  "ex-e7aj9ng4": {
+    "prompt": "Ponha em ordem os passos de construir uma imagem sua.",
+    "hint": "A imagem captura a instância no momento em que é feita.",
+    "items": [
+      "Lançar uma instância a partir de uma imagem publicada",
+      "Instalar e configurar o software",
+      "Rodar o create-image, que a reinicia e tira snapshots dos volumes",
+      "Lançar as máquinas a partir do id novo da AMI"
+    ],
+    "trap": "Rodar o create-image antes de configurar captura a imagem base sem mudança, com um id novo."
+  },
+  "ex-hssxv1hk": {
+    "prompt": "O que o create-image faz com a instância por padrão, antes de tirar os snapshots?",
+    "hint": "Por que o --no-reboot existe?",
+    "choices": [
+      {
+        "text": "Encerra, já que o trabalho dela acabou",
+        "why": "A instância sobrevive; o Packer encerra a própria instância de build, o create-image não."
+      },
+      {
+        "text": "Para, e a deixa parada",
+        "why": "Ela volta; reiniciar não é parar."
+      },
+      {
+        "text": "Reinicia, para o sistema de arquivos ficar em repouso",
+        "why": "Isso. Sem isso a imagem tem a consistência de uma queda de energia."
+      },
+      {
+        "text": "Nada: o snapshot é tirado com a instância rodando, com toda escrita desde o boot ainda na memória",
+        "why": "Isso é o que o --no-reboot pede, e não é o padrão."
+      }
+    ]
+  },
+  "ex-1gpp76ck": {
+    "prompt": "Uma senha de banco foi escrita numa imagem, que depois é compartilhada com duas outras contas. O que decorre disso?",
+    "hint": "Onde vão parar os bytes da imagem?",
+    "choices": [
+      {
+        "text": "Nada, porque uma imagem compartilhada é só leitura",
+        "why": "Só leitura ainda é legível: uma instância lançada tem o disco inteiro."
+      },
+      {
+        "text": "Quem a lançar lê a senha",
+        "why": "Isso. Ela está em todo snapshot e em todo launch; busque segredos no boot."
+      },
+      {
+        "text": "A senha é removida automaticamente quando a imagem é compartilhada",
+        "why": "O EC2 não sabe nada dos arquivos no disco."
+      },
+      {
+        "text": "Só a conta dona consegue lê-la, porque os snapshots continuam privados",
+        "why": "A outra conta lança volumes feitos desses snapshots, e os lê."
+      }
+    ]
+  },
+  "ex-tsjptcgq": {
+    "prompt": "Ligue cada nome ao que ele é.",
+    "hint": "Duas ferramentas, uma opção, um campo, um hábito.",
+    "pairs": [
+      {
+        "left": "EC2 Image Builder",
+        "right": "O pipeline gerenciado da AWS, de recipes e components"
+      },
+      {
+        "left": "Packer",
+        "right": "Um builder que lança, provisiona e chama o create-image"
+      },
+      {
+        "left": "--no-reboot",
+        "right": "Uma imagem com a consistência de uma queda de energia"
+      },
+      {
+        "left": "SourceInstanceId",
+        "right": "A instância de onde uma imagem foi feita"
+      },
+      {
+        "left": "golden image",
+        "right": "A imagem padrão de onde partem as máquinas de uma equipe"
+      }
+    ],
+    "right_distractors": [
+      "A data em que uma imagem deixa de ser listada"
+    ]
+  },
+  "ex-vkqzyjtg": {
+    "prompt": "Uma imagem não muda depois de feita, então uma correção é uma imagem nova com um ___ novo.",
+    "hint": "O que um launch template cita.",
+    "blanks": [
+      {
+        "accept": [
+          "id",
+          "id de AMI"
+        ]
+      }
+    ]
+  },
+  "ex-rz2k3e5g": {
+    "prompt": "Uma imagem é desregistrada. O que acontece com o snapshot que o mapeamento dela apontava?",
+    "hint": "A AWS não tem como saber se você queria guardá-lo.",
+    "choices": [
+      {
+        "text": "Sempre fica, cobrado até alguém apagá-lo",
+        "why": "Isso. Desregistrar remove o registro e deixa os blocos."
+      },
+      {
+        "text": "É apagado junto com a imagem",
+        "why": "Essa é a imagem meio certa: o registro sai e os blocos ficam."
+      },
+      {
+        "text": "Vai para um nível de arquivo de graça",
+        "why": "Nada se move sozinho, e nenhum nível é de graça."
+      },
+      {
+        "text": "Vira público, já que não tem mais imagem",
+        "why": "Um snapshot mantém as próprias permissões; continua privado."
+      }
+    ]
+  },
+  "ex-qk4q3nxh": {
+    "prompt": "Uma conta tem 200 imagens desregistradas cujos snapshots de 15 GB nunca foram apagados, cada um guardado inteiro. A 0,068 USD por GB-mês, quanto custam por mês, em USD?",
+    "hint": "Snapshots vezes tamanho vezes preço.",
+    "unit": "USD"
+  },
+  "ex-ejm9jn5e": {
+    "prompt": "delete-snapshot no snapshot de uma imagem registrada: o que responde, no moto e na AWS?",
+    "hint": "Aqui os dois concordam.",
+    "choices": [
+      {
+        "text": "Uma recusa, InvalidSnapshot.InUse",
+        "why": "Isso. A imagem sai primeiro, depois o snapshot."
+      },
+      {
+        "text": "O snapshot é apagado e a imagem fica sem disco",
+        "why": "É exatamente isso que a recusa impede."
+      },
+      {
+        "text": "A imagem é desregistrada junto",
+        "why": "Nenhum dos dois desregistra nada por conta própria."
+      },
+      {
+        "text": "O moto recusa, e a AWS apaga",
+        "why": "Os dois recusam; esse é um lugar em que o moto confere o que a AWS confere."
+      }
+    ]
+  },
+  "ex-vn8yt0g0": {
+    "prompt": "A data de descontinuação de uma imagem passou. O que isso muda na AWS?",
+    "hint": "Nada que depende dela quebra no dia.",
+    "choices": [
+      {
+        "text": "Ela é desregistrada e os snapshots dela são apagados",
+        "why": "Descontinuar não remove nada; desregistrar é outro ato."
+      },
+      {
+        "text": "Outras contas param de achá-la nas listagens, e ela ainda lança pelo id",
+        "why": "Isso. Quem é novo para de achá-la; quem já usa continua funcionando."
+      },
+      {
+        "text": "Todo launch dela falha com um erro que cita a data que passou",
+        "why": "Ela ainda lança para quem tem o id."
+      },
+      {
+        "text": "As instâncias em execução feitas dela são paradas",
+        "why": "Nada em execução é tocado."
+      }
+    ]
+  },
+  "ex-4ksng8yy": {
+    "prompt": "Uma imagem criptografada com a chave EBS padrão gerenciada pela AWS precisa ser lançada a partir de outra conta. O que funciona?",
+    "hint": "Essa chave é privada da conta.",
+    "choices": [
+      {
+        "text": "Uma launch permission citando a outra conta, como para qualquer imagem",
+        "why": "A permissão é concedida, e o launch ainda falha: a outra conta não consegue usar a chave."
+      },
+      {
+        "text": "Tornar a imagem pública, o que contorna a chave",
+        "why": "Uma imagem criptografada não pode ser pública, e publicar uma imagem é um risco à parte."
+      },
+      {
+        "text": "Copiá-la sob uma chave KMS do próprio cliente cuja política libera o uso a eles, e compartilhar a cópia",
+        "why": "Isso. A cópia é o momento de escolher a chave."
+      },
+      {
+        "text": "Nada: imagens criptografadas nunca saem da conta",
+        "why": "Saem, com uma chave que a outra conta tenha permissão de usar."
+      }
+    ]
+  },
+  "ex-e8xszqg2": {
+    "prompt": "Uma imagem é copiada de sa-east-1 para us-east-1. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Nada liga as duas depois.",
+    "choices": [
+      {
+        "text": "A cópia tem um id próprio",
+        "why": "Um id só significa algo numa região."
+      },
+      {
+        "text": "Os snapshots dela são guardados e cobrados em us-east-1",
+        "why": "Uma cópia é uma imagem separada, com snapshots separados."
+      },
+      {
+        "text": "Desregistrar a original remove a cópia",
+        "why": "A cópia fica."
+      },
+      {
+        "text": "Uma correção na original chega à cópia",
+        "why": "Nada as liga; corrija as duas, ou copie de novo."
+      },
+      {
+        "text": "A cópia pode ser criptografada com uma chave citada na hora da cópia",
+        "why": "O --encrypted --kms-key-id faz isso."
+      }
+    ]
+  },
+  "ex-hhaw3r16": {
+    "prompt": "Um launch template cita uma imagem que foi desregistrada semana passada. Quando alguém descobre?",
+    "hint": "As instâncias em execução não são afetadas.",
+    "choices": [
+      {
+        "text": "No momento em que a imagem foi desregistrada, por um erro",
+        "why": "Desregistrar não confere nada que se refere à imagem."
+      },
+      {
+        "text": "Nunca, já que o template guarda uma cópia da imagem",
+        "why": "Um template guarda o id, não a imagem."
+      },
+      {
+        "text": "Quando a AWS para as instâncias em execução",
+        "why": "As instâncias em execução continuam; os volumes delas já existem."
+      },
+      {
+        "text": "Só no próximo launch a partir dele, como um scale-out",
+        "why": "Isso, que costuma ser o momento em que a máquina a mais fazia falta."
+      }
+    ]
+  },
+  "ex-jc01876v": {
+    "prompt": "Ponha em ordem a aposentadoria de uma imagem antiga.",
+    "hint": "Os ids dos snapshots ficam no mapeamento, que vai embora com a imagem.",
+    "items": [
+      "Definir uma data de descontinuação",
+      "Passar os launch templates para a imagem mais nova",
+      "Ler os ids dos snapshots no mapeamento da imagem",
+      "Desregistrar a imagem",
+      "Apagar os snapshots"
+    ],
+    "trap": "Apagar os snapshots primeiro é recusado enquanto a imagem está registrada, e desregistrar antes de ler o mapeamento perde os ids."
+  },
+  "ex-9q0wh11g": {
+    "prompt": "Um snapshot semanal é guardado por 52 semanas. O volume tinha 50 GB escritos no primeiro, e 5 GB mudam por semana. A 0,068 USD por GB-mês, quanto custam os 52 snapshots por mês, em USD, até o centavo?",
+    "hint": "50 GB, depois 51 snapshots de 5 GB.",
+    "unit": "USD"
+  }
+}

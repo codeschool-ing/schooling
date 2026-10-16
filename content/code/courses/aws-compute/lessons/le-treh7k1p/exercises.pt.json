@@ -1,0 +1,429 @@
+{
+  "ex-ph8k0tqq": {
+    "prompt": "Você quer que o ECS rode o nginx com uma porta, um limite de memória e uma variável de ambiente. O que você entrega ao ECS?",
+    "hint": "O ECS inicia tudo a partir de um tipo de documento.",
+    "choices": [
+      {
+        "text": "Um contêiner que você montou e salvou com docker save",
+        "why": "O ECS nunca recebe um contêiner. Ele baixa uma imagem pelo nome, como a definição diz."
+      },
+      {
+        "text": "Uma definição de task",
+        "why": "A imagem, a porta, a memória e o ambiente são campos de um documento JSON versionado."
+      },
+      {
+        "text": "Uma linha de docker run, guardada nas configurações do cluster",
+        "why": "Clusters não guardam comandos; as flags do docker run viram campos de uma definição de task."
+      },
+      {
+        "text": "Uma AMI com o nginx instalado",
+        "why": "É assim que uma instância EC2 recebe software, assunto da aula 2; o ECS roda imagens, não AMIs."
+      }
+    ]
+  },
+  "ex-yjpbd1z2": {
+    "prompt": "A aplicação numa task chama o S3 e é recusada com AccessDenied. A imagem foi baixada e os logs chegam. Que role precisa da permissão de S3?",
+    "hint": "Quem está chamando o S3: o ECS ou o código?",
+    "choices": [
+      {
+        "text": "A execution role, já que ela funciona",
+        "why": "Ela funciona para o ECS baixar e registrar logs. O código no contêiner nunca a recebe."
+      },
+      {
+        "text": "A role da container instance",
+        "why": "Usar a role da instância a partir de uma task é o que o hop limit 1 existe para impedir."
+      },
+      {
+        "text": "A task role",
+        "why": "É a role cujas credenciais o SDK dentro do contêiner encontra, então as permissões do código vão nela."
+      },
+      {
+        "text": "As duas, porque o ECS junta as duas antes de a task começar",
+        "why": "O ECS não as junta: cada uma serve a um chamador diferente num momento diferente."
+      }
+    ]
+  },
+  "ex-p7fz1r63": {
+    "prompt": "Ligue cada campo do web.json ao que ele decide.",
+    "hint": "Dois são roles, um nomeia revisões, um amarra a vida da task a um contêiner.",
+    "pairs": [
+      {
+        "left": "executionRoleArn",
+        "right": "O que o ECS pode fazer para baixar a imagem e mandar logs"
+      },
+      {
+        "left": "taskRoleArn",
+        "right": "O que o código no contêiner pode chamar"
+      },
+      {
+        "left": "family",
+        "right": "O nome que todas as revisões compartilham"
+      },
+      {
+        "left": "essential",
+        "right": "Se a task para quando este contêiner para"
+      }
+    ],
+    "right_distractors": [
+      "Em que cluster a task entra"
+    ]
+  },
+  "ex-jg03y9fs": {
+    "prompt": "O web.json foi registrado duas vezes, e depois a web:1 teve o registro cancelado. O que o describe-task-definition --task-definition web devolve?",
+    "hint": "Uma família sem número quer dizer uma revisão específica.",
+    "choices": [
+      {
+        "text": "A revisão 2, a ACTIVE mais recente",
+        "why": "Sem número o ECS pega a revisão ACTIVE mais nova, que a captura mostrou como 2."
+      },
+      {
+        "text": "A revisão 1, a primeira registrada",
+        "why": "A revisão 1 está INACTIVE, e a família sozinha nunca quer dizer a primeira."
+      },
+      {
+        "text": "Um erro, porque a família agora tem uma revisão INACTIVE",
+        "why": "Uma revisão INACTIVE não impede que as outras sejam descritas."
+      },
+      {
+        "text": "As duas revisões, juntadas numa só",
+        "why": "Revisões são documentos separados e imutáveis; nada as junta."
+      }
+    ]
+  },
+  "ex-8z9ka16j": {
+    "prompt": "Numa definição de task, cpu é contado em unidades de um ___ avos de vCPU, então 256 é um quarto.",
+    "hint": "Uma potência de dois, quatro vezes 256.",
+    "blanks": [
+      {
+        "accept": [
+          "1024",
+          "1.024",
+          "mil e vinte e quatro"
+        ]
+      }
+    ]
+  },
+  "ex-4qq54qtb": {
+    "prompt": "Um colega põe a senha do banco de dados na lista environment de uma definição de task. Quem consegue lê-la?",
+    "hint": "Onde fica uma definição de task, e quem pode descrevê-la?",
+    "choices": [
+      {
+        "text": "Só o código no contêiner, porque variáveis de ambiente são privadas de um processo",
+        "why": "Dentro do contêiner, sim; mas o valor também fica guardado na definição, em texto puro."
+      },
+      {
+        "text": "Ninguém, porque a AWS criptografa toda definição de task",
+        "why": "A AWS a guarda, e a devolve em claro para quem puder descrevê-la."
+      },
+      {
+        "text": "Quem tiver permissão de descrever a definição de task",
+        "why": "É um campo comum do documento. Um segredo vai em secrets, uma referência que a execution role resolve."
+      },
+      {
+        "text": "Só a execution role",
+        "why": "Uma role não lê documentos; quem lê são pessoas e programas com ecs:DescribeTaskDefinition."
+      }
+    ]
+  },
+  "ex-dv4ba5mr": {
+    "prompt": "Um relatório roda por vinte minutos toda noite e sai. Como ele deve rodar no ECS?",
+    "hint": "Pense no que um serviço faz quando a task dele sai.",
+    "choices": [
+      {
+        "text": "Como um serviço com contagem desejada 1",
+        "why": "O serviço iniciaria o relatório de novo no momento em que terminasse, a noite toda."
+      },
+      {
+        "text": "Como um serviço com desejado 0, aumentado à mão toda noite",
+        "why": "Isso é um run-task com passos a mais, e alguém precisa lembrar de baixar de novo."
+      },
+      {
+        "text": "Como um contêiner essencial na task web",
+        "why": "Aí o fim do relatório pararia a task web também."
+      },
+      {
+        "text": "Como uma task iniciada com run-task",
+        "why": "O run-task o inicia e o esquece, que é para isso que serve um trabalho que termina."
+      }
+    ]
+  },
+  "ex-n5kzbvys": {
+    "prompt": "Um serviço tem contagem desejada 6 e maximumPercent 200. Quantas tasks podem existir ao mesmo tempo durante uma implantação?",
+    "hint": "Uma porcentagem da contagem desejada.",
+    "unit": "tasks"
+  },
+  "ex-x0p7c47y": {
+    "prompt": "O mesmo serviço, desejado 6, tem minimumHealthyPercent 50. Qual é o menor número de tasks que precisa continuar atendendo durante a implantação?",
+    "hint": "Metade da contagem desejada.",
+    "unit": "tasks"
+  },
+  "ex-ezcw6xgt": {
+    "prompt": "No moto, um serviço que pediu 3 tasks mostra desiredCount 3, runningCount 0, pendingCount 3, e nenhuma task aparece. O que isso diz sobre a AWS?",
+    "hint": "O moto guarda os registros e não roda agendador.",
+    "choices": [
+      {
+        "text": "Nada: na AWS o agendador iniciaria três tasks",
+        "why": "O moto guarda o serviço e não inicia nenhuma; o laço que inicia e substitui tasks é da AWS."
+      },
+      {
+        "text": "Que o cluster não tem instâncias, então a AWS diria o mesmo",
+        "why": "O cluster tinha uma instância registrada com espaço; o moto mesmo assim não iniciou nada."
+      },
+      {
+        "text": "Que serviços esperam uma implantação para iniciar tasks",
+        "why": "Na AWS criar o serviço já é a implantação, e as tasks dele começam logo."
+      },
+      {
+        "text": "Que pendingCount quer dizer tasks na fila esperando vaga",
+        "why": "Havia vaga; a contagem pendente é um número que o moto escreveu e nunca muda."
+      }
+    ]
+  },
+  "ex-jvh5vm29": {
+    "prompt": "Um cluster de instâncias que você roda não tem espaço para nem uma task a mais, e o serviço de 4 precisa implantar uma revisão nova sem instâncias novas. Que configuração de implantação funciona?",
+    "hint": "O máximo limita quantas existem ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "minimumHealthyPercent 100, maximumPercent 200",
+        "why": "Isso inicia tasks novas ao lado das antigas, o que pede espaço para até 8."
+      },
+      {
+        "text": "minimumHealthyPercent 50, maximumPercent 100",
+        "why": "Nunca existem mais de 4, então as antigas param primeiro e o cluster não comporta mais do que hoje."
+      },
+      {
+        "text": "minimumHealthyPercent 100, maximumPercent 100",
+        "why": "Nenhuma task pode parar antes de outra começar, e nenhuma pode começar: a implantação não anda."
+      },
+      {
+        "text": "minimumHealthyPercent 0, maximumPercent 200",
+        "why": "Permite parar tudo, e ainda deixa o ECS iniciar tasks novas primeiro, o que pede espaço."
+      }
+    ]
+  },
+  "ex-r2gdwsgn": {
+    "prompt": "Quais destas um serviço faz na AWS que o moto do laboratório não fez? Marque todas as que se aplicam.",
+    "hint": "Compare o que os comandos pediram com o que o moto mostrou depois.",
+    "choices": [
+      {
+        "text": "Iniciar tasks até a contagem em execução chegar à desejada",
+        "why": "O moto deixou o runningCount em 0."
+      },
+      {
+        "text": "Iniciar uma substituta quando uma das tasks dele para",
+        "why": "Esse laço é todo o valor do serviço, e o moto não tem agendador para rodá-lo."
+      },
+      {
+        "text": "Criar uma implantação PRIMARY nova quando a revisão muda",
+        "why": "O moto mudou a revisão do serviço e manteve a implantação antiga como a única."
+      },
+      {
+        "text": "Recusar apagar o serviço enquanto ele quer tasks",
+        "why": "O moto recusou isso também, como a AWS; é a única regra aqui que ele aplicou."
+      },
+      {
+        "text": "Editar a revisão da definição de task que roda",
+        "why": "Nada edita uma revisão, na AWS nem em lugar nenhum: uma mudança é uma revisão nova."
+      }
+    ]
+  },
+  "ex-ka3mank0": {
+    "prompt": "Uma instância deu boot com a AMI otimizada para ECS. Como o agente dela sabe em que cluster entrar?",
+    "hint": "A aula 7 é o mecanismo.",
+    "choices": [
+      {
+        "text": "Do ECS_CLUSTER em /etc/ecs/ecs.config, escrito pelo user data",
+        "why": "Sem a linha ele entra no cluster chamado default."
+      },
+      {
+        "text": "Das tags da instância, que o ECS lê no lançamento",
+        "why": "O ECS não lê tags para decidir quem entra; o agente lê o arquivo de configuração."
+      },
+      {
+        "text": "Ele entra em todo cluster da região e o agendador escolhe",
+        "why": "Uma container instance pertence a exatamente um cluster."
+      },
+      {
+        "text": "Da subnet em que foi lançada",
+        "why": "Clusters não são amarrados a subnets; a mesma subnet pode ter instâncias de vários clusters."
+      }
+    ]
+  },
+  "ex-wcm3neex": {
+    "prompt": "Uma task com hostPort 8080 roda na única instância do cluster. Você inicia uma segunda cópia. O que a AWS responde?",
+    "hint": "O moto respondeu nenhuma task e nenhuma falha; a AWS diz por quê.",
+    "choices": [
+      {
+        "text": "A task começa na porta 8081, a próxima livre",
+        "why": "O ECS não renumera uma porta fixa; hostPort 0 é como se pede uma livre qualquer."
+      },
+      {
+        "text": "Uma falha com o motivo RESOURCE:PORTS",
+        "why": "A única instância com espaço está com a porta ocupada, e o agendador diz isso."
+      },
+      {
+        "text": "As duas tasks dividem a porta 8080 e se revezam",
+        "why": "Dois processos não ocupam a mesma porta no mesmo host, como o Docker mostrou no laptop."
+      },
+      {
+        "text": "A primeira task é parada para abrir espaço",
+        "why": "Posicionar uma task nova nunca para uma em execução."
+      }
+    ]
+  },
+  "ex-cs37xb6s": {
+    "prompt": "Uma m7g.large custa 0,1301 USD por hora na tabela. Quanto custa uma como container instance num mês de 730 horas, em USD, até o centavo?",
+    "hint": "Preço por hora vezes 730; o ECS não acrescenta nada.",
+    "unit": "USD"
+  },
+  "ex-cba6tzv1": {
+    "prompt": "A estratégia de um serviço é base=2 no FARGATE, peso 1 no FARGATE e peso 3 no FARGATE_SPOT. Com 10 tasks, quantas rodam no FARGATE?",
+    "hint": "Primeiro a base, depois o resto dividido 1 para 3.",
+    "unit": "tasks"
+  },
+  "ex-xf6qt6c0": {
+    "prompt": "O moto registrou a m7i.large com 4.096 unidades de CPU. Quantas o agente do ECS registra para ela na AWS?",
+    "hint": "Duas vCPUs, a 1.024 unidades cada.",
+    "choices": [
+      {
+        "text": "4.096, como o moto disse",
+        "why": "O número do moto é de enfeite; uma m7i.large tem 2 vCPUs."
+      },
+      {
+        "text": "2.048, duas vCPUs de 1.024 cada",
+        "why": "É o que o agente registra; os 4.096 do moto são de enfeite."
+      },
+      {
+        "text": "1.024, porque o agente fica com uma vCPU para si",
+        "why": "O agente reserva um pouco de memória, não uma vCPU inteira."
+      },
+      {
+        "text": "8.192, uma unidade por MiB de memória",
+        "why": "Unidades de CPU contam processador, não memória; 8 GiB é outro recurso."
+      }
+    ]
+  },
+  "ex-baftkajj": {
+    "prompt": "Ponha em ordem o que acontece entre lançar uma container instance e o primeiro contêiner dela começar.",
+    "hint": "O user data roda antes de o agente poder saber o cluster.",
+    "items": [
+      "A instância dá boot com a AMI otimizada para ECS",
+      "O user data escreve ECS_CLUSTER em /etc/ecs/ecs.config",
+      "O agente registra a instância naquele cluster",
+      "O ECS posiciona uma task subtraindo o que ela pede do que sobra",
+      "O agente inicia os contêineres da task pelo Docker"
+    ],
+    "trap": "Registrar antes de o user data rodar põe a instância no cluster chamado default."
+  },
+  "ex-a9dk9d0c": {
+    "prompt": "O contêiner roda com --cpu-shares 256 e nada mais roda na máquina. Quanto processador ele pode usar?",
+    "hint": "Shares só contam quando contêineres disputam.",
+    "choices": [
+      {
+        "text": "Um quarto de uma vCPU, sempre",
+        "why": "Isso seria um teto, e --cpu-shares é um peso."
+      },
+      {
+        "text": "Tudo, já que não há disputa",
+        "why": "Um peso divide o tempo disputado; sozinho, o contêiner pode usar todos os processadores."
+      },
+      {
+        "text": "Nada até outro contêiner ceder tempo",
+        "why": "Shares nunca bloqueiam um contêiner que está sozinho."
+      },
+      {
+        "text": "256 MHz de um núcleo",
+        "why": "Shares são um peso relativo, não uma frequência."
+      }
+    ]
+  },
+  "ex-6ycfypt2": {
+    "prompt": "O único contêiner de uma task tem memory 512 e o processo dele cresce até 600 MiB. O que acontece no ECS?",
+    "hint": "A seção chamou a memória de o contrário da configuração de CPU.",
+    "choices": [
+      {
+        "text": "O kernel o mata e a task para com um motivo de falta de memória",
+        "why": "memory é um limite rígido, como os 536870912 bytes do docker inspect."
+      },
+      {
+        "text": "Ele é desacelerado até caber",
+        "why": "Desacelerar é o que a disputa de CPU faz; memória não tem modo lento."
+      },
+      {
+        "text": "O ECS o move para uma instância com mais memória",
+        "why": "O ECS nunca move uma task em execução; um serviço iniciaria uma nova depois que ela parasse."
+      },
+      {
+        "text": "Nada, porque 512 é só uma reserva",
+        "why": "Isso é o memoryReservation, o valor flexível; memory é o rígido."
+      }
+    ]
+  },
+  "ex-57vw8xxh": {
+    "prompt": "O mapeamento de porta com hostPort 8080 e containerPort 80 vira a flag de docker run -p ___.",
+    "hint": "Host primeiro, contêiner depois.",
+    "blanks": [
+      {
+        "accept": [
+          "8080:80"
+        ]
+      }
+    ]
+  },
+  "ex-3hhdy74y": {
+    "prompt": "O segundo docker run com -p 8080:80 deixou o web2 no estado Created. Por que ele não começou?",
+    "hint": "Leia o erro que o Docker imprimiu.",
+    "choices": [
+      {
+        "text": "A imagem precisava ser baixada de novo",
+        "why": "A imagem já estava lá; o erro era sobre a porta."
+      },
+      {
+        "text": "Dois contêineres não podem ter o mesmo nome",
+        "why": "Eles se chamavam web e web2."
+      },
+      {
+        "text": "A porta 8080 do host já estava ocupada pelo web",
+        "why": "O Docker não conseguiu ocupá-la uma segunda vez, que é o RESOURCE:PORTS do ECS numa máquina só."
+      },
+      {
+        "text": "Só um contêiner por imagem pode rodar",
+        "why": "Qualquer número pode rodar de uma imagem, em portas diferentes."
+      }
+    ]
+  },
+  "ex-j5c4hbv9": {
+    "prompt": "Um serviço com hostPort 8080 roda em três container instances, cada uma com CPU e memória de sobra. A contagem desejada vai de 3 para 4 e a quarta task nunca é posicionada. O que resolve sem uma quarta instância?",
+    "hint": "O recurso que falta não é CPU nem memória.",
+    "choices": [
+      {
+        "text": "Aumentar o cpu e o memory da definição de task",
+        "why": "As tasks já cabem; pedir mais torna o posicionamento mais difícil, não mais fácil."
+      },
+      {
+        "text": "Pôr o minimumHealthyPercent em 50",
+        "why": "Isso molda implantações; não libera porta."
+      },
+      {
+        "text": "Acrescentar um capacity provider FARGATE_SPOT com peso 0",
+        "why": "Peso 0 não lhe manda tasks, e as instâncias EC2 continuam com o problema da porta."
+      },
+      {
+        "text": "hostPort 0 atrás de um target group",
+        "why": "Cada task recebe uma porta livre, então uma instância comporta várias, e o target group acompanha as portas."
+      }
+    ]
+  },
+  "ex-vdcyx3qk": {
+    "prompt": "Um serviço de 4 implanta uma imagem nova com minimumHealthyPercent 100 e maximumPercent 200. Ponha os passos em ordem.",
+    "hint": "Com folga: as tasks novas vêm primeiro.",
+    "items": [
+      "Registrar uma revisão nova da definição de task",
+      "Apontar o serviço para ela com update-service",
+      "Quatro tasks novas começam ao lado das quatro antigas",
+      "As tasks novas passam na verificação de saúde do target group",
+      "As quatro tasks antigas são paradas"
+    ],
+    "trap": "Parar as tasks antigas antes de as novas ficarem saudáveis é o que um mínimo de 100 proíbe."
+  }
+}

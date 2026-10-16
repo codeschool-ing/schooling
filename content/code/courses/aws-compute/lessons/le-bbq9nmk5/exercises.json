@@ -1,0 +1,700 @@
+[
+  {
+    "id": "ex-g386evrj",
+    "version": 1,
+    "section": "launch-templates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A launch template has versions 1 to 3. Somebody needs version 2 to have a larger root volume. What do they do?",
+    "hint": "What happens to a version once it is written?",
+    "choices": [
+      {
+        "text": "Edit version 2 in place; groups pick it up at their next launch",
+        "correct": false,
+        "why": "A version is immutable on AWS. There is no call that edits one; the change has to be a new version."
+      },
+      {
+        "text": "Delete version 2 and create it again under the same number",
+        "correct": false,
+        "why": "Numbers are not reused. Deleting version 2 leaves a gap, and the next version created is 4."
+      },
+      {
+        "text": "Resize the volume on an instance, which writes it back into version 2",
+        "correct": false,
+        "why": "Nothing flows from an instance back into a template. The instance changes and the version stays as it was written."
+      },
+      {
+        "text": "Create version 4 with the bigger disk, and point whatever should use it at 4",
+        "correct": true,
+        "why": "Right. Versions are never edited, only added (or deleted), so the fix is the next number, and whatever should use it is pointed at 4."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dr61tcz",
+    "version": 1,
+    "section": "launch-templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group says Version=$Latest. A colleague creates version 5 to try a new image and does not touch the default. What happens?",
+    "hint": "Which of the two names moves by itself?",
+    "choices": [
+      {
+        "text": "Nothing until somebody runs modify-launch-template --default-version 5",
+        "correct": false,
+        "why": "That is how $Default moves. $Latest follows the highest number, so it already means 5."
+      },
+      {
+        "text": "Every running instance is replaced by one from version 5 straight away",
+        "correct": false,
+        "why": "A version change touches no running instance. Replacing them is a separate act, such as an instance refresh."
+      },
+      {
+        "text": "The group's next launch, whatever causes it, uses version 5",
+        "correct": true,
+        "why": "Right. A scale-out or a replacement launched after version 5 exists resolves $Latest to 5, and the experiment is now in the group."
+      },
+      {
+        "text": "The group stops launching until version 5 has been made the default",
+        "correct": false,
+        "why": "A group does not compare $Latest with $Default; it resolves the name it was given and launches."
+      }
+    ]
+  },
+  {
+    "id": "ex-kje24zxa",
+    "version": 1,
+    "section": "launch-templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, a version made with --source-version 1 and only an instance type comes back holding only InstanceType. What would AWS store for it?",
+    "hint": "What is --source-version for?",
+    "choices": [
+      {
+        "text": "Version 1's image, disk, metadata options and tags, with t3.medium as the type",
+        "correct": true,
+        "why": "Right. On AWS the source version is copied and the data sent beside it overrides it. moto 5.2.3 ignores the source."
+      },
+      {
+        "text": "The same as moto: a version keeps only what the call sent, and the source is a label",
+        "correct": false,
+        "why": "That is moto's behaviour, and the lesson marks it as moto's. On AWS the source is what the new version is built from."
+      },
+      {
+        "text": "Nothing: the call fails, because every version has to name its own image",
+        "correct": false,
+        "why": "A version may omit the image; with a source version it inherits it, and without one it simply has none."
+      },
+      {
+        "text": "Version 1's data unchanged, because the data sent is ignored when a source is named",
+        "correct": false,
+        "why": "It is the other way round: the data sent is what changes, and everything else comes from the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzp16the",
+    "version": 1,
+    "section": "launch-templates",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A launch template version can be deleted, but once it exists it can never be ___.",
+    "hint": "The reason a fix is always a new number.",
+    "blanks": [
+      {
+        "accept": [
+          "edited",
+          "changed",
+          "modified",
+          "altered"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5c87sjqr",
+    "version": 1,
+    "section": "launch-templates",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a launch template version hold? Choose all that apply.",
+    "hint": "What one instance is, against how many there are.",
+    "choices": [
+      {
+        "text": "The image id",
+        "correct": true,
+        "why": "Every launch needs one, and the template is where it is written."
+      },
+      {
+        "text": "HttpTokens set to required",
+        "correct": true,
+        "why": "Metadata options are part of what an instance is; lesson 7 explains this one."
+      },
+      {
+        "text": "The minimum and maximum number of instances",
+        "correct": false,
+        "why": "Counts belong to the group that launches from the template, not to the template."
+      },
+      {
+        "text": "A 20 GB gp3 root volume deleted on termination",
+        "correct": true,
+        "why": "Block device mappings are in the template, which is why the disk comes out the same on every instance."
+      },
+      {
+        "text": "The desired capacity a scaling policy moves",
+        "correct": false,
+        "why": "The desired capacity is the group's, and the policies of lesson 5 move it there."
+      },
+      {
+        "text": "A tag put on every instance it launches",
+        "correct": true,
+        "why": "TagSpecifications tag what is launched, which is how instances with chosen-by-nobody ids are found."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm4zczqp",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a group's desired capacity?",
+    "hint": "Which of the three numbers do policies move?",
+    "choices": [
+      {
+        "text": "The count the group is working towards now, between its minimum and maximum",
+        "correct": true,
+        "why": "Right. It sits between the minimum and the maximum, and it is the number a person or a policy moves."
+      },
+      {
+        "text": "The number of instances running at this moment",
+        "correct": false,
+        "why": "They can differ: while instances launch or terminate, what exists lags behind what is desired."
+      },
+      {
+        "text": "The most instances the group will run, whatever the load",
+        "correct": false,
+        "why": "That is the maximum, the ceiling on capacity and on the bill."
+      },
+      {
+        "text": "A suggestion from a policy, which the group follows only above its minimum and only when the instances are healthy",
+        "correct": false,
+        "why": "The group follows it whatever the health of its instances; unhealthy ones are replaced precisely to reach it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqcam2hz",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, what happens to set-desired-capacity 8 on a group whose maximum is 6?",
+    "hint": "moto accepted it. Does AWS?",
+    "choices": [
+      {
+        "text": "It launches eight, as moto did, and raises the maximum to match",
+        "correct": false,
+        "why": "A maximum that moved itself would be no ceiling on the bill. moto's eight is a record nobody pays for."
+      },
+      {
+        "text": "It launches six and holds the desired at eight until the maximum rises",
+        "correct": false,
+        "why": "The desired capacity cannot sit outside the bounds. The call is refused rather than half applied."
+      },
+      {
+        "text": "It refuses the call with a ValidationError, and launches nothing",
+        "correct": true,
+        "why": "Right. The desired capacity must lie between the minimum and the maximum, and nothing is launched."
+      },
+      {
+        "text": "It accepts the number and waits for a policy to confirm it",
+        "correct": false,
+        "why": "Policies and manual calls both set the same number; neither waits for the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-tbq22p0g",
+    "version": 1,
+    "section": "the-group",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group's desired capacity drops by one. Put the steps of AWS's default termination policy in order.",
+    "hint": "Balance first.",
+    "items": [
+      "Pick the zone with the most instances",
+      "Within it, prefer instances from the oldest launch template or configuration",
+      "Then prefer the instance closest to its next billing hour",
+      "Choose at random between whatever is left"
+    ],
+    "trap": "Starting with the oldest version would unbalance the zones, which is what the first step exists to prevent."
+  },
+  {
+    "id": "ex-fdq9pwdx",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An instance in a group is two hours into a three-hour report. The group scales in. What keeps that instance from being the one terminated?",
+    "hint": "Something that takes one instance out of the choice when the count falls.",
+    "choices": [
+      {
+        "text": "A health check grace period of three hours",
+        "correct": false,
+        "why": "The grace period only stops health checks counting after launch. It plays no part in choosing whom to scale in."
+      },
+      {
+        "text": "Scale-in protection on that instance",
+        "correct": true,
+        "why": "Right. set-instance-protection removes it from the scale-in choice; a failed health check would still replace it."
+      },
+      {
+        "text": "A tag such as keep=true on the instance",
+        "correct": false,
+        "why": "No termination policy reads your tags. The order is zone, template age, billing hour, chance."
+      },
+      {
+        "text": "Suspending the group's HealthCheck process",
+        "correct": false,
+        "why": "That stops health checks, not scale-in. The group would still pick an instance to terminate."
+      }
+    ]
+  },
+  {
+    "id": "ex-q77n3xwy",
+    "version": 1,
+    "section": "the-group",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do you list the instances of the group web, whose ids change every time one is replaced?",
+    "hint": "A tag nobody but AWS can write.",
+    "choices": [
+      {
+        "text": "Filter on app=shop, which the template puts on every instance",
+        "correct": false,
+        "why": "Anybody can write app=shop, on any instance or in any other template, so it identifies a purpose and not a group."
+      },
+      {
+        "text": "Keep the ids that create-auto-scaling-group printed when the group was made",
+        "correct": false,
+        "why": "It prints nothing when it works, and the ids would be stale after the first replacement anyway."
+      },
+      {
+        "text": "Filter on the tag aws:autoscaling:groupName=web, which only AWS writes",
+        "correct": true,
+        "why": "Right. AWS writes it on every instance the group launches, and the aws: prefix is reserved for AWS alone."
+      },
+      {
+        "text": "Filter on the subnets in the group's --vpc-zone-identifier",
+        "correct": false,
+        "why": "Other instances share those subnets; a subnet says where something runs, not who launched it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m26e9nt",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto put every instance of a group given three subnets in three zones into sa-east-1a. What does AWS do with the same group?",
+    "hint": "Why give a group more than one zone?",
+    "choices": [
+      {
+        "text": "The same: a group fills its first subnet before using the next",
+        "correct": false,
+        "why": "That is moto's simplification. AWS spreads from the first launch."
+      },
+      {
+        "text": "It spreads them evenly over the three zones, and keeps them even as instances come and go",
+        "correct": true,
+        "why": "Right. One per zone for three instances, two per zone for six, so a lost zone takes a third of the group and not all of it."
+      },
+      {
+        "text": "It puts each one in whichever zone has the lowest price that hour",
+        "correct": false,
+        "why": "On-demand prices do not differ between zones of a region, and placement follows balance, not price."
+      },
+      {
+        "text": "It needs --availability-zones as well, or it uses one zone like moto",
+        "correct": false,
+        "why": "The subnets already name the zones; the group works them out, as its description showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ka35pd2",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group has a maximum of 30. While AZRebalance moves instances between zones, what is the largest number of instances AWS lets it run?",
+    "hint": "10% of the maximum, or one instance, whichever is larger.",
+    "value": 33,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-86mt2wdz",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting or call to what it does about an instance's health.",
+    "hint": "Two sources of answers, one pause, one manual verdict.",
+    "pairs": [
+      {
+        "left": "HealthCheckType EC2",
+        "right": "Catches a failed host or a kernel that stopped"
+      },
+      {
+        "left": "HealthCheckType ELB",
+        "right": "Also catches a web server that stopped answering /health"
+      },
+      {
+        "left": "HealthCheckGracePeriod",
+        "right": "Ignores failed checks for a while after launch"
+      },
+      {
+        "left": "set-instance-health",
+        "right": "Lets a person or a script declare an instance unhealthy"
+      }
+    ],
+    "right_distractors": [
+      "Adds instances when the average CPU rises"
+    ]
+  },
+  {
+    "id": "ex-jbfsagmw",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new group behind a load balancer has health check type ELB and no grace period. The application takes four minutes to start. What happens?",
+    "hint": "What does the group see during those four minutes?",
+    "choices": [
+      {
+        "text": "Each new instance fails its check while starting, is replaced, and the loop goes on",
+        "correct": true,
+        "why": "Right. With no grace period the first failed /health counts, so no instance lives long enough to start, and every launch is billed."
+      },
+      {
+        "text": "The instances serve after four minutes, because a target group waits for new targets",
+        "correct": false,
+        "why": "A target group marks a target unhealthy as soon as its checks fail; waiting is what the group's grace period is for."
+      },
+      {
+        "text": "The group waits for the first healthy answer before it starts checking",
+        "correct": false,
+        "why": "There is no such wait unless the grace period provides it, and here it is zero."
+      },
+      {
+        "text": "The load balancer marks them unhealthy, but the group acts only on EC2 checks",
+        "correct": false,
+        "why": "With type ELB both sources count; that is the point of setting it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y4awd92s",
+    "version": 1,
+    "section": "zones-and-health",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After set-instance-health --health-status Unhealthy, moto still listed the instance, running and marked Unhealthy. What would AWS have done?",
+    "hint": "Replaced, not repaired.",
+    "choices": [
+      {
+        "text": "The same: the status is a label, and replacement waits for the next health check",
+        "correct": false,
+        "why": "On AWS the status is the verdict itself. moto writing it down and stopping is moto's gap."
+      },
+      {
+        "text": "Rebooted it, and marked it healthy again if it answered afterwards",
+        "correct": false,
+        "why": "Groups do not reboot. Whatever was on the instance is assumed to live elsewhere, so a new one is cheaper than a repair."
+      },
+      {
+        "text": "Terminated it and lowered the desired capacity by one",
+        "correct": false,
+        "why": "Health replacement keeps the count. Lowering it is what --should-decrement-desired-capacity asks for, by hand."
+      },
+      {
+        "text": "Terminated it and launched a replacement from the template",
+        "correct": true,
+        "why": "Right. An unhealthy instance is replaced, not repaired, and the count goes back to the desired capacity."
+      }
+    ]
+  },
+  {
+    "id": "ex-fb0n5j1v",
+    "version": 1,
+    "section": "instance-refresh",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana makes version 3, a t3.medium, the template's default. What happens to the three t3.micro instances already running?",
+    "hint": "A template describes the next launch.",
+    "choices": [
+      {
+        "text": "They are stopped, changed to t3.medium and started again",
+        "correct": false,
+        "why": "Nothing resizes them. A template is read at launch and never again."
+      },
+      {
+        "text": "The group replaces them one at a time, since it follows its default",
+        "correct": false,
+        "why": "The group follows the default for new launches only. Replacing on purpose is an instance refresh."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. Each one keeps version 1 until it is terminated for some other reason, as the transcript showed."
+      },
+      {
+        "text": "They are marked unhealthy, so that health replacement brings in version 3",
+        "correct": false,
+        "why": "An old version is not a health problem; the group has no rule that confuses the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-tav9r676",
+    "version": 1,
+    "section": "instance-refresh",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A group of 20 instances is refreshed with MinHealthyPercentage 90 and InstanceWarmup 60. Each new instance takes 4 minutes to launch, boot and pass its health check. About how many minutes does the refresh take?",
+    "hint": "How many may be out at once? Then batches times minutes per batch.",
+    "value": 50,
+    "tolerance": 1,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-v193ngwp",
+    "version": 1,
+    "section": "instance-refresh",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With ten instances and a MinHealthyPercentage of 50, an instance refresh replaces ___ instances in each batch.",
+    "hint": "Half of them must stay healthy.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "five"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3cz5hkzb",
+    "version": 1,
+    "section": "instance-refresh",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A refresh stopped halfway. Which preference lets you start it again without replacing the instances it already replaced?",
+    "hint": "Something that compares each instance with the desired version.",
+    "choices": [
+      {
+        "text": "AutoRollback",
+        "correct": false,
+        "why": "That returns the group to its previous version when a refresh fails; it is the opposite direction."
+      },
+      {
+        "text": "CheckpointPercentages",
+        "correct": false,
+        "why": "Checkpoints pause a refresh at chosen points. They do not decide which instances to skip."
+      },
+      {
+        "text": "SkipMatching",
+        "correct": true,
+        "why": "Right. Instances already on the desired template version are left alone."
+      },
+      {
+        "text": "MinHealthyPercentage of 100",
+        "correct": false,
+        "why": "That limits how many go at once, and every instance would still be replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-csc5kd44",
+    "version": 1,
+    "section": "instance-refresh",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab, start-instance-refresh answered with an HTML page saying 500 Internal Server Error. What does that tell you?",
+    "hint": "Whose error is a 500 with an HTML body, where XML was expected?",
+    "choices": [
+      {
+        "text": "The preferences JSON is wrong, since AWS answers bad input with a 500",
+        "correct": false,
+        "why": "AWS answers bad input with a 400 and a ValidationError in XML. A 500 is the server failing, whatever was sent."
+      },
+      {
+        "text": "That moto does not implement the call, and nothing about what AWS would do",
+        "correct": true,
+        "why": "Right. moto 5.2.3 has no instance refresh; the error is its own, and the request says nothing about AWS either way."
+      },
+      {
+        "text": "That three instances are too few for a minimum healthy percentage of 90",
+        "correct": false,
+        "why": "AWS replaces at least one instance at a time whatever the percentage; the size of the group does not produce a server error."
+      },
+      {
+        "text": "That the template's default version is the broken version 2",
+        "correct": false,
+        "why": "The default was 3 by then, and a refresh would not reach the template before the server failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6tv0766",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On AWS, the web server on an instance in an ELB group stops answering /health. Put what follows in order.",
+    "hint": "By default the old one goes before the new one comes.",
+    "items": [
+      "The target group's health check fails on the instance",
+      "The group marks the instance unhealthy",
+      "The group terminates the instance",
+      "The group launches a replacement from the template",
+      "After its grace period the replacement passes its checks"
+    ],
+    "trap": "For an unhealthy instance the group terminates first and launches second by default; it is rebalancing that launches first."
+  },
+  {
+    "id": "ex-6hd0hvnf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group has minimum 2 and desired 3. You terminate one instance with --should-decrement-desired-capacity. What follows?",
+    "hint": "Which number does the flag change?",
+    "choices": [
+      {
+        "text": "Desired falls to 2, and nothing replaces the instance",
+        "correct": true,
+        "why": "Right. The count itself dropped, and two is still at the minimum, so the group has nothing to launch."
+      },
+      {
+        "text": "Desired stays at 3 and a replacement launches",
+        "correct": false,
+        "why": "That is --no-should-decrement-desired-capacity, the form the lesson used to show a replacement."
+      },
+      {
+        "text": "Desired falls to 2, and the minimum makes the group launch one more anyway",
+        "correct": false,
+        "why": "Two is the minimum, not below it; the group is satisfied."
+      },
+      {
+        "text": "The call is refused, because the group would fall below its minimum",
+        "correct": false,
+        "why": "It would be refused at a desired of 2, where decrementing goes below the minimum. At 3 it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1wk1cad",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did moto 5.2.3 do differently from AWS in this lesson? Choose all that apply.",
+    "hint": "Four of the six were called out in the prose as moto's.",
+    "choices": [
+      {
+        "text": "It accepted a desired capacity above the maximum",
+        "correct": true,
+        "why": "AWS refuses that with a ValidationError."
+      },
+      {
+        "text": "It printed nothing when create-auto-scaling-group worked",
+        "correct": false,
+        "why": "AWS prints nothing either; a successful create has no output."
+      },
+      {
+        "text": "It put every instance into the first subnet",
+        "correct": true,
+        "why": "AWS spreads a group over the zones of its subnets."
+      },
+      {
+        "text": "It left an instance marked unhealthy running",
+        "correct": true,
+        "why": "AWS terminates and replaces it."
+      },
+      {
+        "text": "It wrote the aws:autoscaling:groupName tag on each instance",
+        "correct": false,
+        "why": "AWS writes the same tag; it is how the group's instances are found."
+      },
+      {
+        "text": "It ignored --source-version",
+        "correct": true,
+        "why": "AWS builds the new version from the source and the data sent beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j46d1x0b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a group whose minimum, desired and maximum are all 1 give you?",
+    "hint": "It cannot scale. What else does a group do?",
+    "choices": [
+      {
+        "text": "Nothing beyond a plain instance, since it can never scale",
+        "correct": false,
+        "why": "Scaling is one thing a group does. Keeping its count, by replacing what fails, is the other, and that still works at one."
+      },
+      {
+        "text": "An instance the group will never terminate, which makes it safe for state",
+        "correct": false,
+        "why": "The group terminates it as soon as it fails a check. Nothing on it is safe from that."
+      },
+      {
+        "text": "One instance in each zone of its subnets",
+        "correct": false,
+        "why": "Three subnets with a desired of 1 is still one instance, in one of the zones."
+      },
+      {
+        "text": "One instance that is replaced when it fails its checks",
+        "correct": true,
+        "why": "Right. It is the cheapest way to have a single server come back on its own, provided nothing on it must survive."
+      }
+    ]
+  }
+]

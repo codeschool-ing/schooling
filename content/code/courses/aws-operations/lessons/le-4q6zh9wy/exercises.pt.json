@@ -1,0 +1,318 @@
+{
+  "ex-02cc6fct": {
+    "prompt": "Duas imagens em repositórios diferentes têm o mesmo digest. O que se pode concluir?",
+    "hint": "Um digest é um hash do conteúdo.",
+    "choices": [
+      {
+        "text": "Foram enviadas pela mesma execução de esteira",
+        "why": "Nada num digest registra quem enviou nem quando."
+      },
+      {
+        "text": "Elas têm a mesma tag",
+        "why": "Tags são nomes guardados ao lado da imagem; a mesma imagem pode ter tags diferentes em cada repositório."
+      },
+      {
+        "text": "São a mesma imagem",
+        "why": "Certo. O mesmo conteúdo dá o mesmo digest, onde quer que esteja guardado."
+      },
+      {
+        "text": "Foram construídas do mesmo Dockerfile em dias diferentes",
+        "why": "Dois builds do mesmo Dockerfile costumam diferir em alguma camada, e aí os digests diferem."
+      }
+    ]
+  },
+  "ex-gzyxfvxr": {
+    "prompt": "As tarefas de um serviço rodam todas `shop/web:latest`. Duas reiniciam depois de um push novo; as outras não. O que está rodando agora?",
+    "hint": "Quando uma tarefa resolve a tag?",
+    "choices": [
+      {
+        "text": "Todas as tarefas rodam o build novo, porque a tag mudou",
+        "why": "Uma tarefa em execução fica com a imagem que puxou; só um reinício pergunta à tag de novo."
+      },
+      {
+        "text": "Duas versões ao mesmo tempo, com um nome só",
+        "why": "Certo. As tarefas reiniciadas puxaram a imagem nova; as outras ainda rodam a antiga."
+      },
+      {
+        "text": "O build antigo em todas, até o serviço ser reimplantado",
+        "why": "As duas que reiniciaram pediram latest e receberam o que ela apontava naquele momento."
+      },
+      {
+        "text": "Nada, porque o ECR se recusa a servir uma tag que mudou",
+        "why": "Um repositório mutável serve o que a tag aponta agora, sem reclamar."
+      }
+    ]
+  },
+  "ex-q9d0cd88": {
+    "prompt": "Por que esta lição não pôde rodar `docker push` contra o moto?",
+    "hint": "Dois protocolos participam de um push.",
+    "choices": [
+      {
+        "text": "Porque o Docker se recusa a entrar com a chave test",
+        "why": "Não é no login que para; o moto não tem registro onde entrar."
+      },
+      {
+        "text": "Porque o moto só aceita imagens de menos de 50 MB",
+        "why": "Nenhum limite de tamanho entra nisso; nenhuma camada chega ao moto."
+      },
+      {
+        "text": "Porque um push precisa de uma conta AWS para cobrar o armazenamento",
+        "why": "O moto não cobra nada nem precisa de conta; o que falta é um protocolo."
+      },
+      {
+        "text": "O moto responde a PutImage, mas não ao protocolo de registro",
+        "why": "Certo. As camadas viajam pelo protocolo de registro, que o moto não fala; PutImage é só o último passo."
+      }
+    ]
+  },
+  "ex-yqc3p6dn": {
+    "prompt": "Num repositório `IMMUTABLE`, `1.4.0` já aponta para uma imagem. Uma esteira envia outro conteúdo como `1.4.0`. O que acontece?",
+    "hint": "O nome está ocupado.",
+    "choices": [
+      {
+        "text": "A tag muda e a imagem antiga fica sem tag",
+        "why": "Isso é o que um repositório mutável faz."
+      },
+      {
+        "text": "O ECR guarda a imagem nova como 1.4.0-2",
+        "why": "O ECR nunca inventa uma tag; o push simplesmente falha."
+      },
+      {
+        "text": "As duas imagens ficam com a tag 1.4.0, diferenciadas pelo digest",
+        "why": "Uma tag aponta para uma imagem num repositório, nunca para duas."
+      },
+      {
+        "text": "O push é recusado, e 1.4.0 mantém a imagem",
+        "why": "Certo. O ECR responde ImageTagAlreadyExistsException; a imagem antiga fica intacta."
+      }
+    ]
+  },
+  "ex-7grk5can": {
+    "prompt": "Um repositório imutável já tem uma imagem com a tag `1.4.1`. A esteira pode acrescentar a tag `3f9c2a1b7e40` a essa mesma imagem?",
+    "hint": "A imutabilidade é sobre mudar uma tag de lugar.",
+    "choices": [
+      {
+        "text": "Não: uma imagem imutável não ganha tags depois do primeiro push",
+        "why": "A imutabilidade impede tags de mudar de lugar, e acrescentar uma nova não muda nada."
+      },
+      {
+        "text": "Só apagando 1.4.1 antes",
+        "why": "Nada precisa ser apagado; uma imagem pode ter várias tags."
+      },
+      {
+        "text": "Sim, desde que essa tag não esteja ocupada",
+        "why": "Certo. O laboratório fez exatamente isso, e a imagem carrega as duas."
+      },
+      {
+        "text": "Sim, mas antes o repositório precisa virar MUTABLE",
+        "why": "Não precisa trocar nada; uma tag livre pode ser dada num repositório imutável."
+      }
+    ]
+  },
+  "ex-my91ssqt": {
+    "prompt": "Uma equipe quer todas as tags de release fixas, mas os builds `dev-` dos desenvolvedores sobrescritos à vontade, num repositório só. Que configuração faz isso?",
+    "hint": "Uma exceção estreita à imutabilidade.",
+    "choices": [
+      {
+        "text": "MUTABLE, e uma regra de ciclo de vida que guarde os releases",
+        "why": "Uma regra de ciclo de vida apaga imagens; nunca impede uma tag de mudar."
+      },
+      {
+        "text": "IMMUTABLE_WITH_EXCLUSION, com filtro em dev-*",
+        "why": "Certo. As tags que batem com o filtro podem mudar; todas as outras ficam fixas."
+      },
+      {
+        "text": "IMMUTABLE_WITH_EXCLUSION, com filtro em *",
+        "why": "Um filtro * exclui todas as tags, o que é um repositório mutável com nome mais comprido."
+      },
+      {
+        "text": "IMMUTABLE, com os desenvolvedores apagando as tags velhas antes de cada push",
+        "why": "Funciona à mão e falha no primeiro dia corrido; a exclusão faz isso por eles."
+      }
+    ]
+  },
+  "ex-tq9ag9fj": {
+    "prompt": "Uma tag mutável é um ponteiro; o que identifica a imagem em si é o ___ dela, um hash do manifesto.",
+    "hint": "Seis letras, começa com sha256: quando escrito.",
+    "blanks": [
+      {
+        "accept": [
+          "digest"
+        ]
+      }
+    ]
+  },
+  "ex-gwzs098d": {
+    "prompt": "O que a varredura avançada faz que a básica não faz?",
+    "hint": "Pense numa vulnerabilidade publicada na semana que vem.",
+    "choices": [
+      {
+        "text": "Varre a imagem a cada push, o que a básica nunca faz",
+        "why": "A básica também pode varrer no push; scanOnPush vale para as duas."
+      },
+      {
+        "text": "Bloqueia o push de uma imagem com achados",
+        "why": "Nenhuma bloqueia um push; quem faz isso é uma barreira na esteira."
+      },
+      {
+        "text": "Varre de novo quando saem vulnerabilidades novas, e lê pacotes de linguagem",
+        "why": "Certo. O Inspector varre continuamente e cobre Python, npm e outras bibliotecas."
+      },
+      {
+        "text": "É gratuita",
+        "why": "A básica é a gratuita; a avançada é cobrada pelo Inspector por imagem e por nova varredura."
+      }
+    ]
+  },
+  "ex-vwcnagez": {
+    "prompt": "A varredura do laboratório devolveu `CVE-9999-9999` num pacote chamado `moto_fake`. O que isso mostra sobre o script scan-gate?",
+    "hint": "Separe a lógica da entrada.",
+    "choices": [
+      {
+        "text": "Que a barreira recusa um achado alto, embora este seja falso",
+        "why": "Certo. A lógica foi exercitada; a entrada era de mentira."
+      },
+      {
+        "text": "Que a imagem tem uma vulnerabilidade alta a corrigir",
+        "why": "O moto devolve esse achado para toda imagem; ele não leu nada."
+      },
+      {
+        "text": "Nada, porque o script deveria tê-lo ignorado",
+        "why": "O script não tem como saber que um achado é falso; ele conta severidades como deve."
+      },
+      {
+        "text": "Que a varredura funciona igual no moto e no ECR",
+        "why": "Mostra o contrário: o formato da API é igual e o achado é inventado."
+      }
+    ]
+  },
+  "ex-fyywrd4p": {
+    "prompt": "Uma barreira que recusa todo achado de toda severidade bloqueou os deploys por uma semana, e a equipe está prestes a desligá-la. O que mantém a proteção sem isso?",
+    "hint": "Uma linha com que as pessoas consigam viver, mais correções na origem.",
+    "choices": [
+      {
+        "text": "Rodar a barreira só às sextas",
+        "why": "Uma barreira que roda num dia deixa seis dias de imagens passarem sem conferência."
+      },
+      {
+        "text": "Recusar crítico e alto, reconstruir sobre imagens-base novas, permitir exceções com prazo",
+        "why": "Certo. Uma linha mais estreita fica ligada, os rebuilds tiram a maioria dos achados, e as exceções expiram."
+      },
+      {
+        "text": "Trocar a varredura avançada pela básica para aparecerem menos achados",
+        "why": "Ver menos não é o mesmo que estar mais seguro."
+      },
+      {
+        "text": "Manter a barreira, mas deixar qualquer desenvolvedor pulá-la com uma mensagem de commit",
+        "why": "Um atalho que qualquer um pode digitar vira o caminho normal em uma semana."
+      }
+    ]
+  },
+  "ex-8p4b8w51": {
+    "prompt": "Com a varredura avançada a 0,11 USD por primeira varredura e 0,01 USD por nova varredura, quanto custa um mês em que 300 imagens novas são enviadas e acontecem 2.000 novas varreduras?",
+    "hint": "Duas linhas da lista de preços, somadas.",
+    "unit": "USD"
+  },
+  "ex-ccqka2j8": {
+    "prompt": "A regra 1 expira imagens sem tag depois de 7 dias; a regra 2 mantém as 30 imagens mais novas com tag `dev-`. Uma imagem tem a tag `1.4.0`. Que regra pode expirá-la?",
+    "hint": "Que regra chega a selecioná-la?",
+    "choices": [
+      {
+        "text": "A regra 1, quando fizer sete dias",
+        "why": "A regra 1 só seleciona imagens sem tag, e esta tem uma."
+      },
+      {
+        "text": "A regra 2, quando chegarem 30 builds dev mais novos",
+        "why": "A regra 2 seleciona tags que começam com dev-, e 1.4.0 não começa."
+      },
+      {
+        "text": "Nenhuma: nenhuma regra a seleciona",
+        "why": "Certo. Uma imagem que nenhuma regra seleciona nunca expira."
+      },
+      {
+        "text": "As duas, a que tiver menor prioridade",
+        "why": "A prioridade ordena regras que selecionam uma imagem; aqui nenhuma seleciona."
+      }
+    ]
+  },
+  "ex-kwcgtqkp": {
+    "prompt": "Antes de novas regras de expiração valerem num repositório de onde a produção puxa, o que deve ser executado primeiro, e por quê?",
+    "hint": "Uma regra escrita um pouco errada pode apagar o que está rodando.",
+    "choices": [
+      {
+        "text": "start-lifecycle-policy-preview, para listar o que expiraria",
+        "why": "Certo. A prévia avalia as regras e não apaga nada."
+      },
+      {
+        "text": "Uma varredura de cada imagem, para nenhuma imagem vulnerável ficar",
+        "why": "A varredura não diz nada sobre quais imagens as regras vão apagar."
+      },
+      {
+        "text": "Um reinício de cada tarefa, para todas puxarem imagens novas antes",
+        "why": "Reiniciar é o momento em que uma imagem apagada cobra o preço, não uma verificação."
+      },
+      {
+        "text": "Nada: o ECR se recusa a expirar uma imagem em uso",
+        "why": "O ECR não sabe o que está rodando; uma tarefa só falha quando reinicia."
+      }
+    ]
+  },
+  "ex-n60hy5d9": {
+    "prompt": "Ponha os passos de um push para um registro na ordem em que acontecem.",
+    "hint": "Os nomes vêm por último.",
+    "trap": "Enviar o manifesto primeiro é o deslize: ele nomeia camadas que o registro ainda não teria.",
+    "items": [
+      "O cliente entra no registro",
+      "Cada camada que falta no registro é enviada como blob",
+      "O manifesto é enviado com uma tag",
+      "O registro aponta a tag para o digest do manifesto"
+    ]
+  },
+  "ex-6png41dp": {
+    "prompt": "Ligue cada configuração do ECR àquilo contra o que ela protege.",
+    "hint": "Uma proteção para cada.",
+    "pairs": [
+      {
+        "left": "Tags IMMUTABLE",
+        "right": "Um nome de release passando para outro código"
+      },
+      {
+        "left": "scanOnPush",
+        "right": "Uma imagem que ninguém conferiu contra vulnerabilidades conhecidas"
+      },
+      {
+        "left": "Uma política de ciclo de vida",
+        "right": "Milhares de builds antigos crescendo na fatura"
+      },
+      {
+        "left": "Uma tag com o hash do commit",
+        "right": "Não saber que código está rodando"
+      }
+    ],
+    "right_distractors": [
+      "Uma chave de acesso roubada"
+    ]
+  },
+  "ex-4401qtbj": {
+    "prompt": "A produção roda `shop/api:3f9c2a1b7e40` de um repositório imutável, e o release quebrou o checkout. O que reverter para a imagem anterior exige?",
+    "hint": "Uma tag que não pode ter mudado.",
+    "choices": [
+      {
+        "text": "Reconstruir o commit anterior e enviá-lo de novo",
+        "why": "Um rebuild pode diferir do que rodou; a imagem anterior continua lá, intacta."
+      },
+      {
+        "text": "Voltar latest para o digest antigo",
+        "why": "Nada aqui implanta por latest, e num repositório imutável ela nem mudaria."
+      },
+      {
+        "text": "Um deploy que nomeie a tag anterior",
+        "why": "Certo. A tag antiga ainda aponta exatamente para a imagem que rodava antes."
+      },
+      {
+        "text": "Pedir ao ECR que restaure a imagem do histórico de versões",
+        "why": "O ECR não guarda histórico de versões de uma tag; a imutabilidade é o que o torna desnecessário."
+      }
+    ]
+  }
+}

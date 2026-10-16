@@ -1,0 +1,450 @@
+{
+  "ex-8y13zs0a": {
+    "prompt": "Um estado `Choice` tem regras e nenhum `Default`. Chega uma entrada que nenhuma regra casa. O que acontece na AWS?",
+    "hint": "`Default` é para onde vai todo o resto.",
+    "choices": [
+      {
+        "text": "A execução falha com `States.NoChoiceMatched`",
+        "why": "Isso. Sem regra e sem `Default`, não há para onde ir."
+      },
+      {
+        "text": "Ele segue o `Next` da primeira regra",
+        "why": "Uma regra só é seguida quando casa."
+      },
+      {
+        "text": "A execução termina com sucesso, com a entrada como saída",
+        "why": "Só o `Succeed` encerra uma execução assim; um `Choice` não é estado final."
+      },
+      {
+        "text": "Ele espera até chegar uma entrada que case",
+        "why": "Um `Choice` lê a entrada que tem uma vez; ele nunca espera."
+      }
+    ]
+  },
+  "ex-m4f8c8g1": {
+    "prompt": "Logo depois do `start-execution`, o `describe-execution` da `order-42` disse `RUNNING`. Por quê?",
+    "hint": "O que quem chama espera?",
+    "choices": [
+      {
+        "text": "O moto demora mais que a AWS para iniciar",
+        "why": "A AWS responde do mesmo jeito: um início Standard volta antes do trabalho."
+      },
+      {
+        "text": "A linha de comando ainda não tinha mandado a entrada",
+        "why": "A entrada faz parte da chamada de início; ela já estava lá."
+      },
+      {
+        "text": "O início volta na hora e a execução segue sozinha",
+        "why": "Isso. O `Wait` de dois segundos e a tarefa aconteceram depois de o comando voltar."
+      },
+      {
+        "text": "A fila ainda estava vazia, então o `Notify` estava tentando de novo",
+        "why": "A fila existia; fila vazia não é erro, e o histórico não mostra nova tentativa."
+      }
+    ]
+  },
+  "ex-m7s972pg": {
+    "prompt": "A `order-42` passou pelo `Wait` e o histórico dela teve 13 eventos. A `order-43` pulou o `Wait`. Um `Wait` acrescenta um evento ao entrar e um ao sair. Quantos eventos a `order-43` teve?",
+    "hint": "13 menos o que o Wait acrescenta.",
+    "unit": "eventos"
+  },
+  "ex-ttgz997v": {
+    "prompt": "O moto criou uma máquina de estados cujo único estado tem `\"Next\": \"B\"`, e não existe estado `B`. O que a AWS faz com o mesmo comando?",
+    "hint": "A AWS verifica uma definição quando ela é criada.",
+    "choices": [
+      {
+        "text": "Recusa com `InvalidDefinition`",
+        "why": "Isso, citando o estado que aponta para lugar nenhum."
+      },
+      {
+        "text": "Cria, e a primeira execução falha em `A`",
+        "why": "Esse é, no máximo, o comportamento do moto; a AWS nunca cria."
+      },
+      {
+        "text": "Cria e trata `A` como estado final",
+        "why": "Um destino de `Next` que falta é erro, não um fim implícito."
+      },
+      {
+        "text": "Cria um estado `Pass` chamado `B` para tapar o buraco",
+        "why": "Nada nunca é acrescentado a uma definição por você."
+      }
+    ]
+  },
+  "ex-a6kaj14x": {
+    "prompt": "Ligue cada tipo de estado ao que ele faz.",
+    "hint": "Uma descrição pertence a um tipo que não está à esquerda.",
+    "pairs": [
+      {
+        "left": "`Choice`",
+        "right": "lê a entrada e escolhe o próximo estado"
+      },
+      {
+        "left": "`Wait`",
+        "right": "segura a execução e não roda nada"
+      },
+      {
+        "left": "`Map`",
+        "right": "roda os mesmos passos uma vez por item de uma lista"
+      },
+      {
+        "left": "`Parallel`",
+        "right": "roda ramos diferentes ao mesmo tempo e espera todos"
+      }
+    ],
+    "right_distractors": [
+      "chama um serviço e toma a resposta dele como resultado"
+    ]
+  },
+  "ex-7sbqn6n9": {
+    "prompt": "No estado `Notify`, `___` põe a resposta do SQS em `$.sent`, ao lado da entrada, em vez de substituir a entrada por ela.",
+    "hint": "Um nome de campo, uma palavra em duas partes.",
+    "blanks": [
+      {
+        "accept": [
+          "ResultPath"
+        ]
+      }
+    ]
+  },
+  "ex-6f78syrh": {
+    "prompt": "Um workflow Standard de 8 passos roda 500.000 vezes por mês, sem novas tentativas. A 37,5 USD por milhão de transições de estado, quanto custa um mês? Deixe o nível gratuito de fora.",
+    "hint": "Execuções × passos, depois por milhão.",
+    "unit": "USD"
+  },
+  "ex-949ax8ch": {
+    "prompt": "As mesmas 500.000 execuções como workflows Express levam 1,5 s cada, no menor degrau de memória, 64 MB. A 1 USD por milhão de requisições e 0,00001667 USD por GB-segundo, quanto custa um mês?",
+    "hint": "64 MB são 0,0625 GB; some as requisições.",
+    "unit": "USD"
+  },
+  "ex-kyvm8k33": {
+    "prompt": "Um workflow de reembolso espera a aprovação de um gerente, que leva até dois dias. De qual tipo ele precisa?",
+    "hint": "Dois limites excluem um deles.",
+    "choices": [
+      {
+        "text": "Express, porque é umas cem vezes mais barato",
+        "why": "Ele não roda mais de cinco minutos e não tem `.waitForTaskToken`."
+      },
+      {
+        "text": "Express, iniciado de forma síncrona pela API",
+        "why": "Um início síncrono faz quem chama esperar; o limite de cinco minutos continua."
+      },
+      {
+        "text": "Qualquer um; o tipo só muda o preço",
+        "why": "Os tipos diferem em duração, histórico e nas esperas que suportam."
+      },
+      {
+        "text": "Standard",
+        "why": "Isso: um ano de duração e o callback por token."
+      }
+    ]
+  },
+  "ex-dpmwj5nd": {
+    "prompt": "No laboratório, uma máquina de estados Express com um `Wait` de uma hora termina com sucesso depois de uma hora. O que a AWS faria?",
+    "hint": "O que o `describe-state-machine` mostrou para `orders-fast`?",
+    "choices": [
+      {
+        "text": "O mesmo, já que o moto imita a AWS",
+        "why": "O moto guardou a máquina como Standard, então ela rodou sem o limite do Express."
+      },
+      {
+        "text": "Parar a execução ao chegar aos cinco minutos",
+        "why": "Isso. O limite do Express é cinco minutos, e o moto não o aplica."
+      },
+      {
+        "text": "Recusar criar uma máquina que tenha `Wait`",
+        "why": "O Express aceita `Wait`; o que é limitado é a execução inteira."
+      },
+      {
+        "text": "Rodar até o fim e cobrar como Standard",
+        "why": "O tipo é fixado na criação e decide os limites e a cobrança."
+      }
+    ]
+  },
+  "ex-zha0ay14": {
+    "prompt": "Quais destas são verdadeiras para um workflow Express na AWS? Escolha todas as que se aplicam.",
+    "hint": "A tabela da seção.",
+    "choices": [
+      {
+        "text": "Iniciado de forma assíncrona, roda pelo menos uma vez",
+        "why": "Sim, então uma execução pode se repetir."
+      },
+      {
+        "text": "O histórico dele pode ser lido no serviço por 90 dias",
+        "why": "Isso é do Standard; o Express manda o histórico ao CloudWatch Logs se o log estiver ligado."
+      },
+      {
+        "text": "Ele não tem `.waitForTaskToken`",
+        "why": "Sim; também não tem `.sync`."
+      },
+      {
+        "text": "Ele é cobrado por transição de estado",
+        "why": "O Express é cobrado por requisição e por duração e memória."
+      },
+      {
+        "text": "Uma execução dura no máximo cinco minutos",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-h6j0gwp8": {
+    "prompt": "Um workflow Express iniciado de forma assíncrona cobra um cartão num dos passos. Um cliente é cobrado duas vezes por um pedido, e o workflow não tem `Retry`. O que explica isso, e o que evita?",
+    "hint": "O que \"pelo menos uma vez\" permite?",
+    "choices": [
+      {
+        "text": "Um `Retry` padrão escondido; acrescentar `MaxAttempts: 0`",
+        "why": "Não há nova tentativa padrão numa tarefa; a repetição veio da execução."
+      },
+      {
+        "text": "O cliente clicou duas vezes; o Express não pode ser a causa",
+        "why": "Pode: execução pelo menos uma vez faz parte do que o Express promete."
+      },
+      {
+        "text": "O Express roda todo passo duas vezes; mudar para início síncrono",
+        "why": "Ele não roda todo passo duas vezes; ele pode rodar o workflow inteiro de novo. Síncrono é no máximo uma vez, o que pode perder uma execução."
+      },
+      {
+        "text": "Rodou duas vezes; passar ao provedor uma chave de idempotência",
+        "why": "Isso. Express assíncrono é pelo menos uma vez, então a cobrança precisa reconhecer uma repetição."
+      }
+    ]
+  },
+  "ex-hvaqk284": {
+    "prompt": "Um `Retry` tem `IntervalSeconds: 3`, `BackoffRate: 2` e `MaxAttempts: 3`, e toda tentativa falha na hora. Quantos segundos passam esperando entre tentativas, no total, antes de o `Catch` assumir?",
+    "hint": "Três novas tentativas; cada intervalo é o dobro do anterior.",
+    "unit": "segundos"
+  },
+  "ex-ger339yd": {
+    "prompt": "Ponha os eventos da `order-45` na ordem em que aconteceram.",
+    "hint": "`MaxAttempts: 2` quer dizer duas novas tentativas depois da primeira.",
+    "items": [
+      "a primeira tentativa falha",
+      "um segundo de espera",
+      "a segunda tentativa falha",
+      "dois segundos de espera",
+      "a terceira tentativa falha",
+      "o `Catch` leva a execução para `Failed`"
+    ],
+    "trap": "O `Catch` só age depois da última nova tentativa, não depois da primeira falha."
+  },
+  "ex-bggdqymj": {
+    "prompt": "A `order-45` falhou ao mandar para o SQS, mas o `describe-execution` mostrou o erro `NotifyFailed`. Por quê?",
+    "hint": "Para onde o `Catch` mandou a execução?",
+    "choices": [
+      {
+        "text": "O moto renomeia erros do SQS",
+        "why": "O moto manteve o erro do SQS nos eventos da tarefa; o nome veio do documento."
+      },
+      {
+        "text": "A execução terminou num estado `Fail`, que dá nome ao próprio erro",
+        "why": "Isso. O erro do SQS continua nos eventos `TaskFailed`."
+      },
+      {
+        "text": "`States.ALL` transforma todo erro em `NotifyFailed`",
+        "why": "`States.ALL` só casa erros; ele não renomeia nada."
+      },
+      {
+        "text": "Só o erro da última tentativa é guardado",
+        "why": "Cada tentativa que falhou está no histórico com o próprio erro."
+      }
+    ]
+  },
+  "ex-8n7g55r3": {
+    "prompt": "A lista `Retry` de uma tarefa tem `States.ALL` primeiro, depois `States.Timeout` com um intervalo maior. O que está errado?",
+    "hint": "As regras são tentadas em ordem.",
+    "choices": [
+      {
+        "text": "Nada; a regra mais específica vence onde quer que esteja",
+        "why": "As regras são tentadas em ordem e a primeira que casa vence."
+      },
+      {
+        "text": "Um timeout não pode ser tentado de novo",
+        "why": "`States.Timeout` pode ser tentado de novo como qualquer erro."
+      },
+      {
+        "text": "`States.ALL` precisa vir por último, então a AWS recusa a definição",
+        "why": "Isso. Ele é o pega-tudo, e nada depois dele poderia ser alcançado."
+      },
+      {
+        "text": "`States.Timeout` só vale dentro de um `Catch`",
+        "why": "Nomes de erro valem tanto em `Retry` quanto em `Catch`."
+      }
+    ]
+  },
+  "ex-jy9tg6k5": {
+    "prompt": "Um passo de pagamento tem um `Retry`. Que valor ele deve mandar ao provedor de pagamento como chave de idempotência?",
+    "hint": "Ele precisa ser o mesmo em toda tentativa do mesmo trabalho.",
+    "choices": [
+      {
+        "text": "`$$.Execution.Name`",
+        "why": "Isso. Único por execução e igual entre novas tentativas."
+      },
+      {
+        "text": "Um UUID novo gerado a cada tentativa",
+        "why": "Aí cada nova tentativa parece um pagamento novo, que é o problema."
+      },
+      {
+        "text": "A hora em que a tentativa começou",
+        "why": "Ela muda a cada tentativa."
+      },
+      {
+        "text": "`$$.Task.Token`",
+        "why": "Um token só existe em tarefas com callback, e é um identificador de espera, não uma chave."
+      }
+    ]
+  },
+  "ex-f5v1gkrf": {
+    "prompt": "Com valor `FULL`, o campo de nova tentativa `___` sorteia cada intervalo, para que mil execuções falhando juntas não tentem todas no mesmo segundo.",
+    "hint": "Duas palavras juntas, no estilo de `BackoffRate`.",
+    "blanks": [
+      {
+        "accept": [
+          "JitterStrategy"
+        ]
+      }
+    ]
+  },
+  "ex-egsqdjk2": {
+    "prompt": "Num workflow Standard, como o preço de um `Wait` de uma semana se compara com o de um `Wait` de um segundo?",
+    "hint": "O que o Standard cobra?",
+    "choices": [
+      {
+        "text": "Uma semana custa umas 600.000 vezes mais",
+        "why": "O Standard cobra transições, não tempo passado num estado."
+      },
+      {
+        "text": "O mesmo",
+        "why": "Isso. O estado são as mesmas transições, e o tempo é de graça."
+      },
+      {
+        "text": "Uma semana é recusada; um `Wait` dura no máximo cinco minutos",
+        "why": "Cinco minutos é o limite do Express para a execução inteira, não de um `Wait` no Standard."
+      },
+      {
+        "text": "Uma semana custa uma transição por hora esperada",
+        "why": "Uma espera não conta o tempo; o estado entra uma vez e sai uma vez."
+      }
+    ]
+  },
+  "ex-9egkvnwp": {
+    "prompt": "Uma tarefa `.waitForTaskToken` tem `TimeoutSeconds: 86400` e `HeartbeatSeconds: 300`. O worker manda um heartbeat e depois cai. Quando a tarefa falha, e com o quê?",
+    "hint": "Qual dos dois limites acaba primeiro?",
+    "choices": [
+      {
+        "text": "Uns cinco minutos depois, com `States.HeartbeatTimeout`",
+        "why": "Isso. Silêncio maior que `HeartbeatSeconds` faz a tarefa falhar."
+      },
+      {
+        "text": "Depois de um dia, com `States.Timeout`",
+        "why": "O limite de heartbeat acaba muito antes do dia."
+      },
+      {
+        "text": "Nunca: um worker que caiu a deixa esperando um ano inteiro",
+        "why": "Os dois limites estão definidos, e qualquer um encerra a espera."
+      },
+      {
+        "text": "Na hora, com `States.TaskFailed`",
+        "why": "Ninguém avisa o Step Functions de uma queda; ele percebe o silêncio."
+      }
+    ]
+  },
+  "ex-07m3ny9a": {
+    "prompt": "Ligue cada trabalho ao jeito como o estado deve esperá-lo.",
+    "hint": "Quem decide que a espera acabou?",
+    "pairs": [
+      {
+        "left": "mandar um lembrete na hora que o cliente escolheu",
+        "right": "`Wait` com `TimestampPath`"
+      },
+      {
+        "left": "um gerente aprova um reembolso",
+        "right": "`.waitForTaskToken`"
+      },
+      {
+        "left": "uma tarefa ECS que precisa terminar antes do próximo passo",
+        "right": "`.sync`"
+      },
+      {
+        "left": "iniciar um relatório que ninguém espera",
+        "right": "a integração sem sufixo"
+      }
+    ],
+    "right_distractors": [
+      "um workflow Express com um `Wait` longo"
+    ]
+  },
+  "ex-b87p7fc3": {
+    "prompt": "O sistema da loja recebe uma mensagem com um task token da AWS. O que ele deve fazer com o token?",
+    "hint": "Ele tem até 1.024 caracteres e é feito para ser opaco.",
+    "choices": [
+      {
+        "text": "Ler o id do pedido de dentro dele",
+        "why": "Nada nele é para ser lido; o pedido viaja ao lado dele na mensagem."
+      },
+      {
+        "text": "Encurtá-lo para um UUID, como os tokens do moto",
+        "why": "Os tokens do moto são curtos; os da AWS não, e um token cortado não casa com nada."
+      },
+      {
+        "text": "Passá-lo ao `start-execution` para retomar o workflow",
+        "why": "Isso inicia uma execução nova; a que espera só retoma com uma chamada send-task."
+      },
+      {
+        "text": "Guardá-lo inteiro e devolvê-lo depois",
+        "why": "Isso, com `send-task-success` ou `send-task-failure`. Ele é um identificador de uma tarefa em espera, e nada mais."
+      }
+    ]
+  },
+  "ex-40xns0bp": {
+    "prompt": "Toda foto enviada ao S3 vira três miniaturas: 200.000 fotos por dia, cada uma pronta em menos de três segundos, e uma repetição só sobrescreve os mesmos três arquivos. Qual tipo de workflow se encaixa?",
+    "hint": "Curto, numeroso e seguro de repetir.",
+    "choices": [
+      {
+        "text": "Standard, porque roda exatamente uma vez",
+        "why": "Exatamente uma vez não compra nada quando a repetição é inofensiva, e custa por transição."
+      },
+      {
+        "text": "Express",
+        "why": "Isso: menos de cinco minutos, muitas execuções, e idempotente por natureza."
+      },
+      {
+        "text": "Standard com `.waitForTaskToken` em cada miniatura",
+        "why": "Ninguém devolve token aqui; o trabalho é do próprio serviço."
+      },
+      {
+        "text": "Nenhum: uma máquina de estados não pode ser iniciada pelo S3",
+        "why": "Uma regra do EventBridge no upload inicia uma, como a aula 21 mostra."
+      }
+    ]
+  },
+  "ex-zy6xf1j9": {
+    "prompt": "Quais destas coisas o laboratório desta aula realmente mostrou? Escolha todas as que se aplicam.",
+    "hint": "O moto rodou o interpretador; parte do comportamento da AWS ele pula.",
+    "choices": [
+      {
+        "text": "Intervalos de nova tentativa de um e depois dois segundos reais",
+        "why": "Sim, nos horários da `order-45`."
+      },
+      {
+        "text": "Uma execução Express parada em cinco minutos",
+        "why": "O moto guardou a máquina como Standard e não aplica esse limite."
+      },
+      {
+        "text": "Um task token devolvido, e a execução terminando",
+        "why": "Sim, a `order-46`."
+      },
+      {
+        "text": "Uma definição quebrada recusada com `InvalidDefinition`",
+        "why": "O moto criou a `broken`; a recusa é o comportamento documentado da AWS."
+      },
+      {
+        "text": "Uma mensagem mandada ao SQS por um `Task`, sem função",
+        "why": "Sim; o `receive-message` imprimiu `42`."
+      }
+    ]
+  },
+  "ex-jx4k18fs": {
+    "prompt": "Um workflow Standard de 6 passos roda 100.000 vezes por mês, e em média um passo é tentado de novo duas vezes por execução. A 37,5 USD por milhão de transições, quanto custa o mês?",
+    "hint": "Cada nova tentativa também é uma transição.",
+    "unit": "USD"
+  }
+}

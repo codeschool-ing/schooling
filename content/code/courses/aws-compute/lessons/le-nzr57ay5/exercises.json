@@ -1,0 +1,619 @@
+[
+  {
+    "id": "ex-hxgwm4rg",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the four numbers read off a request profile, which one does Lambda's bill follow, at a fixed duration and memory size?",
+    "hint": "Lambda pays per request and per GB-second of each request.",
+    "choices": [
+      {
+        "text": "The peak hour",
+        "correct": false,
+        "why": "The peak sizes instances and tasks. A function adds environments as requests arrive and pays for none in advance."
+      },
+      {
+        "text": "The number of idle hours",
+        "correct": false,
+        "why": "Idle hours cost a function nothing, so they are where it gains, but they do not set its bill."
+      },
+      {
+        "text": "The volume",
+        "correct": true,
+        "why": "Right: how many requests arrive in the month. With duration and memory fixed, the bill is the volume times a price per request."
+      },
+      {
+        "text": "The hour of the day the traffic starts",
+        "correct": false,
+        "why": "A function is billed the same at 03:00 as at 15:00."
+      }
+    ]
+  },
+  {
+    "id": "ex-smq0rar8",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service takes 20 requests a second for 12 hours a day and none in the other 12. Over the average month of 730 hours (30.42 days), how many requests is that, in millions, to two decimal places?",
+    "hint": "Requests a day, then times 730 / 24.",
+    "value": 26.28,
+    "tolerance": 0.01,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-7c7sfbfz",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The office profile carries 59.13 million requests a month, which averages 22.5 a second. Why is the average the wrong number to price it with?",
+    "hint": "Which two numbers does an average flatten?",
+    "choices": [
+      {
+        "text": "It hides the peak of 60 and the 15 silent hours",
+        "correct": true,
+        "why": "Right. Containers are sized for the peak, and a function and App Runner gain from the silent hours; two services with the same average can need opposite answers."
+      },
+      {
+        "text": "It is wrong arithmetic: 59.13 million a month is closer to 60 a second",
+        "correct": false,
+        "why": "The arithmetic holds: 59.13 million over 2,628,000 seconds is 22.5. The trouble is what it leaves out."
+      },
+      {
+        "text": "Averages are in requests a second, and AWS prices by the hour",
+        "correct": false,
+        "why": "Units convert. The problem is the shape of the day, which no conversion brings back."
+      },
+      {
+        "text": "The average ignores the request duration",
+        "correct": false,
+        "why": "Neither the average nor the profile carries duration; it is the fourth number, read separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-9hhystmt",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Concurrency, the number of requests in flight at once, is the rate of requests multiplied by their ___.",
+    "hint": "Lesson 16 used Little's law: 60 a second at 100 ms each is six at once.",
+    "blanks": [
+      {
+        "accept": [
+          "duration",
+          "average duration",
+          "latency"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-shpcc0q2",
+    "version": 1,
+    "section": "the-request-profile",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each number read off a request profile to the part of the bill it drives.",
+    "hint": "Which meter or which sizing decision does each one feed?",
+    "pairs": [
+      {
+        "left": "the volume",
+        "right": "Lambda's requests and GB-seconds"
+      },
+      {
+        "left": "the peak",
+        "right": "How many instances or tasks must run"
+      },
+      {
+        "left": "the idle hours",
+        "right": "Where App Runner pays memory alone"
+      },
+      {
+        "left": "the duration",
+        "right": "The GB-seconds, and which timeouts apply"
+      }
+    ],
+    "right_distractors": [
+      "The tax rate of the region"
+    ]
+  },
+  {
+    "id": "ex-1bm0p6v6",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In compare.py's table, App Runner is the cheapest option for the office profile, at 27.74 USD. What makes it cheaper there than on the steady profile?",
+    "hint": "Count the hours with no request.",
+    "choices": [
+      {
+        "text": "Office has fewer requests in the month",
+        "correct": false,
+        "why": "App Runner does not bill per request; 59.13 against 78.84 million is not what moves its column."
+      },
+      {
+        "text": "Its 15 idle hours a day pay memory only, not the processor",
+        "correct": true,
+        "why": "Right. Steady has no idle hour, so it pays both meters around the clock: 56.94."
+      },
+      {
+        "text": "App Runner charges its us-east-1 price only during office hours",
+        "correct": false,
+        "why": "The us-east-1 price applies to every row alike."
+      },
+      {
+        "text": "Its peak of 60 is lower than the steady profile's",
+        "correct": false,
+        "why": "The office peak of 60 is the higher of the two; steady runs at 30."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykkynh63",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In compare.py, change MS from 100 to 200 and keep everything else. Two Fargate tasks still cost 49.596 USD a month; a request now costs 0.2 USD per million plus 0.1 GB-second at 0.0000133334. At how many million requests a month does Lambda cost the same as the two tasks? Two decimal places.",
+    "hint": "Price per request first, then divide the tasks' month by it.",
+    "value": 32.35,
+    "tolerance": 0.02,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-aqkfa494",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "EC2 shows the same 162.21 USD on every row of compare.py's table, and is the dearest option on three of the four. What is the table telling you?",
+    "hint": "How much traffic do two c7g.large serve before a third is needed?",
+    "choices": [
+      {
+        "text": "That the sheet's EC2 prices for São Paulo are wrong, too high for this machine",
+        "correct": false,
+        "why": "The price is the sheet's, 0.1111 an hour; nothing about it is wrong."
+      },
+      {
+        "text": "That instances do not scale, so the program is unable to add one when traffic grows",
+        "correct": false,
+        "why": "The program sizes instances hour by hour like everything else; up to 400 a second, two are enough."
+      },
+      {
+        "text": "That a small service cannot fill the smallest instance worth running",
+        "correct": true,
+        "why": "Right. Two machines of 2 vCPU are capacity for 400 a second, and only the busy profile fills them."
+      },
+      {
+        "text": "That EC2 bills per request at a higher rate than Lambda",
+        "correct": false,
+        "why": "EC2 bills by the hour whatever the requests; that is exactly why the figure never moves."
+      }
+    ]
+  },
+  {
+    "id": "ex-x1xpnzby",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does compare.py leave out of its prices? Choose all that apply.",
+    "hint": "Think about what sits in front of the compute, and what a contract changes.",
+    "choices": [
+      {
+        "text": "The load balancer that EC2 and Fargate need in front of them",
+        "correct": true,
+        "why": "Its price is not on this course's sheet; aws-foundations lesson 22 prices it."
+      },
+      {
+        "text": "Savings Plans and Reserved Instance discounts",
+        "correct": true,
+        "why": "The sheet is on-demand list prices only."
+      },
+      {
+        "text": "Lambda's price per million requests",
+        "correct": false,
+        "why": "It is in: 0.2 USD per million, read from the sheet."
+      },
+      {
+        "text": "The minutes an auto scaling group takes to react",
+        "correct": true,
+        "why": "The program sizes every hour perfectly, which a real group never does."
+      },
+      {
+        "text": "Fargate's memory price",
+        "correct": false,
+        "why": "It is in: 0.00612 USD per GB-hour on Arm, read from the sheet."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m4fapex",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With compare.py's assumptions, a request runs 100 ms in a 512 MB function on Arm. At 0.2 USD per million requests and 0.0000133334 USD per GB-second, what does one million requests cost, in USD, to four decimal places?",
+    "hint": "One request is 0.1 s × 0.5 GB of GB-seconds.",
+    "value": 0.8667,
+    "tolerance": 0.0001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-57tb5stg",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "According to the API documentation for create-function, how long may an ordinary Lambda function run before it is stopped?",
+    "hint": "The default is 3 seconds; the question is the ceiling.",
+    "choices": [
+      {
+        "text": "29 seconds",
+        "correct": false,
+        "why": "That is a REST API integration's default timeout in API Gateway, not the function's."
+      },
+      {
+        "text": "900 seconds",
+        "correct": true,
+        "why": "Right: fifteen minutes. A job longer than that has to be split, moved to a task, or orchestrated."
+      },
+      {
+        "text": "30 seconds",
+        "correct": false,
+        "why": "That is the most an HTTP API integration waits."
+      },
+      {
+        "text": "One hour, 3,600 seconds",
+        "correct": false,
+        "why": "No such limit is documented for an ordinary function; 900 seconds is the ceiling."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2fphtxt",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An export endpoint takes 45 seconds to answer. The team wants to put it on Lambda behind an HTTP API. What has to change?",
+    "hint": "Which limit is shorter here, the function's or the integration's?",
+    "choices": [
+      {
+        "text": "Nothing; 45 seconds is well inside Lambda's fifteen minutes",
+        "correct": false,
+        "why": "The function would finish, but the HTTP API stops waiting at 30 seconds, and the caller gets an error."
+      },
+      {
+        "text": "Raise the HTTP API integration timeout to 60 seconds",
+        "correct": false,
+        "why": "An HTTP API integration allows 30 seconds at most. Only REST APIs, Regional or private, can go past 29."
+      },
+      {
+        "text": "Turn it into a queued job the client collects later",
+        "correct": true,
+        "why": "Right: accept the request, queue the work, and let the client collect the result. The request returns at once, and the 45 seconds happen outside any integration timeout."
+      },
+      {
+        "text": "Give the function more memory so it answers within the limit",
+        "correct": false,
+        "why": "More memory buys more CPU and might shorten it, but nothing says it reaches 30 seconds; the design should not depend on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b2f4rvc",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The 45-second export becomes a job. Put the steps in the order they happen.",
+    "hint": "The caller hears back first; the work comes after.",
+    "items": [
+      "The API accepts the request and answers with a job id",
+      "A message describing the export goes onto a queue",
+      "A worker takes the message and builds the export",
+      "The client asks for the job and downloads the result"
+    ],
+    "trap": "Building the export before answering is the synchronous endpoint again, and the 30-second limit with it."
+  },
+  {
+    "id": "ex-jprsxtyk",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto created a function with --timeout 901 and an HTTP API integration of 120,000 ms without complaint. What should you conclude?",
+    "hint": "Who enforces a limit: the imitation, or the service?",
+    "choices": [
+      {
+        "text": "AWS has raised both limits, and moto follows its newest model",
+        "correct": false,
+        "why": "The command line's own model still documents 900 seconds and 30,000 ms. moto simply does not check."
+      },
+      {
+        "text": "The limits apply only in us-east-1",
+        "correct": false,
+        "why": "Nothing in the documentation ties them to a region; moto would accept the same values anywhere."
+      },
+      {
+        "text": "moto skips these checks; AWS refuses both calls",
+        "correct": true,
+        "why": "Right, and the limit has to be read in the documentation. A limit met only in an imitation is a limit not yet met."
+      },
+      {
+        "text": "The AWS CLI rewrote the values to legal ones before sending them",
+        "correct": false,
+        "why": "moto answered 901 and 120000 back; the values went through unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9eazz5r",
+    "version": 1,
+    "section": "effort-to-migrate",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Lambda function's /tmp is 512 MB by default and can be configured up to ___ MB, according to the API's documentation.",
+    "hint": "Ten gigabytes, written in megabytes.",
+    "blanks": [
+      {
+        "accept": [
+          "10240",
+          "10,240",
+          "10 240"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5nbxbb01",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the shop's profile, App Runner comes out at 56.94 USD, the same as for the steady profile. Why does it not gain from the shop's quiet nights?",
+    "hint": "Look at the rate between midnight and 07:00.",
+    "choices": [
+      {
+        "text": "The nights are not quiet: 2 requests a second keep its instances active, so the processor is billed all night",
+        "correct": true,
+        "why": "Right. With silent nights the same profile costs 41.37."
+      },
+      {
+        "text": "App Runner bills by the month, whatever the traffic",
+        "correct": false,
+        "why": "It bills memory and processor by the hour; the 41.37 of silent nights proves the traffic matters."
+      },
+      {
+        "text": "The evening peak of 80 needs a third instance all day",
+        "correct": false,
+        "why": "Two instances serve up to 100 a second in the program, so 80 fits in the two it keeps."
+      },
+      {
+        "text": "App Runner's us-east-1 price rises at night",
+        "correct": false,
+        "why": "There is one price per meter, at any hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-qks9ef55",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "compare.py prices the shop at 56.94 USD on App Runner with a trickle of 2 a second at night, and at 41.37 USD with silent nights. How much does the trickle cost a month, in USD?",
+    "hint": "A subtraction.",
+    "value": 15.57,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-s533xbtg",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which number, written down beside the shop's decision, would reopen it in favour of Lambda?",
+    "hint": "The last line of compare.py.",
+    "choices": [
+      {
+        "text": "An evening peak that climbs above 100 requests a second for an hour",
+        "correct": false,
+        "why": "A higher peak adds tasks and makes the containers dearer, but it is not the break-even with Lambda."
+      },
+      {
+        "text": "Average traffic staying below about 21.8 requests a second",
+        "correct": true,
+        "why": "Right. Below that, a function costs less than the two tasks the shop keeps."
+      },
+      {
+        "text": "Traffic growing towards 400 a second",
+        "correct": false,
+        "why": "That reopens it in favour of instances and a Savings Plan, as the busy row shows."
+      },
+      {
+        "text": "The report taking longer than six minutes",
+        "correct": false,
+        "why": "The report decides where the report runs, not where the API runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkgacaj6",
+    "version": 1,
+    "section": "a-worked-choice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The six-minute sales report fits inside Lambda's fifteen minutes. Why did the shop run it as a scheduled Fargate task instead?",
+    "hint": "What already exists, and what would have to be built?",
+    "choices": [
+      {
+        "text": "Lambda refuses jobs started by a schedule",
+        "correct": false,
+        "why": "A schedule can invoke a function; that is a common use of one."
+      },
+      {
+        "text": "A Fargate task is free when it runs only once a night",
+        "correct": false,
+        "why": "It is billed for the minutes it runs, like every task."
+      },
+      {
+        "text": "It reuses the image the API already builds, so nothing new has to be packaged",
+        "correct": true,
+        "why": "Right. Both would work; the task costs the shop no new packaging and no new skill."
+      },
+      {
+        "text": "Six minutes is over the HTTP API's 30 seconds",
+        "correct": false,
+        "why": "The report is not called through an API at all; that limit does not touch it."
+      }
+    ]
+  },
+  {
+    "id": "ex-chs1m812",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A webhook receiver gets about 5,000 calls a day, at random hours, each running 200 ms. Nobody knows when the next one comes. Which option does this lesson's arithmetic point to?",
+    "hint": "Volume, peak and idle hours: which of them is large here?",
+    "choices": [
+      {
+        "text": "Two Fargate tasks, for availability",
+        "correct": false,
+        "why": "Two tasks cost 49.60 a month to wait for 5,000 calls a day; that is paying for almost nothing but idle hours."
+      },
+      {
+        "text": "App Runner, since its instances sleep between calls",
+        "correct": false,
+        "why": "It is closed to new customers, and between calls it still pays memory for every provisioned instance."
+      },
+      {
+        "text": "Lambda",
+        "correct": true,
+        "why": "Right. About 152,000 requests a month cost cents as functions; every other option pays for the hours nobody calls."
+      },
+      {
+        "text": "Two c7g.large instances, the smallest that are not burstable",
+        "correct": false,
+        "why": "That is 162.21 a month, the dearest option on every small profile."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qp82494",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application is moving from EC2 to Lambda. Which of its habits have to change before it can move? Choose all that apply.",
+    "hint": "Which assume a machine that stays, a process that stays, or a lot of time?",
+    "choices": [
+      {
+        "text": "It keeps user sessions in the process's memory",
+        "correct": true,
+        "why": "Each concurrent request can land in a different environment, and an environment can vanish."
+      },
+      {
+        "text": "It writes uploaded files to its local disk",
+        "correct": true,
+        "why": "/tmp lasts one execution environment; the files have to go to S3 or EFS."
+      },
+      {
+        "text": "It runs a twenty-minute reconciliation every night",
+        "correct": true,
+        "why": "That is past the 900-second limit; it has to be split or moved to a task."
+      },
+      {
+        "text": "It reads its configuration from environment variables",
+        "correct": false,
+        "why": "Functions have environment variables too; this habit travels as it is."
+      },
+      {
+        "text": "It is written in Python",
+        "correct": false,
+        "why": "Python is a managed Lambda runtime; the language is not the obstacle."
+      }
+    ]
+  },
+  {
+    "id": "ex-9g9dhj3r",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The steady profile carries 78.84 million requests a month. If each request ran 50 ms instead of 100, still in 512 MB on Arm (0.2 USD per million requests, 0.0000133334 USD per GB-second), what would Lambda cost a month, in USD, to the cent?",
+    "hint": "One request is now 0.05 s × 0.5 GB of GB-seconds.",
+    "value": 42.05,
+    "tolerance": 0.02,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-2h9p60w1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four options for the nightly profile in order, from the cheapest to the dearest, as compare.py priced them.",
+    "hint": "Twenty-two silent hours a day.",
+    "items": [
+      "Lambda, Arm",
+      "App Runner",
+      "Fargate, Arm",
+      "EC2 c7g.large"
+    ],
+    "trap": "Putting Fargate before App Runner forgets that App Runner pays memory alone in the silent hours."
+  },
+  {
+    "id": "ex-m54pj1nc",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Writing down the requests per second for each hour of an ordinary day gives the service's request ___.",
+    "hint": "Twenty-four numbers, one per hour.",
+    "blanks": [
+      {
+        "accept": [
+          "profile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

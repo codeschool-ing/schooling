@@ -1,0 +1,490 @@
+[
+  {
+    "id": "ex-5fvgxzhr",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which section is the only one a CloudFormation template must have?",
+    "hint": "Without it there is nothing to create.",
+    "choices": [
+      {
+        "text": "Parameters",
+        "correct": false,
+        "why": "Parameters are optional; many templates have none."
+      },
+      {
+        "text": "Resources",
+        "correct": true,
+        "why": "Right. A template with no resources describes nothing to make."
+      },
+      {
+        "text": "Outputs",
+        "correct": false,
+        "why": "Outputs publish values and are optional."
+      },
+      {
+        "text": "Conditions",
+        "correct": false,
+        "why": "Conditions are optional, used to create a resource or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dnqad8z",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "cfn-lint reports W3011 on a bucket with `DeletionPolicy: Retain`. What is still unprotected?",
+    "hint": "Deleting a stack is one way to lose a resource; there is another.",
+    "choices": [
+      {
+        "text": "The bucket's objects, which Retain never covers",
+        "correct": false,
+        "why": "Retain keeps the bucket with its objects; the gap is a different event."
+      },
+      {
+        "text": "An update that replaces the bucket",
+        "correct": true,
+        "why": "Right. Replacement deletes the old resource unless UpdateReplacePolicy is Retain too."
+      },
+      {
+        "text": "Deleting the stack from the console instead of the CLI",
+        "correct": false,
+        "why": "The policy applies however the delete is asked for."
+      },
+      {
+        "text": "Turning on versioning later",
+        "correct": false,
+        "why": "Versioning changes in place and threatens nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-s29b0mc8",
+    "version": 1,
+    "section": "anatomy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why run cfn-lint in the build, before `aws cloudformation deploy`?",
+    "hint": "Compare where each one finds the mistake.",
+    "choices": [
+      {
+        "text": "Because CloudFormation does not validate templates at all",
+        "correct": false,
+        "why": "It does, at the moment the stack is created or updated, which is the problem."
+      },
+      {
+        "text": "Because cfn-lint deploys faster than CloudFormation",
+        "correct": false,
+        "why": "cfn-lint deploys nothing; it only reads the file."
+      },
+      {
+        "text": "Because AWS charges for every template it validates",
+        "correct": false,
+        "why": "Validation is not billed; the cost of a late error is time and a rolled-back stack."
+      },
+      {
+        "text": "A mistake becomes a failed build, not a stack that failed and rolled back",
+        "correct": true,
+        "why": "Right. Found on the laptop or in the build, the mistake touches nothing in AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vvprw75",
+    "version": 1,
+    "section": "anatomy",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To get the ARN of the resource `Uploads` inside a template, you write `!___ Uploads.Arn`.",
+    "hint": "An intrinsic function that gets one attribute.",
+    "blanks": [
+      {
+        "accept": [
+          "GetAtt"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v72apptr",
+    "version": 1,
+    "section": "stacks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does CloudFormation keep the link between the logical id `WebLogs` and the log group `/shop/web`?",
+    "hint": "Terraform needs a file for this; CloudFormation does not.",
+    "choices": [
+      {
+        "text": "In a state file the CLI writes beside the template",
+        "correct": false,
+        "why": "CloudFormation has no state file; that is Terraform's arrangement."
+      },
+      {
+        "text": "In the stack, readable with describe-stack-resources",
+        "correct": true,
+        "why": "Right. The stack holds logical and physical ids side by side."
+      },
+      {
+        "text": "In a tag on the log group",
+        "correct": false,
+        "why": "CloudFormation adds tags, but the stack is the record it trusts."
+      },
+      {
+        "text": "Nowhere: it looks the resource up by name each time",
+        "correct": false,
+        "why": "Many resources have no name to look up; the stack records ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-en803jt0",
+    "version": 1,
+    "section": "stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A stack's creation fails on its fourth resource. What state is the stack in afterwards, by default?",
+    "hint": "CloudFormation undoes what it made.",
+    "choices": [
+      {
+        "text": "ROLLBACK_COMPLETE, which only deletion gets out of",
+        "correct": true,
+        "why": "Right. The three resources are deleted, and the stack can only be deleted and created again."
+      },
+      {
+        "text": "CREATE_FAILED, with three resources kept for the next attempt",
+        "correct": false,
+        "why": "Keeping the partial work is Terraform's habit, or DO_NOTHING's; the default rolls back."
+      },
+      {
+        "text": "UPDATE_ROLLBACK_COMPLETE, ready to update",
+        "correct": false,
+        "why": "That state follows a failed update, not a failed creation."
+      },
+      {
+        "text": "DELETE_COMPLETE, gone as if never created",
+        "correct": false,
+        "why": "The stack stays, in a rolled-back state, so its events can be read."
+      }
+    ]
+  },
+  {
+    "id": "ex-v6vcsmct",
+    "version": 1,
+    "section": "stacks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab deleted the stack `shop-base`. Why was the bucket still listed afterwards?",
+    "hint": "Look at the bucket's policies in the template.",
+    "choices": [
+      {
+        "text": "moto never deletes buckets",
+        "correct": false,
+        "why": "The log group from the same stack was deleted; the bucket was kept on purpose."
+      },
+      {
+        "text": "A bucket with versioning cannot be deleted at all",
+        "correct": false,
+        "why": "A versioned bucket can be deleted once empty; versioning was not the reason."
+      },
+      {
+        "text": "Deleting a stack keeps every resource for 30 days",
+        "correct": false,
+        "why": "No such grace period exists; the log group went at once."
+      },
+      {
+        "text": "Its DeletionPolicy is Retain",
+        "correct": true,
+        "why": "Right. Retain keeps the resource when the stack goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4ws4ynb",
+    "version": 1,
+    "section": "change-sets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a change set, which value of `Replacement` should make you stop and explain it before executing?",
+    "hint": "Which one deletes a resource and makes a new one?",
+    "choices": [
+      {
+        "text": "False",
+        "correct": false,
+        "why": "False means the resource changes in place."
+      },
+      {
+        "text": "True, and Conditional read as True",
+        "correct": true,
+        "why": "Right. Both may delete the resource and create a new one."
+      },
+      {
+        "text": "None",
+        "correct": false,
+        "why": "A real change set says True, False or Conditional; None is moto's."
+      },
+      {
+        "text": "Import",
+        "correct": false,
+        "why": "Import is an Action, not a value of Replacement."
+      }
+    ]
+  },
+  {
+    "id": "ex-re5r58y1",
+    "version": 1,
+    "section": "change-sets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A change set raises a log group's retention from 14 to 30 days and renames the uploads bucket. Which line will say `Replacement: True`?",
+    "hint": "Which property identifies the resource?",
+    "choices": [
+      {
+        "text": "The log group's, because its retention doubles",
+        "correct": false,
+        "why": "Retention changes in place; the log group stays the same one."
+      },
+      {
+        "text": "Both, because any change to a stack replaces its resources",
+        "correct": false,
+        "why": "Most properties change in place; replacement is the exception to look for."
+      },
+      {
+        "text": "The bucket's: a new name means a new bucket",
+        "correct": true,
+        "why": "Right. A bucket's name is its identity; renaming creates another one."
+      },
+      {
+        "text": "Neither, because CloudFormation never replaces a bucket",
+        "correct": false,
+        "why": "It does when the name changes, and deletes the old one unless told to retain it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vjg00v78",
+    "version": 1,
+    "section": "change-sets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto listed `Add` for all three resources in a change set on an existing stack. What does that tell you?",
+    "hint": "What would AWS have computed for a parameter change?",
+    "choices": [
+      {
+        "text": "Nothing about AWS: moto computes change sets as if the stack were empty",
+        "correct": true,
+        "why": "Right. On AWS this change would be one line, Modify WebLogs False."
+      },
+      {
+        "text": "That the update would recreate the stack",
+        "correct": false,
+        "why": "moto computes every change set as if the stack were empty; it says nothing about AWS."
+      },
+      {
+        "text": "That the parameter was not passed",
+        "correct": false,
+        "why": "The parameter was passed; the answer would be the same without it."
+      },
+      {
+        "text": "That the stack had drifted",
+        "correct": false,
+        "why": "Drift is a different comparison, and nothing had changed yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-3g4tdvds",
+    "version": 1,
+    "section": "change-sets",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of updating a production stack in order.",
+    "hint": "Compute, read, then act.",
+    "items": [
+      "Edit the template and run cfn-lint",
+      "Create a change set",
+      "A person reads Action and Replacement",
+      "Execute the change set"
+    ],
+    "trap": "Executing before reading is the slip: update-stack does exactly that."
+  },
+  {
+    "id": "ex-rd4kb4ad",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Somebody changed a log group's retention in the console. The stack's template still says 14 days. What is that called?",
+    "hint": "The resource moved away from the stack.",
+    "choices": [
+      {
+        "text": "A rollback",
+        "correct": false,
+        "why": "A rollback undoes a failed change; nothing failed here."
+      },
+      {
+        "text": "A replacement",
+        "correct": false,
+        "why": "Nothing was replaced; the same log group has another value."
+      },
+      {
+        "text": "A change set",
+        "correct": false,
+        "why": "A change set is computed from a template, before a change."
+      },
+      {
+        "text": "Drift",
+        "correct": true,
+        "why": "Right. Drift is the resource differing from what the stack expects."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgz7tgr0",
+    "version": 1,
+    "section": "drift",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statuses can drift detection report for a resource? Choose all that apply.",
+    "hint": "Four of them, one meaning it was not compared.",
+    "choices": [
+      {
+        "text": "IN_SYNC",
+        "correct": true,
+        "why": "Yes. It matches what the stack expects."
+      },
+      {
+        "text": "MODIFIED",
+        "correct": true,
+        "why": "Yes. At least one property differs."
+      },
+      {
+        "text": "REPLACED",
+        "correct": false,
+        "why": "No. Replacement is a change-set word, not a drift status."
+      },
+      {
+        "text": "NOT_CHECKED",
+        "correct": true,
+        "why": "Yes. The resource type does not support detection."
+      },
+      {
+        "text": "ROLLED_BACK",
+        "correct": false,
+        "why": "No. That belongs to stacks, not to drift."
+      }
+    ]
+  },
+  {
+    "id": "ex-5e79b2eb",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The change made at 2 a.m. was right: one day of logs is what the team wants now. What closes the drift properly?",
+    "hint": "The file is the truth.",
+    "choices": [
+      {
+        "text": "Leave it: the resource is already right",
+        "correct": false,
+        "why": "The next update would put 14 back, undoing the fix at a random moment."
+      },
+      {
+        "text": "Change the template to match, review it, update the stack",
+        "correct": true,
+        "why": "Right. The fix is written down, and the stack and the resource agree again."
+      },
+      {
+        "text": "Update the stack with the current template",
+        "correct": false,
+        "why": "That restores 14 days, the value the team no longer wants."
+      },
+      {
+        "text": "Delete the log group so the stack recreates it",
+        "correct": false,
+        "why": "It loses the logs and recreates the old value."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qn8n5ft",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each CloudFormation feature to the question it answers.",
+    "hint": "One question each.",
+    "pairs": [
+      {
+        "left": "cfn-lint",
+        "right": "Is this file valid before AWS sees it?"
+      },
+      {
+        "left": "A change set",
+        "right": "What will this update do?"
+      },
+      {
+        "left": "Drift detection",
+        "right": "What changed that nobody wrote down?"
+      },
+      {
+        "left": "DeletionPolicy: Retain",
+        "right": "What survives deleting the stack?"
+      }
+    ],
+    "right_distractors": [
+      "Who called the API?"
+    ]
+  },
+  {
+    "id": "ex-gftqrhwt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline should update a CloudFormation stack only after a person has seen what will change. How is that built?",
+    "hint": "Two CloudFormation actions with something between them.",
+    "choices": [
+      {
+        "text": "One action running update-stack, then a manual approval",
+        "correct": false,
+        "why": "The approval would come after the change was made."
+      },
+      {
+        "text": "Run detect-stack-drift and approve if it is IN_SYNC",
+        "correct": false,
+        "why": "Drift says what already changed, not what the update will change."
+      },
+      {
+        "text": "Create a change set, approve manually, then execute it",
+        "correct": true,
+        "why": "Right. CHANGE_SET_REPLACE, an approval, then CHANGE_SET_EXECUTE."
+      },
+      {
+        "text": "Deploy to a copy of the stack first and compare",
+        "correct": false,
+        "why": "A copy can help, but the change set is what shows this stack's changes."
+      }
+    ]
+  }
+]

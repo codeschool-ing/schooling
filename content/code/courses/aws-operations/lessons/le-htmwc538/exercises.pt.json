@@ -1,0 +1,339 @@
+{
+  "ex-5fvgxzhr": {
+    "prompt": "Qual seção é a única que um template do CloudFormation precisa ter?",
+    "hint": "Sem ela não há nada a criar.",
+    "choices": [
+      {
+        "text": "Parameters",
+        "why": "Parameters é opcional; muitos templates não têm."
+      },
+      {
+        "text": "Resources",
+        "why": "Certo. Um template sem recursos não descreve nada a fazer."
+      },
+      {
+        "text": "Outputs",
+        "why": "Outputs publica valores e é opcional."
+      },
+      {
+        "text": "Conditions",
+        "why": "Conditions é opcional, usado para criar ou não um recurso."
+      }
+    ]
+  },
+  "ex-3dnqad8z": {
+    "prompt": "O cfn-lint aponta W3011 num bucket com `DeletionPolicy: Retain`. O que ainda está desprotegido?",
+    "hint": "Excluir a stack é um jeito de perder um recurso; há outro.",
+    "choices": [
+      {
+        "text": "Os objetos do bucket, que Retain nunca cobre",
+        "why": "Retain mantém o bucket com os objetos; a brecha é outro evento."
+      },
+      {
+        "text": "Uma atualização que substitui o bucket",
+        "why": "Certo. A substituição apaga o recurso antigo a menos que UpdateReplacePolicy também seja Retain."
+      },
+      {
+        "text": "Excluir a stack pelo console em vez da CLI",
+        "why": "A política vale de qualquer jeito que a exclusão seja pedida."
+      },
+      {
+        "text": "Ligar o versionamento depois",
+        "why": "O versionamento muda no lugar e não ameaça nada."
+      }
+    ]
+  },
+  "ex-s29b0mc8": {
+    "prompt": "Por que rodar o cfn-lint no build, antes de `aws cloudformation deploy`?",
+    "hint": "Compare onde cada um encontra o erro.",
+    "choices": [
+      {
+        "text": "Porque o CloudFormation não valida templates de jeito nenhum",
+        "why": "Valida, no momento em que a stack é criada ou atualizada, e esse é o problema."
+      },
+      {
+        "text": "Porque o cfn-lint implanta mais rápido que o CloudFormation",
+        "why": "O cfn-lint não implanta nada; ele só lê o arquivo."
+      },
+      {
+        "text": "Porque a AWS cobra por cada template que valida",
+        "why": "Validação não é cobrada; o custo de um erro tardio é tempo e uma stack revertida."
+      },
+      {
+        "text": "Um erro vira um build que falhou, não uma stack que falhou e foi revertida",
+        "why": "Certo. Achado no notebook ou no build, o erro não toca nada na AWS."
+      }
+    ]
+  },
+  "ex-5vvprw75": {
+    "prompt": "Para obter o ARN do recurso `Uploads` dentro de um template, você escreve `!___ Uploads.Arn`.",
+    "hint": "Uma função intrínseca que pega um atributo.",
+    "blanks": [
+      {
+        "accept": [
+          "GetAtt"
+        ]
+      }
+    ]
+  },
+  "ex-v72apptr": {
+    "prompt": "Onde o CloudFormation guarda a ligação entre o id lógico `WebLogs` e o grupo de logs `/shop/web`?",
+    "hint": "O Terraform precisa de um arquivo para isso; o CloudFormation não.",
+    "choices": [
+      {
+        "text": "Num arquivo de estado que a CLI grava ao lado do template",
+        "why": "O CloudFormation não tem arquivo de estado; esse é o arranjo do Terraform."
+      },
+      {
+        "text": "Na stack, legível com describe-stack-resources",
+        "why": "Certo. A stack guarda ids lógicos e físicos lado a lado."
+      },
+      {
+        "text": "Numa tag do grupo de logs",
+        "why": "O CloudFormation acrescenta tags, mas o registro em que ele confia é a stack."
+      },
+      {
+        "text": "Em lugar nenhum: ele procura o recurso pelo nome toda vez",
+        "why": "Muitos recursos não têm nome para procurar; a stack registra ids."
+      }
+    ]
+  },
+  "ex-en803jt0": {
+    "prompt": "A criação de uma stack falha no quarto recurso. Em que estado a stack fica depois, por padrão?",
+    "hint": "O CloudFormation desfaz o que fez.",
+    "choices": [
+      {
+        "text": "ROLLBACK_COMPLETE, de que só a exclusão tira",
+        "why": "Certo. Os três recursos são apagados, e a stack só pode ser excluída e criada de novo."
+      },
+      {
+        "text": "CREATE_FAILED, com três recursos guardados para a próxima tentativa",
+        "why": "Guardar o trabalho parcial é hábito do Terraform, ou do DO_NOTHING; o padrão reverte."
+      },
+      {
+        "text": "UPDATE_ROLLBACK_COMPLETE, pronta para atualizar",
+        "why": "Esse estado vem depois de uma atualização falha, não de uma criação falha."
+      },
+      {
+        "text": "DELETE_COMPLETE, sumida como se nunca tivesse existido",
+        "why": "A stack fica, num estado revertido, para os eventos poderem ser lidos."
+      }
+    ]
+  },
+  "ex-v6vcsmct": {
+    "prompt": "O laboratório excluiu a stack `shop-base`. Por que o bucket ainda aparecia depois?",
+    "hint": "Olhe as políticas do bucket no template.",
+    "choices": [
+      {
+        "text": "O moto nunca apaga buckets",
+        "why": "O grupo de logs da mesma stack foi apagado; o bucket ficou de propósito."
+      },
+      {
+        "text": "Um bucket com versionamento não pode ser apagado de jeito nenhum",
+        "why": "Um bucket versionado pode ser apagado quando vazio; o versionamento não foi o motivo."
+      },
+      {
+        "text": "Excluir uma stack mantém cada recurso por 30 dias",
+        "why": "Esse prazo de carência não existe; o grupo de logs foi embora na hora."
+      },
+      {
+        "text": "A DeletionPolicy dele é Retain",
+        "why": "Certo. Retain mantém o recurso quando a stack vai embora."
+      }
+    ]
+  },
+  "ex-m4ws4ynb": {
+    "prompt": "Num change set, que valor de `Replacement` deve fazer você parar e explicá-lo antes de executar?",
+    "hint": "Qual apaga um recurso e cria um novo?",
+    "choices": [
+      {
+        "text": "False",
+        "why": "False significa que o recurso muda no lugar."
+      },
+      {
+        "text": "True, e Conditional lido como True",
+        "why": "Certo. Os dois podem apagar o recurso e criar um novo."
+      },
+      {
+        "text": "None",
+        "why": "Um change set real diz True, False ou Conditional; None é do moto."
+      },
+      {
+        "text": "Import",
+        "why": "Import é uma Action, não um valor de Replacement."
+      }
+    ]
+  },
+  "ex-re5r58y1": {
+    "prompt": "Um change set aumenta a retenção de um grupo de logs de 14 para 30 dias e renomeia o bucket de uploads. Que linha vai dizer `Replacement: True`?",
+    "hint": "Que propriedade identifica o recurso?",
+    "choices": [
+      {
+        "text": "A do grupo de logs, porque a retenção dobra",
+        "why": "A retenção muda no lugar; o grupo de logs continua o mesmo."
+      },
+      {
+        "text": "As duas, porque qualquer mudança numa stack substitui os recursos",
+        "why": "A maioria das propriedades muda no lugar; a substituição é a exceção a procurar."
+      },
+      {
+        "text": "A do bucket: nome novo significa bucket novo",
+        "why": "Certo. O nome de um bucket é a identidade dele; renomear cria outro."
+      },
+      {
+        "text": "Nenhuma, porque o CloudFormation nunca substitui um bucket",
+        "why": "Substitui quando o nome muda, e apaga o antigo a menos que mandem reter."
+      }
+    ]
+  },
+  "ex-vjg00v78": {
+    "prompt": "O moto listou `Add` para os três recursos num change set de uma stack existente. O que isso diz?",
+    "hint": "O que a AWS teria calculado para uma mudança de parâmetro?",
+    "choices": [
+      {
+        "text": "Nada sobre a AWS: o moto calcula change sets como se a stack estivesse vazia",
+        "why": "Certo. Na AWS essa mudança seria uma linha, Modify WebLogs False."
+      },
+      {
+        "text": "Que a atualização recriaria a stack",
+        "why": "O moto calcula todo change set como se a stack estivesse vazia; isso não diz nada sobre a AWS."
+      },
+      {
+        "text": "Que o parâmetro não foi passado",
+        "why": "O parâmetro foi passado; a resposta seria a mesma sem ele."
+      },
+      {
+        "text": "Que a stack tinha sofrido drift",
+        "why": "Drift é outra comparação, e nada tinha mudado ainda."
+      }
+    ]
+  },
+  "ex-3g4tdvds": {
+    "prompt": "Ponha em ordem os passos de atualizar uma stack de produção.",
+    "hint": "Calcular, ler, depois agir.",
+    "trap": "Executar antes de ler é o deslize: o update-stack faz exatamente isso.",
+    "items": [
+      "Editar o template e rodar o cfn-lint",
+      "Criar um change set",
+      "Uma pessoa lê Action e Replacement",
+      "Executar o change set"
+    ]
+  },
+  "ex-rd4kb4ad": {
+    "prompt": "Alguém mudou a retenção de um grupo de logs no console. O template da stack ainda diz 14 dias. Como isso se chama?",
+    "hint": "O recurso se afastou da stack.",
+    "choices": [
+      {
+        "text": "Um rollback",
+        "why": "Um rollback desfaz uma mudança que falhou; nada falhou aqui."
+      },
+      {
+        "text": "Uma substituição",
+        "why": "Nada foi substituído; o mesmo grupo de logs tem outro valor."
+      },
+      {
+        "text": "Um change set",
+        "why": "Um change set é calculado a partir de um template, antes de uma mudança."
+      },
+      {
+        "text": "Drift",
+        "why": "Certo. Drift é o recurso diferente do que a stack espera."
+      }
+    ]
+  },
+  "ex-qgz7tgr0": {
+    "prompt": "Que estados a detecção de drift pode informar para um recurso? Marque todos os que se aplicam.",
+    "hint": "Quatro, sendo que um significa que não foi comparado.",
+    "choices": [
+      {
+        "text": "IN_SYNC",
+        "why": "Sim. Bate com o que a stack espera."
+      },
+      {
+        "text": "MODIFIED",
+        "why": "Sim. Pelo menos uma propriedade difere."
+      },
+      {
+        "text": "REPLACED",
+        "why": "Não. Substituição é palavra de change set, não estado de drift."
+      },
+      {
+        "text": "NOT_CHECKED",
+        "why": "Sim. O tipo de recurso não suporta a detecção."
+      },
+      {
+        "text": "ROLLED_BACK",
+        "why": "Não. Isso é de stacks, não de drift."
+      }
+    ]
+  },
+  "ex-5e79b2eb": {
+    "prompt": "A mudança feita às 2 da manhã estava certa: um dia de logs é o que a equipe quer agora. O que fecha o drift direito?",
+    "hint": "O arquivo é a verdade.",
+    "choices": [
+      {
+        "text": "Deixar assim: o recurso já está certo",
+        "why": "A próxima atualização poria 14 de volta, desfazendo a correção num momento qualquer."
+      },
+      {
+        "text": "Mudar o template para bater, revisar, atualizar a stack",
+        "why": "Certo. A correção fica escrita, e a stack e o recurso voltam a concordar."
+      },
+      {
+        "text": "Atualizar a stack com o template atual",
+        "why": "Isso restaura 14 dias, o valor que a equipe não quer mais."
+      },
+      {
+        "text": "Apagar o grupo de logs para a stack recriá-lo",
+        "why": "Perde os logs e recria o valor antigo."
+      }
+    ]
+  },
+  "ex-7qn8n5ft": {
+    "prompt": "Ligue cada recurso do CloudFormation à pergunta que ele responde.",
+    "hint": "Uma pergunta para cada.",
+    "pairs": [
+      {
+        "left": "cfn-lint",
+        "right": "Este arquivo é válido antes de a AWS vê-lo?"
+      },
+      {
+        "left": "Um change set",
+        "right": "O que esta atualização vai fazer?"
+      },
+      {
+        "left": "Detecção de drift",
+        "right": "O que mudou sem ninguém escrever?"
+      },
+      {
+        "left": "DeletionPolicy: Retain",
+        "right": "O que sobrevive à exclusão da stack?"
+      }
+    ],
+    "right_distractors": [
+      "Quem chamou a API?"
+    ]
+  },
+  "ex-gftqrhwt": {
+    "prompt": "Uma esteira deve atualizar uma stack do CloudFormation só depois de uma pessoa ver o que vai mudar. Como se monta isso?",
+    "hint": "Duas ações do CloudFormation com algo entre elas.",
+    "choices": [
+      {
+        "text": "Uma ação rodando update-stack, depois uma aprovação manual",
+        "why": "A aprovação viria depois de a mudança estar feita."
+      },
+      {
+        "text": "Rodar detect-stack-drift e aprovar se estiver IN_SYNC",
+        "why": "Drift diz o que já mudou, não o que a atualização vai mudar."
+      },
+      {
+        "text": "Criar um change set, aprovar manualmente, depois executá-lo",
+        "why": "Certo. CHANGE_SET_REPLACE, uma aprovação, depois CHANGE_SET_EXECUTE."
+      },
+      {
+        "text": "Implantar numa cópia da stack primeiro e comparar",
+        "why": "Uma cópia pode ajudar, mas é o change set que mostra as mudanças desta stack."
+      }
+    ]
+  }
+}

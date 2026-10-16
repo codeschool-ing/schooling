@@ -1,0 +1,568 @@
+[
+  {
+    "id": "ex-xq0rnfhh",
+    "version": 1,
+    "section": "site-to-site-vpn",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does creating a customer gateway in AWS actually create?",
+    "hint": "It is `available` the moment it exists.",
+    "choices": [
+      {
+        "text": "A virtual router that AWS runs in the office's network",
+        "correct": false,
+        "why": "AWS runs nothing in the office. The router is the office's own."
+      },
+      {
+        "text": "A record of the office router's public address and BGP number",
+        "correct": true,
+        "why": "Right. It describes the far end of the tunnels; nothing is reached when it is created."
+      },
+      {
+        "text": "The two tunnels, ready for the office to connect to",
+        "correct": false,
+        "why": "The tunnels belong to the VPN connection, which comes after the two gateways."
+      },
+      {
+        "text": "AWS's end of the VPN, attached to the VPC",
+        "correct": false,
+        "why": "That is the virtual private gateway, or a Transit Gateway."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtpwc5e8",
+    "version": 1,
+    "section": "site-to-site-vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To save effort, the office router is configured with only the first of the two tunnels. What does the section say will happen?",
+    "hint": "Who maintains AWS's ends, and how?",
+    "choices": [
+      {
+        "text": "Nothing: the second tunnel is only a spare for heavy traffic",
+        "correct": false,
+        "why": "It is not a spare for load; it is the path that stays up while the other end is maintained."
+      },
+      {
+        "text": "AWS refuses a VPN connection with one tunnel down",
+        "correct": false,
+        "why": "AWS accepts it, which is what makes the mistake possible."
+      },
+      {
+        "text": "The office loses the VPC whenever AWS maintains that tunnel's end",
+        "correct": true,
+        "why": "Right. The two ends are on separate equipment, maintained one at a time; with both tunnels up the other carries the traffic."
+      },
+      {
+        "text": "The single tunnel carries twice the bandwidth",
+        "correct": false,
+        "why": "A tunnel's capacity does not grow because the other one is unused."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwzyqyr9",
+    "version": 1,
+    "section": "site-to-site-vpn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto's `CustomerGatewayConfiguration` shows the customer's outside address as `12.1.2.3` in both tunnels. A colleague wants to load it into the office router. What is the right answer?",
+    "hint": "Compare the document with what the customer gateway was given.",
+    "choices": [
+      {
+        "text": "Load it after replacing `12.1.2.3` with `203.0.113.12`",
+        "correct": false,
+        "why": "One fix would leave identical tunnels, a wrong AWS AS number and keys nobody holds; nothing in it came from an AWS endpoint."
+      },
+      {
+        "text": "Do not: it is moto's template, with values AWS would never give",
+        "correct": true,
+        "why": "Right. The shape matches AWS's documentation; the addresses, the AS number and the identical tunnels are moto's."
+      },
+      {
+        "text": "Load it, since moto answers in AWS's own format",
+        "correct": false,
+        "why": "The format being AWS's says nothing about the values, as lesson 1 warned about moto's answers."
+      },
+      {
+        "text": "Load only the first `<ipsec_tunnel>` block, since the second is a copy",
+        "correct": false,
+        "why": "That repeats the one-tunnel mistake with moto's values on top."
+      }
+    ]
+  },
+  {
+    "id": "ex-dyd3xgke",
+    "version": 1,
+    "section": "site-to-site-vpn",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Every Site-to-Site VPN connection is made of ___ IPsec tunnels.",
+    "hint": "Count the `<ipsec_tunnel>` blocks.",
+    "blanks": [
+      {
+        "accept": [
+          "two",
+          "2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nv2k2qw3",
+    "version": 1,
+    "section": "site-to-site-vpn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The office router speaks BGP. Why does the section recommend BGP over static routes for the VPN?",
+    "hint": "What happens to the routes when a tunnel goes down?",
+    "choices": [
+      {
+        "text": "BGP encrypts the traffic, and static routes do not",
+        "correct": false,
+        "why": "IPsec encrypts the traffic either way. BGP is about routes."
+      },
+      {
+        "text": "Static routes are refused by AWS on a virtual private gateway",
+        "correct": false,
+        "why": "AWS accepts static routing, and the section wrote a static route into the route table."
+      },
+      {
+        "text": "Routes learnt over a dead tunnel are withdrawn, and the other tunnel takes the traffic",
+        "correct": true,
+        "why": "Right. And a new office network is announced rather than typed at both ends."
+      },
+      {
+        "text": "BGP doubles the bandwidth by using both tunnels",
+        "correct": false,
+        "why": "Spreading traffic over both is possible, but the reason given is failover, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z3g7hpf",
+    "version": 1,
+    "section": "site-to-site-vpn",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each object of a Site-to-Site VPN to what it is.",
+    "hint": "Three objects, and one description left over.",
+    "pairs": [
+      {
+        "left": "customer gateway",
+        "right": "AWS's record of the office router"
+      },
+      {
+        "left": "virtual private gateway",
+        "right": "AWS's end, attached to the VPC"
+      },
+      {
+        "left": "VPN connection",
+        "right": "the two tunnels between them"
+      }
+    ],
+    "right_distractors": [
+      "the cable at a colocation building"
+    ]
+  },
+  {
+    "id": "ex-59n0q6m2",
+    "version": 1,
+    "section": "direct-connect",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a Direct Connect location?",
+    "hint": "It is not an AWS region.",
+    "choices": [
+      {
+        "text": "One of the Availability Zones of `sa-east-1`",
+        "correct": false,
+        "why": "A zone is AWS's own datacentre; customers do not bring cables into one."
+      },
+      {
+        "text": "A colocation building where AWS has routers",
+        "correct": true,
+        "why": "Right. Equinix SP4 and Tivit are two in São Paulo; a cross-connect inside joins the two racks."
+      },
+      {
+        "text": "The office, once its router is registered with AWS",
+        "correct": false,
+        "why": "Registering a router is a customer gateway, a VPN object. The location is where the cable meets AWS."
+      },
+      {
+        "text": "An edge location of CloudFront",
+        "correct": false,
+        "why": "Edge locations serve viewers, as lesson 23 showed; they are not where a private link is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-9r3kejas",
+    "version": 1,
+    "section": "direct-connect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop has one office and no rack in any colocation building. Which kind of connection fits it?",
+    "hint": "Somebody has to have equipment in the building.",
+    "choices": [
+      {
+        "text": "A dedicated 10 Gbps connection, ordered from AWS",
+        "correct": false,
+        "why": "A dedicated port ends on the shop's own equipment in that building, which it does not have."
+      },
+      {
+        "text": "A hosted connection from a Direct Connect Partner",
+        "correct": true,
+        "why": "Right. The partner's equipment is in the building, and the shop gets a share of its port, from 50 Mbps."
+      },
+      {
+        "text": "A public virtual interface, which needs no connection",
+        "correct": false,
+        "why": "Every virtual interface rides on a connection. The question is who owns the port."
+      },
+      {
+        "text": "A Direct Connect gateway in `sa-east-1`",
+        "correct": false,
+        "why": "A Direct Connect gateway is global and joins VIFs to VPCs; it does not replace the cable."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfpeqxw1",
+    "version": 1,
+    "section": "direct-connect",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each virtual interface to what it reaches.",
+    "hint": "Three kinds, and one destination none of them reaches.",
+    "pairs": [
+      {
+        "left": "private VIF",
+        "right": "a VPC, through its virtual private gateway"
+      },
+      {
+        "left": "transit VIF",
+        "right": "Transit Gateways, through a Direct Connect gateway"
+      },
+      {
+        "left": "public VIF",
+        "right": "AWS's public addresses, such as S3's"
+      }
+    ],
+    "right_distractors": [
+      "another customer's office"
+    ]
+  },
+  {
+    "id": "ex-h5wrknqq",
+    "version": 1,
+    "section": "direct-connect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, `create-connection` answers `available` at once. What would AWS show for a new dedicated connection?",
+    "hint": "There is a letter and a cable between ordering and light on the fibre.",
+    "choices": [
+      {
+        "text": "`available` too, since the port is reserved at once",
+        "correct": false,
+        "why": "Reserving the port is not the same as a working link. AWS waits for the cross-connect."
+      },
+      {
+        "text": "`ordering`, until the partner accepts it",
+        "correct": false,
+        "why": "That is the start of a hosted connection, which a partner provisions."
+      },
+      {
+        "text": "`requested`, until the LOA and the cross-connect are done",
+        "correct": true,
+        "why": "Right. Between the two there are days or weeks, which is part of choosing a cable over a tunnel."
+      },
+      {
+        "text": "`down`, until the first BGP session comes up",
+        "correct": false,
+        "why": "BGP belongs to a virtual interface, and the connection's state comes before any of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpkcf68z",
+    "version": 1,
+    "section": "direct-connect",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop sends payment data from the office to the VPC over a Direct Connect private VIF and argues that, the cable being private, nothing more is needed. What does the lesson answer?",
+    "hint": "Private and encrypted are two different properties.",
+    "choices": [
+      {
+        "text": "That is right: Direct Connect encrypts every VIF by default",
+        "correct": false,
+        "why": "It does not. The traffic is clear text on the cable."
+      },
+      {
+        "text": "It is not encrypted: add MACsec or a VPN on top",
+        "correct": true,
+        "why": "Right. A private path keeps strangers off it, and still carries clear text that encryption would protect."
+      },
+      {
+        "text": "A public VIF should be used instead, since it is encrypted",
+        "correct": false,
+        "why": "A public VIF reaches AWS's public addresses; it is no more encrypted than a private one."
+      },
+      {
+        "text": "A Direct Connect gateway encrypts traffic between regions",
+        "correct": false,
+        "why": "A Direct Connect gateway routes; it does not encrypt."
+      }
+    ]
+  },
+  {
+    "id": "ex-he97z7c5",
+    "version": 1,
+    "section": "direct-connect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two VPCs, in `sa-east-1` and `us-east-1`, are associated with the same Direct Connect gateway. Can one reach the other through it?",
+    "hint": "What does the gateway route between?",
+    "choices": [
+      {
+        "text": "Yes, that is what a global gateway is for",
+        "correct": false,
+        "why": "It is global so that VIFs reach VPCs in any region, not so that VPCs reach each other."
+      },
+      {
+        "text": "Yes, once both VPCs have route propagation on",
+        "correct": false,
+        "why": "Propagation brings in routes from the office; it does not turn the gateway into a path between VPCs."
+      },
+      {
+        "text": "No: it routes between the VIFs and the VPCs, and VPC-to-VPC traffic is refused",
+        "correct": true,
+        "why": "Right. That is lesson 20's job, with peering or a Transit Gateway."
+      },
+      {
+        "text": "Only if both VPCs are in the same account",
+        "correct": false,
+        "why": "The account changes nothing; the gateway does not carry traffic between VPCs at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwdh63tx",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop wants its link to the VPC to survive a whole building going dark. Which arrangement does that at the lowest number of connections?",
+    "hint": "The building is the thing that fails.",
+    "choices": [
+      {
+        "text": "Two connections at one location, on separate devices",
+        "correct": false,
+        "why": "That survives a device. Both connections are in the building that went dark."
+      },
+      {
+        "text": "One connection at each of two locations",
+        "correct": true,
+        "why": "Right. That is AWS's high-resiliency model: two buildings, one connection each."
+      },
+      {
+        "text": "Two connections at each of two locations",
+        "correct": false,
+        "why": "That also survives it, with four connections where two would do; it is the maximum model."
+      },
+      {
+        "text": "One 10 Gbps connection instead of a 1 Gbps one",
+        "correct": false,
+        "why": "A bigger port is still one port in one building."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1ftxb30",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The office has one Direct Connect connection and a VPN, with the same prefix announced over both by BGP. Which path does AWS use while both are up?",
+    "hint": "One of them is documented as the backup.",
+    "choices": [
+      {
+        "text": "The cable, until it fails",
+        "correct": true,
+        "why": "Right. AWS prefers Direct Connect for the same prefix, and the routes move to the VPN when it goes down."
+      },
+      {
+        "text": "The VPN, since it has two tunnels",
+        "correct": false,
+        "why": "The tunnels are for the VPN's own resilience; they do not make it the preferred road."
+      },
+      {
+        "text": "Both, half the traffic each",
+        "correct": false,
+        "why": "With the same prefix on both, AWS chooses Direct Connect rather than splitting."
+      },
+      {
+        "text": "Whichever was created first",
+        "correct": false,
+        "why": "The order of creation plays no part in route choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pxhhf82",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the lists of 17 September 2026, what does one VPN connection cost for a month of 730 hours, hours only, in dollars?",
+    "hint": "0.05 an hour.",
+    "value": 36.5,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-hr26b7cq",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The office pulls 6,144 GB a month from the VPC. Compare a VPN (0.05 an hour, 0.15 a GB) with a dedicated 1 Gbps port at Equinix SP4 (0.30 an hour, 0.11 a GB), for 730 hours. How many dollars a month does the cheaper one save?",
+    "hint": "Each side is hours plus gigabytes; then subtract.",
+    "value": 63.26,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-s74pzkc0",
+    "version": 1,
+    "section": "resilience-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is billed on a Direct Connect connection in the price list?",
+    "hint": "Two meters, one of them for one direction only.",
+    "choices": [
+      {
+        "text": "Every gigabyte, in both directions",
+        "correct": false,
+        "why": "Traffic into AWS is free over Direct Connect, as from the internet."
+      },
+      {
+        "text": "Only the gigabytes, with the port free",
+        "correct": false,
+        "why": "The port is billed by the hour, 0.30 for 1 Gbps at Equinix SP4."
+      },
+      {
+        "text": "The port's hours, and the gigabytes leaving AWS",
+        "correct": true,
+        "why": "Right. The cross-connect and the circuit to the building are billed by others, outside the list."
+      },
+      {
+        "text": "A flat monthly fee that includes all transfer",
+        "correct": false,
+        "why": "The lines the lesson printed are per hour and per GB."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztpqa1f1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building the shop's VPN, on AWS's side, in order.",
+    "hint": "Each step names an id the one before it made.",
+    "items": [
+      "create the customer gateway for `203.0.113.12`",
+      "create the virtual private gateway",
+      "attach the virtual private gateway to the VPC",
+      "create the VPN connection between the two gateways",
+      "turn on route propagation in the route table"
+    ],
+    "trap": "Creating the connection before attaching the gateway is the usual slip: the tunnels then end on a gateway that leads to no VPC."
+  },
+  {
+    "id": "ex-4x0g3rr8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop will soon have six VPCs in three accounts, and the office needs all of them. Which end for the VPN does the lesson point to?",
+    "hint": "A VPC takes one virtual private gateway, and a VPN connection ends on one gateway.",
+    "choices": [
+      {
+        "text": "Six virtual private gateways, one VPN connection shared by all",
+        "correct": false,
+        "why": "A VPN connection ends on one gateway; six gateways would need six connections and twelve tunnels."
+      },
+      {
+        "text": "A Transit Gateway, with the VPN attached to it once",
+        "correct": true,
+        "why": "Right. Every VPC attached to the Transit Gateway reaches the office through the one connection; the attachment adds 0.09 an hour."
+      },
+      {
+        "text": "A Direct Connect gateway, with VPN connections to it",
+        "correct": false,
+        "why": "A Direct Connect gateway takes virtual interfaces, not VPN connections."
+      },
+      {
+        "text": "One customer gateway per VPC",
+        "correct": false,
+        "why": "The office has one router; more records of it do not give the VPCs a common door."
+      }
+    ]
+  },
+  {
+    "id": "ex-bvh9zes2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, `enable-vgw-route-propagation` answers `500`. What does that tell you about the shop's design?",
+    "hint": "Whose error is it?",
+    "choices": [
+      {
+        "text": "That propagation needs a Transit Gateway, not a virtual private gateway",
+        "correct": false,
+        "why": "Route tables propagate from a virtual private gateway in AWS; the failure was moto's."
+      },
+      {
+        "text": "That the route table must be associated with a subnet first",
+        "correct": false,
+        "why": "It was associated, in the setup. A missing association would not be a server error."
+      },
+      {
+        "text": "Nothing: moto 5.2.3 does not implement it, and AWS would succeed",
+        "correct": true,
+        "why": "Right. A 500 is the server failing, not a refusal of the request; the static route was the part moto could store."
+      },
+      {
+        "text": "That the VPN connection has no tunnels up",
+        "correct": false,
+        "why": "Propagation can be turned on whatever the tunnels' state; routes arrive once they come up."
+      }
+    ]
+  }
+]

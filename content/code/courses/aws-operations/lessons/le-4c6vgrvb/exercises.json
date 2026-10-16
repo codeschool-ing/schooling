@@ -1,0 +1,441 @@
+[
+  {
+    "id": "ex-2q13j0pc",
+    "version": 1,
+    "section": "keys",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each kind of KMS key to who decides its policy.",
+    "hint": "Owned, managed, customer managed.",
+    "pairs": [
+      {
+        "left": "AWS owned",
+        "right": "AWS, and it is not in the account"
+      },
+      {
+        "left": "AWS managed, such as aws/ssm",
+        "right": "AWS; the account can read it"
+      },
+      {
+        "left": "Customer managed",
+        "right": "The team, in the key policy"
+      }
+    ],
+    "right_distractors": [
+      "Whoever last used the key"
+    ]
+  },
+  {
+    "id": "ex-g7najya1",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why pay for a customer managed key when aws/ssm costs no monthly fee?",
+    "hint": "What can the team change?",
+    "choices": [
+      {
+        "text": "Customer managed keys encrypt more strongly",
+        "correct": false,
+        "why": "Both are 256-bit AES in the same hardware."
+      },
+      {
+        "text": "AWS managed keys expire after a year",
+        "correct": false,
+        "why": "They do not expire."
+      },
+      {
+        "text": "Control over who uses the key, in its policy",
+        "correct": true,
+        "why": "Right. A key policy the team writes, and the power to disable or delete."
+      },
+      {
+        "text": "Only customer managed keys are recorded in CloudTrail",
+        "correct": false,
+        "why": "Every KMS request is recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-9996xtvg",
+    "version": 1,
+    "section": "keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A key policy is edited to remove the statement that gives the account's root principal kms:*. What happens to IAM policies that allow kms:Decrypt on that key?",
+    "hint": "Which policy is the root of access?",
+    "choices": [
+      {
+        "text": "They stop mattering",
+        "correct": true,
+        "why": "Right. That statement is what hands the decision to IAM."
+      },
+      {
+        "text": "They keep working, since IAM is checked first",
+        "correct": false,
+        "why": "The key policy is the root; IAM counts only if it delegates."
+      },
+      {
+        "text": "The key is disabled until the statement returns",
+        "correct": false,
+        "why": "The key stays enabled; access changes."
+      },
+      {
+        "text": "The root user loses access but administrators keep it",
+        "correct": false,
+        "why": "Administrators' IAM permissions stop mattering too."
+      }
+    ]
+  },
+  {
+    "id": "ex-b441szaa",
+    "version": 1,
+    "section": "encrypting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did decrypt not need the key's id?",
+    "hint": "Look at what decrypt answered.",
+    "choices": [
+      {
+        "text": "moto guesses the only key there is",
+        "correct": false,
+        "why": "AWS behaves the same with many keys."
+      },
+      {
+        "text": "The alias is stored in the profile",
+        "correct": false,
+        "why": "Nothing was configured."
+      },
+      {
+        "text": "Decrypt uses the default key of the account",
+        "correct": false,
+        "why": "There is no such default for decrypt."
+      },
+      {
+        "text": "The ciphertext names its key",
+        "correct": true,
+        "why": "Right. KMS reads it from the ciphertext."
+      }
+    ]
+  },
+  {
+    "id": "ex-35ms1ebh",
+    "version": 1,
+    "section": "encrypting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A ciphertext was made with --encryption-context order=1001. What does decrypting it without a context do?",
+    "hint": "moto has this right.",
+    "choices": [
+      {
+        "text": "It succeeds, since the context is not secret",
+        "correct": false,
+        "why": "Not secret, and still required."
+      },
+      {
+        "text": "It fails with InvalidCiphertextException",
+        "correct": true,
+        "why": "Right. The context is required, though not secret."
+      },
+      {
+        "text": "It succeeds and returns the context too",
+        "correct": false,
+        "why": "The context is not stored in the ciphertext."
+      },
+      {
+        "text": "It asks for the key's id instead",
+        "correct": false,
+        "why": "The key is in the ciphertext; the context is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5g3833t",
+    "version": 1,
+    "section": "encrypting",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The most that KMS Encrypt accepts in one request is ____ bytes.",
+    "hint": "4 KB.",
+    "blanks": [
+      {
+        "accept": [
+          "4096",
+          "4,096"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9rt9gs4y",
+    "version": 1,
+    "section": "envelope",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In envelope encryption, what does the KMS key encrypt?",
+    "hint": "Look at the figure.",
+    "choices": [
+      {
+        "text": "Only the data key",
+        "correct": true,
+        "why": "Right. The data is encrypted locally with the data key."
+      },
+      {
+        "text": "The file, in 4 KB pieces",
+        "correct": false,
+        "why": "That would be one request per piece; envelope encryption avoids it."
+      },
+      {
+        "text": "The file's name and size",
+        "correct": false,
+        "why": "Neither is encrypted by KMS."
+      },
+      {
+        "text": "Both the file and the data key",
+        "correct": false,
+        "why": "The file never goes to KMS."
+      }
+    ]
+  },
+  {
+    "id": "ex-385q3e1m",
+    "version": 1,
+    "section": "envelope",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 1,
+    "tolerance": 0,
+    "prompt": "How many requests to KMS does envelope.py make to seal a 5 MB file?",
+    "hint": "The size does not matter."
+  },
+  {
+    "id": "ex-54yfn0v6",
+    "version": 1,
+    "section": "envelope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does envelope.py keep the plaintext data key after sealing?",
+    "hint": "Read the sealed file's keys.",
+    "choices": [
+      {
+        "text": "In orders.csv.sealed, base64-encoded",
+        "correct": false,
+        "why": "The file holds the encrypted data key, not the plain one."
+      },
+      {
+        "text": "In ~/.aws, beside the credentials",
+        "correct": false,
+        "why": "Nothing is written there."
+      },
+      {
+        "text": "Nowhere",
+        "correct": true,
+        "why": "Right. It is gone when the function returns."
+      },
+      {
+        "text": "In KMS, under the alias",
+        "correct": false,
+        "why": "KMS does not keep data keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-3tdybyh3",
+    "version": 1,
+    "section": "envelope",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of sealing a file in order.",
+    "hint": "Ask, encrypt, store, forget.",
+    "items": [
+      "Ask KMS for a data key",
+      "Encrypt the file locally with the plain data key",
+      "Write the data and the encrypted data key together",
+      "Discard the plain data key"
+    ]
+  },
+  {
+    "id": "ex-v9dbbg3r",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a KMS key is rotated, what happens to data encrypted before the rotation?",
+    "hint": "Old material is kept.",
+    "choices": [
+      {
+        "text": "It must be re-encrypted within 30 days",
+        "correct": false,
+        "why": "Nothing is re-encrypted."
+      },
+      {
+        "text": "It becomes unreadable",
+        "correct": false,
+        "why": "That is deletion, not rotation."
+      },
+      {
+        "text": "It decrypts only with the old key id",
+        "correct": false,
+        "why": "The id does not change on rotation."
+      },
+      {
+        "text": "It still decrypts, with the old material",
+        "correct": true,
+        "why": "Right. KMS keeps old material for the life of the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvnz02nb",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto decrypted with a key in PendingDeletion. What does AWS do, and why does it matter?",
+    "hint": "The waiting period has a purpose.",
+    "choices": [
+      {
+        "text": "Refuses, so what still needs the key breaks inside the window",
+        "correct": true,
+        "why": "Right. KMSInvalidStateException, inside the window."
+      },
+      {
+        "text": "Decrypts too; the key works until the deletion date",
+        "correct": false,
+        "why": "A pending key cannot be used at all on AWS."
+      },
+      {
+        "text": "Decrypts and sends an e-mail to the account owner",
+        "correct": false,
+        "why": "There is no such e-mail; that alarm is the team's to build."
+      },
+      {
+        "text": "Re-encrypts the data under a new key",
+        "correct": false,
+        "why": "KMS never touches the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf98ngda",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deletion is cancelled. What state is the key in?",
+    "hint": "Somebody has to act again.",
+    "choices": [
+      {
+        "text": "Enabled",
+        "correct": false,
+        "why": "Cancelling does not put a key back into use."
+      },
+      {
+        "text": "Disabled",
+        "correct": true,
+        "why": "Right. It must be enabled on purpose."
+      },
+      {
+        "text": "PendingImport",
+        "correct": false,
+        "why": "That is for imported key material."
+      },
+      {
+        "text": "PendingDeletion, with a new date",
+        "correct": false,
+        "why": "The deletion is cancelled."
+      }
+    ]
+  },
+  {
+    "id": "ex-vhchkh6c",
+    "version": 1,
+    "section": "lifecycle",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 7,
+    "tolerance": 0,
+    "prompt": "What is the shortest waiting period, in days, that schedule-key-deletion accepts?",
+    "hint": "Between 7 and 30.",
+    "unit": "days"
+  },
+  {
+    "id": "ex-gw791qtz",
+    "version": 1,
+    "section": "cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 12,
+    "tolerance": 0.01,
+    "prompt": "An S3 bucket receives 4 million objects a month with SSE-KMS and no Bucket Key. At 0.03 USD per 10,000 requests, what do the writes cost in KMS requests, in USD?",
+    "hint": "4,000,000 / 10,000 × 0.03",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-c1yp0cng",
+    "version": 1,
+    "section": "cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 3,
+    "tolerance": 0,
+    "prompt": "A customer managed key is rotated once a year. Per AWS's documentation, what is its monthly fee in USD after the third rotation?",
+    "hint": "The first two rotations add a fee; later ones do not.",
+    "unit": "USD"
+  },
+  {
+    "id": "ex-bafq3d62",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does KMS behave the same on in moto and on AWS? Choose all that apply.",
+    "hint": "One of them is moto's mistake.",
+    "choices": [
+      {
+        "text": "Refusing a decrypt without the encryption context",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Refusing to encrypt more than 4,096 bytes",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Leaving a key Disabled after a cancelled deletion",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Decrypting with a key pending deletion",
+        "correct": false,
+        "why": "moto does; AWS refuses."
+      },
+      {
+        "text": "Reporting the rotation period",
+        "correct": false,
+        "why": "moto reports only whether rotation is on."
+      }
+    ]
+  }
+]

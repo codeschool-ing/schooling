@@ -1,0 +1,438 @@
+{
+  "ex-kn0c8ek0": {
+    "prompt": "Qual destas coisas roda na conta que a AWS administra, e não na sua?",
+    "hint": "O control plane.",
+    "choices": [
+      {
+        "text": "O kube-proxy, em cada node",
+        "why": "É um add-on, e roda nos seus nodes ao lado dos seus pods."
+      },
+      {
+        "text": "O etcd, onde fica o estado do cluster",
+        "why": "Isso. O etcd e o API server são o control plane que a AWS roda em três zonas."
+      },
+      {
+        "text": "As instâncias do node group",
+        "why": "São instâncias EC2 na sua conta, cobradas pelo preço do EC2."
+      },
+      {
+        "text": "O CoreDNS",
+        "why": "Um Deployment de dois pods nos seus nodes."
+      }
+    ]
+  },
+  "ex-w7pxp912": {
+    "prompt": "Um time dá a cada um dos seus 10 desenvolvedores um cluster EKS próprio, em suporte padrão, a 0,10 USD por hora cada. Quanto custam os control planes num mês de 730 horas, em USD?",
+    "hint": "Clusters vezes preço vezes horas.",
+    "unit": "USD"
+  },
+  "ex-3z3bz56e": {
+    "prompt": "Como o kubectl prova quem é para um cluster EKS com o kubeconfig que aws eks update-kubeconfig escreve?",
+    "hint": "Leia a parte users: do arquivo.",
+    "choices": [
+      {
+        "text": "Com uma senha que o comando escreveu no arquivo",
+        "why": "Não há senha nele; o usuário é um comando."
+      },
+      {
+        "text": "Com um certificado de cliente guardado na seção users do arquivo",
+        "why": "O certificado no arquivo é o do cluster, usado para conferir o servidor."
+      },
+      {
+        "text": "Ele roda aws eks get-token, que gera um pedido pré-assinado ao STS",
+        "why": "Isso. O API server o envia ao STS, que diz quem assinou, então o usuário do Kubernetes é um principal do IAM."
+      },
+      {
+        "text": "O issuer OIDC do cluster assina cada pedido que o kubectl envia",
+        "why": "O issuer serve para pods assumirem roles do IAM, lição 13; ele não assina nada para o kubectl."
+      }
+    ]
+  },
+  "ex-k29v8psz": {
+    "prompt": "A AWS exige que um cluster EKS receba subnets em pelo menos ___ Availability Zones diferentes.",
+    "hint": "Um número.",
+    "blanks": [
+      {
+        "accept": [
+          "duas",
+          "2",
+          "dois"
+        ]
+      }
+    ]
+  },
+  "ex-8jj9pzbw": {
+    "prompt": "Um script cria um cluster e logo depois um node group. Contra o moto funciona. Do que ele precisa antes da segunda chamada na AWS?",
+    "hint": "O moto disse ACTIVE na hora; a AWS não.",
+    "choices": [
+      {
+        "text": "aws eks wait cluster-active",
+        "why": "Isso. Na AWS o cluster fica CREATING por vários minutos antes."
+      },
+      {
+        "text": "Um kubectl get nodes que devolva pelo menos um node",
+        "why": "Não há nodes até o node group existir, então isso esperaria para sempre."
+      },
+      {
+        "text": "aws eks update-kubeconfig, que liga o control plane",
+        "why": "Ele escreve um arquivo na sua máquina e não liga nada."
+      },
+      {
+        "text": "Um sleep de dez segundos",
+        "why": "Dez segundos ficam muito aquém dos minutos que leva; um palpite não é uma espera."
+      }
+    ]
+  },
+  "ex-mj4gbq4j": {
+    "prompt": "Quais destas afirmações valem para o cluster que o moto criou nesta lição? Escolha todas as que se aplicam.",
+    "hint": "O moto guarda registros.",
+    "choices": [
+      {
+        "text": "O endpoint dele é um nome em que nada responde",
+        "why": "O moto inventou o nome e não roda API server."
+      },
+      {
+        "text": "Ficou ACTIVE assim que foi criado",
+        "why": "Na AWS ficaria CREATING por vários minutos."
+      },
+      {
+        "text": "Não há Kubernetes por trás dele",
+        "why": "O moto guarda um registro do cluster e mais nada."
+      },
+      {
+        "text": "kubectl get nodes listaria as três instâncias do node group",
+        "why": "Não há API server, e o moto não lançou instância nenhuma."
+      },
+      {
+        "text": "O issuer OIDC dele é um provedor de identidade real em que outros serviços confiam",
+        "why": "É uma URL que o moto imprimiu; nada a serve."
+      }
+    ]
+  },
+  "ex-zkmeqxpk": {
+    "prompt": "Num cluster EKS recém-criado, o primeiro pod que alguém cria fica em Pending. Por quê?",
+    "hint": "Com o que um cluster novo vem?",
+    "choices": [
+      {
+        "text": "O control plane leva uma hora para aceitar pods",
+        "why": "O control plane está pronto quando o cluster fica ACTIVE."
+      },
+      {
+        "text": "Ainda não há nodes",
+        "why": "Isso. Os nodes são uma decisão separada: um node group, o Fargate ou o Karpenter."
+      },
+      {
+        "text": "O vpc-cni não foi contratado como assinatura à parte",
+        "why": "Add-ons não têm assinatura; o EKS instala os de rede na criação."
+      },
+      {
+        "text": "A imagem do pod não está no ECR",
+        "why": "Uma imagem ausente dá ImagePullBackOff num node, que antes precisa existir."
+      }
+    ]
+  },
+  "ex-yf4dgq68": {
+    "prompt": "O moto respondeu ao create-nodegroup com version 1.19 para um cluster da versão 1.35. Que versão a AWS dá a um managed node group novo?",
+    "hint": "A referência da API da AWS diz.",
+    "choices": [
+      {
+        "text": "A versão mais antiga ainda em suporte padrão",
+        "why": "Nada escolhe a mais antiga; isso começaria o grupo nos últimos meses do relógio."
+      },
+      {
+        "text": "1.19, como o moto disse",
+        "why": "Esse é o valor fixo do moto, o mesmo para qualquer cluster."
+      },
+      {
+        "text": "A versão com que o tipo de AMI foi lançado",
+        "why": "O tipo de AMI escolhe um sistema e um processador, não a versão do Kubernetes."
+      },
+      {
+        "text": "A do control plane, com a imagem mais nova",
+        "why": "Isso. Um managed node group começa no mesmo nível do cluster em que entra."
+      }
+    ]
+  },
+  "ex-hc348pmc": {
+    "prompt": "Ligue cada opção do create-nodegroup ao que ela decide.",
+    "hint": "As lições 4 e 6 já mostraram a maioria.",
+    "pairs": [
+      {
+        "left": "--scaling-config",
+        "right": "O menor, o maior e o número atual de nodes"
+      },
+      {
+        "left": "--update-config maxUnavailable=1",
+        "right": "Quantos nodes um update de versão tira de uma vez"
+      },
+      {
+        "left": "--ami-type AL2023_ARM_64_STANDARD",
+        "right": "O sistema operacional e a família de processador"
+      },
+      {
+        "left": "--labels role=general",
+        "right": "Um rótulo em todo node pelo qual os pods são agendados"
+      },
+      {
+        "left": "--capacity-type SPOT",
+        "right": "Se os nodes são comprados com o desconto spot"
+      }
+    ],
+    "right_distractors": [
+      "A versão do Kubernetes do control plane"
+    ]
+  },
+  "ex-emes0wp1": {
+    "prompt": "Um node group precisa crescer de 3 para 4 nodes. Por que a mudança é feita com aws eks update-nodegroup-config e não com aws autoscaling no grupo que ele cita?",
+    "hint": "De quem é o grupo?",
+    "choices": [
+      {
+        "text": "O aws autoscaling recusa todo grupo cujo nome começa com eks-",
+        "why": "Essa recusa não existe; a questão é quem administra o grupo."
+      },
+      {
+        "text": "O grupo é do EKS, tamanhos incluídos",
+        "why": "Isso. Mudar por trás do EKS deixa errado o registro do node group."
+      },
+      {
+        "text": "Auto Scaling groups não têm tamanho desejado",
+        "why": "A lição 4 definiu um em todo grupo."
+      },
+      {
+        "text": "É mais barato pelo EKS",
+        "why": "As instâncias custam o mesmo qualquer que seja a API que as pediu."
+      }
+    ]
+  },
+  "ex-9hk9nfak": {
+    "prompt": "Um módulo Terraform cria node groups, e os testes dele rodam contra o moto. Um teste cria um grupo com minSize 5 e maxSize 2, e passa. O que o teste que passou mostra?",
+    "hint": "O que o moto fez com os mesmos valores nesta lição?",
+    "choices": [
+      {
+        "text": "Que a AWS aceita um mínimo acima do máximo",
+        "why": "A AWS recusa; o moto confere muito menos."
+      },
+      {
+        "text": "Que o EKS troca os dois valores de lugar sempre que chegam invertidos",
+        "why": "Nada os troca; o moto os guardou como vieram."
+      },
+      {
+        "text": "Nada sobre os valores: o moto aceitou um grupo que a AWS recusaria",
+        "why": "Isso. Uma configuração que o moto aceita não foi validada por ninguém."
+      },
+      {
+        "text": "Que o grupo vai rodar 9 nodes",
+        "why": "Ele não vai rodar nenhum, nem no moto nem na AWS."
+      }
+    ]
+  },
+  "ex-y2v006x1": {
+    "prompt": "Ligue cada add-on ao trabalho que ele faz no cluster.",
+    "hint": "Três add-ons de rede, e um de armazenamento.",
+    "pairs": [
+      {
+        "left": "vpc-cni",
+        "right": "Dá a cada pod um endereço da VPC"
+      },
+      {
+        "left": "kube-proxy",
+        "right": "Escreve as regras que levam o tráfego de um Service aos pods dele"
+      },
+      {
+        "left": "coredns",
+        "right": "Responde ao DNS dos nomes de dentro do cluster"
+      },
+      {
+        "left": "aws-ebs-csi-driver",
+        "right": "Transforma um pedido de volume num volume EBS"
+      }
+    ],
+    "right_distractors": [
+      "Roda o API server"
+    ]
+  },
+  "ex-xtrtmmhs": {
+    "prompt": "Uma t3.medium tem 3 interfaces de rede e 6 endereços IPv4 por interface. Com o vpc-cni padrão, quantos pods cabem nela?",
+    "hint": "interfaces × (endereços − 1) + 2",
+    "unit": "pods"
+  },
+  "ex-2e3mraqs": {
+    "prompt": "Um tipo de instância tem 8 interfaces de rede e 30 endereços IPv4 por interface. Com o vpc-cni padrão e sem prefix delegation, quantos pods cabem num node?",
+    "hint": "A mesma fórmula da lição, com números que ela não mostrou.",
+    "unit": "pods"
+  },
+  "ex-77t6w7h6": {
+    "prompt": "aws eks create-addon --addon-name vpc-cni --resolve-conflicts OVERWRITE assume uma cópia que alguém tinha configurado à mão. O que acontece com as configurações dessa pessoa?",
+    "hint": "A opção tem o nome do que faz.",
+    "choices": [
+      {
+        "text": "São mantidas, e o EKS passa a administrar o add-on",
+        "why": "Isso se parece com PRESERVE, que as mantém."
+      },
+      {
+        "text": "A chamada falha e nada muda",
+        "why": "Isso é o NONE quando os valores diferem."
+      },
+      {
+        "text": "Onde diferem dos padrões do EKS, os valores do EKS os substituem",
+        "why": "Isso, e uma mudança feita à mão some sem aviso."
+      },
+      {
+        "text": "São copiadas para um segundo add-on, desligado",
+        "why": "O EKS mantém um add-on de cada nome e nenhuma cópia."
+      }
+    ]
+  },
+  "ex-tyxy54zk": {
+    "prompt": "Um cluster de nodes t3.medium roda pods pequenos que pedem 50 milicores cada. Pods novos ficam em Pending embora todo node mostre 20% de uso de processador. Qual é o limite mais provável?",
+    "hint": "Do que mais cada pod precisa do node dele?",
+    "choices": [
+      {
+        "text": "Cada node ficou sem endereços da VPC aos 17 pods",
+        "why": "Isso. O vpc-cni dá a cada pod um endereço de verdade, e uma t3.medium tem 17 para dar."
+      },
+      {
+        "text": "O control plane limita todo cluster a um número fixo de pods por zona",
+        "why": "Nenhum limite assim foi descrito; o limite aqui vem dos nodes."
+      },
+      {
+        "text": "O kube-proxy ficou sem regras",
+        "why": "O kube-proxy escreve regras para Services e não tem um limite de pods por node desse tipo."
+      },
+      {
+        "text": "O processador está mais cheio do que os 20% mostram",
+        "why": "Os pods pediram pouco, e 20% é o que usam."
+      }
+    ]
+  },
+  "ex-rfbwwjqj": {
+    "prompt": "Com o prefix ___, o vpc-cni põe um bloco de 16 endereços em cada vaga de uma interface, e um node comporta muito mais pods.",
+    "hint": "O nome da funcionalidade, segunda palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "delegation",
+          "delegação"
+        ]
+      }
+    ]
+  },
+  "ex-andwvh5p": {
+    "prompt": "Ponha os passos de levar um cluster da 1.35 para a 1.36 na ordem que a AWS documenta.",
+    "hint": "Começa lendo e termina nos nodes.",
+    "items": [
+      "Ler os upgrade insights atrás de APIs que a próxima versão remove",
+      "Atualizar o control plane para a 1.36",
+      "Atualizar os add-ons para versões publicadas para a 1.36",
+      "Atualizar todos os node groups para a 1.36"
+    ],
+    "trap": "Os nodes vão por último: um kubelet pode ser mais velho que o API server, nunca mais novo."
+  },
+  "ex-hw7wmebp": {
+    "prompt": "Dois clusters ficam em suporte estendido por 9 meses. O suporte estendido soma 0,50 USD por hora a cada um, em meses de 730 horas. Quanto eles custam a mais no total do que se tivessem sido atualizados, em USD?",
+    "hint": "Clusters × 0,50 × 730 × meses.",
+    "unit": "USD"
+  },
+  "ex-z3jgfesd": {
+    "prompt": "Ninguém mexeu num cluster criado com a upgrade policy padrão, e a versão dele chega ao fim do suporte padrão. O que acontece?",
+    "hint": "A referência da API da AWS diz qual é o padrão.",
+    "choices": [
+      {
+        "text": "A AWS atualiza o control plane naquele dia",
+        "why": "Isso é o que o STANDARD faz; o padrão é EXTENDED."
+      },
+      {
+        "text": "Entra no suporte estendido, a 0,60 USD por hora",
+        "why": "Isso: seis vezes os 0,10 do suporte padrão, e nada no cluster anuncia isso."
+      },
+      {
+        "text": "O cluster deixa de aceitar pods novos até ser atualizado",
+        "why": "Ele continua funcionando; o que muda é a conta."
+      },
+      {
+        "text": "Os node groups são atualizados e o control plane fica",
+        "why": "Nada atualiza os nodes por você; o upgrade deles é uma chamada sua."
+      }
+    ]
+  },
+  "ex-13qzqgmc": {
+    "prompt": "Um cluster na 1.33, cujos nodes estão em grupos gerenciados, precisa chegar à 1.36. Quantas vezes update-cluster-version é chamado, e o que precisa acontecer entre as chamadas?",
+    "hint": "Uma versão menor por upgrade, e uma regra sobre node groups.",
+    "choices": [
+      {
+        "text": "Uma vez, direto para a 1.36, e os node groups depois",
+        "why": "O control plane anda uma versão menor por upgrade."
+      },
+      {
+        "text": "Três vezes, sem nada no meio",
+        "why": "A AWS recusa o próximo upgrade enquanto um managed node group fica para trás."
+      },
+      {
+        "text": "Duas vezes, já que 1.34 e 1.35 são pulados juntos",
+        "why": "Nada pula versões; de 1.33 a 1.36 são três passos."
+      },
+      {
+        "text": "Três vezes, com cada node group nivelado depois de cada uma",
+        "why": "Isso. Um managed node group precisa bater com o cluster antes de o cluster andar de novo."
+      }
+    ]
+  },
+  "ex-jqy9vv61": {
+    "prompt": "Começa o update de um node group. Quais destas coisas vão bloqueá-lo, ou quebrar algo enquanto ele roda? Escolha todas as que se aplicam.",
+    "hint": "Todo pod se move pelo menos uma vez.",
+    "choices": [
+      {
+        "text": "Um PodDisruptionBudget pedindo 3 de 3 réplicas",
+        "why": "Ele nunca é cumprido, então a drenagem para e o update falha se não for forçado."
+      },
+      {
+        "text": "Uma réplica única que guarda o estado no disco do node",
+        "why": "Ela é despejada, iniciada em outro lugar, e o estado fica no disco antigo."
+      },
+      {
+        "text": "Um serviço sem readiness check",
+        "why": "Os pods novos dele recebem tráfego antes de estarem prontos."
+      },
+      {
+        "text": "maxUnavailable em 1",
+        "why": "Deixa o update mais lento e não bloqueia nada."
+      },
+      {
+        "text": "Nodes com o rótulo role=general",
+        "why": "Rótulos decidem para onde os pods vão e não têm papel na drenagem."
+      }
+    ]
+  },
+  "ex-qdkvytks": {
+    "prompt": "Um cluster em suporte padrão (0,10 USD por hora) roda um managed node group de 3 m7g.large sob demanda, a 0,1301 USD por hora cada em sa-east-1. Quanto custa um mês de 730 horas, em USD, até o centavo?",
+    "hint": "Control plane mais nodes; o node group em si não soma nada.",
+    "unit": "USD"
+  },
+  "ex-crdxj0aq": {
+    "prompt": "Um pipeline cria um cluster EKS novo para cada pull request e o apaga depois dos testes. São 20 por dia, e cada cluster vive 2 horas a 0,10 USD por hora. Quanto custam os control planes por dia, em USD?",
+    "hint": "Horas de cluster vezes o preço.",
+    "unit": "USD"
+  },
+  "ex-gbsb1w9b": {
+    "prompt": "Um time quer 40 pods pequenos em cada node m7g.large, que o vpc-cni padrão para em 29. Que mudança aumenta esse limite no mesmo tipo de instância?",
+    "hint": "O limite é sobre endereços nas interfaces.",
+    "choices": [
+      {
+        "text": "Uma subnet maior para o node group",
+        "why": "Mais endereços na subnet não acrescentam vagas às interfaces de um node."
+      },
+      {
+        "text": "Ligar o prefix delegation no vpc-cni",
+        "why": "Isso: um bloco de 16 endereços por vaga em vez de um."
+      },
+      {
+        "text": "Aumentar o maxUnavailable no update config do node group",
+        "why": "Isso governa updates e não muda quantos pods cabem."
+      },
+      {
+        "text": "A upgrade policy em STANDARD",
+        "why": "Ela decide o que acontece quando o suporte acaba, não como os pods recebem endereço."
+      }
+    ]
+  }
+}

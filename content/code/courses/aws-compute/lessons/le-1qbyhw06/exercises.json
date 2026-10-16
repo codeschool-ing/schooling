@@ -1,0 +1,731 @@
+[
+  {
+    "id": "ex-trb6xyyw",
+    "version": 1,
+    "section": "rest-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana deployed `prod`, then added `POST` to `/orders` and did nothing else. On AWS, a partner calls `POST /orders` on `prod`. What comes back?",
+    "hint": "The stage serves a copy taken at one moment.",
+    "choices": [
+      {
+        "text": "`429 Too Many Requests`, from the usage plan",
+        "correct": false,
+        "why": "The plan throttles calls it can route; this method is not in the deployment at all."
+      },
+      {
+        "text": "`403` with `Missing Authentication Token`",
+        "correct": true,
+        "why": "Yes. The deployment predates `POST`, and a REST API answers a method it does not have with that misleading message."
+      },
+      {
+        "text": "`200` with the MOCK body, since the resource exists",
+        "correct": false,
+        "why": "The MOCK belongs to `GET`. `POST` has no integration and is not deployed."
+      },
+      {
+        "text": "`404 Not Found`, as for any unknown path",
+        "correct": false,
+        "why": "A REST API does not answer `404` here; it answers `403`, which is why the message confuses people."
+      }
+    ]
+  },
+  {
+    "id": "ex-s9kq1jny",
+    "version": 1,
+    "section": "rest-apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a deployment of a REST API hold?",
+    "hint": "`get-stage` named one by its id.",
+    "choices": [
+      {
+        "text": "The requests the stage served since it was taken",
+        "correct": false,
+        "why": "That is what logs and metrics record. A deployment is configuration."
+      },
+      {
+        "text": "Only the methods changed since the previous deployment",
+        "correct": false,
+        "why": "It is a whole copy, which is why pointing the stage at an older id rolls everything back."
+      },
+      {
+        "text": "The resources and methods as they were at that moment",
+        "correct": true,
+        "why": "Yes. It is a frozen copy of the tree, and a stage points at one."
+      },
+      {
+        "text": "The API keys allowed to call the stage",
+        "correct": false,
+        "why": "Keys belong to usage plans, which name stages; the deployment knows nothing of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-4990dqtx",
+    "version": 1,
+    "section": "rest-apis",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what it takes for `GET /orders` on a new REST API to answer on a stage.",
+    "hint": "A child needs its parent, a verb needs its path, and nothing answers before the copy.",
+    "items": [
+      "`create-rest-api`",
+      "`create-resource` with `--path-part orders`",
+      "`put-method` for `GET`",
+      "`put-integration` for that method",
+      "`create-deployment` with `--stage-name prod`"
+    ],
+    "trap": "Deploying before the method exists is refused, and deploying before the integration leaves a method with nowhere to send the request."
+  },
+  {
+    "id": "ex-vc8kzsc2",
+    "version": 1,
+    "section": "rest-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner's API key turns up in a public log. With the key alone, what can a stranger do?",
+    "hint": "What is the key for, according to AWS?",
+    "choices": [
+      {
+        "text": "Call the API as that partner, spending the partner's quota",
+        "correct": true,
+        "why": "Yes. A key identifies a client for metering; whoever holds it is that client to API Gateway."
+      },
+      {
+        "text": "Nothing, without the partner's IAM credentials as well",
+        "correct": false,
+        "why": "The method required a key and no authoriser; nothing else is asked for."
+      },
+      {
+        "text": "Change the partner's usage plan",
+        "correct": false,
+        "why": "Plans are changed through the AWS API with the account's credentials, not with a key."
+      },
+      {
+        "text": "Read the partner's data in every other API of the account",
+        "correct": false,
+        "why": "A key works where a plan attaches it to a stage, and a method asks for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbd1bxpw",
+    "version": 1,
+    "section": "rest-apis",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A REST API answers no request until a ___ of it is put on a stage.",
+    "hint": "It is what `create-` followed by this word makes.",
+    "blanks": [
+      {
+        "accept": [
+          "deployment"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c4emvjjm",
+    "version": 1,
+    "section": "rest-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, Ana sends 50 requests a second to her `prod` stage, whose plan allows 10. What happens?",
+    "hint": "Think about what moto serves at a stage's address.",
+    "choices": [
+      {
+        "text": "moto answers `429` after the twentieth, as AWS would",
+        "correct": false,
+        "why": "moto stores the throttle and enforces none of it."
+      },
+      {
+        "text": "moto answers all 50, because it does not throttle",
+        "correct": false,
+        "why": "It does not throttle, but it does not answer either: there is no stage address in moto to call."
+      },
+      {
+        "text": "Nothing reaches it: moto serves no stage address",
+        "correct": true,
+        "why": "Yes. moto keeps the definitions and answers the control plane only."
+      },
+      {
+        "text": "moto refuses the plan when it is created",
+        "correct": false,
+        "why": "It accepted the plan and printed it back."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhmcxxfk",
+    "version": 1,
+    "section": "http-apis",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the first-tier prices on the sheet of 16 October 2026, how much less does an HTTP API cost than a REST API in a month of 30 million requests?",
+    "hint": "4.25 and 1.59 per million.",
+    "value": 79.8,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-d82ts698",
+    "version": 1,
+    "section": "http-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler reads `event[\"httpMethod\"]` and works behind a REST API's Lambda proxy integration. It is moved behind an HTTP API integration with payload format `2.0`. What happens?",
+    "hint": "Look at where `get-order.json` keeps the method.",
+    "choices": [
+      {
+        "text": "It works: the two formats carry the same fields",
+        "correct": false,
+        "why": "They differ, and the method is one of the fields that moved."
+      },
+      {
+        "text": "API Gateway answers `405 Method Not Allowed`",
+        "correct": false,
+        "why": "The route matched; the failure is inside the function."
+      },
+      {
+        "text": "It raises `KeyError`; the method moved",
+        "correct": true,
+        "why": "Yes. Format 1.0 has `httpMethod` at the top; 2.0 has `requestContext.http.method`."
+      },
+      {
+        "text": "API Gateway rewrites the event into format 1.0 for it",
+        "correct": false,
+        "why": "The integration says which format it wants and receives exactly that one."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tkagw3p",
+    "version": 1,
+    "section": "http-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, a request reaches `GET /orders/{id}` with a token whose `exp` passed an hour ago. What happens?",
+    "hint": "The authoriser sits before the integration.",
+    "choices": [
+      {
+        "text": "The function runs and has to check `exp` itself",
+        "correct": false,
+        "why": "The JWT authoriser checks `exp` for you; the function only sees tokens that passed."
+      },
+      {
+        "text": "API Gateway answers `401` and the function is not called",
+        "correct": true,
+        "why": "Yes. A token that fails a check stops at the door."
+      },
+      {
+        "text": "`403` with `Missing Authentication Token`",
+        "correct": false,
+        "why": "That is a REST API's answer for a path or method it does not have."
+      },
+      {
+        "text": "The function runs with `authorizer` set to null in the event",
+        "correct": false,
+        "why": "A route with a JWT authoriser never passes an unchecked request through."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfz419g8",
+    "version": 1,
+    "section": "http-apis",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did the lab in this section really run or show? Choose all that apply.",
+    "hint": "moto serves nothing at an API's address; the emulator runs a handler.",
+    "choices": [
+      {
+        "text": "The handler answering the event in the real Python 3.12 runtime",
+        "correct": true,
+        "why": "Yes: the Lambda base image ran it and printed the dictionary."
+      },
+      {
+        "text": "moto storing the route with its JWT authoriser",
+        "correct": true,
+        "why": "Yes: `create-route` printed `AuthorizationType: JWT`."
+      },
+      {
+        "text": "A token checked against the issuer's public keys",
+        "correct": false,
+        "why": "No token was ever sent; that part is AWS's documented behaviour."
+      },
+      {
+        "text": "API Gateway turning `statusCode` into an HTTP status",
+        "correct": false,
+        "why": "API Gateway was not in front of the emulator; the prose says so."
+      },
+      {
+        "text": "The condition on the function's permission statement",
+        "correct": true,
+        "why": "Yes: `add-permission` returned it, with the API's id in the source ARN."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdc5v4a9",
+    "version": 1,
+    "section": "http-apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the section run `aws lambda add-permission` after creating the route?",
+    "hint": "Whose policy does it change?",
+    "choices": [
+      {
+        "text": "Calls fail with `500`; the function never runs",
+        "correct": true,
+        "why": "Yes. It lets API Gateway invoke the function, from this API only."
+      },
+      {
+        "text": "Without it `create-route` would be refused",
+        "correct": false,
+        "why": "The route was created before it; the permission matters at call time."
+      },
+      {
+        "text": "It lets the function call API Gateway",
+        "correct": false,
+        "why": "The other way round: the principal is `apigateway.amazonaws.com`."
+      },
+      {
+        "text": "REST APIs need it; HTTP APIs reuse the function's role",
+        "correct": false,
+        "why": "Both kinds invoke through the function's resource policy."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hrz71s5",
+    "version": 1,
+    "section": "http-apis",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An HTTP API meters requests in steps of 512 KB. As how many requests is one upload of 1,300 KB billed?",
+    "hint": "Round up, not to the nearest.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-y0yn29bp",
+    "version": 1,
+    "section": "websocket-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `chat` API has the routes `$connect`, `$disconnect`, `$default` and `send`. A client sends `{\"action\": \"refund\", \"order\": 42}`. Which route runs?",
+    "hint": "The selection expression reads `action`.",
+    "choices": [
+      {
+        "text": "`send`, the only route for messages",
+        "correct": false,
+        "why": "`send` runs only for `\"action\": \"send\"`."
+      },
+      {
+        "text": "None: API Gateway closes the connection",
+        "correct": false,
+        "why": "With `$default` defined, an unmatched message still reaches a function."
+      },
+      {
+        "text": "`$connect`, which checks every message",
+        "correct": false,
+        "why": "`$connect` runs once, when the connection opens."
+      },
+      {
+        "text": "`$default`",
+        "correct": true,
+        "why": "Yes. No route is called `refund`, so the message falls to `$default`."
+      }
+    ]
+  },
+  {
+    "id": "ex-94b0ddak",
+    "version": 1,
+    "section": "websocket-apis",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "500 clients stay connected 6 hours a day for 20 days. At 0.388 USD per million connection minutes, what do the minutes cost?",
+    "hint": "Clients × hours × 60 × days.",
+    "value": 1.3968,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-x9jw7ne9",
+    "version": 1,
+    "section": "websocket-apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, the backend posts to a stored connection id whose client closed the tab a second ago. What does it get, and what should it do?",
+    "hint": "moto answered this case differently from AWS.",
+    "choices": [
+      {
+        "text": "Success, and the message waits until the client reconnects",
+        "correct": false,
+        "why": "API Gateway keeps no mailbox; a new connection gets a new id."
+      },
+      {
+        "text": "`GoneException` (410); delete the stored id and carry on",
+        "correct": true,
+        "why": "Yes. It is how a sender learns of a close before `$disconnect` is processed."
+      },
+      {
+        "text": "Exit status 0, as the lab showed",
+        "correct": false,
+        "why": "That was moto, which accepts any id; AWS refuses an id with no connection."
+      },
+      {
+        "text": "A `429`, because the connection is being closed",
+        "correct": false,
+        "why": "429 is throttling; a missing connection is a 410."
+      }
+    ]
+  },
+  {
+    "id": "ex-jrke96ys",
+    "version": 1,
+    "section": "websocket-apis",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each route of the `chat` API with when it runs.",
+    "hint": "Two run once per connection, two once per message.",
+    "pairs": [
+      {
+        "left": "`$connect`",
+        "right": "once, when a client opens the connection"
+      },
+      {
+        "left": "`$disconnect`",
+        "right": "after the connection has closed, best effort"
+      },
+      {
+        "left": "`send`",
+        "right": "for a message whose `action` is `send`"
+      },
+      {
+        "left": "`$default`",
+        "right": "for a message no other route matches"
+      }
+    ],
+    "right_distractors": [
+      "every ten minutes, to keep the connection alive"
+    ]
+  },
+  {
+    "id": "ex-72dbp214",
+    "version": 1,
+    "section": "websocket-apis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A warehouse screen must show new orders all through an 8-hour shift over one WebSocket API. What does its client have to do?",
+    "hint": "Two limits from AWS's documentation.",
+    "choices": [
+      {
+        "text": "Keep it busy within ten minutes, and reconnect after two hours",
+        "correct": true,
+        "why": "Yes, and the backend stores the new connection id each time."
+      },
+      {
+        "text": "Ask AWS for 8-hour connections through a quota increase on the stage",
+        "correct": false,
+        "why": "The two-hour maximum is a fixed limit, not an adjustable quota."
+      },
+      {
+        "text": "Nothing: a connection stays open for as long as its stage exists",
+        "correct": false,
+        "why": "Connections close at two hours, and after ten silent minutes."
+      },
+      {
+        "text": "Send every message to `$default` so the timer resets",
+        "correct": false,
+        "why": "Any message resets the idle timer; the route is irrelevant, and the two-hour limit stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-zva61ja9",
+    "version": 1,
+    "section": "websocket-apis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A WebSocket connection stays open for an hour and nobody sends anything. Which meter grows?",
+    "hint": "One meter counts, the other times.",
+    "choices": [
+      {
+        "text": "Messages, counted in steps of 32 KB",
+        "correct": false,
+        "why": "No message was sent, so there is nothing to count."
+      },
+      {
+        "text": "Both, in equal parts",
+        "correct": false,
+        "why": "Only one of them depends on time alone."
+      },
+      {
+        "text": "Neither, until the first message",
+        "correct": false,
+        "why": "The minutes start when the connection opens."
+      },
+      {
+        "text": "Connection minutes",
+        "correct": true,
+        "why": "Yes. They run for as long as the connection is open."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mdzhmyz",
+    "version": 1,
+    "section": "choosing-one",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a REST API offer and an HTTP API not? Choose all that apply.",
+    "hint": "Four rows of the table.",
+    "choices": [
+      {
+        "text": "Usage plans with a quota per client",
+        "correct": true,
+        "why": "Yes; HTTP APIs have no API keys."
+      },
+      {
+        "text": "A response cache on the stage",
+        "correct": true,
+        "why": "Yes; only a REST stage caches."
+      },
+      {
+        "text": "A JWT authoriser with no code of yours",
+        "correct": false,
+        "why": "That one is the HTTP API's."
+      },
+      {
+        "text": "AWS WAF in front of the API",
+        "correct": true,
+        "why": "Yes; WAF attaches to REST stages."
+      },
+      {
+        "text": "A Lambda authoriser",
+        "correct": false,
+        "why": "Both kinds have it."
+      },
+      {
+        "text": "A private endpoint reachable only from a VPC",
+        "correct": true,
+        "why": "Yes; HTTP APIs are public."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbpjfy9b",
+    "version": 1,
+    "section": "choosing-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Behind an HTTP API, a function takes three minutes to build a report. What does the client see, and what is the fix?",
+    "hint": "An HTTP API waits at most 30 seconds.",
+    "choices": [
+      {
+        "text": "The report, since a Lambda function may run for 15 minutes",
+        "correct": false,
+        "why": "The function's limit is not the API's; the client gives up at 30 seconds."
+      },
+      {
+        "text": "A `504`; answer `202` with an id and run the work elsewhere",
+        "correct": true,
+        "why": "Yes. Lessons 20 and 21 build the elsewhere."
+      },
+      {
+        "text": "A `504`; raise the HTTP API's timeout through a quota increase",
+        "correct": false,
+        "why": "The longer wait AWS added in 2024 is for regional and private REST APIs."
+      },
+      {
+        "text": "A `429`, because the function is busy",
+        "correct": false,
+        "why": "Busy is not throttling; the integration simply did not answer in time."
+      }
+    ]
+  },
+  {
+    "id": "ex-gafjvydr",
+    "version": 1,
+    "section": "choosing-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a load test of the `staging` API, the `prod` API of the same account in São Paulo starts answering `429`. The `prod` function's logs show no throttling. What explains it?",
+    "hint": "Whose limit is shared by every API in a region?",
+    "choices": [
+      {
+        "text": "The staging stage's throttle setting applies to every stage",
+        "correct": false,
+        "why": "A stage's setting is its own."
+      },
+      {
+        "text": "Lambda's concurrency limit, shared with staging's function",
+        "correct": false,
+        "why": "That would show as throttling on the function, and the logs say there was none."
+      },
+      {
+        "text": "The account-wide API Gateway limit, spent by the test",
+        "correct": true,
+        "why": "Yes. Every API in the account and region shares 10,000 requests a second."
+      },
+      {
+        "text": "The REST cache filled up and began refusing requests",
+        "correct": false,
+        "why": "A full cache evicts entries; it does not answer 429."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej1hj7h2",
+    "version": 1,
+    "section": "choosing-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto reported Ana's new 0.5 GB stage cache as `AVAILABLE` at once. What does AWS document?",
+    "hint": "A cache is a cluster AWS creates for the stage.",
+    "choices": [
+      {
+        "text": "The same: a cache is ready as soon as the stage setting is saved",
+        "correct": false,
+        "why": "moto skips the wait; AWS has one."
+      },
+      {
+        "text": "About four minutes in `CREATE_IN_PROGRESS` before it is ready",
+        "correct": true,
+        "why": "Yes, and it is billed by the hour from then on, hit or not."
+      },
+      {
+        "text": "It is created by the first request that misses, a few seconds later",
+        "correct": false,
+        "why": "It is created when the stage setting changes, not on traffic."
+      },
+      {
+        "text": "0.5 GB is below the smallest size",
+        "correct": false,
+        "why": "0.5 GB is the smallest size; the largest is 237 GB."
+      }
+    ]
+  },
+  {
+    "id": "ex-7y5yhapn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop sells its catalogue API to partners, each with a monthly quota, and also serves its mobile app, whose users sign in and carry a JWT. Which design fits best?",
+    "hint": "Each audience needs a feature that one kind of API has.",
+    "choices": [
+      {
+        "text": "One HTTP API for both, with each partner's quota counted inside the function",
+        "correct": false,
+        "why": "Possible, but it rebuilds usage plans by hand and still lets over-quota calls run the function."
+      },
+      {
+        "text": "REST with usage plans for partners; HTTP with JWT for the app",
+        "correct": true,
+        "why": "Yes. Each audience gets the API whose feature it needs, and the app pays the lower price."
+      },
+      {
+        "text": "One WebSocket API, so both audiences hear about new products",
+        "correct": false,
+        "why": "Nothing in the brief needs the server to speak first."
+      },
+      {
+        "text": "One REST API, with an API key for each app user",
+        "correct": false,
+        "why": "A key identifies, it does not authenticate, and a key per user is a password nobody can change safely."
+      }
+    ]
+  },
+  {
+    "id": "ex-9j4ga1qm",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "1,000 pages poll an HTTP API every 10 seconds, 8 hours a day, for 22 days. At 1.59 USD per million, what does the month's polling cost?",
+    "hint": "8 hours is 28,800 seconds.",
+    "value": 100.7424,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-7wrxs0z4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On an HTTP API, the stage called `$___`, with auto-deploy, puts no stage name in the address.",
+    "hint": "The same word names the WebSocket route for unmatched messages.",
+    "blanks": [
+      {
+        "accept": [
+          "default"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wn6xbstx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each REST integration type with what it does with the request.",
+    "hint": "One of them never leaves API Gateway.",
+    "pairs": [
+      {
+        "left": "`MOCK`",
+        "right": "answers from API Gateway itself"
+      },
+      {
+        "left": "`HTTP_PROXY`",
+        "right": "passes the request to a web server as it came"
+      },
+      {
+        "left": "`AWS_PROXY`",
+        "right": "hands the whole request to a Lambda function"
+      },
+      {
+        "left": "`AWS`",
+        "right": "calls another AWS service through a mapping template"
+      }
+    ],
+    "right_distractors": [
+      "runs the request in a container of API Gateway's"
+    ]
+  }
+]

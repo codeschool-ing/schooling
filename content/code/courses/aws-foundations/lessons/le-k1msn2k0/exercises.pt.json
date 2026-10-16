@@ -1,0 +1,386 @@
+{
+  "ex-xq0rnfhh": {
+    "prompt": "O que criar um customer gateway na AWS cria de fato?",
+    "hint": "Ele fica `available` no momento em que existe.",
+    "choices": [
+      {
+        "text": "Um roteador virtual que a AWS roda na rede do escritório",
+        "why": "A AWS não roda nada no escritório. O roteador é do próprio escritório."
+      },
+      {
+        "text": "Um registro do endereço público e do número BGP do roteador do escritório",
+        "why": "Isso. Ele descreve a ponta distante dos túneis; nada é alcançado quando ele é criado."
+      },
+      {
+        "text": "Os dois túneis, prontos para o escritório se conectar",
+        "why": "Os túneis pertencem à conexão VPN, que vem depois dos dois gateways."
+      },
+      {
+        "text": "A ponta da AWS da VPN, presa à VPC",
+        "why": "Esse é o virtual private gateway, ou um Transit Gateway."
+      }
+    ]
+  },
+  "ex-wtpwc5e8": {
+    "prompt": "Para poupar trabalho, o roteador do escritório é configurado só com o primeiro dos dois túneis. O que a seção diz que vai acontecer?",
+    "hint": "Quem faz manutenção nas pontas da AWS, e como?",
+    "choices": [
+      {
+        "text": "Nada: o segundo túnel é só sobra para tráfego pesado",
+        "why": "Ele não é sobra de carga; é o caminho que fica de pé enquanto a outra ponta passa por manutenção."
+      },
+      {
+        "text": "A AWS recusa uma conexão VPN com um túnel desligado",
+        "why": "A AWS aceita, e é isso que torna o erro possível."
+      },
+      {
+        "text": "O escritório perde a VPC sempre que a AWS faz manutenção na ponta daquele túnel",
+        "why": "Isso. As duas pontas ficam em equipamentos separados, mantidos um de cada vez; com os dois túneis de pé o outro carrega o tráfego."
+      },
+      {
+        "text": "O túnel único carrega o dobro de banda",
+        "why": "A capacidade de um túnel não cresce porque o outro está sem uso."
+      }
+    ]
+  },
+  "ex-nwzyqyr9": {
+    "prompt": "O `CustomerGatewayConfiguration` do moto mostra o endereço externo do cliente como `12.1.2.3` nos dois túneis. Um colega quer carregá-lo no roteador do escritório. Qual a resposta certa?",
+    "hint": "Compare o documento com o que o customer gateway recebeu.",
+    "choices": [
+      {
+        "text": "Carregar depois de trocar `12.1.2.3` por `203.0.113.12`",
+        "why": "Uma correção deixaria túneis idênticos, um número de AS da AWS errado e chaves que ninguém tem; nada ali veio de uma ponta da AWS."
+      },
+      {
+        "text": "Não carregar: é o modelo do moto, com valores que a AWS nunca daria",
+        "why": "Isso. O formato bate com a documentação da AWS; os endereços, o número de AS e os túneis idênticos são do moto."
+      },
+      {
+        "text": "Carregar, já que o moto responde no formato da própria AWS",
+        "why": "O formato ser o da AWS não diz nada dos valores, como a lição 1 avisou sobre as respostas do moto."
+      },
+      {
+        "text": "Carregar só o primeiro bloco `<ipsec_tunnel>`, já que o segundo é uma cópia",
+        "why": "Isso repete o erro de um túnel só com os valores do moto por cima."
+      }
+    ]
+  },
+  "ex-dyd3xgke": {
+    "prompt": "Toda conexão VPN Site-to-Site é feita de ___ túneis IPsec.",
+    "hint": "Conte os blocos `<ipsec_tunnel>`.",
+    "blanks": [
+      {
+        "accept": [
+          "dois",
+          "2"
+        ]
+      }
+    ]
+  },
+  "ex-nv2k2qw3": {
+    "prompt": "O roteador do escritório fala BGP. Por que a seção recomenda BGP em vez de rotas estáticas para a VPN?",
+    "hint": "O que acontece com as rotas quando um túnel cai?",
+    "choices": [
+      {
+        "text": "O BGP cifra o tráfego, e rotas estáticas não",
+        "why": "O IPsec cifra o tráfego de qualquer jeito. O BGP trata de rotas."
+      },
+      {
+        "text": "Rotas estáticas são recusadas pela AWS num virtual private gateway",
+        "why": "A AWS aceita roteamento estático, e a seção escreveu uma rota estática na tabela de rotas."
+      },
+      {
+        "text": "Rotas aprendidas por um túnel morto são retiradas, e o outro túnel assume o tráfego",
+        "why": "Isso. E uma rede nova do escritório é anunciada em vez de digitada nas duas pontas."
+      },
+      {
+        "text": "O BGP dobra a banda usando os dois túneis",
+        "why": "Espalhar o tráfego pelos dois é possível, mas o motivo dado é o failover, não a velocidade."
+      }
+    ]
+  },
+  "ex-5z3g7hpf": {
+    "prompt": "Ligue cada objeto de uma VPN Site-to-Site ao que ele é.",
+    "hint": "Três objetos, e uma descrição sobrando.",
+    "pairs": [
+      {
+        "left": "customer gateway",
+        "right": "o registro que a AWS tem do roteador do escritório"
+      },
+      {
+        "left": "virtual private gateway",
+        "right": "a ponta da AWS, presa à VPC"
+      },
+      {
+        "left": "conexão VPN",
+        "right": "os dois túneis entre eles"
+      }
+    ],
+    "right_distractors": [
+      "o cabo num prédio de colocation"
+    ]
+  },
+  "ex-59n0q6m2": {
+    "prompt": "O que é um local do Direct Connect?",
+    "hint": "Não é uma região da AWS.",
+    "choices": [
+      {
+        "text": "Uma das Availability Zones de `sa-east-1`",
+        "why": "Uma zona é datacenter da própria AWS; clientes não levam cabos para dentro de uma."
+      },
+      {
+        "text": "Um prédio de colocation onde a AWS tem roteadores",
+        "why": "Isso. Equinix SP4 e Tivit são dois em São Paulo; um cross-connect lá dentro liga os dois racks."
+      },
+      {
+        "text": "O escritório, depois que o roteador dele é registrado na AWS",
+        "why": "Registrar um roteador é um customer gateway, objeto da VPN. O local é onde o cabo encontra a AWS."
+      },
+      {
+        "text": "Um ponto de presença do CloudFront",
+        "why": "Pontos de presença atendem quem vê, como a lição 23 mostrou; não é onde um enlace privado é feito."
+      }
+    ]
+  },
+  "ex-9r3kejas": {
+    "prompt": "A loja tem um escritório e nenhum rack em prédio de colocation algum. Que tipo de conexão serve?",
+    "hint": "Alguém tem de ter equipamento no prédio.",
+    "choices": [
+      {
+        "text": "Uma conexão dedicada de 10 Gbps, encomendada da AWS",
+        "why": "Uma porta dedicada termina no equipamento da própria loja naquele prédio, que ela não tem."
+      },
+      {
+        "text": "Uma conexão hospedada de um parceiro do Direct Connect",
+        "why": "Isso. O equipamento do parceiro está no prédio, e a loja ganha uma fatia da porta dele, a partir de 50 Mbps."
+      },
+      {
+        "text": "Uma interface virtual pública, que não precisa de conexão",
+        "why": "Toda interface virtual anda numa conexão. A pergunta é de quem é a porta."
+      },
+      {
+        "text": "Um Direct Connect gateway em `sa-east-1`",
+        "why": "Um Direct Connect gateway é global e liga VIFs a VPCs; ele não substitui o cabo."
+      }
+    ]
+  },
+  "ex-yfpeqxw1": {
+    "prompt": "Ligue cada interface virtual ao que ela alcança.",
+    "hint": "Três tipos, e um destino que nenhuma alcança.",
+    "pairs": [
+      {
+        "left": "VIF privada",
+        "right": "uma VPC, pelo virtual private gateway dela"
+      },
+      {
+        "left": "VIF de trânsito",
+        "right": "Transit Gateways, por um Direct Connect gateway"
+      },
+      {
+        "left": "VIF pública",
+        "right": "os endereços públicos da AWS, como os do S3"
+      }
+    ],
+    "right_distractors": [
+      "o escritório de outro cliente"
+    ]
+  },
+  "ex-h5wrknqq": {
+    "prompt": "No moto, o `create-connection` responde `available` na hora. O que a AWS mostraria para uma conexão dedicada nova?",
+    "hint": "Há uma carta e um cabo entre encomendar e ter luz na fibra.",
+    "choices": [
+      {
+        "text": "`available` também, já que a porta é reservada na hora",
+        "why": "Reservar a porta não é o mesmo que um enlace funcionando. A AWS espera o cross-connect."
+      },
+      {
+        "text": "`ordering`, até o parceiro aceitar",
+        "why": "Esse é o começo de uma conexão hospedada, que um parceiro provisiona."
+      },
+      {
+        "text": "`requested`, até a LOA e o cross-connect ficarem prontos",
+        "why": "Isso. Entre os dois há dias ou semanas, o que faz parte de escolher um cabo em vez de um túnel."
+      },
+      {
+        "text": "`down`, até a primeira sessão BGP subir",
+        "why": "O BGP pertence a uma interface virtual, e o estado da conexão vem antes de qualquer uma delas."
+      }
+    ]
+  },
+  "ex-kpkcf68z": {
+    "prompt": "A loja manda dados de pagamento do escritório para a VPC por uma VIF privada do Direct Connect e argumenta que, sendo o cabo privado, nada mais é preciso. O que a lição responde?",
+    "hint": "Privado e cifrado são duas propriedades diferentes.",
+    "choices": [
+      {
+        "text": "Está certo: o Direct Connect cifra toda VIF por padrão",
+        "why": "Não cifra. O tráfego vai em texto claro no cabo."
+      },
+      {
+        "text": "Ele não é cifrado: acrescente MACsec ou uma VPN por cima",
+        "why": "Isso. Um caminho privado mantém estranhos fora, e ainda carrega texto claro que a cifragem protegeria."
+      },
+      {
+        "text": "Deveria usar uma VIF pública, já que ela é cifrada",
+        "why": "Uma VIF pública alcança endereços públicos da AWS; ela não é mais cifrada que uma privada."
+      },
+      {
+        "text": "Um Direct Connect gateway cifra o tráfego entre regiões",
+        "why": "Um Direct Connect gateway roteia; ele não cifra."
+      }
+    ]
+  },
+  "ex-he97z7c5": {
+    "prompt": "Duas VPCs, em `sa-east-1` e `us-east-1`, estão associadas ao mesmo Direct Connect gateway. Uma alcança a outra por ele?",
+    "hint": "Entre o que o gateway roteia?",
+    "choices": [
+      {
+        "text": "Sim, é para isso que serve um gateway global",
+        "why": "Ele é global para VIFs alcançarem VPCs em qualquer região, não para VPCs se alcançarem."
+      },
+      {
+        "text": "Sim, depois que as duas VPCs ligarem a propagação de rotas",
+        "why": "A propagação traz rotas do escritório; ela não transforma o gateway num caminho entre VPCs."
+      },
+      {
+        "text": "Não: ele roteia entre as VIFs e as VPCs, e tráfego de VPC para VPC é recusado",
+        "why": "Isso. Esse é o trabalho da lição 20, com peering ou um Transit Gateway."
+      },
+      {
+        "text": "Só se as duas VPCs estiverem na mesma conta",
+        "why": "A conta não muda nada; o gateway não carrega tráfego entre VPCs de jeito nenhum."
+      }
+    ]
+  },
+  "ex-mwdh63tx": {
+    "prompt": "A loja quer que o enlace até a VPC sobreviva a um prédio inteiro apagar. Que arranjo faz isso com o menor número de conexões?",
+    "hint": "O prédio é o que falha.",
+    "choices": [
+      {
+        "text": "Duas conexões num local, em equipamentos separados",
+        "why": "Isso sobrevive a um equipamento. As duas conexões estão no prédio que apagou."
+      },
+      {
+        "text": "Uma conexão em cada um de dois locais",
+        "why": "Isso. Esse é o modelo de alta resiliência da AWS: dois prédios, uma conexão cada."
+      },
+      {
+        "text": "Duas conexões em cada um de dois locais",
+        "why": "Isso também sobrevive, com quatro conexões onde duas bastariam; é o modelo máximo."
+      },
+      {
+        "text": "Uma conexão de 10 Gbps em vez de uma de 1 Gbps",
+        "why": "Uma porta maior ainda é uma porta num prédio."
+      }
+    ]
+  },
+  "ex-f1ftxb30": {
+    "prompt": "O escritório tem uma conexão Direct Connect e uma VPN, com o mesmo prefixo anunciado pelos dois por BGP. Que caminho a AWS usa enquanto os dois estão de pé?",
+    "hint": "Um deles é documentado como reserva.",
+    "choices": [
+      {
+        "text": "O cabo, até ele falhar",
+        "why": "Isso. A AWS prefere o Direct Connect para o mesmo prefixo, e as rotas passam para a VPN quando ele cai."
+      },
+      {
+        "text": "A VPN, já que ela tem dois túneis",
+        "why": "Os túneis são para a resiliência da própria VPN; eles não a tornam o caminho preferido."
+      },
+      {
+        "text": "Os dois, metade do tráfego cada",
+        "why": "Com o mesmo prefixo nos dois, a AWS escolhe o Direct Connect em vez de dividir."
+      },
+      {
+        "text": "O que tiver sido criado primeiro",
+        "why": "A ordem de criação não tem papel na escolha de rota."
+      }
+    ]
+  },
+  "ex-4pxhhf82": {
+    "prompt": "Pelas listas de 17 de setembro de 2026, quanto custa uma conexão VPN num mês de 730 horas, só as horas, em dólares?",
+    "hint": "0,05 por hora.",
+    "unit": "dólares"
+  },
+  "ex-hr26b7cq": {
+    "prompt": "O escritório puxa 6.144 GB por mês da VPC. Compare uma VPN (0,05 por hora, 0,15 por GB) com uma porta dedicada de 1 Gbps na Equinix SP4 (0,30 por hora, 0,11 por GB), por 730 horas. Quantos dólares por mês o mais barato economiza?",
+    "hint": "Cada lado é horas mais gigabytes; depois subtraia.",
+    "unit": "dólares"
+  },
+  "ex-s74pzkc0": {
+    "prompt": "Qual destes é cobrado numa conexão Direct Connect na lista de preços?",
+    "hint": "Dois medidores, um deles só para um sentido.",
+    "choices": [
+      {
+        "text": "Todo gigabyte, nos dois sentidos",
+        "why": "O tráfego que entra na AWS é grátis pelo Direct Connect, como pela internet."
+      },
+      {
+        "text": "Só os gigabytes, com a porta grátis",
+        "why": "A porta é cobrada por hora, 0,30 por 1 Gbps na Equinix SP4."
+      },
+      {
+        "text": "As horas da porta, e os gigabytes que saem da AWS",
+        "why": "Isso. O cross-connect e o circuito até o prédio são cobrados por outros, fora da lista."
+      },
+      {
+        "text": "Uma taxa mensal fixa que inclui toda transferência",
+        "why": "As linhas que a lição imprimiu são por hora e por GB."
+      }
+    ]
+  },
+  "ex-ztpqa1f1": {
+    "prompt": "Ponha em ordem os passos para construir a VPN da loja, do lado da AWS.",
+    "hint": "Cada passo cita um id que o anterior criou.",
+    "items": [
+      "criar o customer gateway para `203.0.113.12`",
+      "criar o virtual private gateway",
+      "prender o virtual private gateway à VPC",
+      "criar a conexão VPN entre os dois gateways",
+      "ligar a propagação de rotas na tabela de rotas"
+    ],
+    "trap": "Criar a conexão antes de prender o gateway é o deslize comum: os túneis passam a terminar num gateway que não leva a VPC nenhuma."
+  },
+  "ex-4x0g3rr8": {
+    "prompt": "A loja logo terá seis VPCs em três contas, e o escritório precisa de todas. Que ponta para a VPN a lição indica?",
+    "hint": "Uma VPC aceita um virtual private gateway, e uma conexão VPN termina num gateway.",
+    "choices": [
+      {
+        "text": "Seis virtual private gateways, uma conexão VPN compartilhada por todos",
+        "why": "Uma conexão VPN termina num gateway; seis gateways precisariam de seis conexões e doze túneis."
+      },
+      {
+        "text": "Um Transit Gateway, com a VPN presa a ele uma vez",
+        "why": "Isso. Toda VPC presa ao Transit Gateway alcança o escritório pela mesma conexão; a associação acrescenta 0,09 por hora."
+      },
+      {
+        "text": "Um Direct Connect gateway, com conexões VPN até ele",
+        "why": "Um Direct Connect gateway aceita interfaces virtuais, não conexões VPN."
+      },
+      {
+        "text": "Um customer gateway por VPC",
+        "why": "O escritório tem um roteador; mais registros dele não dão às VPCs uma porta comum."
+      }
+    ]
+  },
+  "ex-bvh9zes2": {
+    "prompt": "No moto, o `enable-vgw-route-propagation` responde `500`. O que isso diz sobre o projeto da loja?",
+    "hint": "De quem é o erro?",
+    "choices": [
+      {
+        "text": "Que a propagação precisa de um Transit Gateway, não de um virtual private gateway",
+        "why": "Tabelas de rotas propagam a partir de um virtual private gateway na AWS; a falha foi do moto."
+      },
+      {
+        "text": "Que a tabela de rotas precisa estar associada a uma sub-rede antes",
+        "why": "Ela foi associada, na preparação. A falta de associação não seria um erro do servidor."
+      },
+      {
+        "text": "Nada: o moto 5.2.3 não o implementa, e a AWS teria sucesso",
+        "why": "Isso. Um 500 é o servidor falhando, não uma recusa do pedido; a rota estática foi a parte que o moto conseguiu guardar."
+      },
+      {
+        "text": "Que a conexão VPN não tem túneis de pé",
+        "why": "A propagação pode ser ligada seja qual for o estado dos túneis; as rotas chegam quando eles sobem."
+      }
+    ]
+  }
+}

@@ -1,0 +1,623 @@
+[
+  {
+    "id": "ex-sprsqn8j",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On EKS with Fargate, how many pods run on one of the machines Fargate starts?",
+    "hint": "Kubernetes shows each as a node.",
+    "choices": [
+      {
+        "text": "As many as fit, like any node",
+        "correct": false,
+        "why": "That is a node of a node group. A Fargate machine is started for one pod."
+      },
+      {
+        "text": "One per namespace the profile selects",
+        "correct": false,
+        "why": "Namespaces decide which pods go to Fargate, not how they are packed."
+      },
+      {
+        "text": "Up to the 29 that vpc-cni allows on an m7g.large",
+        "correct": false,
+        "why": "That limit belongs to EC2 nodes; a Fargate machine holds a single pod."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right. The machine is sized for that pod and goes away with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tycmd3mp",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The profile batch selects namespace=jobs, and namespace=reports with the label compute: fargate. Where does a pod in reports without that label run?",
+    "hint": "Every label of a selector has to match.",
+    "choices": [
+      {
+        "text": "On Fargate, because its namespace is listed",
+        "correct": false,
+        "why": "The reports selector also names a label, and the pod lacks it."
+      },
+      {
+        "text": "Nowhere: EKS refuses to create it",
+        "correct": false,
+        "why": "Nothing refuses the pod; it is simply not Fargate's."
+      },
+      {
+        "text": "On the cluster's EC2 nodes, if it has any",
+        "correct": true,
+        "why": "Right. It matches no selector, so the ordinary scheduler places it on a node group's nodes."
+      },
+      {
+        "text": "On Fargate in the jobs namespace instead",
+        "correct": false,
+        "why": "A pod is never moved to another namespace by a profile."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnhmx1k3",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pod on Fargate requests 1 vCPU and 2 GiB. Fargate adds 256 MB and rounds up to the next combination for 1 vCPU (2 to 8 GB, by 1 GB). At 0.0696 USD per vCPU-hour and 0.0076 per GB-hour, what does it cost for 730 hours, in USD, to the cent?",
+    "hint": "2 GiB plus 256 MB rounds up to 3 GB.",
+    "value": 67.45,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-9tx95yq0",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these will not run, or not work, in a pod on EKS Fargate? Choose all that apply.",
+    "hint": "The pod is alone on its machine and has no host to reach.",
+    "choices": [
+      {
+        "text": "A DaemonSet for a log agent",
+        "correct": true,
+        "why": "There is no node of yours to put it on; the agent becomes a sidecar."
+      },
+      {
+        "text": "A privileged container",
+        "correct": true,
+        "why": "Fargate refuses privileged containers."
+      },
+      {
+        "text": "A volume backed by EBS",
+        "correct": true,
+        "why": "EBS volumes are not mounted there; EFS is the one that mounts."
+      },
+      {
+        "text": "An EFS file system mounted in the pod",
+        "correct": false,
+        "why": "EFS is the shared storage Fargate pods do get."
+      },
+      {
+        "text": "A Deployment of three replicas",
+        "correct": false,
+        "why": "Three replicas are three pods on three machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-9833tndp",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "AWS allows at most ___ selectors in one Fargate profile, although moto accepted six.",
+    "hint": "A number.",
+    "blanks": [
+      {
+        "accept": [
+          "five",
+          "5"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-atqg36m2",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The selectors of a Fargate profile have to change. How is it done on AWS?",
+    "hint": "Look for an update operation.",
+    "choices": [
+      {
+        "text": "aws eks update-fargate-profile with the new selectors",
+        "correct": false,
+        "why": "There is no such operation; the command line refused the name."
+      },
+      {
+        "text": "Create a new profile, wait for ACTIVE, then delete the old one",
+        "correct": true,
+        "why": "Right. Profiles are immutable, so a change is a replacement."
+      },
+      {
+        "text": "Delete the cluster and create it with the new profile",
+        "correct": false,
+        "why": "Far more than needed: profiles come and go on a running cluster."
+      },
+      {
+        "text": "Label the pods differently, since selectors read labels at run time",
+        "correct": false,
+        "why": "That changes which pods match, not the profile."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwfkz83y",
+    "version": 1,
+    "section": "fargate-profiles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto accepted a Fargate profile on the default VPC's subnets. Why would the same call fail on AWS?",
+    "hint": "Does a Fargate pod get a public address?",
+    "choices": [
+      {
+        "text": "The default VPC has no subnet in sa-east-1c",
+        "correct": false,
+        "why": "It has one in each of the three zones, as describe-subnets showed."
+      },
+      {
+        "text": "A profile needs one subnet per selector",
+        "correct": false,
+        "why": "Subnets and selectors are independent lists."
+      },
+      {
+        "text": "Those pods get no public address, so AWS takes private ones only",
+        "correct": true,
+        "why": "Right. Fargate pods get no public IP, so only subnets without a route to an internet gateway are accepted."
+      },
+      {
+        "text": "Fargate is not offered in sa-east-1",
+        "correct": false,
+        "why": "The price sheet has Fargate lines for São Paulo."
+      }
+    ]
+  },
+  {
+    "id": "ex-fejgjjec",
+    "version": 1,
+    "section": "karpenter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does Karpenter do when pods cannot be scheduled?",
+    "hint": "No Auto Scaling group is involved.",
+    "choices": [
+      {
+        "text": "It raises the desired count of the cluster's node groups",
+        "correct": false,
+        "why": "That is Cluster Autoscaler's loop."
+      },
+      {
+        "text": "It moves them to Fargate",
+        "correct": false,
+        "why": "Fargate takes the pods a profile selects; Karpenter launches EC2 nodes."
+      },
+      {
+        "text": "It lowers their requests until they fit on an existing node",
+        "correct": false,
+        "why": "Karpenter never edits a pod; it changes the machines."
+      },
+      {
+        "text": "It asks EC2 directly for a machine that holds them",
+        "correct": true,
+        "why": "Right, with one CreateFleet call offering several types."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg78wpaq",
+    "version": 1,
+    "section": "karpenter",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each field of the NodePool to what it decides.",
+    "hint": "Read the notes beside nodepool.yaml.",
+    "pairs": [
+      {
+        "left": "requirements",
+        "right": "The range of instance types Karpenter may choose from"
+      },
+      {
+        "left": "limits.cpu",
+        "right": "The most vCPUs the pool may hold in all"
+      },
+      {
+        "left": "disruption.consolidationPolicy",
+        "right": "Whether badly packed nodes are replaced as well as empty ones"
+      },
+      {
+        "left": "expireAfter",
+        "right": "How old a node may get before it is replaced"
+      },
+      {
+        "left": "nodeClassRef",
+        "right": "Which EC2NodeClass builds the nodes"
+      }
+    ],
+    "right_distractors": [
+      "The Kubernetes version of the control plane"
+    ]
+  },
+  {
+    "id": "ex-q1jssym2",
+    "version": 1,
+    "section": "karpenter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Against moto, create-fleet with three instance types on offer returned three c7g.large, all in sa-east-1a. What does that say about AWS?",
+    "hint": "Whose choice was it?",
+    "choices": [
+      {
+        "text": "That c7g.large had the most spare capacity of the three that day",
+        "correct": false,
+        "why": "moto measures no capacity; it took the first type in the list."
+      },
+      {
+        "text": "That price-capacity-optimized always picks the first override",
+        "correct": false,
+        "why": "On AWS the strategy weighs each pool's price and spare capacity."
+      },
+      {
+        "text": "Nothing: the choice was moto's and not one AWS would make",
+        "correct": true,
+        "why": "Right. moto accepted the request; it modelled no pool."
+      },
+      {
+        "text": "That a fleet puts all its instances in one zone",
+        "correct": false,
+        "why": "The overrides named one subnet here; AWS spreads by the subnets and pools offered."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kbgvg4m",
+    "version": 1,
+    "section": "karpenter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should Karpenter's own pods run?",
+    "hint": "What could consolidation do to a node Karpenter manages?",
+    "choices": [
+      {
+        "text": "On a node from its own NodePool, so it pays for itself",
+        "correct": false,
+        "why": "It could consolidate that node away from under itself."
+      },
+      {
+        "text": "On capacity it does not manage: a small node group or a Fargate profile",
+        "correct": true,
+        "why": "Right. Its controller has to survive what it does to other nodes."
+      },
+      {
+        "text": "Outside the cluster, on a laptop with kubectl",
+        "correct": false,
+        "why": "It runs in the cluster as a Deployment, beside what it watches."
+      },
+      {
+        "text": "In the control plane, which AWS runs for it",
+        "correct": false,
+        "why": "Nothing of yours runs in the control plane; Auto Mode is the case where AWS runs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-45mzk9q1",
+    "version": 1,
+    "section": "karpenter",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Karpenter launches the nodes it chooses with a single EC2 call, ___, of type instant.",
+    "hint": "The call the lesson ran against moto.",
+    "blanks": [
+      {
+        "accept": [
+          "CreateFleet",
+          "create-fleet"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z6r8dmjq",
+    "version": 1,
+    "section": "karpenter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster with WhenEmptyOrUnderutilized consolidation runs a service as one replica with no PodDisruptionBudget. What will happen to it, sooner or later?",
+    "hint": "Consolidation saves money by moving pods.",
+    "choices": [
+      {
+        "text": "It is moved to another node, and is down while it restarts",
+        "correct": true,
+        "why": "Right. One replica and no budget means nothing stops the move or covers the gap."
+      },
+      {
+        "text": "Karpenter leaves it alone because it has a single replica",
+        "correct": false,
+        "why": "Nothing in the policy protects a single replica; the budget is how a workload says so."
+      },
+      {
+        "text": "It is pinned to its node until the node expires",
+        "correct": false,
+        "why": "expireAfter replaces the node too, and the pod moves then as well."
+      },
+      {
+        "text": "Karpenter scales it to two replicas first",
+        "correct": false,
+        "why": "Karpenter changes machines, never the replicas of a workload."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdfz6k0h",
+    "version": 1,
+    "section": "cluster-autoscaler-or-karpenter",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cluster Autoscaler adds two m7i.2xlarge at 0.6426 USD an hour each where Karpenter would have added two c7g.large at 0.1111. How much more does Cluster Autoscaler's choice cost over 730 hours, in USD, to the cent?",
+    "hint": "Difference per hour, times two nodes, times hours.",
+    "value": 775.99,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-16xg9em2",
+    "version": 1,
+    "section": "cluster-autoscaler-or-karpenter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster runs Cluster Autoscaler with one node group of m7g.large (8 GiB). A pod that requests 30 GiB arrives. What happens?",
+    "hint": "The group launches its own type.",
+    "choices": [
+      {
+        "text": "Cluster Autoscaler adds four m7g.large and spreads the pod over them",
+        "correct": false,
+        "why": "A pod runs on one node; it cannot be split."
+      },
+      {
+        "text": "The group switches to a larger type for this one pod",
+        "correct": false,
+        "why": "The type is fixed in the group; Cluster Autoscaler changes only the count."
+      },
+      {
+        "text": "It stays Pending: no group has a node that would hold it",
+        "correct": true,
+        "why": "Right. The shapes are yours to anticipate, with a group for big pods."
+      },
+      {
+        "text": "Fargate takes it automatically",
+        "correct": false,
+        "why": "Only pods a profile selects go to Fargate, and Fargate tops out at 30 GB with the 256 MB added."
+      }
+    ]
+  },
+  {
+    "id": "ex-4rcn4jxq",
+    "version": 1,
+    "section": "cluster-autoscaler-or-karpenter",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put Cluster Autoscaler's loop in order, from a pending pod to a running one.",
+    "hint": "The autoscaler only changes a number.",
+    "items": [
+      "A pod is Pending because no node has room",
+      "Cluster Autoscaler simulates the scheduler against each group's type",
+      "It raises the chosen Auto Scaling group's desired count",
+      "The group launches an instance of its own type",
+      "The node joins and the scheduler places the pod"
+    ],
+    "trap": "The autoscaler never launches the instance itself: the Auto Scaling group does, after the count changes."
+  },
+  {
+    "id": "ex-0991cw15",
+    "version": 1,
+    "section": "cluster-autoscaler-or-karpenter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs Kubernetes on AWS and on another cloud, and wants the same autoscaler, configured the same way, on both. Which fits?",
+    "hint": "Which of the two is the Kubernetes project's own, built on node groups?",
+    "choices": [
+      {
+        "text": "Karpenter, because AWS started it",
+        "correct": false,
+        "why": "Who started it says nothing about where it works the same way."
+      },
+      {
+        "text": "EKS Auto Mode, on both",
+        "correct": false,
+        "why": "Auto Mode is an EKS feature and exists on AWS alone."
+      },
+      {
+        "text": "Cluster Autoscaler",
+        "correct": true,
+        "why": "Right. It works with node groups on every cloud that has them."
+      },
+      {
+        "text": "Fargate profiles, which other clouds also read",
+        "correct": false,
+        "why": "Fargate is AWS's, and a profile means nothing elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzqv3szw",
+    "version": 1,
+    "section": "cluster-autoscaler-or-karpenter",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does Karpenter do that Cluster Autoscaler does not? Choose all that apply.",
+    "hint": "Compare the two rows of the table.",
+    "choices": [
+      {
+        "text": "Picks the instance type for each batch of pending pods",
+        "correct": true,
+        "why": "A group's type is fixed; a NodePool is a range."
+      },
+      {
+        "text": "Replaces nodes that are badly packed, not only empty ones",
+        "correct": true,
+        "why": "That is consolidation with WhenEmptyOrUnderutilized."
+      },
+      {
+        "text": "Calls EC2 directly instead of changing an Auto Scaling group",
+        "correct": true,
+        "why": "It launches with CreateFleet."
+      },
+      {
+        "text": "Reacts to pods that stay Pending",
+        "correct": false,
+        "why": "Both react to exactly that."
+      },
+      {
+        "text": "Needs a node group defined in advance for each shape",
+        "correct": false,
+        "why": "That is Cluster Autoscaler's requirement."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6cx81p9",
+    "version": 1,
+    "section": "cluster-autoscaler-or-karpenter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The NodePool allows arm64 types only, and a team deploys an image built only for x86. What goes wrong?",
+    "hint": "The saving of the section assumed something about the images.",
+    "choices": [
+      {
+        "text": "Karpenter rebuilds the image for Arm",
+        "correct": false,
+        "why": "Karpenter launches machines; it never touches an image."
+      },
+      {
+        "text": "Its containers fail to start on the Arm nodes",
+        "correct": true,
+        "why": "Right. The NodePool would have to allow amd64 types as well."
+      },
+      {
+        "text": "Nothing, since Graviton runs x86 programs at full speed",
+        "correct": false,
+        "why": "Graviton is Arm and does not run an x86-only image."
+      },
+      {
+        "text": "The pods go to Fargate instead",
+        "correct": false,
+        "why": "Only a profile sends pods to Fargate."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4e0bcrh",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pod on Fargate requests 0.25 vCPU and 0.5 GiB. With the 256 MB Fargate adds, it rounds up to 0.25 vCPU and 1 GB. At 0.0696 USD per vCPU-hour and 0.0076 per GB-hour, what does it cost for 730 hours, in USD, to the cent?",
+    "hint": "vCPU × price + GB × price, times hours.",
+    "value": 18.25,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-00b91ed5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Batch jobs of very different sizes, some built for Arm and some for x86, run mostly on spot, and a node group per shape is getting out of hand. What fits best?",
+    "hint": "Which tool chooses the machine per batch of pods?",
+    "choices": [
+      {
+        "text": "More node groups, one per size and architecture",
+        "correct": false,
+        "why": "That is the growth the question says is getting out of hand."
+      },
+      {
+        "text": "Karpenter, with a NodePool allowing both architectures and spot",
+        "correct": true,
+        "why": "Right: one range, chosen per batch, with spot first."
+      },
+      {
+        "text": "Fargate profiles for every namespace",
+        "correct": false,
+        "why": "Fargate charges every request in full and offers no spot pricing on the sheet; the jobs also lose spot."
+      },
+      {
+        "text": "One very large node group of m7i.2xlarge",
+        "correct": false,
+        "why": "Small jobs would each buy a large machine, and the Arm images would not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z7xea2v",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each workload to the capacity this lesson would put it on.",
+    "hint": "Remember what Fargate refuses and what Karpenter needs.",
+    "pairs": [
+      {
+        "left": "Karpenter's own controller",
+        "right": "A small managed node group"
+      },
+      {
+        "left": "Nightly jobs in the namespace jobs",
+        "right": "A Fargate profile selecting jobs"
+      },
+      {
+        "left": "A log agent on every node",
+        "right": "A DaemonSet on the EC2 nodes"
+      },
+      {
+        "left": "Pods of many sizes, Arm and x86",
+        "right": "A NodePool with a wide range of types"
+      }
+    ],
+    "right_distractors": [
+      "A Fargate profile selecting kube-system alone"
+    ]
+  }
+]

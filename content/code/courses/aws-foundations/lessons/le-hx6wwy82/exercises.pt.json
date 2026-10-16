@@ -1,0 +1,405 @@
+{
+  "ex-k1wt77zt": {
+    "prompt": "O que uma unidade organizacional guarda?",
+    "hint": "Ela é uma pasta na árvore.",
+    "choices": [
+      {
+        "text": "Recursos divididos pelas contas abaixo dela",
+        "why": "Uma OU não guarda recurso nenhum. Cada recurso continua pertencendo a exatamente uma conta."
+      },
+      {
+        "text": "Contas e outras OUs, nunca um recurso",
+        "why": "Isso. Ela é um galho da árvore, para que uma regra seja anexada uma vez para tudo o que há nele."
+      },
+      {
+        "text": "Os usuários do IAM de um departamento",
+        "why": "Usuários moram dentro de contas. Uma OU agrupa contas, e é desenhada pelo tipo de trabalho, não pela equipe."
+      },
+      {
+        "text": "Uma fatura própria, paga pela primeira conta dela",
+        "why": "Há uma fatura para a organização inteira, paga pela conta de gerenciamento."
+      }
+    ]
+  },
+  "ex-r1jqknyx": {
+    "prompt": "Logo depois do `create-account`, onde na árvore está a conta nova?",
+    "hint": "O comando não recebe pai.",
+    "choices": [
+      {
+        "text": "Na OU com o nome dela, criada junto",
+        "why": "Nenhuma OU é criada para uma conta. OUs são feitas com `create-organizational-unit`, de propósito."
+      },
+      {
+        "text": "Em lugar nenhum, até o `move-account` lhe dar um pai",
+        "why": "Toda conta tem sempre exatamente um pai; a árvore não tem contas soltas."
+      },
+      {
+        "text": "Direto sob a raiz, ao lado da conta de gerenciamento",
+        "why": "Isso. O `list-children` da raiz na transcrição listou as seis até as mudanças."
+      },
+      {
+        "text": "Na mesma OU da conta que a criou",
+        "why": "A conta de gerenciamento fica sob a raiz, e toda conta que ela cria também, mas não por ela estar lá."
+      }
+    ]
+  },
+  "ex-vy22my2n": {
+    "prompt": "A `shop-prod` já existe sob a raiz de uma organização nova sem OUs. Ordene os passos que a põem em `Prod`, sob `Workloads`.",
+    "hint": "Cada passo precisa de um id que o passo anterior produziu.",
+    "items": [
+      "procurar o id da raiz com `list-roots`",
+      "criar a OU `Workloads` sob a raiz",
+      "criar a OU `Prod` sob `Workloads`",
+      "`move-account` da raiz para `Prod`"
+    ],
+    "trap": "Criar `Prod` antes de `Workloads` é o deslize comum: `create-organizational-unit` precisa do id do pai, e `Workloads` não tem id até existir."
+  },
+  "ex-02x30yef": {
+    "prompt": "Uma empresa desenha a árvore por departamento: uma OU para marketing, uma para engenharia, uma para finanças, cada uma com contas de produção e de teste. Com o que as regras dela vão sofrer?",
+    "hint": "Uma regra anexada a uma OU alcança toda conta abaixo dela.",
+    "choices": [
+      {
+        "text": "Nada; um departamento é o dono natural de uma regra",
+        "why": "Regras seguem o tipo de trabalho. Um departamento mistura produção com testes, então o galho dele não carrega as regras de nenhum dos dois."
+      },
+      {
+        "text": "A fatura, que só pode ser dividida por OU",
+        "why": "A fatura lista cada conta, em qualquer OU que esteja. A forma da árvore não decide a fatura."
+      },
+      {
+        "text": "O aninhamento, já que três departamentos passam de cinco níveis",
+        "why": "Três OUs lado a lado são um nível. Profundidade não é o problema aqui."
+      },
+      {
+        "text": "Regras para sistemas no ar acabam repetidas em três lugares",
+        "why": "Isso. A produção está espalhada por três galhos, então nenhum galho sozinho guarda a regra. É por isso que a loja agrupa por `Prod` e `Staging`."
+      }
+    ]
+  },
+  "ex-1benvavr": {
+    "prompt": "A raiz do moto não lista tipo de política habilitado logo depois de `create-organization` com todos os recursos. O que a raiz da AWS listaria?",
+    "hint": "A referência da API para `CreateOrganization` diz.",
+    "choices": [
+      {
+        "text": "As SCPs, ligadas na hora",
+        "why": "Isso. A AWS as habilita na raiz quando a organização é criada com todos os recursos; o moto espera o `enable-policy-type`."
+      },
+      {
+        "text": "Nada também, até a primeira conta entrar",
+        "why": "Contas entrando não habilitam tipo de política. A lista vazia é diferença do moto."
+      },
+      {
+        "text": "Todo tipo de política que a AWS oferece",
+        "why": "Só as service control policies começam ligadas. As outras são habilitadas uma a uma."
+      },
+      {
+        "text": "O faturamento consolidado, que é um tipo de política",
+        "why": "Faturamento consolidado é um conjunto de recursos, não um tipo de política, e está sempre lá."
+      }
+    ]
+  },
+  "ex-9v8vsm8e": {
+    "prompt": "O topo da árvore de uma organização, com um id que começa com `r-`, se chama ___.",
+    "hint": "Uma por organização.",
+    "blanks": [
+      {
+        "accept": [
+          "raiz",
+          "root"
+        ]
+      }
+    ]
+  },
+  "ex-q9bcq06m": {
+    "prompt": "Duas contas mandam cada uma 8.192 GB de `sa-east-1` para a internet num mês: 0,15 por GB nos primeiros 10.240 GB, depois 0,138. Numa organização, quantos dólares custa o mês, deixando a franquia gratuita de lado?",
+    "hint": "Precifique 16.384 GB como uma conta só faria.",
+    "unit": "dólares"
+  },
+  "ex-byfh48nh": {
+    "prompt": "As mesmas duas contas, mas a `shop-staging` manda só 2.048 GB enquanto a `shop-prod` manda 8.192 GB. Quantos dólares a organização economiza contra duas faturas separadas?",
+    "hint": "Some primeiro, depois veja se o total passa de 10.240 GB.",
+    "unit": "dólares"
+  },
+  "ex-ghs75zp1": {
+    "prompt": "O que muda quando uma conta que pagava a própria fatura entra numa organização?",
+    "hint": "Quem paga, e como o uso é contado.",
+    "choices": [
+      {
+        "text": "Os recursos dela passam para a conta de gerenciamento",
+        "why": "Nada se move. A posse fica com o membro; só o pagador muda."
+      },
+      {
+        "text": "Outra conta paga, e o uso dela é precificado com o resto",
+        "why": "Isso. Um pagador, e a AWS precifica a organização como se fosse uma conta onde os preços têm faixas."
+      },
+      {
+        "text": "As cobranças dela somem da fatura, juntadas num total",
+        "why": "Cada membro continua listado com o que usou. A fatura é uma, as linhas são por conta."
+      },
+      {
+        "text": "Os preços dela caem para os da região da conta de gerenciamento",
+        "why": "Preços seguem a região onde um recurso roda, seja quem for que pague. Entrar não muda lista de preços."
+      }
+    ]
+  },
+  "ex-2qnxwnkx": {
+    "prompt": "Quais destes são divididos entre as contas de uma organização por padrão? Marque todos os que se aplicam.",
+    "hint": "Três coisas atravessam as paredes na fatura.",
+    "choices": [
+      {
+        "text": "As faixas de volume de um preço",
+        "why": "Isso. O uso é somado entre as contas antes de as faixas serem aplicadas."
+      },
+      {
+        "text": "O desconto de um Savings Plan",
+        "why": "Isso. Por padrão ele vale para o uso correspondente em qualquer conta; a lição 14 o lê."
+      },
+      {
+        "text": "A cota de VPC de cada região",
+        "why": "Cotas continuam por conta, que é um dos motivos para dividir contas, afinal."
+      },
+      {
+        "text": "Créditos concedidos pela AWS",
+        "why": "Isso. Eles são gastos contra a organização inteira a não ser que as preferências de faturamento os restrinjam."
+      },
+      {
+        "text": "Os usuários do IAM da conta de gerenciamento",
+        "why": "Identidades nunca atravessam as paredes. O faturamento é a parte que atravessa."
+      }
+    ]
+  },
+  "ex-ryxd9e62": {
+    "prompt": "Uma empresa criou a organização com `CONSOLIDATED_BILLING` anos atrás e agora quer barreiras. O que atrapalha?",
+    "hint": "Leia o que a referência da API para `EnableAllFeatures` pede.",
+    "choices": [
+      {
+        "text": "Nada: políticas podem ser anexadas numa organização só de fatura",
+        "why": "Uma organização só de fatura não anexa política de tipo nenhum. Ela precisa de todos os recursos antes."
+      },
+      {
+        "text": "A organização tem de ser apagada e feita de novo",
+        "why": "A passagem para todos os recursos existe exatamente para este caso. Nada é apagado."
+      },
+      {
+        "text": "Toda conta convidada tem de aprovar a mudança antes",
+        "why": "Isso. Habilitar todos os recursos manda um handshake a cada conta convidada, e a mudança espera por todas."
+      },
+      {
+        "text": "Toda conta-membro tem de ser criada de novo",
+        "why": "As contas ficam como estão; o que elas devem à mudança é uma aprovação."
+      }
+    ]
+  },
+  "ex-syd9g9be": {
+    "prompt": "De onde vêm os números desta seção sobre dinheiro, já que o moto não tem fatura?",
+    "hint": "Um programa da lição 1, e um pouco de conta.",
+    "choices": [
+      {
+        "text": "Do `aws ce get-cost-and-usage` contra o moto",
+        "why": "O moto respondeu com uma lista vazia. Ele não guarda uso e não calcula cobrança."
+      },
+      {
+        "text": "Da lista de preços publicada pela AWS, e de contas sobre ela",
+        "why": "Isso. As faixas foram impressas pelo `price.py` a partir da oferta de 16 de setembro de 2026, e a fatura foi calculada à mão."
+      },
+      {
+        "text": "Da fatura de uma organização real",
+        "why": "Não há conta AWS por trás do curso, então não há fatura para ler."
+      },
+      {
+        "text": "Da tabela de preços do próprio moto",
+        "why": "O moto não tem tabela de preços. Um preço do moto seria um preço que ninguém publicou."
+      }
+    ]
+  },
+  "ex-deh6f019": {
+    "prompt": "Por que o primeiro servidor web da loja não deve rodar na conta de gerenciamento?",
+    "hint": "O que vale para todo membro e não para ela?",
+    "choices": [
+      {
+        "text": "Máquinas lá são cobradas a um preço maior",
+        "why": "Uma máquina custa o mesmo em qualquer conta. O motivo é o que a governa."
+      },
+      {
+        "text": "Ela não tem VPC padrão para pôr o servidor",
+        "why": "Toda conta tem uma VPC padrão em cada região, a de gerenciamento inclusive."
+      },
+      {
+        "text": "Barreiras nunca valem para ela, e ela alcança todo membro",
+        "why": "Isso. Uma carga de trabalho lá roda fora de toda regra, na única conta cujo comprometimento é o de todos."
+      },
+      {
+        "text": "As cotas dela são uma fração das de um membro",
+        "why": "Ela tem as mesmas cotas padrão de qualquer outra conta."
+      }
+    ]
+  },
+  "ex-xsws36cn": {
+    "prompt": "No moto, `list-attached-role-policies` da `OrganizationAccountAccessRole` da `shop-prod` respondeu uma lista vazia. O que responderia na AWS, para uma conta que a organização criou?",
+    "hint": "A AWS dá à role o que ela precisa para administrar a conta.",
+    "choices": [
+      {
+        "text": "Uma lista vazia também, até alguém anexar uma política",
+        "why": "Esse é o comportamento do moto. A AWS anexa uma política ao criar a role."
+      },
+      {
+        "text": "`ReadOnlyAccess`, para a conta de gerenciamento só poder olhar",
+        "why": "A role existe para administrar a conta, não para olhar para ela."
+      },
+      {
+        "text": "`AdministratorAccess`",
+        "why": "Isso. Assumir a role dá controle total da conta-membro, e é por isso que a conta de gerenciamento é tão vigiada."
+      },
+      {
+        "text": "As service control policies da organização",
+        "why": "Uma SCP é anexada no Organizations, nunca a uma role. A lição 4 diz o que ela faz."
+      }
+    ]
+  },
+  "ex-jgpdp8bm": {
+    "prompt": "A política de confiança da `OrganizationAccountAccessRole` cita `arn:aws:iam::123456789012:root`. Quem pode assumir a role?",
+    "hint": "`root` no fim do ARN de uma conta não é o usuário root.",
+    "choices": [
+      {
+        "text": "Só o usuário root da conta de gerenciamento",
+        "why": "A palavra parece isso e quer dizer a conta como um todo. A lição 9 lê políticas de confiança com calma."
+      },
+      {
+        "text": "Quem nessa conta o IAM dela deixar passar",
+        "why": "Isso. A política de confiança deixa a conta entrar; o IAM da conta decide quais identidades dela podem usar isso."
+      },
+      {
+        "text": "Qualquer conta da organização",
+        "why": "Só a conta que ela cita. A `shop-staging` não é a `123456789012`."
+      },
+      {
+        "text": "A raiz da árvore da organização, `r-ucqy`",
+        "why": "A raiz da árvore não é uma identidade e não assume role. O ARN cita uma conta."
+      }
+    ]
+  },
+  "ex-1va0k8d2": {
+    "prompt": "Ponha em ordem a entrada de uma conta existente.",
+    "hint": "A própria conta tem a última palavra.",
+    "items": [
+      "a conta de gerenciamento roda `invite-account-to-organization`",
+      "a AWS manda um e-mail ao dono da outra conta",
+      "alguém dentro dessa conta roda `accept-handshake`",
+      "um administrador lá cria a `OrganizationAccountAccessRole` à mão"
+    ],
+    "trap": "Esperar que a role exista depois de entrar é o deslize comum: só contas que a organização cria a ganham."
+  },
+  "ex-syf34sdy": {
+    "prompt": "`invite-account-to-organization` respondeu `500` no moto. O que isso quer dizer?",
+    "hint": "De quem é um 500 aqui?",
+    "choices": [
+      {
+        "text": "A AWS recusou o convite porque `111122223333` não existe",
+        "why": "Nada chegou à AWS; a requisição foi para o moto, e o moto falhou."
+      },
+      {
+        "text": "O moto não implementa convites",
+        "why": "Isso. O handshake foi descrito pela documentação da AWS e não foi rodado."
+      },
+      {
+        "text": "A conta convidada tem de ser criada antes com `create-account`",
+        "why": "Um convite é para uma conta que já existe fora da organização."
+      },
+      {
+        "text": "A organização chegou ao limite de contas",
+        "why": "Um limite seria uma recusa com motivo. Um 500 é o servidor falhando."
+      }
+    ]
+  },
+  "ex-qc6ppnp4": {
+    "prompt": "A `shop-staging`, criada dentro da organização, tenta `leave-organization` no dia seguinte. O que a impede, sem barreira nenhuma?",
+    "hint": "Ela viraria uma conta avulsa.",
+    "choices": [
+      {
+        "text": "Nada; um membro pode sair quando quiser",
+        "why": "Um membro pode sair, mas não antes de ter o que uma conta avulsa precisa."
+      },
+      {
+        "text": "Só a conta de gerenciamento pode remover uma conta",
+        "why": "`leave-organization` é rodado de dentro do membro, e existe exatamente para isso."
+      },
+      {
+        "text": "Faltam pagamento e plano de suporte",
+        "why": "Isso. Uma conta criada nunca os recolheu, e uma conta avulsa precisa dos três."
+      },
+      {
+        "text": "Contas criadas por uma organização nunca podem sair dela",
+        "why": "Podem, depois que os dados que faltam forem acrescentados. A barreira da lição 4 é que proíbe de vez."
+      }
+    ]
+  },
+  "ex-by7tytp0": {
+    "prompt": "Ligue cada comando ao que ele respondeu nesta lição.",
+    "hint": "Uma transcrição cada.",
+    "pairs": [
+      {
+        "left": "`list-children` da raiz, depois das mudanças",
+        "right": "só a conta de gerenciamento"
+      },
+      {
+        "left": "`list-parents` da `shop-prod`",
+        "right": "a OU `Prod`"
+      },
+      {
+        "left": "`move-account`",
+        "right": "nada"
+      },
+      {
+        "left": "`ce get-cost-and-usage`",
+        "right": "uma lista vazia de resultados"
+      }
+    ],
+    "right_distractors": [
+      "a OU `Workloads`"
+    ]
+  },
+  "ex-zgc5s25k": {
+    "prompt": "Uma conta existente com cinco anos de história entra na organização da loja por convite. Qual destes é verdade sobre ela depois?",
+    "hint": "Compare uma conta criada com uma convidada.",
+    "choices": [
+      {
+        "text": "Os recursos dela passam a ser da conta de gerenciamento",
+        "why": "Entrar não move recurso nenhum. Ela mantém todas as paredes."
+      },
+      {
+        "text": "Ela já carrega a `OrganizationAccountAccessRole`",
+        "why": "Só contas criadas ganham a role. Uma convidada a ganha quando alguém a cria lá."
+      },
+      {
+        "text": "Ela fica sob a raiz para sempre, já que só contas criadas podem ser movidas",
+        "why": "Qualquer membro pode ser movido entre OUs, seja como for que entrou."
+      },
+      {
+        "text": "O uso dela agora conta para as faixas de volume da organização",
+        "why": "Isso. A partir da entrada, a conta de gerenciamento paga por ela e a precifica com o uso de todos os outros."
+      }
+    ]
+  },
+  "ex-5nt5evsx": {
+    "prompt": "Um colega propõe dar à `security` uma organização própria, para ninguém na organização da loja poder tocá-la. O que a loja perde?",
+    "hint": "O que duas organizações não dividem?",
+    "choices": [
+      {
+        "text": "Uma fatura e as regras da árvore",
+        "why": "Isso. Duas organizações são dois pagadores e duas árvores. Uma conta fica mais protegida na sua própria OU com barreiras do que fora da árvore."
+      },
+      {
+        "text": "Nada, já que duas organizações podem dividir uma OU entre elas",
+        "why": "Uma OU pertence a uma árvore, e uma conta a uma organização por vez."
+      },
+      {
+        "text": "A VPC padrão da conta",
+        "why": "A VPC padrão pertence à conta, em qualquer organização que esteja."
+      },
+      {
+        "text": "A capacidade de criar usuários do IAM nela",
+        "why": "O IAM mora dentro da conta e funciona igual em qualquer organização, ou em nenhuma."
+      }
+    ]
+  }
+}

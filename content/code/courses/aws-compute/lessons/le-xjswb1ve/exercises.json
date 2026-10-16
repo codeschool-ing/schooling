@@ -1,0 +1,694 @@
+[
+  {
+    "id": "ex-gcgad1z3",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How is the price of a spot instance set today?",
+    "hint": "There has been no bidding since 2017.",
+    "choices": [
+      {
+        "text": "By an auction: the highest bids win the capacity and set the price",
+        "correct": false,
+        "why": "That was roughly the model before 2017. Nobody bids now."
+      },
+      {
+        "text": "As a fixed 90% off the on-demand price, the same for every type and zone",
+        "correct": false,
+        "why": "Ninety percent is the most AWS describes, not a fixed rate; the real discount varies by pool and week."
+      },
+      {
+        "text": "By the maximum price each customer sets on the request",
+        "correct": false,
+        "why": "MaxPrice only adds a reason to be interrupted; it does not set what anybody pays."
+      },
+      {
+        "text": "By AWS, per type and zone, from long-term supply and demand, moving gradually",
+        "correct": true,
+        "why": "Right. The price of each pool changes over days, not minutes, and you pay it whatever maximum you set."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbam3f6v",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's spot price history shows 0.00001 USD an hour for m7i.large in every zone, dated 2006. How should that be read?",
+    "hint": "Could any of it be a measurement?",
+    "choices": [
+      {
+        "text": "As the floor AWS keeps for spot, which a quiet zone can reach",
+        "correct": false,
+        "why": "There is no such floor, and the date is three years before spot existed."
+      },
+      {
+        "text": "As a real price from moto's catalogue, out of date by some years",
+        "correct": false,
+        "why": "moto's catalogue of instance types is AWS's; its spot prices are not prices from anywhere."
+      },
+      {
+        "text": "As a placeholder, because nothing moto reports about money is real",
+        "correct": true,
+        "why": "Right. On AWS the same call returns real changes of price over the last 90 days, per zone."
+      },
+      {
+        "text": "As what is left of the on-demand price once a 90% discount is applied",
+        "correct": false,
+        "why": "A tenth of 0.16065 is 0.016065, not 0.00001; the number is not derived from anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s309c93",
+    "version": 1,
+    "section": "the-discount",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Assume, for the arithmetic only, a spot discount of 70%. What do 5 spot m7i.large instances cost for 730 hours, at the on-demand price of 0.16065 USD an hour, in USD?",
+    "hint": "You pay 30% of the on-demand price.",
+    "value": 175.91,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-hvjwz5jk",
+    "version": 1,
+    "section": "the-discount",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does setting MaxPrice well below the on-demand price do to a spot instance?",
+    "hint": "What do you pay, whatever the maximum?",
+    "choices": [
+      {
+        "text": "Lowers the bill to that maximum",
+        "correct": false,
+        "why": "You pay the spot price of the pool, never your maximum."
+      },
+      {
+        "text": "Moves the instance to a cheaper zone",
+        "correct": false,
+        "why": "The maximum chooses nothing about placement."
+      },
+      {
+        "text": "Protects it from interruptions while the price stays under the maximum",
+        "correct": false,
+        "why": "AWS reclaims capacity whatever your maximum is; the maximum is an extra reason, never a shield."
+      },
+      {
+        "text": "Adds a second reason to be interrupted, without lowering what you pay",
+        "correct": true,
+        "why": "Right. If the pool's price rises above your maximum, the instance goes; the price you pay meanwhile is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-79r5hfk8",
+    "version": 1,
+    "section": "the-discount",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each spot option to what it means at an interruption.",
+    "hint": "Three behaviours and the kind of request two of them need.",
+    "pairs": [
+      {
+        "left": "terminate",
+        "right": "The instance ends, the default"
+      },
+      {
+        "left": "stop",
+        "right": "EBS volumes kept, started again when capacity returns"
+      },
+      {
+        "left": "hibernate",
+        "right": "Memory written to the root volume first, resumed later"
+      },
+      {
+        "left": "persistent",
+        "right": "The request outlives the instance, which stop and hibernate need"
+      }
+    ],
+    "right_distractors": [
+      "A bid that keeps the instance against other customers"
+    ]
+  },
+  {
+    "id": "ex-2asb0f09",
+    "version": 1,
+    "section": "the-interruption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How much notice does AWS give before it takes a spot instance back?",
+    "hint": "The interruption notice, not the recommendation.",
+    "choices": [
+      {
+        "text": "None: the instance stops without warning",
+        "correct": false,
+        "why": "There is a notice, on the metadata path and in EventBridge."
+      },
+      {
+        "text": "Two minutes",
+        "correct": true,
+        "why": "Right. The notice appears two minutes before the instance is stopped, hibernated or terminated."
+      },
+      {
+        "text": "Fifteen minutes, enough to finish most jobs",
+        "correct": false,
+        "why": "Two minutes is all there is, which is why draining is a list of things to stop."
+      },
+      {
+        "text": "Whatever the lifecycle hook's timeout says",
+        "correct": false,
+        "why": "A hook can hold an instance the group is terminating; it does not lengthen a spot interruption."
+      }
+    ]
+  },
+  {
+    "id": "ex-72115xny",
+    "version": 1,
+    "section": "the-interruption",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On AWS, until an interruption is scheduled, the metadata path spot/instance-action answers with the HTTP status ___.",
+    "hint": "Not found.",
+    "blanks": [
+      {
+        "accept": [
+          "404"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4wre64ha",
+    "version": 1,
+    "section": "the-interruption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "spot-watch.sh, pointed at moto, printed no notice (500). Why is treating every answer but 200 as \"not yet\" the right design?",
+    "hint": "What would a listener that exits on surprises miss?",
+    "choices": [
+      {
+        "text": "Stopping on a surprise would end the listening, and miss the notice when it came",
+        "correct": true,
+        "why": "Right. The only answer that should change its behaviour is a notice; everything else is a reason to look again in five seconds."
+      },
+      {
+        "text": "Because AWS answers 500 while there is no notice yet, exactly as moto did here",
+        "correct": false,
+        "why": "AWS answers 404; the 500 was moto not implementing the path."
+      },
+      {
+        "text": "Because a 500 means the interruption was cancelled",
+        "correct": false,
+        "why": "Nothing cancels a notice; and no 500 is part of the documented behaviour."
+      },
+      {
+        "text": "So that it can be tested against moto at all",
+        "correct": false,
+        "why": "That is a convenience it happens to give, not the reason the design is right on AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-s52snmte",
+    "version": 1,
+    "section": "the-interruption",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue worker on spot gets its interruption notice. Put the drain in order.",
+    "hint": "Stop first, finish second, hand back third.",
+    "items": [
+      "Stop reading new messages from the queue",
+      "Finish the message in hand, or checkpoint it",
+      "Leave unfinished messages undeleted, so they become visible again",
+      "AWS terminates the instance at the time in the notice"
+    ],
+    "trap": "Reading one more message after the notice starts work the two minutes cannot finish."
+  },
+  {
+    "id": "ex-5az3zaa7",
+    "version": 1,
+    "section": "the-interruption",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An instance receives a rebalance recommendation. What can it count on?",
+    "hint": "It is a hint, not a promise.",
+    "choices": [
+      {
+        "text": "An interruption notice within the next two minutes",
+        "correct": false,
+        "why": "The two may arrive together, far apart, or the notice may never come."
+      },
+      {
+        "text": "That AWS will not interrupt it before it has been replaced",
+        "correct": false,
+        "why": "Nothing guarantees that; the notice can come at any moment after, or before, the recommendation."
+      },
+      {
+        "text": "Elevated risk, nothing more: it runs on for hours or days",
+        "correct": true,
+        "why": "Right. That is why a group uses it to launch a replacement early, and nothing waits on it."
+      },
+      {
+        "text": "Fifteen minutes before the notice, as a fixed lead",
+        "correct": false,
+        "why": "There is no fixed lead; the timing varies, and sometimes there is no recommendation at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d5m7pqd",
+    "version": 1,
+    "section": "mixed-groups",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A mixed group has OnDemandBaseCapacity 3 and OnDemandPercentageAboveBaseCapacity 20. At a desired capacity of 13, how many of its instances are spot?",
+    "hint": "Take the base off first, then split the rest.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "instances"
+  },
+  {
+    "id": "ex-d1azveev",
+    "version": 1,
+    "section": "mixed-groups",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson's group allow four instance types rather than one?",
+    "hint": "AWS interrupts by pool.",
+    "choices": [
+      {
+        "text": "Each type in each zone is its own pool of spare capacity, and more pools mean fewer moments with nowhere to launch",
+        "correct": true,
+        "why": "Right. Four types over three zones is twelve pools; one type is three, and they can run dry together."
+      },
+      {
+        "text": "So that the group can pick a faster type when the load rises",
+        "correct": false,
+        "why": "The types are chosen to be interchangeable; nothing picks by speed."
+      },
+      {
+        "text": "Because a mixed instances policy refuses fewer than four",
+        "correct": false,
+        "why": "One override is accepted; four is a choice about pools."
+      },
+      {
+        "text": "To spread the on-demand base over four prices",
+        "correct": false,
+        "why": "The base is about which instances cannot be interrupted, not about prices."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8ztp2tx",
+    "version": 1,
+    "section": "mixed-groups",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto launched the lesson's mixed group as ten m7i.large, all on demand. What would AWS have launched?",
+    "hint": "Base two, then a quarter of eight.",
+    "choices": [
+      {
+        "text": "Ten on-demand instances too, until a scaling policy asked for spot",
+        "correct": false,
+        "why": "The distribution applies from the first launch; no policy is needed."
+      },
+      {
+        "text": "Two on demand and eight spot",
+        "correct": false,
+        "why": "That leaves out the 25% of the eight above the base, which are on demand too."
+      },
+      {
+        "text": "Four on demand and six spot, spread over the types and zones",
+        "correct": true,
+        "why": "Right. Two from the base, two from 25% of the other eight, and six spot instances chosen by the allocation strategy."
+      },
+      {
+        "text": "Ten spot instances, with two kept as a base in reserve",
+        "correct": false,
+        "why": "The base is two running on-demand instances, not a reserve of spot ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c7hkb4b",
+    "version": 1,
+    "section": "mixed-groups",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody adds m7g.large to the overrides of the lesson's group and changes nothing else. What goes wrong on AWS?",
+    "hint": "What does the g mean, and what image is in the template?",
+    "choices": [
+      {
+        "text": "Nothing: overrides change only the instance type, and the image adapts to whichever processor it lands on",
+        "correct": false,
+        "why": "An image is built for one architecture; it does not adapt."
+      },
+      {
+        "text": "m7g.large has less memory, so the group rejects the override",
+        "correct": false,
+        "why": "It has the same 2 vCPUs and 8 GiB as the others; size is not the problem."
+      },
+      {
+        "text": "Arm types are not offered as spot",
+        "correct": false,
+        "why": "They are; the problem is the image, not the market."
+      },
+      {
+        "text": "The x86_64 image cannot boot on Arm; m7g.large needs an override with an arm64 image",
+        "correct": true,
+        "why": "Right. A mixed group can carry Arm and x86 together, but each architecture needs an image of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta2n2r7y",
+    "version": 1,
+    "section": "mixed-groups",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the spot allocation strategies? Choose all that apply.",
+    "hint": "Risk first, price first, or both.",
+    "choices": [
+      {
+        "text": "price-capacity-optimized picks the least-risk pools and the cheapest of those",
+        "correct": true,
+        "why": "And it is AWS's recommendation for most workloads."
+      },
+      {
+        "text": "capacity-optimized picks by risk of interruption, whatever the price",
+        "correct": true,
+        "why": "It ignores price inside the pools it trusts."
+      },
+      {
+        "text": "lowest-price is the safest, because cheap pools are the quiet ones",
+        "correct": false,
+        "why": "Cheap pools are often the ones most likely to be taken back."
+      },
+      {
+        "text": "The strategy also decides how many instances are on demand",
+        "correct": false,
+        "why": "That is the base and the percentage; the strategy only chooses pools for spot."
+      },
+      {
+        "text": "moto 5.2.3 stored the strategy and launched no spot instance",
+        "correct": true,
+        "why": "The description kept it, and every instance came out on demand."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8d69a51",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are good candidates for spot? Choose all that apply.",
+    "hint": "Can any one instance vanish and the work carry on?",
+    "choices": [
+      {
+        "text": "Workers reading from a queue",
+        "correct": true,
+        "why": "An unfinished message comes back after its visibility timeout."
+      },
+      {
+        "text": "The only PostgreSQL server of the shop",
+        "correct": false,
+        "why": "One instance holding state is exactly what an interruption destroys."
+      },
+      {
+        "text": "CI build agents",
+        "correct": true,
+        "why": "An interrupted build is run again, and builds are made to be repeatable."
+      },
+      {
+        "text": "Stateless API instances above an on-demand base",
+        "correct": true,
+        "why": "Requests are short and the base keeps the service up through an interruption."
+      },
+      {
+        "text": "A six-hour report job that cannot checkpoint",
+        "correct": false,
+        "why": "The longer the job, the likelier an interruption lands inside it and starts it again."
+      }
+    ]
+  },
+  {
+    "id": "ex-e049ey28",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application needs 20 minutes to warm its caches before it serves well, and its spot instances are interrupted about once an hour. What is the verdict?",
+    "hint": "Compare the start-up with the life between interruptions.",
+    "choices": [
+      {
+        "text": "Good fit: the discount pays for the warm-up",
+        "correct": false,
+        "why": "A third of every instance's life is spent warming; the discount buys capacity that is not serving."
+      },
+      {
+        "text": "A poor fit unless the warm-up is made shorter, because a third of each instance's hour goes on starting",
+        "correct": true,
+        "why": "Right. Spot suits work whose start-up is short against the time between interruptions."
+      },
+      {
+        "text": "Fine, as long as the lifecycle hook gives it longer to drain",
+        "correct": false,
+        "why": "Draining is not the problem; starting is, and a hook does not lengthen a spot interruption anyway."
+      },
+      {
+        "text": "Good fit if the group uses capacity-optimized",
+        "correct": false,
+        "why": "A strategy can lower the interruption rate; it cannot make a twenty-minute warm-up free."
+      }
+    ]
+  },
+  {
+    "id": "ex-xshtb67m",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service needs three instances to answer at all, and normally runs ten. How should a mixed group set its base?",
+    "hint": "The base is the part an interruption cannot take.",
+    "choices": [
+      {
+        "text": "OnDemandBaseCapacity of at least 3",
+        "correct": true,
+        "why": "Right. The minimum the service needs is on demand, and the rest can be discounted."
+      },
+      {
+        "text": "A base of 0 and an on-demand percentage of 30, which also gives three",
+        "correct": false,
+        "why": "Three of ten only while the group is at ten; at a lower count the percentage gives fewer."
+      },
+      {
+        "text": "A base of 10, so nothing is ever at risk",
+        "correct": false,
+        "why": "Then the group has no spot at all and the discount is gone."
+      },
+      {
+        "text": "No base, with capacity rebalancing to cover the gap",
+        "correct": false,
+        "why": "Rebalancing replaces at-risk instances when it can; it does not keep a floor that cannot be taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-atrngf42",
+    "version": 1,
+    "section": "what-runs-on-spot",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question decides whether something belongs on spot?",
+    "hint": "Not how important it is.",
+    "choices": [
+      {
+        "text": "Whether it is production or test",
+        "correct": false,
+        "why": "A production API can run mostly on spot and a test database must not."
+      },
+      {
+        "text": "Whether its instance type has a large discount this week",
+        "correct": false,
+        "why": "A large discount on something that cannot be interrupted is a gamble that loses eventually."
+      },
+      {
+        "text": "How many instances it runs",
+        "correct": false,
+        "why": "A group of fifty holding state is as unsafe as one."
+      },
+      {
+        "text": "What one interruption would cost",
+        "correct": true,
+        "why": "Right. If any instance can vanish and the work carries on, spot is a discount."
+      }
+    ]
+  },
+  {
+    "id": "ex-88xjrt8y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group has --capacity-rebalance. One of its spot instances receives a rebalance recommendation. What does the group do on AWS?",
+    "hint": "Launch first.",
+    "choices": [
+      {
+        "text": "Terminates it at once, then launches a replacement",
+        "correct": false,
+        "why": "That order would leave a gap; rebalancing launches first."
+      },
+      {
+        "text": "Launches a replacement in a pool at lower risk, then terminates the instance at risk",
+        "correct": true,
+        "why": "Right. Capacity stays up, and the lifecycle hook, if any, still gets its turn on the leaving instance."
+      },
+      {
+        "text": "Waits for the interruption notice, then replaces it",
+        "correct": false,
+        "why": "The point of the setting is to act before the notice, while there is time."
+      },
+      {
+        "text": "Moves it to on demand",
+        "correct": false,
+        "why": "An instance cannot change market; a new one is launched instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-5r36d4qd",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Half a group runs on spot at a 50% discount, the rest on demand, all of one type. By what percentage is the group's bill lower than all on demand?",
+    "hint": "The discount times the share on spot.",
+    "value": 25,
+    "tolerance": 0,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-xknjnx7g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto's lifecycle hook came back with a queue in us-east-1 and a role in account 1234567890, though neither was given. What would AWS show?",
+    "hint": "What was in the call?",
+    "choices": [
+      {
+        "text": "No notification target and no role",
+        "correct": true,
+        "why": "Right. Without a target, the instance's own drain script completes the action when it is done."
+      },
+      {
+        "text": "The same two ARNs, which AWS fills in as defaults",
+        "correct": false,
+        "why": "AWS invents no target; those ARNs are moto's filler."
+      },
+      {
+        "text": "An error, because a hook needs a notification target",
+        "correct": false,
+        "why": "A hook without one is valid; it is completed with complete-lifecycle-action."
+      },
+      {
+        "text": "A queue and a role created for the hook in the group's own account",
+        "correct": false,
+        "why": "AWS creates neither on your behalf for a hook."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmnhgq60",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A group's termination hook has a 120-second timeout and default CONTINUE. A spot interruption notice arrives for one of its instances. How long does the instance have?",
+    "hint": "Whose clock is it?",
+    "choices": [
+      {
+        "text": "Two minutes plus the hook's 120 seconds",
+        "correct": false,
+        "why": "The hook does not add to AWS's reclaim; AWS takes the capacity at the time in the notice."
+      },
+      {
+        "text": "As long as it takes, since CONTINUE waits for the script",
+        "correct": false,
+        "why": "CONTINUE is what happens when the timeout passes; nothing waits forever."
+      },
+      {
+        "text": "Two minutes, whatever the hook says",
+        "correct": true,
+        "why": "Right. A hook holds an instance the group is terminating; it cannot hold back capacity AWS is reclaiming."
+      },
+      {
+        "text": "120 seconds counted from when the hook is completed",
+        "correct": false,
+        "why": "The hook's clock is irrelevant to a reclaim, and two minutes is AWS's."
+      }
+    ]
+  },
+  {
+    "id": "ex-70n7qje4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the spot-watch.sh script poll every five seconds rather than every minute?",
+    "hint": "What is the whole budget?",
+    "choices": [
+      {
+        "text": "Because the metadata service refuses a token older than a minute",
+        "correct": false,
+        "why": "The token asks for 300 seconds; the interval is not about the token."
+      },
+      {
+        "text": "Because the notice only stays on the path for five seconds",
+        "correct": false,
+        "why": "It stays until the instance goes."
+      },
+      {
+        "text": "A minute's delay would spend half of the two minutes before draining began",
+        "correct": true,
+        "why": "Right. Five seconds leaves almost the whole notice for stopping work."
+      },
+      {
+        "text": "Because AWS bills metadata calls by the minute, so polling faster costs nothing more",
+        "correct": false,
+        "why": "Metadata calls are not billed."
+      }
+    ]
+  }
+]

@@ -1,0 +1,445 @@
+{
+  "ex-vdcrbckv": {
+    "prompt": "Uma política permite `s3:ListBucket` em `arn:aws:s3:::shop-assets/*` e `s3:GetObject` em `arn:aws:s3:::shop-assets`. O que quem a tem consegue fazer?",
+    "hint": "Qual ação age sobre o bucket, e qual sobre os objetos?",
+    "choices": [
+      {
+        "text": "As duas coisas, já que o ARN do bucket cobre os objetos dentro dele",
+        "why": "O bucket e os objetos são recursos separados com ARNs separados; um não cobre o outro."
+      },
+      {
+        "text": "Listar o bucket, mas não ler os objetos",
+        "why": "Listar é uma ação sobre o bucket, e esta política a dá só sobre objetos, então listar também falha."
+      },
+      {
+        "text": "Nenhuma das duas: cada ação nomeia o tipo errado de recurso",
+        "why": "Isso. Os dois recursos estão trocados, então a política não concede nada do que pretendia. A política da bia junta `ListBucket` com o bucket e as ações de objeto com `shop-assets/*`."
+      },
+      {
+        "text": "Nada, porque a AWS recusa o documento como malformado",
+        "why": "O documento é bem formado: todo elemento é válido. Ele está errado no sentido, o que nenhuma verificação de gramática vê."
+      }
+    ]
+  },
+  "ex-7c4amsy6": {
+    "prompt": "O que é `2012-10-17` na linha `Version` de uma política?",
+    "hint": "É o mesmo em toda política que você escreve.",
+    "choices": [
+      {
+        "text": "A data em que a política foi escrita",
+        "why": "Ela não muda com os seus documentos. Uma política escrita hoje leva a mesma data."
+      },
+      {
+        "text": "A data em que a AWS fixou a gramática",
+        "why": "Isso. É a data em que a AWS fixou a linguagem; a antiga `2008-10-17` não tem variáveis de política, e um documento sem a linha é lido como a antiga."
+      },
+      {
+        "text": "O número de versão que a AWS mostra como `v1`, `v2` e assim por diante",
+        "why": "Essas são versões de uma política gerenciada, guardadas pelo IAM. O elemento `Version` fica dentro de cada uma delas, sem mudar."
+      },
+      {
+        "text": "A versão da API do IAM que a linha de comando chama",
+        "why": "A API tem versão própria em toda requisição. O `Version` da política trata da linguagem do documento."
+      }
+    ]
+  },
+  "ex-1sqy2r3c": {
+    "prompt": "Uma instrução permite `s3:Get*` em todo recurso. No ano que vem a AWS acrescenta uma operação nova do S3 cujo nome começa com `Get`. A instrução a permite?",
+    "hint": "Quando o curinga é comparado com o nome da ação?",
+    "choices": [
+      {
+        "text": "Não: um curinga é expandido numa lista fixa quando a política é salva",
+        "why": "Nada é expandido ao salvar. O padrão é comparado com a ação de cada requisição quando ela chega."
+      },
+      {
+        "text": "Sim, desde o dia em que ela existir, sem edição nenhuma na política",
+        "why": "Isso. O padrão compara nomes, inclusive nomes que não existiam quando ele foi escrito, e por isso vale pensar antes de escrever um."
+      },
+      {
+        "text": "Só depois de alguém publicar uma versão nova da política",
+        "why": "Uma versão nova muda o documento; ela não é necessária para um padrão antigo bater com um nome novo."
+      },
+      {
+        "text": "Só se a política for gerenciada pela AWS, já que a AWS atualiza essas",
+        "why": "A AWS edita as próprias políticas, mas um curinga na sua bate com o nome novo sem ninguém editar nada."
+      }
+    ]
+  },
+  "ex-2r0fb60a": {
+    "prompt": "Duas políticas são idênticas, exceto que uma põe a instrução `Deny` antes da `Allow` e a outra depois. Em que elas diferem no efeito?",
+    "hint": "Uma política é lida como um firewall?",
+    "choices": [
+      {
+        "text": "A primeira que bate vence, então a primeira política nega e a segunda permite",
+        "why": "Essa é a regra de um firewall. O IAM considera todas as instruções juntas, seja qual for a ordem."
+      },
+      {
+        "text": "A última instrução vence, como num arquivo de configuração",
+        "why": "Nada é sobrescrito pela posição. A lição 8 dá a regra que de fato resolve."
+      },
+      {
+        "text": "Em nada: o IAM não tem ordem entre instruções",
+        "why": "Isso. As instruções são um conjunto, e a lição 8 as resolve pelo efeito, nunca pela posição."
+      },
+      {
+        "text": "As instruções são aplicadas na ordem alfabética dos `Sid`",
+        "why": "Um `Sid` é só um rótulo, e opcional. Ele nunca decide nada."
+      }
+    ]
+  },
+  "ex-d32cpmhj": {
+    "prompt": "O elemento que nomeia em quem uma política de confiança confia, e que uma política de identidade deixa de fora, se chama ___.",
+    "hint": "Ele apareceu na política de confiança da lição 6, com `AWS` ou `Federated` dentro.",
+    "blanks": [
+      {
+        "accept": [
+          "Principal"
+        ]
+      }
+    ]
+  },
+  "ex-7k8wq14y": {
+    "prompt": "O moto é iniciado com `INITIAL_NO_AUTH_ACTION_COUNT=3`. Um aluno primeiro roda `aws sts get-caller-identity` para ver se ele responde, depois os três comandos de preparação. Quantos dos três comandos de preparação passam sem verificação?",
+    "hint": "Toda requisição conta, seja o que for que ela peça.",
+    "unit": "comandos"
+  },
+  "ex-cc7qazzn": {
+    "prompt": "Na preparação, `aws iam list-users` veio em quarto e foi recusado com `InvalidClientTokenId`. Por quê?",
+    "hint": "Com o que o terminal ainda assinava naquele momento?",
+    "choices": [
+      {
+        "text": "O admin ainda não tinha permissão para listar usuários",
+        "why": "O admin já tinha `AdministratorAccess`. Mas a requisição nem foi assinada como admin."
+      },
+      {
+        "text": "Foi assinada com `test`, uma chave que o IAM do moto nunca emitiu",
+        "why": "Isso. As três requisições livres tinham sido gastas, então a quarta foi verificada, e `test` não pertence a ninguém. A linha do `export` resolve."
+      },
+      {
+        "text": "A chave nova leva um minuto para ficar ativa",
+        "why": "As chaves do moto ficam ativas na hora, e a chave nova nem tinha sido usada ainda."
+      },
+      {
+        "text": "O moto recusa `list-users` depois que a verificação é ligada",
+        "why": "Três comandos depois a mesma chamada, assinada com a chave do admin, listou os usuários."
+      }
+    ]
+  },
+  "ex-1f0q7711": {
+    "prompt": "Qual destas requisições NÃO gasta uma das requisições livres de `INITIAL_NO_AUTH_ACTION_COUNT`?",
+    "hint": "Um endereço pertence ao próprio moto, não à AWS que ele imita.",
+    "choices": [
+      {
+        "text": "Uma requisição que falha com erro",
+        "why": "Uma falha também conta, e é assim que um erro de digitação estraga a preparação."
+      },
+      {
+        "text": "`aws sts get-caller-identity`",
+        "why": "Ela chega à API da AWS do moto como qualquer outra chamada, então conta como qualquer outra."
+      },
+      {
+        "text": "Uma requisição ao endereço `/moto-api/` do próprio moto",
+        "why": "Isso. É o endereço de controle do moto, fora da AWS que ele imita, e a linha de comando nunca envia nada para lá."
+      },
+      {
+        "text": "Uma requisição enviada do primeiro terminal em vez do segundo",
+        "why": "O moto conta requisições, não terminais; onde foi digitada não faz diferença."
+      }
+    ]
+  },
+  "ex-mc4x9ahd": {
+    "prompt": "Depois da preparação, um aluno abre um terceiro terminal, lê o `env.sh` e roda `aws iam list-users`. É recusado. Qual é a correção certa?",
+    "hint": "Para o que o `env.sh` define as chaves, e onde mora o `key`?",
+    "choices": [
+      {
+        "text": "Reiniciar o moto, já que um terminal novo zera a contagem",
+        "why": "A contagem é do moto e não tem nada a ver com terminais. Reiniciar jogaria fora o admin e todo o resto."
+      },
+      {
+        "text": "Escrever a chave do admin no `env.sh`, para todo terminal começar com ela",
+        "why": "Uma chave num arquivo é o hábito que este curso recusa, mesmo com as chaves sem valor do moto: o hábito é o que chega a uma real."
+      },
+      {
+        "text": "Usar o shell em que a chave do admin foi exportada",
+        "why": "Isso. O terminal novo assina com `test`, que o moto agora recusa, e a variável `key` só existe no shell antigo."
+      },
+      {
+        "text": "Anexar `AdministratorAccess` ao usuário `test`",
+        "why": "Não existe usuário `test`: é uma chave que o IAM do moto nunca emitiu, e nenhuma política a transforma numa."
+      }
+    ]
+  },
+  "ex-b0m6ex5q": {
+    "prompt": "O que `with_key \"$bia\" aws s3 ls` muda no terminal?",
+    "hint": "Veja onde as duas variáveis são definidas dentro da função.",
+    "choices": [
+      {
+        "text": "Só aquele comando é assinado com a chave da bia",
+        "why": "Isso. As variáveis são definidas na frente do comando, então duram só aquele comando, e o seguinte é do admin de novo."
+      },
+      {
+        "text": "Ele passa o terminal para a bia até o shell terminar",
+        "why": "Isso é o que o `export` faz, como na preparação. A função nunca exporta nada."
+      },
+      {
+        "text": "Ele cria uma chave de acesso nova para a bia a cada execução",
+        "why": "Ele lê a chave já guardada em `$bia`; criar uma seria o `create-access-key`, rodado uma vez."
+      },
+      {
+        "text": "Ele pede ao moto que aja como a bia sem assinar a requisição",
+        "why": "Toda requisição é assinada; a função só escolhe qual chave assina esta."
+      }
+    ]
+  },
+  "ex-zt04q1vm": {
+    "prompt": "Um auditor externo recebe `ReadOnlyAccess` na conta da loja. O que o auditor passa a ver?",
+    "hint": "Leia as linhas do S3 da versão padrão dela.",
+    "choices": [
+      {
+        "text": "As configurações de cada serviço, mas não os dados dentro deles",
+        "why": "`s3:Get*` inclui `GetObject`, que é o próprio dado."
+      },
+      {
+        "text": "Todo objeto de todo bucket, os backups inclusive",
+        "why": "Isso. Somente leitura é uma promessa sobre gravar. Para um auditor, uma política gerenciada pelo cliente que nomeia o que a auditoria precisa é a resposta mais estreita."
+      },
+      {
+        "text": "Só o que a loja acrescentar à política depois",
+        "why": "A loja não pode editar uma política gerenciada pela AWS. A AWS edita, e já foram 188 versões."
+      },
+      {
+        "text": "A lista de buckets, mas nenhum objeto deles",
+        "why": "`s3:List*` dá as listas, e `s3:Get*` dá os objetos também."
+      }
+    ]
+  },
+  "ex-3vtnsddz": {
+    "prompt": "Qual destes ARNs é de uma política gerenciada pela AWS?",
+    "hint": "Olhe onde estaria o número da conta.",
+    "choices": [
+      {
+        "text": "`arn:aws:iam::123456789012:policy/shop-assets-rw`",
+        "why": "Esse leva a conta da loja: é gerenciada pelo cliente."
+      },
+      {
+        "text": "`arn:aws:iam::123456789012:user/admin`",
+        "why": "Esse é um usuário, não uma política."
+      },
+      {
+        "text": "`arn:aws:s3:::shop-assets`",
+        "why": "Esse é um bucket, sem conta nem região no ARN."
+      },
+      {
+        "text": "`arn:aws:iam::aws:policy/ReadOnlyAccess`",
+        "why": "Isso: `aws` no lugar da conta, e é assim que toda conta consegue nomear a mesma política."
+      }
+    ]
+  },
+  "ex-zzvjmy3z": {
+    "prompt": "A `shop-assets-rw` já tem cinco versões. Ponha em ordem os passos para publicar uma edição com segurança e desfazê-la se estiver errada.",
+    "hint": "Não há espaço para uma sexta.",
+    "items": [
+      "apagar a versão mais antiga que não é a padrão",
+      "criar a versão nova com `--set-as-default`",
+      "testar a mudança como o usuário que tem a política",
+      "se estiver errada, `set-default-policy-version` de volta para a anterior"
+    ],
+    "trap": "Criar primeiro é o deslize comum: com cinco versões ele é recusado com `LimitExceeded`, antes de qualquer mudança."
+  },
+  "ex-fftyfa9z": {
+    "prompt": "A requisição da bia para apagar um objeto voltou `Access Denied`. Um colega diz que a chave dela deve estar errada. O que o erro diz?",
+    "hint": "Compare com o erro que a chave `test` recebeu.",
+    "choices": [
+      {
+        "text": "Que a chave está errada, já que o S3 escreve toda falha do mesmo jeito",
+        "why": "Uma chave que o moto nunca emitiu recebeu `InvalidClientTokenId` na preparação. O S3 também tem palavra própria para chave ruim."
+      },
+      {
+        "text": "Que a chave passou, e nada permitia a exclusão",
+        "why": "Isso. O Access Denied vem depois de a assinatura ser conferida; a política dela nunca nomeou `s3:DeleteObject`."
+      },
+      {
+        "text": "Que o objeto não existe",
+        "why": "O `logo.txt` estava lá; a bia tinha acabado de lê-lo. Um objeto ausente é outra resposta."
+      },
+      {
+        "text": "Que o moto não implementa a exclusão de objetos",
+        "why": "O moto apaga objetos para quem tem permissão; a recusa veio da verificação de política."
+      }
+    ]
+  },
+  "ex-7mea55s9": {
+    "prompt": "Por que a lição lista objetos com `s3api list-objects-v2` em vez de `aws s3 ls s3://shop-assets`?",
+    "hint": "O admin recebeu a mesma resposta que a bia receberia.",
+    "choices": [
+      {
+        "text": "O `aws s3 ls` exige `s3:ListAllMyBuckets`, que a bia não tem",
+        "why": "Essa permissão é para listar os buckets, `aws s3 ls` sem endereço. E o admin, que tem tudo, também foi recusado."
+      },
+      {
+        "text": "O moto recusa a assinatura dele, seja quem for que assine; a AWS aceita os dois",
+        "why": "Isso. O delimitador `/` que ele envia atrapalha a verificação de assinatura do moto, então a resposta é `SignatureDoesNotMatch` mesmo para o admin."
+      },
+      {
+        "text": "O `aws s3 ls` está obsoleto na versão 2 da AWS CLI",
+        "why": "Ele é atual e funciona contra a AWS; o problema era do moto."
+      },
+      {
+        "text": "A política da bia permite chamadas `s3api` mas não `s3`",
+        "why": "Uma política nomeia ações de API, e os dois comandos chamam a mesma ação `ListObjectsV2`."
+      }
+    ]
+  },
+  "ex-zqp9d01r": {
+    "prompt": "Uma política gerenciada pelo cliente tem as versões `v1` a `v5`, com a `v1` como padrão. Quantas versões precisam ser apagadas antes de criar duas versões novas?",
+    "hint": "O limite conta toda versão, a padrão inclusive.",
+    "unit": "versões"
+  },
+  "ex-0a82yhsv": {
+    "prompt": "`aws iam delete-user --user-name edu` responde `DeleteConflict ... must delete policies first`. O que isso quer dizer?",
+    "hint": "Que tipo de política mora dentro do usuário?",
+    "choices": [
+      {
+        "text": "A política está anexada a outros usuários, que a perderiam",
+        "why": "Uma política inline pertence só ao edu; ninguém mais pode tê-la."
+      },
+      {
+        "text": "O edu ainda tem uma política inline, que sai antes",
+        "why": "Isso. A API faz nomear cada política inline antes de o usuário ir, e depois de apagados os dois não há cópia para reaproveitar."
+      },
+      {
+        "text": "Um usuário apagado é guardado por uma semana, e a política com ele",
+        "why": "Não há período de espera; o `get-user` respondeu `NoSuchEntity` logo depois."
+      },
+      {
+        "text": "A política inline vai sobreviver ao usuário e continuar anexável",
+        "why": "Isso é o que uma política gerenciada faz. Uma inline não tem ARN com que sobreviver."
+      }
+    ]
+  },
+  "ex-3wdqgqc3": {
+    "prompt": "Trinta roles precisam da mesma permissão, que tem de ser mudada num lugar só e revertida rápido se uma mudança estiver errada. Que tipo de política serve?",
+    "hint": "Conte os lugares em que uma edição teria de ser feita.",
+    "choices": [
+      {
+        "text": "Uma política inline em cada role, para nenhuma compartilhá-la",
+        "why": "Trinta cópias são trinta edições, sem versões para onde voltar."
+      },
+      {
+        "text": "Uma política inline num grupo, com as roles nesse grupo",
+        "why": "Um grupo guarda usuários, nunca roles, então as roles não entram nele."
+      },
+      {
+        "text": "Um único documento gerenciado pelo cliente, anexado a cada uma delas",
+        "why": "Isso. Um documento, uma edição, e uma reversão que é uma troca de versão padrão."
+      },
+      {
+        "text": "A `PowerUserAccess` da AWS, que a AWS mantém atualizada para todos",
+        "why": "Ela não é esta permissão, e as mudanças dela são da AWS, no calendário da AWS, sem reversão sua."
+      }
+    ]
+  },
+  "ex-sn0yr4dv": {
+    "prompt": "Ligue cada necessidade ao tipo de política que a lição recomenda.",
+    "hint": "A última linha da tabela.",
+    "pairs": [
+      {
+        "left": "uma permissão que nunca pode chegar a uma segunda identidade",
+        "right": "inline"
+      },
+      {
+        "left": "uma função de trabalho que a AWS descreve e mantém atual",
+        "right": "gerenciada pela AWS"
+      },
+      {
+        "left": "a permissão da própria loja, compartilhada e versionada",
+        "right": "gerenciada pelo cliente"
+      }
+    ],
+    "right_distractors": [
+      "uma política de confiança"
+    ]
+  },
+  "ex-0nwq7zre": {
+    "prompt": "Quais destas valem para uma política inline num usuário? Marque todas as que se aplicam.",
+    "hint": "Compare com a `shop-assets-rw`.",
+    "choices": [
+      {
+        "text": "Tem nome, mas não tem ARN",
+        "why": "Isso, e é por isso que nada mais consegue nomeá-la para anexar."
+      },
+      {
+        "text": "Pode ser anexada a um segundo usuário",
+        "why": "Ela é escrita dentro de uma identidade; outra recebe a própria cópia ou nada."
+      },
+      {
+        "text": "Uma edição a sobrescreve, sem guardar versão anterior",
+        "why": "Isso. Versões existem só nas políticas gerenciadas."
+      },
+      {
+        "text": "Comporta 6.144 caracteres",
+        "why": "Esse é o limite de uma política gerenciada; as inline de um usuário param em 2.048."
+      },
+      {
+        "text": "Some quando o usuário é apagado",
+        "why": "Isso. A API faz você apagá-la antes, e depois não sobra nada."
+      }
+    ]
+  },
+  "ex-epex6k5z": {
+    "prompt": "O moto aceitou uma política de identidade com o elemento `Principal` e a obedeceu. Antes de usar a mesma política numa conta real, o que deve ser feito?",
+    "hint": "A aceitação do moto não é a da AWS.",
+    "choices": [
+      {
+        "text": "Nada, porque o moto a obedeceu e o moto responde como a AWS",
+        "why": "O moto responde no formato da AWS e verifica menos. A AWS recusa este documento antes de guardá-lo."
+      },
+      {
+        "text": "Torná-la gerenciada pelo cliente, já que políticas gerenciadas aceitam `Principal`",
+        "why": "Toda política de identidade é recusada com `Principal`, gerenciada ou inline: o principal é quem a tiver anexada."
+      },
+      {
+        "text": "Tirar o `Principal` e validar contra a gramática da AWS",
+        "why": "Isso. A lição 8 aponta a validação de políticas do IAM Access Analyzer como essa verificação; o moto responde a ela com erro, então ela roda contra a AWS."
+      },
+      {
+        "text": "Mudar o `Version` para `2008-10-17`, que permite um `Principal`",
+        "why": "A linguagem antiga não tem variáveis de política; ela não faz uma política de identidade aceitar principal."
+      }
+    ]
+  },
+  "ex-b4agaaar": {
+    "prompt": "`aws iam list-user-policies --user-name caio` imprime uma lista vazia, e mesmo assim o caio lê todo bucket. Onde olhar em seguida?",
+    "hint": "Esse comando lista um tipo de política só.",
+    "choices": [
+      {
+        "text": "As políticas gerenciadas anexadas a ele, e as dos grupos dele",
+        "why": "Isso. O `list-user-policies` mostra as inline; o `list-attached-user-policies` e o `list-groups-for-user` mostram o resto."
+      },
+      {
+        "text": "Em lugar nenhum: lista vazia quer dizer que ele não tem política",
+        "why": "Quer dizer que ele não tem política inline. Metade do que um usuário pode fazer está na outra lista."
+      },
+      {
+        "text": "Nas configurações dos próprios buckets, já que o S3 é aberto por padrão",
+        "why": "Um bucket novo é privado. Alguma coisa deu acesso ao caio, e isso está no IAM primeiro."
+      },
+      {
+        "text": "Na contagem do moto, que pode ainda o estar deixando passar",
+        "why": "As três requisições livres foram gastas na preparação; toda requisição desde então é julgada."
+      }
+    ]
+  },
+  "ex-c4zk002b": {
+    "prompt": "Uma política gerenciada guarda no máximo ___ versões.",
+    "hint": "O `LimitExceeded` disse o número.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "cinco"
+        ]
+      }
+    ]
+  }
+}

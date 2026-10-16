@@ -1,0 +1,447 @@
+{
+  "ex-71phxza8": {
+    "prompt": "Um serviço Fargate precisa aceitar a porta 80 só de dentro da VPC. Onde essa regra é escrita?",
+    "hint": "No modo awsvpc, o que leva a interface de rede?",
+    "choices": [
+      {
+        "text": "Num security group que as tasks levam",
+        "why": "Cada task tem a própria interface, e o grupo nomeado na configuração de rede fica nela."
+      },
+      {
+        "text": "No security group da instância em que as tasks rodam",
+        "why": "Não há instância sua; o host é da AWS."
+      },
+      {
+        "text": "No portMappings da definição de task",
+        "why": "O portMappings abre a porta do contêiner; não diz nada sobre quem pode alcançá-la."
+      },
+      {
+        "text": "Nas configurações do cluster, para toda task dele",
+        "why": "Clusters não levam regras de rede; cada serviço ou task nomeia os próprios grupos."
+      }
+    ]
+  },
+  "ex-h87fddkk": {
+    "prompt": "Uma subnet /23 tem 512 endereços, e a AWS reserva cinco em toda subnet. Sem mais nada nela, quantas tasks Fargate ela comporta no máximo?",
+    "hint": "Um endereço privado por task.",
+    "unit": "tasks"
+  },
+  "ex-pwgm484b": {
+    "prompt": "Uma task Fargate numa subnet privada, com assignPublicIp DISABLED, sem NAT gateway e sem VPC endpoints, para com CannotPullContainerError. O que resolve?",
+    "hint": "A task precisa alcançar o registry antes de poder começar.",
+    "choices": [
+      {
+        "text": "Uma rota para NAT, ou endpoints para ECR, Logs e S3",
+        "why": "Os dois dão à task um caminho até o registry e os logs sem endereço público."
+      },
+      {
+        "text": "Abrir a porta 443 de entrada no security group da task",
+        "why": "O pull é de saída; uma regra de entrada não cria rota."
+      },
+      {
+        "text": "Dar à execution role o ecr:BatchGetImage",
+        "why": "Uma permissão não adianta sem um caminho de rede até o registry, e o erro é sobre alcançá-lo."
+      },
+      {
+        "text": "Mudar a task para o modo de rede bridge",
+        "why": "O Fargate só aceita awsvpc."
+      }
+    ]
+  },
+  "ex-6cahskr2": {
+    "prompt": "O run-task do moto no modo awsvpc falhou com um 500, e o describe-network-interfaces mostrou depois uma interface descrita como moto ECS. O que essa interface representa?",
+    "hint": "Que parte do lançamento de uma task o moto concluiu antes de falhar?",
+    "choices": [
+      {
+        "text": "Uma sobra da VPC do laboratório, sem relação com a task",
+        "why": "Ela está na subnet da task com o security group da task, criada pela chamada de run-task."
+      },
+      {
+        "text": "A interface da própria task, que o moto chegou a criar",
+        "why": "Na AWS a mesma interface aparece nos attachments da task e é apagada quando a task para."
+      },
+      {
+        "text": "O NAT gateway que a task usaria para baixar a imagem",
+        "why": "Um NAT gateway é outro recurso; nada aqui criou um."
+      },
+      {
+        "text": "Uma interface da container instance que hospeda a task",
+        "why": "Não existe container instance no Fargate."
+      }
+    ]
+  },
+  "ex-gzmd5z17": {
+    "prompt": "Duas tasks Fargate do mesmo serviço escutam ambas na porta 80, e a AWS por acaso as inicia no mesmo host físico. O que acontece?",
+    "hint": "No awsvpc, o endereço de quem recebe a porta?",
+    "choices": [
+      {
+        "text": "A segunda falha com RESOURCE:PORTS, como na aula 8",
+        "why": "Aquilo era um hostPort fixo num endereço de instância compartilhado; aqui cada task tem o próprio endereço."
+      },
+      {
+        "text": "As duas rodam, cada uma na porta 80 do próprio endereço",
+        "why": "Cada task tem a própria interface, então as portas delas nunca se encontram."
+      },
+      {
+        "text": "O Fargate move a segunda para a porta 81",
+        "why": "Nada renumera a porta; nem é preciso."
+      },
+      {
+        "text": "A bridge do Docker divide a porta 80 entre elas",
+        "why": "Não há bridge no modo awsvpc, e uma porta nunca é dividida."
+      }
+    ]
+  },
+  "ex-ag9109kt": {
+    "prompt": "O único modo de rede que uma definição de task Fargate pode usar é o ___.",
+    "hint": "Cada task ganha a própria interface na VPC.",
+    "blanks": [
+      {
+        "accept": [
+          "awsvpc"
+        ]
+      }
+    ]
+  },
+  "ex-kh5cbxmx": {
+    "prompt": "Uma task Fargate em x86 reserva 0,5 vCPU e 1 GB. A 0,0696 USD por vCPU-hora e 0,0076 por GB-hora, quanto custa num mês de 730 horas, em USD, até o centavo?",
+    "hint": "vCPU vezes o seu medidor, mais GB vezes o seu, depois vezes 730.",
+    "unit": "USD"
+  },
+  "ex-6gkvytz2": {
+    "prompt": "Um cache precisa de 4 GB de memória e de muito pouca CPU. Qual é o menor tamanho de Fargate que o comporta?",
+    "hint": "As faixas de memória sobem com a CPU.",
+    "choices": [
+      {
+        "text": "0,25 vCPU com 4 GB",
+        "why": "256 unidades de CPU permitem no máximo 2 GB; o moto aceitou e a AWS recusa."
+      },
+      {
+        "text": "1 vCPU com 4 GB",
+        "why": "Cabe, e paga o dobro da CPU de um tamanho menor que também cabe."
+      },
+      {
+        "text": "2 vCPU com 4 GB, a menor memória que esse tamanho permite",
+        "why": "Válido, e quatro vezes a CPU de que o cache precisa."
+      },
+      {
+        "text": "0,5 vCPU com 4 GB",
+        "why": "512 unidades permitem de 1 a 4 GB, então é a primeira linha que chega a 4."
+      }
+    ]
+  },
+  "ex-wc9n6ybd": {
+    "prompt": "O fargate_cost.py calculou duas tasks de 1 vCPU e 2 GB em 123,81 USD por mês em x86 e 99,19 em Arm. Quanto passar para Arm economiza por ano, em USD, até o centavo?",
+    "hint": "A diferença mensal, doze vezes.",
+    "unit": "USD"
+  },
+  "ex-kz3d0dx3": {
+    "prompt": "Uma task reserva 1 vCPU e usa um décimo dela o dia todo. O que o Fargate cobra pela CPU dela?",
+    "hint": "O Fargate mede a definição, não a carga.",
+    "choices": [
+      {
+        "text": "Um décimo de vCPU-hora por hora",
+        "why": "O Fargate não mede uso; o que é reservado é o que é cobrado."
+      },
+      {
+        "text": "Nada até passar de 50% da reserva",
+        "why": "Não existe esse limite; a cobrança começa com o download da imagem."
+      },
+      {
+        "text": "A instância em que roda, dividida com outras tasks",
+        "why": "Nenhuma instância aparece numa conta de Fargate."
+      },
+      {
+        "text": "1 vCPU-hora por hora, a reserva inteira",
+        "why": "A conta segue o cpu da definição de task, por segundo, usado ou não."
+      }
+    ]
+  },
+  "ex-m3qcesk3": {
+    "prompt": "Quais destes aparecem numa conta de Fargate? Marque todas as que se aplicam.",
+    "hint": "Dois medidores, e mais um para disco acima de um limite.",
+    "choices": [
+      {
+        "text": "Horas de vCPU que as definições de task reservam",
+        "why": "Um dos dois medidores."
+      },
+      {
+        "text": "GB-horas de memória que as definições de task reservam",
+        "why": "O outro medidor."
+      },
+      {
+        "text": "Armazenamento efêmero acima dos primeiros 20 GB",
+        "why": "0,000211 USD por GB-hora na tabela."
+      },
+      {
+        "text": "Uma cobrança do próprio ECS, por cluster",
+        "why": "O ECS não cobra nada por si, nem no EC2 nem no Fargate."
+      },
+      {
+        "text": "As horas dos hosts em que a AWS roda as tasks",
+        "why": "Esses hosts são da AWS; o custo deles está dentro dos dois medidores."
+      }
+    ]
+  },
+  "ex-j8pr3xn0": {
+    "prompt": "Uma container instance m7i.large custa 117,27 USD por mês; duas tasks Fargate com as mesmas 2 vCPUs custam 123,81. Quando a instância é a escolha mais barata?",
+    "hint": "A instância é cobrada cheia ou vazia.",
+    "choices": [
+      {
+        "text": "Sempre, porque é mais barata por hora",
+        "why": "Só enquanto está cheia; uma instância com um terço vazio custa o mesmo."
+      },
+      {
+        "text": "Nunca, porque o Fargate não tem instância para pagar",
+        "why": "Os medidores do Fargate incluem o custo do host; cheia, a instância ganha."
+      },
+      {
+        "text": "Quando fica quase cheia o mês todo, sem contar os patches",
+        "why": "Lotada, ela é mais barata e tem o dobro de memória; o espaço de sobra que um cluster guarda corrói isso."
+      },
+      {
+        "text": "Só em Arm",
+        "why": "A comparação aqui é x86 contra x86; o Arm baixa os dois lados."
+      }
+    ]
+  },
+  "ex-qq66crpj": {
+    "prompt": "A estratégia de um serviço é base=1 no FARGATE, peso 1 no FARGATE e peso 3 no FARGATE_SPOT. Com 9 tasks, quantas rodam no FARGATE?",
+    "hint": "Primeiro a base, depois uma em cada quatro do resto.",
+    "unit": "tasks"
+  },
+  "ex-4phanrzs": {
+    "prompt": "A AWS recupera a capacidade embaixo de uma task Fargate Spot. O que o processo principal do contêiner recebe primeiro?",
+    "hint": "A mesma coisa que qualquer task parada recebe.",
+    "choices": [
+      {
+        "text": "SIGKILL, porque a capacidade acabou",
+        "why": "O SIGKILL só vem depois do stopTimeout, se o processo ainda estiver rodando."
+      },
+      {
+        "text": "SIGTERM, com o stopTimeout para terminar antes do SIGKILL",
+        "why": "Essa janela, de até 120 segundos no Fargate, é todo o aviso que o código recebe."
+      },
+      {
+        "text": "Um pedido HTTP a um caminho de aviso",
+        "why": "O evento do EventBridge vai para fora da task; o processo recebe um sinal."
+      },
+      {
+        "text": "Nada; a task some",
+        "why": "A task é parada do jeito normal, sinal primeiro."
+      }
+    ]
+  },
+  "ex-78y2vr50": {
+    "prompt": "Qual é o maior stopTimeout que uma definição de contêiner no Fargate pode ter?",
+    "hint": "Ele coincide com o tamanho do aviso do Spot.",
+    "choices": [
+      {
+        "text": "10 segundos, o padrão do Docker",
+        "why": "Esse é o padrão do docker stop num laptop; o do ECS é 30."
+      },
+      {
+        "text": "30 segundos",
+        "why": "Esse é o padrão, não o teto."
+      },
+      {
+        "text": "120 segundos",
+        "why": "Dois minutos, o aviso inteiro."
+      },
+      {
+        "text": "15 minutos",
+        "why": "Nenhum contêiner tem tanto tempo para parar no Fargate."
+      }
+    ]
+  },
+  "ex-tes04w9p": {
+    "prompt": "O contêiner de uma task Spot parada informa o código de saída 137. O que aconteceu?",
+    "hint": "137 é 128 mais o número de um sinal.",
+    "choices": [
+      {
+        "text": "O handler terminou e saiu de forma limpa",
+        "why": "Uma saída limpa é 0, como a primeira execução mostrou."
+      },
+      {
+        "text": "A imagem não pôde ser baixada",
+        "why": "Uma task que nunca começou não tem código de saída de contêiner."
+      },
+      {
+        "text": "Ficou sem memória, que por definição é a saída 137",
+        "why": "Uma morte por falta de memória também é SIGKILL; com Spot e prazo curto, o prazo é a causa mais provável, e o motivo da parada distingue os dois."
+      },
+      {
+        "text": "Foi morto com SIGKILL, sinal 9, ainda rodando no stopTimeout",
+        "why": "O processo não terminou dentro do prazo, como a execução de cinco segundos mostrou."
+      }
+    ]
+  },
+  "ex-cf2d5weq": {
+    "prompt": "Ponha em ordem o que acontece com um worker bem escrito no Fargate Spot quando a AWS recupera a capacidade dele.",
+    "hint": "O sinal vem antes da morte, e a substituta por último.",
+    "items": [
+      "A AWS decide tomar a capacidade de volta",
+      "O processo principal do contêiner recebe SIGTERM",
+      "O handler salva o trabalho e sai dentro do stopTimeout",
+      "O serviço inicia uma task substituta"
+    ],
+    "trap": "A substituta não espera pronta: o serviço só inicia uma depois que a task some."
+  },
+  "ex-fxczx645": {
+    "prompt": "Por que as execuções com SIGTERM passaram --stop-signal SIGTERM ao docker run?",
+    "hint": "Veja o que o docker image inspect imprimiu.",
+    "choices": [
+      {
+        "text": "O Docker manda SIGKILL a menos que se diga outra coisa",
+        "why": "O Docker manda SIGTERM, ou o sinal de parada da própria imagem quando ela nomeia um."
+      },
+      {
+        "text": "A imagem do nginx nomeia o SIGQUIT como sinal de parada",
+        "why": "Sem a flag o shell teria recebido SIGQUIT e o handler de TERM nunca teria rodado."
+      },
+      {
+        "text": "O Fargate exige isso na definição de task",
+        "why": "Aqui é uma flag do docker run, não uma configuração do Fargate."
+      },
+      {
+        "text": "Um shell ignora SIGTERM a menos que a flag esteja definida",
+        "why": "É o trap que faz o shell tratá-lo; a flag só escolhe que sinal o Docker manda."
+      }
+    ]
+  },
+  "ex-ngmgdpjk": {
+    "prompt": "Ligue cada necessidade ao que o Fargate oferece para ela.",
+    "hint": "Cada resposta substitui algo que a instância fornecia.",
+    "pairs": [
+      {
+        "left": "Um shell para olhar dentro de uma task em execução",
+        "right": "ECS Exec"
+      },
+      {
+        "left": "Um coletor de logs ao lado de cada task",
+        "right": "Um contêiner sidecar na definição de task"
+      },
+      {
+        "left": "Arquivos que sobrevivem à task",
+        "right": "Um sistema de arquivos EFS montado nela"
+      },
+      {
+        "left": "150 GB de disco temporário",
+        "right": "Armazenamento efêmero acima de 20 GB"
+      }
+    ],
+    "right_distractors": [
+      "SSH no host"
+    ]
+  },
+  "ex-cf4dktx1": {
+    "prompt": "O moto guardou como awsvpc uma definição Fargate que pedia o modo bridge. Por que isso é pior que uma recusa?",
+    "hint": "Compare o que o autor escreveu com o que a leitura de volta diz.",
+    "choices": [
+      {
+        "text": "Porque o awsvpc custa mais que o bridge",
+        "why": "O modo de rede não muda o preço do Fargate."
+      },
+      {
+        "text": "Porque a definição lida de volta diz algo que o autor nunca escreveu",
+        "why": "Uma recusa aponta o erro; uma reescrita silenciosa o esconde até a AWS recusar o arquivo."
+      },
+      {
+        "text": "Porque a AWS também a reescreveria, então o erro fica escondido duas vezes",
+        "why": "A AWS recusa bridge para Fargate no registro."
+      },
+      {
+        "text": "Porque tasks em bridge não alcançam a internet",
+        "why": "Bridge funciona no EC2; o ponto é o que o moto fez com o arquivo."
+      }
+    ]
+  },
+  "ex-0k5qf8rh": {
+    "prompt": "Uma task Fargate grava uploads no próprio disco, e a task é substituída numa implantação. O que acontece com os arquivos?",
+    "hint": "Onde ficam os 20 GB?",
+    "choices": [
+      {
+        "text": "São copiados para a substituta",
+        "why": "Nada copia armazenamento efêmero entre tasks."
+      },
+      {
+        "text": "Vão embora com a task",
+        "why": "O armazenamento efêmero fica numa capacidade que a task devolve, como o instance store da aula 3."
+      },
+      {
+        "text": "Vão para o S3 automaticamente",
+        "why": "O Fargate não grava nada no S3 por você; isso é trabalho da aplicação."
+      },
+      {
+        "text": "Ficam no host até a próxima task",
+        "why": "O host é da AWS e não é entregue à sua próxima task."
+      }
+    ]
+  },
+  "ex-2vx35r4s": {
+    "prompt": "Qual destas cargas não pode passar do ECS no EC2 para o Fargate como está?",
+    "hint": "Ache a que precisa do próprio host.",
+    "choices": [
+      {
+        "text": "Uma API web atrás de um balanceador de carga",
+        "why": "Esse é o uso mais comum do Fargate."
+      },
+      {
+        "text": "Um job noturno de 20 minutos",
+        "why": "Um run-task no Fargate serve bem."
+      },
+      {
+        "text": "Um contêiner privilegiado",
+        "why": "privileged é recusado no Fargate, porque controlaria um host que não é seu."
+      },
+      {
+        "text": "Um worker de fila que lê do SQS",
+        "why": "Ele precisa de uma task role e de nada do host."
+      }
+    ]
+  },
+  "ex-rxgmem43": {
+    "prompt": "Um worker no Fargate Spot leva uns cinco minutos por mensagem e não consegue retomar no meio. O que torna as interrupções seguras?",
+    "hint": "120 segundos é menos que cinco minutos.",
+    "choices": [
+      {
+        "text": "No SIGTERM, parar de pegar mensagens e devolver a atual",
+        "why": "A mensagem volta para a fila e outro worker a faz inteira; nada fica pela metade."
+      },
+      {
+        "text": "Subir o stopTimeout para 300 segundos",
+        "why": "O Fargate permite no máximo 120."
+      },
+      {
+        "text": "Ignorar o SIGTERM para que a mensagem em mãos nunca seja interrompida no meio",
+        "why": "O SIGKILL chega no stopTimeout de qualquer forma, no meio da mensagem."
+      },
+      {
+        "text": "Pôr base=0 para toda task ficar no Spot",
+        "why": "Isso torna as interrupções mais frequentes, não mais seguras."
+      }
+    ]
+  },
+  "ex-5pna32p9": {
+    "prompt": "Uma subnet privada tem interface endpoints para o ECR e o CloudWatch Logs e nenhum NAT gateway, e as tasks Fargate continuam sem conseguir baixar a imagem. Qual é a falta mais provável?",
+    "hint": "Onde o ECR guarda as camadas da imagem?",
+    "choices": [
+      {
+        "text": "A task precisa de IP público para usar endpoints",
+        "why": "Endpoints existem justamente para que tasks privadas não precisem."
+      },
+      {
+        "text": "A execution role não tem logs:PutLogEvents",
+        "why": "Isso faria os logs falharem, não o pull."
+      },
+      {
+        "text": "Um gateway endpoint para o S3",
+        "why": "As camadas vêm do S3, então sem esse endpoint o download não tem caminho."
+      },
+      {
+        "text": "O cluster não tem o capacity provider FARGATE",
+        "why": "Isso impediria a task de ser posicionada, não a imagem de ser baixada."
+      }
+    ]
+  }
+}

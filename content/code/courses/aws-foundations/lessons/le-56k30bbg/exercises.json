@@ -1,0 +1,571 @@
+[
+  {
+    "id": "ex-39rtgjyp",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop wants `/api/*` to reach one group of machines and every other path another. Which load balancer can do that?",
+    "hint": "Which one reads the request?",
+    "choices": [
+      {
+        "text": "The network load balancer, with one listener per path",
+        "correct": false,
+        "why": "An NLB never sees a path: it passes connections and reads only addresses and ports."
+      },
+      {
+        "text": "The application load balancer",
+        "correct": true,
+        "why": "Right. It reads each HTTP request, so a rule can choose a target group by path, host or header."
+      },
+      {
+        "text": "The gateway load balancer, which sees every port",
+        "correct": false,
+        "why": "Seeing every port is not reading the request. A GWLB passes packets to appliances without looking inside."
+      },
+      {
+        "text": "Any of the three, since rules are part of every listener",
+        "correct": false,
+        "why": "Rules on path and host exist only on an ALB's listeners. The other two have nothing to match them against."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqvhd9f4",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A partner's firewall admits the shop's payment traffic only from addresses written into it once. Which load balancer fits, and why?",
+    "hint": "Whose address changes, and whose does not?",
+    "choices": [
+      {
+        "text": "An NLB, which keeps one fixed address per zone",
+        "correct": true,
+        "why": "Right. Each zone can hold an Elastic IP the shop owns, and those addresses never move."
+      },
+      {
+        "text": "An ALB, since its DNS name never changes and the partner can allow the name",
+        "correct": false,
+        "why": "The name is stable but a firewall filters by address, and the addresses behind an ALB's name change as it scales."
+      },
+      {
+        "text": "A GWLB, because the partner's firewall can be registered as its target",
+        "correct": false,
+        "why": "A GWLB sends the shop's own traffic through appliances it controls. It gives the outside world no fixed address."
+      },
+      {
+        "text": "The Classic load balancer, which is the only one with Elastic IPs",
+        "correct": false,
+        "why": "The Classic one never took Elastic IPs; the NLB does, and Classic is the generation AWS asks new designs to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-y36qnzs4",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The application behind an ALB logs the address of every caller, and every line shows an address of the VPC. Where is the customer's address?",
+    "hint": "An ALB opens its own connection to the target.",
+    "choices": [
+      {
+        "text": "Lost: an ALB never passes it on",
+        "correct": false,
+        "why": "It does pass it on, just not as the connection's source."
+      },
+      {
+        "text": "In the source of the connection, once cross-zone load balancing is turned off",
+        "correct": false,
+        "why": "Cross-zone decides which targets a node may use, not what address the target sees."
+      },
+      {
+        "text": "In the `X-Forwarded-For` header of each request",
+        "correct": true,
+        "why": "Right. The connection comes from the ALB, so the caller's address travels in the header; an NLB would show it as the source itself."
+      },
+      {
+        "text": "In the target group's health check results",
+        "correct": false,
+        "why": "Health checks come from the load balancer and carry nothing about customers."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdch69xa",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every packet entering the shop's VPC must pass through a firewall appliance and then reach its destination unchanged. Why does a GWLB wrap packets in GENEVE rather than forward them like an NLB?",
+    "hint": "What would the appliance see if the packet were readdressed to it?",
+    "choices": [
+      {
+        "text": "Because GENEVE encrypts the packet between the load balancer and the appliance",
+        "correct": false,
+        "why": "GENEVE is a tunnel, not encryption. What it buys is the original packet, intact."
+      },
+      {
+        "text": "So the appliance sees the original packet, addresses and all, and can hand it back unchanged",
+        "correct": true,
+        "why": "Right. The wrapping keeps the source and destination the firewall has to judge, and the return trip lets the packet go on."
+      },
+      {
+        "text": "Because an NLB cannot carry UDP and GENEVE can",
+        "correct": false,
+        "why": "An NLB carries UDP. The difference is in what reaches the appliance, not in the protocols allowed."
+      },
+      {
+        "text": "Because GENEVE lets moto show the packet's path",
+        "correct": false,
+        "why": "moto carries no packet at all, wrapped or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-aebfq75p",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A gateway load balancer talks to its appliances in GENEVE, on UDP port ___.",
+    "hint": "The port of the target group `shop-firewalls`.",
+    "blanks": [
+      {
+        "accept": [
+          "6081"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zwya725e",
+    "version": 1,
+    "section": "three-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In moto, the NLB created with two Elastic IPs answers with its zones and no `LoadBalancerAddresses`. What does that show?",
+    "hint": "Who dropped the addresses?",
+    "choices": [
+      {
+        "text": "That an internet-facing NLB cannot use Elastic IPs",
+        "correct": false,
+        "why": "It can, and that is the reason to choose one. The absence is moto's."
+      },
+      {
+        "text": "That the addresses are given out only once the NLB is `active`",
+        "correct": false,
+        "why": "A plausible guess, and not what happened: moto stored the zones and kept none of the addresses it was sent."
+      },
+      {
+        "text": "Only moto's limit: AWS lists each zone's Elastic IP there",
+        "correct": true,
+        "why": "Right. The transcript shows the request; the result, the fixed address per zone, is AWS's documented behaviour."
+      },
+      {
+        "text": "That the subnets were private, so no public address could be attached",
+        "correct": false,
+        "why": "moto has no notion here of which subnet is public, and it dropped the addresses regardless."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ygcrtds",
+    "version": 1,
+    "section": "listeners-and-rules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which object holds the health check that decides whether a machine receives traffic?",
+    "hint": "The machines are not attached to the load balancer itself.",
+    "choices": [
+      {
+        "text": "The listener",
+        "correct": false,
+        "why": "A listener is a protocol and a port, and the rules that choose a group. It does not watch machines."
+      },
+      {
+        "text": "The load balancer",
+        "correct": false,
+        "why": "The load balancer runs the checks, but what to check and how often is set on something else."
+      },
+      {
+        "text": "The target group",
+        "correct": true,
+        "why": "Right. The path, the interval and the thresholds belong to the group, and every target in it shares them."
+      },
+      {
+        "text": "The security group",
+        "correct": false,
+        "why": "A security group filters traffic; lesson 18 says what it does. It does not judge health."
+      }
+    ]
+  },
+  {
+    "id": "ex-mrsd9rsm",
+    "version": 1,
+    "section": "listeners-and-rules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A target group checks every 15 seconds and marks a target unhealthy after 2 failures in a row. About how many seconds after a machine stops answering does it leave rotation?",
+    "hint": "Interval times the unhealthy threshold.",
+    "value": 30,
+    "tolerance": 0.5,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-6rjr5mtx",
+    "version": 1,
+    "section": "listeners-and-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, `describe-target-health` calls `i-0000000000000dead` healthy. A colleague concludes the lab's health checks work, only too generously. What is the better reading?",
+    "hint": "Was there anything to check?",
+    "choices": [
+      {
+        "text": "The checks run, and a target with no instance answers by default",
+        "correct": false,
+        "why": "No check runs: no machine exists to answer one, and the id names nothing."
+      },
+      {
+        "text": "moto runs no check at all; it reads the instance's state where it has one, and says healthy otherwise",
+        "correct": true,
+        "why": "Right. A stopped machine comes back `unused`; anything else, real or not, is `healthy`. AWS would have refused to register the id at all."
+      },
+      {
+        "text": "The health check path `/health` was wrong",
+        "correct": false,
+        "why": "A wrong path would make a real check fail. Here nothing was asked, on any path."
+      },
+      {
+        "text": "The checks are delayed until the listener on 443 exists",
+        "correct": false,
+        "why": "In AWS checks start when a target is registered in a group a load balancer uses; in moto they never start."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1g1yymz",
+    "version": 1,
+    "section": "listeners-and-rules",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of putting the shop's web machines behind HTTPS in an order that works.",
+    "hint": "Each step needs the ARN or the id the step before it made.",
+    "items": [
+      "create the target group with its health check",
+      "register the machines in it",
+      "get an issued certificate from ACM",
+      "create the HTTPS listener on 443, forwarding to the group",
+      "add the listener on 80 that redirects to 443"
+    ],
+    "trap": "Creating the HTTPS listener before the certificate is issued is the usual slip: AWS refuses a certificate still waiting for validation, even though moto accepted one."
+  },
+  {
+    "id": "ex-ckxxd39e",
+    "version": 1,
+    "section": "listeners-and-rules",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A listener has a rule at priority 10 on `/api/*` and one at priority 20 on the host `admin.shop.example.com`. A request arrives for `admin.shop.example.com/api/users`. Which action answers it?",
+    "hint": "Rules are tried from the lowest number up, and the first match wins.",
+    "choices": [
+      {
+        "text": "The 403 of the rule at priority 20, because the host is more specific",
+        "correct": false,
+        "why": "Specificity plays no part. The rule at 10 matches first, and it ends the search."
+      },
+      {
+        "text": "The forward to `shop-api`, from the rule at priority 10",
+        "correct": true,
+        "why": "Right. The path matches `/api/*`, priority 10 is tried first, and the first match wins."
+      },
+      {
+        "text": "Both: the request is forwarded and then refused",
+        "correct": false,
+        "why": "A request gets one action. Rules are alternatives, not a pipeline."
+      },
+      {
+        "text": "The default action, since two rules match and neither wins",
+        "correct": false,
+        "why": "Priorities exist so that one always wins. The default answers only what no rule matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9q70vkh",
+    "version": 1,
+    "section": "listeners-and-rules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop keeps each customer's basket in the memory of the machine that served them, and turns on stickiness so it is not lost. What does that cost?",
+    "hint": "What happens to those baskets when a machine has to go?",
+    "choices": [
+      {
+        "text": "Nothing beyond a cookie; stickiness has no cost of its own",
+        "correct": false,
+        "why": "The cookie is cheap. The cost is in the load and in the machines that cannot be retired."
+      },
+      {
+        "text": "A charge per sticky session on the bill",
+        "correct": false,
+        "why": "Stickiness is not billed on its own line. Its price is paid in operations."
+      },
+      {
+        "text": "It turns cross-zone load balancing off for the group",
+        "correct": false,
+        "why": "The two settings are separate; one decides where a node may send, the other keeps a caller on a target."
+      },
+      {
+        "text": "Uneven load, and machines that cannot be drained without losing baskets",
+        "correct": true,
+        "why": "Right. Stickiness patches state held on one machine; moving the basket to a store every target can read removes the need for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n2fgxt1",
+    "version": 1,
+    "section": "zones-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Cross-zone is off. `sa-east-1a` holds 4 targets and `sa-east-1b` holds 1, and each zone's node gets half the traffic. What percentage of all traffic does the single target in `sa-east-1b` carry?",
+    "hint": "Half the traffic, shared by the targets of that zone only.",
+    "value": 50,
+    "tolerance": 0.1,
+    "unit": "per cent"
+  },
+  {
+    "id": "ex-hdtfxrnw",
+    "version": 1,
+    "section": "zones-and-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto reports `load_balancing.cross_zone.enabled` as `false` for the shop's ALB. What is true in AWS?",
+    "hint": "One of the three kinds always spreads across zones.",
+    "choices": [
+      {
+        "text": "It is off, as moto says, until somebody turns it on",
+        "correct": false,
+        "why": "That is the NLB's and the GWLB's default, not the ALB's."
+      },
+      {
+        "text": "An ALB always balances across zones; it is switched off per target group",
+        "correct": true,
+        "why": "Right. moto is wrong about the ALB here, and the crossing it causes is not charged."
+      },
+      {
+        "text": "It is on, and every byte it sends across a zone is charged at 0.02",
+        "correct": false,
+        "why": "It is on, but the ALB's crossing from node to target is not charged; that charge is the NLB's."
+      },
+      {
+        "text": "It depends on the number of zones the ALB was given",
+        "correct": false,
+        "why": "The number of zones decides how many nodes there are, not whether they spread across zones."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcxk8d2r",
+    "version": 1,
+    "section": "zones-and-price",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An NLB with cross-zone on forwards 4,096 GB a month to targets spread evenly over two zones. About half crosses zones, at 0.01 each way. How many dollars a month is the crossing?",
+    "hint": "Half the gigabytes, times 0.02.",
+    "value": 40.96,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-xd7k85f1",
+    "version": 1,
+    "section": "zones-and-price",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`price.py` printed four lines of `0.0340` and `0.0189` under `SAE1-LoadBalancerUsage`. Why was a second program needed?",
+    "hint": "What tells the four products apart?",
+    "choices": [
+      {
+        "text": "Because `price.py` reads the wrong version of the offer",
+        "correct": false,
+        "why": "Both programs read the same pinned version, from the same file."
+      },
+      {
+        "text": "One usage type covers four kinds of load balancer, and only the `operation` says which",
+        "correct": true,
+        "why": "Right. `ops.py` prints the operation beside each price, and with five decimals keeps 0.00825 as it is."
+      },
+      {
+        "text": "Because the ALB's prices are in the EC2 offer and not in `AWSELB`",
+        "correct": false,
+        "why": "They are in both, and both say 0.0340. The problem was telling the kinds apart, not finding them."
+      },
+      {
+        "text": "Because `price.py` cannot read an offer smaller than a megabyte",
+        "correct": false,
+        "why": "It read it, and printed its lines. Size had nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c465nedk",
+    "version": 1,
+    "section": "zones-and-price",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the list of 11 September 2026, what do the hours alone of one ALB in São Paulo cost for a month of 730 hours, in dollars?",
+    "hint": "0.034 an hour.",
+    "value": 24.82,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-qxbcwvaf",
+    "version": 1,
+    "section": "zones-and-price",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can be what an ALB's capacity units are counted by in a given hour? Choose all that apply.",
+    "hint": "The hour is charged by the largest of its dimensions.",
+    "choices": [
+      {
+        "text": "New connections a second",
+        "correct": true,
+        "why": "Right. 25 a second is one LCU."
+      },
+      {
+        "text": "Bytes processed in the hour",
+        "correct": true,
+        "why": "Right. 1 GB in the hour, for machine targets, is one LCU."
+      },
+      {
+        "text": "Rule evaluations a second",
+        "correct": true,
+        "why": "Right. 1,000 a second is one LCU."
+      },
+      {
+        "text": "The number of targets registered",
+        "correct": false,
+        "why": "Registering more targets costs nothing by itself; the work done is what is counted."
+      },
+      {
+        "text": "The number of zones it was placed in",
+        "correct": false,
+        "why": "Zones decide where its nodes run, and the hourly price is the same for two or three."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt82jje2",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each need of the shop to the load balancer that fits it.",
+    "hint": "Three kinds, and one need left over.",
+    "pairs": [
+      {
+        "left": "send `/api/*` to one group and the rest to another",
+        "right": "application"
+      },
+      {
+        "left": "give a partner one address per zone that never changes",
+        "right": "network"
+      },
+      {
+        "left": "pass every packet through a firewall appliance",
+        "right": "gateway"
+      }
+    ],
+    "right_distractors": [
+      "Classic"
+    ]
+  },
+  {
+    "id": "ex-drvq6bd1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop runs an NLB over two zones, with 6 targets in one zone and 2 in the other, and wants to avoid paying for zone crossings. What does the lesson suggest?",
+    "hint": "Two ways to even the load; one of them has a price.",
+    "choices": [
+      {
+        "text": "Turn cross-zone on, since crossing is free on every kind",
+        "correct": false,
+        "why": "Free only on the ALB. On an NLB the crossing is charged at 0.01 each way."
+      },
+      {
+        "text": "Keep cross-zone off and even the zones, 4 and 4",
+        "correct": true,
+        "why": "Right. Even zones spread the load without crossing, which is what an auto scaling group over the same zones does."
+      },
+      {
+        "text": "Move the targets into one zone, so nothing ever crosses",
+        "correct": false,
+        "why": "Nothing would cross, and losing that zone would take the whole service with it, which the zones exist to prevent."
+      },
+      {
+        "text": "Replace it with an ALB, whose crossing is free, whatever the protocol",
+        "correct": false,
+        "why": "An ALB speaks HTTP and HTTPS only; a raw TCP service cannot move behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkqt3w56",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A load balancer in a real account receives no traffic for a whole month. What does the bill show for it?",
+    "hint": "Two meters; one of them runs regardless.",
+    "choices": [
+      {
+        "text": "Nothing, since no capacity units were used",
+        "correct": false,
+        "why": "The capacity meter stays at zero; the hour meter does not."
+      },
+      {
+        "text": "Every hour it existed, at its hourly price",
+        "correct": true,
+        "why": "Right. For an ALB in São Paulo that is 24.82 dollars for 730 hours, serving nobody."
+      },
+      {
+        "text": "A minimum of one capacity unit for each hour, and no hourly charge",
+        "correct": false,
+        "why": "It is the other way round: the hour is always charged, and the capacity units follow the work."
+      },
+      {
+        "text": "What moto charged for the same load balancer",
+        "correct": false,
+        "why": "moto charges nothing and knows no price. The bill is AWS's, by the hour."
+      }
+    ]
+  }
+]

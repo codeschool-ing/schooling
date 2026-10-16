@@ -1,0 +1,466 @@
+{
+  "ex-sd6r7fwc": {
+    "prompt": "Um grupo de 8 instâncias tem CPU média de 70% sob uma política de target tracking com alvo de 40%. Quantas instâncias a política pede?",
+    "hint": "Capacidade atual vezes a métrica sobre o alvo.",
+    "unit": "instâncias"
+  },
+  "ex-ssngpvdf": {
+    "prompt": "Qual destas é uma métrica ruim de acompanhar para um grupo de workers que leem de uma fila?",
+    "hint": "Uma boa métrica de alvo cai quando instâncias são acrescentadas.",
+    "choices": [
+      {
+        "text": "A CPU média dos workers",
+        "why": "Se o trabalho é computação, mais workers o dividem e a média cai, que é o que a política supõe."
+      },
+      {
+        "text": "O backlog por instância: mensagens esperando divididas por workers",
+        "why": "Essa cai quando workers são acrescentados, e é justamente por isso que é a métrica de fila que funciona."
+      },
+      {
+        "text": "A média de rede de entrada dos workers",
+        "why": "O tráfego de entrada também é dividido entre os workers, e é uma das quatro métricas predefinidas."
+      },
+      {
+        "text": "O número de mensagens esperando na fila, como um total do grupo inteiro",
+        "why": "Certo. Acrescentar workers não diminui o total só por estarem lá, então a conta de atual vezes métrica sobre alvo não tem o que dividir. O backlog por instância é a forma que funciona."
+      }
+    ]
+  },
+  "ex-1gpvdvpb": {
+    "prompt": "Um grupo tem duas políticas de target tracking. A de CPU removeria duas instâncias; a de requisições acrescentaria uma. O que o grupo faz?",
+    "hint": "Aumenta com qualquer uma, reduz só com todas.",
+    "choices": [
+      {
+        "text": "Remove uma: as duas respostas são somadas",
+        "why": "Políticas não são somadas. Cada uma calcula a própria capacidade, e a regra escolhe entre elas."
+      },
+      {
+        "text": "Remove duas, porque a política de CPU foi criada primeiro",
+        "why": "A ordem de criação não conta."
+      },
+      {
+        "text": "Acrescenta uma",
+        "why": "Certo. Ele aumenta quando qualquer política pede mais e reduz só quando todas concordam, então uma segunda política só pode deixar o grupo maior."
+      },
+      {
+        "text": "Nada, até as duas políticas concordarem",
+        "why": "Concordância é exigida para reduzir, não para aumentar."
+      }
+    ]
+  },
+  "ex-ptpgwava": {
+    "prompt": "No moto, o put-scaling-policy de target tracking não imprimiu nada, e o describe-alarms veio vazio. O que a AWS faz com a mesma chamada?",
+    "hint": "Quem escreve os alarmes de uma política de target tracking?",
+    "choices": [
+      {
+        "text": "Imprime o ARN da política e os dois alarmes do CloudWatch que ela criou e controla",
+        "why": "Certo. A AWS escreve um alarme alto e um baixo para cada política de target tracking, e a resposta os lista."
+      },
+      {
+        "text": "O mesmo que o moto: você depois cria os alarmes e os aponta para a política",
+        "why": "Isso é step e simple scaling. O target tracking existe para você não escrever os alarmes."
+      },
+      {
+        "text": "Imprime o ARN; os alarmes aparecem depois, quando chegam métricas",
+        "why": "Os alarmes são criados junto com a política; as métricas só decidem quando eles mudam de estado."
+      },
+      {
+        "text": "Recusa até o monitoramento detalhado ser ligado no template",
+        "why": "O target tracking funciona com as métricas do grupo como estão; nada precisa ser ligado antes."
+      }
+    ]
+  },
+  "ex-7n4aqft5": {
+    "prompt": "Um alvo de 50% de CPU deixa a outra metade como ___, que segura uma subida enquanto as instâncias novas sobem.",
+    "hint": "Capacidade paga e não usada, de propósito.",
+    "blanks": [
+      {
+        "accept": [
+          "folga",
+          "margem",
+          "capacidade sobrando",
+          "capacidade ociosa"
+        ]
+      }
+    ]
+  },
+  "ex-35jk315h": {
+    "prompt": "O alarme de uma política de passos está em 70% de CPU. Os passos acrescentam 1 para uma violação de 0 a 15 pontos, 2 de 15 a 30 e 4 para 30 ou mais. Um grupo de 5 lê 92%. Qual é a capacidade desejada depois?",
+    "hint": "Meça a partir do limite, ache a linha, some a cinco.",
+    "unit": "instâncias"
+  },
+  "ex-j8gv0rm8": {
+    "prompt": "Uma política simples que acrescenta duas, com cooldown de 300 segundos, é executada duas vezes com um minuto de intervalo, a segunda com --honor-cooldown. O moto foi de 2 a 4 e a 6. Onde a AWS termina?",
+    "hint": "Para que serve a opção?",
+    "choices": [
+      {
+        "text": "Em 6, como o moto, já que uma execução manual pula o cooldown",
+        "why": "Sem a opção pularia; com --honor-cooldown a segunda chamada espera o cooldown como um alarme esperaria."
+      },
+      {
+        "text": "Em 4, porque a última chegou cedo demais e não foi aplicada",
+        "why": "Certo. O moto ignorou a opção, o que é uma lacuna do moto e não da política."
+      },
+      {
+        "text": "Em 8, porque o cooldown enfileira o segundo ajuste e o soma duas vezes",
+        "why": "Nada é enfileirado nem dobrado; uma chamada dentro do cooldown simplesmente não escala."
+      },
+      {
+        "text": "Em 2: o --honor-cooldown cancela o primeiro ajuste também",
+        "why": "A primeira chamada estava fora de qualquer cooldown e vale."
+      }
+    ]
+  },
+  "ex-y2s85afk": {
+    "prompt": "Com a política da lição (alarme em 60%, acrescenta 1 para uma violação de 0 a 20, 3 para 20 ou mais), a CPU lê exatamente 80%. Quantas ela acrescenta?",
+    "hint": "Qual limite de uma faixa está incluído?",
+    "choices": [
+      {
+        "text": "Uma, já que 80% é o topo do primeiro passo",
+        "why": "O limite superior de uma faixa não está incluído; 20 pertence à linha seguinte."
+      },
+      {
+        "text": "Quatro: uma para cada passo alcançado",
+        "why": "Os passos não se acumulam; exatamente uma linha vale para uma leitura."
+      },
+      {
+        "text": "Nenhuma, porque a violação tem de ficar estritamente acima do limite e 20 é a fronteira",
+        "why": "A violação é de 20 pontos, bem acima do limite; a questão da fronteira é entre as linhas, não do alarme."
+      },
+      {
+        "text": "Três",
+        "why": "Certo. Uma violação de 20 é o limite inferior da segunda linha, e limites inferiores estão incluídos."
+      }
+    ]
+  },
+  "ex-n5ghzmq8": {
+    "prompt": "Ligue cada configuração de ajuste ao que o número de um passo significa.",
+    "hint": "Somar, definir, fração, piso.",
+    "pairs": [
+      {
+        "left": "ChangeInCapacity",
+        "right": "Acrescentar ou remover essa quantidade de instâncias"
+      },
+      {
+        "left": "ExactCapacity",
+        "right": "Definir a contagem nesse número"
+      },
+      {
+        "left": "PercentChangeInCapacity",
+        "right": "Acrescentar essa fração da capacidade atual"
+      },
+      {
+        "left": "MinAdjustmentMagnitude",
+        "right": "O mínimo de instâncias que um passo percentual pode acrescentar"
+      }
+    ],
+    "right_distractors": [
+      "Esperar essa quantidade de segundos antes de agir de novo"
+    ]
+  },
+  "ex-jvsq4b3z": {
+    "prompt": "A Ana põe à mão em ALARM um alarme cuja ação é uma política de passos. O moto mostra o alarme em ALARM e o grupo ainda em seis. Por quê?",
+    "hint": "Que metade da ligação o moto mantém?",
+    "choices": [
+      {
+        "text": "O set-alarm-state só muda o rótulo; a AWS também ignora um estado posto à mão",
+        "why": "Na AWS um estado posto à mão dispara as ações do alarme como qualquer outro, e é para testar isso que o comando é usado."
+      },
+      {
+        "text": "O moto guarda alarmes e seus estados e não executa ação nenhuma por eles",
+        "why": "Certo. Na AWS o alarme chamaria a política e o grupo cresceria; o moto não liga os dois a nada."
+      },
+      {
+        "text": "O alarme cita a política, e devia ser a política que cita o alarme",
+        "why": "É o contrário: a ação do alarme é o ARN da política, como a lição ligou."
+      },
+      {
+        "text": "Políticas de passos esperam um cooldown de 300 segundos depois de um alarme antes de agir",
+        "why": "Step scaling não tem cooldown; usa o instance warmup no lugar."
+      }
+    ]
+  },
+  "ex-w0454hbn": {
+    "prompt": "Uma ação agendada tem a recorrência '30 7 * * 1-5' e nenhum fuso horário. Quando ela dispara, no horário de São Paulo?",
+    "hint": "Uma expressão cron sem fuso é lida em UTC.",
+    "choices": [
+      {
+        "text": "Às 07:30, porque um grupo usa o horário local da região",
+        "why": "Uma região não tem fuso próprio para isso; o padrão é UTC seja qual for a região."
+      },
+      {
+        "text": "Às 10:30",
+        "why": "Isso é 07:30 de São Paulo escrito em UTC, a conversão no sentido oposto."
+      },
+      {
+        "text": "Às 04:30",
+        "why": "Certo. 07:30 UTC é três horas mais cedo em São Paulo, antes de alguém chegar."
+      },
+      {
+        "text": "Às 06:30 no verão e 07:30 no inverno",
+        "why": "São Paulo mantém o mesmo fuso o ano todo desde 2019."
+      }
+    ]
+  },
+  "ex-fx60ay8f": {
+    "prompt": "Desde que o Brasil parou de mudar os relógios em 2019, São Paulo fica ___ horas atrás do UTC o ano todo.",
+    "hint": "07:30 lá é 10:30 UTC.",
+    "blanks": [
+      {
+        "accept": [
+          "3",
+          "três"
+        ]
+      }
+    ]
+  },
+  "ex-45vvphh6": {
+    "prompt": "Um agendamento mantém 3 instâncias t3.micro a mais por 10 horas em cada um de 22 dias úteis. A 0,0168 USD por hora, quanto isso soma ao mês, em USD?",
+    "hint": "Instâncias vezes horas vezes dias, vezes o preço.",
+    "unit": "USD"
+  },
+  "ex-x1kzythb": {
+    "prompt": "Uma política de target tracking deixou um grupo em 9 numa noite movimentada. Às 19:00 uma ação agendada põe o mínimo e a capacidade desejada em 2. O que acontece, e o que teria sido melhor?",
+    "hint": "Qual dos dois números a noite precisava mover?",
+    "choices": [
+      {
+        "text": "Cai para 2 e a política devolve instâncias minutos depois; baixar só o mínimo teria deixado a política decidir",
+        "why": "Certo. O corte custa aos usuários os minutos que a política leva para ver a CPU que ele causou, e uma ação só de mínimo o evita."
+      },
+      {
+        "text": "Nada muda, porque a política mantém o grupo em 9 acima de qualquer agendamento",
+        "why": "Uma ação agendada define a capacidade desejada diretamente; a política só reage depois, quando o alarme vê o resultado."
+      },
+      {
+        "text": "Cai para 2 e fica lá, porque um agendamento passa por cima de uma política até a próxima ação",
+        "why": "A política continua trabalhando entre os limites; ela sobe a capacidade desejada de novo assim que o alarme dispara."
+      },
+      {
+        "text": "A ação é recusada porque a capacidade desejada ficaria abaixo do que a política quer",
+        "why": "Nada compara uma ação agendada com o desejo de uma política; os limites são a única verificação."
+      }
+    ]
+  },
+  "ex-53thv6dn": {
+    "prompt": "Ponha em ordem um dia útil do grupo da lição, na AWS.",
+    "hint": "O agendamento move o piso; a política se move dentro dele.",
+    "items": [
+      "Às 07:30 a ação da manhã põe o mínimo e a capacidade desejada em 6",
+      "As instâncias novas sobem antes de a carga chegar",
+      "A carga sobe e a política leva a capacidade desejada acima de 6",
+      "Às 19:00 a ação da noite baixa o mínimo para 2",
+      "A carga cai e a política reduz em direção a 2"
+    ],
+    "trap": "A política não consegue reduzir abaixo de 6 durante o dia; só depois que a ação da noite baixa o piso ela pode encolher o grupo."
+  },
+  "ex-e37n0da6": {
+    "prompt": "Uma política preditiva é posta num grupo criado há duas horas. Quando ela pode produzir a primeira previsão?",
+    "hint": "De quanto histórico ela precisa?",
+    "choices": [
+      {
+        "text": "Na hora, a partir do histórico de outros grupos da região",
+        "why": "Ela prevê a partir das métricas do próprio grupo e de mais ninguém."
+      },
+      {
+        "text": "Quando o grupo tiver 24 horas de histórico de métricas",
+        "why": "Certo. Abaixo disso não há padrão diário a achar, e a AWS documenta 24 horas como mínimo."
+      },
+      {
+        "text": "Depois de 14 dias, a quantidade de histórico que ela lê",
+        "why": "Catorze dias é o máximo que ela lê, não o mínimo de que precisa."
+      },
+      {
+        "text": "Depois de passar a primeira janela de previsão de 48 horas",
+        "why": "Quarenta e oito horas é até onde ela prevê, não uma espera antes da primeira."
+      }
+    ]
+  },
+  "ex-d60ydkpa": {
+    "prompt": "Por que começar uma política preditiva no modo ForecastOnly?",
+    "hint": "O que dá para comparar nessa semana?",
+    "choices": [
+      {
+        "text": "Porque o ForecastAndScale exige antes uma semana de ForecastOnly, senão a AWS recusa",
+        "why": "Nada impõe uma ordem; dá para criar uma política em ForecastAndScale no primeiro dia."
+      },
+      {
+        "text": "ForecastOnly é mais barato, já que uma previsão que escala é cobrada por instância que lança",
+        "why": "A escala preditiva não tem cobrança própria em nenhum modo; o que custa são as instâncias."
+      },
+      {
+        "text": "Para comparar as previsões com o que de fato aconteceu antes de deixá-la agir",
+        "why": "Certo. Uma previsão para uma carga que não se repete é um chute, e uma semana comparando mostra qual das duas você tem."
+      },
+      {
+        "text": "Porque o ForecastAndScale substituiria a política de target tracking ao lado",
+        "why": "As duas trabalham juntas: a previsão sobe o piso e a política dinâmica cuida do resto."
+      }
+    ]
+  },
+  "ex-q00pabh4": {
+    "prompt": "Quais destas são verdadeiras sobre o default instance warmup? Marque todas as que se aplicam.",
+    "hint": "É sobre métricas, não sobre saúde.",
+    "choices": [
+      {
+        "text": "As métricas de uma instância nova ficam fora da média do grupo enquanto ele dura",
+        "why": "Essa é a definição dele."
+      },
+      {
+        "text": "Um health check com falha não conta contra a instância enquanto ele dura",
+        "why": "Isso é o período de carência do health check, outra configuração."
+      },
+      {
+        "text": "Um instance refresh sem InstanceWarmup próprio o usa entre os lotes",
+        "why": "O refresh recorre ao warmup do grupo."
+      },
+      {
+        "text": "É quanto tempo uma política simples espera antes de agir de novo",
+        "why": "Isso é o cooldown."
+      },
+      {
+        "text": "O moto 5.2.3 o aceita na criação e não guarda nada",
+        "why": "A descrição mostrou null para os 180 segundos informados."
+      }
+    ]
+  },
+  "ex-kam4k3xq": {
+    "prompt": "O tráfego de uma loja salta dez vezes sempre que uma influenciadora posta, em horários que ninguém sabe antes. Qual ferramenta desta lição ajuda menos?",
+    "hint": "Qual delas precisa que a carga se repita?",
+    "choices": [
+      {
+        "text": "Uma política de target tracking com mais folga",
+        "why": "A folga absorve qualquer subida, previsível ou não, enquanto a política alcança."
+      },
+      {
+        "text": "Uma política de passos que acrescenta várias instâncias numa violação grande",
+        "why": "Uma resposta íngreme a uma subida brusca é justamente para o que serve o step scaling."
+      },
+      {
+        "text": "A escala preditiva, que projeta um padrão diário e semanal que esse tráfego não tem",
+        "why": "Certo. Uma previsão é um padrão levado adiante, e posts em horários desconhecidos não deixam padrão a levar."
+      },
+      {
+        "text": "Um warm pool de instâncias paradas",
+        "why": "Ele encurta os minutos de que cada instância nova precisa, o que importa mais quando a subida é repentina."
+      }
+    ]
+  },
+  "ex-4f8rpafq": {
+    "prompt": "O grupo foi criado com --default-instance-warmup 180, e a descrição do moto mostra null. O que concluir?",
+    "hint": "De quem é o comportamento do null?",
+    "choices": [
+      {
+        "text": "Que 180 está fora da faixa permitida e a AWS também o descartaria",
+        "why": "180 segundos é um valor comum; a AWS o mostraria de volta."
+      },
+      {
+        "text": "Que o warmup só aparece depois que a primeira instância aquecer",
+        "why": "A configuração faz parte do grupo desde a criação, façam o que fizerem as instâncias."
+      },
+      {
+        "text": "Que o moto aceitou a opção e não a guardou",
+        "why": "Certo. Na AWS a mesma descrição mostra DefaultInstanceWarmup como 180."
+      },
+      {
+        "text": "Que um warmup tem de ser definido com update-auto-scaling-group depois da criação",
+        "why": "Na AWS a criação o aceita; nada exige uma segunda chamada."
+      }
+    ]
+  },
+  "ex-d5nfddnp": {
+    "prompt": "Uma instância nova precisa de 4 minutos até a aplicação responder, e a CPU dela fica em 100% enquanto sobe. O grupo acompanha CPU em 50% e continua aumentando durante cada boot. Qual configuração corrige isso?",
+    "hint": "Qual configuração tira da média uma instância que está subindo?",
+    "choices": [
+      {
+        "text": "Um período de carência de 4 minutos",
+        "why": "Isso impede que health checks com falha contem; a CPU ainda entra na média e ainda move a política."
+      },
+      {
+        "text": "Um cooldown de 4 minutos na política de target tracking",
+        "why": "Cooldowns são do simple scaling; o target tracking usa o warmup no lugar."
+      },
+      {
+        "text": "Um alvo de 90% para uma instância subindo mexer menos na média",
+        "why": "Ela mexe na média do mesmo jeito e não deixa folga para a carga real."
+      },
+      {
+        "text": "O default warmup do grupo, com a duração do boot",
+        "why": "Certo. As métricas da instância que sobe ficam fora do agregado do grupo até ela ficar pronta, então o boot dela deixa de parecer carga."
+      }
+    ]
+  },
+  "ex-pdx6k644": {
+    "prompt": "Quais destas o moto 5.2.3 fez de verdade nesta lição? Marque todas as que se aplicam.",
+    "hint": "O que ele guardou, contra o que ele executou.",
+    "choices": [
+      {
+        "text": "Executou à mão uma política simples e mudou a capacidade desejada",
+        "why": "O execute-policy levou o grupo de 2 a 4."
+      },
+      {
+        "text": "Criou os alarmes de uma política de target tracking",
+        "why": "O describe-alarms voltou vazio."
+      },
+      {
+        "text": "Guardou duas ações agendadas com o fuso horário",
+        "why": "O describe-scheduled-actions mostrou as duas, com America/Sao_Paulo."
+      },
+      {
+        "text": "Disparou uma ação agendada no horário",
+        "why": "O moto não tem relógio que as execute; elas são registros."
+      },
+      {
+        "text": "Devolveu uma previsão para a política preditiva",
+        "why": "O get-predictive-scaling-forecast respondeu 500."
+      },
+      {
+        "text": "Manteve o estado de um alarme depois do set-alarm-state",
+        "why": "O alarme ficou em ALARM com o motivo dado, e não agiu sobre nada."
+      }
+    ]
+  },
+  "ex-yxhycp4z": {
+    "prompt": "Acompanhar a CPU em 50% em vez de 80%: qual frase descreve a troca?",
+    "hint": "Para que serve a outra metade.",
+    "choices": [
+      {
+        "text": "50% escala mais vezes, então custa mais em chamadas de API do que em instâncias",
+        "why": "Chamadas de escala não são cobradas; o custo são as instâncias."
+      },
+      {
+        "text": "Em 80% a política reduz menos, então 80% é a configuração mais segura",
+        "why": "Um alvo maior deixa o grupo mais cheio; é o menos seguro quando a carga sobe."
+      },
+      {
+        "text": "Custam o mesmo, já que o grupo roda o mesmo número de instâncias em qualquer alvo",
+        "why": "Em 50% a mesma carga precisa de mais instâncias; é a conta de atual vezes métrica sobre alvo."
+      },
+      {
+        "text": "50% paga por mais capacidade ociosa toda hora e em troca absorve uma subida enquanto instâncias novas sobem",
+        "why": "Certo. 80% é mais barato até o primeiro pico, quando toda instância satura pelos minutos que os reforços levam."
+      }
+    ]
+  },
+  "ex-ht6qckcz": {
+    "prompt": "Uma promoção começa às 20:00 da próxima sexta, e a loja espera quatro vezes a carga normal. Qual é a ferramenta certa?",
+    "hint": "A data é conhecida com semanas de antecedência.",
+    "choices": [
+      {
+        "text": "Uma ação agendada única com --start-time que sobe o mínimo antes das 20:00",
+        "why": "Certo. A subida é íngreme demais para uma política que reage e a data é conhecida, que é o caso que ações agendadas resolvem melhor."
+      },
+      {
+        "text": "Escala preditiva, que vai ver a promoção chegando",
+        "why": "Uma promoção que nunca aconteceu não está em histórico nenhum; a previsão não tem como saber."
+      },
+      {
+        "text": "Um alvo de CPU menor na política nesse dia",
+        "why": "Ajuda um pouco e ainda reage minutos atrasado a um salto de quatro vezes."
+      },
+      {
+        "text": "Subir o máximo",
+        "why": "Um máximo é um teto; ele não põe uma instância sequer no lugar antes de a carga chegar."
+      }
+    ]
+  }
+}

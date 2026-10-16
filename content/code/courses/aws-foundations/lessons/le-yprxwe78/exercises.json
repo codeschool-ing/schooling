@@ -1,0 +1,596 @@
+[
+  {
+    "id": "ex-q5v8qyhg",
+    "version": 1,
+    "section": "hosted-zones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shop creates a public hosted zone for `shop.example.com` and writes its records. Nobody on the internet gets an answer from it. What is missing?",
+    "hint": "Who sends the askers to the zone?",
+    "choices": [
+      {
+        "text": "A private zone of the same name, associated with the VPC",
+        "correct": false,
+        "why": "A private zone answers inside a VPC and nowhere else. It adds nothing for a stranger on the internet."
+      },
+      {
+        "text": "The delegation at the registrar",
+        "correct": true,
+        "why": "Right. Until the parent domain's NS records name Route 53's servers, no resolver is ever sent to the zone."
+      },
+      {
+        "text": "A region, since `env.sh` names `sa-east-1` and the zone has none",
+        "correct": false,
+        "why": "Route 53 is global; a zone never has a region, and that is not why nobody is answered."
+      },
+      {
+        "text": "An SOA record, which every public zone has to be given by hand after it is created",
+        "correct": false,
+        "why": "The SOA and the NS records are created with the zone, as the listing showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jvkf4y4",
+    "version": 1,
+    "section": "hosted-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A machine in the shop's VPC asks for `db.shop.internal`, which lives in a private zone. Which part of AWS answers it?",
+    "hint": "The address it asks is inside the VPC.",
+    "choices": [
+      {
+        "text": "One of the four name servers in the zone's delegation set",
+        "correct": false,
+        "why": "Those serve public zones to the internet. A private zone is not delegated anywhere."
+      },
+      {
+        "text": "The registrar, which keeps a copy of every zone",
+        "correct": false,
+        "why": "A registrar keeps the delegation of a domain, not its records, and knows nothing of a private zone."
+      },
+      {
+        "text": "The Route 53 Resolver at the VPC's base address plus two",
+        "correct": true,
+        "why": "Right: `10.20.0.2` for this VPC. It answers from the associated private zones first, while DNS support and hostnames are on."
+      },
+      {
+        "text": "Any resolver on the internet, once the zone is associated",
+        "correct": false,
+        "why": "Association makes the zone visible to that VPC only; to the internet it does not exist."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0kpacnb",
+    "version": 1,
+    "section": "hosted-zones",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To clean up, a colleague deletes the shop's public zone and creates a new one with the same records. The site stops resolving everywhere. Why?",
+    "hint": "What did the registrar write down: a zone, or servers?",
+    "choices": [
+      {
+        "text": "The records were copied without their TTLs",
+        "correct": false,
+        "why": "A missing TTL would be refused by the batch; it would not make a correct zone unreachable."
+      },
+      {
+        "text": "A new zone takes two days to become `INSYNC`",
+        "correct": false,
+        "why": "Changes reach Route 53's servers in about a minute. Two days is the TTL of the parent's NS records, and they still name the old servers."
+      },
+      {
+        "text": "The new zone has a new set of name servers, and `.com` still delegates to the old ones",
+        "correct": true,
+        "why": "Right. The delegation names servers, and the set is chosen when a zone is created. The registrar has to be given the new four."
+      },
+      {
+        "text": "Deleting a zone also deletes the domain at the registrar",
+        "correct": false,
+        "why": "The registration is untouched; it simply points at servers that no longer answer for anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-fc2dyjc7",
+    "version": 1,
+    "section": "hosted-zones",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At the list of 11 September 2026, what does the shop pay a month for 30 hosted zones, before any query?",
+    "hint": "The first 25 have one price, the rest another.",
+    "value": 13,
+    "tolerance": 0.01,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-1bgegpdt",
+    "version": 1,
+    "section": "hosted-zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A deployment script retries `create-hosted-zone` after a timeout, with the same `--caller-reference`. What does AWS do with the retry?",
+    "hint": "What is the reference for?",
+    "choices": [
+      {
+        "text": "Creates a second zone, exactly as moto did in the lab",
+        "correct": false,
+        "why": "That is moto's behaviour, and the section says moto does not keep this promise."
+      },
+      {
+        "text": "Refuses it with `HostedZoneAlreadyExists`",
+        "correct": true,
+        "why": "Right. The caller reference exists so a retry cannot leave two zones of the same name."
+      },
+      {
+        "text": "Replaces the first zone, keeping its name servers",
+        "correct": false,
+        "why": "Route 53 never replaces a zone on a create. It either makes one or refuses."
+      },
+      {
+        "text": "Merges the two requests into one change and answers `PENDING`",
+        "correct": false,
+        "why": "A change batch is about records. A zone is created once, or the second attempt is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5gyx7ac",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A batch holds five `CREATE` actions, and the third names a record that already exists. What does Route 53 do?",
+    "hint": "A batch is one unit.",
+    "choices": [
+      {
+        "text": "Applies the first two and stops at the third",
+        "correct": false,
+        "why": "That would leave the zone half changed, which is exactly what a batch exists to prevent."
+      },
+      {
+        "text": "Applies the four that can be applied and reports the third",
+        "correct": false,
+        "why": "Route 53 never applies part of a batch. The four valid ones wait with the failed one."
+      },
+      {
+        "text": "Applies none of them and answers `InvalidChangeBatch`",
+        "correct": true,
+        "why": "Right. The batch is applied whole or not at all, and the error names the record that stopped it."
+      },
+      {
+        "text": "Turns the third into an `UPSERT` and applies all five",
+        "correct": false,
+        "why": "Route 53 does what the batch says. Choosing `UPSERT` is the author's decision, not the service's."
+      }
+    ]
+  },
+  {
+    "id": "ex-e56mhcb5",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants `shop.example.com`, with nothing in front, to lead to its load balancer. Why is an alias record the answer and a `CNAME` is not?",
+    "hint": "What else lives at the apex?",
+    "choices": [
+      {
+        "text": "A `CNAME` must be alone at its name, and the apex holds NS and SOA",
+        "correct": true,
+        "why": "Right. An alias is an ordinary `A` record to the asker, so it sits beside the NS, the SOA and the MX."
+      },
+      {
+        "text": "A `CNAME` cannot point at a name outside its own zone, and the load balancer's name lives in AWS's",
+        "correct": false,
+        "why": "It can; that is what a `CNAME` is mostly for. The rule that matters is about the apex."
+      },
+      {
+        "text": "A load balancer's name changes every hour, and only an alias follows it",
+        "correct": false,
+        "why": "The name is stable; its addresses are what move, and a `CNAME` would follow those too. The trouble is where the record sits."
+      },
+      {
+        "text": "A `CNAME` is a type moto does not store",
+        "correct": false,
+        "why": "moto stored `www` as a `CNAME`, and even stored one at the apex, which AWS refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3z601hx",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In moto, `get-change` answered `INSYNC` for `/change/NOSUCHCHANGE`. What should you conclude?",
+    "hint": "Was there ever such a change?",
+    "choices": [
+      {
+        "text": "The change was applied before moto restarted",
+        "correct": false,
+        "why": "There was never a change with that id. moto answers the same for any id at all."
+      },
+      {
+        "text": "Nothing about the zone: moto answers that for any id",
+        "correct": true,
+        "why": "Right. In moto, the zone's own listing is the evidence; `get-change` only shows the shape of the answer."
+      },
+      {
+        "text": "That AWS also skips the `PENDING` state for small changes",
+        "correct": false,
+        "why": "AWS answers `PENDING` until every name server has the change. moto's answer says nothing about AWS."
+      }
+    ]
+  },
+  {
+    "id": "ex-pc2faf7j",
+    "version": 1,
+    "section": "records",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each record type to what it answers with.",
+    "hint": "Five types from the shop's first batch, and one answer left over.",
+    "pairs": [
+      {
+        "left": "`A`",
+        "right": "an IPv4 address"
+      },
+      {
+        "left": "`AAAA`",
+        "right": "an IPv6 address"
+      },
+      {
+        "left": "`MX`",
+        "right": "the domain's mail server, with a preference"
+      },
+      {
+        "left": "`TXT`",
+        "right": "free text, such as an SPF policy"
+      },
+      {
+        "left": "`CNAME`",
+        "right": "another name to look up instead"
+      }
+    ],
+    "right_distractors": [
+      "the zone's four name servers"
+    ]
+  },
+  {
+    "id": "ex-z2amkrwt",
+    "version": 1,
+    "section": "records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A record carries a TTL of 86,400. Five minutes after it is changed, a customer still reaches the old address. Where is the old answer coming from?",
+    "hint": "Nothing is pushed anywhere.",
+    "choices": [
+      {
+        "text": "From Route 53 servers that have not yet received the change",
+        "correct": false,
+        "why": "Those have it within about a minute. Five minutes on, they all answer with the new address."
+      },
+      {
+        "text": "From the registrar, which still holds the old record",
+        "correct": false,
+        "why": "A registrar holds the delegation, not the zone's records."
+      },
+      {
+        "text": "From a resolver's cache, kept for up to a day",
+        "correct": true,
+        "why": "Right. The resolver was promised 86,400 seconds, and it keeps that promise. Lowering the TTL a day before is the fix."
+      },
+      {
+        "text": "From moto, which serves DNS on port 4567",
+        "correct": false,
+        "why": "moto serves no DNS at all. And a customer on the internet would never reach it."
+      }
+    ]
+  },
+  {
+    "id": "ex-41q411rw",
+    "version": 1,
+    "section": "records",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving `www` to a new address with the least delay in order.",
+    "hint": "The caches have to be holding the short TTL before the change.",
+    "items": [
+      "lower the record's TTL to 60 seconds",
+      "wait one old TTL",
+      "change the record to the new address",
+      "raise the TTL again once the new address has proved itself"
+    ],
+    "trap": "Changing the address before waiting is the usual slip: the caches that asked before the TTL was lowered still hold the old answer for the old, long TTL."
+  },
+  {
+    "id": "ex-ps29g20t",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The API's primary record carries a health check. While the check reports unhealthy, what does Route 53 answer for `api.shop.example.com`?",
+    "hint": "A failover pair has two halves.",
+    "choices": [
+      {
+        "text": "Nothing, until the primary is healthy again",
+        "correct": false,
+        "why": "That is what the secondary exists to prevent."
+      },
+      {
+        "text": "Both addresses, and the client picks one",
+        "correct": false,
+        "why": "Returning several healthy values is multivalue. Failover gives one record, the primary or the secondary."
+      },
+      {
+        "text": "The secondary, `198.51.100.20` in Virginia, until the primary's check passes again",
+        "correct": true,
+        "why": "Right. The primary is left out while its check is unhealthy, and the secondary, with no check of its own, is always considered healthy."
+      },
+      {
+        "text": "The primary, since Route 53 sits in the path and reroutes the packets",
+        "correct": false,
+        "why": "Route 53 never touches the traffic. It chooses an answer, and the answer is the secondary."
+      }
+    ]
+  },
+  {
+    "id": "ex-8epg0atn",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A streaming licence allows a catalogue only to viewers in Brazil. Which routing policy fits?",
+    "hint": "A law cares where the person is, not how fast the network is.",
+    "choices": [
+      {
+        "text": "Latency, so Brazilians reach São Paulo first",
+        "correct": false,
+        "why": "Latency follows the network, and a viewer in Uruguay may well have the lowest latency to São Paulo too."
+      },
+      {
+        "text": "Weighted, with all the weight on São Paulo",
+        "correct": false,
+        "why": "A weight is the same for every asker. It cannot tell one country from another."
+      },
+      {
+        "text": "Geoproximity, with a large bias towards São Paulo",
+        "correct": false,
+        "why": "Geoproximity draws a boundary by distance, and a border is not a distance."
+      },
+      {
+        "text": "Geolocation by country, with a `Default` record",
+        "correct": true,
+        "why": "Right. It chooses by where the asker is, which is what a licence is about, and the `Default` answers the rest of the world."
+      }
+    ]
+  },
+  {
+    "id": "ex-47nfwrt4",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Records that share a name under one routing policy are told apart by their `___`.",
+    "hint": "The field that held `current`, `canary`, `sao-paulo` and `virginia`.",
+    "blanks": [
+      {
+        "accept": [
+          "SetIdentifier"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ev0dzkha",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A name has three weighted records with weights 6, 3 and 1. What share of the answers, in per cent, does the record weighted 3 get?",
+    "hint": "A weight divided by the sum of the weights.",
+    "value": 30,
+    "tolerance": 0.1,
+    "unit": "per cent"
+  },
+  {
+    "id": "ex-96263x7a",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, `get-health-check-status` reports `Success: HTTP Status Code: 200` for a check of `203.0.113.20`. A colleague takes that as proof the failover works. What is wrong with that?",
+    "hint": "Did anything travel to that address?",
+    "choices": [
+      {
+        "text": "Nothing: moto probes the address once, from `us-east-1`, and one success is enough for a check of this kind",
+        "correct": false,
+        "why": "moto probes nothing. The region and the code in its answer are the same for every check."
+      },
+      {
+        "text": "Only that the status needs three successes before it counts",
+        "correct": false,
+        "why": "The threshold is about real probes, and here there were none at all."
+      },
+      {
+        "text": "moto sent no probe; it says that of every check",
+        "correct": true,
+        "why": "Right. moto can confirm the records and the check are wired together; whether the switch happens is AWS's to show, not the lab's."
+      },
+      {
+        "text": "The check is HTTPS, and moto only probes plain HTTP",
+        "correct": false,
+        "why": "moto probes neither. The protocol makes no difference to an answer it invents."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkpykj2z",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these, at the list of 11 September 2026, cost nothing? Choose all that apply.",
+    "hint": "Two lines of the table are free, under conditions.",
+    "choices": [
+      {
+        "text": "Queries answered from an alias to a load balancer",
+        "correct": true,
+        "why": "Right. `Intra-AWS-DNS-Queries` is priced at zero."
+      },
+      {
+        "text": "Queries answered from a `CNAME` to a load balancer",
+        "correct": false,
+        "why": "A `CNAME` is an ordinary record, billed at 0.40 a million. Only the alias is free."
+      },
+      {
+        "text": "The first 50 health checks of AWS endpoints",
+        "correct": true,
+        "why": "Right. `Health-Check-AWS` is free up to 50, then 0.50 a month each."
+      },
+      {
+        "text": "A health check of `203.0.113.20`",
+        "correct": false,
+        "why": "That address is outside AWS, so it is the 0.75 line, plus 2.00 for HTTPS."
+      },
+      {
+        "text": "The first million geolocation queries of a month",
+        "correct": false,
+        "why": "Geolocation queries are 0.70 a million from the first one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1g28k2ht",
+    "version": 1,
+    "section": "routing-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws route53 test-dns-answer` answers `404 Not Found` in the lab. What does that tell you about the record?",
+    "hint": "Who answered the 404?",
+    "choices": [
+      {
+        "text": "That the weighted records were never written",
+        "correct": false,
+        "why": "The listing just above printed them. The 404 is about the command, not the records."
+      },
+      {
+        "text": "Nothing: moto 5.2.3 does not implement the command",
+        "correct": true,
+        "why": "Right. Against AWS the command answers with the values Route 53 would return; in moto it is not there."
+      },
+      {
+        "text": "That Route 53 has no answer for `search.shop.example.com`",
+        "correct": false,
+        "why": "A missing name would come back as an answer about the name. This is moto saying it has no such operation."
+      },
+      {
+        "text": "That the zone is private and cannot be tested",
+        "correct": false,
+        "why": "The zone asked about is the public one, and the 404 would be the same for either."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9rg009r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop moves its API from São Paulo to Virginia with a failover pair, TTL 60. Customers report the old address for an hour after the switch. Which explanation fits the lesson?",
+    "hint": "Sixty seconds is a promise; who might not keep it?",
+    "choices": [
+      {
+        "text": "Route 53 takes an hour to notice that a health check has turned unhealthy and to stop giving the primary",
+        "correct": false,
+        "why": "With a 30-second interval and three failures, the verdict comes in about a minute and a half."
+      },
+      {
+        "text": "A cache on the way kept the answer past its TTL",
+        "correct": true,
+        "why": "Right. The TTL is the floor on a failover's speed, and only as good as the caches that honour it; some clients and resolvers keep answers longer."
+      },
+      {
+        "text": "The secondary had no health check, so Route 53 refused to use it",
+        "correct": false,
+        "why": "A record with no check is always considered healthy, which is why the secondary was given at all."
+      },
+      {
+        "text": "The change batch was still `PENDING`",
+        "correct": false,
+        "why": "A failover needs no batch: both records already exist, and the health check decides between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkp91ngm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps a resolver takes to find `mail.shop.example.com` in order, starting with an empty cache.",
+    "hint": "From the top of the tree to the zone.",
+    "items": [
+      "ask a root server, which refers it to `.com`",
+      "ask a `.com` server, which refers it to Route 53's four name servers",
+      "ask `ns-2048.awsdns-64.com`, which answers from the hosted zone",
+      "keep the answer for the record's TTL"
+    ],
+    "trap": "Starting at Route 53 is the usual slip: the resolver only learns of those servers from `.com`, which is what the delegation wrote there."
+  },
+  {
+    "id": "ex-pvamxg8p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's servers must find `db.shop.internal`, and nobody outside may. One more VPC, in the `shop-staging` account, needs the same names. What does the lesson give for that?",
+    "hint": "A private zone can be seen from more than one network.",
+    "choices": [
+      {
+        "text": "A second public zone, delegated only to staging",
+        "correct": false,
+        "why": "A public zone is answered to anybody who asks; delegation cannot pick the asker."
+      },
+      {
+        "text": "A copy of the private zone in the staging account, kept in step by hand",
+        "correct": false,
+        "why": "It would work until the day the copies differ. The lesson names a way to share the one zone."
+      },
+      {
+        "text": "Associate the same private zone with the staging VPC",
+        "correct": true,
+        "why": "Right. `associate-vpc-with-hosted-zone` accepts a VPC in another account once the zone's owner has authorised it."
+      },
+      {
+        "text": "A geolocation record that answers only for `10.30.0.0/16`",
+        "correct": false,
+        "why": "Geolocation works on countries and continents, and a private range is in none of them."
+      }
+    ]
+  }
+]

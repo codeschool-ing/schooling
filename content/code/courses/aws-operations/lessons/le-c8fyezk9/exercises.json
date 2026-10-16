@@ -1,0 +1,405 @@
+[
+  {
+    "id": "ex-2rh8b8hj",
+    "version": 1,
+    "section": "provider",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Terraform job runs in CodeBuild. Where should the AWS provider get its credentials?",
+    "hint": "The machine has an identity of its own.",
+    "choices": [
+      {
+        "text": "From an access key in the provider block",
+        "correct": false,
+        "why": "A key in the block is a key in the repository, for as long as the history lasts."
+      },
+      {
+        "text": "From a developer's profile copied into the build image",
+        "correct": false,
+        "why": "That makes every build act as one person, with a credential baked into an image."
+      },
+      {
+        "text": "From moto's test key",
+        "correct": false,
+        "why": "AWS refuses that key; it only works against moto."
+      },
+      {
+        "text": "From the build project's role",
+        "correct": true,
+        "why": "Right. The provider finds the role's short-lived credentials by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6784tmj",
+    "version": 1,
+    "section": "provider",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `default_tags` in the provider block do?",
+    "hint": "The topic got tags nobody wrote on it.",
+    "choices": [
+      {
+        "text": "Tags the resources that have no tags block",
+        "correct": false,
+        "why": "Resources with their own tags get both, merged."
+      },
+      {
+        "text": "Tags every taggable resource the provider creates",
+        "correct": true,
+        "why": "Right. Written once, applied to every resource that accepts tags."
+      },
+      {
+        "text": "Adds the tags to the state file, not to AWS",
+        "correct": false,
+        "why": "The lab read them back from the topic itself."
+      },
+      {
+        "text": "Activates the tags for cost allocation in billing",
+        "correct": false,
+        "why": "Activation is a separate step in billing, lesson 24's subject."
+      }
+    ]
+  },
+  {
+    "id": "ex-da6zmthq",
+    "version": 1,
+    "section": "provider",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the places the AWS provider looks for credentials in the order it tries them.",
+    "hint": "The most explicit first.",
+    "items": [
+      "Environment variables",
+      "A profile in ~/.aws",
+      "The machine's own role"
+    ],
+    "trap": "The machine's role first is the slip: a variable set by hand would then be ignored on an EC2 instance."
+  },
+  {
+    "id": "ex-83ypdc87",
+    "version": 1,
+    "section": "state-bucket",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can the state bucket not be created by the configuration whose state it holds?",
+    "hint": "What does init need?",
+    "choices": [
+      {
+        "text": "Terraform forbids creating S3 buckets in a backend configuration",
+        "correct": false,
+        "why": "It creates buckets freely; the order is the problem."
+      },
+      {
+        "text": "It needs the bucket to exist before its very first init",
+        "correct": true,
+        "why": "Right. Hence a small separate configuration, or a CloudFormation stack, that makes it first."
+      },
+      {
+        "text": "Buckets can only be created from the console",
+        "correct": false,
+        "why": "Any API client can create one; the lab did it with Terraform."
+      },
+      {
+        "text": "The bucket would be deleted by every destroy",
+        "correct": false,
+        "why": "prevent_destroy handles that; the real issue is the first init."
+      }
+    ]
+  },
+  {
+    "id": "ex-cw408yny",
+    "version": 1,
+    "section": "state-bucket",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which settings of the state bucket protect against which risk? Choose all that are correct.",
+    "hint": "One guarantee per resource.",
+    "choices": [
+      {
+        "text": "Versioning lets an earlier state be recovered",
+        "correct": true,
+        "why": "Yes. Every write keeps the previous version."
+      },
+      {
+        "text": "The public access block encrypts the state",
+        "correct": false,
+        "why": "No. It stops a public policy or ACL; encryption is a separate setting."
+      },
+      {
+        "text": "prevent_destroy refuses a plan that deletes the bucket",
+        "correct": true,
+        "why": "Yes. Even terraform destroy in the wrong directory."
+      },
+      {
+        "text": "KMS encryption adds a second permission needed to read it",
+        "correct": true,
+        "why": "Yes. Reading needs the key as well as the bucket."
+      },
+      {
+        "text": "Versioning stops two applies writing at once",
+        "correct": false,
+        "why": "No. That is the lock's job; versioning keeps the history."
+      }
+    ]
+  },
+  {
+    "id": "ex-sghkk7mm",
+    "version": 1,
+    "section": "state-bucket",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer can read the state bucket but has no permission on the database. Can they learn the database's password?",
+    "hint": "What does the state hold?",
+    "choices": [
+      {
+        "text": "Quite possibly, if the state stored it, in plain text",
+        "correct": true,
+        "why": "Right. Read access to the state bucket is read access to whatever secrets the state holds."
+      },
+      {
+        "text": "No: the state only holds resource ids",
+        "correct": false,
+        "why": "It holds every attribute Terraform read, including secrets a resource returned."
+      },
+      {
+        "text": "No: Terraform masks sensitive values in the file",
+        "correct": false,
+        "why": "sensitive hides values in the output, not in the state file."
+      },
+      {
+        "text": "By running terraform apply first",
+        "correct": false,
+        "why": "Reading the object is enough; nothing has to run."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jyg36f8",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`terraform init` warns that `dynamodb_table` is deprecated. Does locking still work?",
+    "hint": "Deprecated is not removed.",
+    "choices": [
+      {
+        "text": "No: the lock is ignored until use_lockfile is set",
+        "correct": false,
+        "why": "The lab held a lock in the table after that warning."
+      },
+      {
+        "text": "For applies, but not for plans",
+        "correct": false,
+        "why": "Plans take the lock too, which is how the second one was refused."
+      },
+      {
+        "text": "Yes; the warning says it will go",
+        "correct": true,
+        "why": "Right. A second plan was refused by the table's lock."
+      },
+      {
+        "text": "If the table is in us-east-1",
+        "correct": false,
+        "why": "The table lives in the backend's region, here São Paulo."
+      }
+    ]
+  },
+  {
+    "id": "ex-s90n6dj6",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes the DynamoDB lock a lock, rather than just a record?",
+    "hint": "Read the error the second plan got.",
+    "choices": [
+      {
+        "text": "The item has an expiry time",
+        "correct": false,
+        "why": "There is no expiry, which is why a lock can be left behind."
+      },
+      {
+        "text": "The table allows one item at a time",
+        "correct": false,
+        "why": "It held two items in the lab, the lock and the -md5 digest."
+      },
+      {
+        "text": "A write needing the key free",
+        "correct": true,
+        "why": "Right. ConditionalCheckFailedException is the refusal."
+      },
+      {
+        "text": "Terraform reads the table every second while it runs",
+        "correct": false,
+        "why": "It writes once, conditionally, and deletes at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-8tdx09my",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the migration set `use_lockfile` and `dynamodb_table` together for a while, instead of switching at once?",
+    "hint": "Two colleagues, two versions of the configuration.",
+    "choices": [
+      {
+        "text": "So both versions of the configuration exclude each other",
+        "correct": true,
+        "why": "Right. With both, every run takes the lock the other side checks."
+      },
+      {
+        "text": "Because the lock file needs the table to exist",
+        "correct": false,
+        "why": "The lock file works alone, as the last step showed."
+      },
+      {
+        "text": "To copy the lock items from the table into the bucket",
+        "correct": false,
+        "why": "Nothing is copied; locks are short-lived and remade every run."
+      },
+      {
+        "text": "Because Terraform refuses use_lockfile on a bucket that already has a state",
+        "correct": false,
+        "why": "It accepted it on this one, which had a state."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccvxe49j",
+    "version": 1,
+    "section": "locking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A laptop died mid-apply and every plan is now refused with a lock. What is safe to do?",
+    "hint": "Make sure the other apply is really gone.",
+    "choices": [
+      {
+        "text": "Run every plan and apply with -lock=false from now on",
+        "correct": false,
+        "why": "That removes the protection for everybody, permanently."
+      },
+      {
+        "text": "Ask Who, then force-unlock the ID",
+        "correct": true,
+        "why": "Right. The refusal prints the ID, and the owner confirms nothing is running."
+      },
+      {
+        "text": "Delete the state object and apply again",
+        "correct": false,
+        "why": "That is lesson 7's accident, caused on purpose."
+      },
+      {
+        "text": "Wait an hour for the lock to expire by itself",
+        "correct": false,
+        "why": "Locks do not expire; it would wait for ever."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0msrvft",
+    "version": 1,
+    "section": "locking",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `use_lockfile = true`, the lock is an object next to the state whose name ends in `.___`.",
+    "hint": "The bucket listing showed it.",
+    "blanks": [
+      {
+        "accept": [
+          "tflock"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cehpkjza",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the backend setup to what it is for.",
+    "hint": "One purpose each.",
+    "pairs": [
+      {
+        "left": "The bootstrap configuration",
+        "right": "Creating the bucket before anything uses it"
+      },
+      {
+        "left": "Bucket versioning",
+        "right": "Recovering an earlier state"
+      },
+      {
+        "left": "use_lockfile",
+        "right": "Stopping two writers at once"
+      },
+      {
+        "left": "force-unlock",
+        "right": "Clearing a lock its owner abandoned"
+      }
+    ],
+    "right_distractors": [
+      "Encrypting the plan output"
+    ]
+  },
+  {
+    "id": "ex-m35jvrjj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes keeping the state bucket's own Terraform state in that same bucket, to have one place for everything. What goes wrong?",
+    "hint": "Think of recovering after the bucket is damaged.",
+    "choices": [
+      {
+        "text": "Nothing: S3 is durable enough to hold its own record",
+        "correct": false,
+        "why": "Durability does not help when the configuration managing the bucket is the thing broken."
+      },
+      {
+        "text": "Terraform refuses two states in one bucket",
+        "correct": false,
+        "why": "One bucket holds many states under different keys."
+      },
+      {
+        "text": "The lock would block itself forever",
+        "correct": false,
+        "why": "Each state has its own lock; they do not collide."
+      },
+      {
+        "text": "Managing the bucket would need the bucket already working",
+        "correct": true,
+        "why": "Right. Repairing the bucket needs a state that lives inside the thing being repaired."
+      }
+    ]
+  },
+  {
+    "id": "ex-ztycgs86",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "value": 3600,
+    "tolerance": 0,
+    "prompt": "A state object is written 40 times a day and versioning keeps every version for 90 days. How many versions of it does the bucket hold at the end of the 90th day?",
+    "hint": "Writes a day times days."
+  }
+]

@@ -1,0 +1,434 @@
+[
+  {
+    "id": "ex-2mgz1v08",
+    "version": 1,
+    "section": "the-accident",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The state object was deleted. What happened to the resources it described?",
+    "hint": "The state is a record, not the resources.",
+    "choices": [
+      {
+        "text": "They were deleted with the state, in the same request",
+        "correct": false,
+        "why": "Deleting an object in S3 touches that object only."
+      },
+      {
+        "text": "They are marked for deletion at the next apply",
+        "correct": false,
+        "why": "The next plan wants to create them, not delete them."
+      },
+      {
+        "text": "Nothing: they still exist and keep serving",
+        "correct": true,
+        "why": "Right. Terraform forgot them; AWS did not."
+      },
+      {
+        "text": "They stop working until the state is restored",
+        "correct": false,
+        "why": "Resources never consult the state; only Terraform does."
+      }
+    ]
+  },
+  {
+    "id": "ex-rh8gjt77",
+    "version": 1,
+    "section": "the-accident",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the state was lost, the apply adopted the SNS topic without an error but failed on the bucket. Why the difference?",
+    "hint": "What does each service answer to a create of a name that exists?",
+    "choices": [
+      {
+        "text": "Creating an existing topic returns it; a bucket refuses",
+        "correct": true,
+        "why": "Right. SNS answers with the existing topic, S3 with BucketAlreadyOwnedByYou."
+      },
+      {
+        "text": "The topic was newer than the bucket",
+        "correct": false,
+        "why": "Age plays no part; the services answer differently."
+      },
+      {
+        "text": "Terraform retries topics but not buckets",
+        "correct": false,
+        "why": "No retry was involved; the first call succeeded for the topic."
+      },
+      {
+        "text": "The bucket had DeletionPolicy Retain",
+        "correct": false,
+        "why": "That is CloudFormation; this bucket is Terraform's, and the policy says nothing about creation."
+      }
+    ]
+  },
+  {
+    "id": "ex-k62q24kz",
+    "version": 1,
+    "section": "the-accident",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the state lost, which kind of resource is the most dangerous for an apply to recreate?",
+    "hint": "What stops a second copy from being made?",
+    "choices": [
+      {
+        "text": "A bucket, because its name is global",
+        "correct": false,
+        "why": "The global name is what makes the create fail, which is the safe outcome."
+      },
+      {
+        "text": "A log group, because its logs are lost",
+        "correct": false,
+        "why": "The create fails on the existing name, and the logs stay where they are."
+      },
+      {
+        "text": "An SNS topic, because it is adopted",
+        "correct": false,
+        "why": "Adoption leaves one topic; it is quiet, but no copy is made."
+      },
+      {
+        "text": "One with no unique name, such as an EC2 instance",
+        "correct": true,
+        "why": "Right. The create succeeds, and the account holds two, one of them unmanaged."
+      }
+    ]
+  },
+  {
+    "id": "ex-03dng06s",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does deleting an object in a versioned bucket actually do?",
+    "hint": "The data stays underneath.",
+    "choices": [
+      {
+        "text": "Removes the newest version only",
+        "correct": false,
+        "why": "A plain delete removes no version; it hides them behind a marker."
+      },
+      {
+        "text": "Adds a delete marker on top of the versions",
+        "correct": true,
+        "why": "Right. Earlier versions stay readable by their ids."
+      },
+      {
+        "text": "Moves the object to a recycle bucket for 30 days",
+        "correct": false,
+        "why": "S3 has no recycle bucket; the versions stay in the same bucket."
+      },
+      {
+        "text": "Removes every version unless MFA delete is on",
+        "correct": false,
+        "why": "Versions are only removed by deleting each one by id."
+      }
+    ]
+  },
+  {
+    "id": "ex-cx9zbtmz",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The history shows an 8,403-byte version, a delete marker one second later, and a 2,744-byte version after that. Which version is restored?",
+    "hint": "The last good one, before the marker.",
+    "choices": [
+      {
+        "text": "The 2,744-byte one, because it is the latest",
+        "correct": false,
+        "why": "It was written by the bad apply and records one resource."
+      },
+      {
+        "text": "The delete marker, by deleting it",
+        "correct": false,
+        "why": "Removing the marker exposes the 2,744-byte version, the newest one beneath it."
+      },
+      {
+        "text": "The 8,403-byte one, from before the marker",
+        "correct": true,
+        "why": "Right. It holds the four resources, and copying it makes it the latest."
+      },
+      {
+        "text": "Neither: a version cannot be restored once a newer one exists",
+        "correct": false,
+        "why": "Any version can be copied on top, whatever came after."
+      }
+    ]
+  },
+  {
+    "id": "ex-706ft76x",
+    "version": 1,
+    "section": "restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why stop every pipeline before restoring the state?",
+    "hint": "Look at where the 2,744-byte version came from.",
+    "choices": [
+      {
+        "text": "Because S3 refuses copy-object while a lock exists",
+        "correct": false,
+        "why": "S3 knows nothing of Terraform's lock; the copy would succeed."
+      },
+      {
+        "text": "Because versioning is suspended during a restore",
+        "correct": false,
+        "why": "Versioning stays on; the restore itself is a new version."
+      },
+      {
+        "text": "Because pipelines cache the state and would overwrite it at once",
+        "correct": false,
+        "why": "Pipelines read the state fresh each run; the risk is a run happening, not a cache."
+      },
+      {
+        "text": "An apply in between writes a newer, wrong version",
+        "correct": true,
+        "why": "Right. That is exactly how the bad version appeared."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t0p4jsk",
+    "version": 1,
+    "section": "restore",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "value": 5659,
+    "tolerance": 0,
+    "prompt": "The good state version is 8,403 bytes and the bad one 2,744. How many bytes larger is the good one?",
+    "hint": "A subtraction."
+  },
+  {
+    "id": "ex-ahhtra6x",
+    "version": 1,
+    "section": "import",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is an `import` block the way out, rather than a restore?",
+    "hint": "Import needs no earlier preparation.",
+    "choices": [
+      {
+        "text": "When no version or copy of the state is left",
+        "correct": true,
+        "why": "Right. With a version or a pulled copy, restoring is faster."
+      },
+      {
+        "text": "When the resources were deleted as well",
+        "correct": false,
+        "why": "Import needs the resources to exist; a deleted one is created again instead."
+      },
+      {
+        "text": "Whenever the plan shows changes",
+        "correct": false,
+        "why": "Changes are ordinary; import is for resources the state does not know."
+      },
+      {
+        "text": "Only for resources created in the console",
+        "correct": false,
+        "why": "Any existing resource can be imported, whoever made it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qt93zfa",
+    "version": 1,
+    "section": "import",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should be done with the file `-generate-config-out` writes?",
+    "hint": "It describes the resource as it is.",
+    "choices": [
+      {
+        "text": "Commit it as it is, since Terraform wrote it",
+        "correct": false,
+        "why": "It restates every default and copies the resource's mistakes along with it."
+      },
+      {
+        "text": "Delete it after the apply, because the state is enough",
+        "correct": false,
+        "why": "Without resource blocks, the next plan would destroy the imported resources."
+      },
+      {
+        "text": "Read it, trim defaults, compare with intent",
+        "correct": true,
+        "why": "Right. It is a draft of what exists, which may not be what was meant."
+      },
+      {
+        "text": "Run it through cfn-lint",
+        "correct": false,
+        "why": "cfn-lint reads CloudFormation templates, not HCL."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8zr60bg",
+    "version": 1,
+    "section": "import",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what is left after the accident to the way out.",
+    "hint": "Three situations, three answers.",
+    "pairs": [
+      {
+        "left": "A version of the state in the bucket",
+        "right": "Copy it back on top"
+      },
+      {
+        "left": "A file from terraform state pull",
+        "right": "terraform state push"
+      },
+      {
+        "left": "Nothing but the resources themselves",
+        "right": "import blocks"
+      }
+    ],
+    "right_distractors": [
+      "terraform destroy and apply"
+    ]
+  },
+  {
+    "id": "ex-y933vpqx",
+    "version": 1,
+    "section": "import",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To have Terraform write resource blocks for imported resources, run `terraform plan -generate-___-out=generated.tf`.",
+    "hint": "What it generates.",
+    "blanks": [
+      {
+        "accept": [
+          "config"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sbrpg2ze",
+    "version": 1,
+    "section": "prevention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bucket policy denies `s3:DeleteObject` on `*.tfstate` except to one role. Why are the `.tflock` objects not blocked too?",
+    "hint": "Terraform deletes one of them on every run.",
+    "choices": [
+      {
+        "text": "Lock files are not stored in the bucket",
+        "correct": false,
+        "why": "With use_lockfile they are, beside the state."
+      },
+      {
+        "text": "The resource pattern ends in .tfstate, and they end in .tflock",
+        "correct": true,
+        "why": "Right. Blocking them would break every run, which deletes its lock at the end."
+      },
+      {
+        "text": "Explicit denies never apply to small objects",
+        "correct": false,
+        "why": "Size plays no part in a policy."
+      },
+      {
+        "text": "Terraform uses the maintenance role to delete them",
+        "correct": false,
+        "why": "Terraform runs as whoever runs it, not as the maintenance role."
+      }
+    ]
+  },
+  {
+    "id": "ex-229acgm4",
+    "version": 1,
+    "section": "prevention",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habits protect against losing the state? Choose all that apply.",
+    "hint": "Fewer deleters, a longer history, a second copy.",
+    "choices": [
+      {
+        "text": "terraform state pull before anything unusual",
+        "correct": true,
+        "why": "Yes. A copy that does not depend on the bucket."
+      },
+      {
+        "text": "Editing the state object by hand when a value is wrong",
+        "correct": false,
+        "why": "No. Hand edits skip the lock and the serial; use the state subcommands."
+      },
+      {
+        "text": "An alert when a state object is deleted",
+        "correct": true,
+        "why": "Yes. CloudTrail data events can record it."
+      },
+      {
+        "text": "One state for every environment, to keep it simple",
+        "correct": false,
+        "why": "No. One accident would then cost every environment at once."
+      },
+      {
+        "text": "Noncurrent versions kept longer than it takes to notice",
+        "correct": true,
+        "why": "Yes. The history has to outlast the discovery."
+      }
+    ]
+  },
+  {
+    "id": "ex-36cmkq1d",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the recovery from a deleted state object in order.",
+    "hint": "Stop the damage, find, restore, confirm.",
+    "items": [
+      "Stop every pipeline and person that could apply",
+      "List the object's versions and delete markers",
+      "Copy the last good version on top",
+      "Run terraform plan and expect no changes"
+    ],
+    "trap": "Restoring before stopping the pipelines is the slip: a run in between writes a newer bad version."
+  },
+  {
+    "id": "ex-y5wv04z6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan on a quiet Tuesday says `Plan: 4 to add` for a configuration that has run for a year. What do you do first?",
+    "hint": "A plan that wants to create what exists is about the state.",
+    "choices": [
+      {
+        "text": "Apply it, since Terraform knows best",
+        "correct": false,
+        "why": "Applying adopts some, fails on others, and may duplicate the rest."
+      },
+      {
+        "text": "Stop, and check the state object and its history",
+        "correct": true,
+        "why": "Right. The plan is telling you the state is missing, not the resources."
+      },
+      {
+        "text": "Run terraform destroy to start clean",
+        "correct": false,
+        "why": "With an empty state, destroy finds nothing, and the plan problem remains."
+      },
+      {
+        "text": "Delete the four resources by hand so the plan is right",
+        "correct": false,
+        "why": "That turns a lost record into an outage."
+      }
+    ]
+  }
+]

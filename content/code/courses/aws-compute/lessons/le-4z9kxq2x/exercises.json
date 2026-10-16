@@ -1,0 +1,645 @@
+[
+  {
+    "id": "ex-vydrzdvg",
+    "version": 1,
+    "section": "the-handler",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `app.py`, the line `LOADED = time.time()` sits outside the handler. When does it run?",
+    "choices": [
+      {
+        "text": "Once per execution environment, at import",
+        "correct": true,
+        "why": "The runtime imports the file once, in the INIT phase, and every later event in that environment reuses what it set."
+      },
+      {
+        "text": "Before every event, just ahead of the handler",
+        "correct": false,
+        "why": "Then `warm_for_s` would be near zero on every call; in the capture it grew between the first two."
+      },
+      {
+        "text": "Once when the function is created with `create-function`",
+        "correct": false,
+        "why": "Creating a function stores a package; no code runs until an environment imports it."
+      },
+      {
+        "text": "After the handler returns, while the environment is frozen",
+        "correct": false,
+        "why": "A frozen environment runs nothing at all; the line ran before the first event."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjjncn1g",
+    "version": 1,
+    "section": "the-handler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function's configuration says `--handler greet.handler`, and its zip holds only `app.py` with `def handler`. What happens at the first invocation?",
+    "choices": [
+      {
+        "text": "Lambda finds the only function called `handler` and runs it",
+        "correct": false,
+        "why": "The handler name is a path, file then function. Nothing searches the package for a function by name."
+      },
+      {
+        "text": "`create-function` should already have refused it",
+        "correct": false,
+        "why": "Neither moto nor AWS imports the code at creation; the mismatch only shows when an environment starts."
+      },
+      {
+        "text": "A `Runtime.ImportModuleError`: there is no `greet` module",
+        "correct": true,
+        "why": "The runtime tries to import `greet` from `/var/task` and fails before any event is handled, as `shop` did without its layer."
+      },
+      {
+        "text": "The event is passed to `app.py` as a script",
+        "correct": false,
+        "why": "Lambda never runs a file as a script; it imports a module and calls a function in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1g5n5x9",
+    "version": 1,
+    "section": "the-handler",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `REPORT` line says `Duration: 37.20 ms`. Going by the rule the emulator's log showed, what `Billed Duration` does Lambda charge, in milliseconds?",
+    "hint": "In the capture, 1.05 ms was billed as 2 ms.",
+    "value": 38,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-pyckxttp",
+    "version": 1,
+    "section": "the-handler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every `REPORT` from the emulator ended in `Memory Size: 3008 MB Max Memory Used: 3008 MB`. What should you conclude about your function's memory on AWS?",
+    "choices": [
+      {
+        "text": "It needs 3008 MB, so configure that much",
+        "correct": false,
+        "why": "It used nothing like that: the emulator repeats the size it was given instead of measuring."
+      },
+      {
+        "text": "Nothing; both figures are the emulator's defaults",
+        "correct": true,
+        "why": "The emulator gives every function 3008 MB and reports the same number as used. Lambda measures `Max Memory Used`, and on AWS that line means something."
+      },
+      {
+        "text": "It leaks memory, since it used all of it",
+        "correct": false,
+        "why": "A function that used all its memory on Lambda would be stopped with an out-of-memory error; this one returned normally."
+      },
+      {
+        "text": "Lambda will give it 3008 MB, its default",
+        "correct": false,
+        "why": "Lambda's default is 128 MB, as `create-function` showed in moto; 3008 MB is the emulator's."
+      }
+    ]
+  },
+  {
+    "id": "ex-az1gwfcr",
+    "version": 1,
+    "section": "the-handler",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lambda unpacks a function's own package into the directory `/var/___`, which is where the emulator had the code mounted.",
+    "blanks": [
+      {
+        "accept": [
+          "task"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gartbhd4",
+    "version": 1,
+    "section": "the-package",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first `create-function` failed with `The role defined for the function cannot be assumed by Lambda.` What was missing?",
+    "choices": [
+      {
+        "text": "A permission policy allowing `lambda:CreateFunction`",
+        "correct": false,
+        "why": "moto evaluates no IAM policies by default, so the caller's permissions were not what failed."
+      },
+      {
+        "text": "A runtime that supports roles",
+        "correct": false,
+        "why": "Every runtime runs with an execution role; it is not a feature of some of them."
+      },
+      {
+        "text": "A zip whose `app.py` is inside a folder named after the role",
+        "correct": false,
+        "why": "The role has nothing to do with the zip's layout, and `app.py` belongs at the root."
+      },
+      {
+        "text": "The role itself, trusting `lambda.amazonaws.com`",
+        "correct": true,
+        "why": "`greet-role` did not exist yet. Once created with a trust policy naming the Lambda service, the same call worked."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wn9h9bp",
+    "version": 1,
+    "section": "the-package",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function created with Lambda's defaults has a timeout of 3 seconds; the emulator's `remaining_ms` started near 300,000. How many times longer is the emulator's timeout?",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-kpxt7dxw",
+    "version": 1,
+    "section": "the-package",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`aws lambda invoke` against moto answered `\"StatusCode\": 200` and `\"FunctionError\": \"Handled\"`, and `out.json` began `error running docker`. What failed?",
+    "choices": [
+      {
+        "text": "The handler raised `ValueError`",
+        "correct": false,
+        "why": "That would need the handler to run. Here no runtime started, because moto could not fetch an image to start one in."
+      },
+      {
+        "text": "Nothing: a status of 200 means the call succeeded",
+        "correct": false,
+        "why": "Lambda answers 200 for a function that failed and says so in `FunctionError`; reading only the status hides every error."
+      },
+      {
+        "text": "The role lacked permission to write logs",
+        "correct": false,
+        "why": "A missing log permission does not stop a handler from running or returning; the error text names Docker."
+      },
+      {
+        "text": "moto's attempt to pull a runtime image from Docker Hub",
+        "correct": true,
+        "why": "moto runs a handler in a community image it pulls, and this machine could not pull it. AWS's own image, in the emulator, is how the course runs code."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2t58y3c",
+    "version": 1,
+    "section": "the-package",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On AWS, `create-function --zip-file fileb://big.zip` with a 60 MB zip is refused. The code unzips to 140 MB. What is the way to deploy it as a zip?",
+    "choices": [
+      {
+        "text": "Upload it to S3 and pass `--code S3Bucket=…,S3Key=…`",
+        "correct": true,
+        "why": "The 50 MB limit is on a zip sent in the request. From S3 the zip may be larger, and 140 MB unzipped is under the 250 MB limit."
+      },
+      {
+        "text": "Split it into two functions of 30 MB each",
+        "correct": false,
+        "why": "That changes the application to fit a transport limit that has a simpler way round it."
+      },
+      {
+        "text": "Compress it harder, since only the unzipped size counts",
+        "correct": false,
+        "why": "The direct upload is limited by the zip's own size, and random-looking content does not compress."
+      },
+      {
+        "text": "Nothing works below 250 MB zipped; use an image",
+        "correct": false,
+        "why": "An image is an option, but not the only one: below 250 MB unzipped, a zip from S3 is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b7ny19q",
+    "version": 1,
+    "section": "the-package",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order the steps that take an edit of `app.py` to a version of the function that will never change again.",
+    "items": [
+      "Edit app.py on the laptop",
+      "Zip it again, with app.py at the root",
+      "aws lambda update-function-code",
+      "aws lambda publish-version"
+    ],
+    "trap": "Publishing a version before updating the code freezes the old package: a version copies whatever $LATEST holds at that moment."
+  },
+  {
+    "id": "ex-4br1tsf9",
+    "version": 1,
+    "section": "layers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague builds the layer with `zip ../shopfmt.zip shopfmt.py`, the module at the root of the zip. The function then fails with `No module named 'shopfmt'`. Why?",
+    "choices": [
+      {
+        "text": "Layers have to be published for arm64",
+        "correct": false,
+        "why": "The architecture of a pure Python module makes no difference; it is where the file landed."
+      },
+      {
+        "text": "The function names `shopfmt:1` instead of `shopfmt:$LATEST`",
+        "correct": false,
+        "why": "Layers have no `$LATEST`; a function always names a numbered version."
+      },
+      {
+        "text": "A layer's modules are imported only after the handler starts",
+        "correct": false,
+        "why": "Imports happen at INIT, from `/var/task` and then the layer's directories; there is no later pass."
+      },
+      {
+        "text": "It lands in `/opt/shopfmt.py`, and the runtime imports from `/opt/python`",
+        "correct": true,
+        "why": "Lambda unpacks the zip into `/opt` as it is, and the Python runtime only adds `/opt/python` to its path."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4f44gr4",
+    "version": 1,
+    "section": "layers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong in a layer rather than in the function's own package? Choose every one the section argues for.",
+    "choices": [
+      {
+        "text": "`shopfmt`, used by several functions",
+        "correct": true,
+        "why": "A shared library is what a layer is for: one copy to publish and update."
+      },
+      {
+        "text": "A large dependency that rarely changes",
+        "correct": true,
+        "why": "It keeps the function's own zip small, so every upload of the code is quick."
+      },
+      {
+        "text": "A monitoring extension for `/opt/extensions`",
+        "correct": true,
+        "why": "Extensions are delivered as layers, into the directory the runtime looks in."
+      },
+      {
+        "text": "The handler file itself",
+        "correct": false,
+        "why": "The handler changes with every commit and belongs to one function; it goes in that function's package."
+      },
+      {
+        "text": "A dependency that only one function uses",
+        "correct": false,
+        "why": "Sharing it with nobody gains nothing, and costs a second thing to version."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4kb4bg2",
+    "version": 1,
+    "section": "layers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`shopfmt:2` is published with a bug. Twelve functions use `shopfmt`, and two of them were moved to version 2 this morning. Which functions break?",
+    "choices": [
+      {
+        "text": "The two that name version 2",
+        "correct": true,
+        "why": "Layer versions are immutable and each function keeps the one it names, so the other ten still run `shopfmt:1`."
+      },
+      {
+        "text": "All twelve, as soon as version 2 exists",
+        "correct": false,
+        "why": "A function names a layer version; publishing a new one changes no function's configuration."
+      },
+      {
+        "text": "The ten still on version 1, which AWS retires",
+        "correct": false,
+        "why": "Publishing a version retires nothing; version 1 stays until somebody deletes it."
+      },
+      {
+        "text": "None until each function's `$LATEST` is published again",
+        "correct": false,
+        "why": "The two moved functions run the new layer at once; their configuration changed when they were moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xmafyg2",
+    "version": 1,
+    "section": "layers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function's own package unzips to 180 MB. To get under the limit, a colleague moves 90 MB of it into a layer. What does AWS do?",
+    "choices": [
+      {
+        "text": "It accepts it: 90 MB of package and 90 MB of layer",
+        "correct": false,
+        "why": "The limit is not per piece. The function and its layers are counted together."
+      },
+      {
+        "text": "It accepts it, since layers live in `/opt`",
+        "correct": false,
+        "why": "Where the files land does not matter to the quota; `/var/task` and `/opt` share the 250 MB."
+      },
+      {
+        "text": "Nothing changes: still 180 MB, still allowed",
+        "correct": true,
+        "why": "Moving bytes into a layer neither adds nor removes them, and 180 MB is under 250 MB, so the move was never needed."
+      },
+      {
+        "text": "It refuses, because a layer may hold at most 50 MB",
+        "correct": false,
+        "why": "50 MB is the limit on a zip uploaded directly, for a function or a layer, not on what a layer may hold unzipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-wj02ks9n",
+    "version": 1,
+    "section": "layers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function's package unzips to 140 MB and it names two layers of 60 MB and 35 MB, unzipped. How many MB are left under Lambda's limit for one more layer?",
+    "hint": "The function and every layer are counted together.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-hfhtpf38",
+    "version": 1,
+    "section": "runtimes-and-arm",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the sheet's prices of 16 October 2026, what does a month cost on Arm for six million invocations of a 512 MB function running 200 ms each, requests included and the free allowance left out? Answer in USD.",
+    "hint": "GB-seconds are invocations × seconds × GB; requests are 0.2 USD per million.",
+    "value": 9.2,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-0jhsyccc",
+    "version": 1,
+    "section": "runtimes-and-arm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto created a function with `--runtime python3.99`. What would AWS have done with the same call?",
+    "choices": [
+      {
+        "text": "Created it on the newest Python available",
+        "correct": false,
+        "why": "AWS does not round a runtime name to the nearest one; a name that is not on its list is an error."
+      },
+      {
+        "text": "Created it, then failed at the first invocation",
+        "correct": false,
+        "why": "The name is checked when the function is created, not when it first runs."
+      },
+      {
+        "text": "Refused it with `InvalidParameterValueException`",
+        "correct": true,
+        "why": "`python3.99` has never existed, and AWS answers with the error and the names it accepts."
+      },
+      {
+        "text": "Created it as a deprecated runtime with no patches",
+        "correct": false,
+        "why": "Deprecation applies to runtimes that existed; a name that never existed cannot be deprecated."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkbb2xdn",
+    "version": 1,
+    "section": "runtimes-and-arm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A function has been on a runtime since before its deprecation date, and nobody has touched it. What is its state after that date?",
+    "choices": [
+      {
+        "text": "It keeps running, without security patches",
+        "correct": true,
+        "why": "Deprecation stops the patches and, later, creation and updates; invocations go on."
+      },
+      {
+        "text": "AWS moves it to the next runtime version automatically",
+        "correct": false,
+        "why": "Automatic updates stay within the same runtime; moving to a new language version is a change the owner makes."
+      },
+      {
+        "text": "It stops answering on the deprecation date",
+        "correct": false,
+        "why": "Nothing in AWS's three steps stops a running function; that is why an unowned function on an old runtime is a risk rather than an outage."
+      },
+      {
+        "text": "It is converted to a container image of the same runtime",
+        "correct": false,
+        "why": "No such conversion exists; an image is something the owner builds and deploys."
+      }
+    ]
+  },
+  {
+    "id": "ex-nw18w2k2",
+    "version": 1,
+    "section": "runtimes-and-arm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The resizer works on x86. After `--architectures arm64` and the same zip, every invocation fails importing a compiled image library. What is the fix?",
+    "choices": [
+      {
+        "text": "Raise the memory, since Arm needs more of it",
+        "correct": false,
+        "why": "Memory does not change which processor a compiled file was built for."
+      },
+      {
+        "text": "Build the package again with the library's arm64 wheel",
+        "correct": true,
+        "why": "A compiled dependency is built for one architecture, so the package has to be made for the one it runs on."
+      },
+      {
+        "text": "Move the library into a layer, which Lambda translates for Arm",
+        "correct": false,
+        "why": "Lambda unpacks a layer as it is; it translates nothing, so an x86 file fails from `/opt` exactly as from `/var/task`."
+      },
+      {
+        "text": "Switch the runtime to `provided.al2023`",
+        "correct": false,
+        "why": "That runtime is for a function that brings its own runtime; it does not change the architecture of a library."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2skme5k",
+    "version": 1,
+    "section": "runtimes-and-arm",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each runtime name with what it gives a function.",
+    "pairs": [
+      {
+        "left": "python3.12",
+        "right": "Python 3.12 on Amazon Linux 2023, patched by AWS"
+      },
+      {
+        "left": "nodejs22.x",
+        "right": "Node.js 22, patched by AWS"
+      },
+      {
+        "left": "provided.al2023",
+        "right": "Amazon Linux 2023 and a runtime the function brings, as Go does"
+      }
+    ],
+    "right_distractors": [
+      "A container image of up to 10 GB",
+      "Python 3.12 that AWS no longer patches"
+    ]
+  },
+  {
+    "id": "ex-n9mhhrnp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team deploys the same handler as a container image built `FROM public.ecr.aws/lambda/python:3.12`, instead of a zip on `python3.12`. Who patches the runtime now?",
+    "choices": [
+      {
+        "text": "AWS, underneath the running function, as with a zip",
+        "correct": false,
+        "why": "That is a managed runtime's arrangement. In an image the runtime is part of what you built."
+      },
+      {
+        "text": "ECR, which rescans and patches stored images",
+        "correct": false,
+        "why": "ECR stores and scans images; it does not rewrite them."
+      },
+      {
+        "text": "Nobody: an image's runtime never needs patches",
+        "correct": false,
+        "why": "An image carries the same operating system and Python as the zip's runtime, with the same need for fixes."
+      },
+      {
+        "text": "The team, by rebuilding from a newer base image and deploying it",
+        "correct": true,
+        "why": "The image holds the runtime, so patches arrive only when the image is rebuilt and the function updated."
+      }
+    ]
+  },
+  {
+    "id": "ex-zp38h7ea",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler opens a database connection at module level, next to `LOADED`. A hundred events arrive one after another and one environment handles them all. How many connections were opened?",
+    "choices": [
+      {
+        "text": "A hundred, one per event",
+        "correct": false,
+        "why": "That is what opening it inside the handler would do. At module level it runs at INIT only."
+      },
+      {
+        "text": "One, made at INIT and reused by every event",
+        "correct": true,
+        "why": "Module-level code runs once per environment, which is why it is the place for a connection or a client worth reusing."
+      },
+      {
+        "text": "None until the first event asks for one",
+        "correct": false,
+        "why": "Module-level code does not wait for an event; it runs when the file is imported."
+      },
+      {
+        "text": "Two, one at INIT and one for the first event",
+        "correct": false,
+        "why": "Nothing runs the module twice in the same environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-tynwx8cf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler caches a downloaded file in `/var/task/cache.json`, and every invocation on AWS fails writing it. Where should the cache go?",
+    "choices": [
+      {
+        "text": "`/opt`, where the layers are",
+        "correct": false,
+        "why": "`/opt` is read-only like `/var/task`; both hold what was unpacked from your zips."
+      },
+      {
+        "text": "Into the zip, so it arrives already written",
+        "correct": false,
+        "why": "That works only for a file that never changes; a cache of downloads is written at run time."
+      },
+      {
+        "text": "`/var/runtime`, beside the runtime",
+        "correct": false,
+        "why": "That directory is AWS's runtime, and a function does not write there."
+      },
+      {
+        "text": "`/tmp`",
+        "correct": true,
+        "why": "It is the one writable directory, 512 MB by default, and it lasts as long as the environment does."
+      }
+    ]
+  },
+  {
+    "id": "ex-dk19v0gg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler returns `{'tags': {'a', 'b'}}`, a dictionary holding a Python set. What does the caller receive?",
+    "choices": [
+      {
+        "text": "The tags as a JSON list",
+        "correct": false,
+        "why": "The runtime does not convert a set; it uses the standard JSON encoder, which has no rule for one."
+      },
+      {
+        "text": "An empty answer with status 200",
+        "correct": false,
+        "why": "The failure is reported, like the `ValueError` was, as an error object."
+      },
+      {
+        "text": "A `Runtime.MarshalError`, since a set is not JSON",
+        "correct": true,
+        "why": "What the handler returns must be serialisable to JSON; the runtime reports `Unable to marshal response` when it is not."
+      },
+      {
+        "text": "A Python `repr` string of the dictionary",
+        "correct": false,
+        "why": "The runtime never falls back to `repr`; the answer is JSON or an error."
+      }
+    ]
+  }
+]

@@ -1,0 +1,599 @@
+[
+  {
+    "id": "ex-cmbrq7xt",
+    "version": 1,
+    "section": "what-an-scp-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An SCP allowing `s3:*` is attached to `shop-staging`. A new role there has no IAM policy. What may the role do in S3?",
+    "hint": "Which of the two filters grants?",
+    "choices": [
+      {
+        "text": "Everything, since the SCP allows all of S3",
+        "correct": false,
+        "why": "An SCP grants nothing. It only sets the most the account's identities may be given."
+      },
+      {
+        "text": "Nothing, until IAM grants it something",
+        "correct": true,
+        "why": "Right. IAM grants and the SCP sets a ceiling; with no grant, the ceiling has nothing under it."
+      },
+      {
+        "text": "Read, but not write, until IAM adds more",
+        "correct": false,
+        "why": "No permission is given by default, read included. The role needs an IAM policy for anything."
+      },
+      {
+        "text": "Whatever the management account's role may do there",
+        "correct": false,
+        "why": "Another identity's permissions are not this role's. Each identity is judged by its own policies."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xhtke24",
+    "version": 1,
+    "section": "what-an-scp-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A role in `shop-prod` has `AdministratorAccess`; the SCPs above the account allow only EC2 and S3. What can the role do?",
+    "hint": "What is in both filters?",
+    "choices": [
+      {
+        "text": "Everything: an administrator is above the SCPs",
+        "correct": false,
+        "why": "Nobody in a member account is above its SCPs, the account's root user included."
+      },
+      {
+        "text": "Nothing, since the two policies disagree",
+        "correct": false,
+        "why": "They do not cancel out. What is in both still passes."
+      },
+      {
+        "text": "EC2 and S3, where the two filters overlap",
+        "correct": true,
+        "why": "Right. The effective permissions are where IAM's grant and the SCPs' ceiling overlap."
+      },
+      {
+        "text": "EC2 and S3, plus IAM, which SCPs never limit",
+        "correct": false,
+        "why": "SCPs limit IAM's own actions too, which is how the deployer's role is protected in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-xd3g535d",
+    "version": 1,
+    "section": "what-an-scp-is",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are NOT restricted by the organisation's SCPs? Choose all that apply.",
+    "hint": "Two things sit outside the filter.",
+    "choices": [
+      {
+        "text": "Any identity in the management account",
+        "correct": true,
+        "why": "Right. The management account is never affected by an SCP, wherever it is attached."
+      },
+      {
+        "text": "The root user of `shop-prod`",
+        "correct": false,
+        "why": "A member account's root user is filtered like everyone else in it."
+      },
+      {
+        "text": "A service-linked role in `shop-prod`",
+        "correct": true,
+        "why": "Right. The roles AWS services create to act for themselves are outside SCPs."
+      },
+      {
+        "text": "A role with `AdministratorAccess` in `sandbox`",
+        "correct": false,
+        "why": "Administrator is an IAM grant, and the SCPs filter it like any other."
+      },
+      {
+        "text": "The `OrganizationAccountAccessRole` in a member account",
+        "correct": false,
+        "why": "It is an ordinary role in the member account, so the member's SCPs apply to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttwqq5ks",
+    "version": 1,
+    "section": "what-an-scp-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company enables SCPs on its root on a Monday morning. What changes for its developers that day?",
+    "hint": "Which policy is attached everywhere from the start?",
+    "choices": [
+      {
+        "text": "Every request is refused until somebody writes an allow",
+        "correct": false,
+        "why": "`FullAWSAccess` is attached everywhere, so the ceiling starts at the top and nothing is refused."
+      },
+      {
+        "text": "Only actions in the region of the root are allowed",
+        "correct": false,
+        "why": "A root has no region. Limiting regions takes an SCP somebody writes, like the shop's."
+      },
+      {
+        "text": "Nothing, because `FullAWSAccess` allows every action",
+        "correct": true,
+        "why": "Right. It is attached to the root, each OU and each account, so turning SCPs on changes nothing until a guardrail is written."
+      },
+      {
+        "text": "Their IAM policies are replaced by the SCPs",
+        "correct": false,
+        "why": "Nothing is replaced. IAM keeps granting; the SCPs only set a ceiling over it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e1ravka",
+    "version": 1,
+    "section": "what-an-scp-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe-policy` printed `FullAWSAccess` as one statement. What does it say?",
+    "hint": "It is the ceiling every level starts with.",
+    "choices": [
+      {
+        "text": "`Deny` on `*` unless an allow list exists",
+        "correct": false,
+        "why": "It denies nothing. If it did, enabling SCPs would stop every account on the spot."
+      },
+      {
+        "text": "`Allow` on the actions of the services the account has used",
+        "correct": false,
+        "why": "It knows nothing of what an account has used. It is the same three words everywhere."
+      },
+      {
+        "text": "`Allow`, `Action` `*`, `Resource` `*`",
+        "correct": true,
+        "why": "Right. Every action on every resource, which is why the ceiling starts at the top."
+      },
+      {
+        "text": "`Allow` on `*` for the management account only",
+        "correct": false,
+        "why": "SCPs never apply to the management account, so a policy naming it would do nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9zpx7947",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Sandbox` carries only `sandbox-allow-list`; the account `sandbox` below it still carries `FullAWSAccess`. Which applies to a request from `sandbox`?",
+    "hint": "Each level is a separate filter.",
+    "choices": [
+      {
+        "text": "`FullAWSAccess`, since the account's own policy is the nearest",
+        "correct": false,
+        "why": "Nothing overrides anything in SCPs. The account's policy and the OU's both filter the request."
+      },
+      {
+        "text": "Both, so in effect the allow list",
+        "correct": true,
+        "why": "Right. The request passes every level, and the OU lets through only what its list allows."
+      },
+      {
+        "text": "Neither, because the two contradict each other",
+        "correct": false,
+        "why": "They do not contradict: one allows everything, the other some things, and the overlap is the list."
+      },
+      {
+        "text": "Whichever was attached last",
+        "correct": false,
+        "why": "Order of attachment means nothing to the evaluation; the path does."
+      }
+    ]
+  },
+  {
+    "id": "ex-5bakn3pa",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's root carries `FullAWSAccess` and a deny on `organizations:LeaveOrganization`. An administrator attaches `FullAWSAccess` directly to `shop-prod` as well. Can `shop-prod` now leave?",
+    "hint": "An allow lower down against a deny higher up.",
+    "choices": [
+      {
+        "text": "Yes, because the account's own allow is more specific",
+        "correct": false,
+        "why": "Specificity decides nothing. The request still passes the root, and the root denies it."
+      },
+      {
+        "text": "Yes, once the allow reaches the account",
+        "correct": false,
+        "why": "An allow never lifts a deny, at any level. That is what makes a guardrail one."
+      },
+      {
+        "text": "No: a deny at any level wins",
+        "correct": true,
+        "why": "Right. A deny anywhere on the path ends the request, whatever is allowed below it."
+      },
+      {
+        "text": "Only if the account's root user makes the call",
+        "correct": false,
+        "why": "A member account's root user is under the SCPs like everyone else in the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-wht0rc6d",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the shop use a deny list for everything except its sandbox?",
+    "hint": "What happens on the day AWS launches a service?",
+    "choices": [
+      {
+        "text": "A new service is allowed at once, and nobody has to remember it",
+        "correct": true,
+        "why": "Right. With `FullAWSAccess` everywhere, only what is denied is refused; the sandbox wants the opposite."
+      },
+      {
+        "text": "Deny statements are cheaper than allow statements",
+        "correct": false,
+        "why": "Policies cost nothing either way. The difference is what happens to whatever is not written down."
+      },
+      {
+        "text": "An allow list cannot be attached to an OU",
+        "correct": false,
+        "why": "The shop attaches one to `Sandbox`, an OU. Either strategy works at any level."
+      },
+      {
+        "text": "AWS refuses allow lists on accounts that run production",
+        "correct": false,
+        "why": "AWS refuses neither strategy anywhere. The choice is the company's."
+      }
+    ]
+  },
+  {
+    "id": "ex-7hjht4qf",
+    "version": 1,
+    "section": "inheritance",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Replace `FullAWSAccess` on `Sandbox` with an allow list, in the order AWS accepts.",
+    "hint": "A target may never be left with no SCP.",
+    "items": [
+      "save the policy file",
+      "`create-policy` from the file",
+      "`attach-policy` of the allow list to `Sandbox`",
+      "`detach-policy` of `FullAWSAccess` from `Sandbox`"
+    ],
+    "trap": "Detaching `FullAWSAccess` first is the usual slip: AWS refuses to leave a target with no SCP, with the reason `MIN_POLICY_TYPE_ATTACHMENT_LIMIT_EXCEEDED`. moto lets it through."
+  },
+  {
+    "id": "ex-82z2f7g1",
+    "version": 1,
+    "section": "inheritance",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Workloads` keeps `FullAWSAccess`; `Prod` below it gets an allow list of EC2 and S3 instead; `shop-prod` keeps `FullAWSAccess`. A role in `shop-prod` with `AdministratorAccess` calls DynamoDB. What happens?",
+    "hint": "Walk the path from the root down, one level at a time.",
+    "choices": [
+      {
+        "text": "Allowed: two of the three levels allow everything",
+        "correct": false,
+        "why": "Levels are not a vote. Each one has to allow the request."
+      },
+      {
+        "text": "Refused at `Prod`, the level with no allow for it",
+        "correct": true,
+        "why": "Right. DynamoDB is not in `Prod`'s allow list, so the request stops there however much IAM grants."
+      },
+      {
+        "text": "Allowed, because `shop-prod` itself carries `FullAWSAccess`",
+        "correct": false,
+        "why": "The account's own policy does not override its OU's. Both filter the request."
+      },
+      {
+        "text": "Refused at the root, which no longer allows DynamoDB",
+        "correct": false,
+        "why": "The root is unchanged and still allows everything. The missing allow is lower down."
+      }
+    ]
+  },
+  {
+    "id": "ex-8d887d58",
+    "version": 1,
+    "section": "inheritance",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Keeping `FullAWSAccess` everywhere and attaching policies that refuse particular actions is the strategy called a ___ list.",
+    "hint": "The guardrails are written with one `Effect`.",
+    "blanks": [
+      {
+        "accept": [
+          "deny"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jp33wx8h",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody removes `iam:*` from the `NotAction` list of `sa-east-1-only` because \"IAM should be in São Paulo too\". What breaks?",
+    "hint": "Where does a global service answer from?",
+    "choices": [
+      {
+        "text": "Nothing; IAM requests already go to `sa-east-1`",
+        "correct": false,
+        "why": "IAM is global and answers from one place, normally `us-east-1`, so its requests do not name São Paulo."
+      },
+      {
+        "text": "Only the management account's IAM",
+        "correct": false,
+        "why": "The management account is untouched by SCPs. It is every member account that loses IAM."
+      },
+      {
+        "text": "Every member account loses IAM, users and roles alike",
+        "correct": true,
+        "why": "Right. IAM's requests are not for `sa-east-1`, so the deny now catches all of them. That is why global services are the exceptions."
+      },
+      {
+        "text": "The SCP becomes invalid and AWS refuses to attach it",
+        "correct": false,
+        "why": "It is still valid policy language. It is valid and wrong, which is worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-q53e5723",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `protect-deployer`, what does the condition on `aws:PrincipalArn` do?",
+    "hint": "`ArnNotLike` turns the deny off for a match.",
+    "choices": [
+      {
+        "text": "It names the role that is protected",
+        "correct": false,
+        "why": "The protected role is in `Resource`. The condition is about who is asking."
+      },
+      {
+        "text": "It exempts the role the management account comes in through",
+        "correct": true,
+        "why": "Right. The deny applies to every caller except `OrganizationAccountAccessRole`, so the platform can still change the deployer."
+      },
+      {
+        "text": "It limits the deny to `shop-prod`",
+        "correct": false,
+        "why": "The `*` in the account field makes it apply to every account under `Workloads`."
+      },
+      {
+        "text": "It grants the deployer the actions it lists",
+        "correct": false,
+        "why": "An SCP never grants. This one only refuses, to everybody but one caller."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8yvx47f",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the shop deny `cloudtrail:StopLogging` in every member account?",
+    "hint": "What is the first thing an intruder does?",
+    "choices": [
+      {
+        "text": "To save the cost of the trail",
+        "correct": false,
+        "why": "The deny keeps the trail running, so it saves nothing. It protects the record."
+      },
+      {
+        "text": "Because AWS requires it of every organisation",
+        "correct": false,
+        "why": "AWS requires no SCP at all. The shop writes this one for its own reasons."
+      },
+      {
+        "text": "So that nobody, intruder or tired engineer, switches the record off",
+        "correct": true,
+        "why": "Right. A record of every API call is only worth something if the people it records cannot stop it."
+      },
+      {
+        "text": "Because CloudTrail stops on its own when a region is denied",
+        "correct": false,
+        "why": "Nothing stops on its own. The deny is against a person or a script stopping it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4x9w7y7e",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `sa-east-1-only` attached to the root, `shop-prod` created a VPC in `us-east-1` in moto. What would AWS have answered?",
+    "hint": "moto stores SCPs and decides nothing with them.",
+    "choices": [
+      {
+        "text": "The same VPC id, since the role has full rights",
+        "correct": false,
+        "why": "Full rights in IAM are still filtered by the SCPs. In AWS the deny wins."
+      },
+      {
+        "text": "`AccessDenied`, naming an explicit deny in an SCP",
+        "correct": true,
+        "why": "Right. That is AWS's documented answer; it was not run here, because moto ignores SCPs."
+      },
+      {
+        "text": "`VpcLimitExceeded`, since `us-east-1` is full",
+        "correct": false,
+        "why": "That is the quota refusal from lesson 2, unrelated to SCPs."
+      },
+      {
+        "text": "A `500`, because the request crossed regions",
+        "correct": false,
+        "why": "A 500 is moto failing at something it does not implement. Crossing regions is ordinary."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qxe8c4f",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants to forbid any account outside the organisation from reading its buckets, even with a bucket policy that allows it. Which tool fits?",
+    "hint": "Who is the reader, and is the reader under the organisation's SCPs?",
+    "choices": [
+      {
+        "text": "An SCP denying `s3:GetObject`",
+        "correct": false,
+        "why": "An SCP filters the identities in the shop's accounts. The outside reader is not one of them."
+      },
+      {
+        "text": "A declarative policy for EC2",
+        "correct": false,
+        "why": "Declarative policies set a service's configuration, starting with EC2. Buckets are S3, and the point is who reads them."
+      },
+      {
+        "text": "A resource control policy",
+        "correct": true,
+        "why": "Right. An RCP limits what may be done to the organisation's resources, by anybody, outsiders included."
+      },
+      {
+        "text": "`FullAWSAccess` taken off the account that owns the buckets",
+        "correct": false,
+        "why": "That would filter the account's own identities, and only the inside ones; it also leaves the target with no SCP."
+      }
+    ]
+  },
+  {
+    "id": "ex-dwww0phz",
+    "version": 1,
+    "section": "guardrails",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each of the shop's guardrails to what it refuses.",
+    "hint": "One file each.",
+    "pairs": [
+      {
+        "left": "`deny-leaving`",
+        "right": "an account walking out of the tree"
+      },
+      {
+        "left": "`sa-east-1-only`",
+        "right": "a machine started in Virginia"
+      },
+      {
+        "left": "`protect-security-services`",
+        "right": "switching off the trail"
+      },
+      {
+        "left": "`protect-deployer`",
+        "right": "changing the pipeline's role"
+      }
+    ],
+    "right_distractors": [
+      "reading another account's bucket"
+    ]
+  },
+  {
+    "id": "ex-vnqxaeyj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An engineer says: \"the SCP allows `ec2:*` in `sandbox`, so our developers can launch machines there.\" What is wrong with the sentence?",
+    "hint": "What does an SCP give anybody?",
+    "choices": [
+      {
+        "text": "Nothing; an allow list is how developers get EC2",
+        "correct": false,
+        "why": "An allow list says what may pass, not what is granted. Without an IAM grant, nothing passes."
+      },
+      {
+        "text": "It confuses a ceiling with a grant",
+        "correct": true,
+        "why": "Right. The developers also need an IAM policy in `sandbox` that grants EC2; the SCP only lets it through."
+      },
+      {
+        "text": "`ec2:*` is too broad to be allowed in an SCP",
+        "correct": false,
+        "why": "Wildcards are ordinary in SCPs; `FullAWSAccess` itself is `*`."
+      },
+      {
+        "text": "SCPs apply to OUs, never to the accounts in them",
+        "correct": false,
+        "why": "An SCP on an OU filters every account beneath it; that is the point of attaching it there."
+      }
+    ]
+  },
+  {
+    "id": "ex-n116tqjw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which account should hold a workload that must never be blocked by a guardrail?",
+    "hint": "The question is a trap; read it twice.",
+    "choices": [
+      {
+        "text": "The management account, which no SCP affects",
+        "correct": false,
+        "why": "It is the one place a guardrail cannot reach, and that is exactly why nothing should run there."
+      },
+      {
+        "text": "An account directly under the root",
+        "correct": false,
+        "why": "The root's SCPs apply to it like to every member."
+      },
+      {
+        "text": "None: a workload that needs to escape the guardrails is the thing to question",
+        "correct": true,
+        "why": "Right. Guardrails exist so that no workload escapes them; one that needs to is asking for an exception to be argued, not for a hiding place."
+      },
+      {
+        "text": "A member account invited rather than created",
+        "correct": false,
+        "why": "How an account joined changes nothing about the SCPs it is under."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ktq434d",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request from `shop-prod` passes the SCPs of the root, `Workloads`, `Prod` and the account. If the shop attached one deny to each of those four levels, how many of them must say nothing about the request for it to pass?",
+    "hint": "A deny anywhere wins.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "denies"
+  }
+]

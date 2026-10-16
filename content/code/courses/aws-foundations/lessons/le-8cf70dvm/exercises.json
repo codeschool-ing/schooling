@@ -1,0 +1,612 @@
+[
+  {
+    "id": "ex-0km44p0q",
+    "version": 1,
+    "section": "budgets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The budget `shop-monthly` reaches 100% of its 50 dollars on the 25th. What happens to the machines that are spending?",
+    "hint": "A budget with only notifications.",
+    "choices": [
+      {
+        "text": "AWS stops them, and starts them again on the 1st",
+        "correct": false,
+        "why": "Nothing in a budget with only notifications touches a resource. That belief is how bills grow past the number."
+      },
+      {
+        "text": "They keep running, and AWS refuses to bill past 50 dollars",
+        "correct": false,
+        "why": "The budget is not a ceiling on the bill. Every hour after the 25th is charged like every hour before it."
+      },
+      {
+        "text": "They keep running and charging; the subscribers are told",
+        "correct": true,
+        "why": "Right. A notification informs somebody, and somebody has to act. Even a budget action only applies a policy or stops named instances."
+      },
+      {
+        "text": "New machines are refused, and the running ones carry on",
+        "correct": false,
+        "why": "That is what a budget ACTION with a deny policy would do, if one had been configured. A notification refuses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0a1h4p24",
+    "version": 1,
+    "section": "budgets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the 4th of the month, with 6 of the 50 dollars spent, `aws+billing@example.com` receives an alert from `shop-monthly`. Which notification sent it?",
+    "hint": "6 dollars is 12% of the budget.",
+    "choices": [
+      {
+        "text": "The actual one at 80%, because the forecast needs a month of history first",
+        "correct": false,
+        "why": "Actual compares what was spent, 12% here, against 80%. It cannot fire at 12%."
+      },
+      {
+        "text": "The forecasted one at 100%: the month is projected to end over 50",
+        "correct": true,
+        "why": "Right. The rate of spending changed, and the projection for the month's end passed 50 dollars. It is the early warning."
+      },
+      {
+        "text": "Neither: a budget sends nothing until the period has closed and the bill is issued",
+        "correct": false,
+        "why": "Budgets are checked during the period, at each refresh, which is the point of having them."
+      },
+      {
+        "text": "The SNS topic, which tells every subscriber on each refresh",
+        "correct": false,
+        "why": "The topic is a subscriber of the forecasted notification, not a notification of its own. It only hears what that notification sends."
+      }
+    ]
+  },
+  {
+    "id": "ex-msx9x24a",
+    "version": 1,
+    "section": "budgets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new account runs on promotional credits. Its cost budget, created with the defaults, has shown almost nothing for three months. What is the risk?",
+    "hint": "Read `CostTypes` in the transcript.",
+    "choices": [
+      {
+        "text": "None: credits are not money, so the usage they cover is not cost",
+        "correct": false,
+        "why": "The usage is real and has a price; the credits pay it for now. When they end, the same usage is paid with the card."
+      },
+      {
+        "text": "The budget is broken, because a budget cannot watch an account with credits",
+        "correct": false,
+        "why": "It works as told: with `IncludeCredit` true it subtracts the credits, so it reports what is charged after them."
+      },
+      {
+        "text": "Credits are subtracted by default, so the usage stays hidden until they run out",
+        "correct": true,
+        "why": "Right. `IncludeCredit: true` nets the credits out. A budget with it set to false watches the usage itself, and shows the month that is coming."
+      },
+      {
+        "text": "The forecast is wrong, since it never has five weeks of real history",
+        "correct": false,
+        "why": "Three months is more than five weeks. The forecast is of the net cost, which is the budget's setting, not a lack of history."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g433rww",
+    "version": 1,
+    "section": "budgets",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a budget ACTION do when its threshold is crossed, according to AWS's documentation? Choose all that apply.",
+    "hint": "Three kinds, and none of them removes anything.",
+    "choices": [
+      {
+        "text": "Attach an IAM policy to a role, such as one denying new instances",
+        "correct": true,
+        "why": "Right. The policy is applied by the role you give the budget, and the running instances are untouched."
+      },
+      {
+        "text": "Delete the volumes of the instances that caused the cost",
+        "correct": false,
+        "why": "No budget action deletes. Deleting is the one thing that ends a resource's cost, and it stays a person's decision."
+      },
+      {
+        "text": "Apply an SCP to an organisational unit, from the management account",
+        "correct": true,
+        "why": "Right. Only the management account attaches SCPs, so only its budgets can take this action."
+      },
+      {
+        "text": "Stop named EC2 instances",
+        "correct": true,
+        "why": "Right. Through Systems Manager. A stopped instance's disks still charge for what they hold."
+      },
+      {
+        "text": "Raise the budget's own limit so the alert stops repeating",
+        "correct": false,
+        "why": "A budget does not edit itself. Changing the number is `update-budget`, done by somebody."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p53379n",
+    "version": 1,
+    "section": "budgets",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`shop-monthly` is 50 dollars a month with an actual notification at 80%. At how many dollars of actual cost does it fire?",
+    "hint": "80% of the limit.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-bas1hfbw",
+    "version": 1,
+    "section": "budgets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `describe-subscribers-for-notification` answers with a server error. What may you conclude about the SNS subscriber in `notifications.json`?",
+    "hint": "A 500 is about moto, not about your file.",
+    "choices": [
+      {
+        "text": "Nothing either way: moto cannot show its subscribers",
+        "correct": true,
+        "why": "Right. `create-budget` accepted the file, and the operation that would read the subscribers back is missing from moto."
+      },
+      {
+        "text": "That the topic was refused, so the alert will reach only the mailbox",
+        "correct": false,
+        "why": "A refusal would have failed `create-budget`, which printed nothing and succeeded. The 500 came from a different operation."
+      },
+      {
+        "text": "That the topic needs a policy allowing `budgets.amazonaws.com` to publish",
+        "correct": false,
+        "why": "True of AWS, and the section says so, but moto does not judge topic policies; the error says nothing about one."
+      },
+      {
+        "text": "That SNS subscribers are allowed only on actual notifications",
+        "correct": false,
+        "why": "Either kind of notification may tell a topic; the shop's forecasted one does."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fha99gj",
+    "version": 1,
+    "section": "tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`get-resources` with no filter printed the bucket `shop-assets` and one instance. The bucket `shop-logs` and a `t3.medium` also exist. Why are they missing?",
+    "hint": "What does that API list?",
+    "choices": [
+      {
+        "text": "moto forgets resources created without a region",
+        "correct": false,
+        "why": "Both were created in `sa-east-1`, and `describe-instances` still lists the `t3.medium`."
+      },
+      {
+        "text": "The API lists only resources that carry tags or once did",
+        "correct": true,
+        "why": "Right. A resource never tagged is invisible to it, so the untagged ones have to be found by asking each service."
+      },
+      {
+        "text": "A query with no filter returns only the first page of results",
+        "correct": false,
+        "why": "Two resources are far from a page. The answer is complete for what the API covers."
+      },
+      {
+        "text": "Tag policies hide resources that do not comply with them",
+        "correct": false,
+        "why": "No tag policy existed yet at that point, and a policy never hides a resource from a listing."
+      }
+    ]
+  },
+  {
+    "id": "ex-71banc8p",
+    "version": 1,
+    "section": "tags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants AWS to refuse any instance launched without a `team` tag. Which tool does that?",
+    "hint": "One tool fixes the spelling; another refuses the request.",
+    "choices": [
+      {
+        "text": "A tag policy with `enforced_for` naming `ec2:instance`",
+        "correct": false,
+        "why": "That refuses a wrong value or spelling. A resource with no tags at all is not reported as non-compliant, so it passes."
+      },
+      {
+        "text": "Activating `team` as a cost allocation tag in Billing",
+        "correct": false,
+        "why": "Activation decides which keys split the bill. It refuses no request and requires no tag."
+      },
+      {
+        "text": "An SCP denying `ec2:RunInstances` when `aws:RequestTag/team` is absent",
+        "correct": true,
+        "why": "Right. The condition looks at the tags in the request itself, and the deny refuses a launch that carries none; lesson 4 writes SCPs."
+      },
+      {
+        "text": "A budget filtered by the tag `team`, with an action at 100%",
+        "correct": false,
+        "why": "A budget watches cost after it happens, and its action would come after the spending. It never sees a launch request."
+      }
+    ]
+  },
+  {
+    "id": "ex-bckg96x0",
+    "version": 1,
+    "section": "tags",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, an instance tagged `team=marketing` starts although the attached tag policy allows only web, data and finance. What does that show?",
+    "hint": "Who stored the policy, and who judged it?",
+    "choices": [
+      {
+        "text": "That `enforced_for` covers only instances created after the policy",
+        "correct": false,
+        "why": "This instance was created after the policy was attached, and it was still accepted."
+      },
+      {
+        "text": "That moto stores tag policies and does not enforce them",
+        "correct": true,
+        "why": "Right. moto kept and attached the policy and judged nothing. AWS refuses that value in an account the policy covers."
+      },
+      {
+        "text": "That tag policies apply to buckets and never to instances",
+        "correct": false,
+        "why": "The policy named `ec2:instance` in `enforced_for`; the resource type is the one it asked about."
+      },
+      {
+        "text": "That the policy was attached to the wrong root",
+        "correct": false,
+        "why": "An organisation has one root, and `list-roots` printed it before the policy was attached to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvttac6c",
+    "version": 1,
+    "section": "tags",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `t3.medium` ran untagged from 1 to 14 October and was tagged `team=data` on the 15th. The key `team` was activated in September. Which part of its October cost appears under `team$data`?",
+    "hint": "The key was ready; was the tag?",
+    "choices": [
+      {
+        "text": "All of October, because the key was active before the month began",
+        "correct": false,
+        "why": "An active key splits the lines that carry it. The first fourteen days' lines carry no tag at all."
+      },
+      {
+        "text": "All of October, once a backfill is requested for the month",
+        "correct": false,
+        "why": "A backfill applies an activation to earlier months. It cannot add a tag the resource did not carry at the time."
+      },
+      {
+        "text": "None of it until November, when the next bill is generated",
+        "correct": false,
+        "why": "Lines are split as they are recorded, once the tag is on them; nobody waits for the next bill."
+      },
+      {
+        "text": "From the 15th on; the first fourteen days stay under `team$`",
+        "correct": true,
+        "why": "Right. The tag has to be on the resource when the cost happens. The days before it are the untagged remainder."
+      }
+    ]
+  },
+  {
+    "id": "ex-41sq7mvx",
+    "version": 1,
+    "section": "tags",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens between a new tag key and the first report that splits costs by it, as AWS's documentation describes it.",
+    "hint": "Two waits of up to a day, one on each side of a person's click.",
+    "items": [
+      "the key `team` is first used on a resource",
+      "the key appears in Billing's list of cost allocation tags",
+      "somebody in the management account activates it",
+      "reports split the new costs by `team`"
+    ],
+    "trap": "Putting the activation before the key appears in the list is the usual slip: Billing can only offer a key it has already seen on a resource."
+  },
+  {
+    "id": "ex-sbczcw4r",
+    "version": 1,
+    "section": "tags",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Tag keys used to split the bill must be activated in Billing in the ___ account of the organisation.",
+    "hint": "The account the consolidated bill belongs to.",
+    "blanks": [
+      {
+        "accept": [
+          "management",
+          "payer"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tnh8y3jg",
+    "version": 1,
+    "section": "cost-explorer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`aws ce get-cost-and-usage` against moto answers `\"ResultsByTime\": []`. Why?",
+    "hint": "What would moto add up?",
+    "choices": [
+      {
+        "text": "The key `team` has not been activated",
+        "correct": false,
+        "why": "The query grouped by a dimension came back empty too. There is nothing to group."
+      },
+      {
+        "text": "The period ends on the 1st, which excludes the whole month",
+        "correct": false,
+        "why": "The end is exclusive, so `End=2026-10-01` is all of September. The period is right."
+      },
+      {
+        "text": "moto bills nothing, so there is no spending to report",
+        "correct": true,
+        "why": "Right. moto records resources and never charges them. The shape of the query is the lesson; the numbers would come from a real bill."
+      },
+      {
+        "text": "Cost Explorer has to be enabled first, and preparing the data takes up to a day",
+        "correct": false,
+        "why": "True of a real account the first time, but moto has no such step, and waiting would not fill the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmhk2ck9",
+    "version": 1,
+    "section": "cost-explorer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The data team paid 1,200 dollars upfront on 2 January for a year of capacity. Read with `UnblendedCost`, how does their year look?",
+    "hint": "When is an upfront payment counted, unblended?",
+    "choices": [
+      {
+        "text": "A spike in the first month, then eleven months that look free",
+        "correct": true,
+        "why": "Right. Unblended counts the charge on the day it was charged. Amortised would show 100 dollars in each month."
+      },
+      {
+        "text": "100 dollars in each of the twelve months, the payment spread evenly over the year",
+        "correct": false,
+        "why": "That is `AmortizedCost`, which spreads an upfront payment over the hours it pays for."
+      },
+      {
+        "text": "Nothing at all, since upfront payments are not usage",
+        "correct": false,
+        "why": "The payment is a charge on the bill, and every metric counts it somewhere; they differ in when."
+      },
+      {
+        "text": "The same as `NetUnblendedCost`, minus the 1,200",
+        "correct": false,
+        "why": "Net subtracts discounts the account was given, not upfront payments."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzykf0fz",
+    "version": 1,
+    "section": "cost-explorer",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Cost Explorer metric to what it counts.",
+    "hint": "Two differ in when; one in what is subtracted.",
+    "pairs": [
+      {
+        "left": "`UnblendedCost`",
+        "right": "each charge on the day it was charged"
+      },
+      {
+        "left": "`AmortizedCost`",
+        "right": "upfront payments spread over the hours they cover"
+      },
+      {
+        "left": "`NetUnblendedCost`",
+        "right": "charges after the account's discounts"
+      },
+      {
+        "left": "`BlendedCost`",
+        "right": "an average rate across a consolidated bill"
+      }
+    ],
+    "right_distractors": [
+      "charges before tax and support"
+    ]
+  },
+  {
+    "id": "ex-mr8c6nhw",
+    "version": 1,
+    "section": "cost-explorer",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard calls `get-cost-and-usage` every 5 minutes, all of a 30-day month. At the price list's 0.01 dollars per request, what does the month of requests cost?",
+    "hint": "12 an hour, 24 hours, 30 days.",
+    "value": 86.4,
+    "tolerance": 0.05,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-fy2p2h2n",
+    "version": 1,
+    "section": "cost-explorer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query reads `--time-period Start=2026-09-01,End=2026-09-30 --granularity MONTHLY`. What does it miss?",
+    "hint": "Is the end included?",
+    "choices": [
+      {
+        "text": "Nothing; September has thirty days",
+        "correct": false,
+        "why": "It has, and the end date is exclusive, so the 30th is outside the period."
+      },
+      {
+        "text": "The first day, because the start is exclusive",
+        "correct": false,
+        "why": "The start is inclusive. It is the end that is left out."
+      },
+      {
+        "text": "The month's tax, which MONTHLY granularity reports apart",
+        "correct": false,
+        "why": "Granularity decides the size of each bucket of time, not which charges are counted."
+      },
+      {
+        "text": "30 September, silently",
+        "correct": true,
+        "why": "Right. The end is exclusive, so the whole month is `End=2026-10-01`. Nothing warns that a day is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh29s1bj",
+    "version": 1,
+    "section": "cost-explorer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Spending on NAT gateways triples one week, while the account's month stays under its budget. Which instrument is built to notice?",
+    "hint": "One compares a total with a line; one compares a day with a pattern.",
+    "choices": [
+      {
+        "text": "The actual notification of the budget, at 80%",
+        "correct": false,
+        "why": "The total is under the line, so the actual notification has nothing to fire on."
+      },
+      {
+        "text": "A Cost Anomaly Detection monitor watching costs per service",
+        "correct": true,
+        "why": "Right. It learns each service's usual pattern and reports a day that departs from it, whatever the total does."
+      },
+      {
+        "text": "A Cost Explorer query grouped by `SERVICE`, which alerts on change",
+        "correct": false,
+        "why": "It would show the change to somebody who asked. Cost Explorer answers questions; it sends no alert."
+      },
+      {
+        "text": "A tag policy on the NAT gateways",
+        "correct": false,
+        "why": "A tag policy governs how tags are spelt. It knows nothing about cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkzzffbf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Finance asks how much the web team cost in September. The key `team` was activated on 20 September. What can an honest answer say?",
+    "hint": "Activation is not retroactive by itself.",
+    "choices": [
+      {
+        "text": "The total under `team$web` for September, which is complete",
+        "correct": false,
+        "why": "Before the 20th the key was not active, so those days' costs are not split by team at all."
+      },
+      {
+        "text": "`team$web` from the 20th; the earlier days only after a backfill",
+        "correct": true,
+        "why": "Right. A backfill applies the activation to earlier months, and it helps only where the resources already carried the tag."
+      },
+      {
+        "text": "Nothing until October, the first whole month with the key",
+        "correct": false,
+        "why": "The ten days after activation are split correctly; there is something to report, with its gap named."
+      },
+      {
+        "text": "The September total divided by the number of teams",
+        "correct": false,
+        "why": "That is an invention dressed as a number. Teams do not spend equally, and nothing in the bill says they did."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmv26qx1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the instrument of this lesson that answers it.",
+    "hint": "Three instruments and one gate.",
+    "pairs": [
+      {
+        "left": "is the month going over?",
+        "right": "a budget"
+      },
+      {
+        "left": "did a service's pattern change?",
+        "right": "Cost Anomaly Detection"
+      },
+      {
+        "left": "whose was this cost?",
+        "right": "Cost Explorer, grouped by tag"
+      },
+      {
+        "left": "is `Team` spelt as `team`?",
+        "right": "a tag policy"
+      }
+    ],
+    "right_distractors": [
+      "a service control policy"
+    ]
+  },
+  {
+    "id": "ex-rbw7h38w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A staging account's GPU instance is left running over a weekend. The budget in the management account covers the whole organisation and has an actual notification at 80%. Why might nobody hear until Monday afternoon?",
+    "hint": "Think about what the budget compares and how often.",
+    "choices": [
+      {
+        "text": "Budgets in the management account cannot see member accounts",
+        "correct": false,
+        "why": "They see the whole consolidated bill; that is why the organisation's budget lives there."
+      },
+      {
+        "text": "Alerts are held until the next working day, so a weekend is reported on Monday",
+        "correct": false,
+        "why": "Nothing in AWS's documentation holds alerts for working days. The delay comes from refreshes and from the threshold."
+      },
+      {
+        "text": "One account's spike is small against the whole total, and data refreshes a few times a day",
+        "correct": true,
+        "why": "Right. A per-account budget, or an anomaly monitor per account, would have seen the staging spike on its own."
+      },
+      {
+        "text": "A GPU instance is billed at the end of the month, not by the hour",
+        "correct": false,
+        "why": "Instances are charged for the hours they run, and those hours reach the budget at each refresh."
+      }
+    ]
+  }
+]

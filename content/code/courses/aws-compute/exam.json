@@ -1,0 +1,2747 @@
+[
+  {
+    "id": "ex-rx8w5mm5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A vendor's closed x86_64 binary keeps both vCPUs of its machine at 90% all day and uses about 3 GiB of memory. Which type on the price sheet is the cheapest that fits it?",
+    "hint": "Lesson 1. Three things to check: the architecture, the ratio, and whether the processor is sold whole.",
+    "choices": [
+      {
+        "text": "c7g.large, at 0.1111 USD an hour",
+        "correct": false,
+        "why": "The cheapest of the four, and Arm: a closed binary built for x86_64 does not run on Graviton."
+      },
+      {
+        "text": "c7i.large",
+        "correct": true,
+        "why": "Right. Two x86 vCPUs and 4 GiB, the compute-optimised ratio, at 0.13755 USD an hour."
+      },
+      {
+        "text": "t3.medium, which costs less than half as much",
+        "correct": false,
+        "why": "Its baseline is 20% per vCPU; at 90% all day it is held to the baseline in standard mode or bills surplus in unlimited."
+      },
+      {
+        "text": "m7i.large, the general-purpose type to start on",
+        "correct": false,
+        "why": "It fits and pays for 8 GiB the binary never touches. Starting on m is for when nothing is measured, and here the load is known."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2t8rcnm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A t3.micro has 2 vCPUs, earns 12 credits an hour and holds at most 288. It runs both vCPUs at 40%. Starting from a full balance, how many hours until the credits run out?",
+    "hint": "Lesson 1. One credit is one vCPU at 100% for one minute; what it spends minus what it earns is the loss per hour.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-m047xasm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A file-streaming service on m7i.large shows 15% CPU, and its transfers settle well below 12.5 Gbit/s after the first minutes of every busy hour. What explains it?",
+    "hint": "Lesson 1. Read what \"Up to\" means in the network column.",
+    "choices": [
+      {
+        "text": "A large is guaranteed 0.781 Gbit/s; 12.5 is a burst it spends and loses",
+        "correct": true,
+        "why": "Right. \"Up to\" is a burst on a credit system of its own. The baseline doubles with each size and meets the peak at 8xlarge."
+      },
+      {
+        "text": "Its CPU credits have run out, so the processor is held to its baseline until they return",
+        "correct": false,
+        "why": "m7i is not a burstable family, and a processor at 15% is not what is short here."
+      },
+      {
+        "text": "Only types with the n attribute reach 12.5 Gbit/s at all",
+        "correct": false,
+        "why": "The n raises the ceiling to 40 on c7gn; an m7i.large already bursts to 12.5."
+      },
+      {
+        "text": "Its EBS volume is gp3",
+        "correct": false,
+        "why": "A volume limits what reaches the disk. What stalls here is the stream leaving by the instance's network."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4q50ncp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A group's template names a type that sa-east-1 offers in sa-east-1a and sa-east-1b and not in sa-east-1c, and the group's subnets cover all three zones. What does the group get on AWS?",
+    "hint": "Lesson 1, with lesson 4. Offerings are listed per zone.",
+    "choices": [
+      {
+        "text": "A refusal at creation, because one subnet names a zone the type is missing from",
+        "correct": false,
+        "why": "The group is created. The gap shows when it tries to place an instance in the zone without the type."
+      },
+      {
+        "text": "The next size up in sa-east-1c, so that the spread stays even",
+        "correct": false,
+        "why": "Nothing swaps the type for you; the template says what each instance is."
+      },
+      {
+        "text": "Instances in the two zones that offer it, and none in the third",
+        "correct": true,
+        "why": "Right. A type not offered in a zone cannot be launched there, however correct the rest of the request is."
+      },
+      {
+        "text": "An even spread, since offerings are per region",
+        "correct": false,
+        "why": "describe-instance-type-offerings answers per zone too, which is exactly how a type turns out missing from one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncp6g9ya",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Going from m7i.large to m7i.xlarge, which of these double? Choose all that apply.",
+    "hint": "Lesson 1. A size is a quantity inside one family.",
+    "choices": [
+      {
+        "text": "The vCPUs",
+        "correct": true,
+        "why": "Right. From 2 to 4."
+      },
+      {
+        "text": "The price per hour",
+        "correct": true,
+        "why": "Right. From 0.16065 to 0.3213 USD."
+      },
+      {
+        "text": "The memory per vCPU",
+        "correct": false,
+        "why": "The ratio stays at 4 GiB per vCPU in every size; that ratio is what the family is."
+      },
+      {
+        "text": "The baseline network bandwidth",
+        "correct": true,
+        "why": "Right. From 0.781 to 1.562 Gbit/s."
+      },
+      {
+        "text": "The network peak of 12.5 Gbit/s",
+        "correct": false,
+        "why": "The peak stays at 12.5 until 8xlarge; only the baseline moves."
+      }
+    ]
+  },
+  {
+    "id": "ex-80qcttgq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A nightly job runs create-image --no-reboot on a database server that is writing all night. What does an instance launched from that image start with?",
+    "hint": "Lesson 2. A snapshot is of the blocks, at an instant.",
+    "choices": [
+      {
+        "text": "What a power cut would leave on the disk",
+        "correct": true,
+        "why": "Right. The database recovers as after a crash, without what was still in memory. That is the consistency --no-reboot buys. Rebooting first, or the database's own backup, is the safe way."
+      },
+      {
+        "text": "Everything on disk and in memory",
+        "correct": false,
+        "why": "A snapshot holds the blocks of volumes and nothing of the memory."
+      },
+      {
+        "text": "A consistent copy, because a snapshot is taken at one instant",
+        "correct": false,
+        "why": "One instant of the blocks, which is not the same thing as a file system at rest."
+      },
+      {
+        "text": "Nothing: AWS refuses to register an image of a disk in use",
+        "correct": false,
+        "why": "AWS knows nothing of what runs on the disk and registers whatever the blocks were."
+      }
+    ]
+  },
+  {
+    "id": "ex-yehks33g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Account 111122223333 has a launch permission on your image and runs five instances from it. You deregister the image. What happens in that account?",
+    "hint": "Lesson 2. A launch permission does not make an owner.",
+    "choices": [
+      {
+        "text": "All five stop within minutes",
+        "correct": false,
+        "why": "Instances already running carry on: they were made from the image, not tied to it."
+      },
+      {
+        "text": "Nothing, because a launch permission makes it a co-owner",
+        "correct": false,
+        "why": "It never becomes an owner. To keep a copy of its own it has to copy the image."
+      },
+      {
+        "text": "The five carry on, and so do new launches until the snapshot is deleted",
+        "correct": false,
+        "why": "A launch from a deregistered image is refused on AWS, whatever is left of its snapshots."
+      },
+      {
+        "text": "The five carry on; its next launch from that id fails",
+        "correct": true,
+        "why": "Right. Deregistering ends new launches everywhere and touches nothing already running."
+      }
+    ]
+  },
+  {
+    "id": "ex-90q3x262",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A volume has 40 GB written. A nightly snapshot is kept for 30 days and 5 GB change each day. At 0.068 USD per GB-month, how much less does that cost a month than 30 full copies of the 40 GB, in USD?",
+    "hint": "Lesson 2. Price both ways and subtract; the first snapshot holds what was written, each later one what changed.",
+    "value": 69.02,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-402td3mb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put a first launch from an AMI in order, up to the user data.",
+    "hint": "Lesson 2, with lesson 7. The record, the disks, the boot, the program inside.",
+    "items": [
+      "EC2 reads the image's record and its block device mapping",
+      "A volume is made from each snapshot the mapping names, in the instance's zone",
+      "The instance boots from the root volume",
+      "cloud-init fetches the user data and runs it"
+    ],
+    "trap": "Running the user data before the boot is the slip: cloud-init is a program inside the image, so it exists only once the root volume does."
+  },
+  {
+    "id": "ex-4hf1n751",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A gp3 volume on an m7i.large is raised to 16,000 IOPS. A week of benchmarks inside the instance sustains about 3,600. Why?",
+    "hint": "Lesson 3. EBS travels over the network, and two things set the ceiling.",
+    "choices": [
+      {
+        "text": "The instance's own EBS baseline of 3,600 IOPS",
+        "correct": true,
+        "why": "Right. That baseline covers all its volumes together, since every type has its own bandwidth to EBS. Size the volume and the instance together."
+      },
+      {
+        "text": "gp3 allows 500 IOPS per GiB, so the volume is too small for it",
+        "correct": false,
+        "why": "That limit refuses the change outright; it does not accept it and deliver less."
+      },
+      {
+        "text": "The modification is still optimizing",
+        "correct": false,
+        "why": "That takes minutes to hours, not a week, and meanwhile the volume runs at its old rate, 3,000."
+      },
+      {
+        "text": "gp3 delivers IOPS above 3,000 in bursts only",
+        "correct": false,
+        "why": "What gp3 provisions is not a burst. The burst in this story is the instance's."
+      }
+    ]
+  },
+  {
+    "id": "ex-assc65fd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A batch job keeps its only checkpoint on the NVMe disk of a spot c7gd.xlarge whose interruption behaviour is stop. It is interrupted, and later started again. What is on that disk?",
+    "hint": "Lesson 3, with lesson 6. Whose disk is it?",
+    "choices": [
+      {
+        "text": "The checkpoint, because stop keeps the disks",
+        "correct": false,
+        "why": "Stop keeps the EBS volumes. The instance store belongs to the host and is erased."
+      },
+      {
+        "text": "The checkpoint, provided the root volume is EBS",
+        "correct": false,
+        "why": "The root's type does not change what happens to the instance store."
+      },
+      {
+        "text": "A copy restored from the snapshot AWS takes at an interruption",
+        "correct": false,
+        "why": "An instance store cannot be snapshotted at all."
+      },
+      {
+        "text": "Nothing: the disk is erased whenever the instance leaves its host",
+        "correct": true,
+        "why": "Right. A stop and start lands on a new host with an empty disk. A checkpoint goes to S3 or EBS."
+      }
+    ]
+  },
+  {
+    "id": "ex-07m8m91b",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these requests does AWS refuse? Choose all that apply.",
+    "hint": "Lesson 3, with lesson 2 for the snapshot.",
+    "choices": [
+      {
+        "text": "Growing an attached gp3 volume from 100 GiB to 200",
+        "correct": false,
+        "why": "Growing in use is allowed; the file system inside is grown afterwards."
+      },
+      {
+        "text": "Shrinking an attached gp3 volume from 200 GiB to 100",
+        "correct": true,
+        "why": "Right. An EBS volume never shrinks. A smaller disk is a new volume and a copy."
+      },
+      {
+        "text": "A 100 GiB gp3 volume with 60,000 IOPS",
+        "correct": true,
+        "why": "Right. 500 per GiB stops it at 50,000."
+      },
+      {
+        "text": "A 200 GiB volume from a snapshot of a 100 GiB volume",
+        "correct": false,
+        "why": "Larger than the snapshot's volume is allowed. Smaller is what AWS refuses."
+      },
+      {
+        "text": "An st1 volume of 100 GiB",
+        "correct": true,
+        "why": "Right. The hard-disk types start at 125 GiB."
+      }
+    ]
+  },
+  {
+    "id": "ex-bybdvra4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An EFS file system holding 5 GB, in the throughput mode it got by default, is slow every time traffic spikes. What does AWS recommend?",
+    "hint": "Lesson 3. In the default mode, throughput grows with what is stored.",
+    "choices": [
+      {
+        "text": "One larger gp3 volume shared by the instances",
+        "correct": false,
+        "why": "A volume belongs to one instance in one zone; it is the thing EFS exists to replace here."
+      },
+      {
+        "text": "Writing 100 GB of padding, so that bursting throughput grows",
+        "correct": false,
+        "why": "Bursting does grow with what is stored, and padding at 0.57 USD per GB-month is the dear way round the mode AWS names."
+      },
+      {
+        "text": "Changing PerformanceMode from generalPurpose",
+        "correct": false,
+        "why": "Performance mode is a different setting, and generalPurpose is the one to keep without specific guidance."
+      },
+      {
+        "text": "Elastic throughput, which follows demand",
+        "correct": true,
+        "why": "Right. It bills what is read and written, and AWS recommends elastic for spiky or unpredictable loads."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt6yscte",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A group of one instance type has four instances: two in sa-east-1a, one from version 1 of its template and one from version 2, and one from version 1 in each of the other two zones. The desired capacity drops to 3. Which instance does the default termination policy remove?",
+    "hint": "Lesson 4. The policy is an ordered list, and zones come first.",
+    "choices": [
+      {
+        "text": "The version 1 instance in sa-east-1a",
+        "correct": true,
+        "why": "Right. The fullest zone first, then the oldest template inside it."
+      },
+      {
+        "text": "A version 1 instance in sa-east-1b or sa-east-1c",
+        "correct": false,
+        "why": "Balance comes before age, and those zones hold one instance each."
+      },
+      {
+        "text": "The version 2 instance, the newest of them",
+        "correct": false,
+        "why": "The newest goes first only under NewestInstance; the default removes old templates."
+      },
+      {
+        "text": "Any of the three version 1 instances, chosen at random",
+        "correct": false,
+        "why": "Random is the last step, after the zone and the template have narrowed the choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-y47jkx5h",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these does an instance refresh add to terminating old instances one at a time by hand? Choose all that apply.",
+    "hint": "Lesson 4. The step by hand is one batch with none of the checks.",
+    "choices": [
+      {
+        "text": "Waiting for each new instance to be healthy before the next batch",
+        "correct": true,
+        "why": "Right. That is what MinHealthyPercentage and the warmup pace."
+      },
+      {
+        "text": "Changing the running instances in place, without replacing them",
+        "correct": false,
+        "why": "Nothing changes what a running instance was launched from; a refresh replaces."
+      },
+      {
+        "text": "Stopping when the new instances fail to become healthy",
+        "correct": true,
+        "why": "Right. The step by hand would carry on regardless."
+      },
+      {
+        "text": "Moving the template's default version to the newest",
+        "correct": false,
+        "why": "That is modify-launch-template, a separate decision with a name in the log."
+      },
+      {
+        "text": "Putting the previous version back, with AutoRollback",
+        "correct": true,
+        "why": "Right. Nothing restores the old version when the replacing is done by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3v578sa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "During an investigation somebody ran suspend-processes for ReplaceUnhealthy and never resumed it. Two weeks later one instance's host fails. What happens?",
+    "hint": "Lesson 4. What is the suspended process for?",
+    "choices": [
+      {
+        "text": "The group replaces it, since a failed host is not an unhealthy application",
+        "correct": false,
+        "why": "A failed host fails the EC2 status checks: that is an unhealthy instance, and replacing one is what was suspended."
+      },
+      {
+        "text": "It is marked unhealthy and stays; the group runs one short",
+        "correct": true,
+        "why": "Right. A suspended group no longer keeps its promise, which is why suspending is for investigating and never for running."
+      },
+      {
+        "text": "AWS resumes suspended processes after a day, so that no group stays broken",
+        "correct": false,
+        "why": "Nothing resumes them but resume-processes."
+      },
+      {
+        "text": "AZRebalance moves it to a zone that works",
+        "correct": false,
+        "why": "Rebalancing evens out the zones; it does not stand in for replacing an unhealthy instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-k31ag439",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An AWS account opened in 2025 applies old Terraform that creates a launch configuration for its group. What happens?",
+    "hint": "Lesson 4. AWS has been retiring them, in two steps.",
+    "choices": [
+      {
+        "text": "It is created, but without any of the instance types released since 2023",
+        "correct": false,
+        "why": "That limit applies in older accounts. This one cannot create one at all."
+      },
+      {
+        "text": "It works, and the group simply has no versions",
+        "correct": false,
+        "why": "That is what a launch configuration was in old accounts; this account cannot make one."
+      },
+      {
+        "text": "It is turned into a launch template of the same name",
+        "correct": false,
+        "why": "AWS converts nothing on your behalf."
+      },
+      {
+        "text": "Refused: accounts opened after 1 October 2024 cannot create them",
+        "correct": true,
+        "why": "Right. The move is a launch template with the same answers, and the group switched to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-nr488xq4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A target tracking policy on CPU at 50% has DisableScaleIn set, and an evening scheduled action sets only the minimum, to 2. At night the CPU falls to 10% on 8 instances. What brings the group down?",
+    "hint": "Lesson 5. Who moves the desired capacity here?",
+    "choices": [
+      {
+        "text": "The policy, once its low alarm has waited long enough",
+        "correct": false,
+        "why": "DisableScaleIn turns the policy into one that only adds."
+      },
+      {
+        "text": "The scheduled action, which pulls the group to the new minimum",
+        "correct": false,
+        "why": "Lowering the minimum allows fewer instances; it does not set how many."
+      },
+      {
+        "text": "The cooldown, which removes what the policy added",
+        "correct": false,
+        "why": "A cooldown is a wait between a simple policy's actions, and removes nothing."
+      },
+      {
+        "text": "Nothing: it stays at 8 until something sets the desired capacity",
+        "correct": true,
+        "why": "Right. The evening action that sets only the minimum leaves shrinking to the policy, and this policy cannot shrink."
+      }
+    ]
+  },
+  {
+    "id": "ex-49t3y8fb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the safe introduction of predictive scaling on a group in order.",
+    "hint": "Lesson 5. A forecast is checked before it is allowed to act.",
+    "items": [
+      "The group runs under target tracking and builds at least a day of metric history",
+      "A predictive policy is added in ForecastOnly",
+      "Its forecast is compared with the real load for about a week",
+      "The mode is switched to ForecastAndScale"
+    ],
+    "trap": "Switching to ForecastAndScale before the comparison is the slip: ForecastOnly exists so that a bad forecast is found before it moves the minimum."
+  },
+  {
+    "id": "ex-w49ep4qw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The lesson's step policy adds 1 for a breach of 0 to 20 points and 3 for 20 and up. Its alarm is moved from 60% to 70% and the steps are left alone. The CPU reads 85%. How many instances does it add?",
+    "hint": "Lesson 5. What are the ranges measured from?",
+    "choices": [
+      {
+        "text": "Three, because 85 is 25 points above 60",
+        "correct": false,
+        "why": "60 was the old threshold; the ranges are measured from the alarm's threshold as it is now."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right. 85 is 15 above the new threshold, and the table moves with the alarm."
+      },
+      {
+        "text": "None, since the steps were written for 60",
+        "correct": false,
+        "why": "The steps are relative to the threshold, which is why they need no rewriting when it moves."
+      },
+      {
+        "text": "Two, between the two rows",
+        "correct": false,
+        "why": "There is no interpolation: a reading falls in exactly one row."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b585sth",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each setting to what it decides.",
+    "hint": "Lesson 5, and lesson 4 for the refresh.",
+    "pairs": [
+      {
+        "left": "Health check grace period",
+        "right": "How long before a failed health check counts against a new instance"
+      },
+      {
+        "left": "Default instance warmup",
+        "right": "How long before a new instance's metrics count in the group's average"
+      },
+      {
+        "left": "Cooldown",
+        "right": "How long a simple scaling policy waits before acting again"
+      },
+      {
+        "left": "MinHealthyPercentage",
+        "right": "How much of the desired capacity a refresh keeps healthy"
+      }
+    ],
+    "right_distractors": [
+      "How many versions of the template the group keeps"
+    ]
+  },
+  {
+    "id": "ex-aeegzphg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A mixed group of m7i.large has OnDemandBaseCapacity 2 and OnDemandPercentageAboveBaseCapacity 25, at a desired capacity of 18. Assume, for the arithmetic only, a spot discount of 60% on the on-demand 0.16065 USD an hour. What does the group cost for a month of 730 hours, in USD?",
+    "hint": "Lesson 6. Split the group first: the base, then the percentage of what is above it.",
+    "value": 1266.56,
+    "tolerance": 0.5,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-9qx4enj5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team wants its single PostgreSQL server on spot, with the interruption behaviour stop so that its EBS volumes survive. What is wrong with the plan?",
+    "hint": "Lesson 6. Ask what one interruption costs, not whether the data survives.",
+    "choices": [
+      {
+        "text": "The database is down at every interruption",
+        "correct": true,
+        "why": "Right. It stays down until capacity is back, with nothing to answer meanwhile. A single instance holding state is what does not fit spot: the data survives and the service does not."
+      },
+      {
+        "text": "Nothing; stop keeps the data, so the database is safe there",
+        "correct": false,
+        "why": "Safe for the bytes, and down for the users every time AWS wants the capacity back."
+      },
+      {
+        "text": "Stop needs a one-time request",
+        "correct": false,
+        "why": "The other way round: stop and hibernate need a persistent request."
+      },
+      {
+        "text": "Spot instances have no EBS volumes",
+        "correct": false,
+        "why": "They have them like any instance; that is what stop keeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-6areg6g9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Operations wants one count of every spot interruption across a fleet of three hundred instances. Where should it listen?",
+    "hint": "Lesson 6. The same signal reaches two places.",
+    "choices": [
+      {
+        "text": "On each instance, polling spot/instance-action into a local file",
+        "correct": false,
+        "why": "That reaches the fleet one instance at a time, and leaves the count on the disks being taken back."
+      },
+      {
+        "text": "In describe-spot-price-history, which has a row per interruption",
+        "correct": false,
+        "why": "It has a row per change of price, and none per interruption."
+      },
+      {
+        "text": "An EventBridge rule on the interruption warning",
+        "correct": true,
+        "why": "Right. With a queue or a function as its target: one event per notice, with the instance id in it, for the whole fleet."
+      },
+      {
+        "text": "The group's average CPU, which drops at each interruption",
+        "correct": false,
+        "why": "A drop in CPU has many causes and counts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpvm7j3v",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Spot's saving on a group is the discount multiplied by the ___ of the group that runs on spot.",
+    "hint": "Lesson 6. A 60% discount on 60% of a group came to about 36%.",
+    "blanks": [
+      {
+        "accept": [
+          "share",
+          "fraction",
+          "proportion",
+          "part",
+          "percentage",
+          "portion"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-27jjnddf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An instance runs other teams' containers on a Docker bridge, with tokens required. Somebody raises HttpPutResponseHopLimit from 1 to 2 so that a monitoring agent in a container works. What else changed?",
+    "hint": "Lesson 7. The limit cuts both ways.",
+    "choices": [
+      {
+        "text": "Any workload there now reaches the instance's role through the metadata service",
+        "correct": true,
+        "why": "Right. That is the price of 2, and the reason a container that needs AWS is better given a role of its own."
+      },
+      {
+        "text": "IMDSv1 answers the containers again",
+        "correct": false,
+        "why": "HttpTokens still says required, so every read still needs a token."
+      },
+      {
+        "text": "Nothing; the limit is per container",
+        "correct": false,
+        "why": "It is per instance: one limit for every reply the metadata service sends."
+      },
+      {
+        "text": "The instance itself loses access, since its replies now need two hops",
+        "correct": false,
+        "why": "A limit of 2 still reaches a process on the instance, at one hop."
+      }
+    ]
+  },
+  {
+    "id": "ex-bs7nfj3z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "modify-instance-metadata-defaults --http-tokens required is run in sa-east-1. Which instances require tokens because of it?",
+    "hint": "Lesson 7. It is a default, and defaults apply where nothing else was said.",
+    "choices": [
+      {
+        "text": "Every instance of the account, in every Region",
+        "correct": false,
+        "why": "The account default is set per Region."
+      },
+      {
+        "text": "Every instance running in sa-east-1, after its next reboot",
+        "correct": false,
+        "why": "It changes nothing already running, rebooted or not."
+      },
+      {
+        "text": "Only the instances launched from a launch template",
+        "correct": false,
+        "why": "A template is one more place to set it; the default covers launches that set nothing."
+      },
+      {
+        "text": "New launches in sa-east-1 that name no options of their own",
+        "correct": true,
+        "why": "Right. A launch that names its own options still wins, which is why the policy is the level nobody can forget."
+      }
+    ]
+  },
+  {
+    "id": "ex-j48pyvfh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An IMDSv2 session starts with a PUT to /latest/api/___.",
+    "hint": "Lesson 7. The path names what the PUT returns.",
+    "blanks": [
+      {
+        "accept": [
+          "token"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2fkdaxxc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A user-data script is 14 KB, and its base64 form, as the CLI sends it, is about 18.7 KB. What does AWS do with the launch?",
+    "hint": "Lesson 7. Which form does the 16 KB count?",
+    "choices": [
+      {
+        "text": "Accepts it",
+        "correct": true,
+        "why": "Right. AWS's 16 KB is the raw form, before it is encoded."
+      },
+      {
+        "text": "Refuses it, since the encoded form is over 16 KB",
+        "correct": false,
+        "why": "The limit is counted before the encoding, on the 14 KB."
+      },
+      {
+        "text": "Accepts it, and cloud-init runs it at every boot",
+        "correct": false,
+        "why": "Accepted, and run on the first boot only."
+      },
+      {
+        "text": "Accepts it from a launch template, and refuses it on a plain launch",
+        "correct": false,
+        "why": "The limit is the same whichever way the launch is made."
+      }
+    ]
+  },
+  {
+    "id": "ex-79zb7m25",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Fargate task stops before its application runs, with CannotPullContainerError from ECR in the same account, and no log ever arrives. The subnet routes to a NAT gateway. Which role lacks permissions?",
+    "hint": "Lesson 8, with lesson 10. Two roles, two callers, two moments.",
+    "choices": [
+      {
+        "text": "The task role, the one the code receives",
+        "correct": false,
+        "why": "The code never ran: the pull happens before it exists."
+      },
+      {
+        "text": "The repository policy",
+        "correct": false,
+        "why": "A repository policy is for another account; inside the account, pulling is an IAM question."
+      },
+      {
+        "text": "The execution role",
+        "correct": true,
+        "why": "Right. ECS uses it to pull the image and send the logs, and it needs ecr: permissions for the pull and logs: ones for the output."
+      },
+      {
+        "text": "The node role",
+        "correct": false,
+        "why": "That is an EKS node's role; an ECS task on Fargate has no node of yours."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxmt401e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service of six tasks in bridge mode sets hostPort to 0 and runs on two container instances. How does the load balancer reach all six?",
+    "hint": "Lesson 8. Docker picks the port; somebody has to tell the target group.",
+    "choices": [
+      {
+        "text": "Each instance forwards port 80 to its tasks in turn",
+        "correct": false,
+        "why": "Nothing on the instance does that; each task has a port of its own."
+      },
+      {
+        "text": "It cannot, because hostPort 0 is for Fargate",
+        "correct": false,
+        "why": "Fargate is awsvpc only; 0 is the bridge-mode answer to one copy per instance."
+      },
+      {
+        "text": "Docker gives every task port 80 on an address of its own",
+        "correct": false,
+        "why": "That is awsvpc mode. In bridge mode the tasks share the instance's address."
+      },
+      {
+        "text": "ECS registers each task's port in the target group",
+        "correct": true,
+        "why": "Right. ECS keeps the target group up to date with each task's port, so the traffic finds them all."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3079hx3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Two containers compete for the processor of one container instance: one has cpu 512, the other 1536. What does the first get while they compete, and when the second is idle?",
+    "hint": "Lesson 8. A weight, not a cap.",
+    "choices": [
+      {
+        "text": "A quarter, and then the whole processor",
+        "correct": true,
+        "why": "Right. 512 against 1,536 is one part in four, and with nobody competing a weight limits nothing."
+      },
+      {
+        "text": "Exactly half a vCPU at every moment, since 512 units are half of one",
+        "correct": false,
+        "why": "That would be a cap. cpu on EC2 becomes cpu-shares, which is a weight."
+      },
+      {
+        "text": "A third, and then a third",
+        "correct": false,
+        "why": "512 against 1,536 is one part in four of the total, and alone it is held to nothing."
+      },
+      {
+        "text": "A quarter, idle or not",
+        "correct": false,
+        "why": "When the other is idle there is nothing to share against."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6nc2q98",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A database migration that runs for five minutes and exits is deployed as an ECS service with a desired count of 1. What goes wrong?",
+    "hint": "Lesson 8. Once, or always N.",
+    "choices": [
+      {
+        "text": "It never starts, since a service needs a load balancer",
+        "correct": false,
+        "why": "A service runs without one; the balancer is for traffic."
+      },
+      {
+        "text": "The service starts it again each time it exits",
+        "correct": true,
+        "why": "Right. A service holds a number; a job that should run once is a run-task."
+      },
+      {
+        "text": "Nothing: a service reads exit code 0 as done",
+        "correct": false,
+        "why": "A service counts tasks running; a clean exit is one fewer than the number."
+      },
+      {
+        "text": "ECS refuses a desired count of 1",
+        "correct": false,
+        "why": "One is an ordinary count."
+      }
+    ]
+  },
+  {
+    "id": "ex-awgz5gnp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Fargate task needs 1 vCPU of work and 12 GB of memory. What is the smallest size AWS allows for it on Linux?",
+    "hint": "Lesson 9. The memory range rises with the CPU.",
+    "choices": [
+      {
+        "text": "1 vCPU and 12 GB",
+        "correct": false,
+        "why": "1 vCPU allows 2 to 8 GB; 12 is not among them."
+      },
+      {
+        "text": "1 vCPU and 8 GB, the most 1 vCPU allows",
+        "correct": false,
+        "why": "It is the most 1 vCPU allows and four gigabytes short of what the task needs."
+      },
+      {
+        "text": "2 vCPU and 12 GB",
+        "correct": true,
+        "why": "Right. 2 vCPU allows 4 to 16 GB in steps of 1, so the memory decides the CPU."
+      },
+      {
+        "text": "4 vCPU and 12 GB",
+        "correct": false,
+        "why": "4 vCPU allows 8 to 30 GB, so it fits, and 2 vCPU already does at a lower price."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkapv6ny",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Fargate service is scaled to 300 tasks, all in one /24 subnet that holds nothing else. What happens?",
+    "hint": "Lesson 9. What does each task take from the subnet?",
+    "choices": [
+      {
+        "text": "All 300 start; tasks share their host's address",
+        "correct": false,
+        "why": "In awsvpc each task has an interface and an address of its own."
+      },
+      {
+        "text": "At most 256 start, one per address",
+        "correct": false,
+        "why": "AWS keeps five addresses of every subnet for itself."
+      },
+      {
+        "text": "All 300 start, because Fargate places tasks outside your subnet",
+        "correct": false,
+        "why": "The capacity is AWS's; the interface each task uses is in your subnet."
+      },
+      {
+        "text": "At most 251 start; the rest have no address to take",
+        "correct": true,
+        "why": "Right. 256 less the five AWS reserves. Size a Fargate subnet for tasks, not for instances."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrp35xnw",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Fargate bills a Linux task per second, with a minimum of one ___.",
+    "hint": "Lesson 9. A job of ten seconds pays for sixty.",
+    "blanks": [
+      {
+        "accept": [
+          "minute"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4t3zv7bc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put a Fargate task's life in order, from run-task to its end.",
+    "hint": "Lesson 9. PROVISIONING, PENDING, RUNNING, and what the stop gives back.",
+    "items": [
+      "A network interface is created in the subnet, with the task's security group",
+      "The task is PENDING while the image is pulled",
+      "The containers start and the task is RUNNING",
+      "The task stops and its interface is deleted"
+    ],
+    "trap": "Pulling before the interface exists is the slip: the image comes over the network, and in awsvpc mode the task's only network is that interface."
+  },
+  {
+    "id": "ex-t36evbg7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An ECS deployment of shop/web:1.0.0 started on Monday. On Tuesday 1.0.0 is overwritten in its mutable repository. On Wednesday somebody forces a new deployment only to restart the tasks. What do the tasks run now?",
+    "hint": "Lesson 10. When does ECS turn the tag into a digest?",
+    "choices": [
+      {
+        "text": "Monday's image, because the task definition is the same",
+        "correct": false,
+        "why": "The definition names a tag, and the tag is resolved again at each deployment."
+      },
+      {
+        "text": "A mix: tasks on hosts with a cached copy keep Monday's",
+        "correct": false,
+        "why": "That is Kubernetes nodes with the default pull policy; one ECS deployment runs one digest."
+      },
+      {
+        "text": "Tuesday's image, the one 1.0.0 names by then",
+        "correct": true,
+        "why": "Right. ECS pins one digest per deployment, and a new deployment picks up wherever the tag points by then."
+      },
+      {
+        "text": "Neither: ECS refuses a tag that has moved",
+        "correct": false,
+        "why": "ECS does not track whether a tag moved; it resolves what the tag says now."
+      }
+    ]
+  },
+  {
+    "id": "ex-7g31bwb5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A pipeline's tests run against moto and treat ImageAlreadyExistsException as \"that tag is taken\" in an immutable repository. What happens when the pipeline runs on AWS?",
+    "hint": "Lesson 10. moto and AWS refuse the same push under different names.",
+    "choices": [
+      {
+        "text": "A different name, ImageTagAlreadyExistsException",
+        "correct": true,
+        "why": "Right. The match misses it: AWS keeps ImageAlreadyExistsException for the same manifest under the same tag; a pipeline has to match AWS's names."
+      },
+      {
+        "text": "The same thing, since moto copies AWS's error names",
+        "correct": false,
+        "why": "Here it does not, and that is the point of the question."
+      },
+      {
+        "text": "AWS lets the push through and moves the tag",
+        "correct": false,
+        "why": "Immutable is refused on AWS too; only the error's name differs."
+      },
+      {
+        "text": "AWS answers LayersNotFoundException",
+        "correct": false,
+        "why": "That is for a manifest naming layers the repository does not hold."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvw4g148",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A service is pinned by digest to an image that lost its last tag ten days ago. The repository's lifecycle policy expires untagged images after 7 days. One of the service's tasks fails its health check and is replaced. What happens?",
+    "hint": "Lesson 10. A digest cannot move. Can it disappear?",
+    "choices": [
+      {
+        "text": "The replacement runs, because a digest cannot change",
+        "correct": false,
+        "why": "It cannot change, and it can be deleted: expiring is deleting."
+      },
+      {
+        "text": "The replacement fails to start: the image expired, so no pull finds it",
+        "correct": true,
+        "why": "Right. That is why the rule waits a week, and why a service pinned to an untagged image is a risk to watch."
+      },
+      {
+        "text": "The replacement runs whatever latest points at",
+        "correct": false,
+        "why": "A digest names one image and never falls back to a tag."
+      },
+      {
+        "text": "Nothing expires while a task still uses the image",
+        "correct": false,
+        "why": "ECR does not know who runs an image."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jpbc3fp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Node scale-outs stall on Docker Hub's pull limits for a public base image. What makes them pull from the team's own account?",
+    "hint": "Lesson 10. A copy kept on first request.",
+    "choices": [
+      {
+        "text": "Replication of the registry to every region",
+        "correct": false,
+        "why": "Replication copies what you push; this image was never pushed by you."
+      },
+      {
+        "text": "ECR Public, at public.ecr.aws",
+        "correct": false,
+        "why": "That is another public registry outside the account, with limits of its own."
+      },
+      {
+        "text": "Enhanced scanning, which keeps a copy of each image it reads",
+        "correct": false,
+        "why": "Scanning reads packages and keeps findings, not images."
+      },
+      {
+        "text": "A pull through cache rule",
+        "correct": true,
+        "why": "Right. The private registry fetches the image the first time and keeps a copy, and production runs on the day the upstream is slow."
+      }
+    ]
+  },
+  {
+    "id": "ex-gjxf7g1b",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With the default vpc-cni, a t3.medium holds 17 pods. A team must fit 120 pods, counting every pod, on t3.medium nodes. What is the fewest nodes?",
+    "hint": "Lesson 11. Divide, and a part of a node is a node.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-fhdngjj6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An upgrade from 1.35 to 1.36 breaks a workload that used an API that 1.36 removed. Can the control plane go back to 1.35?",
+    "hint": "Lesson 11. The first step of the order exists for a reason.",
+    "choices": [
+      {
+        "text": "Yes, with update-cluster-version --kubernetes-version 1.35",
+        "correct": false,
+        "why": "That call only moves forward."
+      },
+      {
+        "text": "Yes, within 24 hours of the upgrade",
+        "correct": false,
+        "why": "There is no window; there is no way back at all."
+      },
+      {
+        "text": "No; nothing goes back",
+        "correct": true,
+        "why": "Right. That is why the insights come first. Neither a control plane nor a node group returns to an earlier version, so read list-insights, or upgrade a copy, before the real one."
+      },
+      {
+        "text": "Only while the node groups are still on 1.35",
+        "correct": false,
+        "why": "The nodes lagging behind block the next upgrade; they do not open a way back."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yfbt093",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these is a good reason to run a self-managed node group rather than a managed one?",
+    "hint": "Lesson 11. Look at the cost row of the table first.",
+    "choices": [
+      {
+        "text": "Saving the fee a managed node group adds per instance",
+        "correct": false,
+        "why": "There is no such fee: managed node groups cost the instances and nothing on top."
+      },
+      {
+        "text": "An operating system EKS does not offer",
+        "correct": true,
+        "why": "Right. The reason is a need the managed kind cannot meet, not money."
+      },
+      {
+        "text": "Running the nodes on spot capacity",
+        "correct": false,
+        "why": "A managed node group takes --capacity-type SPOT."
+      },
+      {
+        "text": "Spreading the nodes over several instance types",
+        "correct": false,
+        "why": "A managed node group takes a list of instance types."
+      }
+    ]
+  },
+  {
+    "id": "ex-5j8ka2kw",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each service named in a trust policy to the role that trusts it.",
+    "hint": "Lessons 8, 11 and 12.",
+    "pairs": [
+      {
+        "left": "eks.amazonaws.com",
+        "right": "The EKS cluster role"
+      },
+      {
+        "left": "ec2.amazonaws.com",
+        "right": "The node role of an EKS node group"
+      },
+      {
+        "left": "eks-fargate-pods.amazonaws.com",
+        "right": "The pod execution role of a Fargate profile"
+      },
+      {
+        "left": "ecs-tasks.amazonaws.com",
+        "right": "An ECS task's execution role and task role"
+      }
+    ],
+    "right_distractors": [
+      "A Lambda function's role"
+    ]
+  },
+  {
+    "id": "ex-26s6mkfd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An engineer's role can run aws eks get-token, and the cluster has no access entry for that role. What does kubectl get pods answer?",
+    "hint": "Lesson 11. Who you are and what you may do are two grants.",
+    "choices": [
+      {
+        "text": "Refused: known, and granted nothing in the cluster",
+        "correct": true,
+        "why": "Right. The API server knows the IAM principal, and access entries map an IAM principal to Kubernetes permissions, and this one has none."
+      },
+      {
+        "text": "A timeout, since the token only works inside the VPC",
+        "correct": false,
+        "why": "The endpoint is public by default, and the token is a signed STS request."
+      },
+      {
+        "text": "The pods, since the token proves who she is",
+        "correct": false,
+        "why": "It proves who she is, and being known is not being allowed."
+      },
+      {
+        "text": "An error from STS, which refuses principals it does not know",
+        "correct": false,
+        "why": "STS answers who signed the request; it decides nothing about the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wa2bm3h",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A pod on EKS Fargate requests 1 vCPU and 3.5 GiB. Fargate adds 256 MB and rounds up to the next combination for 1 vCPU (2 to 8 GB, by 1 GB). At 0.0696 USD per vCPU-hour and 0.0076 per GB-hour, what does the pod cost for 730 hours, in USD?",
+    "hint": "Lesson 12. Size the machine first, then price both meters.",
+    "value": 73.0,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-x9c8q3bp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A cluster has no node groups, only a Fargate profile that selects the namespace default. The pods start, and cannot resolve each other's Service names. Why?",
+    "hint": "Lesson 12. Which add-on answers names, and where does it ask to run?",
+    "choices": [
+      {
+        "text": "Fargate pods cannot use the cluster's DNS",
+        "correct": false,
+        "why": "They use it like any pod, once something serves it."
+      },
+      {
+        "text": "kube-proxy is a DaemonSet, and those do not run on Fargate",
+        "correct": false,
+        "why": "True of DaemonSets, and not what answers names: that is CoreDNS."
+      },
+      {
+        "text": "The profile's subnets are private",
+        "correct": false,
+        "why": "Private subnets are exactly what AWS requires of a profile."
+      },
+      {
+        "text": "CoreDNS has nowhere to run: it is annotated for EC2 nodes",
+        "correct": true,
+        "why": "Right. It needs a profile that selects kube-system and the annotation removed; AWS's guide to a Fargate-only cluster gives the patch."
+      }
+    ]
+  },
+  {
+    "id": "ex-stjvqvgp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "What is EKS Auto Mode?",
+    "hint": "Lesson 12. It arrived in December 2024.",
+    "choices": [
+      {
+        "text": "Cluster Autoscaler, switched on by default",
+        "correct": false,
+        "why": "Auto Mode chooses machines; Cluster Autoscaler changes a group's count."
+      },
+      {
+        "text": "Karpenter run by AWS, with NodePools defined and a fee per instance",
+        "correct": true,
+        "why": "Right. AWS operates the controller, the node images and the add-ons on those nodes."
+      },
+      {
+        "text": "Fargate for every pod in the cluster",
+        "correct": false,
+        "why": "Its nodes are EC2 instances, priced at EC2's price plus the fee."
+      },
+      {
+        "text": "Automatic upgrades of the control plane to each new minor version",
+        "correct": false,
+        "why": "Upgrading at the end of standard support is the STANDARD upgrade policy, a different setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-0eep9k35",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A log agent runs as a DaemonSet. The pods of the namespace jobs move to a Fargate profile. What collects their logs now?",
+    "hint": "Lesson 12, with lesson 9's sidecar row.",
+    "choices": [
+      {
+        "text": "The DaemonSet, which adds a pod beside each Fargate pod",
+        "correct": false,
+        "why": "A DaemonSet runs on nodes of yours, and Fargate has none."
+      },
+      {
+        "text": "The agent on an EC2 node, reading them over the network",
+        "correct": false,
+        "why": "It reads files on its own node, and a Fargate pod's machine is not one of them."
+      },
+      {
+        "text": "Nothing, until the agent runs as a sidecar in those pods",
+        "correct": true,
+        "why": "Right. Alone on its machine, a Fargate pod carries its own agent."
+      },
+      {
+        "text": "The pod execution role, which ships them to CloudWatch",
+        "correct": false,
+        "why": "That role pulls the image and registers the node; it ships nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn3gmtrz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The resizer's role trusts the OIDC provider of cluster `shop-a`. During an upgrade its pods move to a new cluster, `shop-b`, with the same namespace, service account and annotation. On AWS their first S3 call fails. What is missing?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "A thumbprint for `shop-b`'s issuer, added to the existing provider",
+        "correct": false,
+        "why": "A thumbprint is consulted only when the issuer's certificate is not signed by a trusted authority, and an EKS issuer's is. The existing provider is `shop-a`'s anyway."
+      },
+      {
+        "text": "A provider for `shop-b`'s issuer, and a trust statement naming it",
+        "correct": true,
+        "why": "Right. Every cluster has its own issuer. A token signed by `shop-b` matches no provider and no `Federated` principal the role trusts, so STS refuses it."
+      },
+      {
+        "text": "`s3:GetObject` on the role of `shop-b`'s nodes",
+        "correct": false,
+        "why": "That hands the bucket to every pod on those nodes, and with IMDSv2 and a hop limit of 1 the pods cannot reach it anyway. The role they ask for is still refused."
+      },
+      {
+        "text": "A fresh annotation: annotations do not carry over",
+        "correct": false,
+        "why": "The annotation is there, and it is the address on the envelope. The lock is the trust policy, which names `shop-a`'s provider and no other."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxvatjc6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An account runs 120 EKS clusters, one per customer, all on EC2 nodes, and IAM allows 100 OIDC providers by default. Which way of giving their pods roles avoids that limit altogether?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "IRSA with `StringLike` on `sub`, so that one provider serves every cluster",
+        "correct": false,
+        "why": "`StringLike` widens which service accounts match. It does not let one provider vouch for 120 issuers: each cluster's tokens are signed by its own."
+      },
+      {
+        "text": "An access key per cluster, kept in a Kubernetes Secret",
+        "correct": false,
+        "why": "That trades a quota for keys that never expire and leak through every copy of the Secret, which is the problem IRSA exists to remove."
+      },
+      {
+        "text": "IRSA with one role per cluster instead of one per workload",
+        "correct": false,
+        "why": "Roles are not what runs out. Each cluster still needs a provider for its own issuer, 120 against a default of 100."
+      },
+      {
+        "text": "EKS Pod Identity, with no provider at all",
+        "correct": true,
+        "why": "Right. Its roles trust `pods.eks.amazonaws.com`, and the link to a service account is an association in EKS, so no cluster needs an OIDC provider."
+      }
+    ]
+  },
+  {
+    "id": "ex-fee451wc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the steps of giving the resizer a role through IRSA, done by hand, in the order they have to happen.",
+    "hint": "Lesson 13.",
+    "items": [
+      "Read the cluster's OIDC issuer with `describe-cluster`",
+      "Create an IAM OIDC provider for that issuer, audience `sts.amazonaws.com`",
+      "Create the role, its trust policy naming the provider and `shop:photos`",
+      "Annotate the service account `photos` with the role's ARN",
+      "Create the resizer's pods with `serviceAccountName: photos`"
+    ],
+    "trap": "The pods come last: one that was already running when the annotation arrived never gets the token."
+  },
+  {
+    "id": "ex-qbtx28dx",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Only the resizer, service account `shop:photos`, should read the photos bucket. Which of these changes would let some other pod read it too? Choose all that apply.",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Deleting the `sub` condition from the role's trust policy",
+        "correct": true,
+        "why": "Right. Every pod's token comes from the same issuer, so with no `sub` any pod annotated with the role gets it."
+      },
+      {
+        "text": "Setting `AWS_ROLE_SESSION_NAME` to `photos-pod` in the resizer",
+        "correct": false,
+        "why": "A session name labels the resizer's calls in CloudTrail. It grants nothing to anybody."
+      },
+      {
+        "text": "Writing the condition as `StringLike` with `system:serviceaccount:shop:*`",
+        "correct": true,
+        "why": "Right. Any service account in the namespace, including one created next year, can be annotated with the role and assume it."
+      },
+      {
+        "text": "Adding `s3:GetObject` to the node role while IMDSv2 is left optional",
+        "correct": true,
+        "why": "Right. Any process on the node can then ask the metadata service for the node's credentials, pods included."
+      },
+      {
+        "text": "Moving the resizer from IRSA to EKS Pod Identity, with one association",
+        "correct": false,
+        "why": "One association links one service account to the role. Nobody else gets it, and the code does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9cws1ax",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function of 1,024 MB runs 50 ms per invocation, 10 million times a month. Moved from x86 to Arm at the same speed, how many USD a month does its duration charge drop by, at the sheet's 0.0000166667 and 0.0000133334 USD per GB-second?",
+    "hint": "Lesson 14. Requests cost the same on both.",
+    "value": 1.67,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-dwc25w6x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function needs a 300 MB model beside its code, 320 MB unzipped in all. Which way of deploying it does Lambda accept?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "A zip uploaded through S3, which lifts the size limit",
+        "correct": false,
+        "why": "S3 lifts the limit on the zip file. Unzipped, the function and its layers still have to fit in 250 MB."
+      },
+      {
+        "text": "The model in a layer and the code in the zip",
+        "correct": false,
+        "why": "Layers are counted with the function, unzipped, against the same 250 MB."
+      },
+      {
+        "text": "A container image in ECR, holding up to 10 GB",
+        "correct": true,
+        "why": "Right. An image may be 10 GB uncompressed, and the model goes in beside the code in `/var/task`."
+      },
+      {
+        "text": "Five layers of 64 MB each, the most one function names",
+        "correct": false,
+        "why": "Five is the most a function may name, and their 320 MB still count together against 250."
+      }
+    ]
+  },
+  {
+    "id": "ex-946axdxt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The alias `live` points at version `1` of `greet`. A developer fixes a bug, runs `update-function-code` and stops there. What do calls to `live` run now?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "The fixed code, since an update reaches every version",
+        "correct": false,
+        "why": "A published version never changes again. Only `$LATEST` takes updates."
+      },
+      {
+        "text": "Nothing, until `live` is moved to a new version",
+        "correct": false,
+        "why": "`live` still points at version `1`, which still exists and still answers."
+      },
+      {
+        "text": "The fixed code in new environments, the old one in warm ones",
+        "correct": false,
+        "why": "Which code an environment runs follows the version it serves, not when it started, and version `1` is one frozen zip."
+      },
+      {
+        "text": "The old code: the update landed in `$LATEST`",
+        "correct": true,
+        "why": "Right. `publish-version` froze version `1`, and every update goes to `$LATEST` until somebody publishes again and moves the alias."
+      }
+    ]
+  },
+  {
+    "id": "ex-fk9dgcd7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A layer for Node.js keeps its packages under `nodejs/___` inside the zip, which is where that runtime looks for them in `/opt`.",
+    "hint": "Lesson 14.",
+    "blanks": [
+      {
+        "accept": [
+          "node_modules"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h9y2t9tw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`thumbs` has `--maximum-retry-attempts 1`, `--maximum-event-age-in-seconds 3600` and the on-failure destination `thumbs-failed`. It is throttled for two hours during an incident while uploads keep arriving. What happens to an upload's event from the first minute of the throttling?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "S3 is told to send it again, and retries it after the incident",
+        "correct": false,
+        "why": "S3 handed the event over and was answered at once; an asynchronous source never hears about the throttle."
+      },
+      {
+        "text": "Lambda keeps it an hour, then gives it to the destination",
+        "correct": true,
+        "why": "Right. A throttled asynchronous event waits in Lambda's queue and is retried until it reaches its maximum age, here an hour, and then goes to the destination."
+      },
+      {
+        "text": "It is lost at once, because the throttle counts as its one retry",
+        "correct": false,
+        "why": "A throttle is not the function failing on the event; the event waits in Lambda's queue for up to its maximum age."
+      },
+      {
+        "text": "It waits in the bucket's queue",
+        "correct": false,
+        "why": "A bucket has no queue of its own. The queue an asynchronous event waits in is Lambda's."
+      }
+    ]
+  },
+  {
+    "id": "ex-ym1td1j3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A DynamoDB stream mapping has `--bisect-batch-on-function-error`, `--maximum-retry-attempts 2` and an on-failure queue. A batch of 100 holds one record the handler raises on, at position 37. What happens to the other 99?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "They wait behind it for the stream's 24 hours, since order comes first",
+        "correct": false,
+        "why": "That is what happens with none of the three settings. Bisecting and a retry limit are there to stop it."
+      },
+      {
+        "text": "They go to the on-failure queue with it, as one failed batch",
+        "correct": false,
+        "why": "The destination receives a description of the records given up on, and bisecting leaves the bad one alone before that."
+      },
+      {
+        "text": "They get through as the failing batch is split in halves",
+        "correct": true,
+        "why": "Right. Each failing batch is cut in two and retried, so the bad record ends up alone, and the good ones around it are processed."
+      },
+      {
+        "text": "They are skipped, and the shard moves on to the next batch",
+        "correct": false,
+        "why": "Skipping good records would break the order the stream keeps; they are processed, not skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dr0yzqp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With `ReportBatchItemFailures` on the mapping, the handler names each SQS message it could not handle by the message's ___ in `batchItemFailures`.",
+    "hint": "Lesson 15.",
+    "blanks": [
+      {
+        "accept": [
+          "messageId"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b0nc0wn3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The function `orders` is fed by the SQS mapping and by the `big-orders` rule, and has no destination and no dead-letter queue of its own. A malformed event arrives by each path and the handler raises every time. Where does each end up on AWS?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Both in Lambda's internal queue, retried for six hours",
+        "correct": false,
+        "why": "That is the asynchronous path alone. The SQS message is read by a mapping and never leaves its queue."
+      },
+      {
+        "text": "Both back with their senders, who are told the function failed",
+        "correct": false,
+        "why": "Neither caller waits: the queue was read by a poller, and EventBridge invokes asynchronously."
+      },
+      {
+        "text": "The message back in its queue; the event lost after two retries",
+        "correct": true,
+        "why": "Right. A queue keeps its message until its redrive policy moves it; Lambda retries the event twice and, with nowhere to send it, leaves a log line."
+      },
+      {
+        "text": "Both in the bus's archive, ready to be replayed",
+        "correct": false,
+        "why": "An archive keeps events only if somebody created one, and SQS messages never pass through a bus."
+      }
+    ]
+  },
+  {
+    "id": "ex-bxtay7qw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An account's concurrency quota was raised to 3,000. One idle function is suddenly sent enough traffic to need all of it. At the rate Lambda lets one function grow, how long does it take, at the least, to reach 3,000 environments?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "No time: the quota is the number it starts with",
+        "correct": false,
+        "why": "A quota is how many may run, not how many start at once; the function grows into it."
+      },
+      {
+        "text": "About 30 seconds",
+        "correct": true,
+        "why": "Right. A function adds up to 1,000 environments every 10 seconds, and requests above the growing count are throttled meanwhile."
+      },
+      {
+        "text": "About 3 seconds",
+        "correct": false,
+        "why": "That would be 1,000 environments a second; the documented rate is 1,000 every 10 seconds."
+      },
+      {
+        "text": "About 5 minutes, a minute and a half for each thousand",
+        "correct": false,
+        "why": "The documented rate is ten times faster: 1,000 environments every 10 seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ga2y7nnx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An SQS consumer writes to a database that takes 100 connections, so its reserved concurrency is 80. A burst of 50,000 messages arrives. What happens to the messages an 81st environment would have taken?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Lambda retries them from its internal queue for six hours",
+        "correct": false,
+        "why": "That is the asynchronous path, for S3, SNS and EventBridge. SQS is read by an event source mapping, and the messages never leave SQS."
+      },
+      {
+        "text": "None is lost: they wait in the queue for their visibility timeout",
+        "correct": true,
+        "why": "Right. A throttle slows the poller; the messages stay put, and only one received too many times goes to the dead-letter queue."
+      },
+      {
+        "text": "The producer gets a 429 and has to send them again",
+        "correct": false,
+        "why": "That is the synchronous path. The producer put the messages on a queue and is long gone; nothing goes back to it."
+      },
+      {
+        "text": "They are dropped, unless the function has an on-failure destination",
+        "correct": false,
+        "why": "Nothing is dropped. The queue still holds them, and a throttle is not a failure of the message."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmf64fqz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function behind API Gateway gets 400 requests a second at 0.25 s each, and has a reserved concurrency of 80. The rest of the account is idle. What do the callers see?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Every request served, borrowing 20 environments from the idle pool",
+        "correct": false,
+        "why": "A reservation is a ceiling as well as a floor. The idle part of the pool is never lent to a function that has one."
+      },
+      {
+        "text": "Every request served: 400 a second is far below the rate limit",
+        "correct": false,
+        "why": "The rate limit is ten times the quota and it is not what binds here. The cap of 80 environments is."
+      },
+      {
+        "text": "About a fifth answered at once with a throttling error",
+        "correct": true,
+        "why": "Right. Little's law gives 400 × 0.25 = 100 in flight; capped at 80, the rest is throttled, and a synchronous caller gets the error straight away."
+      },
+      {
+        "text": "The extra requests wait in Lambda's internal queue",
+        "correct": false,
+        "why": "That happens to asynchronous invocations. API Gateway calls synchronously, and its caller is told."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p01c9xa",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "AWS refuses a reserved concurrency that would leave fewer than ___ of the account's pool unreserved.",
+    "hint": "Lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "100"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hbkx3719",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Python 3.12 function is switched to SnapStart on its published versions. Which of these does AWS document it cannot have alongside SnapStart? Choose all that apply.",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Provisioned concurrency",
+        "correct": true,
+        "why": "Right. The two do not combine; each removes the init phase its own way."
+      },
+      {
+        "text": "An alias that points at the published version",
+        "correct": false,
+        "why": "Aliases point at versions, and versions are exactly where SnapStart applies."
+      },
+      {
+        "text": "An EFS file system mounted on the function",
+        "correct": true,
+        "why": "Right. EFS is on the documented list of what SnapStart does not combine with."
+      },
+      {
+        "text": "2 GB of ephemeral storage in `/tmp`",
+        "correct": true,
+        "why": "Right. Above 512 MB of ephemeral storage, SnapStart is not available."
+      },
+      {
+        "text": "An SDK client built at the top of the file",
+        "correct": false,
+        "why": "That is exactly what the snapshot captures, so the restore skips building it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5kcgzmj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A function on `python3.11` has a cold start its users notice, and the team wants SnapStart. What has to happen first?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Nothing: SnapStart is there on every managed runtime",
+        "correct": false,
+        "why": "AWS documents it for Java 11 and later, Python 3.12 and later and .NET 8 and later, and not for the rest."
+      },
+      {
+        "text": "Turn it on for `$LATEST`, where the code being edited lives",
+        "correct": false,
+        "why": "A snapshot of `$LATEST` would be a snapshot of something that changes; SnapStart applies to published versions."
+      },
+      {
+        "text": "Provisioned concurrency first, which SnapStart builds on",
+        "correct": false,
+        "why": "The two do not combine at all."
+      },
+      {
+        "text": "A move to `python3.12` or later, then publishing a version",
+        "correct": true,
+        "why": "Right. Python 3.12 is the first Python SnapStart supports, and it works on published versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryhy003e",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function spends 700 ms of each request waiting on a database, and more CPU does not shorten that. At 0.0000166667 USD per GB-second, how many USD more does a month of 1,000,000 requests cost at 1,024 MB than at 256 MB?",
+    "hint": "Lesson 17.",
+    "value": 8.75,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-qdkrw09d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function loads a 2 GB model at the top of its file, which takes 14 seconds, and it keeps the default timeout of 3 seconds. What does AWS document happens on a cold start?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Init runs all 14 s: it has no limit",
+        "correct": false,
+        "why": "It has one: ten seconds."
+      },
+      {
+        "text": "Init stops at 10 s and is retried in the 3 s invocation",
+        "correct": true,
+        "why": "Right. Past ten seconds the init is retried in the invoke phase, under the function's own timeout, and 3 s is far too short for it."
+      },
+      {
+        "text": "The request waits 14 s and succeeds, billed for the handler alone",
+        "correct": false,
+        "why": "Since August 2025 the init phase is billed like duration, and it is stopped at 10 s in any case."
+      },
+      {
+        "text": "The first request fails and the warm environment serves the rest",
+        "correct": false,
+        "why": "There is no warm environment to keep: every new one runs the same import and meets the same limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-gepcfb98",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function moved into private subnets to reach its RDS database. Since then every call it makes to Secrets Manager hangs until the timeout, with no network error. Which change fixes that without opening the internet?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "A gateway endpoint for Secrets Manager in the route table",
+        "correct": false,
+        "why": "Gateway endpoints exist for S3 and DynamoDB and for nothing else."
+      },
+      {
+        "text": "An inbound rule on the function's security group for port 443",
+        "correct": false,
+        "why": "Nothing connects to a function; its packets leave and find no route, which no inbound rule changes."
+      },
+      {
+        "text": "An interface endpoint, its group admitting 443 from the function's group",
+        "correct": true,
+        "why": "Right. It puts an interface in each subnet that the service's usual name resolves to, and the SDK reaches it over HTTPS."
+      },
+      {
+        "text": "`secretsmanager:GetSecretValue` added to the execution role",
+        "correct": false,
+        "why": "A refused permission would answer AccessDenied at once. These calls hang because the packets go nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqsjptj5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A team has read that a VPC adds seconds to every Lambda cold start, so instead of putting its function in the VPC it gives the RDS database a public address. What does lesson 18 say about that trade?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "It is right: a cold start in a VPC still waits for its interface",
+        "correct": false,
+        "why": "That was true before September 2019. The interface is now made when the function is configured."
+      },
+      {
+        "text": "It is right, since a VPC was never meant for functions",
+        "correct": false,
+        "why": "A function goes into a VPC to reach what has a private address, which is exactly this database."
+      },
+      {
+        "text": "It pays off only with provisioned concurrency to hide the wait",
+        "correct": false,
+        "why": "There is no wait to hide; provisioned concurrency is bought for the init phase, not for an interface."
+      },
+      {
+        "text": "It answers a cost that went in 2019 by exposing the database",
+        "correct": true,
+        "why": "Right. Since Hyperplane interfaces, a function in a VPC starts as fast as one outside it, and the database could have stayed private."
+      }
+    ]
+  },
+  {
+    "id": "ex-5sbynsem",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A function in two zones goes out through two NAT gateways, one per zone, at 0.093 USD an hour each and 0.093 USD per GB processed. It moves 1,200 GB a month, 1,000 GB of which is S3. A gateway endpoint for S3 is added. What is the NAT gateways' bill for a month of 730 hours afterwards?",
+    "hint": "Lesson 18.",
+    "value": 154.38,
+    "tolerance": 0.05,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-yr5fyc8y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A function in a VPC is deleted, and a minute later the team tries to delete the security group it used. AWS refuses. What explains it?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Lambda's interface is still in the subnet",
+        "correct": true,
+        "why": "Right. The Hyperplane interface outlives the function for a while, and the group it sits in waits for Lambda to delete it."
+      },
+      {
+        "text": "A group cannot be deleted while its VPC still exists",
+        "correct": false,
+        "why": "It can: a group is deleted on its own once nothing uses it."
+      },
+      {
+        "text": "A security group that a function used is kept for 90 days",
+        "correct": false,
+        "why": "There is no such period; the group is free as soon as Lambda has removed its interface."
+      },
+      {
+        "text": "The team must first detach the interface from the console",
+        "correct": false,
+        "why": "Lambda owns that interface, and nobody else may detach or delete it."
+      }
+    ]
+  },
+  {
+    "id": "ex-73wwhd05",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A WebSocket backend sends its clients 500,000 messages a month of 70 KB each. At 1.55 USD per million messages, what do they cost a month?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "About 0.78 USD, one message billed per message sent",
+        "correct": false,
+        "why": "Messages are counted in steps of 32 KB, so 70 KB counts as three."
+      },
+      {
+        "text": "About 1.55 USD, each counted as two",
+        "correct": false,
+        "why": "Two steps of 32 KB carry 64 KB; the last 6 KB start a third."
+      },
+      {
+        "text": "About 2.33 USD, each counted as three",
+        "correct": true,
+        "why": "Right. 70 KB is three steps of 32 KB, so 1.5 million messages at 1.55 per million."
+      },
+      {
+        "text": "Nothing extra: the connection minutes already cover them",
+        "correct": false,
+        "why": "The two meters are separate; messages are billed whether or not the connection is."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqangc47",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An internal API must have no public address, reachable only from inside the shop's VPC, and every caller carries a JWT from the shop's identity provider. Which build fits?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "A REST API with a private endpoint and a Lambda or Cognito authoriser",
+        "correct": true,
+        "why": "Right. Only REST offers a private endpoint, and REST has no built-in JWT authoriser, so one of the authorisers it does have checks the token."
+      },
+      {
+        "text": "An HTTP API with its JWT authoriser on the `$default` stage",
+        "correct": false,
+        "why": "The JWT authoriser is HTTP's, and so is a public address: an HTTP API has no private endpoint."
+      },
+      {
+        "text": "A WebSocket API, so the connection never leaves the VPC",
+        "correct": false,
+        "why": "A WebSocket API decides who may speak first, not where it is reachable from."
+      },
+      {
+        "text": "A REST API with a key per caller in place of the token",
+        "correct": false,
+        "why": "A key identifies a client and authenticates nobody; it travels in plain sight in every request."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp0yz68y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team deletes its HTTP API and recreates it from a template, which gives it a new id. The route, the integration and the function are all back, yet every call answers `500` and the function's log stays empty. What is the likeliest cause?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "The JWT authoriser rejects the callers' tokens",
+        "correct": false,
+        "why": "A failed token is answered with a 401, before the function is touched."
+      },
+      {
+        "text": "The `$default` stage was never deployed by hand",
+        "correct": false,
+        "why": "With auto-deploy, `$default` deploys every change on its own."
+      },
+      {
+        "text": "Its permission still names the old id in the source ARN",
+        "correct": true,
+        "why": "Right. API Gateway is refused when it calls the function, which is a 500 with no invocation behind it."
+      },
+      {
+        "text": "The new integration sends payload format 1.0",
+        "correct": false,
+        "why": "A handler written for 2.0 would run and fail with a `KeyError`, and that error would be in its log."
+      }
+    ]
+  },
+  {
+    "id": "ex-cznk8gg1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Deployment `d2` on the REST stage `prod` breaks a partner's calls, and the one before it, `d1`, worked. What is the quickest way back?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Undo the edit in the tree and wait for it to reach the stage",
+        "correct": false,
+        "why": "A REST stage never takes a change from the tree by itself; it serves the deployment it points at."
+      },
+      {
+        "text": "Point `prod` at `d1` again",
+        "correct": true,
+        "why": "Right. Old deployments stay in the list, and a stage is a pointer to one of them."
+      },
+      {
+        "text": "Delete the stage and create it again with the old settings",
+        "correct": false,
+        "why": "That takes the API away from every caller while it is rebuilt, and its throttling, logging and cache settings with it."
+      },
+      {
+        "text": "Delete `d2`, so the stage falls back to the one before",
+        "correct": false,
+        "why": "A stage falls back to nothing by itself; it points where it is told to."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca8wwwsr",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each requirement with the kind of API Gateway API lesson 19 would build for it.",
+    "hint": "Lesson 19.",
+    "pairs": [
+      {
+        "left": "Partners, each with its own key and a monthly quota",
+        "right": "A REST API"
+      },
+      {
+        "left": "An order's status pushed to the page as soon as it changes",
+        "right": "A WebSocket API"
+      },
+      {
+        "left": "A mobile app whose users carry a JWT, at the lowest price per request",
+        "right": "An HTTP API"
+      }
+    ],
+    "right_distractors": [
+      "A function URL with nothing in front"
+    ]
+  },
+  {
+    "id": "ex-mph34khs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Standard order workflow has a `Map` that runs three states for each line of an order, and orders average 400 lines. Most of the bill is those transitions. Which change does lesson 20 point to?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Make the whole order workflow Express",
+        "correct": false,
+        "why": "The order waits for the warehouse and a cancel window; Express stops at five minutes and keeps no history."
+      },
+      {
+        "text": "Lower the `Map`'s `MaxConcurrency` to 1",
+        "correct": false,
+        "why": "That makes the burst slower and counts exactly as many transitions."
+      },
+      {
+        "text": "Swap each line's states for `Wait` states, which run nothing",
+        "correct": false,
+        "why": "A wait is free per second, and entering one is a transition like any other."
+      },
+      {
+        "text": "Hand the lines to an Express run that the order starts",
+        "correct": true,
+        "why": "Right. The burst costs the Standard meter one transition plus a cheap Express run, and the order keeps Standard's history and duration."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkwh663d",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An Express workflow uses 100 MB of memory, runs 0.45 s and runs 2 million times a month. Express bills memory in steps of 64 MB and time rounded up to the next 100 ms. At 1 USD per million requests and 0.00001667 USD per GB-second, what does the month cost?",
+    "hint": "Lesson 20.",
+    "value": 4.08,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-mq2q2fye",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A mobile app's request must wait for a workflow of four quick steps, about 8 seconds in all, and get its result in the same response. Which fits?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "A Standard workflow, the client polling `describe-execution`",
+        "correct": false,
+        "why": "That is the pattern for jobs of minutes. Here the answer fits in one request, and polling adds round trips for nothing."
+      },
+      {
+        "text": "A synchronous Express execution started by the route",
+        "correct": true,
+        "why": "Right. A synchronous Express execution returns the output in the same call, inside the API's 29 or 30 seconds."
+      },
+      {
+        "text": "A Standard workflow, the route waiting on `start-execution`",
+        "correct": false,
+        "why": "`start-execution` returns at once with the execution's name; it never waits for the result."
+      },
+      {
+        "text": "An Express workflow started asynchronously, which returns its output",
+        "correct": false,
+        "why": "Started asynchronously, an Express run returns nothing to the caller, and it runs at least once."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8g25r1p",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each situation in a `Task` state with the error name Step Functions gives it.",
+    "hint": "Lesson 20.",
+    "pairs": [
+      {
+        "left": "The task runs past its `TimeoutSeconds`",
+        "right": "`States.Timeout`"
+      },
+      {
+        "left": "The state machine's role may not make the call",
+        "right": "`States.Permissions`"
+      },
+      {
+        "left": "A worker holding a token goes quiet past `HeartbeatSeconds`",
+        "right": "`States.HeartbeatTimeout`"
+      }
+    ],
+    "right_distractors": [
+      "`States.ALL`"
+    ]
+  },
+  {
+    "id": "ex-m40f4qpm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Standard workflow's `Notify` task, with a `Retry`, puts each payment on a standard SQS queue, and a consumer charges the card. Some customers are charged twice. What do lessons 20 and 21 together point to?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "Remove the `Retry`, since Standard runs each state exactly once",
+        "correct": false,
+        "why": "Without a retry SQS still delivers twice now and then, and a lost answer would lose the payment instead."
+      },
+      {
+        "text": "Make the queue FIFO, which ends duplicates",
+        "correct": false,
+        "why": "FIFO drops a repeated deduplication id for five minutes on one queue. A consumer that charges and crashes before deleting still charges twice."
+      },
+      {
+        "text": "Carry `$$.Execution.Name` as a key and skip keys already done",
+        "correct": true,
+        "why": "Right. A retry or SQS itself can deliver twice; a key that is the same on every attempt, kept in a store that outlives the message, makes the second one harmless."
+      },
+      {
+        "text": "Raise the queue's visibility timeout to 12 hours",
+        "correct": false,
+        "why": "A longer timeout hides a slow message for longer; it does nothing about a message sent twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6xeg46h",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Orders already go onto the bus `shop`, where one rule sends the large ones to review. An audit team now wants a copy of every `OrderPlaced`. What changes?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The producer also sends each order to the audit queue",
+        "correct": false,
+        "why": "That ties the producer to a consumer, which is what the bus was there to avoid."
+      },
+      {
+        "text": "The `big-orders` pattern is widened to every total, with two targets",
+        "correct": false,
+        "why": "Review would then get every order as well: one pattern decides for all of a rule's targets."
+      },
+      {
+        "text": "A second rule on `shop`; nothing upstream changes",
+        "correct": true,
+        "why": "Right. On a bus the rules choose the targets, so a new consumer is a new rule and nobody upstream changes anything."
+      },
+      {
+        "text": "The audit queue subscribes to the bus, as it would to a topic",
+        "correct": false,
+        "why": "A bus has no subscriptions; its rules pick the targets."
+      }
+    ]
+  },
+  {
+    "id": "ex-qaxd8bmq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Billing learns of paid orders through an SNS topic. Why does lesson 21 put an SQS queue behind billing's subscription instead of subscribing billing's function directly?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "SNS has no way to deliver to a Lambda function",
+        "correct": false,
+        "why": "It has: a Lambda function is one of the endpoints the lesson lists."
+      },
+      {
+        "text": "A queue keeps what the topic drops while billing is down",
+        "correct": true,
+        "why": "Right. A topic retries an endpoint that cannot take a message and then drops it; the queue holds it for up to fourteen days."
+      },
+      {
+        "text": "A queue gives the copy to billing and to shipping together",
+        "correct": false,
+        "why": "A queue hands each message to one consumer. Making copies is the topic's job."
+      },
+      {
+        "text": "Filter policies work on SQS subscriptions and on no other kind",
+        "correct": false,
+        "why": "A filter policy belongs to any subscription; it is not why the queue is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-p39gnf1y",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A stream of 50 million events a month always goes to the same two consumers, each behind an SQS queue. On the sheet of 16 October 2026, which carrier costs less, and by roughly how much?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "An EventBridge bus, about 25.00 USD against 50.00 on a topic",
+        "correct": false,
+        "why": "That swaps the prices: a custom event is 1 USD per million, an SNS publish 0.5."
+      },
+      {
+        "text": "The same on both, since each makes one copy per consumer",
+        "correct": false,
+        "why": "SNS deliveries to SQS are free, and so is its first million of publishes; the bus charges per event put on it."
+      },
+      {
+        "text": "An SNS topic, about 49.50 USD, as each of its two deliveries is billed",
+        "correct": false,
+        "why": "AWS does not charge for SNS deliveries to SQS queues; only the publishes count."
+      },
+      {
+        "text": "An SNS topic, about 24.50 USD against 50.00 on a bus",
+        "correct": true,
+        "why": "Right. 49 million paid publishes at 0.5 is 24.50, deliveries to SQS cost nothing, and 50 million custom events at 1 is 50.00."
+      }
+    ]
+  },
+  {
+    "id": "ex-qknry4ez",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A Beanstalk environment's instances need a font package for PDF reports. A developer installs it over SSH, and a week later the reports fail again. What happened, and where does the package belong?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Managed updates removed it; they should be turned off",
+        "correct": false,
+        "why": "Updates change the platform underneath. The package went because the instance it sat on was replaced."
+      },
+      {
+        "text": "The stack rolled it back; it belongs in the stack's template",
+        "correct": false,
+        "why": "The stack holds no package, and editing it by hand is the classic Beanstalk mistake."
+      },
+      {
+        "text": "An instance was replaced; it belongs in `.ebextensions` or a `.platform` hook",
+        "correct": true,
+        "why": "Right. Beanstalk replaces instances when it deploys immutably, scales or heals, and what an instance needs travels with the version."
+      },
+      {
+        "text": "SSH changes are undone each night; it belongs in the EC2 console",
+        "correct": false,
+        "why": "Nothing undoes the instance at night; the group replaced it, and the console reaches the same instance and loses the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-39bw5md9",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put these Beanstalk deployment policies in order of the serving capacity they keep while a deployment runs, the least first.",
+    "hint": "Lesson 22.",
+    "items": [
+      "`AllAtOnce`",
+      "`Rolling`",
+      "`RollingWithAdditionalBatch`"
+    ],
+    "trap": "AllAtOnce takes every instance at once, Rolling one batch at a time, and the additional batch is launched first so capacity holds."
+  },
+  {
+    "id": "ex-p567qqcc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An App Runner service is busy from 08:00 to 18:00 on weekdays, and nobody visits it at night. What does it take for its nights to cost nothing?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "`MinSize` set to 0 in the auto scaling configuration",
+        "correct": false,
+        "why": "The API's own model refuses a `MinSize` below one."
+      },
+      {
+        "text": "Nothing: with no request the service scales to zero",
+        "correct": false,
+        "why": "It never scales to zero on its own: a provisioned instance pays its memory all night."
+      },
+      {
+        "text": "A lower `MaxConcurrency`, so fewer instances are provisioned",
+        "correct": false,
+        "why": "`MaxConcurrency` decides when an instance is added under load; it never removes the last one."
+      },
+      {
+        "text": "`PauseService` each night, called by somebody or a schedule",
+        "correct": true,
+        "why": "Right. A pause is the one thing that stops both meters, and it is a manual act, losing the instance's state."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9z6m2mf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A Beanstalk environment runs `64bit Amazon Linux 2 v3.3.14 running Python 3.8`, with managed platform updates on and `UpdateLevel: minor`. Python 3.8 has reached its end of life. What will the managed updates do about it?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "Move it to the Amazon Linux 2023 branch in the next weekly window",
+        "correct": false,
+        "why": "That is a change of branch, and managed updates never apply one."
+      },
+      {
+        "text": "Nothing: moving branch is the team's change to make and test",
+        "correct": true,
+        "why": "Right. Managed updates take minor and patch versions within a branch, never a new branch."
+      },
+      {
+        "text": "Upgrade Python to 3.12 and keep the platform version",
+        "correct": false,
+        "why": "The Python version is part of the branch's name; changing it is changing branch."
+      },
+      {
+        "text": "Stop the environment until somebody picks a branch",
+        "correct": false,
+        "why": "Nothing stops it. It carries on, on a language nobody patches, until the team moves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fftw56j0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In compare.py, change LAMBDA_GB from 0.5 to 0.25 and keep MS at 100. Two Fargate tasks still cost 49.596 USD a month, and a request costs 0.2 USD per million plus its GB-seconds at 0.0000133334. At how many million requests a month does Lambda cost the same as the two tasks?",
+    "hint": "Lesson 23.",
+    "value": 92.99,
+    "tolerance": 0.1,
+    "unit": "million requests"
+  },
+  {
+    "id": "ex-rkqgqjy1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An API on two EC2 instances keeps a pool of 20 database connections on each, and the database takes 100. Moved to Lambda as it is, it would have 150 requests in flight at peak. What do lessons 16 and 23 together point to?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Keep the pools of 20, which Lambda shares between environments",
+        "correct": false,
+        "why": "Nothing is shared between environments: at 150 in flight, pools of 20 would ask for 3,000 connections."
+      },
+      {
+        "text": "Provisioned concurrency of 100, so that no more than 100 run",
+        "correct": false,
+        "why": "Provisioned concurrency is not a cap: requests above it are served by on-demand environments, each with its own connection."
+      },
+      {
+        "text": "One connection per environment, opened at init, and a reservation under 100",
+        "correct": true,
+        "why": "Right. Every environment holds its own connection, so capping the environments caps the connections."
+      },
+      {
+        "text": "More memory for the function, so that fewer environments are needed",
+        "correct": false,
+        "why": "More memory shortens CPU-bound work. A request waiting on the database waits as long, and Little's law keeps the count."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7wwg4gd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A PDF export takes 12 minutes to build. A team wants it on Lambda, behind the HTTP API the rest of the shop uses. What has to change?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Nothing: twelve minutes fits inside Lambda's 900 seconds",
+        "correct": false,
+        "why": "The function would finish, after the client had already been given a 504 at 30 seconds."
+      },
+      {
+        "text": "The integration's timeout raised to fifteen minutes",
+        "correct": false,
+        "why": "An HTTP API integration waits 30 seconds at most, whatever it is asked for."
+      },
+      {
+        "text": "Pieces of under 30 seconds each, which the route calls in turn",
+        "correct": false,
+        "why": "The route still waits for all of them, and the client still meets the 30-second limit."
+      },
+      {
+        "text": "The route answers `202` and a queue carries the work",
+        "correct": true,
+        "why": "Right. Twelve minutes fits Lambda's fifteen, but no HTTP API integration waits past 30 seconds, so the export becomes a job."
+      }
+    ]
+  },
+  {
+    "id": "ex-and8e21y",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put these moves in order of the work they take, by lesson 23's table of moves, the least first.",
+    "hint": "Lesson 23.",
+    "items": [
+      "App Runner to ECS, from the same image",
+      "EC2 to Fargate",
+      "EC2 to Lambda"
+    ],
+    "trap": "Moves towards Lambda cost the most, because a function assumes the least about where it runs; App Runner to ECS keeps its image."
+  },
+  {
+    "id": "ex-7sr6cv59",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "compare.py prices the office profile on App Runner at 27.74 USD. Then an outside monitor starts calling it once a minute, around the clock. What happens to that figure, in compare.py's model?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "It stays at 27.74: one request a minute is too little to count",
+        "correct": false,
+        "why": "In compare.py any hour with a request pays the processor, and a real instance has to be active to answer one."
+      },
+      {
+        "text": "It rises to 56.94: the quiet nights now pay the processor",
+        "correct": true,
+        "why": "Right. No hour is idle any more, so all 24 bill vCPU as well as memory on the same two instances."
+      },
+      {
+        "text": "It falls, since App Runner bills memory alone between requests",
+        "correct": false,
+        "why": "Memory is billed while an instance is provisioned anyway; what changes is the processor billed at night."
+      },
+      {
+        "text": "It rises by the monitor's request charges, about one USD",
+        "correct": false,
+        "why": "App Runner bills no fee per request on the sheet; the cost is the instances kept active all night."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9v7fx2h",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "From São Paulo, the first GB of a month to the internet is free, then 0.25 USD per GB up to 10,240 GB, and 0.23 USD per GB from there to 51,200 GB. What does sending 20,000 GB out in one month cost at the list price?",
+    "hint": "Lesson 24.",
+    "value": 4804.55,
+    "tolerance": 0.5,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-hjct59g7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A pull request adds `import boto3` to `orders.py`, so that each quote also writes an audit line to S3. What does the shop's decision record give a reviewer to point at?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "A refused crossing of the S3 seam",
+        "correct": true,
+        "why": "Right. Rules that import boto3, and S3 calls outside that module, are both listed under the lock-in refused."
+      },
+      {
+        "text": "Nothing: the record is about the platform, not about code",
+        "correct": false,
+        "why": "Its `lock-in refused` lines are about code, written so that a reviewer can point at a pull request that crosses one."
+      },
+      {
+        "text": "The exit triggers, since writing to S3 raises the monthly bill",
+        "correct": false,
+        "why": "The triggers are traffic and price changes. This change crosses a seam."
+      },
+      {
+        "text": "A reason to supersede record 4 with a new one",
+        "correct": false,
+        "why": "Nothing in the decision changes; the pull request is what has to change to respect it."
+      }
+    ]
+  },
+  {
+    "id": "ex-14eaf83j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Record 4's exit trigger says Lambda wins below an average of 21.8 requests a second. A year on, the requests run 200 ms instead of 100, and compare.py's break-even falls to about 32 million a month. What should happen to the record?",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "Edit the trigger in record 4 to the new figure",
+        "correct": false,
+        "why": "An accepted record is never edited; it is superseded, so that the history of why stays readable."
+      },
+      {
+        "text": "Keep 21.8, since the trigger is about traffic and not duration",
+        "correct": false,
+        "why": "21.8 came from the cost per request, and doubling the duration roughly doubles the GB-seconds."
+      },
+      {
+        "text": "A new record supersedes it, at about 12.3 a second",
+        "correct": true,
+        "why": "Right. The trigger was arithmetic on the old duration: 32.35 million over a month of 730 hours is about 12.3 a second, and the new record points at the old."
+      },
+      {
+        "text": "Move the API to Lambda, since the trigger has fired",
+        "correct": false,
+        "why": "Traffic did not fall; the break-even did, to about 12.3 a second, further below today's 26.5."
+      }
+    ]
+  },
+  {
+    "id": "ex-adwafyja",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In lesson 24's estimate of what leaving would cost the shop, which figures are captures, or exact arithmetic on them, rather than invented? Choose all that apply.",
+    "hint": "Lesson 24.",
+    "choices": [
+      {
+        "text": "The 31 lines of the two adapters",
+        "correct": true,
+        "why": "Right. Counted with `wc -l`."
+      },
+      {
+        "text": "Three people for three days to learn the next platform",
+        "correct": false,
+        "why": "The lesson says every effort figure in the example is invented, and this is one."
+      },
+      {
+        "text": "0.25 USD per GB to the internet from São Paulo",
+        "correct": true,
+        "why": "Right. Read from AWS's price list by `egress.py`."
+      },
+      {
+        "text": "Two days to move the storage calls",
+        "correct": false,
+        "why": "Another effort figure, invented for the example."
+      },
+      {
+        "text": "49.60 USD a month of Fargate during the overlap",
+        "correct": true,
+        "why": "Right. Lesson 23's program priced it from the sheet."
+      }
+    ]
+  }
+]

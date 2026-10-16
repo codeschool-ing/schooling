@@ -1,0 +1,405 @@
+{
+  "ex-3vd9rvhf": {
+    "prompt": "Quais serviços podem ser alcançados por um gateway endpoint?",
+    "hint": "Dois, e a transcrição imprimiu os dois com `Gateway` ao lado.",
+    "choices": [
+      {
+        "text": "S3 e STS",
+        "why": "O STS apareceu só como `Interface`. Dos dois, só o S3 tem gateway endpoint."
+      },
+      {
+        "text": "S3 e DynamoDB",
+        "why": "Isso. Todo outro serviço é alcançado por um interface endpoint, e o S3 tem os dois tipos."
+      },
+      {
+        "text": "DynamoDB e CloudWatch Logs",
+        "why": "O CloudWatch Logs é alcançado por um interface endpoint, por hora e por gigabyte."
+      },
+      {
+        "text": "Todo serviço que também tem interface endpoint",
+        "why": "Centenas de serviços têm interface endpoint; dois têm gateway endpoint."
+      }
+    ]
+  },
+  "ex-4y9atw27": {
+    "prompt": "Depois que o gateway endpoint existe, a `private-a` manda um pacote para o S3 ao `vpce-…` e não ao `nat-a`, embora `0.0.0.0/0` também case com ele. Por quê?",
+    "hint": "A regra da lição 17 para duas rotas que casam.",
+    "choices": [
+      {
+        "text": "A rota do endpoint foi acrescentada por último, e a mais nova vence",
+        "why": "A ordem em que as rotas foram escritas não conta; o tamanho do prefixo conta."
+      },
+      {
+        "text": "Um dos intervalos da prefix list é mais longo que `0.0.0.0/0`",
+        "why": "Isso. Um pacote para o S3 cai dentro de um dos intervalos da lista, e qualquer intervalo é mais específico que `/0`."
+      },
+      {
+        "text": "Gateway endpoints sempre têm prioridade sobre NAT gateways",
+        "why": "Não existe prioridade por tipo de alvo. A mesma regra do prefixo mais longo decide toda rota."
+      },
+      {
+        "text": "O NAT gateway recusa tráfego para serviços da AWS",
+        "why": "Ele levaria de bom grado, a 0,093 por gigabyte, que é o que a loja pagava antes do endpoint."
+      }
+    ]
+  },
+  "ex-6044kt10": {
+    "prompt": "Antes do endpoint, o 1 TB (1.024 GB) mensal de backups da loja para o S3 passava pelo NAT. Quantos dólares por mês de processamento de NAT eram?",
+    "hint": "O preço por gigabyte da lição 17.",
+    "unit": "dólares"
+  },
+  "ex-xm07e7tt": {
+    "prompt": "O que a política em `endpoint-s3.json` faz?",
+    "hint": "Uma política de recurso numa porta.",
+    "choices": [
+      {
+        "text": "Ela concede a todo principal da VPC acesso aos três buckets",
+        "why": "Uma política de endpoint não concede nada; quem chama ainda precisa de uma permissão de IAM própria."
+      },
+      {
+        "text": "Ela limita o que passa; quem chama ainda precisa do IAM",
+        "why": "Isso. Ela estreita a rota grátis aos três buckets da loja, para que não sirva para copiar dados para outro lugar."
+      },
+      {
+        "text": "Ela substitui as políticas de bucket dos três buckets",
+        "why": "As duas são documentos separados em recursos separados, e as duas valem."
+      },
+      {
+        "text": "Ela vale também para o tráfego das sub-redes à internet, pelo NAT",
+        "why": "Ela vale para o que passa pelo endpoint e mais nada. O tráfego pelo NAT nunca a encontra."
+      }
+    ]
+  },
+  "ex-hj4sx3hr": {
+    "prompt": "Na AWS, com a política de `aws:SourceVpce` no `shop-backups`, uma pessoa administradora com permissões totais de IAM roda `aws s3 ls s3://shop-backups` de um laptop. O que acontece?",
+    "hint": "Uma negação explícita, e uma condição que o laptop não satisfaz.",
+    "choices": [
+      {
+        "text": "Permitido, já que a política de IAM de quem administra se sobrepõe a uma política de bucket",
+        "why": "Uma negação explícita vence qualquer permissão, venha ela de onde vier (lição 8)."
+      },
+      {
+        "text": "Recusado: o pedido não veio pelo endpoint",
+        "why": "Isso. `aws:SourceVpce` não vem preenchido num pedido de fora da VPC, então o Deny vale, para quem administra também."
+      },
+      {
+        "text": "Permitido, porque listar não é um pedido de objeto",
+        "why": "Foi o que o moto fez, e é uma lacuna do moto. A política nomeia `s3:*` no próprio bucket, e a AWS recusa a listagem."
+      },
+      {
+        "text": "Recusado, a menos que o laptop esteja em `sa-east-1`",
+        "why": "Uma região não é um caminho de rede. A condição pergunta por qual endpoint o pedido veio."
+      }
+    ]
+  },
+  "ex-k1mvgmh4": {
+    "prompt": "No laboratório, `put-object` e `get-object` no `shop-backups` foram recusados com 403 e a listagem passou. O que essa transcrição estabelece?",
+    "hint": "Compare com o que a seção diz que a AWS faz.",
+    "choices": [
+      {
+        "text": "O moto aplicou o Deny só aos pedidos de objeto, ignorando a condição",
+        "why": "Isso. O moto ignora blocos `Condition`, então a transcrição mostra o Deny e não o teste de `aws:SourceVpce`; a AWS também recusaria a listagem."
+      },
+      {
+        "text": "O moto julgou todo pedido exatamente como a AWS",
+        "why": "A listagem passou no moto e seria recusada na AWS."
+      },
+      {
+        "text": "O moto ignorou a política, como ignora toda política de bucket",
+        "why": "Ele não a ignorou: os dois pedidos de objeto foram recusados por causa dela."
+      },
+      {
+        "text": "O moto os recusou depois de conferir `aws:SourceVpce`",
+        "why": "O moto não confere condição nenhuma; aplicou o Deny como se não houvesse uma."
+      }
+    ]
+  },
+  "ex-a48egpjf": {
+    "prompt": "O que é um interface endpoint, dentro da VPC?",
+    "hint": "Ele tem endereço e security group.",
+    "choices": [
+      {
+        "text": "Uma linha numa tabela de rotas nomeando uma prefix list",
+        "why": "Esse é um gateway endpoint. Um interface endpoint é um lugar, não uma rota."
+      },
+      {
+        "text": "Uma interface de rede com endereço privado em cada sub-rede",
+        "why": "Isso. Três sub-redes nomeadas, três interfaces, uma por zona."
+      },
+      {
+        "text": "Um NAT gateway reservado a um serviço da AWS",
+        "why": "Ele não traduz nada; o serviço responde no endereço privado da interface."
+      },
+      {
+        "text": "Um endereço público que a AWS dá ao serviço dentro da sua VPC",
+        "why": "O endereço é privado, do intervalo da própria sub-rede, e é por isso que nada precisa sair."
+      }
+    ]
+  },
+  "ex-fzf5ntvy": {
+    "prompt": "O endpoint do STS está com DNS privado ligado. O que precisa mudar na aplicação para ela usar o endpoint?",
+    "hint": "Que nome todo SDK chama?",
+    "choices": [
+      {
+        "text": "Ela precisa chamar o nome DNS do próprio endpoint, `vpce-…`",
+        "why": "Esse nome funciona, e com DNS privado ninguém precisa dele."
+      },
+      {
+        "text": "Ela precisa receber os endereços privados do endpoint",
+        "why": "O resolvedor da VPC os entrega quando o nome de sempre é perguntado."
+      },
+      {
+        "text": "Nada: o nome de sempre resolve para o endpoint dentro da VPC",
+        "why": "Isso. `sts.sa-east-1.amazonaws.com` recebe outra resposta dentro da VPC, e o código não se mexe."
+      },
+      {
+        "text": "Ela precisa de um SDK mais novo que conheça endpoints",
+        "why": "O SDK nem fica sabendo que existe um endpoint; o DNS faz o trabalho."
+      }
+    ]
+  },
+  "ex-eh9mfkk8": {
+    "prompt": "Quais atributos da VPC precisam estar ligados para o DNS privado de um interface endpoint funcionar? Marque todos os que se aplicam.",
+    "hint": "Dois deles, e uma VPC nova só tem um ligado.",
+    "choices": [
+      {
+        "text": "`enableDnsSupport`",
+        "why": "Isso. Ligado numa VPC nova."
+      },
+      {
+        "text": "`MapPublicIpOnLaunch`",
+        "why": "Essa é uma configuração de sub-rede sobre endereços públicos, sem relação."
+      },
+      {
+        "text": "`enableDnsHostnames`",
+        "why": "Isso. Desligado numa VPC nova, e por isso a lição o ligou."
+      },
+      {
+        "text": "`AssignIpv6AddressOnCreation`",
+        "why": "Uma configuração IPv6 de sub-rede; o DNS privado funciona por IPv4."
+      }
+    ]
+  },
+  "ex-d80k7rpd": {
+    "prompt": "Um interface endpoint fica só em duas zonas. Com os preços da lição e 730 horas, quantos dólares por mês custam as horas dele, antes de qualquer gigabyte?",
+    "hint": "0,021 por hora para cada zona.",
+    "unit": "dólares"
+  },
+  "ex-qysb1by9": {
+    "prompt": "Os NAT gateways ficam, por causa do provedor de pagamentos. As máquinas da aplicação também baixam 2 TB (2.048 GB) por mês de imagens de um registro de contêineres. Só pelo dinheiro, por onde essas imagens deveriam vir?",
+    "hint": "Precifique os dois caminhos para 2.048 GB.",
+    "choices": [
+      {
+        "text": "Pelos NAT gateways, já que já estão pagos",
+        "why": "As horas deles estão pagas; os gigabytes, não: 2.048 × 0,093 = 190,46 por mês."
+      },
+      {
+        "text": "Um interface endpoint: uns 66,47 por mês, contra 190,46 pelo NAT",
+        "why": "Isso. 45,99 pelas três zonas mais 2.048 × 0,01 = 20,48. Bem acima do equilíbrio de 554 GB."
+      },
+      {
+        "text": "Um gateway endpoint, que é grátis",
+        "why": "Um registro de contêineres não é um dos dois serviços com gateway endpoint."
+      },
+      {
+        "text": "Tanto faz: a AWS cobra endpoints e NAT igual por gigabyte",
+        "why": "0,01 contra 0,093 é toda a diferença em que esta questão se apoia."
+      }
+    ]
+  },
+  "ex-7ccw2ds5": {
+    "prompt": "As sub-redes de dados ganham uma tabela de rotas própria com `local` e a prefix list do S3, e sem `0.0.0.0/0`. O que isso dá à loja além da economia?",
+    "hint": "Que saída sobra?",
+    "choices": [
+      {
+        "text": "Backups mais rápidos, já que o endpoint fica na mesma zona",
+        "why": "A lição mediu preços, não velocidade, e um gateway endpoint não tem zona."
+      },
+      {
+        "text": "O banco de dados fica sem caminho até a internet",
+        "why": "Isso. A única saída dele é a rota grátis para o S3, então um banco de dados comprometido não consegue chamar outro lugar."
+      },
+      {
+        "text": "Os clientes podem alcançar o banco de dados direto pelo S3",
+        "why": "Uma rota de saída não dá a ninguém um caminho de entrada, e o S3 não encaminha conexões para uma VPC."
+      },
+      {
+        "text": "Os security groups podem ser tirados do banco de dados",
+        "why": "Rotas e filtros fazem trabalhos diferentes; o `db-sg` ainda decide quem pode conectar."
+      }
+    ]
+  },
+  "ex-3g7vjrj9": {
+    "prompt": "O que precisa ficar na frente de um serviço que a loja publica como endpoint service?",
+    "hint": "Um tipo específico de load balancer.",
+    "choices": [
+      {
+        "text": "Um Application Load Balancer",
+        "why": "Um endpoint service recebe um Network Load Balancer, ou um Gateway Load Balancer para appliances."
+      },
+      {
+        "text": "Um Network Load Balancer",
+        "why": "Isso. O da loja é o `stock-api`, interno, nas três sub-redes app."
+      },
+      {
+        "text": "Um internet gateway",
+        "why": "O PrivateLink mantém o tráfego fora da internet; nenhum gateway para ela entra na história."
+      },
+      {
+        "text": "Um NAT gateway em cada zona",
+        "why": "NAT é para conexões de saída à internet. Os consumidores chegam ao serviço pelo próprio endpoint."
+      }
+    ]
+  },
+  "ex-581xx4k8": {
+    "prompt": "Suponha que a VPC do staging também tivesse recebido `10.20.0.0/16`, o mesmo intervalo da produção. Ela ainda poderia usar a API de estoque pelo PrivateLink?",
+    "hint": "O que o PrivateLink liga, e o que não liga?",
+    "choices": [
+      {
+        "text": "Depois que o staging acrescentar um intervalo secundário que não se sobreponha",
+        "why": "Nenhum intervalo precisa mudar. A sobreposição importa para peering e Transit Gateway, que roteiam entre intervalos."
+      },
+      {
+        "text": "Não: intervalos sobrepostos não podem ser ligados de jeito nenhum",
+        "why": "Eles não podem ser roteados entre si; o PrivateLink não roteia entre eles."
+      },
+      {
+        "text": "Sim: nada roteia entre os dois intervalos",
+        "why": "Isso. O staging vê uma interface na própria sub-rede; a produção vê conexões vindas dos endereços do load balancer dela."
+      },
+      {
+        "text": "Sim, por um NAT gateway de cada lado",
+        "why": "NAT gateways não entram; o endpoint e o load balancer são o caminho inteiro."
+      }
+    ]
+  },
+  "ex-0yayahbn": {
+    "prompt": "O que o `--acceptance-required` no endpoint service muda?",
+    "hint": "Permitir um principal é um controle; este é o outro.",
+    "choices": [
+      {
+        "text": "O endpoint de cada consumidor espera até o provedor aceitá-lo",
+        "why": "Isso. A loja decide cada conexão, e não apenas cada conta."
+      },
+      {
+        "text": "Os consumidores precisam aceitar os termos do provedor antes de criar um endpoint",
+        "why": "Não há termos a aceitar; o aceite é do provedor, conexão por conexão."
+      },
+      {
+        "text": "O NLB recusa conexões até um certificado ser instalado",
+        "why": "Certificados são assunto da lição 22 e não têm relação com o aceite."
+      },
+      {
+        "text": "Ele deixa qualquer conta da AWS conectar, sujeito a aprovação",
+        "why": "Quem pode pedir, para começo de conversa, é a lista de principais permitidos, que só nomeia `shop-staging`."
+      }
+    ]
+  },
+  "ex-pnj5sptt": {
+    "prompt": "O moto criou o endpoint do staging como `available` na hora. Que estado a AWS teria dado a ele?",
+    "hint": "O serviço exige aceite.",
+    "choices": [
+      {
+        "text": "`available`, como o moto fez",
+        "why": "Não enquanto o serviço exigir aceite e ninguém tiver aceitado."
+      },
+      {
+        "text": "`rejected`, já que o staging é outra conta",
+        "why": "O staging é o principal permitido; nada o rejeitou."
+      },
+      {
+        "text": "`pendingAcceptance`",
+        "why": "Isso. Ele não carrega tráfego até a loja rodar `accept-vpc-endpoint-connections`, que o moto responde com erro."
+      },
+      {
+        "text": "`failed`, já que as duas VPCs estão em contas diferentes",
+        "why": "Contas diferentes são o caso para o qual o PrivateLink foi feito."
+      }
+    ]
+  },
+  "ex-vpd8rn7f": {
+    "prompt": "Ponha em ordem os passos de oferecer a API de estoque ao staging.",
+    "hint": "O provedor constrói e abre a porta; o consumidor bate; o provedor deixa entrar.",
+    "items": [
+      "criar o Network Load Balancer interno `stock-api`",
+      "criar o endpoint service sobre ele, com aceite obrigatório",
+      "permitir a conta `shop-staging` como principal",
+      "no staging, criar um interface endpoint para o nome do serviço",
+      "na produção, aceitar a conexão do endpoint"
+    ],
+    "trap": "O aceite vem por último: não há o que aceitar até o endpoint do consumidor existir."
+  },
+  "ex-mkyeyac2": {
+    "prompt": "Ligue cada necessidade ao que a atende.",
+    "hint": "A última tabela da lição.",
+    "pairs": [
+      {
+        "left": "uma rota privada até o DynamoDB",
+        "right": "um gateway endpoint"
+      },
+      {
+        "left": "alcançar o Systems Manager sem a internet",
+        "right": "um interface endpoint"
+      },
+      {
+        "left": "oferecer uma API a outra conta, num sentido só",
+        "right": "um endpoint service com PrivateLink"
+      },
+      {
+        "left": "máquinas de duas VPCs conversando livremente",
+        "right": "peering ou um Transit Gateway"
+      }
+    ],
+    "right_distractors": [
+      "um NAT gateway"
+    ]
+  },
+  "ex-hx5bkz50": {
+    "prompt": "A VPC de uma conta nova roda jobs em lote que leem e gravam no S3 e não chamam mais nada. Que arranjo dá aos jobs o que precisam pelo menor preço?",
+    "hint": "Que caminho até o S3 é grátis, e o que mais custaria por hora?",
+    "choices": [
+      {
+        "text": "Um NAT gateway por zona, como na produção",
+        "why": "São 214,62 por mês antes dos 0,093 por gigabyte, para um tráfego que uma rota grátis carrega."
+      },
+      {
+        "text": "Um interface endpoint para o S3 em cada zona",
+        "why": "Funciona, a 45,99 por mês mais 0,01 por gigabyte; o tipo gateway faz o mesmo por nada."
+      },
+      {
+        "text": "Um NAT gateway compartilhado, já que os jobs aguentam perder uma zona",
+        "why": "Mais barato que três, e ainda 71,54 por mês mais 0,093 por gigabyte por algo de que os jobs não precisam."
+      },
+      {
+        "text": "Um gateway endpoint para o S3 nas tabelas de rotas deles, e nenhuma rota para a internet",
+        "why": "Isso. Grátis por hora e por gigabyte, e os jobs ainda ficam sem caminho nenhum até a internet."
+      }
+    ]
+  },
+  "ex-936mrwx5": {
+    "prompt": "Quais destes não custam nada nas listas de preços que as lições leram? Marque todos os que se aplicam.",
+    "hint": "Dois dos cinco são cobrados por hora.",
+    "choices": [
+      {
+        "text": "Um gateway endpoint",
+        "why": "Isso. Nenhuma linha por hora e nenhuma por gigabyte."
+      },
+      {
+        "text": "As horas de um interface endpoint",
+        "why": "0,021 por hora para cada zona em que ele fica."
+      },
+      {
+        "text": "Os gigabytes que o S3 recebe por um gateway endpoint",
+        "why": "Isso. É a economia dos backups, 95,23 por mês."
+      },
+      {
+        "text": "As horas de um internet gateway",
+        "why": "Isso. Lição 17: ele não tem cobrança por hora; os bytes dele são transferência de dados."
+      },
+      {
+        "text": "As horas de um NAT gateway",
+        "why": "0,093 por hora, e por isso compartilhar um era tentador."
+      }
+    ]
+  }
+}

@@ -1,0 +1,404 @@
+{
+  "ex-q5v8qyhg": {
+    "prompt": "A loja cria uma zona hospedada pública para `shop.example.com` e escreve os registros. Ninguém na internet recebe resposta dela. O que falta?",
+    "hint": "Quem manda quem pergunta até a zona?",
+    "choices": [
+      {
+        "text": "Uma zona privada com o mesmo nome, associada à VPC",
+        "why": "Uma zona privada responde dentro de uma VPC e em nenhum outro lugar. Ela não acrescenta nada para um estranho na internet."
+      },
+      {
+        "text": "A delegação no registrador",
+        "why": "Isso. Até os registros NS do domínio pai nomearem os servidores do Route 53, nenhum resolvedor é mandado à zona."
+      },
+      {
+        "text": "Uma região, já que o `env.sh` nomeia `sa-east-1` e a zona não tem nenhuma",
+        "why": "O Route 53 é global; uma zona nunca tem região, e não é por isso que ninguém recebe resposta."
+      },
+      {
+        "text": "Um registro SOA, que toda zona pública precisa receber à mão depois de criada",
+        "why": "O SOA e os NS são criados junto com a zona, como a listagem mostrou."
+      }
+    ]
+  },
+  "ex-7jvkf4y4": {
+    "prompt": "Uma máquina na VPC da loja pergunta por `db.shop.internal`, que vive numa zona privada. Que parte da AWS responde?",
+    "hint": "O endereço a que ela pergunta fica dentro da VPC.",
+    "choices": [
+      {
+        "text": "Um dos quatro servidores de nomes do conjunto de delegação da zona",
+        "why": "Esses servem zonas públicas para a internet. Uma zona privada não é delegada a lugar nenhum."
+      },
+      {
+        "text": "O registrador, que guarda uma cópia de toda zona",
+        "why": "Um registrador guarda a delegação de um domínio, não os registros dele, e não sabe nada de uma zona privada."
+      },
+      {
+        "text": "O Route 53 Resolver no endereço base da VPC mais dois",
+        "why": "Isso: `10.20.0.2` nesta VPC. Ele responde primeiro pelas zonas privadas associadas, enquanto o suporte a DNS e os nomes de host estão ligados."
+      },
+      {
+        "text": "Qualquer resolvedor da internet, depois que a zona é associada",
+        "why": "A associação torna a zona visível só para aquela VPC; para a internet ela não existe."
+      }
+    ]
+  },
+  "ex-h0kpacnb": {
+    "prompt": "Para arrumar, um colega apaga a zona pública da loja e cria uma nova com os mesmos registros. O site para de resolver em todo lugar. Por quê?",
+    "hint": "O que o registrador anotou: uma zona, ou servidores?",
+    "choices": [
+      {
+        "text": "Os registros foram copiados sem os TTLs",
+        "why": "Um TTL faltando seria recusado pelo lote; não tornaria inalcançável uma zona correta."
+      },
+      {
+        "text": "Uma zona nova leva dois dias para ficar `INSYNC`",
+        "why": "Mudanças chegam aos servidores do Route 53 em cerca de um minuto. Dois dias é o TTL dos NS do pai, e eles ainda nomeiam os servidores antigos."
+      },
+      {
+        "text": "A zona nova tem um novo conjunto de servidores de nomes, e `.com` ainda delega para os antigos",
+        "why": "Isso. A delegação nomeia servidores, e o conjunto é escolhido quando a zona é criada. O registrador precisa receber os quatro novos."
+      },
+      {
+        "text": "Apagar uma zona também apaga o domínio no registrador",
+        "why": "O registro do domínio fica intacto; ele só aponta para servidores que não respondem mais por nada."
+      }
+    ]
+  },
+  "ex-fc2dyjc7": {
+    "prompt": "Pela lista de 11 de setembro de 2026, quanto a loja paga por mês por 30 zonas hospedadas, antes de qualquer consulta?",
+    "hint": "As primeiras 25 têm um preço, o resto outro.",
+    "unit": "dólares"
+  },
+  "ex-1bgegpdt": {
+    "prompt": "Um script de implantação repete o `create-hosted-zone` depois de estourar o tempo, com o mesmo `--caller-reference`. O que a AWS faz com a repetição?",
+    "hint": "Para que serve a referência?",
+    "choices": [
+      {
+        "text": "Cria uma segunda zona, exatamente como o moto fez no laboratório",
+        "why": "Esse é o comportamento do moto, e a seção diz que o moto não cumpre essa promessa."
+      },
+      {
+        "text": "Recusa com `HostedZoneAlreadyExists`",
+        "why": "Isso. A referência existe para que uma repetição não deixe duas zonas com o mesmo nome."
+      },
+      {
+        "text": "Substitui a primeira zona, mantendo os servidores de nomes dela",
+        "why": "O Route 53 nunca substitui uma zona num create. Ele cria uma ou recusa."
+      },
+      {
+        "text": "Junta as duas requisições numa mudança só e responde `PENDING`",
+        "why": "Um lote de mudanças trata de registros. Uma zona é criada uma vez, ou a segunda tentativa é recusada."
+      }
+    ]
+  },
+  "ex-z5gyx7ac": {
+    "prompt": "Um lote tem cinco ações `CREATE`, e a terceira cita um registro que já existe. O que o Route 53 faz?",
+    "hint": "Um lote é uma unidade.",
+    "choices": [
+      {
+        "text": "Aplica as duas primeiras e para na terceira",
+        "why": "Isso deixaria a zona mudada pela metade, que é justamente o que um lote existe para evitar."
+      },
+      {
+        "text": "Aplica as quatro que dá para aplicar e informa a terceira",
+        "why": "O Route 53 nunca aplica parte de um lote. As quatro válidas esperam junto com a que falhou."
+      },
+      {
+        "text": "Não aplica nenhuma e responde `InvalidChangeBatch`",
+        "why": "Isso. O lote é aplicado inteiro ou não é, e o erro nomeia o registro que o parou."
+      },
+      {
+        "text": "Transforma a terceira num `UPSERT` e aplica as cinco",
+        "why": "O Route 53 faz o que o lote diz. Escolher `UPSERT` é decisão de quem escreve, não do serviço."
+      }
+    ]
+  },
+  "ex-e56mhcb5": {
+    "prompt": "A loja quer que `shop.example.com`, sem nada na frente, leve ao balanceador de carga. Por que um registro de alias é a resposta e um `CNAME` não?",
+    "hint": "O que mais mora no ápice?",
+    "choices": [
+      {
+        "text": "Um `CNAME` tem de estar sozinho no nome, e o ápice tem NS e SOA",
+        "why": "Isso. Para quem pergunta, um alias é um registro `A` comum, então pode ficar ao lado do NS, do SOA e do MX."
+      },
+      {
+        "text": "Um `CNAME` não pode apontar para um nome fora da própria zona, e o nome do balanceador mora na da AWS",
+        "why": "Pode; é para isso que um `CNAME` mais serve. A regra que importa é sobre o ápice."
+      },
+      {
+        "text": "O nome de um balanceador muda a cada hora, e só um alias o acompanha",
+        "why": "O nome é estável; o que muda são os endereços, e um `CNAME` também os seguiria. O problema é onde o registro fica."
+      },
+      {
+        "text": "`CNAME` é um tipo que o moto não guarda",
+        "why": "O moto guardou o `www` como `CNAME`, e chegou a guardar um no ápice, que a AWS recusa."
+      }
+    ]
+  },
+  "ex-b3z601hx": {
+    "prompt": "No moto, o `get-change` respondeu `INSYNC` para `/change/NOSUCHCHANGE`. O que você deve concluir?",
+    "hint": "Essa mudança chegou a existir?",
+    "choices": [
+      {
+        "text": "A mudança foi aplicada antes de o moto reiniciar",
+        "why": "Nunca houve mudança com esse id. O moto responde o mesmo para qualquer id."
+      },
+      {
+        "text": "Nada sobre a zona: o moto responde isso para qualquer id",
+        "why": "Isso. No moto, a listagem da própria zona é a prova; o `get-change` só mostra o formato da resposta."
+      },
+      {
+        "text": "Que a AWS também pula o estado `PENDING` em mudanças pequenas",
+        "why": "A AWS responde `PENDING` até todo servidor de nomes ter a mudança. A resposta do moto não diz nada sobre a AWS."
+      }
+    ]
+  },
+  "ex-pc2faf7j": {
+    "prompt": "Ligue cada tipo de registro ao que ele responde.",
+    "hint": "Cinco tipos do primeiro lote da loja, e uma resposta sobrando.",
+    "pairs": [
+      {
+        "left": "`A`",
+        "right": "um endereço IPv4"
+      },
+      {
+        "left": "`AAAA`",
+        "right": "um endereço IPv6"
+      },
+      {
+        "left": "`MX`",
+        "right": "o servidor de e-mail do domínio, com uma preferência"
+      },
+      {
+        "left": "`TXT`",
+        "right": "texto livre, como uma política SPF"
+      },
+      {
+        "left": "`CNAME`",
+        "right": "outro nome para consultar no lugar"
+      }
+    ],
+    "right_distractors": [
+      "os quatro servidores de nomes da zona"
+    ]
+  },
+  "ex-z2amkrwt": {
+    "prompt": "Um registro tem TTL de 86.400. Cinco minutos depois de ele ser mudado, um cliente ainda chega ao endereço antigo. De onde vem a resposta antiga?",
+    "hint": "Nada é empurrado para lugar nenhum.",
+    "choices": [
+      {
+        "text": "De servidores do Route 53 que ainda não receberam a mudança",
+        "why": "Esses a recebem em cerca de um minuto. Cinco minutos depois, todos respondem com o endereço novo."
+      },
+      {
+        "text": "Do registrador, que ainda guarda o registro antigo",
+        "why": "Um registrador guarda a delegação, não os registros da zona."
+      },
+      {
+        "text": "Do cache de um resolvedor, guardada por até um dia",
+        "why": "Isso. O resolvedor recebeu a promessa de 86.400 segundos, e a cumpre. Baixar o TTL um dia antes é a solução."
+      },
+      {
+        "text": "Do moto, que serve DNS na porta 4567",
+        "why": "O moto não serve DNS nenhum. E um cliente na internet nunca chegaria até ele."
+      }
+    ]
+  },
+  "ex-41q411rw": {
+    "prompt": "Ponha em ordem os passos para mudar o `www` para um endereço novo com a menor demora.",
+    "hint": "Os caches têm de estar com o TTL curto antes da mudança.",
+    "items": [
+      "baixar o TTL do registro para 60 segundos",
+      "esperar um TTL antigo",
+      "mudar o registro para o endereço novo",
+      "subir o TTL de novo quando o endereço novo tiver se provado"
+    ],
+    "trap": "Mudar o endereço antes de esperar é o deslize comum: os caches que perguntaram antes de o TTL baixar ainda guardam a resposta antiga pelo TTL antigo, longo."
+  },
+  "ex-ps29g20t": {
+    "prompt": "O registro primário da API tem uma verificação de saúde. Enquanto ela informa não saudável, o que o Route 53 responde para `api.shop.example.com`?",
+    "hint": "Um par de failover tem duas metades.",
+    "choices": [
+      {
+        "text": "Nada, até o primário ficar saudável de novo",
+        "why": "É isso que o secundário existe para evitar."
+      },
+      {
+        "text": "Os dois endereços, e o cliente escolhe um",
+        "why": "Devolver vários valores saudáveis é multivalue. Failover dá um registro, o primário ou o secundário."
+      },
+      {
+        "text": "O secundário, `198.51.100.20` na Virgínia, até a verificação do primário passar de novo",
+        "why": "Isso. O primário fica de fora enquanto a verificação está não saudável, e o secundário, sem verificação própria, é sempre considerado saudável."
+      },
+      {
+        "text": "O primário, já que o Route 53 fica no caminho e redireciona os pacotes",
+        "why": "O Route 53 nunca toca no tráfego. Ele escolhe uma resposta, e a resposta é o secundário."
+      }
+    ]
+  },
+  "ex-8epg0atn": {
+    "prompt": "Uma licença de streaming permite um catálogo só para quem assiste do Brasil. Que política de roteamento serve?",
+    "hint": "Uma lei se importa com onde a pessoa está, não com a rapidez da rede.",
+    "choices": [
+      {
+        "text": "Latência, para os brasileiros chegarem a São Paulo primeiro",
+        "why": "Latência segue a rede, e alguém no Uruguai pode muito bem ter a menor latência até São Paulo também."
+      },
+      {
+        "text": "Ponderada, com todo o peso em São Paulo",
+        "why": "Um peso é o mesmo para todo mundo que pergunta. Ele não distingue um país de outro."
+      },
+      {
+        "text": "Geoproximidade, com um viés grande para São Paulo",
+        "why": "Geoproximidade traça uma fronteira por distância, e uma fronteira de país não é uma distância."
+      },
+      {
+        "text": "Geolocalização por país, com um registro `Default`",
+        "why": "Isso. Ela escolhe por onde quem pergunta está, que é do que uma licença trata, e o `Default` responde ao resto do mundo."
+      }
+    ]
+  },
+  "ex-47nfwrt4": {
+    "prompt": "Registros que dividem um nome sob uma política de roteamento são distinguidos pelo `___`.",
+    "hint": "O campo que guardava `current`, `canary`, `sao-paulo` e `virginia`.",
+    "blanks": [
+      {
+        "accept": [
+          "SetIdentifier"
+        ]
+      }
+    ]
+  },
+  "ex-ev0dzkha": {
+    "prompt": "Um nome tem três registros ponderados com pesos 6, 3 e 1. Que fatia das respostas, em porcentagem, o registro de peso 3 recebe?",
+    "hint": "Um peso dividido pela soma dos pesos.",
+    "unit": "por cento"
+  },
+  "ex-96263x7a": {
+    "prompt": "No moto, o `get-health-check-status` informa `Success: HTTP Status Code: 200` para uma verificação de `203.0.113.20`. Um colega toma isso como prova de que o failover funciona. O que está errado nisso?",
+    "hint": "Algo viajou até esse endereço?",
+    "choices": [
+      {
+        "text": "Nada: o moto sonda o endereço uma vez, a partir de `us-east-1`, e um sucesso basta para uma verificação desse tipo",
+        "why": "O moto não sonda nada. A região e o código da resposta são os mesmos para toda verificação."
+      },
+      {
+        "text": "Só que o status precisa de três sucessos antes de contar",
+        "why": "O limite trata de sondas reais, e aqui não houve nenhuma."
+      },
+      {
+        "text": "O moto não enviou sonda; ele diz isso de toda verificação",
+        "why": "Isso. O moto confirma que os registros e a verificação estão ligados; se a troca acontece é a AWS que mostra, não o laboratório."
+      },
+      {
+        "text": "A verificação é HTTPS, e o moto só sonda HTTP simples",
+        "why": "O moto não sonda nenhum dos dois. O protocolo não muda uma resposta que ele inventa."
+      }
+    ]
+  },
+  "ex-mkpykj2z": {
+    "prompt": "Quais destes, pela lista de 11 de setembro de 2026, não custam nada? Marque todos os que se aplicam.",
+    "hint": "Duas linhas da tabela são grátis, sob condições.",
+    "choices": [
+      {
+        "text": "Consultas respondidas a partir de um alias para um balanceador de carga",
+        "why": "Isso. `Intra-AWS-DNS-Queries` tem preço zero."
+      },
+      {
+        "text": "Consultas respondidas a partir de um `CNAME` para um balanceador de carga",
+        "why": "Um `CNAME` é um registro comum, cobrado a 0,40 o milhão. Só o alias é grátis."
+      },
+      {
+        "text": "As primeiras 50 verificações de saúde de endpoints da AWS",
+        "why": "Isso. `Health-Check-AWS` é grátis até 50, depois 0,50 por mês cada."
+      },
+      {
+        "text": "Uma verificação de saúde de `203.0.113.20`",
+        "why": "Esse endereço fica fora da AWS, então é a linha de 0,75, mais 2,00 pelo HTTPS."
+      },
+      {
+        "text": "O primeiro milhão de consultas de geolocalização do mês",
+        "why": "Consultas de geolocalização custam 0,70 o milhão desde a primeira."
+      }
+    ]
+  },
+  "ex-1g28k2ht": {
+    "prompt": "`aws route53 test-dns-answer` responde `404 Not Found` no laboratório. O que isso diz sobre o registro?",
+    "hint": "Quem respondeu o 404?",
+    "choices": [
+      {
+        "text": "Que os registros ponderados nunca foram escritos",
+        "why": "A listagem logo acima os imprimiu. O 404 é sobre o comando, não sobre os registros."
+      },
+      {
+        "text": "Nada: o moto 5.2.3 não implementa o comando",
+        "why": "Isso. Na AWS o comando responde com os valores que o Route 53 devolveria; no moto ele não existe."
+      },
+      {
+        "text": "Que o Route 53 não tem resposta para `search.shop.example.com`",
+        "why": "Um nome que falta voltaria como uma resposta sobre o nome. Isto é o moto dizendo que não tem essa operação."
+      },
+      {
+        "text": "Que a zona é privada e não pode ser testada",
+        "why": "A zona perguntada é a pública, e o 404 seria o mesmo para qualquer uma."
+      }
+    ]
+  },
+  "ex-c9rg009r": {
+    "prompt": "A loja muda a API de São Paulo para a Virgínia com um par de failover, TTL 60. Clientes relatam o endereço antigo por uma hora depois da troca. Que explicação bate com a lição?",
+    "hint": "Sessenta segundos é uma promessa; quem pode não cumpri-la?",
+    "choices": [
+      {
+        "text": "O Route 53 leva uma hora para notar que uma verificação ficou não saudável e parar de dar o primário",
+        "why": "Com intervalo de 30 segundos e três falhas, o veredito sai em cerca de um minuto e meio."
+      },
+      {
+        "text": "Um cache no caminho guardou a resposta além do TTL",
+        "why": "Isso. O TTL é o piso da velocidade de um failover, e só vale o quanto os caches o respeitam; alguns clientes e resolvedores guardam respostas por mais tempo."
+      },
+      {
+        "text": "O secundário não tinha verificação, então o Route 53 se recusou a usá-lo",
+        "why": "Um registro sem verificação é sempre considerado saudável, e é por isso que o secundário chegou a ser dado."
+      },
+      {
+        "text": "O lote de mudanças ainda estava `PENDING`",
+        "why": "Um failover não precisa de lote: os dois registros já existem, e a verificação de saúde decide entre eles."
+      }
+    ]
+  },
+  "ex-mkp91ngm": {
+    "prompt": "Ponha em ordem os passos que um resolvedor dá para achar `mail.shop.example.com`, começando com o cache vazio.",
+    "hint": "Do topo da árvore até a zona.",
+    "items": [
+      "perguntar a um servidor raiz, que o manda a `.com`",
+      "perguntar a um servidor de `.com`, que o manda aos quatro servidores de nomes do Route 53",
+      "perguntar a `ns-2048.awsdns-64.com`, que responde pela zona hospedada",
+      "guardar a resposta pelo TTL do registro"
+    ],
+    "trap": "Começar pelo Route 53 é o deslize comum: o resolvedor só fica sabendo desses servidores por `.com`, que é o que a delegação escreveu lá."
+  },
+  "ex-pvamxg8p": {
+    "prompt": "Os servidores da loja precisam achar `db.shop.internal`, e ninguém de fora pode. Mais uma VPC, na conta `shop-staging`, precisa dos mesmos nomes. O que a lição dá para isso?",
+    "hint": "Uma zona privada pode ser vista por mais de uma rede.",
+    "choices": [
+      {
+        "text": "Uma segunda zona pública, delegada só para staging",
+        "why": "Uma zona pública responde a qualquer um que pergunte; a delegação não escolhe quem pergunta."
+      },
+      {
+        "text": "Uma cópia da zona privada na conta de staging, mantida igual à mão",
+        "why": "Funcionaria até o dia em que as cópias divergissem. A lição cita um jeito de compartilhar a zona única."
+      },
+      {
+        "text": "Associar a mesma zona privada à VPC de staging",
+        "why": "Isso. `associate-vpc-with-hosted-zone` aceita uma VPC de outra conta depois que o dono da zona a autoriza."
+      },
+      {
+        "text": "Um registro de geolocalização que responde só para `10.30.0.0/16`",
+        "why": "Geolocalização trabalha com países e continentes, e uma faixa privada não está em nenhum deles."
+      }
+    ]
+  }
+}

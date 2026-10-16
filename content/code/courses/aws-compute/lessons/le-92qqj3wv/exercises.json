@@ -1,0 +1,721 @@
+[
+  {
+    "id": "ex-8qg9q1wv",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In 123456789012.dkr.ecr.sa-east-1.amazonaws.com/shop/web:1.0.0, what does sa-east-1 decide?",
+    "hint": "Each account has one registry per region.",
+    "choices": [
+      {
+        "text": "The only region where a task may run this image",
+        "correct": false,
+        "why": "A task in another region may pull it; the pull is slower and the transfer is charged."
+      },
+      {
+        "text": "Which regional registry stores its layers",
+        "correct": true,
+        "why": "Right. The registry is per account and per region, and the layers live in that region."
+      },
+      {
+        "text": "Nothing: Docker finds the registry from the repository name",
+        "correct": false,
+        "why": "Docker reads the registry from the part before the first slash, so the hostname is the destination."
+      },
+      {
+        "text": "The region where the image was built, kept as a label",
+        "correct": false,
+        "why": "Where the build ran is not recorded in the address; the address says where the image is stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1st09td",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A role in account 444455556666 has ecr:BatchGetImage and ecr:GetDownloadUrlForLayer allowed by its own IAM permissions, and its pulls of shop/web are refused. What is missing?",
+    "hint": "Two accounts, two halves that have to agree.",
+    "choices": [
+      {
+        "text": "Tag immutability on your repository",
+        "correct": false,
+        "why": "Mutability decides whether tags move; it has nothing to do with who may read."
+      },
+      {
+        "text": "Scan on push, which ECR requires before a pull from another account",
+        "correct": false,
+        "why": "Scanning is about findings, and no pull waits for it."
+      },
+      {
+        "text": "A repository policy that lets 444455556666 in",
+        "correct": true,
+        "why": "Right. From another account the resource has to allow the caller as well as the caller's own IAM."
+      },
+      {
+        "text": "A KMS key of their own set on your repository",
+        "correct": false,
+        "why": "Encryption at rest is chosen at creation by the owner, and AES256 does not block another account."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qffw3ks",
+    "version": 1,
+    "section": "repositories",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Whether a repository's layers are encrypted with ECR's key or a KMS key of your own is decided when the repository is ___, and it cannot be changed afterwards.",
+    "hint": "One moment in the life of a repository.",
+    "blanks": [
+      {
+        "accept": [
+          "created",
+          "made"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-m4dwsw5w",
+    "version": 1,
+    "section": "repositories",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "aws ecr create-repository --repository-name Shop/Web is refused with InvalidParameterException. Why?",
+    "hint": "Read the regular expression in the error.",
+    "choices": [
+      {
+        "text": "A slash is not allowed in a repository name",
+        "correct": false,
+        "why": "shop/web was created a moment earlier; the slash is part of the name."
+      },
+      {
+        "text": "Capital letters",
+        "correct": true,
+        "why": "Right. The pattern accepts lowercase letters, digits, and . _ - / between them."
+      },
+      {
+        "text": "The repository Shop has to exist first, as the parent",
+        "correct": false,
+        "why": "There are no parent repositories: shop/ is a prefix of the name, not a folder."
+      },
+      {
+        "text": "moto refuses a name that AWS would accept",
+        "correct": false,
+        "why": "moto carries the same expression AWS publishes; AWS refuses it as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0bc7y2h",
+    "version": 1,
+    "section": "repositories",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A task in the same account pulls shop/web:1.0.0. Which permissions does its role need? Choose all that apply.",
+    "hint": "One to log in, two to read.",
+    "choices": [
+      {
+        "text": "ecr:GetAuthorizationToken",
+        "correct": true,
+        "why": "It produces the token docker login uses."
+      },
+      {
+        "text": "ecr:BatchGetImage",
+        "correct": true,
+        "why": "It reads the manifest, the first thing a pull fetches."
+      },
+      {
+        "text": "ecr:GetDownloadUrlForLayer",
+        "correct": true,
+        "why": "It fetches each layer the manifest names."
+      },
+      {
+        "text": "ecr:PutImage",
+        "correct": false,
+        "why": "That writes a manifest; a pull reads one."
+      },
+      {
+        "text": "A repository policy naming the account",
+        "correct": false,
+        "why": "Inside one account, IAM alone decides. The repository policy is for other accounts."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfsgzs5w",
+    "version": 1,
+    "section": "pushing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the ECR API calls behind a docker login and docker push in the order they happen.",
+    "hint": "The manifest names the layers, so it cannot go first.",
+    "items": [
+      "GetAuthorizationToken",
+      "BatchCheckLayerAvailability",
+      "InitiateLayerUpload",
+      "UploadLayerPart",
+      "CompleteLayerUpload",
+      "PutImage"
+    ],
+    "trap": "PutImage is last: the manifest it sends refers to layers the registry has to hold already."
+  },
+  {
+    "id": "ex-9kwakgq6",
+    "version": 1,
+    "section": "pushing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an image's digest?",
+    "hint": "sha256sum printed it.",
+    "choices": [
+      {
+        "text": "A random id ECR assigns when a push completes",
+        "correct": false,
+        "why": "Nothing about it is random: anybody holding the same manifest computes the same digest."
+      },
+      {
+        "text": "The SHA-256 of the biggest layer",
+        "correct": false,
+        "why": "Each layer has a digest of its own; the image's is computed over the manifest that lists them."
+      },
+      {
+        "text": "The tag, with the registry address in front of it",
+        "correct": false,
+        "why": "That is the image's name, and a tag moves; a digest does not."
+      },
+      {
+        "text": "The SHA-256 of the manifest's bytes",
+        "correct": true,
+        "why": "Right. sha256sum manifest.json printed the same value as docker image inspect."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fr68rg0",
+    "version": 1,
+    "section": "pushing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lesson's image is 25,988,426 bytes of compressed layers. At 0.10 USD per GB-month, with 1 GB = 1,000,000,000 bytes, what does storing it cost per month, in USD, to four decimal places?",
+    "hint": "Bytes over a billion, times the price.",
+    "value": 0.0026,
+    "tolerance": 0.0001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-z6jr5w7e",
+    "version": 1,
+    "section": "pushing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Against moto, put-image returned a digest different from the one sha256sum manifest.json printed. Which of the two would AWS report for this image?",
+    "hint": "One of them is computed from the bytes, the other is moto's own arithmetic.",
+    "choices": [
+      {
+        "text": "The one sha256sum printed",
+        "correct": true,
+        "why": "Right. AWS hashes the manifest, and docker push reports that same value."
+      },
+      {
+        "text": "The one moto returned, since the registry is what computes it",
+        "correct": false,
+        "why": "moto derives its value from the list of layer digests; AWS does not."
+      },
+      {
+        "text": "Both, as ECR keeps one digest per tag",
+        "correct": false,
+        "why": "A digest belongs to the manifest, and two tags on one manifest share it."
+      },
+      {
+        "text": "Neither: AWS digests the config blob rather than the manifest",
+        "correct": false,
+        "why": "The config has a digest too, listed inside the manifest; the image is named by the manifest's."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w9p77vm",
+    "version": 1,
+    "section": "pushing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The put-image the lesson ran against moto would be refused by AWS. Why?",
+    "hint": "What does a push send before the manifest?",
+    "choices": [
+      {
+        "text": "The manifest was a file, and PutImage accepts manifests from docker alone",
+        "correct": false,
+        "why": "PutImage accepts any manifest; AWS even documents it for retagging with batch-get-image."
+      },
+      {
+        "text": "None of the layers it names was uploaded (LayersNotFoundException)",
+        "correct": true,
+        "why": "Right. A manifest may only name layers the repository already holds."
+      },
+      {
+        "text": "The tag 1.0.0 had not been created beforehand",
+        "correct": false,
+        "why": "Tags are not created separately; PutImage creates the tag."
+      },
+      {
+        "text": "The manifest was not compressed with gzip first",
+        "correct": false,
+        "why": "Layers travel compressed; the manifest is plain JSON and is sent as it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2z14606",
+    "version": 1,
+    "section": "pushing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On AWS, the password aws ecr get-login-password prints is a token that expires after ___ hours.",
+    "hint": "Half a day.",
+    "blanks": [
+      {
+        "accept": [
+          "12",
+          "twelve"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1szc8trk",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a mutable repository on AWS, 1.0.0 is pushed again with a different image. What becomes of the image 1.0.0 used to name, if it had no other tag?",
+    "hint": "moto and AWS differ here.",
+    "choices": [
+      {
+        "text": "It is deleted, as it was in moto",
+        "correct": false,
+        "why": "That is moto's behaviour. AWS keeps the image."
+      },
+      {
+        "text": "It stays, untagged, still stored and billed",
+        "correct": true,
+        "why": "Right, and anything that names its digest still pulls it."
+      },
+      {
+        "text": "It keeps the tag, and the new image is refused",
+        "correct": false,
+        "why": "That is an immutable repository. A mutable one moves the tag."
+      },
+      {
+        "text": "ECR renames its tag to 1.0.0-previous",
+        "correct": false,
+        "why": "ECR invents no tags; the image simply has none left."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq05kzds",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tag mutability setting to what it allows.",
+    "hint": "The exclusion list reverses the setting for the tags it matches.",
+    "pairs": [
+      {
+        "left": "MUTABLE",
+        "right": "Any tag may be moved to another image"
+      },
+      {
+        "left": "IMMUTABLE",
+        "right": "No tag may be moved once pushed"
+      },
+      {
+        "left": "IMMUTABLE_WITH_EXCLUSION",
+        "right": "Only tags matching a filter may be moved"
+      },
+      {
+        "left": "MUTABLE_WITH_EXCLUSION",
+        "right": "Tags matching a filter may not be moved"
+      }
+    ],
+    "right_distractors": [
+      "A tag may move only to a newer image"
+    ]
+  },
+  {
+    "id": "ex-vv4e1rgn",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Kubernetes Deployment runs shop/web:1.0.0 with the default pull policy on three nodes. 1.0.0 is overwritten in a mutable repository, and then a fourth node joins and gets a pod. What is running now?",
+    "hint": "For a tag other than latest, a node pulls only what it does not have.",
+    "choices": [
+      {
+        "text": "Every pod moves to the new image within a few minutes",
+        "correct": false,
+        "why": "Nothing tells running pods that the tag moved; they keep the copy their node has."
+      },
+      {
+        "text": "The fourth node refuses to pull a tag that has changed",
+        "correct": false,
+        "why": "A registry has no notion of a changed tag; it serves whatever the tag names now."
+      },
+      {
+        "text": "The new pod runs the new image and the other three the old one",
+        "correct": true,
+        "why": "Right: two programs under one version number, and no error anywhere."
+      },
+      {
+        "text": "Four pods on the old image, until somebody edits the Deployment",
+        "correct": false,
+        "why": "The fourth node had no copy, so it pulled what 1.0.0 names after the overwrite."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a7tdx4v",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To deploy an image that no later push can change, name it by its ___ instead of a tag: shop/web@sha256: followed by 64 characters.",
+    "hint": "It is computed from the bytes.",
+    "blanks": [
+      {
+        "accept": [
+          "digest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c27tk23h",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under the lesson's lifecycle.json, what happens to an image whose only tag is latest?",
+    "hint": "Check the three selections against the tag latest.",
+    "choices": [
+      {
+        "text": "It expires after 7 days, with the untagged images",
+        "correct": false,
+        "why": "It has a tag, so the untagged rule does not select it."
+      },
+      {
+        "text": "It counts as one of the 30 releases kept",
+        "correct": false,
+        "why": "latest does not match *.*.*, which needs two dots."
+      },
+      {
+        "text": "It stays: no rule selects it",
+        "correct": true,
+        "why": "Right. Catching it would take a rule with tagStatus any, read last."
+      },
+      {
+        "text": "It expires after 14 days, like a pull request build",
+        "correct": false,
+        "why": "That rule matches tags beginning pr-, and latest does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-yz9rah31",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the first rule of lifecycle.json wait seven days before expiring an untagged image, rather than one?",
+    "hint": "Who else might still be using an image that lost its tag?",
+    "choices": [
+      {
+        "text": "A deployment pinned to it by digest would fail to pull it",
+        "correct": true,
+        "why": "Right. Expiring deletes, and a digest names exactly the images a tag left behind."
+      },
+      {
+        "text": "ECR refuses to expire an image younger than seven days",
+        "correct": false,
+        "why": "There is no such floor; countNumber 1 would expire it after a day."
+      },
+      {
+        "text": "Untagged images are free for their first week",
+        "correct": false,
+        "why": "Storage is charged from the first day, tagged or not."
+      },
+      {
+        "text": "The preview needs a week of pushes to compute its list",
+        "correct": false,
+        "why": "A preview evaluates the rules against what is there now."
+      }
+    ]
+  },
+  {
+    "id": "ex-2yaew48r",
+    "version": 1,
+    "section": "tags-and-lifecycle",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto's ECR do in this lesson that AWS would do differently? Choose all that apply.",
+    "hint": "Compare each with what the prose says AWS does.",
+    "choices": [
+      {
+        "text": "Deleted an image when its last tag moved away",
+        "correct": true,
+        "why": "AWS keeps it, untagged."
+      },
+      {
+        "text": "Refused a moved tag with ImageAlreadyExistsException",
+        "correct": true,
+        "why": "AWS answers ImageTagAlreadyExistsException for a tag in an immutable repository."
+      },
+      {
+        "text": "Failed with an internal error on the lifecycle preview",
+        "correct": true,
+        "why": "AWS evaluates the rules and lists what they would expire."
+      },
+      {
+        "text": "Refused the repository name Shop/Web",
+        "correct": false,
+        "why": "AWS refuses it too, with the same regular expression."
+      },
+      {
+        "text": "Kept 1.0.0 in place in the immutable repository",
+        "correct": false,
+        "why": "That is what AWS does as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhnsr52w",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which scan reads the pip packages installed inside an image?",
+    "hint": "One of the two reads language packages as well.",
+    "choices": [
+      {
+        "text": "Basic scanning, on every push",
+        "correct": false,
+        "why": "Basic reads the operating system's packages."
+      },
+      {
+        "text": "Both, the basic one less often",
+        "correct": false,
+        "why": "The difference is what they read, not only how often."
+      },
+      {
+        "text": "Enhanced scanning, run by Amazon Inspector",
+        "correct": true,
+        "why": "Right. It reads OS packages and language packages such as pip and npm."
+      },
+      {
+        "text": "Neither: ECR scans the base image and nothing added to it",
+        "correct": false,
+        "why": "A scan reads the whole image, layers added by your Dockerfile included."
+      }
+    ]
+  },
+  {
+    "id": "ex-3htgz6yt",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An image scanned clean on push on Monday. On Wednesday a vulnerability is published in one of its OS packages. With basic scanning, when does the finding appear?",
+    "hint": "Basic scanning looks at one moment.",
+    "choices": [
+      {
+        "text": "On Wednesday, when the vulnerability is published",
+        "correct": false,
+        "why": "Re-scanning on publication is what enhanced scanning adds."
+      },
+      {
+        "text": "When somebody scans that image again",
+        "correct": true,
+        "why": "Right: on request, at most once every 24 hours for that image."
+      },
+      {
+        "text": "At the next push of any image to the repository",
+        "correct": false,
+        "why": "Scan on push scans the image being pushed, not the ones already there."
+      },
+      {
+        "text": "Not at all: a basic scan runs once per image, ever",
+        "correct": false,
+        "why": "A basic scan may be repeated, once per image every 24 hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-wnwahgbt",
+    "version": 1,
+    "section": "scanning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A repository keeps 40 images of 26 MB each. At 0.10 USD per GB-month, with 1 GB = 1,000 MB, what does it cost per month, in USD?",
+    "hint": "Images times size, in GB, times the price.",
+    "value": 0.104,
+    "tolerance": 0.001,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-cth3n1bz",
+    "version": 1,
+    "section": "scanning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto answered the scan with CVE-9999-9999, severity HIGH, in package moto_fake. What does that say about the image?",
+    "hint": "What did moto ever receive to look inside?",
+    "choices": [
+      {
+        "text": "It has one high vulnerability, in a package Docker added",
+        "correct": false,
+        "why": "There is no package by that name, and no such CVE has been published."
+      },
+      {
+        "text": "Nothing: it is a placeholder moto returns for any image",
+        "correct": true,
+        "why": "Right. moto received a manifest and no layers, so there was nothing to read."
+      },
+      {
+        "text": "Its packages are up to date apart from one",
+        "correct": false,
+        "why": "moto read no packages at all, so it knows nothing about their versions."
+      },
+      {
+        "text": "That moto reads language packages and not OS packages",
+        "correct": false,
+        "why": "It reads neither; the finding is the same whatever the image."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9emmb9m",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline pushes ten releases of 26 MB every working day and deletes nothing. After 250 working days, what does the repository cost per month at 0.10 USD per GB-month, with 1 GB = 1,000 MB?",
+    "hint": "Count the images first.",
+    "value": 6.5,
+    "tolerance": 0.01,
+    "unit": "USD"
+  },
+  {
+    "id": "ex-qh6zdca0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of publishing shop/web:1.0.1 to ECR and deploying it safely in order.",
+    "hint": "The name is the destination, and the digest arrives with the push.",
+    "items": [
+      "docker build the image",
+      "docker tag it with the repository's address",
+      "docker login with the token from aws ecr get-login-password",
+      "docker push",
+      "Deploy it by the digest the push reported"
+    ],
+    "trap": "The tag has to come before the push, because docker reads the registry from the name."
+  },
+  {
+    "id": "ex-kpgpmkjq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster in us-east-1 pulls shop/web from a repository in sa-east-1 on every new node, and pulls are slow and appear on the bill. What fixes both and keeps one pipeline?",
+    "hint": "The repository lives in one region.",
+    "choices": [
+      {
+        "text": "Make the tags immutable",
+        "correct": false,
+        "why": "Immutability stops tags moving; the layers still cross the continent."
+      },
+      {
+        "text": "A lifecycle policy that keeps fewer images",
+        "correct": false,
+        "why": "Fewer stored images do not make one pull any shorter."
+      },
+      {
+        "text": "Enhanced scanning turned on in us-east-1",
+        "correct": false,
+        "why": "Scanning says nothing about where layers are pulled from."
+      },
+      {
+        "text": "Replication of the registry to us-east-1, pulling from there",
+        "correct": true,
+        "why": "Right. Each push is copied to the other region, and nodes pull from their own."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xx7q69c",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each error AWS's ECR answers with the situation that produces it.",
+    "hint": "Read the name of each one closely.",
+    "pairs": [
+      {
+        "left": "ImageTagAlreadyExistsException",
+        "right": "Moving a tag in an immutable repository"
+      },
+      {
+        "left": "ImageAlreadyExistsException",
+        "right": "The same manifest pushed under the same tag again"
+      },
+      {
+        "left": "LayersNotFoundException",
+        "right": "A manifest naming layers that were never uploaded"
+      },
+      {
+        "left": "RepositoryNotEmptyException",
+        "right": "Deleting a repository that still holds images"
+      }
+    ],
+    "right_distractors": [
+      "A tag longer than the repository name"
+    ]
+  }
+]

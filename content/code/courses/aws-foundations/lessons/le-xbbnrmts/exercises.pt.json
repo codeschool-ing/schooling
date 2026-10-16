@@ -1,0 +1,433 @@
+{
+  "ex-rx908xq1": {
+    "prompt": "O caio tem `AdministratorAccess`, e mesmo assim o `assume-role` dele na `deployer` é recusado. Por quê?",
+    "hint": "Duas políticas têm de concordar.",
+    "choices": [
+      {
+        "text": "O `AdministratorAccess` deixa de fora as ações do `sts`",
+        "why": "Ele permite `*` em `*`, o que inclui `sts:AssumeRole`. O lado dele concordou."
+      },
+      {
+        "text": "A política de confiança da role nomeia a bia, e só ela, não ele",
+        "why": "Isso. A política de confiança é a metade da role no acordo, e nenhuma permissão de quem chama a substitui."
+      },
+      {
+        "text": "Uma role dá uma sessão por vez, e a bia estava com ela",
+        "why": "Qualquer número de sessões de uma role pode existir ao mesmo tempo; o caio foi recusado antes de a bia pedir."
+      },
+      {
+        "text": "O caio precisa esperar a chave dele ser aceita pelo STS",
+        "why": "A chave foi aceita: o erro nomeia `user/caio`, o que só uma assinatura verificada revela."
+      }
+    ]
+  },
+  "ex-zgvpec4m": {
+    "prompt": "A bia assume a `deployer`. De quem são as permissões da sessão?",
+    "hint": "O que o `iam list-users` da sessão respondeu?",
+    "choices": [
+      {
+        "text": "As da própria bia, mais as da role",
+        "why": "Nada da bia vem junto. Roles não somam a quem chama."
+      },
+      {
+        "text": "As da role, e mais nada",
+        "why": "Isso. A política da bia deixou que ela pedisse a sessão; dentro dela, só as políticas da role contam."
+      },
+      {
+        "text": "As da própria bia, já que foi ela quem assinou a chamada",
+        "why": "Ela assinou a chamada `AssumeRole`. As chamadas da sessão são assinadas com a chave da sessão."
+      },
+      {
+        "text": "Só o que a política da bia e a da role permitem ao mesmo tempo",
+        "why": "Essa interseção é como funcionam um limite ou uma política de sessão, não a política de quem chama."
+      }
+    ]
+  },
+  "ex-ztz10g0x": {
+    "prompt": "Uma política de confiança nomeia `\"AWS\": \"arn:aws:iam::123456789012:root\"`. Na AWS, quem consegue assumir a role?",
+    "hint": "A conta decide, por meio de alguma coisa.",
+    "choices": [
+      {
+        "text": "Só o usuário root daquela conta",
+        "why": "`:root` aqui quer dizer a própria conta, não o usuário root dela."
+      },
+      {
+        "text": "Quem naquela conta as próprias políticas permitirem",
+        "why": "Isso. A confiança deixa a conta entrar; as políticas de identidade da conta escolhem quais dos seus principais."
+      },
+      {
+        "text": "Todo principal de toda conta da organização",
+        "why": "O ARN nomeia uma conta, e a organização não tem papel numa política de confiança a não ser que uma condição a nomeie."
+      },
+      {
+        "text": "Ninguém, até um usuário daquela conta ser nomeado também",
+        "why": "Nomear a conta basta do lado da role; o moto recusou, a AWS não."
+      }
+    ]
+  },
+  "ex-mf2qx2p8": {
+    "prompt": "No moto, o admin foi recusado numa role cuja política de confiança nomeia a própria conta dele, `arn:aws:iam::123456789012:root`. O que isso mostra?",
+    "hint": "Como o moto compara quem chama com um principal?",
+    "choices": [
+      {
+        "text": "Que a AWS também recusa, já que o admin não é o usuário root",
+        "why": "A AWS lê `:root` como a conta, e o `AdministratorAccess` do admin permite a chamada: a AWS dá a sessão."
+      },
+      {
+        "text": "Que o moto compara os dois ARNs como strings, onde a AWS lê a conta",
+        "why": "Isso. `user/admin` e `root` são strings diferentes; a mesma comparação quebra o encadeamento de roles na próxima seção."
+      },
+      {
+        "text": "Que uma política de confiança não pode nomear a conta a que pertence",
+        "why": "Pode, e é comum; a recusa foi do moto."
+      },
+      {
+        "text": "Que a contagem de requisições livres do moto tinha acabado para o admin",
+        "why": "A contagem é gasta uma vez, para todos, e as requisições do admin são julgadas desde então."
+      }
+    ]
+  },
+  "ex-rrp30f27": {
+    "prompt": "Ponha em ordem o que acontece quando a bia assume a `deployer`.",
+    "hint": "O lado dela é conferido antes do da role.",
+    "items": [
+      "a bia assina uma chamada `AssumeRole` com a própria chave",
+      "a AWS confere se a política da bia permite `sts:AssumeRole` na role",
+      "a AWS confere se a política de confiança da role nomeia a bia",
+      "o STS devolve uma chave, um segredo, um token e uma validade",
+      "a bia assina as próximas chamadas com a chave da sessão"
+    ],
+    "trap": "Assinar as chamadas seguintes com a própria chave é o deslize comum: elas agiriam como a bia, não como a `deployer`."
+  },
+  "ex-k647n3p7": {
+    "prompt": "Ligue cada pergunta à política que a responde.",
+    "hint": "Três políticas, três perguntas.",
+    "pairs": [
+      {
+        "left": "a bia pode pedir a role?",
+        "right": "a política de identidade da bia"
+      },
+      {
+        "left": "a role aceita a bia?",
+        "right": "a política de confiança da role"
+      },
+      {
+        "left": "o que a sessão pode fazer?",
+        "right": "as políticas de permissão da role"
+      }
+    ],
+    "right_distractors": [
+      "a política do grupo da bia, `developers`"
+    ]
+  },
+  "ex-h5vggktj": {
+    "prompt": "Quantas horas tem o `MaxSessionDuration` mais longo que uma role pode receber?",
+    "hint": "O padrão é uma.",
+    "unit": "horas"
+  },
+  "ex-pmngmp55": {
+    "prompt": "A `deployer` tem `MaxSessionDuration` 3600, e a bia pede `--duration-seconds 7200`. O que a AWS faz, e o que o moto fez?",
+    "hint": "Quem aumenta o máximo?",
+    "choices": [
+      {
+        "text": "Os dois concedem uma hora, o máximo que a role permite",
+        "why": "Nenhum dos dois corta o pedido. A AWS o recusa inteiro, e o moto concedeu tudo."
+      },
+      {
+        "text": "Os dois concedem duas horas, já que quem chama escolhe",
+        "why": "Quem chama escolhe dentro do máximo da role; acima dele, a AWS recusa."
+      },
+      {
+        "text": "A AWS recusa o pedido; o moto concedeu duas horas",
+        "why": "Isso. O máximo se aumenta na role, com `update-role`, não pedindo mais. A recusa da AWS não foi rodada aqui."
+      },
+      {
+        "text": "A linha de comando recusa antes de enviar, nos dois",
+        "why": "A linha de comando confere só o piso de 900 segundos, não o máximo da role, que ela não tem como saber."
+      }
+    ]
+  },
+  "ex-ap63kzn0": {
+    "prompt": "A `deployer` e a `auditor` permitem sessões de doze horas. Uma sessão da `deployer` assume a `auditor` e pede quatro horas. O que a AWS responde?",
+    "hint": "Isto é encadeamento de roles.",
+    "choices": [
+      {
+        "text": "Quatro horas, já que as duas roles permitem doze",
+        "why": "O máximo de cada role vale para uma primeira sessão. Uma encadeada tem limite próprio."
+      },
+      {
+        "text": "Uma recusa: o encadeamento limita a uma hora",
+        "why": "Isso, segundo a documentação da AWS. Esse limite não foi medido aqui: o moto concedeu duas horas a uma sessão encadeada."
+      },
+      {
+        "text": "O que sobrar do tempo da primeira sessão",
+        "why": "A duração da segunda sessão não sai do que resta da primeira."
+      },
+      {
+        "text": "Doze horas, o maior dos dois máximos",
+        "why": "Nada escolhe o maior máximo; o pedido foi de quatro e é recusado por passar de uma."
+      }
+    ]
+  },
+  "ex-6vfbf5ze": {
+    "prompt": "Por que uma source identity é prova mais forte de quem fez algo do que um nome de sessão?",
+    "hint": "Quem escolhe cada um, e quando ele pode mudar?",
+    "choices": [
+      {
+        "text": "Uma source identity é criptografada, e um nome de sessão não",
+        "why": "Nenhum dos dois é secreto; os dois vão para o log em texto aberto."
+      },
+      {
+        "text": "Ela passa para toda role encadeada, e ninguém consegue mudá-la",
+        "why": "Isso, e uma política de confiança pode exigi-la. Um nome de sessão é escolhido de novo a cada sessão."
+      },
+      {
+        "text": "O CloudTrail registra source identities e descarta nomes de sessão",
+        "why": "O nome da sessão está em toda linha de log, como o fim do ARN da sessão."
+      },
+      {
+        "text": "O moto confere uma source identity, então o laboratório consegue prová-la",
+        "why": "O moto não devolveu nenhuma; esta parte não foi rodada."
+      }
+    ]
+  },
+  "ex-an038r2w": {
+    "prompt": "Para quem chama definir uma source identity, a política de confiança da role tem de permitir `sts:AssumeRole` e também `sts:___`.",
+    "hint": "Um verbo, e depois as duas palavras.",
+    "blanks": [
+      {
+        "accept": [
+          "SetSourceIdentity"
+        ]
+      }
+    ]
+  },
+  "ex-8q6k1pdn": {
+    "prompt": "A chave de uma sessão e a chave `AKIA` de um usuário vazam no mesmo dia. Por que a da sessão vale menos para quem a achou?",
+    "hint": "Olhe o `Expiration`.",
+    "choices": [
+      {
+        "text": "Ela para de funcionar sozinha depois de uma hora",
+        "why": "Isso. Uma chave `AKIA` funciona até alguém perceber e apagá-la."
+      },
+      {
+        "text": "Ela exige MFA para ser usada, e a chave `AKIA` não",
+        "why": "Uma sessão precisa do token, não de MFA; quem tem os três valores consegue usá-la."
+      },
+      {
+        "text": "Ela só funciona da máquina que assumiu a role",
+        "why": "Nada a prende a uma máquina, a não ser uma condição."
+      },
+      {
+        "text": "A AWS revoga toda sessão quando um vazamento é informado",
+        "why": "Essa revogação automática não existe; a validade é o que a limita."
+      }
+    ]
+  },
+  "ex-fak5424y": {
+    "prompt": "No moto, a sessão da `OrganizationAccountAccessRole` em `shop-prod` foi recusada numa lista de VPCs. Na AWS, o que seria a mesma sessão?",
+    "hint": "O que a AWS anexa à role que cria?",
+    "choices": [
+      {
+        "text": "A mesma coisa: uma role numa conta nova começa sem permissões",
+        "why": "Essa é a versão do moto. A AWS anexa `AdministratorAccess` a esta role."
+      },
+      {
+        "text": "Uma administradora da `shop-prod`",
+        "why": "Isso. A AWS anexa `AdministratorAccess`, e por isso quem pode assumir a role importa tanto."
+      },
+      {
+        "text": "Uma sessão só de leitura, até a conta membro conceder mais",
+        "why": "Nenhuma política de leitura está envolvida; é administração completa."
+      },
+      {
+        "text": "O usuário root da `shop-prod`",
+        "why": "Uma sessão de role nunca é o usuário root, mesmo com todas as permissões."
+      }
+    ]
+  },
+  "ex-gexjcgs7": {
+    "prompt": "Na história do confused deputy, quem está tentando usar mal a role da loja?",
+    "hint": "Não quem tem a permissão.",
+    "choices": [
+      {
+        "text": "A empresa de monitoramento, que tem a permissão",
+        "why": "A empresa é o deputy: ela é usada, não é quem usa. Ela age sobre o ARN de role que um cliente lhe der."
+      },
+      {
+        "text": "Outro cliente da empresa, se passando pela loja",
+        "why": "Isso. Ele dá à empresa o ARN da role da loja como se fosse dele, e o external id é o que impede a empresa de agir sobre ele."
+      },
+      {
+        "text": "Um desenvolvedor da loja com acesso ao ARN da role",
+        "why": "As pessoas da própria loja têm as próprias entradas; a história é sobre um estranho usando a empresa."
+      },
+      {
+        "text": "O usuário root da conta da empresa",
+        "why": "Nada na história precisa do usuário root da empresa; ela acontece pelo serviço normal da empresa."
+      }
+    ]
+  },
+  "ex-k10x4s4h": {
+    "prompt": "O que o external id na política de confiança da loja estabelece?",
+    "hint": "Não quem a empresa é; a conta já diz isso.",
+    "choices": [
+      {
+        "text": "Que a requisição vem da conta da empresa",
+        "why": "O principal já estabelece isso, com a assinatura da empresa."
+      },
+      {
+        "text": "Uma senha que criptografa a sessão que a empresa recebe",
+        "why": "Nada é criptografado com ela; ela é comparada, como string, com a política de confiança."
+      },
+      {
+        "text": "Que a empresa age pela configuração da loja",
+        "why": "Isso. A empresa envia o id do cliente que configurou o pedido, então outro cliente não consegue enviar o da loja."
+      },
+      {
+        "text": "Que a sessão não vai durar mais de uma hora",
+        "why": "A duração é outra configuração; o external id não diz nada sobre tempo."
+      }
+    ]
+  },
+  "ex-ad6qnma9": {
+    "prompt": "Quais destes o moto fez diferente da AWS nesta lição? Marque todos os que se aplicam.",
+    "hint": "Dois deles ele julgou como a AWS.",
+    "choices": [
+      {
+        "text": "Concedeu duas horas numa role cujo máximo era uma",
+        "why": "Isso. A AWS recusa uma duração acima do máximo da role."
+      },
+      {
+        "text": "Recusou o caio, que a política de confiança não nomeia",
+        "why": "Essa é exatamente a resposta da AWS."
+      },
+      {
+        "text": "Aceitou um `AssumeRole` sem external id",
+        "why": "Isso. A AWS recusa, já que o `StringEquals` não tem com o que bater."
+      },
+      {
+        "text": "Entregou uma sessão numa conta que não existe",
+        "why": "Isso. O moto não julga o lado da outra conta."
+      },
+      {
+        "text": "Recusou à bia uma role que a própria política dela não nomeia",
+        "why": "O lado de quem chama é julgado como a AWS julga."
+      },
+      {
+        "text": "Recusou a uma sessão da `deployer` uma role que confia em `role/deployer`",
+        "why": "Isso. A AWS entende o ARN de uma role numa política de confiança como as sessões dela."
+      }
+    ]
+  },
+  "ex-p5v9bab2": {
+    "prompt": "Por que o perfil da lição usa `credential_source = Environment` em vez de `source_profile`?",
+    "hint": "Onde morariam as credenciais de um perfil de origem?",
+    "choices": [
+      {
+        "text": "`source_profile` não consegue assumir uma role em outra conta",
+        "why": "Consegue; é a forma habitual. A diferença é de onde vêm as credenciais que assinam."
+      },
+      {
+        "text": "Nenhuma chave precisa ir para um arquivo",
+        "why": "Isso. Um perfil de origem com chaves significaria escrever a chave do admin em `~/.aws/credentials`."
+      },
+      {
+        "text": "O moto recusa perfis que nomeiam outro perfil",
+        "why": "O moto nunca vê perfis; a linha de comando os resolve antes de enviar qualquer coisa."
+      },
+      {
+        "text": "`credential_source` faz a sessão durar mais",
+        "why": "A duração é `duration_seconds`, outra configuração."
+      }
+    ]
+  },
+  "ex-yrxbk975": {
+    "prompt": "`aws sts get-caller-identity --profile shop-prod` respondeu com a conta da `shop-prod`. O que a linha de comando fez antes?",
+    "hint": "Leia o perfil.",
+    "choices": [
+      {
+        "text": "Ela mudou o moto para a outra conta",
+        "why": "Nada muda o moto; a conta acompanha as credenciais que assinam a chamada."
+      },
+      {
+        "text": "Ela assinou com a chave do admin e perguntou pela shop-prod",
+        "why": "A chave do admin pertence à conta de gerenciamento e responderia com ela, como o último comando fez."
+      },
+      {
+        "text": "Ela assumiu a role do perfil e assinou com a sessão",
+        "why": "Isso. O `configure list` mostrou `assume-role` como o tipo das credenciais."
+      },
+      {
+        "text": "Ela leu uma chave da shop-prod em `~/.aws/credentials`",
+        "why": "Não há esse arquivo no laboratório, nem chave da shop-prod em lugar nenhum."
+      }
+    ]
+  },
+  "ex-r4emvjzq": {
+    "prompt": "O time de dados trabalha na conta de gerenciamento e precisa ler dados em `shop-prod`. Que arranjo combina com o que esta lição ensinou?",
+    "hint": "Uma porta na conta em que se entra, e uma chave do outro lado.",
+    "choices": [
+      {
+        "text": "Usuários do IAM para cada um em `shop-prod`, com chaves de acesso",
+        "why": "Chaves de longo prazo numa segunda conta são exatamente o que uma role evita."
+      },
+      {
+        "text": "Uma role de leitura em `shop-prod` que confia na role do time de dados na gerência",
+        "why": "Isso. A confiança nomeia uma role, não a conta inteira, e a política dessa role permite `sts:AssumeRole` nela."
+      },
+      {
+        "text": "Incluir a `shop-prod` no grupo `data`",
+        "why": "Um grupo guarda usuários de uma conta; uma conta não entra num grupo."
+      },
+      {
+        "text": "A `OrganizationAccountAccessRole`, que toda conta membro já tem",
+        "why": "Funciona, e é administração da conta inteira, muito mais que leitura."
+      }
+    ]
+  },
+  "ex-jpjgg9et": {
+    "prompt": "Um fornecedor de monitoramento diz que não precisa de external id, porque o número da conta AWS dele é único. Por que isso não basta?",
+    "hint": "A quem o número da conta identifica?",
+    "choices": [
+      {
+        "text": "Números de conta podem ser reutilizados depois que uma conta é fechada",
+        "why": "A preocupação não é reutilização; é que uma conta atende todo cliente."
+      },
+      {
+        "text": "O número da conta é público, então qualquer um consegue assinar como ela",
+        "why": "Saber o número de uma conta não deixa ninguém assinar como ela."
+      },
+      {
+        "text": "Ele nomeia o fornecedor, não o cliente por quem age",
+        "why": "Isso. A mesma conta assume roles para todo cliente, e só o external id prende uma requisição a um deles."
+      },
+      {
+        "text": "Políticas de confiança não podem nomear uma conta de fora da organização",
+        "why": "Podem, e terceiros são nomeados exatamente assim."
+      }
+    ]
+  },
+  "ex-d3vxn4nm": {
+    "prompt": "No laboratório, um `assume-role` entre contas dá certo. O que isso provou?",
+    "hint": "Que lado do acordo o moto julga entre contas?",
+    "choices": [
+      {
+        "text": "Que o lado de quem chama permite a chamada, e nada mais",
+        "why": "Isso. O moto deu uma sessão numa conta que não existe, então a política de confiança de lá nunca foi lida."
+      },
+      {
+        "text": "Que as políticas de confiança e de identidade concordam, como na AWS",
+        "why": "Só o lado da identidade foi julgado. O lado da confiança é o que o moto pula entre contas."
+      },
+      {
+        "text": "Que a outra conta existe e tem a role",
+        "why": "A `111122223333` não existe em lugar nenhum, e o moto respondeu do mesmo jeito."
+      },
+      {
+        "text": "Que a role tem `AdministratorAccess`",
+        "why": "A `OrganizationAccountAccessRole` do moto não tem política nenhuma."
+      }
+    ]
+  }
+}

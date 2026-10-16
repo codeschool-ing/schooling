@@ -1,0 +1,397 @@
+{
+  "ex-1khvwnv6": {
+    "prompt": "Uma requisição por `/static/logo.png` falha no ponto de presença de Recife. Para onde ela vai em seguida?",
+    "hint": "Há uma camada entre os pontos de presença e a loja.",
+    "choices": [
+      {
+        "text": "Direto ao bucket em `sa-east-1`",
+        "why": "Só uma falta no cache regional chega à origem."
+      },
+      {
+        "text": "A um cache regional, compartilhado por vários pontos de presença",
+        "why": "Isso. Um acerto ali é respondido sem a origem; só uma segunda falta volta à loja."
+      },
+      {
+        "text": "Ao próximo ponto de presença mais perto, e depois ao seguinte",
+        "why": "Pontos de presença não perguntam uns aos outros. Atrás de cada um fica um cache regional."
+      },
+      {
+        "text": "De volta a quem vê, com um erro até o ponto de presença ser preenchido",
+        "why": "Uma falta é buscada, não recusada. Quem vê espera um pouco mais e recebe o arquivo."
+      }
+    ]
+  },
+  "ex-2hbw4c95": {
+    "prompt": "O bucket `shop-assets` tem de continuar privado, e os arquivos dele ainda precisam ser servidos a todo mundo pela distribuição. O que faz isso funcionar na AWS?",
+    "hint": "Duas metades: uma assina, a outra concorda.",
+    "choices": [
+      {
+        "text": "Desligar o Block Public Access, para o CloudFront poder ler",
+        "why": "Isso deixaria qualquer um ler direto. O OAC existe para que nada precise ficar público."
+      },
+      {
+        "text": "Fazer do bucket uma origem personalizada por HTTPS",
+        "why": "Uma origem personalizada alcança o que é público. O bucket continua fechado para ela."
+      },
+      {
+        "text": "O OAC assinando as requisições, e uma política que só confia nelas",
+        "why": "Isso. A condição em `AWS:SourceArn` nomeia a distribuição, e uma requisição direta ao S3 é recusada."
+      },
+      {
+        "text": "Uma política de cache que guarda os arquivos no ponto de presença para sempre",
+        "why": "Quanto tempo uma cópia fica guardada não diz nada sobre quem pode ler o bucket."
+      }
+    ]
+  },
+  "ex-rv05htdc": {
+    "prompt": "No moto, o `get-distribution` mostra a origem do bucket com `None` onde deveria estar o `OriginAccessControlId`. O que se conclui?",
+    "hint": "O arquivo enviado tinha o id.",
+    "choices": [
+      {
+        "text": "Só que o moto 5.2.3 descarta o OAC, que a AWS manteria",
+        "why": "Isso. A configuração estava certa; o laboratório só não guarda esse campo, então não consegue mostrar a proteção."
+      },
+      {
+        "text": "O OAC foi criado na região errada",
+        "why": "O CloudFront é global, e o OAC dele também; não havia região para errar."
+      },
+      {
+        "text": "Faltava a política do bucket, então o OAC foi removido",
+        "why": "A política veio depois, e a AWS nunca remove um OAC por falta de política; ela só recusaria as leituras."
+      },
+      {
+        "text": "A distribuição ainda estava `InProgress`",
+        "why": "Uma distribuição sendo implantada ainda devolve a configuração que recebeu."
+      }
+    ]
+  },
+  "ex-2cbmd084": {
+    "prompt": "A conta da loja trabalha em `sa-east-1`. Um colega pede o certificado de `cdn.shop.example.com` em `sa-east-1` e não consegue escolhê-lo na distribuição. Por quê?",
+    "hint": "O CloudFront procura certificados numa região só.",
+    "choices": [
+      {
+        "text": "Ele precisa ser validado antes, e a validação leva um dia",
+        "why": "A validação é necessária, mas um certificado validado em São Paulo ainda não apareceria."
+      },
+      {
+        "text": "Uma distribuição só pode usar o certificado padrão de `cloudfront.net`",
+        "why": "Uma distribuição serve os próprios nomes com um certificado do ACM; a pergunta é onde ele mora."
+      },
+      {
+        "text": "O CloudFront só aceita certificados do ACM de `us-east-1`",
+        "why": "Isso. Um certificado vive na região que o emitiu, e o CloudFront lê os de `us-east-1`, rode a loja onde rodar."
+      },
+      {
+        "text": "O nome precisa primeiro ser acrescentado como alias no Route 53",
+        "why": "O registro de alias vem depois; a lista de certificados estaria vazia de qualquer jeito."
+      }
+    ]
+  },
+  "ex-7az16ejx": {
+    "prompt": "O endereço próprio de uma distribuição termina em `___.net`, e é o nome para onde quem vê é mandado até um alias ser acrescentado.",
+    "hint": "O domínio da transcrição, depois da parte aleatória.",
+    "blanks": [
+      {
+        "accept": [
+          "cloudfront"
+        ]
+      }
+    ]
+  },
+  "ex-wmcn01kv": {
+    "prompt": "Onde a linha de comando mostra que o CloudFront não pertence a região nenhuma? Marque todos os que se aplicam.",
+    "hint": "Três lugares nas transcrições da seção.",
+    "choices": [
+      {
+        "text": "O `Location` é `cloudfront.amazonaws.com`, sem região",
+        "why": "Isso. Um endereço para o serviço inteiro."
+      },
+      {
+        "text": "O ARN tem o campo de região vazio",
+        "why": "Isso. `arn:aws:cloudfront::123456789012:…`, dois-pontos juntos."
+      },
+      {
+        "text": "`--region ap-southeast-2` lista a mesma distribuição",
+        "why": "Isso. A opção de região não muda nada para um serviço global."
+      },
+      {
+        "text": "O nome de domínio termina em `sa-east-1.cloudfront.net`",
+        "why": "Não termina: o domínio é um nome aleatório sob `cloudfront.net`, sem região."
+      },
+      {
+        "text": "O certificado do ACM apareceu listado em São Paulo",
+        "why": "Ele apareceu em `us-east-1` e não em São Paulo; o ACM é regional, que é o ponto daquela transcrição."
+      }
+    ]
+  },
+  "ex-hq3nb84h": {
+    "prompt": "Por segurança, um colega acrescenta o cookie de sessão à chave de cache de `/static/*`. O que acontece com as imagens?",
+    "hint": "Tudo na chave divide a taxa de acerto.",
+    "choices": [
+      {
+        "text": "Nada muda, já que imagens não leem cookies",
+        "why": "A imagem não o lê, mas o cache sim: um cookie diferente é uma chave diferente."
+      },
+      {
+        "text": "Uma cópia por cliente, e o cache quase não ajuda",
+        "why": "Isso. Uma cópia por sessão é cache nenhum. Um cookie de que a origem precisa vai numa política de requisição de origem."
+      },
+      {
+        "text": "As imagens viram privadas de cada cliente, o que é mais seguro",
+        "why": "A chave decide qual cópia responde, não quem pode pedir. Privacidade é trabalho de URL assinada."
+      },
+      {
+        "text": "O CloudFront recusa a política, já que cookies não são permitidos numa chave",
+        "why": "Cookies são permitidos numa chave de cache, e é justamente por isso que esse erro é possível."
+      }
+    ]
+  },
+  "ex-bt7wj5g7": {
+    "prompt": "Ligue cada política gerenciada ao que ela faz.",
+    "hint": "Duas políticas de cache e uma de requisição de origem.",
+    "pairs": [
+      {
+        "left": "`CachingOptimized`",
+        "right": "chave no caminho e guarda uma cópia por um dia por padrão"
+      },
+      {
+        "left": "`CachingDisabled`",
+        "right": "não guarda nada, então toda requisição chega à origem"
+      },
+      {
+        "left": "`AllViewer`",
+        "right": "repassa todo cabeçalho, cookie e query string à origem"
+      }
+    ],
+    "right_distractors": [
+      "assina toda requisição ao bucket"
+    ]
+  },
+  "ex-4e1tvkst": {
+    "prompt": "Sob a `CachingOptimized`, a origem manda um arquivo sem cabeçalho `Cache-Control` nenhum. Por quanto tempo um ponto de presença pode guardá-lo?",
+    "hint": "A política tem um mínimo, um padrão e um máximo.",
+    "choices": [
+      {
+        "text": "Nada: sem cabeçalho nada vai para o cache",
+        "why": "Um arquivo que não diz nada recebe o padrão da política, que aqui não é zero."
+      },
+      {
+        "text": "Um ano, o máximo da política",
+        "why": "O máximo vale quando a origem pede mais; um arquivo calado recebe o padrão."
+      },
+      {
+        "text": "Um dia, o padrão da política",
+        "why": "Isso. Um segundo, um dia e um ano são o mínimo, o padrão e o máximo dela."
+      },
+      {
+        "text": "Um segundo, o mínimo da política",
+        "why": "O mínimo impede a origem de pedir menos; não é o que um arquivo calado recebe."
+      }
+    ]
+  },
+  "ex-bqcce4t0": {
+    "prompt": "Depois de uma implantação a loja invalida `/static/css/shop.css`. A invalidação termina, e alguns clientes ainda veem os estilos antigos por horas. Que explicação serve?",
+    "hint": "Os caches de quem o CloudFront alcança?",
+    "choices": [
+      {
+        "text": "A invalidação precisa de um curinga para chegar a todo ponto de presença",
+        "why": "Um caminho sem curinga é tirado de todo ponto de presença; o curinga só amplia o conjunto de caminhos."
+      },
+      {
+        "text": "Os navegadores guardaram uma cópia própria",
+        "why": "Isso. Uma invalidação limpa só os caches do CloudFront. Um nome com versão é novo também para o navegador."
+      },
+      {
+        "text": "O cache regional guarda uma cópia que a invalidação pula",
+        "why": "Os caches regionais são do CloudFront e também são limpos."
+      },
+      {
+        "text": "`COMPLETED` na AWS quer dizer na fila, não feito",
+        "why": "Na fila é `InProgress`. Completed quer dizer que todo ponto de presença largou o caminho."
+      }
+    ]
+  },
+  "ex-mjbq9hab": {
+    "prompt": "Ponha em ordem os passos de lançar uma folha de estilos nova com nomes com versão.",
+    "hint": "O arquivo novo tem de existir antes de algo apontar para ele.",
+    "items": [
+      "gerar `shop.81d0e7.css` a partir do código mudado",
+      "subi-lo ao bucket com um `max-age` de um ano",
+      "publicar a página que aponta para o nome novo",
+      "deixar `shop.3f9a2c.css` no lugar para páginas ainda em cache"
+    ],
+    "trap": "Publicar a página antes de subir o arquivo é o deslize comum: por um momento a página aponta para um nome que ainda não existe."
+  },
+  "ex-99yvc7bb": {
+    "prompt": "No moto, uma invalidação fica `COMPLETED` no momento em que é criada. O que isso diz sobre a AWS?",
+    "hint": "Havia pontos de presença para limpar?",
+    "choices": [
+      {
+        "text": "Que a AWS também termina invalidações na hora",
+        "why": "A da AWS começa `InProgress` e termina quando todo ponto de presença largou os caminhos."
+      },
+      {
+        "text": "Nada: o moto não tem pontos de presença, então não há o que esperar",
+        "why": "Isso. É o mesmo que o `INSYNC` da lição 21: um status sem nada por trás."
+      },
+      {
+        "text": "Que invalidações pequenas pulam o estado `InProgress`",
+        "why": "O tamanho não tem nada a ver com a resposta do moto; ele diz o mesmo para qualquer caminho."
+      },
+      {
+        "text": "Que os caminhos nunca estiveram em cache, então nada precisou ser removido",
+        "why": "Isso também seria verdade no moto, que não guarda cache em lugar nenhum; ainda assim não diz nada sobre a AWS."
+      }
+    ]
+  },
+  "ex-yp3gw564": {
+    "prompt": "Pela lista de 16 de setembro de 2026, quanto custam 2.048 GB mandados a quem vê na América do Sul pelo CloudFront, em dólares, contando só a transferência?",
+    "hint": "0,110 por GB nos primeiros 10 TB.",
+    "unit": "dólares"
+  },
+  "ex-tkppm08e": {
+    "prompt": "Quanto a loja paga pelos bytes que o CloudFront busca no bucket em `sa-east-1`?",
+    "hint": "Uma linha da própria oferta da lição 1.",
+    "choices": [
+      {
+        "text": "0,15 por GB, o mesmo que para a internet",
+        "why": "Esse é o preço de sair da região para a internet. Para o CloudFront é outra linha."
+      },
+      {
+        "text": "0,01 por GB em cada sentido, como atravessar uma zona",
+        "why": "Atravessar uma zona é dentro da região. A busca para o CloudFront tem linha própria."
+      },
+      {
+        "text": "Nada: `SAE1-CloudFront-Out-Bytes` tem preço zero",
+        "why": "Isso. A loja paga quando o CloudFront manda os bytes a quem vê, não quando os busca."
+      },
+      {
+        "text": "0,110 por GB, o preço do CloudFront para a América do Sul",
+        "why": "Isso é o que o lado de quem vê custa. A busca na origem é grátis."
+      }
+    ]
+  },
+  "ex-cbz7brvj": {
+    "prompt": "Num mês a loja invalida 2.400 caminhos, nenhum com curinga. A 0,005 por caminho depois dos primeiros 1.000, quanto isso custa, em dólares?",
+    "hint": "Só os caminhos além de 1.000 são cobrados.",
+    "unit": "dólares"
+  },
+  "ex-2ctcbx77": {
+    "prompt": "Para economizar, um colega passa a distribuição da loja para `PriceClass_200`. A maioria dos clientes está no Brasil. O que acontece com eles?",
+    "hint": "Que parte do mundo a classe mais barata deixa de fora?",
+    "choices": [
+      {
+        "text": "Nada muda para eles; a classe só afeta a Ásia e a África",
+        "why": "A Price Class 200 inclui a Ásia e a África. A América do Sul é o que ela deixa de fora."
+      },
+      {
+        "text": "Passam a ser atendidos de fora, mais longe",
+        "why": "Isso. Para uma loja cujos clientes estão no Brasil, a economia é uma loja mais lenta."
+      },
+      {
+        "text": "As requisições deles vão direto à origem em `sa-east-1`",
+        "why": "Quem vê continua atendido pelo CloudFront, só que por pontos de presença das partes incluídas."
+      },
+      {
+        "text": "Eles são recusados até a classe incluir o Brasil",
+        "why": "Uma classe de preço nunca recusa ninguém; a restrição geográfica recusaria."
+      }
+    ]
+  },
+  "ex-3kbfj95c": {
+    "prompt": "Um arquivo vendido a um cliente precisa ser baixado só por esse cliente, e só até sexta. Que recurso serve?",
+    "hint": "Um link que carrega a própria prova e o próprio prazo.",
+    "choices": [
+      {
+        "text": "Restrição geográfica ao país do cliente",
+        "why": "Um país tem milhões de pessoas; não escolhe um cliente."
+      },
+      {
+        "text": "Uma regra de WAF que permite o endereço IP do cliente",
+        "why": "Um endereço muda com a rede em que o cliente está, e não diz nada sobre sexta."
+      },
+      {
+        "text": "Uma URL assinada que expira na sexta",
+        "why": "Isso. O CloudFront confere a assinatura com o grupo de chaves e a recusa depois da hora que a loja escolheu."
+      },
+      {
+        "text": "Uma invalidação do arquivo na sexta",
+        "why": "Uma invalidação tira uma cópia dos pontos de presença; qualquer um ainda poderia baixá-lo antes e depois."
+      }
+    ]
+  },
+  "ex-k4ke37d9": {
+    "prompt": "A distribuição tem uma web ACL do WAF e o bucket está atrás do OAC. Um testador ainda chega direto ao balanceador da loja, contornando toda regra. O que fecha isso?",
+    "hint": "A origem tem de admitir só o CloudFront.",
+    "choices": [
+      {
+        "text": "Uma segunda web ACL em `sa-east-1`, presa ao balanceador além da distribuição",
+        "why": "Ela poderia filtrar no ALB também, mas deixa a porta dele aberta para a internet inteira."
+      },
+      {
+        "text": "Um OAC na origem do balanceador",
+        "why": "O OAC é para buckets e algumas outras origens da AWS; ele não fecha um balanceador."
+      },
+      {
+        "text": "Ligar o `redirect-to-https`",
+        "why": "Isso muda o que quem vê a distribuição recebe, não quem pode chegar ao balanceador."
+      },
+      {
+        "text": "Um grupo de segurança no balanceador que admite só a lista de prefixos gerenciada do CloudFront",
+        "why": "Isso. Aí o CloudFront é o único caminho de entrada, e a web ACL vê toda requisição."
+      }
+    ]
+  },
+  "ex-q7t2mftj": {
+    "prompt": "As páginas da loja são diferentes para cada cliente logado. Que comportamento serve para elas?",
+    "hint": "Uma cópia compartilhada por todo mundo mostraria a cesta de um cliente a outro.",
+    "choices": [
+      {
+        "text": "`CachingOptimized`, para o balanceador trabalhar menos",
+        "why": "Com chave só no caminho, todo cliente receberia a página do primeiro."
+      },
+      {
+        "text": "`CachingDisabled` com `AllViewer`, repassando os cookies",
+        "why": "Isso. Nada é guardado, e a origem recebe o que precisa para saber quem pergunta."
+      },
+      {
+        "text": "`CachingOptimized` com o cookie de sessão acrescentado à chave",
+        "why": "Isso guarda uma cópia por cliente que ninguém mais usa, um cache que só custa."
+      },
+      {
+        "text": "Nenhum: páginas não podem passar pelo CloudFront",
+        "why": "Podem, e as da loja passam, pelo comportamento padrão."
+      }
+    ]
+  },
+  "ex-zq8msbn7": {
+    "prompt": "A loja manda 10.240 GB por mês a quem vê no Brasil. Quantos dólares por mês a transferência do CloudFront economiza contra mandar os mesmos bytes direto de `sa-east-1`, a 0,110 contra 0,150?",
+    "hint": "A diferença por GB, vezes os GB.",
+    "unit": "dólares"
+  },
+  "ex-3ap5gjgz": {
+    "prompt": "Ligue cada necessidade ao recurso do CloudFront que a atende.",
+    "hint": "Quatro recursos da lição, e um sobrando.",
+    "pairs": [
+      {
+        "left": "manter o bucket privado e ainda servir os arquivos",
+        "right": "Origin Access Control"
+      },
+      {
+        "left": "fazer os pontos de presença esquecerem um arquivo publicado por engano",
+        "right": "uma invalidação"
+      },
+      {
+        "left": "recusar quem vê de um país que a licença exclui",
+        "right": "restrição geográfica"
+      },
+      {
+        "left": "limitar a taxa de um endereço martelando o checkout",
+        "right": "uma web ACL do WAF"
+      }
+    ],
+    "right_distractors": [
+      "uma classe de preço"
+    ]
+  }
+}

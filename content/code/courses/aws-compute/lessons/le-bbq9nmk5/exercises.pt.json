@@ -1,0 +1,476 @@
+{
+  "ex-g386evrj": {
+    "prompt": "Um launch template tem as versões 1 a 3. Alguém precisa que a versão 2 tenha um volume raiz maior. O que essa pessoa faz?",
+    "hint": "O que acontece com uma versão depois de escrita?",
+    "choices": [
+      {
+        "text": "Editar a versão 2 no lugar; os grupos a pegam no próximo lançamento",
+        "why": "Na AWS uma versão é imutável. Nenhuma chamada edita uma versão; a mudança tem de ser uma versão nova."
+      },
+      {
+        "text": "Apagar a versão 2 e criá-la de novo com o mesmo número",
+        "why": "Números não são reaproveitados. Apagar a versão 2 deixa um buraco, e a próxima versão criada é a 4."
+      },
+      {
+        "text": "Redimensionar o volume numa instância, o que o grava de volta na versão 2",
+        "why": "Nada volta de uma instância para o template. A instância muda e a versão continua como foi escrita."
+      },
+      {
+        "text": "Criar a versão 4 com o disco maior, e apontar para a 4 o que deve usá-la",
+        "why": "Certo. Versões nunca são editadas, só acrescentadas (ou apagadas), então a correção é o próximo número, e quem deve usá-la passa a apontar para a 4."
+      }
+    ]
+  },
+  "ex-5dr61tcz": {
+    "prompt": "Um grupo diz Version=$Latest. Um colega cria a versão 5 para testar uma imagem nova e não mexe no padrão. O que acontece?",
+    "hint": "Qual dos dois nomes se move sozinho?",
+    "choices": [
+      {
+        "text": "Nada, até alguém rodar modify-launch-template --default-version 5",
+        "why": "É assim que o $Default se move. O $Latest acompanha o número mais alto, então já significa 5."
+      },
+      {
+        "text": "Toda instância rodando é substituída na hora por uma da versão 5",
+        "why": "Uma mudança de versão não toca instância rodando. Substituí-las é um ato à parte, como um instance refresh."
+      },
+      {
+        "text": "O próximo lançamento do grupo, seja qual for o motivo, usa a versão 5",
+        "why": "Certo. Um aumento de escala ou uma substituição lançados depois que a versão 5 existe resolvem $Latest como 5, e o experimento entra no grupo."
+      },
+      {
+        "text": "O grupo para de lançar até a versão 5 virar a padrão",
+        "why": "Um grupo não compara $Latest com $Default; ele resolve o nome que recebeu e lança."
+      }
+    ]
+  },
+  "ex-kje24zxa": {
+    "prompt": "No laboratório, uma versão criada com --source-version 1 e só um tipo de instância volta contendo apenas InstanceType. O que a AWS guardaria nela?",
+    "hint": "Para que serve o --source-version?",
+    "choices": [
+      {
+        "text": "Os dados da versão 1, com t3.medium como tipo",
+        "why": "Certo. Na AWS a versão de origem é copiada e os dados enviados junto a sobrescrevem. O moto 5.2.3 ignora a origem."
+      },
+      {
+        "text": "O mesmo que o moto: a versão guarda só o que a chamada enviou, e a origem é um rótulo",
+        "why": "Esse é o comportamento do moto, e a lição o marca como do moto. Na AWS a origem é a base da versão nova."
+      },
+      {
+        "text": "Nada: a chamada falha, porque toda versão tem de citar a própria imagem",
+        "why": "Uma versão pode omitir a imagem; com uma versão de origem ela a herda, e sem origem simplesmente não tem."
+      },
+      {
+        "text": "Os dados da versão 1 sem mudança, porque os dados enviados são ignorados quando há uma origem",
+        "why": "É o contrário: os dados enviados são o que muda, e o resto vem da origem."
+      }
+    ]
+  },
+  "ex-jzp16the": {
+    "prompt": "Uma versão de launch template pode ser apagada, mas depois de criada nunca pode ser ___.",
+    "hint": "O motivo de uma correção ser sempre um número novo.",
+    "blanks": [
+      {
+        "accept": [
+          "editada",
+          "alterada",
+          "modificada",
+          "mudada"
+        ]
+      }
+    ]
+  },
+  "ex-5c87sjqr": {
+    "prompt": "Quais destes uma versão de launch template guarda? Marque todos os que se aplicam.",
+    "hint": "O que uma instância é, contra quantas existem.",
+    "choices": [
+      {
+        "text": "O id da imagem",
+        "why": "Todo lançamento precisa de um, e o template é onde ele fica escrito."
+      },
+      {
+        "text": "HttpTokens como required",
+        "why": "As opções de metadata fazem parte do que uma instância é; a lição 7 explica esta."
+      },
+      {
+        "text": "O número mínimo e máximo de instâncias",
+        "why": "Contagens são do grupo que lança a partir do template, não do template."
+      },
+      {
+        "text": "Um volume raiz gp3 de 20 GB apagado ao terminar",
+        "why": "Os block device mappings ficam no template, e é por isso que o disco sai igual em toda instância."
+      },
+      {
+        "text": "A capacidade desejada que uma política de escala move",
+        "why": "A capacidade desejada é do grupo, e as políticas da lição 5 a movem lá."
+      },
+      {
+        "text": "Uma tag posta em toda instância que ele lança",
+        "why": "TagSpecifications marcam o que é lançado, e é assim que se acham instâncias com ids que ninguém escolheu."
+      }
+    ]
+  },
+  "ex-cm4zczqp": {
+    "prompt": "O que é a capacidade desejada de um grupo?",
+    "hint": "Qual dos três números as políticas movem?",
+    "choices": [
+      {
+        "text": "A contagem que o grupo está buscando agora, entre o mínimo e o máximo",
+        "why": "Certo. Ela fica entre o mínimo e o máximo, e é o número que uma pessoa ou uma política move."
+      },
+      {
+        "text": "O número de instâncias rodando neste momento",
+        "why": "Os dois podem diferir: enquanto instâncias são lançadas ou terminadas, o que existe fica atrás do desejado."
+      },
+      {
+        "text": "O máximo de instâncias que o grupo roda, seja qual for a carga",
+        "why": "Isso é o máximo, o teto da capacidade e da conta."
+      },
+      {
+        "text": "Uma sugestão de uma política, que o grupo segue só acima do mínimo e só quando as instâncias estão saudáveis",
+        "why": "O grupo a segue seja qual for a saúde das instâncias; as doentes são substituídas justamente para alcançá-la."
+      }
+    ]
+  },
+  "ex-tqcam2hz": {
+    "prompt": "Na AWS, o que acontece com set-desired-capacity 8 num grupo cujo máximo é 6?",
+    "hint": "O moto aceitou. A AWS aceita?",
+    "choices": [
+      {
+        "text": "Lança oito, como o moto fez, e sobe o máximo junto",
+        "why": "Um máximo que se movesse sozinho não seria teto para a conta. Os oito do moto são um registro que ninguém paga."
+      },
+      {
+        "text": "Lança seis e segura o desejado em oito até o máximo subir",
+        "why": "A capacidade desejada não pode ficar fora dos limites. A chamada é recusada em vez de aplicada pela metade."
+      },
+      {
+        "text": "Recusa a chamada com um ValidationError, e não lança nada",
+        "why": "Certo. A capacidade desejada tem de ficar entre o mínimo e o máximo, e nada é lançado."
+      },
+      {
+        "text": "Aceita o número e espera uma política confirmar",
+        "why": "Políticas e chamadas manuais ajustam o mesmo número; nenhuma espera pela outra."
+      }
+    ]
+  },
+  "ex-tbq22p0g": {
+    "prompt": "A capacidade desejada de um grupo cai em um. Ponha em ordem os passos da política de término padrão da AWS.",
+    "hint": "Equilíbrio primeiro.",
+    "items": [
+      "Escolher a zona com mais instâncias",
+      "Dentro dela, preferir instâncias do launch template ou configuração mais antiga",
+      "Depois, preferir a instância mais perto da próxima hora de cobrança",
+      "Escolher ao acaso entre as que sobrarem"
+    ],
+    "trap": "Começar pela versão mais antiga desequilibraria as zonas, e o primeiro passo existe para impedir isso."
+  },
+  "ex-fdq9pwdx": {
+    "prompt": "Uma instância de um grupo está há duas horas num relatório de três. O grupo reduz a escala. O que impede que justo essa instância seja terminada?",
+    "hint": "Algo que tira uma instância da escolha quando a contagem cai.",
+    "choices": [
+      {
+        "text": "Um período de carência de três horas para o health check",
+        "why": "A carência só impede que os health checks contem depois do lançamento. Ela não participa da escolha de quem sai."
+      },
+      {
+        "text": "Ligar nela a proteção contra scale-in",
+        "why": "Certo. O set-instance-protection a tira da escolha da redução; um health check com falha ainda a substituiria."
+      },
+      {
+        "text": "Uma tag como keep=true na instância",
+        "why": "Nenhuma política de término lê suas tags. A ordem é zona, idade do template, hora de cobrança, acaso."
+      },
+      {
+        "text": "Suspender o processo HealthCheck do grupo",
+        "why": "Isso para os health checks, não a redução. O grupo ainda escolheria uma instância para terminar."
+      }
+    ]
+  },
+  "ex-q77n3xwy": {
+    "prompt": "Como listar as instâncias do grupo web, cujos ids mudam cada vez que uma é substituída?",
+    "hint": "Uma tag que só a AWS pode escrever.",
+    "choices": [
+      {
+        "text": "Filtrar por app=shop, que o template põe em toda instância",
+        "why": "Qualquer um pode escrever app=shop, em qualquer instância ou em outro template, então ela identifica um propósito e não um grupo."
+      },
+      {
+        "text": "Guardar os ids que o create-auto-scaling-group imprimiu quando o grupo foi criado",
+        "why": "Ele não imprime nada quando funciona, e os ids estariam velhos depois da primeira substituição de qualquer jeito."
+      },
+      {
+        "text": "Filtrar pela tag aws:autoscaling:groupName=web, que só a AWS escreve",
+        "why": "Certo. A AWS a escreve em toda instância que o grupo lança, e o prefixo aws: é reservado, então mais nada pode."
+      },
+      {
+        "text": "Filtrar pelas subnets do --vpc-zone-identifier do grupo",
+        "why": "Outras instâncias dividem essas subnets; uma subnet diz onde algo roda, não quem o lançou."
+      }
+    ]
+  },
+  "ex-1m26e9nt": {
+    "prompt": "O moto pôs em sa-east-1a todas as instâncias de um grupo que recebeu três subnets em três zonas. O que a AWS faz com o mesmo grupo?",
+    "hint": "Por que dar a um grupo mais de uma zona?",
+    "choices": [
+      {
+        "text": "O mesmo: um grupo enche a primeira subnet antes de usar a próxima",
+        "why": "Essa é a simplificação do moto. A AWS espalha desde o primeiro lançamento."
+      },
+      {
+        "text": "Espalha igualmente pelas três zonas, e mantém o equilíbrio conforme instâncias entram e saem",
+        "why": "Certo. Uma por zona com três instâncias, duas por zona com seis, então perder uma zona leva um terço do grupo e não ele inteiro."
+      },
+      {
+        "text": "Põe cada uma na zona que tiver o menor preço naquela hora",
+        "why": "Preços sob demanda não mudam entre zonas de uma região, e a colocação segue o equilíbrio, não o preço."
+      },
+      {
+        "text": "Ele também precisa de --availability-zones, senão usa uma zona como o moto",
+        "why": "As subnets já indicam as zonas; o grupo as deduz, como a descrição dele mostrou."
+      }
+    ]
+  },
+  "ex-6ka35pd2": {
+    "prompt": "Um grupo tem máximo de 30. Enquanto o AZRebalance move instâncias entre zonas, qual é o maior número de instâncias que a AWS deixa ele rodar?",
+    "hint": "10% do máximo, ou uma instância, o que for maior.",
+    "unit": "instâncias"
+  },
+  "ex-86mt2wdz": {
+    "prompt": "Ligue cada configuração ou chamada ao que ela faz pela saúde de uma instância.",
+    "hint": "Duas fontes de respostas, uma pausa, um veredito manual.",
+    "pairs": [
+      {
+        "left": "HealthCheckType EC2",
+        "right": "Pega um host com falha ou um kernel que parou"
+      },
+      {
+        "left": "HealthCheckType ELB",
+        "right": "Pega também um servidor web que parou de responder /health"
+      },
+      {
+        "left": "HealthCheckGracePeriod",
+        "right": "Ignora checks com falha por um tempo depois do lançamento"
+      },
+      {
+        "left": "set-instance-health",
+        "right": "Deixa uma pessoa ou um script declarar uma instância doente"
+      }
+    ],
+    "right_distractors": [
+      "Acrescenta instâncias quando a CPU média sobe"
+    ]
+  },
+  "ex-jbfsagmw": {
+    "prompt": "Um grupo novo atrás de um load balancer tem health check do tipo ELB e nenhuma carência. A aplicação leva quatro minutos para subir. O que acontece?",
+    "hint": "O que o grupo vê durante esses quatro minutos?",
+    "choices": [
+      {
+        "text": "Cada instância nova falha no check enquanto sobe, é substituída, e o ciclo continua",
+        "why": "Certo. Sem carência, o primeiro /health com falha conta, então nenhuma instância vive o bastante para subir, e cada lançamento é cobrado."
+      },
+      {
+        "text": "As instâncias atendem depois de quatro minutos, porque um target group espera os alvos novos",
+        "why": "Um target group marca um alvo como doente assim que os checks falham; esperar é a função da carência do grupo."
+      },
+      {
+        "text": "O grupo espera a primeira resposta saudável antes de começar a checar",
+        "why": "Essa espera não existe a não ser que a carência a dê, e aqui ela é zero."
+      },
+      {
+        "text": "O load balancer as marca como doentes, mas o grupo só age pelos checks do EC2",
+        "why": "Com o tipo ELB as duas fontes contam; é para isso que se configura."
+      }
+    ]
+  },
+  "ex-y4awd92s": {
+    "prompt": "Depois de set-instance-health --health-status Unhealthy, o moto ainda listava a instância, rodando e marcada Unhealthy. O que a AWS teria feito?",
+    "hint": "Substituída, não consertada.",
+    "choices": [
+      {
+        "text": "O mesmo: o status é um rótulo, e a substituição espera o próximo health check",
+        "why": "Na AWS o status é o próprio veredito. O moto anotar e parar é uma lacuna do moto."
+      },
+      {
+        "text": "Reiniciado a instância, e marcado como saudável de novo se ela respondesse depois",
+        "why": "Grupos não reiniciam. Supõe-se que o que havia na instância mora em outro lugar, então uma nova sai mais barato que um conserto."
+      },
+      {
+        "text": "Terminado a instância e baixado a capacidade desejada em um",
+        "why": "A substituição por saúde mantém a contagem. Baixá-la é o que --should-decrement-desired-capacity pede, à mão."
+      },
+      {
+        "text": "Terminado a instância e lançado uma substituta a partir do template",
+        "why": "Certo. Uma instância doente é substituída, não consertada, e a contagem volta à capacidade desejada."
+      }
+    ]
+  },
+  "ex-fb0n5j1v": {
+    "prompt": "Ana torna a versão 3, uma t3.medium, a padrão do template. O que acontece com as três instâncias t3.micro que já rodam?",
+    "hint": "Um template descreve o próximo lançamento.",
+    "choices": [
+      {
+        "text": "São paradas, mudadas para t3.medium e ligadas de novo",
+        "why": "Nada as redimensiona. Um template é lido no lançamento e nunca mais."
+      },
+      {
+        "text": "O grupo as substitui uma por vez, já que segue o padrão",
+        "why": "O grupo segue o padrão só nos lançamentos novos. Substituir de propósito é um instance refresh."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Cada uma fica com a versão 1 até ser terminada por outro motivo, como a transcrição mostrou."
+      },
+      {
+        "text": "São marcadas como doentes, para que a substituição por saúde traga a versão 3",
+        "why": "Uma versão antiga não é problema de saúde; o grupo não tem regra que confunda os dois."
+      }
+    ]
+  },
+  "ex-tav9r676": {
+    "prompt": "Um grupo de 20 instâncias passa por um refresh com MinHealthyPercentage 90 e InstanceWarmup 60. Cada instância nova leva 4 minutos para lançar, subir e passar no health check. Quantos minutos, mais ou menos, o refresh leva?",
+    "hint": "Quantas podem estar fora ao mesmo tempo? Depois, lotes vezes minutos por lote.",
+    "unit": "minutos"
+  },
+  "ex-v193ngwp": {
+    "prompt": "Com dez instâncias e um MinHealthyPercentage de 50, um instance refresh substitui ___ instâncias em cada lote.",
+    "hint": "Metade delas tem de continuar saudável.",
+    "blanks": [
+      {
+        "accept": [
+          "5",
+          "cinco"
+        ]
+      }
+    ]
+  },
+  "ex-3cz5hkzb": {
+    "prompt": "Um refresh parou no meio. Qual preferência permite começá-lo de novo sem substituir as instâncias que ele já substituiu?",
+    "hint": "Algo que compara cada instância com a versão desejada.",
+    "choices": [
+      {
+        "text": "AutoRollback",
+        "why": "Isso devolve o grupo à versão anterior quando um refresh falha; é a direção oposta."
+      },
+      {
+        "text": "CheckpointPercentages",
+        "why": "Checkpoints pausam um refresh em pontos escolhidos. Não decidem quais instâncias pular."
+      },
+      {
+        "text": "SkipMatching",
+        "why": "Certo. Instâncias que já estão na versão desejada do template ficam como estão."
+      },
+      {
+        "text": "MinHealthyPercentage de 100",
+        "why": "Isso limita quantas saem de cada vez, e toda instância ainda seria substituída."
+      }
+    ]
+  },
+  "ex-csc5kd44": {
+    "prompt": "No laboratório, o start-instance-refresh respondeu com uma página HTML dizendo 500 Internal Server Error. O que isso diz?",
+    "hint": "De quem é um erro 500 com corpo HTML, onde se esperava XML?",
+    "choices": [
+      {
+        "text": "O JSON das preferências está errado, já que a AWS responde a entrada ruim com um 500",
+        "why": "A AWS responde a entrada ruim com um 400 e um ValidationError em XML. Um 500 é o servidor falhando, seja o que for que se enviou."
+      },
+      {
+        "text": "Que o moto não implementa a chamada, e nada sobre o que a AWS faria",
+        "why": "Certo. O moto 5.2.3 não tem instance refresh; o erro é dele, e o pedido não diz nada sobre a AWS, nem para um lado nem para o outro."
+      },
+      {
+        "text": "Que três instâncias são poucas para um mínimo saudável de 90%",
+        "why": "A AWS substitui pelo menos uma instância por vez seja qual for a porcentagem; o tamanho do grupo não produz erro de servidor."
+      },
+      {
+        "text": "Que a versão padrão do template é a versão 2 quebrada",
+        "why": "A padrão já era a 3, e um refresh nem chegaria ao template antes de o servidor falhar."
+      }
+    ]
+  },
+  "ex-z6tv0766": {
+    "prompt": "Na AWS, o servidor web de uma instância num grupo ELB para de responder /health. Ponha em ordem o que vem depois.",
+    "hint": "Por padrão a antiga sai antes de a nova entrar.",
+    "items": [
+      "O health check do target group falha na instância",
+      "O grupo marca a instância como doente",
+      "O grupo termina a instância",
+      "O grupo lança uma substituta a partir do template",
+      "Depois da carência a substituta passa nos checks"
+    ],
+    "trap": "Para uma instância doente o grupo termina primeiro e lança depois, por padrão; é o rebalanceamento que lança primeiro."
+  },
+  "ex-6hd0hvnf": {
+    "prompt": "Um grupo tem mínimo 2 e desejado 3. Você termina uma instância com --should-decrement-desired-capacity. O que acontece?",
+    "hint": "Que número a opção muda?",
+    "choices": [
+      {
+        "text": "O desejado cai para 2, e nada substitui a instância",
+        "why": "Certo. A própria contagem caiu, e dois ainda está no mínimo, então o grupo não tem o que lançar."
+      },
+      {
+        "text": "O desejado continua 3 e uma substituta é lançada",
+        "why": "Isso é --no-should-decrement-desired-capacity, a forma que a lição usou para mostrar uma substituição."
+      },
+      {
+        "text": "O desejado cai para 2, e o mínimo faz o grupo lançar mais uma de qualquer jeito",
+        "why": "Dois é o mínimo, não abaixo dele; o grupo está satisfeito."
+      },
+      {
+        "text": "A chamada é recusada, porque o grupo ficaria abaixo do mínimo",
+        "why": "Ela seria recusada com desejado 2, onde decrementar fica abaixo do mínimo. Com 3, não fica."
+      }
+    ]
+  },
+  "ex-m1wk1cad": {
+    "prompt": "Quais destes o moto 5.2.3 fez diferente da AWS nesta lição? Marque todos os que se aplicam.",
+    "hint": "Quatro dos seis foram apontados no texto como do moto.",
+    "choices": [
+      {
+        "text": "Aceitou uma capacidade desejada acima do máximo",
+        "why": "A AWS recusa isso com um ValidationError."
+      },
+      {
+        "text": "Não imprimiu nada quando o create-auto-scaling-group funcionou",
+        "why": "A AWS também não imprime nada; uma criação bem-sucedida não tem saída."
+      },
+      {
+        "text": "Pôs todas as instâncias na primeira subnet",
+        "why": "A AWS espalha um grupo pelas zonas das subnets dele."
+      },
+      {
+        "text": "Deixou rodando uma instância marcada como doente",
+        "why": "A AWS a termina e a substitui."
+      },
+      {
+        "text": "Escreveu a tag aws:autoscaling:groupName em cada instância",
+        "why": "A AWS escreve a mesma tag; é assim que se acham as instâncias do grupo."
+      },
+      {
+        "text": "Ignorou o --source-version",
+        "why": "A AWS monta a versão nova a partir da origem e dos dados enviados junto."
+      }
+    ]
+  },
+  "ex-j46d1x0b": {
+    "prompt": "O que um grupo com mínimo, desejado e máximo todos iguais a 1 oferece?",
+    "hint": "Ele não escala. O que mais um grupo faz?",
+    "choices": [
+      {
+        "text": "Nada além de uma instância comum, já que nunca pode escalar",
+        "why": "Escalar é uma coisa que um grupo faz. Manter a contagem, substituindo o que falha, é a outra, e isso funciona com uma."
+      },
+      {
+        "text": "Uma instância que o grupo nunca termina, o que a torna segura para guardar estado",
+        "why": "O grupo a termina assim que ela falha num check. Nada nela está a salvo disso."
+      },
+      {
+        "text": "Uma instância em cada zona das subnets",
+        "why": "Três subnets com desejado 1 continuam sendo uma instância, numa das zonas."
+      },
+      {
+        "text": "Uma instância que é substituída quando falha nos checks",
+        "why": "Certo. É o jeito mais barato de ter um servidor único que volta sozinho, desde que nada nele precise sobreviver."
+      }
+    ]
+  }
+}

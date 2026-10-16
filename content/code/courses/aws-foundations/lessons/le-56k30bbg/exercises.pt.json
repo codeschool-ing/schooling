@@ -1,0 +1,378 @@
+{
+  "ex-39rtgjyp": {
+    "prompt": "A loja quer que `/api/*` chegue a um grupo de máquinas e todo outro caminho a outro. Que balanceador consegue fazer isso?",
+    "hint": "Qual deles lê a requisição?",
+    "choices": [
+      {
+        "text": "O network load balancer, com um listener por caminho",
+        "why": "Um NLB nunca vê um caminho: ele repassa conexões e lê só endereços e portas."
+      },
+      {
+        "text": "O application load balancer",
+        "why": "Isso. Ele lê cada requisição HTTP, então uma regra pode escolher um grupo de alvos por caminho, host ou cabeçalho."
+      },
+      {
+        "text": "O gateway load balancer, que vê todas as portas",
+        "why": "Ver todas as portas não é ler a requisição. Um GWLB passa pacotes a appliances sem olhar dentro."
+      },
+      {
+        "text": "Qualquer um dos três, já que regras fazem parte de todo listener",
+        "why": "Regras de caminho e host só existem nos listeners de um ALB. Os outros dois não têm contra o que compará-las."
+      }
+    ]
+  },
+  "ex-tqvhd9f4": {
+    "prompt": "O firewall de um parceiro aceita o tráfego de pagamento da loja só de endereços escritos nele uma vez. Que balanceador serve, e por quê?",
+    "hint": "O endereço de quem muda, e o de quem não muda?",
+    "choices": [
+      {
+        "text": "Um NLB, que mantém um endereço fixo por zona",
+        "why": "Isso. Cada zona pode ter um Elastic IP da loja, e esses endereços nunca mudam."
+      },
+      {
+        "text": "Um ALB, já que o nome DNS dele nunca muda e o parceiro pode liberar o nome",
+        "why": "O nome é estável, mas um firewall filtra por endereço, e os endereços por trás do nome de um ALB mudam conforme ele escala."
+      },
+      {
+        "text": "Um GWLB, porque o firewall do parceiro pode ser registrado como alvo dele",
+        "why": "Um GWLB passa o tráfego da própria loja por appliances que ela controla. Ele não dá endereço fixo nenhum ao mundo de fora."
+      },
+      {
+        "text": "O Classic load balancer, o único com Elastic IPs",
+        "why": "O Classic nunca aceitou Elastic IPs; o NLB aceita, e o Classic é a geração que a AWS pede para projetos novos evitarem."
+      }
+    ]
+  },
+  "ex-y36qnzs4": {
+    "prompt": "A aplicação atrás de um ALB registra o endereço de cada chamador, e toda linha mostra um endereço da VPC. Onde está o endereço do cliente?",
+    "hint": "Um ALB abre a própria conexão com o alvo.",
+    "choices": [
+      {
+        "text": "Perdido: um ALB nunca o repassa",
+        "why": "Ele repassa, só que não como origem da conexão."
+      },
+      {
+        "text": "Na origem da conexão, depois que o balanceamento entre zonas for desligado",
+        "why": "O balanceamento entre zonas decide quais alvos um nó pode usar, não que endereço o alvo vê."
+      },
+      {
+        "text": "No cabeçalho `X-Forwarded-For` de cada requisição",
+        "why": "Isso. A conexão vem do ALB, então o endereço de quem chamou viaja no cabeçalho; um NLB o mostraria como a própria origem."
+      },
+      {
+        "text": "Nos resultados da verificação de saúde do grupo de alvos",
+        "why": "As verificações de saúde vêm do balanceador e não trazem nada sobre clientes."
+      }
+    ]
+  },
+  "ex-hdch69xa": {
+    "prompt": "Todo pacote que entra na VPC da loja precisa passar por um appliance de firewall e então chegar ao destino inalterado. Por que um GWLB embrulha os pacotes em GENEVE em vez de repassá-los como um NLB?",
+    "hint": "O que o appliance veria se o pacote fosse reendereçado a ele?",
+    "choices": [
+      {
+        "text": "Porque o GENEVE cifra o pacote entre o balanceador e o appliance",
+        "why": "GENEVE é um túnel, não cifragem. O que ele compra é o pacote original, intacto."
+      },
+      {
+        "text": "Para o appliance ver o pacote original, endereços e tudo, e poder devolvê-lo inalterado",
+        "why": "Isso. O embrulho mantém a origem e o destino que o firewall tem de julgar, e a volta deixa o pacote seguir."
+      },
+      {
+        "text": "Porque um NLB não carrega UDP e o GENEVE carrega",
+        "why": "Um NLB carrega UDP. A diferença está no que chega ao appliance, não nos protocolos permitidos."
+      },
+      {
+        "text": "Porque o GENEVE deixa o moto mostrar o caminho do pacote",
+        "why": "O moto não carrega pacote nenhum, embrulhado ou não."
+      }
+    ]
+  },
+  "ex-aebfq75p": {
+    "prompt": "Um gateway load balancer fala com os appliances em GENEVE, na porta UDP ___.",
+    "hint": "A porta do grupo de alvos `shop-firewalls`.",
+    "blanks": [
+      {
+        "accept": [
+          "6081"
+        ]
+      }
+    ]
+  },
+  "ex-zwya725e": {
+    "prompt": "No moto, o NLB criado com dois Elastic IPs responde com as zonas e sem `LoadBalancerAddresses`. O que isso mostra?",
+    "hint": "Quem descartou os endereços?",
+    "choices": [
+      {
+        "text": "Que um NLB voltado para a internet não pode usar Elastic IPs",
+        "why": "Pode, e é o motivo de escolher um. A ausência é do moto."
+      },
+      {
+        "text": "Que os endereços só são dados quando o NLB fica `active`",
+        "why": "Um palpite plausível, e não o que aconteceu: o moto guardou as zonas e não manteve nenhum dos endereços enviados."
+      },
+      {
+        "text": "Só o limite do moto: a AWS lista ali o Elastic IP de cada zona",
+        "why": "Isso. A transcrição mostra o pedido; o resultado, o endereço fixo por zona, é comportamento documentado da AWS."
+      },
+      {
+        "text": "Que as sub-redes eram privadas, então nenhum endereço público pôde ser preso",
+        "why": "O moto não tem aqui noção de qual sub-rede é pública, e descartou os endereços de qualquer jeito."
+      }
+    ]
+  },
+  "ex-8ygcrtds": {
+    "prompt": "Que objeto guarda a verificação de saúde que decide se uma máquina recebe tráfego?",
+    "hint": "As máquinas não são presas ao próprio balanceador.",
+    "choices": [
+      {
+        "text": "O listener",
+        "why": "Um listener é um protocolo e uma porta, e as regras que escolhem um grupo. Ele não vigia máquinas."
+      },
+      {
+        "text": "O balanceador de carga",
+        "why": "O balanceador roda as verificações, mas o que verificar e com que frequência é definido em outro lugar."
+      },
+      {
+        "text": "O grupo de alvos",
+        "why": "Isso. O caminho, o intervalo e os limites pertencem ao grupo, e todo alvo dele os compartilha."
+      },
+      {
+        "text": "O grupo de segurança",
+        "why": "Um grupo de segurança filtra tráfego; a lição 18 diz o que ele faz. Ele não julga saúde."
+      }
+    ]
+  },
+  "ex-mrsd9rsm": {
+    "prompt": "Um grupo de alvos verifica a cada 15 segundos e marca um alvo como não saudável depois de 2 falhas seguidas. Cerca de quantos segundos depois de uma máquina parar de responder ela sai do rodízio?",
+    "hint": "Intervalo vezes o limite de não saudável.",
+    "unit": "segundos"
+  },
+  "ex-6rjr5mtx": {
+    "prompt": "No moto, o `describe-target-health` chama `i-0000000000000dead` de saudável. Um colega conclui que as verificações de saúde do laboratório funcionam, só que generosas demais. Qual é a leitura melhor?",
+    "hint": "Havia algo para verificar?",
+    "choices": [
+      {
+        "text": "As verificações rodam, e um alvo sem instância responde por padrão",
+        "why": "Nenhuma verificação roda: não existe máquina para responder, e o id não nomeia nada."
+      },
+      {
+        "text": "O moto não roda verificação nenhuma; ele lê o estado da instância quando ela existe, e diz saudável no resto",
+        "why": "Isso. Uma máquina parada volta `unused`; todo o resto, real ou não, é `healthy`. A AWS teria se recusado a registrar o id."
+      },
+      {
+        "text": "O caminho `/health` da verificação estava errado",
+        "why": "Um caminho errado faria uma verificação real falhar. Aqui nada foi perguntado, em caminho nenhum."
+      },
+      {
+        "text": "As verificações esperam o listener na 443 existir",
+        "why": "Na AWS as verificações começam quando um alvo é registrado num grupo que um balanceador usa; no moto elas nunca começam."
+      }
+    ]
+  },
+  "ex-e1g1yymz": {
+    "prompt": "Ponha numa ordem que funcione os passos para pôr as máquinas web da loja atrás de HTTPS.",
+    "hint": "Cada passo precisa do ARN ou do id que o passo anterior criou.",
+    "items": [
+      "criar o grupo de alvos com a verificação de saúde",
+      "registrar as máquinas nele",
+      "obter um certificado emitido do ACM",
+      "criar o listener HTTPS na 443, encaminhando ao grupo",
+      "acrescentar o listener na 80 que redireciona para a 443"
+    ],
+    "trap": "Criar o listener HTTPS antes de o certificado ser emitido é o deslize comum: a AWS recusa um certificado ainda esperando validação, mesmo o moto tendo aceitado um."
+  },
+  "ex-ckxxd39e": {
+    "prompt": "Um listener tem uma regra de prioridade 10 em `/api/*` e uma de prioridade 20 no host `admin.shop.example.com`. Chega uma requisição para `admin.shop.example.com/api/users`. Que ação responde?",
+    "hint": "As regras são tentadas do menor número para cima, e a primeira que casa vence.",
+    "choices": [
+      {
+        "text": "O 403 da regra de prioridade 20, porque o host é mais específico",
+        "why": "Especificidade não conta. A regra de 10 casa primeiro, e encerra a busca."
+      },
+      {
+        "text": "O encaminhamento para `shop-api`, da regra de prioridade 10",
+        "why": "Isso. O caminho casa com `/api/*`, a prioridade 10 é tentada primeiro, e a primeira que casa vence."
+      },
+      {
+        "text": "As duas: a requisição é encaminhada e depois recusada",
+        "why": "Uma requisição recebe uma ação. Regras são alternativas, não uma esteira."
+      },
+      {
+        "text": "A ação padrão, já que duas regras casam e nenhuma vence",
+        "why": "As prioridades existem para que uma sempre vença. A padrão responde só ao que nenhuma regra casa."
+      }
+    ]
+  },
+  "ex-h9q70vkh": {
+    "prompt": "A loja guarda a cesta de cada cliente na memória da máquina que o atendeu, e liga a aderência para não perdê-la. O que isso custa?",
+    "hint": "O que acontece com essas cestas quando uma máquina tem de sair?",
+    "choices": [
+      {
+        "text": "Nada além de um cookie; a aderência não tem custo próprio",
+        "why": "O cookie é barato. O custo está na carga e nas máquinas que não podem ser aposentadas."
+      },
+      {
+        "text": "Uma cobrança por sessão fixa na fatura",
+        "why": "A aderência não é cobrada numa linha própria. O preço dela é pago na operação."
+      },
+      {
+        "text": "Ela desliga o balanceamento entre zonas do grupo",
+        "why": "As duas configurações são separadas; uma decide para onde um nó pode mandar, a outra mantém um chamador num alvo."
+      },
+      {
+        "text": "Carga desigual, e máquinas que não podem ser esvaziadas sem perder cestas",
+        "why": "Isso. A aderência remenda estado guardado numa máquina; mover a cesta para um armazenamento que todo alvo lê tira a necessidade dela."
+      }
+    ]
+  },
+  "ex-7n2fgxt1": {
+    "prompt": "O balanceamento entre zonas está desligado. `sa-east-1a` tem 4 alvos e `sa-east-1b` tem 1, e o nó de cada zona recebe metade do tráfego. Que porcentagem de todo o tráfego o único alvo de `sa-east-1b` carrega?",
+    "hint": "Metade do tráfego, dividida só pelos alvos daquela zona.",
+    "unit": "por cento"
+  },
+  "ex-hdtfxrnw": {
+    "prompt": "O moto informa `load_balancing.cross_zone.enabled` como `false` para o ALB da loja. O que é verdade na AWS?",
+    "hint": "Um dos três tipos sempre espalha entre zonas.",
+    "choices": [
+      {
+        "text": "Está desligado, como o moto diz, até alguém ligar",
+        "why": "Esse é o padrão do NLB e do GWLB, não do ALB."
+      },
+      {
+        "text": "Um ALB sempre balanceia entre zonas; desligar se faz por grupo de alvos",
+        "why": "Isso. O moto está errado sobre o ALB aqui, e a travessia que isso causa não é cobrada."
+      },
+      {
+        "text": "Está ligado, e cada byte que ele manda entre zonas é cobrado a 0,02",
+        "why": "Está ligado, mas a travessia do ALB do nó ao alvo não é cobrada; essa cobrança é do NLB."
+      },
+      {
+        "text": "Depende do número de zonas que o ALB recebeu",
+        "why": "O número de zonas decide quantos nós existem, não se eles espalham entre zonas."
+      }
+    ]
+  },
+  "ex-bcxk8d2r": {
+    "prompt": "Um NLB com balanceamento entre zonas ligado repassa 4.096 GB por mês a alvos espalhados por igual em duas zonas. Cerca de metade atravessa zonas, a 0,01 em cada sentido. Quantos dólares por mês custa a travessia?",
+    "hint": "Metade dos gigabytes, vezes 0,02.",
+    "unit": "dólares"
+  },
+  "ex-xd7k85f1": {
+    "prompt": "O `price.py` imprimiu quatro linhas de `0.0340` e `0.0189` sob `SAE1-LoadBalancerUsage`. Por que foi preciso um segundo programa?",
+    "hint": "O que distingue os quatro produtos?",
+    "choices": [
+      {
+        "text": "Porque o `price.py` lê a versão errada da oferta",
+        "why": "Os dois programas leem a mesma versão fixada, do mesmo arquivo."
+      },
+      {
+        "text": "Um tipo de uso cobre quatro tipos de balanceador, e só a `operation` diz qual",
+        "why": "Isso. O `ops.py` imprime a operação ao lado de cada preço, e com cinco casas mantém 0,00825 como é."
+      },
+      {
+        "text": "Porque os preços do ALB estão na oferta do EC2 e não na `AWSELB`",
+        "why": "Estão nas duas, e as duas dizem 0,0340. O problema era distinguir os tipos, não achá-los."
+      },
+      {
+        "text": "Porque o `price.py` não lê uma oferta menor que um megabyte",
+        "why": "Ele a leu, e imprimiu as linhas. O tamanho não teve nada a ver."
+      }
+    ]
+  },
+  "ex-c465nedk": {
+    "prompt": "Pela lista de 11 de setembro de 2026, quanto custam só as horas de um ALB em São Paulo num mês de 730 horas, em dólares?",
+    "hint": "0,034 por hora.",
+    "unit": "dólares"
+  },
+  "ex-qxbcwvaf": {
+    "prompt": "Quais destes podem ser aquilo por que as unidades de capacidade de um ALB são contadas numa hora? Marque todos os que se aplicam.",
+    "hint": "A hora é cobrada pela maior das suas dimensões.",
+    "choices": [
+      {
+        "text": "Conexões novas por segundo",
+        "why": "Isso. 25 por segundo são uma LCU."
+      },
+      {
+        "text": "Bytes processados na hora",
+        "why": "Isso. 1 GB na hora, para alvos que são máquinas, é uma LCU."
+      },
+      {
+        "text": "Avaliações de regra por segundo",
+        "why": "Isso. 1.000 por segundo são uma LCU."
+      },
+      {
+        "text": "O número de alvos registrados",
+        "why": "Registrar mais alvos não custa nada por si; o que se conta é o trabalho feito."
+      },
+      {
+        "text": "O número de zonas em que ele foi posto",
+        "why": "As zonas decidem onde os nós rodam, e o preço por hora é o mesmo para duas ou três."
+      }
+    ]
+  },
+  "ex-gt82jje2": {
+    "prompt": "Ligue cada necessidade da loja ao balanceador que a atende.",
+    "hint": "Três tipos, e uma necessidade sobrando.",
+    "pairs": [
+      {
+        "left": "mandar `/api/*` para um grupo e o resto para outro",
+        "right": "application"
+      },
+      {
+        "left": "dar a um parceiro um endereço por zona que nunca muda",
+        "right": "network"
+      },
+      {
+        "left": "passar todo pacote por um appliance de firewall",
+        "right": "gateway"
+      }
+    ],
+    "right_distractors": [
+      "Classic"
+    ]
+  },
+  "ex-drvq6bd1": {
+    "prompt": "A loja roda um NLB em duas zonas, com 6 alvos numa zona e 2 na outra, e quer evitar pagar por travessias entre zonas. O que a lição sugere?",
+    "hint": "Dois jeitos de igualar a carga; um deles tem preço.",
+    "choices": [
+      {
+        "text": "Ligar o balanceamento entre zonas, já que atravessar é grátis em todo tipo",
+        "why": "Grátis só no ALB. Num NLB a travessia é cobrada a 0,01 em cada sentido."
+      },
+      {
+        "text": "Deixar o balanceamento entre zonas desligado e igualar as zonas, 4 e 4",
+        "why": "Isso. Zonas iguais espalham a carga sem atravessar, que é o que um grupo de auto scaling nas mesmas zonas faz."
+      },
+      {
+        "text": "Pôr todos os alvos numa zona, para nada atravessar",
+        "why": "Nada atravessaria, e perder aquela zona levaria o serviço inteiro, que é o que as zonas existem para evitar."
+      },
+      {
+        "text": "Trocá-lo por um ALB, cuja travessia é grátis, seja qual for o protocolo",
+        "why": "Um ALB fala só HTTP e HTTPS; um serviço em TCP puro não pode passar para trás dele."
+      }
+    ]
+  },
+  "ex-vkqt3w56": {
+    "prompt": "Um balanceador numa conta real não recebe tráfego nenhum durante um mês inteiro. O que a fatura mostra para ele?",
+    "hint": "Dois medidores; um deles roda de qualquer jeito.",
+    "choices": [
+      {
+        "text": "Nada, já que nenhuma unidade de capacidade foi usada",
+        "why": "O medidor de capacidade fica em zero; o de horas não."
+      },
+      {
+        "text": "Cada hora em que existiu, ao preço por hora",
+        "why": "Isso. Para um ALB em São Paulo são 24,82 dólares por 730 horas, sem atender ninguém."
+      },
+      {
+        "text": "Um mínimo de uma unidade de capacidade por hora, e nenhuma cobrança por hora",
+        "why": "É o contrário: a hora é sempre cobrada, e as unidades de capacidade seguem o trabalho."
+      },
+      {
+        "text": "O que o moto cobrou pelo mesmo balanceador",
+        "why": "O moto não cobra nada e não conhece preço. A fatura é da AWS, por hora."
+      }
+    ]
+  }
+}
