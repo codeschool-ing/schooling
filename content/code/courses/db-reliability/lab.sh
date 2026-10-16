@@ -68,7 +68,8 @@ stop_everything() {
   done
   find /var/lib/postgresql -mindepth 1 -maxdepth 1 -exec rm -rf {} +
   rm -rf /var/log/postgresql/*
-  rm -rf /var/lib/pgbackrest/* /var/log/pgbackrest/* /var/spool/pgbackrest /tmp/pgbackrest
+  [ -d /srv/offsite ] && chattr -R -i /srv/offsite 2>/dev/null || true
+  rm -rf /var/lib/pgbackrest/* /var/log/pgbackrest/* /var/spool/pgbackrest /tmp/pgbackrest /srv/offsite
   rm -rf /var/lib/etcd/default /var/lib/etcd/*
   printf '[demo]\npg1-path=/var/lib/postgresql/14/demo\n' > /etc/pgbackrest.conf
   rm -rf /etc/pgbackrest/conf.d/* 2>/dev/null || true
