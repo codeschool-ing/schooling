@@ -15,7 +15,7 @@
 # WHAT IS IN IT, installed with the apt line of the lesson that needs it:
 #   lesson 1   python3 python3-venv python3-pip pipx git curl, and uv with
 #              `pipx install uv`, as ana
-#   lesson 4   postgresql (16) and libpq-dev
+#   lesson 4   postgresql (16)
 #   lesson 13  redis-server (7.0)
 #   lesson 16  nginx
 # The base image has every one of them installed already, so a lesson's
@@ -70,7 +70,7 @@ export SYSTEMD_NSPAWN_UNIFIED_HIERARCHY=1 TZ=America/Sao_Paulo
 
 # The apt lines, as the lessons print them.
 LESSON1="python3 python3-venv python3-pip pipx git curl"
-LESSON4="postgresql libpq-dev"
+LESSON4="postgresql"
 LESSON13="redis-server"
 LESSON16="nginx"
 SERVICES="postgresql redis-server nginx"

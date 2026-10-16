@@ -177,5 +177,6 @@ por isso que a view o acrescentou com `add_error(None, …)` e o template o impr
 **Dois avisos sobre essa regra do jeito que está.** As inscrições moram numa lista Python, então
 somem quando o `runserver` reinicia, e a conferência é uma contagem seguida de um append: duas
 requisições chegando juntas podem ambas ver onze e ambas fazer o append. A aula 4 leva as inscrições
-para o PostgreSQL e faz o banco garantir tanto a unicidade de um e-mail por evento quanto a
-capacidade, que é onde mora uma regra que precisa valer sob carga.
+para o PostgreSQL, onde uma restrição de unicidade recusa uma segunda inscrição do mesmo endereço e
+uma trava de linha faz as inscrições de um evento esperarem a vez, e mede o que acontece sem a
+trava.

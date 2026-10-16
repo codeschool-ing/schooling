@@ -44,7 +44,8 @@ asroot() { lab root "$1" >/dev/null 2>&1 || true; }
 put() { lab as "sudo tee '$1' >/dev/null"; }
 from() {
   local md=$1 path=$2 dest=${3:-}
-  [ -n "$dest" ] || dest="$(dir)/$path"
+  [ -n "$dest" ] || dest=$path
+  case $dest in /*) ;; *) dest="$(dir)/$dest" ;; esac
   python3 "$COURSE/lab/mdfile.py" "$LESSON/$md" "$path" \
     | lab as "mkdir -p \"\$(dirname \"$dest\")\" && cat > \"$dest\"" \
     || { echo "from: $path is not in $md" >&2; exit 1; }

@@ -177,5 +177,5 @@ the view added it with `add_error(None, …)` and the template printed it above 
 **Two warnings about this rule as it stands.** The registrations live in a Python list, so they
 vanish when `runserver` restarts, and the check is a count followed by an append: two requests
 arriving together can both see eleven and both append. Lesson 4 moves registrations into
-PostgreSQL and makes the database enforce both the uniqueness of an email per event and the
-capacity, which is where a rule that must hold under load belongs.
+PostgreSQL, where a unique constraint refuses a second registration from the same address and a row
+lock makes registrations for one event take turns, and it measures what happens without the lock.
