@@ -1,0 +1,435 @@
+[
+  {
+    "id": "ex-4hw93xms",
+    "version": 1,
+    "section": "how-it-splits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which threads run a parallel stream's pipeline?",
+    "hint": "`WhoWorks.java` named them.",
+    "choices": [
+      {
+        "text": "A pool the stream creates and shuts down each time",
+        "correct": false,
+        "why": "The pool is shared and lives as long as the program."
+      },
+      {
+        "text": "A new thread created for each element",
+        "correct": false,
+        "why": "Four threads handled 100,000 elements."
+      },
+      {
+        "text": "Only the common pool's workers; `main` waits",
+        "correct": false,
+        "why": "`main` processed 43,750 elements itself."
+      },
+      {
+        "text": "The thread that called, plus the common pool's workers",
+        "correct": true,
+        "why": "Right: `main` and `ForkJoinPool.commonPool-worker-N`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mf5yc35j",
+    "version": 1,
+    "section": "how-it-splits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a machine with 4 processors, how many workers does the common pool have?",
+    "hint": "One fewer, because the caller helps.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "workers"
+  },
+  {
+    "id": "ex-7bsj24sc",
+    "version": 1,
+    "section": "how-it-splits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a `LinkedList` make a poor source for a parallel stream?",
+    "hint": "Finding the middle.",
+    "choices": [
+      {
+        "text": "Its elements are always boxed",
+        "correct": false,
+        "why": "Every `List` of objects holds references; that is not the issue."
+      },
+      {
+        "text": "It cannot be streamed in parallel at all",
+        "correct": false,
+        "why": "It can; it splits badly."
+      },
+      {
+        "text": "It is not thread-safe, so the stream refuses it",
+        "correct": false,
+        "why": "Reading from it is fine; nothing refuses it."
+      },
+      {
+        "text": "Finding the middle means walking half of it",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-td79ppk3",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Primes.java` keeps the best of five runs for each version. Why?",
+    "hint": "The first runs include something else.",
+    "choices": [
+      {
+        "text": "Five is the number of processors plus one",
+        "correct": false,
+        "why": "The count of runs has nothing to do with processors."
+      },
+      {
+        "text": "The parallel version gives a different answer each time",
+        "correct": false,
+        "why": "Both printed 148933 every time."
+      },
+      {
+        "text": "They include the JIT compiling the code",
+        "correct": true,
+        "why": "Right: the cheapest correction for warm-up."
+      },
+      {
+        "text": "`nanoTime` is wrong on the first call",
+        "correct": false,
+        "why": "The clock is fine; the code being measured is still being compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mcertdz",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The parallel sum of a hundred small numbers took 50 µs against 14 sequential. What cost the difference?",
+    "hint": "The arithmetic took about a microsecond.",
+    "choices": [
+      {
+        "text": "Adding numbers in a different order changes the result",
+        "correct": false,
+        "why": "Both printed 4950."
+      },
+      {
+        "text": "Boxing each number into an `Integer`",
+        "correct": false,
+        "why": "`IntStream` does not box."
+      },
+      {
+        "text": "Handing pieces to other threads and waiting",
+        "correct": true,
+        "why": "Right: the overhead dwarfed the work."
+      },
+      {
+        "text": "The common pool was busy with another program",
+        "correct": false,
+        "why": "Each JVM has its own pool."
+      }
+    ]
+  },
+  {
+    "id": "ex-1btrvysq",
+    "version": 1,
+    "section": "measuring",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a decision that matters, the lesson recommends OpenJDK's benchmark harness, called ___.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "JMH"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a0zry8tj",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten parallel `forEach(shared::add)` runs on an `ArrayList`: some lost elements, one threw, three were right. What is the fix?",
+    "hint": "Stop sharing.",
+    "choices": [
+      {
+        "text": "Use `forEachOrdered` instead of `forEach`",
+        "correct": false,
+        "why": "It orders the calls, and they still touch a shared list."
+      },
+      {
+        "text": "A `synchronized` block around every call to `add`",
+        "correct": false,
+        "why": "That works and serialises the work; the lesson's fix is not to share."
+      },
+      {
+        "text": "Retry until a run comes out right",
+        "correct": false,
+        "why": "Three came out right, and nothing tells you which ones."
+      },
+      {
+        "text": "Let the stream build the list, with `toList()` or a collector",
+        "correct": true,
+        "why": "Right: each thread gets its own container."
+      }
+    ]
+  },
+  {
+    "id": "ex-n76razk3",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson call the three correct runs the worst of the three outcomes?",
+    "hint": "Think of a test.",
+    "choices": [
+      {
+        "text": "A test that landed on one would pass",
+        "correct": true,
+        "why": "Right: the bug hides."
+      },
+      {
+        "text": "They were slower than the others",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Their results were in the wrong order",
+        "correct": false,
+        "why": "Only the size was checked, and it was right."
+      },
+      {
+        "text": "They used more memory",
+        "correct": false,
+        "why": "Memory is not the point either."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn8b39dc",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a parallel stream, which returns the first match in source order?",
+    "hint": "The other may return any match.",
+    "choices": [
+      {
+        "text": "`forEachOrdered`",
+        "correct": false,
+        "why": "That returns nothing; it only visits the elements in order."
+      },
+      {
+        "text": "`anyMatch`",
+        "correct": false,
+        "why": "That answers yes or no."
+      },
+      {
+        "text": "`findAny()`",
+        "correct": false,
+        "why": "It returned 625601, whichever a thread found."
+      },
+      {
+        "text": "`findFirst()`",
+        "correct": true,
+        "why": "Right: it printed 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc29p5yp",
+    "version": 1,
+    "section": "when-it-goes-wrong",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call on a parallel stream with what it guarantees about order.",
+    "hint": "Section 04.",
+    "pairs": [
+      {
+        "left": "`forEach`",
+        "right": "no order"
+      },
+      {
+        "left": "`forEachOrdered`",
+        "right": "source order, by making threads wait"
+      },
+      {
+        "left": "`findAny`",
+        "right": "any match a thread found"
+      },
+      {
+        "left": "`toList()`",
+        "right": "a list in source order"
+      }
+    ]
+  },
+  {
+    "id": "ex-38a3n34j",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A parallel stream's lambda calls a slow web service. What else in the program suffers?",
+    "hint": "The pool is shared.",
+    "choices": [
+      {
+        "text": "Nothing: each parallel stream gets its own threads",
+        "correct": false,
+        "why": "They all share the common pool."
+      },
+      {
+        "text": "The garbage collector, which stops until the call returns",
+        "correct": false,
+        "why": "The collector does not wait for network calls."
+      },
+      {
+        "text": "Every other parallel stream, all left waiting for a worker",
+        "correct": true,
+        "why": "Right: the waiting lambdas hold the pool's few workers."
+      },
+      {
+        "text": "Only sequential streams, which lose their thread",
+        "correct": false,
+        "why": "Sequential streams run on the caller's thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0n2ecsm",
+    "version": 1,
+    "section": "deciding",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make a pipeline a good candidate for `parallel()`? Choose all that apply.",
+    "hint": "The checklist in section 05.",
+    "choices": [
+      {
+        "text": "Expensive computation per element",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Lambdas that query a database",
+        "correct": false,
+        "why": "No: they wait, and hold the pool's workers."
+      },
+      {
+        "text": "Hundreds of thousands of elements",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Lambdas that add to a shared counter",
+        "correct": false,
+        "why": "No: shared state."
+      },
+      {
+        "text": "An `ArrayList` or an array as the source",
+        "correct": true,
+        "why": "Yes: it splits evenly."
+      }
+    ]
+  },
+  {
+    "id": "ex-843m9sq6",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague raises `java.util.concurrent.ForkJoinPool.common.parallelism` to speed up one slow pipeline. What does the lesson warn?",
+    "hint": "Whose pool is it?",
+    "choices": [
+      {
+        "text": "The property is read-only",
+        "correct": false,
+        "why": "It can be set when the JVM starts."
+      },
+      {
+        "text": "The whole program shares that pool",
+        "correct": true,
+        "why": "Right: a decision for everybody, not a tuning knob for one."
+      },
+      {
+        "text": "It takes effect only for sequential streams",
+        "correct": false,
+        "why": "It sizes the pool parallel streams use."
+      },
+      {
+        "text": "It is ignored on machines with more than four processors",
+        "correct": false,
+        "why": "It applies on any machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pn68m7z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a parallel stream's work in order.",
+    "hint": "Split, run, combine.",
+    "items": [
+      "the terminal operation is called",
+      "the spliterator cuts the source into pieces",
+      "the calling thread and the workers run the pipeline on the pieces",
+      "the partial results are combined"
+    ]
+  },
+  {
+    "id": "ex-y6906r1a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pipeline of 40 elements with cheap lambdas got slower with `parallel()`. What should you do?",
+    "hint": "Start sequential.",
+    "choices": [
+      {
+        "text": "Switch the source to a `LinkedList`",
+        "correct": false,
+        "why": "That splits worse."
+      },
+      {
+        "text": "Replace `toList()` with `forEach`",
+        "correct": false,
+        "why": "The terminal operation is not the cost."
+      },
+      {
+        "text": "Remove `parallel()`",
+        "correct": true,
+        "why": "Right: the measurement decided."
+      },
+      {
+        "text": "Add more workers to the common pool",
+        "correct": false,
+        "why": "More threads make the overhead larger, not smaller."
+      }
+    ]
+  }
+]
