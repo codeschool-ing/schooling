@@ -18,6 +18,19 @@
 # makes (the AWS CLI, moto from PyPI, the public price list) and one request to
 # the real STS with moto's placeholder key, which AWS refuses.
 #
+# `check` IS EXPECTED TO REPORT TEN BLOCKS, and none of them is drift: each
+# prints something no two runs share, and no sentence of prose quotes it.
+#   lesson 1  check              moto's resident memory
+#   lesson 14 terms, moto-ri     the reader's peak memory; the reserved-instance
+#                                prices moto invents at random
+#   lesson 23 invalidate         the CLI's epoch-stamped CallerReference
+#   lesson 24 connection         moto's time-stamped Direct Connect id
+#   lesson 25 role-vpcs          a session minted at the time of the run
+#   lesson 26 debug-sts, canonical, curl, retries
+#                                SigV4 signatures and X-Amz-Date, which ARE the
+#                                time, and the SDK's random retry delays
+# Anything else that differs is a transcript that no longer matches its lab.
+#
 # A capture that changes its numbers changes the prose that quotes them: after
 # `capture`, re-read every number the lesson's text cites.
 #
