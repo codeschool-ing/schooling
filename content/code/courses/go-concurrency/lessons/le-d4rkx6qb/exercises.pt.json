@@ -1,0 +1,299 @@
+{
+  "ex-dxtedr5t": {
+    "prompt": "`regexp.MustCompile(`\\d{3}`).FindString(\"GET /orders/1042 200\")` devolveu `104`. Por que não `200`?",
+    "hint": "Que ocorrência o `FindString` devolve, e onde três dígitos podem acabar?",
+    "choices": [
+      {
+        "text": "O `FindString` devolve a ocorrência mais curta",
+        "why": "Os dois candidatos têm três caracteres; quem decidiu foi a posição."
+      },
+      {
+        "text": "Vence a ocorrência mais à esquerda, a `104`",
+        "why": "Isso. `\\b\\d{3}\\b` diz que os dígitos têm de estar sozinhos, e achou `200`."
+      },
+      {
+        "text": "`\\d` só casa dígitos dentro de uma palavra",
+        "why": "`\\d` casa qualquer dígito; fronteiras são trabalho do `\\b`."
+      },
+      {
+        "text": "Códigos de status são excluídos do `\\d`",
+        "why": "O motor não sabe nada de códigos de status."
+      }
+    ]
+  },
+  "ex-1q8ppyga": {
+    "prompt": "Por que os padrões desta lição são escritos entre crases, como `` `\\d{3}` ``?",
+    "hint": "O que o compilador faria com `\"\\d\"`?",
+    "choices": [
+      {
+        "text": "O pacote `regexp` exige strings cruas",
+        "why": "Ele aceita qualquer string; as crases são por causa do compilador."
+      },
+      {
+        "text": "Crases fazem o padrão compilar mais rápido",
+        "why": "Os bytes são os mesmos; só o escape muda."
+      },
+      {
+        "text": "Para a barra invertida chegar ao pacote como foi escrita",
+        "why": "Isso. Numa string crua `\\d` são dois caracteres, uma barra invertida e um `d`."
+      },
+      {
+        "text": "Elas permitem grupos com nome",
+        "why": "Grupos com nome funcionam em qualquer string; `(?P<…>)` não tem barra invertida."
+      }
+    ]
+  },
+  "ex-e98qbva7": {
+    "prompt": "Um programa lê um padrão de busca de uma flag dada pelo usuário. Que chamada deve compilá-lo?",
+    "hint": "O que deve acontecer quando o usuário digita errado?",
+    "choices": [
+      {
+        "text": "`regexp.Compile`, relatando o erro",
+        "why": "Isso. O erro de digitação de uma pessoa é um erro a relatar, não um motivo para derrubar o programa."
+      },
+      {
+        "text": "`regexp.MustCompile` numa variável de pacote",
+        "why": "Esse idioma é para padrões no código; o erro do usuário daria panic na partida."
+      },
+      {
+        "text": "`regexp.MustCompile` dentro de um `recover`",
+        "why": "Isso transforma um erro devolvido em panic e de volta; o `Compile` já o devolve."
+      },
+      {
+        "text": "Nenhuma; `strings.Contains` é mais seguro",
+        "why": "O usuário pediu um padrão, não uma string fixa."
+      }
+    ]
+  },
+  "ex-t76ej34f": {
+    "prompt": "Um grupo escrito `(?P<status>\\d{3})` é achado pelo nome com o método `___`, que devolve a posição dele na slice de subocorrências.",
+    "hint": "O programa o chamou em `line`.",
+    "blanks": [
+      {
+        "accept": [
+          "SubexpIndex"
+        ]
+      }
+    ]
+  },
+  "ex-qga27qcs": {
+    "prompt": "O que o RE2, o `regexp` de Go, promete sobre o tempo de um casamento?",
+    "hint": "Proporcional a quê?",
+    "choices": [
+      {
+        "text": "Um tempo constante, seja qual for a entrada",
+        "why": "Uma entrada mais longa ainda custa o seu tamanho."
+      },
+      {
+        "text": "Tempo proporcional ao tamanho do texto",
+        "why": "Isso, seja qual for o padrão."
+      },
+      {
+        "text": "Mais rápido que qualquer outro motor em todo padrão",
+        "why": "Não é prometido; a promessa é sobre o pior caso."
+      },
+      {
+        "text": "Um limite de tempo de um segundo",
+        "why": "Não existe limite de tempo; não há necessidade de um."
+      }
+    ]
+  },
+  "ex-g0xjwn0d": {
+    "prompt": "Um padrão copiado de outra linguagem, `(\\w+) \\1`, acha uma palavra escrita duas vezes. Go o recusa. O que a lição sugere?",
+    "hint": "Que parte o motor de Go não faz, e que parte o Go comum faz?",
+    "choices": [
+      {
+        "text": "Ligar referências com uma flag de compilação",
+        "why": "Não existe essa flag; o RE2 as recusa de propósito."
+      },
+      {
+        "text": "Usar *lookahead* `(?=` no lugar",
+        "why": "O *lookahead* também é recusado, pelo mesmo motivo."
+      },
+      {
+        "text": "Casar em Go e comparar as duas com `==`",
+        "why": "Isso: a expressão acha os candidatos e o `==` confere se são iguais."
+      },
+      {
+        "text": "Escapar como `\\\\1`",
+        "why": "Isso casa uma barra invertida e um 1 literais, não a palavra anterior."
+      }
+    ]
+  },
+  "ex-h3pz7v4a": {
+    "prompt": "O Python levou 0,52 s com n=24 e 2,07 s com n=26. Mais ou menos por qual fator cada dois `a`s a mais multiplicaram o tempo dele? Dê um número inteiro.",
+    "hint": "2,07 dividido por 0,52.",
+    "unit": "vezes"
+  },
+  "ex-f001rfbt": {
+    "prompt": "Um formulário de cadastro valida e-mails com um padrão que retrocede mal. Uma requisição envia um valor longo, quase casando. Com o `re` do Python e com o `regexp` de Go, o que acontece com o servidor?",
+    "hint": "É o `evil.py` e o `evil/main.go` com um formulário na frente.",
+    "choices": [
+      {
+        "text": "Os dois rejeitam o valor em microssegundos",
+        "why": "O tempo do Python cresce quatro vezes a cada dois caracteres."
+      },
+      {
+        "text": "O Python trava; Go responde na hora",
+        "why": "Isso. É o ReDoS, e com o RE2 o pior caso é o tamanho da entrada."
+      },
+      {
+        "text": "Os dois ficam lentos, já que o problema é o padrão",
+        "why": "O problema é o motor: o mesmo padrão levou um microssegundo em Go."
+      },
+      {
+        "text": "Go dá panic com o padrão ruim",
+        "why": "`^(a+)+$` compila em Go; só não consegue explodir."
+      }
+    ]
+  },
+  "ex-mh9mmgv0": {
+    "prompt": "Com o RE2 um casamento não explode. O que a lição diz que um programa que lê texto não confiável ainda deve fazer?",
+    "hint": "Quanto ainda custa uma entrada longa?",
+    "choices": [
+      {
+        "text": "Trocar para um motor com retrocesso, por segurança",
+        "why": "Essa é a escolha insegura."
+      },
+      {
+        "text": "Compilar o padrão a cada requisição",
+        "why": "Esse é o custo que a seção seguinte mede."
+      },
+      {
+        "text": "Nada mais",
+        "why": "Uma entrada longa ainda custa o seu tamanho."
+      },
+      {
+        "text": "Limitar quanto do texto ele lê, com um teto",
+        "why": "Isso, com `io.LimitReader` por exemplo."
+      }
+    ]
+  },
+  "ex-mj778aa4": {
+    "prompt": "No `cost/main.go`, o que deixou o `compiled each` tão mais lento que o `compiled once`?",
+    "hint": "O que aconteceu cem mil vezes?",
+    "choices": [
+      {
+        "text": "Casou mais linhas",
+        "why": "Os dois acharam 33.333."
+      },
+      {
+        "text": "O padrão foi lido e montado uma vez por linha",
+        "why": "Isso: cem mil compilações, cada uma rodada uma vez."
+      },
+      {
+        "text": "Uma closure é mais lenta que um valor de método",
+        "why": "O `strings only` também era closure e foi o mais rápido."
+      },
+      {
+        "text": "O coletor de lixo parou o laço",
+        "why": "O custo foi a compilação; a lição não mediu nada sobre o coletor."
+      }
+    ]
+  },
+  "ex-zn8qd4y0": {
+    "prompt": "Na primeira execução, `compiled each` levou 151,4 ms e `compiled once` 4,2 ms. Mais ou menos quantas vezes mais demorou compilar toda vez? Dê um número inteiro.",
+    "hint": "151,4 dividido por 4,2.",
+    "unit": "vezes"
+  },
+  "ex-935w65cd": {
+    "prompt": "Qual pergunta é o exemplo da lição de uma que se responde melhor com o pacote `strings` do que com um padrão?",
+    "hint": "Simples: um prefixo, um sufixo, um pedaço fixo.",
+    "choices": [
+      {
+        "text": "Separar uma linha de log em método, caminho, status e tempo",
+        "why": "Isso é uma forma, que é onde um padrão vale a pena."
+      },
+      {
+        "text": "Se o último campo da linha começa com `5`",
+        "why": "Isso. O `strings` respondeu de oito a dez vezes mais rápido."
+      },
+      {
+        "text": "Se uma palavra aparece duas vezes seguidas",
+        "why": "Esse foi o exemplo da referência, feito com um padrão e `==`."
+      },
+      {
+        "text": "Reescrever `/orders/1042` como `/orders/{id=1042}`",
+        "why": "Isso usou um grupo e `$1`, trabalho de um padrão."
+      }
+    ]
+  },
+  "ex-dqne1bh9": {
+    "prompt": "Um handler valida o cabeçalho de toda requisição com `regexp.MustCompile(pattern).MatchString(h)` dentro da função do handler. Qual é o conserto, e o que ele muda?",
+    "hint": "Onde um padrão do código é compilado, e com que frequência?",
+    "choices": [
+      {
+        "text": "Usar `Compile` no lugar, para os erros serem devolvidos",
+        "why": "Isso ainda compila a cada requisição; o custo fica."
+      },
+      {
+        "text": "Pôr um `sync.Mutex` em volta da chamada",
+        "why": "Um `Regexp` compilado pode ser compartilhado; o custo é compilar, não disputa."
+      },
+      {
+        "text": "Um `MustCompile` declarado no nível do pacote",
+        "why": "Isso. Tira a compilação por requisição e leva a falha para a primeira execução."
+      },
+      {
+        "text": "Guardar em cache o resultado do `MatchString` por cabeçalho",
+        "why": "Isso gasta memória e ainda compila a cada falta no cache."
+      }
+    ]
+  },
+  "ex-wd4fkps7": {
+    "prompt": "Ponha os três jeitos do `cost/main.go` do mais rápido ao mais lento, como medido.",
+    "hint": "Centenas de microssegundos, alguns milissegundos, mais de cem milissegundos.",
+    "items": [
+      "`strings only`",
+      "`compiled once`",
+      "`compiled each`"
+    ]
+  },
+  "ex-c1z7f3j3": {
+    "prompt": "Associe cada padrão ao que ele faz.",
+    "hint": "Dois deles são recusados por Go.",
+    "pairs": [
+      {
+        "left": "`\\b\\d{3}\\b`",
+        "right": "três dígitos sozinhos"
+      },
+      {
+        "left": "`(\\w+) \\1`",
+        "right": "recusado: uma referência"
+      },
+      {
+        "left": "`\\d+(?= ms)`",
+        "right": "recusado: *lookahead*"
+      },
+      {
+        "left": "`(?m)^`",
+        "right": "o começo de toda linha"
+      }
+    ],
+    "right_distractors": [
+      "o fim do texto inteiro"
+    ]
+  },
+  "ex-d1c23gv2": {
+    "prompt": "Quais destas valem para o `regexp` de Go? Escolha todas as que se aplicam.",
+    "hint": "Pense na promessa e no que ela custa.",
+    "choices": [
+      {
+        "text": "`^(a+)+$` com 26 `a`s e um `b` responde em microssegundos",
+        "why": "Sim, 1µs na captura."
+      },
+      {
+        "text": "Referências como `\\1` são aceitas",
+        "why": "Recusadas: `invalid escape sequence`."
+      },
+      {
+        "text": "Um `*Regexp` compilado é feito para ser compilado uma vez e reusado",
+        "why": "Sim; compilar toda vez custou cerca de 35 vezes mais."
+      },
+      {
+        "text": "O `MustCompile` devolve um erro para um padrão ruim",
+        "why": "Ele dá panic; o `Compile` devolve o erro."
+      }
+    ]
+  }
+}
