@@ -1,0 +1,261 @@
+{
+  "ex-9w5m39gp": {
+    "prompt": "Que três coisas juntas identificam uma métrica do CloudWatch?",
+    "hint": "O nome é um terço disso.",
+    "choices": [
+      {
+        "text": "Nome, período e estatística",
+        "why": "Período e estatística são escolhidos na leitura, não fazem parte da métrica."
+      },
+      {
+        "text": "Nome, unidade e o timestamp de cada ponto",
+        "why": "Unidade e timestamp pertencem a cada ponto, não à identidade da métrica."
+      },
+      {
+        "text": "Só namespace, região e conta",
+        "why": "Região e conta delimitam a métrica, mas nome e dimensões ainda a identificam."
+      },
+      {
+        "text": "Namespace, nome e dimensões",
+        "why": "Certo. Mude qualquer um e é outra métrica."
+      }
+    ]
+  },
+  "ex-5e2h3e2e": {
+    "prompt": "Pedidos foram publicados com `Service=api,Stage=prod`. Um painel consulta `Orders` só com `Service=api`. O que ele mostra na AWS?",
+    "hint": "Uma métrica com menos dimensões é outra métrica.",
+    "choices": [
+      {
+        "text": "A soma de todos os estágios",
+        "why": "Isso foi o que o moto respondeu; o CloudWatch não soma métricas a menos que peçam."
+      },
+      {
+        "text": "Nenhum dado, nada",
+        "why": "Certo. Ninguém publicou uma métrica só com essa dimensão, então a consulta nomeia uma que não existe, e o gráfico fica vazio."
+      },
+      {
+        "text": "Um erro nomeando a dimensão que falta",
+        "why": "Nenhum erro: a resposta vazia é o que torna esse engano fácil de não ver."
+      },
+      {
+        "text": "Os pedidos de produção, o primeiro estágio publicado",
+        "why": "A ordem de publicação não influi em que métrica uma consulta nomeia."
+      }
+    ]
+  },
+  "ex-y60wh6tt": {
+    "prompt": "Chega uma pergunta sobre um pico de cinco minutos que aconteceu há quatro meses. Qual é o menor período que o CloudWatch ainda consegue mostrar?",
+    "hint": "O detalhe envelhece em degraus.",
+    "choices": [
+      {
+        "text": "Uma hora inteira",
+        "why": "Certo. Entre 63 dias e 15 meses, só sobram pontos de uma hora."
+      },
+      {
+        "text": "Um minuto",
+        "why": "Pontos de um minuto são guardados por 15 dias."
+      },
+      {
+        "text": "Cinco minutos",
+        "why": "Pontos de cinco minutos são guardados por 63 dias."
+      },
+      {
+        "text": "Nenhum: os dados somem depois de três meses",
+        "why": "Dados de uma hora são guardados por 15 meses."
+      }
+    ]
+  },
+  "ex-v88d7dg5": {
+    "prompt": "Noventa e cinco requisições levam uns 40 ms e cinco levam 900 ms. Que estatística mostra que um cliente em vinte espera quase um segundo?",
+    "hint": "A média não descreve requisição nenhuma.",
+    "choices": [
+      {
+        "text": "A média, de 84 ms por requisição",
+        "why": "84 ms é a latência de requisição nenhuma."
+      },
+      {
+        "text": "p50",
+        "why": "A mediana é 40 ms; ela esconde os cinco lentos."
+      },
+      {
+        "text": "Um percentil alto, como o p99",
+        "why": "Certo. O p99 aqui é 900 ms, a cauda lenta tornada visível."
+      },
+      {
+        "text": "SampleCount",
+        "why": "Ela diz quantas requisições, não quão lenta foi alguma."
+      }
+    ]
+  },
+  "ex-199jwpfa": {
+    "prompt": "Usando o método do posto mais próximo em 100 amostras ordenadas, que posto (posição contada a partir de 1) dá o p95?",
+    "hint": "p% das amostras nele ou abaixo dele."
+  },
+  "ex-1e7j6gh9": {
+    "prompt": "Uma página faz 20 requisições, cada uma com 1% de chance de cair na cauda lenta. Qual a probabilidade, em porcentagem, de pelo menos uma ser lenta? Responda com o inteiro mais próximo.",
+    "hint": "Um menos a chance de as vinte escaparem.",
+    "unit": "%"
+  },
+  "ex-fa2ebwvw": {
+    "prompt": "Ligue cada métrica à estatística que responde à pergunta de costume sobre ela.",
+    "hint": "Contagem, latência, nível.",
+    "pairs": [
+      {
+        "left": "Erros por minuto",
+        "right": "Sum"
+      },
+      {
+        "left": "Tempo de resposta",
+        "right": "p99"
+      },
+      {
+        "left": "Memória livre",
+        "right": "Minimum"
+      }
+    ],
+    "right_distractors": [
+      "SampleCount"
+    ]
+  },
+  "ex-c15d2k69": {
+    "prompt": "Por que o id de um cliente nunca vira dimensão?",
+    "hint": "Cada valor distinto faz uma métrica.",
+    "choices": [
+      {
+        "text": "O CloudWatch recusa dimensões com números",
+        "why": "Números são aceitos; o custo é o que torna errado."
+      },
+      {
+        "text": "Dimensões ficam visíveis para todo cliente da AWS",
+        "why": "Métricas são privadas da conta."
+      },
+      {
+        "text": "Dimensões não podem ter mais de oito caracteres",
+        "why": "Esse limite não existe; o problema é quantos valores, não o tamanho."
+      },
+      {
+        "text": "Cada id vira uma métrica cobrada, multiplicando as outras",
+        "why": "Certo. Vinte mil clientes transformaram 240 métricas em 4,8 milhões."
+      }
+    ]
+  },
+  "ex-ms2pgan3": {
+    "prompt": "A 0,30 USD por métrica-mês nas primeiras 10.000, quanto custam 240 métricas personalizadas por mês?",
+    "hint": "Métricas vezes preço.",
+    "unit": "USD"
+  },
+  "ex-ax6crt9s": {
+    "prompt": "Com o Embedded Metric Format, onde vai parar o id de um cliente escrito na mesma linha de log?",
+    "hint": "Só o que o bloco _aws declara vira métrica.",
+    "choices": [
+      {
+        "text": "Como dimensão da métrica de latência",
+        "why": "Só as dimensões listadas no bloco _aws são dimensões."
+      },
+      {
+        "text": "Um campo de log, pesquisável, nunca uma métrica",
+        "why": "Certo. Uma linha é a métrica e o detalhe por trás dela."
+      },
+      {
+        "text": "Em lugar nenhum: o CloudWatch remove campos desconhecidos",
+        "why": "A linha inteira fica no grupo de logs."
+      },
+      {
+        "text": "Numa métrica separada por cliente",
+        "why": "Nenhuma métrica é feita de um campo que o bloco não declara."
+      }
+    ]
+  },
+  "ex-nn0c2q8h": {
+    "prompt": "No JSON do painel, o que significa `\"...\"` no começo de uma linha de métrica?",
+    "hint": "Evita escrever a mesma métrica duas vezes.",
+    "choices": [
+      {
+        "text": "Todas as métricas do namespace",
+        "why": "Isso seria uma expressão SEARCH; ... copia a linha anterior."
+      },
+      {
+        "text": "Copiar a linha de cima",
+        "why": "Certo. A linha do p99 é a métrica de latência de novo com outra estatística."
+      },
+      {
+        "text": "Um marcador para alguém preencher depois",
+        "why": "O CloudWatch o lê, e o widget desenha a linha."
+      },
+      {
+        "text": "Qualquer valor de dimensão",
+        "why": "Dimensões são comparadas exatamente; não há curinga aqui."
+      }
+    ]
+  },
+  "ex-bx3hgw4n": {
+    "prompt": "Ponha os quatro sinais de um painel de serviço na ordem em que esta lição os coloca, do primeiro ao último.",
+    "hint": "O que os clientes sentem primeiro vem primeiro.",
+    "trap": "Erros antes do tráfego é o deslize: uma taxa precisa do tráfego de que é parte.",
+    "items": [
+      "Latência, p50 e p99",
+      "Tráfego por minuto",
+      "Erros como taxa",
+      "Saturação do recurso mais escasso"
+    ]
+  },
+  "ex-hgrztywh": {
+    "prompt": "Para que serve o widget de texto no topo do painel da loja?",
+    "hint": "Pense na pessoa chamada às três.",
+    "choices": [
+      {
+        "text": "Para a página parecer acabada",
+        "why": "Decoração não é o ponto; as palavras são para alguém com pressa."
+      },
+      {
+        "text": "Para guardar os limites dos alarmes",
+        "why": "Limites moram nos alarmes; texto ali se afastaria deles."
+      },
+      {
+        "text": "É obrigatório para o painel ser salvo",
+        "why": "Um painel é salvo só com widgets de métrica."
+      },
+      {
+        "text": "Quem é o dono, e por onde começar a olhar",
+        "why": "Certo. A pessoa chamada à noite precisa exatamente disso."
+      }
+    ]
+  },
+  "ex-0p01z3gv": {
+    "prompt": "Quais destas são boas dimensões para a métrica de latência da loja? Marque todas as que se aplicam.",
+    "hint": "Valores poucos e fixos.",
+    "choices": [
+      {
+        "text": "Service",
+        "why": "Sim. Três serviços, uma lista fixa."
+      },
+      {
+        "text": "Endpoint",
+        "why": "Sim. Uns quarenta, mudando com releases, não com o tráfego."
+      },
+      {
+        "text": "Id do pedido",
+        "why": "Não. Um valor novo por pedido, uma métrica nova por pedido."
+      },
+      {
+        "text": "E-mail do cliente",
+        "why": "Não. Sem limite, e dado pessoal num nome de métrica."
+      },
+      {
+        "text": "Zona de disponibilidade",
+        "why": "Sim. Três valores, e a pergunta que responde é real."
+      }
+    ]
+  },
+  "ex-tnwgk7k7": {
+    "prompt": "Para pedir ao CloudWatch o percentil 99 com get-metric-statistics, você passa `--extended-statistics ___`.",
+    "hint": "Uma letra e dois dígitos.",
+    "blanks": [
+      {
+        "accept": [
+          "p99"
+        ]
+      }
+    ]
+  }
+}

@@ -13,8 +13,10 @@
 #   fence MD N              run the Nth ```sh fence of a lesson file, as it
 #                           stands, and stop the capture if it fails
 #   from_lesson MD FILE     print the fenced block of MD whose first line is
-#                           the comment naming FILE, byte for byte, so the
-#                           program a capture runs is the one the student reads
+#                           the comment naming FILE (or, for JSON, which has
+#                           no comments, whose preceding line ends `FILE`:),
+#                           byte for byte, so the program a capture runs is
+#                           the one the student reads
 #
 # The prompt is printed by this script, from the directory the command ran in,
 # as ana@laptop. Every capture runs with TZ=America/Sao_Paulo.
@@ -86,12 +88,16 @@ from_lesson() {
 import json, re, sys
 text, want = open(sys.argv[1]).read(), sys.argv[2]
 found = []
-for lang, body in re.findall(r'^```([a-z-]*)\n(.*?)^```$', text, re.S | re.M):
+for m in re.finditer(r'^```([a-z-]*)\n(.*?)^```$', text, re.S | re.M):
+    lang, body = m.group(1), m.group(2)
+    before = text[:m.start()].rstrip().rsplit('\n', 1)[-1]
     if lang == 'schooling-example':
         ex = json.loads(body)
         if ex.get('file') == want:
             found.append(''.join(p['code'] for p in ex['parts']))
     elif body.split('\n', 1)[0].lstrip('#/ ').startswith(want):
+        found.append(body)
+    elif lang == 'json' and before.endswith('`' + want + '`:'):
         found.append(body)
 if len(found) != 1:
     sys.exit(f'{sys.argv[1]}: expected one block for {want}, found {len(found)}')
