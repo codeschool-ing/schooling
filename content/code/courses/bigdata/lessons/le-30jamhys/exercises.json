@@ -1,0 +1,506 @@
+[
+  {
+    "id": "ex-y3a0sjje",
+    "version": 1,
+    "section": "kubernetes-in-brief",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each Kubernetes word to the nearest thing in YARN.",
+    "hint": "A namespace partitions the cluster.",
+    "pairs": [
+      {
+        "left": "Pod",
+        "right": "Container"
+      },
+      {
+        "left": "Namespace with a quota",
+        "right": "Queue"
+      },
+      {
+        "left": "API server",
+        "right": "ResourceManager"
+      }
+    ],
+    "right_distractors": [
+      "HDFS block"
+    ]
+  },
+  {
+    "id": "ex-a3s5zqa2",
+    "version": 1,
+    "section": "kubernetes-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Spark on Kubernetes need that Spark on YARN did not?",
+    "hint": "What does every pod start from?",
+    "choices": [
+      {
+        "text": "A Spark daemon on every node",
+        "correct": false,
+        "why": "There is none: the driver asks for pods."
+      },
+      {
+        "text": "An HDFS cluster beside it",
+        "correct": false,
+        "why": "Data usually comes from an object store."
+      },
+      {
+        "text": "An image to start from",
+        "correct": true,
+        "why": "Right. Every pod starts from one."
+      },
+      {
+        "text": "An ApplicationMaster",
+        "correct": false,
+        "why": "The driver plays that part itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-5b2gtp6y",
+    "version": 1,
+    "section": "kubernetes-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Kubernetes, who asks for the executor pods?",
+    "hint": "There is no Spark service on the cluster.",
+    "choices": [
+      {
+        "text": "`spark-submit`, for the whole run",
+        "correct": false,
+        "why": "It only asks for the driver pod."
+      },
+      {
+        "text": "The kubelet on each node, on its own",
+        "correct": false,
+        "why": "It starts pods it is told to start."
+      },
+      {
+        "text": "The driver, from the API server",
+        "correct": true,
+        "why": "Right, and it deletes them at the end."
+      },
+      {
+        "text": "A Spark master running in its own pod",
+        "correct": false,
+        "why": "That is the standalone design."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4ynvvk8",
+    "version": 1,
+    "section": "spark-on-kubernetes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why were the Kubernetes commands of this lesson not run for the course?",
+    "hint": "What did every pod fail with?",
+    "choices": [
+      {
+        "text": "Minikube needs a paid account before it will run",
+        "correct": false,
+        "why": "It is free and local."
+      },
+      {
+        "text": "Python cannot run in a pod",
+        "correct": false,
+        "why": "The spark-py image carries it."
+      },
+      {
+        "text": "Spark 4.1 does not support Kubernetes",
+        "correct": false,
+        "why": "It has since version 2.3."
+      },
+      {
+        "text": "The machine refused nested containers",
+        "correct": true,
+        "why": "Right. A VM of your own has no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-hphtyag9",
+    "version": 1,
+    "section": "spark-on-kubernetes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program path that starts with `___://` names a file already inside the driver's pod, not one to upload.",
+    "hint": "The opposite of remote.",
+    "blanks": [
+      {
+        "accept": [
+          "local"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9wzg57mj",
+    "version": 1,
+    "section": "spark-on-kubernetes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job in a namespace with a quota of 2 cores asks for 4 executors of 1 core. What happens?",
+    "hint": "Who enforces the quota?",
+    "choices": [
+      {
+        "text": "Kubernetes raises the quota for the job's duration",
+        "correct": false,
+        "why": "A quota does not bend."
+      },
+      {
+        "text": "The executors share one core each",
+        "correct": false,
+        "why": "Requests are not split."
+      },
+      {
+        "text": "The job is rejected before it starts",
+        "correct": false,
+        "why": "Pods within the quota start."
+      },
+      {
+        "text": "Extra pods are refused, and the driver retries",
+        "correct": true,
+        "why": "Right. The job runs on what fits."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gms07c6",
+    "version": 1,
+    "section": "dynamic-allocation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With shuffle tracking on and no timeout, why did the idle executors never go back?",
+    "hint": "Where do shuffle files live?",
+    "choices": [
+      {
+        "text": "The standalone cluster cannot release executors",
+        "correct": false,
+        "why": "It did, in the second run."
+      },
+      {
+        "text": "The idle timeout was set to infinity",
+        "correct": false,
+        "why": "It was 15 seconds."
+      },
+      {
+        "text": "They held shuffle files",
+        "correct": true,
+        "why": "Right, which a later query might read. Spark cannot know nobody will."
+      },
+      {
+        "text": "The watcher thread kept them busy",
+        "correct": false,
+        "why": "It only reads the driver's REST interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-7e6zfcns",
+    "version": 1,
+    "section": "dynamic-allocation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an external shuffle service let a cluster do?",
+    "hint": "Who serves the files after the executor is gone?",
+    "choices": [
+      {
+        "text": "Run the driver outside the cluster",
+        "correct": false,
+        "why": "That is a deploy mode, not a shuffle service."
+      },
+      {
+        "text": "Skip the shuffle entirely for every grouped query",
+        "correct": false,
+        "why": "The shuffle still happens."
+      },
+      {
+        "text": "Compress shuffle files twice",
+        "correct": false,
+        "why": "Compression is not its job."
+      },
+      {
+        "text": "Release an idle executor and keep its files",
+        "correct": true,
+        "why": "Right. Another process serves them."
+      }
+    ]
+  },
+  {
+    "id": "ex-yk6x6q31",
+    "version": 1,
+    "section": "dynamic-allocation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happened in the run with a 20-second tracking timeout in order.",
+    "hint": "It started with no executors.",
+    "items": [
+      "Tasks wait and executors are requested",
+      "Round 1 runs on three executors",
+      "Idle executors are released",
+      "Round 2 asks for executors again"
+    ]
+  },
+  {
+    "id": "ex-1qd2zt1q",
+    "version": 1,
+    "section": "spark-connect",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a Spark Connect client not need? Choose all that apply.",
+    "hint": "It sends plans and gets rows back.",
+    "choices": [
+      {
+        "text": "A Java runtime",
+        "correct": true,
+        "why": "Right. It never started one."
+      },
+      {
+        "text": "A route to the executors",
+        "correct": true,
+        "why": "Right. Only the server talks to them."
+      },
+      {
+        "text": "A network connection to the server",
+        "correct": false,
+        "why": "That is all it does need."
+      },
+      {
+        "text": "The DataFrame API",
+        "correct": false,
+        "why": "It is the same API."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0kax7c9",
+    "version": 1,
+    "section": "spark-connect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where was the `AnalysisException` for `no_such_column` produced?",
+    "hint": "Who resolves column names?",
+    "choices": [
+      {
+        "text": "In an executor, while reading files",
+        "correct": false,
+        "why": "Nothing ran: analysis failed first."
+      },
+      {
+        "text": "In the server's analyser",
+        "correct": true,
+        "why": "Right, and sent back to the client."
+      },
+      {
+        "text": "In the client, which knows the schema",
+        "correct": false,
+        "why": "The client sends the plan unresolved."
+      },
+      {
+        "text": "In gRPC, which checks column names",
+        "correct": false,
+        "why": "gRPC carries bytes only."
+      }
+    ]
+  },
+  {
+    "id": "ex-80vkp03j",
+    "version": 1,
+    "section": "managed-services",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does moving a Spark job to a managed service not change?",
+    "hint": "Lessons 5 to 11.",
+    "choices": [
+      {
+        "text": "How the job plans, shuffles and spills",
+        "correct": true,
+        "why": "Right. Those are still yours to get right."
+      },
+      {
+        "text": "Who replaces a dead disk",
+        "correct": false,
+        "why": "The provider does."
+      },
+      {
+        "text": "How long the cluster exists",
+        "correct": false,
+        "why": "It can exist only while the job runs."
+      },
+      {
+        "text": "Who patches the machines",
+        "correct": false,
+        "why": "That moves to the provider."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwqgg31g",
+    "version": 1,
+    "section": "managed-services",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does the lock-in of a managed Spark service mostly live?",
+    "hint": "Above Spark or in it?",
+    "choices": [
+      {
+        "text": "In Catalyst's plans",
+        "correct": false,
+        "why": "The planner is Spark's own."
+      },
+      {
+        "text": "In the provider's catalog, notebooks and scheduler",
+        "correct": true,
+        "why": "Right. Plain Spark code moves with its configuration."
+      },
+      {
+        "text": "In the Parquet files",
+        "correct": false,
+        "why": "Parquet is open."
+      },
+      {
+        "text": "In `spark.read.parquet`",
+        "correct": false,
+        "why": "That is the same everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-njhm88wc",
+    "version": 1,
+    "section": "choosing-where-to-run",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each organisation to where its Spark jobs most likely run.",
+    "hint": "The choice is rarely made for Spark's sake.",
+    "pairs": [
+      {
+        "left": "Ten years of HDFS on its own machines",
+        "right": "YARN"
+      },
+      {
+        "left": "Every service already runs on Kubernetes",
+        "right": "Kubernetes"
+      },
+      {
+        "left": "A new team in the cloud",
+        "right": "A managed service"
+      }
+    ],
+    "right_distractors": [
+      "A single laptop"
+    ]
+  },
+  {
+    "id": "ex-hzvttfvm",
+    "version": 1,
+    "section": "choosing-where-to-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these cannot run a Python driver in cluster mode?",
+    "hint": "Lesson 12 said so.",
+    "choices": [
+      {
+        "text": "Kubernetes",
+        "correct": false,
+        "why": "The driver becomes a pod."
+      },
+      {
+        "text": "Standalone",
+        "correct": true,
+        "why": "Right. YARN and Kubernetes can."
+      },
+      {
+        "text": "A managed service",
+        "correct": false,
+        "why": "They run drivers on the cluster."
+      },
+      {
+        "text": "YARN",
+        "correct": false,
+        "why": "Lesson 12 ran one there."
+      }
+    ]
+  },
+  {
+    "id": "ex-hajbq0h8",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each need to what this lesson offers for it.",
+    "hint": "Four sections, four answers.",
+    "pairs": [
+      {
+        "left": "Release executors between bursts of work",
+        "right": "Dynamic allocation"
+      },
+      {
+        "left": "Run notebooks with no Java on the laptop",
+        "right": "Spark Connect"
+      },
+      {
+        "left": "Cap what one team may use on a shared Kubernetes cluster",
+        "right": "A namespace quota"
+      },
+      {
+        "left": "Nobody on the team wants to patch machines",
+        "right": "A managed service"
+      }
+    ],
+    "right_distractors": [
+      "More shuffle partitions"
+    ]
+  },
+  {
+    "id": "ex-se6vx8pg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Moving a job from YARN on HDFS to Kubernetes on an object store, what matters more than the manager?",
+    "hint": "Lesson 3's locality is gone.",
+    "choices": [
+      {
+        "text": "The image's base Linux distribution",
+        "correct": false,
+        "why": "The job reads the same either way."
+      },
+      {
+        "text": "The number of namespaces",
+        "correct": false,
+        "why": "It changes nothing about the reads."
+      },
+      {
+        "text": "Reading less data, as lessons 6 and 10 showed",
+        "correct": true,
+        "why": "Right. Every read now crosses the network."
+      },
+      {
+        "text": "The driver's port",
+        "correct": false,
+        "why": "Unrelated to the data."
+      }
+    ]
+  }
+]

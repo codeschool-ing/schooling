@@ -1,0 +1,354 @@
+{
+  "ex-y3a0sjje": {
+    "prompt": "Ligue cada palavra do Kubernetes à coisa mais próxima no YARN.",
+    "hint": "Um namespace divide o cluster.",
+    "pairs": [
+      {
+        "left": "Pod",
+        "right": "Contêiner"
+      },
+      {
+        "left": "Namespace com cota",
+        "right": "Fila"
+      },
+      {
+        "left": "API server",
+        "right": "ResourceManager"
+      }
+    ],
+    "right_distractors": [
+      "Bloco do HDFS"
+    ]
+  },
+  "ex-a3s5zqa2": {
+    "prompt": "Do que o Spark no Kubernetes precisa que o Spark no YARN não precisava?",
+    "hint": "De onde todo pod começa?",
+    "choices": [
+      {
+        "text": "Um daemon do Spark em cada nó",
+        "why": "Não há: o driver pede pods."
+      },
+      {
+        "text": "Um cluster HDFS ao lado",
+        "why": "Os dados costumam vir de um object store."
+      },
+      {
+        "text": "Uma imagem de onde começar",
+        "why": "Isso. Todo pod começa de uma."
+      },
+      {
+        "text": "Um ApplicationMaster",
+        "why": "O próprio driver faz esse papel."
+      }
+    ]
+  },
+  "ex-5b2gtp6y": {
+    "prompt": "No Kubernetes, quem pede os pods de executor?",
+    "hint": "Não há serviço do Spark no cluster.",
+    "choices": [
+      {
+        "text": "O `spark-submit`, pela execução inteira",
+        "why": "Ele só pede o pod do driver."
+      },
+      {
+        "text": "O kubelet de cada nó, por conta própria",
+        "why": "Ele inicia os pods que mandam iniciar."
+      },
+      {
+        "text": "O driver, ao API server",
+        "why": "Isso, e os apaga no fim."
+      },
+      {
+        "text": "Um master do Spark rodando no seu próprio pod",
+        "why": "Esse é o desenho do standalone."
+      }
+    ]
+  },
+  "ex-m4ynvvk8": {
+    "prompt": "Por que os comandos de Kubernetes desta aula não foram rodados para o curso?",
+    "hint": "Com o que todo pod falhou?",
+    "choices": [
+      {
+        "text": "O Minikube precisa de uma conta paga para rodar",
+        "why": "Ele é gratuito e local."
+      },
+      {
+        "text": "O Python não roda num pod",
+        "why": "A imagem spark-py o traz."
+      },
+      {
+        "text": "O Spark 4.1 não suporta Kubernetes",
+        "why": "Suporta desde a versão 2.3."
+      },
+      {
+        "text": "A máquina recusou contêineres aninhados",
+        "why": "Isso. Uma VM sua não tem esse limite."
+      }
+    ]
+  },
+  "ex-hphtyag9": {
+    "prompt": "Um caminho de programa que começa com `___://` aponta um arquivo já dentro do pod do driver, não um a enviar.",
+    "hint": "O contrário de remoto, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "local"
+        ]
+      }
+    ]
+  },
+  "ex-9wzg57mj": {
+    "prompt": "Um job num namespace com cota de 2 cores pede 4 executores de 1 core. O que acontece?",
+    "hint": "Quem impõe a cota?",
+    "choices": [
+      {
+        "text": "O Kubernetes sobe a cota enquanto o job estiver rodando",
+        "why": "Uma cota não cede."
+      },
+      {
+        "text": "Os executores dividem um core cada",
+        "why": "Pedidos não são divididos."
+      },
+      {
+        "text": "O job é rejeitado antes de começar",
+        "why": "Os pods dentro da cota iniciam."
+      },
+      {
+        "text": "Pods a mais são recusados, e o driver tenta de novo",
+        "why": "Isso. O job roda com o que cabe."
+      }
+    ]
+  },
+  "ex-6gms07c6": {
+    "prompt": "Com shuffle tracking ligado e sem timeout, por que os executores ociosos nunca foram devolvidos?",
+    "hint": "Onde moram os arquivos de shuffle?",
+    "choices": [
+      {
+        "text": "O cluster standalone não consegue liberar executores",
+        "why": "Ele liberou, na segunda execução."
+      },
+      {
+        "text": "O timeout de ociosidade estava infinito",
+        "why": "Era 15 segundos."
+      },
+      {
+        "text": "Eles guardavam arquivos de shuffle",
+        "why": "Isso, que uma consulta posterior poderia ler. O Spark não tem como saber que ninguém vai."
+      },
+      {
+        "text": "A thread do observador os mantinha ocupados",
+        "why": "Ela só lê a interface REST do driver."
+      }
+    ]
+  },
+  "ex-7e6zfcns": {
+    "prompt": "O que um serviço externo de shuffle deixa um cluster fazer?",
+    "hint": "Quem serve os arquivos depois que o executor se foi?",
+    "choices": [
+      {
+        "text": "Rodar o driver fora do cluster",
+        "why": "Isso é um modo de deploy, não um serviço de shuffle."
+      },
+      {
+        "text": "Pular o shuffle inteiro em todas as consultas agrupadas",
+        "why": "O shuffle ainda acontece."
+      },
+      {
+        "text": "Comprimir duas vezes cada um dos arquivos de shuffle",
+        "why": "Comprimir não é o papel dele."
+      },
+      {
+        "text": "Liberar um executor ocioso e manter os seus arquivos",
+        "why": "Isso. Outro processo os serve."
+      }
+    ]
+  },
+  "ex-yk6x6q31": {
+    "prompt": "Ponha em ordem o que aconteceu na execução com timeout de tracking de 20 segundos.",
+    "hint": "Começou sem executores.",
+    "items": [
+      "Tarefas esperam e executores são pedidos",
+      "A rodada 1 roda em três executores",
+      "Executores ociosos são liberados",
+      "A rodada 2 pede executores de novo"
+    ]
+  },
+  "ex-1qd2zt1q": {
+    "prompt": "Do que um cliente Spark Connect não precisa? Escolha todos que se aplicam.",
+    "hint": "Ele manda planos e recebe linhas.",
+    "choices": [
+      {
+        "text": "Um runtime Java",
+        "why": "Isso. Ele nunca iniciou um."
+      },
+      {
+        "text": "Uma rota até os executores",
+        "why": "Isso. Só o servidor fala com eles."
+      },
+      {
+        "text": "Uma conexão de rede com o servidor",
+        "why": "É tudo de que ele precisa."
+      },
+      {
+        "text": "A API de DataFrame",
+        "why": "É a mesma API."
+      }
+    ]
+  },
+  "ex-j0kax7c9": {
+    "prompt": "Onde foi produzida a `AnalysisException` de `no_such_column`?",
+    "hint": "Quem resolve nomes de coluna?",
+    "choices": [
+      {
+        "text": "Num executor, lendo arquivos",
+        "why": "Nada rodou: a análise falhou antes."
+      },
+      {
+        "text": "No analisador do servidor",
+        "why": "Isso, e mandada de volta ao cliente."
+      },
+      {
+        "text": "No cliente, que conhece o esquema",
+        "why": "O cliente manda o plano sem resolver."
+      },
+      {
+        "text": "No gRPC, que confere nomes de coluna",
+        "why": "O gRPC só carrega bytes."
+      }
+    ]
+  },
+  "ex-80vkp03j": {
+    "prompt": "O que levar um job Spark a um serviço gerenciado não muda?",
+    "hint": "Aulas 5 a 11.",
+    "choices": [
+      {
+        "text": "Como o job planeja, embaralha e despeja",
+        "why": "Isso. Acertá-los ainda é com você."
+      },
+      {
+        "text": "Quem troca um disco morto",
+        "why": "O provedor troca."
+      },
+      {
+        "text": "Quanto tempo o cluster existe",
+        "why": "Ele pode existir só enquanto o job roda."
+      },
+      {
+        "text": "Quem atualiza as máquinas",
+        "why": "Isso passa ao provedor."
+      }
+    ]
+  },
+  "ex-zwqgg31g": {
+    "prompt": "Onde mora, principalmente, o aprisionamento de um serviço Spark gerenciado?",
+    "hint": "Acima do Spark ou nele?",
+    "choices": [
+      {
+        "text": "Nos planos do Catalyst",
+        "why": "O planejador é do próprio Spark."
+      },
+      {
+        "text": "No catálogo, notebooks e agendador do provedor",
+        "why": "Isso. Código Spark comum muda com a sua configuração."
+      },
+      {
+        "text": "Nos arquivos Parquet",
+        "why": "O Parquet é aberto."
+      },
+      {
+        "text": "No `spark.read.parquet`",
+        "why": "Isso é igual em todo lugar."
+      }
+    ]
+  },
+  "ex-njhm88wc": {
+    "prompt": "Ligue cada organização a onde os seus jobs Spark mais provavelmente rodam.",
+    "hint": "A escolha raramente é feita por causa do Spark.",
+    "pairs": [
+      {
+        "left": "Dez anos de HDFS em máquinas próprias",
+        "right": "YARN"
+      },
+      {
+        "left": "Todo serviço já roda no Kubernetes",
+        "right": "Kubernetes"
+      },
+      {
+        "left": "Uma equipe nova na nuvem",
+        "right": "Um serviço gerenciado"
+      }
+    ],
+    "right_distractors": [
+      "Um laptop só"
+    ]
+  },
+  "ex-hzvttfvm": {
+    "prompt": "Qual destes não consegue rodar um driver Python no modo cluster?",
+    "hint": "A aula 12 disse.",
+    "choices": [
+      {
+        "text": "Kubernetes",
+        "why": "O driver vira um pod."
+      },
+      {
+        "text": "O standalone",
+        "why": "Isso. YARN e Kubernetes conseguem."
+      },
+      {
+        "text": "Um serviço gerenciado",
+        "why": "Eles rodam drivers no cluster."
+      },
+      {
+        "text": "YARN",
+        "why": "A aula 12 rodou um lá."
+      }
+    ]
+  },
+  "ex-hajbq0h8": {
+    "prompt": "Ligue cada necessidade ao que esta aula oferece para ela.",
+    "hint": "Quatro seções, quatro respostas.",
+    "pairs": [
+      {
+        "left": "Liberar executores entre rajadas de trabalho",
+        "right": "Alocação dinâmica"
+      },
+      {
+        "left": "Rodar notebooks sem Java no laptop",
+        "right": "Spark Connect"
+      },
+      {
+        "left": "Limitar o que uma equipe usa num Kubernetes compartilhado",
+        "right": "Uma cota de namespace"
+      },
+      {
+        "left": "Ninguém na equipe quer atualizar máquinas",
+        "right": "Um serviço gerenciado"
+      }
+    ],
+    "right_distractors": [
+      "Mais partições de shuffle"
+    ]
+  },
+  "ex-se6vx8pg": {
+    "prompt": "Levando um job do YARN sobre HDFS para o Kubernetes sobre um object store, o que importa mais que o gerenciador?",
+    "hint": "A localidade da aula 3 se foi.",
+    "choices": [
+      {
+        "text": "A distribuição Linux base da imagem",
+        "why": "O job lê igual de qualquer jeito."
+      },
+      {
+        "text": "O número de namespaces",
+        "why": "Ele não muda nada nas leituras."
+      },
+      {
+        "text": "Ler menos dados, como as aulas 6 e 10 mostraram",
+        "why": "Isso. Toda leitura agora cruza a rede."
+      },
+      {
+        "text": "A porta do driver",
+        "why": "Sem relação com os dados."
+      }
+    ]
+  }
+}

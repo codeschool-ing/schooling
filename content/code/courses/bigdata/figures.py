@@ -1008,6 +1008,47 @@ def l12_yarn(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 13
+
+@figure('l13-k8s', 13)
+def l13_k8s(lang):
+    t = {'en': dict(
+            label='Spark on Kubernetes. spark-submit asks the API server for a driver pod. The '
+                  'driver, once running, asks the API server for executor pods, in its namespace '
+                  'and within its quota, and sends them tasks. Every pod starts from the same Spark '
+                  'image and reads its data from an object store.',
+            api='API server', api2='every request goes through it', sub='spark-submit',
+            drv='driver pod', exe='executor pod', ns='namespace analysts, quota 2 cores, 3 GiB',
+            img='image: Spark, Python, your code', store='object store', ask='asks for pods',
+            cap='There is no Spark daemon on the cluster: the driver asks Kubernetes for its own '
+                'executors.'),
+         'pt': dict(
+            label='Spark no Kubernetes. O spark-submit pede ao API server um pod de driver. O '
+                  'driver, quando roda, pede ao API server pods de executor, no seu namespace e '
+                  'dentro da sua cota, e lhes manda tarefas. Todo pod começa da mesma imagem do '
+                  'Spark e lê os seus dados de um object store.',
+            api='API server', api2='todo pedido passa por ele', sub='spark-submit',
+            drv='pod do driver', exe='pod de executor', ns='namespace analysts, cota de 2 cores, 3 GiB',
+            img='imagem: Spark, Python, o seu código', store='object store', ask='pede pods',
+            cap='Não há daemon do Spark no cluster: o driver pede ao Kubernetes os próprios '
+                'executores.')}[lang]
+    f = Fig('l13-k8s', 720, 300, t['label'])
+    box(f, 20, 30, 130, 50, t['sub'], mono=True, size=11)
+    box(f, 250, 24, 200, 62, t['api'], t['api2'], stroke='--phosphor')
+    f.line(150, 55, 248, 55, arrow=True)
+    f.rect(20, 120, 520, 140, stroke='--amber', fill='--ink', dash='5 4')
+    f.text(30, 250, t['ns'], size=10, anchor='start', fill='--amber')
+    box(f, 40, 160, 140, 56, t['drv'], fill='--scan')
+    for i in range(3):
+        box(f, 220 + i * 104, 160, 92, 56, t['exe'], size=9.5)
+    f.line(110, 160, 300, 88, stroke='--amber', arrow=True)
+    f.text(170, 104, t['ask'], size=9.5, anchor='end', fill='--amber')
+    f.text(530, 250, t['img'], size=9.5, anchor='end', fill='--paper-dim')
+    box(f, 570, 160, 130, 56, t['store'])
+    f.line(540, 188, 568, 188, arrow=True)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
