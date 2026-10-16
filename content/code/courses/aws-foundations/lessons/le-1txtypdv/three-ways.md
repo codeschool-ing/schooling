@@ -73,7 +73,7 @@ ana@laptop:~/aws$ ls -sh ~/.cache/aws-prices | grep -e AmazonEC2 -e SavingsPlan
 **The first run downloads two large files, and every run reads both whole.** The listing shows
 them in the cache: 279 MB of EC2 offer, because it prices every instance type in every combination
 of system, licence and tenancy, and 230 MB of Savings Plans rates. Reading one with `json.load` holds it in memory as a Python dictionary. The
-program reads them one after the other, so the peak it reports, 938 MB on the machine the lesson was recorded on, is the larger of the two rather
+program reads them one after the other, so the peak it reports, 936 MB in the run above, is the larger of the two rather
 than their sum. A computer with 2 GB of memory free runs it comfortably.
 
 ## Reading the table
