@@ -120,4 +120,4 @@ The slot and the archive do the same job at different distances. **The slot** ke
 in `pg_wal`, so a standby that drops off for a few minutes resumes from the primary without anything
 else involved. **The archive** keeps everything, somewhere else, so a standby that was away longer
 than the slot's cap still comes back. A standby with both survives a short outage cheaply and a long one
-slowly, and the cap means neither can fill the primary's disk.
+slowly, and the cap means the slot cannot fill the primary's disk.
