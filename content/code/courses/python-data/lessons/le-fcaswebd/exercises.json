@@ -1,0 +1,529 @@
+[
+  {
+    "id": "ex-49emz57j",
+    "version": 1,
+    "section": "a-series-in-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`daily` has a `DatetimeIndex` for 2025. What does `daily[\"2025-03\"]` select?",
+    "hint": "A shorter string covers more.",
+    "choices": [
+      {
+        "text": "The third row",
+        "correct": false,
+        "why": "Text selects by the calendar."
+      },
+      {
+        "text": "Every day of March",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A `KeyError`: no day is labelled `2025-03`",
+        "correct": false,
+        "why": "Partial dates select what they cover."
+      },
+      {
+        "text": "1 March only",
+        "correct": false,
+        "why": "The whole month."
+      }
+    ]
+  },
+  {
+    "id": "ex-k9988z70",
+    "version": 1,
+    "section": "a-series-in-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `Freq: D` under a series tell you?",
+    "hint": "A promise about spacing.",
+    "choices": [
+      {
+        "text": "The values are daily averages",
+        "correct": false,
+        "why": "It is about the index, not the values."
+      },
+      {
+        "text": "The series was read from a daily file",
+        "correct": false,
+        "why": "It says nothing about the source."
+      },
+      {
+        "text": "Every entry is one day after the last",
+        "correct": true,
+        "why": "Right: no day is missing."
+      },
+      {
+        "text": "Missing days are filled with 0",
+        "correct": false,
+        "why": "It describes the index; it fills nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k7dvfam",
+    "version": 1,
+    "section": "shift-and-diff",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the first value of `daily.shift(1)`?",
+    "hint": "Nothing comes before the first day.",
+    "choices": [
+      {
+        "text": "`NaN`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "0",
+        "correct": false,
+        "why": "Nothing is not zero."
+      },
+      {
+        "text": "The first day's count",
+        "correct": false,
+        "why": "That moved to the second row."
+      },
+      {
+        "text": "The last day's count, wrapped around",
+        "correct": false,
+        "why": "A shift does not wrap."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8ngk2q4",
+    "version": 1,
+    "section": "shift-and-diff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why compare each day with `daily.shift(7)` rather than `daily.shift(1)`?",
+    "hint": "Saturday against Friday.",
+    "choices": [
+      {
+        "text": "`shift(1)` fails on a `DatetimeIndex`",
+        "correct": false,
+        "why": "It works; the comparison is the problem."
+      },
+      {
+        "text": "A week of data is less noisy than a day",
+        "correct": false,
+        "why": "It still compares one day with one day."
+      },
+      {
+        "text": "Seven is the default window",
+        "correct": false,
+        "why": "There is no default here."
+      },
+      {
+        "text": "It compares the same weekday",
+        "correct": true,
+        "why": "Right: the weekly pattern drops out."
+      }
+    ]
+  },
+  {
+    "id": "ex-p99ht3e6",
+    "version": 1,
+    "section": "shift-and-diff",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a series with some days missing, what does `shift(7)` compare each row with?",
+    "hint": "Rows or time?",
+    "choices": [
+      {
+        "text": "The same date a week earlier",
+        "correct": false,
+        "why": "That would be `shift(freq=\"7D\")`."
+      },
+      {
+        "text": "The row seven rows earlier, whatever its date",
+        "correct": true,
+        "why": "Right: possibly ten days back."
+      },
+      {
+        "text": "`NaN`, because the series has no frequency",
+        "correct": false,
+        "why": "It still shifts by rows."
+      },
+      {
+        "text": "The nearest date a week earlier",
+        "correct": false,
+        "why": "That is `merge_asof`'s idea, not `shift`'s."
+      }
+    ]
+  },
+  {
+    "id": "ex-epayjt9a",
+    "version": 1,
+    "section": "shift-and-diff",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`daily - daily.shift(1)` can be written `daily.___()`.",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "diff"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rdgwgfnt",
+    "version": 1,
+    "section": "rolling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the first six values of `daily.rolling(7).mean()` `NaN`?",
+    "hint": "How many days exist on 6 January?",
+    "choices": [
+      {
+        "text": "The first week of January had no trips",
+        "correct": false,
+        "why": "It had hundreds."
+      },
+      {
+        "text": "A full window needs seven values",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`rolling` skips the first week of every month",
+        "correct": false,
+        "why": "Only the start of the series."
+      },
+      {
+        "text": "Means of integers are `NaN` until converted",
+        "correct": false,
+        "why": "Integers average fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-snsh3vt8",
+    "version": 1,
+    "section": "rolling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `center=True` wrong for a seven-day mean used to raise an alert?",
+    "hint": "Which days does it read?",
+    "choices": [
+      {
+        "text": "It reads days that have not happened yet",
+        "correct": true,
+        "why": "Right: three of them."
+      },
+      {
+        "text": "It is slower",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "It needs `min_periods`",
+        "correct": false,
+        "why": "That changes the start, not the problem."
+      },
+      {
+        "text": "It gives a different mean for the same seven days",
+        "correct": false,
+        "why": "Same mean, written on a different day."
+      }
+    ]
+  },
+  {
+    "id": "ex-kyqm0j1j",
+    "version": 1,
+    "section": "rolling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "17 May was the quietest day; the week ending 22 June had the lowest seven-day mean. What does the difference say?",
+    "hint": "One day against a week.",
+    "choices": [
+      {
+        "text": "One of the two numbers is wrong",
+        "correct": false,
+        "why": "Both are right answers to different questions."
+      },
+      {
+        "text": "The rolling mean ignores weekends",
+        "correct": false,
+        "why": "It includes every day."
+      },
+      {
+        "text": "A low day and a low stretch are different events",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "May was rainier than June",
+        "correct": false,
+        "why": "Neither number measures that."
+      }
+    ]
+  },
+  {
+    "id": "ex-htfhs9ck",
+    "version": 1,
+    "section": "rolling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A centred seven-day window is written on 4 January. How many of its seven days come after 4 January?",
+    "hint": "Count from the 5th.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ryth544y",
+    "version": 1,
+    "section": "the-days-that-are-not-there",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`S12` counted per day with `groupby` has 326 rows. Why not 365?",
+    "hint": "What does groupby make a row for?",
+    "choices": [
+      {
+        "text": "39 days of data were lost",
+        "correct": false,
+        "why": "Nothing was lost; nothing happened."
+      },
+      {
+        "text": "The station opened in February",
+        "correct": false,
+        "why": "It has trips from 1 January."
+      },
+      {
+        "text": "`dt.normalize()` merged some days",
+        "correct": false,
+        "why": "It keeps each day apart."
+      },
+      {
+        "text": "Days with no trips get no row",
+        "correct": true,
+        "why": "Right: 39 days."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgjv4f2b",
+    "version": 1,
+    "section": "the-days-that-are-not-there",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the gappy `S12` series, `rolling(\"7D\").mean()` covers the right seven days. Why is it still too high?",
+    "hint": "What does it divide by?",
+    "choices": [
+      {
+        "text": "Time windows include one extra day",
+        "correct": false,
+        "why": "The span is right."
+      },
+      {
+        "text": "It averages only the days with a row, not the empty ones",
+        "correct": true,
+        "why": "Right: the zeros are missing from the data."
+      },
+      {
+        "text": "It counts trips twice on days with two rows",
+        "correct": false,
+        "why": "Each day has one row."
+      },
+      {
+        "text": "`min_periods` defaults to 7",
+        "correct": false,
+        "why": "For a time window it defaults to 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvvp0hva",
+    "version": 1,
+    "section": "the-days-that-are-not-there",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which builds a daily series for `S12` with a 0 on every day nobody started a trip?",
+    "hint": "From the calendar, not from the data.",
+    "choices": [
+      {
+        "text": "`s12.groupby(s12[\"started_at\"].dt.date).size()`",
+        "correct": false,
+        "why": "Same gaps as before."
+      },
+      {
+        "text": "`per_day.fillna(0)`",
+        "correct": false,
+        "why": "The missing days are absent, not `NaN`."
+      },
+      {
+        "text": "`s12.set_index(\"started_at\").resample(\"D\").size()`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`per_day.rolling(\"1D\").sum()`",
+        "correct": false,
+        "why": "It still has only the days with rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-w00qx5ns",
+    "version": 1,
+    "section": "the-days-that-are-not-there",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six days of `weather.csv` have no rain reading. Should a rolling rain total treat them as 0?",
+    "hint": "Count or reading?",
+    "choices": [
+      {
+        "text": "Yes, like an empty day of trips",
+        "correct": false,
+        "why": "A missing reading is unknown, not none."
+      },
+      {
+        "text": "Not without saying so: it is unknown",
+        "correct": true,
+        "why": "Right: a decision to make and write down."
+      },
+      {
+        "text": "It does not matter: rolling skips them",
+        "correct": false,
+        "why": "Whether it skips them depends on the window."
+      },
+      {
+        "text": "Yes: pandas requires numbers in a window",
+        "correct": false,
+        "why": "Windows handle `NaN`."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7w0aqmr",
+    "version": 1,
+    "section": "resample",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`daily.resample(\"W\").sum()` gives 431 for the week labelled 5 January. Why is it low?",
+    "hint": "When did the year start?",
+    "choices": [
+      {
+        "text": "It rained that week",
+        "correct": false,
+        "why": "The week is short, whatever the weather."
+      },
+      {
+        "text": "It holds only five days",
+        "correct": true,
+        "why": "Right: 1 to 5 January."
+      },
+      {
+        "text": "New Year's Day had no trips",
+        "correct": false,
+        "why": "It had 106."
+      },
+      {
+        "text": "`\"W\"` counts weeks from Monday to Friday",
+        "correct": false,
+        "why": "It cuts weeks ending on Sunday."
+      }
+    ]
+  },
+  {
+    "id": "ex-gm31cb40",
+    "version": 1,
+    "section": "resample",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For monthly temperatures, why `resample(\"MS\").mean()` and not `.sum()`?",
+    "hint": "February's sum was lower.",
+    "choices": [
+      {
+        "text": "`sum` fails on floats",
+        "correct": false,
+        "why": "It runs."
+      },
+      {
+        "text": "`MS` only supports means",
+        "correct": false,
+        "why": "It takes any aggregation."
+      },
+      {
+        "text": "Means are faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "A level does not add up over time; a sum grows with the month's length",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dk2q7j0b",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call to what it gives on `daily`.",
+    "hint": "Moved, slid, cut.",
+    "pairs": [
+      {
+        "left": "`daily.shift(7)`",
+        "right": "The count a week earlier, on each day"
+      },
+      {
+        "left": "`daily.rolling(7).sum()`",
+        "right": "The total of the last seven days, on each day"
+      },
+      {
+        "left": "`daily.resample(\"W\").sum()`",
+        "right": "One total per calendar week"
+      },
+      {
+        "left": "`daily.diff()`",
+        "right": "The change since the day before"
+      }
+    ],
+    "right_distractors": [
+      "The mean of the whole year"
+    ]
+  },
+  {
+    "id": "ex-37xyz0ts",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps for a seven-day mean of trips at a quiet station.",
+    "hint": "Calendar first.",
+    "items": [
+      "Filter the trips to the station",
+      "Count per day with `resample(\"D\").size()`",
+      "Check that every day has a row",
+      "Take `rolling(7).mean()`"
+    ],
+    "trap": "A window over a series with gaps averages the wrong days."
+  }
+]
