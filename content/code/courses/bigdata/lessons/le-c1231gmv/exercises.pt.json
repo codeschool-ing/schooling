@@ -1,0 +1,374 @@
+{
+  "ex-0xpctbdn": {
+    "prompt": "O que um diretório simples de arquivos Parquet não consegue fazer? Escolha todos que se aplicam.",
+    "hint": "Quatro lacunas foram citadas.",
+    "choices": [
+      {
+        "text": "Mostrar a tabela como era ontem",
+        "why": "Sim. Um arquivo sobrescrito se foi."
+      },
+      {
+        "text": "Guardar cada coluna separada",
+        "why": "O Parquet faz isso sozinho."
+      },
+      {
+        "text": "Ser lido pelo Spark",
+        "why": "O Spark o lê em toda aula."
+      },
+      {
+        "text": "Tornar uma gravação visível de uma vez",
+        "why": "Sim. Um leitor pode ver metade de uma."
+      }
+    ]
+  },
+  "ex-f4sxkg3y": {
+    "prompt": "Um append noturno num diretório Parquet rodou duas vezes. Por que nada falha?",
+    "hint": "O que um leitor do diretório pega?",
+    "choices": [
+      {
+        "text": "Um leitor pega todo arquivo que acha ali",
+        "why": "Isso, e os arquivos da segunda execução parecem quaisquer outros."
+      },
+      {
+        "text": "O Spark tira linhas duplicadas ao ler Parquet",
+        "why": "Não tira; a contagem dobrou."
+      },
+      {
+        "text": "A segunda execução substituiu os arquivos da primeira",
+        "why": "O append acrescenta; havia seis arquivos."
+      },
+      {
+        "text": "Arquivos Parquet trazem um número de execução que leitores conferem",
+        "why": "Não há número assim neles."
+      }
+    ]
+  },
+  "ex-k6nxcaaz": {
+    "prompt": "O que torna atômico um commit do Delta?",
+    "hint": "Qual é a última coisa que um escritor cria?",
+    "choices": [
+      {
+        "text": "Arquivos Parquet são gravados num único bloco",
+        "why": "Os arquivos são gravados antes, onde nenhum leitor olha."
+      },
+      {
+        "text": "Escritores travam o diretório da tabela",
+        "why": "Não há travas: a checagem é no fim."
+      },
+      {
+        "text": "O driver segura cada arquivo de dados na memória até o commit",
+        "why": "Os executores gravam os arquivos de dados direto."
+      },
+      {
+        "text": "Só um escritor cria um log com dado nome",
+        "why": "Isso. Até ele existir, os arquivos de dados novos ficam invisíveis."
+      }
+    ]
+  },
+  "ex-h7wj2egb": {
+    "prompt": "Ponha em ordem os passos de uma gravação no Delta.",
+    "hint": "Os dados vêm antes do commit.",
+    "items": [
+      "Gravar os arquivos Parquet novos",
+      "Tentar criar o próximo arquivo numerado do log",
+      "Se o número estiver tomado, ver o que mudou",
+      "Tentar de novo com o número seguinte se nada conflitar"
+    ]
+  },
+  "ex-s7ra7t1d": {
+    "prompt": "`spark-submit --___ ~/lib/a.jar,~/lib/b.jar job.py` entrega esses arquivos ao driver e a cada executor.",
+    "hint": "Quatro letras.",
+    "blanks": [
+      {
+        "accept": [
+          "jars"
+        ]
+      }
+    ]
+  },
+  "ex-c2jy99z1": {
+    "prompt": "Por que a segunda tentativa de acrescentar fevereiro não gravou nada?",
+    "hint": "O que a primeira tentativa registrou no log?",
+    "choices": [
+      {
+        "text": "Fevereiro tinha sido apagado no meio",
+        "why": "A contagem ficou em 154.822."
+      },
+      {
+        "text": "O Delta recusa qualquer append de linhas que já estão na tabela",
+        "why": "Ele não compara linhas; sem o par as teria dobrado."
+      },
+      {
+        "text": "O log já tinha aquele id de job e número de execução",
+        "why": "Isso. São o `txnAppId` e o `txnVersion`."
+      },
+      {
+        "text": "A tabela estava travada pela primeira tentativa",
+        "why": "O Delta não trava."
+      }
+    ]
+  },
+  "ex-g0c8kq6z": {
+    "prompt": "Por que um `DELETE` removeu seis arquivos e acrescentou três?",
+    "hint": "Um arquivo Parquet pode ser editado?",
+    "choices": [
+      {
+        "text": "Cada linha apagada é gravada num arquivo só dela, à parte",
+        "why": "Três arquivos para 6.285 linhas."
+      },
+      {
+        "text": "O delete também compactou a tabela",
+        "why": "Compactação é o `OPTIMIZE`."
+      },
+      {
+        "text": "O Delta guarda duas cópias de cada arquivo",
+        "why": "Ele guarda uma; as antigas ficam pelo histórico."
+      },
+      {
+        "text": "Os arquivos são reescritos sem as linhas apagadas",
+        "why": "Isso. O commit lista os dois conjuntos."
+      }
+    ]
+  },
+  "ex-r7p5btd5": {
+    "prompt": "Depois do delete, como o `VERSION AS OF 1` ainda devolveu 154.822 compras?",
+    "hint": "Onde estão os arquivos removidos?",
+    "choices": [
+      {
+        "text": "A contagem vem dos arquivos CSV da camada raw",
+        "why": "A tabela não sabe nada da camada raw."
+      },
+      {
+        "text": "O Delta guarda um backup na memória do driver",
+        "why": "Nada fica na memória entre execuções."
+      },
+      {
+        "text": "O delete só foi aplicado a arquivos mais novos",
+        "why": "Ele valeu para todo arquivo com linhas do robô."
+      },
+      {
+        "text": "Os arquivos removidos ainda estão no disco, e a versão 1 os lista",
+        "why": "Isso, até um vacuum apagá-los."
+      }
+    ]
+  },
+  "ex-anmjt0s0": {
+    "prompt": "Ligue cada comando ao que ele faz.",
+    "hint": "Só um deles apaga arquivos do disco.",
+    "pairs": [
+      {
+        "left": "`OPTIMIZE`",
+        "right": "Reescreve arquivos pequenos em grandes num commit novo"
+      },
+      {
+        "left": "`VACUUM`",
+        "right": "Apaga arquivos de que nenhuma versão dentro da retenção precisa"
+      },
+      {
+        "left": "`DESCRIBE HISTORY`",
+        "right": "Lista os commits e o que cada um fez"
+      }
+    ],
+    "right_distractors": [
+      "Copia a tabela para outro catálogo"
+    ]
+  },
+  "ex-hqn83qn7": {
+    "prompt": "Por que o `VACUUM` recusa uma retenção menor que sete dias a menos que uma checagem seja desligada?",
+    "hint": "Quem ainda pode estar usando uma versão antiga?",
+    "choices": [
+      {
+        "text": "Arquivos com menos de sete dias ainda estão sendo gravados",
+        "why": "Um arquivo com commit está pronto."
+      },
+      {
+        "text": "O log só pode ser reescrito uma vez por semana",
+        "why": "O log recebe acréscimos a cada commit."
+      },
+      {
+        "text": "Apagar arquivos custa dinheiro num disco local",
+        "why": "Apagar é de graça; perder histórico é o custo."
+      },
+      {
+        "text": "Uma consulta ainda lendo uma versão antiga perderia os seus arquivos",
+        "why": "Isso. A versão 0 não pôde ser lida depois."
+      }
+    ]
+  },
+  "ex-am8cktmk": {
+    "prompt": "Depois do `OPTIMIZE` e antes do `VACUUM`, quantos arquivos de dados havia no disco para os 31 appends diários?",
+    "hint": "Os arquivos antigos e o novo."
+  },
+  "ex-51yetja3": {
+    "prompt": "O que o particionamento oculto do Iceberg por `days(ts)` deixa uma consulta fazer?",
+    "hint": "A consulta citou uma partição?",
+    "choices": [
+      {
+        "text": "Gravar uma coluna `day` que a tabela não tinha",
+        "why": "Nenhuma coluna `day` é gravada."
+      },
+      {
+        "text": "Filtrar por `ts` e ainda assim pular dias inteiros",
+        "why": "Isso. Dois arquivos lidos, 58 pulados."
+      },
+      {
+        "text": "Pular o rodapé de cada um dos arquivos Parquet que lê",
+        "why": "Os rodapés ainda são lidos nos arquivos que ela mantém."
+      },
+      {
+        "text": "Ler a tabela sem catálogo nenhum",
+        "why": "O catálogo acha a tabela."
+      }
+    ]
+  },
+  "ex-4gk0jvk3": {
+    "prompt": "Por que janeiro saiu em 32 arquivos, um por partição?",
+    "hint": "Em que fuso o `days(ts)` corta?",
+    "choices": [
+      {
+        "text": "Ele corta dias UTC, que os dias locais atravessam",
+        "why": "Isso. São Paulo está três horas atrás."
+      },
+      {
+        "text": "O primeiro arquivo guarda os metadados da tabela",
+        "why": "Os metadados moram no próprio diretório."
+      },
+      {
+        "text": "Um dos dias era grande demais para caber num arquivo só",
+        "why": "As compras de um dia têm poucas centenas de kilobytes."
+      },
+      {
+        "text": "2025 tem um dia a mais em janeiro",
+        "why": "Janeiro tem 31 dias todo ano."
+      }
+    ]
+  },
+  "ex-pzxzvz93": {
+    "prompt": "Ordene os metadados do Iceberg do ponteiro do catálogo até os dados.",
+    "hint": "Cada um aponta para o seguinte.",
+    "items": [
+      "Arquivo de metadados",
+      "Manifest list",
+      "Manifest",
+      "Arquivo de dados"
+    ]
+  },
+  "ex-95ny0paf": {
+    "prompt": "O lote do upsert tinha 1.000 correções e fevereiro inteiro. Com quantas compras a tabela terminou?",
+    "hint": "Correções substituem linhas; linhas novas são acrescentadas.",
+    "choices": [
+      {
+        "text": "Só fevereiro, já que a gravação substituiu a tabela",
+        "why": "Um upsert mantém o que não toca."
+      },
+      {
+        "text": "Janeiro mais fevereiro mais as 1.000 correções",
+        "why": "As correções substituíram linhas com a mesma chave."
+      },
+      {
+        "text": "Janeiro mais fevereiro, cada compra uma vez",
+        "why": "Isso: 154.822."
+      },
+      {
+        "text": "Só janeiro, já que correções cancelam o lote",
+        "why": "Os dois tipos de linha foram aplicados."
+      }
+    ]
+  },
+  "ex-ty0k595x": {
+    "prompt": "Ligue cada tipo de tabela do Hudi à sua troca.",
+    "hint": "Um grava só Parquet; o outro grava também logs.",
+    "pairs": [
+      {
+        "left": "Copy on write",
+        "right": "Reescreve arquivos alterados: gravações caras, leituras simples"
+      },
+      {
+        "left": "Merge on read",
+        "right": "Registra mudanças ao lado dos arquivos: gravações baratas, leituras mais caras"
+      }
+    ],
+    "right_distractors": [
+      "Guarda toda linha na memória"
+    ]
+  },
+  "ex-yxbxxjys": {
+    "prompt": "Um commit do Hudi passa por `requested`, depois `___`, depois concluído.",
+    "hint": "Em voo, em inglês, numa palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "inflight"
+        ]
+      }
+    ]
+  },
+  "ex-vmwe6fwm": {
+    "prompt": "Ligue cada situação ao formato que melhor serve.",
+    "hint": "Escolha pelo que lê e grava a tabela.",
+    "pairs": [
+      {
+        "left": "Lida por Spark, Trino, Flink e um warehouse na nuvem",
+        "right": "Apache Iceberg"
+      },
+      {
+        "left": "Um fluxo de correções a cada poucos minutos",
+        "right": "Apache Hudi"
+      },
+      {
+        "left": "Lida só pelo Spark, com o mínimo de configuração",
+        "right": "Delta Lake"
+      }
+    ],
+    "right_distractors": [
+      "Diretórios de Parquet simples"
+    ]
+  },
+  "ex-k52rq35s": {
+    "prompt": "Ligue cada problema ao recurso de um formato de tabela que o resolve.",
+    "hint": "Cada um veio de uma seção desta aula.",
+    "pairs": [
+      {
+        "left": "Um job repetido dobra um dia",
+        "right": "Uma gravação idempotente com id de job e número de execução"
+      },
+      {
+        "left": "Um visitante pede para ser esquecido",
+        "right": "Um `DELETE` que reescreve os arquivos com as linhas"
+      },
+      {
+        "left": "Um relatório precisa ser refeito como na segunda passada",
+        "right": "Viagem no tempo a uma versão anterior"
+      },
+      {
+        "left": "Milhares de arquivos pequenos de appends diários",
+        "right": "`OPTIMIZE`, depois `VACUUM`"
+      }
+    ],
+    "right_distractors": [
+      "Um executor maior"
+    ]
+  },
+  "ex-n95xh365": {
+    "prompt": "O que um formato de tabela não faz sozinho?",
+    "hint": "As escolhas da aula 10 ficam por baixo.",
+    "choices": [
+      {
+        "text": "Manter um histórico de versões",
+        "why": "Os três mantêm um."
+      },
+      {
+        "text": "Apagar linhas com um comando",
+        "why": "O `DELETE` fez isso aqui."
+      },
+      {
+        "text": "Deixar consultas mais rápidas",
+        "why": "Isso. Codec, tipos e ordenação ainda decidem isso."
+      },
+      {
+        "text": "Tornar uma gravação visível de uma vez",
+        "why": "É exatamente o que o log faz."
+      }
+    ]
+  }
+}

@@ -878,6 +878,55 @@ def l10_file(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-log', 11)
+def l11_log(lang):
+    t = {'en': dict(
+            label='A Delta table as a log and a directory. Commit 0 adds files 1 to 3, commit 1 adds '
+                  'files 4 to 6, commit 2 removes all six and adds files 7 to 9. Version 2 of the '
+                  'table is files 7 to 9; version 1 is files 1 to 6, which are still on disk until '
+                  'a vacuum deletes them.',
+            log='_delta_log', files='data files on disk', add='add', rem='remove',
+            v1='version 1', v2='version 2 (current)', c=['January', 'February', 'DELETE'],
+            cap='The table is whatever the log says it is: version 2 is three files, and the six '
+                'it removed stay on disk for version 1.'),
+         'pt': dict(
+            label='Uma tabela Delta como um log e um diretório. O commit 0 acrescenta os arquivos 1 a '
+                  '3, o commit 1 acrescenta os arquivos 4 a 6, o commit 2 remove os seis e acrescenta '
+                  'os arquivos 7 a 9. A versão 2 da tabela são os arquivos 7 a 9; a versão 1 são os '
+                  'arquivos 1 a 6, que continuam no disco até um vacuum apagá-los.',
+            log='_delta_log', files='arquivos de dados no disco', add='add', rem='remove',
+            v1='versão 1', v2='versão 2 (atual)', c=['janeiro', 'fevereiro', 'DELETE'],
+            cap='A tabela é o que o log diz que ela é: a versão 2 são três arquivos, e os seis que '
+                'ela removeu ficam no disco para a versão 1.')}[lang]
+    f = Fig('l11-log', 720, 280, t['label'])
+    f.text(20, 20, t['log'], size=11, anchor='start', weight='600', mono=True)
+    commits = [('00000.json', [(t['add'], '1 2 3')]), ('00001.json', [(t['add'], '4 5 6')]),
+               ('00002.json', [(t['rem'], '1 2 3 4 5 6'), (t['add'], '7 8 9')])]
+    for i, (name, acts) in enumerate(commits):
+        x = 20 + i * 232
+        f.rect(x, 32, 216, 92, stroke='--amber' if i == 2 else '--wire', fill='--panel')
+        f.text(x + 10, 48, name, size=10, anchor='start', mono=True)
+        f.text(x + 206, 48, t['c'][i], size=9.5, anchor='end', fill='--paper-dim')
+        for k, (verb, ids) in enumerate(acts):
+            f.text(x + 10, 74 + k * 22, f'{verb}: {ids}', size=10, anchor='start', mono=True,
+                   fill='--paper-dim' if verb == t['rem'] else '--paper')
+    f.text(20, 152, t['files'], size=11, anchor='start', weight='600')
+    for n in range(1, 10):
+        x = 20 + (n - 1) * 76
+        live = n >= 7
+        f.rect(x, 166, 64, 40, stroke='--phosphor' if live else '--paper-dim',
+               fill='--scan' if live else '--panel', dash=None if live else '4 3', rx=3)
+        f.text(x + 32, 186, f'{n}.parquet', size=9.5, mono=True,
+               fill='--paper' if live else '--paper-dim')
+    f.line(20, 222, 476, 222, stroke='--paper-dim', width=1.2)
+    f.text(248, 238, t['v1'], size=10, fill='--paper-dim')
+    f.line(476, 254, 704, 254, stroke='--phosphor', width=1.6)
+    f.text(590, 270, t['v2'], size=10, fill='--phosphor')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

@@ -1,0 +1,544 @@
+[
+  {
+    "id": "ex-0xpctbdn",
+    "version": 1,
+    "section": "what-a-lake-cannot-do",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can a plain directory of Parquet files not do? Choose all that apply.",
+    "hint": "Four gaps were named.",
+    "choices": [
+      {
+        "text": "Show the table as it was yesterday",
+        "correct": true,
+        "why": "Yes. An overwritten file is gone."
+      },
+      {
+        "text": "Store each column apart",
+        "correct": false,
+        "why": "Parquet does that on its own."
+      },
+      {
+        "text": "Be read by Spark",
+        "correct": false,
+        "why": "Spark reads it every lesson."
+      },
+      {
+        "text": "Make a write visible all at once",
+        "correct": true,
+        "why": "Yes. A reader can see half of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4sxkg3y",
+    "version": 1,
+    "section": "what-a-lake-cannot-do",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A nightly append to a Parquet directory ran twice. Why does nothing fail?",
+    "hint": "What does a reader of the directory take?",
+    "choices": [
+      {
+        "text": "A reader takes every file it finds there",
+        "correct": true,
+        "why": "Right, and the second run's files look like any others."
+      },
+      {
+        "text": "Spark removes duplicate rows when it reads Parquet",
+        "correct": false,
+        "why": "It does not; the count doubled."
+      },
+      {
+        "text": "The second run replaced the first one's files",
+        "correct": false,
+        "why": "Append adds; six files were there."
+      },
+      {
+        "text": "Parquet files carry a run number that readers check",
+        "correct": false,
+        "why": "There is no such number in them."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6nxcaaz",
+    "version": 1,
+    "section": "the-transaction-log",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What makes a Delta commit atomic?",
+    "hint": "What is the last thing a writer creates?",
+    "choices": [
+      {
+        "text": "Parquet files are written in a single block",
+        "correct": false,
+        "why": "Files are written first, where no reader looks."
+      },
+      {
+        "text": "Writers take a lock on the table's directory",
+        "correct": false,
+        "why": "There are no locks: the check is at the end."
+      },
+      {
+        "text": "The driver holds every data file in memory until commit",
+        "correct": false,
+        "why": "Executors write the data files directly."
+      },
+      {
+        "text": "Creating a given log file succeeds for one writer only",
+        "correct": true,
+        "why": "Right. Until it exists, the new data files are invisible."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7wj2egb",
+    "version": 1,
+    "section": "the-transaction-log",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a Delta write in order.",
+    "hint": "The data comes before the commit.",
+    "items": [
+      "Write the new Parquet files",
+      "Try to create the next numbered log file",
+      "If the number is taken, check what changed",
+      "Retry with the next number if nothing conflicts"
+    ]
+  },
+  {
+    "id": "ex-s7ra7t1d",
+    "version": 1,
+    "section": "the-transaction-log",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`spark-submit --___ ~/lib/a.jar,~/lib/b.jar job.py` hands those files to the driver and to every executor.",
+    "hint": "Four letters.",
+    "blanks": [
+      {
+        "accept": [
+          "jars"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c2jy99z1",
+    "version": 1,
+    "section": "delta-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the second attempt to append February write nothing?",
+    "hint": "What did the first attempt record in the log?",
+    "choices": [
+      {
+        "text": "February had been deleted in between",
+        "correct": false,
+        "why": "The count stayed at 154,822."
+      },
+      {
+        "text": "Delta refuses any append of rows already in the table",
+        "correct": false,
+        "why": "It compares no rows; without the pair it would have doubled them."
+      },
+      {
+        "text": "The log already had that job id and run number",
+        "correct": true,
+        "why": "Right. That is `txnAppId` and `txnVersion`."
+      },
+      {
+        "text": "The table was locked by the first attempt",
+        "correct": false,
+        "why": "Delta takes no locks."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0c8kq6z",
+    "version": 1,
+    "section": "delta-in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did one `DELETE` remove six files and add three?",
+    "hint": "Can a Parquet file be edited?",
+    "choices": [
+      {
+        "text": "Each deleted row is written to a file of its own",
+        "correct": false,
+        "why": "Three files for 6,285 rows."
+      },
+      {
+        "text": "The delete also compacted the table",
+        "correct": false,
+        "why": "Compaction is `OPTIMIZE`."
+      },
+      {
+        "text": "Delta keeps two copies of every file",
+        "correct": false,
+        "why": "It keeps one; old ones stay for history."
+      },
+      {
+        "text": "Files are rewritten without the deleted rows",
+        "correct": true,
+        "why": "Right. The commit lists both sets."
+      }
+    ]
+  },
+  {
+    "id": "ex-r7p5btd5",
+    "version": 1,
+    "section": "delta-in-practice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the delete, how could `VERSION AS OF 1` still return 154,822 purchases?",
+    "hint": "Where are the removed files?",
+    "choices": [
+      {
+        "text": "The count comes from the CSV files of the raw layer",
+        "correct": false,
+        "why": "The table knows nothing of the raw layer."
+      },
+      {
+        "text": "Delta keeps a backup in the driver's memory",
+        "correct": false,
+        "why": "Nothing is kept in memory between runs."
+      },
+      {
+        "text": "The delete was only applied to newer files",
+        "correct": false,
+        "why": "It applied to every file with the crawler's rows."
+      },
+      {
+        "text": "The removed files are still on disk, and version 1 lists them",
+        "correct": true,
+        "why": "Right, until a vacuum deletes them."
+      }
+    ]
+  },
+  {
+    "id": "ex-anmjt0s0",
+    "version": 1,
+    "section": "compaction-and-vacuum",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it does.",
+    "hint": "Only one of them deletes files from disk.",
+    "pairs": [
+      {
+        "left": "`OPTIMIZE`",
+        "right": "Rewrites small files into large ones in a new commit"
+      },
+      {
+        "left": "`VACUUM`",
+        "right": "Deletes files no version within the retention needs"
+      },
+      {
+        "left": "`DESCRIBE HISTORY`",
+        "right": "Lists the commits and what each one did"
+      }
+    ],
+    "right_distractors": [
+      "Copies the table to another catalog"
+    ]
+  },
+  {
+    "id": "ex-hqn83qn7",
+    "version": 1,
+    "section": "compaction-and-vacuum",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `VACUUM` refuse a retention shorter than seven days unless a check is switched off?",
+    "hint": "Who might still be using an old version?",
+    "choices": [
+      {
+        "text": "Files younger than seven days are still being written",
+        "correct": false,
+        "why": "A committed file is finished."
+      },
+      {
+        "text": "The log can only be rewritten once a week",
+        "correct": false,
+        "why": "The log is appended to at every commit."
+      },
+      {
+        "text": "Deleting files costs money on a local disk",
+        "correct": false,
+        "why": "Deleting is free; losing history is the cost."
+      },
+      {
+        "text": "A query still reading an old version would lose its files",
+        "correct": true,
+        "why": "Right. Version 0 could not be read afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-am8cktmk",
+    "version": 1,
+    "section": "compaction-and-vacuum",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `OPTIMIZE` and before `VACUUM`, how many data files were on disk for the 31 daily appends?",
+    "hint": "The old files and the new one.",
+    "value": 32,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-51yetja3",
+    "version": 1,
+    "section": "iceberg",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Iceberg's hidden partitioning by `days(ts)` let a query do?",
+    "hint": "Did the query mention a partition?",
+    "choices": [
+      {
+        "text": "Write a `day` column the table did not have",
+        "correct": false,
+        "why": "No `day` column is ever written."
+      },
+      {
+        "text": "Filter on `ts` and still skip whole days",
+        "correct": true,
+        "why": "Right. Two files read, 58 skipped."
+      },
+      {
+        "text": "Skip the footer of every Parquet file it reads",
+        "correct": false,
+        "why": "Footers are still read for the files it keeps."
+      },
+      {
+        "text": "Read the table without any catalog",
+        "correct": false,
+        "why": "The catalog finds the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gk0jvk3",
+    "version": 1,
+    "section": "iceberg",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did January come out as 32 files, one per partition?",
+    "hint": "In which time zone does `days(ts)` cut?",
+    "choices": [
+      {
+        "text": "It cuts UTC days, which local days straddle",
+        "correct": true,
+        "why": "Right. São Paulo is three hours behind."
+      },
+      {
+        "text": "The first file holds the table's metadata",
+        "correct": false,
+        "why": "Metadata lives in its own directory."
+      },
+      {
+        "text": "One of the days was too large to fit in a single file",
+        "correct": false,
+        "why": "A day's purchases are a few hundred kilobytes."
+      },
+      {
+        "text": "2025 has an extra day in January",
+        "correct": false,
+        "why": "January has 31 days every year."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzxzvz93",
+    "version": 1,
+    "section": "iceberg",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order Iceberg's metadata from the catalog's pointer down to the data.",
+    "hint": "Each points to the next.",
+    "items": [
+      "Metadata file",
+      "Manifest list",
+      "Manifest",
+      "Data file"
+    ]
+  },
+  {
+    "id": "ex-95ny0paf",
+    "version": 1,
+    "section": "hudi",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The upsert batch held 1,000 corrections and all of February. How many purchases did the table end with?",
+    "hint": "Corrections replace rows; new rows are added.",
+    "choices": [
+      {
+        "text": "February only, since the write replaced the table",
+        "correct": false,
+        "why": "An upsert keeps what it does not touch."
+      },
+      {
+        "text": "January plus February plus the 1,000 corrections",
+        "correct": false,
+        "why": "The corrections replaced rows with the same key."
+      },
+      {
+        "text": "January plus February, each purchase once",
+        "correct": true,
+        "why": "Right: 154,822."
+      },
+      {
+        "text": "January only, since corrections cancel the batch",
+        "correct": false,
+        "why": "Both kinds of row were applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-ty0k595x",
+    "version": 1,
+    "section": "hudi",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each Hudi table type to its trade.",
+    "hint": "One writes Parquet only; one also writes logs.",
+    "pairs": [
+      {
+        "left": "Copy on write",
+        "right": "Rewrites changed files: dear writes, plain reads"
+      },
+      {
+        "left": "Merge on read",
+        "right": "Logs changes beside the files: cheap writes, dearer reads"
+      }
+    ],
+    "right_distractors": [
+      "Keeps every row in memory"
+    ]
+  },
+  {
+    "id": "ex-yxbxxjys",
+    "version": 1,
+    "section": "hudi",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Hudi commit passes through `requested`, then `___`, then completed.",
+    "hint": "In flight.",
+    "blanks": [
+      {
+        "accept": [
+          "inflight"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vmwe6fwm",
+    "version": 1,
+    "section": "choosing-a-format",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the format it suits best.",
+    "hint": "Choose by what reads and writes the table.",
+    "pairs": [
+      {
+        "left": "Read by Spark, Trino, Flink and a cloud warehouse",
+        "right": "Apache Iceberg"
+      },
+      {
+        "left": "A stream of corrections every few minutes",
+        "right": "Apache Hudi"
+      },
+      {
+        "left": "Read only by Spark, with the least to set up",
+        "right": "Delta Lake"
+      }
+    ],
+    "right_distractors": [
+      "Plain Parquet directories"
+    ]
+  },
+  {
+    "id": "ex-k52rq35s",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each problem to the feature of a table format that fixes it.",
+    "hint": "Each came from a section of this lesson.",
+    "pairs": [
+      {
+        "left": "A retried job doubles a day",
+        "right": "An idempotent write with a job id and run number"
+      },
+      {
+        "left": "A visitor asks to be forgotten",
+        "right": "A `DELETE` that rewrites the files holding the rows"
+      },
+      {
+        "left": "A report must be rerun as of last Monday",
+        "right": "Time travel to an older version"
+      },
+      {
+        "left": "Thousands of small files from daily appends",
+        "right": "`OPTIMIZE`, then `VACUUM`"
+      }
+    ],
+    "right_distractors": [
+      "A bigger executor"
+    ]
+  },
+  {
+    "id": "ex-n95xh365",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a table format not do by itself?",
+    "hint": "Lesson 10's choices are made underneath.",
+    "choices": [
+      {
+        "text": "Keep a history of versions",
+        "correct": false,
+        "why": "All three keep one."
+      },
+      {
+        "text": "Delete rows with one statement",
+        "correct": false,
+        "why": "`DELETE` did it here."
+      },
+      {
+        "text": "Make queries faster",
+        "correct": true,
+        "why": "Right. Codec, types and sort order still decide that."
+      },
+      {
+        "text": "Make a write visible all at once",
+        "correct": false,
+        "why": "That is exactly what the log does."
+      }
+    ]
+  }
+]
