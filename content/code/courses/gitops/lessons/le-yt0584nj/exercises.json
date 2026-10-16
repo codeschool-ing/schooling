@@ -931,5 +931,346 @@
         "why": "Only a key holder gets those."
       }
     ]
+  },
+  {
+    "id": "ex-5e58xkrh",
+    "version": 1,
+    "section": "base64-is-not-encryption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does bulletin print about its token?",
+    "choices": [
+      {
+        "text": "The token itself",
+        "correct": false,
+        "why": "It never prints the value."
+      },
+      {
+        "text": "Only whether a token exists",
+        "correct": false,
+        "why": "It prints a fingerprint."
+      },
+      {
+        "text": "The start of its SHA-256",
+        "correct": true,
+        "why": "Right. It proves which token without showing it."
+      },
+      {
+        "text": "The token in base64",
+        "correct": false,
+        "why": "That would print the value, encoded."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdnb9skk",
+    "version": 1,
+    "section": "base64-is-not-encryption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The API server encrypts Secrets in etcd. Why does that not make a Secret's YAML safe in Git?",
+    "choices": [
+      {
+        "text": "Encryption in etcd is optional",
+        "correct": false,
+        "why": "Even when on, Git is untouched."
+      },
+      {
+        "text": "Flux decrypts it on the way",
+        "correct": false,
+        "why": "Flux applies what Git holds."
+      },
+      {
+        "text": "Git holds the YAML, not etcd's copy",
+        "correct": true,
+        "why": "Right. Whoever reads the repository reads the token."
+      },
+      {
+        "text": "etcd stores base64",
+        "correct": false,
+        "why": "It is about where the YAML is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5nfvh4s",
+    "version": 1,
+    "section": "three-answers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With Vault and an operator, what does Git hold for a secret?",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The reference is in Git."
+      },
+      {
+        "text": "The key that opens it",
+        "correct": false,
+        "why": "No key goes into Git."
+      },
+      {
+        "text": "The secret, encrypted",
+        "correct": false,
+        "why": "That is the other family."
+      },
+      {
+        "text": "A reference to it",
+        "correct": true,
+        "why": "Right. Which secret, not what."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ee1rjev",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who can open a SealedSecret committed to fleet?",
+    "choices": [
+      {
+        "text": "Anybody with the certificate",
+        "correct": false,
+        "why": "The certificate is the public half."
+      },
+      {
+        "text": "Anybody with kubeseal",
+        "correct": false,
+        "why": "kubeseal only seals."
+      },
+      {
+        "text": "Flux",
+        "correct": false,
+        "why": "Flux applies it; the controller opens it."
+      },
+      {
+        "text": "The controller in that cluster",
+        "correct": true,
+        "why": "Right. Anybody can read the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ekyds68",
+    "version": 1,
+    "section": "sealed-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why keep a copy of the controller's certificate in a file?",
+    "choices": [
+      {
+        "text": "To decrypt seals on a laptop",
+        "correct": false,
+        "why": "It is the public half."
+      },
+      {
+        "text": "Because the controller forgets it",
+        "correct": false,
+        "why": "The controller keeps its keys."
+      },
+      {
+        "text": "Flux needs it",
+        "correct": false,
+        "why": "Flux never reads it."
+      },
+      {
+        "text": "To seal without reaching the cluster",
+        "correct": true,
+        "why": "Right. And to make plain which key is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rx4fctn",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What would happen without the name and namespace in the seal?",
+    "choices": [
+      {
+        "text": "Nothing different",
+        "correct": false,
+        "why": "The binding is the protection."
+      },
+      {
+        "text": "A copy elsewhere would hand out the token",
+        "correct": true,
+        "why": "Right. Copy the SealedSecret and let the controller open it."
+      },
+      {
+        "text": "Seals would be larger",
+        "correct": false,
+        "why": "Size is not the point."
+      },
+      {
+        "text": "kubeseal would refuse",
+        "correct": false,
+        "why": "It is about who can open it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dt3m4y0",
+    "version": 1,
+    "section": "sealed-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The cluster is lost and its keys were never backed up. What becomes of the SealedSecrets in fleet?",
+    "choices": [
+      {
+        "text": "No key opens them any more",
+        "correct": true,
+        "why": "Right. A new controller has new keys."
+      },
+      {
+        "text": "The new controller opens them",
+        "correct": false,
+        "why": "It has different keys."
+      },
+      {
+        "text": "Flux re-seals them",
+        "correct": false,
+        "why": "Flux never sees plaintext."
+      },
+      {
+        "text": "Git decrypts them",
+        "correct": false,
+        "why": "Git stores text."
+      }
+    ]
+  },
+  {
+    "id": "ex-egg05vy1",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A SOPS-encrypted file changes in a pull request. What can the reviewer see?",
+    "choices": [
+      {
+        "text": "Which key changed",
+        "correct": true,
+        "why": "Right. Values are encrypted, keys readable."
+      },
+      {
+        "text": "The new value",
+        "correct": false,
+        "why": "Values are encrypted."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Keys stay readable."
+      },
+      {
+        "text": "The age private key",
+        "correct": false,
+        "why": "It never goes into Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssx4q3vt",
+    "version": 1,
+    "section": "sops",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which files does this lesson's .sops.yaml encrypt?",
+    "choices": [
+      {
+        "text": "Every YAML file",
+        "correct": false,
+        "why": "Only those matching the rule."
+      },
+      {
+        "text": "Every Secret",
+        "correct": false,
+        "why": "It matches paths, not kinds."
+      },
+      {
+        "text": "Files ending in .sops.yaml under a production directory",
+        "correct": true,
+        "why": "Right. Its path_regex says so."
+      },
+      {
+        "text": "Staging's token",
+        "correct": false,
+        "why": "Staging uses Sealed Secrets."
+      }
+    ]
+  },
+  {
+    "id": "ex-82mfc2dy",
+    "version": 1,
+    "section": "vault",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a restart, what must happen before Vault can read a secret?",
+    "choices": [
+      {
+        "text": "The kv engine is enabled again",
+        "correct": false,
+        "why": "It stays enabled."
+      },
+      {
+        "text": "The data is restored",
+        "correct": false,
+        "why": "The data is on disk, encrypted."
+      },
+      {
+        "text": "Somebody unseals it",
+        "correct": true,
+        "why": "Right. Or a cloud key service does it automatically."
+      },
+      {
+        "text": "The root token is renewed",
+        "correct": false,
+        "why": "The token is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-dg308awf",
+    "version": 1,
+    "section": "vault-kubernetes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Production's Vault token asks for staging's secret. What does Vault answer?",
+    "choices": [
+      {
+        "text": "503 sealed",
+        "correct": false,
+        "why": "Vault is unsealed."
+      },
+      {
+        "text": "The secret",
+        "correct": false,
+        "why": "The policy does not allow it."
+      },
+      {
+        "text": "403 permission denied",
+        "correct": true,
+        "why": "Right. The policy names one path."
+      },
+      {
+        "text": "404 not found",
+        "correct": false,
+        "why": "It refuses before looking."
+      }
+    ]
   }
 ]
