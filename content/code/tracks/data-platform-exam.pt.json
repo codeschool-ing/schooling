@@ -1,0 +1,2069 @@
+{
+  "ex-2rndb5fg": {
+    "prompt": "Um programa como o `visitors.py` da aula 1 conta os visitantes diferentes de cada livro em cinco anos de cliques e morre com `MemoryError` numa máquina que não pode ficar maior. Que mudança deixa a mesma máquina terminar com as contagens certas?",
+    "hint": "Big Data e Processamento Distribuído, aula 1.",
+    "choices": [
+      {
+        "text": "Mandar cada visitante, por hash, para um de dezesseis arquivos, contar cada arquivo sozinho e somar as contagens",
+        "why": "Certo."
+      },
+      {
+        "text": "Dividir a entrada por dia, contar os visitantes diferentes de cada dia e somar as contagens diárias",
+        "why": "Um visitante que veio em dois dias é contado nos dois. Só uma divisão pelo visitante põe cada visitante em exatamente uma parte, e é isso que deixa as contagens se somarem."
+      },
+      {
+        "text": "Guardar os visitantes numa estrutura mais compacta que um conjunto de strings",
+        "why": "Uma estrutura menor move a parede e não a remove: cinco anos de visitantes ainda precisam estar na memória ao mesmo tempo."
+      },
+      {
+        "text": "Ler os arquivos diários um de cada vez, fechando cada um antes de abrir o próximo",
+        "why": "Não são os arquivos que enchem a memória. Os conjuntos continuam crescendo por todos os arquivos, e só são contados no fim."
+      }
+    ]
+  },
+  "ex-3601kjxy": {
+    "prompt": "Cada tarefa de um job Spark insere sua fatia de compras numa tabela do PostgreSQL, dando a cada inserção um id de linha novo. Um executor morre no meio de uma tarefa, e o job ainda assim termina. O que a tabela guarda, e o que a teria deixado certa?",
+    "hint": "Big Data e Processamento Distribuído, aula 2; Streaming e Processamento de Eventos, aula 8.",
+    "choices": [
+      {
+        "text": "Algumas compras duas vezes; inserir cada uma pela chave do id da venda, com `ON CONFLICT DO NOTHING`",
+        "why": "Certo."
+      },
+      {
+        "text": "Cada compra uma vez, porque o Spark desfaz as escritas de uma tarefa perdida antes de rodá-la de novo",
+        "why": "O Spark não sabe nada de um efeito colateral. A nova execução escreve de novo, e as linhas da primeira tentativa ficam onde estão."
+      },
+      {
+        "text": "Faltam compras, porque uma tarefa perdida com seu executor não roda de novo",
+        "why": "O driver manda a tarefa perdida para outro executor; a aula 2 viu isso acontecer e chegou à resposta certa."
+      },
+      {
+        "text": "Algumas compras duas vezes; `spark.task.maxFailures` em 1, para que nenhuma tarefa rode uma segunda vez",
+        "why": "Aí um executor perdido derruba o job inteiro, e as linhas que a tentativa morta escreveu ficam na tabela do mesmo jeito."
+      }
+    ]
+  },
+  "ex-9fhtfhgp": {
+    "prompt": "A carga noturna do Spark roda em modo client no cluster standalone. Ontem à noite o driver dela foi morto com o sinal 9 no meio do caminho, e ninguém foi acionado. Que verificação teria disparado?",
+    "hint": "Big Data e Processamento Distribuído, aula 2; Observabilidade e Operação, aula 5.",
+    "choices": [
+      {
+        "text": "Um alerta para qualquer aplicação que o `/json/` do master liste com estado diferente de `FINISHED`",
+        "why": "O master listou a aplicação morta como `FINISHED`, a palavra dele para qualquer coisa que não esteja mais rodando."
+      },
+      {
+        "text": "Um alerta sobre a idade de um timestamp que o job envia a um Pushgateway depois de gravar a saída",
+        "why": "Certo."
+      },
+      {
+        "text": "O Prometheus raspando a porta 4040 do driver a cada quinze segundos atrás de tarefas falhas",
+        "why": "A página morreu com o driver, e um scrape de um processo que não existe mais não encontra nada para perguntar, nem uma falha."
+      },
+      {
+        "text": "Um alerta sobre linhas `ERROR` na saída do próprio driver",
+        "why": "O processo que teria registrado o erro é o que morreu. A única linha foi o `Killed` do shell."
+      }
+    ]
+  },
+  "ex-cjcrc4pc": {
+    "prompt": "Um lake recebe um arquivo por minuto para cada um de 20 streams, todos bem abaixo de 128 MB, e os guarda por um ano de 365 dias. Contando arquivos e blocos a uns 150 bytes cada da memória do namenode, como faz a tabela da aula 3, quantos GB (10⁹ bytes) ocupam os metadados desse ano? Arredonde para uma casa decimal.",
+    "hint": "Big Data e Processamento Distribuído, aula 3.",
+    "unit": "GB"
+  },
+  "ex-532vs1ec": {
+    "prompt": "Ponha em ordem os níveis de localidade do Spark para uma tarefa, do que lê menos pela rede ao que lê mais.",
+    "hint": "Big Data e Processamento Distribuído, aula 3.",
+    "items": [
+      "`PROCESS_LOCAL`",
+      "`NODE_LOCAL`",
+      "`RACK_LOCAL`",
+      "`ANY`"
+    ],
+    "trap": "`NODE_LOCAL` foi o que as tarefas da aula 3 alcançaram, e mesmo assim fica em segundo: uma partição que já está na memória do executor não precisa de disco nenhum."
+  },
+  "ex-83skgbjz": {
+    "prompt": "Um mapper emite um par por compra: o livro como chave e o preço em centavos como valor. Para quais reducers o Hadoop poderia rodar o mesmo programa como combiner e ainda imprimir a resposta certa? Marque todas as que se aplicam.",
+    "hint": "Big Data e Processamento Distribuído, aula 4.",
+    "choices": [
+      {
+        "text": "A receita total de cada livro",
+        "why": "Certo."
+      },
+      {
+        "text": "O maior preço pago por cada livro",
+        "why": "Certo."
+      },
+      {
+        "text": "O preço médio pago por cada livro",
+        "why": "Uma média de médias parciais erra quando os pedaços têm tamanhos diferentes. Emita a soma e a contagem, combine as duas e divida no fim."
+      },
+      {
+        "text": "Por quantos preços diferentes cada livro foi vendido",
+        "why": "Duas tarefas de map podem ver o mesmo preço, então as contagens parciais não se somam; só a lista de preços se soma, e ela não é menor."
+      },
+      {
+        "text": "O menor preço pago por cada livro",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-j7y66kpj": {
+    "prompt": "No `lazy.py`, o segundo `views.count()` levou 17,8 s, contra 26,3 s do primeiro. O que o deixou mais rápido?",
+    "hint": "Big Data e Processamento Distribuído, aula 5.",
+    "choices": [
+      {
+        "text": "O Spark guardou as linhas filtradas de `views` na memória dos executores depois que a primeira contagem as calculou",
+        "why": "Nada foi guardado. `views` é uma receita, e a segunda contagem leu todos os arquivos de novo."
+      },
+      {
+        "text": "Os arquivos estavam no cache do sistema operacional, e os workers Python já estavam de pé",
+        "why": "Certo."
+      },
+      {
+        "text": "A segunda contagem seguiu a linhagem e pulou o `filter`",
+        "why": "A linhagem é a própria receita; segui-la de novo significa rodar o filtro em cada linha de novo."
+      },
+      {
+        "text": "A execução adaptativa juntou as partições do segundo job",
+        "why": "Isto é uma contagem de RDD sem shuffle, então não havia nada para juntar."
+      }
+    ]
+  },
+  "ex-fvmtq7fs": {
+    "prompt": "Lida no `explain(\"formatted\")`, uma condição sobre `day` que os nomes dos diretórios respondem antes de abrir qualquer arquivo aparece no scan em `___`.",
+    "hint": "Big Data e Processamento Distribuído, aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "PartitionFilters",
+          "PartitionFilters:"
+        ]
+      }
+    ]
+  },
+  "ex-ngqr7jkh": {
+    "prompt": "Um job Spark monta as features de treino com data de corte de 31 de agosto de 2025 a partir dos cliques da camada silver, particionados por `day`. As features só podem usar o que se sabia naquele dia. Que filtro respeita isso e deixa o Spark pular todo diretório depois dele?",
+    "hint": "Big Data e Processamento Distribuído, aula 6; Machine Learning e MLOps, aula 6.",
+    "choices": [
+      {
+        "text": "`F.col(\"ts\") < \"2025-09-01\"` sozinho, que diz a mesma coisa até o segundo",
+        "why": "Ele respeita o corte, mas o planejador não sabe que um corte em `ts` implica um em `day`, então abre todos os diretórios."
+      },
+      {
+        "text": "`F.col(\"day\") <= \"2025-08-31\"`, com qualquer corte mais fino em `ts` ao lado",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma UDF Python que compara o `day` de cada linha com o corte",
+        "why": "O planejador não enxerga dentro dela, então não poda nada e chama a função em cada linha de cada dia."
+      },
+      {
+        "text": "Nenhum filtro nos cliques, e a tabela de visitantes juntada como está hoje à noite",
+        "why": "Isso treina com valores de depois do corte: o vazamento que um join point-in-time existe para impedir."
+      }
+    ]
+  },
+  "ex-ajf2sj33": {
+    "prompt": "Pela conta da aula 7, o Spark conta cada arquivo como o seu tamanho mais `spark.sql.files.openCostInBytes`, 4 MB, e empacota o total em partições de 128 MB. Mais ou menos quantas partições faz uma leitura de 1.000 arquivos Parquet de 1 MB cada?",
+    "hint": "Big Data e Processamento Distribuído, aula 7."
+  },
+  "ex-xnp6qxwf": {
+    "prompt": "Um job falha no meio de um stage com `No space left on device` enquanto o HDFS tem terabytes livres. Os arquivos de shuffle foram para onde `___` aponta, e o padrão, `/tmp`, costuma ser o menor disco da máquina.",
+    "hint": "Big Data e Processamento Distribuído, aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "spark.local.dir"
+        ]
+      }
+    ]
+  },
+  "ex-3sqm8t0v": {
+    "prompt": "O relatório da manhã tem de estar pronto às oito. Destes alertas sobre o job Spark dele, qual deve acordar alguém de noite?",
+    "hint": "Big Data e Processamento Distribuído, aula 7; Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "Nenhuma execução bem-sucedida até as sete, uma hora antes do prazo",
+        "why": "Certo."
+      },
+      {
+        "text": "Um stage fez spill de mais de 500 MiB nos discos dos executores",
+        "why": "Um spill é um custo, não uma falha: a ordenação com spill da aula 7 terminou primeiro. No máximo, um ticket."
+      },
+      {
+        "text": "Um executor se perdeu na execução da noite",
+        "why": "O driver rodou as tarefas dele em outro lugar e a resposta saiu certa. Uma causa que pode não ferir ninguém é um ticket."
+      },
+      {
+        "text": "A fila noturna do YARN está em 95% da sua parcela há uma hora",
+        "why": "Uma fila que enche a sua parcela está fazendo o seu trabalho, e isso não diz nada sobre o relatório atrasar."
+      }
+    ]
+  },
+  "ex-2d1sw3qd": {
+    "prompt": "Um job grava um ano de cliques com `partitionBy(\"day\")` logo depois de `repartition(50)` e deixa cinquenta arquivos no diretório de cada dia. Que mudança dá um arquivo a cada dia?",
+    "hint": "Big Data e Processamento Distribuído, aula 8.",
+    "choices": [
+      {
+        "text": "`spark.sql.shuffle.partitions` aumentado para 365",
+        "why": "O `repartition(50)` dá a sua própria contagem, então a configuração não muda nada aqui; e mais tarefas com linhas de todo dia só dariam mais arquivos."
+      },
+      {
+        "text": "`spark.sql.files.maxRecordsPerFile` com as linhas de um dia",
+        "why": "Ele limita as linhas de um arquivo, então só pode dividir o arquivo de uma tarefa; nunca reúne as linhas de um dia vindas de cinquenta tarefas."
+      },
+      {
+        "text": "`repartition(365)`, para que haja uma tarefa por dia",
+        "why": "Sem uma coluna, as linhas são distribuídas em rodízio, não por dia, então cada uma das 365 tarefas fica com linhas de todos os dias."
+      },
+      {
+        "text": "`repartition(\"day\")` antes da gravação",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-qb7wwbz5": {
+    "prompt": "Uma consulta do Structured Streaming mantém um `checkpointLocation`, e o laço da aula 9 chama `rank.checkpoint()`. O que o checkpoint do streaming guarda que o do laço não guarda?",
+    "hint": "Big Data e Processamento Distribuído, aula 9; Streaming e Processamento de Eventos, aula 12.",
+    "choices": [
+      {
+        "text": "Uma cópia das linhas como estavam, gravada em arquivos para que o plano recomece a partir deles",
+        "why": "Esse é o checkpoint do laço: um DataFrame gravado e a sua linhagem cortada."
+      },
+      {
+        "text": "Nada diferente: os dois cortam uma linhagem que cresceu demais",
+        "why": "O do streaming é um registro de progresso e de estado; um reinício o lê para rodar de novo um lote inacabado e trazer de volta as janelas abertas."
+      },
+      {
+        "text": "Que offsets cada lote leu, se a saída dele chegou ao sink, e as janelas abertas",
+        "why": "Certo."
+      },
+      {
+        "text": "O mesmo tipo de dado, guardado no disco local do driver",
+        "why": "Os dois pertencem a um armazenamento que sobrevive à máquina. O checkpoint do streaming é a única cópia da posição e do estado da consulta."
+      }
+    ]
+  },
+  "ex-mc8a894b": {
+    "prompt": "No PostgreSQL, o papel de analista recebeu seis colunas de `sales.customers`, e `email` não é uma delas. Um job Spark noturno copia a tabela inteira para Parquet no lake, e uma analista roda `spark.read.parquet(path).select(\"email\")`. O que acontece?",
+    "hint": "Big Data e Processamento Distribuído, aula 10; Segurança, Governança e Privacidade de Dados, aula 2.",
+    "choices": [
+      {
+        "text": "Recusado: o rodapé do Parquet traz as permissões de coluna da tabela junto com o schema",
+        "why": "O rodapé guarda o schema, os row groups, e as codificações e o menor e o maior valor de cada column chunk. Nada nele diz quem pode ler."
+      },
+      {
+        "text": "Nulos: a poda de colunas deixa de fora o que um papel não recebeu",
+        "why": "A poda descarta as colunas que uma consulta não usa, e esta consulta usa `email`."
+      },
+      {
+        "text": "Os e-mails voltam: a permissão é conferida pelo PostgreSQL, não por um arquivo",
+        "why": "Certo."
+      },
+      {
+        "text": "Recusado: a cópia foi feita com as permissões da analista, então `email` nunca chegou ao lake",
+        "why": "O job copiou a tabela inteira com um papel que pode ler tudo. O que a analista pode ver nunca fez parte da cópia."
+      }
+    ]
+  },
+  "ex-ea6m5v97": {
+    "prompt": "Ligue cada segunda execução ao que um leitor vê depois dela.",
+    "hint": "Big Data e Processamento Distribuído, aula 11; Streaming e Processamento de Eventos, aula 12.",
+    "pairs": [
+      {
+        "left": "Um append no Delta rodado de novo com o mesmo `txnAppId` e o mesmo `txnVersion`",
+        "right": "Uma cópia: o log já guarda o par, então nada é gravado"
+      },
+      {
+        "left": "Um lote do Structured Streaming reprocessado num sink de arquivos",
+        "right": "Uma cópia: os leitores seguem o `_spark_metadata`, uma entrada por lote terminado"
+      },
+      {
+        "left": "O mesmo lote reprocessado num sink Kafka, cada registro com a contagem inteira de uma janela",
+        "right": "Dois registros para algumas chaves, inofensivos para um leitor que guarda o último valor por chave"
+      },
+      {
+        "left": "Um `mode(\"append\")` em Parquet puro rodado duas vezes",
+        "right": "Toda linha dobrada, e nada no diretório diz isso"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia: o log `commits` do checkpoint apaga os arquivos da primeira execução"
+    ]
+  },
+  "ex-dhyc666c": {
+    "prompt": "O visitante `v0936542` pede para ser esquecido. A equipe roda `DELETE FROM` na tabela Delta de cliques, o commit dá certo, e ela responde que os dados sumiram. O que continua verdadeiro?",
+    "hint": "Big Data e Processamento Distribuído, aula 11; Segurança, Governança e Privacidade de Dados, aula 7.",
+    "choices": [
+      {
+        "text": "Nada: o delete reescreveu todo arquivo que tinha as linhas, então não sobra cópia delas",
+        "why": "A reescrita adicionou arquivos novos e marcou os antigos como removidos; eles ficam no disco, e a viagem no tempo os lê. Backups e extrações são outras cópias que um `DELETE` nunca alcança."
+      },
+      {
+        "text": "`count(*)` ainda inclui as linhas, porque é respondido pelas contagens de linhas do log",
+        "why": "O commit do delete tira os arquivos antigos da tabela e adiciona os novos com as suas próprias contagens, então a contagem cai na hora."
+      },
+      {
+        "text": "`VERSION AS OF` uma versão anterior devolve as linhas, até o `VACUUM` apagar os arquivos antigos passada a retenção",
+        "why": "Certo."
+      },
+      {
+        "text": "As linhas saíram dos arquivos, mas continuam escritas nas ações `remove` do log",
+        "why": "Um `remove` nomeia um arquivo pelo caminho. Não carrega linha nenhuma."
+      }
+    ]
+  },
+  "ex-4cdfhfm0": {
+    "prompt": "O job noturno de scores faz append numa tabela Delta com `txnAppId` igual a `lapse-scores` e `txnVersion` igual à noite, `20260228`. Um bug nas features é corrigido, e o job roda de novo para 28 de fevereiro com as mesmas opções. O que a tabela guarda para aquela noite?",
+    "hint": "Big Data e Processamento Distribuído, aula 11; Machine Learning e MLOps, aula 8.",
+    "choices": [
+      {
+        "text": "Os scores corrigidos, no lugar dos da primeira execução",
+        "why": "O par marca uma escrita como já feita, não uma noite a substituir. A segunda escrita é pulada, e substituir a noite exige apagar as linhas dela antes."
+      },
+      {
+        "text": "Os scores das duas execuções, cada membro duas vezes",
+        "why": "Isso é um append puro rodado duas vezes; o par no log é exatamente o que o impede aqui."
+      },
+      {
+        "text": "Os scores da primeira execução, intactos",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada: um `txnVersion` repetido faz a escrita falhar e desfaz a primeira",
+        "why": "A segunda tentativa é pulada sem erro, e um commit que já está no log não é desfeito por uma escrita posterior."
+      }
+    ]
+  },
+  "ex-a0z2ngjj": {
+    "prompt": "Uma consulta do Structured Streaming com trigger `processingTime` de cinco segundos faz append numa tabela Delta, e as tarefas de cada lote gravam os seus próprios arquivos. Um mês depois, a consulta de um dia abre milhares de arquivos minúsculos. Que correção deixa o stream como está e dá arquivos grandes aos leitores?",
+    "hint": "Big Data e Processamento Distribuído, aula 11; Streaming e Processamento de Eventos, aula 12.",
+    "choices": [
+      {
+        "text": "`coalesce(1)` em cada lote, para que cada um grave um só arquivo",
+        "why": "Um arquivo a cada cinco segundos ainda são 17.280 arquivos por dia."
+      },
+      {
+        "text": "Rodar `OPTIMIZE` na tabela num agendamento próprio, à parte do stream",
+        "why": "Certo."
+      },
+      {
+        "text": "Um `spark.sql.files.maxPartitionBytes` maior para os leitores",
+        "why": "Empacotar mais arquivos numa tarefa ainda abre cada arquivo e lê cada rodapé; os arquivos continuam tão pequenos quanto eram."
+      },
+      {
+        "text": "Gravar Parquet puro, cujo `_spark_metadata` junta os arquivos de cada lote",
+        "why": "O `_spark_metadata` lista os arquivos de cada lote terminado. Ele não junta nada."
+      }
+    ]
+  },
+  "ex-46bvt91z": {
+    "prompt": "No YARN, uma aplicação pede executores de 512 MB e deixa o overhead no padrão. Quanto o contêiner de cada executor conta contra a fila?",
+    "hint": "Big Data e Processamento Distribuído, aula 12.",
+    "choices": [
+      {
+        "text": "Uns 896 MB: o heap, e pelo menos 384 MB para o que fica fora dele",
+        "why": "Certo."
+      },
+      {
+        "text": "512 MB, o heap que a aplicação pediu",
+        "why": "Um contêiner é o heap mais um overhead para pilhas de threads, buffers de rede e bibliotecas nativas."
+      },
+      {
+        "text": "Uns 563 MB: o heap, mais um décimo da memória do executor por cima",
+        "why": "O overhead é um décimo da memória ou 384 MB, o que for maior, e um décimo de 512 fica bem abaixo do piso."
+      },
+      {
+        "text": "Menos de 512 MB, porque o Spark reserva 300 MB de todo heap para os seus próprios objetos",
+        "why": "A reserva sai de dentro do heap. O YARN conta o heap inteiro, e o overhead ao lado dele."
+      }
+    ]
+  },
+  "ex-eb0w1n9g": {
+    "prompt": "Por que um job Spark no Kubernetes lê e grava num object store, em vez de guardar os dados nos nós?",
+    "hint": "Big Data e Processamento Distribuído, aula 13.",
+    "choices": [
+      {
+        "text": "Ler pela rede é mais rápido que ler um disco local",
+        "why": "É mais lento: a localidade da aula 3 se perde, e as aulas 6 e 10 são como esse custo é pago de volta."
+      },
+      {
+        "text": "O disco de um pod vive e morre com o pod",
+        "why": "Certo."
+      },
+      {
+        "text": "Executores no Kubernetes não gravam arquivos de shuffle, então não há nada local a guardar",
+        "why": "Eles gravam, e é por isso que a alocação dinâmica ali depende do shuffle tracking ou de um serviço de shuffle remoto."
+      },
+      {
+        "text": "Um HDFS nos nós sobrecarregaria o namenode com cada pod que sobe",
+        "why": "Um namenode atende clusters de milhares de máquinas. O motivo é que nada num nó sobrevive ao seu pod."
+      }
+    ]
+  },
+  "ex-j02bbqm0": {
+    "prompt": "Aos US$ 0,05 por hora supostos na aula 14 para um executor de um quarto de máquina, uma equipe de 12 analistas mantém, cada um, um notebook com 8 executores durante um dia de trabalho de 9 horas, e calcula durante 3 dessas horas. Quanto as horas de executor ociosas custam à equipe num dia de trabalho, em dólares?",
+    "hint": "Big Data e Processamento Distribuído, aula 14."
+  },
+  "ex-jf42mfqj": {
+    "prompt": "Lendo um job terminado com o `history.py`, quais destes aparecem como um stage cujo tempo de tarefa é grande para o que ele moveu, sem nada na coluna de spill? Marque todas as que se aplicam.",
+    "hint": "Big Data e Processamento Distribuído, aula 14.",
+    "choices": [
+      {
+        "text": "Uma chave quente num sort-merge join cuja tarefa passa da sua memória de execução",
+        "why": "Essa tarefa faz spill, e a coluna de spill é a que diz isso."
+      },
+      {
+        "text": "Uma UDF Python aplicada a cada compra",
+        "why": "Certo."
+      },
+      {
+        "text": "Fazer o parse de um ano de texto CSV em gzip",
+        "why": "Certo."
+      },
+      {
+        "text": "Um agrupamento por visitante que manda 35 GB pela rede",
+        "why": "Isso é a coluna de shuffle: o tempo vai em mover bytes, e a tabela os mostra."
+      }
+    ]
+  },
+  "ex-m51gz7fa": {
+    "prompt": "`python -m pytest -q --durations=4` no `shipquote` lista no topo dois teardowns de 0,50 s cada, enquanto as seis cotações do teste de aceitação levam 0,03 s juntas. O que isso diz sobre o topo da pirâmide?",
+    "hint": "Testes Automatizados e CI/CD, aula 1.",
+    "choices": [
+      {
+        "text": "O custo está em montar e desmontar um mundo para os testes, e ele se multiplica a cada módulo lá em cima.",
+        "why": "Certo."
+      },
+      {
+        "text": "O lento são as requisições, e um servidor HTTP mais rápido resolveria.",
+        "why": "As seis requisições custam 0,03 s juntas; os meios segundos são de desligar o servidor."
+      },
+      {
+        "text": "O tempo de teardown é ruído que o pytest soma a todo teste; só as entradas `call` valem a leitura.",
+        "why": "Os teardowns são o custo de verdade: o `serve_forever` confere a cada meio segundo se deve parar, uma vez por módulo."
+      },
+      {
+        "text": "O SQLite da camada de integração é o gargalo da suíte inteira.",
+        "why": "Os três testes de integração levaram 0,17 s; o SQLite vive no próprio processo do teste e quase não custa nada."
+      }
+    ]
+  },
+  "ex-gsn090tk": {
+    "prompt": "Um job Spark manda a cada cliente um e-mail de confirmação de dentro de uma tarefa. O teste de unidade passa à tarefa um spy no lugar do mailer, afirma exatamente uma chamada por pedido, e passa. No cluster, alguns clientes recebem dois e-mails na noite em que um executor é morto. Por que o teste não tinha como ver isso?",
+    "hint": "Testes Automatizados e CI/CD, aula 2; Big Data e Processamento Distribuído, aula 2.",
+    "choices": [
+      {
+        "text": "O Spark refez a tarefa perdida a partir da entrada, e o e-mail dentro dela saiu de novo; o teste rodou cada tarefa uma vez.",
+        "why": "Certo."
+      },
+      {
+        "text": "Um spy só registra as chamadas; um mock feito com `create_autospec` as teria conferido e falhado.",
+        "why": "O teste leu o registro do spy e afirmou uma chamada. O problema não é quem confere, é que o cluster rodou o código duas vezes."
+      },
+      {
+        "text": "O spy substituiu o mailer, então o teste nunca encontrou o servidor SMTP de verdade, que reenvia uma mensagem sem confirmação.",
+        "why": "Nada na história aponta para o servidor de e-mail. Uma tarefa que envia como efeito colateral envia de novo quando o Spark a repete."
+      },
+      {
+        "text": "O Spark reinicia o job inteiro quando um executor morre, então todo pedido foi processado duas vezes.",
+        "why": "Só as tarefas que rodavam naquele executor se perdem e rodam de novo; as terminadas já tinham mandado o resultado. Por isso só alguns clientes receberam dois."
+      }
+    ]
+  },
+  "ex-d4hcw565": {
+    "prompt": "Para um banco de staging, uma equipe copia os pedidos da produção e troca `customer_id` por `md5(customer_id::text)`, para os pedidos continuarem se juntando. Os ids de cliente vão de 1 a 6.012. O que há de errado com esse dado de teste?",
+    "hint": "Testes Automatizados e CI/CD, aula 3; Segurança, Governança e Privacidade de Dados, aula 5.",
+    "choices": [
+      {
+        "text": "O hash de 1 a 6.012 devolve todo cliente num segundo; dado de teste deve ser gerado, não copiado.",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada: depois do hash, a cópia é anônima e a LGPD não a alcança mais.",
+        "why": "Um hash sem chave de um intervalo pequeno e conhecido é o valor escrito de outro jeito. E mesmo um pseudônimo de verdade continua sendo dado pessoal."
+      },
+      {
+        "text": "Manter as junções é o erro; uma fixture não deveria relacionar uma tabela com outra.",
+        "why": "Relações que sobrevivem são justamente o objetivo de anonimizar de forma consistente. O defeito é que as pessoas sobrevivem também."
+      },
+      {
+        "text": "O `md5` é lento demais para uma tabela desse tamanho; um HMAC tornaria a cópia anônima e segura para commitar como fixture.",
+        "why": "Um HMAC com chave é um pseudônimo de verdade, e dado pseudonimizado continua sendo dado pessoal: não pertence a um repositório."
+      }
+    ]
+  },
+  "ex-j2xe4y8c": {
+    "prompt": "Um pull request acrescenta ao `freight` uma sobretaxa para pacotes acima de 30 kg: um `if` e o `return` abaixo dele, sem teste novo. O total vai de 81% para 80%, e o `coverage report -m` aponta só o `return` como faltante. O que o revisor deve concluir?",
+    "hint": "Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "Nenhum comportamento novo foi testado; o preço de um pacote pesado pode ser qualquer coisa.",
+        "why": "Certo."
+      },
+      {
+        "text": "Metade da mudança está testada, já que o `if` está coberto.",
+        "why": "O `if` rodou porque toda cotação passa por ele, e nenhuma passou de 30 kg. Linha que rodou não é linha conferida."
+      },
+      {
+        "text": "Nada sobre essa mudança: cair um ponto no total é o que qualquer mudança num projeto grande parece.",
+        "why": "Por isso o total é a leitura errada. As linhas faltantes do arquivo alterado falam desta mudança."
+      },
+      {
+        "text": "O `return` merece um `# pragma: no cover`, porque pacotes tão pesados são raros e a linha só acrescentaria ruído ao relatório.",
+        "why": "Exclusão é para código que não vale um teste. Um preço vale, e esconder a linha esconde a lacuna."
+      }
+    ]
+  },
+  "ex-g8gfnqf9": {
+    "prompt": "Quais destes merecem ser excluídos da contagem de cobertura? Marque todas as que se aplicam.",
+    "hint": "Testes Automatizados e CI/CD, aula 4.",
+    "choices": [
+      {
+        "text": "O tratamento de um erro da transportadora que nenhum teste alcançou ainda.",
+        "why": "Não testado não é o mesmo que não valer um teste. Essa linha faltante é um teste a escrever."
+      },
+      {
+        "text": "O `main()`, que lê `SHIPQUOTE_PORT` e monta o servidor.",
+        "why": "As duas coisas podem estar erradas, um erro de digitação na variável ou um servidor no endereço errado. Excluí-lo o esconde do único relatório que mostra que nada o confere ainda."
+      },
+      {
+        "text": "Um `assert False` marcando um ramo que não pode acontecer.",
+        "why": "Certo."
+      },
+      {
+        "text": "Código sob `if TYPE_CHECKING:`, lido só por verificadores de tipo.",
+        "why": "Certo."
+      },
+      {
+        "text": "A guarda `if __name__ == \"__main__\":` no fim do `app.py`.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-556nxet0": {
+    "prompt": "A CI deste repositório roda em `pull_request` para a `main` e de novo em `push` na `main`. Por que conferir o código uma segunda vez, depois do merge?",
+    "hint": "Testes Automatizados e CI/CD, aula 5.",
+    "choices": [
+      {
+        "text": "A execução do pull request usa um checkout em cache, e só a do push começa do que foi commitado.",
+        "why": "Toda execução começa de um checkout limpo. Um cache guarda dependências, nunca o código sob teste."
+      },
+      {
+        "text": "Duas mudanças que passaram cada uma sozinha podem entrar em conflito depois de combinadas.",
+        "why": "Certo."
+      },
+      {
+        "text": "Um push na `main` é o que constrói e publica o release.",
+        "why": "Um release começa com uma tag que começa com `v`, que então chama as mesmas verificações."
+      },
+      {
+        "text": "Uma execução de pull request não pode ser uma verificação obrigatória.",
+        "why": "Verificações obrigatórias são justamente as que um pull request precisa passar antes do merge."
+      }
+    ]
+  },
+  "ex-h51tshbz": {
+    "prompt": "Cada célula da matriz envia seu arquivo `.coverage.*` como artifact, e um job de cobertura baixa todos e roda `coverage combine`. O passo de envio não tem `include-hidden-files: true`. O que acontece?",
+    "hint": "Testes Automatizados e CI/CD, aula 6.",
+    "choices": [
+      {
+        "text": "Os arquivos com ponto ficam de fora, então o `coverage combine` não tem nada e todo job fica verde.",
+        "why": "Certo."
+      },
+      {
+        "text": "O envio falha, citando os arquivos ocultos que pulou, e a execução inteira fica vermelha nesse passo.",
+        "why": "Nada falha. A action de envio deixa arquivos ocultos de fora em silêncio, a menos que mandem o contrário."
+      },
+      {
+        "text": "O job de cobertura lê os arquivos direto das máquinas das células, já que rodaram no mesmo workflow.",
+        "why": "Jobs não compartilham arquivos: cada máquina é descartada no fim, e artifacts são o único caminho entre eles."
+      },
+      {
+        "text": "O `merge-multiple` fica com um arquivo dos seis, então só uma célula é contada.",
+        "why": "O `merge-multiple` junta os arquivos dos artifacts num diretório só; aqui os arquivos nem chegaram a um artifact."
+      }
+    ]
+  },
+  "ex-qqb2yvzb": {
+    "prompt": "Ponha as etapas de um pipeline de entrega na ordem que toda equipe mantém, por mais que o resto mude.",
+    "hint": "Testes Automatizados e CI/CD, aula 7.",
+    "items": [
+      "Construir o artefato a partir do commit, uma vez",
+      "Testá-lo, na matriz",
+      "Implantá-lo no staging e fazer o smoke test lá",
+      "Passar pelo portão",
+      "Implantar o mesmo artefato na produção e fazer o smoke test"
+    ],
+    "trap": "Testar antes de construir parece natural, mas o que se testa tem de ser os bytes que vão para produção; e o portão vem depois do staging porque decide sobre um artefato já provado implantável."
+  },
+  "ex-s8frtc42": {
+    "prompt": "Uma equipe aplica a expansão e contração da aula 7 a um evento Avro em vez de uma tabela, trocando o campo `cents` por `amount`: os produtores escrevem os dois por um tempo, os consumidores passam para `amount`, e `cents` sai por último. Qual passo da versão em tabela não tem equivalente no tópico?",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Streaming e Processamento de Eventos, aula 6.",
+    "choices": [
+      {
+        "text": "A expansão, porque o registry recusa qualquer campo novo sob `BACKWARD`.",
+        "why": "Um campo novo com default passa no `BACKWARD`; o que o registry recusa é um campo sem default."
+      },
+      {
+        "text": "A contração, já que um campo nunca pode sair de um subject depois de registrado.",
+        "why": "Remover um campo é permitido sob `BACKWARD`, e um campo que tinha default pode sair sob `FORWARD`."
+      },
+      {
+        "text": "Nenhum: aceitar uma versão reescreve nela as mensagens guardadas.",
+        "why": "O registry confere schemas quando uma versão é oferecida; os bytes no tópico ficam como foram escritos."
+      },
+      {
+        "text": "O preenchimento: um tópico não é migrado, e as mensagens escritas antes de `amount` existir mantêm o seu schema enquanto a retenção as guardar.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-wmyfdwfa": {
+    "prompt": "O `/health` do seu serviço devolve `{\"status\": \"ok\"}` sempre que o processo responde HTTP, como o da loja na aula 14 de observabilidade. Depois de um deploy o banco fica inalcançável e toda requisição do caminho principal falha, e mesmo assim um smoke test no molde do `ops/smoke.sh` passa. O que falta ao smoke test?",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Observabilidade e Operação, aula 14.",
+    "choices": [
+      {
+        "text": "Um `--max-time` maior, para a verificação de saúde esperar o banco subir.",
+        "why": "A verificação respondeu na hora e disse `ok`. Esperar mais pela mesma pergunta dá a mesma resposta."
+      },
+      {
+        "text": "Nada: um smoke test só pergunta se o programa está de pé, e o banco é assunto dos testes de integração.",
+        "why": "Testes de integração nunca encontram a configuração implantada. O smoke test é a única verificação que roda contra ela."
+      },
+      {
+        "text": "Uma comparação do `/version` com o SHA-256 do artefato em vez do número da versão.",
+        "why": "A versão estava certa; o release era o pretendido. O que ninguém perguntou foi se ele consegue fazer o seu trabalho."
+      },
+      {
+        "text": "Uma leitura de verdade pelo caminho principal, como uma cotação para um CEP conhecido.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-grkb1f4z": {
+    "prompt": "Um serviço de staging foi implantado com o endereço e a senha do banco da produção, copiados do arquivo errado, e gravou pedidos de teste na produção. Qual controle o teria impedido?",
+    "hint": "Testes Automatizados e CI/CD, aula 8; Segurança, Governança e Privacidade de Dados, aula 1.",
+    "choices": [
+      {
+        "text": "Revogar o `CONNECT` do banco da produção de `PUBLIC`, para nenhum papel conectar sem ser nomeado.",
+        "why": "O serviço entrou com o papel da própria aplicação, que recebe `CONNECT` pelo nome. Inverter o default não barra um papel nomeado."
+      },
+      {
+        "text": "Um smoke test no staging que confere o `/version` logo depois de cada deploy.",
+        "why": "A versão era a pretendida, então a verificação passa. Um smoke test pergunta se o programa responde, não onde ficam os seus dados."
+      },
+      {
+        "text": "Mascarar os clientes na cópia do próprio staging, para nada pessoal ficar ali.",
+        "why": "Mascarar protege a cópia que o staging guarda. Aqui o staging gravava na produção, e nenhuma cópia estava envolvida."
+      },
+      {
+        "text": "Um `pg_hba.conf` que só admite a aplicação vinda da produção.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-y3y4egp8": {
+    "prompt": "Para um token de pipeline vazado, a aula 9 manda revogar ou rotacionar primeiro, aceitando uma indisponibilidade curta. Na mesma semana uma chave do transit do OpenBao fica sob suspeita de exposição, e alguém segue essa ordem: rotaciona e põe `min_decryption_version=2` na hora, deixando o rewrap para depois. Quanto isso custa aqui?",
+    "hint": "Testes Automatizados e CI/CD, aula 9; Segurança, Governança e Privacidade de Dados, aula 4.",
+    "choices": [
+      {
+        "text": "Uma indisponibilidade curta, até todo serviço ter a nova versão da chave na configuração.",
+        "why": "Os serviços nunca guardam a chave, e as cifragens novas já usam a versão 2. O estrago é no que foi cifrado antes."
+      },
+      {
+        "text": "Nada, já que o texto cifrado antigo continua decifrando depois de uma rotação.",
+        "why": "Isso vale para uma rotação sozinha. Subir o mínimo é justamente o que impede a versão 1 de decifrar."
+      },
+      {
+        "text": "Todo texto cifrado em `v1` é recusado como antigo demais: dado perdido, não pausado.",
+        "why": "Certo."
+      },
+      {
+        "text": "O rewrap, feito depois, mostra o texto claro ao operador que o roda.",
+        "why": "Um rewrap mantém o texto claro dentro do OpenBao durante a chamada, e depois que o mínimo sobe ele nem consegue ler `v1`."
+      }
+    ]
+  },
+  "ex-9p8b0na1": {
+    "prompt": "Um pipeline implanta um site que cifra CPFs pelo OpenBao. Quais destes seguem o menor privilégio? Marque todas as que se aplicam.",
+    "hint": "Testes Automatizados e CI/CD, aula 9; Segurança, Governança e Privacidade de Dados, aula 4.",
+    "choices": [
+      {
+        "text": "`contents: write` no topo do workflow, para o único job que cria o release ter a permissão.",
+        "why": "Uma permissão dada ao workflow alcança todo job, inclusive um job de teste rodando uma dependência comprometida. Ela vai no job que precisa dela."
+      },
+      {
+        "text": "Um token para o site que também pode ler `transit/keys/ipe-cpf`, para conferir a versão da chave antes de cifrar.",
+        "why": "Usar uma chave não exige a configuração dela; o próprio texto cifrado diz qual versão o fez."
+      },
+      {
+        "text": "Uma política que dá ao site `update` em `transit/encrypt/ipe-cpf` e nada em `transit/decrypt/ipe-cpf`.",
+        "why": "Certo."
+      },
+      {
+        "text": "`permissions: contents: read` no topo do workflow, com `id-token: write` acrescentado só no job de deploy.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-26kzph3a": {
+    "prompt": "O `ops/canary.py` se recusa a julgar um lado que respondeu menos de 50 requisições. Um serviço recebe dez requisições por minuto, e o canário fica com 1% delas. Quantos minutos passam até o canário poder ser julgado?",
+    "hint": "Testes Automatizados e CI/CD, aula 10."
+  },
+  "ex-1j5vwmv9": {
+    "prompt": "Uma equipe lança a versão 2 de um modelo de evasão atrás de um serviço web, com uma regra de canário como a do `ops/canary.py`: parar quando a taxa de erro do canário passar a da base em mais de um ponto. A versão 2 responde toda requisição com 200 e dá à maioria dos seus membros uma probabilidade acima de 0.2. O que a regra vê?",
+    "hint": "Testes Automatizados e CI/CD, aula 10; Machine Learning e MLOps, aula 8.",
+    "choices": [
+      {
+        "text": "Uma violação: probabilidades tão altas contam como erros.",
+        "why": "Erro aqui é um 5xx ou nenhuma resposta. Um 200 com um número estranho passa por qualquer contagem de erros."
+      },
+      {
+        "text": "Nada ainda: deveria esperar uns 90 dias pelos rótulos e então comparar qual versão acertou.",
+        "why": "Ninguém precisa esperar rótulos. Uma versão cujas saídas não se parecem nada com as da estável é parada pelo que diz."
+      },
+      {
+        "text": "Nada, porque divide por requisição; dividir por membro faria a taxa de erros mostrar o bug.",
+        "why": "Dividir por membro mantém cada pessoa de um lado. Muda quem vê qual versão, não o que uma contagem de erros consegue medir."
+      },
+      {
+        "text": "Nada; o canário precisa comparar o que as versões dizem, como a probabilidade média.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-gsfx8b7w": {
+    "prompt": "Uma flag que desliga algo caro ou frágil sob pressão, como a chamada à transportadora, e pode ficar no código por anos, é uma flag operacional, também chamada de kill ___.",
+    "hint": "Testes Automatizados e CI/CD, aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "switch",
+          "switches"
+        ]
+      }
+    ]
+  },
+  "ex-fbw3jxvv": {
+    "prompt": "Uma coluna precisa passar de `cents` para `price_cents`, e um rollback tem de continuar seguro a cada passo. Ponha os releases em ordem.",
+    "hint": "Testes Automatizados e CI/CD, aula 11.",
+    "items": [
+      "Acrescentar `price_cents` ao lado de `cents`",
+      "Gravar as duas colunas, ainda lendo `cents`",
+      "Copiar os valores das linhas antigas para `price_cents`",
+      "Ler `price_cents`",
+      "Parar de gravar `cents`, e apagá-la num release posterior"
+    ],
+    "trap": "Copiar as linhas antigas antes de o código gravar as duas deixa um buraco: o que for gravado no meio fica sem `price_cents`. E apagar vem por último porque é o único passo que o release anterior não aguenta."
+  },
+  "ex-p94vgvny": {
+    "prompt": "Um release vai para um canário com 5% dos checkouts e falha uma requisição em vinte ali; os outros 95% estão bem. O objetivo do checkout é 99,5%. Que taxa de queima isso produz, e o que deveria parar o release?",
+    "hint": "Testes Automatizados e CI/CD, aula 11; Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "Cerca de 10, alto o bastante para acionar o plantão, que então para o release.",
+        "why": "Uma em vinte é a taxa do canário. Sobre todos os checkouts são 5% de 5%, 0,25%, contra 0,5% permitidos."
+      },
+      {
+        "text": "Cerca de 0,5, baixa demais para acionar alguém; quem o para é a comparação do canário com a base.",
+        "why": "Certo."
+      },
+      {
+        "text": "Cerca de 0,5, então pode promover, já que o orçamento do mês não está em risco.",
+        "why": "O orçamento está seguro com 5%. Com 100%, o mesmo release falha 5% dos checkouts, uma taxa de queima de 10."
+      },
+      {
+        "text": "Nenhuma dá para calcular ainda: o canário precisa responder 50 requisições antes de uma taxa significar algo.",
+        "why": "Cinquenta é a regra de evidência do próprio canário. Uma taxa de queima só fica indefinida sem tráfego nenhum."
+      }
+    ]
+  },
+  "ex-a5w6ks1t": {
+    "prompt": "O `ops/canary.py` para quando a taxa de erro do canário passa a da base em mais de `MAX_GAP = 1.0` ponto. Para um único erro nunca cruzar sozinho essa diferença, `MIN_REQUESTS` precisa ser de pelo menos ___ respostas.",
+    "hint": "Testes Automatizados e CI/CD, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "100",
+          "cem"
+        ]
+      }
+    ]
+  },
+  "ex-34d2beaj": {
+    "prompt": "Ligue cada peça do pipeline do modelo à ideia de release deste curso que ela representa.",
+    "hint": "Testes Automatizados e CI/CD, aula 7; Machine Learning e MLOps, aula 7.",
+    "pairs": [
+      {
+        "left": "`models:/lapse@champion`, um nome que o `set_registered_model_alias` pode apontar para qualquer versão",
+        "right": "Uma tag como `shipquote:1.4.0`, que qualquer um com acesso de escrita pode mover"
+      },
+      {
+        "left": "O MD5 que o `dvc.lock` registra para `models/lapse.joblib`",
+        "right": "O SHA-256 escrito ao lado do tarball, que nomeia aqueles bytes exatos"
+      },
+      {
+        "left": "O `log_run.py` se recusando a rodar enquanto o `git status --porcelain` imprimir algo",
+        "right": "O `git archive` gravando o que está commitado e nada mais"
+      }
+    ],
+    "right_distractors": [
+      "Um smoke test perguntando o `/version` depois do deploy"
+    ]
+  },
+  "ex-17846q3v": {
+    "prompt": "A aula 1 passa de um sinal ao outro pelo que cada par tem em comum. Associe cada par de sinais ao que o une.",
+    "hint": "Observabilidade e Operação, aula 1.",
+    "pairs": [
+      {
+        "left": "Um rastro e uma linha de log",
+        "right": "o id do rastro escrito em toda linha"
+      },
+      {
+        "left": "Uma métrica e um rastro",
+        "right": "o serviço e uma janela de tempo"
+      },
+      {
+        "left": "Uma métrica e uma linha de log",
+        "right": "o nome do serviço, e quase nada mais"
+      }
+    ],
+    "right_distractors": [
+      "o id do span do primeiro span da requisição"
+    ]
+  },
+  "ex-wyhh7nw9": {
+    "prompt": "O Collector para de responder por dez minutos enquanto o payments continua fazendo cobranças, exportando pelo batch span processor. O que o SDK do payments faz com os spans que termina nesse tempo?",
+    "hint": "Observabilidade e Operação, aula 2.",
+    "choices": [
+      {
+        "text": "Cada requisição espera a exportação dar certo, e as cobranças ficam lentas até o Collector voltar.",
+        "why": "Esperar pela rede é o jeito do processador simples; o de lote põe o span na fila e retorna na hora."
+      },
+      {
+        "text": "Aumenta a fila o quanto precisar e manda tudo quando o Collector voltar.",
+        "why": "A fila é limitada de propósito: um serviço que fica sem memória porque a telemetria não pôde ser entregue é a falha errada."
+      },
+      {
+        "text": "Grava os spans em disco e os envia depois do próximo reinício.",
+        "why": "Nada no SDK guarda a fila em disco; um processo que morre perde o que ainda esperava nela."
+      },
+      {
+        "text": "Guarda um número fixo na fila, 2048 por padrão em Python, e descarta o resto.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-1bgp86se": {
+    "prompt": "Um painel novo filtra spans por `http.request.method`. Ele mostra as requisições do storefront e nenhuma do orders, embora os dois serviços sejam rastreados. Por quê, pela aula 3?",
+    "hint": "Observabilidade e Operação, aula 3.",
+    "choices": [
+      {
+        "text": "A instrumentação do Flask não registra método nenhum; só spans escritos à mão têm um.",
+        "why": "O span `POST /orders` do orders tem o método, sim; a aula 3 listou as chaves dele, `http.method` entre elas."
+      },
+      {
+        "text": "O orders tira as próprias rotas do rastreamento com `OTEL_PYTHON_FLASK_EXCLUDED_URLS`.",
+        "why": "Essa variável deixa de fora só `health` e `metrics`; a rota de pedidos é rastreada."
+      },
+      {
+        "text": "As convenções dão um nome ao método num span de servidor e outro num span de cliente.",
+        "why": "A diferença é uma geração de nomes, não um tipo de span: os spans de servidor e de cliente do orders usam os dois o nome antigo."
+      },
+      {
+        "text": "As bibliotecas de instrumentação do orders ainda escrevem o nome antigo, `http.method`.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-pncf0n63": {
+    "prompt": "Uma equipe tira as confirmações de pedido do RabbitMQ e as passa para um tópico do Kafka, e quer que os spans do mailer continuem no rastro do checkout. Por onde o contexto viaja, e o que o consumidor faz com ele?",
+    "hint": "Observabilidade e Operação, aula 4; Streaming e Processamento de Eventos, aula 16.",
+    "choices": [
+      {
+        "text": "Nos headers do registro: o produtor injeta, e o consumidor extrai e abre o próprio span sob ele.",
+        "why": "Certo."
+      },
+      {
+        "text": "Por lugar nenhum a mais: o offset confirmado do grupo já liga cada registro à requisição que o escreveu.",
+        "why": "Um offset é uma posição numa partição; não sabe nada do rastro de quem produziu o registro."
+      },
+      {
+        "text": "Ele é lido do timestamp do registro, que o produtor preenche a partir do rastro.",
+        "why": "O timestamp diz quando o registro foi criado; o id do rastro são 128 bits aleatórios que só um `traceparent` carrega."
+      },
+      {
+        "text": "O consumidor extrai de `TRACEPARENT` e `TRACESTATE` no próprio ambiente, como faria um processo filho.",
+        "why": "Essa convenção passa o contexto a um processo filho iniciado por um pai rastreado; uma mensagem precisa levar o seu."
+      }
+    ]
+  },
+  "ex-280xajk9": {
+    "prompt": "O relatório matinal em Spark roda num cluster criado para o job e apagado quando ele termina, como descreve o curso de big data. Como o Prometheus pode dizer que o relatório não rodou ontem à noite?",
+    "hint": "Observabilidade e Operação, aula 5; Big Data e Processamento Distribuído, aula 14.",
+    "choices": [
+      {
+        "text": "Coletando o driver enquanto ele roda: `up` caindo para 0 depois mostra que ele rodou.",
+        "why": "Apagado o cluster, o alvo some tenha o relatório terminado ou não; `up` não distingue um job que acabou de um que nunca começou."
+      },
+      {
+        "text": "Um timestamp do último sucesso enviado ao Pushgateway, e um alerta sobre o tempo desde ele.",
+        "why": "Certo."
+      },
+      {
+        "text": "Rastreando cada execução, com links para o que ela leu, e alertando quando uma noite não tem rastro.",
+        "why": "Um rastro só existe para trabalho que aconteceu; nada num armazém de rastros percebe um que falta."
+      },
+      {
+        "text": "O job envia ao Pushgateway um contador das execuções, e um alerta o compara com o do dia anterior.",
+        "why": "Cada execução é um processo novo, então o contador enviado marca 1 toda noite; um timestamp cresce a cada segundo aconteça o que acontecer."
+      }
+    ]
+  },
+  "ex-zz3h9hej": {
+    "prompt": "Como o Prometheus pede os números a cada alvo, ele sabe quando um deixa de responder, e a cada coleta registra isso numa métrica própria chamada ___, que vale 1 ou 0 para cada alvo.",
+    "hint": "Observabilidade e Operação, aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ]
+      }
+    ]
+  },
+  "ex-0wns83v5": {
+    "prompt": "O serviço de lapse do curso de machine learning registra `path`, `status`, `ms`, `p_lapse` e `model_version` em toda requisição. Uma equipe transforma campos assim em labels de um contador de requisições do Prometheus. Quais labels são seguros de manter? Escolha todas as que se aplicam.",
+    "hint": "Observabilidade e Operação, aula 6; Machine Learning e MLOps, aula 9.",
+    "choices": [
+      {
+        "text": "`path`, como o log o escreve",
+        "why": "O log escreve `/lapse/2`, então o id do membro vai no caminho: uma série por membro, até 4.600. Um modelo de rota seria seguro."
+      },
+      {
+        "text": "`model_version`",
+        "why": "Certo."
+      },
+      {
+        "text": "`member_id`, para contar as requisições de um membro",
+        "why": "O experimento do `user_id` na aula 6: um label por pessoa é uma série por pessoa, e o que nomeia um membro vai no span ou na linha."
+      },
+      {
+        "text": "`status`",
+        "why": "Certo."
+      },
+      {
+        "text": "`p_lapse`",
+        "why": "Um score assume centenas de valores e é uma medida; vai na linha de log ou num histograma, nunca num label."
+      }
+    ]
+  },
+  "ex-z39wx58r": {
+    "prompt": "Na aula 7, o payments volta à versão anterior aos 120 segundos, e o percentil 99 do checkout no painel continua alto até os 180. O que o segurou lá?",
+    "hint": "Observabilidade e Operação, aula 7.",
+    "choices": [
+      {
+        "text": "O Grafana guarda cada painel em cache por um minuto antes de perguntar de novo ao Prometheus.",
+        "why": "O Grafana não guarda nem calcula nada; cada painel pergunta à fonte de dados quando é desenhado."
+      },
+      {
+        "text": "O Prometheus coleta o storefront uma vez por minuto, então os checkouts rápidos ainda não tinham sido lidos.",
+        "why": "O laboratório coleta a cada quinze segundos; o atraso é a janela de um minuto dentro da consulta."
+      },
+      {
+        "text": "A anotação do rollback foi escrita um minuto depois do rollback.",
+        "why": "A marca e o rollback saíram juntos; a anotação diz quando alguém agiu, e a linha veio atrás dela."
+      },
+      {
+        "text": "Cada ponto é uma taxa do minuto anterior a ele, e esse minuto ainda tinha checkouts lentos.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-xe699m3n": {
+    "prompt": "Associe cada evento da loja ao nível em que a aula 8 o escreve.",
+    "hint": "Observabilidade e Operação, aula 8.",
+    "pairs": [
+      {
+        "left": "Um cartão que a rede recusou",
+        "right": "`INFO`"
+      },
+      {
+        "left": "RabbitMQ inacessível na inicialização, nova tentativa em 2 s",
+        "right": "`WARNING`"
+      },
+      {
+        "left": "O storefront não alcança o orders, e o checkout falha",
+        "right": "`ERROR`"
+      },
+      {
+        "left": "Um preço consultado no cache, para quem desenvolve o código",
+        "right": "`DEBUG`"
+      }
+    ],
+    "right_distractors": [
+      "`CRITICAL`"
+    ]
+  },
+  "ex-w7cgcxc4": {
+    "prompt": "Em um minuto, a cinco requisições por segundo, os quatro serviços da loja escreveram 1065 linhas e 260212 bytes de log. Nesse ritmo, mais ou menos quantos megabytes eles escrevem num dia, contando um megabyte como 1.000.000 de bytes?",
+    "hint": "Observabilidade e Operação, aula 8.",
+    "unit": "MB"
+  },
+  "ex-4ybwr2at": {
+    "prompt": "Para deixar as buscas por id de rastro mais rápidas, um colega propõe tirar `trace_id` de campo da linha e torná-lo um label do Loki, ao lado de `service_name`. O que a aula 9 diz que essa mudança faz?",
+    "hint": "Observabilidade e Operação, aula 9.",
+    "choices": [
+      {
+        "text": "Cada id de rastro vira um stream próprio, e o índice que mantém o Loki barato deixa de ser pequeno.",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada, porque o Loki já indexa todo campo de toda linha assim que ela chega.",
+        "why": "Esse é o desenho do Elasticsearch; o Loki indexa os labels de cada stream e nunca as linhas."
+      },
+      {
+        "text": "As buscas ficam mais rápidas sem custo, já que o Loki guarda cada valor de um label uma vez só, por mais que ele apareça.",
+        "why": "Cada valor de label é um stream, então um label por rastro multiplica streams como os labels da aula 6 multiplicaram séries."
+      },
+      {
+        "text": "O Loki recusa o label, porque um label só pode dizer de onde a linha veio e nunca o que ela diz.",
+        "why": "O Loki aceita o label; *de onde a linha veio* é o conselho sobre o que labels devem guardar, não uma regra que ele impõe."
+      }
+    ]
+  },
+  "ex-wwpeqhas": {
+    "prompt": "Uma equipe guarda três coisas num só Loki com `retention_period: 168h`: as linhas `INFO` dos serviços, os erros deles e a trilha de auditoria de quem alterou qual cadastro de cliente. O que as aulas de retenção dos dois cursos mandam mudar?",
+    "hint": "Observabilidade e Operação, aula 10; Segurança, Governança e Privacidade de Dados, aula 10.",
+    "choices": [
+      {
+        "text": "Subir o armazém inteiro para cinco anos, para cobrir a trilha e não perder nada.",
+        "why": "Toda linha de rotina, e o dado pessoal que ela carregar, ficaria então cinco anos; nada pode ser guardado além do que a finalidade pede."
+      },
+      {
+        "text": "Nada: um período por armazém é a regra, já que retenção é uma configuração do armazém.",
+        "why": "Quanto tempo é o certo não é uma questão técnica; a finalidade, a lei e o custo decidem, e eles mudam conforme o tipo de registro."
+      },
+      {
+        "text": "Apagar a trilha junto com o resto depois de sete dias, porque ela é dado pessoal.",
+        "why": "Dado pessoal pede uma finalidade e um prazo, não o mais curto possível; registros administrativos costumam ficar cinco anos."
+      },
+      {
+        "text": "Três políticas: uma semana para as linhas de rotina, mais para os erros, e a trilha de auditoria num armazém próprio com prazo próprio, muitas vezes cinco anos.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-9deabnsg": {
+    "prompt": "Um cliente pede para ser apagado. Por uma semana, os logs do storefront levaram o e-mail dele num campo, e há cópias no Loki, no Elasticsearch, no log do próprio contêiner e no backup de ontem à noite. Qual desenho não teria deixado nada para apagar em nenhum deles?",
+    "hint": "Observabilidade e Operação, aula 10; Segurança, Governança e Privacidade de Dados, aula 10.",
+    "choices": [
+      {
+        "text": "Um pedido de exclusão ao Loki para o endereço, enviado no dia em que o pedido chega.",
+        "why": "Alcança um armazém só, e só na próxima passada do compactor; as outras cópias ficam onde estão."
+      },
+      {
+        "text": "Um passo no Collector que mascara todo endereço de e-mail antes de as linhas chegarem a qualquer armazém.",
+        "why": "O pipeline só limpa o que passa por ele; o log do contêiner na máquina continua com o endereço."
+      },
+      {
+        "text": "Uma retenção de 35 dias para backups, para que a cópia de ontem expire sozinha.",
+        "why": "Isso limita quanto tempo o backup guarda o endereço e deixa intocados os armazéns de log e o log da máquina."
+      },
+      {
+        "text": "Linhas que levam só um id interno, que não apontam para ninguém depois que a linha da conta é apagada.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-a2q9g6ph": {
+    "prompt": "Enquanto o mailer fica parado por trinta segundos, o Jaeger lista vários checkouts com uns vinte segundos de duração. Quanto tempo esses clientes esperaram pelo checkout?",
+    "hint": "Observabilidade e Operação, aula 11.",
+    "choices": [
+      {
+        "text": "Uns vinte segundos, já que a duração de um rastro é a duração da requisição.",
+        "why": "Um armazém de rastros mede do início do primeiro span ao fim do último, e os spans do mailer começaram depois de o cliente ter a resposta."
+      },
+      {
+        "text": "A duração do span raiz, algumas centenas de milissegundos.",
+        "why": "Certo."
+      },
+      {
+        "text": "Não dá para saber, porque a diferença de relógio entre hosts torna esses intervalos sem sentido.",
+        "why": "A diferença é de poucos milissegundos, e os relógios do laboratório são de um host só; uma espera de segundos é um achado."
+      },
+      {
+        "text": "Vinte segundos menos a espera na fila, que o Jaeger desenha como um span próprio.",
+        "why": "A espera não tem span; é o intervalo entre o span do orders e o do mailer."
+      }
+    ]
+  },
+  "ex-7xvcwen3": {
+    "prompt": "O storefront guarda um rastro em dez com `parentbased_traceidratio`, e alguém depurando o orders lhe dá `OTEL_TRACES_SAMPLER: always_on`. O que começa a encher o armazém?",
+    "hint": "Observabilidade e Operação, aula 12.",
+    "choices": [
+      {
+        "text": "Só rastros inteiros, porque o storefront registra o próprio span quando o orders guarda um.",
+        "why": "O storefront decidiu quando o rastro começou e descartou o span ali; nada o traz de volta depois."
+      },
+      {
+        "text": "Rastros que começam no `POST /orders` do orders, apontando para um pai que nunca foi exportado.",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada de diferente, já que um serviço mais abaixo segue a flag do `traceparent`.",
+        "why": "`always_on` ignora qualquer pai; só um sampler baseado no pai segue a flag."
+      },
+      {
+        "text": "Todo rastro, inteiro, porque um serviço em `always_on` passa por cima da decisão dos outros.",
+        "why": "Cada SDK decide pelos próprios spans: o storefront continua descartando nove spans raiz em dez, e esses rastros ficam sem raiz."
+      }
+    ]
+  },
+  "ex-q4c84y5v": {
+    "prompt": "O Collector da aula 12 guarda todo erro, todo rastro acima de um segundo e 5% do resto, depois de o `spanmetrics` ter lido todos os spans. Em quais destes não dá mais para confiar? Escolha todas as que se aplicam.",
+    "hint": "Observabilidade e Operação, aula 12.",
+    "choices": [
+      {
+        "text": "Um id de rastro tirado da linha de log de um checkout comum, aberto no Jaeger",
+        "why": "Certo."
+      },
+      {
+        "text": "O percentil 99 de `traces_span_metrics_duration_milliseconds_bucket`",
+        "why": "As métricas de span são calculadas a partir de todos os spans antes de o sampler descartar algum, então ainda contam todo checkout."
+      },
+      {
+        "text": "Checkouts por segundo, contados a partir dos rastros no armazém",
+        "why": "Certo."
+      },
+      {
+        "text": "Um exemplar no painel de latência do orders, aberto como rastro",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma busca no Jaeger pelos checkouts que falharam nos últimos dois minutos",
+        "why": "A política `errors` guarda todo rastro com status de erro, então essa busca acha todos."
+      }
+    ]
+  },
+  "ex-rs7b0v0z": {
+    "prompt": "Com o SDK do Sentry instalado, todo registro do `logging` em `INFO` ou acima fica guardado na memória e só é enviado se vier um erro. Cada registro guardado assim se chama ___.",
+    "hint": "Observabilidade e Operação, aula 13.",
+    "blanks": [
+      {
+        "accept": [
+          "breadcrumb",
+          "breadcrumbs"
+        ]
+      }
+    ]
+  },
+  "ex-pxw1fbm2": {
+    "prompt": "Para caprichar, uma equipe faz a sonda de readiness do storefront chamar o `/ready` do orders, que verifica o banco. Então o banco cai. O que a aula 14 diz que acontece?",
+    "hint": "Observabilidade e Operação, aula 14.",
+    "choices": [
+      {
+        "text": "O Kubernetes reinicia os pods do storefront até o banco voltar.",
+        "why": "Uma sonda de readiness falhando para o tráfego; só uma de liveness reinicia um contêiner."
+      },
+      {
+        "text": "Nada pior que antes, já que o storefront falharia essas requisições de qualquer jeito.",
+        "why": "As páginas de produto não precisam do banco e continuariam funcionando; a sonda derruba essas também."
+      },
+      {
+        "text": "O storefront continua em rotação, porque a readiness olha só para o próprio processo.",
+        "why": "A readiness é o que a verificação pergunta, e esta pergunta a outro serviço; verificar só o processo é a liveness."
+      },
+      {
+        "text": "O storefront também sai de rotação, e leva junto as páginas que nunca tocam no banco.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-dr8pbm17": {
+    "prompt": "O objetivo do serviço de lapse é 99% das requisições abaixo de 50 ms. Uma equipe o cronometra com um histograma do Prometheus e quer o SLI de latência exato, do jeito que a aula 15 monta o do checkout. O que isso exige?",
+    "hint": "Observabilidade e Operação, aula 15; Machine Learning e MLOps, aula 9.",
+    "choices": [
+      {
+        "text": "`histogram_quantile(0.99, ...)` sobre os buckets, comparado com 0,05 s.",
+        "why": "Um percentil tirado de buckets é interpolado dentro de um bucket; a fração abaixo de um limite é a pergunta exata."
+      },
+      {
+        "text": "A média, `_sum` sobre `_count`, mantida abaixo de 50 ms.",
+        "why": "Uma média esconde as requisições lentas; a média de 68,7 ms do serviço de lapse ficou abaixo da mediana."
+      },
+      {
+        "text": "Um limite de bucket em 0,05 s, e o SLI como a taxa desse bucket sobre a taxa da contagem.",
+        "why": "Certo."
+      },
+      {
+        "text": "Um summary, que calcula o percentil 99 dentro de cada worker.",
+        "why": "O cliente Python não calcula nenhum, e percentis de quatro workers não se somam num só."
+      }
+    ]
+  },
+  "ex-6p3zpva4": {
+    "prompt": "O consumidor de estoque do curso de streaming promete que o estoque do site nunca tem mais de um minuto de atraso. Qual destes merece um page às três da manhã?",
+    "hint": "Observabilidade e Operação, aula 16; Streaming e Processamento de Eventos, aula 16.",
+    "choices": [
+      {
+        "text": "Lag em tempo acima de alguns minutos.",
+        "why": "Certo."
+      },
+      {
+        "text": "Lag acima de 1.000 mensagens em qualquer partição.",
+        "why": "Dispara em todo pico de sábado que escoa sozinho, e uma contagem não diz nada sobre a idade do estoque."
+      },
+      {
+        "text": "Um aumento na contagem de rebalanceamentos do grupo.",
+        "why": "É um número para o painel no dia em que outra coisa disparar; não mede promessa nenhuma."
+      },
+      {
+        "text": "Cada venda levando mais de 100 ms para atualizar o estoque.",
+        "why": "Isso é uma causa, e o consumidor pode estar dando conta; o page é do sintoma, o quanto o estoque está velho."
+      }
+    ]
+  },
+  "ex-tgk5g52g": {
+    "prompt": "O objetivo do shipquote é 99,9% das requisições de cotação com sucesso. No passo de 25% do canary, o green falhou 2 das suas 98 respostas. Tomando a taxa de erros do green como SLI, que taxa de queima é essa? Responda com uma casa decimal.",
+    "hint": "Observabilidade e Operação, aula 16; Testes Automatizados e CI/CD, aula 11.",
+    "unit": ""
+  },
+  "ex-4tyq1dfg": {
+    "prompt": "Durante um SEV-2, dois engenheiros rodam `ops/rollback.sh production` uma vez cada, com um minuto de diferença, e os checkouts voltam a falhar. Que prática da aula 17 existe para impedir exatamente isso?",
+    "hint": "Observabilidade e Operação, aula 17; Testes Automatizados e CI/CD, aula 11.",
+    "choices": [
+      {
+        "text": "Subir o incidente para SEV-1, para todo mundo necessário entrar de uma vez.",
+        "why": "Mais gente agindo sem uma voz só é como a troca rodou duas vezes; a severidade decide quem é chamado, não quem age."
+      },
+      {
+        "text": "Atualizações de status num ritmo fixo, a cada quinze minutos.",
+        "why": "As atualizações informam quem está de fora; não impedem duas pessoas de mudarem a mesma coisa."
+      },
+      {
+        "text": "\"Vou fazer…, alguma objeção?\" antes de qualquer um mudar a produção.",
+        "why": "Certo."
+      },
+      {
+        "text": "Uma linha do tempo montada com as anotações e o log do pager, e não com a memória.",
+        "why": "A linha do tempo é escrita depois; registraria os dois rollbacks, não impediria o segundo."
+      }
+    ]
+  },
+  "ex-j89z05xb": {
+    "prompt": "Ponha os passos do incidente da aula 17 na ordem em que o comandante os deu, do page ao encerramento.",
+    "hint": "Observabilidade e Operação, aula 17.",
+    "items": [
+      "Marcar no Grafana a declaração de SEV-2, com o nome do comandante",
+      "Perguntar qual serviço tem mais requisições falhando",
+      "Listar as marcas da última meia hora",
+      "Voltar o payments à versão anterior, e marcar o rollback",
+      "Encerrar quando a taxa de queima de cinco minutos estiver abaixo de 1"
+    ],
+    "trap": "Encerrar quando a taxa de um minuto marca 0 pela primeira vez é o atalho tentador; a janela de cinco minutos ainda guarda falhas nessa hora, e a aula espera por ela."
+  },
+  "ex-5fy6jcx5": {
+    "prompt": "O tempo médio para resolver de uma equipe caiu de cinquenta minutos para trinta neste trimestre, e nada mudou nas ferramentas nem nos alertas. O que a aula 18 diz que poderia explicar isso além de uma resposta mais rápida?",
+    "hint": "Observabilidade e Operação, aula 18.",
+    "choices": [
+      {
+        "text": "Os pages por turno caíram, e menos pages baixam o tempo médio para resolver diretamente.",
+        "why": "Pages por turno medem a carga; não fazem parte do tempo entre uma falha e o seu encerramento."
+      },
+      {
+        "text": "Ela teve menos incidentes, e menos incidentes dão uma média menor.",
+        "why": "Uma média não depende de quantos houve; menos incidentes da mesma duração dão a mesma média."
+      },
+      {
+        "text": "Ela passou a declarar incidentes pequenos que antes ignorava.",
+        "why": "Certo."
+      },
+      {
+        "text": "Ela encolheu a escala, e agora cada incidente tem um dono claro desde o início.",
+        "why": "Uma escala de menos de cinco ou seis pessoas é uma troca contra a qual a aula avisa, não um jeito de encurtar um intervalo."
+      }
+    ]
+  },
+  "ex-2w03mjfn": {
+    "prompt": "A aula 18 define os tempos de escalonamento a partir do objetivo. Com uma taxa de queima de 14,4 e uma janela de 28 dias, quanto do error budget, em por cento, vinte minutos sem ninguém olhando gastam? Responda com uma casa decimal.",
+    "hint": "Observabilidade e Operação, aula 18.",
+    "unit": "%"
+  },
+  "ex-mms0q6ta": {
+    "prompt": "Uma equipe instala o Istio esperando que os sidecars juntem cada requisição num só rastro, sem mudar os serviços. O que ainda falta, pela aula 19?",
+    "hint": "Observabilidade e Operação, aula 19.",
+    "choices": [
+      {
+        "text": "Mutual TLS em STRICT, sem o qual os proxies não registram spans.",
+        "why": "O mutual TLS protege a conexão; os proxies registram spans no modo permissivo também."
+      },
+      {
+        "text": "Nada: os proxies veem toda requisição que entra e sai, e as emparelham sozinhos.",
+        "why": "Um proxy não tem como saber qual chamada de saída pertence a qual requisição de entrada."
+      },
+      {
+        "text": "Cada serviço repassar o `traceparent` recebido para as chamadas que faz.",
+        "why": "Certo."
+      },
+      {
+        "text": "O modo ambient, porque um proxy sidecar não tem como registrar um span.",
+        "why": "Sidecars registram spans; o que não conseguem dar é o vínculo entre a requisição que entra e as chamadas que saem."
+      }
+    ]
+  },
+  "ex-54ny3kpk": {
+    "prompt": "Às 02:30, o `watch.py` noturno do modelo de lapse sai com 1: os scores desta noite não se parecem nada com os das quatro semanas anteriores, e a cadeia para antes de qualquer coisa ser publicada. O marketing lê a lista de manhã. Esse alarme deve acionar um page?",
+    "hint": "Observabilidade e Operação, aula 16; Machine Learning e MLOps, aula 9.",
+    "choices": [
+      {
+        "text": "Não, um ticket: nada precisa ser feito antes da manhã.",
+        "why": "Certo."
+      },
+      {
+        "text": "Sim: todo alarme de modelo é um sintoma, e sintomas acionam page.",
+        "why": "Um sintoma aciona page quando há gente prejudicada agora ou antes da manhã; ninguém age sobre esses scores até uma pessoa olhar."
+      },
+      {
+        "text": "Sim, porque o batch relatou sucesso e só uma pessoa consegue perceber isso.",
+        "why": "O watch já percebeu e parou a cadeia; o que sobra pode esperar o horário de trabalho."
+      },
+      {
+        "text": "Nenhum alerta: o boletim em noventa dias vai dizer se a noite estava errada.",
+        "why": "O watch existe para fazer as vezes desse boletim tardio, e uma verificação que ninguém ouve é uma linha de log."
+      }
+    ]
+  },
+  "ex-897m3t6e": {
+    "prompt": "No mês que vem um cliente de casa faz um pedido de R$ 7.400, muito acima do que um pedido de casa costuma alcançar. Antes de decidir se ele fica, o que a aula 1 confere para separar um erro de um pedido raro que aconteceu de verdade?",
+    "hint": "Analytics, BI e Reverse ETL, aula 1.",
+    "choices": [
+      {
+        "text": "Se ela fica acima da cerca superior de Tukey.",
+        "why": "A cerca diz que um valor está longe dos outros; 591 pedidos ficaram acima dela, a maioria pedidos comuns de escritório. Ela não diz que tipo de outlier uma linha é."
+      },
+      {
+        "text": "Se o cliente é do segmento casa, já que um cliente de casa não gasta tanto e a linha pode sair.",
+        "why": "Um cliente de casa que comprou isso de verdade é um evento raro e real, mantido e reportado com a mediana ao lado da média. Apagar uma linha porque parece estranha é o hábito contra o qual a aula avisa."
+      },
+      {
+        "text": "Se os preços unitários das linhas batem com o preço de tabela do produto, já que uma conversão feita duas vezes deixa uma linha em exatamente cem vezes ele.",
+        "why": "Certo."
+      },
+      {
+        "text": "Se tirá-la mexe mais na média do que na mediana.",
+        "why": "Vai mexer, para qualquer valor grande, erro ou não. Isso diz que a linha é extrema, o que você já sabia, e nada sobre se ela está certa."
+      }
+    ]
+  },
+  "ex-pgz9sdkf": {
+    "prompt": "Os valores de pedido da Lantern têm quartis de 4.790, 9.580 e 16.865 centavos. Pela regra de Tukey que a aula 1 aplica, onde fica a cerca superior, em reais, com centavos?",
+    "hint": "Analytics, BI e Reverse ETL, aula 1."
+  },
+  "ex-qr848zq6": {
+    "prompt": "O cartão da receita líquida da Lantern tem uma linha para o dono. Um analista novo quer preenchê-la. O que vai ali?",
+    "hint": "Analytics, BI e Reverse ETL, aula 2; Segurança, Governança e Privacidade de Dados, aula 9.",
+    "choices": [
+      {
+        "text": "A analista que escreveu `order_revenue`, pelo nome, porque é quem melhor conhece a conta.",
+        "why": "Uma definição de uma pessoa fica sem dono na semana em que ela muda de emprego. O dono é um papel, e conhecer o SQL é a força do steward, não do dono."
+      },
+      {
+        "text": "O financeiro, como papel, que decide quando a definição muda.",
+        "why": "Certo."
+      },
+      {
+        "text": "O time de plataforma de dados, porque ele pode alterar ou apagar a view.",
+        "why": "Esse é o custodiante. Quem pode rodar `DROP` é, de propósito, outro que não quem decide o que a view deve significar."
+      },
+      {
+        "text": "Ninguém: o `COMMENT ON VIEW` já guarda a definição ao lado da conta, então uma linha de dono só a repete.",
+        "why": "O comentário diz o que o número é, não quem pode mudá-lo. Uma definição sem dono muda toda vez que alguém edita uma consulta."
+      }
+    ]
+  },
+  "ex-d8s1nvjw": {
+    "prompt": "A partir de 1º de setembro, o financeiro conta os reembolsos na data do reembolso em vez da data do pedido, e a receita líquida mensal da Lantern dá um degrau para baixo naquele mês num painel do Grafana. O que o gráfico deve trazer?",
+    "hint": "Analytics, BI e Reverse ETL, aula 2; Observabilidade e Operação, aula 7.",
+    "choices": [
+      {
+        "text": "Recalcular todos os meses anteriores pela regra nova, para a linha não ter degrau a explicar.",
+        "why": "Isso é uma edição silenciosa. O relatório do conselho do ano passado foi calculado na versão antiga, e alguém vai comparar os dois."
+      },
+      {
+        "text": "Uma anotação em 1º de setembro que dá o nome da versão nova da definição.",
+        "why": "Certo."
+      },
+      {
+        "text": "Um alerta sobre a queda, para o dono da receita líquida saber da próxima vez que acontecer.",
+        "why": "Alerta é para quando o sistema se comporta mal. Nada aqui se comportou mal: pessoas decidiram algo, numa data conhecida."
+      },
+      {
+        "text": "Nada: a linha está correta, e uma marca nela conduziria o leitor.",
+        "why": "Sem marca, um degrau que é só uma definição nova é lido como algo que os clientes fizeram, que é justamente a leitura errada a evitar."
+      }
+    ]
+  },
+  "ex-w7d5whfe": {
+    "prompt": "Você recomeça a loja do zero e quer o Metabase respondendo pela camada depois. Ponha os passos em ordem.",
+    "hint": "Analytics, BI e Reverse ETL, aula 3.",
+    "items": [
+      "Rodar `lantern.sql`, que apaga `shop` com `CASCADE`",
+      "Rodar `semantic.sql`, que cria as views de novo",
+      "Rodar o bloco de `GRANT` para o papel `metabase`",
+      "Sincronizar o esquema do banco Lantern nas configurações de administração do Metabase"
+    ],
+    "trap": "Apagar `shop` leva junto as views da camada; um grant só alcança as views que existem quando ele roda; e o Metabase mostra o que viu na última sincronização até sincronizar de novo."
+  },
+  "ex-rps19ty6": {
+    "prompt": "A aula 4 mostra cada fórmula DAX ao lado do SQL que calcula o mesmo número. Ligue os dois.",
+    "hint": "Analytics, BI e Reverse ETL, aula 4.",
+    "pairs": [
+      {
+        "left": "`CALCULATE ( [Net Revenue], ALL ( customers ) )`",
+        "right": "`sum(sum(o.net_revenue)) OVER ()`"
+      },
+      {
+        "left": "`TOTALYTD ( [Net Revenue], calendar[day] )`",
+        "right": "`sum(sum(o.net_revenue)) OVER (ORDER BY k.month)`"
+      },
+      {
+        "left": "`[Net Revenue]` numa matriz com a região nas linhas, sob uma segmentação de 2026",
+        "right": "um `WHERE` no ano e `GROUP BY ROLLUP (c.region)`"
+      },
+      {
+        "left": "`AVERAGEX ( VALUES ( customers[customer_id] ), [Net Revenue per Order] )`",
+        "right": "`avg(per_customer)` sobre uma subconsulta agrupada por `customer_id`"
+      }
+    ],
+    "right_distractors": [
+      "`sum(net_revenue) / count(*)` sobre todos os pedidos"
+    ]
+  },
+  "ex-y9hydjc5": {
+    "prompt": "Os pedidos da Lantern chegam ao Tableau com `order_id` guardado como número. Um gráfico novo de pedidos por mês mostra valores na casa dos milhões, para uma loja que recebe algumas centenas de pedidos por mês. O que aconteceu?",
+    "hint": "Analytics, BI e Reverse ETL, aula 5.",
+    "choices": [
+      {
+        "text": "A extração está velha e guarda em cada mês todos os pedidos desde 2025.",
+        "why": "Uma extração velha mostra números antigos, com cada pedido ainda contado uma vez. Ela não transforma centenas em milhões."
+      },
+      {
+        "text": "O gráfico juntou os pedidos às linhas e somou cada pedido uma vez por linha.",
+        "why": "Um fan-out multiplica pelas linhas por pedido, menos de duas aqui. Milhões pedem um fator muito maior."
+      },
+      {
+        "text": "O separador decimal da localidade transformou `32.90` em `3290`.",
+        "why": "Isso são as colunas de dinheiro chegando cem vezes maiores no Power Query. Um id não tem vírgula para ser lida errado."
+      },
+      {
+        "text": "O Tableau tomou `order_id` por medida pelo tipo e somou os ids.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-dkzwp869": {
+    "prompt": "Um cartão do painel de segunda da Lantern conta as compras dos últimos sete dias numa tabela de cliques do lago, guardada num diretório por `day`, e o filtro dele é no timestamp `ts`. A página ficou lenta para abrir. Quais mudanças cortam o quanto a página lê? Marque todas as que se aplicam.",
+    "hint": "Analytics, BI e Reverse ETL, aula 6; Big Data e Processamento Distribuído, aula 6.",
+    "choices": [
+      {
+        "text": "Filtrar o cartão por `day`, além do timestamp `ts`.",
+        "why": "Certo."
+      },
+      {
+        "text": "Dividir o cartão em sete, um por dia da semana, cada um sobre um intervalo menor.",
+        "why": "Cada cartão roda a própria consulta toda vez que a página abre. Menos cartões é o primeiro remédio, não mais."
+      },
+      {
+        "text": "Escrever o teste de \"últimos sete dias\" como uma função Python, para a lógica de datas ficar num lugar só.",
+        "why": "O planejador não enxerga dentro de uma função Python, então deixa o teste para as linhas e abre todos os diretórios."
+      },
+      {
+        "text": "Guardar o resultado do cartão no cache do Metabase por uma hora.",
+        "why": "Certo."
+      },
+      {
+        "text": "Responder a partir de uma tabela pequena de compras por dia, refeita depois de cada carga, com a linha \"dados até\" dizendo quando.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-kywcdygt": {
+    "prompt": "Uma página de monitoramento tem um cartão, \"Acurácia do modelo de evasão: 86,0%\", para um modelo cujos membros de teste evadem 16,9% das vezes. Um número numa página precisa de uma comparação ao lado. Qual cabe neste cartão?",
+    "hint": "Analytics, BI e Reverse ETL, aula 6; Machine Learning e MLOps, aula 4.",
+    "choices": [
+      {
+        "text": "83,1%, a acurácia de um modelo que diz que ninguém evade.",
+        "why": "Certo."
+      },
+      {
+        "text": "A acurácia do mês passado, para o leitor ver se ela está mudando.",
+        "why": "Ela responde se o número se mexe. Os dois meses podem estar logo acima do que um modelo que não sabe nada faz, e o cartão nunca diria."
+      },
+      {
+        "text": "Uma meta de 90% definida pela gerente de produto, com o cartão verde acima dela.",
+        "why": "Uma meta é uma decisão, e uma definida sem a taxa de base não diz nada sobre o que o modelo aprendeu. Uma cor que julga também precisa de uma palavra ao lado."
+      },
+      {
+        "text": "O mesmo mês um ano antes, que tira as estações do caminho.",
+        "why": "Estações mexem em vendas. Num desfecho raro, a acurácia mede sobretudo quão comum é o desfecho comum, em qualquer mês."
+      }
+    ]
+  },
+  "ex-97j6nc3z": {
+    "prompt": "A Lantern decide que o painel de segunda deve ter um objetivo de frescor, medido do jeito que se mede um indicador de nível de serviço. Qual indicador serve?",
+    "hint": "Analytics, BI e Reverse ETL, aula 6; Observabilidade e Operação, aula 15.",
+    "choices": [
+      {
+        "text": "A fração das noites em que o job de carga terminou com status 0.",
+        "why": "Isso mede uma causa, do lado da plataforma. Um job pode terminar sem erro sem ter carregado nada, e é por isso que \"dados até\" vem dos dados."
+      },
+      {
+        "text": "A média de minutos entre o fim de um dia e o fim da carga dele, contada ao longo do mês inteiro.",
+        "why": "Uma média esconde as manhãs ruins. Um indicador é a fração de eventos que deram certo contra um limite."
+      },
+      {
+        "text": "A fração das segundas em que o `max(order_date)` da camada era o dia anterior às 07:00.",
+        "why": "Certo."
+      },
+      {
+        "text": "A fração das manhãs em que o título da página mostrou a data do dia.",
+        "why": "O calendário diz hoje justamente no dia em que uma carga falha. Só os dados dizem até onde chegam."
+      }
+    ]
+  },
+  "ex-c8c0mye2": {
+    "prompt": "A meta de receita líquida de junho de 2026 é R$ 145.000, e os dados da Lantern terminam em 17 de junho. Proporcional aos dias que os dados cobrem, qual é a meta de junho até aqui, em reais, arredondada para o real inteiro?",
+    "hint": "Analytics, BI e Reverse ETL, aula 6."
+  },
+  "ex-491pjevh": {
+    "prompt": "`activation.crm_contacts` ganha duas colunas do batch noturno do time de ML: `p_lapse`, e `cutoff`, a noite para a qual a nota foi calculada. O que o `sync.sh` faz daí em diante?",
+    "hint": "Analytics, BI e Reverse ETL, aula 7; Machine Learning e MLOps, aula 8.",
+    "choices": [
+      {
+        "text": "Ela envia só os contatos cujo `p_lapse` mudou desde a noite anterior.",
+        "why": "O diff compara `row_to_json(m)`, a linha inteira. Uma coluna que muda em toda linha toda noite faz toda linha ficar diferente."
+      },
+      {
+        "text": "O CRM recusa cada contato com `400`, já que `p_lapse` não está na lista de opções dele.",
+        "why": "A lista de opções protege o campo de saúde. Um campo que ninguém restringiu aceita o que recebe."
+      },
+      {
+        "text": "Ela envia todos os contatos de novo, toda noite.",
+        "why": "Certo."
+      },
+      {
+        "text": "Ela cria cada contato uma segunda vez, com um `crm_id` novo.",
+        "why": "O `PUT` pela chave externa atualiza o registro que encontra. Duplicatas vêm do `POST`."
+      }
+    ]
+  },
+  "ex-b8n41ym3": {
+    "prompt": "Às 03:00 a sincronização agendada termina com `run 4: sent 0, removed 0, failed 284, retried after 429: 28`, porque o CRM recusou o novo valor de saúde *new*. Para onde deve ir o alerta sobre essa linha?",
+    "hint": "Analytics, BI e Reverse ETL, aula 7; Observabilidade e Operação, aula 16.",
+    "choices": [
+      {
+        "text": "Para o pager, já que 284 contatos no CRM estão mostrando uma saúde desatualizada agora mesmo.",
+        "why": "Um page quer dizer que alguém precisa agir agora. Esses contatos ficam com o último valor aceito durante a noite, e nada que importe piora antes da manhã."
+      },
+      {
+        "text": "Para lugar nenhum, porque o `send` tenta de novo até as recusas sumirem.",
+        "why": "O `send` só tenta de novo um `429`. Um `400` falha igual em toda execução até alguém mudar a lista de opções ou a view."
+      },
+      {
+        "text": "Para o suporte do fornecedor do CRM, já que a API dele recusou dados válidos.",
+        "why": "O CRM fez o que a lista de opções dele manda. O modelo e o destino discordam, e resolver isso é uma decisão dentro da empresa."
+      },
+      {
+        "text": "Para uma fila de tickets, para alguém acertar a lista de opções ou a view no expediente.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-cf6exxpw": {
+    "prompt": "Um colega arruma a primeira consulta do `sync.sh` e escreve `WHERE s.payload <> row_to_json(m)::jsonb` no lugar de `IS DISTINCT FROM`. O que muda?",
+    "hint": "Analytics, BI e Reverse ETL, aula 7.",
+    "choices": [
+      {
+        "text": "Um cliente que nunca foi enviado nunca mais é enviado.",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada: para linhas assim os dois dão a mesma resposta.",
+        "why": "Eles diferem justamente quando um dos lados é `NULL`, e isso é todo contato sem linha em `last_sent`."
+      },
+      {
+        "text": "Clientes apagados da loja deixam de ser apagados do CRM.",
+        "why": "As exclusões vêm do segundo laço, que acha os contatos ausentes com `NOT EXISTS`. A edição não mexeu nele."
+      },
+      {
+        "text": "Contatos que não mudaram são enviados de novo a cada execução.",
+        "why": "Para um contato já enviado, `<>` dá falso quando os payloads batem, igual a `IS DISTINCT FROM`."
+      }
+    ]
+  },
+  "ex-s6wx9z40": {
+    "prompt": "A audiência `office_win_back` da Lantern é sincronizada com a ferramenta de e-mail para uma oferta de reconquista. Um dos clientes dela clica em *descadastrar*, e a loja registra a retirada do consentimento para a finalidade `marketing-email`. O que precisa acontecer?",
+    "hint": "Analytics, BI e Reverse ETL, aula 8; Segurança, Governança e Privacidade de Dados, aula 7.",
+    "choices": [
+      {
+        "text": "O cliente é apagado da loja e de todas as ferramentas, já que retirar o consentimento é pedir para ser esquecido.",
+        "why": "O consentimento é registrado por finalidade. Retirar o de marketing para o marketing; os pedidos e o registro no CRM servem a outras finalidades, com outras bases."
+      },
+      {
+        "text": "Os e-mails antigos para esse cliente ficam registrados como enviados sem base legal.",
+        "why": "A retirada para o tratamento futuro e não desfaz o passado. O que foi enviado antes foi enviado legalmente."
+      },
+      {
+        "text": "Nada muda até o marketing refazer a lista para a próxima campanha.",
+        "why": "Uma audiência é uma definição, não uma lista. Um cliente que sai do modelo sai do destino na próxima execução, sem ninguém refazer nada."
+      },
+      {
+        "text": "A audiência filtra pelo consentimento atual para essa finalidade, então o cliente sai do modelo e a próxima execução o tira da lista.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-khp8vkby": {
+    "prompt": "O cliente 2 pede para ser esquecido e a loja apaga a linha. Na mesma noite, alguém aperta *full resync* na sincronização do Hightouch da Lantern com o CRM. Quais afirmações valem? Marque todas as que se aplicam.",
+    "hint": "Analytics, BI e Reverse ETL, aula 8; Segurança, Governança e Privacidade de Dados, aula 7.",
+    "choices": [
+      {
+        "text": "Uma extração em CSV de um analista que guarda o cliente faz parte de uma resposta completa.",
+        "why": "Certo."
+      },
+      {
+        "text": "O apagamento precisa de um registro próprio de quais sistemas guardam o cliente, e de uma conferência de que cada um não guarda mais.",
+        "why": "Certo."
+      },
+      {
+        "text": "Todo backup que guarda o cliente precisa ser restaurado e editado na hora.",
+        "why": "A prática defensável é deixar os backups expirarem no prazo, mantê-los fora de uso e reaplicar a exclusão se algum for restaurado."
+      },
+      {
+        "text": "A sincronização nunca apaga o contato do CRM, porque um full resync não faz diff.",
+        "why": "Certo."
+      },
+      {
+        "text": "Configurar o comportamento de exclusão como *Delete destination record* faz o resync remover o contato.",
+        "why": "Um full resync ignora as configurações de limpar e apagar: sem execução anterior para comparar, ele não vê nenhuma linha sair."
+      }
+    ]
+  },
+  "ex-t8g45beq": {
+    "prompt": "Uma célula de coorte que o fim dos dados cortou antes que o resultado pudesse acontecer é desconhecida, e não zero. O nome disso é ___ à direita.",
+    "hint": "Analytics, BI e Reverse ETL, aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "censura",
+          "censoring"
+        ]
+      }
+    ]
+  },
+  "ex-jtfzhq7s": {
+    "prompt": "Um relatório trimestral tira a média de cada coluna da grade de coortes da Lantern a partir de outubro de 2025, com as células não terminadas vazias, sobre as coortes que têm valor, e põe a média de `m1` ao lado da de `m3` para mostrar quão rápido os clientes se afastam. O que está errado na comparação?",
+    "hint": "Analytics, BI e Reverse ETL, aula 9.",
+    "choices": [
+      {
+        "text": "Nada: as células não terminadas ficaram de fora em vez de contar como zero, que é o que a aula pede.",
+        "why": "Deixá-las vazias corrige os zeros falsos. Tirar a média do que sobra ainda mistura gerações."
+      },
+      {
+        "text": "As células vazias deveriam contar como zero, para toda coluna fazer a média das nove coortes.",
+        "why": "Esse é o erro que as células vazias corrigem: aqueles clientes não tiveram tempo, não deixaram de comprar."
+      },
+      {
+        "text": "A média de `m3` cobre só as coortes até fevereiro de 2026, enquanto `m1` inclui março e abril, então as duas colunas fazem a média de gerações diferentes.",
+        "why": "Certo."
+      },
+      {
+        "text": "A coorte de novembro deveria sair antes, já que a Black Friday a torna um outlier.",
+        "why": "Tirar a coorte que é diferente esconde o achado. O problema é quais coortes cada coluna contém."
+      }
+    ]
+  },
+  "ex-69sg5zkt": {
+    "prompt": "Cada afirmação abaixo se apoia em números corretos. Ligue-a à falha da aula 10 que a torna enganosa.",
+    "hint": "Analytics, BI e Reverse ETL, aula 10.",
+    "pairs": [
+      {
+        "left": "Um ranking de taxas de reembolso põe no topo um estado com 31 pedidos",
+        "right": "um denominador pequeno"
+      },
+      {
+        "left": "O gasto médio dos clientes da lista de *ativos* de hoje é citado como o gasto de quem se cadastrou em 2025",
+        "right": "sobrevivência"
+      },
+      {
+        "left": "A fração de chamados do suporte resolvidos em um dia caiu, embora tenha subido tanto na fila do telefone quanto na do e-mail, porque a fila mais lenta, a do e-mail, cresceu",
+        "right": "paradoxo de Simpson"
+      },
+      {
+        "left": "Clientes que instalaram o aplicativo compram duas vezes mais, então o aplicativo leva o crédito",
+        "right": "fator de confusão"
+      },
+      {
+        "left": "O crescimento do ano é citado a partir do mês da Black Friday até hoje",
+        "right": "uma janela escolhida"
+      }
+    ],
+    "right_distractors": [
+      "uma escala cortada"
+    ]
+  },
+  "ex-easyn76b": {
+    "prompt": "O marketing ainda quer saber se um cupom de 10% faz os clientes de casa gastarem mais por pedido. Que desenho resolve isso?",
+    "hint": "Analytics, BI e Reverse ETL, aula 10.",
+    "choices": [
+      {
+        "text": "Comparar pedidos com e sem desconto dentro do segmento casa, o que tira os escritórios.",
+        "why": "Isso remove um fator de confusão e deixa todas as outras diferenças entre quem ganhou cupom e quem não ganhou. Sempre há mais uma coluna."
+      },
+      {
+        "text": "Dar o cupom a clientes de casa sorteados antes da oferta, e compará-los com todos os demais.",
+        "why": "Certo."
+      },
+      {
+        "text": "Calcular a correlação sobre dois anos inteiros de pedidos, já que mais linhas a tornam confiável.",
+        "why": "Mais linhas da mesma mistura carregam o mesmo fator de confusão, e uma correlação não diz nada sobre o sentido da causa."
+      },
+      {
+        "text": "Dividir por cada coluna de `customers` e ficar com o resultado se ele sobreviver a todas as divisões.",
+        "why": "Essa é a defesa fraca que a aula nomeia. Ela só descarta as colunas que alguém pensou em testar."
+      }
+    ]
+  },
+  "ex-8fs5bw50": {
+    "prompt": "Um painel cita a taxa de afastamento que a equipe do modelo informa para 30 de novembro de 2025: 16,9%. Ligue cada parte da definição de uma métrica ao que ela é nesse número.",
+    "hint": "Machine Learning e MLOps, aula 1; Analytics, BI e Reverse ETL, aula 2.",
+    "pairs": [
+      {
+        "left": "Medida",
+        "right": "`lapsed`, 1 ou 0 para cada membro"
+      },
+      {
+        "left": "Agregação",
+        "right": "A média sobre os membros"
+      },
+      {
+        "left": "Filtro",
+        "right": "Só os membros que compraram alguma coisa nos 180 dias até o corte"
+      },
+      {
+        "left": "Tempo",
+        "right": "O corte, e os 90 dias depois dele"
+      }
+    ],
+    "right_distractors": [
+      "O 0,5 com que o `predict` compara cada probabilidade"
+    ]
+  },
+  "ex-k2afftyt": {
+    "prompt": "Um relatório mensal conta os membros do grupo 6, os leitores de policial, a partir do k-means da aula 2 retreinado com as compras de cada mês. Em abril o grupo cai pela metade. O que o dono do relatório deve conferir primeiro?",
+    "hint": "Machine Learning e MLOps, aula 2.",
+    "choices": [
+      {
+        "text": "Se as vendas de policial caíram em abril, já que o grupo acompanha o que os seus membros compram.",
+        "why": "A contagem pode cair pela metade sem mudança nas vendas, porque o número pode agora nomear outro grupo."
+      },
+      {
+        "text": "Se a silhueta caiu, já que um agrupamento mais fraco perde membros de todos os grupos.",
+        "why": "A silhueta dá nota a quão bem os membros se separam; ela não segura o número de um grupo de uma execução para a outra."
+      },
+      {
+        "text": "Se o grupo 6 ainda são os leitores de policial, porque um k-means retreinado numera os grupos de novo.",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada, porque `random_state=0` dá aos leitores de policial o mesmo número em toda execução.",
+        "why": "A semente repete uma execução sobre as mesmas linhas. Com as linhas de um mês novo, os grupos podem se acomodar em outra ordem."
+      }
+    ]
+  },
+  "ex-16hsyaj0": {
+    "prompt": "Os caixas da Ponto Final já gravam cada venda no Kafka no momento em que ela acontece. Para quais destes usos vale calcular atributos a partir desse stream, para que tenham minutos de idade em vez de uma noite? Marque todas as que se aplicam.",
+    "hint": "Machine Learning e MLOps, aula 2; Streaming e Processamento de Eventos, aula 1.",
+    "choices": [
+      {
+        "text": "A nota de afastamento mostrada na página do próprio membro.",
+        "why": "Os atributos dela mudam quando o membro compra, não quando a página abre; a linha da noite passada mostra o número que o marketing usou."
+      },
+      {
+        "text": "Uma checagem de um pagamento com cartão que um segundo atrás não existia.",
+        "why": "Certo."
+      },
+      {
+        "text": "O próximo título que o site mostra a um membro que acabou de comprar um livro.",
+        "why": "Certo."
+      },
+      {
+        "text": "As probabilidades de afastamento por trás da lista mensal de cupons do marketing.",
+        "why": "Os cupons saem uma vez por mês, então uma nota da noite passada serve tanto quanto uma deste segundo."
+      },
+      {
+        "text": "Retreinar o modelo de afastamento com os membros do ano passado.",
+        "why": "Essa entrada é finita e fixa, que é o caso de um lote, e os rótulos dela levam 90 dias para fechar de qualquer jeito."
+      }
+    ]
+  },
+  "ex-k05fqq5f": {
+    "prompt": "Uma loja prevê se um pedido vai ser devolvido em até 30 dias, e retreina toda noite com todos os pedidos até ontem, rotulados a partir da tabela de devoluções. Pelo raciocínio da aula 3 sobre rótulos, o que os pedidos mais novos ensinam ao modelo?",
+    "hint": "Machine Learning e MLOps, aula 3.",
+    "choices": [
+      {
+        "text": "Que devoluções são mais comuns do que são, como os rótulos inacabados fizeram o afastamento parecer três ou quatro vezes mais comum.",
+        "why": "Afastar-se é a ausência de uma compra, então uma janela aberta o infla. Uma devolução é um evento, e uma janela aberta a esconde."
+      },
+      {
+        "text": "Que devoluções são mais raras do que são, porque uma devolução que ainda vai acontecer fica rotulada como mantida.",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada de prejudicial, já que o mês mais novo é uma parte pequena de todos os pedidos.",
+        "why": "A janela aberta é todo pedido dos últimos 30 dias, e essas são as linhas que um retreino noturno trata como as mais relevantes."
+      },
+      {
+        "text": "Nada de prejudicial, desde que as linhas de teste venham da mesma tabela.",
+        "why": "Um teste que carrega os mesmos rótulos errados premia o modelo por aprendê-los."
+      }
+    ]
+  },
+  "ex-zf5swnyj": {
+    "prompt": "O cupom do marketing agora custa R$ 15,00 para enviar, e um membro em afastamento que ele segura continua valendo R$ 60,00. Pela regra prática da aula 4, perto de que probabilidade fica o melhor limiar, para um modelo cujas probabilidades merecem crédito?",
+    "hint": "Machine Learning e MLOps, aula 4.",
+    "unit": ""
+  },
+  "ex-pegw8cjd": {
+    "prompt": "O marketing transforma em meta do modelo de afastamento o número de membros que se afastaram entre os 300 com nota mais alta. Uma meta que anda sozinha acaba sendo burlada, então ela precisa de uma métrica de proteção. Qual serve para este modelo?",
+    "hint": "Machine Learning e MLOps, aula 4; Analytics, BI e Reverse ETL, aula 2.",
+    "choices": [
+      {
+        "text": "ROC AUC, porque um modelo só melhora os seus 300 primeiros ordenando todo mundo melhor.",
+        "why": "A AUC e os 300 primeiros julgam os dois a ordem. Um modelo pode manter a ordem e errar todas as probabilidades."
+      },
+      {
+        "text": "A calibração: o que o modelo disse contra a fração que se afastou.",
+        "why": "Certo."
+      },
+      {
+        "text": "A acurácia, porque ela conta todos os membros e não só trezentos.",
+        "why": "Nestes dados a acurácia mede sobretudo quão comum é ficar: o modelo que diz que ninguém se afasta marca 83,1%."
+      },
+      {
+        "text": "O número de cupons enviados, para que a meta não possa ser comprada enviando mais deles.",
+        "why": "O orçamento já fixa a lista em trezentos; esse número não tem como mudar."
+      }
+    ]
+  },
+  "ex-tvway1r2": {
+    "prompt": "Um job de stream guarda no armazenamento online o `last_purchase_at` de cada membro, com o momento em que o consumidor lê a venda. As linhas de treino tiraram o `day` da compra da tabela de compras. O caixa de Natal perde a linha das 10:20 às 14:00 e depois manda de uma vez as vendas da manhã. O que a equipe construiu?",
+    "hint": "Machine Learning e MLOps, aula 5; Streaming e Processamento de Eventos, aula 9.",
+    "choices": [
+      {
+        "text": "Nada de novo: os dois valores vêm das mesmas vendas, então o modelo recebe o atributo que aprendeu.",
+        "why": "Uma fonte, dois cálculos. O relógio que cada um lê faz parte do que o atributo significa."
+      },
+      {
+        "text": "Um atributo mais seguro, porque o relógio de um caixa pode derivar e o do consumidor é da própria plataforma.",
+        "why": "Uma resposta sobre o mundo usa o tempo da venda. Um relógio de caixa que deriva se sincroniza e se limita, não se troca pelo de quem lê."
+      },
+      {
+        "text": "Training-serving skew: servir diz quando o pipeline soube de uma venda, o treino diz quando ela aconteceu.",
+        "why": "Certo."
+      },
+      {
+        "text": "No máximo um valor velho, que o tempo de vida de sete dias do armazenamento já descarta.",
+        "why": "O valor está horas atrasado e carimbado com o momento errado, e um tempo de vida não mede nenhuma das duas coisas."
+      }
+    ]
+  },
+  "ex-cq5gc3w3": {
+    "prompt": "Um job Spark sobrescreve toda noite uma tabela Delta de atributos dos membros. Para remontar as linhas de treino do corte de 31 de agosto de 2025, a equipe pretende ler a tabela `VERSION AS OF` a versão gravada naquela noite. A tabela passa por vacuum toda semana com a retenção padrão. O que acontece quando eles tentam, em março?",
+    "hint": "Machine Learning e MLOps, aula 6; Big Data e Processamento Distribuído, aula 11.",
+    "choices": [
+      {
+        "text": "Volta com os valores de agosto, porque o log de transações guarda todas as versões.",
+        "why": "O log ainda lista a versão, mas o `VACUUM` apagou os arquivos dela quando passaram da retenção."
+      },
+      {
+        "text": "Volta com os valores de hoje, o vazamento da tabela de resumo da aula 3 num lugar novo.",
+        "why": "O Delta lê a versão pedida ou falha; ele não entrega a tabela atual no lugar dela."
+      },
+      {
+        "text": "Funciona, desde que a gravação de cada noite tenha levado `txnAppId` e `txnVersion`.",
+        "why": "Esses dois fazem uma gravação repetida não acrescentar nada. Não protegem arquivos antigos de um vacuum."
+      },
+      {
+        "text": "Falha: os arquivos que aquela versão lia foram apagados pelo vacuum há tempos.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-6k0dv0z0": {
+    "prompt": "Num incidente, dois engenheiros fazem cada um o rollback do modelo de afastamento com `python champion.py 1`, com um minuto de diferença. A mesma execução dupla do `rollback.sh` do serviço de frete, que troca `current` e `previous`, pôs a versão quebrada de volta. O que faz o segundo `champion.py 1`?",
+    "hint": "Machine Learning e MLOps, aula 7; Testes Automatizados e CI/CD, aula 11.",
+    "choices": [
+      {
+        "text": "Nada de novo: o `champion` já aponta para a versão 1.",
+        "why": "Certo."
+      },
+      {
+        "text": "Move o `champion` para a versão que veio antes, como a segunda troca fez.",
+        "why": "O alias é apontado para a versão escrita na linha de comando. Não existe uma anterior para onde virar."
+      },
+      {
+        "text": "Falha, já que o alias já aponta para essa versão.",
+        "why": "Apontar um alias é uma atribuição, e atribuir o mesmo valor duas vezes deixa o mesmo resultado."
+      },
+      {
+        "text": "Copia o arquivo do modelo da versão 1 por cima do que está em produção pela segunda vez.",
+        "why": "Mover o alias não copia nada. Um serviço ou um lote carrega o que o alias nomeia."
+      }
+    ]
+  },
+  "ex-4qhjv319": {
+    "prompt": "A Ana muda uma linha do `model.py` e quer o resultado registrado como uma versão nova de `lapse` no registro de modelos do MLflow. Ponha os passos na ordem em que a aula 7 os executa.",
+    "hint": "Machine Learning e MLOps, aula 7.",
+    "items": [
+      "Salvar o `model.py` editado por cima do antigo",
+      "`dvc repro`, que retreina e reescreve o `dvc.lock`",
+      "`git add .` e `git commit`",
+      "`python log_run.py`, que cria a versão 2 de `lapse`",
+      "`python champion.py`, que lista as versões e para onde o alias aponta"
+    ],
+    "trap": "O `log_run.py` recusa uma árvore de trabalho com qualquer coisa sem commit, então o commit vem antes dele, e o commit precisa levar o `dvc.lock` que o `dvc repro` grava. O `champion.py` só pode mostrar a versão 2 depois que ela existe."
+  },
+  "ex-yfr34vy5": {
+    "prompt": "O serviço de afastamento por trás da página do membro é lançado com o `canary.py` da equipe de frete: 5%, 25%, 50% e depois todo o tráfego, parando se a taxa de erro do canário passar um ponto acima da do baseline. O canário roda a versão 2 do modelo de afastamento. O que acontece?",
+    "hint": "Machine Learning e MLOps, aula 8; Testes Automatizados e CI/CD, aula 11.",
+    "choices": [
+      {
+        "text": "É parado em 25%, como foi a versão de frete que não cotava Alagoas.",
+        "why": "Aquela versão falhava pedidos. A versão 2 não falha nenhum, então a regra de erro nunca dispara."
+      },
+      {
+        "text": "É parado em 5%, o primeiro passo, onde o canário tem respostas de menos para julgar.",
+        "why": "Respostas de menos fazem o script seguir para o próximo passo, não parar."
+      },
+      {
+        "text": "É promovido: toda resposta é um 200, e os critérios só contam erros.",
+        "why": "Certo."
+      },
+      {
+        "text": "Não tem como rodar: um serviço de modelo não tem taxa de erro para comparar.",
+        "why": "Tem, pelo status de cada pedido. Só que erros não são o que está errado na versão 2."
+      }
+    ]
+  },
+  "ex-sme3131d": {
+    "prompt": "O suporte quer a probabilidade de afastamento de cada membro ao lado dos chamados no help desk. Uma proposta chama o serviço web da aula 8 a cada chamado; outra copia um campo para o help desk. Para qual desenho os dois cursos apontam?",
+    "hint": "Machine Learning e MLOps, aula 8; Analytics, BI e Reverse ETL, aula 7.",
+    "choices": [
+      {
+        "text": "O serviço web, porque uma probabilidade mostrada ao suporte precisa ser calculada quando o chamado abre.",
+        "why": "A nota não pode ser mais nova que os seus atributos, que mudam a cada noite, e um serviço acrescenta uma queda que a tabela nunca teve."
+      },
+      {
+        "text": "Uma sincronização com chave no e-mail do membro, que o suporte já usa para buscar.",
+        "why": "As pessoas trocam e compartilham endereços. O id da própria loja é atribuído uma vez e nunca muda."
+      },
+      {
+        "text": "Uma sincronização que manda a linha de todo membro a cada execução, para o help desk nunca ficar desatualizado.",
+        "why": "Reenviar tudo é mais lento, gasta pedidos que a API limita e sobrescreve o que alguém tiver digitado nesses campos."
+      },
+      {
+        "text": "Uma sincronização noturna de `lapse_scores`, com chave no id do membro, mandando só as linhas que mudaram.",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-b1zt989q": {
+    "prompt": "Um agendador repete o job noturno de notas depois de um timeout. O `score_batch.py` apaga as linhas da noite antes de gravá-las, e um append no Delta que leva `txnAppId` e `txnVersion` não grava nada na segunda vez. Os dois deixam o job ___: o resultado é o mesmo quantas vezes ele rodar.",
+    "hint": "Machine Learning e MLOps, aula 8; Big Data e Processamento Distribuído, aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente",
+          "idempotent"
+        ]
+      }
+    ]
+  },
+  "ex-cth0d1v8": {
+    "prompt": "O objetivo do serviço de afastamento é o da aula 9: 99,9% dos pedidos não respondidos com um 5xx. Numa hora ele responde 20.000 pedidos: 13.000 com 200, 6.960 com 404 para membros de quem o armazenamento online não tem nada novo o bastante, e 40 com 500. Qual é a taxa de queima dessa hora?",
+    "hint": "Machine Learning e MLOps, aula 9; Observabilidade e Operação, aula 16.",
+    "unit": ""
+  },
+  "ex-y57qxsyn": {
+    "prompt": "Com dezesseis pedidos em andamento, o p99 do serviço de afastamento é 351,8 ms, contra 10,8 ms com um de cada vez. Que mudança encurta essa espera, e quanto ela custa?",
+    "hint": "Machine Learning e MLOps, aula 9.",
+    "choices": [
+      {
+        "text": "Mais processos workers, cada um com o seu modelo, pagos em memória.",
+        "why": "Certo."
+      },
+      {
+        "text": "Mais threads dentro do único processo, o que não custa nada a mais de memória.",
+        "why": "O Python roda uma thread de código Python por vez, então as previsões continuam esperando a vez, e alternar também custa."
+      },
+      {
+        "text": "Carregar o modelo uma vez na inicialização em vez de a cada pedido.",
+        "why": "O `serve.py` já faz isso. A espera é a fila atrás das outras previsões."
+      },
+      {
+        "text": "Subir o objetivo para 400 ms, para que o número passe.",
+        "why": "Isso muda a promessa e deixa a espera onde estava."
+      }
+    ]
+  },
+  "ex-e9ezz7x3": {
+    "prompt": "O vigia passou em todas as noites de março a junho. Um colega propõe encurtar a referência dele dos 28 dias antes de cada noite para os 7 dias antes. O que isso faria com a subida lenta do `online_share`?",
+    "hint": "Machine Learning e MLOps, aula 10.",
+    "choices": [
+      {
+        "text": "Pegaria mais cedo, porque uma janela mais curta reage mais rápido ao que muda.",
+        "why": "Reagir mais rápido pega uma quebra repentina. Uma mudança lenta é de poucos por cento por semana, qualquer que seja a janela."
+      },
+      {
+        "text": "Esconderia ainda melhor, já que os membros da semana passada se moveram quase tanto quanto os de hoje.",
+        "why": "Certo."
+      },
+      {
+        "text": "Pegaria a partir de meados de março, a semana em que o frete das compras online ficou grátis.",
+        "why": "Cada semana então se moveu só um pouco em relação à anterior, e é isso que uma referência que se move não consegue ver."
+      },
+      {
+        "text": "Nada, porque o vigia compara as notas e não as entradas.",
+        "why": "Ele compara também a mediana de cada entrada numérica. O problema é com o que ele as compara."
+      }
+    ]
+  },
+  "ex-04k793cg": {
+    "prompt": "Quais destas mudanças só poderiam ser encontradas nos desfechos, noventa dias depois, e não nas entradas? Marque todas as que se aplicam.",
+    "hint": "Machine Learning e MLOps, aula 10.",
+    "choices": [
+      {
+        "text": "O frete grátis leva membros das lojas para o site.",
+        "why": "Isso muda o `online_share`, uma entrada, e o PSI dele chegou a 0,602."
+      },
+      {
+        "text": "Uma carga multiplica todo `spend_180d` por cem.",
+        "why": "A mediana da entrada salta cem vezes naquela noite, e o vigia deu alarme."
+      },
+      {
+        "text": "Um aumento de preço faz membros com as mesmas visitas e o mesmo gasto voltarem menos do que antes.",
+        "why": "Certo."
+      },
+      {
+        "text": "Um canal novo, `app`, aparece entre os membros.",
+        "why": "Um valor que os dados de treino nunca tiveram é uma entrada; o `channel` mediu 0,420 já na primeira noite."
+      },
+      {
+        "text": "Uma assinatura de livros concorrente atrai membros jovens cujos históricos continuam iguais ao que sempre foram.",
+        "why": "Certo."
+      }
+    ]
+  }
+}

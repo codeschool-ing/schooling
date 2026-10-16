@@ -1,0 +1,2848 @@
+[
+  {
+    "id": "ex-2rndb5fg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program like lesson 1's `visitors.py` counts the different visitors of each book over five years of clicks, and dies with `MemoryError` on a machine that cannot be made larger. Which change lets the same machine finish with the right counts?",
+    "hint": "Big Data and Distributed Processing, lesson 1.",
+    "choices": [
+      {
+        "text": "Hash each visitor into one of sixteen files, count each file alone, and add the counts",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Split the input by day, count each day's different visitors, and add the daily counts",
+        "correct": false,
+        "why": "A visitor who came on two days is counted on both. Only a split by the visitor puts each visitor in exactly one part, which is what lets the counts add up."
+      },
+      {
+        "text": "Keep the visitors in a more compact structure than a set of strings",
+        "correct": false,
+        "why": "A smaller structure moves the wall and does not remove it: five years of visitors still have to be held at once."
+      },
+      {
+        "text": "Read the daily files one at a time, closing each before opening the next",
+        "correct": false,
+        "why": "The files are not what fills memory. The sets keep growing across every file, and they are only counted at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-3601kjxy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Each task of a Spark job inserts its slice of purchases into a PostgreSQL table, giving every insert a new row id. An executor dies in the middle of a task, and the job still finishes. What does the table hold, and what would have made it right?",
+    "hint": "Big Data and Distributed Processing, lesson 2; Streaming and Event Processing, lesson 8.",
+    "choices": [
+      {
+        "text": "Some purchases twice; inserting each keyed by its sale id with `ON CONFLICT DO NOTHING`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each purchase once, because Spark undoes a lost task's writes before it reruns the task",
+        "correct": false,
+        "why": "Spark knows nothing of a side effect. The rerun writes again, and the rows of the first attempt stay where they are."
+      },
+      {
+        "text": "Some purchases missing, because a task lost with its executor is not run again",
+        "correct": false,
+        "why": "The driver sends a lost task to another executor; lesson 2 watched it happen and got the right answer."
+      },
+      {
+        "text": "Some purchases twice; `spark.task.maxFailures` set to 1, so that no task ever runs a second time",
+        "correct": false,
+        "why": "Then one lost executor fails the whole job, and the rows the dead attempt wrote stay in the table anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-9fhtfhgp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The nightly Spark load runs in client mode on the standalone cluster. Last night its driver was killed with signal 9 halfway through, and nobody was paged. Which check would have fired?",
+    "hint": "Big Data and Distributed Processing, lesson 2; Observability and Operations, lesson 5.",
+    "choices": [
+      {
+        "text": "An alert on any application the master's `/json/` lists with a state other than `FINISHED`",
+        "correct": false,
+        "why": "The master listed the killed application as `FINISHED`, its word for anything that is no longer running."
+      },
+      {
+        "text": "An alert on the age of a timestamp the job pushes to a Pushgateway once its output is written",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Prometheus scraping the driver's port 4040 for failed tasks every fifteen seconds",
+        "correct": false,
+        "why": "The page died with the driver, and a scrape of a process that is gone finds nothing to ask, not a failure."
+      },
+      {
+        "text": "An alert on `ERROR` lines in the driver's own output",
+        "correct": false,
+        "why": "The process that would have logged the error is the one that died. The only line was the shell's `Killed`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjcrc4pc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A lake lands one file a minute for each of 20 streams, every file far under 128 MB, and keeps them for a year of 365 days. Counting files and blocks at about 150 bytes each of the namenode's memory, as lesson 3's table does, how many GB (10⁹ bytes) does that year's metadata take? Round to one decimal.",
+    "hint": "Big Data and Distributed Processing, lesson 3.",
+    "value": 3.2,
+    "tolerance": 0.05,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-532vs1ec",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Order Spark's locality levels for a task, from the one that reads least over the network to the one that reads most.",
+    "hint": "Big Data and Distributed Processing, lesson 3.",
+    "items": [
+      "`PROCESS_LOCAL`",
+      "`NODE_LOCAL`",
+      "`RACK_LOCAL`",
+      "`ANY`"
+    ],
+    "trap": "`NODE_LOCAL` is what lesson 3's tasks reached, and it still comes second: a partition already in the executor's memory needs no disk at all."
+  },
+  {
+    "id": "ex-83skgbjz",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A mapper emits one pair per purchase: the book as the key and the price in cents as the value. For which reducers could Hadoop run the same program as the combiner and still print the right answer? Choose all that apply.",
+    "hint": "Big Data and Distributed Processing, lesson 4.",
+    "choices": [
+      {
+        "text": "The total revenue of each book",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The highest price paid for each book",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The average price paid for each book",
+        "correct": false,
+        "why": "An average of partial averages is wrong when the pieces differ in size. Emit the sum and the count, combine those, and divide at the end."
+      },
+      {
+        "text": "How many different prices each book was sold at",
+        "correct": false,
+        "why": "Two map tasks can see the same price, so their partial counts do not add up; only the list of prices does, and it is no smaller."
+      },
+      {
+        "text": "The lowest price paid for each book",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7y66kpj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In `lazy.py` the second `views.count()` took 17.8 s, against 26.3 s for the first. What made it faster?",
+    "hint": "Big Data and Distributed Processing, lesson 5.",
+    "choices": [
+      {
+        "text": "Spark kept the filtered lines of `views` in the executors' memory once the first count had computed them",
+        "correct": false,
+        "why": "Nothing was kept. `views` is a recipe, and the second count read every file again."
+      },
+      {
+        "text": "The files sat in the operating system's cache, and the Python workers were already up",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The second count followed the lineage and skipped the `filter`",
+        "correct": false,
+        "why": "The lineage is the recipe itself; following it again means running the filter on every line again."
+      },
+      {
+        "text": "Adaptive execution merged the second job's partitions",
+        "correct": false,
+        "why": "This is an RDD count with no shuffle, so there was nothing to coalesce."
+      }
+    ]
+  },
+  {
+    "id": "ex-fvmtq7fs",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Read in `explain(\"formatted\")`, a condition on `day` that the directory names answer before any file is opened appears on the scan under `___`.",
+    "hint": "Big Data and Distributed Processing, lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "PartitionFilters",
+          "PartitionFilters:"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ngqr7jkh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Spark job builds training features as of 31 August 2025 from the silver clicks, which are partitioned by `day`. The features may use only what was known on that day. Which filter keeps to that and lets Spark skip every directory after it?",
+    "hint": "Big Data and Distributed Processing, lesson 6; Machine Learning and MLOps, lesson 6.",
+    "choices": [
+      {
+        "text": "`F.col(\"ts\") < \"2025-09-01\"` alone, which says the same thing to the second",
+        "correct": false,
+        "why": "It keeps to the cutoff, but the planner does not know that a cut on `ts` implies one on `day`, so it opens every directory."
+      },
+      {
+        "text": "`F.col(\"day\") <= \"2025-08-31\"`, with any finer cut on `ts` beside it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A Python UDF that compares each row's `day` with the cutoff",
+        "correct": false,
+        "why": "The planner cannot see inside it, so it prunes nothing and calls the function on every row of every day."
+      },
+      {
+        "text": "No filter on the clicks, and the visitors table joined as it stands tonight",
+        "correct": false,
+        "why": "That trains on values from after the cutoff: the leak a point-in-time join exists to stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-ajf2sj33",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "By lesson 7's arithmetic, Spark counts each file as its size plus `spark.sql.files.openCostInBytes`, 4 MB, and packs the total into partitions of 128 MB. About how many partitions does a read of 1,000 Parquet files of 1 MB each make?",
+    "hint": "Big Data and Distributed Processing, lesson 7.",
+    "value": 39,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-xnp6qxwf",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A job fails mid-stage with `No space left on device` while HDFS has terabytes free. The shuffle files went where `___` points, and its default, `/tmp`, is often a machine's smallest disk.",
+    "hint": "Big Data and Distributed Processing, lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "spark.local.dir"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3sqm8t0v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The morning report is due at eight. Of these alerts on its Spark job, which one should page somebody at night?",
+    "hint": "Big Data and Distributed Processing, lesson 7; Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "No successful run by seven, an hour before it is due",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A stage spilled more than 500 MiB to the executors' disks",
+        "correct": false,
+        "why": "A spill is a cost, not a failure: lesson 7's spilling sort finished first. It is a ticket at most."
+      },
+      {
+        "text": "An executor was lost during the night's run",
+        "correct": false,
+        "why": "The driver reran its tasks elsewhere and the answer was right. A cause that may hurt nobody is a ticket."
+      },
+      {
+        "text": "The nightly YARN queue has sat at 95% of its share for an hour",
+        "correct": false,
+        "why": "A queue that fills its share is doing its job, and it says nothing about whether the report will be late."
+      }
+    ]
+  },
+  {
+    "id": "ex-2d1sw3qd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A job writes a year of clicks with `partitionBy(\"day\")` straight after `repartition(50)`, and leaves fifty files in every day's directory. Which change gives each day one file?",
+    "hint": "Big Data and Distributed Processing, lesson 8.",
+    "choices": [
+      {
+        "text": "`spark.sql.shuffle.partitions` raised to 365",
+        "correct": false,
+        "why": "`repartition(50)` names its own count, so the setting changes nothing here; and more tasks holding every day would only mean more files."
+      },
+      {
+        "text": "`spark.sql.files.maxRecordsPerFile` set to a day's rows",
+        "correct": false,
+        "why": "It caps the rows in a file, so it can only split a task's file; it never gathers a day's rows out of fifty tasks."
+      },
+      {
+        "text": "`repartition(365)`, so that there is one task for each day",
+        "correct": false,
+        "why": "Without a column the rows are dealt out in turn, not by day, so each of the 365 tasks holds rows of every day."
+      },
+      {
+        "text": "`repartition(\"day\")` before the write",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb7wwbz5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Structured Streaming query keeps a `checkpointLocation`, and lesson 9's loop calls `rank.checkpoint()`. What does the streaming checkpoint hold that the loop's does not?",
+    "hint": "Big Data and Distributed Processing, lesson 9; Streaming and Event Processing, lesson 12.",
+    "choices": [
+      {
+        "text": "A copy of the rows as they stood, written to files so that the plan can start again from them",
+        "correct": false,
+        "why": "That is the loop's checkpoint: a DataFrame written out and its lineage cut."
+      },
+      {
+        "text": "Nothing different: both cut a lineage that has grown too long",
+        "correct": false,
+        "why": "The streaming one is a record of progress and state; a restart reads it to rerun an unfinished batch and to bring back the open windows."
+      },
+      {
+        "text": "Which offsets each batch read, whether its output reached the sink, and the open windows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The same kind of data, kept on the driver's local disk",
+        "correct": false,
+        "why": "Both belong on storage that outlives the machine. The streaming checkpoint is the only copy of the query's position and state."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc8a894b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In PostgreSQL the analyst role was granted six columns of `sales.customers`, and `email` is not one of them. A nightly Spark job copies the whole table to Parquet in the lake, and an analyst runs `spark.read.parquet(path).select(\"email\")`. What happens?",
+    "hint": "Big Data and Distributed Processing, lesson 10; Data Security, Governance and Privacy, lesson 2.",
+    "choices": [
+      {
+        "text": "Refused: the Parquet footer carries the table's column privileges with its schema",
+        "correct": false,
+        "why": "The footer holds the schema, the row groups, and each column chunk's encodings and smallest and largest value. Nothing in it says who may read."
+      },
+      {
+        "text": "Nulls: column pruning leaves out what a role was not granted",
+        "correct": false,
+        "why": "Pruning drops the columns a query does not use, and this query uses `email`."
+      },
+      {
+        "text": "The e-mails come back: the grant is checked by PostgreSQL, not by a file",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Refused: the copy was made with the analyst's grants, so `email` never reached the lake",
+        "correct": false,
+        "why": "The job copied the whole table as a role that may read all of it. What the analyst may see was never part of the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-ea6m5v97",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each second run to what a reader sees after it.",
+    "hint": "Big Data and Distributed Processing, lesson 11; Streaming and Event Processing, lesson 12.",
+    "pairs": [
+      {
+        "left": "A Delta append run again with the same `txnAppId` and `txnVersion`",
+        "right": "One copy: the log already holds the pair, so nothing is written"
+      },
+      {
+        "left": "A Structured Streaming batch replayed into a file sink",
+        "right": "One copy: readers go by `_spark_metadata`, an entry per finished batch"
+      },
+      {
+        "left": "The same batch replayed into a Kafka sink, each record a window's whole count",
+        "right": "Two records for some keys, harmless to a reader keeping the last value per key"
+      },
+      {
+        "left": "A plain Parquet `mode(\"append\")` run twice",
+        "right": "Every row doubled, and nothing in the directory says so"
+      }
+    ],
+    "right_distractors": [
+      "One copy: the checkpoint's `commits` log deletes the first run's files"
+    ]
+  },
+  {
+    "id": "ex-dhyc666c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Visitor `v0936542` asks to be forgotten. The team runs `DELETE FROM` on the Delta table of clicks, the commit succeeds, and they reply that the data is gone. What is still true?",
+    "hint": "Big Data and Distributed Processing, lesson 11; Data Security, Governance and Privacy, lesson 7.",
+    "choices": [
+      {
+        "text": "Nothing: the delete rewrote every file that held the rows, so no copy of them is left",
+        "correct": false,
+        "why": "The rewrite added new files and marked the old ones removed; they stay on disk, and time travel reads them. Backups and extracts are further copies a `DELETE` never reaches."
+      },
+      {
+        "text": "`count(*)` still includes the rows, since it is answered from the row counts in the log",
+        "correct": false,
+        "why": "The delete's commit removes the old files from the table and adds the new ones with their own counts, so the count drops at once."
+      },
+      {
+        "text": "`VERSION AS OF` an earlier version returns the rows, until `VACUUM` deletes the old files past their retention",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The rows are out of the files but still written in the log's `remove` actions",
+        "correct": false,
+        "why": "A `remove` names a file by its path. It carries no rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cdfhfm0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The nightly scoring job appends to a Delta table with `txnAppId` set to `lapse-scores` and `txnVersion` to the night, `20260228`. A bug in the features is fixed, and the job is run again for 28 February with the same options. What does the table hold for that night?",
+    "hint": "Big Data and Distributed Processing, lesson 11; Machine Learning and MLOps, lesson 8.",
+    "choices": [
+      {
+        "text": "The corrected scores, in place of the first run's",
+        "correct": false,
+        "why": "The pair marks a write as already done, not a night to replace. The second write is skipped, and replacing the night means deleting its rows first."
+      },
+      {
+        "text": "Both runs' scores, so every member twice",
+        "correct": false,
+        "why": "That is a plain append run twice; the pair in the log is exactly what stops it here."
+      },
+      {
+        "text": "The first run's scores, untouched",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing at all: a repeated `txnVersion` fails the write and rolls back the first one",
+        "correct": false,
+        "why": "The second attempt is skipped without an error, and a commit already in the log is not undone by a later write."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0z2ngjj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Structured Streaming query with a five-second `processingTime` trigger appends to a Delta table, and each batch's tasks write their own files. A month on, one day's query opens thousands of tiny files. Which fix leaves the stream as it is and gives readers large files?",
+    "hint": "Big Data and Distributed Processing, lesson 11; Streaming and Event Processing, lesson 12.",
+    "choices": [
+      {
+        "text": "`coalesce(1)` on every batch, so each writes a single file",
+        "correct": false,
+        "why": "One file every five seconds is still 17,280 files a day."
+      },
+      {
+        "text": "Running `OPTIMIZE` on the table on a schedule, apart from the stream",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A larger `spark.sql.files.maxPartitionBytes` for the readers",
+        "correct": false,
+        "why": "Packing more files into a task still opens every file and reads every footer; the files stay as small as they were."
+      },
+      {
+        "text": "Writing plain Parquet instead, whose `_spark_metadata` merges each batch's files",
+        "correct": false,
+        "why": "`_spark_metadata` lists the files of each finished batch. It merges nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-46bvt91z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On YARN, an application asks for executors of 512 MB and leaves the overhead at its default. What does each executor's container count against the queue?",
+    "hint": "Big Data and Distributed Processing, lesson 12.",
+    "choices": [
+      {
+        "text": "About 896 MB: the heap, and at least 384 MB for what lies outside it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "512 MB, the heap the application asked for",
+        "correct": false,
+        "why": "A container is the heap plus an overhead for thread stacks, network buffers and native libraries."
+      },
+      {
+        "text": "About 563 MB: the heap, plus a tenth of the executor's memory on top",
+        "correct": false,
+        "why": "The overhead is a tenth of the memory or 384 MB, whichever is larger, and a tenth of 512 is far below the floor."
+      },
+      {
+        "text": "Less than 512 MB, because Spark reserves 300 MB of every heap for its own objects",
+        "correct": false,
+        "why": "The reserve is carved out of the heap. YARN counts the whole heap, and the overhead beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-eb0w1n9g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does a Spark job on Kubernetes read and write an object store, rather than keep its data on the nodes?",
+    "hint": "Big Data and Distributed Processing, lesson 13.",
+    "choices": [
+      {
+        "text": "Reading across the network is faster than reading a local disk",
+        "correct": false,
+        "why": "It is slower: lesson 3's locality is lost, and lessons 6 and 10 are how that is paid back."
+      },
+      {
+        "text": "A pod's disk lives and dies with the pod",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Executors on Kubernetes write no shuffle files, so there is nothing local to keep",
+        "correct": false,
+        "why": "They do write them, which is why dynamic allocation there leans on shuffle tracking or a remote shuffle service."
+      },
+      {
+        "text": "HDFS on the nodes would overload its namenode with every pod that starts",
+        "correct": false,
+        "why": "One namenode serves clusters of thousands of machines. The reason is that nothing on a node outlives its pod."
+      }
+    ]
+  },
+  {
+    "id": "ex-j02bbqm0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "At lesson 14's assumed US$0.05 an hour for an executor of a quarter of a machine, a team of 12 analysts each keep a notebook holding 8 executors through a 9-hour working day, and compute for 3 of those hours. What do the idle executor-hours cost the team in one working day, in dollars?",
+    "hint": "Big Data and Distributed Processing, lesson 14.",
+    "value": 28.8,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jf42mfqj",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Reading a finished job with `history.py`, which of these show up as a stage whose task time is large for what it moved, with nothing in the spill column? Choose all that apply.",
+    "hint": "Big Data and Distributed Processing, lesson 14.",
+    "choices": [
+      {
+        "text": "A hot key in a sort-merge join whose task outgrows its execution memory",
+        "correct": false,
+        "why": "That task spills, and the spill column is the one that says so."
+      },
+      {
+        "text": "A Python UDF applied to every purchase",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Parsing a year of gzipped CSV text",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A grouping by visitor that sends 35 GB across the network",
+        "correct": false,
+        "why": "That is the shuffle column: the time goes on moving bytes, and the table shows them."
+      }
+    ]
+  },
+  {
+    "id": "ex-m51gz7fa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`python -m pytest -q --durations=4` on `shipquote` lists two teardowns of 0.50 s each at the top, while the acceptance test's six quotes take 0.03 s together. What does that say about the top of the pyramid?",
+    "hint": "Automated Testing and CI/CD, lesson 1.",
+    "choices": [
+      {
+        "text": "Its cost is in setting up and tearing down a world for the tests, and it multiplies with every module up there.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The requests are what is slow, and a quicker HTTP server would fix it.",
+        "correct": false,
+        "why": "The six requests cost 0.03 s together; the half seconds belong to shutting the server down."
+      },
+      {
+        "text": "Teardown time is noise pytest adds to every test; only the `call` entries are worth reading.",
+        "correct": false,
+        "why": "The teardowns are the real cost: `serve_forever` checks every half second whether it should stop, once per module."
+      },
+      {
+        "text": "The integration layer's SQLite is the bottleneck of the whole suite.",
+        "correct": false,
+        "why": "The three integration tests took 0.17 s; SQLite lives in the test's own process and costs almost nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsn090tk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Spark job sends each customer a confirmation e-mail from inside a task. Its unit test hands the task a spy for the mailer, asserts exactly one call per order, and passes. In the cluster, some customers get two e-mails on the night an executor is killed. Why could the test not see it?",
+    "hint": "Automated Testing and CI/CD, lesson 2; Big Data and Distributed Processing, lesson 2.",
+    "choices": [
+      {
+        "text": "Spark reran the lost task from its input, so the e-mail inside it went out again; the test ran each task once.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A spy only records calls; a mock built with `create_autospec` would have checked them and failed.",
+        "correct": false,
+        "why": "The test did read the spy's record and asserted one call. The problem is not who checks, it is that the cluster ran the code twice."
+      },
+      {
+        "text": "The spy replaced the mailer, so the test never met the real SMTP server, which resends a message it did not hear back about.",
+        "correct": false,
+        "why": "Nothing in the story points at the mail server. A task that sends as a side effect sends again when Spark retries it."
+      },
+      {
+        "text": "Spark restarts the whole job when an executor dies, so every order was processed twice.",
+        "correct": false,
+        "why": "Only the tasks running on that executor are lost and rerun; finished tasks had already sent their results. That is why only some customers got two."
+      }
+    ]
+  },
+  {
+    "id": "ex-d4hcw565",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "For a staging database, a team copies production's orders and replaces `customer_id` with `md5(customer_id::text)`, so the orders still join to each other. The customer ids run from 1 to 6,012. What is wrong with this test data?",
+    "hint": "Automated Testing and CI/CD, lesson 3; Data Security, Governance and Privacy, lesson 5.",
+    "choices": [
+      {
+        "text": "Hashing 1 to 6,012 returns every customer in a second; test data should be generated, not copied.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: once hashed, the copy is anonymous and the LGPD no longer reaches it.",
+        "correct": false,
+        "why": "An unkeyed hash of a small, known range is the value written differently. And even a proper pseudonym is still personal data."
+      },
+      {
+        "text": "Keeping the joins is the mistake; a fixture should not relate one table to another.",
+        "correct": false,
+        "why": "Relationships surviving is what anonymising consistently is for. The flaw is that the people survive too."
+      },
+      {
+        "text": "`md5` is too slow for a table this size; an HMAC would make the copy anonymous and safe to commit as a fixture.",
+        "correct": false,
+        "why": "A keyed HMAC is a real pseudonym, and pseudonymised data is still personal data: it does not belong in a repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2xe4y8c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A pull request adds a surcharge for parcels over 30 kg to `freight`: an `if` and the `return` under it, with no new test. The total goes from 81% to 80%, and `coverage report -m` names only the `return` as missing. What should the reviewer conclude?",
+    "hint": "Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "None of the new behaviour was tested; the price of a heavy parcel could be anything.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Half the change is tested, since the `if` is covered.",
+        "correct": false,
+        "why": "The `if` ran because every quote passes through it, and no quote went over 30 kg. A line that ran is not a line that was checked."
+      },
+      {
+        "text": "Nothing about this change: a one-point drop in the total is what any change on a large project looks like.",
+        "correct": false,
+        "why": "That is why the total is the wrong thing to read. The changed file's missing lines speak about this change."
+      },
+      {
+        "text": "The `return` deserves `# pragma: no cover`, because parcels that heavy are rare and the line would only add noise to the report.",
+        "correct": false,
+        "why": "An exclusion is for code not worth testing. A price is worth testing, and hiding the line hides the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-g8gfnqf9",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these earn an exclusion from the coverage count? Choose all that apply.",
+    "hint": "Automated Testing and CI/CD, lesson 4.",
+    "choices": [
+      {
+        "text": "The handling of a carrier error that no test has reached yet.",
+        "correct": false,
+        "why": "Untested is not the same as not worth testing. That missing line is a test to write."
+      },
+      {
+        "text": "`main()`, which reads `SHIPQUOTE_PORT` and builds the server.",
+        "correct": false,
+        "why": "Both can be wrong, a typo in the variable or a server on the wrong address. Excluding it hides it from the one report that shows nothing checks it yet."
+      },
+      {
+        "text": "An `assert False` marking a branch that cannot happen.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Code under `if TYPE_CHECKING:`, read by type checkers only.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The `if __name__ == \"__main__\":` guard at the foot of `app.py`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-556nxet0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "This repository's CI runs on `pull_request` to `main` and again on `push` to `main`. Why check the code a second time, after it merges?",
+    "hint": "Automated Testing and CI/CD, lesson 5.",
+    "choices": [
+      {
+        "text": "The pull request run uses a cached checkout, and only the push run starts from what was committed.",
+        "correct": false,
+        "why": "Every run starts from a clean checkout. A cache holds dependencies, never the code under test."
+      },
+      {
+        "text": "Two changes that each passed on their own can conflict once combined.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A push to `main` is what builds and publishes the release.",
+        "correct": false,
+        "why": "A release is started by a tag starting with `v`, which then calls the same checks."
+      },
+      {
+        "text": "A pull request run cannot be a required check.",
+        "correct": false,
+        "why": "Required checks are exactly the ones a pull request must pass before it merges."
+      }
+    ]
+  },
+  {
+    "id": "ex-h51tshbz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every matrix cell uploads its `.coverage.*` file as an artifact, and a coverage job downloads them all and runs `coverage combine`. The upload step has no `include-hidden-files: true`. What happens?",
+    "hint": "Automated Testing and CI/CD, lesson 6.",
+    "choices": [
+      {
+        "text": "The dot-files are left out, so `coverage combine` has nothing and every job stays green.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The upload fails, naming the hidden files it skipped, and the whole run goes red at that step.",
+        "correct": false,
+        "why": "Nothing fails. The upload action leaves hidden files out quietly unless told otherwise."
+      },
+      {
+        "text": "The coverage job reads the files from the cells' machines instead, since they ran in the same workflow.",
+        "correct": false,
+        "why": "Jobs do not share files: each machine is discarded at the end, and artifacts are the only way across."
+      },
+      {
+        "text": "`merge-multiple` keeps one file of the six, so only one cell is counted.",
+        "correct": false,
+        "why": "`merge-multiple` puts the artifacts' files into one directory; the files here never reached an artifact at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqb2yvzb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "Put the stages of a delivery pipeline in the order every team keeps, whatever else differs.",
+    "hint": "Automated Testing and CI/CD, lesson 7.",
+    "items": [
+      "Build the artifact from the commit, once",
+      "Test it, in the matrix",
+      "Deploy it to staging and smoke-test it there",
+      "Pass the gate",
+      "Deploy the same artifact to production and smoke-test it"
+    ],
+    "trap": "Testing before building reads naturally, but what is tested has to be the bytes that ship; and the gate comes after staging because it decides on an artifact already proved deployable."
+  },
+  {
+    "id": "ex-s8frtc42",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team applies lesson 7's expand then contract to an Avro event rather than a table, replacing the field `cents` with `amount`: producers write both for a while, consumers move to `amount`, and `cents` is dropped last. Which step of the table version has no counterpart on the topic?",
+    "hint": "Automated Testing and CI/CD, lesson 7; Streaming and Event Processing, lesson 6.",
+    "choices": [
+      {
+        "text": "The expand, because the registry refuses any new field under `BACKWARD`.",
+        "correct": false,
+        "why": "A new field with a default passes `BACKWARD`; it is a field with no default that the registry refuses."
+      },
+      {
+        "text": "The contract, since a field can never leave a subject once registered.",
+        "correct": false,
+        "why": "Removing a field is allowed under `BACKWARD`, and a field that had a default may go under `FORWARD`."
+      },
+      {
+        "text": "None of them: accepting a version rewrites the stored messages in it.",
+        "correct": false,
+        "why": "The registry checks schemas when a version is offered; the bytes on the topic stay as they were written."
+      },
+      {
+        "text": "The backfill: a topic is not migrated, and messages written before `amount` existed keep their schema for as long as retention keeps them.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-wmyfdwfa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Your service's `/health` returns `{\"status\": \"ok\"}` whenever the process answers HTTP, like the storefront's in observability lesson 14. After a deploy its database is unreachable and every request on the main path fails, yet a smoke test shaped like `ops/smoke.sh` passes. What does the smoke test lack?",
+    "hint": "Automated Testing and CI/CD, lesson 7; Observability and Operations, lesson 14.",
+    "choices": [
+      {
+        "text": "A longer `--max-time`, so the health check waits for the database to come up.",
+        "correct": false,
+        "why": "The check answered at once and said `ok`. Waiting longer for the same question gets the same answer."
+      },
+      {
+        "text": "Nothing: a smoke test only asks whether the program is up, and the database is the integration tests' business.",
+        "correct": false,
+        "why": "Integration tests never meet the deployed configuration. The smoke test is the one check that runs against it."
+      },
+      {
+        "text": "A comparison of `/version` against the artifact's SHA-256 rather than its version number.",
+        "correct": false,
+        "why": "The version was right; the release was the one meant. What nobody asked was whether it can do its job."
+      },
+      {
+        "text": "One real read through the main path, such as a quote for a known CEP.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-grkb1f4z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A staging service was deployed with production's database address and password, copied from the wrong file, and wrote test orders into production. Which control would have stopped it?",
+    "hint": "Automated Testing and CI/CD, lesson 8; Data Security, Governance and Privacy, lesson 1.",
+    "choices": [
+      {
+        "text": "Revoking `CONNECT` on production's database from `PUBLIC`, so that no role connects unless named.",
+        "correct": false,
+        "why": "The service logged in as the application's own role, which is granted `CONNECT` by name. Turning the default around does not stop a named role."
+      },
+      {
+        "text": "A smoke test in staging that checks `/version` right after each deploy finishes.",
+        "correct": false,
+        "why": "The version was the one meant, so the check passes. A smoke test asks whether the program answers, not where its data lives."
+      },
+      {
+        "text": "Masking the customers in staging's own copy, so nothing personal sits there.",
+        "correct": false,
+        "why": "Masking protects the copy staging holds. Here staging was writing to production, and no copy was involved."
+      },
+      {
+        "text": "Production's `pg_hba.conf` admitting the app only from production.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3y4egp8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "For a leaked pipeline token, lesson 9 says revoke or rotate first, accepting a short outage. The same week an OpenBao transit key is suspected exposed, and somebody follows that order: rotate it, then set `min_decryption_version=2` at once, planning to rewrap later. What does that cost here?",
+    "hint": "Automated Testing and CI/CD, lesson 9; Data Security, Governance and Privacy, lesson 4.",
+    "choices": [
+      {
+        "text": "A short outage, until every service has the new key version in its configuration.",
+        "correct": false,
+        "why": "Services never hold the key, and new encryptions already use version 2. The damage is to what was encrypted before."
+      },
+      {
+        "text": "Nothing, since old ciphertext keeps decrypting after a rotation.",
+        "correct": false,
+        "why": "That is true of a rotation alone. Raising the minimum is what stops version 1 from decrypting."
+      },
+      {
+        "text": "Every `v1` ciphertext is refused as too old: data lost, not paused.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The rewrap, done afterwards, shows the plaintext to the operator who runs it.",
+        "correct": false,
+        "why": "A rewrap keeps the plaintext inside OpenBao for the length of the call, and after the minimum is raised it cannot read `v1` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p8b0na1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A pipeline deploys a website that encrypts CPFs through OpenBao. Which of these follow least privilege? Choose all that apply.",
+    "hint": "Automated Testing and CI/CD, lesson 9; Data Security, Governance and Privacy, lesson 4.",
+    "choices": [
+      {
+        "text": "`contents: write` at the top of the workflow, so the one job that creates the release has it.",
+        "correct": false,
+        "why": "A permission set for the workflow reaches every job, including a test job running a compromised dependency. It belongs on the job that needs it."
+      },
+      {
+        "text": "A token for the website that may also read `transit/keys/ipe-cpf`, to check the key's version before it encrypts.",
+        "correct": false,
+        "why": "Using a key does not need its configuration; the ciphertext already says which version made it."
+      },
+      {
+        "text": "A policy giving the website `update` on `transit/encrypt/ipe-cpf` and nothing on `transit/decrypt/ipe-cpf`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`permissions: contents: read` at the top of the workflow, with `id-token: write` added in the deploy job alone.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-26kzph3a",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`ops/canary.py` refuses to judge a side that has answered fewer than 50 requests. A service takes ten requests a minute, and its canary gets 1% of them. How many minutes pass before the canary can be judged?",
+    "hint": "Automated Testing and CI/CD, lesson 10.",
+    "value": 500,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-1j5vwmv9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team ships version 2 of a lapse model behind a web service with a canary rule like `ops/canary.py`: stop when the canary's error rate is more than a point above the baseline's. Version 2 answers every request with a 200, and gives most of its members a probability over 0.2. What does the rule see?",
+    "hint": "Automated Testing and CI/CD, lesson 10; Machine Learning and MLOps, lesson 8.",
+    "choices": [
+      {
+        "text": "A breach: probabilities that high are counted as errors.",
+        "correct": false,
+        "why": "An error here is a 5xx or no answer. A 200 carrying a strange number passes every error count."
+      },
+      {
+        "text": "Nothing yet: it should wait about 90 days for the labels, then compare which version was right.",
+        "correct": false,
+        "why": "Nobody has to wait for labels. A version whose outputs look nothing like the stable one's is stopped on what it says."
+      },
+      {
+        "text": "Nothing, because it splits per request; splitting by member would make the error rate show the bug.",
+        "correct": false,
+        "why": "Splitting by member keeps each person on one side. It changes who sees which version, not what an error count can measure."
+      },
+      {
+        "text": "Nothing; the canary must compare what the two versions say, such as the mean probability.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsfx8b7w",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A flag that turns off something expensive or fragile under pressure, such as the carrier call, and may stay in the code for years, is an operational flag, also called a kill ___.",
+    "hint": "Automated Testing and CI/CD, lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "switch",
+          "switches"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fbw3jxvv",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A column has to go from `cents` to `price_cents`, and a rollback must stay safe at every step. Put the releases in order.",
+    "hint": "Automated Testing and CI/CD, lesson 11.",
+    "items": [
+      "Add `price_cents` beside `cents`",
+      "Write both columns, still reading `cents`",
+      "Copy the old rows' values into `price_cents`",
+      "Read `price_cents`",
+      "Stop writing `cents`, and drop it in a later release"
+    ],
+    "trap": "Copying the old rows before the code writes both leaves a gap: whatever is written in between has no `price_cents`. And the drop is last because it is the one step the release before cannot survive."
+  },
+  {
+    "id": "ex-p94vgvny",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A release goes to a canary on 5% of checkouts and fails one request in twenty there; the other 95% are fine. The checkout objective is 99.5%. What burn rate does that produce, and what should stop the release?",
+    "hint": "Automated Testing and CI/CD, lesson 11; Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "About 10, high enough to page the on-call, who then stops the release.",
+        "correct": false,
+        "why": "One in twenty is the canary's rate. Over all checkouts it is 5% of 5%, 0.25%, against an allowed 0.5%."
+      },
+      {
+        "text": "About 0.5, too low to page; the canary's comparison with the baseline must stop it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "About 0.5, so it is safe to promote, since the month's budget is not at risk.",
+        "correct": false,
+        "why": "The budget is safe at 5%. At 100% the same release fails 5% of checkouts, a burn rate of 10."
+      },
+      {
+        "text": "None can be computed yet: the canary has to answer 50 requests before any rate means something.",
+        "correct": false,
+        "why": "Fifty is the canary's own evidence rule. A burn rate is undefined only with no traffic at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5w6ks1t",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`ops/canary.py` stops when the canary's error rate is more than `MAX_GAP = 1.0` point above the baseline's. For a single error never to cross that gap on its own, `MIN_REQUESTS` has to be at least ___ answers.",
+    "hint": "Automated Testing and CI/CD, lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "100",
+          "one hundred",
+          "a hundred"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-34d2beaj",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each piece of the model pipeline to the release idea from this course that it plays.",
+    "hint": "Automated Testing and CI/CD, lesson 7; Machine Learning and MLOps, lesson 7.",
+    "pairs": [
+      {
+        "left": "`models:/lapse@champion`, a name `set_registered_model_alias` can point at any version",
+        "right": "A tag such as `shipquote:1.4.0`, which anybody with write access can move"
+      },
+      {
+        "left": "The MD5 that `dvc.lock` records for `models/lapse.joblib`",
+        "right": "The SHA-256 written beside the tarball, naming those exact bytes"
+      },
+      {
+        "left": "`log_run.py` refusing to run while `git status --porcelain` prints anything",
+        "right": "`git archive` writing what is committed and nothing else"
+      }
+    ],
+    "right_distractors": [
+      "A smoke test asking `/version` after the deploy"
+    ]
+  },
+  {
+    "id": "ex-17846q3v",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Lesson 1 moves from one signal to the next through what each pair has in common. Match each pair of signals to what joins it.",
+    "hint": "Observability and Operations, lesson 1.",
+    "pairs": [
+      {
+        "left": "A trace and a log line",
+        "right": "the trace id written in every line"
+      },
+      {
+        "left": "A metric and a trace",
+        "right": "the service and a time window"
+      },
+      {
+        "left": "A metric and a log line",
+        "right": "the service name, and almost nothing else"
+      }
+    ],
+    "right_distractors": [
+      "the span id of the request's first span"
+    ]
+  },
+  {
+    "id": "ex-wyhh7nw9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The Collector stops answering for ten minutes while payments keeps taking charges, exporting through the batch span processor. What does payments' SDK do with the spans it finishes in that time?",
+    "hint": "Observability and Operations, lesson 2.",
+    "choices": [
+      {
+        "text": "Each request waits for its export to go through, so charges slow down until the Collector is back.",
+        "correct": false,
+        "why": "Waiting on the network is the simple processor's habit; the batch one queues the span and returns at once."
+      },
+      {
+        "text": "It grows the queue as far as it needs and sends everything when the Collector returns.",
+        "correct": false,
+        "why": "The queue is bounded on purpose: a service that ran out of memory because its telemetry could not be delivered is the wrong failure."
+      },
+      {
+        "text": "It writes them to disk and sends them after the next restart.",
+        "correct": false,
+        "why": "Nothing in the SDK keeps the queue on disk; a process that dies loses whatever was still waiting in it."
+      },
+      {
+        "text": "It keeps a fixed number in its queue, 2048 by default in Python, and drops the rest.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bgp86se",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A new panel filters spans on `http.request.method`. It shows the storefront's requests and none of orders', although both services are traced. Why, by lesson 3?",
+    "hint": "Observability and Operations, lesson 3.",
+    "choices": [
+      {
+        "text": "Flask's instrumentation records no method at all; only spans written by hand carry one.",
+        "correct": false,
+        "why": "Orders' `POST /orders` span does carry the method; lesson 3 listed its keys, `http.method` among them."
+      },
+      {
+        "text": "Orders excludes its routes from tracing with `OTEL_PYTHON_FLASK_EXCLUDED_URLS`.",
+        "correct": false,
+        "why": "That variable leaves out `health` and `metrics` only; the order route is traced."
+      },
+      {
+        "text": "The conventions name the method one way on a server span and another way on a client span.",
+        "correct": false,
+        "why": "The difference is a generation of names, not a kind of span: orders' server and client spans both use the older one."
+      },
+      {
+        "text": "Orders' instrumentation libraries still write the older name, `http.method`.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pncf0n63",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team moves the order confirmations from RabbitMQ to a Kafka topic and wants the mailer's spans to stay in the checkout's trace. Where does the context travel, and what does the consumer do with it?",
+    "hint": "Observability and Operations, lesson 4; Streaming and Event Processing, lesson 16.",
+    "choices": [
+      {
+        "text": "In the record's headers: the producer injects it, and the consumer extracts it and starts its span under it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nowhere extra: the group's committed offset already ties each record to the request that wrote it.",
+        "correct": false,
+        "why": "An offset is a position in a partition; it knows nothing about the trace of whoever produced the record."
+      },
+      {
+        "text": "It is read from the record's timestamp, which the producer sets from the trace.",
+        "correct": false,
+        "why": "The timestamp says when the record was created; the trace id is 128 random bits that only a `traceparent` carries."
+      },
+      {
+        "text": "The consumer extracts it from `TRACEPARENT` and `TRACESTATE` in its own environment, as a child process would.",
+        "correct": false,
+        "why": "That convention passes the context to a child process started by a traced parent; a message has to carry its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-280xajk9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The morning Spark report runs on a cluster created for the job and deleted when it ends, as the big data course describes. How can Prometheus say that the report did not run last night?",
+    "hint": "Observability and Operations, lesson 5; Big Data and Distributed Processing, lesson 14.",
+    "choices": [
+      {
+        "text": "Scrape the driver while it runs: `up` falling to 0 afterwards shows that it ran.",
+        "correct": false,
+        "why": "Once the cluster is deleted the target is gone whether or not the report finished; `up` cannot tell a job that ended from one that never started."
+      },
+      {
+        "text": "A last-success timestamp pushed to the Pushgateway, and an alert on the time since it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Trace each run, with links to what it read, and alert when a night has no trace.",
+        "correct": false,
+        "why": "A trace exists only for work that happened; nothing in a trace store notices one that is missing."
+      },
+      {
+        "text": "The job pushes a counter of its runs to the Pushgateway, and an alert compares it with the day before.",
+        "correct": false,
+        "why": "Each run is a new process, so the counter it pushes reads 1 every night; a timestamp grows every second whatever happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz3h9hej",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Because Prometheus asks each target for its numbers, it knows when one stops answering, and on every scrape it records that as a metric of its own named ___, 1 or 0 for each target.",
+    "hint": "Observability and Operations, lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "up"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0wns83v5",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "The lapse service of the machine learning course logs `path`, `status`, `ms`, `p_lapse` and `model_version` for every request. A team turns fields like these into labels on a Prometheus request counter. Which labels are safe to keep? Choose all that apply.",
+    "hint": "Observability and Operations, lesson 6; Machine Learning and MLOps, lesson 9.",
+    "choices": [
+      {
+        "text": "`path`, as the log writes it",
+        "correct": false,
+        "why": "The log writes `/lapse/2`, so the member id rides in the path: one series per member, up to 4,600. A route template would be safe."
+      },
+      {
+        "text": "`model_version`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`member_id`, to count one member's requests",
+        "correct": false,
+        "why": "Lesson 6's `user_id` experiment: a label per person is a series per person, and anything that names one member goes on the span or the line."
+      },
+      {
+        "text": "`status`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`p_lapse`",
+        "correct": false,
+        "why": "A score takes hundreds of values and is a measurement; it belongs in the log line or a histogram, never in a label."
+      }
+    ]
+  },
+  {
+    "id": "ex-z39wx58r",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In lesson 7, payments is rolled back at 120 seconds, and the checkout's 99th percentile on the panel stays high until 180. What kept it there?",
+    "hint": "Observability and Operations, lesson 7.",
+    "choices": [
+      {
+        "text": "Grafana caches each panel for a minute before it asks Prometheus again.",
+        "correct": false,
+        "why": "Grafana stores and computes nothing; every panel asks its data source when it is drawn."
+      },
+      {
+        "text": "Prometheus scrapes the storefront once a minute, so the fast checkouts had not been read yet.",
+        "correct": false,
+        "why": "The lab scrapes every fifteen seconds; the lag is the one-minute window inside the query."
+      },
+      {
+        "text": "The rollback annotation was written a minute after the rollback.",
+        "correct": false,
+        "why": "The mark and the rollback went out together; the annotation says when somebody acted, and the line lagged behind it."
+      },
+      {
+        "text": "Each point is a rate over the minute before it, and that minute still held slow checkouts.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-xe699m3n",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each event in the shop to the level lesson 8 writes it at.",
+    "hint": "Observability and Operations, lesson 8.",
+    "pairs": [
+      {
+        "left": "A card the network declined",
+        "right": "`INFO`"
+      },
+      {
+        "left": "RabbitMQ not reachable at start-up, retrying in 2 s",
+        "right": "`WARNING`"
+      },
+      {
+        "left": "The storefront cannot reach orders, so the checkout fails",
+        "right": "`ERROR`"
+      },
+      {
+        "left": "A price looked up in the cache, for whoever develops the code",
+        "right": "`DEBUG`"
+      }
+    ],
+    "right_distractors": [
+      "`CRITICAL`"
+    ]
+  },
+  {
+    "id": "ex-w7cgcxc4",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "In one minute at five requests a second, the shop's four services wrote 1065 lines and 260212 bytes of logs. At that rate, about how many megabytes do they write in a day, counting a megabyte as 1,000,000 bytes?",
+    "hint": "Observability and Operations, lesson 8.",
+    "value": 375,
+    "tolerance": 5,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-4ybwr2at",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To make lookups by trace id faster, a colleague proposes turning `trace_id` from a field in the line into a Loki label, beside `service_name`. What does lesson 9 say that change does?",
+    "hint": "Observability and Operations, lesson 9.",
+    "choices": [
+      {
+        "text": "Each trace id becomes a stream of its own, and the index that keeps Loki cheap stops being small.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, because Loki already indexes every field of every line as it arrives.",
+        "correct": false,
+        "why": "That is Elasticsearch's design; Loki indexes the labels of each stream and never the lines."
+      },
+      {
+        "text": "Lookups get faster at no cost, since Loki stores each value of a label only once, however often it appears.",
+        "correct": false,
+        "why": "Each label value is a stream, so a label per trace multiplies streams the way lesson 6's labels multiplied series."
+      },
+      {
+        "text": "Loki refuses the label, because a label may only say where a line came from and never what it says.",
+        "correct": false,
+        "why": "Loki accepts the label; *where a line came from* is the advice about what labels should hold, not a rule it enforces."
+      }
+    ]
+  },
+  {
+    "id": "ex-wwpeqhas",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team keeps three things in one Loki with `retention_period: 168h`: the services' `INFO` lines, their errors, and the audit trail of who changed which customer record. What do the two courses' lessons on retention say to change?",
+    "hint": "Observability and Operations, lesson 10; Data Security, Governance and Privacy, lesson 10.",
+    "choices": [
+      {
+        "text": "Raise the whole store to five years, so the audit trail is covered and nothing is lost.",
+        "correct": false,
+        "why": "Every routine line, and whatever personal data it holds, would then stay five years; nothing may be kept longer than its purpose needs."
+      },
+      {
+        "text": "Nothing: one period per store is the rule, since retention is a setting of the store.",
+        "correct": false,
+        "why": "How long is right is not a technical question; the purpose, the law and the cost decide it, and they differ by kind of record."
+      },
+      {
+        "text": "Delete the trail with the rest after seven days, because it is personal data.",
+        "correct": false,
+        "why": "Personal data needs a purpose and a period, not the shortest one; administrative records commonly keep five years."
+      },
+      {
+        "text": "Three policies: a week for routine lines, longer for errors, and the audit trail in its own store with its own period, often five years.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-9deabnsg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A customer asks to be erased. For a week the storefront's logs carried their e-mail address in a field, and copies sit in Loki, Elasticsearch, the container's own log and last night's backup. Which design would have left nothing to delete in any of them?",
+    "hint": "Observability and Operations, lesson 10; Data Security, Governance and Privacy, lesson 10.",
+    "choices": [
+      {
+        "text": "A Loki delete request for the address, sent the day the request arrives.",
+        "correct": false,
+        "why": "It reaches one store, and only on the compactor's next pass; the other copies stay where they are."
+      },
+      {
+        "text": "A step in the Collector that masks every e-mail address before the lines reach any of the stores.",
+        "correct": false,
+        "why": "The pipeline cleans only what passes through it; the container's log on the machine keeps the address."
+      },
+      {
+        "text": "A backup retention of 35 days, so the copy taken last night expires on its own.",
+        "correct": false,
+        "why": "That bounds how long the backup holds the address and leaves every log store and the machine's log untouched."
+      },
+      {
+        "text": "Lines carrying only an internal id, which point at nobody once the account row is erased.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2q9g6ph",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "While the mailer is stopped for thirty seconds, Jaeger lists several checkouts as about twenty seconds long. How long did those customers wait for their checkout?",
+    "hint": "Observability and Operations, lesson 11.",
+    "choices": [
+      {
+        "text": "About twenty seconds, since a trace's length is the duration of its request.",
+        "correct": false,
+        "why": "A trace store measures from the first span's start to the last span's end, and the mailer's spans began after the customer had the answer."
+      },
+      {
+        "text": "The root span's duration, a few hundred milliseconds.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot be told, because clock skew between hosts makes such gaps meaningless.",
+        "correct": false,
+        "why": "Skew is a few milliseconds, and the lab's clocks are one host's; a wait of seconds is a finding."
+      },
+      {
+        "text": "Twenty seconds less the queue's wait, which Jaeger draws as a span of its own.",
+        "correct": false,
+        "why": "The wait has no span; it is the gap between orders' span and the mailer's."
+      }
+    ]
+  },
+  {
+    "id": "ex-7xvcwen3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The storefront keeps one trace in ten with `parentbased_traceidratio`, and somebody debugging orders gives it `OTEL_TRACES_SAMPLER: always_on`. What starts to fill the store?",
+    "hint": "Observability and Operations, lesson 12.",
+    "choices": [
+      {
+        "text": "Only whole traces, because the storefront records its own span once orders has kept one.",
+        "correct": false,
+        "why": "The storefront decided when the trace began and dropped its span then; nothing brings it back later."
+      },
+      {
+        "text": "Traces that begin at orders' `POST /orders`, pointing at a parent that was never exported.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing different, since a downstream service follows the flag in `traceparent`.",
+        "correct": false,
+        "why": "`always_on` ignores any parent; only a parent-based sampler follows the flag."
+      },
+      {
+        "text": "Every trace, whole, because one service on `always_on` overrides the decision for the others.",
+        "correct": false,
+        "why": "Each SDK decides for its own spans: the storefront still drops nine root spans in ten, so those traces have no root."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4c84y5v",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Lesson 12's Collector keeps every error, every trace over a second and 5% of the rest, after `spanmetrics` has read every span. Which of these can no longer be trusted? Choose all that apply.",
+    "hint": "Observability and Operations, lesson 12.",
+    "choices": [
+      {
+        "text": "A trace id taken from the log line of an ordinary checkout, opened in Jaeger",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The 99th percentile from `traces_span_metrics_duration_milliseconds_bucket`",
+        "correct": false,
+        "why": "The span metrics are computed from every span before the sampler drops any, so they still count every checkout."
+      },
+      {
+        "text": "Checkouts per second, counted from the traces in the store",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An exemplar on orders' latency panel, opened as a trace",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A search in Jaeger for the checkouts that failed in the last two minutes",
+        "correct": false,
+        "why": "The `errors` policy keeps every trace with an error status, so that search finds all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs7b0v0z",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "With Sentry's SDK installed, every `logging` record at `INFO` and above is kept in memory and sent only if an error follows. Each record kept that way is called a ___.",
+    "hint": "Observability and Operations, lesson 13.",
+    "blanks": [
+      {
+        "accept": [
+          "breadcrumb",
+          "breadcrumbs"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pxw1fbm2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To be thorough, a team makes the storefront's readiness probe call orders' `/ready`, which checks the database. Then the database goes down. What does lesson 14 say follows?",
+    "hint": "Observability and Operations, lesson 14.",
+    "choices": [
+      {
+        "text": "Kubernetes restarts the storefront's pods until the database returns.",
+        "correct": false,
+        "why": "A failing readiness probe stops traffic; only a liveness probe restarts a container."
+      },
+      {
+        "text": "Nothing worse than before, since the storefront would have failed those requests anyway.",
+        "correct": false,
+        "why": "The product pages need no database and would have kept working; the probe takes them down as well."
+      },
+      {
+        "text": "The storefront stays in rotation, because readiness looks only at the process itself.",
+        "correct": false,
+        "why": "Readiness is whatever the check asks, and this one asks another service; checking only the process is liveness."
+      },
+      {
+        "text": "The storefront leaves rotation too, and takes with it the pages that never touch the database.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dr8pbm17",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The lapse service's objective is 99% of requests under 50 ms. A team times it with a Prometheus histogram and wants the latency SLI to be exact, the way lesson 15 builds the checkout's. What does that take?",
+    "hint": "Observability and Operations, lesson 15; Machine Learning and MLOps, lesson 9.",
+    "choices": [
+      {
+        "text": "`histogram_quantile(0.99, ...)` over the buckets, compared with 0.05 s.",
+        "correct": false,
+        "why": "A percentile from buckets is interpolated inside a bucket; the share below a boundary is the exact question."
+      },
+      {
+        "text": "The mean, `_sum` over `_count`, kept under 50 ms.",
+        "correct": false,
+        "why": "A mean hides the slow requests; the lapse service's mean of 68.7 ms sat below its median."
+      },
+      {
+        "text": "A bucket boundary at 0.05 s, and the SLI as that bucket's rate over the count's rate.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A summary, which computes the 99th percentile inside each worker.",
+        "correct": false,
+        "why": "Python's client computes none, and percentiles from four workers cannot be added into one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6p3zpva4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The streaming course's stock consumer promises that the website's stock is never more than a minute old. Which of these deserves a page at three in the morning?",
+    "hint": "Observability and Operations, lesson 16; Streaming and Event Processing, lesson 16.",
+    "choices": [
+      {
+        "text": "Lag in time past a few minutes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lag above 1,000 messages on any partition.",
+        "correct": false,
+        "why": "It fires on every Saturday peak that drains by itself, and a count says nothing about how old the stock is."
+      },
+      {
+        "text": "A rise in the group's count of rebalances.",
+        "correct": false,
+        "why": "That is a number for the dashboard on the day something else fires; it measures no promise."
+      },
+      {
+        "text": "Each sale taking longer than 100 ms to update the stock.",
+        "correct": false,
+        "why": "That is a cause, and the consumer may still be keeping up; the page belongs to the symptom, how stale the stock is."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgk5g52g",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "Shipquote's objective is 99.9% of quote requests succeeding. At the canary's 25% step, green failed 2 of its 98 answers. Taking green's error ratio as the SLI, what burn rate is that? Answer to one decimal.",
+    "hint": "Observability and Operations, lesson 16; Automated Testing and CI/CD, lesson 11.",
+    "value": 20.4,
+    "tolerance": 0.5,
+    "unit": ""
+  },
+  {
+    "id": "ex-4tyq1dfg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "During a SEV-2, two engineers each run `ops/rollback.sh production` once, a minute apart, and checkouts start failing again. Which practice from lesson 17 is meant to stop exactly this?",
+    "hint": "Observability and Operations, lesson 17; Automated Testing and CI/CD, lesson 11.",
+    "choices": [
+      {
+        "text": "Raising the incident to SEV-1, so everybody needed joins at once.",
+        "correct": false,
+        "why": "More people acting without one voice is how the swap ran twice; severity decides who is called, not who acts."
+      },
+      {
+        "text": "Status updates on a fixed rhythm, every fifteen minutes.",
+        "correct": false,
+        "why": "Updates keep the people outside informed; they do not stop two people changing the same thing."
+      },
+      {
+        "text": "\"I am going to…, objections?\" before anybody changes production.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A timeline built from the annotations and the pager's log rather than from memory.",
+        "correct": false,
+        "why": "The timeline is written afterwards; it would record both rollbacks, not prevent the second."
+      }
+    ]
+  },
+  {
+    "id": "ex-j89z05xb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the steps of lesson 17's incident in the order the commander took them, from the page to the close.",
+    "hint": "Observability and Operations, lesson 17.",
+    "items": [
+      "Mark the SEV-2 declaration on Grafana, with the commander's name",
+      "Ask which service's requests fail the most",
+      "List the marks of the last half hour",
+      "Roll payments back, and mark the rollback",
+      "Close once the five-minute burn rate is under 1"
+    ],
+    "trap": "Closing when the one-minute rate first reads 0 is the tempting shortcut; the five-minute window still holds failures then, and the lesson waits for it."
+  },
+  {
+    "id": "ex-5fy6jcx5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team's mean time to resolve fell from fifty minutes to thirty this quarter, and nothing about its tools or alerts changed. What does lesson 18 say could explain it besides a faster response?",
+    "hint": "Observability and Operations, lesson 18.",
+    "choices": [
+      {
+        "text": "Its pages per shift fell, and fewer pages lower the mean time to resolve directly.",
+        "correct": false,
+        "why": "Pages per shift measure load; they are not part of the time from a failure to its close."
+      },
+      {
+        "text": "It had fewer incidents, and fewer incidents give a smaller mean.",
+        "correct": false,
+        "why": "A mean does not depend on how many there were; fewer incidents of the same length give the same mean."
+      },
+      {
+        "text": "It began declaring small incidents it used to ignore.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It shortened its rota, so each incident now has one clear owner from the start.",
+        "correct": false,
+        "why": "A rota of fewer than five or six people is a trade the lesson warns about, not a way to shorten an interval."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w03mjfn",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 18 times its escalation against the objective. At a burn rate of 14.4 and a 28-day window, how much of the error budget, in per cent, do twenty minutes without anybody looking spend? Answer to one decimal.",
+    "hint": "Observability and Operations, lesson 18.",
+    "value": 0.7,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-mms0q6ta",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team installs Istio expecting its sidecars to join every request into one trace, with no change to the services. What is still missing, by lesson 19?",
+    "hint": "Observability and Operations, lesson 19.",
+    "choices": [
+      {
+        "text": "STRICT mutual TLS, without which the proxies record no spans.",
+        "correct": false,
+        "why": "Mutual TLS secures the connection; the proxies record spans in permissive mode too."
+      },
+      {
+        "text": "Nothing: the proxies see every request in and out, and pair them up themselves.",
+        "correct": false,
+        "why": "A proxy cannot know which outgoing call belongs to which incoming request."
+      },
+      {
+        "text": "Each service passing the incoming `traceparent` on to the calls it makes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ambient mode, because a sidecar proxy has no way to record a span.",
+        "correct": false,
+        "why": "Sidecars record spans; what they cannot supply is the tie between a request in and the calls out."
+      }
+    ]
+  },
+  {
+    "id": "ex-54ny3kpk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At 02:30 the lapse model's nightly `watch.py` exits 1: tonight's scores look nothing like the four weeks before, and the chain stops before anything is published. Marketing reads the list in the morning. Should that alarm page somebody?",
+    "hint": "Observability and Operations, lesson 16; Machine Learning and MLOps, lesson 9.",
+    "choices": [
+      {
+        "text": "No, a ticket: nothing has to be done before the morning.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Yes: every model alarm is a symptom, and symptoms page.",
+        "correct": false,
+        "why": "A symptom pages when people are hurt now or before morning; nobody acts on these scores until a person has looked."
+      },
+      {
+        "text": "Yes, because the batch reported success and only a person can catch that.",
+        "correct": false,
+        "why": "The watch already caught it and stopped the chain; what remains can wait for working hours."
+      },
+      {
+        "text": "No alert at all: the report card in ninety days will say whether the night was wrong.",
+        "correct": false,
+        "why": "The watch exists to stand in for that late card, and a check nobody hears is a log line."
+      }
+    ]
+  },
+  {
+    "id": "ex-897m3t6e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Next month a home customer places an order worth R$ 7,400, far above anything a home order usually reaches. Before deciding whether to keep it, what does lesson 1 check to tell an error from a rare order that really happened?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 1.",
+    "choices": [
+      {
+        "text": "Whether it lies above Tukey's high fence.",
+        "correct": false,
+        "why": "The fence says a value is far from the rest; 591 orders were above it, most of them ordinary office orders. It cannot say what kind of outlier a row is."
+      },
+      {
+        "text": "Whether the customer is in the home segment, since a home customer does not spend that much and the row can go.",
+        "correct": false,
+        "why": "A home customer who really bought that much is a rare real event, kept and reported with the median beside the mean. Deleting a row because it looks odd is the habit the lesson warns against."
+      },
+      {
+        "text": "Whether its lines' unit prices match the product's list price, since a conversion done twice leaves a line at exactly a hundred times it.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whether leaving it out moves the mean more than the median.",
+        "correct": false,
+        "why": "It will, for any large value, error or not. That says the row is extreme, which you knew, and nothing about whether it is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgz9sdkf",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lantern's order values have quartiles of 4,790, 9,580 and 16,865 cents. By the Tukey rule lesson 1 applies, where is the high fence, in reais to the cent?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 1.",
+    "value": 349.78,
+    "tolerance": 0.01,
+    "unit": ""
+  },
+  {
+    "id": "ex-qr848zq6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lantern's card for net revenue has a row for its owner. A new analyst wants to fill it in. What belongs there?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 2; Data Security, Governance and Privacy, lesson 9.",
+    "choices": [
+      {
+        "text": "The analyst who wrote `order_revenue`, by name, because she knows the arithmetic best.",
+        "correct": false,
+        "why": "A definition owned by a person is owned by nobody the week she changes jobs. The owner is a role, and knowing the SQL is the steward's strength, not the owner's."
+      },
+      {
+        "text": "Finance, as a role, which decides when the definition changes.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The data platform team, because it can change or drop the view.",
+        "correct": false,
+        "why": "That is the custodian. The person who can run `DROP` is deliberately not the one who decides what the view should mean."
+      },
+      {
+        "text": "Nobody: `COMMENT ON VIEW` already stores the definition beside the arithmetic, so a row for the owner repeats it.",
+        "correct": false,
+        "why": "The comment says what the number is, not who may change it. A definition with no owner changes whenever somebody edits a query."
+      }
+    ]
+  },
+  {
+    "id": "ex-d8s1nvjw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "From 1 September, finance counts refunds on the date of the refund instead of the order's, and Lantern's monthly net revenue steps down that month on a Grafana dashboard. What should the chart carry?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 2; Observability and Operations, lesson 7.",
+    "choices": [
+      {
+        "text": "Recompute every earlier month under the new rule, so the line has no step left to explain.",
+        "correct": false,
+        "why": "That is a silent edit. Last year's board report was computed under the old version, and somebody will compare the two."
+      },
+      {
+        "text": "An annotation on 1 September that names the new version of the definition.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "An alert on the drop, so the owner of net revenue hears about it the next time it happens.",
+        "correct": false,
+        "why": "An alert is for the system misbehaving. Nothing here misbehaved: people decided something, on a known date."
+      },
+      {
+        "text": "Nothing: the line is correct, and a mark on it would steer the reader.",
+        "correct": false,
+        "why": "Unmarked, a step that is only a new definition reads as something customers did, which is exactly the misreading to prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7d5whfe",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "You start the shop again from nothing and want Metabase answering from the layer afterwards. Put the steps in order.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 3.",
+    "items": [
+      "Run `lantern.sql`, which drops `shop` with `CASCADE`",
+      "Run `semantic.sql`, which builds the views again",
+      "Run the `GRANT` block for the `metabase` role",
+      "Sync the Lantern database's schema in Metabase's admin settings"
+    ],
+    "trap": "Dropping `shop` takes the layer's views with it; a grant reaches only the views that exist when it runs; and Metabase shows what its last sync saw until it syncs again."
+  },
+  {
+    "id": "ex-rps19ty6",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Lesson 4 shows each DAX formula beside the SQL that computes the same number. Match them.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 4.",
+    "pairs": [
+      {
+        "left": "`CALCULATE ( [Net Revenue], ALL ( customers ) )`",
+        "right": "`sum(sum(o.net_revenue)) OVER ()`"
+      },
+      {
+        "left": "`TOTALYTD ( [Net Revenue], calendar[day] )`",
+        "right": "`sum(sum(o.net_revenue)) OVER (ORDER BY k.month)`"
+      },
+      {
+        "left": "`[Net Revenue]` in a matrix with region on the rows, under a 2026 slicer",
+        "right": "a `WHERE` on the year and `GROUP BY ROLLUP (c.region)`"
+      },
+      {
+        "left": "`AVERAGEX ( VALUES ( customers[customer_id] ), [Net Revenue per Order] )`",
+        "right": "`avg(per_customer)` over a subquery grouped by `customer_id`"
+      }
+    ],
+    "right_distractors": [
+      "`sum(net_revenue) / count(*)` over every order"
+    ]
+  },
+  {
+    "id": "ex-y9hydjc5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lantern's orders reach Tableau with `order_id` stored as a number. A new chart of orders per month shows values in the millions, for a shop that takes a few hundred orders a month. What happened?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 5.",
+    "choices": [
+      {
+        "text": "The extract is stale and holds every order since 2025 in each month.",
+        "correct": false,
+        "why": "A stale extract shows old numbers, each order still counted once. It cannot turn hundreds into millions."
+      },
+      {
+        "text": "The chart joined orders to their lines and summed each order once per line.",
+        "correct": false,
+        "why": "A fan-out multiplies by the lines per order, under two here. Millions need a much larger factor."
+      },
+      {
+        "text": "The decimal separator of the locale turned `32.90` into `3290`.",
+        "correct": false,
+        "why": "That is the money columns arriving a hundred times too large in Power Query. An id has no decimal point to misread."
+      },
+      {
+        "text": "Tableau took `order_id` for a measure from its type and summed the ids.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkzwp869",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A card on Lantern's Monday page counts the last seven days of purchases from a lake table of clicks, stored one directory per `day`, and its filter is on the timestamp `ts`. The page has become slow to open. Which changes cut how much the page reads? Choose all that apply.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 6; Big Data and Distributed Processing, lesson 6.",
+    "choices": [
+      {
+        "text": "Filter the card on `day` as well as on the timestamp `ts`.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Split the card into seven cards, one per weekday, each over a smaller range.",
+        "correct": false,
+        "why": "Every card runs its own query each time the page opens. Fewer cards is the first remedy, not more."
+      },
+      {
+        "text": "Write the \"last seven days\" test as a Python function, so the date logic lives in one place.",
+        "correct": false,
+        "why": "The planner cannot see inside a Python function, so it leaves the test for the rows and opens every directory."
+      },
+      {
+        "text": "Keep the card's result in Metabase's cache for an hour.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Answer it from a small table of purchases per day, rebuilt after each load, with the \"data until\" line saying when.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-kywcdygt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A monitoring page has one tile, \"Lapse model accuracy: 86.0%\", for a model whose test members lapse 16.9% of the time. A number on a page needs a comparison beside it. Which one belongs on this tile?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 6; Machine Learning and MLOps, lesson 4.",
+    "choices": [
+      {
+        "text": "83.1%, the accuracy of a model that says nobody lapses.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Last month's accuracy, so the reader sees whether it is moving.",
+        "correct": false,
+        "why": "It answers whether the number moves. Both months could sit barely above what a model that knows nothing scores, and the tile would never say."
+      },
+      {
+        "text": "A target of 90% set by the product manager, with the tile green above it.",
+        "correct": false,
+        "why": "A target is a decision, and one set without the base rate says nothing about what the model learned. A colour that judges also needs a word beside it."
+      },
+      {
+        "text": "The same month a year earlier, which takes the seasons out.",
+        "correct": false,
+        "why": "Seasons move sales. On a rare outcome, accuracy measures mostly how common the common outcome is, in any month."
+      }
+    ]
+  },
+  {
+    "id": "ex-97j6nc3z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lantern decides its Monday page should have an objective for freshness, measured the way a service level indicator is. Which indicator fits?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 6; Observability and Operations, lesson 15.",
+    "choices": [
+      {
+        "text": "The share of nights on which the load job exited with status 0.",
+        "correct": false,
+        "why": "That measures a cause, on the platform's side. A job can exit cleanly having loaded nothing, which is why \"data until\" comes from the data."
+      },
+      {
+        "text": "The average number of minutes between the end of a day and the end of its load, over the month.",
+        "correct": false,
+        "why": "An average hides the bad mornings. An indicator is the share of events that went well against a threshold."
+      },
+      {
+        "text": "The share of Mondays on which the layer's `max(order_date)` was the day before by 07:00.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The share of mornings on which the page's title showed that day's date.",
+        "correct": false,
+        "why": "The calendar says today on the very day a load fails. Only the data says how far it reaches."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8c0mye2",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "June 2026's net revenue target is R$ 145,000, and Lantern's data ends on 17 June. Pro-rated to the days the data covers, what is June's target so far, in reais, rounded to a whole real?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 6.",
+    "value": 82167,
+    "tolerance": 1,
+    "unit": ""
+  },
+  {
+    "id": "ex-491pjevh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`activation.crm_contacts` gains two columns from the ML team's nightly batch: `p_lapse`, and `cutoff`, the night the score was computed for. What does `sync.sh` do from then on?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 7; Machine Learning and MLOps, lesson 8.",
+    "choices": [
+      {
+        "text": "It sends only the contacts whose `p_lapse` moved since the night before.",
+        "correct": false,
+        "why": "The diff compares `row_to_json(m)`, the whole row. A column that changes on every row every night makes every row differ."
+      },
+      {
+        "text": "The CRM refuses each contact with `400`, since `p_lapse` is not on its picklist.",
+        "correct": false,
+        "why": "The picklist guards the health field. A field nobody restricted takes what it is sent."
+      },
+      {
+        "text": "It sends every contact again, every night.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It creates each contact a second time, with a new `crm_id`.",
+        "correct": false,
+        "why": "`PUT` on the external id updates the record it finds. Duplicates come from `POST`."
+      }
+    ]
+  },
+  {
+    "id": "ex-b8n41ym3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "At 03:00 the scheduled sync ends with `run 4: sent 0, removed 0, failed 284, retried after 429: 28`, because the CRM refused the new health value *new*. Where should the alert on that line go?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 7; Observability and Operations, lesson 16.",
+    "choices": [
+      {
+        "text": "To the pager, since 284 contacts in the CRM are showing an out-of-date health right now.",
+        "correct": false,
+        "why": "A page means somebody must act now. Those contacts keep their last accepted value overnight, and nothing that matters gets worse before morning."
+      },
+      {
+        "text": "Nowhere, because `send` retries until the refusals clear.",
+        "correct": false,
+        "why": "`send` retries a `429` only. A `400` fails the same way on every run until somebody changes the picklist or the view."
+      },
+      {
+        "text": "To the CRM vendor's support, since its API refused valid data.",
+        "correct": false,
+        "why": "The CRM did what its picklist says. The model and the destination disagree, and settling that is a decision inside the company."
+      },
+      {
+        "text": "To a ticket queue, for somebody to fix the picklist or the view in working hours.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf6exxpw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague tidies `sync.sh`'s first query, writing `WHERE s.payload <> row_to_json(m)::jsonb` in place of `IS DISTINCT FROM`. What changes?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 7.",
+    "choices": [
+      {
+        "text": "A customer who was never sent before is never sent at all.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing: for rows like these the two give the same answer.",
+        "correct": false,
+        "why": "They differ exactly where one side is `NULL`, and that is every contact with no row in `last_sent`."
+      },
+      {
+        "text": "Customers erased from the shop stop being deleted from the CRM.",
+        "correct": false,
+        "why": "Deletes come from the second loop, which finds missing contacts with `NOT EXISTS`. The edit did not touch it."
+      },
+      {
+        "text": "Contacts that did not change are sent again on every run.",
+        "correct": false,
+        "why": "For a contact sent before, `<>` is false when the payloads match, just as `IS DISTINCT FROM` is."
+      }
+    ]
+  },
+  {
+    "id": "ex-s6wx9z40",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lantern's `office_win_back` audience is synced to the e-mail tool for a win-back offer. One of its customers clicks *unsubscribe*, and the shop records a withdrawal of consent for the purpose `marketing-email`. What has to follow?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 8; Data Security, Governance and Privacy, lesson 7.",
+    "choices": [
+      {
+        "text": "The customer is erased from the shop and from every tool, since withdrawing consent is asking to be forgotten.",
+        "correct": false,
+        "why": "Consent is recorded per purpose. Withdrawing the marketing one stops marketing; the orders and the CRM record serve other purposes, on other bases."
+      },
+      {
+        "text": "The old e-mails to this customer are recorded as sent without a legal basis.",
+        "correct": false,
+        "why": "Withdrawal stops future processing and does not undo the past. What was sent before it was sent lawfully."
+      },
+      {
+        "text": "Nothing changes until marketing rebuilds the list for the next campaign.",
+        "correct": false,
+        "why": "An audience is a definition, not a list. A customer who leaves the model leaves the destination on the next run, with nobody rebuilding anything."
+      },
+      {
+        "text": "The audience filters on current consent for that purpose, so the customer leaves the model and the next run takes them off the list.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-khp8vkby",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Customer 2 asks to be forgotten and the shop deletes the row. The same evening, somebody presses *full resync* on Lantern's Hightouch sync to the CRM. Which statements hold? Choose all that apply.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 8; Data Security, Governance and Privacy, lesson 7.",
+    "choices": [
+      {
+        "text": "An analyst's CSV extract that holds the customer belongs in a complete answer.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The erasure needs its own record of which systems hold the customer, and a check that each one no longer does.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Every backup holding the customer has to be restored and edited at once.",
+        "correct": false,
+        "why": "The defensible practice is to let backups expire on schedule, keep them out of use, and apply the deletion again if one is ever restored."
+      },
+      {
+        "text": "The sync never deletes the contact from the CRM, because a full resync does no diffing.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Setting the delete behaviour to *Delete destination record* makes the resync remove the contact.",
+        "correct": false,
+        "why": "A full resync ignores the clear and delete settings: with no previous run to compare, it sees no row leave."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8g45beq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A cohort cell that the end of the data cut off before its outcome could happen is unknown rather than zero. The name for this is right-___.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "censoring",
+          "censored"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jtfzhq7s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A quarterly report averages each column of Lantern's cohort grid from October 2025, unfinished cells left empty, over the cohorts that have a value, and sets the `m1` average beside the `m3` average to show how fast customers drift away. What is wrong with the comparison?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 9.",
+    "choices": [
+      {
+        "text": "Nothing: unfinished cells were left out rather than counted as zero, which is what the lesson asks for.",
+        "correct": false,
+        "why": "Leaving them empty fixes the false zeros. Averaging what is left still mixes generations."
+      },
+      {
+        "text": "The empty cells should count as zero, so that every column averages all nine cohorts.",
+        "correct": false,
+        "why": "That is the mistake the empty cells fix: those customers had no time, not no orders."
+      },
+      {
+        "text": "The `m3` average covers only the cohorts up to February 2026, while `m1` includes March and April, so the two columns average different generations.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The November cohort should come out first, since Black Friday makes it an outlier.",
+        "correct": false,
+        "why": "Dropping the cohort that differs hides the finding. The problem is which cohorts each column holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-69sg5zkt",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Each claim below is built on correct numbers. Match it to the failure in lesson 10 that makes it misleading.",
+    "hint": "Analytics, BI and Reverse ETL, lesson 10.",
+    "pairs": [
+      {
+        "left": "A ranking of refund rates puts a state with 31 orders at the top",
+        "right": "a small denominator"
+      },
+      {
+        "left": "The average spend of the customers on today's *active* list is quoted as what the 2025 sign-ups spend",
+        "right": "survivorship"
+      },
+      {
+        "left": "Support's share of tickets solved within a day fell, though it rose on both the phone and the e-mail queue, as the slower e-mail queue grew",
+        "right": "Simpson's paradox"
+      },
+      {
+        "left": "Customers who installed the app order twice as often, so the app gets the credit",
+        "right": "confounding"
+      },
+      {
+        "left": "This year's growth is quoted from Black Friday's month to today",
+        "right": "a chosen window"
+      }
+    ],
+    "right_distractors": [
+      "a truncated scale"
+    ]
+  },
+  {
+    "id": "ex-easyn76b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marketing still wants to know whether a 10% coupon makes home customers spend more per order. Which design settles it?",
+    "hint": "Analytics, BI and Reverse ETL, lesson 10.",
+    "choices": [
+      {
+        "text": "Compare discounted and full-price orders inside the home segment, which takes the offices out of the comparison.",
+        "correct": false,
+        "why": "It removes one confounder and leaves every other way the customers who got coupons differ from those who did not. There is always one more column."
+      },
+      {
+        "text": "Give the coupon to home customers picked at random before the offer, and compare them with the rest.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Compute the correlation over two full years of orders, since more rows make it believable.",
+        "correct": false,
+        "why": "More rows of the same mix carry the same confounder, and a correlation says nothing about which way the cause runs."
+      },
+      {
+        "text": "Split by each column of `customers` and keep the result if it survives every split.",
+        "correct": false,
+        "why": "That is the weak defence the lesson names. It only rules out the columns somebody thought to try."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fs5bw50",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A dashboard quotes the lapse rate the model team reports for 30 November 2025: 16.9%. Match each part of a metric's definition to what it is in that number.",
+    "hint": "Machine Learning and MLOps, lesson 1; Analytics, BI and Reverse ETL, lesson 2.",
+    "pairs": [
+      {
+        "left": "Measure",
+        "right": "`lapsed`, 1 or 0 for each member"
+      },
+      {
+        "left": "Aggregation",
+        "right": "The mean over the members"
+      },
+      {
+        "left": "Filter",
+        "right": "Only members who bought something in the 180 days up to the cutoff"
+      },
+      {
+        "left": "Time",
+        "right": "The cutoff, and the 90 days after it"
+      }
+    ],
+    "right_distractors": [
+      "The 0.5 that `predict` compares each probability with"
+    ]
+  },
+  {
+    "id": "ex-k2afftyt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A monthly report counts the members in group 6, the crime readers, from lesson 2's k-means retrained on each month's purchases. In April the group halves. What should the report's owner check first?",
+    "hint": "Machine Learning and MLOps, lesson 2.",
+    "choices": [
+      {
+        "text": "Whether crime sales fell in April, since the group follows what its members buy.",
+        "correct": false,
+        "why": "The count can halve with no change in sales, because the number may now name a different group."
+      },
+      {
+        "text": "Whether the silhouette fell, since a weaker grouping sheds members from every group.",
+        "correct": false,
+        "why": "The silhouette scores how well members separate; it does not hold a group's number still between runs."
+      },
+      {
+        "text": "Whether group 6 is still the crime readers, because a retrained k-means numbers its groups afresh.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing, because `random_state=0` gives the crime readers the same number on every run.",
+        "correct": false,
+        "why": "The seed repeats a run on the same rows. On a new month's rows the groups can settle in another order."
+      }
+    ]
+  },
+  {
+    "id": "ex-16hsyaj0",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Ponto Final's tills already write every sale to Kafka as it happens. For which of these is it worth computing features from that stream, so that they are minutes old rather than a night? Choose all that apply.",
+    "hint": "Machine Learning and MLOps, lesson 2; Streaming and Event Processing, lesson 1.",
+    "choices": [
+      {
+        "text": "The lapse score shown on a member's own page.",
+        "correct": false,
+        "why": "Its features change when the member buys, not when the page opens; last night's row shows the number marketing used."
+      },
+      {
+        "text": "A check on a card payment that did not exist a second ago.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The next title the website shows a member who has just bought a book.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The lapse probabilities behind marketing's monthly voucher list.",
+        "correct": false,
+        "why": "The vouchers go out once a month, so a score from last night serves as well as one from this second."
+      },
+      {
+        "text": "Retraining the lapse model on last year's members.",
+        "correct": false,
+        "why": "That input is finite and fixed, which is a batch's case, and its labels take 90 days to close anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-k05fqq5f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A shop predicts whether an order will be returned within 30 days, and retrains every night on every order up to yesterday, labelled from the returns table. By lesson 3's reasoning about labels, what do the newest orders teach the model?",
+    "hint": "Machine Learning and MLOps, lesson 3.",
+    "choices": [
+      {
+        "text": "That returns are commoner than they are, as unfinished labels made lapsing look three or four times as common.",
+        "correct": false,
+        "why": "Lapsed is the absence of a purchase, so an open window inflates it. A return is an event, and an open window hides it."
+      },
+      {
+        "text": "That returns are rarer than they are, because a return yet to happen is labelled kept.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nothing harmful, since the newest month is a small share of all the orders.",
+        "correct": false,
+        "why": "The open window is every order of the last 30 days, and those are the rows a nightly retrain treats as the most relevant."
+      },
+      {
+        "text": "Nothing harmful, as long as the test rows come from the same table.",
+        "correct": false,
+        "why": "A test that carries the same wrong labels rewards the model for learning them."
+      }
+    ]
+  },
+  {
+    "id": "ex-zf5swnyj",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Marketing's voucher now costs R$ 15.00 to send, and a lapsing member it keeps is still worth R$ 60.00. By lesson 4's rule of thumb, near what probability does the best threshold sit, for a model whose probabilities can be believed?",
+    "hint": "Machine Learning and MLOps, lesson 4.",
+    "value": 0.25,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-pegw8cjd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Marketing makes the lapse model's target the number of lapsers among the 300 members it scores highest. A target that moves alone gets gamed, so it needs a guardrail. Which one fits this model?",
+    "hint": "Machine Learning and MLOps, lesson 4; Analytics, BI and Reverse ETL, lesson 2.",
+    "choices": [
+      {
+        "text": "ROC AUC, because a model can only improve its top 300 by ordering everybody better.",
+        "correct": false,
+        "why": "AUC and the top 300 both judge the order. A model can keep the order and get every probability wrong."
+      },
+      {
+        "text": "Calibration: what the model said against the share that lapsed.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Accuracy, because it counts every member and not only three hundred.",
+        "correct": false,
+        "why": "On this data accuracy mostly measures how common staying is: the model that says nobody lapses scores 83.1%."
+      },
+      {
+        "text": "The number of vouchers sent, so that the target cannot be bought by sending more of them.",
+        "correct": false,
+        "why": "The budget already fixes the list at three hundred; the number cannot move."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvway1r2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A stream job keeps each member's `last_purchase_at` in the online store, set to the moment the consumer reads the sale. The training rows took the purchase's `day` from the purchases table. Natal's till loses its line from 10:20 to 14:00 and then sends the morning's sales at once. What has the team built?",
+    "hint": "Machine Learning and MLOps, lesson 5; Streaming and Event Processing, lesson 9.",
+    "choices": [
+      {
+        "text": "Nothing new: both values come from the same sales, so the model gets the feature it learned.",
+        "correct": false,
+        "why": "One source, two computations. Which clock each one reads is part of what the feature means."
+      },
+      {
+        "text": "A safer feature, because a till's clock can drift and the consumer's clock is the platform's own.",
+        "correct": false,
+        "why": "An answer about the world takes the time of the sale. A drifting till clock is synchronised and bounded, not swapped for the reader's."
+      },
+      {
+        "text": "Training-serving skew: serving says when the pipeline heard of a sale, training when it happened.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A stale value at worst, which the store's seven-day time to live already drops.",
+        "correct": false,
+        "why": "The value is hours late and stamped with the wrong moment, and a time to live measures neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq5gc3w3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Spark job overwrites one Delta table of member features every night. To rebuild the training rows for the 31 August 2025 cutoff, the team plans to read the table `VERSION AS OF` the version written that night. The table is vacuumed every week with the default retention. What happens when they try, in March?",
+    "hint": "Machine Learning and MLOps, lesson 6; Big Data and Distributed Processing, lesson 11.",
+    "choices": [
+      {
+        "text": "It returns August's values, because the transaction log keeps every version.",
+        "correct": false,
+        "why": "The log still lists the version, but `VACUUM` deleted its files once they were older than the retention."
+      },
+      {
+        "text": "It returns today's values, the summary-table leak of lesson 3 in a new place.",
+        "correct": false,
+        "why": "Delta reads the version it is asked for or fails; it does not hand back the current table instead."
+      },
+      {
+        "text": "It works, provided each night's write carried `txnAppId` and `txnVersion`.",
+        "correct": false,
+        "why": "Those make a retried write add nothing. They do not keep old files from a vacuum."
+      },
+      {
+        "text": "It fails: the files that version read were vacuumed long ago.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6k0dv0z0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In an incident, two engineers each roll the lapse model back with `python champion.py 1`, a minute apart. The same double run of the shipping service's `rollback.sh`, which swaps `current` and `previous`, put the broken release back. What does the second `champion.py 1` do?",
+    "hint": "Machine Learning and MLOps, lesson 7; Automated Testing and CI/CD, lesson 11.",
+    "choices": [
+      {
+        "text": "Nothing new: `champion` already names version 1.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It moves `champion` to whatever version came before, as the second swap did.",
+        "correct": false,
+        "why": "The alias is set to the version named on the command line. There is no previous one to flip to."
+      },
+      {
+        "text": "It fails, since the alias already names that version.",
+        "correct": false,
+        "why": "Setting an alias is an assignment, and assigning the same value twice leaves the same result."
+      },
+      {
+        "text": "It copies version 1's model file over the one in production a second time.",
+        "correct": false,
+        "why": "Moving the alias copies nothing. A service or a batch loads whatever the alias names."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qhjv319",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Ana changes one line of `model.py` and wants the result recorded as a new version of `lapse` in MLflow's registry. Put the steps in the order lesson 7 runs them.",
+    "hint": "Machine Learning and MLOps, lesson 7.",
+    "items": [
+      "Save the edited `model.py` over the old one",
+      "`dvc repro`, which retrains and rewrites `dvc.lock`",
+      "`git add .` and `git commit`",
+      "`python log_run.py`, which creates version 2 of `lapse`",
+      "`python champion.py`, which lists the versions and where the alias points"
+    ],
+    "trap": "`log_run.py` refuses a working tree with anything uncommitted, so the commit comes before it, and the commit has to carry the `dvc.lock` that `dvc repro` writes. `champion.py` can show version 2 only once it exists."
+  },
+  {
+    "id": "ex-yfr34vy5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "The lapse service behind the member page is rolled out with the shipping team's `canary.py`: 5%, 25%, 50% and then all the traffic, stopping if the canary's error rate is more than one point above the baseline's. The canary runs lapse version 2. What happens?",
+    "hint": "Machine Learning and MLOps, lesson 8; Automated Testing and CI/CD, lesson 11.",
+    "choices": [
+      {
+        "text": "It is stopped at 25%, as the shipping release that could not quote Alagoas was.",
+        "correct": false,
+        "why": "That release failed requests. Version 2 fails none, so the error rule never fires."
+      },
+      {
+        "text": "It is stopped at 5%, the first step, where the canary has too few answers to judge.",
+        "correct": false,
+        "why": "Too few answers makes the script carry on to the next step, not stop."
+      },
+      {
+        "text": "It is promoted: every answer is a 200, and the criteria count only errors.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot run: a model service has no error rate to compare.",
+        "correct": false,
+        "why": "It has one, from the status of every request. Errors are just not what is wrong with version 2."
+      }
+    ]
+  },
+  {
+    "id": "ex-sme3131d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Support wants each member's lapse probability beside their tickets in the help desk. One proposal calls lesson 8's web service for every ticket; another copies a field into the help desk. Which design do the two courses point to?",
+    "hint": "Machine Learning and MLOps, lesson 8; Analytics, BI and Reverse ETL, lesson 7.",
+    "choices": [
+      {
+        "text": "The web service, because a probability shown to support has to be computed when the ticket opens.",
+        "correct": false,
+        "why": "The score can be no fresher than its features, which change nightly, and a service adds an outage the table never had."
+      },
+      {
+        "text": "A sync keyed by the member's e-mail address, which support already searches by.",
+        "correct": false,
+        "why": "People change and share addresses. The shop's own id is assigned once and never changes."
+      },
+      {
+        "text": "A sync that sends every member's row on every run, so that the help desk is never out of date.",
+        "correct": false,
+        "why": "Resending everything is slower, spends requests the API limits, and overwrites whatever somebody typed in those fields."
+      },
+      {
+        "text": "A nightly sync of `lapse_scores`, keyed by member id, sending only the rows that changed.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1zt989q",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A scheduler retries the nightly scoring job after a timeout. `score_batch.py` deletes the night's rows before writing them, and a Delta append that carries `txnAppId` and `txnVersion` writes nothing the second time. Both make the job ___: it leaves the same result however many times it runs.",
+    "hint": "Machine Learning and MLOps, lesson 8; Big Data and Distributed Processing, lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cth0d1v8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "The lapse service's objective is lesson 9's: 99.9% of requests not answered with a 5xx. In one hour it answers 20,000 requests: 13,000 with a 200, 6,960 with a 404 for members the online store has nothing fresh for, and 40 with a 500. What is that hour's burn rate?",
+    "hint": "Machine Learning and MLOps, lesson 9; Observability and Operations, lesson 16.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-y57qxsyn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "With sixteen requests in flight, the lapse service's p99 is 351.8 ms, against 10.8 ms one at a time. Which change shortens that wait, and what does it cost?",
+    "hint": "Machine Learning and MLOps, lesson 9.",
+    "choices": [
+      {
+        "text": "More worker processes, each with its own model, paid for in memory.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "More threads inside the one process, which costs nothing extra in memory.",
+        "correct": false,
+        "why": "Python runs one thread of Python code at a time, so the predictions still take turns, and switching costs something too."
+      },
+      {
+        "text": "Loading the model once at start-up rather than on every request.",
+        "correct": false,
+        "why": "`serve.py` already does that. The wait is queueing behind other predictions."
+      },
+      {
+        "text": "Raising the objective to 400 ms, so that the number passes.",
+        "correct": false,
+        "why": "That moves the promise and leaves the wait where it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9ezz7x3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The watch passed every night from March to June. A colleague proposes shortening its reference from the 28 days before each night to the 7 days before. What would that do to the slow rise in `online_share`?",
+    "hint": "Machine Learning and MLOps, lesson 10.",
+    "choices": [
+      {
+        "text": "Catch it sooner, because a shorter window reacts faster to whatever changes.",
+        "correct": false,
+        "why": "Reacting faster catches a sudden break. A slow change is a few per cent a week whatever the window."
+      },
+      {
+        "text": "Hide it even better, since last week's members have moved almost as far as tonight's.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Catch it from mid-March, the week postage on online orders became free.",
+        "correct": false,
+        "why": "Each week then moved only a little from the one before, which a moving reference cannot see."
+      },
+      {
+        "text": "Nothing, because the watch compares the scores and not the inputs.",
+        "correct": false,
+        "why": "It compares the median of every numeric input too. The trouble is what it compares them with."
+      }
+    ]
+  },
+  {
+    "id": "ex-04k793cg",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these changes could be found only in the outcomes, ninety days late, and not in the inputs? Choose all that apply.",
+    "hint": "Machine Learning and MLOps, lesson 10.",
+    "choices": [
+      {
+        "text": "Free postage moves members from the shops to the website.",
+        "correct": false,
+        "why": "That changes `online_share`, an input, and its PSI reached 0.602."
+      },
+      {
+        "text": "A load multiplies every `spend_180d` by a hundred.",
+        "correct": false,
+        "why": "The input's median jumps a hundredfold that night, and the watch raised an alarm."
+      },
+      {
+        "text": "A price rise makes members with the same visits and spend come back less often than before.",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A new channel, `app`, appears among the members.",
+        "correct": false,
+        "why": "A value the training data never had is an input; `channel` measured 0.420 on the first night."
+      },
+      {
+        "text": "A rival's book subscription draws away young members whose histories look as they always did.",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]
