@@ -1,0 +1,404 @@
+{
+  "ex-a875sqx1": {
+    "prompt": "O Redis roda só com snapshots. Um snapshot terminou, depois dois pedidos foram gravados e confirmados, e então o contêiner foi morto com `docker kill`. O que o Redis reiniciado tem?",
+    "choices": [
+      {
+        "text": "Tudo, porque cada `OK` queria dizer que o pedido estava no disco",
+        "why": "Com snapshots, `OK` quer dizer que a escrita está na memória. Os dois pedidos da aula voltaram faltando."
+      },
+      {
+        "text": "O que estava salvo antes, e nada depois",
+        "why": "Isso. O `rdb_changes_since_last_save` tinha contado exatamente esses dois antes da morte."
+      },
+      {
+        "text": "Nada, porque um Redis morto apaga o snapshot ao sair",
+        "why": "Um processo morto não faz nada ao sair; o arquivo fica e é carregado."
+      },
+      {
+        "text": "Só os dois pedidos, refeitos a partir do log de escritas recentes",
+        "why": "Não há log só com snapshots; isso é o arquivo append-only da seção seguinte."
+      }
+    ]
+  },
+  "ex-60mrvzjd": {
+    "prompt": "Por que reiniciar com `docker stop` é um teste ruim de quanto uma configuração com snapshots perde?",
+    "choices": [
+      {
+        "text": "O `docker stop` remove o volume com nome junto com o contêiner, então não há o que comparar",
+        "why": "Ele não remove nada; o `docker start` trouxe todas as chaves de volta."
+      },
+      {
+        "text": "O `docker stop` manda `SIGKILL`, que nenhum programa consegue capturar",
+        "why": "Ele manda `SIGTERM` e espera; o `SIGKILL` é o `docker kill`."
+      },
+      {
+        "text": "O Redis ouve o `SIGTERM` e salva antes um snapshot final",
+        "why": "Isso, então desse jeito nunca se perde nada. Os reinícios para os quais a persistência existe são os que não avisam."
+      },
+      {
+        "text": "As regras de snapshot voltam a vazio a cada parada",
+        "why": "As regras são configuração; uma parada não mexe nelas."
+      }
+    ]
+  },
+  "ex-15s4wgj3": {
+    "prompt": "Com a regra padrão `300 100`, o Redis tira um snapshot depois de 300 segundos se pelo menos 100 chaves mudaram. Mudam 80 chaves nos cinco minutos depois de um snapshot e nenhuma outra regra dispara. Se o processo morrer nesse momento, quantas dessas mudanças se perdem?",
+    "hint": "A regra disparou?"
+  },
+  "ex-1n1h47mw": {
+    "prompt": "Uma instância de 20 GB que está gravando muito precisa de bem mais que 20 GB de memória por alguns segundos sempre que um snapshot começa. O que explica isso?",
+    "hint": "O `BGSAVE` faz fork.",
+    "choices": [
+      {
+        "text": "O snapshot é montado inteiro na memória antes, como uma segunda cópia, e só então gravado no disco de uma vez",
+        "why": "O filho grava aos poucos, a partir da cópia congelada; nenhum segundo conjunto é montado."
+      },
+      {
+        "text": "Páginas que o pai altera durante a gravação são copiadas, e uma instância ocupada altera muitas",
+        "why": "Isso: copy-on-write. O `rdb_last_cow_size` informa quanto foi copiado."
+      },
+      {
+        "text": "O Redis comprime o snapshot, e a compressão precisa de um buffer do tamanho dos dados",
+        "why": "A compressão trabalha em pedaços pequenos; não precisa de uma cópia de tudo."
+      },
+      {
+        "text": "Os clientes são pausados e as escritas deles se acumulam na memória até o snapshot acabar",
+        "why": "O pai continua atendendo os clientes; é para isso que serve o fork."
+      }
+    ]
+  },
+  "ex-m3178r95": {
+    "prompt": "Com `appendonly yes` e `appendfsync everysec`, três chaves foram gravadas e o contêiner morto em seguida com `docker kill`. As três voltaram. Por que o último segundo não fez diferença?",
+    "choices": [
+      {
+        "text": "Porque o `everysec` espera um segundo antes de responder cada escrita",
+        "why": "Ele responde na hora; o descarregamento acontece em segundo plano."
+      },
+      {
+        "text": "Os bytes já estavam com o sistema operacional, que sobreviveu ao Redis",
+        "why": "Isso. Um processo morto não leva o page cache junto; uma máquina sem energia levaria."
+      },
+      {
+        "text": "Porque o Docker salva no disco a memória de um contêiner quando ele é morto, e a devolve na partida",
+        "why": "O Docker não salva nada; os dados voltaram do log no volume."
+      },
+      {
+        "text": "Porque as regras de snapshot também rodaram em segundo plano e cobriram o último segundo",
+        "why": "O log diz que os dados vieram dos arquivos append-only, não de um snapshot."
+      }
+    ]
+  },
+  "ex-sd0k3xng": {
+    "prompt": "Associe cada arquivo em `appendonlydir` ao que ele guarda.",
+    "pairs": [
+      {
+        "left": "`appendonly.aof.manifest`",
+        "right": "quais arquivos formam o log, e em que ordem"
+      },
+      {
+        "left": "`appendonly.aof.1.base.rdb`",
+        "right": "o conjunto de dados como era quando este log começou"
+      },
+      {
+        "left": "`appendonly.aof.1.incr.aof`",
+        "right": "todo comando de escrita desde então, no protocolo do cliente"
+      }
+    ],
+    "right_distractors": [
+      "a configuração com que o Redis foi iniciado"
+    ]
+  },
+  "ex-8rfp9ppr": {
+    "prompt": "Dez mil `INCR` numa chave levaram o arquivo incremental de 136 bytes para 330.188. O que o `BGREWRITEAOF` fez a respeito?",
+    "choices": [
+      {
+        "text": "Comprimiu o arquivo incremental no lugar",
+        "why": "O par antigo foi apagado, não comprimido."
+      },
+      {
+        "text": "Gravou uma base nova a partir da memória, com o valor do contador, e começou um incremental vazio",
+        "why": "Isso. O valor já inclui os incrementos, então eles não são mais necessários; a sequência foi para 2."
+      },
+      {
+        "text": "Percorreu o arquivo incremental, tirou todo comando repetido e manteve um de cada, na mesma ordem",
+        "why": "Nada do arquivo incremental antigo foi mantido."
+      },
+      {
+        "text": "Desligou o log e voltou para snapshots",
+        "why": "O log continuou ligado; só os arquivos mudaram."
+      }
+    ]
+  },
+  "ex-wgbkm9jj": {
+    "prompt": "Para subir a imagem oficial com o arquivo append-only ligado, acrescente `--___ yes` depois do nome da imagem.",
+    "hint": "Uma palavra, o nome da configuração.",
+    "blanks": [
+      {
+        "accept": [
+          "appendonly"
+        ]
+      }
+    ]
+  },
+  "ex-1vgx8jgz": {
+    "prompt": "A máquina que roda o Redis perde energia. Qual configuração perde mais escritas confirmadas?",
+    "choices": [
+      {
+        "text": "`appendfsync everysec`",
+        "why": "Cerca de um segundo de escritas."
+      },
+      {
+        "text": "`appendfsync no`, que deixa o descarregamento para o sistema operacional",
+        "why": "O que o sistema operacional não tinha descarregado, até uns 30 segundos no Linux: mais que everysec, menos que minutos."
+      },
+      {
+        "text": "Só snapshots, com as regras padrão",
+        "why": "Isso. Tudo desde o último snapshot, o que pode ser minutos ou uma hora de escritas."
+      },
+      {
+        "text": "`appendfsync always`",
+        "why": "Nada confirmado: cada escrita foi descarregada antes da resposta."
+      }
+    ]
+  },
+  "ex-m9pve5y2": {
+    "prompt": "No benchmark da aula, o `always` custou bem mais com um cliente que com 50. Por que ele dói menos com muitos clientes?",
+    "choices": [
+      {
+        "text": "Com 50 clientes, o Redis transforma o `always` em `everysec` por conta própria",
+        "why": "A configuração não muda; cada escrita continua descarregada antes da resposta."
+      },
+      {
+        "text": "Um descarregamento cobre todas as escritas que chegaram juntas, então o custo é dividido",
+        "why": "Isso. Um cliente paga um descarregamento inteiro por cada escrita."
+      },
+      {
+        "text": "Com 50 clientes a maioria das escritas é recusada, e escritas recusadas não são descarregadas",
+        "why": "Toda requisição deu certo; o CSV informa uma taxa de `SET` bem-sucedidos."
+      },
+      {
+        "text": "Vários clientes gravam em vários arquivos ao mesmo tempo",
+        "why": "Há um arquivo incremental; as escritas de todos os clientes vão para ele."
+      }
+    ]
+  },
+  "ex-ehmzp4d1": {
+    "prompt": "Um colega mediu o `always` no SSD de um notebook, viu que custou 10%, e quer ligá-lo na produção, que roda num volume de nuvem. O que deve acontecer primeiro?",
+    "choices": [
+      {
+        "text": "Nada: um custo de 10% num disco é um custo de 10% em qualquer disco",
+        "why": "O custo é o tempo de um descarregamento, que difere em ordens de grandeza entre discos."
+      },
+      {
+        "text": "Ligar o `everysec` também, para os dois protegerem os dados",
+        "why": "O `appendfsync` aceita um valor; os dois são alternativas."
+      },
+      {
+        "text": "Rodar o mesmo benchmark na máquina de produção",
+        "why": "Isso, com um número de clientes parecido com o dela. A proporção da aula foi de uma máquina; a decisão precisa da máquina que vai servir."
+      },
+      {
+        "text": "Desligar os snapshots para pagar por ele",
+        "why": "Snapshots custam um fork de vez em quando, não um descarregamento por escrita; isso não compensa."
+      }
+    ]
+  },
+  "ex-65k0dpme": {
+    "prompt": "Ordene estas configurações da que perde mais escritas confirmadas quando a máquina perde energia à que perde menos.",
+    "items": [
+      "Sem persistência",
+      "Só snapshots, a cada poucos minutos",
+      "`appendfsync no`",
+      "`appendfsync everysec`",
+      "`appendfsync always`"
+    ],
+    "trap": "O `no` deixa para o sistema operacional, que descarrega mais ou menos a cada 30 segundos."
+  },
+  "ex-p7jt1waw": {
+    "prompt": "Uma instância só com snapshots é reiniciada com `--appendonly yes` acrescentado ao comando. O `DBSIZE` responde 0. O que aconteceu?",
+    "choices": [
+      {
+        "text": "A opção nova apagou o `dump.rdb` na partida",
+        "why": "O arquivo continuava lá, com 128 bytes, até o próximo save gravar por cima."
+      },
+      {
+        "text": "O Redis carregou só o log novo e vazio e nunca leu o snapshot",
+        "why": "Isso. E a parada limpa seguinte salvou o conjunto vazio por cima do snapshot."
+      },
+      {
+        "text": "O snapshot era de outra versão e foi recusado",
+        "why": "Mesma imagem, mesma versão; o log não mostra nenhuma tentativa de lê-lo."
+      },
+      {
+        "text": "O Redis ainda está carregando, e o `DBSIZE` conta só o que já carregou",
+        "why": "Enquanto carrega, o Redis responde com erros `LOADING`, não com uma contagem."
+      }
+    ]
+  },
+  "ex-xp37pre1": {
+    "prompt": "Qual é o jeito seguro de ligar o arquivo append-only numa instância que tem dados e só snapshots?",
+    "choices": [
+      {
+        "text": "Reiniciá-la com `--appendonly yes` e depois rodar `BGREWRITEAOF`",
+        "why": "A essa altura o reinício já carregou um log vazio; a reescrita salvaria o vazio."
+      },
+      {
+        "text": "`CONFIG SET appendonly yes` no servidor em execução, esperar a reescrita, e então torná-lo permanente",
+        "why": "Isso. O arquivo base é gravado a partir do que está na memória, então a próxima partida carrega os dados."
+      },
+      {
+        "text": "Copiar o `dump.rdb` para dentro do `appendonlydir` e reiniciar",
+        "why": "Sem um manifesto que o cite, o Redis não o lê."
+      },
+      {
+        "text": "Pará-la antes com `docker stop`, para o snapshot final estar a salvo",
+        "why": "O snapshot está a salvo; o reinício seguinte é que o ignora."
+      }
+    ]
+  },
+  "ex-jfc63z5s": {
+    "prompt": "Toda escrita no Redis da loja agora falha com `MISCONF`. Onde o operador deve olhar primeiro?",
+    "choices": [
+      {
+        "text": "No disco em que os snapshots são gravados, que a linha do log cita por inteiro",
+        "why": "Isso. Um snapshot que falhou para as escritas até um dar certo; disco cheio é a causa comum."
+      },
+      {
+        "text": "Nos clientes, que estão mandando comandos que o Redis não entende",
+        "why": "Um comando desconhecido responde `ERR unknown command`; o `MISCONF` é sobre salvar."
+      },
+      {
+        "text": "No `maxmemory`, porque a instância está cheia",
+        "why": "Uma instância cheia responde `OOM`, que é a aula 14."
+      },
+      {
+        "text": "Nas réplicas, que pararam de confirmar",
+        "why": "Réplicas não têm papel no `MISCONF`; aqui não há nenhuma."
+      }
+    ]
+  },
+  "ex-90692f4b": {
+    "prompt": "Um Redis guarda só páginas renderizadas que a aplicação consegue montar de novo. Que persistência cabe?",
+    "choices": [
+      {
+        "text": "`appendfsync always`, para nenhuma página se perder",
+        "why": "Uma página perdida é remontada; pagar um descarregamento por escrita não compra nada."
+      },
+      {
+        "text": "Nenhuma: `--save \"\"` e o log desligado",
+        "why": "Isso. Ele começa vazio e na hora, e não gasta forks nem disco com cópias."
+      },
+      {
+        "text": "Snapshots e log, por segurança",
+        "why": "Seguro para dados que ninguém quer de volta; o custo é real e o benefício não."
+      },
+      {
+        "text": "Snapshots a cada minuto",
+        "why": "Todo fork custa memória, para páginas que podem ser montadas de novo."
+      }
+    ]
+  },
+  "ex-khxhz147": {
+    "prompt": "Quais campos do `INFO persistence` dizem que o Redis está falhando ao salvar? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "`rdb_last_bgsave_status:err`",
+        "why": "Isso: o último snapshot falhou."
+      },
+      {
+        "text": "`aof_last_write_status:err`",
+        "why": "Isso: uma escrita no log falhou."
+      },
+      {
+        "text": "`loading:1`",
+        "why": "Isso é um reinício ainda lendo o arquivo."
+      },
+      {
+        "text": "`rdb_bgsave_in_progress:1`",
+        "why": "Um snapshot em andamento é normal; não diz nada do resultado."
+      },
+      {
+        "text": "`aof_enabled:0`",
+        "why": "O log desligado é uma escolha, não uma falha."
+      }
+    ]
+  },
+  "ex-9k84w9n1": {
+    "prompt": "Só com snapshots, o `INFO persistence` informa `rdb_changes_since_last_save:2`. O que isso diz ao operador?",
+    "choices": [
+      {
+        "text": "Duas escritas se perderiam se o Redis caísse agora",
+        "why": "Isso. As duas estão na memória e em nenhum arquivo."
+      },
+      {
+        "text": "Dois snapshots falharam desde o último que funcionou",
+        "why": "Falhas aparecem no `rdb_last_bgsave_status`; este campo conta escritas."
+      },
+      {
+        "text": "Duas chaves eram grandes demais para o snapshot e foram puladas",
+        "why": "Um snapshot guarda todas as chaves; nada é pulado por tamanho."
+      },
+      {
+        "text": "O próximo snapshot começa em dois segundos, quando uma regra dispara",
+        "why": "É uma contagem de mudanças, não uma contagem regressiva."
+      }
+    ]
+  },
+  "ex-9gqhkcgy": {
+    "prompt": "Alguém rodou `FLUSHALL` por engano numa instância com o arquivo append-only ligado. Nada foi reescrito nem reiniciado desde então. O que traz os dados de volta?",
+    "choices": [
+      {
+        "text": "Rodar `BGREWRITEAOF`, para o log ser refeito a partir do que guardava",
+        "why": "Uma reescrita é feita a partir da memória, que agora está vazia: tornaria a perda definitiva."
+      },
+      {
+        "text": "Parar o Redis, remover aquele comando do fim do `.incr.aof` e subi-lo de novo",
+        "why": "Isso. A reprodução então refaz tudo até o comando anterior a ele."
+      },
+      {
+        "text": "Nada, porque o `FLUSHALL` apaga os arquivos do log também",
+        "why": "Ele é acrescentado ao log como qualquer escrita; os arquivos ficam."
+      },
+      {
+        "text": "Reiniciar com o log desligado, para o Redis carregar o `dump.rdb`",
+        "why": "Com regras de save ligadas, o `FLUSHALL` também salva um snapshot vazio, e um mais antigo é mais velho que o log."
+      }
+    ]
+  },
+  "ex-n0evtdah": {
+    "prompt": "Uma instância com `appendfsync everysec` recebe 5.000 escritas por segundo, sem parar. A máquina perde energia. Pela cifra da tabela para o `everysec`, cerca de quantas escritas confirmadas se perdem?",
+    "hint": "Cerca de um segundo de escritas."
+  },
+  "ex-6yk73mrf": {
+    "prompt": "A loja guarda as chaves de idempotência num Redis com `appendfsync everysec`. Que evento pode perder uma chave já confirmada?",
+    "choices": [
+      {
+        "text": "`docker kill` no contêiner",
+        "why": "A aula o matou desse jeito e não perdeu nada."
+      },
+      {
+        "text": "`docker stop` no contêiner",
+        "why": "Uma parada limpa descarrega tudo antes."
+      },
+      {
+        "text": "Um `BGREWRITEAOF` iniciado à mão enquanto a loja está ocupada gravando chaves",
+        "why": "A reescrita é feita a partir da memória, que tem a chave."
+      },
+      {
+        "text": "A máquina perder energia até um segundo depois de a resposta ter saído",
+        "why": "Isso. Esse segundo no page cache é a janela que o `everysec` aceita."
+      }
+    ]
+  },
+  "ex-71mbc7sa": {
+    "prompt": "Com snapshots e arquivo append-only ligados, um Redis que reinicia carrega o ___ e ignora o `dump.rdb`.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "AOF"
+        ]
+      }
+    ]
+  }
+}

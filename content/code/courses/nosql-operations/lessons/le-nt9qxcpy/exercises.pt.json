@@ -1,0 +1,417 @@
+{
+  "ex-377wnd86": {
+    "prompt": "Qual destes um serviço de banco gerenciado tira das suas mãos?",
+    "choices": [
+      {
+        "text": "Trocar um disco com defeito e reconstruir o nó",
+        "why": "Isso. As máquinas e suas falhas ficam abaixo da linha da responsabilidade compartilhada."
+      },
+      {
+        "text": "Escolher a shard key",
+        "why": "A shard key decorre das suas consultas; o provedor executa o que você escolher."
+      },
+      {
+        "text": "Decidir quais operações precisam de escrita na maioria",
+        "why": "O write concern é uma troca por operação entre latência e garantia, e continua seu."
+      },
+      {
+        "text": "Escrever a repetição depois que um failover derruba uma conexão",
+        "why": "Um failover ainda derruba conexões; repetir é trabalho da aplicação."
+      }
+    ]
+  },
+  "ex-qn1wbzzz": {
+    "prompt": "Um MongoDB gerenciado promove um novo primário em poucos segundos depois que uma zona falha. O que a aplicação ainda vê?",
+    "choices": [
+      {
+        "text": "Conexões derrubadas e erros nas escritas em andamento durante esses segundos",
+        "why": "Isso. O provedor monta os membros; a aplicação ainda repete e reconecta."
+      },
+      {
+        "text": "Perda de dados, já que serviços gerenciados replicam de forma assíncrona",
+        "why": "Escritas confirmadas pela maioria sobrevivem a uma eleição onde quer que ela rode."
+      },
+      {
+        "text": "Uma janela de manutenção anunciada uma semana antes",
+        "why": "Uma falha de zona não é agendada; janelas de manutenção são para patches."
+      },
+      {
+        "text": "Nada: o failover gerenciado é invisível para os clientes",
+        "why": "A eleição da aula 9 continua acontecendo, com os mesmos segundos de escritas recusadas."
+      }
+    ]
+  },
+  "ex-ba9a2vry": {
+    "prompt": "Por que upgrades de versão maior de um banco gerenciado ainda são iniciados pelo cliente na maioria dos serviços?",
+    "choices": [
+      {
+        "text": "Os provedores não têm permissão de instalá-los pelas licenças",
+        "why": "As licenças restringem quem vende o serviço, não quem roda um upgrade."
+      },
+      {
+        "text": "Um upgrade maior apaga os backups feitos na versão antiga",
+        "why": "Nada na aula diz que backups são apagados; o risco é o comportamento da aplicação."
+      },
+      {
+        "text": "Porque custam à parte",
+        "why": "O preço não é o motivo; o comportamento é."
+      },
+      {
+        "text": "Mudam comportamentos de que a aplicação depende",
+        "why": "Isso. Versões menores e patches do sistema são aplicados na sua janela; uma versão maior precisa ser testada por você antes."
+      }
+    ]
+  },
+  "ex-972g2r2a": {
+    "prompt": "Associe cada produto a um serviço operado pela empresa que o faz.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "MongoDB Atlas"
+      },
+      {
+        "left": "Redis",
+        "right": "Redis Cloud"
+      },
+      {
+        "left": "Cassandra",
+        "right": "DataStax Astra DB"
+      }
+    ],
+    "right_distractors": [
+      "Amazon Keyspaces"
+    ]
+  },
+  "ex-rnp0rkr1": {
+    "prompt": "Uma equipe passa seu Redis para um plano gerenciado com 1 GB de memória e `noeviction`. Seis meses depois as escritas começam a falhar com `OOM`. De quem é o problema, e qual é a correção?",
+    "choices": [
+      {
+        "text": "Do provedor: um serviço gerenciado tem que aumentar a memória sozinho",
+        "why": "Todo plano tem um tamanho; chegar a ele é uma decisão de capacidade acima da linha."
+      },
+      {
+        "text": "Da equipe: um plano maior ou menos dados, e uma fatura maior de qualquer jeito",
+        "why": "Isso. É igual às aulas 14 e 20; só que a correção é um plano em vez de uma VM."
+      },
+      {
+        "text": "De ninguém: mudar para `allkeys-lru` resolve sem custo",
+        "why": "Com expulsão, dados são apagados; se isso sai de graça depende de o Redis ser cache ou banco."
+      },
+      {
+        "text": "Do provedor, porque `OOM` é uma queda do servidor dele",
+        "why": "O Redis fica no ar e recusa escritas; nada caiu."
+      }
+    ]
+  },
+  "ex-8t0qd17v": {
+    "prompt": "Um MongoDB gerenciado aceita uma shard key que manda todo pedido novo para um único shard. Por que isso não vai aparecer na página de status do provedor?",
+    "choices": [
+      {
+        "text": "É uma decisão sobre os dados, executada exatamente como foi tomada",
+        "why": "Isso. O serviço funciona como projetado; o projeto era seu."
+      },
+      {
+        "text": "Páginas de status só cobrem Redis e Cassandra",
+        "why": "Todo provedor tem uma, para todo serviço; isso só não é algo que ela cobre."
+      },
+      {
+        "text": "O balanceador da aula 10 vai corrigir em uma hora",
+        "why": "O balanceador move chunks; ele não espalha escritas que caem todas na faixa de chaves mais nova."
+      },
+      {
+        "text": "O provedor esconde incidentes causados por sharding",
+        "why": "Nada é escondido; não há incidente do lado dele para informar."
+      }
+    ]
+  },
+  "ex-28sr9be3": {
+    "prompt": "Por que uma tabela que lê mil tombstones para devolver dez linhas é pior num serviço que cobra por leitura do que no seu próprio hardware?",
+    "choices": [
+      {
+        "text": "Os provedores guardam tombstones para sempre",
+        "why": "A compactação ainda os remove depois do período de carência."
+      },
+      {
+        "text": "Não é pior: o provedor absorve o trabalho extra",
+        "why": "O trabalho extra é exatamente o que o preço por leitura mede."
+      },
+      {
+        "text": "Lá, cada leitura desperdiçada é cobrada",
+        "why": "Isso. Quase todo eixo de um serviço gerenciado é cobrado, então um erro de modelagem vira um custo mensal."
+      },
+      {
+        "text": "Serviços gerenciados recusam leituras com tombstones",
+        "why": "Eles aplicam os mesmos limites que você escolhe; a recusa não é a diferença."
+      }
+    ]
+  },
+  "ex-s3x16p7x": {
+    "prompt": "O que um teste de restauração num serviço gerenciado responde e a documentação dele não? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Sob qual licença o banco está",
+        "why": "Uma licença se lê num arquivo ou num anúncio, não se descobre restaurando."
+      },
+      {
+        "text": "Quanto tempo leva restaurar os seus dados de verdade",
+        "why": "Isso: o número que vai para o runbook e para o plano de saída."
+      },
+      {
+        "text": "O que falta na cópia restaurada, como usuários ou configurações fora dos dados",
+        "why": "Isso: descoberto num teste, e não num incidente."
+      },
+      {
+        "text": "Quem na equipe sabe onde fica o botão",
+        "why": "Isso: um restore que ninguém sabe iniciar demora mais que qualquer documentação diz."
+      }
+    ]
+  },
+  "ex-qrmc2nr5": {
+    "prompt": "Qual destes mantém um banco gerenciado privado?",
+    "choices": [
+      {
+        "text": "Uma senha longa compartilhada por todas as aplicações",
+        "why": "Uma senha compartilhada significa que um vazamento abre todas as portas."
+      },
+      {
+        "text": "Só rede privada, TLS, uma conta por aplicação",
+        "why": "Isso: as três configurações que todo provedor tem com nomes diferentes."
+      },
+      {
+        "text": "Confiar no log de auditoria do provedor para barrar intrusos",
+        "why": "Um log registra quem se conectou; não barra ninguém, e lê-lo é com você."
+      },
+      {
+        "text": "Um endpoint público numa porta diferente da padrão",
+        "why": "Uma porta diferente não esconde nada de um scanner."
+      }
+    ]
+  },
+  "ex-ffjcj8mr": {
+    "prompt": "Um backup que ninguém nunca ___ é uma esperança, seja quem for que o fez.",
+    "blanks": [
+      {
+        "accept": [
+          "restaurou"
+        ]
+      }
+    ]
+  },
+  "ex-1tatfdnq": {
+    "prompt": "O Amazon DocumentDB responde a drivers do MongoDB. Qual é o primeiro documento a ler antes de levar uma aplicação para ele?",
+    "choices": [
+      {
+        "text": "A SSPL, para confirmar que pode ser usado",
+        "why": "Usar um serviço para a própria aplicação não é o que a SSPL restringe."
+      },
+      {
+        "text": "A página de preços",
+        "why": "O preço importa, mas não diz quais das suas consultas vão funcionar."
+      },
+      {
+        "text": "O manual do próprio MongoDB, já que o motor é o mesmo",
+        "why": "É outro motor atrás de uma camada de tradução."
+      },
+      {
+        "text": "A lista de recursos não suportados",
+        "why": "Isso. O que falta na tradução é achado ali ou em produção."
+      }
+    ]
+  },
+  "ex-k4m25mfq": {
+    "prompt": "Associe cada produto à sua situação de licença.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "SSPL, desde outubro de 2018"
+      },
+      {
+        "left": "Redis 7.4",
+        "right": "RSALv2 ou SSPLv1, licença dupla"
+      },
+      {
+        "left": "Valkey",
+        "right": "BSD, sob a Linux Foundation"
+      },
+      {
+        "left": "Cassandra",
+        "right": "Apache License 2.0"
+      }
+    ],
+    "right_distractors": [
+      "somente GPLv2"
+    ]
+  },
+  "ex-tg98d38d": {
+    "prompt": "O laboratório procurou um arquivo de licença na imagem `redis:7.4` e não encontrou nenhum. O que a aula conclui?",
+    "choices": [
+      {
+        "text": "O Redis 7.4 ainda é BSD, já que nada diz o contrário",
+        "why": "Um arquivo ausente não diz nada sobre a licença; o Redis anunciou a mudança para o 7.4."
+      },
+      {
+        "text": "Ela depende do que o Redis anunciou",
+        "why": "Isso. O laboratório confirma a versão 7.4.11 e não consegue confirmar a licença; a aula diz qual é qual."
+      },
+      {
+        "text": "A imagem é o Valkey com outro nome",
+        "why": "O `redis-server --version` imprimiu Redis 7.4.11."
+      },
+      {
+        "text": "A imagem não pode ser rodada legalmente",
+        "why": "Rodar o Redis para a própria aplicação é permitido por todas as licenças discutidas."
+      }
+    ]
+  },
+  "ex-207dr9d3": {
+    "prompt": "Uma loja guarda suas sessões num Redis 7.4 auto-hospedado e vende sapatos, não bancos. O que a mudança para RSALv2/SSPLv1 significa para ela hoje?",
+    "choices": [
+      {
+        "text": "Ela tem que migrar para o Valkey antes do próximo upgrade",
+        "why": "Nada a obriga; o Valkey é uma opção entre várias."
+      },
+      {
+        "text": "Nada para uso próprio; importa para quais provedores e versões estarão à venda para ela depois",
+        "why": "Isso. A restrição é sobre vender o Redis como serviço; o que muda são as escolhas futuras da loja."
+      },
+      {
+        "text": "Ela deve uma taxa de licença ao Redis",
+        "why": "Nenhuma das licenças cobra taxa para rodar o software você mesmo."
+      },
+      {
+        "text": "Ela tem que publicar o código-fonte da aplicação",
+        "why": "Essa obrigação é sobre oferecer o próprio banco como serviço."
+      }
+    ]
+  },
+  "ex-2mqk9vwn": {
+    "prompt": "O Valkey nasceu de um fork da versão ___ do Redis, a última sob a licença BSD.",
+    "blanks": [
+      {
+        "accept": [
+          "7.2.4"
+        ]
+      }
+    ]
+  },
+  "ex-pgxwp1yg": {
+    "prompt": "Um dump lê a 50 MB/s. Quantas horas leva para ler 1 TB (1.000.000 MB)? Arredonde para uma casa decimal.",
+    "unit": "horas"
+  },
+  "ex-xax8v4mr": {
+    "prompt": "Por que a aula chama recursos além do banco, como busca embutida ou gatilhos, de o custo que se esconde?",
+    "choices": [
+      {
+        "text": "São cobrados à parte e ninguém lê essa parte da fatura",
+        "why": "O custo escondido é o trabalho de substituí-los, não o preço."
+      },
+      {
+        "text": "Cada um precisa ser refeito fora ao sair",
+        "why": "Isso. Listá-los à medida que são adotados mantém a saída com preço."
+      },
+      {
+        "text": "Deixam o banco mais lento",
+        "why": "Velocidade não é o argumento; sair é."
+      },
+      {
+        "text": "Violam a licença do banco",
+        "why": "Os recursos do provedor estão sob os termos dele, não da licença do banco."
+      }
+    ]
+  },
+  "ex-5danay2t": {
+    "prompt": "Uma loja não pode fechar por uma noite, e o dump e restore dela leva nove horas. Qual rota de saída serve?",
+    "choices": [
+      {
+        "text": "Replicar continuamente para o lugar novo e trocar em minutos",
+        "why": "Isso, e é um projeto por si só, e é por isso que tem preço calculado cedo."
+      },
+      {
+        "text": "Pedir ao provedor para exportar mais rápido",
+        "why": "A velocidade de exportação é do provedor; a janela ainda é sua de encaixar."
+      },
+      {
+        "text": "Ficar, já que sair é impossível",
+        "why": "Sair custa um projeto, o que é um preço, não uma impossibilidade."
+      },
+      {
+        "text": "Dump e restore mesmo assim, com escritas permitidas durante o dump",
+        "why": "Escritas depois do dump se perdem no lado novo."
+      }
+    ]
+  },
+  "ex-qpcss8fq": {
+    "prompt": "O que restaurar o backup exportado do provedor nos seus próprios contêineres prova que nenhum outro teste de saída prova?",
+    "choices": [
+      {
+        "text": "Que os recursos do provedor existem fora dele",
+        "why": "Um restore de dados não traz índices de busca nem gatilhos junto."
+      },
+      {
+        "text": "Que a licença permite sair",
+        "why": "Nenhuma licença aqui restringe sair."
+      },
+      {
+        "text": "Que o egress vai sair de graça",
+        "why": "Um restore não diz nada sobre preço de transferência."
+      },
+      {
+        "text": "Que o seu próprio software o lê, e em quanto tempo",
+        "why": "Isso: as três coisas que a seção lista."
+      }
+    ]
+  },
+  "ex-zeywbn6g": {
+    "prompt": "Qual decisão fica com você em todo serviço gerenciado, qualquer que seja o plano do provedor?",
+    "choices": [
+      {
+        "text": "Em qual zona o nó substituto é construído",
+        "why": "Reconstruir nós com falha é trabalho do provedor."
+      },
+      {
+        "text": "Quando o sistema operacional dos nós recebe patches",
+        "why": "Você escolhe uma janela; o provedor aplica."
+      },
+      {
+        "text": "Como os backups são guardados de forma durável",
+        "why": "O armazenamento de backups fica abaixo da linha."
+      },
+      {
+        "text": "Se leituras vão a um secundário",
+        "why": "Isso. Read preference é uma troca por operação que só você está em posição de julgar."
+      }
+    ]
+  },
+  "ex-wr3qqxdj": {
+    "prompt": "Ordene um teste de saída, do primeiro ao último.",
+    "items": [
+      "Exportar o backup do provedor para um armazenamento que você controla",
+      "Subir contêineres do mesmo produto no seu laboratório",
+      "Restaurar o backup neles",
+      "Rodar as leituras da aplicação contra a cópia",
+      "Anotar no plano de saída o tempo que tudo levou"
+    ],
+    "trap": "Não dá para restaurar o que não foi exportado, nem medir o que não terminou."
+  },
+  "ex-zcc7nrec": {
+    "prompt": "Um serviço compatível com Cassandra passa em todos os testes de uma aplicação. O que ainda pode diferir do Cassandra das aulas 16 a 19?",
+    "choices": [
+      {
+        "text": "Como ele se comporta sob carga",
+        "why": "Isso. O motor por baixo é o do próprio provedor."
+      },
+      {
+        "text": "A licença do driver",
+        "why": "O driver é o mesmo; o motor é que mudou."
+      },
+      {
+        "text": "Os tipos de dados, que são sempre traduzidos para JSON",
+        "why": "Nada na aula diz isso; a diferença citada é o motor."
+      },
+      {
+        "text": "A sintaxe CQL das consultas que passaram",
+        "why": "Essas consultas passaram; a sintaxe que usaram é aceita."
+      }
+    ]
+  }
+}

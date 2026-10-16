@@ -1,0 +1,616 @@
+[
+  {
+    "id": "ex-rtgfqder",
+    "version": 1,
+    "section": "why-shard",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Writes no longer fit on one primary. Why does adding secondaries to the replica set not help?",
+    "choices": [
+      {
+        "text": "Each secondary is another full copy that still follows the one primary",
+        "correct": true,
+        "why": "Right. A replica set multiplies safety, not capacity."
+      },
+      {
+        "text": "Secondaries refuse writes until they are promoted by hand",
+        "correct": false,
+        "why": "They refuse client writes by design, and promotion is an election, not a manual step."
+      },
+      {
+        "text": "A replica set is limited to three members",
+        "correct": false,
+        "why": "It allows more; the limit is that every member stores and applies everything."
+      },
+      {
+        "text": "Secondaries slow the primary down by asking for the oplog too often",
+        "correct": false,
+        "why": "Fetching the oplog is cheap; the problem is that all writes still go to one machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-9p9krdbf",
+    "version": 1,
+    "section": "why-shard",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each server of a sharded cluster to what it does.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "mongos",
+        "right": "routes each request to the shards that hold the data"
+      },
+      {
+        "left": "config server",
+        "right": "keeps the map of which range lives on which shard"
+      },
+      {
+        "left": "shard",
+        "right": "stores its part of each sharded collection"
+      }
+    ],
+    "right_distractors": [
+      "elects the primary of every replica set"
+    ]
+  },
+  {
+    "id": "ex-tz01nyx8",
+    "version": 1,
+    "section": "why-shard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before sharding a collection that is slow, what does the lesson say to try first?",
+    "choices": [
+      {
+        "text": "Indexes, a bigger machine, archiving old data or secondary reads",
+        "correct": true,
+        "why": "Right. Each costs less and is undone in an afternoon; a shard key is not."
+      },
+      {
+        "text": "A hashed shard key, since it is the safe default for any collection",
+        "correct": false,
+        "why": "Hashed keys scatter range queries; there is no key that is safe by default."
+      },
+      {
+        "text": "A second mongos, so the router stops being the bottleneck",
+        "correct": false,
+        "why": "Without sharding there is no router at all."
+      },
+      {
+        "text": "Nothing: shard as early as possible, while the collection is small",
+        "correct": false,
+        "why": "Sharding is the last thing to reach for, because the key is expensive to change."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vfc684m",
+    "version": 1,
+    "section": "building-a-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `cluster.sh`, why is each shard started as a replica set even though it has a single member?",
+    "choices": [
+      {
+        "text": "Because a single-member set starts faster than a standalone server would",
+        "correct": false,
+        "why": "Speed is not the reason; the cluster requires the form."
+      },
+      {
+        "text": "Because in a sharded cluster shards and config servers are replica sets",
+        "correct": true,
+        "why": "Right. One member keeps the lab small; production gives each set three."
+      },
+      {
+        "text": "So that `mongos` can read from secondaries",
+        "correct": false,
+        "why": "With one member there are no secondaries."
+      },
+      {
+        "text": "So that `--wiredTigerCacheSizeGB` takes effect",
+        "correct": false,
+        "why": "The cache setting works on any mongod."
+      }
+    ]
+  },
+  {
+    "id": "ex-ef22vj7w",
+    "version": 1,
+    "section": "building-a-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `mongos` store?",
+    "choices": [
+      {
+        "text": "A copy of the config server's map, written to its own disk",
+        "correct": false,
+        "why": "It reads the map from the config server; it keeps nothing durable."
+      },
+      {
+        "text": "Recent query results, as a cache",
+        "correct": false,
+        "why": "It routes; it does not cache documents."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. That is why the script gives it no data directory and no replica set."
+      },
+      {
+        "text": "The documents of unsharded collections",
+        "correct": false,
+        "why": "Those live on the database's primary shard."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks0ny236",
+    "version": 1,
+    "section": "building-a-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every `mongod` in `cluster.sh` get `--wiredTigerCacheSizeGB 0.25`?",
+    "choices": [
+      {
+        "text": "So that the data files are compressed",
+        "correct": false,
+        "why": "Compression is a separate setting; this one is memory."
+      },
+      {
+        "text": "Otherwise each would size its cache from the whole machine's memory",
+        "correct": true,
+        "why": "Right, and three of them would compete for the same memory."
+      },
+      {
+        "text": "Because a shard refuses to start with more than a gigabyte of cache",
+        "correct": false,
+        "why": "There is no such refusal; the default is just too large for a shared VM."
+      },
+      {
+        "text": "So that the balancer moves ranges in smaller pieces",
+        "correct": false,
+        "why": "Range size is set per collection with `configureCollectionBalancing`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fepxq06d",
+    "version": 1,
+    "section": "shard-key",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each shard owned 5,000 orders after the first 10,000. After orders 10,001 to 20,000 were inserted under the ranged key, how many did `shard2` own?",
+    "value": 15000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vdyxjavy",
+    "version": 1,
+    "section": "shard-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does splitting the top range again not fix a growing shard key?",
+    "choices": [
+      {
+        "text": "The newest piece is still on one shard, and every new value lands in it",
+        "correct": true,
+        "why": "Right. The hot spot moves with the top of the range."
+      },
+      {
+        "text": "Splitting is refused for a key with consecutive values",
+        "correct": false,
+        "why": "Splits work; they just do not change where new values go."
+      },
+      {
+        "text": "The balancer moves the split pieces back together again",
+        "correct": false,
+        "why": "The balancer moves ranges between shards; it does not undo splits to punish them."
+      },
+      {
+        "text": "A split deletes the documents already in the range",
+        "correct": false,
+        "why": "A split only changes the map."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6w308e3",
+    "version": 1,
+    "section": "shard-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under a hashed `orderId`, which query is sent to every shard?",
+    "hint": "What does a hash do to neighbouring values?",
+    "choices": [
+      {
+        "text": "`find({ orderId: 12345 })`",
+        "correct": false,
+        "why": "An exact value hashes to one place: `SINGLE_SHARD`."
+      },
+      {
+        "text": "`find({ orderId: { $gte: 100, $lt: 200 } })`",
+        "correct": true,
+        "why": "Right: `SHARD_MERGE`. The hundred neighbouring numbers were scattered on purpose."
+      },
+      {
+        "text": "Neither: a hashed key makes every query single-shard",
+        "correct": false,
+        "why": "The capture showed the range query as `SHARD_MERGE`."
+      },
+      {
+        "text": "Both, since hashing hides which shard owns a value",
+        "correct": false,
+        "why": "`mongos` hashes the exact value itself and knows where it lives."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzyk8h8n",
+    "version": 1,
+    "section": "shard-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query on `orders` filters by `customer`, a field that is not in the shard key. How many shards does `mongos` ask?",
+    "choices": [
+      {
+        "text": "Only the shard that holds most of that customer's orders",
+        "correct": false,
+        "why": "`mongos` has no way to know that; the map is by shard key."
+      },
+      {
+        "text": "One, chosen at random",
+        "correct": false,
+        "why": "A random shard would miss the orders on the others."
+      },
+      {
+        "text": "All of them, whatever the key's kind",
+        "correct": true,
+        "why": "Right: `SHARD_MERGE`, under the ranged and the hashed key alike."
+      },
+      {
+        "text": "The primary shard of the database",
+        "correct": false,
+        "why": "A sharded collection is spread over every shard, not kept on the primary one."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa14ejfp",
+    "version": 1,
+    "section": "shard-key",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `explain()` through `mongos`, the top stage `___` means the query went to exactly one shard.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "SINGLE_SHARD"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xz3sabdh",
+    "version": 1,
+    "section": "balancer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ninety seconds after the inserts, `shard1` showed 66,538 owned visits and 33,462 orphaned. What are the orphaned ones?",
+    "choices": [
+      {
+        "text": "Visits whose insert failed and was never acknowledged",
+        "correct": false,
+        "why": "Every insert was acknowledged; the count came back as 100,000."
+      },
+      {
+        "text": "Copies left behind by migrations, deleted after a delay",
+        "correct": true,
+        "why": "Right. The ranges now belong to `shard2`, and counts through `mongos` leave the old copies out."
+      },
+      {
+        "text": "Visits with no `country` field, which no range can hold",
+        "correct": false,
+        "why": "Every visit had `\"BR\"`."
+      },
+      {
+        "text": "Duplicates that will be counted twice until the balancer finishes",
+        "correct": false,
+        "why": "`mongos` already excludes them from counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-evpdqp8r",
+    "version": 1,
+    "section": "balancer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A collection is sharded on `{ status: 1 }`, where status is one of four words. Ten shards are added. How many can ever hold its data?",
+    "hint": "A range can only be cut between two different values.",
+    "choices": [
+      {
+        "text": "All ten, once the balancer has run long enough",
+        "correct": false,
+        "why": "No amount of balancing splits a range holding a single value."
+      },
+      {
+        "text": "At most four",
+        "correct": true,
+        "why": "Right. Cardinality is a ceiling on how far the collection can spread."
+      },
+      {
+        "text": "Exactly two, since the balancer works in pairs of shards",
+        "correct": false,
+        "why": "It moves between pairs at a time, but it uses every shard over time."
+      },
+      {
+        "text": "One, because a string key cannot be split",
+        "correct": false,
+        "why": "Strings split fine between different values."
+      }
+    ]
+  },
+  {
+    "id": "ex-z9qhpre7",
+    "version": 1,
+    "section": "balancer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the lesson set the range size of its collections to 1 MB?",
+    "choices": [
+      {
+        "text": "At the 128 MB default a lab collection is too small for the balancer to act",
+        "correct": true,
+        "why": "Right. It acts only when the gap passes about three range sizes."
+      },
+      {
+        "text": "Because ranges larger than 1 MB are marked jumbo",
+        "correct": false,
+        "why": "Jumbo means indivisible, not large."
+      },
+      {
+        "text": "To make `getShardDistribution` print smaller numbers",
+        "correct": false,
+        "why": "The setting changes behaviour, not how numbers print."
+      },
+      {
+        "text": "Because MongoDB 8.0 requires it for compound keys",
+        "correct": false,
+        "why": "No such requirement; `orders` used the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6qrfyjd",
+    "version": 1,
+    "section": "balancer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `sh.splitFind` answer for the collection keyed on `{ country: 1 }`?",
+    "choices": [
+      {
+        "text": "That the range was split into two",
+        "correct": false,
+        "why": "It could not be."
+      },
+      {
+        "text": "`CannotSplit`: the chunk is indivisible",
+        "correct": true,
+        "why": "Right. Every document had the same key value."
+      },
+      {
+        "text": "That the balancer was disabled for this collection",
+        "correct": false,
+        "why": "It was enabled throughout; it had marked the range jumbo."
+      },
+      {
+        "text": "That `country` needed an index first",
+        "correct": false,
+        "why": "Sharding creates the key's index; the problem was the single value."
+      }
+    ]
+  },
+  {
+    "id": "ex-vea9n68a",
+    "version": 1,
+    "section": "changing-the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change can `refineCollectionShardKey` make?",
+    "choices": [
+      {
+        "text": "Replace the first field of the key",
+        "correct": false,
+        "why": "The new key must start with the old one."
+      },
+      {
+        "text": "Turn a ranged key into a hashed one",
+        "correct": false,
+        "why": "That needs `reshardCollection`, as the lesson did for `orders`."
+      },
+      {
+        "text": "Add fields to the end of the existing key",
+        "correct": true,
+        "why": "Right, and nothing moves when it does."
+      },
+      {
+        "text": "Remove a field that the queries no longer use at all",
+        "correct": false,
+        "why": "Refining only appends."
+      }
+    ]
+  },
+  {
+    "id": "ex-me09azsx",
+    "version": 1,
+    "section": "changing-the-key",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`reshardCollection` on 20,000 orders took 332.94 seconds. To the nearest whole minute, how long was that?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-2w4dmc2a",
+    "version": 1,
+    "section": "changing-the-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did resharding 20,000 small orders take over five minutes?",
+    "choices": [
+      {
+        "text": "By default it copies for at least five minutes, to let the shards catch up with writes",
+        "correct": true,
+        "why": "Right. On a real collection the copy itself then dominates."
+      },
+      {
+        "text": "Because the lab's shards are single members and copy slowly",
+        "correct": false,
+        "why": "Copying 20,000 small documents takes well under a second here."
+      },
+      {
+        "text": "Because a hashed key has to be computed for every document twice over",
+        "correct": false,
+        "why": "Hashing is cheap; the time is a deliberate minimum."
+      },
+      {
+        "text": "Because writes were blocked for the whole operation",
+        "correct": false,
+        "why": "Writes are blocked only for a short moment at the switch-over."
+      }
+    ]
+  },
+  {
+    "id": "ex-q5q24g7s",
+    "version": 1,
+    "section": "changing-the-key",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team plans to reshard because one shard is overloaded. What should they check first?",
+    "choices": [
+      {
+        "text": "That the new key starts with the old one",
+        "correct": false,
+        "why": "That is refining's rule; resharding takes any key."
+      },
+      {
+        "text": "Free disk for a second copy, and load headroom on an already struggling cluster",
+        "correct": true,
+        "why": "Right. Resharding moves the whole collection through the shards it is meant to relieve."
+      },
+      {
+        "text": "That the balancer is disabled for good",
+        "correct": false,
+        "why": "Nothing in the lesson asks for that."
+      },
+      {
+        "text": "That `mongos` is restarted after the change",
+        "correct": false,
+        "why": "The router reads the new map on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-agwjat3p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the building of the lab's cluster in order, as `cluster.sh` does it.",
+    "items": [
+      "Start the config server and the two shards",
+      "Initiate a one-member replica set on each",
+      "Start `mongos`, pointing it at the config server",
+      "Add the two shards through `mongos`"
+    ],
+    "trap": "`mongos` reads the map from a config server that has to be running and initiated."
+  },
+  {
+    "id": "ex-b4209wx6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of the lab's cluster? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A hashed `orderId` spread 20,000 consecutive orders almost evenly",
+        "correct": true,
+        "why": "Right: 9,859 and 10,141."
+      },
+      {
+        "text": "A key with a single value was split once the balancer had time",
+        "correct": false,
+        "why": "It stayed one jumbo range until the key was refined."
+      },
+      {
+        "text": "Refining the key let the balancer move ranges it could not move before",
+        "correct": true,
+        "why": "Right: three ranges went to `shard2`."
+      },
+      {
+        "text": "Resharding left the range query on `orders` single-shard",
+        "correct": false,
+        "why": "Under the new hashed key it became `SHARD_MERGE`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmexpjrj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A shop's queries mostly ask for one customer's orders, newest first. Which shard key fits best?",
+    "choices": [
+      {
+        "text": "`{ orderId: 1, customer: 1, placedAt: -1 }`",
+        "correct": false,
+        "why": "A key that starts with a growing value puts every new order on one shard, and the query does not lead with it."
+      },
+      {
+        "text": "`{ customer: 1, placedAt: -1 }`",
+        "correct": true,
+        "why": "Right. Writes spread over customers, and one customer's history sits on one shard."
+      },
+      {
+        "text": "`{ status: 1 }`",
+        "correct": false,
+        "why": "Low cardinality: a handful of values can never spread far."
+      },
+      {
+        "text": "`{ placedAt: \"hashed\" }`",
+        "correct": false,
+        "why": "Writes spread, but every customer query asks every shard."
+      }
+    ]
+  }
+]

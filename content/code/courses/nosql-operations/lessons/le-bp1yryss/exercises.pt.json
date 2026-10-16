@@ -1,0 +1,410 @@
+{
+  "ex-rtgfqder": {
+    "prompt": "As escritas não cabem mais num primário. Por que acrescentar secundários ao replica set não ajuda?",
+    "choices": [
+      {
+        "text": "Cada secundário é mais uma cópia inteira que segue o mesmo primário",
+        "why": "Isso. Um replica set multiplica segurança, não capacidade."
+      },
+      {
+        "text": "Secundários recusam escritas até serem promovidos à mão",
+        "why": "Eles recusam escritas de clientes por projeto, e a promoção é uma eleição, não um passo manual."
+      },
+      {
+        "text": "Um replica set é limitado a três membros",
+        "why": "Ele permite mais; o limite é que todo membro guarda e aplica tudo."
+      },
+      {
+        "text": "Secundários deixam o primário lento pedindo o oplog com frequência demais",
+        "why": "Buscar o oplog é barato; o problema é que toda escrita continua indo a uma máquina."
+      }
+    ]
+  },
+  "ex-9p9krdbf": {
+    "prompt": "Associe cada servidor de um cluster shardeado ao que ele faz.",
+    "hint": "Uma descrição não pertence a nenhum.",
+    "pairs": [
+      {
+        "left": "mongos",
+        "right": "encaminha cada requisição aos shards que têm o dado"
+      },
+      {
+        "left": "config server",
+        "right": "guarda o mapa de qual faixa mora em qual shard"
+      },
+      {
+        "left": "shard",
+        "right": "guarda a sua parte de cada coleção shardeada"
+      }
+    ],
+    "right_distractors": [
+      "elege o primário de todo replica set"
+    ]
+  },
+  "ex-tz01nyx8": {
+    "prompt": "Antes de shardear uma coleção que está lenta, o que a aula manda tentar primeiro?",
+    "choices": [
+      {
+        "text": "Índices, uma máquina maior, arquivar dados velhos ou ler de secundários",
+        "why": "Isso. Cada um custa menos e se desfaz numa tarde; uma chave de shard, não."
+      },
+      {
+        "text": "Uma chave de shard hashed, já que é o padrão seguro para qualquer coleção",
+        "why": "Chaves hashed espalham consultas por faixa; não existe chave segura por padrão."
+      },
+      {
+        "text": "Um segundo mongos, para o roteador deixar de ser o gargalo",
+        "why": "Sem sharding não há roteador nenhum."
+      },
+      {
+        "text": "Nada: shardear o quanto antes, enquanto a coleção é pequena",
+        "why": "Sharding é a última coisa a buscar, porque a chave é cara de mudar."
+      }
+    ]
+  },
+  "ex-7vfc684m": {
+    "prompt": "No `cluster.sh`, por que cada shard é iniciado como replica set mesmo tendo um único membro?",
+    "choices": [
+      {
+        "text": "Porque um conjunto de um membro sobe mais rápido do que um servidor avulso subiria",
+        "why": "Velocidade não é o motivo; o cluster exige a forma."
+      },
+      {
+        "text": "Porque é a forma que o cluster exige de shards e config servers",
+        "why": "Isso. Um membro mantém o laboratório pequeno; produção dá três a cada conjunto."
+      },
+      {
+        "text": "Para o `mongos` poder ler de secundários",
+        "why": "Com um membro não há secundários."
+      },
+      {
+        "text": "Para o `--wiredTigerCacheSizeGB` fazer efeito",
+        "why": "A configuração de cache funciona em qualquer mongod."
+      }
+    ]
+  },
+  "ex-ef22vj7w": {
+    "prompt": "O que o `mongos` guarda?",
+    "choices": [
+      {
+        "text": "Uma cópia do mapa do config server, gravada no próprio disco",
+        "why": "Ele lê o mapa no config server; não guarda nada durável."
+      },
+      {
+        "text": "Resultados recentes de consultas, como cache",
+        "why": "Ele roteia; não guarda documentos em cache."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. É por isso que o script não lhe dá diretório de dados nem replica set."
+      },
+      {
+        "text": "Os documentos das coleções não shardeadas",
+        "why": "Esses moram no shard primário do banco."
+      }
+    ]
+  },
+  "ex-ks0ny236": {
+    "prompt": "Por que todo `mongod` do `cluster.sh` recebe `--wiredTigerCacheSizeGB 0.25`?",
+    "choices": [
+      {
+        "text": "Para os arquivos de dados serem comprimidos",
+        "why": "Compressão é outra configuração; esta é memória."
+      },
+      {
+        "text": "Senão cada um dimensionaria o cache pela memória da máquina inteira",
+        "why": "Isso, e três deles disputariam a mesma memória."
+      },
+      {
+        "text": "Porque um shard se recusa a subir com mais de um gigabyte de cache",
+        "why": "Não existe essa recusa; o padrão é só grande demais para uma VM compartilhada."
+      },
+      {
+        "text": "Para o balancer mover faixas em pedaços menores",
+        "why": "O tamanho de faixa é definido por coleção com o `configureCollectionBalancing`."
+      }
+    ]
+  },
+  "ex-fepxq06d": {
+    "prompt": "Cada shard tinha 5.000 pedidos depois dos primeiros 10.000. Depois de inseridos os pedidos 10.001 a 20.000 com a chave por faixa, quantos o `shard2` tinha?"
+  },
+  "ex-vdyxjavy": {
+    "prompt": "Por que dividir de novo a faixa de cima não conserta uma chave de shard que cresce?",
+    "choices": [
+      {
+        "text": "O pedaço mais novo continua num shard, e todo valor novo cai nele",
+        "why": "Isso. O ponto quente acompanha o topo da faixa."
+      },
+      {
+        "text": "Dividir é recusado para uma chave com valores consecutivos",
+        "why": "Divisões funcionam; só não mudam para onde vão os valores novos."
+      },
+      {
+        "text": "O balancer junta de novo os pedaços divididos",
+        "why": "O balancer move faixas entre shards; não desfaz divisões."
+      },
+      {
+        "text": "Uma divisão apaga os documentos que já estavam na faixa",
+        "why": "Uma divisão só muda o mapa."
+      }
+    ]
+  },
+  "ex-a6w308e3": {
+    "prompt": "Com `orderId` hashed, qual consulta é mandada a todos os shards?",
+    "hint": "O que um hash faz com valores vizinhos?",
+    "choices": [
+      {
+        "text": "`find({ orderId: 12345 })`",
+        "why": "Um valor exato vira um único hash: `SINGLE_SHARD`."
+      },
+      {
+        "text": "`find({ orderId: { $gte: 100, $lt: 200 } })`",
+        "why": "Isso: `SHARD_MERGE`. Os cem números vizinhos foram espalhados de propósito."
+      },
+      {
+        "text": "Nenhuma: uma chave hashed faz toda consulta ir a um shard",
+        "why": "A captura mostrou a consulta por faixa como `SHARD_MERGE`."
+      },
+      {
+        "text": "As duas, já que o hash esconde qual shard tem um valor",
+        "why": "O `mongos` calcula o hash do valor exato e sabe onde ele mora."
+      }
+    ]
+  },
+  "ex-xzyk8h8n": {
+    "prompt": "Uma consulta em `orders` filtra por `customer`, um campo fora da chave de shard. Quantos shards o `mongos` pergunta?",
+    "choices": [
+      {
+        "text": "Só o shard que tem a maioria dos pedidos desse cliente",
+        "why": "O `mongos` não tem como saber; o mapa é pela chave de shard."
+      },
+      {
+        "text": "Um, sorteado",
+        "why": "Um shard sorteado perderia os pedidos dos outros."
+      },
+      {
+        "text": "Todos, seja qual for o tipo da chave",
+        "why": "Isso: `SHARD_MERGE`, com a chave por faixa e com a hashed."
+      },
+      {
+        "text": "O shard primário do banco",
+        "why": "Uma coleção shardeada fica espalhada por todos os shards, não no primário."
+      }
+    ]
+  },
+  "ex-sa14ejfp": {
+    "prompt": "No `explain()` pelo `mongos`, o estágio de topo `___` quer dizer que a consulta foi a exatamente um shard.",
+    "hint": "Duas palavras unidas por um sublinhado.",
+    "blanks": [
+      {
+        "accept": [
+          "SINGLE_SHARD"
+        ]
+      }
+    ]
+  },
+  "ex-xz3sabdh": {
+    "prompt": "Noventa segundos depois dos inserts, o `shard1` mostrava 66.538 visitas possuídas e 33.462 órfãs. O que são as órfãs?",
+    "choices": [
+      {
+        "text": "Visitas cujo insert falhou e nunca foi confirmado",
+        "why": "Todo insert foi confirmado; a contagem voltou 100.000."
+      },
+      {
+        "text": "Cópias deixadas pelas migrações, apagadas depois de um atraso",
+        "why": "Isso. As faixas agora são do `shard2`, e contagens pelo `mongos` deixam as cópias antigas de fora."
+      },
+      {
+        "text": "Visitas sem o campo `country`, que nenhuma faixa consegue guardar",
+        "why": "Toda visita tinha `\"BR\"`."
+      },
+      {
+        "text": "Duplicatas que serão contadas duas vezes até o balancer terminar",
+        "why": "O `mongos` já as exclui das contagens."
+      }
+    ]
+  },
+  "ex-evpdqp8r": {
+    "prompt": "Uma coleção é shardeada por `{ status: 1 }`, em que o status é uma de quatro palavras. Dez shards são acrescentados. Quantos podem algum dia guardar os dados dela?",
+    "hint": "Uma faixa só pode ser cortada entre dois valores diferentes.",
+    "choices": [
+      {
+        "text": "Todos os dez, depois de o balancer rodar o bastante",
+        "why": "Nenhuma quantidade de balanceamento divide uma faixa com um valor só."
+      },
+      {
+        "text": "No máximo quatro",
+        "why": "Isso. A cardinalidade é um teto para o quanto a coleção pode se espalhar."
+      },
+      {
+        "text": "Exatamente dois, já que o balancer trabalha em pares de shards",
+        "why": "Ele move entre pares de cada vez, mas usa todos os shards com o tempo."
+      },
+      {
+        "text": "Um, porque uma chave de texto não pode ser dividida",
+        "why": "Textos se dividem sem problema entre valores diferentes."
+      }
+    ]
+  },
+  "ex-z9qhpre7": {
+    "prompt": "Por que a aula definiu o tamanho de faixa das coleções em 1 MB?",
+    "choices": [
+      {
+        "text": "Com o padrão de 128 MB uma coleção de laboratório é pequena demais para o balancer agir",
+        "why": "Isso. Ele só age quando a diferença passa de uns três tamanhos de faixa."
+      },
+      {
+        "text": "Porque faixas maiores que 1 MB são marcadas jumbo",
+        "why": "Jumbo quer dizer indivisível, não grande."
+      },
+      {
+        "text": "Para o `getShardDistribution` imprimir números menores",
+        "why": "A configuração muda comportamento, não a forma de imprimir números."
+      },
+      {
+        "text": "Porque o MongoDB 8.0 exige isso para chaves compostas",
+        "why": "Não existe essa exigência; `orders` usou o padrão."
+      }
+    ]
+  },
+  "ex-z6qrfyjd": {
+    "prompt": "O que o `sh.splitFind` respondeu para a coleção com chave `{ country: 1 }`?",
+    "choices": [
+      {
+        "text": "Que a faixa foi dividida em duas",
+        "why": "Não dava."
+      },
+      {
+        "text": "`CannotSplit`: o chunk é indivisível",
+        "why": "Isso. Todo documento tinha o mesmo valor de chave."
+      },
+      {
+        "text": "Que o balancer estava desabilitado para esta coleção",
+        "why": "Ele esteve habilitado o tempo todo; tinha marcado a faixa como jumbo."
+      },
+      {
+        "text": "Que `country` precisava antes de um índice",
+        "why": "O sharding cria o índice da chave; o problema era o valor único."
+      }
+    ]
+  },
+  "ex-vea9n68a": {
+    "prompt": "Qual mudança o `refineCollectionShardKey` consegue fazer?",
+    "choices": [
+      {
+        "text": "Trocar o primeiro campo da chave",
+        "why": "A chave nova precisa começar pela antiga."
+      },
+      {
+        "text": "Transformar uma chave por faixa em hashed",
+        "why": "Isso exige `reshardCollection`, como a aula fez com `orders`."
+      },
+      {
+        "text": "Acrescentar campos ao fim da chave existente",
+        "why": "Isso, e nada se move quando faz."
+      },
+      {
+        "text": "Remover um campo que as consultas não usam mais de jeito nenhum",
+        "why": "Refinar só acrescenta."
+      }
+    ]
+  },
+  "ex-me09azsx": {
+    "prompt": "O `reshardCollection` sobre 20.000 pedidos levou 332,94 segundos. Arredondando para o minuto inteiro, quanto foi isso?",
+    "unit": "min"
+  },
+  "ex-2w4dmc2a": {
+    "prompt": "Por que o resharding de 20.000 pedidos pequenos levou mais de cinco minutos?",
+    "choices": [
+      {
+        "text": "Por padrão ele copia por pelo menos cinco minutos, para os shards acompanharem as escritas",
+        "why": "Isso. Numa coleção real a cópia em si passa a dominar."
+      },
+      {
+        "text": "Porque os shards do laboratório têm um membro só e copiam devagar",
+        "why": "Copiar 20.000 documentos pequenos leva bem menos de um segundo aqui."
+      },
+      {
+        "text": "Porque uma chave hashed precisa ser calculada duas vezes para cada documento",
+        "why": "Calcular o hash é barato; o tempo é um mínimo deliberado."
+      },
+      {
+        "text": "Porque as escritas ficaram bloqueadas a operação inteira",
+        "why": "As escritas ficam bloqueadas só por um instante curto na troca."
+      }
+    ]
+  },
+  "ex-q5q24g7s": {
+    "prompt": "Uma equipe planeja fazer resharding porque um shard está sobrecarregado. O que ela deve conferir primeiro?",
+    "choices": [
+      {
+        "text": "Que a chave nova comece pela antiga",
+        "why": "Essa é a regra do refine; o resharding aceita qualquer chave."
+      },
+      {
+        "text": "Disco livre para uma segunda cópia, e folga de carga num cluster que já sofre",
+        "why": "Isso. O resharding move a coleção inteira pelos shards que deveria aliviar."
+      },
+      {
+        "text": "Que o balancer esteja desabilitado de vez",
+        "why": "Nada na aula pede isso."
+      },
+      {
+        "text": "Que o `mongos` seja reiniciado depois da mudança",
+        "why": "O roteador lê o mapa novo sozinho."
+      }
+    ]
+  },
+  "ex-agwjat3p": {
+    "prompt": "Ponha em ordem a montagem do cluster do laboratório, como o `cluster.sh` faz.",
+    "items": [
+      "Iniciar o config server e os dois shards",
+      "Iniciar um replica set de um membro em cada",
+      "Iniciar o `mongos`, apontando para o config server",
+      "Acrescentar os dois shards pelo `mongos`"
+    ],
+    "trap": "O `mongos` lê o mapa num config server que precisa estar rodando e iniciado."
+  },
+  "ex-b4209wx6": {
+    "prompt": "Quais destas valem para o cluster do laboratório? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Um `orderId` hashed espalhou 20.000 pedidos consecutivos quase por igual",
+        "why": "Isso: 9.859 e 10.141."
+      },
+      {
+        "text": "Uma chave com um valor só foi dividida quando o balancer teve tempo",
+        "why": "Ficou numa faixa jumbo até a chave ser refinada."
+      },
+      {
+        "text": "Refinar a chave deixou o balancer mover faixas que antes não conseguia",
+        "why": "Isso: três faixas foram para o `shard2`."
+      },
+      {
+        "text": "O resharding deixou a consulta por faixa em `orders` num shard só",
+        "why": "Com a nova chave hashed ela virou `SHARD_MERGE`."
+      }
+    ]
+  },
+  "ex-fmexpjrj": {
+    "prompt": "As consultas de uma loja pedem quase sempre os pedidos de um cliente, os mais novos primeiro. Qual chave de shard serve melhor?",
+    "choices": [
+      {
+        "text": "`{ orderId: 1, customer: 1, placedAt: -1 }`",
+        "why": "Uma chave que começa por um valor que cresce põe todo pedido novo num shard, e a consulta não começa por ele."
+      },
+      {
+        "text": "`{ customer: 1, placedAt: -1 }`",
+        "why": "Isso. As escritas se espalham pelos clientes, e o histórico de um cliente fica num shard."
+      },
+      {
+        "text": "`{ status: 1 }`",
+        "why": "Cardinalidade baixa: um punhado de valores nunca se espalha muito."
+      },
+      {
+        "text": "`{ placedAt: \"hashed\" }`",
+        "why": "As escritas se espalham, mas toda consulta por cliente pergunta a todos os shards."
+      }
+    ]
+  }
+}

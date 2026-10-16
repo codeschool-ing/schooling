@@ -1,0 +1,568 @@
+[
+  {
+    "id": "ex-5nc5n0e1",
+    "version": 1,
+    "section": "sstables-and-compaction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after two INSERTs, `ls` of the table's directory on `c1` printed nothing. Where were the rows?",
+    "choices": [
+      {
+        "text": "Nowhere yet: an INSERT is applied at the next compaction",
+        "correct": false,
+        "why": "The rows were readable at once; compaction merges files that already exist."
+      },
+      {
+        "text": "On c2 and c3 only, since c1 was the coordinator",
+        "correct": false,
+        "why": "With three copies, c1 is a replica too."
+      },
+      {
+        "text": "In the memtable and the commit log",
+        "correct": true,
+        "why": "Right. nodetool flush wrote them out as nb-1."
+      },
+      {
+        "text": "In a hidden SSTable that ls does not list",
+        "correct": false,
+        "why": "SSTables are ordinary files; the directory was empty until the flush."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yrt0qck",
+    "version": 1,
+    "section": "sstables-and-compaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An `UPDATE` changed Ana's `CB-012` from 2 to 3 after `nb-1` was flushed. What happened to `nb-1`?",
+    "choices": [
+      {
+        "text": "It was rewritten in place with the value 3",
+        "correct": false,
+        "why": "SSTables are never changed once written."
+      },
+      {
+        "text": "Nothing; it went to a newer SSTable",
+        "correct": true,
+        "why": "Right: quantity 2 in nb-1, quantity 3 in nb-3, until compaction merged them."
+      },
+      {
+        "text": "It was deleted and replaced by nb-3",
+        "correct": false,
+        "why": "nb-1 stayed until compaction; there were three SSTables."
+      },
+      {
+        "text": "It was marked read-only and moved aside",
+        "correct": false,
+        "why": "Every SSTable is read-only; nothing moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-n47nf5x2",
+    "version": 1,
+    "section": "sstables-and-compaction",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before `nodetool compact`, how many SSTables did `tablestats` report for `shop.baskets` on `c1`?",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-teb21xwk",
+    "version": 1,
+    "section": "sstables-and-compaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do you find out which compaction strategy a table really uses on your cluster?",
+    "choices": [
+      {
+        "text": "Assume UCS, since Cassandra 5.0 introduced it",
+        "correct": false,
+        "why": "The lab's table got STCS on 5.0.9; UCS is the default only in cassandra_latest.yaml."
+      },
+      {
+        "text": "Look at the default_compaction line of cassandra_latest.yaml",
+        "correct": false,
+        "why": "That file is the recommended settings, not necessarily the ones in use."
+      },
+      {
+        "text": "Count the SSTables in the data directory",
+        "correct": false,
+        "why": "The count depends on timing and load, not only on the strategy."
+      },
+      {
+        "text": "Read the compaction line of DESCRIBE TABLE",
+        "correct": true,
+        "why": "Right. It said SizeTieredCompactionStrategy."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ayw92wa",
+    "version": 1,
+    "section": "sstables-and-compaction",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each compaction strategy to the table it suits.",
+    "pairs": [
+      {
+        "left": "TimeWindowCompactionStrategy",
+        "right": "time series written once and expired by TTL"
+      },
+      {
+        "left": "LeveledCompactionStrategy",
+        "right": "read-heavy tables whose rows are updated often"
+      },
+      {
+        "left": "SizeTieredCompactionStrategy",
+        "right": "write-heavy tables, and the default of cassandra.yaml"
+      }
+    ],
+    "right_distractors": [
+      "tables with no primary key"
+    ]
+  },
+  {
+    "id": "ex-abmv54bf",
+    "version": 1,
+    "section": "tombstones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did `sstabledump` show in `nb-5`, the SSTable flushed after the `DELETE`?",
+    "choices": [
+      {
+        "text": "The keyboard row with quantity 1 and a deleted flag on it",
+        "correct": false,
+        "why": "The old row stayed in nb-4; nb-5 has no cells at all."
+      },
+      {
+        "text": "A row with no cells and a deletion_info timestamp",
+        "correct": true,
+        "why": "Right: that is the tombstone, the whole of it."
+      },
+      {
+        "text": "An empty file, since a delete removes data",
+        "correct": false,
+        "why": "A delete adds a marker; it removes nothing."
+      },
+      {
+        "text": "Ana's whole partition, rewritten without the keyboard",
+        "correct": false,
+        "why": "Nothing is rewritten until compaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-ydf1dafc",
+    "version": 1,
+    "section": "tombstones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The outbox query returned one row, yet the trace reported `Read 1 live rows and 1499 tombstone cells`. What is the lesson's diagnosis?",
+    "choices": [
+      {
+        "text": "Its deletes pile up, and each read steps over them",
+        "correct": true,
+        "why": "Right. Each poll pays for every handled item until compaction can drop the tombstones."
+      },
+      {
+        "text": "The deletes failed and the rows are still live",
+        "correct": false,
+        "why": "They are counted as tombstones, not live rows."
+      },
+      {
+        "text": "The trace counts each row twice, so the real number is half",
+        "correct": false,
+        "why": "1499 rows were deleted, and 1499 tombstones were read."
+      },
+      {
+        "text": "The table needs an SAI index on id",
+        "correct": false,
+        "why": "An index does not remove the tombstones the partition read steps over."
+      }
+    ]
+  },
+  {
+    "id": "ex-78x5eqgh",
+    "version": 1,
+    "section": "tombstones",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Above how many tombstones in one read does a Cassandra 5.0.9 node abort the query with an error, by default?",
+    "value": 100000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0n1jqsbr",
+    "version": 1,
+    "section": "tombstones",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A worker drains a queue partition by deleting each item it handles. Which change does the lesson suggest?",
+    "choices": [
+      {
+        "text": "Delete faster, so the tombstones are compacted sooner",
+        "correct": false,
+        "why": "Tombstones stay at least gc_grace_seconds however fast they are written."
+      },
+      {
+        "text": "Raise tombstone_warn_threshold, so that the warnings stop appearing in the log",
+        "correct": false,
+        "why": "That hides the cost without removing it."
+      },
+      {
+        "text": "Add a time bucket to the key, or store how far the consumer got",
+        "correct": true,
+        "why": "Right. Either way reads stop walking over handled items."
+      },
+      {
+        "text": "Run nodetool compact every hour on the queue table",
+        "correct": false,
+        "why": "Compaction keeps tombstones younger than gc_grace_seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-5eyfw8zr",
+    "version": 1,
+    "section": "tombstones",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since an SSTable never changes, a DELETE writes a marker called a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "tombstone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-84mt8hn4",
+    "version": 1,
+    "section": "gc-grace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `gc_grace_seconds = 864000` mean for a table?",
+    "choices": [
+      {
+        "text": "Tombstones are kept at least ten days before compaction drops them",
+        "correct": true,
+        "why": "Right: 864000 seconds is ten days of grace."
+      },
+      {
+        "text": "Rows written to the table expire ten days after they were written",
+        "correct": false,
+        "why": "That would be a TTL; gc_grace_seconds concerns tombstones."
+      },
+      {
+        "text": "Repair runs automatically on every node of the cluster every ten days",
+        "correct": false,
+        "why": "Nothing runs repair for you; the setting is the deadline you must meet."
+      },
+      {
+        "text": "A deleted row can be undone by the operator for ten days afterwards",
+        "correct": false,
+        "why": "There is no undo; the tombstone wins over the older row."
+      }
+    ]
+  },
+  {
+    "id": "ex-7w1gfhnd",
+    "version": 1,
+    "section": "gc-grace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team lowers `gc_grace_seconds` from ten days to two to reduce tombstones. Their repairs finish once a week. What have they done?",
+    "choices": [
+      {
+        "text": "Slowed every write, because tombstones are checked more often",
+        "correct": false,
+        "why": "The setting changes nothing about writes."
+      },
+      {
+        "text": "Nothing harmful, because hinted handoff carries every delete",
+        "correct": false,
+        "why": "Hints are best effort and expire after max_hint_window."
+      },
+      {
+        "text": "Made repair unnecessary, since tombstones vanish sooner",
+        "correct": false,
+        "why": "Repair is what carries the tombstone before it vanishes."
+      },
+      {
+        "text": "Made deleted rows able to come back, since a tombstone now goes before repair reaches it",
+        "correct": true,
+        "why": "Right. The repair deadline shrank to two days and the repairs did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm9vgg82",
+    "version": 1,
+    "section": "gc-grace",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of a tombstone in order, on a node that saw the delete.",
+    "items": [
+      "The DELETE writes the tombstone to the memtable",
+      "A flush writes it to a new SSTable",
+      "Compactions copy it forward while it is younger than gc_grace_seconds",
+      "A compaction after gc_grace_seconds drops it with the data it shadowed"
+    ]
+  },
+  {
+    "id": "ex-2w7xnc0p",
+    "version": 1,
+    "section": "gc-grace",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can carry a missed delete to a replica that was down? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Hinted handoff, if the node was down less than max_hint_window",
+        "correct": true,
+        "why": "Right, best effort."
+      },
+      {
+        "text": "Read repair, if a read compares that replica with another",
+        "correct": true,
+        "why": "Right, only for rows that are read."
+      },
+      {
+        "text": "nodetool repair",
+        "correct": true,
+        "why": "Right, and the only one that visits every partition."
+      },
+      {
+        "text": "Compaction on the node that saw the delete",
+        "correct": false,
+        "why": "Compaction is local; it sends nothing to other nodes."
+      },
+      {
+        "text": "A larger gc_grace_seconds alone",
+        "correct": false,
+        "why": "It keeps the tombstone longer, but something still has to carry it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqc4yfej",
+    "version": 1,
+    "section": "gc-grace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A node has been down for three weeks, with the default `gc_grace_seconds`. What does the lesson say to do with it?",
+    "choices": [
+      {
+        "text": "Wipe it and let it rejoin as a new node",
+        "correct": true,
+        "why": "Right. Its data may hold deletes everyone else has forgotten."
+      },
+      {
+        "text": "Start it and read everything at ALL first",
+        "correct": false,
+        "why": "A read at ALL read-repairs the same old rows into the others."
+      },
+      {
+        "text": "Start it and run repair at once",
+        "correct": false,
+        "why": "Repair would spread its rows whose tombstones the others already purged."
+      },
+      {
+        "text": "Raise gc_grace_seconds before starting it",
+        "correct": false,
+        "why": "The tombstones are already gone; raising it now brings nothing back."
+      }
+    ]
+  },
+  {
+    "id": "ex-m38etf95",
+    "version": 1,
+    "section": "the-delete-that-comes-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which two settings did the lab shorten to make the resurrection happen in minutes?",
+    "choices": [
+      {
+        "text": "The tombstone thresholds, and the repair timeout",
+        "correct": false,
+        "why": "Neither was touched."
+      },
+      {
+        "text": "The replication factor to 1, and consistency to ONE",
+        "correct": false,
+        "why": "The keyspace kept three copies and the delete ran at QUORUM."
+      },
+      {
+        "text": "The compaction strategy to UCS, and the heap to 256 MB",
+        "correct": false,
+        "why": "The table used STCS, and the heap is the lab's from lesson 1."
+      },
+      {
+        "text": "A 60-second gc_grace_seconds, and hints switched off",
+        "correct": true,
+        "why": "Right. The second stands in for a node down longer than max_hint_window."
+      }
+    ]
+  },
+  {
+    "id": "ex-eeqjzd4b",
+    "version": 1,
+    "section": "the-delete-that-comes-back",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the purge, a read at `ONE` from `c1` showed one item. Then `nodetool repair` ran and the deleted item was back. Why did repair copy it?",
+    "choices": [
+      {
+        "text": "Repair prefers the node that was down most recently",
+        "correct": false,
+        "why": "Repair has no such preference; it reconciles by timestamp."
+      },
+      {
+        "text": "Repair ignores deletes by design",
+        "correct": false,
+        "why": "Repair copies tombstones like any data, while they exist."
+      },
+      {
+        "text": "c3 had a row the others lacked, and no tombstone was left to say it was deleted",
+        "correct": true,
+        "why": "Right. Without the tombstone the old row is simply the newest thing anyone has."
+      },
+      {
+        "text": "The DELETE had failed on c1 and c2",
+        "correct": false,
+        "why": "It succeeded at QUORUM, and the dumps showed its effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvxfpdh3",
+    "version": 1,
+    "section": "the-delete-that-comes-back",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the resurrection in the order the lab ran them.",
+    "items": [
+      "Write both items at ALL and switch hints off",
+      "Stop c3 and delete the monitor at QUORUM",
+      "Wait past gc_grace_seconds",
+      "Flush and compact c1 and c2",
+      "Start c3 and run repair"
+    ]
+  },
+  {
+    "id": "ex-0252gr3s",
+    "version": 1,
+    "section": "the-delete-that-comes-back",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `sstabledump` on `c1` show after the wait, the flush and the compaction?",
+    "choices": [
+      {
+        "text": "The keyboard only",
+        "correct": true,
+        "why": "Right. Neither the monitor nor its tombstone was left."
+      },
+      {
+        "text": "The keyboard and the monitor's tombstone",
+        "correct": false,
+        "why": "The tombstone was older than gc_grace_seconds and was dropped."
+      },
+      {
+        "text": "Both items, since compaction never drops data",
+        "correct": false,
+        "why": "It drops shadowed data together with a purgeable tombstone."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The keyboard was never deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-214wachq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Repair has been failing silently every night for two weeks on a cluster with default settings, and nobody deleted anything unusual. What is at risk?",
+    "choices": [
+      {
+        "text": "Nothing, since no node was down",
+        "correct": false,
+        "why": "A missed write needs no outage: a dropped mutation under load leaves a replica behind too."
+      },
+      {
+        "text": "Only performance, since compaction falls behind on the busy nodes",
+        "correct": false,
+        "why": "Compaction runs independently of repair."
+      },
+      {
+        "text": "The tombstone_failure_threshold will be reached",
+        "correct": false,
+        "why": "That depends on deletes per partition, not on repair."
+      },
+      {
+        "text": "A missed delete returning, as two weeks exceed the grace",
+        "correct": true,
+        "why": "Right. Two weeks is past ten days; the guarantee is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-p4b8gh3j",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command from this lesson to what it showed.",
+    "pairs": [
+      {
+        "left": "nodetool flush",
+        "right": "the memtable written out as a new SSTable"
+      },
+      {
+        "left": "nodetool compact",
+        "right": "several SSTables merged into one"
+      },
+      {
+        "left": "sstabledump",
+        "right": "an SSTable's rows and tombstones as JSON"
+      },
+      {
+        "left": "nodetool disablehandoff",
+        "right": "no hints kept for a node that is down"
+      }
+    ],
+    "right_distractors": [
+      "the replicas of a partition key"
+    ]
+  }
+]

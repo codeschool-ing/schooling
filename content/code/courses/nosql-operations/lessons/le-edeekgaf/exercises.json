@@ -1,0 +1,598 @@
+[
+  {
+    "id": "ex-sxzn102g",
+    "version": 1,
+    "section": "stages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What crosses the connection from the server to the client when an aggregation pipeline runs?",
+    "choices": [
+      {
+        "text": "Every document the first stage reads",
+        "correct": false,
+        "why": "That is what a loop in the application moves."
+      },
+      {
+        "text": "Only the output of the last stage",
+        "correct": true,
+        "why": "Right. Every earlier stage works on the server."
+      },
+      {
+        "text": "The output of each stage, for the client to check",
+        "correct": false,
+        "why": "Stages pass documents to each other on the server."
+      },
+      {
+        "text": "The pipeline's source code and the matching documents",
+        "correct": false,
+        "why": "The pipeline goes the other way, client to server."
+      }
+    ]
+  },
+  {
+    "id": "ex-9edj9a0v",
+    "version": 1,
+    "section": "stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Revenue per month in `America/Sao_Paulo` gave a `2025-12` row with 33 orders, although every order was generated in 2026. Why?",
+    "choices": [
+      {
+        "text": "The generator has a bug in its first day",
+        "correct": false,
+        "why": "The dates are all in 2026 UTC; the month depends on the zone asked for."
+      },
+      {
+        "text": "Decimal128 sums spill into the previous group",
+        "correct": false,
+        "why": "The sums are exact; the row is about dates."
+      },
+      {
+        "text": "$sort put a December order first by mistake",
+        "correct": false,
+        "why": "$sort ordered thirteen groups correctly; the group key is the point."
+      },
+      {
+        "text": "Early 2026 in UTC was still 2025 in São Paulo",
+        "correct": true,
+        "why": "Right. A BSON date is a moment; the zone in $dateToString decides the calendar month."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccrzjrh0",
+    "version": 1,
+    "section": "stages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `$group` stage says `revenue: { $sum: \"total\" }`, without a dollar inside the string. What does it produce?",
+    "choices": [
+      {
+        "text": "A zero, silently",
+        "correct": true,
+        "why": "Right. $sum ignores values that are not numbers, so the literal string adds nothing."
+      },
+      {
+        "text": "An error naming the missing dollar",
+        "correct": false,
+        "why": "No error: a string literal is a valid argument; it just is not a number."
+      },
+      {
+        "text": "The same totals, since the field name is understood",
+        "correct": false,
+        "why": "Without the dollar it is the text \"total\", not the field."
+      },
+      {
+        "text": "The count of documents in each group",
+        "correct": false,
+        "why": "Counting is $sum: 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-nexdrqgr",
+    "version": 1,
+    "section": "stages",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the stages of the revenue-per-month pipeline in the order the lesson ran them.",
+    "items": [
+      "$match: not cancelled",
+      "$group: by month",
+      "$sort: by month",
+      "$project: rename _id"
+    ],
+    "trap": "Sorting before grouping would sort 98,958 documents instead of 13."
+  },
+  {
+    "id": "ex-x9jeqbmh",
+    "version": 1,
+    "section": "stages",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many documents came out of the `$group` stage of the revenue-per-month pipeline?",
+    "hint": "Count the months, the first one included.",
+    "value": 13,
+    "tolerance": 0,
+    "unit": "documents"
+  },
+  {
+    "id": "ex-n1dd0wza",
+    "version": 1,
+    "section": "lookup-unwind",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `$unwind: \"$items\"` do to an order with three lines?",
+    "choices": [
+      {
+        "text": "Keeps the first line and drops the rest",
+        "correct": false,
+        "why": "Every element becomes a document; none is dropped."
+      },
+      {
+        "text": "Sorts the lines inside the array",
+        "correct": false,
+        "why": "Sorting an array is a different operator."
+      },
+      {
+        "text": "Makes three documents, each with one line in items",
+        "correct": true,
+        "why": "Right. 100,000 orders became 200,652 lines."
+      },
+      {
+        "text": "Merges identical lines into one",
+        "correct": false,
+        "why": "Order 2's two identical lines came out as two documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-s78hp1z6",
+    "version": 1,
+    "section": "lookup-unwind",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the `$lookup` to `products` placed after the `$group` in the best-sellers pipeline?",
+    "choices": [
+      {
+        "text": "$lookup cannot read documents made by $unwind",
+        "correct": false,
+        "why": "It can; it would just run once per line."
+      },
+      {
+        "text": "So it runs four times instead of about two hundred thousand",
+        "correct": true,
+        "why": "Right. A join after the reduction works once per result."
+      },
+      {
+        "text": "$group would lose the product name otherwise",
+        "correct": false,
+        "why": "Keeping the name through a group is possible; the reason is cost."
+      },
+      {
+        "text": "A lookup has to be the last stage of a pipeline",
+        "correct": false,
+        "why": "The $project came after it."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1wvvzwt",
+    "version": 1,
+    "section": "lookup-unwind",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `$lookup` put its matches in an array, so that the pipeline needs `$first` to take the name out?",
+    "choices": [
+      {
+        "text": "Because products is a capped collection",
+        "correct": false,
+        "why": "It is an ordinary collection."
+      },
+      {
+        "text": "Because $project only reads arrays",
+        "correct": false,
+        "why": "$project reads any field."
+      },
+      {
+        "text": "To keep the products sorted by _id",
+        "correct": false,
+        "why": "The array's purpose is the number of matches, not their order."
+      },
+      {
+        "text": "To it, a SKU matches zero, one or many products",
+        "correct": true,
+        "why": "Right. Here exactly one product matches each SKU, but the stage cannot know that."
+      }
+    ]
+  },
+  {
+    "id": "ex-mveqk9r3",
+    "version": 1,
+    "section": "lookup-unwind",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the stage that turns each element of an order's lines into its own document: `{ $___: \"$items\" }`.",
+    "blanks": [
+      {
+        "accept": [
+          "unwind"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-hf6h6ehw",
+    "version": 1,
+    "section": "lookup-unwind",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A product page runs a `$lookup` from `orders` to `reviews` on every request to show three recent reviews. What does the lesson suggest?",
+    "choices": [
+      {
+        "text": "Reconsider the model, embedding what that page reads",
+        "correct": true,
+        "why": "Right. Lessons 3 and 4: model for the query the page makes."
+      },
+      {
+        "text": "Nothing; $lookup is the normal way to read related data",
+        "correct": false,
+        "why": "It is the exception for reports; a join on every request is a modelling smell."
+      },
+      {
+        "text": "Add allowDiskUse so the join does not fail",
+        "correct": false,
+        "why": "Three reviews never approach a memory limit."
+      },
+      {
+        "text": "Move the lookup before the $match",
+        "correct": false,
+        "why": "That makes it run on more documents, not fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2nf6c2f",
+    "version": 1,
+    "section": "lookup-unwind",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Over the whole collection, how many documents did `$unwind: \"$items\"` produce from the 100,000 orders?",
+    "hint": "The $count after the $unwind.",
+    "value": 200652,
+    "tolerance": 0,
+    "unit": "documents"
+  },
+  {
+    "id": "ex-g584zk54",
+    "version": 1,
+    "section": "pipeline-vs-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loop sent 24,564,648 bytes and the pipeline 111,198. Where do most of the pipeline's bytes come from?",
+    "hint": "Look at the plain count.",
+    "choices": [
+      {
+        "text": "The one result document",
+        "correct": false,
+        "why": "One small document is a few hundred bytes at most."
+      },
+      {
+        "text": "The orders the $match let through",
+        "correct": false,
+        "why": "They never left the server; only the group's output did."
+      },
+      {
+        "text": "The serverStatus replies",
+        "correct": true,
+        "why": "Right. The count alone moved 111,172 bytes."
+      },
+      {
+        "text": "Index entries sent for the client to check",
+        "correct": false,
+        "why": "No index entries are sent to a client."
+      }
+    ]
+  },
+  {
+    "id": "ex-enmtrcx2",
+    "version": 1,
+    "section": "pipeline-vs-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loop's revenue was `206042969.6000362` and the pipeline's `206042969.60`. What made the loop's wrong?",
+    "choices": [
+      {
+        "text": "It read some orders twice",
+        "correct": false,
+        "why": "Both counted 98,958 orders."
+      },
+      {
+        "text": "parseFloat turned each total into a double",
+        "correct": true,
+        "why": "Right. The pipeline added Decimal128 values, which are exact."
+      },
+      {
+        "text": "The pipeline rounded its answer to two places",
+        "correct": false,
+        "why": "Decimal128 kept the cents exactly; nothing was rounded."
+      },
+      {
+        "text": "mongosh truncates long numbers when it prints them",
+        "correct": false,
+        "why": "It printed the double's full value; that value is off."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh8gweg2",
+    "version": 1,
+    "section": "pipeline-vs-loop",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job must write every order of the day to a file for the accounting system. Pipeline or loop?",
+    "choices": [
+      {
+        "text": "A pipeline, which is faster for any job",
+        "correct": false,
+        "why": "It is faster when the result is small; here every document is the result."
+      },
+      {
+        "text": "A $group into one document holding every order",
+        "correct": false,
+        "why": "One document is limited to 16 MB, and the data still crosses."
+      },
+      {
+        "text": "Neither; the file has to be written by mongodump",
+        "correct": false,
+        "why": "mongodump writes BSON for restoring, not a file for another system."
+      },
+      {
+        "text": "A loop over a find on that day",
+        "correct": true,
+        "why": "Right. The pipeline's advantage is sending less, and here nothing can be left behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-vv144shn",
+    "version": 1,
+    "section": "pipeline-vs-loop",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many documents did the loop fetch to compute the total?",
+    "value": 98958,
+    "tolerance": 0,
+    "unit": "documents"
+  },
+  {
+    "id": "ex-aenph8pt",
+    "version": 1,
+    "section": "pipeline-vs-loop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The loop took 6,989 ms on the lab. What should you expect on your machine?",
+    "choices": [
+      {
+        "text": "A different time, and the same wide gap",
+        "correct": true,
+        "why": "Right. Timings vary from run to run; the size of the gap is what holds."
+      },
+      {
+        "text": "Exactly 6,989 ms, since the data is the same",
+        "correct": false,
+        "why": "The data is the same; the machine and the moment are not."
+      },
+      {
+        "text": "The pipeline being slower on a faster machine",
+        "correct": false,
+        "why": "A faster machine speeds both up; the loop still moves 24.5 MB."
+      },
+      {
+        "text": "The same time divided by your number of processors",
+        "correct": false,
+        "why": "The loop runs in one thread of mongosh."
+      }
+    ]
+  },
+  {
+    "id": "ex-j60qgad6",
+    "version": 1,
+    "section": "pipeline-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these pipelines read the whole collection, with an index on `{ status: 1, ordered_at: -1 }`?",
+    "choices": [
+      {
+        "text": "$match on status, then $group by customer",
+        "correct": false,
+        "why": "A $match first became an IXSCAN."
+      },
+      {
+        "text": "$group by status, then $match on _id",
+        "correct": false,
+        "why": "The server moved that match before the group and used the index."
+      },
+      {
+        "text": "$group by customer, then $match on its list",
+        "correct": true,
+        "why": "Right. The match depends on what the group computed, so it cannot move."
+      },
+      {
+        "text": "$match on status and ordered_at, then $sort by ordered_at",
+        "correct": false,
+        "why": "Equality then sort is what this index is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-534bzgwg",
+    "version": 1,
+    "section": "pipeline-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Since MongoDB 6.0, what happens by default when a sort stage passes its 100 MB?",
+    "choices": [
+      {
+        "text": "The pipeline fails with a memory error",
+        "correct": false,
+        "why": "That happens only with allowDiskUse: false."
+      },
+      {
+        "text": "It writes sorted runs to disk and merges them",
+        "correct": true,
+        "why": "Right: usedDisk: true and a count of spills in explain."
+      },
+      {
+        "text": "The server raises the limit for that query",
+        "correct": false,
+        "why": "The limit stays; the stage spills past it."
+      },
+      {
+        "text": "It keeps the first 100 MB and drops the rest",
+        "correct": false,
+        "why": "Dropping input would give a wrong answer; nothing is dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-r97ph9d4",
+    "version": 1,
+    "section": "pipeline-limits",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each explain or error result to the run that produced it, sorting 29 MB of orders.",
+    "hint": "One description belongs to none of them.",
+    "pairs": [
+      {
+        "left": "usedDisk: false, spills: 0",
+        "right": "limit at 100 MB"
+      },
+      {
+        "left": "Sort exceeded memory limit",
+        "right": "limit at 10 MB and allowDiskUse: false"
+      },
+      {
+        "left": "usedDisk: true, spills: 4",
+        "right": "limit at 10 MB and the default"
+      }
+    ],
+    "right_distractors": [
+      "an index on total"
+    ]
+  },
+  {
+    "id": "ex-zjfampav",
+    "version": 1,
+    "section": "pipeline-limits",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An explain shows `usedDisk: true` on a `$group`. Which changes reduce the memory it needs? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "A $match before it that sends fewer documents in",
+        "correct": true,
+        "why": "Yes: less input, less to hold."
+      },
+      {
+        "text": "A $project early on that drops fields no later stage reads",
+        "correct": true,
+        "why": "Yes: the memory counted is what each document still carries."
+      },
+      {
+        "text": "Passing allowDiskUse: false",
+        "correct": false,
+        "why": "That turns the spill into a failure; the memory needed is the same."
+      },
+      {
+        "text": "Raising the server's memory limit for everyone",
+        "correct": false,
+        "why": "The stage needs as much as before; the server just holds more at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-vrmxa59t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report groups paid orders by customer and keeps the customers with ten or more. Where should the filter on `status` go, and why?",
+    "choices": [
+      {
+        "text": "After the $group, so every order is counted first",
+        "correct": false,
+        "why": "Counting unpaid orders would give the wrong count, and the group reads everything."
+      },
+      {
+        "text": "In the client, after the results arrive",
+        "correct": false,
+        "why": "Filtering in the client moves every group across first."
+      },
+      {
+        "text": "In a $lookup to a collection of statuses",
+        "correct": false,
+        "why": "status is a field of the order; no join is needed."
+      },
+      {
+        "text": "In a $match before the $group",
+        "correct": true,
+        "why": "Right: there it uses an index on status. The match on 'ten or more' goes after, since it is on what the group computed."
+      }
+    ]
+  },
+  {
+    "id": "ex-9we36yy7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question is a pipeline the better tool for than a loop in the application?",
+    "choices": [
+      {
+        "text": "The ten customers with the highest revenue this year",
+        "correct": true,
+        "why": "Right: large input, ten documents out."
+      },
+      {
+        "text": "Send each order's confirmation e-mail again",
+        "correct": false,
+        "why": "Every order has to reach the program to be sent."
+      },
+      {
+        "text": "Copy every order to another system",
+        "correct": false,
+        "why": "Every document crosses either way."
+      },
+      {
+        "text": "Show one order's page to its customer",
+        "correct": false,
+        "why": "That is one findOne, with nothing to reduce."
+      }
+    ]
+  }
+]
