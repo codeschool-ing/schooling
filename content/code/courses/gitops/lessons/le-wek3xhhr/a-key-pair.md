@@ -43,7 +43,7 @@ LXaA1zXL8TKAHvpvgVMUlXou3Uz277HIUfzoZaz3FasGS2+L2KUSZnJuLA==
 this lesson's whole guarantee rests on**: whoever holds it and the password can sign anything in
 your name, and every verifier will accept it. In a team it does not live on a laptop. It lives in
 the CI system's secret store, or better, in a key management service that signs on request and never
-lets the key out; `cosign` can use one in place of the file with `--key` set to an address such as
+lets the key out. `cosign` can use one in place of the file with `--key` set to an address such as
 `awskms://`, `gcpkms://`, `azurekms://` or `hashivault://`. Lesson 9 is about where secrets like
 this one live.
 

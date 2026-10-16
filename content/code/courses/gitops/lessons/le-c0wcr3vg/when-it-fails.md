@@ -3,10 +3,10 @@ title: When Flux reports a failure
 version: 1
 ---
 
-Flux reports a failure as `READY False` on the object that failed, with the reason in the message,
-and the chain from source to Kustomization tells you where to look first: **a source that is not
-ready makes everything downstream stale, so read the chain from the left.** Each of these was
-produced on purpose, and put right again.
+Flux reports a failure as `READY False` on the object that failed, with the reason in the message.
+The chain from source to Kustomization tells you where to look first: **a source that is not ready
+makes everything downstream stale, so read the chain from the left.** Each of these was produced on
+purpose, and put right again.
 
 ## Credentials that stopped working
 

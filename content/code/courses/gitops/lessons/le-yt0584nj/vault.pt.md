@@ -127,8 +127,8 @@ ana@laptop:~$ vault kv get -field=token secret/bulletin/production | sha256sum |
 ```
 
 Versão 1 de `bulletin/production`, escrita na hora que o Vault mostra; cada escrita seguinte é uma
-versão nova, e as antigas continuam legíveis até alguém destruí-las. A impressão digital é a que os
-pods da produção vão mostrar quando a aula 10 a ler daqui.
+versão nova, e as antigas continuam legíveis até alguém destruí-las. A impressão digital é como um pod
+mostra o valor, e a aula 10 compara as duas.
 
 Agora a propriedade que o modo dev esconde. Reinicie o contêiner, como um reinício do laptop faria:
 

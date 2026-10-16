@@ -27,7 +27,7 @@ name of an entry in a secret store; the repository says *which* secret and the s
 The price is a service that has to be running, reachable and unsealed for anything to start.
 
 Neither family is the right one everywhere. A small team with one cluster is well served by Sealed
-Secrets; a team that wants a pull request to show which keys changed, and to decrypt a file on a
-laptop when it has to, uses SOPS; a company with dozens of clusters and an audit department ends up
+Secrets. A team that wants a pull request to show which keys changed, and to decrypt a file on a
+laptop when it has to, uses SOPS. A company with dozens of clusters and an audit department ends up
 with a secret store. This lesson runs Vault and teaches it to recognise the cluster; lesson 10 adds
 the operator that reads from it, and from the cloud providers' stores.

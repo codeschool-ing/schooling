@@ -123,8 +123,8 @@ ana@laptop:~$ vault kv get -field=token secret/bulletin/production | sha256sum |
 ```
 
 Version 1 of `bulletin/production`, written at the time Vault prints; every later write is a new
-version, and the old ones stay readable until somebody destroys them. The fingerprint is the one
-production's pods will print once lesson 10 reads it from here.
+version, and the old ones stay readable until somebody destroys them. The fingerprint is how a pod
+reports the value, and lesson 10 compares the two.
 
 Now the property that dev mode hides. Restart the container, as a reboot of the laptop would:
 
@@ -146,8 +146,8 @@ Sealed                  false
 ```
 
 **After every restart Vault is sealed, and nothing can read a secret until somebody unseals it.**
-That is the price of a secret store that does not keep its own key next to its data, and the reason
-the real deployments use automatic unsealing with a cloud key service: a sealed Vault at three in
-the morning is an outage for everything that depends on it. The root token is for setting Vault up;
+That is the price of a secret store that does not keep its own key next to its data, and it is why
+real deployments use automatic unsealing with a cloud key service. A sealed Vault at three in the
+morning is an outage for everything that depends on it. The root token is for setting Vault up;
 after that, people and programs get tokens of their own, with policies that allow what they need.
 The next section gives one to the cluster.

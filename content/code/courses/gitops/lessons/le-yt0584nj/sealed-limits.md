@@ -49,9 +49,9 @@ One key so far, made when the controller first started, stored as an ordinary Se
 **If the cluster is lost, those keys are lost with it**, and every SealedSecret in the repository
 becomes a file nobody can open. A cluster rebuilt from Git, which is GitOps's promise, would start
 with new keys and fail every seal. So the keys are backed up, out of the cluster and out of Git:
-`kubectl get secrets -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml` writes them out, and
-that file goes wherever the company keeps its most sensitive material, because it opens every secret
-the cluster has ever sealed. Applying it to a new cluster and restarting the controller lets the new
+`kubectl get secrets -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml` writes them out. That
+file goes wherever the company keeps its most sensitive material, because it opens every secret the
+cluster has ever sealed. Applying it to a new cluster and restarting the controller lets the new
 controller open the old seals.
 
 The other way out is to re-seal: keep the plaintext somewhere else, and seal it again for the new

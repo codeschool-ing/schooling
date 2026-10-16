@@ -4,9 +4,9 @@ version: 1
 ---
 
 **A private key is a secret that lasts for years**, and everything this course says about secrets in
-lessons 9 to 11 applies to it: it has to be stored, protected, rotated, and revoked when it leaks,
-and a key that signed releases for three years cannot be rotated without every verifier learning the
-new one. Sigstore, the project `cosign` belongs to, offers a way around the long-lived key, called
+lessons 9 to 11 applies to it: it has to be stored, protected, rotated, and revoked when it leaks. A
+key that signed releases for three years cannot be rotated without every verifier learning the new
+one. Sigstore, the project `cosign` belongs to, offers a way around the long-lived key, called
 **keyless** signing. There is still a key; it lives for a few minutes.
 
 1. The signer, usually a CI job, proves who it is to an OpenID Connect provider: GitHub Actions,
@@ -30,7 +30,7 @@ cosign verify ghcr.io/fluxcd/source-controller:v1.9.6 \
 
 **That command was not run for this course**: the recording machine cannot reach Sigstore's public
 services, Fulcio, Rekor and the trust root that verification fetches. It is how you check that a
-Flux image you are about to run was built by Flux's own release workflow, and nothing else in this
+Flux image you are about to run was built by Flux's own release workflow. Nothing else in this
 lesson changes for keyless: the signature still sits beside the artefact, and Flux and the admission
 controllers in the coming sections take an identity and an issuer in place of a public key.
 

@@ -5,8 +5,8 @@ version: 1
 
 Verifying needs three things: the image, the public key, and the decision about the transparency
 log. **`--insecure-ignore-tlog=true` says that no public log entry is expected**, which is true of
-every signature in this course and is the reason the flag has that name: for a signature that was
-meant to be logged, skipping the log check removes the proof of when it was made.
+every signature in this course. The flag has that name because, for a signature that was meant to be
+logged, skipping the log check removes the proof of when it was made.
 
 ```
 ana@laptop:~/signing$ cosign verify --key cosign.pub --insecure-ignore-tlog=true localhost:5001/bulletin@$DIGEST | jq .

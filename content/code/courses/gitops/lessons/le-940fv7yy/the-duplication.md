@@ -15,11 +15,11 @@ ana@laptop:~/fleet$ diff apps/bulletin/staging/bulletin.yaml apps/bulletin/produ
 5
 ```
 
-Two files of 46 lines each that differ in 5 of them, and the other 41 are written
-twice. **Every line written twice is a line that will one day be changed once.** A
-probe's path, a port, a label added to the Deployment in staging for a test and never carried over:
-each one makes production differ from staging in a way nobody chose, and the diff that showed the
-release in transit in lesson 5 fills up with them.
+Two files of 46 lines each that differ in 5 of them, and the other 41 are written twice. **Every
+line written twice is a line that will one day be changed once.** A probe's path, a port, a label
+added to the Deployment in staging for a test and never carried over: each one makes production
+differ from staging in a way nobody chose. The diff that showed the release in transit in lesson 5
+fills up with them.
 
 Two tools remove the duplication, from opposite directions:
 

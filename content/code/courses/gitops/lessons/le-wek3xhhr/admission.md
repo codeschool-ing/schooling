@@ -51,5 +51,5 @@ machine cannot reach. Two properties of such a policy are worth knowing before y
 needs to verify **digests**, so it rewrites a tag in a pod's spec to the digest it verified, and the
 pod runs exactly what was checked. And it is a **door that can be locked from the inside**: a policy
 that refuses every image, including the policy engine's own on its next restart, stops the cluster
-from healing, which is why such policies exclude the system namespaces and are tried in `Audit` mode
+from healing. That is why such policies exclude the system namespaces and are tried in `Audit` mode
 first.
