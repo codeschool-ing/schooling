@@ -1,0 +1,434 @@
+[
+  {
+    "id": "ex-q1de8jrn",
+    "version": 1,
+    "section": "writing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which signature does `go test -bench` run as a benchmark?",
+    "hint": "Same rules as a test, with a different prefix and parameter.",
+    "choices": [
+      {
+        "text": "`func BenchCount(b *testing.B)`",
+        "correct": false,
+        "why": "The prefix is `Benchmark`, in full."
+      },
+      {
+        "text": "`func BenchmarkCount(t *testing.T)`",
+        "correct": false,
+        "why": "A benchmark takes a `*testing.B`; with a `*testing.T` the go command reports a malformed name."
+      },
+      {
+        "text": "`func BenchmarkCount(b *testing.B)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`func TestBenchmarkCount(b *testing.B)`",
+        "correct": false,
+        "why": "A `Test` prefix makes it a test, and a test takes a `*testing.T`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k390bajw",
+    "version": 1,
+    "section": "writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BenchmarkTop` calls `Count` once before its `for b.Loop()`. What does its result measure?",
+    "hint": "What does `b.Loop` time?",
+    "choices": [
+      {
+        "text": "`Top` alone",
+        "correct": true,
+        "why": "Right: the setup before the loop is not timed."
+      },
+      {
+        "text": "`Count` and `Top` together, divided by two",
+        "correct": false,
+        "why": "Nothing is divided by two; `Count` runs once, outside the timed loop."
+      },
+      {
+        "text": "`Count` alone, since it is the slower of the two",
+        "correct": false,
+        "why": "Speed does not decide what is timed; position relative to the loop does."
+      },
+      {
+        "text": "The time it takes to build `sample`",
+        "correct": false,
+        "why": "`sample` is built at package level, before any benchmark."
+      }
+    ]
+  },
+  {
+    "id": "ex-ad4cex1t",
+    "version": 1,
+    "section": "writing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson run benchmarks with `-run '^$'`?",
+    "hint": "What does that pattern match?",
+    "choices": [
+      {
+        "text": "It makes the benchmarks run in alphabetical order",
+        "correct": false,
+        "why": "`-run` selects tests; it says nothing about benchmark order."
+      },
+      {
+        "text": "It selects every benchmark",
+        "correct": false,
+        "why": "Benchmarks are selected by `-bench`."
+      },
+      {
+        "text": "It turns on the memory columns",
+        "correct": false,
+        "why": "That is `-benchmem`."
+      },
+      {
+        "text": "It matches no test name, so no test runs first",
+        "correct": true,
+        "why": "Right: an empty name is the only thing `^$` matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn2zdeea",
+    "version": 1,
+    "section": "writing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To get a throughput column in MB/s, a benchmark declares how many bytes one round processes with `b.___`.",
+    "hint": "Set, bytes.",
+    "blanks": [
+      {
+        "accept": [
+          "SetBytes"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cy9xq9qx",
+    "version": 1,
+    "section": "reading",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of `BenchmarkCount-4  10363  113733 ns/op  16104 B/op  2311 allocs/op` with what it is.",
+    "hint": "Section 03's table.",
+    "pairs": [
+      {
+        "left": "`-4`",
+        "right": "the GOMAXPROCS of the run"
+      },
+      {
+        "left": "`10363`",
+        "right": "rounds in the measured run"
+      },
+      {
+        "left": "`16104 B/op`",
+        "right": "bytes allocated per round"
+      },
+      {
+        "left": "`2311 allocs/op`",
+        "right": "separate allocations per round"
+      }
+    ],
+    "right_distractors": [
+      "goroutines started per round"
+    ]
+  },
+  {
+    "id": "ex-fbwe3fhj",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In five runs of unchanged code, which column did not move at all?",
+    "hint": "It depends only on the code.",
+    "choices": [
+      {
+        "text": "ns/op",
+        "correct": false,
+        "why": "It moved between 98,755 and 101,532."
+      },
+      {
+        "text": "MB/s",
+        "correct": false,
+        "why": "Throughput is computed from the time, so it moved with it."
+      },
+      {
+        "text": "allocs/op",
+        "correct": true,
+        "why": "Right: 2311 every time."
+      },
+      {
+        "text": "the round count",
+        "correct": false,
+        "why": "It went from 12162 to 10000."
+      }
+    ]
+  },
+  {
+    "id": "ex-nv3ymjyn",
+    "version": 1,
+    "section": "reading",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The candidate cut allocations from 2311 to 2055 per round. By how many?",
+    "hint": "Two capitalised words in each of 128 repetitions.",
+    "value": 256,
+    "tolerance": 0,
+    "unit": "allocations"
+  },
+  {
+    "id": "ex-zn6880j3",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The candidate was measurably faster, by about a tenth. Why did the course still put the old `Count` back?",
+    "hint": "Measured is not the same as worth keeping.",
+    "choices": [
+      {
+        "text": "Because the tests failed on the candidate",
+        "correct": false,
+        "why": "`go test . -count=1` passed on it."
+      },
+      {
+        "text": "Counting was not shown to matter",
+        "correct": true,
+        "why": "Right: twenty lines, a second path and an in-place write, for a gain nothing needed."
+      },
+      {
+        "text": "Because the two groups of runs overlapped on the axis",
+        "correct": false,
+        "why": "They did not: 87,509 to 93,811 against 98,755 to 101,532."
+      },
+      {
+        "text": "Because allocations went up",
+        "correct": false,
+        "why": "They went down by 256."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnxw8ket",
+    "version": 1,
+    "section": "reading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Section 02's single run said 113,733 ns/op; five runs a minute later said about 100,000. What does the lesson draw from that?",
+    "hint": "Nothing changed in between.",
+    "choices": [
+      {
+        "text": "The code got faster on its own",
+        "correct": false,
+        "why": "Nothing changed; the machine did."
+      },
+      {
+        "text": "The first run is always discarded",
+        "correct": false,
+        "why": "There is no such rule in the report."
+      },
+      {
+        "text": "`-count 5` makes each round cheaper",
+        "correct": false,
+        "why": "It repeats the measurement; it changes nothing inside it."
+      },
+      {
+        "text": "One run is not a measurement",
+        "correct": true,
+        "why": "Right. The spread between identical runs is the noise floor."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v7y1kry",
+    "version": 1,
+    "section": "not-fooling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BenchmarkSumN` reported about 150 ns/op and `BenchmarkSumLoop` about 280. What does the disassembly show?",
+    "hint": "Look for a multiplication in the `sum_test.go:7` lines.",
+    "choices": [
+      {
+        "text": "That `b.N` loops run on two processors",
+        "correct": false,
+        "why": "The function's code has nothing to do with processors; one loop has no arithmetic."
+      },
+      {
+        "text": "The `b.N` loop just counts to 1000",
+        "correct": true,
+        "why": "Right: the result was unused, so the compiler removed the work and left the counting."
+      },
+      {
+        "text": "That `b.Loop` adds 130 ns of overhead per round",
+        "correct": false,
+        "why": "The difference is the arithmetic `b.N` lost, not overhead of `b.Loop`."
+      },
+      {
+        "text": "That `sumTo` was never called",
+        "correct": false,
+        "why": "Its loop is there, inlined; only the body's arithmetic is gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcvt8sj1",
+    "version": 1,
+    "section": "not-fooling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old benchmark written with `b.N` builds a 1 MB input at the top of the function, then loops. Its numbers seem high. What is missing?",
+    "hint": "In the `b.N` style, when does the timer start?",
+    "choices": [
+      {
+        "text": "`b.SetBytes(1 << 20)`",
+        "correct": false,
+        "why": "That adds a throughput column; it does not exclude the setup."
+      },
+      {
+        "text": "`-benchmem`",
+        "correct": false,
+        "why": "It reports memory; the timing stays the same."
+      },
+      {
+        "text": "`b.ResetTimer()` after the setup",
+        "correct": true,
+        "why": "Right. Without it the setup is part of the time; `b.Loop` would exclude it on its own."
+      },
+      {
+        "text": "`-count 5`",
+        "correct": false,
+        "why": "Repeating a biased measurement repeats the bias."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttpkpd7c",
+    "version": 1,
+    "section": "not-fooling",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habits does the lesson give for a busy machine? Choose all that apply.",
+    "hint": "Three of them, in a numbered list.",
+    "choices": [
+      {
+        "text": "Compare runs made one after the other, on the same machine",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Look at the spread of several runs before the averages",
+        "correct": true,
+        "why": "Yes, with `-count`."
+      },
+      {
+        "text": "Compare today's number with one written down last month",
+        "correct": false,
+        "why": "That is exactly what the first habit warns against."
+      },
+      {
+        "text": "Set GOMAXPROCS to 1 so other programs cannot interfere",
+        "correct": false,
+        "why": "It limits this program, not the others on the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-eyspy1cm",
+    "version": 1,
+    "section": "not-fooling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does `benchstat` come from?",
+    "hint": "The course does not install it.",
+    "choices": [
+      {
+        "text": "It is a subcommand, `go test -benchstat`",
+        "correct": false,
+        "why": "There is no such flag."
+      },
+      {
+        "text": "The module `golang.org/x/perf`, a separate download",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The `testing` package",
+        "correct": false,
+        "why": "`testing` has no statistics tool."
+      },
+      {
+        "text": "`go tool benchstat`, shipped with 1.27.1",
+        "correct": false,
+        "why": "It is not part of the toolchain."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xv5g3yj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps the lesson followed with the candidate `Count` in order.",
+    "hint": "A faster wrong answer is worth nothing.",
+    "items": [
+      "benchmark the current version several times",
+      "write the candidate",
+      "run the tests on it",
+      "benchmark it the same number of times",
+      "decide whether the difference is worth the code"
+    ]
+  },
+  {
+    "id": "ex-dvzb2v1j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague shows one run where their change made a function 4% faster. Before reading any code, what do you ask for?",
+    "hint": "How big was the spread between identical runs in this lesson?",
+    "choices": [
+      {
+        "text": "A run with `-benchmem` added",
+        "correct": false,
+        "why": "Memory columns help, but the question is whether 4% is above the noise."
+      },
+      {
+        "text": "The name of the machine it ran on",
+        "correct": false,
+        "why": "Knowing the machine does not tell you the spread."
+      },
+      {
+        "text": "A profile with `-cpuprofile`",
+        "correct": false,
+        "why": "A profile says where time goes, not whether 4% is real."
+      },
+      {
+        "text": "Repeated runs of each",
+        "correct": true,
+        "why": "Right. Identical runs here spread by almost 3%, so one run of 4% proves nothing yet."
+      }
+    ]
+  }
+]
