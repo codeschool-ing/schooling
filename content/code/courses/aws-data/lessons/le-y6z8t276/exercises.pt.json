@@ -1,0 +1,407 @@
+{
+  "ex-dg1335tm": {
+    "prompt": "O que o S3 guarda quando a linha de comando faz uma URL pré-assinada?",
+    "hint": "Uma URL para uma chave que não existe saiu sem problema.",
+    "choices": [
+      {
+        "text": "Nada; a URL é calculada localmente e só conferida quando usada",
+        "why": "Isso. Fazê-la não manda requisição nenhuma."
+      },
+      {
+        "text": "Um registro do link, apagado na expiração",
+        "why": "Não há lista de links emitidos; o S3 repete o cálculo da assinatura no uso."
+      },
+      {
+        "text": "Uma cópia pública do objeto",
+        "why": "O objeto continua privado; a URL carrega uma permissão, não uma cópia."
+      },
+      {
+        "text": "A chave secreta, para que o S3 confira a URL depois",
+        "why": "O S3 já conhece a chave secreta de toda chave que emitiu; nada é enviado."
+      }
+    ]
+  },
+  "ex-gbmtv0be": {
+    "prompt": "Ligue cada parâmetro de uma URL pré-assinada ao que ele carrega.",
+    "hint": "Um deles é o motivo de uma URL colada nomear uma chave.",
+    "pairs": [
+      {
+        "left": "`X-Amz-Credential`",
+        "right": "O id da chave de quem assinou, a data, a região e o serviço"
+      },
+      {
+        "left": "`X-Amz-Expires`",
+        "right": "Segundos de validade depois do momento da assinatura"
+      },
+      {
+        "left": "`X-Amz-Signature`",
+        "right": "A assinatura feita com a chave secreta"
+      },
+      {
+        "left": "`X-Amz-SignedHeaders`",
+        "right": "Quais cabeçalhos a assinatura cobre"
+      }
+    ],
+    "right_distractors": [
+      "Os endereços que podem usar a URL"
+    ]
+  },
+  "ex-ag8rxggb": {
+    "prompt": "Uma URL pré-assinada válida por sete dias vazou num chamado de suporte. O que a faz parar de funcionar na hora na AWS?",
+    "hint": "O S3 confere quem assinou quando a URL é usada.",
+    "choices": [
+      {
+        "text": "Apagar o chamado",
+        "why": "Quem copiou a URL continua com ela; o chamado era só onde ela foi vista."
+      },
+      {
+        "text": "Desativar a chave que a assinou, ou tirar o acesso de quem assinou",
+        "why": "Isso. A URL carrega a autoridade de quem assinou, conferida no momento do uso."
+      },
+      {
+        "text": "Fazer uma nova URL pré-assinada para o mesmo objeto, que substitui a antiga",
+        "why": "URLs são independentes; uma nova não faz nada com a antiga."
+      },
+      {
+        "text": "Ligar o Block Public Access do bucket",
+        "why": "Uma requisição pré-assinada é assinada pela chave da própria conta, então não é acesso público."
+      }
+    ]
+  },
+  "ex-e9kz1vzq": {
+    "prompt": "No moto, uma URL pré-assinada por um segundo ainda funciona três segundos depois. O que uma suíte de testes feita sobre o moto deve concluir sobre a expiração?",
+    "hint": "Quem aplica o limite, e ele está aqui?",
+    "choices": [
+      {
+        "text": "Que relógios atrasam, e o S3 também dá alguns segundos de tolerância",
+        "why": "A lição não documenta tolerância; o moto também serviu uma URL com assinatura quebrada."
+      },
+      {
+        "text": "Que a URL vive enquanto o objeto existir",
+        "why": "Na AWS ela morre no `X-Amz-Expires` ou com as credenciais, o que vier antes."
+      },
+      {
+        "text": "Nada: o moto não confere; teste a expiração em outro lugar",
+        "why": "Isso. A expiração se testa pela documentação ou numa conta real; neste laboratório uma URL pré-assinada mostra a forma e nada sobre a segurança."
+      },
+      {
+        "text": "Que um segundo foi arredondado para um minuto inteiro pelo relógio do moto",
+        "why": "Nada foi arredondado; a URL diz `X-Amz-Expires=1`."
+      }
+    ]
+  },
+  "ex-997v4a77": {
+    "prompt": "Qual é o maior `--expires-in`, em segundos, que o S3 aceita para uma URL assinada com a chave de longo prazo de um usuário do IAM?",
+    "hint": "Sete dias."
+  },
+  "ex-1f1ryfzs": {
+    "prompt": "O moto é ligado com `INITIAL_NO_AUTH_ACTION_COUNT=5`. O que o número quer dizer?",
+    "hint": "Conte a preparação.",
+    "choices": [
+      {
+        "text": "Cinco usuários podem ser criados antes de o IAM começar a conferir",
+        "why": "Ele conta requisições, de qualquer tipo."
+      },
+      {
+        "text": "As cinco primeiras requisições não passam pelo IAM",
+        "why": "Isso. Toda requisição seguinte é conferida; as cinco foram o bucket, o relatório, o usuário, a política dele e a chave dele."
+      },
+      {
+        "text": "Uma requisição negada é repetida cinco vezes antes de falhar",
+        "why": "O moto não repete; a linha de comando repete erros do servidor, não negações."
+      },
+      {
+        "text": "As políticas são relidas a cada cinco requisições",
+        "why": "Uma política vale a partir da requisição seguinte à sua escrita."
+      }
+    ]
+  },
+  "ex-3ecne36k": {
+    "prompt": "A política do painel permite `s3:GetObject` e `s3:ListBucket` e não tem `Deny`. Por que o `PutObject` dele foi recusado?",
+    "hint": "Qual é o ponto de partida de toda avaliação?",
+    "choices": [
+      {
+        "text": "Um bucket recusa escritas de qualquer chave criada depois dele",
+        "why": "A ordem de criação não importa; o que se lê é a política."
+      },
+      {
+        "text": "Porque uma ação que nada permite é negada",
+        "why": "Isso. A negação implícita é o padrão de onde toda política parte."
+      },
+      {
+        "text": "`ListBucket` contém uma negação implícita de escritas",
+        "why": "Um allow não carrega negação; a escrita é recusada porque nada a permite."
+      },
+      {
+        "text": "A chave não tinha permissão porque o segredo nunca foi impresso",
+        "why": "Imprimir um segredo não muda nada além de quem o viu."
+      }
+    ]
+  },
+  "ex-d6wskay5": {
+    "prompt": "No modo IAM do moto, `aws s3 ls s3://quitanda-curated-prod` falha com `SignatureDoesNotMatch` e `--recursive` funciona. Qual é a causa?",
+    "hint": "Compare as duas query strings.",
+    "choices": [
+      {
+        "text": "A chave do painel está errada",
+        "why": "A mesma chave assinou a listagem recursiva, que funcionou."
+      },
+      {
+        "text": "A política não permite listar com delimitador",
+        "why": "Um problema de política é `AccessDenied`, não erro de assinatura."
+      },
+      {
+        "text": "O S3 recusa `delimiter=/` a usuários do IAM",
+        "why": "O S3 aceita; quem falha é o moto."
+      },
+      {
+        "text": "O moto calcula errado a assinatura quando um valor da query tem `/`",
+        "why": "Isso. `--prefix reports` sem barra também funcionou. É defeito do moto, não comportamento do S3."
+      }
+    ]
+  },
+  "ex-dq90gfy5": {
+    "prompt": "Por que a lição lê a chave de acesso nova para variáveis em vez de imprimi-la?",
+    "hint": "Onde uma linha impressa vai parar?",
+    "choices": [
+      {
+        "text": "Um segredo na tela vai parar no histórico, em gravações e em capturas de tela",
+        "why": "Isso. As chaves do moto são falsas, e o hábito é o que vale manter com as reais."
+      },
+      {
+        "text": "A linha de comando se recusa a imprimir uma chave secreta",
+        "why": "Ela imprime se pedirem; é exatamente isso que o `--query` evita."
+      },
+      {
+        "text": "O moto revogaria uma chave impressa",
+        "why": "Nem o moto nem a AWS sabem se uma chave foi impressa."
+      },
+      {
+        "text": "Variáveis fazem a chave valer por mais tempo do que uma chave que foi impressa na tela",
+        "why": "Uma chave de acesso não expira sozinha; onde ela fica não muda isso."
+      }
+    ]
+  },
+  "ex-01gqpndn": {
+    "prompt": "Um bucket já tem uma política pública quando o `BlockPublicPolicy` é ligado, e o `RestrictPublicBuckets` fica desligado. Na AWS, uma requisição anônima ainda consegue ler por essa política?",
+    "hint": "Uma chave de cada par olha para a frente, a outra para trás.",
+    "choices": [
+      {
+        "text": "Não: o `BlockPublicPolicy` apaga a política pública",
+        "why": "Ele recusa políticas públicas novas e não apaga nada."
+      },
+      {
+        "text": "Sim, pela política antiga",
+        "why": "Isso. Só o `RestrictPublicBuckets` neutraliza uma política pública que já está lá; as chaves de bloqueio barram concessões novas."
+      },
+      {
+        "text": "Não: qualquer uma das chaves torna o bucket privado",
+        "why": "Cada chave faz uma coisa; por isso as quatro são ligadas juntas."
+      },
+      {
+        "text": "Sim, mas só para objetos escritos depois da chave",
+        "why": "A política vale para todo objeto que ela nomeia, escrito quando for."
+      }
+    ]
+  },
+  "ex-kck6znkm": {
+    "prompt": "Por que o Block Public Access da conta é o que a lição chama de mais importante?",
+    "hint": "Pense num bucket que ninguém criou ainda.",
+    "choices": [
+      {
+        "text": "Cobre os buckets criados depois, que ninguém configurou",
+        "why": "Isso. A mais rígida entre conta e bucket vence, então a da conta vale para o próximo bucket também."
+      },
+      {
+        "text": "É mais barato que configurar por bucket",
+        "why": "Nenhuma das duas é cobrada."
+      },
+      {
+        "text": "Uma configuração por bucket não pode ser lida de volta",
+        "why": "O `get-public-access-block` a lê de volta."
+      },
+      {
+        "text": "A configuração da conta é a única que o moto aplica",
+        "why": "O moto não aplica nenhuma das duas."
+      }
+    ]
+  },
+  "ex-87ygeef5": {
+    "prompt": "Com as quatro chaves ligadas no moto, quais destas coisas aconteceram que a AWS teria recusado? Marque todas as que se aplicam.",
+    "hint": "Veja as transcrições depois de as chaves serem ligadas.",
+    "choices": [
+      {
+        "text": "Uma política de bucket com `\"Principal\": \"*\"` e `Allow` foi aceita",
+        "why": "Sim: o `BlockPublicPolicy` a recusa na AWS."
+      },
+      {
+        "text": "Um `curl` sem credenciais leu um objeto",
+        "why": "Sim: o `RestrictPublicBuckets` o recusa na AWS."
+      },
+      {
+        "text": "Uma ACL `public-read` foi aceita sob `BucketOwnerEnforced`",
+        "why": "Sim: a AWS responde `AccessControlListNotSupported`."
+      },
+      {
+        "text": "O `get-public-access-block` imprimiu as quatro chaves",
+        "why": "Ler a configuração de volta é o que a AWS faz também."
+      }
+    ]
+  },
+  "ex-vr3n8vf1": {
+    "prompt": "Uma instrução tem `\"Principal\": \"*\"`, `\"Effect\": \"Deny\"` e uma condição em `aws:SecureTransport`. Ela torna o bucket público?",
+    "hint": "Acesso público precisa de um efeito que conceda.",
+    "choices": [
+      {
+        "text": "Sim, porque um `\"Principal\": \"*\"` em qualquer lugar de uma política de bucket a torna pública",
+        "why": "Só um `Allow` concede; esta aplica uma recusa a todo mundo."
+      },
+      {
+        "text": "Sim, para requisições feitas por TLS",
+        "why": "Não negar algo não é permitir."
+      },
+      {
+        "text": "Não: um Deny não concede nada; o `*` diz que a recusa vale para todos",
+        "why": "Isso. Acesso público é `*` com `Allow`."
+      },
+      {
+        "text": "Só se o Block Public Access estiver desligado",
+        "why": "Não há nada público nela para bloquear."
+      }
+    ]
+  },
+  "ex-95vetw19": {
+    "prompt": "O moto recusou uma leitura sob um Deny condicionado a `aws:SecureTransport` ser `\"true\"`, por HTTP simples. O que isso mostra?",
+    "hint": "Na AWS essa política nega só requisições por TLS.",
+    "choices": [
+      {
+        "text": "Que o moto trata toda requisição HTTP como TLS",
+        "why": "Aí a política com `\"false\"` teria deixado a leitura passar, e ela também foi recusada."
+      },
+      {
+        "text": "Que as negações dele não provam nada",
+        "why": "Isso. O moto não avalia a condição como o S3, então uma negação dele sob uma condição não é mais prova do que um sucesso."
+      },
+      {
+        "text": "Que a política está errada e trancaria a Quitanda para fora na AWS também",
+        "why": "Na AWS, com `\"true\"`, requisições HTTP simples não são negadas."
+      },
+      {
+        "text": "Que um Deny em `s3:*` não pode ser apagado",
+        "why": "A política foi apagada e a leitura voltou."
+      }
+    ]
+  },
+  "ex-6xe1kvq9": {
+    "prompt": "Qual é a única verificação de que um objeto é público em que a lição diz para confiar?",
+    "hint": "Quem assina a requisição?",
+    "choices": [
+      {
+        "text": "Ler a política do bucket com cuidado",
+        "why": "Uma ACL ou outra camada pode conceder o que a política não mostra."
+      },
+      {
+        "text": "Uma requisição de fora, sem credenciais, esperando 403",
+        "why": "Isso. Testa todas as camadas de uma vez, do jeito que um estranho testaria."
+      },
+      {
+        "text": "`aws s3 ls` com as chaves da própria conta",
+        "why": "O dono consegue ler; isso não diz nada sobre estranhos."
+      },
+      {
+        "text": "`get-public-access-block` mostrando quatro `true`",
+        "why": "Isso lê uma configuração; no moto ela estava ligada e não aplicou nada."
+      }
+    ]
+  },
+  "ex-c5xvpfmw": {
+    "prompt": "O grupo de ACL cujo nome soava seguro mas queria dizer qualquer conta da AWS no mundo era `___`.",
+    "hint": "Não é `AllUsers`.",
+    "blanks": [
+      {
+        "accept": [
+          "AuthenticatedUsers"
+        ]
+      }
+    ]
+  },
+  "ex-mxdtq7g7": {
+    "prompt": "Ligue cada pergunta ao serviço da AWS que a responde.",
+    "hint": "Uma porta aberta, o que há atrás, quem passou, e quando mudou.",
+    "pairs": [
+      {
+        "left": "Quais buckets estão compartilhados fora da organização?",
+        "right": "IAM Access Analyzer for S3"
+      },
+      {
+        "left": "Quais objetos guardam números de cartão?",
+        "right": "Amazon Macie"
+      },
+      {
+        "left": "Quem leu este objeto na terça passada?",
+        "right": "Data events do CloudTrail"
+      },
+      {
+        "left": "O acesso público deste bucket estava bloqueado ontem e hoje não?",
+        "right": "Regras do AWS Config"
+      }
+    ],
+    "right_distractors": [
+      "S3 Intelligent-Tiering"
+    ]
+  },
+  "ex-spac1k3t": {
+    "prompt": "Ordene as proteções da Quitanda da rede mais larga para a mais estreita, como a lição faz.",
+    "hint": "A conta vem primeiro, uma única URL por último.",
+    "items": [
+      "Block Public Access na conta",
+      "`BucketOwnerEnforced` em todo bucket",
+      "Políticas de bucket que negam",
+      "URLs pré-assinadas curtas e estreitas"
+    ]
+  },
+  "ex-nazr1cdg": {
+    "prompt": "Um fornecedor sem conta na AWS precisa baixar uma nota fiscal hoje à tarde. Qual é o jeito mais seguro que a lição oferece?",
+    "hint": "Minutos, e quem assina mais estreito.",
+    "choices": [
+      {
+        "text": "Uma política de bucket permitindo `\"Principal\": \"*\"` naquela chave, removida amanhã",
+        "why": "Essa é a primeira forma de vazamento, e o Block Public Access a recusa na AWS."
+      },
+      {
+        "text": "Uma ACL `public-read` na nota",
+        "why": "As ACLs ficam desligadas sob `BucketOwnerEnforced`, e um objeto público é público para todos."
+      },
+      {
+        "text": "Uma URL de sete dias assinada com a chave de um administrador",
+        "why": "Sete dias e a autoridade de um administrador é a URL mais larga e mais longa que existe."
+      },
+      {
+        "text": "Uma URL de poucos minutos, assinada por um papel que só lê aquele prefixo",
+        "why": "Isso. Um vazamento dela vale um prefixo, por minutos."
+      }
+    ]
+  },
+  "ex-tfys7pb5": {
+    "prompt": "Qual destas coisas o moto acertou nesta lição?",
+    "hint": "Uma camada é avaliada, as outras são guardadas.",
+    "choices": [
+      {
+        "text": "Entregar ao `curl` um objeto sob uma política `Allow` pública",
+        "why": "Isso. O moto avalia esse tipo de Allow, e essa é a resposta do S3 também quando nada o bloqueia."
+      },
+      {
+        "text": "Recusar uma URL pré-assinada usada depois de passado o `X-Amz-Expires`",
+        "why": "Ele serviu uma usada dois segundos depois de expirar."
+      },
+      {
+        "text": "Recusar uma ACL `public-read` num bucket com `BucketOwnerEnforced`",
+        "why": "Ele aceitou `public-read`."
+      },
+      {
+        "text": "Ler `aws:SecureTransport` numa condição",
+        "why": "Recusou também sob a condição invertida."
+      }
+    ]
+  }
+}
