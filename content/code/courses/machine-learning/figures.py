@@ -1200,6 +1200,44 @@ def l12_pinball(lang):
             'Errar para o atraso custa nove vezes mais: o modelo aprende a prometer mais.')
     return fig, cap
 
+# ------------------------------------------------------------------ lesson 16
+
+@figure('l16-choose-k', 16)
+def l16_choose_k(lang):
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_score
+    from sklearn.preprocessing import StandardScaler
+    b = data('baskets.csv')
+    z = StandardScaler().fit_transform(b.drop(columns='customer_id'))
+    ks = list(range(2, 9))
+    fits = [KMeans(n_clusters=k, n_init=10, random_state=0).fit(z) for k in ks]
+    inertia = [f.inertia_ for f in fits]
+    sil = [silhouette_score(z, f.labels_) for f in fits]
+    fig = Fig('l16-choose-k', 620, 300, T(lang,
+        'Two small charts against the number of clusters, from 2 to 8. On the left, inertia falls steeply '
+        'from about 5,800 at two clusters to about 1,800 at four, then flattens. On the right, the '
+        'silhouette rises to a peak of 0.589 at four clusters and falls on both sides. Four is marked on both.',
+        'Dois gráficos pequenos contra o número de grupos, de 2 a 8. À esquerda, a inércia cai íngreme de '
+        'cerca de 5.800 com dois grupos para cerca de 1.800 com quatro, e depois fica plana. À direita, a '
+        'silhueta sobe até um pico de 0,589 com quatro grupos e cai dos dois lados. O quatro está marcado '
+        'nos dois.'))
+    dec = (lambda v: f'{v:.1f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.1f}')
+    thou = (lambda v: f'{v:,.0f}'.replace(',', '.')) if lang == 'pt' else (lambda v: f'{v:,.0f}')
+    for x0, x1, ys, ymax, ticks, fmt, label in [
+            (70, 290, inertia, 6000, [0, 2000, 4000, 6000], thou, T(lang, 'inertia', 'inércia')),
+            (380, 600, sil, 0.6, [0, 0.2, 0.4, 0.6], dec, T(lang, 'silhouette', 'silhueta'))]:
+        p = Plot(fig, x0, 30, x1, 240, 1.6, 8.4, 0, ymax)
+        p.xaxis(ks, fmt=str, label=T(lang, 'clusters', 'grupos'))
+        p.yaxis(ticks, fmt=fmt, label=label)
+        p.vline(4, stroke='--amber', dash='4 3', top=p.sy(ymax * 0.97))
+        fig.path('M' + ' L'.join(f'{p.sx(k):.1f} {p.sy(v):.1f}' for k, v in zip(ks, ys)),
+                 stroke='--phosphor', width=2.2)
+        for k, v in zip(ks, ys):
+            fig.circle(p.sx(k), p.sy(v), 3.5, fill='--amber' if k == 4 else '--phosphor')
+    cap = T(lang, 'The elbow and the peak agree on four, which real data seldom makes this easy.',
+            'O cotovelo e o pico concordam em quatro, o que dados reais raramente facilitam assim.')
+    return fig, cap
+
 
 def main():
     if '--list' in sys.argv:
