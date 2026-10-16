@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Every number lesson 17 quotes: the dashboard's KPIs, its charts' values and
+# the check formulas the lesson prints.
+#
+# THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Run it from this
+# directory, after `bash ../../lab.sh up`:
+#
+#   bash captures.sh
+#
+# Nothing here is a terminal the student sees: this course has no terminal.
+# NOT RUN IN EXCEL: pivot tables over the data model, GETPIVOTDATA, slicers
+# and timelines. The measures of lesson 16 (Total Revenue, Revenue LY, Revenue
+# YoY %, Bags Sold, Sales Count) and this lesson's Average Sale are computed in Python from the pasted sales for every slicer
+# and timeline state the lesson describes. The SUMIFS, COUNTIFS and MAX
+# formulas the lesson prints as checks are put, exactly as printed, into a
+# LibreOffice Calc 24.2 workbook holding the pasted tables, with `Sales` made
+# a table that carries lesson 2's Revenue column (lab.sh says why not Excel).
+# The budget comparison reads budget-2026.csv out of lesson 14 and adds its
+# January-June columns per channel.
+#
+# Recorded on Ubuntu 24.04 with LibreOffice 24.2.7.2, TZ=America/Sao_Paulo,
+# on 2026-10-10.
+set -euo pipefail
+export TZ=America/Sao_Paulo
+cd "$(dirname "$0")"
+exec bash ../../lab.sh run l17.py
