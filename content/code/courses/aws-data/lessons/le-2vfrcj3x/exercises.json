@@ -1,0 +1,674 @@
+[
+  {
+    "id": "ex-5qmkjp0x",
+    "version": 1,
+    "section": "in-place",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In its default way of paying, what is an Athena query billed by?",
+    "hint": "There is no cluster to leave running.",
+    "choices": [
+      {
+        "text": "The seconds the query took to run",
+        "correct": false,
+        "why": "Time is how a warehouse cluster is paid for; Athena's per-query price does not look at the clock."
+      },
+      {
+        "text": "The bytes it read from S3",
+        "correct": true,
+        "why": "Right: 9 dollars a terabyte in São Paulo, rounded up to whole megabytes."
+      },
+      {
+        "text": "The number of rows in its answer",
+        "correct": false,
+        "why": "A query that reads a whole bucket to return four rows pays for the bucket."
+      },
+      {
+        "text": "The hours its workgroup was enabled",
+        "correct": false,
+        "why": "A workgroup is a set of settings and costs nothing while it waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-87ds5asm",
+    "version": 1,
+    "section": "in-place",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Athena rounds the bytes a query read up to a whole megabyte, and charges at least ___ MB for any query.",
+    "hint": "It is the number three of the four bills in this lesson met.",
+    "blanks": [
+      {
+        "accept": [
+          "10",
+          "ten"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2p455jxc",
+    "version": 1,
+    "section": "in-place",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Tonight a file for 2026-10-16 lands under the table's `LOCATION`, in `dt=2026-10-16/`. Tomorrow a query with `WHERE dt = '2026-10-16'` returns no rows. What is the likeliest cause?",
+    "hint": "Where does Athena find the list of partitions?",
+    "choices": [
+      {
+        "text": "A new object in S3 takes a day to become readable",
+        "correct": false,
+        "why": "S3 reads back a new object at once; the delay is not in S3."
+      },
+      {
+        "text": "The file has to be loaded into Athena with a `COPY` first",
+        "correct": false,
+        "why": "That is a warehouse's way. Athena reads the files where they are."
+      },
+      {
+        "text": "Nobody added the partition to the catalog",
+        "correct": true,
+        "why": "Right. Until `MSCK REPAIR TABLE`, `ADD PARTITION`, a crawler or a projection names it, Athena does not read that prefix."
+      },
+      {
+        "text": "Athena answered from a cached result of yesterday's query",
+        "correct": false,
+        "why": "Reusing results is a setting that is off unless turned on, and the query had a different filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-1csp4rhc",
+    "version": 1,
+    "section": "in-place",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You run `DROP TABLE quitanda.orders` on the external table of `orders.sql`. What happens to the objects under `s3://quitanda-curated-prod/orders/`?",
+    "hint": "Whose data is it, according to `EXTERNAL`?",
+    "choices": [
+      {
+        "text": "They are deleted with the table",
+        "correct": false,
+        "why": "That is what dropping a managed table does; an external one owns only its description."
+      },
+      {
+        "text": "They stay where they are",
+        "correct": true,
+        "why": "Right. Only the description in the catalog goes, and a new `CREATE` reads the same files again."
+      },
+      {
+        "text": "They move to the workgroup's results prefix",
+        "correct": false,
+        "why": "Athena writes answers there; it moves nothing of yours."
+      },
+      {
+        "text": "They are kept for 30 days and then expire",
+        "correct": false,
+        "why": "Expiry is a life-cycle rule on the bucket, lesson 3, and a table cannot set one."
+      }
+    ]
+  },
+  {
+    "id": "ex-sra6n3dj",
+    "version": 1,
+    "section": "in-place",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these cost nothing on Athena's per-terabyte price? Choose all that apply.",
+    "hint": "What does a statement read from S3?",
+    "choices": [
+      {
+        "text": "A `CREATE EXTERNAL TABLE` statement",
+        "correct": true,
+        "why": "Yes: a statement that only changes the catalog is free."
+      },
+      {
+        "text": "An `ALTER TABLE … ADD PARTITION`",
+        "correct": true,
+        "why": "Yes, for the same reason."
+      },
+      {
+        "text": "A query that fails on a column that does not exist",
+        "correct": true,
+        "why": "Yes: failed queries are not charged."
+      },
+      {
+        "text": "A query you cancel after it has read 2 GB",
+        "correct": false,
+        "why": "A cancelled query costs what it had read when it stopped."
+      },
+      {
+        "text": "A query that reads 50 MB and returns no rows",
+        "correct": false,
+        "why": "The read is the bill, whatever came out of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6z6xrgz",
+    "version": 1,
+    "section": "in-place",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto answers `DDL` and `SUCCEEDED` for `orders.sql`, and `aws glue get-databases` comes back empty. What does that prove about `orders.sql`?",
+    "hint": "What did moto keep?",
+    "choices": [
+      {
+        "text": "That it is valid Athena DDL and would create the table",
+        "correct": false,
+        "why": "Athena would have refused it, since the database `quitanda` does not exist."
+      },
+      {
+        "text": "That moto created the table in another region",
+        "correct": false,
+        "why": "moto created nothing anywhere; it marked the request done."
+      },
+      {
+        "text": "Only that the request was well formed",
+        "correct": true,
+        "why": "Right. moto ran no DDL, and a success from it is a statement about the request."
+      },
+      {
+        "text": "That Athena keeps its tables outside the Glue Data Catalog",
+        "correct": false,
+        "why": "Athena's tables live in the Glue Data Catalog; it is moto that kept no table."
+      }
+    ]
+  },
+  {
+    "id": "ex-pdcrj3t9",
+    "version": 1,
+    "section": "the-lake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `lake.py` read `AWS_ENDPOINT_URL` itself and hand the address to PyArrow?",
+    "hint": "Which programs read that variable on their own?",
+    "choices": [
+      {
+        "text": "PyArrow does not read it, and without it would go to the real S3",
+        "correct": true,
+        "why": "Right. The variable is read by the AWS command line and boto3, and PyArrow needs `endpoint_override`."
+      },
+      {
+        "text": "moto refuses a request whose address does not carry the port number",
+        "correct": false,
+        "why": "The port is part of the address the variable holds; the issue is who reads the variable."
+      },
+      {
+        "text": "To keep the two keys `test` out of the source code of the program itself",
+        "correct": false,
+        "why": "The keys are other variables, which PyArrow does read."
+      },
+      {
+        "text": "So that the region becomes `sa-east-1`",
+        "correct": false,
+        "why": "The region comes from `AWS_DEFAULT_REGION`, another line of the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-tgqmcp8z",
+    "version": 1,
+    "section": "the-lake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same 755,511 orders take 40,641,097 bytes as CSV and 12,703,975 as Parquet. Where does the saving come from?",
+    "hint": "Nothing was lost on the way.",
+    "choices": [
+      {
+        "text": "Parquet leaves out the partition column `dt`",
+        "correct": false,
+        "why": "Neither file holds `dt`: it is in the key for both layers."
+      },
+      {
+        "text": "Parquet rounds `total_cents` to whole reais",
+        "correct": false,
+        "why": "Every value survives; both layers give the same sums to the cent."
+      },
+      {
+        "text": "Columns stored apart, with their types, and compressed with Snappy",
+        "correct": true,
+        "why": "Right. A column of small numbers in one place compresses far better than the same numbers spread through lines of text."
+      },
+      {
+        "text": "`lake.py` writes fewer days to the curated layer",
+        "correct": false,
+        "why": "It printed 31 objects for each layer."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ygbpshx",
+    "version": 1,
+    "section": "the-lake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this lake, what is the difference between the raw layer and the curated layer?",
+    "hint": "Same rows, two buckets.",
+    "choices": [
+      {
+        "text": "Raw is the development copy and curated is the production copy",
+        "correct": false,
+        "why": "Both are `-prod`; the environment is the last word of the name."
+      },
+      {
+        "text": "Raw keeps a sample of the orders and curated keeps every one of them",
+        "correct": false,
+        "why": "Both hold all 755,511 orders."
+      },
+      {
+        "text": "Raw is encrypted and curated is not",
+        "correct": false,
+        "why": "Nothing in this lesson sets encryption on either bucket."
+      },
+      {
+        "text": "Raw is what arrives, as CSV; curated is what is read, as Parquet",
+        "correct": true,
+        "why": "Right. Lesson 17 is the job that turns one into the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-vwyx7s2a",
+    "version": 1,
+    "section": "asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does `ask.py` know how many bytes a query read?",
+    "hint": "Look at what `Counted` stands between.",
+    "choices": [
+      {
+        "text": "It asks moto's Athena for `DataScannedInBytes`",
+        "correct": false,
+        "why": "moto answers 0 for every query, which is why the program exists."
+      },
+      {
+        "text": "Every read PyArrow makes from S3 passes through it and is added up",
+        "correct": true,
+        "why": "Right. The count is made where the bytes pass, so a column nobody read adds nothing."
+      },
+      {
+        "text": "It estimates the size from the columns that the SQL names",
+        "correct": false,
+        "why": "Nothing is estimated; the footer bytes it counted are the proof."
+      },
+      {
+        "text": "It adds up the object sizes that `aws s3 ls` prints for the prefix",
+        "correct": false,
+        "why": "That would give the whole table every time, and the counts differ per question."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvy7z8ae",
+    "version": 1,
+    "section": "asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The question about payments names two of the seven columns, and on the CSV the read was all 40,641,097 bytes. Why?",
+    "hint": "Where does a column start in a line of text?",
+    "choices": [
+      {
+        "text": "The `ORDER BY` forced the engine to read everything",
+        "correct": false,
+        "why": "The sort is over four result rows; the Parquet read with the same `ORDER BY` was eight times smaller."
+      },
+      {
+        "text": "A CSV file gives no way to find a column without reading each line whole",
+        "correct": true,
+        "why": "Right. Every line was read to pick two values out of it."
+      },
+      {
+        "text": "`ask.py` reads every object whole, whatever its format",
+        "correct": false,
+        "why": "On Parquet it read 5,102,048 bytes of 12,703,975."
+      },
+      {
+        "text": "The question had no `WHERE`, and a query without one reads every column of a table",
+        "correct": false,
+        "why": "A filter decides which rows or partitions; which columns are read is the format's business."
+      }
+    ]
+  },
+  {
+    "id": "ex-n55b2wkx",
+    "version": 1,
+    "section": "asking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A day written a minute ago shows up in `ask.py`'s answer and not in Athena's, for the same SQL over the same objects. Why?",
+    "hint": "Each one finds the partitions in a different place.",
+    "choices": [
+      {
+        "text": "S3 shows a newly written object to some readers a while before it shows it to others",
+        "correct": false,
+        "why": "S3 reads a new object back at once to everybody."
+      },
+      {
+        "text": "Athena answers from its own copy of the lake, which it refreshes once every night",
+        "correct": false,
+        "why": "Athena keeps no copy; it reads the objects at query time."
+      },
+      {
+        "text": "`ask.py` lists S3 each run, while the catalog decides which days the other reads",
+        "correct": true,
+        "why": "Right. The new day is in S3 and not yet in the catalog."
+      },
+      {
+        "text": "DuckDB reads Parquet files that Athena's engine is not able to read",
+        "correct": false,
+        "why": "Both read the same Parquet; the difference is which files each was told about."
+      }
+    ]
+  },
+  {
+    "id": "ex-515gsr18",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `WHERE dt = '2026-10-15'` the engine opened one object of 31. What made skipping the other 30 possible?",
+    "hint": "Where is `dt` written?",
+    "choices": [
+      {
+        "text": "`dt` is in the key, so the filter is settled before any read",
+        "correct": true,
+        "why": "Right, and it works on the CSV too, which also opened one object."
+      },
+      {
+        "text": "The smallest and largest value in each Parquet footer",
+        "correct": false,
+        "why": "Those let a reader skip blocks inside a file it opened; the CSV, which has no footer, skipped the same 30 days."
+      },
+      {
+        "text": "DuckDB kept the other days from an earlier query",
+        "correct": false,
+        "why": "Each run of `ask.py` is a new process with nothing kept."
+      },
+      {
+        "text": "The days were sorted by date, so the engine stopped at the 15th",
+        "correct": false,
+        "why": "An engine that stopped there would still have opened the fourteen days before it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rj8jyam5",
+    "version": 1,
+    "section": "three-reads",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The query on `hour` read 2,039,661 bytes from 31 objects, and PyArrow read each footer as 65,536 bytes. How many bytes were the `hour` column itself?",
+    "hint": "Take 31 footers away.",
+    "value": 8045,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-paq6z3e1",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the part of a Parquet read spent on footers grow with the number of files rather than with their size?",
+    "hint": "How many footers does a file have?",
+    "choices": [
+      {
+        "text": "A footer holds a copy of every value of the file",
+        "correct": false,
+        "why": "It holds a map of where each column block is: 1,576 bytes for a day of 23,781 rows."
+      },
+      {
+        "text": "PyArrow rereads the footer before each column it reads",
+        "correct": false,
+        "why": "One footer read per object: the hour query made 62 requests to 31 objects, two each."
+      },
+      {
+        "text": "Each file is read for its own footer once, whatever its size",
+        "correct": true,
+        "why": "Right: 31 files, 31 footer reads. A hundred small files per day would be a hundred per day."
+      },
+      {
+        "text": "Larger files are compressed better, so their footers become smaller",
+        "correct": false,
+        "why": "A footer's size follows the number of columns and blocks, not the compression."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwyffvg6",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three of the four questions were billed the same 10 MB although their reads differ by a factor of 31. What is the right reading of that?",
+    "hint": "Multiply the lake by a thousand.",
+    "choices": [
+      {
+        "text": "Partitioning saves nothing on Athena, only on DuckDB",
+        "correct": false,
+        "why": "On a lake a thousand times larger the reads keep their ratios and the bills follow them."
+      },
+      {
+        "text": "The lake is small, so the minimum hides ratios that a larger lake pays in full",
+        "correct": true,
+        "why": "Right. At a thousand times this lake, the dashboard was 1,485 dollars a month against 186."
+      },
+      {
+        "text": "Parquet costs the same as CSV on Athena once both kinds of file are compressed",
+        "correct": false,
+        "why": "The CSV month was billed 39 MB against the Parquet's 10, on the same rows."
+      },
+      {
+        "text": "`ask.py` rounds its counts to whole megabytes and so loses the difference",
+        "correct": false,
+        "why": "It counts every byte; only the bill is rounded, by Athena's own rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-z34q8apk",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On AWS, what happens to a query in the `analysts` workgroup, with its 10 MB cutoff, that would read the 40,641,097 bytes of the CSV month?",
+    "hint": "moto recorded the setting and did nothing with it.",
+    "choices": [
+      {
+        "text": "It runs to the end and the bill stops at 10 MB",
+        "correct": false,
+        "why": "The cutoff ends the query; it does not give away the rest of the read."
+      },
+      {
+        "text": "It is refused before reading, since the table is larger than the cutoff",
+        "correct": false,
+        "why": "Athena cannot know in advance what a query will read; it counts as it goes."
+      },
+      {
+        "text": "It succeeds, because the cutoff only applies to the console",
+        "correct": false,
+        "why": "The cutoff belongs to the workgroup and applies to every query run in it."
+      },
+      {
+        "text": "It is cancelled once its scan passes 10 MB",
+        "correct": true,
+        "why": "Right, and the person who ran it gets an error naming the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-k686jwda",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does partition projection change about how Athena finds a table's partitions?",
+    "hint": "Look at `storage.location.template`.",
+    "choices": [
+      {
+        "text": "A crawler runs before each query and registers the days that arrived since the last",
+        "correct": false,
+        "why": "No crawler is involved: the catalog is left out of the question."
+      },
+      {
+        "text": "It computes the keys from the table's properties instead of looking them up",
+        "correct": true,
+        "why": "Right. Tonight's day is readable with nothing registered, as long as its key fits the template."
+      },
+      {
+        "text": "Partitions are copied into Athena so that it can skip S3",
+        "correct": false,
+        "why": "Athena keeps no data; it still reads the objects in S3."
+      },
+      {
+        "text": "It merges the small partitions into larger ones, on a schedule of its own choosing",
+        "correct": false,
+        "why": "Projection changes how keys are found, not the files under them."
+      }
+    ]
+  },
+  {
+    "id": "ex-84s3yseh",
+    "version": 1,
+    "section": "guardrails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants three years of daily CSV turned into Parquet partitioned by `dt`, with Athena alone. Why will one CTAS statement not do it?",
+    "hint": "Count the partitions.",
+    "choices": [
+      {
+        "text": "CTAS writes CSV only, so a second statement would have to convert it to Parquet",
+        "correct": false,
+        "why": "CTAS writes the format named in `WITH`, Parquet included."
+      },
+      {
+        "text": "CTAS cannot partition its output",
+        "correct": false,
+        "why": "`partitioned_by` is one of its properties."
+      },
+      {
+        "text": "A CTAS is capped at 10 MB, which is the minimum a query is billed for on Athena",
+        "correct": false,
+        "why": "The minimum is the least a query is billed, not the most it reads."
+      },
+      {
+        "text": "It writes at most 100 partitions, and three years is over a thousand days",
+        "correct": true,
+        "why": "Right. The backfill becomes a series of `INSERT INTO` statements of a hundred days each."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxc8sjgm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of the setup to what it decides.",
+    "hint": "Two of them are about files, two about money.",
+    "pairs": [
+      {
+        "left": "The file format",
+        "right": "How much of each file a question reads"
+      },
+      {
+        "left": "The partitioning",
+        "right": "How many files a question opens"
+      },
+      {
+        "left": "The 10 MB minimum",
+        "right": "The least a small query is billed"
+      },
+      {
+        "left": "The per-query cutoff",
+        "right": "The most one query may read before it is cancelled"
+      }
+    ],
+    "right_distractors": [
+      "How long answers stay in the results prefix"
+    ]
+  },
+  {
+    "id": "ex-y9pwvjkc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens between the shop's export and an Athena answer about that day.",
+    "hint": "Athena reads what the catalog names.",
+    "items": [
+      "The day's CSV lands in the raw bucket",
+      "A job writes the day as Parquet under `dt=` in the curated bucket",
+      "The partition is added to the catalog",
+      "A query filtered on that `dt` reads the day's column blocks"
+    ]
+  },
+  {
+    "id": "ex-r8n1zgfj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard runs `SELECT neighbourhood, count(*) FROM orders_csv WHERE dt BETWEEN '2026-10-01' AND '2026-10-07' GROUP BY neighbourhood` every hour. Which one change cuts what it reads the most?",
+    "hint": "It already reads only seven days.",
+    "choices": [
+      {
+        "text": "Point it at the Parquet table `orders` instead",
+        "correct": true,
+        "why": "Right. The days are already pruned; the format then reads one column of seven instead of whole lines."
+      },
+      {
+        "text": "Run it in a workgroup with a 10 MB cutoff",
+        "correct": false,
+        "why": "A cutoff cancels a query; it does not make the same question read less."
+      },
+      {
+        "text": "Run `MSCK REPAIR TABLE` before each refresh",
+        "correct": false,
+        "why": "That registers partitions; the seven days it reads stay the same."
+      },
+      {
+        "text": "Drop the `WHERE` and filter the days in the dashboard",
+        "correct": false,
+        "why": "Without the filter it would read all 31 days of CSV, four times more."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd9fqvng",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query reads 25,165,825 bytes. Counting a megabyte as 1,048,576 bytes, how many megabytes does Athena bill for it?",
+    "hint": "Divide, then apply the two rules.",
+    "value": 25,
+    "tolerance": 0
+  }
+]

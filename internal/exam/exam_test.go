@@ -607,32 +607,114 @@ func TestAMarkOutsideTheFenceIsTheShippedOne(t *testing.T) {
 }
 
 /*
-AND A PAPER IS AS LONG AS THE PARAMETER SAYS.
+AND A PAPER IS AS LONG AS THE PARAMETER SAYS — the parameter for ITS scope.
 
 	`TestALongPoolIsDrawnFrom` below checks the drawing happens at all, at the
-	shipped twenty. This checks the number is the one somebody set — the same
+	shipped number. This checks the number is the one somebody set — the same
 	claim as the mark's, on the knob whose wrong value is not a wrong result but
 	an exam that takes three times as long as anybody agreed to.
+
+	EACH SCOPE IS WIRED TO A DIFFERENT NUMBER, and both are wired in every case,
+	because the defect this replaced was one reader answering for both: a test
+	that wired only the one under test would pass on a store that read the
+	wrong one.
 */
 func TestAPaperIsAsLongAsTheParameterSays(t *testing.T) {
-	const pool, want = 28, 8
+	const pool, course, track = 28, 8, 17
 
-	db := testPool(t)
-	school, student := school(t, db), student(t, db)
-	questions(t, db, school, exam.ScopeTrack, "frontend", pool)
+	for _, one := range []struct {
+		scope exam.Scope
+		id    string
+		want  int
+	}{
+		{exam.ScopeCourse, "web-fundamentals", course},
+		{exam.ScopeTrack, "frontend", track},
+	} {
+		db := testPool(t)
+		school, student := school(t, db), student(t, db)
+		questions(t, db, school, one.scope, one.id, pool)
 
-	store := exam.NewStore(db, open, nothingWithdrawn, exam.Numbers{
-		QuestionsPerPaper: func(context.Context) int { return want },
-	})
+		store := exam.NewStore(db, open, nothingWithdrawn, exam.Numbers{
+			QuestionsPerPaper:      func(context.Context) int { return course },
+			QuestionsPerTrackPaper: func(context.Context) int { return track },
+		})
 
-	paper, _, err := store.Start(context.Background(), school, student,
-		exam.ScopeTrack, "frontend", "en")
-	if err != nil {
-		t.Fatalf("starting: %v", err)
+		paper, _, err := store.Start(context.Background(), school, student,
+			one.scope, one.id, "en")
+		if err != nil {
+			t.Fatalf("starting the %s exam: %v", one.scope, err)
+		}
+		if len(paper.Questions) != one.want {
+			t.Errorf("a %s pool of %d drew %d questions, want the %d its own parameter says",
+				one.scope, pool, len(paper.Questions), one.want)
+		}
 	}
-	if len(paper.Questions) != want {
-		t.Errorf("a pool of %d drew %d questions at a setting of %d",
-			pool, len(paper.Questions), want)
+}
+
+/*
+A TRACK'S FINAL IS THIRTY AND A COURSE'S PAPER IS STILL TWENTY, as shipped (A-14).
+
+	One pool long enough for either, so the only thing that can make the two
+	papers differ is the scope. And a track pool under thirty is asked in full —
+	twenty-five of twenty-five, not the course's twenty of them.
+*/
+func TestATrackFinalDrawsItsOwnNumber(t *testing.T) {
+	long := exam.QuestionsPerTrackAttempt.Fallback + 10
+
+	for _, one := range []struct {
+		scope exam.Scope
+		id    string
+		pool  int
+		want  int
+	}{
+		{exam.ScopeTrack, "frontend", long, exam.QuestionsPerTrackAttempt.Fallback},
+		{exam.ScopeTrack, "frontend", 25, 25},
+		{exam.ScopeCourse, "web-fundamentals", long, exam.QuestionsPerAttempt.Fallback},
+	} {
+		db := testPool(t)
+		school, student := school(t, db), student(t, db)
+		questions(t, db, school, one.scope, one.id, one.pool)
+		store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
+
+		paper, _, err := store.Start(context.Background(), school, student,
+			one.scope, one.id, "en")
+		if err != nil {
+			t.Fatalf("starting the %s exam: %v", one.scope, err)
+		}
+		if len(paper.Questions) != one.want {
+			t.Errorf("a %s pool of %d gave a paper of %d, want %d",
+				one.scope, one.pool, len(paper.Questions), one.want)
+		}
+	}
+}
+
+/*
+AND A TRACK LENGTH OUTSIDE ITS FENCE IS THE SHIPPED THIRTY — not the number it
+asked for, and not the course's twenty, which is the other number in reach.
+*/
+func TestATrackLengthOutsideTheFenceIsTheShippedOne(t *testing.T) {
+	pool := exam.QuestionsPerTrackAttempt.Fallback + 10
+
+	for _, outside := range []int{
+		exam.QuestionsPerTrackAttempt.Least - 1,
+		exam.QuestionsPerTrackAttempt.Most + 1,
+	} {
+		db := testPool(t)
+		school, student := school(t, db), student(t, db)
+		questions(t, db, school, exam.ScopeTrack, "frontend", pool)
+
+		store := exam.NewStore(db, open, nothingWithdrawn, exam.Numbers{
+			QuestionsPerTrackPaper: func(context.Context) int { return outside },
+		})
+		paper, _, err := store.Start(context.Background(), school, student,
+			exam.ScopeTrack, "frontend", "en")
+		if err != nil {
+			t.Fatalf("starting: %v", err)
+		}
+		if len(paper.Questions) != exam.QuestionsPerTrackAttempt.Fallback {
+			t.Errorf("a track length of %d gave a paper of %d, want the shipped %d",
+				outside, len(paper.Questions), exam.QuestionsPerTrackAttempt.Fallback)
+		}
 	}
 }
 
@@ -699,7 +781,7 @@ func TestALongPoolIsDrawnFrom(t *testing.T) {
 	db := testPool(t)
 	school := school(t, db)
 	first, second := student(t, db), student(t, db)
-	questions(t, db, school, exam.ScopeTrack, "frontend", exam.QuestionsPerAttempt.Fallback+8)
+	questions(t, db, school, exam.ScopeTrack, "frontend", exam.QuestionsPerTrackAttempt.Fallback+8)
 	store := exam.NewStore(db, open, nothingWithdrawn, asShipped)
 	ctx := context.Background()
 
@@ -709,9 +791,9 @@ func TestALongPoolIsDrawnFrom(t *testing.T) {
 		if err != nil {
 			t.Fatalf("starting: %v", err)
 		}
-		if len(paper.Questions) != exam.QuestionsPerAttempt.Fallback {
+		if len(paper.Questions) != exam.QuestionsPerTrackAttempt.Fallback {
 			t.Fatalf("a pool of %d gave a paper of %d, want %d",
-				exam.QuestionsPerAttempt.Fallback+8, len(paper.Questions), exam.QuestionsPerAttempt.Fallback)
+				exam.QuestionsPerTrackAttempt.Fallback+8, len(paper.Questions), exam.QuestionsPerTrackAttempt.Fallback)
 		}
 		for _, q := range paper.Questions {
 			papers[i] = append(papers[i], q.ExerciseID)

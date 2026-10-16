@@ -1,0 +1,372 @@
+{
+  "ex-y1jz22wj": {
+    "prompt": "Um consumidor grava o checkpoint e depois faz o trabalho. Ele cai entre os dois. O que acontece com aquele registro?",
+    "hint": "Onde o reinício começa?",
+    "choices": [
+      {
+        "text": "É processado duas vezes",
+        "why": "Essa é a outra ordem: trabalho primeiro, depois checkpoint."
+      },
+      {
+        "text": "Se perde: o reinício começa depois dele",
+        "why": "Isso: no máximo uma vez. Nada é feito duas vezes, e este registro nunca é processado."
+      },
+      {
+        "text": "O Kinesis percebe a queda e o entrega de novo",
+        "why": "O Kinesis não sabe nada do consumidor; serve o iterador que lhe pedirem."
+      },
+      {
+        "text": "É processado exatamente uma vez",
+        "why": "Nenhuma ordem dos dois passos dá isso; o trabalho nunca aconteceu."
+      }
+    ]
+  },
+  "ex-n3na254c": {
+    "prompt": "Por que \"exatamente uma vez\" não é uma terceira forma de ordenar o trabalho e o checkpoint?",
+    "hint": "As duas escritas vão para sistemas diferentes.",
+    "choices": [
+      {
+        "text": "Porque o checkpoint é sempre gravado primeiro",
+        "why": "Pode ser gravado em qualquer ordem; é isso que as duas garantias são."
+      },
+      {
+        "text": "Porque exige uma rede mais rápida",
+        "why": "Velocidade diminui a janela e nunca a fecha."
+      },
+      {
+        "text": "Porque o Kinesis o proíbe nos termos de uso",
+        "why": "É questão de duas escritas separadas, não de uma regra."
+      },
+      {
+        "text": "Nenhuma escrita única cobre os dois",
+        "why": "Isso: uma queda entre eles perde ou repete. Exatamente uma vez se constrói com escritas atômicas ou trabalho idempotente, de ponta a ponta."
+      }
+    ]
+  },
+  "ex-rrw6p1s1": {
+    "prompt": "Por que pelo menos uma vez é o padrão do Kinesis, do Firehose, da Lambda e do Kafka?",
+    "hint": "Qual das duas pode ser consertada depois?",
+    "choices": [
+      {
+        "text": "É a única que não perde nada",
+        "why": "Isso: duplicados podem ser tratados depois, registros perdidos não. No máximo uma vez só serve a dados que podem se perder."
+      },
+      {
+        "text": "É mais barata de rodar que no máximo uma vez",
+        "why": "As duas custam o mesmo para rodar; diferem no que uma queda faz."
+      },
+      {
+        "text": "Remove duplicados sozinha",
+        "why": "Ela os cria; removê-los é tarefa do consumidor."
+      }
+    ]
+  },
+  "ex-bqq2vgph": {
+    "prompt": "O retry de um produtor pôs `o-301` no shard duas vezes, nos números de sequência 1 e 2. Por que o número de sequência não identifica a cópia?",
+    "hint": "Quem atribuiu cada número?",
+    "choices": [
+      {
+        "text": "Números de sequência são reaproveitados depois de um retry",
+        "why": "Foram 1 e 2: diferentes, nunca reaproveitados."
+      },
+      {
+        "text": "Cada cópia ganhou um número próprio",
+        "why": "Isso, então só uma chave nos dados mostra que são um pagamento: o id do pedido, posto lá pelo produtor."
+      },
+      {
+        "text": "Os números de sequência do moto são inteiros pequenos",
+        "why": "Na AWS são strings longas, e a cópia ganha um novo do mesmo jeito."
+      },
+      {
+        "text": "O número de sequência é cifrado",
+        "why": "É uma posição simples no shard."
+      }
+    ]
+  },
+  "ex-72fgp6wt": {
+    "prompt": "Uma equipe monta a chave de idempotência com id do cliente, valor e data. O que dá errado?",
+    "hint": "Dois eventos reais podem ter os três iguais?",
+    "choices": [
+      {
+        "text": "Nada, desde que a data inclua o fuso horário",
+        "why": "O defeito não é a precisão da data; a chave descreve o evento em vez de nomeá-lo."
+      },
+      {
+        "text": "A chave é longa demais para o DynamoDB",
+        "why": "Algumas dezenas de caracteres cabem bem numa chave."
+      },
+      {
+        "text": "Dois pedidos reais viram um",
+        "why": "Isso: dois pedidos do mesmo valor naquele dia têm a mesma chave, e um pagamento se perde. A chave tem de ser um id atribuído uma vez quando o evento acontece, como o id do pedido."
+      },
+      {
+        "text": "Um retry do produtor deixa de ser pego",
+        "why": "Um retry tem os mesmos três valores, então seria pego; o erro é na outra direção."
+      }
+    ]
+  },
+  "ex-gc01y569": {
+    "prompt": "Quais destes podem pôr o mesmo registro duas vezes nas mãos de um consumidor? Marque todos os que se aplicam.",
+    "hint": "Quatro lugares foram nomeados, e uma coisa que parece duplicado e não é.",
+    "choices": [
+      {
+        "text": "Um produtor que tenta de novo depois de uma confirmação perdida",
+        "why": "Isso; o shard guarda as duas cópias."
+      },
+      {
+        "text": "Um consumidor que cai antes do checkpoint",
+        "why": "Isso; o reinício lê o lote de novo."
+      },
+      {
+        "text": "Um worker perdendo o lease para outro num rebalanceamento",
+        "why": "Isso; o dono novo começa do último checkpoint."
+      },
+      {
+        "text": "Dois clientes pagando o mesmo valor no mesmo dia",
+        "why": "Esses são dois eventos reais, não um duplicado."
+      }
+    ]
+  },
+  "ex-3fzm8hns": {
+    "prompt": "No modo `plain`, depois da queda e do reinício, `c-17` mostrou 20.340 centavos em vez de 12.780. Por que o reinício leu os quatro primeiros registros de novo?",
+    "hint": "Procure o `checkpoint.txt`.",
+    "choices": [
+      {
+        "text": "Nenhum checkpoint tinha sido gravado, então começou em `TRIM_HORIZON`",
+        "why": "Isso. O checkpoint é gravado uma vez, no fim, e a queda veio antes."
+      },
+      {
+        "text": "O moto reenviou os registros depois da queda",
+        "why": "O moto serviu o iterador que pediram; o consumidor pediu o começo."
+      },
+      {
+        "text": "O DynamoDB desfez as quatro atualizações",
+        "why": "Nada foi desfeito; é por isso que os totais dobraram."
+      },
+      {
+        "text": "`ADD` lê todo registro duas vezes",
+        "why": "`ADD` se aplica uma vez por chamada; as chamadas é que se repetiram."
+      }
+    ]
+  },
+  "ex-taqqrf5z": {
+    "prompt": "Por que o `totals.py` põe o `Put` da deduplicação e o `ADD` numa transação só em vez de duas escritas uma depois da outra?",
+    "hint": "Imagine uma queda entre as duas escritas separadas.",
+    "choices": [
+      {
+        "text": "Uma transação é mais barata que duas escritas",
+        "why": "Custa o dobro de uma escrita comum por item; é paga pela correção."
+      },
+      {
+        "text": "O DynamoDB só aceita `attribute_not_exists` dentro de uma transação",
+        "why": "Um `put-item` comum também aceita a condição."
+      },
+      {
+        "text": "Uma transação faz as escritas rodarem em paralelo",
+        "why": "O ponto é que dão certo ou falham juntas, não a velocidade."
+      },
+      {
+        "text": "Para uma queda não registrar um pedido sem contá-lo",
+        "why": "Isso, nem contar um sem registrá-lo. Ou as duas escritas acontecem ou nenhuma acontece."
+      }
+    ]
+  },
+  "ex-xdpcmteq": {
+    "prompt": "Com a deduplicação ligada, o stream inteiro de sete registros foi reprocessado. Quantos itens o `quitanda-processed` guardava depois?",
+    "hint": "Um por pagamento, não por registro.",
+    "unit": "itens"
+  },
+  "ex-w5j1rnj3": {
+    "prompt": "A tabela de ids de pedido processados cresce um item por pagamento para sempre. O que a limita, e a que preço?",
+    "hint": "O DynamoDB pode apagar itens quando expiram.",
+    "choices": [
+      {
+        "text": "Um TTL além do reprocessamento mais longo",
+        "why": "Isso, e duplicados mais velhos que ele deixam de ser pegos. A janela é escolhida de propósito, a partir da retenção do stream mais uma folga."
+      },
+      {
+        "text": "Apagar a tabela toda noite; nada se perde",
+        "why": "Um reprocessamento na manhã seguinte contaria todo pedido de novo."
+      },
+      {
+        "text": "Nada a limita, e nada precisa",
+        "why": "Ela custa armazenamento por item para sempre; um TTL acaba com isso."
+      }
+    ]
+  },
+  "ex-nwqf45kv": {
+    "prompt": "Um consumidor escreve cada lote no S3 sob uma chave com a hora da escrita. Cai depois da escrita e antes do checkpoint, e reprocessa. O que fica no lago?",
+    "hint": "Compare as duas listagens da seção.",
+    "choices": [
+      {
+        "text": "Um objeto, porque o S3 sobrescreve o antigo",
+        "why": "Sobrescrever exige a mesma chave; a hora fez uma nova."
+      },
+      {
+        "text": "Dois objetos com os mesmos registros, e toda consulta conta os dois",
+        "why": "Isso. Uma chave do shard e da faixa de sequência teria caído no mesmo objeto."
+      },
+      {
+        "text": "Nenhum objeto, porque o S3 recusa bytes idênticos",
+        "why": "O S3 não compara nada; guarda o que recebe sob a chave dada."
+      },
+      {
+        "text": "Dois objetos, e o S3 marca o segundo como duplicado",
+        "why": "O S3 não tem essa marca."
+      }
+    ]
+  },
+  "ex-1w3ch2y0": {
+    "prompt": "No laboratório, `ADD 500` duas vezes fez 1.000 e `put-item` de 500 duas vezes deixou 500. Quando um consumidor pode usar o segundo?",
+    "hint": "Um upsert leva o estado inteiro.",
+    "choices": [
+      {
+        "text": "Sempre que a tabela tem chave de ordenação",
+        "why": "O esquema de chave não tem nada a ver com isso."
+      },
+      {
+        "text": "Quando os registros chegam em ordem",
+        "why": "A ordem importa para qual fotografia vence, não para a escrita se repetir com segurança."
+      },
+      {
+        "text": "Quando cada evento leva o estado novo",
+        "why": "Isso: um saldo, não um valor a somar. Um stream de mudanças, como pagamentos, ainda precisa da deduplicação."
+      },
+      {
+        "text": "Nunca com o DynamoDB, só com o `MERGE` do SQL",
+        "why": "O `put-item` é exatamente um upsert; o laboratório o rodou."
+      }
+    ]
+  },
+  "ex-jfxgqmwp": {
+    "prompt": "Uma escrita é ___ quando repeti-la deixa o mesmo resultado que fazê-la uma vez.",
+    "hint": "A palavra em que o título da lição termina.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  },
+  "ex-17q9k6hh": {
+    "prompt": "Um consumidor guarda o maior número de sequência que já aplicou, por shard, e pula tudo igual ou abaixo dele. Que duplicados isso pega?",
+    "hint": "Que número de sequência o retry de um produtor recebe?",
+    "choices": [
+      {
+        "text": "Todo duplicado, de qualquer origem",
+        "why": "O retry de um produtor chega com número maior e passa no teste."
+      },
+      {
+        "text": "Só os retries do produtor",
+        "why": "O contrário: esses ganham números novos, maiores."
+      },
+      {
+        "text": "Os reprocessamentos do consumidor",
+        "why": "Isso: eles voltam com os mesmos números. É o checkpoint levado para dentro do destino, um número por shard."
+      },
+      {
+        "text": "Nenhum, porque números de sequência não têm ordem",
+        "why": "Dentro de um shard eles crescem, e é isso que faz a marca d'água funcionar."
+      }
+    ]
+  },
+  "ex-16kynwnk": {
+    "prompt": "O que o produtor idempotente do Kafka, ligado por padrão desde o Kafka 3.0, remove?",
+    "hint": "Ele age no broker, por partição, dentro de uma sessão do produtor.",
+    "choices": [
+      {
+        "text": "Duplicados escritos pelos próprios retries numa sessão",
+        "why": "Isso. O broker reconhece um número que já escreveu e não o escreve de novo."
+      },
+      {
+        "text": "Duplicados que um consumidor cria ao reprocessar",
+        "why": "Um reprocessamento é o consumidor lendo de novo; o produtor não entra."
+      },
+      {
+        "text": "Registros com a mesma chave",
+        "why": "Isso é compactação, que guarda o mais recente por chave; idempotência é sobre retries."
+      },
+      {
+        "text": "Escritas repetidas no DynamoDB mais adiante",
+        "why": "Nada no Kafka chega além do Kafka."
+      }
+    ]
+  },
+  "ex-pwcksj3x": {
+    "prompt": "Um consumidor Kafka usa transações e lê com `read_committed`, e escreve cada resultado no DynamoDB. A escrita no DynamoDB é exatamente uma vez?",
+    "hint": "Onde a transação para?",
+    "choices": [
+      {
+        "text": "Sim, as transações cobrem toda escrita que o consumidor faz",
+        "why": "Cobrem registros e offsets do Kafka; o DynamoDB fica fora."
+      },
+      {
+        "text": "Sim, porque o `read_committed` esconde duplicados",
+        "why": "Esconde dos leitores transações não confirmadas, não escritas externas repetidas."
+      },
+      {
+        "text": "Não: está fora da transação",
+        "why": "Isso, então tem de ser idempotente por conta própria. Exatamente uma vez é de ponta a ponta, e esta ponta é o DynamoDB."
+      }
+    ]
+  },
+  "ex-zp6vebth": {
+    "prompt": "Ligue cada origem de duplicados ao que a pega.",
+    "hint": "Um remédio só funciona dentro do Kafka.",
+    "pairs": [
+      {
+        "left": "O retry de um produtor do Kinesis",
+        "right": "Uma chave de idempotência nos dados"
+      },
+      {
+        "left": "O retry de um produtor do Kafka",
+        "right": "O produtor idempotente, no broker"
+      },
+      {
+        "left": "O reprocessamento de um shard pelo consumidor",
+        "right": "Uma marca d'água de número de sequência por shard"
+      },
+      {
+        "left": "Um retry do Firehose no S3",
+        "right": "Uma deduplicação quando o lago é compactado"
+      }
+    ],
+    "right_distractors": [
+      "Uma retenção maior"
+    ]
+  },
+  "ex-zjz43ks4": {
+    "prompt": "Ponha em ordem o que o `totals.py` no modo `dedupe` faz com um registro.",
+    "hint": "O checkpoint é a última coisa, e só uma vez por execução.",
+    "items": [
+      "Ler o registro do shard",
+      "Interpretar o id do pedido, o cliente e o valor",
+      "Tentar a transação: pôr o id do pedido se ausente, e somar o valor",
+      "Se a transação for cancelada, reportar um duplicado e seguir",
+      "No fim do shard, gravar o checkpoint"
+    ]
+  },
+  "ex-ycb08sz2": {
+    "prompt": "O app da Quitanda manda \"os pontos de fidelidade do cliente `c-17` agora são 340\" depois de todo pedido. Que desenho de destino é o mais simples e correto com entrega pelo menos uma vez?",
+    "hint": "O evento é um estado ou uma mudança?",
+    "choices": [
+      {
+        "text": "Uma tabela de deduplicação de ids de evento numa transação com um `ADD`",
+        "why": "Funciona, e paga por uma memória de que o evento não precisa: o evento é um estado."
+      },
+      {
+        "text": "Um `ADD` de 340 aos pontos do cliente",
+        "why": "Isso soma um estado como se fosse uma mudança, e conta de novo a cada reprocessamento."
+      },
+      {
+        "text": "Um `put-item` que põe os pontos em 340, com uma versão para um evento mais velho não sobrescrever um mais novo",
+        "why": "Isso. O upsert absorve duplicados, e a versão cuida da ordem."
+      },
+      {
+        "text": "Entrega exatamente uma vez pelo Kinesis",
+        "why": "O Kinesis oferece pelo menos uma vez; não há configuração para exatamente uma vez."
+      }
+    ]
+  }
+}

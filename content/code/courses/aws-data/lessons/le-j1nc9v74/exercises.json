@@ -1,0 +1,604 @@
+[
+  {
+    "id": "ex-67a5pqfj",
+    "version": 1,
+    "section": "the-questions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does this lesson ask about price last rather than first?",
+    "hint": "Think of Athena's 9.00 a terabyte and the \"my orders\" screen.",
+    "choices": [
+      {
+        "text": "Because price is the least important of the six",
+        "correct": false,
+        "why": "It matters a great deal; it just cannot be read before the workload says what to multiply."
+      },
+      {
+        "text": "A price means something only once the workload says what to multiply",
+        "correct": true,
+        "why": "Right. Read first, Athena's per-terabyte price would have ruled in a store the access pattern rules out."
+      },
+      {
+        "text": "Because the price sheet only covers some stores",
+        "correct": false,
+        "why": "It covers every store of this lesson; the order is about reasoning, not data."
+      },
+      {
+        "text": "Because managed services all cost about the same",
+        "correct": false,
+        "why": "The worked comparison found 10.50 against 338.25 for one workload."
+      }
+    ]
+  },
+  {
+    "id": "ex-d63tc9rq",
+    "version": 1,
+    "section": "the-questions",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the six questions in the order this lesson asks them.",
+    "hint": "The shape of the work first, the bill last.",
+    "items": [
+      "What is the access pattern?",
+      "How fast must an answer come?",
+      "What consistency does the reader need?",
+      "How big, and how fast does it grow?",
+      "Who operates it?",
+      "What does it cost, at this workload?"
+    ]
+  },
+  {
+    "id": "ex-n0h714p2",
+    "version": 1,
+    "section": "the-questions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At checkout, Quitanda shows a loyalty balance that must include the points the customer earned a second ago in the same purchase. Which question rules out answering it from a cache or from the warehouse?",
+    "hint": "Both of those are, by design, behind the source.",
+    "choices": [
+      {
+        "text": "Latency, since a warehouse answers in seconds",
+        "correct": false,
+        "why": "True of the warehouse, and a cache answers in under a millisecond; what excludes both is that neither sees the write just made."
+      },
+      {
+        "text": "Scale, since loyalty grows with every purchase",
+        "correct": false,
+        "why": "The data is small; size is not what fails here."
+      },
+      {
+        "text": "Consistency",
+        "correct": true,
+        "why": "Right: the reader must see the latest write, which the store of record gives and its copies do not."
+      },
+      {
+        "text": "Price, since a cache costs money every hour",
+        "correct": false,
+        "why": "Price comes last and is not what disqualifies them."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw860gqh",
+    "version": 1,
+    "section": "the-questions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team of three runs Aurora and S3 well. A new feature needs a small lookup by key, about 50 requests a second, next to data that is already in Aurora. Which question argues most for keeping it in Aurora rather than adding DynamoDB?",
+    "hint": "Count the stores the team runs.",
+    "choices": [
+      {
+        "text": "Scale: DynamoDB cannot serve as few as 50 requests a second",
+        "correct": false,
+        "why": "It serves any rate; small loads are not a problem for it."
+      },
+      {
+        "text": "Who operates it: one store fewer to run",
+        "correct": true,
+        "why": "Right. At 50 a second an indexed query is easy for Aurora, and the team avoids a new store to learn and watch."
+      },
+      {
+        "text": "Price: Aurora is cheaper per request than DynamoDB in every case",
+        "correct": false,
+        "why": "The worked comparison found the opposite for a workload alone; Aurora wins here because it is already paid for."
+      },
+      {
+        "text": "Consistency: DynamoDB offers no strong reads",
+        "correct": false,
+        "why": "It offers strongly consistent reads per request."
+      }
+    ]
+  },
+  {
+    "id": "ex-584mchs5",
+    "version": 1,
+    "section": "the-tree",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each workload to the branch of the tree it belongs on.",
+    "hint": "Ask the first question of each.",
+    "pairs": [
+      {
+        "left": "a cart read and written by the customer's id many times a minute",
+        "right": "DynamoDB"
+      },
+      {
+        "left": "contracts kept for seven years and read almost never",
+        "right": "S3"
+      },
+      {
+        "left": "an order, its lines and the stock, all or nothing",
+        "right": "RDS or Aurora"
+      },
+      {
+        "left": "a dashboard refreshed all day by forty analysts",
+        "right": "Redshift"
+      }
+    ],
+    "right_distractors": [
+      "ElastiCache, as the store of record"
+    ]
+  },
+  {
+    "id": "ex-95w38e1a",
+    "version": 1,
+    "section": "the-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is ElastiCache never the store of record in this lesson's designs?",
+    "hint": "What happens to its data when a node restarts?",
+    "choices": [
+      {
+        "text": "It is too slow for writes",
+        "correct": false,
+        "why": "It is the fastest store of the course."
+      },
+      {
+        "text": "It keeps data only until eviction or a restart",
+        "correct": true,
+        "why": "Right, which makes it a copy in front of a store that keeps the data for good."
+      },
+      {
+        "text": "It costs more per GB than any database",
+        "correct": false,
+        "why": "Memory is dear, and that is not why it cannot be the record."
+      },
+      {
+        "text": "It cannot be read by more than one application",
+        "correct": false,
+        "why": "Any number of clients read a cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzzxb9v3",
+    "version": 1,
+    "section": "the-tree",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fraud check needs the orders placed in the last minute. The analyst writes it against Redshift, which is loaded every hour. What is wrong?",
+    "hint": "Which store knows about the last minute?",
+    "choices": [
+      {
+        "text": "Redshift cannot filter on time",
+        "correct": false,
+        "why": "It filters on time very well, over the data it has."
+      },
+      {
+        "text": "The query needs a sort key on the order date",
+        "correct": false,
+        "why": "A sort key makes it faster over loaded data; the last minute is not loaded yet."
+      },
+      {
+        "text": "Redshift answers as of the last load, and \"now\" lives in the store of record or the stream",
+        "correct": true,
+        "why": "Right: Aurora or the Kinesis stream knows the last minute; the warehouse learns it within the hour."
+      },
+      {
+        "text": "Fraud checks must run on Athena",
+        "correct": false,
+        "why": "Athena reads the lake, which is behind the source too."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2fwjw1d",
+    "version": 1,
+    "section": "quitanda-workloads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Carts would work in Aurora. Why does Quitanda put them in DynamoDB?",
+    "hint": "Access by one key, spikes, and abandoned carts.",
+    "choices": [
+      {
+        "text": "One key, spiky load, and expiry deleting abandoned carts for free",
+        "correct": true,
+        "why": "Right, and the business database stays free of rows nobody keeps."
+      },
+      {
+        "text": "Aurora cannot store a cart's list of products",
+        "correct": false,
+        "why": "A table of cart lines does that easily."
+      },
+      {
+        "text": "A cart must be joined to the stock on every read",
+        "correct": false,
+        "why": "If it did, that would argue for Aurora; nothing joins it until it becomes an order."
+      },
+      {
+        "text": "DynamoDB is the store of record for orders",
+        "correct": false,
+        "why": "Orders live in Aurora; a cart is copied there when it becomes one."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ywcj270",
+    "version": 1,
+    "section": "quitanda-workloads",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard runs 300 queries a day on Athena, each scanning 20 GB, at 9.00 USD a terabyte. What does it cost a day, in USD?",
+    "hint": "20 GB is 0.02 TB.",
+    "value": 54.0,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-z25sej9r",
+    "version": 1,
+    "section": "quitanda-workloads",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each dashboard query scans 20 GB, 0.18 USD on Athena. A Redshift Serverless workgroup at 8 RPUs, busy ten hours, costs 47.81 a day. Around how many such queries a day make the two cost the same?",
+    "hint": "Divide the day of Redshift by the price of one query.",
+    "choices": [
+      {
+        "text": "About 27",
+        "correct": false,
+        "why": "That divides by 1.8, ten times the price of a query."
+      },
+      {
+        "text": "About 500",
+        "correct": false,
+        "why": "At 500 Athena costs 90.00, nearly twice the workgroup."
+      },
+      {
+        "text": "About 2,656",
+        "correct": false,
+        "why": "That divides by 0.018, a tenth of the price of a query."
+      },
+      {
+        "text": "About 266",
+        "correct": true,
+        "why": "Right: 47.81 ÷ 0.18 = 265.6. Fewer than that, Athena; more, Redshift."
+      }
+    ]
+  },
+  {
+    "id": "ex-1aye2grt",
+    "version": 1,
+    "section": "quitanda-workloads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lake's copy of an order and Aurora disagree about its total. Which is right?",
+    "hint": "One store of record per fact.",
+    "choices": [
+      {
+        "text": "The lake, because it keeps every change DMS captured",
+        "correct": false,
+        "why": "It is a copy derived from Aurora, and a copy that disagrees has missed something."
+      },
+      {
+        "text": "Whichever was written most recently",
+        "correct": false,
+        "why": "Recency is not the rule; the copy may be newer and still wrong."
+      },
+      {
+        "text": "Aurora, the store of record",
+        "correct": true,
+        "why": "Right; the lake's pipeline is what to investigate."
+      },
+      {
+        "text": "Neither until a person decides",
+        "correct": false,
+        "why": "The design already decided, by naming the store of record."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rcb45ke",
+    "version": 1,
+    "section": "one-workload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of the 10.50 USD DynamoDB month for \"my orders\" is the largest?",
+    "hint": "Look at the three lines of the table.",
+    "choices": [
+      {
+        "text": "The 3,000,000 reads",
+        "correct": false,
+        "why": "They cost 0.56."
+      },
+      {
+        "text": "Storage beyond the first 25 GB",
+        "correct": true,
+        "why": "Right: 9.38 of the 10.50."
+      },
+      {
+        "text": "The 600,000 writes",
+        "correct": false,
+        "why": "They cost 0.56 too."
+      },
+      {
+        "text": "The global secondary index on the date",
+        "correct": false,
+        "why": "There is none: the date is the sort key."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a0q0aw3",
+    "version": 1,
+    "section": "one-workload",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If the screen were opened 1,000,000 times a month, each an Athena query billed at the 10 MB minimum, what is the least the scans cost, at 9.00 USD a terabyte?",
+    "hint": "One million times 10 MB, in terabytes.",
+    "value": 90.0,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-5krm8h7t",
+    "version": 1,
+    "section": "one-workload",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's orders already live in an Aurora instance that has room to spare. What does adding \"my orders\" there, as one indexed query per lookup, add to the bill?",
+    "hint": "What is Aurora's price made of?",
+    "choices": [
+      {
+        "text": "Another 338.25 a month, the price the section computed",
+        "correct": false,
+        "why": "That is the price of an instance for this workload alone; the instance already exists."
+      },
+      {
+        "text": "10.50, the same as DynamoDB, since the requests are the same",
+        "correct": false,
+        "why": "Aurora does not price per request; it prices the instance."
+      },
+      {
+        "text": "Close to nothing; the machine is paid for",
+        "correct": true,
+        "why": "Right; at most some I/O, which the table priced at a few dollars."
+      },
+      {
+        "text": "The 270.00 minimum, as Athena would charge",
+        "correct": false,
+        "why": "That is Athena's per-query minimum; Aurora has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-w824gf3p",
+    "version": 1,
+    "section": "anti-patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a busy `jobs` table used as a queue in PostgreSQL get slower over time?",
+    "hint": "What does an update leave behind?",
+    "choices": [
+      {
+        "text": "PostgreSQL limits a table to a number of updates a day",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "`SKIP LOCKED` stops working past a thousand rows",
+        "correct": false,
+        "why": "It works at any size; the problem is the dead rows around it."
+      },
+      {
+        "text": "The workers' polling fills the write-ahead log",
+        "correct": false,
+        "why": "Reads write no WAL; the updates do, and the bloat is in the table."
+      },
+      {
+        "text": "Each finished job leaves a dead row, faster than vacuum cleans",
+        "correct": true,
+        "why": "Right, and every poll then wades through them."
+      }
+    ]
+  },
+  {
+    "id": "ex-9wpdttax",
+    "version": 1,
+    "section": "anti-patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A DynamoDB table keyed by order id is asked for \"the orders of customer c-17\". With no index, what does that become?",
+    "hint": "The key is not the customer.",
+    "choices": [
+      {
+        "text": "A `Query` on the customer, as fast as by the id",
+        "correct": false,
+        "why": "A `Query` needs the partition key, which is the order id here."
+      },
+      {
+        "text": "A `Scan` with a filter, reading and billing every item",
+        "correct": true,
+        "why": "Right: the filter is applied after the read, so the whole table is paid for."
+      },
+      {
+        "text": "An error until the table is recreated with a new key",
+        "correct": false,
+        "why": "DynamoDB allows the scan; it just costs the whole table."
+      },
+      {
+        "text": "A request DynamoDB answers from its cache of recent items",
+        "correct": false,
+        "why": "There is no such cache for arbitrary attributes."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yq3pfz5",
+    "version": 1,
+    "section": "anti-patterns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application inserts an order into Redshift twice, with the same declared primary key. What does Redshift do?",
+    "hint": "Declared is not enforced.",
+    "choices": [
+      {
+        "text": "Refuses the second insert with a key violation",
+        "correct": false,
+        "why": "That is what a relational database that enforces keys does."
+      },
+      {
+        "text": "Keeps the newer row and drops the older",
+        "correct": false,
+        "why": "It keeps both; nothing merges them."
+      },
+      {
+        "text": "Stores both rows",
+        "correct": true,
+        "why": "Right: its keys are declared and not enforced, which is one reason an application's writes do not belong there."
+      },
+      {
+        "text": "Queues the second insert until the first commits, then refuses it",
+        "correct": false,
+        "why": "Commits do queue, and the second still goes in."
+      }
+    ]
+  },
+  {
+    "id": "ex-p254j2h0",
+    "version": 1,
+    "section": "anti-patterns",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A query opens 500,000 small objects in S3. At 0.00056 USD per 1,000 GET requests, what does it pay in requests alone, in USD?",
+    "hint": "500 thousands.",
+    "value": 0.28,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-d6dw7ed8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each of 800 delivery drivers sends a position every five seconds. The app shows each driver's latest position; the operations team wants a month of positions for route analysis. Which design fits both?",
+    "hint": "Two access patterns: one key, now; and all of history.",
+    "choices": [
+      {
+        "text": "One Aurora table of every position, queried for the newest per driver",
+        "correct": false,
+        "why": "Nearly 14 million rows a day on the business database, to answer a question about one row per driver."
+      },
+      {
+        "text": "Newest point per person in DynamoDB; the stream to S3 for Athena",
+        "correct": true,
+        "why": "Right: each access pattern on its own branch, the stream feeding both."
+      },
+      {
+        "text": "Redshift for both, loaded every five seconds",
+        "correct": false,
+        "why": "A warehouse loaded row by row is the third anti-pattern, and the app would wait seconds."
+      },
+      {
+        "text": "One S3 object per position, read by the app for the newest",
+        "correct": false,
+        "why": "Millions of tiny files, and the app listing them to find the latest."
+      }
+    ]
+  },
+  {
+    "id": "ex-89k66693",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are anti-patterns this lesson warns against? Choose all that apply.",
+    "hint": "A store serving an access pattern it was not built for.",
+    "choices": [
+      {
+        "text": "A `jobs` table polled every second by workers",
+        "correct": true,
+        "why": "Yes: a database as a queue."
+      },
+      {
+        "text": "A DynamoDB table whose partition key is the order status",
+        "correct": true,
+        "why": "Yes: few values, one hot partition."
+      },
+      {
+        "text": "An application writing single rows into Redshift",
+        "correct": true,
+        "why": "Yes: a warehouse as an application's store."
+      },
+      {
+        "text": "Firehose buffering events into larger files in S3",
+        "correct": false,
+        "why": "That is the cure for tiny files."
+      },
+      {
+        "text": "ElastiCache in front of Aurora for the catalogue page",
+        "correct": false,
+        "why": "That is the design of this lesson's workloads."
+      }
+    ]
+  },
+  {
+    "id": "ex-94tdzc0s",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new feature searches products by any words in their descriptions, ranked by relevance, as the customer types. What does the first question tell Quitanda?",
+    "hint": "Is this access pattern on any branch of the tree?",
+    "choices": [
+      {
+        "text": "Use an Aurora `LIKE '%word%'` query, since products live there",
+        "correct": false,
+        "why": "A leading wildcard uses no index and ranks nothing; it is the relational store bent to a pattern it does not serve."
+      },
+      {
+        "text": "Scan the DynamoDB table with a `contains` filter",
+        "correct": false,
+        "why": "The second anti-pattern, on every keystroke."
+      },
+      {
+        "text": "Run an Athena query for each keystroke",
+        "correct": false,
+        "why": "Seconds per answer and the 10 MB minimum per query."
+      },
+      {
+        "text": "It is a pattern none of these stores is built for",
+        "correct": true,
+        "why": "Right: full-text search wants a search engine, fed from the store of record, rather than bending one of these."
+      }
+    ]
+  }
+]

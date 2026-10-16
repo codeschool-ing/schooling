@@ -1,0 +1,43 @@
+---
+title: No máximo uma vez, pelo menos uma vez, exatamente uma vez
+version: 1
+---
+
+**Uma garantia de entrega é uma afirmação sobre uma pergunta só: quando um consumidor cai, o que
+acontece com o registro em que ele estava trabalhando?** Todo consumidor das lições 20 a 22 faz duas
+coisas por registro, ou por lote: faz o trabalho, como somar um pagamento a um total, e anota que o
+fez, com um checkpoint no Kinesis ou um offset confirmado no Kafka. Uma queda pode cair entre as duas,
+e a ordem das duas decide a resposta.
+
+**Primeiro o checkpoint, depois o trabalho, é no máximo uma vez** (*at most once*). Se o processo
+morre depois do checkpoint e antes do trabalho, o reinício começa depois de um registro que nunca foi
+processado: ele se perde, em silêncio, e nada é feito duas vezes. **Primeiro o trabalho, depois o
+checkpoint, é pelo menos uma vez** (*at least once*). Se o processo morre depois do trabalho e antes
+do checkpoint, o reinício lê o registro de novo e faz o trabalho uma segunda vez: nada se perde, e
+algumas coisas são feitas duas vezes.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"Duas ordens dos mesmos dois passos, com uma queda entre eles. Linha de cima, no máximo uma vez: o consumidor grava o checkpoint, cai, e ao reiniciar começa depois do registro, então o registro nunca é processado: perdido. Linha de baixo, pelo menos uma vez: o consumidor faz o trabalho, cai antes do checkpoint, e ao reiniciar lê o registro de novo e faz o trabalho uma segunda vez: feito duas vezes.\" data-fig=\"l23-orders\"><text x=\"20.0\" y=\"50.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">no máximo uma vez</text><rect x=\"150.0\" y=\"30.0\" width=\"110.0\" height=\"40.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"205.0\" y=\"50.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">checkpoint</text><line x1=\"262.0\" y1=\"50.0\" x2=\"290.0\" y2=\"50.0\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><polygon points=\"296.0,50.0 290.0,47.0 290.0,53.0\" fill=\"var(--wire)\" stroke=\"none\"></polygon><rect x=\"298.0\" y=\"30.0\" width=\"60.0\" height=\"40.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"3 3\"></rect><text x=\"328.0\" y=\"50.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">queda</text><line x1=\"360.0\" y1=\"50.0\" x2=\"388.0\" y2=\"50.0\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><polygon points=\"394.0,50.0 388.0,47.0 388.0,53.0\" fill=\"var(--wire)\" stroke=\"none\"></polygon><rect x=\"396.0\" y=\"30.0\" width=\"120.0\" height=\"40.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"456.0\" y=\"50.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">trabalho</text><text x=\"456.0\" y=\"84.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">nunca alcançado</text><line x1=\"518.0\" y1=\"50.0\" x2=\"546.0\" y2=\"50.0\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><polygon points=\"552.0,50.0 546.0,47.0 546.0,53.0\" fill=\"var(--wire)\" stroke=\"none\"></polygon><rect x=\"554.0\" y=\"30.0\" width=\"150.0\" height=\"40.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"629.0\" y=\"44.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">reinício: depois dele</text><text x=\"629.0\" y=\"59.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">perdido</text><text x=\"20.0\" y=\"150.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" font-weight=\"600\" fill=\"var(--paper)\">pelo menos uma vez</text><rect x=\"150.0\" y=\"130.0\" width=\"110.0\" height=\"40.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"205.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">trabalho</text><line x1=\"262.0\" y1=\"150.0\" x2=\"290.0\" y2=\"150.0\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><polygon points=\"296.0,150.0 290.0,147.0 290.0,153.0\" fill=\"var(--wire)\" stroke=\"none\"></polygon><rect x=\"298.0\" y=\"130.0\" width=\"60.0\" height=\"40.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"3 3\"></rect><text x=\"328.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">queda</text><line x1=\"360.0\" y1=\"150.0\" x2=\"388.0\" y2=\"150.0\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><polygon points=\"394.0,150.0 388.0,147.0 388.0,153.0\" fill=\"var(--wire)\" stroke=\"none\"></polygon><rect x=\"396.0\" y=\"130.0\" width=\"120.0\" height=\"40.0\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"456.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">checkpoint</text><text x=\"456.0\" y=\"184.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">nunca alcançado</text><line x1=\"518.0\" y1=\"150.0\" x2=\"546.0\" y2=\"150.0\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></line><polygon points=\"552.0,150.0 546.0,147.0 546.0,153.0\" fill=\"var(--wire)\" stroke=\"none\"></polygon><rect x=\"554.0\" y=\"130.0\" width=\"150.0\" height=\"40.0\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"629.0\" y=\"144.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">reinício: lê de novo</text><text x=\"629.0\" y=\"159.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">feito duas vezes</text></svg>", "caption": "A ordem entre o trabalho e o checkpoint decide o que uma queda entre eles faz.", "same": ["checkpoint"]}
+```
+
+**Exatamente uma vez não é uma terceira ordem.** Não existe jeito de arrumar os dois passos para que
+uma queda entre eles não perca nem repita, porque o trabalho acontece num sistema, o DynamoDB ou o S3
+ou um banco, e o checkpoint em outro, e nenhuma escrita única cobre os dois. Exatamente uma vez
+(*exactly once*) é uma propriedade do pipeline inteiro, construída de um de dois jeitos: ou o trabalho
+e o checkpoint viram uma escrita atômica só, que é o que as transações do Kafka fazem dentro do Kafka. Ou o trabalho fica **idempotente**, de modo que fazê-lo duas vezes deixa o mesmo resultado que fazê-lo
+uma. Aí uma entrega pelo menos uma vez produz efeitos exatamente uma vez, e essa é a garantia que esta
+lição constrói.
+
+## O que cada serviço promete
+
+| | promete | então o consumidor precisa |
+|---|---|---|
+| Kinesis Data Streams | pelo menos uma vez: a AWS documenta que registros podem ser entregues mais de uma vez | tolerar duplicados |
+| Data Firehose | pelo menos uma vez no S3: uma entrega repetida pode escrever um registro duas vezes | tolerar duplicados no lago |
+| Lambda lendo o Kinesis | pelo menos uma vez: um lote que falhou é repetido inteiro | fazer a função idempotente |
+| Kafka, configuração padrão | pelo menos uma vez | tolerar duplicados, ou usar transações |
+
+**Pelo menos uma vez é o padrão em toda parte, porque é o único que não perde nada.** No máximo uma vez
+é uma escolha a fazer só para dados que podem se perder, como métricas que uma amostra seguinte
+substitui. Tudo o que a Quitanda conta, pagamentos acima de tudo, é pelo menos uma vez. Então todo consumidor disso tem de responder à pergunta da próxima seção: de onde vêm os
+duplicados, e como distinguir um de um segundo evento, verdadeiro, que por acaso parece igual?

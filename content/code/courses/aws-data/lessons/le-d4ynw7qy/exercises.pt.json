@@ -1,0 +1,373 @@
+{
+  "ex-z0q4p0nd": {
+    "prompt": "Num bucket versionado, `aws s3 rm s3://bucket/key` roda sem id de versão. O que fica no bucket depois?",
+    "hint": "Um delete sem versão acrescenta algo.",
+    "choices": [
+      {
+        "text": "Nada sob aquela chave: a versão mais recente foi removida e as antigas junto",
+        "why": "Nada foi removido; esse é o ponto do versionamento."
+      },
+      {
+        "text": "Todas as versões que ela tinha, sob um novo marcador de exclusão",
+        "why": "Isso. O marcador faz a chave responder `NoSuchKey`, e apagar o marcador a traz de volta."
+      },
+      {
+        "text": "As versões antigas, e a mais recente movida para um prefixo de lixeira",
+        "why": "O S3 não tem prefixo de lixeira; a versão mais recente fica onde estava, sob o marcador."
+      },
+      {
+        "text": "Só a versão mais recente, marcada como não atual",
+        "why": "As versões antigas também ficam; toda versão é guardada."
+      }
+    ]
+  },
+  "ex-pdp48d3q": {
+    "prompt": "Um script apagou `customers/customers.csv` num bucket versionado. O que traz o arquivo de volta com o último conteúdo?",
+    "hint": "O que o script acrescentou?",
+    "choices": [
+      {
+        "text": "Enviar o arquivo de novo a partir de um backup",
+        "why": "Funciona se houver backup, e acrescenta uma terceira versão; os bytes nunca saíram de lá."
+      },
+      {
+        "text": "Apagar o marcador de exclusão",
+        "why": "Isso. Remover o marcador faz a última versão de verdade voltar a ser a mais recente."
+      },
+      {
+        "text": "`restore-object`, como para um objeto arquivado",
+        "why": "Uma restauração é para as classes Glacier e é recusada para o resto."
+      },
+      {
+        "text": "Suspender o versionamento, o que desfaz o último delete",
+        "why": "Suspender muda como escritas novas são versionadas e não desfaz nada."
+      }
+    ]
+  },
+  "ex-b06jf7zc": {
+    "prompt": "Ponha os estados de versionamento de um bucket na ordem em que ele pode passar por eles, desde a criação.",
+    "hint": "Não há volta para o primeiro.",
+    "items": [
+      "Não versionado",
+      "Enabled",
+      "Suspended"
+    ]
+  },
+  "ex-j9cmx685": {
+    "prompt": "No moto, depois de suspender o versionamento e escrever a chave mais uma vez, um id de versão antigo responde `NoSuchVersion`. O que isso diz sobre o S3?",
+    "hint": "O moto é a referência do que o S3 guarda?",
+    "choices": [
+      {
+        "text": "Que o moto erra aqui: o S3 guarda as versões antigas",
+        "why": "Isso. E falha na direção perigosa, fazendo uma limpeza parecer feita sem ter sido."
+      },
+      {
+        "text": "Que suspender o versionamento é um jeito barato de apagar versões antigas",
+        "why": "No S3 elas ficam, listadas e cobradas; removê-las exige um delete por versão ou uma regra."
+      },
+      {
+        "text": "Que o S3 guarda versões antigas só por 24 horas depois de uma suspensão",
+        "why": "Não existe essa janela; elas ficam até serem apagadas."
+      },
+      {
+        "text": "Que a versão `null` junta numa só cópia as versões de antes",
+        "why": "Ela guarda uma escrita, a mais recente."
+      }
+    ]
+  },
+  "ex-11ts4w8m": {
+    "prompt": "Um bucket versionado guarda uma tabela de 50 GB reescrita toda noite, e o `aws s3 ls` mostra 50 GB. Por que esse é o número errado para a conta?",
+    "hint": "O que uma listagem mostra, e o que é cobrado?",
+    "choices": [
+      {
+        "text": "O `aws s3 ls` arredonda os tamanhos para baixo de 50 em 50 GB",
+        "why": "Ele imprime bytes exatos; só imprime apenas as versões atuais."
+      },
+      {
+        "text": "Versões são cobradas a Standard-IA, então a listagem exagera a conta",
+        "why": "Uma versão não atual é cobrada na própria classe, a mesma da atual aqui."
+      },
+      {
+        "text": "Só a versão atual é listada; as antigas também são cobradas",
+        "why": "Isso. Depois de 360 noites sem regra são 18.000 GB cobrados por uma tabela de 50 GB."
+      },
+      {
+        "text": "Marcadores de exclusão são cobrados como cópias inteiras",
+        "why": "Um marcador não tem bytes; o custo está nas versões."
+      }
+    ]
+  },
+  "ex-yz2ew4ds": {
+    "prompt": "Uma tabela de 20 GB é reescrita toda noite num bucket versionado, com uma regra que expira versões não atuais 7 dias depois de substituídas. Depois que a regra se estabiliza, quantos GB o bucket guarda dela?",
+    "hint": "A versão atual mais as substituídas nos últimos sete dias."
+  },
+  "ex-a1fcyqve": {
+    "prompt": "Uma tabela é lida uma vez por mês, no fechamento. Quanto tempo as versões não atuais dela devem viver, e por quê?",
+    "hint": "Uma versão serve enquanto alguém ainda perceberia a escrita ruim.",
+    "choices": [
+      {
+        "text": "Sete dias, o número certo para qualquer tabela",
+        "why": "Sete serve para uma tabela lida todo dia; uma escrita quebrada aqui pode passar semanas sem ser vista."
+      },
+      {
+        "text": "Um mês e alguns dias",
+        "why": "Isso. Uma escrita ruim ainda tem volta quando é notada no fechamento; o número é quanto tempo um erro pode passar despercebido."
+      },
+      {
+        "text": "Para sempre, já que versões não custam nada",
+        "why": "Cada uma é cobrada inteira; um ano sem regra custou mais de vinte vezes."
+      },
+      {
+        "text": "Um dia, para manter a conta no mínimo",
+        "why": "É o mais barato, e uma escrita ruim achada no fechamento ficaria sem volta."
+      }
+    ]
+  },
+  "ex-7yzy1yz8": {
+    "prompt": "Uma regra passa objetos sob `now/` para o Glacier depois de 0 dias. No moto, o `head-object` de um objeto novo ali ainda mostra Standard. Por quê?",
+    "hint": "O que no moto aplicaria a regra?",
+    "choices": [
+      {
+        "text": "O objeto tem menos de 128 KB, então a regra o pula",
+        "why": "Ele tinha 200.000 bytes, acima dessa linha."
+      },
+      {
+        "text": "Regras só valem para objetos escritos antes de a regra existir",
+        "why": "Regras valem para todo objeto que o filtro alcança."
+      },
+      {
+        "text": "O moto guarda regras e nunca as aplica; nada nele envelhece",
+        "why": "Isso. Na AWS a próxima execução diária o moveria."
+      },
+      {
+        "text": "Uma passagem de classe exige pelo menos 30 dias",
+        "why": "Esse mínimo é para Standard-IA e One Zone-IA, não para o Glacier."
+      }
+    ]
+  },
+  "ex-cbet66p9": {
+    "prompt": "Ligue cada problema à ação de ciclo de vida que o resolve.",
+    "hint": "Duas delas são sobre versões.",
+    "pairs": [
+      {
+        "left": "Exportações com mais de um ano só são lidas em auditorias",
+        "right": "`Transitions`"
+      },
+      {
+        "left": "Versões substituídas de uma tabela noturna se acumulam",
+        "right": "`NoncurrentVersionExpiration`"
+      },
+      {
+        "left": "Partes de uploads que morreram no meio são cobradas",
+        "right": "`AbortIncompleteMultipartUpload`"
+      },
+      {
+        "left": "Arquivos de rascunho precisam sumir depois de uma semana",
+        "right": "`Expiration`"
+      }
+    ],
+    "right_distractors": [
+      "`ObjectLockConfiguration`"
+    ]
+  },
+  "ex-6vn43bm6": {
+    "prompt": "O moto aceitou uma regra que passa objetos para Standard-IA depois de 10 dias. O que o S3 faz com a mesma regra?",
+    "hint": "Há um tempo mínimo em Standard antes dessa classe.",
+    "choices": [
+      {
+        "text": "Aceita e espera 30 dias de qualquer jeito",
+        "why": "O S3 não corrige uma regra; recusa."
+      },
+      {
+        "text": "Aceita, já que o moto e o S3 conferem regras do mesmo jeito",
+        "why": "O moto confere menos que o S3, e é por isso que os arquivos de regras são conferidos por você."
+      },
+      {
+        "text": "Aceita e cobra os 20 dias restantes como exclusão antecipada",
+        "why": "Exclusão antecipada é sobre sair cedo de uma classe; esta regra nem chega a ser gravada."
+      },
+      {
+        "text": "Recusa: os dias precisam ser pelo menos 30",
+        "why": "Isso. O moto só confirmou que o arquivo é lido."
+      }
+    ]
+  },
+  "ex-h6tqevcj": {
+    "prompt": "Por padrão desde 2024, uma regra de ciclo de vida não muda de classe objetos menores que ___ KB.",
+    "hint": "O `TransitionDefaultMinimumObjectSize` diz qual.",
+    "blanks": [
+      {
+        "accept": [
+          "128"
+        ]
+      }
+    ]
+  },
+  "ex-1smhvq8g": {
+    "prompt": "Uma versão de nota fiscal está travada em modo compliance. O `delete-object` sem id de versão dá certo. A nota foi destruída?",
+    "hint": "Uma trava protege versões, não chaves.",
+    "choices": [
+      {
+        "text": "Sim: o moto deixou passar porque não avalia política",
+        "why": "O S3 também deixaria; o delete só acrescenta um marcador."
+      },
+      {
+        "text": "Não: um marcador agora a esconde, e ela segue lá embaixo",
+        "why": "Isso. A chave pode ser escondida; a versão não pode ser destruída."
+      },
+      {
+        "text": "Sim, depois da próxima execução do ciclo de vida",
+        "why": "Uma regra também não remove uma versão travada antes da data."
+      },
+      {
+        "text": "Não, porque uma chave travada recusa todo delete",
+        "why": "O delete sem versão deu certo; o que está travado é a versão."
+      }
+    ]
+  },
+  "ex-yjp8c0pq": {
+    "prompt": "A Quitanda quer que um pequeno papel de emergência possa remover uma versão travada numa emergência, e mais ninguém. Que configuração faz isso na AWS?",
+    "hint": "Um modo tem bypass, e o bypass é uma permissão.",
+    "choices": [
+      {
+        "text": "Modo compliance, com o root como identidade de emergência",
+        "why": "Nem o root remove uma versão travada em compliance antes da data."
+      },
+      {
+        "text": "Retenção legal em toda versão, desligada pelo papel",
+        "why": "Qualquer um com `s3:PutObjectLegalHold` desliga, e a retenção legal é para um fim de data desconhecida, não para um esquema de permissões."
+      },
+      {
+        "text": "Modo governance, com `s3:BypassGovernanceRetention` permitido só àquele papel",
+        "why": "Isso. O bypass só funciona para uma identidade cuja política o permita."
+      },
+      {
+        "text": "Versionamento com MFA delete",
+        "why": "Isso amarra os deletes ao dispositivo do root, não a um papel."
+      }
+    ]
+  },
+  "ex-z0cgdffj": {
+    "prompt": "Uma versão tem uma retenção governance que acabou ontem e uma retenção legal ligada. Um delete é enviado com `--bypass-governance-retention`. O que acontece?",
+    "hint": "A retenção legal não tem data nem bypass.",
+    "choices": [
+      {
+        "text": "É recusado: a retenção legal bloqueia o delete até ser desligada",
+        "why": "Isso. O bypass do governance não alcança a retenção legal."
+      },
+      {
+        "text": "Dá certo, já que a retenção acabou",
+        "why": "A retenção acabou, e a retenção legal é uma trava separada."
+      },
+      {
+        "text": "Dá certo, já que o bypass passa por cima de todo tipo de trava que uma versão tem",
+        "why": "Ele passa por cima da retenção governance e de nada mais."
+      },
+      {
+        "text": "Acrescenta um marcador e deixa a versão",
+        "why": "Um delete que nomeia uma versão não acrescenta marcador; este é simplesmente recusado."
+      }
+    ]
+  },
+  "ex-wprwwsyx": {
+    "prompt": "Quando o Object Lock pode ser ligado num bucket, segundo a seção?",
+    "hint": "Veja o comando que criou o bucket de arquivo.",
+    "choices": [
+      {
+        "text": "A qualquer momento, com `put-object-lock-configuration` no bucket",
+        "why": "Essa chamada define um padrão num bucket que já tem a trava; ela é ligada na criação."
+      },
+      {
+        "text": "Na criação, o que já liga o versionamento junto",
+        "why": "Isso. Por isso foi `s3api create-bucket` com `--object-lock-enabled-for-bucket`."
+      },
+      {
+        "text": "Depois que o primeiro objeto é escrito, quando o bucket já tem uma versão para travar",
+        "why": "Escrever objetos não tem nada a ver com isso."
+      },
+      {
+        "text": "Com `aws s3 mb --lock`",
+        "why": "O `aws s3 mb` não tem essa opção."
+      }
+    ]
+  },
+  "ex-4fzwz2er": {
+    "prompt": "No moto, uma retenção compliance virou governance e a versão foi apagada. O que um teste contra o moto pode provar sobre uma trava?",
+    "hint": "Forma, ou força?",
+    "choices": [
+      {
+        "text": "Que o modo compliance pode ser desfeito por um administrador",
+        "why": "No S3 não pode, por ninguém, nem pelo root."
+      },
+      {
+        "text": "Nada, então o moto é inútil para travas",
+        "why": "Mostra que as requisições estão bem formadas e que o delete simples é recusado."
+      },
+      {
+        "text": "Que as requisições estão bem formadas, e mais nada",
+        "why": "Isso. Teste a forma contra o moto e acredite na documentação da AWS pela força."
+      },
+      {
+        "text": "Que a trava aguenta, já que o moto recusou o primeiro delete",
+        "why": "Recusou aquele e depois deixou a retenção ser encurtada."
+      }
+    ]
+  },
+  "ex-sdvpzrk7": {
+    "prompt": "Por que a lição prefere o modo governance com um papel de bypass ao MFA delete?",
+    "hint": "Quem tem o dispositivo, e o que mais deixa de funcionar?",
+    "choices": [
+      {
+        "text": "O MFA delete amarra todo delete permanente ao dispositivo do root, e impede a configuração de ciclo de vida",
+        "why": "Isso. Um dispositivo na mão de uma pessoa, e nenhuma regra para expirar versões não atuais."
+      },
+      {
+        "text": "O MFA delete custa a mais por requisição",
+        "why": "A lição não cita preço para ele; a objeção é quem tem o dispositivo."
+      },
+      {
+        "text": "O MFA delete só funciona em us-east-1",
+        "why": "Nada na lição o prende a uma região."
+      },
+      {
+        "text": "O MFA delete pode ser ligado pelo console por qualquer um",
+        "why": "Só o root pode ligá-lo, e nunca pelo console."
+      }
+    ]
+  },
+  "ex-rtewz0fv": {
+    "prompt": "As notas fiscais da Quitanda precisam sobreviver a alguém com chaves de administrador roubadas por cinco anos. Quais destes fazem parte disso na AWS? Marque todos os que se aplicam.",
+    "hint": "Quais proteções um administrador não consegue desfazer?",
+    "choices": [
+      {
+        "text": "Um bucket criado com Object Lock",
+        "why": "Sim: a trava só pode ser ligada na criação."
+      },
+      {
+        "text": "Uma retenção padrão em modo compliance de cinco anos",
+        "why": "Sim: ninguém pode encurtá-la nem tirá-la."
+      },
+      {
+        "text": "Só o versionamento",
+        "why": "Quem pode apagar um marcador também pode apagar as versões."
+      },
+      {
+        "text": "Modo governance, com o bypass permitido aos administradores",
+        "why": "As chaves roubadas são de um administrador, então o bypass também é."
+      }
+    ]
+  },
+  "ex-t5ga6d3a": {
+    "prompt": "Ordene a vida de uma exportação sob a regra `orders-age-out` da Quitanda.",
+    "hint": "Dias 30, 365 e 2.555.",
+    "items": [
+      "Escrita em Standard",
+      "Passada para Standard-IA",
+      "Passada para Deep Archive",
+      "Expirada"
+    ]
+  },
+  "ex-yzg4ghy5": {
+    "prompt": "Um arquivo de 10 GB é sobrescrito toda noite por 30 noites num bucket versionado sem regra. Na 30ª noite, quantos GB o bucket guarda para aquela chave?",
+    "hint": "Toda escrita é uma versão, e nenhuma expira."
+  }
+}

@@ -1,0 +1,407 @@
+{
+  "ex-9tnwm1cj": {
+    "prompt": "O que decide em qual shard de um stream um registro é escrito?",
+    "hint": "O produtor fornece uma string com cada registro.",
+    "choices": [
+      {
+        "text": "O MD5 da chave de partição",
+        "why": "Isso. O resumo é lido como um número de 128 bits, e cada shard é dono de uma faixa contígua deles."
+      },
+      {
+        "text": "O Kinesis manda cada registro para o shard com menos dados",
+        "why": "O Kinesis não faz balanceamento próprio; só a chave decide, e é assim que nasce um shard quente."
+      },
+      {
+        "text": "Os shards recebem registros em rodízio",
+        "why": "Um rodízio espalharia os eventos de um cliente por todos os shards e perderia a ordem deles."
+      },
+      {
+        "text": "Um hash dos dados do registro",
+        "why": "O Kinesis nunca olha dentro dos dados; dois eventos diferentes de um cliente vão para o mesmo shard."
+      }
+    ]
+  },
+  "ex-vwsa7gr6": {
+    "prompt": "Um stream criado com dois shards. O MD5 de uma chave, lido como número, é 254303140926280561521588452831818067638, que fica acima de 2^127. Para onde vai o registro?",
+    "hint": "Um stream novo divide o espaço ao meio.",
+    "choices": [
+      {
+        "text": "Para o shard 0, porque o shard 0 é preenchido primeiro",
+        "why": "Shards não são preenchidos em ordem; cada um é dono de uma faixa do espaço de hash."
+      },
+      {
+        "text": "Para o shard 1",
+        "why": "Isso. O shard 1 é dono de 2^127 e de tudo acima. Esse número é o MD5 de `c-02`, que a lição pôs no shard 1."
+      },
+      {
+        "text": "É recusado, porque o número é maior que um inteiro de 64 bits",
+        "why": "O espaço de chaves de hash tem 128 bits; todo MD5 cabe nele."
+      },
+      {
+        "text": "Para qualquer um dos dois, escolhido quando o registro chega",
+        "why": "A mesma chave sempre cai no mesmo shard; é isso que mantém uma chave em ordem."
+      }
+    ]
+  },
+  "ex-n3yyx213": {
+    "prompt": "A Quitanda usa a loja como chave do stream de pedidos. Ela tem três lojas, e o stream tem oito shards. O que acontece?",
+    "hint": "Conte os valores de hash distintos.",
+    "choices": [
+      {
+        "text": "Os oito shards dividem a carga por igual, uma loja por shard e o resto de reserva",
+        "why": "Shards de reserva não assumem nada; parados é tudo o que são."
+      },
+      {
+        "text": "O Kinesis percebe o desequilíbrio e espalha as três chaves pelos oito shards",
+        "why": "Nada rebalanceia chaves; o hash decide, e três chaves dão três hashes."
+      },
+      {
+        "text": "No máximo três shards recebem registros, e os outros cinco são pagos e ficam parados",
+        "why": "Isso. Três chaves dão três pontos; uma chave com mais valores, como o cliente, se espalharia."
+      },
+      {
+        "text": "O stream recusa chaves com menos valores que shards",
+        "why": "O Kinesis aceita qualquer chave; nunca sabe quantos valores distintos você vai mandar."
+      }
+    ]
+  },
+  "ex-ny4tjtnx": {
+    "prompt": "Um produtor que quer apontar ele mesmo um ponto da reta de hash, em vez de deixar o Kinesis calcular o hash da chave, passa ___ no `PutRecord`.",
+    "hint": "O nome diz que a chave de hash é dada em vez de calculada.",
+    "blanks": [
+      {
+        "accept": [
+          "ExplicitHashKey"
+        ]
+      }
+    ]
+  },
+  "ex-cqznjzc6": {
+    "prompt": "O produtor escreveu `o-101 placed` e depois `o-102 placed`, de clientes em shards diferentes. O que o Kinesis promete sobre a ordem em que um consumidor os lê?",
+    "hint": "A ordem é propriedade de algo menor que o stream.",
+    "choices": [
+      {
+        "text": "Que `o-101 placed` é lido primeiro, já que foi escrito primeiro",
+        "why": "Isso vale dentro de um shard; esses dois estão em shards diferentes."
+      },
+      {
+        "text": "Nada: a ordem vale dentro de um shard e não entre shards",
+        "why": "Isso. Na lição o consumidor imprimiu `o-102 placed` em sexto, depois de todo o shard 0."
+      },
+      {
+        "text": "Que são lidos na ordem do `ApproximateArrivalTimestamp`",
+        "why": "O horário é aproximado, e nenhuma leitura ordena por ele; um leitor que o queira tem de ordenar."
+      },
+      {
+        "text": "Que voltam na ordem dos números de sequência",
+        "why": "Números de sequência são posições num shard; os dois foram o número 1 no próprio shard."
+      }
+    ]
+  },
+  "ex-f7fyqr25": {
+    "prompt": "Um código testado contra o moto guarda números de sequência como inteiros e os compara com `<`. Por que ele vai quebrar na AWS?",
+    "hint": "Como é um número de sequência da AWS?",
+    "choices": [
+      {
+        "text": "Os números de sequência da AWS são aleatórios, então comparar dois com `<` não quer dizer nada",
+        "why": "Eles crescem com o tempo dentro de um shard; compará-los faz sentido."
+      },
+      {
+        "text": "A AWS numera os registros no stream inteiro, não por shard",
+        "why": "Um número de sequência é uma posição num shard, na AWS como no moto."
+      },
+      {
+        "text": "Na AWS são strings decimais longas, grandes demais para um inteiro de 64 bits",
+        "why": "Isso. Guarde-os como strings, e compare-os como números de tamanho arbitrário."
+      },
+      {
+        "text": "Na AWS os números de sequência começam em zero",
+        "why": "Onde começam não é o problema; o tamanho é."
+      }
+    ]
+  },
+  "ex-dkqcfm54": {
+    "prompt": "O `PutRecord` de `o-101 packed` estoura o tempo, o produtor o manda de novo, e enquanto isso já escreveu `o-101 delivered`. O que o shard pode ter agora?",
+    "hint": "O produtor não tem como saber se a primeira tentativa foi escrita.",
+    "choices": [
+      {
+        "text": "`packed`, `delivered` e `packed` de novo: um duplicado, e um evento depois de um posterior",
+        "why": "Isso. A primeira tentativa pode ter sido escrita; o retry a acrescenta de novo depois de `delivered`. A lição 23 trata disso."
+      },
+      {
+        "text": "Só `packed` e `delivered`, nessa ordem, porque o Kinesis descarta registros repetidos",
+        "why": "O Kinesis não deduplica; um registro reenviado ganha um número de sequência novo."
+      },
+      {
+        "text": "Só `delivered`, porque a requisição que estourou o tempo é cancelada",
+        "why": "Um timeout do lado do produtor não cancela nada no servidor."
+      },
+      {
+        "text": "`packed` e `delivered`, ordenados pelo Kinesis pela hora de envio",
+        "why": "O Kinesis guarda no shard a ordem de chegada e não sabe nada de quando o produtor enviou."
+      }
+    ]
+  },
+  "ex-j0fx9vds": {
+    "prompt": "O que o `PutRecords`, que escreve até 500 registros numa chamada, promete sobre a ordem deles?",
+    "hint": "Não é um `PutRecord` com uma lista.",
+    "choices": [
+      {
+        "text": "Que são escritos na ordem da lista",
+        "why": "É essa a crença a largar; ele não promete isso."
+      },
+      {
+        "text": "Ordem dentro de cada chave de partição, mas não entre chaves",
+        "why": "Até registros de uma chave num lote podem ser escritos fora da ordem da lista."
+      },
+      {
+        "text": "Nada, nem dentro do próprio lote",
+        "why": "Isso. O `PutRecord` com `SequenceNumberForOrdering` é a forma estrita."
+      }
+    ]
+  },
+  "ex-z3x01as3": {
+    "prompt": "Um consumidor reinicia depois de uma hora parado e pede um iterador `LATEST`. O que acontece com os registros escritos nessa hora?",
+    "hint": "Para onde o `LATEST` aponta?",
+    "choices": [
+      {
+        "text": "São entregues primeiro, do mais velho ao mais novo, e depois vêm os novos",
+        "why": "Isso seria o `AFTER_SEQUENCE_NUMBER` a partir de um checkpoint."
+      },
+      {
+        "text": "São apagados do shard",
+        "why": "Ler ou não ler nunca apaga; só o período de retenção apaga."
+      },
+      {
+        "text": "Este consumidor nunca os vê; eles ficam no shard para outros leitores",
+        "why": "Isso. O `LATEST` aponta para depois do registro mais novo, então só vê o que for escrito depois que ele existe."
+      },
+      {
+        "text": "O Kinesis recusa um iterador `LATEST` enquanto houver registros não lidos no shard",
+        "why": "O Kinesis não tem noção de registro não lido; cada leitor guarda a própria posição."
+      }
+    ]
+  },
+  "ex-8tpqjhs5": {
+    "prompt": "Ligue cada necessidade ao tipo de iterador que a atende.",
+    "hint": "Um deles começa num horário em vez de num registro.",
+    "pairs": [
+      {
+        "left": "Reprocessar tudo o que o shard ainda guarda",
+        "right": "`TRIM_HORIZON`"
+      },
+      {
+        "left": "Retomar depois do último registro que você terminou",
+        "right": "`AFTER_SEQUENCE_NUMBER`"
+      },
+      {
+        "left": "Reprocessar tudo desde as 09:00",
+        "right": "`AT_TIMESTAMP`"
+      },
+      {
+        "left": "Só o que for escrito daqui para frente",
+        "right": "`LATEST`"
+      }
+    ],
+    "right_distractors": [
+      "`AT_SEQUENCE_NUMBER`"
+    ]
+  },
+  "ex-efwv5v65": {
+    "prompt": "Um consumidor num stream com a retenção padrão fica quebrado de sexta à noite a segunda de manhã. É corrigido e reiniciado com `TRIM_HORIZON`. O que ele lê?",
+    "hint": "A retenção padrão é de um dia.",
+    "choices": [
+      {
+        "text": "Tudo desde sexta à noite, porque registros não lidos ficam até alguém lê-los",
+        "why": "Um shard guarda registros pelo período de retenção, lidos ou não, e depois os apaga."
+      },
+      {
+        "text": "Só as últimas 24 horas; o fim de semana antes disso sumiu, sem erro nenhum",
+        "why": "Isso. O `TRIM_HORIZON` passa a significar, em silêncio, um ponto mais tardio. Sete dias de retenção teriam salvado o fim de semana."
+      },
+      {
+        "text": "Nada, porque o iterador de sexta expirou",
+        "why": "Um iterador novo é pego no reinício; a expiração só quer dizer que o antigo não pode ser reaproveitado."
+      },
+      {
+        "text": "Um erro dizendo que registros foram perdidos",
+        "why": "Não existe esse erro; o silêncio é o perigo."
+      }
+    ]
+  },
+  "ex-wypcmn9m": {
+    "prompt": "Qual é o maior período de retenção que um stream do Kinesis aceita, em horas? O moto recusou 9.000 com o limite na mensagem.",
+    "hint": "365 dias.",
+    "unit": "horas"
+  },
+  "ex-6w5rbyk8": {
+    "prompt": "Um stream de dez shards é estrangulado num shard enquanto os outros nove estão quase parados. O que ajuda?",
+    "hint": "O limite é por shard, e a chave decide o shard.",
+    "choices": [
+      {
+        "text": "Uma chave de partição com mais valores, para os registros da chave movimentada se espalharem",
+        "why": "Isso. Um shard quente vem de uma chave quente; acrescentar shards deixa essa chave onde está."
+      },
+      {
+        "text": "Dobrar os shards com `update-shard-count`",
+        "why": "A chave movimentada continua caindo num ponto, agora num shard filho com metade da faixa."
+      },
+      {
+        "text": "Enhanced fan-out nos consumidores",
+        "why": "Isso aumenta a capacidade de leitura; o estrangulamento aqui é na escrita."
+      },
+      {
+        "text": "Retenção maior",
+        "why": "A retenção decide quanto tempo os registros ficam, não quão rápido podem chegar."
+      }
+    ]
+  },
+  "ex-pyr7v6aw": {
+    "prompt": "No laboratório, 2.000 registros entraram num stream de um shard em bem menos de um segundo, sem nenhuma falha. O que isso mostra?",
+    "hint": "Para que o moto tem relógio?",
+    "choices": [
+      {
+        "text": "Que um shard aceita mais de 1.000 registros por segundo quando são pequenos",
+        "why": "O limite é 1 MB ou 1.000 registros por segundo, o que vier primeiro; registros pequenos batem na contagem."
+      },
+      {
+        "text": "Que o moto não aplica limite de capacidade, então o estrangulamento nunca foi testado",
+        "why": "Isso. Na AWS parte disso teria sido recusada com `ProvisionedThroughputExceededException`."
+      },
+      {
+        "text": "Que o `PutRecords` está isento do limite por shard",
+        "why": "Cada registro de um lote conta para o shard dele como contaria um sozinho."
+      }
+    ]
+  },
+  "ex-9bdk0244": {
+    "prompt": "Depois de `update-shard-count` de 2 para 4, um consumidor lê o shard 3 antes do shard 0. O que dá errado para a chave `c-17`?",
+    "hint": "Onde estão os eventos de c-17 de antes do reshard?",
+    "choices": [
+      {
+        "text": "Nada, porque o shard 3 guarda uma cópia dos registros do shard 0",
+        "why": "Os filhos começam vazios; o pai guarda os registros até o período de retenção removê-los."
+      },
+      {
+        "text": "Os eventos dela de depois do reshard são lidos antes dos de antes dele",
+        "why": "Isso. Um pai precisa ser lido até o fim antes dos filhos, o que a Kinesis Client Library faz seguindo o `ParentShardId`."
+      },
+      {
+        "text": "O shard 0 recusa leitura depois de fechado",
+        "why": "Um shard fechado recusa escrita; pode ser lido até os registros expirarem."
+      },
+      {
+        "text": "`c-17` vai para o shard 1, então os eventos dela se dividem em três",
+        "why": "O shard 1 também está fechado; o `shard_of.py` achou `c-17` no shard 3."
+      }
+    ]
+  },
+  "ex-x0eb3yvz": {
+    "prompt": "Para uma carga estável e conhecida, o stream provisionado da lição custou 82,50 por mês e o on-demand 250,40. O que o on-demand compra com a diferença?",
+    "hint": "O que o mês da promoção mostrou?",
+    "choices": [
+      {
+        "text": "Registros guardados por mais tempo",
+        "why": "Os dois começam em 24 horas; retenção maior tem preço à parte em cada modo."
+      },
+      {
+        "text": "Não ter de dimensionar e fazer reshard para um pico que ninguém conhece ainda",
+        "why": "Isso. Dimensionado para um pico de 30 MB/s, o provisionado teria custado 657,00 só em shard-horas."
+      },
+      {
+        "text": "Ordem entre shards",
+        "why": "Um stream on-demand também é feito de shards, e ordena os registros do mesmo jeito."
+      },
+      {
+        "text": "Leituras que não custam nada, sejam quantos forem os consumidores",
+        "why": "O contrário: no on-demand, cada consumidor paga a linha de leitura de novo."
+      }
+    ]
+  },
+  "ex-ye6bg5tq": {
+    "prompt": "Um stream provisionado recebe 10 milhões de registros por dia, de 30 KB cada, por 30 dias. A 0,02800 USD por milhão de PUT payload units de 25 KB, quanto custam as unidades no mês, em USD?",
+    "hint": "Um registro de 30 KB são duas unidades.",
+    "unit": "USD"
+  },
+  "ex-2t24ykkb": {
+    "prompt": "A Quitanda acrescenta um terceiro consumidor ao stream estável da lição. Como muda cada conta?",
+    "hint": "Qual modo cobra por gigabyte lido?",
+    "choices": [
+      {
+        "text": "As duas sobem um terço",
+        "why": "Um stream provisionado cobra shards, não leituras."
+      },
+      {
+        "text": "O on-demand sobe 48,00; o provisionado não muda",
+        "why": "Isso: 600 GB × 0,08000 no on-demand. Num provisionado, três consumidores dividem 2 MB por segundo por shard, e isso sobra nesta carga."
+      },
+      {
+        "text": "O provisionado precisa de um shard por consumidor, então sobe um terço; o on-demand não muda",
+        "why": "Consumidores não ganham shards próprios; dividem a capacidade de leitura de cada shard."
+      },
+      {
+        "text": "Nenhuma muda",
+        "why": "A conta on-demand tem uma linha de leitura por consumidor."
+      }
+    ]
+  },
+  "ex-kecrm58h": {
+    "prompt": "Ponha em ordem o que acontece com os registros de `c-17` quando o stream da lição passa de dois para quatro shards.",
+    "hint": "O pai é fechado antes de algum registro cair num filho.",
+    "items": [
+      "Os registros dela são escritos no shard 0, o shard em que o MD5 dela cai",
+      "`update-shard-count` fecha o shard 0 e abre os shards 2 e 3 sobre a faixa dele",
+      "Registros novos com a chave caem no shard 3",
+      "Um consumidor lê o shard 0 até o fim",
+      "O mesmo consumidor passa para o shard 3"
+    ]
+  },
+  "ex-jsvwvfaf": {
+    "prompt": "Uma checagem de fraude precisa de todos os eventos de um pedido em ordem, e nada entre pedidos. Os clientes fazem muitos pedidos por dia. Qual chave de partição serve melhor?",
+    "hint": "A menor coisa cujos eventos precisam ficar em ordem.",
+    "choices": [
+      {
+        "text": "A loja, para a fraude de cada loja ser checada num shard",
+        "why": "Três valores põem o stream em três shards no máximo, e ninguém pediu ordem por loja."
+      },
+      {
+        "text": "O cliente",
+        "why": "Funciona, mas prende todos os pedidos de um cliente pesado a um shard quando só cada pedido precisa de ordem."
+      },
+      {
+        "text": "Um valor aleatório por registro, para espalhar a carga",
+        "why": "Espalha perfeitamente e joga os eventos de um pedido em todos os shards, perdendo a ordem pedida."
+      },
+      {
+        "text": "O id do pedido",
+        "why": "Isso. Mantém cada pedido em ordem e se espalha melhor que o cliente."
+      }
+    ]
+  },
+  "ex-cdp9epgr": {
+    "prompt": "Quais destas coisas a lição viu o moto fazer como a AWS faria? Marque todas as que se aplicam.",
+    "hint": "Separe o que foi rodado do que só foi documentado.",
+    "choices": [
+      {
+        "text": "Pôr uma chave no shard em que o MD5 dela cai",
+        "why": "Isso; o `shard_of.py` previu todo registro."
+      },
+      {
+        "text": "Recusar uma retenção de 9.000 horas",
+        "why": "Isso, com o próprio limite da AWS na mensagem."
+      },
+      {
+        "text": "Estrangular escritas acima de 1.000 registros por segundo num shard",
+        "why": "O moto aceitou 2.000 em bem menos de um segundo."
+      },
+      {
+        "text": "Apagar registros mais velhos que o período de retenção",
+        "why": "O moto guarda todo registro até parar; a exclusão não foi rodada."
+      },
+      {
+        "text": "Fechar os shards pais num reshard",
+        "why": "Isso; eles ganharam um `EndingSequenceNumber`."
+      }
+    ]
+  }
+}

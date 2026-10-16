@@ -1,0 +1,387 @@
+{
+  "ex-eaya7640": {
+    "prompt": "Um cluster EMR on EC2 fica de pé por uma hora. O que é cobrado por cada máquina dele?",
+    "hint": "De quem é a máquina, e de quem é o software?",
+    "choices": [
+      {
+        "text": "Só a taxa do EMR, porque a taxa inclui a máquina",
+        "why": "A taxa é o que o EMR soma por cima; a tabela de preços diz isso ao lado da linha, e a máquina tem o preço do EC2."
+      },
+      {
+        "text": "A hora do EC2 e a taxa do EMR",
+        "why": "Isso: 0.32130 de uma m7i.xlarge sob demanda mais 0.05040 de taxa, 0.37170 por hora."
+      },
+      {
+        "text": "Uma DPU-hora, como o Glue cobra",
+        "why": "DPU é a unidade do Glue; o EMR on EC2 cobra máquinas."
+      },
+      {
+        "text": "Só a hora do EC2: o software é de código aberto, então o EMR não soma nada",
+        "why": "O Spark é de código aberto, e o EMR cobra mesmo assim por instalá-lo, configurá-lo e operá-lo nas suas máquinas."
+      }
+    ]
+  },
+  "ex-qtwvv50q": {
+    "prompt": "No meio de um job, a AWS toma de volta um dos nós de tarefa Spot do cluster. O que acontece com o job?",
+    "hint": "O que um nó de tarefa guarda?",
+    "choices": [
+      {
+        "text": "Falha, porque os blocos do HDFS daquele nó sumiram",
+        "why": "Um nó de tarefa não roda DataNode e não guarda blocos; essa perda é de um nó core."
+      },
+      {
+        "text": "O cluster é encerrado junto",
+        "why": "É o que perder o nó primário faz."
+      },
+      {
+        "text": "As tarefas dele rodam de novo em outra máquina; mais lento, nada perdido",
+        "why": "Isso. É por isso que os nós de tarefa são os que vão para o Spot."
+      },
+      {
+        "text": "O EMR pausa o job até voltar capacidade Spot do mesmo tipo",
+        "why": "O YARN não pausa; ele entrega as tarefas perdidas às máquinas que ainda tem."
+      }
+    ]
+  },
+  "ex-dc2w2vxe": {
+    "prompt": "Para economizar, uma equipe roda um cluster noturno de seis horas com os nós primário, core e de tarefa todos em Spot. Que risco ela assumiu que um grupo de tarefa em Spot sozinho não traria?",
+    "hint": "Ordene os papéis pelo custo de perder um.",
+    "choices": [
+      {
+        "text": "O preço Spot subir acima do sob demanda durante a noite",
+        "why": "Com o máximo no preço sob demanda, um grupo nunca paga mais que isso; quando o mercado passa dele, a máquina é tomada de volta."
+      },
+      {
+        "text": "Uma máquina tomada de volta encerrar a noite inteira",
+        "why": "Isso. Um primário tomado de volta encerra o cluster, e um core tomado de volta pode derrubar o job com os blocos dele."
+      },
+      {
+        "text": "O HDFS se recusar a subir em máquinas Spot",
+        "why": "O HDFS roda em qualquer máquina; o problema é o que acontece quando uma vai embora."
+      },
+      {
+        "text": "O EMR cobrar uma taxa maior por hora em máquinas Spot",
+        "why": "A taxa é a mesma seja qual for a forma de comprar a máquina."
+      }
+    ]
+  },
+  "ex-ryzrv653": {
+    "prompt": "Por que um cluster criado toda noite guarda os dados no S3 e não no HDFS?",
+    "hint": "Onde o HDFS mora?",
+    "choices": [
+      {
+        "text": "O EMR não consegue escrever Parquet no HDFS",
+        "why": "O Spark escreve Parquet no HDFS sem problema; a questão é quanto tempo ele fica lá."
+      },
+      {
+        "text": "Ler o S3 a partir do EMR é grátis e ler o HDFS não",
+        "why": "Nenhum dos dois é o motivo; o HDFS são os discos do próprio cluster."
+      },
+      {
+        "text": "Encerrar o cluster apaga o HDFS dele",
+        "why": "Isso. O HDFS mora nos discos dos nós core, e eles vão embora com o cluster."
+      },
+      {
+        "text": "O HDFS é mais lento que o S3 em qualquer tipo de leitura",
+        "why": "Discos locais muitas vezes são mais rápidos; a velocidade não é o motivo de um cluster transitório evitá-los."
+      }
+    ]
+  },
+  "ex-n0v8cnj0": {
+    "prompt": "Ligue cada nó ao que ele roda.",
+    "hint": "Só um deles guarda blocos do HDFS.",
+    "pairs": [
+      {
+        "left": "primário",
+        "right": "ResourceManager e NameNode"
+      },
+      {
+        "left": "core",
+        "right": "DataNode e NodeManager"
+      },
+      {
+        "left": "tarefa",
+        "right": "Só o NodeManager"
+      }
+    ],
+    "right_distractors": [
+      "O Glue Data Catalog"
+    ]
+  },
+  "ex-438m60jb": {
+    "prompt": "O cluster noturno da Quitanda pede nós de tarefa Spot, e em algumas noites fica esperando porque falta m7i.xlarge Spot na zona. Que mudança resolve isso?",
+    "hint": "O Spot é um conjunto de pools, um por tipo e zona.",
+    "choices": [
+      {
+        "text": "Instance fleets oferecendo três tipos de máquina para a capacidade de tarefa",
+        "why": "Isso. Uma fleet que aceita qualquer um de vários tipos tira de vários pools e raramente espera. Exige recriar o cluster, porque grupos e fleets não se misturam."
+      },
+      {
+        "text": "Um segundo instance group de m7i.xlarge Spot",
+        "why": "Mesmo tipo, mesma zona, mesmo pool: a falta é a mesma."
+      },
+      {
+        "text": "Passar os nós de tarefa para o grupo core",
+        "why": "Isso põe HDFS nas máquinas que podem sumir e não faz nada pela falta."
+      },
+      {
+        "text": "Um `BidPrice` maior no mesmo grupo",
+        "why": "Um pool sem máquinas sobrando não tem nenhuma a preço algum; o Spot é tomado de volta por capacidade, não leiloado."
+      }
+    ]
+  },
+  "ex-gmfpr7pp": {
+    "prompt": "No laboratório, o cluster com fleets foi criado, e listar as fleets dele respondeu `500`. Qual é a conclusão certa?",
+    "hint": "O que um sucesso do moto quer dizer?",
+    "choices": [
+      {
+        "text": "Fleets não são oferecidas em sa-east-1",
+        "why": "A região não é o problema; o moto pôs o cluster em us-east-1 de todo jeito."
+      },
+      {
+        "text": "A requisição estava bem formada, e o moto não modela fleets",
+        "why": "Isso. `InstanceCollectionType` também voltou `null`. Como o EMR preenche uma fleet não foi rodado."
+      },
+      {
+        "text": "As flags estavam erradas, e o cluster não tem nós de tarefa",
+        "why": "Uma requisição malformada é recusada pela linha de comando antes de ser enviada; esta foi aceita."
+      },
+      {
+        "text": "As fleets de um cluster levam alguns minutos para aparecer",
+        "why": "O moto não espera nada; um 500 é um erro dentro do moto, não um atraso."
+      }
+    ]
+  },
+  "ex-bsgpw4z4": {
+    "prompt": "Para um job em lote noturno cuja falha é só um incômodo, quais grupos são candidatos razoáveis ao Spot? Marque todos os que se aplicam.",
+    "hint": "Ordene os papéis pelo que a perda deles custa.",
+    "choices": [
+      {
+        "text": "Os nós de tarefa",
+        "why": "Sim: perder um custa tempo."
+      },
+      {
+        "text": "Os nós core, aceitando que um tomado de volta pode derrubar a execução",
+        "why": "Sim, para um job que pode falhar; a seção diz que nós core não deveriam ser Spot a menos que o job aguente falhar."
+      },
+      {
+        "text": "O nó primário, já que ele não faz trabalho nenhum",
+        "why": "Ele não faz trabalho nenhum e coordena todo ele; perdê-lo encerra o cluster."
+      },
+      {
+        "text": "Nenhum: Spot é para servidores web sem estado",
+        "why": "Trabalho em lote que pode ser refeito é o uso clássico do Spot."
+      }
+    ]
+  },
+  "ex-1h6yzmmn": {
+    "prompt": "No moto, um step Spark que aponta para um programa num bucket que não existe continua `RUNNING` minutos depois. O que o mesmo step faria na AWS?",
+    "hint": "Quem confere se o arquivo existe?",
+    "choices": [
+      {
+        "text": "Ficar `RUNNING` até o arquivo ser enviado",
+        "why": "Nada espera o arquivo; o `spark-submit` procura por ele uma vez."
+      },
+      {
+        "text": "Falhar, com o motivo nos logs em `--log-uri`",
+        "why": "Isso. O moto não roda nada, então nunca chega ao momento em que o step falharia."
+      },
+      {
+        "text": "Ser recusado pelo `add-steps` antes de entrar na fila",
+        "why": "Os argumentos de um step não são conferidos quando ele é adicionado; vão para o comando."
+      },
+      {
+        "text": "Dar `COMPLETED`, porque o próprio `spark-submit` iniciou",
+        "why": "Um step termina quando o comando dá certo, e este não consegue."
+      }
+    ]
+  },
+  "ex-x5j90pkb": {
+    "prompt": "Um cluster criado com `--no-auto-terminate` que terminou os steps fica no estado ___, cobrado por segundo.",
+    "hint": "A saída do describe-cluster mostrou.",
+    "blanks": [
+      {
+        "accept": [
+          "WAITING"
+        ]
+      }
+    ]
+  },
+  "ex-509hc796": {
+    "prompt": "Analistas consultam os dados curated pelo Trino em dias úteis das 9 às 18, e um job noturno roda às 3. Que arranjo serve aos dois?",
+    "hint": "Um dos dois tem em torno do que agendar; o outro não.",
+    "choices": [
+      {
+        "text": "Um cluster de longa duração com tempo ocioso para os analistas, e um transitório por noite para o job",
+        "why": "Isso. Trabalho interativo precisa de algo ligado quando as pessoas chegam; o job precisa de um cluster por uma hora."
+      },
+      {
+        "text": "Um cluster transitório para cada consulta de analista",
+        "why": "Cada consulta esperaria máquinas ligarem e instalarem; trabalho interativo não se agenda."
+      },
+      {
+        "text": "Um cluster ligado a semana inteira para os dois",
+        "why": "Funciona, e paga toda hora de noite e de fim de semana que ninguém usa."
+      },
+      {
+        "text": "Glue para as consultas e EMR para o job",
+        "why": "O Glue roda jobs de ETL; não é onde analistas rodam SQL interativo."
+      }
+    ]
+  },
+  "ex-zqr3hxfw": {
+    "prompt": "Uma aplicação do EMR Serverless sem capacidade pré-inicializada ficou três dias sem job. Quanto ela custou em processamento?",
+    "hint": "Olhe `autoStopConfiguration`.",
+    "choices": [
+      {
+        "text": "O mínimo de workers dela por 72 horas",
+        "why": "Sem capacidade pré-inicializada não há mínimo segurado."
+      },
+      {
+        "text": "A taxa do EMR por toda hora em que existiu",
+        "why": "O Serverless não cobra por existir; cobra o que os jobs usaram."
+      },
+      {
+        "text": "Uma DPU-hora por dia para continuar registrada",
+        "why": "DPU é a unidade do Glue, e nada é cobrado para continuar registrada."
+      },
+      {
+        "text": "Nada: ela parou depois de 15 minutos ociosa",
+        "why": "Isso. O Serverless cobra vCPU-horas e GB-horas que jobs usaram, e não houve nenhum."
+      }
+    ]
+  },
+  "ex-epm2yp2k": {
+    "prompt": "Quando o EMR on EKS é o certo dos três?",
+    "hint": "Ele não cria máquinas.",
+    "choices": [
+      {
+        "text": "Quando a equipe não tem Kubernetes e quer o começo mais simples",
+        "why": "Aí ele acrescenta um cluster Kubernetes para operar só para rodar Spark."
+      },
+      {
+        "text": "Quando o Kubernetes já roda todo o resto",
+        "why": "Isso. O Spark divide então os nós, o monitoramento e as pessoas que a organização já tem."
+      },
+      {
+        "text": "Quando o job guarda os dados no HDFS entre execuções",
+        "why": "Um cluster virtual não tem HDFS próprio; isso é EMR on EC2 com nós core."
+      },
+      {
+        "text": "Quando o objetivo é não pagar nada entre jobs, sem nó seu mantido em lugar algum",
+        "why": "Isso é o EMR Serverless; no EKS os nós que você mantém custam o que custam."
+      }
+    ]
+  },
+  "ex-wmzb5a26": {
+    "prompt": "Quais destas coisas o moto realmente fez no laboratório desta lição? Marque todas as que se aplicam.",
+    "hint": "Registrar uma requisição não é rodá-la.",
+    "choices": [
+      {
+        "text": "Guardar um step com os argumentos, como o `spark-submit` os receberia",
+        "why": "Sim; o `list-steps` os mostrou."
+      },
+      {
+        "text": "Guardar os instance groups e o mercado em que cada um paga",
+        "why": "Sim; a tabela mostrou `SPOT` no grupo de tarefa."
+      },
+      {
+        "text": "Encerrar o cluster transitório depois do step",
+        "why": "Ele ficou `WAITING` com o step `RUNNING`."
+      },
+      {
+        "text": "Conferir que o cluster EKS por trás do cluster virtual existe",
+        "why": "`aws eks list-clusters` estava vazio e o registro deu certo."
+      },
+      {
+        "text": "Cobrar a execução do Serverless pelas vCPU-horas",
+        "why": "Ela informou 0.0 de tudo."
+      }
+    ]
+  },
+  "ex-krdmmgkv": {
+    "prompt": "Uma m7i.xlarge sob demanda custa 0,32130 USD por hora e a taxa do EMR é 0,05040. Quanto custam um primário e quatro core por 3 horas, em USD, com duas casas?",
+    "hint": "Cinco máquinas, cada uma a máquina mais a taxa, por três horas."
+  },
+  "ex-6avw35aj": {
+    "prompt": "O EMR on EC2 custa 0.37170 por unidade-hora contra 0.69000 do Glue, e ainda assim \"EMR left on\" é a linha mais cara do programa. Por quê?",
+    "hint": "Conte as horas que cada linha paga.",
+    "choices": [
+      {
+        "text": "Paga as 730 horas do mês por 60 horas de trabalho",
+        "why": "Isso: onze máquinas × 730 horas, trabalhando ou não."
+      },
+      {
+        "text": "A taxa do EMR dobra num cluster que roda mais de um dia",
+        "why": "A taxa por hora é a mesma na primeira hora e na septingentésima."
+      },
+      {
+        "text": "Roda onze máquinas onde o Glue roda dez",
+        "why": "Uma máquina a mais é 10%; a linha é mais de sete vezes a do Glue."
+      },
+      {
+        "text": "Máquinas Spot custam mais à noite",
+        "why": "O programa só usa máquinas sob demanda, e a noite não é o problema."
+      }
+    ]
+  },
+  "ex-e339ycs6": {
+    "prompt": "O cluster sempre ligado custa 2984,75 USD por mês. O Glue com dez DPUs custa 207,00 por mês para cada hora de trabalho noturno. Quantas horas por noite igualam os dois? Uma casa decimal.",
+    "hint": "Divida a linha plana pela inclinação."
+  },
+  "ex-8gwsx6b5": {
+    "prompt": "Ordene pelo preço de uma unidade de 4 vCPU e 16 GB por uma hora, do mais barato ao mais caro.",
+    "hint": "Máquina mais taxa, reservada e sob demanda, depois os produtos por job.",
+    "items": [
+      "EMR on EC2, máquina reservada",
+      "EMR on EC2, máquina sob demanda",
+      "Glue Flex",
+      "EMR Serverless",
+      "Glue"
+    ]
+  },
+  "ex-cpxrs21n": {
+    "prompt": "Trinta jobs a mais manteriam as mesmas dez unidades ocupadas dezesseis horas por noite. O que custa menos por mês: o Glue com dez DPUs, ou o cluster de onze máquinas sempre ligado?",
+    "hint": "Onde as duas linhas do gráfico se cruzam?",
+    "choices": [
+      {
+        "text": "O Glue, a 207,00 por hora noturna",
+        "why": "Em dezesseis horas isso dá 207,00 × 16 = 3312,00, acima da linha plana."
+      },
+      {
+        "text": "O que nunca desliga, a 2984,75",
+        "why": "Isso. Passadas 14,4 horas por noite a linha plana fica abaixo da do Glue."
+      },
+      {
+        "text": "Nenhum: em dezesseis horas custam o mesmo",
+        "why": "Eles custam o mesmo em 14,4 horas; em dezesseis já se separaram de novo."
+      },
+      {
+        "text": "O Glue, porque um cluster também paga os minutos que as máquinas levam para ligar",
+        "why": "Um cluster sempre ligado liga uma vez por mês; esses minutos somem em 730 horas."
+      }
+    ]
+  },
+  "ex-2jnec3d1": {
+    "prompt": "Um job Spark roda uma vez por mês por quarenta minutos: ETL comum de tabelas catalogadas, sem biblioteca especial. Qual é a casa sensata?",
+    "hint": "Conte as horas que um cluster esperaria.",
+    "choices": [
+      {
+        "text": "Um cluster EMR de longa duração em máquinas reservadas",
+        "why": "Máquinas reservadas são pagas o ano todo por quarenta minutos de trabalho por mês."
+      },
+      {
+        "text": "Glue",
+        "why": "Isso: curto, raro, comum e catalogado é o caso para o qual o Glue foi feito."
+      },
+      {
+        "text": "EMR on EKS",
+        "why": "Vale onde o Kubernetes já existe, e nada diz que ele existe aqui."
+      },
+      {
+        "text": "Um cluster EMR transitório com nós core em Spot",
+        "why": "Funciona, e custa uma definição de cluster e a manutenção dela para economizar centavos em quarenta minutos."
+      }
+    ]
+  }
+}

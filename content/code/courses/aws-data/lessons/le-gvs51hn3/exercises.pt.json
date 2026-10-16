@@ -1,0 +1,390 @@
+{
+  "ex-nk1q0tdx": {
+    "prompt": "A que parte de um cluster provisionado do Redshift um cliente SQL se conecta?",
+    "hint": "Uma parte planeja a consulta e junta as respostas.",
+    "choices": [
+      {
+        "text": "A cada nó de computação, um por vez",
+        "why": "Os nós de computação recebem o trabalho do líder; um cliente nunca fala com eles."
+      },
+      {
+        "text": "O nó líder",
+        "why": "Isso. Ele interpreta, planeja e compila o SQL, e junta o que as slices devolvem."
+      },
+      {
+        "text": "A slice que guarda as linhas que a consulta quer",
+        "why": "Toda slice guarda uma parte de toda tabela, e só o líder sabe combiná-las."
+      },
+      {
+        "text": "O Redshift Managed Storage, no S3",
+        "why": "O armazenamento gerenciado guarda os blocos; ele não responde a SQL."
+      }
+    ]
+  },
+  "ex-7j7nb0ne": {
+    "prompt": "Uma consulta lê três colunas de uma tabela de vinte. O que o armazenamento colunar economiza para ela?",
+    "hint": "Cada coluna é gravada em blocos próprios.",
+    "choices": [
+      {
+        "text": "Nada, já que o Redshift lê linhas inteiras e descarta depois as colunas que não quer",
+        "why": "É assim que um banco por linhas lê; o Redshift grava cada coluna separada justamente para evitar isso."
+      },
+      {
+        "text": "Ele lê as três colunas da memória do líder",
+        "why": "O líder não guarda dados de tabela; as slices leem os blocos."
+      },
+      {
+        "text": "Os blocos das outras dezessete colunas",
+        "why": "Isso. Só os blocos das três colunas são lidos; o resto fica no disco."
+      },
+      {
+        "text": "Ele lê todas as colunas, mas cada uma comprimida",
+        "why": "A compressão existe e é uma segunda economia; a primeira é nem ler as outras colunas."
+      }
+    ]
+  },
+  "ex-a3zzbbht": {
+    "prompt": "No moto, o `get-statement-result` responde a um `SELECT` numa tabela que ninguém criou com três linhas que têm uma rua e uma cidade. O que isso mostra?",
+    "hint": "Existiu alguma tabela chamada `orders`?",
+    "choices": [
+      {
+        "text": "Que o Redshift enche um banco novo com linhas de exemplo",
+        "why": "Um banco novo do Redshift é vazio, e a consulta falharia dizendo o nome da tabela que falta."
+      },
+      {
+        "text": "Que uma tabela chamada `orders` já existia no cluster",
+        "why": "Não há cluster para guardá-la; e as linhas não têm data nem contagem, que era o que a consulta pedia."
+      },
+      {
+        "text": "Que o moto devolve uma resposta de exemplo dele e não roda SQL",
+        "why": "Isso. As mesmas três linhas voltam seja qual for o comando."
+      },
+      {
+        "text": "Que a Data API guardou em cache o resultado da consulta de outra conta",
+        "why": "Nada é compartilhado entre contas; o moto imita uma conta e inventa as linhas."
+      }
+    ]
+  },
+  "ex-81cw9nfb": {
+    "prompt": "Um cluster RA3 cresce de dois nós para três. Quais destas coisas mudam? Marque todas as que se aplicam.",
+    "hint": "No RA3, computação e armazenamento têm preços separados.",
+    "choices": [
+      {
+        "text": "O número de slices que dividem o trabalho de cada consulta",
+        "why": "Sim. Cada nó `ra3.xlplus` traz mais duas."
+      },
+      {
+        "text": "O preço por hora da computação do cluster",
+        "why": "Sim. Nós são cobrados por hora de nó."
+      },
+      {
+        "text": "A quantidade de dados que o cluster guarda",
+        "why": "Os dados estão no armazenamento gerenciado, e acrescentar computação não muda isso."
+      },
+      {
+        "text": "O preço por GB-mês do armazenamento gerenciado",
+        "why": "É uma linha separada da tabela, 0,043, seja qual for o número de nós."
+      }
+    ]
+  },
+  "ex-0535xs6c": {
+    "prompt": "Ligue cada estilo de distribuição à tabela que ele serve.",
+    "hint": "Uma das opções da direita é sobre sort keys.",
+    "pairs": [
+      {
+        "left": "`AUTO`",
+        "right": "Qualquer tabela, até você conhecer os joins dela melhor que as estatísticas"
+      },
+      {
+        "left": "`EVEN`",
+        "right": "Uma tabela grande sem join dominante"
+      },
+      {
+        "left": "`KEY`",
+        "right": "Duas tabelas grandes ligadas por join numa coluna"
+      },
+      {
+        "left": "`ALL`",
+        "right": "Uma tabela pequena com que todo relatório faz join"
+      }
+    ],
+    "right_distractors": [
+      "Uma tabela filtrada principalmente por faixas de data"
+    ]
+  },
+  "ex-0gpqgxny": {
+    "prompt": "Um modelo põe 10.000 linhas em 4 slices e a slice mais cheia fica com 6.000 delas. Qual é a razão dela para a média, o `max/mean` que o `slices.py` imprime? Dê duas casas decimais.",
+    "hint": "A média são as linhas divididas pelas slices."
+  },
+  "ex-y3b4zh3z": {
+    "prompt": "Para fugir do desequilíbrio que o `c-01` causa, a Quitanda põe a chave de `orders` em `order_id` e mantém `customers` com chave em `customer_id`. O que um join dos dois em `customer_id` custa agora?",
+    "hint": "Um pedido só fica ao lado do cliente se os dois caíram na mesma slice pelo hash.",
+    "choices": [
+      {
+        "text": "Nada a mais, porque as duas tabelas são distribuídas por `KEY`",
+        "why": "Elas têm chave em colunas diferentes, então linhas correspondentes raramente dividem uma slice."
+      },
+      {
+        "text": "Cerca de três linhas em quatro vão para outra slice antes de o join rodar",
+        "why": "Isso. O modelo moveu 7.449 de 10.000, o que um hash que ignora a coluna do join dá com quatro slices."
+      },
+      {
+        "text": "O desequilíbrio passa para `customers`, que agora guarda os pedidos de `c-01`",
+        "why": "`customers` tem uma linha para `c-01`; pedidos não são guardados nela."
+      },
+      {
+        "text": "O join é recusado até as duas tabelas terem a mesma chave",
+        "why": "O Redshift roda qualquer join; uma diferença custa movimento, não erro."
+      }
+    ]
+  },
+  "ex-7s37m5ka": {
+    "prompt": "Por que `stores` é declarada `DISTSTYLE ALL` no `orders.sql`?",
+    "hint": "Qual o tamanho dela, e quem faz join com ela?",
+    "choices": [
+      {
+        "text": "`ALL` mantém as linhas ordenadas por `store_id`",
+        "why": "Ordem é trabalho da sort key; `ALL` é sobre onde as linhas moram."
+      },
+      {
+        "text": "Ela é minúscula e todo relatório faz join com ela, então uma cópia em cada nó faz que nenhum join com ela mova linha",
+        "why": "Isso. O custo, uma gravação por nó a cada carga, não é nada com quarenta linhas."
+      },
+      {
+        "text": "Uma coluna de chave `SMALLINT` exige `ALL`",
+        "why": "O tipo de uma coluna não dita o estilo."
+      },
+      {
+        "text": "`ALL` distribui as linhas por igual entre as slices",
+        "why": "Isso é `EVEN`. `ALL` põe uma cópia inteira em cada nó."
+      }
+    ]
+  },
+  "ex-jjctf50k": {
+    "prompt": "`orders` tem `COMPOUND SORTKEY (dt, customer_id)`. Qual destes filtros deixa os zone maps pularem mais blocos?",
+    "hint": "Olhe a primeira coluna da chave, e o que o `zonemaps.py` imprimiu.",
+    "choices": [
+      {
+        "text": "`customer_id = 'c-17'`",
+        "why": "A segunda coluna só ajuda dentro de cada valor da primeira; o modelo leu 36 de 40 blocos."
+      },
+      {
+        "text": "`dt = '2026-10-05'`",
+        "why": "Isso. Um filtro na primeira coluna leu 2 de 40 blocos no modelo."
+      },
+      {
+        "text": "Os dois igualmente, já que as duas colunas estão na chave",
+        "why": "Peso igual é o objetivo de uma chave interleaved; uma chave compound favorece a primeira coluna."
+      },
+      {
+        "text": "Nenhum, porque zone maps precisam de um índice",
+        "why": "Zone maps existem para todo bloco e não precisam de índice; precisam de linhas ordenadas."
+      }
+    ]
+  },
+  "ex-3mbezsd5": {
+    "prompt": "Por que uma sort key interleaved combina mal com a tabela `orders` da Quitanda?",
+    "hint": "O que os valores de `dt` fazem com o tempo?",
+    "choices": [
+      {
+        "text": "Uma chave interleaved só comporta uma coluna, e `orders` precisa de duas",
+        "why": "Ela comporta várias colunas e dá peso igual a elas; é esse o objetivo."
+      },
+      {
+        "text": "Chaves interleaved não podem ser combinadas com `DISTKEY`",
+        "why": "Distribuição e ordenação são escolhas independentes."
+      },
+      {
+        "text": "`dt` só cresce, então as linhas novas se amontoam num canto da ordem e a tabela vive precisando de um `VACUUM REINDEX` caro",
+        "why": "Isso. A documentação da AWS desaconselha interleaved numa data ou numa coluna de identidade."
+      },
+      {
+        "text": "Chaves interleaved só ordenam a região não ordenada do fim",
+        "why": "A região não ordenada existe com qualquer sort key; não é isso que o interleaved muda."
+      }
+    ]
+  },
+  "ex-nxd2153a": {
+    "prompt": "O menor e o maior valor de uma coluna em cada bloco, mantidos em memória para que um filtro pule o bloco, são o zone ___ do bloco.",
+    "hint": "Duas palavras, a primeira já dada.",
+    "blanks": [
+      {
+        "accept": [
+          "map"
+        ]
+      }
+    ]
+  },
+  "ex-e023ez62": {
+    "prompt": "No Redshift Serverless, o que o namespace guarda?",
+    "hint": "Uma das duas coisas é o que o warehouse é, a outra é aquilo em que ele roda.",
+    "choices": [
+      {
+        "text": "A capacidade em RPUs e a rede em que fica",
+        "why": "Isso é o workgroup."
+      },
+      {
+        "text": "O histórico das consultas que rodaram",
+        "why": "Nenhum dos dois nomes é para histórico; o namespace são os dados e quem pode usá-los."
+      },
+      {
+        "text": "Os nós de computação e as slices deles",
+        "why": "O Serverless não tem nós à vista; a capacidade é em RPUs, e é do workgroup."
+      },
+      {
+        "text": "Os bancos, tabelas, usuários e o armazenamento deles",
+        "why": "Isso. Um workgroup pode ser trocado e os dados do namespace não saem do lugar."
+      }
+    ]
+  },
+  "ex-ywc7g2fq": {
+    "prompt": "Um workgroup Serverless tem capacidade base de 8 RPUs, e nenhuma consulta rodou entre 22:00 e 07:00. Quanto essas nove horas custaram de computação?",
+    "hint": "Quando uma RPU-hora é cobrada?",
+    "choices": [
+      {
+        "text": "8 RPUs × 9 horas pelo preço da RPU-hora",
+        "why": "A base é aquilo com que uma consulta começa, não uma cobrança por existir."
+      },
+      {
+        "text": "Nada, já que a computação só é cobrada enquanto há consultas rodando",
+        "why": "Isso. O armazenamento continua cobrado, pela tarifa do armazenamento gerenciado."
+      },
+      {
+        "text": "128 RPUs × 9 horas, a base padrão",
+        "why": "A base foi definida como 8, e nenhuma base é cobrada parada."
+      },
+      {
+        "text": "Um minuto por hora, o mínimo de 60 segundos",
+        "why": "O mínimo vale a cada vez que a computação sobe, e ela não subiu."
+      }
+    ]
+  },
+  "ex-cfp8gevy": {
+    "prompt": "Qual configuração do Serverless impede uma consulta cara de virar um mês caro?",
+    "hint": "O Redshift escala acima da base enquanto uma consulta pesada roda.",
+    "choices": [
+      {
+        "text": "A capacidade base",
+        "why": "A base é onde uma consulta começa; o Redshift escala acima dela."
+      },
+      {
+        "text": "A capacidade máxima",
+        "why": "Isso. É o teto de quanto o Redshift escala."
+      },
+      {
+        "text": "A cota de armazenamento do namespace",
+        "why": "O armazenamento é uma linha pequena; são as RPU-horas que uma consulta cara acumula."
+      },
+      {
+        "text": "O mínimo de 60 segundos por subida",
+        "why": "Isso é uma regra de cobrança, não uma configuração, e define um piso e não um teto."
+      }
+    ]
+  },
+  "ex-m1bt3sk4": {
+    "prompt": "Pela tabela, um nó `ra3.xlplus` custa 1,731 USD por hora. Quanto custa a computação de um cluster de três nós num mês de 30 dias, 720 horas, em USD? Dê duas casas decimais.",
+    "hint": "Nós × preço × horas."
+  },
+  "ex-6nddwjkt": {
+    "prompt": "Os analistas da Quitanda agora trabalham 6 horas por dia a 32 RPUs. Num mês de 30 dias, o que custa menos de computação: o Serverless, ou o cluster de dois nós `ra3.xlplus` a 2.492,64 USD?",
+    "hint": "Uma hora a 32 RPUs custa 19,1232 USD.",
+    "choices": [
+      {
+        "text": "O Serverless, que só cobra as horas usadas",
+        "why": "Cobra, e seis delas por dia dão 3.442,18 USD, acima do cluster."
+      },
+      {
+        "text": "Dá o mesmo, porque os dois cobram por hora",
+        "why": "Eles cobram horas diferentes: o cluster toda hora em que existe, o Serverless toda hora em que trabalha."
+      },
+      {
+        "text": "O cluster",
+        "why": "Isso. 19,1232 × 6 × 30 dá 3.442,18 USD; a linha cai em cerca de 4,34 horas por dia."
+      },
+      {
+        "text": "O Serverless, porque o armazenamento é mais barato lá",
+        "why": "O armazenamento custa 0,043 por GB-mês nos dois, então não move a linha."
+      }
+    ]
+  },
+  "ex-46eq4d7a": {
+    "prompt": "Uma consulta do Redshift Spectrum lê 0,4 TB de arquivos no S3. Quanto custa pela tabela?",
+    "hint": "O Spectrum é cobrado como o Athena.",
+    "choices": [
+      {
+        "text": "0,24 USD, pelo preço da RPU-hora",
+        "why": "Isso multiplica pelo preço do Serverless; o Spectrum é cobrado pelos dados lidos."
+      },
+      {
+        "text": "5,00 USD, sendo um TB a menor unidade cobrada",
+        "why": "O preço é por TB, e uma fração de TB custa essa fração."
+      },
+      {
+        "text": "Nada, já que os arquivos já são pagos como armazenamento do S3",
+        "why": "Guardar e ler são cobranças separadas."
+      },
+      {
+        "text": "2,00 USD",
+        "why": "Isso. 0,4 × 5,00."
+      }
+    ]
+  },
+  "ex-07qpxv1x": {
+    "prompt": "Ponha em ordem a vida de uma consulta num cluster provisionado.",
+    "hint": "O líder aparece duas vezes.",
+    "items": [
+      "O cliente manda o SQL ao nó líder na porta 5439",
+      "O líder planeja a consulta e a compila em código",
+      "Cada slice varre a sua parte, pulando os blocos que os zone maps descartam",
+      "O líder junta o que as slices devolveram e manda a resposta"
+    ]
+  },
+  "ex-kqp23xme": {
+    "prompt": "Desde que uma rede de restaurantes virou cliente, todo relatório sobre `orders` ficou mais lento, e a `SVV_TABLE_INFO` mostra um `skew_rows` alto para ela. Qual é a causa mais provável, e a correção?",
+    "hint": "O `skew_rows` compara a slice mais cheia com a mais vazia.",
+    "choices": [
+      {
+        "text": "A sort key ficou desordenada; rode `VACUUM SORT ONLY`",
+        "why": "Linhas desordenadas alargam os zone maps; não põem mais linhas numa slice."
+      },
+      {
+        "text": "A capacidade base está baixa demais; aumente-a",
+        "why": "Capacidade base é do Serverless; isto é um cluster com as linhas mal repartidas."
+      },
+      {
+        "text": "`DISTKEY (customer_id)` encontrou um cliente dominante; redistribua por uma coluna sem um, ou `EVEN`",
+        "why": "Isso. Uma slice guarda os pedidos da rede e toda varredura espera por ela."
+      },
+      {
+        "text": "O Spectrum está lendo CSV; converta os arquivos para Parquet",
+        "why": "`orders` é uma tabela no warehouse, não arquivos no S3."
+      }
+    ]
+  },
+  "ex-x9f6hanx": {
+    "prompt": "Quais destas coisas foram medidas nesta lição, em vez de tiradas da documentação da AWS? Marque todas as que se aplicam.",
+    "hint": "Duas coisas rodaram: o moto, e dois modelos em Python.",
+    "choices": [
+      {
+        "text": "No modelo, uma chave em `customer_id` pôs 5.420 de 10.000 linhas numa slice",
+        "why": "Sim, o `slices.py` imprimiu."
+      },
+      {
+        "text": "O moto deixa um comando da Data API em `STARTED`",
+        "why": "Sim, cinco segundos depois de enviado."
+      },
+      {
+        "text": "Um nó `ra3.xlplus` tem duas slices",
+        "why": "Isso é da documentação da AWS; o moto não roda nós para contar."
+      },
+      {
+        "text": "`DS_BCAST_INNER` copia uma tabela inteira para todo nó",
+        "why": "Da documentação do `EXPLAIN`; nenhum plano foi produzido aqui."
+      },
+      {
+        "text": "O Serverless cobra por segundo com mínimo de 60 segundos",
+        "why": "Documentado pela AWS; o moto nem conseguiu criar um namespace."
+      }
+    ]
+  }
+}

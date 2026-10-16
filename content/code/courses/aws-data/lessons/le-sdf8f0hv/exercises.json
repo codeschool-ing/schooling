@@ -1,0 +1,570 @@
+[
+  {
+    "id": "ex-epje6k40",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many copies of each 10 GB segment does Aurora keep, and where?",
+    "hint": "Count per zone, then zones.",
+    "choices": [
+      {
+        "text": "Two, one in each of two zones, like Multi-AZ",
+        "correct": false,
+        "why": "That is the RDS Multi-AZ instance; Aurora writes each segment six times."
+      },
+      {
+        "text": "Six: two in each of three zones",
+        "correct": true,
+        "why": "Right. The six copies of one segment are a protection group."
+      },
+      {
+        "text": "Three, one per zone, with a read quorum of two",
+        "correct": false,
+        "why": "There are two copies per zone, six in all; the read quorum is three of six."
+      },
+      {
+        "text": "One per instance in the cluster",
+        "correct": false,
+        "why": "Instances share one volume; the number of copies has nothing to do with them."
+      }
+    ]
+  },
+  {
+    "id": "ex-kafq0hq0",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Zone `sa-east-1c` goes dark, taking two of a protection group's six copies. What can the cluster still do?",
+    "hint": "Write quorum 4, read quorum 3.",
+    "choices": [
+      {
+        "text": "Read, but not write, until the zone comes back",
+        "correct": false,
+        "why": "Four copies are left, which is exactly the write quorum."
+      },
+      {
+        "text": "Nothing, until a failover moves the volume",
+        "correct": false,
+        "why": "The volume is not moved; it is still spread across the other two zones."
+      },
+      {
+        "text": "Write only to the copies in `sa-east-1a`",
+        "correct": false,
+        "why": "Writes go to every copy that answers, and four answering is enough."
+      },
+      {
+        "text": "Both read and write, with four copies left",
+        "correct": true,
+        "why": "Right. A zone is the failure Aurora is designed to survive without stopping writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcwp0gba",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Aurora pick a write quorum of 4 and a read quorum of 3 out of 6, rather than 3 and 3?",
+    "hint": "Add the two numbers and compare with six.",
+    "choices": [
+      {
+        "text": "3 and 3 would be faster, and 4 and 3 is a compromise on price",
+        "correct": false,
+        "why": "Price is not the reason; with 3 and 3 a read could miss the latest write."
+      },
+      {
+        "text": "With 4 + 3 above 6, a read always meets a copy that has the latest write",
+        "correct": true,
+        "why": "Right. Two sets of 3 could be disjoint; 4 and 3 cannot."
+      },
+      {
+        "text": "Writes need one extra copy for the replica's cache",
+        "correct": false,
+        "why": "Replicas read the storage like anyone else; the quorum is about overlap."
+      },
+      {
+        "text": "Three zones need an odd number of copies per zone",
+        "correct": false,
+        "why": "There are two per zone, an even number; the reason is the overlap."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jxsgn1v",
+    "version": 1,
+    "section": "the-storage-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an Aurora writer send to the storage layer when a transaction commits?",
+    "hint": "\"The log is the database.\"",
+    "choices": [
+      {
+        "text": "The changed data pages, to six copies",
+        "correct": false,
+        "why": "That is how an RDS instance and its mirror work; Aurora sends no pages."
+      },
+      {
+        "text": "Log records only, which the storage nodes apply to the pages",
+        "correct": true,
+        "why": "Right. Which makes a commit a small network write, and lets replicas share the volume."
+      },
+      {
+        "text": "A snapshot of the volume, every five minutes",
+        "correct": false,
+        "why": "That confuses the commit with the backups of lesson 7."
+      },
+      {
+        "text": "The whole transaction to each replica, which writes it to disk",
+        "correct": false,
+        "why": "Replicas have no disk of their own; they read the shared volume."
+      }
+    ]
+  },
+  {
+    "id": "ex-7y48p0ec",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda creates an Aurora cluster and then two instances in it. Which one is the writer?",
+    "hint": "A cluster has exactly one writer.",
+    "choices": [
+      {
+        "text": "The one with the larger instance class",
+        "correct": false,
+        "why": "Size breaks a tie between replicas at failover; it does not choose the first writer."
+      },
+      {
+        "text": "Both, one per zone",
+        "correct": false,
+        "why": "Aurora has one writer per cluster; the other instance is a replica."
+      },
+      {
+        "text": "The first one created",
+        "correct": true,
+        "why": "Right. Every instance after it is a replica, until a failover moves the role."
+      },
+      {
+        "text": "Neither until you name one with `--promotion-tier 0`",
+        "correct": false,
+        "why": "The tier orders replicas for a failover; the first instance is the writer from the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhqwhvcw",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto reports an Aurora cluster's `StorageType` as `gp2`. Why is that answer wrong, and not just unusual?",
+    "hint": "Where does gp2 come from?",
+    "choices": [
+      {
+        "text": "gp2 is too slow for Aurora, which needs io2",
+        "correct": false,
+        "why": "Aurora uses no EBS type at all, fast or slow."
+      },
+      {
+        "text": "An Aurora volume is not an EBS disk",
+        "correct": true,
+        "why": "Right. moto borrowed a field from its model of an ordinary instance."
+      },
+      {
+        "text": "gp2 was retired, and moto should say gp3",
+        "correct": false,
+        "why": "gp3 would be just as wrong; neither is Aurora storage."
+      },
+      {
+        "text": "Aurora clusters report no storage type at all",
+        "correct": false,
+        "why": "They do report one, `aurora` or `aurora-iopt1`, which is how the billing mode is shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss6bw0gf",
+    "version": 1,
+    "section": "a-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda's first `create-db-cluster` named no storage size. What decides how much storage the cluster pays for?",
+    "hint": "RDS bills what it allocated. What does Aurora bill?",
+    "choices": [
+      {
+        "text": "A default of 100 GiB, raised by autoscaling",
+        "correct": false,
+        "why": "That is an RDS instance's model; Aurora has no allocation to start from."
+      },
+      {
+        "text": "The size given to the first instance",
+        "correct": false,
+        "why": "Instances carry no storage in Aurora; moto's `1` is a placeholder."
+      },
+      {
+        "text": "The data it holds, billed once",
+        "correct": true,
+        "why": "Right. The six copies are AWS's cost, not a line on the bill."
+      },
+      {
+        "text": "Six times the data, for the six copies",
+        "correct": false,
+        "why": "The copies are not billed; you pay for the data once."
+      }
+    ]
+  },
+  {
+    "id": "ex-xsn58hca",
+    "version": 1,
+    "section": "replicas-and-endpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an Aurora failover to a replica need no data to be copied or replayed?",
+    "hint": "Where does the replica read from?",
+    "choices": [
+      {
+        "text": "The replica reads the same shared volume the writer wrote",
+        "correct": true,
+        "why": "Right. It only has to start accepting writes, and the cluster endpoint moves to it."
+      },
+      {
+        "text": "Aurora replicas are synchronous, like a Multi-AZ standby",
+        "correct": false,
+        "why": "They are not synchronous copies at all: they have no copy, they share the volume."
+      },
+      {
+        "text": "The data is restored from the latest snapshot during failover",
+        "correct": false,
+        "why": "Nothing is restored; a snapshot would take far longer than thirty seconds."
+      },
+      {
+        "text": "Failover waits until the replica has replayed the log",
+        "correct": false,
+        "why": "The storage nodes apply the log; the replica has nothing of its own to catch up."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rh24agz",
+    "version": 1,
+    "section": "replicas-and-endpoints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster runs a writer and no replica, because nothing reads from a replica. What does that cost on the day the writer fails, by AWS's documentation?",
+    "hint": "Something has to run the engine against the volume.",
+    "choices": [
+      {
+        "text": "Nothing: the six copies in storage take over",
+        "correct": false,
+        "why": "The copies hold data; they do not run an engine or accept connections."
+      },
+      {
+        "text": "The data written since the last snapshot",
+        "correct": false,
+        "why": "No data is lost: the volume survives the instance."
+      },
+      {
+        "text": "A new instance has to start: under ten minutes by AWS's figure, instead of about thirty seconds",
+        "correct": true,
+        "why": "Right. One replica, even an idle one, is what makes failover fast."
+      },
+      {
+        "text": "The volume has to be restored into a new cluster",
+        "correct": false,
+        "why": "The cluster and its volume stay; only an instance is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-hyexng2b",
+    "version": 1,
+    "section": "replicas-and-endpoints",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Aurora endpoint to the traffic Quitanda sends it.",
+    "hint": "One of them is never for an application.",
+    "pairs": [
+      {
+        "left": "Cluster endpoint",
+        "right": "Checkouts, which write orders"
+      },
+      {
+        "left": "Reader endpoint",
+        "right": "The product catalogue pages"
+      },
+      {
+        "left": "Custom endpoint",
+        "right": "The analysts' heavy reports, on a replica of their own"
+      },
+      {
+        "left": "Instance endpoint",
+        "right": "Diagnosing one particular machine"
+      }
+    ],
+    "right_distractors": [
+      "Backups to S3"
+    ]
+  },
+  {
+    "id": "ex-1678h732",
+    "version": 1,
+    "section": "replicas-and-endpoints",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By AWS's documentation, what is the largest number of instances an Aurora cluster can have, writer included?",
+    "hint": "Fifteen replicas and one more.",
+    "value": 16,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8s5gx3w4",
+    "version": 1,
+    "section": "serverless-v2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database needs 16 GiB of memory around the clock. What does the lesson's arithmetic say about running it on Serverless v2 instead of a `db.r7g.large`?",
+    "hint": "16 GiB is 8 ACUs at 0.25 an ACU-hour.",
+    "choices": [
+      {
+        "text": "About the same, since both are billed by the hour",
+        "correct": false,
+        "why": "8 ACUs cost 2.00 an hour against 0.43884; the unit is the same and the price is not."
+      },
+      {
+        "text": "Cheaper, because serverless scales down when idle",
+        "correct": false,
+        "why": "This database is never idle, so there is nothing to scale down."
+      },
+      {
+        "text": "About 4.6 times the price: 1,460.00 a month against 320.35",
+        "correct": true,
+        "why": "Right. Serverless wins when the load is mostly absent, not when it is constant."
+      },
+      {
+        "text": "Impossible, because serverless stops at 8 ACUs",
+        "correct": false,
+        "why": "The documented maximum is far higher, 256 ACUs on recent versions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve0s5hws",
+    "version": 1,
+    "section": "serverless-v2",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 8 ACUs and 0.25 USD per ACU-hour, how many hours a month at full size can a cluster that pauses when idle run before it costs more than a `db.r7g.large` at 320.35 a month?",
+    "hint": "Divide the monthly price by the hourly cost of 8 ACUs.",
+    "value": 160,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-tewv5hj3",
+    "version": 1,
+    "section": "serverless-v2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson put a minimum of 0 with auto-pause on the development cluster, and not on the shop's?",
+    "hint": "What happens to the first connection after a pause?",
+    "choices": [
+      {
+        "text": "The first connection waits for it to wake",
+        "correct": true,
+        "why": "Right. Seconds of waiting are fine for a developer and not for the morning's first customer."
+      },
+      {
+        "text": "A paused cluster loses its data after 24 hours",
+        "correct": false,
+        "why": "Storage stays, and is billed, while compute is paused."
+      },
+      {
+        "text": "The shop's cluster is provisioned, which cannot pause",
+        "correct": false,
+        "why": "The question is about which cluster should pause, and why."
+      },
+      {
+        "text": "Auto-pause is only for MySQL",
+        "correct": false,
+        "why": "This lesson's cluster is Aurora PostgreSQL and moto stored the setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-4963c7d9",
+    "version": 1,
+    "section": "io-optimized",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One `db.r7g.large` and 500 GB. I/O-Optimized adds 96.34 a month for the instance and 119.00 for storage, and Standard charges 0.28 per million I/Os. Above how many million I/Os a month is I/O-Optimized cheaper? Round to the nearest whole number.",
+    "hint": "(96.34 + 119.00) / 0.28",
+    "value": 769,
+    "tolerance": 1
+  },
+  {
+    "id": "ex-97w5xw3x",
+    "version": 1,
+    "section": "io-optimized",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Quitanda adds a third `db.r7g.large` to its cluster. What happens to the break-even point between Standard and I/O-Optimized?",
+    "hint": "The premium is per instance.",
+    "choices": [
+      {
+        "text": "It falls, since replicas add no storage",
+        "correct": false,
+        "why": "No storage is added, and the instance premium still grows, so the line rises."
+      },
+      {
+        "text": "It rises by about 344 million I/Os a month",
+        "correct": true,
+        "why": "Right. 96.34 more of instance premium, divided by 0.28."
+      },
+      {
+        "text": "It does not move; only storage sets it",
+        "correct": false,
+        "why": "Instances and storage both carry a premium under I/O-Optimized."
+      },
+      {
+        "text": "It disappears: three instances always favour I/O-Optimized",
+        "correct": false,
+        "why": "More instances raise the fixed premium, which favours Standard until the I/O grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cr711jx",
+    "version": 1,
+    "section": "io-optimized",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After switching to I/O-Optimized, the I/O line of Quitanda's bill is gone. What has the lesson warned that this hides?",
+    "hint": "A missing index on Standard shows up as money.",
+    "choices": [
+      {
+        "text": "Storage growth, which is now free",
+        "correct": false,
+        "why": "Storage is billed at 0.428 a GB-month, more than on Standard."
+      },
+      {
+        "text": "The replicas, which are no longer billed",
+        "correct": false,
+        "why": "Every instance is still billed, at a higher hourly price."
+      },
+      {
+        "text": "A slow query, now unpriced",
+        "correct": true,
+        "why": "Right. It is just as slow; only the invoice stopped saying so."
+      },
+      {
+        "text": "Writes, which are now asynchronous",
+        "correct": false,
+        "why": "The billing mode changes nothing about how storage is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-bztrea06",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of building Quitanda's Aurora cluster in order.",
+    "hint": "The cluster exists before any machine.",
+    "items": [
+      "`create-db-cluster`, which makes the volume and the two endpoints",
+      "The first `create-db-instance`, which becomes the writer",
+      "A second instance in another zone, as a replica",
+      "`failover-db-cluster` to rehearse moving the writer"
+    ]
+  },
+  {
+    "id": "ex-ds4f4vgx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A reporting database is used two hours each morning and idle the rest of the day; its I/O is small. Which Aurora set-up fits what the lesson priced?",
+    "hint": "Two levers: how capacity is billed, and how I/O is billed.",
+    "choices": [
+      {
+        "text": "A provisioned `db.r7g.large` on I/O-Optimized",
+        "correct": false,
+        "why": "It pays for 730 hours to use about 44, and a premium for I/O it barely does."
+      },
+      {
+        "text": "Serverless v2 with auto-pause, on Standard storage",
+        "correct": true,
+        "why": "Right. Far below the 160 hours where serverless stops winning, and too little I/O for I/O-Optimized to pay."
+      },
+      {
+        "text": "Serverless v2 with a minimum equal to its maximum",
+        "correct": false,
+        "why": "That is a provisioned instance billed at serverless prices, 4.6 times as much."
+      },
+      {
+        "text": "Two provisioned instances, so the reports run on a replica",
+        "correct": false,
+        "why": "Nothing else uses this database, so a replica only doubles the idle hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzfxa4ap",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these follow from Aurora's shared volume? Choose all that apply.",
+    "hint": "Think of what replicas no longer need.",
+    "choices": [
+      {
+        "text": "A replica adds no storage to the bill",
+        "correct": true,
+        "why": "Yes; there is one volume."
+      },
+      {
+        "text": "Replica lag is documented in milliseconds",
+        "correct": true,
+        "why": "Yes; replicas read the same data and only refresh their memory."
+      },
+      {
+        "text": "Failover to a replica copies no data",
+        "correct": true,
+        "why": "Yes; the data is already where it can read it."
+      },
+      {
+        "text": "A `DELETE` without a `WHERE` can be undone from a replica",
+        "correct": false,
+        "why": "The replica reads the same volume, so it sees the delete at once; backups undo it."
+      },
+      {
+        "text": "I/O stops being billed",
+        "correct": false,
+        "why": "Only on I/O-Optimized, which is a billing choice and not a property of the volume."
+      }
+    ]
+  }
+]

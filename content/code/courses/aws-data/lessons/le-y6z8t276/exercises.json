@@ -1,0 +1,591 @@
+[
+  {
+    "id": "ex-dg1335tm",
+    "version": 1,
+    "section": "presigned-urls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does S3 store when the command line makes a presigned URL?",
+    "hint": "A URL for a key that does not exist came out fine.",
+    "choices": [
+      {
+        "text": "Nothing; the URL is computed locally and checked only when used",
+        "correct": true,
+        "why": "Right. Making it sends no request at all."
+      },
+      {
+        "text": "A record of the link, deleted at expiry",
+        "correct": false,
+        "why": "There is no list of issued links; S3 repeats the signature calculation on use."
+      },
+      {
+        "text": "A public copy of the object",
+        "correct": false,
+        "why": "The object stays private; the URL carries a permission, not a copy."
+      },
+      {
+        "text": "The secret key, so that S3 can check the URL later",
+        "correct": false,
+        "why": "S3 already knows the secret key of every key it issued; nothing is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-gbmtv0be",
+    "version": 1,
+    "section": "presigned-urls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each parameter of a presigned URL to what it carries.",
+    "hint": "One of them is why a pasted URL names a key.",
+    "pairs": [
+      {
+        "left": "`X-Amz-Credential`",
+        "right": "The signer's access key id, the date, the region and the service"
+      },
+      {
+        "left": "`X-Amz-Expires`",
+        "right": "Seconds of validity after the signing moment"
+      },
+      {
+        "left": "`X-Amz-Signature`",
+        "right": "The signature made with the secret key"
+      },
+      {
+        "left": "`X-Amz-SignedHeaders`",
+        "right": "Which headers the signature covers"
+      }
+    ],
+    "right_distractors": [
+      "The addresses allowed to use the URL"
+    ]
+  },
+  {
+    "id": "ex-ag8rxggb",
+    "version": 1,
+    "section": "presigned-urls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A presigned URL valid for seven days leaked into a support ticket. What makes it stop working at once on AWS?",
+    "hint": "S3 checks the signer when the URL is used.",
+    "choices": [
+      {
+        "text": "Deleting the ticket",
+        "correct": false,
+        "why": "Anybody who copied the URL still has it; the ticket was only where it was seen."
+      },
+      {
+        "text": "Deactivating the key that signed it, or removing the signer's access",
+        "correct": true,
+        "why": "Right. The URL carries the signer's authority, which is checked at the moment of use."
+      },
+      {
+        "text": "Making a new presigned URL for the same object, which replaces the old one",
+        "correct": false,
+        "why": "URLs are independent; a new one does nothing to the old."
+      },
+      {
+        "text": "Turning on Block Public Access for the bucket",
+        "correct": false,
+        "why": "A presigned request is signed by the account's own key, so it is not public access."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9kz1vzq",
+    "version": 1,
+    "section": "presigned-urls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto, a URL presigned for one second still works three seconds later. What should a test suite built on moto conclude about expiry?",
+    "hint": "Who enforces the limit, and is it here?",
+    "choices": [
+      {
+        "text": "That clocks drift, and S3 also allows a grace period of a few seconds",
+        "correct": false,
+        "why": "The lesson documents no grace period; moto served a URL with a broken signature as well."
+      },
+      {
+        "text": "That the URL lives as long as the object exists",
+        "correct": false,
+        "why": "On AWS it dies at `X-Amz-Expires` or with its credentials, whichever comes first."
+      },
+      {
+        "text": "Nothing: moto skips the check, so test expiry elsewhere",
+        "correct": true,
+        "why": "Right. Expiry is tested against the documentation or a real account; in this lab a presigned URL shows its shape and nothing about its safety."
+      },
+      {
+        "text": "That one second was rounded up to a whole minute by moto's clock",
+        "correct": false,
+        "why": "Nothing was rounded; the URL says `X-Amz-Expires=1`."
+      }
+    ]
+  },
+  {
+    "id": "ex-997v4a77",
+    "version": 1,
+    "section": "presigned-urls",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the longest `--expires-in`, in seconds, that S3 honours for a URL signed with an IAM user's long-term key?",
+    "hint": "Seven days.",
+    "value": 604800,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1f1ryfzs",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto is started with `INITIAL_NO_AUTH_ACTION_COUNT=5`. What does the number mean?",
+    "hint": "Count the setup.",
+    "choices": [
+      {
+        "text": "Five users may be created before IAM starts checking",
+        "correct": false,
+        "why": "It counts requests, of any kind."
+      },
+      {
+        "text": "The first five requests skip the IAM check",
+        "correct": true,
+        "why": "Right. Every later one is checked; the five were the bucket, the report, the user, its policy and its key."
+      },
+      {
+        "text": "A denied request is retried five times before failing",
+        "correct": false,
+        "why": "moto does not retry; the command line retries server errors, not denials."
+      },
+      {
+        "text": "Policies are re-read every five requests",
+        "correct": false,
+        "why": "A policy takes effect on the next request after it is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ecne36k",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The dashboard's policy allows `s3:GetObject` and `s3:ListBucket` and has no `Deny`. Why was its `PutObject` refused?",
+    "hint": "What is the starting point of every evaluation?",
+    "choices": [
+      {
+        "text": "A bucket refuses writes from any key created after it",
+        "correct": false,
+        "why": "Nothing about creation order matters; the policy is what is read."
+      },
+      {
+        "text": "Because an action nothing allows is denied",
+        "correct": true,
+        "why": "Right. The implicit deny is the default every policy starts from."
+      },
+      {
+        "text": "`ListBucket` contains an implicit deny on writes",
+        "correct": false,
+        "why": "An allow carries no deny; the write is refused because nothing allows it."
+      },
+      {
+        "text": "The key had no permission because its secret was never printed",
+        "correct": false,
+        "why": "Printing a secret changes nothing except who has seen it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6wskay5",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In moto's IAM mode, `aws s3 ls s3://quitanda-curated-prod` fails with `SignatureDoesNotMatch` and `--recursive` works. What is the cause?",
+    "hint": "Compare the two query strings.",
+    "choices": [
+      {
+        "text": "The dashboard's key is wrong",
+        "correct": false,
+        "why": "The same key signed the recursive listing, which worked."
+      },
+      {
+        "text": "The policy does not allow listing with a delimiter",
+        "correct": false,
+        "why": "A policy problem is `AccessDenied`, not a signature error."
+      },
+      {
+        "text": "S3 refuses `delimiter=/` to IAM users",
+        "correct": false,
+        "why": "S3 accepts it; moto is the one that fails."
+      },
+      {
+        "text": "moto miscomputes the signature when a query value has a `/`",
+        "correct": true,
+        "why": "Right. `--prefix reports` with no slash worked too. It is moto's defect, not S3's behaviour."
+      }
+    ]
+  },
+  {
+    "id": "ex-dq90gfy5",
+    "version": 1,
+    "section": "who-may-read",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson read the new access key into variables instead of printing it?",
+    "hint": "Where does a printed line end up?",
+    "choices": [
+      {
+        "text": "A secret on a screen ends up in history, recordings and screenshots",
+        "correct": true,
+        "why": "Right. moto's keys are fake, and the habit is the one to keep with real ones."
+      },
+      {
+        "text": "The command line refuses to print a secret key",
+        "correct": false,
+        "why": "It prints it if asked; that is exactly what the `--query` avoids."
+      },
+      {
+        "text": "moto would revoke a printed key",
+        "correct": false,
+        "why": "Neither moto nor AWS can tell whether a key was printed."
+      },
+      {
+        "text": "Variables keep the key valid for longer than a key that was printed on screen",
+        "correct": false,
+        "why": "An access key has no expiry of its own; where it is kept changes nothing about that."
+      }
+    ]
+  },
+  {
+    "id": "ex-01gqpndn",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bucket already has a public policy when `BlockPublicPolicy` is turned on, and `RestrictPublicBuckets` is left off. On AWS, can an anonymous request still read through that policy?",
+    "hint": "One switch of each pair looks forward, the other looks back.",
+    "choices": [
+      {
+        "text": "No: `BlockPublicPolicy` deletes the public policy",
+        "correct": false,
+        "why": "It refuses new public policies and deletes nothing."
+      },
+      {
+        "text": "Yes, through the old policy",
+        "correct": true,
+        "why": "Right. Only `RestrictPublicBuckets` neutralises a public policy already there; the blocking switches stop new grants."
+      },
+      {
+        "text": "No: any one switch makes the bucket private",
+        "correct": false,
+        "why": "Each switch does one thing; that is why all four are set together."
+      },
+      {
+        "text": "Yes, but only for objects written after the switch",
+        "correct": false,
+        "why": "The policy applies to every object it names, whenever written."
+      }
+    ]
+  },
+  {
+    "id": "ex-kck6znkm",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the account-level Block Public Access the one the lesson calls most important?",
+    "hint": "Think of a bucket nobody has created yet.",
+    "choices": [
+      {
+        "text": "It covers buckets created later, which nobody has configured",
+        "correct": true,
+        "why": "Right. The stricter of account and bucket wins, so the account setting holds for the next bucket too."
+      },
+      {
+        "text": "It is cheaper than setting it per bucket",
+        "correct": false,
+        "why": "Neither is billed."
+      },
+      {
+        "text": "A bucket-level setting cannot be read back",
+        "correct": false,
+        "why": "`get-public-access-block` reads it back."
+      },
+      {
+        "text": "The account setting is the only one moto enforces",
+        "correct": false,
+        "why": "moto enforces neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-87ygeef5",
+    "version": 1,
+    "section": "block-public-access",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With all four switches on in moto, which of these happened that AWS would have refused? Choose all that apply.",
+    "hint": "Look at the transcripts after the switches were set.",
+    "choices": [
+      {
+        "text": "A bucket policy with `\"Principal\": \"*\"` and `Allow` was accepted",
+        "correct": true,
+        "why": "Yes: `BlockPublicPolicy` refuses it on AWS."
+      },
+      {
+        "text": "A `curl` with no credentials read an object",
+        "correct": true,
+        "why": "Yes: `RestrictPublicBuckets` refuses it on AWS."
+      },
+      {
+        "text": "A `public-read` ACL was accepted under `BucketOwnerEnforced`",
+        "correct": true,
+        "why": "Yes: AWS answers `AccessControlListNotSupported`."
+      },
+      {
+        "text": "`get-public-access-block` printed the four switches",
+        "correct": false,
+        "why": "Reading the configuration back is what AWS does too."
+      }
+    ]
+  },
+  {
+    "id": "ex-vr3n8vf1",
+    "version": 1,
+    "section": "defender-policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A statement has `\"Principal\": \"*\"`, `\"Effect\": \"Deny\"` and a condition on `aws:SecureTransport`. Does it make the bucket public?",
+    "hint": "Public access needs an effect that grants.",
+    "choices": [
+      {
+        "text": "Yes, because a `\"Principal\": \"*\"` anywhere in a bucket policy makes it public",
+        "correct": false,
+        "why": "Only an `Allow` grants; this one applies a refusal to everybody."
+      },
+      {
+        "text": "Yes, for requests made over TLS",
+        "correct": false,
+        "why": "Not denying something is not allowing it."
+      },
+      {
+        "text": "No: a Deny grants nothing; `*` says the refusal applies to everybody",
+        "correct": true,
+        "why": "Right. Public access is `*` with `Allow`."
+      },
+      {
+        "text": "Only if Block Public Access is off",
+        "correct": false,
+        "why": "There is nothing public to block in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-95vetw19",
+    "version": 1,
+    "section": "defender-policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "moto refused a read under a Deny conditioned on `aws:SecureTransport` being `\"true\"`, over plain HTTP. What does that show?",
+    "hint": "On AWS that policy denies only TLS requests.",
+    "choices": [
+      {
+        "text": "That moto treats every HTTP request as TLS",
+        "correct": false,
+        "why": "Then the policy with `\"false\"` would have let the read through, and it was refused too."
+      },
+      {
+        "text": "That its denials prove nothing",
+        "correct": true,
+        "why": "Right. moto does not evaluate the condition as S3 does, so a denial from it under a condition is no more evidence than a success."
+      },
+      {
+        "text": "That the policy is wrong and would lock out Quitanda on AWS too",
+        "correct": false,
+        "why": "On AWS, with `\"true\"`, plain HTTP requests are not denied."
+      },
+      {
+        "text": "That a Deny on `s3:*` cannot be deleted",
+        "correct": false,
+        "why": "The policy was deleted and the read came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xe1kvq9",
+    "version": 1,
+    "section": "the-bucket-that-leaked",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the one check of whether an object is public that the lesson says to trust?",
+    "hint": "Who signs the request?",
+    "choices": [
+      {
+        "text": "Reading the bucket policy carefully",
+        "correct": false,
+        "why": "An ACL or another layer can grant what the policy does not show."
+      },
+      {
+        "text": "A request from outside with no credentials, expecting 403",
+        "correct": true,
+        "why": "Right. It tests every layer at once, the way a stranger would."
+      },
+      {
+        "text": "`aws s3 ls` with the account's own keys",
+        "correct": false,
+        "why": "The owner can read; that says nothing about strangers."
+      },
+      {
+        "text": "`get-public-access-block` showing four `true`",
+        "correct": false,
+        "why": "That reads a configuration; in moto it was set and enforced nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5xvpfmw",
+    "version": 1,
+    "section": "the-bucket-that-leaked",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ACL group whose name sounded safe but meant any AWS account in the world was `___`.",
+    "hint": "Not `AllUsers`.",
+    "blanks": [
+      {
+        "accept": [
+          "AuthenticatedUsers"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mxdtq7g7",
+    "version": 1,
+    "section": "the-bucket-that-leaked",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the AWS service that answers it.",
+    "hint": "A door open, what is behind it, who walked through, and when it changed.",
+    "pairs": [
+      {
+        "left": "Which buckets are shared outside the organisation?",
+        "right": "IAM Access Analyzer for S3"
+      },
+      {
+        "left": "Which objects hold card numbers?",
+        "right": "Amazon Macie"
+      },
+      {
+        "left": "Who read this object last Tuesday?",
+        "right": "CloudTrail data events"
+      },
+      {
+        "left": "Was this bucket's public access blocked yesterday and not today?",
+        "right": "AWS Config rules"
+      }
+    ],
+    "right_distractors": [
+      "S3 Intelligent-Tiering"
+    ]
+  },
+  {
+    "id": "ex-spac1k3t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order Quitanda's protections from the broadest net to the narrowest, as the lesson does.",
+    "hint": "The account comes first, a single URL last.",
+    "items": [
+      "Block Public Access on the account",
+      "`BucketOwnerEnforced` on every bucket",
+      "Bucket policies that deny",
+      "Short, narrow presigned URLs"
+    ]
+  },
+  {
+    "id": "ex-nazr1cdg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A supplier with no AWS account must download one invoice this afternoon. Which is the safest way the lesson offers?",
+    "hint": "Minutes, and the narrowest signer.",
+    "choices": [
+      {
+        "text": "A bucket policy allowing `\"Principal\": \"*\"` on that one key, removed tomorrow",
+        "correct": false,
+        "why": "That is the first shape of a leak, and Block Public Access refuses it on AWS."
+      },
+      {
+        "text": "A `public-read` ACL on the invoice",
+        "correct": false,
+        "why": "ACLs are off under `BucketOwnerEnforced`, and a public object is public to everybody."
+      },
+      {
+        "text": "A seven-day URL signed with an administrator's key",
+        "correct": false,
+        "why": "Seven days and an administrator's authority are the widest, longest URL there is."
+      },
+      {
+        "text": "A URL of a few minutes, signed by a role that reads only that prefix",
+        "correct": true,
+        "why": "Right. A leak of it is worth one prefix, for minutes."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfys7pb5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did moto get right in this lesson?",
+    "hint": "One layer is evaluated, the others are stored.",
+    "choices": [
+      {
+        "text": "Serving `curl` an object under a public `Allow` policy",
+        "correct": true,
+        "why": "Right. moto evaluates that kind of Allow, and that is S3's answer too when nothing blocks it."
+      },
+      {
+        "text": "Refusing a presigned URL used after `X-Amz-Expires` had passed",
+        "correct": false,
+        "why": "It served one used two seconds after expiry."
+      },
+      {
+        "text": "Refusing a `public-read` ACL on a bucket set to `BucketOwnerEnforced`",
+        "correct": false,
+        "why": "It accepted `public-read`."
+      },
+      {
+        "text": "Reading `aws:SecureTransport` in a condition",
+        "correct": false,
+        "why": "It refused under the reversed condition as well."
+      }
+    ]
+  }
+]

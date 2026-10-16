@@ -1,0 +1,543 @@
+[
+  {
+    "id": "ex-xk42kyvg",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What decides which partition a DynamoDB item is stored in?",
+    "hint": "One of the two key attributes goes through a function.",
+    "choices": [
+      {
+        "text": "The sort key, compared with the ranges each partition holds",
+        "correct": false,
+        "why": "The sort key orders items inside a collection; it plays no part in choosing the partition."
+      },
+      {
+        "text": "A hash of the partition key",
+        "correct": true,
+        "why": "Right. The hash of the partition key's value chooses the partition, so equal keys live together and neighbouring ones scatter."
+      },
+      {
+        "text": "The order in which the items were written",
+        "correct": false,
+        "why": "Write order decides nothing about placement; two items written a second apart can land anywhere."
+      },
+      {
+        "text": "The size of the item, so that partitions fill evenly",
+        "correct": false,
+        "why": "Size does not enter the hash. Even filling comes from a key with many distinct values, which lesson 11 returns to."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsxcvqdj",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Customers are stored under partition keys `CUSTOMER#c-17`, `CUSTOMER#c-18` and so on. Can one request read \"customers c-17 to c-40\"?",
+    "hint": "Ask where those partition keys are stored relative to each other.",
+    "choices": [
+      {
+        "text": "Yes, a `query` with `BETWEEN` on the partition key, which reads them in key order",
+        "correct": false,
+        "why": "A query takes exactly one partition key, with `=`. `BETWEEN` is a sort-key condition."
+      },
+      {
+        "text": "Yes, with `begins_with(pk, :p)`",
+        "correct": false,
+        "why": "That is the second refusal in the section on reads: `Query key condition not supported`."
+      },
+      {
+        "text": "No: neighbouring keys hash to unrelated partitions",
+        "correct": true,
+        "why": "Right. Ranges exist only inside one item collection, along the sort key."
+      },
+      {
+        "text": "No, because a range of customers needs a transaction",
+        "correct": false,
+        "why": "Transactions are about writing together, not about reading a range."
+      }
+    ]
+  },
+  {
+    "id": "ex-ex1pqf9k",
+    "version": 1,
+    "section": "the-key",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`create-table` was given `--attribute-definitions` for `pk` and `total_cents` with a key schema of `pk` alone. What happened, and why?",
+    "hint": "What is that list for?",
+    "choices": [
+      {
+        "text": "It was refused: the list names only attributes used by a key or an index",
+        "correct": true,
+        "why": "Right. It is not a list of columns, and moto refused it with the same message AWS uses."
+      },
+      {
+        "text": "The table was created and every item must now carry a number called `total_cents`",
+        "correct": false,
+        "why": "DynamoDB enforces no attribute beyond the key, so there is no such thing as a required column."
+      },
+      {
+        "text": "The table was created with an index on `total_cents`",
+        "correct": false,
+        "why": "An index is declared on its own, with its own key schema; naming an attribute creates nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-21p9wqmq",
+    "version": 1,
+    "section": "access-patterns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the access patterns written down before the table is created?",
+    "hint": "What does a fast read have to name?",
+    "choices": [
+      {
+        "text": "Because AWS asks for them in `create-table`, to size the partitions",
+        "correct": false,
+        "why": "Nothing in the API takes a list of patterns; they shape the keys you declare."
+      },
+      {
+        "text": "Because a key serves only the questions it was built for",
+        "correct": true,
+        "why": "Right. There is no planner to find another way; the key is the design."
+      },
+      {
+        "text": "Because a table cannot be deleted once it holds items, so the first design is the final one",
+        "correct": false,
+        "why": "A table can be deleted at any time. What is expensive is rewriting every item to new keys."
+      },
+      {
+        "text": "Because DynamoDB normalises the entities from the list",
+        "correct": false,
+        "why": "DynamoDB normalises nothing; the patterns are what replaces normalisation as the starting point."
+      }
+    ]
+  },
+  {
+    "id": "ex-seggmzqn",
+    "version": 1,
+    "section": "access-patterns",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Quitanda question to the read that answers it in the lesson's table.",
+    "hint": "Count what each question is given.",
+    "pairs": [
+      {
+        "left": "A customer's profile",
+        "right": "`get-item` on `pk` and `sk = PROFILE`"
+      },
+      {
+        "left": "One order and its lines",
+        "right": "`query` with `begins_with` on the order's prefix"
+      },
+      {
+        "left": "A customer's orders in a date range",
+        "right": "`query` with `BETWEEN` two date prefixes"
+      },
+      {
+        "left": "Every order of one day, across customers",
+        "right": "a `scan`, until an index exists"
+      }
+    ]
+  },
+  {
+    "id": "ex-a07txg6d",
+    "version": 1,
+    "section": "access-patterns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The back office asks for \"the total sold per district this month\", recomputed whenever someone opens the report. What does writing it as an access pattern tell you?",
+    "hint": "Look at what the question is given and how much it touches.",
+    "choices": [
+      {
+        "text": "It needs a sort key on `district`",
+        "correct": false,
+        "why": "A sort key orders items inside one customer's collection; the question crosses every customer."
+      },
+      {
+        "text": "It is a `BETWEEN` on the order dates of every partition",
+        "correct": false,
+        "why": "A query reads one partition. Running one per customer is a scan with extra steps."
+      },
+      {
+        "text": "It aggregates across everything, which a store read by key serves badly; it belongs in the warehouse or the lake, fed from the table",
+        "correct": true,
+        "why": "Right. Writing the pattern down is how you find that DynamoDB is the wrong store for it."
+      },
+      {
+        "text": "Nothing: a filter expression makes it cheap",
+        "correct": false,
+        "why": "A filter is applied after the read, so the whole table is still read and paid for."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8f6hjy1",
+    "version": 1,
+    "section": "single-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why are the key attributes called `pk` and `sk` and not `customer_id` and `order_date`?",
+    "hint": "Look at what `sk` holds for a profile.",
+    "choices": [
+      {
+        "text": "Because DynamoDB forbids longer names for key attributes",
+        "correct": false,
+        "why": "Key attribute names can be long; the choice is about meaning."
+      },
+      {
+        "text": "Because each holds different kinds of value for different items, and a specific name would be false for some of them",
+        "correct": true,
+        "why": "Right. `sk` is `PROFILE` for one kind of item and an order or a line for the others."
+      },
+      {
+        "text": "Because `order_date` is a reserved word",
+        "correct": false,
+        "why": "`date` is reserved; `order_date` is not, and the reason is elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-x6ece1c9",
+    "version": 1,
+    "section": "single-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In c-17's collection, why does `PROFILE` come after every order?",
+    "hint": "Compare the first characters.",
+    "choices": [
+      {
+        "text": "Because it was written last by the seed program",
+        "correct": false,
+        "why": "It was written first, before the orders. The order in a collection is the sort key's, not the write order."
+      },
+      {
+        "text": "Because DynamoDB puts items without a date last",
+        "correct": false,
+        "why": "DynamoDB knows nothing about dates inside a string; it compares bytes."
+      },
+      {
+        "text": "Because `P` sorts after `O` in byte order",
+        "correct": true,
+        "why": "Right. Nothing about a profile makes it first; only its sort key could."
+      },
+      {
+        "text": "Because a profile has fewer attributes than an order",
+        "correct": false,
+        "why": "The number of attributes plays no part in ordering."
+      }
+    ]
+  },
+  {
+    "id": "ex-61082v45",
+    "version": 1,
+    "section": "single-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose order ids had no fixed width, so a customer could have both `o-1002` and `o-10021` on the same day. What would the query for one order's prefix, `begins_with(sk, ORDER#2026-10-05#o-1002)`, return?",
+    "hint": "Is one id the beginning of the other?",
+    "choices": [
+      {
+        "text": "Only `o-1002` and its lines, because the order id is matched whole",
+        "correct": false,
+        "why": "`begins_with` compares bytes, and it has no idea where the id ends."
+      },
+      {
+        "text": "Both orders and both sets of lines, since `o-10021` begins with `o-1002`",
+        "correct": true,
+        "why": "Right. That is why the seed starts at five digits, or why a separator after the id would be needed."
+      },
+      {
+        "text": "A `ValidationException`, because two items match a prefix",
+        "correct": false,
+        "why": "A query returns as many items as the condition covers; matching many is its normal job."
+      },
+      {
+        "text": "Nothing, because DynamoDB refuses two ids of different lengths on the same day",
+        "correct": false,
+        "why": "Nothing in DynamoDB stops that; the convention lives in the program that writes the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-kddtxcs7",
+    "version": 1,
+    "section": "three-reads",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can be a sort-key condition in a `query`? Choose every one that can.",
+    "hint": "Each allowed condition describes one contiguous run of the sorted collection.",
+    "choices": [
+      {
+        "text": "`begins_with(sk, :prefix)`",
+        "correct": true,
+        "why": "Yes: every key with a prefix sits together in byte order."
+      },
+      {
+        "text": "`sk BETWEEN :a AND :b`",
+        "correct": true,
+        "why": "Yes, including both ends."
+      },
+      {
+        "text": "`contains(sk, :word)`",
+        "correct": false,
+        "why": "The matches could be anywhere in the collection, so it is not a run; it exists only as a filter."
+      },
+      {
+        "text": "`sk > :a`",
+        "correct": true,
+        "why": "Yes: everything after a point is a run."
+      },
+      {
+        "text": "`sk = :a OR sk = :b`",
+        "correct": false,
+        "why": "Two separate points are two runs; a key condition has no `OR`."
+      }
+    ]
+  },
+  {
+    "id": "ex-m93yj6ve",
+    "version": 1,
+    "section": "three-reads",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's table, how many items does `query` return for `pk = CUSTOMER#c-19` and `sk BETWEEN ORDER#2026-10-10 AND ORDER#2026-10-12`?",
+    "hint": "List c-19's sort keys from the scan in \"Loading it\" and remember that the lines sort with their order.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3xvh4p81",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`query` on `begins_with(sk, ORDER#)` with `--no-scan-index-forward --limit 1` returned `ORDER#2026-10-12#o-10003#LINE#2`. Why not the order itself?",
+    "hint": "Read the collection backwards.",
+    "choices": [
+      {
+        "text": "Because the lines sort after their order, so reading backwards meets them first",
+        "correct": true,
+        "why": "Right. The query did what it was asked; the key did not fit the question."
+      },
+      {
+        "text": "Because `--limit` counts lines and not orders",
+        "correct": false,
+        "why": "`--limit` counts items, and DynamoDB has no idea which items are lines."
+      },
+      {
+        "text": "Because moto ignores `--no-scan-index-forward` and always reads in ascending order, so AWS would have answered with the order",
+        "correct": false,
+        "why": "Read ascending, the first item would have been the order of 3 October. The answer came from the end of the collection."
+      },
+      {
+        "text": "Because the order of 12 October was still pending",
+        "correct": false,
+        "why": "A query knows nothing about delivery; only the sort key decides the order."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqby9ar7",
+    "version": 1,
+    "section": "three-reads",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A scan with a filter on `#n = Gabi` returned `Count` 1 and `ScannedCount` 30. What did the filter save?",
+    "hint": "When is the filter applied?",
+    "choices": [
+      {
+        "text": "29 of the 30 reads, since only the match was read",
+        "correct": false,
+        "why": "`ScannedCount` 30 says all thirty were read."
+      },
+      {
+        "text": "Only network transfer; all thirty were read",
+        "correct": true,
+        "why": "Right. A filter decides what you get, not what you pay for."
+      },
+      {
+        "text": "Half the reads, because a scan with a filter is eventually consistent",
+        "correct": false,
+        "why": "Consistency changes the price of a read and has nothing to do with the filter; lesson 11 prices it."
+      }
+    ]
+  },
+  {
+    "id": "ex-chj4g8f2",
+    "version": 1,
+    "section": "conditional-writes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `put-item` names a key that already holds an item. What happens by default?",
+    "hint": "The profile written by hand in the first section is the example.",
+    "choices": [
+      {
+        "text": "The new attributes are merged into the old item, key by key",
+        "correct": false,
+        "why": "Merging is what `update-item` does. A put replaces the whole item."
+      },
+      {
+        "text": "It fails with a duplicate-key error, as an INSERT would",
+        "correct": false,
+        "why": "That is the SQL habit; DynamoDB only refuses when a condition says so."
+      },
+      {
+        "text": "The old item is replaced whole, silently",
+        "correct": true,
+        "why": "Right. Ana became Gabi without a message."
+      },
+      {
+        "text": "Both items are kept, as two versions of one key",
+        "correct": false,
+        "why": "DynamoDB keeps no versions of an item; that is S3 with versioning, in lesson 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-xezg85cn",
+    "version": 1,
+    "section": "conditional-writes",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A put that must not replace an existing item carries the condition `___(pk)`, which is true only when no item with that key exists.",
+    "hint": "The function name says \"this attribute is absent\".",
+    "blanks": [
+      {
+        "accept": [
+          "attribute_not_exists"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gxvcsjsj",
+    "version": 1,
+    "section": "conditional-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could `seed.py` not simply have been told to leave existing profiles alone?",
+    "hint": "Which API does `batch_writer` call?",
+    "choices": [
+      {
+        "text": "Because boto3 has no way to send a condition",
+        "correct": false,
+        "why": "boto3 sends conditions on `put_item`, `update_item` and transactions; the limit is the API the batch uses."
+      },
+      {
+        "text": "Because `BatchWriteItem` accepts only plain puts and deletes, with no condition",
+        "correct": true,
+        "why": "Right. Writes that must not overwrite go one by one with a condition, or in a transaction."
+      },
+      {
+        "text": "Because a condition costs a read unit for every item checked, which a batch of 25 cannot pay",
+        "correct": false,
+        "why": "A condition is charged as part of the write, not as a separate read, and the batch limit has another cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ksstrcp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A driver's phone sends \"deliver o-10009\" twice, the second time after a timeout. With the condition `attribute_exists(pending_since)` on the update, what is stored as `delivered_at`?",
+    "hint": "The first update removed something the condition checks.",
+    "choices": [
+      {
+        "text": "The time of the second request, which overwrote the first",
+        "correct": false,
+        "why": "The second update was refused, so it wrote nothing."
+      },
+      {
+        "text": "Both times, as a list",
+        "correct": false,
+        "why": "An update with `SET` writes one value, and the refused one writes none."
+      },
+      {
+        "text": "The first one's: the retry was refused and wrote nothing",
+        "correct": true,
+        "why": "Right. The condition turns a retried state change into a no-op."
+      },
+      {
+        "text": "Nothing, because a duplicate request cancels both",
+        "correct": false,
+        "why": "Nothing cancels the first; it was applied and answered before the second arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzfnb3th",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of designing a DynamoDB table in the order this lesson takes them.",
+    "hint": "The table is not the first step.",
+    "items": [
+      "Write down every question, with its inputs, order and size",
+      "Choose the partition key and sort key each question can name",
+      "Create the table with those two key attributes",
+      "Load items whose keys follow the convention",
+      "Read each pattern back with one get-item or query"
+    ]
+  },
+  {
+    "id": "ex-kxpm304b",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda wants \"a customer's three most recent orders, newest first\" in one query, without reading their lines. Which change to the keys makes that possible?",
+    "hint": "Lines sit between orders in the collection. Where else could they go?",
+    "choices": [
+      {
+        "text": "Add `--limit 3` and a filter that drops lines",
+        "correct": false,
+        "why": "The limit counts items before the filter, so three items read could be one order and two lines, and one order would come back."
+      },
+      {
+        "text": "Store the lines under a sort-key prefix of their own, such as `LINE#2026-10-12#o-10003#1`, so that `ORDER#` covers only orders",
+        "correct": true,
+        "why": "Right, at a price: one order and its lines are now two runs, so pattern A3 needs two queries. A design trades one pattern against another."
+      },
+      {
+        "text": "Make `order_day` the partition key",
+        "correct": false,
+        "why": "Then a customer's orders are spread over every day's partition, and the question cannot name one."
+      },
+      {
+        "text": "Use a number for the sort key",
+        "correct": false,
+        "why": "A number would sort by value, but the lines would still sit among the orders."
+      }
+    ]
+  }
+]

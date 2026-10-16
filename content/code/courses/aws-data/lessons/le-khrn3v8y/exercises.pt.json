@@ -1,0 +1,395 @@
+{
+  "ex-7t5s5ktv": {
+    "prompt": "Por que um leitor precisa ler toda linha de um arquivo CSV para tirar uma coluna dele?",
+    "hint": "Onde começa o quinto campo da próxima linha?",
+    "choices": [
+      {
+        "text": "Arquivos CSV estão sempre comprimidos, e texto comprimido é lido inteiro",
+        "why": "O CSV da camada raw é texto puro, e mesmo assim foi lido inteiro."
+      },
+      {
+        "text": "Nada no arquivo diz onde um campo começa",
+        "why": "Isso. As linhas são gravadas uma depois da outra, então uma coluna só é achada lendo-as."
+      },
+      {
+        "text": "O S3 só devolve objetos inteiros ao Athena",
+        "why": "O S3 serve trechos de um objeto; as leituras de Parquet são trechos."
+      },
+      {
+        "text": "O cabeçalho dele fica no fim do arquivo",
+        "why": "O cabeçalho é a primeira linha, e nomeia colunas sem dizer onde estão."
+      }
+    ]
+  },
+  "ex-hxwgj24p": {
+    "prompt": "Parquet sem compressão nenhuma ocupou 24.667.617 bytes, contra os 40.641.097 do CSV, para os mesmos pedidos. De onde vem essa diferença?",
+    "hint": "Como um número é escrito em cada um?",
+    "choices": [
+      {
+        "text": "O Parquet deixou de fora as colunas que ninguém consulta",
+        "why": "Toda coluna está lá; os mesmos totais saíram dele."
+      },
+      {
+        "text": "Números guardados como números, e palavras repetidas como um dicionário",
+        "why": "Isso: quatro formas de pagamento guardadas uma vez cada, com um código pequeno por linha."
+      },
+      {
+        "text": "O PyArrow o comprimiu mesmo assim, com o codec padrão, apesar da configuração",
+        "why": "O arranjo pediu `none`, e o Snappy o levou mais abaixo, a 12.703.975."
+      },
+      {
+        "text": "Os 96 arquivos pequenos de cada dia dividem um rodapé",
+        "why": "Esse arranjo é outro, e cada arquivo dele tem rodapé próprio."
+      }
+    ]
+  },
+  "ex-keq4x02d": {
+    "prompt": "Ligue cada parte de um arquivo colunar ao que ela é.",
+    "hint": "O ORC usa outros nomes para as mesmas coisas.",
+    "pairs": [
+      {
+        "left": "Grupo de linhas",
+        "right": "Um bloco de linhas; o ORC o chama de stripe"
+      },
+      {
+        "left": "Column chunk",
+        "right": "Uma coluna dentro de um grupo, comprimida sozinha"
+      },
+      {
+        "left": "Rodapé",
+        "right": "Onde começa cada bloco e que valores ele guarda"
+      },
+      {
+        "left": "Codificação por dicionário",
+        "right": "Cada palavra repetida guardada uma vez, com um código por linha"
+      }
+    ],
+    "right_distractors": [
+      "Uma cópia das linhas como texto, para as pessoas lerem"
+    ]
+  },
+  "ex-e8hgf6t5": {
+    "prompt": "O ORC com zstd saiu menor que o Parquet com zstd. O que um lago deve tirar disso?",
+    "hint": "Qual decisão importou mais?",
+    "choices": [
+      {
+        "text": "Mudar o lago inteiro para ORC, já que o ORC é sempre o menor dos dois formatos",
+        "why": "É uma comparação com um conjunto de dados; o próximo pode ir para o outro lado."
+      },
+      {
+        "text": "Manter os dois, para cada motor ler o que prefere",
+        "why": "Duas cópias da camada curated é o dobro do armazenamento e dois jobs para manter em dia."
+      },
+      {
+        "text": "Pouco: os dois são bons, e a decisão que contou foi colunas em vez de linhas",
+        "why": "Isso. Escolha o que suas ferramentas usam por padrão e fique com ele."
+      },
+      {
+        "text": "O ORC é menor porque descarta o rodapé",
+        "why": "O ORC também tem rodapé e estatísticas de stripe; o leitor buscou o fim dele em cinco requisições."
+      }
+    ]
+  },
+  "ex-r9j3ejm0": {
+    "prompt": "O CSV com gzip leu 8.421.323 bytes, todos eles, para uma pergunta sobre duas colunas. Por que todos?",
+    "hint": "O que a compressão mudou, e o que não mudou?",
+    "choices": [
+      {
+        "text": "A compressão encolheu a leitura sem torná-la seletiva",
+        "why": "Isso: ainda toda coluna de toda linha, só com menos bytes para buscar."
+      },
+      {
+        "text": "O Athena cobra arquivos gzip pelo tamanho descomprimido",
+        "why": "O Athena cobra os bytes lidos do S3, que são os comprimidos."
+      },
+      {
+        "text": "O ask.py não consegue ler uma coluna de um arquivo gzip",
+        "why": "Nenhum leitor consegue: é o formato, não o programa, que não tem colunas."
+      },
+      {
+        "text": "Os arquivos eram pequenos demais para o leitor pular alguma parte",
+        "why": "Um CSV de 40 MB também foi lido inteiro; o tamanho não era o motivo."
+      }
+    ]
+  },
+  "ex-7t1kbhtz": {
+    "prompt": "Uma origem manda uma única exportação de 10 GB por noite, comprimida com gzip. Por que isso deixa um job Spark lento, seja qual for o número de workers?",
+    "hint": "Onde a descompressão precisa começar?",
+    "choices": [
+      {
+        "text": "O gzip é o codec mais lento de descomprimir",
+        "why": "Não é a velocidade; dez workers dividiriam um codec lento se pudessem."
+      },
+      {
+        "text": "O S3 limita um objeto gzip a um leitor por vez",
+        "why": "O S3 atende quantos leitores forem; é o formato que impede dividir."
+      },
+      {
+        "text": "Os workers não conseguem ler CSV, só Parquet",
+        "why": "O Spark lê CSV; o script da lição 17 leu a camada raw."
+      },
+      {
+        "text": "Um arquivo gzip não pode ser dividido, então um worker lê tudo",
+        "why": "Isso: a descompressão começa do início, então os outros esperam."
+      }
+    ]
+  },
+  "ex-0e9vgwnk": {
+    "prompt": "O zstd levou os arquivos Parquet de 24.667.617 bytes para 7.433.857, mas a leitura da pergunta de pagamentos só de 6.481.669 para 4.280.951. Por que a leitura encolheu menos?",
+    "hint": "Quais colunas guardam a maior parte do que a compressão tira?",
+    "choices": [
+      {
+        "text": "O zstd comprime menos nas leituras seguintes de um mesmo arquivo grande",
+        "why": "Um arquivo é comprimido uma vez, na gravação; leituras não o mudam."
+      },
+      {
+        "text": "As colunas dela já eram pequenas; a economia estava em outras",
+        "why": "Isso: `order_id` e `customer_id` foram os que mais encolheram, e a pergunta não toca nenhum."
+      },
+      {
+        "text": "Os rodapés não são comprimidos, e são a maior parte do que se lê",
+        "why": "Os rodapés são uma parte pequena dos dois números; as colunas são a diferença."
+      },
+      {
+        "text": "O DuckDB descomprime antes de contar",
+        "why": "A contagem é de bytes lidos do S3, comprimidos."
+      }
+    ]
+  },
+  "ex-c8px1vvg": {
+    "prompt": "Um arquivo comprimido com ___ não pode ser dividido: descomprimi-lo começa pelo primeiro byte, então um leitor pega o arquivo inteiro.",
+    "hint": "É o codec que o CSV raw recebeu.",
+    "blanks": [
+      {
+        "accept": [
+          "gzip",
+          "gz"
+        ]
+      }
+    ]
+  },
+  "ex-73np1msb": {
+    "prompt": "O mês em CSV tem 40.641.097 bytes e o mês em Parquet com zstd tem 7.433.857. Quantas vezes menor é o Parquet, arredondando para o inteiro mais próximo?",
+    "hint": "Divida um pelo outro."
+  },
+  "ex-hcv0q1vp": {
+    "prompt": "O que permite a um leitor pular um grupo de linhas sem lê-lo?",
+    "hint": "Está no rodapé.",
+    "choices": [
+      {
+        "text": "Um índice de todo valor, guardado no catálogo",
+        "why": "O catálogo conhece partições, não valores."
+      },
+      {
+        "text": "O menor e o maior valor de cada column chunk",
+        "why": "Isso: um grupo cuja maior hora é 20 não pode casar com `hour >= 21`."
+      },
+      {
+        "text": "A contagem de linhas de cada grupo",
+        "why": "Uma contagem diz quantas linhas, não quais valores."
+      },
+      {
+        "text": "A chave de partição no nome do objeto",
+        "why": "Isso pula arquivos inteiros; os grupos ficam dentro de um arquivo."
+      }
+    ]
+  },
+  "ex-51peedqz": {
+    "prompt": "Os grupos embaralhados leram 7.261.486 bytes para a pergunta do fim da noite, mais que os 4.914.494 de um grupo por dia. Por que pior do que não ter grupos pequenos?",
+    "hint": "O que eles pularam, e o que acrescentaram?",
+    "choices": [
+      {
+        "text": "Embaralhar quebrou as estatísticas, que então são ignoradas",
+        "why": "As estatísticas estão certas, de 7 a 23 em todo grupo; só não excluem nada."
+      },
+      {
+        "text": "Não pularam nada e pagaram rodapés mais longos e compressão pior",
+        "why": "Isso: todo grupo cobre o dia inteiro, e uma mistura comprime pior que sequências."
+      },
+      {
+        "text": "Um arquivo embaralhado é reordenado antes da leitura",
+        "why": "Nada é ordenado na hora da leitura."
+      },
+      {
+        "text": "O arranjo embaralhado tem mais linhas",
+        "why": "As mesmas linhas, em outra ordem."
+      }
+    ]
+  },
+  "ex-91nmzg88": {
+    "prompt": "O arranjo `groups` está ordenado por hora. Uma consulta filtra por `customer_id = 'c-17'`. Quantos dos doze grupos de um dia as estatísticas conseguem pular?",
+    "hint": "Que faixa de clientes cada grupo cobre?",
+    "choices": [
+      {
+        "text": "Onze, já que um cliente faz os pedidos dele numa hora certa do dia",
+        "why": "Os clientes pedem a qualquer hora, e os grupos são cortados por hora, não por cliente."
+      },
+      {
+        "text": "A maioria deles, já que `c-17` fica bem perto do começo do alfabeto",
+        "why": "A faixa de ids de todo grupo começa perto de `c-1`, então `c-17` cai dentro de todas."
+      },
+      {
+        "text": "Quase nenhum: todo grupo abrange quase todos os ids de cliente",
+        "why": "Isso. As estatísticas ajudam a coluna pela qual as linhas estão ordenadas, e estas estão por hora."
+      },
+      {
+        "text": "Os doze, porque a chave de partição é `dt`",
+        "why": "A partição pula outros dias; dentro do dia, nada em `dt` ajuda."
+      }
+    ]
+  },
+  "ex-gddfe7v8": {
+    "prompt": "No arquivo ordenado de 15 de outubro, quantos dos doze grupos de linhas têm a maior hora igual ou acima de 21, e por isso precisam ser lidos para `hour >= 21`?",
+    "hint": "Leia a coluna da direita do `footer.py`."
+  },
+  "ex-xg93zf3d": {
+    "prompt": "Onde deve acontecer a ordenação que torna úteis as estatísticas dos grupos de linhas?",
+    "hint": "Não custa nada na hora da consulta.",
+    "choices": [
+      {
+        "text": "Em cada consulta, com um `ORDER BY` na coluna filtrada",
+        "why": "O `ORDER BY` de uma consulta ordena a resposta, depois que a leitura terminou."
+      },
+      {
+        "text": "No S3, que guarda os objetos em ordem de chave",
+        "why": "O S3 ordena chaves, não as linhas dentro de um objeto."
+      },
+      {
+        "text": "No catálogo, como propriedade da tabela",
+        "why": "Uma propriedade descreve; não rearranja linha nenhuma."
+      },
+      {
+        "text": "No job que grava o arquivo",
+        "why": "Isso: ordenado uma vez na gravação, pulado em toda leitura depois."
+      }
+    ]
+  },
+  "ex-w3q1szqy": {
+    "prompt": "Por que `customer_id` é uma chave de partição ruim para os pedidos da Quitanda, embora uma pergunta sobre um cliente abrisse um único prefixo?",
+    "hint": "Conte os arquivos que um mês deixaria.",
+    "choices": [
+      {
+        "text": "39.979 arquivos minúsculos, e quase toda pergunta abre todos",
+        "why": "Isso: 318 bytes de dados por arquivo, menos que um rodapé."
+      },
+      {
+        "text": "Uma chave de partição não pode ser uma string",
+        "why": "`dt` é uma string."
+      },
+      {
+        "text": "O catálogo recusa uma tabela que tenha mais de 10.000 partições",
+        "why": "Esse não é o limite que importa; o milhão grátis está cem vezes mais longe."
+      },
+      {
+        "text": "Os ids de cliente mudam sempre que um cliente se muda para outro endereço",
+        "why": "Um id opaco não muda com o endereço."
+      }
+    ]
+  },
+  "ex-ptt5ksq3": {
+    "prompt": "No arranjo de arquivos pequenos a pergunta do mês leu 27.000.299 bytes, mais que os 22.068.273 que o arranjo guarda. Como uma leitura pode passar dos arquivos?",
+    "hint": "Quanto o PyArrow busca para achar um rodapé?",
+    "choices": [
+      {
+        "text": "O moto serviu cada arquivo duas vezes por engano",
+        "why": "O moto serviu o que foi pedido; o leitor pediu duas vezes."
+      },
+      {
+        "text": "Cada arquivo tem menos de 64 KiB, então veio inteiro, e as colunas vieram de novo",
+        "why": "Isso: um custo por arquivo maior que os dados que ele embrulha."
+      },
+      {
+        "text": "A listagem das 2.976 chaves conta como bytes lidos, por cima dos arquivos",
+        "why": "O contador começa depois da listagem; só leituras são contadas."
+      },
+      {
+        "text": "Os 96 arquivos de cada dia se sobrepõem, e assim alguns pedidos ficam guardados em dobro",
+        "why": "As fatias não se sobrepõem; saíram as mesmas quatro linhas."
+      }
+    ]
+  },
+  "ex-s9t9gejc": {
+    "prompt": "Três anos são 1.096 dias. Guardados como 96 arquivos por dia, lidos com duas requisições GET por arquivo, quantas requisições faz uma pergunta sobre tudo isso?",
+    "hint": "Dias vezes arquivos vezes dois."
+  },
+  "ex-y0j8ajjv": {
+    "prompt": "Quais destes ajudam contra arquivos pequenos? Marque todos os que se aplicam.",
+    "hint": "Menos arquivos, e maiores.",
+    "choices": [
+      {
+        "text": "Um job de compactação que reescreve cada dia fechado em poucos arquivos grandes",
+        "why": "Sim."
+      },
+      {
+        "text": "Uma chave de partição mais grossa, `dt` em vez de `customer_id`",
+        "why": "Sim."
+      },
+      {
+        "text": "Um gravador que grava um arquivo por dia, como o `etl.py` faz",
+        "why": "Sim."
+      },
+      {
+        "text": "Um corte por consulta no workgroup",
+        "why": "Ele para uma consulta; os arquivos continuam pequenos."
+      },
+      {
+        "text": "Grupos de linhas menores dentro de cada arquivo",
+        "why": "Isso corta os arquivos em mais pedaços, não menos."
+      }
+    ]
+  },
+  "ex-gdjmxrtd": {
+    "prompt": "Que arranjo as medidas recomendam para os pedidos curated da Quitanda?",
+    "hint": "As duas decisões, juntas.",
+    "choices": [
+      {
+        "text": "ORC particionado por `customer_id`, os menores arquivos",
+        "why": "Arquivos pequenos são o problema, não o objetivo."
+      },
+      {
+        "text": "CSV com gzip por `dt`, que todo mundo consegue abrir",
+        "why": "Ele lê toda coluna; isso pertence à camada raw."
+      },
+      {
+        "text": "Parquet por `dt` e `hour`, gravado como 96 arquivos por dia",
+        "why": "Essa é a linha dos arquivos pequenos da tabela."
+      },
+      {
+        "text": "Parquet por `dt`, um arquivo por dia, ordenado por hora",
+        "why": "Isso, com zstd ou Snappy."
+      }
+    ]
+  },
+  "ex-vrgnt9g4": {
+    "prompt": "Ponha estes arranjos em ordem dos bytes que a pergunta do mês leu deles, do maior para o menor.",
+    "hint": "Um arranjo colunar leu mais que o CSV com gzip.",
+    "items": [
+      "CSV puro",
+      "Parquet em 96 arquivos por dia",
+      "CSV comprimido com gzip",
+      "ORC com zstd"
+    ]
+  },
+  "ex-6yc07a2j": {
+    "prompt": "Um stream grava os cliques do app da Quitanda em prefixos `dt=`, um arquivo pequeno por minuto, e os analistas os consultam por dia. Qual é a primeira correção?",
+    "hint": "1.440 arquivos por dia.",
+    "choices": [
+      {
+        "text": "Particionar por minuto também, para que uma consulta abra menos arquivos",
+        "why": "Um dia continuaria sendo 1.440 arquivos, em 1.440 prefixos."
+      },
+      {
+        "text": "Um job que compacta cada dia fechado em poucos arquivos Parquet grandes",
+        "why": "Isso: as consultas abrem poucos arquivos por dia em vez de 1.440."
+      },
+      {
+        "text": "Subir o corte do workgroup para as consultas pararem de falhar",
+        "why": "Elas são lentas e caras, não cortadas; os arquivos continuam pequenos."
+      },
+      {
+        "text": "Gravar os cliques como CSV, para que todo arquivo pequeno possa ser lido inteiro",
+        "why": "Arquivos pequenos já são lidos inteiros; CSV tira o que as colunas economizavam."
+      }
+    ]
+  }
+}

@@ -1,0 +1,391 @@
+{
+  "ex-6xpn8k6m": {
+    "prompt": "Os relatórios da Quitanda deixam o banco de pedidos lento, e alguém propõe ligar o Multi-AZ. O que isso muda para os relatórios?",
+    "hint": "Dá para consultar o standby?",
+    "choices": [
+      {
+        "text": "Nada: o standby não aceita conexões",
+        "why": "Isso. O Multi-AZ é um seguro contra falha, e os commits ficam um pouco mais lentos, não mais rápidos."
+      },
+      {
+        "text": "Eles ficam mais rápidos, porque as leituras são divididas entre as duas zonas",
+        "why": "Toda leitura continua indo para o primário; o standby só recebe escritas."
+      },
+      {
+        "text": "Eles vão para o standby automaticamente, deixando o primário para a loja",
+        "why": "Nada é mandado para o standby até um failover torná-lo primário."
+      },
+      {
+        "text": "Eles leem dados alguns segundos velhos",
+        "why": "Isso descreve uma réplica de leitura, que é assíncrona e legível."
+      }
+    ]
+  },
+  "ex-0h36z9eh": {
+    "prompt": "Depois de um failover Multi-AZ, o que a aplicação da Quitanda precisa fazer para alcançar o banco de novo?",
+    "hint": "O endereço da instância é um nome DNS.",
+    "choices": [
+      {
+        "text": "Trocar a configuração para o endpoint próprio do standby",
+        "why": "O standby não tem endpoint próprio; o nome da instância é que passa para ele."
+      },
+      {
+        "text": "Reconectar ao mesmo nome, que agora aponta para o standby",
+        "why": "Isso. É por isso que um cliente não pode guardar a resposta do DNS para sempre."
+      },
+      {
+        "text": "Esperar o primário antigo ser consertado, já que o RDS volta sozinho para ele",
+        "why": "O standby vira o primário e um novo standby é construído; nada espera a máquina antiga."
+      },
+      {
+        "text": "Nada: as conexões abertas passam junto com os dados",
+        "why": "Toda conexão aberta cai, e as transações em andamento são desfeitas."
+      }
+    ]
+  },
+  "ex-d4r6ycdh": {
+    "prompt": "No moto, `reboot-db-instance --force-failover` dá certo e a instância continua em `sa-east-1a`. O que dá para concluir sobre o failover da sua aplicação?",
+    "hint": "O que o moto construiu quando `--multi-az` foi passado?",
+    "choices": [
+      {
+        "text": "Que ela se reconecta dentro dos 60 a 120 segundos documentados",
+        "why": "Nada passou por failover, então nada sobre reconectar foi medido."
+      },
+      {
+        "text": "Que o moto fez failover e voltou dentro da chamada",
+        "why": "Não há standby no moto: `SecondaryAvailabilityZone` é `None`."
+      },
+      {
+        "text": "Que o failover está desligado nesta instância e precisa ser ligado",
+        "why": "A instância é `MultiAZ: True`; o moto só não modela standby nenhum."
+      },
+      {
+        "text": "Nada; só um ensaio numa conta de verdade mede isso",
+        "why": "Isso. O moto aceitou a requisição e não simulou nada do que ela pede."
+      }
+    ]
+  },
+  "ex-qabk2qdv": {
+    "prompt": "Uma PostgreSQL `db.m7g.large` custa 0,442 USD por hora em Multi-AZ e o gp3 0,438 por GB-mês em Multi-AZ. Quanto custa uma instância Multi-AZ com 50 GiB num mês de 730 horas? Dê em USD com duas casas decimais.",
+    "hint": "730 × 0,442, mais 50 × 0,438."
+  },
+  "ex-0k1gw6w3": {
+    "prompt": "O que um Multi-AZ DB cluster dá à Quitanda que uma instância Multi-AZ não dá?",
+    "hint": "Conte as cópias, e pergunte o que cada uma faz enquanto espera.",
+    "choices": [
+      {
+        "text": "Duas cópias que respondem leituras, e um failover documentado mais rápido",
+        "why": "Isso. Dois readers atrás de um reader endpoint, e um failover que a AWS documenta como costumando levar menos de 35 segundos."
+      },
+      {
+        "text": "Escritas nas três instâncias ao mesmo tempo",
+        "why": "Há um writer; os readers recebem as escritas dele."
+      },
+      {
+        "text": "Suporte a todo engine do RDS, Oracle e SQL Server inclusive",
+        "why": "O cluster é só para PostgreSQL e MySQL."
+      },
+      {
+        "text": "Proteção contra um `DELETE` sem `WHERE`",
+        "why": "Toda cópia recebe a exclusão; só um backup desfaz um erro."
+      }
+    ]
+  },
+  "ex-b8z6cfh6": {
+    "prompt": "Num Multi-AZ DB cluster um commit espera um dos dois readers, não os dois. O que isso compra, e o que custa?",
+    "hint": "Pense no reader mais lento.",
+    "choices": [
+      {
+        "text": "Não compra nada; os dois readers são sempre idênticos",
+        "why": "O reader que não confirmou pode estar um instante atrás."
+      },
+      {
+        "text": "Um reader lento não segura os commits, e uma leitura pelo reader endpoint pode vir um pouco velha",
+        "why": "Isso. O reader que confirmou tem tudo, o que mantém o failover seguro."
+      },
+      {
+        "text": "Os commits ficam assíncronos, e o cluster pode perder transações no failover",
+        "why": "Um reader sempre tem toda transação confirmada, e é para ele que o failover vai."
+      },
+      {
+        "text": "As escritas vão para o reader que responder primeiro",
+        "why": "As escritas vão para o writer; os readers só confirmam."
+      }
+    ]
+  },
+  "ex-bzgbhyyc": {
+    "prompt": "Alguém roda `DELETE FROM orders` sem `WHERE` no primário. O que a réplica de leitura tem um instante depois?",
+    "hint": "Uma réplica reaplica o que o primário confirma.",
+    "choices": [
+      {
+        "text": "As linhas, já que réplicas ignoram exclusões",
+        "why": "Uma réplica reaplica toda mudança, exclusões inclusive."
+      },
+      {
+        "text": "As linhas, até alguém promovê-la",
+        "why": "A promoção para a replicação futura; a exclusão já chegou."
+      },
+      {
+        "text": "Nenhuma: ela reaplicou a exclusão",
+        "why": "Isso. Uma réplica não é backup; quem desfaz isso é a recuperação para um ponto no tempo."
+      },
+      {
+        "text": "As linhas, porque ela está um dia atrás",
+        "why": "O atraso de uma réplica é de segundos, não de um dia, e não é margem de segurança."
+      }
+    ]
+  },
+  "ex-xqy1knrp": {
+    "prompt": "Um cliente faz um pedido e a página de confirmação, que lê de uma réplica, diz \"nenhum pedido ainda\". Qual é a correção que a lição dá?",
+    "hint": "Quais leituras podem estar um instante velhas?",
+    "choices": [
+      {
+        "text": "Criar mais réplicas, para alguma estar em dia",
+        "why": "Toda réplica é assíncrona; mais delas não acabam com o atraso."
+      },
+      {
+        "text": "Ler do primário logo após uma escrita",
+        "why": "Isso. Relatórios podem estar segundos atrás; um cliente lendo a própria escrita não pode."
+      },
+      {
+        "text": "Tornar a réplica síncrona com `--multi-az`",
+        "why": "Essa flag cria um standby que não pode ser lido; a réplica continua assíncrona."
+      },
+      {
+        "text": "Dar à réplica uma classe maior que a do primário",
+        "why": "Uma réplica maior acompanha melhor, e ainda fica atrás pelo tempo que a mudança leva para chegar."
+      }
+    ]
+  },
+  "ex-ec28qc16": {
+    "prompt": "O que promover uma réplica de leitura faz, na AWS?",
+    "hint": "Dá para desfazer?",
+    "choices": [
+      {
+        "text": "Troca os papéis, e o primário antigo passa a ser a réplica de leitura do novo",
+        "why": "O primário antigo não aprende a seguir nada; o vínculo é simplesmente cortado."
+      },
+      {
+        "text": "Torna a réplica síncrona até ela ser rebaixada",
+        "why": "Não existe rebaixamento; a promoção só vai num sentido."
+      },
+      {
+        "text": "Corta o vínculo e cria uma instância independente que aceita escritas",
+        "why": "Isso, e não tem volta. O moto aceitou e manteve o vínculo nos registros dele."
+      },
+      {
+        "text": "Passa o endpoint do primário para a réplica",
+        "why": "A instância promovida fica com o endpoint dela; mover nomes é o que o failover Multi-AZ faz."
+      }
+    ]
+  },
+  "ex-nrwvmsjj": {
+    "prompt": "Uma réplica em us-east-1 recebe o write-ahead log do primário de São Paulo, 500 GB num mês, a 0,138 USD por GB. Quanto custa a transferência naquele mês? Dê em USD com duas casas decimais.",
+    "hint": "Gigabytes vezes o preço por gigabyte."
+  },
+  "ex-wgg2thnr": {
+    "prompt": "No moto, uma réplica foi criada de uma instância com `--backup-retention-period 0`. Por que a AWS recusaria a mesma requisição?",
+    "hint": "A partir do que uma réplica é construída?",
+    "choices": [
+      {
+        "text": "Réplicas precisam de uma origem Multi-AZ",
+        "why": "Uma instância Single-AZ pode ter réplicas; ela precisa de backups ligados."
+      },
+      {
+        "text": "Réplicas partem de um backup",
+        "why": "Isso. Retenção de pelo menos um dia é a condição da AWS, e o moto não a confere."
+      },
+      {
+        "text": "Retenção 0 deixa a instância somente leitura",
+        "why": "A retenção decide os backups, não se a instância aceita escrita."
+      },
+      {
+        "text": "Uma `db.t4g.micro` é pequena demais para ter réplicas",
+        "why": "A recusa é por causa dos backups, não da classe."
+      }
+    ]
+  },
+  "ex-0n91wdy1": {
+    "prompt": "A Quitanda restaura o banco de pedidos para as 14:32 de terça. Onde estão os dados restaurados?",
+    "hint": "Uma restauração rebobina a instância?",
+    "choices": [
+      {
+        "text": "Em `quitanda-orders`, rebobinada para as 14:32",
+        "why": "A original fica exatamente como estava, com o erro."
+      },
+      {
+        "text": "Num snapshot que precisa ser restaurado de novo",
+        "why": "A restauração já produziu uma instância; não há segundo passo para um snapshot."
+      },
+      {
+        "text": "Numa réplica de leitura da original",
+        "why": "Uma instância restaurada não segue nada; ela é independente."
+      },
+      {
+        "text": "Numa instância nova, em endpoint novo",
+        "why": "Isso. Depois alguém copia linhas de volta ou aponta a aplicação para ela."
+      }
+    ]
+  },
+  "ex-vnpnnw7w": {
+    "prompt": "Uma instância guarda 7 dias de backups automáticos. Qual restauração a AWS consegue fazer?",
+    "hint": "Entre o primeiro horário restaurável e o `LatestRestorableTime`.",
+    "choices": [
+      {
+        "text": "Para três dias atrás às 14:32:10, no segundo",
+        "why": "Isso. O snapshot do dia mais o log reaplicado até aquele segundo."
+      },
+      {
+        "text": "Para dez dias atrás, a partir do snapshot mais antigo",
+        "why": "Dez dias está fora de uma janela de sete; o moto aceitou uma restauração assim e a AWS a recusa."
+      },
+      {
+        "text": "Para o segundo atual, incluindo as escritas do último minuto",
+        "why": "O último horário restaurável fica cerca de cinco minutos atrás, até o log chegar ao S3."
+      },
+      {
+        "text": "Só para o momento de um snapshot diário",
+        "why": "O log entre os snapshots é o que torna qualquer segundo restaurável."
+      }
+    ]
+  },
+  "ex-zf0efnyz": {
+    "prompt": "Uma instância restaurada sobe e os servidores da aplicação não conseguem se conectar a ela. Pelo que a lição diz que a AWS documenta, qual é a causa provável?",
+    "hint": "O que o comando de restauração não indicou?",
+    "choices": [
+      {
+        "text": "Uma restauração sempre leva um dia até aceitar conexões",
+        "why": "Ela leva tempo para ser construída, e depois fica `available` como qualquer instância."
+      },
+      {
+        "text": "Ela subiu com o security group padrão, que não deixa os servidores entrarem",
+        "why": "Isso. Indique o security group e o parameter group no comando de restauração."
+      },
+      {
+        "text": "A senha mestre foi trocada pela restauração",
+        "why": "Os dados, usuários inclusive, estão como eram no ponto restaurado."
+      },
+      {
+        "text": "Os servidores ainda usam o endpoint antigo, que agora os recusa",
+        "why": "O endpoint antigo continua funcionando e continua servindo a instância original."
+      }
+    ]
+  },
+  "ex-vt517592": {
+    "prompt": "Entre os snapshots diários, o RDS copia o ___ de transações do engine para o S3 a cada cinco minutos.",
+    "hint": "É o que é reaplicado numa restauração.",
+    "blanks": [
+      {
+        "accept": [
+          "log",
+          "logs"
+        ]
+      }
+    ]
+  },
+  "ex-wpgc4p37": {
+    "prompt": "A Quitanda apaga uma instância que tinha backups automáticos e um snapshot manual. O que sobra depois, pelo padrão da AWS?",
+    "hint": "Qual dos dois pertence à instância e qual à conta?",
+    "choices": [
+      {
+        "text": "Os dois, até o período de retenção expirar",
+        "why": "Os backups automáticos vão junto com a instância, a menos que você peça para mantê-los."
+      },
+      {
+        "text": "Só o snapshot manual",
+        "why": "Isso. Ele pertence à conta e fica até alguém apagá-lo."
+      },
+      {
+        "text": "Só os backups automáticos",
+        "why": "É o contrário: os snapshots manuais sobrevivem à instância."
+      },
+      {
+        "text": "Nada: uma instância apagada leva todos os backups",
+        "why": "Snapshots manuais nunca são apagados com a instância."
+      }
+    ]
+  },
+  "ex-y2apdbx0": {
+    "prompt": "Por que guardar um snapshot manual antes de uma migração se a recuperação para um ponto no tempo já cobre os últimos sete dias?",
+    "hint": "O que acontece com o ponto no tempo depois de sete dias?",
+    "choices": [
+      {
+        "text": "Ele fica guardado depois que a janela anda, até alguém apagá-lo",
+        "why": "Isso. E sobrevive à exclusão da instância."
+      },
+      {
+        "text": "Um snapshot restaura mais rápido, porque é reaplicado até o segundo",
+        "why": "Um snapshot não tem log ao lado; é um momento e nada depois."
+      },
+      {
+        "text": "Um snapshot manual é gratuito, e os backups automáticos são cobrados",
+        "why": "Os dois são cobrados pelo preço de backup além da franquia."
+      },
+      {
+        "text": "Backups automáticos não podem ser restaurados numa instância nova",
+        "why": "Uma restauração para um ponto no tempo faz exatamente isso."
+      }
+    ]
+  },
+  "ex-3t1t3aph": {
+    "prompt": "Ligue cada problema à cópia que o resolve.",
+    "hint": "Um é sobre uma máquina, um sobre leituras, um sobre um erro, um sobre anos.",
+    "pairs": [
+      {
+        "left": "Uma zona fica sem energia",
+        "right": "Um standby Multi-AZ"
+      },
+      {
+        "left": "Os relatórios da manhã deixam a loja lenta",
+        "right": "Uma réplica de leitura"
+      },
+      {
+        "left": "Um `DELETE` sem `WHERE` às 14:32",
+        "right": "Uma restauração para um ponto no tempo"
+      },
+      {
+        "left": "O banco precisa ser guardado por cinco anos",
+        "right": "Um snapshot manual"
+      }
+    ],
+    "right_distractors": [
+      "Uma classe de instância maior"
+    ]
+  },
+  "ex-ktzj0yea": {
+    "prompt": "Ponha em ordem os passos para se recuperar de um `DELETE` sem `WHERE`, mantendo as escritas feitas desde então.",
+    "hint": "A instância original continua rodando o tempo todo.",
+    "items": [
+      "Descobrir o horário do erro",
+      "Restaurar para um ponto logo antes dele, indicando o security group e o parameter group",
+      "Consultar a instância restaurada atrás das linhas apagadas",
+      "Inseri-las na original, e depois apagar a instância restaurada"
+    ]
+  },
+  "ex-f9xykbgf": {
+    "prompt": "Quais destas coisas o moto aceitou nesta lição que a AWS recusaria? Marque todas as que se aplicam.",
+    "hint": "Quatro números e condições que o moto poderia ter conferido.",
+    "choices": [
+      {
+        "text": "Uma retenção de backup de 36 dias",
+        "why": "Sim; o máximo da AWS é 35."
+      },
+      {
+        "text": "Uma restauração para um horário anterior à existência da instância",
+        "why": "Sim; a AWS só restaura dentro da janela."
+      },
+      {
+        "text": "Uma réplica de uma instância com backups desligados",
+        "why": "Sim; a AWS exige pelo menos um dia de retenção."
+      },
+      {
+        "text": "Um snapshot manual de uma instância em execução",
+        "why": "Isso também é normal na AWS."
+      },
+      {
+        "text": "Uma exclusão com `--skip-final-snapshot`",
+        "why": "A AWS aceita quando dito em voz alta; o que ela recusa é uma exclusão sem nenhuma das duas flags."
+      }
+    ]
+  }
+}

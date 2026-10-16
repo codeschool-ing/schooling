@@ -1,0 +1,436 @@
+{
+  "ex-0xqckge8": {
+    "prompt": "A Quitanda quer os pedidos fechados do ano passado no lake, uma vez. Ninguém escreve mais nessas linhas. Que tipo de migração serve?",
+    "hint": "Há algo a acompanhar depois da cópia?",
+    "choices": [
+      {
+        "text": "`full-load-and-cdc`, por segurança",
+        "why": "O CDC seguiria depois da cópia esperando mudanças que nunca vêm, numa instância cobrada por hora."
+      },
+      {
+        "text": "`cdc`, começando do início do ano passado",
+        "why": "O CDC lê mudanças do log; não copia linhas escritas há muito tempo e nunca alteradas."
+      },
+      {
+        "text": "`full-load`",
+        "why": "Isso: uma cópia avulsa de linhas que não mudam mais."
+      },
+      {
+        "text": "Uma replication config serverless sem tipo de migração",
+        "why": "Uma config leva um tipo de replicação como qualquer tarefa; o serverless muda onde ela roda, não o que faz."
+      }
+    ]
+  },
+  "ex-h4bw7bvm": {
+    "prompt": "O que a captura de mudanças lê para saber o que mudou num banco?",
+    "hint": "Todo banco sério escreve isso antes de mudar as tabelas.",
+    "choices": [
+      {
+        "text": "As tabelas, procurando linhas com `updated_at` recente",
+        "why": "Isso perde exclusões e toda escrita que esqueceu a coluna, e carrega a origem com consultas."
+      },
+      {
+        "text": "O log que o próprio banco faz das suas mudanças",
+        "why": "Isso: o WAL, o binary log, o redo log."
+      },
+      {
+        "text": "Um dump noturno, comparado com o da noite anterior",
+        "why": "Isso é uma diferença de retratos, um dia atrasada e cega a tudo que mudou duas vezes."
+      },
+      {
+        "text": "Uma tabela de auditoria preenchida por triggers que o DMS instala em toda tabela",
+        "why": "O DMS lê o log; triggers em toda tabela deixariam lenta toda escrita da loja."
+      }
+    ]
+  },
+  "ex-kqtjfftg": {
+    "prompt": "Por que uma tarefa full-load-and-cdc anota a posição do log antes de copiar a primeira tabela, e não depois de copiar a última?",
+    "hint": "O que acontece com uma mudança feita enquanto uma tabela está sendo copiada?",
+    "choices": [
+      {
+        "text": "Para ainda capturar uma mudança feita durante a cópia",
+        "why": "Isso. Anotada depois, as mudanças feitas nas horas de cópia cairiam entre o copiado e o capturado."
+      },
+      {
+        "text": "Porque a origem apaga o log quando uma cópia começa",
+        "why": "Uma cópia não muda nada no log da origem."
+      },
+      {
+        "text": "Porque anotá-la antes deixa a própria cópia mais rápida",
+        "why": "Não custa nada à cópia de um jeito ou de outro; a ordem é questão de correção."
+      },
+      {
+        "text": "Porque o destino precisa da posição para criar as tabelas",
+        "why": "As tabelas do destino vêm da estrutura da origem, não de uma posição do log."
+      }
+    ]
+  },
+  "ex-6k899842": {
+    "prompt": "Quais destes são logs que a captura de mudanças lê? Marque todos os que se aplicam.",
+    "hint": "O log escrito antes de as tabelas mudarem.",
+    "choices": [
+      {
+        "text": "O write-ahead log do PostgreSQL",
+        "why": "Sim."
+      },
+      {
+        "text": "O binary log do MySQL",
+        "why": "Sim."
+      },
+      {
+        "text": "O redo log do Oracle",
+        "why": "Sim."
+      },
+      {
+        "text": "O log de consultas lentas do banco",
+        "why": "Ele registra consultas lentas, não mudanças."
+      },
+      {
+        "text": "O log de acesso do servidor web",
+        "why": "Ele registra requisições à loja, não linhas."
+      }
+    ]
+  },
+  "ex-83jprz7b": {
+    "prompt": "Por que o endpoint de origem da lição indica um segredo do Secrets Manager em vez de passar `--password`?",
+    "hint": "Onde vai parar um comando digitado?",
+    "choices": [
+      {
+        "text": "O DMS recusa senhas dadas na linha de comando",
+        "why": "Ele aceita; o problema é o que o shell e a máquina guardam."
+      },
+      {
+        "text": "Uma senha digitada fica no histórico do shell e na lista de processos",
+        "why": "Isso, e o segredo ainda mantém a credencial num lugar só, que pode ser trocado."
+      },
+      {
+        "text": "O Secrets Manager deixa a conexão com a origem mais rápida",
+        "why": "Ele é lido uma vez para conectar; velocidade não é o motivo."
+      },
+      {
+        "text": "O moto exige um segredo para um endpoint PostgreSQL",
+        "why": "O moto aceitaria uma senha simples também; ele não confere nenhum dos dois."
+      }
+    ]
+  },
+  "ex-zwcrs476": {
+    "prompt": "No laboratório, `test-connection` contra a origem respondeu `testing`. O que isso estabeleceu sobre o caminho até `198.51.100.20`?",
+    "hint": "O moto tentou conectar?",
+    "choices": [
+      {
+        "text": "Que a instância alcançou a origem, e o teste está rodando",
+        "why": "O moto não abre conexão nenhuma; não há instância para abrir."
+      },
+      {
+        "text": "Que as credenciais do segredo estão certas",
+        "why": "O moto não olhou dentro do segredo."
+      },
+      {
+        "text": "Nada: o moto registra o teste e nunca conecta",
+        "why": "Isso. Na AWS a mesma chamada termina em `successful` ou numa falha com o motivo."
+      },
+      {
+        "text": "Que uma VPN até o rack está de pé",
+        "why": "Nada no laboratório tem caminho de rede para outro lugar que não o moto."
+      }
+    ]
+  },
+  "ex-w0q7wsbm": {
+    "prompt": "Logo depois de `create-replication-task`, antes de qualquer início, o moto informa `FullLoadProgressPercent` 100 e `TablesLoaded` 1. Qual é a leitura certa?",
+    "hint": "O bucket de destino existe?",
+    "choices": [
+      {
+        "text": "A carga rodou durante a criação porque a tabela é pequena",
+        "why": "Uma tarefa não carrega nada até ser iniciada, e esta não tinha origem para ler."
+      },
+      {
+        "text": "Os números são os que o moto escreve em toda tarefa",
+        "why": "Isso: a origem não existe e o bucket também não."
+      },
+      {
+        "text": "Uma tabela já está em `s3://quitanda-raw-prod/cdc/`",
+        "why": "Listá-lo respondeu `NoSuchBucket`."
+      },
+      {
+        "text": "A origem estava vazia, então uma carga completa termina na hora",
+        "why": "Não há origem nenhuma atrás de `198.51.100.20` no laboratório."
+      }
+    ]
+  },
+  "ex-k7e53vn7": {
+    "prompt": "Um mapeamento inclui `public.%` e exclui `public.web_sessions`. O que atravessa?",
+    "hint": "Uma regra é mais ampla que a outra.",
+    "choices": [
+      {
+        "text": "Toda tabela de `public`, `web_sessions` incluída, já que `%` a pega",
+        "why": "A exclusão a tira de volta."
+      },
+      {
+        "text": "Só `web_sessions`",
+        "why": "A exclusão tira essa tabela; não a seleciona."
+      },
+      {
+        "text": "Nada, porque as duas regras se contradizem",
+        "why": "Não se contradizem; uma é geral e a outra é a exceção."
+      },
+      {
+        "text": "Toda tabela de `public` menos `web_sessions`",
+        "why": "Isso: a exclusão vence o curinga."
+      }
+    ]
+  },
+  "ex-4e0r5ey9": {
+    "prompt": "Por que a Quitanda tira o `tax_id` no mapeamento de tabelas em vez de apagá-lo do lake depois?",
+    "hint": "O que precisa ser apagado se nunca chega?",
+    "choices": [
+      {
+        "text": "Ele nunca chega ao destino, então nada precisa ser apagado lá",
+        "why": "Isso. Dado pessoal que o lake nunca guarda é dado que o lake nunca precisa proteger."
+      },
+      {
+        "text": "Arquivos no S3 não podem ter uma coluna tirada depois",
+        "why": "Eles podem ser reescritos sem ela; esse é o caminho caro."
+      },
+      {
+        "text": "Tirar colunas deixa a carga completa mais rápida",
+        "why": "Um pouco, talvez; não é o motivo."
+      },
+      {
+        "text": "O DMS não consegue replicar uma coluna de texto",
+        "why": "Ele replica colunas de texto; o `tax_id` sai pelo que guarda."
+      }
+    ]
+  },
+  "ex-0n7t46ph": {
+    "prompt": "A tarefa roda em limited LOB mode com `LobMaxSize` 64, e as `notes` de um pedido têm 200 KB. O que acontece com esse valor na AWS?",
+    "hint": "O modo limitado é rápido porque decide o buffer de antemão.",
+    "choices": [
+      {
+        "text": "A tarefa falha e cita a linha",
+        "why": "Nada para a tarefa; é por isso que a falha é silenciosa."
+      },
+      {
+        "text": "O DMS passa esse valor para o full LOB mode",
+        "why": "O modo é da tarefa; não muda por valor."
+      },
+      {
+        "text": "Ele chega cortado em 64 KB, com um aviso no log da tarefa",
+        "why": "Isso. Meça o maior valor na origem antes de escolher o limite."
+      },
+      {
+        "text": "A linha é pulada e contada como erro",
+        "why": "A linha atravessa; o valor dela fica menor do que era."
+      }
+    ]
+  },
+  "ex-y9vg8sbn": {
+    "prompt": "O que ligar a validação diz que uma carga completa terminada não diz?",
+    "hint": "Rodou versus está certo.",
+    "choices": [
+      {
+        "text": "Que a tarefa rodou até o fim sem parar",
+        "why": "O status da tarefa já diz isso; a validação diz mais."
+      },
+      {
+        "text": "Que a cópia está certa, tabela por tabela, linha por linha",
+        "why": "Isso, ao preço de leituras a mais na origem."
+      },
+      {
+        "text": "Que o slot na origem foi apagado",
+        "why": "A validação compara dados; o slot é outro assunto."
+      },
+      {
+        "text": "Que todo LOB coube em `LobMaxSize`",
+        "why": "O corte aparece no log da tarefa; a validação é sobre linhas baterem."
+      }
+    ]
+  },
+  "ex-s1tq25ne": {
+    "prompt": "Qual é a diferença entre `pg_logical_slot_peek_changes` e `pg_logical_slot_get_changes`?",
+    "hint": "Rode cada uma duas vezes.",
+    "choices": [
+      {
+        "text": "`peek` só lê inserções; `get` lê tudo",
+        "why": "As duas devolveram a inserção, a alteração e a exclusão."
+      },
+      {
+        "text": "`get` precisa de `wal_level=logical`, e `peek` funciona em qualquer nível",
+        "why": "As duas leem um slot lógico, que precisa de WAL lógico."
+      },
+      {
+        "text": "`peek` deixa as mudanças; `get` as consome",
+        "why": "Isso: o segundo `get` não devolveu nada."
+      },
+      {
+        "text": "`get` também devolve as transações desfeitas",
+        "why": "Uma transação desfeita não aparece em nenhuma."
+      }
+    ]
+  },
+  "ex-nq9dq2y1": {
+    "prompt": "Nas mudanças decodificadas, a linha `DELETE` traz só `order_id`. Por que isso basta para o destino?",
+    "hint": "Como o destino acha a linha a apagar?",
+    "choices": [
+      {
+        "text": "A chave primária acha a linha no destino",
+        "why": "Isso; por padrão a chave é tudo o que o PostgreSQL registra sobre uma linha apagada."
+      },
+      {
+        "text": "O destino guarda uma cópia de toda linha, então procura o resto no histórico",
+        "why": "Um destino aplicando mudanças não precisa de histórico para achar uma linha pela chave."
+      },
+      {
+        "text": "Exclusões no DMS só marcam linhas, então os valores não importam",
+        "why": "O que quer que o destino faça com uma exclusão, primeiro precisa achar a linha."
+      },
+      {
+        "text": "O `test_decoding` encurta toda linha para a primeira coluna",
+        "why": "As linhas de inserção e de alteração trouxeram todas as colunas."
+      }
+    ]
+  },
+  "ex-nmrwcthv": {
+    "prompt": "Para que toda alteração no log traga a linha antiga além da nova, a `REPLICA IDENTITY` da tabela é definida como ___.",
+    "hint": "A alteração decodificada passou a mostrar `old-key` e `new-tuple`.",
+    "blanks": [
+      {
+        "accept": [
+          "FULL"
+        ]
+      }
+    ]
+  },
+  "ex-tax9aw78": {
+    "prompt": "A tarefa do DMS é parada numa sexta-feira para o fim de semana, e o slot dela fica no servidor antigo, que continua recebendo pedidos. O que acontece lá?",
+    "hint": "O que um slot faz o servidor guardar?",
+    "choices": [
+      {
+        "text": "Nada muda, já que uma tarefa parada não lê nada",
+        "why": "Esse é justamente o problema: nada lê, e o slot guarda tudo o que não foi lido."
+      },
+      {
+        "text": "O servidor apaga o slot depois de uma hora sem leitor",
+        "why": "Por padrão um slot é mantido sem limite; um teto precisa ser definido com `max_slot_wal_keep_size`."
+      },
+      {
+        "text": "O servidor guarda toda mudança desde a posição do slot, e o disco enche",
+        "why": "Isso: 3431 kB por vinte mil linhas no laboratório, o fim de semana inteiro na loja."
+      },
+      {
+        "text": "Pedidos novos são recusados até a tarefa voltar",
+        "why": "As escritas continuam; só cresce o log que elas deixam."
+      }
+    ]
+  },
+  "ex-gnevtn5b": {
+    "prompt": "Depois de 20.000 linhas inseridas sem ninguém ler o slot, ele segurava 3431 kB de WAL. Isso dá cerca de quantos bytes de WAL por linha? Considere 1 kB como 1024 bytes e arredonde para o inteiro mais próximo.",
+    "hint": "3431 × 1024 ÷ 20000."
+  },
+  "ex-awdk6mwt": {
+    "prompt": "Ponha o cutover em ordem.",
+    "hint": "Nada pode ser escrito em dois lugares, e nada pode ficar para trás.",
+    "items": [
+      "Rodar a tarefa até a validação ficar verde e a latência ser de segundos",
+      "Parar quem escreve na origem",
+      "Esperar latência zero e contagens batendo",
+      "Apontar as aplicações para o destino e ligá-las",
+      "Parar a tarefa e manter a origem só leitura",
+      "Apagar o slot de replicação na origem"
+    ]
+  },
+  "ex-1amw8819": {
+    "prompt": "Uma migração roda 10 dias numa `dms.t3.medium` a 0,15100 USD por hora. Quanto custa a instância, em USD com duas casas?",
+    "hint": "Dez dias de 24 horas."
+  },
+  "ex-wg8ge34p": {
+    "prompt": "Uma alimentação permanente do lake tem uma carga constante que alguém mediu em cerca de 2 DCUs. Pela tabela, o que custa menos por mês?",
+    "hint": "2 × 0,18471 × 730 contra 0,31000 × 730.",
+    "choices": [
+      {
+        "text": "O Serverless em 2 DCUs, porque escala",
+        "why": "Escalar ajuda uma carga desigual; esta é constante, e 2 DCUs o mês todo dão 269,68."
+      },
+      {
+        "text": "Uma `dms.c5.large`, a 226,30",
+        "why": "Isso: uma carga medida e constante é o caso de uma instância."
+      },
+      {
+        "text": "Custam o mesmo, já que a DCU tem preço para igualar",
+        "why": "As duas linhas da tabela dão 269,68 e 226,30."
+      },
+      {
+        "text": "Uma `dms.r6i.large`, por ser a maior da tabela",
+        "why": "A 0,56000 por hora ela dá 408,80 por mês, a mais cara das três."
+      }
+    ]
+  },
+  "ex-gnr0qn01": {
+    "prompt": "A tarefa do DMS que alimentava o lake é apagada quando o lake ganha outra origem, mas a loja continua no PostgreSQL antigo. Três semanas depois o disco dele está cheio. Qual é a causa mais provável?",
+    "hint": "O que apagar a tarefa deixou para trás na origem?",
+    "choices": [
+      {
+        "text": "O DMS continua lendo a origem depois de a tarefa ser apagada",
+        "why": "Se algo estivesse lendo, o slot liberaria o log; nada está."
+      },
+      {
+        "text": "O slot `dms_orders` ficou para trás, guardando tudo",
+        "why": "Isso: o passo 6 do cutover, esquecido."
+      },
+      {
+        "text": "A validação encheu a origem de tabelas de comparação",
+        "why": "A validação lê a origem; ela parou junto com a tarefa."
+      },
+      {
+        "text": "O limited LOB mode escreveu cópias cortadas das notas",
+        "why": "As configurações de LOB moldam o que chega ao destino; não escrevem nada na origem."
+      }
+    ]
+  },
+  "ex-5aqxxbps": {
+    "prompt": "Ligue cada termo ao que ele é.",
+    "hint": "Os quatro apareceram nas transcrições do PostgreSQL.",
+    "pairs": [
+      {
+        "left": "slot de replicação",
+        "right": "um marcador no log que o servidor mantém para um leitor"
+      },
+      {
+        "left": "plugin de saída",
+        "right": "transforma o log em algo que um leitor entende"
+      },
+      {
+        "left": "LSN",
+        "right": "uma posição no WAL"
+      },
+      {
+        "left": "`REPLICA IDENTITY FULL`",
+        "right": "valores antigos em toda alteração e exclusão"
+      }
+    ],
+    "right_distractors": [
+      "copia cada tabela uma vez"
+    ]
+  },
+  "ex-b6g4vq0d": {
+    "prompt": "Uma tabela da origem não tem chave primária. As inserções dela replicam, e as alterações e exclusões não. Qual é a primeira coisa a corrigir no PostgreSQL?",
+    "hint": "O que uma exclusão leva ao log por padrão?",
+    "choices": [
+      {
+        "text": "Aumentar o `LobMaxSize` para as linhas caberem",
+        "why": "O tamanho de LOB não tem nada a ver com achar uma linha."
+      },
+      {
+        "text": "Mudar a tarefa para `full-load` e recarregar toda noite",
+        "why": "Isso desiste do CDC em vez de corrigi-lo."
+      },
+      {
+        "text": "Usar o plugin `pglogical` em vez do `test_decoding`",
+        "why": "Qualquer plugin lê o mesmo log, e falta ao log um jeito de identificar a linha."
+      },
+      {
+        "text": "Dar uma replica identity à tabela: chave ou `FULL`",
+        "why": "Isso. Sem uma, o log não tem por onde achar a linha alterada."
+      }
+    ]
+  }
+}

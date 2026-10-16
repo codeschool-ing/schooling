@@ -286,6 +286,7 @@ func parameters() []setting.Declared {
 		billing.WithdrawalDays,
 		exam.PassMark,
 		exam.QuestionsPerAttempt,
+		exam.QuestionsPerTrackAttempt,
 		identity.ChangeCap,
 		identity.ConfirmationLife,
 		identity.PresenceWindow,
@@ -486,6 +487,7 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 	   failure `passMark` was handed in to end, on the day it was still a
 	   constant. */
 	tenant.NewHandler(settings.Reads(exam.PassMark), settings.Reads(exam.QuestionsPerAttempt),
+		settings.Reads(exam.QuestionsPerTrackAttempt),
 		settings.Reads(billing.MostInstalments),
 		/* AN ERROR IS NO DISCOUNT. The school still describes itself; the
 		   invitation simply draws no struck-through figure, which is what it
@@ -841,12 +843,14 @@ func router(pool *pgxpool.Pool, log *slog.Logger, cfg config.Config,
 			}
 			return set, nil
 		},
-		/* AND THE TWO NUMBERS AN EXAM IS SET BY, from the registry. `exam`
-		   declares both — it is where the argument for each lives — and this is
-		   the line that hands it the readers. */
+		/* AND THE NUMBERS AN EXAM IS SET BY, from the registry. `exam` declares
+		   them — it is where the argument for each lives — and this is the line
+		   that hands it the readers. Two lengths, because a course paper and a
+		   track's final are two decisions (A-14). */
 		exam.Numbers{
-			PassMark:          settings.Reads(exam.PassMark),
-			QuestionsPerPaper: settings.Reads(exam.QuestionsPerAttempt),
+			PassMark:               settings.Reads(exam.PassMark),
+			QuestionsPerPaper:      settings.Reads(exam.QuestionsPerAttempt),
+			QuestionsPerTrackPaper: settings.Reads(exam.QuestionsPerTrackAttempt),
 		})
 
 	// A CERTIFICATE IS THREE FACTS THIS MODULE MAY NOT GO AND READ: whether the

@@ -1,0 +1,611 @@
+[
+  {
+    "id": "ex-bypyr071",
+    "version": 1,
+    "section": "airflow-parts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which part of Airflow works out that a task is due and hands it to a worker?",
+    "hint": "It is the part that has to be awake at three in the morning.",
+    "choices": [
+      {
+        "text": "The web server, where the runs are drawn",
+        "correct": false,
+        "why": "The web server shows runs and lets people clear a task; it starts nothing on its own."
+      },
+      {
+        "text": "The scheduler",
+        "correct": true,
+        "why": "Right. It reads the DAGs and the metadata database and queues what is due."
+      },
+      {
+        "text": "The metadata database, which holds every run",
+        "correct": false,
+        "why": "It holds the state the scheduler reads; it decides nothing."
+      },
+      {
+        "text": "The Glue job itself, when its start time arrives",
+        "correct": false,
+        "why": "A Glue job has no clock of its own here; something has to start it, and that is what Airflow is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ngxq9rh",
+    "version": 1,
+    "section": "airflow-parts",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of Airflow to what it does.",
+    "hint": "Five parts, four of them here.",
+    "pairs": [
+      {
+        "left": "web server",
+        "right": "where a failed task is cleared to run again"
+      },
+      {
+        "left": "metadata database",
+        "right": "the state of every DAG run and task instance"
+      },
+      {
+        "left": "workers",
+        "right": "run the tasks taken from a queue"
+      },
+      {
+        "left": "DAG folder",
+        "right": "the Python files, in a bucket on MWAA"
+      }
+    ],
+    "right_distractors": [
+      "the Spark code of the Glue job"
+    ]
+  },
+  {
+    "id": "ex-ytb0nq8k",
+    "version": 1,
+    "section": "airflow-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The DAG's run that starts at 03:00 on 16 October 2026 begins. What does `{{ ds }}` hold in its tasks?",
+    "hint": "A run covers an interval, and it is named after the interval.",
+    "choices": [
+      {
+        "text": "`2026-10-16`, the day the run starts",
+        "correct": false,
+        "why": "That is when it runs; the interval it covers is the day before."
+      },
+      {
+        "text": "`2026-10-01`, the `start_date` of the DAG",
+        "correct": false,
+        "why": "The start date is where the schedule begins, not the date of each run."
+      },
+      {
+        "text": "The clock time at which the task happened to start",
+        "correct": false,
+        "why": "A task that starts late or is re-run still gets its interval's date; that is the point of it."
+      },
+      {
+        "text": "`2026-10-15`",
+        "correct": true,
+        "why": "Right: the run at three on the 16th covers the 15th, the partition the job should read."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ts73z6k",
+    "version": 1,
+    "section": "airflow-parts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody copies the DAG with `catchup=True` and uploads it on 16 October; its `start_date` is 1 October. What does Airflow do?",
+    "hint": "Catch-up is a backfill that nobody asked for.",
+    "choices": [
+      {
+        "text": "Runs the pipeline once for every night since 1 October",
+        "correct": true,
+        "why": "Right: fifteen runs, each with its own `ds`, each starting two Glue jobs. Useful on purpose, expensive by accident."
+      },
+      {
+        "text": "Runs tonight's interval and nothing earlier",
+        "correct": false,
+        "why": "That is what `catchup=False` does."
+      },
+      {
+        "text": "Refuses the file because its start date is in the past",
+        "correct": false,
+        "why": "A past start date is ordinary; it is what catch-up counts from."
+      },
+      {
+        "text": "Runs the night of 1 October and waits for a person to run the rest",
+        "correct": false,
+        "why": "Catch-up schedules every missed interval on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8b5ag3s",
+    "version": 1,
+    "section": "airflow-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does MWAA refuse a DAG bucket that has no versioning?",
+    "hint": "What does the environment record about each file?",
+    "choices": [
+      {
+        "text": "Versioning lets a DAG file be edited in place",
+        "correct": false,
+        "why": "No S3 object is edited in place, versioned or not; lesson 1 showed an upload replacing it whole."
+      },
+      {
+        "text": "The web server reads DAGs over a public URL that needs it",
+        "correct": false,
+        "why": "MWAA also requires the bucket to block public access."
+      },
+      {
+        "text": "It records which version of each file it loaded",
+        "correct": true,
+        "why": "Right, and a bucket without versions cannot answer that."
+      },
+      {
+        "text": "Versioned buckets are cheaper to read from",
+        "correct": false,
+        "why": "Versioning keeps more bytes, and costs more if anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsa4nn4q",
+    "version": 1,
+    "section": "mwaa-in-moto",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`AWS_ENDPOINT_URL` is `http://localhost:4567`, and `aws mwaa list-environments` cannot connect to `http://api.localhost:4567/environments`. Where did `api.` come from?",
+    "hint": "The `--debug` output named it.",
+    "choices": [
+      {
+        "text": "moto redirected the request to a subdomain of its own",
+        "correct": false,
+        "why": "The request never reached moto; the command line could not connect."
+      },
+      {
+        "text": "The MWAA API, which puts a host prefix before the host",
+        "correct": true,
+        "why": "Right: `host_prefix` `api.`, which the command line adds whatever the endpoint is, even an IP address."
+      },
+      {
+        "text": "A typing mistake in the lab's environment variables",
+        "correct": false,
+        "why": "Every other service in the lab uses the same variable and reaches `localhost`."
+      },
+      {
+        "text": "MWAA demands HTTPS, so the command line rewrote the address",
+        "correct": false,
+        "why": "The address it tried is still `http://`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6szvp741",
+    "version": 1,
+    "section": "mwaa-in-moto",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a student's machine whose resolver answers names under `.localhost`, the same command gets a `500` instead of a connection error. What should the student conclude?",
+    "hint": "Which program answered, and what does it have?",
+    "choices": [
+      {
+        "text": "An environment exists in moto, and it is broken",
+        "correct": false,
+        "why": "There is no MWAA in moto 5.2.3 to hold one."
+      },
+      {
+        "text": "Their moto has part of MWAA that the course's does not",
+        "correct": false,
+        "why": "Both are 5.2.3; asked directly, moto answers `404` for the path."
+      },
+      {
+        "text": "The request reached moto, and moto has no MWAA at all",
+        "correct": true,
+        "why": "Right. A different road to the same answer."
+      },
+      {
+        "text": "`create-environment` will now work, since the name resolves",
+        "correct": false,
+        "why": "Resolving the name only lets the request reach a server with nothing behind that path."
+      }
+    ]
+  },
+  {
+    "id": "ex-3w95mxtz",
+    "version": 1,
+    "section": "mwaa-in-moto",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these really happened in this lesson's lab? Choose all that apply.",
+    "hint": "Storing is not running.",
+    "choices": [
+      {
+        "text": "The DAG file was stored in a versioned bucket",
+        "correct": true,
+        "why": "Yes; S3 in moto is faithful."
+      },
+      {
+        "text": "The state machine's definition was stored as written",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A cron schedule was stored with its timezone",
+        "correct": true,
+        "why": "Yes; `get-schedule` returned it."
+      },
+      {
+        "text": "The scheduler picked the DAG up from the bucket",
+        "correct": false,
+        "why": "There is no Airflow and no MWAA in the lab."
+      },
+      {
+        "text": "The state machine started the Glue job `load-orders`",
+        "correct": false,
+        "why": "Glue answered that no such job exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9rm64gm",
+    "version": 1,
+    "section": "the-idle-bill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A small environment costs 0.84249 USD an hour. What does it cost for a 30-day month of 720 hours, in USD to two decimals, with no extra workers?",
+    "hint": "It is billed every hour, working or not.",
+    "value": 606.59,
+    "tolerance": 0.01
+  },
+  {
+    "id": "ex-8f1dnpja",
+    "version": 1,
+    "section": "the-idle-bill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The small environment is priced at 0.84249 an hour, yet the section says it costs 10.25 USD per hour of work. Where does the difference come from?",
+    "hint": "Divide the month by the hours the pipeline works.",
+    "choices": [
+      {
+        "text": "615.02 a month, spread over 60 hours of work",
+        "correct": true,
+        "why": "Right: 670 of the 730 hours are paid for waiting."
+      },
+      {
+        "text": "The Glue DPUs of the two jobs are included in it",
+        "correct": false,
+        "why": "Glue is billed on its own, on top."
+      },
+      {
+        "text": "Extra workers are charged at 10.25 an hour while busy",
+        "correct": false,
+        "why": "A small extra worker is 0.09456 an hour."
+      },
+      {
+        "text": "MWAA bills a minimum of twelve hours for each DAG run",
+        "correct": false,
+        "why": "MWAA bills the environment by the hour, not the runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-2c7h31fv",
+    "version": 1,
+    "section": "the-idle-bill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda will run no pipeline for three weeks. What can it do to stop paying for its MWAA environment meanwhile?",
+    "hint": "There is no stopped state.",
+    "choices": [
+      {
+        "text": "Stop the environment and start it again afterwards",
+        "correct": false,
+        "why": "An environment has no stopped state."
+      },
+      {
+        "text": "Set the extra workers to zero",
+        "correct": false,
+        "why": "That removes the 0.09456 lines; the environment's own hourly price stays."
+      },
+      {
+        "text": "Delete it, losing its run history",
+        "correct": true,
+        "why": "Right. The DAGs survive in the bucket; the record of past runs does not."
+      },
+      {
+        "text": "Move it to a smaller class for the three weeks",
+        "correct": false,
+        "why": "A smaller class is still billed every hour, and small is already the smallest of the sheet."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksd6n70g",
+    "version": 1,
+    "section": "the-idle-bill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Forty DAGs already share one small environment comfortably. Another team adds one more DAG. What does it add to the environment's bill?",
+    "hint": "What is the environment billed for?",
+    "choices": [
+      {
+        "text": "A forty-first share: 615.02 ÷ 41",
+        "correct": false,
+        "why": "That is the average after; the total does not grow by a share."
+      },
+      {
+        "text": "Another 615.02, since each team needs its own environment",
+        "correct": false,
+        "why": "Teams can share an environment; that sharing is what makes MWAA cheap per pipeline."
+      },
+      {
+        "text": "Close to nothing, unless it needs more workers",
+        "correct": true,
+        "why": "Right. The environment is paid for waiting; one more DAG waits in the same hours."
+      },
+      {
+        "text": "15.38, the price per DAG the section computed",
+        "correct": false,
+        "why": "That is an average over forty, not what one more adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2k34hhq",
+    "version": 1,
+    "section": "step-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What in the state machine plays the part that `{{ ds }}` played in the DAG?",
+    "hint": "What does a state machine know about intervals?",
+    "choices": [
+      {
+        "text": "`$.ds`, which Step Functions fills in for each execution",
+        "correct": false,
+        "why": "Step Functions fills in nothing of the sort; `$.` reads the input it was given."
+      },
+      {
+        "text": "The `.sync` suffix on the resource",
+        "correct": false,
+        "why": "That makes the state wait for the job; it carries no date."
+      },
+      {
+        "text": "The `Retry` block of each state",
+        "correct": false,
+        "why": "That replaces `retries=2`, not the date."
+      },
+      {
+        "text": "Nothing: it gets a timestamp, and the job works out \"yesterday\"",
+        "correct": true,
+        "why": "Right, and with no intervals there is no backfill either."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7a38scm",
+    "version": 1,
+    "section": "step-functions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `describe-execution` says `RUNNING` and `get-execution-history` ends in `ExecutionSucceeded`, through `Pass` states. Which is telling the truth?",
+    "hint": "Look for a `Pass` state in `nightly.json`.",
+    "choices": [
+      {
+        "text": "The history: the execution succeeded quickly",
+        "correct": false,
+        "why": "There is no `Pass` state in the definition, and the Glue job was never started."
+      },
+      {
+        "text": "Neither: moto executes nothing",
+        "correct": true,
+        "why": "Right. The status never moves, and the history is a fixed sample."
+      },
+      {
+        "text": "The status: the Glue job is still running",
+        "correct": false,
+        "why": "Glue said the job does not exist."
+      },
+      {
+        "text": "Both, one after the other",
+        "correct": false,
+        "why": "The status was read after the history was written and still said `RUNNING`."
+      }
+    ]
+  },
+  {
+    "id": "ex-md0krmjn",
+    "version": 1,
+    "section": "step-functions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A `Task` state whose resource is `arn:aws:states:::glue:startJobRun` with the suffix ___ added waits for the Glue job to finish before moving on.",
+    "hint": "Without it, the state moves on as soon as the job has started.",
+    "blanks": [
+      {
+        "accept": [
+          ".sync",
+          "sync"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dez0eqh9",
+    "version": 1,
+    "section": "scheduling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does EventBridge Scheduler accept for 03:00 every day?",
+    "hint": "AWS's cron has six fields and a question mark.",
+    "choices": [
+      {
+        "text": "`cron(0 3 * * *)`",
+        "correct": false,
+        "why": "Five fields is Unix cron; AWS refuses it, though moto stored it."
+      },
+      {
+        "text": "`cron(3 0 * * ? *)`",
+        "correct": false,
+        "why": "Minutes come first: that is 00:03."
+      },
+      {
+        "text": "`cron(0 3 * * ? *)`",
+        "correct": true,
+        "why": "Right: minute 0, hour 3, any day of the month, every month, any day of the week, every year."
+      },
+      {
+        "text": "`rate(03:00)`",
+        "correct": false,
+        "why": "A rate is an interval such as `rate(1 day)`, and it has no time of day."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7hbq0p0",
+    "version": 1,
+    "section": "scheduling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The schedule `cron(0 3 * * ? *)` is created without `--schedule-expression-timezone`. When does it fire, in São Paulo time?",
+    "hint": "Without a timezone, the expression is read in UTC.",
+    "choices": [
+      {
+        "text": "At 03:00, since the region is sa-east-1",
+        "correct": false,
+        "why": "The region does not set the timezone of an expression."
+      },
+      {
+        "text": "At 06:00, three hours later",
+        "correct": false,
+        "why": "That is the UTC time of a schedule set to 03:00 São Paulo, the other way round."
+      },
+      {
+        "text": "At midnight",
+        "correct": true,
+        "why": "Right: 03:00 UTC is 00:00 in São Paulo."
+      },
+      {
+        "text": "It is refused until a timezone is given",
+        "correct": false,
+        "why": "The timezone is optional, which is why the mistake is easy."
+      }
+    ]
+  },
+  {
+    "id": "ex-xb3c2vg2",
+    "version": 1,
+    "section": "scheduling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One night Scheduler fires late and the execution starts at 03:40. The job computes \"yesterday\" from `<aws.scheduler.scheduled-time>`. Which day does it process?",
+    "hint": "Which time does that attribute carry?",
+    "choices": [
+      {
+        "text": "The day before the night it was due to run",
+        "correct": true,
+        "why": "Right. The attribute is the time the run was due, not when it started, so a late start changes nothing."
+      },
+      {
+        "text": "Today, because 03:40 is after the schedule",
+        "correct": false,
+        "why": "The job never sees 03:40; it sees the scheduled time."
+      },
+      {
+        "text": "No day: a late execution gets an empty input",
+        "correct": false,
+        "why": "Scheduler fills the attribute on every invocation, late or not."
+      },
+      {
+        "text": "Two days back, since the delay pushed it past a boundary",
+        "correct": false,
+        "why": "Forty minutes crosses no day boundary, and the time used is the scheduled one anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6nbcn9j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda has two pipelines today. In a year it expects thirty-five DAGs from four teams, and frequent re-runs of past days. What plan fits?",
+    "hint": "Pay for waiting when there is enough to wait for.",
+    "choices": [
+      {
+        "text": "MWAA now, since it will be needed in a year and moving later is work",
+        "correct": false,
+        "why": "A year of 615.02 a month for two pipelines, about 7,380, buys nothing the alternative lacks today."
+      },
+      {
+        "text": "Step Functions now, each step a dated Glue job; MWAA when the DAGs come",
+        "correct": true,
+        "why": "Right. The jobs stay when the orchestrator changes, which keeps the move cheap."
+      },
+      {
+        "text": "MWAA now, deleted every morning and created again every night",
+        "correct": false,
+        "why": "Each deletion loses the run history, which is what backfills and re-runs depend on."
+      },
+      {
+        "text": "Step Functions for good, with every re-run of a past day started by hand",
+        "correct": false,
+        "why": "Frequent re-runs of past days by four teams is the case Airflow's intervals exist for."
+      }
+    ]
+  },
+  {
+    "id": "ex-27mg91az",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these monthly costs from the cheapest to the dearest.",
+    "hint": "Idle first; then what scales; then the environments.",
+    "items": [
+      "Step Functions and Scheduler between runs",
+      "Three extra small workers, two hours a night",
+      "A small environment",
+      "A medium environment",
+      "A large environment"
+    ]
+  },
+  {
+    "id": "ex-6fqjnj6f",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twenty-five DAGs share one small environment at 615.02 USD a month. What does each cost, in USD to two decimals?",
+    "hint": "The environment is the bill; the DAGs divide it.",
+    "value": 24.6,
+    "tolerance": 0.01
+  }
+]
