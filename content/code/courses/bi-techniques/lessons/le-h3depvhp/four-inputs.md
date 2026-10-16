@@ -15,10 +15,10 @@ before the test.
 | **significance level**, α | 5%, two-sided | the chance of a false alarm when nothing changed | more visitors |
 | **power**, 1 − β | 80% | the chance of detecting the effect if it is really there | fewer visitors, and more real effects missed |
 
-Two of these come from `statistics` lesson 15. **α is the type I error rate**: declaring a winner
-that is not one. **β is the type II error rate**: missing a winner that is one, and power is its
-complement. The conventions, 5 per cent and 80 per cent, mean a test is set up to accept four
-times more risk of missing an effect than of inventing one, which reflects that shipping a change
+Two of these come from `statistics` lesson 15. **α is the type I error rate**: declaring a winner that
+is not one. **β is the type II error rate**: missing a winner that is one, and power is its
+complement. The conventions, 5 per cent and 80 per cent, mean a test is set up to accept four times
+more risk of missing an effect than of inventing one. That reflects a judgement: shipping a change
 that does nothing usually costs more than not shipping one that helps.
 
 **The baseline comes from data, not from hope.** Panela's 4.2 per cent is the conversion the plan

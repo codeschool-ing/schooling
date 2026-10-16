@@ -17,10 +17,10 @@ old**. The chi-square test asks how surprising a gap that size is if the split w
 p = 0.087. A fair coin produces a gap like that more than one time in twelve, so there is no
 evidence of a problem.
 
-The second test is different: p = 3.5 × 10⁻⁶, a gap a fair split would produce a few times in a million.
-That is a **sample ratio mismatch**, SRM, and when it happens **the test's result is not
+The second test is different: p = 3.5 × 10⁻⁶, a gap a fair split would produce a few times in a
+million. That is a **sample ratio mismatch**, SRM, and when it happens **the test's result is not
 interpreted, whatever it says**. A broken split almost always means some visitors were lost from one
-group and not the other, and the lost ones are rarely a random sample: a treatment page that crashes
+group and not the other, and the lost ones are rarely a random sample. A treatment page that crashes
 on old phones loses exactly the visitors least likely to buy, and the treatment looks better for it.
 
 Common causes worth knowing, because the fix is in the plumbing, not in the statistics:

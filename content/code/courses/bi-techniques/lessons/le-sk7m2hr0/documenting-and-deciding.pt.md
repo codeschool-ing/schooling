@@ -33,8 +33,9 @@ e a Panela teria de conseguir explicá-la e revisá-la. O texto já exigiu que e
 por uma pessoa; a exigência caiu em 2019, então se uma pessoa olha agora é escolha da empresa.
 
 Ainda há um argumento para manter uma pessoa no circuito sempre que a decisão de um modelo fecha uma
-porta: não revisando toda marcação, o que ninguém faria por muito tempo, mas **um caminho pelo qual um
-cliente, ou um funcionário que veja algo estranho, possa pedir o olhar de alguém**.
+porta. Não para revisar toda marcação, o que ninguém faria por muito tempo, mas para manter **um
+caminho pelo qual um cliente, ou um funcionário que veja algo estranho, possa pedir o olhar de
+alguém**.
 
 ## Decidir não usar
 

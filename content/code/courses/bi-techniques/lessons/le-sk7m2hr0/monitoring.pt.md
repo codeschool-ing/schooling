@@ -24,7 +24,7 @@ As defesas são trabalho de rotina, e por isso muitas vezes ficam de lado.
   rodar toda noite.
 - **Mantenha um grupo de controle.** Uma fatia pequena e sorteada dos clientes marcados, digamos um em
   dez, não recebe oferta. Eles mostram o que os marcados pelo modelo fazem sem intervenção, o que
-  mantém honesto o dado de treino, e são o grupo de controle de um teste A/B da própria oferta: a
+  mantém honesto o dado de treino. E são o grupo de controle de um teste A/B da própria oferta: a
   medida da taxa de retenção que a aula 17 chamou de número mais frágil. As aulas 7 a 11 dizem de que
   tamanho ele precisa ser e como lê-lo.
 - **Vigie as entradas, não só as saídas.** Se o intervalo mediano do Norte cair de 14 dias para 7

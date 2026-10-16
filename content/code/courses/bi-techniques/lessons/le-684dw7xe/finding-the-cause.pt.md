@@ -25,8 +25,8 @@ engajamento, e para a maioria dos clientes elas são. Para um cliente cuja caixa
 atrasada, elas medem geografia. Nada está errado no dado: toda data nele está correta. O que está
 errado é supor que onze dias de silêncio querem dizer a mesma coisa para todo mundo.
 
-É também um caso de **viés de agregação**, já que um modelo só foi ajustado às quatro regiões, e de
-**viés de representação**, já que o Norte é uma fatia pequena demais do dado de treino para o modelo
+É também um caso de **viés de agregação**, já que um modelo só foi ajustado às quatro regiões. E é
+viés de representação, já que o Norte é uma fatia pequena demais do dado de treino para o modelo
 aprender o ritmo dele sozinho.
 
 ## Uma causa é uma afirmação

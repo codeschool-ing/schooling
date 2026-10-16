@@ -18,9 +18,9 @@ and the difference grows with the gap between the pages and with the length of t
 
 It is not free, and the cost is the one the A/B lessons were about. The bandit's estimate of the old
 page rests on far fewer visitors, so **its measurement of the difference is less precise**, and its
-choices depend on early results, which lesson 11 showed to be noisy: a page that starts unlucky gets
+choices depend on early results, which lesson 11 showed to be noisy. A page that starts unlucky gets
 fewer visitors and fewer chances to recover. In this run it showed the new page to only two visitors
-in three, well short of the nine in ten its rule would reach once it was sure: with conversion rates
+in three, well short of the nine in ten its rule would reach once it was sure. With conversion rates
 this close, the two pages trade places in its eyes for a long time.
 
 **The trade is learning against earning.** When the question is "which page, so we can decide and

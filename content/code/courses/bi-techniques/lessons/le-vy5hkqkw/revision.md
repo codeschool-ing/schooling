@@ -15,13 +15,13 @@ This makes a forecast of one week, the last week of June 2025, seven times: firs
 {"language": "python", "file": "revision.py", "parts": [{"code": "import pandas as pd\nfrom statsmodels.tsa.holtwinters import ExponentialSmoothing\n\norders = pd.read_csv(\"daily_orders.csv\", parse_dates=[\"date\"], index_col=\"date\")[\"orders\"]\nweekly = orders.resample(\"W-SUN\").sum()[\"2023-01-08\":\"2025-08-31\"]\ntarget = pd.Timestamp(\"2025-06-29\")", "note": "One target week, the last of June 2025."}, {"code": "print(f\"forecasts of the week ending {target.date()}, actual {weekly[target]}\")\nfor origin in weekly[\"2024-12-29\":\"2025-06-22\"].index[::4]:\n    fit = ExponentialSmoothing(weekly[:origin], trend=\"add\", seasonal=\"mul\",\n                               seasonal_periods=52).fit()\n    h = (target - origin).days // 7\n    print(f\"  made {origin.date()}, {h:2} weeks ahead: {fit.forecast(h).iloc[-1]:7.0f}\")", "note": "Every four weeks, refit on everything known so far and forecast the same target week again."}], "output": "forecasts of the week ending 2025-06-29, actual 11166\n  made 2024-12-29, 26 weeks ahead:   11399\n  made 2025-01-26, 22 weeks ahead:   11362\n  made 2025-02-23, 18 weeks ahead:   11561\n  made 2025-03-23, 14 weeks ahead:   11352\n  made 2025-04-20, 10 weeks ahead:   11331\n  made 2025-05-18,  6 weeks ahead:   11307\n  made 2025-06-15,  2 weeks ahead:   11157"}
 ```
 
-Most revisions moved the forecast by a few dozen orders. The one exception has a name: the
-February vintage jumped by about 200, because the week ending 16 February came in high, with no
-Carnival in it, and the level rose; four weeks later Carnival arrived in March and the next vintage
-took the jump back. The last vintage, two weeks ahead, said 11,157 against 11,166 that happened.
-That is the normal shape: **revisions settle as the target approaches**, and when one jumps, the
-jump should be explainable by something in the new weeks. A series of revisions that jump around
-for no nameable reason is a sign the method is reacting to noise.
+Most revisions moved the forecast by a few dozen orders. The one exception has a name: the February
+vintage jumped by about 200, because the week ending 16 February came in high, with no Carnival in it,
+and the level rose. Four weeks later Carnival arrived in March and the next vintage took the jump
+back. The last vintage, two weeks ahead, said 11,157 against 11,166 that happened. That is the normal
+shape: **revisions settle as the target approaches**, and when one jumps, the jump should be
+explainable by something in the new weeks. A series of revisions that jump around for no nameable
+reason is a sign the method is reacting to noise.
 
 ## Keep every vintage
 

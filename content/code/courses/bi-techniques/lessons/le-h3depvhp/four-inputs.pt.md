@@ -18,8 +18,8 @@ antes do teste.
 Dois deles vêm da aula 15 de `statistics`. **O α é a taxa de erro tipo I**: declarar um vencedor que
 não é. **O β é a taxa de erro tipo II**: perder um vencedor que é, e o poder é o complemento dele. As
 convenções, 5 por cento e 80 por cento, querem dizer que um teste é montado para aceitar quatro vezes
-mais risco de perder um efeito do que de inventar um, o que reflete que lançar uma mudança que não
-faz nada costuma custar mais que não lançar uma que ajuda.
+mais risco de perder um efeito do que de inventar um. Isso reflete um julgamento: lançar uma mudança
+que não faz nada costuma custar mais que não lançar uma que ajuda.
 
 **A taxa de base vem do dado, não da esperança.** Os 4,2 por cento da Panela são a conversão que o
 plano espera no grupo de controle. Se a taxa real vier diferente, o poder do teste muda junto, o que

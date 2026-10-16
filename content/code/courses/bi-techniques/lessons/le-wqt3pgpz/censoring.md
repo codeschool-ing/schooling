@@ -30,8 +30,8 @@ and say why.
 The second mistake is averaging. "Average month-6 retention" across all cohorts can only use the
 cohorts that are at least six months old, so it describes older cohorts only. "Average retention
 curve" built by averaging each column uses a different set of cohorts in every column: month 1
-averages all eighteen cohorts of the heatmap, month 12 only the twelve of 2024, and if the newer cohorts behave differently, the
-curve bends where the set of cohorts changes rather than where behaviour does.
+averages all eighteen cohorts of the heatmap, month 12 only the twelve of 2024. If the newer cohorts
+behave differently, the curve bends where the set of cohorts changes rather than where behaviour does.
 
 The safe practices:
 

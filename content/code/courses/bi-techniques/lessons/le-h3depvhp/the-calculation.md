@@ -21,7 +21,7 @@ you want to see.
 
 ## Where the formula comes from
 
-`statistics` lesson 12 gave the standard error of a proportion, `sqrt(p(1 − p)/n)`. The test of
-lesson 10 will compare the difference of two rates with its standard error; the sample size is the
-`n` at which a true difference of exactly the MDE sits far enough from zero that, 80 per cent of the
-time, it lands beyond the 5 per cent threshold. The two z-values are those two distances, added.
+`statistics` lesson 12 gave the standard error of a proportion, `sqrt(p(1 − p)/n)`. The test of lesson
+10 will compare the difference of two rates with its standard error. The sample size is the `n` at
+which a true difference of exactly the MDE sits far enough from zero that, 80 per cent of the time, it
+lands beyond the 5 per cent threshold. The two z-values are those two distances, added.

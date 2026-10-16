@@ -21,7 +21,7 @@ O segundo teste é outra história: p = 3,5 × 10⁻⁶, uma diferença que uma 
 algumas vezes em um milhão. Isso é um **desequilíbrio da amostra**, em inglês *sample ratio mismatch*
 (SRM), e quando acontece **o resultado do teste não é interpretado, diga o que disser**. Uma divisão
 quebrada quase sempre quer dizer que alguns visitantes se perderam de um grupo e não do outro, e os
-perdidos raramente são uma amostra aleatória: uma página de tratamento que quebra em celulares velhos
+perdidos raramente são uma amostra aleatória. Uma página de tratamento que quebra em celulares velhos
 perde exatamente os visitantes menos propensos a comprar, e o tratamento parece melhor por isso.
 
 Causas comuns que vale conhecer, porque o conserto está no encanamento e não na estatística:

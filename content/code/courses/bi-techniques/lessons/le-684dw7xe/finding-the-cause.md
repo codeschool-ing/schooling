@@ -26,9 +26,9 @@ for most customers they are. For a customer whose box arrives a week late, they 
 Nothing is wrong with the data: every date in it is correct. What is wrong is the assumption that
 eleven days of silence means the same thing for everybody.
 
-It is also a case of **aggregation bias**, since one model was fitted to all four regions, and of
-**representation bias**, since the North is too small a share of the training data for the model to
-learn its rhythm on its own.
+It is also a case of **aggregation bias**, since one model was fitted to all four regions. And it is
+representation bias, since the North is too small a share of the training data for the model to learn
+its rhythm on its own.
 
 ## A cause is a claim
 

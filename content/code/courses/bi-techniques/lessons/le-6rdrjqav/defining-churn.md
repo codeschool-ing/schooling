@@ -34,7 +34,7 @@ round number, and the choice of percentile is a trade:
 - **too long a silence**, 120 days, notices churn months after it happened, too late to do anything.
 
 Two cautions. **The threshold differs between groups whose ordering rhythm differs**: fortnightly
-customers have longer normal gaps than weekly ones, and lesson 18 shows Panela's North receiving its
-boxes a week later than everybody else, so one threshold for everybody treats the North as more
-"churned" than it is. And **churn can only be judged where the silence has had time to happen**: a
-customer whose last order was ten days before the data ends is undecided, not active.
+customers have longer normal gaps than weekly ones. Lesson 18 shows Panela's North receiving its boxes
+a week later than everybody else, so one threshold for everybody treats the North as more "churned"
+than it is. And **churn can only be judged where the silence has had time to happen**: a customer
+whose last order was ten days before the data ends is undecided, not active.

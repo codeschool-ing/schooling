@@ -19,7 +19,7 @@ sai mais barato, e a diferença cresce com a distância entre as páginas e com 
 
 Não é de graça, e o custo é aquele de que as aulas de A/B falavam. A estimativa do bandido para a
 página antiga se apoia em bem menos visitantes, então **a medida dele da diferença é menos precisa**,
-e as escolhas dele dependem dos primeiros resultados, que a aula 11 mostrou serem ruidosos: uma página
+e as escolhas dele dependem dos primeiros resultados, que a aula 11 mostrou serem ruidosos. Uma página
 que começa com azar recebe menos visitantes e menos chances de se recuperar. Nesta rodada ele mostrou
 a página nova a só dois visitantes em três, bem abaixo dos nove em dez que a regra dele alcançaria
 quando tivesse certeza: com taxas de conversão tão próximas, as duas páginas trocam de lugar aos olhos

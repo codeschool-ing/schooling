@@ -31,9 +31,9 @@ secrets. A churn score that kept somebody out of a club would be such a decision
 have to be able to explain it and to review it. The text once required that review to be made by a
 person; that requirement was removed in 2019, so whether a person looks is now the company's choice.
 
-There is still an argument for keeping a person in the loop wherever a model's decision closes a door: not
-reviewing every flag, which nobody would do for long, but **a route by which a customer, or an
-employee who sees something odd, can ask for a human look**.
+There is still an argument for keeping a person in the loop wherever a model's decision closes a door.
+Not to review every flag, which nobody would do for long, but to keep **a route by which a customer,
+or an employee who sees something odd, can ask for a human look**.
 
 ## Deciding not to
 

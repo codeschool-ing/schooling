@@ -22,6 +22,6 @@ você quer ver.
 ## De onde vem a fórmula
 
 A aula 12 de `statistics` deu o erro padrão de uma proporção, `sqrt(p(1 − p)/n)`. O teste da aula 10
-vai comparar a diferença de duas taxas com o erro padrão dela; o tamanho de amostra é o `n` em que uma
+vai comparar a diferença de duas taxas com o erro padrão dela. O tamanho de amostra é o `n` em que uma
 diferença verdadeira de exatamente o MDE fica longe o bastante de zero para, 80 por cento das vezes,
 cair além do limiar de 5 por cento. Os dois valores z são essas duas distâncias, somadas.

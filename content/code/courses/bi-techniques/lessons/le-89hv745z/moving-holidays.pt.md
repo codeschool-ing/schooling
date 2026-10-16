@@ -40,11 +40,11 @@ prevista.
 ```
 
 **O modelo estima um dia de Carnaval em cerca de −322 pedidos**, e com isso corrige as duas semanas
-que a aula 3 errou. A semana que termina em 16 de fevereiro, que teve Carnaval em 2024 e não em
-2025, agora é prevista em 8.735 contra 8.767 reais. As semanas em que o Carnaval de fato caiu em
-2025 são rebaixadas, mas não o bastante: a semana que termina em 9 de março ainda é prevista em
-8.695 contra 7.794, então o efeito por dia fica subestimado com só dois Carnavais nos anos de
-treino. Nas 26 semanas o MAE cai de 362,0 para 301,3.
+que a aula 3 errou. A semana que termina em 16 de fevereiro, que teve Carnaval em 2024 e não em 2025,
+agora é prevista em 8.735 contra 8.767 reais. As semanas em que o Carnaval de fato caiu em 2025 são
+rebaixadas, mas não o bastante: a semana que termina em 9 de março ainda é prevista em 8.695 contra
+7.794. O efeito por dia fica subestimado com só dois Carnavais nos anos de treino. Nas 26 semanas o
+MAE cai de 362,0 para 301,3.
 
 É a mesma ideia da lista de feriados do Prophet da aula 3, montada com peças que você já tem. Vêm
 dois cuidados junto. Um regressor precisa **dos seus valores futuros na hora da previsão**: um

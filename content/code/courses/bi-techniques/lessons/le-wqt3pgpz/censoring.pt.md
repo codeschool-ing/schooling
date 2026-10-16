@@ -28,9 +28,9 @@ período não terminou**, ou pinte-as de cinza e diga por quê.
 ## Tirar a média de colunas de comprimentos diferentes
 
 O segundo erro é a média. "Retenção média no mês 6" em todas as coortes só pode usar as coortes com
-pelo menos seis meses, então descreve só as mais antigas. Uma "curva média de retenção" montada tirando
-a média de cada coluna usa um conjunto diferente de coortes em cada coluna: o mês 1 tira a média das
-dezoito coortes do mapa de calor, o mês 12 só das doze de 2024, e se as coortes mais novas se
+pelo menos seis meses, então descreve só as mais antigas. Uma "curva média de retenção" montada
+tirando a média de cada coluna usa um conjunto diferente de coortes em cada coluna: o mês 1 tira a
+média das dezoito coortes do mapa de calor, o mês 12 só das doze de 2024. Se as coortes mais novas se
 comportam diferente, a curva dobra onde o conjunto de coortes muda e não onde o comportamento muda.
 
 As práticas seguras:

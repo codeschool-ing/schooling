@@ -30,6 +30,6 @@ Two rules make a rolling evaluation trustworthy.
   question is one week ahead and finance's is a year. A model can win at one horizon and lose at
   another, as lesson 4's damped trend did.
 
-When two models are this close, the tie-breakers are not accuracy at all: which one the team can
-maintain, which one fails more gracefully when something odd happens, and whether an average of the
-two, which is often better than either, is worth the second model.
+When two models are this close, the tie-breakers are not accuracy at all. They are which one the team
+can maintain, which one fails more gracefully when something odd happens, and whether an average of
+the two is worth running a second model; such an average often beats either.

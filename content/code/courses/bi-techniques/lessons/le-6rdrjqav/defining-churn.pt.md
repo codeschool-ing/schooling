@@ -35,7 +35,7 @@ redondo, e a escolha do percentil é uma troca:
   para fazer qualquer coisa.
 
 Dois cuidados. **O limiar muda entre grupos cujo ritmo de pedido muda**: clientes quinzenais têm
-intervalos normais mais longos que os semanais, e a aula 18 mostra o Norte da Panela recebendo as
-caixas uma semana depois de todo mundo, então um limiar único trata o Norte como mais "perdido" do que
-está. E **o churn só pode ser julgado onde o silêncio teve tempo de acontecer**: um cliente cujo último
+intervalos normais mais longos que os semanais. A aula 18 mostra o Norte da Panela recebendo as caixas
+uma semana depois de todo mundo, então um limiar único trata o Norte como mais "perdido" do que está.
+E **o churn só pode ser julgado onde o silêncio teve tempo de acontecer**: um cliente cujo último
 pedido foi dez dias antes do fim do dado está indefinido, não ativo.

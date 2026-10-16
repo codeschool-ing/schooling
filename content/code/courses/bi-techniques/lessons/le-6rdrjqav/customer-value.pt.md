@@ -41,5 +41,5 @@ Três correções transformam essa receita num número que define um orçamento.
   descontada pelo custo de capital da empresa; em um ano a correção é pequena.
 
 O valor do cliente também herda todo cuidado da aula 12 e desta: é calculado por coorte, precisa de
-coortes velhas o bastante para ter chegado à idade relatada, e as coortes de 2025, que retêm melhor,
+coortes velhas o bastante para ter chegado à idade relatada. E as coortes de 2025, que retêm melhor,
 vão valer mais do que estes números de 2024 dizem.
