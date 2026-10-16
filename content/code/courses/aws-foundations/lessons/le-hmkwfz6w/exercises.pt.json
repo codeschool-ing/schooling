@@ -1,0 +1,452 @@
+{
+  "ex-66hyhbs3": {
+    "prompt": "O caio tem a `AmazonS3ReadOnlyAccess`, que permite `s3:Get*` em todo recurso, e uma política inline que nega `s3:*` no `shop-backups`. Ele pede um objeto do `shop-backups`. O que acontece?",
+    "hint": "Especificidade conta?",
+    "choices": [
+      {
+        "text": "Permitido: `s3:Get*` nomeia a ação com mais precisão que `s3:*`",
+        "why": "Especificidade não decide nada no IAM. Um `Deny` explícito que bate encerra a requisição."
+      },
+      {
+        "text": "Recusado: o `Deny` explícito vence",
+        "why": "Isso, e o moto julgou exatamente isso como a AWS: o `shop-assets` listou, o `shop-backups` foi recusado."
+      },
+      {
+        "text": "Permitido, porque a política gerenciada foi anexada antes da inline",
+        "why": "A ordem de anexação, como a ordem das instruções, não tem papel nenhum."
+      },
+      {
+        "text": "Depende de qual das duas políticas a AWS ler primeiro",
+        "why": "A AWS lê todas juntas; o resultado é o mesmo toda vez."
+      }
+    ]
+  },
+  "ex-ppbx5xsw": {
+    "prompt": "Um usuário do IAM recém-criado, sem políticas, roda `aws s3 ls` e é recusado. O que o recusou?",
+    "hint": "Ninguém escreveu nada sobre este usuário.",
+    "choices": [
+      {
+        "text": "Um `Deny` que a AWS anexa a todo usuário novo",
+        "why": "Nenhuma política é anexada a um usuário novo. A recusa não precisa de nenhuma."
+      },
+      {
+        "text": "Nada a permitiu",
+        "why": "Isso: a negação implícita. É onde toda requisição começa, e só um `Allow` a tira de lá."
+      },
+      {
+        "text": "O S3 recusa todo usuário sem dispositivo de MFA",
+        "why": "O MFA só importa onde a condição de uma política o exige."
+      },
+      {
+        "text": "A contagem de requisições livres do moto tinha acabado",
+        "why": "O fim da contagem é o que faz o moto julgar; o julgamento em si é a falta de `Allow`."
+      }
+    ]
+  },
+  "ex-13nfg961": {
+    "prompt": "Uma SCP em `shop-prod` permite `s3:*`. Uma role nessa conta não tem políticas de identidade, e o bucket que ela lê não tem política de bucket. A role consegue ler o bucket?",
+    "hint": "Que tipo de camada é uma SCP?",
+    "choices": [
+      {
+        "text": "Sim: a SCP permite, e nada nega",
+        "why": "Uma SCP só limita. O `Allow` dela diz até onde as políticas da conta podem ir, e aqui nenhuma vai a lugar nenhum."
+      },
+      {
+        "text": "Sim, para buckets que pertencem à mesma organização",
+        "why": "Pertencer a uma organização também não concede nada; uma camada que concede tem de permitir a ação."
+      },
+      {
+        "text": "Não: nada concede isso",
+        "why": "Isso. Passar por todo limite é metade da regra; a outra metade é um `Allow` numa política de identidade ou de recurso."
+      },
+      {
+        "text": "Não, porque uma SCP que permite algo nega todo o resto ao root",
+        "why": "A SCP limita todo principal, root inclusive, mas não foi ela que recusou esta requisição: foi a falta de concessão."
+      }
+    ]
+  },
+  "ex-gqcxzg25": {
+    "prompt": "Uma role em `shop-prod` grava no `shop-logs`, um bucket em `log-archive`. A política do bucket permite a role; as políticas da própria role não dizem nada sobre S3. A gravação é permitida?",
+    "hint": "Quantas contas estão envolvidas?",
+    "choices": [
+      {
+        "text": "Sim: uma política de bucket que permite um principal basta",
+        "why": "Dentro de uma conta, bastaria. Entre contas, o lado de quem chama também tem de permitir."
+      },
+      {
+        "text": "Não: o lado da própria role não concede nada",
+        "why": "Isso. A role também precisa de `s3:PutObject` no bucket na própria política. Essa regra não foi rodada aqui, já que o moto não julga política de bucket."
+      },
+      {
+        "text": "Sim, já que as duas contas estão na organização da loja",
+        "why": "Estar na mesma organização não concede nada; as políticas de cada conta continuam decidindo."
+      },
+      {
+        "text": "Não: a AWS proíbe gravar no bucket de outra conta",
+        "why": "É permitido e comum, desde que os dois lados concedam; o log centralizado funciona exatamente assim."
+      }
+    ]
+  },
+  "ex-5npnq67d": {
+    "prompt": "Ponha em ordem os passos da avaliação da AWS, como a figura da lição os desenha.",
+    "hint": "O passo que pode encerrar tudo de uma vez vem primeiro.",
+    "items": [
+      "procurar um `Deny` explícito em qualquer política",
+      "conferir se as SCPs e RCPs da organização permitem",
+      "achar um `Allow` numa política de identidade ou de recurso",
+      "conferir o limite de permissões, se houver um",
+      "conferir a política de sessão, se uma foi passada"
+    ],
+    "trap": "Pôr o `Allow` primeiro é o deslize comum. Um `Allow` achado cedo não decide nada, porque um `Deny` ou um limite depois ainda recusa."
+  },
+  "ex-3953f63p": {
+    "prompt": "Ligue cada camada a quem a escreve.",
+    "hint": "A tabela da primeira seção.",
+    "pairs": [
+      {
+        "left": "uma service control policy",
+        "right": "a organização"
+      },
+      {
+        "left": "um limite de permissões",
+        "right": "um administrador, num usuário ou role"
+      },
+      {
+        "left": "uma política de sessão",
+        "right": "quem assume a role"
+      },
+      {
+        "left": "uma política de bucket",
+        "right": "o dono do recurso"
+      }
+    ],
+    "right_distractors": [
+      "a AWS, igual para toda conta"
+    ]
+  },
+  "ex-htr6vccn": {
+    "prompt": "Um usuário não tem políticas próprias e tem um limite de permissões de `s3:*`. Na AWS, ele consegue listar os buckets?",
+    "hint": "Interseção ou soma?",
+    "choices": [
+      {
+        "text": "Sim: o limite permite toda ação do S3",
+        "why": "Um limite não concede nada. O `Allow` dele é um teto, e sem política de identidade não há nada embaixo."
+      },
+      {
+        "text": "Não: a interseção de nada com S3 é nada",
+        "why": "Isso. O limite só tira; uma política de identidade ainda tem de permitir a listagem."
+      },
+      {
+        "text": "Sim, mas só para buckets que ele mesmo criou",
+        "why": "Criar um bucket não dá nada ao criador no IAM, e ele nem conseguiria ter criado um."
+      },
+      {
+        "text": "Só depois de o limite se propagar, alguns minutos depois",
+        "why": "O tempo não é a questão; nenhuma espera transforma um teto numa concessão."
+      }
+    ]
+  },
+  "ex-dtqbvd6k": {
+    "prompt": "A `app-admin` tem `AdministratorAccess` e um limite só de S3. Uma sessão dela chama `iam:ListUsers`. O que a AWS responderia, e o que o moto respondeu?",
+    "hint": "O moto guarda limites.",
+    "choices": [
+      {
+        "text": "Os dois listam os usuários: o `AdministratorAccess` está acima de qualquer limite",
+        "why": "Nenhuma política está acima de um limite; é para isso que um limite existe. Só o moto listou."
+      },
+      {
+        "text": "Os dois recusam, porque o moto aplica o limite como a AWS",
+        "why": "O moto guarda o limite e nunca o aplica: a sessão listou `admin`, `caio` e `dani`."
+      },
+      {
+        "text": "A AWS recusa; o moto listou todos os usuários",
+        "why": "Isso. `iam:ListUsers` está fora da interseção, então a AWS recusa. A recusa não foi rodada aqui."
+      },
+      {
+        "text": "A AWS lista; o moto recusou, porque o limite nomeia o S3",
+        "why": "É o contrário: a AWS aplica limites e o moto não."
+      }
+    ]
+  },
+  "ex-h15ez9b4": {
+    "prompt": "Quais destes o moto ignorou nesta lição, embora a AWS os aplicasse? Marque todos os que se aplicam.",
+    "hint": "Dois deles ele julgou exatamente como a AWS.",
+    "choices": [
+      {
+        "text": "Um limite de permissões numa role",
+        "why": "Isso. Guardado, e nunca aplicado."
+      },
+      {
+        "text": "Um `Deny` explícito numa política inline de usuário",
+        "why": "Esse o moto aplicou: o `shop-backups` foi recusado ao caio."
+      },
+      {
+        "text": "Uma política de sessão passada ao `assume-role`",
+        "why": "Isso. Nem um `Deny` em toda ação do IAM mudou nada."
+      },
+      {
+        "text": "Uma política de bucket negando a exclusão do bucket",
+        "why": "Isso. O bucket foi apagado."
+      },
+      {
+        "text": "A negação implícita para um usuário sem política",
+        "why": "O moto recusou tudo ao caio antes de qualquer política ser anexada, como a AWS faria."
+      },
+      {
+        "text": "Uma condição exigindo MFA",
+        "why": "Isso. A dani listou os buckets com uma chave comum."
+      }
+    ]
+  },
+  "ex-5x4ry8hk": {
+    "prompt": "Por que é perigoso deixar um desenvolvedor criar roles e anexar qualquer política a elas, sem limite no caminho?",
+    "hint": "O que o desenvolvedor poderia criar, e depois virar?",
+    "choices": [
+      {
+        "text": "Toda role custa dinheiro enquanto existir",
+        "why": "Roles são gratuitas. O custo está no que se pode fazer uma fazer."
+      },
+      {
+        "text": "Uma role criada por eles os tornaria administradores",
+        "why": "Isso: criar, confiar em si mesmo, assumir. O limite é o que põe teto em toda role que esse desenvolvedor criar."
+      },
+      {
+        "text": "Dois desenvolvedores poderiam criar roles com o mesmo nome",
+        "why": "O IAM recusa um nome duplicado; isso é um incômodo, não uma escalada."
+      },
+      {
+        "text": "Uma role pula o MFA que o criador era obrigado a usar",
+        "why": "Se o MFA é exigido depende de condições, não de a role existir."
+      }
+    ]
+  },
+  "ex-xrk3fhgq": {
+    "prompt": "Na política de delegação, por que a segunda instrução nega `iam:DeleteRolePermissionsBoundary` e `iam:CreatePolicyVersion` no limite?",
+    "hint": "O que um desenvolvedor poderia fazer logo depois de criar uma role do jeito certo?",
+    "choices": [
+      {
+        "text": "Para manter o limite abaixo de cinco versões",
+        "why": "O limite de cinco é aplicado de qualquer jeito. O deny trata de quem pode mudar o limite."
+      },
+      {
+        "text": "Porque todo `Allow` numa política precisa de um `Deny` correspondente",
+        "why": "Essa regra não existe; a maioria das políticas não tem `Deny` nenhum."
+      },
+      {
+        "text": "Para o teto não poder ser tirado nem reescrito depois",
+        "why": "Isso. A primeira instrução faz do limite o preço de uma role; a segunda impede que o preço seja tomado de volta."
+      },
+      {
+        "text": "Para impedir os desenvolvedores de apagar as roles que criaram",
+        "why": "O `DeleteRole` não está na lista; apagar uma role própria é inofensivo aqui."
+      }
+    ]
+  },
+  "ex-7smrnfjv": {
+    "prompt": "A chave de condição que uma política de delegação usa para exigir um teto em toda role nova é `iam:___`.",
+    "hint": "Ela nomeia a política gerenciada dada na requisição.",
+    "blanks": [
+      {
+        "accept": [
+          "PermissionsBoundary"
+        ]
+      }
+    ]
+  },
+  "ex-fh2me9dv": {
+    "prompt": "As políticas de identidade de uma role permitem `s3:*` e `iam:*`. O limite dela permite `s3:*` e `logs:*`. Dos três serviços S3, IAM e CloudWatch Logs, quantos as sessões dela podem usar na AWS?",
+    "hint": "A sobreposição das duas listas.",
+    "unit": "serviços"
+  },
+  "ex-1vapqpk9": {
+    "prompt": "O `shop-assets` tem uma política de bucket negando `s3:DeleteBucket` a `\"*\"`. Na AWS, o `admin`, com `AdministratorAccess` na mesma conta, esvazia o bucket e o apaga. O que acontece?",
+    "hint": "Onde um `Deny` explícito conta?",
+    "choices": [
+      {
+        "text": "Apagado: um administrador está acima de uma política de bucket",
+        "why": "Nada está acima de um `Deny` explícito, `AdministratorAccess` inclusive."
+      },
+      {
+        "text": "Apagado: uma política de bucket só vale para outras contas",
+        "why": "Ela vale para quem ela nomeia, e `\"*\"` nomeia todo mundo, os principais do dono inclusive."
+      },
+      {
+        "text": "Recusado: o `Deny` explícito encerra a requisição onde quer que esteja escrito",
+        "why": "Isso. O moto apagou, já que nunca lê políticas de bucket; a recusa da AWS não foi rodada aqui."
+      },
+      {
+        "text": "Recusado, até o admin apagar a política do bucket, o que ele não consegue",
+        "why": "Ele consegue apagar a política, já que nada nega isso, e depois o bucket. O `Deny` protege contra acidentes, não contra um administrador decidido."
+      }
+    ]
+  },
+  "ex-k6zz9qz9": {
+    "prompt": "Uma política nega tudo quando `{\"Bool\": {\"aws:MultiFactorAuthPresent\": \"false\"}}`. Na AWS, um script assina uma requisição com uma chave de acesso de longo prazo e sem MFA. A requisição é negada por essa instrução?",
+    "hint": "A chave vale `false`, ou está ausente?",
+    "choices": [
+      {
+        "text": "Não: com chave de longo prazo, a chave de MFA não existe",
+        "why": "Isso. Por isso a forma documentada é `BoolIfExists`, que também bate com uma chave ausente."
+      },
+      {
+        "text": "Sim: sem MFA, o valor da chave é `false`",
+        "why": "Para uma chave de longo prazo a chave nem está presente, e essa é a armadilha."
+      },
+      {
+        "text": "Sim, e o moto negaria do mesmo jeito",
+        "why": "O moto trata toda condição como satisfeita, então negaria; a AWS não. Eles diferem aqui."
+      },
+      {
+        "text": "A política é recusada como malformada, já que `Bool` não aceita strings",
+        "why": "`\"false\"` é como um valor booleano se escreve numa condição; o documento é válido."
+      }
+    ]
+  },
+  "ex-ahemhjcr": {
+    "prompt": "Um bucket só permite leituras com `IpAddress` em `aws:SourceIp` `203.0.113.0/24`, o escritório. Uma aplicação numa máquina EC2 chega ao S3 por um VPC endpoint e é recusada. Por quê?",
+    "hint": "O que a requisição pelo endpoint carrega?",
+    "choices": [
+      {
+        "text": "O endereço público da máquina está fora do intervalo do escritório",
+        "why": "Por um endpoint não há endereço público na requisição."
+      },
+      {
+        "text": "VPC endpoints não suportam S3",
+        "why": "O S3 é um dos endpoints mais comuns; a lição 19 monta um."
+      },
+      {
+        "text": "Condições não são avaliadas para requisições vindas do EC2",
+        "why": "Elas são avaliadas para toda requisição. Esta simplesmente não tem a chave."
+      },
+      {
+        "text": "A requisição não leva endereço público para comparar",
+        "why": "Isso. O endpoint tem chaves próprias, e uma política feita para os dois caminhos nomeia as duas."
+      }
+    ]
+  },
+  "ex-s655yw1h": {
+    "prompt": "Ligue cada chave de condição ao que ela guarda.",
+    "hint": "A tabela das quatro chaves.",
+    "pairs": [
+      {
+        "left": "`aws:SourceIp`",
+        "right": "o endereço público de onde a requisição veio"
+      },
+      {
+        "left": "`aws:MultiFactorAuthPresent`",
+        "right": "se as credenciais foram obtidas com MFA"
+      },
+      {
+        "left": "`aws:PrincipalTag/team`",
+        "right": "uma tag no usuário ou na role que chama"
+      },
+      {
+        "left": "`aws:RequestedRegion`",
+        "right": "a região para a qual a requisição vai"
+      }
+    ],
+    "right_distractors": [
+      "a região onde quem chama está"
+    ]
+  },
+  "ex-dgwrky2h": {
+    "prompt": "Que ferramenta diz, para um principal e uma lista de ações, se cada uma seria permitida e qual instrução decidiu, sem fazer as requisições?",
+    "hint": "Uma ferramenta simula; as outras validam ou fazem levantamento.",
+    "choices": [
+      {
+        "text": "`aws accessanalyzer validate-policy`",
+        "why": "Ela confere a gramática e a prática de um documento, não o que um principal pode fazer."
+      },
+      {
+        "text": "`aws iam simulate-principal-policy`",
+        "why": "Isso. Ela lê as políticas reais do principal e responde por ação; o moto responde a ela com HTTP 500, então ela roda contra a AWS."
+      },
+      {
+        "text": "Um Access Analyzer de acesso externo",
+        "why": "Ele lista recursos compartilhados fora da conta ou da organização, não decisões para um principal."
+      },
+      {
+        "text": "`aws iam get-account-summary`",
+        "why": "Ele conta usuários, políticas e cotas; não julga nada."
+      }
+    ]
+  },
+  "ex-m24spwpd": {
+    "prompt": "No moto, um `Deny` restrito a regiões diferentes de `sa-east-1` recusou ao caio uma requisição em `sa-east-1`. Por quê?",
+    "hint": "O que o moto faz com uma condição?",
+    "choices": [
+      {
+        "text": "O `AWS_DEFAULT_REGION` estava em outra região",
+        "why": "A transcrição imprimiu `sa-east-1` logo antes da requisição."
+      },
+      {
+        "text": "O moto trata toda condição como satisfeita, então o `Deny` se aplicou",
+        "why": "Isso. A AWS teria comparado a região e deixado a requisição passar."
+      },
+      {
+        "text": "Listar buckets é uma chamada global, então a região dela é `us-east-1`",
+        "why": "Uma preocupação plausível, mas o moto nunca comparou região nenhuma: tirar a política deixou a mesma chamada passar."
+      },
+      {
+        "text": "O caio não tinha `Allow` para listar buckets",
+        "why": "Ele tinha a `AmazonS3ReadOnlyAccess`; tirado o `Deny`, a listagem funcionou."
+      }
+    ]
+  },
+  "ex-b12vwzkr": {
+    "prompt": "A loja quer a garantia de que ninguém em `shop-prod`, o usuário root inclusive, consiga parar o CloudTrail. Que camada pode dar isso?",
+    "hint": "Que camada alcança o usuário root de uma conta membro?",
+    "choices": [
+      {
+        "text": "Um `Deny` numa política de identidade em todo usuário e role",
+        "why": "O root não recebe política de identidade, e toda identidade nova também precisaria dela."
+      },
+      {
+        "text": "Um limite de permissões em toda role da conta",
+        "why": "Um limite é definido por identidade, o root não pode ter um, e uma role criada amanhã começaria sem ele."
+      },
+      {
+        "text": "Uma service control policy com `Deny`, definida pela organização",
+        "why": "Isso. Uma SCP põe teto em todo principal da conta, root e identidades ainda não criadas inclusive; a lição 4 monta uma."
+      },
+      {
+        "text": "Uma política de sessão passada sempre que alguém assume uma role",
+        "why": "Uma política de sessão é escolhida por quem chama, então não garante nada sobre quem a deixa de fora."
+      }
+    ]
+  },
+  "ex-hxfk8kyh": {
+    "prompt": "Um desenvolvedor testa uma política nova no laboratório com a verificação do moto ligada, vê a chamada permitida, e conclui que a AWS também vai permitir. Qual é o motivo mais forte de isso não decorrer?",
+    "hint": "O que o moto pulou nesta lição que poderia ter recusado a chamada?",
+    "choices": [
+      {
+        "text": "As chaves do moto não são reais, então nada do que ele permite conta",
+        "why": "As chaves são do moto, mas as políticas de identidade foram julgadas como a AWS julga. A lacuna está em outro lugar."
+      },
+      {
+        "text": "O moto não aplica limite, SCP nem política de recurso e trata toda condição como satisfeita",
+        "why": "Isso. Qualquer um deles poderia recusar na AWS o que o moto permitiu; o simulador e o Access Analyzer são onde descobrir."
+      },
+      {
+        "text": "O moto avalia instruções em ordem, e a AWS não",
+        "why": "Nenhum dos dois tem ordem; o deny explícito do moto venceu um allow exatamente como o da AWS."
+      },
+      {
+        "text": "Um reinício do moto teria mudado a resposta",
+        "why": "Um reinício esvazia o moto; não muda como ele julga uma política."
+      }
+    ]
+  },
+  "ex-y2c4m18b": {
+    "prompt": "Toda requisição à AWS começa como uma negação ___.",
+    "hint": "A resposta antes de qualquer política ser lida.",
+    "blanks": [
+      {
+        "accept": [
+          "implícita",
+          "implicita"
+        ]
+      }
+    ]
+  }
+}
