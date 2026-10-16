@@ -21,7 +21,7 @@ A check costs four things, and three of them recur:
   that out.
 
 And it is worth one thing: the defects it catches, each one worth **what that defect would have
-cost had it escapes, minus what it costs when the test finds it**. Why a defect found late costs so
+cost had it escaped, minus what it costs when the test finds it**. Why a defect found late costs so
 much more than one found early is `qa-fundamentals` lesson 3; here that difference is one number
 you put into the sum. Which defects are likely enough to deserve a check at all is
 `qa-fundamentals` lesson 20, on prioritisation by risk.
@@ -44,13 +44,23 @@ nothing scrolls sideways, and lesson 16's comparison of the whole page with a sc
 run of the screenshot test writes its baseline:
 
 ```
-%%CAP baseline%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (673ms)
+    Error: A snapshot doesn't exist at /home/ana/quitanda/evidence/visual.spec.js-snapshots/shop-linux.png, writing actual.
+  1 failed
 ```
 
 Then the shop as it stands, with lesson 7's defect in it:
 
 ```
-%%CAP as-it-is%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
+  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (439ms)
+  1 passed (1.6s)
+ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (211ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (149ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (138ms)
+  3 passed (1.9s)
 ```
 
 Then four edits of the kind a shop makes every week, each undone before the next. Two are changes
@@ -58,26 +68,63 @@ somebody meant, one is a defect, and one is the fix lesson 7 asked for. The bord
 `app/public/style.css`:
 
 ```
-%%CAP border%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (960ms)
+      4794 pixels (ratio 0.01 of all image pixels) are different.
+  1 failed
+ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (163ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (132ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (158ms)
+  3 passed (1.8s)
 ```
 
 The banana costs R$ 6,20 instead of R$ 5,90, in `app/store.js`:
 
 ```
-%%CAP price%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.1s)
+      25 pixels (ratio 0.01 of all image pixels) are different.
+  1 failed
+ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (180ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (148ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (136ms)
+  3 passed (1.8s)
 ```
 
 Somebody writes `color: #fff` into `.price`, so every price is white on a white card. The page
 still holds the prices, and lesson 1's smoke test runs too:
 
 ```
-%%CAP hidden-price%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
+  ✘  1 evidence/visual.spec.js:5:1 › the shop looks as it did (1.0s)
+      1383 pixels (ratio 0.01 of all image pixels) are different.
+  1 failed
+ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
+  ✘  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (165ms)
+  ✘  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (142ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (129ms)
+  3 passed (1.7s)
+ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js | grep -E '✓|✘|^  [0-9]+ (passed|failed)'
+  ✓  1 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (175ms)
+  1 passed (1.4s)
 ```
 
 And the fix: `white-space: nowrap; min-width: 24rem;` deleted from `.basket`:
 
 ```
-%%CAP basket-fixed%%
+ana@laptop:~/quitanda$ npx playwright test --config evidence.config.js evidence/visual.spec.js | grep -E '✓|✘|^ +[0-9]+ pixels|snapshot doesn|^  [0-9]+ (passed|failed)'
+  ✓  1 evidence/visual.spec.js:5:1 › the shop looks as it did (451ms)
+  1 passed (1.7s)
+ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js -g sideways | grep -E '✓|✘|Expected to fail|^  [0-9]+ (passed|failed)'
+  ✓  1 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 360 px (158ms)
+  ✓  2 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 390 px (152ms)
+  ✓  3 tests/responsive.spec.js:45:3 › nothing scrolls sideways at 768 px (161ms)
+    Expected to fail, but passed.
+    Expected to fail, but passed.
+  2 failed
+  1 passed (3.6s)
 ```
 
 | the edit | was it a defect? | screenshot | sideways check |
@@ -86,13 +133,13 @@ And the fix: `white-space: nowrap; min-width: 24rem;` deleted from `.basket`:
 | darker border | no | **failed** | passed |
 | new price | no | **failed** | passed |
 | white prices | yes | **failed** | passed |
-| the fix | no, a repair | PIXELS | **passed, and said so** |
+| the fix | no, a repair | passed | **passed, and said so** |
 
 **Read the table by column.** The sideways check went red once, on the one thing it asks about, and
 it is blind to everything else, the white prices included, which the smoke test also passed. The
 screenshot went red on every edit that moved a pixel at its one width, the defect and the two
 changes alike, and it cannot see lesson 7's defect at all, because it takes its picture in a window
-1280 wide, where the basket fits.
+1280 wide, Playwright's default, where the basket fits.
 
 ## The two tests in the model
 
@@ -100,18 +147,18 @@ The numbers below are **assumptions, stated so you can change them**: a suite th
 working day for 250 days, 5,000 runs a year; ten minutes for a person to open a red run, look at a
 diff and decide; the shop's look changed once a week, 50 times a year; a defect found by a test in
 review costing 15 minutes and one found by a customer costing a working day, 480. The run times
-come from the captures.
+come from the runs above: 211, 149 and 138 ms for the three widths, and 439 ms for the screenshot, on the shop as it stands.
 
 | | sideways check (lesson 7) | screenshot (lesson 16) |
 |---|---|---|
 | writing | 15 min | 10 min |
-| changes that break it, a year | 0 of the 3 harmless edits above: 0 | 3 of 3: **50 × 10 = 500 min** |
-| false alarms | 0 | counted in the line above: every one was a change |
-| runs, machine time | RUNTIME | VISTIME |
+| changes of look that break it | 0 of the 2 above: 0 min | 2 of 2, so all 50: **50 × 10 = 500 min** |
+| runs, machine time | 0.50 s a run: 2,490 s, 41 min | 0.44 s a run: 2,195 s, 37 min |
 | defects caught, a year | assume 1: 465 min | assume 1: 465 min |
 | **person cost : value** | **15 : 465** | **510 : 465** |
 
-The screenshot is the more powerful test, and in this shop it **costs more than the defect it
+**The two cost about the same to run**, so run time is not where they differ. The screenshot is the more
+powerful test, and in this shop it **costs more than the defect it
 catches**, because the shop changes its look more often than it breaks it. That is a statement
 about the shop and not about screenshots: change the assumption to one change of look a month and
 its person cost is 10 + 12 × 10 = 130, comfortably under its value. The sideways check is cheap for
@@ -119,16 +166,16 @@ a reason that does not depend on the assumptions. It asks one question that has 
 at every width**, so nothing harmless can turn it red.
 
 ```schooling-figure
-FIGURE
+{"svg": "<svg viewBox=\"0 0 720 380\" role=\"img\" aria-label=\"A chart with cost on the horizontal axis and value on the vertical, both in person-minutes a year from 0 to 600, and a dashed diagonal where value equals cost. The sideways check from lesson 7 sits at cost 15 and value 465, far above the diagonal. The screenshot test with the look changing every week sits at cost 510 and value 465, below the diagonal. An arrow moves it to cost 130, above the diagonal, for a look that changes once a month.\"><polygon points=\"90,320 680,40 90,40\" fill=\"var(--panel)\"></polygon><line x1=\"90\" y1=\"320\" x2=\"680\" y2=\"320\" stroke=\"var(--wire)\" stroke-width=\"1\"></line><line x1=\"90\" y1=\"320\" x2=\"90\" y2=\"40\" stroke=\"var(--wire)\" stroke-width=\"1\"></line><text x=\"90\" y=\"338\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"middle\">0</text><text x=\"82\" y=\"324\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"end\">0</text><text x=\"287\" y=\"338\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"middle\">200</text><text x=\"82\" y=\"231\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"end\">200</text><text x=\"483\" y=\"338\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"middle\">400</text><text x=\"82\" y=\"137\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"end\">400</text><text x=\"680\" y=\"338\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"middle\">600</text><text x=\"82\" y=\"44\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"end\">600</text><line x1=\"90\" y1=\"320\" x2=\"680\" y2=\"40\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" stroke-dasharray=\"4 4\"></line><text x=\"414\" y=\"203\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"start\">value = cost</text><text x=\"102\" y=\"180\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\" text-anchor=\"start\">worth more than it costs</text><text x=\"672\" y=\"306\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--amber)\" text-anchor=\"end\">costs more than it is worth</text><text x=\"385\" y=\"360\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\" text-anchor=\"middle\">cost, person-minutes a year</text><text x=\"22\" y=\"180\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\" text-anchor=\"middle\" transform=\"rotate(-90 22 180)\">value, person-minutes a year</text><line x1=\"582\" y1=\"103\" x2=\"230\" y2=\"103\" stroke=\"var(--amber)\" stroke-width=\"1.5\" stroke-dasharray=\"5 4\"></line><polygon points=\"226,103 238,98 238,108\" fill=\"var(--amber)\"></polygon><circle cx=\"105\" cy=\"103\" r=\"6\" fill=\"var(--phosphor)\"></circle><text x=\"115\" y=\"73\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\" text-anchor=\"start\">sideways check</text><text x=\"115\" y=\"88\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"start\">15 : 465</text><circle cx=\"218\" cy=\"103\" r=\"6\" fill=\"var(--amber)\"></circle><text x=\"226\" y=\"73\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\" text-anchor=\"start\">screenshot, look changes monthly</text><text x=\"226\" y=\"88\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"start\">130 : 465</text><circle cx=\"592\" cy=\"103\" r=\"6\" fill=\"var(--amber)\"></circle><text x=\"600\" y=\"129\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\" text-anchor=\"end\">screenshot, look changes weekly</text><text x=\"600\" y=\"144\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\" text-anchor=\"end\">510 : 465</text></svg>", "caption": "Three points from the cost model, with this section's assumptions. The sideways check costs about a thirtieth of what it is worth. The screenshot costs more than it is worth while the look changes weekly, and less once it changes monthly: the test did not change, the shop did."}
 ```
 
 ## What to do with an expensive test
 
 - **Narrow it.** `expect(page.locator('.card').first()).toHaveScreenshot()` compares one card rather
-  than the page, and stops failing when the header changes.
+  than the page, so an edit anywhere else on the page no longer turns it red.
 - **Ask for the fact instead of the picture**, where there is one. The white prices are a contrast
   failure, and a contrast check has a right answer, which `non-functional-testing` lessons 12 to 15
   test.
 - **Run it less often**, at night rather than on every push, so that it is a report somebody reads
   rather than a gate somebody waits behind.
-- **Delete it**, with the reason written down, which is the section after next.
+- **Delete it**, with the reason written down, which is two sections on.

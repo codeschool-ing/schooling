@@ -47,8 +47,8 @@ Everything you learnt about isolation and cleanup in lesson 15 applies unchanged
 **`non-functional-testing` builds on this one.** It assumes the automation base you now have, and
 uses it for what this course kept pointing at and leaving alone: how fast the page is
 (`non-functional-testing` lesson 10, front-end performance) and whether everybody can use it
-(lessons 12 to 15, accessibility). The contrast check that would have caught the white prices
-two sections back is that course's subject.
+(lessons 12 to 15, accessibility). The contrast check that would have caught the white prices of
+this lesson's experiment is that course's subject.
 
 And `testing-cicd` is where the suite you built stops running on your laptop. Lesson 1 there is
 the layers again, from the pipeline's side, and lesson 5 is continuous integration, where the run
