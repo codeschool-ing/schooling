@@ -130,8 +130,8 @@ tps = 54424.941721 (without initial connection time)
 
 O `--scale=10` criou um milhão de linhas em `pgbench_accounts`. **Vinte vezes mais clientes fizeram
 menos trabalho**: 90.620 transações por segundo com quatro, 54.425 com oitenta. E cada transação
-esperou muito mais, 0,044 ms em média com quatro clientes e 1,470 ms com oitenta, porque a máquina
-de gravação tem quatro processadores e oitenta backends se revezaram neles, com o kernel alternando
+esperou muito mais, 0,044 ms em média com quatro clientes e 1,470 ms com oitenta. A máquina de
+gravação tem quatro processadores, então oitenta backends se revezaram neles, com o kernel alternando
 entre eles e os backends disputando as mesmas estruturas compartilhadas. A lição 22 do
 `db-performance` trata de rodar benchmarks direito; estes números são da máquina de gravação, com o
 próprio `pgbench` disputando os mesmos quatro processadores, e os seus serão diferentes.

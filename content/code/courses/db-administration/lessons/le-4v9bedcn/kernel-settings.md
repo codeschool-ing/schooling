@@ -42,7 +42,7 @@ to lower a score; on your virtual machine it prints the unit's -900.
 **`vm.overcommit_memory = 2` stops the kernel promising memory it does not have.** A request
 beyond the limit fails at once, inside the process that made it, and PostgreSQL turns that into an
 `out of memory` error for that one query rather than a killed process and a restart. The limit is
-the swap plus `vm.overcommit_ratio` per cent of the memory, and that second number is the trap:
+the swap plus `vm.overcommit_ratio` per cent of the memory. That second number is the trap:
 **at the default of 50, a 4 GB machine without swap may commit only 2 GB in total**, every process
 included, and a server sized by lesson 6's arithmetic can fail to start or fail ordinary queries. So
 the two are set together, on a machine that runs nothing but the database, in a file of their own:

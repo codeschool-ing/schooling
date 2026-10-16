@@ -112,7 +112,7 @@ through this.
 
 This disk filled because it was smaller than `max_wal_size`, on purpose. On a real server the
 usual causes are a replication slot nobody is reading, which lesson 7 named, and an archive
-command that keeps failing, which `db-reliability` covers with archiving; in both, the log is kept
+command that keeps failing, which `db-reliability` covers with archiving. In both, the log is kept
 because something still needs it, and it grows until the disk ends. **Watch free space on the log's
 filesystem and alert well before it is full**, and when it fills anyway, lesson 24 writes the
 runbook for that night.

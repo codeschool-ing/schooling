@@ -130,8 +130,8 @@ tps = 54424.941721 (without initial connection time)
 
 `--scale=10` made a million rows in `pgbench_accounts`. **Twenty times the clients did less
 work**: 90,620 transactions a second with four, 54,425 with eighty. And each transaction waited far
-longer, 0.044 ms on average with four clients and 1.470 ms with eighty, because the recording
-machine has four processors and eighty backends took turns on them, with the kernel switching
+longer, 0.044 ms on average with four clients and 1.470 ms with eighty. The recording
+machine has four processors, so eighty backends took turns on them, with the kernel switching
 between them and the backends contending for the same shared structures. Lesson 22 of
 `db-performance` is about running benchmarks properly; these numbers are the recording machine's,
 with `pgbench` itself competing for the same four processors, and yours will differ.

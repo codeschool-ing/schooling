@@ -42,7 +42,7 @@ para baixar uma pontuação; na sua máquina virtual imprime o -900 da unidade.
 **`vm.overcommit_memory = 2` faz o kernel parar de prometer memória que não tem.** Um pedido acima
 do limite falha na hora, dentro do processo que o fez, e o PostgreSQL transforma isso num erro
 `out of memory` para aquela consulta, em vez de um processo morto e um reinício. O limite é o swap
-mais `vm.overcommit_ratio` por cento da memória, e esse segundo número é a armadilha: **no padrão de
+mais `vm.overcommit_ratio` por cento da memória. Esse segundo número é a armadilha: **no padrão de
 50, uma máquina de 4 GB sem swap só pode comprometer 2 GB no total**, contando todos os processos, e
 um servidor dimensionado pela aritmética da lição 6 pode não iniciar ou falhar em consultas comuns.
 Então os dois são ajustados juntos, numa máquina que só roda o banco, num arquivo próprio:

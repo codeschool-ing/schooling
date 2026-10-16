@@ -116,8 +116,8 @@ como confirmado se perdeu, que é o WAL cumprindo a promessa que a lição 7 des
 
 Este disco encheu porque era menor que o `max_wal_size`, de propósito. Num servidor de verdade, as
 causas de costume são um slot de replicação que ninguém está lendo, que a lição 7 nomeou, e um
-comando de arquivamento que falha sem parar, que o `db-reliability` trata junto com o arquivamento;
-nos dois casos, o log é guardado porque alguma coisa ainda precisa dele, e cresce até o disco
+comando de arquivamento que falha sem parar, que o `db-reliability` trata junto com o arquivamento.
+Nos dois casos, o log é guardado porque alguma coisa ainda precisa dele, e cresce até o disco
 acabar. **Vigie o espaço livre do sistema de arquivos do log e dispare um alerta bem antes de ele
 encher**, e quando ele encher mesmo assim, a lição 24 escreve o runbook para essa noite.
 
