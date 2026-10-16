@@ -1,0 +1,625 @@
+{
+  "ex-cya9djxk": {
+    "prompt": "O banco de um sistema passa a maior parte do tempo respondendo leituras das mesmas linhas. Qual técnica responde a esse problema primeiro?",
+    "choices": [
+      {
+        "text": "Sharding pela coluna mais lida, para que cada servidor responda parte das leituras",
+        "why": "O sharding divide escritas e tamanho, com um custo permanente em toda consulta; leituras são mais baratas de resolver com réplicas."
+      },
+      {
+        "text": "Replicação",
+        "why": "Certo. Réplicas recebem leituras; toda cópia tem tudo."
+      },
+      {
+        "text": "Particionar a tabela por mês",
+        "why": "Particionar barateia consultas por faixa; não acrescenta um servidor para respondê-las."
+      },
+      {
+        "text": "Um índice maior na coluna lida",
+        "why": "As linhas já são achadas; o problema é quantas vezes elas são pedidas."
+      }
+    ]
+  },
+  "ex-4b905zg7": {
+    "prompt": "Por que a aula recorre ao sharding por último?",
+    "choices": [
+      {
+        "text": "O PostgreSQL não o suporta",
+        "why": "O laboratório o rodou em dois servidores PostgreSQL; o roteamento mora no programa."
+      },
+      {
+        "text": "Só ajuda leituras, que as réplicas já resolvem",
+        "why": "O sharding é o que escala escritas; essa é a razão de existir dele."
+      },
+      {
+        "text": "Muda toda consulta que o programa faz, para sempre",
+        "why": "Certo. Cada consulta precisa escolher um shard ou perguntar a todos, e isso é difícil de desfazer."
+      },
+      {
+        "text": "Precisa de um banco diferente para cada shard, de um fornecedor diferente, para que um bug num não chegue aos outros",
+        "why": "Os shards do laboratório são a mesma imagem do PostgreSQL."
+      }
+    ]
+  },
+  "ex-msvgxkcp": {
+    "prompt": "O que uma réplica PostgreSQL recebe do primário, na replicação por streaming?",
+    "choices": [
+      {
+        "text": "Cada comando SQL que um cliente mandou, para rodar de novo na cópia de dados da réplica",
+        "why": "Ela recebe as mudanças que os comandos fizeram, não os comandos; um comando com now() daria resultados diferentes."
+      },
+      {
+        "text": "Uma cópia completa dos dados a cada poucos minutos",
+        "why": "Uma cópia completa acontece uma vez, com o pg_basebackup; depois só o log flui."
+      },
+      {
+        "text": "Só as linhas que os clientes leram recentemente",
+        "why": "Isso seria um cache; uma réplica tem tudo."
+      },
+      {
+        "text": "O log de escrita antecipada, à medida que é escrito",
+        "why": "Certo. A réplica aplica as mesmas mudanças na mesma ordem."
+      }
+    ]
+  },
+  "ex-hm7tzv2v": {
+    "prompt": "O pg_stat_replication mostra sync_state = async. O que isso quer dizer para um cliente cujo INSERT acabou de retornar?",
+    "choices": [
+      {
+        "text": "A réplica pode ainda não ter a linha",
+        "why": "Certo. O primário não esperou a réplica antes de responder."
+      },
+      {
+        "text": "A réplica recebeu a linha e vai aplicá-la à noite",
+        "why": "Ela aplica mudanças continuamente, um instante atrás."
+      },
+      {
+        "text": "A linha já existe nos dois servidores",
+        "why": "Essa é a garantia da replicação síncrona, na aula 3."
+      },
+      {
+        "text": "O INSERT foi enfileirado e ainda pode falhar",
+        "why": "Ele foi confirmado no primário; só a cópia da réplica está atrasada."
+      }
+    ]
+  },
+  "ex-spgrftwj": {
+    "prompt": "Por que uma réplica recusa um UPDATE?",
+    "choices": [
+      {
+        "text": "Dois servidores aceitando escritas nas mesmas linhas teriam de concordar sobre o resultado",
+        "why": "Certo. Uma réplica evita o problema nunca escrevendo."
+      },
+      {
+        "text": "O disco dela está montado como somente leitura",
+        "why": "Ela grava no disco o tempo todo, aplicando o log."
+      },
+      {
+        "text": "Réplicas rodam uma versão mais antiga do PostgreSQL",
+        "why": "Os dois contêineres rodam postgres:16.15."
+      },
+      {
+        "text": "O usuário replicator não tem permissão de escrita",
+        "why": "O UPDATE rodou como o usuário tickets, que escreve no primário; a recusa é por ser réplica."
+      }
+    ]
+  },
+  "ex-ryxhqv2q": {
+    "prompt": "O comando que copia o diretório de dados inteiro do primário para iniciar uma réplica é o pg____ .",
+    "blanks": [
+      {
+        "accept": [
+          "basebackup",
+          "_basebackup"
+        ]
+      }
+    ]
+  },
+  "ex-jgdmt3hd": {
+    "prompt": "Qual leitura deve ir para o primário e não para uma réplica?",
+    "choices": [
+      {
+        "text": "Verificar que um lugar está livre logo antes de vendê-lo",
+        "why": "Certo. Uma leitura que decide uma escrita precisa ver o estado mais recente."
+      },
+      {
+        "text": "A lista de casas de show",
+        "why": "Muda raramente; a cópia da réplica serve."
+      },
+      {
+        "text": "A página de um show navegada por um visitante",
+        "why": "O grosso do tráfego, e um segundo de atraso não machuca ninguém."
+      },
+      {
+        "text": "Um painel de vendas por dia, atualizado a cada minuto",
+        "why": "Ninguém percebe um número com um segundo de idade; é uma leitura natural de réplica."
+      }
+    ]
+  },
+  "ex-7td9zn98": {
+    "prompt": "O problema de um sistema são escritas demais. Por que mais réplicas não ajudam?",
+    "choices": [
+      {
+        "text": "Toda réplica repete toda escrita",
+        "why": "Certo. Réplicas acrescentam capacidade de leitura; o trabalho de escrita é aplicado em todo lugar."
+      },
+      {
+        "text": "Réplicas atrasam as escritas do primário travando as linhas enquanto as copiam",
+        "why": "Réplicas leem o log; não tomam travas nas linhas do primário."
+      },
+      {
+        "text": "O PostgreSQL limita um primário a uma réplica",
+        "why": "O max_wal_senders permite dez por padrão."
+      },
+      {
+        "text": "As escritas precisam ser mandadas a toda réplica pelo programa",
+        "why": "O programa escreve uma vez no primário; a replicação faz o resto."
+      }
+    ]
+  },
+  "ex-4y85ndj0": {
+    "prompt": "Depois de cinco segundos de leituras, o xact_commit da réplica foi de 3 para 8027 enquanto o load.py mandou 9655 pedidos. O que explica a diferença?",
+    "choices": [
+      {
+        "text": "O nginx respondeu 1600 do cache",
+        "why": "Este nginx não guarda cache."
+      },
+      {
+        "text": "1600 pedidos falharam",
+        "why": "A linha de status mostrou 9655 respostas 200."
+      },
+      {
+        "text": "O contador é atualizado em lotes, então fica atrás dos pedidos",
+        "why": "Certo. As leituras chegaram à réplica."
+      },
+      {
+        "text": "Umas 1600 leituras foram para o primário",
+        "why": "Todo GET no app.py pergunta a db(REPLICA)."
+      }
+    ]
+  },
+  "ex-32wwx6pj": {
+    "prompt": "Um comprador compra um ingresso e a próxima página diz que ele nunca foi vendido. Qual garantia se perdeu?",
+    "choices": [
+      {
+        "text": "Isolamento entre dois compradores do mesmo show",
+        "why": "Um comprador, lendo a própria escrita."
+      },
+      {
+        "text": "Ler as próprias escritas",
+        "why": "Certo. A leitura veio de uma réplica que não tinha aplicado a venda."
+      },
+      {
+        "text": "Atomicidade, porque a venda foi aplicada em duas metades",
+        "why": "A venda foi confirmada inteira; a réplica não tinha aplicado nada dela."
+      },
+      {
+        "text": "Durabilidade",
+        "why": "A venda está segura no primário; só ainda não está visível."
+      }
+    ]
+  },
+  "ex-a1ha6mb4": {
+    "prompt": "Um programa guarda o pg_current_wal_lsn() do primário depois de cada escrita de um usuário. O que ele faz com isso antes de ler de uma réplica?",
+    "choices": [
+      {
+        "text": "Manda o LSN para a réplica para que ela aplique o log até aquele ponto imediatamente",
+        "why": "Uma réplica já aplica o log o mais rápido que pode; o programa só pode esperar ou ir para outro lugar."
+      },
+      {
+        "text": "Compara com a hora da leitura",
+        "why": "Um LSN é uma posição no log, não uma hora."
+      },
+      {
+        "text": "Usa como id do ingresso",
+        "why": "Identifica um lugar no log, não uma linha."
+      },
+      {
+        "text": "Verifica se o pg_last_wal_replay_lsn() da réplica é pelo menos esse",
+        "why": "Certo. Se for, a réplica aplicou a escrita do usuário."
+      }
+    ]
+  },
+  "ex-2zjc3jk1": {
+    "prompt": "Qual é a fraqueza de 'ler do primário por alguns segundos depois de cada escrita'?",
+    "choices": [
+      {
+        "text": "Manda toda leitura do sistema para o primário",
+        "why": "Só as leituras de usuários que acabaram de escrever."
+      },
+      {
+        "text": "Os segundos são um palpite sobre o pior atraso",
+        "why": "Certo. Uma réplica mais atrasada que o palpite ainda serve uma leitura velha."
+      },
+      {
+        "text": "Exige replicação síncrona",
+        "why": "Funciona com réplicas assíncronas; essa é a graça."
+      },
+      {
+        "text": "Não pode ser implementado sem mudar o PostgreSQL",
+        "why": "É uma decisão no programa: uma hora na sessão."
+      }
+    ]
+  },
+  "ex-nqrnfe8n": {
+    "prompt": "Ponha em ordem os eventos de uma escrita assíncrona, como o leitor da réplica os vive.",
+    "items": [
+      "O primário grava a mudança no WAL",
+      "O cliente ouve que a transação foi confirmada",
+      "A réplica recebe o registro do log",
+      "A réplica o aplica, e as leituras lá veem a mudança"
+    ]
+  },
+  "ex-vfcspv86": {
+    "prompt": "Com o primário parado, as vendas da bilheteria falham e as páginas dos shows continuam carregando. Por quê?",
+    "choices": [
+      {
+        "text": "A réplica se promoveu sozinha quando o primário parou",
+        "why": "Ela foi promovida à mão depois; até lá ficou somente leitura."
+      },
+      {
+        "text": "O nginx serve as páginas de uma cópia que guardou na memória antes de o primário parar",
+        "why": "Este nginx não guarda cópias; toda página veio da réplica."
+      },
+      {
+        "text": "As páginas são lidas da réplica, que continua de pé",
+        "why": "Certo. Vendas precisam do primário; leituras foram roteadas para outro lugar."
+      },
+      {
+        "text": "O app tenta as vendas de novo até darem certo",
+        "why": "A venda devolveu um 502 na hora."
+      }
+    ]
+  },
+  "ex-qvgggx4r": {
+    "prompt": "Depois de promover uma réplica assíncrona, quais vendas podem se perder?",
+    "choices": [
+      {
+        "text": "Todas as vendas da última hora, porque réplicas copiam de hora em hora",
+        "why": "Réplicas seguem continuamente; a perda é o atraso no momento da falha."
+      },
+      {
+        "text": "Só as vendas em andamento, que o cliente nunca viu confirmadas",
+        "why": "Essas também se perdem, mas as perigosas são as confirmadas."
+      },
+      {
+        "text": "As confirmadas no primário antigo mas ainda não enviadas",
+        "why": "Certo. Elas só existem na máquina morta."
+      },
+      {
+        "text": "Nenhuma; uma réplica promovida busca o log que falta no primário morto quando sobe",
+        "why": "O primário está morto; não há de onde buscar."
+      }
+    ]
+  },
+  "ex-0m37p4n8": {
+    "prompt": "Ligue cada perigo de failover ao que o defende.",
+    "pairs": [
+      {
+        "left": "o programa ainda aponta para o primário antigo",
+        "right": "um proxy ou um nome que se move para o novo"
+      },
+      {
+        "left": "escritas confirmadas perdidas com a máquina antiga",
+        "right": "replicação síncrona"
+      },
+      {
+        "left": "o primário antigo volta e aceita escritas",
+        "right": "isolá-lo antes de promover"
+      }
+    ]
+  },
+  "ex-8t6p6bgr": {
+    "prompt": "O plano de uma consulta de junho na tabela de vendas particionada lê só a sales_2026_06. Como isso se chama?",
+    "choices": [
+      {
+        "text": "Atraso de replicação",
+        "why": "Nada nesta consulta envolve uma réplica."
+      },
+      {
+        "text": "Uma leitura só de índice da tabela pai, que guarda um resumo de cada filha",
+        "why": "A pai não guarda linhas; o plano lê uma filha."
+      },
+      {
+        "text": "Poda de partições",
+        "why": "Certo. O planejador descartou cinco partições pelo filtro."
+      },
+      {
+        "text": "Sharding por mês",
+        "why": "As seis partições estão num servidor."
+      }
+    ]
+  },
+  "ex-yccj9jhn": {
+    "prompt": "Na tabela sales da aula, insere-se uma venda datada de 2026-07-03. O que acontece?",
+    "choices": [
+      {
+        "text": "É guardada na tabela pai",
+        "why": "Uma pai particionada não guarda linhas próprias."
+      },
+      {
+        "text": "O insert falha: nenhuma partição abrange julho",
+        "why": "Certo. Alguém precisa criar antes a partição de julho."
+      },
+      {
+        "text": "Vai para a partição de junho, a última",
+        "why": "Uma partição por faixa só aceita linhas dentro da faixa."
+      },
+      {
+        "text": "O PostgreSQL cria uma partição de julho automaticamente",
+        "why": "Não cria; é por isso que existe uma tarefa agendada."
+      }
+    ]
+  },
+  "ex-6t13s8vc": {
+    "prompt": "Numa tabela de vendas particionada por mês, um relatório pede toda venda do show 42 desde o início. Como o particionamento o afeta?",
+    "choices": [
+      {
+        "text": "Seis vezes mais rápido, porque as partições são lidas em paralelo",
+        "why": "Leituras paralelas de seis pedaços fazem o mesmo trabalho de uma tabela, mais seis planos."
+      },
+      {
+        "text": "Um pouco mais lento: toda partição é lida",
+        "why": "Certo. A poda precisa de filtro na chave; o show 42 não é a chave."
+      },
+      {
+        "text": "Falha, porque a consulta não nomeia um mês",
+        "why": "Consultas na pai funcionam com qualquer filtro; só a poda precisa da chave."
+      },
+      {
+        "text": "Lê só a partição mais recente",
+        "why": "Isso perderia vendas antigas; o planejador não pode descartar nenhuma."
+      }
+    ]
+  },
+  "ex-za3tay0z": {
+    "prompt": "Além de tempo, o que um DELETE grande custa que descartar uma partição não custa?",
+    "choices": [
+      {
+        "text": "Não pode ser desfeito",
+        "why": "O DELETE da aula foi desfeito."
+      },
+      {
+        "text": "Exige desanexar a tabela antes",
+        "why": "Um DELETE funciona direto na pai."
+      },
+      {
+        "text": "A remoção de cada linha vai para o log e para toda réplica",
+        "why": "Certo, e as linhas mortas ficam no disco até o VACUUM."
+      },
+      {
+        "text": "Apaga linhas de outras partições também",
+        "why": "O WHERE dele o limita a janeiro."
+      }
+    ]
+  },
+  "ex-pg723b1m": {
+    "prompt": "Na captura, quantas linhas o DELETE removeu de janeiro?",
+    "unit": "linhas"
+  },
+  "ex-0d6benr8": {
+    "prompt": "A bilheteria tem sharding por show. Qual operação toca exatamente um shard?",
+    "choices": [
+      {
+        "text": "Listar os dez shows mais vendidos da semana",
+        "why": "Todo shard tem alguns shows; todos precisam ser perguntados."
+      },
+      {
+        "text": "Vender um ingresso do show 42",
+        "why": "Certo. A linha do show e os ingressos dele moram num shard."
+      },
+      {
+        "text": "Contar todos os ingressos vendidos",
+        "why": "Cada shard conta os seus; o programa soma."
+      },
+      {
+        "text": "Achar todo ingresso que um comprador comprou, em todos os shows a que foi este ano",
+        "why": "Os ingressos de um comprador ficam espalhados pelos shards dos shows."
+      }
+    ]
+  },
+  "ex-cd469t0d": {
+    "prompt": "Com sharding por show, um show leva 80% de todas as vendas. O que acontece?",
+    "choices": [
+      {
+        "text": "O roteador espalha esse show por todos os shards",
+        "why": "O shard_for dá uma resposta por show."
+      },
+      {
+        "text": "Nada; as vendas são divididas por igual pelo hash",
+        "why": "O hash divide shows, não vendas de um show."
+      },
+      {
+        "text": "O shard dele fica sobrecarregado enquanto os outros ficam parados",
+        "why": "Certo. Uma chave quente não pode ser dividida fazendo sharding por ela."
+      },
+      {
+        "text": "Acrescentar um shard resolve",
+        "why": "O show quente continua caindo num shard."
+      }
+    ]
+  },
+  "ex-m16h81wb": {
+    "prompt": "Com o roteador da aula e dois shards, o show n vende n ingressos para n de 1 a 100. Quantos ingressos ficam no shard 0?",
+    "hint": "O shard 0 fica com os shows pares.",
+    "unit": "ingressos"
+  },
+  "ex-wnkgys29": {
+    "prompt": "Cada shard devolve o preço médio dos ingressos dos seus shows. Por que a média dessas médias está errada?",
+    "choices": [
+      {
+        "text": "Os shards têm números diferentes de ingressos",
+        "why": "Certo. Cada shard deve devolver uma soma e uma contagem, que se juntam."
+      },
+      {
+        "text": "A resposta de um shard sempre chega atrasada",
+        "why": "Atrasada ou não, a aritmética está errada."
+      },
+      {
+        "text": "Os preços estão em centavos, então dividir pelo número de shards arredonda cada média para baixo",
+        "why": "O arredondamento não é o problema; os pesos são."
+      },
+      {
+        "text": "Médias não podem ser calculadas em SQL",
+        "why": "avg() existe; juntá-las é o problema."
+      }
+    ]
+  },
+  "ex-fantcf5a": {
+    "prompt": "Dois shards criam linhas numa tabela com id bigserial. O que dá errado?",
+    "choices": [
+      {
+        "text": "Os dois distribuem os mesmos ids",
+        "why": "Certo. Cada shard tem a sua própria sequência."
+      },
+      {
+        "text": "Nada, desde que cada shard tenha a própria chave primária",
+        "why": "Cada chave só é única dentro do seu shard."
+      },
+      {
+        "text": "Os ids pulam de dois em dois porque as duas sequências se revezam",
+        "why": "As sequências não sabem uma da outra."
+      },
+      {
+        "text": "Os inserts falham no segundo shard",
+        "why": "O insert de cada shard funciona; o choque é entre shards."
+      }
+    ]
+  },
+  "ex-1w6w12bn": {
+    "prompt": "Por que a chave de shard é escolhida para que as operações comuns fiquem dentro de um shard?",
+    "choices": [
+      {
+        "text": "Roteadores só alcançam um shard por conexão, então um segundo shard exige abrir uma conexão nova a cada vez",
+        "why": "O roteador mantém uma conexão com todo shard."
+      },
+      {
+        "text": "Travas não existem entre shards",
+        "why": "Travas existem em cada shard; atomicidade entre eles não."
+      },
+      {
+        "text": "Nenhuma transação comum abrange dois servidores",
+        "why": "Certo. Commit em duas fases e sagas existem, e os dois são caros."
+      },
+      {
+        "text": "Shards não conseguem ler as tabelas uns dos outros",
+        "why": "Verdade, e não é o motivo; o programa lê os dois."
+      }
+    ]
+  },
+  "ex-988fexkp": {
+    "prompt": "Pelo módulo, mais ou menos que fatia das chaves se move ao ir de 4 shards para 5?",
+    "choices": [
+      {
+        "text": "Um quinto",
+        "why": "Esse é o mínimo, de que o anel se aproxima."
+      },
+      {
+        "text": "Quatro quintos",
+        "why": "Certo. n / (n + 1), com n = 4."
+      },
+      {
+        "text": "Nenhuma, porque os shards antigos ficam com as chaves",
+        "why": "O resto de quase toda chave muda."
+      },
+      {
+        "text": "Um quarto",
+        "why": "Cada shard antigo cede um quarto só num anel."
+      }
+    ]
+  },
+  "ex-dhcd856g": {
+    "prompt": "Com 10 pontos por shard, o anel moveu só 26,2% das chaves. Por que isso não é um resultado melhor que o de 1000 pontos?",
+    "choices": [
+      {
+        "text": "26,2% está abaixo do mínimo, então é erro de medida",
+        "why": "O mínimo vale para uma divisão igual; esta não foi."
+      },
+      {
+        "text": "Menos pontos deixam as buscas mais lentas",
+        "why": "Menos pontos deixam as buscas mais rápidas."
+      },
+      {
+        "text": "É melhor; menos chaves se movendo é sempre o objetivo",
+        "why": "Mover menos chaves deixando um shard subutilizado não é economia."
+      },
+      {
+        "text": "Os shards ficaram muito desiguais, um com quase o dobro das chaves de outro",
+        "why": "Certo. Menos mudanças vieram de o novo shard receber menos que a sua parte."
+      }
+    ]
+  },
+  "ex-dwhjkaxf": {
+    "prompt": "O que criar 256 shards lógicos em quatro servidores desde o início compra?",
+    "choices": [
+      {
+        "text": "O shard lógico de uma chave nunca muda; só o mapa para servidores muda",
+        "why": "Certo. Shards lógicos inteiros se movem, e nenhuma chave ganha novo hash."
+      },
+      {
+        "text": "Transações entre shards viram comuns, porque shards lógicos dividem um servidor",
+        "why": "Dois shards lógicos podem estar em servidores diferentes a qualquer momento."
+      },
+      {
+        "text": "Nenhuma necessidade de chave de shard",
+        "why": "A chave ainda escolhe o shard lógico."
+      },
+      {
+        "text": "256 vezes a capacidade de escrita",
+        "why": "A capacidade continua sendo a de quatro servidores."
+      }
+    ]
+  },
+  "ex-hnhnmnr8": {
+    "prompt": "Ligue cada problema à técnica que a aula usa para ele.",
+    "pairs": [
+      {
+        "left": "leituras demais",
+        "right": "réplicas"
+      },
+      {
+        "left": "meses velhos para jogar fora",
+        "right": "partições"
+      },
+      {
+        "left": "escritas demais para um servidor",
+        "right": "shards"
+      },
+      {
+        "left": "sobreviver à perda do primário",
+        "right": "promover uma réplica"
+      }
+    ]
+  },
+  "ex-hqz2t6xv": {
+    "prompt": "Um sistema de ingressos faz sharding por comprador. O que vira operação entre shards que o sharding por show teria mantido local?",
+    "choices": [
+      {
+        "text": "Inserir um ingresso",
+        "why": "Um insert cai no shard do comprador."
+      },
+      {
+        "text": "Ler o perfil de um comprador",
+        "why": "Local ao shard do comprador."
+      },
+      {
+        "text": "Mostrar a um comprador os próprios ingressos",
+        "why": "Isso fica local quando o comprador é a chave."
+      },
+      {
+        "text": "Vender os últimos lugares de um show",
+        "why": "Certo. Compradores de um show estão em muitos shards, e a contagem de lugares precisa ser verificada contra todos."
+      }
+    ]
+  },
+  "ex-yzwz1n4v": {
+    "prompt": "Uma consulta sem chave de shard é mandada a todo shard e as respostas juntadas; isso se chama scatter-___ .",
+    "blanks": [
+      {
+        "accept": [
+          "gather"
+        ]
+      }
+    ]
+  }
+}

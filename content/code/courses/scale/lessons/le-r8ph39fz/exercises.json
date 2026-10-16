@@ -1,0 +1,745 @@
+[
+  {
+    "id": "ex-3sxsn1ng",
+    "version": 1,
+    "section": "three-signals",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which signal answers 'where did the time go' across several services?",
+    "choices": [
+      {
+        "text": "Logs written by the load balancer for each connection it opens",
+        "correct": false,
+        "why": "They record events at one point, not the path through every service."
+      },
+      {
+        "text": "Health checks",
+        "correct": false,
+        "why": "They say up or down."
+      },
+      {
+        "text": "Traces",
+        "correct": true,
+        "why": "Right. Lesson 8 builds them."
+      },
+      {
+        "text": "Metrics, summed over every request of every service and every copy",
+        "correct": false,
+        "why": "Sums say how much, not where one request spent its time."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jpw139m",
+    "version": 1,
+    "section": "three-signals",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are metrics cheap compared with logs?",
+    "choices": [
+      {
+        "text": "Prometheus is free and log systems are paid",
+        "correct": false,
+        "why": "Both exist free; cost here is volume."
+      },
+      {
+        "text": "Metrics are compressed and logs are not",
+        "correct": false,
+        "why": "Both can be compressed; the count of records differs."
+      },
+      {
+        "text": "A counter is one number however many requests it counts",
+        "correct": true,
+        "why": "Right. Logs cost in proportion to traffic."
+      },
+      {
+        "text": "Metrics are only kept for an hour",
+        "correct": false,
+        "why": "Retention is a setting, not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5z7dx1a",
+    "version": 1,
+    "section": "red-and-use",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does RED stand for?",
+    "choices": [
+      {
+        "text": "Rate, errors, duration",
+        "correct": true,
+        "why": "Right: the service from its users' side."
+      },
+      {
+        "text": "Rate, errors, disk, for the resources a service runs on",
+        "correct": false,
+        "why": "Resources are USE's subject."
+      },
+      {
+        "text": "Requests, events, dashboards",
+        "correct": false,
+        "why": "Not the list."
+      },
+      {
+        "text": "Replicas, errors, databases",
+        "correct": false,
+        "why": "Not the list."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dek7et5",
+    "version": 1,
+    "section": "red-and-use",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In USE terms, what were the fifteen connections waiting on a Lock in lesson 1's hot row?",
+    "choices": [
+      {
+        "text": "Saturation",
+        "correct": true,
+        "why": "Right: work waiting for a resource, here one row's lock."
+      },
+      {
+        "text": "Rate, since fifteen requests were being handled at once by the database",
+        "correct": false,
+        "why": "They were not being handled; they were waiting."
+      },
+      {
+        "text": "Errors",
+        "correct": false,
+        "why": "Every sale succeeded."
+      },
+      {
+        "text": "Utilisation",
+        "correct": false,
+        "why": "Utilisation is how busy the resource is, not how much waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrryvqhj",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "tickets_requests_total is a counter. What happens to it when a copy restarts?",
+    "choices": [
+      {
+        "text": "It keeps its value on disk",
+        "correct": false,
+        "why": "prometheus_client keeps metrics in memory."
+      },
+      {
+        "text": "It goes negative until the copy catches up with the others",
+        "correct": false,
+        "why": "Counters never go below zero."
+      },
+      {
+        "text": "It starts again from zero",
+        "correct": true,
+        "why": "Right, and rate() treats the fall as a reset."
+      },
+      {
+        "text": "Prometheus restores it from the last scrape",
+        "correct": false,
+        "why": "The copy's memory is gone; Prometheus only records."
+      }
+    ]
+  },
+  {
+    "id": "ex-99kyej5d",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each metric type to what its value means.",
+    "pairs": [
+      {
+        "left": "counter",
+        "right": "only grows; its rate is the information"
+      },
+      {
+        "left": "gauge",
+        "right": "goes up and down; its value now is the information"
+      },
+      {
+        "left": "histogram",
+        "right": "counts of observations per bucket"
+      }
+    ]
+  },
+  {
+    "id": "ex-djg3bz2p",
+    "version": 1,
+    "section": "instrumenting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does observe() catch every exception and reply 500?",
+    "choices": [
+      {
+        "text": "A 500 is faster than a closed connection",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Otherwise the error is never counted or logged",
+        "correct": true,
+        "why": "Right. An uncaught exception closes the connection and leaves nothing in the metrics."
+      },
+      {
+        "text": "Python's server would otherwise stop",
+        "correct": false,
+        "why": "It survives a handler's exception; the request is what is lost."
+      },
+      {
+        "text": "nginx refuses to forward an exception",
+        "correct": false,
+        "why": "nginx sees a closed connection, and answers 502."
+      }
+    ]
+  },
+  {
+    "id": "ex-cb1nzymf",
+    "version": 1,
+    "section": "scraping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Prometheus scrape each copy directly instead of asking through nginx?",
+    "choices": [
+      {
+        "text": "Scraping through nginx is slower",
+        "correct": false,
+        "why": "The problem is which copy answers, not speed."
+      },
+      {
+        "text": "Through nginx it would get one copy's numbers, a different one each time",
+        "correct": true,
+        "why": "Right. A counter needs every copy's own value."
+      },
+      {
+        "text": "Prometheus cannot speak HTTP/1.1 keepalive",
+        "correct": false,
+        "why": "It can; that is not the reason."
+      },
+      {
+        "text": "nginx blocks /metrics",
+        "correct": false,
+        "why": "The capture fetched /metrics through nginx."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhc7by76",
+    "version": 1,
+    "section": "scraping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call up the first thing to alert on?",
+    "choices": [
+      {
+        "text": "A copy that stops being scraped silently leaves every graph",
+        "correct": true,
+        "why": "Right. Its numbers disappear without anything looking wrong."
+      },
+      {
+        "text": "It is the only metric that does not need labels to be read",
+        "correct": false,
+        "why": "It has instance and job labels."
+      },
+      {
+        "text": "It measures latency",
+        "correct": false,
+        "why": "It is 1 or 0: scraped or not."
+      },
+      {
+        "text": "It counts errors",
+        "correct": false,
+        "why": "Errors are in tickets_requests_total."
+      }
+    ]
+  },
+  {
+    "id": "ex-56adttt2",
+    "version": 1,
+    "section": "scraping",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Prometheus fetching a program's /metrics page is called a ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "scrape"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mtd82fjz",
+    "version": 1,
+    "section": "counters-and-rates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does rate(tickets_requests_total[30s]) return?",
+    "choices": [
+      {
+        "text": "The average latency of the last 30 seconds, per route and status",
+        "correct": false,
+        "why": "Latency is in the histogram; this is a counter."
+      },
+      {
+        "text": "The total since the copy started",
+        "correct": false,
+        "why": "That is the raw counter."
+      },
+      {
+        "text": "The requests of the last 30 s, one per line",
+        "correct": false,
+        "why": "Metrics keep no individual requests."
+      },
+      {
+        "text": "Per-second increase over 30 s",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ervp16k5",
+    "version": 1,
+    "section": "counters-and-rates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The box office reported 338 sales a second and the load generator 331. What does the lesson make of that?",
+    "choices": [
+      {
+        "text": "The generator is wrong",
+        "correct": false,
+        "why": "Both are right about different windows."
+      },
+      {
+        "text": "Two independent measurements agree, so the instrumentation is right",
+        "correct": true,
+        "why": "Right. The small gap is the window each one covered."
+      },
+      {
+        "text": "Seven sales a second are being lost",
+        "correct": false,
+        "why": "Every sale answered 201; the windows differ."
+      },
+      {
+        "text": "Prometheus double-counts",
+        "correct": false,
+        "why": "Then it would be near 660."
+      }
+    ]
+  },
+  {
+    "id": "ex-2753ks4c",
+    "version": 1,
+    "section": "counters-and-rates",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many requests were in progress across the copies when sum(tickets_in_flight) was asked?",
+    "value": 17,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-qsq16e9v",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a percentile computed from a histogram an estimate?",
+    "choices": [
+      {
+        "text": "It only knows which bucket the value falls in",
+        "correct": true,
+        "why": "Right. Inside the bucket, it interpolates."
+      },
+      {
+        "text": "Prometheus samples one request in a hundred",
+        "correct": false,
+        "why": "Every request is counted."
+      },
+      {
+        "text": "Latencies are rounded to the nearest millisecond before they are stored in each bucket",
+        "correct": false,
+        "why": "Rounding is not the cause; bucket width is."
+      },
+      {
+        "text": "Scrapes lose some requests",
+        "correct": false,
+        "why": "Counters are cumulative; nothing is lost between scrapes."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa3pz0rm",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three copies each report their own p95. Why not average them for the box office's p95?",
+    "choices": [
+      {
+        "text": "Averages are not allowed in PromQL",
+        "correct": false,
+        "why": "avg() exists; it gives the wrong answer here."
+      },
+      {
+        "text": "One copy usually gets most of the slow requests",
+        "correct": false,
+        "why": "Even with equal copies the average of percentiles is not a percentile."
+      },
+      {
+        "text": "Percentiles do not combine; bucket counts do",
+        "correct": true,
+        "why": "Right. sum by (le) first, then one quantile."
+      },
+      {
+        "text": "The copies have different buckets",
+        "correct": false,
+        "why": "They run the same code."
+      }
+    ]
+  },
+  {
+    "id": "ex-yynjsbj2",
+    "version": 1,
+    "section": "histograms",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For reads, the histogram said 20 ms and the load generator 30 ms. What explains it?",
+    "choices": [
+      {
+        "text": "The generator is slower than the box office",
+        "correct": false,
+        "why": "It measures; it does not add time to the server."
+      },
+      {
+        "text": "The generator also timed nginx and the network",
+        "correct": true,
+        "why": "Right. An inside latency is a lower bound on what users see."
+      },
+      {
+        "text": "Prometheus scrapes delay requests",
+        "correct": false,
+        "why": "A scrape is one small request every five seconds."
+      },
+      {
+        "text": "The histogram's buckets are 10 ms wide",
+        "correct": false,
+        "why": "Bucket width blurs; it does not shift by a third."
+      }
+    ]
+  },
+  {
+    "id": "ex-4xbfzjem",
+    "version": 1,
+    "section": "histograms",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Of 1000 requests, 940 took up to 100 ms and 990 up to 250 ms. Interpolating evenly inside the bucket, what p95 does the histogram give, in ms?",
+    "hint": "The 950th request is 10 of the 50 in the 100–250 bucket.",
+    "value": 130,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-x72pwd55",
+    "version": 1,
+    "section": "structured-logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the box office write each log line as one JSON object?",
+    "choices": [
+      {
+        "text": "Docker only accepts JSON",
+        "correct": false,
+        "why": "Docker keeps any output."
+      },
+      {
+        "text": "JSON is shorter than text",
+        "correct": false,
+        "why": "It is usually longer."
+      },
+      {
+        "text": "It encrypts the content of each line so that only the log system can read it",
+        "correct": false,
+        "why": "JSON is plain text."
+      },
+      {
+        "text": "So a program can search it by field",
+        "correct": true,
+        "why": "Right. It arrives already taken apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jawybyn",
+    "version": 1,
+    "section": "structured-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the replica stopped, what did the client see, and where was the real cause?",
+    "choices": [
+      {
+        "text": "A timeout; the cause was unknown",
+        "correct": false,
+        "why": "The answer came at once."
+      },
+      {
+        "text": "The full Python traceback; nothing was logged",
+        "correct": false,
+        "why": "Clients get a short message on purpose."
+      },
+      {
+        "text": "A short 500; the cause was in the error log line",
+        "correct": true,
+        "why": "Right: AdminShutdown, for the server on the other end."
+      },
+      {
+        "text": "A 502 from nginx; the cause was in nginx's log",
+        "correct": false,
+        "why": "The try in observe turned it into a 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-5vv59hx4",
+    "version": 1,
+    "section": "structured-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which field does the lesson say must not go into a log line?",
+    "choices": [
+      {
+        "text": "The buyer's e-mail",
+        "correct": true,
+        "why": "Right. Logs are copied widely and kept long."
+      },
+      {
+        "text": "The name of the copy that answered, taken from the container's host name",
+        "correct": false,
+        "why": "It is how a failure is traced to one copy."
+      },
+      {
+        "text": "The route template",
+        "correct": false,
+        "why": "That is exactly what a log line should carry."
+      },
+      {
+        "text": "The duration in milliseconds",
+        "correct": false,
+        "why": "Useful and harmless."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqe748yk",
+    "version": 1,
+    "section": "cardinality",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the box office label requests with /events/{id} rather than the real path?",
+    "choices": [
+      {
+        "text": "Each path would be a separate series",
+        "correct": true,
+        "why": "Right. Series multiply by every label's values."
+      },
+      {
+        "text": "The real path would reveal what users buy to anyone who could read the metrics",
+        "correct": false,
+        "why": "The lesson's reason is cost, not privacy."
+      },
+      {
+        "text": "Prometheus refuses slashes in label values",
+        "correct": false,
+        "why": "The template has slashes."
+      },
+      {
+        "text": "Templates are faster to compare",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j2r9ta4",
+    "version": 1,
+    "section": "cardinality",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A histogram with 11 buckets is labelled by route (4 values) and status (3 values) on 5 copies. How many bucket series is that?",
+    "hint": "Multiply them all.",
+    "value": 660,
+    "tolerance": 0,
+    "unit": "series"
+  },
+  {
+    "id": "ex-8bv1s4fp",
+    "version": 1,
+    "section": "cardinality",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a value per user or per request belong, by the lesson?",
+    "choices": [
+      {
+        "text": "In the metric's name, so that each user gets a metric of their own",
+        "correct": false,
+        "why": "Same explosion, by another route."
+      },
+      {
+        "text": "In logs or traces",
+        "correct": true,
+        "why": "Right: where unique details are expected."
+      },
+      {
+        "text": "Nowhere; it should not be recorded",
+        "correct": false,
+        "why": "It is useful, in the right signal."
+      },
+      {
+        "text": "In a metric label",
+        "correct": false,
+        "why": "That is the cardinality explosion."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d8jxdw1",
+    "version": 1,
+    "section": "slos",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which is an SLO rather than an SLI?",
+    "choices": [
+      {
+        "text": "The fraction of sales answered within 250 ms",
+        "correct": false,
+        "why": "That is the indicator, without a target."
+      },
+      {
+        "text": "tickets_request_seconds_bucket",
+        "correct": false,
+        "why": "A metric the SLI is built from."
+      },
+      {
+        "text": "The sales that may fail",
+        "correct": false,
+        "why": "That is the error budget."
+      },
+      {
+        "text": "99.9% of sales within 250 ms over 30 days",
+        "correct": true,
+        "why": "Right: a target over a window."
+      }
+    ]
+  },
+  {
+    "id": "ex-20w7xe65",
+    "version": 1,
+    "section": "slos",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An SLO of 99.5% over 30 days allows how many minutes of complete outage?",
+    "hint": "30 days are 43 200 minutes.",
+    "value": 216,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-3d3bjjr1",
+    "version": 1,
+    "section": "slos",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which alert does the lesson recommend?",
+    "choices": [
+      {
+        "text": "Any error",
+        "correct": false,
+        "why": "The budget exists to absorb some."
+      },
+      {
+        "text": "The availability falling below 100% for one minute",
+        "correct": false,
+        "why": "100% is not a target worth having."
+      },
+      {
+        "text": "The budget being spent fast enough to run out within hours",
+        "correct": true,
+        "why": "Right. Worth waking up for."
+      },
+      {
+        "text": "Any request slower than the objective",
+        "correct": false,
+        "why": "A single slow request is noise."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e8feecg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 03:10 sales got slow. Which order of signals does the lesson describe for finding out why?",
+    "choices": [
+      {
+        "text": "Only logs, read from 03:00 onwards until the slow sales appear",
+        "correct": false,
+        "why": "That answers slowly; metrics narrow it down first."
+      },
+      {
+        "text": "Trace, then log, then metric",
+        "correct": false,
+        "why": "Without a metric you do not know which traces to look at."
+      },
+      {
+        "text": "Log, then metric, then trace",
+        "correct": false,
+        "why": "Logs are the detail, read last."
+      },
+      {
+        "text": "Metric, then trace, then log",
+        "correct": true,
+        "why": "Right: how much and when, then where, then what exactly."
+      }
+    ]
+  }
+]

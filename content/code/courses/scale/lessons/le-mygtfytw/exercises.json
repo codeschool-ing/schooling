@@ -1,0 +1,830 @@
+[
+  {
+    "id": "ex-v4t93b85",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson run the five databases one at a time?",
+    "choices": [
+      {
+        "text": "Docker runs one container at a time",
+        "correct": false,
+        "why": "The box office runs four at once."
+      },
+      {
+        "text": "Together they want more memory than the lab should give",
+        "correct": true,
+        "why": "Right. One at a time, the largest takes about a gigabyte."
+      },
+      {
+        "text": "They use the same port",
+        "correct": false,
+        "why": "None of them publishes a port in this lesson."
+      },
+      {
+        "text": "Each one would overwrite the data the previous one left in the shared volume",
+        "correct": false,
+        "why": "Each lives in its own container."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0b9zs4z",
+    "version": 1,
+    "section": "one-at-a-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is DynamoDB Local, as used here?",
+    "choices": [
+      {
+        "text": "An open-source fork of DynamoDB",
+        "correct": false,
+        "why": "Amazon publishes it for testing; it is not the service's code."
+      },
+      {
+        "text": "A program that answers DynamoDB's interface on your machine",
+        "correct": true,
+        "why": "Right, without the service's partitions, throttling or bill."
+      },
+      {
+        "text": "A copy of the AWS service, with its partitions and limits reproduced on a smaller scale",
+        "correct": false,
+        "why": "It reproduces the interface, not the distribution or the limits."
+      },
+      {
+        "text": "A cache in front of the real service that keeps a copy of recent items",
+        "correct": false,
+        "why": "It talks to nothing in the cloud."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0da8efj",
+    "version": 1,
+    "section": "mongodb",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In find({\"venue.name\": \"Teatro Ipê\"}, {name: 1, starts_at: 1}), what is the second argument?",
+    "choices": [
+      {
+        "text": "The sort order",
+        "correct": false,
+        "why": "That is .sort()."
+      },
+      {
+        "text": "A projection: the fields to return",
+        "correct": true,
+        "why": "Right; _id comes unless excluded."
+      },
+      {
+        "text": "An index to use for the query, named by the fields it covers",
+        "correct": false,
+        "why": "That is hint(); this argument shapes the result."
+      },
+      {
+        "text": "A second filter, applied after the first one has run",
+        "correct": false,
+        "why": "Filters are the first argument."
+      }
+    ]
+  },
+  {
+    "id": "ex-cv0ec59t",
+    "version": 1,
+    "section": "mongodb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the path \"venue.name\" let a MongoDB query do?",
+    "choices": [
+      {
+        "text": "Filter on a field of an embedded document",
+        "correct": true,
+        "why": "Right, like any top-level field."
+      },
+      {
+        "text": "Read the venue from another database",
+        "correct": false,
+        "why": "Everything is in one document."
+      },
+      {
+        "text": "Join the shows collection to a venues collection",
+        "correct": false,
+        "why": "There is no venues collection; the venue is inside each show."
+      },
+      {
+        "text": "Rename the field",
+        "correct": false,
+        "why": "It names a path; renaming is an update."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxf7g3h3",
+    "version": 1,
+    "section": "mongodb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A document is inserted with venu instead of venue. What happens?",
+    "choices": [
+      {
+        "text": "It is stored, and never matches a query on venue.name",
+        "correct": true,
+        "why": "Right, unless the collection enforces a JSON Schema."
+      },
+      {
+        "text": "MongoDB refuses it",
+        "correct": false,
+        "why": "Nothing declared the shape, so nothing refuses it."
+      },
+      {
+        "text": "The whole collection is rewritten with the new field name added to every document",
+        "correct": false,
+        "why": "Documents are independent; nothing else changes."
+      },
+      {
+        "text": "MongoDB corrects the field name to the closest one it already knows",
+        "correct": false,
+        "why": "It does not guess."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5jj100c",
+    "version": 1,
+    "section": "mongodb-indexes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before the index, the query for Teatro Ipê examined 100 documents and returned 34. Which stage was that?",
+    "choices": [
+      {
+        "text": "COLLSCAN",
+        "correct": true,
+        "why": "Right: every document read."
+      },
+      {
+        "text": "FETCH",
+        "correct": false,
+        "why": "Not what the capture printed."
+      },
+      {
+        "text": "IXSCAN",
+        "correct": false,
+        "why": "That came after createIndex, examining 34."
+      },
+      {
+        "text": "SORT",
+        "correct": false,
+        "why": "There was no sort in that query."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v4084vb",
+    "version": 1,
+    "section": "mongodb-indexes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "updateMany renamed the venue in 33 documents. What can a reader in the middle see?",
+    "choices": [
+      {
+        "text": "Some shows with the old name and some with the new",
+        "correct": true,
+        "why": "Right. Each document changes atomically; the 33 are not one transaction."
+      },
+      {
+        "text": "A document with half the venue changed",
+        "correct": false,
+        "why": "Single-document writes are atomic."
+      },
+      {
+        "text": "An error, because the collection is locked while the update runs over its documents",
+        "correct": false,
+        "why": "Reads continue during updateMany."
+      },
+      {
+        "text": "Only the old name, until all 33 are done",
+        "correct": false,
+        "why": "That would need a transaction across documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sw6k6m6",
+    "version": 1,
+    "section": "mongodb-indexes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many documents did the indexed query examine?",
+    "value": 34,
+    "tolerance": 0,
+    "unit": "documents"
+  },
+  {
+    "id": "ex-9akn8qkp",
+    "version": 1,
+    "section": "dynamodb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the sort key written as show-1#seat-42 rather than seat-42#show-1?",
+    "choices": [
+      {
+        "text": "The # character must come in the middle of a key",
+        "correct": false,
+        "why": "# is a convention, not a requirement."
+      },
+      {
+        "text": "It makes each item cheaper to write, because the shorter part is compressed first",
+        "correct": false,
+        "why": "The order changes how it is read, not what it costs to write."
+      },
+      {
+        "text": "DynamoDB requires the longest part first",
+        "correct": false,
+        "why": "No such rule exists."
+      },
+      {
+        "text": "So one buyer's tickets for a show sit together in sort order",
+        "correct": true,
+        "why": "Right. begins_with narrows by the leading part."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hp60c73",
+    "version": 1,
+    "section": "dynamodb",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does DynamoDB send numbers, like cents, as strings in its requests?",
+    "choices": [
+      {
+        "text": "So that no precision is lost on the way",
+        "correct": true,
+        "why": "Right. A JSON number can be read as a float by the client."
+      },
+      {
+        "text": "Because YAML has no numbers",
+        "correct": false,
+        "why": "The rule is DynamoDB's, in JSON too."
+      },
+      {
+        "text": "Because the attribute was declared as S",
+        "correct": false,
+        "why": "cents is N; only the transport is a string."
+      },
+      {
+        "text": "So that they sort as text",
+        "correct": false,
+        "why": "N attributes sort as numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-vedq6bb8",
+    "version": 1,
+    "section": "dynamodb-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A query names only the sort key. What does DynamoDB answer?",
+    "choices": [
+      {
+        "text": "Every item that matches the condition, just more slowly",
+        "correct": false,
+        "why": "There is no fallback to reading everything."
+      },
+      {
+        "text": "A ValidationException: the partition key is missing",
+        "correct": true,
+        "why": "Right. A query must name the partition."
+      },
+      {
+        "text": "An empty result",
+        "correct": false,
+        "why": "It refuses rather than answering empty."
+      },
+      {
+        "text": "The first item of each partition, in the order the partitions are stored on disk",
+        "correct": false,
+        "why": "Nothing like that exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6efj2f3",
+    "version": 1,
+    "section": "dynamodb-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A scan with a filter returned 3 items with ScannedCount 5. What is the capacity charged on?",
+    "choices": [
+      {
+        "text": "The 5 items read",
+        "correct": true,
+        "why": "Right. The filter runs after the read."
+      },
+      {
+        "text": "The 3 items returned",
+        "correct": false,
+        "why": "Returned items are a subset of what was paid for."
+      },
+      {
+        "text": "Nothing, scans are free",
+        "correct": false,
+        "why": "They are the most expensive reads."
+      },
+      {
+        "text": "The size of the filter expression, counted in characters and billed per thousand",
+        "correct": false,
+        "why": "Capacity is about data read."
+      }
+    ]
+  },
+  {
+    "id": "ex-00s1p6hz",
+    "version": 1,
+    "section": "dynamodb-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A global secondary index keyed by ticket is added. Right after a sale, a query on the index does not show it. Why?",
+    "choices": [
+      {
+        "text": "The sale was written to the wrong partition and has to be moved before the index sees it",
+        "correct": false,
+        "why": "The sale is where its key put it; the index is simply behind."
+      },
+      {
+        "text": "The index is updated asynchronously",
+        "correct": true,
+        "why": "Right: lesson 2's replica lag in a new place."
+      },
+      {
+        "text": "Indexes only contain items older than a day",
+        "correct": false,
+        "why": "They follow the table, a moment behind."
+      },
+      {
+        "text": "Queries on an index need a scan first",
+        "correct": false,
+        "why": "They are queries like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr1qqans",
+    "version": 1,
+    "section": "dynamodb-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a strongly consistent read cost in DynamoDB, compared with the default?",
+    "choices": [
+      {
+        "text": "Half as much, because it reads from the leader only and skips the replicas",
+        "correct": false,
+        "why": "It costs more, not less."
+      },
+      {
+        "text": "The same",
+        "correct": false,
+        "why": "The lesson says twice."
+      },
+      {
+        "text": "Nothing extra, but it is slower",
+        "correct": false,
+        "why": "It is billed at twice the rate."
+      },
+      {
+        "text": "Twice as much",
+        "correct": true,
+        "why": "Right: lesson 3's trade on the price list."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhz08ap1",
+    "version": 1,
+    "section": "cassandra",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The query WHERE show_id = 'show-1' LIMIT 3 returned the newest three scans without sorting. Why?",
+    "choices": [
+      {
+        "text": "The partition is stored in clustering order, newest first",
+        "correct": true,
+        "why": "Right: CLUSTERING ORDER BY (scanned_at DESC)."
+      },
+      {
+        "text": "Only three scans existed",
+        "correct": false,
+        "why": "Show 1 had five."
+      },
+      {
+        "text": "Cassandra keeps an index on scanned_at",
+        "correct": false,
+        "why": "No index was created; the order is the storage."
+      },
+      {
+        "text": "cqlsh sorts the result by time before printing it, as a convenience for the reader",
+        "correct": false,
+        "why": "The shell prints what the node returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-njxf2y3d",
+    "version": 1,
+    "section": "cassandra",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The scan written at 21:04:09-0300 printed as 2026-11-16 00:04:09+0000. Why the next day?",
+    "choices": [
+      {
+        "text": "Cassandra rounds to the next day",
+        "correct": false,
+        "why": "Nothing is rounded."
+      },
+      {
+        "text": "cqlsh prints UTC, three hours ahead of São Paulo",
+        "correct": true,
+        "why": "Right. Same instant, another clock."
+      },
+      {
+        "text": "The node's clock was wrong",
+        "correct": false,
+        "why": "The instant is right; only the zone differs."
+      },
+      {
+        "text": "The insert was applied late, after midnight, when the node caught up",
+        "correct": false,
+        "why": "Timestamps are what was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-6yg6aph7",
+    "version": 1,
+    "section": "cassandra",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a token in Cassandra?",
+    "choices": [
+      {
+        "text": "A password for cqlsh",
+        "correct": false,
+        "why": "Not in this sense."
+      },
+      {
+        "text": "The id the node gives each row as it arrives, in increasing order",
+        "correct": false,
+        "why": "show-7's token is negative and show-1's positive; they are hashes, not a sequence."
+      },
+      {
+        "text": "A counter of writes, increased each time the partition changes",
+        "correct": false,
+        "why": "It is computed from the key, not counted."
+      },
+      {
+        "text": "The hash of a partition key, which places it on the ring",
+        "correct": true,
+        "why": "Right: lesson 2's ring at its real size."
+      }
+    ]
+  },
+  {
+    "id": "ex-m544z2vy",
+    "version": 1,
+    "section": "cassandra-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Cassandra refuse SELECT … WHERE gate = 'B' unless told ALLOW FILTERING?",
+    "choices": [
+      {
+        "text": "gate is a reserved word",
+        "correct": false,
+        "why": "The table uses it as a column."
+      },
+      {
+        "text": "Answering would read every partition on every node",
+        "correct": true,
+        "why": "Right. gate is not in the key."
+      },
+      {
+        "text": "The column is empty",
+        "correct": false,
+        "why": "Every scan has a gate."
+      },
+      {
+        "text": "Filtering text is not supported in CQL at all",
+        "correct": false,
+        "why": "It is supported, on the key, or with ALLOW FILTERING."
+      }
+    ]
+  },
+  {
+    "id": "ex-78nj6tfg",
+    "version": 1,
+    "section": "cassandra-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a cluster with three replicas, a write at ONE and a read at ONE. What can the read miss?",
+    "choices": [
+      {
+        "text": "Only deleted rows",
+        "correct": false,
+        "why": "Any recent write can be missed."
+      },
+      {
+        "text": "The write, if it asks a replica the write has not reached",
+        "correct": true,
+        "why": "Right. 1 + 1 is not more than 3."
+      },
+      {
+        "text": "Nothing; ONE always reads the newest",
+        "correct": false,
+        "why": "ONE reads whichever replica answers first."
+      },
+      {
+        "text": "Rows of other partitions, because ONE reads the first partition of the table",
+        "correct": false,
+        "why": "Consistency levels are about replicas, not partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-255zxrvj",
+    "version": 1,
+    "section": "cassandra-queries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many megabytes did docker stats show the Cassandra node using, rounded to the nearest whole number?",
+    "value": 803,
+    "tolerance": 1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-ej0k1krd",
+    "version": 1,
+    "section": "neo4j",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Neo4j's db hits count?",
+    "choices": [
+      {
+        "text": "Rows returned",
+        "correct": false,
+        "why": "That is Rows: 3."
+      },
+      {
+        "text": "Cache misses on the disk",
+        "correct": false,
+        "why": "It counts logical work, not cache behaviour."
+      },
+      {
+        "text": "Nodes and relationships touched",
+        "correct": true,
+        "why": "Right; it does not vary between runs."
+      },
+      {
+        "text": "Milliseconds spent",
+        "correct": false,
+        "why": "That is Time, which does vary."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpew0j48",
+    "version": 1,
+    "section": "neo4j",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With a million shows, which part of the recommendation query would grow unless something is added?",
+    "choices": [
+      {
+        "text": "The walk from buyers to other shows",
+        "correct": false,
+        "why": "It touches only relationships on the paths."
+      },
+      {
+        "text": "Counting the shared buyers",
+        "correct": false,
+        "why": "That depends on the walked paths too."
+      },
+      {
+        "text": "Sorting three result rows",
+        "correct": false,
+        "why": "Three rows cost nothing."
+      },
+      {
+        "text": "Finding Show 1, which scans every Show node without an index on name",
+        "correct": true,
+        "why": "Right. The walk itself depends only on the paths it follows."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j9rp6bd",
+    "version": 1,
+    "section": "neo4j",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of the recommendation walk.",
+    "items": [
+      "Find the node Show 1",
+      "Follow BOUGHT backwards to its buyers",
+      "Follow BOUGHT forwards to their other shows",
+      "Count the buyers per other show and sort"
+    ]
+  },
+  {
+    "id": "ex-6zps5ttb",
+    "version": 1,
+    "section": "influxdb",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the write say -p s?",
+    "choices": [
+      {
+        "text": "It writes in parallel streams, one per channel, so that web and app are stored apart",
+        "correct": false,
+        "why": "Channels are tags; -p sets the time unit."
+      },
+      {
+        "text": "It writes to the bucket called s",
+        "correct": false,
+        "why": "The bucket is -b sales."
+      },
+      {
+        "text": "The timestamps in sales.lp are in seconds",
+        "correct": true,
+        "why": "Right. The default precision is nanoseconds."
+      },
+      {
+        "text": "It skips the points that fail to parse and writes the rest",
+        "correct": false,
+        "why": "-p is precision."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9mq10a5",
+    "version": 1,
+    "section": "influxdb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The hourly row for the web labelled 22:00:00Z covers which hour in São Paulo?",
+    "choices": [
+      {
+        "text": "19:00 to 20:00",
+        "correct": false,
+        "why": "That treats the label as the start of the window."
+      },
+      {
+        "text": "22:00 to 23:00",
+        "correct": false,
+        "why": "That reads the label as local time and as the start."
+      },
+      {
+        "text": "21:00 to 22:00",
+        "correct": false,
+        "why": "That is the hour in UTC."
+      },
+      {
+        "text": "18:00 to 19:00",
+        "correct": true,
+        "why": "Right: UTC minus three, labelled with the end of the window."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g5m0b4t",
+    "version": 1,
+    "section": "influxdb",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In InfluxDB 2, data is written into a ___, which carries a retention period.",
+    "blanks": [
+      {
+        "accept": [
+          "bucket"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-y44nsy52",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson say is true of all five databases?",
+    "choices": [
+      {
+        "text": "They need several machines each before they can answer a single question",
+        "correct": false,
+        "why": "Each ran on one node in the lab."
+      },
+      {
+        "text": "They all replace PostgreSQL",
+        "correct": false,
+        "why": "The lesson says the opposite."
+      },
+      {
+        "text": "The key is the design",
+        "correct": true,
+        "why": "Right. Fast where the key goes straight to the data, expensive elsewhere."
+      },
+      {
+        "text": "They are all strongly consistent by default",
+        "correct": false,
+        "why": "DynamoDB's reads are eventually consistent by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-13x5m3v9",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each database to the question it refused or overcharged in this lesson.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "a filter on a field with no index"
+      },
+      {
+        "left": "DynamoDB",
+        "right": "a query without the partition key"
+      },
+      {
+        "left": "Cassandra",
+        "right": "a filter on a column outside the key"
+      },
+      {
+        "left": "Neo4j",
+        "right": "finding a node by an unindexed property"
+      }
+    ]
+  },
+  {
+    "id": "ex-k3ameryn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team needs 'the last 20 orders of a customer', at very high write volume across many servers. Which design from this lesson fits?",
+    "choices": [
+      {
+        "text": "A time series with the customer as a tag",
+        "correct": false,
+        "why": "Millions of customers as tags is the cardinality problem."
+      },
+      {
+        "text": "Customer as partition key, order time as clustering or sort key",
+        "correct": true,
+        "why": "Right: one partition, read in order, in Cassandra or DynamoDB."
+      },
+      {
+        "text": "A graph of customers and orders",
+        "correct": false,
+        "why": "One hop and a sort is not a graph question."
+      },
+      {
+        "text": "Order time as the partition key, so that the newest orders are found first",
+        "correct": false,
+        "why": "Every recent order would land in the same partition."
+      }
+    ]
+  }
+]

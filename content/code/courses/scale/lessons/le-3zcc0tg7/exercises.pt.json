@@ -1,0 +1,447 @@
+{
+  "ex-zsn7mm7w": {
+    "prompt": "O que é degradação graciosa?",
+    "choices": [
+      {
+        "text": "Deixar todo pedido igualmente lento sob carga",
+        "why": "Isso é escolher não escolher."
+      },
+      {
+        "text": "Decidir o que o sistema faz sem cada dependência",
+        "why": "Certo, para uma falha levar só o que precisa dela."
+      },
+      {
+        "text": "Acrescentar cópias de cada serviço quando a carga passa do plano",
+        "why": "Isso é escalar."
+      },
+      {
+        "text": "Tentar de novo até a dependência responder",
+        "why": "Isso é a aula 10, e tem limites."
+      }
+    ]
+  },
+  "ex-qqtax2f5": {
+    "prompt": "Ligue cada dependência ao que a bilheteria faz sem ela.",
+    "pairs": [
+      {
+        "left": "a réplica",
+        "right": "ler do primário"
+      },
+      {
+        "left": "o primário",
+        "right": "responder da memória e pausar as vendas"
+      },
+      {
+        "left": "o Redis",
+        "right": "vender sem o limite por comprador"
+      },
+      {
+        "left": "o payments",
+        "right": "recusar vendas na hora, manter as leituras"
+      }
+    ]
+  },
+  "ex-43xpc37r": {
+    "prompt": "Falta capacidade à bilheteria. O que deve sair primeiro?",
+    "choices": [
+      {
+        "text": "O botão de comprar",
+        "why": "Esse é o essencial."
+      },
+      {
+        "text": "As recomendações na página de um show",
+        "why": "Certo: opcional antes de essencial."
+      },
+      {
+        "text": "Mostrar os lugares que sobram, mesmo de um cache que diz a idade",
+        "why": "Isso é importante e barato de degradar, não de tirar."
+      },
+      {
+        "text": "Nada; tudo fica lento junto",
+        "why": "Essa é a falha que a prática evita."
+      }
+    ]
+  },
+  "ex-k7y1apse": {
+    "prompt": "Em que ordem o read_event tenta as fontes?",
+    "choices": [
+      {
+        "text": "Primário, réplica, memória",
+        "why": "As leituras começam pela réplica."
+      },
+      {
+        "text": "Réplica, primário, memória",
+        "why": "Certo, depois 503."
+      },
+      {
+        "text": "Réplica, memória, primário",
+        "why": "O primário tem dados novos; vem antes da memória."
+      },
+      {
+        "text": "Memória, réplica, primário",
+        "why": "A memória é o último recurso."
+      }
+    ]
+  },
+  "ex-aaq6vn1d": {
+    "prompt": "Por que a réplica da aula 2 não conseguia subir de novo depois de parada?",
+    "choices": [
+      {
+        "text": "O Docker apaga os dados da réplica ao parar",
+        "why": "Parar mantém os dados do contêiner; esse era o problema."
+      },
+      {
+        "text": "O primário recusava conexões de replicação depois de reiniciar",
+        "why": "O log cita o pg_basebackup e um diretório não vazio."
+      },
+      {
+        "text": "A verificação de saúde rodava antes do PostgreSQL subir",
+        "why": "O PostgreSQL nunca subia."
+      },
+      {
+        "text": "O pg_basebackup recusa um diretório de dados não vazio, e o laço tentava para sempre",
+        "why": "Certo. Agora só copia quando não há nada."
+      }
+    ]
+  },
+  "ex-0wxd53ez": {
+    "prompt": "As leituras recuam para o primário quando a réplica cai. Qual é o risco?",
+    "choices": [
+      {
+        "text": "Leituras no primário bloqueiam vendas, que esperam atrás delas pela linha",
+        "why": "Leituras simples não travam linhas."
+      },
+      {
+        "text": "Ele foi dimensionado para escritas, não para leituras",
+        "why": "Certo: aí a queda só mudou de lugar."
+      },
+      {
+        "text": "Os dados do primário são mais velhos",
+        "why": "São os mais novos."
+      },
+      {
+        "text": "Os compradores veem um erro",
+        "why": "Eles veem uma resposta normal."
+      }
+    ]
+  },
+  "ex-y0q26apj": {
+    "prompt": "Com os dois bancos fora, por que o show 2 deu 503 enquanto o show 1 respondeu?",
+    "choices": [
+      {
+        "text": "A memória guarda só um show, o lido mais recentemente",
+        "why": "Ela guarda todo show que esta cópia leu."
+      },
+      {
+        "text": "A réplica tinha o show 2 e o primário o show 1",
+        "why": "Os dois têm todos os shows."
+      },
+      {
+        "text": "O show 2 estava esgotado",
+        "why": "A seção 07 esgotou o show 7."
+      },
+      {
+        "text": "Esta cópia nunca tinha lido o show 2",
+        "why": "Certo: um cache só devolve o que viu."
+      }
+    ]
+  },
+  "ex-tcrcyv2b": {
+    "prompt": "Por que as vendas são pausadas, em vez de respondidas da memória, quando o primário cai?",
+    "choices": [
+      {
+        "text": "O payments precisa do primário",
+        "why": "O payments tem o próprio estado."
+      },
+      {
+        "text": "Só o primário sabe quais lugares estão livres",
+        "why": "Certo."
+      },
+      {
+        "text": "O limite de taxa mora no primário",
+        "why": "Ele mora no Redis."
+      },
+      {
+        "text": "A memória é lenta demais para vendas",
+        "why": "A memória é rápida; não é a verdade."
+      }
+    ]
+  },
+  "ex-qcjy7tm1": {
+    "prompt": "Quando os bancos voltaram, quem fez a bilheteria voltar para a réplica?",
+    "choices": [
+      {
+        "text": "Um operador, por uma flag ligada no console depois que o alerta passou",
+        "why": "Não há flag."
+      },
+      {
+        "text": "Um reinício da bilheteria",
+        "why": "Ela não foi reiniciada."
+      },
+      {
+        "text": "O Prometheus, depois que o alerta disparou",
+        "why": "O Prometheus só observa."
+      },
+      {
+        "text": "Ninguém: toda leitura tenta a réplica primeiro",
+        "why": "Certo: voltar é automático."
+      }
+    ]
+  },
+  "ex-ntad9122": {
+    "prompt": "Com o Redis parado, a venda passou. O que se perdeu nesse meio-tempo?",
+    "choices": [
+      {
+        "text": "O estado do disjuntor, que mora no Redis",
+        "why": "O disjuntor fica na memória de cada cópia."
+      },
+      {
+        "text": "A idempotência da cobrança",
+        "why": "As chaves ficam no payments."
+      },
+      {
+        "text": "O limite por comprador",
+        "why": "Certo, e o log diz isso."
+      },
+      {
+        "text": "Nada",
+        "why": "Robôs agora podem comprar mais rápido."
+      }
+    ]
+  },
+  "ex-dxn6zb6v": {
+    "prompt": "Com o payments fora e o disjuntor aberto, quanto uma leitura levou?",
+    "choices": [
+      {
+        "text": "Cerca de um segundo, o timeout",
+        "why": "Leituras nunca chamam o payments."
+      },
+      {
+        "text": "Dez segundos, a espera do disjuntor",
+        "why": "Leituras não passam pelo disjuntor."
+      },
+      {
+        "text": "2,5 ms, como sempre",
+        "why": "Certo: nada de que ela precisa estava fora."
+      },
+      {
+        "text": "Falhou com 503",
+        "why": "O disjuntor só protege cobranças."
+      }
+    ]
+  },
+  "ex-88dd75dq": {
+    "prompt": "O que a bilheteria fazia de errado num show esgotado da aula 8 à aula 10?",
+    "choices": [
+      {
+        "text": "Se recusava a cobrar",
+        "why": "Cobrava primeiro."
+      },
+      {
+        "text": "Vendia mais lugares que a capacidade do show quando duas vendas disputavam",
+        "why": "A condição do UPDATE impedia isso."
+      },
+      {
+        "text": "Cobrava o comprador, depois respondia 409",
+        "why": "Certo: a cobrança vinha antes da verificação do lugar."
+      },
+      {
+        "text": "Respondia 500",
+        "why": "Respondia 409."
+      }
+    ]
+  },
+  "ex-77wpzvje": {
+    "prompt": "Qual ordem fecha de vez a janela do último lugar?",
+    "choices": [
+      {
+        "text": "Reservar com prazo, cobrar, confirmar; liberar se a cobrança falhar",
+        "why": "Certo: uma saga, cada passo com uma compensação."
+      },
+      {
+        "text": "Cobrar, depois reservar",
+        "why": "Esse é o defeito original."
+      },
+      {
+        "text": "Segurar a trava da linha durante a cobrança",
+        "why": "A aula 1 mostrou quanto isso custa."
+      },
+      {
+        "text": "Verificar os lugares duas vezes antes de cobrar",
+        "why": "A janela continua entre as verificações e o UPDATE."
+      }
+    ]
+  },
+  "ex-car2rje4": {
+    "prompt": "Por que o defeito do esgotado nunca tinha aparecido?",
+    "choices": [
+      {
+        "text": "O payments escondia as cobranças dos logs",
+        "why": "As cobranças eram contadas."
+      },
+      {
+        "text": "Nenhum show do laboratório tinha esgotado",
+        "why": "Certo: um caminho não rodado é um caminho não testado."
+      },
+      {
+        "text": "O 409 ficava em cache",
+        "why": "Nada guarda vendas em cache."
+      },
+      {
+        "text": "Só acontece com três cópias",
+        "why": "Uma cópia faz isso."
+      }
+    ]
+  },
+  "ex-2bz1yb40": {
+    "prompt": "Um ciclo fechado de 64 trabalhadores recebe 128 respostas por segundo. Qual é o tempo médio por pedido, em ms?",
+    "hint": "W = L ÷ λ.",
+    "unit": "ms"
+  },
+  "ex-wrb2f643": {
+    "prompt": "100 vendas por segundo, cada uma passando 1 s esperando um payments lento. Quantas vendas estão em andamento em média?",
+    "hint": "L = λ × W.",
+    "unit": "vendas"
+  },
+  "ex-0wsxb95b": {
+    "prompt": "O tráfego fica igual, mas um serviço mais adiante dobra a latência. O que acontece antes dele?",
+    "choices": [
+      {
+        "text": "A vazão cai pela metade e nada mais se mexe",
+        "why": "Com as mesmas chegadas, L cresce primeiro."
+      },
+      {
+        "text": "Menos threads são necessárias",
+        "why": "Mais, para a mesma taxa."
+      },
+      {
+        "text": "O dobro de pedidos fica em andamento",
+        "why": "Certo: L cresce com W."
+      },
+      {
+        "text": "Nada, já que antes dele não há trabalho a mais",
+        "why": "Ele segura threads, vagas e conexões por mais tempo."
+      }
+    ]
+  },
+  "ex-9q2gxqzj": {
+    "prompt": "Para um pedido de 10 ms numa fila M/M/1, qual é o tempo médio a 90% de utilização?",
+    "choices": [
+      {
+        "text": "1000 ms",
+        "why": "Isso seria 99% de ocupação."
+      },
+      {
+        "text": "19 ms",
+        "why": "Isso seria crescimento proporcional."
+      },
+      {
+        "text": "100 ms",
+        "why": "Certo: 10 ÷ (1 − 0,9)."
+      },
+      {
+        "text": "11 ms",
+        "why": "A espera cresce bem mais rápido que a carga."
+      }
+    ]
+  },
+  "ex-t54hykce": {
+    "prompt": "Tempo de serviço de 20 ms, utilização de 75%. Qual é o tempo médio numa fila M/M/1, em ms?",
+    "hint": "S ÷ (1 − ρ).",
+    "unit": "ms"
+  },
+  "ex-ghzkwx3d": {
+    "prompt": "Que utilização o planejamento de capacidade costuma mirar no pico esperado?",
+    "choices": [
+      {
+        "text": "100%",
+        "why": "Aí a fila nunca esvazia."
+      },
+      {
+        "text": "95%, para nada ser desperdiçado",
+        "why": "É onde a curva é vertical."
+      },
+      {
+        "text": "20%, para sobrar folga de verdade",
+        "why": "Seguro, mas cerca de três vezes o custo."
+      },
+      {
+        "text": "60 a 70%",
+        "why": "Certo, com 80% como alarme."
+      }
+    ]
+  },
+  "ex-nc392vbx": {
+    "prompt": "2000 leituras por segundo a 1,1 ms cada e 150 vendas por segundo a 10 ms cada. Quantas CPUs de trabalho são, com uma casa decimal?",
+    "hint": "2,2 + 1,5.",
+    "unit": "CPUs"
+  },
+  "ex-888ks549": {
+    "prompt": "3,5 CPUs de trabalho no pico, meta de 70%, cópias de uma CPU, e N + 1. Quantas cópias?",
+    "hint": "3,5 ÷ 0,7, depois mais uma.",
+    "unit": "cópias"
+  },
+  "ex-ry256s28": {
+    "prompt": "Quatro cópias com 32 vagas cada encontram um primário que permite 100 conexões. Qual é uma correção?",
+    "choices": [
+      {
+        "text": "24 vagas por cópia, ou um agregador como o PgBouncer",
+        "why": "Certo: 96, ou muitas vagas em poucas conexões."
+      },
+      {
+        "text": "Um timeout maior nas cobranças",
+        "why": "Sem relação com conexões."
+      },
+      {
+        "text": "Mais cópias",
+        "why": "Mais cópias precisam de mais conexões."
+      },
+      {
+        "text": "Desligar a réplica",
+        "why": "A réplica é outro servidor."
+      }
+    ]
+  },
+  "ex-x8vgpg01": {
+    "prompt": "Se o primeiro minuto tivesse 20.000 compradores em vez de 6.000, por que mais cópias não bastariam?",
+    "choices": [
+      {
+        "text": "Toda venda atualiza a linha de um show, que chega ao teto perto de 138 por segundo",
+        "why": "Certo: a linha quente da aula 1."
+      },
+      {
+        "text": "O Prometheus ficaria para trás",
+        "why": "Monitoramento não limita vendas."
+      },
+      {
+        "text": "O nginx aceita no máximo quatro cópias",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Cópias não conseguem dividir o Redis",
+        "why": "Elas dividem; essa foi a aula 9."
+      }
+    ]
+  },
+  "ex-2e46fvqf": {
+    "prompt": "Um plano diz 3 cópias a 70%. Na véspera, a máquina de uma cópia é aposentada. O que o N + 1 diz?",
+    "choices": [
+      {
+        "text": "Rodar 3 e ligar novas tentativas em todo lugar",
+        "why": "Novas tentativas acrescentam carga."
+      },
+      {
+        "text": "Rodar 2 a 105%",
+        "why": "Acima de 100% a fila cresce sem fim."
+      },
+      {
+        "text": "Rodar 3 e aumentar o timeout",
+        "why": "Um timeout não acrescenta capacidade."
+      },
+      {
+        "text": "Rodar 4; sem uma, ficam 70%",
+        "why": "Certo."
+      }
+    ]
+  }
+}
