@@ -2143,5 +2143,517 @@
         "why": "Nothing holds WAL any more, so it stops growing."
       }
     ]
+  },
+  {
+    "id": "ex-8ndq2295",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A table of 2,000,000 rows only ever receives inserts. With the default settings, after how many inserted rows does autovacuum vacuum it?",
+    "hint": "Lesson 14.",
+    "value": 401000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-p780p49m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A plain VACUUM is working through orders. Which of these statements on orders has to wait for it?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "UPDATE orders SET status = 'paid' WHERE id = 1",
+        "correct": false,
+        "why": "Writes carry on while a plain VACUUM runs."
+      },
+      {
+        "text": "ALTER TABLE orders ADD COLUMN note text",
+        "correct": true,
+        "why": "Right. Its lock conflicts with changes to the table's structure and with another VACUUM."
+      },
+      {
+        "text": "SELECT count(*) FROM orders",
+        "correct": false,
+        "why": "Reads carry on while a plain VACUUM runs."
+      },
+      {
+        "text": "INSERT INTO orders (customer_id, status, total_cents, created_at) VALUES (1, 'paid', 990, now())",
+        "correct": false,
+        "why": "An insert is a write, and writes are not blocked."
+      }
+    ]
+  },
+  {
+    "id": "ex-6p62qybt",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each hidden column of a row version to what it says.",
+    "hint": "Lesson 14.",
+    "pairs": [
+      {
+        "left": "ctid",
+        "right": "where the version lives: page and item"
+      },
+      {
+        "left": "xmin",
+        "right": "the transaction that wrote it"
+      },
+      {
+        "left": "xmax",
+        "right": "the transaction that deleted or replaced it"
+      }
+    ],
+    "right_distractors": [
+      "the transaction that last read it"
+    ]
+  },
+  {
+    "id": "ex-czrnn6xm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A VACUUM logs `bypassing nonessential maintenance of table ... as a failsafe`. What is it telling you?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "maintenance_work_mem ran out, so the run was cancelled",
+        "correct": false,
+        "why": "The run went on; the hint about memory is advice for next time."
+      },
+      {
+        "text": "A session idle in transaction is holding the horizon",
+        "correct": false,
+        "why": "That shows as 'dead but not yet removable'."
+      },
+      {
+        "text": "The table is so old in transaction ids that freezing is all it does now",
+        "correct": true,
+        "why": "Right. Past vacuum_failsafe_age, 1.6 billion by default, it skips index cleanup and throttling to bring the age down."
+      },
+      {
+        "text": "autovacuum is off, so a manual run took over",
+        "correct": false,
+        "why": "The failsafe is about the transaction-id age, whoever started the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-2swdtwsh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A bloated log table has no primary key and no unique index, and the application writes to it all day. What does pg_repack do with it?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "Repacks it under ACCESS EXCLUSIVE, like VACUUM FULL",
+        "correct": false,
+        "why": "It has no such fallback; it stops before starting."
+      },
+      {
+        "text": "Repacks it and loses the rows written during the copy",
+        "correct": false,
+        "why": "It refuses rather than replay changes it cannot place."
+      },
+      {
+        "text": "Refuses it",
+        "correct": true,
+        "why": "Right. The replay finds rows by a primary key or a unique index on not-null columns."
+      },
+      {
+        "text": "Adds a primary key on ctid for the duration of the run",
+        "correct": false,
+        "why": "It changes nothing about the table's keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pdvz3ha",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "pgstattuple reported table_len 122880000 for the bloated copy. How many pages of 8192 bytes is that?",
+    "hint": "Lesson 15.",
+    "value": 15000,
+    "tolerance": 0,
+    "unit": "pages"
+  },
+  {
+    "id": "ex-4mpy78sy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "After an apt update of its package, the repack program complains that its version differs from the one installed in shop. What fixes it?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "A restart of the server",
+        "correct": false,
+        "why": "pg_repack is not a preloaded library; the mismatch is in the database."
+      },
+      {
+        "text": "VACUUM FULL on the table first",
+        "correct": false,
+        "why": "That rewrites a table and leaves the extension as it was."
+      },
+      {
+        "text": "Reinstalling the package with apt",
+        "correct": false,
+        "why": "The files are already the new ones; the database still holds the old extension."
+      },
+      {
+        "text": "DROP the extension and CREATE it again",
+        "correct": true,
+        "why": "Right. The extension in the database must match the program, and recreating it does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wfy2w6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A purge deletes the oldest 30% of a table's rows, which sit in the first pages of its file, and VACUUM runs. What happens to the file's size?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "It shrinks by 30%, as VACUUM gives the space back",
+        "correct": false,
+        "why": "A plain VACUUM returns only an empty tail."
+      },
+      {
+        "text": "It stays the same; the space is free inside the file",
+        "correct": true,
+        "why": "Right. VACUUM cuts off empty pages at the end of the file, and these are at its start."
+      },
+      {
+        "text": "It shrinks once autovacuum moves the remaining rows forward",
+        "correct": false,
+        "why": "Autovacuum moves no rows; that takes a rewrite."
+      },
+      {
+        "text": "It grows, because VACUUM writes a copy first",
+        "correct": false,
+        "why": "That is VACUUM FULL; a plain VACUUM writes no copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m5m2qkr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "During an upgrade by logical replication, the application runs an UPDATE on a published table that has no primary key and no REPLICA IDENTITY. What happens?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "It commits and reaches the subscriber like any other",
+        "correct": false,
+        "why": "Without a way to identify the row, it cannot be sent."
+      },
+      {
+        "text": "It commits, and the subscriber stops with a conflict",
+        "correct": false,
+        "why": "The refusal comes earlier, on the publisher."
+      },
+      {
+        "text": "The publisher refuses it",
+        "correct": true,
+        "why": "Right. The subscriber would have no way to find the row, so the old server refuses until the table has one."
+      },
+      {
+        "text": "It commits and is silently left out of the subscriber",
+        "correct": false,
+        "why": "The publisher refuses the statement rather than drop it quietly."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3c5awpw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The primary has just been upgraded from 16 to 17 with pg_upgrade. What about the physical standby that was following it on 16?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "It keeps following and upgrades itself from the WAL",
+        "correct": false,
+        "why": "WAL does not carry a change of major version."
+      },
+      {
+        "text": "It follows once ALTER EXTENSION ... UPDATE has run",
+        "correct": false,
+        "why": "Extensions are not what separates the two."
+      },
+      {
+        "text": "It follows after vacuumdb --analyze-in-stages",
+        "correct": false,
+        "why": "Statistics have nothing to do with replication."
+      },
+      {
+        "text": "It has to be rebuilt; it cannot follow a 17 primary",
+        "correct": true,
+        "why": "Right. A physical standby cannot follow a primary of another major version."
+      }
+    ]
+  },
+  {
+    "id": "ex-bg99e71x",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put a move of shop from 16 to 17 by dump and restore in order.",
+    "hint": "Lesson 20.",
+    "items": [
+      "stop the application writing to 16",
+      "dump shop with 17's pg_dump -Fc",
+      "pg_restore -j 4 into the 17 cluster",
+      "vacuumdb --analyze-in-stages on 17",
+      "point the application at 17"
+    ],
+    "trap": "Anything written after the dump began is not in it, which is why the writes stop first; and a restored database has no statistics until the analyze runs."
+  },
+  {
+    "id": "ex-zae2sqbp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`pg_upgradecluster -m upgrade --___ 16 main` gives each data file a second name in the new cluster instead of copying it.",
+    "hint": "Lesson 20.",
+    "blanks": [
+      {
+        "accept": [
+          "link"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-anhtytn1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With shared_buffers at 1GB the server's shared_memory_size was 1074 MB. How many huge pages of 2 MB would it need?",
+    "hint": "Lesson 9.",
+    "value": 537,
+    "tolerance": 0,
+    "unit": "pages"
+  },
+  {
+    "id": "ex-gk7skyh8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A dedicated server with 16 GB of memory and no swap gets vm.overcommit_memory = 2 and vm.overcommit_ratio = 90. About how much may all its processes commit together?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "About 8 GB, half of the memory",
+        "correct": false,
+        "why": "That is the default ratio of 50, which this server changed."
+      },
+      {
+        "text": "All 16 GB, since nothing else runs there",
+        "correct": false,
+        "why": "The limit is the ratio's share of memory, whatever else runs."
+      },
+      {
+        "text": "About 14.4 GB",
+        "correct": true,
+        "why": "Right: the swap, here none, plus 90% of the memory."
+      },
+      {
+        "text": "No limit: mode 2 grants each request and kills later",
+        "correct": false,
+        "why": "That describes mode 0; mode 2 refuses beyond the limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9rfbtye",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A tablespace's filesystem is full, and the plan at noon is ALTER TABLE big_table SET TABLESPACE pg_default to move a 20 GB table off it. What does the application see?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "Every query on that table waits until the copy ends",
+        "correct": true,
+        "why": "Right. The move copies the table and locks it against every query while it does."
+      },
+      {
+        "text": "Nothing: the copy runs under the lock a SELECT takes",
+        "correct": false,
+        "why": "That is pg_repack's way; SET TABLESPACE locks the table out."
+      },
+      {
+        "text": "Errors, because a full tablespace cannot be read",
+        "correct": false,
+        "why": "A full filesystem refuses writes that need room; reads go on."
+      },
+      {
+        "text": "Only writes wait; reads carry on",
+        "correct": false,
+        "why": "The lock covers every query, reads included."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpm03zqh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "pg_test_fsync reports fdatasync at 2315 ops/sec on the data disk. One session commits small transactions one after another. Roughly what is its ceiling?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "About 2.3 million, the speed of an unflushed write",
+        "correct": false,
+        "why": "That is a write landing in the kernel's memory; a commit waits for the disk."
+      },
+      {
+        "text": "About 2,300 commits a second, whatever the processor",
+        "correct": true,
+        "why": "Right. Each commit waits for one flush of the log."
+      },
+      {
+        "text": "No ceiling: checkpoints do the flushing",
+        "correct": false,
+        "why": "The commit waits for its own log flush, not for a checkpoint."
+      },
+      {
+        "text": "About 513, the open_sync row",
+        "correct": false,
+        "why": "fdatasync is Linux's default and what the server uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-15gs5mpe",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "max_connections is 100, superuser_reserved_connections is 3 and reserved_connections is 5. How many sessions can roles with neither SUPERUSER nor pg_use_reserved_connections open in total?",
+    "hint": "Lesson 10.",
+    "value": 92,
+    "tolerance": 0,
+    "unit": "sessions"
+  },
+  {
+    "id": "ex-ahn3yjm0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An application keeps a pool of 20 connections open on purpose. Somebody sets ALTER ROLE app SET idle_session_timeout = '1min'. What follows on a quiet night?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Nothing, as the setting only touches transactions left open",
+        "correct": false,
+        "why": "That is idle_in_transaction_session_timeout."
+      },
+      {
+        "text": "Each one is cut after a minute at rest, and the app reconnects",
+        "correct": true,
+        "why": "Right. It ends sessions idle outside a transaction, which is a pool's normal state."
+      },
+      {
+        "text": "Long queries are cancelled after a minute",
+        "correct": false,
+        "why": "A running query is not idle; that would be statement_timeout."
+      },
+      {
+        "text": "The pool shrinks max_connections to match",
+        "correct": false,
+        "why": "max_connections is a server setting fixed at start."
+      }
+    ]
+  },
+  {
+    "id": "ex-jasqmwn8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A report's SELECT has run for forty minutes. You want it stopped and the analyst's session kept. Which call?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "pg_terminate_backend(pid)",
+        "correct": false,
+        "why": "That ends the whole session."
+      },
+      {
+        "text": "sudo kill -9 on the backend's pid",
+        "correct": false,
+        "why": "That makes the postmaster restart every process."
+      },
+      {
+        "text": "pg_cancel_backend(pid)",
+        "correct": true,
+        "why": "Right. It cancels the running statement and leaves the session alive."
+      },
+      {
+        "text": "ALTER ROLE analyst SET statement_timeout = '30min'",
+        "correct": false,
+        "why": "A role's setting applies from its next connection, not to the running query."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wgvmwt7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Somebody ran BEGIN in psql, changed a row and went to lunch. From pg_stat_activity, how long has their session held that row's lock?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "now() - backend_start, the session's age",
+        "correct": false,
+        "why": "The session may have connected long before the transaction began."
+      },
+      {
+        "text": "The duration printed beside query",
+        "correct": false,
+        "why": "query holds the last statement's text, not a duration."
+      },
+      {
+        "text": "now() - xact_start",
+        "correct": true,
+        "why": "Right. The transaction began then, and it holds what it took until it ends."
+      },
+      {
+        "text": "now() - pg_postmaster_start_time()",
+        "correct": false,
+        "why": "That is how long the server has run."
+      }
+    ]
   }
 ]
