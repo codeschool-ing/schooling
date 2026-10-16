@@ -112,9 +112,9 @@ the lock. The other forty-nine sleep ten milliseconds and look in the cache agai
 the value. The lock has its own expiry, `ex=10`, so that a process which dies holding it cannot
 block the key for ever.
 
-The second look inside the lock is there because an earlier version of this program, without it,
-made **two** queries in one run. One caller found the cache empty, the first lock holder stored the value and released the
-lock, and the late caller then got the lock and ran the query again. A lock that is released lets the
+The second look inside the lock matters. Without it, a caller that found the cache empty can get
+the lock **after** the first holder has stored the value and released it, and run the query a second
+time. A lock that is released lets the
 next caller in, so the holder must check whether the work is still needed.
 
 ```

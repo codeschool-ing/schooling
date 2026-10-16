@@ -113,9 +113,8 @@ a trava. Os outros quarenta e nove dormem dez milissegundos e olham no cache de 
 valor. A trava tem a própria expiração, `ex=10`, para que um processo que morra segurando-a não
 bloqueie a chave para sempre.
 
-A segunda olhada dentro da trava está lá porque uma versão anterior deste programa, sem ela, fez
-**duas** consultas numa rodada. Um chamador achou o cache vazio, o primeiro dono da trava guardou o
-valor e soltou a trava, e o chamador atrasado pegou então a trava e rodou a consulta de novo. Uma
+A segunda olhada dentro da trava importa. Sem ela, um chamador que achou o cache vazio pode pegar a
+trava **depois** que o primeiro dono guardou o valor e a soltou, e rodar a consulta uma segunda vez. Uma
 trava solta deixa entrar o próximo, então quem a segura precisa conferir se o trabalho ainda é
 necessário.
 
