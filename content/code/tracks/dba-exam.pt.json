@@ -8,16 +8,16 @@
         "why": "Isso confunde a ligação com o drive; NVMe e SATA dizem como o drive se conecta, e nenhum dos dois números conta flushes."
       },
       {
-        "text": "É um número de leitura, e a caixa traz a velocidade de escrita como um segundo número em MB/s",
-        "why": "Um número de escrita em MB/s continua sendo vazão; o flush de um commit tem poucos kilobytes e é contado por segundo."
-      },
-      {
         "text": "Vale também para commits, desde que cerca de um décimo do drive fique livre",
         "why": "Espaço livre é o único ponto em que capacidade encosta em velocidade, e ele não transforma vazão em commits."
       },
       {
         "text": "Mede transferências grandes; um commit espera um flush pequeno, que o `pg_test_fsync` mede",
         "why": "Isso: vazão e flushes por segundo são perguntas diferentes, e um servidor movimentado espera pela segunda."
+      },
+      {
+        "text": "É um número de leitura, e a caixa traz a velocidade de escrita como um segundo número em MB/s",
+        "why": "Um número de escrita em MB/s continua sendo vazão; o flush de um commit tem poucos kilobytes e é contado por segundo."
       }
     ]
   },
@@ -38,20 +38,20 @@
     "hint": "Informática Essencial, aula 1; Servidor de Banco de Dados: Instalação e Manutenção, aula 6.",
     "choices": [
       {
-        "text": "O `work_mem` limita cada conexão a 64MB, então os relatórios transbordam para arquivos temporários",
-        "why": "O `work_mem` é um teto por sort ou hash, não por conexão, e nada soma os passos."
+        "text": "Os sorts e hashes passaram da memória, e o sistema está levando memória para o disco",
+        "why": "Isso: cada passo pode pegar um `work_mem`, vinte relatórios multiplicam isso, e memória cheia faz swap."
       },
       {
         "text": "O `shared_buffers` é pequeno demais, então toda página tem que vir do disco",
         "why": "Dar mais ao cache tiraria memória de uma máquina que já ficou sem; o sintoma é de memória, não de falta de cache."
       },
       {
-        "text": "Os sorts e hashes passaram da memória, e o sistema está levando memória para o disco",
-        "why": "Isso: cada passo pode pegar um `work_mem`, vinte relatórios multiplicam isso, e memória cheia faz swap."
-      },
-      {
         "text": "Vinte relatórios são mais do que o processador aguenta, e o número de ociosidade está atrasado",
         "why": "O processador ocioso é a evidência, não um erro de leitura: o trabalho está esperando o disco."
+      },
+      {
+        "text": "O `work_mem` limita cada conexão a 64MB, então os relatórios transbordam para arquivos temporários",
+        "why": "O `work_mem` é um teto por sort ou hash, não por conexão, e nada soma os passos."
       }
     ]
   },
@@ -60,8 +60,8 @@
     "hint": "Informática Essencial, aula 8; Backup, Replicação e Alta Disponibilidade, aula 10.",
     "choices": [
       {
-        "text": "Conectado, ele é só mais uma pasta, aberta a quem tomar o servidor",
-        "why": "Isso: o invasor vai primeiro atrás dos backups, e um drive sempre conectado faz parte da máquina."
+        "text": "Sobreviveria se cada arquivo de dump fosse criptografado com uma senha própria",
+        "why": "A criptografia impede que o conteúdo seja lido; o invasor ainda pode apagar o arquivo ou criptografá-lo por cima."
       },
       {
         "text": "Sobreviveria se cada dump fosse restaurado na manhã seguinte para provar que funciona",
@@ -72,8 +72,8 @@
         "why": "Todos esses dumps ficam no mesmo drive conectado, então todos são alcançados juntos."
       },
       {
-        "text": "Sobreviveria se cada arquivo de dump fosse criptografado com uma senha própria",
-        "why": "A criptografia impede que o conteúdo seja lido; o invasor ainda pode apagar o arquivo ou criptografá-lo por cima."
+        "text": "Sempre ligado, ele é só mais uma pasta para quem tomar aquela máquina",
+        "why": "Isso: o invasor vai primeiro atrás dos backups, e um drive sempre conectado faz parte da máquina."
       }
     ]
   },
@@ -272,16 +272,16 @@
     "hint": "Fundamentos da Web e Internet, aula 7.",
     "choices": [
       {
+        "text": "Apagar essa linha no banco",
+        "why": "Isso: o identificador passa a não apontar para nada, e isso é encerrar a sessão do seu lado."
+      },
+      {
         "text": "Trocar a senha do funcionário, que vai dentro do cookie",
         "why": "O cookie leva um identificador e mais nada; a senha nunca esteve nele."
       },
       {
         "text": "Esperar o tempo de inatividade, que encerra depois de um período parado",
         "why": "Isso encerra em algum momento, e só se o ladrão ficar quieto; não é na hora."
-      },
-      {
-        "text": "Apagar a linha dessa sessão na tabela do servidor",
-        "why": "Isso: o identificador passa a não apontar para nada, e isso é encerrar a sessão do seu lado."
       },
       {
         "text": "Mandar uma resposta dizendo àquele navegador para descartar o cookie",
@@ -298,16 +298,16 @@
         "why": "É o que o modo permite no Linux; o servidor confere o próprio diretório antes de aceitar isso."
       },
       {
-        "text": "O servidor se recusa a subir, porque o diretório está aberto a outras contas",
-        "why": "Isso: os tamanhos se perguntam ao servidor, com as funções de tamanho dele."
+        "text": "Ele sobe, mas os arquivos ficaram executáveis e o servidor não lê nenhum",
+        "why": "O bit de execução num arquivo de dados não muda nada para o servidor; o problema é o diretório aberto."
       },
       {
         "text": "Nada muda, porque o umask da conta postgres continua valendo",
         "why": "O umask só age quando um arquivo é criado; o `chmod` é absoluto."
       },
       {
-        "text": "Ele sobe, mas os arquivos ficaram executáveis e o servidor não lê nenhum",
-        "why": "O bit de execução num arquivo de dados não muda nada para o servidor; o problema é o diretório aberto."
+        "text": "O servidor se recusa a subir, porque o diretório está aberto a outras contas",
+        "why": "Isso: os tamanhos se perguntam ao servidor, com as funções de tamanho dele."
       }
     ]
   },
@@ -316,16 +316,16 @@
     "hint": "Linux e Linha de Comando, aula 5; Servidor de Banco de Dados: Instalação e Manutenção, aula 3.",
     "choices": [
       {
+        "text": "Nada no servidor: `active (exited)` quer dizer que o serviço rodou e está saudável",
+        "why": "Essa unit só repassa comandos aos clusters; o sucesso dela não diz nada sobre o postmaster."
+      },
+      {
         "text": "A unit do próprio cluster, `systemctl status postgresql@16-main`",
         "why": "Isso: essa unit contém o postmaster, e o status e o journal dela dizem por que ele caiu."
       },
       {
         "text": "`systemctl enable postgresql`, já que `exited` quer dizer que não sobe no boot",
         "why": "Subir no boot é a linha `Loaded:`, não a `Active:`."
-      },
-      {
-        "text": "Nada no servidor: `active (exited)` quer dizer que o serviço rodou e está saudável",
-        "why": "Essa unit só repassa comandos aos clusters; o sucesso dela não diz nada sobre o postmaster."
       },
       {
         "text": "`systemctl restart postgresql`, porque `exited` é como uma queda aparece",
@@ -346,12 +346,12 @@
         "why": "O banco está em outra máquina; a ordem de uma unit local não diz nada sobre ele."
       },
       {
-        "text": "`Type=forking`, para o systemd esperar o serviço terminar de subir",
-        "why": "`forking` é para programa que vira daemon sozinho; num que não vira, a partida trava."
-      },
-      {
         "text": "`After=` e `Wants=network-online.target`, com o serviço wait-online habilitado",
         "why": "Isso."
+      },
+      {
+        "text": "`Type=forking`, para o systemd esperar o serviço terminar de subir",
+        "why": "`forking` é para programa que vira daemon sozinho; num que não vira, a partida trava."
       }
     ]
   },
@@ -375,16 +375,16 @@
         "why": "O postmaster trata um backend morto assim como queda e reinicia todos os processos."
       },
       {
-        "text": "Mandar `-9` para o postmaster, para os filhos pararem junto com ele",
-        "why": "`KILL` não deixa nada fazer limpeza; a próxima partida é uma recuperação de queda do servidor inteiro."
-      },
-      {
         "text": "`kill -HUP 4821` no lugar, para o backend reler as configurações e soltar tudo",
         "why": "`HUP` pede para reler a configuração; a transação e os locks dela continuam."
       },
       {
         "text": "`sudo kill 4821` no lugar, que encerra só aquela sessão, de forma limpa",
         "why": "Isso: `TERM` é o que a `pg_terminate_backend` envia."
+      },
+      {
+        "text": "Mandar `-9` para o postmaster, para os filhos pararem junto com ele",
+        "why": "`KILL` não deixa nada fazer limpeza; a próxima partida é uma recuperação de queda do servidor inteiro."
       }
     ]
   },
@@ -408,20 +408,20 @@
     "hint": "Linux e Linha de Comando, aula 7; Servidor de Banco de Dados: Instalação e Manutenção, aula 20.",
     "choices": [
       {
-        "text": "`apt-mark showhold`",
-        "why": "Isso: um pacote retido é pulado por todo upgrade, em silêncio."
+        "text": "`apt policy postgresql-16`, já que a prioridade 100 da versão instalada bloqueia a nova",
+        "why": "A prioridade 100 só impede que um pacote instalado seja trocado por um mais velho."
       },
       {
         "text": "`pg_upgradecluster`, porque ir de 16.2 para 16.15 converte o diretório de dados",
         "why": "Isso é uma versão menor: programas novos e um restart, sem arquivo convertido."
       },
       {
-        "text": "`apt policy postgresql-16`, já que a prioridade 100 da versão instalada bloqueia a nova",
-        "why": "A prioridade 100 só impede que um pacote instalado seja trocado por um mais velho."
-      },
-      {
         "text": "Instalar a 16.3 primeiro e depois cada versão seguinte, já que o apt não pula nenhuma",
         "why": "As versões menores são cumulativas; a 16.15 traz todas as correções desde a 16.2."
+      },
+      {
+        "text": "`apt-mark showhold`",
+        "why": "Isso: um pacote retido é pulado por todo upgrade, em silêncio."
       }
     ]
   },
@@ -430,16 +430,16 @@
     "hint": "Linux e Linha de Comando, aula 11; Servidor de Banco de Dados: Instalação e Manutenção, aula 6.",
     "choices": [
       {
+        "text": "Não: esse cache é o segundo cache pelo qual o banco lê as páginas dele",
+        "why": "Isso: descartá-lo transforma leituras baratas em leituras de disco de verdade."
+      },
+      {
         "text": "Sim: com 300 MB livres, o próximo sort grande vai ser morto por falta de memória",
         "why": "`available` é o número que diz quanto um programa consegue, e ele marca 10 GB."
       },
       {
         "text": "Sim, depois de subir o `shared_buffers` para 12 GB para o servidor guardar as páginas",
         "why": "Memória dada a um cache sai do outro; um quarto da máquina é o ponto de partida."
-      },
-      {
-        "text": "Não: esse cache é o segundo cache pelo qual o banco lê as páginas dele",
-        "why": "Isso: descartá-lo transforma leituras baratas em leituras de disco de verdade."
       },
       {
         "text": "Não: acrescente swap, para o cache poder ir para o disco",
@@ -474,16 +474,16 @@
     "hint": "Linux e Linha de Comando, aula 11; Servidor de Banco de Dados: Instalação e Manutenção, aula 8.",
     "choices": [
       {
+        "text": "O dispositivo está saturado, como mostra o `%util`; espalhe as tabelas num segundo volume",
+        "why": "Num dispositivo com fila, `%util` em 100 é um fato, não um veredito de saturação."
+      },
+      {
         "text": "Os flushes levam 38 ms, e todo commit precisa esperar um deles antes de voltar",
         "why": "Isso: um `f_await` alto no volume do banco é o sinal mais direto de que o disco é lento demais para ele."
       },
       {
         "text": "As escritas esperam 0,4 ms, então o disco vai bem e a lentidão está nas consultas",
         "why": "Escritas comuns caem no cache de páginas; o commit espera o flush, que é a parte lenta."
-      },
-      {
-        "text": "O dispositivo está saturado, como mostra o `%util`; espalhe as tabelas num segundo volume",
-        "why": "Num dispositivo com fila, `%util` em 100 é um fato, não um veredito de saturação."
       },
       {
         "text": "Pôr `fsync = off`, para os commits pararem de esperar a confirmação do disco",
@@ -522,16 +522,16 @@
         "why": "Essa linha é a segunda porta; a primeira é um endereço em que o servidor escute, e isso falta."
       },
       {
-        "text": "Um `max_connections` maior, já que o servidor recusa clientes novos",
-        "why": "Servidor lotado responde `sorry, too many clients already`; uma recusa nem chegou a ele."
-      },
-      {
         "text": "`listen_addresses` com 10.0.0.7, e depois `systemctl reload postgresql`",
         "why": "É um parâmetro `postmaster`: o reload o deixa pendente até um restart."
       },
       {
         "text": "`listen_addresses` com 10.0.0.7, e depois um restart completo do PostgreSQL",
         "why": "Isso."
+      },
+      {
+        "text": "Um `max_connections` maior, já que o servidor recusa clientes novos",
+        "why": "Servidor lotado responde `sorry, too many clients already`; uma recusa nem chegou a ele."
       }
     ]
   },
@@ -573,12 +573,12 @@
         "why": "O túnel termina em `127.0.0.1` porta 5432, que é TCP, não o socket."
       },
       {
-        "text": "A linha `host` de `127.0.0.1/32`",
-        "why": "Isso: o sshd no servidor se conecta a `127.0.0.1`, e é esse endereço que o arquivo compara."
-      },
-      {
         "text": "Nenhuma, porque o que passa dentro do SSH pula o `pg_hba.conf`",
         "why": "Toda conexão passa pelo arquivo; o SSH só muda de onde ela parece vir."
+      },
+      {
+        "text": "A linha `host` de `127.0.0.1/32`",
+        "why": "Isso: o sshd no servidor se conecta a `127.0.0.1`, e é esse endereço que o arquivo compara."
       }
     ]
   },
@@ -598,20 +598,20 @@
     "hint": "Redes e Protocolos, aula 8; Backup, Replicação e Alta Disponibilidade, aula 9.",
     "choices": [
       {
-        "text": "O rsync manda só as partes alteradas, então a cópia remota nunca é um backup inteiro",
-        "why": "Só a transferência é uma diferença; o que chega do outro lado é um espelho completo."
-      },
-      {
         "text": "Quem controla este servidor consegue apagar a cópia, à mão ou por meio da próxima execução",
         "why": "Isso: um repositório esvaziado é espelhado vazio, e a própria chave consegue apagar."
+      },
+      {
+        "text": "A barra no final faz o rsync criar `pgbackrest/pgbackrest` do outro lado",
+        "why": "Com a barra o conteúdo é copiado para dentro; sem ela a pasta em si é que seria."
       },
       {
         "text": "O rsync por SSH manda o backup às claras para quem estiver no caminho",
         "why": "O rsync por SSH viaja dentro do SSH, cifrado, na porta 22."
       },
       {
-        "text": "A barra no final faz o rsync criar `pgbackrest/pgbackrest` do outro lado",
-        "why": "Com a barra o conteúdo é copiado para dentro; sem ela a pasta em si é que seria."
+        "text": "O rsync manda só as partes alteradas, então a cópia remota nunca é um backup inteiro",
+        "why": "Só a transferência é uma diferença; o que chega do outro lado é um espelho completo."
       }
     ]
   },
@@ -644,7 +644,7 @@
         "why": "O serial avisa os servidores secundários de que a zona mudou; resolvedores nunca o leem."
       },
       {
-        "text": "Limpar esse nome no resolvedor da empresa, para a próxima consulta ir ao ns1",
+        "text": "Limpar esse nome no resolvedor que todos usam, para a próxima consulta ir ao ns1",
         "why": "Isso: resolvedores de fora continuam esperando o TTL."
       }
     ]
@@ -662,7 +662,7 @@
         "why": "Um relógio errado explica uma máquina, não todos os usuários em todo tipo de aparelho."
       },
       {
-        "text": "O servidor nunca carregou o arquivo renovado e ainda manda o certificado antigo",
+        "text": "O processo nunca carregou o arquivo novo e ainda manda o antigo",
         "why": "Isso: só uma verificação do que o servidor envia, pelo `openssl s_client`, enxerga isso."
       },
       {
@@ -750,16 +750,16 @@
         "why": "Mesmo com ela no lugar, um `UNIQUE` do PostgreSQL na coluna pura aceita os dois, porque compara exatamente."
       },
       {
-        "text": "O `utf8` antigo do MySQL guardou a maiúscula de um jeito que o PostgreSQL lê como outro caractere",
-        "why": "O limite de três bytes do `utf8` custa os emoji; não transforma uma maiúscula em outra letra."
+        "text": "A collation padrão do MySQL ignora maiúsculas, então o `UNIQUE` dele recusava um; o PostgreSQL compara exatamente",
+        "why": "Isso: um índice único em `lower(email)` pede ao PostgreSQL o comportamento antigo, depois de juntar o par."
       },
       {
         "text": "O servidor novo passa valores sem aspas para minúsculas, como faz com nomes, e por isso eles diferem",
         "why": "Essa conversão vale para identificadores como nomes de tabela; um valor guardado fica como foi escrito."
       },
       {
-        "text": "A collation padrão do MySQL ignora maiúsculas, então o `UNIQUE` dele recusava um; o PostgreSQL compara exatamente",
-        "why": "Isso: um índice único em `lower(email)` pede ao PostgreSQL o comportamento antigo, depois de juntar o par."
+        "text": "O `utf8` antigo do MySQL guardou a maiúscula de um jeito que o PostgreSQL lê como outro caractere",
+        "why": "O limite de três bytes do `utf8` custa os emoji; não transforma uma maiúscula em outra letra."
       }
     ]
   },
@@ -813,16 +813,16 @@
         "why": "Isso mantém os locks durante os trinta segundos do provedor, que é o próprio problema."
       },
       {
-        "text": "Confirmar uma linha `pending`, chamar o provedor e liquidá-la numa segunda transação",
-        "why": "Isso: a parte lenta fica entre duas transações curtas, e a linha diz em que pé as coisas estão."
+        "text": "Definir `idle_in_transaction_session_timeout` abaixo de trinta segundos",
+        "why": "Isso mata os checkouts cujo provedor está lento; não tira a espera de dentro da transação."
       },
       {
         "text": "Rodar a transação em `SERIALIZABLE`, para nenhum outro checkout entrar em conflito com ela",
         "why": "O nível de isolamento não encurta o tempo em que os locks ficam presos."
       },
       {
-        "text": "Definir `idle_in_transaction_session_timeout` abaixo de trinta segundos",
-        "why": "Isso mata os checkouts cujo provedor está lento; não tira a espera de dentro da transação."
+        "text": "Confirmar uma linha `pending`, chamar o provedor e liquidá-la numa segunda transação",
+        "why": "Isso: a parte lenta fica entre duas transações curtas, e a linha diz em que pé as coisas estão."
       }
     ]
   },
@@ -919,16 +919,16 @@
     "hint": "Servidor de Banco de Dados: Instalação e Manutenção, aula 10; Backup, Replicação e Alta Disponibilidade, aula 18.",
     "choices": [
       {
+        "text": "Num `SET` que a aplicação envia uma vez, logo ao se conectar ao PgBouncer",
+        "why": "Uma configuração de sessão fica na conexão com o servidor que a executou, atinge outros clientes e não chega aos demais."
+      },
+      {
         "text": "Em `ALTER ROLE app SET`, que cada nova conexão de `app` herda",
         "why": "Isso: as conexões do pool entram como `app`, e mais ninguém é pego."
       },
       {
         "text": "Em `ALTER SYSTEM`, com um reload, para toda sessão do servidor",
         "why": "Isso também encerra as suas próprias sessões e jobs longos de manutenção, para os quais o limite nunca foi pensado."
-      },
-      {
-        "text": "Num `SET` que a aplicação envia uma vez, logo ao se conectar ao PgBouncer",
-        "why": "Uma configuração de sessão fica na conexão com o servidor que a executou, atinge outros clientes e não chega aos demais."
       },
       {
         "text": "Em `ALTER DATABASE shop SET`, para limitar só as conexões ao `shop`",
@@ -992,12 +992,12 @@
     "hint": "Servidor de Banco de Dados: Instalação e Manutenção, aula 16; Bancos de Dados Relacionais e SQL, aula 10.",
     "choices": [
       {
-        "text": "Aumentar o `work_mem` do job, para o nested loop ter espaço para rodar",
-        "why": "O loop foi escolhido porque o planner esperava uma linha; memória não muda essa estimativa."
-      },
-      {
         "text": "Terminar com `ANALYZE orders`, que leituras e escritas acompanham sem esperar",
         "why": "Isso."
+      },
+      {
+        "text": "Aumentar o `work_mem` do job, para o nested loop ter espaço para rodar",
+        "why": "O loop foi escolhido porque o planner esperava uma linha; memória não muda essa estimativa."
       },
       {
         "text": "Desligar o autovacuum em `orders` durante a carga, e religar depois",
@@ -1018,16 +1018,16 @@
         "why": "Isso é o `lock_timeout`, que conta só a espera; esta configuração conta também o trabalho."
       },
       {
-        "text": "Ela termina, e os dois segundos limitam as consultas na fila atrás dela",
-        "why": "A configuração pertence à sessão que a definiu; as outras não são afetadas."
-      },
-      {
         "text": "Ela termina, porque o `statement_timeout` não vale para `ALTER TABLE`",
         "why": "Ele vale para qualquer comando; é por isso que corta uma reescrita no meio."
       },
       {
         "text": "Ela pega o lock, trabalha dois segundos e é cancelada em toda execução",
         "why": "Isso: o `lock_timeout` teria limitado a espera e deixado o trabalho terminar."
+      },
+      {
+        "text": "Ela termina, e os dois segundos limitam as consultas na fila atrás dela",
+        "why": "A configuração pertence à sessão que a definiu; as outras não são afetadas."
       }
     ]
   },
@@ -1036,20 +1036,20 @@
     "hint": "Servidor de Banco de Dados: Instalação e Manutenção, aula 10; Linux e Linha de Comando, aula 6.",
     "choices": [
       {
-        "text": "`kill -STOP`, que congela o backend e devolve a vaga até um `-CONT`",
-        "why": "Um processo congelado continua existindo e continua com a sua vaga e os seus locks."
+        "text": "Um restart do serviço, já que um backend ignora `SIGTERM` como o `stubborn.sh` fazia",
+        "why": "Um backend trata o `SIGTERM` e sai direito; um restart custa todas as conexões."
       },
       {
         "text": "Nada diferente: o `-9` libera a vaga, e só a transação daquele backend se perde",
         "why": "Um backend que morre sem arrumar pode deixar a memória compartilhada pela metade, e toda sessão paga."
       },
       {
-        "text": "Um `kill` simples, o `SIGTERM` que o `pg_terminate_backend` envia: só aquela sessão é desfeita",
-        "why": "Isso: um backend morto com `-9` não consegue arrumar nada, e o postmaster reinicia todos os processos."
+        "text": "`kill -STOP`, que congela o backend e devolve a vaga até um `-CONT`",
+        "why": "Um processo congelado continua existindo e continua com a sua vaga e os seus locks."
       },
       {
-        "text": "Um restart do serviço, já que um backend ignora `SIGTERM` como o `stubborn.sh` fazia",
-        "why": "Um backend trata o `SIGTERM` e sai direito; um restart custa todas as conexões."
+        "text": "Um `kill` simples, o `SIGTERM` que o `pg_terminate_backend` envia: só aquela sessão é desfeita",
+        "why": "Isso: um backend morto com `-9` não consegue arrumar nada, e o postmaster reinicia todos os processos."
       }
     ]
   },
@@ -1080,16 +1080,16 @@
     "hint": "Servidor de Banco de Dados: Instalação e Manutenção, aula 20.",
     "choices": [
       {
-        "text": "O unattended-upgrades instalou a versão menor que veio pelo pocket de segurança",
-        "why": "Isso: os scripts do pacote pararam o cluster, trocaram os programas e o iniciaram."
+        "text": "O `apt upgrade` levou o cluster a uma versão maior nova, como faz todo outono",
+        "why": "De 16.2 para 16.15 é uma versão menor, e o Ubuntu nunca muda a versão maior dentro de um release."
       },
       {
         "text": "O servidor caiu durante a noite, e a recuperação o subiu com os binários novos",
         "why": "Uma queda não deixa linha de fast shutdown, e a recuperação não troca os programas."
       },
       {
-        "text": "O `apt upgrade` levou o cluster a uma versão maior nova, como faz todo outono",
-        "why": "De 16.2 para 16.15 é uma versão menor, e o Ubuntu nunca muda a versão maior dentro de um release."
+        "text": "O unattended-upgrades instalou a versão menor que veio pelo pocket de segurança",
+        "why": "Isso: os scripts do pacote pararam o cluster, trocaram os programas e o iniciaram."
       },
       {
         "text": "O `pg_upgradecluster` rodou por um timer, convertendo o diretório de dados no caminho",
@@ -1102,16 +1102,16 @@
     "hint": "Servidor de Banco de Dados: Instalação e Manutenção, aula 8.",
     "choices": [
       {
+        "text": "Escritas no cache do sistema operacional sobrevivem a um kill; uma queda de energia as perde",
+        "why": "Isso: só uma queda de energia ou do kernel mostra o que o `fsync = off` custa."
+      },
+      {
         "text": "Nada: uma recuperação limpa depois de um kill mostra que a ordem das escritas continua valendo",
         "why": "Nada impõe essa ordem com o `fsync` desligado; o kill só nunca a pôs à prova."
       },
       {
         "text": "A recuperação reaplica o log, que continua indo para o disco, então só os arquivos de tabela correm risco",
         "why": "Com o `fsync` desligado, a chamada também não é feita para o log."
-      },
-      {
-        "text": "Escritas no cache do sistema operacional sobrevivem a um kill; uma queda de energia as perde",
-        "why": "Isso: só uma queda de energia ou do kernel mostra o que o `fsync = off` custa."
       },
       {
         "text": "O `kill -9` manda um `SIGTERM` antes, então o servidor teve tempo de gravar antes de morrer",
@@ -1158,12 +1158,12 @@
     "hint": "Desempenho e Escala de Bancos de Dados, aula 15; Backup, Replicação e Alta Disponibilidade, aula 11.",
     "choices": [
       {
-        "text": "`pg_replication_slots`, atrás de um slot cujo consumidor sumiu",
-        "why": "Isso: um slot esquecido segura o horizonte e o log ao mesmo tempo, e não tem linha no pg_stat_activity."
-      },
-      {
         "text": "`pg_stat_archiver`, porque um comando de arquivamento falhando também segura o VACUUM",
         "why": "Um arquivamento quebrado mantém segmentos no pg_wal, mas não segura snapshot nenhum, então não segura o corte."
+      },
+      {
+        "text": "`pg_replication_slots`, atrás de um slot cujo consumidor sumiu",
+        "why": "Isso: um slot esquecido segura o horizonte e o log ao mesmo tempo, e não tem linha no pg_stat_activity."
       },
       {
         "text": "`pg_prepared_xacts`, atrás de um commit em duas fases que um coordenador esqueceu",
@@ -1210,12 +1210,12 @@
         "why": "Esse é o preço do hot_standby_feedback, que ficou desligado aqui."
       },
       {
-        "text": "Ele fica horas atrás durante a exportação, o pior estado para promovê-lo",
-        "why": "Isso: o curso tira relatórios longos da réplica que um failover usaria."
-      },
-      {
         "text": "Todo commit no primário espera até o standby reproduzi-lo",
         "why": "O standby é assíncrono; segurar a reprodução dele nunca atrasa um commit no primário."
+      },
+      {
+        "text": "Ele fica horas atrás durante a exportação, o pior estado para promovê-lo",
+        "why": "Isso: o curso tira relatórios longos da réplica que um failover usaria."
       },
       {
         "text": "Nada, porque a reprodução se atualiza a toda velocidade quando a exportação termina",
@@ -1228,16 +1228,16 @@
     "hint": "Desempenho e Escala de Bancos de Dados, aula 20; Backup, Replicação e Alta Disponibilidade, aula 19.",
     "choices": [
       {
+        "text": "Uma leitura que decide uma venda pertence ao primário, junto da escrita",
+        "why": "Isso."
+      },
+      {
         "text": "Nada, desde que o `replay_lag` das réplicas fique abaixo de um segundo",
         "why": "Por menor que seja o atraso, agir sobre um momento que já passou pode vender a mesma última unidade duas vezes."
       },
       {
         "text": "A porta 5001 recusa um `SELECT`, porque standbys só aceitam conexões de replicação",
         "why": "Um standby responde leituras; o que ele recusa é uma escrita, como transação somente leitura."
-      },
-      {
-        "text": "Uma leitura que decide uma venda pertence ao primário, junto da escrita",
-        "why": "Isso."
       },
       {
         "text": "A porta 5001 manda cada conexão para o nó que for o primário no momento",
@@ -1297,8 +1297,8 @@
     "hint": "Desempenho e Escala de Bancos de Dados, aula 13; Linux e Linha de Comando, aula 6.",
     "choices": [
       {
-        "text": "`pg_terminate_backend(5792)`, porque SIGKILL reinicia todas as conexões",
-        "why": "Isso."
+        "text": "Tentar `pg_cancel_backend(5792)` primeiro, o mais gentil dos dois",
+        "why": "Um cancelamento para um comando em execução; uma raiz ociosa não tem nenhum, e a transação dela mantém as travas."
       },
       {
         "text": "`kill -9` é o certo aqui, porque um backend ocioso ignora o sinal educado",
@@ -1309,8 +1309,8 @@
         "why": "Só a função encerra uma sessão; um backend morto por SIGKILL é tratado como uma queda."
       },
       {
-        "text": "Tentar `pg_cancel_backend(5792)` primeiro, o mais gentil dos dois",
-        "why": "Um cancelamento para um comando em execução; uma raiz ociosa não tem nenhum, e a transação dela mantém as travas."
+        "text": "`pg_terminate_backend(5792)`, porque SIGKILL reinicia todas as conexões",
+        "why": "Isso."
       }
     ]
   },
@@ -1367,16 +1367,16 @@
         "why": "Isso é o reserved_connections, zero por padrão; as três vagas de superusuário são uma reserva à parte."
       },
       {
+        "text": "Pools de superusuário ocupam também as vagas reservadas, e ninguém entra para consertar",
+        "why": "Isso: o sorry, too many clients already passa a chegar também ao administrador."
+      },
+      {
         "text": "Superusuários passam por cima de `max_connections`, então o servidor pode ficar sem memória",
         "why": "Ninguém passa por cima: com todas as vagas ocupadas, até o postgres é recusado."
       },
       {
         "text": "Um pool de superusuário ignora `default_pool_size` e abre uma por cliente",
         "why": "O tamanho do pool vale por banco e papel, seja qual for o papel; o papel não muda como o pool empresta conexões."
-      },
-      {
-        "text": "Pools de superusuário ocupam também as vagas reservadas, e ninguém entra para consertar",
-        "why": "Isso: o sorry, too many clients already passa a chegar também ao administrador."
       }
     ]
   },
@@ -1411,12 +1411,12 @@
     "hint": "Backup, Replicação e Alta Disponibilidade, aula 12; Desempenho e Escala de Bancos de Dados, aula 15.",
     "choices": [
       {
-        "text": "A configuração de um papel só alcança sessões novas, e estas abriram antes",
-        "why": "Isso vale para o ALTER ROLE, mas a aula 12 pôs o limite na própria sessão e ela esperou do mesmo jeito."
-      },
-      {
         "text": "O comando já terminou; o que espera é o commit, fora dele",
         "why": "Isso."
+      },
+      {
+        "text": "A configuração de um papel só alcança sessões novas, e estas abriram antes",
+        "why": "Isso vale para o ALTER ROLE, mas a aula 12 pôs o limite na própria sessão e ela esperou do mesmo jeito."
       },
       {
         "text": "Sessões esperando precisam de `idle_in_transaction_session_timeout`",
@@ -1433,16 +1433,16 @@
     "hint": "Backup, Replicação e Alta Disponibilidade, aula 13.",
     "choices": [
       {
-        "text": "Reconstruir o standby a partir de um novo base backup, já que o slot se perdeu",
-        "why": "Esse foi o final da aula 11; com o arquivo ao lado do slot, o standby se atualiza sem isso."
+        "text": "Acrescentar `--pg1-path=/var/lib/postgresql/16/standby` ao `restore_command`",
+        "why": "Isso: o pgBackRest confere se o servidor que pede é o diretório de dados que lhe foi informado."
       },
       {
         "text": "Aumentar o `max_slot_wal_keep_size` no primário e reiniciar o standby",
         "why": "Os segmentos já sumiram do primário; um limite maior só ajuda na próxima queda."
       },
       {
-        "text": "Acrescentar `--pg1-path=/var/lib/postgresql/16/standby` ao `restore_command`",
-        "why": "Isso: o pgBackRest confere se o servidor que pede é o diretório de dados que lhe foi informado."
+        "text": "Reconstruir o standby a partir de um novo base backup, já que o slot se perdeu",
+        "why": "Esse foi o final da aula 11; com o arquivo ao lado do slot, o standby se atualiza sem isso."
       },
       {
         "text": "Rodar `stanza-create` de novo para o standby entrar na stanza",
@@ -1455,20 +1455,20 @@
     "hint": "Backup, Replicação e Alta Disponibilidade, aula 15; Servidor de Banco de Dados: Instalação e Manutenção, aula 5.",
     "choices": [
       {
-        "text": "O `ALTER SYSTEM` gravou o `postgresql.auto.conf` do próprio primário, não o do standby",
-        "why": "Isso: configure também no standby e reinicie-o."
+        "text": "O standby recebeu o valor mas espera um reinício, como `pending_restart` mostraria",
+        "why": "Nada chegou ao standby para ficar pendente; o arquivo que mudou é o do primário."
       },
       {
         "text": "Uma linha no `conf.d` do standby sobrepõe o valor que a replicação trouxe",
         "why": "O postgresql.auto.conf é lido por último e vence o conf.d; aqui o valor nem chegou."
       },
       {
-        "text": "O standby recebeu o valor mas espera um reinício, como `pending_restart` mostraria",
-        "why": "Nada chegou ao standby para ficar pendente; o arquivo que mudou é o do primário."
-      },
-      {
         "text": "A replicação física só aplica configurações no próximo checkpoint do standby",
         "why": "Ela leva o log das mudanças de dados, nunca arquivos de configuração, em checkpoint nenhum."
+      },
+      {
+        "text": "O comando gravou o `postgresql.auto.conf` só no primário, e nenhum arquivo é replicado",
+        "why": "Isso: configure também no standby e reinicie-o."
       }
     ]
   },
@@ -1555,12 +1555,12 @@
         "why": "O verify sai com 0 mesmo com dano, e numa noite em que o job não roda não há código nenhum para ler."
       },
       {
-        "text": "Um `grep CRON /var/log/syslog` diário na máquina reconstruída",
-        "why": "O log lista os jobs que o cron iniciou; um job ausente do crontab não deixa linha para achar."
-      },
-      {
         "text": "Um monitor em outro lugar que espera o aviso de sucesso do job toda noite",
         "why": "Isso: só algo fora da máquina percebe um job que nunca rodou."
+      },
+      {
+        "text": "Um `grep CRON /var/log/syslog` diário na máquina reconstruída",
+        "why": "O log lista os jobs que o cron iniciou; um job ausente do crontab não deixa linha para achar."
       }
     ]
   },
@@ -1569,8 +1569,8 @@
     "hint": "Backup, Replicação e Alta Disponibilidade, aula 17.",
     "choices": [
       {
-        "text": "Disse a cada cliente que o insert deu certo, numa linha que o rewind vai descartar",
-        "why": "Isso: a cerca era a espera, e cancelá-la cria escritas confirmadas que só o primário antigo tem."
+        "text": "Desfez cada insert, porque o cancelamento chegou antes do commit",
+        "why": "Eles já tinham feito commit local antes de começar a esperar, e um cancelamento não desfaz um commit."
       },
       {
         "text": "Nada de grave: as linhas chegam ao novo líder quando o primário antigo voltar",
@@ -1581,8 +1581,8 @@
         "why": "Só o Patroni congelado poderia rebaixá-lo; cancelar sessões não muda nada no papel dele."
       },
       {
-        "text": "Desfez cada insert, porque o cancelamento chegou antes do commit",
-        "why": "Eles já tinham feito commit local antes de começar a esperar, e um cancelamento não desfaz um commit."
+        "text": "Disse a cada cliente que o insert deu certo, numa linha que o rewind vai descartar",
+        "why": "Isso: a cerca era a espera, e cancelá-la cria escritas confirmadas que só o primário antigo tem."
       }
     ]
   },
@@ -1591,20 +1591,20 @@
     "hint": "Backup, Replicação e Alta Disponibilidade, aula 6.",
     "choices": [
       {
-        "text": "Tanto faz, porque o `--target-exclusive` desfaz a transação do alvo",
-        "why": "O target-exclusive decide se o alvo nomeado é reproduzido; ele não desfaz nada que vem depois."
+        "text": "Exatamente 14:03, porque as pessoas lembram do relógio do servidor de banco",
+        "why": "O horário que as pessoas lembram vem de telas e gráficos, não necessariamente do relógio ou do fuso do servidor."
       },
       {
         "text": "Para depois: um alvo além do erro ainda pode pausar antes do commit dele",
         "why": "O recovery_target_time para antes do primeiro commit depois do horário dado, então um alvo tardio reproduz o DELETE."
       },
       {
-        "text": "Exatamente 14:03, porque as pessoas lembram do relógio do servidor de banco",
-        "why": "O horário que as pessoas lembram vem de telas e gráficos, não necessariamente do relógio ou do fuso do servidor."
-      },
-      {
         "text": "Para antes: o reparo traz de volta as transações boas que faltarem",
         "why": "Isso."
+      },
+      {
+        "text": "Tanto faz, porque o `--target-exclusive` desfaz a transação do alvo",
+        "why": "O target-exclusive decide se o alvo nomeado é reproduzido; ele não desfaz nada que vem depois."
       }
     ]
   },
@@ -1613,16 +1613,16 @@
     "hint": "Docker e Containers, aula 9; Servidor de Banco de Dados: Instalação e Manutenção, aula 11.",
     "choices": [
       {
-        "text": "`docker exec db psql -c \"ALTER ROLE postgres PASSWORD '...'\"`, pois a variável só age num volume vazio",
-        "why": "O motivo está certo, e o comando leva a senha para o histórico do shell e, se der erro, para o log do servidor."
-      },
-      {
-        "text": "`\\password postgres` no psql dentro do container, pois a variável só age num volume vazio",
+        "text": "`\\password postgres` no psql dentro dele, pois a variável só age num volume vazio",
         "why": "Isso: a senha antiga está guardada no banco, e o `\\password` manda um verificador, não a senha."
       },
       {
         "text": "Um script em `/docker-entrypoint-initdb.d` que a defina, rodado na próxima partida",
         "why": "Scripts de preparação só rodam com o diretório de dados vazio, e este volume não está vazio desde o ano passado."
+      },
+      {
+        "text": "`docker exec db psql -c \"ALTER ROLE postgres PASSWORD '...'\"`, pois a variável só age num volume vazio",
+        "why": "O motivo está certo, e o comando leva a senha para o histórico do shell e, se der erro, para o log do servidor."
       },
       {
         "text": "Rodar `docker rm -f db` e o mesmo `docker run` mais uma vez, para a mudança ser lida",
@@ -1639,12 +1639,12 @@
         "why": "Nenhuma versão converte os arquivos de outra ao subir; alguma coisa precisa levar os dados de um lado para o outro."
       },
       {
-        "text": "Roda como antes, porque o entrypoint encontra um banco e pula a inicialização",
-        "why": "Pular a inicialização é verdade, e o servidor que ele sobe depois não consegue ler arquivos que o 16 escreveu."
-      },
-      {
         "text": "O 17 recusa esses arquivos; os dados vão por pg_upgrade, dump e restore ou replicação lógica",
         "why": "Isso: imagem nova é versão principal nova, e o volume continua no formato do 16."
+      },
+      {
+        "text": "Roda como antes, porque o entrypoint encontra um banco e pula a inicialização",
+        "why": "Pular a inicialização é verdade, e o servidor que ele sobe depois não consegue ler arquivos que o 16 escreveu."
       },
       {
         "text": "Roda como antes, já que 16 e 17 dividem o formato em disco que toda versão menor mantém intacto",
@@ -1691,7 +1691,7 @@
         "why": "O `prune` simples remove volumes anônimos que nenhum container usa, cheios ou vazios."
       },
       {
-        "text": "Sumiram: cada uma estava num volume anônimo que nenhum container usava",
+        "text": "Sumiram: cada uma estava num volume anônimo que nada usava",
         "why": "Isso."
       }
     ]
@@ -1920,20 +1920,20 @@
     "hint": "Nuvem e Serverless, aula 5; Servidor de Banco de Dados: Instalação e Manutenção, aula 9.",
     "choices": [
       {
-        "text": "Aumentar o volume para 400 GB, já que um `gp3` maior faz mais operações por segundo",
-        "why": "Isso valia para tipos de volume mais antigos; o `gp3` tem a mesma linha de base em qualquer tamanho."
+        "text": "Comprar mais IOPS para o mesmo volume `gp3`, sem mudar o tamanho dele",
+        "why": "Isso: o commit espera quantos flushes por segundo o disco faz, e o `gp3` vende operações separadas do tamanho."
       },
       {
         "text": "Mover o diretório de dados para `st1`, que lê sequências longas mais rápido e mais barato",
         "why": "O `st1` foi feito para leituras sequenciais longas e é lento em muitas operações pequenas."
       },
       {
-        "text": "Comprar mais throughput em MiB/s, o número que uma cópia de arquivo grande mostra",
-        "why": "Throughput é bytes por segundo de escritas longas; um commit espera um flush pequeno de cada vez."
+        "text": "Aumentar o volume para 400 GB, já que um `gp3` maior faz mais operações por segundo",
+        "why": "Isso valia para tipos de volume mais antigos; o `gp3` tem a mesma linha de base em qualquer tamanho."
       },
       {
-        "text": "Comprar mais IOPS para o mesmo volume `gp3`, sem mudar o tamanho dele",
-        "why": "Isso: o commit espera quantos flushes por segundo o disco faz, e o `gp3` vende operações separadas do tamanho."
+        "text": "Comprar mais throughput em MiB/s, o número que uma cópia de arquivo grande mostra",
+        "why": "Throughput é bytes por segundo de escritas longas; um commit espera um flush pequeno de cada vez."
       }
     ]
   },
@@ -1998,8 +1998,8 @@
     "hint": "NoSQL: Modelagem e Operação, aula 9; Backup, Replicação e Alta Disponibilidade, aula 13.",
     "choices": [
       {
-        "text": "Mandar para o primário as leituras dessa página por um tempo depois de cada pedido novo",
-        "why": "Isso: o primário é o único lugar com garantia de ter a escrita que ele acabou de confirmar."
+        "text": "Gravar os pedidos com `w: \"majority\"` e continuar lendo de qualquer secundário",
+        "why": "A maioria de três é o primário e um secundário; a leitura ainda pode cair no outro."
       },
       {
         "text": "Manter `secondaryPreferred` e acrescentar `readConcern(\"majority\")` a essa leitura",
@@ -2010,8 +2010,8 @@
         "why": "O membro mais rápido pode muito bem ser um secundário que ainda não alcançou o primário."
       },
       {
-        "text": "Gravar os pedidos com `w: \"majority\"` e continuar lendo de qualquer secundário",
-        "why": "A maioria de três é o primário e um secundário; a leitura ainda pode cair no outro."
+        "text": "Mandar ao primário, por um tempo, as leituras de quem acabou de comprar",
+        "why": "Isso: o primário é o único lugar com garantia de ter a escrita que ele acabou de confirmar."
       }
     ]
   },
@@ -2042,12 +2042,12 @@
     "hint": "NoSQL: Modelagem e Operação, aula 11; Backup, Replicação e Alta Disponibilidade, aula 8.",
     "choices": [
       {
-        "text": "A hora está garantida com folga, já que a restauração cresce só com os bytes copiados",
-        "why": "É assim que cresce a restauração de um snapshot; a de um dump insere todo documento e constrói todo índice de novo."
-      },
-      {
         "text": "Nada ainda: cronometrar a restauração de novo, numa cópia completa dos dados reais e dos índices",
         "why": "Isso: reconstruir os índices cresce com os dados vezes o número deles, e só uma medição diz se cabe na hora."
+      },
+      {
+        "text": "A hora está garantida com folga, já que a restauração cresce só com os bytes copiados",
+        "why": "É assim que cresce a restauração de um snapshot; a de um dump insere todo documento e constrói todo índice de novo."
       },
       {
         "text": "Um snapshot de arquivos levaria o mesmo tempo, porque as duas restaurações inserem todo documento",
@@ -2139,12 +2139,12 @@
         "why": "O provedor executou a política que recebeu; um despejo que mandaram fazer não é indisponibilidade dele."
       },
       {
-        "text": "De um failover, cujas conexões derrubadas um retry na aplicação teria salvado",
-        "why": "Não houve failover; as chaves foram despejadas de propósito pela política."
+        "text": "Da equipe: quais chaves são passíveis de despejo é uma escolha sobre os próprios dados",
+        "why": "Isso."
       },
       {
-        "text": "Da equipe: se uma chave pode ser despejada é uma escolha sobre os próprios dados",
-        "why": "Isso."
+        "text": "De um failover, cujas conexões derrubadas um retry na aplicação teria salvado",
+        "why": "Não houve failover; as chaves foram despejadas de propósito pela política."
       },
       {
         "text": "Da janela de manutenção, já que o patch reiniciou a instância vazia",
@@ -2157,16 +2157,16 @@
     "hint": "Fundamentos de Segurança da Informação, aula 6; Servidor de Banco de Dados: Instalação e Manutenção, aula 12.",
     "choices": [
       {
-        "text": "Passar as tabelas a um dono `NOLOGIN`; dar à `app` só privilégios de linha",
-        "why": "Isso: um comando injetado pode então perder linhas, que um backup traz de volta, mas não apagar uma tabela."
+        "text": "Revogar de `app` o direito de apagar tabelas e mantê-lo como dono",
+        "why": "Posse não se limita com grant: quem é dono de uma tabela pode alterá-la, apagá-la e conceder sobre ela."
       },
       {
         "text": "Exigir um segundo fator sempre que o papel `app` fizer login",
         "why": "A falha roda dentro de uma sessão que a aplicação já abriu; um fator protege o login, não o que vem depois."
       },
       {
-        "text": "Revogar de `app` o direito de apagar tabelas e mantê-lo como dono",
-        "why": "Posse não se limita com grant: quem é dono de uma tabela pode alterá-la, apagá-la e conceder sobre ela."
+        "text": "Passar as tabelas a um dono `NOLOGIN`; dar à `app` só privilégios de linha",
+        "why": "Isso: um comando injetado pode então perder linhas, que um backup traz de volta, mas não apagar uma tabela."
       },
       {
         "text": "Renomear `app` para algo que nenhum atacante adivinhe de fora",
@@ -2204,20 +2204,20 @@
     "hint": "Fundamentos de Segurança da Informação, aula 4; Backup, Replicação e Alta Disponibilidade, aula 9.",
     "choices": [
       {
-        "text": "O repositório fica em outro armazenamento, então os dois já falham por motivos diferentes",
-        "why": "Outro armazenamento sobrevive a um disco morto; não sobrevive à única causa que alcança os dois."
+        "text": "Uma única invasão como `postgres` ali alcança os backups e os dados ao mesmo tempo",
+        "why": "Isso."
       },
       {
-        "text": "Os dois são gravados pelo PostgreSQL, então um bug numa versão atinge ambos",
-        "why": "O repositório é gravado pelo pgBackRest; a causa comum aqui é uma credencial, não o software."
+        "text": "O repositório fica em outro armazenamento, então os dois já falham por motivos diferentes",
+        "why": "Outro armazenamento sobrevive a um disco morto; não sobrevive à única causa que alcança os dois."
       },
       {
         "text": "Um backup só percebe o dano, então nem conta como camada",
         "why": "Restaurar de um backup é um controle corretivo; ele conta sempre que falha por motivos próprios."
       },
       {
-        "text": "Quem virar `postgres` naquele servidor consegue apagar os backups e os dados",
-        "why": "Isso."
+        "text": "Os dois são gravados pelo PostgreSQL, então um bug numa versão atinge ambos",
+        "why": "O repositório é gravado pelo pgBackRest; a causa comum aqui é uma credencial, não o software."
       }
     ]
   },
@@ -2270,8 +2270,8 @@
     "hint": "Fundamentos de Segurança da Informação, aula 6; Servidor de Banco de Dados: Instalação e Manutenção, aula 11.",
     "choices": [
       {
-        "text": "Um papel comum para os relatórios; o superusuário só para administrar",
-        "why": "Isso."
+        "text": "Nada precisa mudar: ela é de confiança, e o papel é só dela",
+        "why": "O menor privilégio limita o estrago de qualquer coisa que dê errado agindo como ela, não a honestidade dela."
       },
       {
         "text": "Uma segunda pessoa aprovando cada relatório antes de ela rodá-lo",
@@ -2282,8 +2282,8 @@
         "why": "Uma senha roubada funciona inteira até ser trocada; o que importa é até onde o papel alcança."
       },
       {
-        "text": "Nada precisa mudar: ela é de confiança, e o papel é só dela",
-        "why": "O menor privilégio limita o estrago de qualquer coisa que dê errado agindo como ela, não a honestidade dela."
+        "text": "Um papel comum para os relatórios; o superusuário só para administrar",
+        "why": "Isso."
       }
     ]
   },
@@ -2292,16 +2292,16 @@
     "hint": "Fundamentos de Segurança da Informação, aula 6; Servidor de Banco de Dados: Instalação e Manutenção, aula 19.",
     "choices": [
       {
-        "text": "`log_statement = 'ddl'`, num log que os donos leem toda semana",
-        "why": "Isso: a segregação vira detectiva em vez de preventiva, e a segunda pessoa chega depois."
+        "text": "`log_statement = 'all'`, para todo comando que ela manda ficar guardado para revisão",
+        "why": "Isso enterra as mudanças sob cada `BEGIN` e `END`, e grava literais como senhas no arquivo."
       },
       {
         "text": "Um papel para ela que não consiga rodar `DROP`, para uma mudança errada ser recusada",
         "why": "Isso limita uma conta; a tarefa continua precisando de alguém capaz de mudar o esquema, e esse alguém é ela."
       },
       {
-        "text": "`log_statement = 'all'`, para todo comando que ela manda ficar guardado para revisão",
-        "why": "Isso enterra as mudanças sob cada `BEGIN` e `END`, e grava literais como senhas no arquivo."
+        "text": "`log_statement = 'ddl'`, num log que os donos leem toda semana",
+        "why": "Isso: a segregação vira detectiva em vez de preventiva, e a segunda pessoa chega depois."
       },
       {
         "text": "Rodízio de funções, passando o esquema a um desenvolvedor a cada dois meses",
@@ -2354,16 +2354,16 @@
         "why": "Vinte minutos respondem ao RTO; o RPO pergunta com que frequência, e um backup noturno pode perder um dia."
       },
       {
-        "text": "Está certo, pois as duas metas são um número só e vale a menor",
-        "why": "A aula as mantém independentes; tratá-las como uma é justamente como o dinheiro vai para a errada."
+        "text": "Paga por uma velocidade que ninguém pediu, e a uma hora continua sem atender",
+        "why": "Isso."
       },
       {
         "text": "Atende ao RPO, porque uma restauração tão rápida perde menos de uma hora",
         "why": "A velocidade da restauração decide o tempo parado, não quanto o último backup contém."
       },
       {
-        "text": "Paga por uma velocidade que ninguém pediu, e a uma hora continua sem atender",
-        "why": "Isso."
+        "text": "Está certo, pois as duas metas são um número só e vale a menor",
+        "why": "A aula as mantém independentes; tratá-las como uma é justamente como o dinheiro vai para a errada."
       }
     ]
   },
@@ -2372,16 +2372,16 @@
     "hint": "Criptografia Aplicada, aula 14; Bancos de Dados Relacionais e SQL, aula 6.",
     "choices": [
       {
-        "text": "Os próprios códigos, já que CBC com IV zero se decifra sem chave",
-        "why": "Um IV fixo faz entradas iguais parecerem iguais; ele não devolve o texto claro."
+        "text": "Quais pacientes têm o mesmo diagnóstico, e quantos deles têm cada um",
+        "why": "Isso."
       },
       {
         "text": "Nada, pois todo valor é bytes aleatórios para quem não tem a chave",
         "why": "O `encrypt` com `'aes'` usa CBC com IV todo zero, então códigos iguais dão bytes iguais."
       },
       {
-        "text": "Quais pacientes têm o mesmo diagnóstico, e quantos deles têm cada um",
-        "why": "Isso."
+        "text": "Os próprios códigos, já que CBC com IV zero se decifra sem chave",
+        "why": "Um IV fixo faz entradas iguais parecerem iguais; ele não devolve o texto claro."
       },
       {
         "text": "O tamanho da chave, lido no tamanho de cada texto cifrado do grupo",
@@ -2394,20 +2394,20 @@
     "hint": "Criptografia Aplicada, aula 14; Backup, Replicação e Alta Disponibilidade, aula 9.",
     "choices": [
       {
-        "text": "Num arquivo ao lado dos backups no repositório externo, para a restauração achá-lo",
-        "why": "Uma chave nunca fica ao lado do que protege: quem leva o repositório leva a chave."
+        "text": "Só na memória da DBA que o gerou, para ele não ficar em disco nenhum",
+        "why": "Aí a restauração depende de uma pessoa estar ao alcance, e nenhum ensaio prova que a cópia está certa."
       },
       {
-        "text": "Num cofre em que a organização confia, aberto a mais de uma pessoa, e provado por um ensaio",
-        "why": "Isso."
+        "text": "Num arquivo ao lado dos backups no repositório externo, para a restauração achá-lo",
+        "why": "Uma chave nunca fica ao lado do que protege: quem leva o repositório leva a chave."
       },
       {
         "text": "No repositório de configuração junto com o `postgresql.conf`, para o provisionamento recriá-lo",
         "why": "Uma chave num repositório é lida por todo mundo que o clona, enquanto existir alguma cópia."
       },
       {
-        "text": "Só na memória da DBA que o gerou, para ele não ficar em disco nenhum",
-        "why": "Aí a restauração depende de uma pessoa estar ao alcance, e nenhum ensaio prova que a cópia está certa."
+        "text": "Num cofre em que a organização confia, aberto a mais de uma pessoa, e provado por um ensaio",
+        "why": "Isso."
       }
     ]
   },
@@ -2466,20 +2466,20 @@
     "hint": "Criptografia Aplicada, aula 14; Backup, Replicação e Alta Disponibilidade, aula 10.",
     "choices": [
       {
-        "text": "A chave mestra chega em claro ao servidor a cada unwrap, pronta para ser roubada",
-        "why": "O unwrap devolve uma chave de dados, por um instante; a chave mestra nunca sai do KMS."
+        "text": "O invasor consegue apagar essa chave antes, e todo backup vai junto com ela",
+        "why": "Isso."
       },
       {
         "text": "Quem copiar o bucket agora decifra os backups sem passar pelo KMS",
         "why": "As chaves de dados ficam guardadas embrulhadas; lê-las ainda exige um unwrap por uma identidade autorizada."
       },
       {
-        "text": "O invasor pode apagar essa chave antes, e todo backup vai junto com ela",
-        "why": "Isso."
-      },
-      {
         "text": "Rotacionar a chave mestra passa a exigir recriptografar cada backup",
         "why": "A rotação reembrulha as chaves de dados, algumas centenas de bytes cada, seja quem for que tenha a credencial."
+      },
+      {
+        "text": "A chave mestra chega em claro ao servidor a cada unwrap, pronta para ser roubada",
+        "why": "O unwrap devolve uma chave de dados, por um instante; a chave mestra nunca sai do KMS."
       }
     ]
   },
@@ -2510,16 +2510,16 @@
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 12; Backup, Replicação e Alta Disponibilidade, aula 1.",
     "choices": [
       {
-        "text": "Restaurei o dump da noite passada num segundo banco e comparei um relatório com o banco em produção",
-        "why": "Isso: como apagar o índice e ver o teste falhar, mostra que a garantia se sustenta."
-      },
-      {
         "text": "O job de backup saiu com status 0 todas as noites durante um mês",
         "why": "Isso é uma afirmação sobre o job, não sobre os dados: um pipe que termina em `gzip` sai com 0 sem nada dentro."
       },
       {
         "text": "O dump tem meio megabyte, então não é um dos arquivos de vinte bytes que um pipe quebrado deixa",
         "why": "Tamanho é pista, não prova: um dump do banco errado ou de um schema em três também não é minúsculo."
+      },
+      {
+        "text": "Restaurei o dump da noite passada num segundo banco e comparei um relatório com o banco em produção",
+        "why": "Isso: como apagar o índice e ver o teste falhar, mostra que a garantia se sustenta."
       },
       {
         "text": "O script começa com `set -o pipefail`, então a falha de qualquer programa nele deixa o job vermelho",
@@ -2554,16 +2554,16 @@
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 14; Servidor de Banco de Dados: Instalação e Manutenção, aula 11.",
     "choices": [
       {
-        "text": "Reescrever o histórico com `git filter-repo` e fazer force-push, para os scanners não acharem nada",
-        "why": "Limpar é opcional e vem por último: não recupera cópias já clonadas, forkadas ou guardadas em cache."
+        "text": "Dar uma nova senha a `app` com `\\password app` e depois atualizar o ambiente do projeto",
+        "why": "Isso: revogar é o único passo que torna inútil o valor vazado."
       },
       {
         "text": "Ler o log do servidor atrás de logins como `app`, para saber se a senha foi usada",
         "why": "Verificar o uso é o segundo passo; enquanto a senha não muda, ela continua funcionando para quem a tem."
       },
       {
-        "text": "Dar uma nova senha a `app` com `\\password app` e depois atualizar o ambiente do projeto",
-        "why": "Isso: revogar é o único passo que torna inútil o valor vazado."
+        "text": "Reescrever o histórico com `git filter-repo` e fazer force-push, para os scanners não acharem nada",
+        "why": "Limpar é opcional e vem por último: não recupera cópias já clonadas, forkadas ou guardadas em cache."
       },
       {
         "text": "Tornar o repositório privado, já que só quem podia lê-lo tinha a senha",
@@ -2576,20 +2576,20 @@
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 17; Fundamentos de Segurança da Informação, aula 17.",
     "choices": [
       {
-        "text": "Usar depois que a clínica concordar por escrito, já que é ela quem decide o que se faz com eles",
-        "why": "Os pacientes os deram para serem atendidos; a assinatura da clínica não os transforma em dados de demonstração do seu portfólio."
-      },
-      {
         "text": "Usar num repositório privado e publicar só os planos das consultas e os tempos",
         "why": "Escondido ou não, você guardaria dados sensíveis de pacientes sem base para isso, e eles não são seus para usar."
+      },
+      {
+        "text": "Gerar dados inventados: isso continua sendo dado pessoal, e diagnóstico é dado sensível",
+        "why": "Isso."
       },
       {
         "text": "Usar: sem os nomes, os dados estão anonimizados, e dado anonimizado fica fora da LGPD",
         "why": "Tirar o nome e manter endereço e data de nascimento ainda identifica as pessoas, com um passo a mais."
       },
       {
-        "text": "Gerar dados inventados: isso continua sendo dado pessoal, e diagnóstico é dado sensível",
-        "why": "Isso."
+        "text": "Usar depois que a clínica concordar por escrito, já que é ela quem decide o que se faz com eles",
+        "why": "Os pacientes os deram para serem atendidos; a assinatura da clínica não os transforma em dados de demonstração do seu portfólio."
       }
     ]
   },
@@ -2636,20 +2636,20 @@
     "hint": "O Projeto de Portfólio: do Briefing ao Deploy, aula 20; Backup, Replicação e Alta Disponibilidade, aula 8.",
     "choices": [
       {
-        "text": "`pg_dump` noturno, não arquivamento do WAL: a demonstração pode perder um dia. Com pedidos reais e RPO de minutos, eu arquivaria",
-        "why": "Isso: a escolha, a alternativa, um motivo nos termos do próprio projeto e o que a mudaria."
+        "text": "`pg_dump` noturno, já que arquivar o WAL é exagero para um banco tão pequeno; ninguém precisa disso abaixo de alguns gigabytes",
+        "why": "Isso ataca a alternativa, com uma afirmação geral que o entrevistador pode ter um banco inteiro para desmentir."
       },
       {
         "text": "`pg_dump` noturno, porque era o que eu sabia; eu nunca tinha configurado arquivamento do WAL antes deste projeto",
         "why": "Honesto, mas para no meio: a aula pede para dizer quando você escolheria diferente."
       },
       {
-        "text": "`pg_dump` noturno, já que arquivar o WAL é exagero para um banco tão pequeno; ninguém precisa disso abaixo de alguns gigabytes",
-        "why": "Isso ataca a alternativa, com uma afirmação geral que o entrevistador pode ter um banco inteiro para desmentir."
-      },
-      {
         "text": "`pg_dump` noturno em vez de arquivar o WAL, porque o `pg_dump` é mais simples e é por onde a maioria das equipes começa",
         "why": "Uma verdade geral no lugar dos fatos do projeto, e nenhuma condição em que a outra escolha vence."
+      },
+      {
+        "text": "`pg_dump` noturno, não arquivamento do WAL: perder um dia é aceitável na demonstração. Com pedidos reais e RPO de minutos, eu arquivaria",
+        "why": "Isso: a escolha, a alternativa, um motivo nos termos do próprio projeto e o que a mudaria."
       }
     ]
   },
@@ -2684,16 +2684,16 @@
         "why": "Silêncio enquanto você conserta sozinho é como um erro pequeno vira incidente."
       },
       {
-        "text": "Avisar agora quem precisa saber que a sua mudança pode ser o motivo",
+        "text": "Publicar a causa provável na página de status, para o suporte ter o que responder",
+        "why": "Nunca se chuta uma causa em público; uma causa errada precisa ser desmentida."
+      },
+      {
+        "text": "Avisar agora quem precisa saber que a sua mudança é uma causa provável",
         "why": "Isso."
       },
       {
         "text": "Começar já a linha do tempo do relatório, enquanto os horários estão nos logs",
         "why": "O relatório vem depois que o incidente acaba, não antes de alguém saber dele."
-      },
-      {
-        "text": "Publicar a causa provável na página de status, para o suporte ter o que responder",
-        "why": "Nunca se chuta uma causa em público; uma causa errada precisa ser desmentida."
       }
     ]
   },
@@ -2702,20 +2702,20 @@
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 20; Backup, Replicação e Alta Disponibilidade, aula 22.",
     "choices": [
       {
-        "text": "O script pede o nome do servidor; responsável Ana, até 30 de outubro",
-        "why": "Isso: uma mudança, com responsável e data."
+        "text": "Ter mais cuidado com o servidor a que cada terminal aberto está conectado",
+        "why": "\"Ter mais cuidado\" não é ação: não muda nada que alguém possa conferir."
       },
       {
         "text": "Causa: erro humano do júnior que rodou o comando",
         "why": "Isso é causa, não ação, e erro humano nunca é causa sozinho."
       },
       {
-        "text": "Ter mais cuidado com o servidor a que cada terminal aberto está conectado",
-        "why": "\"Ter mais cuidado\" não é ação: não muda nada que alguém possa conferir."
-      },
-      {
         "text": "O júnior não roda nada em produção até acabar o período de experiência",
         "why": "Isso pune uma pessoa; o relatório pergunta como o sistema deixou uma ação razoável causar dano."
+      },
+      {
+        "text": "O script pede o nome do servidor; responsável Ana, até 30 de outubro",
+        "why": "Isso: uma mudança, com responsável e data."
       }
     ]
   },
@@ -2768,20 +2768,20 @@
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 4; Backup, Replicação e Alta Disponibilidade, aula 1.",
     "choices": [
       {
-        "text": "Fui responsável pelos backups do PostgreSQL num laboratório, usando pg_dump e pgBackRest",
-        "why": "Começa com uma expressão que esconde o que você fez, e depois lista ferramentas."
+        "text": "Montei backups noturnos no laboratório, cada um restaurado num segundo servidor e conferido",
+        "why": "Isso: o que você fez, o que passou a ser verdade e como qualquer um pode conferir."
       },
       {
         "text": "Aumentei em 40% a confiabilidade dos backups com pgBackRest, compressão e retenção",
         "why": "Um número sem base de comparação nem forma de medir custa mais que número nenhum."
       },
       {
-        "text": "Ajudei a montar um sistema de backup com pgBackRest, cron e PostgreSQL 16",
-        "why": "\"Ajudei\" esconde a sua parte, e o resto da linha é uma lista de ferramentas."
+        "text": "Fui responsável pelos backups do PostgreSQL num laboratório, usando pg_dump e pgBackRest",
+        "why": "Começa com uma expressão que esconde o que você fez, e depois lista ferramentas."
       },
       {
-        "text": "Montei backups noturnos no laboratório, cada um restaurado num segundo servidor e conferido",
-        "why": "Isso: o que você fez, o que passou a ser verdade e como qualquer um pode conferir."
+        "text": "Ajudei a montar um sistema de backup com pgBackRest, cron e PostgreSQL 16",
+        "why": "\"Ajudei\" esconde a sua parte, e o resto da linha é uma lista de ferramentas."
       }
     ]
   },
@@ -2790,20 +2790,20 @@
     "hint": "Do Estudo ao Emprego: Currículo, Entrevistas e os Primeiros 90 Dias, aula 13.",
     "choices": [
       {
-        "text": "Uma explicação de como o PostgreSQL inicia, para mostrar que você entendeu a causa",
-        "why": "O enunciado pediu uma correção que alguém consiga seguir, não um ensaio sobre o servidor."
-      },
-      {
         "text": "Uma gravação da sessão de terminal inteira, para o avaliador ver cada comando",
         "why": "O avaliador tem uns dez minutos; duzentos comandos não dizem quais importaram."
+      },
+      {
+        "text": "Os passos, em ordem, que outra pessoa conseguiria seguir, e o que você conferiu",
+        "why": "Isso: num teste de infraestrutura, o runbook ocupa o lugar do README."
       },
       {
         "text": "Nada mais: um servidor que agora sobe é a evidência, e uma nota só encheria",
         "why": "A nota diz o que você fez, o que escolheu e por quê, e o que faria com mais tempo."
       },
       {
-        "text": "Os passos, em ordem, que outra pessoa conseguiria seguir, e o que você conferiu",
-        "why": "Isso: num teste de infraestrutura, o runbook ocupa o lugar do README."
+        "text": "Uma explicação de como o PostgreSQL inicia, para mostrar que você entendeu a causa",
+        "why": "O enunciado pediu uma correção que alguém consiga seguir, não um ensaio sobre o servidor."
       }
     ]
   },
