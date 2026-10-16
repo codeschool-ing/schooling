@@ -1,0 +1,640 @@
+[
+  {
+    "id": "ex-mnkssa8n",
+    "version": 1,
+    "section": "why-duplicate",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Copying a product's name into every order line moves a cost. From where to where?",
+    "choices": [
+      {
+        "text": "From each order view to the rare rename",
+        "correct": true,
+        "why": "Right. The order page saves a read on every view, and the rename pays for all of them."
+      },
+      {
+        "text": "From the database's disk to its memory",
+        "correct": false,
+        "why": "The trade is between reads and writes, not between kinds of storage."
+      },
+      {
+        "text": "From the rare rename to every order view",
+        "correct": false,
+        "why": "That is the direction of the normalised design, the one the copy replaces."
+      },
+      {
+        "text": "From the application to the database, which keeps the copies in step",
+        "correct": false,
+        "why": "No store in this course tracks copies; that work moves to the application."
+      }
+    ]
+  },
+  {
+    "id": "ex-4x7wx2e9",
+    "version": 1,
+    "section": "why-duplicate",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The order page is read 200 times a minute. How many reads is that in a day?",
+    "hint": "A day has 1,440 minutes.",
+    "value": 288000,
+    "tolerance": 0,
+    "unit": "reads"
+  },
+  {
+    "id": "ex-0zr9jhcw",
+    "version": 1,
+    "section": "why-duplicate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these facts is the worst candidate for copying into every order?",
+    "hint": "Compare how often it changes with how often it is read.",
+    "choices": [
+      {
+        "text": "The product's name",
+        "correct": false,
+        "why": "It changes a few times a year and is shown on every order view: a good copy."
+      },
+      {
+        "text": "The product's current stock count",
+        "correct": true,
+        "why": "Right. It changes with every sale and an order page has no use for it."
+      },
+      {
+        "text": "The unit price paid",
+        "correct": false,
+        "why": "That is a snapshot, and it belongs in the order because it must not change."
+      },
+      {
+        "text": "The customer's display name, as the page shows it",
+        "correct": false,
+        "why": "It changes rarely and is read on every view; a copy that follows, but a fair one."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8nstwyn",
+    "version": 1,
+    "section": "why-duplicate",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these move from the database to you when you duplicate a fact? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The extra writes, each time the fact changes",
+        "correct": true,
+        "why": "Right: every copy is a write you now owe."
+      },
+      {
+        "text": "Knowing where every copy is",
+        "correct": true,
+        "why": "Right: nothing in MongoDB knows that `orders` carries a product's name."
+      },
+      {
+        "text": "The window in which copies disagree",
+        "correct": true,
+        "why": "Right, including the case where the last write never happens."
+      },
+      {
+        "text": "The guarantee that reads are fast",
+        "correct": false,
+        "why": "Fast reads are what the copy buys, not what it costs."
+      }
+    ]
+  },
+  {
+    "id": "ex-6x1km4vc",
+    "version": 1,
+    "section": "why-duplicate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team copies each customer's loyalty points balance into every order document so the order page can show it. Points change on every purchase and on every login bonus. What does the section's trade say?",
+    "choices": [
+      {
+        "text": "A good copy, since order pages are read often",
+        "correct": false,
+        "why": "Reads are only half of it; the fact changes far too often for the copy to pay."
+      },
+      {
+        "text": "A good copy, as long as it is treated as a snapshot",
+        "correct": false,
+        "why": "A snapshot of points from the day of the order is a wrong number on today's page."
+      },
+      {
+        "text": "A poor copy: it changes too often",
+        "correct": true,
+        "why": "Right. Read it from the customer at view time, or leave it off the order page."
+      },
+      {
+        "text": "Fine either way, because MongoDB updates copies automatically",
+        "correct": false,
+        "why": "It does not: the application has to find and update every copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-9st6zkt2",
+    "version": 1,
+    "section": "extended-reference",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the mouse's price went up to 199.00 in `products`, order 1001 still showed `unit_price: 189.00`. Is that a bug?",
+    "choices": [
+      {
+        "text": "Yes: the copy drifted and must be repaired",
+        "correct": false,
+        "why": "Repairing it would rewrite what Ana paid; the price is a snapshot."
+      },
+      {
+        "text": "No: the line records the price paid, which must not change",
+        "correct": true,
+        "why": "Right. Invoices, refunds and disputes all need the price of the day."
+      },
+      {
+        "text": "Yes, until a nightly job copies the new price",
+        "correct": false,
+        "why": "No job should ever touch a snapshot."
+      },
+      {
+        "text": "No, because MongoDB cannot update a value inside an array",
+        "correct": false,
+        "why": "It can, with `arrayFilters`, as the last section does to baskets."
+      }
+    ]
+  },
+  {
+    "id": "ex-27h9rgqv",
+    "version": 1,
+    "section": "extended-reference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the order keep `customer.id` beside its copy `customer.name`?",
+    "choices": [
+      {
+        "text": "So the copies can be found and updated when the source changes",
+        "correct": true,
+        "why": "Right: `updateMany` matched the two orders by `customer.id`."
+      },
+      {
+        "text": "Because MongoDB refuses a nested document without an `id` field",
+        "correct": false,
+        "why": "Nested documents need no id; this one is the application's choice."
+      },
+      {
+        "text": "So that the name can be dropped later to save space",
+        "correct": false,
+        "why": "The name is there to save a read on every view."
+      },
+      {
+        "text": "Because searching by the old name would be too slow",
+        "correct": false,
+        "why": "It would be worse than slow: two customers can share a name."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyye39tv",
+    "version": 1,
+    "section": "extended-reference",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A copy that records a fact as it was when something happened, like the price paid, is called a ___ in this lesson.",
+    "hint": "A picture taken at one moment.",
+    "blanks": [
+      {
+        "accept": [
+          "snapshot"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cdxqmf68",
+    "version": 1,
+    "section": "extended-reference",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer \"removes duplication\" by deleting `unit_price` from order lines and reading the price from `products` when an order is shown. What breaks?",
+    "choices": [
+      {
+        "text": "Nothing, since the price is now stored once",
+        "correct": false,
+        "why": "Stored once, it is the current price, which is a different fact."
+      },
+      {
+        "text": "Only performance, because of the extra read",
+        "correct": false,
+        "why": "The extra read is the small cost; the wrong numbers are the big one."
+      },
+      {
+        "text": "Old orders show today's prices",
+        "correct": true,
+        "why": "Right. A snapshot was replaced by a different fact."
+      },
+      {
+        "text": "New orders can no longer be inserted",
+        "correct": false,
+        "why": "Inserts still work; it is the reading of old ones that lies."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmvvrw3p",
+    "version": 1,
+    "section": "two-writes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is every order written into both `orders_by_id` and `orders_by_customer`?",
+    "choices": [
+      {
+        "text": "Each table answers a question from a different key",
+        "correct": true,
+        "why": "Right: the order number for one, the customer for the other."
+      },
+      {
+        "text": "Because Cassandra keeps two copies of every table for safety",
+        "correct": false,
+        "why": "Copies for safety are the replication factor, lesson 17; these are two different tables."
+      },
+      {
+        "text": "Because a batch needs at least two statements",
+        "correct": false,
+        "why": "The batch exists because of the two tables, not the reverse."
+      },
+      {
+        "text": "Because one table is for reads and the other for writes",
+        "correct": false,
+        "why": "Both are read; each by its own question."
+      }
+    ]
+  },
+  {
+    "id": "ex-dp5916g5",
+    "version": 1,
+    "section": "two-writes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a Cassandra logged batch guarantee? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Every statement is applied eventually, even if the coordinator fails halfway",
+        "correct": true,
+        "why": "Right: the batch log is replayed by another node."
+      },
+      {
+        "text": "No reader sees one table updated and the other not",
+        "correct": false,
+        "why": "There is no isolation; the two writes are not one moment."
+      },
+      {
+        "text": "The batch is faster than the same inserts sent one by one",
+        "correct": false,
+        "why": "It is slower: the batch log is an extra round of writes."
+      },
+      {
+        "text": "An invalid statement gets the whole batch refused up front",
+        "correct": true,
+        "why": "Right, as the conditional batch showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wx8drvqc",
+    "version": 1,
+    "section": "two-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The batch with `IF NOT EXISTS` on both tables was refused. Why?",
+    "choices": [
+      {
+        "text": "Because order 1002 already existed",
+        "correct": false,
+        "why": "It did not; the batch was refused before anything was checked."
+      },
+      {
+        "text": "Because a condition is limited to one partition of one table",
+        "correct": true,
+        "why": "Right: `Batch with conditions cannot span multiple tables`."
+      },
+      {
+        "text": "Because `IF NOT EXISTS` is not valid inside any batch whatsoever",
+        "correct": false,
+        "why": "It is valid in a batch confined to one partition of one table."
+      },
+      {
+        "text": "Because the keyspace has a replication factor of 1",
+        "correct": false,
+        "why": "The same refusal happens at any replication factor."
+      }
+    ]
+  },
+  {
+    "id": "ex-ps4j2qq6",
+    "version": 1,
+    "section": "two-writes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop must insert each order exactly once, in both tables, even if the client retries. What does the section suggest?",
+    "choices": [
+      {
+        "text": "A logged batch, which already makes every write happen exactly once",
+        "correct": false,
+        "why": "A batch gives all-or-nothing, not a check that the order is new."
+      },
+      {
+        "text": "`IF NOT EXISTS` on the copy table only",
+        "correct": false,
+        "why": "The identity belongs to the table that owns it, `orders_by_id`."
+      },
+      {
+        "text": "A conditional insert into `orders_by_id`, then the copy",
+        "correct": true,
+        "why": "Right. One table is the source of truth; the copy follows it."
+      },
+      {
+        "text": "Two separate inserts and a nightly job that deletes duplicates",
+        "correct": false,
+        "why": "Duplicates in Cassandra overwrite rather than pile up; the problem is a missing write, not an extra one."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp93mvsh",
+    "version": 1,
+    "section": "keeping-copies-honest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a drifted copy have to be found by a scheduled check rather than by an error?",
+    "choices": [
+      {
+        "text": "Because MongoDB hides errors about copies",
+        "correct": false,
+        "why": "There is no error to hide: MongoDB does not know the copies exist."
+      },
+      {
+        "text": "Every document is valid alone; only a comparison shows it",
+        "correct": true,
+        "why": "Right. Nothing fails; the copy is just wrong."
+      },
+      {
+        "text": "Because errors about copies are raised only on a replica set, never on one server",
+        "correct": false,
+        "why": "A replica set changes nothing here."
+      },
+      {
+        "text": "Because drift fixes itself after a while",
+        "correct": false,
+        "why": "A copy that was never updated stays wrong forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nvd34rx",
+    "version": 1,
+    "section": "keeping-copies-honest",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the stages of the drift check in the order the pipeline runs them.",
+    "items": [
+      "`$unwind` the basket's items",
+      "`$lookup` the product each item names",
+      "`$match` the items whose name differs from the product's",
+      "`$count` what is left"
+    ],
+    "trap": "You cannot compare an item before it is its own document."
+  },
+  {
+    "id": "ex-k0dr2v6e",
+    "version": 1,
+    "section": "keeping-copies-honest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `arrayFilters: [{ \"i.sku\": \"KB-101\" }]` do in the repair?",
+    "choices": [
+      {
+        "text": "It picks which of the baskets are updated by the statement",
+        "correct": false,
+        "why": "The first argument, `{ \"items.sku\": \"KB-101\" }`, picks the baskets."
+      },
+      {
+        "text": "It removes the keyboard from every basket",
+        "correct": false,
+        "why": "It is a `$set` on the name; nothing is removed."
+      },
+      {
+        "text": "Limits it to elements whose `sku` is `KB-101`",
+        "correct": true,
+        "why": "Right: Carla's cable keeps its own name."
+      },
+      {
+        "text": "It creates an index on `items.sku`",
+        "correct": false,
+        "why": "Indexes are lesson 7; this is a filter inside one update."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp59xwb3",
+    "version": 1,
+    "section": "keeping-copies-honest",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone extends the drift check to every copied field, `orders.lines.unit_price` included, and lets it repair what it finds. What happens?",
+    "choices": [
+      {
+        "text": "The shop gets more accurate prices",
+        "correct": false,
+        "why": "It gets today's prices on old orders, which are wrong for them."
+      },
+      {
+        "text": "Old orders get today's prices",
+        "correct": true,
+        "why": "Right. Snapshots are left out of the check on purpose."
+      },
+      {
+        "text": "Nothing, since prices rarely change",
+        "correct": false,
+        "why": "Every price change since launch would be rewritten into history."
+      },
+      {
+        "text": "MongoDB refuses to update a `Decimal128`",
+        "correct": false,
+        "why": "It updates it without complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-rd580z5j",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each copy to what should happen to it when its source changes.",
+    "hint": "One action fits none of them.",
+    "pairs": [
+      {
+        "left": "`orders.lines.unit_price`",
+        "right": "never changes"
+      },
+      {
+        "left": "`orders.customer.name`",
+        "right": "`updateMany` on `customer.id`"
+      },
+      {
+        "left": "`carts.items.name`",
+        "right": "`updateMany` with `arrayFilters`"
+      },
+      {
+        "left": "a row in `orders_by_customer`",
+        "right": "rewritten from `orders_by_id`"
+      }
+    ],
+    "right_distractors": [
+      "deleted and left empty"
+    ]
+  },
+  {
+    "id": "ex-cmzk2sbt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new feature copies each product's category into order lines, and nobody adds it to the table of copies. What is the likely outcome a year later?",
+    "choices": [
+      {
+        "text": "MongoDB warns about an untracked copy",
+        "correct": false,
+        "why": "It has no idea what is a copy."
+      },
+      {
+        "text": "The categories stay right, since copies follow their source",
+        "correct": false,
+        "why": "Copies follow only when somebody writes the update."
+      },
+      {
+        "text": "Stale categories in old orders that no check finds",
+        "correct": true,
+        "why": "Right, and whether that is a snapshot or a drift was never decided either."
+      },
+      {
+        "text": "The orders become invalid documents and fail to load",
+        "correct": false,
+        "why": "They load fine; that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmdwsdcd",
+    "version": 1,
+    "section": "two-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While the logged batch for an order is being applied, a page reads both tables. What can it see?",
+    "choices": [
+      {
+        "text": "The order in one table and not yet in the other",
+        "correct": true,
+        "why": "Right. A logged batch has no isolation; the two writes are not one moment."
+      },
+      {
+        "text": "Either both rows or neither, never only one of them alone",
+        "correct": false,
+        "why": "That would be isolation, which a logged batch does not give."
+      },
+      {
+        "text": "An error until the batch finishes",
+        "correct": false,
+        "why": "Reads are never blocked by a batch."
+      },
+      {
+        "text": "The order twice in `orders_by_id`",
+        "correct": false,
+        "why": "One primary key, one row."
+      }
+    ]
+  },
+  {
+    "id": "ex-gt3g1vxc",
+    "version": 1,
+    "section": "keeping-copies-honest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section say to repair a drifted copy from the source and never from another copy?",
+    "choices": [
+      {
+        "text": "Only the source is known to be current",
+        "correct": true,
+        "why": "Right. Copying from a copy can spread the drift instead of fixing it."
+      },
+      {
+        "text": "Because copies are read-only in MongoDB",
+        "correct": false,
+        "why": "MongoDB has no notion of a copy, read-only or not."
+      },
+      {
+        "text": "Because reading from the source is faster",
+        "correct": false,
+        "why": "Speed is not the argument; correctness is."
+      },
+      {
+        "text": "Because `$lookup` can only read the source collection",
+        "correct": false,
+        "why": "`$lookup` can read any collection."
+      }
+    ]
+  },
+  {
+    "id": "ex-7s6braza",
+    "version": 1,
+    "section": "why-duplicate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What separates a snapshot from a copy that follows?",
+    "choices": [
+      {
+        "text": "As it was at an event, or as it is now",
+        "correct": true,
+        "why": "Right. The price paid is the first; the name shown is the second."
+      },
+      {
+        "text": "Whether it is stored in MongoDB or in Cassandra",
+        "correct": false,
+        "why": "Both kinds exist in both stores."
+      },
+      {
+        "text": "Whether it is a number or a string",
+        "correct": false,
+        "why": "A name can be a snapshot on an invoice; the type does not decide."
+      },
+      {
+        "text": "Whether the database updates it automatically",
+        "correct": false,
+        "why": "Neither is updated by the database."
+      }
+    ]
+  }
+]

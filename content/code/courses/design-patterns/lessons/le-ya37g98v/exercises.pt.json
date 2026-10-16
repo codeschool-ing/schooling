@@ -1,0 +1,370 @@
+{
+ "ex-pfqt4sbg": {
+  "prompt": "Num sistema com event sourcing, o que é o log de eventos?",
+  "choices": [
+   {
+    "text": "Uma trilha de auditoria guardada ao lado das tabelas de verdade, para o caso de alguém perguntar",
+    "why": "Essa é a imagem que a seção substitui: aqui não há outras tabelas para ficar ao lado."
+   },
+   {
+    "text": "Um cache de mudanças recentes, limpo depois de aplicadas",
+    "why": "Nada é limpo; apagar um evento mudaria um saldo em silêncio."
+   },
+   {
+    "text": "Os próprios dados",
+    "why": "Isso. Qualquer estado numa tela foi calculado a partir dele e pode ser calculado de novo."
+   }
+  ]
+ },
+ "ex-rsnex083": {
+  "prompt": "No histórico de state_only.py, quantos centavos a Bia devia no fim de 24 de março?",
+  "unit": "centavos"
+ },
+ "ex-my4mpp6f": {
+  "prompt": "A biblioteca pergunta quanto os membros pagaram de multa em março. Que versão de state_only.py consegue responder?",
+  "choices": [
+   {
+    "text": "O histórico, somando os FinePaid de março",
+    "why": "Isso. Os pagamentos foram registrados como fatos; o saldo só guardou o efeito líquido."
+   },
+   {
+    "text": "As duas, subtraindo os saldos",
+    "why": "Um saldo mistura multas, pagamentos e correções; num número só não dá para separar um pagamento de uma correção."
+   },
+   {
+    "text": "Nenhuma, porque os pagamentos nunca foram registrados",
+    "why": "O histórico tem um FinePaid de 100 em 24 de março."
+   }
+  ]
+ },
+ "ex-gymtv6fg": {
+  "prompt": "Dois atendentes leem o stream da Bia na versão 2 e os dois acrescentam um empréstimo. O que store.py faz?",
+  "choices": [
+   {
+    "text": "Guarda os dois, já que acrescentar nunca dá conflito",
+    "why": "Os dois gravariam a versão 3, e UNIQUE (stream, version) permite um."
+   },
+   {
+    "text": "Trava o stream enquanto o primeiro atendente decide",
+    "why": "Nada é travado; o conflito aparece no insert."
+   },
+   {
+    "text": "Grava o primeiro; o segundo recebe ConcurrencyError e precisa reler",
+    "why": "Isso. Concorrência otimista: o índice único recusa a segunda versão 3."
+   },
+   {
+    "text": "Junta os dois empréstimos num evento só, a versão 3, com os dois exemplares",
+    "why": "Um store nunca edita nem junta eventos; quem perde roda as regras de novo."
+   }
+  ]
+ },
+ "ex-7z1d5tq4": {
+  "prompt": "O que impede um UPDATE na tabela de eventos em store.py?",
+  "choices": [
+   {
+    "text": "Um trigger que lança \"events are append-only\"",
+    "why": "Isso. A promessa mora no banco, então vale para qualquer código que se conecte."
+   },
+   {
+    "text": "A classe EventStore não tem método update",
+    "why": "Verdade, mas não basta: a demonstração manda o UPDATE direto por store.db, e só o trigger o barra."
+   },
+   {
+    "text": "O SQLite recusa updates em tabelas com chave AUTOINCREMENT",
+    "why": "O SQLite permite; a recusa é a que a tabela recebeu."
+   }
+  ]
+ },
+ "ex-3ahek720": {
+  "prompt": "Acrescentar com uma versão esperada, e deixar quem perde reler, se chama concorrência ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "otimista",
+     "optimistic"
+    ]
+   }
+  ]
+ },
+ "ex-sts01fea": {
+  "prompt": "Por que evolve nunca deve lançar exceção para um evento de que não gosta?",
+  "choices": [
+   {
+    "text": "Exceções são lentas dentro de reduce",
+    "why": "Velocidade não é a questão; uma exceção lançada deixaria o stream ilegível."
+   },
+   {
+    "text": "O Python proíbe lançar exceção dentro de um match",
+    "why": "Permite; o motivo é o histórico guardado, não a sintaxe."
+   },
+   {
+    "text": "Uma dataclass congelada não pode ser devolvida depois de uma exceção",
+    "why": "Congelar diz respeito a mutação, não a exceções; nada nela impede um raise."
+   },
+   {
+    "text": "O evento está guardado, então toda dobra futura falharia nele",
+    "why": "Isso. Eventos são fatos; as regras pertencem ao comando, antes de o evento existir."
+   }
+  ]
+ },
+ "ex-7h95ngmm": {
+  "prompt": "Ponha em ordem os passos de lend() em fold.py.",
+  "items": [
+   "Ler os eventos do membro",
+   "Dobrá-los com evolve num Member e numa versão",
+   "Conferir as regras contra esse estado",
+   "Acrescentar CopyLent, esperando aquela versão"
+  ],
+  "trap": "O estado é calculado antes das regras e jogado fora depois; só o evento é guardado."
+ },
+ "ex-83ssngyy": {
+  "prompt": "Um auditor pergunta o que a Bia tinha no dia do segundo evento dela. Com fold.py, como você responde?",
+  "choices": [
+   {
+    "text": "Restaurar o backup do banco do mês passado e olhar",
+    "why": "Um backup mostra no máximo um momento passado; os eventos dão todos."
+   },
+   {
+    "text": "Dobrar só os dois primeiros eventos",
+    "why": "Isso. Parar a dobra antes é toda a viagem no tempo aqui."
+   },
+   {
+    "text": "Ler a linha de Member como foi guardada na versão 2",
+    "why": "Nenhum Member é guardado em versão nenhuma; o estado é sempre calculado."
+   }
+  ]
+ },
+ "ex-80zhapf4": {
+  "prompt": "MostBorrowed foi criado depois de todos os empréstimos terem acontecido. Como ele os contou?",
+  "choices": [
+   {
+    "text": "Perguntou a FinesOwed, que os tinha visto",
+    "why": "Projeções não leem umas às outras; FinesOwed ignora empréstimos de qualquer jeito."
+   },
+   {
+    "text": "Lending guardava um contador para o caso de uma tela querer",
+    "why": "Esse contador não existe, e com os eventos guardados nenhum é necessário."
+   },
+   {
+    "text": "catch_up leu tudo desde a posição 0",
+    "why": "Isso. Uma projeção nova começa com checkpoint 0 e lê o histórico inteiro."
+   }
+  ]
+ },
+ "ex-1dn9cp66": {
+  "prompt": "Uma projeção calcula \"dias de atraso\" com date.today(). O que dá errado?",
+  "choices": [
+   {
+    "text": "Cada reconstrução dá uma resposta diferente a partir dos mesmos eventos",
+    "why": "Isso. Uma projeção precisa ser determinística nos eventos; a data pertence ao evento."
+   },
+   {
+    "text": "date.today() não é permitido em threads",
+    "why": "É permitido; o problema é a resposta depender de quando a reconstrução roda."
+   },
+   {
+    "text": "O checkpoint para de avançar",
+    "why": "O checkpoint avança normalmente; os números ao lado dele é que derivam."
+   },
+   {
+    "text": "Nada, desde que o relógio do servidor esteja certo",
+    "why": "Um relógio certo ainda marca outro dia amanhã, então uma reconstrução amanhã discorda da de hoje."
+   }
+  ]
+ },
+ "ex-sbfxyf1j": {
+  "prompt": "Associe cada regra de projeção ao que quebrá-la causaria.",
+  "pairs": [
+   {
+    "left": "Ela nunca acrescenta eventos",
+    "right": "ler o histórico mudaria o histórico"
+   },
+   {
+    "left": "Ela nunca pede fatos ao lado da escrita",
+    "right": "o acoplamento que a divisão removeu volta"
+   },
+   {
+    "left": "Ela guarda o próprio checkpoint",
+    "right": "um reinício não saberia de onde retomar"
+   }
+  ]
+ },
+ "ex-akgjrhnr": {
+  "prompt": "Em snapshot.py, quantos eventos a reconstrução aplicou quando partiu do snapshot?",
+  "unit": "eventos"
+ },
+ "ex-r4kra478": {
+  "prompt": "Depois que existe um snapshot na versão 10.002, os eventos antes dele podem ser arquivados e removidos?",
+  "choices": [
+   {
+    "text": "Não: um snapshot é um cache, e os eventos continuam sendo o registro",
+    "why": "Isso. Apagar um snapshot não perde nada; apagar eventos perde histórico."
+   },
+   {
+    "text": "Sim, o snapshot guarda tudo o que aqueles eventos anteriores chegaram a dizer",
+    "why": "Ele guarda uma dobra deles; projeções, auditorias e um evolve corrigido precisam dos eventos."
+   },
+   {
+    "text": "Sim, se o snapshot tiver menos de um ano",
+    "why": "Idade não é a questão; um snapshot é derivado e os eventos não."
+   }
+  ]
+ },
+ "ex-p117ddwy": {
+  "prompt": "Um bug em evolve é corrigido. Snapshots foram tirados enquanto ele existia. O que deve acontecer com eles?",
+  "choices": [
+   {
+    "text": "Mantê-los: a próxima reconstrução os corrige sozinha",
+    "why": "A reconstrução parte do snapshot e dobra só os eventos posteriores, então o estado errado sobrevive."
+   },
+   {
+    "text": "Editá-los à mão para os valores certos",
+    "why": "Edições à mão são palpites; dobrar desde a versão 1 com o código corrigido é exato."
+   },
+   {
+    "text": "Apagar todos e dobrar outra vez com o código corrigido",
+    "why": "Isso. Snapshots são descartáveis por projeto; é isso que torna a correção segura."
+   },
+   {
+    "text": "Acrescentar eventos de correção a todo stream afetado",
+    "why": "Os eventos estavam certos; só a dobra em cache estava errada."
+   }
+  ]
+ },
+ "ex-3gbw3y6t": {
+  "prompt": "Em lag.py, por que a projeção estava vazia quando lida logo depois da devolução da Dani?",
+  "choices": [
+   {
+    "text": "O store ainda não tinha confirmado os eventos",
+    "why": "append confirma antes de retornar; o store estava na posição 2."
+   },
+   {
+    "text": "FinesOwed ignora CopyReturned até chegar um pagamento",
+    "why": "Ela soma a multa em CopyReturned, como a linha seguinte mostra."
+   },
+   {
+    "text": "O worker ainda não os tinha aplicado",
+    "why": "Isso. A projeção estava em 0 enquanto o store estava em 2."
+   }
+  ]
+ },
+ "ex-e0enchf1": {
+  "prompt": "Um worker aplica o evento 41 e cai antes de salvar o checkpoint de 40. O que acontece no reinício, e o que a projeção precisa tolerar?",
+  "choices": [
+   {
+    "text": "O evento 41 se perde, então a projeção precisa tolerar lacunas",
+    "why": "Ele continua no store; ler depois de 40 o entrega de novo."
+   },
+   {
+    "text": "O 41 é aplicado duas vezes; repetir precisa ser seguro",
+    "why": "Isso. A entrega é pelo menos uma vez, então salve o checkpoint com o resultado ou torne o apply idempotente."
+   },
+   {
+    "text": "O store se recusa a entregar o evento 41 duas vezes",
+    "why": "O store não sabe quem leu o quê; o checkpoint é assunto da projeção."
+   }
+  ]
+ },
+ "ex-a1gmfw1z": {
+  "prompt": "Associe cada número ao que ele diz sobre uma projeção.",
+  "pairs": [
+   {
+    "left": "a posição da ponta do store",
+    "right": "o último evento gravado"
+   },
+   {
+    "left": "o checkpoint da projeção",
+    "right": "o último evento que ela aplicou"
+   },
+   {
+    "left": "ponta menos checkpoint",
+    "right": "quantos eventos ela está atrás"
+   }
+  ]
+ },
+ "ex-ss023qat": {
+  "prompt": "Os CopyLent antigos não têm título. Por que não rodar uma migração que acrescenta um a cada linha guardada?",
+  "choices": [
+   {
+    "text": "Editar o histórico guardado quebra a única promessa do store",
+    "why": "Isso. Um upcaster muda a leitura e deixa a linha como foi gravada; o trigger recusaria a edição de qualquer jeito."
+   },
+   {
+    "text": "O SQLite não consegue acrescentar chaves a um texto JSON",
+    "why": "Consegue, com json_set; o motivo é o histórico, não a capacidade."
+   },
+   {
+    "text": "A migração seria lenta demais com dez mil linhas",
+    "why": "Dez mil linhas se atualizam num instante; não é a velocidade que proíbe."
+   }
+  ]
+ },
+ "ex-b0aj1yae": {
+  "prompt": "A biblioteca passa a cobrar multas em reais. O que deve acontecer com o campo fine de CopyReturned?",
+  "choices": [
+   {
+    "text": "Eventos novos guardam reais em fine; leitores dividem os antigos por 100",
+    "why": "Leitores não distinguem antigos de novos pelo campo, então as somas misturam centavos e reais em silêncio."
+   },
+   {
+    "text": "Um upcaster que multiplica as multas antigas por 100 na leitura",
+    "why": "Isso transforma centavos antigos corretos em números errados; nada nos eventos antigos mudou."
+   },
+   {
+    "text": "Reescrever os eventos guardados em reais",
+    "why": "Eventos guardados nunca são reescritos, e o trigger recusa."
+   },
+   {
+    "text": "Um campo ou tipo novo; fine continua querendo dizer centavos",
+    "why": "Isso. O sentido de um evento fica fixado quando ele é gravado; só a forma pode ser adaptada."
+   }
+  ]
+ },
+ "ex-s5hpgfjs": {
+  "prompt": "Quais destes precisam ser determinísticos nos eventos que leem? Marque todos que se aplicam.",
+  "choices": [
+   {
+    "text": "evolve",
+    "why": "Isso. Toda dobra do mesmo stream precisa dar o mesmo estado."
+   },
+   {
+    "text": "Uma projeção como FinesOwed",
+    "why": "Isso. Uma reconstrução a partir do 0 precisa reproduzir o mesmo modelo de leitura."
+   },
+   {
+    "text": "Um upcaster como lent_v1_to_v2",
+    "why": "Isso. A mesma linha guardada precisa ser lida do mesmo jeito para sempre, daí o TITLE_OF congelado."
+   },
+   {
+    "text": "O comando lend, decidindo se a Bia pode pegar um livro",
+    "why": "Um comando pode ler o relógio ou outras entradas; o que ele decide fica registrado como evento, e é o evento que o código depois lê."
+   }
+  ]
+ },
+ "ex-e4am5aed": {
+  "prompt": "Ordene estes do mais barato de descartar ao mais perigoso de descartar.",
+  "items": [
+   "Um snapshot",
+   "Uma projeção, reconstruída a partir da posição 0",
+   "Um evento no store"
+  ],
+  "trap": "Uma projeção custa uma reconstrução sobre o store inteiro, um snapshot só uma dobra mais longa; um evento não pode ser recuperado de jeito nenhum."
+ },
+ "ex-3sf8edvm": {
+  "prompt": "Uma tela lê FinesOwed para decidir se oferece o botão Lend à Bia, e lend() a recusa mesmo assim. Qual está certo?",
+  "choices": [
+   {
+    "text": "A tela, porque a projeção é mais nova que o comando",
+    "why": "Uma projeção nunca é mais nova que o store; no máximo ela alcançou."
+   },
+   {
+    "text": "lend(), porque ele dobra o stream dela, que é a verdade",
+    "why": "Isso. A tela pode estar atrasada; a decisão lê os próprios eventos."
+   },
+   {
+    "text": "Nenhum dos dois até um snapshot ser tirado",
+    "why": "Snapshots só aceleram a dobra; a resposta é a mesma sem eles."
+   }
+  ]
+ }
+}

@@ -1,0 +1,415 @@
+{
+  "ex-vyq64h2p": {
+    "prompt": "Dois workers rodaram, 500 vezes cada um, `GET visits`, somaram um no shell e rodaram `SET visits` com o resultado. O contador terminou em 554. O que aconteceu com o resto?",
+    "hint": "Onde a soma aconteceu?",
+    "choices": [
+      {
+        "text": "O Redis descartou escritas que não teve tempo de persistir",
+        "why": "Nada foi descartado: todo `SET` rodou. Persistência é a aula 13 e não tem papel aqui."
+      },
+      {
+        "text": "Os dois workers leram o mesmo valor e gravaram o mesmo número, então um incremento de cada par assim sumiu",
+        "why": "Isso. A corrida estava entre o `GET` e o `SET` de cada worker, fora do Redis; o `INCR` a fecha."
+      },
+      {
+        "text": "Os dois laços rodaram um depois do outro em vez de juntos, e o segundo laço sobrescreveu tudo o que o primeiro tinha gravado",
+        "why": "Rodando um depois do outro, teriam chegado a 1.000. A perda exige que se sobreponham."
+      },
+      {
+        "text": "O `redis-cli` perde comandos quando duas cópias dele rodam num contêiner",
+        "why": "Os mesmos dois laços com `INCR` chegaram a exatamente 1.000, no mesmo contêiner."
+      }
+    ]
+  },
+  "ex-913k6ptm": {
+    "prompt": "Um worker pega uma trava com `SET lock:order:7 w1 NX EX 30` às 10:00:00 e cai às 10:00:05 sem liberá-la. Quantos segundos depois da queda outro worker consegue pegar a trava, no mínimo?",
+    "hint": "O tempo de vida começou quando a chave foi gravada.",
+    "unit": "segundos"
+  },
+  "ex-zn2rrsah": {
+    "prompt": "Por que a aula libera uma trava com um script Lua que confere o dono antes de apagar, em vez de um `DEL` simples?",
+    "hint": "Pense num worker que demorou mais que o tempo de vida da trava.",
+    "choices": [
+      {
+        "text": "O `DEL` não consegue apagar uma chave que ainda tem expiração, então a trava ficaria até expirar sozinha",
+        "why": "O `DEL` apaga qualquer chave, com ou sem expiração; esse é justamente o perigo."
+      },
+      {
+        "text": "Scripts Lua são mais rápidos que comandos separados",
+        "why": "Velocidade não é a questão; a conferência e a remoção não podem ser separadas."
+      },
+      {
+        "text": "Um worker que passou dos 30 segundos apagaria uma trava que outro worker pegou depois",
+        "why": "Isso. Conferir o valor antes, num único comando, faz cada worker apagar só a própria trava."
+      },
+      {
+        "text": "Um `DEL` é replicado para as réplicas e um script não, então as réplicas guardariam uma trava que ninguém tem",
+        "why": "Os dois chegam às réplicas. O problema está no primário, entre a conferência e a remoção."
+      }
+    ]
+  },
+  "ex-kde0hwvn": {
+    "prompt": "Uma chave de carrinho foi gravada com `EX 600`. Um minuto depois a aplicação altera o carrinho com um `SET cart:ana …` simples. O que acontece com o tempo de vida da chave?",
+    "choices": [
+      {
+        "text": "Ela mantém os 540 segundos que faltavam",
+        "why": "É isso que o `KEEPTTL` pede; um `SET` simples não faz isso."
+      },
+      {
+        "text": "Ela recomeça dos 600 segundos",
+        "why": "Um `SET` simples não define tempo de vida nenhum, então não há de onde recomeçar."
+      },
+      {
+        "text": "Removido: o carrinho nunca expira",
+        "why": "Isso: o `TTL` responde `-1`. A captura da aula mostra exatamente isso, e nada o avisa."
+      },
+      {
+        "text": "O `SET` é recusado enquanto a chave tem tempo de vida",
+        "why": "Ele respondeu `OK`; é por isso que a mudança passa despercebida."
+      }
+    ]
+  },
+  "ex-37x436dp": {
+    "prompt": "Em `SET lock:order:1001 worker-a ___ EX 30`, a opção que falta faz o Redis gravar a chave só se ela ainda não existir.",
+    "hint": "Duas letras.",
+    "blanks": [
+      {
+        "accept": [
+          "NX"
+        ]
+      }
+    ]
+  },
+  "ex-315mrjty": {
+    "prompt": "O estoque de um produto baixa um a cada venda, e as páginas de listagem leem só o preço. Por que a aula o guarda como hash em vez de string JSON?",
+    "choices": [
+      {
+        "text": "Cada venda é um `HINCRBY` atômico, e a listagem lê um campo",
+        "why": "Isso. Com uma string, cada venda é ler, fazer o parse e gravar, com uma corrida no meio."
+      },
+      {
+        "text": "Um hash sobrevive a um reinício do servidor, e uma string JSON se perde com a memória",
+        "why": "A persistência trata todos os tipos igual; a aula 13 é sobre ela."
+      },
+      {
+        "text": "O Redis não consegue guardar um documento JSON numa string, então ele precisa ser dividido em campos",
+        "why": "A aula guardou o mesmo produto como string JSON uma linha depois."
+      },
+      {
+        "text": "O hash é o único tipo do Redis que guarda um número e faz contas com ele",
+        "why": "Uma string também guarda número: o contador de estoque da seção anterior era uma."
+      }
+    ]
+  },
+  "ex-7rm2052a": {
+    "prompt": "A loja guarda em cache, por 60 segundos, a resposta JSON inteira de uma API de frete, e sempre a manda ao navegador sem mudanças. Qual forma de guardar cabe?",
+    "hint": "Como ela é lida, e algum campo muda sozinho?",
+    "choices": [
+      {
+        "text": "Um hash, para cada frete poder ser lido com `HGET`",
+        "why": "Nada lê um frete só; a resposta inteira sai como chegou."
+      },
+      {
+        "text": "Um sorted set de fretes, com o preço como score",
+        "why": "Nada os ordena também; isso remontaria um documento que ninguém pediu para mudar."
+      },
+      {
+        "text": "Uma string com `EX 60`, com a resposta exatamente como a API a mandou",
+        "why": "Isso. Uma cópia da resposta de outro sistema, lida inteira e nunca alterada campo a campo, é o caso em que a string ganha."
+      },
+      {
+        "text": "Uma lista com um frete por elemento, cortada nos mais recentes que a API mandou até agora",
+        "why": "Ordem e tamanho não são a questão; a forma do acesso é."
+      }
+    ]
+  },
+  "ex-gbvv1smg": {
+    "prompt": "Acrescentar uma descrição de 92 caracteres ao hash do produto levou o `MEMORY USAGE` de 120 bytes para 424. Por que tanto mais que 92?",
+    "choices": [
+      {
+        "text": "O Redis guarda cada campo de um hash duas vezes, uma para cada réplica que vai recebê-lo",
+        "why": "Não há réplicas aqui, e uma réplica guarda a sua cópia na própria memória."
+      },
+      {
+        "text": "Um valor acima de 64 bytes transformou o `listpack` compacto num `hashtable`",
+        "why": "Isso: o `hash-max-listpack-value` é 64, e o hash inteiro mudou de codificação, não só o campo novo."
+      },
+      {
+        "text": "Texto é guardado em UTF-16, o que dobra o tamanho, e os nomes dos campos são guardados de novo",
+        "why": "O Redis guarda os bytes como foram enviados; o salto veio da codificação do hash."
+      },
+      {
+        "text": "Um campo de descrição é indexado para busca",
+        "why": "O Redis não indexa nada dentro de um hash por conta própria."
+      }
+    ]
+  },
+  "ex-8btp00kk": {
+    "prompt": "Um worker roda `RPOP jobs:email`, recebe `order-1001` e cai antes de mandar o e-mail. Onde está a tarefa agora?",
+    "choices": [
+      {
+        "text": "De volta à frente da lista, devolvida quando a conexão fechou",
+        "why": "O Redis não sabe que a retirada ficou pela metade; nada a devolve."
+      },
+      {
+        "text": "Numa lista de pendentes, esperando uma confirmação",
+        "why": "Isso é o que o grupo de consumidores de um stream guarda; uma lista não guarda nada assim."
+      },
+      {
+        "text": "Em lugar nenhum: a retirada a removeu, e o `LLEN` diz 0",
+        "why": "Isso. É por isso que existem os streams, ou o `LMOVE` para uma lista de em andamento."
+      },
+      {
+        "text": "Na réplica, que guarda cada elemento retirado por um dia",
+        "why": "A réplica aplica a mesma retirada; ela remove a tarefa também."
+      }
+    ]
+  },
+  "ex-acevgmqx": {
+    "prompt": "Associe cada necessidade da loja à estrutura que a aula usou para ela.",
+    "hint": "Sobra uma estrutura.",
+    "pairs": [
+      {
+        "left": "os três últimos produtos que um cliente abriu, o mais novo primeiro",
+        "right": "uma lista, com `LPUSH` e `LTRIM`"
+      },
+      {
+        "left": "os produtos com as etiquetas `office` e `usb-c` ao mesmo tempo",
+        "right": "dois sets, com `SINTER`"
+      },
+      {
+        "left": "os três mais vendidos do mês",
+        "right": "um sorted set, com `ZREVRANGE`"
+      },
+      {
+        "left": "o estoque de um produto, uma unidade a menos por venda",
+        "right": "uma string com um inteiro, com `DECR`"
+      }
+    ],
+    "right_distractors": [
+      "um stream com um grupo de consumidores"
+    ]
+  },
+  "ex-317hx1ez": {
+    "prompt": "Toda noite às 02:00 todo cliente do Redis da loja espera cerca de um segundo, enquanto um relatório roda `SMEMBERS` num set com vários milhões de membros. O que explica isso?",
+    "hint": "Quantos comandos o Redis executa ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "A conexão do relatório esgota o limite de conexões, então os outros clientes são recusados",
+        "why": "Uma conexão está longe de qualquer limite; os outros clientes estão conectados e esperando."
+      },
+      {
+        "text": "Sets são gravados em disco sempre que são lidos, e o disco é lento de madrugada",
+        "why": "Uma leitura não grava nada; o tempo vai em percorrer o set na memória."
+      },
+      {
+        "text": "Os comandos rodam um de cada vez, então a leitura toda segura os demais",
+        "why": "Isso. Uma big key lida inteira é uma parada para todos; o `SSCAN` a lê em pedaços pequenos."
+      },
+      {
+        "text": "O `SMEMBERS` trava o set enquanto lê, e os outros clientes estão gravando nele",
+        "why": "Não há travas por chave; todo cliente espera, qualquer que seja a chave que quer."
+      }
+    ]
+  },
+  "ex-tkj35e5v": {
+    "prompt": "`SADD tag:usb-c CB-012` respondeu `(integer) 0`. O que isso quer dizer?",
+    "choices": [
+      {
+        "text": "O comando falhou e o set não mudou por causa de um erro",
+        "why": "Um erro teria dito `(error)`. Zero é uma contagem."
+      },
+      {
+        "text": "`CB-012` já era membro, então nada foi acrescentado",
+        "why": "Isso. O `SADD` responde quantos membros eram novos, e um set não guarda repetições."
+      },
+      {
+        "text": "O set `tag:usb-c` agora está vazio",
+        "why": "O `SCARD` ainda contou 2 logo depois."
+      },
+      {
+        "text": "`CB-012` foi acrescentado na posição 0",
+        "why": "Um set não tem posições; isso é uma lista."
+      }
+    ]
+  },
+  "ex-rpz8zevk": {
+    "prompt": "`KB-101` e `CB-012` têm score 5, e o `ZREVRANGE` listou `KB-101` primeiro. Por quê?",
+    "choices": [
+      {
+        "text": "`KB-101` chegou a 5 primeiro",
+        "why": "Não chegou: `CB-012` ganhou os 5 numa chamada antes da segunda venda do teclado. O tempo não é registrado."
+      },
+      {
+        "text": "Scores iguais são ordenados pelo nome do membro, e na ordem inversa `K` vem antes de `C`",
+        "why": "Isso. Para desempatar de outro jeito, o critério tem de entrar no próprio score."
+      },
+      {
+        "text": "`KB-101` foi vendido mais vezes, em duas chamadas contra uma",
+        "why": "Um sorted set guarda a soma, não o número de chamadas."
+      },
+      {
+        "text": "A ordem de scores iguais é aleatória, sorteada de novo a cada chamada, então a página vai piscar",
+        "why": "Ela é fixa: pelo nome, byte a byte."
+      }
+    ]
+  },
+  "ex-h556hwvd": {
+    "prompt": "`ZREVRANK bestsellers:2026-10 MS-204` respondeu `(integer) 2`. Em que lugar a caixa de mais vendidos mostra o mouse, contando o primeiro produto como lugar 1?",
+    "hint": "As posições contam a partir de zero."
+  },
+  "ex-z5tr3psa": {
+    "prompt": "Pedidos não pagos em 30 minutos precisam ser cancelados por uma tarefa que roda a cada minuto. Qual desenho no Redis entrega a essa tarefa exatamente os pedidos vencidos?",
+    "hint": "A tabela da seção tem uma linha para isso.",
+    "choices": [
+      {
+        "text": "Uma chave por pedido com `EX 1800`, e a tarefa reage quando cada chave expira",
+        "why": "Uma chave expirada sai da memória quando o Redis chega nela, não no segundo em que expira (aula 14), então a tarefa saberia tarde, ou nunca."
+      },
+      {
+        "text": "Uma lista de números de pedido que a tarefa lê inteira e confere um por um",
+        "why": "Funciona, e lê todos os pedidos a cada minuto, incluindo os milhares ainda não vencidos."
+      },
+      {
+        "text": "Um set de pedidos não pagos, com `SINTER` contra um set de vencidos",
+        "why": "Alguma coisa ainda teria de descobrir quais pedidos venceram; o set não consegue."
+      },
+      {
+        "text": "Um sorted set com o prazo de cada pedido como score, lido com `ZRANGE … -inf <agora> BYSCORE`",
+        "why": "Isso. O intervalo por score devolve só os membros cujo prazo já passou."
+      }
+    ]
+  },
+  "ex-scntxtjc": {
+    "prompt": "O que o `0` em `XGROUP CREATE orders shipping 0` decide?",
+    "choices": [
+      {
+        "text": "O grupo começa do início, então vê as entradas que já estão lá",
+        "why": "Isso. `$` o começaria no fim, só com entradas novas."
+      },
+      {
+        "text": "Que o grupo começa sem consumidores, e eles entram quando leem pela primeira vez",
+        "why": "Consumidores aparecem quando leem pela primeira vez; o argumento é uma posição."
+      },
+      {
+        "text": "Que as entradas são entregues aos workers sem precisar de confirmação nenhuma",
+        "why": "Isso seria a opção `NOACK` do `XREADGROUP`, não este argumento."
+      },
+      {
+        "text": "Que o stream fica limitado a zero entradas de histórico",
+        "why": "Um limite é o `MAXLEN` no `XADD` ou o `XTRIM`; o `0` aqui é um id."
+      }
+    ]
+  },
+  "ex-wc5e2kyd": {
+    "prompt": "Ponha em ordem a vida de um evento de pedido num grupo de consumidores.",
+    "items": [
+      "O `XADD` o acrescenta ao stream",
+      "O `XREADGROUP … >` o entrega a um worker",
+      "Ele fica na lista de entradas pendentes do grupo",
+      "O `XACK` o tira da lista de pendentes",
+      "O `XTRIM` o remove do próprio stream"
+    ],
+    "trap": "Confirmar não apaga."
+  },
+  "ex-s12fwbqn": {
+    "prompt": "O `worker-1` caiu segurando duas entradas. Um novo `worker-3` entra no grupo e roda `XREADGROUP GROUP shipping worker-3 COUNT 10 STREAMS orders >`. Ele recebe as duas entradas?",
+    "hint": "O que o `>` pede?",
+    "choices": [
+      {
+        "text": "Sim, porque as entradas de um consumidor que caiu voltam ao grupo depois de um tempo",
+        "why": "Nenhum temporizador faz isso; elas ficam pendentes até alguém reivindicá-las."
+      },
+      {
+        "text": "Não: o `>` só devolve entradas nunca entregues ao grupo, então elas precisam ser reivindicadas com `XAUTOCLAIM` ou `XCLAIM`",
+        "why": "Isso. É o passo que a aula fez com o `worker-2`."
+      },
+      {
+        "text": "Sim, porque um consumidor novo começa do início do stream",
+        "why": "A posição é do grupo, não de cada consumidor."
+      },
+      {
+        "text": "Não, porque essas entradas foram apagadas quando o `worker-1` caiu",
+        "why": "Elas continuam no stream e continuam pendentes; nada as apagou."
+      }
+    ]
+  },
+  "ex-z9m3er5v": {
+    "prompt": "O `XPENDING` mostra uma entrada com contador de entregas 7 e todas as outras com 1. Qual a explicação mais provável, e a resposta de costume?",
+    "choices": [
+      {
+        "text": "A entrada é muito antiga; corte o stream",
+        "why": "A idade aparece como tempo parado. O contador diz que ela foi entregue sete vezes."
+      },
+      {
+        "text": "Sete workers estão lendo ao mesmo tempo; reduza o grupo",
+        "why": "Uma entrada pertence a um consumidor por vez; o contador é quantas vezes ela trocou de mãos."
+      },
+      {
+        "text": "Ela foi reivindicada depois de falhar sete vezes; mova-a para um stream separado para uma pessoa olhar",
+        "why": "Isso. Uma entrada que derruba todo worker que a pega continua voltando, a menos que algo a separe."
+      },
+      {
+        "text": "O Redis a entregou sete vezes por conta própria, para garantir que pelo menos uma cópia chegasse a um worker vivo",
+        "why": "O Redis entrega uma vez por leitura ou reivindicação; nunca reenvia por conta própria."
+      }
+    ]
+  },
+  "ex-9x0t269f": {
+    "prompt": "O grupo `shipping` confirmou as três entradas. Quais destas são verdadeiras? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "`XLEN orders` ainda responde 3",
+        "why": "Isso: confirmar não apaga."
+      },
+      {
+        "text": "A lista de pendentes do grupo `shipping` está vazia",
+        "why": "Isso: toda entrada foi confirmada."
+      },
+      {
+        "text": "Um grupo `billing` criado em `0` depois ainda vê as três",
+        "why": "Isso: o atraso dele era 3."
+      },
+      {
+        "text": "As três entradas foram removidas do stream",
+        "why": "Só o corte remove entradas."
+      },
+      {
+        "text": "A lista de pendentes de todo outro grupo foi limpa também",
+        "why": "Cada grupo guarda a sua própria lista de pendentes."
+      }
+    ]
+  },
+  "ex-2vggw16h": {
+    "prompt": "O Redis executa os comandos um de cada vez, numa única ___, e é por isso que o `INCR` não perde atualização e um comando lento faz todo cliente esperar.",
+    "blanks": [
+      {
+        "accept": [
+          "thread"
+        ]
+      }
+    ]
+  },
+  "ex-2ac6v9e0": {
+    "prompt": "Um serviço de pagamento se protege de novas tentativas com `SET done:payment:<pedido> charged NX EX 86400` num primário Redis que replica em segundo plano. O primário falha e uma réplica assume sem as últimas escritas. O que pode dar errado agora?",
+    "hint": "A chave é uma escrita como qualquer outra.",
+    "choices": [
+      {
+        "text": "Nada, porque a chave foi gravada com `NX`",
+        "why": "O `NX` decide se a escrita acontece, não se ela sobrevive a um failover."
+      },
+      {
+        "text": "Toda chave na réplica perde a expiração",
+        "why": "A expiração é replicada junto com a chave."
+      },
+      {
+        "text": "Uma nova tentativa que chega depois do failover não acha a chave e cobra o cartão uma segunda vez",
+        "why": "Isso. Se as escritas perdidas incluem essa chave, a proteção sumiu; a aula 15 perde uma escrita assim de propósito."
+      },
+      {
+        "text": "A réplica recusa todo `SET … NX` até o primário antigo voltar",
+        "why": "Uma réplica promovida aceita escritas; é isso que promoção quer dizer."
+      }
+    ]
+  }
+}

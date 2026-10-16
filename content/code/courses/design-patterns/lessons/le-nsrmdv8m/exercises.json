@@ -1,0 +1,641 @@
+[
+ {
+  "id": "ex-6td77mfz",
+  "version": 1,
+  "section": "inversion-of-control",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What separates a framework from a library, in the sense the lesson uses?",
+  "choices": [
+   {
+    "text": "A framework is larger and has more modules",
+    "correct": false,
+    "why": "Size decides nothing: desk.py is a framework of a dozen lines."
+   },
+   {
+    "text": "A framework calls you; you call a library",
+    "correct": true,
+    "why": "Right. Who holds the loop is the whole difference."
+   },
+   {
+    "text": "A library has to be installed, while a framework ships with the language",
+    "correct": false,
+    "why": "unittest ships with Python and is a framework; textwrap ships with it too and is a library."
+   },
+   {
+    "text": "A framework only exists for web applications",
+    "correct": false,
+    "why": "unittest and tkinter are frameworks with no web in them."
+   }
+  ]
+ },
+ {
+  "id": "ex-w7ph7y3e",
+  "version": 1,
+  "section": "inversion-of-control",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In desk.py, the request to renew Vidas Secas was skipped. Which code made that decision?",
+  "choices": [
+   {
+    "text": "The lend handler, which saw a title it did not expect",
+    "correct": false,
+    "why": "lend was never called for that request; no handler was registered for renew."
+   },
+   {
+    "text": "Python, because the dictionary lookup raised an error",
+    "correct": false,
+    "why": "Desk.run uses get, which returns None instead of raising; the skip is a branch in run."
+   },
+   {
+    "text": "Desk.run, the loop of the framework",
+    "correct": true,
+    "why": "Right. The framework owns the loop, so it decides what happens to a request nobody handles."
+   }
+  ]
+ },
+ {
+  "id": "ex-q6ywh1k1",
+  "version": 1,
+  "section": "inversion-of-control",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "\"Don't call us, we'll call you\" is the old name for inversion of control: the ___ principle.",
+  "blanks": [
+   {
+    "accept": [
+     "Hollywood"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-tk5kj9bm",
+  "version": 1,
+  "section": "constructor-injection",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does OverdueNotices receive a Clock instead of calling date.today() itself?",
+  "choices": [
+   {
+    "text": "date.today() is slow, and a clock object caches the answer",
+    "correct": false,
+    "why": "Speed has nothing to do with it; FixedClock exists so the day can be chosen."
+   },
+   {
+    "text": "So the caller decides which day it is",
+    "correct": true,
+    "why": "Right. \"What day is it\" is a dependency, and the most often forgotten one."
+   },
+   {
+    "text": "Python forbids calling date.today() inside a method",
+    "correct": false,
+    "why": "It allows it; the first draft did exactly that, and it worked until somebody needed 20 March."
+   },
+   {
+    "text": "Every class must take a clock, as a rule of SOLID",
+    "correct": false,
+    "why": "No principle says so; only classes whose behaviour depends on the date need one."
+   }
+  ]
+ },
+ {
+  "id": "ex-gv16b94z",
+  "version": 1,
+  "section": "constructor-injection",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "OverdueNotices is built with FixedClock(date(2026, 3, 20)). A loan was due on 9 March 2026. What fine, in cents, does its notice quote?",
+  "hint": "50 cents for each day after the due date.",
+  "value": 550,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-y9t8jex1",
+  "version": 1,
+  "section": "constructor-injection",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A class you are reviewing takes seven collaborators in its constructor. What does the lesson read into that?",
+  "choices": [
+   {
+    "text": "Constructor injection has hit its limit and a container is needed",
+    "correct": false,
+    "why": "A container would hide the seven, not remove them; the class would still do seven things."
+   },
+   {
+    "text": "Half of them should move to setters so the constructor reads shorter",
+    "correct": false,
+    "why": "That only hides them and loses the guarantee that each one is present."
+   },
+   {
+    "text": "The class is probably doing several jobs, and the long list is just being honest about it",
+    "correct": true,
+    "why": "Right. Lesson 3's single responsibility principle is the conversation to have about it."
+   }
+  ]
+ },
+ {
+  "id": "ex-meg7zmxs",
+  "version": 1,
+  "section": "other-forms",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each form of injection to the moment a missing dependency is noticed.",
+  "pairs": [
+   {
+    "left": "constructor",
+    "right": "when the object is built"
+   },
+   {
+    "left": "setter",
+    "right": "at the first use, possibly much later"
+   },
+   {
+    "left": "method",
+    "right": "at the call that should have passed it"
+   }
+  ]
+ },
+ {
+  "id": "ex-r6f6mbn4",
+  "version": 1,
+  "section": "other-forms",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In forms.py, Reminder() succeeded and the first remind() failed with 'NoneType' object has no attribute 'send'. What does that show?",
+  "choices": [
+   {
+    "text": "Setter injection lets an object exist without what it needs",
+    "correct": true,
+    "why": "Right. Between construction and the assignment the object is broken, and nothing says so until it is used."
+   },
+   {
+    "text": "PrintNotifier has a bug in its send method",
+    "correct": false,
+    "why": "PrintNotifier was never reached; the attribute was still None."
+   },
+   {
+    "text": "Python cannot assign an attribute after an object is built, so the notifier is lost",
+    "correct": false,
+    "why": "It can; the third line of output came from a Reminder whose notifier was assigned afterwards."
+   }
+  ]
+ },
+ {
+  "id": "ex-zfxdj5py",
+  "version": 1,
+  "section": "other-forms",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The desk prints a receipt for one member and texts it to the next, using the same Receipt object. Which form fits?",
+  "choices": [
+   {
+    "text": "Constructor injection, with one Receipt per channel kept for the day",
+    "correct": false,
+    "why": "It works, but it builds objects to carry a choice that changes with every call."
+   },
+   {
+    "text": "Method injection",
+    "correct": true,
+    "why": "Right. The dependency changes from call to call, so each call passes it."
+   },
+   {
+    "text": "A service locator that the desk updates before each receipt",
+    "correct": false,
+    "why": "That is global state changing under the receipt, and the call no longer shows which channel it uses."
+   },
+   {
+    "text": "Setter injection, setting the notifier before every receipt",
+    "correct": false,
+    "why": "Possible, and one forgotten assignment sends a receipt down the previous member's channel."
+   }
+  ]
+ },
+ {
+  "id": "ex-7m3f15wz",
+  "version": 1,
+  "section": "composition-root",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the composition root of a program?",
+  "choices": [
+   {
+    "text": "The base class every service of the program inherits its wiring from",
+    "correct": false,
+    "why": "Nothing inherits from it; it is the place where objects are built and connected."
+   },
+   {
+    "text": "The place near the entry point that builds and wires every object",
+    "correct": true,
+    "why": "Right. In main.py it is build."
+   },
+   {
+    "text": "The top directory of the repository, where main.py is kept",
+    "correct": false,
+    "why": "It is code, not a folder: the root of the object graph."
+   }
+  ]
+ },
+ {
+  "id": "ex-rt1bmct1",
+  "version": 1,
+  "section": "composition-root",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A colleague adds a helper inside OverdueNotices that writes SmsNotifier() for urgent notices. What has changed?",
+  "choices": [
+   {
+    "text": "Nothing important, since SmsNotifier still matches the Notifier protocol",
+    "correct": false,
+    "why": "Matching the protocol is not the issue; the job now chooses a concrete class, which only main.py was meant to do."
+   },
+   {
+    "text": "A choice that belonged to the composition root is back inside the job",
+    "correct": true,
+    "why": "Right. Changing how urgent notices go out now means finding that helper."
+   },
+   {
+    "text": "The program will no longer run, because OverdueNotices may not import anything",
+    "correct": false,
+    "why": "It still runs; the cost is in design, and it shows the day somebody wants e-mail instead."
+   },
+   {
+    "text": "The job becomes a service locator",
+    "correct": false,
+    "why": "Nothing is fetched from a registry; the class is constructed directly, which is the original problem."
+   }
+  ]
+ },
+ {
+  "id": "ex-ts3rpa9c",
+  "version": 1,
+  "section": "composition-root",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what happens when main.py runs in order.",
+  "items": [
+   "Read the channel from the arguments and LIBRARY_TODAY from the environment",
+   "Build the store, the notifier and the clock",
+   "Build OverdueNotices with those three",
+   "Call send_all and print how many were sent"
+  ],
+  "trap": "Building the job before its collaborators is impossible with constructor injection: it needs them as arguments."
+ },
+ {
+  "id": "ex-wj09kkb0",
+  "version": 1,
+  "section": "containers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "How does the container in container.py know that OverdueNotices needs a Clock?",
+  "choices": [
+   {
+    "text": "Clock was registered before OverdueNotices",
+    "correct": false,
+    "why": "Order of registration plays no part; the bare container refused even though everything else was registered."
+   },
+   {
+    "text": "It reads the type hints on __init__",
+    "correct": true,
+    "why": "Right. get_type_hints is the autowiring; without the hints it would know nothing."
+   },
+   {
+    "text": "It calls the constructor with no arguments and studies the error it gets back",
+    "correct": false,
+    "why": "It never calls a constructor without arguments; it resolves every hinted parameter first."
+   },
+   {
+    "text": "OverdueNotices registers its own needs when it is imported",
+    "correct": false,
+    "why": "OverdueNotices knows nothing about the container, and that is what keeps it reusable."
+   }
+  ]
+ },
+ {
+  "id": "ex-bmmvg4tr",
+  "version": 1,
+  "section": "containers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "wired.py printed same notifier: True and same clock: False. Why the difference?",
+  "choices": [
+   {
+    "text": "A clock holds a date, and objects holding dates are always rebuilt",
+    "correct": false,
+    "why": "The container knows nothing about dates; it follows what was registered."
+   },
+   {
+    "text": "The clock was registered as a lambda, and lambdas cannot be compared with is",
+    "correct": false,
+    "why": "The comparison is between the objects resolve returned, and any two objects can be compared with is."
+   },
+   {
+    "text": "Only the notifier was registered with shared=True",
+    "correct": true,
+    "why": "Right. That is a lifetime: one shared instance, or a new one per request."
+   }
+  ]
+ },
+ {
+  "id": "ex-p1w9x98y",
+  "version": 1,
+  "section": "containers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A command-line tool of twelve classes is wired by hand in main. A teammate proposes adding a container. What does the lesson say?",
+  "choices": [
+   {
+    "text": "Keep the hand wiring; at this size a container costs more than it saves",
+    "correct": true,
+    "why": "Right. The trade pays when the wiring is large, repetitive or per request, and none of that is true here."
+   },
+   {
+    "text": "Add it, because constructor injection does not work without one",
+    "correct": false,
+    "why": "main.py injects by hand and works; the container automates what build already does."
+   },
+   {
+    "text": "Add it, since a container finds missing dependencies before the program even starts",
+    "correct": false,
+    "why": "A runtime container finds them at resolve; hand wiring in main fails at least as early."
+   }
+  ]
+ },
+ {
+  "id": "ex-y4a6gxbz",
+  "version": 1,
+  "section": "service-locator",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Injection and a service locator both keep SmtpNotifier() out of the job. What is the difference?",
+  "choices": [
+   {
+    "text": "A locator is faster, because nothing has to be passed through every constructor on the way",
+    "correct": false,
+    "why": "Passing an argument costs nothing worth measuring; the difference is in what a reader and a test can see."
+   },
+   {
+    "text": "With injection the object is handed its collaborators; with a locator it fetches them",
+    "correct": true,
+    "why": "Right. The direction is the difference, and it decides whether the constructor tells the truth."
+   },
+   {
+    "text": "A locator works with protocols, and injection with concrete classes",
+    "correct": false,
+    "why": "Both work with either; OverdueNotices is injected with protocols."
+   }
+  ]
+ },
+ {
+  "id": "ex-brqvhfxy",
+  "version": 1,
+  "section": "service-locator",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team imports its container into every class and calls container.resolve(Notifier) inside methods. What have they built?",
+  "choices": [
+   {
+    "text": "Dependency injection, since a container is doing the work",
+    "correct": false,
+    "why": "A container used this way is asked from inside, which is fetching, not being handed."
+   },
+   {
+    "text": "A composition root spread across the files",
+    "correct": false,
+    "why": "A root is one place by definition; spread out, it is the scattering the root exists to end."
+   },
+   {
+    "text": "A service locator, whatever the container is called",
+    "correct": true,
+    "why": "Right. The tool is the same; asking it from inside methods makes it a locator."
+   },
+   {
+    "text": "Inversion of control, because no class constructs its own notifier",
+    "correct": false,
+    "why": "Each class still decides when to get its notifier and from where; nothing is handed to it."
+   }
+  ]
+ },
+ {
+  "id": "ex-dc5qcmnt",
+  "version": 1,
+  "section": "service-locator",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these does the service locator in locator.py hide or cause? Choose all that apply.",
+  "choices": [
+   {
+    "text": "The constructor claims the class needs nothing",
+    "correct": true,
+    "why": "Right. LocatedNotices() takes no arguments and uses three services."
+   },
+   {
+    "text": "A missing clock is found inside the loop rather than at construction",
+    "correct": true,
+    "why": "Right. The object was built and announced before the KeyError."
+   },
+   {
+    "text": "One test's fake can leak into the next test",
+    "correct": true,
+    "why": "Right. The registry is global, so what one test provides stays for the next."
+   },
+   {
+    "text": "The job sends notices to the wrong members",
+    "correct": false,
+    "why": "The rule is the same as in OverdueNotices; what changed is how the collaborators arrive."
+   }
+  ]
+ },
+ {
+  "id": "ex-ae91r631",
+  "version": 1,
+  "section": "testing-with-fakes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does test_overdue.py need no unittest.mock.patch at all?",
+  "choices": [
+   {
+    "text": "Because unittest refuses patches in a class that has setUp",
+    "correct": false,
+    "why": "setUp and patch work together fine; there is simply nothing to patch."
+   },
+   {
+    "text": "The job is handed its clock and notifier, so the test hands it fakes",
+    "correct": true,
+    "why": "Right. A class that builds nothing has nothing to reach into."
+   },
+   {
+    "text": "PrintNotifier never sends anything real, so it needs no replacing",
+    "correct": false,
+    "why": "The test does not use PrintNotifier at all; it passes a RecordingNotifier."
+   }
+  ]
+ },
+ {
+  "id": "ex-e4shrwhp",
+  "version": 1,
+  "section": "testing-with-fakes",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test patches \"overdue_draft.SmtpNotifier\". The job is then moved to a file called jobs.py and the test is left alone. What happens?",
+  "choices": [
+   {
+    "text": "Python updates the patch target to follow the moved class",
+    "correct": false,
+    "why": "A patch target is a string; nothing rewrites it."
+   },
+   {
+    "text": "The patch misses, and the real mail server is called",
+    "correct": true,
+    "why": "Right. The patch was coupled to an import name, not to what the job needs."
+   },
+   {
+    "text": "The test keeps working exactly as before",
+    "correct": false,
+    "why": "jobs.py looks up its own SmtpNotifier; the patch replaced the name in the old module."
+   },
+   {
+    "text": "Every test in the file fails to import",
+    "correct": false,
+    "why": "Only the moved job changes; whether the test notices at all is the danger."
+   }
+  ]
+ },
+ {
+  "id": "ex-264xtp5h",
+  "version": 1,
+  "section": "testing-with-fakes",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In test_overdue.py, Loan and ListedLoans are the real classes. Why are they not faked?",
+  "choices": [
+   {
+    "text": "They are fast, deterministic and ours, so faking them would test nothing",
+    "correct": true,
+    "why": "Right. Fake what is slow, non-deterministic or outside the process."
+   },
+   {
+    "text": "A frozen dataclass cannot be replaced by a double",
+    "correct": false,
+    "why": "It could; any object with the same fields would do. It is just pointless."
+   },
+   {
+    "text": "Faking every collaborator is the rule, and these two were forgotten",
+    "correct": false,
+    "why": "A test that fakes everything checks only call order and breaks on every refactor."
+   }
+  ]
+ },
+ {
+  "id": "ex-njtr1xz0",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each line of this lesson's code to the idea it shows.",
+  "pairs": [
+   {
+    "left": "desk.run(queue) calling each handler",
+    "right": "inversion of control"
+   },
+   {
+    "left": "def __init__(self, loans, notifier, clock)",
+    "right": "constructor injection"
+   },
+   {
+    "left": "Services.get(\"clock\") inside send_all",
+    "right": "service locator"
+   },
+   {
+    "left": "get_type_hints(provider.__init__)",
+    "right": "autowiring"
+   }
+  ],
+  "right_distractors": [
+   "setter injection"
+  ]
+ },
+ {
+  "id": "ex-p6a98vpg",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Deep inside a mailer class, a method reads os.environ[\"SMTP_HOST\"] and builds a connection. Which change does this lesson point to?",
+  "choices": [
+   {
+    "text": "Register the host in a global Services registry so every class can read it",
+    "correct": false,
+    "why": "That swaps one hidden dependency for another; the method would still fetch."
+   },
+   {
+    "text": "Read the variable in a setter that the mailer calls on itself",
+    "correct": false,
+    "why": "The class would still decide where its configuration comes from."
+   },
+   {
+    "text": "Read it in main and pass the connection in",
+    "correct": true,
+    "why": "Right. Configuration is read once, near the entry point, and the class receives what it needs."
+   }
+  ]
+ },
+ {
+  "id": "ex-2pbmacw7",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test passes when run alone and fails when run after another test in the same file. Which design from this lesson is the usual suspect?",
+  "choices": [
+   {
+    "text": "Constructor injection, because setUp builds a new object each time",
+    "correct": false,
+    "why": "A fresh object per test is what keeps tests independent."
+   },
+   {
+    "text": "A service locator, whose global registry keeps what the first test provided",
+    "correct": true,
+    "why": "Right. Order-dependent tests are the signature of shared global state."
+   },
+   {
+    "text": "Method injection, which passes a different notifier on every call",
+    "correct": false,
+    "why": "Each call names its notifier, so nothing carries over between tests."
+   },
+   {
+    "text": "A composition root, since main.py runs before the tests",
+    "correct": false,
+    "why": "The tests never import main.py; the root is not part of what is tested."
+   }
+  ]
+ }
+]

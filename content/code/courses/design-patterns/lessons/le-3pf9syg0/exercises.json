@@ -1,0 +1,603 @@
+[
+ {
+  "id": "ex-xhch4g45",
+  "version": 1,
+  "section": "entities",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In entities.py, why are the two members called Ana Souza not equal?",
+  "choices": [
+   {
+    "text": "Their phone numbers differ",
+    "correct": false,
+    "why": "Both have +55 11 5550-0114; the program makes them identical on purpose."
+   },
+   {
+    "text": "Their ids differ",
+    "correct": true,
+    "why": "Right. m-014 and m-203 are two members whatever their attributes say."
+   },
+   {
+    "text": "Python compares the two objects by their addresses in memory",
+    "correct": false,
+    "why": "That is the default, and Member overrides it with __eq__."
+   }
+  ]
+ },
+ {
+  "id": "ex-q3a6cb0y",
+  "version": 1,
+  "section": "entities",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "entities.py puts ana, before and other_ana in a set. If Member had no __eq__ and __hash__ of its own, how many elements would the set hold?",
+  "hint": "Without them, Python compares objects by identity in memory.",
+  "value": 3,
+  "tolerance": 0,
+  "unit": "elements"
+ },
+ {
+  "id": "ex-bfnwcctr",
+  "version": 1,
+  "section": "entities",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team lets the database assign each member's id on INSERT. What problem does the section point out?",
+  "choices": [
+   {
+    "text": "Sequences run out after a few million rows",
+    "correct": false,
+    "why": "Exhaustion is not the issue raised; timing is."
+   },
+   {
+    "text": "Two members could end up with the same id",
+    "correct": false,
+    "why": "A sequence does not repeat; the trouble is before it has been asked at all."
+   },
+   {
+    "text": "Until it is saved, the member has no identity to compare or refer to",
+    "correct": true,
+    "why": "Right. An entity needs its id from the moment it exists."
+   },
+   {
+    "text": "Nothing, as long as every entity is saved immediately after it is made",
+    "correct": false,
+    "why": "Even saved at once, it cannot go in a set or be named by another aggregate before the INSERT returns."
+   }
+  ]
+ },
+ {
+  "id": "ex-mek9t88j",
+  "version": 1,
+  "section": "value-objects",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "money.py prints True and then False for fine == Money(175) and fine is Money(175). Why is the False harmless?",
+  "choices": [
+   {
+    "text": "For a value, which object it is never matters",
+    "correct": true,
+    "why": "Right. Equal values are interchangeable; only an entity cares about identity."
+   },
+   {
+    "text": "It is a bug in the frozen dataclass that Python will fix",
+    "correct": false,
+    "why": "is compares identity, and two separately made objects are two objects. Nothing is broken."
+   },
+   {
+    "text": "Because the second Money has a different currency",
+    "correct": false,
+    "why": "Both are BRL, the default; the == just above is True."
+   }
+  ]
+ },
+ {
+  "id": "ex-yy9yeq48",
+  "version": 1,
+  "section": "value-objects",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the section give money a type instead of passing ints around?",
+  "choices": [
+   {
+    "text": "An int cannot hold amounts above a few million cents",
+    "correct": false,
+    "why": "Python's int has no such limit; the reason is where the rules live."
+   },
+   {
+    "text": "So money's rules live in one place",
+    "correct": true,
+    "why": "Right. Currency mixing and half cents are refused once, in Money."
+   },
+   {
+    "text": "Dataclasses make arithmetic faster than plain ints",
+    "correct": false,
+    "why": "They make it slower, if anything; speed is not the point."
+   },
+   {
+    "text": "Because a database column cannot store an integer amount",
+    "correct": false,
+    "why": "SqliteMembers stores owed as an INTEGER without trouble."
+   }
+  ]
+ },
+ {
+  "id": "ex-q2edj23d",
+  "version": 1,
+  "section": "value-objects",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each language to how it usually writes a value object.",
+  "pairs": [
+   {
+    "left": "Python",
+    "right": "@dataclass(frozen=True)"
+   },
+   {
+    "left": "Java",
+    "right": "a record"
+   },
+   {
+    "left": "Go",
+    "right": "a small struct passed by value"
+   },
+   {
+    "left": "TypeScript",
+    "right": "readonly fields plus an equals method"
+   }
+  ]
+ },
+ {
+  "id": "ex-m3rdedwa",
+  "version": 1,
+  "section": "aggregates",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does Member.loans return a tuple rather than the list itself?",
+  "choices": [
+   {
+    "text": "Tuples use less memory, and members are loaded often",
+    "correct": false,
+    "why": "Memory is not the reason; the tuple closes a door."
+   },
+   {
+    "text": "So no code can add a loan except through borrow",
+    "correct": true,
+    "why": "Right. A tuple has no append, so the five-loan rule cannot be bypassed that way."
+   },
+   {
+    "text": "Because a dataclass cannot contain a list",
+    "correct": false,
+    "why": "Member is not a dataclass, and dataclasses can hold lists."
+   }
+  ]
+ },
+ {
+  "id": "ex-p6fya9x9",
+  "version": 1,
+  "section": "aggregates",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A film is lent on 2 March 2026 and comes back on 20 March. Using member.py's rules, what fine is charged, in cents?",
+  "hint": "A film goes out for 7 days.",
+  "value": 550,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-4zhnf3yz",
+  "version": 1,
+  "section": "aggregates",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A migration script needs to import old loans. It writes them straight into member._loans. What does the section's reasoning say about that?",
+  "choices": [
+   {
+    "text": "Fine, because migrations run only once",
+    "correct": false,
+    "why": "Running once is enough to load a member with seven loans, and the root never sees it."
+   },
+   {
+    "text": "It must go through the root, like every other path",
+    "correct": true,
+    "why": "Right. Going through borrow, or a factory, is what keeps five loans the maximum."
+   },
+   {
+    "text": "Python will raise an error because _loans is private",
+    "correct": false,
+    "why": "The underscore is a convention; the write will succeed silently."
+   }
+  ]
+ },
+ {
+  "id": "ex-74z0jfs4",
+  "version": 1,
+  "section": "invariants-and-boundaries",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In copies.py, Bia is offered the extra copy while already holding five loans. What happens to the copy?",
+  "choices": [
+   {
+    "text": "It is never touched, because lend checks the member first",
+    "correct": false,
+    "why": "lend changes the copy first and the member second."
+   },
+   {
+    "text": "It stays out to Bia, and Caio is refused",
+    "correct": false,
+    "why": "The transcript shows on loan to: None, and Caio gets it."
+   },
+   {
+    "text": "It is checked out to her, then checked back in when she is refused",
+    "correct": true,
+    "why": "Right. A correction made by code after the first change had already happened."
+   }
+  ]
+ },
+ {
+  "id": "ex-r3yt5zqc",
+  "version": 1,
+  "section": "invariants-and-boundaries",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Copy.on_loan_to holds the member's ___ , a string such as m-002, and never the Member object.",
+  "blanks": [
+   {
+    "accept": [
+     "id",
+     "identifier",
+     "identity"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-8q15czjk",
+  "version": 1,
+  "section": "invariants-and-boundaries",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A new rule: a member's holds and loans together may not exceed eight. Holds are their own aggregate. What does the section suggest asking first?",
+  "choices": [
+   {
+    "text": "Must it hold at every instant, or soon?",
+    "correct": true,
+    "why": "Right. Most cross-boundary rules turn out to be \"soon\", and then an event and a handler will do."
+   },
+   {
+    "text": "How to merge holds into the Member aggregate straight away",
+    "correct": false,
+    "why": "That is one answer if the rule must hold at every instant, and it makes the aggregate bigger; ask first."
+   },
+   {
+    "text": "Which of the two aggregates should hold a reference to the other object",
+    "correct": false,
+    "why": "Aggregates refer to each other by id; holding the object is the second door."
+   }
+  ]
+ },
+ {
+  "id": "ex-62z5ytyh",
+  "version": 1,
+  "section": "repositories",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why is there a MemberRepository and no LoanRepository?",
+  "choices": [
+   {
+    "text": "Loans are stored in a file rather than the database",
+    "correct": false,
+    "why": "Loans have a table of their own in SqliteMembers."
+   },
+   {
+    "text": "Nobody has written it yet",
+    "correct": false,
+    "why": "Its absence is deliberate, and the section argues for it."
+   },
+   {
+    "text": "A loan never loads without its member",
+    "correct": true,
+    "why": "Right. Repositories exist per aggregate root."
+   }
+  ]
+ },
+ {
+  "id": "ex-d9rtjwdr",
+  "version": 1,
+  "section": "repositories",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does InMemoryMembers keep deep copies instead of the members it is given?",
+  "choices": [
+   {
+    "text": "So a change counts only once it has been saved, as in a database",
+    "correct": true,
+    "why": "Right. Otherwise a test would pass for code that forgot to call save."
+   },
+   {
+    "text": "Deep copies make the tests run faster",
+    "correct": false,
+    "why": "Copying is slower; the copies buy realism."
+   },
+   {
+    "text": "Python dictionaries cannot hold objects that change later",
+    "correct": false,
+    "why": "They can; that is exactly what would make the fake too forgiving."
+   },
+   {
+    "text": "Because SqliteMembers does the same with its rows",
+    "correct": false,
+    "why": "SQLite stores rows, not objects; the copies imitate that behaviour."
+   }
+  ]
+ },
+ {
+  "id": "ex-czp5azed",
+  "version": 1,
+  "section": "repositories",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A teammate adds a method lend_directly(member_id, copy_id) to SqliteMembers that inserts a loan row. What is wrong with it?",
+  "choices": [
+   {
+    "text": "It is fine; it is faster than loading the member",
+    "correct": false,
+    "why": "Faster, and it skips both of the member's rules."
+   },
+   {
+    "text": "It changes the aggregate behind its root, skipping both limits",
+    "correct": true,
+    "why": "Right. A repository gets and saves whole aggregates; it does not make business changes."
+   },
+   {
+    "text": "It should be on InMemoryMembers too, so both classes match the protocol",
+    "correct": false,
+    "why": "Adding it to both would put the second door in both places."
+   }
+  ]
+ },
+ {
+  "id": "ex-v351x2e8",
+  "version": 1,
+  "section": "domain-events",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does Member record LoanStarted instead of sending the SMS receipt itself?",
+  "choices": [
+   {
+    "text": "The SMS gateway does not accept messages from objects",
+    "correct": false,
+    "why": "The gateway is not the issue; the member's dependencies are."
+   },
+   {
+    "text": "Events are faster to send than SMS messages",
+    "correct": false,
+    "why": "The SMS is still sent, by a handler; speed does not change."
+   },
+   {
+    "text": "The member says what happened; reactions belong elsewhere",
+    "correct": true,
+    "why": "Right. Adding a reaction is a line in HANDLERS, and member.py does not change."
+   }
+  ]
+ },
+ {
+  "id": "ex-wnrpzdxf",
+  "version": 1,
+  "section": "domain-events",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of handlers.run in order.",
+  "items": [
+   "Load the member from the repository",
+   "Ask the member to borrow or give back",
+   "Pull the events out of the member",
+   "Save the member",
+   "Publish the events to the handlers"
+  ],
+  "trap": "Saving before pulling would store the events in the in-memory copy and hand them out again on the next get."
+ },
+ {
+  "id": "ex-t3zdr211",
+  "version": 1,
+  "section": "domain-events",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Publishing after saving can fail and leave a saved loan with no event sent. When does the section say that is not acceptable, and what does it offer?",
+  "choices": [
+   {
+    "text": "In any case; publish before saving instead",
+    "correct": false,
+    "why": "Publishing first sends receipts for loans a failed save then loses."
+   },
+   {
+    "text": "When another aggregate depends on it: write it to an outbox in the same transaction",
+    "correct": true,
+    "why": "Right. A separate job publishes from the outbox and marks events sent."
+   },
+   {
+    "text": "When the event is a receipt: retry the SMS three times",
+    "correct": false,
+    "why": "A lost receipt is the case the section calls acceptable."
+   }
+  ]
+ },
+ {
+  "id": "ex-aj36ank9",
+  "version": 1,
+  "section": "domain-services",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With FinePolicy and Carnaval closed on 16 and 17 February 2026, a book due on 15 February comes back on 18 February. What is the fine, in cents?",
+  "hint": "Count the days after the due date the library was open.",
+  "value": 50,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-d748qjhr",
+  "version": 1,
+  "section": "domain-services",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the closed-days rule get a FinePolicy of its own instead of a method on Loan?",
+  "choices": [
+   {
+    "text": "It needs the library's calendar, which no single loan or member should hold",
+    "correct": true,
+    "why": "Right. A rule with no natural owner gets a home of its own."
+   },
+   {
+    "text": "Services are always better than methods on entities",
+    "correct": false,
+    "why": "That belief is the anaemic domain model the section warns against."
+   },
+   {
+    "text": "Loan is a dataclass, and dataclasses cannot have methods",
+    "correct": false,
+    "why": "Money is a dataclass with several methods."
+   }
+  ]
+ },
+ {
+  "id": "ex-a0atq3me",
+  "version": 1,
+  "section": "domain-services",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these are application services rather than domain services, in the section's terms? Choose all that apply.",
+  "choices": [
+   {
+    "text": "lend_copy in repositories.py",
+    "correct": true,
+    "why": "Right. Load, ask, save: it coordinates and decides nothing."
+   },
+   {
+    "text": "FinePolicy.fine_for in closures.py",
+    "correct": false,
+    "why": "It decides something a librarian would recognise: a domain service."
+   },
+   {
+    "text": "run in handlers.py",
+    "correct": true,
+    "why": "Right. It loads, saves and publishes; every decision is the member's."
+   },
+   {
+    "text": "Member.borrow in member.py",
+    "correct": false,
+    "why": "That is a method of the aggregate root, not a service of either kind."
+   }
+  ]
+ },
+ {
+  "id": "ex-1z691mgv",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each piece of lending to the tactical pattern it is.",
+  "pairs": [
+   {
+    "left": "Money(175)",
+    "right": "value object"
+   },
+   {
+    "left": "Member with its loans",
+    "right": "aggregate"
+   },
+   {
+    "left": "SqliteMembers",
+    "right": "repository"
+   },
+   {
+    "left": "FineCharged",
+    "right": "domain event"
+   },
+   {
+    "left": "FinePolicy",
+    "right": "domain service"
+   }
+  ]
+ },
+ {
+  "id": "ex-bkzznrx7",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Acquisitions records \"2 copies of ISBN 978-65-5555-001-6 at BRL 49.90\". In lending, copy C-0107 is out to Bia. How should each be modelled?",
+  "choices": [
+   {
+    "text": "Both copies are entities everywhere, since a copy is a physical thing",
+    "correct": false,
+    "why": "Physical or not, acquisitions cares about a quantity, not which copy is which."
+   },
+   {
+    "text": "The desk's one is an entity; the order's 2 is only a value",
+    "correct": true,
+    "why": "Right. The same concept is either, depending on the context."
+   },
+   {
+    "text": "Both are values, because each has an ISBN that identifies it",
+    "correct": false,
+    "why": "Two copies share one ISBN; C-0107 and C-0108 are not interchangeable at the desk."
+   }
+  ]
+ },
+ {
+  "id": "ex-fmdv4dd4",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Lending a copy changes the Copy and the Member. Which design follows both of the section's rules about boundaries?",
+  "choices": [
+   {
+    "text": "Put each Copy inside the Member who holds it, so one transaction covers both",
+    "correct": false,
+    "why": "Then a copy has to be found inside whichever member holds it, and the aggregate grows without limit."
+   },
+   {
+    "text": "Give Copy a reference to the Member object, so it can call borrow directly",
+    "correct": false,
+    "why": "Holding the object is the second door; the rule is to refer by id."
+   },
+   {
+    "text": "Own transactions, joined by ids, repaired by events",
+    "correct": true,
+    "why": "Right. One aggregate per transaction, by id, and \"soon\" rather than \"instant\" between them."
+   },
+   {
+    "text": "Lock both tables for the whole lend, every time",
+    "correct": false,
+    "why": "That is the larger lock the section keeps for rules that must hold at every instant; lending is not one."
+   }
+  ]
+ }
+]

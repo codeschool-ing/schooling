@@ -1,0 +1,647 @@
+[
+  {
+    "id": "ex-6042q97h",
+    "version": 1,
+    "section": "entity-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a relational design, what pays for keeping every fact in exactly one place?",
+    "choices": [
+      {
+        "text": "Joins and a planner, at read time",
+        "correct": true,
+        "why": "Right. They answer questions nobody listed, so the schema never has to know them."
+      },
+      {
+        "text": "Cheaper disk, which makes duplicated data unnecessary",
+        "correct": false,
+        "why": "Cheap disk argues for duplication, if anything; it is not what makes normalisation work."
+      },
+      {
+        "text": "Foreign keys, which copy each fact to the tables that use it",
+        "correct": false,
+        "why": "A foreign key points at the fact; it copies nothing."
+      },
+      {
+        "text": "Transactions, which make every query fast",
+        "correct": false,
+        "why": "Transactions protect writes; they do not answer new questions."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rathwtd",
+    "version": 1,
+    "section": "entity-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the commonest first mistake when a team designs for a NoSQL store?",
+    "choices": [
+      {
+        "text": "Duplicating data before measuring whether reads need it",
+        "correct": false,
+        "why": "Duplication by design is lesson 4's tool; the mistake the section names is the opposite."
+      },
+      {
+        "text": "Copying the relational schema and joining in the application",
+        "correct": true,
+        "why": "Right. It keeps normalisation's cost and throws away the joins that paid for it."
+      },
+      {
+        "text": "Choosing a store with no schema at all",
+        "correct": false,
+        "why": "A schema exists anyway (lesson 6); the mistake is about how the data is split."
+      },
+      {
+        "text": "Listing every query before creating a single collection or table",
+        "correct": false,
+        "why": "That is the method the lesson recommends, not the mistake."
+      }
+    ]
+  },
+  {
+    "id": "ex-brtwt6gx",
+    "version": 1,
+    "section": "entity-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do the stores of this course give up joins, or make them expensive?",
+    "hint": "Where does their data live?",
+    "choices": [
+      {
+        "text": "Because their query languages were designed before joins were invented",
+        "correct": false,
+        "why": "Joins are older than all three products."
+      },
+      {
+        "text": "Because they keep no indexes that a join could use",
+        "correct": false,
+        "why": "MongoDB has a full index system, lesson 7; the obstacle is elsewhere."
+      },
+      {
+        "text": "Because a join across machines costs network trips per row",
+        "correct": true,
+        "why": "Right. A store built to answer from one partition cannot also promise to combine any two on demand."
+      },
+      {
+        "text": "Because a join would break eventual consistency",
+        "correct": false,
+        "why": "Consistency is lesson 5's subject; the cost here is distance between machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwax8z8h",
+    "version": 1,
+    "section": "list-the-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the shop's table of access patterns, which column decides the key the data is stored under?",
+    "choices": [
+      {
+        "text": "What the application already knows when it asks",
+        "correct": true,
+        "why": "Right. A product code, a customer, an order number: the value in hand is the key."
+      },
+      {
+        "text": "What it wants back",
+        "correct": false,
+        "why": "That decides the unit stored together, not how it is found."
+      },
+      {
+        "text": "The expected rate",
+        "correct": false,
+        "why": "The rate decides how much to pay for a question, not its key."
+      },
+      {
+        "text": "The order the rows come back in, newest first or not",
+        "correct": false,
+        "why": "Order is kept inside what the key finds; it does not choose the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kkpyfkx",
+    "version": 1,
+    "section": "list-the-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "\"My orders\" wants a customer's orders newest first, ten at a time. How can a store answer it without sorting at read time?",
+    "choices": [
+      {
+        "text": "By caching the sorted answer in the application",
+        "correct": false,
+        "why": "A cache still had to sort once, and goes stale with each order."
+      },
+      {
+        "text": "By storing the rows in that order",
+        "correct": true,
+        "why": "Right. Cassandra's clustering order is exactly this, in the next sections."
+      },
+      {
+        "text": "By sorting on the order number, which grows with time anyway",
+        "correct": false,
+        "why": "That is still a sort at read time, over all of a customer's orders."
+      },
+      {
+        "text": "By reading only the latest order and following links back",
+        "correct": false,
+        "why": "Ten reads chained one after another is the slow path, not the fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-6d1rdj0s",
+    "version": 1,
+    "section": "list-the-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\"Orders over 500 to review for fraud\" starts from nothing the application knows. In a store that answers by key, what are the options?",
+    "choices": [
+      {
+        "text": "A lookup by key, since every order has an id",
+        "correct": false,
+        "why": "The ids of the orders over 500 are exactly what nobody knows yet."
+      },
+      {
+        "text": "None: such a question has to move to a relational database first",
+        "correct": false,
+        "why": "A warehouse is one option, not the only one; a structure built in advance also works."
+      },
+      {
+        "text": "A scan, or a structure built in advance",
+        "correct": true,
+        "why": "Right. At a few times a day a scan may be acceptable; at thousands a minute it is not."
+      },
+      {
+        "text": "An index on the key, which makes any condition fast",
+        "correct": false,
+        "why": "An index on the key helps lookups by key, and the condition is on the total."
+      }
+    ]
+  },
+  {
+    "id": "ex-683bfw1a",
+    "version": 1,
+    "section": "list-the-queries",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the start of a design by access pattern in order.",
+    "items": [
+      "Write down every question the application will ask",
+      "For each, note what it already knows and what it wants back",
+      "Rank the questions by their expected rate",
+      "Choose the key and the unit that answer each one"
+    ],
+    "trap": "No collection or table exists until the last step."
+  },
+  {
+    "id": "ex-02swzywh",
+    "version": 1,
+    "section": "embed-or-reference",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these argue for embedding a piece of data inside its parent document? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It is read together with the parent",
+        "correct": true,
+        "why": "Right: one read hands back both."
+      },
+      {
+        "text": "Its size is bounded",
+        "correct": true,
+        "why": "Right: an order has a handful of lines, not an unbounded list."
+      },
+      {
+        "text": "It belongs to the parent and to nothing else",
+        "correct": true,
+        "why": "Right: an order line has no life outside its order."
+      },
+      {
+        "text": "Many parents share it, and it changes on its own",
+        "correct": false,
+        "why": "That is the customer, and it argues for a reference."
+      },
+      {
+        "text": "It keeps growing for as long as the parent exists",
+        "correct": false,
+        "why": "Unbounded growth meets the 16 MB limit, as the transcript did."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qd653x1",
+    "version": 1,
+    "section": "embed-or-reference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the order keep only the customer's e-mail, and read the rest from `customers`?",
+    "choices": [
+      {
+        "text": "Because MongoDB cannot nest one document inside another",
+        "correct": false,
+        "why": "The order lines are nested documents; nesting is not the obstacle."
+      },
+      {
+        "text": "Because she is shared by many orders and changes on her own",
+        "correct": true,
+        "why": "Right. Embedding it would mean one copy per order to keep in step, lesson 4's subject."
+      },
+      {
+        "text": "Because an e-mail address is the only field an index can use",
+        "correct": false,
+        "why": "Any field can be indexed (lesson 7)."
+      },
+      {
+        "text": "Because a document may hold only one level of fields",
+        "correct": false,
+        "why": "That is a Redis hash; a document can nest."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d86srhy",
+    "version": 1,
+    "section": "embed-or-reference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `$push` of a 9 MB string was refused with `BSONObj size ... is invalid`. What state is Ana's customer document in afterwards?",
+    "choices": [
+      {
+        "text": "It holds half of the second string, cut at the limit",
+        "correct": false,
+        "why": "An update applies whole or not at all; nothing is cut."
+      },
+      {
+        "text": "It is deleted, because it became invalid",
+        "correct": false,
+        "why": "The last `findOne` returned it, name and city intact."
+      },
+      {
+        "text": "It is moved to a second document that continues the first",
+        "correct": false,
+        "why": "MongoDB never splits a document; that design is the application's to choose."
+      },
+      {
+        "text": "Unchanged: the second push never happened",
+        "correct": true,
+        "why": "Right. The refusal is clean, and the next write that grows it will be refused too."
+      }
+    ]
+  },
+  {
+    "id": "ex-58a4a0sn",
+    "version": 1,
+    "section": "embed-or-reference",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A product document embeds every review, and a review takes about 2,048 bytes. About how many reviews fit before MongoDB's limit of 16 MiB (16,777,216 bytes)?",
+    "hint": "Divide, and ignore the product's own fields.",
+    "value": 8192,
+    "tolerance": 100,
+    "unit": "reviews"
+  },
+  {
+    "id": "ex-neypvesk",
+    "version": 1,
+    "section": "embed-or-reference",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A blog stores each post as a document. Most posts get a dozen comments, and a few popular ones get tens of thousands. Where should the comments go?",
+    "hint": "Is the list bounded?",
+    "choices": [
+      {
+        "text": "Embedded in the post, since they are read with it",
+        "correct": false,
+        "why": "Read together, yes, but not bounded: the popular posts are the ones that would hit the limit."
+      },
+      {
+        "text": "In a collection of their own, each one referencing its post",
+        "correct": true,
+        "why": "Right. An unbounded list is a reference, whatever the typical case looks like."
+      },
+      {
+        "text": "Embedded, with the post split into a new document each time it fills",
+        "correct": false,
+        "why": "Possible as a deliberate pattern, but it is the application's machinery, and the section's rule points elsewhere."
+      },
+      {
+        "text": "In Redis, because MongoDB cannot hold that many small documents",
+        "correct": false,
+        "why": "A collection holds millions of small documents without trouble."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnzwcwzq",
+    "version": 1,
+    "section": "one-query-one-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `PRIMARY KEY ((customer), ordered_at)` and `CLUSTERING ORDER BY (ordered_at DESC)`, what does `... WHERE customer = 'ana@example.com' LIMIT 2` return?",
+    "choices": [
+      {
+        "text": "Ana's two oldest orders",
+        "correct": false,
+        "why": "DESC stores the newest first, and LIMIT takes from the top."
+      },
+      {
+        "text": "Any two of Ana's orders, in no defined order",
+        "correct": false,
+        "why": "Inside a partition the order is defined by the clustering columns."
+      },
+      {
+        "text": "Ana's two newest orders",
+        "correct": true,
+        "why": "Right: October's monitor, then September's order 1001."
+      },
+      {
+        "text": "The two newest orders in the whole table",
+        "correct": false,
+        "why": "The `WHERE` names one partition; the rest of the table is not read."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5vzwzm2",
+    "version": 1,
+    "section": "one-query-one-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Cassandra refuse `ORDER BY ordered_at DESC` without a customer in the `WHERE`?",
+    "choices": [
+      {
+        "text": "Because order exists only inside a partition",
+        "correct": true,
+        "why": "Right. Sorting the whole table would mean reading all of it, which is what the refusal prevents."
+      },
+      {
+        "text": "Because DESC is not allowed on a timestamp column",
+        "correct": false,
+        "why": "The table was created with `ordered_at DESC`; the column is fine."
+      },
+      {
+        "text": "Because LIMIT and ORDER BY cannot appear in the same statement",
+        "correct": false,
+        "why": "They can, once the partition key is restricted, as the error says."
+      },
+      {
+        "text": "Because the table has only one node to read from",
+        "correct": false,
+        "why": "The same refusal happens on a hundred nodes."
+      }
+    ]
+  },
+  {
+    "id": "ex-6c1pv3nw",
+    "version": 1,
+    "section": "one-query-one-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order 1014 was inserted with the same customer and the same `ordered_at` as order 1013. What did Cassandra do?",
+    "hint": "Is there a row with that primary key already?",
+    "choices": [
+      {
+        "text": "Refused the insert with a duplicate-key error",
+        "correct": false,
+        "why": "There was no error: Cassandra has no such check on an ordinary insert."
+      },
+      {
+        "text": "Kept both rows, since the order ids differ",
+        "correct": false,
+        "why": "`order_id` was not part of the key, so the two rows had the same identity."
+      },
+      {
+        "text": "Overwrote order 1013 with 1014, silently",
+        "correct": true,
+        "why": "Right. An insert is an upsert; the fix is a key that makes each order unique."
+      },
+      {
+        "text": "Moved 1014 to the next millisecond to keep it unique",
+        "correct": false,
+        "why": "Cassandra never changes a value you wrote."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgw3wkv8",
+    "version": 1,
+    "section": "one-query-one-table",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Adding `order_id` after `ordered_at` in the primary key makes it a second ___ column, so two orders placed in the same instant are two rows.",
+    "hint": "It orders rows inside the partition.",
+    "blanks": [
+      {
+        "accept": [
+          "clustering"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zy301pyg",
+    "version": 1,
+    "section": "keys-as-queries",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `HGETALL cart:ana@example.com`, where is the \"query\"?",
+    "choices": [
+      {
+        "text": "In a secondary index on the customer field",
+        "correct": false,
+        "why": "There is no field and no index; the key is all there is."
+      },
+      {
+        "text": "In the key name, built from what the application knows",
+        "correct": true,
+        "why": "Right. The application builds the name from the session's customer and asks for exactly that key."
+      },
+      {
+        "text": "In the `cart:` prefix, which Redis uses to group keys into a table",
+        "correct": false,
+        "why": "To Redis the colon is an ordinary character; there are no tables."
+      },
+      {
+        "text": "In the hash's fields, which the server searches",
+        "correct": false,
+        "why": "`HGETALL` returns every field; nothing is searched."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6q9zmf2",
+    "version": 1,
+    "section": "keys-as-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, `KEYS cart:*` over a million keys took about 139 ms. Why is that a problem on a production Redis?",
+    "choices": [
+      {
+        "text": "Because it returns the keys in a random order",
+        "correct": false,
+        "why": "Order is not the issue; the time the server spends is."
+      },
+      {
+        "text": "Because Redis runs one command at a time, so every other client waits for it",
+        "correct": true,
+        "why": "Right. For those 139 ms no basket update and no session read is served."
+      },
+      {
+        "text": "Because it deletes the keys it matches",
+        "correct": false,
+        "why": "`KEYS` only lists them."
+      },
+      {
+        "text": "Because it misses keys added while it runs",
+        "correct": false,
+        "why": "Nothing is added while it runs, since nothing else runs at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pzvx9b8",
+    "version": 1,
+    "section": "keys-as-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SCAN 0 MATCH cart:* COUNT 1000` answered `512` and an empty list. What does that mean?",
+    "choices": [
+      {
+        "text": "That there is no basket in the database",
+        "correct": false,
+        "why": "`KEYS` and `--scan` both found one; this slice simply held none."
+      },
+      {
+        "text": "That 512 baskets matched and were left out of the reply",
+        "correct": false,
+        "why": "512 is a cursor, not a count."
+      },
+      {
+        "text": "This slice held no match; continue from 512",
+        "correct": true,
+        "why": "Right. It ends when the cursor comes back as 0."
+      },
+      {
+        "text": "That the pattern is wrong, since `MATCH` needs quotes",
+        "correct": false,
+        "why": "The same pattern found the basket through `--scan`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ack8e60f",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of the shop's questions to the structure this lesson built for it.",
+    "hint": "One structure answers none of them.",
+    "pairs": [
+      {
+        "left": "show an order",
+        "right": "one document, lines embedded"
+      },
+      {
+        "left": "my orders, newest first",
+        "right": "a partition per customer, clustered DESC"
+      },
+      {
+        "left": "show and change the basket",
+        "right": "a hash under cart: and the e-mail"
+      },
+      {
+        "left": "show the customer's name beside the order",
+        "right": "a second read, by reference"
+      }
+    ],
+    "right_distractors": [
+      "KEYS over every key"
+    ]
+  },
+  {
+    "id": "ex-r3d7r7yf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A year after launch, the warehouse asks for every order in status \"paid\" in Cassandra. What does the access-pattern approach say this costs?",
+    "choices": [
+      {
+        "text": "Nothing: `ALLOW FILTERING` on the existing table answers it",
+        "correct": false,
+        "why": "It answers by reading every partition on every node, on every request."
+      },
+      {
+        "text": "A secondary sort, added to `orders_by_customer` with an `ALTER TABLE`",
+        "correct": false,
+        "why": "The clustering order cannot be altered, and it would still be per customer."
+      },
+      {
+        "text": "A new table designed for that question, filled with every order written before it existed",
+        "correct": true,
+        "why": "Right. The new question is a new structure plus a backfill, and lesson 4 keeps the two in step."
+      },
+      {
+        "text": "A join between `orders_by_customer` and a table of statuses",
+        "correct": false,
+        "why": "Cassandra has no joins."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft37d2mq",
+    "version": 1,
+    "section": "keys-as-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop starts needing \"every open basket\" on each admin page view. What does the section recommend instead of `SCAN`?",
+    "choices": [
+      {
+        "text": "Running `KEYS cart:*`, since there are few baskets",
+        "correct": false,
+        "why": "`KEYS` walks every key, sessions included, however few baskets there are."
+      },
+      {
+        "text": "A set of basket keys, updated with each basket, so the question has a key of its own",
+        "correct": true,
+        "why": "Right. A question asked often gets a structure; a scan on every page view means a key is missing."
+      },
+      {
+        "text": "A `SCAN` with a larger `COUNT`, so it finishes in one call",
+        "correct": false,
+        "why": "A huge COUNT turns SCAN back into one long pause, which is KEYS again."
+      },
+      {
+        "text": "Moving the sessions to another Redis so the scan has less to read",
+        "correct": false,
+        "why": "Smaller, but still a scan on every page view."
+      }
+    ]
+  }
+]

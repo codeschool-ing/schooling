@@ -1,0 +1,394 @@
+{
+  "ex-sxzn102g": {
+    "prompt": "O que atravessa a conexão do servidor para o cliente quando um pipeline de agregação roda?",
+    "choices": [
+      {
+        "text": "Todo documento que o primeiro estágio lê",
+        "why": "Isso é o que um laço na aplicação move."
+      },
+      {
+        "text": "Só a saída do último estágio",
+        "why": "Isso. Todo estágio anterior trabalha no servidor."
+      },
+      {
+        "text": "A saída de cada estágio, para o cliente conferir",
+        "why": "Os estágios passam documentos entre si no servidor."
+      },
+      {
+        "text": "O código do pipeline e os documentos que casam",
+        "why": "O pipeline vai no outro sentido, do cliente ao servidor."
+      }
+    ]
+  },
+  "ex-9edj9a0v": {
+    "prompt": "A receita por mês em `America/Sao_Paulo` deu uma linha `2025-12` com 33 pedidos, embora todo pedido tenha sido gerado em 2026. Por quê?",
+    "choices": [
+      {
+        "text": "O gerador tem um bug no primeiro dia",
+        "why": "As datas estão todas em 2026 UTC; o mês depende do fuso pedido."
+      },
+      {
+        "text": "Somas de Decimal128 transbordam para o grupo anterior",
+        "why": "As somas são exatas; a linha é sobre datas."
+      },
+      {
+        "text": "O $sort pôs um pedido de dezembro primeiro por engano",
+        "why": "O $sort ordenou treze grupos corretamente; o ponto é a chave do grupo."
+      },
+      {
+        "text": "O começo de 2026 em UTC ainda era 2025 em São Paulo",
+        "why": "Isso. Uma data BSON é um instante; o fuso no $dateToString decide o mês do calendário."
+      }
+    ]
+  },
+  "ex-ccrzjrh0": {
+    "prompt": "Um estágio `$group` diz `revenue: { $sum: \"total\" }`, sem cifrão dentro da string. O que ele produz?",
+    "choices": [
+      {
+        "text": "Um zero, em silêncio",
+        "why": "Isso. O $sum ignora valores que não são números, então a string literal não soma nada."
+      },
+      {
+        "text": "Um erro citando o cifrão ausente",
+        "why": "Nenhum erro: uma string literal é um argumento válido; só não é número."
+      },
+      {
+        "text": "Os mesmos totais, já que o nome do campo é entendido",
+        "why": "Sem o cifrão é o texto \"total\", não o campo."
+      },
+      {
+        "text": "A contagem de documentos de cada grupo",
+        "why": "Contar é $sum: 1."
+      }
+    ]
+  },
+  "ex-nexdrqgr": {
+    "prompt": "Ponha os estágios do pipeline de receita por mês na ordem em que a aula os rodou.",
+    "items": [
+      "$match: não cancelados",
+      "$group: por mês",
+      "$sort: por mês",
+      "$project: renomeia _id"
+    ],
+    "trap": "Ordenar antes de agrupar ordenaria 98.958 documentos em vez de 13."
+  },
+  "ex-x9jeqbmh": {
+    "prompt": "Quantos documentos saíram do estágio `$group` do pipeline de receita por mês?",
+    "hint": "Conte os meses, o primeiro incluído.",
+    "unit": "documentos"
+  },
+  "ex-n1dd0wza": {
+    "prompt": "O que `$unwind: \"$items\"` faz com um pedido de três linhas?",
+    "choices": [
+      {
+        "text": "Fica com a primeira linha e descarta as outras",
+        "why": "Todo elemento vira um documento; nenhum é descartado."
+      },
+      {
+        "text": "Ordena as linhas dentro do array",
+        "why": "Ordenar um array é outro operador."
+      },
+      {
+        "text": "Faz três documentos, cada um com uma linha em items",
+        "why": "Isso. 100.000 pedidos viraram 200.652 linhas."
+      },
+      {
+        "text": "Junta linhas idênticas numa só",
+        "why": "As duas linhas idênticas do pedido 2 saíram como dois documentos."
+      }
+    ]
+  },
+  "ex-s78hp1z6": {
+    "prompt": "Por que o `$lookup` em `products` fica depois do `$group` no pipeline dos mais vendidos?",
+    "choices": [
+      {
+        "text": "O $lookup não consegue ler documentos feitos pelo $unwind",
+        "why": "Consegue; só rodaria uma vez por linha."
+      },
+      {
+        "text": "Para rodar quatro vezes em vez de cerca de duzentas mil",
+        "why": "Isso. Um join depois da redução trabalha uma vez por resultado."
+      },
+      {
+        "text": "Senão o $group perderia o nome do produto",
+        "why": "Dá para manter o nome através de um grupo; o motivo é custo."
+      },
+      {
+        "text": "Um lookup tem de ser o último estágio de um pipeline",
+        "why": "O $project veio depois dele."
+      }
+    ]
+  },
+  "ex-g1wvvzwt": {
+    "prompt": "Por que o `$lookup` põe as correspondências num array, de modo que o pipeline precisa de `$first` para tirar o nome?",
+    "choices": [
+      {
+        "text": "Porque products é uma coleção capped",
+        "why": "É uma coleção comum."
+      },
+      {
+        "text": "Porque o $project só lê arrays",
+        "why": "O $project lê qualquer campo."
+      },
+      {
+        "text": "Para manter os produtos ordenados por _id",
+        "why": "O propósito do array é o número de correspondências, não a ordem."
+      },
+      {
+        "text": "Para ele, um SKU casa com zero, um ou vários produtos",
+        "why": "Isso. Aqui exatamente um produto casa com cada SKU, mas o estágio não tem como saber."
+      }
+    ]
+  },
+  "ex-mveqk9r3": {
+    "prompt": "Complete o estágio que transforma cada elemento das linhas de um pedido num documento próprio: `{ $___: \"$items\" }`.",
+    "blanks": [
+      {
+        "accept": [
+          "unwind"
+        ]
+      }
+    ]
+  },
+  "ex-hf6h6ehw": {
+    "prompt": "Uma página de produto roda um `$lookup` de `orders` para `reviews` a cada requisição para mostrar três avaliações recentes. O que a aula sugere?",
+    "choices": [
+      {
+        "text": "Rever o modelo, embutindo o que essa página lê",
+        "why": "Isso. Aulas 3 e 4: modelar para a consulta que a página faz."
+      },
+      {
+        "text": "Nada; o $lookup é o jeito normal de ler dados relacionados",
+        "why": "Ele é a exceção para relatórios; um join a cada requisição é cheiro de modelagem."
+      },
+      {
+        "text": "Acrescentar allowDiskUse para o join não falhar",
+        "why": "Três avaliações nunca chegam perto de um limite de memória."
+      },
+      {
+        "text": "Mover o lookup para antes do $match",
+        "why": "Isso o faz rodar sobre mais documentos, não menos."
+      }
+    ]
+  },
+  "ex-y2nf6c2f": {
+    "prompt": "Na coleção inteira, quantos documentos `$unwind: \"$items\"` produziu a partir dos 100.000 pedidos?",
+    "hint": "O $count depois do $unwind.",
+    "unit": "documentos"
+  },
+  "ex-g584zk54": {
+    "prompt": "O laço mandou 24.564.648 bytes e o pipeline 111.198. De onde vem a maior parte dos bytes do pipeline?",
+    "hint": "Olhe a contagem simples.",
+    "choices": [
+      {
+        "text": "O único documento de resultado",
+        "why": "Um documento pequeno tem no máximo algumas centenas de bytes."
+      },
+      {
+        "text": "Os pedidos que o $match deixou passar",
+        "why": "Eles nunca saíram do servidor; só a saída do grupo saiu."
+      },
+      {
+        "text": "As respostas do serverStatus",
+        "why": "Isso. A contagem sozinha moveu 111.172 bytes."
+      },
+      {
+        "text": "Entradas de índice enviadas para o cliente conferir",
+        "why": "Nenhuma entrada de índice é enviada a um cliente."
+      }
+    ]
+  },
+  "ex-enmtrcx2": {
+    "prompt": "A receita do laço foi `206042969.6000362` e a do pipeline `206042969.60`. O que deixou a do laço errada?",
+    "choices": [
+      {
+        "text": "Ele leu alguns pedidos duas vezes",
+        "why": "Os dois contaram 98.958 pedidos."
+      },
+      {
+        "text": "parseFloat fez de cada total um double",
+        "why": "Isso. O pipeline somou valores Decimal128, que são exatos."
+      },
+      {
+        "text": "O pipeline arredondou a resposta para duas casas",
+        "why": "O Decimal128 manteve os centavos exatos; nada foi arredondado."
+      },
+      {
+        "text": "O mongosh trunca números longos ao imprimi-los",
+        "why": "Ele imprimiu o valor inteiro do double; esse valor está errado."
+      }
+    ]
+  },
+  "ex-hh8gweg2": {
+    "prompt": "Um processo noturno precisa gravar todo pedido do dia num arquivo para o sistema contábil. Pipeline ou laço?",
+    "choices": [
+      {
+        "text": "Um pipeline, que é mais rápido para qualquer trabalho",
+        "why": "Ele é mais rápido quando o resultado é pequeno; aqui todo documento é o resultado."
+      },
+      {
+        "text": "Um $group num documento só com todos os pedidos",
+        "why": "Um documento é limitado a 16 MB, e os dados atravessam do mesmo jeito."
+      },
+      {
+        "text": "Nenhum; o arquivo precisa ser gravado pelo mongodump",
+        "why": "O mongodump grava BSON para restauração, não um arquivo para outro sistema."
+      },
+      {
+        "text": "Um laço sobre um find daquele dia",
+        "why": "Isso. A vantagem do pipeline é mandar menos, e aqui nada pode ficar para trás."
+      }
+    ]
+  },
+  "ex-vv144shn": {
+    "prompt": "Quantos documentos o laço buscou para calcular o total?",
+    "unit": "documentos"
+  },
+  "ex-aenph8pt": {
+    "prompt": "O laço levou 6.989 ms no laboratório. O que você deve esperar na sua máquina?",
+    "choices": [
+      {
+        "text": "Outro tempo, e a mesma grande diferença",
+        "why": "Isso. Os tempos variam de uma execução para outra; o tamanho da diferença é o que se mantém."
+      },
+      {
+        "text": "Exatamente 6.989 ms, já que os dados são os mesmos",
+        "why": "Os dados são os mesmos; a máquina e o momento não."
+      },
+      {
+        "text": "O pipeline sendo mais lento numa máquina mais rápida",
+        "why": "Uma máquina mais rápida acelera os dois; o laço ainda move 24,5 MB."
+      },
+      {
+        "text": "O mesmo tempo dividido pelo seu número de processadores",
+        "why": "O laço roda numa thread do mongosh."
+      }
+    ]
+  },
+  "ex-j60qgad6": {
+    "prompt": "Qual destes pipelines leu a coleção inteira, com um índice em `{ status: 1, ordered_at: -1 }`?",
+    "choices": [
+      {
+        "text": "$match em status, depois $group por cliente",
+        "why": "Um $match primeiro virou um IXSCAN."
+      },
+      {
+        "text": "$group por status, depois $match em _id",
+        "why": "O servidor moveu esse match para antes do grupo e usou o índice."
+      },
+      {
+        "text": "$group por cliente, depois $match na lista",
+        "why": "Isso. O match depende do que o grupo calculou, então não pode se mover."
+      },
+      {
+        "text": "$match em status e ordered_at, depois $sort por ordered_at",
+        "why": "Igualdade e depois ordenação é para o que esse índice serve."
+      }
+    ]
+  },
+  "ex-534bzgwg": {
+    "prompt": "Desde o MongoDB 6.0, o que acontece por padrão quando um estágio de ordenação passa dos 100 MB?",
+    "choices": [
+      {
+        "text": "O pipeline falha com erro de memória",
+        "why": "Isso só acontece com allowDiskUse: false."
+      },
+      {
+        "text": "Ele grava trechos ordenados em disco e os intercala",
+        "why": "Isso: usedDisk: true e uma contagem de spills no explain."
+      },
+      {
+        "text": "O servidor sobe o limite para essa consulta",
+        "why": "O limite fica; o estágio transborda para o disco."
+      },
+      {
+        "text": "Ele fica com os primeiros 100 MB e descarta o resto",
+        "why": "Descartar entrada daria uma resposta errada; nada é descartado."
+      }
+    ]
+  },
+  "ex-r97ph9d4": {
+    "prompt": "Associe cada resultado de explain ou erro à execução que o produziu, ordenando 29 MB de pedidos.",
+    "hint": "Uma descrição não pertence a nenhuma delas.",
+    "pairs": [
+      {
+        "left": "usedDisk: false, spills: 0",
+        "right": "limite em 100 MB"
+      },
+      {
+        "left": "Sort exceeded memory limit",
+        "right": "limite em 10 MB e allowDiskUse: false"
+      },
+      {
+        "left": "usedDisk: true, spills: 4",
+        "right": "limite em 10 MB e o padrão"
+      }
+    ],
+    "right_distractors": [
+      "um índice em total"
+    ]
+  },
+  "ex-zjfampav": {
+    "prompt": "Um explain mostra `usedDisk: true` num `$group`. Quais mudanças reduzem a memória de que ele precisa? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Um $match antes dele que mande menos documentos",
+        "why": "Sim: menos entrada, menos a guardar."
+      },
+      {
+        "text": "Um $project cedo que descarte campos que nenhum estágio seguinte lê",
+        "why": "Sim: a memória contada é o que cada documento ainda carrega."
+      },
+      {
+        "text": "Passar allowDiskUse: false",
+        "why": "Isso transforma o transbordo numa falha; a memória necessária é a mesma."
+      },
+      {
+        "text": "Subir o limite de memória do servidor para todos",
+        "why": "O estágio precisa do mesmo tanto; o servidor só guarda mais de uma vez."
+      }
+    ]
+  },
+  "ex-vrmxa59t": {
+    "prompt": "Um relatório agrupa os pedidos pagos por cliente e fica com os clientes de dez ou mais. Onde deve ficar o filtro em `status`, e por quê?",
+    "choices": [
+      {
+        "text": "Depois do $group, para todo pedido ser contado antes",
+        "why": "Contar pedidos não pagos daria a contagem errada, e o grupo leria tudo."
+      },
+      {
+        "text": "No cliente, depois de os resultados chegarem",
+        "why": "Filtrar no cliente faz todo grupo atravessar antes."
+      },
+      {
+        "text": "Num $lookup para uma coleção de status",
+        "why": "status é um campo do pedido; nenhum join é necessário."
+      },
+      {
+        "text": "Num $match antes do $group",
+        "why": "Isso: ali ele usa um índice em status. O match de 'dez ou mais' vai depois, já que é sobre o que o grupo calculou."
+      }
+    ]
+  },
+  "ex-9we36yy7": {
+    "prompt": "Para qual pergunta um pipeline é ferramenta melhor que um laço na aplicação?",
+    "choices": [
+      {
+        "text": "Os dez clientes com maior receita no ano",
+        "why": "Isso: entrada grande, dez documentos de saída."
+      },
+      {
+        "text": "Reenviar o e-mail de confirmação de cada pedido",
+        "why": "Todo pedido precisa chegar ao programa para ser enviado."
+      },
+      {
+        "text": "Copiar todo pedido para outro sistema",
+        "why": "Todo documento atravessa de qualquer jeito."
+      },
+      {
+        "text": "Mostrar a página de um pedido ao seu cliente",
+        "why": "Isso é um findOne, sem nada a reduzir."
+      }
+    ]
+  }
+}

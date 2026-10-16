@@ -1,0 +1,615 @@
+[
+  {
+    "id": "ex-j2fp3taz",
+    "version": 1,
+    "section": "collscan-ixscan",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without an index on `customer`, how many documents did the server read to return Ana's 82 orders?",
+    "choices": [
+      {
+        "text": "All 100,000",
+        "correct": true,
+        "why": "Right: COLLSCAN, totalDocsExamined 100000."
+      },
+      {
+        "text": "82, because it stops when it has them",
+        "correct": false,
+        "why": "It cannot know it has them all until it has looked at every document."
+      },
+      {
+        "text": "About half, on average, since the orders are in random order",
+        "correct": false,
+        "why": "That would be true for finding one document; finding all of them needs every one read."
+      },
+      {
+        "text": "None: the _id index is used for every query",
+        "correct": false,
+        "why": "The _id index only helps queries on _id."
+      }
+    ]
+  },
+  {
+    "id": "ex-f74aa0j8",
+    "version": 1,
+    "section": "collscan-ixscan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two runs of the same explain give `ms: 21` and `ms: 34`, and the same `keys` and `docs`. Which numbers should you compare when judging an index?",
+    "choices": [
+      {
+        "text": "The milliseconds, because they are what the user feels",
+        "correct": false,
+        "why": "They vary from run to run and depend on what else the machine is doing."
+      },
+      {
+        "text": "The number of stages: fewer stages means a faster plan",
+        "correct": false,
+        "why": "COLLSCAN alone is one stage and the slowest plan in the lesson."
+      },
+      {
+        "text": "keys and docs against returned",
+        "correct": true,
+        "why": "Right. The counts are the same on every run and show the work the plan does."
+      },
+      {
+        "text": "The average of several runs' milliseconds, taken on the laptop",
+        "correct": false,
+        "why": "An average of an idle laptop's timings still hides how the work grows with the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9h0s33e",
+    "version": 1,
+    "section": "collscan-ixscan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the plan `FETCH <- IXSCAN` say happened?",
+    "choices": [
+      {
+        "text": "The server read the whole collection and then the index",
+        "correct": false,
+        "why": "Reading the whole collection is COLLSCAN; it does not appear."
+      },
+      {
+        "text": "The index answered alone, with no document read",
+        "correct": false,
+        "why": "That is a covered plan, PROJECTION_COVERED <- IXSCAN, with docs 0."
+      },
+      {
+        "text": "Documents were fetched over the network from another server",
+        "correct": false,
+        "why": "FETCH reads documents from this server's storage."
+      },
+      {
+        "text": "Index entries found, then their documents opened",
+        "correct": true,
+        "why": "Right. The list reads from the outside in: IXSCAN fed FETCH."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bw2jrge",
+    "version": 1,
+    "section": "collscan-ixscan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson's generator use a hand-written random function instead of `Math.random()`?",
+    "choices": [
+      {
+        "text": "`Math.random()` is not available in mongosh",
+        "correct": false,
+        "why": "It is; the problem is that it gives a different sequence every run."
+      },
+      {
+        "text": "So every run, on any machine, makes the same orders",
+        "correct": true,
+        "why": "Right. Same seed, same sequence: your 82 and 4,044 match the lesson's."
+      },
+      {
+        "text": "A seeded generator is faster for 100,000 documents",
+        "correct": false,
+        "why": "Speed is not the reason; reproducibility is."
+      },
+      {
+        "text": "`Math.random()` would produce duplicate _id values",
+        "correct": false,
+        "why": "The _id is the loop counter, not a random number."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4pedw8v",
+    "version": 1,
+    "section": "collscan-ixscan",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the index on `customer`, how many index entries (`keys`) did the query for Ana's orders read?",
+    "value": 82,
+    "tolerance": 0,
+    "unit": "entries"
+  },
+  {
+    "id": "ex-vtadvn3e",
+    "version": 1,
+    "section": "compound-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With only `{ status: 1 }`, the newest twenty pending orders came from `SORT <- FETCH <- IXSCAN` reading 4,044 documents. Why so many for twenty?",
+    "choices": [
+      {
+        "text": "They are not in date order in it, so all get sorted",
+        "correct": true,
+        "why": "Right. A blocking SORT reads its whole input before returning the first result."
+      },
+      {
+        "text": "limit(20) is applied before the index is read",
+        "correct": false,
+        "why": "A limit can only stop a scan whose output is already in the right order."
+      },
+      {
+        "text": "Pending orders are spread over every month",
+        "correct": false,
+        "why": "They are, but the index found exactly the 4,044 pending ones; the problem is their order."
+      },
+      {
+        "text": "The status index is multikey",
+        "correct": false,
+        "why": "status is a plain string, not an array."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3zttap1",
+    "version": 1,
+    "section": "compound-order",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For pending orders in March, `{ ordered_at: -1, status: 1 }` read 8,574 keys and `{ status: 1, ordered_at: -1 }` read 339. What explains the difference?",
+    "choices": [
+      {
+        "text": "The first index is bigger on disk, so each entry costs more to read",
+        "correct": false,
+        "why": "It is bigger, but size is not what made the scan read more entries."
+      },
+      {
+        "text": "hint disables the planner's optimisations",
+        "correct": false,
+        "why": "Both queries were hinted; the difference is in the indexes."
+      },
+      {
+        "text": "The leading field decides which entries sit together",
+        "correct": true,
+        "why": "Right. The scan reads the contiguous stretch the leading field allows, then filters."
+      },
+      {
+        "text": "Descending dates are slower to scan than ascending ones",
+        "correct": false,
+        "why": "Both indexes have ordered_at descending."
+      }
+    ]
+  },
+  {
+    "id": "ex-r59gemq7",
+    "version": 1,
+    "section": "compound-order",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By the equality, sort, range rule, order the fields of an index for `find({ customer: c, total: { $gte: 1000 } }).sort({ ordered_at: -1 })`.",
+    "items": [
+      "customer",
+      "ordered_at",
+      "total"
+    ],
+    "trap": "total before ordered_at would bring back a SORT stage."
+  },
+  {
+    "id": "ex-yz5r1v5b",
+    "version": 1,
+    "section": "compound-order",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `{ status: 1, ordered_at: -1, total: 1 }` the query for big pending orders read 73 keys to return 20, some of them unwanted. Why is that the better plan than the one reading exactly the 1,139 matching entries?",
+    "choices": [
+      {
+        "text": "Because a range field placed last is never read",
+        "correct": false,
+        "why": "It is read in every key; it filters without disturbing the order."
+      },
+      {
+        "text": "Because a SORT stage cannot run on decimals",
+        "correct": false,
+        "why": "The SORT was on ordered_at, and it ran in the other plan."
+      },
+      {
+        "text": "It is not; reading only matching keys always wins",
+        "correct": false,
+        "why": "The other plan read 1,139 keys and then sorted them all."
+      },
+      {
+        "text": "The scan stops at twenty, with no sort",
+        "correct": true,
+        "why": "Right. Reading every match and sorting them costs more than skipping a few unwanted keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2akaayq",
+    "version": 1,
+    "section": "compound-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Once `{ status: 1, ordered_at: -1 }` exists, what is `{ status: 1 }` worth?",
+    "choices": [
+      {
+        "text": "It is still needed for queries on status alone",
+        "correct": false,
+        "why": "A prefix of a compound index serves those queries."
+      },
+      {
+        "text": "Little: the compound's prefix does its job, and this one only costs",
+        "correct": true,
+        "why": "Right. It is the redundant index $indexStats would show unused."
+      },
+      {
+        "text": "It makes the compound index faster",
+        "correct": false,
+        "why": "Indexes do not help each other; each is a separate structure."
+      },
+      {
+        "text": "It is required for the compound index to be built",
+        "correct": false,
+        "why": "A compound index needs no single-field index beside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4drq7kw",
+    "version": 1,
+    "section": "compound-order",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The order of fields in a compound index follows equality, then ___, then range.",
+    "blanks": [
+      {
+        "accept": [
+          "sort"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jk7m8drd",
+    "version": 1,
+    "section": "covered-and-multikey",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `{ customer: 1, ordered_at: -1, total: 1 }`, why did `find({ customer: \"ana@example.com\" }, { ordered_at: 1, total: 1 })` read 82 documents?",
+    "hint": "What comes back unless it is excluded?",
+    "choices": [
+      {
+        "text": "`_id` came back, and it is not indexed there",
+        "correct": true,
+        "why": "Right. One field outside the index and every document has to be opened."
+      },
+      {
+        "text": "Because the sort was on a descending field",
+        "correct": false,
+        "why": "The covered version sorted the same way and read no documents."
+      },
+      {
+        "text": "Because decimals cannot be returned from an index",
+        "correct": false,
+        "why": "The covered query returned total from the index."
+      },
+      {
+        "text": "Because projections always need the document",
+        "correct": false,
+        "why": "The first query had a projection and docs: 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-enxcs4qf",
+    "version": 1,
+    "section": "covered-and-multikey",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every other index on `orders` had 100,000 entries. How many did `items.sku_1` have?",
+    "hint": "keysPerIndex, from validate().",
+    "value": 169164,
+    "tolerance": 0,
+    "unit": "entries"
+  },
+  {
+    "id": "ex-787r2mh0",
+    "version": 1,
+    "section": "covered-and-multikey",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An index `{ tags: 1, sizes: 1 }` exists on a collection whose documents have `tags` as an array and `sizes` as a number. A new document arrives with both as arrays. What happens?",
+    "choices": [
+      {
+        "text": "It is stored, and the index gets one entry per pair of elements",
+        "correct": false,
+        "why": "That growth is exactly what the server refuses to do."
+      },
+      {
+        "text": "It is stored, and left out of the index",
+        "correct": false,
+        "why": "A document missing from an index would vanish from queries that use it; the server refuses instead."
+      },
+      {
+        "text": "The insert is refused",
+        "correct": true,
+        "why": "Right. A compound index can have at most one array field per document, checked on every write."
+      },
+      {
+        "text": "The index is dropped automatically",
+        "correct": false,
+        "why": "Indexes are never dropped by a write."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3pnh6s9",
+    "version": 1,
+    "section": "covered-and-multikey",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The index on `items.sku` found 42,139 orders containing the monitor. Why is it worth little for that query?",
+    "choices": [
+      {
+        "text": "Multikey indexes are slower than a collection scan",
+        "correct": false,
+        "why": "They are not slower in general; this value is simply not selective."
+      },
+      {
+        "text": "SKUs inside arrays are not indexed until a restart",
+        "correct": false,
+        "why": "The index served the query at once."
+      },
+      {
+        "text": "The query needed a covered plan",
+        "correct": false,
+        "why": "A multikey index cannot cover a query on the array field anyway."
+      },
+      {
+        "text": "It matches nearly half the orders, so most get read anyway",
+        "correct": true,
+        "why": "Right. Indexes pay off when a value picks out a small slice, like 82 of 100,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7701jck",
+    "version": 1,
+    "section": "index-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same 100,000 documents took 1,294 ms to insert with one index and 3,080 ms with nine. What does that measure?",
+    "choices": [
+      {
+        "text": "That inserts are slow in MongoDB generally",
+        "correct": false,
+        "why": "The first run is the baseline; the difference is the indexes."
+      },
+      {
+        "text": "Eight more structures to update per document",
+        "correct": true,
+        "why": "Right. Each document became nine index entries instead of one."
+      },
+      {
+        "text": "The time mongosh spent building the array of documents",
+        "correct": false,
+        "why": "The array was built before the timer started."
+      },
+      {
+        "text": "A network delay between mongosh and the server",
+        "correct": false,
+        "why": "Both runs crossed the same connection with the same documents."
+      }
+    ]
+  },
+  {
+    "id": "ex-7b6apjv9",
+    "version": 1,
+    "section": "index-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query for paid orders was run with `hint(\"pending_by_date\")`, a partial index on pending orders. It returned 0; without the hint, 20. What does that show?",
+    "choices": [
+      {
+        "text": "Forcing it gave a short answer and no error",
+        "correct": true,
+        "why": "Right. The index only holds pending orders, so a scan of it cannot find paid ones."
+      },
+      {
+        "text": "The hint was ignored and the query hit an error",
+        "correct": false,
+        "why": "No error was raised; the hint was obeyed."
+      },
+      {
+        "text": "There were no paid orders in the collection",
+        "correct": false,
+        "why": "The query without the hint returned 20 of them."
+      },
+      {
+        "text": "Partial indexes return results in a random order",
+        "correct": false,
+        "why": "The order is the index's; the problem is what it contains."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6w6ayhx",
+    "version": 1,
+    "section": "index-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does an application still check a session's date when the sessions collection has a TTL index of 300 seconds?",
+    "choices": [
+      {
+        "text": "The TTL index only deletes on restart",
+        "correct": false,
+        "why": "The capture saw a deletion within seventy seconds, with no restart."
+      },
+      {
+        "text": "TTL indexes work on strings, not dates",
+        "correct": false,
+        "why": "They work on date fields."
+      },
+      {
+        "text": "Removal runs once a minute, so expired ones linger",
+        "correct": true,
+        "why": "Right. The TTL index keeps the collection small; the code enforces the limit."
+      },
+      {
+        "text": "The index deletes sessions as soon as they are created",
+        "correct": false,
+        "why": "s-new stayed; only the session past its limit went."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg33rm2p",
+    "version": 1,
+    "section": "index-cost",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each index option to what it does.",
+    "hint": "One behaviour belongs to none of them.",
+    "pairs": [
+      {
+        "left": "unique: true",
+        "right": "refuses a second document with the same key"
+      },
+      {
+        "left": "partialFilterExpression",
+        "right": "indexes only the documents matching a filter"
+      },
+      {
+        "left": "expireAfterSeconds",
+        "right": "deletes documents whose date is older than the limit"
+      }
+    ],
+    "right_distractors": [
+      "compresses the documents the index points at"
+    ]
+  },
+  {
+    "id": "ex-69213ed6",
+    "version": 1,
+    "section": "index-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`createIndex({ customer: 1, status: 1 }, { unique: true })` failed on `orders`. What has to happen before it can succeed?",
+    "choices": [
+      {
+        "text": "Nothing: retry it with background: true",
+        "correct": false,
+        "why": "How the index is built does not change what it would forbid."
+      },
+      {
+        "text": "The non-unique index on customer has to be dropped first",
+        "correct": false,
+        "why": "Other indexes do not block it; the data does."
+      },
+      {
+        "text": "The collection needs a validator first",
+        "correct": false,
+        "why": "A validator checks types; uniqueness is the index's job."
+      },
+      {
+        "text": "The existing duplicates have to be resolved",
+        "correct": true,
+        "why": "Right. The build named the first one it hit; a unique rule cannot exist over data that breaks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gn292rqy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A screen lists one customer's orders by `status`, newest first, twenty at a time: `find({ customer: c, status: s }).sort({ ordered_at: -1 }).limit(20)`. Which single index serves it with no SORT stage?",
+    "choices": [
+      {
+        "text": "`{ ordered_at: -1, customer: 1, status: 1 }`",
+        "correct": false,
+        "why": "Sort first scatters the customer's orders over the whole index, as in the March example."
+      },
+      {
+        "text": "`{ customer: 1, status: 1, ordered_at: -1 }`",
+        "correct": true,
+        "why": "Right: the two equality fields, in either order, then the sort field."
+      },
+      {
+        "text": "`{ customer: 1, ordered_at: -1 }` plus `{ status: 1 }`",
+        "correct": false,
+        "why": "A query uses one index here; status would be filtered by fetching documents."
+      },
+      {
+        "text": "`{ customer: 1, ordered_at: -1, status: 1 }`",
+        "correct": false,
+        "why": "It avoids the SORT but reads every status of the customer; equality fields belong before the sort."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce2kxyx7",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons to drop an index? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "$indexStats shows no operations after a week of real traffic",
+        "correct": true,
+        "why": "Yes: it costs writes and memory and serves nothing."
+      },
+      {
+        "text": "Another index starts with the same fields in the same order",
+        "correct": true,
+        "why": "Yes: the prefix of the longer one answers the same queries."
+      },
+      {
+        "text": "It is larger than the collection's _id index",
+        "correct": false,
+        "why": "Size alone says nothing; the three-field indexes were the largest and the most useful."
+      },
+      {
+        "text": "It is unique, and the application already checks for duplicates",
+        "correct": false,
+        "why": "Two concurrent checks both see no duplicate; only the index makes the rule hold."
+      }
+    ]
+  }
+]

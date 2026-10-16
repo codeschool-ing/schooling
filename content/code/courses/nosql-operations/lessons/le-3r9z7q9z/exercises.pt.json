@@ -1,0 +1,381 @@
+{
+  "ex-5nc5n0e1": {
+    "prompt": "Logo depois de dois INSERTs, o `ls` do diretório da tabela no `c1` não imprimiu nada. Onde estavam as linhas?",
+    "choices": [
+      {
+        "text": "Em lugar nenhum ainda: um INSERT é aplicado na próxima compactação",
+        "why": "As linhas eram legíveis na hora; a compactação junta arquivos que já existem."
+      },
+      {
+        "text": "Só no c2 e no c3, já que o c1 era o coordenador",
+        "why": "Com três cópias, o c1 também é réplica."
+      },
+      {
+        "text": "Na memtable e no commit log",
+        "why": "Isso. O nodetool flush as gravou como nb-1."
+      },
+      {
+        "text": "Numa SSTable escondida que o ls não lista",
+        "why": "SSTables são arquivos comuns; o diretório estava vazio até o flush."
+      }
+    ]
+  },
+  "ex-4yrt0qck": {
+    "prompt": "Um `UPDATE` mudou o `CB-012` da Ana de 2 para 3 depois que o `nb-1` foi gravado. O que aconteceu com o `nb-1`?",
+    "choices": [
+      {
+        "text": "Foi reescrito no lugar com o valor 3",
+        "why": "SSTables nunca mudam depois de gravadas."
+      },
+      {
+        "text": "Nada; foi para uma SSTable mais nova",
+        "why": "Isso: quantidade 2 no nb-1, quantidade 3 no nb-3, até a compactação juntá-las."
+      },
+      {
+        "text": "Foi apagado e substituído pelo nb-3",
+        "why": "O nb-1 ficou até a compactação; eram três SSTables."
+      },
+      {
+        "text": "Foi marcado como somente leitura e posto de lado",
+        "why": "Toda SSTable é somente leitura; nada foi movido."
+      }
+    ]
+  },
+  "ex-n47nf5x2": {
+    "prompt": "Antes do `nodetool compact`, quantas SSTables o `tablestats` relatou para `shop.baskets` no `c1`?"
+  },
+  "ex-teb21xwk": {
+    "prompt": "Como descobrir que estratégia de compactação uma tabela usa de verdade no seu cluster?",
+    "choices": [
+      {
+        "text": "Supor UCS, já que o Cassandra 5.0 a introduziu",
+        "why": "A tabela do laboratório ganhou STCS no 5.0.9; a UCS é padrão só no cassandra_latest.yaml."
+      },
+      {
+        "text": "Olhar a linha default_compaction do cassandra_latest.yaml",
+        "why": "Esse arquivo são as configurações recomendadas, não necessariamente as usadas."
+      },
+      {
+        "text": "Contar as SSTables no diretório de dados",
+        "why": "A contagem depende do momento e da carga, não só da estratégia."
+      },
+      {
+        "text": "Ler a linha compaction do DESCRIBE TABLE",
+        "why": "Isso. Disse SizeTieredCompactionStrategy."
+      }
+    ]
+  },
+  "ex-7ayw92wa": {
+    "prompt": "Associe cada estratégia de compactação à tabela a que serve.",
+    "pairs": [
+      {
+        "left": "TimeWindowCompactionStrategy",
+        "right": "séries temporais gravadas uma vez e expiradas por TTL"
+      },
+      {
+        "left": "LeveledCompactionStrategy",
+        "right": "tabelas com muita leitura cujas linhas mudam com frequência"
+      },
+      {
+        "left": "SizeTieredCompactionStrategy",
+        "right": "tabelas com muita escrita, e o padrão do cassandra.yaml"
+      }
+    ],
+    "right_distractors": [
+      "tabelas sem chave primária"
+    ]
+  },
+  "ex-abmv54bf": {
+    "prompt": "O que o `sstabledump` mostrou no `nb-5`, a SSTable gravada depois do `DELETE`?",
+    "choices": [
+      {
+        "text": "A linha do teclado com quantidade 1 e uma marca de apagada",
+        "why": "A linha velha ficou no nb-4; o nb-5 não tem célula nenhuma."
+      },
+      {
+        "text": "Uma linha sem células e com um timestamp em deletion_info",
+        "why": "Isso: essa é a lápide, inteira."
+      },
+      {
+        "text": "Um arquivo vazio, já que um delete remove dados",
+        "why": "Um delete acrescenta um marcador; não remove nada."
+      },
+      {
+        "text": "A partição inteira da Ana, reescrita sem o teclado",
+        "why": "Nada é reescrito até a compactação."
+      }
+    ]
+  },
+  "ex-ydf1dafc": {
+    "prompt": "A consulta à fila devolveu uma linha, mas o rastreio relatou `Read 1 live rows and 1499 tombstone cells`. Qual é o diagnóstico da aula?",
+    "choices": [
+      {
+        "text": "Os deletes se acumulam, e cada leitura passa por cima deles",
+        "why": "Isso. Cada consulta paga por todo item tratado até a compactação poder descartar as lápides."
+      },
+      {
+        "text": "Os deletes falharam e as linhas continuam vivas",
+        "why": "Elas contam como lápides, não como linhas vivas."
+      },
+      {
+        "text": "O rastreio conta cada linha duas vezes, então o número real é metade",
+        "why": "1499 linhas foram apagadas, e 1499 lápides foram lidas."
+      },
+      {
+        "text": "A tabela precisa de um índice SAI em id",
+        "why": "Um índice não remove as lápides pelas quais a leitura da partição passa."
+      }
+    ]
+  },
+  "ex-78x5eqgh": {
+    "prompt": "Acima de quantas lápides numa leitura um nó do Cassandra 5.0.9 aborta a consulta com erro, por padrão?"
+  },
+  "ex-0n1jqsbr": {
+    "prompt": "Um consumidor esvazia uma partição de fila apagando cada item que trata. Que mudança a aula sugere?",
+    "choices": [
+      {
+        "text": "Apagar mais rápido, para as lápides serem compactadas antes",
+        "why": "As lápides ficam pelo menos gc_grace_seconds, por mais rápido que sejam gravadas."
+      },
+      {
+        "text": "Subir o tombstone_warn_threshold, para os avisos pararem de aparecer no log",
+        "why": "Isso esconde o custo sem removê-lo."
+      },
+      {
+        "text": "Pôr um balde de tempo na chave, ou guardar até onde o consumidor foi",
+        "why": "Isso. Dos dois jeitos as leituras param de passar por itens tratados."
+      },
+      {
+        "text": "Rodar nodetool compact a cada hora na tabela da fila",
+        "why": "A compactação mantém lápides mais novas que gc_grace_seconds."
+      }
+    ]
+  },
+  "ex-5eyfw8zr": {
+    "prompt": "Como uma SSTable nunca muda, um DELETE grava um marcador chamado ___.",
+    "blanks": [
+      {
+        "accept": [
+          "tombstone",
+          "lápide",
+          "lapide"
+        ]
+      }
+    ]
+  },
+  "ex-84mt8hn4": {
+    "prompt": "O que `gc_grace_seconds = 864000` significa para uma tabela?",
+    "choices": [
+      {
+        "text": "Lápides ficam dez dias, no mínimo, até a compactação descartá-las",
+        "why": "Isso: 864000 segundos são dez dias de carência."
+      },
+      {
+        "text": "As linhas gravadas na tabela expiram dez dias depois de gravadas",
+        "why": "Isso seria um TTL; gc_grace_seconds trata de lápides."
+      },
+      {
+        "text": "O repair roda sozinho em todos os nós do cluster a cada dez dias",
+        "why": "Nada roda repair por você; a configuração é o prazo que você precisa cumprir."
+      },
+      {
+        "text": "Uma linha apagada pode ser desfeita pelo operador por dez dias depois",
+        "why": "Não há desfazer; a lápide vence a linha mais velha."
+      }
+    ]
+  },
+  "ex-7w1gfhnd": {
+    "prompt": "Uma equipe baixa o `gc_grace_seconds` de dez dias para dois para reduzir lápides. Os repairs dela terminam uma vez por semana. O que ela fez?",
+    "choices": [
+      {
+        "text": "Deixou toda escrita mais lenta, porque as lápides são conferidas mais vezes",
+        "why": "A configuração não muda nada nas escritas."
+      },
+      {
+        "text": "Nada de ruim, porque o hinted handoff leva todo delete",
+        "why": "Hints são esforço possível e expiram depois de max_hint_window."
+      },
+      {
+        "text": "Tornou o repair desnecessário, já que as lápides somem antes",
+        "why": "O repair é o que leva a lápide antes que ela suma."
+      },
+      {
+        "text": "Deixou linhas apagadas voltarem, já que a lápide agora vai embora antes de o repair alcançá-la",
+        "why": "Isso. O prazo do repair encolheu para dois dias e os repairs não."
+      }
+    ]
+  },
+  "ex-cm9vgg82": {
+    "prompt": "Ponha em ordem a vida de uma lápide, num nó que viu o delete.",
+    "items": [
+      "O DELETE grava a lápide na memtable",
+      "Um flush a grava numa SSTable nova",
+      "As compactações a copiam adiante enquanto é mais nova que gc_grace_seconds",
+      "Uma compactação depois de gc_grace_seconds a descarta com os dados que ela encobria"
+    ]
+  },
+  "ex-2w7xnc0p": {
+    "prompt": "Quais destes podem levar um delete perdido a uma réplica que estava fora? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Hinted handoff, se o nó ficou fora menos que max_hint_window",
+        "why": "Isso, por esforço possível."
+      },
+      {
+        "text": "Read repair, se uma leitura comparar aquela réplica com outra",
+        "why": "Isso, só para linhas que são lidas."
+      },
+      {
+        "text": "nodetool repair",
+        "why": "Isso, e o único que visita toda partição."
+      },
+      {
+        "text": "A compactação no nó que viu o delete",
+        "why": "A compactação é local; não manda nada a outros nós."
+      },
+      {
+        "text": "Um gc_grace_seconds maior, sozinho",
+        "why": "Mantém a lápide mais tempo, mas algo ainda precisa levá-la."
+      }
+    ]
+  },
+  "ex-cqc4yfej": {
+    "prompt": "Um nó ficou fora por três semanas, com o `gc_grace_seconds` padrão. O que a aula diz para fazer com ele?",
+    "choices": [
+      {
+        "text": "Apagá-lo e deixá-lo entrar de novo como nó novo",
+        "why": "Isso. Os dados dele podem guardar deletes que todos os outros esqueceram."
+      },
+      {
+        "text": "Ligá-lo e ler tudo em ALL primeiro",
+        "why": "Uma leitura em ALL faz read repair das mesmas linhas velhas nos outros."
+      },
+      {
+        "text": "Ligá-lo e rodar repair na hora",
+        "why": "O repair espalharia linhas dele cujas lápides os outros já expurgaram."
+      },
+      {
+        "text": "Subir o gc_grace_seconds antes de ligá-lo",
+        "why": "As lápides já se foram; subir agora não traz nada de volta."
+      }
+    ]
+  },
+  "ex-m38etf95": {
+    "prompt": "Quais duas configurações o laboratório encurtou para a ressurreição acontecer em minutos?",
+    "choices": [
+      {
+        "text": "Os limites de lápide, e o tempo máximo do repair",
+        "why": "Nenhum dos dois foi mexido."
+      },
+      {
+        "text": "O fator de replicação para 1, e a consistência para ONE",
+        "why": "O keyspace manteve três cópias e o delete rodou em QUORUM."
+      },
+      {
+        "text": "A estratégia de compactação para UCS, e o heap para 256 MB",
+        "why": "A tabela usou STCS, e o heap é o do laboratório desde a aula 1."
+      },
+      {
+        "text": "Um gc_grace_seconds de 60 segundos, e hints desligados",
+        "why": "Isso. O segundo faz o papel de um nó fora por mais que max_hint_window."
+      }
+    ]
+  },
+  "ex-eeqjzd4b": {
+    "prompt": "Depois do expurgo, uma leitura em `ONE` a partir do `c1` mostrou um item. Então o `nodetool repair` rodou e o item apagado voltou. Por que o repair o copiou?",
+    "choices": [
+      {
+        "text": "O repair prefere o nó que ficou fora mais recentemente",
+        "why": "O repair não tem essa preferência; reconcilia por timestamp."
+      },
+      {
+        "text": "O repair ignora deletes por projeto",
+        "why": "O repair copia lápides como qualquer dado, enquanto existem."
+      },
+      {
+        "text": "O c3 tinha a linha, e não sobrou lápide dizendo que fora apagada",
+        "why": "Isso. Sem a lápide a linha velha é simplesmente a coisa mais nova que alguém tem."
+      },
+      {
+        "text": "O DELETE tinha falhado no c1 e no c2",
+        "why": "Deu certo em QUORUM, e os despejos mostraram o efeito."
+      }
+    ]
+  },
+  "ex-zvxfpdh3": {
+    "prompt": "Ponha os passos da ressurreição na ordem em que o laboratório os rodou.",
+    "items": [
+      "Gravar os dois itens em ALL e desligar os hints",
+      "Parar o c3 e apagar o monitor em QUORUM",
+      "Esperar passar o gc_grace_seconds",
+      "Fazer flush e compact no c1 e no c2",
+      "Ligar o c3 e rodar repair"
+    ]
+  },
+  "ex-0252gr3s": {
+    "prompt": "O que o `sstabledump` no `c1` mostrou depois da espera, do flush e da compactação?",
+    "choices": [
+      {
+        "text": "Só o teclado",
+        "why": "Isso. Não sobrou nem o monitor nem a lápide dele."
+      },
+      {
+        "text": "O teclado e a lápide do monitor",
+        "why": "A lápide era mais velha que gc_grace_seconds e foi descartada."
+      },
+      {
+        "text": "Os dois itens, já que a compactação nunca descarta dados",
+        "why": "Ela descarta dados encobertos junto com uma lápide expurgável."
+      },
+      {
+        "text": "Nada",
+        "why": "O teclado nunca foi apagado."
+      }
+    ]
+  },
+  "ex-214wachq": {
+    "prompt": "O repair falha em silêncio toda noite há duas semanas num cluster com configurações padrão, e ninguém apagou nada fora do comum. O que está em risco?",
+    "choices": [
+      {
+        "text": "Nada, já que nenhum nó ficou fora",
+        "why": "Uma escrita perdida não precisa de queda: uma mutação descartada sob carga também deixa uma réplica para trás."
+      },
+      {
+        "text": "Só desempenho, já que a compactação atrasa nos nós mais ocupados",
+        "why": "A compactação roda independente do repair."
+      },
+      {
+        "text": "O tombstone_failure_threshold vai ser atingido",
+        "why": "Isso depende de deletes por partição, não do repair."
+      },
+      {
+        "text": "Um delete perdido voltando, já que duas semanas passam da carência",
+        "why": "Isso. Duas semanas passam de dez dias; a garantia se foi."
+      }
+    ]
+  },
+  "ex-p4b8gh3j": {
+    "prompt": "Associe cada comando desta aula ao que ele mostrou.",
+    "pairs": [
+      {
+        "left": "nodetool flush",
+        "right": "a memtable gravada como uma SSTable nova"
+      },
+      {
+        "left": "nodetool compact",
+        "right": "várias SSTables juntadas numa"
+      },
+      {
+        "left": "sstabledump",
+        "right": "as linhas e lápides de uma SSTable em JSON"
+      },
+      {
+        "left": "nodetool disablehandoff",
+        "right": "nenhum hint guardado para um nó fora"
+      }
+    ],
+    "right_distractors": [
+      "as réplicas de uma chave de partição"
+    ]
+  }
+}

@@ -1,0 +1,421 @@
+{
+  "ex-1fm7bz9w": {
+    "prompt": "Durante a carga, o `mongostat` imprimiu `SLV` na coluna `repl` em todas as linhas, enquanto o `rs.status()` listava o `mongo1` como `PRIMARY`. Em qual resposta você se baseia?",
+    "hint": "Qual das duas é o relato do próprio replica set sobre si?",
+    "choices": [
+      {
+        "text": "`rs.status()`, a resposta do próprio replica set",
+        "why": "Isso. Uma ferramenta de monitoramento é software com defeitos próprios; esta versão informa o papel errado diante de um servidor 8.0."
+      },
+      {
+        "text": "O `mongostat`, porque amostra a cada segundo e o `rs.status()` é uma foto",
+        "why": "Amostrar mais vezes não torna certa uma coluna errada."
+      },
+      {
+        "text": "Nenhuma: o membro está trocando de papel o tempo todo",
+        "why": "O `rs.status()` disse `PRIMARY` antes e depois das cinco linhas; não houve eleição."
+      },
+      {
+        "text": "O `mongostat`, já que o `rs.status()` se atrasa nas eleições",
+        "why": "Não houve eleição para se atrasar, e o status do próprio replica set é a autoridade sobre papéis."
+      }
+    ]
+  },
+  "ex-r1p81fy7": {
+    "prompt": "O cache do WiredTiger mostra 82% usado e 3% sujo, e fica assim. O que isso diz do servidor?",
+    "hint": "Lembre onde começa a expulsão em segundo plano e onde as threads da aplicação são convocadas.",
+    "choices": [
+      {
+        "text": "O cache está prestes a falhar e precisa de mais memória hoje",
+        "why": "82% passou do alvo de segundo plano e está longe dos 95% em que as consultas começam a expulsar elas mesmas."
+      },
+      {
+        "text": "Nada alarmante: a expulsão está trabalhando",
+        "why": "Isso. 80% usado e 5% sujo são onde o WiredTiger começa a expulsar em segundo plano; é um cache fazendo seu trabalho."
+      },
+      {
+        "text": "As escritas estão travadas, porque o dado sujo está acima do gatilho",
+        "why": "O gatilho do sujo é 20%; 3% está abaixo até do alvo de 5% em segundo plano."
+      },
+      {
+        "text": "Os dados não cabem mais e toda leitura vai ao disco",
+        "why": "Um cache cheio guarda as páginas quentes; nada aqui diz que toda leitura erra o cache."
+      }
+    ]
+  },
+  "ex-620s5vsh": {
+    "prompt": "O `rs.printSecondaryReplicationInfo()` mostrou o `mongo3` com `syncedTo` 07:41:26 enquanto o `mongo2` estava em 07:41:44, em dia com o primário. Quantos segundos atrás do primário estava o `mongo3`?",
+    "unit": "segundos"
+  },
+  "ex-a96q8g9s": {
+    "prompt": "Enquanto o `mongo3` estava travado com `db.fsyncLock()`, as escritas da carga continuaram dando certo com o write concern padrão. Por que nada do que a aplicação via revelou o atraso?",
+    "choices": [
+      {
+        "text": "O write concern padrão exige a maioria, e `mongo1` e `mongo2` eram uma",
+        "why": "Isso. Dois de três confirmaram toda escrita, então o terceiro podia ficar para trás em silêncio."
+      },
+      {
+        "text": "O `fsyncLock` só bloqueia leituras num secundário, não a replicação",
+        "why": "A trava impediu o `mongo3` de aplicar escritas, e por isso ele ficou 18 segundos atrás."
+      },
+      {
+        "text": "O primário guarda as escritas de um membro travado num buffer e as repete depois, sem aparecer",
+        "why": "O secundário puxa do oplog quando consegue; o primário não segura nada para ele."
+      },
+      {
+        "text": "O write concern padrão é `w: 1`, então nenhum secundário importa",
+        "why": "O padrão num replica set é a maioria, como dizia a tabela da aula 1."
+      }
+    ]
+  },
+  "ex-ppfg7a02": {
+    "prompt": "Uma consulta aparece no `db.currentOp()` com `planSummary: 'COLLSCAN'` e `secs_running` subindo. Qual é a coisa mais útil que esse campo diz?",
+    "choices": [
+      {
+        "text": "A consulta segura uma trava que bloqueia todas as outras operações",
+        "why": "Uma varredura de coleção cede a vez a outras operações; nada na saída mostrou algo bloqueado."
+      },
+      {
+        "text": "Nenhum índice atende o filtro",
+        "why": "Isso. COLLSCAN é a varredura de todos os documentos, o que os índices da aula 7 existem para evitar."
+      },
+      {
+        "text": "A consulta já foi escrita no log de consultas lentas",
+        "why": "Uma operação é registrada quando termina; a encerrada só apareceu lá depois do `killOp`."
+      },
+      {
+        "text": "A consulta veio de um secundário",
+        "why": "O resumo do plano trata de como a consulta lê, não de onde ela veio."
+      }
+    ]
+  },
+  "ex-wxb0xz5k": {
+    "prompt": "Sob `allkeys-lru`, o `INFO` mostrou `keyspace_hits:122951` e `keyspace_misses:93717` enquanto 100.000 chaves aleatórias eram lidas e cerca de 59.400 cabiam. O que diz a taxa de acerto de 56,7%?",
+    "hint": "Compare com a fatia do espaço de chaves que cabe.",
+    "choices": [
+      {
+        "text": "O Redis está quebrado: um cache funcionando acerta acima de 90%",
+        "why": "Com leituras aleatórias, nenhum cache faz melhor que a fatia de chaves que guarda."
+      },
+      {
+        "text": "A réplica está atendendo metade das leituras",
+        "why": "O benchmark leu só do primário; a réplica não atendeu nada."
+      },
+      {
+        "text": "É mais ou menos o que leituras aleatórias devem dar",
+        "why": "Isso. Cerca de 59% das chaves cabem, e a taxa fica perto disso."
+      },
+      {
+        "text": "Metade das expulsões falhou",
+        "why": "Expulsões não falham sob `allkeys-lru`; 212.690 deram certo."
+      }
+    ]
+  },
+  "ex-s4gfckx5": {
+    "prompt": "Uma réplica do Redis mostra `state=online` e `lag=1`, mas a diferença entre `master_repl_offset` e o `offset` dela cresceu 30 MB em dez minutos. O que está acontecendo?",
+    "hint": "O `lag` conta outra coisa que não bytes.",
+    "choices": [
+      {
+        "text": "Nada: `lag=1` prova que a réplica está em dia",
+        "why": "`lag` é segundos desde a última confirmação; uma réplica que confirma devagar o mantém pequeno."
+      },
+      {
+        "text": "A réplica confirma devagar demais para acompanhar",
+        "why": "Isso. A diferença em bytes é o que um failover perderia, e é ela que merece alerta."
+      },
+      {
+        "text": "Os offsets contam coisas diferentes e não são comparáveis",
+        "why": "Os dois contam bytes do mesmo fluxo de replicação; depois do unpause eram iguais."
+      },
+      {
+        "text": "O primário parou de aceitar escritas",
+        "why": "Um offset crescendo é o primário produzindo escritas; quem fica para trás é a réplica."
+      }
+    ]
+  },
+  "ex-g7knzne4": {
+    "prompt": "Com a réplica pausada, o `master_repl_offset` era 205882318 e o `offset` da réplica era 154056900. Quantos bytes de escritas existiam só no primário?",
+    "unit": "bytes"
+  },
+  "ex-mvccgefr": {
+    "prompt": "O `SLOWLOG GET 1` listou `KEYS order:*` com o terceiro campo 4517, e o comando não encontrou chave nenhuma. Por que foi lento?",
+    "choices": [
+      {
+        "text": "Levou 4517 segundos porque a réplica estava pausada",
+        "why": "O campo é em microssegundos, e leituras não esperam réplica."
+      },
+      {
+        "text": "Precisou olhar cada chave para descobrir que nenhuma batia",
+        "why": "Isso. 4.517 µs para umas sessenta mil chaves; com milhões leva segundos, e o Redis não responde a ninguém enquanto isso."
+      },
+      {
+        "text": "O padrão foi compilado numa expressão regular antes",
+        "why": "Compilar um padrão curto é trivial; percorrer o espaço de chaves é o custo."
+      },
+      {
+        "text": "Expulsões rodaram durante o comando e o seguraram",
+        "why": "O benchmark tinha terminado; nada estava sendo gravado."
+      }
+    ]
+  },
+  "ex-es5ed654": {
+    "prompt": "Clientes recusados porque `maxclients` foi atingido são contados no campo do `INFO` ___.",
+    "hint": "Foi de 0 para 1 depois do `PING` recusado.",
+    "blanks": [
+      {
+        "accept": [
+          "rejected_connections"
+        ]
+      }
+    ]
+  },
+  "ex-kmvzdyex": {
+    "prompt": "O `tablestats` mostrou `Average tombstones per slice` de 10,1 e `Maximum tombstones per slice` de 2299 para a tabela da cesta. Qual dos dois diz que a tabela tem um problema?",
+    "choices": [
+      {
+        "text": "A média, porque é calculada sobre todas as leituras dos últimos cinco minutos",
+        "why": "Cobrir todas as leituras é o que dilui uma partição ruim em 10,1."
+      },
+      {
+        "text": "O máximo",
+        "why": "Isso. A cesta da Ana devolveu 10 linhas depois de ler 1.990 tombstones; a média esconde isso."
+      },
+      {
+        "text": "Nenhum, até a compactação remover os tombstones",
+        "why": "A compactação mantém os tombstones até passar o gc_grace_seconds (aula 18); as leituras pagam agora."
+      },
+      {
+        "text": "Os dois igualmente, já que 2299 é uma contagem exata",
+        "why": "2299 é o limite de uma faixa do histograma; a leitura contou 1.990."
+      }
+    ]
+  },
+  "ex-0tt09512": {
+    "prompt": "Por que o `tablestats` disse 2299 tombstones se o aviso do `cqlsh` disse que a leitura encontrou 1990?",
+    "choices": [
+      {
+        "text": "Alguns deletes foram contados duas vezes",
+        "why": "Foram enviados 1.990 deletes e lidos 1.990 tombstones."
+      },
+      {
+        "text": "As estatísticas são guardadas em faixas fixas, e 2299 é o topo da que contém 1990",
+        "why": "Isso. A mesma divisão em faixas dá 1131752 e 51012 em outros pontos da saída."
+      },
+      {
+        "text": "O flush acrescentou 309 tombstones próprios",
+        "why": "Um flush grava o que está na memória; não cria exclusões."
+      },
+      {
+        "text": "O aviso arredonda para baixo até o limite",
+        "why": "O aviso imprime a contagem que a leitura encontrou; o limite é 1.000."
+      }
+    ]
+  },
+  "ex-pzw4abyx": {
+    "prompt": "O `tpstats` de um nó de um cluster mostra um ritmo constante de `MUTATION_REQ` descartados, enquanto clientes gravando em `QUORUM` não relatam erros. O que decorre disso?",
+    "choices": [
+      {
+        "text": "Os descartes são inofensivos porque os clientes ouviram que as escritas deram certo",
+        "why": "Sucesso em QUORUM diz que outras réplicas têm a escrita, não esta."
+      },
+      {
+        "text": "Este nó está sem escritas que os outros têm, até o repair devolvê-las",
+        "why": "Isso. Cada mutation descartada é uma cópia que não existe aqui; o repair da aula 19 é o que a restaura."
+      },
+      {
+        "text": "Os clientes estão enganados: uma escrita descartada é informada como erro",
+        "why": "Uma réplica descartando sua cópia não faz falhar uma escrita que o quórum já satisfez."
+      },
+      {
+        "text": "O nó está fora e suas escritas ficam guardadas como hints",
+        "why": "Um nó que informa `tpstats` está no ar; está sobrecarregado, descartando trabalho que recebeu."
+      }
+    ]
+  },
+  "ex-dskypgsd": {
+    "prompt": "Associe cada comando do `nodetool` à pergunta que ele responde.",
+    "pairs": [
+      {
+        "left": "`status`",
+        "right": "todo nó está no ar e normal, e como os dados se espalham?"
+      },
+      {
+        "left": "`proxyhistograms`",
+        "right": "quanto tempo os pedidos inteiros levam no coordenador?"
+      },
+      {
+        "left": "`tpstats`",
+        "right": "há trabalho enfileirado, bloqueado ou descartado dentro do nó?"
+      },
+      {
+        "left": "`compactionstats`",
+        "right": "há junções de SSTables esperando para rodar?"
+      }
+    ],
+    "right_distractors": [
+      "quais consultas têm os planos mais lentos?"
+    ]
+  },
+  "ex-mr3pj1r5": {
+    "prompt": "As leituras tiveram mediana de 258 µs e p99 de 4768 µs no `proxyhistograms`. Por que o p99 é o número a observar?",
+    "choices": [
+      {
+        "text": "É o que um pedido em cada cem espera, e uma página faz muitos pedidos",
+        "why": "Isso. A mediana descreve a maioria dos pedidos; a cauda é onde os usuários sentem um nó doente."
+      },
+      {
+        "text": "A mediana não é medida num único nó",
+        "why": "A saída mostra mediana para todas as colunas."
+      },
+      {
+        "text": "O p99 exclui a carga em massa, então é mais limpo",
+        "why": "Nada é excluído; a carga em massa é o motivo do p99 de escrita de 105.778 µs."
+      },
+      {
+        "text": "A mediana zera a cada cinco minutos e o p99 nunca",
+        "why": "Os dois vêm dos mesmos histogramas, mantidos desde que o nó subiu."
+      }
+    ]
+  },
+  "ex-b48nq1kf": {
+    "prompt": "Qual destes deve acionar alguém às três da manhã?",
+    "hint": "Pergunte se há dados prestes a se perder ou trabalho sendo recusado.",
+    "choices": [
+      {
+        "text": "Um cache Redis em 97% do `maxmemory` sob `allkeys-lru`",
+        "why": "Isso é um cache com limite fazendo seu trabalho."
+      },
+      {
+        "text": "Um secundário do MongoDB 18 segundos atrás numa tarde tranquila",
+        "why": "Ele se recupera sozinho; o lugar dele é um painel."
+      },
+      {
+        "text": "Um nó do Cassandra `DN` por mais que `max_hint_window`",
+        "why": "Isso. Passada a janela, os outros param de guardar hints, e só um repair que uma pessoa roda restaura as escritas perdidas."
+      },
+      {
+        "text": "O `opcounters.insert` do MongoDB passando de um milhão",
+        "why": "Um contador desde a subida só cresce; o valor dele sozinho não significa nada."
+      }
+    ]
+  },
+  "ex-t8zp5404": {
+    "prompt": "A mesma métrica do Redis, `evicted_keys` subindo, é número de painel num servidor e alerta em outro. O que decide qual?",
+    "choices": [
+      {
+        "text": "O tamanho do `maxmemory`",
+        "why": "Um limite pequeno ou grande é atingido do mesmo jeito; o que importa é o que uma expulsão apaga."
+      },
+      {
+        "text": "Se há uma réplica ligada",
+        "why": "As expulsões chegam à réplica como deletes; isso não muda o significado delas."
+      },
+      {
+        "text": "Se o Redis é um cache na frente de um banco ou a única casa daquele dado",
+        "why": "Isso. Num cache uma expulsão é um erro de cache depois; onde o Redis é o banco, é dado apagado de propósito."
+      },
+      {
+        "text": "A hora do dia em que as expulsões acontecem",
+        "why": "O horário muda quem está acordado, não se houve perda de dados."
+      }
+    ]
+  },
+  "ex-8evbp8k0": {
+    "prompt": "Atraso de replicação é causa, não sintoma que os usuários sentem. Por que a aula ainda deixa que ele acione alguém?",
+    "choices": [
+      {
+        "text": "O sintoma dele, dados perdidos num failover, é irreversível",
+        "why": "Isso. Bancos dobram a regra do sintoma exatamente onde esperar o sintoma significa perder dados."
+      },
+      {
+        "text": "Porque toda causa merece acionar alguém num banco",
+        "why": "A maioria das causas vai para painéis; só as que levam a perda ou recusa acionam alguém."
+      },
+      {
+        "text": "Porque usuários percebem leituras velhas em segundos",
+        "why": "Com leituras no primário, os usuários não veem atraso nenhum; é por isso que ele é invisível."
+      },
+      {
+        "text": "Porque os exporters não publicam mais nada sobre replica sets",
+        "why": "O `mongodb_exporter` lê `serverStatus` e `replSetGetStatus`, muito mais que o atraso."
+      }
+    ]
+  },
+  "ex-w81rbnjm": {
+    "prompt": "Associe cada produto ao exporter mais usado para publicar suas métricas no Prometheus.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "`mongodb_exporter`"
+      },
+      {
+        "left": "Redis",
+        "right": "`redis_exporter`"
+      },
+      {
+        "left": "Cassandra",
+        "right": "o JMX exporter, como agente Java"
+      }
+    ],
+    "right_distractors": [
+      "`node_exporter`"
+    ]
+  },
+  "ex-r9fmpcpw": {
+    "prompt": "Um servidor Redis roda com `noeviction` e guarda as sessões da loja. O `used_memory` chega ao `maxmemory`. O que os clientes veem?",
+    "choices": [
+      {
+        "text": "Sessões antigas somem para abrir espaço",
+        "why": "Isso é o que uma política de expulsão faz; `noeviction` não apaga nada."
+      },
+      {
+        "text": "Escritas recusadas com `OOM`",
+        "why": "Isso. Este é o alerta do Redis que aciona alguém: trabalho está sendo recusado."
+      },
+      {
+        "text": "Nada visível, porque o Redis grava em disco o que não cabe na memória",
+        "why": "A persistência copia a memória para o disco; não aumenta a memória (aula 13)."
+      },
+      {
+        "text": "O Redis reinicia e recarrega seu snapshot",
+        "why": "Atingir o limite não é uma queda; o Redis fica no ar e recusa escritas."
+      }
+    ]
+  },
+  "ex-a5kvbz6g": {
+    "prompt": "Ponha em ordem o experimento de atraso de replicação desta aula.",
+    "items": [
+      "Travar o `mongo3` com `db.fsyncLock()`",
+      "Rodar a carga de novo no primário",
+      "Ler o atraso com `rs.printSecondaryReplicationInfo()`",
+      "Destravar o `mongo3` com `db.fsyncUnlock()`",
+      "Ler o atraso de novo e vê-lo em zero"
+    ],
+    "trap": "O atraso só se acumula enquanto chegam escritas e o membro não consegue aplicá-las."
+  },
+  "ex-b9vdmprw": {
+    "prompt": "Quais destas leituras da aula descrevem um servidor se comportando como projetado, e não um problema? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Redis em 97% do `maxmemory`, expulsando, sob `allkeys-lru`",
+        "why": "Isso: um cache com limite no limite."
+      },
+      {
+        "text": "A cesta da Ana lida através de 1.990 tombstones para devolver 10 linhas",
+        "why": "Esse é o padrão de fila contra o qual a aula 18 alerta: um problema de modelagem."
+      },
+      {
+        "text": "O `tpstats` com todas as contagens de pending, blocked e dropped em zero",
+        "why": "Isso: um nó dando conta do trabalho."
+      },
+      {
+        "text": "Uma consulta achada pelo `currentOp` como `COLLSCAN` que rodaria por 100 minutos",
+        "why": "Uma varredura da coleção inteira que ninguém quis é a operação lenta que a seção encerra."
+      },
+      {
+        "text": "O cache do WiredTiger em 68,7% usado e 4,2% sujo",
+        "why": "Isso: abaixo dos dois alvos de segundo plano."
+      }
+    ]
+  }
+}
