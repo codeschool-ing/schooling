@@ -81,6 +81,13 @@ type Handler struct {
 	   parameter, so it moves on a console screen while this process runs. */
 	examQuestions func(ctx context.Context) int
 
+	/* trackExamQuestions is the same sentence on a track's card, and it is a
+	   number of its own because the paper is: A-14 draws thirty for a track's
+	   final and twenty for a course. One field for both would have the track
+	   card promising the course's length — the defect `examQuestions` was
+	   introduced to end, moved one card along. */
+	trackExamQuestions func(ctx context.Context) int
+
 	// instalments is the most parts a card sale may be split into.
 	//
 	// HANDED IN FOR passMark's REASON EXACTLY: `billing` owns it and a module may
@@ -150,11 +157,12 @@ type Plan struct {
 	Currency   string
 }
 
-func NewHandler(passMark, examQuestions, instalments, pixDiscount func(ctx context.Context) int,
-	offer Offer) *Handler {
+func NewHandler(passMark, examQuestions, trackExamQuestions, instalments,
+	pixDiscount func(ctx context.Context) int, offer Offer) *Handler {
 
 	return &Handler{
-		passMark: passMark, examQuestions: examQuestions, instalments: instalments,
+		passMark: passMark, examQuestions: examQuestions,
+		trackExamQuestions: trackExamQuestions, instalments: instalments,
 		pixDiscount: pixDiscount, offer: offer,
 	}
 }
@@ -210,10 +218,20 @@ theDraw is how many questions a course card says its paper will hold.
 	which is why it is `omitempty`.
 */
 func (h *Handler) theDraw(ctx context.Context) int {
-	if h.examQuestions == nil {
+	return drawOf(ctx, h.examQuestions)
+}
+
+// theTrackDraw is theDraw for a track's card, with theDraw's answer to an
+// unwired reader.
+func (h *Handler) theTrackDraw(ctx context.Context) int {
+	return drawOf(ctx, h.trackExamQuestions)
+}
+
+func drawOf(ctx context.Context, read func(ctx context.Context) int) int {
+	if read == nil {
 		return 0
 	}
-	if n := h.examQuestions(ctx); n > 0 {
+	if n := read(ctx); n > 0 {
 		return n
 	}
 	return 0
@@ -292,6 +310,10 @@ type schoolBody struct {
 	// say nothing and so must carry a safe one. See theDraw.
 	ExamQuestions int `json:"examQuestions,omitempty"`
 
+	// How many questions a track's final draws, which is its own number
+	// (A-14). `omitempty` for ExamQuestions' reason.
+	TrackExamQuestions int `json:"trackExamQuestions,omitempty"`
+
 	// The most parts a card sale may be split into. NOT `omitempty` for
 	// `passMark`'s reason: zero is not a policy anybody set, and a screen
 	// reading a missing key as "no limit" would draw a picker the server
@@ -346,10 +368,11 @@ func (h *Handler) school(w http.ResponseWriter, r *http.Request) {
 
 	web.JSON(w, http.StatusOK, schoolBody{
 		Slug: school.Slug, Name: school.Name, Accent: school.Accent, Site: school.Site,
-		Plans:         plans,
-		PassMark:      h.theMark(r.Context()),
-		ExamQuestions: h.theDraw(r.Context()),
-		Instalments:   h.mostInstalments(r.Context()),
-		PixDiscount:   h.pixOff(r.Context()),
+		Plans:              plans,
+		PassMark:           h.theMark(r.Context()),
+		ExamQuestions:      h.theDraw(r.Context()),
+		TrackExamQuestions: h.theTrackDraw(r.Context()),
+		Instalments:        h.mostInstalments(r.Context()),
+		PixDiscount:        h.pixOff(r.Context()),
 	})
 }
