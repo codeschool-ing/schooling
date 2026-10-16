@@ -500,6 +500,47 @@ def l04_joins(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 6
+
+@figure('l06-catalyst', 6)
+def l06_catalyst(lang):
+    t = {'en': dict(
+            label='The planner in five steps. A DataFrame program or a SQL query is parsed into a '
+                  'parsed logical plan, analysed against the schema into an analysed plan, '
+                  'rewritten by rules into an optimised plan, and given implementations as a '
+                  'physical plan. While the job runs, adaptive execution looks at each finished '
+                  'shuffle and replans what comes after it.',
+            src='DataFrame or SQL', steps=['parsed', 'analysed', 'optimised', 'physical'],
+            subs=['names as text', 'names checked', 'rules rewrite', 'joins, shuffles'],
+            aqe='while it runs: replan after each shuffle', what='what', how='how',
+            cap='Three plans say what; the fourth says how, and adaptive execution keeps '
+                'revising it as the stages finish.'),
+         'pt': dict(
+            label='O planejador em cinco passos. Um programa DataFrame ou uma consulta SQL é '
+                  'interpretado num plano lógico, analisado contra o esquema num plano analisado, '
+                  'reescrito por regras num plano otimizado e recebe implementações como plano '
+                  'físico. Enquanto o job roda, a execução adaptativa olha cada shuffle terminado e '
+                  'replaneja o que vem depois.',
+            src='DataFrame ou SQL', steps=['interpretado', 'analisado', 'otimizado', 'físico'],
+            subs=['nomes como texto', 'nomes conferidos', 'regras reescrevem', 'joins, shuffles'],
+            aqe='durante a execução: replaneja após cada shuffle', what='o quê', how='como',
+            cap='Três planos dizem o quê; o quarto diz como, e a execução adaptativa continua '
+                'revisando-o conforme os estágios terminam.')}[lang]
+    f = Fig('l06-catalyst', 720, 230, t['label'])
+    box(f, 10, 60, 110, 56, t['src'], size=10.5)
+    x = 140
+    for i, (s, sub) in enumerate(zip(t['steps'], t['subs'])):
+        f.line(x - 18, 88, x - 2, 88, arrow=True)
+        box(f, x, 60, 130, 56, s, sub, stroke='--amber' if i == 3 else '--phosphor')
+        x += 145
+    f.text(352, 40, t['what'], size=10.5, fill='--paper-dim')
+    f.text(645, 40, t['how'], size=10.5, fill='--paper-dim')
+    f.path('M645 116 L645 170 L560 170', stroke='--amber', width=1.3, dash='4 3')
+    f.path('M560 182 L645 182 L645 120', stroke='--amber', width=1.3, dash='4 3', arrow=True)
+    f.text(548, 176, t['aqe'], size=10, fill='--amber', anchor='end')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

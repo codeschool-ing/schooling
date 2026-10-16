@@ -1,0 +1,541 @@
+{
+  "ex-2g6xsgy5": {
+    "prompt": "Ordene os planos que o Catalyst produz, do primeiro ao último.",
+    "hint": "Os nomes são conferidos antes de qualquer reescrita.",
+    "items": [
+      "Plano lógico interpretado",
+      "Plano lógico analisado",
+      "Plano lógico otimizado",
+      "Plano físico"
+    ]
+  },
+  "ex-xv7jw9wj": {
+    "prompt": "Uma consulta cita uma coluna `kinde` que não existe. Quando ela falha?",
+    "hint": "Que passo procura os nomes no esquema?",
+    "choices": [
+      {
+        "text": "Na análise, antes de qualquer dado ser lido",
+        "why": "Isso. Os nomes são conferidos contra o esquema ali."
+      },
+      {
+        "text": "No passo de otimização",
+        "why": "A otimização só reescreve um plano já válido."
+      },
+      {
+        "text": "Nunca; a coluna é preenchida com nulls",
+        "why": "Uma coluna inexistente é erro, não nulls."
+      },
+      {
+        "text": "Quando a primeira tarefa chega a uma linha sem essa coluna",
+        "why": "Nem chega lá; a análise recusa."
+      }
+    ]
+  },
+  "ex-ke5erq1h": {
+    "prompt": "Por que o Catalyst não faz nada por um `filter(lambda ...)` de RDD?",
+    "hint": "O que ele consegue ver de um lambda?",
+    "choices": [
+      {
+        "text": "O Catalyst só roda sobre strings SQL",
+        "why": "DataFrames também passam por ele."
+      },
+      {
+        "text": "RDDs são planejados por outro otimizador, desligado por padrão",
+        "why": "Não existe otimizador para RDDs."
+      },
+      {
+        "text": "RDDs só existem no driver",
+        "why": "Eles são distribuídos, como os DataFrames."
+      },
+      {
+        "text": "O Spark vê uma função que precisa rodar como está",
+        "why": "Isso. O Catalyst trabalha com expressões que consegue ler."
+      }
+    ]
+  },
+  "ex-8k6np467": {
+    "prompt": "No plano otimizado, para onde foi o filtro sobre `kind`, e por quê?",
+    "hint": "Compare com o plano interpretado.",
+    "choices": [
+      {
+        "text": "Lugar nenhum; planos nunca mudam a ordem do programa",
+        "why": "Mudá-la é para isso que serve o otimizador."
+      },
+      {
+        "text": "Para cima da ordenação, para ela rodar primeiro",
+        "why": "Ele se moveu para perto dos dados, não para longe."
+      },
+      {
+        "text": "Para o lado dos livros no join",
+        "why": "O `kind` é uma coluna dos cliques."
+      },
+      {
+        "text": "Para baixo do join, sobre os cliques",
+        "why": "Isso. Filtrar antes de juntar encolhe a entrada do join."
+      }
+    ]
+  },
+  "ex-ep86raz4": {
+    "prompt": "O que o número depois do `#` em `book_id#4` diz ao Catalyst?",
+    "hint": "Há dois `book_id`.",
+    "choices": [
+      {
+        "text": "Qual `book_id` ela é",
+        "why": "Isso. `book_id#4` e `book_id#7` são os dois lados do join."
+      },
+      {
+        "text": "Quantas linhas têm esse valor",
+        "why": "Nenhum dado foi lido quando os planos são feitos."
+      },
+      {
+        "text": "A posição da coluna no arquivo",
+        "why": "É um id dado pelo Catalyst, não uma posição."
+      },
+      {
+        "text": "A partição em que ela mora",
+        "why": "Partições são de linhas, não de colunas."
+      }
+    ]
+  },
+  "ex-1bfahjzp": {
+    "prompt": "O plano físico juntou os cliques aos livros com um ___HashJoin, copiando os livros para cada tarefa.",
+    "hint": "O join no map da aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "Broadcast"
+        ]
+      }
+    ]
+  },
+  "ex-z0sq6ad2": {
+    "prompt": "O que é todo nó `Exchange` num plano físico?",
+    "hint": "A palavra da aula 4.",
+    "choices": [
+      {
+        "text": "Um shuffle",
+        "why": "Isso, e a fronteira de um estágio."
+      },
+      {
+        "text": "Um arquivo sendo lido",
+        "why": "Isso é um `Scan`."
+      },
+      {
+        "text": "Uma escrita no HDFS",
+        "why": "Arquivos de shuffle vão ao disco local."
+      },
+      {
+        "text": "Um join",
+        "why": "Joins têm nós próprios; um exchange pode alimentar um."
+      }
+    ]
+  },
+  "ex-1c53gxkd": {
+    "prompt": "Por que há dois nós `HashAggregate` em volta do primeiro `Exchange`?",
+    "hint": "O combiner da aula 4.",
+    "choices": [
+      {
+        "text": "Um conta compras, o outro conta livros",
+        "why": "Os dois contam a mesma coisa, em duas metades."
+      },
+      {
+        "text": "O segundo confere o primeiro",
+        "why": "Ele soma as contagens parciais, não as confere."
+      },
+      {
+        "text": "Contar em duas metades, em volta de um shuffle",
+        "why": "Isso. Cada tarefa manda poucas contagens em vez de cada linha."
+      },
+      {
+        "text": "O AQE acrescentou uma cópia",
+        "why": "Os dois estão no plano inicial."
+      }
+    ]
+  },
+  "ex-9pdn4gd3": {
+    "prompt": "O `Exchange` da ordenação usa `rangepartitioning`, e não `hashpartitioning`. Por quê?",
+    "hint": "Aula 4: do que precisa uma saída ordenada globalmente?",
+    "choices": [
+      {
+        "text": "Só há dez categorias",
+        "why": "A quantidade de chaves não decide o particionador."
+      },
+      {
+        "text": "Particionar por faixa é sempre mais rápido",
+        "why": "Custa uma passada de amostragem; é escolhido pela ordem."
+      },
+      {
+        "text": "As contagens são números e não podem ter hash",
+        "why": "Números têm hash sem problema."
+      },
+      {
+        "text": "Cada tarefa precisa ter uma faixa de valores",
+        "why": "Isso. O hash espalharia vizinhos entre tarefas."
+      }
+    ]
+  },
+  "ex-kca33q4d": {
+    "prompt": "O plano formatado tem dois nós `Exchange` e um `BroadcastExchange`. Quantos shuffles a consulta faz?",
+    "hint": "Um broadcast não é um shuffle."
+  },
+  "ex-jzrp6p6p": {
+    "prompt": "O `size of files read` foi 388,8 MiB tanto na consulta de todas as colunas quanto na de uma coluna. Por que ele não ajuda a ver a poda de colunas?",
+    "hint": "O que ele soma de fato?",
+    "choices": [
+      {
+        "text": "A poda de colunas não aconteceu",
+        "why": "O `ReadSchema` mostra duas colunas, e os tempos diferem pela metade."
+      },
+      {
+        "text": "Conta arquivos abertos, não bytes lidos",
+        "why": "Isso. O tempo mostrou a diferença que a métrica não mostrava."
+      },
+      {
+        "text": "As duas consultas leram as mesmas linhas",
+        "why": "As linhas não são a questão; as colunas são."
+      },
+      {
+        "text": "A métrica só é preenchida para CSV",
+        "why": "Ela foi preenchida; mede outra coisa."
+      }
+    ]
+  },
+  "ex-3cep29tp": {
+    "prompt": "Por que o `pruning.py` monta cada consulta de novo antes de cronometrá-la, em vez de rodar o mesmo DataFrame duas vezes?",
+    "hint": "O que a segunda execução reaproveitaria?",
+    "choices": [
+      {
+        "text": "Um DataFrame só pode rodar uma vez",
+        "why": "Ele pode rodar quantas vezes quiser."
+      },
+      {
+        "text": "O shuffle da primeira seria reaproveitado",
+        "why": "Isso. A segunda execução cronometraria quase nada."
+      },
+      {
+        "text": "O Python guarda a resposta em cache",
+        "why": "O Python não guarda nada; o reaproveitamento são os arquivos de shuffle do Spark."
+      },
+      {
+        "text": "Os arquivos mudam entre execuções",
+        "why": "Não mudam."
+      }
+    ]
+  },
+  "ex-53tnvvpr": {
+    "prompt": "O que quer dizer `ReadSchema: struct<kind:string,book_id:int>` num scan?",
+    "hint": "Lido, não guardado.",
+    "choices": [
+      {
+        "text": "Essas duas colunas estão em cache",
+        "why": "Nada está em cache aqui."
+      },
+      {
+        "text": "O resultado terá essas duas colunas",
+        "why": "O resultado é uma contagem só."
+      },
+      {
+        "text": "Os arquivos só contêm essas duas colunas",
+        "why": "Eles contêm sete; a consulta precisa de duas."
+      },
+      {
+        "text": "Só essas duas colunas serão lidas",
+        "why": "Isso. As outras cinco são puladas nos arquivos."
+      }
+    ]
+  },
+  "ex-5d7vhxyg": {
+    "prompt": "Por que a poda de colunas economiza pouco num arquivo CSV?",
+    "hint": "Como se acha o terceiro campo de uma linha?",
+    "choices": [
+      {
+        "text": "Uma linha precisa ser lida inteira para achar qualquer campo",
+        "why": "Isso. Economiza interpretação, não leitura."
+      },
+      {
+        "text": "O Spark nem poda colunas em CSV",
+        "why": "Ele poda o que interpreta; os bytes ainda passam."
+      },
+      {
+        "text": "Arquivos CSV são sempre compactados",
+        "why": "Nem sempre, e a compressão não é o motivo."
+      },
+      {
+        "text": "Colunas CSV não têm nomes",
+        "why": "O cabeçalho dá nomes; o problema é a organização."
+      }
+    ]
+  },
+  "ex-eptyphm1": {
+    "prompt": "Com o filtro `day = '2025-03-14'`, quantos arquivos o scan abriu?",
+    "hint": "Um diretório por dia."
+  },
+  "ex-ajgqs9ac": {
+    "prompt": "Uma consulta filtra `ts` entre dois horários de 14 de março, sem filtro em `day`. Quantos diretórios ela abre?",
+    "hint": "O planejador sabe que o `ts` implica o `day`?",
+    "choices": [
+      {
+        "text": "Nenhum; falha sem filtro em `day`",
+        "why": "Roda, lendo tudo."
+      },
+      {
+        "text": "Um, porque os horários caem num dia só",
+        "why": "Verdade sobre os dados, desconhecida pelo planejador."
+      },
+      {
+        "text": "Dois, o dia e o seguinte",
+        "why": "Sem filtro de partição não há poda nenhuma."
+      },
+      {
+        "text": "Os 365",
+        "why": "Isso. Filtre também em `day` para podar."
+      }
+    ]
+  },
+  "ex-yw94cw4y": {
+    "prompt": "Ligue cada linha de um scan ao que ela decide.",
+    "hint": "Diretórios, interior dos arquivos, colunas.",
+    "pairs": [
+      {
+        "left": "PartitionFilters",
+        "right": "Que diretórios são abertos"
+      },
+      {
+        "left": "PushedFilters",
+        "right": "O que o leitor pode pular dentro de um arquivo"
+      },
+      {
+        "left": "ReadSchema",
+        "right": "Que colunas são lidas"
+      }
+    ],
+    "right_distractors": [
+      "Quantos executores rodam o scan"
+    ]
+  },
+  "ex-7npkrj5x": {
+    "prompt": "Escolher o dia por uma UDF Python deu a mesma resposta. O que custou?",
+    "hint": "Procure `PartitionFilters` no plano dela.",
+    "choices": [
+      {
+        "text": "Nada; a UDF foi podada como uma nativa",
+        "why": "O plano dela não tem a linha `PartitionFilters`."
+      },
+      {
+        "text": "Os 365 arquivos foram abertos, para a resposta de um dia",
+        "why": "Isso. O planejador não conseguiu transformar a UDF num diretório."
+      },
+      {
+        "text": "A resposta foi aproximada",
+        "why": "Foi exatamente 1.304, a mesma."
+      },
+      {
+        "text": "Ela falhou nos dias que não eram 14 de março",
+        "why": "Ela devolveu falso para eles, depois de lê-los."
+      }
+    ]
+  },
+  "ex-2xzmaxbk": {
+    "prompt": "Por que `F.date_format(\"day\", \"MM-dd\") == \"03-14\"` consegue podar partições e a UDF Python não?",
+    "hint": "Onde cada um pode ser avaliado?",
+    "choices": [
+      {
+        "text": "Ela é mais barata de calcular",
+        "why": "O custo não é o motivo; onde ela pode rodar é."
+      },
+      {
+        "text": "O Java a avalia por diretório",
+        "why": "Isso. Uma função Python precisaria de Python ali."
+      },
+      {
+        "text": "Ela devolve uma string",
+        "why": "O tipo de retorno não importa."
+      },
+      {
+        "text": "UDFs são proibidas em filtros",
+        "why": "O filtro com UDF funcionou, devagar."
+      }
+    ]
+  },
+  "ex-5mygzk2a": {
+    "prompt": "O `kind = 'purchase'` foi empurrado ao leitor, mas o scan de um dia entregou as 65.753 linhas. Por quê?",
+    "hint": "O que o leitor usa para pular?",
+    "choices": [
+      {
+        "text": "O filtro foi aplicado duas vezes por engano",
+        "why": "Aplicá-lo de novo acima do scan é proposital."
+      },
+      {
+        "text": "Nenhum row group pôde ser descartado",
+        "why": "Isso. Pular exige valores agrupados; a aula 10 os ordena."
+      },
+      {
+        "text": "O pushdown só funciona com números",
+        "why": "Strings também têm mínimo e máximo."
+      },
+      {
+        "text": "A UDF desligou o pushdown",
+        "why": "Esta consulta não tinha UDF."
+      }
+    ]
+  },
+  "ex-ssjcgz28": {
+    "prompt": "O que quer dizer `AdaptiveSparkPlan isFinalPlan=false` no topo de um plano?",
+    "hint": "Final segundo quem, e quando?",
+    "choices": [
+      {
+        "text": "A execução adaptativa está desligada",
+        "why": "O nó só aparece quando ela está ligada."
+      },
+      {
+        "text": "O plano é revisto conforme os estágios terminam",
+        "why": "Isso. Depois da execução fica `true`."
+      },
+      {
+        "text": "A consulta ainda não foi otimizada",
+        "why": "A otimização lógica está feita; o AQE acrescenta mudanças em execução."
+      },
+      {
+        "text": "O plano tem um erro",
+        "why": "É o estado normal antes de rodar."
+      }
+    ]
+  },
+  "ex-my65xrqe": {
+    "prompt": "Por que o AQE pôs `AQEShuffleRead coalesced` acima do shuffle do agrupamento?",
+    "hint": "Dez categorias, 200 partições.",
+    "choices": [
+      {
+        "text": "Uma partição era grande demais e precisou ser dividida",
+        "why": "Isso é o tratamento de skew, aula 8; aqui elas eram minúsculas."
+      },
+      {
+        "text": "O join precisou virar broadcast",
+        "why": "Ele já era broadcast desde o início."
+      },
+      {
+        "text": "Os executores ficaram sem memória",
+        "why": "Nada falhou."
+      },
+      {
+        "text": "A maioria das 200 partições estava vazia",
+        "why": "Isso. Ele as juntou em poucas de tamanho razoável."
+      }
+    ]
+  },
+  "ex-5b2entbb": {
+    "prompt": "Qual destes a execução adaptativa não consegue mudar?",
+    "hint": "Ela replaneja depois de um shuffle.",
+    "choices": [
+      {
+        "text": "Dividir uma partição muito maior que as outras",
+        "why": "Ela consegue; aula 8."
+      },
+      {
+        "text": "O número de partições depois de um shuffle",
+        "why": "Ela as junta, como a seção 10 mostrou."
+      },
+      {
+        "text": "Que arquivos o primeiro estágio lê",
+        "why": "Isso. Isso é decidido antes de qualquer shuffle."
+      },
+      {
+        "text": "Um join com shuffle virando broadcast",
+        "why": "Ela consegue, quando um lado se revela pequeno."
+      }
+    ]
+  },
+  "ex-xhd6nyfx": {
+    "prompt": "O `spark.sql.autoBroadcastJoinThreshold` imprimiu `10485760b`. Quantos MiB são?",
+    "hint": "Divida por 1.048.576.",
+    "unit": "MiB"
+  },
+  "ex-zh28nhpw": {
+    "prompt": "Com o limite em -1, o que substituiu o broadcast join?",
+    "hint": "Os dois lados embaralhados, depois ordenados.",
+    "choices": [
+      {
+        "text": "Nenhum join; a consulta falhou",
+        "why": "Planejou normalmente, do outro jeito."
+      },
+      {
+        "text": "Um `BroadcastNestedLoopJoin`",
+        "why": "Esse é para joins sem condição de igualdade."
+      },
+      {
+        "text": "Um broadcast dos cliques em vez dos livros",
+        "why": "O -1 desliga o broadcast nos dois lados."
+      },
+      {
+        "text": "Um `SortMergeJoin`",
+        "why": "Isso. O join no reduce da aula 4."
+      }
+    ]
+  },
+  "ex-xrr4cjx1": {
+    "prompt": "O join foi estimado em 783,6 GiB. Por que a escolha do broadcast continuou certa?",
+    "hint": "De que estimativa um broadcast depende?",
+    "choices": [
+      {
+        "text": "Só a estimativa do lado pequeno importava",
+        "why": "Isso. 15,5 KiB para os livros estava perto."
+      },
+      {
+        "text": "O AQE corrigiu a estimativa antes de escolher",
+        "why": "A escolha foi feita antes de rodar, pela estimativa."
+      },
+      {
+        "text": "O join produziu mesmo 783,6 GiB",
+        "why": "Ele produziu uns 22 milhões de linhas de poucos bytes."
+      },
+      {
+        "text": "Estimativas são ignoradas em joins",
+        "why": "Elas decidem a estratégia."
+      }
+    ]
+  },
+  "ex-r5a9vtff": {
+    "prompt": "Um relatório lê `data/silver/clicks`, mantém as linhas onde `udf_month(ts) == 12`, e é lento. Que reescrita economiza mais?",
+    "hint": "Qual coluna é a partição?",
+    "choices": [
+      {
+        "text": "Manter a UDF no `ts` e acrescentar executores",
+        "why": "Ainda todo arquivo e toda linha pelo Python."
+      },
+      {
+        "text": "Filtrar `day` em dezembro com funções nativas",
+        "why": "Isso. 31 diretórios abertos em vez de 365, e nenhuma viagem ao Python."
+      },
+      {
+        "text": "Trocar a UDF por `F.month(\"ts\") == 12`",
+        "why": "Melhor, mas o `ts` não é a coluna de partição; todo diretório ainda é aberto."
+      },
+      {
+        "text": "Ler o CSV cru no lugar",
+        "why": "Mais lento em todos os sentidos."
+      }
+    ]
+  },
+  "ex-dky45tkb": {
+    "prompt": "Ligue cada coisa vista num plano ao que ela indica.",
+    "hint": "Leia os nomes dos nós.",
+    "pairs": [
+      {
+        "left": "`PartitionFilters: [...]`",
+        "right": "Diretórios pulados pelo nome"
+      },
+      {
+        "left": "`partial_count(1)`",
+        "right": "Contar antes do shuffle"
+      },
+      {
+        "left": "`AQEShuffleRead coalesced`",
+        "right": "Partições juntadas em execução"
+      },
+      {
+        "left": "`BroadcastExchange`",
+        "right": "Um lado pequeno copiado para cada tarefa"
+      }
+    ]
+  }
+}
