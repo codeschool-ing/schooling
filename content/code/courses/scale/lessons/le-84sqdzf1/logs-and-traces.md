@@ -29,9 +29,10 @@ practice the move goes in both directions:
 
 Metrics can carry the link too. An **exemplar** is a trace id attached to one observation of a
 histogram: of the requests in the 100 to 250 ms bucket, here is one, and here is its trace.
-Prometheus stores exemplars when the client sends them, and a dashboard can then show, beside a
-slow percentile, a button to the trace of a request that was slow. It closes the loop of lesson 7:
-**the metric that says something is slow points at one request that was.**
+Prometheus keeps exemplars when the client sends them and exemplar storage is turned on, and a
+dashboard can then show, beside a slow percentile, a button to the trace of a request that was slow.
+It closes the loop of lesson 7: **the metric that says something is slow points at one request that
+was.**
 
 The box office's metrics do not send exemplars; `prometheus_client` can, given a trace id per
 observation, and OpenTelemetry's own metrics SDK does it by itself when a span is current.

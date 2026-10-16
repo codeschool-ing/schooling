@@ -212,4 +212,4 @@ replica      Up 13 seconds (healthy)
 ```
 
 Eight services. Jaeger takes a few seconds to accept spans after it starts; until it does, the
-Collector logs a refused connection and keeps the spans, retrying.
+Collector's exporter keeps the spans in its queue and tries again, which is its default.
