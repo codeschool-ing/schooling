@@ -63,8 +63,8 @@ Agora meça. Salve como `~/dl/slow.py`:
 
 ```
 ana@vm:~/dl$ python slow.py
-plain      3.5 microseconds an image, 0.004 s for all 1077
-warped  1747.1 microseconds an image, 1.882 s for all 1077
+plain      3.2 microseconds an image, 0.003 s for all 1077
+warped  1772.6 microseconds an image, 1.909 s for all 1077
 item 0: (1, 32, 32)  label 6  read again, same image: False
             %%%%====                         :=##%#**=:.                        -*##+-:.            
             %%%%====                      . :=+%%%%*=-..                      .-+*#%#+-:.           
@@ -84,8 +84,8 @@ item 0: (1, 32, 32)  label 6  read again, same image: False
             ####████****....                   ..::--=+++=:::.                  ..:-----=----.      
 ```
 
-**Ler uma imagem simples levou 3,5 microssegundos; ler uma entortada levou 1747,1**, umas
-quinhentas vezes mais. No conjunto de treino isso dá 0,004 segundo contra 1,882 segundo por
+**Ler uma imagem simples levou 3,2 microssegundos; ler uma entortada levou 1772,6**, mais de
+quinhentas vezes mais. No conjunto de treino isso dá 0,003 segundo contra 1,909 segundo por
 passada, e é pago de novo a cada época, porque a transformação roda dentro do `__getitem__`. São
 tempos de uma máquina num momento, e os seus vão ser outros: o que se transfere é a proporção, uma
 transformação custando centenas de vezes o que a leitura em si custa.

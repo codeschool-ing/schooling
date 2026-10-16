@@ -35,7 +35,7 @@ tensors. Save this as `~/dl/batches.py`:
 
 ```
 ana@vm:~/dl$ python batches.py
-one batch: (32, 64) (32,)  first labels: [2, 4, 8, 4, 0, 5]
+one batch: (32, 64) (32,)  first labels: [3, 9, 7, 1, 6, 0]
 batches: 34  first 32  last 21  images: 1077
 with drop_last: 33 batches
 collate of 3 items: (3, 64) [6, 6, 6]

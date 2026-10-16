@@ -42,21 +42,24 @@ configuração e não treina nada, então o que ele mede é só o carregador:
 
 ```
 ana@vm:~/dl$ python workers.py
-num_workers=0  epochs 0.94 s  0.84 s  0.84 s   fastest 1.0x the speed of 0 workers
-num_workers=2  epochs 0.50 s  0.48 s  0.39 s   fastest 2.1x the speed of 0 workers
-num_workers=4  epochs 0.34 s  0.33 s  0.32 s   fastest 2.6x the speed of 0 workers
+num_workers=0  epochs 2.06 s  2.10 s  1.97 s   fastest 1.0x the speed of 0 workers
+num_workers=2  epochs 1.14 s  1.01 s  1.02 s   fastest 2.0x the speed of 0 workers
+num_workers=4  epochs 0.64 s  0.59 s  0.56 s   fastest 3.5x the speed of 0 workers
 ```
 
-**Dois workers leem uma época 2,1 vezes mais rápido que nenhum, e quatro workers 2,6 vezes**: de
-0,84 segundo no melhor caso para 0,39 e para 0,32. Quatro workers não são quatro vezes mais rápidos,
-porque a máquina tem quatro processadores e o processo principal também precisa de parte do tempo
-deles, para receber os lotes. Passado o número de processadores livres, um worker extra só se reveza com os
-outros. São os tempos desta máquina no momento da execução; nos seus, os segundos vão ser outros, e
-o formato, mais workers mais rápido até os processadores acabarem, é o que esperar.
+**Dois workers leem uma época 2,0 vezes mais rápido que nenhum, e quatro workers 3,5 vezes**: de
+1,97 segundo no melhor caso para 1,01 e para 0,56. Cada worker entorta os próprios lotes no próprio
+processador, então a leitura se divide entre eles. Quatro não chegam a ser quatro vezes mais
+rápidos, porque o processo principal também precisa de tempo de processador, para receber os lotes,
+e numa máquina de quatro processadores não há um quinto para lhe dar. Passado o número de
+processadores livres, um worker extra só se reveza com os outros. São os tempos desta máquina no
+momento da execução; nos seus, os segundos vão ser outros, e o formato, mais workers mais rápido até
+os processadores acabarem, é o que esperar.
 
-**A primeira época é a mais lenta de cada linha**, e com workers ela também inclui iniciar os
-processos e entregar a cada um uma cópia do dataset. `persistent_workers=True` os mantém vivos depois disso; sem
-ele, toda época pagaria a partida de novo, o que é um custo real quando as épocas são curtas.
+**Com workers, a primeira época é a mais lenta da sua linha**: 1,14 segundo contra 1,01 e 1,02, e
+0,64 contra 0,59 e 0,56. Ela inclui iniciar os processos e entregar a cada um uma cópia do dataset.
+`persistent_workers=True` os mantém vivos depois disso; sem ele, toda época pagaria a partida de
+novo, o que é um custo real quando as épocas são curtas.
 
 **O carregador sozinho é um piso.** Uma época de treino não pode ser mais curta que o tempo de
 montar os seus lotes, por mais rápido que seja o modelo, então esse número é o primeiro a conhecer em

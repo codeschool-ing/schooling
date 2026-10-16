@@ -63,8 +63,8 @@ Now measure it. Save as `~/dl/slow.py`:
 
 ```
 ana@vm:~/dl$ python slow.py
-plain      3.5 microseconds an image, 0.004 s for all 1077
-warped  1747.1 microseconds an image, 1.882 s for all 1077
+plain      3.2 microseconds an image, 0.003 s for all 1077
+warped  1772.6 microseconds an image, 1.909 s for all 1077
 item 0: (1, 32, 32)  label 6  read again, same image: False
             %%%%====                         :=##%#**=:.                        -*##+-:.            
             %%%%====                      . :=+%%%%*=-..                      .-+*#%#+-:.           
@@ -84,8 +84,8 @@ item 0: (1, 32, 32)  label 6  read again, same image: False
             ####████****....                   ..::--=+++=:::.                  ..:-----=----.      
 ```
 
-**Reading a plain image took 3.5 microseconds; reading a warped one took 1747.1**, some five hundred
-times as long. Over the training set that is 0.004 seconds against 1.882 seconds for one pass, and
+**Reading a plain image took 3.2 microseconds; reading a warped one took 1772.6**, more than five
+hundred times as long. Over the training set that is 0.003 seconds against 1.909 seconds for one pass, and
 it is paid again in every epoch, because the transform runs inside `__getitem__`. These are times
 on one machine at one moment, and yours will differ: what carries over is the ratio, a transform
 costing hundreds of times what the read itself costs.

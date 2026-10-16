@@ -42,22 +42,23 @@ trains nothing, so what it measures is the loader alone:
 
 ```
 ana@vm:~/dl$ python workers.py
-num_workers=0  epochs 0.94 s  0.84 s  0.84 s   fastest 1.0x the speed of 0 workers
-num_workers=2  epochs 0.50 s  0.48 s  0.39 s   fastest 2.1x the speed of 0 workers
-num_workers=4  epochs 0.34 s  0.33 s  0.32 s   fastest 2.6x the speed of 0 workers
+num_workers=0  epochs 2.06 s  2.10 s  1.97 s   fastest 1.0x the speed of 0 workers
+num_workers=2  epochs 1.14 s  1.01 s  1.02 s   fastest 2.0x the speed of 0 workers
+num_workers=4  epochs 0.64 s  0.59 s  0.56 s   fastest 3.5x the speed of 0 workers
 ```
 
-**Two workers read an epoch 2.1 times as fast as none, and four workers 2.6 times**: from 0.84
-seconds at best to 0.39 and to 0.32. Four workers are not four times as fast, because the machine
-has four processors and the main process needs some of their time too, to receive the batches. Past the
-number of free processors, an extra worker only takes turns with the others. These are this
-machine's times at the moment of the run; on yours the seconds will differ, and the shape, more
-workers faster until the processors run out, is what to expect.
+**Two workers read an epoch 2.0 times as fast as none, and four workers 3.5 times**: from 1.97
+seconds at best to 1.01 and to 0.56. Each worker warps its own batches on its own processor, so
+the reading divides between them. Four are not quite four times as fast, because the main process
+needs some processor time too, to receive the batches, and on a four-processor machine there is no
+fifth one to give it. Past the number of free processors, an extra worker only takes turns with the
+others. These are this machine's times at the moment of the run; on yours the seconds will differ,
+and the shape, more workers faster until the processors run out, is what to expect.
 
-**The first epoch is the slowest in each row**, and with workers it also includes starting the
-processes and handing each a copy of the dataset. `persistent_workers=True` keeps them alive after
-that; without it, every epoch would pay the start-up again, which is a real cost when epochs are
-short.
+**With workers, the first epoch is the slowest of its row**: 1.14 seconds against 1.01 and 1.02,
+and 0.64 against 0.59 and 0.56. It includes starting the processes and handing each a copy of the
+dataset. `persistent_workers=True` keeps them alive after that; without it, every epoch would pay
+the start-up again, which is a real cost when epochs are short.
 
 **The loader alone is a floor.** A training epoch cannot be shorter than the time it takes to build
 its batches, however fast the model is, so this number is the first one to know about any training
