@@ -1,0 +1,574 @@
+[
+  {
+    "id": "ex-3b2m76xt",
+    "version": 1,
+    "section": "counting-the-work",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the forward pass the MLP does 2.0 floating-point operations per parameter and the CNN 17.6. Why the difference?",
+    "hint": "Count how many times one weight is used for one image.",
+    "choices": [
+      {
+        "text": "The CNN computes in float64",
+        "correct": false,
+        "why": "Both run in float32; the counter counts operations, not bytes."
+      },
+      {
+        "text": "A convolution weight is used at all 64 positions of the map",
+        "correct": true,
+        "why": "Right. The filter slides over the 8 by 8 map, so each of its weights multiplies 64 times per image, where a dense weight multiplies once."
+      },
+      {
+        "text": "The pooling layer has weights of its own that are counted",
+        "correct": false,
+        "why": "Max pooling has no parameters; it picks the largest of four values."
+      },
+      {
+        "text": "The counter includes the ReLUs as multiplications",
+        "correct": false,
+        "why": "The counter adds up matrix products and convolutions; the MLP has a ReLU too and still comes out at 2.0."
+      }
+    ]
+  },
+  {
+    "id": "ex-hhjg8f01",
+    "version": 1,
+    "section": "counting-the-work",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dense network of 1,000,000 parameters trains for one epoch on 50,000 examples. How many GFLOPs (billions of operations) does the 6 × N × D rule predict?",
+    "hint": "Six, times the parameters, times the examples seen; then divide by a billion.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "GFLOPs"
+  },
+  {
+    "id": "ex-dw5sg8vz",
+    "version": 1,
+    "section": "counting-the-work",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague replaces a dense network of 2 million parameters with a convolutional one of 2 million, for 64 by 64 images, and keeps the same training budget because the parameter count is equal. What is wrong with the budget?",
+    "hint": "The 6 × N × D rule assumes something about how often a weight is used.",
+    "choices": [
+      {
+        "text": "Nothing, since the 6 × N × D rule holds for every network whatever its layers",
+        "correct": false,
+        "why": "It holds where each weight is used once per example. The CNN of this lesson did 52.4 operations per parameter per step, not 6."
+      },
+      {
+        "text": "The convolutional network will be cheaper, because each of its layers holds fewer weights",
+        "correct": false,
+        "why": "Smaller layers mean fewer parameters per layer, not less arithmetic: each weight is reused at every position."
+      },
+      {
+        "text": "Its weights are reused at every position, so its arithmetic per image is far larger",
+        "correct": true,
+        "why": "Right. On a 64 by 64 map a filter's weights work thousands of times per image, and the budget has to be counted from the arithmetic."
+      },
+      {
+        "text": "Convolutions run only on graphics cards",
+        "correct": false,
+        "why": "Lesson 11's CNN trained on this course's processor; a card is faster, not required."
+      }
+    ]
+  },
+  {
+    "id": "ex-cdd19qa1",
+    "version": 1,
+    "section": "counting-the-work",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The CNN did 198 times the MLP's arithmetic per training step, but took far fewer times as long. What explains the gap?",
+    "hint": "What does a step cost that does not depend on the size of the matrices?",
+    "choices": [
+      {
+        "text": "The counter overstates what a convolution costs, counting each product twice",
+        "correct": false,
+        "why": "The counter's numbers were checked by hand in this section; the arithmetic is real."
+      },
+      {
+        "text": "PyTorch skips the multiplications by zero after a ReLU",
+        "correct": false,
+        "why": "Dense routines multiply every entry, zeros included."
+      },
+      {
+        "text": "Fixed overhead per step, which is most of the MLP's tiny step",
+        "correct": true,
+        "why": "Right. Calling layers, checking shapes and allocating outputs cost the same for a small product as for a large one."
+      },
+      {
+        "text": "The CNN was timed on smaller batches than the MLP, so each step had less to do",
+        "correct": false,
+        "why": "Both were timed on the same batch of 32 digits."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1sx0vdm",
+    "version": 1,
+    "section": "memory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Training in float32 with Adam, how many bytes per parameter do the weights, the gradients and the optimiser's state take together?",
+    "hint": "Four bytes a number, and count the numbers kept per parameter.",
+    "choices": [
+      {
+        "text": "4, the weight alone",
+        "correct": false,
+        "why": "That is what the saved file holds; training keeps three more numbers per parameter."
+      },
+      {
+        "text": "8: the weight and its gradient",
+        "correct": false,
+        "why": "Enough for plain SGD, which keeps no state. Adam keeps two averages more."
+      },
+      {
+        "text": "12, with one buffer for Adam",
+        "correct": false,
+        "why": "One buffer is SGD with momentum. Adam keeps the average of the gradient and of its square."
+      },
+      {
+        "text": "16",
+        "correct": true,
+        "why": "Right: weight, gradient and Adam's two buffers, 4 bytes each. memory.py measured 153,128 + 153,128 + 306,256 for 38,282 parameters."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fcw5095",
+    "version": 1,
+    "section": "memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You double the batch size of a training run and change nothing else. Which part of the memory doubles?",
+    "hint": "Which of the four does every example in the batch have its own copy of?",
+    "choices": [
+      {
+        "text": "The gradients, since twice as many examples contribute",
+        "correct": false,
+        "why": "The gradient is averaged over the batch into one number per parameter; its size does not change."
+      },
+      {
+        "text": "The activations saved for the backward pass",
+        "correct": true,
+        "why": "Right: 18,992 bytes per example for the CNN, at a batch of 32 and at a batch of 1,077 alike."
+      },
+      {
+        "text": "Adam's buffers",
+        "correct": false,
+        "why": "They hold two numbers per parameter whatever the batch."
+      },
+      {
+        "text": "The weights, which are copied per example",
+        "correct": false,
+        "why": "One set of weights serves the whole batch; that is what a matrix product does."
+      }
+    ]
+  },
+  {
+    "id": "ex-p72c3ar9",
+    "version": 1,
+    "section": "memory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network of 3 million parameters, trained with Adam in float32 on 256 by 256 images, runs out of memory at a batch of 128. Which change frees the most memory?",
+    "hint": "Compare 16 bytes per parameter with what each large image keeps for the backward pass.",
+    "choices": [
+      {
+        "text": "Replacing Adam with plain SGD",
+        "correct": false,
+        "why": "It frees 8 bytes per parameter, 24 MB here, while the activations of 128 large images run to gigabytes."
+      },
+      {
+        "text": "Batches of 32, accumulated four at a time",
+        "correct": true,
+        "why": "Right. The activations grow with the batch and dominate at this image size; accumulation keeps the effective batch of 128."
+      },
+      {
+        "text": "Storing the gradients in bfloat16 instead of float32",
+        "correct": false,
+        "why": "That halves 12 MB of gradients and leaves the activations, the large part, untouched."
+      },
+      {
+        "text": "Removing a tenth of the parameters from the last layers",
+        "correct": false,
+        "why": "A tenth of 48 MB of parameter memory is small next to what the batch keeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-zy82w16a",
+    "version": 1,
+    "section": "mixed-precision",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under mixed precision with bfloat16, why do the weights themselves stay in float32?",
+    "hint": "Look at what precision.py printed for 1 + 0.001.",
+    "choices": [
+      {
+        "text": "bfloat16 cannot hold numbers as large as weights",
+        "correct": false,
+        "why": "Its largest number is 3.39e+38, the same range as float32."
+      },
+      {
+        "text": "A small update to a weight would round away in bfloat16",
+        "correct": true,
+        "why": "Right. 1 + 0.001 comes back as 1 in bfloat16, so a weight kept there would stop moving."
+      },
+      {
+        "text": "PyTorch's optimisers refuse bfloat16 tensors",
+        "correct": false,
+        "why": "They accept them; the reason is the arithmetic of the update, not a refusal."
+      },
+      {
+        "text": "So that the saved file stays compatible with lesson 9",
+        "correct": false,
+        "why": "A state_dict can hold any type; the file has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t2p5ebz",
+    "version": 1,
+    "section": "mixed-precision",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a GradScaler protect a float16 training run from?",
+    "hint": "precision.py's third test, 1e-6 × 1e-3.",
+    "choices": [
+      {
+        "text": "Weights growing past 65,504 and becoming inf",
+        "correct": false,
+        "why": "The weights stay in float32 under mixed precision; the scaler acts on the gradients."
+      },
+      {
+        "text": "Two runs with the same seed giving different numbers",
+        "correct": false,
+        "why": "That is determinism, lesson 18's subject; the scaler does not touch it."
+      },
+      {
+        "text": "Small gradients rounding to 0",
+        "correct": true,
+        "why": "Right. It multiplies the loss before backward so they stay representable, and divides them back before the step."
+      },
+      {
+        "text": "The step after 1 being too coarse for small updates",
+        "correct": false,
+        "why": "That is bfloat16's weakness, and keeping the weights in float32 is what answers it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4r35wbq8",
+    "version": 1,
+    "section": "mixed-precision",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In trap.py the training loss was 2.3230 in every epoch, yet the first-layer weights had moved by up to 0.2466. What happened?",
+    "hint": "What does autocast keep for as long as its block lasts?",
+    "choices": [
+      {
+        "text": "bfloat16 rounded every update to zero",
+        "correct": false,
+        "why": "Then the weights would not have moved; they did, because they are kept in float32."
+      },
+      {
+        "text": "Each forward pass ran on cached copies of the initial weights",
+        "correct": true,
+        "why": "Right. The block around the whole loop never ended, so the cache was never refreshed. One autocast per batch fixes it."
+      },
+      {
+        "text": "A rate of 0.1 is too high for 16-bit arithmetic, so every step overshot",
+        "correct": false,
+        "why": "mixed.py trained at 0.1 under autocast and reached 0.972."
+      },
+      {
+        "text": "zero_grad does nothing inside an autocast block",
+        "correct": false,
+        "why": "Gradients that piled up would make the loss jump about, not hold still to four decimals."
+      }
+    ]
+  },
+  {
+    "id": "ex-83kqn71h",
+    "version": 1,
+    "section": "mixed-precision",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bfloat16 has the same largest number as float32 and a coarse step after 1; float16 is the other way round. In one word, what does float16 give up that bfloat16 keeps? ___",
+    "hint": "Its largest number is 6.55e+04.",
+    "blanks": [
+      {
+        "accept": [
+          "range"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-da5q45ak",
+    "version": 1,
+    "section": "gradient-accumulation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of one accumulated step, over four pieces of 32, in order.",
+    "hint": "The step reads .grad, and backward adds into it.",
+    "items": [
+      "Compute the loss of one piece of 32",
+      "Divide that loss by 4",
+      "Call backward, which adds into .grad",
+      "After the fourth piece, call opt.step()",
+      "Call opt.zero_grad() before the next four"
+    ]
+  },
+  {
+    "id": "ex-jwvrv1v6",
+    "version": 1,
+    "section": "gradient-accumulation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network with batch normalisation accumulates four pieces of 32. Is its gradient the gradient of a batch of 128?",
+    "hint": "What does batch normalisation compute from the batch it is given?",
+    "choices": [
+      {
+        "text": "Yes, as accumulate.py showed for cnn.py",
+        "correct": false,
+        "why": "cnn.py has no layer that looks across the batch; that is why the two agreed there."
+      },
+      {
+        "text": "Yes, provided each of the four losses is divided by 4 before backward",
+        "correct": false,
+        "why": "The division fixes the scale. It cannot fix statistics computed over 32 examples instead of 128."
+      },
+      {
+        "text": "No: each piece is normalised with its own mean and variance",
+        "correct": true,
+        "why": "Right. Four sets of statistics over 32 are not one set over 128, so the gradient differs. Layer normalisation has no such problem."
+      },
+      {
+        "text": "No, because accumulating four pieces changes the learning rate",
+        "correct": false,
+        "why": "With the division by 4 the scale is right; the difference is in the statistics."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jwb123z",
+    "version": 1,
+    "section": "the-price-of-an-hour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`time python compare.py` printed a `user` time larger than its `real` time. How can a program use more time than it took?",
+    "hint": "How many processors does the machine have?",
+    "choices": [
+      {
+        "text": "`user` adds up the time of every processor the program used",
+        "correct": true,
+        "why": "Right. PyTorch split the products across four processors, so their times add up past the clock's."
+      },
+      {
+        "text": "`user` includes the time the program spent waiting for other programs",
+        "correct": false,
+        "why": "Waiting is in `real`, which runs on the clock; `user` counts only time spent computing."
+      },
+      {
+        "text": "The shell's clock is less precise than the one inside the processor",
+        "correct": false,
+        "why": "The difference is far larger than any imprecision; it is the four processors."
+      },
+      {
+        "text": "`real` leaves out the time spent loading PyTorch",
+        "correct": false,
+        "why": "`real` runs from start to finish, imports included."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmzm5m8x",
+    "version": 1,
+    "section": "the-price-of-an-hour",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job is estimated at 4,083 card-hours. You rent 16 cards instead of 8. What happens to the bill?",
+    "hint": "The bill is card-hours times the price.",
+    "choices": [
+      {
+        "text": "It halves, because the run takes half as long",
+        "correct": false,
+        "why": "Half the days on twice the cards is the same number of card-hours."
+      },
+      {
+        "text": "About the same, or a little more",
+        "correct": true,
+        "why": "Right. The card-hours do not change, and exchanging gradients between more cards lowers the share of the peak kept."
+      },
+      {
+        "text": "It doubles, because twice as many cards are rented",
+        "correct": false,
+        "why": "They are rented for half as long, so the card-hours stay where they were."
+      },
+      {
+        "text": "It falls, because the price per card drops with volume",
+        "correct": false,
+        "why": "Nothing in the lesson's arithmetic, or in the price variable, says that."
+      }
+    ]
+  },
+  {
+    "id": "ex-0054ccdv",
+    "version": 1,
+    "section": "the-price-of-an-hour",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In bill.py, KEPT falls from 0.40 to 0.20 and nothing else changes. By what factor do the card-hours multiply?",
+    "hint": "KEPT divides the card-hours.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-y8z2nyag",
+    "version": 1,
+    "section": "diminishing-returns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Going from 64 epochs to 128 raised the validation accuracy by 0.6 points. How much arithmetic did that doubling cost?",
+    "hint": "Each line of the table has twice the arithmetic of the line above it.",
+    "choices": [
+      {
+        "text": "A tenth of the run so far",
+        "correct": false,
+        "why": "128 is twice 64, so the new epochs are as many as all the old ones."
+      },
+      {
+        "text": "The same as the doubling from 4 epochs to 8 epochs",
+        "correct": false,
+        "why": "That one added 4 epochs; this one added 64."
+      },
+      {
+        "text": "As much as all the epochs before it together",
+        "correct": true,
+        "why": "Right: 64 more epochs, for 0.6 points, where the doubling from 4 to 8 bought 7.5 for 4 epochs."
+      },
+      {
+        "text": "Nothing, since the images were already in memory",
+        "correct": false,
+        "why": "Memory is not arithmetic: every epoch runs the forward and backward passes again."
+      }
+    ]
+  },
+  {
+    "id": "ex-835trhp2",
+    "version": 1,
+    "section": "diminishing-returns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the arithmetic of 1,077 images for 30 epochs, 270 images for 120 epochs reached 0.942 against the full run's 0.950. What does that support?",
+    "hint": "Same amount of arithmetic, spent in two ways.",
+    "choices": [
+      {
+        "text": "120 epochs is too many for any network, whatever the data",
+        "correct": false,
+        "why": "On all 1,077 images, 128 epochs gave the best accuracy of the table."
+      },
+      {
+        "text": "New examples are worth more than repeated passes",
+        "correct": true,
+        "why": "Right. A small set gone over many times is learnt as itself rather than as digits, the overfitting of lesson 7."
+      },
+      {
+        "text": "The arithmetic was not really equal",
+        "correct": false,
+        "why": "270 × 120 is 32,400 examples seen and 1,077 × 30 is 32,310: equal to within a batch."
+      },
+      {
+        "text": "Smaller sets need a higher learning rate",
+        "correct": false,
+        "why": "The rate was the same in both, and nothing in the run points at it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0h2fjvm0",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these stay the same size when the batch grows? Choose every one that does.",
+    "hint": "One number per parameter, or one set per example?",
+    "choices": [
+      {
+        "text": "The weights",
+        "correct": true,
+        "why": "One set serves the whole batch."
+      },
+      {
+        "text": "The gradients",
+        "correct": true,
+        "why": "One per parameter, averaged over the batch."
+      },
+      {
+        "text": "Adam's two buffers",
+        "correct": true,
+        "why": "Two numbers per parameter, whatever the batch."
+      },
+      {
+        "text": "The activations saved for backward",
+        "correct": false,
+        "why": "Every example keeps its own: 18,992 bytes each for the CNN."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwwns7v6",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each remedy to what it saves.",
+    "hint": "The list in the memory section.",
+    "pairs": [
+      {
+        "left": "bfloat16 autocast",
+        "right": "bytes of the activations and of the arithmetic"
+      },
+      {
+        "left": "gradient accumulation",
+        "right": "the activations of a large batch"
+      },
+      {
+        "left": "torch.utils.checkpoint",
+        "right": "activations, paid for with extra arithmetic"
+      },
+      {
+        "left": "SGD with momentum instead of Adam",
+        "right": "half of the optimiser's state"
+      }
+    ],
+    "right_distractors": [
+      "the operations of the forward pass"
+    ]
+  }
+]

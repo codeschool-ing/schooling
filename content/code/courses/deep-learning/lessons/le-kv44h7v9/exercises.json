@@ -1,0 +1,578 @@
+[
+  {
+    "id": "ex-hx67p7jy",
+    "version": 1,
+    "section": "sequences-as-tensors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A recurrent layer built with `batch_first=True` reads a tensor of shape `(32, 50, 16)`. What is the 50?",
+    "hint": "Batch, time, features.",
+    "choices": [
+      {
+        "text": "The number of sequences in the batch",
+        "correct": false,
+        "why": "That is the first axis, 32, when the batch comes first."
+      },
+      {
+        "text": "The size of the state the layer keeps",
+        "correct": false,
+        "why": "The state's size is the layer's `hidden_size`, a setting of the layer and not an axis of its input."
+      },
+      {
+        "text": "The number of features at each step",
+        "correct": false,
+        "why": "Features are the last axis, 16 here, for example the width of an embedding."
+      },
+      {
+        "text": "The number of steps in each sequence",
+        "correct": true,
+        "why": "Right: the middle axis is time, so each of the 32 sequences has 50 steps of 16 features."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmf4a32t",
+    "version": 1,
+    "section": "sequences-as-tensors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the dense layer in `shapes.py` fail on a sequence of 9 steps after working on one of 6?",
+    "hint": "Count its weights per position.",
+    "choices": [
+      {
+        "text": "The embedding table had no row for the new symbols",
+        "correct": false,
+        "why": "The new sequence used the same eight symbols; the embedding worked and returned `(4, 9, 3)`."
+      },
+      {
+        "text": "It has weights for 18 inputs, and 9 steps flatten to 27",
+        "correct": true,
+        "why": "Right: the error said `4x27 and 18x10`. A dense layer owns one weight per position, so a longer sequence has positions it cannot read."
+      },
+      {
+        "text": "A dense layer refuses `int64` input",
+        "correct": false,
+        "why": "It never saw integers: the embedding had already turned them into floats."
+      },
+      {
+        "text": "Nine steps exceed the batch size of 4",
+        "correct": false,
+        "why": "Batch and length are separate axes; one does not limit the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgq5b10c",
+    "version": 1,
+    "section": "sequences-as-tensors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nn.Embedding(8, 3)` receives the symbol 4. What does it return?",
+    "hint": "Compare the two lines `shapes.py` printed for step 0.",
+    "choices": [
+      {
+        "text": "A vector of eight with a 1 in position 4",
+        "correct": false,
+        "why": "That is a one-hot vector. The embedding returns three numbers, the width it was built with."
+      },
+      {
+        "text": "The number 4 scaled to between 0 and 1",
+        "correct": false,
+        "why": "A symbol's size means nothing, so scaling it would invent an order; the embedding does not do that."
+      },
+      {
+        "text": "Row 4 of a learnt 8 by 3 table",
+        "correct": true,
+        "why": "Right: `shapes.py` printed the same three numbers for the embedded step and for `embed.weight[4]`."
+      },
+      {
+        "text": "Three random numbers drawn again at every call",
+        "correct": false,
+        "why": "The table is drawn once, at creation, and then trained like any weight; the same symbol gets the same row."
+      }
+    ]
+  },
+  {
+    "id": "ex-6b1y7wdb",
+    "version": 1,
+    "section": "an-rnn-by-hand",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many parameters does `nn.RNN(input_size=4, hidden_size=10)` have? It keeps two biases, as the lesson's layer did.",
+    "hint": "`W_ih` is hidden by input, `W_hh` hidden by hidden, and each bias is the hidden size.",
+    "value": 160,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-ypvgf5xm",
+    "version": 1,
+    "section": "an-rnn-by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model predicts, after every character of a text, which character comes next. Which of `nn.RNN`'s two outputs should its final layer read?",
+    "hint": "It needs an answer at every step, not one per sequence.",
+    "choices": [
+      {
+        "text": "`out`",
+        "correct": true,
+        "why": "Right: `out` holds the state after every step, so the layer can predict at each one, like the tagger in the lesson."
+      },
+      {
+        "text": "`h_last`, which summarises the whole sequence",
+        "correct": false,
+        "why": "That gives one prediction per sequence, which suits a classifier. Here every position needs its own."
+      },
+      {
+        "text": "Only the first step of `out`, before the state fills up",
+        "correct": false,
+        "why": "The first state has seen one character; the predictions at later steps need the later states."
+      },
+      {
+        "text": "Neither: next-character prediction needs a dense layer per position",
+        "correct": false,
+        "why": "That is the fixed-length problem the recurrent layer solves; one set of weights reads every step."
+      }
+    ]
+  },
+  {
+    "id": "ex-63en47jq",
+    "version": 1,
+    "section": "an-rnn-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the same `nn.RNN` read a sequence of 40 steps after being built for one of 4?",
+    "hint": "Where in the formula does the position appear?",
+    "choices": [
+      {
+        "text": "It pads every sequence to a maximum length set at creation",
+        "correct": false,
+        "why": "No length is given when the layer is built; its 50 parameters do not mention one."
+      },
+      {
+        "text": "PyTorch adds weights for the extra steps",
+        "correct": false,
+        "why": "The count stays at 50; nothing is added when the sequence grows."
+      },
+      {
+        "text": "Its weights belong to the step and are reused at each one",
+        "correct": true,
+        "why": "Right: the loop applies `W_ih` and `W_hh` at every `t`, so the length is only the number of turns."
+      },
+      {
+        "text": "It reads the last 4 steps and ignores the rest",
+        "correct": false,
+        "why": "`out` had 40 states, one per step, so every step was read."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpghxn4n",
+    "version": 1,
+    "section": "backprop-through-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `bptt.py`, why is the RNN's gradient 2.9e-14 for the input 49 steps back?",
+    "hint": "What happens to the gradient at each step on the way back?",
+    "choices": [
+      {
+        "text": "A product of 49 factors, each a little below 1",
+        "correct": true,
+        "why": "Right: each step back multiplies by `W_hh` and by the slope of `tanh`, and fifty of those make a number close to zero."
+      },
+      {
+        "text": "The first input was a smaller random number than the last one",
+        "correct": false,
+        "why": "The gradient measures how much the output depends on the input, not how large the input is."
+      },
+      {
+        "text": "Autograd stops tracking after 20 steps",
+        "correct": false,
+        "why": "It tracks all 50; the value at 30 steps back, 1.2e-08, is small and not zero."
+      },
+      {
+        "text": "`float32` rounds very small gradients to that value",
+        "correct": false,
+        "why": "`float32` represents numbers far smaller than that; the shrinking came from the arithmetic, not from rounding."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jm073g2",
+    "version": 1,
+    "section": "backprop-through-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's RNN trains for a few hundred steps and then its loss turns into `nan` in a single step. Which change answers that?",
+    "hint": "The gradient that shrinks has a mirror image.",
+    "choices": [
+      {
+        "text": "A longer sequence, so the gradient has further to shrink",
+        "correct": false,
+        "why": "Length changes how far the product runs; it does not put a ceiling on a gradient that has already grown."
+      },
+      {
+        "text": "Clipping the gradient's length before each step",
+        "correct": true,
+        "why": "Right: a sudden `nan` is the exploding case, and `clip_grad_norm_` caps the step's size while keeping its direction."
+      },
+      {
+        "text": "Removing the `tanh`, so nothing squashes the state",
+        "correct": false,
+        "why": "Without `tanh` nothing bounds the state at all, and a growing product grows faster."
+      },
+      {
+        "text": "Training on fewer steps with the same rate",
+        "correct": false,
+        "why": "Stopping earlier hides the failure without fixing the step that sent the weights flying."
+      }
+    ]
+  },
+  {
+    "id": "ex-3wvp4w3b",
+    "version": 1,
+    "section": "backprop-through-time",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Running lesson 3's algorithm over an RNN unrolled into one layer per step of the sequence is called backpropagation through ___.",
+    "hint": "The steps of a sequence happen along one axis.",
+    "blanks": [
+      {
+        "accept": [
+          "time"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9qjpfgx1",
+    "version": 1,
+    "section": "lstm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets an LSTM carry a gradient across many steps where an RNN loses it?",
+    "hint": "Look at the line that updates `c`.",
+    "choices": [
+      {
+        "text": "It has four times the parameters of an RNN with the same input and state sizes",
+        "correct": false,
+        "why": "More parameters do not change the product on the way back; the path does."
+      },
+      {
+        "text": "Its `tanh` is replaced by a sigmoid",
+        "correct": false,
+        "why": "It has both, and a sigmoid's slope is smaller than `tanh`'s, which would shrink the gradient faster."
+      },
+      {
+        "text": "From one cell state to the next the gradient meets only the forget gate",
+        "correct": true,
+        "why": "Right: `c = f * c0 + i * g` has no matrix and no `tanh` between `c0` and `c`, so a gate near 1 lets it through."
+      },
+      {
+        "text": "It keeps a copy of every input",
+        "correct": false,
+        "why": "Its memory is two vectors of fixed size, like an RNN's one; nothing grows with the length."
+      }
+    ]
+  },
+  {
+    "id": "ex-9pxkn4tn",
+    "version": 1,
+    "section": "lstm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`bptt.py lstm` printed 1.6e-11 at 49 steps back and `bptt.py lstm 3` printed 2.9e-02. What does the pair show?",
+    "hint": "The second run changed one bias, not the architecture.",
+    "choices": [
+      {
+        "text": "An LSTM keeps its gradients from the start, and the first run was unlucky",
+        "correct": false,
+        "why": "Both runs used seed 0; the difference is the bias, and a fresh LSTM lost its gradient almost as fast as the RNN."
+      },
+      {
+        "text": "A larger bias makes every gradient larger, in any layer",
+        "correct": false,
+        "why": "The bias acted through the forget gate, the one factor on the cell-state path; in an RNN there is no such gate."
+      },
+      {
+        "text": "The output gate was closed in the first run",
+        "correct": false,
+        "why": "The second run changed only the forget gate's bias; the output gate was the same in both."
+      },
+      {
+        "text": "The path exists, and an open forget gate is what uses it",
+        "correct": true,
+        "why": "Right: with the gates around 0.95 the same layer passed nine orders of magnitude more gradient. Training has to open them, or a bias has to start them open."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2xfvcj9",
+    "version": 1,
+    "section": "lstm",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of an LSTM step to what it does.",
+    "hint": "`c = f * c0 + i * g` and `h = o * tanh(c)`.",
+    "pairs": [
+      {
+        "left": "forget gate `f`",
+        "right": "scales what the cell state already holds"
+      },
+      {
+        "left": "input gate `i`",
+        "right": "scales what this step proposes to add"
+      },
+      {
+        "left": "candidate `g`",
+        "right": "the new content, through a `tanh`"
+      },
+      {
+        "left": "output gate `o`",
+        "right": "scales how much of the cell state is shown as `h`"
+      }
+    ],
+    "right_distractors": [
+      "multiplies the state by `W_hh` on the way back"
+    ]
+  },
+  {
+    "id": "ex-cbkfwbtv",
+    "version": 1,
+    "section": "the-recall-task",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At length 20 the RNN ended at 0.482 and the LSTM at 1.000, with the same data and steps. What explains the gap?",
+    "hint": "The answer sits 19 steps before the question.",
+    "choices": [
+      {
+        "text": "The gradient from the answer reaches the first symbol through the LSTM's cell state",
+        "correct": true,
+        "why": "Right: the RNN's gradient reaches 19 steps back faintly, which is why it was still climbing, and the LSTM's forget bias of +1 kept its path open."
+      },
+      {
+        "text": "The LSTM saw more training sequences",
+        "correct": false,
+        "why": "Both drew 3,000 batches of 64 from the same generator with the same seed."
+      },
+      {
+        "text": "The RNN's state of 64 numbers is too small to hold the three bits of the first symbol",
+        "correct": false,
+        "why": "Both states are 64 numbers, far more than three bits; the RNN failed to learn to keep them, not to fit them."
+      },
+      {
+        "text": "The test set favoured the LSTM",
+        "correct": false,
+        "why": "It was the same 1,000 sequences for both, drawn from seed 1234."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfz8fy9k",
+    "version": 1,
+    "section": "the-recall-task",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The LSTM ended at 0.144 on length 50, where chance is 0.125. What does that run support?",
+    "hint": "One run, 3,000 steps, 1,000 test sequences.",
+    "choices": [
+      {
+        "text": "An LSTM cannot learn this task at length 50",
+        "correct": false,
+        "why": "The run tried one budget and one setting; more steps or another rate were not tried, so it does not show a limit of the cell."
+      },
+      {
+        "text": "The LSTM has started to learn and would reach 1.000 with more steps",
+        "correct": false,
+        "why": "0.144 against 0.125 on 1,000 sequences is small enough to be noise, and no run measured more steps."
+      },
+      {
+        "text": "Under this budget it did not learn it",
+        "correct": true,
+        "why": "Right: that is the whole claim the lesson makes. The rest would need more runs."
+      },
+      {
+        "text": "The RNN was the better model at length 50",
+        "correct": false,
+        "why": "It ended at 0.118, at chance like the LSTM; neither learnt the task."
+      }
+    ]
+  },
+  {
+    "id": "ex-9yj5ma0h",
+    "version": 1,
+    "section": "the-recall-task",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If `SYMBOLS` in `seqtask.py` were 10 instead of 8, what accuracy would a model that guesses score on the recall task?",
+    "hint": "Chance with eight symbols was 0.125.",
+    "value": 0.1,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-zhdgbzgw",
+    "version": 1,
+    "section": "why-they-were-replaced",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`timing.py` read 3,200 symbols as 64 sequences of 50 and as one sequence of 3,200. What did the comparison isolate?",
+    "hint": "Same symbols, same layer, same multiplications.",
+    "choices": [
+      {
+        "text": "The cost of the larger memory a long sequence needs",
+        "correct": false,
+        "why": "Both runs hold the same number of states; the difference is how the steps are arranged."
+      },
+      {
+        "text": "The speed of four threads against one",
+        "correct": false,
+        "why": "The program pins one thread for both rows, so threads are the same on each side."
+      },
+      {
+        "text": "The cost of the backward pass",
+        "correct": false,
+        "why": "Only the forward pass was timed, under `torch.no_grad()`."
+      },
+      {
+        "text": "The arrangement: 50 steps on 64 rows against 3,200 steps on one",
+        "correct": true,
+        "why": "Right: the arithmetic was identical and the single sequence took 3.9 times as long, because its steps have to run one after another."
+      }
+    ]
+  },
+  {
+    "id": "ex-jky63z0x",
+    "version": 1,
+    "section": "why-they-were-replaced",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A phone keyboard suggests the next word as each letter is typed, using little memory. Why does a recurrent network still suit it?",
+    "hint": "What does one more symbol cost an RNN?",
+    "choices": [
+      {
+        "text": "It trains faster than a transformer on long texts",
+        "correct": false,
+        "why": "Training on long texts is where it is slowest: its steps run one after another."
+      },
+      {
+        "text": "Each letter is one step, and only the state is kept",
+        "correct": true,
+        "why": "Right: the cost per step is constant, at letter 10 as at letter 10,000, which is what an input arriving one piece at a time wants."
+      },
+      {
+        "text": "Its state grows with the text, so it forgets nothing",
+        "correct": false,
+        "why": "The state has a fixed size; that is both its limit and, here, its advantage."
+      },
+      {
+        "text": "A phone has no processor that can run matrix products",
+        "correct": false,
+        "why": "Every model here is matrix products; a phone runs them, and the question is how many and how much memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-6fd27hzv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one step of an LSTM in the order it is computed.",
+    "hint": "`lstm_step.py`, top to bottom.",
+    "items": [
+      "one sum of the input and the previous output through the weights",
+      "cut into four blocks: three sigmoids and one `tanh`",
+      "new cell state: forget times old, plus input times candidate",
+      "new output: output gate times `tanh` of the cell state"
+    ]
+  },
+  {
+    "id": "ex-rs0hsyd2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of the recurrent layers in this lesson? Choose every one that is.",
+    "hint": "Parameters, paths and steps.",
+    "choices": [
+      {
+        "text": "Their number of parameters does not depend on the sequence length",
+        "correct": true,
+        "why": "Right: the weights belong to the step, 50 for the RNN whether it reads 4 steps or 40."
+      },
+      {
+        "text": "An LSTM has four times the parameters of an RNN with the same sizes",
+        "correct": true,
+        "why": "Right: 200 against 50, because it computes four blocks where the RNN computes one."
+      },
+      {
+        "text": "A freshly built LSTM passes gradients back 50 steps almost undiminished",
+        "correct": false,
+        "why": "Fresh, it printed 1.6e-11 at 49 steps back; only with the forget bias raised did it keep 2.9e-02."
+      },
+      {
+        "text": "The steps of one sequence are computed one after another",
+        "correct": true,
+        "why": "Right: each needs the state the previous one wrote, which is what `timing.py` measured."
+      },
+      {
+        "text": "Clipping the gradient cures the gradient that shrinks with distance",
+        "correct": false,
+        "why": "Clipping caps a gradient that grew; a gradient of 1e-14 has nothing to cap."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qgvtkj6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must classify sequences of 500 sensor readings, where the event that decides the class sits near the start. Before training an LSTM on them, what does this lesson say to check first?",
+    "hint": "How far back did the lesson's LSTM reach under its budget?",
+    "choices": [
+      {
+        "text": "Whether the readings fit in `int64`",
+        "correct": false,
+        "why": "Sensor readings are features, floats fed straight in; `int64` is for symbols going into an embedding."
+      },
+      {
+        "text": "Whether the batch of sequences is larger than the 500 steps of each one",
+        "correct": false,
+        "why": "Batch and length are separate axes and neither has to be larger."
+      },
+      {
+        "text": "Whether `batch_first=True` doubles the speed",
+        "correct": false,
+        "why": "It changes the order of the axes the layer expects, not the work it does."
+      },
+      {
+        "text": "Whether the gradient reaches 500 steps back, with a test like `bptt.py`",
+        "correct": true,
+        "why": "Right: the lesson's LSTM did not learn a fact 50 steps back under its budget, so a fact 500 back is the risk to measure before spending a training run."
+      }
+    ]
+  }
+]
