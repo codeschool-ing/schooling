@@ -6,7 +6,7 @@ version: 1
 After the incident, the write-up turns what happened into what changes. Its form is settled and worth
 keeping to, because a write-up that changes shape every time is one nobody compares with the last:
 
-```
+```localised
 Title       Orders failed for 30 seconds: primary pg1 lost
 Date        ...
 Authors     ...

@@ -14,14 +14,14 @@ and they need them **early and repeatedly** rather than complete:
 
 A first message within minutes, with the facts above, reads like this:
 
-```
+```localised
 14:05  Orders cannot currently be placed in the shop. We are investigating.
        Orders already placed are not affected. Next update by 14:20.
 ```
 
 and an update, when the cause is known:
 
-```
+```localised
 14:18  The main database server failed at 13:58 and a standby took over at 13:59.
        Orders placed between 13:58 and 13:59 may have failed; customers who saw an
        error should place them again. The shop is working normally. Next update
