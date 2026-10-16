@@ -95,8 +95,8 @@ quinze vezes na maioria deles, e o primeiro bloco recebe um gradiente mais de um
 último. Os pesos dele
 quase não se mexem, os blocos seguintes leem algo perto de ruído, e a pilha inteira trava: os
 gradientes que desaparecem da aula 3, agindo numa rede de verdade. Na rede residual todo bloco
-recebe um gradiente do mesmo tamanho. A soma copia o gradiente da saída direto para a entrada,
-porque a derivada de `x + f(x)` em relação a `x` é 1 mais o que `f` contribuir, então sempre há um
+recebe um gradiente do mesmo tamanho. A soma copia o gradiente da saída direto para a entrada:
+a derivada de `x + f(x)` em relação a `x` é 1 mais o que `f` contribuir. Então sempre há um
 caminho de volta em que nada é multiplicado até sumir.
 
 Essa é toda a mudança da ResNet. O resto da arquitetura são as pilhas de convoluções 3x3 da VGG com

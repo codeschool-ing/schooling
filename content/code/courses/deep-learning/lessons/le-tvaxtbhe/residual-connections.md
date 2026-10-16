@@ -95,9 +95,9 @@ fifteen times at most of them, and the first block gets a gradient more than a m
 the last one. Its weights barely
 move, the blocks after it are reading what is close to noise, and the whole stack stalls: lesson 3's
 vanishing gradients, at work in a real network. In the residual network every block gets a gradient
-of the same size. The addition copies the gradient of the output straight to the input, because
-the derivative of `x + f(x)` with respect to `x` is 1 plus whatever `f` contributes, so there is
-always a path back along which nothing is multiplied away.
+of the same size. The addition copies the gradient of the output straight to the input: the
+derivative of `x + f(x)` with respect to `x` is 1 plus whatever `f` contributes. So there is always
+a path back along which nothing is multiplied away.
 
 That is the whole of ResNet's change. The rest of the architecture is VGG's stacks of 3x3
 convolutions with batch normalisation, and the next section takes torchvision's version apart.
