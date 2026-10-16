@@ -55,7 +55,7 @@ result of using a cloud well**, because every managed service is bought partly w
 leaving it. What the record adds is that the price was looked at, compared with what it bought, and
 written where the next person will find it.
 
-That is also the answer to the question in this course's title: which compute? Not
+That is also the answer to the question this course's title asks: which compute? Not
 one service for everything, and not the cheapest line of a sheet, but the one whose request
 profile, running cost, migration effort and lock-in a team can state in a file like this one, and
 still defend when the file is two years old.
