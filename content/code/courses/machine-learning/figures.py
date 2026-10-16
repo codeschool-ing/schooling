@@ -1328,6 +1328,49 @@ def l19_pdp(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 22
+
+@figure('l22-cities', 22)
+def l22_cities(lang):
+    old = data('churn.csv', usecols=['snapshot', 'city', 'churned'])
+    new = data('churn_2026.csv', usecols=['customer_id', 'snapshot', 'city']).merge(
+        data('churn_2026_labels.csv'), on=['customer_id', 'snapshot'])
+    rows = pd.concat([old, new])
+    rows['rival'] = rows['city'].isin(['Curitiba', 'Belo Horizonte'])
+    rate = rows.groupby(['snapshot', 'rival'])['churned'].mean().unstack()
+    months = list(rate.index)
+    fig = Fig('l22-cities', 600, 340, T(lang,
+        'Monthly share of subscribers who left, July 2024 to March 2026, in two lines: Curitiba and Belo '
+        'Horizonte together, and the other three cities. Through 2025 the two lines cross back and forth '
+        'between about 0.03 and 0.08, rising together after the September price rise. From January 2026, '
+        'to the right of a dashed line where the model\'s data ends, the two cities sit above the others '
+        'every month: 0.058 against 0.045, 0.064 against 0.041, and 0.073 against 0.050.',
+        'Parte mensal dos assinantes que saíram, de julho de 2024 a março de 2026, em duas linhas: '
+        'Curitiba e Belo Horizonte juntas, e as outras três cidades. Ao longo de 2025 as duas linhas se '
+        'cruzam várias vezes entre cerca de 0,03 e 0,08, subindo juntas depois do aumento de preço de '
+        'setembro. A partir de janeiro de 2026, à direita de uma linha tracejada onde terminam os dados do '
+        'modelo, as duas cidades ficam acima das outras todo mês: 0,058 contra 0,045, 0,064 contra 0,041 '
+        'e 0,073 contra 0,050.'))
+    p = Plot(fig, 70, 30, 560, 280, 0, len(months) - 1, 0.02, 0.09)
+    names = {'en': ['Jul 2024', 'Jan 2025', 'Jul 2025', 'Jan 2026'],
+             'pt': ['jul 2024', 'jan 2025', 'jul 2025', 'jan 2026']}[lang]
+    p.xaxis([0, 6, 12, 18], fmt=lambda v: names[[0, 6, 12, 18].index(v)])
+    dec = (lambda v: f'{v:.2f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.2f}')
+    p.yaxis([0.02, 0.04, 0.06, 0.08], fmt=dec, label=T(lang, 'share who left that month', 'parte que saiu no mês'))
+    for rival, stroke, width in [(False, '--phosphor', 2), (True, '--amber', 2.4)]:
+        fig.path('M' + ' L'.join(f'{p.sx(i):.1f} {p.sy(v):.1f}' for i, v in enumerate(rate[rival])),
+                 stroke=stroke, width=width)
+    p.vline(17.5, label=T(lang, 'the model\'s data ends', 'fim dos dados do modelo'), stroke='--paper-dim',
+            top=p.sy(0.088), anchor='end')
+    fig.text(p.sx(18.6), p.sy(rate[True].iloc[-1]) - 10, T(lang, 'Curitiba + BH', 'Curitiba + BH'),
+             size=10, anchor='end', fill='--amber')
+    fig.text(p.sx(18.6), p.sy(rate[False].iloc[-2]) + 18, T(lang, 'the other three', 'as outras três'),
+             size=10, anchor='end', fill='--phosphor')
+    cap = T(lang, 'Two cities move away from the rest in January, and nothing the model reads moved with them.',
+            'Duas cidades se afastam das outras em janeiro, e nada do que o modelo lê se mexeu com elas.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
