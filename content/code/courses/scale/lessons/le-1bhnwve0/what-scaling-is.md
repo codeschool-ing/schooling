@@ -53,6 +53,6 @@ measure both on the same box office, and section 09 finds the work that cannot b
 `architecture` gave the patterns their names: replication and sharding in its lesson 10, the
 circuit breaker in lesson 11, back pressure in lesson 12. This course **measures the limits that
 force them**. Each lesson runs something on your own machine, pushes it until it stops keeping up,
-and reads what it says when it does. That is also the second half of the course's title:
+and reads what it says when it does. That is also the second half of the course's name:
 **observability** is being able to answer, from the outside, what a running system is doing and
 why. Lessons 7 and 8 build that; every other lesson uses it.
