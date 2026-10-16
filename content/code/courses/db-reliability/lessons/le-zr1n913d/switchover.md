@@ -39,5 +39,5 @@ still `stopped` while it restarted as a replica. A few seconds after that, every
 `streaming` on timeline 3, with `pg1` the leader again.
 
 Lesson 23 rehearses exactly this, and it is the first thing to try on any new cluster: a switchover
-that works says the replicas are current, that every node can reach every other, and that the
+that works says **the replicas are current**, that every node can reach every other, and that the
 application, lesson 19's subject, follows the leader.

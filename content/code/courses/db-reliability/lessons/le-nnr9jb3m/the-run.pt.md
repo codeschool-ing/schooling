@@ -48,8 +48,8 @@ ela; o `timeout client` do HAProxy no arquivo da lição 19 é de trinta minutos
 Para o ensaio isso foi um incômodo. Para uma aplicação é o incidente que a lição 22 não mostrou: uma
 thread de requisição presa por meia hora numa conexão, depois outra, até não sobrar nenhuma e o shop
 cair **depois** que o failover já terminou. O achado virou uma linha no topo do script,
-`export PGCONNECT_TIMEOUT=5`, que faz toda conexão desistir depois de cinco segundos, e uma ação para a
-aplicação de verdade: um timeout de conexão na configuração do driver, e um statement timeout para as
+`export PGCONNECT_TIMEOUT=5`, que faz toda conexão desistir depois de cinco segundos. Virou também uma
+ação para a aplicação de verdade: um timeout de conexão na configuração do driver, e um statement timeout para as
 consultas, os dois mais curtos do que qualquer coisa que um cliente esperaria.
 
 É para isso que serve um ensaio. Nada nas lições 16 a 19 previu este problema; ele apareceu na

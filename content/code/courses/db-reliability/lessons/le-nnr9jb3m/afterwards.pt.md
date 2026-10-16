@@ -19,6 +19,6 @@ trimestre é comum. E a cada vez um pouco mais se torna real:
 5. as falhas mais difíceis de arranjar: o etcd perdido (lição 16), um líder congelado (lição 17), uma
    região inteira (lição 20).
 
-Nenhum dos passos seguintes é seguro antes que os anteriores tenham passado, e um time que já fez o
+**Nenhum dos passos seguintes é seguro antes que os anteriores tenham passado**, e um time que já fez o
 quarto é um time que viu o próprio failover funcionar com clientes em cima. É essa a afirmação que
 este curso vem construindo desde a lição 1, feita com evidência.

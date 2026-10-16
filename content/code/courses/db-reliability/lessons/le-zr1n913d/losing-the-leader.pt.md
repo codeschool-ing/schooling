@@ -67,7 +67,7 @@ ana@vm:~$ grep -E "rewind" ~/patroni/pg1.log | head -n 3
 ```
 
 O reboot da lição 15 criou um segundo primário. Este voltou como **réplica**, na timeline 2, fazendo
-streaming do `pg3`: antes de iniciar o PostgreSQL, o Patroni leu a chave de líder, viu que ela nomeava
-outro nó e rodou o **`pg_rewind`** para trazer os dados do `pg1` de volta ao ponto em que as histórias
+streaming do `pg3`. Antes de iniciar o PostgreSQL, o Patroni leu a chave de líder e viu que ela nomeava
+outro nó. Depois rodou o **`pg_rewind`** para trazer os dados do `pg1` de volta ao ponto em que as histórias
 se separaram, com os checksums que o `initdb` ligou e a configuração que ele sabe onde achar. Tudo o que
 a lição 15 fez à mão para reintegrar um primário, em menos de um segundo de log.

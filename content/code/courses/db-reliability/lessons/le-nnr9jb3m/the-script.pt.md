@@ -4,8 +4,8 @@ version: 1
 ---
 
 Um ensaio feito à mão sai um pouco diferente a cada vez, e os números dele não podem ser comparados.
-Escrito como script, ele verifica as mesmas coisas na mesma ordem e reporta os mesmos números, e quem
-o executa pode observar em vez de digitar. Salve isto como `rehearsal.sh` no seu diretório home, ao
+Escrito como script, ele verifica as mesmas coisas na mesma ordem e reporta os mesmos números, e **quem
+o executa pode observar em vez de digitar**. Salve isto como `rehearsal.sh` no seu diretório home, ao
 lado do `orders.sh` da lição 19, e torne-o executável:
 
 ```schooling-example

@@ -48,9 +48,9 @@ HAProxy's `timeout client` in lesson 19's file is thirty minutes.
 For the rehearsal that was an inconvenience. For an application it is the incident lesson 22 did not
 show: a request thread stuck for half an hour on one connection, then another, until none is left and
 the shop is down **after** the failover has finished. The finding became a line at the top of the
-script, `export PGCONNECT_TIMEOUT=5`, which makes every connection give up after five seconds, and
-an action for the real application: a connect timeout in its driver's configuration, and a statement
-timeout for the queries, both shorter than anything a customer would wait for.
+script, `export PGCONNECT_TIMEOUT=5`, which makes every connection give up after five seconds. It
+also became an action for the real application: a connect timeout in its driver's configuration, and
+a statement timeout for the queries, both shorter than anything a customer would wait for.
 
 That is what a rehearsal is for. Nothing in lessons 16 to 19 predicted this one; it appeared the first
 time the whole chain was made to fail together.

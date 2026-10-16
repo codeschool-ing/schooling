@@ -15,8 +15,8 @@ application_name=standby1
 ana@vm:~$ sudo pg_ctlcluster 16 standby start
 ```
 
-O `-R` copiou o nome para o `primary_conninfo` do standby, então ele vai se apresentar como `standby1`
-toda vez que se conectar. (O papel, o `.pgpass` dele e o servidor vazio na porta 5434 são feitos
+O `-R` copiou o nome para o `primary_conninfo` do standby, então **ele vai se apresentar como `standby1`
+toda vez que se conectar**. (O papel, o `.pgpass` dele e o servidor vazio na porta 5434 são feitos
 exatamente como na lição 11.) Com um banco chamado `bench` preenchido por `pgbench -i -s 10`, o
 benchmark que vem com o PostgreSQL, há algo para medir.
 

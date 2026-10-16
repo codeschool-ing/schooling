@@ -67,7 +67,7 @@ ana@vm:~$ grep -E "rewind" ~/patroni/pg1.log | head -n 3
 ```
 
 Lesson 15's reboot made a second primary. This one came back as a **replica**, on timeline 2,
-streaming from `pg3`: before starting PostgreSQL, Patroni read the leader key, saw it named another
-node, and ran **`pg_rewind`** to bring `pg1`'s data back to the point where the histories split, with
-the checksums `initdb` turned on and the configuration it knows where to find. Everything lesson 15 did
+streaming from `pg3`. Before starting PostgreSQL, Patroni read the leader key and saw it named another
+node. Then it ran **`pg_rewind`** to bring `pg1`'s data back to the point where the histories split,
+with the checksums `initdb` turned on and the configuration it knows where to find. Everything lesson 15 did
 by hand to rejoin a primary, in under a second of the log.

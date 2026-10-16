@@ -15,8 +15,8 @@ application_name=standby1
 ana@vm:~$ sudo pg_ctlcluster 16 standby start
 ```
 
-`-R` copied the name into the standby's `primary_conninfo`, so it will introduce itself as
-`standby1` every time it connects. (The role, its `.pgpass` and the empty server on port 5434 are made
+`-R` copied the name into the standby's `primary_conninfo`, so **it will introduce itself as
+`standby1` every time it connects**. (The role, its `.pgpass` and the empty server on port 5434 are made
 exactly as in lesson 11.) With a database called `bench` filled by `pgbench -i -s 10`, the benchmark
 that comes with PostgreSQL, there is something to measure.
 

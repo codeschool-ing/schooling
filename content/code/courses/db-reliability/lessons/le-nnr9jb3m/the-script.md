@@ -5,7 +5,7 @@ version: 1
 
 A rehearsal done by hand is done slightly differently every time, and its numbers cannot be compared.
 Written down as a script, it checks the same things in the same order and reports the same numbers,
-and the person running it can watch instead of type. Save this as `rehearsal.sh` in your home
+and **the person running it can watch instead of type**. Save this as `rehearsal.sh` in your home
 directory, beside lesson 19's `orders.sh`, and make it executable:
 
 ```schooling-example

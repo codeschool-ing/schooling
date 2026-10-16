@@ -39,5 +39,5 @@ instante depois: o `pg3` ainda `stopped` enquanto reiniciava como réplica. Algu
 disso, está tudo `streaming` na timeline 3, com o `pg1` de novo como líder.
 
 A lição 23 ensaia exatamente isso, e é a primeira coisa a testar em qualquer cluster novo: um
-switchover que funciona diz que as réplicas estão em dia, que todo nó alcança todos os outros e que a
+switchover que funciona diz que **as réplicas estão em dia**, que todo nó alcança todos os outros e que a
 aplicação, assunto da lição 19, segue o líder.

@@ -19,6 +19,6 @@ quarter is common. And each time a little more is made real:
 5. the failures that are harder to arrange: etcd lost (lesson 16), a frozen leader (lesson 17), a
    whole region (lesson 20).
 
-None of the later steps is safe before the earlier ones have passed, and a team that has done the
+**None of the later steps is safe before the earlier ones have passed**, and a team that has done the
 fourth one is a team that has seen its own failover work with customers on it. That is the claim this
 course has been building towards since lesson 1, made with evidence.
