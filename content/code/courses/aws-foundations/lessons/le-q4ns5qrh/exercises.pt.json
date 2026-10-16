@@ -1,0 +1,432 @@
+{
+  "ex-95ahhjf9": {
+    "prompt": "Qual metade de uma chave de acesso pode aparecer num log ou num chamado sem dano?",
+    "hint": "Uma metade nomeia a chave; a outra assina com ela.",
+    "choices": [
+      {
+        "text": "A chave secreta, já que ela nunca vai junto com uma requisição",
+        "why": "Ela nunca é enviada justamente porque é a parte que assina. Quem a lê consegue assinar como o usuário."
+      },
+      {
+        "text": "O id da chave de acesso, `AKIA…`",
+        "why": "Isso. Ele nomeia a chave e está em toda requisição e em toda linha do CloudTrail; sozinho, não assina nada."
+      },
+      {
+        "text": "Nenhuma: as duas metades são igualmente secretas",
+        "why": "O id não é segredo nenhum. Tratá-lo como segredo torna impossível compartilhar uma busca no CloudTrail."
+      },
+      {
+        "text": "Qualquer metade, desde que a outra fique escondida",
+        "why": "O segredo sozinho basta para assinar quando o id é adivinhado ou achado, e o id é impresso em todo lugar."
+      }
+    ]
+  },
+  "ex-kd37w1f2": {
+    "prompt": "Uma chave secreta tem quarenta caracteres. Por que esse comprimento não é defesa na prática?",
+    "hint": "Como as chaves chegam aos atacantes?",
+    "choices": [
+      {
+        "text": "Porque a AWS só confere os primeiros dezesseis caracteres",
+        "why": "O segredo inteiro entra em toda assinatura. O comprimento é real; ele só protege contra o atacante errado."
+      },
+      {
+        "text": "Porque o hardware atual testa toda string de quarenta caracteres",
+        "why": "Nada consegue tentar todas. É exatamente por isso que ninguém ataca uma chave adivinhando."
+      },
+      {
+        "text": "Porque chaves são copiadas de onde foram escritas, nunca adivinhadas",
+        "why": "Isso. Uma chave achada num repositório, numa imagem ou num log funciona seja qual for o comprimento."
+      },
+      {
+        "text": "Porque o id revela a um atacante a maior parte do segredo",
+        "why": "O id e o segredo são strings independentes. Um não diz nada sobre o outro."
+      }
+    ]
+  },
+  "ex-znrap2x6": {
+    "prompt": "Ligue cada chamador ao que ele deve usar em vez de uma chave de acesso.",
+    "hint": "A tabela de alternativas da seção.",
+    "pairs": [
+      {
+        "left": "uma pessoa num teclado",
+        "right": "o IAM Identity Center e o `aws sso login`"
+      },
+      {
+        "left": "um programa no EC2",
+        "right": "um instance profile"
+      },
+      {
+        "left": "um pipeline do GitHub Actions",
+        "right": "o token OIDC dele, trocado por uma role"
+      },
+      {
+        "left": "um servidor do escritório com certificado",
+        "right": "o IAM Roles Anywhere"
+      }
+    ],
+    "right_distractors": [
+      "uma segunda chave de acesso, trocada todo mês"
+    ]
+  },
+  "ex-8wvqbnwz": {
+    "prompt": "Quais destes são jeitos de as chaves vazarem, como a seção os descreve? Marque todos os que se aplicam.",
+    "hint": "Três são cópias feitas por ferramentas comuns.",
+    "choices": [
+      {
+        "text": "Um `.env` commitado uma vez e removido no commit seguinte",
+        "why": "Isso. O primeiro commit ainda a guarda, e um repositório público é varrido em minutos."
+      },
+      {
+        "text": "Uma imagem construída com `COPY . .` a partir de um diretório com `~/.aws`",
+        "why": "Isso. Toda camada pode ser aberta por quem consegue baixar a imagem."
+      },
+      {
+        "text": "Um job de CI rodando com `set -x`",
+        "why": "Isso. O shell imprime cada comando com as variáveis expandidas, chaves inclusive, no log do job."
+      },
+      {
+        "text": "Um atacante tentando strings secretas até uma assinar certo",
+        "why": "Ninguém vaza uma chave assim; o número de strings está muito além de qualquer tentativa."
+      },
+      {
+        "text": "A AWS imprimindo o segredo no CloudTrail",
+        "why": "O CloudTrail registra o id da chave. O segredo nunca é enviado, então a AWS não tem o que imprimir."
+      }
+    ]
+  },
+  "ex-km7bp4z5": {
+    "prompt": "Um desenvolvedor faz push de uma chave num repositório público e a remove num segundo push dez minutos depois. O que deve acontecer com a chave?",
+    "hint": "O que um commit guarda?",
+    "choices": [
+      {
+        "text": "Nada mais: ela ficou pública só dez minutos",
+        "why": "Varredores leem pushes públicos em minutos, e o primeiro commit ainda guarda a chave depois do segundo push."
+      },
+      {
+        "text": "Tratá-la como vazada: desativar, ver o que ela fez, trocar",
+        "why": "Isso. O segundo push mudou a versão mais recente, não o histórico, e a chave tem de ser dada como copiada."
+      },
+      {
+        "text": "Reescrever o histórico do repositório para o commit sumir, e manter a chave",
+        "why": "Reescrever o histórico remove a prova, não as cópias já feitas dela."
+      },
+      {
+        "text": "Tornar o repositório privado",
+        "why": "Isso barra leitores futuros, não os que leram naqueles dez minutos."
+      }
+    ]
+  },
+  "ex-cad3pt23": {
+    "prompt": "Quantas chaves de acesso um usuário do IAM pode ter ao mesmo tempo?",
+    "hint": "O moto recusou a seguinte com `LimitExceeded`.",
+    "unit": "chaves"
+  },
+  "ex-3er4g5pn": {
+    "prompt": "Ponha em ordem os passos da troca da chave do `erp-sync`.",
+    "hint": "Todo passo menos o último pode ser desfeito.",
+    "items": [
+      "criar a segunda chave",
+      "mudar o programa para a chave nova",
+      "conferir que o último uso da chave antiga parou",
+      "deixar a chave antiga `Inactive`",
+      "esperar, e então apagar a chave antiga"
+    ],
+    "trap": "Apagar vem por último porque é o único passo que não tem volta."
+  },
+  "ex-mqdsnkyj": {
+    "prompt": "Por que a chave antiga fica `Inactive` por um tempo, em vez de ser apagada assim que o programa trocou?",
+    "hint": "O que acontece com quem ainda a usava?",
+    "choices": [
+      {
+        "text": "Porque uma chave não pode ser apagada enquanto está `Active`",
+        "why": "Uma chave ativa pode ser apagada na hora; a ordem é uma escolha, não uma regra que o IAM aplica."
+      },
+      {
+        "text": "Para um usuário esquecido falhar com a chave ainda recuperável",
+        "why": "Isso. `--status Active` desfaz o desligamento num comando; nada desfaz uma exclusão."
+      },
+      {
+        "text": "Porque a AWS precisa de uma semana para tirar a chave dos sistemas dela",
+        "why": "Uma chave apagada para de funcionar na hora, como o moto mostrou com `InvalidAccessKeyId`."
+      },
+      {
+        "text": "Para que o relatório de credenciais tenha tempo de registrar a troca",
+        "why": "O relatório é gerado sob pedido e mostra a mudança na próxima vez que for."
+      }
+    ]
+  },
+  "ex-myh26rgm": {
+    "prompt": "Um dia depois de o sistema de contabilidade passar para a chave nova, o `LastUsedDate` da chave antiga ainda está mudando. O que isso significa, e o que vem depois?",
+    "hint": "Quem mais tem o par antigo?",
+    "choices": [
+      {
+        "text": "Nada: a data se atualiza sozinha uma vez por dia",
+        "why": "A data só muda quando uma requisição é assinada com a chave. Algo assinou com ela."
+      },
+      {
+        "text": "A chave nova falhou, então apague-a e fique com a antiga",
+        "why": "A data da própria chave nova diz se ela funciona. A data antiga mudando diz que existe mais alguém."
+      },
+      {
+        "text": "Outro programa a usa; achá-lo antes de desligar",
+        "why": "Isso. Achar esse usuário é o motivo de a chave antiga ainda não ter sido apagada, e as linhas dele no CloudTrail dizem de onde chama."
+      },
+      {
+        "text": "A chave vazou, então apague o usuário",
+        "why": "Pode ser um script esquecido e não um invasor, e apagar o usuário remove as duas chaves e a prova."
+      }
+    ]
+  },
+  "ex-d4df9wnz": {
+    "prompt": "No laboratório, a chave antiga enviou o arquivo com sucesso depois de `update-access-key --status Inactive`. O que isso estabelece?",
+    "hint": "Registrado não é aplicado.",
+    "choices": [
+      {
+        "text": "Só que o moto registra `Inactive` e continua aceitando a chave",
+        "why": "Isso. A AWS recusa toda requisição assinada com uma chave inativa, que é a falha que o passo existe para provocar."
+      },
+      {
+        "text": "Que `Inactive` só vale depois do próximo relatório de credenciais",
+        "why": "O relatório lê o estado; não o aplica. Na AWS a recusa é imediata."
+      },
+      {
+        "text": "Que uma chave inativa ainda funciona no S3 mas não em outros serviços",
+        "why": "Nada no laboratório comparou serviços, e a AWS não documenta exceção assim."
+      },
+      {
+        "text": "Que a política `upload-erp` passa por cima do status da chave",
+        "why": "Uma política decide o que uma chave válida pode fazer. Uma chave inativa não é válida na AWS."
+      }
+    ]
+  },
+  "ex-dcfn5zyf": {
+    "prompt": "O relatório de credenciais chega em base64, então é lido com `aws iam get-credential-report --query Content --output text | base64 ___`.",
+    "hint": "A opção que decodifica.",
+    "blanks": [
+      {
+        "accept": [
+          "-d",
+          "--decode"
+        ]
+      }
+    ]
+  },
+  "ex-a8t2q7cw": {
+    "prompt": "O `key-ages.py` imprime `old-report  key 1  400 days  last used N/A  ROTATE`. O que deve acontecer com essa chave?",
+    "hint": "Leia a coluna de último uso além da idade.",
+    "choices": [
+      {
+        "text": "Trocá-la, como o aviso diz",
+        "why": "Trocar dá a uma chave que ninguém usa uma substituta nova. O aviso conta dias; o último uso vazio diz mais."
+      },
+      {
+        "text": "Desligá-la, esperar, apagá-la; sem nova",
+        "why": "Isso. Uma chave nunca usada em 400 dias é uma chave a remover; desligá-la antes ainda pega uma surpresa."
+      },
+      {
+        "text": "Deixá-la: uma chave nunca usada não pode vazar",
+        "why": "Ela vaza exatamente como qualquer outra, e aí o primeiro uso dela é do invasor."
+      },
+      {
+        "text": "Anexar a política de quarentena a ela",
+        "why": "Nada diz que ela vazou. A quarentena é para uma chave achada em público, não para uma que só é velha."
+      }
+    ]
+  },
+  "ex-gvcqpmh8": {
+    "prompt": "Passados quantos dias o `key-ages.py` sinaliza uma chave, a linha que o benchmark do CIS e o `IAM.3` do Security Hub traçam?",
+    "hint": "O valor de `LIMIT`.",
+    "unit": "dias"
+  },
+  "ex-jb6bb787": {
+    "prompt": "Por que o `mfa-to-delete.json` usa `BoolIfExists` e não `Bool`?",
+    "hint": "O que leva uma requisição assinada só com a chave?",
+    "choices": [
+      {
+        "text": "Porque `Bool` não consegue comparar com `false`",
+        "why": "`Bool` compara com qualquer dos dois valores. O problema é uma chave que nem está lá."
+      },
+      {
+        "text": "Requisições só com a chave não têm essa chave, e `Bool` as perderia",
+        "why": "Isso. O deny pularia justamente a requisição para a qual existe; o `IfExists` faz a chave ausente contar como coincidência."
+      },
+      {
+        "text": "Porque o `IfExists` faz a política valer em toda região",
+        "why": "Regiões não têm nada a ver; o `IfExists` é sobre uma chave de condição ausente."
+      },
+      {
+        "text": "Porque o moto só entende as formas `IfExists`",
+        "why": "O moto ignora condições por inteiro, como o teste invertido mostrou. A escolha segue a avaliação da AWS."
+      }
+    ]
+  },
+  "ex-1fd89nwh": {
+    "prompt": "Com a condição invertida para negar só requisições que TÊM MFA, o moto ainda recusou a exclusão de `dani` feita só com a chave. O que se conclui?",
+    "hint": "Na AWS essa exclusão teria sido permitida.",
+    "choices": [
+      {
+        "text": "Que um deny explícito sempre vence, diga a condição o que disser",
+        "why": "Na AWS um deny só vale quando a condição bate. Esta não bateu, e a AWS permitiria a exclusão."
+      },
+      {
+        "text": "Que a chave da `dani` leva MFA sem ela saber",
+        "why": "Uma chave nunca leva MFA; só uma sessão de `get-session-token` com um código leva."
+      },
+      {
+        "text": "Que o moto ignora a condição, então a primeira recusa não provou nada sobre ela",
+        "why": "Isso. Um deny com condição nega sempre no moto; se a condição de MFA bate é comportamento documentado da AWS."
+      },
+      {
+        "text": "Que a `AmazonS3FullAccess` deixa de fora `s3:DeleteObject` em buckets que guardam backups",
+        "why": "Inclui: `s3:*`. A recusa veio do deny inline, que o moto aplicou sem condição."
+      }
+    ]
+  },
+  "ex-cgeja0gf": {
+    "prompt": "Uma chave é achada num gist público. Ponha a resposta em ordem.",
+    "hint": "Pare-a primeiro; entenda-a antes de substituí-la.",
+    "items": [
+      "desativar a chave",
+      "buscar no CloudTrail o que o id da chave fez",
+      "desfazer o que ela criou, sessões inclusive",
+      "dar ao programa uma chave nova e apagar a antiga",
+      "descobrir como ela vazou"
+    ],
+    "trap": "Trocar antes de investigar substitui a chave enquanto o que o invasor criou ainda está lá."
+  },
+  "ex-jqkz4ve1": {
+    "prompt": "A AWS anexa a `AWSCompromisedKeyQuarantineV3` a um usuário cuja chave ela achou em público. O que ainda falta fazer?",
+    "hint": "Um freio, não uma cura.",
+    "choices": [
+      {
+        "text": "Nada: a política desativa a chave",
+        "why": "Ela deixa a chave ativa e nega uma lista de ações. A chave ainda assina tudo o que a lista não cobre."
+      },
+      {
+        "text": "Só remover a política quando o usuário confirmar que foi engano",
+        "why": "Uma chave achada em público está vazada, diga o usuário o que disser. A política é o começo da resposta."
+      },
+      {
+        "text": "Desativar, investigar e trocar, como para qualquer chave vazada",
+        "why": "Isso. A quarentena barra as ações caras e persistentes; ela não desfaz nada e a AWS ainda manda trocar."
+      },
+      {
+        "text": "Anexar também a versão `V2`, já que cada versão cobre serviços diferentes",
+        "why": "Uma versão posterior substitui a anterior; empilhá-las não acrescenta nada de que a resposta precise."
+      }
+    ]
+  },
+  "ex-d6aya2w4": {
+    "prompt": "Que ferramenta recusa um commit com uma chave da AWS no laptop do próprio desenvolvedor, antes de qualquer servidor vê-la?",
+    "hint": "Ela instala hooks no repositório local.",
+    "choices": [
+      {
+        "text": "O push protection do GitHub",
+        "why": "O push protection recusa o push no GitHub, depois de o commit já existir no laptop."
+      },
+      {
+        "text": "O `git-secrets`, do AWS Labs",
+        "why": "Isso. Os hooks dele conferem as mudanças de cada commit contra os padrões de chave da AWS."
+      },
+      {
+        "text": "O relatório de credenciais",
+        "why": "O relatório lista chaves que existem no IAM; ele não sabe nada do repositório de ninguém."
+      },
+      {
+        "text": "A política `AWSCompromisedKeyQuarantineV3`",
+        "why": "Ela é aplicada depois de a chave ser achada em público, que é exatamente o que a pergunta quer evitar."
+      }
+    ]
+  },
+  "ex-g8jzbg4t": {
+    "prompt": "O deploy da loja no GitHub Actions assina com a chave de um usuário do IAM guardada como segredo do repositório, e o `key-ages.py` a sinaliza com 200 dias. Qual a correção melhor?",
+    "hint": "Este é um dos casos em que a chave é inevitável?",
+    "choices": [
+      {
+        "text": "Trocá-la agora e pôr um lembrete a cada 90 dias",
+        "why": "Isso mantém uma chave onde nenhuma é necessária. Um pipeline com token OIDC não está na lista do último recurso."
+      },
+      {
+        "text": "Trocar o token OIDC do workflow pela `deployer`; apagar a chave",
+        "why": "Isso. O web identity da lição 10: sessões curtas, uma condição em `sub` que nomeia o repositório, e nenhum segredo para envelhecer."
+      },
+      {
+        "text": "Mudar a chave dos segredos do repositório para os da organização",
+        "why": "A chave passaria a ser lida por mais repositórios, não menos, e continuaria velha."
+      },
+      {
+        "text": "Exigir MFA do usuário com uma condição `BoolIfExists`",
+        "why": "Um pipeline não tem celular para dar um código. A condição simplesmente pararia todo deploy."
+      }
+    ]
+  },
+  "ex-vnkpr8wp": {
+    "prompt": "Um alerta diz que a chave atual do `erp-sync` apareceu num paste público há uma hora. Que comando a `ana` digita primeiro?",
+    "hint": "Reversível, e imediato.",
+    "choices": [
+      {
+        "text": "`aws iam delete-user --user-name erp-sync`",
+        "why": "O IAM recusa apagar um usuário que ainda tem chaves e políticas, e o sucesso perderia o registro do que a chave era."
+      },
+      {
+        "text": "`aws iam create-access-key --user-name erp-sync`",
+        "why": "Uma chave nova mantém o programa rodando, e deixa a vazada funcionando para o estranho enquanto isso."
+      },
+      {
+        "text": "`aws iam update-access-key --user-name erp-sync --access-key-id … --status Inactive`",
+        "why": "Isso. Ele para a chave na hora e pode ser revertido; a investigação e a troca vêm depois."
+      },
+      {
+        "text": "`aws iam generate-credential-report`",
+        "why": "O relatório descreve chaves e não para nenhuma. Ele pode esperar a chave estar desligada."
+      }
+    ]
+  },
+  "ex-6851bdxm": {
+    "prompt": "Ligue cada comando ao passo dele numa rotação.",
+    "hint": "Quatro passos, quatro comandos.",
+    "pairs": [
+      {
+        "left": "`create-access-key`",
+        "right": "a segunda chave"
+      },
+      {
+        "left": "`get-access-key-last-used`",
+        "right": "conferir que a antiga ficou quieta"
+      },
+      {
+        "left": "`update-access-key --status Inactive`",
+        "right": "desligar a chave antiga"
+      },
+      {
+        "left": "`delete-access-key`",
+        "right": "o passo que não tem volta"
+      }
+    ],
+    "right_distractors": [
+      "mudar o programa para a chave nova"
+    ]
+  },
+  "ex-475vx5cf": {
+    "prompt": "Dos chamadores da loja, qual a lição deixa com uma chave de acesso, e por que esse?",
+    "hint": "Fora da AWS, sem certificado e sem navegador.",
+    "choices": [
+      {
+        "text": "A `bia`, porque desenvolvedores precisam da linha de comando todo dia",
+        "why": "Pessoas têm o Identity Center e o `aws sso login`, lição 11. Pessoas não estão na lista."
+      },
+      {
+        "text": "Os servidores web, porque leem `shop-assets` o tempo todo",
+        "why": "Eles rodam no EC2 e vestem a `shop-app` por um instance profile, lição 10."
+      },
+      {
+        "text": "O `erp-sync`, o sistema de contabilidade do escritório",
+        "why": "Isso. Um programa fora da AWS a que a loja não consegue dar certificado, chamando num horário: a lista curta que sobra."
+      },
+      {
+        "text": "O pipeline de deploy, porque o CI roda fora da AWS",
+        "why": "Ele roda fora da AWS e ainda assim tem um token OIDC para trocar por uma role."
+      }
+    ]
+  }
+}
