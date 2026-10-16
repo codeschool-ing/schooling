@@ -1,0 +1,552 @@
+[
+ {
+  "id": "ex-rsescb1g",
+  "version": 1,
+  "section": "the-duplication",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Three tests each wait for a button that a rename removed, and the default test timeout is 30 seconds. Run with one worker, how many seconds does the run spend before it reports all three failures?",
+  "value": 90,
+  "tolerance": 3,
+  "unit": "s"
+ },
+ {
+  "id": "ex-v9g68waw",
+  "version": 1,
+  "section": "the-duplication",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "After the button became *Add to cart*, the three duplicated tests failed although the shop worked. What was actually wrong?",
+  "choices": [
+   {
+    "text": "Each test held its own copy of one fact about the markup",
+    "correct": true,
+    "why": "Right. The fact changed once, and every copy of it failed separately; the repair is four edits in three places."
+   },
+   {
+    "text": "The locators were fragile, and role and name should have been CSS classes",
+    "correct": false,
+    "why": "Role and name are the locators lesson 2 recommends, and a class can be renamed just as easily. The locator was fine; it was written three times."
+   },
+   {
+    "text": "The tests ran in parallel and saw one another's bananas",
+    "correct": false,
+    "why": "They ran with one worker, one after another, and none of them got as far as adding anything."
+   },
+   {
+    "text": "Nothing: a red suite after a markup change is a defect found",
+    "correct": false,
+    "why": "The shop still worked, so there was no defect to find. The suite reported its own knowledge going stale."
+   }
+  ]
+ },
+ {
+  "id": "ex-fpje8dzv",
+  "version": 1,
+  "section": "a-page-object",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does a page object hold, in this lesson's sense of the pattern?",
+  "choices": [
+   {
+    "text": "A list of selector strings shared by the tests",
+    "correct": false,
+    "why": "That moves the strings and keeps the problem: tests still say *click this button* and still repeat multi-step actions."
+   },
+   {
+    "text": "The expected results of every test of the page",
+    "correct": false,
+    "why": "Expectations stay in the tests; section 05 is about why."
+   },
+   {
+    "text": "What a customer does on one page and sees there, with its locators",
+    "correct": true,
+    "why": "Right. Behaviour in the customer's words, and the knowledge of where things are behind it."
+   },
+   {
+    "text": "Its own browser, so that each test is isolated",
+    "correct": false,
+    "why": "It is handed the test's `page` and starts nothing; isolation comes from the context Playwright gives each test."
+   }
+  ]
+ },
+ {
+  "id": "ex-b5791fmy",
+  "version": 1,
+  "section": "a-page-object",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With `ShopPage` in place, the button is renamed and all three tests fail again. Where do the stack traces point first?",
+  "choices": [
+   {
+    "text": "To the line of each test that adds a fruit",
+    "correct": false,
+    "why": "The test's line appears too, below, as the step in progress; the first frame is where the button is named."
+   },
+   {
+    "text": "To `app/public/app.js`, where the text changed",
+    "correct": false,
+    "why": "Playwright knows nothing of the shop's source; it reports where the test code was waiting."
+   },
+   {
+    "text": "Nowhere: a timeout carries no stack trace at all",
+    "correct": false,
+    "why": "The capture shows one: the call log, then the code frame at `shop-page.js:14`, then the spec's line."
+   },
+   {
+    "text": "To line 14 of `pages/shop-page.js`",
+    "correct": true,
+    "why": "Right. `ShopPage.addToBasket` is the one place that names *Add to basket*, so one edit there makes all three pass."
+   }
+  ]
+ },
+ {
+  "id": "ex-m910gba9",
+  "version": 1,
+  "section": "a-page-object",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague worries that `basketCount()` builds a new locator on every call, before the page has drawn anything. What happens?",
+  "choices": [
+   {
+    "text": "It finds the element once and goes stale when the header is redrawn",
+    "correct": false,
+    "why": "That is how a stored element handle behaves. A locator holds no element at all."
+   },
+   {
+    "text": "Nothing is found until the locator is used, against the page as it is then",
+    "correct": true,
+    "why": "Right. A locator is a description resolved at each use, so building one early or often costs nothing."
+   },
+   {
+    "text": "It throws, because the count is drawn after the products arrive",
+    "correct": false,
+    "why": "Creating a locator never looks at the page, so there is nothing to throw about yet."
+   },
+   {
+    "text": "Each call slows the test, so it should be made once in the constructor",
+    "correct": false,
+    "why": "Building a locator does no work in the browser; either place is fine."
+   }
+  ]
+ },
+ {
+  "id": "ex-xw35gaz1",
+  "version": 1,
+  "section": "components",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put the layers in order, from the one that knows least about the HTML to the HTML itself.",
+  "items": [
+   "the test: `shop.addToBasket('banana')`",
+   "the page object, `ShopPage`",
+   "the component, `ProductCard`",
+   "the locator: `getByRole('button', { name })`",
+   "the element in the DOM"
+  ],
+  "trap": "A markup change enters at the bottom and should stop at the locators."
+ },
+ {
+  "id": "ex-q9tmh8fh",
+  "version": 1,
+  "section": "components",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`ProductCard` is constructed from a root locator. What does that buy?",
+  "choices": [
+   {
+    "text": "Faster tests, since the card is located only once",
+    "correct": false,
+    "why": "Locators are resolved at each use whatever they start from; the gain is scope, not speed."
+   },
+   {
+    "text": "Strict mode can no longer complain about eight buttons",
+    "correct": false,
+    "why": "Scoping does avoid the eight matches, but that is a side effect: chaining from the card did it in lesson 2 without a class."
+   },
+   {
+    "text": "One class serves any card it is handed, on any page",
+    "correct": true,
+    "why": "Right. Every locator inside starts from the root, which is why the guava card passed on `/` and on `/ssr`."
+   },
+   {
+    "text": "A card can be checked without the page loading",
+    "correct": false,
+    "why": "Every check still runs against a loaded page; the component only decides where to look in it."
+   }
+  ]
+ },
+ {
+  "id": "ex-4p34hmwy",
+  "version": 1,
+  "section": "components",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team gives every page object a `BasePage` parent holding the header. A new checkout page has no header but a progress bar. What goes wrong?",
+  "choices": [
+   {
+    "text": "It inherits header methods it cannot honestly offer",
+    "correct": true,
+    "why": "Right. Holding parts as fields lets each page have exactly the parts it draws, and say so in its constructor."
+   },
+   {
+    "text": "Nothing, as long as the checkout page overrides the header methods",
+    "correct": false,
+    "why": "Overriding them to do what? The page still offers a header it does not have; the class lies about the page."
+   },
+   {
+    "text": "The tests fail at once, because `extends` needs every method",
+    "correct": false,
+    "why": "JavaScript requires nothing of the kind; the inherited methods simply sit there until somebody calls one."
+   },
+   {
+    "text": "The progress bar must be put into `BasePage` as well",
+    "correct": false,
+    "why": "That is the road to every page inheriting every part; it makes the problem bigger rather than solving it."
+   }
+  ]
+ },
+ {
+  "id": "ex-cetwvpse",
+  "version": 1,
+  "section": "assertions-belong-in-tests",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With the basket's answer held back 200 ms, `expect(await shop.basket.itemCount()).toBe(1)` failed five times in five. Why?",
+  "choices": [
+   {
+    "text": "`Number()` turned the text into `NaN`",
+    "correct": false,
+    "why": "Every failure received `0`, a number; the text was a digit, only the wrong one."
+   },
+   {
+    "text": "`toBe` compares objects by reference, not by value",
+    "correct": false,
+    "why": "For numbers `toBe` compares the values; `0` is simply not `1`."
+   },
+   {
+    "text": "The route stopped the request from reaching the server",
+    "correct": false,
+    "why": "The route delays and then continues it; the polled test, on the same route, saw the count reach 1."
+   },
+   {
+    "text": "The count was read once, before the answer redrew it",
+    "correct": true,
+    "why": "Right. `textContent()` is a snapshot, and a plain `expect` on a value never asks again."
+   }
+  ]
+ },
+ {
+  "id": "ex-z2kc4b0z",
+  "version": 1,
+  "section": "assertions-belong-in-tests",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which version of the count lets the test keep Playwright's retrying assertions?",
+  "choices": [
+   {
+    "text": "`async itemCount()` returning `Number(await count.textContent())`",
+    "correct": false,
+    "why": "That is the snapshot that failed five times in five; only a poll around it retries."
+   },
+   {
+    "text": "`basketCount()` returning the locator",
+    "correct": true,
+    "why": "Right. `expect(locator).toHaveText('1')` reads again until it matches or time runs out."
+   },
+   {
+    "text": "`checkCount(n)`, with the `expect` inside the page object",
+    "correct": false,
+    "why": "It can retry, but it hides the expectation and fits one test; the retry was never the page object's to own."
+   },
+   {
+    "text": "A getter that caches the first text it reads",
+    "correct": false,
+    "why": "Caching makes the snapshot permanent: the test would compare the count from before the click forever."
+   }
+  ]
+ },
+ {
+  "id": "ex-9tb76eds",
+  "version": 1,
+  "section": "assertions-belong-in-tests",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test checks what the shop shows when its products fail to load. Its page object's `open()` ends by expecting a visible product card. What does that assertion do to this test?",
+  "choices": [
+   {
+    "text": "Fails it inside `open()`, before it looks at the error",
+    "correct": true,
+    "why": "Right. This is the argument against assertions in page objects: a precondition for most tests is the subject of this one."
+   },
+   {
+    "text": "Makes it more reliable, since it confirms the page opened",
+    "correct": false,
+    "why": "It confirms the opposite of what this test sets up; the page object has decided what *loaded* means for everyone."
+   },
+   {
+    "text": "Nothing, because assertions inside classes do not retry",
+    "correct": false,
+    "why": "An `expect` on a locator retries wherever it is written."
+   },
+   {
+    "text": "Passes it, since `open()` runs before the test body starts",
+    "correct": false,
+    "why": "A failure anywhere the test awaits, in a page object or a fixture, fails the test."
+   }
+  ]
+ },
+ {
+  "id": "ex-b487hzj3",
+  "version": 1,
+  "section": "fixtures",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To add a fixture of your own, such as `shop`, you call `test.___ ({ shop: async ({ page }, use) => { … } })` and export the result.",
+  "blanks": [
+   {
+    "accept": [
+     "extend"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-ahq23ha9",
+  "version": 1,
+  "section": "fixtures",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the `shop` fixture, where does code that must run after the test go?",
+  "choices": [
+   {
+    "text": "In an `afterEach` that the fixture file exports",
+    "correct": false,
+    "why": "A fixture carries its own cleanup; nothing outside it is needed."
+   },
+   {
+    "text": "Before `use`, because the runner reverses the order",
+    "correct": false,
+    "why": "Code before `use` is setup and runs first; nothing is reversed."
+   },
+   {
+    "text": "Nowhere: fixtures cannot clean up",
+    "correct": false,
+    "why": "`page` itself is a fixture that closes the page after each test."
+   },
+   {
+    "text": "After `await use(shop)`, which returns when the test ends",
+    "correct": true,
+    "why": "Right. The test runs while `use` waits; what follows it is the teardown."
+   }
+  ]
+ },
+ {
+  "id": "ex-1xc8zcft",
+  "version": 1,
+  "section": "fixtures",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The card tests ask for `page` and not for `shop`, in a suite where the fixtures file defines `shop`. What does the `shop` fixture do for them?",
+  "choices": [
+   {
+    "text": "Resets the basket first, like every other test",
+    "correct": false,
+    "why": "Fixtures are set up on demand; a test that does not name one does not pay for it."
+   },
+   {
+    "text": "Opens the shop, then their `goto` loads it again",
+    "correct": false,
+    "why": "No page load happens on their behalf; only their own `goto` runs."
+   },
+   {
+    "text": "Nothing, since they import `test` from `@playwright/test` and never name it",
+    "correct": true,
+    "why": "Right. Neither the import nor the argument mentions it, so it is never built for them."
+   },
+   {
+    "text": "Breaks them, because a spec must import the extended `test`",
+    "correct": false,
+    "why": "Both `test` objects work side by side; the run passed all five."
+   }
+  ]
+ },
+ {
+  "id": "ex-0gnsrxfk",
+  "version": 1,
+  "section": "over-abstraction",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each page-object method to what is wrong with it.",
+  "pairs": [
+   {
+    "left": "`clickAddButtonOnBananaCard()`",
+    "right": "named after the markup, so it changes when the markup does"
+   },
+   {
+    "left": "`addToBasket()` ending in `waitForTimeout(2000)`",
+    "right": "a wait one test needed, paid by every test"
+   },
+   {
+    "left": "`isInBasket()` returning `false` from a `catch`",
+    "right": "a failure turned into a value nobody may check"
+   },
+   {
+    "left": "an `AppPage` with methods for every page",
+    "right": "several classes pretending to be one"
+   }
+  ]
+ },
+ {
+  "id": "ex-cmgsdqdg",
+  "version": 1,
+  "section": "over-abstraction",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`basketCount()` is one line long. Why does this lesson keep it while calling `click(locator)` a wasted wrapper?",
+  "choices": [
+   {
+    "text": "One-line methods are fine while there are fewer than five of them",
+    "correct": false,
+    "why": "No count decides it; the lesson names no such limit."
+   },
+   {
+    "text": "Its name says what the customer sees and hides where it lives",
+    "correct": true,
+    "why": "Right. A redesign moves the count and the name stays true; `click(locator)` only renames `locator.click()`."
+   },
+   {
+    "text": "A method returning a locator cannot be a wrapper",
+    "correct": false,
+    "why": "`getBasketCountSpan()` returns one too, and is named after the markup."
+   },
+   {
+    "text": "It is used by three tests, and `click` by none",
+    "correct": false,
+    "why": "Use counts do not rescue a name that repeats the widget; a popular wrapper is still a second vocabulary."
+   }
+  ]
+ },
+ {
+  "id": "ex-mqq4r5ex",
+  "version": 1,
+  "section": "over-abstraction",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "When does this lesson say a page object should be written?",
+  "choices": [
+   {
+    "text": "Before the first test, so that tests have something to call",
+    "correct": false,
+    "why": "Written first, it guesses which steps repeat, and guesses wrong."
+   },
+   {
+    "text": "When a markup change has broken a test for the first time",
+    "correct": false,
+    "why": "Waiting for the breakage means paying for the duplication once before removing it; the signal is the repetition itself."
+   },
+   {
+    "text": "Only for pages with more than one component on them",
+    "correct": false,
+    "why": "The shop's first page object had no components at all, and earned its place."
+   },
+   {
+    "text": "Once the tests repeat a step, moving only what repeats",
+    "correct": true,
+    "why": "Right. This lesson began from three tests that repeated themselves."
+   }
+  ]
+ },
+ {
+  "id": "ex-rhda4yew",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The search page from lesson 3 gets a `SearchPage`. A test types `papaya` and checks the list. Which method should the page object offer for the result?",
+  "choices": [
+   {
+    "text": "`results()` returning the locator for `#results li`",
+    "correct": true,
+    "why": "Right. The test can wait for `aria-busy` and then assert on the locator, which retries."
+   },
+   {
+    "text": "`async resultNames()` returning the texts of the list right away",
+    "correct": false,
+    "why": "A snapshot, read while answers are still arriving; on that page it races exactly as the count did here."
+   },
+   {
+    "text": "`expectOnlyPapaya()`, which asserts inside the page object",
+    "correct": false,
+    "why": "That hides the expectation and fits one test; the next search needs another method."
+   },
+   {
+    "text": "`waitAndRead()`, sleeping a second before reading",
+    "correct": false,
+    "why": "Lesson 3 measured that sleep: after one second it read the stale *p* answer, three fruit."
+   }
+  ]
+ },
+ {
+  "id": "ex-qm16k2e6",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these belong inside a page object or one of its components? Choose all that apply.",
+  "choices": [
+   {
+    "text": "The test id `product-banana` and the button's accessible name",
+    "correct": true,
+    "why": "Yes. Where things are on the page is exactly what the page object is for."
+   },
+   {
+    "text": "A method `addToBasket(id)` that clicks the card's button",
+    "correct": true,
+    "why": "Yes. An action in the customer's words, with the locators behind it."
+   },
+   {
+    "text": "The expectation that two fruit make two items",
+    "correct": false,
+    "why": "That is the test case itself, and it stays in the test where a reader can see it."
+   },
+   {
+    "text": "The `POST /api/reset` that empties the basket",
+    "correct": false,
+    "why": "Preparing the world is setup; in this lesson it lives in the `shop` fixture, not in the page."
+   }
+  ]
+ },
+ {
+  "id": "ex-k2jmy4m9",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A suite of 30 tests clicks *Add to basket* in each test, written out every time, once per test. The button is renamed. How many lines must change if the suite uses a page object whose `ProductCard` names the button?",
+  "value": 1,
+  "tolerance": 0
+ }
+]

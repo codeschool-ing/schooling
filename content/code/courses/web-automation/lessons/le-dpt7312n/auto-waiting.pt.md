@@ -25,9 +25,10 @@ página como ela está naquele momento.
 
 ## Depois de uma ação: uma asserção que tenta de novo
 
-O **Add to basket** da loja manda uma requisição e redesenha a contagem quando a resposta chega. O
-`click()` volta assim que o clique é entregue, não quando a requisição termina. Este teste lê a
-contagem dos dois jeitos. Salve-o como `tests/waiting.spec.js`:
+O **Add to basket** da loja manda uma requisição e, quando a resposta chega, redesenha a contagem e
+mostra *Added Mango* no aviso por dois segundos. O `click()` volta assim que o clique é entregue,
+não quando nada disso aconteceu. Este teste lê o aviso dos dois jeitos. Salve-o como
+`tests/waiting.spec.js`:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -38,29 +39,37 @@ test.beforeEach(async ({ request }) => {
 
 test('a read is a snapshot, an assertion retries', async ({ page }) => {
   await page.goto('/');
-  const count = page.getByTestId('basket-count');
+  const toast = page.getByRole('status');
   await page.getByTestId('product-mango').getByRole('button', { name: 'Add to basket' }).click();
-  console.log(`read straight after the click: ${await count.textContent()}`);
-  await expect(count).toHaveText('1');
+  await expect(toast).toHaveText('Added Mango');
+  console.log(`read once: "${await toast.textContent()}"`);
+  // The shop empties the toast two seconds after it appears.
+  await expect(toast).toHaveText('');
 });
 ```
 
 ```
-%%CAP waiting%%
+ana@laptop:~/quitanda$ npx playwright test tests/waiting.spec.js
+
+Running 1 test using 1 worker
+
+read once: "Added Mango"
+  ✓  1 tests/waiting.spec.js:7:1 › a read is a snapshot, an assertion retries (3.1s)
+
+  1 passed (4.6s)
 ```
 
-O `textContent()` leu a contagem na hora e recebeu `0`: **uma leitura é uma foto**, tirada no
-instante em que roda, antes de a resposta da loja voltar. O `expect(count).toHaveText('1')` passou
-na mesma página, porque uma asserção sobre um localizador é uma **asserção web-first**: ela lê,
-compara e lê de novo até o texto bater. O mesmo teste dez vezes, um depois do outro:
+A primeira asserção esperou a resposta e o aviso. O `textContent()` então o leu uma vez e recebeu
+`Added Mango`: **uma leitura é uma foto**, tirada no instante em que roda, e leria a mesma coisa
+por mais que o teste esperasse depois. O `expect(toast).toHaveText('')` passou no mesmo elemento,
+porque uma asserção sobre um localizador é uma **asserção web-first**: ela lê, compara e lê de novo
+até o texto bater. Aqui ela continuou lendo até a loja esvaziar o aviso, e é por isso que o teste
+levou mais de dois segundos.
 
-```
-%%CAP waiting-repeat%%
-```
-
-A foto leu `0` sete vezes e `1` três vezes, conforme a loja já tivesse respondido ou não; a
-asserção passou nas dez. Um teste que conferisse a foto com `expect(text).toBe('1')` teria falhado
-em sete dessas dez execuções e passado em três, que é o teste instável de que trata a aula 14.
+**Nunca faça uma asserção sobre a foto de algo que ainda está mudando.**
+`expect(await toast.textContent()).toBe('')` confere o valor num instante só; lido antes de a loja
+responder ou depois de o aviso sumir, ele dá um veredito diferente na mesma página, que é o teste
+instável de que trata a aula 14.
 
 ## Quanto tempo é "até"
 
@@ -81,7 +90,66 @@ test('a click on a button that is not there', async ({ page }) => {
 ```
 
 ```
-%%CAP waiting-fail%%
+ana@laptop:~/quitanda$ npx playwright test tests/waiting.spec.js
+
+Running 3 tests using 1 worker
+
+read once: "Added Mango"
+  ✓  1 tests/waiting.spec.js:7:1 › a read is a snapshot, an assertion retries (3.2s)
+  ✘  2 tests/waiting.spec.js:17:1 › an assertion that is never true (5.1s)
+  ✘  3 tests/waiting.spec.js:22:1 › a click on a button that is not there (30.0s)
+
+
+  1) tests/waiting.spec.js:17:1 › an assertion that is never true ──────────────────────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByTestId('basket-count')
+    Expected: "1"
+    Received: "0"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for getByTestId('basket-count')
+        9 × locator resolved to <span data-testid="basket-count">0</span>
+          - unexpected value "0"
+
+
+      17 | test('an assertion that is never true', async ({ page }) => {
+      18 |   await page.goto('/');
+    > 19 |   await expect(page.getByTestId('basket-count')).toHaveText('1');
+         |                                                  ^
+      20 | });
+      21 |
+      22 | test('a click on a button that is not there', async ({ page }) => {
+        at /home/ana/quitanda/tests/waiting.spec.js:19:50
+
+    Error Context: test-results/waiting-an-assertion-that-is-never-true/error-context.md
+
+  2) tests/waiting.spec.js:22:1 › a click on a button that is not there ────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Buy now' })
+
+
+      22 | test('a click on a button that is not there', async ({ page }) => {
+      23 |   await page.goto('/');
+    > 24 |   await page.getByRole('button', { name: 'Buy now' }).click();
+         |                                                       ^
+      25 | });
+      26 |
+        at /home/ana/quitanda/tests/waiting.spec.js:24:55
+
+    Error Context: test-results/waiting-a-click-on-a-button-that-is-not-there/error-context.md
+
+  2 failed
+    tests/waiting.spec.js:17:1 › an assertion that is never true ───────────────────────────────────
+    tests/waiting.spec.js:22:1 › a click on a button that is not there ─────────────────────────────
+  1 passed (40.7s)
 ```
 
 As duas falhas mostram dois relógios diferentes:

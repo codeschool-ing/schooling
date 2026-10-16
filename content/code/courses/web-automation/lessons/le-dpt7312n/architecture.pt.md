@@ -38,14 +38,24 @@ Playwright imprime o que manda quando a variável `DEBUG` pede. Estes são os pr
 teste de fumaça da aula 1:
 
 ```
-%%CAP protocol-methods%%
+ana@laptop:~/quitanda$ DEBUG=pw:protocol npx playwright test tests/smoke.spec.js 2>&1 | grep SEND | grep -o '"method":"[A-Za-z.]*"' | head -8
+"method":"Browser.getVersion"
+"method":"Target.setAutoAttach"
+"method":"Target.createBrowserContext"
+"method":"Browser.setDownloadBehavior"
+"method":"Target.createTarget"
+"method":"Browser.getWindowForTarget"
+"method":"Page.enable"
+"method":"Page.getFrameTree"
 ```
 
 Cada `SEND` é um comando com um número; a resposta do navegador volta como um `RECV` com o mesmo
 número, e os eventos voltam como linhas `RECV` sem número nenhum. Contando a execução inteira:
 
 ```
-%%CAP protocol-count%%
+ana@laptop:~/quitanda$ DEBUG=pw:protocol npx playwright test tests/smoke.spec.js 2>&1 | grep -o 'SEND\|RECV' | sort | uniq -c
+     90 RECV
+     29 SEND
 ```
 
 **Um teste que abre uma página levou 29 comandos**, e o navegador mandou 90 linhas de volta: uma
@@ -57,7 +67,8 @@ Playwright.
 mesmo, entrega a ele um par de pipes e avisa isso na linha de comando:
 
 ```
-%%CAP pipe%%
+ana@laptop:~/quitanda$ DEBUG=pw:browser npx playwright test tests/smoke.spec.js 2>&1 | grep -o 'remote-debugging-[a-z]*'
+remote-debugging-pipe
 ```
 
 Quando o navegador roda em outro lugar, em outra máquina ou num contêiner, o Playwright o alcança

@@ -309,27 +309,27 @@
   "type": "quiz",
   "difficulty": "medium",
   "drillable": true,
-  "prompt": "Straight after clicking Add to basket, `await count.textContent()` returned `0`, and `await expect(count).toHaveText('1')` then passed. Why did they disagree?",
+  "prompt": "Once the toast says *Added Mango*, `await toast.textContent()` returns `Added Mango`, and `await expect(toast).toHaveText('')` on the next line passes. Why do the two lines not contradict each other?",
   "choices": [
    {
-    "text": "The click failed the first time and was retried",
+    "text": "The read retried and found `Added Mango` on its second try",
     "correct": false,
-    "why": "One click, one request; only the reading differed."
+    "why": "A read never retries; it took one look, at one instant."
    },
    {
-    "text": "`textContent()` reads the page once; the assertion reads until it matches",
+    "text": "The read is one instant; the assertion reads until the toast empties",
     "correct": true,
-    "why": "Right. The snapshot came before the shop's answer; the assertion waited for it."
+    "why": "Right. The shop clears the toast after two seconds, and the assertion was still reading then."
    },
    {
-    "text": "The count is drawn inside a frame that a plain read of the page cannot reach",
+    "text": "`toHaveText('')` matches any text at all",
     "correct": false,
-    "why": "There is no frame; the read reached the element and got its text at that instant."
+    "why": "It compares the whole text; it passed only once the toast was empty."
    },
    {
-    "text": "`toHaveText` ignores digits",
+    "text": "They read two different elements of the page",
     "correct": false,
-    "why": "It compared `1` with `1`; the earlier failing run shows it comparing digits exactly."
+    "why": "Both use the same locator, `getByRole('status')`."
    }
   ]
  },

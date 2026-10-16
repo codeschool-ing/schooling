@@ -103,7 +103,20 @@ esvazia a cesta com `POST /api/reset` antes de cada teste. Contextos criados com
 `goto('/')` funciona neles como funciona em `page`.
 
 ```
-%%CAP contexts%%
+ana@laptop:~/quitanda$ npx playwright test tests/contexts.spec.js
+
+Running 4 tests using 1 worker
+
+Ana's page reads ana
+Bia's page reads null
+  ✓  1 tests/contexts.spec.js:8:1 › two contexts share nothing in the browser (375ms)
+cookies: Ana [], Bia []
+Ana's total after Bia's mango: R$ 10,40
+  ✓  2 tests/contexts.spec.js:31:1 › two shoppers, one basket: the shop's flaw (439ms)
+  ✓  3 tests/contexts.spec.js:57:1 › the page fixture: storage written in one test (107ms)
+  ✓  4 tests/contexts.spec.js:63:1 › the next test in the same browser starts without it (103ms)
+
+  4 passed (2.4s)
 ```
 
 ## O que a execução diz

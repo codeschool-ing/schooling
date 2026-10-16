@@ -127,7 +127,17 @@ for (const address of ['/', '/ssr']) {
 Run it with the page-object tests, whose file is the one from the previous section, untouched:
 
 ```
-%%CAP components%%
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js tests/page-object-card.spec.js --workers 1
+
+Running 5 tests using 1 worker
+
+  ✓  1 tests/page-object-card.spec.js:7:3 › the guava card on / (164ms)
+  ✓  2 tests/page-object-card.spec.js:7:3 › the guava card on /ssr (121ms)
+  ✓  3 tests/page-object.spec.js:8:1 › a banana goes into the basket (206ms)
+  ✓  4 tests/page-object.spec.js:15:1 › two fruit make two items (322ms)
+  ✓  5 tests/page-object.spec.js:24:1 › the total follows the price (263ms)
+
+  5 passed (2.7s)
 ```
 
 Five passed. **The three basket tests ran against a page object whose inside was rewritten**, and

@@ -74,7 +74,17 @@ test('the total follows the price', async ({ shop }) => {
 ```
 
 ```
-%%CAP fixtures%%
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js tests/page-object-card.spec.js --workers 1
+
+Running 5 tests using 1 worker
+
+  ✓  1 tests/page-object-card.spec.js:7:3 › the guava card on / (195ms)
+  ✓  2 tests/page-object-card.spec.js:7:3 › the guava card on /ssr (130ms)
+  ✓  3 tests/page-object.spec.js:3:1 › a banana goes into the basket (217ms)
+  ✓  4 tests/page-object.spec.js:8:1 › two fruit make two items (393ms)
+  ✓  5 tests/page-object.spec.js:15:1 › the total follows the price (258ms)
+
+  5 passed (2.8s)
 ```
 
 **Each test is now only the case itself**: what the customer did and what they should see. Compare

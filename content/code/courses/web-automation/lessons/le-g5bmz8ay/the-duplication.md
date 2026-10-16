@@ -52,7 +52,15 @@ that adds fruit and the two would count each other's bananas. Lesson 15 is about
 the flag keeps every transcript about one thing at a time.
 
 ```
-%%CAP dup%%
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js --workers 1
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/page-object.spec.js:7:1 › a banana goes into the basket (213ms)
+  ✓  2 tests/page-object.spec.js:13:1 › two fruit make two items (386ms)
+  ✓  3 tests/page-object.spec.js:21:1 › the total follows the price (288ms)
+
+  3 passed (2.3s)
 ```
 
 ## The change
@@ -62,7 +70,81 @@ Now the shop's owner decides the button should say *Add to cart*. It is a one-wo
 Make the edit with `sed`, run the same three tests, and put the word back:
 
 ```
-%%CAP dup-cart%%
+ana@laptop:~/quitanda$ sed -i 's/>Add to basket</>Add to cart</' app/public/app.js
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js --workers 1
+
+Running 3 tests using 1 worker
+
+  ✘  1 tests/page-object.spec.js:7:1 › a banana goes into the basket (30.1s)
+  ✘  2 tests/page-object.spec.js:13:1 › two fruit make two items (30.1s)
+  ✘  3 tests/page-object.spec.js:21:1 › the total follows the price (30.0s)
+
+
+  1) tests/page-object.spec.js:7:1 › a banana goes into the basket ─────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+
+
+       7 | test('a banana goes into the basket', async ({ page }) => {
+       8 |   await page.goto('/');
+    >  9 |   await page.getByTestId('product-banana').getByRole('button', { name: 'Add to basket' }).click();
+         |                                                                                           ^
+      10 |   await expect(page.getByTestId('basket-count')).toHaveText('1');
+      11 | });
+      12 |
+        at /home/ana/quitanda/tests/page-object.spec.js:9:91
+
+    Error Context: test-results/page-object-a-banana-goes-into-the-basket/error-context.md
+
+  2) tests/page-object.spec.js:13:1 › two fruit make two items ─────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+
+
+      13 | test('two fruit make two items', async ({ page }) => {
+      14 |   await page.goto('/');
+    > 15 |   await page.getByTestId('product-banana').getByRole('button', { name: 'Add to basket' }).click();
+         |                                                                                           ^
+      16 |   await expect(page.getByTestId('basket-count')).toHaveText('1');
+      17 |   await page.getByTestId('product-mango').getByRole('button', { name: 'Add to basket' }).click();
+      18 |   await expect(page.getByTestId('basket-count')).toHaveText('2');
+        at /home/ana/quitanda/tests/page-object.spec.js:15:91
+
+    Error Context: test-results/page-object-two-fruit-make-two-items/error-context.md
+
+  3) tests/page-object.spec.js:21:1 › the total follows the price ──────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('product-papaya').getByRole('button', { name: 'Add to basket' })
+
+
+      21 | test('the total follows the price', async ({ page }) => {
+      22 |   await page.goto('/');
+    > 23 |   await page.getByTestId('product-papaya').getByRole('button', { name: 'Add to basket' }).click();
+         |                                                                                           ^
+      24 |   await expect(page.locator('.basket-total')).toHaveText('R$ 7,90');
+      25 | });
+      26 |
+        at /home/ana/quitanda/tests/page-object.spec.js:23:91
+
+    Error Context: test-results/page-object-the-total-follows-the-price/error-context.md
+
+  3 failed
+    tests/page-object.spec.js:7:1 › a banana goes into the basket ──────────────────────────────────
+    tests/page-object.spec.js:13:1 › two fruit make two items ──────────────────────────────────────
+    tests/page-object.spec.js:21:1 › the total follows the price ───────────────────────────────────
+ana@laptop:~/quitanda$ sed -i 's/>Add to cart</>Add to basket</' app/public/app.js
 ```
 
 **Three failures, one cause, and a minute and a half to find out.** Each test waited for a button

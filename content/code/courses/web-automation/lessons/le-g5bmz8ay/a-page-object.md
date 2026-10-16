@@ -69,7 +69,15 @@ test('the total follows the price', async ({ page }) => {
 ```
 
 ```
-%%CAP po%%
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js --workers 1
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/page-object.spec.js:8:1 › a banana goes into the basket (474ms)
+  ✓  2 tests/page-object.spec.js:15:1 › two fruit make two items (416ms)
+  ✓  3 tests/page-object.spec.js:24:1 › the total follows the price (381ms)
+
+  3 passed (3.2s)
 ```
 
 Read the second test aloud again: *open the shop, add a banana, the count is 1, add a mango, the
@@ -82,7 +90,89 @@ in the test, and the reason is two sections on.
 The button becomes *Add to cart*, and the suite fails exactly as before:
 
 ```
-%%CAP po-cart%%
+ana@laptop:~/quitanda$ sed -i 's/>Add to basket</>Add to cart</' app/public/app.js
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js --workers 1
+
+Running 3 tests using 1 worker
+
+  ✘  1 tests/page-object.spec.js:8:1 › a banana goes into the basket (30.0s)
+  ✘  2 tests/page-object.spec.js:15:1 › two fruit make two items (30.0s)
+  ✘  3 tests/page-object.spec.js:24:1 › the total follows the price (30.0s)
+
+
+  1) tests/page-object.spec.js:8:1 › a banana goes into the basket ─────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+
+
+       at ../pages/shop-page.js:14
+
+      12 |   async addToBasket(product) {
+      13 |     const card = this.page.getByTestId(`product-${product}`);
+    > 14 |     await card.getByRole('button', { name: 'Add to basket' }).click();
+         |                                                               ^
+      15 |   }
+      16 |
+      17 |   basketCount() {
+        at ShopPage.addToBasket (/home/ana/quitanda/pages/shop-page.js:14:63)
+        at /home/ana/quitanda/tests/page-object.spec.js:11:14
+
+    Error Context: test-results/page-object-a-banana-goes-into-the-basket/error-context.md
+
+  2) tests/page-object.spec.js:15:1 › two fruit make two items ─────────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+
+
+       at ../pages/shop-page.js:14
+
+      12 |   async addToBasket(product) {
+      13 |     const card = this.page.getByTestId(`product-${product}`);
+    > 14 |     await card.getByRole('button', { name: 'Add to basket' }).click();
+         |                                                               ^
+      15 |   }
+      16 |
+      17 |   basketCount() {
+        at ShopPage.addToBasket (/home/ana/quitanda/pages/shop-page.js:14:63)
+        at /home/ana/quitanda/tests/page-object.spec.js:18:14
+
+    Error Context: test-results/page-object-two-fruit-make-two-items/error-context.md
+
+  3) tests/page-object.spec.js:24:1 › the total follows the price ──────────────────────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByTestId('product-papaya').getByRole('button', { name: 'Add to basket' })
+
+
+       at ../pages/shop-page.js:14
+
+      12 |   async addToBasket(product) {
+      13 |     const card = this.page.getByTestId(`product-${product}`);
+    > 14 |     await card.getByRole('button', { name: 'Add to basket' }).click();
+         |                                                               ^
+      15 |   }
+      16 |
+      17 |   basketCount() {
+        at ShopPage.addToBasket (/home/ana/quitanda/pages/shop-page.js:14:63)
+        at /home/ana/quitanda/tests/page-object.spec.js:27:14
+
+    Error Context: test-results/page-object-the-total-follows-the-price/error-context.md
+
+  3 failed
+    tests/page-object.spec.js:8:1 › a banana goes into the basket ──────────────────────────────────
+    tests/page-object.spec.js:15:1 › two fruit make two items ──────────────────────────────────────
+    tests/page-object.spec.js:24:1 › the total follows the price ───────────────────────────────────
 ```
 
 **Look where the failures point.** All three stack traces run through `pages/shop-page.js`, line
@@ -90,7 +180,16 @@ The button becomes *Add to cart*, and the suite fails exactly as before:
 repair is one edit, in the one place that knows:
 
 ```
-%%CAP po-cart-fixed%%
+ana@laptop:~/quitanda$ sed -i "s/name: 'Add to basket'/name: 'Add to cart'/" pages/shop-page.js
+ana@laptop:~/quitanda$ npx playwright test tests/page-object.spec.js --workers 1
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/page-object.spec.js:8:1 › a banana goes into the basket (215ms)
+  ✓  2 tests/page-object.spec.js:15:1 › two fruit make two items (422ms)
+  ✓  3 tests/page-object.spec.js:24:1 › the total follows the price (178ms)
+
+  3 passed (2.4s)
 ```
 
 Before, the rename cost four edits in three tests; now it costs one, and it will still cost one

@@ -34,7 +34,12 @@ reporter, o `baseURL` e o `webServer` que inicia a loja vêm todos do arquivo ba
 é escolhida com `--config`, e `--list` mostra o que ela rodaria sem rodar nada:
 
 ```
-%%CAP list%%
+ana@laptop:~/quitanda$ npx playwright test --config browsers.config.js --list tests/smoke.spec.js
+Listing tests:
+  [chromium] › smoke.spec.js:3:1 › the shop opens and lists its fruit
+  [firefox] › smoke.spec.js:3:1 › the shop opens and lists its fruit
+  [webkit] › smoke.spec.js:3:1 › the shop opens and lists its fruit
+Total: 3 tests in 1 file
 ```
 
 **Um teste virou três.** Todo arquivo de teste em `tests/` se multiplica do mesmo jeito, e esse é o
@@ -46,14 +51,32 @@ preço da cobertura: uma suíte que leva quatro minutos num navegador leva uns d
 nome de projeto, então um nome de arquivo posto depois é lido como projeto:
 
 ```
-%%CAP project-greedy%%
+ana@laptop:~/quitanda$ npx playwright test --config browsers.config.js --project chromium tests/smoke.spec.js
+Error: Project(s) "tests/smoke.spec.js" not found. Available projects: "chromium", "firefox", "webkit"
+    at filterProjects (/home/ana/quitanda/node_modules/playwright/lib/runner/projectUtils.js:80:11)
+    at runTests (/home/ana/quitanda/node_modules/playwright/lib/program.js:217:42)
+    at i.<anonymous> (/home/ana/quitanda/node_modules/playwright/lib/program.js:71:7)
 ```
 
 Escreva o nome com sinal de igual, que encerra a opção, ou ponha os arquivos antes. Aqui está o
 projeto Chromium sozinho, sobre o teste de fumaça e o teste de contextos da próxima seção:
 
 ```
-%%CAP chromium%%
+ana@laptop:~/quitanda$ npx playwright test --config browsers.config.js --project=chromium tests/smoke.spec.js tests/contexts.spec.js
+
+Running 5 tests using 2 workers
+
+  ✓  1 [chromium] › tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (278ms)
+Ana's page reads ana
+Bia's page reads null
+  ✓  2 [chromium] › tests/contexts.spec.js:8:1 › two contexts share nothing in the browser (458ms)
+cookies: Ana [], Bia []
+Ana's total after Bia's mango: R$ 10,40
+  ✓  3 [chromium] › tests/contexts.spec.js:31:1 › two shoppers, one basket: the shop's flaw (400ms)
+  ✓  4 [chromium] › tests/contexts.spec.js:57:1 › the page fixture: storage written in one test (100ms)
+  ✓  5 [chromium] › tests/contexts.spec.js:63:1 › the next test in the same browser starts without it (89ms)
+
+  5 passed (2.5s)
 ```
 
 O `[chromium]` na frente de cada linha é o projeto, e numa execução dos três é assim que você sabe
@@ -68,7 +91,27 @@ esses downloads são bloqueados**, então só o Chromium está instalado, e o pr
 antes da primeira linha:
 
 ```
-%%CAP firefox%%
+ana@laptop:~/quitanda$ npx playwright test --config browsers.config.js --project=firefox tests/smoke.spec.js
+
+Running 1 test using 1 worker
+
+  ✘  1 [firefox] › tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (4ms)
+
+
+  1) [firefox] › tests/smoke.spec.js:3:1 › the shop opens and lists its fruit ──────────────────────
+
+    Error: browserType.launch: Executable doesn't exist at /home/ana/.cache/ms-playwright/firefox-1495/firefox/firefox
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+
+  1 failed
+    [firefox] › tests/smoke.spec.js:3:1 › the shop opens and lists its fruit ───────────────────────
 ```
 
 O caminho cita `firefox-1495`: o Playwright 1.56.0 procura uma versão específica do seu Firefox

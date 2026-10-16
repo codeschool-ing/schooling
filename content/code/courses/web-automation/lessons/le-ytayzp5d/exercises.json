@@ -1,0 +1,591 @@
+[
+ {
+  "id": "ex-sdencb2t",
+  "version": 1,
+  "section": "the-config",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does this lesson keep its failing tests in `evidence/` instead of marking them with `test.fail()` under `tests/`?",
+  "choices": [
+   {
+    "text": "It would count as a pass and lose its trace",
+    "correct": true,
+    "why": "Right. `retain-on-failure` keeps evidence only when the outcome was not the declared one, and the run of lesson 3's file left no trace."
+   },
+   {
+    "text": "`test.fail()` stops the test before the browser opens",
+    "correct": false,
+    "why": "The marked test ran for six seconds and failed at its assertion; the annotation changes how the result is counted, not whether it runs."
+   },
+   {
+    "text": "Playwright refuses `test.fail()` when a trace setting is given",
+    "correct": false,
+    "why": "The run with `--trace retain-on-failure` accepted it and reported *2 passed*."
+   },
+   {
+    "text": "Folders other than `tests/` run faster",
+    "correct": false,
+    "why": "Where a test file lives changes which configuration finds it, not its speed."
+   }
+  ]
+ },
+ {
+  "id": "ex-2p4qt131",
+  "version": 1,
+  "section": "the-config",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In `evidence.config.js`, what does `...base.use` inside `use` protect?",
+  "choices": [
+   {
+    "text": "The `webServer` that starts the shop",
+    "correct": false,
+    "why": "`webServer` sits outside `use`, and `...base` at the top already copies it."
+   },
+   {
+    "text": "The `list` reporter",
+    "correct": false,
+    "why": "The reporter is set at the top level of the file, and this one names `list` again itself."
+   },
+   {
+    "text": "The `baseURL`, which a bare `use` would replace",
+    "correct": true,
+    "why": "Right. A key written after the spread replaces the whole object it names, so the base's `use` has to be spread again inside it."
+   },
+   {
+    "text": "The `testDir`",
+    "correct": false,
+    "why": "`testDir` is not inside `use`, and this file changes it to `evidence` on purpose."
+   }
+  ]
+ },
+ {
+  "id": "ex-ctnpz21q",
+  "version": 1,
+  "section": "the-config",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "To film every test and delete the film of each one that passes, the configuration sets video: ' ___ ' .",
+  "blanks": [
+   {
+    "accept": [
+     "retain-on-failure"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-da71w0gz",
+  "version": 1,
+  "section": "evidence",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each file a failing test left to the question it answers.",
+  "pairs": [
+   {
+    "left": "test-failed-1.png",
+    "right": "What the screen showed at the end"
+   },
+   {
+    "left": "error-context.md",
+    "right": "What the page held, as greppable text"
+   },
+   {
+    "left": "video.webm",
+    "right": "How the screen got there"
+   },
+   {
+    "left": "trace.zip",
+    "right": "What happened, in what order, and when"
+   }
+  ]
+ },
+ {
+  "id": "ex-v0e7gzpv",
+  "version": 1,
+  "section": "evidence",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the failing click's `error-context.md`, the Banana button carries `[active]`. Which story does that rule out?",
+  "choices": [
+   {
+    "text": "That the server counted the basket wrong",
+    "correct": false,
+    "why": "The focus says nothing about the server; that story is ruled out later, by the trace showing no request at all."
+   },
+   {
+    "text": "That the request to the basket went out and failed",
+    "correct": false,
+    "why": "The error context holds no network at all; only the trace can say whether a request was made."
+   },
+   {
+    "text": "That the page never drew the products",
+    "correct": false,
+    "why": "True that it is ruled out, but by the eight list items, not by `[active]`."
+   },
+   {
+    "text": "That the click missed the button",
+    "correct": true,
+    "why": "Right. `[active]` marks the element with the focus, and the button got it by being clicked."
+   }
+  ]
+ },
+ {
+  "id": "ex-wrb4mb25",
+  "version": 1,
+  "section": "evidence",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The failing click's screenshot shows eight cards and *Basket: 0 items*, and nothing looks wrong. What does that tell you?",
+  "choices": [
+   {
+    "text": "The failure comes from a flaky test, so it can safely be ignored this time",
+    "correct": false,
+    "why": "A screenshot says nothing about how often a test fails, and this one fails on every run."
+   },
+   {
+    "text": "The page drew everything; the defect is in how it got there",
+    "correct": true,
+    "why": "Right. A missing element or a broken layout is ruled out, and the question moves to order and time, which only the trace holds."
+   },
+   {
+    "text": "Screenshots are taken before the assertion runs",
+    "correct": false,
+    "why": "`only-on-failure` takes the picture at the end, after the assertion gave up."
+   },
+   {
+    "text": "The video holds the same frame and need not be kept",
+    "correct": false,
+    "why": "Here the video would add little, but that is a judgement about this failure, not a rule about videos."
+   }
+  ]
+ },
+ {
+  "id": "ex-m021q36a",
+  "version": 1,
+  "section": "reading-a-trace",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the trace, `/slow/ssr.js` was requested at 2679.3 and took 1504.4 ms; the click started at 2690.3. How many milliseconds before the script arrived did the click happen?",
+  "hint": "Arrival is the start plus the time it took.",
+  "value": 1493.4,
+  "tolerance": 1,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-krgegdyq",
+  "version": 1,
+  "section": "reading-a-trace",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what the failing click's trace recorded in the order it happened.",
+  "items": [
+   "`goto` starts",
+   "`/slow/ssr.js` is requested",
+   "The click starts",
+   "The assertion starts waiting",
+   "`/slow/ssr.js` arrives"
+  ],
+  "trap": "The script was asked for before the click, which makes it tempting to think it arrived first; it took a second and a half."
+ },
+ {
+  "id": "ex-1ds915w3",
+  "version": 1,
+  "section": "reading-a-trace",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In the search race's `0-trace.network`, the answer to `papaya` is the first line and the answer to `p` the last, although `p` was asked first. Why?",
+  "choices": [
+   {
+    "text": "Lines are written as responses finish",
+    "correct": true,
+    "why": "Right. The file's order is arrival order, which is exactly the defect: the shortest query is the slowest to answer."
+   },
+   {
+    "text": "The browser sorts requests by the length of the address",
+    "correct": false,
+    "why": "Nothing sorts them; the order is the moment each one was finished."
+   },
+   {
+    "text": "Playwright writes the network file backwards",
+    "correct": false,
+    "why": "The requests for the page and its script come first in the same file, in the order they ended."
+   },
+   {
+    "text": "The `type` action sent the keys in reverse",
+    "correct": false,
+    "why": "The starts, in `_monotonicTime`, go from `p` to `papaya`; the keys were sent in order."
+   }
+  ]
+ },
+ {
+  "id": "ex-htz77h1v",
+  "version": 1,
+  "section": "reading-a-trace",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test clicks Save and fails because a message never appears. Its trace shows the click, then `POST /api/save` answered `500`. Which story does that support?",
+  "choices": [
+   {
+    "text": "The click came before the page's script had attached a handler",
+    "correct": false,
+    "why": "Then no request would have been sent at all, as in the shop's `/ssr`; here one was."
+   },
+   {
+    "text": "The click missed the button",
+    "correct": false,
+    "why": "A missed click causes no request; this one caused exactly the request Save makes."
+   },
+   {
+    "text": "The server failed the request the click sent",
+    "correct": true,
+    "why": "Right. The page did its part and the server answered with an error, so the report goes to whoever owns the server."
+   },
+   {
+    "text": "The test's assertion is too impatient",
+    "correct": false,
+    "why": "A longer wait would not turn a `500` into a saved record."
+   }
+  ]
+ },
+ {
+  "id": "ex-c0rq4fnc",
+  "version": 1,
+  "section": "attaching",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is `testInfo.attach` called in `afterEach` and not as the last line of the test?",
+  "choices": [
+   {
+    "text": "Attachments are only accepted from hooks",
+    "correct": false,
+    "why": "A test can attach too; the issue is whether that line is reached."
+   },
+   {
+    "text": "`afterEach` runs before the page closes, the test after",
+    "correct": false,
+    "why": "The test body runs first; the order is the other way round, and the messages are already in the array either way."
+   },
+   {
+    "text": "It keeps the attachment out of passing tests",
+    "correct": false,
+    "why": "The hook runs for passing tests too and attaches their messages as well."
+   },
+   {
+    "text": "A failed line stops the test, never its hooks",
+    "correct": true,
+    "why": "Right. The test stopped at the failing `expect`, which is exactly when the messages are wanted."
+   }
+  ]
+ },
+ {
+  "id": "ex-arnba2at",
+  "version": 1,
+  "section": "attaching",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The page event that fires for an error a script threw and nobody caught is called ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "pageerror"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-gcg827k2",
+  "version": 1,
+  "section": "attaching",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The trace already holds the console error and the page error. What does attaching them add?",
+  "choices": [
+   {
+    "text": "Nothing; the attachment repeats the trace and can go",
+    "correct": false,
+    "why": "It repeats the evidence, and puts it where it is read first: in the terminal, and in tests that kept no trace."
+   },
+   {
+    "text": "The same evidence, where it is read first",
+    "correct": true,
+    "why": "Right. Under `retain-on-failure` a passing test keeps no trace, and the `list` reporter prints a text attachment in place."
+   },
+   {
+    "text": "It makes the test fail when the page throws",
+    "correct": false,
+    "why": "Attaching only records; failing on an error is the extra `expect` the section shows."
+   },
+   {
+    "text": "The time of each message",
+    "correct": false,
+    "why": "The times are in the trace; the attachment in this lesson is plain text without them."
+   }
+  ]
+ },
+ {
+  "id": "ex-cgerfj1s",
+  "version": 1,
+  "section": "in-ci",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With `trace: 'on-first-retry'` and one retry, a test fails and then passes on its retry. What trace do you have?",
+  "choices": [
+   {
+    "text": "Only the retry's, the run that passed",
+    "correct": true,
+    "why": "Right. That is this setting's blind spot: the run you need to see is the one it did not record."
+   },
+   {
+    "text": "One of the failing first attempt",
+    "correct": false,
+    "why": "The first attempt is never recorded under this setting; the capture's first folder had a screenshot and a video and no trace."
+   },
+   {
+    "text": "None, because the test ended green and nothing failed in the end",
+    "correct": false,
+    "why": "The retry is recorded whatever its outcome; that is what the setting means."
+   },
+   {
+    "text": "Two, one for each attempt",
+    "correct": false,
+    "why": "That would be `'on'` with retries; `on-first-retry` records one attempt only."
+   }
+  ]
+ },
+ {
+  "id": "ex-5f7z7wcz",
+  "version": 1,
+  "section": "in-ci",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why should the step that copies `test-results/` off a build server run whatever the outcome?",
+  "choices": [
+   {
+    "text": "Because the report is needed to mark the build green",
+    "correct": false,
+    "why": "The build's status comes from the test command's exit code, not from a copied folder."
+   },
+   {
+    "text": "Because Playwright deletes the folder when it exits",
+    "correct": false,
+    "why": "Playwright leaves the folder; the machine is what gets thrown away when the job ends."
+   },
+   {
+    "text": "Failed runs are the ones with evidence",
+    "correct": true,
+    "why": "Right. Evidence is kept for failures, and a success-only step skips exactly those runs."
+   },
+   {
+    "text": "To keep the disk cost down",
+    "correct": false,
+    "why": "Copying more often costs more disk, not less; the lifetime of the copies is what bounds it."
+   }
+  ]
+ },
+ {
+  "id": "ex-zm36xs55",
+  "version": 1,
+  "section": "in-ci",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test signs in with a real employee's account and keeps a trace on failure. What is the risk in the artefact?",
+  "choices": [
+   {
+    "text": "The trace grows too large for the build service to upload",
+    "correct": false,
+    "why": "A sign-in adds a few requests; size is not the problem here."
+   },
+   {
+    "text": "The trace viewer refuses to open traces that contain cookies",
+    "correct": false,
+    "why": "Nothing in the lesson says so; the viewer opens whatever was recorded."
+   },
+   {
+    "text": "The video shows the password as it was typed into the form",
+    "correct": false,
+    "why": "A password field draws dots on screen; the trace's network lines are where the secret travels."
+   },
+   {
+    "text": "Anyone who opens it reads what the sign-in exchanged",
+    "correct": true,
+    "why": "Right. A trace holds requests and responses, bodies included, so test accounts should be fake and artefacts private."
+   }
+  ]
+ },
+ {
+  "id": "ex-7e3wv09g",
+  "version": 1,
+  "section": "visual-comparison",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A screenshot test passes on your laptop and fails on the build server on every line of text, with no change to the page. What is the likeliest cause?",
+  "choices": [
+   {
+    "text": "The baseline was never committed to version control",
+    "correct": false,
+    "why": "Then the server would have no baseline and would write one and fail with *a snapshot doesn't exist*, not with differing text."
+   },
+   {
+    "text": "The server's fonts draw the text differently",
+    "correct": true,
+    "why": "Right. Text is drawn by the system's fonts and anti-aliasing, which differ between machines."
+   },
+   {
+    "text": "The server's screen is smaller",
+    "correct": false,
+    "why": "The browser's window size comes from the configuration, not from a screen, and a build server has none."
+   },
+   {
+    "text": "`toHaveScreenshot` is too slow on servers",
+    "correct": false,
+    "why": "Slowness would show as a timeout, not as pixels that differ."
+   }
+  ]
+ },
+ {
+  "id": "ex-zy20wss1",
+  "version": 1,
+  "section": "visual-comparison",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why did the first run of `evidence/visual.spec.js` fail?",
+  "choices": [
+   {
+    "text": "There was no baseline yet, so it wrote one",
+    "correct": true,
+    "why": "Right. *A snapshot doesn't exist … writing actual*; the second run compared against it and passed."
+   },
+   {
+    "text": "The page was still loading its products when the picture was taken",
+    "correct": false,
+    "why": "The test waits for eight cards before the screenshot; the message names a missing file."
+   },
+   {
+    "text": "The basket still held fruit another test had added",
+    "correct": false,
+    "why": "The test empties the basket first, for exactly that reason."
+   },
+   {
+    "text": "Screenshots need a headed browser",
+    "correct": false,
+    "why": "It ran headless and the second run passed."
+   }
+  ]
+ },
+ {
+  "id": "ex-kkrwghg6",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test fails only on the build server, once in twenty runs, and passes on its retry. Which configuration gives you a trace of a failing run?",
+  "choices": [
+   {
+    "text": "`trace: 'on-first-retry'` with one retry",
+    "correct": false,
+    "why": "It records the retry, which is the run that passed."
+   },
+   {
+    "text": "`test.fail()` on the test, with any trace setting",
+    "correct": false,
+    "why": "A failure would then be the expected outcome, and its trace would be deleted like a pass."
+   },
+   {
+    "text": "`trace: 'retain-on-failure'`",
+    "correct": true,
+    "why": "Right. It records every attempt and keeps the ones whose outcome was not the declared one, the failing first attempt included."
+   },
+   {
+    "text": "`screenshot: 'only-on-failure'`",
+    "correct": false,
+    "why": "That keeps a picture of the end, not a trace."
+   }
+  ]
+ },
+ {
+  "id": "ex-5xa42re5",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A teammate says the screenshot of a failure *looks fine*, so the test must be wrong. What should you open next?",
+  "choices": [
+   {
+    "text": "The video, to watch the failure again from the start",
+    "correct": false,
+    "why": "It would show the same screen arriving; it carries no requests and no times of actions."
+   },
+   {
+    "text": "Nothing; rerun the job until it passes and move on",
+    "correct": false,
+    "why": "A pass on a later run deletes this run's evidence and explains nothing."
+   },
+   {
+    "text": "The HTML report's index page",
+    "correct": false,
+    "why": "The report shows the same attachments; the answer is in what the trace holds, wherever you open it."
+   },
+   {
+    "text": "The trace's actions and network",
+    "correct": true,
+    "why": "Right. A screen that looks fine moves the question to order and time, which only the trace records."
+   }
+  ]
+ },
+ {
+  "id": "ex-acshb4wm",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did the trace of the failing click hold? Choose all that apply.",
+  "choices": [
+   {
+    "text": "A copy of the video",
+    "correct": true,
+    "why": "Right. A resource of 114572 bytes, the size of `video.webm`."
+   },
+   {
+    "text": "The start time of the click",
+    "correct": true,
+    "why": "Right. `\"startTime\":2690.277` on the click's line."
+   },
+   {
+    "text": "A `POST /api/basket`",
+    "correct": false,
+    "why": "The network file had three lines and none of them was a POST: the click sent nothing."
+   },
+   {
+    "text": "The shop's own server log for the request",
+    "correct": false,
+    "why": "A trace is recorded on the browser's side; what the server printed to its own log is not in it."
+   }
+  ]
+ }
+]

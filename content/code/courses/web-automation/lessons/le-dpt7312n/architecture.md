@@ -37,7 +37,15 @@ developer tools of lesson 1 use to talk to the page they inspect. Playwright pri
 when the `DEBUG` variable asks for it. Here are the first commands of the smoke test from lesson 1:
 
 ```
-%%CAP protocol-methods%%
+ana@laptop:~/quitanda$ DEBUG=pw:protocol npx playwright test tests/smoke.spec.js 2>&1 | grep SEND | grep -o '"method":"[A-Za-z.]*"' | head -8
+"method":"Browser.getVersion"
+"method":"Target.setAutoAttach"
+"method":"Target.createBrowserContext"
+"method":"Browser.setDownloadBehavior"
+"method":"Target.createTarget"
+"method":"Browser.getWindowForTarget"
+"method":"Page.enable"
+"method":"Page.getFrameTree"
 ```
 
 Each `SEND` is a command with a number; the browser's answer comes back as a `RECV` carrying the
@@ -45,7 +53,9 @@ same number, and events come back as `RECV` lines with no number at all. Counted
 run:
 
 ```
-%%CAP protocol-count%%
+ana@laptop:~/quitanda$ DEBUG=pw:protocol npx playwright test tests/smoke.spec.js 2>&1 | grep -o 'SEND\|RECV' | sort | uniq -c
+     90 RECV
+     29 SEND
 ```
 
 **One test that opens one page took 29 commands**, and the browser sent 90 lines back: an answer to
@@ -57,7 +67,8 @@ Playwright's.
 itself, it hands it a pair of pipes and tells it so on the command line:
 
 ```
-%%CAP pipe%%
+ana@laptop:~/quitanda$ DEBUG=pw:browser npx playwright test tests/smoke.spec.js 2>&1 | grep -o 'remote-debugging-[a-z]*'
+remote-debugging-pipe
 ```
 
 When the browser runs somewhere else, on another machine or in a container, Playwright reaches it

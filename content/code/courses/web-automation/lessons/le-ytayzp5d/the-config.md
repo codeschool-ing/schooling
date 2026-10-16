@@ -66,9 +66,10 @@ shows it, run with the trace setting from the command line:
 %%CAP quarantined%%
 ```
 
-The second test failed, as its `✘` says, and the only thing left in `test-results/` is the file
-Playwright keeps about the last run. A quarantined test leaves no evidence behind, and lesson 14,
-which is about quarantine, has to live with that.
+The second test failed, as its `✘` says, and the summary counts it among the passes. Its folder
+in `test-results/` holds only `error-context.md`, a file the next section reads; **the trace is
+gone**, deleted with the passing tests. A quarantined test leaves almost no evidence behind, and
+lesson 14, which is about quarantine, has to live with that.
 
 So the tests of this lesson go in a folder of their own, `evidence/`, which the base configuration
 never reads, since its `testDir` is `tests`. A plain `npx playwright test` stays green; the failures

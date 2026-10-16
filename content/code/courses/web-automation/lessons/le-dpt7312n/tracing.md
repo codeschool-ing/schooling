@@ -15,14 +15,31 @@ console. Lesson 16 uses traces to diagnose real failures; this section shows wha
 `--trace on` records a trace for every test in the run:
 
 ```
-%%CAP trace-run%%
+ana@laptop:~/quitanda$ npx playwright test tests/contexts.spec.js --trace on
+
+Running 4 tests using 1 worker
+
+Ana's page reads ana
+Bia's page reads null
+  ✓  1 tests/contexts.spec.js:8:1 › two contexts share nothing in the browser (534ms)
+cookies: Ana [], Bia []
+Ana's total after Bia's mango: R$ 10,40
+  ✓  2 tests/contexts.spec.js:31:1 › two shoppers, one basket: the shop's flaw (615ms)
+  ✓  3 tests/contexts.spec.js:57:1 › the page fixture: storage written in one test (151ms)
+  ✓  4 tests/contexts.spec.js:63:1 › the next test in the same browser starts without it (165ms)
+
+  4 passed (3.0s)
 ```
 
 Nothing in the output mentions it. The traces are in `test-results/`, one folder per test, each
 named after the file and the test:
 
 ```
-%%CAP trace-ls%%
+ana@laptop:~/quitanda$ ls test-results
+contexts-the-next-test-in-the-same-browser-starts-without-it
+contexts-the-page-fixture-storage-written-in-one-test
+contexts-two-contexts-share-nothing-in-the-browser
+contexts-two-shoppers-one-basket-the-shop-s-flaw
 ```
 
 ## What is inside
@@ -31,10 +48,46 @@ A trace is a zip archive, and any tool that lists a zip will show its contents. 
 two shoppers:
 
 ```
-%%CAP trace-unzip%%
+ana@laptop:~/quitanda$ unzip -l test-results/contexts-two-shoppers-*/trace.zip
+Archive:  test-results/contexts-two-shoppers-one-basket-the-shop-s-flaw/trace.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+     2524  2026-10-15 21:50   resources/src@6ce6e52f7b3ff0cadddbf49cff84b497dd93146a.txt
+    10478  2026-10-15 21:50   test.trace
+     1950  2026-10-15 21:50   2-trace.trace
+     1153  2026-10-15 21:50   2-trace.network
+       14  2026-10-15 21:50   resources/e7e8acd9614309b836bf29744b10316e7e9ae74c.json
+      455  2026-10-15 21:50   2-trace.stacks
+    12334  2026-10-15 21:50   1-trace.trace
+    11743  2026-10-15 21:50   1-trace.network
+     2459  2026-10-15 21:50   resources/page@5c43eac8d15b790ac05241bed803b305-1792111821187.jpeg
+     9481  2026-10-15 21:50   resources/page@5c43eac8d15b790ac05241bed803b305-1792111821419.jpeg
+    33113  2026-10-15 21:50   resources/page@5c43eac8d15b790ac05241bed803b305-1792111821439.jpeg
+    33130  2026-10-15 21:50   resources/page@5c43eac8d15b790ac05241bed803b305-1792111821448.jpeg
+    33655  2026-10-15 21:50   resources/page@5c43eac8d15b790ac05241bed803b305-1792111821565.jpeg
+      777  2026-10-15 21:50   resources/1ce73c06221cd554cd0d9b5e41880a93864b7397.html
+     1240  2026-10-15 21:50   resources/39dfe74803f515f71990df1b2934669d13b07de7.css
+      479  2026-10-15 21:50   resources/1c9a406b53395251437640846f6d28fb68008123.json
+       47  2026-10-15 21:50   resources/6e6f9bda0f8670a0c478f30e68530a696865f42f.json
+       14  2026-10-15 21:50   resources/a7f393e2fef8da8622e971e616554e89ac8ecb76.json
+       71  2026-10-15 21:50   resources/ee0f2e8073ce999113f321888e8e5cdc95ea7ae2.json
+      376  2026-10-15 21:50   1-trace.stacks
+    21213  2026-10-15 21:50   0-trace.trace
+    21134  2026-10-15 21:50   0-trace.network
+     2459  2026-10-15 21:50   resources/page@96dd63ff4c62a7233623aa8b8f6a15c7-1792111821155.jpeg
+     9481  2026-10-15 21:50   resources/page@96dd63ff4c62a7233623aa8b8f6a15c7-1792111821230.jpeg
+    33113  2026-10-15 21:50   resources/page@96dd63ff4c62a7233623aa8b8f6a15c7-1792111821261.jpeg
+    33113  2026-10-15 21:50   resources/page@96dd63ff4c62a7233623aa8b8f6a15c7-1792111821271.jpeg
+    33509  2026-10-15 21:50   resources/page@96dd63ff4c62a7233623aa8b8f6a15c7-1792111821362.jpeg
+    33190  2026-10-15 21:50   resources/page@96dd63ff4c62a7233623aa8b8f6a15c7-1792111821589.jpeg
+       22  2026-10-15 21:50   resources/e08a78924b70868ee32e65ed1f50e8617a496356.json
+       15  2026-10-15 21:50   resources/ecd48961d64df9c15fe3c56d69856ba51244c7f6.json
+      377  2026-10-15 21:50   0-trace.stacks
+---------                     -------
+   343119                     31 files
 ```
 
-Thirty-three files, of four kinds:
+Thirty-one files on this run, of four kinds:
 
 - **`test.trace`** is the test as the runner saw it: each step, the hooks, and where in the source
   each one was called. The test's own source is in `resources/src@….txt`, so the viewer can show
@@ -49,7 +102,20 @@ Thirty-three files, of four kinds:
 There are three numbered contexts in a test that made two. The network files say whose is whose:
 
 ```
-%%CAP trace-network%%
+ana@laptop:~/quitanda$ unzip -p test-results/contexts-two-shoppers-*/trace.zip 0-trace.network | grep -o '"url":"[^"]*"' | sort | uniq -c
+      2 "url":"http://localhost:3000/"
+      3 "url":"http://localhost:3000/api/basket"
+      2 "url":"http://localhost:3000/api/products"
+      2 "url":"http://localhost:3000/app.js"
+      2 "url":"http://localhost:3000/style.css"
+ana@laptop:~/quitanda$ unzip -p test-results/contexts-two-shoppers-*/trace.zip 1-trace.network | grep -o '"url":"[^"]*"' | sort | uniq -c
+      1 "url":"http://localhost:3000/"
+      2 "url":"http://localhost:3000/api/basket"
+      1 "url":"http://localhost:3000/api/products"
+      1 "url":"http://localhost:3000/app.js"
+      1 "url":"http://localhost:3000/style.css"
+ana@laptop:~/quitanda$ unzip -p test-results/contexts-two-shoppers-*/trace.zip 2-trace.network | grep -o '"url":"[^"]*"' | sort | uniq -c
+      1 "url":"http://localhost:3000/api/reset"
 ```
 
 `0-` is Ana: the page twice, because she reloaded, and the basket three times, once on each load
@@ -87,11 +153,22 @@ Reporters can be combined, so `--reporter=list,html` keeps the lines in the term
 site as well:
 
 ```
-%%CAP report-run%%
+ana@laptop:~/quitanda$ npx playwright test tests/smoke.spec.js --reporter=list,html
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/smoke.spec.js:3:1 › the shop opens and lists its fruit (158ms)
+
+  1 passed (1.5s)
+
+To open last HTML report run:
+
+  npx playwright show-report
 ```
 
 ```
-%%CAP report-ls%%
+ana@laptop:~/quitanda$ ls playwright-report
+index.html
 ```
 
 `playwright-report/index.html` is the report, and it is a single page that can be published as a

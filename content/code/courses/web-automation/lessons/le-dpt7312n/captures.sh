@@ -23,7 +23,7 @@
 #     stripped from everything below, which is what a terminal does with them
 #     on screen. No character of text is changed.
 #
-# Recorded 2026-10-11 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
+# Recorded 2026-10-15 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
 # Playwright 1.56.0 and Chromium 141.0.7390.37, TZ=America/Sao_Paulo.
 
 set -uo pipefail
@@ -57,8 +57,6 @@ run 'npx playwright test tests/contexts.spec.js'
 
 block waiting
 run 'npx playwright test tests/waiting.spec.js'
-block waiting-repeat
-run 'npx playwright test tests/waiting.spec.js --repeat-each 10 --workers 1'
 block waiting-fail
 cp tests/waiting.spec.js /tmp/l10-waiting.spec.js
 sed -n '/^```javascript$/,/^```$/p' "$HERE/auto-waiting.md" | awk 'BEGIN{n=0} /^```javascript$/{n++; next} /^```$/{next} n==2' > /tmp/l10-failing.js

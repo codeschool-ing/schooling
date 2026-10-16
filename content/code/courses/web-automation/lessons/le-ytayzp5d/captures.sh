@@ -23,7 +23,7 @@
 # The trace viewer and `npx playwright show-report` were not run: both open a
 # window and this machine has no screen. Nothing here watched a video.
 #
-# Recorded 2026-10-10 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
+# Recorded 2026-10-15 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
 # Playwright 1.56.0 and Chromium 141.0.7390.37, TZ=America/Sao_Paulo.
 
 set -uo pipefail
@@ -50,7 +50,7 @@ run "ls -la $SSR/"
 block evidence-file
 run "file $SSR/test-failed-1.png $SSR/video.webm"
 block error-context
-run "cat $SSR/error-context.md"
+run "grep -v '^\`\`\`' $SSR/error-context.md"
 block report-du
 run 'du -sh test-results playwright-report'
 
@@ -62,7 +62,7 @@ run "unzip -p $SSR/trace.zip 0-trace.trace | grep '\"type\":\"before\"' | grep -
 block trace-network
 run "unzip -p $SSR/trace.zip 0-trace.network | grep -o '\"url\":\"[^\"]*\"\\|\"time\":[0-9.]*\\|\"_monotonicTime\":[0-9.]*' | paste - - -"
 block search-run
-run 'npx playwright test --config evidence.config.js evidence/search.spec.js' | nocolor | head -8
+run 'npx playwright test --config evidence.config.js evidence/search.spec.js' | nocolor | head -5
 block search-network
 run "unzip -p test-results/search-*/trace.zip 0-trace.network | grep -o '\"url\":\"[^\"]*search?[^\"]*\"\\|\"time\":[0-9.]*\\|\"_monotonicTime\":[0-9.]*' | paste - - - | grep search"
 block search-actions
@@ -72,17 +72,17 @@ run "unzip -p test-results/search-*/trace.zip 0-trace.trace | grep '\"type\":\"b
 block errors-run
 run 'npx playwright test --config evidence.config.js evidence/errors.spec.js' | nocolor
 block errors-trace
-run "unzip -p test-results/errors-*/trace.zip 0-trace.trace | grep -o '\"type\":\"console\".\\{0,120\\}\\|\"method\":\"pageError\".\\{0,120\\}'"
+run "unzip -p test-results/errors-*/trace.zip 0-trace.trace | grep -o '\"type\":\"console\".\\{0,150\\}\\|\"method\":\"pageError\".\\{0,150\\}'"
 
 # --- in-ci
 block retry
 run 'npx playwright test --config evidence.config.js evidence/ssr.spec.js --retries 1 --trace on-first-retry' | nocolor | head -6
 run 'find test-results -type f | sort'
 block trace-off
-run 'npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js' | nocolor | tail -2
+run 'npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js' | nocolor | grep -E '^ana@|passed|failed'
 run 'du -sh test-results'
 block trace-on
-run 'npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js --trace on' | nocolor | tail -2
+run 'npx playwright test tests/smoke.spec.js tests/locators.spec.js tests/search.spec.js --trace on' | nocolor | grep -E '^ana@|passed|failed'
 run 'du -sh test-results; find test-results -name trace.zip | wc -l'
 
 # --- visual-comparison

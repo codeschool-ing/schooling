@@ -24,7 +24,8 @@
 #     pages/shop-page.js changed the same way, and put back;
 #   - in "number", the method `itemCount()` the section shows appended to
 #     pages/basket-summary.js, and tests/page-object-number.spec.js written from
-#     the section's unlabelled block; both are taken out after;
+#     the section's unlabelled block (whose route delays the basket's answer
+#     by 200 ms, as the prose says); both are taken out after;
 #   - every run that adds to the basket uses --workers 1: the shop has one
 #     basket for everybody (lesson 15), and the prose says so;
 #   - Playwright's colour codes (ESC[...m) are stripped from the test runs,
@@ -42,8 +43,14 @@ stage 12 || exit 1
 P=$REPO_DEFAULT
 cd "$P" || exit 1
 nocolor() { sed 's/\x1b\[[0-9;]*m//g'; }
-version() {   # write one section's version of a file into the project
-  bash "$HERE/../../lab.sh" fence "$HERE/$1" "$2" > "$2"
+version() {   # write one section's version of a file into the project; a
+              # schooling-example is joined from its parts, as stage does
+  bash "$HERE/../../lab.sh" fence "$HERE/$1" "$2" | python3 -c '
+import json, sys
+s = sys.stdin.read()
+if s.startswith("{"):
+    s = "\n".join(p["code"] for p in json.loads(s)["parts"]) + "\n"
+sys.stdout.write(s)' > "$2"
   chown ana:ana "$2"
 }
 
@@ -93,7 +100,7 @@ spec = [b for b in blocks if "the count, read as a number" in b][0]
 open(sys.argv[2], "w").write(spec + "\n")
 PY
 chown ana:ana pages/basket-summary.js tests/page-object-number.spec.js
-run "npx playwright test tests/page-object-number.spec.js --workers 1 --repeat-each 10 | grep -E 'passed|failed|✘|✓|Received'" | nocolor
+run "npx playwright test tests/page-object-number.spec.js --workers 1 --repeat-each 5 | grep -E 'passed|failed|✘|✓|Received'" | nocolor
 rm -f tests/page-object-number.spec.js
 cp /tmp/l12-basket-summary.js pages/basket-summary.js; chown ana:ana pages/basket-summary.js
 

@@ -203,23 +203,23 @@
   "trap": "Um contexto fica dentro de um navegador, e não o contrário: um navegador contém muitos contextos."
  },
  "ex-enjq142y": {
-  "prompt": "Logo depois de clicar em Add to basket, `await count.textContent()` devolveu `0`, e `await expect(count).toHaveText('1')` em seguida passou. Por que discordaram?",
+  "prompt": "Quando o aviso diz *Added Mango*, `await toast.textContent()` devolve `Added Mango`, e `await expect(toast).toHaveText('')` na linha seguinte passa. Por que as duas linhas não se contradizem?",
   "choices": [
    {
-    "text": "O clique falhou da primeira vez e foi repetido",
-    "why": "Um clique, uma requisição; só a leitura diferiu."
+    "text": "A leitura tentou de novo e achou `Added Mango` na segunda vez",
+    "why": "Uma leitura não tenta de novo; olhou uma vez, num instante."
    },
    {
-    "text": "O `textContent()` lê a página uma vez; a asserção lê até bater",
-    "why": "Certo. A foto veio antes da resposta da loja; a asserção esperou por ela."
+    "text": "A leitura é um instante; a asserção lê até o aviso esvaziar",
+    "why": "Certo. A loja limpa o aviso depois de dois segundos, e a asserção ainda estava lendo."
    },
    {
-    "text": "A contagem é desenhada dentro de um frame que uma leitura simples da página não alcança",
-    "why": "Não há frame; a leitura alcançou o elemento e pegou o texto daquele instante."
+    "text": "O `toHaveText('')` casa com qualquer texto",
+    "why": "Ele compara o texto inteiro; só passou quando o aviso esvaziou."
    },
    {
-    "text": "O `toHaveText` ignora dígitos",
-    "why": "Ele comparou `1` com `1`; a execução que falhou mostra ele comparando dígitos exatamente."
+    "text": "Elas leem dois elementos diferentes da página",
+    "why": "As duas usam o mesmo localizador, `getByRole('status')`."
    }
   ]
  },
