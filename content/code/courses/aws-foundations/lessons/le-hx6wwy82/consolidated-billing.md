@@ -56,7 +56,7 @@ shown against each account is a detail of the bill's layout; the second total is
 
 ## Discounts and credits travel too
 
-Two more things cross the walls on the bill, and lesson 14 reads both of them on one.
+Two more things cross the walls on the bill, and lesson 14 reads both.
 
 **Reserved Instances and Savings Plans are shared across the organisation.** Both are a commitment
 to a certain amount of use in exchange for a lower price, and by default the discount applies to

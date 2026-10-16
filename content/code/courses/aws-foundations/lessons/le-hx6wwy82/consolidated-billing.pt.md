@@ -58,7 +58,7 @@ aparece contra cada conta é um detalhe do layout da fatura; o segundo total é 
 
 ## Descontos e créditos também viajam
 
-Mais duas coisas atravessam as paredes na fatura, e a lição 14 lê as duas numa delas.
+Mais duas coisas atravessam as paredes na fatura, e a lição 14 lê as duas.
 
 **Reserved Instances e Savings Plans são divididos pela organização.** Os dois são um compromisso
 com uma certa quantidade de uso em troca de um preço menor, e por padrão o desconto vale para o uso
