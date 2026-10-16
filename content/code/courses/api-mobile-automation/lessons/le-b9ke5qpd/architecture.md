@@ -54,7 +54,7 @@ The `appium:` prefix is the W3C rule for a capability the standard does not defi
 vendor's extension carries its name, so two tools cannot mean different things by one word.
 **Appium refuses an extension capability without the prefix.** On iOS the same test asks for
 `platformName: iOS` and `appium:automationName: XCUITest`. The driver changes underneath while the requests stay the same. That is the sense of *one driver
-for Android and iOS* in this lesson's title: one protocol and one client for both, with a driver per
+for Android and iOS* in the title of this lesson. It means one protocol and one client for both, with a driver per
 platform behind it.
 
 **One promise is not made: that the same test runs on both.** An element's id on Android is a resource id. On iOS it is an accessibility identifier, which the
