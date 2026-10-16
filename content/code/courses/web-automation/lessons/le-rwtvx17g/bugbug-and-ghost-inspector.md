@@ -19,7 +19,7 @@ never from a course.
 
 Its quick-start guide begins with the extension: install BugBug's extension for Chrome from the
 Chrome Web Store and allow it in incognito mode, so that recordings run in a clean browser profile.
-That is the first lesson of lesson 4 arriving through a setup screen: a browser full of your own
+That is lesson 4's point arriving through a setup screen: a browser full of your own
 cookies and cache is a different browser from the one your users have.
 
 Its documentation on schedules says the service can run tests "in the cloud" automatically and

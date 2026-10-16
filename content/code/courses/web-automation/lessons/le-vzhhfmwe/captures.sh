@@ -21,8 +21,8 @@
 #   - the colour codes. Playwright forces colour on in its workers, so a
 #     failure's text can carry ANSI escapes; every Playwright line here goes
 #     through sed, which deletes exactly ESC[...m and nothing else;
-#   - the two JSON reports are copied to /tmp/lab/L19-run1.json and
-#     L19-run2.json, where the lesson's timeline figure was drawn from;
+#   - the JSON reports are copied to /tmp/lab/L19-run1.json, -run2.json and
+#     -run8.json; the lesson's timeline figure was drawn from the first;
 #   - the shards. The three run one after the other on this one machine,
 #     standing in for three CI machines, and the zip each writes is moved into
 #     all-blob-reports/ the way a CI job would upload it.
@@ -68,18 +68,23 @@ done
 block load-after-w; cat /proc/loadavg
 
 block red4
-pw 'PLAYWRIGHT_JSON_OUTPUT_FILE=run.json npx playwright test --workers 4 --reporter=json'
+pw "PLAYWRIGHT_JSON_OUTPUT_FILE=run.json npx playwright test --workers 4 --reporter=list,json | $SUMMARY"
 block overlap1
 run 'node overlap.mjs run.json'
 cp run.json /tmp/lab/L19-run1.json
 block red4b
-pw 'PLAYWRIGHT_JSON_OUTPUT_FILE=run2.json npx playwright test --workers 4 --reporter=json'
+pw "PLAYWRIGHT_JSON_OUTPUT_FILE=run2.json npx playwright test --workers 4 --reporter=list,json | $SUMMARY"
 block overlap2
 run 'node overlap.mjs run2.json'
 cp run2.json /tmp/lab/L19-run2.json
 
 block turns4
 pw "for i in 1 2 3; do npx playwright test --config turns.config.js --workers 4 | $SUMMARY; done"
+
+block turns-w
+for w in 1 2 8; do
+  pw "npx playwright test --config turns.config.js --workers $w | $SUMMARY"
+done
 
 block shard-lists
 for i in 1 2 3; do
@@ -98,8 +103,11 @@ block load-before-cost; cat /proc/loadavg
 
 block cost
 for w in 1 2 3 4 6 8; do
-  run "bash measure.sh npx playwright test --config turns.config.js --workers $w"
+  run "bash measure.sh npx playwright test --config turns.config.js --project parallel --fully-parallel --repeat-each 4 --workers $w"
 done
 block w8
-pw "npx playwright test --config turns.config.js --workers 8 | grep -E '^Running|^    \[|^  [0-9]+ (passed|failed|flaky|skipped|did not run)'"
+pw "PLAYWRIGHT_JSON_OUTPUT_FILE=run8.json npx playwright test --config turns.config.js --workers 8 --reporter=list,json | $SUMMARY"
+block overlap8
+run 'node overlap.mjs run8.json'
+cp run8.json /tmp/lab/L19-run8.json
 block load-end; cat /proc/loadavg

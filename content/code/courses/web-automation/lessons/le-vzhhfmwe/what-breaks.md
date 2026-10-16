@@ -25,8 +25,13 @@ Save it as `overlap.mjs`:
 ```javascript
 // Reads a JSON report from Playwright and, for every test that ended in a
 // way it was not expected to, names the tests that other workers were
-// running at the same moment.
+// running in that test's first two seconds.
 import { readFileSync } from 'node:fs';
+
+// A test here resets the shop as it starts and checks the result within two
+// seconds (the /ssr page of lesson 6 takes one and a half to come alive), so
+// what other workers did in those two seconds is the suspect.
+const WINDOW = 2000;
 
 const report = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 const runs = [];
@@ -58,11 +63,14 @@ const plain = (text) => text.replace(/\u001b\[[0-9;]*m/g, '');
 for (const run of runs) {
   if (run.status === run.expected || run.status === 'skipped') continue;
   console.log(`${run.name}  worker ${run.worker}  ${at(run.start)} to ${at(run.end)}`);
-  for (const line of plain(run.error).split('\n')) {
-    if (/^(Expected|Received):/.test(line)) console.log(`  ${line}`);
+  const lines = plain(run.error).split('\n');
+  console.log(`  ${lines[0]}`);
+  for (const line of lines) {
+    if (/^(Expected|Received)/.test(line)) console.log(`  ${line}`);
   }
   for (const other of runs) {
-    if (other.worker !== run.worker && other.start < run.end && other.end > run.start) {
+    if (other.worker !== run.worker && other.worker >= 0
+        && other.start < run.start + WINDOW && other.end > run.start) {
       console.log(`    beside it: ${other.name}  worker ${other.worker}  ${at(other.start)} to ${at(other.end)}`);
     }
   }

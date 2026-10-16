@@ -57,6 +57,9 @@ run 'npx playwright test --config recorded.config.js recorded/side.spec.js' | no
 block codegen
 run 'npx playwright test --config recorded.config.js recorded/codegen.spec.js' | nocolor
 
+block codegen-again
+run "for i in 1 2 3 4 5; do npx playwright test --config recorded.config.js recorded/codegen.spec.js -g 'banana|two fruit' | grep -E '✓|✘|Received string'; done" | nocolor
+
 block hand
 run 'npx playwright test tests/two-fruit.spec.js --repeat-each 3 --workers 1' | nocolor
 
