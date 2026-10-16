@@ -27,7 +27,7 @@ Everything on that list is free software, and none of it needs an account anywhe
 
 | path | what it is | what it costs your computer |
 |---|---|---|
-| installed | the tools on a computer that already runs Linux | about 0.6 GiB of memory for the cluster and the registry, 1.7 GiB from lesson 3 on, and about 10 GiB of disk for the images |
+| installed | the tools on a computer that already runs Linux | about 0.6 GiB of memory for the cluster and the registry, 1.5 to 1.7 GiB from lesson 3 on, 2 GiB for the few minutes lesson 12 runs a second cluster, and about 10 GiB of disk for the images |
 | **a virtual machine with Multipass** (recommended) | Ubuntu Server 24.04 in a VM made with one command, on Windows, macOS or Linux, with the same tools inside it | 4 processors, 8 GiB of memory and 40 GiB of disk while it runs |
 | online | a Linux virtual machine rented by the hour from any cloud provider | nothing on your computer; money for every hour it exists, and it must be deleted when you stop |
 
@@ -61,9 +61,9 @@ multipass shell gitops
 
 **Those two commands were not run for this course**, because the computer it was recorded on cannot
 run a hypervisor. The first creates the VM and the second opens a shell inside it, as the user
-`ubuntu`. Everything after this point happens in that shell. With 6 GiB of memory every lesson still
-works, as long as you do not keep Argo CD and Flux running at the same time; lesson 4 says when to
-remove one.
+`ubuntu`. Everything after this point happens in that shell. On the recording machine the lab never
+used more than about 2 GiB, so 8 GiB leaves the VM's own system plenty of room. Argo CD and Flux
+never run together: lesson 4 removes one before installing the other.
 
 A snapshot of the VM once the next section works, with `multipass stop gitops` and then `multipass
 snapshot gitops`, gives you a clean start whenever an experiment goes wrong.

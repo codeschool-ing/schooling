@@ -27,18 +27,18 @@ Tudo nessa lista é software livre, e nada exige conta em lugar nenhum.
 
 | caminho | o que é | o que custa ao seu computador |
 |---|---|---|
-| instalado | as ferramentas num computador que já roda Linux | cerca de 0,6 GiB de memória para o cluster e o registry, 1,7 GiB a partir da aula 3, e cerca de 10 GiB de disco para as imagens |
+| instalado | as ferramentas num computador que já roda Linux | cerca de 0,6 GiB de memória para o cluster e o registry, de 1,5 a 1,7 GiB a partir da aula 3, 2 GiB nos poucos minutos em que a aula 12 roda um segundo cluster, e cerca de 10 GiB de disco para as imagens |
 | **uma máquina virtual com Multipass** (recomendado) | Ubuntu Server 24.04 numa VM criada com um comando, no Windows, no macOS ou no Linux, com as mesmas ferramentas dentro | 4 processadores, 8 GiB de memória e 40 GiB de disco enquanto roda |
 | online | uma máquina virtual Linux alugada por hora em qualquer provedor de nuvem | nada no seu computador; dinheiro por cada hora em que ela existir, e ela precisa ser apagada quando você parar |
 
 **A máquina virtual é a recomendação**, porque tudo aqui foi escrito para Linux e parte disso passa
-do `kubectl` para a máquina de baixo: o nó é um container Docker em que você entra com `docker exec`,
-e o registry e o Gitea são alcançados pelo nome do container de dentro do cluster. Numa VM Ubuntu
-isso funciona igual em qualquer máquina. O Multipass, ferramenta da Canonical, cria a VM com um
-comando e usa o hipervisor que o seu sistema tiver: Hyper-V no Windows (VirtualBox no Windows Home),
-o framework de virtualização embutido no macOS e KVM no Linux. Qualquer outro hipervisor serve
-também, VirtualBox, UTM num Mac com Apple silicon ou GNOME Boxes, ao preço de um instalador para
-clicar. O curso `virtualization` monta uma à mão na aula 4.
+do `kubectl` para a máquina de baixo: o nó é um container Docker em que você entra com `docker
+exec`, e o registry e o Gitea são alcançados pelo nome do container de dentro do cluster. Numa VM
+Ubuntu isso funciona igual em qualquer máquina. O Multipass, ferramenta da Canonical, cria a VM com
+um comando e usa o hipervisor que o seu sistema tiver: Hyper-V no Windows (VirtualBox no Windows
+Home), o framework de virtualização embutido no macOS e KVM no Linux. Qualquer outro hipervisor
+serve também, VirtualBox, UTM num Mac com Apple silicon ou GNOME Boxes, ao preço de um instalador
+para clicar. O curso `virtualization` monta uma à mão na aula 4.
 
 **Instalado** é a mesma coisa sem a VM, e é a melhor escolha se o seu computador já roda Ubuntu ou
 outro Linux: nada abaixo muda, exceto que você pula os próximos dois comandos. O Docker Desktop no
@@ -61,9 +61,9 @@ multipass shell gitops
 
 **Esses dois comandos não foram executados para este curso**, porque o computador em que ele foi
 gravado não roda um hipervisor. O primeiro cria a VM e o segundo abre um shell dentro dela, como o
-usuário `ubuntu`. Tudo daqui em diante acontece nesse shell. Com 6 GiB de memória todas as aulas
-ainda funcionam, desde que você não mantenha o Argo CD e o Flux rodando ao mesmo tempo; a aula 4 diz
-quando remover um deles.
+usuário `ubuntu`. Tudo daqui em diante acontece nesse shell. Na máquina que gravou o curso, o
+laboratório nunca usou mais que uns 2 GiB, então 8 GiB deixam bastante folga para o sistema da
+própria VM. O Argo CD e o Flux nunca rodam juntos: a aula 4 remove um antes de instalar o outro.
 
 Um snapshot da VM depois que a próxima seção funcionar, com `multipass stop gitops` e depois
 `multipass snapshot gitops`, dá a você um começo limpo sempre que um experimento der errado.

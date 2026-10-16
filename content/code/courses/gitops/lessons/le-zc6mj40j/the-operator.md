@@ -24,8 +24,8 @@ It adds two kinds of object, and only the second one is about a particular secre
 token is the `token` field of `bulletin/production`", and the store says what that is today. A
 reviewer reads which secret a workload gets and from where; the value never appears in a pull
 request, a diff or a clone. And because the operator keeps reading, **changing the value in the
-store changes the cluster without a commit**, which is exactly what lesson 11 needs for rotation,
-and exactly what a GitOps purist will object to: the Secret's content is now state that Git does not
+store changes the cluster without a commit**. That is exactly what lesson 11 needs for rotation, and
+exactly what a GitOps purist will object to: the Secret's content is now state that Git does not
 describe. The answer is that Git describes *which* secret and *who may read it*, and the store
 describes the value and keeps its own history and audit log. Lesson 12 reads both.
 

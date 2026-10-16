@@ -23,8 +23,8 @@ Ele acrescenta dois tipos de objeto, e só o segundo é sobre um segredo especí
 **O que vai para o Git é o ExternalSecret, que não guarda segredo nenhum.** Ele diz "o token da
 produção é o campo `token` de `bulletin/production`", e o cofre diz o que isso é hoje. Quem revisa
 lê qual segredo uma carga recebe e de onde; o valor nunca aparece num pull request, num diff ou num
-clone. E como o operador continua lendo, **mudar o valor no cofre muda o cluster sem um commit**,
-que é exatamente o que a aula 11 precisa para a rotação, e exatamente o que um purista de GitOps vai
+clone. E como o operador continua lendo, **mudar o valor no cofre muda o cluster sem um commit**. É
+exatamente o que a aula 11 precisa para a rotação, e exatamente o que um purista de GitOps vai
 contestar: o conteúdo do Secret passa a ser estado que o Git não descreve. A resposta é que o Git
 descreve *qual* segredo e *quem pode lê-lo*, e o cofre descreve o valor e mantém o próprio histórico
 e log de auditoria. A aula 12 lê os dois.
