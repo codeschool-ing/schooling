@@ -1,0 +1,346 @@
+{
+  "ex-p3cbcrmk": {
+    "prompt": "Num `Nested Loop`, que filho roda uma vez por linha do outro?",
+    "hint": "Externo e interno.",
+    "choices": [
+      {
+        "text": "O primeiro filho impresso",
+        "why": "Esse é o lado externo; ele roda uma vez."
+      },
+      {
+        "text": "O segundo filho impresso, o lado interno",
+        "why": "Isso: na junção do cliente 4242 ele mostra loops=10, um por pedido."
+      },
+      {
+        "text": "O filho que tiver índice",
+        "why": "Os dois filhos podem usar índices; a posição decide qual se repete."
+      },
+      {
+        "text": "Nenhum: os dois rodam uma vez e são comparados",
+        "why": "Isso descreve um merge join."
+      }
+    ]
+  },
+  "ex-k0m5j70j": {
+    "prompt": "A varredura de índice interna mostra `rows=2 loops=10` e `Buffers: shared hit=15 read=25`. Quantas páginas as dez buscas tocaram juntas?",
+    "hint": "Buffers não são médias.",
+    "choices": [
+      {
+        "text": "400: 40 por loop vezes 10",
+        "why": "Os buffers já vêm somados nos loops; só tempos e linhas são por loop."
+      },
+      {
+        "text": "40 no total, umas 4 por busca",
+        "why": "Isso: diferente de linhas e tempos, as contagens de buffers são totais."
+      },
+      {
+        "text": "20, uma por linha devolvida",
+        "why": "Cada busca também percorreu níveis do índice; a contagem é 40."
+      },
+      {
+        "text": "25, já que os 15 hits não foram tocados",
+        "why": "Um hit é uma página tocada na memória; ela conta."
+      }
+    ]
+  },
+  "ex-mb54cp38": {
+    "prompt": "Uma varredura de índice interna leva uns 0,022 ms por loop. Mais ou menos quantos milissegundos custariam 100000 linhas externas só em buscas?",
+    "hint": "Por loop, vezes loops.",
+    "unit": "ms"
+  },
+  "ex-ek856fe4": {
+    "prompt": "O filho externo de um nested loop mostra `rows=12` estimado e `rows=95000` real, e a varredura de índice interna, `loops=95000`. Qual é a causa a perseguir primeiro?",
+    "hint": "Com base em que número o loop foi escolhido?",
+    "choices": [
+      {
+        "text": "Falta o índice do lado interno",
+        "why": "Ele existe: o lado interno é uma varredura de índice."
+      },
+      {
+        "text": "A estimativa externa, 12 contra 95000",
+        "why": "Isso: a junção era certa para 12 linhas; a estimativa estava errada."
+      },
+      {
+        "text": "O work_mem é pequeno demais para o loop",
+        "why": "Um nested loop não guarda tabela hash; o work_mem não o limita."
+      },
+      {
+        "text": "Os planos paralelos estavam desligados na sessão",
+        "why": "O paralelismo dividiria o trabalho, não mudaria as 95000 buscas."
+      }
+    ]
+  },
+  "ex-dztm3cbz": {
+    "prompt": "Que entrada de um hash join é lida para a tabela hash?",
+    "hint": "O filho embaixo do `Hash`.",
+    "choices": [
+      {
+        "text": "A maior, para haver menos consultas",
+        "why": "O contrário: fazer hash do lado maior custa mais memória e mais lotes."
+      },
+      {
+        "text": "Sempre a tabela da esquerda no SQL",
+        "why": "O planejador escolhe o lado; customers virou hash embora escrita depois."
+      },
+      {
+        "text": "A menor, pela estimativa",
+        "why": "Isso: 200000 clientes, e não dois milhões de pedidos."
+      },
+      {
+        "text": "As duas, numa tabela só",
+        "why": "Um lado constrói, o outro consulta."
+      }
+    ]
+  },
+  "ex-va98s7xy": {
+    "prompt": "Um nó `Hash` mostra `Batches: 2  Memory Usage: 5966kB` e a junção, `temp read=3262 written=3262`. O que isso diz?",
+    "hint": "A memória permitida é o work_mem vezes um multiplicador.",
+    "choices": [
+      {
+        "text": "Não coube, e parte foi para o disco",
+        "why": "Isso: o hash passou da memória dele, e uns 25 MB foram para arquivos temporários e voltaram."
+      },
+      {
+        "text": "Dois processos montaram o hash em paralelo",
+        "why": "Lotes são partes de um hash, não workers; os planos paralelos estavam desligados."
+      },
+      {
+        "text": "A junção rodou duas vezes sobre a mesma entrada",
+        "why": "loops=1; os lotes são passadas sobre dados divididos."
+      },
+      {
+        "text": "Os shared buffers estavam cheios naquela hora",
+        "why": "Arquivos temporários são do work_mem, não dos shared buffers."
+      }
+    ]
+  },
+  "ex-jsw9dtd6": {
+    "prompt": "Com o `work_mem` em 32 MB o hash dos clientes coube em um lote e a consulta levou 1401 ms; com 1 MB levou 8 lotes e 943 ms. O que concluir antes de aumentar o `work_mem` no servidor?",
+    "hint": "O derramamento custou o que o planejador achava?",
+    "choices": [
+      {
+        "text": "Mais memória deixa hash joins mais lentos, então baixe no servidor",
+        "why": "Uma consulta numa máquina quente não mostra regra em nenhuma direção."
+      },
+      {
+        "text": "Os tempos estão errados porque o ANALYZE acrescenta custo",
+        "why": "Os três pagaram o mesmo custo extra."
+      },
+      {
+        "text": "Lotes acima de 1 devem ser eliminados custe o que custar",
+        "why": "Aqui eliminá-los não rendeu nada; são um custo a medir, não um veredito."
+      },
+      {
+        "text": "Lotes são um custo a medir, e aqui o derramamento saiu barato",
+        "why": "Isso: os arquivos temporários ficaram no cache do sistema; meça, e pese a parte de cada conexão."
+      }
+    ]
+  },
+  "ex-a9y3qafs": {
+    "prompt": "Um hash pode usar `work_mem` vezes `hash_mem_multiplier`, que vale ___ por padrão.",
+    "hint": "O SHOW imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "2",
+          "dois"
+        ]
+      }
+    ]
+  },
+  "ex-g3m9d9nw": {
+    "prompt": "Do que um merge join precisa das duas entradas?",
+    "hint": "Duas listas intercaladas à mão.",
+    "choices": [
+      {
+        "text": "Em ordem pela chave da junção, ambas",
+        "why": "Isso: aí cada uma é percorrida uma vez, juntas."
+      },
+      {
+        "text": "Um índice na chave primária de cada tabela, seja qual for a junção",
+        "why": "Ordem é do que ele precisa; um índice é só um jeito de obtê-la."
+      },
+      {
+        "text": "Pequenas o bastante para o work_mem",
+        "why": "Essa é a necessidade do hash join."
+      },
+      {
+        "text": "O mesmo número de linhas em cada lado",
+        "why": "200000 pedidos encontraram 500001 linhas."
+      }
+    ]
+  },
+  "ex-yvrc9cqk": {
+    "prompt": "A varredura de índice de `order_lines` no merge join mostra `rows=500001`, embora a tabela tenha cinco milhões. Por quê?",
+    "hint": "Os dois lados chegam em ordem.",
+    "choices": [
+      {
+        "text": "As estatísticas estavam velhas",
+        "why": "As estimativas estavam perto; rows= aqui é o que foi lido."
+      },
+      {
+        "text": "Parou ao passar do pedido 200000",
+        "why": "Isso: uma linha além da última que batia encerrou a junção."
+      },
+      {
+        "text": "Só meio milhão de linhas tem pedido",
+        "why": "Toda linha tem pedido; as outras pertencem a pedidos posteriores."
+      },
+      {
+        "text": "Uma varredura só de índice devolve uma linha por página",
+        "why": "Ela devolve cada entrada que bate."
+      }
+    ]
+  },
+  "ex-arj8tant": {
+    "prompt": "O planejador escolheu um hash join (1392 ms) em vez de um merge join (171 ms), com estimativas a 1% da verdade. `random_page_cost = 1.1` o fez escolher o merge. O que você tira disso?",
+    "hint": "As linhas estavam certas; outra coisa teve o preço errado.",
+    "choices": [
+      {
+        "text": "Pôr enable_hashjoin = off na configuração",
+        "why": "Isso força toda junção e deixa o preço errado no lugar."
+      },
+      {
+        "text": "Rodar ANALYZE para as estimativas melhorarem",
+        "why": "As estimativas já estavam certas: 504377 contra 500000."
+      },
+      {
+        "text": "Um preço estava errado, não uma contagem",
+        "why": "Isso: o random_page_cost cobra demais leituras de índice nesta máquina em cache; meça e ajuste uma vez na configuração."
+      },
+      {
+        "text": "Merge joins são sempre mais rápidos que hash joins",
+        "why": "Só quando as entradas já estão em ordem; aqui estavam."
+      }
+    ]
+  },
+  "ex-xg6prxc9": {
+    "prompt": "Juntando clientes aos pedidos, o planejador usou nested loop para 10 e 1000 clientes e hash join para 20000. O que mudou entre eles?",
+    "hint": "Só a faixa mudou.",
+    "choices": [
+      {
+        "text": "Os índices disponíveis para o planejador",
+        "why": "Os mesmos índices existiam para os três."
+      },
+      {
+        "text": "O número esperado de linhas externas",
+        "why": "Isso: o custo do loop cresce com elas e o do hash join quase não."
+      },
+      {
+        "text": "O ajuste de work_mem",
+        "why": "Era o padrão nos três."
+      },
+      {
+        "text": "A ordem das tabelas no SQL",
+        "why": "O SQL era o mesmo, fora o número."
+      }
+    ]
+  },
+  "ex-htc01cv4": {
+    "prompt": "Com 1000 clientes o planejador esperava 1027 linhas externas e pôs uma busca interna a 36.75. Mais ou menos quanto custa o nested loop, antes dos pequenos extras?",
+    "hint": "Linhas externas vezes uma busca.",
+    "unit": "unidades de custo"
+  },
+  "ex-yjr56mgf": {
+    "prompt": "No hash join de 20000 clientes, por que os clientes são o lado em hash?",
+    "hint": "Que tabela tem menos linhas?",
+    "choices": [
+      {
+        "text": "20000 linhas fazem uma tabela menor que dois milhões",
+        "why": "Isso: o planejador faz hash do lado que espera ser menor."
+      },
+      {
+        "text": "customers vem primeiro na consulta",
+        "why": "A ordem escrita não decide; as estimativas decidem."
+      },
+      {
+        "text": "orders não tem índice que o hash possa usar",
+        "why": "Um hash join não usa índice em lado nenhum."
+      },
+      {
+        "text": "Um hash join só pode fazer hash de tabela com chave primária",
+        "why": "Qualquer entrada pode virar hash; chaves não entram nisso."
+      }
+    ]
+  },
+  "ex-vz23422n": {
+    "prompt": "Ligue cada sinal de alerta à junção a que pertence.",
+    "hint": "A última tabela da aula.",
+    "pairs": [
+      {
+        "left": "`loops` na casa dos milhares onde se esperavam poucos",
+        "right": "nested loop"
+      },
+      {
+        "left": "`Batches` acima de 1",
+        "right": "hash join"
+      },
+      {
+        "left": "um `Sort` na frente de cada entrada",
+        "right": "merge join"
+      }
+    ],
+    "right_distractors": [
+      "bitmap heap scan"
+    ]
+  },
+  "ex-3kw1yy32": {
+    "prompt": "Uma junção está lenta. Ponha estes passos na ordem em que a aula ensina a dá-los.",
+    "hint": "Linhas antes de métodos.",
+    "items": [
+      "Rodar EXPLAIN (ANALYZE, BUFFERS) nela",
+      "Comparar linhas estimadas e reais nos filhos da junção, a partir de baixo",
+      "Se as estimativas se sustentam, forçar o método rejeitado para comparar",
+      "Questionar a tabela de preços ou os índices, não a junção"
+    ],
+    "trap": "Forçar um método primeiro pula a pergunta de se a estimativa era a causa."
+  },
+  "ex-w4f7zzfx": {
+    "prompt": "Quais destas são verdadeiras sobre os três métodos de junção? Marque todas as que se aplicam.",
+    "hint": "A tabela lado a lado.",
+    "choices": [
+      {
+        "text": "O custo de um nested loop cresce com as linhas externas",
+        "why": "Certo: linhas vezes uma busca."
+      },
+      {
+        "text": "Um hash join lê cada lado uma vez",
+        "why": "Certo: constrói uma vez, consulta uma vez."
+      },
+      {
+        "text": "A saída de um merge join sai ordenada pela chave",
+        "why": "Certo: um ORDER BY nela não custa nada a mais."
+      },
+      {
+        "text": "Um hash join precisa de índice na coluna da junção",
+        "why": "Ele não usa índice."
+      },
+      {
+        "text": "Um merge join não consegue parar antes do fim de uma das entradas",
+        "why": "Ele parou no pedido 200000 na aula."
+      }
+    ]
+  },
+  "ex-xsjpzexv": {
+    "prompt": "Um relatório junta uma tabela `regions` de 300 linhas a uma `sales` de 40 milhões pela `region_id`, sem filtro, e `sales` tem índice em `region_id`. Que método você espera, e por quê?",
+    "hint": "Toda linha de sales é pedida.",
+    "choices": [
+      {
+        "text": "Um nested loop sobre as regiões, usando o índice de sales",
+        "why": "300 buscas juntas buscariam as 40 milhões de linhas na ordem do índice, o jeito lento."
+      },
+      {
+        "text": "Um merge join, porque region_id tem índice",
+        "why": "Só um lado está em ordem, e as 40 milhões teriam de ser percorridas pelo índice."
+      },
+      {
+        "text": "Um hash join sobre as 300 regiões",
+        "why": "Isso: as 300 regiões viram hash na memória e sales é lida uma vez, em ordem."
+      },
+      {
+        "text": "Nenhuma junção: o planejador lê as duas e filtra",
+        "why": "Uma junção precisa de um dos três métodos."
+      }
+    ]
+  }
+}
