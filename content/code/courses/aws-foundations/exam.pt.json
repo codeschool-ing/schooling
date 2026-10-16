@@ -1242,5 +1242,669 @@
       "uma porta dedicada de 1 Gbps em cada um de dois locais"
     ],
     "trap": "O anexo ao Transit Gateway é cobrado além da hora da própria VPN, 0.09 contra 0.05, e ainda fica bem abaixo dos 0.30 de uma porta."
+  },
+  "ex-ssm64xvz": {
+    "prompt": "Os servidores web da loja precisam ler o `shop-assets` e também mandar mensagens a uma fila. Um colega cria dois papéis, `shop-app` e `shop-app-queue`, e quer os dois na instância. O que a lição diz?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "Anexar dois instance profiles, um para cada papel",
+        "why": "Uma instância tem uma associação de profile, e é no profile que o papel vai."
+      },
+      {
+        "text": "Usar um papel cujas políticas concedam as duas coisas",
+        "why": "Isso. Um profile guarda exatamente um papel; o moto recusou o segundo com `LimitExceeded`, como a AWS documenta."
+      },
+      {
+        "text": "Pôr os dois papéis no profile `shop-app`",
+        "why": "Essa é a chamada que falhou: `InstanceSessionsPerInstanceProfile` é 1."
+      },
+      {
+        "text": "Copiar uma chave do segundo papel para o disco",
+        "why": "Um papel não tem chave própria, e chave no disco é o que os profiles existem para evitar."
+      }
+    ]
+  },
+  "ex-4yrcx46f": {
+    "prompt": "O CloudTrail mostra um bucket lido por `arn:aws:sts::123456789012:assumed-role/shop-app/i-0ee42130b0c3e009d`. O que a última parte diz?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "A chave de acesso que assinou a chamada",
+        "why": "Um id de chave começa com `AKIA` ou `ASIA`; isto é um nome de sessão."
+      },
+      {
+        "text": "O nome do instance profile",
+        "why": "O profile também é `shop-app`; a última parte nomeia outra coisa."
+      },
+      {
+        "text": "Qual máquina fez a chamada: a sessão leva o nome da instância",
+        "why": "Isso. No EC2 o nome da sessão do papel é o id da instância, então o log aponta para uma máquina."
+      },
+      {
+        "text": "A pessoa que iniciou a instância",
+        "why": "Quem a iniciou é outro evento, `RunInstances`; esta chamada foi da própria máquina."
+      }
+    ]
+  },
+  "ex-pmywj9vr": {
+    "prompt": "Alguns pods EKS da loja vão rodar no Fargate, e cada um precisa de um papel próprio. Que mecanismo a lição aponta para eles?",
+    "hint": "Lição 10.",
+    "choices": [
+      {
+        "text": "O EKS Pod Identity, a escolha mais simples",
+        "why": "Ele é mais simples no EKS, mas o agente dele não alcança pods no Fargate."
+      },
+      {
+        "text": "O instance profile do nó, com hop limit 2",
+        "why": "Isso divide um papel com todo pod, que é o que um papel por carga evita."
+      },
+      {
+        "text": "Um task role do ECS",
+        "why": "Task roles pertencem a tarefas do ECS, não a pods no EKS."
+      },
+      {
+        "text": "O IRSA, um token trocado no STS",
+        "why": "Isso. O IRSA continua onde o Pod Identity não chega, como pods no Fargate."
+      }
+    ]
+  },
+  "ex-7vthz6fk": {
+    "prompt": "Ligue cada jeito de uma carga receber um papel ao lugar onde ela acha as credenciais.",
+    "hint": "Lição 10.",
+    "pairs": [
+      {
+        "left": "um instance profile do EC2",
+        "right": "`169.254.169.254`, o serviço de metadados"
+      },
+      {
+        "left": "um task role do ECS",
+        "right": "`169.254.170.2`, o agente do ECS"
+      },
+      {
+        "left": "EKS Pod Identity",
+        "right": "`169.254.170.23`, um agente no nó"
+      },
+      {
+        "left": "IRSA",
+        "right": "um arquivo de token nomeado por `AWS_WEB_IDENTITY_TOKEN_FILE`"
+      }
+    ],
+    "right_distractors": [
+      "`~/.aws/credentials` no nó"
+    ]
+  },
+  "ex-pzb94z1t": {
+    "prompt": "Um permission set recebe `PT12H`, e a sessão do Identity Center dura as oito horas padrão. Nove horas depois do `aws sso login`, um comando com esse perfil roda. O que acontece?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Funciona: as credenciais do papel duram doze horas",
+        "why": "O permission set limita cada conjunto de credenciais do papel; o login tem seu próprio relógio, mais curto."
+      },
+      {
+        "text": "Ele diz que o token expirou, e é preciso `aws sso login` de novo",
+        "why": "Isso. A sessão do Identity Center limita o próprio login, e ela acabou em oito horas."
+      },
+      {
+        "text": "Ele recorre às chaves de teste que o `env.sh` exporta",
+        "why": "Um perfil nomeado com `--profile` tira as chaves do ambiente da cadeia."
+      },
+      {
+        "text": "Funciona até as credenciais do papel chegarem a doze horas, e para",
+        "why": "Credenciais novas do papel precisam do token do login, e o token morreu em oito horas."
+      }
+    ]
+  },
+  "ex-ndapm1jj": {
+    "prompt": "A bia entra na `shop-staging` com `Developer`, que é o `PowerUserAccess` da AWS, e tenta criar um papel do IAM para o teste dela. O que acontece?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Funciona: power users podem fazer tudo",
+        "why": "Tudo menos gerenciar o IAM e a organização, que é exatamente isto."
+      },
+      {
+        "text": "Funciona, mas só nas contas onde ela tem `ReadOnly`",
+        "why": "`ReadOnly` não muda nada em lugar nenhum; não ajudaria também."
+      },
+      {
+        "text": "É recusado: o `PowerUserAccess` deixa de fora gerenciar o IAM",
+        "why": "Isso. É a linha comum entre construir numa conta e governá-la."
+      },
+      {
+        "text": "É recusado, porque usuários do Identity Center não podem chamar o IAM",
+        "why": "Eles agem como um papel, e um permission set que permitisse o IAM os deixaria."
+      }
+    ]
+  },
+  "ex-84rsfae4": {
+    "prompt": "Uma equipe habilita uma instância de conta do Identity Center dentro da `shop-staging`, querendo dar acesso às pessoas dela na `shop-staging` e na `shop-prod`. O que a lição diz sobre isso?",
+    "hint": "Lição 11.",
+    "choices": [
+      {
+        "text": "Funciona, desde que o SCIM esteja conectado",
+        "why": "O SCIM provisiona usuários e grupos; ele não muda o que uma instância de conta pode fazer."
+      },
+      {
+        "text": "Não dá: esse tipo só serve aplicações",
+        "why": "Isso. O acesso a contas vem da instância da organização, habilitada uma vez na conta de gerenciamento."
+      },
+      {
+        "text": "Funciona só para a `shop-staging`",
+        "why": "Uma instância de conta não dá acesso a nenhuma conta da AWS, nem à própria."
+      },
+      {
+        "text": "Ela substitui a instância da organização naquele ramo da árvore",
+        "why": "Instâncias não seguem a árvore; a organização tem uma instância para acesso a contas."
+      }
+    ]
+  },
+  "ex-ckc0bpqy": {
+    "prompt": "Um servidor no escritório pode receber um certificado X.509 de uma autoridade certificadora em que a conta confia. Em vez de uma chave de acesso, ele pode assumir um papel pelo IAM Roles ___.",
+    "hint": "Lição 12.",
+    "blanks": [
+      {
+        "accept": [
+          "Anywhere"
+        ]
+      }
+    ]
+  },
+  "ex-z23vwp09": {
+    "prompt": "Uma cópia da chave atual do `erp-sync` aparece numa colagem pública. A única política dele é a `upload-erp.json`. Antes que alguém aja, o que quem a achou pode fazer?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "Ler todo backup em `shop-backups`",
+        "why": "A política permite só `s3:PutObject`; não há `GetObject` nela."
+      },
+      {
+        "text": "Criar um usuário novo com chave própria",
+        "why": "Isso exige permissões do IAM, e o `erp-sync` não tem nenhuma."
+      },
+      {
+        "text": "Pôr arquivos em `erp/` no `shop-backups`, sobrescrevendo o que existe",
+        "why": "Isso. Uma chave que precisa existir deve fazer o mínimo possível, e esta só envia para um prefixo."
+      },
+      {
+        "text": "Nada, já que a chave só funciona do escritório",
+        "why": "Uma chave de acesso funciona de qualquer rede; nada a prende a um lugar."
+      }
+    ]
+  },
+  "ex-8nny6hqs": {
+    "prompt": "A chave vazada da dani agora está `Inactive`. O CloudTrail, buscado pelo id dela, mostra que ela criou um usuário `support2` com chave de acesso própria. O que vem antes da rotação?",
+    "hint": "Lição 12.",
+    "choices": [
+      {
+        "text": "Nada: o `support2` para quando a chave da dani para",
+        "why": "O `support2` tem chave própria, e desligar a da dani não faz nada com ela."
+      },
+      {
+        "text": "Anexar a `AWSCompromisedKeyQuarantineV3` à dani, e esperar",
+        "why": "A quarentena é um freio no usuário da dani, não no usuário que o intruso criou."
+      },
+      {
+        "text": "Desfazer o que a chave criou: o `support2` e a chave dele",
+        "why": "Isso. Um intruso cuidadoso cria outra entrada antes de a primeira fechar; essa porta também tem de sumir."
+      },
+      {
+        "text": "Apagar a chave da dani, para o IAM esquecer o que ela fez",
+        "why": "Apagar primeiro joga fora o que o IAM sabe da chave, e o registro do CloudTrail era o necessário."
+      }
+    ]
+  },
+  "ex-29hr20gt": {
+    "prompt": "O `plan.py` deixou sete blocos `/20` livres em `10.20.0.0/16`. Quantas sub-redes `/24` esses sete blocos comportariam?",
+    "hint": "Lição 16. Conte primeiro quantas `/24` cabem numa `/20`.",
+    "unit": "sub-redes"
+  },
+  "ex-kh0y7q47": {
+    "prompt": "A produção, `10.20.0.0/16`, precisa de uma segunda faixa IPv4 que a AWS aceite e que nunca a impeça de se ligar à staging ou ao escritório. Qual?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "`172.16.0.0/16`",
+        "why": "Uma VPC cuja faixa primária está em `10.0.0.0/8` não pode acrescentar uma de `172.16.0.0/12`."
+      },
+      {
+        "text": "`10.30.0.0/16`",
+        "why": "A AWS aceitaria, e é a faixa da staging: as duas VPCs nunca poderiam ser ligadas."
+      },
+      {
+        "text": "`10.40.0.0/16`",
+        "why": "Isso. Mesma família da primária, e não colide com nada do plano da loja."
+      },
+      {
+        "text": "`192.168.10.0/24`",
+        "why": "Família errada para esta VPC, e ainda dentro do `192.168.0.0/16` do escritório."
+      }
+    ]
+  },
+  "ex-wewsyyvt": {
+    "prompt": "Muitas organizações apagam a VPC padrão em toda região de toda conta. O que elas ganham com isso?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Uma fatura menor, já que a VPC padrão é cobrada por hora",
+        "why": "Uma VPC não custa nada para existir; o ganho não é dinheiro."
+      },
+      {
+        "text": "Espaço para `172.31.0.0/16` no próprio plano",
+        "why": "Ninguém precisa apagá-la para isso; o ponto é o que cai lá."
+      },
+      {
+        "text": "Nada criado sem nomear uma VPC cai numa rede aberta",
+        "why": "Isso. As sub-redes dela são todas públicas, e tudo que alguém cria sem escolher se acumula lá."
+      },
+      {
+        "text": "Uma cota maior de VPCs na região",
+        "why": "Libera uma das cinco, que não é o motivo de ninguém fazer isso."
+      }
+    ]
+  },
+  "ex-htzbcnrd": {
+    "prompt": "O `AvailableIpAddressCount` da `app-a` caiu de 4.091 para 12, e a camada continua crescendo. O que a AWS deixa a loja fazer?",
+    "hint": "Lição 16.",
+    "choices": [
+      {
+        "text": "Alargar a `app-a` de `/20` para `/19`",
+        "why": "A faixa de uma sub-rede não pode ser mudada depois de criada."
+      },
+      {
+        "text": "Criar outra sub-rede com os blocos livres e pôr as máquinas novas lá",
+        "why": "Isso. O espaço livre é para isto; uma sub-rede que se esgota é substituída ou ganha companhia."
+      },
+      {
+        "text": "Recuperar os cinco endereços que a AWS guarda",
+        "why": "Eles são reservados em toda sub-rede, de qualquer tamanho, e nunca são entregues."
+      },
+      {
+        "text": "Estender a `app-a` até `sa-east-1b`",
+        "why": "Uma sub-rede vive em exatamente uma zona."
+      }
+    ]
+  },
+  "ex-f8eh3tea": {
+    "prompt": "A staging divide um NAT gateway com seu Elastic IP, e 300 GB por mês passam por ele. Com os preços da lição e 730 horas, quanto esse NAT custa por mês, em dólares?",
+    "hint": "Lição 17. Três linhas: as horas do gateway, as horas do endereço, os gigabytes.",
+    "unit": "dólares"
+  },
+  "ex-gqketk9k": {
+    "prompt": "Arrumando, alguém roda `replace-route-table-association` e passa a `app-b` para a tabela `public` por engano. O que acontece com as máquinas dela?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "Nada até a próxima reinicialização de cada máquina",
+        "why": "Uma associação vale para o próximo pacote, não na inicialização."
+      },
+      {
+        "text": "A partir do próximo pacote perdem a internet: não têm endereço público",
+        "why": "Isso. O `0.0.0.0/0` delas agora aponta para o internet gateway, que não tem para que traduzir os endereços privados."
+      },
+      {
+        "text": "Ficam alcançáveis pela internet",
+        "why": "Sem endereço público, ninguém de fora tem um endereço para alcançá-las."
+      },
+      {
+        "text": "Perdem o banco, já que o `local` pertence à tabela privada",
+        "why": "Toda tabela da VPC tem a rota `local`."
+      }
+    ]
+  },
+  "ex-77ytdf24": {
+    "prompt": "Para dobrar a saída da loja, um colega quer um segundo internet gateway na VPC de produção. O que a AWS responde?",
+    "hint": "Lição 17.",
+    "choices": [
+      {
+        "text": "Anexa, e os dois dividem o tráfego",
+        "why": "Não há divisão a arranjar: uma VPC, um internet gateway."
+      },
+      {
+        "text": "Anexa em outra zona, para resiliência",
+        "why": "Um internet gateway não tem zona; a AWS já o roda pela região toda."
+      },
+      {
+        "text": "Uma recusa: um por VPC, e ele não tem zona a perder",
+        "why": "Isso. A regra vale nos dois sentidos, uma VPC por gateway e um gateway por VPC; o moto mostrou a primeira metade."
+      },
+      {
+        "text": "Anexa, por mais 0.093 por hora",
+        "why": "0.093 é a hora do NAT gateway; um internet gateway não tem preço por hora."
+      }
+    ]
+  },
+  "ex-vcfg5rt7": {
+    "prompt": "A staging começou com um NAT gateway compartilhado na zona a. Ponha em ordem os passos que dão à zona b uma saída própria.",
+    "hint": "Lição 17.",
+    "items": [
+      "alocar um Elastic IP",
+      "criar um NAT gateway na `public-b` com esse endereço",
+      "criar uma tabela de rotas `private-b`",
+      "acrescentar `0.0.0.0/0` para o NAT gateway novo na `private-b`",
+      "associar `app-b` e `data-b` à `private-b`"
+    ],
+    "trap": "Associar as sub-redes antes de a tabela ter a rota cortaria a zona b da internet nesse meio-tempo."
+  },
+  "ex-3b48vkjz": {
+    "prompt": "Ontem à tarde a aplicação não conseguiu alcançar o banco por vinte minutos. Que ferramenta diz o que de fato aconteceu com essas conexões?",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Os VPC Flow Logs, com um `ACCEPT` ou `REJECT` por tentativa",
+        "why": "Isso. Eles registram o que aconteceu, depois de acontecer, por interface de rede."
+      },
+      {
+        "text": "O VPC Reachability Analyzer, rodado hoje",
+        "why": "Ele lê a configuração de hoje e não envia nada; não diz o que os pacotes de ontem encontraram."
+      },
+      {
+        "text": "`describe-security-group-rules` no `db-sg`",
+        "why": "Isso imprime as regras de hoje, não o que aconteceu com uma conexão."
+      },
+      {
+        "text": "O moto, repetindo as mesmas requisições",
+        "why": "O moto não filtra nada, então deixaria tudo passar."
+      }
+    ]
+  },
+  "ex-yr3qp85s": {
+    "prompt": "Um testador inicia uma máquina de depuração na `public-a` e, para ela funcionar logo, dá a ela o `alb-sg`. O que essa máquina agora alcança que não deveria?",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "Nada: regras nomeiam endereços, e o endereço dela é novo",
+        "why": "A regra do `app-sg` nomeia um grupo, não um endereço."
+      },
+      {
+        "text": "O banco na 5432",
+        "why": "O `db-sg` confia no `app-sg`, e a máquina carrega o `alb-sg`."
+      },
+      {
+        "text": "As máquinas da aplicação na 8080, como se fosse o load balancer",
+        "why": "Isso. Uma referência confia em qualquer interface que carregue o grupo, então carregá-lo é a identidade."
+      },
+      {
+        "text": "A internet na 443, que o `alb-sg` normalmente bloqueia",
+        "why": "O `alb-sg` deixa a 443 entrar de qualquer lugar; nunca foi um bloqueio na saída."
+      }
+    ]
+  },
+  "ex-mxrpkkat": {
+    "prompt": "Um parceiro em `198.51.100.7` precisa alcançar a loja na 443, enquanto o resto de `198.51.100.0/24` é recusado e todo o resto entra. Ponha as regras de entrada da network ACL pública na ordem em que devem ser numeradas, da menor para a maior.",
+    "hint": "Lição 18.",
+    "items": [
+      "permitir TCP 443 de `198.51.100.7/32`",
+      "negar tudo de `198.51.100.0/24`",
+      "permitir TCP 443 de `0.0.0.0/0`",
+      "a regra `*`, 32767, negando o que nada casou"
+    ],
+    "trap": "A primeira que casa decide: ponha a negação do /24 primeiro e o parceiro é recusado com todo o resto da faixa."
+  },
+  "ex-ee2v1n1k": {
+    "prompt": "Duas máquinas da aplicação estão na mesma sub-rede, `app-a`. Uma se conecta à outra na 8080. Que filtros julgam essa conexão?",
+    "hint": "Lição 18.",
+    "choices": [
+      {
+        "text": "A network ACL da `app-a`, na entrada e na saída",
+        "why": "Uma network ACL fica na borda da sub-rede, e este pacote nunca a atravessa."
+      },
+      {
+        "text": "Nenhum: tráfego dentro de uma sub-rede nunca é filtrado",
+        "why": "Os security groups estão em cada interface, então ainda o julgam."
+      },
+      {
+        "text": "Só os security groups das duas interfaces",
+        "why": "Isso. Um security group fica em cada interface, então vê tráfego entre vizinhos que nenhuma borda vê."
+      },
+      {
+        "text": "A network ACL e os security groups juntos",
+        "why": "Os dois valem para um pacote que entra na sub-rede; este fica dentro dela."
+      }
+    ]
+  },
+  "ex-5f4svv8h": {
+    "prompt": "Um interface endpoint para o registro de contêineres fica nas três sub-redes de aplicação, e 600 GB por mês passam por ele. Pelos preços de 17 de setembro de 2026 e 730 horas, quanto custa por mês, em dólares?",
+    "hint": "Lição 19. Uma hora por zona, e os gigabytes.",
+    "unit": "dólares"
+  },
+  "ex-9e9rgxyf": {
+    "prompt": "Os NAT gateways ficam, por causa do provedor de pagamentos. As chamadas da aplicação ao STS somam cerca de 10 GB por mês. Só pelo dinheiro, vale um interface endpoint do STS em três zonas?",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "Sim: cada gigabyte economiza 0.083 contra o NAT",
+        "why": "Economiza, e 10 GB poupam 0.83 por mês contra 45.99 de horas."
+      },
+      {
+        "text": "Não: ele só se paga acima de uns 554 GB por mês",
+        "why": "Isso. Chamadas ao STS são pequenas; o endpoint serve para tráfego como um registro puxando imagens o dia todo."
+      },
+      {
+        "text": "Sim: interface endpoints são grátis, como os gateway endpoints",
+        "why": "Só gateway endpoints são grátis; um interface endpoint é cobrado por hora por zona."
+      },
+      {
+        "text": "Não: o STS não pode ser alcançado por um endpoint",
+        "why": "Pode, como interface endpoint; a lição criou um."
+      }
+    ]
+  },
+  "ex-f9d6sccx": {
+    "prompt": "Uma política de bucket pode recusar o que não chegou pelo endpoint da loja com uma condição em `aws:___`, que a AWS define em toda requisição que passou por um.",
+    "hint": "Lição 19.",
+    "blanks": [
+      {
+        "accept": [
+          "SourceVpce"
+        ]
+      }
+    ]
+  },
+  "ex-w0cf6fpx": {
+    "prompt": "A staging lê a API de estoque da produção pelo PrivateLink. Quem paga o quê, pela lição? Marque todos os que se aplicam.",
+    "hint": "Lição 19.",
+    "choices": [
+      {
+        "text": "A staging paga o interface endpoint dela, por hora e por gigabyte",
+        "why": "Isso: o consumidor paga 0.021 por hora por zona e 0.01 por gigabyte."
+      },
+      {
+        "text": "A produção paga o Network Load Balancer na frente da API",
+        "why": "Isso: o provedor paga o load balancer dele, que a lição 22 precifica."
+      },
+      {
+        "text": "A staging paga processamento de NAT a cada requisição",
+        "why": "Nada passa por um NAT gateway; o endpoint está dentro da sub-rede da staging."
+      },
+      {
+        "text": "A produção paga transferência para a internet pelas respostas",
+        "why": "Nada vai para a internet em sentido nenhum."
+      }
+    ]
+  },
+  "ex-7rtjxmw8": {
+    "prompt": "Produção, staging e uma VPC de ferramentas se anexam a um Transit Gateway, e ele processa 1.000 GB num mês. Com os preços da lição e 730 horas, quanto o hub custa nesse mês, em dólares?",
+    "hint": "Lição 20. Por anexo por hora, e por gigabyte processado.",
+    "unit": "dólares"
+  },
+  "ex-5yyq4gck": {
+    "prompt": "Depois de um incidente, 300 GB são restaurados da cópia de recuperação na Virgínia para a produção em São Paulo, pelo peering entre regiões. Pelos preços da lição 1, quanto custa a transferência?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "41.40 dólares, a 0.138 por gigabyte",
+        "why": "0.138 é o preço de sair de São Paulo; estes bytes saem da Virgínia."
+      },
+      {
+        "text": "6.00 dólares, a 0.02 por gigabyte",
+        "why": "Isso. Entre regiões o sentido decide, e sair da Virgínia para São Paulo é o barato."
+      },
+      {
+        "text": "Nada, já que peering não tem cobrança",
+        "why": "Peering não tem linha por hora; os bytes entre regiões continuam com preço."
+      },
+      {
+        "text": "6.00 dólares, mais 0.02 por gigabyte processado",
+        "why": "Processamento é cobrança do Transit Gateway; um peering não processa nada."
+      }
+    ]
+  },
+  "ex-x265q01b": {
+    "prompt": "A VPC de produção está na `shop-prod` e a da staging na `shop-staging`, duas contas. Como surge um peering entre elas?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "A conta de gerenciamento o cria para as duas",
+        "why": "Os donos das duas VPCs o fazem; a conta de gerenciamento não é parte."
+      },
+      {
+        "text": "Um lado o cria, e ele fica ativo na hora",
+        "why": "Ele espera em `pending-acceptance` até o outro lado concordar."
+      },
+      {
+        "text": "Por um compartilhamento no AWS Resource Access Manager",
+        "why": "O RAM é como a lição compartilhou o Transit Gateway, não um peering."
+      },
+      {
+        "text": "Um lado pede com `--peer-owner-id`; o outro aceita com as próprias credenciais",
+        "why": "Isso. Um peering é pedido por um dono e aceito pelo outro, então o dono de cada VPC concorda."
+      }
+    ]
+  },
+  "ex-3btxs2nm": {
+    "prompt": "O `db-sg` da produção deveria deixar entrar o grupo da aplicação da cópia na Virgínia, pelo peering entre regiões. A regra dele pode nomear esse grupo como origem?",
+    "hint": "Lição 20.",
+    "choices": [
+      {
+        "text": "Sim: os grupos de qualquer VPC emparelhada podem ser nomeados",
+        "why": "Só de uma VPC emparelhada da mesma região; a Virgínia é outra."
+      },
+      {
+        "text": "Não: isso só funciona dentro de uma região",
+        "why": "Isso. Os grupos da staging poderiam ser nomeados pela produção; a faixa da Virgínia tem de ser escrita como endereços."
+      },
+      {
+        "text": "Sim, depois que o peering for trocado por um Transit Gateway",
+        "why": "Um Transit Gateway também é regional, e a lição não dá a ele esse poder."
+      },
+      {
+        "text": "Não: security groups não valem por um peering",
+        "why": "Eles valem nos dois lados de um peering, como em qualquer lugar."
+      }
+    ]
+  },
+  "ex-28m9t0v2": {
+    "prompt": "Um terminal tem `AWS_DEFAULT_REGION=sa-east-1` e `AWS_REGION=us-east-1` exportadas, e nenhum `--region` é digitado. Que região um comando consulta?",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "`sa-east-1`, já que foi exportada primeiro",
+        "why": "A ordem dos exports não conta; as variáveis têm uma precedência fixa."
+      },
+      {
+        "text": "`us-east-1`: a variável mais curta ganha",
+        "why": "Isso. O `aws configure list` nomeia as duas na coluna `LOCATION`, `AWS_REGION` primeiro."
+      },
+      {
+        "text": "A região do perfil, já que duas variáveis se anulam",
+        "why": "Nada se anula; o ambiente continua ganhando do arquivo."
+      },
+      {
+        "text": "Nenhuma: a linha de comando recusa o conflito",
+        "why": "Ela escolhe uma sem reclamar, por isso vale rodar o `aws configure list`."
+      }
+    ]
+  },
+  "ex-c40dqdq3": {
+    "prompt": "Um script guardou o `NextToken` de `aws iam list-policies --scope AWS --max-items 50` e o passa como `--starting-token` para `aws iam list-policies --scope Local --max-items 50`. O que a lição diz sobre isso?",
+    "hint": "Lição 25.",
+    "choices": [
+      {
+        "text": "Funciona: o token é o marcador do IAM, válido para qualquer listagem",
+        "why": "O token é da própria linha de comando, montado em volta do marcador do serviço."
+      },
+      {
+        "text": "Ele só vale para o mesmo comando com as mesmas opções",
+        "why": "Isso. Um escopo diferente é outra listagem, e o token não serve para ela."
+      },
+      {
+        "text": "Funciona, se o `--page-size` for igual nos dois",
+        "why": "O tamanho da página muda quantos itens cada requisição pede, não a qual listagem um token pertence."
+      },
+      {
+        "text": "Funciona com `--no-paginate` acrescentado",
+        "why": "O `--no-paginate` desliga o acompanhamento e imprime só a primeira página."
+      }
+    ]
+  },
+  "ex-316gqhxc": {
+    "prompt": "Um perfil de papel nomeia um papel cuja política de confiança exige um segundo fator. Para a linha de comando pedir um código antes de assumi-lo, o perfil também define `___`.",
+    "hint": "Lição 25.",
+    "blanks": [
+      {
+        "accept": [
+          "mfa_serial"
+        ]
+      }
+    ]
+  },
+  "ex-90ab6jmp": {
+    "prompt": "Alguém captura uma das requisições `GetCallerIdentity` assinadas da loja e a envia de novo, igual, uma semana depois. O que a AWS faz com ela?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "Responde: a assinatura continua correta",
+        "why": "Ela está correta para o seu horário, e o horário faz parte do que foi assinado."
+      },
+      {
+        "text": "Recusa: o `X-Amz-Date` dela está longe demais do relógio da AWS",
+        "why": "Isso. O horário é assinado, então uma requisição capturada não pode ser repetida para sempre."
+      },
+      {
+        "text": "Responde, mas só da mesma rede",
+        "why": "O endereço não faz parte da assinatura; o horário faz."
+      },
+      {
+        "text": "Recusa, porque o segredo estava na requisição",
+        "why": "O segredo nunca está na requisição; só uma assinatura feita com ele."
+      }
+    ]
+  },
+  "ex-4y7b85m6": {
+    "prompt": "Um SDK em modo `standard` chama uma API que continua respondendo `ThrottlingException`. Ponha em ordem o que ele faz, a partir da primeira requisição.",
+    "hint": "Lição 26.",
+    "items": [
+      "enviar a requisição marcada `attempt=1`",
+      "esperar um intervalo curto e aleatório",
+      "enviá-la de novo, marcada `attempt=2; max=3`",
+      "esperar um intervalo mais longo e aleatório",
+      "enviar a terceira e última tentativa",
+      "desistir, dizendo que chegou a duas novas tentativas"
+    ],
+    "trap": "A espera cresce entre as tentativas, e uma parte aleatória evita que clientes que falharam juntos tentem de novo juntos."
+  },
+  "ex-k788xp46": {
+    "prompt": "Uma ferramenta escrita à mão manda ao DynamoDB um `POST /` com `Action=PutItem&Version=...` como corpo de formulário, assinado corretamente. O que acontece?",
+    "hint": "Lição 26.",
+    "choices": [
+      {
+        "text": "Funciona, como a mesma requisição funciona no STS",
+        "why": "O STS fala query; o DynamoDB não."
+      },
+      {
+        "text": "Recusada: esse serviço fala JSON, com a ação num cabeçalho",
+        "why": "Isso. O DynamoDB põe a ação no `X-Amz-Target`; uma requisição montada no protocolo errado é recusada, por melhor que esteja assinada."
+      },
+      {
+        "text": "É recusada pela assinatura, que só cobre requisições query",
+        "why": "A assinatura é a mesma nos quatro protocolos; o dialeto é o problema."
+      },
+      {
+        "text": "Funciona, se o item for no caminho, como faz o S3",
+        "why": "Isso é REST-XML, o protocolo do S3, que também não é o do DynamoDB."
+      }
+    ]
   }
 }

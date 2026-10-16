@@ -1715,5 +1715,927 @@
       "a dedicated 1 Gbps port at each of two locations"
     ],
     "trap": "A Transit Gateway attachment is charged on top of the VPN's own hour, 0.09 against 0.05, and it is still far below a port's 0.30."
+  },
+  {
+    "id": "ex-ssm64xvz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The shop's web servers must read `shop-assets` and also send messages to a queue. A colleague makes two roles, `shop-app` and `shop-app-queue`, and wants both on the instance. What does the lesson say?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Attach two instance profiles, one for each role",
+        "correct": false,
+        "why": "An instance carries one profile association, and the profile is where the role goes."
+      },
+      {
+        "text": "Use one role whose policies grant both",
+        "correct": true,
+        "why": "Right. A profile holds exactly one role; moto refused the second with `LimitExceeded`, as AWS documents."
+      },
+      {
+        "text": "Put both roles into the `shop-app` profile",
+        "correct": false,
+        "why": "That is the call that failed: `InstanceSessionsPerInstanceProfile` is 1."
+      },
+      {
+        "text": "Copy a key for the second role onto the disk",
+        "correct": false,
+        "why": "A role has no key of its own, and a key on the disk is what profiles exist to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yrcx46f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "CloudTrail shows a bucket read by `arn:aws:sts::123456789012:assumed-role/shop-app/i-0ee42130b0c3e009d`. What does the last part tell you?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "The access key that signed the call",
+        "correct": false,
+        "why": "A key id starts with `AKIA` or `ASIA`; this is a session name."
+      },
+      {
+        "text": "The name of the instance profile",
+        "correct": false,
+        "why": "The profile is `shop-app` too; the last part names something else."
+      },
+      {
+        "text": "Which machine made the call: the session is named after the instance",
+        "correct": true,
+        "why": "Right. On EC2 the role's session name is the instance id, so the log points at one machine."
+      },
+      {
+        "text": "The person who launched the instance",
+        "correct": false,
+        "why": "Who launched it is a separate `RunInstances` event; this call was the machine's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmywj9vr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Some of the shop's EKS pods will run on Fargate, and each needs a role of its own. Which mechanism does the lesson point to for them?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "EKS Pod Identity, the simpler choice",
+        "correct": false,
+        "why": "It is simpler on EKS, but its agent does not reach pods on Fargate."
+      },
+      {
+        "text": "The node's instance profile, with a hop limit of 2",
+        "correct": false,
+        "why": "That shares one role with every pod, which is what a role per workload avoids."
+      },
+      {
+        "text": "An ECS task role",
+        "correct": false,
+        "why": "Task roles belong to ECS tasks, not to pods on EKS."
+      },
+      {
+        "text": "IRSA, a token traded at STS",
+        "correct": true,
+        "why": "Right. IRSA stays where Pod Identity does not reach, such as pods on Fargate."
+      }
+    ]
+  },
+  {
+    "id": "ex-7vthz6fk",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each way a workload gets a role to where its credentials are found.",
+    "hint": "Lesson 10.",
+    "pairs": [
+      {
+        "left": "an EC2 instance profile",
+        "right": "`169.254.169.254`, the metadata service"
+      },
+      {
+        "left": "an ECS task role",
+        "right": "`169.254.170.2`, the ECS agent"
+      },
+      {
+        "left": "EKS Pod Identity",
+        "right": "`169.254.170.23`, an agent on the node"
+      },
+      {
+        "left": "IRSA",
+        "right": "a token file named by `AWS_WEB_IDENTITY_TOKEN_FILE`"
+      }
+    ],
+    "right_distractors": [
+      "`~/.aws/credentials` on the node"
+    ]
+  },
+  {
+    "id": "ex-pzb94z1t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A permission set is given `PT12H`, and the Identity Center session lasts the default eight hours. Nine hours after `aws sso login`, a command with that profile runs. What happens?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "It works: the role credentials last twelve hours",
+        "correct": false,
+        "why": "The permission set bounds each set of role credentials; the sign-in has its own, shorter clock."
+      },
+      {
+        "text": "It says the token has expired, and `aws sso login` is needed again",
+        "correct": true,
+        "why": "Right. The Identity Center session limits the sign-in itself, and it ended at eight hours."
+      },
+      {
+        "text": "It falls back to the test keys `env.sh` exports",
+        "correct": false,
+        "why": "A profile named with `--profile` takes the environment's keys out of the chain."
+      },
+      {
+        "text": "It works until the role credentials reach twelve hours, then stops",
+        "correct": false,
+        "why": "New role credentials need the sign-in's token, and the token died at eight hours."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndapm1jj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "bia signs in to `shop-staging` with `Developer`, which is AWS's `PowerUserAccess`, and tries to create an IAM role for her test. What happens?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "It works: power users may do everything",
+        "correct": false,
+        "why": "Everything except managing IAM and the organisation, which is exactly this."
+      },
+      {
+        "text": "It works, but only in the accounts where she has `ReadOnly`",
+        "correct": false,
+        "why": "`ReadOnly` changes nothing anywhere; it would not help either."
+      },
+      {
+        "text": "It is refused: `PowerUserAccess` leaves out managing IAM",
+        "correct": true,
+        "why": "Right. That is the usual line between building in an account and governing it."
+      },
+      {
+        "text": "It is refused, because Identity Center users cannot call IAM",
+        "correct": false,
+        "why": "They act as a role, and a permission set that allowed IAM would let them."
+      }
+    ]
+  },
+  {
+    "id": "ex-84rsfae4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team enables an account instance of Identity Center inside `shop-staging`, hoping to give its people access to `shop-staging` and `shop-prod`. What does the lesson say about that?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "It works, as long as SCIM is connected",
+        "correct": false,
+        "why": "SCIM provisions users and groups; it does not change what an account instance can do."
+      },
+      {
+        "text": "It cannot: that kind serves applications only",
+        "correct": true,
+        "why": "Right. Access to accounts comes from the organisation instance, enabled once in the management account."
+      },
+      {
+        "text": "It works for `shop-staging` only",
+        "correct": false,
+        "why": "An account instance gives access to no AWS account, its own included."
+      },
+      {
+        "text": "It replaces the organisation instance for that branch of the tree",
+        "correct": false,
+        "why": "Instances do not follow the tree; the organisation has one instance for account access."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckc0bpqy",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A server in the office can be given an X.509 certificate from a certificate authority the account trusts. Instead of an access key, it can assume a role through IAM Roles ___.",
+    "hint": "Lesson 12.",
+    "blanks": [
+      {
+        "accept": [
+          "Anywhere"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z23vwp09",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A copy of `erp-sync`'s current key turns up in a public paste. Its only policy is `upload-erp.json`. Before anybody acts, what can whoever found it do?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Read every backup in `shop-backups`",
+        "correct": false,
+        "why": "The policy allows `s3:PutObject` only; there is no `GetObject` in it."
+      },
+      {
+        "text": "Create a new user with a key of its own",
+        "correct": false,
+        "why": "That needs IAM permissions, and `erp-sync` has none."
+      },
+      {
+        "text": "Put files under `erp/` in `shop-backups`, overwriting what is there",
+        "correct": true,
+        "why": "Right. A key that has to exist should do as little as possible, and this one can only upload to one prefix."
+      },
+      {
+        "text": "Nothing, since the key works only from the office",
+        "correct": false,
+        "why": "An access key works from any network; nothing ties it to a place."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nny6hqs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "dani's leaked key is now `Inactive`. CloudTrail, searched by its id, shows that it created a user `support2` with an access key of its own. What comes before the rotation?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "Nothing: `support2` stops working when dani's key does",
+        "correct": false,
+        "why": "`support2` has its own key, and switching dani's off does nothing to it."
+      },
+      {
+        "text": "Attach `AWSCompromisedKeyQuarantineV3` to dani, and wait",
+        "correct": false,
+        "why": "The quarantine is a brake on dani's user, not on the user the intruder made."
+      },
+      {
+        "text": "Undo what the key made: `support2` and its key",
+        "correct": true,
+        "why": "Right. A careful intruder makes another way in before the first is closed; that door has to go too."
+      },
+      {
+        "text": "Delete dani's key, so that IAM forgets what it did",
+        "correct": false,
+        "why": "Deleting first throws away what IAM knows about the key, and CloudTrail's record is what was needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-29hr20gt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`plan.py` left seven `/20` blocks spare in `10.20.0.0/16`. How many `/24` subnets could those seven blocks hold?",
+    "hint": "Lesson 16. Count how many `/24`s fit in one `/20` first.",
+    "value": 112,
+    "tolerance": 0,
+    "unit": "subnets"
+  },
+  {
+    "id": "ex-kh0y7q47",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Production, `10.20.0.0/16`, needs a second IPv4 range that AWS will accept and that will never stop it joining staging or the office. Which one?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "`172.16.0.0/16`",
+        "correct": false,
+        "why": "A VPC whose primary range is in `10.0.0.0/8` cannot add one from `172.16.0.0/12`."
+      },
+      {
+        "text": "`10.30.0.0/16`",
+        "correct": false,
+        "why": "AWS would accept it, and it is staging's range: the two VPCs could then never be joined."
+      },
+      {
+        "text": "`10.40.0.0/16`",
+        "correct": true,
+        "why": "Right. Same family as the primary, and it collides with nothing in the shop's plan."
+      },
+      {
+        "text": "`192.168.10.0/24`",
+        "correct": false,
+        "why": "Wrong family for this VPC, and inside the office's `192.168.0.0/16` besides."
+      }
+    ]
+  },
+  {
+    "id": "ex-wewsyyvt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Many organisations delete the default VPC in every region of every account. What does that buy them?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "A cheaper bill, since a default VPC costs by the hour",
+        "correct": false,
+        "why": "A VPC costs nothing to have; the saving is not money."
+      },
+      {
+        "text": "Room for `172.31.0.0/16` in their own plan",
+        "correct": false,
+        "why": "Nobody needs to delete it for that; the point is what lands there."
+      },
+      {
+        "text": "Nothing created without naming a VPC lands in an open network",
+        "correct": true,
+        "why": "Right. Its subnets are all public, and whatever somebody creates without choosing collects there."
+      },
+      {
+        "text": "A higher quota of VPCs in the region",
+        "correct": false,
+        "why": "It frees one of the five, which is not why anybody does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-htzbcnrd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`app-a`'s `AvailableIpAddressCount` has fallen from 4,091 to 12, and the tier keeps growing. What does AWS let the shop do?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Widen `app-a` from a `/20` to a `/19`",
+        "correct": false,
+        "why": "A subnet's range cannot be changed after it is created."
+      },
+      {
+        "text": "Create another subnet from the spare blocks and place new machines there",
+        "correct": true,
+        "why": "Right. The spare room is for this; a subnet that runs out is replaced or joined by another."
+      },
+      {
+        "text": "Reclaim the five addresses AWS keeps",
+        "correct": false,
+        "why": "They are reserved in every subnet, whatever its size, and are never given out."
+      },
+      {
+        "text": "Stretch `app-a` into `sa-east-1b`",
+        "correct": false,
+        "why": "A subnet lives in exactly one zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8eh3tea",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Staging shares one NAT gateway with its Elastic IP, and 300 GB a month go through it. With the lesson's prices and 730 hours, what does that NAT cost a month, in dollars?",
+    "hint": "Lesson 17. Three lines: the gateway's hours, the address's hours, the gigabytes.",
+    "value": 99.44,
+    "tolerance": 0.02,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-gqketk9k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Tidying up, somebody runs `replace-route-table-association` and moves `app-b` onto the `public` table by mistake. What happens to its machines?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "Nothing until the next restart of each machine",
+        "correct": false,
+        "why": "An association takes effect for the next packet, not at boot."
+      },
+      {
+        "text": "From the next packet they lose the internet: they have no public address",
+        "correct": true,
+        "why": "Right. Their `0.0.0.0/0` now points at the internet gateway, which has nothing to translate their private addresses into."
+      },
+      {
+        "text": "They become reachable from the internet",
+        "correct": false,
+        "why": "With no public address, nobody outside has an address to reach them at."
+      },
+      {
+        "text": "They lose the database, since `local` belongs to the private table",
+        "correct": false,
+        "why": "Every table of the VPC carries the `local` route."
+      }
+    ]
+  },
+  {
+    "id": "ex-77ytdf24",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "To double the shop's way out, a teammate wants a second internet gateway on the production VPC. What does AWS answer?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "It attaches it, and the two share the traffic",
+        "correct": false,
+        "why": "There is no sharing to arrange: one VPC, one internet gateway."
+      },
+      {
+        "text": "It attaches it in another zone, for resilience",
+        "correct": false,
+        "why": "An internet gateway has no zone; AWS already runs it across the region."
+      },
+      {
+        "text": "A refusal: one per VPC, and it has no zone to lose",
+        "correct": true,
+        "why": "Right. The rule runs both ways, one VPC per gateway and one gateway per VPC; moto showed the first half."
+      },
+      {
+        "text": "It attaches it, for an extra 0.093 an hour",
+        "correct": false,
+        "why": "0.093 is the NAT gateway's hour; an internet gateway has no hourly price."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcfg5rt7",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Staging started with one shared NAT gateway in zone a. Put in order the steps that give zone b a way out of its own.",
+    "hint": "Lesson 17.",
+    "items": [
+      "allocate an Elastic IP",
+      "create a NAT gateway in `public-b` with that address",
+      "create a route table `private-b`",
+      "add `0.0.0.0/0` to the new NAT gateway in `private-b`",
+      "associate `app-b` and `data-b` with `private-b`"
+    ],
+    "trap": "Associating the subnets before the table has its route would cut zone b off from the internet in the meantime."
+  },
+  {
+    "id": "ex-3b48vkjz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Yesterday afternoon the application could not reach the database for twenty minutes. Which tool says what actually happened to those connections?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "VPC Flow Logs, with an `ACCEPT` or `REJECT` per attempt",
+        "correct": true,
+        "why": "Right. They record what happened, after it happened, per network interface."
+      },
+      {
+        "text": "VPC Reachability Analyzer, run today",
+        "correct": false,
+        "why": "It reads today's configuration and sends nothing; it cannot say what yesterday's packets met."
+      },
+      {
+        "text": "`describe-security-group-rules` on `db-sg`",
+        "correct": false,
+        "why": "That prints today's rules, not what happened to a connection."
+      },
+      {
+        "text": "moto, replaying the same requests",
+        "correct": false,
+        "why": "moto filters nothing, so it would let everything through."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr3qp85s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A tester launches a debugging machine in `public-a` and, to get it working quickly, gives it `alb-sg`. What can that machine now reach that it should not?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "Nothing: rules name addresses, and its address is new",
+        "correct": false,
+        "why": "`app-sg`'s rule names a group, not an address."
+      },
+      {
+        "text": "The database on 5432",
+        "correct": false,
+        "why": "`db-sg` trusts `app-sg`, and the machine carries `alb-sg`."
+      },
+      {
+        "text": "The application machines on 8080, as if it were the load balancer",
+        "correct": true,
+        "why": "Right. A reference trusts whatever interface carries the group, so carrying it is the identity."
+      },
+      {
+        "text": "The internet on 443, which `alb-sg` normally blocks",
+        "correct": false,
+        "why": "`alb-sg` lets 443 in from anywhere; it was never a block on the way out."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxrpkkat",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "A partner at `198.51.100.7` must reach the shop on 443, while the rest of `198.51.100.0/24` is refused and everybody else is let in. Put the public network ACL's inbound rules in the order they must be numbered, lowest first.",
+    "hint": "Lesson 18.",
+    "items": [
+      "allow TCP 443 from `198.51.100.7/32`",
+      "deny everything from `198.51.100.0/24`",
+      "allow TCP 443 from `0.0.0.0/0`",
+      "the `*` rule, 32767, denying what nothing matched"
+    ],
+    "trap": "The first match decides: put the /24 deny first and the partner is refused with everyone else in its range."
+  },
+  {
+    "id": "ex-ee2v1n1k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Two application machines sit in the same subnet, `app-a`. One connects to the other on 8080. Which filters judge that connection?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "The network ACL of `app-a`, in and out",
+        "correct": false,
+        "why": "A network ACL sits at the subnet's edge, and this packet never crosses it."
+      },
+      {
+        "text": "None: traffic inside a subnet is never filtered",
+        "correct": false,
+        "why": "The security groups are on each interface, so they still judge it."
+      },
+      {
+        "text": "Only the security groups of the two interfaces",
+        "correct": true,
+        "why": "Right. A security group sits on each interface, so it sees traffic between neighbours that no edge ever sees."
+      },
+      {
+        "text": "Both the network ACL and the security groups",
+        "correct": false,
+        "why": "Both apply to a packet that crosses into the subnet; this one stays inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5f4svv8h",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An interface endpoint for the container registry sits in the three app subnets, and 600 GB a month go through it. At the prices of 17 September 2026 and 730 hours, what does it cost a month, in dollars?",
+    "hint": "Lesson 19. An hour per zone, and the gigabytes.",
+    "value": 51.99,
+    "tolerance": 0.02,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-9e9rgxyf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The NAT gateways stay for the payment provider. The application's STS calls add up to about 10 GB a month. On money alone, is an STS interface endpoint in three zones worth it?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Yes: every gigabyte saves 0.083 against NAT",
+        "correct": false,
+        "why": "It does, and 10 GB save 0.83 a month against 45.99 of hours."
+      },
+      {
+        "text": "No: it pays for itself only above about 554 GB a month",
+        "correct": true,
+        "why": "Right. STS calls are small; the endpoint suits traffic such as a registry pulling images all day."
+      },
+      {
+        "text": "Yes: interface endpoints are free, like gateway endpoints",
+        "correct": false,
+        "why": "Only gateway endpoints are free; an interface endpoint is billed by the hour per zone."
+      },
+      {
+        "text": "No: STS cannot be reached through an endpoint",
+        "correct": false,
+        "why": "It can, as an interface endpoint; the lesson created one."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9d6sccx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A bucket policy can refuse whatever did not arrive through the shop's endpoint with a condition on `aws:___`, which AWS sets on every request that came through one.",
+    "hint": "Lesson 19.",
+    "blanks": [
+      {
+        "accept": [
+          "SourceVpce"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-w0cf6fpx",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Staging reads production's stock API through PrivateLink. Who pays for what, by the lesson? Choose all that apply.",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "Staging pays for its interface endpoint, by the hour and the gigabyte",
+        "correct": true,
+        "why": "Right: the consumer pays 0.021 an hour per zone and 0.01 a gigabyte."
+      },
+      {
+        "text": "Production pays for the Network Load Balancer in front of the API",
+        "correct": true,
+        "why": "Right: the provider pays for its load balancer, which lesson 22 prices."
+      },
+      {
+        "text": "Staging pays NAT processing for every request",
+        "correct": false,
+        "why": "Nothing goes through a NAT gateway; the endpoint is inside staging's subnet."
+      },
+      {
+        "text": "Production pays data transfer to the internet for the answers",
+        "correct": false,
+        "why": "Nothing goes to the internet either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rtjxmw8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Production, staging and a tools VPC attach to one Transit Gateway, and it processes 1,000 GB in a month. With the lesson's prices and 730 hours, what does the hub cost that month, in dollars?",
+    "hint": "Lesson 20. Per attachment per hour, and per gigabyte processed.",
+    "value": 217.1,
+    "tolerance": 0.02,
+    "unit": "dollars"
+  },
+  {
+    "id": "ex-5yyq4gck",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "After an incident, 300 GB are restored from the disaster-recovery copy in Virginia to production in São Paulo, over the cross-region peering. At lesson 1's prices, what does the transfer cost?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "41.40 dollars, at 0.138 a gigabyte",
+        "correct": false,
+        "why": "0.138 is the price of leaving São Paulo; these bytes leave Virginia."
+      },
+      {
+        "text": "6.00 dollars, at 0.02 a gigabyte",
+        "correct": true,
+        "why": "Right. Between regions the direction decides, and leaving Virginia for São Paulo is the cheap one."
+      },
+      {
+        "text": "Nothing, since peering has no charge",
+        "correct": false,
+        "why": "Peering has no hourly line; the bytes between regions are still priced."
+      },
+      {
+        "text": "6.00 dollars, plus 0.02 a gigabyte processed",
+        "correct": false,
+        "why": "Processing is a Transit Gateway charge; a peering processes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-x265q01b",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Production's VPC is in `shop-prod` and staging's in `shop-staging`, two accounts. How does a peering between them come to be?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "The management account creates it for both",
+        "correct": false,
+        "why": "The owners of the two VPCs make it; the management account is not a party."
+      },
+      {
+        "text": "One side creates it, and it is active at once",
+        "correct": false,
+        "why": "It waits in `pending-acceptance` until the other side agrees."
+      },
+      {
+        "text": "Through a share in AWS Resource Access Manager",
+        "correct": false,
+        "why": "RAM is how the lesson shared the Transit Gateway, not a peering."
+      },
+      {
+        "text": "One side requests it with `--peer-owner-id`; the other accepts with its own credentials",
+        "correct": true,
+        "why": "Right. A peering is requested by one owner and accepted by the other, so each VPC's owner agrees."
+      }
+    ]
+  },
+  {
+    "id": "ex-3btxs2nm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`db-sg` in production should let in the Virginia copy's application group over the cross-region peering. Can its rule name that group as its source?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "Yes: any peered VPC's groups can be named",
+        "correct": false,
+        "why": "Only a peered VPC of the same region; Virginia is another."
+      },
+      {
+        "text": "No: that works only within one region",
+        "correct": true,
+        "why": "Right. Staging's groups could be named from production; Virginia's range has to be written as addresses."
+      },
+      {
+        "text": "Yes, once the peering is moved to a Transit Gateway",
+        "correct": false,
+        "why": "A Transit Gateway is regional too, and the lesson gives it no such power."
+      },
+      {
+        "text": "No: security groups do not apply over a peering",
+        "correct": false,
+        "why": "They apply on both sides of a peering, like anywhere else."
+      }
+    ]
+  },
+  {
+    "id": "ex-28m9t0v2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A terminal has `AWS_DEFAULT_REGION=sa-east-1` and `AWS_REGION=us-east-1` both exported, and no `--region` is typed. Which region does a command ask?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "`sa-east-1`, since it was exported first",
+        "correct": false,
+        "why": "The order of the exports plays no part; the variables have a fixed precedence."
+      },
+      {
+        "text": "`us-east-1`: the shorter variable wins",
+        "correct": true,
+        "why": "Right. `aws configure list` names both in its `LOCATION` column, `AWS_REGION` first."
+      },
+      {
+        "text": "The profile's region, since two variables cancel each other",
+        "correct": false,
+        "why": "Nothing cancels; the environment still beats the file."
+      },
+      {
+        "text": "Neither: the command line refuses the conflict",
+        "correct": false,
+        "why": "It picks one without complaint, which is why `aws configure list` is worth running."
+      }
+    ]
+  },
+  {
+    "id": "ex-c40dqdq3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A script saved the `NextToken` from `aws iam list-policies --scope AWS --max-items 50` and passes it as `--starting-token` to `aws iam list-policies --scope Local --max-items 50`. What does the lesson say about that?",
+    "hint": "Lesson 25.",
+    "choices": [
+      {
+        "text": "It works: the token is IAM's marker, good for any listing",
+        "correct": false,
+        "why": "The token is the command line's own, built around the service's marker."
+      },
+      {
+        "text": "It is only good for the same command with the same options",
+        "correct": true,
+        "why": "Right. A different scope is a different listing, and the token does not carry over to it."
+      },
+      {
+        "text": "It works, if `--page-size` is the same in both",
+        "correct": false,
+        "why": "Page size changes how many items each request asks for, not which listing a token belongs to."
+      },
+      {
+        "text": "It works with `--no-paginate` added",
+        "correct": false,
+        "why": "`--no-paginate` turns the following off and prints only the first page."
+      }
+    ]
+  },
+  {
+    "id": "ex-316gqhxc",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "hard",
+    "prompt": "A role profile names a role whose trust policy demands a second factor. For the command line to ask for a code before assuming it, the profile also sets `___`.",
+    "hint": "Lesson 25.",
+    "blanks": [
+      {
+        "accept": [
+          "mfa_serial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-90ab6jmp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Somebody captures one of the shop's signed `GetCallerIdentity` requests and sends it again, unchanged, a week later. What does AWS do with it?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "Answers it: the signature is still correct",
+        "correct": false,
+        "why": "It is correct for its time, and the time is part of what was signed."
+      },
+      {
+        "text": "Refuses it: its `X-Amz-Date` is too far from AWS's clock",
+        "correct": true,
+        "why": "Right. The time is signed, so a captured request cannot be replayed for ever."
+      },
+      {
+        "text": "Answers it, but only from the same network",
+        "correct": false,
+        "why": "The address is not part of the signature; the time is."
+      },
+      {
+        "text": "Refuses it, because the secret was in the request",
+        "correct": false,
+        "why": "The secret is never in the request; only a signature made with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y7b85m6",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "An SDK in `standard` mode calls an API that keeps answering `ThrottlingException`. Put what it does in order, from the first request.",
+    "hint": "Lesson 26.",
+    "items": [
+      "send the request marked `attempt=1`",
+      "wait a short, random delay",
+      "send it again, marked `attempt=2; max=3`",
+      "wait a longer, random delay",
+      "send the third and last attempt",
+      "give up, saying it reached two retries"
+    ],
+    "trap": "The wait grows between attempts, and a random part keeps clients that failed together from retrying together."
+  },
+  {
+    "id": "ex-k788xp46",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A tool written by hand sends DynamoDB a `POST /` with `Action=PutItem&Version=...` as a form body, correctly signed. What happens?",
+    "hint": "Lesson 26.",
+    "choices": [
+      {
+        "text": "It works, as the same request does for STS",
+        "correct": false,
+        "why": "STS speaks query; DynamoDB does not."
+      },
+      {
+        "text": "Refused: that service speaks JSON, naming the action in a header",
+        "correct": true,
+        "why": "Right. DynamoDB names the action in `X-Amz-Target`; a request built in the wrong protocol is refused, however well it is signed."
+      },
+      {
+        "text": "It is refused for its signature, which covers only query requests",
+        "correct": false,
+        "why": "Signing is the same in all four protocols; the dialect is the problem."
+      },
+      {
+        "text": "It works, if the item goes in the path, as S3 does",
+        "correct": false,
+        "why": "That is REST-XML, S3's protocol, which is not DynamoDB's either."
+      }
+    ]
   }
 ]
