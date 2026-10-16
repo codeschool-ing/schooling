@@ -8,7 +8,7 @@ setting is Quitanda's payments: a Kinesis stream of one record per paid order, a
 keeps each customer's running total in DynamoDB. The totals are the kind of number somebody reports
 to finance, so counting an order twice is not a rounding error; it is a wrong invoice.
 
-The terminal is the one from lesson 1, with moto empty. A stream of one shard, and two tables, one
+The terminal is the one from lesson 1: moto running in its own terminal and the four lines of lesson 1's "Your lab, in brief" typed in this one, with moto started empty. A stream of one shard, and two tables, one
 for the totals and one for the order ids already processed:
 
 ```sh

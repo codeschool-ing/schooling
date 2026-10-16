@@ -9,7 +9,7 @@ e um consumidor que mantém o total acumulado de cada cliente no DynamoDB. Os to
 número que alguém reporta ao financeiro, então contar um pedido duas vezes não é erro de
 arredondamento; é uma fatura errada.
 
-O terminal é o da lição 1, com o moto vazio. Um stream de um shard, e duas tabelas, uma para os totais
+O terminal é o da lição 1: o moto rodando no terminal dele e as quatro linhas de "O seu laboratório, em resumo" da lição 1 digitadas neste, com o moto ligado vazio. Um stream de um shard, e duas tabelas, uma para os totais
 e uma para os ids de pedido já processados:
 
 ```sh
