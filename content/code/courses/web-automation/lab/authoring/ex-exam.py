@@ -1113,4 +1113,212 @@ C('ex-dvzermqw', None, 'medium',
    "No jsdom, `document.body.innerText` era `undefined`, porque o que ele devolve depende do que está visível. A propriedade que ignora estilos, ___ , estava lá."),
   [(["textContent"], ["textContent"])])
 
+# lesson 19
+N('ex-8jmsykv6', None, 'medium',
+  ("A build machine has 7 logical processors. Neither the configuration nor the command line sets `workers`. By the rule in Playwright's installed code, how many workers can `npx playwright test` start?",
+   "Uma máquina de build tem 7 processadores lógicos. Nem a configuração nem a linha de comando definem `workers`. Pela regra do código instalado do Playwright, quantos workers `npx playwright test` pode iniciar?"),
+  3, None)
+
+Q('ex-bezgbk1n', None, 'medium',
+  ("Five test files, forty tests between them, run with `--workers 8 --fully-parallel` on a machine with sixteen threads. How many workers does the run use?",
+   "Cinco arquivos de teste, quarenta testes ao todo, rodam com `--workers 8 --fully-parallel` numa máquina de dezesseis threads. Quantos workers a execução usa?"),
+  [("Five, one for each file", "Cinco, um por arquivo", 0,
+    "That is the default unit of work; `--fully-parallel` makes each test a unit of its own.",
+    "Essa é a unidade padrão de trabalho; `--fully-parallel` faz de cada teste uma unidade."),
+   ("Eight, the number allowed", "Oito, o número permitido", 1,
+    "Right. Forty tests are enough to keep all eight busy once tests, not files, are handed out.",
+    "Certo. Quarenta testes bastam para ocupar os oito quando se distribuem testes, e não arquivos."),
+   ("Sixteen, one per thread", "Dezesseis, um por thread", 0,
+    "`--workers` on the command line comes first and caps it at eight.",
+    "O `--workers` da linha de comando vem primeiro e limita em oito."),
+   ("Forty, one per test", "Quarenta, um por teste", 0,
+    "A worker runs one test after another; the count never goes past `--workers`.",
+    "Um worker roda um teste depois do outro; o número nunca passa de `--workers`.")])
+
+Q('ex-4z1hsr8f', None, 'hard',
+  ("A suite holds one file of forty tests and twenty files of one test each, none of them fully parallel. It runs as `--shard=1/3`, `2/3` and `3/3`. Why can the shards not come out even?",
+   "Uma suíte tem um arquivo de quarenta testes e vinte arquivos de um teste cada, nenhum totalmente paralelo. Ela roda como `--shard=1/3`, `2/3` e `3/3`. Por que os shards não saem equilibrados?"),
+  [("Playwright deals shards by each file's last duration", "O Playwright divide os shards pela última duração de cada arquivo", 0,
+    "It does not know how long a test takes; `filterForShard` counts tests.",
+    "Ele não sabe quanto um teste leva; o `filterForShard` conta testes."),
+   ("Shards need a blob report to balance themselves", "Shards precisam de um relatório blob para se equilibrar", 0,
+    "A blob report only merges the results afterwards.",
+    "O relatório blob só junta os resultados depois."),
+   ("The big file is never split, so one shard gets all forty", "O arquivo grande nunca é dividido, então um shard leva os quarenta", 1,
+    "Right. A group is a whole file unless it is fully parallel; marking it so lets its tests be dealt out apart.",
+    "Certo. Um grupo é o arquivo inteiro, a menos que seja totalmente paralelo; marcá-lo assim deixa distribuir seus testes."),
+   ("Three shards need a multiple of three files", "Três shards exigem um múltiplo de três arquivos", 0,
+    "Any count of groups can be dealt; the trouble is one group holding most of the tests.",
+    "Qualquer número de grupos pode ser distribuído; o problema é um grupo ter quase todos os testes.")])
+
+N('ex-0g0v80sk', None, 'hard',
+  ("In the curve, peak memory was 924 MB with one worker and 4476 MB with eight. On average, how many megabytes did each worker added after the first cost? Round to the nearest whole number.",
+   "Na curva, o pico de memória foi 924 MB com um worker e 4476 MB com oito. Em média, quantos megabytes custou cada worker acrescentado depois do primeiro? Arredonde para um número inteiro."),
+  507, ("MB", "MB"), tolerance=1)
+
+Q('ex-4jyp5qzf', None, 'medium',
+  ("With the final `turns.config.js`, where `one-at-a-time` depends on `parallel`, a test in `parallel` fails. What happens to the shop's tests in `one-at-a-time`?",
+   "Com o `turns.config.js` final, em que `one-at-a-time` depende de `parallel`, um teste de `parallel` falha. O que acontece com os testes da loja em `one-at-a-time`?"),
+  [("They run as usual, after the failure", "Rodam normalmente, depois da falha", 0,
+    "A project whose dependencies did not all pass is left out of the run.",
+    "Um projeto cujas dependências não passaram todas fica fora da execução."),
+   ("They are left out, so nobody learns whether they pass", "Ficam de fora, e ninguém sabe se passariam", 1,
+    "Right. `tasks.js` drops it, which suits a sign-in setup project and is a nuisance here, where the two groups need nothing from each other.",
+    "Certo. O `tasks.js` o descarta, o que serve a um projeto de login e atrapalha aqui, onde os grupos não precisam um do outro."),
+   ("They run in parallel, to make up the time", "Rodam em paralelo, para recuperar o tempo", 0,
+    "`workers: 1` on the project never changes because of another project's result.",
+    "O `workers: 1` do projeto nunca muda por causa do resultado de outro."),
+   ("They are retried until `parallel` passes", "São repetidos até `parallel` passar", 0,
+    "Nothing in a dependency waits for, or retries, the project it depends on.",
+    "Nada numa dependência espera ou repete o projeto de que depende.")])
+
+# lesson 20
+Q('ex-s2t4vdq7', None, 'hard',
+  ("Suppose each card's button carried `data-testid=\"add-banana\"` and so on, spelt the shop's way. Going through Selenium IDE's builders in their order, which one names the banana's button first?",
+   "Suponha que o botão de cada cartão tivesse `data-testid=\"add-banana\"` e assim por diante, escrito do jeito da loja. Seguindo os construtores do Selenium IDE na ordem, qual nomeia primeiro o botão da banana?"),
+  [("`css:data-test-id`, which looks for test attributes", "`css:data-test-id`, que procura atributos de teste", 0,
+    "It reads only `data-test-id` and `data-test`, not the shop's spelling.",
+    "Ele lê só `data-test-id` e `data-test`, não a grafia da loja."),
+   ("`css:data-attr`, the third in the order", "`css:data-attr`, o terceiro da ordem", 1,
+    "Right. The third builder takes the element's own first `data-*` attribute, as it did for the basket count.",
+    "Certo. O terceiro construtor pega o primeiro atributo `data-*` do próprio elemento, como fez com a contagem da cesta."),
+   ("`css:finder`, with the card's random id", "`css:finder`, com o id aleatório do cartão", 0,
+    "The finder is fourth; a `data-*` attribute on the button is taken before it is reached.",
+    "O finder é o quarto; um atributo `data-*` no botão é usado antes de chegar nele."),
+   ("`xpath:innerText`, from the button's words", "`xpath:innerText`, pelas palavras do botão", 0,
+    "The XPath builders come last, and an earlier one already answers.",
+    "Os construtores XPath vêm por último, e um anterior já responde.")])
+
+Q('ex-c27z54na', None, 'medium',
+  ("A `.side` recording's `target` names a random card id that no longer exists, and its `targets` list also holds `xpath=//button[contains(.,'Add to basket')]`. What does the IDE's playback do?",
+   "O `target` de uma gravação `.side` cita um id aleatório de cartão que não existe mais, e a lista `targets` também tem `xpath=//button[contains(.,'Add to basket')]`. O que a reprodução do IDE faz?"),
+  [("It tries the next entry in `targets` and clicks", "Tenta a próxima entrada de `targets` e clica", 0,
+    "The loop that would try the alternatives is commented out in `side-runtime`.",
+    "O laço que tentaria as alternativas está comentado no `side-runtime`."),
+   ("It asks the person to pick an entry, then goes on", "Pede que a pessoa escolha uma entrada e segue", 0,
+    "Playback asks nobody; choosing another entry is something a person does in the IDE afterwards.",
+    "A reprodução não pergunta a ninguém; escolher outra entrada é algo que a pessoa faz depois no IDE."),
+   ("It waits for the target, then fails the step", "Espera pelo target e depois reprova o passo", 1,
+    "Right. A click polls for its target up to the implicit wait and fails; the list is kept for a person, not tried.",
+    "Certo. O clique procura o target até a espera implícita e falha; a lista fica para uma pessoa, não é tentada."),
+   ("It skips the step and marks it as a warning", "Pula o passo e o marca como aviso", 0,
+    "A step that cannot find its target fails, as `recorded/side.spec.js` did after five seconds.",
+    "Um passo que não acha o target falha, como o `recorded/side.spec.js` depois de cinco segundos.")])
+
+C('ex-8xq4y7ms', None, 'medium',
+  ("An application marks its elements with `data-qa`. To make codegen build its test-id locators from that attribute, the option is `npx playwright codegen --___ data-qa`.",
+   "Uma aplicação marca seus elementos com `data-qa`. Para o codegen montar os localizadores de test id com esse atributo, a opção é `npx playwright codegen --___ data-qa`."),
+  [(["test-id-attribute"], ["test-id-attribute"])])
+
+N('ex-3dqj8n13', None, 'medium',
+  ("A team has 50 recorded flows, and each clicks *Add to basket* twice, with the full locator written on each line as codegen writes it. The button is renamed. How many lines name the old words and need editing?",
+   "Uma equipe tem 50 fluxos gravados, e cada um clica em *Add to basket* duas vezes, com o localizador completo em cada linha, como o codegen escreve. O botão é renomeado. Quantas linhas citam as palavras antigas e precisam de edição?"),
+  100, None)
+
+# lesson 21
+N('ex-tc1f204d', None, 'medium',
+  ("At the 281 ms the browser test took, how many seconds would 500 such checks take on one worker, run 20 times a day?",
+   "Aos 281 ms que o teste de navegador levou, quantos segundos 500 verificações dessas levariam num worker, rodadas 20 vezes por dia?"),
+  2810, ("s", "s"))
+
+N('ex-2mt5mrss', None, 'hard',
+  ("A test fails one run in a hundred for reasons unrelated to the shop. In what percentage of series of 50 runs would it pass all 50? Round to a whole number.",
+   "Um teste falha uma execução em cem por motivos alheios à loja. Em que porcentagem das séries de 50 execuções ele passaria nas 50? Arredonde para um número inteiro."),
+  61, ("%", "%"), tolerance=1)
+
+Q('ex-k4tff3hj', None, 'hard',
+  ("A change keeps `total()` right but makes `POST /api/basket` answer `{ lines, sum: 590 }` instead of `total: 590`. Which of the lesson's three tests fail?",
+   "Uma mudança mantém o `total()` certo, mas faz o `POST /api/basket` responder `{ lines, sum: 590 }` em vez de `total: 590`. Quais dos três testes da aula falham?"),
+  [("Only the unit test of `total()`", "Só o teste unitário de `total()`", 0,
+    "The function was not touched, so its three cases still pass.",
+    "A função não foi mexida, então seus três casos continuam passando."),
+   ("The API test and the browser test", "O teste de API e o teste de navegador", 1,
+    "Right. The API test compares the whole answer, and the page reads `basket.total`, which is now missing.",
+    "Certo. O teste de API compara a resposta inteira, e a página lê `basket.total`, que agora falta."),
+   ("Only the browser test, as with the cents", "Só o de navegador, como no caso dos centavos", 0,
+    "This time the API's own answer changed, and the API test checks it with `toEqual`.",
+    "Desta vez mudou a resposta da própria API, e o teste de API a confere com `toEqual`."),
+   ("None, since the arithmetic is right", "Nenhum, já que a conta está certa", 0,
+    "Two of the tests check more than the arithmetic: the answer's shape and what the page draws.",
+    "Dois testes conferem mais que a conta: o formato da resposta e o que a página desenha.")])
+
+Q('ex-c7y9d0s7', None, 'medium',
+  ("The testing trophy's wide integration band renders components in jsdom. Which defect from this course would that band still miss?",
+   "A faixa larga de integração do troféu de testes renderiza componentes no jsdom. Que defeito deste curso essa faixa ainda deixaria passar?"),
+  [("A price read wrongly from an API answer", "Um preço lido errado de uma resposta da API", 0,
+    "Reading data into the DOM is what jsdom does well; no layout is needed.",
+    "Ler dados para o DOM é o que o jsdom faz bem; não precisa de layout."),
+   ("A component that forgets to draw a heading", "Um componente que esquece de desenhar um título", 0,
+    "A missing element is in the tree, and jsdom has the tree.",
+    "Um elemento que falta aparece na árvore, e o jsdom tem a árvore."),
+   ("Lesson 7's basket, too wide for a phone", "A cesta da aula 7, larga demais para um celular", 1,
+    "Right. jsdom has no layout and reported a `scrollWidth` of 0, which is why the trophy keeps a cup of end-to-end tests too.",
+    "Certo. O jsdom não tem layout e informou `scrollWidth` 0, por isso o troféu também guarda um copo de testes ponta a ponta."),
+   ("A handler wired to the wrong button", "Um handler ligado ao botão errado", 0,
+    "jsdom runs listeners when an element is clicked, so a wrong wiring shows.",
+    "O jsdom roda os listeners quando um elemento é clicado, então a ligação errada aparece.")])
+
+M('ex-5hfrenss', None, 'medium',
+  ("Which of these checks on quitanda have earned a place in the browser layer, by lesson 21's question? Choose all that apply.",
+   "Quais destas verificações na quitanda merecem lugar na camada de navegador, pela pergunta da aula 21? Marque todas que se aplicam."),
+  [("Open the shop, add a banana and read the total", "Abrir a loja, adicionar uma banana e ler o total", 1,
+    "Right. A journey crosses every seam at once, which is what the few tests at the top are for.",
+    "Certo. Uma jornada cruza todas as costuras de uma vez, e é para isso que servem os poucos testes do topo."),
+   ("The click on `/ssr` before its script has arrived", "O clique em `/ssr` antes de o script chegar", 1,
+    "Right. The HTML was right throughout; only a browser sees the buttons doing nothing.",
+    "Certo. O HTML estava certo o tempo todo; só um navegador vê os botões sem fazer nada."),
+   ("All 65,536 baskets of none to three of each fruit", "As 65.536 cestas de nenhuma a três de cada fruta", 0,
+    "That is arithmetic, and a handful of unit cases with something to say covers it.",
+    "Isso é conta, e um punhado de casos unitários com algo a dizer cobre."),
+   ("Every name the server should refuse with `409`", "Todo nome que o servidor deve recusar com `409`", 0,
+    "One browser test shows the refusal reaches the screen; the other cases belong to the layer that decides.",
+    "Um teste de navegador mostra que a recusa chega à tela; os outros casos são da camada que decide."),
+   ("The page that scrolls sideways at 360 pixels", "A página que rola de lado a 360 pixels", 1,
+    "Right. Overflow is layout, and only something that lays the page out can measure it.",
+    "Certo. Transbordar é layout, e só quem monta a página consegue medir.")])
+
+# lesson 22
+N('ex-m7kjjbnb', None, 'medium',
+  ("Keep the lesson's assumptions for the screenshot test, 10 minutes to write and 10 minutes for each change that breaks it, but say the shop's look changes once a quarter. What is its person cost for a year, in minutes?",
+   "Mantenha as premissas da aula para o teste de captura, 10 minutos para escrever e 10 para cada mudança que o quebra, mas digamos que o visual da loja muda uma vez por trimestre. Qual é o custo em pessoa por ano, em minutos?"),
+  50, ("min", "min"))
+
+N('ex-8bz3w6xn', None, 'hard',
+  ("Suppose a suite's declared failures cost 12.4 seconds a run, and the suite runs 5,000 times a year. How many minutes of machine time a year do they spend? Round to the nearest whole number.",
+   "Suponha que as falhas declaradas de uma suíte custem 12,4 segundos por execução, e a suíte rode 5.000 vezes por ano. Quantos minutos de máquina por ano elas gastam? Arredonde para um número inteiro."),
+  1033, ("min", "min"), tolerance=1)
+
+Q('ex-7vf9cfk3', None, 'hard',
+  ("A suite holds 100 tests, each failing one run in 200 for no reason, independently. Roughly what share of its runs go red with nothing changed?",
+   "Uma suíte tem 100 testes, cada um falhando uma execução em 200 sem motivo, de forma independente. Aproximadamente que parte das execuções fica vermelha sem nada mudar?"),
+  [("Half of one percent, like each test", "Meio por cento, como cada teste", 0,
+    "A developer meets a red run, and a run is red when any one of the hundred fails.",
+    "Um desenvolvedor encontra uma execução vermelha, e ela fica vermelha quando qualquer um dos cem falha."),
+   ("About two in five", "Cerca de duas em cinco", 1,
+    "Right. 1 − 0.995 to the power 100 is about 0.39, which is why the lesson tracks red runs, not red tests.",
+    "Certo. 1 − 0,995 elevado a 100 dá cerca de 0,39, por isso a aula acompanha execuções vermelhas, não testes."),
+   ("Exactly half, since 100 is half of 200", "Exatamente a metade, já que 100 é metade de 200", 0,
+    "The chances do not add; each run is green only if all hundred pass.",
+    "As chances não se somam; cada execução só fica verde se os cem passarem."),
+   ("Every run, since one test always fails", "Toda execução, já que um teste sempre falha", 0,
+    "With 1 in 200 each, many runs still have no failure at all.",
+    "Com 1 em 200 cada, muitas execuções ainda não têm falha nenhuma.")])
+
+Q('ex-3xtx5cnf', None, 'medium',
+  ("The search defect is fixed. Lesson 3's test and lesson 13's `waitForFunction` test both report *Expected to fail, but passed*. After removing both marks, what does the lesson ask?",
+   "O defeito da busca é corrigido. O teste da aula 3 e o teste `waitForFunction` da aula 13 informam *Expected to fail, but passed*. Depois de tirar as duas marcas, o que a aula pede?"),
+  [("Keep both, since two checks are safer", "Manter os dois, já que dois são mais seguros", 0,
+    "Two tests of one behaviour double the upkeep and catch nothing the first does not.",
+    "Dois testes do mesmo comportamento dobram a manutenção e não pegam nada que o primeiro não pegue."),
+   ("Delete both, since the defect is gone", "Apagar os dois, já que o defeito sumiu", 0,
+    "The fix is now worth guarding; one of them becomes the regression check.",
+    "A correção agora merece proteção; um deles vira a verificação de regressão."),
+   ("Mark both with `test.skip()` until next month", "Marcar os dois com `test.skip()` até o mês que vem", 0,
+    "A skipped test stops looking, and nothing says when to start again.",
+    "Um teste pulado deixa de olhar, e nada diz quando voltar."),
+   ("Keep the clearer one; give the reason in the commit", "Manter o mais claro; dar o motivo no commit", 1,
+    "Right. Keep the one whose failure would tell a developer more, and write why the other went.",
+    "Certo. Fique com aquele cuja falha diria mais a um desenvolvedor, e escreva por que o outro saiu.")])
+
+
 write(D, X, exam=True)

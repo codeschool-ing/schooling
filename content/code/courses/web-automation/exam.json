@@ -2017,5 +2017,384 @@
     "ignore_accents": true
    }
   ]
+ },
+ {
+  "id": "ex-8jmsykv6",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "A build machine has 7 logical processors. Neither the configuration nor the command line sets `workers`. By the rule in Playwright's installed code, how many workers can `npx playwright test` start?",
+  "value": 3,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-bezgbk1n",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "Five test files, forty tests between them, run with `--workers 8 --fully-parallel` on a machine with sixteen threads. How many workers does the run use?",
+  "choices": [
+   {
+    "text": "Five, one for each file",
+    "correct": false,
+    "why": "That is the default unit of work; `--fully-parallel` makes each test a unit of its own."
+   },
+   {
+    "text": "Eight, the number allowed",
+    "correct": true,
+    "why": "Right. Forty tests are enough to keep all eight busy once tests, not files, are handed out."
+   },
+   {
+    "text": "Sixteen, one per thread",
+    "correct": false,
+    "why": "`--workers` on the command line comes first and caps it at eight."
+   },
+   {
+    "text": "Forty, one per test",
+    "correct": false,
+    "why": "A worker runs one test after another; the count never goes past `--workers`."
+   }
+  ]
+ },
+ {
+  "id": "ex-4z1hsr8f",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A suite holds one file of forty tests and twenty files of one test each, none of them fully parallel. It runs as `--shard=1/3`, `2/3` and `3/3`. Why can the shards not come out even?",
+  "choices": [
+   {
+    "text": "Playwright deals shards by each file's last duration",
+    "correct": false,
+    "why": "It does not know how long a test takes; `filterForShard` counts tests."
+   },
+   {
+    "text": "Shards need a blob report to balance themselves",
+    "correct": false,
+    "why": "A blob report only merges the results afterwards."
+   },
+   {
+    "text": "The big file is never split, so one shard gets all forty",
+    "correct": true,
+    "why": "Right. A group is a whole file unless it is fully parallel; marking it so lets its tests be dealt out apart."
+   },
+   {
+    "text": "Three shards need a multiple of three files",
+    "correct": false,
+    "why": "Any count of groups can be dealt; the trouble is one group holding most of the tests."
+   }
+  ]
+ },
+ {
+  "id": "ex-0g0v80sk",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "In the curve, peak memory was 924 MB with one worker and 4476 MB with eight. On average, how many megabytes did each worker added after the first cost? Round to the nearest whole number.",
+  "value": 507,
+  "tolerance": 1,
+  "unit": "MB"
+ },
+ {
+  "id": "ex-4jyp5qzf",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "With the final `turns.config.js`, where `one-at-a-time` depends on `parallel`, a test in `parallel` fails. What happens to the shop's tests in `one-at-a-time`?",
+  "choices": [
+   {
+    "text": "They run as usual, after the failure",
+    "correct": false,
+    "why": "A project whose dependencies did not all pass is left out of the run."
+   },
+   {
+    "text": "They are left out, so nobody learns whether they pass",
+    "correct": true,
+    "why": "Right. `tasks.js` drops it, which suits a sign-in setup project and is a nuisance here, where the two groups need nothing from each other."
+   },
+   {
+    "text": "They run in parallel, to make up the time",
+    "correct": false,
+    "why": "`workers: 1` on the project never changes because of another project's result."
+   },
+   {
+    "text": "They are retried until `parallel` passes",
+    "correct": false,
+    "why": "Nothing in a dependency waits for, or retries, the project it depends on."
+   }
+  ]
+ },
+ {
+  "id": "ex-s2t4vdq7",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "Suppose each card's button carried `data-testid=\"add-banana\"` and so on, spelt the shop's way. Going through Selenium IDE's builders in their order, which one names the banana's button first?",
+  "choices": [
+   {
+    "text": "`css:data-test-id`, which looks for test attributes",
+    "correct": false,
+    "why": "It reads only `data-test-id` and `data-test`, not the shop's spelling."
+   },
+   {
+    "text": "`css:data-attr`, the third in the order",
+    "correct": true,
+    "why": "Right. The third builder takes the element's own first `data-*` attribute, as it did for the basket count."
+   },
+   {
+    "text": "`css:finder`, with the card's random id",
+    "correct": false,
+    "why": "The finder is fourth; a `data-*` attribute on the button is taken before it is reached."
+   },
+   {
+    "text": "`xpath:innerText`, from the button's words",
+    "correct": false,
+    "why": "The XPath builders come last, and an earlier one already answers."
+   }
+  ]
+ },
+ {
+  "id": "ex-c27z54na",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "A `.side` recording's `target` names a random card id that no longer exists, and its `targets` list also holds `xpath=//button[contains(.,'Add to basket')]`. What does the IDE's playback do?",
+  "choices": [
+   {
+    "text": "It tries the next entry in `targets` and clicks",
+    "correct": false,
+    "why": "The loop that would try the alternatives is commented out in `side-runtime`."
+   },
+   {
+    "text": "It asks the person to pick an entry, then goes on",
+    "correct": false,
+    "why": "Playback asks nobody; choosing another entry is something a person does in the IDE afterwards."
+   },
+   {
+    "text": "It waits for the target, then fails the step",
+    "correct": true,
+    "why": "Right. A click polls for its target up to the implicit wait and fails; the list is kept for a person, not tried."
+   },
+   {
+    "text": "It skips the step and marks it as a warning",
+    "correct": false,
+    "why": "A step that cannot find its target fails, as `recorded/side.spec.js` did after five seconds."
+   }
+  ]
+ },
+ {
+  "id": "ex-8xq4y7ms",
+  "version": 1,
+  "type": "cloze",
+  "difficulty": "medium",
+  "prompt": "An application marks its elements with `data-qa`. To make codegen build its test-id locators from that attribute, the option is `npx playwright codegen --___ data-qa`.",
+  "blanks": [
+   {
+    "accept": [
+     "test-id-attribute"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-3dqj8n13",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "A team has 50 recorded flows, and each clicks *Add to basket* twice, with the full locator written on each line as codegen writes it. The button is renamed. How many lines name the old words and need editing?",
+  "value": 100,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-tc1f204d",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "At the 281 ms the browser test took, how many seconds would 500 such checks take on one worker, run 20 times a day?",
+  "value": 2810,
+  "tolerance": 0,
+  "unit": "s"
+ },
+ {
+  "id": "ex-2mt5mrss",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "A test fails one run in a hundred for reasons unrelated to the shop. In what percentage of series of 50 runs would it pass all 50? Round to a whole number.",
+  "value": 61,
+  "tolerance": 1,
+  "unit": "%"
+ },
+ {
+  "id": "ex-k4tff3hj",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A change keeps `total()` right but makes `POST /api/basket` answer `{ lines, sum: 590 }` instead of `total: 590`. Which of the lesson's three tests fail?",
+  "choices": [
+   {
+    "text": "Only the unit test of `total()`",
+    "correct": false,
+    "why": "The function was not touched, so its three cases still pass."
+   },
+   {
+    "text": "The API test and the browser test",
+    "correct": true,
+    "why": "Right. The API test compares the whole answer, and the page reads `basket.total`, which is now missing."
+   },
+   {
+    "text": "Only the browser test, as with the cents",
+    "correct": false,
+    "why": "This time the API's own answer changed, and the API test checks it with `toEqual`."
+   },
+   {
+    "text": "None, since the arithmetic is right",
+    "correct": false,
+    "why": "Two of the tests check more than the arithmetic: the answer's shape and what the page draws."
+   }
+  ]
+ },
+ {
+  "id": "ex-c7y9d0s7",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "The testing trophy's wide integration band renders components in jsdom. Which defect from this course would that band still miss?",
+  "choices": [
+   {
+    "text": "A price read wrongly from an API answer",
+    "correct": false,
+    "why": "Reading data into the DOM is what jsdom does well; no layout is needed."
+   },
+   {
+    "text": "A component that forgets to draw a heading",
+    "correct": false,
+    "why": "A missing element is in the tree, and jsdom has the tree."
+   },
+   {
+    "text": "Lesson 7's basket, too wide for a phone",
+    "correct": true,
+    "why": "Right. jsdom has no layout and reported a `scrollWidth` of 0, which is why the trophy keeps a cup of end-to-end tests too."
+   },
+   {
+    "text": "A handler wired to the wrong button",
+    "correct": false,
+    "why": "jsdom runs listeners when an element is clicked, so a wrong wiring shows."
+   }
+  ]
+ },
+ {
+  "id": "ex-5hfrenss",
+  "version": 1,
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "prompt": "Which of these checks on quitanda have earned a place in the browser layer, by lesson 21's question? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Open the shop, add a banana and read the total",
+    "correct": true,
+    "why": "Right. A journey crosses every seam at once, which is what the few tests at the top are for."
+   },
+   {
+    "text": "The click on `/ssr` before its script has arrived",
+    "correct": true,
+    "why": "Right. The HTML was right throughout; only a browser sees the buttons doing nothing."
+   },
+   {
+    "text": "All 65,536 baskets of none to three of each fruit",
+    "correct": false,
+    "why": "That is arithmetic, and a handful of unit cases with something to say covers it."
+   },
+   {
+    "text": "Every name the server should refuse with `409`",
+    "correct": false,
+    "why": "One browser test shows the refusal reaches the screen; the other cases belong to the layer that decides."
+   },
+   {
+    "text": "The page that scrolls sideways at 360 pixels",
+    "correct": true,
+    "why": "Right. Overflow is layout, and only something that lays the page out can measure it."
+   }
+  ]
+ },
+ {
+  "id": "ex-m7kjjbnb",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "Keep the lesson's assumptions for the screenshot test, 10 minutes to write and 10 minutes for each change that breaks it, but say the shop's look changes once a quarter. What is its person cost for a year, in minutes?",
+  "value": 50,
+  "tolerance": 0,
+  "unit": "min"
+ },
+ {
+  "id": "ex-8bz3w6xn",
+  "version": 1,
+  "type": "numeric",
+  "difficulty": "hard",
+  "prompt": "Suppose a suite's declared failures cost 12.4 seconds a run, and the suite runs 5,000 times a year. How many minutes of machine time a year do they spend? Round to the nearest whole number.",
+  "value": 1033,
+  "tolerance": 1,
+  "unit": "min"
+ },
+ {
+  "id": "ex-7vf9cfk3",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "hard",
+  "prompt": "A suite holds 100 tests, each failing one run in 200 for no reason, independently. Roughly what share of its runs go red with nothing changed?",
+  "choices": [
+   {
+    "text": "Half of one percent, like each test",
+    "correct": false,
+    "why": "A developer meets a red run, and a run is red when any one of the hundred fails."
+   },
+   {
+    "text": "About two in five",
+    "correct": true,
+    "why": "Right. 1 − 0.995 to the power 100 is about 0.39, which is why the lesson tracks red runs, not red tests."
+   },
+   {
+    "text": "Exactly half, since 100 is half of 200",
+    "correct": false,
+    "why": "The chances do not add; each run is green only if all hundred pass."
+   },
+   {
+    "text": "Every run, since one test always fails",
+    "correct": false,
+    "why": "With 1 in 200 each, many runs still have no failure at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-3xtx5cnf",
+  "version": 1,
+  "type": "quiz",
+  "difficulty": "medium",
+  "prompt": "The search defect is fixed. Lesson 3's test and lesson 13's `waitForFunction` test both report *Expected to fail, but passed*. After removing both marks, what does the lesson ask?",
+  "choices": [
+   {
+    "text": "Keep both, since two checks are safer",
+    "correct": false,
+    "why": "Two tests of one behaviour double the upkeep and catch nothing the first does not."
+   },
+   {
+    "text": "Delete both, since the defect is gone",
+    "correct": false,
+    "why": "The fix is now worth guarding; one of them becomes the regression check."
+   },
+   {
+    "text": "Mark both with `test.skip()` until next month",
+    "correct": false,
+    "why": "A skipped test stops looking, and nothing says when to start again."
+   },
+   {
+    "text": "Keep the clearer one; give the reason in the commit",
+    "correct": true,
+    "why": "Right. Keep the one whose failure would tell a developer more, and write why the other went."
+   }
+  ]
  }
 ]

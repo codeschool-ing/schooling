@@ -1418,5 +1418,255 @@
     ]
    }
   ]
+ },
+ "ex-8jmsykv6": {
+  "prompt": "Uma máquina de build tem 7 processadores lógicos. Nem a configuração nem a linha de comando definem `workers`. Pela regra do código instalado do Playwright, quantos workers `npx playwright test` pode iniciar?"
+ },
+ "ex-bezgbk1n": {
+  "prompt": "Cinco arquivos de teste, quarenta testes ao todo, rodam com `--workers 8 --fully-parallel` numa máquina de dezesseis threads. Quantos workers a execução usa?",
+  "choices": [
+   {
+    "text": "Cinco, um por arquivo",
+    "why": "Essa é a unidade padrão de trabalho; `--fully-parallel` faz de cada teste uma unidade."
+   },
+   {
+    "text": "Oito, o número permitido",
+    "why": "Certo. Quarenta testes bastam para ocupar os oito quando se distribuem testes, e não arquivos."
+   },
+   {
+    "text": "Dezesseis, um por thread",
+    "why": "O `--workers` da linha de comando vem primeiro e limita em oito."
+   },
+   {
+    "text": "Quarenta, um por teste",
+    "why": "Um worker roda um teste depois do outro; o número nunca passa de `--workers`."
+   }
+  ]
+ },
+ "ex-4z1hsr8f": {
+  "prompt": "Uma suíte tem um arquivo de quarenta testes e vinte arquivos de um teste cada, nenhum totalmente paralelo. Ela roda como `--shard=1/3`, `2/3` e `3/3`. Por que os shards não saem equilibrados?",
+  "choices": [
+   {
+    "text": "O Playwright divide os shards pela última duração de cada arquivo",
+    "why": "Ele não sabe quanto um teste leva; o `filterForShard` conta testes."
+   },
+   {
+    "text": "Shards precisam de um relatório blob para se equilibrar",
+    "why": "O relatório blob só junta os resultados depois."
+   },
+   {
+    "text": "O arquivo grande nunca é dividido, então um shard leva os quarenta",
+    "why": "Certo. Um grupo é o arquivo inteiro, a menos que seja totalmente paralelo; marcá-lo assim deixa distribuir seus testes."
+   },
+   {
+    "text": "Três shards exigem um múltiplo de três arquivos",
+    "why": "Qualquer número de grupos pode ser distribuído; o problema é um grupo ter quase todos os testes."
+   }
+  ]
+ },
+ "ex-0g0v80sk": {
+  "prompt": "Na curva, o pico de memória foi 924 MB com um worker e 4476 MB com oito. Em média, quantos megabytes custou cada worker acrescentado depois do primeiro? Arredonde para um número inteiro.",
+  "unit": "MB"
+ },
+ "ex-4jyp5qzf": {
+  "prompt": "Com o `turns.config.js` final, em que `one-at-a-time` depende de `parallel`, um teste de `parallel` falha. O que acontece com os testes da loja em `one-at-a-time`?",
+  "choices": [
+   {
+    "text": "Rodam normalmente, depois da falha",
+    "why": "Um projeto cujas dependências não passaram todas fica fora da execução."
+   },
+   {
+    "text": "Ficam de fora, e ninguém sabe se passariam",
+    "why": "Certo. O `tasks.js` o descarta, o que serve a um projeto de login e atrapalha aqui, onde os grupos não precisam um do outro."
+   },
+   {
+    "text": "Rodam em paralelo, para recuperar o tempo",
+    "why": "O `workers: 1` do projeto nunca muda por causa do resultado de outro."
+   },
+   {
+    "text": "São repetidos até `parallel` passar",
+    "why": "Nada numa dependência espera ou repete o projeto de que depende."
+   }
+  ]
+ },
+ "ex-s2t4vdq7": {
+  "prompt": "Suponha que o botão de cada cartão tivesse `data-testid=\"add-banana\"` e assim por diante, escrito do jeito da loja. Seguindo os construtores do Selenium IDE na ordem, qual nomeia primeiro o botão da banana?",
+  "choices": [
+   {
+    "text": "`css:data-test-id`, que procura atributos de teste",
+    "why": "Ele lê só `data-test-id` e `data-test`, não a grafia da loja."
+   },
+   {
+    "text": "`css:data-attr`, o terceiro da ordem",
+    "why": "Certo. O terceiro construtor pega o primeiro atributo `data-*` do próprio elemento, como fez com a contagem da cesta."
+   },
+   {
+    "text": "`css:finder`, com o id aleatório do cartão",
+    "why": "O finder é o quarto; um atributo `data-*` no botão é usado antes de chegar nele."
+   },
+   {
+    "text": "`xpath:innerText`, pelas palavras do botão",
+    "why": "Os construtores XPath vêm por último, e um anterior já responde."
+   }
+  ]
+ },
+ "ex-c27z54na": {
+  "prompt": "O `target` de uma gravação `.side` cita um id aleatório de cartão que não existe mais, e a lista `targets` também tem `xpath=//button[contains(.,'Add to basket')]`. O que a reprodução do IDE faz?",
+  "choices": [
+   {
+    "text": "Tenta a próxima entrada de `targets` e clica",
+    "why": "O laço que tentaria as alternativas está comentado no `side-runtime`."
+   },
+   {
+    "text": "Pede que a pessoa escolha uma entrada e segue",
+    "why": "A reprodução não pergunta a ninguém; escolher outra entrada é algo que a pessoa faz depois no IDE."
+   },
+   {
+    "text": "Espera pelo target e depois reprova o passo",
+    "why": "Certo. O clique procura o target até a espera implícita e falha; a lista fica para uma pessoa, não é tentada."
+   },
+   {
+    "text": "Pula o passo e o marca como aviso",
+    "why": "Um passo que não acha o target falha, como o `recorded/side.spec.js` depois de cinco segundos."
+   }
+  ]
+ },
+ "ex-8xq4y7ms": {
+  "prompt": "Uma aplicação marca seus elementos com `data-qa`. Para o codegen montar os localizadores de test id com esse atributo, a opção é `npx playwright codegen --___ data-qa`.",
+  "blanks": [
+   {
+    "accept": [
+     "test-id-attribute"
+    ]
+   }
+  ]
+ },
+ "ex-3dqj8n13": {
+  "prompt": "Uma equipe tem 50 fluxos gravados, e cada um clica em *Add to basket* duas vezes, com o localizador completo em cada linha, como o codegen escreve. O botão é renomeado. Quantas linhas citam as palavras antigas e precisam de edição?"
+ },
+ "ex-tc1f204d": {
+  "prompt": "Aos 281 ms que o teste de navegador levou, quantos segundos 500 verificações dessas levariam num worker, rodadas 20 vezes por dia?",
+  "unit": "s"
+ },
+ "ex-2mt5mrss": {
+  "prompt": "Um teste falha uma execução em cem por motivos alheios à loja. Em que porcentagem das séries de 50 execuções ele passaria nas 50? Arredonde para um número inteiro.",
+  "unit": "%"
+ },
+ "ex-k4tff3hj": {
+  "prompt": "Uma mudança mantém o `total()` certo, mas faz o `POST /api/basket` responder `{ lines, sum: 590 }` em vez de `total: 590`. Quais dos três testes da aula falham?",
+  "choices": [
+   {
+    "text": "Só o teste unitário de `total()`",
+    "why": "A função não foi mexida, então seus três casos continuam passando."
+   },
+   {
+    "text": "O teste de API e o teste de navegador",
+    "why": "Certo. O teste de API compara a resposta inteira, e a página lê `basket.total`, que agora falta."
+   },
+   {
+    "text": "Só o de navegador, como no caso dos centavos",
+    "why": "Desta vez mudou a resposta da própria API, e o teste de API a confere com `toEqual`."
+   },
+   {
+    "text": "Nenhum, já que a conta está certa",
+    "why": "Dois testes conferem mais que a conta: o formato da resposta e o que a página desenha."
+   }
+  ]
+ },
+ "ex-c7y9d0s7": {
+  "prompt": "A faixa larga de integração do troféu de testes renderiza componentes no jsdom. Que defeito deste curso essa faixa ainda deixaria passar?",
+  "choices": [
+   {
+    "text": "Um preço lido errado de uma resposta da API",
+    "why": "Ler dados para o DOM é o que o jsdom faz bem; não precisa de layout."
+   },
+   {
+    "text": "Um componente que esquece de desenhar um título",
+    "why": "Um elemento que falta aparece na árvore, e o jsdom tem a árvore."
+   },
+   {
+    "text": "A cesta da aula 7, larga demais para um celular",
+    "why": "Certo. O jsdom não tem layout e informou `scrollWidth` 0, por isso o troféu também guarda um copo de testes ponta a ponta."
+   },
+   {
+    "text": "Um handler ligado ao botão errado",
+    "why": "O jsdom roda os listeners quando um elemento é clicado, então a ligação errada aparece."
+   }
+  ]
+ },
+ "ex-5hfrenss": {
+  "prompt": "Quais destas verificações na quitanda merecem lugar na camada de navegador, pela pergunta da aula 21? Marque todas que se aplicam.",
+  "choices": [
+   {
+    "text": "Abrir a loja, adicionar uma banana e ler o total",
+    "why": "Certo. Uma jornada cruza todas as costuras de uma vez, e é para isso que servem os poucos testes do topo."
+   },
+   {
+    "text": "O clique em `/ssr` antes de o script chegar",
+    "why": "Certo. O HTML estava certo o tempo todo; só um navegador vê os botões sem fazer nada."
+   },
+   {
+    "text": "As 65.536 cestas de nenhuma a três de cada fruta",
+    "why": "Isso é conta, e um punhado de casos unitários com algo a dizer cobre."
+   },
+   {
+    "text": "Todo nome que o servidor deve recusar com `409`",
+    "why": "Um teste de navegador mostra que a recusa chega à tela; os outros casos são da camada que decide."
+   },
+   {
+    "text": "A página que rola de lado a 360 pixels",
+    "why": "Certo. Transbordar é layout, e só quem monta a página consegue medir."
+   }
+  ]
+ },
+ "ex-m7kjjbnb": {
+  "prompt": "Mantenha as premissas da aula para o teste de captura, 10 minutos para escrever e 10 para cada mudança que o quebra, mas digamos que o visual da loja muda uma vez por trimestre. Qual é o custo em pessoa por ano, em minutos?",
+  "unit": "min"
+ },
+ "ex-8bz3w6xn": {
+  "prompt": "Suponha que as falhas declaradas de uma suíte custem 12,4 segundos por execução, e a suíte rode 5.000 vezes por ano. Quantos minutos de máquina por ano elas gastam? Arredonde para um número inteiro.",
+  "unit": "min"
+ },
+ "ex-7vf9cfk3": {
+  "prompt": "Uma suíte tem 100 testes, cada um falhando uma execução em 200 sem motivo, de forma independente. Aproximadamente que parte das execuções fica vermelha sem nada mudar?",
+  "choices": [
+   {
+    "text": "Meio por cento, como cada teste",
+    "why": "Um desenvolvedor encontra uma execução vermelha, e ela fica vermelha quando qualquer um dos cem falha."
+   },
+   {
+    "text": "Cerca de duas em cinco",
+    "why": "Certo. 1 − 0,995 elevado a 100 dá cerca de 0,39, por isso a aula acompanha execuções vermelhas, não testes."
+   },
+   {
+    "text": "Exatamente a metade, já que 100 é metade de 200",
+    "why": "As chances não se somam; cada execução só fica verde se os cem passarem."
+   },
+   {
+    "text": "Toda execução, já que um teste sempre falha",
+    "why": "Com 1 em 200 cada, muitas execuções ainda não têm falha nenhuma."
+   }
+  ]
+ },
+ "ex-3xtx5cnf": {
+  "prompt": "O defeito da busca é corrigido. O teste da aula 3 e o teste `waitForFunction` da aula 13 informam *Expected to fail, but passed*. Depois de tirar as duas marcas, o que a aula pede?",
+  "choices": [
+   {
+    "text": "Manter os dois, já que dois são mais seguros",
+    "why": "Dois testes do mesmo comportamento dobram a manutenção e não pegam nada que o primeiro não pegue."
+   },
+   {
+    "text": "Apagar os dois, já que o defeito sumiu",
+    "why": "A correção agora merece proteção; um deles vira a verificação de regressão."
+   },
+   {
+    "text": "Marcar os dois com `test.skip()` até o mês que vem",
+    "why": "Um teste pulado deixa de olhar, e nada diz quando voltar."
+   },
+   {
+    "text": "Manter o mais claro; dar o motivo no commit",
+    "why": "Certo. Fique com aquele cuja falha diria mais a um desenvolvedor, e escreva por que o outro saiu."
+   }
+  ]
  }
 }
