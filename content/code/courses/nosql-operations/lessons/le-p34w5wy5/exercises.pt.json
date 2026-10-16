@@ -1,0 +1,393 @@
+{
+  "ex-pt74x422": {
+    "prompt": "Um cliente manda `SET order:1002 paid` direto a uma réplica. O que acontece?",
+    "choices": [
+      {
+        "text": "A réplica o repassa ao primário e responde `OK`",
+        "why": "Réplicas do Redis não repassam; o cliente precisa achar o primário."
+      },
+      {
+        "text": "É recusado com `READONLY`",
+        "why": "Isso. Uma réplica é somente leitura por padrão, para não guardar dados que o primário nunca viu."
+      },
+      {
+        "text": "É guardado na réplica e copiado de volta ao primário depois",
+        "why": "A replicação só corre num sentido, do primário para a réplica."
+      },
+      {
+        "text": "Fica na fila até a réplica ser promovida",
+        "why": "Nada o enfileira; o erro vem na hora."
+      }
+    ]
+  },
+  "ex-2qdkqb91": {
+    "prompt": "O primário informa `master_repl_offset` 5000 e uma réplica informa `slave_repl_offset` 4200. O que isso diz?",
+    "choices": [
+      {
+        "text": "A réplica tem 800 bytes de escritas que ainda não recebeu",
+        "why": "Isso. Offsets iguais querem dizer que a réplica tem tudo; a diferença é o quanto ela está atrás."
+      },
+      {
+        "text": "A réplica tem 800 chaves a menos que o primário",
+        "why": "Offsets contam bytes do fluxo de replicação, não chaves."
+      },
+      {
+        "text": "A réplica está 800 milissegundos atrás",
+        "why": "A unidade é bytes; o atraso em segundos é outro campo."
+      },
+      {
+        "text": "A réplica se desconectou e vai precisar de uma cópia completa do conjunto de dados quando voltar",
+        "why": "Uma diferença pequena é o estado normal de uma réplica assíncrona."
+      }
+    ]
+  },
+  "ex-wbzrdngn": {
+    "prompt": "Por que uma réplica não é um backup?",
+    "choices": [
+      {
+        "text": "Não dá para ler de uma réplica",
+        "why": "Ela respondeu ao `GET` na aula."
+      },
+      {
+        "text": "Uma réplica guarda só a última hora de escritas",
+        "why": "Ela guarda o conjunto de dados inteiro."
+      },
+      {
+        "text": "Um erro no primário chega a todas as réplicas em milissegundos",
+        "why": "Isso, um `FLUSHALL` inclusive. Backup é uma cópia que o erro não alcança: os arquivos da aula 13, guardados em outro lugar."
+      },
+      {
+        "text": "Uma réplica guarda os dados num formato que o primário não consegue carregar depois de uma queda",
+        "why": "Mesmo formato; esse não é o motivo."
+      }
+    ]
+  },
+  "ex-0j716wth": {
+    "prompt": "Por que a aula roda três Sentinels com quórum 2, e não um?",
+    "choices": [
+      {
+        "text": "Um Sentinel não distingue um primário morto do próprio link perdido",
+        "why": "Isso, e seria um ponto único de falha. Uma maioria que concorda é o que torna um failover confiável."
+      },
+      {
+        "text": "Cada Sentinel vigia uma réplica, e há três servidores",
+        "why": "Todo Sentinel vigia o conjunto inteiro."
+      },
+      {
+        "text": "Um Sentinel só consegue promover uma réplica na própria máquina",
+        "why": "Ele promove pela rede, qualquer réplica."
+      },
+      {
+        "text": "Três Sentinels deixam o failover três vezes mais rápido",
+        "why": "A velocidade vem do `down-after-milliseconds`; mais Sentinels acrescentam acordo, não velocidade."
+      }
+    ]
+  },
+  "ex-1nzrycda": {
+    "prompt": "Com `sentinel down-after-milliseconds shop 5000`, quantos segundos o primário precisa ficar em silêncio para um Sentinel considerá-lo fora do ar?",
+    "unit": "segundos"
+  },
+  "ex-adn3t5ra": {
+    "prompt": "Depois de um failover, o primário antigo `redis-1` é iniciado de novo. O que ele vira?",
+    "choices": [
+      {
+        "text": "O primário de novo, porque o nome dele está na configuração do Sentinel",
+        "why": "O Sentinel reescreveu o arquivo quando o primário mudou; o nome antigo é passado."
+      },
+      {
+        "text": "Uma réplica do novo primário, por ordem do Sentinel",
+        "why": "Isso. Dois primários para um conjunto de dados é o que um failover nunca pode produzir."
+      },
+      {
+        "text": "Um segundo primário, até alguém rebaixá-lo à mão",
+        "why": "O Sentinel o reconfigurou assim que conseguiu alcançá-lo."
+      },
+      {
+        "text": "Nada: ele se recusa a iniciar até os dados serem apagados",
+        "why": "Ele inicia, e então se ressincroniza com o novo primário."
+      }
+    ]
+  },
+  "ex-8ph4ha5s": {
+    "prompt": "Uma aplicação está configurada com `redis-1:6379` como endereço do Redis. O Sentinel faz failover para `redis-3`. O que a aplicação vê?",
+    "hint": "Quem sabe que o primário mudou?",
+    "choices": [
+      {
+        "text": "Nada: o Sentinel move o endereço `redis-1` para o novo servidor",
+        "why": "O Sentinel move o papel, não nomes nem endereços."
+      },
+      {
+        "text": "Erros até `redis-1` voltar, e depois erros `READONLY` nas escritas, porque `redis-1` volta como réplica",
+        "why": "Isso. O cliente tem de perguntar a um Sentinel pelo primário de `shop`, e não guardar um endereço."
+      },
+      {
+        "text": "Uma pausa curta, e depois as escritas vão sozinhas para `redis-3`",
+        "why": "Nada redireciona um cliente que nunca perguntou ao Sentinel."
+      },
+      {
+        "text": "Um erro `MOVED` apontando para `redis-3`",
+        "why": "`MOVED` é o redirecionamento do Redis Cluster; o Sentinel não tem nenhum."
+      }
+    ]
+  },
+  "ex-0bedy0sb": {
+    "prompt": "Por que cada Sentinel da aula recebe a sua própria cópia do `sentinel.conf`, num diretório próprio?",
+    "choices": [
+      {
+        "text": "Cada Sentinel reescreve o arquivo conforme aprende sobre réplicas, outros Sentinels e o primário",
+        "why": "Isso. Um arquivo compartilhado seria reescrito por três processos ao mesmo tempo."
+      },
+      {
+        "text": "Cada arquivo cita um primário diferente para vigiar",
+        "why": "Os três arquivos são idênticos no começo: a mesma linha `monitor`."
+      },
+      {
+        "text": "O Docker não consegue montar um arquivo em três contêineres",
+        "why": "Consegue; o problema são três escritores, não a montagem."
+      },
+      {
+        "text": "O quórum é contado pelo número de arquivos",
+        "why": "O quórum é o número na linha `monitor`."
+      }
+    ]
+  },
+  "ex-zshkwqg9": {
+    "prompt": "Na aula, o pedido 2002 foi gravado no primário depois de ele ser cortado da rede, e respondeu `OK`. Onde ele está depois que a rede volta?",
+    "choices": [
+      {
+        "text": "Só no primário antigo, que agora discorda dos outros",
+        "why": "O primário antigo virou réplica e descartou os dados na ressincronização completa."
+      },
+      {
+        "text": "Em lugar nenhum",
+        "why": "Isso. A réplica promovida nunca o teve, e o primário antigo o jogou fora ao voltar."
+      },
+      {
+        "text": "Em todos os servidores, mesclado quando o primário antigo voltou",
+        "why": "O Redis não mescla duas histórias; o conjunto do novo primário vence inteiro."
+      },
+      {
+        "text": "Nos logs dos Sentinels, de onde pode ser refeito",
+        "why": "Sentinels registram eventos sobre servidores, nunca dados."
+      }
+    ]
+  },
+  "ex-mk2q6s82": {
+    "prompt": "Um cliente roda `SET order:2004 paid` e depois `WAIT 1 2000`, que responde `0`. O que vale para o pedido 2004?",
+    "choices": [
+      {
+        "text": "Foi desfeito, já que nenhuma réplica o confirmou",
+        "why": "O `WAIT` não desfaz nada; o `GET` ainda o achou no primário."
+      },
+      {
+        "text": "Está no primário e em nenhuma réplica, então um failover agora o perderia",
+        "why": "Isso. A aplicação agora sabe que a escrita está em risco, e pode dizer isso em vez de confirmar o pedido."
+      },
+      {
+        "text": "Está a salvo: o `WAIT` continua tentando em segundo plano até uma réplica tê-lo",
+        "why": "O `WAIT` só informa; a replicação segue como antes, e a partição a impede."
+      },
+      {
+        "text": "Foi recusado com `NOREPLICAS`",
+        "why": "O `SET` respondeu `OK`; a recusa veio depois, quando o atraso passou de 10 segundos."
+      }
+    ]
+  },
+  "ex-wx8s7jjz": {
+    "prompt": "Um primário tem `min-replicas-to-write 1` e `min-replicas-max-lag 10`. Ele é cortado das duas réplicas às 12:00:00. Por no máximo cerca de quantos segundos ele ainda pode aceitar escritas que serão perdidas?",
+    "hint": "Quando o primário começa a recusar?",
+    "unit": "segundos"
+  },
+  "ex-85bbrt3e": {
+    "prompt": "Uma equipe baixa o `min-replicas-max-lag` de 10 para 1 para encolher a janela. O que ela paga por isso?",
+    "choices": [
+      {
+        "text": "Nada: um atraso menor é só mais seguro",
+        "why": "Mais seguro para a consistência, e pago em disponibilidade."
+      },
+      {
+        "text": "Toda escrita agora espera uma réplica antes de responder",
+        "why": "As escritas ainda respondem na hora; só a regra de recusa mudou."
+      },
+      {
+        "text": "O Sentinel faz failover com mais frequência",
+        "why": "O tempo do Sentinel é o `down-after-milliseconds`, outra configuração."
+      },
+      {
+        "text": "O primário recusa escritas também em soluços comuns da rede",
+        "why": "Isso. Uma falha de um segundo nas confirmações das réplicas agora basta para parar as escritas."
+      }
+    ]
+  },
+  "ex-29zqnvkc": {
+    "prompt": "Em quantos hash slots o Redis Cluster divide o espaço de chaves?"
+  },
+  "ex-14330607": {
+    "prompt": "O `redis-cli` sem `-c` manda `SET product:KB-101 34990` ao nó 1 e recebe `MOVED 14967 172.18.0.4:6379`. O que aconteceu com a escrita?",
+    "choices": [
+      {
+        "text": "O nó 1 a guardou e mandou uma cópia ao dono",
+        "why": "Os nós não repassam comandos; dizem ao cliente aonde ir."
+      },
+      {
+        "text": "Nada foi gravado; o cliente precisa mandá-la ao nó dono do slot 14967",
+        "why": "Isso. Com `-c`, o `redis-cli` segue o redirecionamento sozinho."
+      },
+      {
+        "text": "Foi gravada no slot 14967 do nó 1, que a partir de agora é dono desse slot e responde por ele",
+        "why": "Slots só mudam por resharding, nunca porque um cliente gravou no nó errado."
+      },
+      {
+        "text": "O cluster está quebrado e precisa de `--cluster fix`",
+        "why": "`MOVED` é a resposta normal de um cluster saudável."
+      }
+    ]
+  },
+  "ex-f9gfjbz9": {
+    "prompt": "Para manter `cart:ana:items` e `cart:ana:total` num slot só, as chaves são renomeadas para que as duas contenham `___cart:ana}`, e só essa parte é usada no hash.",
+    "hint": "Um caractere.",
+    "blanks": [
+      {
+        "accept": [
+          "{"
+        ]
+      }
+    ]
+  },
+  "ex-spgmwh0k": {
+    "prompt": "Um desenvolvedor põe o carrinho de todo cliente sob a hash tag `{carts}` para um script Lua poder atualizar dois carrinhos juntos. O que dá errado quando a loja cresce?",
+    "choices": [
+      {
+        "text": "O script é recusado com `CROSSSLOT`",
+        "why": "Toda chave está num slot só, então o script roda; essa era a ideia."
+      },
+      {
+        "text": "Todo carrinho cai num slot de um nó só, que fica com toda a carga e a memória",
+        "why": "Isso. Uma hash tag que agrupa demais é a partição quente da aula 3."
+      },
+      {
+        "text": "Os carrinhos são copiados para todo nó, multiplicando a memória por três",
+        "why": "Um slot vive num primário e na sua réplica, não em todo lugar."
+      },
+      {
+        "text": "As chaves expiram junto com a hash tag por causa das chaves",
+        "why": "Uma hash tag só escolhe o slot."
+      }
+    ]
+  },
+  "ex-cjce21x6": {
+    "prompt": "Na aula, o nó dono do slot de `product:KB-101` foi parado. Quem assumiu os slots dele, e com o quê?",
+    "choices": [
+      {
+        "text": "A réplica dele, promovida pelos outros primários",
+        "why": "Isso, com os dados que tinha replicado. O preço ainda estava lá; uma escrita ainda não replicada não estaria."
+      },
+      {
+        "text": "Um Sentinel, que promoveu a réplica mais próxima",
+        "why": "Um cluster não roda Sentinel; os primários votam."
+      },
+      {
+        "text": "Os outros dois primários, que dividiram os slots dele entre si para a carga continuar equilibrada",
+        "why": "Os slots vão para a réplica; os outros primários não pegam nenhum sem reshard."
+      },
+      {
+        "text": "Ninguém: esses slots recusam todo pedido até o nó parado ser iniciado de novo",
+        "why": "Isso só acontece com slots sem réplica restante."
+      }
+    ]
+  },
+  "ex-8pd7mqy8": {
+    "prompt": "O Redis da loja guarda alguns gigabytes e um servidor dá conta das escritas com folga. Ele precisa sobreviver à perda de uma máquina. O que cabe?",
+    "choices": [
+      {
+        "text": "Redis Cluster com três primários",
+        "why": "Compra capacidade que a loja não precisa, e proíbe operações com várias chaves entre slots."
+      },
+      {
+        "text": "Um primário, duas réplicas e três Sentinels",
+        "why": "Isso. Alta disponibilidade de um conjunto que cabe numa máquina é o caso do Sentinel."
+      },
+      {
+        "text": "Um Redis com arquivo append-only e `appendfsync always`",
+        "why": "Sobrevive a um reinício, não à perda da máquina."
+      },
+      {
+        "text": "Um primário e uma réplica, com failover à mão",
+        "why": "Funciona só quando alguém está acordado para fazê-lo."
+      }
+    ]
+  },
+  "ex-2spa4bm6": {
+    "prompt": "Associe cada propriedade ao Sentinel ou ao Cluster.",
+    "pairs": [
+      {
+        "left": "clientes seguem redirecionamentos `MOVED`",
+        "right": "Cluster"
+      },
+      {
+        "left": "clientes perguntam pelo primário de `shop`",
+        "right": "Sentinel"
+      },
+      {
+        "left": "escritas confirmadas podem se perder num failover",
+        "right": "os dois"
+      }
+    ],
+    "right_distractors": [
+      "nenhum dos dois"
+    ]
+  },
+  "ex-zw75480m": {
+    "prompt": "Quais destes param de funcionar, ou precisam de mudança, quando uma aplicação passa do Sentinel para o Cluster? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Um script Lua que atualiza juntos o carrinho de um cliente e um contador de estoque",
+        "why": "Isso. As duas chaves ficam em slots diferentes, a menos que tenham a mesma tag."
+      },
+      {
+        "text": "`SELECT 2` para separar os dados de teste",
+        "why": "Isso. Um cluster só tem o banco 0."
+      },
+      {
+        "text": "`INCR` num único contador",
+        "why": "Uma chave sempre está num slot só."
+      },
+      {
+        "text": "Ler um hash com `HGETALL`",
+        "why": "Um hash é uma chave só."
+      }
+    ]
+  },
+  "ex-71pd7gbw": {
+    "prompt": "Ponha em ordem a escrita perdida da aula.",
+    "items": [
+      "O primário é cortado da rede",
+      "O primário responde `OK` ao pedido 2002",
+      "Os Sentinels concordam que ele caiu e promovem uma réplica",
+      "A rede volta e o primário antigo vira réplica",
+      "Uma ressincronização completa descarta o pedido 2002 do primário antigo"
+    ],
+    "trap": "A promoção acontece enquanto o primário antigo ainda aceita escritas."
+  },
+  "ex-3v54kjv7": {
+    "prompt": "Um pagamento nunca pode ser confirmado e depois perdido. Que arranjo a aula indica?",
+    "choices": [
+      {
+        "text": "Redis com Sentinel e `WAIT 2 1000` depois de cada pagamento",
+        "why": "O `WAIT` informa e não impede; um failover ainda pode perder uma escrita confirmada."
+      },
+      {
+        "text": "Redis Cluster, já que cada slot tem a sua réplica",
+        "why": "A replicação do Cluster também é assíncrona."
+      },
+      {
+        "text": "Um armazenamento que só confirma depois que a maioria tem a escrita, como um replica set do MongoDB com write concern majority",
+        "why": "Isso. O Redis pode distribuir o trabalho; o registro de um pagamento vive onde confirmar quer dizer maioria."
+      },
+      {
+        "text": "Redis com `min-replicas-max-lag 1`",
+        "why": "Encolhe a janela para cerca de um segundo; não a fecha."
+      }
+    ]
+  }
+}

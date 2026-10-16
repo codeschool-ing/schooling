@@ -1,0 +1,643 @@
+[
+  {
+    "id": "ex-rc4dyh02",
+    "version": 1,
+    "section": "one-order-five-shapes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the word \"NoSQL\" actually name?",
+    "choices": [
+      {
+        "text": "A family of databases that all store data without a schema",
+        "correct": false,
+        "why": "The families differ on exactly this; MongoDB can validate a schema and Cassandra requires one."
+      },
+      {
+        "text": "Every kind of database that is not relational",
+        "correct": true,
+        "why": "Right. The products under the name have less in common with each other than with Postgres."
+      },
+      {
+        "text": "A query language that replaces SQL across the products",
+        "correct": false,
+        "why": "Each product has its own interface: mongosh, Redis commands, CQL."
+      },
+      {
+        "text": "Databases designed to run on many machines",
+        "correct": false,
+        "why": "Postgres can run on many machines too, and Redis is often a single server."
+      }
+    ]
+  },
+  {
+    "id": "ex-91tffq3n",
+    "version": 1,
+    "section": "one-order-five-shapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis and MongoDB can both hold order 1001 as one value under one name. What is the difference between them that the lesson asks you to watch?",
+    "hint": "Two things to watch: the unit, and something about the unit.",
+    "choices": [
+      {
+        "text": "Whether the server can read inside the value to answer a query",
+        "correct": true,
+        "why": "Right. MongoDB reads every field; Redis hands the value back whole and knows nothing of its contents."
+      },
+      {
+        "text": "Whether the value is kept on disk or only in the server's memory",
+        "correct": false,
+        "why": "Persistence matters (lesson 13), but it is not what decides which questions each can answer."
+      },
+      {
+        "text": "Whether the whole order can be read back in a single request",
+        "correct": false,
+        "why": "Both hand the whole order back in one request; that is what they share."
+      },
+      {
+        "text": "Whether the value is stored as JSON text or in a binary format",
+        "correct": false,
+        "why": "Redis held JSON text and still could not read a field of it; the format is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-388yh12b",
+    "version": 1,
+    "section": "one-order-five-shapes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An analytics team will ask questions about the shop's orders that nobody can list today. Which property of a store matters most to them?",
+    "choices": [
+      {
+        "text": "How fast a value is returned when its key is already known",
+        "correct": false,
+        "why": "That serves questions planned in advance, which is the opposite of their situation."
+      },
+      {
+        "text": "How many rows a single partition can hold",
+        "correct": false,
+        "why": "A partition answers questions about one key; unplanned questions cross partitions."
+      },
+      {
+        "text": "That the server sees inside what it stores and joins it when read",
+        "correct": true,
+        "why": "Right. Seeing inside and joining at read time is what answers a question nobody planned for."
+      },
+      {
+        "text": "That every write is acknowledged by every copy of the data before it returns",
+        "correct": false,
+        "why": "That is a consistency setting from lesson 1; it says nothing about which questions are possible."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg61wwb5",
+    "version": 1,
+    "section": "one-order-five-shapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which family is reading order 1001 back a join assembled from several tables on every read?",
+    "choices": [
+      {
+        "text": "Wide column, because each order line is its own row",
+        "correct": false,
+        "why": "The lines are rows, but all of them sit in Ana's partition and come back in one read."
+      },
+      {
+        "text": "Relational",
+        "correct": true,
+        "why": "Right. Each fact is stored once, and the order is rebuilt from orders, order_lines, customers and products."
+      },
+      {
+        "text": "Graph",
+        "correct": false,
+        "why": "A graph follows the links stored beside each node; it does not join tables."
+      },
+      {
+        "text": "Document, because the customer lives elsewhere",
+        "correct": false,
+        "why": "The order itself, lines included, came back from one document; the customer's city would be a second read, not a join."
+      }
+    ]
+  },
+  {
+    "id": "ex-13cn2hx7",
+    "version": 1,
+    "section": "document",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson store `unit_price` as `Decimal128(\"39.90\")` rather than as the number 39.90?",
+    "choices": [
+      {
+        "text": "Because MongoDB refuses numbers with a fractional part",
+        "correct": false,
+        "why": "It accepts them, as binary floating-point doubles, which is the problem."
+      },
+      {
+        "text": "Because a decimal type sorts faster in an index",
+        "correct": false,
+        "why": "Speed is not the reason given; exactness is."
+      },
+      {
+        "text": "Because 39.90 has no exact binary floating-point form",
+        "correct": true,
+        "why": "Right. Decimal128 keeps decimal digits, so 268.80 is stored as typed."
+      },
+      {
+        "text": "Because Redis and Cassandra need the same type to read it",
+        "correct": false,
+        "why": "Each store keeps its own copy in its own types; none reads MongoDB's."
+      }
+    ]
+  },
+  {
+    "id": "ex-7299eh8j",
+    "version": 1,
+    "section": "document",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`findOne({ _id: 1001 })` returned the customer, the date, both lines and the total. Why was no join needed?",
+    "choices": [
+      {
+        "text": "Because mongosh joins collections on the client, out of sight",
+        "correct": false,
+        "why": "There was only one collection involved; nothing was joined anywhere."
+      },
+      {
+        "text": "Because the lines were written inside the order",
+        "correct": true,
+        "why": "Right. The unit stored is the unit read: one document, one lookup."
+      },
+      {
+        "text": "Because `_id` is indexed and the index stores the whole document",
+        "correct": false,
+        "why": "The index finds the document; it is the document that holds the lines."
+      },
+      {
+        "text": "Because MongoDB has no way to relate two collections",
+        "correct": false,
+        "why": "It has one, `$lookup`, in lesson 8; it was simply not needed here."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8c1zgkv",
+    "version": 1,
+    "section": "document",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `orders` collection grows to two million documents with no index besides `_id`. What does `find({ \"lines.sku\": \"MS-204\" })` do?",
+    "hint": "Seeing inside is not the same as being fast inside.",
+    "choices": [
+      {
+        "text": "It is refused until an index on `lines.sku` exists",
+        "correct": false,
+        "why": "MongoDB runs it; refusing a scan is Cassandra's habit, not MongoDB's."
+      },
+      {
+        "text": "It reads every document and returns the matching ones",
+        "correct": true,
+        "why": "Right. The answer is correct and the cost grows with the collection, until lesson 7's index."
+      },
+      {
+        "text": "It looks only at the first line of each order, since arrays are not searched",
+        "correct": false,
+        "why": "The query matched order 1001 by its second line, the mouse."
+      },
+      {
+        "text": "It returns an error, because nested fields need `$lookup`",
+        "correct": false,
+        "why": "Dot notation reaches nested fields directly; `$lookup` joins collections."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4zt2395",
+    "version": 1,
+    "section": "document",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana ordered at 10:22 in São Paulo, and `findOne` showed `13:22:00.000Z`, because MongoDB stores dates in ___.",
+    "hint": "The Z at the end names it.",
+    "blanks": [
+      {
+        "accept": [
+          "UTC"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0gwsfm8d",
+    "version": 1,
+    "section": "key-value",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order 1001 is stored with `SET` as JSON text. Why does `HGET order:1001 total` answer `WRONGTYPE`?",
+    "choices": [
+      {
+        "text": "Because the field is called `total` in the JSON but `TOTAL` in Redis's own hash",
+        "correct": false,
+        "why": "No field exists at all; to Redis the value is one string."
+      },
+      {
+        "text": "Because `HGET` only reads keys created in the same session",
+        "correct": false,
+        "why": "Keys do not belong to sessions."
+      },
+      {
+        "text": "Because JSON has to be stored with a JSON-specific command",
+        "correct": false,
+        "why": "Plain Redis has no JSON type; the lesson's point is that the text is opaque either way."
+      },
+      {
+        "text": "Because the value is a string, and the server never read the JSON in it",
+        "correct": true,
+        "why": "Right. `TYPE` said `string`; fields are something a hash has."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1hx0935",
+    "version": 1,
+    "section": "key-value",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a key-value design, how is \"every order over 500 reais\" usually answered?",
+    "choices": [
+      {
+        "text": "By a second structure written with each order and holding the answer",
+        "correct": true,
+        "why": "Right: a sorted set of order ids scored by total, for example, kept in step with the orders."
+      },
+      {
+        "text": "By a `GET` with a condition on the value, like a `WHERE` clause",
+        "correct": false,
+        "why": "No Redis command takes a condition on a value."
+      },
+      {
+        "text": "By an index the server builds on the totals as each order arrives",
+        "correct": false,
+        "why": "The server does not know there is a total; it holds bytes."
+      },
+      {
+        "text": "By asking for keys whose name matches `order:*` and a price",
+        "correct": false,
+        "why": "A pattern matches key names, and the total is not in the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a666ers",
+    "version": 1,
+    "section": "key-value",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop wants Redis itself to keep a running sum of a customer's spending, exact to the cent. Which way of storing it does that?",
+    "hint": "What type does Redis keep values in, and which command adds exactly?",
+    "choices": [
+      {
+        "text": "Text like \"268.80\", added with `HINCRBYFLOAT`",
+        "correct": false,
+        "why": "That arithmetic is floating point, and a sum of many prices drifts away from the cents."
+      },
+      {
+        "text": "Integer cents, like 26880, added with `HINCRBY`, which adds whole numbers exactly",
+        "correct": true,
+        "why": "Right. Integer addition is exact, and the application divides by 100 to show it."
+      },
+      {
+        "text": "A `Decimal128` field inside a hash",
+        "correct": false,
+        "why": "That is MongoDB's type; Redis keeps every value as a string."
+      },
+      {
+        "text": "A JSON string with the total inside, rewritten after each order",
+        "correct": false,
+        "why": "Then the application does the sum, not Redis, and two writers can overwrite each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-njsytyf0",
+    "version": 1,
+    "section": "key-value",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of a Redis hash, as the transcript showed it? Choose all that apply.",
+    "choices": [
+      {
+        "text": "One field can be read without reading the others",
+        "correct": true,
+        "why": "Right: `HGET order:1001 total` returned the total alone."
+      },
+      {
+        "text": "A field can hold another hash, so the order lines nest inside",
+        "correct": false,
+        "why": "A hash is one level deep; the lines went in as JSON text."
+      },
+      {
+        "text": "Every value comes back as a string, the total included",
+        "correct": true,
+        "why": "Right: `\"268.80\"`, in quotes."
+      },
+      {
+        "text": "The server can return every hash whose total is over 500",
+        "correct": false,
+        "why": "There is still no query by value; the key is the only way in."
+      }
+    ]
+  },
+  {
+    "id": "ex-mk5v6wwk",
+    "version": 1,
+    "section": "wide-column",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does \"wide column\" describe in Cassandra?",
+    "choices": [
+      {
+        "text": "Rows grouped into partitions by a key and kept sorted inside each one",
+        "correct": true,
+        "why": "Right. A partition of many rows is the \"wide\" in the name."
+      },
+      {
+        "text": "Tables allowed to have thousands of columns",
+        "correct": false,
+        "why": "The name suggests it; the model is about rows in partitions."
+      },
+      {
+        "text": "Each column of a table in its own file, as analytics engines do",
+        "correct": false,
+        "why": "That is column-oriented storage, a different idea."
+      },
+      {
+        "text": "Columns wide enough to store whole JSON documents",
+        "correct": false,
+        "why": "Width of a value has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-981cmsqr",
+    "version": 1,
+    "section": "wide-column",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `PRIMARY KEY ((customer), ordered_at, sku)`, what decides which node holds a row?",
+    "choices": [
+      {
+        "text": "`ordered_at`, so that each day lands on its own node",
+        "correct": false,
+        "why": "`ordered_at` is a clustering column: it orders rows inside the partition."
+      },
+      {
+        "text": "The three columns, taken together as one key",
+        "correct": false,
+        "why": "Together they make a row unique; only the part in the inner parentheses places it."
+      },
+      {
+        "text": "`customer`, the partition key",
+        "correct": true,
+        "why": "Right. Every row for one customer lives in the same partition, on the same nodes."
+      },
+      {
+        "text": "`sku`, since products are spread evenly",
+        "correct": false,
+        "why": "`sku` is the last clustering column; it orders lines within one date."
+      }
+    ]
+  },
+  {
+    "id": "ex-gvyzvmaq",
+    "version": 1,
+    "section": "wide-column",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's three rows came back with the August keyboard first, though the `SELECT` had no `ORDER BY`. Why?",
+    "choices": [
+      {
+        "text": "Because the keyboard row was inserted last",
+        "correct": false,
+        "why": "Insertion order does not decide it; it was inserted third and came back first."
+      },
+      {
+        "text": "Because rows are stored sorted by their clustering columns, ordered_at then sku",
+        "correct": true,
+        "why": "Right. The order in the partition is the order on disk."
+      },
+      {
+        "text": "Because cqlsh sorts every result alphabetically",
+        "correct": false,
+        "why": "By SKU alphabetically, CB-012 would come before KB-101; it did not."
+      },
+      {
+        "text": "By chance, since a single node returns rows in no particular order",
+        "correct": false,
+        "why": "Inside a partition the order is defined, and lesson 3 relies on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rh66xjw",
+    "version": 1,
+    "section": "wide-column",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer adds `ALLOW FILTERING` to the \"lines over 500\" query because it worked instantly in the lab. What happens on a cluster with millions of partitions?",
+    "choices": [
+      {
+        "text": "The same: the filter uses the clustering order",
+        "correct": false,
+        "why": "`unit_price` is not a key column, so no order helps."
+      },
+      {
+        "text": "Cassandra builds an index on first use and reuses it",
+        "correct": false,
+        "why": "Nothing is built; every run scans."
+      },
+      {
+        "text": "It scans every node to return a few rows",
+        "correct": true,
+        "why": "Right. The usual fix is a second table whose partition key is the question."
+      },
+      {
+        "text": "It is refused again, since the clause only works on one node",
+        "correct": false,
+        "why": "It runs; that is the danger. The refusal was the warning."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2enjme7",
+    "version": 1,
+    "section": "graph-and-time-series",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these questions is the sign that a graph store is the right tool?",
+    "choices": [
+      {
+        "text": "What was the total of all orders placed in September, across all customers?",
+        "correct": false,
+        "why": "A sum over everything is a scan in any store, and a graph store is not the fast one at it."
+      },
+      {
+        "text": "What did order 1001 contain?",
+        "correct": false,
+        "why": "One aggregate by its id is a document or key-value read."
+      },
+      {
+        "text": "What was the checkout's response time last Tuesday afternoon, minute by minute?",
+        "correct": false,
+        "why": "Measurements over an interval are time series."
+      },
+      {
+        "text": "How are these two accounts connected, through any number of shared cards?",
+        "correct": true,
+        "why": "Right. A path of unknown length is what a graph store follows cheaply."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqectcbt",
+    "version": 1,
+    "section": "graph-and-time-series",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The checkout's response time is sampled every ten seconds on each of three servers. How many points does that add in one day?",
+    "hint": "One server gives 8,640.",
+    "value": 25920,
+    "tolerance": 0,
+    "unit": "points"
+  },
+  {
+    "id": "ex-dta2mdmy",
+    "version": 1,
+    "section": "graph-and-time-series",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is TimescaleDB, as the lesson describes it?",
+    "choices": [
+      {
+        "text": "A metrics collector that asks each service for its numbers at an interval",
+        "correct": false,
+        "why": "That describes Prometheus."
+      },
+      {
+        "text": "A Postgres extension for time-partitioned data",
+        "correct": true,
+        "why": "Right. Tables stay tables and SQL stays SQL."
+      },
+      {
+        "text": "A graph database queried in Cypher",
+        "correct": false,
+        "why": "That is Neo4j."
+      },
+      {
+        "text": "A fork of Redis made after its 2024 licence change",
+        "correct": false,
+        "why": "That is Valkey."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hpyg400",
+    "version": 1,
+    "section": "graph-and-time-series",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of one time-series point in order, from first to last.",
+    "items": [
+      "Appended with the current time",
+      "Read at full resolution in recent ranges",
+      "Rolled up into one-minute averages",
+      "Deleted by the retention policy"
+    ],
+    "trap": "A point is almost never changed once written."
+  },
+  {
+    "id": "ex-znbt5jpc",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the family built to answer it.",
+    "hint": "One description fits none of them.",
+    "pairs": [
+      {
+        "left": "Give me the value filed under this name",
+        "right": "key-value"
+      },
+      {
+        "left": "Give me this whole order, lines and all",
+        "right": "document"
+      },
+      {
+        "left": "Give me this customer's rows, in date order",
+        "right": "wide column"
+      },
+      {
+        "left": "What is connected to this account, and through what?",
+        "right": "graph"
+      }
+    ],
+    "right_distractors": [
+      "column-oriented storage"
+    ]
+  },
+  {
+    "id": "ex-wdh9s53v",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service records every sign-in of every account, and the only question ever asked is an account's last 50 sign-ins, newest first. Which shape fits best?",
+    "hint": "Is it measurements to aggregate, or rows to fetch for one key?",
+    "choices": [
+      {
+        "text": "A time-series store, because every sign-in has a timestamp",
+        "correct": false,
+        "why": "A timestamp alone does not make a time series: nothing is aggregated or downsampled, and the question is per account."
+      },
+      {
+        "text": "A graph store, since accounts are linked to their sign-ins",
+        "correct": false,
+        "why": "There is one hop and no path to follow."
+      },
+      {
+        "text": "A wide-column table partitioned by account, clustered by time",
+        "correct": true,
+        "why": "Right. One partition per account, rows already sorted; the question is one slice."
+      },
+      {
+        "text": "A key-value store holding one string per account with every sign-in appended to it",
+        "correct": false,
+        "why": "The value grows without bound and has to be read whole to find the last 50."
+      }
+    ]
+  }
+]

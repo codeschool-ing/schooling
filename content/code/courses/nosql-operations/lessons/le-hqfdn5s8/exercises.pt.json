@@ -1,0 +1,387 @@
+{
+  "ex-q52rj1cw": {
+    "prompt": "Um Redis iniciado sem opções chega ao limite de memória da máquina. O que acontece?",
+    "choices": [
+      {
+        "text": "Ele despeja as chaves usadas há mais tempo",
+        "why": "Sem `maxmemory` não há teto em que despejar."
+      },
+      {
+        "text": "Ele recusa escritas com um erro `OOM`",
+        "why": "Isso precisa de um `maxmemory` com que comparar; o padrão é 0, sem limite."
+      },
+      {
+        "text": "Cresce até o kernel matá-lo",
+        "why": "Isso. `maxmemory 0` quer dizer sem limite dentro do Redis, então o único limite é o da máquina."
+      },
+      {
+        "text": "Ele move as chaves mais antigas para o disco e segue",
+        "why": "O Redis nunca manda chaves para o disco por conta própria; persistência é cópia, não transbordo."
+      }
+    ]
+  },
+  "ex-664rn2cg": {
+    "prompt": "Sob `noeviction`, uma instância cheia recusa `SET product:KB-101 34990`. Qual destes comandos ainda funciona?",
+    "choices": [
+      {
+        "text": "`SADD tag:office KB-101`",
+        "why": "Ele poderia acrescentar dados, então é recusado como o `SET`."
+      },
+      {
+        "text": "`DEL page:1`",
+        "why": "Isso. Ele libera memória, então o Redis o permite; leituras também funcionam."
+      },
+      {
+        "text": "`LPUSH viewed:ana MN-330`",
+        "why": "Um push acrescenta um elemento; recusado."
+      },
+      {
+        "text": "`INCR visits` numa chave que ainda não existe",
+        "why": "Ele criaria uma chave; recusado."
+      }
+    ]
+  },
+  "ex-jjrdtynj": {
+    "prompt": "Um contêiner Redis roda com `docker run --memory 1g` e `maxmemory 1gb`. Sob carga, ele some com código de saída 137 em vez de responder erros `OOM`. Por quê?",
+    "hint": "O que o `maxmemory` conta?",
+    "choices": [
+      {
+        "text": "Buffers e a cópia de um fork vêm por cima dos dados, e o kernel age antes",
+        "why": "Isso. Ponha o `maxmemory` bem abaixo do limite do contêiner."
+      },
+      {
+        "text": "Saída 137 é como o Redis informa `OOM` ao Docker quando uma escrita é recusada no teto",
+        "why": "137 é um processo morto pelo sinal 9; o `OOM` do Redis é um erro para o cliente, e o processo continua vivo."
+      },
+      {
+        "text": "As unidades diferem: `1g` no Docker é maior que `1gb` no Redis, então os limites nunca bateram",
+        "why": "Se algo, a do Docker é a maior; o que importa é o que o `maxmemory` deixa de fora."
+      },
+      {
+        "text": "O `noeviction` derruba o Redis quando ele enche",
+        "why": "Ele recusa escritas e continua rodando, como a captura da aula mostra."
+      }
+    ]
+  },
+  "ex-szqkq8jb": {
+    "prompt": "Sob `allkeys-random`, a mesma carga perdeu produtos que o `allkeys-lru` manteve. Por quê?",
+    "choices": [
+      {
+        "text": "Uma escolha ao acaso dá a um produto lido milhares de vezes a mesma chance de uma página que ninguém lê",
+        "why": "Isso. O LRU usa as leituras; o acaso as ignora."
+      },
+      {
+        "text": "O `allkeys-random` despeja mais chaves no total",
+        "why": "Os três despejaram mais ou menos o mesmo número; só a escolha mudou."
+      },
+      {
+        "text": "Produtos são maiores que páginas, e a escolha ao acaso prefere chaves grandes porque liberam mais memória de uma vez",
+        "why": "Os produtos têm poucos bytes, e o acaso ignora o tamanho."
+      },
+      {
+        "text": "O acaso despeja as chaves mais novas, e os produtos foram gravados por último",
+        "why": "Os produtos foram gravados primeiro, e o acaso ignora a idade."
+      }
+    ]
+  },
+  "ex-2pvapgnj": {
+    "prompt": "Associe cada política às chaves que pode despejar e a como escolhe uma.",
+    "hint": "Uma descrição não serve para nenhuma.",
+    "pairs": [
+      {
+        "left": "`allkeys-lru`",
+        "right": "qualquer chave, a usada há mais tempo"
+      },
+      {
+        "left": "`allkeys-lfu`",
+        "right": "qualquer chave, a usada com menos frequência"
+      },
+      {
+        "left": "`volatile-ttl`",
+        "right": "só chaves com expiração, a mais perto de expirar"
+      },
+      {
+        "left": "`noeviction`",
+        "right": "nenhuma: as escritas são recusadas"
+      }
+    ],
+    "right_distractors": [
+      "qualquer chave, a maior primeiro"
+    ]
+  },
+  "ex-58wrce89": {
+    "prompt": "Toda noite às 03:00 um relatório lê uma vez cada página do cache. Toda manhã o cache fica lento até as chaves populares de produto serem refeitas. Que mudança resolve isso?",
+    "hint": "O que uma leitura faz com a ideia que cada política tem de uma chave?",
+    "choices": [
+      {
+        "text": "Trocar `allkeys-lru` por `allkeys-lfu`, que uma passada só quase não altera",
+        "why": "Isso. Sob LRU a passada torna toda página recente; sob LFU os contadores dos produtos continuam ganhando."
+      },
+      {
+        "text": "Trocar por `allkeys-random`, para as leituras do relatório não contarem",
+        "why": "O acaso ignora o relatório, e também todas as leituras que os produtos já tiveram."
+      },
+      {
+        "text": "Subir o `maxmemory-samples` de 5 para 10",
+        "why": "Uma amostragem melhor do LRU ainda despeja pela recência, e as páginas são as recentes."
+      },
+      {
+        "text": "Trocar por `noeviction`, para nada ser empurrado para fora",
+        "why": "Aí o cache recusa entradas novas quando enche, o que é pior para um cache."
+      }
+    ]
+  },
+  "ex-jtnct84d": {
+    "prompt": "O Redis despeja amostrando algumas chaves e despejando a melhor candidata entre elas. Quantas chaves ele amostra por padrão?",
+    "hint": "`maxmemory-samples`."
+  },
+  "ex-k78gm3ny": {
+    "prompt": "Uma instância roda `volatile-lru`. Ela está cheia, o `evicted_keys` é 0 e as escritas falham com `OOM`. Qual a causa mais provável?",
+    "choices": [
+      {
+        "text": "O `volatile-lru` só despeja quando o `maxmemory-samples` passa de 5",
+        "why": "A amostragem decide qual candidata, não se o despejo acontece."
+      },
+      {
+        "text": "Nenhuma chave que a enche tem expiração, então nenhuma é candidata",
+        "why": "Isso, e o Redis recusa escritas como faria o `noeviction`. A execução da aula recusou milhares de escritas sem despejar nada."
+      },
+      {
+        "text": "As chaves são lidas com frequência demais para contarem como usadas há mais tempo",
+        "why": "Sempre há uma usada há mais tempo; o problema é que nada é elegível."
+      },
+      {
+        "text": "O `volatile-lru` precisa que a instância tenha persistência ligada",
+        "why": "Despejo e persistência são configurações independentes."
+      }
+    ]
+  },
+  "ex-f2dmc6de": {
+    "prompt": "Um Redis guarda páginas renderizadas e os contadores de estoque da loja, sob `allkeys-lru`. Qual é o risco?",
+    "choices": [
+      {
+        "text": "Escritas de páginas novas são recusadas quando ele enche",
+        "why": "O `allkeys-lru` despeja em vez de recusar."
+      },
+      {
+        "text": "Um contador de estoque que ninguém leu por um tempo é despejado, em silêncio",
+        "why": "Isso. Toda chave é candidata, e um registro despejado é um registro perdido sem erro nenhum."
+      },
+      {
+        "text": "Páginas nunca são despejadas por serem maiores",
+        "why": "O tamanho não conta; a recência sim."
+      },
+      {
+        "text": "Os contadores perdem a expiração quando uma página é despejada",
+        "why": "Despejar uma chave não faz nada com outra."
+      }
+    ]
+  },
+  "ex-56m8eqpv": {
+    "prompt": "Que configurações cabem num Redis que guarda só cópias que a aplicação consegue refazer?",
+    "choices": [
+      {
+        "text": "`noeviction` com snapshots e arquivo append-only",
+        "why": "Essa é a coluna do banco: recusa quando enche e salva o que ninguém quer de volta."
+      },
+      {
+        "text": "`volatile-ttl` com o arquivo append-only",
+        "why": "Funciona só se toda chave tiver expiração, e o log salva cópias à toa."
+      },
+      {
+        "text": "`allkeys-lru` ou `allkeys-lfu`, e sem persistência",
+        "why": "Isso. Qualquer chave pode sair, e um reinício começa vazio e se enche de novo."
+      },
+      {
+        "text": "`allkeys-random` com snapshots a cada minuto",
+        "why": "O acaso joga fora chaves populares, e os snapshots custam forks por cópias."
+      }
+    ]
+  },
+  "ex-19cj2jyy": {
+    "prompt": "Uma equipe mantém uma instância sob `volatile-lru` para páginas de cache e registros. Quais destas condições precisam valer para isso funcionar? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Toda escrita de cache, em todo serviço, define uma expiração",
+        "why": "Isso. Uma chave de cache sem expiração enche a memória e nunca pode ser despejada."
+      },
+      {
+        "text": "Nenhum registro recebe expiração, nem por acidente",
+        "why": "Isso. Um registro com expiração vira candidato ao despejo."
+      },
+      {
+        "text": "A instância tem o arquivo append-only ligado",
+        "why": "Persistência é uma questão separada do que pode ser despejado."
+      },
+      {
+        "text": "O `maxmemory-samples` é elevado para 10",
+        "why": "A amostragem ajusta a precisão; não decide o que é elegível."
+      },
+      {
+        "text": "Um `SET` simples nunca é usado para atualizar uma chave de cache",
+        "why": "Isso. A aula 12 mostrou que ele remove a expiração."
+      }
+    ]
+  },
+  "ex-pwgs6xjn": {
+    "prompt": "`TTL cart:nobody` responde `-2`. O que isso quer dizer?",
+    "choices": [
+      {
+        "text": "A chave existe e nunca expira",
+        "why": "Isso é `-1`."
+      },
+      {
+        "text": "A chave expirou há dois segundos",
+        "why": "Respostas negativas são códigos, não tempos."
+      },
+      {
+        "text": "A chave não existe",
+        "why": "Isso. `-1` é uma chave sem expiração; `-2` é nenhuma chave."
+      },
+      {
+        "text": "A chave tem expiração mas o Redis não consegue lê-la",
+        "why": "Esse estado não existe."
+      }
+    ]
+  },
+  "ex-ebqsz4ez": {
+    "prompt": "Um segundo depois de 200.000 chaves expirarem, o `DBSIZE` ainda contava muitas delas. Por quê?",
+    "choices": [
+      {
+        "text": "Elas saem quando tocadas ou amostradas, não no segundo em que expiram",
+        "why": "Isso. Até lá elas contam e ocupam memória; um `GET` responde `(nil)` e apaga na hora."
+      },
+      {
+        "text": "O `DBSIZE` é calculado uma vez por segundo e estava desatualizado",
+        "why": "Ele é exato no momento em que responde; as chaves estavam mesmo lá."
+      },
+      {
+        "text": "As chaves tinham sido tornadas persistentes pelo `EVAL`, que não põe expiração nas chaves que grava",
+        "why": "Toda chave foi gravada com `EX 1`, e todas saíram."
+      },
+      {
+        "text": "A expiração espera o próximo snapshot",
+        "why": "Snapshots não têm nada a ver com expiração."
+      }
+    ]
+  },
+  "ex-dkcyyy40": {
+    "prompt": "Um serviço de login dá a toda sessão exatamente `EX 3600`, e um e-mail de marketing traz 500.000 logins em dez minutos. O que a aula sugere, e por quê?",
+    "choices": [
+      {
+        "text": "Encurtar a expiração para 600, para as sessões saírem antes",
+        "why": "Elas continuariam expirando juntas, só que antes, e derrubariam os usuários."
+      },
+      {
+        "text": "Somar alguns segundos aleatórios a cada `EX`",
+        "why": "Isso. Espalhadas, o ciclo ativo nunca tem um pico de chaves mortas para limpar de uma vez."
+      },
+      {
+        "text": "Ligar o `volatile-ttl`, para as sessões serem despejadas antes de expirar",
+        "why": "O despejo só roda no teto de memória; não espalha a expiração."
+      },
+      {
+        "text": "Nada: o Redis remove cada chave no segundo exato em que expira",
+        "why": "Não remove; o `DBSIZE` da aula ficou atrás da expiração."
+      }
+    ]
+  },
+  "ex-nq1xvpvh": {
+    "prompt": "Uma chave que existe mas não tem expiração responde ao `TTL` com ___.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ]
+      }
+    ]
+  },
+  "ex-n21dffne": {
+    "prompt": "Num cache, o `evicted_keys` sobe sem parar o dia todo. O que isso diz?",
+    "choices": [
+      {
+        "text": "A expiração está funcionando como planejado",
+        "why": "Isso é o `expired_keys`; despejo é outro contador."
+      },
+      {
+        "text": "O cache é pequeno demais para o que pedem que guarde",
+        "why": "Isso. Ele não para de empurrar chaves para fora para abrir espaço."
+      },
+      {
+        "text": "Chaves estão sendo apagadas pela aplicação com `DEL`",
+        "why": "O `DEL` não conta em nenhum dos dois contadores."
+      },
+      {
+        "text": "A persistência está falhando",
+        "why": "Isso aparece no `INFO persistence`, aula 13."
+      }
+    ]
+  },
+  "ex-67xtfdja": {
+    "prompt": "A política que mantém um pequeno contador de quantas vezes cada chave é usada, e despeja a de menor valor, é `allkeys-___`.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "lfu"
+        ]
+      }
+    ]
+  },
+  "ex-tr2ehrnh": {
+    "prompt": "Sob `noeviction` com teto de 4 MB, a aula mandou 20.000 escritas de página e 17.668 responderam `OK`. Quantas foram recusadas?"
+  },
+  "ex-ep89trbw": {
+    "prompt": "Um Redis que é a única cópia dos contadores de estoque da loja chega ao teto. Que política mantém todo contador, e o que a aplicação vê?",
+    "choices": [
+      {
+        "text": "`allkeys-lfu`; nada, porque contadores populares sobrevivem",
+        "why": "Um contador impopular ainda é despejado, e é um registro que não existe em mais lugar nenhum."
+      },
+      {
+        "text": "`noeviction`; erros `OOM` nas escritas novas, que acionam alguém",
+        "why": "Isso. Um banco recusa em vez de esquecer."
+      },
+      {
+        "text": "`volatile-ttl`; nada, porque contadores não têm expiração",
+        "why": "Sem candidatas ele também recusa escritas, e o nome promete um despejo que nunca acontece."
+      },
+      {
+        "text": "`allkeys-random`; contadores faltando de vez em quando, refeitos a partir do cache",
+        "why": "Não há de onde refazê-los; esta é a única cópia."
+      }
+    ]
+  },
+  "ex-k99safwj": {
+    "prompt": "Uma instância cheia sob `volatile-lru` recebe um `SET`. Ponha em ordem o que o Redis faz.",
+    "items": [
+      "Comparar a memória usada com o `maxmemory`",
+      "Amostrar chaves que têm expiração",
+      "Despejar a usada há mais tempo da amostra",
+      "Executar o `SET`"
+    ],
+    "trap": "O espaço é aberto antes de o comando rodar."
+  },
+  "ex-dt4jp821": {
+    "prompt": "As chaves de idempotência da loja (`SET … NX EX 86400`) ficam no mesmo Redis que o cache de páginas, sob `volatile-ttl`. O que pode acontecer quando ele enche?",
+    "hint": "As chaves de idempotência têm expiração?",
+    "choices": [
+      {
+        "text": "Nada: chaves de idempotência nunca são candidatas",
+        "why": "Elas foram gravadas com `EX`, então sob `volatile-` são candidatas como as páginas."
+      },
+      {
+        "text": "As escritas são recusadas, porque as chaves têm expiração",
+        "why": "Chaves com expiração são o que o `volatile-` despeja; a recusa vem quando não há nenhuma."
+      },
+      {
+        "text": "Uma chave de idempotência é despejada antes da hora, e um pagamento repetido é cobrado duas vezes",
+        "why": "Isso. Páginas com menos tempo saem primeiro, mas elas são registros com expiração, então a política as trata como cache quando as páginas acabam."
+      },
+      {
+        "text": "As páginas saem primeiro porque são maiores",
+        "why": "O `volatile-ttl` escolhe pelo tempo que falta, não pelo tamanho; uma página com uma hora sai depois de uma chave com menos."
+      }
+    ]
+  }
+}

@@ -1,0 +1,641 @@
+[
+ {
+  "id": "ex-58fbfgxn",
+  "version": 1,
+  "section": "concurrency-and-parallelism",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In models.py, four threads built the four overdue reports. Why were they no faster than one thread?",
+  "choices": [
+   {
+    "text": "Creating four threads cost more than the reports themselves",
+    "correct": false,
+    "why": "Starting a thread takes microseconds; the reports took over a second."
+   },
+   {
+    "text": "The GIL let one of them run Python at a time",
+    "correct": true,
+    "why": "Right. Arithmetic holds the interpreter lock, so the threads took turns on one core."
+   },
+   {
+    "text": "The laptop had only one core for the four of them to share",
+    "correct": false,
+    "why": "It had four, and the four processes used them: the same work took about a third of the time."
+   },
+   {
+    "text": "ThreadPoolExecutor runs the jobs one after another unless told otherwise",
+    "correct": false,
+    "why": "The same pool overlapped the four lookups, finishing them in a quarter of the time."
+   }
+  ]
+ },
+ {
+  "id": "ex-kq5xt033",
+  "version": 1,
+  "section": "concurrency-and-parallelism",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "On the ordinary CPython build, only one thread at a time runs Python bytecode, because of the global interpreter ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "lock"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-yqx795na",
+  "version": 1,
+  "section": "concurrency-and-parallelism",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In asyncio, where can another task start running in the middle of your coroutine?",
+  "choices": [
+   {
+    "text": "Between any two bytecodes, as with threads",
+    "correct": false,
+    "why": "That is the threading row of the table; asyncio has one thread and does not preempt it."
+   },
+   {
+    "text": "Every few milliseconds, when the event loop decides the coroutine has run for long enough",
+    "correct": false,
+    "why": "The loop never takes control back by itself; a coroutine that never awaits blocks everything else."
+   },
+   {
+    "text": "Only at an await",
+    "correct": true,
+    "why": "Right. The switch points are written in the code, which is what makes asyncio cooperative."
+   }
+  ]
+ },
+ {
+  "id": "ex-wbyhht4q",
+  "version": 1,
+  "section": "race-conditions",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The counter stands at 10. Three desks each run record() from race.py, and all three read the counter before any of them writes. How many of the three loans are lost?",
+  "hint": "Each desk writes the value it read, plus one.",
+  "value": 2,
+  "tolerance": 0,
+  "unit": "loans"
+ },
+ {
+  "id": "ex-198zdrx7",
+  "version": 1,
+  "section": "race-conditions",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "plus_equals.py lost no updates in four million. What does that run show about counter.issued += 1?",
+  "choices": [
+   {
+    "text": "That += is a single atomic operation in Python",
+    "correct": false,
+    "why": "It is still a read, an addition and a write; 3.12 happens not to switch between them."
+   },
+   {
+    "text": "Only that the window was not hit in that run on 3.12",
+    "correct": true,
+    "why": "Right. Nothing in the language promises it, and the free-threaded build or an extra call reopens it."
+   },
+   {
+    "text": "That the GIL protects any program's shared data from races",
+    "correct": false,
+    "why": "race.py ran under the same GIL and lost three quarters of its updates."
+   },
+   {
+    "text": "That a million iterations is too few to show a race",
+    "correct": false,
+    "why": "race.py showed one in four thousand; the count of iterations is not what decides it."
+   }
+  ]
+ },
+ {
+  "id": "ex-9qnxh7ea",
+  "version": 1,
+  "section": "race-conditions",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Two threads read the same list of loans, and neither ever changes it. Is there a race?",
+  "choices": [
+   {
+    "text": "No: with no writer, there is nothing to interleave badly",
+    "correct": true,
+    "why": "Right. A race needs shared state, at least one writer and a non-atomic step; this has no writer."
+   },
+   {
+    "text": "Yes, because the list is shared between two threads",
+    "correct": false,
+    "why": "Sharing alone is not enough; reading the same unchanging list in any order gives the same answer."
+   },
+   {
+    "text": "Yes, unless each thread is given its own copy of the list before it starts",
+    "correct": false,
+    "why": "Copies would also be safe, and they are not needed; the list already cannot change under either reader."
+   }
+  ]
+ },
+ {
+  "id": "ex-atdjwayv",
+  "version": 1,
+  "section": "locks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does locks.py create the lock inside LoanCounter rather than asking each desk to take one?",
+  "choices": [
+   {
+    "text": "A lock created outside a class cannot be used with a with statement",
+    "correct": false,
+    "why": "Any Lock works with with, wherever it was made."
+   },
+   {
+    "text": "So taking it is not something a caller has to remember",
+    "correct": true,
+    "why": "Right. The lock sits next to the state it guards, which is lesson 1's encapsulation doing a new job."
+   },
+   {
+    "text": "Inside the class it makes record() run in parallel on all four cores",
+    "correct": false,
+    "why": "A lock does the opposite: it lets one thread at a time through those steps."
+   }
+  ]
+ },
+ {
+  "id": "ex-qwcf1ekn",
+  "version": 1,
+  "section": "locks",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What makes the second deadlock.py unable to deadlock?",
+  "choices": [
+   {
+    "text": "The timeout on the second lock, which breaks the wait after a second",
+    "correct": false,
+    "why": "The first version had the same timeout and still deadlocked until it fired."
+   },
+   {
+    "text": "Using an RLock, so each thread can take its own lock twice",
+    "correct": false,
+    "why": "Both versions use a plain Lock, and the deadlock was between two threads, not one thread and itself."
+   },
+   {
+    "text": "Both swaps take the locks in member-number order",
+    "correct": true,
+    "why": "Right. With one agreed order the cycle of waiting cannot form."
+   },
+   {
+    "text": "Sorting the log, so the lines no longer depend on which thread wrote first",
+    "correct": false,
+    "why": "Both versions sort the log; that only fixes the order of the printed lines."
+   }
+  ]
+ },
+ {
+  "id": "ex-mnn0egsm",
+  "version": 1,
+  "section": "locks",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the first deadlock.py, what would have happened without timeout=1?",
+  "choices": [
+   {
+    "text": "Python would raise a DeadlockError after a few seconds",
+    "correct": false,
+    "why": "Python has no such error; nothing notices a cycle of plain locks."
+   },
+   {
+    "text": "Both threads would wait forever, printing nothing",
+    "correct": true,
+    "why": "Right. A deadlocked program uses no processor and looks exactly like one that is thinking."
+   },
+   {
+    "text": "One swap would finish and the other would be cancelled",
+    "correct": false,
+    "why": "That is what the timeout made happen; without it, nothing lets go."
+   }
+  ]
+ },
+ {
+  "id": "ex-njrtjjgm",
+  "version": 1,
+  "section": "singleton-under-threads",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first catalogue.py created four catalogues. What let that happen?",
+  "choices": [
+   {
+    "text": "Each thread imported its own copy of the module",
+    "correct": false,
+    "why": "A module is executed once per process; all four threads shared one _instance."
+   },
+   {
+    "text": "The global statement gives every thread a private _instance variable",
+    "correct": false,
+    "why": "global means the module's variable, the same one for every thread."
+   },
+   {
+    "text": "All four checked _instance before any constructor finished",
+    "correct": true,
+    "why": "Right. Check-then-act, with the whole slow constructor inside the gap."
+   }
+  ]
+ },
+ {
+  "id": "ex-831a09vj",
+  "version": 1,
+  "section": "singleton-under-threads",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In the fixed get_catalogue, why is _instance checked a second time inside the lock?",
+  "choices": [
+   {
+    "text": "A thread that waited at the lock may find a winner already built it",
+    "correct": true,
+    "why": "Right. Without the second check, each waiting thread would build its own after the first one left."
+   },
+   {
+    "text": "The first check could raise an error if _instance was never assigned",
+    "correct": false,
+    "why": "_instance is set to None at import, so the first check always has something to read."
+   },
+   {
+    "text": "To make the first check unnecessary, so it can be removed later",
+    "correct": false,
+    "why": "The first check is what spares every later caller the cost of locking; both stay."
+   },
+   {
+    "text": "Python reloads global variables each time a lock is acquired",
+    "correct": false,
+    "why": "Nothing is reloaded; the value may simply have changed while the thread waited."
+   }
+  ]
+ },
+ {
+  "id": "ex-j29mg2wh",
+  "version": 1,
+  "section": "singleton-under-threads",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is CATALOGUE = Catalogue() at the top of a module safe however many threads import it?",
+  "choices": [
+   {
+    "text": "Module-level objects are frozen by Python after the import finishes",
+    "correct": false,
+    "why": "Nothing is frozen; the object can still be changed. What is guaranteed is that it is built once."
+   },
+   {
+    "text": "The module body runs once, under the import system's own lock, before anyone gets it",
+    "correct": true,
+    "why": "Right. A second importer waits for the first and then gets the finished module."
+   },
+   {
+    "text": "The GIL stops other threads from running during any constructor",
+    "correct": false,
+    "why": "The first catalogue.py had four constructors running at once under the same GIL."
+   }
+  ]
+ },
+ {
+  "id": "ex-bpkhhv42",
+  "version": 1,
+  "section": "observer-under-threads",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the first observers.py, the statistics listener never received the event. Why?",
+  "choices": [
+   {
+    "text": "The e-mail listener raised an exception that stopped the loop",
+    "correct": false,
+    "why": "Nothing raised; the e-mail was recorded and the program ended normally."
+   },
+   {
+    "text": "A removal shifted the list under the loop, which then ran off its end",
+    "correct": true,
+    "why": "Right. The loop keeps a position; the statistics slid to position 1, which it had already passed."
+   },
+   {
+    "text": "Unsubscribing the fines desk also removed every listener after it",
+    "correct": false,
+    "why": "remove takes out one item; the e-mail and statistics listeners were still in the list."
+   }
+  ]
+ },
+ {
+  "id": "ex-r46rk7f9",
+  "version": 1,
+  "section": "observer-under-threads",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Why does the fixed publish copy the list under the lock and call the listeners after releasing it?",
+  "choices": [
+   {
+    "text": "Calling a function while holding a lock is forbidden by Python",
+    "correct": false,
+    "why": "Python allows it; the copy is a design choice, not a rule of the language."
+   },
+   {
+    "text": "Copying makes the listeners run in parallel on several cores",
+    "correct": false,
+    "why": "They still run one after another on the publisher's thread."
+   },
+   {
+    "text": "A listener could be slow, or subscribe from inside its callback and deadlock",
+    "correct": true,
+    "why": "Right. Hold a lock around your own data, never around a call into code you do not control."
+   },
+   {
+    "text": "The copy is faster to walk than the original list",
+    "correct": false,
+    "why": "Walking either list costs the same; the point is that nobody can change the copy."
+   }
+  ]
+ },
+ {
+  "id": "ex-1559ewnd",
+  "version": 1,
+  "section": "observer-under-threads",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "With the snapshot fix, a listener is unsubscribed while an event is being published. What can happen?",
+  "choices": [
+   {
+    "text": "It still receives that one event, since it was in the copy",
+    "correct": true,
+    "why": "Right. It was in the copy; the section names this cost, and only the listener can guard against it."
+   },
+   {
+    "text": "The publish raises RuntimeError, because the list changed size",
+    "correct": false,
+    "why": "The loop walks the copy, which did not change; that error belongs to dictionaries and sets."
+   },
+   {
+    "text": "The unsubscribe waits until every listener has been called",
+    "correct": false,
+    "why": "The lock is released before the calls, so unsubscribe goes through at once."
+   }
+  ]
+ },
+ {
+  "id": "ex-m39vgdrn",
+  "version": 1,
+  "section": "immutability-helps",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The rules change from 50 cents a day with no grace to 100 cents with 2 days' grace. A reader of the mutable dictionary sees the price changed and the grace not yet. What does it charge for 4 days late?",
+  "choices": [
+   {
+    "text": "200 cents, as under the old rules",
+    "correct": false,
+    "why": "The old rules would charge 200, but this reader is using the new price."
+   },
+   {
+    "text": "Nothing: reading a dictionary while another thread writes it raises an error",
+    "correct": false,
+    "why": "Only iterating over a dictionary while its size changes raises; reading two keys does not."
+   },
+   {
+    "text": "400 cents, which neither set of rules would charge",
+    "correct": true,
+    "why": "Right. 4 x 100 with no grace: a torn read, built from half of each rule set."
+   }
+  ]
+ },
+ {
+  "id": "ex-mksaeyk3",
+  "version": 1,
+  "section": "immutability-helps",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A frozen dataclass Shelf holds a field books: list[str]. Two threads share one Shelf. What does frozen=True guarantee?",
+  "choices": [
+   {
+    "text": "Nothing about the Shelf can change after it is built",
+    "correct": false,
+    "why": "Frozen is only as deep as the fields: the list inside can still be appended to."
+   },
+   {
+    "text": "The field cannot point at another list; the list itself can still change",
+    "correct": true,
+    "why": "Right. Use a tuple all the way down, or the lock comes back through the side door."
+   },
+   {
+    "text": "Appends to the list are made atomic by the dataclass",
+    "correct": false,
+    "why": "The dataclass does nothing to the list's methods; it only refuses assignment to its own fields."
+   },
+   {
+    "text": "Each thread gets its own copy of the list when it reads the field",
+    "correct": false,
+    "why": "Reading a field hands over the same list object to every reader."
+   }
+  ]
+ },
+ {
+  "id": "ex-14vym9tw",
+  "version": 1,
+  "section": "immutability-helps",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In Java, a thread publishes new frozen rules by assigning them to a plain field. What can go wrong?",
+  "choices": [
+   {
+    "text": "Another thread may keep reading the old rules and never see the new ones",
+    "correct": true,
+    "why": "Right. Java needs volatile or an AtomicReference to make the publication visible."
+   },
+   {
+    "text": "The rules object can be changed by the reading thread",
+    "correct": false,
+    "why": "The object is immutable in either language; the question is whether the new reference is seen."
+   },
+   {
+    "text": "The compiler rejects assignment to a field shared between threads",
+    "correct": false,
+    "why": "Java compiles it without complaint, which is exactly why the mistake is easy to make."
+   }
+  ]
+ },
+ {
+  "id": "ex-0eh0pxc5",
+  "version": 1,
+  "section": "choosing-a-model",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the ways of handling shared state in the order the section says to try them.",
+  "items": [
+   "Share nothing: each task has its own data",
+   "Share only immutable values, swapping a reference to publish",
+   "Confine each mutable thing to one owner and send it messages",
+   "Lock around your own data, briefly, in one agreed order"
+  ],
+  "trap": "Reaching for the lock first is the habit the section argues against: it is the only one whose correctness depends on every caller."
+ },
+ {
+  "id": "ex-7m21gz15",
+  "version": 1,
+  "section": "choosing-a-model",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each kind of work to the Python model the section suggests for it.",
+  "pairs": [
+   {
+    "left": "Thousands of open connections, mostly waiting",
+    "right": "asyncio"
+   },
+   {
+    "left": "Waiting through a library that blocks and has no async version",
+    "right": "ThreadPoolExecutor"
+   },
+   {
+    "left": "Independent pieces of heavy arithmetic",
+    "right": "ProcessPoolExecutor"
+   },
+   {
+    "left": "Long-lived state that many callers change",
+    "right": "an actor that owns it"
+   }
+  ]
+ },
+ {
+  "id": "ex-a2360s6g",
+  "version": 1,
+  "section": "choosing-a-model",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "An asyncio handler reads a member's loan count, awaits a database call, then writes count + 1. Two requests for the same member arrive together. What happens?",
+  "choices": [
+   {
+    "text": "Nothing can go wrong: asyncio runs on one thread",
+    "correct": false,
+    "why": "One thread removes the gaps you did not write, not the ones you did; the await is one."
+   },
+   {
+    "text": "One update can be lost, because the await is a gap between read and write",
+    "correct": true,
+    "why": "Right. It is race.py again, with the await in place of sleep(0)."
+   },
+   {
+    "text": "The event loop runs the second request after the first one finishes",
+    "correct": false,
+    "why": "The loop starts the second as soon as the first awaits; that is what await is for."
+   },
+   {
+    "text": "asyncio raises an error because two tasks touched the same value",
+    "correct": false,
+    "why": "Nothing watches for that; the lost update is as silent as it was with threads."
+   }
+  ]
+ },
+ {
+  "id": "ex-3drf4ykn",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these can lose or corrupt data when run by several threads at once? Choose all that apply.",
+  "choices": [
+   {
+    "text": "if isbn not in cache: cache[isbn] = fetch(isbn), with a slow fetch",
+    "correct": true,
+    "why": "Right. Check-then-act: two threads can both miss and both fetch, like the four catalogues."
+   },
+   {
+    "text": "Several threads reading one frozen FineRules object",
+    "correct": false,
+    "why": "No writer, nothing to race on: every reader sees the same complete value."
+   },
+   {
+    "text": "Updating a total by reading it, calling a function, and writing it back",
+    "correct": true,
+    "why": "Right. Read-modify-write with a gap in the middle, which is race.py."
+   },
+   {
+    "text": "Walking a list of listeners while another thread removes one",
+    "correct": true,
+    "why": "Right. A listener is skipped silently, as the statistics were."
+   }
+  ]
+ },
+ {
+  "id": "ex-54ehbhap",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team moves its Python service to the free-threaded build. Which program from this lesson is the most likely to start behaving differently?",
+  "choices": [
+   {
+    "text": "rules.py, because frozen dataclasses rely on the GIL",
+    "correct": false,
+    "why": "Frozen dataclasses refuse assignment in any build; immutability never needed the GIL."
+   },
+   {
+    "text": "locks.py, because a Lock no longer works without the GIL",
+    "correct": false,
+    "why": "A Lock is the tool that works the same in both builds; it never leaned on the GIL."
+   },
+   {
+    "text": "plus_equals.py",
+    "correct": true,
+    "why": "Right. Its safety was an accident of when 3.12 switches threads, and threads that truly run at once remove the accident."
+   },
+   {
+    "text": "models.py's waiting half, which would stop overlapping the lookups",
+    "correct": false,
+    "why": "Waiting overlapped under the GIL already; without it, the computing half is what changes."
+   }
+  ]
+ },
+ {
+  "id": "ex-dy4zbarm",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A swap must lock a member and a book, and other code locks a book and then a member. What is the simplest change that rules out a deadlock between them?",
+  "choices": [
+   {
+    "text": "Give every lock a timeout of one second",
+    "correct": false,
+    "why": "A timeout turns a permanent deadlock into a failed operation; the cycle can still form."
+   },
+   {
+    "text": "Agree that every code path takes the member's lock before the book's",
+    "correct": true,
+    "why": "Right. The same rule as sorting by member number: one order, so no cycle."
+   },
+   {
+    "text": "Replace both locks with RLocks",
+    "correct": false,
+    "why": "An RLock lets one thread take it twice; it does nothing for two threads waiting on each other."
+   }
+  ]
+ }
+]

@@ -1,0 +1,632 @@
+[
+  {
+    "id": "ex-d5r8b4kq",
+    "version": 1,
+    "section": "three-members",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a replica set have three members rather than two?",
+    "choices": [
+      {
+        "text": "So that any two of them are a majority that can still decide",
+        "correct": true,
+        "why": "Right. With two, a member that loses its partner cannot tell a crash from a cut cable, and one of two is not a majority."
+      },
+      {
+        "text": "So that reads can be spread over three machines",
+        "correct": false,
+        "why": "Reads go to the primary by default; the number three is about deciding, not about load."
+      },
+      {
+        "text": "Because each member stores a third of the data",
+        "correct": false,
+        "why": "Every member holds all of it. Splitting the data is sharding, lesson 10."
+      },
+      {
+        "text": "Because MongoDB refuses to start a set of two members at all",
+        "correct": false,
+        "why": "It allows it; it simply cannot survive losing either member."
+      }
+    ]
+  },
+  {
+    "id": "ex-4v9q491w",
+    "version": 1,
+    "section": "three-members",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The three containers were started with `--bind_ip_all`. What would happen without it?",
+    "choices": [
+      {
+        "text": "Each `mongod` would listen only on `127.0.0.1`, and the other members could not reach it",
+        "correct": true,
+        "why": "Right. Listening on localhost alone is the default, and a replica set talks over the network."
+      },
+      {
+        "text": "The containers would become reachable from the internet through the VM's own address",
+        "correct": false,
+        "why": "The option widens what mongod listens on inside the container; no port is published either way."
+      },
+      {
+        "text": "The member names would be container ids",
+        "correct": false,
+        "why": "That is what `--hostname` prevents."
+      },
+      {
+        "text": "`rs.initiate` would choose the primary at random instead of holding an election",
+        "correct": false,
+        "why": "The election happens either way; this option is about who can connect."
+      }
+    ]
+  },
+  {
+    "id": "ex-2aagxw2e",
+    "version": 1,
+    "section": "three-members",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `rs.initiate`, the prompt on `mongo1` said `rs0 [direct: secondary]`. A moment later it said `primary`. What happened in between?",
+    "choices": [
+      {
+        "text": "Every member starts as a secondary; `mongo1` won the first election",
+        "correct": true,
+        "why": "Right. Nobody is primary by being named first; the set elects one."
+      },
+      {
+        "text": "`mongo1` copied the data from the other two before it was allowed to lead",
+        "correct": false,
+        "why": "There was no data yet, and a primary is not made by copying."
+      },
+      {
+        "text": "`mongosh` silently reconnected to a different container of the set",
+        "correct": false,
+        "why": "`direct:` means the session stayed on `mongo1` throughout."
+      },
+      {
+        "text": "The prompt was wrong at first and corrected itself",
+        "correct": false,
+        "why": "It was right both times: the member's state changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dg1r3ac",
+    "version": 1,
+    "section": "oplog-and-write-concern",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a secondary copy from the primary?",
+    "choices": [
+      {
+        "text": "The data files, every few seconds",
+        "correct": false,
+        "why": "That is the obvious guess, and wrong: files are not shipped."
+      },
+      {
+        "text": "The entries of the oplog, applied in order",
+        "correct": true,
+        "why": "Right: `local.oplog.rs`, one entry per change."
+      },
+      {
+        "text": "The queries clients sent, which it runs again",
+        "correct": false,
+        "why": "It copies the changes those queries made, not the queries."
+      },
+      {
+        "text": "Only the documents that clients read from it",
+        "correct": false,
+        "why": "A secondary copies every change, whether anybody reads it or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-h27gzdns",
+    "version": 1,
+    "section": "oplog-and-write-concern",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With both secondaries frozen, an insert with `w: \"majority\", wtimeout: 3000` failed with `WriteConcernFailed`. What did `countDocuments()` show next, and why?",
+    "hint": "Does a write-concern error undo the write?",
+    "choices": [
+      {
+        "text": "The document was counted: the error is about the confirmation, not the write",
+        "correct": true,
+        "why": "Right. Three products, the monitor among them. The write sat on the primary with no promise attached."
+      },
+      {
+        "text": "It was not counted, because a failed write is rolled back at once",
+        "correct": false,
+        "why": "Nothing is undone by a write-concern error; that is what makes a blind retry dangerous."
+      },
+      {
+        "text": "It was counted twice, once per attempt",
+        "correct": false,
+        "why": "There was one attempt; the shell did not retry."
+      },
+      {
+        "text": "The count failed too, since the secondaries were locked",
+        "correct": false,
+        "why": "Reads on the primary are not affected by locks on the secondaries."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrhtfj0b",
+    "version": 1,
+    "section": "oplog-and-write-concern",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Nobody ever set a write concern on the lab's replica set. What does a plain `insertOne` wait for?",
+    "choices": [
+      {
+        "text": "The primary alone",
+        "correct": false,
+        "why": "That was the default before MongoDB 5.0. The capture shows `majority`."
+      },
+      {
+        "text": "A majority of the members, with no time limit",
+        "correct": true,
+        "why": "Right: `{ w: 'majority', wtimeout: 0 }`, source `implicit`."
+      },
+      {
+        "text": "All three members, for at most three seconds each time",
+        "correct": false,
+        "why": "Three seconds was the `wtimeout` the lesson chose for one insert; the default waits for a majority with no limit."
+      },
+      {
+        "text": "Nothing: an unset write concern is not acknowledged",
+        "correct": false,
+        "why": "Unacknowledged writes need `w: 0`, asked for explicitly."
+      }
+    ]
+  },
+  {
+    "id": "ex-scntjdm0",
+    "version": 1,
+    "section": "oplog-and-write-concern",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The oplog is a ___ collection: it has a fixed size, and the oldest entries are overwritten as new ones arrive.",
+    "hint": "One word, the English name for this kind of collection.",
+    "blanks": [
+      {
+        "accept": [
+          "capped"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6yf36gq7",
+    "version": 1,
+    "section": "election",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the capture, `mongo2` was killed at 07:55:23.101 and `mongo3` was elected at 07:55:31.752. For how many seconds was there no primary? Answer to two decimal places.",
+    "value": 8.65,
+    "tolerance": 0.01,
+    "unit": "s"
+  },
+  {
+    "id": "ex-rr948mpy",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A planned `docker stop` of the primary produced a new primary in milliseconds; `docker kill` took about nine seconds. What explains the difference?",
+    "choices": [
+      {
+        "text": "A stopping primary hands over at once; a killed one goes silent, and the others wait out the timeout",
+        "correct": true,
+        "why": "Right: `stepUpRequestSkipDryRun` against `electionTimeout`."
+      },
+      {
+        "text": "`docker kill` also damaged the data files, and the surviving secondaries had to check them before electing anyone",
+        "correct": false,
+        "why": "The secondaries never read the dead member's files; they only noticed its silence."
+      },
+      {
+        "text": "A killed container takes longer to release its network name",
+        "correct": false,
+        "why": "Names have nothing to do with it; the delay is a timeout the members wait out."
+      },
+      {
+        "text": "There was no difference in the server; the shell was slower the second time",
+        "correct": false,
+        "why": "The timestamps come from the servers themselves."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdgf6pjs",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team lowers `electionTimeoutMillis` from ten seconds to one, to make failover faster. What new failure do they invite?",
+    "hint": "What else, besides a crash, makes heartbeats go unanswered for a second?",
+    "choices": [
+      {
+        "text": "Writes with `w: 1` stop being acknowledged",
+        "correct": false,
+        "why": "Write concern is unaffected by the timeout."
+      },
+      {
+        "text": "Elections nobody needed, every time the network pauses briefly",
+        "correct": true,
+        "why": "Right. A short pause looks like a crash, and each needless election is its own moment with no primary."
+      },
+      {
+        "text": "The secondaries can no longer read the oplog",
+        "correct": false,
+        "why": "Replication does not depend on the election timeout."
+      },
+      {
+        "text": "A crashed primary returns as primary, since its term has not expired",
+        "correct": false,
+        "why": "A returning member always rejoins behind the current primary's term."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptb0s6dz",
+    "version": 1,
+    "section": "election",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the killed `mongo2` was started again, what state did it come back in?",
+    "choices": [
+      {
+        "text": "Primary again, because it was primary before it died",
+        "correct": false,
+        "why": "Nothing in the configuration prefers it, and the set already had a primary."
+      },
+      {
+        "text": "Secondary, catching up from the new primary's oplog",
+        "correct": true,
+        "why": "Right. `mongo3` stayed primary."
+      },
+      {
+        "text": "Removed from the set until somebody adds it back",
+        "correct": false,
+        "why": "It is still in the configuration; it simply rejoins."
+      },
+      {
+        "text": "Unreachable, until the whole set is restarted together",
+        "correct": false,
+        "why": "`rs.status()` showed it healthy as soon as it was up."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0a8jk2f",
+    "version": 1,
+    "section": "read-preference",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each read preference to where a read goes.",
+    "hint": "One description fits none of them.",
+    "pairs": [
+      {
+        "left": "primary",
+        "right": "the primary, and an error when there is none"
+      },
+      {
+        "left": "secondaryPreferred",
+        "right": "a secondary, and the primary only when no secondary answers"
+      },
+      {
+        "left": "nearest",
+        "right": "whichever member answers fastest, primary or not"
+      },
+      {
+        "left": "primaryPreferred",
+        "right": "the primary, and a secondary only while there is none"
+      }
+    ],
+    "right_distractors": [
+      "every member at once, merging the answers"
+    ]
+  },
+  {
+    "id": "ex-tydd0sad",
+    "version": 1,
+    "section": "read-preference",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With both secondaries frozen, the primary returned 329.90 and a read with `readPref(\"secondary\")` returned 349.90. What told the client that the second answer was old?",
+    "choices": [
+      {
+        "text": "A warning printed under the result",
+        "correct": false,
+        "why": "No warning appeared; both reads succeeded quietly."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": true,
+        "why": "Right. A stale read looks exactly like a fresh one; tolerating it is the application's job, lesson 5."
+      },
+      {
+        "text": "An error, because the secondary was locked",
+        "correct": false,
+        "why": "`fsyncLock` blocks writes on the member, not reads."
+      },
+      {
+        "text": "The prompt changed to `[secondary]` for that line",
+        "correct": false,
+        "why": "The session stayed connected to the set; the prompt still said `primary`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7ben2g3",
+    "version": 1,
+    "section": "read-preference",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the primary, with both secondaries frozen, `readConcern(\"majority\")` returned the old price while `\"local\"` returned the new one. What does this say about `\"majority\"`?",
+    "choices": [
+      {
+        "text": "It is buggy on a primary and is meant for secondaries",
+        "correct": false,
+        "why": "It did exactly what it promises, on the primary."
+      },
+      {
+        "text": "It returns the newest value any member has",
+        "correct": false,
+        "why": "That is closer to the opposite: the newest value was on one member only."
+      },
+      {
+        "text": "It buys durability, not freshness: it never returns a value that could still be rolled back",
+        "correct": true,
+        "why": "Right. The new price was on one member of three, so it could still disappear."
+      },
+      {
+        "text": "It waits until every member has the latest write",
+        "correct": false,
+        "why": "It did not wait at all; it answered with the majority-committed value."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9cesz3h",
+    "version": 1,
+    "section": "read-preference",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is different when `mongosh` is given `mongodb://mongo1,mongo2,mongo3/shop?replicaSet=rs0` instead of being run `direct` on one container?",
+    "choices": [
+      {
+        "text": "It finds the primary itself and routes each read by read preference",
+        "correct": true,
+        "why": "Right: it behaves as a driver does, and the prompt drops `direct`."
+      },
+      {
+        "text": "It writes to all three members at once",
+        "correct": false,
+        "why": "Writes still go to the primary only."
+      },
+      {
+        "text": "It reads from all three members and returns whatever the majority of them answer",
+        "correct": false,
+        "why": "A read goes to one member; read concern, not the connection, decides how settled it must be."
+      },
+      {
+        "text": "Nothing, apart from a longer command line",
+        "correct": false,
+        "why": "The connection to the set is what lets reads follow a read preference."
+      }
+    ]
+  },
+  {
+    "id": "ex-h65jgha7",
+    "version": 1,
+    "section": "minority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fifteen seconds after `mongo3` was disconnected, it reported itself as `SECONDARY` and refused a write. Who told it to step down?",
+    "choices": [
+      {
+        "text": "The new primary, which sent it a message over the network telling it to step down",
+        "correct": false,
+        "why": "The network was exactly what it had lost; no message could reach it."
+      },
+      {
+        "text": "The driver, after the write failed",
+        "correct": false,
+        "why": "The write failed because it had already stepped down."
+      },
+      {
+        "text": "Nobody: it saw it could reach no majority and stepped down on its own",
+        "correct": true,
+        "why": "Right. The only member it could reach was itself, one of three."
+      },
+      {
+        "text": "Docker, when the container left the network",
+        "correct": false,
+        "why": "Docker knows nothing about replica sets; the decision was mongod's."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gjkcfjx",
+    "version": 1,
+    "section": "minority",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ana's order was inserted on the cut-off `mongo3` with `w: 1` and acknowledged. Which setting would have turned the vanished order into an error she could see?",
+    "hint": "Which writes survive a rollback?",
+    "choices": [
+      {
+        "text": "`readConcern: \"majority\"` on the insert",
+        "correct": false,
+        "why": "Read concern governs reads; the write would still have been acknowledged by one member."
+      },
+      {
+        "text": "The default write concern, `w: \"majority\"`",
+        "correct": true,
+        "why": "Right. Two members could not be reached, so the insert would have waited and then failed when `mongo3` stepped down."
+      },
+      {
+        "text": "A read preference of `nearest` for the application",
+        "correct": false,
+        "why": "Read preference never affects where a write goes."
+      },
+      {
+        "text": "A shorter election timeout on the three members",
+        "correct": false,
+        "why": "A shorter timeout narrows the window; any `w: 1` write inside it can still be rolled back."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4fj7cvb",
+    "version": 1,
+    "section": "minority",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the network was healed, where was Ana's order?",
+    "choices": [
+      {
+        "text": "In the collection, merged with Bruno's",
+        "correct": false,
+        "why": "Only Bruno's was there; MongoDB does not merge two histories."
+      },
+      {
+        "text": "Nowhere: a rollback deletes everything it undoes, for good",
+        "correct": false,
+        "why": "It is kept, which is how `bsondump` could show it."
+      },
+      {
+        "text": "In a BSON file under `/data/db/rollback` on `mongo3`",
+        "correct": true,
+        "why": "Right, and nothing applies it again unless a person does."
+      },
+      {
+        "text": "In the oplog of `mongo2`, waiting to be replayed when the set is next restarted",
+        "correct": false,
+        "why": "`mongo2` never received it; it existed only on the losing side."
+      }
+    ]
+  },
+  {
+    "id": "ex-gdph7nd3",
+    "version": 1,
+    "section": "minority",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the partition in the lab in order, from the cut to the rollback.",
+    "items": [
+      "`mongo3` is disconnected while it is primary",
+      "`mongo3` acknowledges Ana's order with `w: 1`",
+      "`mongo3` misses its heartbeats and steps down",
+      "`mongo2` is elected and takes Bruno's order",
+      "`mongo3` is reconnected and rolls Ana's order back"
+    ],
+    "trap": "Stepping down on one side and electing on the other both wait for the same silence."
+  },
+  {
+    "id": "ex-5g7smfqc",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of the three-member set in this lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A write acknowledged by a majority survives the loss of any one member",
+        "correct": true,
+        "why": "Right: any future primary needs a majority, and any majority holds it."
+      },
+      {
+        "text": "A member cut off from the other two keeps accepting writes until it is reconnected",
+        "correct": false,
+        "why": "It stepped down within seconds and refused with `not primary`."
+      },
+      {
+        "text": "A read from a secondary can return a value older than the primary's",
+        "correct": true,
+        "why": "Right: 349.90 against 329.90."
+      },
+      {
+        "text": "The member started first is always the primary",
+        "correct": false,
+        "why": "The primary changed twice in this lesson; the set elects it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qs9s2kx",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A member that wrote operations its new primary never received undoes them when it rejoins. That is called a ___.",
+    "hint": "The directory `/data/db/` holds a folder of the same name.",
+    "blanks": [
+      {
+        "accept": [
+          "rollback",
+          "roll back",
+          "roll-back"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f8rm0c4z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application reads a customer's basket right after the customer adds an item, and must see that item. Which setting fits?",
+    "choices": [
+      {
+        "text": "`readPref(\"secondary\")`, to keep load off the primary",
+        "correct": false,
+        "why": "A secondary can still be behind the write it was just told about."
+      },
+      {
+        "text": "`readPref(\"nearest\")`, since the closest member answers fastest",
+        "correct": false,
+        "why": "The nearest member may be a secondary that has not applied the write yet."
+      },
+      {
+        "text": "Read from the primary, the default",
+        "correct": true,
+        "why": "Right, or a causally consistent session; the lesson ran only the first."
+      },
+      {
+        "text": "`readConcern(\"majority\")` on any member",
+        "correct": false,
+        "why": "Majority buys durability, not freshness; it can return the basket from before the item."
+      }
+    ]
+  }
+]

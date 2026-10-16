@@ -1,0 +1,582 @@
+[
+  {
+    "id": "ex-q52rj1cw",
+    "version": 1,
+    "section": "maxmemory",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Redis started with no options reaches the memory of its machine. What happens?",
+    "choices": [
+      {
+        "text": "It evicts the least recently used keys",
+        "correct": false,
+        "why": "With no `maxmemory` there is no ceiling to evict at."
+      },
+      {
+        "text": "It refuses writes with an `OOM` error",
+        "correct": false,
+        "why": "That needs a `maxmemory` to compare against; the default is 0, no limit."
+      },
+      {
+        "text": "It grows until the kernel kills it",
+        "correct": true,
+        "why": "Right. `maxmemory 0` means no limit inside Redis, so the only limit is the machine's."
+      },
+      {
+        "text": "It moves the oldest keys to disk and keeps going",
+        "correct": false,
+        "why": "Redis never swaps keys to disk on its own; persistence is a copy, not an overflow."
+      }
+    ]
+  },
+  {
+    "id": "ex-664rn2cg",
+    "version": 1,
+    "section": "maxmemory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `noeviction`, a full instance refuses `SET product:KB-101 34990`. Which of these commands still works?",
+    "choices": [
+      {
+        "text": "`SADD tag:office KB-101`",
+        "correct": false,
+        "why": "It could add data, so it is refused like the `SET`."
+      },
+      {
+        "text": "`DEL page:1`",
+        "correct": true,
+        "why": "Right. It frees memory, so Redis allows it; reads work too."
+      },
+      {
+        "text": "`LPUSH viewed:ana MN-330`",
+        "correct": false,
+        "why": "A push adds an element; refused."
+      },
+      {
+        "text": "`INCR visits` on a key that does not exist yet",
+        "correct": false,
+        "why": "It would create a key; refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjrdtynj",
+    "version": 1,
+    "section": "maxmemory",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Redis container runs with `docker run --memory 1g` and `maxmemory 1gb`. Under load it disappears with exit code 137 instead of answering `OOM` errors. Why?",
+    "hint": "What does `maxmemory` count?",
+    "choices": [
+      {
+        "text": "Buffers and a fork's copy come on top of the data, and the kernel acts first",
+        "correct": true,
+        "why": "Right. Set `maxmemory` well below the container's limit."
+      },
+      {
+        "text": "Exit 137 is how Redis reports `OOM` to Docker when a write is refused at the ceiling",
+        "correct": false,
+        "why": "137 is a process killed by signal 9; Redis's own `OOM` is an error to a client, and the process lives."
+      },
+      {
+        "text": "The units differ: `1g` in Docker is larger than `1gb` in Redis, so the limits never matched",
+        "correct": false,
+        "why": "If anything Docker's is the larger; the gap that matters is what `maxmemory` leaves out."
+      },
+      {
+        "text": "`noeviction` crashes Redis when it is full",
+        "correct": false,
+        "why": "It refuses writes and keeps running, as the lesson's capture shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-szqkq8jb",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `allkeys-random`, the same load lost products that `allkeys-lru` kept. Why?",
+    "choices": [
+      {
+        "text": "A random pick gives a product read thousands of times the same chance as a page nobody reads",
+        "correct": true,
+        "why": "Right. LRU uses the reads; random ignores them."
+      },
+      {
+        "text": "`allkeys-random` evicts more keys in total",
+        "correct": false,
+        "why": "All three evicted about the same number; only the choice differed."
+      },
+      {
+        "text": "Products are larger than pages, and a random pick prefers large keys because they free more memory at once",
+        "correct": false,
+        "why": "The products are a few bytes and random ignores size."
+      },
+      {
+        "text": "Random evicts the newest keys, and the products were written last",
+        "correct": false,
+        "why": "The products were written first, and random ignores age."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pvapgnj",
+    "version": 1,
+    "section": "policies",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each policy to the keys it may evict and how it picks one.",
+    "hint": "One description fits none of them.",
+    "pairs": [
+      {
+        "left": "`allkeys-lru`",
+        "right": "any key, the one used least recently"
+      },
+      {
+        "left": "`allkeys-lfu`",
+        "right": "any key, the one used least often"
+      },
+      {
+        "left": "`volatile-ttl`",
+        "right": "only keys with an expiry, the one closest to expiring"
+      },
+      {
+        "left": "`noeviction`",
+        "right": "none: writes are refused"
+      }
+    ],
+    "right_distractors": [
+      "any key, the largest first"
+    ]
+  },
+  {
+    "id": "ex-58wrce89",
+    "version": 1,
+    "section": "policies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every night at 03:00 a report reads every page in the cache once. Each morning the cache is slow until the popular product keys are rebuilt. Which change addresses it?",
+    "hint": "What does one read do to each policy's idea of a key?",
+    "choices": [
+      {
+        "text": "Move from `allkeys-lru` to `allkeys-lfu`, which a single pass barely moves",
+        "correct": true,
+        "why": "Right. Under LRU the pass makes every page recent; under LFU the products' counters still win."
+      },
+      {
+        "text": "Move to `allkeys-random`, so the report's reads do not count",
+        "correct": false,
+        "why": "Random ignores the report, and also every read the products ever had."
+      },
+      {
+        "text": "Raise `maxmemory-samples` from 5 to 10",
+        "correct": false,
+        "why": "Better sampling of LRU still evicts by recency, and the pages are the recent ones."
+      },
+      {
+        "text": "Move to `noeviction`, so nothing is pushed out",
+        "correct": false,
+        "why": "Then the cache refuses new entries when full, which is worse for a cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtnct84d",
+    "version": 1,
+    "section": "policies",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis evicts by sampling a few keys and evicting the best candidate among them. How many keys does it sample by default?",
+    "hint": "`maxmemory-samples`.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-k78gm3ny",
+    "version": 1,
+    "section": "cache-or-database",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An instance runs `volatile-lru`. It is full, `evicted_keys` is 0, and writes fail with `OOM`. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "`volatile-lru` only evicts when `maxmemory-samples` is above 5",
+        "correct": false,
+        "why": "Sampling decides which candidate, not whether eviction happens."
+      },
+      {
+        "text": "No key filling it has an expiry, so none is a candidate",
+        "correct": true,
+        "why": "Right, and Redis refuses writes as `noeviction` would. The lesson's run refused thousands of writes with nothing evicted."
+      },
+      {
+        "text": "The keys are read too often to count as least recently used",
+        "correct": false,
+        "why": "Something is always least recent; the problem is that nothing is eligible."
+      },
+      {
+        "text": "`volatile-lru` needs the instance to have persistence on",
+        "correct": false,
+        "why": "Eviction and persistence are independent settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2dmc6de",
+    "version": 1,
+    "section": "cache-or-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One Redis holds rendered pages and the shop's stock counters, under `allkeys-lru`. What is the risk?",
+    "choices": [
+      {
+        "text": "Writes of new pages are refused once it is full",
+        "correct": false,
+        "why": "`allkeys-lru` evicts instead of refusing."
+      },
+      {
+        "text": "A stock counter nobody read for a while is evicted, silently",
+        "correct": true,
+        "why": "Right. Every key is a candidate, and a record evicted is a record lost with no error."
+      },
+      {
+        "text": "Pages are never evicted because they are larger",
+        "correct": false,
+        "why": "Size plays no part; recency does."
+      },
+      {
+        "text": "The counters lose their expiry when a page is evicted",
+        "correct": false,
+        "why": "Evicting one key does nothing to another."
+      }
+    ]
+  },
+  {
+    "id": "ex-56m8eqpv",
+    "version": 1,
+    "section": "cache-or-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which settings fit a Redis that holds only copies the application can rebuild?",
+    "choices": [
+      {
+        "text": "`noeviction` with snapshots and the append-only file",
+        "correct": false,
+        "why": "That is the database column: it refuses when full and saves what nobody needs back."
+      },
+      {
+        "text": "`volatile-ttl` with the append-only file",
+        "correct": false,
+        "why": "It works only if every key has an expiry, and the log saves copies for nothing."
+      },
+      {
+        "text": "`allkeys-lru` or `allkeys-lfu`, and no persistence",
+        "correct": true,
+        "why": "Right. Any key may go, and a restart starts empty and fills again."
+      },
+      {
+        "text": "`allkeys-random` with snapshots every minute",
+        "correct": false,
+        "why": "Random throws away popular keys, and the snapshots cost forks for copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-19cj2jyy",
+    "version": 1,
+    "section": "cache-or-database",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps one instance under `volatile-lru` for both cache pages and records. Which of these must hold for it to work? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Every cache write, in every service, sets an expiry",
+        "correct": true,
+        "why": "Right. A cache key without one fills memory and can never be evicted."
+      },
+      {
+        "text": "No record ever gets an expiry, even by accident",
+        "correct": true,
+        "why": "Right. A record with an expiry becomes a candidate for eviction."
+      },
+      {
+        "text": "The instance has the append-only file on",
+        "correct": false,
+        "why": "Persistence is a separate question from what may be evicted."
+      },
+      {
+        "text": "`maxmemory-samples` is raised to 10",
+        "correct": false,
+        "why": "Sampling tunes accuracy; it does not decide what is eligible."
+      },
+      {
+        "text": "A plain `SET` is never used to update a cache key",
+        "correct": true,
+        "why": "Right. Lesson 12 showed that it removes the expiry."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwgs6xjn",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`TTL cart:nobody` answers `-2`. What does it mean?",
+    "choices": [
+      {
+        "text": "The key exists and never expires",
+        "correct": false,
+        "why": "That is `-1`."
+      },
+      {
+        "text": "The key expired two seconds ago",
+        "correct": false,
+        "why": "Negative answers are codes, not times."
+      },
+      {
+        "text": "The key does not exist",
+        "correct": true,
+        "why": "Right. `-1` is a key with no expiry; `-2` is no key."
+      },
+      {
+        "text": "The key has an expiry but Redis cannot read it",
+        "correct": false,
+        "why": "There is no such state."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebqsz4ez",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A second after 200,000 keys expired, `DBSIZE` still counted many of them. Why?",
+    "choices": [
+      {
+        "text": "They leave when touched or sampled, not at the second they expire",
+        "correct": true,
+        "why": "Right. Until then they are counted and take memory; a `GET` answers `(nil)` and deletes on the spot."
+      },
+      {
+        "text": "`DBSIZE` is computed once a second and was out of date",
+        "correct": false,
+        "why": "It is exact at the moment it answers; the keys really were still there."
+      },
+      {
+        "text": "The keys had been made persistent by the `EVAL`, which sets no expiry on keys it writes",
+        "correct": false,
+        "why": "Every key was written with `EX 1`, and all of them did go."
+      },
+      {
+        "text": "Expiry waits for the next snapshot",
+        "correct": false,
+        "why": "Snapshots have nothing to do with expiry."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkcyyy40",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A login service gives every session exactly `EX 3600`, and a marketing email brings 500,000 logins in ten minutes. What does the lesson suggest, and why?",
+    "choices": [
+      {
+        "text": "Shorten the expiry to 600, so that sessions are removed sooner",
+        "correct": false,
+        "why": "They would still expire together, only sooner, and log people out."
+      },
+      {
+        "text": "Add a few random seconds to each `EX`",
+        "correct": true,
+        "why": "Right. Spread out, the active cycle never has a spike of dead keys to clear at once."
+      },
+      {
+        "text": "Turn on `volatile-ttl`, so the sessions are evicted before they expire",
+        "correct": false,
+        "why": "Eviction only runs at the memory ceiling; it does not spread expiry."
+      },
+      {
+        "text": "Nothing: Redis removes each key at the exact second it expires",
+        "correct": false,
+        "why": "It does not; the lesson's `DBSIZE` lagged behind expiry."
+      }
+    ]
+  },
+  {
+    "id": "ex-nq1xvpvh",
+    "version": 1,
+    "section": "expiry",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A key that exists but has no expiry answers `TTL` with ___.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n21dffne",
+    "version": 1,
+    "section": "expiry",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a cache, `evicted_keys` climbs steadily all day. What does it say?",
+    "choices": [
+      {
+        "text": "Expiry is working as intended",
+        "correct": false,
+        "why": "That is `expired_keys`; eviction is a different counter."
+      },
+      {
+        "text": "The cache is too small for what it is asked to hold",
+        "correct": true,
+        "why": "Right. It keeps pushing out keys to make room."
+      },
+      {
+        "text": "Keys are being deleted by the application with `DEL`",
+        "correct": false,
+        "why": "`DEL` counts in neither counter."
+      },
+      {
+        "text": "Persistence is failing",
+        "correct": false,
+        "why": "That shows in `INFO persistence`, lesson 13."
+      }
+    ]
+  },
+  {
+    "id": "ex-67xtfdja",
+    "version": 1,
+    "section": "policies",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The policy that keeps a small counter of how often each key is used, and evicts the key with the lowest, is `allkeys-___`.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "lfu"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tr2ehrnh",
+    "version": 1,
+    "section": "maxmemory",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Under `noeviction` with a 4 MB ceiling, the lesson sent 20,000 page writes and 17,668 answered `OK`. How many were refused?",
+    "value": 2332,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ep89trbw",
+    "version": 1,
+    "section": "cache-or-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Redis that is the shop's only copy of its stock counters reaches its ceiling. Which policy keeps every counter, and what does the application see?",
+    "choices": [
+      {
+        "text": "`allkeys-lfu`; nothing, because popular counters survive",
+        "correct": false,
+        "why": "An unpopular counter is still evicted, and it is a record that exists nowhere else."
+      },
+      {
+        "text": "`noeviction`; `OOM` errors on new writes, which page somebody",
+        "correct": true,
+        "why": "Right. A database refuses rather than forgets."
+      },
+      {
+        "text": "`volatile-ttl`; nothing, because counters have no expiry",
+        "correct": false,
+        "why": "With no candidates it refuses writes too, and its name promises an eviction that never happens."
+      },
+      {
+        "text": "`allkeys-random`; occasional missing counters, rebuilt from the cache",
+        "correct": false,
+        "why": "There is nothing to rebuild them from; this is the only copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-k99safwj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A full instance under `volatile-lru` receives a `SET`. Put what Redis does in order.",
+    "items": [
+      "Compare used memory with `maxmemory`",
+      "Sample keys that have an expiry",
+      "Evict the least recently used of the sample",
+      "Run the `SET`"
+    ],
+    "trap": "Room is made before the command runs."
+  },
+  {
+    "id": "ex-dt4jp821",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop's idempotency keys (`SET … NX EX 86400`) live in the same Redis as its page cache, under `volatile-ttl`. What can happen when it fills up?",
+    "hint": "Do the idempotency keys have an expiry?",
+    "choices": [
+      {
+        "text": "Nothing: idempotency keys are never candidates",
+        "correct": false,
+        "why": "They were written with `EX`, so under `volatile-` they are candidates like the pages."
+      },
+      {
+        "text": "Writes are refused, because the keys have an expiry",
+        "correct": false,
+        "why": "Keys with an expiry are what `volatile-` evicts; refusal comes when there are none."
+      },
+      {
+        "text": "An idempotency key is evicted early, and a retried payment is charged twice",
+        "correct": true,
+        "why": "Right. Pages with less time left go first, but they are records with an expiry, so the policy treats them as cache once the pages run short."
+      },
+      {
+        "text": "The pages are evicted first because they are larger",
+        "correct": false,
+        "why": "`volatile-ttl` picks by time left, not size; a page with an hour left goes after a key with less."
+      }
+    ]
+  }
+]

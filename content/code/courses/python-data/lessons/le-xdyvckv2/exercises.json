@@ -1,0 +1,478 @@
+[
+  {
+    "id": "ex-p5etw94p",
+    "version": 1,
+    "section": "apply-on-rows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does each call of `trips.apply(minutes_of, axis=1)` receive?",
+    "hint": "`axis=1` means rows.",
+    "choices": [
+      {
+        "text": "One column, as a Series",
+        "correct": false,
+        "why": "That is `axis=0`."
+      },
+      {
+        "text": "One row, as a new Series",
+        "correct": true,
+        "why": "Right: built for every call."
+      },
+      {
+        "text": "The whole DataFrame",
+        "correct": false,
+        "why": "One row per call."
+      },
+      {
+        "text": "A NumPy array of the row's values",
+        "correct": false,
+        "why": "pandas hands over a Series."
+      }
+    ]
+  },
+  {
+    "id": "ex-5zjvvcp5",
+    "version": 1,
+    "section": "apply-on-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The row version took about 330 ms and the column version under 1 ms. What makes most of the difference?",
+    "hint": "How many times does Python run?",
+    "choices": [
+      {
+        "text": "The column version skips the lost bikes",
+        "correct": false,
+        "why": "Both give the same values, `NaN` included."
+      },
+      {
+        "text": "Datetimes are slow to subtract in any form",
+        "correct": false,
+        "why": "The column subtraction is fast."
+      },
+      {
+        "text": "A Python call and a new Series for each of 33,337 rows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`%timeit` runs the row version more times",
+        "correct": false,
+        "why": "It reports an average per run."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1f09em8",
+    "version": 1,
+    "section": "apply-on-rows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What should you ask before writing `apply(..., axis=1)`?",
+    "hint": "If the answer is yes, columns can do it.",
+    "choices": [
+      {
+        "text": "Is the calculation the same for every row?",
+        "correct": true,
+        "why": "Right: then write it on columns."
+      },
+      {
+        "text": "Does the table fit in memory?",
+        "correct": false,
+        "why": "It already does."
+      },
+      {
+        "text": "Is the function named?",
+        "correct": false,
+        "why": "A name does not make it fast."
+      },
+      {
+        "text": "Are there more columns than rows?",
+        "correct": false,
+        "why": "Not the question."
+      }
+    ]
+  },
+  {
+    "id": "ex-6n335m1e",
+    "version": 1,
+    "section": "map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trips[\"plan\"].map({\"annual\": \"subscriber\"})`. What happens to the day passes?",
+    "hint": "They are not in the dictionary.",
+    "choices": [
+      {
+        "text": "They stay `day`",
+        "correct": false,
+        "why": "That is what `replace` does."
+      },
+      {
+        "text": "A `KeyError` names the missing key",
+        "correct": false,
+        "why": "Nothing fails."
+      },
+      {
+        "text": "They become `NaN`",
+        "correct": true,
+        "why": "Right, silently."
+      },
+      {
+        "text": "They become `subscriber` too",
+        "correct": false,
+        "why": "Only `annual` is mapped."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcnrmgv0",
+    "version": 1,
+    "section": "map",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You need to fix three known misspellings in a column and leave every other value alone. Which call?",
+    "hint": "Which one passes unknown values through?",
+    "choices": [
+      {
+        "text": "`map` with a dictionary of the three",
+        "correct": false,
+        "why": "Every other value would become `NaN`."
+      },
+      {
+        "text": "`replace` with a dictionary of the three",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`apply` with an `if` for each",
+        "correct": false,
+        "why": "It works, slowly, and `replace` says it in one call."
+      },
+      {
+        "text": "`astype(\"category\")`",
+        "correct": false,
+        "why": "That keeps the misspellings as categories."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcg6f31v",
+    "version": 1,
+    "section": "map",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these, given to `map`, makes it a loop in Python?",
+    "hint": "A lookup or a call?",
+    "choices": [
+      {
+        "text": "A dictionary",
+        "correct": false,
+        "why": "That is a lookup."
+      },
+      {
+        "text": "A Series indexed by the keys",
+        "correct": false,
+        "why": "Also a lookup."
+      },
+      {
+        "text": "Another column of the same table",
+        "correct": false,
+        "why": "A Series again: a lookup by its index."
+      },
+      {
+        "text": "A function",
+        "correct": true,
+        "why": "Right: called once per value."
+      }
+    ]
+  },
+  {
+    "id": "ex-1b4d89gx",
+    "version": 1,
+    "section": "map",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`trips[\"end_station\"].map(names)` has how many `NaN` values, where `names` covers all 20 stations?",
+    "hint": "The end station was already missing for some trips.",
+    "value": 146,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-b0r94ass",
+    "version": 1,
+    "section": "conditions-without-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `band` function, why does `pd.isna(m)` come first?",
+    "hint": "What is `nan < 10`?",
+    "choices": [
+      {
+        "text": "Otherwise a missing length ends up `\"long\"`",
+        "correct": true,
+        "why": "Right: every comparison with `nan` is `False`."
+      },
+      {
+        "text": "It is faster to test first",
+        "correct": false,
+        "why": "Order matters for correctness here."
+      },
+      {
+        "text": "`np.select` requires it first",
+        "correct": false,
+        "why": "The function came before `np.select`."
+      },
+      {
+        "text": "`nan < 10` raises an error",
+        "correct": false,
+        "why": "It is `False`, silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-82ejw3ed",
+    "version": 1,
+    "section": "conditions-without-apply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Bands are ranges of one number: under 10, 10 to 30, 30 and over. Which call fits best, and keeps the bands in order?",
+    "hint": "It returns a categorical.",
+    "choices": [
+      {
+        "text": "`np.where`",
+        "correct": false,
+        "why": "Two choices only, unless nested."
+      },
+      {
+        "text": "`Series.apply` with a function",
+        "correct": false,
+        "why": "A loop, and the result is plain text."
+      },
+      {
+        "text": "`pd.cut`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`Series.map` with a dictionary",
+        "correct": false,
+        "why": "A dictionary maps values, not ranges."
+      }
+    ]
+  },
+  {
+    "id": "ex-csqk2j8h",
+    "version": 1,
+    "section": "conditions-without-apply",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pd.cut(trips[\"minutes\"], bins=[0, 10, 30, np.inf], right=False, ...)`. Where does a trip of exactly 10 minutes go?",
+    "hint": "`right=False` includes the left edge.",
+    "choices": [
+      {
+        "text": "`short`",
+        "correct": false,
+        "why": "`short` stops just below 10."
+      },
+      {
+        "text": "`normal`",
+        "correct": true,
+        "why": "Right: [10, 30)."
+      },
+      {
+        "text": "`NaN`: 10 is on an edge",
+        "correct": false,
+        "why": "Edges belong to one band."
+      },
+      {
+        "text": "`long`",
+        "correct": false,
+        "why": "That starts at 30."
+      }
+    ]
+  },
+  {
+    "id": "ex-82bfpx7n",
+    "version": 1,
+    "section": "the-slow-path-in-groupby",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`by_day.median()` took 0.8 ms and `by_day.agg(lambda s: s.median())` 26 ms. What does the slow one do 365 times?",
+    "hint": "One per group.",
+    "choices": [
+      {
+        "text": "Sorts the whole table",
+        "correct": false,
+        "why": "It sorts nothing."
+      },
+      {
+        "text": "Calls a Python function",
+        "correct": true,
+        "why": "Right: once per day."
+      },
+      {
+        "text": "Reads the CSV again",
+        "correct": false,
+        "why": "The data is in memory."
+      },
+      {
+        "text": "Computes a different median",
+        "correct": false,
+        "why": "`equals` said they match."
+      }
+    ]
+  },
+  {
+    "id": "ex-jby9w6bf",
+    "version": 1,
+    "section": "the-slow-path-in-groupby",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The cost of a `lambda` in `agg` grows with what?",
+    "hint": "By station it was a couple of milliseconds.",
+    "choices": [
+      {
+        "text": "The number of columns",
+        "correct": false,
+        "why": "One column was aggregated."
+      },
+      {
+        "text": "The number of rows, whatever the grouping",
+        "correct": false,
+        "why": "The same rows cost little in 20 groups."
+      },
+      {
+        "text": "The length of the `lambda`",
+        "correct": false,
+        "why": "Short or long, it is one call per group."
+      },
+      {
+        "text": "The number of groups",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpt6mf16",
+    "version": 1,
+    "section": "when-apply-is-right",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `apply` fine for the longest dry run in each month?",
+    "hint": "How many calls, and could a column expression say it?",
+    "choices": [
+      {
+        "text": "Because rain is a float column",
+        "correct": false,
+        "why": "The type is not the reason."
+      },
+      {
+        "text": "`apply` is fast on `groupby`",
+        "correct": false,
+        "why": "It is the slow path; here it runs twelve times."
+      },
+      {
+        "text": "Each day depends on the ones before, and it runs twelve times",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because the weather table has no missing values",
+        "correct": false,
+        "why": "It has six."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkyfdw42",
+    "version": 1,
+    "section": "when-apply-is-right",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `summary.map(lambda v: f\"{v:.1f} min\")` return?",
+    "hint": "Look at the f-string.",
+    "choices": [
+      {
+        "text": "The same numbers, rounded",
+        "correct": false,
+        "why": "They become text."
+      },
+      {
+        "text": "A Series of the column names",
+        "correct": false,
+        "why": "It works cell by cell."
+      },
+      {
+        "text": "An error: `map` is only for Series",
+        "correct": false,
+        "why": "DataFrames have `map` too."
+      },
+      {
+        "text": "A table of text for display",
+        "correct": true,
+        "why": "Right: format at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbmqatkd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each task to the tool this lesson recommends.",
+    "hint": "Lookup, conditions, ranges, groups.",
+    "pairs": [
+      {
+        "left": "Station codes to names",
+        "right": "`map` with a Series"
+      },
+      {
+        "left": "Lost, short, normal or long",
+        "right": "`np.select`"
+      },
+      {
+        "left": "Ranges of one number, kept in order",
+        "right": "`pd.cut`"
+      },
+      {
+        "left": "Median trip per day",
+        "right": "`groupby(...).median()`"
+      }
+    ],
+    "right_distractors": [
+      "`apply(..., axis=1)`"
+    ]
+  },
+  {
+    "id": "ex-km6xyzt8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of replacing a slow `apply` in a notebook.",
+    "hint": "Keep the old answer to check the new one.",
+    "items": [
+      "Keep the `apply` result as the reference",
+      "Write the column expression",
+      "Check both give the same values",
+      "Time both with `%timeit`"
+    ],
+    "trap": "A faster answer is worth nothing until it is shown to be the same answer."
+  }
+]

@@ -1,0 +1,382 @@
+{
+ "ex-ygfg5zbk": {
+  "prompt": "O primeiro counting.py pôs quatro títulos na prateleira e imprimiu counted: 7. De onde vieram os três a mais?",
+  "choices": [
+   {
+    "text": "super() rodou o add_all do pai e o do filho",
+    "why": "super() roda só a versão do pai; o add_all do filho rodou uma vez, porque o programa o chamou uma vez."
+   },
+   {
+    "text": "Shelf.add_all chama self.add, e self é o filho",
+    "why": "Isso. Cada uma das três chamadas a self caiu em CountingShelf.add, que contou os títulos uma segunda vez."
+   },
+   {
+    "text": "O contador também era incrementado por __len__ cada vez que o programa perguntava quantos títulos havia",
+    "why": "__len__ só lê a lista; nada nele mexe em added."
+   },
+   {
+    "text": "O Python chamou __init__ uma segunda vez, uma para cada classe da hierarquia",
+    "why": "__init__ rodou uma vez por objeto, e ele zera o contador em vez de somar."
+   }
+  ]
+ },
+ "ex-se5azpam": {
+  "prompt": "Com o segundo shelf.py (add_all estende a lista) e o segundo counting.py (só add é sobrescrito), um programa acrescenta 2 títulos um a um com add, depois 5 de uma vez com add_all. O que counted imprime?",
+  "hint": "Qual das duas chamadas ainda passa pelo add do filho?",
+  "unit": "títulos"
+ },
+ "ex-32s1a1kj": {
+  "prompt": "CountingShelf sobrescreve só add e conta com Shelf.add_all fazendo um laço sobre self.add. Qual mudança em Shelf mantém a contagem certa?",
+  "choices": [
+   {
+    "text": "add_all chama um novo add_many, que estende a lista",
+    "why": "Aí os títulos em lote nunca passam por add, e o filho para de contá-los, como na terceira execução."
+   },
+   {
+    "text": "Renomear a lista privada _titles para _items, e mais nada",
+    "why": "Isso. O filho nunca mexe na lista, e a chamada a self de que ele depende continua igual."
+   },
+   {
+    "text": "Fazer add chamar self.add_all([title]), para todo armazenamento passar por um método só",
+    "why": "add_all volta para add, que chama add_all de novo: o primeiro add do filho nunca termina."
+   }
+  ]
+ },
+ "ex-fqgxr3e7": {
+  "prompt": "explosion.py termina em 36 subclasses para quatro eixos. Chega um quinto eixo: o empréstimo pode ser comum ou expresso, duas opções. De quantas subclasses o projeto de uma classe por combinação precisa agora?",
+  "unit": "classes"
+ },
+ "ex-zj3mg5xk": {
+  "prompt": "Por que a explosão de classes passa despercebida no começo da vida de um projeto?",
+  "choices": [
+   {
+    "text": "Porque o Python gera as classes combinadas sozinho até passarem de dez",
+    "why": "O Python não gera nada; toda classe desse projeto é escrita por alguém."
+   },
+   {
+    "text": "Porque o primeiro eixo sempre entra por composição",
+    "why": "No programa o primeiro eixo também é uma hierarquia; os dois projetos só custam o mesmo nesse tamanho."
+   },
+   {
+    "text": "Com dois eixos de duas opções, os dois projetos custam quatro",
+    "why": "Isso. Um produto e uma soma coincidem em 2 × 2 e 2 + 2; eles se separam no terceiro eixo, doze contra sete."
+   },
+   {
+    "text": "Porque uma classe só fica cara quando tem mais de um método",
+    "why": "O custo contado aqui é o número de classes e onde uma mudança tem de ser feita, seja qual for o tamanho delas."
+   }
+  ]
+ },
+ "ex-ssx4yg6w": {
+  "prompt": "O time do catálogo quer Book e Film no alto das classes de empréstimo; o setor de multas quer a regra de multa lá. Como um projeto por composição resolve?",
+  "choices": [
+   {
+    "text": "Nenhum fica no alto: o item e a regra de multa viram campos",
+    "why": "Isso. Um empréstimo tem um item e tem uma regra de multa, e nenhum eixo precisa ficar dentro do outro."
+   },
+   {
+    "text": "Vence o time dono de mais classes, já que o eixo dele multiplica menos",
+    "why": "Qual eixo fica no alto não muda o produto; a composição elimina a escolha em vez de fazê-la."
+   },
+   {
+    "text": "Usa duas hierarquias e herança múltipla para juntá-las",
+    "why": "Isso continua declarando uma classe por combinação, que é a explosão de novo com mais pais."
+   }
+  ]
+ },
+ "ex-qj58rwkq": {
+  "prompt": "CountedShelf contou 4 com as duas versões de shelf.py. O que o protege da chamada a self da primeira versão?",
+  "choices": [
+   {
+    "text": "Ele sobrescreve add_all, o que impede a versão do pai de rodar",
+    "why": "O add_all dele roda, sim, o add_all da prateleira de dentro; o que importa é de quem é o add que este chama depois."
+   },
+   {
+    "text": "Dentro da prateleira guardada, self é aquele Shelf, então o self.add dele nunca chega ao invólucro",
+    "why": "Isso. Um objeto guardado chama os próprios métodos em si mesmo, nunca no objeto que o guarda."
+   },
+   {
+    "text": "O Python pula a busca de métodos para objetos guardados em campos",
+    "why": "A busca acontece normalmente; ela começa pela classe do objeto de dentro, que é Shelf."
+   }
+  ]
+ },
+ "ex-cjhvrhpz": {
+  "prompt": "Um CountedShelf repassa com __getattr__ em vez de escrever os métodos. Mais tarde Shelf ganha add_many. O que acontece com os títulos acrescentados por ele?",
+  "choices": [
+   {
+    "text": "Levantam AttributeError, já que o invólucro nunca definiu add_many",
+    "why": "__getattr__ existe justamente para responder por atributos que o invólucro não tem, então a chamada passa."
+   },
+   {
+    "text": "São contados duas vezes, como no primeiro counting.py",
+    "why": "Nada no invólucro os conta; a prateleira de dentro nunca chama o invólucro de volta."
+   },
+   {
+    "text": "Vão para a prateleira e nunca são contados, sem erro nenhum",
+    "why": "Isso. O repasse automático oferece todo método novo sem ninguém decidir, e esse passa por fora do contador."
+   },
+   {
+    "text": "O Python se recusa a carregar counted.py até add_many ser escrito à mão",
+    "why": "O Python não verifica nada disso; o programa roda e o relatório fica errado em silêncio."
+   }
+  ]
+ },
+ "ex-e280j5v5": {
+  "prompt": "Um objeto que guarda outro e repassa chamadas a ele, acrescentando no caminho o que precisa, está usando ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "delegação",
+     "delegacao",
+     "delegation"
+    ]
+   }
+  ]
+ },
+ "ex-rws6ss79": {
+  "prompt": "Na semana de anistia todo empréstimo aberto tem de parar de cobrar. Por que isso é um laço de atribuições em fines.py?",
+  "choices": [
+   {
+    "text": "Cada empréstimo guarda sua regra num campo, e um campo aceita outro valor",
+    "why": "Isso. Trocar a parte muda o comportamento de um objeto que já existe."
+   },
+   {
+    "text": "Amnesty é subclasse de Loan, então os empréstimos viram empréstimos de anistia",
+    "why": "Amnesty é uma regra de multa sem pai nenhum; os empréstimos continuam sendo objetos Loan."
+   },
+   {
+    "text": "O Python consegue mudar a classe de um objeto, e o programa faz isso para cada empréstimo",
+    "why": "Atribuir __class__ é possível e a seção desaconselha; fines.py atribui uma regra em vez disso."
+   }
+  ]
+ },
+ "ex-72aqepgd": {
+  "prompt": "O empréstimo de um estudante vence em 16 de março e guarda GraceDays(3, PerDay(75)). Ele volta em 23 de março. Qual é a multa, em centavos?",
+  "hint": "Sete dias de atraso, antes da carência.",
+  "unit": "centavos"
+ },
+ "ex-1qzjvpgk": {
+  "prompt": "Em test_fines.py a regra Recording responde 999 centavos, o que nenhuma regra de verdade responderia. O que esse número deixa o teste verificar?",
+  "choices": [
+   {
+    "text": "Que o empréstimo rejeita multas implausíveis da regra",
+    "why": "O empréstimo não rejeita nada; o teste afirma que 999 volta direto."
+   },
+   {
+    "text": "Que o empréstimo devolve a resposta da regra em vez de calcular a sua",
+    "why": "Isso. Um valor que nenhum cálculo real produz só pode ter vindo do dublê."
+   },
+   {
+    "text": "Que multas acima de 900 centavos acionam o teto da biblioteca",
+    "why": "Não existe teto em fines.py; o número foi escolhido por ser impossível, não por significar algo."
+   },
+   {
+    "text": "Que o unittest consegue comparar inteiros de três dígitos",
+    "why": "assertEqual compara quaisquer inteiros; o tamanho deste serve para distinguir de onde veio."
+   }
+  ]
+ },
+ "ex-c00set4x": {
+  "prompt": "Quais destes são herança nos lugares em que a lição diz que ela serve? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "class ReservationExpired(LibraryError)",
+    "why": "Sim. Um eixo, e qualquer lugar que captura LibraryError deve capturar esta também."
+   },
+   {
+    "text": "class ReadyNotice(Notice), preenchendo o body abstrato",
+    "why": "Sim. O pai declarou o buraco e é dono do algoritmo em volta dele."
+   },
+   {
+    "text": "class LoanTest(unittest.TestCase)",
+    "why": "Sim. Um framework projetado para milhares de filhos, com ganchos documentados."
+   },
+   {
+    "text": "class CountingShelf(Shelf), sobrescrevendo add e add_all",
+    "why": "Shelf não foi escrito para ser estendido e nunca documentou suas chamadas a self; essa é a classe base frágil."
+   },
+   {
+    "text": "class StudentFilmLoan(FilmLoan), sobrescrevendo fine",
+    "why": "Ali variam dois eixos, e é por isso que o fine dela teve de ser copiado de StudentLoan."
+   }
+  ]
+ },
+ "ex-wr9g4033": {
+  "prompt": "Notice.render chama self.body, e Shelf.add_all chamava self.add. Por que a primeira é segura para os filhos e a segunda não era?",
+  "choices": [
+   {
+    "text": "Porque body devolve um texto e add não devolve nada",
+    "why": "O tipo de retorno não tem nada a ver; uma chamada a self escondida é frágil seja o que for que devolva."
+   },
+   {
+    "text": "Porque uma ABC só pode ter uma classe filha",
+    "why": "Notice tem dois filhos em fits.py, e uma ABC pode ter quantos quiser."
+   },
+   {
+    "text": "Essa chamada a self é o contrato declarado e cobrado",
+    "why": "Isso. Uma chamada a self é perigosa quando é acidente de implementação e segura quando é documentada."
+   }
+  ]
+ },
+ "ex-qravgbj6": {
+  "prompt": "Associe cada linguagem ao jeito de impedir que uma classe ganhe subclasses.",
+  "pairs": [
+   {
+    "left": "Java",
+    "right": "final na classe, recusado pelo compilador"
+   },
+   {
+    "left": "Kotlin",
+    "right": "fechada por padrão a menos que marcada open"
+   },
+   {
+    "left": "Python",
+    "right": "typing.final, cobrado só por um verificador de tipos"
+   },
+   {
+    "left": "TypeScript",
+    "right": "não há como proibir"
+   }
+  ]
+ },
+ "ex-k8tyzhz4": {
+  "prompt": "Book e Film em mixins.py herdam os mesmos quatro mixins, e ainda assim um imprime a etiqueta de estante e o outro o código de barras. Por quê?",
+  "choices": [
+   {
+    "text": "Os pais estão listados em ordem diferente, e o Python roda o primeiro label na ordem de resolução de métodos",
+    "why": "Isso. Trocar dois nomes de lugar entre os parênteses mudou o que a classe faz, e nada avisou."
+   },
+   {
+    "text": "Film sobrescreve label ele mesmo",
+    "why": "Film só define __init__; os dois labels vêm de mixins."
+   },
+   {
+    "text": "O Python escolhe o mixin cujo label usa campos que o objeto tem",
+    "why": "O Python nunca olha dentro de um método para escolhê-lo; e os dois objetos têm title, shelf e code."
+   }
+  ]
+ },
+ "ex-fceq48ky": {
+  "prompt": "Member(JsonMixin) falha com 'Member' object has no attribute 'as_dict'. O que esse erro mostra sobre os mixins?",
+  "choices": [
+   {
+    "text": "Que json.dumps não consegue serializar objetos com um campo name",
+    "why": "json.dumps nem foi alcançado; a chamada falhou um passo antes, procurando as_dict."
+   },
+   {
+    "text": "Que um mixin só pode ser usado por uma classe com __init__ próprio",
+    "why": "Member tem __init__; o que falta é um método que outro mixin deveria trazer."
+   },
+   {
+    "text": "JsonMixin depende de um método que só outro pai fornece",
+    "why": "Isso. É a classe base frágil entre irmãos, descoberta só quando o método é chamado pela primeira vez."
+   },
+   {
+    "text": "Que Member precisava herdar de Book também",
+    "why": "Um membro não é um livro; o que ele precisava era a capacidade as_dict, de AsDictMixin."
+   }
+  ]
+ },
+ "ex-cm8c8888": {
+  "prompt": "Em Go, uma struct embute dois tipos que têm, os dois, um método Label, e o código chama s.Label(). O que acontece?",
+  "choices": [
+   {
+    "text": "Vence o tipo embutido primeiro, como na ordem de resolução de métodos do Python",
+    "why": "Go não tem ordem de resolução para esse caso; ele se recusa a adivinhar."
+   },
+   {
+    "text": "Vence o tipo embutido por último, como nas funções de mixin do TypeScript",
+    "why": "Essa é a regra do TypeScript; Go trata o conflito como erro."
+   },
+   {
+    "text": "O compilador recusa a chamada como seletor ambíguo, antes de rodar",
+    "why": "Isso. O conflito que o Python resolveu em silêncio em mixins.py não compila em Go."
+   },
+   {
+    "text": "O programa entra em pânico em tempo de execução na primeira chamada a Label",
+    "why": "Go pega isso antes, na compilação, quando a chamada é escrita."
+   }
+  ]
+ },
+ "ex-sdyfe7m6": {
+  "prompt": "Ponha em ordem os passos para transformar a hierarquia de empréstimos em composição, como a seção os faz.",
+  "items": [
+   "Fixar o comportamento com testes que passam por open_loan",
+   "Dar nome ao que varia entre as subclasses",
+   "Dar ao pai um campo para cada coisa que varia",
+   "Fazer open_loan passar partes em vez de escolher uma classe",
+   "Apagar as subclasses que nada mais constrói"
+  ],
+  "trap": "Apagar as subclasses antes de a fábrica parar de citá-las quebra todo mundo de uma vez; elas saem por último."
+ },
+ "ex-9jbv5fet": {
+  "prompt": "Por que os testes de test_loans.py passam por open_loan em vez de construir StudentLoan e FilmLoan diretamente?",
+  "choices": [
+   {
+    "text": "Porque o unittest não consegue importar classes, só funções",
+    "why": "O unittest importa qualquer coisa que o Python importe; test_fines.py importa a classe Loan."
+   },
+   {
+    "text": "Para nunca citarem as classes que a refatoração apaga",
+    "why": "Isso. Testes escritos contra a porta que todo mundo usa sobrevivem a uma mudança atrás dela."
+   },
+   {
+    "text": "Porque open_loan é mais rápido que chamar um construtor",
+    "why": "Se tanto, é um pouco mais lento; velocidade não foi o motivo."
+   }
+  ]
+ },
+ "ex-hgh11k53": {
+  "prompt": "Um colega quer um AuditedShelf que escreva uma linha de log para cada título acrescentado. Shelf vem de um pacote publicado. Que projeto esta lição defende?",
+  "choices": [
+   {
+    "text": "Herdar de Shelf e sobrescrever só add, já que add_all o chama",
+    "why": "Isso depende de uma chamada a self não documentada; o segundo shelf.py removeu exatamente isso e a contagem foi para 1."
+   },
+   {
+    "text": "Guardar um Shelf e repassar tudo com __getattr__, para métodos novos continuarem funcionando",
+    "why": "Métodos novos continuariam funcionando e sem log, que é a falha que a auditoria existe para evitar."
+   },
+   {
+    "text": "Guardar um Shelf e escrever cada método que oferece, com log em cada um",
+    "why": "Isso. Depende só do que os métodos de Shelf fazem, e um método novo é algo que o invólucro decide oferecer."
+   },
+   {
+    "text": "Copiar o código de Shelf para o projeto e acrescentar o log nele",
+    "why": "Isso cria uma cópia divergente do pacote: toda correção feita lá tem de ser copiada à mão dali em diante."
+   }
+  ]
+ },
+ "ex-0r20zbp2": {
+  "prompt": "A biblioteca começa a emprestar leitores digitais por 21 dias, com a carência de estudante de sempre. No loans.py por composição, o que precisa mudar?",
+  "choices": [
+   {
+    "text": "open_loan aprende mais uma duração de empréstimo, e só",
+    "why": "Isso. Duração e regra de multa são partes separadas, então o item novo reaproveita GraceDays sem mudança."
+   },
+   {
+    "text": "Duas classes novas, EReaderLoan e StudentEReaderLoan",
+    "why": "É disso que a hierarquia antiga precisaria; a por composição não tem classe por tipo de empréstimo."
+   },
+   {
+    "text": "Uma subclasse de GraceDays que saiba de leitores digitais",
+    "why": "A regra de carência não liga para o que foi emprestado; ela só vê dias de atraso."
+   },
+   {
+    "text": "Reescrever test_loans.py, porque cada um dos testes cita uma classe de empréstimo",
+    "why": "Nenhum deles cita uma classe; todos passam por open_loan, e é por isso que sobreviveram à refatoração."
+   }
+  ]
+ },
+ "ex-e1pckp59": {
+  "prompt": "Uma mudança correta dentro de um pai quebra uma subclasse que contava com o pai chamando os próprios métodos. Isso se chama problema da classe ___ frágil.",
+  "blanks": [
+   {
+    "accept": [
+     "base"
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,383 @@
+{
+ "ex-4e65g8xg": {
+  "prompt": "Em pull_push.py, por que a linha \"Iracema is back\" nunca aparece na metade pull?",
+  "choices": [
+   {
+    "text": "O gerador lançou um erro no terceiro título e o laço o engoliu",
+    "why": "Nada foi lançado; a transcrição não mostra erro, e um laço for não engole exceções."
+   },
+   {
+    "text": "Ninguém pediu um terceiro livro",
+    "why": "Isso. Um gerador só roda até o próximo valor que alguém pede, e o islice parou depois de dois."
+   },
+   {
+    "text": "O balcão imprimiu, mas depois que a metade push começou, e a linha sumiu",
+    "why": "A saída está em ordem e completa; a metade push imprime as próprias três linhas sobre o balcão."
+   }
+  ]
+ },
+ "ex-dnh4b6qa": {
+  "prompt": "Associe cada jeito de obter valores ao que os entrega.",
+  "pairs": [
+   {
+    "left": "um valor, puxado",
+    "right": "uma chamada de função"
+   },
+   {
+    "left": "muitos valores, puxados",
+    "right": "um gerador"
+   },
+   {
+    "left": "um valor, empurrado depois",
+    "right": "uma promise ou future"
+   },
+   {
+    "left": "muitos valores, empurrados",
+    "right": "um observable"
+   }
+  ]
+ },
+ "ex-fed7kqsq": {
+  "prompt": "Qual destas fontes combina mal com pull, de modo que um projeto reativo serve melhor?",
+  "choices": [
+   {
+    "text": "Um arquivo CSV com os empréstimos do ano passado, lido linha a linha",
+    "why": "Um arquivo espera a próxima leitura; um laço comum sobre ele é mais simples e nunca guarda mais do que pediu."
+   },
+   {
+    "text": "Um cursor de banco de dados sobre a tabela de membros",
+    "why": "Um cursor busca quando pedido, então o consumidor dita o ritmo, que é a força do pull."
+   },
+   {
+    "text": "Mensagens chegando num socket, vindas dos totens de autoatendimento da biblioteca",
+    "why": "Isso. Os totens mandam quando um membro os usa; o programa não pode pedir que esperem, que é o caso para o qual o push existe."
+   },
+   {
+    "text": "Uma lista de títulos já na memória",
+    "why": "Está tudo ali antes de começar; percorrê-la é o pull na forma mais simples."
+   }
+  ]
+ },
+ "ex-99cna1fx": {
+  "prompt": "returns = of(\"Dom Casmurro\", \"Vidas Secas\") roda, e mais nada por enquanto. O que o observable imprimiu?",
+  "choices": [
+   {
+    "text": "Nada: ninguém se inscreveu",
+    "why": "Isso. Um observable é uma descrição; o produtor roda dentro de subscribe."
+   },
+   {
+    "text": "Os dois títulos, porque of() empurra os valores assim que é chamado",
+    "why": "of() só monta um Observable em volta de um produtor; a transcrição imprime \"built; nothing has happened yet\" primeiro."
+   },
+   {
+    "text": "O primeiro título, guardado até chegar um inscrito",
+    "why": "Nada é guardado: não há buffer em Observable, só uma função esperando ser chamada."
+   }
+  ]
+ },
+ "ex-vj6n35rp": {
+  "prompt": "O produtor descuidado chama on_next(\"O Cortiço\") depois de on_complete(). Por que quem se inscreveu nunca o vê?",
+  "choices": [
+   {
+    "text": "O Python interrompe uma função na primeira chamada a um método chamado on_complete",
+    "why": "O produtor continua rodando; a chamada acontece e o sink decide o que fazer com ela."
+   },
+   {
+    "text": "O sink fechou na conclusão e passou a ignorar todo sinal posterior",
+    "why": "Isso. A regra sobre o fim é mantida pelo Sink para todo produtor, então nenhum produtor precisa lembrar dela."
+   },
+   {
+    "text": "Títulos são deduplicados, e O Cortiço já tinha sido enviado",
+    "why": "Nada deduplica, e O Cortiço não tinha sido enviado; o produtor mandou Iracema antes de concluir."
+   },
+   {
+    "text": "subscribe retornou antes de o produtor conseguir enviá-lo",
+    "why": "O produtor roda inteiro dentro de subscribe, de forma síncrona; ele enviou, para um sink fechado."
+   }
+  ]
+ },
+ "ex-va7eqpw6": {
+  "prompt": "Um fluxo manda qualquer número de valores, depois no máximo um fim: on_error ou on____ , nunca os dois.",
+  "blanks": [
+   {
+    "accept": [
+     "_complete"
+    ]
+   }
+  ]
+ },
+ "ex-w8gybjmx": {
+  "prompt": "Na execução de operators.py, o que é impresso logo depois de \"source: Vidas Secas, 3 days late\"?",
+  "choices": [
+   {
+    "text": "\"source: Iracema, 0 days late\", porque a fonte manda as quatro antes de os operadores rodarem",
+    "why": "É assim que três list comprehensions se comportariam. Um fluxo manda cada valor pela cadeia inteira primeiro."
+   },
+   {
+    "text": "\"fines so far: 150 cents\"",
+    "why": "Isso. O valor passa por filter_, map_ e scan antes de a fonte seguir adiante."
+   },
+   {
+    "text": "\"fines so far: 3 cents\", porque scan roda antes de map_",
+    "why": "Os operadores rodam na ordem escrita no pipe: filter_, depois map_, depois scan."
+   }
+  ]
+ },
+ "ex-ea7ksfxk": {
+  "prompt": "Uma quinta devolução entra em operators.py depois de O Cortiço: (\"Senhora\", 2). Qual é o último total acumulado impresso, em centavos?",
+  "hint": "O total antes dela era 400.",
+  "unit": "centavos"
+ },
+ "ex-nxd0yfab": {
+  "prompt": "fines = Observable(produce).pipe(filter_(...), map_(...), scan(...)) roda. O que aconteceu com a fonte?",
+  "choices": [
+   {
+    "text": "Rodou uma vez, e os resultados ficam guardados para o primeiro inscrito",
+    "why": "Não há cache em lugar nenhum da cadeia; cada inscrição roda a fonte de novo."
+   },
+   {
+    "text": "Rodou até o filter_ e está esperando",
+    "why": "Nada rodou, nem a fonte; o pipe só aninha uma descrição dentro de outra."
+   },
+   {
+    "text": "Nada rodou ainda; o pipe só montou uma descrição",
+    "why": "Isso. Inscrever-se em fines é o que faz as inscrições correrem rio acima e dá a partida na fonte."
+   }
+  ]
+ },
+ "ex-r0n693ze": {
+  "prompt": "Na metade quente de hot_cold.py, qual é o primeiro título que Bia vê?",
+  "choices": [
+   {
+    "text": "Dom Casmurro, repetido para ela quando se inscreve",
+    "why": "Um Subject simples não guarda histórico; repetir é o que o ReplaySubject acrescenta."
+   },
+   {
+    "text": "Vidas Secas, o título logo após a entrada de Bia",
+    "why": "Isso. Ela entrou depois que Dom Casmurro passou, e um fluxo quente só manda o que acontece dali em diante."
+   },
+   {
+    "text": "Nenhum: quem se inscreve tarde não recebe nada",
+    "why": "Entrar tarde só custa o que já foi enviado; Bia recebe os dois títulos seguintes."
+   }
+  ]
+ },
+ "ex-g18btcgk": {
+  "prompt": "Quais destas fontes são quentes? Marque todas que se aplicam.",
+  "choices": [
+   {
+    "text": "Teclas digitadas na caixa de busca da página do catálogo",
+    "why": "Isso. O usuário digita esteja algo ouvindo ou não."
+   },
+   {
+    "text": "Uma requisição HTTP pela lista de aquisições novas",
+    "why": "Cada inscrição manda a própria requisição, que é o comportamento frio que surpreende quem se inscreve duas vezes."
+   },
+   {
+    "text": "Leituras do leitor de código de barras no balcão de devoluções",
+    "why": "Isso. Os livros passam pelo leitor no horário deles."
+   },
+   {
+    "text": "of(\"Dom Casmurro\", \"Iracema\")",
+    "why": "of() roda o produtor para cada inscrito desde o primeiro valor, que é a definição de frio."
+   }
+  ]
+ },
+ "ex-6bfk7a8d": {
+  "prompt": "Uma página mostra os empréstimos do membro em dois lugares, e o log do servidor mostra duas requisições idênticas por visita. Qual é a correção provável?",
+  "choices": [
+   {
+    "text": "Fazer o servidor responder mais rápido, para a segunda requisição achar o cache da primeira",
+    "why": "Velocidade não muda quantas vezes um observable frio roda; continuariam sendo duas requisições."
+   },
+   {
+    "text": "Fazer as duas partes da tela dividirem uma única inscrição",
+    "why": "Isso. A requisição é fria, então cada inscrito dá a própria partida; um operador como share a transforma numa execução com dois ouvintes."
+   },
+   {
+    "text": "Transformar a requisição num Subject em que a página empurra valores",
+    "why": "Um Subject é quente, mas alguém ainda precisa fazer a requisição e empurrar a resposta; o share faz essa ligação por você."
+   },
+   {
+    "text": "Cancelar a inscrição do segundo lugar assim que o primeiro receber a resposta",
+    "why": "A essa altura as duas requisições já foram enviadas; e o segundo lugar não mostraria nada."
+   }
+  ]
+ },
+ "ex-sf43x27w": {
+  "prompt": "Os valores chegam mais depressa do que são tratados, em média, o dia todo, com uma fila sem limite no meio. O que acontece?",
+  "choices": [
+   {
+    "text": "A fila e a espera de cada valor continuam crescendo até a memória acabar",
+    "why": "Isso. Uma fila absorve uma rajada, nunca uma taxa; a leitura mais antiga do flood.py já tinha cinco segundos de idade depois de dez."
+   },
+   {
+    "text": "A fila suaviza a taxa, então os valores são tratados com atraso mas o acúmulo fica estável",
+    "why": "Só fica estável se a taxa média de entrada for igual à de saída; o flood.py cresce três por segundo."
+   },
+   {
+    "text": "O Python lança queue.Full quando a fila chega ao tamanho padrão",
+    "why": "Uma fila sem limite não tem tamanho a atingir; queue.Full só existe quando maxsize está definido."
+   }
+  ]
+ },
+ "ex-466qa7mp": {
+  "prompt": "No flood.py, as leituras chegam a 5 por segundo e o catálogo trata 2. Quantas leituras estão esperando depois de 20 segundos?",
+  "unit": "leituras"
+ },
+ "ex-mr2v9n54": {
+  "prompt": "Um inscrito de Reactive Streams chama request(1) depois de tratar cada valor. O que isso lhe dá que o blocking.py consegue bloqueando uma thread?",
+  "choices": [
+   {
+    "text": "Valores numa ordem garantida, que uma fila não pode prometer",
+    "why": "A queue.Queue é a primeira a entrar, a primeira a sair; o blocking.py tratou as doze em ordem."
+   },
+   {
+    "text": "Um produtor que nunca manda mais do que o inscrito disse que aguenta",
+    "why": "Isso. A demanda é o mesmo backpressure sem uma thread esperando: o publicador segura o próximo valor até chegar um pedido."
+   },
+   {
+    "text": "Um jeito de fazer o leitor do balcão ler mais devagar",
+    "why": "A demanda só funciona quando o produtor consegue se segurar; o leitor não consegue, e é por isso que a seção 07 existe."
+   },
+   {
+    "text": "Valores perdidos contados automaticamente pela biblioteca",
+    "why": "Com demanda nada se perde; contar perdas é coisa das estratégias drop e latest."
+   }
+  ]
+ },
+ "ex-q32p73mg": {
+  "prompt": "Associe cada tipo de dado à estratégia que a seção recomenda para uma fila cheia.",
+  "pairs": [
+   {
+    "left": "empréstimos sendo devolvidos no balcão",
+    "right": "block, ou buffer com limite e alarme"
+   },
+   {
+    "left": "exemplares de um livro na estante, enviados a cada mudança",
+    "right": "latest"
+   },
+   {
+    "left": "visualizações de página para um relatório semanal",
+    "right": "drop, com os descartes contados"
+   }
+  ]
+ },
+ "ex-9tyhvgz2": {
+  "prompt": "No strategies.py, drop e latest trataram cada um cerca de um terço das leituras. O que latest dá que drop não dá?",
+  "choices": [
+   {
+    "text": "Perde menos leituras",
+    "why": "Perde mais: oito contra sete do drop."
+   },
+   {
+    "text": "O catálogo sempre trabalha na leitura mais nova, terminando na 12",
+    "why": "Isso. O drop fica com as antigas e joga fora as novas, então a última que ele tratou foi a 10 e a 12 se perdeu."
+   },
+   {
+    "text": "Uma fila que guarda mais de duas leituras quando precisa",
+    "why": "Latest guarda no máximo uma; crescer além da capacidade é o que o buffer faz."
+   }
+  ]
+ },
+ "ex-g0cwygxh": {
+  "prompt": "Block e buffer trataram as doze leituras e terminaram no tick 36. Onde block pôs o custo que buffer guardou na memória?",
+  "choices": [
+   {
+    "text": "Em lugar nenhum: block é simplesmente a estratégia melhor",
+    "why": "A diferença entre as taxas precisa ir para algum lugar, e block só funciona com um produtor que pode esperar."
+   },
+   {
+    "text": "Em leituras perdidas, contadas na coluna lost",
+    "why": "Block não perdeu nenhuma; a coluna lost dele é 0, como a do buffer."
+   },
+   {
+    "text": "No tempo do produtor: o leitor terminou no tick 31 em vez do 12",
+    "why": "Isso. A diferença entre as duas taxas precisa ficar em algum lugar: numa fila que cresce, ou num produtor que espera."
+   }
+  ]
+ },
+ "ex-pmzpwwpx": {
+  "prompt": "Por que o RxJS não tem request(n), quando o Reactor constrói tudo sobre ele?",
+  "choices": [
+   {
+    "text": "JavaScript tem uma thread só, então um produtor nunca pode ser mais rápido que o consumidor",
+    "why": "Uma thread só não impede eventos de se acumularem; é por isso que o RxJS traz throttleTime e sampleTime."
+   },
+   {
+    "text": "A maioria das fontes do navegador é quente e não pode ser desacelerada, então ele oferece operadores com perda",
+    "why": "Isso. Um usuário não clica mais devagar porque um tratador está ocupado."
+   },
+   {
+    "text": "Foi escrito antes de Reactive Streams existir e não se atualizou",
+    "why": "A seção diz que foi decidido de propósito: a demanda teria pouco o que desacelerar num navegador."
+   }
+  ]
+ },
+ "ex-zc8kyxzx": {
+  "prompt": "Em Go, um envio para um canal com buffer fica dentro de um select com um caso default que incrementa dropped. Que estratégia é essa?",
+  "choices": [
+   {
+    "text": "block, porque canais sempre bloqueiam",
+    "why": "Um envio simples bloqueia; o default roda justamente quando o envio teria de esperar."
+   },
+   {
+    "text": "latest, porque a leitura mais nova substitui a que está no canal",
+    "why": "Nada é tirado do canal; a leitura nova é que vai embora."
+   },
+   {
+    "text": "drop, com contagem",
+    "why": "Isso. Quando o canal está cheio, a leitura nova é descartada, e o contador torna a perda visível."
+   },
+   {
+    "text": "buffer, porque o canal foi criado com capacidade",
+    "why": "A capacidade é um limite; um buffer sem limite nunca chegaria ao caso default."
+   }
+  ]
+ },
+ "ex-r5afz6yn": {
+  "prompt": "fines.subscribe(...) é chamado em operators.py. Ponha em ordem o que acontece.",
+  "items": [
+   "O produtor de scan se inscreve no observable que map_ devolveu",
+   "O produtor de map_ se inscreve no observable de filter_",
+   "O produtor de filter_ se inscreve na fonte",
+   "A fonte empurra Dom Casmurro no callback de filter_",
+   "Vidas Secas chega a quem se inscreveu como 150"
+  ],
+  "trap": "As inscrições correm rio acima, do fim da cadeia até a fonte, antes de qualquer valor descer."
+ },
+ "ex-vww6ec8q": {
+  "prompt": "Uma tela na sala de leitura mostra quantas mesas de estudo estão livres, a partir de um fluxo de sensores que muda muitas vezes por minuto. As telas são ligadas a qualquer hora do dia. Que projeto serve?",
+  "choices": [
+   {
+    "text": "Um observable frio que lê os sensores desde o começo para cada tela, com buffer para nenhuma mudança se perder",
+    "why": "Os sensores são quentes e o passado não vale nada aqui; guardar cada mudança só faz a tela mostrar contagens velhas."
+   },
+   {
+    "text": "Quente, guardando o valor atual para quem chega, e latest para quem fica para trás",
+    "why": "Isso. Como um BehaviorSubject: uma tela ligada ao meio-dia precisa da contagem agora, e só a contagem mais nova importa."
+   },
+   {
+    "text": "Um Subject simples, e block para os sensores esperarem a tela mais lenta",
+    "why": "Um Subject simples não dá nada a uma tela atrasada até a próxima mudança, e sensores não podem ser obrigados a esperar."
+   }
+  ]
+ },
+ "ex-93w5ajzn": {
+  "prompt": "Pagamentos de multa chegam do banco como eventos, às vezes em rajadas de centenas. O tratador registra cada um no banco de dados. Que escolha é errada aqui?",
+  "choices": [
+   {
+    "text": "Latest, para o tratador sempre trabalhar no pagamento mais novo",
+    "why": "Isso, essa é a errada. Um pagamento é um fato: substituir um pelo próximo perde dinheiro que um membro pagou de verdade."
+   },
+   {
+    "text": "Um buffer com limite e um alarme quando ele enche",
+    "why": "Essa é sensata: rajadas acabam, nada se perde, e o alarme avisa quando não acabam."
+   },
+   {
+    "text": "Demanda, se a interface do banco deixar o tratador pedir pagamentos em lotes",
+    "why": "Essa também é sensata: quando o produtor consegue se segurar, deixar o consumidor ditar o ritmo não perde nada."
+   }
+  ]
+ }
+}
