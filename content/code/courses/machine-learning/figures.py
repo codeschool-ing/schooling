@@ -1058,6 +1058,79 @@ def l10_pr(lang):
             'Acima da linha tracejada um corte dá dinheiro; a curva a cruza numa revocação de mais ou menos metade.')
     return fig, cap
 
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-value-curve', 11)
+def l11_value_curve(lang):
+    import numpy as np
+    t = first_model_scores()
+    y = t['churned'].to_numpy() == 1
+    ch = t['chance'].to_numpy()
+    cuts = np.round(np.arange(0.05, 0.501, 0.005), 3)
+    vals = [144 * (y & (ch >= c)).sum() - 40 * (ch >= c).sum() for c in cuts]
+    fig = Fig('l11-value-curve', 580, 360, T(lang,
+        'Net value on the test months against the cut, from 0.05 to 0.5. The curve starts deep below '
+        'zero, climbs steeply to a broad flat top between about 0.17 and 0.27, and slopes gently down '
+        'to about R$ 9,000 at 0.5. A dashed line marks the break-even cut of 0.278, just right of the top.',
+        'Valor líquido nos meses de teste contra o corte, de 0,05 a 0,5. A curva começa bem abaixo de '
+        'zero, sobe íngreme até um topo largo e plano entre cerca de 0,17 e 0,27, e desce devagar até '
+        'cerca de R$ 9.000 em 0,5. Uma linha tracejada marca o corte de equilíbrio, 0,278, logo à '
+        'direita do topo.'))
+    p = Plot(fig, 92, 24, 550, 300, 0.05, 0.5, -80000, 30000)
+    dec = (lambda v: f'{v:.1f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.1f}')
+    p.xaxis([0.1, 0.2, 0.3, 0.4, 0.5], fmt=dec, label=T(lang, 'cut: send a credit above this chance',
+                                                       'corte: mandar crédito acima desta chance'))
+    p.yaxis([-80000, -60000, -40000, -20000, 0, 20000], fmt=lambda v: money(lang, v),
+            label=T(lang, 'net value, six months', 'valor líquido, seis meses'))
+    fig.line(p.sx(0.05), p.sy(0), p.sx(0.5), p.sy(0), stroke='--paper-dim', width=1.2)
+    fig.path('M' + ' L'.join(f'{p.sx(c):.1f} {p.sy(v):.1f}' for c, v in zip(cuts, vals)),
+             stroke='--phosphor', width=2.4)
+    p.vline(40 / 144, label=T(lang, 'break-even 0.278', 'equilíbrio 0,278'), top=p.sy(29000))
+    for c in (0.5,):
+        v = vals[list(cuts).index(c)]
+        fig.circle(p.sx(c), p.sy(v), 4.5, fill='--amber')
+        fig.text(p.sx(c) - 8, p.sy(v) - 12, T(lang, 'the default, 0.5', 'o padrão, 0,5'), size=10,
+                 anchor='end', fill='--amber')
+    cap = T(lang, 'A flat top, a gentle slope to the right and a cliff to the left: a cut too low costs '
+                  'far more than a cut too high.',
+            'Um topo plano, uma descida suave à direita e um penhasco à esquerda: um corte baixo demais '
+            'custa muito mais que um alto demais.')
+    return fig, cap
+
+
+@figure('l11-reliability', 11)
+def l11_reliability(lang):
+    from sklearn.calibration import calibration_curve
+    t = first_model_scores()
+    happened, said = calibration_curve(t['churned'], t['chance'], n_bins=10, strategy='quantile')
+    fig = Fig('l11-reliability', 560, 380, T(lang,
+        'A reliability chart. Each of ten points is a tenth of the test rows: across, the average chance '
+        'the model gave; up, the share that really cancelled. The dashed diagonal is where an honest '
+        'model sits. The low points sit on it; the top three sit above it, the last at 0.247 across and '
+        '0.292 up.',
+        'Um gráfico de confiabilidade. Cada um dos dez pontos é um décimo das linhas de teste: na '
+        'horizontal, a chance média que o modelo deu; na vertical, a parte que cancelou de verdade. A '
+        'diagonal tracejada é onde fica um modelo honesto. Os pontos baixos ficam nela; os três de cima '
+        'ficam acima, o último em 0,247 na horizontal e 0,292 na vertical.'))
+    p = Plot(fig, 80, 30, 420, 330, 0, 0.3, 0, 0.3)
+    dec = (lambda v: f'{v:.2f}'.replace('.', ',')) if lang == 'pt' else (lambda v: f'{v:.2f}')
+    p.xaxis([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3], fmt=dec, label=T(lang, 'what the model said', 'o que o modelo disse'))
+    p.yaxis([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3], fmt=dec, label=T(lang, 'what happened', 'o que aconteceu'))
+    fig.line(p.sx(0), p.sy(0), p.sx(0.3), p.sy(0.3), stroke='--paper-dim', width=1.2, dash='4 4')
+    fig.text(p.sx(0.2) + 8, p.sy(0.17), T(lang, 'honest', 'honesto'), size=10, fill='--paper-dim', anchor='start')
+    fig.path('M' + ' L'.join(f'{p.sx(a):.1f} {p.sy(b):.1f}' for a, b in zip(said, happened)),
+             stroke='--phosphor-dim', width=1.4)
+    for a, b in zip(said, happened):
+        fig.circle(p.sx(a), p.sy(b), 4, fill='--phosphor')
+    fig.text(p.sx(said[-1]) - 10, p.sy(happened[-1]) - 2, T(lang, 'top tenth', 'décimo de cima'),
+             size=10, anchor='end', fill='--amber')
+    fig.text(440, 120, T(lang, 'above the line:', 'acima da linha:'), size=10.5, anchor='start', weight='600')
+    fig.text(440, 138, T(lang, 'more left than', 'saiu mais gente'), size=10.5, anchor='start', fill='--paper-dim')
+    fig.text(440, 154, T(lang, 'the model said', 'que o modelo disse'), size=10.5, anchor='start', fill='--paper-dim')
+    cap = T(lang, 'Honest at the bottom, low at the top, where the credits go.',
+            'Honesto embaixo, baixo em cima, onde vão os créditos.')
+    return fig, cap
+
 
 def main():
     if '--list' in sys.argv:
