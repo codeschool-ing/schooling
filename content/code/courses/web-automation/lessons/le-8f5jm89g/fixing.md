@@ -44,17 +44,16 @@ answer to a question the box no longer holds. With that listener in place of the
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config quarantine.config.js --repeat-each 20 | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  20 passed (21.9s)
+  20 passed (20.8s)
 ```
 
-Twenty of twenty. Read that number with some care, because **a short green streak proves little
-about a rare failure**. Before the fix this test failed one attempt in twenty with two workers. At
-a true rate of 1 in 20, a run of twenty passes still happens about 36% of the time, since 0.95
-raised to the power 20 is about 0.36. With one worker it failed eight in twenty, and twenty
-passes in a row at that rate would happen with a chance of 0.6 raised to the 20th power, about 4
-in 100,000. So the strong evidence is the count from the conditions where the test failed most,
-taken many times; a fix you can explain from the code, as this one can, is what makes the count
-believable. Put the original `search.js` back after trying this: the shop's flaws are kept on
+Twenty of twenty. How much that proves depends on the rate it replaced. Before the fix this test
+failed 5, 6 and 8 attempts in twenty on three runs, about one in four. At that rate, twenty passes
+in a row would happen by luck with a chance of 0.75 raised to the power 20, about 3 in 1,000, which
+is strong evidence. **A short green streak proves little about a rare failure**, though. Had the
+test failed one attempt in twenty, twenty passes in a row would still happen about 36% of the
+time, since 0.95 raised to the power 20 is about 0.36. So measure a fix where the test failed most,
+many times, and prefer a fix you can explain from the code, as this one can. Put the original `search.js` back after trying this: the shop's flaws are kept on
 purpose for the lessons that use them.
 
 ## Leaving the quarantine

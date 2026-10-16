@@ -45,17 +45,16 @@ antigo em `app/public/search.js`, o job da quarentena:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config quarantine.config.js --repeat-each 20 | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  20 passed (21.9s)
+  20 passed (20.8s)
 ```
 
-Vinte de vinte. Leia esse número com algum cuidado, porque **uma sequência verde curta prova pouco
-sobre uma falha rara**. Antes da correção este teste falhava uma tentativa em vinte com dois
-workers. Com uma taxa real de 1 em 20, uma sequência de vinte aprovações ainda acontece cerca de 36%
-das vezes, já que 0,95 elevado a 20 dá cerca de 0,36. Com um worker ele falhava oito em vinte, e
-vinte aprovações seguidas nessa taxa aconteceriam com chance de 0,6 elevado a 20, cerca de 4 em
-100.000. Então a evidência forte é a contagem nas condições em que o teste mais falhava, tirada
-muitas vezes; uma correção que você consegue explicar pelo código, como esta, é o que torna a
-contagem crível. Ponha o `search.js` original de volta depois de testar isso: as falhas da loja
+Vinte de vinte. Quanto isso prova depende da taxa que ficou para trás. Antes da correção este teste
+falhou 5, 6 e 8 tentativas em vinte em três execuções, cerca de uma em quatro. Nessa taxa, vinte
+aprovações seguidas aconteceriam por sorte com chance de 0,75 elevado a 20, cerca de 3 em 1.000, o
+que é uma evidência forte. **Uma sequência verde curta prova pouco sobre uma falha rara**, porém. Se
+o teste falhasse uma tentativa em vinte, vinte aprovações seguidas ainda aconteceriam cerca de 36%
+das vezes, já que 0,95 elevado a 20 dá cerca de 0,36. Então meça uma correção onde o teste mais
+falhava, muitas vezes, e prefira uma correção que você consegue explicar pelo código, como esta. Ponha o `search.js` original de volta depois de testar isso: as falhas da loja
 ficam de propósito para as aulas que as usam.
 
 ## Sair da quarentena

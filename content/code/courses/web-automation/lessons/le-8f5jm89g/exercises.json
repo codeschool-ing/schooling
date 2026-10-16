@@ -37,7 +37,7 @@
   "type": "quiz",
   "difficulty": "medium",
   "drillable": true,
-  "prompt": "Why does the lesson call a test that fails four runs in ten worse than one that fails every run?",
+  "prompt": "Why does the lesson call a test that fails five runs in ten worse than one that fails every run?",
   "choices": [
    {
     "text": "It hides more defects in the page",
@@ -95,17 +95,17 @@
   "type": "quiz",
   "difficulty": "medium",
   "drillable": true,
-  "prompt": "`banana.spec.js` and `waiting.spec.js`, twenty times each, give 40 passed with `--workers 1` and 2 failed with `--workers 2`, both receiving a count of 2. Which cause is that?",
+  "prompt": "`ssr.spec.js` and `waiting.spec.js`, ten times each, give 20 passed with `--workers 1` and 3 failed with `--workers 2`, each receiving a count of 2. Which cause is that?",
   "choices": [
    {
     "text": "Order: one ran before the other",
     "correct": false,
-    "why": "With one worker they also ran one after another, forty times, and every run passed; both reset first."
+    "why": "With one worker they also ran one after another, twenty times, and every run passed; both reset first."
    },
    {
     "text": "Timing: the page was slower with two workers",
     "correct": false,
-    "why": "A slow page would make the count late, not 2; the 2 is a second fruit that one test never added."
+    "why": "A slow page would make the count late, not 2; the 2 is a mango the ssr test never added."
    },
    {
     "text": "Shared state: one basket, two tests at the same moment",
@@ -131,7 +131,7 @@
    {
     "text": "Its rate was worked out and written beside it",
     "correct": true,
-    "why": "Right. A known, stated rate of one in a million is a decision; four in ten that nobody measured is a problem."
+    "why": "Right. A known, stated rate of one in a million is a decision; five in ten that nobody measured is a problem."
    },
    {
     "text": "Go tests are not allowed to be flaky, so it cannot count",
@@ -204,27 +204,27 @@
   "type": "quiz",
   "difficulty": "hard",
   "drillable": true,
-  "prompt": "The typing test failed 1 of 20 with two workers and 8 of 20 with one. It reads nothing another test writes. What does the change of rate tell you?",
+  "prompt": "The typing test failed 5 of 20 with two workers and 6 of 20 with one. The ssr and waiting pair failed 0 times with one worker and 3 with two. What does that contrast tell you?",
   "choices": [
    {
-    "text": "Shared state, since the rate moved with `--workers`",
+    "text": "Both are shared state, since both were run with `--workers`",
     "correct": false,
-    "why": "Workers also change the load on the machine; sharing is shown by a value that is another test's work, and here there is none."
+    "why": "Running with the flag proves nothing; what matters is whether the rate moved, and for the typing test it barely did."
    },
    {
-    "text": "Timing: the load moved the race",
+    "text": "The pair shares data; the typing test's cause is inside it",
     "correct": true,
-    "why": "Right. Nothing is shared, so what moved is when six nearly simultaneous answers were handled."
+    "why": "Right. A rate that jumps with workers says sharing, and the count of 2 names what was shared; a rate that stays put points at the test and its page."
    },
    {
-    "text": "Nothing: twenty runs are too few to compare",
+    "text": "Nothing: twenty runs are too few to compare anything",
     "correct": false,
-    "why": "Twenty is few for proving a fix, but 1 against 8 is a difference no coin explains; it says the conditions matter."
+    "why": "Twenty is few for proving a rare failure gone, but 0 against 3 beside 5 against 6 is a pattern worth reading."
    },
    {
-    "text": "One worker is broken on this machine",
+    "text": "Two workers make the machine too slow for both",
     "correct": false,
-    "why": "The failures are the search's wrong final list, the same in every failing attempt; no worker is broken."
+    "why": "Then the typing test would have moved too; it failed slightly more with one worker, not with two."
    }
   ]
  },
@@ -245,7 +245,7 @@
    {
     "text": "Which answer landed last",
     "correct": true,
-    "why": "Right. In one run `papaya` landed last; in the other, `p` did, at 832 ms."
+    "why": "Right. In one run the answer to `pap` was drawn last; in the other, the answer to `pa`, at 815 ms."
    },
    {
     "text": "How fast the keys were typed",
@@ -281,7 +281,7 @@
    {
     "text": "Flaky",
     "correct": true,
-    "why": "Right. The summary prints the count, as in *2 flaky* on the quarantined test."
+    "why": "Right. The summary prints the count, as in *7 flaky* on the quarantined test."
    },
    {
     "text": "Skipped, because the retry replaced it",
@@ -297,7 +297,7 @@
   "type": "quiz",
   "difficulty": "medium",
   "drillable": true,
-  "prompt": "The shared-basket pair, with `--retries 2`, prints *2 flaky, 38 passed* and exits with code 0. What did the retries hide?",
+  "prompt": "The shared-basket pair, with `--retries 2`, prints *5 flaky, 15 passed* and exits with code 0. What did the retries hide?",
   "choices": [
    {
     "text": "Nothing: the failures were noise",
@@ -362,7 +362,7 @@
    {
     "text": "A folder makes the test pass",
     "correct": false,
-    "why": "The quarantine job above still failed one attempt in twenty; the folder only changes which run decides."
+    "why": "The quarantine job above still failed eight attempts in twenty; the folder only changes which run decides."
    },
    {
     "text": "Playwright forbids two test folders in one configuration",
@@ -405,27 +405,27 @@
   "type": "quiz",
   "difficulty": "hard",
   "drillable": true,
-  "prompt": "`test.fail()` is added to the 145 ms typing test and it runs twenty times. The search defect does not show on any attempt. What does the summary say?",
+  "prompt": "`test.fail()` is added to the 145 ms typing test and it runs twenty times. The search defect shows on 7 of the attempts. What does the summary say?",
   "choices": [
    {
-    "text": "20 passed, because the annotation covers it",
+    "text": "20 passed, because the annotation covers the test",
     "correct": false,
-    "why": "The annotation expects a failure, and a pass under it is reported as an error."
+    "why": "The annotation expects a failure, and every attempt where the page behaved is a pass under it, which is an error."
    },
    {
-    "text": "20 failed: expected to fail, but passed",
+    "text": "7 failed, 13 passed",
+    "correct": false,
+    "why": "That reads the attempts as if there were no annotation; under `test.fail()` the seven that met the defect are the ones that pass."
+   },
+   {
+    "text": "13 failed, 7 passed",
     "correct": true,
-    "why": "Right. An annotation that says *always fails* cannot describe a test that fails sometimes."
+    "why": "Right. Each of the thirteen says *Expected to fail, but passed*: an annotation for *always fails* cannot describe a test that fails some of the time."
    },
    {
-    "text": "20 flaky",
+    "text": "7 flaky, 13 passed",
     "correct": false,
-    "why": "Flaky needs retries and an attempt that failed first; there were neither."
-   },
-   {
-    "text": "20 skipped",
-    "correct": false,
-    "why": "`test.fail()` runs the test; skipping is `test.skip()` and `test.fixme()`."
+    "why": "Flaky needs retries and an attempt that failed first; there were no retries."
    }
   ]
  },
@@ -480,7 +480,7 @@
     "why": "Each attempt has its timeout; the failing attempt took 6.1 s because it waited out five seconds."
    },
    {
-    "text": "The final list is wrong; more waiting changes nothing",
+    "text": "The final list is wrong, and more waiting changes nothing about it",
     "correct": true,
     "why": "Right. A limit of thirty seconds would make the failure take thirty seconds and fail the same way."
    },
@@ -503,27 +503,27 @@
   "type": "quiz",
   "difficulty": "hard",
   "drillable": true,
-  "prompt": "After the search fix, the quarantine job passes 20 of 20 with two workers. What would make that evidence much stronger?",
+  "prompt": "After the search fix, the quarantine job passes 20 of 20. Before it, the test failed 5, 6 and 8 attempts in twenty. How strong is that evidence?",
   "choices": [
    {
-    "text": "Running it again tomorrow with the same settings",
+    "text": "Weak: twenty passes prove nothing about a flaky test",
     "correct": false,
-    "why": "Twenty more under the condition where it failed one in twenty adds little; the condition matters more than the day."
+    "why": "That holds for a rare failure; at one in four, twenty passes by luck are about 3 in 1,000."
    },
    {
-    "text": "Adding `--retries 2` to make sure",
+    "text": "Strong: by luck that streak would happen about 3 times in 1,000",
+    "correct": true,
+    "why": "Right. 0.75 raised to the power 20 is about 0.003, and the fix can also be explained from the code."
+   },
+   {
+    "text": "Complete: the defect cannot come back",
+    "correct": false,
+    "why": "No count proves a future; a later change to `search.js` can bring the race back, which is why the test stays."
+   },
+   {
+    "text": "Unknown until the run is repeated with `--retries 2`",
     "correct": false,
     "why": "Retries can only turn failures into flaky passes; they make a green streak weaker evidence, not stronger."
-   },
-   {
-    "text": "Many runs with one worker",
-    "correct": true,
-    "why": "Right. Twenty passes at that rate would happen about 4 times in 100,000 by luck."
-   },
-   {
-    "text": "Moving it back into `tests/` and watching the gate",
-    "correct": false,
-    "why": "That puts an unproved test back where its failures shut the gate, the step the quarantine exists to avoid."
    }
   ]
  },
@@ -565,7 +565,7 @@
     "why": "The page may be right for the zone it was asked in; first find whether the test or the machine assumed a zone."
    },
    {
-    "text": "Environment and the clock; fix the zone and time",
+    "text": "Environment; fix zone and clock",
     "correct": true,
     "why": "Right. Remove the difference between machines: the test sets the zone and the time it means, as Playwright's `timezoneId` and a fixed clock allow."
    }

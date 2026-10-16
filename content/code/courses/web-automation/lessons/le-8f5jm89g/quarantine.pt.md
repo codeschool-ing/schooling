@@ -61,7 +61,8 @@ O portão, como fica no fim desta aula:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  42 passed (13.0s)
+  1 failed
+  50 passed (21.3s)
 ```
 
 O job da quarentena, rodado como uma quarentena deve ser rodada, muitas vezes, para o resultado ser
@@ -69,15 +70,14 @@ uma taxa:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config quarantine.config.js --repeat-each 20 | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  1 failed
-  19 passed (25.2s)
+  8 failed
+  12 passed (42.5s)
 ```
 
 No CI os dois são jobs separados. O resultado do portão decide se uma mudança entra; o da quarentena
-não decide nada e é lido pela contagem. A aula 5 de `testing-cicd` trata de montar esses jobs. O
-portão acima ficou verde nesta execução, e a primeira seção mostrou que ele não fica verde em toda
-execução: os dois testes que reiniciam a loja um embaixo do outro continuam nele. Pô-los em
-quarentena seria a resposta errada, porque o defeito está em como os testes dividem os dados, e a
+não decide nada e é lido pela contagem. A aula 5 de `testing-cicd` trata de montar esses jobs. O portão acima está vermelho, como esteve nas dez execuções da primeira seção: o teste do ssr
+encontra uma cesta em que outro teste acabou de pôr algo. Pô-lo em quarentena seria a resposta
+errada, porque o defeito está em como os testes dividem os dados, e não no teste nem na página, e a
 aula 15 o corrige ali.
 
 ## skip, fixme e fail
@@ -105,14 +105,15 @@ acrescentado como primeira linha do corpo, vinte vezes:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config quarantine.config.js --repeat-each 20 | grep -E 'Expected to fail|^  [0-9]+ (failed|flaky|passed)' | sort | uniq -c
-     20     Expected to fail, but passed.
-      1   20 failed
+     13     Expected to fail, but passed.
+      1   13 failed
+      1   7 passed (38.6s)
 ```
 
-**O defeito da busca não apareceu em nenhuma das vinte tentativas, então as vinte foram informadas
-como falhas**: *Expected to fail, but passed.* Uma anotação que diz *isto sempre falha* não
-consegue descrever um teste que falha às vezes, e embrulhar um nela deixa o relatório errado no
-outro sentido. É essa a lacuna que uma quarentena preenche.
+**O defeito da busca apareceu em sete tentativas, e essas sete passaram. Nas outras treze ele não
+apareceu, e cada uma foi informada como falha**: *Expected to fail, but passed.* Uma anotação que
+diz *isto sempre falha* não consegue descrever um teste que falha às vezes; embrulhado nela, o
+teste continua vermelho, agora nas execuções em que a página se comportou. É essa a lacuna que uma quarentena preenche.
 
 ## Uma quarentena precisa de uma saída
 

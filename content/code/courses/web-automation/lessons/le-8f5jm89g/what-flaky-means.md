@@ -19,45 +19,65 @@ that failed:
 
 ```
 ana@laptop:~/quitanda$ for i in 1 2 3 4 5 6 7 8 9 10; do npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)|^    tests/'; done
-  42 passed (12.8s)
-  42 passed (12.5s)
   2 failed
     tests/cache.spec.js:7:1 › a new offer reaches the page ─────────────────────────────────────────
     tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  40 passed (20.2s)
-  42 passed (12.5s)
+  49 passed (24.0s)
   2 failed
     tests/cache.spec.js:7:1 › a new offer reaches the page ─────────────────────────────────────────
     tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  40 passed (20.2s)
+  49 passed (24.1s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  50 passed (21.7s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  50 passed (21.3s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  50 passed (21.2s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  50 passed (21.6s)
   2 failed
     tests/cache.spec.js:7:1 › a new offer reaches the page ─────────────────────────────────────────
     tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  40 passed (20.2s)
-  42 passed (12.6s)
+  49 passed (24.2s)
   2 failed
     tests/cache.spec.js:7:1 › a new offer reaches the page ─────────────────────────────────────────
     tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
-  40 passed (20.3s)
-  42 passed (12.4s)
-  42 passed (12.5s)
+  49 passed (24.0s)
+  1 failed
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  50 passed (21.2s)
+  2 failed
+    tests/cache.spec.js:7:1 › a new offer reaches the page ─────────────────────────────────────────
+    tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready ──────────────
+  49 passed (24.4s)
 ```
 
-**Four runs of ten failed, and the other six passed**, with no edit between any of them. Each
-time the same two tests failed together: lesson 4's `a new offer reaches the page` and lesson 6's
-`a click on /ssr adds to the basket once the page is ready`. A failing run took about 20 seconds
-against about 12.5 for a passing one, because a failing check waits out its five seconds first.
+**Not one of the ten runs passed, and they did not all fail the same way.** Lesson 6's `a click
+on /ssr adds to the basket once the page is ready` failed in all ten. Lesson 4's `a new offer
+reaches the page` failed in five of them, runs 1, 2, 7, 8 and 10, and passed in the other five,
+with no edit between any of them.
 
 Both tests begin with `POST /api/reset`, and that request resets the whole shop: it empties the
-one basket and puts the offer back to Mango. Playwright runs files side by side, in two workers on this four-processor machine, and a reset
-sent by one test can arrive in the middle of another. The cache test sets the offer to Banana and
-then opens the page; a reset in between leaves Mango on it. Each test is right about a shop it
-has to itself. The next section names this cause and shows it on two smaller tests.
+one basket and puts the offer back to Mango. Playwright runs files side by side, in two workers on
+this four-processor machine, and a reset or a fruit sent by one test can arrive in the middle of
+another. The cache test sets the offer to Banana and then opens the page; a reset in between
+leaves Mango on it. The ssr test waits about a second and a half for its page to be ready before
+it clicks, which leaves plenty of time for another test to put something in the basket. Each test
+is right about a shop it has to itself.
+
+The ssr test's ten failures out of ten look like the other kind of red, a defect in the page. They
+are not: the next section runs it with one other test, one at a time, and it passes every time.
+**A red that comes back every run is still information**, and here it points at the suite rather
+than at the shop.
 
 ## Why it is worse than red
 
 A test that fails every time gets fixed or gets argued about, because nobody can merge past it.
-A test that fails four times in ten gets **re-run**. The second run is green, the change goes in,
+A test that fails five times in ten, like the cache test, gets **re-run**. The second run is green, the change goes in,
 and the person who pressed the button learns that a red result from this suite means *try
 again*. That lesson does not stay with one test. The day a change really does break the cache
 test, the red is read the same way, and the defect is merged on the second attempt.
@@ -72,8 +92,8 @@ goes off without a fire is an alarm that will be switched off.**
 
 ## Green by luck
 
-The other half is quieter. The six green runs above were not evidence that the two tests work;
-they were runs where the reset happened to land somewhere harmless. The platform's own rules
+The other half is quieter. The cache test passed in five of the ten runs, and those passes were not
+evidence that it works; they were runs where the reset happened to land somewhere harmless. The platform's own rules
 describe one of its test suites the same way: it *passed locally on timing alone*, and that was
 called worse than failing, *because it means the suite was green by luck*. A suite that is green
 by luck tells you nothing on the days it is green.

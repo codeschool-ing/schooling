@@ -37,31 +37,33 @@ movimento que a aula 3 fez com o `aria-busy`.
 
 ## Estado compartilhado
 
-Dois testes mexem na mesma coisa ao mesmo tempo, e cada um está certo sozinho. Todo teste deste
-projeto que põe algo na cesta começa esvaziando-a com `POST /api/reset` e depois espera uma
-contagem de 1. O `tests/waiting.spec.js` da aula 10 e o `tests/banana.spec.js` da aula 11 fazem
-isso. Cada arquivo tem um teste; `--repeat-each 20` roda cada teste vinte vezes. Com um worker, as
-quarenta execuções se revezam:
+Dois testes mexem na mesma coisa ao mesmo tempo, e cada um está certo sozinho. O
+`tests/ssr.spec.js` da aula 6 esvazia a cesta com `POST /api/reset`, põe uma banana e espera uma
+contagem de 1. O `tests/waiting.spec.js` da aula 10 também começa com um reset, põe uma manga, e só
+verifica a mensagem que avisa isso. Cada arquivo tem um teste; `--repeat-each 10` roda cada teste
+dez vezes. Com um worker, as vinte execuções se revezam:
 
 ```
-ana@laptop:~/quitanda$ npx playwright test tests/banana.spec.js tests/waiting.spec.js --repeat-each 20 --workers 1 | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  40 passed (27.3s)
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js tests/waiting.spec.js --repeat-each 10 --workers 1 | grep -E '^  [0-9]+ (failed|flaky|passed)'
+  20 passed (1.0m)
 ```
 
 Com dois workers, duas delas rodam ao mesmo tempo contra a cesta única:
 
 ```
-ana@laptop:~/quitanda$ npx playwright test tests/banana.spec.js tests/waiting.spec.js --repeat-each 20 --workers 2 | grep -E '^  [0-9]+ (failed|flaky|passed)|Expected:|Received:'
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js tests/waiting.spec.js --repeat-each 10 --workers 2 | grep -E '^  [0-9]+ (failed|flaky|passed)|Expected:|Received:'
     Expected: "1"
     Received: "2"
     Expected: "1"
     Received: "2"
-  2 failed
-  38 passed (28.1s)
+    Expected: "1"
+    Received: "2"
+  3 failed
+  17 passed (43.0s)
 ```
 
-Nada mudou em nenhum dos arquivos. Uma contagem de 2 quer dizer que um teste pôs a sua fruta entre
-o reset e a verificação do outro. **Passar sozinho e falhar junto é a assinatura do estado
+Nada mudou em nenhum dos arquivos. Uma contagem de 2 quer dizer que a manga chegou entre o reset
+e a verificação do teste do ssr. **Passar sozinho e falhar junto é a assinatura do estado
 compartilhado**, e mudar o `--workers` é como você a enxerga. A aula 15 dá a cada teste dados só
 seus, que é a correção; a aula 19 trata de rodar a suíte em paralelo de propósito.
 

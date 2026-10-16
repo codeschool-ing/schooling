@@ -11,8 +11,8 @@
 # THE STUDENT BUILDS ALL OF THIS FROM THE LESSONS. `diagnosis` shows
 # quarantine.config.js and the first quarantine/typing.spec.js, `quarantine`
 # replaces the test with its tagged version, which is what `stage 14` leaves.
-# The other test files run here (tests/banana.spec.js, tests/waiting.spec.js)
-# are lessons 10 and 11's. What is STAGED rather than typed, beyond what
+# The other test files run here (tests/ssr.spec.js, tests/waiting.spec.js)
+# are lessons 6 and 10's. What is STAGED rather than typed, beyond what
 # ../../lab.sh's header lists for every lesson:
 #   - in "diag-20" and "diag-w1", the first version of the test, taken from
 #     `diagnosis` with `lab.sh fence`; the final one is put back after;
@@ -28,7 +28,7 @@
 #   - Playwright's colour codes are stripped from the test runs, which is what
 #     a terminal shows once it has drawn them.
 #
-# Recorded 2026-10-11 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
+# Recorded 2026-10-16 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
 # Playwright 1.56.0 and Chromium 141.0.7390.37, TZ=America/Sao_Paulo, on a
 # machine with 4 processors (so Playwright's default is 2 workers).
 
@@ -42,15 +42,15 @@ P=$REPO_DEFAULT
 cd "$P" || exit 1
 nocolor() { sed 's/\x1b\[[0-9;]*m//g'; }
 SUM="grep -E '^  [0-9]+ (failed|flaky|passed)'"
-PAIR='tests/banana.spec.js tests/waiting.spec.js'
+PAIR='tests/ssr.spec.js tests/waiting.spec.js'
 
 block gate-10
 run "for i in 1 2 3 4 5 6 7 8 9 10; do npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)|^    tests/'; done" | nocolor
 
 block pair-w1
-run "npx playwright test $PAIR --repeat-each 20 --workers 1 | $SUM" | nocolor
+run "npx playwright test $PAIR --repeat-each 10 --workers 1 | $SUM" | nocolor
 block pair-w2
-run "npx playwright test $PAIR --repeat-each 20 --workers 2 | grep -E '^  [0-9]+ (failed|flaky|passed)|Expected:|Received:'" | nocolor
+run "npx playwright test $PAIR --repeat-each 10 --workers 2 | grep -E '^  [0-9]+ (failed|flaky|passed)|Expected:|Received:'" | nocolor
 
 bash "$HERE/../../lab.sh" fence "$HERE/diagnosis.md" quarantine/typing.spec.js > quarantine/typing.spec.js
 chown ana:ana quarantine/typing.spec.js
@@ -84,10 +84,10 @@ echo "runs: $n"
 block retries-typing
 run "npx playwright test --config quarantine.config.js --repeat-each 20 --retries 2 | $SUM" | nocolor
 block retries-pair
-run "npx playwright test $PAIR --repeat-each 20 --retries 2 > /tmp/run.log; echo \"exit code \$?\"" | nocolor
+run "npx playwright test $PAIR --repeat-each 10 --retries 2 > /tmp/run.log; echo \"exit code \$?\"" | nocolor
 run "$SUM /tmp/run.log" | nocolor
 block fail-on-flaky
-run "npx playwright test $PAIR --repeat-each 20 --retries 2 --fail-on-flaky-tests > /tmp/run.log; echo \"exit code \$?\"" | nocolor
+run "npx playwright test $PAIR --repeat-each 10 --retries 2 --fail-on-flaky-tests > /tmp/run.log; echo \"exit code \$?\"" | nocolor
 run "$SUM /tmp/run.log" | nocolor
 
 block gate

@@ -61,23 +61,23 @@ The gate, as it stands at the end of this lesson:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  42 passed (13.0s)
+  1 failed
+  50 passed (21.3s)
 ```
 
 The quarantine job, run the way a quarantine should be run, many times, so the result is a rate:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config quarantine.config.js --repeat-each 20 | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  1 failed
-  19 passed (25.2s)
+  8 failed
+  12 passed (42.5s)
 ```
 
 In CI the two are separate jobs. The gate's result decides whether a change goes in; the
 quarantine's result decides nothing, and is read for its count. `testing-cicd` lesson 5 is about
-building those jobs. The gate above was green on this run, and the first section showed it is
-not green on every run: the two tests that reset the shop under each other are still in it.
-Quarantining them would be the wrong answer, because the defect is in how the tests share data,
-and lesson 15 fixes it there.
+building those jobs. The gate above is red, as it was on all ten runs in the first section: the ssr test meets a basket
+another test has just added to. Quarantining it would be the wrong answer, because the defect is in
+how the tests share data rather than in the test or the page, and lesson 15 fixes it there.
 
 ## skip, fixme and fail
 
@@ -104,14 +104,15 @@ the first line of its body, twenty times:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test --config quarantine.config.js --repeat-each 20 | grep -E 'Expected to fail|^  [0-9]+ (failed|flaky|passed)' | sort | uniq -c
-     20     Expected to fail, but passed.
-      1   20 failed
+     13     Expected to fail, but passed.
+      1   13 failed
+      1   7 passed (38.6s)
 ```
 
-**The search defect did not show on any of the twenty attempts, so all twenty were reported as
-failures**: *Expected to fail, but passed.* An annotation that says *this always fails* cannot
-describe a test that fails sometimes, and wrapping one in it makes the report wrong in the other
-direction. That is the gap a quarantine fills.
+**The search defect showed on seven attempts, and those seven passed. On the other thirteen it
+did not show, and each was reported as a failure**: *Expected to fail, but passed.* An annotation
+that says *this always fails* cannot describe a test that fails sometimes; wrapped in one, the test
+is still red, now on the runs where the page behaved. That is the gap a quarantine fills.
 
 ## A quarantine needs a way out
 

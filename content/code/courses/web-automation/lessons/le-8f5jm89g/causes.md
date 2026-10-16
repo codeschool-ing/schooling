@@ -37,31 +37,33 @@ name the course it asked for, the same move lesson 3 made with `aria-busy`.
 
 ## Shared state
 
-Two tests touch the same thing at the same time, and each is right on its own. Every test of this
-project that adds to the basket starts by emptying it with `POST /api/reset` and then expects a
-count of 1. Lesson 10's `tests/waiting.spec.js` and lesson 11's `tests/banana.spec.js` both do.
-Each file has one test; `--repeat-each 20` runs each test twenty times. With one worker the forty
-runs take turns:
+Two tests touch the same thing at the same time, and each is right on its own. Lesson 6's
+`tests/ssr.spec.js` empties the basket with `POST /api/reset`, adds a banana and expects a count of
+1. Lesson 10's `tests/waiting.spec.js` also starts with a reset, adds a mango, and checks only the
+message that says so. Each file has one test; `--repeat-each 10` runs each test ten times. With one
+worker the twenty runs take turns:
 
 ```
-ana@laptop:~/quitanda$ npx playwright test tests/banana.spec.js tests/waiting.spec.js --repeat-each 20 --workers 1 | grep -E '^  [0-9]+ (failed|flaky|passed)'
-  40 passed (27.3s)
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js tests/waiting.spec.js --repeat-each 10 --workers 1 | grep -E '^  [0-9]+ (failed|flaky|passed)'
+  20 passed (1.0m)
 ```
 
 With two workers, two of them run at once against the one basket:
 
 ```
-ana@laptop:~/quitanda$ npx playwright test tests/banana.spec.js tests/waiting.spec.js --repeat-each 20 --workers 2 | grep -E '^  [0-9]+ (failed|flaky|passed)|Expected:|Received:'
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js tests/waiting.spec.js --repeat-each 10 --workers 2 | grep -E '^  [0-9]+ (failed|flaky|passed)|Expected:|Received:'
     Expected: "1"
     Received: "2"
     Expected: "1"
     Received: "2"
-  2 failed
-  38 passed (28.1s)
+    Expected: "1"
+    Received: "2"
+  3 failed
+  17 passed (43.0s)
 ```
 
-Nothing in either file changed. A count of 2 means one test added its fruit between the other's
-reset and its check. **Passing alone and failing together is the signature of shared state**, and
+Nothing in either file changed. A count of 2 means the mango landed between the ssr test's reset
+and its check. **Passing alone and failing together is the signature of shared state**, and
 changing `--workers` is how you see it. Lesson 15 gives each test data of its own, which is the
 fix; lesson 19 is about running the suite in parallel on purpose.
 
