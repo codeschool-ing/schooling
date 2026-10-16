@@ -1,0 +1,511 @@
+[
+  {
+    "id": "ex-02yb2c1b",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a standby, in terms of earlier lessons?",
+    "hint": "Lesson 6's recovery, without a target.",
+    "choices": [
+      {
+        "text": "A logical dump reloaded every night",
+        "correct": false,
+        "why": "A standby is physical: it replays the log into a copy of the files."
+      },
+      {
+        "text": "A second primary that accepts writes",
+        "correct": false,
+        "why": "A standby is read-only until it is promoted."
+      },
+      {
+        "text": "A base backup that never stops recovering",
+        "correct": true,
+        "why": "Right. It receives the log as it is written and replays it continuously."
+      },
+      {
+        "text": "A snapshot taken every few seconds",
+        "correct": false,
+        "why": "Snapshots are copies at instants; a standby replays every change."
+      }
+    ]
+  },
+  {
+    "id": "ex-asp74y7m",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of one change from the primary to a query on the standby in order.",
+    "hint": "Four steps, four columns in pg_stat_replication.",
+    "items": [
+      "The primary writes it to its own log and commits",
+      "The WAL sender sends the new log",
+      "The standby writes and flushes it to its pg_wal",
+      "The standby replays it into its data files"
+    ],
+    "trap": "Nothing is visible to a query on the standby until the last step; each step can lag the one before."
+  },
+  {
+    "id": "ex-2gmqfr8s",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `DELETE` with the wrong `WHERE` runs on the primary. What does the standby have a second later?",
+    "hint": "Replication copies changes, all of them.",
+    "choices": [
+      {
+        "text": "The same rows lost, on both servers",
+        "correct": true,
+        "why": "Right. Replication protects against losing a server; backups protect against losing data."
+      },
+      {
+        "text": "The rows, because standbys ignore deletes",
+        "correct": false,
+        "why": "A standby replays every change the primary logged."
+      },
+      {
+        "text": "A warning and a paused replay",
+        "correct": false,
+        "why": "Nothing in replication judges whether a change was a mistake."
+      },
+      {
+        "text": "The rows, until the next checkpoint",
+        "correct": false,
+        "why": "Checkpoints do not delay replay."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0hbszsd",
+    "version": 1,
+    "section": "building-a-standby",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What can the role created with `LOGIN REPLICATION` do?",
+    "hint": "It was given exactly one right.",
+    "choices": [
+      {
+        "text": "Read every table, so it can copy them",
+        "correct": false,
+        "why": "A physical standby copies files and log, and needs no rights on tables."
+      },
+      {
+        "text": "Create databases on the standby",
+        "correct": false,
+        "why": "Nothing on a standby is created by hand; it replays the primary."
+      },
+      {
+        "text": "Promote the standby",
+        "correct": false,
+        "why": "Promotion is an administrator's act on the standby, not a right of this role."
+      },
+      {
+        "text": "Receive the log, and nothing besides it",
+        "correct": true,
+        "why": "Right. It cannot read a single table."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq4d33rk",
+    "version": 1,
+    "section": "building-a-standby",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the replication password go in `/var/lib/postgresql/.pgpass` rather than in `primary_conninfo`?",
+    "hint": "What does a backup of the data directory copy?",
+    "choices": [
+      {
+        "text": "Because primary_conninfo cannot hold a password",
+        "correct": false,
+        "why": "It can; that is exactly what the lesson avoids."
+      },
+      {
+        "text": "Backups copy that file",
+        "correct": true,
+        "why": "Right: a password there would sit in a file every backup copies. postgresql.auto.conf lives in the data directory, and travels with every base backup."
+      },
+      {
+        "text": "Because .pgpass encrypts the password",
+        "correct": false,
+        "why": "It is plain text, protected only by its permissions."
+      },
+      {
+        "text": "Because pg_hba.conf reads it",
+        "correct": false,
+        "why": "pg_hba.conf decides which connections are allowed; it reads no password file."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbvrjr7p",
+    "version": 1,
+    "section": "building-a-standby",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `pg_basebackup` option with what it does here.",
+    "hint": "Three make it a standby, one brings the log.",
+    "pairs": [
+      {
+        "left": "-R",
+        "right": "Writes the replication settings and standby.signal"
+      },
+      {
+        "left": "-C",
+        "right": "Creates the replication slot on the primary"
+      },
+      {
+        "left": "-S standby1",
+        "right": "Names the slot to create and use"
+      },
+      {
+        "left": "-X stream",
+        "right": "Brings the log written during the copy"
+      }
+    ],
+    "right_distractors": [
+      "Compresses the copy on the way"
+    ]
+  },
+  {
+    "id": "ex-f2v2cvdj",
+    "version": 1,
+    "section": "building-a-standby",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An empty file called `___.signal` in the data directory makes PostgreSQL start as a read-only copy that follows a primary.",
+    "hint": "The kind of server it makes.",
+    "blanks": [
+      {
+        "accept": [
+          "standby"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-55rn99z4",
+    "version": 1,
+    "section": "watching-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pg_stat_replication`, what does `sync_state: async` tell you?",
+    "hint": "Lesson 12 changes it.",
+    "choices": [
+      {
+        "text": "The standby is behind and catching up",
+        "correct": false,
+        "why": "That would show in the LSN columns, not in sync_state."
+      },
+      {
+        "text": "Commits do not wait for this standby",
+        "correct": true,
+        "why": "Right: the primary does not wait for this standby to confirm a commit. Commits return as soon as the primary has them."
+      },
+      {
+        "text": "The standby is not connected",
+        "correct": false,
+        "why": "A disconnected standby has no row in the view at all."
+      },
+      {
+        "text": "The standby replays faster than the primary writes",
+        "correct": false,
+        "why": "sync_state says nothing about speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-89yzsf5d",
+    "version": 1,
+    "section": "watching-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "All four positions in `pg_stat_replication` read `0/4000000`. What does that say?",
+    "hint": "Sent, written, flushed, replayed.",
+    "choices": [
+      {
+        "text": "Replication has stopped at that position",
+        "correct": false,
+        "why": "state was streaming; nothing new had been written."
+      },
+      {
+        "text": "The slot is full",
+        "correct": false,
+        "why": "Slots do not fill; the positions agree because there was nothing to send."
+      },
+      {
+        "text": "The standby has written the log but not replayed it",
+        "correct": false,
+        "why": "replay_lsn equals the others; it has replayed it."
+      },
+      {
+        "text": "It has replayed all the primary has written",
+        "correct": true,
+        "why": "Right: the standby has everything the primary wrote, replayed. When they differ, the gaps are replication lag."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r2dc72q",
+    "version": 1,
+    "section": "watching-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the standby answer to an `INSERT`?",
+    "hint": "It applies the primary's history and makes none of its own.",
+    "choices": [
+      {
+        "text": "A read-only transaction error",
+        "correct": true,
+        "why": "Right: cannot execute INSERT in a read-only transaction. Lesson 19 is about how applications find the server that accepts writes."
+      },
+      {
+        "text": "It forwarded the INSERT to the primary",
+        "correct": false,
+        "why": "PostgreSQL never forwards writes; the application has to send them to the primary."
+      },
+      {
+        "text": "It accepted it and replicated it back",
+        "correct": false,
+        "why": "Replication runs one way, primary to standby."
+      },
+      {
+        "text": "It queued it until the next promotion",
+        "correct": false,
+        "why": "Nothing is queued; the statement fails."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3s9znts",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What problem does a replication slot solve?",
+    "hint": "Without one, the primary recycles on its own schedule.",
+    "choices": [
+      {
+        "text": "Standbys reading uncommitted data",
+        "correct": false,
+        "why": "Standbys only replay committed history; slots are about retention."
+      },
+      {
+        "text": "Two standbys replaying in different orders",
+        "correct": false,
+        "why": "Each replays the same log in the same order."
+      },
+      {
+        "text": "A lagging standby finding its log already recycled",
+        "correct": true,
+        "why": "Right: without it, a standby that falls behind finds its log recycled. The slot makes the primary keep every segment the standby still needs."
+      },
+      {
+        "text": "The primary sending log too fast",
+        "correct": false,
+        "why": "Slots do not throttle anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-33vcmtdr",
+    "version": 1,
+    "section": "slots",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the standby stopped and three updates run, how many MB of log did the slot hold?",
+    "hint": "The held column.",
+    "value": 49,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-cw3v3c35",
+    "version": 1,
+    "section": "slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A standby was decommissioned on Friday, but its slot was left on the primary. What happens by Monday?",
+    "hint": "Lesson 4's broken archive, again.",
+    "choices": [
+      {
+        "text": "Nothing: an inactive slot is ignored",
+        "correct": false,
+        "why": "An inactive slot keeps its promise with nobody to collect."
+      },
+      {
+        "text": "The slot expires after 24 hours",
+        "correct": false,
+        "why": "Slots never expire by default."
+      },
+      {
+        "text": "The primary promotes the standby automatically",
+        "correct": false,
+        "why": "Nothing promotes anything here."
+      },
+      {
+        "text": "The kept log fills the primary's disk",
+        "correct": true,
+        "why": "Right: the primary keeps the weekend's log, and its disk fills. A full disk stops the primary. Watch for inactive slots and drop them."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fg8w0ap",
+    "version": 1,
+    "section": "the-lost-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `max_slot_wal_keep_size = '32MB'` do to the inactive slot holding 49 MB?",
+    "hint": "wal_status.",
+    "choices": [
+      {
+        "text": "Deleted the slot",
+        "correct": false,
+        "why": "The slot still exists; it is marked lost."
+      },
+      {
+        "text": "Moved the log to the standby",
+        "correct": false,
+        "why": "The standby was stopped; nothing moved."
+      },
+      {
+        "text": "Marked it as lost",
+        "correct": true,
+        "why": "Right: marked lost, so its segments can be recycled. The primary chose its own disk over the standby, which is the right choice."
+      },
+      {
+        "text": "Archived the log it held",
+        "correct": false,
+        "why": "Archiving was off in this lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-je1kan6c",
+    "version": 1,
+    "section": "the-lost-slot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After its slot was lost, the standby was started again. What did it say, and what is the fix?",
+    "hint": "requested WAL segment has already been removed.",
+    "choices": [
+      {
+        "text": "Log gone; rebuild from a base backup",
+        "correct": true,
+        "why": "Right: its segment was removed, so it is rebuilt from a new base backup, unless an archive can supply the missing log."
+      },
+      {
+        "text": "It caught up from the primary after a delay",
+        "correct": false,
+        "why": "The primary no longer had the segment, so there was nothing to catch up from."
+      },
+      {
+        "text": "It promoted itself, since the primary refused it",
+        "correct": false,
+        "why": "A standby never promotes itself."
+      },
+      {
+        "text": "It restarted the primary to recover the segment",
+        "correct": false,
+        "why": "A standby has no control over the primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rjkatd0",
+    "version": 1,
+    "section": "the-lost-slot",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A standby must survive a four-hour network outage. The primary writes 5 GB of log an hour. What is the smallest `max_slot_wal_keep_size`, in GB?",
+    "hint": "Hours times rate.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-vgzd9ha0",
+    "version": 1,
+    "section": "the-lost-slot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does an archive beside the slot change what happens when a slot is lost?",
+    "hint": "Where else can a standby get old segments?",
+    "choices": [
+      {
+        "text": "It prevents slots from ever being lost",
+        "correct": false,
+        "why": "The cap still applies; the archive makes losing the slot survivable."
+      },
+      {
+        "text": "It fetches old segments from the archive, then streams",
+        "correct": true,
+        "why": "Right: the standby fetches the missing segments from the archive, then streams again. The slot keeps recent log close; the archive keeps the rest. Lesson 13 builds it."
+      },
+      {
+        "text": "It makes the primary keep log for longer",
+        "correct": false,
+        "why": "The archive is a copy elsewhere; the primary's pg_wal is unchanged."
+      },
+      {
+        "text": "Nothing; standbys cannot read archives",
+        "correct": false,
+        "why": "A standby with restore_command reads the archive like any recovery."
+      }
+    ]
+  },
+  {
+    "id": "ex-ym090eg2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team has one standby, a slot with no cap, and no backups because \"the standby is our backup\". Which two failures are they exposed to?",
+    "hint": "One from each half of the course.",
+    "choices": [
+      {
+        "text": "Slow queries on the standby, and a slow primary",
+        "correct": false,
+        "why": "Performance is not what this setup risks."
+      },
+      {
+        "text": "A network outage and a power cut",
+        "correct": false,
+        "why": "The standby helps with both; those are what it is for."
+      },
+      {
+        "text": "A dead standby's slot, and a replicated DELETE",
+        "correct": true,
+        "why": "Right. An uncapped slot turns a dead standby into an outage, and nothing protects data from a bad statement."
+      },
+      {
+        "text": "None, if the standby is in another building",
+        "correct": false,
+        "why": "Distance helps with fires, not with deletes or full disks."
+      }
+    ]
+  }
+]
