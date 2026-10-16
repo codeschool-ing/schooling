@@ -1,18 +1,18 @@
 ---
-title: What fine-tuning forgets
+title: O que o fine-tuning esquece
 version: 1
 ---
 
-Fine-tuning changes weights that were already doing a job. **If the old job still matters, the
-question is what is left of it afterwards**, and the cases where it matters are common: a model
-that gains new classes and must keep the old ones, a deployed model extended to a second task, a
-language model taught a narrow skill that should still answer everything else.
+O fine-tuning muda pesos que já faziam um trabalho. **Se o trabalho antigo ainda importa, a pergunta
+é o que sobra dele depois**, e os casos em que importa são comuns: um modelo que ganha classes novas
+e precisa manter as antigas, um modelo em produção estendido para uma segunda tarefa, um modelo de
+linguagem ensinado numa habilidade estreita que ainda deveria responder a todo o resto.
 
-`base.pt` makes the question easy to ask. Its own head, `Linear(64, 5)` for the digits 0 to 4, can
-be set aside before the new head replaces it and put back on the fine-tuned body at any moment.
-If the body still computes what that head expects, the old digits are still recognised. The
-program fine-tunes on 5 to 9 with 10 images per class, five ways, and measures the old task as it
-goes. Save as `~/dl/forget.py`:
+O `base.pt` torna a pergunta fácil de fazer. A cabeça dele, `Linear(64, 5)` para os dígitos de 0 a
+4, pode ser guardada antes de a cabeça nova tomar o lugar dela e posta de volta sobre o corpo
+ajustado a qualquer momento. Se o corpo ainda calcula o que essa cabeça espera, os dígitos antigos
+continuam reconhecidos. O programa faz fine-tuning em 5 a 9 com 10 imagens por classe, de cinco
+jeitos, e mede a tarefa antiga pelo caminho. Salve como `~/dl/forget.py`:
 
 ```schooling-example
 {
@@ -21,7 +21,7 @@ goes. Save as `~/dl/forget.py`:
   "parts": [
     {
       "code": "\"\"\"forget: what fine-tuning on 5 to 9 does to the digits 0 to 4 that base.pt knew.\"\"\"\nimport torch\nimport torch.nn as nn\n\nimport cnn\nimport loop\nimport tdigits\n\n(x, y), (xv, yv), _ = tdigits.load(images=True)\nnew_val = xv[yv >= 5], yv[yv >= 5] - 5\nold_val = xv[yv < 5], yv[yv < 5]\nidx = torch.cat([torch.nonzero(y == d).flatten()[:10] for d in range(5, 10)])\ntrain = x[idx], y[idx] - 5",
-      "note": "Dois conjuntos de validação desta vez: os dígitos novos, e as 180 imagens de 0 a 4 em que o `base.pt` marcou 0.989 na aula 13."
+      "note": "Dois conjuntos de validação desta vez: os dígitos novos, e as 180 imagens de 0 a 4 em que o `base.pt` marcou 0,989 na aula 13."
     },
     {
       "code": "def old_task(model, old_head):\n    \"\"\"The body as it is now, with base.pt's own head put back: accuracy on 0 to 4.\"\"\"\n    return loop.evaluate(nn.Sequential(*model[:8], old_head), *old_val)[1]",
@@ -43,41 +43,43 @@ goes. Save as `~/dl/forget.py`:
 PENDING forget
 ```
 
-The last column is the new task at the end of each run. It differs from the matching row of
-`depths.py` or `rates.py` by a little, because one long call to `loop.fit` and a hundred short
-ones with `seed=epoch` shuffle the batches differently.
+A última coluna é a tarefa nova no fim de cada execução. Ela difere um pouco da linha
+correspondente do `depths.py` ou do `rates.py`, porque uma chamada longa ao `loop.fit` e cem chamadas
+curtas com `seed=epoch` embaralham os lotes de jeitos diferentes.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Um gráfico de linhas da acurácia nos dígitos de 0 a 4 contra a época de ajuste em 5 a 9, nas épocas 0, 1, 2, 5, 10, 20, 50 e 100. Só a cabeça e corpo 1e-4, cabeça 1e-3 ficam em 0.989 o tempo todo. Último bloco e tudo a 1e-3 descem até 0.944 e 0.939. Tudo a 1e-2 cai de 0.989 para 0.294, com o mínimo de 0.250 na época 20.\"><text x=\"48\" y=\"20\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">acurácia em 0 a 4, cabeça antiga de volta</text><path d=\"M56 240 L456 240\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"48\" y=\"240\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">0.0</text><path d=\"M56 140.0 L456 140.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"2 4\"></path><text x=\"48\" y=\"140.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">0.5</text><path d=\"M56 40.0 L456 40.0\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"2 4\"></path><text x=\"48\" y=\"40.0\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1.0</text><text x=\"56.0\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">0</text><text x=\"113.14285714285714\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">1</text><text x=\"170.28571428571428\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">2</text><text x=\"227.42857142857142\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">5</text><text x=\"284.57142857142856\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">10</text><text x=\"341.7142857142857\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">20</text><text x=\"398.85714285714283\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">50</text><text x=\"456.0\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper-dim)\">100</text><text x=\"256.0\" y=\"278\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">época</text><path d=\"M56.0 42.2 L113.1 41.2 L170.3 42.2 L227.4 45.6 L284.6 42.2 L341.7 45.6 L398.9 50.0 L456.0 51.2\" stroke=\"var(--paper-dim)\" stroke-width=\"2\" fill=\"none\"></path><path d=\"M56.0 42.2 L113.1 41.2 L170.3 44.4 L227.4 50.0 L284.6 44.4 L341.7 48.8 L398.9 52.2 L456.0 52.2\" stroke=\"var(--paper)\" stroke-width=\"2\" fill=\"none\" stroke-dasharray=\"6 4\"></path><path d=\"M56.0 42.2 L113.1 42.2 L170.3 42.2 L227.4 42.2 L284.6 42.2 L341.7 42.2 L398.9 42.2 L456.0 42.2\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><path d=\"M56.0 42.2 L113.1 42.2 L170.3 42.2 L227.4 42.2 L284.6 42.2 L341.7 41.2 L398.9 42.2 L456.0 42.2\" stroke=\"var(--phosphor-dim)\" stroke-width=\"2\" fill=\"none\" stroke-dasharray=\"6 4\"></path><path d=\"M56.0 42.2 L113.1 72.2 L170.3 68.8 L227.4 156.6 L284.6 74.4 L341.7 190.0 L398.9 177.8 L456.0 181.2\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><path d=\"M474 40 L498 40\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><text x=\"506\" y=\"40\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">só a cabeça</text><path d=\"M474 58 L498 58\" stroke=\"var(--phosphor-dim)\" stroke-width=\"2\" fill=\"none\" stroke-dasharray=\"6 4\"></path><text x=\"506\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">corpo 1e-4, cabeça 1e-3</text><path d=\"M474 76 L498 76\" stroke=\"var(--paper-dim)\" stroke-width=\"2\" fill=\"none\"></path><text x=\"506\" y=\"76\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">último bloco</text><path d=\"M474 94 L498 94\" stroke=\"var(--paper)\" stroke-width=\"2\" fill=\"none\" stroke-dasharray=\"6 4\"></path><text x=\"506\" y=\"94\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">tudo</text><path d=\"M474 181.2 L498 181.2\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><text x=\"506\" y=\"181.2\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">tudo a 1e-2</text></svg>", "caption": "Quanto de 0 a 4 sobrevive ao ajuste em 5 a 9, da execução do forget.py."}
 ```
 
-## Three outcomes
+## Três desfechos
 
-**Where the body did not move, nothing was forgotten.** Head only leaves the body exactly as `base.pt` had it,
-so 0 to 4 stay at 0.989 throughout: nothing that computes them was touched. The slow body, at
-1e-4, ends at 0.989 too, having moved 0.04 of its size in `rates.py`. The price is on the new task,
-0.667 and 0.822, the two lowest numbers in the last column.
+**Onde o corpo quase não se moveu, nada foi esquecido.** Só a cabeça deixa o corpo exatamente como
+o `base.pt` o tinha, então 0 a 4 ficam em 0,989 o tempo todo: nada do que os calcula foi tocado. O
+corpo lento, a 1e-4, termina em 0,989 também, depois de andar 0,04 do próprio tamanho no
+`rates.py`. O preço fica na tarefa nova, 0,667 e 0,822, os dois números mais baixos da última
+coluna.
 
-**At 1e-3 the old task erodes slowly.** The last block and everything both end around 0.94, five
-points down from 0.989, while reaching 0.900 and 0.917 on the new digits. The body has drifted
-towards 5 to 9 and the old head reads it a little less well each epoch.
+**A 1e-3 a tarefa antiga se desgasta devagar.** O último bloco e tudo terminam por volta de 0,94,
+cinco pontos abaixo de 0,989, enquanto chegam a 0,900 e 0,917 nos dígitos novos. O corpo derivou na
+direção de 5 a 9, e a cabeça antiga o lê um pouco pior a cada época.
 
-**At 1e-2 the old task collapses.** Everything at the high rate was down to 0.839 after a single
-epoch and ends at 0.294, while it scores 0.922 on the new task, the best in the column. This is
-**catastrophic forgetting**: the weights that recognised 0 to 4 were rewritten to recognise 5 to 9,
-and nothing in the training asked them to keep the first job. The curve also jumps about, 0.417 at
-epoch 5 and 0.828 at epoch 10, because the old task is not what the steps are aiming at; where it
-lands at any epoch is a by-product.
+**A 1e-2 a tarefa antiga desaba.** Tudo na taxa alta já estava em 0,839 depois de uma única época e
+termina em 0,294, enquanto marca 0,922 na tarefa nova, o melhor da coluna. Isso é o **esquecimento
+catastrófico**: os pesos que reconheciam 0 a 4 foram reescritos para reconhecer 5 a 9, e nada no
+treino pediu que eles mantivessem o primeiro trabalho. A curva também salta, 0,417 na época 5 e
+0,828 na época 10, porque a tarefa antiga não é o alvo dos passos; onde ela cai em cada época é um
+efeito colateral.
 
-## What to do about it
+## O que fazer a respeito
 
-The figure is the whole trade: **the setups that kept the old task are the ones that learnt the new
-one least well**, because both depend on how far the body moves. The ways out each change that:
+A figura é a troca inteira: **as configurações que mantiveram a tarefa antiga são as que aprenderam
+pior a nova**, porque as duas coisas dependem de quanto o corpo se move. As saídas mudam isso, cada
+uma de um jeito:
 
-- **Freeze more, or lower the body's rate.** Cheap and reliable, and it gives up what moving would
-  have bought on the new task, as the two flat lines did here.
-- **Rehearse.** Mix some of the old training data into the new training, with a head that answers
-  all ten digits, so the loss itself asks for both tasks. It needs the old data, which is often the
-  thing you do not have.
-- **Keep the original weights untouched and learn a separate correction.** The next section builds
-  one, and removing it gives the old model back exactly.
+- **Congelar mais, ou baixar a taxa do corpo.** Barato e confiável, e abre mão do que mover teria
+  comprado na tarefa nova, como as duas linhas retas fizeram aqui.
+- **Ensaiar.** Misturar parte dos dados de treino antigos no treino novo, com uma cabeça que
+  responde aos dez dígitos, para que a própria loss peça as duas tarefas. Precisa dos dados antigos,
+  que muitas vezes são justamente o que você não tem.
+- **Manter os pesos originais intocados e aprender uma correção à parte.** A próxima seção constrói
+  uma, e tirá-la devolve o modelo antigo exatamente.

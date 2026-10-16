@@ -46,8 +46,8 @@ PENDING rates
 ## Reading the two numbers together
 
 **The rate sets the distance.** At 1e-4 the first layer moved by 0.03 to 0.04
-of its own size, at 1e-3 by 0.16 to 0.18, and at 1e-2 by 0.32 to 0.40: the filters at 1e-2 were a
-third of the way to being different filters. The two-group setup, body at 1e-4 and head at 1e-3,
+of its own size, at 1e-3 by 0.16 to 0.18, and at 1e-2 by 0.32 to 0.40: at 1e-2 the filters changed by
+about a third of their own size. The two-group setup, body at 1e-4 and head at 1e-3,
 moved the body as little as 1e-4 did, 0.04, because that is the rate its group was given.
 
 **On this task, travelling far scored best.** 1e-2 reached 0.922 to 0.950, the highest row, level

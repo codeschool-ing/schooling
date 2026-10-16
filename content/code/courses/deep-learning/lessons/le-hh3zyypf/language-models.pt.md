@@ -1,18 +1,17 @@
 ---
-title: The same decisions on a language model
+title: As mesmas decisões num modelo de linguagem
 version: 1
 ---
 
-Everything in this lesson was decided on a network of 37,957 parameters. **The decisions are the
-same for a language model with billions of them**: which weights learn, at what rate, what the
-model forgets, and whether to train the weights at all or a small correction beside them. What
-changes is that at that size the first decision also settles whether the training fits on the
-machine you have.
+Tudo nesta aula foi decidido numa rede de 37.957 parâmetros. **As decisões são as mesmas para um
+modelo de linguagem com bilhões deles**: quais pesos aprendem, com que taxa, o que o modelo esquece,
+e se vale treinar os pesos ou uma correção pequena ao lado deles. O que muda é que, nesse tamanho, a
+primeira decisão também resolve se o treino cabe na máquina que você tem.
 
-None of it can run here. The weights live on `huggingface.co`, which this lab cannot reach, and
-the 4-bit training at the end needs an NVIDIA graphics card. **The arithmetic runs anywhere**, and
-it uses the `LoRA` class of the previous section on a real layer of the right size. Save as
-`~/dl/sizes.py`, next to `lora.py`:
+Nada disso roda aqui. Os pesos ficam no `huggingface.co`, que este laboratório não alcança, e o
+treino em 4 bits do fim precisa de uma placa de vídeo NVIDIA. **A aritmética roda em qualquer
+lugar**, e usa a classe `LoRA` da seção anterior numa camada real do tamanho certo. Salve como
+`~/dl/sizes.py`, ao lado do `lora.py`:
 
 ```schooling-example
 {
@@ -39,42 +38,44 @@ it uses the `LoRA` class of the previous section on a real layer of the right si
 PENDING sizes
 ```
 
-## What the numbers decide
+## O que os números decidem
 
-**Full fine-tuning trains all 6,738,415,616 weights.** Every one of them then needs a gradient and,
-with Adam, two more numbers of optimiser state, and lesson 19 adds up what that costs in memory.
-Even before any of that, the frozen weights alone take 12.6 GiB in 16 bits. A full fine-tune of a
-model this size is a job for several data-centre graphics cards.
+**O fine-tuning completo treina todos os 6.738.415.616 pesos.** Cada um deles precisa então de um
+gradiente e, com o Adam, de mais dois números de estado do otimizador, e a aula 19 soma quanto isso
+custa em memória. Antes de tudo isso, só os pesos congelados ocupam 12,6 GiB em 16 bits. Um
+fine-tuning completo de um modelo desse tamanho é trabalho para várias placas de vídeo de data
+center.
 
-**LoRA trains 4,194,304 of them**, 0.062% of the model, with rank 8 on two of the four attention
-projections of every block. Gradients and optimiser state exist only for those, and the result is
-an adapter of 8 MiB that sits beside an unchanged base model, as `adapt.py` did with `base.pt`.
-The family of methods that train a small number of new or chosen parameters is called **PEFT**,
-parameter-efficient fine-tuning, and LoRA is the one most used; PEFT is also the name of Hugging
-Face's library that implements them.
+**O LoRA treina 4.194.304 deles**, 0,062% do modelo, com rank 8 em duas das quatro projeções de
+atenção de cada bloco. Gradientes e estado do otimizador existem só para esses, e o resultado é um
+adaptador de 8 MiB que fica ao lado de um modelo base inalterado, como o `adapt.py` fez com o
+`base.pt`. A família de métodos que treinam um número pequeno de parâmetros novos ou escolhidos se
+chama **PEFT**, parameter-efficient fine-tuning, e o LoRA é o mais usado; PEFT também é o nome da
+biblioteca do Hugging Face que os implementa.
 
-**QLoRA stores the frozen base in 4 bits**, 3.1 GiB here instead of 12.6, and trains a 16-bit LoRA
-adapter on top of it. The frozen weights are unpacked to 16 bits on the fly for each computation,
-and the gradient flows through them to the adapter without ever being stored for them. It is what
-makes adapting a model of this size possible on one consumer graphics card.
+**O QLoRA guarda a base congelada em 4 bits**, 3,1 GiB aqui em vez de 12,6, e treina por cima um
+adaptador LoRA em 16 bits. Os pesos congelados são desempacotados para 16 bits na hora de cada
+conta, e o gradiente passa por eles até o adaptador sem nunca ser guardado para eles. É o que torna
+possível adaptar um modelo desse tamanho numa única placa de vídeo de consumidor.
 
-The other decisions carry over unchanged:
+As outras decisões passam sem mudança:
 
-- **Which layers.** `target_modules` below is this lesson's `LEARNS` dictionary under another
-  name. The attention projections are the usual first choice; adding the MLP matrices trains more
-  and sometimes earns it, measured the way `depths.py` measured the depths.
-- **Forgetting.** A chat model fine-tuned hard on one narrow kind of text gets worse at the rest,
-  for the reason `forget.py` showed. The defences are the same: a lower rate, fewer epochs, some
-  general data mixed back in, or an adapter that leaves the base intact.
-- **The baseline.** For a language model it is rarely training from scratch. It is the base model
-  with a well-written prompt, and a fine-tune that does not beat it was not worth running.
+- **Quais camadas.** O `target_modules` abaixo é o dicionário `LEARNS` desta aula com outro nome. As
+  projeções de atenção são a primeira escolha de costume; somar as matrizes do MLP treina mais e às
+  vezes compensa, medido do jeito que o `depths.py` mediu as profundidades.
+- **Esquecimento.** Um modelo de chat ajustado com força num tipo estreito de texto piora no resto,
+  pelo motivo que o `forget.py` mostrou. As defesas são as mesmas: uma taxa menor, menos épocas,
+  algum dado geral misturado de volta, ou um adaptador que deixa a base intacta.
+- **A referência.** Para um modelo de linguagem ela raramente é treinar do zero. É o modelo base com
+  um prompt bem escrito, e um fine-tuning que não o supera não valeu a execução.
 
-## What it looks like, not run
+## Como fica, sem rodar
 
-This is the usual shape of QLoRA with Hugging Face's `transformers`, `bitsandbytes` and `peft`
-libraries, none of which this course installs. **Not run for this course**: the first call
-downloads the 12.6 GiB of 16-bit weights `sizes.py` counted, from `huggingface.co`, which this
-lab cannot reach and where the model's page asks you to accept its licence first, and `load_in_4bit` needs an NVIDIA graphics card.
+Este é o formato de costume do QLoRA com as bibliotecas `transformers`, `bitsandbytes` e `peft` do
+Hugging Face, e nenhuma delas é instalada neste curso. **Não executado neste curso**: a primeira
+chamada baixa os 12,6 GiB de pesos em 16 bits que o `sizes.py` contou, do `huggingface.co`, que este
+laboratório não alcança e onde a página do modelo pede que você aceite a licença dele antes, e o
+`load_in_4bit` precisa de uma placa de vídeo NVIDIA.
 
 ```python
 import torch
@@ -93,7 +94,7 @@ model = get_peft_model(model, config)       # freezes the base, adds A and B bes
 model.print_trainable_parameters()
 ```
 
-`r` and `lora_alpha` are the `rank` and `alpha` of `lora.py`, and `q_proj` and `v_proj` are the
-two projections `sizes.py` counted. The training loop that follows is the one you know, on text
-instead of digits, and `peft`'s `merge_and_unload()` does what `merged()` did: it folds the adapter
-into the weights for serving.
+`r` e `lora_alpha` são o `rank` e o `alpha` do `lora.py`, e `q_proj` e `v_proj` são as duas
+projeções que o `sizes.py` contou. O laço de treino que vem depois é o que você conhece, com texto em
+vez de dígitos, e o `merge_and_unload()` do `peft` faz o que o `merged()` fez: dobra o adaptador nos
+pesos para servir o modelo.

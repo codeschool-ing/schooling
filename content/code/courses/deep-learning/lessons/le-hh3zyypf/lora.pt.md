@@ -1,24 +1,24 @@
 ---
-title: LoRA, a small correction beside frozen weights
+title: LoRA, uma correção pequena ao lado de pesos congelados
 version: 1
 ---
 
-Fine-tuning a layer replaces its weight matrix `W` with `W + ΔW`, where `ΔW` is whatever training
-added. For the 512-to-64 layer of `base.pt`, `ΔW` has 32,768 numbers, as many as `W` itself. **LoRA,
-short for low-rank adaptation, bets that the change a new task needs is far simpler than the matrix
-it changes**, and writes it as the product of two thin matrices: `ΔW = B A`, with `A` of `r` rows
-by 512 and `B` of 64 rows by `r`. The rank `r` is small, so the two together hold `r × (512 + 64)`
-numbers: 2,304 at rank 4, against 32,768.
+Fazer fine-tuning de uma camada troca a matriz de pesos `W` por `W + ΔW`, em que `ΔW` é o que o
+treino somou. Na camada de 512 para 64 do `base.pt`, `ΔW` tem 32.768 números, tantos quanto o
+próprio `W`. **LoRA, sigla de low-rank adaptation, aposta que a mudança de que uma tarefa nova
+precisa é bem mais simples que a matriz que ela muda**, e a escreve como o produto de duas matrizes
+finas: `ΔW = B A`, com `A` de `r` linhas por 512 e `B` de 64 linhas por `r`. O rank `r` é pequeno,
+então as duas juntas guardam `r × (512 + 64)` números: 2.304 com rank 4, contra 32.768.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 660 270\" role=\"img\" aria-label=\"Um diagrama da camada adaptada. A entrada, 512 números, segue por dois caminhos. Em cima, pelo peso congelado W de 64 por 512 do base.pt, 32.768 números. Embaixo, por A, 4 por 512, 2.048 números, e depois B, 64 por 4, 256 números, que começa em zero; A e B aprendem. Os dois resultados são somados e dão a saída, 64 números.\"><text x=\"50\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">entrada</text><text x=\"50\" y=\"138\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">512 números</text><rect x=\"160\" y=\"34\" width=\"220\" height=\"64\" rx=\"6\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"5 4\"></rect><text x=\"270\" y=\"56\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" fill=\"var(--paper)\">W  64 × 512</text><text x=\"270\" y=\"78\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--paper-dim)\">32,768</text><text x=\"270\" y=\"18\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">congelado, do base.pt</text><rect x=\"160\" y=\"160\" width=\"100\" height=\"56\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"210\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--phosphor)\">A  4 × 512</text><text x=\"210\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--phosphor)\">2,048</text><rect x=\"280\" y=\"160\" width=\"100\" height=\"56\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"2\"></rect><text x=\"330\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--phosphor)\">B  64 × 4</text><text x=\"330\" y=\"200\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"12\" fill=\"var(--phosphor)\">256</text><text x=\"270\" y=\"236\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\">aprendem</text><text x=\"330\" y=\"254\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">começa em zero</text><path d=\"M260 188 L280 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M272.6 191.1 L280 188 L272.6 184.9\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M90 129 L120 129\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M120 66 L120 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M120 66 L160 66\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M152.6 69.1 L160 66 L152.6 62.9\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M120 188 L160 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M152.6 191.1 L160 188 L152.6 184.9\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><circle cx=\"450\" cy=\"129\" r=\"14\" fill=\"var(--panel)\" stroke=\"var(--paper)\" stroke-width=\"1.4\"></circle><text x=\"450\" y=\"129\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"16\" fill=\"var(--paper)\">+</text><path d=\"M380 66 L450 66\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M450 66 L450 115\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M446.9 107.6 L450 115 L453.1 107.6\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M380 188 L450 188\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M450 188 L450 143\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M453.1 150.4 L450 143 L446.9 150.4\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M464 129 L530 129\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M522.6 132.1 L530 129 L522.6 125.9\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"580\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">saída</text><text x=\"580\" y=\"138\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">64 números</text></svg>", "caption": "A camada congelada e o adaptador ao lado dela, com rank 4. Só A e B aprendem."}
 ```
 
-Three details make it work. **`W` stays frozen**, so whatever the training does, the original layer
-is still there underneath. **`B` starts at zero**, so `B A` is zero and the adapted network begins
-exactly where `base.pt` was, with no random jolt. And the input passes through `A` and `B` beside
-`W` rather than through a rebuilt matrix, which keeps the cost of the adapter to its own small size.
-The whole idea fits in one class. Save as `~/dl/lora.py`:
+Três detalhes fazem isso funcionar. **`W` fica congelado**, então, faça o treino o que fizer, a
+camada original continua lá embaixo. **`B` começa em zero**, então `B A` é zero e a rede adaptada
+começa exatamente onde o `base.pt` estava, sem nenhum solavanco aleatório. E a entrada passa por `A`
+e `B` ao lado de `W` em vez de por uma matriz remontada, o que limita o custo do adaptador ao
+tamanho pequeno dele. A ideia inteira cabe numa classe. Salve como `~/dl/lora.py`:
 
 ```schooling-example
 {
@@ -41,10 +41,10 @@ The whole idea fits in one class. Save as `~/dl/lora.py`:
 }
 ```
 
-The experiment puts the adapter on the 512-to-64 layer, the one that did most of the work in
-`depths.py`, freezes everything else in `base.pt`, and trains it with a new head, at ranks 1, 4 and
-16. Then it checks the two promises in the class: that the adapter folds into a plain layer, and
-that removing it gives back the old network. Save as `~/dl/adapt.py`, next to `lora.py`:
+O experimento põe o adaptador na camada de 512 para 64, a que fez a maior parte do trabalho no
+`depths.py`, congela todo o resto do `base.pt` e o treina com uma cabeça nova, nos ranks 1, 4 e 16.
+Depois confere as duas promessas da classe: que o adaptador se dobra numa camada comum, e que
+tirá-lo devolve a rede antiga. Salve como `~/dl/adapt.py`, ao lado do `lora.py`:
 
 ```schooling-example
 {
@@ -79,28 +79,30 @@ that removing it gives back the old network. Save as `~/dl/adapt.py`, next to `l
 PENDING adapt
 ```
 
-## What the adapter bought
+## O que o adaptador comprou
 
-**At rank 4 the adapter matched the last block with about a twelfth of its parameters.** It trained
-2,629 parameters, the 2,304 of `A` and `B` plus the new head's 325, where unfreezing the last block
-trained 33,157. With 50 images per class it scored 0.967, 0.967 and 0.972, against 0.967, 0.978
-and 0.967 for the last block in `depths.py`; with 10 per class, 0.867 to 0.917 against 0.894 to
-0.911. Rank 1 was too thin, 0.889 to 0.900 with 50 per class, and rank 16 added nothing over rank
-4 there.
+**Com rank 4 o adaptador empatou com o último bloco usando cerca de um doze avos dos parâmetros
+dele.** Treinou 2.629 parâmetros, os 2.304 de `A` e `B` mais os 325 da cabeça nova, enquanto
+descongelar o último bloco treinou 33.157. Com 50 imagens por classe marcou 0,967, 0,967 e 0,972,
+contra 0,967, 0,978 e 0,967 do último bloco no `depths.py`; com 10 por classe, de 0,867 a 0,917
+contra 0,894 a 0,911. O rank 1 foi fino demais, de 0,889 a 0,900 com 50 por classe, e o rank 16 não
+somou nada ao rank 4 ali.
 
-It did not beat training from scratch either, and could not be expected to: it adapts the same
-small donor as every other row in this lesson.
+Também não superou o treino do zero, e nem dava para esperar isso: ele adapta o mesmo doador
+pequeno que todas as outras linhas desta aula.
 
-**The adapter folds away.** The merged layer and the adapter gave the same outputs to within
-8.6e-06, which is float32 rounding. After training, `B A` can be added to `W` once, and the network
-that ships is the plain `cnn.make_cnn(5)` shape with no adapter in it and nothing extra to compute
-per prediction.
+**O adaptador se dobra.** A camada mesclada e o adaptador deram as mesmas saídas a menos de
+8,6e-06, que é arredondamento de float32. Depois do treino, `B A` pode ser somado a `W` uma vez, e
+a rede que vai para produção tem o formato comum do `cnn.make_cnn(5)`, sem adaptador nenhum e sem
+nada a mais para calcular por predição.
 
-**And it can be taken off.** With the adapter on, the old task scored 0.950: the corrected layer
-has drifted from what `base.pt`'s head expects, as fine-tuning did in the previous section. With
-the adapter removed and the frozen layer put back, it scored 0.989, the number `base.pt` had in
-lesson 13. **Nothing was forgotten, because nothing was overwritten.** One frozen network can carry
-several adapters, one per task, each a small file, swapped in when its task is asked for.
+**E ele pode ser tirado.** Com o adaptador no lugar, a tarefa antiga marcou 0,950: a camada
+corrigida se afastou do que a cabeça do `base.pt` espera, como o fine-tuning fez na seção anterior.
+Com o adaptador tirado e a camada congelada de volta, marcou 0,989, o número que o `base.pt` tinha na
+aula 13. **Nada foi esquecido, porque nada foi sobrescrito.** Uma rede congelada pode carregar
+vários adaptadores, um por tarefa, cada um num arquivo pequeno, trocados quando a tarefa deles é
+pedida.
 
-Lesson 13's finding still holds: the adapter cannot add what the frozen layers below it never
-learnt. LoRA decides how much you train and what you keep, not what the donor knows.
+A conclusão da aula 13 continua valendo: o adaptador não acrescenta o que as camadas congeladas
+abaixo dele nunca aprenderam. O LoRA decide quanto você treina e o que você mantém, não o que o
+doador sabe.

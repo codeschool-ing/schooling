@@ -1,20 +1,20 @@
 ---
-title: Frozen and thawed, one tensor at a time
+title: Congelado e descongelado, um tensor por vez
 version: 1
 ---
 
-Lesson 13 froze the whole body of `base.pt` and trained a new head on top. **Fine-tuning is the
-same start with some of the body allowed to learn as well**, and the decision this lesson is about
-is how much. Before any of it is trained, it is worth seeing exactly what "frozen" means in
-PyTorch, because two common beliefs about it are wrong.
+A aula 13 congelou o corpo inteiro do `base.pt` e treinou uma cabeça nova por cima. **Fine-tuning é
+o mesmo começo com parte do corpo também liberada para aprender**, e a decisão desta aula é quanto.
+Antes de treinar qualquer coisa, vale ver exatamente o que "congelado" quer dizer no PyTorch,
+porque duas crenças comuns sobre isso estão erradas.
 
-The first is that `model.eval()` freezes a model. It does not: evaluation mode changes how a few
-layers behave, dropout and batch normalisation among them, and has nothing to say about
-gradients. The second is that a frozen layer is something the optimiser knows about. It is not:
-**freezing is one flag on each parameter tensor, `requires_grad`, and the optimiser only ever sees
-the tensors it was handed.** The program below shows both. It needs `base.pt` from lesson 13 in
-`~/dl`; if you have deleted it, run lesson 13's `pretrain.py` again, which writes the same file.
-Save as `~/dl/freeze.py`:
+A primeira é que `model.eval()` congela um modelo. Não congela: o modo de avaliação muda o
+comportamento de algumas camadas, entre elas dropout e batch normalization, e não tem nada a ver
+com gradientes. A segunda é que uma camada congelada é algo que o otimizador conhece. Não é:
+**congelar é uma marca em cada tensor de parâmetros, `requires_grad`, e o otimizador só enxerga os
+tensores que recebeu.** O programa abaixo mostra as duas coisas. Ele precisa do `base.pt` da aula
+13 em `~/dl`; se você o apagou, rode de novo o `pretrain.py` da aula 13, que grava o mesmo arquivo.
+Salve como `~/dl/freeze.py`:
 
 ```schooling-example
 {
@@ -45,39 +45,39 @@ Save as `~/dl/freeze.py`:
 PENDING freeze
 ```
 
-## Reading the output
+## Lendo a saída
 
-**The table is the network as the optimiser could see it.** Every tensor has a name, a shape and a
-count, and the four belonging to the convolutions say `requires_grad=False`. Together they hold
-4,800 of the 37,957 parameters; the 512-to-64 layer and the new head hold the other 33,157, which
-is the line `learns 33157 of 37957`.
+**A tabela é a rede como o otimizador poderia vê-la.** Cada tensor tem um nome, um formato e uma
+contagem, e os quatro das convoluções dizem `requires_grad=False`. Juntos eles guardam 4.800 dos
+37.957 parâmetros; a camada de 512 para 64 e a cabeça nova guardam os outros 33.157, que é a linha
+`learns 33157 of 37957`.
 
-**Backward skips a frozen tensor completely.** After one batch the list of tensors with a gradient
-names `6.weight`, `6.bias`, `8.weight` and `8.bias`, and nothing else. The convolutions were used
-in the forward pass, so the gradient still flowed *through* them on its way back, but nothing was
-stored *for* them. That is the whole saving: no gradient for a frozen tensor, and so no memory for
-one and nothing for the optimiser to move. The model was in evaluation mode the whole time and the
-gradients arrived regardless, which settles the first belief.
+**O backward pula por completo um tensor congelado.** Depois de um lote, a lista de tensores com
+gradiente traz `6.weight`, `6.bias`, `8.weight` e `8.bias`, e mais nada. As convoluções foram usadas
+na ida, então o gradiente ainda passou *por* elas no caminho de volta, mas nada foi guardado *para*
+elas. Essa é toda a economia: nenhum gradiente para um tensor congelado, e portanto nenhuma memória
+para ele e nada para o otimizador mover. O modelo ficou em modo de avaliação o tempo todo e os
+gradientes chegaram mesmo assim, o que encerra a primeira crença.
 
-**An optimiser can hold several parameter groups, each with its own rate.** Instead of one list,
-`torch.optim.Adam` was given two dictionaries, and `param_groups` reports them back: two tensors
-at `0.0001` and two at `0.001`. The step then changed exactly those four tensors and left the
-first four as `base.pt` had them, which is the last line.
+**Um otimizador pode ter vários grupos de parâmetros, cada um com a própria taxa.** Em vez de uma
+lista, o `torch.optim.Adam` recebeu dois dicionários, e `param_groups` os devolve: dois tensores a
+`0.0001` e dois a `0.001`. O passo então mudou exatamente esses quatro tensores e deixou os quatro
+primeiros como o `base.pt` os tinha, que é a última linha.
 
-Two habits follow from that, and every program in this lesson keeps them:
+Daí saem dois hábitos, e todo programa desta aula os mantém:
 
-- **Give the optimiser only the tensors that learn**, with
-  `[p for p in model.parameters() if p.requires_grad]` or explicit groups. Adam would skip a tensor
-  whose gradient is `None` anyway, but a list that says what learns is one you can check by
-  reading it.
-- **Set the flags before building the optimiser**, and replace a layer before setting them: a
-  layer created with `nn.Linear` starts with `requires_grad=True`, which is why the new head learns
-  without anybody switching it on.
+- **Dê ao otimizador só os tensores que aprendem**, com
+  `[p for p in model.parameters() if p.requires_grad]` ou com grupos explícitos. O Adam pularia de
+  qualquer jeito um tensor cujo gradiente é `None`, mas uma lista que diz o que aprende é uma lista
+  que você confere lendo.
+- **Ponha as marcas antes de montar o otimizador**, e troque uma camada antes de pôr as marcas: uma
+  camada criada com `nn.Linear` já nasce com `requires_grad=True`, e é por isso que a cabeça nova
+  aprende sem ninguém ligá-la.
 
-Evaluation mode does matter in one case, and it is the mirror of the first belief. Batch
-normalisation, which lesson 8 built, keeps a running mean and variance that are buffers rather
-than parameters, and in training mode it updates them whatever `requires_grad` says. **So freezing
-a body that contains batch normalisation also means keeping those layers in evaluation mode**, or
-the statistics learnt on the old data drift towards the new batches. `cnn.make_cnn` has no such
-layer, so nothing in this lesson depends on it, but the ResNet of lesson 12 puts one after every
-convolution.
+O modo de avaliação importa num caso, e ele é o espelho da primeira crença. A batch normalization,
+que a aula 8 construiu, guarda uma média e uma variância acumuladas que são buffers e não
+parâmetros, e em modo de treino ela as atualiza não importa o que `requires_grad` diga. **Então
+congelar um corpo que tem batch normalization também quer dizer manter essas camadas em modo de
+avaliação**, senão as estatísticas aprendidas nos dados antigos derivam na direção dos lotes novos.
+O `cnn.make_cnn` não tem essa camada, então nada nesta aula depende disso, mas a ResNet da aula 12
+põe uma depois de cada convolução.

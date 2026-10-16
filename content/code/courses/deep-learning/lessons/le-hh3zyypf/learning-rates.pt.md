@@ -1,18 +1,18 @@
 ---
-title: Learning rates, and how far the weights travel
+title: Taxas de aprendizado, e até onde os pesos andam
 version: 1
 ---
 
-Lesson 5 called the learning rate the setting that matters most, and in fine-tuning it gains a
-second job. From scratch, the rate only decides how fast the network gets somewhere useful. **From
-pretrained weights, it also decides how far the network is allowed to wander from where it
-started**, and the starting point is the thing you borrowed. A rate that is right for random
-weights can carry a pretrained layer well away from what it knew within the first few epochs.
+A aula 5 chamou a taxa de aprendizado de o ajuste que mais importa, e no fine-tuning ela ganha um
+segundo trabalho. Do zero, a taxa só decide quão rápido a rede chega a algum lugar útil. **A partir
+de pesos pré-treinados, ela também decide quanto a rede pode se afastar de onde começou**, e o ponto
+de partida é justamente o que você pegou emprestado. Uma taxa certa para pesos aleatórios pode
+levar uma camada pré-treinada para longe do que ela sabia nas primeiras épocas.
 
-That distance can be measured. The program below fine-tunes everything, with 10 images per class,
-at three single rates and once with two: a slow body and a faster head, set through the parameter
-groups of the first section. Beside each accuracy it prints how far the first convolution travelled,
-as a fraction of its size in `base.pt`. Save as `~/dl/rates.py`:
+Essa distância se mede. O programa abaixo faz fine-tuning de tudo, com 10 imagens por classe, em
+três taxas únicas e uma vez com duas: um corpo lento e uma cabeça mais rápida, postos pelos grupos
+de parâmetros da primeira seção. Ao lado de cada acurácia ele mostra quanto a primeira convolução
+andou, como fração do tamanho dela no `base.pt`. Salve como `~/dl/rates.py`:
 
 ```schooling-example
 {
@@ -25,7 +25,7 @@ as a fraction of its size in `base.pt`. Save as `~/dl/rates.py`:
     },
     {
       "code": "def moved(model):\n    \"\"\"How far the first convolution went from base.pt, as a fraction of its size.\"\"\"\n    w0, w = base[0].weight, model[0].weight\n    return ((w - w0).norm() / w0.norm()).item()",
-      "note": "A distância entre os pesos da primeira camada agora e no `base.pt`, dividida pelo tamanho dos pesos no `base.pt`. 0.10 quer dizer que os filtros mudaram um décimo do próprio tamanho."
+      "note": "A distância entre os pesos da primeira camada agora e no `base.pt`, dividida pelo tamanho dos pesos no `base.pt`. 0,10 quer dizer que os filtros mudaram um décimo do próprio tamanho."
     },
     {
       "code": "SETUPS = {\n    \"one rate, 1e-2\": lambda m: [{\"params\": m.parameters(), \"lr\": 1e-2}],\n    \"one rate, 1e-3\": lambda m: [{\"params\": m.parameters(), \"lr\": 1e-3}],\n    \"one rate, 1e-4\": lambda m: [{\"params\": m.parameters(), \"lr\": 1e-4}],\n    \"body 1e-4, head 1e-3\": lambda m: [{\"params\": m[:8].parameters(), \"lr\": 1e-4},\n                                       {\"params\": m[8].parameters(), \"lr\": 1e-3}],\n}",
@@ -43,37 +43,39 @@ as a fraction of its size in `base.pt`. Save as `~/dl/rates.py`:
 PENDING rates
 ```
 
-## Reading the two numbers together
+## Lendo os dois números juntos
 
-**The rate sets the distance.** At 1e-4 the first layer moved by 0.03 to 0.04
-of its own size, at 1e-3 by 0.16 to 0.18, and at 1e-2 by 0.32 to 0.40: the filters at 1e-2 were a
-third of the way to being different filters. The two-group setup, body at 1e-4 and head at 1e-3,
-moved the body as little as 1e-4 did, 0.04, because that is the rate its group was given.
+**A taxa define a distância.** A 1e-4 a primeira camada andou de 0,03 a 0,04 do próprio tamanho, a
+1e-3 de 0,16 a 0,18, e a 1e-2 de 0,32 a 0,40: a 1e-2 os filtros mudaram cerca de um terço do
+próprio tamanho. A configuração com dois grupos, corpo a 1e-4 e cabeça a 1e-3, moveu o corpo tão
+pouco quanto 1e-4, 0,04, porque essa é a taxa que o grupo dele recebeu.
 
-**On this task, travelling far scored best.** 1e-2 reached 0.922 to 0.950, the highest row, level
-with training from scratch in `depths.py`. The slow body scored lowest, 0.828 to 0.844, below
-everything at 1e-3 and below the last block of `depths.py` too. That is the previous section's result in a
-different form: `base.pt` has little to give the digits 5 to 9, so the less the body is held to
-it, the better the new task goes.
+**Nesta tarefa, andar longe deu a melhor nota.** A 1e-2 chegou de 0,922 a 0,950, a linha mais alta,
+empatada com o treino do zero do `depths.py`. O corpo lento marcou menos, de 0,828 a 0,844, abaixo
+de tudo a 1e-3 e abaixo também do último bloco do `depths.py`. É o resultado da seção anterior de
+outra forma: o `base.pt` tem pouco a dar aos dígitos de 5 a 9, então quanto menos o corpo fica preso
+a ele, melhor vai a tarefa nova.
 
-What a high rate costs is not in this table, because the table only asks about the new task. The
-next section asks the old one.
+O que uma taxa alta custa não está nesta tabela, porque a tabela só pergunta pela tarefa nova. A
+próxima seção pergunta pela antiga.
 
-## Why fine-tuning usually runs slower
+## Por que o fine-tuning costuma ser mais lento
 
-In practice fine-tuning uses lower rates than training from scratch, and often lower still for the
-layers near the input, and the reason is the half of the trade this lab's donor cannot show. **With
-a body worth keeping, every step away from it throws away something that took far more data to
-learn than you are fine-tuning on.** The early layers, holding the most general features, get the
-smallest rate; the layers near the head get more; the new head, which starts from nothing, gets the
-most. Training each depth at its own rate is called discriminative fine-tuning, and it is exactly
-the list of groups `rates.py` built, with more entries.
+Na prática o fine-tuning usa taxas menores que o treino do zero, e muitas vezes menores ainda para
+as camadas perto da entrada, e o motivo é a metade da troca que o doador deste laboratório não
+consegue mostrar. **Com um corpo que vale a pena manter, cada passo para longe dele joga fora algo
+que custou muito mais dados para aprender do que os que você está usando no fine-tuning.** As
+primeiras camadas, com as características mais gerais, recebem a menor taxa; as camadas perto da
+cabeça, mais; a cabeça nova, que começa do nada, a maior. Treinar cada profundidade com a própria
+taxa se chama discriminative fine-tuning, e é exatamente a lista de grupos que o `rates.py` montou,
+com mais entradas.
 
-Two smaller habits come from the same reasoning:
+Dois hábitos menores vêm do mesmo raciocínio:
 
-- **A new head starts random, so its first gradients are large and arbitrary**, and they flow back
-  into a body that was fine. Training the head alone for a few epochs first, then unfreezing, or
-  starting with lesson 5's warm-up, keeps those first steps from undoing the body.
-- **Choose the rate by validation, as always**, but read the distance too. A rate that wins on the
-  new task by moving the body a third of its size is telling you the pretrained weights were not
-  doing much, which is worth knowing before you pay for a larger donor.
+- **Uma cabeça nova começa aleatória, então os primeiros gradientes dela são grandes e
+  arbitrários**, e eles voltam para um corpo que estava bem. Treinar só a cabeça por algumas épocas
+  antes e só depois descongelar, ou começar com o warm-up da aula 5, impede que esses primeiros
+  passos desfaçam o corpo.
+- **Escolha a taxa pela validação, como sempre**, mas leia a distância também. Uma taxa que vence na
+  tarefa nova movendo o corpo um terço do tamanho dele está dizendo que os pesos pré-treinados não
+  faziam muita coisa, e é bom saber disso antes de pagar por um doador maior.

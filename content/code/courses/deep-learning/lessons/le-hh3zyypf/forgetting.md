@@ -53,7 +53,7 @@ ones with `seed=epoch` shuffle the batches differently.
 
 ## Three outcomes
 
-**Where the body did not move, nothing was forgotten.** Head only leaves the body exactly as `base.pt` had it,
+**Where the body barely moved, nothing was forgotten.** Head only leaves the body exactly as `base.pt` had it,
 so 0 to 4 stay at 0.989 throughout: nothing that computes them was touched. The slow body, at
 1e-4, ends at 0.989 too, having moved 0.04 of its size in `rates.py`. The price is on the new task,
 0.667 and 0.822, the two lowest numbers in the last column.

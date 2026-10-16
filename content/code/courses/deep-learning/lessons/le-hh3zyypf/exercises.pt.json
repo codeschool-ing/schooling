@@ -1,0 +1,407 @@
+{
+  "ex-ksrsa40k": {
+    "prompt": "O que pôr `requires_grad = False` num tensor de parâmetros muda durante o treino?",
+    "hint": "Olhe a lista de tensores que tinham gradiente depois do backward.",
+    "choices": [
+      {
+        "text": "A camada é pulada na ida",
+        "why": "Ela ainda roda; as convoluções calcularam as saídas e o gradiente passou por elas."
+      },
+      {
+        "text": "O backward não guarda gradiente para ele, então o passo o deixa como está",
+        "why": "Certo. O backward deixou o `.grad` vazio nos quatro tensores das convoluções, e o passo não os mudou."
+      },
+      {
+        "text": "A camada passa para o modo de avaliação, como faz o `model.eval()`",
+        "why": "As duas coisas não têm relação: o modo de avaliação muda dropout e batch normalization, e não diz nada sobre gradientes."
+      },
+      {
+        "text": "O otimizador o apaga dos grupos de parâmetros dele",
+        "why": "O otimizador guarda a lista que recebeu, seja ela qual for; um tensor sem gradiente é só pulado."
+      }
+    ]
+  },
+  "ex-08vn28f5": {
+    "prompt": "Um colega chama `model.eval()` num corpo pré-treinado para congelá-lo, e depois treina com um otimizador que tem todos os parâmetros. O que acontece com o corpo?",
+    "hint": "O `freeze.py` rodou o backward em modo de avaliação.",
+    "choices": [
+      {
+        "text": "Fica fixo, porque o modo de avaliação desliga os gradientes",
+        "why": "Essa é a crença que a seção testa; os gradientes chegaram em modo de avaliação mesmo assim."
+      },
+      {
+        "text": "O treino para com um erro no primeiro lote",
+        "why": "Nada recusa isso; o backward e o passo rodam como sempre."
+      },
+      {
+        "text": "Continua aprendendo; os tensores ainda recebem gradientes",
+        "why": "Certo. Congelar é `requires_grad = False`, ou deixar os tensores fora do otimizador."
+      },
+      {
+        "text": "Só as camadas de batch normalization dele continuam aprendendo",
+        "why": "O modo de avaliação impede a batch normalization de atualizar as estatísticas acumuladas; não impede gradiente nenhum."
+      }
+    ]
+  },
+  "ex-z1b3pavg": {
+    "prompt": "No `freeze.py`, a rede tem 37.957 parâmetros e aprende 33.157. Quantos parâmetros as duas convoluções congeladas guardam?",
+    "hint": "Some as quatro linhas com `requires_grad=False`, ou subtraia.",
+    "unit": "parâmetros"
+  },
+  "ex-m7nyxzfe": {
+    "prompt": "Por que todo começo pré-treinado do `depths.py` ganha uma cabeça nova em vez de manter a do `base.pt`?",
+    "hint": "O que cada saída da cabeça antiga representa?",
+    "choices": [
+      {
+        "text": "Os pesos da cabeça antiga não estão salvos no `base.pt`",
+        "why": "Estão, como `8.weight` e `8.bias`; o `forget.py` os põe de volta mais tarde."
+      },
+      {
+        "text": "As cinco saídas dela querem dizer 0 a 4, não os dígitos novos",
+        "why": "Certo. Uma cabeça está presa aos rótulos de uma tarefa, então uma tarefa nova ganha uma nova."
+      },
+      {
+        "text": "Uma cabeça nova tem mais parâmetros, então aprende mais rápido",
+        "why": "Tem exatamente o mesmo número, 325; o que muda é o que as saídas dela significam."
+      },
+      {
+        "text": "O PyTorch se recusa a treinar uma camada carregada de um arquivo",
+        "why": "O último bloco e tudo treinam camadas carregadas na mesma execução."
+      }
+    ]
+  },
+  "ex-wzfd1g89": {
+    "prompt": "Com 10 imagens por classe, como o fine-tuning de tudo se saiu contra o treino do zero?",
+    "hint": "As linhas `scratch` e `everything` do bloco do meio.",
+    "choices": [
+      {
+        "text": "Claramente na frente, perto de 0,98 em toda semente",
+        "why": "Nenhuma execução com 10 por classe chegou lá; 0,98 é do zero com 50."
+      },
+      {
+        "text": "Empatado com o começo só com a cabeça",
+        "why": "A cabeça sozinha ficou de 0,672 a 0,689, bem abaixo."
+      },
+      {
+        "text": "Nunca treinou e ficou perto do acaso",
+        "why": "O acaso entre cinco dígitos é 0,2, e ele marcou acima de 0,9."
+      },
+      {
+        "text": "Um pouco atrás: 0,917 a 0,933 contra 0,933 a 0,944",
+        "why": "Certo. Perto, e mesmo assim não na frente, porque esse doador tem pouco a dar."
+      }
+    ]
+  },
+  "ex-eh9wa3c4": {
+    "prompt": "Ponha em ordem a receita da aula para escolher quanto de uma rede pré-treinada ajustar.",
+    "hint": "A comparação mais barata vem primeiro, e a referência antes de todas.",
+    "items": [
+      "Treinar a mesma rede do zero como referência",
+      "Treinar só uma cabeça nova sobre o corpo congelado",
+      "Descongelar também o último bloco",
+      "Descongelar tudo",
+      "Ficar com a profundidade que a nota de validação diz que mereceu os parâmetros"
+    ]
+  },
+  "ex-kqezajvw": {
+    "prompt": "Você tem um corpo pré-treinado em milhões de fotos de plantas e 30 fotos novas de uma doença de folha, parecidas com as do doador. Que começo a aula sugere tentar com mais afinco?",
+    "hint": "Poucas imagens para ajustar, e características que provavelmente ainda são gerais.",
+    "choices": [
+      {
+        "text": "Uma profundidade congelada, começando só pela cabeça",
+        "why": "Certo. Cada parâmetro que aprende é ajustado a 30 imagens, e as características de um doador grande e parecido valem a pena manter."
+      },
+      {
+        "text": "Tudo numa taxa alta, que foi o melhor no `rates.py`",
+        "why": "Foi o melhor ali porque o `base.pt` tinha pouco a dar; aqui o doador tem muito."
+      },
+      {
+        "text": "Só o do zero, já que o do zero venceu nesta aula",
+        "why": "Venceu contra um doador de 528 imagens; uma rede treinada do zero com 30 fotos fica fraca."
+      },
+      {
+        "text": "Tudo com a cabeça congelada",
+        "why": "A cabeça nova começa aleatória e é a única parte que precisa aprender."
+      }
+    ]
+  },
+  "ex-zsraa2wv": {
+    "prompt": "Dar às camadas perto da entrada uma taxa menor que às camadas perto da cabeça se chama ___ fine-tuning.",
+    "hint": "A palavra está na última parte da seção.",
+    "blanks": [
+      {
+        "accept": [
+          "discriminative",
+          "discriminativo"
+        ]
+      }
+    ]
+  },
+  "ex-etdyx7kk": {
+    "prompt": "No `rates.py`, o que o número entre parênteses fez quando a taxa foi de 1e-4 a 1e-2?",
+    "hint": "Ele compara a primeira camada com o `base.pt`.",
+    "choices": [
+      {
+        "text": "Caiu, à medida que os dígitos antigos eram esquecidos",
+        "why": "Os dígitos antigos são medidos no `forget.py`; esse número é uma distância entre pesos."
+      },
+      {
+        "text": "Cresceu, de cerca de 0,04 para cerca de 0,4",
+        "why": "Certo. Quanto maior a taxa, mais longe a primeira camada andou do que o `base.pt` lhe deu."
+      },
+      {
+        "text": "Ficou em zero, já que a primeira camada estava congelada",
+        "why": "Toda camada aprendeu no `rates.py`; a configuração mais lenta ainda a moveu 0,04."
+      },
+      {
+        "text": "Acompanhou a loss da última época",
+        "why": "A loss não é impressa; o `moved()` compara dois tensores de pesos."
+      }
+    ]
+  },
+  "ex-3403w2s8": {
+    "prompt": "Com um corpo pré-treinado em muito mais dados do que você tem, por que as camadas perto da entrada costumam receber a menor taxa?",
+    "hint": "O que essas camadas guardam, e quanto custou aprender isso?",
+    "choices": [
+      {
+        "text": "Elas têm mais parâmetros, então cada passo tem de ser menor",
+        "why": "Aqui as duas convoluções têm 4.800 de 37.957; a taxa segue o que a camada sabe, não o tamanho dela."
+      },
+      {
+        "text": "Os gradientes delas são os maiores da rede",
+        "why": "A aula 3 viu os gradientes encolherem em direção à entrada numa rede sigmoide profunda, não crescerem."
+      },
+      {
+        "text": "O que elas sabem custou mais dados do que você tem",
+        "why": "Certo. Cada passo para longe delas joga fora algo que os seus dados não conseguiriam ensinar de novo."
+      },
+      {
+        "text": "Uma taxa menor faz cada época rodar mais rápido",
+        "why": "A taxa muda o tamanho de um passo, não quanto um passo custa para calcular."
+      }
+    ]
+  },
+  "ex-wz4x0n4w": {
+    "prompt": "Como o `forget.py` mede o que o corpo ajustado ainda sabe dos dígitos de 0 a 4?",
+    "hint": "Olhe o `old_task`.",
+    "choices": [
+      {
+        "text": "Treina uma cabeça nova em 0 a 4 depois do fine-tuning",
+        "why": "Uma cabeça nova poderia reaprender muito de um corpo mudado e esconder o estrago; a antiga não pode."
+      },
+      {
+        "text": "Mede quanto os pesos andaram desde o `base.pt`",
+        "why": "Isso é o `moved()` do `rates.py`; uma distância não diz o que ainda funciona."
+      },
+      {
+        "text": "Põe de volta a cabeça do próprio `base.pt` e mede 0 a 4",
+        "why": "Certo. Se o corpo ainda calcula o que essa cabeça espera, os dígitos antigos continuam reconhecidos."
+      },
+      {
+        "text": "Conta as unidades que ficam caladas em 0 a 4",
+        "why": "Contar unidades caladas foi a verificação da aula 13, nos dígitos novos."
+      }
+    ]
+  },
+  "ex-gn238hkq": {
+    "prompt": "No `forget.py`, que configuração marcou mais nos dígitos novos, e quanto isso custou?",
+    "hint": "Compare a última coluna com a coluna da época 100.",
+    "choices": [
+      {
+        "text": "Tudo a 1e-2, que perdeu 0 a 4",
+        "why": "Certo: 0,922 em 5 a 9, enquanto 0 a 4 caiu para 0,294. A configuração que mais moveu o corpo aprendeu melhor a tarefa nova e perdeu a antiga."
+      },
+      {
+        "text": "Só a cabeça, que também manteve 0 a 4 em 0,989",
+        "why": "Manteve a tarefa antiga e marcou o menos na nova, 0,667."
+      },
+      {
+        "text": "Corpo 1e-4, cabeça 1e-3, sem custo nenhum",
+        "why": "Manteve 0 a 4, e pagou com 0,822 nos dígitos novos."
+      },
+      {
+        "text": "O último bloco, que deixou 0 a 4 sem mudança",
+        "why": "Chegou a 0,900, e 0 a 4 se desgastou até 0,944."
+      }
+    ]
+  },
+  "ex-rcq31c83": {
+    "prompt": "O modelo de uma loja reconhece 40 produtos. Você ajusta todas as camadas dele numa taxa alta só com fotos de 5 produtos novos, guardando a cabeça antiga à parte. O que a aula prevê para os 40 produtos antigos?",
+    "hint": "O que na loss pede que o corpo os mantenha?",
+    "choices": [
+      {
+        "text": "Ficam como estavam, já que a cabeça deles não foi treinada",
+        "why": "A cabeça está intacta, mas lê um corpo que foi reescrito; é isso que o `forget.py` mediu."
+      },
+      {
+        "text": "Melhoram, porque o corpo agora viu mais fotos",
+        "why": "As fotos novas puxam o corpo para os produtos novos, não para os antigos."
+      },
+      {
+        "text": "Nada, até se saber a acurácia dos produtos novos",
+        "why": "A tarefa antiga pode ser medida sozinha, como o `forget.py` faz a cada poucas épocas."
+      },
+      {
+        "text": "A acurácia deles pode desabar, como a de 0 a 4 a 1e-2",
+        "why": "Certo. Nada no treino pede ao corpo que mantenha o trabalho antigo, então uma taxa alta o reescreve."
+      }
+    ]
+  },
+  "ex-d2haw53h": {
+    "prompt": "Por que a classe `LoRA` começa `B` em zero?",
+    "hint": "Quanto vale `B A` quando `B` é zero?",
+    "choices": [
+      {
+        "text": "Para o adaptador não ter nada a treinar no começo",
+        "why": "`A` e `B` treinam desde o primeiro passo; zero é só onde `B` começa."
+      },
+      {
+        "text": "Para começar igual à rede pré-treinada",
+        "why": "Certo. `B A` é zero, então a camada calcula o que `W` calculava, sem solavanco aleatório."
+      },
+      {
+        "text": "Porque uma matriz de rank baixo tem de começar em zero",
+        "why": "`A` também é de rank baixo e começa aleatória."
+      },
+      {
+        "text": "Para cancelar o peso congelado `W` da saída",
+        "why": "`W` continua na saída; o `base(x)` é somado ao termo do adaptador."
+      }
+    ]
+  },
+  "ex-b154kfjw": {
+    "prompt": "Ligue cada matriz do adaptador de rank 4 na camada de 512 para 64 ao formato e ao papel dela.",
+    "hint": "64 saídas, 512 entradas, rank 4.",
+    "pairs": [
+      {
+        "left": "W",
+        "right": "64 × 512, congelada, do base.pt"
+      },
+      {
+        "left": "A",
+        "right": "4 × 512, aprende, começa aleatória"
+      },
+      {
+        "left": "B",
+        "right": "64 × 4, aprende, começa em zero"
+      }
+    ],
+    "right_distractors": [
+      "512 × 64, aprende, começa em zero"
+    ]
+  },
+  "ex-3bgbwpqj": {
+    "prompt": "Depois do `adapt.py`, você precisa da rede original de volta para os dígitos de 0 a 4. O que a execução mostra que basta?",
+    "hint": "As duas últimas linhas da saída.",
+    "choices": [
+      {
+        "text": "Treinar de novo a cabeça antiga em 0 a 4 com o adaptador no lugar",
+        "why": "Não foi preciso treinar nada; com o adaptador no lugar a tarefa antiga marcou 0,950 e não foi retreinada."
+      },
+      {
+        "text": "Pôr a camada congelada de volta no lugar do adaptador",
+        "why": "Certo. 0 a 4 marcou 0,989 de novo, porque `W` nunca foi sobrescrito."
+      },
+      {
+        "text": "Mesclar o adaptador, o que restaura os pesos originais",
+        "why": "Mesclar soma `B A` em `W`; dá a camada adaptada, não a original."
+      },
+      {
+        "text": "Nada funciona; o fine-tuning sobrescreveu a camada",
+        "why": "Isso é o que o fine-tuning completo faz; o LoRA deixou a camada congelada por baixo."
+      }
+    ]
+  },
+  "ex-36c9sj8b": {
+    "prompt": "O que o QLoRA muda em relação ao LoRA comum?",
+    "hint": "Qual das duas partes é guardada em 4 bits?",
+    "choices": [
+      {
+        "text": "O adaptador treina em 4 bits enquanto a base fica em 16",
+        "why": "É o contrário: o adaptador fica em 16 bits para conseguir aprender com precisão."
+      },
+      {
+        "text": "A base congelada fica em 4 bits",
+        "why": "Certo: 3,1 GiB em vez de 12,6 no `sizes.py`, e o adaptador ainda treina em 16 bits."
+      },
+      {
+        "text": "Todo peso é treinado, mas cada um fica em 4 bits",
+        "why": "A base fica congelada no QLoRA, como no LoRA; só o adaptador aprende."
+      },
+      {
+        "text": "O modelo base é apagado e só o adaptador é guardado",
+        "why": "O adaptador só funciona ao lado da base em que foi treinado."
+      }
+    ]
+  },
+  "ex-247eg8tr": {
+    "prompt": "Você faz fine-tuning de um modelo de chat com os chamados de suporte da sua empresa, e depois ele responde pior a perguntas gerais. Que mudança ataca isso mais diretamente?",
+    "hint": "As mesmas defesas que nos dígitos do `forget.py`.",
+    "choices": [
+      {
+        "text": "Subir a taxa de aprendizado para o treino acabar antes",
+        "why": "Uma taxa maior moveu o `base.pt` para mais longe e esqueceu mais."
+      },
+      {
+        "text": "Treinar mais épocas só com os chamados",
+        "why": "Mais passos mirando só os chamados puxam para mais longe da tarefa geral."
+      },
+      {
+        "text": "Descongelar todas as camadas para ele reaprender as respostas gerais",
+        "why": "Nada nos dados dos chamados ensina respostas gerais; descongelar mais só move mais."
+      },
+      {
+        "text": "Uma taxa menor num adaptador LoRA, com algum texto geral misturado",
+        "why": "Certo. Cada parte limita quanto a base se move ou pede à loss que mantenha a tarefa antiga."
+      }
+    ]
+  },
+  "ex-08fbsbkz": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "O fine-tuning de tudo a 1e-2 deixou 0 a 4 em 0,294",
+        "why": "Sim, a partir de 0,989 antes da primeira época."
+      },
+      {
+        "text": "O fine-tuning de tudo superou o do zero com 50 imagens por classe",
+        "why": "Não: 0,967 a 0,972 contra 0,972 a 0,983."
+      },
+      {
+        "text": "Um adaptador de rank 4 empatou com o último bloco, treinando 2.629 parâmetros",
+        "why": "Sim, contra 33.157 do último bloco."
+      },
+      {
+        "text": "O `model.eval()` impediu o corpo de receber gradientes",
+        "why": "Não: quatro tensores receberam gradientes em modo de avaliação."
+      },
+      {
+        "text": "As linhas repetidas da aula 13 deram os números da aula 13",
+        "why": "Sim, até o último dígito, com as mesmas imagens e sementes."
+      }
+    ]
+  },
+  "ex-ef7ake7f": {
+    "prompt": "No `adapt.py` com rank 4, que parâmetros o otimizador recebe?",
+    "hint": "Tudo no `base.pt` foi congelado antes de o adaptador e a cabeça entrarem.",
+    "choices": [
+      {
+        "text": "Todos os 37.957 do `base.pt`, mais o adaptador",
+        "why": "O laço sobre `model.parameters()` congelou cada um deles primeiro."
+      },
+      {
+        "text": "Só `A` e `B`; a cabeça nova fica congelada",
+        "why": "Um `nn.Linear` novo começa com `requires_grad=True`, então a cabeça aprende."
+      },
+      {
+        "text": "`A`, `B` e a cabeça nova: 2.629 ao todo",
+        "why": "Certo: 2.048 mais 256 mais 325."
+      },
+      {
+        "text": "O peso de 512 para 64 e a cabeça nova",
+        "why": "Isso é o último bloco do `depths.py`; aqui o peso fica congelado dentro do adaptador."
+      }
+    ]
+  }
+}
