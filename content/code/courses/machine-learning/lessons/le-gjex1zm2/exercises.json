@@ -1,0 +1,533 @@
+[
+  {
+    "id": "ex-z6vp8qnp",
+    "version": 1,
+    "section": "the-rare-class",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The test months have 24,257 rows and 1,484 leavers. One row in how many is a leaver? One decimal place.",
+    "hint": "24,257 / 1,484.",
+    "value": 16.3,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-f5w3c14b",
+    "version": 1,
+    "section": "the-rare-class",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `predict` find almost no leavers on a rare class?",
+    "hint": "What cut does `predict` use?",
+    "choices": [
+      {
+        "text": "It ignores the leavers' rows when fitting",
+        "correct": false,
+        "why": "They are fitted; it is the reading that is off."
+      },
+      {
+        "text": "It needs `class_weight` to run on churn data at all",
+        "correct": false,
+        "why": "It runs; it uses the wrong line for this business."
+      },
+      {
+        "text": "It uses 0.5, and few chances reach it",
+        "correct": true,
+        "why": "Yes. When almost everybody stays, a chance above one half is rare."
+      },
+      {
+        "text": "Leavers are removed by `by_time`",
+        "correct": false,
+        "why": "`by_time` splits by date only."
+      }
+    ]
+  },
+  {
+    "id": "ex-g40p11m1",
+    "version": 1,
+    "section": "too-few",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`few.py` kept the count of leavers fixed and changed their share. What happened to AUC?",
+    "hint": "Compare 300 at 0.8% with 300 at 5.7%.",
+    "choices": [
+      {
+        "text": "It rose a lot with the larger share",
+        "correct": false,
+        "why": "It slightly fell."
+      },
+      {
+        "text": "It fell to chance level",
+        "correct": false,
+        "why": "Both stayed near 0.74."
+      },
+      {
+        "text": "It could not be computed for the larger share of leavers",
+        "correct": false,
+        "why": "It was computed: 0.737."
+      },
+      {
+        "text": "Almost nothing",
+        "correct": true,
+        "why": "Yes. 0.748 against 0.737; the count is what mattered."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyc18jwv",
+    "version": 1,
+    "section": "too-few",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A fraud team has 120 labelled frauds and two million clean transactions. Which step helps most?",
+    "hint": "Count or share?",
+    "choices": [
+      {
+        "text": "More real examples, gathered over time",
+        "correct": true,
+        "why": "Yes. The count is what limits the model."
+      },
+      {
+        "text": "Oversampling the 120 frauds until they match the clean rows",
+        "correct": false,
+        "why": "Copies add no new fraud."
+      },
+      {
+        "text": "Undersampling the clean rows to 120",
+        "correct": false,
+        "why": "That throws away evidence and adds no fraud."
+      },
+      {
+        "text": "Using accuracy instead of AUC",
+        "correct": false,
+        "why": "Accuracy is blind on a rare class."
+      }
+    ]
+  },
+  {
+    "id": "ex-rramdjqa",
+    "version": 1,
+    "section": "class-weights",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `class_weight=\"___\"`, each class weighs the same in total in the loss.",
+    "hint": "The scikit-learn value.",
+    "blanks": [
+      {
+        "accept": [
+          "balanced"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-nse5rvpg",
+    "version": 1,
+    "section": "class-weights",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Training has 36,427 stayers and 2,201 leavers. Under balanced weights, about how many stayers is one leaver worth? One decimal place.",
+    "hint": "36,427 / 2,201.",
+    "value": 16.6,
+    "tolerance": 0.05
+  },
+  {
+    "id": "ex-nyfxng8g",
+    "version": 1,
+    "section": "class-weights",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the class weights do to the churn model?",
+    "hint": "Look at AUC and the mean chance.",
+    "choices": [
+      {
+        "text": "Removed the September problem",
+        "correct": false,
+        "why": "The weights know nothing about the price rise."
+      },
+      {
+        "text": "Raised every chance and moved the useful cut",
+        "correct": true,
+        "why": "Yes. Mean chance 0.051 to 0.313; best cut 0.23 to 0.79."
+      },
+      {
+        "text": "Improved its ranking of leavers above stayers",
+        "correct": false,
+        "why": "AUC fell slightly, 0.804 to 0.797."
+      },
+      {
+        "text": "Made it calibrated on the test",
+        "correct": false,
+        "why": "Six times the true rate is far from calibrated."
+      }
+    ]
+  },
+  {
+    "id": "ex-1y85t674",
+    "version": 1,
+    "section": "resampling",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each remedy to what it does to the training rows.",
+    "hint": "Copy, drop, invent, or weigh.",
+    "pairs": [
+      {
+        "left": "Oversampling",
+        "right": "Copies leavers"
+      },
+      {
+        "left": "Undersampling",
+        "right": "Drops stayers"
+      },
+      {
+        "left": "SMOTE",
+        "right": "Invents leavers between neighbours"
+      },
+      {
+        "left": "Class weights",
+        "right": "Changes no rows, only their weight"
+      }
+    ],
+    "right_distractors": [
+      "Adds new real leavers"
+    ]
+  },
+  {
+    "id": "ex-2jwwnxxz",
+    "version": 1,
+    "section": "resampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the one honest argument for undersampling?",
+    "hint": "Not about the class.",
+    "choices": [
+      {
+        "text": "It invents leavers that the data never contained",
+        "correct": false,
+        "why": "That is SMOTE, and undersampling invents nothing."
+      },
+      {
+        "text": "It needs no correction afterwards",
+        "correct": false,
+        "why": "Its chances are inflated and need the formula."
+      },
+      {
+        "text": "It makes training cheap on data too large to fit",
+        "correct": true,
+        "why": "Yes. Fewer rows, as long as the chances are corrected."
+      },
+      {
+        "text": "It raises AUC",
+        "correct": false,
+        "why": "It lowered average precision most of all."
+      }
+    ]
+  },
+  {
+    "id": "ex-dh20n25y",
+    "version": 1,
+    "section": "resampling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why are SMOTE's invented rows awkward on `churn.csv`?",
+    "hint": "A row between card and boleto.",
+    "choices": [
+      {
+        "text": "It only works for regression",
+        "correct": false,
+        "why": "It is a classification technique."
+      },
+      {
+        "text": "SMOTE refuses any file with more than ten columns in it",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "It needs a graphics card",
+        "correct": false,
+        "why": "It runs on a processor."
+      },
+      {
+        "text": "A category has no point halfway between two values",
+        "correct": true,
+        "why": "Yes. And the invented rows add no information either."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fr7344j",
+    "version": 1,
+    "section": "resampling-leaks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Oversampling before the split gave AUC 0.908, after it 0.793. Why the gap?",
+    "hint": "Where do the copies land?",
+    "choices": [
+      {
+        "text": "Copies landed on both sides of the split",
+        "correct": true,
+        "why": "Yes. Lesson 4's leakage, made by the remedy."
+      },
+      {
+        "text": "Random folds are always optimistic about a model",
+        "correct": false,
+        "why": "Both versions used the same random folds."
+      },
+      {
+        "text": "The first version had more leavers to learn from",
+        "correct": false,
+        "why": "Copies are not new leavers."
+      },
+      {
+        "text": "AUC rises with more rows",
+        "correct": false,
+        "why": "Not by itself, and the test months say 0.789."
+      }
+    ]
+  },
+  {
+    "id": "ex-14chm7at",
+    "version": 1,
+    "section": "resampling-leaks",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an honest evaluation with oversampling in order.",
+    "hint": "Nothing fitted from data before the split.",
+    "items": [
+      "Split into learning and judging rows",
+      "Oversample the learning rows only",
+      "Fit the model",
+      "Score the untouched judging rows"
+    ]
+  },
+  {
+    "id": "ex-5dk6ywb4",
+    "version": 1,
+    "section": "resampling-leaks",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these must happen inside each fold, after the split? Choose all that apply.",
+    "hint": "Anything fitted from the data.",
+    "choices": [
+      {
+        "text": "Oversampling",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Reading the CSV file",
+        "correct": false,
+        "why": "Reading fits nothing."
+      },
+      {
+        "text": "Scaling with means and spreads",
+        "correct": true,
+        "why": "Yes, those are fitted."
+      },
+      {
+        "text": "Filling in missing values with a median",
+        "correct": true,
+        "why": "Yes, the median is fitted."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfvf9h6x",
+    "version": 1,
+    "section": "correcting-chances",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An undersampled model kept 10% of stayers and gives a chance of 0.5. What is the corrected chance? Three decimal places.",
+    "hint": "0.5 × 0.1 / (0.5 × 0.1 + 0.5).",
+    "value": 0.091,
+    "tolerance": 0.0005
+  },
+  {
+    "id": "ex-15bw2jkf",
+    "version": 1,
+    "section": "correcting-chances",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `correct.py` call the share `share_kept` rather than `kept`?",
+    "hint": "Look at the import line.",
+    "choices": [
+      {
+        "text": "Python forbids variables called `kept`",
+        "correct": false,
+        "why": "It does not; `kept` would be legal."
+      },
+      {
+        "text": "`KEPT` already means something in `feira.py`",
+        "correct": true,
+        "why": "Yes. Two meanings for one name invite a quiet bug."
+      },
+      {
+        "text": "It is shorter",
+        "correct": false,
+        "why": "It is longer."
+      },
+      {
+        "text": "scikit-learn reserves the name",
+        "correct": false,
+        "why": "No library reserves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7zbgw03",
+    "version": 1,
+    "section": "correcting-chances",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Data fits in memory and the model gives chances. What does the lesson put first?",
+    "hint": "The order of preference.",
+    "choices": [
+      {
+        "text": "Class weights, then a cut of 0.5",
+        "correct": false,
+        "why": "Weighted chances are distorted; 0.5 lost money."
+      },
+      {
+        "text": "SMOTE, then calibration on the test months",
+        "correct": false,
+        "why": "Calibrating on the test months is hindsight."
+      },
+      {
+        "text": "Do not resample; choose the cut from the costs",
+        "correct": true,
+        "why": "Yes. The cut is where imbalance is dealt with."
+      },
+      {
+        "text": "Undersample, then correct with the formula",
+        "correct": false,
+        "why": "That is for data too large to fit."
+      }
+    ]
+  },
+  {
+    "id": "ex-84jh4x92",
+    "version": 1,
+    "section": "what-it-buys",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which of these cases does rebalancing earn its place? Choose all that apply.",
+    "hint": "Section 08's list.",
+    "choices": [
+      {
+        "text": "A boosted model with honest chances and a cut from the costs",
+        "correct": false,
+        "why": "It has already dealt with the imbalance."
+      },
+      {
+        "text": "Data too large to fit, with chances corrected afterwards",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "A deployed system that only says yes or no",
+        "correct": true,
+        "why": "Yes, there is no cut to move."
+      },
+      {
+        "text": "A report that needs a higher AUC",
+        "correct": false,
+        "why": "Rebalancing did not raise AUC here."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxjpnfqz",
+    "version": 1,
+    "section": "what-it-buys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You add class weights to a support vector machine on a one-in-a-thousand class. What does the lesson ask you to do next?",
+    "hint": "Do not assume.",
+    "choices": [
+      {
+        "text": "Oversample as well, before the split",
+        "correct": false,
+        "why": "Before the split is the leak."
+      },
+      {
+        "text": "Nothing; the weights fixed it",
+        "correct": false,
+        "why": "That is the assumption the lesson warns against."
+      },
+      {
+        "text": "Report its accuracy on the test months",
+        "correct": false,
+        "why": "Accuracy is blind here."
+      },
+      {
+        "text": "Check with lesson 10's curves",
+        "correct": true,
+        "why": "Yes. Measure the remedy rather than trust it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0q2gd8z",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`rebalance.py` prints each model's best cut on the test months. Why is that acceptable here when lesson 11 called it hindsight?",
+    "hint": "What is the column used for?",
+    "choices": [
+      {
+        "text": "Only as a ceiling, to compare models",
+        "correct": true,
+        "why": "Yes. Nobody reports it as money earned."
+      },
+      {
+        "text": "It is not acceptable and should be removed",
+        "correct": false,
+        "why": "Used as a comparison and labelled a ceiling, it is fine."
+      },
+      {
+        "text": "Because the test months are the same as the training months here",
+        "correct": false,
+        "why": "They are the same split as always."
+      },
+      {
+        "text": "Because rebalanced models need no cut",
+        "correct": false,
+        "why": "They need one more than ever; theirs moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-eskestgd",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At their own best cuts, how many reais did the plain model make above the undersampled one?",
+    "hint": "23,832 − 18,440.",
+    "value": 5392,
+    "tolerance": 0,
+    "unit": "reais"
+  }
+]

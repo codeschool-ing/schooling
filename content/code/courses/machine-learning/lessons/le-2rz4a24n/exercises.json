@@ -1,0 +1,498 @@
+[
+  {
+    "id": "ex-dv2ee5w4",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `by_hand.py` fail on `churn_2026.csv`?",
+    "hint": "Read the last line of the error.",
+    "choices": [
+      {
+        "text": "The medians were recomputed on the new file",
+        "correct": false,
+        "why": "They come from the training rows here."
+      },
+      {
+        "text": "Logistic regression cannot score more than 10,000 rows at once",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "The new file has no `churned` column",
+        "correct": false,
+        "why": "The program never reads it for the new rows."
+      },
+      {
+        "text": "A new column, `plan_monthly`",
+        "correct": true,
+        "why": "Yes. The new file had a new plan."
+      }
+    ]
+  },
+  {
+    "id": "ex-pybg0bkt",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which change to the new file would make the hand-made preparation give wrong chances without any error?",
+    "hint": "Fewer columns, no names to check.",
+    "choices": [
+      {
+        "text": "A value absent that month",
+        "correct": true,
+        "why": "Yes. The columns shift and the model reads the wrong ones."
+      },
+      {
+        "text": "More rows than the training file had",
+        "correct": false,
+        "why": "Row counts do not matter."
+      },
+      {
+        "text": "Rows sorted by a different column",
+        "correct": false,
+        "why": "Each row is scored on its own."
+      },
+      {
+        "text": "A new plan, as in 2026",
+        "correct": false,
+        "why": "That raised an error, the good outcome."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmzas08z",
+    "version": 1,
+    "section": "transformers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A transformer learns in `fit` and changes rows in ___.",
+    "hint": "The other half of the contract.",
+    "blanks": [
+      {
+        "accept": [
+          "transform",
+          "transform()",
+          ".transform"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k0jc7fg3",
+    "version": 1,
+    "section": "transformers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which call is lesson 4's preparation leak in one line?",
+    "hint": "Fitting on the wrong rows.",
+    "choices": [
+      {
+        "text": "`scaler.fit_transform(train)`",
+        "correct": false,
+        "why": "On the training rows it is fine."
+      },
+      {
+        "text": "`scaler.fit_transform(test)`",
+        "correct": true,
+        "why": "Yes. It learns the scaling from the rows it is about to judge."
+      },
+      {
+        "text": "`scaler.transform(test)`",
+        "correct": false,
+        "why": "That only applies what was learned."
+      },
+      {
+        "text": "`scaler.fit(train)`",
+        "correct": false,
+        "why": "Fitting on training rows is correct."
+      }
+    ]
+  },
+  {
+    "id": "ex-tds4fndt",
+    "version": 1,
+    "section": "transformers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each object to what it learns in `fit`.",
+    "hint": "Some learn nothing.",
+    "pairs": [
+      {
+        "left": "`SimpleImputer(strategy=\"median\")`",
+        "right": "The median of each column"
+      },
+      {
+        "left": "`StandardScaler`",
+        "right": "Each column's mean and spread"
+      },
+      {
+        "left": "`OneHotEncoder`",
+        "right": "The categories each column holds"
+      },
+      {
+        "left": "`FunctionTransformer(add_shapes)`",
+        "right": "Nothing"
+      }
+    ],
+    "right_distractors": [
+      "The labels"
+    ]
+  },
+  {
+    "id": "ex-ef60825d",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `pipeline.py`'s model given to fit on?",
+    "hint": "Nothing is prepared outside it.",
+    "choices": [
+      {
+        "text": "A scaled array of the 36 columns",
+        "correct": false,
+        "why": "The scaling happens inside."
+      },
+      {
+        "text": "The output of `get_dummies`",
+        "correct": false,
+        "why": "`OneHotEncoder` does that job inside."
+      },
+      {
+        "text": "The raw table, with every column",
+        "correct": true,
+        "why": "Yes. The pipeline picks and prepares its columns."
+      },
+      {
+        "text": "Only `NUMERIC`",
+        "correct": false,
+        "why": "It takes the whole table and picks inside."
+      }
+    ]
+  },
+  {
+    "id": "ex-de5k1k3g",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`NUMERIC` has 11 columns, `SHAPES` 7, two columns have gaps, and the five word columns have 16 values in all. How many columns reach the logistic regression?",
+    "hint": "11 + 7 + 2 + 16.",
+    "value": 36,
+    "tolerance": 0,
+    "unit": "columns"
+  },
+  {
+    "id": "ex-xhb7yc7a",
+    "version": 1,
+    "section": "a-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How do `churned` and `customer_id` stay out of the model, though the raw table is passed in?",
+    "hint": "Which columns does `ColumnTransformer` keep?",
+    "choices": [
+      {
+        "text": "`load_churn` removes them before the pipeline sees the table",
+        "correct": false,
+        "why": "`load_churn` keeps every column."
+      },
+      {
+        "text": "`FunctionTransformer` deletes them",
+        "correct": false,
+        "why": "`add_shapes` only adds columns."
+      },
+      {
+        "text": "Logistic regression ignores text columns",
+        "correct": false,
+        "why": "`churned` is a number, and it would be used."
+      },
+      {
+        "text": "`ColumnTransformer` drops columns it is not told about",
+        "correct": true,
+        "why": "Yes. Only `NUMERIC + SHAPES` and `CATEGORICAL` go through."
+      }
+    ]
+  },
+  {
+    "id": "ex-2s17x2tf",
+    "version": 1,
+    "section": "searching-a-pipeline",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a grid search over the pipeline, the logistic regression's C is named ___ in the dictionary of settings.",
+    "hint": "Two underscores, then the setting.",
+    "blanks": [
+      {
+        "accept": [
+          "logistic__C"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s2v7vmm0",
+    "version": 1,
+    "section": "searching-a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can a grid search over a pipeline not commit lesson 4's preparation leak?",
+    "hint": "What is fitted in each fold?",
+    "choices": [
+      {
+        "text": "Each fold refits the whole pipeline",
+        "correct": true,
+        "why": "Yes. Nothing outside it can be fitted on the wrong rows."
+      },
+      {
+        "text": "The folds are random",
+        "correct": false,
+        "why": "They are by month here, and that is unrelated."
+      },
+      {
+        "text": "It skips preparation during the search",
+        "correct": false,
+        "why": "It runs it, inside every fold."
+      },
+      {
+        "text": "`GridSearchCV` forbids `StandardScaler`",
+        "correct": false,
+        "why": "It allows any transformer."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9dzbpaz",
+    "version": 1,
+    "section": "searching-a-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`search.py` scored C from 0.1 to 10 between R$ 915 and R$ 917 per thousand rows. What follows?",
+    "hint": "Is there anything to choose?",
+    "choices": [
+      {
+        "text": "C = 10 is the best and should be used",
+        "correct": false,
+        "why": "Two reais per thousand rows is inside the noise."
+      },
+      {
+        "text": "The default is as good as any; spend the time elsewhere",
+        "correct": true,
+        "why": "Yes. Lesson 9's conclusion, again."
+      },
+      {
+        "text": "Regularisation is broken in this pipeline",
+        "correct": false,
+        "why": "C = 0.01 does cost something, so it is working."
+      },
+      {
+        "text": "The folds are too few to measure C",
+        "correct": false,
+        "why": "They measured a real cost at 0.01."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzkn29nd",
+    "version": 1,
+    "section": "new-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In March 2026, how can anybody tell whether the chances for `churn_2026.csv` are good?",
+    "hint": "When do the answers exist?",
+    "choices": [
+      {
+        "text": "By the AUC on the test months",
+        "correct": false,
+        "why": "That measured 2025, not these rows."
+      },
+      {
+        "text": "By the share of credits sent",
+        "correct": false,
+        "why": "That is a question to ask, not a score."
+      },
+      {
+        "text": "Not yet: no answers exist",
+        "correct": true,
+        "why": "Yes. Lesson 22 compares them as they come."
+      },
+      {
+        "text": "By refitting on the new file",
+        "correct": false,
+        "why": "There are no labels to fit on."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp60yx11",
+    "version": 1,
+    "section": "new-data",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `score_2026.py` fitted on all of `churn.csv`, test months included?",
+    "hint": "What were the test months for?",
+    "choices": [
+      {
+        "text": "It is a mistake that leaks the test months",
+        "correct": false,
+        "why": "The test months already did their job; there is nothing left to measure on them."
+      },
+      {
+        "text": "The pipeline refuses to fit on fewer rows",
+        "correct": false,
+        "why": "It fits on any number of rows."
+      },
+      {
+        "text": "`load_churn` cannot split by date any more",
+        "correct": false,
+        "why": "`by_time` still works; it is simply not needed here."
+      },
+      {
+        "text": "They are the newest evidence now",
+        "correct": true,
+        "why": "Yes. Including the months after the price rise."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mwq47r3",
+    "version": 1,
+    "section": "reproducibility",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did two unseeded fits of `HistGradientBoostingClassifier` give different models?",
+    "hint": "What does it turn on above 10,000 rows?",
+    "choices": [
+      {
+        "text": "Early stopping's random hold-out",
+        "correct": true,
+        "why": "Yes. A different tenth, a different number of trees."
+      },
+      {
+        "text": "Trees are always random",
+        "correct": false,
+        "why": "With a seed they are identical, as the last two lines show."
+      },
+      {
+        "text": "The processor rounds differently each time",
+        "correct": false,
+        "why": "The seeded lines are identical."
+      },
+      {
+        "text": "The data file changed between the fits",
+        "correct": false,
+        "why": "Same file, same rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-hd4k6kef",
+    "version": 1,
+    "section": "reproducibility",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should be kept with a model that will be used? Choose all that apply.",
+    "hint": "Three things.",
+    "choices": [
+      {
+        "text": "The code that built it, at its commit",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The pinned versions of the libraries",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The test months' AUC, instead of the code",
+        "correct": false,
+        "why": "A score is not a recipe."
+      },
+      {
+        "text": "The data it learned from, or its fingerprint",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-g52xfzas",
+    "version": 1,
+    "section": "reproducibility",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The two unseeded runs printed R$ 21,120 and R$ 21,152. How many reais apart were they?",
+    "hint": "Subtract.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "reais"
+  },
+  {
+    "id": "ex-q0azb9c4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `churn_model.py`'s pipeline in the order the rows pass through them.",
+    "hint": "Columns first, then preparation, then the model.",
+    "items": [
+      "Add lesson 14's seven columns",
+      "Fill gaps, scale numbers and one-hot the words",
+      "Logistic regression"
+    ]
+  },
+  {
+    "id": "ex-aftysvk6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague scores next month's file by copying the training program's preparation lines into the scoring program. What is the lesson's objection?",
+    "hint": "Where does the preparation live?",
+    "choices": [
+      {
+        "text": "Next month's file has no labels",
+        "correct": false,
+        "why": "True, and scoring does not need them."
+      },
+      {
+        "text": "Two copies drift apart, and the preparation is part of the model",
+        "correct": true,
+        "why": "Yes. Put it in the pipeline, fitted once."
+      },
+      {
+        "text": "Copying code is slow",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "Scoring programs may not import pandas",
+        "correct": false,
+        "why": "They can."
+      }
+    ]
+  }
+]
