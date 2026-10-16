@@ -60,7 +60,7 @@ teach the wrong thing. Four differences matter here, and the lessons that meet t
   one a policy should deny. Lesson 7 turns on moto's checking, and from then on a user without
   permission is refused. What moto checks is the user's own policies, a role's trust policy and an
   explicit deny; it does **not** check permission boundaries, service control policies, session
-  policies or a bucket's own policy, and it treats every condition in a policy as met. Lessons 4 and
+  policies or a bucket's own policy beyond its objects, and it treats every condition in a policy as met. Lessons 4 and
   8 teach those from AWS's documentation and say which lines were not run.
 - **It carries no traffic.** A VPC in moto is a record with an id and a CIDR range. A security group
   stores its rules and filters nothing, because nothing flows. Lessons 16 to 24 build the network

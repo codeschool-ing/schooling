@@ -54,8 +54,9 @@ ana@laptop:~/aws$ aws s3 ls
 The logo goes first, because a bucket with objects in it cannot be deleted in AWS or in moto, and the
 bucket policy denies only the bucket's own deletion. **Then the bucket is gone. AWS would have
 refused**, `admin` and its `AdministratorAccess` included,
-because an explicit `Deny` anywhere ends the request, and a bucket policy is anywhere. moto stores
-bucket policies and never consults them when it judges. That refusal was not run here.
+because an explicit `Deny` anywhere ends the request, and a bucket policy is anywhere. moto judges a
+bucket policy's `Deny` only on reading and writing objects, as lesson 19 shows, and never on the
+bucket itself. That refusal was not run here.
 
 **Across accounts, a resource policy is half of the answer.** If the shop's `log-archive` account
 owns `shop-logs` and a role in `shop-prod` writes to it, the bucket policy has to allow that role

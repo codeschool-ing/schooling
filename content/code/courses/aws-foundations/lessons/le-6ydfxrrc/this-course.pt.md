@@ -63,7 +63,7 @@ encontram voltam a dizê-lo:
   uma política deveria negar. A lição 7 liga a verificação do moto, e dali em diante um usuário sem
   permissão é recusado. O que o moto verifica são as políticas do próprio usuário, a política de
   confiança de uma role e um deny explícito; ele **não** verifica permission boundaries, service
-  control policies, session policies nem a política do próprio bucket, e trata toda condição de uma
+  control policies, session policies nem a política do próprio bucket além dos objetos, e trata toda condição de uma
   política como atendida. As lições 4 e 8 ensinam essas pela documentação da AWS e dizem quais
   linhas não foram rodadas.
 - **Ele não carrega tráfego.** Uma VPC no moto é um registro com um id e uma faixa CIDR. Um security

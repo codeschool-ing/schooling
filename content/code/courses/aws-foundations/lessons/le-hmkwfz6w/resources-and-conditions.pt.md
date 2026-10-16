@@ -54,8 +54,9 @@ ana@laptop:~/aws$ aws s3 ls
 O logo vai primeiro, porque um bucket com objetos dentro não pode ser apagado nem na AWS nem no moto,
 e a política do bucket nega só a exclusão do próprio bucket. **Depois o bucket some. A AWS teria
 recusado**, `admin` e o `AdministratorAccess` dele inclusive, porque um `Deny` explícito em qualquer
-lugar encerra a requisição, e uma política de bucket é um lugar qualquer. O moto guarda políticas de
-bucket e nunca as consulta quando julga. Essa recusa não foi rodada aqui.
+lugar encerra a requisição, e uma política de bucket é um lugar qualquer. O moto julga o `Deny`
+de uma política de bucket só na leitura e na escrita de objetos, como a lição 19 mostra, e nunca no
+próprio bucket. Essa recusa não foi rodada aqui.
 
 **Entre contas, uma política de recurso é metade da resposta.** Se a conta `log-archive` da loja é
 dona do `shop-logs` e uma role em `shop-prod` grava nele, a política do bucket tem de permitir essa
