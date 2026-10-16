@@ -65,7 +65,7 @@ baseOffset: 50 lastOffset: 54 count: 5 baseSequence: 0 lastSequence: 4 producerI
 ```
 
 The first line is the client waiting while a fresh cluster prepares the internal topic it keeps
-producer ids in; it retries on its own and is printed only the first time. The batch it wrote
+producer ids in; it retries on its own, and the line is a notice, not a failure. The batch it wrote
 sits at offsets 50 to 54 with **`producerId: 0`, `producerEpoch: 0` and sequences 0 to 4**. A
 retry of that batch would arrive with the same producer id and base sequence 0, and the leader
 would answer success without writing it again.

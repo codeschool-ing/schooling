@@ -26,7 +26,8 @@ written**. It has two choices:
 A client with retries switched on, which the Python client has by default, chooses the first.
 Lesson 5 watched a producer ride out a leader's death this way: `acks.py` lost nothing and, that
 time, wrote nothing twice, but nothing in the client promised the second. The cure for this gap belongs to Kafka, and it is the
-idempotent producer, two sections on.
+idempotent producer, two sections on. A lost acknowledgement is not provoked in this lesson: it needs a
+network that drops one reply and not the write before it, which this lab cannot stage.
 
 ## Gap two: the consumer and its commit
 

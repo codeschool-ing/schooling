@@ -42,7 +42,7 @@ statement could tell it was a repeat; it adds to whatever is there.
 
 Now the other shape. The sales themselves are stored, **keyed by the sale's id**, and the number
 sold is computed from them. `ON CONFLICT (sale) DO NOTHING` turns a second insert of the same id
-into nothing at all; SQLite calls this an **upsert** when the conflict clause updates instead:
+into nothing at all; SQLite calls the clause an **upsert**, whether it does nothing or updates:
 
 ```
 ubuntu@stream:~/work$ python -m sqlite3 demo.db "CREATE TABLE sales (sale TEXT PRIMARY KEY, book TEXT, qty INTEGER)"

@@ -15,7 +15,7 @@ ubuntu@stream:~/work$ python -m sqlite3 stock.db "SELECT count(*) FROM processed
 (40,)
 ```
 
-Forty rows, one per sale applied, after a crash, a restart and a replay that skipped them all.
+Forty rows, one per sale, after a crash and a restart that skipped the one it had already applied.
 
 Forty rows is nothing. Put numbers on Ponto Final instead: five shops at, say, two thousand sales a
 day each is ten thousand ids a day, three and a half million a year. A sale id is ten characters;

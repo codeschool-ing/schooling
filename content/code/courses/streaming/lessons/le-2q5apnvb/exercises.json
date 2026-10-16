@@ -1,0 +1,644 @@
+[
+  {
+    "id": "ex-jcgfkvrx",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A producer's sale is written by the leader, but the acknowledgement is lost. What does the producer know?",
+    "choices": [
+      {
+        "text": "That the sale was written, since the leader never fails silently",
+        "correct": false,
+        "why": "It received nothing, so it cannot tell a lost reply from a lost write."
+      },
+      {
+        "text": "Nothing: written and unacknowledged looks like never written",
+        "correct": true,
+        "why": "Right. That is the first gap, and retrying it can write twice."
+      },
+      {
+        "text": "That the sale was lost, because no reply came",
+        "correct": false,
+        "why": "It may well be on disk; the reply is what was lost."
+      },
+      {
+        "text": "Which offset it was written at",
+        "correct": false,
+        "why": "The offset comes in the reply, which never arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnyzfz7x",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each order of steps to what a crash between them causes.",
+    "pairs": [
+      {
+        "left": "commit, then process",
+        "right": "the interrupted messages are never processed"
+      },
+      {
+        "left": "process, then commit",
+        "right": "the interrupted messages are processed again"
+      },
+      {
+        "left": "produce, ack lost, retry",
+        "right": "the message may be written twice"
+      }
+    ],
+    "right_distractors": [
+      "the message is corrupted on disk"
+    ]
+  },
+  {
+    "id": "ex-hdj6jkwp",
+    "version": 1,
+    "section": "where-it-breaks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a consumer whose processing writes to another Kafka topic close its gap, while one that writes to PostgreSQL cannot do it the same way?",
+    "choices": [
+      {
+        "text": "PostgreSQL is slower than Kafka, so it cannot keep up with a transaction",
+        "correct": false,
+        "why": "Speed has nothing to do with whether two writes can share a transaction."
+      },
+      {
+        "text": "Kafka keeps messages for longer",
+        "correct": false,
+        "why": "Retention is not the point; atomicity is."
+      },
+      {
+        "text": "Both steps are Kafka writes there, so one transaction holds both",
+        "correct": true,
+        "why": "Right. The output and the offset commit can share a Kafka transaction; a database row cannot."
+      },
+      {
+        "text": "PostgreSQL cannot be read by a consumer",
+        "correct": false,
+        "why": "The question is about writing to it, not reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-qe92vpf8",
+    "version": 1,
+    "section": "at-most-once",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer in at-most-once mode reads batches of ten from 50 sales and crashes after processing the 25th. On restart it processes the rest. How many sales are never processed?",
+    "hint": "The third batch was committed before it was processed.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-cbr2zqtx",
+    "version": 1,
+    "section": "at-most-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the at-most-once crash, the file holds 45 different ids. How would anybody find out five sales are missing?",
+    "choices": [
+      {
+        "text": "The consumer prints an error for each",
+        "correct": false,
+        "why": "It printed nothing about them: they were committed as handled."
+      },
+      {
+        "text": "Kafka marks them as unread",
+        "correct": false,
+        "why": "The committed offset says they were read."
+      },
+      {
+        "text": "Only by counting against the topic",
+        "correct": true,
+        "why": "Right. A loss is silent; the file is simply shorter."
+      },
+      {
+        "text": "The file contains blank lines where they were",
+        "correct": false,
+        "why": "Nothing is written for a sale that is never processed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2g8n33fr",
+    "version": 1,
+    "section": "at-most-once",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these is the best fit for at most once?",
+    "choices": [
+      {
+        "text": "Payments to suppliers",
+        "correct": false,
+        "why": "A lost payment is worse than a repeated one only if both are caught; neither is acceptable silently."
+      },
+      {
+        "text": "A sample of page views feeding a rough dashboard",
+        "correct": true,
+        "why": "Right. A few lost events change little, and a duplicate would distort it the same way."
+      },
+      {
+        "text": "The stock count shown on the website",
+        "correct": false,
+        "why": "Every lost sale makes the stock wrong for good."
+      },
+      {
+        "text": "The nightly feed of every sale to the accountant, for the tax return",
+        "correct": false,
+        "why": "Accounting needs every sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-c607tt1g",
+    "version": 1,
+    "section": "at-least-once",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Same 50 sales, batches of ten, crash after processing the 25th, but in at-least-once mode. How many sales are processed twice?",
+    "hint": "The last commit was after the second batch.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-2hz2bpp1",
+    "version": 1,
+    "section": "at-least-once",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After that at-least-once crash and restart, how many lines does the output file hold for the 50 sales?",
+    "value": 55,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-mqq58854",
+    "version": 1,
+    "section": "at-least-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer catches every exception from its processing, logs it and carries on, then commits the batch. What guarantee does it really have?",
+    "choices": [
+      {
+        "text": "At least once, since it commits after processing",
+        "correct": false,
+        "why": "The failed message is covered by the commit and never retried."
+      },
+      {
+        "text": "Exactly once",
+        "correct": false,
+        "why": "Nothing makes the effect atomic with the commit."
+      },
+      {
+        "text": "None for the failed messages: they vanish",
+        "correct": true,
+        "why": "Right. It made them disappear on purpose; they belong in a dead-letter topic."
+      },
+      {
+        "text": "At most once, but only during rebalances",
+        "correct": false,
+        "why": "Rebalances have nothing to do with swallowed exceptions."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0qy3yzn",
+    "version": 1,
+    "section": "at-least-once",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is at least once the usual choice, rather than at most once?",
+    "choices": [
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "Commit order changes outcomes, not speed in any meaningful way."
+      },
+      {
+        "text": "A duplicate is visible to a reader that keeps ids; a loss leaves no trace",
+        "correct": true,
+        "why": "Right. Choose the failure that can be repaired, and repair it downstream."
+      },
+      {
+        "text": "Kafka refuses to run at most once",
+        "correct": false,
+        "why": "The order of two calls in the consumer decides it; Kafka allows either."
+      },
+      {
+        "text": "It never produces duplicates in practice",
+        "correct": false,
+        "why": "The run in this lesson produced five."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmmhyzzw",
+    "version": 1,
+    "section": "the-idempotent-producer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Python program uses confluent-kafka and sets nothing about idempotence. Is its producer idempotent?",
+    "choices": [
+      {
+        "text": "Yes, as in every client since Kafka 3.0",
+        "correct": false,
+        "why": "That default is the Java client's; librdkafka keeps its own."
+      },
+      {
+        "text": "No: librdkafka defaults to false",
+        "correct": true,
+        "why": "Right. The dump shows producerId -1 for tills.py's batch."
+      },
+      {
+        "text": "Yes, whenever acks=all",
+        "correct": false,
+        "why": "acks=all is required by idempotence, not the same thing as it."
+      },
+      {
+        "text": "Only on topics with one partition",
+        "correct": false,
+        "why": "Partition count has nothing to do with the producer's setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjnzynfj",
+    "version": 1,
+    "section": "the-idempotent-producer",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a log dump, a batch from a producer without idempotence shows `producerId: ___`.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fj9xnnqd",
+    "version": 1,
+    "section": "the-idempotent-producer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An idempotent producer crashes after sending a sale and, on restart, sends the same sale again. What happens?",
+    "choices": [
+      {
+        "text": "The broker refuses it, because the sequence was already written",
+        "correct": false,
+        "why": "The restarted program has a new PID, so its sequences start again."
+      },
+      {
+        "text": "It is written twice",
+        "correct": true,
+        "why": "Right. Idempotence protects retries inside one producer session, not resends after a restart."
+      },
+      {
+        "text": "The producer refuses to start until the old PID expires",
+        "correct": false,
+        "why": "An idempotent producer starts with a new PID at once."
+      },
+      {
+        "text": "Kafka merges the two into one record",
+        "correct": false,
+        "why": "Kafka never merges records by content."
+      }
+    ]
+  },
+  {
+    "id": "ex-6typ6eg3",
+    "version": 1,
+    "section": "the-idempotent-producer",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which settings come with enable.idempotence=true in librdkafka? Choose all that apply.",
+    "choices": [
+      {
+        "text": "acks=all",
+        "correct": true,
+        "why": "Yes: a configuration with acks=1 is refused."
+      },
+      {
+        "text": "At most five requests in flight per connection",
+        "correct": true,
+        "why": "Yes: more is refused."
+      },
+      {
+        "text": "Retries without limit inside message.timeout.ms",
+        "correct": true,
+        "why": "Yes: retrying is safe once sequences are checked."
+      },
+      {
+        "text": "isolation.level=read_committed",
+        "correct": false,
+        "why": "That is a consumer setting, about transactions."
+      },
+      {
+        "text": "A transactional.id",
+        "correct": false,
+        "why": "Only transactions need one; idempotence works without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-wddk51my",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A transaction of five sales is aborted. What happens to the five records?",
+    "choices": [
+      {
+        "text": "They are never written to the log",
+        "correct": false,
+        "why": "They are written at once; the dump showed them at offsets 6 to 10."
+      },
+      {
+        "text": "They are deleted from the log by the abort",
+        "correct": false,
+        "why": "A log is append-only; an abort adds a marker."
+      },
+      {
+        "text": "They stay in the log, hidden from read_committed readers",
+        "correct": true,
+        "why": "Right. A read_uncommitted reader still sees them."
+      },
+      {
+        "text": "They are moved to a dead-letter topic for somebody to look at later",
+        "correct": false,
+        "why": "Kafka moves nothing; dead-letter topics are written by programs."
+      }
+    ]
+  },
+  {
+    "id": "ex-jm7pzy40",
+    "version": 1,
+    "section": "transactions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two transactions of five records each go to an empty single-partition topic, one committed and one aborted. What is the partition's end offset afterwards?",
+    "hint": "Each transaction ends with a marker that takes an offset.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "offset"
+  },
+  {
+    "id": "ex-z481mgmq",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Java consumer with default settings reads a topic written by eos_copy.py. What does it see?",
+    "choices": [
+      {
+        "text": "Only committed records, like every consumer",
+        "correct": false,
+        "why": "Java's default is read_uncommitted."
+      },
+      {
+        "text": "Nothing until it sets a transactional.id",
+        "correct": false,
+        "why": "That is a producer setting."
+      },
+      {
+        "text": "The aborted copies as well",
+        "correct": true,
+        "why": "Right. It would count 22 where 20 were committed."
+      },
+      {
+        "text": "An error, since transactional topics need special consumers",
+        "correct": false,
+        "why": "Any consumer reads them; the isolation level decides what it sees."
+      }
+    ]
+  },
+  {
+    "id": "ex-54gad8fm",
+    "version": 1,
+    "section": "transactions",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer that must not see aborted records sets `isolation.level` to ___.",
+    "blanks": [
+      {
+        "accept": [
+          "read_committed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-x3heg0yr",
+    "version": 1,
+    "section": "exactly-once-in-kafka",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In eos_copy.py, how does the consumer's position reach __consumer_offsets?",
+    "choices": [
+      {
+        "text": "Through auto commit, every five seconds",
+        "correct": false,
+        "why": "Auto commit is off."
+      },
+      {
+        "text": "Through `consumer.commit()` after each batch",
+        "correct": false,
+        "why": "The program never calls commit."
+      },
+      {
+        "text": "Inside the producer's transaction",
+        "correct": true,
+        "why": "Right. Output and offsets commit together."
+      },
+      {
+        "text": "It does not; the position is kept only in the consumer's memory until it closes",
+        "correct": false,
+        "why": "The group's offset was 55 at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz9962gc",
+    "version": 1,
+    "section": "exactly-once-in-kafka",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "eos_copy.py crashed after reading 25 sales in batches of ten. From which offset did the restart read?",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "offset"
+  },
+  {
+    "id": "ex-rkq6qb7c",
+    "version": 1,
+    "section": "exactly-once-in-kafka",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a read_committed count of big-sales match the source exactly, while a read_uncommitted count has two more?",
+    "choices": [
+      {
+        "text": "The aborted batch's two copies stay in the log, hidden only from committed readers",
+        "correct": true,
+        "why": "Right. The abort marks them; it does not remove them."
+      },
+      {
+        "text": "The restart copied two sales twice",
+        "correct": false,
+        "why": "The restart's copies were committed once; the extras are the aborted ones."
+      },
+      {
+        "text": "The idempotent producer added two records",
+        "correct": false,
+        "why": "idempotent.py wrote to sales, and those were small sales."
+      },
+      {
+        "text": "read_uncommitted counts the transaction markers",
+        "correct": false,
+        "why": "Markers are never delivered to applications."
+      }
+    ]
+  },
+  {
+    "id": "ex-he9bkjwd",
+    "version": 1,
+    "section": "the-edge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "eos_copy.py also sends an email per big sale. After a crash and restart, what happens to the emails of the aborted batch?",
+    "choices": [
+      {
+        "text": "They are cancelled by the abort",
+        "correct": false,
+        "why": "An email cannot be unsent; the abort only hides Kafka records."
+      },
+      {
+        "text": "They are sent again",
+        "correct": true,
+        "why": "Right. The effect is outside the transaction."
+      },
+      {
+        "text": "They are held until the transaction commits",
+        "correct": false,
+        "why": "Nothing holds an email; it went when send was called."
+      },
+      {
+        "text": "Kafka sends them for the program",
+        "correct": false,
+        "why": "Kafka has no part in sending email."
+      }
+    ]
+  },
+  {
+    "id": "ex-zq5f45ed",
+    "version": 1,
+    "section": "the-edge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does \"exactly-once effect\" mean outside Kafka, in the honest sense the lesson gives it?",
+    "choices": [
+      {
+        "text": "Every message is delivered exactly once",
+        "correct": false,
+        "why": "Delivery stays at least once; the effect is what is made exact."
+      },
+      {
+        "text": "A two-phase commit joins Kafka and the database",
+        "correct": false,
+        "why": "Kafka does not offer one, for good reasons."
+      },
+      {
+        "text": "Duplicates arrive, and the result is as if each came once",
+        "correct": true,
+        "why": "Right. The receiving side tolerates repeats."
+      },
+      {
+        "text": "Kafka's transactions extend to any database that supports them",
+        "correct": false,
+        "why": "They cover Kafka writes only."
+      }
+    ]
+  },
+  {
+    "id": "ex-892bds25",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of one eos_copy.py batch in order.",
+    "items": [
+      "consume up to ten sales",
+      "begin_transaction",
+      "produce the big sales to big-sales",
+      "send_offsets_to_transaction with the consumer's position",
+      "commit_transaction"
+    ]
+  },
+  {
+    "id": "ex-zxr3nv93",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team's consumer reads sales and inserts rows into PostgreSQL. They switch on enable.idempotence and transactions in their producer and expect no duplicate rows. What did they miss?",
+    "choices": [
+      {
+        "text": "Nothing: those two settings make the pipeline exactly once",
+        "correct": false,
+        "why": "They cover Kafka writes; the database insert is outside."
+      },
+      {
+        "text": "The repeat sits between the row and the offset commit, outside any Kafka transaction",
+        "correct": true,
+        "why": "Right. That is lesson 8."
+      },
+      {
+        "text": "They need more partitions",
+        "correct": false,
+        "why": "Partitions do not change the gap between effect and commit."
+      },
+      {
+        "text": "PostgreSQL must be switched to read_committed",
+        "correct": false,
+        "why": "That is a Kafka consumer setting, and it does not reach the database."
+      }
+    ]
+  }
+]

@@ -1,0 +1,362 @@
+{
+  "ex-5gdx28qv": {
+    "prompt": "Quais destas gravações são idempotentes? Escolha todas que se aplicam.",
+    "choices": [
+      {
+        "text": "SET qty = 98",
+        "why": "Sim: uma segunda execução define o mesmo valor."
+      },
+      {
+        "text": "SET qty = qty - 2",
+        "why": "Cada execução subtrai de novo."
+      },
+      {
+        "text": "INSERT da venda pela chave do id, ON CONFLICT DO NOTHING",
+        "why": "Sim: a segunda cópia não tem para onde ir."
+      },
+      {
+        "text": "Acrescentar uma linha a um arquivo de log",
+        "why": "Cada execução acrescenta uma linha."
+      },
+      {
+        "text": "Gravar um arquivo num nome fixo com o mesmo conteúdo",
+        "why": "Sim: a segunda gravação deixa o mesmo arquivo."
+      }
+    ]
+  },
+  "ex-qwmcaq4t": {
+    "prompt": "A tabela tem bk-04 com qty 0. `UPDATE sold SET qty = qty + 2` roda duas vezes para a mesma venda. Quanto é qty agora?",
+    "unit": "cópias"
+  },
+  "ex-kd6s4tcs": {
+    "prompt": "Por que uma API de pagamento não pode simplesmente virar idempotente do jeito que a tabela de vendas virou?",
+    "choices": [
+      {
+        "text": "Você não controla o formato da gravação dela",
+        "why": "Isso. Aí o consumidor precisa lembrar o que já fez."
+      },
+      {
+        "text": "Pagamentos são rápidos demais para ficarem numa tabela",
+        "why": "Velocidade não é o problema; quem controla a gravação é."
+      },
+      {
+        "text": "O Kafka não consegue carregar eventos de pagamento",
+        "why": "Ele carrega quaisquer bytes; o problema está lá na frente."
+      },
+      {
+        "text": "APIs de pagamento têm chaves primárias longas demais para o SQLite",
+        "why": "A API nem é uma tabela."
+      }
+    ]
+  },
+  "ex-1b83k3cc": {
+    "prompt": "O destino grava o id da venda em `processed` numa transação e atualiza o estoque numa segunda. O que uma queda entre elas causa?",
+    "choices": [
+      {
+        "text": "A venda é aplicada duas vezes na próxima entrega",
+        "why": "Essa é a outra ordem; aqui o id já está registrado."
+      },
+      {
+        "text": "Nada, porque o id torna seguro",
+        "why": "Só se os dois dividirem uma transação."
+      },
+      {
+        "text": "Uma venda marcada como aplicada que nunca foi",
+        "why": "Isso. A próxima entrega a pula, e o estoque nunca se move."
+      },
+      {
+        "text": "O SQLite recusa a segunda transação",
+        "why": "Nada a recusa; o processo simplesmente sumiu."
+      }
+    ]
+  },
+  "ex-yp1eqxmt": {
+    "prompt": "Por que o offset do Kafka não é um bom id para deduplicar vendas?",
+    "choices": [
+      {
+        "text": "Offsets mudam quando um tópico é compactado",
+        "why": "Offsets nunca mudam; a compactação deixa buracos."
+      },
+      {
+        "text": "Uma venda reenviada fica em dois offsets",
+        "why": "Isso. O id tem de vir do evento."
+      },
+      {
+        "text": "Offsets são grandes demais para guardar",
+        "why": "Cada um é um inteiro."
+      },
+      {
+        "text": "Duas partições não podem ter o mesmo offset",
+        "why": "Elas podem e têm; esse é outro problema."
+      }
+    ]
+  },
+  "ex-n9qfpghx": {
+    "prompt": "Oito livros começam com 100 cópias cada. Quarenta vendas levam 71 cópias, e o tópico é relido num destino sem ids. Qual é o estoque total agora?",
+    "unit": "cópias"
+  },
+  "ex-g5dna04b": {
+    "prompt": "O destino com deduplicação cai depois da 15ª venda, entre o commit do banco e o do Kafka. O tópico tem 40 vendas. No reinício, quantas vendas ele pula como já vistas?",
+    "unit": "vendas"
+  },
+  "ex-m65rjape": {
+    "prompt": "O offset_sink.py guarda o próximo offset no banco. O que o offset confirmado do grupo de consumidores guarda?",
+    "choices": [
+      {
+        "text": "Os mesmos offsets, copiados pelo Kafka",
+        "why": "O Kafka não copia nada do SQLite."
+      },
+      {
+        "text": "Nada: o programa nunca confirma no grupo",
+        "why": "Isso. O banco é o único registro."
+      },
+      {
+        "text": "O offset da queda",
+        "why": "Uma queda não grava nada em lugar nenhum."
+      },
+      {
+        "text": "O fim de cada partição",
+        "why": "Esse é o offset final do log, que não é um commit."
+      }
+    ]
+  },
+  "ex-ahr690j4": {
+    "prompt": "O offset_sink.py aplicou a venda do offset 32 da partição 1, a última. O que a linha de `offsets` da partição 1 guarda?",
+    "hint": "O próximo offset a ler.",
+    "unit": "offset"
+  },
+  "ex-p8we1hda": {
+    "prompt": "Por que guardar o offset no banco é mais barato que uma tabela de ids processados?",
+    "choices": [
+      {
+        "text": "Um número por partição, não um por evento",
+        "why": "Isso. E não precisa de janela, porque nunca cresce."
+      },
+      {
+        "text": "O SQLite guarda e compara inteiros mais rápido que texto",
+        "why": "Uma diferença real, mas não a que importa."
+      },
+      {
+        "text": "Ela deixa o Kafka fazer a deduplicação no broker em vez do banco",
+        "why": "O Kafka não participa; o banco decide onde começar."
+      },
+      {
+        "text": "Ela não precisa de transação",
+        "why": "Ela precisa de uma: efeito e offset juntos."
+      }
+    ]
+  },
+  "ex-8tw7mbg8": {
+    "prompt": "Uma equipe apaga ids processados com mais de sete dias. Qual duplicata ainda pode passar?",
+    "choices": [
+      {
+        "text": "Uma nova tentativa do produtor depois de uma confirmação perdida",
+        "why": "Ela chega em segundos."
+      },
+      {
+        "text": "Uma reentrega depois de um rebalanceamento",
+        "why": "Segundos de novo."
+      },
+      {
+        "text": "Uma queda da qual o consumidor se recupera em uma hora",
+        "why": "Uma hora está bem dentro de sete dias."
+      },
+      {
+        "text": "Uma releitura do tópico de um mês atrás",
+        "why": "Isso. Esses ids foram esquecidos, então as vendas são aplicadas de novo."
+      }
+    ]
+  },
+  "ex-rspv39r9": {
+    "prompt": "Dez mil ids de venda por dia a cinquenta bytes cada: cerca de quantos megabytes por ano? (365 dias; 1 MB = 1.000.000 bytes)",
+    "unit": "MB"
+  },
+  "ex-nfmas1n8": {
+    "prompt": "O argumento honesto é guardar os ids processados pelo tempo que o tópico guardar os eventos, porque nada mais antigo pode ser ___.",
+    "blanks": [
+      {
+        "accept": [
+          "relido",
+          "reprocessado"
+        ]
+      }
+    ]
+  },
+  "ex-0v9pp5e1": {
+    "prompt": "Atualizações de preço do bk-01 chegam como versão 1, versão 3, versão 2, e o destino grava o que chegar por último. Que preço fica guardado?",
+    "choices": [
+      {
+        "text": "O da versão 2",
+        "why": "Isso. Último a chegar não é último a acontecer."
+      },
+      {
+        "text": "O da versão 3",
+        "why": "Só se o destino comparar versões."
+      },
+      {
+        "text": "O da versão 1, já que veio primeiro",
+        "why": "Ele foi sobrescrito duas vezes."
+      },
+      {
+        "text": "Nenhum; o SQLite recusa o conflito",
+        "why": "Um upsert resolve o conflito atualizando."
+      }
+    ]
+  },
+  "ex-dtcye3ay": {
+    "prompt": "Com o upsert com versão, as versões 1 (3990), 3 (4490) e 2 (4290) chegam nessa ordem. Que preço em centavos fica guardado?",
+    "unit": "centavos"
+  },
+  "ex-x1he8rmc": {
+    "prompt": "Por que o timestamp do evento é uma versão fraca?",
+    "choices": [
+      {
+        "text": "Timestamps ocupam espaço demais",
+        "why": "São oito bytes."
+      },
+      {
+        "text": "O SQLite não consegue comparar timestamps",
+        "why": "Consegue; o problema é o que eles significam."
+      },
+      {
+        "text": "O Kafka reescreve timestamps em todo tópico",
+        "why": "Só tópicos LogAppendTime os substituem."
+      },
+      {
+        "text": "Relógios empatam e discordam",
+        "why": "Isso. Os relógios da lição 9 discordam mais do que se espera."
+      }
+    ]
+  },
+  "ex-qcd0kmd8": {
+    "prompt": "Por que o padrão outbox grava o evento numa tabela do mesmo banco?",
+    "choices": [
+      {
+        "text": "Para a mudança e o evento serem confirmados juntos ou nenhum",
+        "why": "Isso. Um dos dois sistemas sai do momento que importa."
+      },
+      {
+        "text": "Porque o Kafka não é alcançável a partir do programa",
+        "why": "O relay o alcança; o ponto é a atomicidade."
+      },
+      {
+        "text": "Para deixar o evento menor",
+        "why": "O conteúdo é o mesmo."
+      },
+      {
+        "text": "Para o relay nunca mandar um evento duas vezes",
+        "why": "O relay entrega pelo menos uma vez; as duplicatas são tratadas pelo id."
+      }
+    ]
+  },
+  "ex-3awceh94": {
+    "prompt": "Ponha em ordem os passos da outbox para uma reposição.",
+    "items": [
+      "Atualizar o estoque e inserir o evento na outbox, numa transação",
+      "O relay lê as linhas não enviadas",
+      "O relay as produz no Kafka e espera a confirmação",
+      "O relay marca as linhas confirmadas como enviadas"
+    ]
+  },
+  "ex-m48tcmw8": {
+    "prompt": "O relay cai depois de o Kafka confirmar dois eventos e antes de marcá-los como enviados. O que acontece depois?",
+    "choices": [
+      {
+        "text": "Eles se perdem",
+        "why": "Eles continuam como não enviados na tabela."
+      },
+      {
+        "text": "O banco desfaz a reposição",
+        "why": "A reposição foi confirmada bem antes."
+      },
+      {
+        "text": "Eles são enviados de novo, com os mesmos ids",
+        "why": "Isso. Os consumidores deduplicam pelo id criado na mudança."
+      },
+      {
+        "text": "O Kafka os recusa porque a idempotência está ligada",
+        "why": "Uma nova execução do relay é uma nova sessão de produtor."
+      }
+    ]
+  },
+  "ex-0njstdav": {
+    "prompt": "Um relay de outbox entrega cada evento pelo menos ___ vez, e é por isso que todo evento carrega um id.",
+    "blanks": [
+      {
+        "accept": [
+          "uma"
+        ]
+      }
+    ]
+  },
+  "ex-1ss7qrqc": {
+    "prompt": "O que o teste de duplicatas compara?",
+    "choices": [
+      {
+        "text": "O tamanho do tópico antes e depois",
+        "why": "O tópico não muda; a saída pode mudar."
+      },
+      {
+        "text": "A saída do consumidor depois de uma execução e depois de uma segunda sobre a mesma entrada",
+        "why": "Isso. Se a segunda execução muda algo, o consumidor não é idempotente."
+      },
+      {
+        "text": "O lag do grupo de consumidores",
+        "why": "O lag diz quão atrasado, não se os efeitos se repetem."
+      },
+      {
+        "text": "O número de linhas que cada execução imprime no terminal, que deveria bater de uma execução para a outra",
+        "why": "As duas execuções imprimem uma linha; o que importa são os dados de saída."
+      }
+    ]
+  },
+  "ex-k6d5s376": {
+    "prompt": "Ligue cada falha ao teste que a pega.",
+    "pairs": [
+      {
+        "left": "um destino que subtrai a cada entrega",
+        "right": "rodar duas vezes sobre a mesma entrada"
+      },
+      {
+        "left": "efeito e commit em duas transações",
+        "right": "derrubar no meio do lote, comparar com uma execução limpa"
+      },
+      {
+        "left": "último a escrever vence",
+        "right": "entregar uma versão antiga depois de uma nova"
+      },
+      {
+        "left": "uma gravação repetida pelo produtor",
+        "right": "gravar o mesmo evento duas vezes no tópico"
+      }
+    ],
+    "right_distractors": [
+      "conferir o lag do grupo de consumidores"
+    ]
+  },
+  "ex-wyt7wn1x": {
+    "prompt": "Um destino mantém totais diários por loja somando os centavos de cada venda. Ele precisa sobreviver a releituras de qualquer ponto da retenção do tópico. Qual desenho serve melhor?",
+    "choices": [
+      {
+        "text": "Guardar ids processados por um dia",
+        "why": "Uma releitura da semana passada passa."
+      },
+      {
+        "text": "Ligar a idempotência no produtor",
+        "why": "Isso não faz nada por releituras nem pelo vão do consumidor."
+      },
+      {
+        "text": "Guardar as vendas pela chave do id e calcular os totais a partir delas",
+        "why": "Isso. Uma gravação idempotente não precisa de memória nem de janela."
+      },
+      {
+        "text": "Confirmar offsets depois de cada venda em vez de depois de cada lote",
+        "why": "Isso diminui as duplicatas de queda, não as de releitura."
+      }
+    ]
+  },
+  "ex-1kjecr0p": {
+    "prompt": "Um destino com deduplicação aplica 40 vendas, e depois o tópico é relido inteiro. Quantas vendas a releitura aplica?",
+    "unit": "vendas"
+  }
+}
