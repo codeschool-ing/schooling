@@ -8,8 +8,8 @@ only this, creates the machine, installs PostgreSQL, takes the backups, keeps a 
 data centre of the same region, and fails over to it when the primary dies. Everything lessons 2 to
 20 built by hand is offered as a setting.
 
-That is a real trade, and often a good one. It is also the place where the questions of this course
-are most easily stopped being asked, because the answer seems to be "the provider does it". This
+That is a real trade, and often a good one. It is also the place where people most easily stop asking
+the questions of this course, because the answer seems to be "the provider does it". This
 lesson is about what that answer actually covers, and it is the one lesson of the course you could
 take on such a service instead of on your virtual machine: its transcripts are arithmetic, done in
 `psql` on the lab's own server.
