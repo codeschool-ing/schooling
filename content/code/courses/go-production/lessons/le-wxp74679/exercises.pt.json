@@ -1,0 +1,387 @@
+{
+  "ex-qxrpkhhx": {
+    "prompt": "Ana roda `gofmt internal/tally/classes.go`, sem flags. O que acontece com o arquivo?",
+    "hint": "Veja onde o texto formatado apareceu na seção 02.",
+    "choices": [
+      {
+        "text": "Nada: a versão formatada vai para a saída padrão",
+        "why": "Isso. Sem flag, o `gofmt` imprime o resultado e deixa o arquivo como estava; quem grava de volta é o `-w`."
+      },
+      {
+        "text": "Ele é reescrito no lugar, e o nome é impresso",
+        "why": "Isso é o `go fmt`, que roda `gofmt -l -w`. O `gofmt` puro não grava nada sem `-w`."
+      },
+      {
+        "text": "Ele fica intacto, e cada problema de estilo é apontado com o número da linha",
+        "why": "O `gofmt` é uma impressora, não um verificador: ele nunca lista problemas, imprime o arquivo no único layout."
+      },
+      {
+        "text": "Ele é renomeado para `classes.go.orig`",
+        "why": "O `.orig` aparece só no cabeçalho do diff de `-d`, como rótulo. Nenhum arquivo com esse nome é criado."
+      }
+    ]
+  },
+  "ex-tk7ghhbm": {
+    "prompt": "O `gofmt` transformou `if status/100==c` em `if status/100 == c`. Por que há espaços em volta de `==` e nenhum em volta de `/`?",
+    "hint": "No mesmo arquivo, `float64(n) / float64(s.Lines)` manteve os espaços em volta da `/`.",
+    "choices": [
+      {
+        "text": "O `gofmt` sempre escreve operadores aritméticos sem espaço",
+        "why": "A expressão do `Share` na mesma saída tem espaço em volta da `/`. A regra depende da expressão, não do operador."
+      },
+      {
+        "text": "O operador que liga mais forte fica sem espaço",
+        "why": "Isso. A `/` liga mais forte que `==`, então fica sem espaço e o olho lê `status/100` como uma peça só. Sozinha numa expressão, a `/` ganha espaços."
+      },
+      {
+        "text": "Ele manteve o espaçamento que Ana digitou em volta da `/` e só corrigiu o `==`",
+        "why": "Ana não digitou espaço em volta de nenhum dos dois. O `gofmt` decide o espaçamento pela árvore sintática, não pelo original."
+      },
+      {
+        "text": "Um espaço depois da `/` poderia iniciar um comentário",
+        "why": "Comentário começa com `//` ou `/*`; um espaço depois de uma `/` sozinha não cria nenhum."
+      }
+    ]
+  },
+  "ex-eyqfkztp": {
+    "prompt": "Associe cada jeito de rodar o `gofmt` num arquivo desarrumado com o que ele faz.",
+    "hint": "Três flags decidem para onde vai o resultado; o quarto jeito não usa nenhuma.",
+    "pairs": [
+      {
+        "left": "`gofmt file.go`",
+        "right": "imprime o arquivo formatado na saída padrão"
+      },
+      {
+        "left": "`gofmt -l .`",
+        "right": "imprime os nomes dos arquivos que diferem"
+      },
+      {
+        "left": "`gofmt -d file.go`",
+        "right": "imprime um diff unificado das mudanças"
+      },
+      {
+        "left": "`gofmt -w file.go`",
+        "right": "grava o resultado de volta e não imprime nada"
+      }
+    ],
+    "right_distractors": [
+      "tira o nome do tipo de cada elemento de um literal composto"
+    ]
+  },
+  "ex-gdz1d8tt": {
+    "prompt": "`go fmt -n ./...` imprimiu o comando que rodaria: `/usr/local/go/bin/gofmt -l ___ main.go main_test.go ...`.",
+    "hint": "A flag que grava o resultado de volta em cada arquivo.",
+    "blanks": [
+      {
+        "accept": [
+          "-w"
+        ]
+      }
+    ]
+  },
+  "ex-90k94d0s": {
+    "prompt": "O editor do Bruno mostra um tab com 2 colunas e o da Carla com 8. Os dois abrem a struct `Class` depois do `gofmt`, com os comentários alinhados. O que cada um vê?",
+    "hint": "Recuo e alinhamento são feitos de caracteres diferentes.",
+    "choices": [
+      {
+        "text": "Comentários alinhados só para o Bruno, já que o `gofmt` alinha para tabs de 2 colunas",
+        "why": "O `gofmt` não supõe largura de tab para alinhar: ele alinha com espaços, que valem uma coluna em qualquer editor."
+      },
+      {
+        "text": "Recuos diferentes, mas as colunas alinhadas para os dois",
+        "why": "Isso. Cada linha de campo começa com um tab, que cada editor desenha na sua largura; o preenchimento entre nome, tipo e comentário é feito com espaços, então as colunas sobrevivem."
+      },
+      {
+        "text": "Exatamente a mesma coisa, porque o `gofmt` trocou os tabs por espaços",
+        "why": "O `gofmt` recua com tabs: a tabela da seção 02 mostra um tab por nível. Só o alinhamento é feito com espaços."
+      },
+      {
+        "text": "Colunas desalinhadas para os dois, até cada um rodar o `gofmt` com sua largura de tab",
+        "why": "O `gofmt` não tem ajuste de largura de tab, e nem precisa: espaços alinham igual em qualquer largura."
+      }
+    ]
+  },
+  "ex-n9fwp2ra": {
+    "prompt": "Por que nenhum ajuste do `gofmt` consegue pôr a chave de abertura de uma função numa linha só dela?",
+    "hint": "A seção 03 passou uma função assim pelo `gofmt`.",
+    "choices": [
+      {
+        "text": "O ajuste foi removido em favor de um arquivo `.gofmt` no módulo",
+        "why": "O `gofmt` não lê arquivo de configuração, e o `gofmt -h` lista todas as flags que ele tem: nenhuma escolhe estilo."
+      },
+      {
+        "text": "Dá para fazer com `-r`, reescrevendo `{` como quebra de linha e `{`",
+        "why": "O `-r` reescreve expressões, e a saída sai impressa no mesmo layout. Ele não tem como expressar uma quebra de linha."
+      },
+      {
+        "text": "A quebra de linha ali encerra a instrução: erro de sintaxe",
+        "why": "Isso. Uma quebra de linha depois de `)` encerra a instrução, então um `{` sozinho na linha seguinte não é lido: `unexpected semicolon or newline before {`."
+      },
+      {
+        "text": "Só o `go vet` pode mexer nas chaves",
+        "why": "O `go vet` aponta código suspeito e não muda nada. A posição da chave é fixada pela própria linguagem."
+      }
+    ]
+  },
+  "ex-9k8re008": {
+    "prompt": "Quais destas coisas o `gofmt` deixa exatamente como você escreveu? Marque todas as que valem.",
+    "hint": "Compare o `classes.go` desarrumado com o que o `gofmt` imprimiu.",
+    "choices": [
+      {
+        "text": "Uma linha de 109 caracteres",
+        "why": "Sim. O `gofmt` nunca quebra uma linha longa; a linha do `append` saiu numa linha só."
+      },
+      {
+        "text": "Uma variável chamada `n`",
+        "why": "Sim. Nomes não são tocados; se `n` é um bom nome é assunto dos linters da lição 8."
+      },
+      {
+        "text": "Três linhas em branco seguidas",
+        "why": "Não. As três linhas em branco depois da struct viraram uma."
+      },
+      {
+        "text": "Quatro espaços de recuo",
+        "why": "Não. O recuo virou um tab por nível."
+      },
+      {
+        "text": "O texto de um comentário",
+        "why": "Sim. Um comentário acompanha o código e nunca é reescrito nem requebrado."
+      }
+    ]
+  },
+  "ex-sm8g5jz0": {
+    "prompt": "`gofmt -l .` não imprime nada, e `gofmt -s -l .` imprime `internal/tally/classes_test.go`. O que isso diz a Ana?",
+    "hint": "O que o `go fmt -n` mostrou que o `go fmt` passa para o `gofmt`?",
+    "choices": [
+      {
+        "text": "O `go fmt ./...` vai encurtar o literal na próxima execução",
+        "why": "O `go fmt` roda `gofmt -l -w` e nada mais, então nunca aplica o `-s`; o literal fica até alguém pedir `-s` pelo nome."
+      },
+      {
+        "text": "O teste tem um bug que o `-s` detectou",
+        "why": "O teste passou. O `-s` procura construções que pode encurtar sem mudar o significado, não bugs."
+      },
+      {
+        "text": "O arquivo está formatado, mas o `-s` tem um literal a encurtar",
+        "why": "Isso. Layout e simplificação são perguntas separadas: o `Class` antes de cada elemento de `[]Class{...}` é correto e redundante."
+      },
+      {
+        "text": "O `-s` vai mudar o que o teste confere, então precisa de revisão manual",
+        "why": "Toda reescrita do `-s` preserva o significado: o diff tirou o nome do tipo de quatro linhas e deixou os valores como estavam."
+      }
+    ]
+  },
+  "ex-f6da69d7": {
+    "prompt": "Ana quer renomear `tally.Count` para `tally.Tally` e roda `gofmt -r 'a.Count -> a.Tally' -w .`. Em que estado o módulo fica?",
+    "hint": "Quais ocorrências de `Count` são escritas com um ponto na frente?",
+    "choices": [
+      {
+        "text": "Renomeado em todo lugar, já que o `-r` confere a que pacote cada `Count` pertence",
+        "why": "O `-r` casa sintaxe e não tem tipos: na seção 03, o `a` de `a.Duration` casou com `time` tão bem quanto com `e`."
+      },
+      {
+        "text": "Inalterado, porque o `-r` se recusa a mexer num nome exportado",
+        "why": "Nada no `-r` olha se um nome é exportado; ele reescreve qualquer expressão que o padrão case."
+      },
+      {
+        "text": "Quebrado: as chamadas dizem `tally.Tally` e a função continua `func Count`",
+        "why": "Isso. `func Count(...)` não tem ponto, então o padrão não casa com a declaração, enquanto toda chamada `x.Count` muda, inclusive as de outros pacotes."
+      },
+      {
+        "text": "Renomeado só dentro de `internal/tally`, onde `Count` é declarado",
+        "why": "O `-w .` percorre o módulo inteiro, e o padrão não sabe nada sobre onde um nome foi declarado."
+      }
+    ]
+  },
+  "ex-vv6pbvka": {
+    "prompt": "O que o `goimports -w` fez com o bloco de imports de `tools/classes/main.go`?",
+    "hint": "O bloco tinha um pacote antes, e o `go build` apontou nove problemas.",
+    "choices": [
+      {
+        "text": "Pôs `strings` em ordem e deixou o resto para o compilador",
+        "why": "Ele fez mais que ordenar: os erros de build eram imports faltando e sobrando, e é isso que o `goimports` corrige."
+      },
+      {
+        "text": "Tirou `strings` e acrescentou os cinco pacotes que o arquivo usa",
+        "why": "Isso. `fmt` e `os`, `tally`, e `message` e `language` do `golang.org/x/text`, em dois grupos, sem o `strings` que não era usado."
+      },
+      {
+        "text": "Acrescentou os pacotes que faltavam e deixou `strings` comentado",
+        "why": "Um import sem uso é removido de vez. O compilador recusa um assim, então mantê-lo deixaria o arquivo sem compilar."
+      },
+      {
+        "text": "Acrescentou linhas de `go get` para os dois módulos que não achou",
+        "why": "O `goimports` muda só o arquivo Go. A dependência de `golang.org/x/text` teve de entrar no `go.mod` com `go get` antes."
+      }
+    ]
+  },
+  "ex-6c8qtwa3": {
+    "prompt": "Ponha as linhas do bloco de imports na ordem em que o `goimports -local example.com/hits` as escreve.",
+    "hint": "Biblioteca padrão, módulos dos outros, depois os seus; ordenados dentro de cada grupo.",
+    "items": [
+      "`\"fmt\"`",
+      "`\"os\"`",
+      "`\"golang.org/x/text/language\"`",
+      "`\"golang.org/x/text/message\"`",
+      "`\"example.com/hits/internal/tally\"`"
+    ]
+  },
+  "ex-ss69j1c0": {
+    "prompt": "Por que Ana rodou `go get golang.org/x/text@v0.43.0` antes do `goimports`?",
+    "hint": "Onde o `goimports` procura um pacote chamado `message`?",
+    "choices": [
+      {
+        "text": "Para o `goimports` achar os dois pacotes do `x/text`",
+        "why": "Isso. Ele procura na biblioteca padrão, no próprio módulo e no que o `go.mod` exige; um módulo que ninguém exige não é candidato."
+      },
+      {
+        "text": "Porque o `goimports` não baixa nada e o `go get` formata o bloco de imports",
+        "why": "O `go get` edita o `go.mod` e baixa; ele nunca mexe num arquivo `.go`. Quem escreveu o bloco foi o `goimports`."
+      },
+      {
+        "text": "Porque o `goimports` se recusa a rodar num módulo sem dependências",
+        "why": "Ele roda bem em arquivos que só importam a biblioteca padrão; a dependência importa só para os pacotes que ele precisa achar."
+      },
+      {
+        "text": "Para tirar a marca `// indirect` antes",
+        "why": "O `go get` pôs a marca; o `go mod tidy` a tirou depois, quando um arquivo passou a importar o módulo."
+      }
+    ]
+  },
+  "ex-hn6fxazm": {
+    "prompt": "Num time, o Davi roda `goimports` ao salvar sem `-local`, e a Elisa roda com `-local example.com/hits`. Nenhum dos dois muda código. O que os commits mostram ao longo de um mês?",
+    "hint": "Rode cada versão sobre um arquivo que o outro acabou de escrever.",
+    "choices": [
+      {
+        "text": "Nada: o `goimports` lê o `-local` do `go.mod`",
+        "why": "O `goimports` não lê nada disso: a primeira execução da seção 04, sem a flag, pôs `tally` no mesmo grupo que `golang.org/x/text`."
+      },
+      {
+        "text": "Falhas de build, já que a ordem dos imports decide qual pacote vence",
+        "why": "A ordem de um bloco de imports não muda nada no build; os dois arranjos compilam para o mesmo programa."
+      },
+      {
+        "text": "Diffs que movem os imports do próprio módulo entre grupos, de lá para cá",
+        "why": "Isso. Cada gravação reescreve o bloco do outro: a Elisa separa um terceiro grupo, o Davi junta de volta. A seção 05 põe a flag num script só por isso."
+      },
+      {
+        "text": "Uma verificação `gofmt -l .` que falha nos arquivos da Elisa",
+        "why": "O `gofmt` puro só ordena dentro dos grupos e aceita os dois arranjos; é uma verificação com `goimports -local` que os distinguiria."
+      }
+    ]
+  },
+  "ex-ec8qd8tg": {
+    "prompt": "Um passo de CI roda só `gofmt -l .`. Um pull request com um arquivo desarrumado passa. Por quê?",
+    "hint": "Veja o status de saída impresso depois do nome do arquivo na seção 05.",
+    "choices": [
+      {
+        "text": "O `gofmt -l` lista o arquivo e ainda sai com 0",
+        "why": "Isso. Listar é o que pediram, então ele informa sucesso; a verificação precisa olhar a saída, como faz `test -z \"$(gofmt -l .)\"`."
+      },
+      {
+        "text": "Os runners de CI usam um `gofmt` configurado de modo mais tolerante que o do notebook",
+        "why": "O `gofmt` não tem configuração nenhuma. A mesma versão imprime o mesmo layout em qualquer máquina."
+      },
+      {
+        "text": "O `-l` só lê arquivos alterados desde o último commit",
+        "why": "O `-l .` lê todo arquivo `.go` dentro do diretório, alterado ou não."
+      },
+      {
+        "text": "Ele imprimiu na saída de erro, que o CI não mostra",
+        "why": "A lista vai para a saída padrão; o CI mostra no log, debaixo de um passo verde."
+      }
+    ]
+  },
+  "ex-3kw9kjgg": {
+    "prompt": "Com o `classes.go` desarrumado na árvore, quais destes comandos saem com status diferente de 0? Marque todos os que valem.",
+    "hint": "Duas ferramentas com as mesmas flags não concordaram.",
+    "choices": [
+      {
+        "text": "`gofmt -l .`",
+        "why": "Ele listou o arquivo e saiu com 0."
+      },
+      {
+        "text": "`test -z \"$(gofmt -l .)\"`",
+        "why": "Sim, 1: a saída capturada não estava vazia."
+      },
+      {
+        "text": "`gofmt -d .`",
+        "why": "Sim, 1: o `gofmt -d` sai com 1 sempre que imprime um diff."
+      },
+      {
+        "text": "`goimports -d .`",
+        "why": "Ele imprimiu um diff e saiu com 0, ao contrário do `gofmt -d`."
+      }
+    ]
+  },
+  "ex-s16s2r6a": {
+    "prompt": "Com `internal/tally/broken.go` impossível de ler, Ana roda `out=$(gofmt -l .) && test -z \"$out\"; echo $?`. Que número o `echo` imprime?",
+    "hint": "A atribuição carrega o status de saída do comando dentro de `$(...)`."
+  },
+  "ex-58e9xfqq": {
+    "prompt": "O hook de pre-commit da Ana passou, mas o `check-fmt.sh` do CI falhou no mesmo commit. Que explicação combina com o hook da seção 05?",
+    "hint": "O que o hook lê: os arquivos no disco ou o que foi para o stage?",
+    "choices": [
+      {
+        "text": "O CI tem um `gofmt` compilado com outros ajustes de layout que o dela",
+        "why": "Não há ajustes de layout, e o script fixa `goimports@v0.52.0` nos dois lugares."
+      },
+      {
+        "text": "Ela corrigiu no disco um arquivo do stage sem adicioná-lo de novo",
+        "why": "Isso. O hook conferiu o arquivo arrumado no disco enquanto o Git registrou a versão desarrumada do stage; o CI pegou o que foi para o commit."
+      },
+      {
+        "text": "O hook rodou sem `-local` e o CI com",
+        "why": "Os dois rodam o mesmo `scripts/check-fmt.sh`, que já leva o `-local`; é por isso que ele é um arquivo só."
+      },
+      {
+        "text": "O CI confere também `vendor/`, que o hook pula",
+        "why": "Os dois rodam o script em `.`, e o `hits` nem tem `vendor/`."
+      }
+    ]
+  },
+  "ex-7spwg7d2": {
+    "prompt": "Um módulo guarda um arquivo `.go` quebrado de propósito em `parser/testdata/` como entrada de um teste. A cópia dele do `check-fmt.sh` agora falha com status 2 em toda execução. Qual é a correção certa?",
+    "hint": "Quais diretórios o `go fmt ./...` deixa de fora, e por quê?",
+    "choices": [
+      {
+        "text": "Apagar o `|| exit 2` do script",
+        "why": "Isso deixaria passar também um arquivo de verdade que não compila, que é justamente o buraco que a seção 05 fechou."
+      },
+      {
+        "text": "Citar os diretórios do próprio código em vez de `.`",
+        "why": "Isso. O `testdata/` guarda entradas que o comando go nunca compila; citar os diretórios do seu código mantém a verificação rígida onde deve ser."
+      },
+      {
+        "text": "Pôr `// Code generated ... DO NOT EDIT.` no topo para o `gofmt` pular",
+        "why": "O `gofmt` não isenta arquivos gerados: ele os lê como qualquer outro, e este continuaria sem compilar."
+      },
+      {
+        "text": "Rodar `gofmt -w` no `testdata/` uma vez, para parar de falhar",
+        "why": "O `gofmt` não grava um arquivo que não consegue ler, e consertar o arquivo estragaria o teste que precisa dele quebrado."
+      }
+    ]
+  },
+  "ex-6ky6mhk4": {
+    "prompt": "O Git abandona um commit quando o arquivo executável `.git/hooks/___` sai com qualquer coisa diferente de 0.",
+    "hint": "O hook que roda antes de o Git registrar o commit.",
+    "blanks": [
+      {
+        "accept": [
+          "pre-commit"
+        ]
+      }
+    ]
+  },
+  "ex-g1mqwshc": {
+    "prompt": "Ponha em ordem o que aconteceu quando Ana fez o primeiro commit com o `classes.go` desarrumado.",
+    "hint": "Do `git commit` até o commit que passou.",
+    "items": [
+      "o Git roda `.git/hooks/pre-commit`",
+      "o `check-fmt.sh` roda `goimports -l`, que cita o `classes.go`",
+      "o script sai com 1 e o Git abandona o commit",
+      "o `go fmt ./...` reescreve o `classes.go`",
+      "o `git add -u` põe o arquivo no stage e o commit passa"
+    ]
+  }
+}
