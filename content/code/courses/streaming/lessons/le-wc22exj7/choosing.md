@@ -31,7 +31,7 @@ somebody has to know it well.
 **Kafka Streams fits a service that already reads Kafka** and needs a count, a join or a
 deduplication inside it. Nothing new to install or operate; the scaling is the service's own. The
 price is that everything in and out is a Kafka topic, it is Java, and its internal topics multiply:
-two counts in section 03 already made four.
+two counts in section 03 already made three.
 
 ## For Ponto Final
 

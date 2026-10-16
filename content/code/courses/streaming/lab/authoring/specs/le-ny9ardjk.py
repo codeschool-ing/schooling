@@ -26,7 +26,7 @@ Q(S2,"medium",("The leader has offsets 0 to 9, one in-sync follower has 0 to 8 a
 ],hint=("Look for the first offset missing from some in-sync replica.","Procure o primeiro offset que falta em alguma réplica em sincronia."))
 Q(S2,"hard",("Why are consumers never shown records above the high watermark?","Por que os consumidores nunca veem registros acima do high watermark?"),[
  ("Those records are still compressed","Esses registros ainda estão comprimidos",False,"Compression has nothing to do with visibility.","Compressão não tem nada a ver com visibilidade."),
- ("A new leader might not have them, so a reader could see a record that later disappears","Um novo líder pode não tê-los, e um leitor veria um registro que depois some",True,"Right. That rule makes a failover invisible to readers.","Isso. Essa regra torna a troca de líder invisível para os leitores."),
+ ("Otherwise a reader would see records a new leader lacks, which then disappear","Senão um leitor veria registros que um novo líder não tem, e que depois somem",True,"Right. That rule makes a failover invisible to readers.","Isso. Essa regra torna a troca de líder invisível para os leitores."),
  ("Kafka reads them in batches of seven","O Kafka os lê em lotes de sete",False,"Seven was this example's high watermark, not a batch size.","Sete era o high watermark do exemplo, não um tamanho de lote."),
  ("The producer has not received its acknowledgement yet, and acknowledgements are what make a record readable","O produtor ainda não recebeu a confirmação, e a confirmação é o que torna um registro legível",False,"With acks=1 a producer can be answered before the high watermark moves; visibility follows the replicas, not the answer.","Com acks=1 um produtor pode ser respondido antes do high watermark andar; a visibilidade segue as réplicas, não a resposta."),
 ])
@@ -34,7 +34,7 @@ Q(S3,"easy",("What is the default `replica.lag.time.max.ms` the broker reported?
  ("30000","30000",True,"Right: thirty seconds without being fully caught up removes a follower.","Isso: trinta segundos sem estar em dia tiram um seguidor."),
  ("300","300",False,"300 is `leader.imbalance.check.interval.seconds`, in seconds.","300 é o `leader.imbalance.check.interval.seconds`, em segundos."),
  ("9000","9000",False,"That number was not what the grep printed.","Esse número não foi o que o grep imprimiu."),
- ("4000","4000",False,"The grep printed a larger value.","O grep imprimiu um valor maior."),
+ ("10000","10000",False,"The grep printed a larger value.","O grep imprimiu um valor maior."),
 ])
 Q(S3,"medium",("Node 3 is frozen with `kill -STOP`. Forty seconds later, what does `describe` show?","O nó 3 é congelado com `kill -STOP`. Quarenta segundos depois, o que o `describe` mostra?"),[
  ("Node 3 still in every ISR, because its process is alive","O nó 3 ainda em toda ISR, porque o processo está vivo",False,"Alive is not enough; it stopped fetching.","Estar vivo não basta; ele parou de buscar."),
@@ -69,7 +69,7 @@ Q(S4,"hard",("A topic has replication factor 3 and `min.insync.replicas=1`. Two 
 N(S4,"medium",("With replication factor 3 and `min.insync.replicas=2`, how many nodes can be lost while `acks=all` writes still succeed?","Com fator de replicação 3 e `min.insync.replicas=2`, quantos nós podem ser perdidos com as escritas `acks=all` ainda dando certo?"),1,0,("nodes","nós"))
 Q(S5,"easy",("While the leader of partition 1 was killed, `acks.py` sent a hundred sales. What did it report?","Enquanto o líder da partição 1 era morto, o `acks.py` mandou cem vendas. O que ele informou?"),[
  ("70 delivered and 30 failed","70 entregues e 30 com falha",False,"Nothing failed in the run with one node killed.","Nada falhou na execução com um nó morto."),
- ("100 delivered, at 100 consecutive offsets","100 entregues, em 100 offsets seguidos",True,"Right. The client kept the sales in memory and sent them to the new leader.","Isso. O cliente guardou as vendas na memória e as mandou ao novo líder."),
+ ("100 delivered, none twice","100 entregues, nenhuma duas vezes",True,"Right. The client kept the sales in memory and sent them to the new leader.","Isso. O cliente guardou as vendas na memória e as mandou ao novo líder."),
  ("100 delivered and 3 duplicates","100 entregues e 3 duplicadas",False,"The offsets ran 290 to 389, exactly one per sale.","Os offsets foram de 290 a 389, exatamente um por venda."),
  ("An error, because the bootstrap address was dead","Um erro, porque o endereço de bootstrap estava morto",False,"It had three addresses and the FAIL lines are logs, not failed sales.","Ele tinha três endereços e as linhas FAIL são logs, não vendas com falha."),
 ])
@@ -106,8 +106,8 @@ Q(S6,"hard",("Why would a team run five controllers rather than four?","Por que 
 Q(S7,"medium",("`till-log` shows `Leader: none` and `Elr: 2`. What does the `Elr` entry tell an operator?","O `till-log` mostra `Leader: none` e `Elr: 2`. O que a entrada `Elr` diz a um operador?"),[
  ("Node 2 is the replica that lost the most data","O nó 2 é a réplica que perdeu mais dados",False,"The opposite: it holds every committed record.","O contrário: ele tem todo registro confirmado."),
  ("Node 2 must be removed from the topic","O nó 2 precisa ser tirado do tópico",False,"It is the node to bring back, not to remove.","É o nó a trazer de volta, não a tirar."),
- ("Node 2 is being elected right now","O nó 2 está sendo eleito agora",False,"It is down; it can only be elected when it returns.","Ele está fora; só pode ser eleito quando voltar."),
- ("Node 2 can lead cleanly when it comes back","O nó 2 pode liderar sem perda quando voltar",True,"Right. It was the last in-sync replica, so it has everything committed.","Isso. Era a última réplica em sincronia, então tem tudo que foi confirmado."),
+ ("Node 2 is being elected leader at this moment by the controllers","O nó 2 está sendo eleito líder neste momento pelos controllers",False,"It is down; it can only be elected when it returns.","Ele está fora; só pode ser eleito quando voltar."),
+ ("Node 2 has all that was committed","O nó 2 tem tudo que foi confirmado",True,"Right. It was the last in-sync replica, so it has everything committed.","Isso. Era a última réplica em sincronia, então tem tudo que foi confirmado."),
 ])
 N(S7,"medium",("After the unclean election made node 3 leader of `till-log`, how many sales did a consumer reading from the beginning get?","Depois que a eleição não limpa fez do nó 3 o líder do `till-log`, quantas vendas um consumidor lendo desde o começo recebeu?"),10,0,("sales","vendas"))
 Q(S7,"hard",("A topic holds the live positions of delivery vans, useless after a minute. Which choice about unclean election fits it, by the section's argument?","Um tópico guarda as posições ao vivo das vans de entrega, inúteis depois de um minuto. Que escolha sobre eleição não limpa combina com ele, pelo argumento da seção?"),[
@@ -128,7 +128,7 @@ Q(S8,"hard",("Why does this lab not demonstrate what replication is really for?"
  ("`kill -9` is gentler than a real failure","`kill -9` é mais gentil que uma falha real",False,"It is as abrupt as a power cut for the process.","Ele é tão abrupto quanto uma queda de energia para o processo."),
  ("The followers in a lab never leave the ISR","Os seguidores de um laboratório nunca saem da ISR",False,"Node 3 left the ISR when it was frozen.","O nó 3 saiu da ISR quando foi congelado."),
 ])
-C(S8,"easy",("The broker setting that names a broker's rack or zone, so replicas are spread across them, is `broker.___`.","A configuração de broker que nomeia o rack ou zona dele, para espalhar as réplicas, é `broker.___`."),[(["rack"],["rack"])])
+C(S8,"easy",("The setting that tells Kafka which failure domain a broker sits in, so replicas are spread across them, is `broker.___`.","A configuração que diz ao Kafka em que domínio de falha um broker está, para espalhar as réplicas, é `broker.___`."),[(["rack"],["rack"])])
 O(D,"medium",("Put the steps of the unclean election in the order they happened.","Ponha os passos da eleição não limpa na ordem em que aconteceram."),[
  ("Ten sales written to both replicas","Dez vendas gravadas nas duas réplicas"),
  ("Node 3 is killed","O nó 3 é morto"),

@@ -30,7 +30,7 @@ e alguém precisa conhecê-lo bem.
 **O Kafka Streams serve a um serviço que já lê do Kafka** e precisa de uma contagem, um join ou uma
 deduplicação lá dentro. Nada novo a instalar nem a operar; a escala é a do próprio serviço. O preço
 é que tudo o que entra e sai é tópico do Kafka, é Java, e os tópicos internos se multiplicam: duas
-contagens na seção 03 já fizeram quatro.
+contagens na seção 03 já fizeram três.
 
 ## Para a Ponto Final
 

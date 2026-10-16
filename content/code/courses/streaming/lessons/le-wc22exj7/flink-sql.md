@@ -53,8 +53,9 @@ GROUP BY window_start, window_end;
 Read it from the bottom. The `INSERT` is the query: a **tumbling window** of five minutes over
 `ts`, which lesson 10 drew, grouped and counted. The two `CREATE TABLE` statements do not create
 anything in Kafka; they tell Flink how to read a topic as a table and how to write one. `at` is
-taken as text, because Flink's JSON reader does not accept the `-03:00` on the end of it, and `ts`
-is a **computed column** made from its first nineteen characters, the shop's clock time. The
+read as text, and `ts` is a **computed column** made from its first nineteen characters, the shop's
+clock time; the `-03:00` at the end is dropped, which is safe because all five shops keep the same
+time zone. The
 `WATERMARK` line says that `ts` is the event time and that a sale may be up to two minutes late,
 the same bound as lesson 12. The two `SET` lines at the top are for section 07.
 

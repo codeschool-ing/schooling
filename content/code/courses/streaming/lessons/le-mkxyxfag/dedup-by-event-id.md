@@ -36,11 +36,11 @@ once, and `--crash-after` stops it dead between the two commits. Save it as
       "note": "Two tables: the stock, and **the ids already applied, as a primary key**, so the database itself refuses a second copy. A new file starts every book at 100."
     },
     {
-      "code": "def from_the_start(consumer, partitions):\n    if args.replay:\n        for p in partitions:\n            p.offset = OFFSET_BEGINNING\n    consumer.assign(partitions)\n\n\nconsumer = Consumer({\"bootstrap.servers\": \"localhost:9092\", \"group.id\": \"stock-sink\",\n                     \"auto.offset.reset\": \"earliest\", \"enable.auto.commit\": False})\nconsumer.subscribe([\"sales\"], on_assign=from_the_start)\n",
-      "note": "`--replay` moves every partition back to its first offset when the group is given them, which is what reprocessing a topic looks like to a consumer."
+      "code": "def from_the_start(consumer, partitions):\n    if args.replay:\n        for p in partitions:\n            p.offset = OFFSET_BEGINNING\n    consumer.assign(partitions)\n\n\nconsumer = Consumer({\"bootstrap.servers\": \"localhost:9092\", \"group.id\": \"stock-sink\",\n                     \"auto.offset.reset\": \"earliest\", \"enable.auto.commit\": False,\n                     \"session.timeout.ms\": 6000})\nconsumer.subscribe([\"sales\"], on_assign=from_the_start)\n",
+      "note": "`--replay` moves every partition back to its first offset when the group is given them, which is what reprocessing a topic looks like to a consumer. A six-second session, the broker's minimum, lets a restart after a crash take over the crashed member's partitions quickly, as in lesson 7."
     },
     {
-      "code": "applied = skipped = 0\nwhile (msg := consumer.poll(10)) is not None:\n    sale = json.loads(msg.value())\n    with db:\n        first_time = not args.dedup or db.execute(\n            \"INSERT OR IGNORE INTO processed VALUES (?)\", (sale[\"sale\"],)).rowcount == 1\n        if first_time:\n            db.execute(\"UPDATE stock SET qty = qty - ? WHERE book = ?\", (sale[\"qty\"], sale[\"book\"]))\n    applied, skipped = applied + first_time, skipped + (not first_time)",
+      "code": "applied = skipped = 0\nwhile (msg := consumer.poll(15)) is not None:\n    sale = json.loads(msg.value())\n    with db:\n        first_time = not args.dedup or db.execute(\n            \"INSERT OR IGNORE INTO processed VALUES (?)\", (sale[\"sale\"],)).rowcount == 1\n        if first_time:\n            db.execute(\"UPDATE stock SET qty = qty - ? WHERE book = ?\", (sale[\"qty\"], sale[\"book\"]))\n    applied, skipped = applied + first_time, skipped + (not first_time)",
       "note": "**`with db:` is one transaction**: it commits when the block ends and rolls back if anything in it raises. `INSERT OR IGNORE` changes one row for a new id and none for a known one, and `rowcount` says which."
     },
     {

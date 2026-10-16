@@ -18,62 +18,31 @@ replaces the old one: the count of sales of a shop so far.
 Save this as `~/work/SalesPerShop.java`:
 
 ```schooling-example
-@file SalesPerShop.java
-@lang java
---- The imports: the configuration, the builder, the stream type and the serialisers that turn Java strings and numbers into Kafka's bytes and back.
-// SalesPerShop.java: sales counted per shop and per book, by Kafka Streams.
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Produced;
-
---- The book is read out of the sale's JSON with a regular expression, to keep the program to Kafka's own jars. A real application would use a JSON library or, better, a schema, as lesson 6 does.
-public class SalesPerShop {
-    static final Pattern BOOK = Pattern.compile("\"book\": \"([^\"]+)\"");
-
-    static String book(String sale) {
-        Matcher m = BOOK.matcher(sale);
-        return m.find() ? m.group(1) : "unknown";
+{
+  "file": "SalesPerShop.java",
+  "language": "java",
+  "parts": [
+    {
+      "code": "// SalesPerShop.java: sales counted per shop and per book, by Kafka Streams.\nimport java.util.Properties;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\nimport org.apache.kafka.common.serialization.Serdes;\nimport org.apache.kafka.streams.KafkaStreams;\nimport org.apache.kafka.streams.StreamsBuilder;\nimport org.apache.kafka.streams.StreamsConfig;\nimport org.apache.kafka.streams.kstream.KStream;\nimport org.apache.kafka.streams.kstream.Produced;\n",
+      "note": "The imports: the configuration, the builder, the stream type and the serialisers that turn Java strings and numbers into Kafka's bytes and back."
+    },
+    {
+      "code": "public class SalesPerShop {\n    static final Pattern BOOK = Pattern.compile(\"\\\"book\\\": \\\"([^\\\"]+)\\\"\");\n\n    static String book(String sale) {\n        Matcher m = BOOK.matcher(sale);\n        return m.find() ? m.group(1) : \"unknown\";\n    }\n",
+      "note": "The book is read out of the sale's JSON with a regular expression, to keep the program to Kafka's own jars. A real application would use a JSON library or, better, a schema, as lesson 6 does."
+    },
+    {
+      "code": "    public static void main(String[] args) {\n        String copy = args.length > 0 ? args[0] : \"a\";\n        Properties p = new Properties();\n        p.put(StreamsConfig.APPLICATION_ID_CONFIG, \"sales-per-shop\");\n        p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, \"localhost:9092\");\n        p.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);\n        p.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);\n        p.put(StreamsConfig.STATE_DIR_CONFIG, System.getProperty(\"user.home\") + \"/streams-state/\" + copy);\n        p.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);\n",
+      "note": "**The application id names everything**: the consumer group the copies share, the prefix of the topics the library creates, and the directory of its local state. Each copy running on one machine needs a state directory of its own, so the first argument names it."
+    },
+    {
+      "code": "        StreamsBuilder builder = new StreamsBuilder();\n        KStream<String, String> sales = builder.stream(\"sales\");\n        sales.groupByKey().count()\n             .toStream().to(\"sales-per-shop\", Produced.with(Serdes.String(), Serdes.Long()));\n        sales.groupBy((shop, sale) -> book(sale)).count()\n             .toStream().to(\"sales-per-book\", Produced.with(Serdes.String(), Serdes.Long()));\n",
+      "note": "The topology. **`groupByKey` keeps the shop that is already the key**, so counting per shop needs nothing moved. `groupBy` picks a new key, the book, and that is a different matter, which section 04 opens. Each `count` is a KTable, and `toStream().to(...)` sends every change of it to an output topic, with the count as a Java `long`."
+    },
+    {
+      "code": "        KafkaStreams streams = new KafkaStreams(builder.build(), p);\n        streams.setStateListener((now, before) -> {\n            System.out.println(\"state: \" + before + \" -> \" + now);\n            if (now == KafkaStreams.State.RUNNING) {\n                streams.metadataForLocalThreads().forEach(t ->\n                    System.out.println(\"tasks here: \" + t.activeTasks().stream()\n                        .map(a -> a.taskId().toString()).sorted().toList()));\n            }\n        });\n        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));\n        streams.start();\n    }\n}",
+      "note": "Start it, and say what happens. The listener prints each change of state, and once the application is running, the **tasks** this copy was given: one per input partition of each part of the topology. Ctrl+C runs the shutdown hook, which closes the application cleanly."
     }
-
---- **The application id names everything**: the consumer group the copies share, the prefix of the topics the library creates, and the directory of its local state. Each copy running on one machine needs a state directory of its own, so the first argument names it.
-    public static void main(String[] args) {
-        String copy = args.length > 0 ? args[0] : "a";
-        Properties p = new Properties();
-        p.put(StreamsConfig.APPLICATION_ID_CONFIG, "sales-per-shop");
-        p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        p.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);
-        p.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);
-        p.put(StreamsConfig.STATE_DIR_CONFIG, System.getProperty("user.home") + "/streams-state/" + copy);
-        p.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
-
---- The topology. **`groupByKey` keeps the shop that is already the key**, so counting per shop needs nothing moved. `groupBy` picks a new key, the book, and that is a different matter, which section 04 opens. Each `count` is a KTable, and `toStream().to(...)` sends every change of it to an output topic, with the count as a Java `long`.
-        StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, String> sales = builder.stream("sales");
-        sales.groupByKey().count()
-             .toStream().to("sales-per-shop", Produced.with(Serdes.String(), Serdes.Long()));
-        sales.groupBy((shop, sale) -> book(sale)).count()
-             .toStream().to("sales-per-book", Produced.with(Serdes.String(), Serdes.Long()));
-
---- Start it, and say what happens. The listener prints each change of state, and once the application is running, the **tasks** this copy was given: one per input partition of each part of the topology. Ctrl+C runs the shutdown hook, which closes the application cleanly.
-        KafkaStreams streams = new KafkaStreams(builder.build(), p);
-        streams.setStateListener((now, before) -> {
-            System.out.println("state: " + before + " -> " + now);
-            if (now == KafkaStreams.State.RUNNING) {
-                streams.metadataForLocalThreads().forEach(t ->
-                    System.out.println("tasks here: " + t.activeTasks().stream()
-                        .map(a -> a.taskId().toString()).sorted().toList()));
-            }
-        });
-        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
-        streams.start();
-    }
+  ]
 }
 ```
 
