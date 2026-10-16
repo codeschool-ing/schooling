@@ -22,7 +22,7 @@ X.append(quiz('ex-k16szz7y', 'workers', 'easy',
 X.append(numeric('ex-gkxe33yg', 'workers', 'medium',
   ("A laptop has 12 logical processors. `playwright.config.js` sets no `workers` and the command line has no `--workers`. How many workers does `npx playwright test` start, at most?",
    "Um notebook tem 12 processadores lógicos. O `playwright.config.js` não define `workers` e a linha de comando não tem `--workers`. Quantos workers o `npx playwright test` abre, no máximo?"),
-  6, None,
+  6, ("workers", "workers"),
   hint=("The default is a percentage of `os.cpus().length`, rounded down.",
         "O padrão é uma porcentagem de `os.cpus().length`, arredondada para baixo.")))
 

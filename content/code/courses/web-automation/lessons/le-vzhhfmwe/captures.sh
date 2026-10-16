@@ -117,9 +117,9 @@ block shards-split
 run 'rm -rf all-blob-reports && mkdir all-blob-reports'
 for i in 1 2 3; do
   pw "npx playwright test --config turns.config.js --project parallel --shard=$i/3 --reporter=list,blob | $SUMMARY"
-  run "mv blob-report/report-$i.zip all-blob-reports/parallel-$i.zip"
+  run "mv blob-report/*.zip all-blob-reports/parallel-$i.zip"
   pw "npx playwright test --config turns.config.js --project one-at-a-time --no-deps --shard=$i/3 --reporter=list,blob | $SUMMARY"
-  run "mv blob-report/report-$i.zip all-blob-reports/one-at-a-time-$i.zip"
+  run "mv blob-report/*.zip all-blob-reports/one-at-a-time-$i.zip"
 done
 block merge-split
 pw "npx playwright merge-reports --reporter list all-blob-reports | $SUMMARY"
