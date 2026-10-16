@@ -19,9 +19,10 @@
 # `run` gives each capture a network namespace of its own: nothing it does can
 # reach the internet, moto is always on 127.0.0.1:4567, and it is always empty
 # when the capture starts, because each run starts a new one exactly as the
-# student does in the other terminal. ~/aws is put back to what `tools` left, so
-# no lesson inherits a file from another one. The variables the student exports
-# in every terminal are read out of the lesson's sixth fence and sourced.
+# student does in the other terminal. It also gets a copy-on-write layer over
+# ~ana, thrown away afterwards, so no lesson inherits a file from another one
+# and two captures can run at once. The variables the student exports in every
+# terminal are read out of the lesson's sixth fence and sourced.
 #
 # What is STAGED rather than typed, and why:
 #   - there is no user `ana` on the recording machine, and it was not allowed to
@@ -79,8 +80,13 @@ lab_run() {
       && AWS_CA_BUNDLE=/root/.ccr/ca-bundle.crt bash "$script" "$@")
     return
   fi
-  unshare -n bash -s "$script" "$@" <<EOF
+  # A copy-on-write layer over ~ana for this run alone, so runs can go in
+  # parallel and none of them changes the lab the next one starts from.
+  local layer; layer=$(mktemp -d /var/tmp/aws-data-run.XXXXXX)
+  mkdir -p "$layer/upper" "$layer/work"
+  unshare -m -n bash -s "$script" "$@" <<EOF
 set -uo pipefail
+mount -t overlay overlay -o lowerdir=/home/ana,upperdir=$layer/upper,workdir=$layer/work /home/ana || exit 1
 python3 -c '
 import socket, fcntl, struct
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -99,6 +105,9 @@ status=\$?
 moto_stop
 exit \$status
 EOF
+  local status=$?
+  rm -rf "$layer"
+  return $status
 }
 
 case "${1:-}" in
