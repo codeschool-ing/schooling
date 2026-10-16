@@ -1,0 +1,618 @@
+[
+  {
+    "id": "ex-448k4wcp",
+    "version": 1,
+    "section": "what-an-account-holds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two accounts each have an IAM user called `bia`. What is the relation between the two users?",
+    "hint": "Where does an IAM identity exist?",
+    "choices": [
+      {
+        "text": "They are one user, since IAM is global",
+        "correct": false,
+        "why": "IAM is global across the regions of ONE account. It does not reach into another account."
+      },
+      {
+        "text": "None: two strangers who share a name",
+        "correct": true,
+        "why": "Right. An identity exists inside its account, and a name in one account means nothing in the next."
+      },
+      {
+        "text": "The second one was refused, so only the first exists",
+        "correct": false,
+        "why": "User names are unique inside an account, not across accounts. Both were created."
+      },
+      {
+        "text": "They share a password but each has its own permissions",
+        "correct": false,
+        "why": "Nothing is shared between them, the password included. Each account keeps its own identities whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksqz82sb",
+    "version": 1,
+    "section": "what-an-account-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `arn:aws:sns:sa-east-1:123456789012:shop-alerts`, which field tells you whose the topic is?",
+    "hint": "Count the fields from the left: the first is always `arn`.",
+    "choices": [
+      {
+        "text": "The second, `aws`",
+        "correct": false,
+        "why": "That is the partition: which copy of AWS, such as `aws-cn` for China. Every account in it shares the value."
+      },
+      {
+        "text": "The fourth, `sa-east-1`",
+        "correct": false,
+        "why": "The region says where the topic lives, not who owns it. Thousands of accounts have topics there."
+      },
+      {
+        "text": "The fifth, `123456789012`",
+        "correct": true,
+        "why": "Right. The account field is the owner, and the first thing to read in an ARN somebody shows you."
+      },
+      {
+        "text": "The last, `shop-alerts`, since names are unique",
+        "correct": false,
+        "why": "A topic name is unique only inside one account and region. Another account may have its own `shop-alerts`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yxey382q",
+    "version": 1,
+    "section": "what-an-account-holds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy someone pasted names `arn:aws:s3:::shop-backups/*`. Which account owns the bucket, going by the ARN alone?",
+    "hint": "Look at the fourth and fifth fields.",
+    "choices": [
+      {
+        "text": "The account the policy is attached in, which the ARN leaves implied",
+        "correct": false,
+        "why": "An empty field is not shorthand for 'this account'. A bucket name is global, so the ARN does not carry an owner at all."
+      },
+      {
+        "text": "The management account, since S3 is billed there",
+        "correct": false,
+        "why": "The bill is consolidated in lesson 3, but ownership is not. The bucket belongs to the account that created it."
+      },
+      {
+        "text": "It cannot be told: a bucket's ARN has no account field",
+        "correct": true,
+        "why": "Right. Bucket names are one namespace for all of AWS, so the ARN leaves the account empty. Finding the owner takes another question."
+      },
+      {
+        "text": "Account `000000000000`, which the empty field stands for",
+        "correct": false,
+        "why": "No such convention exists. The field is empty because the bucket name does not belong to any account."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9s26z04",
+    "version": 1,
+    "section": "what-an-account-holds",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A user's ARN, such as `arn:aws:iam::123456789012:user/bia`, leaves the ___ field empty, because IAM is global inside an account.",
+    "hint": "The field that is `sa-east-1` in the topic's ARN.",
+    "blanks": [
+      {
+        "accept": [
+          "region"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-68drsxsx",
+    "version": 1,
+    "section": "what-an-account-holds",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new account has its default VPC in `sa-east-1` and the quota of five VPCs per region. How many more `create-vpc` calls does AWS accept there before refusing one?",
+    "hint": "The default VPC counts.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "VPCs"
+  },
+  {
+    "id": "ex-esjv2xgg",
+    "version": 1,
+    "section": "what-an-account-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "moto created a sixth VPC in a region whose quota is five. What does that tell you about AWS?",
+    "hint": "What does moto do with a quota's value?",
+    "choices": [
+      {
+        "text": "That the quota counts only the VPCs created by hand, and not the default one",
+        "correct": false,
+        "why": "The default VPC does count in AWS. Whatever moto did, it says nothing about how AWS counts."
+      },
+      {
+        "text": "Nothing: moto keeps the number and never counts against it",
+        "correct": true,
+        "why": "Right. In AWS the fifth `create-vpc` would have been refused with `VpcLimitExceeded`; that part was not run."
+      },
+      {
+        "text": "That an adjustable quota rises on its own when it is reached",
+        "correct": false,
+        "why": "Adjustable means it may be raised on request, for one region of one account. Nothing raises it automatically."
+      },
+      {
+        "text": "That the quota applies to the whole organisation, not to one account",
+        "correct": false,
+        "why": "Quotas are per account, and for this one per region too. That is why a second account starts again from the default."
+      }
+    ]
+  },
+  {
+    "id": "ex-086z3dfd",
+    "version": 1,
+    "section": "a-second-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-prod` and the management account each have a default VPC with the range `172.31.0.0/16`. What follows?",
+    "hint": "Same addresses, different owners.",
+    "choices": [
+      {
+        "text": "They are one network seen from two accounts",
+        "correct": false,
+        "why": "They have different ids and different owners. Same range, two networks."
+      },
+      {
+        "text": "The second account's creation should have failed",
+        "correct": false,
+        "why": "Every account gets a default VPC with that range. Nothing collides, because nothing joins them."
+      },
+      {
+        "text": "Nothing joins them, and joining them later needs different ranges",
+        "correct": true,
+        "why": "Right. An address means something only inside its own network. Connecting two networks with the same range is why the shop plans `10.20.0.0/16`."
+      },
+      {
+        "text": "Machines in the two accounts can already reach each other by address",
+        "correct": false,
+        "why": "Nothing connects two accounts' networks until somebody does it on purpose, which lessons 19 and 20 do."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtccptrc",
+    "version": 1,
+    "section": "a-second-account",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shop-prod` tries to create the bucket `shop-assets`, which the management account already has. What does it hear?",
+    "hint": "Whose is the name, from `shop-prod`'s side?",
+    "choices": [
+      {
+        "text": "`BucketAlreadyExists`",
+        "correct": true,
+        "why": "Right. Another account has the name, and the answer does not say which account."
+      },
+      {
+        "text": "`BucketAlreadyOwnedByYou`, since both accounts are in one organisation",
+        "correct": false,
+        "why": "That is the answer to the account that owns the bucket. An organisation does not merge ownership."
+      },
+      {
+        "text": "Success, because `shop-prod` sees no bucket of that name",
+        "correct": false,
+        "why": "Not seeing a bucket does not free its name. Bucket names are one namespace for every account."
+      },
+      {
+        "text": "`AccessDenied`, naming the management account as the owner",
+        "correct": false,
+        "why": "It is not a permission question, and the refusal never names the owner: a stranger may not learn whose a name is."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8aw5drt",
+    "version": 1,
+    "section": "a-second-account",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The `test` keys in `env.sh` belong to the management account. How does `aws --profile shop-prod ec2 describe-vpcs` end up inside `shop-prod`?",
+    "hint": "Read the three lines of the profile.",
+    "choices": [
+      {
+        "text": "The profile replaces the keys with `shop-prod`'s own access key",
+        "correct": false,
+        "why": "No key of `shop-prod` was ever made. The profile names a role to take on, not a key."
+      },
+      {
+        "text": "The management account may act in any member account directly",
+        "correct": false,
+        "why": "Its credentials act only in itself. Reaching a member account takes a role there that it is allowed to assume."
+      },
+      {
+        "text": "The command line assumes `OrganizationAccountAccessRole` with those keys, then uses the temporary ones",
+        "correct": true,
+        "why": "Right. `credential_source = Environment` starts from the keys in the environment, and `role_arn` names the role whose credentials come back."
+      },
+      {
+        "text": "`--profile` sends the request to another endpoint, where `shop-prod` answers",
+        "correct": false,
+        "why": "The endpoint is still moto's, from `env.sh`. What changes is the credentials the request is signed with."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ndte0kf",
+    "version": 1,
+    "section": "a-second-account",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these must be unique across all of AWS, and not only inside one account? Choose all that apply.",
+    "hint": "Three of the section's names cross the walls.",
+    "choices": [
+      {
+        "text": "An S3 bucket's name",
+        "correct": true,
+        "why": "Right. One namespace for every account, which moto enforces too."
+      },
+      {
+        "text": "An account's alias for the sign-in address",
+        "correct": true,
+        "why": "Right. AWS refuses a second account the same alias; moto lets it through."
+      },
+      {
+        "text": "An IAM user's name",
+        "correct": false,
+        "why": "Unique inside its account only. Two accounts may each have a `bia`."
+      },
+      {
+        "text": "The root user's e-mail address",
+        "correct": true,
+        "why": "Right. A second account with the same address fails with `EMAIL_ALREADY_EXISTS` in AWS; moto accepts it."
+      },
+      {
+        "text": "A VPC's address range",
+        "correct": false,
+        "why": "Both default VPCs in the transcript use `172.31.0.0/16`. A range is unique nowhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks9e4rp6",
+    "version": 1,
+    "section": "a-second-account",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "moto answered `create-account` with `SUCCEEDED` at once. What does AWS answer?",
+    "hint": "An account takes AWS some time to set up.",
+    "choices": [
+      {
+        "text": "`SUCCEEDED` too, once the e-mail is confirmed",
+        "correct": false,
+        "why": "No e-mail confirmation sits between the call and its answer. The account is made in the background."
+      },
+      {
+        "text": "`IN_PROGRESS`, and you poll until the work is done",
+        "correct": true,
+        "why": "Right. AWS builds the account in the background, and `describe-create-account-status` says when it is ready; moto skips the wait."
+      },
+      {
+        "text": "A handshake the new account has to accept",
+        "correct": false,
+        "why": "A handshake is how an existing account is invited, in lesson 3. A created account joins without one."
+      },
+      {
+        "text": "An access key for the new account's root user",
+        "correct": false,
+        "why": "No key is made for anybody. The new root user does not even have a password."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5evxx47",
+    "version": 1,
+    "section": "never-just-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pipeline makes a VPC per pull request in the account that also runs production. Which failure does the section predict?",
+    "hint": "What do the two share?",
+    "choices": [
+      {
+        "text": "The test VPCs reach production's machines by address",
+        "correct": false,
+        "why": "Two VPCs are not joined unless somebody joins them. The shared thing is a number, not a network."
+      },
+      {
+        "text": "Production's next deployment is refused because the tests used the quota",
+        "correct": true,
+        "why": "Right. Five VPCs per region is counted for the whole account, so the tests spend what production needs."
+      },
+      {
+        "text": "The bill shows the test VPCs under production's tag",
+        "correct": false,
+        "why": "A tag is whatever the pipeline writes; that is a different failure. The section's point here is the quota."
+      },
+      {
+        "text": "AWS deletes the oldest VPC to make room",
+        "correct": false,
+        "why": "AWS never deletes a resource to honour a quota. It refuses the new one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6t2j4f1z",
+    "version": 1,
+    "section": "never-just-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the shop keep the logs of `shop-prod` in `log-archive` rather than in `shop-prod` itself?",
+    "hint": "Who would want the logs to say something else?",
+    "choices": [
+      {
+        "text": "Storage is cheaper in an account with no workloads",
+        "correct": false,
+        "why": "A gigabyte costs the same in any account. The reason is who can delete it."
+      },
+      {
+        "text": "A log may only be read from the account that wrote it",
+        "correct": false,
+        "why": "The opposite: the point is to read it from somewhere the writer does not control."
+      },
+      {
+        "text": "Whoever takes over `shop-prod` could delete the evidence there",
+        "correct": true,
+        "why": "Right. A record of what happened has to survive the people it records, so it lives behind another wall."
+      },
+      {
+        "text": "Production's quota of log groups would run out",
+        "correct": false,
+        "why": "That is the quota story from another failure. The logs are moved for their safety, not for space."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve6hh6ph",
+    "version": 1,
+    "section": "never-just-one",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each of the shop's accounts to what lives in it.",
+    "hint": "One line of the table each.",
+    "pairs": [
+      {
+        "left": "management",
+        "right": "the organisation and the bill"
+      },
+      {
+        "left": "`shop-staging`",
+        "right": "a copy of the shop for testing releases"
+      },
+      {
+        "left": "`sandbox`",
+        "right": "experiments, cleared out regularly"
+      },
+      {
+        "left": "`log-archive`",
+        "right": "a copy of every account's logs"
+      }
+    ],
+    "right_distractors": [
+      "the shop customers use"
+    ]
+  },
+  {
+    "id": "ex-s8bqxzsz",
+    "version": 1,
+    "section": "never-just-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer has administrator rights in `sandbox` and runs a script that deletes every machine it can find. What is the most it can reach?",
+    "hint": "Where does the blast radius end?",
+    "choices": [
+      {
+        "text": "Every account in the organisation, since she is an administrator",
+        "correct": false,
+        "why": "Administrator is a set of permissions inside one account. It stops at that account's walls."
+      },
+      {
+        "text": "`sandbox` and `shop-staging`, which share developers",
+        "correct": false,
+        "why": "Sharing people does not join two accounts. Her credentials in `sandbox` act only there."
+      },
+      {
+        "text": "The machines in `sandbox`",
+        "correct": true,
+        "why": "Right. A mistake reaches, at most, the account it happened in. That is what the split buys."
+      },
+      {
+        "text": "Only the machines she created herself, whatever the account",
+        "correct": false,
+        "why": "Nothing limits an administrator to her own resources. The wall does the limiting, not authorship."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmdar8ye",
+    "version": 1,
+    "section": "never-just-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Six accounts cost nothing to keep. What does the section say they do cost?",
+    "hint": "What does every one of them need?",
+    "choices": [
+      {
+        "text": "A monthly fee per account once the organisation passes five",
+        "correct": false,
+        "why": "There is no fee per account at any count. The cost is in the work."
+      },
+      {
+        "text": "The same baseline in each, kept the same",
+        "correct": true,
+        "why": "Right. Logging, guardrails, access and a budget in every account, which drift apart when done by hand. Lessons 3 to 5 automate it."
+      },
+      {
+        "text": "Data transfer between them, charged per account crossed",
+        "correct": false,
+        "why": "Lesson 1's prices follow zones and regions. Crossing an account boundary adds nothing to them."
+      },
+      {
+        "text": "A second support plan for every account",
+        "correct": false,
+        "why": "The section names no such charge. What every account needs is the baseline, and a way for people to get in."
+      }
+    ]
+  },
+  {
+    "id": "ex-768ptj55",
+    "version": 1,
+    "section": "a-second-account",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The three `configure set` lines wrote the profile `shop-prod` into the file `~/.aws/___`.",
+    "hint": "The transcript printed it with `cat`.",
+    "blanks": [
+      {
+        "accept": [
+          "config"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cdbeqvtj",
+    "version": 1,
+    "section": "never-just-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the management account hold no workload, not even a small one?",
+    "hint": "Lesson 4 makes the reason precise; the section names it.",
+    "choices": [
+      {
+        "text": "Resources there would appear twice on the consolidated bill",
+        "correct": false,
+        "why": "Each resource is charged once, to the account that owns it, wherever that account sits."
+      },
+      {
+        "text": "The organisation's guardrails cannot restrict it",
+        "correct": true,
+        "why": "Right. Anything running in the management account runs outside every rule the organisation sets."
+      },
+      {
+        "text": "AWS refuses to create resources in an account that manages others",
+        "correct": false,
+        "why": "AWS allows it; that is why it has to be a rule the company keeps."
+      },
+      {
+        "text": "Its quotas are shared with every member account",
+        "correct": false,
+        "why": "Quotas are per account, the management account's included. Sharing them is not the risk."
+      }
+    ]
+  },
+  {
+    "id": "ex-992p6xxh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A policy in `shop-staging` allows reading `arn:aws:sns:sa-east-1:218935875641:shop-alerts`. Which account's topic is that, if `shop-prod` is `218935875641`?",
+    "hint": "The policy's own account does not matter; the ARN says.",
+    "choices": [
+      {
+        "text": "`shop-prod`'s, so the policy reaches across a wall",
+        "correct": true,
+        "why": "Right. The fifth field names `shop-prod`. A policy in staging naming production's resource is exactly the line to question."
+      },
+      {
+        "text": "`shop-staging`'s, since that is where the policy lives",
+        "correct": false,
+        "why": "Where a policy lives does not change whose a resource is. The ARN carries the owner."
+      },
+      {
+        "text": "The management account's, since topics belong to it",
+        "correct": false,
+        "why": "The management account owns the organisation, not its members' topics."
+      },
+      {
+        "text": "Any account's: SNS topic names are global like bucket names",
+        "correct": false,
+        "why": "A topic name is unique only inside one account and region, which is why its ARN has an account field."
+      }
+    ]
+  },
+  {
+    "id": "ex-jbgs3prb",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's lab in the order that works, from an empty moto to a look inside `shop-prod`.",
+    "hint": "Each step needs the one before it to exist.",
+    "items": [
+      "create the organisation",
+      "create the account `shop-prod`",
+      "write a profile naming its `OrganizationAccountAccessRole`",
+      "run `describe-vpcs` with `--profile shop-prod`"
+    ],
+    "trap": "Writing the profile before the account exists is the usual slip: its `role_arn` needs the account number that `create-account` returns."
+  },
+  {
+    "id": "ex-vhgpdep1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A start-up runs production and its developers' experiments in one account, separated by tags. Which change removes the most risk for the least work?",
+    "hint": "Which wall would a mistake have to cross?",
+    "choices": [
+      {
+        "text": "Write a condition on the `env` tag into every developer policy",
+        "correct": false,
+        "why": "That is the arrangement that fails the day one resource lacks the tag. It adds care, not a wall."
+      },
+      {
+        "text": "Move production to another region of the same account",
+        "correct": false,
+        "why": "IAM is global inside the account, so the developers' permissions follow production there."
+      },
+      {
+        "text": "Ask for a higher VPC quota so the two never compete",
+        "correct": false,
+        "why": "That treats one symptom. The experiments could still delete production."
+      },
+      {
+        "text": "Move the experiments into a sandbox account of their own",
+        "correct": true,
+        "why": "Right. A separate account puts a wall between the two: identities, quotas and the bill split with it."
+      }
+    ]
+  }
+]
