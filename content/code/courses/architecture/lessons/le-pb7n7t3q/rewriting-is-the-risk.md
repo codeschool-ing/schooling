@@ -1,0 +1,34 @@
+---
+title: The rewrite is the risk
+version: 1
+---
+
+Every system old enough to be worth replacing has the same problem: it works, people depend on it, and
+nobody remembers everything it does. The plan that comes naturally is to write the new system beside
+it, catch up with every feature, and switch on a chosen day. It is called the **big-bang rewrite**, and
+its record is poor for reasons that have nothing to do with the team's skill:
+
+- **The old system keeps moving.** While the new one is being written, the business still needs
+  changes, so they are made twice or the new system falls further behind.
+- **Nothing is delivered until everything is.** Months of work produce no value and no feedback, and the
+  first real test of the new system is the day it carries all the traffic.
+- **The behaviour nobody wrote down is found on switch-over day.** A report somebody runs at month end, a
+  rounding rule, a customer who depends on a bug.
+
+Martin Fowler described the alternative in 2004 and named it after the **strangler figs** he saw in
+Queensland, which grow from a seed on a host tree, send roots down around it, and stand on their own
+once the host has gone. Applied to software:
+
+1. Put a **facade** in front of the old system, a proxy or a gateway that every request passes through.
+   At first it sends everything to the old system and changes nothing.
+2. Build **one piece** of the new system, and send that piece's traffic to it through the facade, a
+   share at a time.
+3. When the piece carries all its traffic, **delete** the old code for it. Repeat with the next piece.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Three stages of a strangler fig migration. First, a facade in front of the monolith, sending everything to it. Second, the facade sends stock requests to a new stock service and everything else to the monolith, whose stock module is now unused. Third, more pieces have moved, and the monolith is small or gone.\"><defs><marker id=\"l15-phases-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"10\" y=\"10\" width=\"700\" height=\"230\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"125\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">1. a facade</text><rect x=\"50\" y=\"50\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"125\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">edge</text><path d=\"M125 82 L125 108\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l15-phases-ah-phosphor)\"></path><text x=\"355\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">2. stock moves</text><rect x=\"280\" y=\"50\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"355\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">edge</text><path d=\"M355 82 L355 108\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l15-phases-ah-phosphor)\"></path><text x=\"585\" y=\"34\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\" font-weight=\"600\">3. more follow</text><rect x=\"510\" y=\"50\" width=\"150\" height=\"30\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"585\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">edge</text><path d=\"M585 82 L585 108\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#l15-phases-ah-phosphor)\"></path><rect x=\"50\" y=\"110\" width=\"150\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"125.0\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">monolith</text><rect x=\"280\" y=\"110\" width=\"110\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"335.0\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">monolith</text><rect x=\"510\" y=\"110\" width=\"50\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"535.0\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">…</text><rect x=\"400\" y=\"110\" width=\"70\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"435\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">stock</text><rect x=\"575\" y=\"110\" width=\"58\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"604\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">stock</text><rect x=\"640\" y=\"110\" width=\"58\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"669\" y=\"145\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">orders</text><text x=\"360\" y=\"215\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">the clients talk to the edge the whole time</text></svg>", "caption": "A facade first, then one piece at a time behind it. Clients only ever see the facade, so they never notice a piece moving."}
+```
+
+Every step can be reversed by changing a route in the facade, every step delivers something, and the
+old system keeps working the whole time. Lesson 2 said a module that owns its data and has a public
+surface is a service waiting for a network; this is how it gets one.

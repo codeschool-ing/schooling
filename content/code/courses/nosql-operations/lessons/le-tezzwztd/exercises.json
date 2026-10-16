@@ -1,0 +1,628 @@
+[
+  {
+    "id": "ex-8pnp2ezr",
+    "version": 1,
+    "section": "access-pattern-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team asks \"MongoDB or Cassandra?\" for a new service. What should be answered first?",
+    "choices": [
+      {
+        "text": "Which of the two has the better benchmark",
+        "correct": false,
+        "why": "A benchmark measures somebody else's workload; the question is about yours."
+      },
+      {
+        "text": "The operations and their costs",
+        "correct": true,
+        "why": "Right. The access pattern decides; the brand follows."
+      },
+      {
+        "text": "Which one the team has used before",
+        "correct": false,
+        "why": "Familiarity is a tie-breaker, not the first question."
+      },
+      {
+        "text": "Which licence is cheaper",
+        "correct": false,
+        "why": "Both are free to run for your own application; the licence is a later line of the record."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mr9nad5",
+    "version": 1,
+    "section": "access-pattern-decides",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each access pattern to the family that fits it.",
+    "pairs": [
+      {
+        "left": "a whole order with varying attributes, read and written as one",
+        "right": "document"
+      },
+      {
+        "left": "billions of sensor readings appended, read by device and time range",
+        "right": "wide column"
+      },
+      {
+        "left": "a session looked up by its token, with an expiry",
+        "right": "key-value"
+      },
+      {
+        "left": "stock, orders and payments changed together in one transaction",
+        "right": "relational"
+      }
+    ],
+    "right_distractors": [
+      "graph"
+    ]
+  },
+  {
+    "id": "ex-p0nsagdf",
+    "version": 1,
+    "section": "access-pattern-decides",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A founder says: \"we will have a billion events a day, so we need Cassandra now\". Today the shop has ten thousand a day. What does the lesson say to write down?",
+    "choices": [
+      {
+        "text": "Nothing: forecasts do not belong in a decision record",
+        "correct": false,
+        "why": "They belong there, labelled as forecasts."
+      },
+      {
+        "text": "MongoDB, as a compromise between the two",
+        "correct": false,
+        "why": "A compromise between a fact and a guess is still a guess."
+      },
+      {
+        "text": "Cassandra, since migrating later is impossible",
+        "correct": false,
+        "why": "Migration costs a project; Cassandra now costs every query written first, from today."
+      },
+      {
+        "text": "The forecast, labelled as one",
+        "correct": true,
+        "why": "Right. A pattern you might have is a revisit trigger, not today's design."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvwpcjca",
+    "version": 1,
+    "section": "access-pattern-decides",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say the table classifies operations, not systems?",
+    "choices": [
+      {
+        "text": "Systems are too large to classify",
+        "correct": false,
+        "why": "Size is not the reason; mixed patterns are."
+      },
+      {
+        "text": "Each operation needs its own database",
+        "correct": false,
+        "why": "Most operations of most systems share one relational database."
+      },
+      {
+        "text": "Families are defined by their operations, not by vendors",
+        "correct": false,
+        "why": "True in a sense, but it does not explain why a whole system is the wrong unit."
+      },
+      {
+        "text": "One application has many operations, fitting different families",
+        "correct": true,
+        "why": "Right. The shop's orders fit Postgres while its page views fit Redis."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdcg3scj",
+    "version": 1,
+    "section": "postgres-does-that",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plan for `doc @> '{\"gift\": {\"wrap\": true}}'` showed `Bitmap Index Scan on orders_doc`. What does that tell you?",
+    "choices": [
+      {
+        "text": "The GIN index found the rows",
+        "correct": true,
+        "why": "Right. 2,000 of 100,000 orders were found through the index."
+      },
+      {
+        "text": "Postgres converted the JSON to columns",
+        "correct": false,
+        "why": "The column stays `jsonb`; the index covers its contents."
+      },
+      {
+        "text": "The query was sent to MongoDB",
+        "correct": false,
+        "why": "Only Postgres was involved."
+      },
+      {
+        "text": "Every row was read and then filtered",
+        "correct": false,
+        "why": "That would be a Seq Scan, which the plan did not show."
+      }
+    ]
+  },
+  {
+    "id": "ex-765vzdex",
+    "version": 1,
+    "section": "postgres-does-that",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `docker kill postgres` and `docker start postgres`, how many rows did the unlogged `cache` table hold?",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-v8cwn3hm",
+    "version": 1,
+    "section": "postgres-does-that",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `page_views` keep its row after the crash while `cache` lost its own?",
+    "choices": [
+      {
+        "text": "`page_views` has a primary key and `cache` does not",
+        "correct": false,
+        "why": "Both have one; persistence is the difference."
+      },
+      {
+        "text": "The upsert wrote `cache` to memory only",
+        "correct": false,
+        "why": "Unlogged tables have data files; they just skip the log."
+      },
+      {
+        "text": "`cache` had expired",
+        "correct": false,
+        "why": "Its expiry was five minutes away; the crash emptied it."
+      },
+      {
+        "text": "`cache` is unlogged: no write-ahead log, so recovery empties it",
+        "correct": true,
+        "why": "Right. `relpersistence` said `u`; recovery replayed the log for `p` tables only."
+      }
+    ]
+  },
+  {
+    "id": "ex-5pkb46hj",
+    "version": 1,
+    "section": "postgres-does-that",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker held job 1 with `FOR UPDATE SKIP LOCKED` while a second worker ran the same query. What did the second get, and why?",
+    "choices": [
+      {
+        "text": "Nothing until the first committed",
+        "correct": false,
+        "why": "That is `FOR UPDATE` without `SKIP LOCKED`, which queues."
+      },
+      {
+        "text": "Job 2, skipping the locked row",
+        "correct": true,
+        "why": "Right, and without waiting."
+      },
+      {
+        "text": "An error about a lock conflict",
+        "correct": false,
+        "why": "That is `NOWAIT`; `SKIP LOCKED` simply passes over."
+      },
+      {
+        "text": "Job 1, since reads are not blocked",
+        "correct": false,
+        "why": "`FOR UPDATE` is a locking read; it does not hand out a locked row."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5wekjc9",
+    "version": 1,
+    "section": "postgres-does-that",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does the lesson name as things Postgres does not do as well? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Sorted sets and streams at memory speed",
+        "correct": true,
+        "why": "Right: that is what Redis is."
+      },
+      {
+        "text": "Accepting writes on many machines at once",
+        "correct": true,
+        "why": "Right: one primary takes every write."
+      },
+      {
+        "text": "Accepting writes in two regions at once",
+        "correct": true,
+        "why": "Right: that is Cassandra's multi-datacentre replication."
+      },
+      {
+        "text": "Indexing JSON documents",
+        "correct": false,
+        "why": "The GIN index on `jsonb` did exactly that."
+      },
+      {
+        "text": "Atomic upserts",
+        "correct": false,
+        "why": "`ON CONFLICT DO UPDATE` is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cj1611xv",
+    "version": 1,
+    "section": "postgres-does-that",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Postgres, `INSERT ... ON ___ DO UPDATE` turns an insert into an upsert.",
+    "blanks": [
+      {
+        "accept": [
+          "CONFLICT"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s3etny75",
+    "version": 1,
+    "section": "when-nosql-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which sign says an operation belongs in Redis beside the main database?",
+    "choices": [
+      {
+        "text": "It stores the only copy of the customer's payments, which must never be lost",
+        "correct": false,
+        "why": "Payments are the least forgivable data the shop has."
+      },
+      {
+        "text": "Its queries are not known yet",
+        "correct": false,
+        "why": "Unknown queries argue for a relational database."
+      },
+      {
+        "text": "It is small, hot and forgivable",
+        "correct": true,
+        "why": "Right. Lessons 13 and 15 showed what Redis can lose; an operation that can afford it fits."
+      },
+      {
+        "text": "It changes several entities that have to agree",
+        "correct": false,
+        "why": "That is the relational row of the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-rc57h8v9",
+    "version": 1,
+    "section": "when-nosql-wins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A product catalogue stores monitors and cables with different attributes, but every product is also joined to stock, prices and orders in reports. Where does the lesson lean?",
+    "choices": [
+      {
+        "text": "Cassandra, for the reports",
+        "correct": false,
+        "why": "Ad-hoc reports are what a query-first model handles worst."
+      },
+      {
+        "text": "Postgres, with the varying attributes in a `jsonb` column",
+        "correct": true,
+        "why": "Right. The documents are one table among many, not the whole application."
+      },
+      {
+        "text": "Redis, as a cache of the catalogue",
+        "correct": false,
+        "why": "A cache may sit in front, but it is not where the catalogue lives."
+      },
+      {
+        "text": "MongoDB, because the shapes vary",
+        "correct": false,
+        "why": "Varying shape alone is what a `jsonb` column handles; the joins argue the other way."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9pthyj4",
+    "version": 1,
+    "section": "when-nosql-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which case is the strongest for Cassandra?",
+    "choices": [
+      {
+        "text": "A shop's orders, payments and stock",
+        "correct": false,
+        "why": "They change together in transactions; that is relational."
+      },
+      {
+        "text": "Device telemetry in two regions",
+        "correct": true,
+        "why": "Right: write volume, a known query, and more than one datacentre."
+      },
+      {
+        "text": "Sessions with a thirty-minute expiry",
+        "correct": false,
+        "why": "Small, hot and forgivable: Redis."
+      },
+      {
+        "text": "A dashboard whose questions change weekly",
+        "correct": false,
+        "why": "Changing questions are what Cassandra charges for most."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0x07dhv",
+    "version": 1,
+    "section": "when-nosql-wins",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Redis structure that keeps a ranking ordered as scores change is a sorted ___.",
+    "blanks": [
+      {
+        "accept": [
+          "set"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kfdrvh3z",
+    "version": 1,
+    "section": "two-databases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop commits a sale in Postgres and then sets the new stock in Redis. The process dies between the two. What does the product page show?",
+    "choices": [
+      {
+        "text": "An error, because the transaction rolled back",
+        "correct": false,
+        "why": "The commit had already happened."
+      },
+      {
+        "text": "Nothing, because Redis evicts keys it cannot confirm",
+        "correct": false,
+        "why": "Redis does not know the key is stale."
+      },
+      {
+        "text": "The old stock: Redis never heard of the sale",
+        "correct": true,
+        "why": "Right. That is the dual write's gap, and no retry closes it because the retrying process died."
+      },
+      {
+        "text": "The new stock, because Postgres pushes changes to Redis",
+        "correct": false,
+        "why": "Nothing connects them unless you build it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwynynhn",
+    "version": 1,
+    "section": "two-databases",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the transactional outbox in order, for one sale.",
+    "items": [
+      "Insert the order and an outbox row",
+      "COMMIT both in one transaction",
+      "The relay reads the outbox row",
+      "The relay sets the stock in Redis",
+      "The relay marks the row done"
+    ],
+    "trap": "Marking before applying would lose the entry if the relay died in between."
+  },
+  {
+    "id": "ex-vzhs9b36",
+    "version": 1,
+    "section": "two-databases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why must an outbox entry say \"set the stock of MN-330 to 0\" rather than \"decrement the stock of MN-330\"?",
+    "choices": [
+      {
+        "text": "Decrements are not supported by Redis",
+        "correct": false,
+        "why": "`DECR` exists; repeating it is the problem."
+      },
+      {
+        "text": "A dead relay repeats its last entry",
+        "correct": true,
+        "why": "Right. A relay that dies after the SET and before marking repeats it."
+      },
+      {
+        "text": "Absolute values use less space in the outbox",
+        "correct": false,
+        "why": "Size is not the concern; repetition is."
+      },
+      {
+        "text": "Postgres cannot store negative numbers in jsonb",
+        "correct": false,
+        "why": "It can, and it is irrelevant here."
+      }
+    ]
+  },
+  {
+    "id": "ex-afht5g8e",
+    "version": 1,
+    "section": "two-databases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is a cost of running Redis beside Postgres even when nothing fails?",
+    "choices": [
+      {
+        "text": "Licences forbid using both together",
+        "correct": false,
+        "why": "No licence discussed in lesson 21 does."
+      },
+      {
+        "text": "Two backups and two restore drills to keep",
+        "correct": true,
+        "why": "Right, with two skills on call and two places for access to be wrong."
+      },
+      {
+        "text": "Postgres becomes slower because Redis exists",
+        "correct": false,
+        "why": "Redis takes load off Postgres if anything."
+      },
+      {
+        "text": "Transactions stop working in Postgres",
+        "correct": false,
+        "why": "They work as before; they just do not reach Redis."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvwdnrwk",
+    "version": 1,
+    "section": "decision-record",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What belongs in the \"revisit when\" paragraph of a decision record?",
+    "choices": [
+      {
+        "text": "The date of the next major version",
+        "correct": false,
+        "why": "A release is not a reason to change databases by itself."
+      },
+      {
+        "text": "Nothing: decisions are final",
+        "correct": false,
+        "why": "The record exists so a later reader knows when it stops holding."
+      },
+      {
+        "text": "A number or an event, such as writes outgrowing the largest primary",
+        "correct": true,
+        "why": "Right. Something that can be noticed, not a feeling."
+      },
+      {
+        "text": "\"When the team feels ready\"",
+        "correct": false,
+        "why": "A feeling cannot be noticed by anyone else."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxdqj66y",
+    "version": 1,
+    "section": "decision-record",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the shop's record, why did MongoDB lose for the orders even though an order is an aggregate?",
+    "choices": [
+      {
+        "text": "It changes with stock and payment",
+        "correct": true,
+        "why": "Right. The aggregate is not the unit of change; the transaction is."
+      },
+      {
+        "text": "The volume is too high",
+        "correct": false,
+        "why": "The volume was thousands a day, low for any of them."
+      },
+      {
+        "text": "MongoDB's licence forbids shops",
+        "correct": false,
+        "why": "The SSPL restricts offering MongoDB as a service, not using it."
+      },
+      {
+        "text": "MongoDB cannot store arrays of items",
+        "correct": false,
+        "why": "It does, in lesson 6."
+      }
+    ]
+  },
+  {
+    "id": "ex-p73m1sp5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps a leaderboard for a game in Postgres, recomputed with `ORDER BY score` on every page view, and it is now slow. What does this course suggest?",
+    "choices": [
+      {
+        "text": "Move the whole game to Cassandra",
+        "correct": false,
+        "why": "The problem is one structure, not the write volume of the whole game."
+      },
+      {
+        "text": "A sorted set in Redis beside Postgres, fed through an outbox",
+        "correct": true,
+        "why": "Right: a memory-speed structure for one hot operation, and no dual write."
+      },
+      {
+        "text": "Make the scores table UNLOGGED",
+        "correct": false,
+        "why": "That makes writes cheaper and loses the scores in a crash; the slow part is the ranking read."
+      },
+      {
+        "text": "Store the scores in a `jsonb` column with a GIN index",
+        "correct": false,
+        "why": "GIN answers containment, not ordering by a number."
+      }
+    ]
+  },
+  {
+    "id": "ex-16fcdfy1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these did this lesson actually run in the lab? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`SKIP LOCKED` handing two workers different jobs",
+        "correct": true,
+        "why": "Right: the second worker got job 2."
+      },
+      {
+        "text": "A GIN index answering a containment query",
+        "correct": true,
+        "why": "Right: the Bitmap Index Scan."
+      },
+      {
+        "text": "An unlogged table emptied by a crash",
+        "correct": true,
+        "why": "Right: `docker kill`, then a count of 0."
+      },
+      {
+        "text": "A relay copying outbox rows into Redis",
+        "correct": false,
+        "why": "The lesson says plainly it does not build the relay."
+      }
+    ]
+  }
+]

@@ -1,0 +1,619 @@
+[
+  {
+    "id": "ex-377wnd86",
+    "version": 1,
+    "section": "what-you-stop-doing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does a managed database service take off your hands?",
+    "choices": [
+      {
+        "text": "Replacing a failed disk and rebuilding the node",
+        "correct": true,
+        "why": "Right. The machines and their failures sit below the shared-responsibility line."
+      },
+      {
+        "text": "Choosing the shard key",
+        "correct": false,
+        "why": "The shard key follows from your queries; the provider carries out whatever you pick."
+      },
+      {
+        "text": "Deciding which operations need majority writes",
+        "correct": false,
+        "why": "Write concern is a per-operation trade between latency and a guarantee, and it stays yours."
+      },
+      {
+        "text": "Writing the retry after a failover drops a connection",
+        "correct": false,
+        "why": "A failover still drops connections; retrying is the application's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-qn1wbzzz",
+    "version": 1,
+    "section": "what-you-stop-doing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A managed MongoDB promotes a new primary in a few seconds after a zone fails. What does the application still see?",
+    "choices": [
+      {
+        "text": "Dropped connections and errors on in-flight writes for those seconds",
+        "correct": true,
+        "why": "Right. The provider builds the members; the application still retries and reconnects."
+      },
+      {
+        "text": "Data loss, since managed services replicate asynchronously",
+        "correct": false,
+        "why": "Majority-acknowledged writes survive an election wherever it is run."
+      },
+      {
+        "text": "A maintenance window announced a week before",
+        "correct": false,
+        "why": "A zone failure is not scheduled; maintenance windows are for patching."
+      },
+      {
+        "text": "Nothing: managed failover is invisible to clients",
+        "correct": false,
+        "why": "The election of lesson 9 still happens, with the same seconds of refused writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba9a2vry",
+    "version": 1,
+    "section": "what-you-stop-doing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are major version upgrades of a managed database still started by the customer on most services?",
+    "choices": [
+      {
+        "text": "Providers are not allowed to install them under the licences",
+        "correct": false,
+        "why": "The licences restrict who sells the service, not who runs an upgrade."
+      },
+      {
+        "text": "A major upgrade deletes the backups taken on the old version",
+        "correct": false,
+        "why": "Nothing in the lesson says backups are deleted; the risk is the application's behaviour."
+      },
+      {
+        "text": "Because they cost extra",
+        "correct": false,
+        "why": "Price is not the reason given; behaviour is."
+      },
+      {
+        "text": "They change behaviour the application depends on",
+        "correct": true,
+        "why": "Right. Minor versions and OS patches are applied in your window; a major version needs testing by you first."
+      }
+    ]
+  },
+  {
+    "id": "ex-972g2r2a",
+    "version": 1,
+    "section": "what-you-stop-doing",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each product to a service run by the company that makes it.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "MongoDB Atlas"
+      },
+      {
+        "left": "Redis",
+        "right": "Redis Cloud"
+      },
+      {
+        "left": "Cassandra",
+        "right": "DataStax Astra DB"
+      }
+    ],
+    "right_distractors": [
+      "Amazon Keyspaces"
+    ]
+  },
+  {
+    "id": "ex-rnp0rkr1",
+    "version": 1,
+    "section": "what-you-stop-doing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its Redis to a managed plan with 1 GB of memory and `noeviction`. Six months later writes start failing with `OOM`. Whose problem is it, and what is the fix?",
+    "choices": [
+      {
+        "text": "The provider's: a managed service has to scale memory by itself",
+        "correct": false,
+        "why": "Every plan has a size; reaching it is a capacity decision above the line."
+      },
+      {
+        "text": "The team's: a larger plan or less data, and a bigger invoice either way",
+        "correct": true,
+        "why": "Right. It looks exactly like lessons 14 and 20; only the fix is a plan instead of a VM."
+      },
+      {
+        "text": "Nobody's: switching to `allkeys-lru` fixes it at no cost",
+        "correct": false,
+        "why": "Under eviction, data is deleted; whether that is free depends on whether Redis is a cache or the database."
+      },
+      {
+        "text": "The provider's, because `OOM` is a crash of their server",
+        "correct": false,
+        "why": "Redis stays up and refuses writes; nothing crashed."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t0qd17v",
+    "version": 1,
+    "section": "what-stays-yours",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A managed MongoDB accepts a shard key that sends every new order to one shard. Why will this not appear on the provider's status page?",
+    "choices": [
+      {
+        "text": "It is a decision about the data, carried out exactly as made",
+        "correct": true,
+        "why": "Right. The service works as designed; the design was yours."
+      },
+      {
+        "text": "Status pages only cover Redis and Cassandra",
+        "correct": false,
+        "why": "Every provider has one, for every service; this is just not something it covers."
+      },
+      {
+        "text": "The balancer of lesson 10 will fix it within the hour",
+        "correct": false,
+        "why": "The balancer moves chunks; it cannot spread writes that all land on the newest key range."
+      },
+      {
+        "text": "The provider hides incidents caused by sharding",
+        "correct": false,
+        "why": "Nothing is hidden; there is no incident on their side to report."
+      }
+    ]
+  },
+  {
+    "id": "ex-28sr9be3",
+    "version": 1,
+    "section": "what-stays-yours",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a table that reads a thousand tombstones to return ten rows worse on a service that charges per read than on your own hardware?",
+    "choices": [
+      {
+        "text": "Providers keep tombstones forever",
+        "correct": false,
+        "why": "Compaction still removes them after the grace period."
+      },
+      {
+        "text": "It is not worse: the provider absorbs the extra work",
+        "correct": false,
+        "why": "The extra work is what the per-read price measures."
+      },
+      {
+        "text": "There, every wasted read is billed",
+        "correct": true,
+        "why": "Right. Almost every axis of a managed service is billed, so a modelling mistake becomes a monthly cost."
+      },
+      {
+        "text": "Managed services refuse reads with tombstones",
+        "correct": false,
+        "why": "They apply the same thresholds you choose; refusal is not the difference."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3x16p7x",
+    "version": 1,
+    "section": "what-stays-yours",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a restore drill on a managed service answer that its documentation does not? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Which licence the database is under",
+        "correct": false,
+        "why": "A licence is read in a file or an announcement, not found by restoring."
+      },
+      {
+        "text": "How long a restore of your actual data takes",
+        "correct": true,
+        "why": "Right: the number that goes into the runbook and the exit plan."
+      },
+      {
+        "text": "What the restored copy is missing, such as users or settings outside the data",
+        "correct": true,
+        "why": "Right: found in a drill rather than in an incident."
+      },
+      {
+        "text": "Who in the team knows where the button is",
+        "correct": true,
+        "why": "Right: a restore nobody knows how to start takes longer than any documentation says."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrmc2nr5",
+    "version": 1,
+    "section": "what-stays-yours",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these keeps a managed database private?",
+    "choices": [
+      {
+        "text": "A long password shared by every application",
+        "correct": false,
+        "why": "One shared password means one leak opens every door."
+      },
+      {
+        "text": "Private network only, TLS, one account per app",
+        "correct": true,
+        "why": "Right: the three settings every provider has under different names."
+      },
+      {
+        "text": "Trusting the provider's audit log to block intruders",
+        "correct": false,
+        "why": "A log records who connected; it blocks nobody, and reading it is yours."
+      },
+      {
+        "text": "A public endpoint on a port other than the default",
+        "correct": false,
+        "why": "A different port hides nothing from a scanner."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffjcj8mr",
+    "version": 1,
+    "section": "what-stays-yours",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A backup that nobody has ever ___ is a hope, whoever took it.",
+    "blanks": [
+      {
+        "accept": [
+          "restored"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1tatfdnq",
+    "version": 1,
+    "section": "compatible-and-licences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Amazon DocumentDB answers MongoDB drivers. What is the first document to read before moving an application to it?",
+    "choices": [
+      {
+        "text": "The SSPL, to check it may be used",
+        "correct": false,
+        "why": "Using a service for your own application is not what the SSPL restricts."
+      },
+      {
+        "text": "The pricing page",
+        "correct": false,
+        "why": "Price matters, but it says nothing about which of your queries will work."
+      },
+      {
+        "text": "MongoDB's own manual, since the engine is the same",
+        "correct": false,
+        "why": "It is a different engine behind a translation layer."
+      },
+      {
+        "text": "Its list of unsupported features",
+        "correct": true,
+        "why": "Right. What is missing from the translation is found there or in production."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4m25mfq",
+    "version": 1,
+    "section": "compatible-and-licences",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each product to its licence situation.",
+    "pairs": [
+      {
+        "left": "MongoDB",
+        "right": "SSPL, since October 2018"
+      },
+      {
+        "left": "Redis 7.4",
+        "right": "RSALv2 or SSPLv1, a dual licence"
+      },
+      {
+        "left": "Valkey",
+        "right": "BSD, under the Linux Foundation"
+      },
+      {
+        "left": "Cassandra",
+        "right": "Apache License 2.0"
+      }
+    ],
+    "right_distractors": [
+      "GPLv2 only"
+    ]
+  },
+  {
+    "id": "ex-tg98d38d",
+    "version": 1,
+    "section": "compatible-and-licences",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lab searched the `redis:7.4` image for a licence file and found none. What does the lesson conclude?",
+    "choices": [
+      {
+        "text": "Redis 7.4 is still BSD-licensed, since nothing says otherwise",
+        "correct": false,
+        "why": "A missing file says nothing about the licence; Redis announced the change for 7.4."
+      },
+      {
+        "text": "It rests on what Redis announced",
+        "correct": true,
+        "why": "Right. The lab confirms version 7.4.11 and cannot confirm the licence; the lesson says which is which."
+      },
+      {
+        "text": "The image is Valkey under another name",
+        "correct": false,
+        "why": "`redis-server --version` printed Redis 7.4.11."
+      },
+      {
+        "text": "The image cannot be legally run",
+        "correct": false,
+        "why": "Running Redis for your own application is allowed under every licence discussed."
+      }
+    ]
+  },
+  {
+    "id": "ex-207dr9d3",
+    "version": 1,
+    "section": "compatible-and-licences",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop stores its sessions in self-hosted Redis 7.4 and sells shoes, not databases. What does the RSALv2/SSPLv1 change mean for it today?",
+    "choices": [
+      {
+        "text": "It has to move to Valkey before the next upgrade",
+        "correct": false,
+        "why": "Nothing forces it; Valkey is one option among several."
+      },
+      {
+        "text": "Nothing for its own use; it matters for which providers and versions are on offer to it later",
+        "correct": true,
+        "why": "Right. The restriction is on selling Redis as a service; the shop's future choices are what change."
+      },
+      {
+        "text": "It owes Redis a licence fee",
+        "correct": false,
+        "why": "Neither licence charges a fee for running the software yourself."
+      },
+      {
+        "text": "It has to publish its application's source code",
+        "correct": false,
+        "why": "That obligation is about offering the database itself as a service."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mqk9vwn",
+    "version": 1,
+    "section": "compatible-and-licences",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Valkey was forked from Redis version ___, the last release under the BSD licence.",
+    "blanks": [
+      {
+        "accept": [
+          "7.2.4"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pgxwp1yg",
+    "version": 1,
+    "section": "the-exit",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dump reads at 50 MB/s. How many hours does it take to read 1 TB (1,000,000 MB)? Round to one decimal place.",
+    "value": 5.6,
+    "tolerance": 0.1,
+    "unit": "hours"
+  },
+  {
+    "id": "ex-xax8v4mr",
+    "version": 1,
+    "section": "the-exit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call features beyond the database, such as built-in search or triggers, the cost that hides?",
+    "choices": [
+      {
+        "text": "They are billed separately and nobody reads that part of the invoice",
+        "correct": false,
+        "why": "The hidden cost is the work of replacing them, not their price."
+      },
+      {
+        "text": "Each must be rebuilt elsewhere on leaving",
+        "correct": true,
+        "why": "Right. Listing them as they are adopted keeps the exit priced."
+      },
+      {
+        "text": "They slow the database down",
+        "correct": false,
+        "why": "Speed is not the argument; leaving is."
+      },
+      {
+        "text": "They break the licence of the database",
+        "correct": false,
+        "why": "A provider's own features are under its terms, not the database's licence."
+      }
+    ]
+  },
+  {
+    "id": "ex-5danay2t",
+    "version": 1,
+    "section": "the-exit",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop cannot close for a night, and its dump-and-restore takes nine hours. Which exit route fits?",
+    "choices": [
+      {
+        "text": "Replicate continuously into the new place and switch over in minutes",
+        "correct": true,
+        "why": "Right, and it is a project of its own, which is why it is priced early."
+      },
+      {
+        "text": "Ask the provider to export faster",
+        "correct": false,
+        "why": "The export speed is the provider's; the window is still yours to fit."
+      },
+      {
+        "text": "Stay, since leaving is impossible",
+        "correct": false,
+        "why": "Leaving costs a project, which is a price, not an impossibility."
+      },
+      {
+        "text": "Dump and restore anyway, with writes allowed during the dump",
+        "correct": false,
+        "why": "Writes after the dump are lost on the new side."
+      }
+    ]
+  },
+  {
+    "id": "ex-qpcss8fq",
+    "version": 1,
+    "section": "the-exit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does restoring the provider's exported backup into your own containers prove that no other exit test does?",
+    "choices": [
+      {
+        "text": "That the provider's features exist outside",
+        "correct": false,
+        "why": "A data restore does not bring search indexes or triggers with it."
+      },
+      {
+        "text": "That the licence permits leaving",
+        "correct": false,
+        "why": "No licence here restricts leaving."
+      },
+      {
+        "text": "That egress will be free",
+        "correct": false,
+        "why": "A restore says nothing about transfer prices."
+      },
+      {
+        "text": "That your own software reads it, and how fast",
+        "correct": true,
+        "why": "Right: the three things the section lists."
+      }
+    ]
+  },
+  {
+    "id": "ex-zeywbn6g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which decision stays with you on every managed service, whatever the provider's tier?",
+    "choices": [
+      {
+        "text": "Which zone the replacement node is built in",
+        "correct": false,
+        "why": "Rebuilding failed nodes is the provider's work."
+      },
+      {
+        "text": "When the operating system of the nodes is patched",
+        "correct": false,
+        "why": "You choose a window; the provider patches."
+      },
+      {
+        "text": "How backups are stored durably",
+        "correct": false,
+        "why": "Storage of backups is below the line."
+      },
+      {
+        "text": "Whether reads go to a secondary",
+        "correct": true,
+        "why": "Right. Read preference is a per-operation trade only you are in a position to judge."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr3qqxdj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order an exit test, from first to last.",
+    "items": [
+      "Export the provider's backup to storage you control",
+      "Start containers of the same product in your lab",
+      "Restore the backup into them",
+      "Run the application's reads against the copy",
+      "Write the time it all took into the exit plan"
+    ],
+    "trap": "You cannot restore what you have not exported, nor time what has not finished."
+  },
+  {
+    "id": "ex-zcc7nrec",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Cassandra-compatible service passes all of an application's tests. What can still differ from the Cassandra of lessons 16 to 19?",
+    "choices": [
+      {
+        "text": "How it behaves under load",
+        "correct": true,
+        "why": "Right. The engine underneath is the provider's own."
+      },
+      {
+        "text": "The licence of the driver",
+        "correct": false,
+        "why": "The driver is the same one; the engine is what changed."
+      },
+      {
+        "text": "The data types, which are always translated to JSON",
+        "correct": false,
+        "why": "Nothing in the lesson says so; the difference named is the engine."
+      },
+      {
+        "text": "The CQL syntax of the queries that passed",
+        "correct": false,
+        "why": "Those queries passed; the syntax they used is accepted."
+      }
+    ]
+  }
+]

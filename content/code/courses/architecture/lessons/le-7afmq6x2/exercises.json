@@ -1,0 +1,695 @@
+[
+  {
+    "id": "ex-wwmz067d",
+    "version": 1,
+    "section": "one-model-two-jobs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does CQRS separate?",
+    "hint": "Command, query.",
+    "choices": [
+      {
+        "text": "The database from the application server",
+        "correct": false,
+        "why": "Not the point."
+      },
+      {
+        "text": "The model that takes changes from the models that answer questions",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Production from test environments",
+        "correct": false,
+        "why": "Not the point."
+      },
+      {
+        "text": "One team's code from another's",
+        "correct": false,
+        "why": "That is about organisation."
+      }
+    ]
+  },
+  {
+    "id": "ex-6g4j8m1k",
+    "version": 1,
+    "section": "one-model-two-jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does CQRS require?",
+    "hint": "The lab keeps everything in one PostgreSQL.",
+    "choices": [
+      {
+        "text": "Separate databases for reads and writes",
+        "correct": false,
+        "why": "The lab uses one."
+      },
+      {
+        "text": "Event sourcing on the write side",
+        "correct": false,
+        "why": "Ordinary tables work too."
+      },
+      {
+        "text": "A message broker between the sides",
+        "correct": false,
+        "why": "Polling a table works."
+      },
+      {
+        "text": "Accepting that a read model lags",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-6gjc9e1c",
+    "version": 1,
+    "section": "one-model-two-jobs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a read replica not solve what CQRS solves?",
+    "hint": "What does it copy?",
+    "choices": [
+      {
+        "text": "It copies the same model, joins included",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot answer reads",
+        "correct": false,
+        "why": "It answers reads."
+      },
+      {
+        "text": "It is always synchronous, so it is slow",
+        "correct": false,
+        "why": "Replicas are often asynchronous."
+      },
+      {
+        "text": "It takes writes as well, which confuses the models",
+        "correct": false,
+        "why": "A replica refuses writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z93w4fs",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which table is the source of truth in the lab?",
+    "hint": "The others are built from it.",
+    "choices": [
+      {
+        "text": "`order_summary`",
+        "correct": false,
+        "why": "A read model."
+      },
+      {
+        "text": "`events`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`units_sold`",
+        "correct": false,
+        "why": "A read model."
+      },
+      {
+        "text": "`checkpoint`",
+        "correct": false,
+        "why": "A bookmark for the projection."
+      }
+    ]
+  },
+  {
+    "id": "ex-77sp0gm8",
+    "version": 1,
+    "section": "events-as-the-record",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lab store \"o-1 is paid with two coffees and three rice\"?",
+    "hint": "Run `show`.",
+    "choices": [
+      {
+        "text": "In the last event",
+        "correct": false,
+        "why": "The last event says only that it was paid."
+      },
+      {
+        "text": "In a row of `orders`",
+        "correct": false,
+        "why": "There is no such table."
+      },
+      {
+        "text": "Nowhere; it is worked out from the events",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "In the checkpoint",
+        "correct": false,
+        "why": "That holds a position."
+      }
+    ]
+  },
+  {
+    "id": "ex-184e97j0",
+    "version": 1,
+    "section": "events-as-the-record",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are events named in the past tense, like `ItemAdded`?",
+    "hint": "Can an event be refused?",
+    "choices": [
+      {
+        "text": "It is a convention of PostgreSQL",
+        "correct": false,
+        "why": "Nothing to do with the database."
+      },
+      {
+        "text": "To sort them alphabetically",
+        "correct": false,
+        "why": "Not the reason."
+      },
+      {
+        "text": "Because commands and events are the same thing",
+        "correct": false,
+        "why": "They are not."
+      },
+      {
+        "text": "An event is a fact that already happened",
+        "correct": true,
+        "why": "Right; a command can be refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4vcz3qc",
+    "version": 1,
+    "section": "events-as-the-record",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How is the tea's removal from o-1 recorded?",
+    "hint": "Look at version 4.",
+    "choices": [
+      {
+        "text": "Version 3 is deleted",
+        "correct": false,
+        "why": "Events are never deleted."
+      },
+      {
+        "text": "Version 3 is updated to 0 units",
+        "correct": false,
+        "why": "Events are never changed."
+      },
+      {
+        "text": "As a new event, version 4",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is not recorded, only applied",
+        "correct": false,
+        "why": "It is recorded."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgdhxayt",
+    "version": 1,
+    "section": "events-as-the-record",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What older practice does event sourcing resemble most?",
+    "hint": "Corrections are new entries.",
+    "choices": [
+      {
+        "text": "A spreadsheet with formulas",
+        "correct": false,
+        "why": "Cells are overwritten."
+      },
+      {
+        "text": "An accountant's ledger",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A filing cabinet sorted by name",
+        "correct": false,
+        "why": "Not about order of changes."
+      },
+      {
+        "text": "A telephone directory",
+        "correct": false,
+        "why": "Entries are replaced."
+      }
+    ]
+  },
+  {
+    "id": "ex-84gfcjnw",
+    "version": 1,
+    "section": "projections",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a projection?",
+    "hint": "The read side.",
+    "choices": [
+      {
+        "text": "A forecast of future orders",
+        "correct": false,
+        "why": "Not the meaning here."
+      },
+      {
+        "text": "A copy of the events table on another server",
+        "correct": false,
+        "why": "It builds different tables."
+      },
+      {
+        "text": "A process that keeps a read model up to date from the events",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A view the database computes on every query",
+        "correct": false,
+        "why": "It stores its results."
+      }
+    ]
+  },
+  {
+    "id": "ex-r0g5z25y",
+    "version": 1,
+    "section": "projections",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `pay o-2` and before `project`, what did `units_sold` show?",
+    "hint": "Look between the two commands.",
+    "choices": [
+      {
+        "text": "An error, until projected",
+        "correct": false,
+        "why": "It answered normally."
+      },
+      {
+        "text": "The old numbers, without o-2's tea",
+        "correct": true,
+        "why": "Right: the window."
+      },
+      {
+        "text": "The new numbers, at once",
+        "correct": false,
+        "why": "The projection had not run."
+      },
+      {
+        "text": "Nothing; the table was locked",
+        "correct": false,
+        "why": "Nothing was locked."
+      }
+    ]
+  },
+  {
+    "id": "ex-btzey31t",
+    "version": 1,
+    "section": "projections",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the checkpoint move in the same transaction as the read models?",
+    "hint": "Think about a crash halfway.",
+    "choices": [
+      {
+        "text": "To make the projection faster",
+        "correct": false,
+        "why": "It is about correctness."
+      },
+      {
+        "text": "Because PostgreSQL requires it",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "So that events can be deleted once read",
+        "correct": false,
+        "why": "Events are never deleted."
+      },
+      {
+        "text": "A crash then leaves both as they were",
+        "correct": true,
+        "why": "Right; no event is counted twice or lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ga4sy4x",
+    "version": 1,
+    "section": "projections",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many events did the second `project` apply?",
+    "hint": "Only what was new.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "events"
+  },
+  {
+    "id": "ex-wm15kpmk",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does the lab show o-1 as it was at version 3?",
+    "hint": "`upto`.",
+    "choices": [
+      {
+        "text": "It reads a backup from that time",
+        "correct": false,
+        "why": "There is no backup."
+      },
+      {
+        "text": "It undoes events 4 to 6 in the table",
+        "correct": false,
+        "why": "Nothing is undone."
+      },
+      {
+        "text": "It replays the events and stops at 3",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It keeps a copy of every version",
+        "correct": false,
+        "why": "Only the events are kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmcbx0fr",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why could the lab answer \"which products are removed before paying\"?",
+    "hint": "What would an `UPDATE` have kept?",
+    "choices": [
+      {
+        "text": "A read model had been built for it",
+        "correct": false,
+        "why": "None was."
+      },
+      {
+        "text": "Every removal is still an event",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "PostgreSQL logs every change",
+        "correct": false,
+        "why": "Not queryable like this."
+      },
+      {
+        "text": "The projection counted removals",
+        "correct": false,
+        "why": "It did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-af1wam6y",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `rebuild` show about read models?",
+    "hint": "Empty, then project everything.",
+    "choices": [
+      {
+        "text": "They must be backed up",
+        "correct": false,
+        "why": "They can be rebuilt."
+      },
+      {
+        "text": "They drift from the events over time",
+        "correct": false,
+        "why": "The rebuild gave the same tables."
+      },
+      {
+        "text": "They are disposable, rebuilt from history",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They cannot be changed once created",
+        "correct": false,
+        "why": "A new one can be built at any time."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq5y4tje",
+    "version": 1,
+    "section": "two-writers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What stopped the coffee from overwriting the tea in o-3?",
+    "hint": "Look at the schema.",
+    "choices": [
+      {
+        "text": "A lock taken while thinking",
+        "correct": false,
+        "why": "Nothing was locked."
+      },
+      {
+        "text": "The projection's checkpoint",
+        "correct": false,
+        "why": "Not involved."
+      },
+      {
+        "text": "`UNIQUE (stream, version)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The tea command cancelled it",
+        "correct": false,
+        "why": "Commands do not see each other."
+      }
+    ]
+  },
+  {
+    "id": "ex-5frx8hqn",
+    "version": 1,
+    "section": "two-writers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the usual response to the conflict?",
+    "hint": "Load again.",
+    "choices": [
+      {
+        "text": "Overwrite version 2 with the coffee",
+        "correct": false,
+        "why": "That loses the tea."
+      },
+      {
+        "text": "Reload, recheck the command, try again",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Give up and tell nobody",
+        "correct": false,
+        "why": "A silent failure."
+      },
+      {
+        "text": "Delete the tea's event",
+        "correct": false,
+        "why": "Events are never deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ex9khrj",
+    "version": 1,
+    "section": "two-writers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can \"never sell more coffee than is in stock\" not be enforced by each order's stream alone?",
+    "hint": "What does one command load?",
+    "choices": [
+      {
+        "text": "Streams are too slow for stock",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "Stock is not allowed in events",
+        "correct": false,
+        "why": "It can be."
+      },
+      {
+        "text": "The unique constraint covers only coffee",
+        "correct": false,
+        "why": "It covers every stream."
+      },
+      {
+        "text": "The rule spans streams, and each command loads one",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-trvcd5tt",
+    "version": 1,
+    "section": "the-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can an append-only store honour a request to erase a person?",
+    "hint": "Keep the data out, or make it unreadable.",
+    "choices": [
+      {
+        "text": "Edit the events to blank the name",
+        "correct": false,
+        "why": "That breaks the append-only rule."
+      },
+      {
+        "text": "Crypto-shredding: delete the person's key",
+        "correct": true,
+        "why": "Right, or keep personal data outside the events."
+      },
+      {
+        "text": "It cannot, so the law does not apply",
+        "correct": false,
+        "why": "The law applies."
+      },
+      {
+        "text": "Rebuild the read models without that person",
+        "correct": false,
+        "why": "The events still hold the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-eandswrs",
+    "version": 1,
+    "section": "the-costs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each cost of event sourcing to what people do about it.",
+    "hint": "Old events, long streams, personal data.",
+    "pairs": [
+      {
+        "left": "events are forever",
+        "right": "upcast old versions as they are read"
+      },
+      {
+        "left": "replays get slow",
+        "right": "snapshots every few hundred events"
+      },
+      {
+        "left": "erasing a person",
+        "right": "crypto-shredding"
+      }
+    ]
+  },
+  {
+    "id": "ex-td98tb5c",
+    "version": 1,
+    "section": "the-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which part of Quitanda does the lesson suggest event sourcing for?",
+    "hint": "Where the history is the product.",
+    "choices": [
+      {
+        "text": "The catalogue's descriptions",
+        "correct": false,
+        "why": "Nobody asks what they said in March."
+      },
+      {
+        "text": "Everything, from the first day",
+        "correct": false,
+        "why": "Start with what clearly benefits."
+      },
+      {
+        "text": "The search box",
+        "correct": false,
+        "why": "That is a read model."
+      },
+      {
+        "text": "Payments and the stock ledger",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2zy6ye8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of an event-sourced command in order.",
+    "hint": "Load, check, append, project.",
+    "items": [
+      "Replay the order's events to get its state",
+      "Check the command against that state",
+      "Append an event with the next version",
+      "A projection applies it to the read models"
+    ]
+  },
+  {
+    "id": "ex-3ek6htq9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new report needs \"orders cancelled after paying\" for the last year. With event sourcing, what is the work?",
+    "hint": "The facts are already there.",
+    "choices": [
+      {
+        "text": "Add a column and wait a year for data",
+        "correct": false,
+        "why": "The history is already recorded."
+      },
+      {
+        "text": "Restore last year's backups and compare",
+        "correct": false,
+        "why": "The events already have it."
+      },
+      {
+        "text": "A new projection over existing events",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It cannot be answered after the fact",
+        "correct": false,
+        "why": "It can."
+      }
+    ]
+  }
+]

@@ -1,0 +1,460 @@
+{
+  "ex-0bbf2n4k": {
+    "prompt": "No `ps -u postgres -o pid,ppid,cmd`, todo backend de cliente tem o mesmo PPID. De quem é esse pid?",
+    "hint": "Quem inicia um processo para cada cliente novo?",
+    "choices": [
+      {
+        "text": "Do processo psql que abriu a conexão",
+        "why": "O psql é o cliente, outro programa; o backend é iniciado do lado do servidor."
+      },
+      {
+        "text": "Do systemd, já que ele inicia todo serviço",
+        "why": "O systemd é pai do postmaster (PPID 1), não dos backends."
+      },
+      {
+        "text": "Do postmaster",
+        "why": "Isso. O postmaster aceita cada conexão e inicia um backend para atendê-la."
+      },
+      {
+        "text": "Do checkpointer",
+        "why": "O checkpointer é irmão dos backends, também iniciado pelo postmaster."
+      }
+    ]
+  },
+  "ex-rr2nqhc1": {
+    "prompt": "O `state` de um backend é `idle` e a `query` dele é `SELECT pg_sleep(600)`. O que ele está fazendo?",
+    "hint": "O que a query guarda para um backend ocioso?",
+    "choices": [
+      {
+        "text": "Dormindo 600 segundos dentro do pg_sleep",
+        "why": "Isso apareceria como active. idle quer dizer que nenhum comando está rodando agora."
+      },
+      {
+        "text": "Nada; esse foi o último comando dele",
+        "why": "Isso. Para um backend ocioso, a query é simplesmente o comando mais recente que ele rodou."
+      },
+      {
+        "text": "Esperando um lock de outra sessão",
+        "why": "Um backend esperando um lock continua active, rodando o comando."
+      },
+      {
+        "text": "Segurando uma transação aberta",
+        "why": "Esse estado tem nome próprio, idle in transaction."
+      }
+    ]
+  },
+  "ex-4ys8qgwt": {
+    "prompt": "Ligue cada parte do nome de processo `postgres: 16/main: ana shop [local] idle` ao que ela diz.",
+    "hint": "O backend reescreve o próprio nome para o ps.",
+    "pairs": [
+      {
+        "left": "16/main",
+        "right": "O cluster"
+      },
+      {
+        "left": "ana",
+        "right": "O papel"
+      },
+      {
+        "left": "shop",
+        "right": "O banco"
+      },
+      {
+        "left": "[local]",
+        "right": "Onde o cliente está: o socket"
+      },
+      {
+        "left": "idle",
+        "right": "O que ele está fazendo agora"
+      }
+    ]
+  },
+  "ex-mftcrh24": {
+    "prompt": "Por que mudar o max_connections precisou de `systemctl restart` em vez de um reload?",
+    "hint": "O contexto dele na pg_settings.",
+    "choices": [
+      {
+        "text": "O ALTER SYSTEM nunca vale com um reload, para nenhum parâmetro",
+        "why": "Muitos parâmetros definidos com ALTER SYSTEM valem com um reload; a lição 5 mostrou. Este não."
+      },
+      {
+        "text": "O contexto dele é postmaster: as vagas são dimensionadas quando o servidor inicia",
+        "why": "Isso. As vagas são dimensionadas na memória compartilhada na partida, então só um reinício as muda."
+      },
+      {
+        "text": "As sessões abertas manteriam o limite antigo",
+        "why": "O limite não é por sessão; é o tamanho de uma tabela na memória compartilhada."
+      },
+      {
+        "text": "Um reload só lê o pg_hba.conf",
+        "why": "Um reload relê o postgresql.conf também, para parâmetros sighup e user."
+      }
+    ]
+  },
+  "ex-f98krdzr": {
+    "prompt": "O max_connections é 20, o superuser_reserved_connections é 3 e o reserved_connections é 0. Quantas conexões um papel comum consegue abrir no total?",
+    "hint": "A reserva sai do topo.",
+    "unit": "conexões"
+  },
+  "ex-efttwxp8": {
+    "prompt": "Toda tentativa de conexão, incluindo `sudo -u postgres psql`, agora falha com `sorry, too many clients already`. O que isso diz?",
+    "hint": "Compare com a mensagem que o app recebeu primeiro.",
+    "choices": [
+      {
+        "text": "A autenticação peer está recusando o papel postgres",
+        "why": "Uma autenticação recusada diz Peer authentication failed. Isto é sobre vagas."
+      },
+      {
+        "text": "As vagas reservadas também estão ocupadas",
+        "why": "Isso. Sessões de superusuário as ocuparam, então nem um superusuário tem porta sobrando."
+      },
+      {
+        "text": "O servidor caiu e só o socket ficou, respondendo recusas por ele",
+        "why": "Um servidor parado dá No such file or directory. Algo respondeu com FATAL, então ele está rodando."
+      },
+      {
+        "text": "Só as vagas comuns estão cheias",
+        "why": "Aí um superusuário entraria, e papéis comuns veriam a mensagem das vagas reservadas."
+      }
+    ]
+  },
+  "ex-mhph6jd9": {
+    "prompt": "Nenhuma vaga está livre e você precisa de uma sessão para limpar. Por que `pkill` (SIGTERM) num backend e nunca `kill -9`?",
+    "hint": "O que o postmaster faz quando um backend morre sem arrumar a casa?",
+    "choices": [
+      {
+        "text": "O kill -9 é recusado para processos do postgres",
+        "why": "Com sudo funciona, que é exatamente o perigo."
+      },
+      {
+        "text": "O SIGKILL faz o postmaster reiniciar todo mundo",
+        "why": "Isso. Um backend morto pode ter deixado a memória compartilhada mudada pela metade, então o postmaster trata como uma queda."
+      },
+      {
+        "text": "O SIGTERM é mais rápido",
+        "why": "A velocidade não é a diferença; o que acontece com todas as outras sessões é."
+      },
+      {
+        "text": "O SIGTERM também aumenta o max_connections em um",
+        "why": "Ele só encerra um backend, liberando a vaga dele."
+      }
+    ]
+  },
+  "ex-hg8ab21r": {
+    "prompt": "Na máquina de gravação, aumentar o max_connections de 100 para 1000 levou o shared_memory_size de 143MB para 184MB sem ninguém conectado. Por quê?",
+    "hint": "Quando as vagas são pagas?",
+    "choices": [
+      {
+        "text": "Os shared buffers crescem com o max_connections",
+        "why": "O shared_buffers é uma configuração própria e continuou em 128MB."
+      },
+      {
+        "text": "Cada vaga pré-aloca work_mem para as ordenações futuras",
+        "why": "O work_mem é privado e só é pego quando uma ordenação roda."
+      },
+      {
+        "text": "Cada vaga é reservada na partida",
+        "why": "Isso. Entradas da tabela de locks e a contabilidade de transações são dimensionadas para todo backend possível."
+      },
+      {
+        "text": "Backends ociosos foram iniciados antecipadamente para cada vaga nova, para conectar depois ser mais rápido",
+        "why": "O PostgreSQL não inicia nenhum backend antes de um cliente conectar."
+      }
+    ]
+  },
+  "ex-es7w2pqc": {
+    "prompt": "Em quatro processadores, o pgbench --select-only com 80 clientes fez menos transações por segundo do que com 4, e cada uma demorou muito mais. O que explica isso?",
+    "hint": "Quantos backends conseguem rodar no mesmo instante?",
+    "choices": [
+      {
+        "text": "Só quatro rodam ao mesmo tempo; o resto espera",
+        "why": "Isso. Os backends extras somam troca de contexto e disputa, não vazão."
+      },
+      {
+        "text": "O disco não acompanhou oitenta clientes",
+        "why": "O --select-only lê uma tabela que cabe na memória; o disco sai da conta."
+      },
+      {
+        "text": "O max_connections recusou a maioria dos oitenta",
+        "why": "Ele estava em 1000, e o pgbench não relatou transações com falha."
+      },
+      {
+        "text": "Cada cliente novo deixou os shared buffers menores",
+        "why": "Os shared buffers são fixos na partida e compartilhados por todos."
+      }
+    ]
+  },
+  "ex-kqe8abp3": {
+    "prompt": "Um backend novo informou 1504 kB na pg_backend_memory_contexts e 2154 kB depois do `\\d+ orders`. O que cresceu?",
+    "hint": "O que as consultas por trás do \\d+ leram?",
+    "choices": [
+      {
+        "text": "Os shared buffers",
+        "why": "Os shared buffers não contam nos contextos de memória do próprio backend."
+      },
+      {
+        "text": "Os caches privados do catálogo dele",
+        "why": "Isso. Eles enchem conforme o backend toca tabelas, e não são compartilhados com outros backends."
+      },
+      {
+        "text": "O work_mem, reservado para a próxima ordenação",
+        "why": "Nada é reservado antes; o work_mem é pego enquanto a ordenação roda e devolvido."
+      },
+      {
+        "text": "A memória do postmaster, compartilhada por todas as sessões",
+        "why": "A view informa o backend que a consulta, mais nada."
+      }
+    ]
+  },
+  "ex-3wpgykyh": {
+    "prompt": "O `pg_cancel_backend` numa sessão idle in transaction devolveu `t`, e a sessão continuou idle in transaction. Por quê?",
+    "hint": "Sobre o que um cancelamento age?",
+    "choices": [
+      {
+        "text": "O cancelamento foi recusado porque o app não é superusuário",
+        "why": "Foi mandado por uma superusuária e devolveu t; só não havia nada para cancelar."
+      },
+      {
+        "text": "Ele vale quando o idle_in_transaction_session_timeout expira",
+        "why": "O timeout estava em 0 então, e os dois não têm relação."
+      },
+      {
+        "text": "Ele cancela um comando em execução; não havia nenhum",
+        "why": "Isso. O t só quer dizer que o sinal foi enviado. Encerrar a sessão exige pg_terminate_backend."
+      },
+      {
+        "text": "Os cancelamentos ficam numa fila até o cliente mandar o próximo comando ao servidor",
+        "why": "Não há fila. Um cancelamento interrompe o que está rodando agora, e nada estava."
+      }
+    ]
+  },
+  "ex-4ay8n7t7": {
+    "prompt": "Quais duas coisas uma sessão idle in transaction continua segurando?",
+    "hint": "Uma afeta outros escritores, uma afeta o vacuum.",
+    "choices": [
+      {
+        "text": "Um processador e uma parte dos shared buffers",
+        "why": "Um backend ocioso não usa processador, e os shared buffers não pertencem a uma sessão."
+      },
+      {
+        "text": "O work_mem dele e um segmento de WAL",
+        "why": "Nenhuma ordenação está rodando, e segmentos de WAL pertencem ao servidor, não a uma sessão."
+      },
+      {
+        "text": "Os locks das linhas que mudou, e um snapshot que o vacuum tem de respeitar",
+        "why": "Isso. Quem escreve nessas linhas espera, e o vacuum guarda versões de linha que o snapshot pode precisar."
+      },
+      {
+        "text": "Duas das três vagas reservadas de superusuário, já que foi aberta por um papel com privilégios",
+        "why": "Ela ocupa uma vaga comum, como qualquer sessão de um papel comum."
+      }
+    ]
+  },
+  "ex-q1d484d2": {
+    "prompt": "Para o servidor encerrar as sessões da aplicação que ficam paradas dentro de uma transação inacabada por mais de um minuto: ALTER ROLE app SET ___ = '60s';",
+    "hint": "idle, in, transaction, session, timeout, unidos por sublinhados.",
+    "blanks": [
+      {
+        "accept": [
+          "idle_in_transaction_session_timeout"
+        ]
+      }
+    ]
+  },
+  "ex-eys76vzp": {
+    "prompt": "Por que a lição define o timeout no papel `app`, e não para o servidor inteiro no postgresql.conf?",
+    "hint": "Quem mais abre transações no servidor?",
+    "choices": [
+      {
+        "text": "O parâmetro não pode ser definido no postgresql.conf",
+        "why": "Pode; o contexto dele é user. A lição escolheu o papel de propósito."
+      },
+      {
+        "text": "Para as suas próprias sessões e os trabalhos de manutenção não serem pegos",
+        "why": "Isso. O limite é escolhido a partir das transações da aplicação e deve valer só para ela."
+      },
+      {
+        "text": "Uma configuração de papel vale para sessões já abertas",
+        "why": "O contrário: vale a partir da próxima conexão, e é por isso que a demonstração abriu uma sessão nova."
+      },
+      {
+        "text": "No servidor inteiro, ela também encerraria sessões ociosas sem transação",
+        "why": "Isso é o idle_session_timeout, outro parâmetro."
+      }
+    ]
+  },
+  "ex-skh1mwas": {
+    "prompt": "Com `pgbench --connect`, quatro clientes fizeram centenas de transações por segundo em vez de dezenas de milhares. Pelo que cada transação pagou?",
+    "hint": "O --connect abre uma conexão nova a cada vez.",
+    "choices": [
+      {
+        "text": "Um flush no disco, porque cada conexão confirma",
+        "why": "O --select-only não escreve nada; não havia commit para fazer flush."
+      },
+      {
+        "text": "Um lock na pgbench_accounts",
+        "why": "Leituras pela chave primária não se bloqueiam."
+      },
+      {
+        "text": "Um backend novo: processo, autenticação, caches frios",
+        "why": "Isso. A conexão levou vários milissegundos para uma busca que levava uma fração de um."
+      },
+      {
+        "text": "Um reload do postgresql.conf",
+        "why": "Conectar não faz o servidor ler arquivo de configuração."
+      }
+    ]
+  },
+  "ex-89x9kq73": {
+    "prompt": "O que um pooler como o PgBouncer muda para o servidor?",
+    "hint": "Muitos clientes, poucos backends.",
+    "choices": [
+      {
+        "text": "Ele guarda resultados de consultas para o servidor ser consultado menos vezes pelas mesmas linhas",
+        "why": "Um pooler empresta conexões; ele não guarda resultados."
+      },
+      {
+        "text": "Ele aumenta o max_connections automaticamente",
+        "why": "Ele faz o trabalho oposto: deixa a configuração continuar pequena."
+      },
+      {
+        "text": "Muitos clientes da aplicação se revezam em poucos backends reais do servidor",
+        "why": "Isso. O max_connections pode continuar pequeno enquanto o número de clientes cresce."
+      },
+      {
+        "text": "Ele substitui o postmaster",
+        "why": "O servidor não muda; o pooler fica na frente dele."
+      }
+    ]
+  },
+  "ex-w8m2zwzr": {
+    "prompt": "Por que o `dropuser app` precisou de um `REVOKE` antes?",
+    "hint": "O que o papel ainda tinha?",
+    "choices": [
+      {
+        "text": "Ele ainda tinha uma sessão aberta",
+        "why": "As sessões dele tinham acabado; o obstáculo eram os grants em duas tabelas."
+      },
+      {
+        "text": "O usuário do sistema operacional tinha de sair primeiro",
+        "why": "Os dois são independentes; o userdel veio depois."
+      },
+      {
+        "text": "A configuração de timeout bloqueava a remoção",
+        "why": "Configurações do papel vão junto com ele."
+      },
+      {
+        "text": "Ele ainda tinha privilégios",
+        "why": "Isso. Um papel não pode ser removido enquanto privilégios ou objetos dependem dele; a lição 13 tem o DROP OWNED."
+      }
+    ]
+  },
+  "ex-5ehpyy8h": {
+    "prompt": "Uma aplicação registra `remaining connection slots are reserved for roles with the SUPERUSER attribute`, e a pg_stat_activity mostra 90 sessões dela idle in transaction há horas. Qual é a primeira correção?",
+    "hint": "Aumentar o limite abre espaço para mais do mesmo.",
+    "choices": [
+      {
+        "text": "Aumentar o max_connections para 500",
+        "why": "O vazamento continua, mais memória é reservada, e as sessões ocupadas ficam mais lentas."
+      },
+      {
+        "text": "Encerrá-las e definir um timeout no papel dela",
+        "why": "Isso. As vagas estão ocupadas por sessões sem fazer nada; depois a aplicação precisa ser corrigida para confirmar."
+      },
+      {
+        "text": "Tornar o papel da aplicação superusuário para usar as vagas reservadas",
+        "why": "Aí ele come a reserva também, e ninguém consegue entrar para consertar."
+      },
+      {
+        "text": "Reiniciar o PostgreSQL toda noite",
+        "why": "Limpa o sintoma por algumas horas e corta todas as sessões de uma vez."
+      }
+    ]
+  },
+  "ex-cebczffq": {
+    "prompt": "Todas as vagas estão ocupadas por sessões de superusuário e você precisa entrar sem reiniciar. Ponha os passos em ordem.",
+    "hint": "Primeiro pelo shell, depois SQL.",
+    "items": [
+      "Achar os backends com ps -u postgres",
+      "Mandar SIGTERM para um deles com pkill",
+      "Conectar com psql na vaga liberada",
+      "Encerrar o resto com pg_terminate_backend"
+    ],
+    "trap": "SQL precisa de uma conexão, então a primeira vaga tem de ser liberada pelo shell."
+  },
+  "ex-naq9581g": {
+    "prompt": "Um serviço web abre uma conexão nova com o banco a cada requisição HTTP e a fecha depois. Ele fica lento sob carga, embora os processadores do servidor estejam quase ociosos. O que você sugere?",
+    "hint": "Qual medida da lição se parece com isso?",
+    "choices": [
+      {
+        "text": "Mais shared_buffers, para os backends acharem as linhas que precisam já na memória",
+        "why": "Os processadores estão ociosos e o custo é por conexão; guardar linhas não mexe nisso."
+      },
+      {
+        "text": "Um max_connections maior",
+        "why": "Nada é recusado; cada conexão simplesmente é cara de abrir."
+      },
+      {
+        "text": "Um pool de conexões",
+        "why": "Isso. Esse é o caso do pgbench --connect: o tempo vai em iniciar backends, não em consultas."
+      },
+      {
+        "text": "idle_in_transaction_session_timeout",
+        "why": "As conexões dele fecham logo; nenhuma fica parada numa transação."
+      }
+    ]
+  },
+  "ex-mfn8d87t": {
+    "prompt": "Quais destes crescem quando o max_connections aumenta, mesmo que ninguém conecte? Marque todos que se aplicam.",
+    "hint": "O que é dimensionado por vaga na partida?",
+    "choices": [
+      {
+        "text": "shared_memory_size",
+        "why": "Sim. Foi de 143MB para 184MB entre 100 e 1000."
+      },
+      {
+        "text": "A capacidade da tabela de locks",
+        "why": "Sim. Ela é dimensionada por backend possível."
+      },
+      {
+        "text": "shared_buffers",
+        "why": "Não. É uma configuração própria e fica onde está."
+      },
+      {
+        "text": "O número de processos backend",
+        "why": "Não. Um backend só existe enquanto um cliente está conectado."
+      },
+      {
+        "text": "work_mem",
+        "why": "Não. É um teto por operação, sem relação com o número de vagas."
+      }
+    ]
+  },
+  "ex-679g2fc6": {
+    "prompt": "Passar de 100 para 1000 vagas levou o shared_memory_size de 143MB para 184MB. Mais ou menos quantos kB isso dá por vaga acrescentada? (1 MB = 1024 kB)",
+    "hint": "41 MB divididos por 900 vagas.",
+    "unit": "kB"
+  },
+  "ex-715ywdbz": {
+    "prompt": "O que o `*` no prompt `shop=*>` diz?",
+    "hint": "Ele apareceu logo depois do BEGIN.",
+    "choices": [
+      {
+        "text": "O psql está dentro de uma transação que ainda não foi confirmada",
+        "why": "Isso. Vale notar nas suas próprias sessões antes de sair de perto de uma."
+      },
+      {
+        "text": "O papel é superusuário",
+        "why": "O prompt de um superusuário termina em #; o do app termina em >."
+      },
+      {
+        "text": "Um comando falhou",
+        "why": "Uma transação com falha mostra !, como em shop=!>."
+      },
+      {
+        "text": "A conexão foi reiniciada",
+        "why": "Depois do reset o psql voltou a shop=> sem transação."
+      }
+    ]
+  }
+}

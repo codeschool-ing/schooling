@@ -1,0 +1,384 @@
+{
+ "ex-ry3fe4k7": {
+  "prompt": "charge(due, back) respondeu 200, 200 e depois 400 com as mesmas duas datas. Por quê?",
+  "choices": [
+   {
+    "text": "Ela lê uma global que foi reatribuída entre as chamadas",
+    "why": "Isso. daily_fine virou 100, e charge depende dela embora a assinatura não diga."
+   },
+   {
+    "text": "As datas são comparadas de outro jeito na terceira chamada",
+    "why": "Aritmética de datas é determinística; os argumentos foram idênticos toda vez."
+   },
+   {
+    "text": "Acrescentar em fines_charged dobra o resultado seguinte",
+    "why": "O registro é escrito, nunca lido, por charge; foi a taxa global que mudou."
+   }
+  ]
+ },
+ "ex-w386d3pt": {
+  "prompt": "Quais destas funções são puras? Marque todas que se aplicam.",
+  "choices": [
+   {
+    "text": "fine(due, returned, daily=50), que devolve um número de centavos",
+    "why": "Isso. Toda a entrada está na assinatura e ela não muda nada."
+   },
+   {
+    "text": "Uma função que devolve os empréstimos que vencem antes de date.today()",
+    "why": "Ela lê o relógio, então a mesma chamada responde diferente em outro dia."
+   },
+   {
+    "text": "notices(loans, today), que acrescenta numa lista que ela criou e a devolve",
+    "why": "Isso. A lista nasce dentro da chamada; ninguém de fora a vê mudar."
+   },
+   {
+    "text": "Uma função que ordena no lugar a lista que recebeu e devolve None",
+    "why": "Quem chama ainda guarda essa lista, então a mutação escapa."
+   }
+  ]
+ },
+ "ex-jspt8gx9": {
+  "prompt": "Poder trocar uma chamada como fine(due, back) pelo seu valor em qualquer lugar sem mudar o programa se chama transparência ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "referencial",
+     "referential"
+    ]
+   }
+  ]
+ },
+ "ex-nj3c3754": {
+  "prompt": "Depois de renew_in_place(first), a lista do histórico mostra 30 de março como vencimento. Por quê?",
+  "choices": [
+   {
+    "text": "O histórico foi impresso depois de uma segunda renovação",
+    "why": "Houve uma renovação; o histórico só guarda o mesmo objeto."
+   },
+   {
+    "text": "O Python copia objetos para dentro de listas e renew_in_place atualizou a cópia também",
+    "why": "O Python nunca copia no append; ele guarda uma referência, que é o bug inteiro."
+   },
+   {
+    "text": "O histórico guardava uma referência ao empréstimo, não uma cópia",
+    "why": "Isso. Todo mundo que guarda o objeto vê a edição, então o registro ficou falso."
+   }
+  ]
+ },
+ "ex-rz9vzw4g": {
+  "prompt": "Member é uma dataclass congelada com titles: list[str]. bia.titles.append(\"Dom Casmurro\") funciona. Qual correção a seção dá?",
+  "choices": [
+   {
+    "text": "Guardar uma tupla, para o valor ser imutável de cima até o fundo",
+    "why": "Isso. Um objeto congelado só é tão imutável quanto o que guarda; tupla não tem append."
+   },
+   {
+    "text": "Pôr frozen=True uma segunda vez, no campo",
+    "why": "frozen é opção da classe; protege os campos de reatribuição e nada mais fundo."
+   },
+   {
+    "text": "Nada: dataclasses congeladas copiam as listas a cada acesso",
+    "why": "Nenhuma cópia é feita; o append mudou a única lista que o membro guarda."
+   }
+  ]
+ },
+ "ex-898j52zj": {
+  "prompt": "O que replace(loan, due=new_date) faz com o empréstimo original?",
+  "choices": [
+   {
+    "text": "Nada; devolve um Loan novo com aquele campo trocado",
+    "why": "Isso. O valor antigo fica intocado, e é por isso que o histórico manteve 16 de março."
+   },
+   {
+    "text": "Edita o vencimento no lugar, contornando o frozen",
+    "why": "Nunca edita; uma instância congelada recusa atribuição até da própria biblioteca."
+   },
+   {
+    "text": "Faz cópia profunda de cada campo, inclusive a string do título, para memória nova",
+    "why": "Os campos são copiados por referência: o empréstimo novo compartilha o título com o antigo."
+   }
+  ]
+ },
+ "ex-6xqxb09t": {
+  "prompt": "Em core.py e shell.py, onde date.today() pode ser chamado?",
+  "choices": [
+   {
+    "text": "Em days_late, onde a data é necessária",
+    "why": "Isso tornaria o núcleo impuro e os testes dependentes do calendário."
+   },
+   {
+    "text": "Só na casca",
+    "why": "Isso. O núcleo recebe today como argumento; a casca lê o relógio ou a linha de comando."
+   },
+   {
+    "text": "Nos dois, desde que os resultados sejam iguais",
+    "why": "Ler o relógio no núcleo é a impureza que a divisão existe para tirar."
+   }
+  ]
+ },
+ "ex-hss6hnqy": {
+  "prompt": "Ponha em ordem o que main() em shell.py faz.",
+  "items": [
+   "Ler a data e carregar os empréstimos",
+   "Chamar o núcleo para decidir os avisos",
+   "Gravar os avisos em outbox.txt",
+   "Imprimir quantos foram gravados"
+  ],
+  "trap": "O núcleo fica no meio: ler, decidir, gravar. Nada é gravado antes de a decisão existir."
+ },
+ "ex-582xpge6": {
+  "prompt": "O remind da lição 13 recebia uma função send; core.notices devolve valores Notice. Quando a lição diz que a injeção ainda é necessária?",
+  "choices": [
+   {
+    "text": "Sempre que houver testes, já que valores não podem ser afirmados",
+    "why": "Valores são o mais fácil de afirmar; test_core.py faz exatamente isso."
+   },
+   {
+    "text": "Nunca; devolver valores sempre a substitui",
+    "why": "Nem sempre: alguns núcleos precisam agir no meio do trabalho."
+   },
+   {
+    "text": "Quando o núcleo precisa agir no meio, digamos ler um registro dependendo de outro",
+    "why": "Isso. Um núcleo cujo trabalho termina numa decisão pode devolvê-la; um que precisa de um efeito no meio precisa recebê-lo."
+   }
+  ]
+ },
+ "ex-xs9k8q2h": {
+  "prompt": "gentle = pipeline(per_day(50), capped(500)). Quanto é gentle(12), em centavos?",
+  "hint": "pipeline aplica os passos da esquerda para a direita.",
+  "unit": "centavos"
+ },
+ "ex-gf5k6zgg": {
+  "prompt": "Dentro de per_day, a fine devolvida ainda sabe cents depois que per_day retornou. Como isso se chama?",
+  "choices": [
+   {
+    "text": "Uma variável global",
+    "why": "cents é local a uma chamada de per_day; per_day(50) e per_day(100) guardam cada um o seu."
+   },
+   {
+    "text": "Um campo de dataclass congelada definido quando a função foi criada",
+    "why": "Nenhuma classe está envolvida; funções capturam variáveis sozinhas."
+   },
+   {
+    "text": "Um closure",
+    "why": "Isso. A função de dentro captura a variável da chamada que a criou."
+   }
+  ]
+ },
+ "ex-7t776vfp": {
+  "prompt": "Uma interface FinePolicy tem um método e nenhum estado, com uma classe por política. O que a seção sugere?",
+  "choices": [
+   {
+    "text": "Trocar as classes por funções, que já são a strategy",
+    "why": "Isso. O ponto de Norvig: quando funções são valores, vários padrões encolhem para uma linha."
+   },
+   {
+    "text": "Manter as classes: uma strategy precisa ser classe para ser padrão",
+    "why": "O padrão é a ideia de trocar o algoritmo; a classe é um jeito de guardá-la."
+   },
+   {
+    "text": "Juntar todas as políticas numa função com um if por política",
+    "why": "Isso traz de volta o switch que a lição 14 tirou."
+   }
+  ]
+ },
+ "ex-wbmzj7bh": {
+  "prompt": "Depois de reduce consumir fines, list(fines) imprimiu []. Por quê?",
+  "choices": [
+   {
+    "text": "map devolve um iterador preguiçoso, e o reduce já o tinha esgotado",
+    "why": "Isso. Iteradores entregam cada valor uma vez; faça uma lista antes se precisar dele duas vezes."
+   },
+   {
+    "text": "reduce esvazia qualquer lista que recebe, para economizar memória",
+    "why": "reduce não modifica uma lista; fines nunca foi lista."
+   },
+   {
+    "text": "filter removeu todos os empréstimos na segunda passada",
+    "why": "Não há segunda passada: os iteradores já estavam esgotados."
+   }
+  ]
+ },
+ "ex-zsvrcp6q": {
+  "prompt": "Associe cada parte da compreensão sum(days_late(l) * 50 for l in LOANS if days_late(l) > 0) ao trabalho que ela faz.",
+  "pairs": [
+   {
+    "left": "if days_late(l) > 0",
+    "right": "filter"
+   },
+   {
+    "left": "days_late(l) * 50",
+    "right": "map"
+   },
+   {
+    "left": "sum(...)",
+    "right": "reduce"
+   }
+  ]
+ },
+ "ex-m0varshz": {
+  "prompt": "Uma pessoa vinda do TypeScript escreve late = filter(...) em Python e depois percorre late duas vezes. O que acontece no segundo laço?",
+  "choices": [
+   {
+    "text": "Os mesmos itens, como com array.filter no TypeScript",
+    "why": "Esse é o comportamento do TypeScript; o filter do Python é preguiçoso e de uso único."
+   },
+   {
+    "text": "Um TypeError, porque um iterador não pode ser percorrido duas vezes",
+    "why": "Nada é lançado; o segundo laço só não acha nada, o que é pior."
+   },
+   {
+    "text": "Nenhum item, em silêncio",
+    "why": "Isso. O primeiro laço esgotou o iterador, e um iterador esgotado não entrega nada sem reclamar."
+   }
+  ]
+ },
+ "ex-3y1r8qkm": {
+  "prompt": "Por que parse_loan devolve Err para uma linha ruim em vez de lançar exceção?",
+  "choices": [
+   {
+    "text": "Lançar exceções é mais lento que retornar em Python",
+    "why": "Velocidade não é o argumento; a falha ser um resultado esperado é."
+   },
+   {
+    "text": "date.fromisoformat não lança, então não há exceção para repassar",
+    "why": "Lança ValueError para 30 de fevereiro; parse_loan a captura e a transforma num Err."
+   },
+   {
+    "text": "match só funciona com valores, nunca com exceções",
+    "why": "Verdade sobre o match, mas a escolha do Result veio antes e por outro motivo."
+   },
+   {
+    "text": "Uma linha ruim é esperada, e a importação precisa relatar cada uma delas",
+    "why": "Isso. Erros devolvidos são dados; o laço continua e imprime três erros em cinco linhas."
+   }
+  ]
+ },
+ "ex-jcnz8e20": {
+  "prompt": "O arquivo de configuração que dá nome ao banco está faltando na inicialização. Seguindo a tabela da seção, o que o código deve fazer?",
+  "choices": [
+   {
+    "text": "Lançar, e deixar o programa parar com barulho",
+    "why": "Isso. Configuração faltando não é algo que quem chama trata no dia a dia; deve quebrar onde alguém vai ver."
+   },
+   {
+    "text": "Devolver Err em toda função até main, camada por camada",
+    "why": "Devolvê-lo por todas as camadas é o ruído contra o qual a tabela alerta."
+   },
+   {
+    "text": "Devolver um Ok com nome de banco vazio e seguir",
+    "why": "Isso esconde a falha num valor que mente, o pior dos dois mundos."
+   }
+  ]
+ },
+ "ex-hwm5tffy": {
+  "prompt": "O que um verificador de tipos como o mypy acrescenta ao tipo de retorno Ok | Err?",
+  "choices": [
+   {
+    "text": "Converte exceções em valores Err automaticamente",
+    "why": "Um verificador não muda nada em execução; parse_loan faz a conversão."
+   },
+   {
+    "text": "Roda parse_loan em linhas de exemplo para achar falhas",
+    "why": "O mypy lê o código, não o executa."
+   },
+   {
+    "text": "Recusa .value até o código conferir qual caso tem nas mãos",
+    "why": "Isso. O caso de falha precisa ser tratado antes de o código passar na verificação."
+   }
+  ]
+ },
+ "ex-p8aeh8dw": {
+  "prompt": "Associe cada linguagem a onde a imutabilidade dela para.",
+  "pairs": [
+   {
+    "left": "Python",
+    "right": "Um objeto congelado que guarda uma lista ainda pode ter a lista mudada"
+   },
+   {
+    "left": "Java",
+    "right": "final impede reatribuição, não a mutação do que o campo aponta"
+   },
+   {
+    "left": "Go",
+    "right": "Uma cópia de struct ainda compartilha os slices e maps de dentro"
+   },
+   {
+    "left": "TypeScript",
+    "right": "readonly só é conferido na compilação"
+   }
+  ]
+ },
+ "ex-kg2ewe7w": {
+  "prompt": "Um revisor de Go pede para trocar uma cadeia de auxiliares genéricos Map e Filter por um laço simples. Como a lição lê isso?",
+  "choices": [
+   {
+    "text": "Como uma falha do seu projeto que o laço vai corrigir",
+    "why": "O projeto pode ser igualmente funcional com um laço; o pedido é sobre idioma."
+   },
+   {
+    "text": "Como a cultura da linguagem: o laço é o idioma do Go",
+    "why": "Isso. O Go nunca adotou map e filter como estilo, e funções puras continuam dentro do laço."
+   },
+   {
+    "text": "Como prova de que Go não consegue passar funções como valores",
+    "why": "O Go tem closures desde o começo."
+   }
+  ]
+ },
+ "ex-sn137bnt": {
+  "prompt": "Um colega embrulha uma função de multa impura com functools.cache \"para ganhar velocidade\". O que dá errado?",
+  "choices": [
+   {
+    "text": "Nada; cache funciona igual em qualquer função",
+    "why": "Só funciona se a resposta depender apenas dos argumentos."
+   },
+   {
+    "text": "Devolve respostas velhas quando a entrada escondida muda por fora",
+    "why": "Isso. Um charge em cache continuaria respondendo 200 depois de a taxa virar 100, e sem registrar nada."
+   },
+   {
+    "text": "O Python se recusa a fazer cache de uma função que lê uma global",
+    "why": "O Python não consegue saber; pureza é uma disciplina que ele não confere."
+   }
+  ]
+ },
+ "ex-0cj4hjp8": {
+  "prompt": "Um lote de avisos precisa sair às 08:00 a partir de uma lista de empréstimos que duas threads seguram. Que projeto mantém as garantias desta lição?",
+  "choices": [
+   {
+    "text": "Cada thread renova empréstimos no lugar e quem envia lê a lista compartilhada",
+    "why": "Mutação de objetos compartilhados é exatamente o problema de apelido; quem envia pode ver meia renovação."
+   },
+   {
+    "text": "Uma função notices que chama date.today() e manda cada e-mail conforme decide",
+    "why": "Isso mistura o relógio, a decisão e o efeito, que núcleo e casca separam."
+   },
+   {
+    "text": "Empréstimos congelados, um notices(loans, today) puro, e o envio na casca",
+    "why": "Isso. Valores imutáveis são seguros para compartilhar, a decisão é pura, e o único efeito fica na borda."
+   }
+  ]
+ },
+ "ex-75d7jxnp": {
+  "prompt": "pipeline(capped(500), per_day(50)) é aplicado a 15 dias. O que devolve, e por quê?",
+  "choices": [
+   {
+    "text": "500, porque o teto sempre vence",
+    "why": "A ordem importa: aqui o teto roda primeiro, sobre os dias."
+   },
+   {
+    "text": "Um erro, porque capped espera centavos",
+    "why": "Os dois são ints; nada confere a unidade, e é por isso que a ordem é fácil de errar."
+   },
+   {
+    "text": "25000, porque os passos rodam da direita para a esquerda como na matemática",
+    "why": "Da direita para a esquerda limitaria 750 a 500, não daria 25000; e este pipeline roda da esquerda para a direita."
+   },
+   {
+    "text": "750: o teto encontra 15 dias, não centavos, e deixa passar",
+    "why": "Isso. Da esquerda para a direita, min(15, 500) é 15, depois 15 * 50 é 750."
+   }
+  ]
+ }
+}

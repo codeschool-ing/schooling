@@ -1,0 +1,622 @@
+[
+  {
+    "id": "ex-m6xdw5bd",
+    "version": 1,
+    "section": "documents-and-bson",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does MongoDB store a document as on disk and on the wire?",
+    "choices": [
+      {
+        "text": "BSON, a binary encoding with more types than JSON has",
+        "correct": true,
+        "why": "Right. Dates, 32- and 64-bit integers, Decimal128 and ObjectId are BSON types JSON lacks."
+      },
+      {
+        "text": "JSON text, compressed",
+        "correct": false,
+        "why": "mongosh prints something JSON-like, but the stored form is binary and typed."
+      },
+      {
+        "text": "Rows of a hidden table, one column per field seen so far",
+        "correct": false,
+        "why": "There is no table behind a collection; each document carries its own fields and types."
+      },
+      {
+        "text": "JavaScript source code that mongosh evaluates when it reads",
+        "correct": false,
+        "why": "mongosh speaks JavaScript; the server stores data, not programs."
+      }
+    ]
+  },
+  {
+    "id": "ex-103rheyx",
+    "version": 1,
+    "section": "documents-and-bson",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In mongosh you insert `{ views: 12345678901 }`. What BSON type does `views` get?",
+    "hint": "It does not fit in 32 bits.",
+    "choices": [
+      {
+        "text": "long, because the number is whole",
+        "correct": false,
+        "why": "mongosh does not promote a large whole number to a 64-bit integer; that takes NumberLong."
+      },
+      {
+        "text": "double",
+        "correct": true,
+        "why": "Right. Only whole numbers that fit in 32 bits go as int; the rest are doubles, exact only up to 2^53."
+      },
+      {
+        "text": "int, truncated to the largest 32-bit value",
+        "correct": false,
+        "why": "Nothing is truncated; the value becomes a double."
+      },
+      {
+        "text": "decimal, since doubles cannot hold eleven digits",
+        "correct": false,
+        "why": "A double holds eleven digits exactly; decimal is used only when you ask for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjkerwkv",
+    "version": 1,
+    "section": "documents-and-bson",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customer accounts get ObjectIds, and the account page's URL is `/account/<id>`. What does a stranger learn from one such URL?",
+    "hint": "Read the first four bytes.",
+    "choices": [
+      {
+        "text": "Nothing: the id is random from the first byte to the last, like a token",
+        "correct": false,
+        "why": "Only five of the twelve bytes are random, and they are the same for every id from one process."
+      },
+      {
+        "text": "The customer's e-mail, encoded in the middle bytes",
+        "correct": false,
+        "why": "No field of the document goes into its ObjectId."
+      },
+      {
+        "text": "Its creation time, to the second, and a guess at its neighbours",
+        "correct": true,
+        "why": "Right. The timestamp is readable and the counter is sequential, so an ObjectId is no substitute for a random token."
+      },
+      {
+        "text": "The server's address, which the client stamps in every id",
+        "correct": false,
+        "why": "The 5-byte part is a random value per process, not an address."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9vgwyn0",
+    "version": 1,
+    "section": "documents-and-bson",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes long is an ObjectId?",
+    "hint": "It prints as 24 hexadecimal digits.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-x3d85kas",
+    "version": 1,
+    "section": "documents-and-bson",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `NumberDecimal(349.90 * 3)` give `Decimal128('1049.6999999999998')`?",
+    "choices": [
+      {
+        "text": "Decimal128 has too few digits for that value",
+        "correct": false,
+        "why": "It has 34 significant digits; the error was already in its input."
+      },
+      {
+        "text": "The multiplication ran as doubles before the decimal was built from the result",
+        "correct": true,
+        "why": "Right. Build the decimal from a string, NumberDecimal(\"349.90\"), and multiply on the server."
+      },
+      {
+        "text": "The server rounds decimals to two places on insert",
+        "correct": false,
+        "why": "Nothing was inserted, and the server does not round decimals that way."
+      },
+      {
+        "text": "mongosh treats a decimal as a string until it is stored",
+        "correct": false,
+        "why": "The value was a number when it reached NumberDecimal; that is what the warning was about."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tg0h63p",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application runs `updateOne({ _id: orderId }, { $set: { status: \"paid\" } })` and treats the absence of an exception as success. What does it report when `orderId` names no order?",
+    "hint": "Look at what the server answered for `_id: 22`.",
+    "choices": [
+      {
+        "text": "That it was paid: matchedCount 0 is not an error",
+        "correct": true,
+        "why": "Right. An update that matches nothing is a successful update of nothing; the count is the only signal."
+      },
+      {
+        "text": "An error, because the server refuses updates to missing documents",
+        "correct": false,
+        "why": "The server raised nothing; it answered acknowledged: true."
+      },
+      {
+        "text": "A new order, since updateOne inserts when nothing matches",
+        "correct": false,
+        "why": "Only with upsert: true does an update insert."
+      },
+      {
+        "text": "A timeout, while the server waits for the order to appear",
+        "correct": false,
+        "why": "The server answers at once; it does not wait for a matching document."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j5k3mhn",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `updateOne({ _id: 1 }, { status: \"shipped\" })` refused?",
+    "choices": [
+      {
+        "text": "Order 1 had no status field yet",
+        "correct": false,
+        "why": "It had one, and $set would create one anyway."
+      },
+      {
+        "text": "Status changes need a multi-document transaction",
+        "correct": false,
+        "why": "A single-document update is atomic without one."
+      },
+      {
+        "text": "It had no `$` operator, so it would replace the whole order",
+        "correct": true,
+        "why": "Right. Without the check it would mean replacing the order with { status: \"shipped\" } and losing the rest."
+      },
+      {
+        "text": "`shipped` is not a value the collection's rules allow for status",
+        "correct": false,
+        "why": "There was no validator on orders; the refusal came from mongosh itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7bdx9eq",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A restocking job runs `updateOne({ _id: \"LS-050\" }, { $set: { name: \"Laptop stand\" }, $inc: { stock: 5 } }, { upsert: true })`. Its first attempt times out on the client, though the server applied it, and the job retries. What is the stock?",
+    "hint": "The second call of the capture is this retry.",
+    "choices": [
+      {
+        "text": "5, because an upsert is idempotent",
+        "correct": false,
+        "why": "It is only idempotent with operators like $set; $inc adds again."
+      },
+      {
+        "text": "10",
+        "correct": true,
+        "why": "Right. The retry matched the document the first attempt created and added 5 again."
+      },
+      {
+        "text": "An E11000 error, because the first attempt already inserted LS-050",
+        "correct": false,
+        "why": "An upsert that finds the document updates it; only a plain insert collides."
+      },
+      {
+        "text": "0, since a timed-out write is rolled back by the server",
+        "correct": false,
+        "why": "The server does not know the client gave up; the write stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-8c7np3py",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two clients run `updateOne({ _id: \"MN-330\" }, { $inc: { stock: -1 } })` at the same moment, with stock at 1. What is the stock afterwards?",
+    "choices": [
+      {
+        "text": "0, because the second decrement read the old value",
+        "correct": false,
+        "why": "That is what read-subtract-write in the application does; $inc is applied by the server to the current value."
+      },
+      {
+        "text": "-1",
+        "correct": true,
+        "why": "Right. Each $inc is atomic on the document; preventing a negative needs a filter such as stock: { $gt: 0 }."
+      },
+      {
+        "text": "1, because conflicting updates cancel each other",
+        "correct": false,
+        "why": "Neither update is cancelled; both are applied, one after the other."
+      },
+      {
+        "text": "An error for one of them, since stock cannot go below zero",
+        "correct": false,
+        "why": "Nothing forbade a negative stock; a validator with minimum: 0 would, and the validation section adds one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rf4mfd0",
+    "version": 1,
+    "section": "crud",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Complete the filter that finds the orders with a line for the cable: `db.orders.find({ \"___\": \"CB-012\" })`.",
+    "hint": "A dotted path into the array of lines.",
+    "blanks": [
+      {
+        "accept": [
+          "items.sku"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-cmb5zea8",
+    "version": 1,
+    "section": "crud",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`db.products.insertOne({ _id: \"KB-101\", ... })` is refused with E11000. What enforced it?",
+    "choices": [
+      {
+        "text": "A validator the products collection was created with",
+        "correct": false,
+        "why": "No validator existed yet; E11000 is a duplicate key, not a failed rule."
+      },
+      {
+        "text": "The unique index on `_id` every collection has",
+        "correct": true,
+        "why": "Right. It cannot be dropped, and it is the one constraint MongoDB enforces unasked."
+      },
+      {
+        "text": "mongosh, which remembers the ids it has inserted",
+        "correct": false,
+        "why": "A new mongosh session was refused just the same; the check is on the server."
+      },
+      {
+        "text": "A foreign key from orders to products",
+        "correct": false,
+        "why": "MongoDB has no foreign keys."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6swsjtt",
+    "version": 1,
+    "section": "schema-anyway",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A product's price was imported as the string `\"79.90\"`. Why does `find({ price: { $lt: NumberDecimal(\"100\") } })` leave it out?",
+    "choices": [
+      {
+        "text": "Values compare by type first, and no string sits in a numeric range",
+        "correct": true,
+        "why": "Right. The query does not fail; it returns a shorter list."
+      },
+      {
+        "text": "The string is compared letter by letter, and \"7\" comes after \"1\" in that order",
+        "correct": false,
+        "why": "A string is not compared with a number at all."
+      },
+      {
+        "text": "The query raises a type error, which mongosh hides",
+        "correct": false,
+        "why": "No error is raised; a find simply does not match across types."
+      },
+      {
+        "text": "Strings are not indexed, so the query skips them",
+        "correct": false,
+        "why": "There is no index here, and strings can be indexed."
+      }
+    ]
+  },
+  {
+    "id": "ex-na689w4f",
+    "version": 1,
+    "section": "schema-anyway",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these products in the order `find().sort({ price: 1 })` returns them.",
+    "hint": "A missing field sorts like null; strings sort after numbers.",
+    "items": [
+      "Webcam, with no price field",
+      "USB-C cable, price Decimal128 39.90",
+      "27-inch monitor, price Decimal128 1499.00",
+      "Memory card, price the string \"79.90\""
+    ],
+    "trap": "The memory card is the cheapest and still comes last."
+  },
+  {
+    "id": "ex-ems6h1za",
+    "version": 1,
+    "section": "schema-anyway",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A developer types `db.prodcuts.insertOne(...)`. What does the server do?",
+    "choices": [
+      {
+        "text": "Refuses it, because `prodcuts` does not exist",
+        "correct": false,
+        "why": "A first write creates the collection it names."
+      },
+      {
+        "text": "Suggests `products` and waits for confirmation",
+        "correct": false,
+        "why": "The server has no spelling suggestions."
+      },
+      {
+        "text": "Writes the document into `products`, the closest name",
+        "correct": false,
+        "why": "Names are matched exactly."
+      },
+      {
+        "text": "Creates a collection called `prodcuts` and stores the document there",
+        "correct": true,
+        "why": "Right, acknowledged: true. Only the list of collection names shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk7m2s0d",
+    "version": 1,
+    "section": "schema-anyway",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You inherit a collection of 2 million orders and are told every `total` is a decimal. Which one query tests the claim and tells you how far it is wrong?",
+    "choices": [
+      {
+        "text": "`find({ total: { $type: \"decimal\" } }).count()`",
+        "correct": false,
+        "why": "It counts the good ones and says nothing about which other types are there, missing included."
+      },
+      {
+        "text": "`aggregate([{ $group: { _id: { $type: \"$total\" }, n: { $sum: 1 } } }])`",
+        "correct": true,
+        "why": "Right. One row per type, missing included, with how many of each: the census."
+      },
+      {
+        "text": "`findOne()`, read by a person",
+        "correct": false,
+        "why": "One document proves nothing about two million."
+      },
+      {
+        "text": "`find({ total: { $exists: false } })`",
+        "correct": false,
+        "why": "That finds the missing ones only, not the strings or doubles."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t39ch5r",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `$jsonSchema` validator is added with `collMod` to a collection where two documents already break it. What happens to those two?",
+    "choices": [
+      {
+        "text": "collMod is refused until they are fixed, naming both of them",
+        "correct": false,
+        "why": "It answered { ok: 1 }; existing documents are not checked."
+      },
+      {
+        "text": "They are deleted",
+        "correct": false,
+        "why": "A validator never removes data."
+      },
+      {
+        "text": "They stay, and the rule applies from the next write",
+        "correct": true,
+        "why": "Right. Finding them is a $nor query around the validator."
+      },
+      {
+        "text": "They are converted to the types the schema names",
+        "correct": false,
+        "why": "Nothing is converted; the string price stayed a string until $set changed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqjr91pj",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Under `validationLevel: \"strict\"`, an update that only does `$inc: { stock: -1 }` is refused. Which document was it applied to?",
+    "hint": "Strict checks the document the update leaves behind.",
+    "choices": [
+      {
+        "text": "One whose stock would have gone below zero",
+        "correct": false,
+        "why": "That is possible, but the capture's refusal was about price, a field the update never touched."
+      },
+      {
+        "text": "One already invalid elsewhere, such as a string price",
+        "correct": true,
+        "why": "Right. Strict checks the whole resulting document; moderate lets updates to already-invalid documents through."
+      },
+      {
+        "text": "One created before the validator existed, whatever it holds now",
+        "correct": false,
+        "why": "A valid old document updates without trouble; age is not what is checked."
+      },
+      {
+        "text": "Any document, because strict refuses every update",
+        "correct": false,
+        "why": "Strict refuses only updates that leave an invalid document."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcyzcdat",
+    "version": 1,
+    "section": "validation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each validator setting to what an invalid write does under it.",
+    "hint": "One behaviour belongs to none of them.",
+    "pairs": [
+      {
+        "left": "validationAction: \"error\"",
+        "right": "refused, with the failed rule in the error"
+      },
+      {
+        "left": "validationAction: \"warn\"",
+        "right": "accepted, and a line in the server's log"
+      },
+      {
+        "left": "validationLevel: \"moderate\"",
+        "right": "an update to an already-invalid document goes through"
+      }
+    ],
+    "right_distractors": [
+      "the document is fixed to match the schema"
+    ]
+  },
+  {
+    "id": "ex-dk9mevdh",
+    "version": 1,
+    "section": "validation",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of rolling a validator out on a busy collection in order.",
+    "items": [
+      "add the rule with validationAction \"warn\"",
+      "read the log to learn which programs write invalid documents",
+      "repair the documents until the $nor census is empty",
+      "switch to validationLevel \"strict\" and validationAction \"error\""
+    ],
+    "trap": "Refusing first breaks the programs you have not found yet."
+  },
+  {
+    "id": "ex-0j7tr8wa",
+    "version": 1,
+    "section": "validation",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these does a `$jsonSchema` validator on `products` give you? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "An error at the moment a program writes a string price",
+        "correct": true,
+        "why": "Yes, whichever program it is."
+      },
+      {
+        "text": "A refusal of writes to a misspelt collection such as `prodcuts`",
+        "correct": false,
+        "why": "The validator belongs to products; prodcuts is another collection with no rule."
+      },
+      {
+        "text": "The details of which rule failed and the type it saw",
+        "correct": true,
+        "why": "Yes: propertyName, specifiedAs, consideredType."
+      },
+      {
+        "text": "A check of the documents stored before the rule existed",
+        "correct": false,
+        "why": "Old documents are not checked; the $nor census is how you find them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bc46k6w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report sums `total` across all orders and comes out a few cents off the accounting system. The totals are all numbers. What is the likeliest cause, given this lesson?",
+    "choices": [
+      {
+        "text": "Some totals are strings and were skipped by the sum",
+        "correct": false,
+        "why": "The question says they are all numbers; a skipped string would be off by whole prices, not cents."
+      },
+      {
+        "text": "The totals are doubles, and binary fractions do not add up to exact cents",
+        "correct": true,
+        "why": "Right. Store money as Decimal128 built from strings, or as integer cents."
+      },
+      {
+        "text": "Dates are in UTC, so a day's orders fall into the wrong report",
+        "correct": false,
+        "why": "That would move whole orders between days, not cents across the total."
+      },
+      {
+        "text": "ObjectIds sort by time, so the newest orders were not yet counted",
+        "correct": false,
+        "why": "A sum does not depend on order, and these orders have integer ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwmdf6z9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to what most likely caused it.",
+    "pairs": [
+      {
+        "left": "a product missing from \"under 100\"",
+        "right": "its price is stored as a string"
+      },
+      {
+        "left": "a product sorted before the cheapest one",
+        "right": "its price field is misspelt, so price is missing"
+      },
+      {
+        "left": "an update reporting matchedCount: 0",
+        "right": "the filter names a document that does not exist"
+      },
+      {
+        "left": "a stock of 10 after one restock of 5",
+        "right": "an upsert with $inc was retried"
+      }
+    ]
+  }
+]

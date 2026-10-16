@@ -1,0 +1,597 @@
+[
+  {
+    "id": "ex-pt74x422",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client sends `SET order:1002 paid` straight to a replica. What happens?",
+    "choices": [
+      {
+        "text": "The replica forwards it to the primary and answers `OK`",
+        "correct": false,
+        "why": "Redis replicas do not forward; the client has to find the primary."
+      },
+      {
+        "text": "It is refused with `READONLY`",
+        "correct": true,
+        "why": "Right. A replica is read-only by default, so it cannot hold data its primary never saw."
+      },
+      {
+        "text": "It is stored on the replica and copied back to the primary later",
+        "correct": false,
+        "why": "Replication runs one way only, from primary to replica."
+      },
+      {
+        "text": "It is queued until the replica is promoted",
+        "correct": false,
+        "why": "Nothing queues it; the error comes at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qdkqb91",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The primary reports `master_repl_offset` 5000 and a replica reports `slave_repl_offset` 4200. What does that say?",
+    "choices": [
+      {
+        "text": "The replica has 800 bytes of writes it has not received yet",
+        "correct": true,
+        "why": "Right. Equal offsets mean the replica has everything; the gap is how far behind it is."
+      },
+      {
+        "text": "The replica has 800 keys fewer than the primary",
+        "correct": false,
+        "why": "Offsets count bytes of the replication stream, not keys."
+      },
+      {
+        "text": "The replica is 800 milliseconds behind",
+        "correct": false,
+        "why": "The unit is bytes; lag in seconds is a separate field."
+      },
+      {
+        "text": "The replica has disconnected and will need a full copy of the dataset when it returns",
+        "correct": false,
+        "why": "A small gap is the normal state of an asynchronous replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-wbzrdngn",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a replica not a backup?",
+    "choices": [
+      {
+        "text": "A replica cannot be read from",
+        "correct": false,
+        "why": "It answered `GET` in the lesson."
+      },
+      {
+        "text": "A replica keeps only the last hour of writes",
+        "correct": false,
+        "why": "It holds the whole dataset."
+      },
+      {
+        "text": "A mistake on the primary reaches every replica within milliseconds",
+        "correct": true,
+        "why": "Right, a `FLUSHALL` included. A backup is a copy that a mistake does not reach: lesson 13's files, kept elsewhere."
+      },
+      {
+        "text": "A replica stores its data in a format the primary cannot load back after a crash",
+        "correct": false,
+        "why": "Same format; that is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-0j716wth",
+    "version": 1,
+    "section": "sentinel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson run three Sentinels with a quorum of 2, rather than one?",
+    "choices": [
+      {
+        "text": "One Sentinel cannot tell a dead primary from its own lost link",
+        "correct": true,
+        "why": "Right, and it would be a single point of failure. A majority that agrees is what makes a failover trustworthy."
+      },
+      {
+        "text": "Each Sentinel watches one replica, and there are three servers",
+        "correct": false,
+        "why": "Every Sentinel watches the whole set."
+      },
+      {
+        "text": "A Sentinel can only promote a replica on its own machine",
+        "correct": false,
+        "why": "It promotes over the network, any replica."
+      },
+      {
+        "text": "Three Sentinels make failover three times faster",
+        "correct": false,
+        "why": "Speed comes from `down-after-milliseconds`; more Sentinels add agreement, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nzrycda",
+    "version": 1,
+    "section": "sentinel",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `sentinel down-after-milliseconds shop 5000`, how many seconds must the primary be silent before a Sentinel considers it down?",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-adn3t5ra",
+    "version": 1,
+    "section": "sentinel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a failover, the old primary `redis-1` is started again. What does it become?",
+    "choices": [
+      {
+        "text": "The primary again, because its name is in the Sentinel configuration",
+        "correct": false,
+        "why": "Sentinel rewrote its file when the primary changed; the old name is history."
+      },
+      {
+        "text": "A replica of the new primary, by Sentinel's instruction",
+        "correct": true,
+        "why": "Right. Two primaries for one dataset is what failover must never produce."
+      },
+      {
+        "text": "A second primary, until somebody demotes it by hand",
+        "correct": false,
+        "why": "Sentinel reconfigured it as soon as it could reach it."
+      },
+      {
+        "text": "Nothing: it refuses to start until its data is deleted",
+        "correct": false,
+        "why": "It starts, and then resynchronises from the new primary."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ph4ha5s",
+    "version": 1,
+    "section": "sentinel",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application is configured with `redis-1:6379` as its Redis address. Sentinel fails over to `redis-3`. What does the application see?",
+    "hint": "Who knows that the primary moved?",
+    "choices": [
+      {
+        "text": "Nothing: Sentinel moves the address `redis-1` to the new server",
+        "correct": false,
+        "why": "Sentinel moves the role, not names or addresses."
+      },
+      {
+        "text": "Errors until `redis-1` returns, then `READONLY` errors on writes, because `redis-1` comes back as a replica",
+        "correct": true,
+        "why": "Right. A client has to ask a Sentinel for the primary of `shop`, not hold an address."
+      },
+      {
+        "text": "A short pause, then its writes go to `redis-3` on their own",
+        "correct": false,
+        "why": "Nothing redirects a client that never asked Sentinel."
+      },
+      {
+        "text": "A `MOVED` error pointing at `redis-3`",
+        "correct": false,
+        "why": "`MOVED` is Redis Cluster's redirection; Sentinel has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bedy0sb",
+    "version": 1,
+    "section": "sentinel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does each Sentinel in the lesson get its own copy of `sentinel.conf`, in its own directory?",
+    "choices": [
+      {
+        "text": "Each Sentinel rewrites its file as it learns about replicas, other Sentinels and the primary",
+        "correct": true,
+        "why": "Right. One shared file would be rewritten by three processes at once."
+      },
+      {
+        "text": "Each file names a different primary to watch",
+        "correct": false,
+        "why": "All three files are identical when they start: same `monitor` line."
+      },
+      {
+        "text": "Docker cannot mount one file into three containers",
+        "correct": false,
+        "why": "It can; the problem is three writers, not the mount."
+      },
+      {
+        "text": "The quorum is counted by the number of files",
+        "correct": false,
+        "why": "The quorum is the number in the `monitor` line."
+      }
+    ]
+  },
+  {
+    "id": "ex-zshkwqg9",
+    "version": 1,
+    "section": "losing-a-write",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lesson, order 2002 was written to the primary after it was cut off from the network, and answered `OK`. Where is it after the network heals?",
+    "choices": [
+      {
+        "text": "On the old primary only, which now disagrees with the others",
+        "correct": false,
+        "why": "The old primary became a replica and flushed its data on the full resync."
+      },
+      {
+        "text": "Nowhere",
+        "correct": true,
+        "why": "Right. The promoted replica never had it, and the old primary threw it away when it rejoined."
+      },
+      {
+        "text": "On every server, merged in when the old primary rejoined",
+        "correct": false,
+        "why": "Redis does not merge two histories; the new primary's dataset wins whole."
+      },
+      {
+        "text": "In the Sentinels' logs, from which it can be replayed",
+        "correct": false,
+        "why": "Sentinels log events about servers, never data."
+      }
+    ]
+  },
+  {
+    "id": "ex-mk2q6s82",
+    "version": 1,
+    "section": "losing-a-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client runs `SET order:2004 paid` and then `WAIT 1 2000`, which answers `0`. What is true of order 2004?",
+    "choices": [
+      {
+        "text": "It was rolled back, since no replica confirmed it",
+        "correct": false,
+        "why": "`WAIT` undoes nothing; `GET` still found it on the primary."
+      },
+      {
+        "text": "It is on the primary and on no replica, so a failover now would lose it",
+        "correct": true,
+        "why": "Right. The application now knows the write is at risk, and can say so instead of confirming the order."
+      },
+      {
+        "text": "It is safe: `WAIT` keeps retrying in the background until a replica has it",
+        "correct": false,
+        "why": "`WAIT` only reports; replication carries on as before, and the partition stops it."
+      },
+      {
+        "text": "It was refused with `NOREPLICAS`",
+        "correct": false,
+        "why": "The `SET` answered `OK`; the refusal came later, once the lag passed 10 seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-wx8s7jjz",
+    "version": 1,
+    "section": "losing-a-write",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A primary has `min-replicas-to-write 1` and `min-replicas-max-lag 10`. It is cut off from both replicas at 12:00:00. For at most about how many seconds can it go on accepting writes that will be lost?",
+    "hint": "When does the primary start refusing?",
+    "value": 10,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-85bbrt3e",
+    "version": 1,
+    "section": "losing-a-write",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team lowers `min-replicas-max-lag` from 10 to 1 to shrink the window. What do they pay for it?",
+    "choices": [
+      {
+        "text": "Nothing: a lower lag is strictly safer",
+        "correct": false,
+        "why": "Safer for consistency, and paid in availability."
+      },
+      {
+        "text": "Every write now waits for a replica before answering",
+        "correct": false,
+        "why": "Writes still answer at once; only the refusal rule changed."
+      },
+      {
+        "text": "Sentinel fails over more often",
+        "correct": false,
+        "why": "Sentinel's timing is `down-after-milliseconds`, a separate setting."
+      },
+      {
+        "text": "The primary refuses writes during ordinary network hiccups too",
+        "correct": true,
+        "why": "Right. A one-second gap in the replicas' acknowledgements is now enough to stop writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-29zqnvkc",
+    "version": 1,
+    "section": "cluster",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many hash slots does Redis Cluster divide the key space into?",
+    "value": 16384,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-14330607",
+    "version": 1,
+    "section": "cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`redis-cli` without `-c` sends `SET product:KB-101 34990` to node 1 and gets `MOVED 14967 172.18.0.4:6379`. What happened to the write?",
+    "choices": [
+      {
+        "text": "Node 1 stored it and forwarded a copy to the owner",
+        "correct": false,
+        "why": "Nodes do not forward commands; they tell the client where to go."
+      },
+      {
+        "text": "Nothing was written; the client must send it to the node that owns slot 14967",
+        "correct": true,
+        "why": "Right. With `-c`, `redis-cli` follows the redirection itself."
+      },
+      {
+        "text": "It was written to slot 14967 on node 1, which from now on owns that slot and answers for it",
+        "correct": false,
+        "why": "Slots move only by resharding, never because a client wrote to the wrong node."
+      },
+      {
+        "text": "The cluster is broken and needs `--cluster fix`",
+        "correct": false,
+        "why": "`MOVED` is the normal answer of a healthy cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-f9gfjbz9",
+    "version": 1,
+    "section": "cluster",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To keep `cart:ana:items` and `cart:ana:total` in one slot, the keys are renamed so that both contain `___cart:ana}`, and only that part is hashed.",
+    "hint": "One character.",
+    "blanks": [
+      {
+        "accept": [
+          "{"
+        ],
+        "ignore_case": false,
+        "ignore_accents": false
+      }
+    ]
+  },
+  {
+    "id": "ex-spgmwh0k",
+    "version": 1,
+    "section": "cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer puts every customer's cart under the hash tag `{carts}` so that a Lua script can update any two carts together. What goes wrong as the shop grows?",
+    "choices": [
+      {
+        "text": "The script is refused with `CROSSSLOT`",
+        "correct": false,
+        "why": "Every key is in one slot, so the script runs; that was the point."
+      },
+      {
+        "text": "Every cart lands in one slot on one node, which takes all the load and memory",
+        "correct": true,
+        "why": "Right. A hash tag that groups too much is the hot partition of lesson 3."
+      },
+      {
+        "text": "Carts are copied to every node, multiplying memory by three",
+        "correct": false,
+        "why": "A slot lives on one primary and its replica, not everywhere."
+      },
+      {
+        "text": "The braces make the keys expire with the hash tag",
+        "correct": false,
+        "why": "A hash tag only chooses the slot."
+      }
+    ]
+  },
+  {
+    "id": "ex-cjce21x6",
+    "version": 1,
+    "section": "cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson, the node that owned `product:KB-101`'s slot was stopped. Who took over its slots, and with what?",
+    "choices": [
+      {
+        "text": "Its replica, promoted by the other primaries",
+        "correct": true,
+        "why": "Right, with the data it had replicated. The price was still there; a write not yet replicated would not have been."
+      },
+      {
+        "text": "A Sentinel, which promoted the nearest replica",
+        "correct": false,
+        "why": "A cluster runs no Sentinel; its primaries vote."
+      },
+      {
+        "text": "The other two primaries, which split its slots between them so that the load stays even",
+        "correct": false,
+        "why": "Slots move to the replica; other primaries take none without a reshard."
+      },
+      {
+        "text": "Nobody: those slots refuse every request until the stopped node is started again",
+        "correct": false,
+        "why": "That happens only to slots with no replica left."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pd7mqy8",
+    "version": 1,
+    "section": "which-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's Redis holds a few gigabytes and one server handles its writes easily. It must survive the loss of a machine. Which fits?",
+    "choices": [
+      {
+        "text": "Redis Cluster with three primaries",
+        "correct": false,
+        "why": "It buys capacity the shop does not need, and forbids multi-key operations across slots."
+      },
+      {
+        "text": "A primary, two replicas and three Sentinels",
+        "correct": true,
+        "why": "Right. High availability of a dataset that fits one machine is Sentinel's case."
+      },
+      {
+        "text": "One Redis with the append-only file and `appendfsync always`",
+        "correct": false,
+        "why": "It survives a restart, not the loss of its machine."
+      },
+      {
+        "text": "A primary and one replica, failed over by hand",
+        "correct": false,
+        "why": "It works only when somebody is awake to do it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2spa4bm6",
+    "version": 1,
+    "section": "which-one",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each property to Sentinel or Cluster.",
+    "pairs": [
+      {
+        "left": "clients follow `MOVED` redirections",
+        "right": "Cluster"
+      },
+      {
+        "left": "clients ask for the primary of `shop`",
+        "right": "Sentinel"
+      },
+      {
+        "left": "acknowledged writes can be lost in a failover",
+        "right": "both"
+      }
+    ],
+    "right_distractors": [
+      "neither"
+    ]
+  },
+  {
+    "id": "ex-zw75480m",
+    "version": 1,
+    "section": "which-one",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these stop working, or need changes, when an application moves from Sentinel to Cluster? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A Lua script that updates a customer's cart and a stock counter together",
+        "correct": true,
+        "why": "Right. The two keys are in different slots unless tagged together."
+      },
+      {
+        "text": "`SELECT 2` to keep test data apart",
+        "correct": true,
+        "why": "Right. A cluster has database 0 only."
+      },
+      {
+        "text": "`INCR` on a single counter",
+        "correct": false,
+        "why": "One key is always in one slot."
+      },
+      {
+        "text": "Reading a hash with `HGETALL`",
+        "correct": false,
+        "why": "A hash is one key."
+      }
+    ]
+  },
+  {
+    "id": "ex-71pd7gbw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's lost write in order.",
+    "items": [
+      "The primary is cut off from the network",
+      "The primary answers `OK` to order 2002",
+      "The Sentinels agree it is down and promote a replica",
+      "The network heals and the old primary becomes a replica",
+      "A full resync flushes order 2002 from the old primary"
+    ],
+    "trap": "The promotion happens while the old primary is still accepting writes."
+  },
+  {
+    "id": "ex-3v54kjv7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment must never be confirmed and then lost. Which arrangement does the lesson point to?",
+    "choices": [
+      {
+        "text": "Redis with Sentinel and `WAIT 2 1000` after every payment",
+        "correct": false,
+        "why": "`WAIT` reports and does not prevent; a failover can still lose an acknowledged write."
+      },
+      {
+        "text": "Redis Cluster, since each slot has its own replica",
+        "correct": false,
+        "why": "Cluster replication is asynchronous too."
+      },
+      {
+        "text": "A store that acknowledges only after a majority has the write, such as a MongoDB replica set with majority write concern",
+        "correct": true,
+        "why": "Right. Redis can hand the work out; the record of a payment lives where acknowledgement means a majority."
+      },
+      {
+        "text": "Redis with `min-replicas-max-lag 1`",
+        "correct": false,
+        "why": "It shrinks the window to about a second; it does not close it."
+      }
+    ]
+  }
+]

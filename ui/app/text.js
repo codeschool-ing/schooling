@@ -147,8 +147,10 @@ const WINDOW_DOTS = '<span class="win-dots" aria-hidden="true"><i></i><i></i><i>
 
 /* `user@host:path$ ` and `PS <path>> `, which is every prompt the catalogue
    writes. The bare `$ ` has no machine in it and falls through to the shell's
-   own name, which is the only true thing left to say about it. */
-const TAB_UNIX = /^([\w.-]+)@([\w.-]+):(\S*?)[$#] /;
+   own name, which is the only true thing left to say about it. An active
+   virtual environment puts its name in front, `(.venv) ana@lab:~/pydata$ `,
+   and the tab still reads the machine behind it. */
+const TAB_UNIX = /^(?:\([\w.-]+\) )?([\w.-]+)@([\w.-]+):(\S*?)[$#] /;
 const TAB_POWERSHELL = /^(PS [^>\n]*)> /;
 const SHELLS = new Set(['sh', 'bash', 'zsh', 'shell', 'console', 'terminal']);
 
@@ -604,6 +606,24 @@ const RULES = {
       begin commit rollback transaction grant revoke and or count sum avg min max`,
   }),
 
+  /* DAX, the formula language of Power Pivot and Power BI. A single quote
+     names a TABLE there ('Sales'[Bags]), so only the double quote is a string,
+     and `--` is a comment as well as `//`. */
+  dax: language({
+    line: ['//', '--'],
+    quotes: ['"'],
+    keywords: `var return define evaluate measure column table order by asc desc true false
+      not in`,
+  }),
+
+  /* Power Query's M. `#"Changed Type"` is a quoted NAME, and it is coloured
+     as the string it is spelt with. */
+  powerquery: language({
+    quotes: ['"'],
+    keywords: `let in each if then else try otherwise type meta and or not true false null as
+      is section shared error`,
+  }),
+
   r: language({
     line: ['#'],
     block: null,
@@ -747,6 +767,7 @@ const ALIAS = {
   toml: 'ini', conf: 'ini', cfg: 'ini', properties: 'ini',
   vimrc: 'vim',
   tf: 'hcl', terraform: 'hcl',
+  m: 'powerquery', pq: 'powerquery',
   bash: 'sh', zsh: 'sh', shell: 'sh', console: 'sh', terminal: 'sh',
 };
 
@@ -792,7 +813,7 @@ export const LANGUAGES = Object.keys(COMPILED).concat(Object.keys(ALIAS)).sort()
    rule would find. What is coloured is the line the student typed; the prompt
    is dimmed to the colour of a comment, because that is what it is, chrome in
    front of the command. */
-const PROMPT = /^(?:[\w.-]+@[\w.-]+:\S*[$#]|PS [^>\n]*>|\$) /;
+const PROMPT = /^(?:(?:\([\w.-]+\) )?[\w.-]+@[\w.-]+:\S*[$#]|PS [^>\n]*>|\$) /;
 
 /* Read twice: here to decide how to colour the block, and by `codeBar` above to
    decide what to write on its tab. */

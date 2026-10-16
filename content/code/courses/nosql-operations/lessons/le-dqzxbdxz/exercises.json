@@ -1,0 +1,629 @@
+[
+  {
+    "id": "ex-1am52pxg",
+    "version": 1,
+    "section": "mongodump",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a `.metadata.json` file in a `mongodump` directory hold about the collection's indexes?",
+    "choices": [
+      {
+        "text": "Their definitions",
+        "correct": true,
+        "why": "Right. The index itself is built again from the documents on every restore."
+      },
+      {
+        "text": "The index files, compressed so the restore can skip building them",
+        "correct": false,
+        "why": "A few hundred bytes cannot hold an index over 100,000 orders; only the description is there."
+      },
+      {
+        "text": "Nothing: indexes are not part of a dump at all",
+        "correct": false,
+        "why": "The restore printed `restoring indexes ... from metadata`, so the definitions travel."
+      },
+      {
+        "text": "How many times each index was used since the server started",
+        "correct": false,
+        "why": "Usage statistics are not backed up; they belong to the running server."
+      }
+    ]
+  },
+  {
+    "id": "ex-93zdd55w",
+    "version": 1,
+    "section": "mongodump",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did this lesson's server have to be a replica set, even with one member?",
+    "choices": [
+      {
+        "text": "Because `mongodump` refuses to connect to a standalone server",
+        "correct": false,
+        "why": "A plain dump works against a standalone; the option that needs more is `--oplog`."
+      },
+      {
+        "text": "Because `--oplog` reads the oplog, and only a replica-set member keeps one",
+        "correct": true,
+        "why": "Right. That is the only reason; nothing here needs a second copy."
+      },
+      {
+        "text": "Because a named volume can be mounted only by a replica set",
+        "correct": false,
+        "why": "Volumes do not care what runs on them; the snapshot copy ran as a standalone."
+      },
+      {
+        "text": "Because MongoDB 8.0 runs every server as a replica set",
+        "correct": false,
+        "why": "Lesson 1's `mongo` was a standalone server."
+      }
+    ]
+  },
+  {
+    "id": "ex-zg4hm9nk",
+    "version": 1,
+    "section": "mongodump",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dump without `--oplog` copied `payments` at 20:15:11.762 and finished `orders` at 20:15:12.073, while writes went on. What is wrong with restoring it as it is?",
+    "hint": "When was each collection true?",
+    "choices": [
+      {
+        "text": "Nothing, because a dump locks the database while it runs",
+        "correct": false,
+        "why": "The payments kept arriving during the dump; nothing was locked."
+      },
+      {
+        "text": "The orders would be missing their indexes",
+        "correct": false,
+        "why": "Index definitions travel with or without `--oplog`."
+      },
+      {
+        "text": "Each collection reflects a different moment, so the restore shows a state that never existed",
+        "correct": true,
+        "why": "Right. `--oplog` and `--oplogReplay` bring every collection to the end of the dump."
+      },
+      {
+        "text": "The archive would be too large to copy out with `docker cp`",
+        "correct": false,
+        "why": "Size has nothing to do with it; the problem is time."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxxzrbq1",
+    "version": 1,
+    "section": "mongodump",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To restore a dump taken with `--oplog` to the moment it ended, `mongorestore` is given the option `--___`.",
+    "hint": "Replay what was recorded.",
+    "blanks": [
+      {
+        "accept": [
+          "oplogReplay"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1ae3b28b",
+    "version": 1,
+    "section": "snapshot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `db.fsyncLock()` run before the `tar` of the volume?",
+    "choices": [
+      {
+        "text": "So that no file changed while the copy was being made",
+        "correct": true,
+        "why": "Right. A file-by-file copy of a changing server can be a state that never existed."
+      },
+      {
+        "text": "So that `tar` could read files owned by the `mongodb` user inside the volume",
+        "correct": false,
+        "why": "The throwaway container ran as root and could read them anyway; the lock is about change."
+      },
+      {
+        "text": "So that the copy would leave the indexes out and come out smaller",
+        "correct": false,
+        "why": "The snapshot carried the indexes; that is why it was nearly six times the dump."
+      },
+      {
+        "text": "So that clients would be disconnected before the backup",
+        "correct": false,
+        "why": "Clients stay connected; their writes wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttyhp68e",
+    "version": 1,
+    "section": "snapshot",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The snapshot archive was 4,687,568 bytes and the dump archive 810,350 bytes. How many times larger is the snapshot? One decimal place.",
+    "value": 5.8,
+    "tolerance": 0.1
+  },
+  {
+    "id": "ex-7ktqs0fr",
+    "version": 1,
+    "section": "snapshot",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a replica set of three, where should the lock and the file copy go, and why?",
+    "choices": [
+      {
+        "text": "On the primary, since it has the newest data",
+        "correct": false,
+        "why": "Locking the primary stops every write in the application for the length of the copy."
+      },
+      {
+        "text": "On all three at once, so the copies agree",
+        "correct": false,
+        "why": "With every member locked nothing can be written, which is the outage this avoids."
+      },
+      {
+        "text": "On a secondary: the primary keeps working and the secondary catches up afterwards",
+        "correct": true,
+        "why": "Right, from the oplog, once it is unlocked."
+      },
+      {
+        "text": "Nowhere: on a replica set the files can be copied without a lock",
+        "correct": false,
+        "why": "Each member's files change while it runs, replica set or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-0kedk93q",
+    "version": 1,
+    "section": "snapshot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The snapshot copy was started without `--replSet`. Why?",
+    "choices": [
+      {
+        "text": "It names `mongo:27017` as the only member, and the copy is not it",
+        "correct": true,
+        "why": "Right. Started as a standalone it reads the files, and the log says they belong to a set."
+      },
+      {
+        "text": "A snapshot drops the replica-set configuration, so there is nothing to join",
+        "correct": false,
+        "why": "The log line shows the configuration is still in the files."
+      },
+      {
+        "text": "A standalone server starts faster",
+        "correct": false,
+        "why": "Speed is not the reason; identity is."
+      },
+      {
+        "text": "`--replSet` cannot be combined with a named volume",
+        "correct": false,
+        "why": "The original server used both."
+      }
+    ]
+  },
+  {
+    "id": "ex-6171e759",
+    "version": 1,
+    "section": "not-equivalent",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job to the tool or option in this lesson that does it.",
+    "hint": "One tool does none of them.",
+    "pairs": [
+      {
+        "left": "writes documents and index definitions out",
+        "right": "mongodump"
+      },
+      {
+        "left": "brings every collection of a dump to one moment",
+        "right": "--oplogReplay"
+      },
+      {
+        "left": "makes the data files hold still while they are copied",
+        "right": "db.fsyncLock()"
+      },
+      {
+        "left": "restores a snapshot",
+        "right": "starting a mongod on the files"
+      }
+    ],
+    "right_distractors": [
+      "refineCollectionShardKey"
+    ]
+  },
+  {
+    "id": "ex-khcftnv2",
+    "version": 1,
+    "section": "not-equivalent",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A collection of 400 GB with six indexes has to come back within an hour of a disaster. Which backup can promise that, and how would you know?",
+    "hint": "Which restore does work in proportion to data times indexes?",
+    "choices": [
+      {
+        "text": "The dump, because it is smaller and copies faster",
+        "correct": false,
+        "why": "Copying is the cheap half; inserting 400 GB and building six indexes is the expensive one."
+      },
+      {
+        "text": "Either one, since both restored 100,000 orders in about two seconds",
+        "correct": false,
+        "why": "At 100,000 orders everything is fast; the two scale differently."
+      },
+      {
+        "text": "A snapshot is the likelier one, and only a timed restore of that size settles it",
+        "correct": true,
+        "why": "Right. The reasoning points at the snapshot; the drill is what makes it a promise."
+      },
+      {
+        "text": "Neither, because MongoDB cannot restore anything above 100 GB",
+        "correct": false,
+        "why": "There is no such limit; the question is time."
+      }
+    ]
+  },
+  {
+    "id": "ex-zd2fpqt6",
+    "version": 1,
+    "section": "not-equivalent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a `mongodump` taken through `mongos` not represent one moment of the sharded cluster?",
+    "choices": [
+      {
+        "text": "Each shard is copied at its own pace and there is no single oplog to replay",
+        "correct": true,
+        "why": "Right, so `--oplog` is not available there."
+      },
+      {
+        "text": "`mongos` caches old documents and returns them during the dump",
+        "correct": false,
+        "why": "`mongos` stores nothing; it routes."
+      },
+      {
+        "text": "The balancer deletes chunks while they are being dumped",
+        "correct": false,
+        "why": "Moving data is a separate risk; the main problem is no common moment across shards."
+      },
+      {
+        "text": "The config server refuses reads during a dump",
+        "correct": false,
+        "why": "It does not; the dump reads it like any other server."
+      }
+    ]
+  },
+  {
+    "id": "ex-fned068x",
+    "version": 1,
+    "section": "not-equivalent",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the two copies keeps the oplog and the journal?",
+    "choices": [
+      {
+        "text": "The dump, inside its archive",
+        "correct": false,
+        "why": "The dump keeps only the oplog entries written during the dump, not the server's oplog."
+      },
+      {
+        "text": "The file snapshot",
+        "correct": true,
+        "why": "Right: it copies everything under `/data/db`."
+      },
+      {
+        "text": "Both, since each restored every collection with every index",
+        "correct": false,
+        "why": "The dump rebuilt the indexes; it did not carry the server's files."
+      },
+      {
+        "text": "Neither, because those are recreated whenever a server starts",
+        "correct": false,
+        "why": "The snapshot carried them, which is part of why it was larger."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdm3pt5x",
+    "version": 1,
+    "section": "restore-drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the restore, `payments` held 142 documents and the original 500. What does the gap measure?",
+    "choices": [
+      {
+        "text": "A restore that failed halfway",
+        "correct": false,
+        "why": "The log reported 0 failures and every other collection matched."
+      },
+      {
+        "text": "The writes made after the dump ended, which no backup taken then could hold",
+        "correct": true,
+        "why": "Right. It is what a restore loses, and it says how often backups have to run."
+      },
+      {
+        "text": "Payments the oplog replay applied twice",
+        "correct": false,
+        "why": "Applying entries cannot leave fewer documents; the restore has fewer, not more."
+      },
+      {
+        "text": "Documents that `mongodump` skipped because the collection was locked while it ran",
+        "correct": false,
+        "why": "Nothing was locked during the dump."
+      }
+    ]
+  },
+  {
+    "id": "ex-h91kw7er",
+    "version": 1,
+    "section": "restore-drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the drill restore into a container that has never seen the shop?",
+    "choices": [
+      {
+        "text": "Because `mongorestore` refuses to write into a database that already exists",
+        "correct": false,
+        "why": "It writes into existing databases; that is exactly what would hide a broken backup."
+      },
+      {
+        "text": "So nothing already there makes the restore look better than it is",
+        "correct": true,
+        "why": "Right. A collection already present would pass a check the backup alone would fail."
+      },
+      {
+        "text": "To get a newer MongoDB version",
+        "correct": false,
+        "why": "Both use `mongo:8.0`."
+      },
+      {
+        "text": "Because the original's volume is still locked",
+        "correct": false,
+        "why": "It was unlocked right after the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghrrvdtf",
+    "version": 1,
+    "section": "restore-drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order did `mongorestore --oplogReplay` do its work?",
+    "choices": [
+      {
+        "text": "Indexes, then documents, then the oplog",
+        "correct": false,
+        "why": "Building indexes first would make every insert slower; the log shows them last."
+      },
+      {
+        "text": "Documents, then the oplog entries, then the indexes",
+        "correct": true,
+        "why": "Right: `finished restoring`, `applied 26 oplog entries`, `restoring indexes`."
+      },
+      {
+        "text": "The oplog first, so the documents land already up to date",
+        "correct": false,
+        "why": "Entries are replayed on top of the documents, so the documents come first."
+      },
+      {
+        "text": "All three at once, one collection at a time",
+        "correct": false,
+        "why": "The log shows three phases across all collections."
+      }
+    ]
+  },
+  {
+    "id": "ex-ayc9pfvs",
+    "version": 1,
+    "section": "restore-drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the restore drill in order.",
+    "items": [
+      "Start a server that has never seen the data",
+      "Copy the archive into it",
+      "Run `mongorestore --oplogReplay`",
+      "Compare counts and indexes against the source",
+      "Record the time and every difference"
+    ],
+    "trap": "A comparison needs something restored to compare."
+  },
+  {
+    "id": "ex-ayke2b1q",
+    "version": 1,
+    "section": "restore-drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The data of the `mongo` container survives `docker rm` because it lives in a named ___.",
+    "hint": "`-v mongo-data:/data/db`",
+    "blanks": [
+      {
+        "accept": [
+          "volume"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0bkyb65v",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of the two backups in this lesson? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The dump restore built the indexes from the documents",
+        "correct": true,
+        "why": "Right: `restoring indexes ... from metadata`."
+      },
+      {
+        "text": "The snapshot was taken while the server kept accepting writes",
+        "correct": false,
+        "why": "Writes were blocked by `fsyncLock` for the length of the copy."
+      },
+      {
+        "text": "The dump held payments written while it ran, thanks to the oplog",
+        "correct": true,
+        "why": "Right: 119 copied, 142 after the replay."
+      },
+      {
+        "text": "Either file, kept inside the container, survives `docker rm -f mongo`",
+        "correct": false,
+        "why": "A file inside a container goes with it; that is why the archive was copied out."
+      }
+    ]
+  },
+  {
+    "id": "ex-ng39hm60",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team runs `mongodump` every night and has never restored one. What do they actually know?",
+    "choices": [
+      {
+        "text": "That they can recover from any disaster",
+        "correct": false,
+        "why": "A backup nobody restored has not shown it can be restored."
+      },
+      {
+        "text": "That a command ran",
+        "correct": true,
+        "why": "Right, and nothing about whether the data comes back, or how long it takes."
+      },
+      {
+        "text": "How long a restore takes, from the dump's own duration",
+        "correct": false,
+        "why": "A dump's duration says little about a restore that also builds every index."
+      },
+      {
+        "text": "That their indexes are safe, since the metadata is in the dump",
+        "correct": false,
+        "why": "Definitions are there; whether they build, and in what time, is untested."
+      }
+    ]
+  },
+  {
+    "id": "ex-4afckp4f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop can afford to lose at most fifteen minutes of orders. What does that decide about its dumps?",
+    "hint": "What did the 142 against 500 measure?",
+    "choices": [
+      {
+        "text": "Each dump has to finish in under fifteen minutes",
+        "correct": false,
+        "why": "Duration matters less than the gap between one backup and the next."
+      },
+      {
+        "text": "The dumps have to use `--gzip`",
+        "correct": false,
+        "why": "Compression changes size, not what is lost."
+      },
+      {
+        "text": "Nothing, since `--oplog` already makes a dump lossless",
+        "correct": false,
+        "why": "It makes a dump consistent at its end; writes after that are still lost."
+      },
+      {
+        "text": "A backup has to complete at least every fifteen minutes",
+        "correct": true,
+        "why": "Right. What a restore loses is everything written after the last backup ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-6wb601gr",
+    "version": 1,
+    "section": "snapshot",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the snapshot written by a throwaway container rather than by `docker exec` into the server's own container?",
+    "choices": [
+      {
+        "text": "So the archive lands on the VM, outside the server's container",
+        "correct": true,
+        "why": "Right. A backup kept inside the container it protects is lost with it."
+      },
+      {
+        "text": "The server's container has no `tar` of its own to make the archive with",
+        "correct": false,
+        "why": "Both run the same image, `mongo:8.0`, which has `tar`."
+      },
+      {
+        "text": "`docker exec` cannot run inside a container while `fsyncLock` holds its writes",
+        "correct": false,
+        "why": "`docker exec` ran `fsyncUnlock` while the lock held."
+      },
+      {
+        "text": "A throwaway container copies faster",
+        "correct": false,
+        "why": "Speed is the same; the point is where the file ends up."
+      }
+    ]
+  },
+  {
+    "id": "ex-knhpbekn",
+    "version": 1,
+    "section": "mongodump",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was the archive copied out of the container with `docker cp` right after the dump?",
+    "choices": [
+      {
+        "text": "To compress it",
+        "correct": false,
+        "why": "`--gzip` had already compressed it."
+      },
+      {
+        "text": "A backup inside the container it protects is lost with it",
+        "correct": true,
+        "why": "Right. `docker rm -f mongo` would take the server and its only backup together."
+      },
+      {
+        "text": "Because `mongorestore` can only read archives from the VM's disk, never from a container",
+        "correct": false,
+        "why": "It ran inside a container, reading `/tmp/shop.archive.gz` there."
+      },
+      {
+        "text": "Because the archive is deleted automatically as soon as the dump finishes",
+        "correct": false,
+        "why": "It stays where it was written until something removes it."
+      }
+    ]
+  }
+]

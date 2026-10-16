@@ -1,0 +1,701 @@
+[
+  {
+    "id": "ex-2dsz10ae",
+    "version": 1,
+    "section": "postgresql-conf",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`work_mem` showed `4MB`, yet it is not among the 25 active lines of Ubuntu's `postgresql.conf`. Where does the 4MB come from?",
+    "hint": "What applies when no file sets a parameter?",
+    "choices": [
+      {
+        "text": "From the commented-out line `#work_mem = 4MB`",
+        "correct": false,
+        "why": "A comment is ignored by the server. It documents the default; it does not set it."
+      },
+      {
+        "text": "From a file in conf.d that the package installed",
+        "correct": false,
+        "why": "The directory was empty: `ls -l` printed `total 0`."
+      },
+      {
+        "text": "The default compiled into the PostgreSQL server",
+        "correct": true,
+        "why": "Right. Any parameter no file sets keeps its built-in default."
+      },
+      {
+        "text": "From postgresql.auto.conf in the data directory",
+        "correct": false,
+        "why": "That file held only its two comment lines until ALTER SYSTEM wrote to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-axsxja7p",
+    "version": 1,
+    "section": "postgresql-conf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You add `shared_buffers = 512MB` to `conf.d/10-memory.conf`, while line 130 of `postgresql.conf` still says `128MB`. After a restart, which value does the server use?",
+    "hint": "Where is `include_dir` in the main file, and which value wins?",
+    "choices": [
+      {
+        "text": "128MB, because the main file outranks the files it includes",
+        "correct": false,
+        "why": "There is no rank between files, only order. The include comes at the end, so it is read last."
+      },
+      {
+        "text": "Neither: the server refuses to start with a parameter set twice",
+        "correct": false,
+        "why": "A name set twice is allowed and silent. That is exactly why it is a hazard."
+      },
+      {
+        "text": "512MB",
+        "correct": true,
+        "why": "Right. conf.d is read after the main file, and the last value read for a name wins."
+      },
+      {
+        "text": "The smaller of the two, as a safety measure",
+        "correct": false,
+        "why": "The server does not compare values. The later line simply replaces the earlier one."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2t7z4qy",
+    "version": 1,
+    "section": "postgresql-conf",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In postgresql.conf, `shared_buffers = 128mb` is an error, because memory units are case-sensitive: the correct spelling is 128___.",
+    "hint": "Megabytes, as the file's header spells it.",
+    "blanks": [
+      {
+        "accept": [
+          "MB"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-b34vt8w9",
+    "version": 1,
+    "section": "pg-settings",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pg_settings` shows `shared_buffers` with setting `16384` and unit `8kB`. How much memory is that?",
+    "hint": "Multiply by the unit.",
+    "choices": [
+      {
+        "text": "16 MB",
+        "correct": false,
+        "why": "That reads 16384 as kilobytes. The unit is 8 kB pages."
+      },
+      {
+        "text": "128 MB",
+        "correct": true,
+        "why": "Right: 16384 × 8 kB, the same value SHOW printed."
+      },
+      {
+        "text": "16384 MB",
+        "correct": false,
+        "why": "That ignores the unit column altogether."
+      },
+      {
+        "text": "8 GB",
+        "correct": false,
+        "why": "That multiplies by 8 MB instead of 8 kB."
+      }
+    ]
+  },
+  {
+    "id": "ex-khpnc0yv",
+    "version": 1,
+    "section": "pg-settings",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `context` to what a new value takes before it applies.",
+    "hint": "The column answers: what does it take to change this?",
+    "pairs": [
+      {
+        "left": "postmaster",
+        "right": "a restart of the server"
+      },
+      {
+        "left": "sighup",
+        "right": "a reload of the configuration"
+      },
+      {
+        "left": "user",
+        "right": "a SET in the session, by anybody"
+      },
+      {
+        "left": "internal",
+        "right": "nothing will change it on this cluster"
+      }
+    ],
+    "right_distractors": [
+      "a new connection to the database, as a superuser"
+    ]
+  },
+  {
+    "id": "ex-r01qw1qh",
+    "version": 1,
+    "section": "pg-settings",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`data_directory` is written in `postgresql.conf`, yet `pg_settings` says its source is `override`. Why?",
+    "hint": "Look at the command line in lesson 3's `ps` output.",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM overrode it in postgresql.auto.conf",
+        "correct": false,
+        "why": "A value from that file shows `configuration file` with the file's name as sourcefile."
+      },
+      {
+        "text": "The server was started with `-D`, which sets it",
+        "correct": true,
+        "why": "Right. The value comes from how the postmaster was started; the line in the file is a note."
+      },
+      {
+        "text": "The line in the file has a syntax error and was skipped",
+        "correct": false,
+        "why": "A skipped line would appear in pg_file_settings with an error, and the server would not have found its data."
+      },
+      {
+        "text": "`override` is what every postmaster parameter shows",
+        "correct": false,
+        "why": "`max_connections` is postmaster too and showed `configuration file`, line 65."
+      }
+    ]
+  },
+  {
+    "id": "ex-4dscnnfd",
+    "version": 1,
+    "section": "reload-or-restart",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a reload, the log ends with `configuration file ... contains errors; unaffected changes were applied`. The line above it says `parameter \"shared_buffers\" cannot be changed without restarting the server`. What is wrong with the file?",
+    "hint": "Read the lines above the word errors.",
+    "choices": [
+      {
+        "text": "Nothing: one value is waiting for a restart",
+        "correct": true,
+        "why": "Right. The file is valid; pending_restart is true for shared_buffers until the next restart."
+      },
+      {
+        "text": "shared_buffers is misspelt",
+        "correct": false,
+        "why": "A misspelt name produces `unrecognized configuration parameter`, a different line."
+      },
+      {
+        "text": "The value 256MB exceeds what the machine allows",
+        "correct": false,
+        "why": "The restart then applied it without complaint: 32768 pages of 8 kB."
+      },
+      {
+        "text": "Every change in the file was rejected",
+        "correct": false,
+        "why": "The log says the opposite: log_min_duration_statement changed at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb54r5vd",
+    "version": 1,
+    "section": "reload-or-restart",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague put `work_mem = 64mb` in a conf.d file, reloaded, and saw no complaint from `systemctl`. The server is running normally. What is the risk?",
+    "hint": "What does the server do with that file the next time it starts?",
+    "choices": [
+      {
+        "text": "None: a bad value is skipped and the default used, at reload and at start alike",
+        "correct": false,
+        "why": "Only the reload forgives it. At start the same line is FATAL."
+      },
+      {
+        "text": "The next restart fails",
+        "correct": true,
+        "why": "Right. The running server kept 4MB, but at start it refuses a file with an invalid value."
+      },
+      {
+        "text": "Every session is now using 64 kilobytes of work_mem",
+        "correct": false,
+        "why": "The value was refused, not reinterpreted: SHOW work_mem still printed 4MB."
+      },
+      {
+        "text": "Connections opened after the reload are refused",
+        "correct": false,
+        "why": "New connections work; the bad line affects nothing until the server reads the files at start."
+      }
+    ]
+  },
+  {
+    "id": "ex-2d0c41wx",
+    "version": 1,
+    "section": "reload-or-restart",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these cuts every open connection?",
+    "hint": "One rereads the files; one stops the server.",
+    "choices": [
+      {
+        "text": "`SELECT pg_reload_conf();`",
+        "correct": false,
+        "why": "That sends SIGHUP; sessions stay connected and receive the new values."
+      },
+      {
+        "text": "`sudo systemctl reload postgresql`",
+        "correct": false,
+        "why": "A reload, the same signal as pg_reload_conf()."
+      },
+      {
+        "text": "`sudo pg_ctlcluster 16 main reload`",
+        "correct": false,
+        "why": "Ubuntu's wrapper for the same reload."
+      },
+      {
+        "text": "`sudo systemctl restart postgresql`",
+        "correct": true,
+        "why": "Right. A restart stops the server, so every session and transaction ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfh49dkj",
+    "version": 1,
+    "section": "alter-system",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You set `work_mem = 8MB` in conf.d and reload, and SHOW still prints 16MB. `pg_file_settings` shows your line with `applied = f`. What is the likeliest cause?",
+    "hint": "Which file does the server read last?",
+    "choices": [
+      {
+        "text": "work_mem needs a restart, not a reload",
+        "correct": false,
+        "why": "work_mem is a user parameter; a reload applies it."
+      },
+      {
+        "text": "The conf.d file is not named in postgresql.conf",
+        "correct": false,
+        "why": "include_dir reads every .conf file in the directory; the line was read, it appears in pg_file_settings."
+      },
+      {
+        "text": "8MB is below the minimum for work_mem",
+        "correct": false,
+        "why": "The minimum is 64 kB, and an invalid value shows an error rather than applied = f alone."
+      },
+      {
+        "text": "Somebody ran ALTER SYSTEM SET work_mem = '16MB'",
+        "correct": true,
+        "why": "Right. postgresql.auto.conf is read after conf.d and wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-ennwqjwh",
+    "version": 1,
+    "section": "alter-system",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these layers in the order the server applies them, the first applied at the top; the last one to set a value wins.",
+    "hint": "Files first, in the order they are read; then what belongs to the connection.",
+    "items": [
+      "postgresql.conf",
+      "a file in conf.d",
+      "postgresql.auto.conf",
+      "ALTER DATABASE shop SET",
+      "SET in the session"
+    ],
+    "trap": "ALTER SYSTEM's file comes after conf.d, not before it."
+  },
+  {
+    "id": "ex-rds6f3bg",
+    "version": 1,
+    "section": "alter-system",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`ALTER SYSTEM SET work_mem = '64mb';` answered with an error, where the same typo in a conf.d file was accepted until the reload. Why the difference?",
+    "hint": "Who reads the value at the moment it is written?",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM applies the value immediately, so it must be valid",
+        "correct": false,
+        "why": "It applies nothing: the 16MB took effect only after pg_reload_conf()."
+      },
+      {
+        "text": "ALTER SYSTEM only accepts values in kilobytes",
+        "correct": false,
+        "why": "'16MB' was accepted in the next statement."
+      },
+      {
+        "text": "ana is not allowed to change work_mem with ALTER SYSTEM",
+        "correct": false,
+        "why": "ana is a superuser, and the error named the value, not a permission."
+      },
+      {
+        "text": "It checks the value before writing a line",
+        "correct": true,
+        "why": "Right. The server checks the value at once; an editor knows nothing about units."
+      }
+    ]
+  },
+  {
+    "id": "ex-akdf81xc",
+    "version": 1,
+    "section": "pg-hba",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A connection matches line 125 and fails its password check. Line 127 below would also admit it. What happens?",
+    "hint": "Does the server keep reading after a match?",
+    "choices": [
+      {
+        "text": "The server tries line 127 next",
+        "correct": false,
+        "why": "There is no falling through: the first matching line decides alone."
+      },
+      {
+        "text": "It is admitted with a warning in the log",
+        "correct": false,
+        "why": "A failed method is a FATAL refusal, with the reason in the log."
+      },
+      {
+        "text": "It is refused",
+        "correct": true,
+        "why": "Right. The first line that matches is the only one that counts."
+      },
+      {
+        "text": "psql asks for the password a second time, as line 127",
+        "correct": false,
+        "why": "psql's second attempt was with and without encryption, both against line 125."
+      }
+    ]
+  },
+  {
+    "id": "ex-maxz3yqn",
+    "version": 1,
+    "section": "pg-hba",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the client see only `password authentication failed`, when the log says `User \"ana\" has no password assigned`?",
+    "hint": "Who should learn which roles exist?",
+    "choices": [
+      {
+        "text": "psql truncates long server messages",
+        "correct": false,
+        "why": "psql printed the whole message; the server chose to send less."
+      },
+      {
+        "text": "The DETAIL is written later, by a background process",
+        "correct": false,
+        "why": "Both log lines carry the same timestamp and process id."
+      },
+      {
+        "text": "The client gave up before the server could explain",
+        "correct": false,
+        "why": "The server sent its FATAL and closed; the explanation is withheld on purpose."
+      },
+      {
+        "text": "So a stranger learns nothing about which roles exist or have passwords",
+        "correct": true,
+        "why": "Right. The detail is for the administrator who reads the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0r5df2y",
+    "version": 1,
+    "section": "pg-hba",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each pg_hba.conf method to what it does.",
+    "hint": "One asks the kernel, one asks for a password, one admits, one refuses.",
+    "pairs": [
+      {
+        "left": "peer",
+        "right": "the operating-system user must match the role"
+      },
+      {
+        "left": "scram-sha-256",
+        "right": "a password, proved through a challenge"
+      },
+      {
+        "left": "trust",
+        "right": "admits whoever matches, asking nothing"
+      },
+      {
+        "left": "reject",
+        "right": "refuses whoever matches"
+      }
+    ]
+  },
+  {
+    "id": "ex-kc0m2xh3",
+    "version": 1,
+    "section": "pg-hba",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application on 10.0.0.15 gets `FATAL: no pg_hba.conf entry for host \"10.0.0.15\", user \"app\", database \"shop\", no encryption`. What does that tell you?",
+    "hint": "It got a FATAL from PostgreSQL, so it reached something.",
+    "choices": [
+      {
+        "text": "The server is not listening on that network",
+        "correct": false,
+        "why": "Then the client would get Connection refused from the kernel and no FATAL at all."
+      },
+      {
+        "text": "The password for app is wrong",
+        "correct": false,
+        "why": "A wrong password needs a matching line first, and gives password authentication failed."
+      },
+      {
+        "text": "The role app does not exist",
+        "correct": false,
+        "why": "The file is checked before the role is looked up; the message names the file."
+      },
+      {
+        "text": "It reached the server, and no line matches those four values",
+        "correct": true,
+        "why": "Right. Listening works; a host line for that address, role and database is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-nx7bz2rt",
+    "version": 1,
+    "section": "the-handful",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these parameters should keep its default on every server you run?",
+    "hint": "One of them protects the data against a power cut.",
+    "choices": [
+      {
+        "text": "fsync",
+        "correct": true,
+        "why": "Right. Off, a power cut corrupts the cluster."
+      },
+      {
+        "text": "shared_buffers",
+        "correct": false,
+        "why": "Its default of 128MB is small for most servers; lesson 6 sizes it."
+      },
+      {
+        "text": "listen_addresses",
+        "correct": false,
+        "why": "Any server that serves another machine changes it."
+      },
+      {
+        "text": "log_min_duration_statement",
+        "correct": false,
+        "why": "Off by default, and lesson 19 turns it on."
+      }
+    ]
+  },
+  {
+    "id": "ex-y34qcz5x",
+    "version": 1,
+    "section": "the-handful",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After setting `listen_addresses = '*'` and reloading, `ss -ltn` still shows only `127.0.0.1:5432`. Why?",
+    "hint": "Look at its context.",
+    "choices": [
+      {
+        "text": "pg_hba.conf has no line for other addresses",
+        "correct": false,
+        "why": "pg_hba.conf decides who is admitted, not where the server listens."
+      },
+      {
+        "text": "It is a postmaster parameter: it needs a restart",
+        "correct": true,
+        "why": "Right. The sockets are opened at start; the restart in the lesson changed ss to 0.0.0.0."
+      },
+      {
+        "text": "The firewall hides the other sockets from ss",
+        "correct": false,
+        "why": "ss lists the machine's own listening sockets; a firewall filters packets, not that list."
+      },
+      {
+        "text": "'*' is IPv6-only and ss -ltn shows IPv4",
+        "correct": false,
+        "why": "'*' means every address; after the restart ss showed 0.0.0.0."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxq73xn3",
+    "version": 1,
+    "section": "the-handful",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many of the parameters in the course's table of the handful worth touching need a restart to change: listen_addresses, max_connections, shared_buffers, shared_preload_libraries, work_mem, max_wal_size?",
+    "hint": "work_mem is user, max_wal_size is sighup.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-psy94aas",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You inherit a server and want to know, before anyone restarts it, whether a restart would change anything or fail. Which pair of checks answers both?",
+    "hint": "One view knows what is waiting; one command reads the files as a start would.",
+    "choices": [
+      {
+        "text": "SHOW all, and systemctl status",
+        "correct": false,
+        "why": "Both describe the running server; neither reads the files as a restart will."
+      },
+      {
+        "text": "grep on postgresql.conf, and pg_lsclusters",
+        "correct": false,
+        "why": "grep misses conf.d and postgresql.auto.conf, and pg_lsclusters says only online or down."
+      },
+      {
+        "text": "A reload, then reading whether systemctl printed an error",
+        "correct": false,
+        "why": "systemctl reload printed nothing even with the typo in place."
+      },
+      {
+        "text": "pending_restart in pg_settings, and postgres -C on the files",
+        "correct": true,
+        "why": "Right. The first lists changes not yet applied; the second fails exactly where a start would."
+      }
+    ]
+  },
+  {
+    "id": "ex-aq6ra36t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add `host shop app 10.0.0.15/32 scram-sha-256` at the bottom of pg_hba.conf, below a line `host all all 10.0.0.0/24 reject`, and reload. What does app on 10.0.0.15 get?",
+    "hint": "Which line does the connection meet first?",
+    "choices": [
+      {
+        "text": "A password prompt, since its own line is more specific",
+        "correct": false,
+        "why": "Specificity counts for nothing; order decides, and the reject line comes first."
+      },
+      {
+        "text": "no pg_hba.conf entry",
+        "correct": false,
+        "why": "Two lines match; the message would be pg_hba.conf rejects connection."
+      },
+      {
+        "text": "Refused by the reject line",
+        "correct": true,
+        "why": "Right. 10.0.0.15 is inside 10.0.0.0/24, so the earlier line decides. Move the new line above it."
+      },
+      {
+        "text": "The reload fails because the two lines contradict each other",
+        "correct": false,
+        "why": "Overlapping lines are normal and legal; only order separates them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8txccr9v",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to the change that is missing.",
+    "hint": "Kernel, file, method, restart.",
+    "pairs": [
+      {
+        "left": "Connection refused",
+        "right": "listen_addresses does not include that address"
+      },
+      {
+        "left": "no pg_hba.conf entry for host",
+        "right": "a host line for that client"
+      },
+      {
+        "left": "password authentication failed",
+        "right": "a correct password for the role"
+      },
+      {
+        "left": "pending_restart is true",
+        "right": "a restart of the server"
+      }
+    ]
+  },
+  {
+    "id": "ex-w2dxs3ar",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report needs `work_mem = 256MB`, and only the role `reporting` runs it. Which change gives it that without touching anybody else?",
+    "hint": "There is a layer per role.",
+    "choices": [
+      {
+        "text": "ALTER SYSTEM SET work_mem = '256MB', then a reload",
+        "correct": false,
+        "why": "That gives every connection 256MB per sort, which lesson 6 shows is how a machine runs out of memory."
+      },
+      {
+        "text": "work_mem = 256MB in conf.d/50-reporting.conf",
+        "correct": false,
+        "why": "A file in conf.d applies to the whole server, whatever its name says."
+      },
+      {
+        "text": "ALTER DATABASE shop SET work_mem = '256MB'",
+        "correct": false,
+        "why": "Every role connecting to shop would get it, not just reporting."
+      },
+      {
+        "text": "ALTER ROLE reporting SET work_mem = '256MB'",
+        "correct": true,
+        "why": "Right. It applies from that role's next connection, and to nobody else."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yhaw1b4",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The view that lists every line of every configuration file in the order read, with `applied` and `error` columns, is pg___.",
+    "hint": "Not pg_settings: that one shows the values in use.",
+    "blanks": [
+      {
+        "accept": [
+          "_file_settings"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

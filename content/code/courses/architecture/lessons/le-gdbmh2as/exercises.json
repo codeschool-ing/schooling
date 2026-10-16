@@ -1,0 +1,866 @@
+[
+  {
+    "id": "ex-xb4s22fd",
+    "version": 1,
+    "section": "request-response",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is temporal coupling, in a synchronous call?",
+    "hint": "What has to be true at the same moment?",
+    "choices": [
+      {
+        "text": "Two services that were deployed on the same day",
+        "correct": false,
+        "why": "Deploy dates are not the coupling meant here."
+      },
+      {
+        "text": "Both sides must be up at once",
+        "correct": true,
+        "why": "Right: the caller borrows the callee's availability and speed for the length of the call."
+      },
+      {
+        "text": "Two services that share the same clock and time zone settings",
+        "correct": false,
+        "why": "Clocks have nothing to do with it."
+      },
+      {
+        "text": "A message that must be processed before a deadline set by the sender",
+        "correct": false,
+        "why": "That is a deadline, a different idea from this lesson's timeouts section."
+      }
+    ]
+  },
+  {
+    "id": "ex-0567v4ej",
+    "version": 1,
+    "section": "request-response",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service makes its HTTP calls with `async` and `await`, so no thread blocks while it waits. Is the call still synchronous in this course's sense?",
+    "hint": "The shape of the conversation, not the code that waits.",
+    "choices": [
+      {
+        "text": "No, because no thread is blocked",
+        "correct": false,
+        "why": "Blocking is about the code; the conversation still needs its answer now."
+      },
+      {
+        "text": "Yes: the request still needs the answer to complete",
+        "correct": true,
+        "why": "Right. It changes how many calls can wait at once, not the coupling."
+      },
+      {
+        "text": "No, because the event loop turns it into a message on a queue",
+        "correct": false,
+        "why": "An event loop is not a broker; nothing is queued for later."
+      },
+      {
+        "text": "Only if the callee also uses `async`",
+        "correct": false,
+        "why": "What the callee is written in does not change the shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-v116x190",
+    "version": 1,
+    "section": "request-response",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match the state of the service you call to what it does to you, in a synchronous call.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "slow",
+        "right": "you are slow too"
+      },
+      {
+        "left": "down",
+        "right": "you fail, unless there is a fallback"
+      },
+      {
+        "left": "overloaded",
+        "right": "you wait, holding a thread or connection"
+      }
+    ],
+    "right_distractors": [
+      "you become faster"
+    ]
+  },
+  {
+    "id": "ex-c6m9w60s",
+    "version": 1,
+    "section": "the-chain",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the first request through the lab's chain, how many milliseconds did the checkout report it took?",
+    "hint": "The outermost `took_ms`.",
+    "value": 373,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-pn54ks3c",
+    "version": 1,
+    "section": "the-chain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did pricing report 242 ms when its own work was 100 ms?",
+    "hint": "What does each link's time include?",
+    "choices": [
+      {
+        "text": "Pricing's Python code is slower than the others'",
+        "correct": false,
+        "why": "All three run the same program."
+      },
+      {
+        "text": "The number is wrong; it counts the checkout's time too",
+        "correct": false,
+        "why": "Pricing measures from its own start, which is after the checkout called it."
+      },
+      {
+        "text": "It includes waiting for stock and the hop to it",
+        "correct": true,
+        "why": "Right: its own 100 ms, stock's 100 and the connection between them."
+      },
+      {
+        "text": "Docker adds a fixed delay to every container",
+        "correct": false,
+        "why": "There is no such delay."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsy0nbe0",
+    "version": 1,
+    "section": "the-chain",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A checkout calls four services one after another, each taking 50 ms, and the calls do not depend on each other. Made in parallel instead, at least how long would they take?",
+    "hint": "In parallel, the sum becomes the slowest.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-4h0tvkgg",
+    "version": 1,
+    "section": "chains-multiply",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Five services in a synchronous chain are each up 99% of the time, independently. What percentage of the time is the chain up? One decimal place.",
+    "hint": "0.99 to the fifth power.",
+    "value": 95.1,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-6p288hqq",
+    "version": 1,
+    "section": "chains-multiply",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With stock stopped, the checkout answered `502`. Where was the cause?",
+    "hint": "Read the nested answer.",
+    "choices": [
+      {
+        "text": "In the checkout, which had a bug",
+        "correct": false,
+        "why": "Nothing in the checkout was wrong."
+      },
+      {
+        "text": "In pricing's code, which mishandled the response",
+        "correct": false,
+        "why": "Pricing reported correctly that stock was unreachable."
+      },
+      {
+        "text": "At the bottom: stock was down",
+        "correct": true,
+        "why": "Right. The failure travelled up the chain."
+      },
+      {
+        "text": "In the network, which dropped the checkout's request",
+        "correct": false,
+        "why": "The checkout's request reached pricing; pricing's answer came back."
+      }
+    ]
+  },
+  {
+    "id": "ex-1t48c4d3",
+    "version": 1,
+    "section": "chains-multiply",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The table assumes services fail independently. Why does the lesson call that optimistic?",
+    "hint": "What do services often share?",
+    "choices": [
+      {
+        "text": "Shared databases, networks or deploys make them fail together",
+        "correct": true,
+        "why": "Right, so real chains can do worse than the product."
+      },
+      {
+        "text": "Services never fail at all in practice",
+        "correct": false,
+        "why": "They do; that is what the table measures."
+      },
+      {
+        "text": "The product overstates downtime, so real chains are better",
+        "correct": false,
+        "why": "Shared causes make things worse, not better."
+      },
+      {
+        "text": "Independence would require them to run on different continents",
+        "correct": false,
+        "why": "Independence here is about causes of failure, not geography."
+      }
+    ]
+  },
+  {
+    "id": "ex-7gayfdwx",
+    "version": 1,
+    "section": "chains-multiply",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the lesson offer to shorten the multiplication of a chain? Choose all that apply.",
+    "hint": "Three ways close the section.",
+    "choices": [
+      {
+        "text": "Fewer hops on the path",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A fallback when a dependency does not answer",
+        "correct": true,
+        "why": "Right, where the dependency allows one."
+      },
+      {
+        "text": "A longer timeout everywhere",
+        "correct": false,
+        "why": "That makes callers wait longer; it multiplies nothing less."
+      },
+      {
+        "text": "Not waiting, where the answer is not needed now",
+        "correct": true,
+        "why": "Right: the asynchronous style."
+      }
+    ]
+  },
+  {
+    "id": "ex-m7y3e2cb",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a slow service worse for its callers than a stopped one?",
+    "hint": "Which one fails at once?",
+    "choices": [
+      {
+        "text": "A slow service corrupts its callers' data",
+        "correct": false,
+        "why": "Data is untouched; time is what is lost."
+      },
+      {
+        "text": "A stopped one fails fast; a slow one makes everyone wait",
+        "correct": true,
+        "why": "Right. Without a timeout, possibly for ever."
+      },
+      {
+        "text": "A stopped service is restarted by Compose straight away",
+        "correct": false,
+        "why": "Nothing restarted stock in the lab."
+      },
+      {
+        "text": "A slow service returns wrong answers",
+        "correct": false,
+        "why": "It returned the right answer, late."
+      }
+    ]
+  },
+  {
+    "id": "ex-7makepzp",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With stock slowed to 5,000 ms and no timeouts, how many seconds did the client wait, to one decimal place?",
+    "hint": "curl's `time_total`.",
+    "value": 5.2,
+    "tolerance": 0.05,
+    "unit": "s"
+  },
+  {
+    "id": "ex-pa95h6j7",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After pricing got a one-second timeout, what did the client receive, and when?",
+    "hint": "The capture in the section.",
+    "choices": [
+      {
+        "text": "A `200` with the right answer, after five seconds",
+        "correct": false,
+        "why": "That was before the timeout."
+      },
+      {
+        "text": "A `504` straight from stock, at once",
+        "correct": false,
+        "why": "Stock was not reached by the client; pricing gave up on it."
+      },
+      {
+        "text": "A `502` after about 1.2 seconds",
+        "correct": true,
+        "why": "Right: pricing's `504`, passed up by the checkout."
+      },
+      {
+        "text": "Nothing: the connection hung until curl gave up",
+        "correct": false,
+        "why": "Pricing's timeout ended the wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-cprcz2qg",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The checkout gives up after two seconds, and pricing waits up to five for stock. What goes wrong?",
+    "hint": "Who is still waiting for pricing's answer at second three?",
+    "choices": [
+      {
+        "text": "Nothing; longer timeouts lower down are safer",
+        "correct": false,
+        "why": "They waste work on requests nobody waits for."
+      },
+      {
+        "text": "The checkout's timeout is ignored because pricing's is longer",
+        "correct": false,
+        "why": "Each caller's timeout applies to its own call."
+      },
+      {
+        "text": "Stock is called twice for each request",
+        "correct": false,
+        "why": "Nothing in the setup retries."
+      },
+      {
+        "text": "Pricing keeps working on requests nobody waits for any more",
+        "correct": true,
+        "why": "Right. Timeouts have to shrink going down a chain."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ma6t0t3",
+    "version": 1,
+    "section": "timeouts",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Passing the time left along with each request, so that every link knows how long it may spend, is called deadline ___.",
+    "hint": "gRPC does it with every call.",
+    "blanks": [
+      {
+        "accept": [
+          "propagation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wwepevnh",
+    "version": 1,
+    "section": "asynchronous",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the asynchronous style buy, according to the lesson?",
+    "hint": "Not speed.",
+    "choices": [
+      {
+        "text": "Faster processing of each message",
+        "correct": false,
+        "why": "The work takes as long as it takes, somewhere else."
+      },
+      {
+        "text": "A guarantee that every message is processed exactly once",
+        "correct": false,
+        "why": "Delivery guarantees are a separate subject, lesson 7."
+      },
+      {
+        "text": "Decoupling in time",
+        "correct": true,
+        "why": "Right: the sender does not need the receiver to be up right now."
+      },
+      {
+        "text": "Strong consistency between sender and receiver",
+        "correct": false,
+        "why": "While a message waits, the two disagree."
+      }
+    ]
+  },
+  {
+    "id": "ex-bcg58tar",
+    "version": 1,
+    "section": "asynchronous",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The e-mail service is down for ten minutes at lunch. With `OrderPlaced` going through a queue, what happens to orders?",
+    "hint": "Who depends on the e-mail service being up?",
+    "choices": [
+      {
+        "text": "Orders go on; the messages wait for the e-mail service",
+        "correct": true,
+        "why": "Right. The confirmations go out late, and nothing is lost."
+      },
+      {
+        "text": "Orders fail until the e-mail service is back",
+        "correct": false,
+        "why": "That is the synchronous version."
+      },
+      {
+        "text": "Orders succeed, and those ten minutes of e-mails are discarded",
+        "correct": false,
+        "why": "A queue holds them; it does not throw them away."
+      },
+      {
+        "text": "The broker sends the e-mails itself while the service is down",
+        "correct": false,
+        "why": "A broker carries messages; it does not do the receiver's work."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd2p7kx3",
+    "version": 1,
+    "section": "asynchronous",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A queue between a spiky source and a steady worker, so the worker can be sized for the average rather than the peak, is called queue-based load ___.",
+    "hint": "A word about making things even.",
+    "blanks": [
+      {
+        "accept": [
+          "levelling",
+          "leveling"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bvm5agyx",
+    "version": 1,
+    "section": "asynchronous",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these become things to design for when a conversation goes asynchronous? Choose all that apply.",
+    "hint": "Four costs are listed.",
+    "choices": [
+      {
+        "text": "The sender can only say \"accepted\"",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A message may arrive twice or out of order",
+        "correct": true,
+        "why": "Right, lesson 7."
+      },
+      {
+        "text": "The two sides disagree while a message waits",
+        "correct": true,
+        "why": "Right, lesson 9."
+      },
+      {
+        "text": "The receiver must be up whenever the sender is",
+        "correct": false,
+        "why": "That is exactly what asynchronous removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-mp4ctmzr",
+    "version": 1,
+    "section": "accepted-for-later",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `202 Accepted` tell the client?",
+    "hint": "Received, and not yet...",
+    "choices": [
+      {
+        "text": "The work is finished and the result is in the body",
+        "correct": false,
+        "why": "That would be a `200` with the result."
+      },
+      {
+        "text": "Received, and not processed yet",
+        "correct": true,
+        "why": "Right. The `Location` header says where the result will be."
+      },
+      {
+        "text": "The request was refused and must be sent again later",
+        "correct": false,
+        "why": "A refusal would be a 4xx or a 503."
+      },
+      {
+        "text": "The server is overloaded and queued it without promising anything",
+        "correct": false,
+        "why": "202 is a promise that it will be processed."
+      }
+    ]
+  },
+  {
+    "id": "ex-542xpd7q",
+    "version": 1,
+    "section": "accepted-for-later",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps of the lab's report request in order.",
+    "hint": "The capture, top to bottom.",
+    "items": [
+      "The client sends `POST /reports`",
+      "The server answers `202` with `Location: /reports/1`",
+      "A `GET` on that address finds the job running",
+      "A later `GET` finds it done, with the result"
+    ]
+  },
+  {
+    "id": "ex-wg0twsn2",
+    "version": 1,
+    "section": "accepted-for-later",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The reports container restarts while a report is being built. What does the client see, with `report.py` as written?",
+    "hint": "Where are the jobs kept?",
+    "choices": [
+      {
+        "text": "The report, a little later than expected",
+        "correct": false,
+        "why": "The job was lost with the process's memory."
+      },
+      {
+        "text": "A `202` again, because the job is restarted automatically",
+        "correct": false,
+        "why": "Nothing remembers that the job existed."
+      },
+      {
+        "text": "A `404` on the job's address",
+        "correct": true,
+        "why": "Right. The jobs were in a dictionary; a real service keeps them in a database."
+      },
+      {
+        "text": "`{\"status\": \"running\"}` for ever",
+        "correct": false,
+        "why": "The address no longer exists at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkw2cns9",
+    "version": 1,
+    "section": "accepted-for-later",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Polling every two seconds costs too much for a client that waits on many jobs. Which alternative does the lesson name?",
+    "hint": "The server pushes instead of being asked.",
+    "choices": [
+      {
+        "text": "Poll every hundred milliseconds instead",
+        "correct": false,
+        "why": "That costs more, not less."
+      },
+      {
+        "text": "A callback to an address the client gave",
+        "correct": true,
+        "why": "Right, or a message on a queue, or a held connection, lesson 18."
+      },
+      {
+        "text": "Hold the original POST open until the job is done",
+        "correct": false,
+        "why": "That is the long connection the pattern exists to avoid."
+      },
+      {
+        "text": "Make the job synchronous again",
+        "correct": false,
+        "why": "Too slow to hold a connection was the reason for the pattern."
+      }
+    ]
+  },
+  {
+    "id": "ex-4r3t5q47",
+    "version": 1,
+    "section": "commands-events-queries",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each message to its kind.",
+    "hint": "Imperative, past tense, or a question.",
+    "pairs": [
+      {
+        "left": "ChargeCard",
+        "right": "command"
+      },
+      {
+        "left": "PaymentDeclined",
+        "right": "event"
+      },
+      {
+        "left": "GetPrice",
+        "right": "query"
+      }
+    ],
+    "right_distractors": [
+      "transaction"
+    ]
+  },
+  {
+    "id": "ex-z1j8j6sj",
+    "version": 1,
+    "section": "commands-events-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loyalty service listens to `OrderPlaced` and dislikes an order. What can it do?",
+    "hint": "Can an event be refused?",
+    "choices": [
+      {
+        "text": "Refuse the event, so that the order is undone",
+        "correct": false,
+        "why": "An event states something that already happened."
+      },
+      {
+        "text": "Delete the event from the broker so nobody else sees it",
+        "correct": false,
+        "why": "The event belongs to everyone listening; deleting it hides a fact."
+      },
+      {
+        "text": "React, for example by sending a command of its own",
+        "correct": true,
+        "why": "Right. It cannot make the order not have happened."
+      },
+      {
+        "text": "Nothing; listeners may not act on events",
+        "correct": false,
+        "why": "Acting on events is what listeners are for."
+      }
+    ]
+  },
+  {
+    "id": "ex-tyctn37y",
+    "version": 1,
+    "section": "commands-events-queries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda adds a loyalty-points service that reacts to `OrderPlaced`. What has to change in the orders service?",
+    "hint": "Who knows whom, with an event?",
+    "choices": [
+      {
+        "text": "A new call to the loyalty service after each order",
+        "correct": false,
+        "why": "That would make it a command, and couple orders to loyalty."
+      },
+      {
+        "text": "A new event type, `OrderPlacedForLoyalty`",
+        "correct": false,
+        "why": "The existing event already says what happened."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The receiver knows the sender; orders does not know loyalty exists."
+      },
+      {
+        "text": "Its database, to store the loyalty points",
+        "correct": false,
+        "why": "Points belong to the loyalty service's own data."
+      }
+    ]
+  },
+  {
+    "id": "ex-1h3rs648",
+    "version": 1,
+    "section": "commands-events-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team sends a stock query as a message and waits for the answer on a reply queue, to avoid depending on the stock service. What does the lesson say?",
+    "hint": "Does it still fail when stock is down?",
+    "choices": [
+      {
+        "text": "It removes the dependency, as intended",
+        "correct": false,
+        "why": "The caller still waits, and still fails without stock."
+      },
+      {
+        "text": "It is a synchronous call with more parts, hiding the dependency",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Queries must never use a broker for any reason",
+        "correct": false,
+        "why": "The lesson's point is about why, not a ban on brokers."
+      },
+      {
+        "text": "It is the recommended way to send queries",
+        "correct": false,
+        "why": "The table puts queries in the synchronous column."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybxrc0jz",
+    "version": 1,
+    "section": "choosing-a-style",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question does the lesson say decides between synchronous and asynchronous?",
+    "hint": "Before it can go on.",
+    "choices": [
+      {
+        "text": "Which style is faster for this call",
+        "correct": false,
+        "why": "Asynchronous is not faster; it is decoupled."
+      },
+      {
+        "text": "Does the caller need the outcome before going on?",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Which broker the team already runs",
+        "correct": false,
+        "why": "The broker follows from the choice, not the other way."
+      },
+      {
+        "text": "How many services are involved",
+        "correct": false,
+        "why": "A conversation between two can be either."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtv88jn4",
+    "version": 1,
+    "section": "choosing-a-style",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each of Quitanda's conversations to the style the lesson's table gives it.",
+    "hint": "Who is waiting, in each one?",
+    "pairs": [
+      {
+        "left": "authorise the card at checkout",
+        "right": "synchronous command"
+      },
+      {
+        "left": "send the confirmation e-mail",
+        "right": "asynchronous event"
+      },
+      {
+        "left": "build the monthly report",
+        "right": "asynchronous request-reply"
+      },
+      {
+        "left": "show the basket's price",
+        "right": "synchronous query"
+      }
+    ],
+    "right_distractors": [
+      "a shared database table"
+    ]
+  },
+  {
+    "id": "ex-0k5yyset",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The warehouse service takes an order to pick and replies \"picked\" about twenty minutes later. The checkout currently calls it synchronously and times out. What fits?",
+    "hint": "Nobody at the checkout waits twenty minutes.",
+    "choices": [
+      {
+        "text": "A twenty-five minute timeout on the call",
+        "correct": false,
+        "why": "A checkout held open for twenty minutes is the problem, not the fix."
+      },
+      {
+        "text": "Retrying the call until the warehouse answers in time",
+        "correct": false,
+        "why": "The warehouse is not failing; it is slow by nature."
+      },
+      {
+        "text": "A command on a queue, and a `Picked` event later",
+        "correct": true,
+        "why": "Right: the checkout says \"accepted\", and the outcome arrives as an event."
+      },
+      {
+        "text": "A faster warehouse",
+        "correct": false,
+        "why": "Picking takes as long as people take to walk the aisles."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sd7zh9m",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statement about the two styles does the lesson support?",
+    "hint": "The last paragraph.",
+    "choices": [
+      {
+        "text": "Asynchronous is the advanced style that mature systems move to",
+        "correct": false,
+        "why": "The lesson rejects that ranking."
+      },
+      {
+        "text": "Synchronous should be avoided between services",
+        "correct": false,
+        "why": "Many conversations have the synchronous shape."
+      },
+      {
+        "text": "Each fits a different kind of conversation",
+        "correct": true,
+        "why": "Right. Trouble comes from using one where the other fits."
+      },
+      {
+        "text": "A system must pick one style and use it everywhere",
+        "correct": false,
+        "why": "The checkout itself uses both."
+      }
+    ]
+  }
+]
