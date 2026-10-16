@@ -18,7 +18,7 @@ under the same prefixes.
 
 The price sheet from lesson 1 prints the S3 block. This lesson, like every lesson of the course,
 assumes moto running in its own terminal and the four lines of lesson 1's "Your lab, in brief" typed
-in this one; the sheet itself needs neither, only the cache it filled the first time:
+in this one. The sheet itself needs neither, only the cache it filled the first time:
 
 ```
 ana@laptop:~/aws$ python3 prices.py s3
@@ -56,8 +56,8 @@ nothing extra from Standard, 0.01000 from Standard-IA, 0.03000 from Glacier Inst
 
 ## What else each class trades
 
-The price sheet shows two of the trades. AWS's documentation for S3 storage classes states the rest,
-and none of it is something moto can show, because moto keeps every object in the same dictionary
+The price sheet shows two of the trades. AWS's documentation for S3 storage classes states the rest.
+None of it is something moto can show, because moto keeps every object in the same dictionary
 whatever its class says:
 
 | class | zones | minimum days billed | smallest object billed | first byte |

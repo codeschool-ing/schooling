@@ -19,7 +19,7 @@ Archive, lado a lado, sob os mesmos prefixos.
 
 A tabela de preços da lição 1 imprime o bloco do S3. Esta lição, como toda lição do curso, supõe o
 moto rodando no terminal dele e as quatro linhas de "Seu laboratório, em resumo", da lição 1,
-digitadas neste; a tabela em si não precisa de nenhum dos dois, só do cache que ela encheu na primeira
+digitadas neste. A tabela em si não precisa de nenhum dos dois, só do cache que ela encheu na primeira
 vez:
 
 ```
@@ -59,7 +59,7 @@ e 0,02800 no Deep Archive na velocidade padrão.
 ## O que mais cada classe troca
 
 A tabela de preços mostra duas das trocas. A documentação da AWS sobre as classes de armazenamento do
-S3 diz o resto, e nada disso o moto consegue mostrar, porque ele guarda todo objeto no mesmo
+S3 diz o resto. Nada disso o moto consegue mostrar, porque ele guarda todo objeto no mesmo
 dicionário, diga a classe o que disser:
 
 | classe | zonas | mínimo de dias cobrados | menor objeto cobrado | primeiro byte |
