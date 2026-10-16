@@ -40,10 +40,28 @@ await browser.close();
 ```
 
 ```
-%%CAP timing%%
+ana@laptop:~/quitanda$ node simulated/timing.mjs
+jsdom:    10 pages in 729 ms
+chromium: launched in 76 ms
+chromium: 10 pages in 1643 ms
 ```
 
-%%CAP-PROSE timing%%
+and once more, to see how much it moves:
+
+```
+ana@laptop:~/quitanda$ node simulated/timing.mjs
+jsdom:    10 pages in 852 ms
+chromium: launched in 95 ms
+chromium: 10 pages in 1699 ms
+```
+
+**jsdom was about twice as fast, not ten times.** Ten pages took 729 ms in jsdom against 1643 ms
+in Chromium, and 852 against 1699 the second time: a difference of under a tenth of a second a
+page. Chromium itself started in 76 and 95 ms. The seconds-long start that simulated browsers were
+written to avoid is not there any more; a headless browser on a laptop starts faster than a person
+can notice. Over five hundred page checks the gap would come to around three quarters of a
+minute, which is worth something in a suite run many times a day and nothing at all for a check
+that can no longer fail.
 
 ## Where it fits
 
@@ -85,7 +103,29 @@ the shop running, `node --test` runs it; `--test-reporter=tap` prints plain text
 symbols:
 
 ```
-%%CAP ssr-test%%
+ana@laptop:~/quitanda$ node --test --test-reporter=tap simulated/ssr.test.mjs
+TAP version 13
+# Subtest: every product the API lists is a card in the HTML of /ssr
+ok 1 - every product the API lists is a card in the HTML of /ssr
+  ---
+  duration_ms: 205.516868
+  type: 'test'
+  ...
+# Subtest: the HTML of / has an empty list, for app.js to fill
+ok 2 - the HTML of / has an empty list, for app.js to fill
+  ---
+  duration_ms: 23.865929
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 964.790891
 ```
 
 **Testing code that reads and writes the DOM, without a page around it.** A function that builds a
@@ -102,7 +142,7 @@ browser. A simulated one answers those questions with zeros and passes.
 
 **Put it where it belongs in the suite.** Lesson 21 draws the testing pyramid: many cheap tests at
 the bottom, few expensive ones at the top, and `testing-cicd` lesson 1 the layers a pipeline runs.
-A jsdom test sits low: faster than a browser test and, as the timing showed, by less than its
-reputation, and blind to everything above the DOM. A browser test sits at the top and is the only
+A jsdom test sits low: faster than a browser test, by less than its reputation, and blind to
+everything above the DOM. A browser test sits at the top and is the only
 one that sees the page a customer sees. The expensive mistake is the one in between: asking the
 cheap layer a question only the top one can answer, and counting its green as evidence.

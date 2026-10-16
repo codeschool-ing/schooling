@@ -8,7 +8,9 @@ behind it. It is the one simulated browser in wide use today, and most people ru
 Jest's `jsdom` test environment is a package, `jest-environment-jsdom`, built on it.
 
 ```
-%%CAP jest-env%%
+ana@laptop:~/quitanda$ npm view jest-environment-jsdom version dependencies.jsdom
+version = '30.5.2'
+dependencies.jsdom = '^26.1.0'
 ```
 
 So a Jest user today runs jsdom 26, whatever version is newest. This section installs jsdom itself,
@@ -38,14 +40,42 @@ The project's `package.json` gains one line. Save it as `package.json`:
 ```
 
 ```
-%%CAP npm-install%%
+ana@laptop:~/quitanda$ npm install
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'jsdom@30.1.2',
+npm warn EBADENGINE   required: { node: '^22.22.2 || ^24.15.0 || >=26.0.0' },
+npm warn EBADENGINE   current: { node: 'v22.22.0', npm: '10.9.4' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: '@asamuzakjp/css-color@7.1.5',
+npm warn EBADENGINE   required: { node: '^22.22.2 || ^24.15.0 || >=26.0.0' },
+npm warn EBADENGINE   current: { node: 'v22.22.0', npm: '10.9.4' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: '@asamuzakjp/dom-selector@9.2.4',
+npm warn EBADENGINE   required: { node: '^22.22.2 || ^24.15.0 || >=26.0.0' },
+npm warn EBADENGINE   current: { node: 'v22.22.0', npm: '10.9.4' }
+npm warn EBADENGINE }
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'w3c-xmlserializer@6.0.0',
+npm warn EBADENGINE   required: { node: '^22.22.2 || ^24.15.0 || >=26.0.0' },
+npm warn EBADENGINE   current: { node: 'v22.22.0', npm: '10.9.4' }
+npm warn EBADENGINE }
+
+added 248 packages, and audited 249 packages in 9s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
 ```
 
 **Read the warnings before the last line.** jsdom 30.1.2 declares which versions of Node it
 supports, and the Node of lesson 1 is just below them:
 
 ```
-%%CAP jsdom-engines%%
+ana@laptop:~/quitanda$ npm view jsdom@30.1.2 engines
+{ node: '^22.22.2 || ^24.15.0 || >=26.0.0' }
 ```
 
 22.22.0 is two patch releases short of 22.22.2. npm warns and installs anyway, and everything in
@@ -89,7 +119,24 @@ HTML and does nothing else: no `<script>` runs and nothing linked from the page 
 against `http://localhost:3000`. With the shop running:
 
 ```
-%%CAP home-bare%%
+ana@laptop:~/quitanda$ node simulated/home.mjs
+http://localhost:3000/app.js:4
+  const response = await fetch(url, options);
+                   ^
+
+ReferenceError: fetch is not defined
+    at getJson (http://localhost:3000/app.js:4:20)
+    at load (http://localhost:3000/app.js:38:26)
+    at http://localhost:3000/app.js:51:1
+    at Script.runInContext (node:vm:149:12)
+    at Object.runInContext (node:vm:301:6)
+    at processJavaScript (/home/ana/quitanda/node_modules/jsdom/lib/jsdom/living/nodes/HTMLScriptElement-impl.js:274:10)
+    at HTMLScriptElementImpl._innerEval (/home/ana/quitanda/node_modules/jsdom/lib/jsdom/living/nodes/HTMLScriptElement-impl.js:207:5)
+    at onLoadExternalScript (/home/ana/quitanda/node_modules/jsdom/lib/jsdom/living/nodes/HTMLScriptElement-impl.js:107:12)
+    at onLoadWrapped (/home/ana/quitanda/node_modules/jsdom/lib/jsdom/browser/resources/per-document-resource-loader.js:84:33)
+    at Object.check (/home/ana/quitanda/node_modules/jsdom/lib/jsdom/browser/resources/resource-queue.js:76:23)
+
+Node.js v22.22.0
 ```
 
 **jsdom 30.1.2 has no `fetch`.** Node 22 has one, and every script in this course has used it; the
@@ -160,7 +207,9 @@ window.close();
 ```
 
 ```
-%%CAP home%%
+ana@laptop:~/quitanda$ node simulated/home.mjs
+cards: 8
+basket: 1, toast: Added Banana
 ```
 
 **Eight cards, a banana in the basket and the toast's text**, from the same `app.js` Chromium runs.

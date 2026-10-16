@@ -1,0 +1,560 @@
+[
+ {
+  "id": "ex-b42fwfb0",
+  "version": 1,
+  "section": "simulated-browsers",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put what a real browser does with the shop's page in order, from the bytes to the screen.",
+  "items": [
+   "Fetch the bytes of the page",
+   "Parse the HTML into a DOM",
+   "Match the CSS rules to each element",
+   "Lay out every box: its size and place",
+   "Paint the pixels",
+   "Composite the layers onto the screen"
+  ],
+  "trap": "Layout needs the matched styles first: a box cannot be sized before its rules are known."
+ },
+ {
+  "id": "ex-e1gccfxk",
+  "version": 1,
+  "section": "simulated-browsers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "This course's Playwright tests run in Chromium with no window. What kind of browser is that?",
+  "choices": [
+   {
+    "text": "A simulated browser, because nothing is shown on a screen",
+    "correct": false,
+    "why": "No window is not the same as no layout. Headless Chromium still lays the page out and paints it into memory."
+   },
+   {
+    "text": "The whole browser, laying out and painting into memory",
+    "correct": true,
+    "why": "Right. That is why lesson 16 could take screenshots of it and lesson 7 could measure 400 pixels."
+   },
+   {
+    "text": "A DOM library like jsdom, started by Playwright for speed",
+    "correct": false,
+    "why": "Playwright never swaps the browser for a library; it drives a real Chromium build."
+   },
+   {
+    "text": "A browser that runs scripts but skips the CSS",
+    "correct": false,
+    "why": "Headless Chromium applies every rule; the Menu button was hidden by CSS in it, at 1280 pixels."
+   }
+  ]
+ },
+ {
+  "id": "ex-39xnz2kd",
+  "version": 1,
+  "section": "simulated-browsers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which step of a browser's work does a simulated browser leave out entirely?",
+  "choices": [
+   {
+    "text": "Parsing the HTML",
+    "correct": false,
+    "why": "It parses: jsdom found the eight cards with ordinary selectors."
+   },
+   {
+    "text": "Running the page's scripts",
+    "correct": false,
+    "why": "jsdom ran `app.js` and drew the cards once it had a `fetch`."
+   },
+   {
+    "text": "Layout",
+    "correct": true,
+    "why": "Right. With no layout there is no size or position, which is why `scrollWidth` came back 0."
+   },
+   {
+    "text": "Matching CSS rules",
+    "correct": false,
+    "why": "Partly kept: jsdom matched `min-width` on the basket and reported 384px."
+   }
+  ]
+ },
+ {
+  "id": "ex-79xqam2g",
+  "version": 1,
+  "section": "zombie",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Zombie's `visit` called back with 0 cards, and two seconds later there were 8. What does that show?",
+  "choices": [
+   {
+    "text": "The shop drew the cards twice",
+    "correct": false,
+    "why": "There was one drawing; it happened after the callback, when `/api/products` answered."
+   },
+   {
+    "text": "Zombie's idea of a loaded page did not include the request the cards need",
+    "correct": true,
+    "why": "Right. Its log said the event loop was empty before `GET /api/products` went out."
+   },
+   {
+    "text": "Zombie cannot run `app.js`",
+    "correct": false,
+    "why": "It ran it: eight cards appeared two seconds later, drawn by that script."
+   },
+   {
+    "text": "The server was slow on the first request",
+    "correct": false,
+    "why": "The requests were fast; they simply started after Zombie had already called back."
+   }
+  ]
+ },
+ {
+  "id": "ex-f2dpcj59",
+  "version": 1,
+  "section": "zombie",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What did `npm view` show about the state of Zombie.js?",
+  "choices": [
+   {
+    "text": "A release last month, built on jsdom 30",
+    "correct": false,
+    "why": "The newest release is 6.1.4, and it pins jsdom 11.12.0."
+   },
+   {
+    "text": "That it was removed from npm",
+    "correct": false,
+    "why": "It is still there and still installs, with a screen of deprecation warnings."
+   },
+   {
+    "text": "Its last release, 6.1.4, came out in November 2018 and pins jsdom 11.12.0",
+    "correct": true,
+    "why": "Right. Nineteen major versions of jsdom behind, with a deprecated `request` underneath."
+   },
+   {
+    "text": "It is maintained by the Playwright team",
+    "correct": false,
+    "why": "Its maintainers are its own authors, and nothing has been published since 2018."
+   }
+  ]
+ },
+ {
+  "id": "ex-3nqagzw4",
+  "version": 1,
+  "section": "htmlunit",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "HtmlUnit found 8 cards on `/ssr` and 0 on `/`. Why none on `/`?",
+  "choices": [
+   {
+    "text": "Its Rhino engine could not parse the `async` function on line 3 of `app.js`",
+    "correct": true,
+    "why": "Right. No script ran, so nothing drew the cards. On `/ssr` they came in the HTML."
+   },
+   {
+    "text": "The home page is broken in every browser",
+    "correct": false,
+    "why": "Chromium and jsdom both drew eight cards from the same page."
+   },
+   {
+    "text": "Three seconds was too short a wait for `/api/products`",
+    "correct": false,
+    "why": "The request was never sent: the script that sends it failed to compile."
+   },
+   {
+    "text": "HtmlUnit does not run JavaScript at all",
+    "correct": false,
+    "why": "It does run it, through its own engine; this script used syntax the engine does not know."
+   }
+  ]
+ },
+ {
+  "id": "ex-mt401rqj",
+  "version": 1,
+  "section": "htmlunit",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each tool with where the page's JavaScript runs in it.",
+  "pairs": [
+   {
+    "left": "HtmlUnit",
+    "right": "A fork of Mozilla Rhino, inside Java"
+   },
+   {
+    "left": "Zombie.js",
+    "right": "jsdom 11.12.0, pinned inside it"
+   },
+   {
+    "left": "jsdom",
+    "right": "Node's own V8, in a separate context"
+   },
+   {
+    "left": "Headless Chromium",
+    "right": "V8 inside a browser that also lays out and paints"
+   }
+  ]
+ },
+ {
+  "id": "ex-9j0gjvja",
+  "version": 1,
+  "section": "htmlunit",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Java team's suite runs on `HtmlUnitDriver` and is green. A user reports that a button does nothing in Safari. What did the green suite establish about Safari?",
+  "choices": [
+   {
+    "text": "That the button works there, since both follow the standard",
+    "correct": false,
+    "why": "Following a standard is what every engine claims; lesson 10 runs three real ones because they still differ."
+   },
+   {
+    "text": "Nothing: it ran in an engine no user has",
+    "correct": true,
+    "why": "Right. A pass in HtmlUnit is a pass in Rhino and HtmlUnit's DOM, not in Safari's JavaScriptCore and WebKit."
+   },
+   {
+    "text": "That the defect is in Safari, not in the page",
+    "correct": false,
+    "why": "The suite never ran in Safari, so it holds no evidence about where the fault lies."
+   },
+   {
+    "text": "That the button worked in Chrome too",
+    "correct": false,
+    "why": "No Chrome ran either; `HtmlUnitDriver` starts no browser at all."
+   }
+  ]
+ },
+ {
+  "id": "ex-8j6cq6nd",
+  "version": 1,
+  "section": "jsdom-in-practice",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "For jsdom to run the shop's scripts, the option is written `runScripts: '___'`, a name that warns the sandbox is not foolproof.",
+  "blanks": [
+   {
+    "accept": [
+     "dangerously"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-wc98behn",
+  "version": 1,
+  "section": "jsdom-in-practice",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A script opens the shop with `runScripts: 'dangerously'` and leaves out `resources: 'usable'`. What happens?",
+  "choices": [
+   {
+    "text": "jsdom refuses to start without both options",
+    "correct": false,
+    "why": "Each option is independent; jsdom starts happily with either."
+   },
+   {
+    "text": "The cards are drawn but unstyled",
+    "correct": false,
+    "why": "Nothing draws them: the script that would is never downloaded."
+   },
+   {
+    "text": "`app.js` is never fetched, so the list stays empty",
+    "correct": true,
+    "why": "Right. Without it jsdom loads no subresource, scripts in `<script src>` included."
+   },
+   {
+    "text": "The inline scripts fail and the external ones run",
+    "correct": false,
+    "why": "It is the other way round: inline scripts run, and external ones are not fetched."
+   }
+  ]
+ },
+ {
+  "id": "ex-nfnn83fn",
+  "version": 1,
+  "section": "jsdom-in-practice",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first `simulated/home.mjs` ended with `ReferenceError: fetch is not defined`, although Node 22 has `fetch`. Why?",
+  "choices": [
+   {
+    "text": "Node's `fetch` needs a flag on version 22",
+    "correct": false,
+    "why": "Node 22 has `fetch` with no flag; `shop.mjs` itself calls it."
+   },
+   {
+    "text": "The shop's server does not allow requests from jsdom",
+    "correct": false,
+    "why": "No request was sent; the error came before any."
+   },
+   {
+    "text": "`app.js` ran in jsdom's window, which has no `fetch` of its own",
+    "correct": true,
+    "why": "Right. The page's globals are jsdom's, not Node's, and jsdom 30.1.2 implements no `fetch`."
+   },
+   {
+    "text": "The Node in use is older than jsdom 30.1.2 supports",
+    "correct": false,
+    "why": "npm did warn about 22.22.0, but the fixed script ran on that same Node without an error."
+   }
+  ]
+ },
+ {
+  "id": "ex-svtzhna3",
+  "version": 1,
+  "section": "what-they-miss",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In Chromium, at 360 pixels wide, the shop's `scrollWidth` was 400. What number did jsdom report for the same page?",
+  "value": 0,
+  "tolerance": 0,
+  "unit": "pixels"
+ },
+ {
+  "id": "ex-dyc2ezn2",
+  "version": 1,
+  "section": "what-they-miss",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Somebody moves lesson 7's check `scrollWidth <= 360` into a jsdom test to make the suite faster. It passes. What has the move done?",
+  "choices": [
+   {
+    "text": "Fixed the defect, since the basket no longer overflows",
+    "correct": false,
+    "why": "`style.css` did not change; Chromium still measures 400."
+   },
+   {
+    "text": "Made the check faster and just as good",
+    "correct": false,
+    "why": "It is not as good: it now compares 0 with 360 on every page, broken or not."
+   },
+   {
+    "text": "Turned it into a check that passes on every page",
+    "correct": true,
+    "why": "Right. Without layout every width is 0, so the test can no longer fail, which is worse than having no test."
+   },
+   {
+    "text": "Made it fail, because jsdom has no window",
+    "correct": false,
+    "why": "It passed: jsdom answers with 0, not with an error."
+   }
+  ]
+ },
+ {
+  "id": "ex-w8zkktm0",
+  "version": 1,
+  "section": "what-they-miss",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Above 600 pixels the Menu button is `display: none`. jsdom's `click()` on it set `aria-expanded` to true. Why could it?",
+  "choices": [
+   {
+    "text": "jsdom did not know the button was hidden",
+    "correct": false,
+    "why": "It knew: `getComputedStyle` reported `display` as `none` one line earlier."
+   },
+   {
+    "text": "Its `click()` sends the event straight to the element, with no pointer to land anywhere",
+    "correct": true,
+    "why": "Right. Nothing asks whether the element is visible, covered or zero-sized; Playwright's click asks all three."
+   },
+   {
+    "text": "The media query hid it only on phones",
+    "correct": false,
+    "why": "Above 600 pixels it is hidden for everyone; Chromium refused to click it at 1280."
+   },
+   {
+    "text": "jsdom waited until the button became visible",
+    "correct": false,
+    "why": "jsdom has no auto-waiting, and the button never became visible."
+   }
+  ]
+ },
+ {
+  "id": "ex-k2v6714b",
+  "version": 1,
+  "section": "what-they-miss",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did jsdom 30.1.2 report as `undefined` on the shop's window?",
+  "choices": [
+   {
+    "text": "`matchMedia`",
+    "correct": true,
+    "why": "Right: a page cannot ask a media query's question there."
+   },
+   {
+    "text": "`IntersectionObserver`",
+    "correct": true,
+    "why": "Right: nothing scrolls into view where nothing has a position."
+   },
+   {
+    "text": "`querySelector`",
+    "correct": false,
+    "why": "It is there; every script in the lesson used it."
+   },
+   {
+    "text": "`getComputedStyle`",
+    "correct": false,
+    "why": "It is there, and it reported `min-width` as 384px."
+   }
+  ]
+ },
+ {
+  "id": "ex-s4e3p8v2",
+  "version": 1,
+  "section": "when-they-fit",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is `simulated/ssr.test.mjs` a good fit for jsdom?",
+  "choices": [
+   {
+    "text": "It needs no script and no layout, only the HTML the server sent",
+    "correct": true,
+    "why": "Right. Every question it asks is answered the same in jsdom and in Chromium."
+   },
+   {
+    "text": "jsdom runs `/ssr`'s late script faster than Chromium",
+    "correct": false,
+    "why": "The test runs no scripts at all; neither option is set."
+   },
+   {
+    "text": "It checks that the buttons on `/ssr` can be pressed",
+    "correct": false,
+    "why": "It checks that each button carries the right `data-id`; whether a person can press it is a browser's question."
+   },
+   {
+    "text": "Playwright cannot read server-rendered HTML",
+    "correct": false,
+    "why": "Lesson 6 read it with Playwright's `request` fixture."
+   }
+  ]
+ },
+ {
+  "id": "ex-gwp6e1vg",
+  "version": 1,
+  "section": "when-they-fit",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these checks could move from a Playwright test to a jsdom test without losing anything?",
+  "choices": [
+   {
+    "text": "Nothing on the home page is wider than a 390-pixel window",
+    "correct": false,
+    "why": "Width needs layout; jsdom would answer 0 and pass."
+   },
+   {
+    "text": "The Menu button opens the navigation on a phone",
+    "correct": false,
+    "why": "It depends on a media query and on a click a person can make, neither of which jsdom models."
+   },
+   {
+    "text": "The HTML of `/ssr` has a card for every product the API lists",
+    "correct": true,
+    "why": "Right. It reads the tree the server sent, which is identical in both."
+   },
+   {
+    "text": "Search shows its results after the last request answers",
+    "correct": false,
+    "why": "Lesson 3's race depends on real requests in a real page; through a shim it would test the shim."
+   }
+  ]
+ },
+ {
+  "id": "ex-z1qrbx1h",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A cookie banner covers the Pay button on a checkout page. A jsdom test clicks Pay and passes. A customer cannot pay. What did the test miss?",
+  "choices": [
+   {
+    "text": "That the banner's script failed",
+    "correct": false,
+    "why": "The banner works perfectly; the trouble is where it is drawn."
+   },
+   {
+    "text": "That the Pay button is under something, which only layout can know",
+    "correct": true,
+    "why": "Right. jsdom's click goes straight to the element; a pointer lands on whatever is on top."
+   },
+   {
+    "text": "That the button has the wrong label",
+    "correct": false,
+    "why": "The label is in the DOM, and jsdom reads it like any browser."
+   },
+   {
+    "text": "That the test needed a longer wait",
+    "correct": false,
+    "why": "No wait helps: the banner never moves, and jsdom never asks where things are."
+   }
+  ]
+ },
+ {
+  "id": "ex-mnvkwwpf",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`shop.mjs` lends the page Node's `fetch`. A tester uses it to check that the shop refuses a request from another site. What is wrong with that test?",
+  "choices": [
+   {
+    "text": "Node's `fetch` applies none of the browser's rules between sites, so it tests the shim",
+    "correct": true,
+    "why": "Right. The check is about what a browser enforces, and no browser code is in the path."
+   },
+   {
+    "text": "jsdom cannot send a POST request",
+    "correct": false,
+    "why": "The banana's `POST /api/basket` went through the same shim."
+   },
+   {
+    "text": "The shim forgets the page's address",
+    "correct": false,
+    "why": "It resolves each address against `window.location.href`, which is how `/api/products` worked."
+   },
+   {
+    "text": "Nothing: the shim is the browser's own `fetch`",
+    "correct": false,
+    "why": "There is no browser here; the shim hands the request to Node."
+   }
+  ]
+ },
+ {
+  "id": "ex-47y4scpm",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "jsdom's README names two features outside its scope: layout, and ___, which is why clicking the Search link left the address at `/`.",
+  "blanks": [
+   {
+    "accept": [
+     "navigation"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

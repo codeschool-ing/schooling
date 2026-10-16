@@ -159,15 +159,15 @@
     "why": "Pular a limpeza na falha deixaria dados justamente quando os testes dão errado; o Playwright a roda."
    },
    {
-    "text": "Sim, passando ou falhando",
+    "text": "Sim, sempre, passando ou falhando",
     "why": "Certo. Também rodou depois do Ctrl+C. O que ela não sobrevive é o processo ser morto."
    },
    {
-    "text": "Só com `--retries` igual a um ou mais",
+    "text": "Com `--retries` igual a um ou mais",
     "why": "As novas tentativas decidem se o teste roda de novo, não se os ganchos rodam."
    },
    {
-    "text": "Só no modo serial",
+    "text": "No modo serial, e fora dele não",
     "why": "O modo serial muda a ordem e o pulo entre testes, não o `afterEach` depois de uma falha."
    }
   ]
@@ -204,7 +204,7 @@
   "prompt": "Uma equipe aponta a suíte para o ambiente de staging compartilhado da empresa e acrescenta um `beforeEach` que chama ali um endpoint de reinício. O que dá errado primeiro?",
   "choices": [
    {
-    "text": "Apaga os dados de todos os outros",
+    "text": "Apaga os dados de que outras pessoas e suítes dependem",
     "why": "Certo. Um reinício é global: devolve tudo ao início, inclusive o que é dos outros."
    },
    {
@@ -229,7 +229,7 @@
     "why": "Chegaram, e cada um esvaziou a cesta no seu instante; o problema veio depois."
    },
    {
-    "text": "Os cliques de cada worker caíram na cesta do outro depois do reinício",
+    "text": "Os cliques do outro worker vieram depois do reinício",
     "why": "Certo. Um reinício só é seguro quando nada escreve entre ele e a última verificação."
    },
    {
@@ -275,7 +275,7 @@
     "why": "Certo. Um contexto novo receberia então uma cesta vazia só dele; quem testa pede com as evidências."
    },
    {
-    "text": "Modo serial em todo arquivo",
+    "text": "Modo serial em cada arquivo",
     "why": "Cada arquivo ainda rodaria ao lado dos outros em outros workers."
    },
    {
@@ -321,7 +321,7 @@
     "why": "Os testes passariam tranquilos; o dano é para as pessoas nos dados."
    },
    {
-    "text": "Ambientes internos nunca têm cópia de segurança",
+    "text": "Ambientes internos não têm cópia de segurança",
     "why": "Ter ou não cópia de segurança é irrelevante; a cópia em si é o problema."
    }
   ]
@@ -351,15 +351,15 @@
   "prompt": "Um teste cria um pedido para um cliente único e então verifica que a página de pedidos da loja diz *1 order today*. Passa sozinho e falha na suíte completa. O que deve mudar?",
   "choices": [
    {
-    "text": "Dar ao cliente uma cauda aleatória mais longa",
+    "text": "Dar ao nome do cliente uma cauda aleatória mais longa",
     "why": "O cliente já era único; a contagem inclui os pedidos de todo mundo."
    },
    {
-    "text": "Verificar o pedido deste cliente, e não o total da loja",
+    "text": "Checar o que o próprio teste criou, não o total geral",
     "why": "Certo. Uma contagem global é estado compartilhado; os dados do próprio teste são a parte que ninguém muda."
    },
    {
-    "text": "Apagar o pedido no `afterEach`",
+    "text": "Apagar o pedido no `afterEach` para o próximo teste começar limpo",
     "why": "Arrumar depois não impede que pedidos de outros testes cheguem durante este."
    },
    {
@@ -393,11 +393,11 @@
   "prompt": "Com que arranjo a aula fecha a seção sobre limpeza?",
   "choices": [
    {
-    "text": "Dados únicos, um delete no fim, ambiente novo onde der",
+    "text": "Dados únicos, um delete no fim, ambiente novo",
     "why": "Certo. Cada um cobre o que os outros não cobrem, e o reinício fica para dados que não podem ser únicos."
    },
    {
-    "text": "Um reinício antes de cada teste, em todo lugar",
+    "text": "Um reinício antes de cada teste, onde a suíte rodar",
     "why": "Num ambiente compartilhado ou numa execução paralela, um reinício global destrói dados alheios."
    },
    {

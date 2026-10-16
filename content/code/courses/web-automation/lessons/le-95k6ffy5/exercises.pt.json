@@ -1,0 +1,375 @@
+{
+ "ex-b42fwfb0": {
+  "prompt": "Ponha em ordem o que um navegador de verdade faz com a página da loja, dos bytes até a tela.",
+  "items": [
+   "Buscar os bytes da página",
+   "Analisar o HTML e montar um DOM",
+   "Casar as regras de CSS com cada elemento",
+   "Fazer o layout de cada caixa: tamanho e lugar",
+   "Pintar os pixels",
+   "Compor as camadas na tela"
+  ],
+  "trap": "O layout precisa dos estilos já casados: uma caixa não tem tamanho antes de as regras serem conhecidas."
+ },
+ "ex-e1gccfxk": {
+  "prompt": "Os testes de Playwright deste curso rodam no Chromium sem janela. Que tipo de navegador é esse?",
+  "choices": [
+   {
+    "text": "Um navegador simulado, porque nada aparece numa tela",
+    "why": "Sem janela não é o mesmo que sem layout. O Chromium headless continua diagramando a página e pintando tudo na memória."
+   },
+   {
+    "text": "O navegador inteiro, diagramando e pintando na memória",
+    "why": "Certo. É por isso que a aula 16 tirou capturas dele e a aula 7 mediu 400 pixels."
+   },
+   {
+    "text": "Uma biblioteca de DOM como o jsdom, iniciada pelo Playwright por velocidade",
+    "why": "O Playwright nunca troca o navegador por uma biblioteca; ele conduz uma versão de verdade do Chromium."
+   },
+   {
+    "text": "Um navegador que roda scripts mas pula o CSS",
+    "why": "O Chromium headless aplica todas as regras; o botão Menu foi escondido pelo CSS nele, com 1280 pixels."
+   }
+  ]
+ },
+ "ex-39xnz2kd": {
+  "prompt": "Que passo do trabalho de um navegador um navegador simulado deixa de fora por completo?",
+  "choices": [
+   {
+    "text": "Analisar o HTML",
+    "why": "Ele analisa: o jsdom achou os oito cards com seletores comuns."
+   },
+   {
+    "text": "Rodar os scripts da página",
+    "why": "O jsdom rodou o `app.js` e desenhou os cards assim que ganhou um `fetch`."
+   },
+   {
+    "text": "O layout",
+    "why": "Certo. Sem layout não há tamanho nem posição, e por isso o `scrollWidth` veio 0."
+   },
+   {
+    "text": "Casar regras de CSS",
+    "why": "Guardado em parte: o jsdom casou o `min-width` da cesta e informou 384px."
+   }
+  ]
+ },
+ "ex-79xqam2g": {
+  "prompt": "O `visit` do Zombie chamou o callback com 0 cards, e dois segundos depois havia 8. O que isso mostra?",
+  "choices": [
+   {
+    "text": "A loja desenhou os cards duas vezes",
+    "why": "Houve um desenho só; ele aconteceu depois do callback, quando `/api/products` respondeu."
+   },
+   {
+    "text": "A ideia de página carregada do Zombie não incluía a requisição de que os cards precisam",
+    "why": "Certo. O log dele disse que o laço de eventos estava vazio antes de o `GET /api/products` sair."
+   },
+   {
+    "text": "O Zombie não consegue rodar o `app.js`",
+    "why": "Rodou: oito cards apareceram dois segundos depois, desenhados por esse script."
+   },
+   {
+    "text": "O servidor demorou na primeira requisição",
+    "why": "As requisições foram rápidas; só começaram depois de o Zombie já ter chamado o callback."
+   }
+  ]
+ },
+ "ex-f2dpcj59": {
+  "prompt": "O que o `npm view` mostrou sobre o estado do Zombie.js?",
+  "choices": [
+   {
+    "text": "Uma versão no mês passado, construída sobre o jsdom 30",
+    "why": "A versão mais nova é a 6.1.4, e ela fixa o jsdom 11.12.0."
+   },
+   {
+    "text": "Que foi removido do npm",
+    "why": "Ele continua lá e continua instalando, com uma tela de avisos de obsolescência."
+   },
+   {
+    "text": "A última versão, 6.1.4, saiu em novembro de 2018 e fixa o jsdom 11.12.0",
+    "why": "Certo. Dezenove versões maiores do jsdom atrás, com um `request` obsoleto por baixo."
+   },
+   {
+    "text": "É mantido pela equipe do Playwright",
+    "why": "Os mantenedores são os próprios autores, e nada foi publicado desde 2018."
+   }
+  ]
+ },
+ "ex-3nqagzw4": {
+  "prompt": "O HtmlUnit achou 8 cards em `/ssr` e 0 em `/`. Por que nenhum em `/`?",
+  "choices": [
+   {
+    "text": "O motor Rhino dele não conseguiu analisar a função `async` da linha 3 do `app.js`",
+    "why": "Certo. Nenhum script rodou, então nada desenhou os cards. Em `/ssr` eles vieram no HTML."
+   },
+   {
+    "text": "A página inicial está quebrada em todo navegador",
+    "why": "O Chromium e o jsdom desenharam oito cards da mesma página."
+   },
+   {
+    "text": "Três segundos foram pouco para esperar `/api/products`",
+    "why": "A requisição nem foi enviada: o script que a envia não compilou."
+   },
+   {
+    "text": "O HtmlUnit não roda JavaScript nenhum",
+    "why": "Ele roda, pelo próprio motor; este script usou uma sintaxe que o motor não conhece."
+   }
+  ]
+ },
+ "ex-mt401rqj": {
+  "prompt": "Ligue cada ferramenta ao lugar onde o JavaScript da página roda nela.",
+  "pairs": [
+   {
+    "left": "HtmlUnit",
+    "right": "Um fork do Mozilla Rhino, dentro do Java"
+   },
+   {
+    "left": "Zombie.js",
+    "right": "O jsdom 11.12.0, fixado dentro dele"
+   },
+   {
+    "left": "jsdom",
+    "right": "O próprio V8 do Node, num contexto separado"
+   },
+   {
+    "left": "Chromium headless",
+    "right": "O V8 dentro de um navegador que também diagrama e pinta"
+   }
+  ]
+ },
+ "ex-9j0gjvja": {
+  "prompt": "A suíte de uma equipe Java roda no `HtmlUnitDriver` e está verde. Um usuário relata que um botão não faz nada no Safari. O que a suíte verde estabeleceu sobre o Safari?",
+  "choices": [
+   {
+    "text": "Que o botão funciona lá, já que os dois seguem o padrão",
+    "why": "Seguir o padrão é o que todo motor afirma; a aula 10 roda três de verdade porque eles ainda diferem."
+   },
+   {
+    "text": "Nada: rodou num motor que nenhum usuário tem",
+    "why": "Certo. Passar no HtmlUnit é passar no Rhino e no DOM do HtmlUnit, não no JavaScriptCore e no WebKit do Safari."
+   },
+   {
+    "text": "Que o defeito é do Safari, não da página",
+    "why": "A suíte nunca rodou no Safari, então não tem evidência de onde está a falha."
+   },
+   {
+    "text": "Que o botão funcionou no Chrome também",
+    "why": "Nenhum Chrome rodou também; o `HtmlUnitDriver` não inicia navegador nenhum."
+   }
+  ]
+ },
+ "ex-8j6cq6nd": {
+  "prompt": "Para o jsdom rodar os scripts da loja, a opção se escreve `runScripts: '___'`, um nome que avisa que a caixa de areia não é à prova de falhas.",
+  "blanks": [
+   {
+    "accept": [
+     "dangerously"
+    ]
+   }
+  ]
+ },
+ "ex-wc98behn": {
+  "prompt": "Um script abre a loja com `runScripts: 'dangerously'` e deixa de fora `resources: 'usable'`. O que acontece?",
+  "choices": [
+   {
+    "text": "O jsdom se recusa a iniciar sem as duas opções",
+    "why": "Cada opção é independente; o jsdom inicia sem problema com qualquer uma."
+   },
+   {
+    "text": "Os cards são desenhados mas sem estilo",
+    "why": "Nada os desenha: o script que faria isso nem é baixado."
+   },
+   {
+    "text": "O `app.js` nunca é buscado, então a lista fica vazia",
+    "why": "Certo. Sem ela o jsdom não carrega nenhum sub-recurso, scripts em `<script src>` incluídos."
+   },
+   {
+    "text": "Os scripts embutidos falham e os externos rodam",
+    "why": "É o contrário: os embutidos rodam, e os externos não são buscados."
+   }
+  ]
+ },
+ "ex-nfnn83fn": {
+  "prompt": "O primeiro `simulated/home.mjs` terminou com `ReferenceError: fetch is not defined`, embora o Node 22 tenha `fetch`. Por quê?",
+  "choices": [
+   {
+    "text": "O `fetch` do Node precisa de uma flag na versão 22",
+    "why": "O Node 22 tem `fetch` sem flag; o próprio `shop.mjs` o chama."
+   },
+   {
+    "text": "O servidor da loja não aceita requisições do jsdom",
+    "why": "Nenhuma requisição foi enviada; o erro veio antes."
+   },
+   {
+    "text": "O `app.js` rodou na janela do jsdom, que não tem `fetch` próprio",
+    "why": "Certo. Os globais da página são do jsdom, não do Node, e o jsdom 30.1.2 não implementa `fetch`."
+   },
+   {
+    "text": "O Node em uso é mais velho do que o jsdom 30.1.2 suporta",
+    "why": "O npm avisou sobre o 22.22.0, mas o script corrigido rodou nesse mesmo Node sem erro."
+   }
+  ]
+ },
+ "ex-svtzhna3": {
+  "prompt": "No Chromium, com 360 pixels de largura, o `scrollWidth` da loja era 400. Que número o jsdom informou para a mesma página?",
+  "unit": "pixels"
+ },
+ "ex-dyc2ezn2": {
+  "prompt": "Alguém leva a verificação da aula 7, `scrollWidth <= 360`, para um teste no jsdom para deixar a suíte mais rápida. Ela passa. O que a mudança fez?",
+  "choices": [
+   {
+    "text": "Corrigiu o defeito, já que a cesta não transborda mais",
+    "why": "O `style.css` não mudou; o Chromium continua medindo 400."
+   },
+   {
+    "text": "Deixou a verificação mais rápida e tão boa quanto",
+    "why": "Não é tão boa: agora compara 0 com 360 em toda página, quebrada ou não."
+   },
+   {
+    "text": "Transformou-a numa verificação que passa em toda página",
+    "why": "Certo. Sem layout toda largura é 0, então o teste não consegue mais falhar, o que é pior do que não ter teste."
+   },
+   {
+    "text": "Fez ela falhar, porque o jsdom não tem janela",
+    "why": "Ela passou: o jsdom responde com 0, não com um erro."
+   }
+  ]
+ },
+ "ex-w8zkktm0": {
+  "prompt": "Acima de 600 pixels o botão Menu tem `display: none`. O `click()` do jsdom nele mudou `aria-expanded` para true. Por que conseguiu?",
+  "choices": [
+   {
+    "text": "O jsdom não sabia que o botão estava escondido",
+    "why": "Sabia: o `getComputedStyle` informou `display` como `none` uma linha antes."
+   },
+   {
+    "text": "O `click()` dele manda o evento direto ao elemento, sem ponteiro que caia em algum lugar",
+    "why": "Certo. Nada pergunta se o elemento está visível, coberto ou com tamanho zero; o clique do Playwright pergunta as três coisas."
+   },
+   {
+    "text": "A media query o escondia só em celulares",
+    "why": "Acima de 600 pixels ele fica escondido para todos; o Chromium se recusou a clicar com 1280."
+   },
+   {
+    "text": "O jsdom esperou o botão ficar visível",
+    "why": "O jsdom não espera sozinho, e o botão nunca ficou visível."
+   }
+  ]
+ },
+ "ex-k2v6714b": {
+  "prompt": "Quais destes o jsdom 30.1.2 informou como `undefined` na janela da loja?",
+  "choices": [
+   {
+    "text": "`matchMedia`",
+    "why": "Certo: ali uma página não consegue fazer a pergunta de uma media query."
+   },
+   {
+    "text": "`IntersectionObserver`",
+    "why": "Certo: nada entra na área visível onde nada tem posição."
+   },
+   {
+    "text": "`querySelector`",
+    "why": "Está lá; todo script da aula o usou."
+   },
+   {
+    "text": "`getComputedStyle`",
+    "why": "Está lá, e informou o `min-width` como 384px."
+   }
+  ]
+ },
+ "ex-s4e3p8v2": {
+  "prompt": "Por que o `simulated/ssr.test.mjs` combina bem com o jsdom?",
+  "choices": [
+   {
+    "text": "Não precisa de script nem de layout, só do HTML que o servidor mandou",
+    "why": "Certo. Toda pergunta que ele faz tem a mesma resposta no jsdom e no Chromium."
+   },
+   {
+    "text": "O jsdom roda o script atrasado de `/ssr` mais rápido que o Chromium",
+    "why": "O teste não roda script nenhum; nenhuma das opções está ligada."
+   },
+   {
+    "text": "Ele confere que os botões de `/ssr` podem ser apertados",
+    "why": "Ele confere que cada botão carrega o `data-id` certo; se uma pessoa consegue apertá-lo é pergunta para um navegador."
+   },
+   {
+    "text": "O Playwright não consegue ler HTML renderizado no servidor",
+    "why": "A aula 6 o leu com o fixture `request` do Playwright."
+   }
+  ]
+ },
+ "ex-gwp6e1vg": {
+  "prompt": "Qual destas verificações poderia passar de um teste de Playwright para um teste no jsdom sem perder nada?",
+  "choices": [
+   {
+    "text": "Nada na página inicial é mais largo que uma janela de 390 pixels",
+    "why": "Largura pede layout; o jsdom responderia 0 e passaria."
+   },
+   {
+    "text": "O botão Menu abre a navegação num celular",
+    "why": "Depende de uma media query e de um clique que uma pessoa consegue dar, e o jsdom não modela nenhum dos dois."
+   },
+   {
+    "text": "O HTML de `/ssr` tem um card para cada produto que a API lista",
+    "why": "Certo. Ele lê a árvore que o servidor mandou, que é idêntica nos dois."
+   },
+   {
+    "text": "A busca mostra os resultados depois que a última requisição responde",
+    "why": "A corrida da aula 3 depende de requisições de verdade numa página de verdade; por um shim ela testaria o shim."
+   }
+  ]
+ },
+ "ex-z1qrbx1h": {
+  "prompt": "Um banner de cookies cobre o botão Pagar numa página de checkout. Um teste no jsdom clica em Pagar e passa. Um cliente não consegue pagar. O que o teste não viu?",
+  "choices": [
+   {
+    "text": "Que o script do banner falhou",
+    "why": "O banner funciona perfeitamente; o problema é onde ele é desenhado."
+   },
+   {
+    "text": "Que o botão Pagar está debaixo de algo, o que só o layout sabe",
+    "why": "Certo. O clique do jsdom vai direto ao elemento; um ponteiro cai no que estiver por cima."
+   },
+   {
+    "text": "Que o botão tem o rótulo errado",
+    "why": "O rótulo está no DOM, e o jsdom o lê como qualquer navegador."
+   },
+   {
+    "text": "Que o teste precisava de uma espera maior",
+    "why": "Nenhuma espera ajuda: o banner nunca sai, e o jsdom nunca pergunta onde as coisas estão."
+   }
+  ]
+ },
+ "ex-mnvkwwpf": {
+  "prompt": "O `shop.mjs` empresta à página o `fetch` do Node. Um testador o usa para conferir que a loja recusa uma requisição de outro site. O que há de errado nesse teste?",
+  "choices": [
+   {
+    "text": "O `fetch` do Node não aplica nenhuma das regras do navegador entre sites, então testa o shim",
+    "why": "Certo. A verificação é sobre o que um navegador impõe, e nenhum código de navegador está no caminho."
+   },
+   {
+    "text": "O jsdom não consegue mandar uma requisição POST",
+    "why": "O `POST /api/basket` da banana passou pelo mesmo shim."
+   },
+   {
+    "text": "O shim esquece o endereço da página",
+    "why": "Ele resolve cada endereço a partir de `window.location.href`, e foi assim que `/api/products` funcionou."
+   },
+   {
+    "text": "Nada: o shim é o próprio `fetch` do navegador",
+    "why": "Não há navegador aqui; o shim entrega a requisição ao Node."
+   }
+  ]
+ },
+ "ex-47y4scpm": {
+  "prompt": "O README do jsdom cita duas funcionalidades fora do escopo dele: o layout e a ___, e por isso clicar no link Search deixou o endereço em `/`.",
+  "blanks": [
+   {
+    "accept": [
+     "navegação",
+     "navegacao"
+    ]
+   }
+  ]
+ }
+}

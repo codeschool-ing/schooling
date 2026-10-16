@@ -60,14 +60,25 @@ question of *when is the page ready* inside Zombie, where you cannot see it.
 here:
 
 ```
-%%CAP zombie-time%%
+ana@laptop:~/quitanda$ npm view zombie time | tail -6
+  '6.1.0': '2018-04-02T23:14:43.758Z',
+  '6.1.1': '2018-04-07T17:12:16.567Z',
+  '6.1.2': '2018-04-29T21:26:50.740Z',
+  '6.1.3': '2018-08-12T03:18:03.070Z',
+  '6.1.4': '2018-11-27T17:53:28.989Z'
+}
 ```
 
 **The last release is 6.1.4, from 27 November 2018.** Nothing has been published since. What it
 depends on tells the rest:
 
 ```
-%%CAP zombie-deps%%
+ana@laptop:~/quitanda$ npm view zombie version dependencies.jsdom dependencies.request
+version = '6.1.4'
+dependencies.jsdom = '11.12.0'
+dependencies.request = '^2.85.0'
+ana@laptop:~/quitanda$ npm view request deprecated
+request has been deprecated, see https://github.com/request/request/issues/3142
 ```
 
 Zombie pins jsdom at exactly 11.12.0, and this lesson installs jsdom 30.1.2: nineteen major
@@ -82,7 +93,22 @@ unmaintained package into the project's `package.json`. Make `~/zombie-try`, go 
 install:
 
 ```
-%%CAP zombie-install%%
+ana@laptop:~/zombie-try$ npm install zombie@6.1.4
+npm warn deprecated request-promise-native@1.0.9: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
+npm warn deprecated har-validator@5.1.5: this library is no longer supported
+npm warn deprecated whatwg-encoding@1.0.5: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated domexception@1.0.1: Use your platform's native DOMException instead
+npm warn deprecated left-pad@1.3.0: use String.prototype.padStart()
+npm warn deprecated w3c-hr-time@1.0.2: Use your platform's native performance.now() and performance.timeOrigin.
+npm warn deprecated uuid@3.4.0: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+npm warn deprecated core-js@2.6.12: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+
+added 104 packages in 4s
+
+4 packages are looking for funding
+  run `npm fund` for details
 ```
 
 Every deprecation warning there is a package Zombie pulls in. Then write a file named `visit.js` in
@@ -104,14 +130,29 @@ browser.visit('/', () => {
 ```
 
 ```
-%%CAP zombie-visit%%
+ana@laptop:~/zombie-try$ node visit.js
+(node:19961) [DEP0044] DeprecationWarning: The `util.isArray` API is deprecated. Please use `Array.isArray()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+when visit() called back: 0 cards
+two seconds later: 8 cards
 ```
 
 **Zero, then eight.** The callback came back before the cards were drawn. The `DEBUG` variable
 switches on Zombie's own log, and it shows the order of events:
 
 ```
-%%CAP zombie-debug%%
+ana@laptop:~/zombie-try$ DEBUG=zombie node visit.js
+2026-10-16T01:17:17.222Z zombie Opened window http://localhost:3000/ 
+(node:20018) [DEP0044] DeprecationWarning: The `util.isArray` API is deprecated. Please use `Array.isArray()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T01:17:17.263Z zombie GET http://localhost:3000/ => 200
+2026-10-16T01:17:17.291Z zombie Loaded document http://localhost:3000/
+2026-10-16T01:17:17.296Z zombie GET http://localhost:3000/app.js => 200
+2026-10-16T01:17:17.315Z zombie Event loop is empty
+when visit() called back: 0 cards
+2026-10-16T01:17:17.320Z zombie GET http://localhost:3000/api/products => 200
+2026-10-16T01:17:17.335Z zombie GET http://localhost:3000/api/basket => 200
+two seconds later: 8 cards
 ```
 
 Zombie fetched `app.js`, ran it, reported its event loop empty, and called back. Only after that

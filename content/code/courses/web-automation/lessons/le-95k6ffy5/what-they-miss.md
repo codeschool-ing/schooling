@@ -48,7 +48,18 @@ window.close();
 ```
 
 ```
-%%CAP missing%%
+ana@laptop:~/quitanda$ node simulated/missing.mjs
+innerWidth: 1024
+scrollWidth: 0
+.basket min-width: 384px
+.basket width: 0
+lesson 7's check at 360 px: passes
+matchMedia: undefined
+IntersectionObserver: undefined
+ResizeObserver: undefined
+innerText: undefined
+Not implemented: navigation to another Document
+after clicking Search: /
 ```
 
 Read the first five lines together. **jsdom knows the rule and cannot apply it**: it matched
@@ -108,7 +119,28 @@ await browser.close();
 ```
 
 ```
-%%CAP hidden%%
+ana@laptop:~/quitanda$ node simulated/hidden.mjs
+jsdom: display is none
+jsdom: aria-expanded is true after click()
+locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('.menu-toggle')
+    - locator resolved to <button type="button" class="menu-toggle" aria-expanded="false">Menu</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+      - waiting 100ms
+    4 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying click action
+      - waiting 500ms
+
+chromium: aria-expanded is false
 ```
 
 **jsdom knew the button was hidden and clicked it anyway.** Its `click()` is the DOM's own method:

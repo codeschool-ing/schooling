@@ -5,8 +5,8 @@ version: 1
 
 **HtmlUnit is a browser written in Java, for Java programs**, and unlike Zombie it is still
 released: 5.6.0 was the newest version on Maven Central, the registry Java libraries are published
-to, when this lesson was captured in October 2026. It parses HTML, builds a DOM, matches CSS rules and runs JavaScript, all inside the
-Java process that called it. Java teams meet it in two places: called directly, as below, and as
+to, when this lesson was captured in October 2026. It parses HTML, builds a DOM, matches CSS
+rules and runs JavaScript, all inside the Java process that called it. Java teams meet it in two places: called directly, as below, and as
 the browser behind Selenium's `HtmlUnitDriver`.
 
 ## Under Selenium
@@ -40,7 +40,10 @@ This needs a JDK and Maven, which lesson 1 did not install; with neither, read t
 JDK here is this one:
 
 ```
-%%CAP java-version%%
+ana@laptop:~/quitanda$ java -version
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-24.04.4-Ubuntu)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-24.04.4-Ubuntu, mixed mode, sharing)
 ```
 
 Maven downloads a Java library and everything it depends on. In a folder `htmlunit` inside the
@@ -91,7 +94,22 @@ public class Shop {
 In `~/quitanda/htmlunit`, Maven copies the jars into `lib`:
 
 ```
-%%CAP mvn-deps%%
+ana@laptop:~/quitanda/htmlunit$ mvn -q dependency:copy-dependencies -DoutputDirectory=lib
+ana@laptop:~/quitanda/htmlunit$ ls lib
+commons-codec-1.11.jar
+commons-io-2.22.0.jar
+commons-lang3-3.21.0.jar
+commons-logging-1.4.0.jar
+htmlunit-5.6.0.jar
+htmlunit-core-js-5.6.0.jar
+htmlunit-csp-5.6.0.jar
+htmlunit-cssparser-5.6.0.jar
+htmlunit-websocket-client-5.6.0.jar
+htmlunit-xpath-5.6.0.jar
+httpclient-4.5.14.jar
+httpcore-4.4.16.jar
+httpmime-4.5.14.jar
+neko-htmlunit-5.6.0.jar
 ```
 
 **That download is the one step not run the way you will run it.** Maven Central's main address
@@ -102,13 +120,18 @@ Java 11 and later run a single source file without a separate compile step. With
 the program prints this many lines, most of them two stack traces:
 
 ```
-%%CAP htmlunit-lines%%
+ana@laptop:~/quitanda/htmlunit$ java -cp 'lib/*' Shop.java 2>&1 | wc -l
+391
 ```
 
 and `grep` keeps the count lines and the one line of each script error that names it:
 
 ```
-%%CAP htmlunit-run%%
+ana@laptop:~/quitanda/htmlunit$ java -cp 'lib/*' Shop.java 2>&1 | grep -E 'cards|ScriptException'
+org.htmlunit.ScriptException: missing formal parameter (http://localhost:3000/slow/ssr.js#3)
+/ssr has 8 cards
+org.htmlunit.ScriptException: missing ; before statement (http://localhost:3000/app.js#3)
+/ has 0 cards
 ```
 
 **`/ssr` has its eight cards, and `/` has none.** Both pages hit the same wall. Line 3 of `app.js`

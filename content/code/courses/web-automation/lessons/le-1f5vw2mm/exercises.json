@@ -140,7 +140,7 @@
     "why": "It creates its own customer with a unique name, so nobody else can take or delete it."
    },
    {
-    "text": "A test of the one basket the shop keeps",
+    "text": "A test of the only basket the shop keeps",
     "correct": true,
     "why": "Right. There is no basket to make unique, only the basket, and other tests write to it."
    },
@@ -240,17 +240,17 @@
     "why": "Skipping cleanup on failure would leave data exactly when tests go wrong; Playwright runs it."
    },
    {
-    "text": "Yes, passed or failed",
+    "text": "Yes, every time, passed or failed",
     "correct": true,
     "why": "Right. It also ran after Ctrl+C. What it cannot survive is the process being killed."
    },
    {
-    "text": "Only with `--retries` set to one or more",
+    "text": "With `--retries` set to one or more",
     "correct": false,
     "why": "Retries decide whether the test runs again, not whether its hooks run."
    },
    {
-    "text": "Only in serial mode",
+    "text": "In serial mode alone",
     "correct": false,
     "why": "Serial mode changes ordering and skipping between tests, not `afterEach` after a failure."
    }
@@ -310,7 +310,7 @@
   "prompt": "A team points its suite at the company's shared staging environment, and adds a `beforeEach` that calls a reset endpoint there. What goes wrong first?",
   "choices": [
    {
-    "text": "It wipes everybody else's data",
+    "text": "It wipes the data other people and suites rely on",
     "correct": true,
     "why": "Right. A reset is global: it puts everything back, including what belongs to everybody else."
    },
@@ -346,7 +346,7 @@
     "why": "They did, and each emptied the basket at its moment; the trouble came after."
    },
    {
-    "text": "Each worker's clicks landed in the other's basket after its reset",
+    "text": "The other worker's clicks came after its reset",
     "correct": true,
     "why": "Right. A reset is safe only when nothing writes between it and the last assertion."
    },
@@ -382,7 +382,7 @@
     "why": "It passes alone and with `--workers 1`; it failed only beside the other file."
    },
    {
-    "text": "Serial mode orders one file, and the basket is shared by all files",
+    "text": "It orders one file's tests and leaves the others free to run",
     "correct": true,
     "why": "Right. Another file in another worker still writes to the same basket."
    },
@@ -403,7 +403,7 @@
   "prompt": "What removes the basket problem for good, so that basket tests can run in parallel?",
   "choices": [
    {
-    "text": "Resetting before every click",
+    "text": "Resetting before each click",
     "correct": false,
     "why": "It narrows the window and never closes it, and each reset can wipe the other test's basket."
    },
@@ -413,7 +413,7 @@
     "why": "Right. A fresh context would then get an empty basket of its own; the tester asks for it with the evidence."
    },
    {
-    "text": "Serial mode in every file",
+    "text": "Serial mode in each file",
     "correct": false,
     "why": "Each file would still run beside the others in other workers."
    },
@@ -480,7 +480,7 @@
     "why": "The tests might pass happily; the harm is to the people in the data."
    },
    {
-    "text": "Internal environments are never backed up",
+    "text": "Internal environments are not backed up",
     "correct": false,
     "why": "Whether they are backed up is beside the point; the copy itself is the problem."
    }
@@ -527,7 +527,7 @@
   "prompt": "A test creates an order for a unique customer, then asserts that the shop's orders page says *1 order today*. It passes alone and fails in the full suite. What should change?",
   "choices": [
    {
-    "text": "Give the customer a longer random tail",
+    "text": "Give the customer's name a longer random tail",
     "correct": false,
     "why": "The customer was already unique; the count includes everybody's orders."
    },
@@ -537,7 +537,7 @@
     "why": "Right. A global count is shared state; the test's own data is the part nobody else can change."
    },
    {
-    "text": "Delete the order in `afterEach`",
+    "text": "Delete the order in `afterEach` so the next test starts clean",
     "correct": false,
     "why": "Tidying after does nothing about other tests' orders arriving during this one."
    },
@@ -585,17 +585,17 @@
   "prompt": "Which arrangement does the lesson end the cleanup section on?",
   "choices": [
    {
-    "text": "Unique data, a tidy delete at the end, a fresh environment where possible",
+    "text": "Unique data, a tidy delete, a fresh environment",
     "correct": true,
     "why": "Right. Each covers what the others cannot, and the reset is kept for data that cannot be unique."
    },
    {
-    "text": "A reset before every test, everywhere",
+    "text": "A reset before each test, wherever the suite runs",
     "correct": false,
     "why": "On a shared environment or in a parallel run, a global reset destroys other people's data."
    },
    {
-    "text": "A delete at the end of every test, and nothing else",
+    "text": "A delete at the end of each test, and nothing more",
     "correct": false,
     "why": "That is the one that fails when a run is killed."
    },
