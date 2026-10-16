@@ -1238,6 +1238,52 @@ def l16_choose_k(lang):
             'O cotovelo e o pico concordam em quatro, o que dados reais raramente facilitam assim.')
     return fig, cap
 
+# ------------------------------------------------------------------ lesson 17
+
+@figure('l17-maps', 17)
+def l17_maps(lang):
+    import numpy as np
+    from sklearn.cluster import KMeans
+    from sklearn.decomposition import PCA
+    from sklearn.manifold import TSNE
+    from sklearn.preprocessing import StandardScaler
+    from umap import UMAP
+    b = data('baskets.csv')
+    z = StandardScaler().fit_transform(b.drop(columns='customer_id'))
+    groups = KMeans(n_clusters=4, n_init=10, random_state=0).fit(z).labels_
+    maps = [(T(lang, 'PCA', 'PCA'), PCA(n_components=2).fit_transform(z)),
+            (T(lang, 't-SNE', 't-SNE'), TSNE(perplexity=30, random_state=0).fit_transform(z)),
+            (T(lang, 'UMAP', 'UMAP'), UMAP(random_state=0, n_jobs=1).fit_transform(z))]
+    keep = np.random.default_rng(0).choice(len(z), 450, replace=False)
+    colours = ['--phosphor', '--amber', '--paper', '--paper-dim']
+    names = [T(lang, 'vegetables and greens', 'legumes e folhas'), T(lang, 'rare, large orders', 'pedidos raros e grandes'),
+             T(lang, 'fruit', 'fruta'), T(lang, 'bakery', 'padaria')]
+    fig = Fig('l17-maps', 640, 290, T(lang,
+        'Three square maps of the same 1,200 customers, a sample of 450 drawn as dots coloured by their '
+        'k-means group. In the PCA map the four groups are visible but touch. In the t-SNE map they are four '
+        'separate blobs. In the UMAP map they are four tight, widely separated islands.',
+        'Três mapas quadrados dos mesmos 1.200 clientes, uma amostra de 450 desenhada como pontos coloridos '
+        'pelo grupo do k-means. No mapa da PCA os quatro grupos aparecem, mas se tocam. No mapa do t-SNE são '
+        'quatro manchas separadas. No mapa do UMAP são quatro ilhas apertadas e bem afastadas.'))
+    for i, (title, flat) in enumerate(maps):
+        x0, y0, size = 20 + i * 205, 36, 190
+        fig.rect(x0, y0, size, size, stroke='--wire', fill='--panel')
+        fig.text(x0 + size / 2, y0 - 14, title, size=11.5, weight='600')
+        lo, hi = flat.min(axis=0), flat.max(axis=0)
+        for j in keep:
+            px = x0 + 10 + (flat[j, 0] - lo[0]) / (hi[0] - lo[0]) * (size - 20)
+            py = y0 + 10 + (flat[j, 1] - lo[1]) / (hi[1] - lo[1]) * (size - 20)
+            fig.circle(px, py, 2.2, fill=colours[groups[j]])
+    for g in range(4):
+        x = 30 + g * 155
+        fig.circle(x, 256, 4.5, fill=colours[g])
+        fig.text(x + 10, 256, names[g], size=10.5, anchor='start')
+    cap = T(lang, 'Same customers, same groups, three pictures. Only the first keeps distances between groups '
+                  'honest; the other two keep neighbours.',
+            'Os mesmos clientes, os mesmos grupos, três retratos. Só o primeiro mantém honestas as distâncias '
+            'entre grupos; os outros dois mantêm os vizinhos.')
+    return fig, cap
+
 
 def main():
     if '--list' in sys.argv:
