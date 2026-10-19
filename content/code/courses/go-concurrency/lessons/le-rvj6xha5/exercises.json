@@ -1,0 +1,529 @@
+[
+  {
+    "id": "ex-yv5zgzhg",
+    "version": 1,
+    "section": "durations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a `time.Duration`, underneath?",
+    "hint": "`int64(d)` printed it for ninety minutes.",
+    "choices": [
+      {
+        "text": "A struct holding a number and a unit",
+        "correct": false,
+        "why": "There is no unit field. Ninety minutes converted to `int64` was one plain number, 5,400,000,000,000."
+      },
+      {
+        "text": "An `int64` of nanoseconds",
+        "correct": true,
+        "why": "Right. `1h30m0s` is its `String` method; the value is 5,400,000,000,000 nanoseconds."
+      },
+      {
+        "text": "A `float64` counting seconds",
+        "correct": false,
+        "why": "`Hours` and `Minutes` return floats, but the duration itself is an integer of nanoseconds."
+      },
+      {
+        "text": "A string such as `1h30m0s`",
+        "correct": false,
+        "why": "That is how it prints, through its `String` method, not what it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-3b26tzg6",
+    "version": 1,
+    "section": "durations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`n := 4; time.Sleep(n * time.Second)` does not compile, while `time.Sleep(4 * time.Second)` does. Why?",
+    "hint": "What type does `n` have, and what type does the literal `4` have?",
+    "choices": [
+      {
+        "text": "`time.Sleep` only accepts constants",
+        "correct": false,
+        "why": "`time.Sleep(time.Duration(n) * time.Second)` passes a computed value and compiles."
+      },
+      {
+        "text": "Multiplying a variable by a duration overflows",
+        "correct": false,
+        "why": "Four seconds is far from the limit of about 292 years, and the error was a type error."
+      },
+      {
+        "text": "`n` is an `int`, and `time.Second` is not",
+        "correct": true,
+        "why": "Right: `mismatched types int and time.Duration`. The untyped `4` takes the type it is used with."
+      },
+      {
+        "text": "The `*` operator is not defined for durations",
+        "correct": false,
+        "why": "It is: `90 * time.Minute` is the first line of `dur.go`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n19vw7gv",
+    "version": 1,
+    "section": "durations",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To turn the `int` in `n` into a duration of `n` seconds, write `time.___(n) * time.Second`.",
+    "hint": "The name of the type itself.",
+    "blanks": [
+      {
+        "accept": [
+          "Duration"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yjfpngy8",
+    "version": 1,
+    "section": "durations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `time.ParseDuration(\"3 days\")` fail?",
+    "hint": "Where do the package's units stop, and why there?",
+    "choices": [
+      {
+        "text": "The space between the number and the unit is the only problem",
+        "correct": false,
+        "why": "`3days` fails as well: there is no day unit, because a day is not always 24 hours."
+      },
+      {
+        "text": "Its units stop at the hour, since a day's length depends on clock changes",
+        "correct": true,
+        "why": "Right. The package leaves days to you, where you know which calendar you mean."
+      },
+      {
+        "text": "Three days is longer than a `Duration` can hold",
+        "correct": false,
+        "why": "A `Duration` holds about 292 years."
+      },
+      {
+        "text": "Durations are parsed from integers only",
+        "correct": false,
+        "why": "`1h15m30.5s` parsed, fraction and all."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j4cpg0n",
+    "version": 1,
+    "section": "durations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program records `start := time.Now()`, and during the next minute the machine's clock is moved back five minutes by the network time service. What does `time.Since(start)` report at the end of that minute?",
+    "hint": "Which of the two readings does `Since` use?",
+    "choices": [
+      {
+        "text": "About minus four minutes",
+        "correct": false,
+        "why": "That is what the wall clock alone would give. `Since` uses the monotonic reading `start` carries."
+      },
+      {
+        "text": "About one minute",
+        "correct": true,
+        "why": "Right. The monotonic clock only moves forwards and ignores the correction."
+      },
+      {
+        "text": "Zero, because the clocks disagree",
+        "correct": false,
+        "why": "Nothing reports zero for disagreement; the monotonic reading is used and is right."
+      },
+      {
+        "text": "About six minutes",
+        "correct": false,
+        "why": "Moving the wall clock back would not add time even if it were used."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmq0c2db",
+    "version": 1,
+    "section": "durations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before writing a `time.Time` to a file, why strip the monotonic reading with `Round(0)`?",
+    "hint": "What is `m=+0.000103412` counted from?",
+    "choices": [
+      {
+        "text": "It makes the file smaller",
+        "correct": false,
+        "why": "Size is not the reason; meaning is."
+      },
+      {
+        "text": "Files cannot hold more than second precision",
+        "correct": false,
+        "why": "`Round(0)` keeps the nanoseconds of the wall clock. It removes only the monotonic reading."
+      },
+      {
+        "text": "It is counted from this process's start",
+        "correct": true,
+        "why": "Right. Another process or machine has a different start, and the number would mislead."
+      },
+      {
+        "text": "The monotonic reading is a security leak",
+        "correct": false,
+        "why": "The section gives no such reason: the reading is meaningless outside its process."
+      }
+    ]
+  },
+  {
+    "id": "ex-6drqaanm",
+    "version": 1,
+    "section": "timers-and-tickers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a timer give you that `time.Sleep` does not?",
+    "hint": "Where can a goroutine wait for a timer?",
+    "choices": [
+      {
+        "text": "A channel, to wait on in a `select` and to cancel with `Stop`",
+        "correct": true,
+        "why": "Right. `Sleep` blocks the goroutine; a timer is a value with a channel and a `Stop` method."
+      },
+      {
+        "text": "Better precision, measured in nanoseconds instead of milliseconds",
+        "correct": false,
+        "why": "Both take a `Duration` in nanoseconds; precision is not the difference."
+      },
+      {
+        "text": "It sleeps without a goroutine",
+        "correct": false,
+        "why": "Something still waits on the channel, and that something is a goroutine."
+      },
+      {
+        "text": "It survives a restart of the program",
+        "correct": false,
+        "why": "Timers live in the process and end with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mw8ff7xb",
+    "version": 1,
+    "section": "timers-and-tickers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `timer.go`, where does the function given to `time.AfterFunc` run?",
+    "hint": "`main` was busy with the ticker when it fired.",
+    "choices": [
+      {
+        "text": "In `main`, at its next receive",
+        "correct": false,
+        "why": "`main` received nothing from it: `AfterFunc` has no channel."
+      },
+      {
+        "text": "In a goroutine of its own, when the time comes",
+        "correct": true,
+        "why": "Right. It printed at 400 ms while `main` was waiting on the ticker."
+      },
+      {
+        "text": "In the goroutine that called it",
+        "correct": false,
+        "why": "That goroutine was `main`, and it was still running when the function fired."
+      },
+      {
+        "text": "Inside the ticker's channel",
+        "correct": false,
+        "why": "The ticker and `AfterFunc` are unrelated; a channel holds values, not running code."
+      }
+    ]
+  },
+  {
+    "id": "ex-ssz2jrdd",
+    "version": 1,
+    "section": "timers-and-tickers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's code, in a module whose `go.mod` says `go 1.27.1`, calls `defer t.Stop()` after every `NewTimer` \"so the timer is not leaked\". What is true of that line?",
+    "hint": "What changed in Go 1.23, and for which modules?",
+    "choices": [
+      {
+        "text": "It is required, or each timer stays in memory forever",
+        "correct": false,
+        "why": "That was true before Go 1.23. Since then an unreferenced timer is collected even if it never fired."
+      },
+      {
+        "text": "It is harmful, because `Stop` drains the channel",
+        "correct": false,
+        "why": "`Stop` cancels the timer. It does no harm; it is just not what prevents a leak any more."
+      },
+      {
+        "text": "It does no harm and its stated reason is out of date",
+        "correct": true,
+        "why": "Right. In a module at Go 1.23 or later the garbage collector recovers the timer anyway."
+      },
+      {
+        "text": "It panics if the timer already fired",
+        "correct": false,
+        "why": "`Stop` on a fired timer returns `false`; it does not panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-kwz4vat2",
+    "version": 1,
+    "section": "timers-and-tickers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `slow.go` the ticker fired every 100 ms for the first 800 ms, eight ticks, and the reader received four of them. How many ticks were dropped?",
+    "hint": "Stamped 100, 200, 400 and 700 were delivered.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "ticks"
+  },
+  {
+    "id": "ex-6tvaxwws",
+    "version": 1,
+    "section": "timers-and-tickers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program must count every request it receives, and someone proposes counting the ticks of a ticker that the request handler reads. What goes wrong when the handler falls behind?",
+    "hint": "What happens to a tick that fires while another waits?",
+    "choices": [
+      {
+        "text": "The ticks queue up, so the count is right",
+        "correct": false,
+        "why": "A ticker does not queue: `slow.go` lost the ticks at 300, 500 and 600."
+      },
+      {
+        "text": "Ticks are dropped, so the count comes out low",
+        "correct": true,
+        "why": "Right. A ticker suits \"every so often\", not counting events."
+      },
+      {
+        "text": "The ticker speeds up to catch up",
+        "correct": false,
+        "why": "It keeps its period; the late reader finds one tick and no more."
+      },
+      {
+        "text": "The program deadlocks",
+        "correct": false,
+        "why": "Nothing blocks for good: the ticker drops what nobody reads in time."
+      }
+    ]
+  },
+  {
+    "id": "ex-7afgmvyc",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A meeting is set for 14:30 in São Paulo and printed in Tokyo as `2026-10-17 02:30 JST`. What changed in the value?",
+    "hint": "`Equal` compared it with its UTC copy.",
+    "choices": [
+      {
+        "text": "The instant moved forward twelve hours",
+        "correct": false,
+        "why": "The instant is the same everywhere; only the clock on the wall differs."
+      },
+      {
+        "text": "The date was rounded to the next day",
+        "correct": false,
+        "why": "Nothing was rounded. In Tokyo it already is the next day at that instant."
+      },
+      {
+        "text": "Only the location used to print it",
+        "correct": true,
+        "why": "Right. `In` changes the location, and the location changes the words."
+      },
+      {
+        "text": "The value lost its monotonic reading",
+        "correct": false,
+        "why": "`time.Date` never had one; and that is not what `In` does."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sm1qq20",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why compare two `time.Time` values with `Equal` instead of `==`?",
+    "hint": "What does `==` compare in a struct?",
+    "choices": [
+      {
+        "text": "`==` does not compile for `time.Time`",
+        "correct": false,
+        "why": "It compiles; it just compares more than the instant."
+      },
+      {
+        "text": "`==` also compares the location",
+        "correct": true,
+        "why": "Right. `Equal` said the São Paulo value and its UTC copy are the same instant."
+      },
+      {
+        "text": "`Equal` ignores the seconds",
+        "correct": false,
+        "why": "It compares to the nanosecond."
+      },
+      {
+        "text": "`==` uses the wall clock and `Equal` the monotonic one",
+        "correct": false,
+        "why": "The difference is the location, not which clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-t88c623y",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program works on a laptop and fails in a minimal container with `unknown time zone America/Sao_Paulo`, spelt correctly. What is the smallest fix inside the program?",
+    "hint": "Where does `LoadLocation` look, and what can the binary carry?",
+    "choices": [
+      {
+        "text": "Replace the name with `time.FixedZone(\"-03\", -3*3600)`",
+        "correct": false,
+        "why": "That works for today and prints the wrong hour for summer dates before 2019."
+      },
+      {
+        "text": "Import `time/tzdata`, embedding the database",
+        "correct": true,
+        "why": "Right. It cost 416,176 bytes in the lab, and the system's copy is still preferred when there is one."
+      },
+      {
+        "text": "Use `America/Sao Paulo` with a space",
+        "correct": false,
+        "why": "That spelling is refused everywhere, as the lesson printed."
+      },
+      {
+        "text": "Set `TZ=UTC` in the container",
+        "correct": false,
+        "why": "The program asks for São Paulo by name; `TZ` does not supply a missing database."
+      }
+    ]
+  },
+  {
+    "id": "ex-996a1dta",
+    "version": 1,
+    "section": "zones",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`t.Format(\"DD/MM/YYYY\")` printed `DD/MM/YYYY`. Which layout prints the date as `05/03/2026` for 5 March 2026?",
+    "hint": "Day first: the reference day is 2, the month 1, the year 2006.",
+    "choices": [
+      {
+        "text": "`01/02/2006`",
+        "correct": false,
+        "why": "That is month first, `03/05/2026`."
+      },
+      {
+        "text": "`02/01/2006`",
+        "correct": true,
+        "why": "Right: 02 is the day, 01 the month, 2006 the year."
+      },
+      {
+        "text": "`dd/mm/yyyy`",
+        "correct": false,
+        "why": "Letters are not part of the reference moment and print themselves."
+      },
+      {
+        "text": "`%d/%m/%Y`",
+        "correct": false,
+        "why": "That is C's notation; Go would print it as it is."
+      }
+    ]
+  },
+  {
+    "id": "ex-r3vhmr0k",
+    "version": 1,
+    "section": "zones",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a Go layout with what it stands for.",
+    "hint": "Monday, January 2nd 2006, 15:04:05, seven hours behind UTC.",
+    "pairs": [
+      {
+        "left": "`2006`",
+        "right": "the year"
+      },
+      {
+        "left": "`01`",
+        "right": "the month"
+      },
+      {
+        "left": "`02`",
+        "right": "the day"
+      },
+      {
+        "left": "`15`",
+        "right": "the hour, 24-hour clock"
+      }
+    ],
+    "right_distractors": [
+      "the minute"
+    ]
+  },
+  {
+    "id": "ex-kndb56vw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these durations from shortest to longest.",
+    "hint": "Convert each to minutes.",
+    "items": [
+      "`45 * time.Minute`",
+      "`time.Hour`",
+      "`1h15m30.5s`",
+      "`90 * time.Minute`"
+    ]
+  },
+  {
+    "id": "ex-xcfcxd3a",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are safe ways to measure how long a function took? Choose all that apply.",
+    "hint": "Which values carry a monotonic reading?",
+    "choices": [
+      {
+        "text": "`start := time.Now()` before, `time.Since(start)` after",
+        "correct": true,
+        "why": "Yes. Both readings come from `Now` and carry the monotonic clock."
+      },
+      {
+        "text": "`a := time.Now()` and `b := time.Now()`, then `b.Sub(a)`",
+        "correct": true,
+        "why": "Yes. `Sub` uses the monotonic readings when both values carry one."
+      },
+      {
+        "text": "`time.Now().Round(0)` before and after, then `Sub`",
+        "correct": false,
+        "why": "`Round(0)` strips the monotonic reading, so a clock correction in between shows up in the result."
+      },
+      {
+        "text": "Two `time.Parse` calls on printed wall-clock times",
+        "correct": false,
+        "why": "Parsed times have no monotonic reading, and the printing lost precision too."
+      }
+    ]
+  }
+]

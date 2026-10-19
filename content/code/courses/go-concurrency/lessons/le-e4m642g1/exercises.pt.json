@@ -1,0 +1,322 @@
+{
+  "ex-n8exqpns": {
+    "prompt": "No `first.go`, o espelho respondeu em 80 ms e o primário em 120 ms. O que o `select` fez com o caso do primário?",
+    "hint": "Um `select` executa um caso e acaba.",
+    "choices": [
+      {
+        "text": "Rodou-o 40 ms depois, após o do espelho",
+        "why": "Um `select` roda um caso. Uma segunda resposta precisa de um segundo `select`."
+      },
+      {
+        "text": "Nada: ele não foi escolhido",
+        "why": "Isso. O caso do espelho rodou e o `select` acabou."
+      },
+      {
+        "text": "Cancelou o trabalho da goroutine do primário",
+        "why": "Nada cancela uma goroutine de fora; o primário seguiu e enviou no buffer dele."
+      },
+      {
+        "text": "Juntou as duas respostas numa só",
+        "why": "Cada caso recebe de um canal; nada os junta."
+      }
+    ]
+  },
+  "ex-cmjha8wt": {
+    "prompt": "Por que os dois canais do `first.go` têm buffer de um?",
+    "hint": "O que acontece com o envio de quem perdeu?",
+    "choices": [
+      {
+        "text": "Para o `select` ver qual está pronto",
+        "why": "Um `select` enxerga envios e recebimentos prontos em canais sem buffer do mesmo jeito."
+      },
+      {
+        "text": "Porque o `select` recusa canais sem buffer",
+        "why": "Ele aceita qualquer canal."
+      },
+      {
+        "text": "Para o envio do perdedor terminar",
+        "why": "Isso. Ninguém recebe a resposta mais lenta; com espaço para ela, o envio termina mesmo assim."
+      },
+      {
+        "text": "Para o espelho responder mais rápido",
+        "why": "O buffer não muda quanto tempo o `ask` dorme."
+      }
+    ]
+  },
+  "ex-t037vatz": {
+    "prompt": "O `fair.go` manteve os dois canais prontos e rodou o `select` 10.000 vezes: `map[a:4932 b:5068]`. O que isso diz sobre a ordem dos casos?",
+    "hint": "Se o primeiro caso escrito fosse preferido, o que o mapa mostraria?",
+    "choices": [
+      {
+        "text": "O primeiro caso escrito ganha um pouco mais vezes",
+        "why": "O `b`, segundo caso, ganhou mais nesta execução, e a seguinte foi ao contrário."
+      },
+      {
+        "text": "A ordem escrita não dá prioridade",
+        "why": "Isso. Ao acaso, de modo uniforme, para um canal ocupado não deixar outro sem vez."
+      },
+      {
+        "text": "O runtime alterna entre os dois casos",
+        "why": "Alternância estrita daria exatamente 5000 para cada."
+      },
+      {
+        "text": "O canal `b` é mais rápido que o canal `a`",
+        "why": "Os dois são idênticos; a divisão muda de execução para execução."
+      }
+    ]
+  },
+  "ex-2nka60dt": {
+    "prompt": "O que `time.After(200 * time.Millisecond)` devolve?",
+    "hint": "Ele é usado como `case` num `select`.",
+    "choices": [
+      {
+        "text": "Um booleano que vira verdadeiro depois de 200 ms",
+        "why": "Um booleano não poderia ser esperado pelo `select`."
+      },
+      {
+        "text": "Nada; ele bloqueia quem chama por 200 ms",
+        "why": "Isso é `time.Sleep`. `time.After` retorna na hora."
+      },
+      {
+        "text": "Um canal que entrega um valor depois de 200 ms",
+        "why": "Isso. Um recebimento nele é o caso de timeout."
+      },
+      {
+        "text": "Um erro passados 200 ms",
+        "why": "Nenhum erro está envolvido; um valor chega num canal."
+      }
+    ]
+  },
+  "ex-71f1y68q": {
+    "prompt": "O `timeout.go` imprimiu `timed out` depois de 200 ms, enquanto a goroutine lenta precisava de 500 ms. O que aconteceu com essa goroutine?",
+    "hint": "Um timeout para a espera, não o trabalho.",
+    "choices": [
+      {
+        "text": "Ela foi parada quando o timer disparou",
+        "why": "Nada a parou. Parar o trabalho é o que o `context` acrescenta, na lição 10."
+      },
+      {
+        "text": "Continuou dormindo, enviou no buffer e retornou",
+        "why": "Isso. O buffer de um a deixou terminar mesmo sem ninguém ler o resultado."
+      },
+      {
+        "text": "Deu panic, porque o canal tinha sido abandonado",
+        "why": "Não existe canal abandonado; um envio espera ou termina."
+      },
+      {
+        "text": "Virou o resultado do próximo `select`",
+        "why": "Não houve próximo `select`; o programa imprimiu o tempo e acabou."
+      }
+    ]
+  },
+  "ex-d2yqpwrq": {
+    "prompt": "Um laço recebe resultados com `case <-time.After(150 * time.Millisecond)` dentro dele. A fonte envia um resultado a cada 140 ms, para sempre. Quando o laço leva timeout?",
+    "hint": "Cada passada do `select` cria um timer novo.",
+    "choices": [
+      {
+        "text": "Depois de 150 ms",
+        "why": "O primeiro resultado chega em 140 ms, e a passada seguinte começa 150 ms novos."
+      },
+      {
+        "text": "Depois de cerca de um segundo, quando os timers se somam",
+        "why": "Os timers não se somam; cada um é novo e cada um perde."
+      },
+      {
+        "text": "Nunca: cada resultado vence o timer novo",
+        "why": "Isso. Um limite por passo só pega um fluxo que fica quieto por mais tempo que o limite."
+      },
+      {
+        "text": "Depois de 150 resultados",
+        "why": "O número 150 são milissegundos, e nada conta resultados."
+      }
+    ]
+  },
+  "ex-vaarwzcn": {
+    "prompt": "No `budget.go` o prazo criado uma vez antes do laço era de 350 ms, e os resultados chegavam a cada 100 ms. Quantos resultados esse laço pegou?",
+    "hint": "Resultados em 100, 200, 300, 400…",
+    "unit": "resultados"
+  },
+  "ex-gc4s4gss": {
+    "prompt": "Dentro de um laço `for` com um `select`, por que o `budget.go` escreve `break perStep` em vez de `break`?",
+    "hint": "Do que um `break` simples sai?",
+    "choices": [
+      {
+        "text": "Um `break` simples sairia só do `select`",
+        "why": "Isso. O rótulo faz ele sair do laço `for` em volta."
+      },
+      {
+        "text": "Um `break` simples não é permitido dentro de `select`",
+        "why": "É permitido; só encerra o `select`, e o laço dá outra volta."
+      },
+      {
+        "text": "Rótulos fazem o laço rodar mais rápido",
+        "why": "Um rótulo muda para onde o controle vai, não a velocidade."
+      },
+      {
+        "text": "Para parar o timer criado por `time.After`",
+        "why": "O rótulo não tem nada a ver com o timer."
+      }
+    ]
+  },
+  "ex-0v3jjjkp": {
+    "prompt": "O `try.go` ofereceu cinco atualizações a um canal com espaço para dois, usando `select` com `default`. O que ele imprimiu para as atualizações 3, 4 e 5?",
+    "hint": "O buffer estava cheio e o `select` não espera.",
+    "choices": [
+      {
+        "text": "`queued`, depois de esperar espaço",
+        "why": "Com um `default` não há espera: o caso que não pode andar é pulado."
+      },
+      {
+        "text": "`dropped`",
+        "why": "Isso. Sem espaço, então o `default` rodou."
+      },
+      {
+        "text": "Um erro de deadlock",
+        "why": "Nada bloqueou, então não havia o que travar."
+      },
+      {
+        "text": "`received`, na hora",
+        "why": "Só 1 e 2 foram recebidas, depois do laço."
+      }
+    ]
+  },
+  "ex-mqfssstz": {
+    "prompt": "`time ./restless` informou `user 0m0.994s` e `time ./patient` `user 0m0.003s`, ambos em um segundo de tempo `real`. Mais ou menos quantos milissegundos de processador o laço que pergunta desperdiçou?",
+    "hint": "994 menos 3.",
+    "unit": "ms"
+  },
+  "ex-8dky2d19": {
+    "prompt": "O que torna útil um caso num canal nil dentro de um `select`?",
+    "hint": "O que faz um recebimento num canal nil?",
+    "choices": [
+      {
+        "text": "Devolve o zero value na hora, como um canal fechado",
+        "why": "Isso é um canal fechado. Um nil bloqueia para sempre."
+      },
+      {
+        "text": "Dá panic, o que mostra um `make` esquecido",
+        "why": "Enviar ou receber em nil não dá panic; bloqueia para sempre. Fechar um canal nil dá panic."
+      },
+      {
+        "text": "Nunca é escolhido, então o caso fica desligado",
+        "why": "Isso. O `both.go` põe cada entrada em `nil` quando ela fecha."
+      },
+      {
+        "text": "Faz o `select` pegar os outros casos primeiro",
+        "why": "Não há prioridade: o caso nil nunca está pronto, então nunca é candidato."
+      }
+    ]
+  },
+  "ex-cknckwse": {
+    "prompt": "No `both.go`, alguém apaga a linha `a = nil`. A entrada `a` fecha primeiro. O que o laço faz dali em diante?",
+    "hint": "Um canal fechado está sempre pronto para receber.",
+    "choices": [
+      {
+        "text": "Espera só em `b`, como antes",
+        "why": "Sem o `nil`, o caso de `a` continua pronto, devolvendo zero e `false` a cada passada."
+      },
+      {
+        "text": "Dá panic: recebimento de canal fechado",
+        "why": "Receber de um canal fechado é permitido."
+      },
+      {
+        "text": "Gira, imprimindo `a closed` de novo e de novo, e nunca acaba",
+        "why": "Isso: `a != nil` continua verdadeiro, e o caso fechado segue ganhando metade dos sorteios, como o `restless`."
+      },
+      {
+        "text": "Termina na hora, porque uma entrada acabou",
+        "why": "A condição do laço exige as duas `nil`."
+      }
+    ]
+  },
+  "ex-ap9jrg59": {
+    "prompt": "Associe cada formato de `select` ao que ele faz.",
+    "hint": "Um espera o primeiro, um desiste, um nunca espera.",
+    "pairs": [
+      {
+        "left": "dois recebimentos, sem `default`",
+        "right": "espera o que ficar pronto primeiro"
+      },
+      {
+        "left": "um recebimento e `time.After`",
+        "right": "espera, mas só até um limite"
+      },
+      {
+        "left": "um envio e `default`",
+        "right": "envia agora ou não envia"
+      },
+      {
+        "left": "um recebimento num canal nil",
+        "right": "um caso que nunca pode ser escolhido"
+      }
+    ],
+    "right_distractors": [
+      "recebe de todos os canais em ordem"
+    ]
+  },
+  "ex-dbbbdgvc": {
+    "prompt": "Ponha os passos do `select` na ordem em que a lição os descreve.",
+    "hint": "Ele olha todos os casos antes de escolher.",
+    "items": [
+      "olhar todos os casos",
+      "se alguns estão prontos, escolher um ao acaso",
+      "se nenhum está pronto e há `default`, rodá-lo",
+      "senão, esperar até um ficar pronto"
+    ]
+  },
+  "ex-50z615g7": {
+    "prompt": "Um recebimento num canal ___ bloqueia para sempre, e é por isso que pôr isso numa variável de canal desliga o caso dela.",
+    "hint": "O zero value de uma variável de canal.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ]
+      }
+    ]
+  },
+  "ex-n7rsfhbr": {
+    "prompt": "Um worker precisa tratar mensagens de `urgent` antes das de `normal` sempre que as duas estiverem esperando. Escrever o caso `urgent` primeiro num `select` não resolve. O que resolve?",
+    "hint": "A seção 02 termina com o formato.",
+    "choices": [
+      {
+        "text": "Um buffer maior em `urgent`",
+        "why": "Um buffer muda quando um envio espera, não que caso pronto o `select` escolhe."
+      },
+      {
+        "text": "Antes um `select` só em `urgent` com `default`, depois o geral",
+        "why": "Isso. O primeiro `select` pega uma mensagem urgente se houver, e só então as duas são consideradas."
+      },
+      {
+        "text": "Listar `urgent` duas vezes no mesmo `select`",
+        "why": "Mudaria as chances, não daria prioridade: `normal` ainda poderia ser escolhido com urgentes esperando."
+      },
+      {
+        "text": "Definir `GOMAXPROCS` como 1",
+        "why": "A escolha entre casos prontos é aleatória em qualquer número de processadores."
+      }
+    ]
+  },
+  "ex-z0qv8yyw": {
+    "prompt": "Uma goroutine de barra de progresso lê de `updates`, e o worker nunca pode ser segurado por ela. Que envio serve?",
+    "hint": "Descartar uma porcentagem de progresso é aceitável.",
+    "choices": [
+      {
+        "text": "`updates <- p`, num canal sem buffer",
+        "why": "Isso espera a barra de progresso toda vez."
+      },
+      {
+        "text": "`updates <- p` num laço com `time.Sleep` até conseguir",
+        "why": "Isso é o worker esperando, de um jeito mais lento."
+      },
+      {
+        "text": "Um `select` com `case updates <- p` e um `default`",
+        "why": "Isso. Envia se a barra está pronta e descarta a atualização caso contrário."
+      },
+      {
+        "text": "Um `select` com `case updates <- p` e um canal nil",
+        "why": "Um caso nil nunca é escolhido, então isso espera exatamente como um envio simples."
+      }
+    ]
+  }
+}

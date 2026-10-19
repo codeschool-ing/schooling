@@ -1,0 +1,323 @@
+{
+  "ex-qctzsypn": {
+    "prompt": "O que o fan-in faz?",
+    "hint": "É o oposto do padrão da lição 13.",
+    "choices": [
+      {
+        "text": "Envia um fluxo de trabalho a várias goroutines",
+        "why": "Isso é fan-out, lição 13."
+      },
+      {
+        "text": "Junta vários canais num só",
+        "why": "Isso: um laço lê o que qualquer entrada produzir."
+      },
+      {
+        "text": "Ordena os valores de um canal pelo momento em que foram enviados",
+        "why": "Nada ordena; os valores chegam na ordem em que são copiados."
+      },
+      {
+        "text": "Limita quantas goroutines rodam ao mesmo tempo",
+        "why": "Esse é o papel do pool de workers, lição 7."
+      }
+    ]
+  },
+  "ex-xjewcz4s": {
+    "prompt": "Por que o `merge` inicia uma goroutine copiadora por entrada, em vez de ler as entradas uma depois da outra num laço?",
+    "hint": "O que acontece com as outras enquanto uma entrada não tem nada a enviar?",
+    "choices": [
+      {
+        "text": "Goroutines copiam valores mais rápido que um laço",
+        "why": "Velocidade não é o motivo; o bloqueio é."
+      },
+      {
+        "text": "Um laço esperando uma entrada calada seguraria as outras",
+        "why": "Isso. Cada entrada pode travar a qualquer momento, então cada uma precisa de uma goroutine própria esperando por ela."
+      },
+      {
+        "text": "Funções genéricas exigem uma goroutine por argumento",
+        "why": "Generics não têm nada a ver com goroutines."
+      },
+      {
+        "text": "Um canal só pode ser lido por uma goroutine de cada vez",
+        "why": "A lição 13 teve três workers lendo um canal ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-s766rphr": {
+    "prompt": "Um colega tira o `wg.Wait()` e o `close(out)` da goroutine deles e os põe no próprio `merge`, logo antes do `return out`. O que acontece quando o `main` chama o `merge`?",
+    "hint": "Quem está lendo `out` enquanto o `merge` espera?",
+    "choices": [
+      {
+        "text": "Funciona igual, com uma goroutine a menos",
+        "why": "O `merge` ainda não devolveu `out`, então ninguém pode receber o que as copiadoras enviam."
+      },
+      {
+        "text": "`out` é fechado antes de qualquer valor ser enviado",
+        "why": "O `wg.Wait()` vem primeiro, e ele nunca retorna."
+      },
+      {
+        "text": "Nunca retorna: as copiadoras travam enviando para um canal que ninguém lê",
+        "why": "Isso. O `merge` espera copiadoras que esperam um leitor que espera o `merge` retornar."
+      },
+      {
+        "text": "As copiadoras entram em panic com `send on closed channel`",
+        "why": "Nada é fechado: o programa trava antes de chegar ao `close`."
+      }
+    ]
+  },
+  "ex-1v7ycpc6": {
+    "prompt": "O `merge.go` juntou três fontes: `disk` enviou 3 leituras, `net` 4 e `cpu` 2. Quantas leituras o `main` imprimiu antes de `all sources closed`?",
+    "hint": "Uma junção não perde nem acrescenta nada.",
+    "unit": "leituras"
+  },
+  "ex-fqqpmdj4": {
+    "prompt": "O `spin.go` contou 972.922 valores zero em 100 ms, embora só seis números tenham sido enviados. De onde vieram os zeros?",
+    "hint": "O que faz um recebimento de um canal fechado?",
+    "choices": [
+      {
+        "text": "Dos canais fechados, que estão sempre prontos",
+        "why": "Isso. Um recebimento de um canal fechado devolve o valor zero na hora, toda vez."
+      },
+      {
+        "text": "Do `numbers`, que envia um zero depois do último valor como marcador de fim",
+        "why": "O `numbers` envia de 1 a 3 e fecha; ninguém envia zero."
+      },
+      {
+        "text": "Do timer, que dispara a cada nanossegundo",
+        "why": "O `time.After` entrega uma vez, depois de 100 ms, e encerra o laço."
+      },
+      {
+        "text": "Do `select` escolhendo um case vazio",
+        "why": "Não há case vazio; os dois recebimentos estavam simplesmente sempre prontos."
+      }
+    ]
+  },
+  "ex-sscs31e2": {
+    "prompt": "No `pair.go`, o que `b = nil` faz quando `b` fechou?",
+    "hint": "Lição 5: um canal nil num `select`.",
+    "choices": [
+      {
+        "text": "Fecha `b` uma segunda vez, sem efeito",
+        "why": "Não fecha nada, e fechar duas vezes provocaria panic."
+      },
+      {
+        "text": "Libera na hora a memória do canal para o coletor de lixo",
+        "why": "Ele muda a variável do laço; a coleta não é o ponto."
+      },
+      {
+        "text": "Desliga aquele case pelo resto do laço",
+        "why": "Isso. Um canal nil nunca está pronto, então o case dele não é escolhido de novo."
+      },
+      {
+        "text": "Faz a goroutine de `numbers` parar de enviar",
+        "why": "Essa goroutine já tinha terminado; a variável é a referência do próprio laço."
+      }
+    ]
+  },
+  "ex-cwn2gj89": {
+    "prompt": "Um programa junta uma lista de canais cujo tamanho só se conhece quando ele roda. Que junção serve?",
+    "hint": "Quantas linhas `case` um `select` tem?",
+    "choices": [
+      {
+        "text": "Um `select` com um case por canal",
+        "why": "Cada case é escrito no código, então o número fica fixo quando o código é escrito."
+      },
+      {
+        "text": "O `merge` da seção 02, com uma goroutine por entrada",
+        "why": "Isso: uma goroutine por entrada, quantas forem."
+      },
+      {
+        "text": "Ler os canais em sequência num laço `for`",
+        "why": "Um canal calado seguraria todos os outros."
+      },
+      {
+        "text": "Qualquer uma, já que `range` funciona sobre uma lista de canais",
+        "why": "`range` sobre uma slice dá os canais, não os valores deles."
+      }
+    ]
+  },
+  "ex-vczqcx7f": {
+    "prompt": "Para separar um canal fechado de um valor de verdade, receba com a forma comma-ok, `v, ___ := <-a`, que vale false quando `a` está fechado e vazio.",
+    "hint": "A segunda variável nos cases do `pair.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "ok"
+        ]
+      }
+    ]
+  },
+  "ex-cp2gnyve": {
+    "prompt": "O `early.go` fechou `out` logo depois do laço da primeira copiadora. Com o que o programa terminou?",
+    "hint": "A outra copiadora ainda enviava.",
+    "choices": [
+      {
+        "text": "`fatal error: all goroutines are asleep - deadlock!`",
+        "why": "Isso é o `never.go`, o erro oposto."
+      },
+      {
+        "text": "`panic: send on closed channel`",
+        "why": "Isso, na linha 26, o `out <- v` da copiadora lenta."
+      },
+      {
+        "text": "Três leituras lentas depois da rápida",
+        "why": "Só uma leitura lenta chegou antes do panic."
+      },
+      {
+        "text": "`main is done`, depois de uma pausa",
+        "why": "O panic encerrou o programa antes."
+      }
+    ]
+  },
+  "ex-wr3bh7f8": {
+    "prompt": "O `never.go` parou com `fatal error: all goroutines are asleep - deadlock!`. Por que o mesmo defeito num servidor pode não levantar erro nenhum?",
+    "hint": "Quando o runtime relata um deadlock?",
+    "choices": [
+      {
+        "text": "Servidores desligam a verificação de deadlock",
+        "why": "Não há chave; a verificação exige todas as goroutines paradas."
+      },
+      {
+        "text": "Um servidor fecha todos os canais quando uma requisição termina",
+        "why": "Nada fecha canais por você."
+      },
+      {
+        "text": "Outras partes do servidor continuam rodando",
+        "why": "Isso. O leitor travado só espera para sempre, um vazamento que só uma contagem de goroutines mostra."
+      },
+      {
+        "text": "Num servidor o `range` termina depois de um timeout",
+        "why": "`range` sobre um canal não tem timeout."
+      }
+    ]
+  },
+  "ex-2s2tax3p": {
+    "prompt": "Uma junção tem três copiadoras. Que código pode fechar o canal de saída?",
+    "hint": "O último remetente fecha; quem sabe qual é o último?",
+    "choices": [
+      {
+        "text": "A copiadora que terminar primeiro",
+        "why": "Isso é o `early.go`: as outras ainda enviam."
+      },
+      {
+        "text": "Cada copiadora, protegida por um recover",
+        "why": "Recuperar esconde um panic; o segundo fechamento e os envios seguintes continuam errados."
+      },
+      {
+        "text": "O `main`, depois de ler um número fixo de valores",
+        "why": "Um receptor fechando um canal em que outros enviam é o fechamento antecipado de novo, do outro lado."
+      },
+      {
+        "text": "Uma goroutine que espera um `WaitGroup` que as copiadoras decrementam",
+        "why": "Isso. Só algo que as conta sabe quando as três terminaram."
+      }
+    ]
+  },
+  "ex-h7m03egs": {
+    "prompt": "Ponha em ordem a vida do `merge` da seção 02, da chamada ao fim do laço do `main`.",
+    "hint": "A goroutine que fecha começa antes de qualquer valor andar.",
+    "items": [
+      "uma goroutine copiadora começa por entrada",
+      "uma goroutine começa a esperar o `WaitGroup`",
+      "o `merge` devolve `out` ao `main`",
+      "toda entrada fecha e toda copiadora chama `Done`",
+      "o `close(out)` encerra o `range` do `main`"
+    ]
+  },
+  "ex-k0qfpcxv": {
+    "prompt": "Associe cada programa desta lição ao que ele imprimiu por último.",
+    "hint": "Dois deles terminaram mal.",
+    "pairs": [
+      {
+        "left": "`merge.go`",
+        "right": "`all sources closed`"
+      },
+      {
+        "left": "`pair.go`",
+        "right": "`both closed`"
+      },
+      {
+        "left": "`early.go`",
+        "right": "um panic `send on closed channel`"
+      },
+      {
+        "left": "`never.go`",
+        "right": "um relatório de deadlock"
+      }
+    ],
+    "right_distractors": [
+      "`main is done`"
+    ]
+  },
+  "ex-bse72k76": {
+    "prompt": "Quais destas junções terminam com todo valor entregue e nada rodando? Escolha todas as que se aplicam.",
+    "hint": "Confira quem fecha, e se um case fechado é desligado.",
+    "choices": [
+      {
+        "text": "Copiadoras mais uma goroutine que fecha depois de `wg.Wait()`",
+        "why": "Sim: o `merge` da seção 02."
+      },
+      {
+        "text": "Um laço `select` que põe cada canal em nil quando ele fecha",
+        "why": "Sim: o `pair.go`."
+      },
+      {
+        "text": "Um laço `select` com recebimentos simples e sem condição de saída",
+        "why": "Isso é o `spin.go`: ele gira em zeros para sempre."
+      },
+      {
+        "text": "Copiadoras que fecham a saída cada uma quando a sua entrada termina",
+        "why": "Isso é o `early.go`: um panic."
+      }
+    ]
+  },
+  "ex-gj9vbgtg": {
+    "prompt": "Na execução do `merge.go`, `net-3` e `disk-2` chegaram os dois aos 60ms. O que decidiu qual dos dois o `main` imprimiu primeiro?",
+    "hint": "Quem envia em `out`, e em que ordem os envios se completam?",
+    "choices": [
+      {
+        "text": "A ordem dos argumentos do `merge`",
+        "why": "`disk` foi o primeiro argumento e saiu em segundo."
+      },
+      {
+        "text": "Qual envio de copiadora aconteceu primeiro",
+        "why": "Isso. Duas copiadoras disputaram o envio em `out`; a junção mantém a ordem de chegada e não promete nada sobre empates."
+      },
+      {
+        "text": "A ordem alfabética dos nomes das fontes",
+        "why": "Nada no `merge` compara valores."
+      },
+      {
+        "text": "`net` tem prioridade porque envia mais",
+        "why": "Canais não têm prioridades."
+      }
+    ]
+  },
+  "ex-vygy46wj": {
+    "prompt": "Uma junção com `select` precisa tratar um canal cujo valor zero é uma leitura válida, como uma temperatura de 0. Que parte do `pair.go` torna isso seguro?",
+    "hint": "Como o `pair.go` sabe que um valor é real e não o zero de um canal fechado?",
+    "choices": [
+      {
+        "text": "Testar `if v == 0` como o `spin.go` fez",
+        "why": "Isso jogaria fora uma leitura real de 0 junto com os zeros do canal fechado."
+      },
+      {
+        "text": "A condição `for a != nil || b != nil`",
+        "why": "Ela encerra o laço; é o `ok` que distingue um valor de um fechamento."
+      },
+      {
+        "text": "O `ok` de `v, ok := <-a`",
+        "why": "Isso. O `ok` vale true para todo valor enviado, zero incluído, e false só quando o canal está fechado."
+      },
+      {
+        "text": "Enviar os valores como ponteiros para nil marcar o fim",
+        "why": "Isso muda o tipo para contornar um problema que o `ok` já resolve."
+      }
+    ]
+  },
+  "ex-87x7tkxr": {
+    "prompt": "As duas entradas do `never.go` enviaram dois valores cada, e o `main` imprimiu todos antes do deadlock. Quantos valores o `main` imprimiu?",
+    "hint": "1, 2, 10 e 11.",
+    "unit": "valores"
+  }
+}

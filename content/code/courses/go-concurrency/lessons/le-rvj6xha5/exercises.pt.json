@@ -1,0 +1,361 @@
+{
+  "ex-yv5zgzhg": {
+    "prompt": "O que é um `time.Duration`, por baixo?",
+    "hint": "`int64(d)` o imprimiu para noventa minutos.",
+    "choices": [
+      {
+        "text": "Uma struct com um número e uma unidade",
+        "why": "Não existe campo de unidade. Noventa minutos convertidos para `int64` deram um número simples, 5.400.000.000.000."
+      },
+      {
+        "text": "Um `int64` de nanossegundos",
+        "why": "Isso. `1h30m0s` é o método `String`; o valor é 5.400.000.000.000 nanossegundos."
+      },
+      {
+        "text": "Um `float64` que conta segundos",
+        "why": "`Hours` e `Minutes` devolvem floats, mas a duração em si é um inteiro de nanossegundos."
+      },
+      {
+        "text": "Uma string como `1h30m0s`",
+        "why": "É assim que ela é impressa, pelo método `String`, não o que ela é."
+      }
+    ]
+  },
+  "ex-3b26tzg6": {
+    "prompt": "`n := 4; time.Sleep(n * time.Second)` não compila, enquanto `time.Sleep(4 * time.Second)` compila. Por quê?",
+    "hint": "Que tipo tem `n`, e que tipo tem o literal `4`?",
+    "choices": [
+      {
+        "text": "`time.Sleep` só aceita constantes",
+        "why": "`time.Sleep(time.Duration(n) * time.Second)` passa um valor calculado e compila."
+      },
+      {
+        "text": "Multiplicar uma variável por uma duração estoura",
+        "why": "Quatro segundos estão longe do limite de cerca de 292 anos, e o erro foi de tipo."
+      },
+      {
+        "text": "`n` é um `int`, e `time.Second` não é",
+        "why": "Isso: `mismatched types int and time.Duration`. O `4` sem tipo assume o tipo de onde é usado."
+      },
+      {
+        "text": "O operador `*` não é definido para durações",
+        "why": "É sim: `90 * time.Minute` é a primeira linha do `dur.go`."
+      }
+    ]
+  },
+  "ex-n19vw7gv": {
+    "prompt": "Para transformar o `int` em `n` numa duração de `n` segundos, escreva `time.___(n) * time.Second`.",
+    "hint": "O nome do próprio tipo.",
+    "blanks": [
+      {
+        "accept": [
+          "Duration"
+        ]
+      }
+    ]
+  },
+  "ex-yjfpngy8": {
+    "prompt": "Por que `time.ParseDuration(\"3 days\")` falha?",
+    "hint": "Onde param as unidades do pacote, e por que ali?",
+    "choices": [
+      {
+        "text": "O espaço entre o número e a unidade é o único problema",
+        "why": "`3days` também falha: não existe unidade de dia, porque um dia nem sempre tem 24 horas."
+      },
+      {
+        "text": "As unidades param na hora, já que a duração de um dia depende das mudanças de relógio",
+        "why": "Isso. O pacote deixa os dias com você, que sabe de que calendário está falando."
+      },
+      {
+        "text": "Três dias é mais do que um `Duration` comporta",
+        "why": "Um `Duration` comporta cerca de 292 anos."
+      },
+      {
+        "text": "Durações só são lidas de inteiros",
+        "why": "`1h15m30.5s` foi lido, com fração e tudo."
+      }
+    ]
+  },
+  "ex-6j4cpg0n": {
+    "prompt": "Um programa grava `start := time.Now()`, e durante o minuto seguinte o relógio da máquina é atrasado cinco minutos pelo serviço de hora da rede. O que `time.Since(start)` informa no fim desse minuto?",
+    "hint": "Qual das duas leituras o `Since` usa?",
+    "choices": [
+      {
+        "text": "Cerca de menos quatro minutos",
+        "why": "Isso é o que o relógio de parede sozinho daria. `Since` usa a leitura monotônica que `start` carrega."
+      },
+      {
+        "text": "Cerca de um minuto",
+        "why": "Isso. O relógio monotônico só anda para a frente e ignora a correção."
+      },
+      {
+        "text": "Zero, porque os relógios discordam",
+        "why": "Nada informa zero por discordância; a leitura monotônica é usada e está certa."
+      },
+      {
+        "text": "Cerca de seis minutos",
+        "why": "Atrasar o relógio de parede não somaria tempo nem se ele fosse usado."
+      }
+    ]
+  },
+  "ex-tmq0c2db": {
+    "prompt": "Antes de gravar um `time.Time` num arquivo, por que tirar a leitura monotônica com `Round(0)`?",
+    "hint": "A partir de quando `m=+0.000103412` é contado?",
+    "choices": [
+      {
+        "text": "Deixa o arquivo menor",
+        "why": "O tamanho não é o motivo; o significado é."
+      },
+      {
+        "text": "Arquivos não guardam mais do que precisão de segundos",
+        "why": "`Round(0)` mantém os nanossegundos do relógio de parede. Só tira a leitura monotônica."
+      },
+      {
+        "text": "Ela conta do início deste processo",
+        "why": "Isso. Outro processo ou máquina tem outro início, e o número enganaria."
+      },
+      {
+        "text": "A leitura monotônica é um vazamento de segurança",
+        "why": "A seção não dá esse motivo: a leitura não significa nada fora do processo."
+      }
+    ]
+  },
+  "ex-6drqaanm": {
+    "prompt": "O que um timer dá que o `time.Sleep` não dá?",
+    "hint": "Onde uma goroutine pode esperar um timer?",
+    "choices": [
+      {
+        "text": "Um canal, para esperar num `select` e cancelar com `Stop`",
+        "why": "Isso. `Sleep` bloqueia a goroutine; um timer é um valor com um canal e um método `Stop`."
+      },
+      {
+        "text": "Mais precisão, medida em nanossegundos em vez de milissegundos",
+        "why": "Os dois recebem um `Duration` em nanossegundos; precisão não é a diferença."
+      },
+      {
+        "text": "Ele dorme sem goroutine",
+        "why": "Alguém ainda espera no canal, e esse alguém é uma goroutine."
+      },
+      {
+        "text": "Ele sobrevive a um reinício do programa",
+        "why": "Timers vivem no processo e acabam com ele."
+      }
+    ]
+  },
+  "ex-mw8ff7xb": {
+    "prompt": "No `timer.go`, onde roda a função passada a `time.AfterFunc`?",
+    "hint": "`main` estava ocupada com o ticker quando ela disparou.",
+    "choices": [
+      {
+        "text": "Em `main`, no próximo recebimento",
+        "why": "`main` não recebeu nada dela: `AfterFunc` não tem canal."
+      },
+      {
+        "text": "Numa goroutine própria, quando chega a hora",
+        "why": "Isso. Ela imprimiu em 400 ms enquanto `main` esperava o ticker."
+      },
+      {
+        "text": "Na goroutine que o chamou",
+        "why": "Essa goroutine era `main`, e ainda estava rodando quando a função disparou."
+      },
+      {
+        "text": "Dentro do canal do ticker",
+        "why": "O ticker e o `AfterFunc` não têm relação; um canal guarda valores, não código rodando."
+      }
+    ]
+  },
+  "ex-ssz2jrdd": {
+    "prompt": "O código de um colega, num módulo cujo `go.mod` diz `go 1.27.1`, chama `defer t.Stop()` depois de todo `NewTimer` \"para o timer não vazar\". O que é verdade sobre essa linha?",
+    "hint": "O que mudou no Go 1.23, e para quais módulos?",
+    "choices": [
+      {
+        "text": "É obrigatória, senão cada timer fica na memória para sempre",
+        "why": "Isso era verdade antes do Go 1.23. Desde então um timer sem referência é recolhido mesmo que nunca dispare."
+      },
+      {
+        "text": "É prejudicial, porque `Stop` esvazia o canal",
+        "why": "`Stop` cancela o timer. Não faz mal; só não é mais o que evita um vazamento."
+      },
+      {
+        "text": "Não faz mal, e o motivo dado está desatualizado",
+        "why": "Isso. Num módulo em Go 1.23 ou posterior o coletor de lixo recupera o timer de qualquer jeito."
+      },
+      {
+        "text": "Dá panic se o timer já disparou",
+        "why": "`Stop` num timer que já disparou devolve `false`; não dá panic."
+      }
+    ]
+  },
+  "ex-kwz4vat2": {
+    "prompt": "No `slow.go` o ticker disparou a cada 100 ms nos primeiros 800 ms, oito ticks, e quem lia recebeu quatro. Quantos ticks foram descartados?",
+    "hint": "Os carimbados em 100, 200, 400 e 700 foram entregues.",
+    "unit": "ticks"
+  },
+  "ex-6tvaxwws": {
+    "prompt": "Um programa precisa contar toda requisição que recebe, e alguém propõe contar os ticks de um ticker que o tratador de requisições lê. O que dá errado quando o tratador se atrasa?",
+    "hint": "O que acontece com um tick que dispara enquanto outro espera?",
+    "choices": [
+      {
+        "text": "Os ticks se enfileiram, e a contagem sai certa",
+        "why": "Um ticker não enfileira: o `slow.go` perdeu os ticks de 300, 500 e 600."
+      },
+      {
+        "text": "Ticks são descartados, então a contagem sai baixa",
+        "why": "Isso. Um ticker serve para \"de tempos em tempos\", não para contar eventos."
+      },
+      {
+        "text": "O ticker acelera para pôr em dia",
+        "why": "Ele mantém o período; quem lê atrasado encontra um tick e nenhum outro."
+      },
+      {
+        "text": "O programa entra em deadlock",
+        "why": "Nada fica bloqueado de vez: o ticker descarta o que ninguém lê a tempo."
+      }
+    ]
+  },
+  "ex-7afgmvyc": {
+    "prompt": "Uma reunião marcada para 14:30 em São Paulo é impressa em Tóquio como `2026-10-17 02:30 JST`. O que mudou no valor?",
+    "hint": "`Equal` o comparou com a sua cópia em UTC.",
+    "choices": [
+      {
+        "text": "O instante avançou doze horas",
+        "why": "O instante é o mesmo em todo lugar; só o relógio da parede muda."
+      },
+      {
+        "text": "A data foi arredondada para o dia seguinte",
+        "why": "Nada foi arredondado. Em Tóquio já é o dia seguinte naquele instante."
+      },
+      {
+        "text": "Só a localização usada para imprimi-lo",
+        "why": "Isso. `In` muda a localização, e a localização muda as palavras."
+      },
+      {
+        "text": "O valor perdeu a leitura monotônica",
+        "why": "`time.Date` nunca teve uma; e não é isso que `In` faz."
+      }
+    ]
+  },
+  "ex-8sm1qq20": {
+    "prompt": "Por que comparar dois `time.Time` com `Equal` e não com `==`?",
+    "hint": "O que `==` compara numa struct?",
+    "choices": [
+      {
+        "text": "`==` não compila para `time.Time`",
+        "why": "Compila; só compara mais do que o instante."
+      },
+      {
+        "text": "`==` compara até a localização",
+        "why": "Isso. `Equal` disse que o valor de São Paulo e a cópia em UTC são o mesmo instante."
+      },
+      {
+        "text": "`Equal` ignora os segundos",
+        "why": "Ele compara até o nanossegundo."
+      },
+      {
+        "text": "`==` usa o relógio de parede e `Equal` o monotônico",
+        "why": "A diferença é a localização, não o relógio."
+      }
+    ]
+  },
+  "ex-t88c623y": {
+    "prompt": "Um programa funciona num notebook e falha num contêiner mínimo com `unknown time zone America/Sao_Paulo`, escrito certo. Qual é o menor conserto dentro do programa?",
+    "hint": "Onde `LoadLocation` procura, e o que o binário pode carregar?",
+    "choices": [
+      {
+        "text": "Trocar o nome por `time.FixedZone(\"-03\", -3*3600)`",
+        "why": "Isso funciona para hoje e imprime a hora errada para datas de verão antes de 2019."
+      },
+      {
+        "text": "Importar `time/tzdata`, embutindo o banco de dados",
+        "why": "Isso. Custou 416.176 bytes no laboratório, e a cópia do sistema ainda é preferida quando existe."
+      },
+      {
+        "text": "Usar `America/Sao Paulo` com espaço",
+        "why": "Essa grafia é recusada em todo lugar, como a lição imprimiu."
+      },
+      {
+        "text": "Definir `TZ=UTC` no contêiner",
+        "why": "O programa pede São Paulo pelo nome; `TZ` não fornece um banco de dados que falta."
+      }
+    ]
+  },
+  "ex-996a1dta": {
+    "prompt": "`t.Format(\"DD/MM/YYYY\")` imprimiu `DD/MM/YYYY`. Que layout imprime a data como `05/03/2026` para 5 de março de 2026?",
+    "hint": "Dia primeiro: o dia de referência é 2, o mês 1, o ano 2006.",
+    "choices": [
+      {
+        "text": "`01/02/2006`",
+        "why": "Isso é mês primeiro, `03/05/2026`."
+      },
+      {
+        "text": "`02/01/2006`",
+        "why": "Isso: 02 é o dia, 01 o mês, 2006 o ano."
+      },
+      {
+        "text": "`dd/mm/yyyy`",
+        "why": "Letras não fazem parte do momento de referência e se imprimem."
+      },
+      {
+        "text": "`%d/%m/%Y`",
+        "why": "Essa é a notação de C; Go a imprimiria como está."
+      }
+    ]
+  },
+  "ex-r3vhmr0k": {
+    "prompt": "Associe cada pedaço de um layout Go ao que ele representa.",
+    "hint": "Segunda, 2 de janeiro de 2006, 15:04:05, sete horas atrás do UTC.",
+    "pairs": [
+      {
+        "left": "`2006`",
+        "right": "o ano"
+      },
+      {
+        "left": "`01`",
+        "right": "o mês"
+      },
+      {
+        "left": "`02`",
+        "right": "o dia"
+      },
+      {
+        "left": "`15`",
+        "right": "a hora, relógio de 24 horas"
+      }
+    ],
+    "right_distractors": [
+      "o minuto"
+    ]
+  },
+  "ex-kndb56vw": {
+    "prompt": "Ponha estas durações da mais curta para a mais longa.",
+    "hint": "Converta cada uma para minutos.",
+    "items": [
+      "`45 * time.Minute`",
+      "`time.Hour`",
+      "`1h15m30.5s`",
+      "`90 * time.Minute`"
+    ]
+  },
+  "ex-xcfcxd3a": {
+    "prompt": "Quais destes são jeitos seguros de medir quanto tempo uma função levou? Escolha todos os que se aplicam.",
+    "hint": "Quais valores carregam uma leitura monotônica?",
+    "choices": [
+      {
+        "text": "`start := time.Now()` antes, `time.Since(start)` depois",
+        "why": "Sim. As duas leituras vêm de `Now` e carregam o relógio monotônico."
+      },
+      {
+        "text": "`a := time.Now()` e `b := time.Now()`, depois `b.Sub(a)`",
+        "why": "Sim. `Sub` usa as leituras monotônicas quando os dois valores têm uma."
+      },
+      {
+        "text": "`time.Now().Round(0)` antes e depois, depois `Sub`",
+        "why": "`Round(0)` tira a leitura monotônica, então uma correção do relógio no meio aparece no resultado."
+      },
+      {
+        "text": "Duas chamadas de `time.Parse` sobre horas de parede impressas",
+        "why": "Horas lidas de texto não têm leitura monotônica, e a impressão também perdeu precisão."
+      }
+    ]
+  }
+}

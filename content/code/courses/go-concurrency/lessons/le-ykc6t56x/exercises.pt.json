@@ -1,0 +1,351 @@
+{
+  "ex-m0nz6vr6": {
+    "prompt": "Qual destas funções o `go test` roda como teste?",
+    "hint": "Um nome, uma maiúscula depois dele e um parâmetro.",
+    "choices": [
+      {
+        "text": "`func testCount(t *testing.T)` em `wordcount_test.go`",
+        "why": "O nome tem de começar com `Test`, T maiúsculo. Um `test` minúsculo é uma função comum não exportada."
+      },
+      {
+        "text": "`func TestCount(t *testing.T)` em `wordcount_test.go`",
+        "why": "Isso: o prefixo `Test`, uma maiúscula depois, um `*testing.T`, num arquivo `_test.go`."
+      },
+      {
+        "text": "`func TestCount()` em `wordcount_test.go`",
+        "why": "Sem o parâmetro `*testing.T` não há como relatar falha, e o comando go recusa a assinatura."
+      },
+      {
+        "text": "`func TestCount(t *testing.T)` em `wordcount.go`",
+        "why": "A função está certa mas o arquivo não: testes são compilados de arquivos que terminam em `_test.go`."
+      }
+    ]
+  },
+  "ex-hj9xk9m1": {
+    "prompt": "O primeiro `TestCount` falhou em `fun` e `fast` mas passou em `go`. O que esse padrão disse a quem leu?",
+    "hint": "O que `fun` e `fast` tinham na frase que `go` não tinha?",
+    "choices": [
+      {
+        "text": "Que `Count` perdia palavras no fim do texto",
+        "why": "`simple.` é a última palavra e não foi conferida; `fun.` fica no meio e falhou. A posição não era o padrão."
+      },
+      {
+        "text": "Que o minúsculo estava quebrado",
+        "why": "`Go` e `go` foram contados juntos como `go`, três vezes, então o minúsculo funcionou."
+      },
+      {
+        "text": "Que a pontuação ficava grudada na palavra",
+        "why": "Isso. `fun.` e `fast,` carregavam um ponto e uma vírgula; nenhum `go` da frase encostava em um."
+      },
+      {
+        "text": "Que o scanner divide palavras em toda letra que não é ASCII",
+        "why": "A frase é toda ASCII. O `ScanWords` divide nos espaços, e por isso a pontuação ficou."
+      }
+    ]
+  },
+  "ex-34czsghj": {
+    "prompt": "Por que o primeiro teste usa `t.Fatalf` quando `Count` devolve erro, mas `t.Errorf` para cada contagem?",
+    "hint": "Quais conferências ainda valem a pena depois de cada tipo de falha?",
+    "choices": [
+      {
+        "text": "Depois de um erro o map não vale a conferência; as contagens são independentes entre si",
+        "why": "Isso. Pare onde seguir só enterraria a falha real, siga onde cada conferência diz algo novo."
+      },
+      {
+        "text": "`t.Fatalf` é para erros e `t.Errorf` é para valores errados",
+        "why": "Os dois aceitam qualquer mensagem. A diferença é se a função de teste para."
+      },
+      {
+        "text": "`t.Errorf` não marca o teste como falho",
+        "why": "Marca. Os dois marcam o teste como falho; só o `Fatalf` também o para."
+      },
+      {
+        "text": "`t.Fatalf` encerra toda a execução do `go test`",
+        "why": "Ele encerra a função de teste atual (ou o subteste), e os outros testes rodam."
+      }
+    ]
+  },
+  "ex-9dj91ytv": {
+    "prompt": "O nome de um arquivo de teste tem de terminar em ___ para o `go test` compilá-lo e o `go build` deixá-lo de fora.",
+    "hint": "`wordcount` mais seis caracteres mais `.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "_test.go"
+        ]
+      }
+    ]
+  },
+  "ex-1cek8eqj": {
+    "prompt": "O teste de um colega falha, e ele muda a contagem esperada no teste até passar. Quando esse é o conserto certo?",
+    "hint": "A lição 25 encontrou os dois casos: `fun.` e `go's`.",
+    "choices": [
+      {
+        "text": "Sempre que o código foi escrito antes do teste",
+        "why": "A ordem em que foram escritos não diz qual está certo. `Count` existiu primeiro e errava em `fun.`."
+      },
+      {
+        "text": "Quando o teste pediu algo que o pacote não deveria fazer",
+        "why": "Isso. `go's` era uma decisão sobre o que é uma palavra; `fun.` era um defeito, e o código mudou."
+      },
+      {
+        "text": "Quando a falha é relatada com `t.Errorf` e não com `t.Fatalf`",
+        "why": "O método que relatou diz como o teste segue, não quem estava errado."
+      },
+      {
+        "text": "Nunca; um teste é uma especificação",
+        "why": "Um teste pode fazer a pergunta errada, como o `possessive` fez. Decidir faz parte do trabalho."
+      }
+    ]
+  },
+  "ex-apdanfpa": {
+    "prompt": "Qual é o nome completo do subteste iniciado por `t.Run(\"accents\", …)` dentro de `TestCount`?",
+    "hint": "A saída do `-v` o imprime depois de `=== RUN`.",
+    "choices": [
+      {
+        "text": "`accents`",
+        "why": "Essa é a string passada a `t.Run`. O relatório acrescenta o nome do pai na frente."
+      },
+      {
+        "text": "`TestCount.accents`",
+        "why": "O separador é uma barra, que é também onde o `-run` divide."
+      },
+      {
+        "text": "`TestCount/accents`",
+        "why": "Isso: pai, barra, subteste."
+      },
+      {
+        "text": "`TestCount_accents_3`",
+        "why": "Subtestes têm o nome da sua string, não um número por posição."
+      }
+    ]
+  },
+  "ex-8ev0nqwa": {
+    "prompt": "Na execução com cinco subtestes, o `possessive` falhou. O que aconteceu com `empty`, o subteste depois dele?",
+    "hint": "Cada subteste tem o seu próprio `t`.",
+    "choices": [
+      {
+        "text": "Foi pulado, porque o pai já tinha falhado",
+        "why": "O pai só falha quando a execução acaba; os outros filhos ainda rodam."
+      },
+      {
+        "text": "Rodou e passou",
+        "why": "Isso. Uma falha, mesmo um `t.Fatalf`, encerra o subteste que a relatou e mais nada."
+      },
+      {
+        "text": "Também falhou, porque subtestes compartilham um `*testing.T`",
+        "why": "Cada subteste recebe o seu próprio `t`, que é exatamente o que isola as falhas."
+      },
+      {
+        "text": "Rodou primeiro, já que o `go test` reordena subtestes que falham para o fim",
+        "why": "Subtestes rodam na ordem em que `t.Run` é chamado; a saída do `-v` os lista na ordem do código."
+      }
+    ]
+  },
+  "ex-86t19hmh": {
+    "prompt": "Você quer rodar só o subteste `case` de `TestCount`, e não um subteste `lowercase` que talvez seja acrescentado um dia. Que padrão de `-run` faz isso?",
+    "hint": "Cada parte do padrão é uma expressão regular que casa em qualquer ponto daquele nível do nome.",
+    "choices": [
+      {
+        "text": "`-run 'TestCount/case'`",
+        "why": "`case` casa dentro de `lowercase` também, já que a expressão não está ancorada."
+      },
+      {
+        "text": "`-run 'case'`",
+        "why": "Sem barra isso é comparado com os nomes de teste de primeiro nível, e nenhum teste se chama `case`."
+      },
+      {
+        "text": "`-run 'TestCount/^case$'`",
+        "why": "Isso. As âncoras fazem o segundo nível casar com o nome inteiro `case` e nada mais longo."
+      },
+      {
+        "text": "`-run 'TestCount' -v case`",
+        "why": "O `-v` não recebe argumento; a palavra a mais vira um caminho de pacote que não existe."
+      }
+    ]
+  },
+  "ex-hj8tyjpf": {
+    "prompt": "Por que o curso mudou o teste `possessive` em vez de fazer `Count` dividir `Go's` em `go`?",
+    "hint": "Pense em `don't`.",
+    "choices": [
+      {
+        "text": "Porque o detector de corridas relatou uma corrida no `TrimFunc`",
+        "why": "Nada neste pacote é concorrente, e não houve corrida nenhuma."
+      },
+      {
+        "text": "Porque `unicode.IsLetter` não reconhece um apóstrofo",
+        "why": "Ele o reconhece bem, como não letra. A questão é que o `TrimFunc` só apara as pontas."
+      },
+      {
+        "text": "Dividir nos apóstrofos quebraria `don't` e `it's`",
+        "why": "Isso. Era uma decisão sobre o que é uma palavra, e agora o teste a registra."
+      },
+      {
+        "text": "Porque um teste que falha não pode ser consertado mudando o código",
+        "why": "O primeiro teste foi consertado mudando o código, na seção 02."
+      }
+    ]
+  },
+  "ex-acnf9kma": {
+    "prompt": "Ponha as linhas que o `go test -v` imprimiu para os cinco subtestes na ordem em que aparecem, começando pela primeira.",
+    "hint": "Toda linha RUN vem antes do resumo que fecha o pai.",
+    "items": [
+      "`=== RUN   TestCount`",
+      "`=== RUN   TestCount/punctuation`",
+      "`=== RUN   TestCount/empty`",
+      "`--- FAIL: TestCount (0.00s)`",
+      "`--- PASS: TestCount/punctuation (0.00s)`"
+    ]
+  },
+  "ex-mx657tb7": {
+    "prompt": "Sem `t.Helper()`, a chamada de `wantCount` que falhou relatou a linha 7 de `demo_test.go`. O que havia na linha 7?",
+    "hint": "Que linha todas as chamadas do helper compartilham?",
+    "choices": [
+      {
+        "text": "A segunda chamada, a que perguntou por `fun`",
+        "why": "Essa era a linha 15, e é o que o relatório nomeia depois que `t.Helper()` entra."
+      },
+      {
+        "text": "O `t.Errorf` dentro do helper",
+        "why": "Isso, e toda chamada passa por ele, então a linha não diz nada sobre qual chamada falhou."
+      },
+      {
+        "text": "A declaração `func TestDemo(t *testing.T)`",
+        "why": "Uma falha é relatada na linha que a registrou, não na declaração do teste."
+      },
+      {
+        "text": "A linha `import \"testing\"`",
+        "why": "A linha 3 é o import. A linha 7 fica dentro de `wantCount`."
+      }
+    ]
+  },
+  "ex-3khf6xq5": {
+    "prompt": "O `TestCountFile` escreve o `note.txt` em `t.TempDir()`. O que acontece com esse diretório se o teste falhar no meio?",
+    "hint": "A remoção é registrada com `t.Cleanup`.",
+    "choices": [
+      {
+        "text": "Fica em `/tmp` para a falha poder ser examinada",
+        "why": "Não fica: a limpeza roda na falha também. Para guardar um arquivo, copie-o para fora com um `t.Logf` apontando para ele."
+      },
+      {
+        "text": "Só é removido por `go clean -testcache`",
+        "why": "O cache de testes guarda resultados, não diretórios temporários."
+      },
+      {
+        "text": "É reaproveitado pela próxima execução do mesmo teste",
+        "why": "Cada chamada devolve um diretório novo e vazio; a execução da lição tinha um número aleatório novo no nome."
+      },
+      {
+        "text": "É removido quando o teste termina, passando ou falhando",
+        "why": "Isso. É para isso que serve o `t.TempDir`: sem lixo depois de uma falha, sem colisão entre execuções."
+      }
+    ]
+  },
+  "ex-n5xbp8ey": {
+    "prompt": "Para quais destas uma função registrada com `t.Cleanup` serve? Escolha todas as que se aplicam.",
+    "hint": "Ela roda depois que o teste e os seus subtestes terminam.",
+    "choices": [
+      {
+        "text": "Parar um servidor que o teste iniciou",
+        "why": "Sim. A seção o cita."
+      },
+      {
+        "text": "Devolver o valor de uma variável de pacote que o teste mudou",
+        "why": "Sim, e o `t.Setenv` faz exatamente isso com uma variável de ambiente."
+      },
+      {
+        "text": "Tentar o teste de novo se ele falhou",
+        "why": "Uma limpeza roda depois do veredito e não pode mudá-lo."
+      },
+      {
+        "text": "Rodar antes do teste, para preparar a entrada",
+        "why": "Preparação é código comum no começo do teste. Uma limpeza roda no fim."
+      }
+    ]
+  },
+  "ex-gf27jz59": {
+    "prompt": "Por que o `TestCountFile` também confere que um arquivo inexistente dá um erro que casa com `fs.ErrNotExist`?",
+    "hint": "O que quem chama `CountFile` pode fazer com o erro?",
+    "choices": [
+      {
+        "text": "Porque o `go test` considera incompleto um teste com uma conferência só",
+        "why": "O comando go não tem opinião sobre quantas conferências um teste faz."
+      },
+      {
+        "text": "Quem chama usa `errors.Is` nele, e um embrulho descuidado o quebraria",
+        "why": "Isso. O teste fixa uma promessa que a função faz a quem a chama."
+      },
+      {
+        "text": "Para garantir que o `t.TempDir` foi esvaziado",
+        "why": "O diretório é novo e vazio quando o teste começa; o `missing.txt` nunca foi escrito."
+      },
+      {
+        "text": "Porque o `os.Open` entra em pânico com um arquivo inexistente",
+        "why": "Ele devolve um erro, que é o que o teste examina."
+      }
+    ]
+  },
+  "ex-w2krves2": {
+    "prompt": "Associe cada método de `*testing.T` ao que ele faz.",
+    "hint": "Cinco métodos da seção, quatro deles aqui.",
+    "pairs": [
+      {
+        "left": "`t.Helper()`",
+        "right": "relatar a linha de quem chamou, não esta"
+      },
+      {
+        "left": "`t.TempDir()`",
+        "right": "um diretório novo e vazio, removido no fim"
+      },
+      {
+        "left": "`t.Setenv(k, v)`",
+        "right": "definir uma variável para este teste e restaurá-la"
+      },
+      {
+        "left": "`t.Context()`",
+        "right": "cancelado logo antes das limpezas rodarem"
+      }
+    ],
+    "right_distractors": [
+      "rodar o teste de novo com o detector de corridas"
+    ]
+  },
+  "ex-eq3xb4h4": {
+    "prompt": "Na última execução de `go test -v` da lição 25, quantos subtestes o `TestCount` tinha?",
+    "hint": "Conte as linhas PASS recuadas sob `TestCount`.",
+    "unit": "subtestes"
+  },
+  "ex-0k76fe8c": {
+    "prompt": "Um teste confere que `Count` dá `\"the\": 2` para um parágrafo, e passa. Um mês depois alguém muda o `notLetter` para aparar dígitos também. Que subteste do arquivo final desta lição pegaria essa mudança?",
+    "hint": "Procure um caso cujas palavras contêm dígitos.",
+    "choices": [
+      {
+        "text": "`punctuation`",
+        "why": "A frase dele não tem dígito, então aparar dígitos não muda nada ali."
+      },
+      {
+        "text": "`accents`",
+        "why": "Letras acentuadas são letras; aparar dígitos as deixa em paz."
+      },
+      {
+        "text": "Nenhum: nenhum caso tem uma palavra com dígito",
+        "why": "Isso. Um comportamento que nenhum teste exercita pode mudar em silêncio, o assunto da lição 30."
+      },
+      {
+        "text": "`empty`",
+        "why": "Um texto vazio não tem palavras a aparar."
+      }
+    ]
+  },
+  "ex-vcm4w950": {
+    "prompt": "Para rodar um subteste você passa ao `go test` a flag ___ seguida de um padrão como `'TestCount/possessive'`.",
+    "hint": "Uma flag de três letras depois do hífen.",
+    "blanks": [
+      {
+        "accept": [
+          "-run"
+        ]
+      }
+    ]
+  }
+}
