@@ -63,4 +63,4 @@ background and keeps the build graph in memory between commands, much as Gradle'
 The first command after a new `.bazelversion` also downloads that Bazel, and the first build
 downloads `rules_java`, the six jars and **two JDKs of Bazel's own**: one that runs its tools and
 one that compiles your code. That is the hermetic rule from the first section, applied to the
-compiler itself. Your program still runs on the JDK 25 the `java` course installed.
+compiler itself. Your program still runs on the JDK 25 that `java` lesson 1 installed.

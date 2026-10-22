@@ -1,0 +1,707 @@
+[
+  {
+    "id": "ex-91px1nbb",
+    "version": 1,
+    "section": "schema-sql-every-start",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You add a column to the `CREATE TABLE IF NOT EXISTS book` statement in `schema.sql` and restart against the database the application has been using. What happens to the `book` table?",
+    "hint": "Read what `IF NOT EXISTS` checks for.",
+    "choices": [
+      {
+        "text": "It gains the new column on that start",
+        "correct": false,
+        "why": "That is the picture of `schema.sql` as a description of the schema. It describes an empty database only; an existing table is left as it is."
+      },
+      {
+        "text": "Nothing changes: the whole statement is skipped",
+        "correct": true,
+        "why": "`IF NOT EXISTS` finds a table called `book` and skips the statement, new column included, without an error or a log line."
+      },
+      {
+        "text": "The start fails because `book` already exists",
+        "correct": false,
+        "why": "That is what would happen without the guard. The guard exists precisely so that the second start does not fail."
+      },
+      {
+        "text": "Spring Boot drops the table and creates it again with the column",
+        "correct": false,
+        "why": "Spring Boot's script runner never drops anything on its own. Dropping and recreating is Hibernate's `create`, a different setting."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v6jzb1r",
+    "version": 1,
+    "section": "schema-sql-every-start",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did lesson 10's `data.sql` end each `INSERT` with `ON CONFLICT ... DO NOTHING`?",
+    "hint": "When did that file run?",
+    "choices": [
+      {
+        "text": "To skip any row whose price breaks the `CHECK` constraint",
+        "correct": false,
+        "why": "`ON CONFLICT` handles unique and primary key conflicts, not a failed `CHECK`; a negative price would still stop the insert."
+      },
+      {
+        "text": "Because PostgreSQL requires it on an insert of several rows",
+        "correct": false,
+        "why": "A multi-row `INSERT` works without it, as `V2__first_titles.sql` shows."
+      },
+      {
+        "text": "Because the file ran on every start, and the second insert of the same names would fail on their unique constraints",
+        "correct": true,
+        "why": "Every statement in a file that runs at each start has to be harmless the second time. A migration runs once, so V2 drops the guard."
+      },
+      {
+        "text": "To make the inserts faster when the table is large",
+        "correct": false,
+        "why": "It changes what happens on a conflict, not how fast anything runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndkceb1q",
+    "version": 1,
+    "section": "schema-sql-every-start",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `spring.sql.init.mode=always`, which of these can `schema.sql` NOT do for a database that already exists? Choose all that apply.",
+    "hint": "The file has no memory and runs whole each time.",
+    "choices": [
+      {
+        "text": "Change a column of an existing table, without a guard written by hand for that change",
+        "correct": true,
+        "why": "An `ALTER` works once and fails on every later start, so each change would need its own guard, forever."
+      },
+      {
+        "text": "Create a table that does not exist yet",
+        "correct": false,
+        "why": "This it can do: `CREATE TABLE IF NOT EXISTS` creates the missing table and skips the ones that exist."
+      },
+      {
+        "text": "Say which version of the file this database last received",
+        "correct": true,
+        "why": "Nothing records which version ran, which is exactly what `flyway_schema_history` adds."
+      },
+      {
+        "text": "Bring a database created months ago to the same schema as one created today",
+        "correct": true,
+        "why": "Each copy started from a different version of the file, and the guards stop the old one from ever catching up."
+      }
+    ]
+  },
+  {
+    "id": "ex-6me4djrp",
+    "version": 1,
+    "section": "flyway-takes-over",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What version and description does Flyway read from the file name `V2__first_titles.sql`?",
+    "hint": "Two underscores separate the two halves.",
+    "choices": [
+      {
+        "text": "Version 2, description `first titles`",
+        "correct": true,
+        "why": "The part between `V` and the double underscore is the version; the rest, underscores turned into spaces, is the description."
+      },
+      {
+        "text": "Version `2__first`, description `titles`",
+        "correct": false,
+        "why": "That would split at the last underscore. The separator is the double underscore, which comes first."
+      },
+      {
+        "text": "Version 2, description `V2__first_titles`",
+        "correct": false,
+        "why": "The description is what follows the separator, without the version in front of it."
+      },
+      {
+        "text": "Version 1, because it is the second file in the directory",
+        "correct": false,
+        "why": "Flyway takes the version from the name, never from the file's position in a listing."
+      }
+    ]
+  },
+  {
+    "id": "ex-btzgrxmy",
+    "version": 1,
+    "section": "flyway-takes-over",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`db/migration` holds `V1__a.sql`, `V2__b.sql`, `V10__c.sql` and `V9__d.sql`. Put them in the order Flyway applies them to an empty database.",
+    "hint": "Versions compare as numbers.",
+    "items": [
+      "V1__a.sql",
+      "V2__b.sql",
+      "V9__d.sql",
+      "V10__c.sql"
+    ],
+    "trap": "Sorted as text, V10 lands right after V1; Flyway compares the versions as numbers, so 10 comes after 9."
+  },
+  {
+    "id": "ex-7wdb39c3",
+    "version": 1,
+    "section": "flyway-takes-over",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Flyway refuses to start: `Found non-empty schema(s) \"public\" but no schema history table`. The database is production, with three years of orders, and its tables are exactly what V1 to V4 create. What do you do?",
+    "hint": "Which way out keeps the data, and which number is the truth?",
+    "choices": [
+      {
+        "text": "Drop the database and recreate it, so that Flyway can apply V1 to V4 from the start",
+        "correct": false,
+        "why": "That works on test data. Here it deletes three years of orders."
+      },
+      {
+        "text": "Start it once with `baseline-on-migrate` and `baseline-version=4`",
+        "correct": true,
+        "why": "The baseline records that the database already holds versions up to 4, and Flyway applies only what comes after."
+      },
+      {
+        "text": "Baseline at version 1, so that V2 to V4 run and confirm the tables",
+        "correct": false,
+        "why": "V2 to V4 would try to create tables and rows that are already there, and fail or duplicate them."
+      },
+      {
+        "text": "Add `spring.flyway.baseline-on-migrate=true` to `application.properties` for good",
+        "correct": false,
+        "why": "It would work today, and later it would silently baseline any non-empty database the application is pointed at, the wrong one included."
+      }
+    ]
+  },
+  {
+    "id": "ex-mq0emy97",
+    "version": 1,
+    "section": "flyway-takes-over",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody baselined a database at version 2, but it only ever had what V1 creates; V2 is the migration that inserts the first six books. What happens from then on?",
+    "hint": "What can each check see? V2 adds rows, not columns.",
+    "choices": [
+      {
+        "text": "Flyway finds V2's checksum missing from the baseline row and refuses to start",
+        "correct": false,
+        "why": "A baseline row carries no checksum to compare; Flyway takes the claim as given."
+      },
+      {
+        "text": "Flyway applies V2 anyway, because the baseline only covers the schema and not the data",
+        "correct": false,
+        "why": "A baseline covers every version up to its number, schema or data. V2 is treated as applied."
+      },
+      {
+        "text": "Hibernate's `validate` notices the missing books at start-up",
+        "correct": false,
+        "why": "`validate` compares tables and column types with the entities. It does not count rows."
+      },
+      {
+        "text": "V2 never runs there, and no check reports it",
+        "correct": true,
+        "why": "The baseline version is a claim nobody verifies, and missing rows break no rule that Flyway or Hibernate checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpndbssx",
+    "version": 1,
+    "section": "validate-the-mapping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `spring.jpa.hibernate.ddl-auto` value makes Hibernate compare the entities with the schema and refuse to start on a difference, changing nothing?",
+    "hint": "One value only reads.",
+    "choices": [
+      {
+        "text": "`update`",
+        "correct": false,
+        "why": "`update` changes the schema towards the entities, which is a second author of the schema beside the migrations."
+      },
+      {
+        "text": "`none`",
+        "correct": false,
+        "why": "`none` neither changes nor compares: it is how the isbn mismatch went unnoticed in lessons 10 and 11."
+      },
+      {
+        "text": "`create-drop`",
+        "correct": false,
+        "why": "`create-drop` builds the schema from the entities at start and drops it at shutdown."
+      },
+      {
+        "text": "`validate`",
+        "correct": true,
+        "why": "It checks and changes nothing, which is the right job for Hibernate once migrations own the schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpeamwhy",
+    "version": 1,
+    "section": "validate-the-mapping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `ddl-auto=update` the wrong choice in a project that uses Flyway?",
+    "hint": "Count who writes the schema, and what each one records.",
+    "choices": [
+      {
+        "text": "It makes start-up slower than `validate` on large schemas",
+        "correct": false,
+        "why": "Speed is not the argument; both read the whole schema at start."
+      },
+      {
+        "text": "It becomes a second author of the schema, records nothing, and never drops, renames or retypes a column",
+        "correct": true,
+        "why": "The schema would then be whatever the last entity to start asked for, and no history would say so."
+      },
+      {
+        "text": "Flyway refuses to start whenever `update` is set",
+        "correct": false,
+        "why": "Flyway does not read Hibernate's settings; the two would run, one after the other."
+      },
+      {
+        "text": "It deletes the rows of every table whose entity changed",
+        "correct": false,
+        "why": "That describes `create`, which rebuilds the schema. `update` only adds."
+      }
+    ]
+  },
+  {
+    "id": "ex-khjfh3a1",
+    "version": 1,
+    "section": "validate-the-mapping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Hibernate says: `wrong column type encountered in column [isbn] in table [book]; found [bpchar (Types#CHAR)], but expecting [varchar(255) (Types#VARCHAR)]`. Which side is which?",
+    "hint": "`found` is what Hibernate read from the database.",
+    "choices": [
+      {
+        "text": "The column is `char(n)`; the entity's `String` field, with nothing else said, expects `varchar(255)`",
+        "correct": true,
+        "why": "`bpchar` is PostgreSQL's name for `char(n)`, and `varchar(255)` is Hibernate's default for a `String`."
+      },
+      {
+        "text": "The column is `varchar(255)`; the entity declares `char`",
+        "correct": false,
+        "why": "That reads the message backwards: `found` is the database and `expecting` is the entity."
+      },
+      {
+        "text": "The `isbn` column is missing and Hibernate is describing the one it would create",
+        "correct": false,
+        "why": "A missing column has a message of its own; this one found the column and disliked its type."
+      },
+      {
+        "text": "PostgreSQL has no `varchar`, so Hibernate falls back to `bpchar`",
+        "correct": false,
+        "why": "PostgreSQL has `varchar`. The two names come from the two sides being compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-7a8a7dse",
+    "version": 1,
+    "section": "validate-the-mapping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration created `book.isbn` without its `UNIQUE` constraint. `ddl-auto=validate` is set. What happens?",
+    "hint": "List what `validate` compares.",
+    "choices": [
+      {
+        "text": "The start fails, because the entity and the table disagree about uniqueness",
+        "correct": false,
+        "why": "`validate` does not compare constraints, so there is no disagreement for it to find."
+      },
+      {
+        "text": "Hibernate adds the constraint, since `validate` repairs small differences",
+        "correct": false,
+        "why": "`validate` never changes the schema; repairing is not among its jobs."
+      },
+      {
+        "text": "It starts, and a second book with the same ISBN is accepted",
+        "correct": true,
+        "why": "`validate` checks tables, columns and types, not `UNIQUE`, `NOT NULL`, `CHECK` or foreign keys. Constraints are the migrations' job."
+      },
+      {
+        "text": "Flyway refuses to start because the table does not match V1's checksum",
+        "correct": false,
+        "why": "The checksum is computed from the file, not from the table; a file that ran as written matches its row."
+      }
+    ]
+  },
+  {
+    "id": "ex-khb371zm",
+    "version": 1,
+    "section": "the-history-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `checksum` column of `flyway_schema_history` let Flyway notice?",
+    "hint": "It is computed from a file.",
+    "choices": [
+      {
+        "text": "That somebody changed a table's rows by hand",
+        "correct": false,
+        "why": "The checksum is computed from the migration file, so nothing done to the data changes it."
+      },
+      {
+        "text": "That a migration file changed after it ran",
+        "correct": true,
+        "why": "Flyway compares the number stored when the file ran with the number of the file it finds now."
+      },
+      {
+        "text": "That two copies of the application started at the same moment",
+        "correct": false,
+        "why": "Concurrent starts are a question of locking, not of checksums."
+      },
+      {
+        "text": "That a migration took longer than it did last time",
+        "correct": false,
+        "why": "Durations go in `execution_time`; the checksum describes the contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8r2k31j",
+    "version": 1,
+    "section": "the-history-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague corrects a price inside `V2__first_titles.sql`, which production ran months ago, and deploys. What does production do on its next start?",
+    "hint": "Compare the file with its row.",
+    "choices": [
+      {
+        "text": "It applies the new V2, so production gets the corrected price",
+        "correct": false,
+        "why": "Version 2 has a row already, so Flyway never runs V2 again; it compares it."
+      },
+      {
+        "text": "It starts normally, because only data changed and not the schema",
+        "correct": false,
+        "why": "The checksum covers the whole file, data or schema. Any edit changes it."
+      },
+      {
+        "text": "It refuses to start with a checksum mismatch and applies nothing",
+        "correct": true,
+        "why": "The file no longer matches the row that recorded it, and Flyway stops before two databases can quietly disagree."
+      },
+      {
+        "text": "It runs V2 again from the top, inserting the six books a second time",
+        "correct": false,
+        "why": "Flyway applies a version once. What it does with a changed one is refuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-17fcxme7",
+    "version": 1,
+    "section": "the-history-table",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A price in V2 is wrong. Which of these deal with it correctly? Choose all that apply.",
+    "hint": "Where has V2 run, and what does each action leave in the database?",
+    "choices": [
+      {
+        "text": "Revert V2 to what ran, and write the correction as the next migration, an `UPDATE`",
+        "correct": true,
+        "why": "Every database then receives the same steps in the same order, and the history says what happened."
+      },
+      {
+        "text": "Edit V2 and run `repair`, so that the history matches the file",
+        "correct": false,
+        "why": "`repair` rewrites the stored checksum and runs nothing: the database keeps the old price while the file shows the new one."
+      },
+      {
+        "text": "If V2 has only ever run on your own machine, edit it and recreate your own database",
+        "correct": true,
+        "why": "Nobody else has seen the old version, so there is no history to keep yet."
+      },
+      {
+        "text": "Edit V2 and delete its row from the history, so that it runs again",
+        "correct": false,
+        "why": "V2 would insert its six books a second time, against unique constraints that already hold them."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mx64w5t",
+    "version": 1,
+    "section": "the-next-migration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `V3__publisher.sql` failed on its second statement, why was there no `publisher` table?",
+    "hint": "Which database was it, and what can it do with DDL?",
+    "choices": [
+      {
+        "text": "Flyway ran an undo migration that dropped what V3 had created",
+        "correct": false,
+        "why": "Flyway's free edition has no undo, and none was written."
+      },
+      {
+        "text": "Flyway checks every statement against the database before running any of them, so the `CREATE TABLE` never ran",
+        "correct": false,
+        "why": "It ran; the error came from the database on the second statement, line 6."
+      },
+      {
+        "text": "PostgreSQL runs DDL in transactions, and Flyway ran V3 in one, so the failure rolled back the whole file",
+        "correct": true,
+        "why": "\"Changes successfully rolled back\": the database was left exactly at version 2."
+      },
+      {
+        "text": "Hibernate's `validate` dropped the table because no entity maps it",
+        "correct": false,
+        "why": "`validate` changes nothing, and it never ran: the start stopped at Flyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhcfcb6n",
+    "version": 1,
+    "section": "the-next-migration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same `V3__publisher.sql` passes in a test run that starts from an empty database. Why does that prove little about production?",
+    "hint": "What does the failing statement need in order to fail?",
+    "choices": [
+      {
+        "text": "Tests use another PostgreSQL version, which accepts that statement",
+        "correct": false,
+        "why": "The version is not the point; PostgreSQL 16 accepts it too on an empty table."
+      },
+      {
+        "text": "A `NOT NULL` column with no default fails only on a table that has rows, and an empty database has none",
+        "correct": true,
+        "why": "Every existing row would break the rule; with no rows there is nothing to break. Test against data shaped like production's."
+      },
+      {
+        "text": "Tests run migrations outside transactions, which hides errors",
+        "correct": false,
+        "why": "Flyway runs them in transactions there too; the statement simply succeeds on an empty table."
+      },
+      {
+        "text": "Test runs skip migrations that add foreign keys",
+        "correct": false,
+        "why": "Nothing skips them; the reference to `publisher` is valid on an empty table."
+      }
+    ]
+  },
+  {
+    "id": "ex-853rd4t4",
+    "version": 1,
+    "section": "the-next-migration",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every book must get a required `publisher_id`, on a shop that is running. Put the steps of expand and contract in order.",
+    "hint": "Nothing may be required before every row can satisfy it.",
+    "items": [
+      "A migration adds `publisher_id` as a column that may be empty",
+      "A release writes `publisher_id` for every new book",
+      "A migration fills `publisher_id` for the old rows",
+      "A migration makes `publisher_id` `NOT NULL`"
+    ],
+    "trap": "Making the column required before the old rows are filled is the V3 that failed in this section."
+  },
+  {
+    "id": "ex-nf7atpw7",
+    "version": 1,
+    "section": "the-next-migration",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On PostgreSQL a failed migration leaves no row behind. On ___, which commits each `CREATE` and `ALTER` the moment it runs, it leaves half the change and a failed row in the history.",
+    "hint": "The other widely used open-source database the section names.",
+    "blanks": [
+      {
+        "accept": [
+          "MySQL"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vp4e4fjw",
+    "version": 1,
+    "section": "liquibase",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What identifies a changeset in Liquibase?",
+    "hint": "Look at the history table's first three columns.",
+    "choices": [
+      {
+        "text": "A version number in the changelog's file name",
+        "correct": false,
+        "why": "That is Flyway's identity. A Liquibase changelog holds many changesets in one file."
+      },
+      {
+        "text": "Its `id`, its `author` and the file it is in, together",
+        "correct": true,
+        "why": "`databasechangelog` records all three, and the same `id` by another author is another changeset."
+      },
+      {
+        "text": "Its `md5sum`",
+        "correct": false,
+        "why": "The checksum detects an edit to a changeset; it is not its name."
+      },
+      {
+        "text": "Its position in the changelog",
+        "correct": false,
+        "why": "Position decides the order of execution, recorded in `orderexecuted`, not the identity."
+      }
+    ]
+  },
+  {
+    "id": "ex-6n0g8bps",
+    "version": 1,
+    "section": "liquibase",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Flyway piece with its Liquibase counterpart.",
+    "hint": "The comparison table at the end of the section.",
+    "pairs": [
+      {
+        "left": "flyway_schema_history",
+        "right": "databasechangelog"
+      },
+      {
+        "left": "V2__first_titles.sql",
+        "right": "a changeset"
+      },
+      {
+        "left": "checksum",
+        "right": "md5sum"
+      },
+      {
+        "left": "spring-boot-starter-flyway",
+        "right": "spring-boot-starter-liquibase"
+      }
+    ],
+    "right_distractors": [
+      "databasechangeloglock"
+    ]
+  },
+  {
+    "id": "ex-z1tew61r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Liquibase changeset dropped the column `notes`, and its written rollback adds `notes` back. After the rollback, what is in the column?",
+    "hint": "What does a rollback run, and in which direction?",
+    "choices": [
+      {
+        "text": "The old values, restored from a copy Liquibase kept before the drop",
+        "correct": false,
+        "why": "Liquibase keeps no copy of data. A rollback is new changes run forward."
+      },
+      {
+        "text": "Nothing: the column is back, empty",
+        "correct": true,
+        "why": "The rollback re-creates the column; the data went with the drop and no step brings it back."
+      },
+      {
+        "text": "The values stored in `databasechangelog` when the changeset ran",
+        "correct": false,
+        "why": "That table records which changesets ran, never the rows they touched."
+      },
+      {
+        "text": "The rollback refuses, because a dropped column can never be added back",
+        "correct": false,
+        "why": "With a written `rollback`, Liquibase runs it; it refuses only when it has neither a written rollback nor one it can generate."
+      }
+    ]
+  },
+  {
+    "id": "ex-5w3k02vz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On two branches, you and a colleague each add a `V4__...sql` with a different description, and both branches are merged. What does Flyway do at the next start?",
+    "hint": "What identifies a migration in Flyway?",
+    "choices": [
+      {
+        "text": "It applies both, in the alphabetical order of their descriptions",
+        "correct": false,
+        "why": "The version is the identity; two files cannot share one, whatever their descriptions."
+      },
+      {
+        "text": "It applies the newer file and ignores the older one",
+        "correct": false,
+        "why": "Flyway does not look at file dates, and it does not choose silently between two claims."
+      },
+      {
+        "text": "It refuses to start, because two migrations claim version 4",
+        "correct": true,
+        "why": "Two files with one version are a conflict Flyway will not settle for you: one of them has to become V5."
+      },
+      {
+        "text": "It applies whichever it finds first and records the other as already applied",
+        "correct": false,
+        "why": "Recording a migration that never ran would be the silent drift Flyway exists to prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnqg41qz",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop renames `book.title` to `name`, and during a deployment old and new copies of the application run against one database. Which steps belong to a safe sequence? Choose all that apply.",
+    "hint": "During the deployment, which column does each copy of the application read?",
+    "choices": [
+      {
+        "text": "A migration adds `name` and copies `title` into it",
+        "correct": true,
+        "why": "The expand step: both columns exist, so both versions of the code find the one they read."
+      },
+      {
+        "text": "One migration runs `ALTER TABLE book RENAME COLUMN title TO name` with the release",
+        "correct": false,
+        "why": "The old copies still running would ask for `title` and fail until the deployment ends."
+      },
+      {
+        "text": "The code moves to reading and writing `name`",
+        "correct": true,
+        "why": "Once every running copy uses `name`, `title` has no readers left."
+      },
+      {
+        "text": "A later migration drops `title`, in a release after nothing reads it",
+        "correct": true,
+        "why": "The contract step, last, when it can break nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-22hsa6xg",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A database was baselined at version 2, as this lesson showed, and has since received V3 and nothing else. How many rows does its `flyway_schema_history` hold?",
+    "hint": "V1 and V2 never ran there.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "rows"
+  }
+]

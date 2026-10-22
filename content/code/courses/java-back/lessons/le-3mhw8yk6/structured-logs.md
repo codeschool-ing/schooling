@@ -7,7 +7,7 @@ The lines so far are written for a person at a terminal, and a person reads them
 is mostly read by a program instead: something collects every line from every copy of the
 application, stores it, and answers questions like "every `ERROR` from `OrderService` this morning"
 or "every line with request id `checkout-42`". To answer those from text, it has to cut each line into
-fields with a pattern, and the pattern breaks the first time a message contains the character it cuts
+fields with a pattern. The pattern breaks the first time a message contains the character it cuts
 on, or runs over several lines, as Hibernate's report on the database does at every start-up.
 
 A **structured log** writes each event as data instead: one JSON object per line, with the level, the
@@ -60,10 +60,10 @@ ana@vm:~/bookshop$ grep checkout-43 app.log | python3 -m json.tool
 }
 ```
 
-The same event, and nothing has to be guessed from its position any more. The logger's name is
-whole, not shortened to 40 characters; the thread's name is whole; the time is in UTC with the zone
-written as `Z`, so lines from machines in different zones sort together; and **`requestId` is a field
-of its own**, because Boot copies every MDC entry into the object. A log platform can now filter on
+The same event, and nothing has to be guessed from its position any more. The logger's name and the
+thread's name are whole, not shortened. The time is in UTC with the zone written as `Z`, so lines
+from machines in different zones sort together. And **`requestId` is a field of its own**, because
+Boot copies every MDC entry into the object. A log platform can now filter on
 `requestId` exactly, rather than searching text for a string that might also appear in a message.
 And a message that runs over several lines, like Hibernate's report on the database, stays a single
 object: its line breaks are written as `\n` inside the string, so nothing in a message can start a

@@ -64,4 +64,4 @@ plano e guarda o grafo do build na memória entre um comando e outro, mais ou me
 Gradle. O primeiro comando depois de um `.bazelversion` novo também baixa aquele Bazel, e o primeiro
 build baixa o `rules_java`, os seis jars e **dois JDKs do próprio Bazel**: um que roda as
 ferramentas dele e um que compila o seu código. É a regra hermética da primeira seção, aplicada ao
-próprio compilador. O seu programa continua rodando no JDK 25 que o curso `java` instalou.
+próprio compilador. O seu programa continua rodando no JDK 25 que a aula 1 de `java` instalou.

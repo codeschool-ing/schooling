@@ -103,7 +103,7 @@ server on the internet and run it. So anybody who could get a string into a log 
 header, a search box or a user name, could make the server run their code. Logging a request's
 `User-Agent` was enough.
 
-The facade did not protect anybody, and it is worth being exact about why. An application that logged
+The facade did not protect anybody. An application that logged
 through SLF4J with Log4j2 behind it handed the attacker's string, unchanged, to the same `log4j-core`
 that did the lookup: **the vulnerable code was in the backend, and a facade forwards the message to the
 backend**, which is its job. What the facade did buy was the cure. A project whose code spoke only

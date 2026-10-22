@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-m4y63p31",
+    "version": 1,
+    "section": "when-it-is-wired",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does a Spring Boot application, built the way this course builds the bookshop, work out which beans exist and which one each constructor receives?",
+    "hint": "Lesson 5 watched it happen inside `java -jar`.",
+    "choices": [
+      {
+        "text": "Every time it starts",
+        "correct": true,
+        "why": "Right. The container scans the package, reads constructors by reflection and checks the autoconfiguration conditions on each start, and keeps none of it for the next one."
+      },
+      {
+        "text": "While `javac` compiles the classes",
+        "correct": false,
+        "why": "That is Micronaut's moment. Spring's compiler step produces ordinary classes and nothing about the wiring."
+      },
+      {
+        "text": "During `mvn package`, when the jar is built",
+        "correct": false,
+        "why": "That is where Quarkus does it, and where Spring's optional AOT step would. The bookshop does not use that step."
+      },
+      {
+        "text": "The first time a request reaches each controller",
+        "correct": false,
+        "why": "Spring builds its singleton beans before it opens the port, which is why a missing bean stops the start instead of failing a request."
+      }
+    ]
+  },
+  {
+    "id": "ex-5cnvs5rt",
+    "version": 1,
+    "section": "when-it-is-wired",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In which of these deployments do a few seconds of startup cost the most?",
+    "hint": "Count how often a user waits for a start.",
+    "choices": [
+      {
+        "text": "A monolith deployed once a week and kept running",
+        "correct": false,
+        "why": "It pays the start once a week. Nobody waits on it except the person deploying."
+      },
+      {
+        "text": "A service with heavy traffic that runs on three long-lived instances",
+        "correct": false,
+        "why": "Heavy traffic is a question of throughput once running. The three starts happen at deploy time and the users never see them."
+      },
+      {
+        "text": "A nightly batch job that runs for two hours",
+        "correct": false,
+        "why": "A few seconds out of two hours is noise, and nobody is waiting for the first answer."
+      },
+      {
+        "text": "A function that is started from zero copies when a request arrives",
+        "correct": true,
+        "why": "Right. Every cold start is a user waiting, so the startup time is part of the response time."
+      }
+    ]
+  },
+  {
+    "id": "ex-qn484yt7",
+    "version": 1,
+    "section": "when-it-is-wired",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Quarkus service is deployed, and the operator changes a property in its environment and restarts it. The new value is ignored. What is the likeliest explanation?",
+    "hint": "Not every property is read at the same moment.",
+    "choices": [
+      {
+        "text": "It is a build-time property, so it needs a new build",
+        "correct": true,
+        "why": "Right. Work moved into the build is decided there, and Quarkus marks such properties as build-time ones; changing them at start does nothing."
+      },
+      {
+        "text": "Quarkus never reads the environment, only the properties file",
+        "correct": false,
+        "why": "Properties read at start can come from the environment, as in Spring. The issue is which properties are read at start at all."
+      },
+      {
+        "text": "A native image cannot read configuration at all",
+        "correct": false,
+        "why": "A native image still reads runtime configuration when it starts; what it cannot do is change what was decided in its build."
+      },
+      {
+        "text": "The restart reused a cached container from the last start",
+        "correct": false,
+        "why": "Quarkus keeps no container between starts; what it replays is a record made by the build, which is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9wsbznc",
+    "version": 1,
+    "section": "when-it-is-wired",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does Spring Boot do at every start that Micronaut has already done while compiling? Choose all that apply.",
+    "hint": "Think of the container's work, not the server's.",
+    "choices": [
+      {
+        "text": "Scanning the package for annotated classes",
+        "correct": true,
+        "why": "Right. Micronaut's annotation processors saw every annotation inside `javac`."
+      },
+      {
+        "text": "Reading constructors by reflection to find what each bean needs",
+        "correct": true,
+        "why": "Right. Micronaut generated a class per bean that calls the constructor directly."
+      },
+      {
+        "text": "Opening the HTTP port",
+        "correct": false,
+        "why": "Every server opens its port when it starts; a port cannot be opened by a compiler."
+      },
+      {
+        "text": "Reading the values of runtime properties such as the database password",
+        "correct": false,
+        "why": "Both read runtime configuration at start, since a password must not be compiled into the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd1z4pam",
+    "version": 1,
+    "section": "four-frameworks",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each framework to where it works out its wiring.",
+    "hint": "The figure in the first reading section.",
+    "pairs": [
+      {
+        "left": "Quarkus",
+        "right": "its extensions, during the build"
+      },
+      {
+        "left": "Micronaut",
+        "right": "annotation processors, inside javac"
+      },
+      {
+        "left": "Javalin",
+        "right": "your own code, in main"
+      },
+      {
+        "left": "Play",
+        "right": "Guice, when the application starts"
+      }
+    ],
+    "right_distractors": [
+      "an operator, when the service is deployed"
+    ]
+  },
+  {
+    "id": "ex-xh8r7mmr",
+    "version": 1,
+    "section": "four-frameworks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Play application, a route in `conf/routes` names a controller method that was renamed. When does the mistake show?",
+    "hint": "The routes file is not read at start.",
+    "choices": [
+      {
+        "text": "At start, when Guice builds the controllers and their routes",
+        "correct": false,
+        "why": "Guice runs at start, but the routes file was turned into code long before that."
+      },
+      {
+        "text": "In the build, because the routes file is compiled into code",
+        "correct": true,
+        "why": "Right. A route naming a method that does not exist is a compile error, and nothing is deployed with it."
+      },
+      {
+        "text": "Only when a request reaches that route",
+        "correct": false,
+        "why": "That would be the behaviour of routes read by reflection at request time; Play's are checked earlier."
+      },
+      {
+        "text": "Never: the route silently answers 404",
+        "correct": false,
+        "why": "A route that silently disappeared would be the worst outcome, and compiling the file is how Play avoids it."
+      }
+    ]
+  },
+  {
+    "id": "ex-4kg07p63",
+    "version": 1,
+    "section": "four-frameworks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is producing a GraalVM native image simpler for Quarkus and Micronaut than for a Spring Boot application left as this course builds it?",
+    "hint": "What has to be declared before a native image is built?",
+    "choices": [
+      {
+        "text": "GraalVM only accepts Jakarta annotations, which Spring does not use",
+        "correct": false,
+        "why": "native-image compiles any Java; it knows nothing about which annotations a framework chose."
+      },
+      {
+        "text": "Spring's jar is too large for native-image to compile",
+        "correct": false,
+        "why": "Size makes the build slower, not impossible. The obstacle is reflection, not bytes."
+      },
+      {
+        "text": "Everything reached by reflection must be known before the build, and their wiring is already decided then",
+        "correct": true,
+        "why": "Right. A framework that wires at start by reflection has to run that analysis early first, which is the job of Spring's AOT step."
+      },
+      {
+        "text": "A native image cannot open a network port without Jetty",
+        "correct": false,
+        "why": "A native image opens sockets like any program; Spring's Tomcat works in one too once the AOT step has run."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxybn28e",
+    "version": 1,
+    "section": "four-frameworks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Micronaut wires the application at compile time: its annotation processors run inside ___ and write a class for every bean.",
+    "blanks": [
+      {
+        "accept": [
+          "javac",
+          "the compiler",
+          "the java compiler"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6075a5vd",
+    "version": 1,
+    "section": "four-frameworks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Micronaut Data repository declares `findByTitel` where the entity's field is `title`. When does the team find out?",
+    "hint": "Micronaut Data builds the query from the method name, and the question is when.",
+    "choices": [
+      {
+        "text": "When the application starts and builds the repository",
+        "correct": false,
+        "why": "That is when Spring Data would complain about a derived query; Micronaut Data has already parsed the name by then."
+      },
+      {
+        "text": "The first time the method is called",
+        "correct": false,
+        "why": "Nothing about this query is left to the call; the name was checked earlier."
+      },
+      {
+        "text": "Never: the method returns an empty list",
+        "correct": false,
+        "why": "A query naming a field that does not exist is refused, not run against nothing."
+      },
+      {
+        "text": "When the code is compiled",
+        "correct": true,
+        "why": "Right. The annotation processor turns the name into a query inside javac and fails the build on a field that does not exist, so the typo never reaches a running application."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ec2472s",
+    "version": 1,
+    "section": "javalin-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first build of `javalin-hello` had no Jackson in its pom, and `GET /books` answered 500. What does that show about Javalin?",
+    "hint": "Compare it with what lesson 4's starters did for the bookshop.",
+    "choices": [
+      {
+        "text": "Records cannot be turned into JSON outside Spring",
+        "correct": false,
+        "why": "The same record became JSON as soon as jackson-databind was in the pom."
+      },
+      {
+        "text": "Javalin needs an annotation on the handler to know it returns JSON",
+        "correct": false,
+        "why": "Javalin reads no annotations; `ctx.json` is the whole instruction, and it needs a mapper to carry it out."
+      },
+      {
+        "text": "You choose and add the JSON library; Spring's starter had brought one",
+        "correct": true,
+        "why": "Right. spring-boot-starter-webmvc pulls in Jackson and configures it; a library leaves that decision, and its absence, to you."
+      },
+      {
+        "text": "Port 7070 was still held by the run before, so the server answered with an error",
+        "correct": false,
+        "why": "A taken port stops the server from starting at all; this server started and answered, with a 500."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8w32nhv",
+    "version": 1,
+    "section": "javalin-by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the `javalin-hello` pom carry the maven-shade-plugin?",
+    "hint": "Lesson 1 tried to run a jar that needed a library.",
+    "choices": [
+      {
+        "text": "To make the classes smaller by renaming their packages as it copies them",
+        "correct": false,
+        "why": "The plugin can relocate packages, but this pom does not ask it to; the jar it produces is bigger, not smaller."
+      },
+      {
+        "text": "Because Javalin refuses to start from a jar that the ordinary jar plugin made",
+        "correct": false,
+        "why": "Javalin does not know how it was packaged. The plain jar fails before Javalin is reached, because its classes are not in it."
+      },
+      {
+        "text": "To pack every dependency into one runnable jar, main class named",
+        "correct": true,
+        "why": "Right. The plain jar holds only `HelloApp`; the shaded one holds Javalin, Jetty, Jackson and the logger too."
+      },
+      {
+        "text": "To pin the versions of the dependencies",
+        "correct": false,
+        "why": "Versions are pinned by the `<version>` of each dependency; shading copies whatever was resolved."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd0v67n2",
+    "version": 1,
+    "section": "javalin-by-hand",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens between `java -jar` and the answer to `GET /books/2` in `javalin-hello`.",
+    "hint": "Configuration comes before the server; the handler before the JSON.",
+    "items": [
+      "`main` calls `Javalin.create`, and the lambda registers the two routes",
+      "`start(7070)` opens Jetty on port 7070",
+      "Jetty accepts the request and Javalin matches it to `/books/{id}`",
+      "The handler converts `{id}`, finds the book and calls `ctx.json`",
+      "Jackson writes the record as JSON in the response"
+    ],
+    "trap": "In Javalin 7 the routes are part of the configuration, so they are registered before the port opens, not after."
+  },
+  {
+    "id": "ex-fk575b6s",
+    "version": 1,
+    "section": "measured",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bookshop's jar is 21,580,405 bytes and `javalin-hello`'s is 9,534,256. How many times bigger is the bookshop's? Answer to two decimal places.",
+    "hint": "Divide the first by the second.",
+    "value": 2.26,
+    "tolerance": 0.02
+  },
+  {
+    "id": "ex-brj206jy",
+    "version": 1,
+    "section": "measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `first-answer.sh` time the start from outside instead of comparing the line each framework prints about its own startup?",
+    "hint": "Ask where each stopwatch starts.",
+    "choices": [
+      {
+        "text": "The frameworks' lines are rounded too coarsely to compare",
+        "correct": false,
+        "why": "Both report to the millisecond. The trouble is what they count, not how precisely."
+      },
+      {
+        "text": "Each line starts its stopwatch at a different moment",
+        "correct": true,
+        "why": "Right. Neither counts the JVM's own start, and they do not begin at the same point after it; the time from `java -jar` to the first answer is one span for both."
+      },
+      {
+        "text": "Javalin does not print a startup time",
+        "correct": false,
+        "why": "It does: `Javalin started in ...ms`, under its banner."
+      },
+      {
+        "text": "Spring's line is printed before Tomcat opens the port",
+        "correct": false,
+        "why": "Spring logs `Started` after the web server is up, so its number is not short of the port."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hh58drq",
+    "version": 1,
+    "section": "measured",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Over three runs each, the bookshop took about three times as long as `javalin-hello` to answer its first request. Which conclusion does that measurement support?",
+    "hint": "What was timed, and how often does it happen?",
+    "choices": [
+      {
+        "text": "Javalin answers requests about three times faster once both are running",
+        "correct": false,
+        "why": "The first answer was the one thing timed. Speed once running is a separate measurement, and lesson 20 takes one."
+      },
+      {
+        "text": "Each start of the bookshop costs some seconds more than Javalin's, on that machine",
+        "correct": true,
+        "why": "Right. It is a cost per start, measured on one machine, which matters exactly as often as the service starts."
+      },
+      {
+        "text": "The fully built bookshop of lesson 23 will be three times slower to start than a Javalin service with the same features",
+        "correct": false,
+        "why": "Neither of those two programs was measured. Database, security and metrics add start-up work to both."
+      },
+      {
+        "text": "Spring Boot is unsuitable for production services",
+        "correct": false,
+        "why": "Most production services start once per deploy and run for days; for them a few seconds at start go unnoticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-cc9rw6s4",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each symptom below is typical of one framework, because of where that framework does its wiring. Match them.",
+    "hint": "Ask in which phase each mistake could first be noticed.",
+    "pairs": [
+      {
+        "left": "a route naming a renamed method breaks the build",
+        "right": "Play"
+      },
+      {
+        "left": "a property changed in production takes effect only after a new build",
+        "right": "Quarkus"
+      },
+      {
+        "left": "a build without the annotation processors produces an application that finds no beans",
+        "right": "Micronaut"
+      },
+      {
+        "left": "a missing JSON library shows up as a 500 at the first request",
+        "right": "Javalin"
+      }
+    ],
+    "right_distractors": [
+      "Spring Boot"
+    ]
+  },
+  {
+    "id": "ex-8sr6se29",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team runs a Spring Boot API with Spring Security and Spring Data on four instances that live for weeks. A start takes nine seconds, and somebody proposes rewriting it in Javalin to fix that. What is the strongest objection?",
+    "hint": "When is the nine seconds paid, and what would the rewrite cost?",
+    "choices": [
+      {
+        "text": "Javalin will not run on more than one instance behind a load balancer",
+        "correct": false,
+        "why": "A Javalin service is an ordinary process with a port, and runs on as many instances as anything else."
+      },
+      {
+        "text": "Javalin has no way to talk to a database",
+        "correct": false,
+        "why": "It can, through any library the team adds, such as JDBC from lesson 9. Choosing and wiring that library is the cost."
+      },
+      {
+        "text": "Javalin also starts slowly once it has as many routes as this API",
+        "correct": false,
+        "why": "Registering a lambda per route is cheap; nothing in this lesson suggests routes are where Spring's seconds go."
+      },
+      {
+        "text": "Its starts are rare, and Spring's libraries would be lost",
+        "correct": true,
+        "why": "Right. Startup matters when starts are frequent and waited on; here they are neither, and the ecosystem is what the team would give up."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckhy1xpj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague reads `Javalin started in` a few hundred milliseconds and `Started BookshopApplication in` a few seconds, and says: \"So Javalin is several times faster than Spring.\" What is wrong with that? Choose all that apply.",
+    "hint": "Three separate questions: what each line counts, what startup says about requests, and where it was measured.",
+    "choices": [
+      {
+        "text": "The two lines start their stopwatches at different moments, so they are not one measurement",
+        "correct": true,
+        "why": "Right. Compare the time from `java -jar` to the first answer instead, which is one span for both."
+      },
+      {
+        "text": "Startup time says nothing about how fast each answers once running",
+        "correct": true,
+        "why": "Right. \"Faster\" for a service usually means requests, and that is a load test, not a start."
+      },
+      {
+        "text": "A single run on one machine is not a measurement of the frameworks in general",
+        "correct": true,
+        "why": "Right. The lesson's own runs differed from each other by hundreds of milliseconds or more."
+      },
+      {
+        "text": "Spring's number leaves out the time Tomcat takes to open the port",
+        "correct": false,
+        "why": "Spring prints `Started` after the web server is up; what its number leaves out is the JVM's own start, which `process running for` adds."
+      }
+    ]
+  }
+]

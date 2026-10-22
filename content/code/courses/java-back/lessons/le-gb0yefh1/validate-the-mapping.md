@@ -4,9 +4,9 @@ version: 1
 ---
 
 The migrations own the schema now, and Hibernate still has an opinion about it. `ddl-auto` decides what
-Hibernate does with that opinion at start-up, and it has five values: `create` and `create-drop` build the
-schema from the entities, `update` alters the schema towards them, `validate` compares the two and
-refuses to start if they disagree, and `none`, which lessons 10 and 11 used, does nothing at all.
+Hibernate does with that opinion at start-up. `create` and `create-drop` build the schema from the
+entities, and `update` alters the schema towards them. `validate` compares the two and refuses to start
+if they disagree. `none`, which lessons 10 and 11 used, does nothing at all.
 
 The tempting one is `update`, and the reason it is wrong here is worth knowing. It adds what is missing
 and never drops, renames or changes the type of anything, so a renamed field leaves the old column

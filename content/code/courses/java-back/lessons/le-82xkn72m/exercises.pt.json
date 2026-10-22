@@ -1,0 +1,546 @@
+{
+  "ex-yp5k92rw": {
+    "prompt": "Por que a tabela de pedidos se chama `customer_order` e não `order`?",
+    "hint": "Pense em `ORDER BY`.",
+    "choices": [
+      {
+        "text": "O Hibernate põe o nome do pacote na frente do nome da tabela",
+        "why": "O Hibernate tira o nome da tabela da classe da entidade, não do pacote, e `@Table` dá o nome desta explicitamente."
+      },
+      {
+        "text": "`ORDER` é uma palavra reservada em SQL",
+        "why": "Isso. É o `ORDER` de `ORDER BY`, então uma tabela com esse nome precisaria de aspas em toda instrução."
+      },
+      {
+        "text": "O PostgreSQL mantém uma tabela de sistema chamada `order`",
+        "why": "Não existe essa tabela de sistema; o choque é com a gramática da linguagem, não com outra tabela."
+      },
+      {
+        "text": "O Flyway recusa nomes de tabela com menos de seis letras",
+        "why": "O Flyway roda o SQL que recebe e não impõe regra de nome; as tabelas `author` e `book` são curtas."
+      }
+    ]
+  },
+  "ex-8wnhkmx0": {
+    "prompt": "`OrderLine` guarda o seu próprio `priceCents` em vez de ler o preço do livro quando um pedido é mostrado. Por quê?",
+    "hint": "O que acontece com um pedido antigo quando um preço muda no mês que vem?",
+    "choices": [
+      {
+        "text": "O Hibernate não consegue seguir um `@ManyToOne` preguiçoso para ler um campo",
+        "why": "Consegue, dentro de uma transação; `OrderResponse.from` lê assim o título do livro de cada linha."
+      },
+      {
+        "text": "Para evitar um join toda vez que o catálogo lista os livros",
+        "why": "Listar livros nunca toca em `order_line`; a cópia é sobre pedidos, não sobre o catálogo."
+      },
+      {
+        "text": "Para que uma mudança de preço depois não reescreva o que alguém pagou",
+        "why": "Isso. A linha registra o preço no momento do pedido; o preço do livro fica livre para mudar depois."
+      },
+      {
+        "text": "Porque o campo de preço de `Book` é privado",
+        "why": "`Book` tem um `getPriceCents()` público, e `Order.add` o chama para fazer a cópia."
+      }
+    ]
+  },
+  "ex-xs7b3byp": {
+    "prompt": "Um pedido pede dois exemplares de um livro que tem um. Por que a livraria responde `409` e não `400`?",
+    "hint": "Há algo errado na requisição em si?",
+    "choices": [
+      {
+        "text": "Um `400` é reservado para o que o Bean Validation rejeita",
+        "why": "Essa reserva não existe; `400` significa que a requisição em si está malformada ou inválida, seja quem for que descubra."
+      },
+      {
+        "text": "A requisição é válida, e quem a recusa é o estado atual da loja",
+        "why": "Isso. A mesma requisição daria certo com mais estoque, e é isso que um conflito com o estado do recurso significa."
+      },
+      {
+        "text": "Um `409` faz os clientes HTTP repetirem a requisição sozinhos",
+        "why": "Nenhum cliente repete um `409` sozinho; repetir um pedido sem estoque só falharia de novo."
+      },
+      {
+        "text": "O Spring mapeia toda `RuntimeException` para `409` por padrão",
+        "why": "Sem tratamento, uma `RuntimeException` vira `500`; o `409` vem do `@ExceptionHandler` em `ApiErrorHandler`."
+      }
+    ]
+  },
+  "ex-h37749hz": {
+    "prompt": "Uma conexão JDBC em modo autocommit roda uma instrução. Qual é a transação?",
+    "hint": "O código da aula 9 nunca pediu uma.",
+    "choices": [
+      {
+        "text": "Tudo o que a conexão faz até ser fechada",
+        "why": "Isso faria cada instrução esperar o fim da conexão para valer; autocommit é o contrário."
+      },
+      {
+        "text": "Aquela instrução, sozinha",
+        "why": "Isso. Cada instrução confirma assim que termina, o que serve para um insert e não serve para um pedido."
+      },
+      {
+        "text": "Nenhuma: em autocommit o PostgreSQL roda as instruções fora de qualquer transação",
+        "why": "Toda instrução no PostgreSQL roda numa transação; autocommit só faz cada uma ser a sua própria."
+      },
+      {
+        "text": "Tudo o que é feito enquanto uma requisição HTTP é tratada",
+        "why": "O JDBC não sabe nada de requisições HTTP; agrupar por requisição é o que `@Transactional` num serviço faz."
+      }
+    ]
+  },
+  "ex-7sd2zh63": {
+    "prompt": "Um pedido pede um Dom Casmurro (5 em estoque) e dois Frankenstein (1 em estoque). O Hibernate envia o `update` de Dom Casmurro antes de `take` falhar em Frankenstein. Qual o estoque de Dom Casmurro depois?",
+    "hint": "Um update enviado não é um update confirmado.",
+    "choices": [
+      {
+        "text": "4, porque o update chegou ao banco antes da falha",
+        "why": "Chegou ao banco dentro da transação, e o rollback o desfez."
+      },
+      {
+        "text": "5, porque o Hibernate cancela os updates que já enviou",
+        "why": "O Hibernate não pega de volta uma instrução; o banco a desfaz porque a transação é desfeita."
+      },
+      {
+        "text": "5, porque o rollback desfaz a transação inteira",
+        "why": "Isso. Enviada ou não, nada dentro de uma transação desfeita fica."
+      },
+      {
+        "text": "4 até a aplicação reiniciar, depois 5",
+        "why": "O estoque mora no banco, não na memória da aplicação; reiniciar não muda nada."
+      }
+    ]
+  },
+  "ex-9ky55z3d": {
+    "prompt": "Quais destas, saindo de `place`, fazem o Spring desfazer a transação por padrão? Escolha todas as que se aplicam.",
+    "hint": "Não verificada, verificada, e o que nunca sai do método.",
+    "choices": [
+      {
+        "text": "`OutOfStockException`",
+        "why": "Ela estende `RuntimeException`, que desfaz."
+      },
+      {
+        "text": "Uma `IOException` declarada com `throws`",
+        "why": "Uma exceção verificada confirma por padrão, a não ser que `rollbackFor` a nomeie."
+      },
+      {
+        "text": "Uma `IllegalStateException`",
+        "why": "Também é uma `RuntimeException`, então desfaz como qualquer outra."
+      },
+      {
+        "text": "Uma `OutOfStockException` capturada dentro de `place`, que depois retorna normalmente",
+        "why": "O Spring só vê o que sai do método; um retorno normal confirma o que tiver sido feito."
+      },
+      {
+        "text": "Um `Error`, como `OutOfMemoryError`",
+        "why": "Errors desfazem, assim como as exceções de tempo de execução."
+      }
+    ]
+  },
+  "ex-fjs990gx": {
+    "prompt": "Um método de serviço lança uma `PaymentDeclinedException` verificada e não pode confirmar. O atributo de `@Transactional` que a nomeia é `___`.",
+    "hint": "Por padrão, uma exceção verificada confirma.",
+    "blanks": [
+      {
+        "accept": [
+          "rollbackFor"
+        ]
+      }
+    ]
+  },
+  "ex-27hdny1n": {
+    "prompt": "O `OrderController` pede um `OrderService` no construtor. O que o Spring entrega?",
+    "hint": "Onde a transação começa?",
+    "choices": [
+      {
+        "text": "O objeto `OrderService`, com código de transação compilado dentro de `place`",
+        "why": "A classe é compilada exatamente como foi escrita; nada é acrescentado ao método."
+      },
+      {
+        "text": "Um `OrderService` novo a cada requisição",
+        "why": "O bean é singleton, como a aula 5 mostrou; o proxy envolve esse único objeto."
+      },
+      {
+        "text": "Um proxy em volta dele",
+        "why": "Isso. O proxy abre e fecha a transação em volta de cada chamada que vem de fora."
+      },
+      {
+        "text": "O `JpaTransactionManager`, que repassa as chamadas ao serviço",
+        "why": "O gerenciador de transações é a quem o proxy pede para abrir e confirmar; ele nunca é injetado no lugar do serviço."
+      }
+    ]
+  },
+  "ex-nehtes3d": {
+    "prompt": "Durante `place`, o log de debug mostra `Participating in existing transaction` para uma chamada de repositório. O que aconteceu?",
+    "hint": "`PROPAGATION_REQUIRED`.",
+    "choices": [
+      {
+        "text": "O repositório abriu uma transação própria e a confirmou na hora",
+        "why": "Isso é o que `Creating new transaction` diria; esta linha diz que ele se juntou."
+      },
+      {
+        "text": "O repositório se juntou à transação que `place` tinha aberto",
+        "why": "Isso. Com a propagação padrão, uma chamada dentro de uma transação vira parte dela, e o rollback a cobre também."
+      },
+      {
+        "text": "O repositório pegou uma segunda conexão emprestada do pool",
+        "why": "Juntar-se usa a mesma conexão; uma segunda é o que `REQUIRES_NEW` custa."
+      },
+      {
+        "text": "O repositório rodou sem transação, porque o serviço já tinha uma",
+        "why": "Ele rodou dentro da transação do serviço, que é o sentido de participar."
+      }
+    ]
+  },
+  "ex-p7xh4ppc": {
+    "prompt": "No desvio, `place` não tem anotação e chama `placeAt`, que é `@Transactional`. Por que `placeAt` roda sem transação?",
+    "hint": "Por onde passa a chamada a `placeAt`?",
+    "choices": [
+      {
+        "text": "`@Transactional` só funciona em métodos que o controller chama pelo nome",
+        "why": "Qualquer chamador de fora do bean serviria; o controller é só o chamador que existe aqui."
+      },
+      {
+        "text": "Um método com um parâmetro `Instant` não pode ter proxy",
+        "why": "Os tipos dos parâmetros não fazem diferença para um proxy; chamado de outro bean, `placeAt` ganharia a sua transação."
+      },
+      {
+        "text": "`place` o chama por `this`, e essa chamada nunca passa pelo proxy",
+        "why": "Isso. O proxy só vê as chamadas que vêm de fora do objeto."
+      },
+      {
+        "text": "Só o primeiro método anotado de uma classe é lido",
+        "why": "Todo método anotado é lido; `get` mantém a sua transação somente leitura na mesma classe."
+      }
+    ]
+  },
+  "ex-hdq83kv1": {
+    "prompt": "Um pedido recusado precisa deixar uma linha numa tabela de auditoria, gravada por outro bean chamado de dentro de `place`, mesmo que `place` seja desfeito. Que configuração o método de auditoria precisa?",
+    "hint": "Ele precisa confirmar seja o que for que o chamador faça.",
+    "choices": [
+      {
+        "text": "`propagation = Propagation.REQUIRED`",
+        "why": "Isso o junta à transação do pedido, e o rollback do pedido leva a linha de auditoria junto."
+      },
+      {
+        "text": "`readOnly = true`",
+        "why": "Uma transação somente leitura é feita para não gravar, e ainda se juntaria à do chamador."
+      },
+      {
+        "text": "`isolation = Isolation.SERIALIZABLE`",
+        "why": "O isolamento decide o que transações concorrentes enxergam, não se este trabalho sobrevive a um rollback."
+      },
+      {
+        "text": "`propagation = Propagation.REQUIRES_NEW`",
+        "why": "Isso. Ela suspende a transação do pedido e confirma a sua própria, ao custo de uma segunda conexão."
+      }
+    ]
+  },
+  "ex-h01eta48": {
+    "prompt": "Ligue cada atributo de `@Transactional` ao que ele faz.",
+    "hint": "Dois deles são propagação.",
+    "pairs": [
+      {
+        "left": "`propagation = REQUIRED`",
+        "right": "junta-se à transação do chamador, ou abre uma"
+      },
+      {
+        "left": "`propagation = REQUIRES_NEW`",
+        "right": "suspende a transação do chamador e confirma a sua"
+      },
+      {
+        "left": "`readOnly = true`",
+        "right": "o Hibernate pula a verificação de mudanças e nunca descarrega"
+      },
+      {
+        "left": "`rollbackFor = X.class`",
+        "right": "desfaz quando a exceção verificada X sai do método"
+      }
+    ],
+    "right_distractors": [
+      "roda o método de novo depois de um rollback"
+    ]
+  },
+  "ex-0969z0ey": {
+    "prompt": "A livraria nunca escolheu um nível de isolamento. Em qual ela roda?",
+    "hint": "O padrão do PostgreSQL.",
+    "choices": [
+      {
+        "text": "`REPEATABLE READ`",
+        "why": "Esse é o padrão do MySQL, não do PostgreSQL."
+      },
+      {
+        "text": "`SERIALIZABLE`",
+        "why": "É o nível mais estrito, e nenhum banco comum começa nele."
+      },
+      {
+        "text": "`READ UNCOMMITTED`",
+        "why": "O PostgreSQL aceita o nome e o roda como `READ COMMITTED`; também não é o padrão."
+      },
+      {
+        "text": "`READ COMMITTED`",
+        "why": "Isso. `SHOW transaction_isolation` respondeu `read committed`."
+      }
+    ]
+  },
+  "ex-rk2tcbvg": {
+    "prompt": "Em `READ COMMITTED`, uma transação lê o estoque de um livro duas vezes. Entre as duas leituras, outra transação confirma uma mudança nele. O que a segunda leitura devolve?",
+    "hint": "O que cada instrução enxerga?",
+    "choices": [
+      {
+        "text": "O valor novo, confirmado",
+        "why": "Isso. Cada instrução enxerga o que estava confirmado quando começou: uma leitura não repetível."
+      },
+      {
+        "text": "O valor que a transação viu primeiro, porque ela guarda um só retrato",
+        "why": "Um só retrato para a transação inteira é o `REPEATABLE READ`."
+      },
+      {
+        "text": "Nada até a trava da outra transação ser liberada",
+        "why": "A outra transação já confirmou, e no PostgreSQL uma leitura simples nunca espera por quem grava."
+      },
+      {
+        "text": "Um erro dizendo que a linha mudou durante a transação",
+        "why": "Leituras não falham assim; o erro de serialização vem numa gravação, e num nível mais estrito."
+      }
+    ]
+  },
+  "ex-z2z90yzh": {
+    "prompt": "Em `REPEATABLE READ`, `place` falha com `could not serialize access due to concurrent update`. O que a aplicação precisa fazer para o pedido passar?",
+    "hint": "O retrato de onde ela leu está desatualizado.",
+    "choices": [
+      {
+        "text": "Repetir só o `update` que falhou, na mesma transação",
+        "why": "A transação foi abortada; e as leituras anteriores vieram do retrato desatualizado, de todo modo."
+      },
+      {
+        "text": "Rodar a transação inteira de novo, desde o começo",
+        "why": "Isso. Uma transação nova tira um retrato novo, lê o estoque atual e decide de novo."
+      },
+      {
+        "text": "Nada: o PostgreSQL tenta a transação de novo sozinho",
+        "why": "O PostgreSQL a desfaz e informa o erro; a nova tentativa é código da aplicação."
+      },
+      {
+        "text": "Baixar o nível para `READ UNCOMMITTED` só naquela instrução",
+        "why": "Um nível não muda no meio de uma transação, e no PostgreSQL esse nível é o `READ COMMITTED`."
+      }
+    ]
+  },
+  "ex-xhkdbf63": {
+    "prompt": "Sem a trava, dois pedidos de um exemplar cada chegam juntos para um livro com 1 em estoque, e os dois são aceitos. Quanto o estoque do livro marca depois?",
+    "hint": "Cada transação gravou o que calculou a partir do que leu.",
+    "unit": "exemplares"
+  },
+  "ex-5c4xfn1r": {
+    "prompt": "Por que o `CHECK (stock >= 0)` não barrou os dois pedidos pelo último Frankenstein?",
+    "hint": "Veja o valor que cada `update` gravou.",
+    "choices": [
+      {
+        "text": "Nenhuma gravação foi abaixo de 0, então ele nunca disparou",
+        "why": "Isso. Cada gravação pôs o estoque em 0; a segunda substituiu a primeira em vez de subtrair dela."
+      },
+      {
+        "text": "O `update` do Hibernate ignora as restrições da tabela",
+        "why": "As restrições são conferidas pelo banco em toda instrução, seja quem for que a envie."
+      },
+      {
+        "text": "`READ COMMITTED` só confere restrições no fim do expediente",
+        "why": "O nível de isolamento não tem nada a ver com quando um `CHECK` roda; ele roda a cada gravação."
+      },
+      {
+        "text": "O Flyway desligou a restrição quando aplicou o `V3`",
+        "why": "O Flyway rodou a migração como estava escrita, e a restrição está valendo."
+      }
+    ]
+  },
+  "ex-w3sszskr": {
+    "prompt": "Com `findByIdForUpdate`, ana e bia pedem o último Frankenstein no mesmo instante, e a leitura de ana vem primeiro. Ponha os eventos em ordem.",
+    "hint": "A segunda leitura com trava espera.",
+    "items": [
+      "a transação de ana trava a linha e lê 1",
+      "a transação de bia pede a mesma linha e espera",
+      "a transação de ana grava 0 e confirma",
+      "a transação de bia recebe a linha e lê 0",
+      "a transação de bia é desfeita e bia recebe um 409"
+    ],
+    "trap": "bia não lê 1 para depois esperar: é a própria leitura com trava que espera."
+  },
+  "ex-kctz47fe": {
+    "prompt": "Qual mudança em `place` faria a trava de um livro procurado doer mais?",
+    "hint": "Por quanto tempo a linha fica presa?",
+    "choices": [
+      {
+        "text": "Salvar o pedido antes do laço em vez de depois",
+        "why": "Os inserts vêm antes, mas a transação dura mais ou menos o mesmo; o tempo de trava quase não muda."
+      },
+      {
+        "text": "Chamar um serviço de pagamento entre a leitura com trava e o commit",
+        "why": "Isso. Todo pedido daquele livro entra na fila atrás da chamada de rede, cada um segurando uma conexão."
+      },
+      {
+        "text": "Marcar `get` como `@Transactional(readOnly = true)`",
+        "why": "`get` lê pedidos sem leitura com trava, então não mexe na trava do livro."
+      },
+      {
+        "text": "Pedir dois livros diferentes numa só requisição em vez de um só livro",
+        "why": "Duas linhas ficam travadas em vez de uma, cada uma pelo mesmo tempo curto."
+      }
+    ]
+  },
+  "ex-f4vpb74f": {
+    "prompt": "Clientes editam o próprio endereço de entrega, e duas edições do mesmo endereço quase nunca se encontram. Que proteção contra atualização perdida combina?",
+    "hint": "Ninguém deveria esperar por uma colisão que raramente acontece.",
+    "choices": [
+      {
+        "text": "Uma coluna `@Version`, com nova tentativa quando o update perde",
+        "why": "Isso. A trava otimista não custa nada até uma colisão, e aí a edição que perdeu é refeita ou informada."
+      },
+      {
+        "text": "Uma trava `PESSIMISTIC_WRITE` em toda leitura de endereço",
+        "why": "Funciona, e faz todo leitor esperar para se proteger de uma colisão que quase nunca acontece."
+      },
+      {
+        "text": "Aumentar o `maximum-pool-size` do pool",
+        "why": "Mais conexões rodam mais transações ao mesmo tempo, o que deixa colisões mais prováveis, não mais raras."
+      },
+      {
+        "text": "Deixar por conta do `READ COMMITTED`",
+        "why": "A atualização perdida é possível em `READ COMMITTED`; foi assim que dois pedidos de Frankenstein passaram."
+      }
+    ]
+  },
+  "ex-7pvskey2": {
+    "prompt": "Com `connection-timeout=5000`, quantos segundos uma requisição espera por uma conexão livre antes de falhar?",
+    "hint": "A propriedade é em milissegundos.",
+    "unit": "segundos"
+  },
+  "ex-gn7xr4cs": {
+    "prompt": "Com um pool de duas conexões e uma linha travada pelo `psql`, o terceiro de três pedidos falhou depois de cinco segundos. Por que o terceiro?",
+    "hint": "O que os outros dois faziam enquanto esperavam?",
+    "choices": [
+      {
+        "text": "O PostgreSQL recusa mais de duas transações esperando uma mesma linha travada",
+        "why": "O PostgreSQL enfileira quantos esperarem; o terceiro nem chegou ao banco."
+      },
+      {
+        "text": "Os outros dois seguravam as duas conexões enquanto esperavam a trava",
+        "why": "Isso. Uma transação mantém a conexão enquanto espera, então o pool estava vazio para o terceiro."
+      },
+      {
+        "text": "O HikariCP só empresta conexões na ordem em que o pool as abriu",
+        "why": "A ordem do empréstimo não é a questão; não havia conexão livre para emprestar."
+      },
+      {
+        "text": "`connection-timeout` conta desde que a aplicação começou",
+        "why": "Conta a partir de quando a requisição pediu uma conexão; o log disse `timed out after 5005ms`."
+      }
+    ]
+  },
+  "ex-egx29fce": {
+    "prompt": "Em produção, o log mostra `Connection is not available, request timed out` algumas vezes por hora, nos momentos de mais movimento. O que deve ser olhado primeiro?",
+    "hint": "O que segura uma conexão por mais tempo do que deveria?",
+    "choices": [
+      {
+        "text": "Subir o `maximum-pool-size` até o `max_connections` do banco",
+        "why": "Uma instância tomaria todas as conexões do banco, e mais consultas ativas do que núcleos só deixa cada uma mais lenta."
+      },
+      {
+        "text": "Subir o `connection-timeout` para 30 segundos",
+        "why": "As requisições esperariam mais pela mesma falta, e falhariam mais tarde em vez de mais cedo."
+      },
+      {
+        "text": "Quais transações duram muito, e pelo que esperam",
+        "why": "Isso. Um pool esgotado costuma ser transações segurando conexões tempo demais, como a que esperava uma trava."
+      },
+      {
+        "text": "Ligar o autocommit em todas as conexões do pool",
+        "why": "Isso quebraria cada pedido em commits separados e desfaria o que a aula construiu."
+      }
+    ]
+  },
+  "ex-h5dzz90a": {
+    "prompt": "Quais destas mudanças na livraria podem deixar o estoque de um livro errado sem que nenhum erro chegue ao cliente? Escolha todas as que se aplicam.",
+    "hint": "Procure um commit que deveria ter sido um rollback, e dois gravadores.",
+    "choices": [
+      {
+        "text": "`place` captura a `OutOfStockException` e devolve o pedido sem aquela linha",
+        "why": "Um retorno normal confirma: as linhas tiradas antes da falha mantêm a mudança de estoque, diga o pedido o que disser."
+      },
+      {
+        "text": "`place` lê os livros com `findById` em vez de `findByIdForUpdate`",
+        "why": "Dois pedidos ao mesmo tempo podem ler o mesmo estoque e ser aceitos: a atualização perdida."
+      },
+      {
+        "text": "`take` lança uma exceção verificada declarada em `place`, sem `rollbackFor`",
+        "why": "Uma exceção verificada confirma por padrão, então as linhas anteriores ficam tiradas, mesmo que o cliente veja um erro no pedido."
+      },
+      {
+        "text": "`take` lança `OutOfStockException`, como hoje",
+        "why": "Esse é o código da aula: a transação é desfeita e o cliente recebe um `409`."
+      },
+      {
+        "text": "`maximum-pool-size` baixa para 2",
+        "why": "Um pool pequeno faz requisições falharem com `500`, que o cliente vê; não muda o que uma transação grava."
+      }
+    ]
+  },
+  "ex-qyn86sdm": {
+    "prompt": "Ligue cada sintoma à sua causa.",
+    "hint": "Cada um destes apareceu na aula.",
+    "pairs": [
+      {
+        "left": "dois `201` pelo último exemplar, estoque 0, dois pedidos",
+        "right": "uma leitura sem trava antes da gravação"
+      },
+      {
+        "left": "um `500` depois de cinco segundos, `Connection is not available`",
+        "right": "todas as conexões presas por transações esperando"
+      },
+      {
+        "left": "`could not serialize access due to concurrent update`",
+        "right": "um nível mais estrito recusando uma gravação em conflito"
+      },
+      {
+        "left": "um método `@Transactional` que rodou sem transação",
+        "right": "uma chamada por `this` que pulou o proxy"
+      }
+    ],
+    "right_distractors": [
+      "uma restrição `CHECK` recusando estoque negativo"
+    ]
+  },
+  "ex-rwdype0g": {
+    "prompt": "Um endpoint novo cancela um pedido e devolve os exemplares ao estoque. Um clique duplo envia dois cancelamentos do mesmo pedido juntos, e os dois devolvem os exemplares. O que impede isso?",
+    "hint": "É a atualização perdida de novo, em outra linha.",
+    "choices": [
+      {
+        "text": "Fazer o método de cancelar `@Transactional(readOnly = true)`",
+        "why": "Um método que precisa gravar não pode ser somente leitura, e o indicador não diz nada sobre outras transações."
+      },
+      {
+        "text": "Pôr explicitamente o isolamento do método de cancelar em `READ COMMITTED`",
+        "why": "Ele já roda nesse nível, e esse nível deixa os dois lerem o pedido como não cancelado."
+      },
+      {
+        "text": "Uma leitura com trava do pedido, recusando um já cancelado",
+        "why": "Isso. O segundo cancelamento espera, depois lê o pedido como cancelado e para."
+      },
+      {
+        "text": "Subir o `maximum-pool-size` para que os dois cancelamentos rodem sem esperar",
+        "why": "Rodar os dois juntos sem esperar é o problema, não a solução."
+      }
+    ]
+  },
+  "ex-94zajyhg": {
+    "prompt": "Um pedido pede um Dom Casmurro e dois Frankenstein, dos quais há um. Ponha o que acontece em ordem.",
+    "hint": "O proxy é o primeiro e o último.",
+    "items": [
+      "o proxy em volta de `place` cria uma transação",
+      "uma leitura com trava busca Dom Casmurro",
+      "o Hibernate envia o update do estoque de Dom Casmurro",
+      "uma leitura com trava busca Frankenstein",
+      "`take` lança `OutOfStockException`",
+      "o proxy desfaz a transação"
+    ],
+    "trap": "O update é enviado antes de Frankenstein ser lido, porque o Hibernate descarrega antes da próxima consulta; mesmo assim ele é desfeito."
+  }
+}

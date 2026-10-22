@@ -1,0 +1,796 @@
+[
+  {
+    "id": "ex-yp5k92rw",
+    "version": 1,
+    "section": "orders",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the orders table called `customer_order` and not `order`?",
+    "hint": "Think of `ORDER BY`.",
+    "choices": [
+      {
+        "text": "Hibernate prefixes a table's name with the name of its package",
+        "correct": false,
+        "why": "Hibernate derives a table name from the entity's class, not its package, and `@Table` names this one explicitly."
+      },
+      {
+        "text": "`ORDER` is a reserved word in SQL",
+        "correct": true,
+        "why": "Right. It is the `ORDER` of `ORDER BY`, so a table with that name would need quoting in every statement."
+      },
+      {
+        "text": "PostgreSQL keeps a system table of its own called `order`",
+        "correct": false,
+        "why": "There is no such system table; the clash is with the language's grammar, not with another table."
+      },
+      {
+        "text": "Flyway refuses table names that are shorter than six letters",
+        "correct": false,
+        "why": "Flyway runs the SQL it is given and imposes no naming rule; the `author` and `book` tables are short."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wnhkmx0",
+    "version": 1,
+    "section": "orders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`OrderLine` stores its own `priceCents` instead of reading the book's price when an order is shown. Why?",
+    "hint": "What happens to an old order when a price changes next month?",
+    "choices": [
+      {
+        "text": "Hibernate cannot follow a lazy `@ManyToOne` to read a field",
+        "correct": false,
+        "why": "It can, inside a transaction; `OrderResponse.from` reads each line's book title that way."
+      },
+      {
+        "text": "To avoid a join every time the catalogue lists its books",
+        "correct": false,
+        "why": "Listing books never touches `order_line`; the copy is about orders, not the catalogue."
+      },
+      {
+        "text": "So that a later price change does not rewrite what somebody paid",
+        "correct": true,
+        "why": "Right. The line records the price at the moment of the order; the book's price is free to move afterwards."
+      },
+      {
+        "text": "Because the price field of `Book` is private",
+        "correct": false,
+        "why": "`Book` has a public `getPriceCents()`, and `Order.add` calls it to make the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-xs7b3byp",
+    "version": 1,
+    "section": "orders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order asks for two copies of a book that has one. Why does the bookshop answer `409` rather than `400`?",
+    "hint": "Is anything wrong with the request itself?",
+    "choices": [
+      {
+        "text": "A `400` is reserved for what Bean Validation rejects",
+        "correct": false,
+        "why": "No such reservation exists; `400` means the request itself is malformed or invalid, whoever finds out."
+      },
+      {
+        "text": "The request is valid, and the shop's current state refuses it",
+        "correct": true,
+        "why": "Right. The same request would succeed with more stock, which is what a conflict with the resource's state means."
+      },
+      {
+        "text": "A `409` makes HTTP clients repeat the request on their own",
+        "correct": false,
+        "why": "No client retries a `409` by itself; retrying an out-of-stock order would only fail again."
+      },
+      {
+        "text": "Spring maps every `RuntimeException` to `409` by default",
+        "correct": false,
+        "why": "Unhandled, a `RuntimeException` becomes a `500`; the `409` comes from the `@ExceptionHandler` in `ApiErrorHandler`."
+      }
+    ]
+  },
+  {
+    "id": "ex-h37749hz",
+    "version": 1,
+    "section": "all-or-nothing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A JDBC connection in autocommit mode runs a statement. What is the transaction?",
+    "hint": "Lesson 9's code never asked for one.",
+    "choices": [
+      {
+        "text": "Everything the connection does until it is closed",
+        "correct": false,
+        "why": "That would make every statement wait for the end of the connection to take effect; autocommit is the opposite."
+      },
+      {
+        "text": "That one statement, on its own",
+        "correct": true,
+        "why": "Right. Each statement commits as soon as it finishes, which is fine for one insert and wrong for an order."
+      },
+      {
+        "text": "None: in autocommit mode PostgreSQL runs statements outside any transaction",
+        "correct": false,
+        "why": "Every statement in PostgreSQL runs in a transaction; autocommit only makes each one its own."
+      },
+      {
+        "text": "Everything done while one HTTP request is being handled",
+        "correct": false,
+        "why": "JDBC knows nothing about HTTP requests; grouping by request is what `@Transactional` on a service does."
+      }
+    ]
+  },
+  {
+    "id": "ex-7sd2zh63",
+    "version": 1,
+    "section": "all-or-nothing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An order asks for one Dom Casmurro (5 in stock) and two Frankenstein (1 in stock). Hibernate sends the `update` for Dom Casmurro before `take` fails on Frankenstein. What is Dom Casmurro's stock afterwards?",
+    "hint": "An update sent is not an update committed.",
+    "choices": [
+      {
+        "text": "4, because the update reached the database before the failure",
+        "correct": false,
+        "why": "It reached the database inside the transaction, and the rollback undid it."
+      },
+      {
+        "text": "5, because Hibernate cancels updates it has already sent",
+        "correct": false,
+        "why": "Hibernate cannot take back a statement; the database undoes it because the transaction rolls back."
+      },
+      {
+        "text": "5, because the rollback undoes the whole transaction",
+        "correct": true,
+        "why": "Right. Sent or not, nothing inside a rolled-back transaction stays."
+      },
+      {
+        "text": "4 until the application restarts, then 5",
+        "correct": false,
+        "why": "The stock lives in the database, not in the application's memory; a restart changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ky55z3d",
+    "version": 1,
+    "section": "all-or-nothing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these, coming out of `place`, make Spring roll the transaction back by default? Choose all that apply.",
+    "hint": "Unchecked, checked, and what never leaves the method.",
+    "choices": [
+      {
+        "text": "`OutOfStockException`",
+        "correct": true,
+        "why": "It extends `RuntimeException`, which rolls back."
+      },
+      {
+        "text": "An `IOException` declared with `throws`",
+        "correct": false,
+        "why": "A checked exception commits by default, unless `rollbackFor` names it."
+      },
+      {
+        "text": "An `IllegalStateException`",
+        "correct": true,
+        "why": "It is a `RuntimeException` too, so it rolls back like any other."
+      },
+      {
+        "text": "An `OutOfStockException` caught inside `place`, which then returns normally",
+        "correct": false,
+        "why": "Spring only sees what leaves the method; a normal return commits whatever was done."
+      },
+      {
+        "text": "An `Error`, such as `OutOfMemoryError`",
+        "correct": true,
+        "why": "Errors roll back as well as runtime exceptions."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjs990gx",
+    "version": 1,
+    "section": "all-or-nothing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service method throws a checked `PaymentDeclinedException` and must not commit. The `@Transactional` attribute that names it is `___`.",
+    "hint": "By default a checked exception commits.",
+    "blanks": [
+      {
+        "accept": [
+          "rollbackFor"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-27hdny1n",
+    "version": 1,
+    "section": "the-proxy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`OrderController` asks for an `OrderService` in its constructor. What does Spring give it?",
+    "hint": "Where does the transaction begin?",
+    "choices": [
+      {
+        "text": "The `OrderService` object, with transaction code compiled into `place`",
+        "correct": false,
+        "why": "The class is compiled exactly as written; nothing is added to the method."
+      },
+      {
+        "text": "A new `OrderService` for each request",
+        "correct": false,
+        "why": "The bean is a singleton, as lesson 5 showed; the proxy wraps that one object."
+      },
+      {
+        "text": "A proxy wrapped around it",
+        "correct": true,
+        "why": "Right. The proxy begins and ends the transaction around each call that comes in from outside."
+      },
+      {
+        "text": "The `JpaTransactionManager`, which forwards calls to the service",
+        "correct": false,
+        "why": "The transaction manager is what the proxy asks to begin and commit; it is never injected in the service's place."
+      }
+    ]
+  },
+  {
+    "id": "ex-nehtes3d",
+    "version": 1,
+    "section": "the-proxy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During `place`, the debug log shows `Participating in existing transaction` for a repository call. What happened?",
+    "hint": "`PROPAGATION_REQUIRED`.",
+    "choices": [
+      {
+        "text": "The repository started a transaction of its own and committed it at once",
+        "correct": false,
+        "why": "That is what `Creating new transaction` would say; this line says it joined."
+      },
+      {
+        "text": "The repository joined the transaction `place` had begun",
+        "correct": true,
+        "why": "Right. With the default propagation a call inside a transaction becomes part of it, so the rollback covers it too."
+      },
+      {
+        "text": "The repository borrowed a second connection from the pool",
+        "correct": false,
+        "why": "Joining uses the same connection; a second one is what `REQUIRES_NEW` costs."
+      },
+      {
+        "text": "The repository ran with no transaction, because the service already had one",
+        "correct": false,
+        "why": "It ran inside the service's transaction, which is the point of participating."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7xh4ppc",
+    "version": 1,
+    "section": "the-proxy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the detour, `place` has no annotation and calls `placeAt`, which is `@Transactional`. Why does `placeAt` run without a transaction?",
+    "hint": "Through what does the call to `placeAt` travel?",
+    "choices": [
+      {
+        "text": "`@Transactional` works only on methods the controller calls by name",
+        "correct": false,
+        "why": "Any caller outside the bean would do; the controller is just the one caller here."
+      },
+      {
+        "text": "A method with an `Instant` parameter cannot be proxied",
+        "correct": false,
+        "why": "Parameter types make no difference to a proxy; called from another bean, `placeAt` would get its transaction."
+      },
+      {
+        "text": "`place` calls it on `this`, and that call never passes through the proxy",
+        "correct": true,
+        "why": "Right. The proxy only sees calls that come in from outside the object."
+      },
+      {
+        "text": "Only the first annotated method in a class is read",
+        "correct": false,
+        "why": "Every annotated method is read; `get` keeps its read-only transaction in the same class."
+      }
+    ]
+  },
+  {
+    "id": "ex-hdq83kv1",
+    "version": 1,
+    "section": "the-proxy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A refused order must leave a row in an audit table, written by another bean called from inside `place`, even though `place` rolls back. Which setting does the audit method need?",
+    "hint": "It must commit whatever the caller does.",
+    "choices": [
+      {
+        "text": "`propagation = Propagation.REQUIRED`",
+        "correct": false,
+        "why": "That joins the order's transaction, so the order's rollback takes the audit row with it."
+      },
+      {
+        "text": "`readOnly = true`",
+        "correct": false,
+        "why": "A read-only transaction is meant not to write at all, and it would still join the caller's."
+      },
+      {
+        "text": "`isolation = Isolation.SERIALIZABLE`",
+        "correct": false,
+        "why": "Isolation decides what concurrent transactions see, not whether this work survives a rollback."
+      },
+      {
+        "text": "`propagation = Propagation.REQUIRES_NEW`",
+        "correct": true,
+        "why": "Right. It suspends the order's transaction and commits its own, at the cost of a second connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-h01eta48",
+    "version": 1,
+    "section": "the-proxy",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `@Transactional` attribute to what it does.",
+    "hint": "Two of them are propagation.",
+    "pairs": [
+      {
+        "left": "`propagation = REQUIRED`",
+        "right": "joins the caller's transaction, or starts one"
+      },
+      {
+        "left": "`propagation = REQUIRES_NEW`",
+        "right": "suspends the caller's transaction and commits its own"
+      },
+      {
+        "left": "`readOnly = true`",
+        "right": "Hibernate skips dirty checking and never flushes"
+      },
+      {
+        "left": "`rollbackFor = X.class`",
+        "right": "rolls back when the checked exception X leaves the method"
+      }
+    ],
+    "right_distractors": [
+      "runs the method again after a rollback"
+    ]
+  },
+  {
+    "id": "ex-0969z0ey",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bookshop never chose an isolation level. Which one does it run at?",
+    "hint": "PostgreSQL's default.",
+    "choices": [
+      {
+        "text": "`REPEATABLE READ`",
+        "correct": false,
+        "why": "That is MySQL's default, not PostgreSQL's."
+      },
+      {
+        "text": "`SERIALIZABLE`",
+        "correct": false,
+        "why": "It is the strictest level, and no common database starts there."
+      },
+      {
+        "text": "`READ UNCOMMITTED`",
+        "correct": false,
+        "why": "PostgreSQL accepts the name and runs it as `READ COMMITTED`; it is not the default either."
+      },
+      {
+        "text": "`READ COMMITTED`",
+        "correct": true,
+        "why": "Right. `SHOW transaction_isolation` answered `read committed`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk2tcbvg",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At `READ COMMITTED`, a transaction reads a book's stock twice. Between the two reads another transaction commits a change to it. What does the second read return?",
+    "hint": "What does each statement see?",
+    "choices": [
+      {
+        "text": "The new, committed value",
+        "correct": true,
+        "why": "Right. Each statement sees what was committed when it began: a non-repeatable read."
+      },
+      {
+        "text": "The value the transaction saw first, because it holds one snapshot",
+        "correct": false,
+        "why": "One snapshot for the whole transaction is `REPEATABLE READ`."
+      },
+      {
+        "text": "Nothing until the other transaction's lock is released",
+        "correct": false,
+        "why": "The other transaction has already committed, and a plain read never waits for a writer in PostgreSQL anyway."
+      },
+      {
+        "text": "An error saying the row changed during the transaction",
+        "correct": false,
+        "why": "Reads never fail this way; the serialization error comes at a write, and at a stricter level."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2z90yzh",
+    "version": 1,
+    "section": "isolation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At `REPEATABLE READ`, `place` fails with `could not serialize access due to concurrent update`. What must the application do for the order to go through?",
+    "hint": "The snapshot it read from is out of date.",
+    "choices": [
+      {
+        "text": "Repeat only the `update` that failed, in the same transaction",
+        "correct": false,
+        "why": "The transaction is aborted; and its earlier reads came from the stale snapshot anyway."
+      },
+      {
+        "text": "Run the whole transaction again from the start",
+        "correct": true,
+        "why": "Right. A new transaction takes a new snapshot, reads the current stock and decides again."
+      },
+      {
+        "text": "Nothing: PostgreSQL retries the transaction by itself",
+        "correct": false,
+        "why": "PostgreSQL rolls it back and reports the error; the retry is the application's code."
+      },
+      {
+        "text": "Lower the level to `READ UNCOMMITTED` for that one statement",
+        "correct": false,
+        "why": "A level cannot change in the middle of a transaction, and in PostgreSQL that level is `READ COMMITTED`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhkdbf63",
+    "version": 1,
+    "section": "lost-update",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without the lock, two orders for one copy each arrive together for a book with 1 in stock, and both are accepted. What does the book's stock read afterwards?",
+    "hint": "Each transaction wrote what it computed from what it read.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-5c4xfn1r",
+    "version": 1,
+    "section": "lost-update",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `CHECK (stock >= 0)` not stop the two orders for the last Frankenstein?",
+    "hint": "Look at the value each `update` wrote.",
+    "choices": [
+      {
+        "text": "Neither write went below 0, so it never fired",
+        "correct": true,
+        "why": "Right. Each write set the stock to 0; the second replaced the first instead of subtracting from it."
+      },
+      {
+        "text": "Hibernate's `update` bypasses the table's constraints",
+        "correct": false,
+        "why": "Constraints are checked by the database on every statement, whoever sends it."
+      },
+      {
+        "text": "`READ COMMITTED` checks constraints only at the end of the day's work",
+        "correct": false,
+        "why": "The isolation level has nothing to do with when a `CHECK` runs; it runs on each write."
+      },
+      {
+        "text": "Flyway turned the constraint off when it applied `V3`",
+        "correct": false,
+        "why": "Flyway ran the migration as written, and the constraint is in force."
+      }
+    ]
+  },
+  {
+    "id": "ex-w3sszskr",
+    "version": 1,
+    "section": "lost-update",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `findByIdForUpdate`, ana and bia order the last Frankenstein at the same moment and ana's read comes first. Put the events in order.",
+    "hint": "The second locking read waits.",
+    "items": [
+      "ana's transaction locks the row and reads 1",
+      "bia's transaction asks for the same row and waits",
+      "ana's transaction writes 0 and commits",
+      "bia's transaction gets the row and reads 0",
+      "bia's transaction rolls back and bia gets a 409"
+    ],
+    "trap": "bia does not read 1 and then wait: the locking read itself is what waits."
+  },
+  {
+    "id": "ex-kctz47fe",
+    "version": 1,
+    "section": "lost-update",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which change to `place` would make the lock on a popular book hurt the most?",
+    "hint": "How long is the row held?",
+    "choices": [
+      {
+        "text": "Saving the order before the loop instead of after it",
+        "correct": false,
+        "why": "The inserts move earlier but the transaction lasts about as long; the lock time barely changes."
+      },
+      {
+        "text": "Calling a payment service between the locking read and the commit",
+        "correct": true,
+        "why": "Right. Every order for that book queues behind the network call, each holding a connection."
+      },
+      {
+        "text": "Marking `get` as `@Transactional(readOnly = true)`",
+        "correct": false,
+        "why": "`get` reads orders without a locking read, so it does not touch the book's lock."
+      },
+      {
+        "text": "Ordering two different books in one request instead of a single one",
+        "correct": false,
+        "why": "Two rows are locked instead of one, each for the same short time."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4vpb74f",
+    "version": 1,
+    "section": "lost-update",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Customers edit their own delivery address, and two edits of the same address almost never meet. Which protection against a lost update fits?",
+    "hint": "Nobody should wait for a collision that rarely happens.",
+    "choices": [
+      {
+        "text": "A `@Version` column, with a retry when the update loses",
+        "correct": true,
+        "why": "Right. Optimistic locking costs nothing until a collision, and then the losing edit is retried or reported."
+      },
+      {
+        "text": "A `PESSIMISTIC_WRITE` lock on every read of an address",
+        "correct": false,
+        "why": "It works, and makes every reader wait to guard against a collision that almost never happens."
+      },
+      {
+        "text": "Raising the pool's `maximum-pool-size`",
+        "correct": false,
+        "why": "More connections run more transactions at once, which makes collisions likelier, not rarer."
+      },
+      {
+        "text": "Leaving it to `READ COMMITTED`",
+        "correct": false,
+        "why": "The lost update is possible at `READ COMMITTED`; that is how two Frankenstein orders went through."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pvskey2",
+    "version": 1,
+    "section": "pool",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `connection-timeout=5000`, how many seconds does a request wait for a free connection before it fails?",
+    "hint": "The property is in milliseconds.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-gn7xr4cs",
+    "version": 1,
+    "section": "pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a pool of two connections and one row locked by `psql`, the third of three orders failed after five seconds. Why the third?",
+    "hint": "What were the other two doing while they waited?",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses more than two transactions waiting on one locked row",
+        "correct": false,
+        "why": "PostgreSQL queues any number of waiters; the third never reached the database at all."
+      },
+      {
+        "text": "The two others held both connections while they waited for the lock",
+        "correct": true,
+        "why": "Right. A transaction keeps its connection while it waits, so the pool was empty for the third."
+      },
+      {
+        "text": "HikariCP lends connections only in the order the pool opened them",
+        "correct": false,
+        "why": "The order of lending is not the issue; there was no free connection to lend."
+      },
+      {
+        "text": "`connection-timeout` counts from when the application started",
+        "correct": false,
+        "why": "It counts from when the request asked for a connection; the log said `timed out after 5005ms`."
+      }
+    ]
+  },
+  {
+    "id": "ex-egx29fce",
+    "version": 1,
+    "section": "pool",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In production the log shows `Connection is not available, request timed out` a few times an hour, at the busiest moments. What should be looked at first?",
+    "hint": "What holds a connection for longer than it should?",
+    "choices": [
+      {
+        "text": "Raising `maximum-pool-size` to the database's `max_connections`",
+        "correct": false,
+        "why": "One instance would then take every connection the database has, and more active queries than cores only slows each one."
+      },
+      {
+        "text": "Raising `connection-timeout` to 30 seconds",
+        "correct": false,
+        "why": "Requests would wait longer for the same shortage, and fail later instead of sooner."
+      },
+      {
+        "text": "Which transactions last long, and what they wait on",
+        "correct": true,
+        "why": "Right. An exhausted pool is usually transactions holding connections too long, as the one waiting on a lock did."
+      },
+      {
+        "text": "Turning autocommit on for every connection in the pool",
+        "correct": false,
+        "why": "That would break every order into separate commits and undo what the lesson built."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5dzz90a",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes to the bookshop can leave a book's stock wrong without any error reaching the customer? Choose all that apply.",
+    "hint": "Look for a commit that should have been a rollback, and for two writers.",
+    "choices": [
+      {
+        "text": "`place` catches `OutOfStockException` and returns the order without that line",
+        "correct": true,
+        "why": "A normal return commits: lines taken before the failure keep their stock change, whatever the order says."
+      },
+      {
+        "text": "`place` reads books with `findById` instead of `findByIdForUpdate`",
+        "correct": true,
+        "why": "Two orders at once can both read the same stock and both be accepted: the lost update."
+      },
+      {
+        "text": "`take` throws a checked exception declared on `place`, with no `rollbackFor`",
+        "correct": true,
+        "why": "A checked exception commits by default, so earlier lines stay taken even though the customer sees an error for the order."
+      },
+      {
+        "text": "`take` throws `OutOfStockException`, as it does now",
+        "correct": false,
+        "why": "That is the lesson's code: the transaction rolls back and the customer gets a `409`."
+      },
+      {
+        "text": "`maximum-pool-size` is lowered to 2",
+        "correct": false,
+        "why": "A small pool makes requests fail with a `500`, which the customer sees; it does not change what a transaction writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyn86sdm",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to its cause.",
+    "hint": "Every one of these appeared in the lesson.",
+    "pairs": [
+      {
+        "left": "two `201`s for the last copy, stock 0, two orders",
+        "right": "a read with no lock before the write"
+      },
+      {
+        "left": "a `500` after five seconds, `Connection is not available`",
+        "right": "every connection held by a waiting transaction"
+      },
+      {
+        "left": "`could not serialize access due to concurrent update`",
+        "right": "a stricter level refusing a conflicting write"
+      },
+      {
+        "left": "a `@Transactional` method that ran with no transaction",
+        "right": "a call on `this` that skipped the proxy"
+      }
+    ],
+    "right_distractors": [
+      "a `CHECK` constraint refusing a negative stock"
+    ]
+  },
+  {
+    "id": "ex-rwdype0g",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new endpoint cancels an order and puts its copies back in stock. A double click sends two cancellations of the same order together, and both put the copies back. What prevents it?",
+    "hint": "It is the lost update again, on a different row.",
+    "choices": [
+      {
+        "text": "Make the cancel method `@Transactional(readOnly = true)`",
+        "correct": false,
+        "why": "A method that must write cannot be read-only, and the flag says nothing about other transactions."
+      },
+      {
+        "text": "Set the cancel method's isolation to `READ COMMITTED` explicitly",
+        "correct": false,
+        "why": "It already runs there, and that level lets both read the order as not cancelled."
+      },
+      {
+        "text": "A locking read of the order, refusing one already cancelled",
+        "correct": true,
+        "why": "Right. The second cancellation waits, then reads the order as cancelled and stops."
+      },
+      {
+        "text": "Raise `maximum-pool-size` so that both cancellations run without waiting",
+        "correct": false,
+        "why": "Running both at once without waiting is the problem, not the fix."
+      }
+    ]
+  },
+  {
+    "id": "ex-94zajyhg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An order asks for one Dom Casmurro and two Frankenstein, of which there is one. Put what happens in order.",
+    "hint": "The proxy is first and last.",
+    "items": [
+      "the proxy around `place` creates a transaction",
+      "a locking read fetches Dom Casmurro",
+      "Hibernate sends the update of Dom Casmurro's stock",
+      "a locking read fetches Frankenstein",
+      "`take` throws `OutOfStockException`",
+      "the proxy rolls the transaction back"
+    ],
+    "trap": "The update is sent before Frankenstein is read, because Hibernate flushes before the next query; it is still undone."
+  }
+]

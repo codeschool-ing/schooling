@@ -248,9 +248,9 @@
         "why": "Nothing here is encrypted; the prefix names a hashing algorithm, and {noop} is the one that would mean plain text."
       },
       {
-        "text": "It tells the delegating encoder which algorithm made the hash, so old and new algorithms can sit in one table",
+        "text": "It tells the delegating encoder which algorithm made the hash, so old and new algorithms share one table",
         "correct": true,
-        "why": "Right. A system can store {argon2} hashes for new passwords while every {bcrypt} hash keeps checking."
+        "why": "Right. A system stores {argon2} hashes for new passwords while every {bcrypt} hash keeps checking."
       }
     ]
   },
@@ -363,7 +363,7 @@
         "why": "Length does not stop verification; it makes every request heavier, which is a smaller problem than the exposure."
       },
       {
-        "text": "Anybody holding the token can read the payload",
+        "text": "Anybody holding the token reads the payload",
         "correct": true,
         "why": "Right. base64url is readable by anybody with basenc, including whoever finds a token in a log or a copied header."
       }
@@ -380,7 +380,7 @@
     "hint": "What is the signature computed over, and with what?",
     "choices": [
       {
-        "text": "The signature check, since the HMAC over the new payload differs and computing a new one needs the server's secret",
+        "text": "The HMAC check: recomputing it takes the server's secret",
         "correct": true,
         "why": "Right. Anybody can recompute the base64url, but nobody without the secret can produce the 32 bytes that match it."
       },

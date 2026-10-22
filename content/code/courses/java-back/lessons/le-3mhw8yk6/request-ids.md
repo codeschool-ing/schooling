@@ -12,15 +12,15 @@ another, then a thousand more.
 What separates them is a **request id**: a short value given to each request on the way in, written
 on every line that request causes, and returned to the caller so that a person holding a failed
 response can quote it. Getting it onto every line without passing it to every method is the job of
-the **MDC**, the Mapped Diagnostic Context: a small map that belongs to the current thread, which
-SLF4J lets you fill and the backend reads each time it writes a line.
+the **MDC**, the Mapped Diagnostic Context. It is a small map that belongs to the current thread:
+SLF4J lets you fill it, and the backend reads it each time it writes a line.
 
 ## The filter
 
 Create `src/main/java/com/example/bookshop/web/RequestIdFilter.java`:
 
 ```schooling-example
-{"language": "java", "file": "RequestIdFilter.java", "parts": [{"code": "package com.example.bookshop.web;\n\nimport java.io.IOException;\nimport java.util.UUID;\n\nimport jakarta.servlet.FilterChain;\nimport jakarta.servlet.ServletException;\nimport jakarta.servlet.http.HttpServletRequest;\nimport jakarta.servlet.http.HttpServletResponse;\n\nimport org.slf4j.MDC;\nimport org.springframework.core.Ordered;\nimport org.springframework.core.annotation.Order;\nimport org.springframework.stereotype.Component;\nimport org.springframework.web.filter.OncePerRequestFilter;\n"}, {"code": "@Component\n@Order(Ordered.HIGHEST_PRECEDENCE)\npublic class RequestIdFilter extends OncePerRequestFilter {\n", "note": "A `@Component` filter is registered by Boot for every request. `HIGHEST_PRECEDENCE` puts it before Spring Security's filters, so a request refused with 401 gets an id as well."}, {"code": "    static final String HEADER = \"X-Request-Id\";\n", "note": "`OncePerRequestFilter` guarantees one run per request, even when a request is forwarded inside the server."}, {"code": "    @Override\n    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)\n            throws ServletException, IOException {"}, {"code": "        String id = request.getHeader(HEADER);\n        if (id == null || !id.matches(\"[A-Za-z0-9-]{1,64}\")) {\n            id = UUID.randomUUID().toString().substring(0, 8);\n        }", "note": "Use the caller's id if it has one and it is short, plain letters, digits and hyphens. Anything else is replaced by eight characters of a random UUID: a value from outside is never written into the log as it came."}, {"code": "        MDC.put(\"requestId\", id);\n        response.setHeader(HEADER, id);", "note": "`MDC.put` attaches the id to this thread, and the same id goes back to the caller in the response header."}, {"code": "        try {\n            chain.doFilter(request, response);\n        } finally {\n            MDC.remove(\"requestId\");\n        }\n    }\n}", "note": "The rest of the chain runs with the id in place. `finally` takes it off again whatever happens, because Tomcat hands this thread to another request next."}]}
+{"language": "java", "file": "RequestIdFilter.java", "parts": [{"code": "package com.example.bookshop.web;\n\nimport java.io.IOException;\nimport java.util.UUID;\n\nimport jakarta.servlet.FilterChain;\nimport jakarta.servlet.ServletException;\nimport jakarta.servlet.http.HttpServletRequest;\nimport jakarta.servlet.http.HttpServletResponse;\n\nimport org.slf4j.MDC;\nimport org.springframework.core.Ordered;\nimport org.springframework.core.annotation.Order;\nimport org.springframework.stereotype.Component;\nimport org.springframework.web.filter.OncePerRequestFilter;\n"}, {"code": "@Component\n@Order(Ordered.HIGHEST_PRECEDENCE)\npublic class RequestIdFilter extends OncePerRequestFilter {\n", "note": "A `@Component` filter is registered by Boot for every request, and `OncePerRequestFilter` runs it once per request even when the request is forwarded inside the server. `HIGHEST_PRECEDENCE` puts it before Spring Security's filters, so a request refused with 401 gets an id as well."}, {"code": "    static final String HEADER = \"X-Request-Id\";\n"}, {"code": "    @Override\n    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)\n            throws ServletException, IOException {"}, {"code": "        String id = request.getHeader(HEADER);\n        if (id == null || !id.matches(\"[A-Za-z0-9-]{1,64}\")) {\n            id = UUID.randomUUID().toString().substring(0, 8);\n        }", "note": "Use the caller's id if it has one and it is short, plain letters, digits and hyphens. Anything else is replaced by eight characters of a random UUID: a value from outside is never written into the log as it came."}, {"code": "        MDC.put(\"requestId\", id);\n        response.setHeader(HEADER, id);", "note": "`MDC.put` attaches the id to this thread, and the same id goes back to the caller in the response header."}, {"code": "        try {\n            chain.doFilter(request, response);\n        } finally {\n            MDC.remove(\"requestId\");\n        }\n    }\n}", "note": "The rest of the chain runs with the id in place. `finally` takes it off again whatever happens, because Tomcat hands this thread to another request next."}]}
 ```
 
 The last line of `application.properties`, added in the previous section, is the other half:
@@ -46,9 +46,9 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar > app.log
 
 ## Following one request
 
-The header comes back on every response. Without one the filter makes an id up; with a sensible one
-it keeps it; with one it does not trust it replaces it; and a request that Spring Security turns away
-still has one, because the filter runs first:
+The header comes back on every response. A request without one gets an id made up, and a sensible
+one is kept. One the filter does not trust is replaced. A request that Spring Security turns away
+still gets an id, because the filter runs first:
 
 ```
 ana@vm:~/bookshop$ curl -si localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
@@ -70,7 +70,7 @@ the log, and the log is read by people and parsed by programs that trust it. A h
 break could add a line of its own, with a timestamp and a level that the application never wrote.
 The filter accepts only what a request id needs to be, and that leaves nothing to forge with.
 
-Now an order, with the token lesson 15 showed how to get:
+Now an order, with a token from lesson 15's `/auth/token`:
 
 ```
 ana@vm:~/bookshop$ TOKEN=$(curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])')
