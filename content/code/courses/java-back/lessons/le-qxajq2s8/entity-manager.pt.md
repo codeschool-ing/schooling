@@ -227,7 +227,7 @@ O `-q` deixa o Maven em silêncio, então um build que não imprime nada é um b
 segundo terminal é o primeiro sinal de que o mapeador funciona:
 
 ```
-2026-10-16T20:33:16.175-03:00  INFO 2270 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
+2026-10-22T19:22:09.895-03:00  INFO 29289 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 E a API responde como na aula 9, com três livros a mais e um formato diferente por baixo:
@@ -287,7 +287,7 @@ imprime, reduzido com `grep` à linha que importa:
 
 ```
 ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'Application run failed|PSQLException'
-2026-10-16T20:33:11.667-03:00 ERROR 2209 --- [bookshop] [           main] o.s.boot.SpringApplication               : Application run failed
+2026-10-22T19:21:55.395-03:00 ERROR 28795 --- [bookshop] [           main] o.s.boot.SpringApplication               : Application run failed
 Caused by: org.postgresql.util.PSQLException: ERROR: column "author_id" of relation "book" does not exist
 ```
 
@@ -315,8 +315,8 @@ ana@vm:~/bookshop$ curl -s localhost:8080/books/2
 O segundo terminal mostra quanto essa requisição custou:
 
 ```
-2026-10-16T20:33:22.952-03:00 DEBUG 2406 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
-2026-10-16T20:33:22.955-03:00 DEBUG 2406 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:29.934-03:00 DEBUG 29937 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
+2026-10-22T19:22:29.940-03:00 DEBUG 29937 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 **Dois comandos para um livro.** O `find` carregou a linha de `book` e mais nada; o autor era um proxy.

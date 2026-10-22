@@ -71,17 +71,17 @@ returns. There is no `persist`, no `merge` and no `save` anywhere. Build, start 
 and read the second terminal:
 
 ```
-2026-10-16T20:33:33.960-03:00  INFO 2639 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.712 seconds (process running for 6.167)
-2026-10-16T20:33:34.091-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
-2026-10-16T20:33:34.133-03:00  INFO 2639 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : the same object twice: true
-2026-10-16T20:33:34.133-03:00  INFO 2639 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : price changed in memory, nothing saved yet
-2026-10-16T20:33:34.160-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : update book set author_id=?,isbn=?,price_cents=?,title=? where id=?
-2026-10-16T20:33:34.519-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
-2026-10-16T20:33:34.522-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:34.526-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:34.527-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:34.528-03:00 DEBUG 2639 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:34.529-03:00  INFO 2639 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
+2026-10-22T19:22:47.111-03:00  INFO 30767 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 7.474 seconds (process running for 8.226)
+2026-10-22T19:22:47.163-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
+2026-10-22T19:22:47.219-03:00  INFO 30767 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : the same object twice: true
+2026-10-22T19:22:47.220-03:00  INFO 30767 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : price changed in memory, nothing saved yet
+2026-10-22T19:22:47.235-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : update book set author_id=?,isbn=?,price_cents=?,title=? where id=?
+2026-10-22T19:22:47.557-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
+2026-10-22T19:22:47.561-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:47.563-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:47.564-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:47.565-03:00 DEBUG 30767 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:47.566-03:00  INFO 30767 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 Read it in order. There is one `select`, for the first `find`. The second `find` ran no SQL and
@@ -109,16 +109,16 @@ ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost:5432/bookshop -
 Stop the application and start it once more, changing nothing:
 
 ```
-2026-10-16T20:33:40.424-03:00  INFO 2780 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 4.315 seconds (process running for 4.947)
-2026-10-16T20:33:40.477-03:00 DEBUG 2780 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
-2026-10-16T20:33:40.504-03:00  INFO 2780 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : the same object twice: true
-2026-10-16T20:33:40.504-03:00  INFO 2780 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : price changed in memory, nothing saved yet
-2026-10-16T20:33:40.785-03:00 DEBUG 2780 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
-2026-10-16T20:33:40.789-03:00 DEBUG 2780 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:40.791-03:00 DEBUG 2780 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:40.794-03:00 DEBUG 2780 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:40.795-03:00 DEBUG 2780 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:40.796-03:00  INFO 2780 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
+2026-10-22T19:22:55.017-03:00  INFO 31198 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.685 seconds (process running for 6.374)
+2026-10-22T19:22:55.118-03:00 DEBUG 31198 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
+2026-10-22T19:22:55.141-03:00  INFO 31198 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : the same object twice: true
+2026-10-22T19:22:55.141-03:00  INFO 31198 --- [bookshop] [           main] c.e.bookshop.catalogue.RepriceOnce       : price changed in memory, nothing saved yet
+2026-10-22T19:22:55.415-03:00 DEBUG 31198 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
+2026-10-22T19:22:55.424-03:00 DEBUG 31198 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:55.429-03:00 DEBUG 31198 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:55.433-03:00 DEBUG 31198 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:55.434-03:00 DEBUG 31198 --- [bookshop] [           main] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:22:55.437-03:00  INFO 31198 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 **No `UPDATE` this time.** The method set the price to 3800 again, the row already said 3800, and the

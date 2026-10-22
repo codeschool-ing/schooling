@@ -85,8 +85,7 @@ The last two statements are the table defending itself. A second The Time Machin
 ISBN breaks the `UNIQUE` rule, and the error names the constraint PostgreSQL made for it,
 `book_isbn_key`, and the key that already exists. A price of -1 breaks the `CHECK`.
 
-**These rules hold whatever program does the writing.** Lesson 7 made `BookService` refuse a
-duplicate ISBN with a 409; the table refuses it too, for `psql`, for a script somebody runs next
+**These rules hold whatever program does the writing.** Lesson 7 made `BookService` refuse a duplicate ISBN with a 409. The table refuses it too: for `psql`, for a script somebody runs next
 year, and for two requests that arrive at the same moment and both pass the service's check, which
 is lesson 14's subject.
 

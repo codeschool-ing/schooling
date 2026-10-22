@@ -6,13 +6,13 @@ version: 1
 A aula 10 terminou com duas classes, `JpaBookRepository` e `JpaAuthorRepository`, e a maior parte das
 linhas delas entregava uma string JPQL a um `EntityManager` e devolvia o que voltava. Toda aplicação com
 banco de dados escreve esse código, e ele quase não muda de uma entidade para a outra. O Spring Data JPA
-assume esse trabalho, e o arranjo que ele oferece cabe numa frase: **você declara o repositório como
+assume esse código. **Você declara o repositório como
 uma interface, e o Spring Data fornece o objeto que a implementa quando a aplicação sobe.**
 
 A imagem que quase todo mundo traz é a de geração de código: um plugin escreve um
 `BookRepositoryImpl.java` em algum lugar dentro de `target/`, e o build o compila. Nada disso é escrito.
 Quando a aplicação sobe, o Spring Data procura, dentro do pacote da aplicação, interfaces que estendem
-uma das interfaces de repositório dele, e cria um **proxy** para cada uma: um objeto criado em tempo de
+uma das interfaces de repositório dele. Para cada uma, ele cria um **proxy**: um objeto criado em tempo de
 execução que implementa a interface e decide o que cada chamada faz. Os métodos que todo repositório tem
 vão para uma classe compartilhada, `SimpleJpaRepository`, que chama o mesmo `EntityManager` que a aula 10
 chamava. Os métodos que você mesmo declara ganham uma consulta montada para eles uma vez, durante a

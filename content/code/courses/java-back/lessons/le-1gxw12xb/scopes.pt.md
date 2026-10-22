@@ -93,9 +93,9 @@ responde a requisições web, cada uma na sua própria thread, e duas requisiç�
 `nextId++`, dois livros salvos juntos poderiam, de vez em quando, receber o mesmo id, sob carga e em
 nenhum teste que rode uma requisição por vez.
 
-A regra para um singleton é que ele guarde ou nenhum estado que mude, como `BookService`, cujo único
-campo é `final` e aponta para um repositório, ou estado seguro de usar a partir de várias threads ao
-mesmo tempo, como o repositório.
+A regra para um singleton é que ele não guarde estado que mude, ou só guarde estado seguro de usar a
+partir de várias threads ao mesmo tempo. `BookService` é do primeiro tipo: o seu único campo é `final`
+e aponta para um repositório. O repositório é do segundo.
 
 ## Escopo de requisição, em resumo
 

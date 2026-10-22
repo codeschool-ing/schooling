@@ -149,8 +149,8 @@ DROP TABLE
 what each one costs. A web application cannot pay that on every request, so Boot does not use
 `DriverManager`. It builds a **`DataSource`**, JDBC's other way to get a connection, an interface
 in `javax.sql` whose one job is `getConnection()`. The one Boot builds from the three
-`spring.datasource` properties is HikariCP's, a **connection pool**: it opens connections ahead of
-time and lends them out, and when code calls `close()` on one, the connection goes back to the pool
+`spring.datasource` properties is HikariCP's, a **connection pool**, which opens connections ahead
+of time and lends them out. When code calls `close()` on one, the connection goes back to the pool
 instead of being closed.
 
 ```schooling-figure

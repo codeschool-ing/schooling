@@ -86,10 +86,9 @@ Os dois últimos comandos são a tabela se defendendo. Um segundo The Time Machi
 viola a regra `UNIQUE`, e o erro nomeia a restrição que o PostgreSQL criou para ela,
 `book_isbn_key`, e a chave que já existe. Um preço de -1 viola o `CHECK`.
 
-**Essas regras valem seja qual for o programa que escreve.** A aula 7 fez o `BookService` recusar um
-ISBN repetido com um 409; a tabela também o recusa, para o `psql`, para um script que alguém rode no
-ano que vem, e para duas requisições que chegam no mesmo instante e passam as duas pela verificação
-do serviço, que é o assunto da aula 14.
+**Essas regras valem seja qual for o programa que escreve.** A aula 7 fez o `BookService` recusar um ISBN repetido com um 409. A tabela também o recusa: para o `psql`, para um script que
+alguém rode no ano que vem, e para duas requisições que chegam no mesmo instante e passam as duas
+pela verificação do serviço, que é o assunto da aula 14.
 
 Um número na última linha merece uma segunda olhada. A linha de Frankenstein que falhou teria sido a
 **6**, não a 5. O duplicado pegou o 5 da sequência antes de a regra `UNIQUE` recusá-lo, e uma

@@ -23,8 +23,8 @@ delas:
 
 ## Um desvio pela injeção em campo
 
-**Injeção em campo não é só um jeito mais curto de escrever a mesma coisa**, embora seja mais curta,
-apareça em muito código e tutorial antigos e funcione. Troque `BookService.java` por esta versão por
+A injeção em campo é mais curta, aparece em muito código e tutorial antigos e funciona. **Ela não é a
+mesma coisa escrita de um jeito mais breve.** Troque `BookService.java` por esta versão por
 um momento:
 
 ```java

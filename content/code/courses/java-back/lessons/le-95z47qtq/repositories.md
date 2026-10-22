@@ -5,8 +5,8 @@ version: 1
 
 Lesson 10 ended with two classes, `JpaBookRepository` and `JpaAuthorRepository`, and most of their
 lines handed a JPQL string to an `EntityManager` and returned what came back. Every application with a
-database writes that code, and it barely changes from one entity to the next. Spring Data JPA takes it
-over, and the arrangement it offers is one sentence: **you declare the repository as an interface, and
+database writes that code, and it barely changes from one entity to the next. Spring Data JPA takes that
+code over. **You declare the repository as an interface, and
 Spring Data supplies the object that implements it when the application starts.**
 
 The picture most people bring is code generation: a plugin writes a `BookRepositoryImpl.java`

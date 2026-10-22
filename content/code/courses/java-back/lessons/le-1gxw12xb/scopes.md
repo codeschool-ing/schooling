@@ -93,9 +93,9 @@ numbers them with an `AtomicLong`. With a `HashMap` and a `long` incremented by 
 saved together could now and then receive the same id, under load and in no test that runs one
 request at a time.
 
-The rule for a singleton is that it holds either no state that changes, like `BookService`, whose one
-field is `final` and points at a repository, or state that is safe to use from several threads at
-once, like the repository.
+The rule for a singleton is that it holds no state that changes, or only state that is safe to use
+from several threads at once. `BookService` is the first kind: its one field is `final` and points at
+a repository. The repository is the second.
 
 ## Request scope, in brief
 

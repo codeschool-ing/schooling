@@ -69,7 +69,7 @@ withlock() { if locked; then "$@"; else ( exec 9>"$LOCK"; flock 9; JB_LOCKED=1 "
 
 as_ana() { runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana \
   PATH=/usr/local/bin:/usr/bin:/bin TZ=America/Sao_Paulo LANG=C.UTF-8 LC_ALL=C.UTF-8 \
-  ${EXTRA_ENV:-} "$@"; }
+  ${EXTRA_ENV:-} "$@" 9>&-; }   # a daemon a command starts must not keep the lock
 
 up() {
   command -v mvn >/dev/null && dpkg -s openjdk-25-jdk >/dev/null 2>&1 \

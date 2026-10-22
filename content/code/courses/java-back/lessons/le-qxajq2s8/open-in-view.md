@@ -20,10 +20,10 @@ ana@vm:~/bookshop$ curl -s -i localhost:8080/books/1
 HTTP/1.1 500 
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:34:23 GMT
+Date: Thu, 22 Oct 2026 22:24:28 GMT
 Connection: close
 
-{"timestamp":"2026-10-16T23:34:23.421Z","status":500,"error":"Internal Server Error","path":"/books/1"}
+{"timestamp":"2026-10-22T22:24:28.556Z","status":500,"error":"Internal Server Error","path":"/books/1"}
 ```
 
 A 500, in Spring's default shape for an exception nobody handled: lesson 7's handler covers the
@@ -31,8 +31,8 @@ bookshop's own exceptions and Spring's web errors, and this is neither. The seco
 it was; these are the lines before the stack trace starts:
 
 ```
-2026-10-16T20:34:23.404-03:00 DEBUG 3723 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
-2026-10-16T20:34:23.412-03:00 ERROR 3723 --- [bookshop] [nio-8080-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.hibernate.LazyInitializationException: Could not initialize proxy [com.example.bookshop.catalogue.Author#1] - no session] with root cause
+2026-10-22T19:24:28.538-03:00 DEBUG 1176 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
+2026-10-22T19:24:28.547-03:00 ERROR 1176 --- [bookshop] [nio-8080-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.hibernate.LazyInitializationException: Could not initialize proxy [com.example.bookshop.catalogue.Author#1] - no session] with root cause
 
 org.hibernate.LazyInitializationException: Could not initialize proxy [com.example.bookshop.catalogue.Author#1] - no session
 ```
@@ -50,7 +50,7 @@ ana@vm:~/bookshop$ curl -s -i localhost:8080/books/1
 HTTP/1.1 200 
 Content-Type: application/json
 Content-Length: 100
-Date: Fri, 16 Oct 2026 23:34:29 GMT
+Date: Thu, 22 Oct 2026 22:24:50 GMT
 
 {"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
 ```
@@ -58,8 +58,8 @@ Date: Fri, 16 Oct 2026 23:34:29 GMT
 Same code, and it works. The second terminal shows both statements, the author's included:
 
 ```
-2026-10-16T20:34:29.180-03:00 DEBUG 3866 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
-2026-10-16T20:34:29.187-03:00 DEBUG 3866 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:24:50.548-03:00 DEBUG 1616 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
+2026-10-22T19:24:50.745-03:00 DEBUG 1616 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 **Open session in view**, OSIV, is a Spring setting that opens a persistence context when a web
@@ -69,7 +69,7 @@ context open and loads itself. Spring Boot turns it on by default, and a project
 property gets this warning on every start:
 
 ```
-2026-10-16T20:34:37.255-03:00  WARN 4081 --- [bookshop] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-10-22T19:25:24.361-03:00  WARN 2298 --- [bookshop] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 ```
 
 It is switched off in this bookshop for three reasons.

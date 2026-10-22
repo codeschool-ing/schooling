@@ -24,11 +24,11 @@ ana@vm:~/bookshop$ curl -s -o /dev/null -w "%{http_code}\n" localhost:8080/books
 and look at the second terminal:
 
 ```
-2026-10-16T20:33:50.361-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
-2026-10-16T20:33:50.367-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:50.368-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:50.369-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:50.370-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:06.699-03:00 DEBUG 31528 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
+2026-10-22T19:23:06.702-03:00 DEBUG 31528 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:06.704-03:00 DEBUG 31528 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:06.704-03:00 DEBUG 31528 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:06.705-03:00 DEBUG 31528 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 One `select` on `book`, with `author_id` among its columns and no name, and then one `select` on
@@ -49,11 +49,11 @@ Switching the relationship to `FetchType.EAGER` sounds like the cure, and it is 
 is not. Change `LAZY` to `EAGER` in `Book`, rebuild, restart, and ask for the list again:
 
 ```
-2026-10-16T20:33:59.039-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
-2026-10-16T20:33:59.041-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:59.042-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:59.045-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
-2026-10-16T20:33:59.046-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:21.710-03:00 DEBUG 32238 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
+2026-10-22T19:23:21.716-03:00 DEBUG 32238 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:21.720-03:00 DEBUG 32238 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:21.723-03:00 DEBUG 32238 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-22T19:23:21.728-03:00 DEBUG 32238 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 The same five statements. `EAGER` decides that the author is loaded *with* the book, but a JPQL
@@ -63,7 +63,7 @@ whose authors it promised to load, and loads them one by one, straight away inst
 statement:
 
 ```
-2026-10-16T20:33:59.077-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-4] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id where b1_0.id=?
+2026-10-22T19:23:21.792-03:00 DEBUG 32238 --- [bookshop] [nio-8080-exec-4] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id where b1_0.id=?
 ```
 
 Put `LAZY` back before going on. `EAGER` moves the problem rather than solving it, and it makes every
@@ -88,15 +88,15 @@ Rebuild and restart with the `sql` profile. The catalogue report at start-up is 
 statement:
 
 ```
-2026-10-16T20:34:10.652-03:00  INFO 3471 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.987 seconds (process running for 6.566)
-2026-10-16T20:34:11.122-03:00 DEBUG 3471 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id order by b1_0.id
-2026-10-16T20:34:11.159-03:00  INFO 3471 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
+2026-10-22T19:23:55.971-03:00  INFO 462 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 19.029 seconds (process running for 20.949)
+2026-10-22T19:23:57.729-03:00 DEBUG 462 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id order by b1_0.id
+2026-10-22T19:23:58.396-03:00  INFO 462 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 and so is the list:
 
 ```
-2026-10-16T20:34:12.459-03:00 DEBUG 3471 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id order by b1_0.id
+2026-10-22T19:24:00.305-03:00 DEBUG 462 --- [bookshop] [nio-8080-exec-5] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id order by b1_0.id
 ```
 
 One statement. The `join` is in the SQL, the author's `id` and `name` are among the columns, and

@@ -149,8 +149,8 @@ O `Jdbc.java` abria uma conexão, usava uma vez e fechava, e o fim daquela seç�
 uma custa. Uma aplicação web não pode pagar isso a cada requisição, então o Boot não usa o
 `DriverManager`. Ele monta um **`DataSource`**, o outro jeito do JDBC de obter uma conexão, uma
 interface de `javax.sql` cujo único trabalho é `getConnection()`. O que o Boot monta a partir das
-três propriedades `spring.datasource` é o do HikariCP, um **pool de conexões**: ele abre conexões
-antes da hora e as empresta, e quando o código chama `close()` numa delas, a conexão volta para o
+três propriedades `spring.datasource` é o do HikariCP, um **pool de conexões**, que abre conexões
+antes da hora e as empresta. Quando o código chama `close()` numa delas, a conexão volta para o
 pool em vez de ser fechada.
 
 ```schooling-figure

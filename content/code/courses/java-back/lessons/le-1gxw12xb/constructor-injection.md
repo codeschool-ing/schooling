@@ -23,8 +23,8 @@ on each of them:
 
 ## A detour through field injection
 
-**Field injection is not just a shorter way to write the same thing**, although it is shorter, it
-fills a great deal of older code and tutorials, and it works. Replace `BookService.java` with this
+Field injection is shorter, it fills a great deal of older code and tutorials, and it works. **It is
+not the same thing written more briefly.** Replace `BookService.java` with this
 version for a moment:
 
 ```java

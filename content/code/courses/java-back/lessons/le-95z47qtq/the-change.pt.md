@@ -44,7 +44,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 ```
 
 Crie o `TitleAndPrice.java` ao lado dele. É uma interface com dois getters e nenhuma implementação em
-lugar nenhum do projeto, o que a seção sobre `@Query` explica:
+lugar nenhum do projeto. A seção sobre `@Query` explica por quê:
 
 ```java
 package com.example.bookshop.catalogue;
