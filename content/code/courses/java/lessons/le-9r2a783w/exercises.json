@@ -1,0 +1,524 @@
+[
+  {
+    "id": "ex-gca67zyn",
+    "version": 1,
+    "section": "declared-and-actual-type",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each type to what it decides.",
+    "hint": "The table at the top of section 02.",
+    "pairs": [
+      {
+        "left": "The variable's declared type",
+        "right": "Which methods may be called"
+      },
+      {
+        "left": "The object's actual class",
+        "right": "Which override runs"
+      }
+    ],
+    "right_distractors": [
+      "Which fields are private"
+    ]
+  },
+  {
+    "id": "ex-ke31xdyv",
+    "version": 1,
+    "section": "declared-and-actual-type",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Desk`'s loop called `item.describe()` on three elements declared `Item`. What did it print?",
+    "hint": "Each object ran its own override.",
+    "choices": [
+      {
+        "text": "`an item`, three times",
+        "correct": false,
+        "why": "That would mean the declared type chose the body; it chooses only what may be called."
+      },
+      {
+        "text": "`a book`, `a DVD`, `an item`",
+        "correct": true,
+        "why": "Right: one call in the source, three bodies at run time."
+      },
+      {
+        "text": "A compile error, since `Item` cannot hold a `Book`",
+        "correct": false,
+        "why": "A variable may hold any subclass of its type."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqetb9sf",
+    "version": 1,
+    "section": "declared-and-actual-type",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Item item = new Book(...)` followed by `item.isbn()` does not compile. Why, when the object is a book?",
+    "hint": "What does the compiler look at?",
+    "choices": [
+      {
+        "text": "Because `isbn()` is private in `Book`",
+        "correct": false,
+        "why": "It is public; the error said the symbol could not be found."
+      },
+      {
+        "text": "Because the object was converted to an `Item` when it was assigned",
+        "correct": false,
+        "why": "Assignment changes nothing about the object; it is still a `Book`."
+      },
+      {
+        "text": "`Item` declares no `isbn()`",
+        "correct": true,
+        "why": "Right: the compiler checks declarations only; what the object really is becomes known at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cvsx0fd",
+    "version": 1,
+    "section": "declared-and-actual-type",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`(Book) items[1]` compiled, and the program then threw `ClassCastException`. What does that say about a cast?",
+    "hint": "Who checked the promise, and when?",
+    "choices": [
+      {
+        "text": "It moves the check to run time, when the cast executes",
+        "correct": true,
+        "why": "Right: the compiler accepts a cast that could succeed, and the JVM checks the real class."
+      },
+      {
+        "text": "It converts the object into the target class",
+        "correct": false,
+        "why": "Nothing was converted: a `Dvd` stays a `Dvd`, so the cast failed."
+      },
+      {
+        "text": "It turns off type checking for that line",
+        "correct": false,
+        "why": "The JVM checked, and refused."
+      },
+      {
+        "text": "It is a compile error that `javac` only reports when the program runs",
+        "correct": false,
+        "why": "Compile errors are reported by `javac`; this one compiled."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0qwr0xg",
+    "version": 1,
+    "section": "declared-and-actual-type",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which form does the section recommend for using `isbn()` on an `Item` that might be a book?",
+    "hint": "The one that turns a crash into a branch.",
+    "choices": [
+      {
+        "text": "`((Book) item).isbn()`",
+        "correct": false,
+        "why": "If the item is a DVD, that throws."
+      },
+      {
+        "text": "`if (item instanceof Book book) { book.isbn(); }`",
+        "correct": true,
+        "why": "Right: it asks first, and names the result."
+      },
+      {
+        "text": "Add `isbn()` to `Item`, returning `null` for anything else",
+        "correct": false,
+        "why": "That gives every item a method that means nothing for most of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1scyd6d",
+    "version": 1,
+    "section": "declared-and-actual-type",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which line of `Casts.java` did the `ClassCastException` happen?",
+    "hint": "The last line of the stack trace.",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-xgfm0g25",
+    "version": 1,
+    "section": "dynamic-dispatch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `say`, which method does the `invokevirtual` instruction name?",
+    "hint": "The compiler wrote what it knew.",
+    "choices": [
+      {
+        "text": "`Book.describe`, since the first call passes a book",
+        "correct": false,
+        "why": "`say` is compiled once and called with both; it cannot name one subclass."
+      },
+      {
+        "text": "`Item.describe`",
+        "correct": true,
+        "why": "Right: the declared type, with the body left open."
+      },
+      {
+        "text": "`Object.toString`, the root of every class",
+        "correct": false,
+        "why": "`describe` is declared in `Item`, and that is what is named."
+      },
+      {
+        "text": "None; it names a slot number in a table",
+        "correct": false,
+        "why": "The instruction names a method; the table is how HotSpot looks it up."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjzs3nme",
+    "version": 1,
+    "section": "dynamic-dispatch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When `invokevirtual Item.describe` runs on a `Dvd`, how does the JVM find the body?",
+    "hint": "It starts from the object.",
+    "choices": [
+      {
+        "text": "It runs `Item.describe`, since that is the method the instruction names",
+        "correct": false,
+        "why": "The name says which method; the object's class says which body."
+      },
+      {
+        "text": "It asks the compiler, which recorded the answer in the class file",
+        "correct": false,
+        "why": "The compiler is long gone at run time and recorded only the declared type."
+      },
+      {
+        "text": "It reads the object's class and looks the method up in that class's table",
+        "correct": true,
+        "why": "Right: `Dvd`'s table maps `describe` to `Dvd.describe`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tz3pgj3",
+    "version": 1,
+    "section": "dynamic-dispatch",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call instruction to how its body is chosen.",
+    "hint": "The table at the end of section 03.",
+    "pairs": [
+      {
+        "left": "`invokevirtual`",
+        "right": "By the object's class, at run time"
+      },
+      {
+        "left": "`invokestatic`",
+        "right": "By the compiler, from the class named in the call"
+      },
+      {
+        "left": "`invokespecial`",
+        "right": "Exactly the one named: a constructor or a `super.m()` call"
+      }
+    ],
+    "right_distractors": [
+      "By the order of the methods in the source file"
+    ]
+  },
+  {
+    "id": "ex-bztpgvm3",
+    "version": 1,
+    "section": "dynamic-dispatch",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which instruction calls a method through an interface type, such as lesson 23's `Lendable`?",
+    "hint": "Its name says it.",
+    "choices": [
+      {
+        "text": "`invokestatic`",
+        "correct": false,
+        "why": "That is for static methods, chosen by the compiler."
+      },
+      {
+        "text": "`invokeinterface`",
+        "correct": true,
+        "why": "Right: dispatched by the object's class, like `invokevirtual`."
+      },
+      {
+        "text": "`invokespecial`",
+        "correct": false,
+        "why": "That is for constructors and `super` calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-4apwqg9f",
+    "version": 1,
+    "section": "dynamic-dispatch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague avoids small overridable methods \"because virtual calls are slow\". What does the section answer?",
+    "hint": "The JIT watches each call site.",
+    "choices": [
+      {
+        "text": "That the colleague is right, and `final` everywhere is the remedy",
+        "correct": false,
+        "why": "The section argues the opposite: it is a design decision."
+      },
+      {
+        "text": "That a look-up is cheap, and the JIT calls one class directly where it has seen only one",
+        "correct": true,
+        "why": "Right: so the choice is about design, not speed."
+      },
+      {
+        "text": "That the JVM searches up to `Object` on every call, which is fast enough",
+        "correct": false,
+        "why": "HotSpot does not search on every call; each class has a table."
+      }
+    ]
+  },
+  {
+    "id": "ex-vppfmba8",
+    "version": 1,
+    "section": "what-is-not-dynamic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which kind of member follows the object, as `who()` did?",
+    "hint": "Only one of the four did.",
+    "choices": [
+      {
+        "text": "A field",
+        "correct": false,
+        "why": "`p.name` printed `parent field`: bound by the declared type."
+      },
+      {
+        "text": "A static method",
+        "correct": false,
+        "why": "`p.kind()` printed `parent static`."
+      },
+      {
+        "text": "An overridable instance method",
+        "correct": true,
+        "why": "Right: the only kind that dispatches."
+      },
+      {
+        "text": "A private method",
+        "correct": false,
+        "why": "`callSecret()` printed `parent private`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rwecw0k",
+    "version": 1,
+    "section": "what-is-not-dynamic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Parent p = new Child();` and `Child` declares its own `name`. What does `p.name` read, and why?",
+    "hint": "Look at the `getfield` instruction.",
+    "choices": [
+      {
+        "text": "`child field`, because the object behind the variable is a `Child`",
+        "correct": false,
+        "why": "Fields do not dispatch; the object's class plays no part."
+      },
+      {
+        "text": "`parent field`: the compiler wrote `getfield Parent.name`",
+        "correct": true,
+        "why": "Right: two fields share the name, and the declared type picked one."
+      },
+      {
+        "text": "A compile error, since two fields cannot share a name",
+        "correct": false,
+        "why": "Hiding a field is legal, which is why it surprises."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gjgfyhp",
+    "version": 1,
+    "section": "what-is-not-dynamic",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`callSecret()` in `Parent` calls `secret()`, and `Child` also has a private `secret()`. Why did a `Child` object print `parent private`?",
+    "hint": "Can a subclass see a private method?",
+    "choices": [
+      {
+        "text": "Because the call was compiled as `invokestatic`",
+        "correct": false,
+        "why": "`javap` showed `invokevirtual`; the instruction is not the reason."
+      },
+      {
+        "text": "Because `Child.secret` is missing `@Override`",
+        "correct": false,
+        "why": "Adding it would be a compile error: there is nothing to override."
+      },
+      {
+        "text": "Nothing below `Parent` replaces it",
+        "correct": true,
+        "why": "Right: a private method is never overridden, so the JVM selects `Parent`'s, and `Child.secret` is an unrelated method with the same name."
+      }
+    ]
+  },
+  {
+    "id": "ex-hst8sx78",
+    "version": 1,
+    "section": "what-is-not-dynamic",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`p.kind()` printed `parent static` because the compiler wrote `___ Parent.kind`.",
+    "hint": "The instruction for static methods.",
+    "blanks": [
+      {
+        "accept": [
+          "invokestatic"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hkcqfmtb",
+    "version": 1,
+    "section": "what-is-not-dynamic",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are bound by the compiler, from the declared type? Choose all that apply.",
+    "hint": "Everything except overridable instance methods.",
+    "choices": [
+      {
+        "text": "Reading a field",
+        "correct": true,
+        "why": "Yes: `getfield` names the class."
+      },
+      {
+        "text": "Calling a `static` method",
+        "correct": true,
+        "why": "Yes: `invokestatic`."
+      },
+      {
+        "text": "Calling a public instance method that a subclass overrides",
+        "correct": false,
+        "why": "No: that is dynamic dispatch."
+      },
+      {
+        "text": "Calling a constructor",
+        "correct": true,
+        "why": "Yes: `invokespecial`, exactly the one named."
+      }
+    ]
+  },
+  {
+    "id": "ex-v975dd28",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`Item[] items = { new Book(...) }; Book b = (Book) items[0]; Item i = b;` Then `i.describe()` and `b.describe()`. What do they print?",
+    "hint": "One object, two variables.",
+    "choices": [
+      {
+        "text": "`an item`, then `a book`",
+        "correct": false,
+        "why": "The method follows the object, whatever variable you call it through."
+      },
+      {
+        "text": "`a book`, twice, from the one object",
+        "correct": true,
+        "why": "Right: one `Book` object, so `Book.describe` both times."
+      },
+      {
+        "text": "A `ClassCastException` on the cast",
+        "correct": false,
+        "why": "The element really is a `Book`, so the cast succeeds."
+      }
+    ]
+  },
+  {
+    "id": "ex-3pnyzj6t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Report` class has `public static String header()`, and `DetailedReport extends Report` declares its own `header()`. Code calls `report.header()` with `Report report = new DetailedReport();` and expects the detailed header. What is the fix?",
+    "hint": "Static methods do not dispatch.",
+    "choices": [
+      {
+        "text": "Add `@Override` to `DetailedReport.header()`",
+        "correct": false,
+        "why": "On a static method that is a compile error, not a fix."
+      },
+      {
+        "text": "Cast: `((DetailedReport) report).header()` in every caller",
+        "correct": false,
+        "why": "It works and spreads knowledge of the subclass into every caller."
+      },
+      {
+        "text": "Make it an instance method",
+        "correct": true,
+        "why": "Right: make `header()` an instance method in both classes; then it overrides, and the object chooses."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy30dqm9",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a call `item.describe()` in order, from the source to the body that runs.",
+    "hint": "Compile time first.",
+    "items": [
+      "`javac` checks that `Item` declares `describe()`",
+      "`javac` writes `invokevirtual Item.describe`",
+      "The JVM reads the class of the object `item` refers to",
+      "The JVM runs the body from that class's method table"
+    ]
+  },
+  {
+    "id": "ex-4wn1yggv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the section say a static method should be called on its class's name, never through a variable?",
+    "hint": "What did `p.kind()` suggest, and what did it do?",
+    "choices": [
+      {
+        "text": "It looks dynamic and is not",
+        "correct": true,
+        "why": "Right: through a variable it looks as if the object chooses; `Parent.kind()` says what really happens."
+      },
+      {
+        "text": "Because calling it through a variable is a compile error",
+        "correct": false,
+        "why": "It compiled and ran; it only misleads."
+      },
+      {
+        "text": "Because it is slower through a variable",
+        "correct": false,
+        "why": "Speed is not the issue; both are `invokestatic`."
+      }
+    ]
+  }
+]

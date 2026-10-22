@@ -1,0 +1,936 @@
+[
+  {
+    "id": "ex-ertcbwyf",
+    "version": 1,
+    "section": "what-changed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which need pushed most Go projects towards an outside router before Go 1.22?",
+    "hint": "Look at the first rows of the table.",
+    "choices": [
+      {
+        "text": "Writing middleware, which `net/http` had no shape for",
+        "correct": false,
+        "why": "The `func(http.Handler) http.Handler` shape is plain Go and always was."
+      },
+      {
+        "text": "Grouping routes, which needed a framework's router groups",
+        "correct": false,
+        "why": "A mux mounted inside a mux groups routes, as `/admin/` does."
+      },
+      {
+        "text": "Serving HTTPS, which the standard server lacked",
+        "correct": false,
+        "why": "TLS is not in the table at all; the gap was routing."
+      },
+      {
+        "text": "Routing by method and reading values out of the path",
+        "correct": true,
+        "why": "Right. Those rows are closed now by `GET /events` and `{id}`."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmbpw1rs",
+    "version": 1,
+    "section": "what-changed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is still absent from `net/http` and is a real reason a framework helps?",
+    "hint": "Section 02's second list.",
+    "choices": [
+      {
+        "text": "Wildcards in a path",
+        "correct": false,
+        "why": "`{id}` arrived in 1.22."
+      },
+      {
+        "text": "A 405 with an `Allow` header for a wrong method",
+        "correct": false,
+        "why": "The 1.22 mux writes that by itself."
+      },
+      {
+        "text": "Decoding and validating a body in one call",
+        "correct": true,
+        "why": "Right. boxoffice needed `decodeJSON` plus a `validate` method for it."
+      },
+      {
+        "text": "Choosing between two overlapping patterns",
+        "correct": false,
+        "why": "The most specific wins, and a tie panics at registration."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7sc6d7h",
+    "version": 1,
+    "section": "what-changed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The lesson says the question is not \"does the framework have more\". What is the question?",
+    "hint": "A framework has more, by definition.",
+    "choices": [
+      {
+        "text": "Whether it is newer than the standard library",
+        "correct": false,
+        "why": "Age decides nothing here; cost against benefit does."
+      },
+      {
+        "text": "Whether it is faster than `net/http` in a benchmark of hello world",
+        "correct": false,
+        "why": "Section 08 dismisses that benchmark as evidence about a real service."
+      },
+      {
+        "text": "Whether what it has is worth what it costs",
+        "correct": true,
+        "why": "Right. Sections 03 and 04 measure each side."
+      },
+      {
+        "text": "Whether the team likes its syntax",
+        "correct": false,
+        "why": "Taste is not the measure the lesson uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-qr4rtmaf",
+    "version": 1,
+    "section": "what-changed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says: \"we need Gin, because the standard library cannot group the `/admin/` routes behind one auth check.\" What do you answer?",
+    "hint": "How does boxoffice protect `/admin/`?",
+    "choices": [
+      {
+        "text": "A wrapped sub-mux at `/admin/` does it",
+        "correct": true,
+        "why": "Right. That is lesson 2's `requireStaff(tokens)(admin)`."
+      },
+      {
+        "text": "Right: route groups are one of the gaps Go 1.22 left open",
+        "correct": false,
+        "why": "Groups never needed a framework; that row of the table says \"the same\"."
+      },
+      {
+        "text": "Only by checking the token inside each admin handler",
+        "correct": false,
+        "why": "The check sits on the subtree, once, not in every handler."
+      },
+      {
+        "text": "Only with `{path...}` and a manual dispatch on the rest of the path",
+        "correct": false,
+        "why": "Nothing manual is needed; a mounted sub-mux routes the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-3v8afg29",
+    "version": 1,
+    "section": "what-you-write",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines, in total, are boxoffice's seven plumbing files as `wc -l` counted them?",
+    "hint": "The first `total` line.",
+    "value": 269,
+    "tolerance": 0,
+    "unit": "lines"
+  },
+  {
+    "id": "ex-p534bpea",
+    "version": 1,
+    "section": "what-you-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did those plumbing lines add to boxoffice's `go.mod`?",
+    "hint": "They use `http.Handler`, `encoding/json` and `context`.",
+    "choices": [
+      {
+        "text": "One module, `golang.org/x/net`, for CORS",
+        "correct": false,
+        "why": "CORS is thirty lines of `net/http` in `cors.go`."
+      },
+      {
+        "text": "The validator library behind the `validate` methods",
+        "correct": false,
+        "why": "The `validate` methods are plain `if` statements."
+      },
+      {
+        "text": "A logging module for `logRequests`",
+        "correct": false,
+        "why": "It calls `log.Printf` from the standard library."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. `go.mod` lists the module itself and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-jjaja4cg",
+    "version": 1,
+    "section": "what-you-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is the strongest argument a framework has against hand-written plumbing, according to section 03?",
+    "hint": "Think of `decode.go`.",
+    "choices": [
+      {
+        "text": "It saves the lines of a 25-line `writeJSON`",
+        "correct": false,
+        "why": "The section calls that hardly an argument."
+      },
+      {
+        "text": "Thousands of users found its bugs",
+        "correct": true,
+        "why": "Right. The obvious one-line decoder is wrong in four ways."
+      },
+      {
+        "text": "It compiles faster",
+        "correct": false,
+        "why": "Build time is not the argument."
+      },
+      {
+        "text": "It makes the binary smaller",
+        "correct": false,
+        "why": "Lesson 4 measured every framework's binary as larger."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzeamjqd",
+    "version": 1,
+    "section": "what-you-write",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Code written against `net/http` in 2012 still compiles because of the Go ___ compatibility promise.",
+    "hint": "A version number.",
+    "blanks": [
+      {
+        "accept": [
+          "1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dw4g5pck",
+    "version": 1,
+    "section": "the-price",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many compile errors did the Echo program report when its import was switched from v5 to v4?",
+    "hint": "Count the lines under `# example.com/fw/echo4`.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "errors"
+  },
+  {
+    "id": "ex-g489e08v",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did changing only the Echo import line break the file in seven places?",
+    "hint": "Who owns the handler's signature?",
+    "choices": [
+      {
+        "text": "v4 needs Go 1.22 and the lab ran an older Go",
+        "correct": false,
+        "why": "The lab ran Go 1.27.1, and the errors name the context type."
+      },
+      {
+        "text": "`go mod tidy` failed to download v4",
+        "correct": false,
+        "why": "It downloaded v4.16.0; the build is what failed."
+      },
+      {
+        "text": "The handler's context type changed",
+        "correct": true,
+        "why": "Right. In v4 `echo.Context` is an interface; in v5 a struct taken by pointer."
+      },
+      {
+        "text": "The sed replaced the import in the wrong file",
+        "correct": false,
+        "why": "`grep` shows both imports now name v4."
+      }
+    ]
+  },
+  {
+    "id": "ex-hna8m6t2",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Your service imports Gin and never calls a function in one of Gin's dependencies. That dependency gets a known vulnerability. Is the service affected?",
+    "hint": "Section 04 and the tool from `go-production` lesson 9.",
+    "choices": [
+      {
+        "text": "Yes, until someone checks whether it is reachable and upgrades it",
+        "correct": true,
+        "why": "Right. The module is in your process; a reachability check and an upgrade settle it."
+      },
+      {
+        "text": "No, a module you never call is never in the binary",
+        "correct": false,
+        "why": "Gin itself calls its dependencies; code you do not call directly still runs."
+      },
+      {
+        "text": "No, vulnerabilities in indirect dependencies are Gin's responsibility",
+        "correct": false,
+        "why": "Your service ships it; the responsibility is yours."
+      },
+      {
+        "text": "Yes, and the fix is to remove Gin at once",
+        "correct": false,
+        "why": "Checking reachability and upgrading is the fix, not a rewrite."
+      }
+    ]
+  },
+  {
+    "id": "ex-r9wz0hs0",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happened to `gorilla/mux` in December 2022?",
+    "hint": "It was the default router of the Go world for years.",
+    "choices": [
+      {
+        "text": "It was merged into `net/http`",
+        "correct": false,
+        "why": "The 1.22 patterns were written by the Go team, not merged from gorilla."
+      },
+      {
+        "text": "It released v2 with a new handler type",
+        "correct": false,
+        "why": "That describes Echo's v5, not gorilla."
+      },
+      {
+        "text": "It was archived, then revived in 2023",
+        "correct": true,
+        "why": "Right. Every project using it had to decide whether to wait or migrate."
+      },
+      {
+        "text": "It changed its licence",
+        "correct": false,
+        "why": "The section names archiving, not a licence change."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx2dzf7y",
+    "version": 1,
+    "section": "the-price",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the costs in section 04, which one does the lesson call the smallest and the easiest to measure?",
+    "hint": "31.6 MB against 9.8 MB.",
+    "choices": [
+      {
+        "text": "The second thing every newcomer has to learn",
+        "correct": false,
+        "why": "That cost lasts as long as the team changes."
+      },
+      {
+        "text": "A major version that touches every handler",
+        "correct": false,
+        "why": "Section 04 shows that one in seven errors and calls it expensive."
+      },
+      {
+        "text": "The vulnerabilities that arrive with each module",
+        "correct": false,
+        "why": "Those need weekly checking; not small."
+      },
+      {
+        "text": "The binary's size",
+        "correct": true,
+        "why": "Right. It matters a little more in a container image, and is still the smallest."
+      }
+    ]
+  },
+  {
+    "id": "ex-w1rqbg1k",
+    "version": 1,
+    "section": "where-it-gets-in-the-way",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Gin handler starts a goroutine that logs `c.Param(\"id\")` a second later. In tests it logs the right id; under load it logs ids from other customers. Why?",
+    "hint": "What happens to the context when the handler returns?",
+    "choices": [
+      {
+        "text": "A data race in the map of events",
+        "correct": false,
+        "why": "The id comes from the context, not the map."
+      },
+      {
+        "text": "Gin shuffles parameters between routes under load",
+        "correct": false,
+        "why": "Nothing is shuffled; an object is reused."
+      },
+      {
+        "text": "The logger buffers lines and prints them out of order",
+        "correct": false,
+        "why": "The ids themselves are wrong, not their order."
+      },
+      {
+        "text": "It needed `c.Copy()`: Gin recycles the original",
+        "correct": true,
+        "why": "Right. Gin's documentation says to give a goroutine a copy, never the original."
+      }
+    ]
+  },
+  {
+    "id": "ex-5639pmxg",
+    "version": 1,
+    "section": "where-it-gets-in-the-way",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 2's `logRequests` middleware has the standard shape. Where does it NOT work unchanged?",
+    "hint": "Which of these is not `net/http`?",
+    "choices": [
+      {
+        "text": "Anywhere in Fiber",
+        "correct": true,
+        "why": "Right. Fiber runs on fasthttp and needs its own middleware or an adaptor."
+      },
+      {
+        "text": "Around a chi router",
+        "correct": false,
+        "why": "A chi router is an `http.Handler`."
+      },
+      {
+        "text": "Around Echo's engine",
+        "correct": false,
+        "why": "Echo's engine is an `http.Handler` at the top."
+      },
+      {
+        "text": "Around Gin's engine",
+        "correct": false,
+        "why": "Around the engine works; inside a route it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-zsdes1sw",
+    "version": 1,
+    "section": "where-it-gets-in-the-way",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say a framework's defaults are a bigger surface than `net/http`'s?",
+    "hint": "Count the places choices are made.",
+    "choices": [
+      {
+        "text": "`net/http` has no defaults",
+        "correct": false,
+        "why": "It has some; the missing timeouts are one."
+      },
+      {
+        "text": "Framework defaults change every release",
+        "correct": false,
+        "why": "The argument is about how many there are."
+      },
+      {
+        "text": "Hundreds of choices against a handful",
+        "correct": true,
+        "why": "Right. Each of those is found the day a client or auditor finds it."
+      },
+      {
+        "text": "Framework defaults are insecure",
+        "correct": false,
+        "why": "Each is reasonable for somebody; few are insecure."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbgrsf1n",
+    "version": 1,
+    "section": "where-it-gets-in-the-way",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Gin service must set a header after a middleware has already written, and stream a long response. What does the lesson say happens?",
+    "hint": "What does `c.JSON` hide?",
+    "choices": [
+      {
+        "text": "Gin handles both through `c.JSON` options",
+        "correct": false,
+        "why": "The helper is what has to be bypassed."
+      },
+      {
+        "text": "It cannot be done in Go",
+        "correct": false,
+        "why": "Lesson 13 streams a response in Go."
+      },
+      {
+        "text": "The service must move to Fiber",
+        "correct": false,
+        "why": "Nothing about this needs fasthttp."
+      },
+      {
+        "text": "The helper is bypassed and HTTP learnt anyway",
+        "correct": true,
+        "why": "Right. A framework postpones the day you need HTTP; it does not remove it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ckpnjvj0",
+    "version": 1,
+    "section": "where-it-earns-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twelve developers will write eighty routes, and new people join every month. What does the lesson call the strongest argument for a framework here?",
+    "hint": "What must every handler look like?",
+    "choices": [
+      {
+        "text": "Speed under load",
+        "correct": false,
+        "why": "The routes wait on a database; speed is section 06's other case."
+      },
+      {
+        "text": "Smaller binaries",
+        "correct": false,
+        "why": "Frameworks made larger binaries in lesson 4."
+      },
+      {
+        "text": "Consistency across every handler",
+        "correct": true,
+        "why": "Right, and the argument grows with the team."
+      },
+      {
+        "text": "Fewer modules to audit",
+        "correct": false,
+        "why": "A framework brings more modules, not fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9r8x9ar",
+    "version": 1,
+    "section": "where-it-earns-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You like Gin's `binding:\"required,max=100\"` tags and nothing else about Gin. What does section 06 suggest?",
+    "hint": "What library sits underneath?",
+    "choices": [
+      {
+        "text": "Use `go-playground/validator` on its own",
+        "correct": true,
+        "why": "Right. It is the one part of Gin you can have without Gin."
+      },
+      {
+        "text": "Adopt Gin, because tags only work inside it",
+        "correct": false,
+        "why": "The validator works on any struct in any handler."
+      },
+      {
+        "text": "Write a tag parser of your own with `reflect`",
+        "correct": false,
+        "why": "A ready library does this already."
+      },
+      {
+        "text": "Avoid tags; they are slower than `if` statements",
+        "correct": false,
+        "why": "The lesson weighs readability and mistakes, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-6xn12sy8",
+    "version": 1,
+    "section": "where-it-earns-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants Fiber \"because it is faster\". The service answers every request after a PostgreSQL query. What does the lesson ask for before agreeing?",
+    "hint": "Where does the time go?",
+    "choices": [
+      {
+        "text": "A hello-world benchmark comparing Fiber and `net/http`",
+        "correct": false,
+        "why": "That measures a service nobody runs."
+      },
+      {
+        "text": "Nothing; Fiber is faster, so it is the better choice",
+        "correct": false,
+        "why": "Speed nobody notices does not pay for leaving `net/http`."
+      },
+      {
+        "text": "A count of the modules Fiber brings",
+        "correct": false,
+        "why": "That is a cost, not evidence that the speed matters."
+      },
+      {
+        "text": "A profile of the real service under its real load",
+        "correct": true,
+        "why": "Right. With a database behind each request, halving the HTTP share is not noticed."
+      }
+    ]
+  },
+  {
+    "id": "ex-fznq879j",
+    "version": 1,
+    "section": "where-it-earns-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "All of your team's services are written in Echo. You are starting a new one. What does the lesson recommend?",
+    "hint": "The least technical reason.",
+    "choices": [
+      {
+        "text": "Echo",
+        "correct": true,
+        "why": "Right. Shared knowledge and middleware beat any difference in the table."
+      },
+      {
+        "text": "The standard library, the course's default",
+        "correct": false,
+        "why": "The team question comes first and overrides the default."
+      },
+      {
+        "text": "chi, as a compromise between the two",
+        "correct": false,
+        "why": "A lone service in another style costs everyone who touches it."
+      },
+      {
+        "text": "Gin, because more people know it",
+        "correct": false,
+        "why": "The people who matter here already know Echo."
+      }
+    ]
+  },
+  {
+    "id": "ex-naz7vm8g",
+    "version": 1,
+    "section": "middle-path",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the lesson's test for telling a library from a framework?",
+    "hint": "Look at one function's parameters.",
+    "choices": [
+      {
+        "text": "Whether it is in the standard library",
+        "correct": false,
+        "why": "chi is outside it and counts as a library."
+      },
+      {
+        "text": "Whether the handler's signature stays `func(w http.ResponseWriter, r *http.Request)`",
+        "correct": true,
+        "why": "Right. A library leaves the shape of your program alone."
+      },
+      {
+        "text": "Whether it has more than ten modules",
+        "correct": false,
+        "why": "Module count is a cost, not the definition."
+      },
+      {
+        "text": "Whether it ships middleware",
+        "correct": false,
+        "why": "chi ships middleware and is still a library."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9d8x3k2",
+    "version": 1,
+    "section": "middle-path",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many modules besides the program's own did `go list -m all` print for the chi version?",
+    "hint": "The last command of the build.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "modules"
+  },
+  {
+    "id": "ex-2mgena7k",
+    "version": 1,
+    "section": "middle-path",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The chi version answered `DELETE /events/1`. How did its answer differ from `ServeMux`'s?",
+    "hint": "Compare the `Allow` headers.",
+    "choices": [
+      {
+        "text": "Its 405 listed only `GET` and had no body",
+        "correct": true,
+        "why": "Right. `ServeMux` adds `HEAD` and writes `Method Not Allowed`."
+      },
+      {
+        "text": "It answered 404 instead of 405",
+        "correct": false,
+        "why": "It answered 405; that is Gin's 404."
+      },
+      {
+        "text": "It answered with an HTML page",
+        "correct": false,
+        "why": "That was Beego, in lesson 4."
+      },
+      {
+        "text": "Its 405 came back as JSON",
+        "correct": false,
+        "why": "That was Echo; chi's had an empty body."
+      }
+    ]
+  },
+  {
+    "id": "ex-wxmg1eb8",
+    "version": 1,
+    "section": "middle-path",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "boxoffice needs rate limiting. Which choice keeps to the middle path?",
+    "hint": "Each piece replaceable on its own.",
+    "choices": [
+      {
+        "text": "`x/time/rate` in a standard middleware",
+        "correct": true,
+        "why": "Right. A small package, in the shape lesson 2 uses."
+      },
+      {
+        "text": "Move to Echo, which ships a rate limiter",
+        "correct": false,
+        "why": "That changes every handler to get one middleware."
+      },
+      {
+        "text": "A counter in each handler, compared against a constant",
+        "correct": false,
+        "why": "Work for every request belongs in a middleware, once."
+      },
+      {
+        "text": "Nothing; rate limiting needs a framework",
+        "correct": false,
+        "why": "Section 07 names a library for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m67c903g",
+    "version": 1,
+    "section": "middle-path",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each gap of section 02 to the middle-path answer section 07 gives.",
+    "hint": "Each piece in the standard shape.",
+    "pairs": [
+      {
+        "left": "validation",
+        "right": "`go-playground/validator` called from a handler"
+      },
+      {
+        "left": "rate limiting",
+        "right": "`golang.org/x/time/rate` in a middleware"
+      },
+      {
+        "left": "regular expressions in a path",
+        "right": "a router such as `chi`"
+      }
+    ],
+    "right_distractors": [
+      "Fiber's `app.Test`"
+    ]
+  },
+  {
+    "id": "ex-1xsgqn1a",
+    "version": 1,
+    "section": "deciding",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put section 08's four questions in the order the lesson asks them.",
+    "hint": "The first yes ends the search.",
+    "items": [
+      "Does the team already have a framework?",
+      "Has a measurement shown the HTTP layer is where the time goes?",
+      "Will many people write many routes that must all look the same?",
+      "Does `ServeMux` lack a routing feature you need?"
+    ],
+    "trap": "The team question comes first because it overrides all the others."
+  },
+  {
+    "id": "ex-jxrka05n",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Six months into a standard-library service, the same twenty lines of decoding and error handling are pasted into every handler and are drifting apart. What does section 08 read in that?",
+    "hint": "A sign of a wrong choice, and what to do.",
+    "choices": [
+      {
+        "text": "Write the helper now, or adopt one that has it",
+        "correct": true,
+        "why": "Right, and the fix is cheapest early."
+      },
+      {
+        "text": "Nothing: duplication is the normal price of the standard library",
+        "correct": false,
+        "why": "The section names exactly this as a sign."
+      },
+      {
+        "text": "A sign the team needs Fiber",
+        "correct": false,
+        "why": "Speed has nothing to do with pasted code."
+      },
+      {
+        "text": "A reason to rewrite the service in another language",
+        "correct": false,
+        "why": "One helper settles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd3rvpy6",
+    "version": 1,
+    "section": "deciding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is section 08's sign that adopting a framework was the wrong choice?",
+    "hint": "Where does the team's time go?",
+    "choices": [
+      {
+        "text": "Half the time goes into overriding its defaults",
+        "correct": true,
+        "why": "Right. Both mean the framework's shape costs more than it saves."
+      },
+      {
+        "text": "The binary is larger than the standard library's",
+        "correct": false,
+        "why": "That is known on day one and is the smallest cost."
+      },
+      {
+        "text": "A new developer needs a day to learn it",
+        "correct": false,
+        "why": "A day is cheap; the section names larger signs."
+      },
+      {
+        "text": "It has a GitHub issue open",
+        "correct": false,
+        "why": "Every active project has open issues."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfk0ae51",
+    "version": 1,
+    "section": "deciding",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which of these new services does section 08 end at the standard library? Choose all that apply.",
+    "hint": "All four answers must be no.",
+    "choices": [
+      {
+        "text": "A solo developer's six-route API, no framework around it, no measured bottleneck, no special routing",
+        "correct": true,
+        "why": "Right. Four noes."
+      },
+      {
+        "text": "A new service in a team whose other services all use Gin",
+        "correct": false,
+        "why": "Question 1 says yes: use Gin."
+      },
+      {
+        "text": "An internal API of a small team, waiting on PostgreSQL, routes like `/events/{id}`",
+        "correct": true,
+        "why": "Right. Nothing there needs more than 1.22's patterns."
+      },
+      {
+        "text": "A service needing `{id:[0-9]+}` patterns",
+        "correct": false,
+        "why": "Question 4 says yes: add a router such as chi."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsb1h3gn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A public API product needs an OpenAPI document that stays in step with eighty routes, and the company has no framework yet. Which answer follows the lesson?",
+    "hint": "Section 06 says this alone can decide.",
+    "choices": [
+      {
+        "text": "Hand-write the OpenAPI file and keep the standard library",
+        "correct": false,
+        "why": "A hand-written description drifts from the code."
+      },
+      {
+        "text": "Fiber, because public APIs need speed",
+        "correct": false,
+        "why": "No profile was mentioned; the need is the document."
+      },
+      {
+        "text": "chi, because it generates OpenAPI",
+        "correct": false,
+        "why": "chi is a router; section 07 says it does routing and middleware."
+      },
+      {
+        "text": "Adopt one that generates it from the code",
+        "correct": true,
+        "why": "Right. When the API is a product, that alone can decide."
+      }
+    ]
+  },
+  {
+    "id": "ex-6h2mej1t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call the choice of framework one of the few decisions in a Go service that is expensive to reverse?",
+    "hint": "Where does the framework appear in the code?",
+    "choices": [
+      {
+        "text": "Frameworks charge licence fees to leave",
+        "correct": false,
+        "why": "Every framework here is free."
+      },
+      {
+        "text": "Its modules cannot be removed from `go.sum`",
+        "correct": false,
+        "why": "`go mod tidy` removes unused modules."
+      },
+      {
+        "text": "The binary keeps its code after you stop importing it",
+        "correct": false,
+        "why": "A rebuild drops what is not imported."
+      },
+      {
+        "text": "It is in the signature of every handler",
+        "correct": true,
+        "why": "Right. Changing it touches every route, as Echo's v4 build showed."
+      }
+    ]
+  }
+]

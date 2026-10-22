@@ -1,0 +1,904 @@
+[
+  {
+    "id": "ex-b4686092",
+    "version": 1,
+    "section": "three-levels",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each distance from the code to a defect it catches.",
+    "hint": "Section 02's table.",
+    "pairs": [
+      {
+        "left": "one handler",
+        "right": "validation that lets a bad value through"
+      },
+      {
+        "left": "the whole router",
+        "right": "middleware in the wrong order"
+      },
+      {
+        "left": "a real database",
+        "right": "a trigger that never fires"
+      }
+    ],
+    "right_distractors": [
+      "a typo in a comment"
+    ]
+  },
+  {
+    "id": "ex-e5zwtsa2",
+    "version": 1,
+    "section": "three-levels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why do boxoffice's handler tests need no database at all?",
+    "hint": "Lesson 6's interface.",
+    "choices": [
+      {
+        "text": "`go test` starts a PostgreSQL in memory",
+        "correct": false,
+        "why": "`go test` starts no database; section 07 needs a real server for that."
+      },
+      {
+        "text": "`httptest` intercepts every SQL query and answers it from memory",
+        "correct": false,
+        "why": "`httptest` deals in HTTP requests and responses, never SQL."
+      },
+      {
+        "text": "Each handler gets `memStore` through `Store`",
+        "correct": true,
+        "why": "Right. The interface written so PostgreSQL could replace memory lets memory replace PostgreSQL here."
+      },
+      {
+        "text": "Handlers read the database only on start-up",
+        "correct": false,
+        "why": "`getEvent` asks its store on every request."
+      }
+    ]
+  },
+  {
+    "id": "ex-52242gnp",
+    "version": 1,
+    "section": "three-levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson test `pgStore`'s concurrent sales against PostgreSQL and not against a fake?",
+    "hint": "What is being trusted?",
+    "choices": [
+      {
+        "text": "A fake runs too fast to show the contention between transactions",
+        "correct": false,
+        "why": "Speed is not the point: the fake is simply not the code under question."
+      },
+      {
+        "text": "Go forbids interfaces in the test files of `package main`",
+        "correct": false,
+        "why": "Test files use interfaces like any other Go file."
+      },
+      {
+        "text": "The fake is not the thing being trusted",
+        "correct": true,
+        "why": "Right. Only the database shows whether lesson 8's `UPDATE` is safe under concurrency."
+      },
+      {
+        "text": "Mutexes do not work inside `go test`",
+        "correct": false,
+        "why": "They work the same; `memStore` holds one throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-2v2jnx1y",
+    "version": 1,
+    "section": "httptest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestGetEvent` calls `getEvent` directly. Why does it call `req.SetPathValue(\"id\", tt.id)`?",
+    "hint": "Who fills it in on a real request?",
+    "choices": [
+      {
+        "text": "Without it the recorder discards the body",
+        "correct": false,
+        "why": "The recorder keeps whatever the handler writes; the path value is about the request."
+      },
+      {
+        "text": "No mux ran, so nothing set it",
+        "correct": true,
+        "why": "Right. The `ServeMux` sets `{id}` when it matches `/events/{id}`, and a direct call skips the mux."
+      },
+      {
+        "text": "`NewRequest` refuses a URL with a number in it",
+        "correct": false,
+        "why": "`NewRequest` accepts `/events/1` without complaint."
+      },
+      {
+        "text": "It makes the test run in parallel",
+        "correct": false,
+        "why": "Parallelism comes from `t.Parallel`, which these tests do not call."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tjjybw5",
+    "version": 1,
+    "section": "httptest",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does every case of `TestBuyTickets` get its own `newMemStore()`?",
+    "hint": "A purchase changes something.",
+    "choices": [
+      {
+        "text": "Results would depend on case order",
+        "correct": true,
+        "why": "Right. The purchase of two seats changes the store."
+      },
+      {
+        "text": "`newMemStore` is cheap and Go discourages reuse",
+        "correct": false,
+        "why": "Cost is not the reason; independence between cases is."
+      },
+      {
+        "text": "A store survives only one request",
+        "correct": false,
+        "why": "`memStore` keeps its events for as long as the value exists."
+      },
+      {
+        "text": "The race detector demands it",
+        "correct": false,
+        "why": "These cases run one after another; there is no race to detect."
+      }
+    ]
+  },
+  {
+    "id": "ex-95gx32m6",
+    "version": 1,
+    "section": "httptest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a failing case, what does `TestBuyTickets` check beyond the status?",
+    "hint": "Lesson 3's promise.",
+    "choices": [
+      {
+        "text": "That the response took under a millisecond",
+        "correct": false,
+        "why": "No case measures time."
+      },
+      {
+        "text": "That an `X-Request-ID` header is present on the recorder",
+        "correct": false,
+        "why": "A lone handler never passes through `requestID`; section 04 checks that header."
+      },
+      {
+        "text": "That the store holds no new ticket",
+        "correct": false,
+        "why": "The test reads the response only, never the store."
+      },
+      {
+        "text": "A problem document",
+        "correct": true,
+        "why": "Right. The body decodes as a `problem` with a matching `status`, sent as `application/problem+json`."
+      }
+    ]
+  },
+  {
+    "id": "ex-03sbhkxv",
+    "version": 1,
+    "section": "integration",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test` replays a passing result as `(cached)` while its inputs stay the same; passing the flag ___ turns that off for one run, as CI always does.",
+    "hint": "A number of runs.",
+    "blanks": [
+      {
+        "accept": [
+          "-count=1",
+          "count=1",
+          "-count 1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s81r0fey",
+    "version": 1,
+    "section": "the-router",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`newTestServer` calls `t.Helper()`. What does that change?",
+    "hint": "Look at section 07's skip lines.",
+    "choices": [
+      {
+        "text": "It closes the server when the test ends",
+        "correct": false,
+        "why": "That is `t.Cleanup(srv.Close)`."
+      },
+      {
+        "text": "It runs the helper in its own goroutine",
+        "correct": false,
+        "why": "`t.Helper` starts nothing; it only marks the function."
+      },
+      {
+        "text": "Failures name the caller's line",
+        "correct": true,
+        "why": "Right. That is why the skips pointed at the tests, not inside `testDB`."
+      },
+      {
+        "text": "It hides the helper's output",
+        "correct": false,
+        "why": "Output is untouched; only the reported line changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3h1q1es",
+    "version": 1,
+    "section": "the-router",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each token `TestStaffRoutes` sends to the status it expects on `/admin/report`.",
+    "hint": "Lessons 2 and 3.",
+    "pairs": [
+      {
+        "left": "no token",
+        "right": "401"
+      },
+      {
+        "left": "the door's token",
+        "right": "403"
+      },
+      {
+        "left": "the manager's token",
+        "right": "200"
+      }
+    ],
+    "right_distractors": [
+      "404"
+    ]
+  },
+  {
+    "id": "ex-ma68hdzk",
+    "version": 1,
+    "section": "the-router",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`TestTheLogHoldsNoToken` passes today. Why keep it?",
+    "hint": "Who would change `logRequests`?",
+    "choices": [
+      {
+        "text": "It speeds up the other tests by warming the logger",
+        "correct": false,
+        "why": "It warms nothing; it asserts something about the log."
+      },
+      {
+        "text": "Go's test runner fails a package that has no log test",
+        "correct": false,
+        "why": "No such rule exists."
+      },
+      {
+        "text": "For the day somebody logs the headers to help debugging",
+        "correct": true,
+        "why": "Right. Today `logRequests` logs no headers; the test makes that a promise."
+      },
+      {
+        "text": "It checks the token reaches the handler intact",
+        "correct": false,
+        "why": "It checks the log, not the handler."
+      }
+    ]
+  },
+  {
+    "id": "ex-jewxe15h",
+    "version": 1,
+    "section": "the-router",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`TestMain` sends the default logger to `io.Discard`. Why do none of the router tests call `t.Parallel()`?",
+    "hint": "The default logger is one value for the whole process.",
+    "choices": [
+      {
+        "text": "`httptest.NewServer` refuses to start twice",
+        "correct": false,
+        "why": "Each call gets a port of its own."
+      },
+      {
+        "text": "Two tests would read each other's log lines",
+        "correct": true,
+        "why": "Right. Changing the default logger is changing a global."
+      },
+      {
+        "text": "`TestMain` runs again for every parallel test",
+        "correct": false,
+        "why": "`TestMain` runs once per package."
+      },
+      {
+        "text": "Parallel tests skip `t.Cleanup`",
+        "correct": false,
+        "why": "Cleanups run for parallel tests as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-05g68tbs",
+    "version": 1,
+    "section": "configuration",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `load` take `getenv func(string) string` instead of calling `os.Getenv`?",
+    "hint": "Look at `env(map)`.",
+    "choices": [
+      {
+        "text": "`os.Getenv` is slower than a function value",
+        "correct": false,
+        "why": "Speed is not the reason; testability is."
+      },
+      {
+        "text": "`os.Getenv` is unavailable in `package main`",
+        "correct": false,
+        "why": "`main` itself passes `os.Getenv` to `load`."
+      },
+      {
+        "text": "It lets `load` read Windows variables",
+        "correct": false,
+        "why": "The platform has nothing to do with it."
+      },
+      {
+        "text": "Tests hand it a map and leave the process's environment alone",
+        "correct": true,
+        "why": "Right. Nothing a test sets reaches the process."
+      }
+    ]
+  },
+  {
+    "id": "ex-zprpqzjc",
+    "version": 1,
+    "section": "configuration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With lesson 14's `load`, the door and the manager got the same token. What happened at start-up?",
+    "hint": "Two maps, one of them only for walking.",
+    "choices": [
+      {
+        "text": "A coin toss: map order picked the role",
+        "correct": true,
+        "why": "Right. Go visits a map in a different order on purpose, so the role was a coin toss."
+      },
+      {
+        "text": "`load` refused to start, with a clear message about it",
+        "correct": false,
+        "why": "It accepted it: the test failed with `error <nil>`."
+      },
+      {
+        "text": "The door was always the manager",
+        "correct": false,
+        "why": "Not always: it depended on the order of that start."
+      },
+      {
+        "text": "The server crashed on the first staff request",
+        "correct": false,
+        "why": "Nothing crashed; one role silently replaced the other."
+      }
+    ]
+  },
+  {
+    "id": "ex-tg1caaar",
+    "version": 1,
+    "section": "configuration",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order how the duplicate-token defect was handled in section 05.",
+    "hint": "The test came first.",
+    "items": [
+      "write a case giving the door the manager's token",
+      "run it against lesson 14's `load` and watch it fail",
+      "read the roles from a slice and refuse a token that already has one",
+      "run it again and see `ok`"
+    ]
+  },
+  {
+    "id": "ex-vt3qpmsa",
+    "version": 1,
+    "section": "configuration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestLoadSecretFromFile` writes `from-a-file\\n` into `t.TempDir()`. What is it checking?",
+    "hint": "An editor leaves something at the end.",
+    "choices": [
+      {
+        "text": "That the file is deleted once it is read",
+        "correct": false,
+        "why": "The framework deletes the directory; `load` deletes nothing."
+      },
+      {
+        "text": "The trailing newline is trimmed",
+        "correct": true,
+        "why": "Right. The token must be `from-a-file`, trimmed."
+      },
+      {
+        "text": "That the file has mode 0600",
+        "correct": false,
+        "why": "`load` never checks the mode."
+      },
+      {
+        "text": "That a flag overrides the file",
+        "correct": false,
+        "why": "Secrets have no flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-y06wccff",
+    "version": 1,
+    "section": "races",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `-race`, `TestConcurrentPurchases` printed `ok`. What was wrong with it?",
+    "hint": "Line 35.",
+    "choices": [
+      {
+        "text": "`memStore` sold more than ten seats",
+        "correct": false,
+        "why": "The server sold exactly ten; its mutex held."
+      },
+      {
+        "text": "`wg.Go` started fewer than fifty goroutines",
+        "correct": false,
+        "why": "It started fifty; the race report is about `sold`."
+      },
+      {
+        "text": "The event number 3 does not exist",
+        "correct": false,
+        "why": "The test creates it; `newMemStore` already holds 1 and 2."
+      },
+      {
+        "text": "Fifty goroutines ran `sold++` on one integer with nothing ordering them",
+        "correct": true,
+        "why": "Right. Two goroutines both read 7 and both write 8, and the count comes out low now and then."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1qpgg8z",
+    "version": 1,
+    "section": "races",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which line of `concurrency_test.go` did the race detector report both accesses?",
+    "hint": "The line with `sold++`.",
+    "value": 35,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-p78rqh7f",
+    "version": 1,
+    "section": "races",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the fix for the race in `TestConcurrentPurchases`?",
+    "hint": "One indivisible step.",
+    "choices": [
+      {
+        "text": "Fewer buyers, so the goroutines rarely overlap",
+        "correct": false,
+        "why": "Rarer is still a race; the detector would still find it."
+      },
+      {
+        "text": "A mutex inside `memStore`",
+        "correct": false,
+        "why": "`memStore` already holds one; the race is in the test's own counter."
+      },
+      {
+        "text": "An `atomic.Int64`",
+        "correct": true,
+        "why": "Right. `Add` is one indivisible step, and `Load` reads the total after `Wait`."
+      },
+      {
+        "text": "Running the test without `-race`",
+        "correct": false,
+        "why": "That hides the race; it does not remove it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pgt7ba3j",
+    "version": 1,
+    "section": "races",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statement about the race detector matches section 06?",
+    "hint": "What it watches.",
+    "choices": [
+      {
+        "text": "It needs cgo and sees only races that run",
+        "correct": true,
+        "why": "Right. That is why the test exists to make the concurrent case happen."
+      },
+      {
+        "text": "It reads the source and finds every race in the package",
+        "correct": false,
+        "why": "It watches execution; code that never runs concurrently shows nothing."
+      },
+      {
+        "text": "It belongs in production binaries",
+        "correct": false,
+        "why": "Section 08 keeps it to tests and staging runs because of its cost."
+      },
+      {
+        "text": "It needs a PostgreSQL to compare against",
+        "correct": false,
+        "why": "It needs a C compiler, not a database."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv766mxb",
+    "version": 1,
+    "section": "integration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `testDB` give every test a database with a random name?",
+    "hint": "Section 07's bold sentence.",
+    "choices": [
+      {
+        "text": "PostgreSQL forbids two tests in one database",
+        "correct": false,
+        "why": "It forbids nothing of the kind; isolation is the test's choice."
+      },
+      {
+        "text": "Random names make migrations faster",
+        "correct": false,
+        "why": "The name has no effect on speed."
+      },
+      {
+        "text": "To hide test data from `psql -l`",
+        "correct": false,
+        "why": "The names start with `boxoffice_test_` and are dropped afterwards."
+      },
+      {
+        "text": "Isolation between tests",
+        "correct": true,
+        "why": "Right. Each starts from the migrations and the two seed events."
+      }
+    ]
+  },
+  {
+    "id": "ex-1m66fwp8",
+    "version": 1,
+    "section": "integration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`testDB` registers the drop first and `pool.Close` second. In which order do they run?",
+    "hint": "Cleanups run last-registered first.",
+    "choices": [
+      {
+        "text": "Drop, then close",
+        "correct": false,
+        "why": "Cleanups run in reverse order of registration."
+      },
+      {
+        "text": "Both at once, in two goroutines",
+        "correct": false,
+        "why": "Cleanups run one after another."
+      },
+      {
+        "text": "Close, then drop",
+        "correct": true,
+        "why": "Right. The pool closes first, and `WITH (FORCE)` covers any connection still open."
+      },
+      {
+        "text": "Only the drop; the pool leaks",
+        "correct": false,
+        "why": "`t.Cleanup(pool.Close)` runs too."
+      }
+    ]
+  },
+  {
+    "id": "ex-72wfcvf8",
+    "version": 1,
+    "section": "integration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `TestASaleReachesTheHub` poll `pg_stat_activity` before selling?",
+    "hint": "A notification sent before LISTEN.",
+    "choices": [
+      {
+        "text": "To count how many seats are left",
+        "correct": false,
+        "why": "The seat count comes from the notification, 117."
+      },
+      {
+        "text": "A sale before `listen` has run `LISTEN` is never heard",
+        "correct": true,
+        "why": "Right. Waiting for the fact replaces a sleep that fails on a slow machine."
+      },
+      {
+        "text": "PostgreSQL drops notifications for idle sessions",
+        "correct": false,
+        "why": "An idle session that ran `LISTEN` receives them."
+      },
+      {
+        "text": "To make the test slower and so more realistic",
+        "correct": false,
+        "why": "The wait ends the moment `LISTEN` shows up."
+      }
+    ]
+  },
+  {
+    "id": "ex-ap8yd615",
+    "version": 1,
+    "section": "integration",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `BOXOFFICE_TEST_DATABASE_URL`, what did the last line of the run say?",
+    "hint": "Skipped is not passed.",
+    "choices": [
+      {
+        "text": "`FAIL`",
+        "correct": false,
+        "why": "Skipping is not failing; that is the danger."
+      },
+      {
+        "text": "`SKIP` for the package",
+        "correct": false,
+        "why": "The package line said `ok`."
+      },
+      {
+        "text": "`[no test files]`",
+        "correct": false,
+        "why": "That is for packages without tests."
+      },
+      {
+        "text": "`ok`",
+        "correct": true,
+        "why": "Right. Without `-v`, nothing says two tests did not run, so CI must set the variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nhx36wf",
+    "version": 1,
+    "section": "integration",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The second identical run printed `(cached)`. Why is that a trap for a database test?",
+    "hint": "What goes into the cache key?",
+    "choices": [
+      {
+        "text": "A cached run deletes the test databases",
+        "correct": false,
+        "why": "A cached run runs nothing at all."
+      },
+      {
+        "text": "The cache key covers the code, the flags and the variables read, and never the database's contents",
+        "correct": true,
+        "why": "Right. `-count=1` turns the cache off, and CI always passes it."
+      },
+      {
+        "text": "Cached results expire after a second",
+        "correct": false,
+        "why": "They stay until an input changes."
+      },
+      {
+        "text": "`(cached)` means the test failed earlier",
+        "correct": false,
+        "why": "Only passing results are cached."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vdrdcka",
+    "version": 1,
+    "section": "what-to-run",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What coverage did `go test -count=1 -cover .` report for boxoffice?",
+    "hint": "Section 08's last transcript.",
+    "value": 60.6,
+    "tolerance": 0.05,
+    "unit": "%"
+  },
+  {
+    "id": "ex-cjypd9bh",
+    "version": 1,
+    "section": "what-to-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the lesson read the coverage number?",
+    "hint": "The other way round.",
+    "choices": [
+      {
+        "text": "As a target to raise before every release",
+        "correct": false,
+        "why": "Raising it by testing lines asserts nothing anybody needed."
+      },
+      {
+        "text": "As proof that 60.6% of the code is correct",
+        "correct": false,
+        "why": "A line that ran was not necessarily checked."
+      },
+      {
+        "text": "As the share of tests that passed",
+        "correct": false,
+        "why": "It counts statements, not tests."
+      },
+      {
+        "text": "As a list of what no test has touched",
+        "correct": true,
+        "why": "Right. `go tool cover -html` shows that list."
+      }
+    ]
+  },
+  {
+    "id": "ex-0y3bk5n1",
+    "version": 1,
+    "section": "what-to-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the race detector cost on boxoffice's whole suite?",
+    "hint": "Compare the two `real` lines.",
+    "choices": [
+      {
+        "text": "About double, still two seconds",
+        "correct": true,
+        "why": "Right. For a suite this size the price is nothing."
+      },
+      {
+        "text": "Ten times the time",
+        "correct": false,
+        "why": "The runs took about 0.9 and 2.1 seconds."
+      },
+      {
+        "text": "Nothing measurable on a suite this size",
+        "correct": false,
+        "why": "The time roughly doubled."
+      },
+      {
+        "text": "It failed to finish without a database",
+        "correct": false,
+        "why": "The variable was set and both runs finished `ok`."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5cdh92q",
+    "version": 1,
+    "section": "what-to-run",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each moment to what section 08 runs then.",
+    "hint": "The three habits.",
+    "pairs": [
+      {
+        "left": "on every save",
+        "right": "`go test -run` for the part you are changing"
+      },
+      {
+        "left": "before every commit",
+        "right": "`go vet ./...` and `go test -race ./...`"
+      },
+      {
+        "left": "in CI, on every push",
+        "right": "`go test -race -count=1 ./...` with the database variable set"
+      }
+    ],
+    "right_distractors": [
+      "`go build` only"
+    ]
+  },
+  {
+    "id": "ex-fsaw3t67",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements match this lesson? Choose all that apply.",
+    "hint": "Sections 04, 06 and 07.",
+    "choices": [
+      {
+        "text": "A test's own code runs concurrently too and follows the same rules",
+        "correct": true,
+        "why": "Right. The race in section 06 was in the test."
+      },
+      {
+        "text": "`t.Cleanup` runs only when the test passes",
+        "correct": false,
+        "why": "It runs however the test ends."
+      },
+      {
+        "text": "A skipped integration test prints `ok` without `-v`",
+        "correct": true,
+        "why": "Right. That is why CI sets the variable."
+      },
+      {
+        "text": "`httptest.NewServer` listens on a real port on `127.0.0.1`",
+        "correct": true,
+        "why": "Right. The whole router is served over a real connection."
+      },
+      {
+        "text": "Section 07's tests share one database to save time",
+        "correct": false,
+        "why": "Each gets its own, created and dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-sy1b4kc9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague adds `t.Parallel()` to `TestTheLogHoldsNoToken` and `TestStaffRoutes`. What does the lesson predict?",
+    "hint": "One test swaps a global.",
+    "choices": [
+      {
+        "text": "Nothing changes, since each has its own server",
+        "correct": false,
+        "why": "The servers are separate; the default logger is not."
+      },
+      {
+        "text": "The log test reads lines from the other test's requests",
+        "correct": true,
+        "why": "Right. The default logger is one value for the process."
+      },
+      {
+        "text": "`go test` refuses to compile them",
+        "correct": false,
+        "why": "Both compile; the problem shows at run time."
+      },
+      {
+        "text": "`TestMain` stops discarding the log",
+        "correct": false,
+        "why": "`TestMain` ran once already; parallelism does not undo it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hjjy48n3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what `testDB` does for one test, from the first step to the last.",
+    "hint": "Its cleanups run at the end.",
+    "items": [
+      "create a database with a random name",
+      "migrate it",
+      "open a pool and hand it to the test",
+      "close the pool",
+      "drop the database `WITH (FORCE)`"
+    ]
+  }
+]

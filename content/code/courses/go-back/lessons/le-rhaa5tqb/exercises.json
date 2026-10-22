@@ -1,0 +1,922 @@
+[
+  {
+    "id": "ex-dk45tbpx",
+    "version": 1,
+    "section": "why-migrations",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets a database say which schema changes it has already received?",
+    "hint": "The tool keeps something inside each database.",
+    "choices": [
+      {
+        "text": "The date of the last deploy, kept in the repository's README",
+        "correct": false,
+        "why": "The README knows nothing about a particular database."
+      },
+      {
+        "text": "A table listing the migration numbers applied to it",
+        "correct": true,
+        "why": "Right. Reading it says where that database is."
+      },
+      {
+        "text": "The size of the data directory",
+        "correct": false,
+        "why": "Size says nothing about which changes ran."
+      },
+      {
+        "text": "A comment at the top of schema.sql",
+        "correct": false,
+        "why": "schema.sql ran once by hand and records nothing per database."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jmd6f7g",
+    "version": 1,
+    "section": "why-migrations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A migration added a column, and a week later it turns out to be wrong. Production has written data into it since. What is the usual way out?",
+    "hint": "What would a down migration do to the data?",
+    "choices": [
+      {
+        "text": "Run the down migration in production",
+        "correct": false,
+        "why": "A down that drops the column drops the week's data with it."
+      },
+      {
+        "text": "Edit the old migration file and apply it again",
+        "correct": false,
+        "why": "Databases that already applied it would never run the edit."
+      },
+      {
+        "text": "A new migration that corrects it",
+        "correct": true,
+        "why": "Right. History only moves forward, and the data is kept."
+      },
+      {
+        "text": "Delete the row of that migration from the history table by hand",
+        "correct": false,
+        "why": "Then the tool tries to apply it again over a column that exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hzmqfgv",
+    "version": 1,
+    "section": "why-migrations",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each migration tool to how one migration is written.",
+    "hint": "The table in section 02.",
+    "pairs": [
+      {
+        "left": "golang-migrate",
+        "right": "two files, `.up.sql` and `.down.sql`"
+      },
+      {
+        "left": "goose",
+        "right": "one file with `-- +goose Up` and `-- +goose Down`"
+      },
+      {
+        "left": "lesson 6's way",
+        "right": "`schema.sql`, run once by hand with `psql`"
+      }
+    ],
+    "right_distractors": [
+      "a Go struct read by AutoMigrate"
+    ]
+  },
+  {
+    "id": "ex-5f418dw8",
+    "version": 1,
+    "section": "goose",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In goose, what decides the order in which `00001_events.sql` and `00002_tickets.sql` are applied?",
+    "hint": "Look at the start of each name.",
+    "choices": [
+      {
+        "text": "The time each file was last modified on disk",
+        "correct": false,
+        "why": "goose reads versions from names, not from timestamps on disk."
+      },
+      {
+        "text": "Alphabetical order of the table names inside",
+        "correct": false,
+        "why": "goose never reads the SQL to order files."
+      },
+      {
+        "text": "The number at the front of the name",
+        "correct": true,
+        "why": "Right. It is the migration's version."
+      },
+      {
+        "text": "The order they appear in sqlc.yaml",
+        "correct": false,
+        "why": "sqlc.yaml names a directory, not files in order."
+      }
+    ]
+  },
+  {
+    "id": "ex-dycjnc2h",
+    "version": 1,
+    "section": "goose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `goose up` applied two migrations, `goose_db_version` held three rows. Where did the third come from?",
+    "hint": "Read the version_id column.",
+    "choices": [
+      {
+        "text": "The INSERT of two events in the first migration",
+        "correct": false,
+        "why": "Those rows went into events, not into goose's table."
+      },
+      {
+        "text": "The status command, which records each check it makes",
+        "correct": false,
+        "why": "status reads the table and writes nothing."
+      },
+      {
+        "text": "Version 0, written the first time",
+        "correct": true,
+        "why": "Right. Rows 1 and 2 are the two migrations."
+      },
+      {
+        "text": "sqlc generate",
+        "correct": false,
+        "why": "sqlc reads migration files; it writes Go, not rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrqeyc6p",
+    "version": 1,
+    "section": "goose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`goose down` was run once after `up` had applied versions 1 and 2. What was undone?",
+    "hint": "\\dt answered right after it.",
+    "choices": [
+      {
+        "text": "Both migrations, back to an empty database",
+        "correct": false,
+        "why": "`events` was still listed by `\\dt`."
+      },
+      {
+        "text": "Only version 2",
+        "correct": true,
+        "why": "Right. down undoes the last migration only."
+      },
+      {
+        "text": "Nothing, because down needs a version number",
+        "correct": false,
+        "why": "It reported `OK 00002_tickets.sql`."
+      },
+      {
+        "text": "The rows of events, keeping the table",
+        "correct": false,
+        "why": "Down runs the file's Down SQL, which dropped tickets."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n3yn3jv",
+    "version": 1,
+    "section": "goose",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson drop and recreate the boxoffice database before the first `goose up`, instead of just running it?",
+    "hint": "What does the hand-made database lack?",
+    "choices": [
+      {
+        "text": "It has events and no history",
+        "correct": true,
+        "why": "Right. In production you would mark version 1 as applied instead."
+      },
+      {
+        "text": "goose refuses to connect to a database created with createdb",
+        "correct": false,
+        "why": "It connects to any PostgreSQL database."
+      },
+      {
+        "text": "The tickets table is already there",
+        "correct": false,
+        "why": "tickets is new in this lesson."
+      },
+      {
+        "text": "sqlc needs an empty database to generate",
+        "correct": false,
+        "why": "sqlc needs the tables to exist, the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7bqtpn9",
+    "version": 1,
+    "section": "goose",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "sqlc.yaml now says `schema: ___`, so the numbered files are the one place the schema is written.",
+    "hint": "The directory goose reads too.",
+    "blanks": [
+      {
+        "accept": [
+          "migrations"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k1mkj2vz",
+    "version": 1,
+    "section": "migrations-in-the-binary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `//go:embed migrations/*.sql` give boxoffice?",
+    "hint": "Think of lesson 16's single binary.",
+    "choices": [
+      {
+        "text": "A goose command installed beside it",
+        "correct": false,
+        "why": "The library runs inside boxoffice; no command is needed."
+      },
+      {
+        "text": "The SQL files, compiled in",
+        "correct": true,
+        "why": "Right. No directory has to sit beside the binary."
+      },
+      {
+        "text": "Migrations generated from the Go structs",
+        "correct": false,
+        "why": "That is AutoMigrate's approach in lesson 7."
+      },
+      {
+        "text": "A copy of the database",
+        "correct": false,
+        "why": "Only the files are embedded."
+      }
+    ]
+  },
+  {
+    "id": "ex-74s0tzea",
+    "version": 1,
+    "section": "migrations-in-the-binary",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three copies of boxoffice start at the same moment against one empty database. What does the session locker do?",
+    "hint": "An advisory lock in PostgreSQL.",
+    "choices": [
+      {
+        "text": "One applies them while the other two wait",
+        "correct": true,
+        "why": "Right. When the lock is free, there is nothing left to apply."
+      },
+      {
+        "text": "Each copy applies the migrations in its own transaction, and two fail",
+        "correct": false,
+        "why": "The lock is what prevents three attempts at once."
+      },
+      {
+        "text": "It stops the two later copies from starting at all",
+        "correct": false,
+        "why": "They wait, then start normally."
+      },
+      {
+        "text": "It locks the events table until a restart",
+        "correct": false,
+        "why": "The lock lasts only for the migration run."
+      }
+    ]
+  },
+  {
+    "id": "ex-58akszj4",
+    "version": 1,
+    "section": "migrations-in-the-binary",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "boxoffice is started a second time against a database already at version 2. What does its log show about migrations?",
+    "hint": "The restart capture.",
+    "choices": [
+      {
+        "text": "Both migrations applied again, faster",
+        "correct": false,
+        "why": "Applied migrations are never run twice."
+      },
+      {
+        "text": "An error that the tables already exist",
+        "correct": false,
+        "why": "goose knew from its table that nothing was pending."
+      },
+      {
+        "text": "A line saying the database is behind",
+        "correct": false,
+        "why": "It was at the newest version."
+      },
+      {
+        "text": "Nothing: only the listening line",
+        "correct": true,
+        "why": "Right. There was nothing pending."
+      }
+    ]
+  },
+  {
+    "id": "ex-9am3cz1c",
+    "version": 1,
+    "section": "migrations-in-the-binary",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new index on a table of a hundred million rows takes minutes to build. Why is that a problem for migrating at start-up specifically?",
+    "hint": "What does the server do while migrating?",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses migrations longer than a minute",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "go:embed cannot hold a migration that large",
+        "correct": false,
+        "why": "The file is a few lines; the table is what is large."
+      },
+      {
+        "text": "It answers no health checks meanwhile",
+        "correct": true,
+        "why": "Right. A separate migration step keeps start-up fast."
+      },
+      {
+        "text": "The advisory lock expires after a minute",
+        "correct": false,
+        "why": "The lock lasts as long as the session holds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgds80ks",
+    "version": 1,
+    "section": "migrations-in-the-binary",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changes let old and new copies of boxoffice run against the same schema during a deploy? Choose all that apply.",
+    "hint": "Changes both versions can live with.",
+    "choices": [
+      {
+        "text": "Add a column before the code uses it",
+        "correct": true,
+        "why": "Right. Old code ignores it."
+      },
+      {
+        "text": "Drop a column the old code still reads",
+        "correct": false,
+        "why": "Old copies fail on their next query."
+      },
+      {
+        "text": "Drop a column only after nothing reads it",
+        "correct": true,
+        "why": "Right. Both versions are already past it."
+      },
+      {
+        "text": "Rename a column in one migration while both versions run",
+        "correct": false,
+        "why": "The old code still uses the old name."
+      }
+    ]
+  },
+  {
+    "id": "ex-k83nc6dw",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In psql, the INSERT inside the transaction failed, and then COMMIT was typed. What did PostgreSQL answer?",
+    "hint": "The last lines before the SELECT.",
+    "choices": [
+      {
+        "text": "COMMIT, keeping the UPDATE",
+        "correct": false,
+        "why": "sold stayed at 2, so the UPDATE was not kept."
+      },
+      {
+        "text": "An error asking which statement to keep",
+        "correct": false,
+        "why": "There is no partial commit."
+      },
+      {
+        "text": "WARNING and a partial commit",
+        "correct": false,
+        "why": "Nothing partial survived: sold stayed at 2."
+      },
+      {
+        "text": "ROLLBACK",
+        "correct": true,
+        "why": "Right. A broken transaction is thrown away whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ckckb4k",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pgStore.Sell` write `defer tx.Rollback(ctx)` right after `Begin`, when it also calls `Commit`?",
+    "hint": "Think of every early return.",
+    "choices": [
+      {
+        "text": "An early return discards it",
+        "correct": true,
+        "why": "Right. Otherwise the connection goes back to the pool mid-transaction, holding locks."
+      },
+      {
+        "text": "Rollback after Commit undoes the commit, as a safety check",
+        "correct": false,
+        "why": "After a successful Commit, Rollback does nothing."
+      },
+      {
+        "text": "pgx refuses to commit without a deferred rollback",
+        "correct": false,
+        "why": "pgx has no such rule; the defer is for the error paths."
+      },
+      {
+        "text": "It makes the transaction faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-s590bmef",
+    "version": 1,
+    "section": "transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `s.q().WithTx(tx)` change about the generated `SellSeats` and `InsertTicket`?",
+    "hint": "Lesson 8 section 05.",
+    "choices": [
+      {
+        "text": "They are regenerated with BEGIN and COMMIT inside them",
+        "correct": false,
+        "why": "Nothing is regenerated; only where queries are sent changes."
+      },
+      {
+        "text": "They send their SQL through the transaction's connection",
+        "correct": true,
+        "why": "Right. Same functions, routed through tx."
+      },
+      {
+        "text": "They start retrying on error 40001",
+        "correct": false,
+        "why": "WithTx adds no retries."
+      },
+      {
+        "text": "They take a lock on the events table",
+        "correct": false,
+        "why": "Locks come from the statements, not from WithTx."
+      }
+    ]
+  },
+  {
+    "id": "ex-0072bnh7",
+    "version": 1,
+    "section": "transactions",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a successful `pgStore.Sell` in order.",
+    "hint": "Begin first, Commit last.",
+    "items": [
+      "`s.pool.Begin` takes a connection and sends BEGIN",
+      "`SellSeats` takes the seats if enough are left",
+      "`InsertTicket` records the ticket and returns its id",
+      "`tx.Commit` makes both writes permanent",
+      "The handler answers 201 with the ticket id"
+    ]
+  },
+  {
+    "id": "ex-2pp1ykta",
+    "version": 1,
+    "section": "concurrency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "\"Read, then write\" recorded 27 sold for 50 sales in one run and 17 in the next. What happened to the rest?",
+    "hint": "Many transactions read the same value.",
+    "choices": [
+      {
+        "text": "They were refused with 40001",
+        "correct": false,
+        "why": "The refusal count was 0 at READ COMMITTED."
+      },
+      {
+        "text": "Lost updates: later writes erased earlier ones",
+        "correct": true,
+        "why": "Right. Each wrote the same number plus one."
+      },
+      {
+        "text": "The goroutines that sold them crashed before committing anything at all",
+        "correct": false,
+        "why": "No error was logged; the commits succeeded with stale numbers."
+      },
+      {
+        "text": "The pool ran out of connections",
+        "correct": false,
+        "why": "Requests waited for connections and all ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-cs2qk9ea",
+    "version": 1,
+    "section": "concurrency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At REPEATABLE READ the counts added up (16 sold plus 34 refused) yet 34 buyers were told no. What must code at that level do?",
+    "hint": "SQLSTATE 40001.",
+    "choices": [
+      {
+        "text": "Answer those buyers with 409 Conflict",
+        "correct": false,
+        "why": "There were seats; telling them it is sold out is false."
+      },
+      {
+        "text": "Catch 40001 and run the whole transaction again",
+        "correct": true,
+        "why": "Right. The refusal is a request to retry, not a sold-out answer."
+      },
+      {
+        "text": "Lower the level to READ COMMITTED for those requests",
+        "correct": false,
+        "why": "That brings the lost updates back."
+      },
+      {
+        "text": "Retry only the UPDATE statement",
+        "correct": false,
+        "why": "The read is stale too; the transaction is repeated whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-d6q7r8k7",
+    "version": 1,
+    "section": "concurrency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is boxoffice's `SellSeats` exact under concurrency without FOR UPDATE or a stricter level?",
+    "hint": "Look at where the check is.",
+    "choices": [
+      {
+        "text": "Check and change are one statement",
+        "correct": true,
+        "why": "Right. The second buyer finds seats - sold too small."
+      },
+      {
+        "text": "pgx serialises every query sent by one pool",
+        "correct": false,
+        "why": "A pool runs several queries at once."
+      },
+      {
+        "text": "Go's mutex in pgStore",
+        "correct": false,
+        "why": "pgStore has no mutex; memStore did."
+      },
+      {
+        "text": "Each request gets its own table",
+        "correct": false,
+        "why": "All share the events table."
+      }
+    ]
+  },
+  {
+    "id": "ex-163ckqy1",
+    "version": 1,
+    "section": "concurrency",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of selling a seat to what the race program measured.",
+    "hint": "Four lines per run.",
+    "pairs": [
+      {
+        "left": "read, then write",
+        "right": "fewer than 50 sold, no refusals"
+      },
+      {
+        "left": "the same at REPEATABLE READ",
+        "right": "sold plus refusals adds to 50"
+      },
+      {
+        "left": "SELECT ... FOR UPDATE",
+        "right": "50 sold, transactions queued for the row"
+      },
+      {
+        "left": "one UPDATE",
+        "right": "50 sold, no transaction needed"
+      }
+    ]
+  },
+  {
+    "id": "ex-nn80xr2m",
+    "version": 1,
+    "section": "concurrency",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A transaction refused at REPEATABLE READ for a concurrent update carries SQLSTATE ___.",
+    "hint": "A serialization failure.",
+    "blanks": [
+      {
+        "accept": [
+          "40001"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2e7p467p",
+    "version": 1,
+    "section": "the-pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With MaxConns 2, six one-second queries and a 2.5 s deadline each, why did two of them fail?",
+    "hint": "When did the last two get a connection?",
+    "choices": [
+      {
+        "text": "PostgreSQL limits pg_sleep to two at a time",
+        "correct": false,
+        "why": "The limit was the pool's two connections."
+      },
+      {
+        "text": "Their contexts were cancelled by the first two queries",
+        "correct": false,
+        "why": "Each had its own context with its own deadline."
+      },
+      {
+        "text": "They waited 2 s for a connection, leaving 0.5 s for a 1 s query",
+        "correct": true,
+        "why": "Right. Waiting for the pool spends the query's own deadline."
+      },
+      {
+        "text": "The pool gave up waiting for them",
+        "correct": false,
+        "why": "Stat said 0 gave up waiting; they got connections and ran out of time."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rh2mkh5",
+    "version": 1,
+    "section": "the-pool",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "max_connections is 100. Three copies of boxoffice run with MaxConns 10. How many connections can the three pools hold at most together?",
+    "hint": "Section 07's arithmetic.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-s3p40w4k",
+    "version": 1,
+    "section": "the-pool",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Twenty buyers hit an event with five seats, and fifteen got no answer for five seconds. Which line caused it?",
+    "hint": "A sold-out buyer inside a transaction.",
+    "choices": [
+      {
+        "text": "`SellSeats`, whose UPDATE locks the whole table",
+        "correct": false,
+        "why": "It locks one row and finishes quickly."
+      },
+      {
+        "text": "`InsertTicket`, which waits for the foreign key",
+        "correct": false,
+        "why": "Sold-out buyers never reached the insert."
+      },
+      {
+        "text": "`if _, err := s.Get(ctx, id)`, asking the pool for a second connection while holding one",
+        "correct": true,
+        "why": "Right. Ten holders each waiting for an eleventh: nobody proceeds."
+      },
+      {
+        "text": "`tx.Commit`, which blocks until all twenty finish",
+        "correct": false,
+        "why": "Commits do not wait for other requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-378n785d",
+    "version": 1,
+    "section": "the-pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What ended the stuck requests after five seconds in that run?",
+    "hint": "The rush client had a limit.",
+    "choices": [
+      {
+        "text": "PostgreSQL killed the idle transactions",
+        "correct": false,
+        "why": "Nothing on the database side intervened."
+      },
+      {
+        "text": "WriteTimeout closed the connections",
+        "correct": false,
+        "why": "WriteTimeout is ten seconds and does not cancel contexts."
+      },
+      {
+        "text": "The client gave up, net/http cancelled the request contexts, and the waits returned",
+        "correct": true,
+        "why": "Right. The log shows context canceled after 5.000906 s, as 500s."
+      },
+      {
+        "text": "The pool grew to 20 connections",
+        "correct": false,
+        "why": "MaxConns stayed 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-7j05vhfp",
+    "version": 1,
+    "section": "the-pool",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What rule does the fix in `Sell` follow?",
+    "hint": "q.GetEvent instead of s.Get.",
+    "choices": [
+      {
+        "text": "Inside a transaction, query through it",
+        "correct": true,
+        "why": "Right. Never wait for a second resource from the pool you hold one of."
+      },
+      {
+        "text": "Never call Get from a store method",
+        "correct": false,
+        "why": "Get is fine outside a transaction."
+      },
+      {
+        "text": "Raise MaxConns above the number of buyers",
+        "correct": false,
+        "why": "A bigger pool only moves the threshold; the cycle remains."
+      },
+      {
+        "text": "Commit before checking whether the event exists",
+        "correct": false,
+        "why": "There is nothing to commit on a sold-out path."
+      }
+    ]
+  },
+  {
+    "id": "ex-h9kkh5we",
+    "version": 1,
+    "section": "the-pool",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the fix, how many of the twenty buyers got 409?",
+    "hint": "The last rush.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "buyers"
+  },
+  {
+    "id": "ex-fqy2ptmx",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file holds the transaction that writes the sale and the ticket?",
+    "hint": "The table in section 08.",
+    "choices": [
+      {
+        "text": "`pgstore.go`",
+        "correct": true,
+        "why": "Right. Every query of it goes through the transaction."
+      },
+      {
+        "text": "`migrate.go`, run at start",
+        "correct": false,
+        "why": "migrate.go applies migrations."
+      },
+      {
+        "text": "`events.go`, in the handler",
+        "correct": false,
+        "why": "The handler only calls Store.Sell."
+      },
+      {
+        "text": "`migrations/00002_tickets.sql`",
+        "correct": false,
+        "why": "That file creates the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-539zjjgs",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `schema.sql` deleted in this lesson?",
+    "hint": "Where is the schema written now?",
+    "choices": [
+      {
+        "text": "goose cannot run in a directory that contains it",
+        "correct": false,
+        "why": "goose reads only the migrations directory."
+      },
+      {
+        "text": "It had a syntax error",
+        "correct": false,
+        "why": "It ran fine in lesson 6."
+      },
+      {
+        "text": "go:embed would compile it into the binary by mistake",
+        "correct": false,
+        "why": "The pattern is migrations/*.sql."
+      },
+      {
+        "text": "It became migration 1",
+        "correct": true,
+        "why": "Right. One place for the schema."
+      }
+    ]
+  },
+  {
+    "id": "ex-669jx809",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's handler opens a transaction and, inside it, calls a helper that runs `pool.QueryRow`. Under load the service freezes. What do you change?",
+    "hint": "Section 07's rule.",
+    "choices": [
+      {
+        "text": "Double MaxConns",
+        "correct": false,
+        "why": "The cycle still forms at twice the load."
+      },
+      {
+        "text": "Switch the transaction to REPEATABLE READ",
+        "correct": false,
+        "why": "Isolation does not change how connections are held."
+      },
+      {
+        "text": "Hand it the tx to query through",
+        "correct": true,
+        "why": "Right. One connection per request, no waiting on the pool while holding it."
+      },
+      {
+        "text": "Add a mutex around the handler",
+        "correct": false,
+        "why": "That serialises every request and hides the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bmrj4yg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens when boxoffice starts against an empty database in order.",
+    "hint": "Migrate before the pool.",
+    "items": [
+      "main reads the tokens and DATABASE_URL",
+      "migrate takes the advisory lock and applies 00001 and 00002",
+      "the pool is built with MaxConns 10 and pinged",
+      "the server logs that it is listening"
+    ]
+  }
+]

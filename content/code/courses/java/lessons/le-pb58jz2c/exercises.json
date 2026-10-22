@@ -1,0 +1,521 @@
+[
+  {
+    "id": "ex-38p5r8jf",
+    "version": 1,
+    "section": "returning-this",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes `new Receipt().line(...).line(...)` possible?",
+    "hint": "Look at the last line of `line`.",
+    "choices": [
+      {
+        "text": "`line` ends with `return this;`",
+        "correct": true,
+        "why": "Right: the second call is made on the receipt the first one returned."
+      },
+      {
+        "text": "A special chaining syntax enabled by the `fluent` keyword",
+        "correct": false,
+        "why": "There is no such keyword; it is ordinary method calls on returned values."
+      },
+      {
+        "text": "`Receipt` extending `StringBuilder`",
+        "correct": false,
+        "why": "It extends nothing; it returns itself, as `StringBuilder` does."
+      },
+      {
+        "text": "The `List<String>` field, which keeps the receipt alive between calls",
+        "correct": false,
+        "why": "The list holds the lines; the chain works because of what `line` returns."
+      }
+    ]
+  },
+  {
+    "id": "ex-q8crj59v",
+    "version": 1,
+    "section": "returning-this",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What total did the receipt print, in cents?",
+    "hint": "150 plus 500.",
+    "value": 650,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-dknep64w",
+    "version": 1,
+    "section": "returning-this",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`card.setName(\"Ana\").setNumber(1042)` failed with `void cannot be dereferenced`. What does the message mean?",
+    "hint": "What did `setName` return?",
+    "choices": [
+      {
+        "text": "That `card` is `null`",
+        "correct": false,
+        "why": "That would be a `NullPointerException` at run time; this is a compile error."
+      },
+      {
+        "text": "That `setNumber` does not exist",
+        "correct": false,
+        "why": "It exists on `Card`; the problem is what it was called on."
+      },
+      {
+        "text": "`setName` returned nothing",
+        "correct": true,
+        "why": "Right: `setName` returns `void`, so there is nothing to call `setNumber` on."
+      }
+    ]
+  },
+  {
+    "id": "ex-rgawyszz",
+    "version": 1,
+    "section": "returning-this",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the section advise against making every setter return `this`?",
+    "hint": "Think of tools that read classes by their setters.",
+    "choices": [
+      {
+        "text": "Because returning `this` makes a copy of the object each time",
+        "correct": false,
+        "why": "`return this` returns a reference to the same object; nothing is copied."
+      },
+      {
+        "text": "`java.beans` recognises only `void` setters, and tools built on it would miss the rest",
+        "correct": true,
+        "why": "Right: chaining suits a class meant to be configured in one go, not every bean."
+      },
+      {
+        "text": "Because the compiler forbids a setter with a return value",
+        "correct": false,
+        "why": "It allows it; `Receipt.line` is effectively one."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4t8q065",
+    "version": 1,
+    "section": "builder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `Loan`'s constructor `private`?",
+    "hint": "What would a public one let a caller skip?",
+    "choices": [
+      {
+        "text": "So that `Loan` cannot be extended",
+        "correct": false,
+        "why": "Preventing subclasses is `final`'s job; here the point is the checks."
+      },
+      {
+        "text": "To force `build()`",
+        "correct": true,
+        "why": "Right: every loan goes through `build()` and its checks, because the builder is the only way in."
+      },
+      {
+        "text": "Because nested classes cannot call public constructors",
+        "correct": false,
+        "why": "They can call any; private is chosen to close the other doors."
+      }
+    ]
+  },
+  {
+    "id": "ex-af7dnhq8",
+    "version": 1,
+    "section": "builder",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Loan.of(\"Iracema\").to(\"Ana\").build()` set no period. What did it print?",
+    "hint": "The builder's fields start at their defaults.",
+    "choices": [
+      {
+        "text": "`Iracema to Ana for 0 days`",
+        "correct": false,
+        "why": "`days` starts at 21 in the builder, not at Java's default for an `int`."
+      },
+      {
+        "text": "`Iracema to Ana for 21 days`",
+        "correct": true,
+        "why": "Right: the default period, and no note."
+      },
+      {
+        "text": "An `IllegalStateException`, since `days` was not set",
+        "correct": false,
+        "why": "Only the member is required; the period has a default."
+      }
+    ]
+  },
+  {
+    "id": "ex-4mkf3ngd",
+    "version": 1,
+    "section": "builder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The third loan forgot `to(...)`. When was the mistake caught?",
+    "hint": "The stack trace's first line after the message.",
+    "choices": [
+      {
+        "text": "At compile time, because `member` is required",
+        "correct": false,
+        "why": "The compiler cannot see that a chain left out a call."
+      },
+      {
+        "text": "When the loan was printed",
+        "correct": false,
+        "why": "It was never printed; it was never built."
+      },
+      {
+        "text": "In `build()`, before any `Loan` existed",
+        "correct": true,
+        "why": "Right: `at Loan$Builder.build`, with a message naming the book."
+      },
+      {
+        "text": "In `days(14)`, which checks the member first",
+        "correct": false,
+        "why": "`days` only stores the number; every check is in `build()`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ks1hqnyx",
+    "version": 1,
+    "section": "builder",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Besides `Loan.class`, which class file did `ls Loan*.class` list?",
+    "hint": "A nested class gets a file of its own.",
+    "choices": [
+      {
+        "text": "`Builder.class`",
+        "correct": false,
+        "why": "The outer class's name is part of the file name."
+      },
+      {
+        "text": "`Loan.Builder.class`",
+        "correct": false,
+        "why": "The source writes a dot; the file name uses another character."
+      },
+      {
+        "text": "`Loan$Builder.class`",
+        "correct": true,
+        "why": "Right: outer name, a `$`, nested name."
+      },
+      {
+        "text": "None: a nested class is compiled into `Loan.class`",
+        "correct": false,
+        "why": "Every class, nested or not, gets its own class file."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wcdyj6j",
+    "version": 1,
+    "section": "builder",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the section's table, which situations call for a builder? Choose all that apply.",
+    "hint": "A builder is a second class with every field written twice.",
+    "choices": [
+      {
+        "text": "Several optional fields with sensible defaults",
+        "correct": true,
+        "why": "Yes: each is set by name, or left alone."
+      },
+      {
+        "text": "Two required fields and nothing else",
+        "correct": false,
+        "why": "No: a constructor or a record is simpler."
+      },
+      {
+        "text": "Rules that involve more than one field at once",
+        "correct": true,
+        "why": "Yes: `build()` sees every part together."
+      },
+      {
+        "text": "Any class with a setter",
+        "correct": false,
+        "why": "No: setters and builders answer different needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfft1hsb",
+    "version": 1,
+    "section": "builder",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague suggests replacing the builder with a public constructor `Loan(String book, String member, int days, String note)`. What does the section say goes wrong first?",
+    "hint": "Read the caller's line, not the class.",
+    "choices": [
+      {
+        "text": "Every caller passes `21` and `\"\"` for parts it does not care about, by position",
+        "correct": true,
+        "why": "Right: and nothing says which number is the period."
+      },
+      {
+        "text": "The loan becomes mutable",
+        "correct": false,
+        "why": "A constructor with `final` fields keeps it immutable."
+      },
+      {
+        "text": "The checks become impossible",
+        "correct": false,
+        "why": "A constructor can check its arguments; the problem is the call sites."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3ynz77t",
+    "version": 1,
+    "section": "immutable-chains",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `due.plusDays(7);` on a line of its own, what does `due` hold?",
+    "hint": "The program printed it.",
+    "choices": [
+      {
+        "text": "7 November, seven days later",
+        "correct": false,
+        "why": "That date was computed and thrown away."
+      },
+      {
+        "text": "31 October, as before the call",
+        "correct": true,
+        "why": "Right: `LocalDate` never changes; the result had to be assigned."
+      },
+      {
+        "text": "`null`, because the result was not stored",
+        "correct": false,
+        "why": "`due` keeps the object it already referred to."
+      }
+    ]
+  },
+  {
+    "id": "ex-rn5hzd5n",
+    "version": 1,
+    "section": "immutable-chains",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fix for the renewal is one assignment: `due = due.___(7);`.",
+    "hint": "The method `Dates` called and ignored.",
+    "blanks": [
+      {
+        "accept": [
+          "plusDays"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ynhvszyq",
+    "version": 1,
+    "section": "immutable-chains",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`first.plus(50).plus(50).withReason(...)` ran, and `first` still printed 150 cents. Why?",
+    "hint": "What does `plus` return?",
+    "choices": [
+      {
+        "text": "Because `cents` is `final`, so the additions were refused",
+        "correct": false,
+        "why": "Nothing was refused; each call built a new `Fine` with the new total."
+      },
+      {
+        "text": "`plus` returns a new `Fine`",
+        "correct": true,
+        "why": "Right: `second` is the last of four objects."
+      },
+      {
+        "text": "Because `toString` prints the value from the constructor",
+        "correct": false,
+        "why": "`toString` prints the current fields; `first`'s simply never changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdh0qny9",
+    "version": 1,
+    "section": "immutable-chains",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many `Fine` objects exist after `Fines` builds `first` and `second`?",
+    "hint": "Count `first`, the two in the middle and `second`.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "objects"
+  },
+  {
+    "id": "ex-zmr90c7p",
+    "version": 1,
+    "section": "immutable-chains",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each class to what `x.something()` does to `x`.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "`StringBuilder`",
+        "right": "Changes `x` and returns it"
+      },
+      {
+        "left": "`LocalDate`",
+        "right": "Returns a new object, `x` unchanged"
+      },
+      {
+        "left": "`Loan.Builder`",
+        "right": "Changes the builder and returns it"
+      },
+      {
+        "left": "`String`",
+        "right": "Returns a new string, `x` unchanged"
+      }
+    ]
+  },
+  {
+    "id": "ex-656e3nag",
+    "version": 1,
+    "section": "immutable-chains",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the compiler say nothing about `title.toUpperCase();`?",
+    "hint": "Is ignoring a result legal?",
+    "choices": [
+      {
+        "text": "Because `toUpperCase` changes the string in place",
+        "correct": false,
+        "why": "It returned `IRACEMA` and `iracema` printed; nothing changed in place."
+      },
+      {
+        "text": "Because warnings for ignored results are turned off by default in `javac`",
+        "correct": false,
+        "why": "`javac` has no such check to turn on."
+      },
+      {
+        "text": "Calling a method and discarding what it returns is legal Java",
+        "correct": true,
+        "why": "Right: the language cannot tell a forgotten result from an unwanted one."
+      }
+    ]
+  },
+  {
+    "id": "ex-mftyhg1f",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `Loan.of(\"Central do Brasil\").to(\"Bruno\").days(7).build()` in the order they run.",
+    "hint": "Left to right.",
+    "items": [
+      "`of` creates a builder holding the book",
+      "`to` stores the member and returns the builder",
+      "`days` stores 7 and returns the builder",
+      "`build` checks every rule and creates the `Loan`"
+    ]
+  },
+  {
+    "id": "ex-gaqsrgqy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`BigDecimal total = BigDecimal.ZERO; for (...) { total.add(price); }` always ends at zero. What is wrong?",
+    "hint": "`BigDecimal` sits in one row of the section's table.",
+    "choices": [
+      {
+        "text": "`BigDecimal.ZERO` is a constant and refuses `add`",
+        "correct": false,
+        "why": "`add` works on it and returns a new value."
+      },
+      {
+        "text": "`add` returns a new value and the loop throws it away",
+        "correct": true,
+        "why": "Right: `total = total.add(price);`."
+      },
+      {
+        "text": "The loop needs a `StringBuilder` to collect the sum",
+        "correct": false,
+        "why": "`StringBuilder` builds text, not numbers."
+      },
+      {
+        "text": "`price` is added before the loop starts",
+        "correct": false,
+        "why": "Each iteration calls `add`; each result is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-wt4xv9zb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Receipt.line` changes the receipt and returns it. A colleague calls `receipt.line(\"fee\", 150);` on a line of its own. Is the fee recorded?",
+    "hint": "Which kind of chain is the receipt?",
+    "choices": [
+      {
+        "text": "Yes: `line` changed the receipt",
+        "correct": true,
+        "why": "Right: ignoring `this` loses nothing, unlike ignoring a new object."
+      },
+      {
+        "text": "No: like `plusDays`, the result has to be assigned",
+        "correct": false,
+        "why": "That is the immutable kind; the receipt is the other."
+      },
+      {
+        "text": "No: a chain must have at least two calls",
+        "correct": false,
+        "why": "One call is a chain of one, and it runs normally."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7an7znk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a fluent interface?",
+    "hint": "It is a design, not a keyword.",
+    "choices": [
+      {
+        "text": "An `interface` whose methods all have default bodies",
+        "correct": false,
+        "why": "The word interface here means a class's surface, not the Java `interface`."
+      },
+      {
+        "text": "Calls that chain into one expression",
+        "correct": true,
+        "why": "Right: each method returns an object for the next call."
+      },
+      {
+        "text": "A class whose methods take no parameters",
+        "correct": false,
+        "why": "`line` and `days` take parameters and chain fine."
+      }
+    ]
+  }
+]

@@ -1,0 +1,2491 @@
+[
+  {
+    "id": "ex-58gg1h7w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A colleague copies a `.class` file compiled on a Mac onto a Linux server with the same Java release. What happens when the server runs it?",
+    "hint": "What does `javac` write, and for which machine?",
+    "choices": [
+      {
+        "text": "It fails, because the bytecode holds the Mac processor's instructions",
+        "correct": false,
+        "why": "Bytecode holds no processor's instructions; it is for the JVM, which is what differs between machines."
+      },
+      {
+        "text": "It runs, because the class file is for the JVM and the server has one",
+        "correct": true,
+        "why": "Right: the same class file runs on any JVM of that release or later."
+      },
+      {
+        "text": "It runs only after `javac` is run again on the server",
+        "correct": false,
+        "why": "Recompiling is needed when the release is older, not when the operating system differs."
+      },
+      {
+        "text": "It runs in the interpreter only, since the JIT needs the original machine",
+        "correct": false,
+        "why": "The JIT compiles for whichever processor the JVM is running on, at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-10abrefr",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Java 21's class files carry major version 65. Which major version does a class compiled with `--release 11` carry?",
+    "hint": "The major version moves by one per release.",
+    "value": 55,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1xmr4scg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On an Ubuntu 24.04 machine set up as the course does, a build tool reports Java 21 although `java -version` says 25. What is the likeliest cause?",
+    "hint": "Which variable does such a tool read before `/usr/bin/java`?",
+    "choices": [
+      {
+        "text": "`update-alternatives` switched back to 21 after Maven was installed",
+        "correct": false,
+        "why": "Then `java -version` would say 21 as well; it said 25."
+      },
+      {
+        "text": "The JDK 25 package lacks a compiler, so the tool fell back to 21",
+        "correct": false,
+        "why": "`openjdk-25-jdk` carries `javac`; and 21 here is a runtime with no compiler at all."
+      },
+      {
+        "text": "`JAVA_HOME` is set to `/usr/lib/jvm/default-java`, which points at 21",
+        "correct": true,
+        "why": "Right: `default-java` is the archive's default, 21, and tools such as Maven prefer `JAVA_HOME`."
+      },
+      {
+        "text": "The project's class files were compiled with `--release 21`",
+        "correct": false,
+        "why": "`--release` changes what is written, not which Java the tool runs on."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmxvaj4g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Classes were compiled with `javac -d build Report.java`. Which command runs `Report` from the source directory?",
+    "hint": "`java` needs to be told where the classes are, and then a class name.",
+    "choices": [
+      {
+        "text": "`java build/Report.class`",
+        "correct": false,
+        "why": "`java` takes a class name, not a file path; it would look for a class called `build/Report.class`."
+      },
+      {
+        "text": "`java -cp build Report`",
+        "correct": true,
+        "why": "Right: the class path names the directory, and `Report` is the class to start."
+      },
+      {
+        "text": "`java Report`, because `-d` remembers where it wrote the classes",
+        "correct": false,
+        "why": "Nothing is remembered; without `-cp` the class path is the current directory, where there is no `Report.class`."
+      },
+      {
+        "text": "`java -d build Report`",
+        "correct": false,
+        "why": "`-d` is the compiler's option for where to write; `java` uses `-cp` to say where to read."
+      }
+    ]
+  },
+  {
+    "id": "ex-rx2cmvvf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A script runs a Java program and checks `$?` afterwards. The program found nothing to do and called `System.exit(0)`. What does the script see?",
+    "hint": "Which number means success, by convention?",
+    "choices": [
+      {
+        "text": "1, because the program stopped early",
+        "correct": false,
+        "why": "Stopping early is not failing; the status is the number passed to `exit`."
+      },
+      {
+        "text": "Nothing: `$?` is only set when a program throws an exception",
+        "correct": false,
+        "why": "`$?` holds the status of every command that finishes, Java or not."
+      },
+      {
+        "text": "0, which the script reads as success",
+        "correct": true,
+        "why": "Right: the number given to `System.exit` is the status, and 0 means success."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ppc9zhn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A job runs `java Report.java` a thousand times a day, and each run takes about a second where a compiled class took a fifth of one. Where does the difference go?",
+    "hint": "What does source-file mode do before it runs anything?",
+    "choices": [
+      {
+        "text": "Into starting the compiler and compiling the file in memory, on every run",
+        "correct": true,
+        "why": "Right: nothing is written to disk, so every run pays for the compiler again."
+      },
+      {
+        "text": "Into the program itself, which runs more slowly when started from source",
+        "correct": false,
+        "why": "Once compiled, the bytecode is the same; the program runs at the same speed."
+      },
+      {
+        "text": "Into the JIT, which is switched off in source-file mode",
+        "correct": false,
+        "why": "The JIT works the same way; the extra time is spent before `main` starts."
+      },
+      {
+        "text": "Into writing `Report.class` to disk before running it",
+        "correct": false,
+        "why": "Source-file mode writes nothing: `ls` showed no class file afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6gmmgt8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Following Java's conventions, which of these names is a constant?",
+    "hint": "Constants have a case of their own.",
+    "choices": [
+      {
+        "text": "`maxLoans`",
+        "correct": false,
+        "why": "camelCase marks a method, a variable or a parameter."
+      },
+      {
+        "text": "`MaxLoans`",
+        "correct": false,
+        "why": "PascalCase marks a type: a class, interface, enum or record."
+      },
+      {
+        "text": "`maxloans`",
+        "correct": false,
+        "why": "All lower case, run together, is how a package is named."
+      },
+      {
+        "text": "`MAX_LOANS`",
+        "correct": true,
+        "why": "Right: UPPER_SNAKE_CASE is for `static final` constants."
+      }
+    ]
+  },
+  {
+    "id": "ex-bhhq8yzh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`Catalogue.java` declares `public class Inventory`. What happens at `javac Catalogue.java`?",
+    "hint": "Of the naming rules, only one is enforced by the compiler.",
+    "choices": [
+      {
+        "text": "It compiles and writes `Catalogue.class`",
+        "correct": false,
+        "why": "Class files are named after the class, never after the source file."
+      },
+      {
+        "text": "It refuses: a public class must be in a file named after it",
+        "correct": true,
+        "why": "Right: the compiler asks for `Inventory.java`, and that rule is not a style choice."
+      },
+      {
+        "text": "It compiles, with a warning that the file name breaks the naming convention for classes",
+        "correct": false,
+        "why": "Conventions produce no warnings; this one is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvwj6dze",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A counter of page views is declared `int` and has reached 2,147,483,647. What does the next `views++` leave in it?",
+    "hint": "An `int` has 32 bits, and nothing checks the arithmetic.",
+    "choices": [
+      {
+        "text": "2,147,483,648, because Java widens it to `long` when needed",
+        "correct": false,
+        "why": "Java never changes a variable's type; the sum is computed and stored as an `int`."
+      },
+      {
+        "text": "An `ArithmeticException`, thrown by the increment",
+        "correct": false,
+        "why": "Plain arithmetic on `int` never throws; only methods such as `Math.addExact` do."
+      },
+      {
+        "text": "-2,147,483,648, the smallest `int`",
+        "correct": true,
+        "why": "Right: it wraps round silently, which is why a count that can pass two billion is a `long`."
+      },
+      {
+        "text": "It stays at 2,147,483,647, the largest value",
+        "correct": false,
+        "why": "Stopping at the largest value is what a cast from a huge `double` does; `int` arithmetic wraps."
+      }
+    ]
+  },
+  {
+    "id": "ex-sxeyhcxg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two `Integer` variables hold the member ids 4021 and 4021, read from two different files. A test with ids under 100 passed. Why does `if (idA == idB)` now take the wrong branch?",
+    "hint": "What does `==` compare when both sides are objects?",
+    "choices": [
+      {
+        "text": "Because `==` on `Integer` compares the values only up to 1000",
+        "correct": false,
+        "why": "There is no such limit; `==` on objects compares references at every value."
+      },
+      {
+        "text": "`==` compares references, and only values from -128 to 127 share a cached object",
+        "correct": true,
+        "why": "Right: small values happened to be the same object, which hid the bug; `equals` compares the values."
+      },
+      {
+        "text": "Because reading from a file adds an invisible character to each id",
+        "correct": false,
+        "why": "The values are equal; `idA.equals(idB)` would say `true`."
+      },
+      {
+        "text": "Because large `Integer` values are unboxed to `long`, which `==` refuses",
+        "correct": false,
+        "why": "No unboxing happens when both sides are `Integer`; that is the whole problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhvt2hw7",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "`var pages = 256;` declares a variable of type `___`, and nothing assigned to it later can change that.",
+    "hint": "A whole-number literal with no suffix.",
+    "blanks": [
+      {
+        "accept": [
+          "int"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gycgbf50",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A method declares `double total;` and assigns it inside an `if` and inside its `else`, then prints it. Does it compile?",
+    "hint": "The compiler checks paths, not values.",
+    "choices": [
+      {
+        "text": "Yes: every path to the print assigns `total` first",
+        "correct": true,
+        "why": "Right: definite assignment holds on both branches, so the read is allowed."
+      },
+      {
+        "text": "No: a local must be given a value where it is declared",
+        "correct": false,
+        "why": "Assigning later is fine, as long as every path does it before the read."
+      },
+      {
+        "text": "Yes, and it would also compile with the `else` removed, since `total` defaults to 0.0",
+        "correct": false,
+        "why": "Locals get no default; without the `else` there is a path that reads it unassigned, and that is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-8wy0ab6x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A recursive method fails with `StackOverflowError` after about 23,000 calls. A colleague raises `-Xss` to 4m and it reaches about 100,000. What does that fix?",
+    "hint": "What does `-Xss` size, and what does an endless chain of calls need?",
+    "choices": [
+      {
+        "text": "Everything: a bigger heap gives the objects in each frame more room",
+        "correct": false,
+        "why": "`-Xss` sizes each thread's stack, not the heap; and objects live on the heap anyway."
+      },
+      {
+        "text": "Nothing, if the recursion never ends; it only moves where it fails",
+        "correct": true,
+        "why": "Right: a chain that never returns fills any stack, and a bigger one only delays the error."
+      },
+      {
+        "text": "The cause, because the default stack is too small for any recursion",
+        "correct": false,
+        "why": "Recursion that ends fits the default stack easily; the default reached 23,254 frames."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgg0r6q4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which of these assignments compiles without a cast?",
+    "hint": "Java converts by itself only in the direction that cannot overflow.",
+    "choices": [
+      {
+        "text": "`int n = 3.0;`",
+        "correct": false,
+        "why": "`double` to `int` narrows, and the compiler refuses it even though 3.0 fits."
+      },
+      {
+        "text": "`byte b = someInt;`",
+        "correct": false,
+        "why": "`int` to `byte` narrows; it needs `(byte)`."
+      },
+      {
+        "text": "`long total = someInt;`",
+        "correct": true,
+        "why": "Right: `int` to `long` widens, and every `int` fits."
+      },
+      {
+        "text": "`boolean ok = 1;`",
+        "correct": false,
+        "why": "`boolean` converts to nothing and nothing converts to it; `1` is not `true` in Java."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhv31xcq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A loop does `short stock = 0;` and then `stock += 40_000;` once. It compiles. What is wrong?",
+    "hint": "What does a compound operator add that `stock = stock + 40_000` would not?",
+    "choices": [
+      {
+        "text": "Nothing: `+=` checks the range and would have refused a value that does not fit",
+        "correct": false,
+        "why": "No check happens; the compound operator's hidden cast keeps the low bits silently."
+      },
+      {
+        "text": "It throws `ArithmeticException` at run time, because 40,000 does not fit in a `short`",
+        "correct": false,
+        "why": "Casts never throw; the result is a wrong number, not an exception."
+      },
+      {
+        "text": "`+=` hides a cast back to `short`, so 40,000 is stored as a negative number",
+        "correct": true,
+        "why": "Right: 40,000 is above 32,767, and the hidden cast keeps the low 16 bits: -25,536."
+      }
+    ]
+  },
+  {
+    "id": "ex-9z9nwpx9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "What does `(byte) 300` evaluate to? A `byte` holds -128 to 127, and a narrowing cast keeps the low bits.",
+    "hint": "Subtract 256 until the number fits.",
+    "value": 44,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3q2xdqxf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`String code = \" ab-12 \"; code.strip(); code.toUpperCase();` and then `System.out.println(\"[\" + code + \"]\")`. What is printed?",
+    "hint": "Where did the results of the two calls go?",
+    "choices": [
+      {
+        "text": "`[AB-12]`",
+        "correct": false,
+        "why": "That would need `code = code.strip().toUpperCase();`: both results were thrown away."
+      },
+      {
+        "text": "`[ ab-12 ]`",
+        "correct": true,
+        "why": "Right: a `String` never changes, and each call returned a new string nobody kept."
+      },
+      {
+        "text": "`[ AB-12 ]`",
+        "correct": false,
+        "why": "`toUpperCase` did not change `code` either; neither call did."
+      },
+      {
+        "text": "`[ab-12]`",
+        "correct": false,
+        "why": "`strip` returned a new string as well, and it was not assigned."
+      }
+    ]
+  },
+  {
+    "id": "ex-zegdpgx4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program reads a member's name from a file into `name` and tests `name == \"Ana\"`. The file says Ana. Why can the test be `false`?",
+    "hint": "Where does a string built while the program runs live?",
+    "choices": [
+      {
+        "text": "Because `==` on strings is case-sensitive and the file may differ in case",
+        "correct": false,
+        "why": "The case matches here; `equals` is case-sensitive too and would say `true`."
+      },
+      {
+        "text": "Because strings read from files are stored in another encoding",
+        "correct": false,
+        "why": "Encoding decides the characters, and these are the same three characters."
+      },
+      {
+        "text": "`==` compares references, and a string read at run time is a new object",
+        "correct": true,
+        "why": "Right: only literals share one object; `name.equals(\"Ana\")` compares the characters."
+      }
+    ]
+  },
+  {
+    "id": "ex-jyt7zka5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To build a long string in a loop without copying everything so far on every turn, append to a `___` and call `toString()` once at the end.",
+    "hint": "A mutable buffer of characters.",
+    "blanks": [
+      {
+        "accept": [
+          "StringBuilder",
+          "java.lang.StringBuilder",
+          "StringBuffer"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0ep7bscm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A shop's checkout adds prices held in `double`s and compares the total with `==` against the amount the customer was quoted. Sometimes equal amounts compare unequal. What is the sound fix?",
+    "hint": "Money wants exact decimal arithmetic.",
+    "choices": [
+      {
+        "text": "Round both sides with `Math.round` before comparing",
+        "correct": false,
+        "why": "`Math.round` gives whole units, so two prices that differ by cents would compare equal."
+      },
+      {
+        "text": "Hold amounts as `long` cents, or as `BigDecimal` built from strings",
+        "correct": true,
+        "why": "Right: both are exact, and the comparison then means what it says."
+      },
+      {
+        "text": "Use `float` instead of `double`, which has fewer digits to disagree on",
+        "correct": false,
+        "why": "`float` has the same binary fractions with fewer bits; it disagrees sooner, not later."
+      },
+      {
+        "text": "Build each `BigDecimal` from the `double` price, `new BigDecimal(price)`",
+        "correct": false,
+        "why": "That records the `double`'s binary error exactly, all 55 digits of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-vf2sccyg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "What does `Math.floorMod(-7, 3)` return?",
+    "hint": "`floorDiv(-7, 3)` rounds -2.33 down, to -3.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-aqyvmk4r",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these evaluate to `true`? Choose all that apply.",
+    "hint": "NaN is equal to nothing, itself included.",
+    "choices": [
+      {
+        "text": "`0.1 + 0.2 == 0.3`",
+        "correct": false,
+        "why": "The sum is 0.30000000000000004 and the literal sits a hair below three tenths."
+      },
+      {
+        "text": "`Double.isNaN(0.0 / 0)`",
+        "correct": true,
+        "why": "Yes: `0.0 / 0` is NaN, and `isNaN` is the way to ask."
+      },
+      {
+        "text": "`0.0 == -0.0`",
+        "correct": true,
+        "why": "Yes: the two zeros compare equal, although `1 / -0.0` gives `-Infinity`."
+      },
+      {
+        "text": "`Math.abs(Integer.MIN_VALUE) > 0`",
+        "correct": false,
+        "why": "Its positive twin does not fit in an `int`, so the result is still negative."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0d2rsgz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`int[] backup = shelf;` is meant to keep a copy before `shelf` is sorted. After `Arrays.sort(shelf)`, what does `backup` hold?",
+    "hint": "An array variable holds a reference.",
+    "choices": [
+      {
+        "text": "The sorted values, because both names refer to one array",
+        "correct": true,
+        "why": "Right: assignment copied the reference; `Arrays.copyOf` makes a second array."
+      },
+      {
+        "text": "The original order, because assignment copies the elements",
+        "correct": false,
+        "why": "Assignment copies the reference only; no second array exists."
+      },
+      {
+        "text": "Nothing: `sort` gives `shelf` a new array and `backup` still points at the old one, emptied",
+        "correct": false,
+        "why": "`sort` works in place on the one array; nothing is emptied."
+      }
+    ]
+  },
+  {
+    "id": "ex-njjnb9vm",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put these in the order the steps happen when `int[][] rows = new int[2][]; rows[0] = new int[3];` runs and `rows[1].length` is then read.",
+    "hint": "The outer array comes first, and its rows start empty.",
+    "items": [
+      "An outer array of two elements is created, both `null`",
+      "A row of three zeros is created and stored at index 0",
+      "`rows[1]` is read and found to be `null`",
+      "A `NullPointerException` is thrown"
+    ]
+  },
+  {
+    "id": "ex-et8vf4gm",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "A classic `switch` on `\"poetry\"` has `case \"novel\"` with a `break`, `case \"poetry\"` with no `break`, `case \"history\"` with a `break`, and `default`. Put what happens in order.",
+    "hint": "A `case` is a label to jump to, not a box.",
+    "items": [
+      "Jump straight to the `case \"poetry\"` label",
+      "Run the poetry statements",
+      "Fall through and run the history statements",
+      "Reach `break` and leave the `switch`"
+    ]
+  },
+  {
+    "id": "ex-j5scnkpf",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A method receives `int[] prices` and must add 10 to every price in the array. Which loop does the job?",
+    "hint": "The loop variable of a for-each holds what, exactly?",
+    "choices": [
+      {
+        "text": "`for (int p : prices) { p = p + 10; }`",
+        "correct": false,
+        "why": "It compiles and changes nothing: `p` is a copy of each element, and the array keeps its old values."
+      },
+      {
+        "text": "`for (int i = 0; i < prices.length; i++) { prices[i] += 10; }`",
+        "correct": true,
+        "why": "Right: writing back needs the position, and the counting `for` is the loop that has it."
+      },
+      {
+        "text": "`for (int i = 0; i <= prices.length; i++) { prices[i] += 10; }`",
+        "correct": false,
+        "why": "`<=` runs one pass too many and reads one place past the end, which throws `ArrayIndexOutOfBoundsException`."
+      },
+      {
+        "text": "`do { prices[0] += 10; } while (false);`",
+        "correct": false,
+        "why": "That runs once and touches only the first element."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2tt358c",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`for (int i = 0; i < 2; i++) { body(); }` runs to the end. Put the first five things it does in the order they happen.",
+    "hint": "The first part of the header runs once; the third runs after each pass.",
+    "items": [
+      "`int i = 0`",
+      "the test `i < 2`, true",
+      "`body()`",
+      "`i++`",
+      "the test `i < 2` again"
+    ]
+  },
+  {
+    "id": "ex-gw8ka0ch",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "`Book a = new Book(); Book b = a; b.title = \"X\";` What does `a.title` hold afterwards?",
+    "hint": "How many times did `new` run?",
+    "choices": [
+      {
+        "text": "`null`, because only `b` was given a title",
+        "correct": false,
+        "why": "`b` and `a` lead to one object, so a title set through either is the object's title."
+      },
+      {
+        "text": "Whatever `a` had before, since `b = a` copied the book",
+        "correct": false,
+        "why": "Assignment copies the reference, never the object; there was only ever one book."
+      },
+      {
+        "text": "`\"X\"`",
+        "correct": true,
+        "why": "Right: one `new`, one object, two references to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mztj4wx6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "On the course's JVM a `Book[1000]` took 4,016 bytes: a 16-byte header and one 4-byte reference per slot. How many bytes does a `Book[500]` take?",
+    "hint": "The array holds references, not books.",
+    "value": 2016,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-b29yavja",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A `NullPointerException` says `Cannot read field \"title\" because \"<local3>\" is null`. Why a number instead of the variable's name, and how do you get the name?",
+    "hint": "What does `javac` keep in a class file by default?",
+    "choices": [
+      {
+        "text": "Locals were compiled without names; `javac -g` keeps them",
+        "correct": true,
+        "why": "Right: without that information the JVM has only numbers for the locals, and Maven compiles with it by default."
+      },
+      {
+        "text": "The variable was declared with `var`, which has no name at run time",
+        "correct": false,
+        "why": "`var` changes nothing in the class file; the numbering comes from the missing debug information."
+      },
+      {
+        "text": "The object was already collected; run with a larger heap",
+        "correct": false,
+        "why": "A `null` reference never led to an object, so there was nothing to collect."
+      },
+      {
+        "text": "The JVM hides names for security; there is no way to see them",
+        "correct": false,
+        "why": "They are shown as soon as the class file carries them, as `-g` demonstrates."
+      }
+    ]
+  },
+  {
+    "id": "ex-3j888z6x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A class has a field `int loans;` and a method with a local variable `int loans;`. Neither is assigned before being read. What happens?",
+    "hint": "One of the two is checked by the compiler.",
+    "choices": [
+      {
+        "text": "Both read 0, because every `int` starts at zero",
+        "correct": false,
+        "why": "Only the field does; a local has no default at all."
+      },
+      {
+        "text": "Both fail to compile, because neither was initialised",
+        "correct": false,
+        "why": "A field always has a value, so reading it compiles; the JVM zeroes every new object."
+      },
+      {
+        "text": "Reading the field gives 0; reading the local does not compile",
+        "correct": true,
+        "why": "Right: the compiler can check one method's paths, and not every place that sets a field."
+      }
+    ]
+  },
+  {
+    "id": "ex-ccr6nern",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A constructor's parameter is called `title`, like the field. To store the parameter in the field, the constructor writes `___.title = title;`.",
+    "hint": "The object being built.",
+    "blanks": [
+      {
+        "accept": [
+          "this"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-yt482af4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team adds `Book(String isbn, String title)` to a class that had no constructor. Code elsewhere that says `new Book()` now fails to compile. Why?",
+    "hint": "Where did `Book()` come from before?",
+    "choices": [
+      {
+        "text": "Two constructors may not exist in one class",
+        "correct": false,
+        "why": "A class may have as many as it likes, as long as their parameter lists differ."
+      },
+      {
+        "text": "The new constructor must call `this()` on its first line",
+        "correct": false,
+        "why": "`this(...)` is optional and calls another constructor of the same class; nothing requires it."
+      },
+      {
+        "text": "Fields declared without an initialiser now make `new Book()` illegal",
+        "correct": false,
+        "why": "Fields keep their defaults whatever constructors exist; the missing piece is the constructor itself."
+      },
+      {
+        "text": "`Book()` is added only when no constructor is declared",
+        "correct": true,
+        "why": "Right: declaring one removed the free one, and the error lists the constructors that remain."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ta1qy15",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A field is declared with no access modifier in class `lib.Shelf`. Which class can read it?",
+    "hint": "Writing nothing is a level of its own.",
+    "choices": [
+      {
+        "text": "A subclass of `Shelf` in the package `app`",
+        "correct": false,
+        "why": "Package-private does not reach subclasses in other packages; that is what `protected` adds."
+      },
+      {
+        "text": "`lib.Inside`, another class in the package `lib`",
+        "correct": true,
+        "why": "Right: no modifier means package-private, open to every class of the same package and to nothing else."
+      },
+      {
+        "text": "Any class that writes `import lib.Shelf;`",
+        "correct": false,
+        "why": "An import only shortens a name; it grants no access."
+      },
+      {
+        "text": "Only `Shelf` itself, as with `private`",
+        "correct": false,
+        "why": "That is `private`; package-private also opens the field to the rest of the package."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnddb259",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each access modifier with the widest group of classes it lets in.",
+    "hint": "The four levels, from narrowest to widest.",
+    "pairs": [
+      {
+        "left": "`private`",
+        "right": "The class that declares the member"
+      },
+      {
+        "left": "no modifier",
+        "right": "Every class in the same package"
+      },
+      {
+        "left": "`protected`",
+        "right": "The same package, plus subclasses elsewhere"
+      },
+      {
+        "left": "`public`",
+        "right": "Every class anywhere"
+      }
+    ],
+    "right_distractors": [
+      "Every class that imports the class"
+    ]
+  },
+  {
+    "id": "ex-v8awp879",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A `Branch` class counts loans in `static int booksOnLoan`. Three branches lend 2, 1 and 4 books. What does `norte.booksOnLoan` print, for the branch that lent 1?",
+    "hint": "How many copies of a static field exist?",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-kjhdfgt6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Limits.MAX_LOANS` is `static final int` and was changed from 3 to 5. Only `Limits.java` was recompiled, and `Report`, which prints the limit, still prints 3. What does that tell you?",
+    "hint": "Look at what `javap -c Report` would show where the limit is used.",
+    "choices": [
+      {
+        "text": "The JVM cached the old `Limits.class` from the previous run",
+        "correct": false,
+        "why": "Each run loads the class files from disk afresh; `Report` simply never asks `Limits` for the value."
+      },
+      {
+        "text": "`final` fields can only be changed by restarting the machine",
+        "correct": false,
+        "why": "Nothing about the machine is involved; recompiling `Report` gives 5."
+      },
+      {
+        "text": "The constant 3 was copied into `Report`'s class file when it was compiled",
+        "correct": true,
+        "why": "Right: a compile-time constant is inlined into its users, so every class that uses it must be compiled again."
+      },
+      {
+        "text": "A `static` field is read through an object, and no `Limits` object was made",
+        "correct": false,
+        "why": "Static fields need no object, and reading through the class name works; the value never left `Report`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ha4vk6qn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Inside `public static void main`, the call `greet();` fails with `non-static method greet() cannot be referenced from a static context`. `greet` prints the field `greeting`. What is the fix that keeps the design sound?",
+    "hint": "Does `greet` need an object's data?",
+    "choices": [
+      {
+        "text": "Make an object first, then call `greet()` on it",
+        "correct": true,
+        "why": "Right: `greet` needs a greeting, so it needs the object that has one."
+      },
+      {
+        "text": "Make `greet` static",
+        "correct": false,
+        "why": "Then it cannot read `greeting` either, which then has to be static too, and soon everything is shared."
+      },
+      {
+        "text": "Write `this.greet();` instead",
+        "correct": false,
+        "why": "A static method has no `this`, so that fails for the same reason."
+      },
+      {
+        "text": "Turn `main` into an instance method, as Java 21 allows",
+        "correct": false,
+        "why": "Java 21 does not allow it: instance `main` methods come with Java 25's compact source files."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmwk8ez2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A field is declared `final List<String> titles = new ArrayList<>();`. Which line compiles?",
+    "hint": "What exactly does `final` fix?",
+    "choices": [
+      {
+        "text": "`titles.clear();`",
+        "correct": true,
+        "why": "Right: `final` fixes which list the field leads to, not what the list holds."
+      },
+      {
+        "text": "`titles = new ArrayList<>();`",
+        "correct": false,
+        "why": "That assigns the field a second time, which `final` refuses."
+      },
+      {
+        "text": "`titles = null;`",
+        "correct": false,
+        "why": "Also a second assignment; `null` is a value like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-kt1nhrv4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`String branch = \"Centro\";` is read inside an anonymous class, and later in the method `branch = \"Norte\";` is added. The compiler now refuses the anonymous class. What problem is it preventing?",
+    "hint": "What does the anonymous object keep: the variable, or its value?",
+    "choices": [
+      {
+        "text": "Two threads writing `branch` at once",
+        "correct": false,
+        "why": "No thread is involved; the rule holds in a program with one."
+      },
+      {
+        "text": "A `String` being changed, which strings do not allow",
+        "correct": false,
+        "why": "The string never changes; `branch` would lead to a different string."
+      },
+      {
+        "text": "The anonymous class outliving `main` and reading freed memory",
+        "correct": false,
+        "why": "Java has no freed memory to read; the copy is exactly what lets the object outlive the method safely."
+      },
+      {
+        "text": "A copy taken at creation drifting from the variable",
+        "correct": true,
+        "why": "Right: the object stores the value it saw; if the variable could change, the two would drift apart in silence."
+      }
+    ]
+  },
+  {
+    "id": "ex-06t8qxxe",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these does the compiler refuse? Choose all that apply.",
+    "hint": "`final` on a method, a class and a field each forbids one thing.",
+    "choices": [
+      {
+        "text": "`class MyString extends String { }`",
+        "correct": true,
+        "why": "Yes: `String` is a final class, and no class may extend it."
+      },
+      {
+        "text": "A subclass declaring its own version of a `final` method",
+        "correct": true,
+        "why": "Yes: a final method cannot be overridden."
+      },
+      {
+        "text": "A subclass calling a `final` method it inherited",
+        "correct": false,
+        "why": "No: `final` stops a method being replaced, not being called."
+      },
+      {
+        "text": "A constructor that ends without assigning a blank `final` field",
+        "correct": true,
+        "why": "Yes: every constructor must set a blank final, and the error points at its closing brace."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aa8mj4c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A program hands thousands of small `Card` objects to a long-lived cache, and finds that every `Member` they came from also stays in memory. `Card` is declared inside `Member`. What is the likely cause, and the fix?",
+    "hint": "What did `javap -p` show inside an inner class?",
+    "choices": [
+      {
+        "text": "The cache keeps its own copy of every `Member`; marking `Member` final stops it",
+        "correct": false,
+        "why": "Nothing is copied, and `final` on a class has nothing to do with what stays reachable."
+      },
+      {
+        "text": "Garbage collection skips nested classes; move `Card` to its own file",
+        "correct": false,
+        "why": "The collector treats every class alike; a separate file would help only by removing the hidden reference."
+      },
+      {
+        "text": "`Card` is inner, its hidden field holds the member; make it `static`",
+        "correct": true,
+        "why": "Right: `this$0` keeps the outer object reachable, and a static nested class has no such field."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdh0ab1k",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A stack trace mentions the class `Sorting$1`. Nobody typed that name. What is it?",
+    "hint": "The JVM has no idea of nesting.",
+    "choices": [
+      {
+        "text": "The first version of `Sorting`, kept for compatibility",
+        "correct": false,
+        "why": "Class files carry no version numbers in their names."
+      },
+      {
+        "text": "The first anonymous class declared in `Sorting`",
+        "correct": true,
+        "why": "Right: the compiler names anonymous classes after their outer class and a counter."
+      },
+      {
+        "text": "A copy of `Sorting` the JIT compiler made while optimising it",
+        "correct": false,
+        "why": "The JIT works in memory and never invents classes with new names."
+      },
+      {
+        "text": "A static nested class called `1` inside `Sorting`",
+        "correct": false,
+        "why": "A class cannot be named with a digit in the source; only the compiler gives such names."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbqz5fr2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`Main` is in package `com.example.library.app`, compiled with `javac -d out`. From the project directory, `java -cp out Main` fails. What is wrong?",
+    "hint": "A class's name includes its package.",
+    "choices": [
+      {
+        "text": "`-cp` must point at `out/com/example/library/app`",
+        "correct": false,
+        "why": "That is the `wrong name` failure: the class path names where the package tree starts, not the class's own directory."
+      },
+      {
+        "text": "`Main` needs an `import` of its own package",
+        "correct": false,
+        "why": "A class never imports its own package; the run fails on the name given to `java`."
+      },
+      {
+        "text": "The name: it must be `com.example.library.app.Main`",
+        "correct": true,
+        "why": "Right: no class is called just `Main`, so the JVM finds no `out/Main.class`."
+      },
+      {
+        "text": "The program has to be packed into a jar before it can run",
+        "correct": false,
+        "why": "A directory on the class path runs perfectly well; jars are a convenience."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6pqm1xg",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "`mvn package` runs every phase up to `package`. Put these in the order Maven runs them.",
+    "hint": "Tests need compiled code, and the jar needs tested code.",
+    "items": [
+      "copy the resources",
+      "compile the main classes",
+      "compile and run the tests",
+      "pack the jar"
+    ]
+  },
+  {
+    "id": "ex-4jkzxvpc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A build of the course's project fails with `release version 25 not supported`, and the four `Unsafe` warnings did not appear. What do you run first?",
+    "hint": "Which Java prints those warnings, and which one cannot compile for 25?",
+    "choices": [
+      {
+        "text": "`mvn -U package`, to download newer plugins",
+        "correct": false,
+        "why": "The plugins are pinned and fine; the JDK running them is the problem."
+      },
+      {
+        "text": "`mvn -v`, to see which Java Maven found",
+        "correct": true,
+        "why": "Right: no warnings and no release 25 both say Maven is on Java 21, in this course through `JAVA_HOME`."
+      },
+      {
+        "text": "Lower `maven.compiler.release` to 21 in `pom.xml`",
+        "correct": false,
+        "why": "That hides the symptom and builds for the wrong release; the course's machine has JDK 25."
+      },
+      {
+        "text": "Delete `~/.m2/repository` and build again",
+        "correct": false,
+        "why": "Downloaded plugins have nothing to do with which compiler runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-hm751n2m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A long-running program ends with `OutOfMemoryError: Java heap space`. What is the first question to ask?",
+    "hint": "The collector frees what nothing can reach.",
+    "choices": [
+      {
+        "text": "How to call `System.gc()` more often",
+        "correct": false,
+        "why": "`System.gc()` is a request, and the collector already ran; it could free nothing that was still reachable."
+      },
+      {
+        "text": "Which object's `finalize` failed to run",
+        "correct": false,
+        "why": "Finalizers neither free memory reliably nor explain it; they are deprecated for removal."
+      },
+      {
+        "text": "What still holds references it should have let go",
+        "correct": true,
+        "why": "Right: everything still reachable stays, and a collection that only grows is the usual answer."
+      },
+      {
+        "text": "How much more heap the JVM should be given with `-Xmx`",
+        "correct": false,
+        "why": "That postpones the error when something keeps growing; it is a question for after the cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nksy4a2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "An object that no chain of references leads to from a root, such as a running method's local or a static field, is ___, and the collector may reuse its memory.",
+    "hint": "The opposite of the word the lesson used for objects that stay.",
+    "blanks": [
+      {
+        "accept": [
+          "unreachable",
+          "garbage"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-grk6hxkp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`CountingSet extends HashSet` counts in an overridden `add` and also in an overridden `addAll`. Adding three ISBNs with `addAll` counts six. What is the sound fix?",
+    "hint": "Whether `HashSet.addAll` calls `add` is not in its contract.",
+    "choices": [
+      {
+        "text": "Remove the count from `addAll`, since `HashSet` calls `add` anyway",
+        "correct": false,
+        "why": "That works today and breaks the day `HashSet` stops calling `add`, with no edit to this class."
+      },
+      {
+        "text": "Keep a `HashSet` in a private field and offer only the methods meant",
+        "correct": true,
+        "why": "Right: composition depends on the set's public methods, not on how they happen to be written."
+      },
+      {
+        "text": "Divide the count by two inside `addAll`",
+        "correct": false,
+        "why": "That bakes the same hidden detail in twice; any change in `HashSet` breaks it again."
+      }
+    ]
+  },
+  {
+    "id": "ex-ne95jjpa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`Book extends Item`, and `Item` has `private int year`. Code inside `Book` writes `year = 2000;`. What happens?",
+    "hint": "Lesson 14's rule, seen from a subclass.",
+    "choices": [
+      {
+        "text": "It compiles, because a subclass has every field of its superclass",
+        "correct": false,
+        "why": "The book does have a year, set by `Item`'s constructor, and its own code still may not touch it."
+      },
+      {
+        "text": "It compiles and creates a second `year` field in `Book`",
+        "correct": false,
+        "why": "An assignment never declares a field; it would need a declaration to do that."
+      },
+      {
+        "text": "It fails: `year has private access in Item`",
+        "correct": true,
+        "why": "Right: `private` stops at the declaring class, subclasses included; `protected` or a method would open it."
+      },
+      {
+        "text": "It fails until `Book` calls `super()` on its first line",
+        "correct": false,
+        "why": "`super(...)` builds the item part; it grants no access to private fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekb5m3b3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An abstract class `Item` declares a constructor that takes a title. Since nobody can write `new Item(...)`, what is that constructor for?",
+    "hint": "Who builds the `Item` part of a `Book`?",
+    "choices": [
+      {
+        "text": "Nothing: the compiler refuses a constructor in an abstract class",
+        "correct": false,
+        "why": "It accepts one; abstract only forbids `new` on the class itself."
+      },
+      {
+        "text": "Subclasses call it with `super(title)`",
+        "correct": true,
+        "why": "Right: every `Book` and `Dvd` runs it, so the shared field is set in one place."
+      },
+      {
+        "text": "It runs once, when the class is loaded, to set up static fields",
+        "correct": false,
+        "why": "That is a static block; a constructor runs for each object."
+      },
+      {
+        "text": "Reflection uses it to create `Item` objects that `new` cannot",
+        "correct": false,
+        "why": "Reflection is refused too: an abstract class has no instances of its own at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-hg09zy6x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a template method design, `Item.fee(days)` holds the algorithm and calls the abstract hook `dailyRate()`. Why mark `fee` itself `final`?",
+    "hint": "What could a subclass do to `fee` otherwise?",
+    "choices": [
+      {
+        "text": "So that the JIT can inline it, which an abstract class needs",
+        "correct": false,
+        "why": "Speed is not the reason the lesson gives, and the JIT inlines non-final methods as well."
+      },
+      {
+        "text": "Because a method that calls an abstract method has to be final",
+        "correct": false,
+        "why": "No such rule exists; the compiler would accept `fee` without `final`."
+      },
+      {
+        "text": "So no subclass can replace the algorithm and skip its rules",
+        "correct": true,
+        "why": "Right: subclasses fill in the hook; the steps around it, like the cap, stay the same for all."
+      }
+    ]
+  },
+  {
+    "id": "ex-fw28p0xd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "`Shelf.getTitles()` returns its private `List<String>` field directly. What can a caller now do?",
+    "hint": "`private` protects the field, not the object it points at.",
+    "choices": [
+      {
+        "text": "Add or remove titles in the shelf's own list",
+        "correct": true,
+        "why": "Right: the caller holds the same list, so `private` stopped nothing."
+      },
+      {
+        "text": "Only read it, since a getter returns a read-only copy",
+        "correct": false,
+        "why": "A getter returns whatever its body returns; here, the list itself."
+      },
+      {
+        "text": "Nothing at all, because the field is private",
+        "correct": false,
+        "why": "The field is private; the list it refers to was handed out."
+      },
+      {
+        "text": "Change the list only after casting it to `ArrayList`",
+        "correct": false,
+        "why": "No cast is needed: `add` is on `List` already."
+      }
+    ]
+  },
+  {
+    "id": "ex-7937nmxa",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To return a list that the caller can read but that never changes and never follows later changes to the field, write `return List.___(titles);`.",
+    "hint": "A copy, not a view.",
+    "blanks": [
+      {
+        "accept": [
+          "copyOf"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h7s8b49g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Three classes each compute a late fee by calling `loan.getDaysLate()` and multiplying by 50. The rate changes to 75. What does tell-don't-ask say should have been done?",
+    "hint": "Where does the number belong?",
+    "choices": [
+      {
+        "text": "A public constant `RATE` that the three classes all read",
+        "correct": false,
+        "why": "That fixes the number and still leaves the rule copied three times."
+      },
+      {
+        "text": "A method `loan.lateFee()`, so the rule lives in `Loan` once",
+        "correct": true,
+        "why": "Right: callers ask for the answer, and the rule changes in one place."
+      },
+      {
+        "text": "A setter `setRate` on each caller, so each can choose",
+        "correct": false,
+        "why": "That multiplies the places where the rule can disagree with itself."
+      },
+      {
+        "text": "Nothing: getters are the encapsulated way to share data",
+        "correct": false,
+        "why": "A getter exposes a value; the rule that uses it still sits in three classes."
+      }
+    ]
+  },
+  {
+    "id": "ex-r09gjtxe",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "An interface used by ten classes gains a new method. When does adding it leave all ten compiling unchanged?",
+    "hint": "Since Java 8 an interface method can have a body.",
+    "choices": [
+      {
+        "text": "When the new method is declared `abstract`",
+        "correct": false,
+        "why": "An abstract method is exactly what each of the ten would then have to implement."
+      },
+      {
+        "text": "Never: every implementer has to be recompiled with it",
+        "correct": false,
+        "why": "Recompiling is not the problem; a missing implementation is, and a body removes it."
+      },
+      {
+        "text": "When it is a `default` method with a body",
+        "correct": true,
+        "why": "Right: classes that do not override it inherit the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1k05pex",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Book` extends `Item`, which has a public method `label()`, and implements `Lendable`, which has a default `label()` with the same signature. `Book` declares no `label()`. What happens?",
+    "hint": "Two defaults clash; a class and a default do not.",
+    "choices": [
+      {
+        "text": "A compile error, as with two clashing defaults",
+        "correct": false,
+        "why": "The error is for two interfaces; a superclass method takes part under a different rule."
+      },
+      {
+        "text": "It compiles, and `Item.label()` runs: the class wins",
+        "correct": true,
+        "why": "Right: a method inherited from a class beats a default method."
+      },
+      {
+        "text": "It compiles, and the default runs, because the interface is named last",
+        "correct": false,
+        "why": "Declaration order in `extends` and `implements` decides nothing."
+      },
+      {
+        "text": "It compiles only if `Book` writes `Lendable.super.label()`",
+        "correct": false,
+        "why": "That syntax chooses a default explicitly; here nothing needs choosing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss8a1djd",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A class permitted by a sealed interface has to say one of three words. Match each to what it means.",
+    "hint": "The hierarchy stops, stays closed, or opens.",
+    "pairs": [
+      {
+        "left": "`final`",
+        "right": "Nothing may extend it"
+      },
+      {
+        "left": "`sealed`",
+        "right": "It names its own permitted subclasses"
+      },
+      {
+        "left": "`non-sealed`",
+        "right": "Any class may extend it again"
+      }
+    ],
+    "right_distractors": [
+      "It may only be used inside its package"
+    ]
+  },
+  {
+    "id": "ex-ck5hdtqa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A class has `print(long n)` and `print(Integer n)`. Which one does `print(5)` call?",
+    "hint": "Rank the conversions the compiler tries.",
+    "choices": [
+      {
+        "text": "`print(long)`",
+        "correct": true,
+        "why": "Right: widening `int` to `long` is preferred to boxing it into `Integer`."
+      },
+      {
+        "text": "`print(Integer)`, because `Integer` holds an `int` exactly",
+        "correct": false,
+        "why": "Boxing is considered only if no widening match exists."
+      },
+      {
+        "text": "Neither: the call is ambiguous and does not compile",
+        "correct": false,
+        "why": "The ranking settles it, so there is no ambiguity here."
+      },
+      {
+        "text": "Whichever is written first in the class",
+        "correct": false,
+        "why": "Order in the source plays no part in choosing an overload."
+      }
+    ]
+  },
+  {
+    "id": "ex-131w7adx",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "When several overloads could take an argument, put the three ways the compiler can match it in the order it prefers them, best first.",
+    "hint": "Varargs is the last resort.",
+    "items": [
+      "Widening a primitive, `int` to `long`",
+      "Boxing, `int` to `Integer`",
+      "Varargs, `int` into `int...`"
+    ]
+  },
+  {
+    "id": "ex-2x601nx8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Book` declares `public boolean equals(Book other)` comparing ISBNs, and a correct `hashCode`. Two books with one ISBN go into a `HashSet`. What is its size, and why?",
+    "hint": "Which `equals` does a collection call?",
+    "choices": [
+      {
+        "text": "1, because the hash codes are equal and the set compares ISBNs",
+        "correct": false,
+        "why": "The set calls `equals(Object)`, and `Book` never overrode that one."
+      },
+      {
+        "text": "1, because `HashSet` calls the most specific `equals` it finds",
+        "correct": false,
+        "why": "Overloads are picked at compile time from the declared type, which inside the set is `Object`."
+      },
+      {
+        "text": "2: `equals(Book)` overloads `equals(Object)` and the set never calls it",
+        "correct": true,
+        "why": "Right: `Object.equals` compares identity, and the two are different objects."
+      },
+      {
+        "text": "It does not compile: `equals` must take `Object`",
+        "correct": false,
+        "why": "It compiles; only `@Override` on it would have turned the mistake into an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zsd6z6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "`Item item = new Book(...);` and both classes declare `describe()`. Whose `describe()` runs on `item.describe()`?",
+    "hint": "The object decides what runs.",
+    "choices": [
+      {
+        "text": "`Item`'s, because that is the variable's declared type",
+        "correct": false,
+        "why": "The declared type decides what may be called; the object decides which body runs."
+      },
+      {
+        "text": "`Book`'s",
+        "correct": true,
+        "why": "Right: instance methods are bound dynamically, to the object's actual class."
+      },
+      {
+        "text": "Both, `Item`'s first and then `Book`'s",
+        "correct": false,
+        "why": "An override replaces; it runs `Item`'s only if it calls `super.describe()` itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-hfakyqr6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Item` and `Book` each declare a public field `name`, and `Book extends Item`. With `Item item = new Book();`, which `name` does `item.name` read?",
+    "hint": "Fields do not take part in dynamic dispatch.",
+    "choices": [
+      {
+        "text": "`Item`'s, because a field is chosen by the declared type",
+        "correct": true,
+        "why": "Right: `Book`'s field hides `Item`'s, and access is bound at compile time."
+      },
+      {
+        "text": "`Book`'s, because the object is a `Book`",
+        "correct": false,
+        "why": "That is how a method behaves; a field follows the variable's type."
+      },
+      {
+        "text": "Neither: the compiler refuses two fields with one name",
+        "correct": false,
+        "why": "It accepts it; the second field hides the first."
+      },
+      {
+        "text": "Whichever constructor assigned last",
+        "correct": false,
+        "why": "There are two separate fields in the object, and both keep their values."
+      }
+    ]
+  },
+  {
+    "id": "ex-phgbda3e",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Which of these are decided at compile time, by the declared type, rather than by the object at run time? Choose all that apply.",
+    "hint": "Only overridable instance methods follow the object.",
+    "choices": [
+      {
+        "text": "Calling a `static` method through a variable",
+        "correct": true,
+        "why": "Yes: static methods hide rather than override, and the declared type picks."
+      },
+      {
+        "text": "Reading a field",
+        "correct": true,
+        "why": "Yes: fields hide, and access goes by the declared type."
+      },
+      {
+        "text": "Calling a public instance method a subclass overrides",
+        "correct": false,
+        "why": "No: that is dynamic dispatch, decided by the object's class."
+      },
+      {
+        "text": "Choosing between two overloads",
+        "correct": true,
+        "why": "Yes: overload resolution happens in `javac`, from the argument's declared types."
+      },
+      {
+        "text": "Calling an interface method on a variable of the interface's type",
+        "correct": false,
+        "why": "No: the implementing object's method runs, chosen at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mymq0fz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program writes `title.strip();` on a line of its own and then prints `title`, which still has its spaces. Why?",
+    "hint": "What does a method on an immutable object give back?",
+    "choices": [
+      {
+        "text": "`strip` only removes tabs, not spaces",
+        "correct": false,
+        "why": "It removes both; the result was simply not kept."
+      },
+      {
+        "text": "Strings are cached, so the print showed an older copy",
+        "correct": false,
+        "why": "There is one string and it was never changed; caching plays no part."
+      },
+      {
+        "text": "`strip` returned a new string, and the line threw it away",
+        "correct": true,
+        "why": "Right: `title = title.strip();` keeps it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3m2mtjvb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In a builder for an immutable `Loan`, where are the rules about the parts, such as a due date after the start date, checked?",
+    "hint": "Only one method sees every part at once.",
+    "choices": [
+      {
+        "text": "In each `withX` setter, as the value arrives",
+        "correct": false,
+        "why": "A setter sees one part; a rule between two parts cannot be checked until both are in."
+      },
+      {
+        "text": "In `build()`, once, with every part in view",
+        "correct": true,
+        "why": "Right: `build()` validates and then creates the loan."
+      },
+      {
+        "text": "In the caller, before the builder is created",
+        "correct": false,
+        "why": "Then every caller repeats the rules, and one of them will forget."
+      },
+      {
+        "text": "Nowhere: a builder's purpose is to skip validation",
+        "correct": false,
+        "why": "Its purpose is a readable way to pass many parts; validation stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-2w20nj42",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`Book extends Item`, and neither class has been used yet. Put these steps of the first `new Book()` in the order they run.",
+    "hint": "The superclass first, at both levels.",
+    "items": [
+      "`Item`'s static block",
+      "`Book`'s static block",
+      "`Item`'s instance block",
+      "`Item`'s constructor body",
+      "`Book`'s constructor body"
+    ]
+  },
+  {
+    "id": "ex-2qds8fw0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A program creates five `Book` objects. How many times does `Book`'s static block run?",
+    "hint": "It belongs to the class, not to an object.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-748cmgk7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`Item`'s constructor calls `describe()`, which `Book` overrides to print its field `pages`, declared `int pages = 100;`. What does the first line printed by `new Book()` show for `pages`?",
+    "hint": "Whose part of the object is built first?",
+    "choices": [
+      {
+        "text": "100, because the initialiser is on the same line as the field",
+        "correct": false,
+        "why": "The initialiser runs in step 5, after `Item`'s constructor has already made the call."
+      },
+      {
+        "text": "Nothing: the compiler refuses an overridable call in a constructor",
+        "correct": false,
+        "why": "It compiles without a word; that is why it is a trap."
+      },
+      {
+        "text": "`Item`'s version runs instead, since `Book` is not built yet",
+        "correct": false,
+        "why": "Dispatch follows the object's class from the start: `Book`'s version runs."
+      },
+      {
+        "text": "0: `Book`'s initialisers have not run yet",
+        "correct": true,
+        "why": "Right: the override runs on an object whose `Book` part still holds defaults."
+      }
+    ]
+  },
+  {
+    "id": "ex-73qawna6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A file saves each book's genre as `genre.ordinal()`. A new constant is inserted at the top of the enum. What happens to the saved books when they are read back?",
+    "hint": "What does an ordinal measure?",
+    "choices": [
+      {
+        "text": "They read back correctly, since an ordinal is fixed when a constant is created",
+        "correct": false,
+        "why": "An ordinal is the position in the list, and every position after the insert moved."
+      },
+      {
+        "text": "Reading fails with an exception for every book",
+        "correct": false,
+        "why": "Nothing fails: each number still names some constant, just the wrong one."
+      },
+      {
+        "text": "Every book comes back one genre off, with no error",
+        "correct": true,
+        "why": "Right: store `name()` instead, which survives an insert."
+      }
+    ]
+  },
+  {
+    "id": "ex-qw60hvsj",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To turn the text `\"POETRY\"` back into the constant `Genre.POETRY`, call `Genre.___(\"POETRY\")`.",
+    "hint": "It throws if the name is not exact.",
+    "blanks": [
+      {
+        "accept": [
+          "valueOf"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-17nrtk6p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Given `record Isbn(String value) {}`, how do you read the component from an `Isbn` called `isbn`?",
+    "hint": "Accessors are named after the components.",
+    "choices": [
+      {
+        "text": "`isbn.getValue()`",
+        "correct": false,
+        "why": "Records do not follow the `get` convention."
+      },
+      {
+        "text": "`isbn.value`, since the field is public",
+        "correct": false,
+        "why": "The field is `private final`; the accessor is the way in."
+      },
+      {
+        "text": "`isbn.get(\"value\")`",
+        "correct": false,
+        "why": "There is no lookup by name; each component has its own method."
+      },
+      {
+        "text": "`isbn.value()`",
+        "correct": true,
+        "why": "Right: one accessor per component, with the component's name."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5phrrf6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`record Shelf(String name, List<String> titles) {}` is built from an `ArrayList`. Later the code that built it adds a title to that `ArrayList`. Does the shelf change?",
+    "hint": "A record is as immutable as its components.",
+    "choices": [
+      {
+        "text": "Yes, unless the compact constructor stores `List.copyOf(titles)`",
+        "correct": true,
+        "why": "Right: the final field holds the same list; a copy in the constructor cuts the link."
+      },
+      {
+        "text": "No, because a record copies every component it is given",
+        "correct": false,
+        "why": "A record stores what it is given; copying is the author's job."
+      },
+      {
+        "text": "No, because the field is `final`",
+        "correct": false,
+        "why": "`final` fixes the reference, not the contents of the list it points at."
+      },
+      {
+        "text": "It throws, because records forbid mutable components",
+        "correct": false,
+        "why": "Records accept any component type; nothing checks mutability."
+      }
+    ]
+  },
+  {
+    "id": "ex-5dff8g6s",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`int a = 3, b = 5;` and `swap(a, b)` exchanges its two parameters inside the method. What does `System.out.println(a)` print afterwards?",
+    "hint": "The method got copies.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-jya7c1cy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A method `void reset(Book b) { b = new Book(\"blank\"); }` is called as `reset(mine)`. What happens to `mine`?",
+    "hint": "Two arrows, then one of them moves.",
+    "choices": [
+      {
+        "text": "`mine` now refers to the blank book",
+        "correct": false,
+        "why": "Only the copy of the reference, `b`, was pointed at the new book."
+      },
+      {
+        "text": "The original book's fields are overwritten with the blank one's",
+        "correct": false,
+        "why": "Assigning to `b` moves an arrow; it copies no fields into any object."
+      },
+      {
+        "text": "It does not compile: a parameter cannot be reassigned",
+        "correct": false,
+        "why": "It compiles; a parameter is a local variable unless declared `final`."
+      },
+      {
+        "text": "Nothing: `mine` still refers to the same book, unchanged",
+        "correct": true,
+        "why": "Right: Java passed a copy of the reference, and reassigning a copy reaches nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rscg79n",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`List<Integer> ids` holds `[7, 3, 5]`. After `ids.remove(2)`, what does it hold?",
+    "hint": "An `int` literal and two methods called `remove`.",
+    "choices": [
+      {
+        "text": "`[7, 3, 5]`, because no element equals 2",
+        "correct": false,
+        "why": "That would be `remove(Object)`; given an `int`, the compiler picks `remove(int index)`."
+      },
+      {
+        "text": "`[7, 3]`",
+        "correct": true,
+        "why": "Right: `2` is an index here, and index 2 holds the 5."
+      },
+      {
+        "text": "`[3, 5]`, because the first element is removed",
+        "correct": false,
+        "why": "Removing index 0 would do that; the argument was 2."
+      },
+      {
+        "text": "A compile error, because the call is ambiguous",
+        "correct": false,
+        "why": "It is not ambiguous: the `int` version matches without boxing, so it wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-3htt8577",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A method receives `List<String> titles` and calls `titles.add(\"Emma\")`. One caller passes `Arrays.asList(shelf)`, another `List.of(\"Dune\")`. What happens?",
+    "hint": "Neither of those two builds a list that can grow.",
+    "choices": [
+      {
+        "text": "The first works, because it copies the array into a new list",
+        "correct": false,
+        "why": "`Arrays.asList` wraps the array without copying it, and an array cannot grow."
+      },
+      {
+        "text": "Both throw `UnsupportedOperationException`, every time",
+        "correct": true,
+        "why": "Right: one is a fixed-size view of an array, the other cannot change at all, and the `List` type hides both facts."
+      },
+      {
+        "text": "Neither compiles, because those methods do not return a `List`",
+        "correct": false,
+        "why": "Both return `List`, which is exactly why the compiler cannot warn."
+      },
+      {
+        "text": "The second works, since `List.of` only refuses `set`",
+        "correct": false,
+        "why": "`List.of` refuses every change, size and elements alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-qvkw92a1",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "An `ArrayList` grows its inner array from 10 slots to 15, then 22. Following the same rule, how many slots does the array that replaces a full 22 have?",
+    "hint": "The old length plus half of it, rounded down.",
+    "value": 33,
+    "tolerance": 0,
+    "unit": "slots"
+  },
+  {
+    "id": "ex-s35qbpp0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A program must answer, thousands of times a second, whether an ISBN has already been seen. Which collection fits?",
+    "hint": "\"Is this one in there?\"",
+    "choices": [
+      {
+        "text": "An `ArrayList` searched with `contains`",
+        "correct": false,
+        "why": "`contains` on a list reads elements one by one until it finds a match: a `Set` written the slow way."
+      },
+      {
+        "text": "A `HashSet`",
+        "correct": true,
+        "why": "Right: the hash code jumps to a bucket, and the question is exactly the one a `Set` is built for."
+      },
+      {
+        "text": "A `TreeMap` from ISBN to `true`",
+        "correct": false,
+        "why": "A map with a dummy value is a set in disguise, and the sorted order is paid for and never read."
+      },
+      {
+        "text": "A `LinkedList`, because no element is read by position",
+        "correct": false,
+        "why": "A linked list still walks node by node to answer `contains`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yps9ft46",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A `Book` class overrides `equals` by ISBN and not `hashCode`. Two equal books go into a `HashSet`. What does the set report?",
+    "hint": "Which step of a hash lookup decides the bucket?",
+    "choices": [
+      {
+        "text": "Size 1, because `equals` stops the second one",
+        "correct": false,
+        "why": "`equals` is only compared inside a bucket, and the two books landed in different ones."
+      },
+      {
+        "text": "An exception on the second `add`, naming the broken contract",
+        "correct": false,
+        "why": "Nothing checks the contract: the set is wrong, silently."
+      },
+      {
+        "text": "Size 2, and `contains` of a third equal book is false",
+        "correct": true,
+        "why": "Right: `Object`'s `hashCode` gives each object its own number, so equal books never meet."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp4m45k4",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "prompt": "Match each `Map` class to the order it iterates its keys in.",
+    "hint": "They mirror the three sets.",
+    "pairs": [
+      {
+        "left": "`HashMap`",
+        "right": "No order to rely on"
+      },
+      {
+        "left": "`LinkedHashMap`",
+        "right": "The order keys were first inserted"
+      },
+      {
+        "left": "`TreeMap`",
+        "right": "Sorted by the keys"
+      }
+    ],
+    "right_distractors": [
+      "The order values were last changed"
+    ]
+  },
+  {
+    "id": "ex-v4ys1da4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A help desk takes requests in arrival order, and an empty desk at night is normal. Which pair of declaration and call reads best?",
+    "hint": "Throwing form for a mistake, special value for a normal outcome.",
+    "choices": [
+      {
+        "text": "`Queue<Request> q = new ArrayDeque<>()` and `q.poll()`, testing for `null`",
+        "correct": true,
+        "why": "Right: first in, first out, and `poll` answers `null` for the normal empty case."
+      },
+      {
+        "text": "`Stack<Request>` and `pop()`",
+        "correct": false,
+        "why": "A stack serves the newest request first, and `pop` throws on empty."
+      },
+      {
+        "text": "`Queue<Request> q = new LinkedList<>()` and `q.remove()`",
+        "correct": false,
+        "why": "`remove()` throws on an empty queue, and `LinkedList` is the slower queue."
+      },
+      {
+        "text": "`PriorityQueue<Request>` and `peek()`",
+        "correct": false,
+        "why": "A priority queue serves the smallest, not the earliest, and `peek` never takes anything out."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzgq57nb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Why does the JDK's own documentation steer you from `Stack` to `Deque` for a stack?",
+    "hint": "What does `Stack` extend?",
+    "choices": [
+      {
+        "text": "`Stack` cannot hold more than 1024 elements",
+        "correct": false,
+        "why": "There is no such limit; the problem is what `Stack` lets you do, not how much it holds."
+      },
+      {
+        "text": "It extends `Vector`, so list methods such as `add(0, x)` and `get(i)` reach past the top, and every call pays for locking",
+        "correct": true,
+        "why": "Right: it is-a list in the code and not in meaning, and its methods are `synchronized`."
+      },
+      {
+        "text": "`Stack.pop` returns `null` on an empty stack, hiding mistakes",
+        "correct": false,
+        "why": "`pop` throws on empty, as the deque's does; the problem lies elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-jymcyg8q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `for-each` over an `ArrayList` calls `loans.remove(loan)` on a match, and the program finishes without an exception. What can you conclude?",
+    "hint": "When does the iterator check `modCount`?",
+    "choices": [
+      {
+        "text": "That removing inside a `for-each` is safe for this list",
+        "correct": false,
+        "why": "It is never safe: the check is best-effort, `hasNext` does not make it, and the next run can fail."
+      },
+      {
+        "text": "That the JVM can copy the list for the loop",
+        "correct": false,
+        "why": "No copy is made: the loop walks the list itself through its iterator."
+      },
+      {
+        "text": "Nothing: the check that throws simply did not run",
+        "correct": true,
+        "why": "Right: if the removal leaves the cursor at the size, `hasNext` says done and the check never runs."
+      },
+      {
+        "text": "That the matching element was the first one",
+        "correct": false,
+        "why": "The position that slips through is the one next to the end, not the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-386hjnxg",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To remove from a list every element that matches a condition, without writing a loop, call `list.___(...)`.",
+    "hint": "The shortest of the four safe ways.",
+    "blanks": [
+      {
+        "accept": [
+          "removeIf"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-15a6jfb2",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these change a list safely while it is being walked? Choose all that apply.",
+    "hint": "Whatever changes the list must be whatever walks it.",
+    "choices": [
+      {
+        "text": "`it.remove()` on an explicit `Iterator`",
+        "correct": true,
+        "why": "Yes: the iterator makes the change itself and keeps its count in step."
+      },
+      {
+        "text": "`list.add(x)` inside a `for-each` over the same list",
+        "correct": false,
+        "why": "No: the change comes from outside the iterator, a structural one."
+      },
+      {
+        "text": "`ListIterator.set` and `ListIterator.add`",
+        "correct": true,
+        "why": "Yes: the list iterator made each insertion, so it walks past them cleanly."
+      },
+      {
+        "text": "A `for-each` over `List.copyOf(list)` that removes from `list`",
+        "correct": true,
+        "why": "Yes: the walk is over a copy that does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-yywdzhtz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A method `double total(List<Number> amounts)` refuses a `List<Integer>`. Which signature accepts it and still lets the method read the values?",
+    "hint": "Producer `extends`, consumer `super`.",
+    "choices": [
+      {
+        "text": "`double total(List<? extends Number> amounts)`",
+        "correct": true,
+        "why": "Right: the method only reads, so the list is a producer of `Number`s."
+      },
+      {
+        "text": "`double total(List<? super Number> amounts)`, so that any list of numbers fits",
+        "correct": false,
+        "why": "`? super Number` accepts lists of `Number` or `Object`, not `Integer`."
+      },
+      {
+        "text": "`double total(List amounts)`, the raw type",
+        "correct": false,
+        "why": "It compiles with warnings and gives up the check the brackets were for."
+      },
+      {
+        "text": "No signature: generics forbid passing a subtype's list",
+        "correct": false,
+        "why": "A wildcard is the way to say a method accepts lists of subtypes."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bwcffst",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A raw `List` collects titles, and somebody adds an `Integer` by mistake. Where does the program fail, and why is that a problem?",
+    "hint": "The cast is where the damage is found.",
+    "choices": [
+      {
+        "text": "At the `add`, which throws `ClassCastException` immediately",
+        "correct": false,
+        "why": "A raw list accepts anything; nothing is checked at the `add`."
+      },
+      {
+        "text": "At compile time, because `javac` refuses raw types",
+        "correct": false,
+        "why": "`javac` compiles raw types with an unchecked note; it does not refuse them."
+      },
+      {
+        "text": "Later, at a cast far from the `add`, so the stack trace points away from the mistake",
+        "correct": true,
+        "why": "Right: the trace names where the value was read, in a real program another class, written by another person."
+      }
+    ]
+  },
+  {
+    "id": "ex-66zc7gxh",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Because of type ___, a `List<String>` and a `List<Integer>` are the same class at run time.",
+    "hint": "The compiler removes the type arguments.",
+    "blanks": [
+      {
+        "accept": [
+          "erasure"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-934b8bae",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "easy",
+    "prompt": "A stack trace is printed for an exception thrown in `daysLate`, called by `fine`, called by `main`. Put its lines in the order they are printed.",
+    "hint": "The most recent call first.",
+    "items": [
+      "The exception's class and message",
+      "`at Fine.daysLate`",
+      "`at Fine.fine`",
+      "`at Fine.main`"
+    ]
+  },
+  {
+    "id": "ex-bz7rz3k5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why must a caller of `Files.readString` catch or declare `IOException`, when a caller of `Integer.parseInt` need not catch anything?",
+    "hint": "It depends on the exception's class.",
+    "choices": [
+      {
+        "text": "`readString` can fail, and `parseInt` succeeds on any string",
+        "correct": false,
+        "why": "`parseInt` fails readily, with `NumberFormatException`."
+      },
+      {
+        "text": "`IOException` is checked; `NumberFormatException` extends `RuntimeException`",
+        "correct": true,
+        "why": "Right: a missing file meets a correct program, a bad number is a bug, and the classes say so."
+      },
+      {
+        "text": "File access is a privileged operation the compiler audits",
+        "correct": false,
+        "why": "The compiler knows nothing about files; it reads the `throws` clause of the method called."
+      },
+      {
+        "text": "`parseInt` catches its own exception internally",
+        "correct": false,
+        "why": "It throws it to the caller, which is why the program ended with a stack trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns4b5ydn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A method's `try` throws an exception, and its `finally` contains `return \"ok\";`. What does the caller see?",
+    "hint": "What leaves the method when `finally` returns?",
+    "choices": [
+      {
+        "text": "The exception, because `finally` leaves what is thrown alone",
+        "correct": false,
+        "why": "A `return` in `finally` replaces whatever was leaving, an exception included."
+      },
+      {
+        "text": "`\"ok\"`, and the exception is gone without a trace",
+        "correct": true,
+        "why": "Right: no stack trace, no message, which is why the compiler warns with `-Xlint:finally`."
+      },
+      {
+        "text": "A compile error, since a `finally` may not contain `return`",
+        "correct": false,
+        "why": "It compiles; only a lint warning flags it."
+      },
+      {
+        "text": "Both, as a suppressed exception attached to the result",
+        "correct": false,
+        "why": "Suppressed exceptions belong to try-with-resources and ride on an exception, never on a return value."
+      }
+    ]
+  },
+  {
+    "id": "ex-84w2f9y4",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`try (var a = open(\"a\"); var b = open(\"b\")) { ... } catch (Exception e) { ... } finally { ... }` and the body throws. Put what happens in order.",
+    "hint": "Reverse order to close, and everything closed before the handler.",
+    "items": [
+      "`b` is closed",
+      "`a` is closed",
+      "the `catch` block runs",
+      "the `finally` block runs"
+    ]
+  },
+  {
+    "id": "ex-fwex7ax4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a try-with-resources, the body throws and then `close` throws too. What does the caller receive?",
+    "hint": "Which of the two explains why the work did not happen?",
+    "choices": [
+      {
+        "text": "The exception from `close`, which replaced the first",
+        "correct": false,
+        "why": "That is the masking a hand-written `finally` causes; try-with-resources keeps the first."
+      },
+      {
+        "text": "A new exception wrapping both as causes",
+        "correct": false,
+        "why": "No new exception is made, and a cause is a different relation."
+      },
+      {
+        "text": "The body's, with the `close` failure as suppressed",
+        "correct": true,
+        "why": "Right: the `Suppressed:` line sits under the body's own trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-wnb9dvht",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A server loop wraps each request in `catch (Exception e)` and logs the error. A request recurses without end. What does the `catch` do?",
+    "hint": "Where does `StackOverflowError` sit in the tree?",
+    "choices": [
+      {
+        "text": "It logs the error and the loop carries on",
+        "correct": false,
+        "why": "`StackOverflowError` is not an `Exception`, so this `catch` does not match it."
+      },
+      {
+        "text": "Nothing: `StackOverflowError` is an `Error` and passes it",
+        "correct": true,
+        "why": "Right: it descends from `Error`, the other branch under `Throwable`."
+      },
+      {
+        "text": "It catches it only if the method declares `throws StackOverflowError`",
+        "correct": false,
+        "why": "Declaring an unchecked throwable changes nothing about which `catch` matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5yf2b3c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A loader catches an `IOException` it cannot handle and throws `new CatalogueException(\"cannot load the catalogue\")`. What is lost, and how is it kept?",
+    "hint": "The JDK's report of what actually went wrong.",
+    "choices": [
+      {
+        "text": "The original exception and its trace; pass it as the cause, so `Caused by:` prints it",
+        "correct": true,
+        "why": "Right: the new exception says what failed here, and the cause says why."
+      },
+      {
+        "text": "No information, because the message already says what went wrong",
+        "correct": false,
+        "why": "It says what failed in this program and not why: the missing file is gone."
+      },
+      {
+        "text": "The line number; add it to the message by hand",
+        "correct": false,
+        "why": "The new exception has its own trace; what goes is the original's."
+      },
+      {
+        "text": "The checked status; make `CatalogueException` extend `IOException`",
+        "correct": false,
+        "why": "Checked or not is a separate decision; the lost information is the original exception."
+      }
+    ]
+  },
+  {
+    "id": "ex-ebnsxhff",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A framework finds methods marked `@Check` by reflection while the program runs. Which retention must `@Check` declare?",
+    "hint": "Only one of the three reaches the running program.",
+    "choices": [
+      {
+        "text": "`CLASS`, the default",
+        "correct": false,
+        "why": "`CLASS` writes it into the class file and the JVM does not load it."
+      },
+      {
+        "text": "`SOURCE`",
+        "correct": false,
+        "why": "The compiler drops it after compiling, so nothing at run time could see it."
+      },
+      {
+        "text": "`RUNTIME`",
+        "correct": true,
+        "why": "Right: only a `RUNTIME` annotation is visible to reflection."
+      }
+    ]
+  },
+  {
+    "id": "ex-5q0rtyh5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A class declares `public String tostring()` with `@Override` above it. What happens?",
+    "hint": "What does `@Override` ask the compiler to check?",
+    "choices": [
+      {
+        "text": "It compiles, and printing the object uses the new method",
+        "correct": false,
+        "why": "The lowercase `s` makes it a different method; nothing would call it."
+      },
+      {
+        "text": "The compiler refuses it: nothing above has that method",
+        "correct": true,
+        "why": "Right: the annotation turns the typo into a compile error."
+      },
+      {
+        "text": "It compiles with a warning, and `toString` is renamed",
+        "correct": false,
+        "why": "The compiler renames nothing; it refuses the file."
+      },
+      {
+        "text": "It fails at run time with `NoSuchMethodError`",
+        "correct": false,
+        "why": "The check happens at compile time, before anything runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6yvcn6f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A library's `module-info.java` exports `com.example.library.api` and not `com.example.library.internal`. An app module imports a `public` class from `internal`. What happens?",
+    "hint": "To the app module, what is that package?",
+    "choices": [
+      {
+        "text": "It compiles, because the class is `public`",
+        "correct": false,
+        "why": "Above the package, the module decides; `public` is no longer enough."
+      },
+      {
+        "text": "It compiles with a warning and fails when run",
+        "correct": false,
+        "why": "The refusal comes at compile time."
+      },
+      {
+        "text": "`javac` answers as if the package did not exist",
+        "correct": true,
+        "why": "Right: an unexported package is not part of what the library offers."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ggp9qm3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "A typical application, built with Maven and a web framework, has no `module-info.java`. Where does it run?",
+    "hint": "Lesson 18's project, and nearly every service.",
+    "choices": [
+      {
+        "text": "On the class path, as nearly all Java software does",
+        "correct": true,
+        "why": "Right: modules bind only code that runs as modules."
+      },
+      {
+        "text": "It cannot run on Java 25 without a module declaration",
+        "correct": false,
+        "why": "Class-path applications run on every release since 9."
+      },
+      {
+        "text": "On the module path, where `java` turns it into a module",
+        "correct": false,
+        "why": "That would make it an automatic or named module; a plain application stays on the class path."
+      },
+      {
+        "text": "Inside a runtime built with `jlink`",
+        "correct": false,
+        "why": "`jlink` refuses a program that is not modular."
+      }
+    ]
+  }
+]

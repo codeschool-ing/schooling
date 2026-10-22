@@ -1,0 +1,378 @@
+{
+  "ex-49gq1094": {
+    "prompt": "O `OpenDemo` fez `book.year = -1899` numa classe com atributo público. O que aconteceu?",
+    "hint": "Leia a única linha que ele imprimiu.",
+    "choices": [
+      {
+        "text": "O compilador recusou o valor negativo",
+        "why": "O compilador confere tipos, e `-1899` é um `int` perfeitamente válido."
+      },
+      {
+        "text": "Ninguém reclamou; saiu `-1899`",
+        "why": "Isso: um atributo público não tem código próprio que rode quando ele é escrito."
+      },
+      {
+        "text": "A JVM lançou uma `IllegalArgumentException` quando o atributo foi escrito",
+        "why": "Essa exceção veio do `checkYear` em `Book`; a `OpenBook` não tem verificação assim."
+      },
+      {
+        "text": "O ano foi guardado como 1899, o valor absoluto",
+        "why": "O Java guarda exatamente o `int` que recebe; nada o corrigiu."
+      }
+    ]
+  },
+  "ex-74epfhj0": {
+    "prompt": "Por que o construtor de `Book` também chama `checkYear`, e não só o `setYear`?",
+    "hint": "Pense em `new Book(\"x\", -1899)`.",
+    "choices": [
+      {
+        "text": "Porque um construtor não pode chamar um setter",
+        "why": "Pode; a lição faz os dois passarem por um método privado para a regra existir uma vez só."
+      },
+      {
+        "text": "Para deixar o stack trace uma linha mais curto quando um ano ruim chega pelo construtor",
+        "why": "O stack trace é efeito colateral; o que importa é quais escritas são verificadas."
+      },
+      {
+        "text": "Senão construir um livro seria um atalho em volta da regra",
+        "why": "Isso: toda escrita tem de passar pela verificação, inclusive a primeira."
+      }
+    ]
+  },
+  "ex-0g932gvg": {
+    "prompt": "O `Sneaky` escreveu `book.year = -1899` no `Book` de atributo privado. O que o impediu?",
+    "hint": "A mensagem começava com o nome do arquivo e um número de linha.",
+    "choices": [
+      {
+        "text": "O compilador, antes de qualquer execução",
+        "why": "Isso: `year has private access in Book`, e não havia nada para rodar."
+      },
+      {
+        "text": "O `checkYear`, que lançou exceção quando o atributo mudou",
+        "why": "O `checkYear` só roda quando chamado; uma escrita direta o pularia, e é por isso que o compilador a proíbe."
+      },
+      {
+        "text": "O verificador da JVM, ao carregar o `Sneaky.class`",
+        "why": "Não houve `Sneaky.class`: o `javac` relatou um erro e não escreveu nada."
+      },
+      {
+        "text": "O `final` no atributo",
+        "why": "`year` não é final, já que o `setYear` o altera; o final é o `title`."
+      }
+    ]
+  },
+  "ex-j2acskjm": {
+    "prompt": "Pela convenção de nomes JavaBeans, o getter de um atributo `boolean` chamado `available` se chama `___`.",
+    "hint": "Para um `boolean`, `is` substitui `get`.",
+    "blanks": [
+      {
+        "accept": [
+          "isAvailable",
+          "isAvailable()"
+        ]
+      }
+    ]
+  },
+  "ex-km66rt6c": {
+    "prompt": "Um setter que só faz `this.year = year;` não verifica nada. O que ele ainda compra em relação a um atributo público?",
+    "hint": "Pense no dia em que uma regra chega.",
+    "choices": [
+      {
+        "text": "Acesso mais rápido, porque o JIT compila o método",
+        "why": "Velocidade não é o argumento; acessar um atributo é no mínimo tão rápido."
+      },
+      {
+        "text": "Um lugar só para uma verificação futura",
+        "why": "Isso: a regra entra no setter e todo chamador a recebe."
+      },
+      {
+        "text": "Proteção contra ano negativo, já que setters recusam negativos por padrão",
+        "why": "Um setter faz só o que o corpo dele diz; este não diz nada."
+      },
+      {
+        "text": "Nada; os dois são idênticos em tudo",
+        "why": "Eles se comportam igual hoje, e diferem no dia em que a regra precisa mudar."
+      }
+    ]
+  },
+  "ex-zn8hcyt9": {
+    "prompt": "Quais destas escolhas em `Book` protegem a regra de que o ano fica entre 1450 e 2100? Escolha todas as que se aplicam.",
+    "hint": "Encontre todos os caminhos por onde um ano poderia entrar.",
+    "choices": [
+      {
+        "text": "`year` é `private`",
+        "why": "Sim: nenhum código fora de `Book` consegue escrevê-lo diretamente."
+      },
+      {
+        "text": "O construtor passa o argumento por `checkYear`",
+        "why": "Sim: a primeira escrita é verificada como todas as outras."
+      },
+      {
+        "text": "`title` é `final`",
+        "why": "Isso fixa o título; não diz nada sobre o ano."
+      },
+      {
+        "text": "`setYear` passa o argumento por `checkYear`",
+        "why": "Sim: as mudanças depois da construção também são verificadas."
+      },
+      {
+        "text": "`getYear` devolve um `int` em vez de um `Integer`",
+        "why": "Ler não quebra a regra; o tipo do retorno não muda nada aqui."
+      }
+    ]
+  },
+  "ex-wv229dq1": {
+    "prompt": "`Shelf.titles` é `private final`, e mesmo assim o `LeakDemo` pôs três livros numa prateleira para dois. Como?",
+    "hint": "O que exatamente o `getTitles()` devolveu?",
+    "choices": [
+      {
+        "text": "`final` impede trocar a lista, então o `add` da prateleira pulou a verificação",
+        "why": "O `Shelf.add` nem foi chamado na terceira vez; quem foi chamado foi o `ArrayList.add`."
+      },
+      {
+        "text": "O getter devolveu a própria lista da prateleira, e o chamador acrescentou um terceiro livro direto nela",
+        "why": "Isso: `private` esconde o nome, não o objeto ao qual uma referência leva."
+      },
+      {
+        "text": "Um terceiro `add` é permitido quando a capacidade é par",
+        "why": "Não existe essa regra; a verificação é `titles.size() == capacity`."
+      },
+      {
+        "text": "O `getTitles()` devolveu uma cópia da lista, e foi essa cópia que passou do limite de dois",
+        "why": "Uma cópia crescendo deixaria a prateleira com dois; a própria prateleira relatou três."
+      }
+    ]
+  },
+  "ex-n72z1b9d": {
+    "prompt": "O que o `final` em `private final List<String> titles` garante?",
+    "hint": "Uma referência e o objeto a que ela se refere são duas coisas.",
+    "choices": [
+      {
+        "text": "Que ninguém pode acrescentar nem remover nada da lista, nem de dentro da classe nem de fora",
+        "why": "A lista continuou um `ArrayList` comum, e o `LeakDemo` acrescentou nela."
+      },
+      {
+        "text": "Que o getter devolve uma cópia",
+        "why": "O `final` não faz nada com o que um método devolve."
+      },
+      {
+        "text": "Que o atributo se refere à mesma lista por toda a vida do objeto",
+        "why": "Isso: a referência é fixa; o conteúdo da lista não."
+      }
+    ]
+  },
+  "ex-8hx43dwx": {
+    "prompt": "No `SafeDemo`, `copy` e `view` foram pegas, e depois `Iracema` foi acrescentado à prateleira. Por que só a `view` o mostrou?",
+    "hint": "Uma delas é uma lista nova; a outra é uma janela.",
+    "choices": [
+      {
+        "text": "O `List.copyOf` criou uma lista nova naquele momento; a vista enxerga a própria lista da prateleira",
+        "why": "Isso: as mudanças posteriores chegam à vista e nunca à cópia."
+      },
+      {
+        "text": "O `Collections.unmodifiableList` se atualiza a cada `add` da prateleira",
+        "why": "Nada é atualizado; a vista não tem cópia própria para atualizar."
+      },
+      {
+        "text": "A `copy` foi impressa antes de `Iracema` ser acrescentado",
+        "why": "As duas foram impressas depois do `add`; a ordem dos `println` não explica nada."
+      },
+      {
+        "text": "Cópias descartam o último elemento acrescentado ao original",
+        "why": "A cópia guardou tudo o que havia quando foi feita: um título."
+      }
+    ]
+  },
+  "ex-wd2cezkg": {
+    "prompt": "O que o `view.add(\"O Guarani\")` fez?",
+    "hint": "As três últimas linhas da transcrição.",
+    "choices": [
+      {
+        "text": "Acrescentou o livro, já que a capacidade da prateleira era 3",
+        "why": "A vista recusa qualquer mudança, seja qual for a capacidade."
+      },
+      {
+        "text": "Lançou `IllegalStateException: shelf is full`",
+        "why": "Essa mensagem vem do `SafeShelf.add`, que esta chamada nunca alcançou."
+      },
+      {
+        "text": "Lançou `UnsupportedOperationException`",
+        "why": "Isso: uma vista só de leitura recusa `add`, na linha que tentou."
+      }
+    ]
+  },
+  "ex-86pptk5s": {
+    "prompt": "Ligue cada jeito de devolver `titles` ao que o chamador consegue fazer com o resultado.",
+    "hint": "A tabela da seção, mais a `Shelf` que vaza.",
+    "pairs": [
+      {
+        "left": "`return titles;`",
+        "right": "Alterar a própria lista da prateleira"
+      },
+      {
+        "left": "`return List.copyOf(titles);`",
+        "right": "Ler um retrato que nunca muda"
+      },
+      {
+        "left": "`return Collections.unmodifiableList(titles);`",
+        "right": "Ler a lista atual, sem alterar nada"
+      }
+    ],
+    "right_distractors": [
+      "Alterar o retrato sem tocar na prateleira"
+    ]
+  },
+  "ex-8w9wxc5m": {
+    "prompt": "Um construtor `Shelf(List<String> titles)` faz `this.titles = titles;`. O getter devolve uma cópia. Como um chamador ainda consegue furar a capacidade?",
+    "hint": "Quem mais segura a lista que foi passada?",
+    "choices": [
+      {
+        "text": "Não consegue: copiar na saída fecha todas as portas",
+        "why": "A lista veio do chamador, que continua com ela."
+      },
+      {
+        "text": "Chamando o construtor duas vezes no mesmo objeto",
+        "why": "Um construtor roda uma vez por objeto; isso não é uma entrada."
+      },
+      {
+        "text": "Acrescentando à lista que passou, que agora é o atributo da prateleira",
+        "why": "Isso: copie o que recebe, `new ArrayList<>(titles)`, tanto quanto o que devolve."
+      },
+      {
+        "text": "Lendo a cópia e fazendo cast de volta para `ArrayList` para alcançar a lista da prateleira",
+        "why": "Uma cópia do `List.copyOf` não é a lista da prateleira, seja qual for o cast."
+      }
+    ]
+  },
+  "ex-gsjk51mk": {
+    "prompt": "O `AskDemo` imprimiu a multa certa. O que há de errado com ele?",
+    "hint": "Onde a regra da multa está escrita?",
+    "choices": [
+      {
+        "text": "Usa `long` para dinheiro, o que perde centavos",
+        "why": "Uma contagem de centavos em `long` não perde nada; é a escolha segura."
+      },
+      {
+        "text": "A regra mora no chamador, então todo outro chamador precisa repeti-la",
+        "why": "Isso: o recibo, o e-mail e a página da conta copiariam cada um as mesmas linhas."
+      },
+      {
+        "text": "Cobra multa negativa de um empréstimo devolvido antes do prazo",
+        "why": "A proteção `late > 0` impede isso; o risco é o próximo chamador esquecê-la."
+      },
+      {
+        "text": "`getDue()` expõe uma data mutável",
+        "why": "`LocalDate` não muda depois de construída, então entregá-la é seguro."
+      }
+    ]
+  },
+  "ex-ztvdbhfj": {
+    "prompt": "O que o `TellDemo` imprimiu para um empréstimo com devolução em 9 de outubro, consultado em 5 de outubro?",
+    "hint": "A segunda linha da saída.",
+    "choices": [
+      {
+        "text": "`Iracema: -200 cents`",
+        "why": "Quatro dias antes daria -200 sem a proteção, e o `lateFeeCents` a tem."
+      },
+      {
+        "text": "`Iracema: 0 cents`",
+        "why": "Isso: um empréstimo que ainda não atrasou não deve nada."
+      },
+      {
+        "text": "`Iracema: 150 cents`",
+        "why": "Essa foi a primeira linha, para 12 de outubro."
+      }
+    ]
+  },
+  "ex-wwdsx9td": {
+    "prompt": "Com `FEE_PER_DAY_CENTS = 50`, o que o `lateFeeCents` devolve para um empréstimo com devolução em 9 de outubro, consultado em 19 de outubro? Dê em centavos.",
+    "hint": "Dias de atraso vezes cinquenta.",
+    "unit": "centavos"
+  },
+  "ex-nz9pxq3n": {
+    "prompt": "Por que o `describe` recebe `today` como parâmetro em vez de chamar `LocalDate.now()` ele mesmo?",
+    "hint": "Pense num teste escrito em qualquer dia do ano.",
+    "choices": [
+      {
+        "text": "Para que o mesmo empréstimo dê a mesma resposta seja qual for o dia em que o código roda",
+        "why": "Isso: quem chama decide o que é hoje, e um teste pode fixar esse dia."
+      },
+      {
+        "text": "Porque `LocalDate.now()` não é permitido numa classe com atributos privados",
+        "why": "Nada proíbe; foi uma escolha por previsibilidade."
+      },
+      {
+        "text": "Porque `LocalDate.now()` devolve um objeto mutável",
+        "why": "`LocalDate` é imutável, seja quem for que a crie."
+      }
+    ]
+  },
+  "ex-1b11zxcd": {
+    "prompt": "Uma classe leva uma linha lida de um arquivo CSV até o código que a grava, e não decide nada. Seguindo a seção, como ela deve ser escrita?",
+    "hint": "Alguns dados são só dados.",
+    "choices": [
+      {
+        "text": "Com atributos privados, sem getters, e métodos para cada regra",
+        "why": "Ela não tem regras; inventar comportamento para ela seria cerimônia."
+      },
+      {
+        "text": "Com atributos públicos mutáveis, já que métodos de acesso são burocracia e esta classe não tem regra a proteger",
+        "why": "Atributos públicos mutáveis trazem de volta todos os problemas da seção 02."
+      },
+      {
+        "text": "Como um record, cujos métodos de acesso existem porque ler os valores é o objetivo",
+        "why": "Isso: o `record` da lição 29 é a ferramenta para dados que são só dados."
+      }
+    ]
+  },
+  "ex-z9qvdjzc": {
+    "prompt": "Ponha as linhas do stack trace do `BookDemo` na ordem em que foram impressas, de cima para baixo.",
+    "hint": "O topo é onde a exceção foi lançada.",
+    "items": [
+      "`Exception in thread \"main\" java.lang.IllegalArgumentException: year out of range: -1899`",
+      "`at Book.checkYear(Book.java:25)`",
+      "`at Book.setYear(Book.java:20)`",
+      "`at BookDemo.main(BookDemo.java:6)`"
+    ]
+  },
+  "ex-f1kgn0r9": {
+    "prompt": "Uma classe `Member` tem `private final List<Loan> loans` e promete no máximo cinco empréstimos. Qual getter cumpre a promessa e ainda deixa uma tela mostrar os empréstimos atuais do sócio conforme mudam?",
+    "hint": "A tela precisa ver as mudanças posteriores e não fazer nenhuma.",
+    "choices": [
+      {
+        "text": "`return loans;`",
+        "why": "A tela poderia então acrescentar um sexto empréstimo à própria lista do sócio."
+      },
+      {
+        "text": "`return List.copyOf(loans);`",
+        "why": "Seguro, mas congelado: a tela não veria empréstimos acrescentados depois de perguntar."
+      },
+      {
+        "text": "`return Collections.unmodifiableList(loans);`",
+        "why": "Isso: uma janela só de leitura que acompanha a lista do sócio."
+      },
+      {
+        "text": "`return new ArrayList<>(loans);`",
+        "why": "Uma cópia nova: mudá-la é inofensivo, e ela é tão congelada quanto o `copyOf`."
+      }
+    ]
+  },
+  "ex-k08830x9": {
+    "prompt": "Todo chamador de `loan.getDue()` compara a data com hoje e cobra uma multa. O que a seção sugere?",
+    "hint": "Quem deveria ser dono da conta?",
+    "choices": [
+      {
+        "text": "Tornar `due` público, já que todo chamador o lê de qualquer jeito e um getter não acrescenta nada",
+        "why": "Isso espalha a regra ainda mais e abre mão da proteção da data."
+      },
+      {
+        "text": "Levar a multa para um método de `Loan`, e abandonar o getter se nada mais o lê",
+        "why": "Isso: diga ao empréstimo o que você precisa, e a regra existe uma vez só."
+      },
+      {
+        "text": "Acrescentar um setter para `due` para os chamadores o corrigirem",
+        "why": "Ninguém precisa mudar a data; precisam da multa."
+      }
+    ]
+  }
+}
