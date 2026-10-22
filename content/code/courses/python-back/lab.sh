@@ -16,6 +16,7 @@
 #   lesson 1   python3 python3-venv python3-pip pipx git curl, and uv with
 #              `pipx install uv`, as ana
 #   lesson 4   postgresql (16)
+#   lesson 5   w3m, a browser for the terminal
 #   lesson 13  redis-server (7.0)
 #   lesson 16  nginx
 # The base image has every one of them installed already, so a lesson's
@@ -71,6 +72,7 @@ export SYSTEMD_NSPAWN_UNIFIED_HIERARCHY=1 TZ=America/Sao_Paulo
 # The apt lines, as the lessons print them.
 LESSON1="python3 python3-venv python3-pip pipx git curl"
 LESSON4="postgresql"
+LESSON5="w3m"
 LESSON13="redis-server"
 LESSON16="nginx"
 SERVICES="postgresql redis-server nginx"
@@ -113,7 +115,7 @@ build() {
     grep -q UV_SYSTEM_CERTS /home/ana/.profile || echo 'export UV_SYSTEM_CERTS=1' >> /home/ana/.profile
     sed -i 's/^# *en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen && locale-gen >/dev/null
     apt-get update -q
-    apt-get install -y -q $LESSON1 $LESSON4 $LESSON13 $LESSON16
+    apt-get install -y -q $LESSON1 $LESSON4 $LESSON5 $LESSON13 $LESSON16
     for s in $SERVICES; do systemctl disable \$s >/dev/null 2>&1 || true; done
     rm -rf /home/ana/.local/share/pipx /home/ana/.local/state/pipx
     runuser -u ana -- bash -lc 'PIP_CERT=/etc/ssl/certs/ca-certificates.crt pipx install uv && pipx ensurepath'

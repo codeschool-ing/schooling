@@ -5,6 +5,7 @@ A whole file in a lesson is either a fenced block whose first line is a
 comment naming it (`# events/views.py`, `{# templates/base.html #}`,
 `/* a.css */`), or a
 `schooling-example` whose "file" is it, in which case its parts are joined.
+A script's `#!` line may come first, with the comment on the line after it.
 Exit 1 if the lesson does not show it, or shows it twice.
 """
 import json, re, sys
@@ -19,7 +20,8 @@ for m in re.finditer(r"^```([^\n]*)\n(.*?)^```$", text, re.S | re.M):
         if ex.get("file") == path:
             found.append("".join(p["code"] for p in ex["parts"]))
         continue
-    first = body.split("\n", 1)[0].strip()
+    lines = body.split("\n", 2)
+    first = lines[1].strip() if lines[0].startswith("#!") and len(lines) > 1 else lines[0].strip()
     names = re.findall(r"^(?:#|//|--|<!--|\{#|/\*)\s*(\S+)", first)
     if names and names[0] == path:
         found.append(body)
