@@ -1,0 +1,510 @@
+[
+  {
+    "id": "ex-zr7xznsg",
+    "version": 1,
+    "section": "reader",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does an `io.Reader` say the data has ended?",
+    "hint": "Look at the last line `reader.go` printed.",
+    "choices": [
+      {
+        "text": "It returns `n` equal to `-1`",
+        "correct": false,
+        "why": "`n` is never negative; the contract says 0 <= n <= len(p)."
+      },
+      {
+        "text": "It returns the error `io.EOF`",
+        "correct": true,
+        "why": "Right: the end of the data is reported as an error value."
+      },
+      {
+        "text": "It returns a `nil` slice",
+        "correct": false,
+        "why": "`Read` fills a slice the caller owns; it returns only a count and an error."
+      },
+      {
+        "text": "It panics with a message saying the stream is finished",
+        "correct": false,
+        "why": "Ending is ordinary, so it is an ordinary return value."
+      }
+    ]
+  },
+  {
+    "id": "ex-v9ferkv6",
+    "version": 1,
+    "section": "reader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`reader.go` read 30 bytes eight at a time. Why does it print `buf[:n]` and not `buf`?",
+    "hint": "What was in the last two bytes of `buf` after the fourth call?",
+    "choices": [
+      {
+        "text": "`buf` is unexported and cannot be printed",
+        "correct": false,
+        "why": "A local variable prints fine. The issue is what it holds."
+      },
+      {
+        "text": "Past `n`, `buf` still holds bytes from an earlier call",
+        "correct": true,
+        "why": "Right: after the fourth call the last two bytes were still `al`."
+      },
+      {
+        "text": "Printing `buf` would consume the reader",
+        "correct": false,
+        "why": "Printing a slice reads memory, not the Reader."
+      },
+      {
+        "text": "`%q` cannot quote a slice of a fixed size",
+        "correct": false,
+        "why": "`%q` quotes any `[]byte`; `buf[:n]` is also a slice."
+      }
+    ]
+  },
+  {
+    "id": "ex-kmqkt878",
+    "version": 1,
+    "section": "reader",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loop calls `r.Read(buf)` and does `if err == io.EOF { break }` before using `buf[:n]`. With the `alphabet` Reader, what is lost?",
+    "hint": "The last call returned data and an error together.",
+    "choices": [
+      {
+        "text": "Nothing: `EOF` always comes with `n` equal to 0",
+        "correct": false,
+        "why": "That is what `strings.Reader` did. The contract also allows data and `EOF` in one call, and `alphabet` does it."
+      },
+      {
+        "text": "The first ten letters",
+        "correct": false,
+        "why": "The first two calls returned `nil` errors, so the loop used them."
+      },
+      {
+        "text": "The last six letters, `uvwxyz`",
+        "correct": true,
+        "why": "Right. Use the `n` bytes first, then look at `err`."
+      },
+      {
+        "text": "The whole alphabet, because the loop never starts",
+        "correct": false,
+        "why": "The loop runs; only the call that brings `EOF` is mishandled."
+      }
+    ]
+  },
+  {
+    "id": "ex-vezmq5cy",
+    "version": 1,
+    "section": "reader",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`io.ReadAll(&alphabet{})` returned the letters and a `nil` error, though the Reader returned `io.EOF`. Why?",
+    "hint": "What was `ReadAll` asked to do?",
+    "choices": [
+      {
+        "text": "`alphabet` returned `EOF` only for small buffers",
+        "correct": false,
+        "why": "It returns `EOF` whenever it runs past `z`, whatever the buffer."
+      },
+      {
+        "text": "Reaching the end is what it was asked to do",
+        "correct": true,
+        "why": "Right; `ReadAll` and `io.Copy` treat `EOF` as the finish line."
+      },
+      {
+        "text": "`ReadAll` ignores every error from the Reader",
+        "correct": false,
+        "why": "A real failure, a broken connection say, comes back from `ReadAll` as an error."
+      },
+      {
+        "text": "`fmt` prints `io.EOF` as `<nil>`",
+        "correct": false,
+        "why": "`reader.go` printed `err=EOF`, so `fmt` shows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd635a6f",
+    "version": 1,
+    "section": "reader",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An `io.Reader` has exactly one method, called ___.",
+    "hint": "`go doc io.Reader` printed it.",
+    "blanks": [
+      {
+        "accept": [
+          "Read"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ajh8t6dg",
+    "version": 1,
+    "section": "writer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Writer's `Write` returns `n` smaller than `len(p)`. What must it also return?",
+    "hint": "The contract is stricter than Read's on exactly this.",
+    "choices": [
+      {
+        "text": "Nothing; the caller calls `Write` again with the rest",
+        "correct": false,
+        "why": "That is the Reader's world. A short write without an error breaks the Writer contract."
+      },
+      {
+        "text": "A non-nil error saying why",
+        "correct": true,
+        "why": "Right, so a caller can check `err` alone."
+      },
+      {
+        "text": "`io.EOF`, to say the destination is full",
+        "correct": false,
+        "why": "`EOF` means the end of input; it is not the Writer's word for a full disk."
+      },
+      {
+        "text": "The bytes that were not written",
+        "correct": false,
+        "why": "`Write` returns a count and an error, nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-86pha8dg",
+    "version": 1,
+    "section": "writer",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these did `report` write to, unchanged, in `writer.go`? Choose all that apply.",
+    "hint": "Three calls to `report`.",
+    "choices": [
+      {
+        "text": "`os.Stdout`",
+        "correct": true,
+        "why": "Yes, the terminal."
+      },
+      {
+        "text": "a `bytes.Buffer`",
+        "correct": true,
+        "why": "Yes, 38 bytes kept in memory."
+      },
+      {
+        "text": "a SHA-256 hash",
+        "correct": true,
+        "why": "Yes, `sha256.New()` returns a Writer."
+      },
+      {
+        "text": "a file on disk",
+        "correct": false,
+        "why": "Not in this program; files are lesson 18, and they would work just the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-qf41rp2c",
+    "version": 1,
+    "section": "writer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The program's hash and `sha256sum` of the same two lines agreed. What does that check establish?",
+    "hint": "A hash of different bytes would differ.",
+    "choices": [
+      {
+        "text": "That `crypto/sha256` is faster than the shell",
+        "correct": false,
+        "why": "Nothing was timed."
+      },
+      {
+        "text": "That the buffer and the terminal received different bytes",
+        "correct": false,
+        "why": "The opposite: the same function wrote the same bytes to each."
+      },
+      {
+        "text": "`report` wrote exactly those 38 bytes",
+        "correct": true,
+        "why": "Right; any difference, even a missing newline, changes the hash."
+      },
+      {
+        "text": "That the hash stored the report so it can be read back",
+        "correct": false,
+        "why": "A hash keeps no copy; what goes in is only digested."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4ggj8jj",
+    "version": 1,
+    "section": "writer",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`counting.go` wrote `one line` and `and another` with `Fprintln`. How many bytes did the counter report?",
+    "hint": "Count each newline as one byte.",
+    "value": 21,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-7qmj31mz",
+    "version": 1,
+    "section": "writer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two goroutines both write through the same `counter` from `counting.go`. What is wrong?",
+    "hint": "What does `Write` do to the counter's own field?",
+    "choices": [
+      {
+        "text": "Nothing, because `os.Stdout` is safe to share",
+        "correct": false,
+        "why": "The terminal is; `c.n` is not."
+      },
+      {
+        "text": "`c.n += int64(n)` is a data race",
+        "correct": true,
+        "why": "Right: lesson 1's lost update, which a mutex or an atomic fixes."
+      },
+      {
+        "text": "The lines arrive in alphabetical order",
+        "correct": false,
+        "why": "Nothing sorts writes; the order is whatever the goroutines did."
+      },
+      {
+        "text": "`Fprintln` refuses a Writer that is not a file",
+        "correct": false,
+        "why": "It accepted `counter` in the single-goroutine run."
+      }
+    ]
+  },
+  {
+    "id": "ex-s90dcw9t",
+    "version": 1,
+    "section": "composing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each function from `io` with what it gives back.",
+    "hint": "Some return a Reader, one returns a Writer, one returns both.",
+    "pairs": [
+      {
+        "left": "`io.LimitReader`",
+        "right": "a Reader that stops after n bytes"
+      },
+      {
+        "left": "`io.TeeReader`",
+        "right": "a Reader that also writes what it reads"
+      },
+      {
+        "left": "`io.MultiWriter`",
+        "right": "a Writer that writes to all of several"
+      },
+      {
+        "left": "`io.Pipe`",
+        "right": "a connected Reader and Writer"
+      }
+    ],
+    "right_distractors": [
+      "a Reader that sorts its input"
+    ]
+  },
+  {
+    "id": "ex-bt5jkghb",
+    "version": 1,
+    "section": "composing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `pipe.go` write into the pipe from a separate goroutine?",
+    "hint": "`io.Pipe` has no buffer, like an unbuffered channel.",
+    "choices": [
+      {
+        "text": "Only goroutines may hold the writing end",
+        "correct": false,
+        "why": "Any code may; the problem is waiting."
+      },
+      {
+        "text": "To make the copy run twice as fast",
+        "correct": false,
+        "why": "Speed is not the point; with one goroutine the program does not finish at all."
+      },
+      {
+        "text": "Each write blocks until somebody reads",
+        "correct": true,
+        "why": "Right: written from `main`, the first `Fprintf` would wait for a reader that never runs."
+      },
+      {
+        "text": "The race detector requires it",
+        "correct": false,
+        "why": "The detector has nothing to say either way; the pipe synchronises."
+      }
+    ]
+  },
+  {
+    "id": "ex-sphcjtg6",
+    "version": 1,
+    "section": "composing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone deletes `pw.Close()` from `pipe.go`. What happens?",
+    "hint": "How does the reading side learn the data has ended?",
+    "choices": [
+      {
+        "text": "`io.Copy` waits for ever after three lines",
+        "correct": true,
+        "why": "Right: without the close there is no `EOF`, and `main` is left waiting."
+      },
+      {
+        "text": "The hash comes out different",
+        "correct": false,
+        "why": "The program never reaches the line that prints it."
+      },
+      {
+        "text": "Nothing, because the goroutine ends anyway",
+        "correct": false,
+        "why": "The goroutine ending does not tell the reader anything; only `Close` does."
+      },
+      {
+        "text": "`io.Copy` returns 69 and an error",
+        "correct": false,
+        "why": "It does not return at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfb2xs9z",
+    "version": 1,
+    "section": "composing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go run -race pipe.go` exited 0 with nothing on standard error. Two goroutines handled the same bytes. Why no race?",
+    "hint": "Section 04 of lesson 16: a value that moves.",
+    "choices": [
+      {
+        "text": "The detector does not check code in the `io` package",
+        "correct": false,
+        "why": "It checks the whole program, standard library included."
+      },
+      {
+        "text": "The goroutine ran before `main` started reading",
+        "correct": false,
+        "why": "It could not: each write waited for a read."
+      },
+      {
+        "text": "The pipe hands each chunk over, so nothing is shared",
+        "correct": true,
+        "why": "Right, as a channel does."
+      },
+      {
+        "text": "`os.Stdout` was redirected to `/dev/null`",
+        "correct": false,
+        "why": "The redirect hides the output; it does not change what the goroutines did."
+      }
+    ]
+  },
+  {
+    "id": "ex-35knrq9d",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the path one chunk of bytes takes through `pipe.go`.",
+    "hint": "It starts in the goroutine and ends in two places at once.",
+    "items": [
+      "`Fprintf` writes it into `pw`",
+      "`io.Copy` reads it from the tee over `pr`",
+      "the tee writes it into the hash",
+      "the multi-writer writes it to the terminal and `kept`"
+    ]
+  },
+  {
+    "id": "ex-hr5hv445",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function `CountLines(f *os.File) int` is hard to test. What change does the lesson recommend?",
+    "hint": "What would a test pass in?",
+    "choices": [
+      {
+        "text": "Write the test's input to a temporary file first",
+        "correct": false,
+        "why": "That works, and it is the cost the change avoids."
+      },
+      {
+        "text": "Take an `io.Reader` instead of `*os.File`",
+        "correct": true,
+        "why": "Right: a file still works, and a test passes a `strings.Reader`."
+      },
+      {
+        "text": "Return a `[]byte` instead of an `int`",
+        "correct": false,
+        "why": "The result is not what makes it hard to test; the input is."
+      },
+      {
+        "text": "Make it a method on a type that holds the file path",
+        "correct": false,
+        "why": "Still tied to the disk, just one step further away."
+      }
+    ]
+  },
+  {
+    "id": "ex-d94d41wf",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`reader.go` read a 30-byte string with an 8-byte buffer. How many calls to `Read` did it make, counting the one that returned `EOF`?",
+    "hint": "Count the lines it printed.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-qr5whc25",
+    "version": 1,
+    "section": "composing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `io.ReadAll` return for `io.MultiReader(strings.NewReader(\"ab\"), strings.NewReader(\"cd\"))`?",
+    "hint": "The table: one after another, as if concatenated.",
+    "choices": [
+      {
+        "text": "`abcd`",
+        "correct": true,
+        "why": "Right: the second Reader starts where the first ends."
+      },
+      {
+        "text": "`ab`, since the first Reader ends with `EOF`",
+        "correct": false,
+        "why": "MultiReader swallows each inner `EOF` until the last Reader is done."
+      },
+      {
+        "text": "`acbd`, one byte from each in turn",
+        "correct": false,
+        "why": "That would be interleaving; MultiReader reads them one after another."
+      },
+      {
+        "text": "an error: two Readers cannot share one `EOF`",
+        "correct": false,
+        "why": "There is one `EOF`, at the end of the last Reader, and `ReadAll` reports no error for it."
+      }
+    ]
+  }
+]

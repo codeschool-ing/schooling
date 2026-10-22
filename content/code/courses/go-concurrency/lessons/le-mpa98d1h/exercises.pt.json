@@ -1,0 +1,338 @@
+{
+  "ex-5sfvq574": {
+    "prompt": "O que `flag.Int(\"times\", 1, \"how many greetings\")` devolve?",
+    "hint": "O `greet` lê `*times` depois do `Parse`.",
+    "choices": [
+      {
+        "text": "O número dado na linha de comando",
+        "why": "Nada foi lido ainda quando `flag.Int` retorna; o `Parse` vem depois."
+      },
+      {
+        "text": "Um ponteiro, preenchido pelo `Parse`",
+        "why": "Isso. O programa o desreferencia depois do `Parse`."
+      },
+      {
+        "text": "Um erro se `-times` faltar",
+        "why": "Uma flag ausente fica com o padrão, 1 aqui; não há erro."
+      },
+      {
+        "text": "A linha de ajuda, para o `-h`",
+        "why": "A ajuda é o terceiro argumento e o pacote a guarda para o texto de uso."
+      }
+    ]
+  },
+  "ex-0rr4gzwd": {
+    "prompt": "`bin/greet bia -times 2` imprimiu uma saudação e `left over: [bia -times 2]`. Por quê?",
+    "hint": "Onde o `Parse` para?",
+    "choices": [
+      {
+        "text": "O `Parse` parou em `bia`",
+        "why": "Isso. Tudo dali em diante fica em `flag.Args()`."
+      },
+      {
+        "text": "`-times` precisa de sinal de igual",
+        "why": "`-times 2` funciona quando vem primeiro; só flags bool precisam de `=` para um valor."
+      },
+      {
+        "text": "Palavras desconhecidas cancelam todas as flags",
+        "why": "Nada foi cancelado: as flags depois de `bia` nem foram lidas."
+      },
+      {
+        "text": "`bia` foi tomado como valor de `-name`",
+        "why": "A saudação disse `hello, world`, então `-name` manteve o padrão."
+      }
+    ]
+  },
+  "ex-thtghav8": {
+    "prompt": "Alguém roda `bin/greet -shout false` para garantir que a saudação não saia em maiúsculas. O que acontece?",
+    "hint": "Uma flag bool recebe um valor separado?",
+    "choices": [
+      {
+        "text": "Os gritos ficam desligados, como pedido",
+        "why": "A saída foi `HELLO, WORLD`: `-shout` sozinho significa verdadeiro."
+      },
+      {
+        "text": "O `Parse` recusa `false` como flag desconhecida",
+        "why": "`false` não tem traço, então nem é flag; é uma palavra de sobra."
+      },
+      {
+        "text": "Ele grita, e `false` sobra em `flag.Args()`",
+        "why": "Isso. `-shout=false` é como uma bool recebe falso."
+      },
+      {
+        "text": "O programa sai com o status 2",
+        "why": "Nada foi recusado; a saudação rodou."
+      }
+    ]
+  },
+  "ex-phgzd16y": {
+    "prompt": "Com que status de saída terminou `bin/greet -times=two`?",
+    "hint": "A convenção para \"você me chamou errado\"."
+  },
+  "ex-hha15a9z": {
+    "prompt": "Um script roda `tool -h` para imprimir a ajuda num arquivo, e confere o status de saída para saber se a ferramenta está instalada. Com o tratamento padrão do pacote `flag`, que status ele vai ver?",
+    "hint": "Pedir ajuda não é um erro.",
+    "choices": [
+      {
+        "text": "2, como para qualquer flag recusada",
+        "why": "O `-h` imprimiu o uso e saiu com 0 na lição."
+      },
+      {
+        "text": "0",
+        "why": "Isso: `bin/greet -h; echo $?` imprimiu `0`."
+      },
+      {
+        "text": "1, porque o programa não rodou",
+        "why": "O pacote escolhe 0 para a ajuda e 2 para uma recusa; o 1 não aparece."
+      },
+      {
+        "text": "127, o status de comando ausente",
+        "why": "O 127 é do shell, quando o programa não existe. Aqui o programa rodou."
+      }
+    ]
+  },
+  "ex-bgxktwty": {
+    "prompt": "Que dois métodos tornam um tipo utilizável com `flag.Var`?",
+    "hint": "O `list` do `tags/main.go` os tem.",
+    "choices": [
+      {
+        "text": "`Parse` e `Usage`",
+        "why": "Esses pertencem a um `FlagSet`, não a um valor."
+      },
+      {
+        "text": "`MarshalText` e `UnmarshalText`",
+        "why": "Esses servem ao `flag.TextVar`. O `flag.Var` pede a interface `flag.Value`."
+      },
+      {
+        "text": "`String` e `Set`",
+        "why": "Isso: é a `flag.Value`."
+      },
+      {
+        "text": "`Get` e `Default`",
+        "why": "Não existe esse par na interface."
+      }
+    ]
+  },
+  "ex-ez7pcpw6": {
+    "prompt": "`-tag go -tag concurrency` deu uma lista de dois. O que no `list` faz uma flag repetida somar em vez de a última vencer?",
+    "hint": "Quantas vezes o `Set` é chamado?",
+    "choices": [
+      {
+        "text": "O `flag.Var` guarda todo valor que recebeu",
+        "why": "O pacote não guarda nada; ele chama o `Set` e o tipo decide."
+      },
+      {
+        "text": "O `Set` acrescenta em vez de atribuir",
+        "why": "Isso. Um `Set` que atribuísse guardaria só o último."
+      },
+      {
+        "text": "O nome da flag termina no plural",
+        "why": "O nome é `tag`, e nomes não mudam comportamento."
+      },
+      {
+        "text": "O `String` junta os valores com vírgulas",
+        "why": "O `String` só imprime; juntar é trabalho do `Set`."
+      }
+    ]
+  },
+  "ex-tb64yj6w": {
+    "prompt": "`bin/tags -port 70000` imprimiu `invalid value \"70000\" for flag -port: not a port`. De onde veio `not a port`?",
+    "hint": "Quem conferiu o intervalo?",
+    "choices": [
+      {
+        "text": "Do `strconv.Atoi`, que recusa números acima de 65535",
+        "why": "O `Atoi` lê 70000 sem problema; a conferência do intervalo é do programa."
+      },
+      {
+        "text": "Do tipo de porta do pacote `flag`",
+        "why": "O pacote não tem tipo de porta; por isso foi usado o `flag.Func`."
+      },
+      {
+        "text": "Do erro que a função passada ao `flag.Func` devolveu",
+        "why": "Isso. O `Parse` imprime esse erro depois do nome da flag."
+      },
+      {
+        "text": "Do sistema operacional",
+        "why": "Nenhum socket foi aberto; o programa nem passou do `Parse`."
+      }
+    ]
+  },
+  "ex-pp5ng92b": {
+    "prompt": "Por que o `tags/main.go` lê `-addr` com `flag.TextVar` e `netip.Addr` em vez de um `flag.String` conferido à mão?",
+    "hint": "Quem é dono das regras de um endereço IPv4?",
+    "choices": [
+      {
+        "text": "`flag.String` não guarda pontos",
+        "why": "Uma flag string guarda qualquer texto."
+      },
+      {
+        "text": "O tipo dono das regras as confere",
+        "why": "Isso: `IPv4 field has value >255`, escrito pelo `netip`, não por este programa."
+      },
+      {
+        "text": "O `TextVar` lê mais rápido",
+        "why": "Velocidade não é o argumento; correção é."
+      },
+      {
+        "text": "Uma conferência à mão teria de rodar antes do `Parse`",
+        "why": "Ela rodaria depois do `Parse`, o que é permitido; a questão é não escrever um leitor que já existe."
+      }
+    ]
+  },
+  "ex-8zwbbyt8": {
+    "prompt": "Para uma verificação escrita como função, sem declarar um tipo, o pacote oferece `flag.___`.",
+    "hint": "A flag `-port` a usou.",
+    "blanks": [
+      {
+        "accept": [
+          "Func"
+        ]
+      }
+    ]
+  },
+  "ex-5cn1t10x": {
+    "prompt": "Em que trabalham as funções de nível de pacote como `flag.String` e `flag.Parse`?",
+    "hint": "Um subcomando cria o seu próprio do mesmo tipo.",
+    "choices": [
+      {
+        "text": "Um `FlagSet` escondido, `flag.CommandLine`",
+        "why": "Isso. O `flag.NewFlagSet` cria outro."
+      },
+      {
+        "text": "As variáveis de ambiente do processo",
+        "why": "O pacote lê a linha de comando, não o ambiente."
+      },
+      {
+        "text": "Um arquivo de padrões na pasta pessoal",
+        "why": "Nenhum arquivo é lido; os padrões estão no código."
+      },
+      {
+        "text": "As configurações do próprio comando go",
+        "why": "O comando go usa o pacote; não empresta configurações a ele."
+      }
+    ]
+  },
+  "ex-x2a1pken": {
+    "prompt": "`bin/tool list -tag x` foi recusado com `flag provided but not defined: -tag`, embora o `add` aceite `-tag`. Por quê?",
+    "hint": "Quantos `FlagSet`s existem?",
+    "choices": [
+      {
+        "text": "Flags precisam ser definidas antes de o `os.Args` ser lido",
+        "why": "O `os.Args` existe desde o início; a ordem de leitura não é a questão."
+      },
+      {
+        "text": "O `-tag` foi gasto pelo caso `add`",
+        "why": "Só um caso roda. O conjunto do `add` nem foi criado."
+      },
+      {
+        "text": "O `list` tem um `FlagSet` próprio",
+        "why": "Isso. O texto de uso dele só cita `-limit`."
+      },
+      {
+        "text": "Uma tag não pode ter uma letra",
+        "why": "O valor nem foi conferido: a própria flag é desconhecida para o `list`."
+      }
+    ]
+  },
+  "ex-zz1zj5e4": {
+    "prompt": "Um programa lê os mesmos argumentos duas vezes, uma para achar um arquivo de configuração e outra de verdade, e não pode sair na primeira passada. Que tratamento de erro o seu `FlagSet` deve usar?",
+    "hint": "Qual escolha devolve o erro?",
+    "choices": [
+      {
+        "text": "`flag.ExitOnError`",
+        "why": "Isso encerra o programa com o status 2 na primeira flag ruim."
+      },
+      {
+        "text": "`flag.PanicOnError`",
+        "why": "Isso dá panic, o que não é jeito de seguir para uma segunda passada."
+      },
+      {
+        "text": "`flag.ContinueOnError`",
+        "why": "Isso. O `Parse` devolve o erro e o programa decide."
+      },
+      {
+        "text": "Nenhum `FlagSet`, já que `flag.Parse` pode ser chamado duas vezes",
+        "why": "O `flag.CommandLine` sai em caso de erro, então a primeira passada ainda poderia encerrar o programa."
+      }
+    ]
+  },
+  "ex-011j840g": {
+    "prompt": "Por que o `tool` escreve `unknown command \"remove\"` na saída de erro e não na saída padrão?",
+    "hint": "Pense em `tool list | sort`.",
+    "choices": [
+      {
+        "text": "A saída padrão é fechada depois de um erro",
+        "why": "Nada a fecha; a escolha é do programa."
+      },
+      {
+        "text": "Para ficar fora de um pipe",
+        "why": "Isso, e o status 2 diz a um script o que deu errado."
+      },
+      {
+        "text": "O `os.Exit` descarta a saída padrão",
+        "why": "O que foi escrito antes do `os.Exit` está escrito."
+      },
+      {
+        "text": "O pacote `flag` exige isso",
+        "why": "Esta mensagem é do próprio programa; nenhum `FlagSet` viu o `remove`."
+      }
+    ]
+  },
+  "ex-5fdhp29g": {
+    "prompt": "Ponha os passos do `greet` na ordem em que acontecem.",
+    "hint": "Nada pode ser lido antes de ser declarado e analisado.",
+    "items": [
+      "declarar as flags com `flag.String`, `flag.Int`…",
+      "chamar `flag.Parse`",
+      "ler `*name` e `*times`",
+      "imprimir o que sobrou em `flag.Args()`"
+    ]
+  },
+  "ex-wyea6g9f": {
+    "prompt": "Associe cada chamada ao que ela lê.",
+    "hint": "Uma delas aceita qualquer tipo que se lê de texto.",
+    "pairs": [
+      {
+        "left": "`flag.Duration`",
+        "right": "`1s`, `250ms`"
+      },
+      {
+        "left": "`flag.TextVar`",
+        "right": "um `netip.Addr` como `192.0.2.10`"
+      },
+      {
+        "left": "`flag.Var`",
+        "right": "um tipo com `String` e `Set`"
+      },
+      {
+        "left": "`flag.Bool`",
+        "right": "`-shout` sozinho, ou `-shout=false`"
+      }
+    ],
+    "right_distractors": [
+      "um arquivo de configurações"
+    ]
+  },
+  "ex-gcb8seqg": {
+    "prompt": "Quais destas linhas de comando terminam com o status 2? Escolha todas as que se aplicam.",
+    "hint": "Recusas são 2; ajuda é 0; uma palavra de sobra não é recusa.",
+    "choices": [
+      {
+        "text": "`bin/greet -times=two`",
+        "why": "Sim: não é um `int`."
+      },
+      {
+        "text": "`bin/tool remove`",
+        "why": "Sim: a recusa do próprio programa segue a convenção."
+      },
+      {
+        "text": "`bin/greet -h`",
+        "why": "A ajuda sai com 0."
+      },
+      {
+        "text": "`bin/greet -shout false`",
+        "why": "Ele rodou e gritou; `false` foi só uma palavra de sobra."
+      }
+    ]
+  }
+}

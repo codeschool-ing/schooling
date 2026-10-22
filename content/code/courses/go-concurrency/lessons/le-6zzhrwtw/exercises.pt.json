@@ -1,0 +1,362 @@
+{
+  "ex-2k3kgs0q": {
+    "prompt": "O `notes.go` abriu `notes.txt` com `os.O_APPEND|os.O_WRONLY`. O que isso fez a segunda escrita fazer?",
+    "hint": "O arquivo terminou com 33 bytes e duas linhas.",
+    "choices": [
+      {
+        "text": "Substituir a primeira linha",
+        "why": "É o que `os.Create` ou `os.WriteFile` fariam: esvaziar o arquivo antes."
+      },
+      {
+        "text": "Ir depois da linha existente",
+        "why": "Isso: `O_APPEND` escreve no fim."
+      },
+      {
+        "text": "Falhar, porque o arquivo já estava aberto para leitura",
+        "why": "O `os.WriteFile` o tinha fechado; nada o mantinha aberto."
+      },
+      {
+        "text": "Criar um segundo arquivo chamado `notes.txt.1`",
+        "why": "Nenhuma flag renomeia ou duplica um arquivo."
+      }
+    ]
+  },
+  "ex-nwp279bh": {
+    "prompt": "Por que o `notes.go` confere o erro de `f.Close()` depois de escrever, quando um programa que só lê pode fazer apenas `defer f.Close()`?",
+    "hint": "Quando uma escrita que falhou pode ser informada?",
+    "choices": [
+      {
+        "text": "O `defer` não é permitido num arquivo aberto para escrita",
+        "why": "`defer f.Close()` compila para qualquer arquivo; só descarta o erro."
+      },
+      {
+        "text": "Fechar um arquivo duas vezes dá panic",
+        "why": "Um segundo Close devolve um erro, e o programa fecha uma vez de qualquer jeito."
+      },
+      {
+        "text": "Alguns sistemas só acusam a falha no Close",
+        "why": "Isso; ignorá-lo pode perder dados sem uma palavra."
+      },
+      {
+        "text": "O Close devolve quantos bytes foram escritos",
+        "why": "O `Close` devolve só um erro."
+      }
+    ]
+  },
+  "ex-ez2whkwn": {
+    "prompt": "Um programa pede permissões `0o666` na máquina do laboratório, cuja umask é `0022`. O que o `ls -l` mostra?",
+    "hint": "A umask tira bits de todo arquivo que o processo cria.",
+    "choices": [
+      {
+        "text": "`-rw-rw-rw-`, exatamente o que foi pedido",
+        "why": "O modo é um pedido; a umask o apara."
+      },
+      {
+        "text": "`-rw-r--r--`",
+        "why": "Isso: 0o666 menos os bits 0o022 dá 0o644."
+      },
+      {
+        "text": "`-rwxr-xr-x`, porque arquivos ganham execução por padrão",
+        "why": "Nada acrescenta bits; 0o666 nem tem bit de execução."
+      },
+      {
+        "text": "Um erro, porque a umask proíbe escrita do grupo",
+        "why": "A umask nunca recusa; ela tira bits em silêncio."
+      }
+    ]
+  },
+  "ex-add0mdt3": {
+    "prompt": "Como um programa deve decidir que um erro de `os.ReadFile` significa que o arquivo não existe?",
+    "hint": "O texto é para pessoas.",
+    "choices": [
+      {
+        "text": "`strings.Contains(err.Error(), \"no such file\")`",
+        "why": "O texto muda de um sistema para outro e pode mudar; é para pessoas."
+      },
+      {
+        "text": "Comparar `err == nil` e supor o resto",
+        "why": "Um arquivo que você não pode ler também devolve erro; os dois pedem tratamento diferente."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)`",
+        "why": "Isso; ele imprimiu `does not exist: true`."
+      },
+      {
+        "text": "Conferir se `len(data) == 0`",
+        "why": "Um arquivo vazio que existe também não tem dados."
+      }
+    ]
+  },
+  "ex-s5nw08f2": {
+    "prompt": "Quais afirmações sobre a execução do `tree.go` são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Leia a saída linha a linha.",
+    "choices": [
+      {
+        "text": "O `os.ReadDir` listou `14`, `15` e `16` nessa ordem",
+        "why": "Sim; ele ordena pelo nome."
+      },
+      {
+        "text": "O `WalkDir` achou 32 arquivos Go no `io` da biblioteca padrão",
+        "why": "Sim, 144.889 bytes deles, testes incluídos."
+      },
+      {
+        "text": "O `MkdirAll` falhou na segunda chamada, já que `logs/2026/10` existia",
+        "why": "O `MkdirAll` se dá por satisfeito quando os diretórios existem; o `Mkdir` teria falhado."
+      },
+      {
+        "text": "A raiz recusou `../notes.txt`",
+        "why": "Sim: `path escapes from parent`."
+      }
+    ]
+  },
+  "ex-yr4xwe34": {
+    "prompt": "Um servidor junta um nome vindo do usuário a `uploads/` com `filepath.Join` e o abre. O que o `os.Root` acrescenta que uma checagem de `..` no nome não acrescenta?",
+    "hint": "Nem todo jeito de sair de um diretório se escreve com dois pontos.",
+    "choices": [
+      {
+        "text": "Abertura de arquivos mais rápida",
+        "why": "Velocidade não é o propósito dele."
+      },
+      {
+        "text": "Ele recusa fugas por links simbólicos também",
+        "why": "Isso: todo nome é resolvido dentro da raiz ou recusado, links incluídos."
+      },
+      {
+        "text": "Ele cifra os arquivos dentro da raiz",
+        "why": "Ele muda onde os nomes são resolvidos, não o que os arquivos guardam."
+      },
+      {
+        "text": "Ele deixa o diretório só para leitura",
+        "why": "O `os.Root` também tem `Create`, `Mkdir` e `Remove`."
+      }
+    ]
+  },
+  "ex-j41211rk": {
+    "prompt": "Dentro da função do `filepath.WalkDir`, o argumento `err` não é nil para um diretório. O que a lição recomenda?",
+    "hint": "Um diretório que não pôde ser lido chega como esse erro.",
+    "choices": [
+      {
+        "text": "Ignorá-lo e devolver nil, para o percurso terminar",
+        "why": "Isso esconde o diretório ilegível: os totais saem curtos e nada diz por quê."
+      },
+      {
+        "text": "Chamar `os.Exit(1)` na hora",
+        "why": "Devolva o erro e deixe quem chamou o `WalkDir` decidir."
+      },
+      {
+        "text": "Devolvê-lo, a menos que queira pular esse diretório",
+        "why": "Isso; devolver `filepath.SkipDir` é o jeito deliberado de pular."
+      },
+      {
+        "text": "Tentar o mesmo caminho até dar certo",
+        "why": "Um erro de permissão não some por pedir de novo."
+      }
+    ]
+  },
+  "ex-w5m0p48j": {
+    "prompt": "Para deixar uma subárvore inteira como `.git` fora de um percurso, a função devolve `filepath.___`.",
+    "hint": "Um valor de erro sentinela cujo nome diz o que faz.",
+    "blanks": [
+      {
+        "accept": [
+          "SkipDir"
+        ]
+      }
+    ]
+  },
+  "ex-0e7x7k6e": {
+    "prompt": "O `plain.txt` tinha 1.088.890 bytes e o `forgot.txt`, escrito por um buffer sem flush, tinha 1.085.440. Quantos bytes se perderam?",
+    "hint": "Subtraia.",
+    "unit": "bytes"
+  },
+  "ex-yzrj2m99": {
+    "prompt": "Por que o `forgot.txt` tinha exatamente 265 vezes 4.096 bytes?",
+    "hint": "O que um `bufio.Writer` repassa, e quando?",
+    "choices": [
+      {
+        "text": "Só buffers cheios chegaram ao arquivo",
+        "why": "Isso; nada chamou o `Flush`."
+      },
+      {
+        "text": "O disco guarda arquivos em blocos e arredondou para baixo",
+        "why": "O `wc -c` informa o tamanho do arquivo, não os blocos que ocupa; o `plain.txt` não era múltiplo."
+      },
+      {
+        "text": "O `h.Close()` cortou o arquivo no último bloco cheio",
+        "why": "O Close não escreveu nem cortou nada; o fim nunca saiu do buffer."
+      },
+      {
+        "text": "O `Fprintf` para de escrever depois de 4.096 chamadas",
+        "why": "4.096 é o tamanho do buffer em bytes, não uma contagem de chamadas."
+      }
+    ]
+  },
+  "ex-wh731abc": {
+    "prompt": "Por que escrever pelo `bufio.Writer` foi mais rápido?",
+    "hint": "Conte as chamadas de sistema.",
+    "choices": [
+      {
+        "text": "Ele comprime as linhas",
+        "why": "Os dois arquivos tinham 1.088.890 bytes."
+      },
+      {
+        "text": "Ele escreve de várias goroutines",
+        "why": "Uma goroutine fez tudo."
+      },
+      {
+        "text": "Ele pula a formatação do `fmt.Fprintf`",
+        "why": "O `Fprintf` formatou toda linha nas duas execuções."
+      },
+      {
+        "text": "Menos chamadas de sistema, e maiores",
+        "why": "Isso: cerca de 266 escritas de 4.096 bytes."
+      }
+    ]
+  },
+  "ex-b7ghcseh": {
+    "prompt": "Um leitor de logs feito com `bufio.Scanner` informa 100.000 linhas de um arquivo que tem 100.001. O que ele esqueceu?",
+    "hint": "Como o `lines.go` soube por que parou?",
+    "choices": [
+      {
+        "text": "Chamar `Scan` mais uma vez depois do laço",
+        "why": "O `Scan` já devolveu false; chamar de novo não muda nada."
+      },
+      {
+        "text": "Conferir o `s.Err()` depois do laço",
+        "why": "Isso: ele teria dito `token too long`, e o `s.Buffer` é o conserto."
+      },
+      {
+        "text": "Abrir o arquivo com `os.O_APPEND`",
+        "why": "A flag é sobre escrita; este programa lê."
+      },
+      {
+        "text": "Contar a quebra de linha final como linha",
+        "why": "A linha que faltou tinha 100.000 bytes, não era vazia."
+      }
+    ]
+  },
+  "ex-w656ts3j": {
+    "prompt": "Associe cada chamada ao que ela faz.",
+    "hint": "Duas são do lado do Writer, duas do lado do Scanner.",
+    "pairs": [
+      {
+        "left": "`w.Flush()`",
+        "right": "manda o que está no buffer para o arquivo"
+      },
+      {
+        "left": "`s.Scan()`",
+        "right": "avança para a próxima linha, false no fim"
+      },
+      {
+        "left": "`s.Err()`",
+        "right": "diz por que a leitura parou, se não foi o fim"
+      },
+      {
+        "left": "`s.Buffer(buf, max)`",
+        "right": "aumenta a maior linha aceita"
+      }
+    ],
+    "right_distractors": [
+      "fecha o arquivo de baixo"
+    ]
+  },
+  "ex-s4764mw6": {
+    "prompt": "Ordene os passos de escrever um arquivo com segurança por um buffer.",
+    "hint": "O buffer fica em cima do arquivo, então é esvaziado primeiro.",
+    "items": [
+      "`os.Create` o arquivo e conferir o erro",
+      "embrulhá-lo em `bufio.NewWriter`",
+      "escrever as linhas pelo buffer",
+      "`Flush` e conferir o erro",
+      "`Close` o arquivo e conferir o erro"
+    ]
+  },
+  "ex-ed83hxax": {
+    "prompt": "Um programa escreve um relatório com `bufio.NewWriter(f)` e `defer f.Close()`, e nunca chama `Flush`. O relatório tem menos de 4.096 bytes. O que vai parar no arquivo?",
+    "hint": "Quais buffers chegaram ao `forgot.txt`?",
+    "choices": [
+      {
+        "text": "O relatório inteiro, já que o `Close` faz flush",
+        "why": "Fechar o arquivo não faz flush do `bufio.Writer` em cima."
+      },
+      {
+        "text": "Os primeiros 4.096 bytes",
+        "why": "O relatório nem encheu um buffer."
+      },
+      {
+        "text": "Nada: o arquivo fica vazio",
+        "why": "Isso: o único buffer estava incompleto, e nunca recebeu flush."
+      },
+      {
+        "text": "Um erro de execução na saída",
+        "why": "Nada informa a perda, e é isso que a torna perigosa."
+      }
+    ]
+  },
+  "ex-39zv8gnt": {
+    "prompt": "Que par de chamadas a lição 18 usa para ler e escrever arquivos pequenos inteiros num passo?",
+    "hint": "Seção 02.",
+    "choices": [
+      {
+        "text": "`os.Open` e `os.Create`",
+        "why": "Esses abrem um arquivo; ler e escrever são outras chamadas."
+      },
+      {
+        "text": "`os.ReadFile` e `os.WriteFile`",
+        "why": "Isso, os atalhos de arquivo inteiro."
+      },
+      {
+        "text": "`bufio.NewScanner` e `bufio.NewWriter`",
+        "why": "Esses embrulham um arquivo aberto para muitas leituras e escritas pequenas."
+      },
+      {
+        "text": "`os.ReadDir` e `os.MkdirAll`",
+        "why": "Esses trabalham com diretórios."
+      }
+    ]
+  },
+  "ex-p7m7k56r": {
+    "prompt": "Qual chamada abre um arquivo existente só para leitura?",
+    "hint": "É o `OpenFile` com a flag de leitura já preenchida.",
+    "choices": [
+      {
+        "text": "`os.Open`",
+        "why": "Isso."
+      },
+      {
+        "text": "`os.Create`, que também o esvazia",
+        "why": "O `Create` abre para escrita, e esvazia um arquivo existente."
+      },
+      {
+        "text": "`os.ReadDir`, recebendo o nome do arquivo",
+        "why": "O `ReadDir` lista um diretório."
+      },
+      {
+        "text": "`os.OpenRoot`, que abre qualquer coisa abaixo dele",
+        "why": "O `OpenRoot` abre um diretório como raiz para outros nomes."
+      }
+    ]
+  },
+  "ex-d92rsagy": {
+    "prompt": "Em que ordem o `os.ReadDir` devolve as entradas de um diretório?",
+    "hint": "`14`, `15` e `16` saíram em ordem.",
+    "choices": [
+      {
+        "text": "Na ordem em que o disco por acaso as guarda",
+        "why": "É o que o sistema operacional entrega; o `ReadDir` ordena."
+      },
+      {
+        "text": "Ordenadas pelo nome",
+        "why": "Isso."
+      },
+      {
+        "text": "As mais novas primeiro, pela data de modificação",
+        "why": "Datas exigiriam `Info()` para toda entrada; o `ReadDir` ordena pelo nome."
+      },
+      {
+        "text": "Diretórios primeiro, depois arquivos",
+        "why": "Ele não agrupa por tipo."
+      }
+    ]
+  }
+}

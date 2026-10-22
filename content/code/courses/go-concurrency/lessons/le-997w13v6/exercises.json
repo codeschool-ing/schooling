@@ -1,0 +1,628 @@
+[
+  {
+    "id": "ex-41s0kxbx",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the race detector, physically?",
+    "hint": "Think about what `go build -race` produces.",
+    "choices": [
+      {
+        "text": "A separate program that watches yours from outside",
+        "correct": false,
+        "why": "There is no second program. The checking is compiled into yours."
+      },
+      {
+        "text": "A second build of your own program",
+        "correct": true,
+        "why": "Right. `-race` changes how the program is compiled, so the checks run inside it."
+      },
+      {
+        "text": "A linter that reads the source without running it",
+        "correct": false,
+        "why": "It needs the program to run: it reports races that happen, not races that could."
+      },
+      {
+        "text": "A flag that makes goroutines take turns",
+        "correct": false,
+        "why": "Goroutines still run in parallel under `-race`; that is how it sees them collide."
+      }
+    ]
+  },
+  {
+    "id": "ex-wn2bcg2w",
+    "version": 1,
+    "section": "running-it",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cost` took 0.156 s plainly and 1.852 s built with `-race`. Roughly how many times slower was the race build? Give a whole number.",
+    "hint": "1.852 divided by 0.156.",
+    "value": 12,
+    "tolerance": 1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-0237tdqj",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The race build of `cost` was 12 times slower and held 9 times the memory. Why does the lesson say a server that mostly waits on a network would pay far less?",
+    "hint": "What does the detector check, and how much of it does waiting do?",
+    "choices": [
+      {
+        "text": "The detector switches itself off during network calls",
+        "correct": false,
+        "why": "It never switches off. Waiting is simply not something it has to check."
+      },
+      {
+        "text": "Network code is compiled without `-race`",
+        "correct": false,
+        "why": "`-race` applies to the whole program, standard library included."
+      },
+      {
+        "text": "Waiting touches no memory, so there is little to check",
+        "correct": true,
+        "why": "Right. `cost` does almost nothing but touch memory, which is the worst case."
+      },
+      {
+        "text": "Servers run with `GORACE=halt_on_error=1`, which is cheaper",
+        "correct": false,
+        "why": "That option decides when to stop after a report; it does not make checking cheaper."
+      }
+    ]
+  },
+  {
+    "id": "ex-x9g8hv6g",
+    "version": 1,
+    "section": "running-it",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the lesson put the race detector? Choose all that apply.",
+    "hint": "Who pays the cost, and who reads the report?",
+    "choices": [
+      {
+        "text": "`go test -race ./...` in CI on every change",
+        "correct": true,
+        "why": "Yes, the single most useful line the course adds."
+      },
+      {
+        "text": "Your own runs while you develop",
+        "correct": true,
+        "why": "Yes. You pay the cost and you read the report."
+      },
+      {
+        "text": "The binary shipped to every user",
+        "correct": false,
+        "why": "Every user would pay the slowdown for a check that helps only whoever reads its output."
+      },
+      {
+        "text": "A build without tests, run once before release",
+        "correct": false,
+        "why": "One run sees only the races that happen in it. Tests that make goroutines meet, run on every change, see far more."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd4vfn8p",
+    "version": 1,
+    "section": "running-it",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program built with `-race` that found a race carries on running and, at the end, exits with status ___.",
+    "hint": "Lesson 1 met the same number.",
+    "blanks": [
+      {
+        "accept": [
+          "66"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-97mtqst8",
+    "version": 1,
+    "section": "reading-the-output",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the parts of a race report in the order they are printed.",
+    "hint": "The access that completed the race comes first.",
+    "items": [
+      "the access that completed the race, with its stack",
+      "the previous access to the same address, with its stack",
+      "where each goroutine named was created",
+      "how many races were found, and status 66"
+    ]
+  },
+  {
+    "id": "ex-7qxr78de",
+    "version": 1,
+    "section": "reading-the-output",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the `stats.go` report, the previous write's stack is `main.serve()` at line 22, then `main.main.gowrap1()` at line 15. What is line 15?",
+    "hint": "`gowrap` is the runtime's wrapper around one kind of statement.",
+    "choices": [
+      {
+        "text": "The `go serve(s)` statement",
+        "correct": true,
+        "why": "Right. The same line appears again as the goroutine's birthplace."
+      },
+      {
+        "text": "The `fmt.Println` that read the counter",
+        "correct": false,
+        "why": "That read is line 17, under the first block of the report."
+      },
+      {
+        "text": "A second write to `s.served` inside `main`",
+        "correct": false,
+        "why": "`main` writes nothing to the counter; line 15 only starts `serve`."
+      },
+      {
+        "text": "The line where the program exited with status 66",
+        "correct": false,
+        "why": "The exit status has no line in the source; the detector sets it when the program ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-b4gfyrqv",
+    "version": 1,
+    "section": "reading-the-output",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The plain run of `stats.go` printed `served so far: 10` and stopped normally. What does that tell you about the race?",
+    "hint": "What did the plain run have, that the race run had in addition?",
+    "choices": [
+      {
+        "text": "That the race only exists in builds made with `-race`",
+        "correct": false,
+        "why": "The race is in the source. `-race` is what makes it visible."
+      },
+      {
+        "text": "Nothing: without the detector there is no symptom",
+        "correct": true,
+        "why": "Right. That is why the detector exists; the plain run looked fine."
+      },
+      {
+        "text": "That the read happened before every write",
+        "correct": false,
+        "why": "The read came after about ten increments, unordered against them."
+      },
+      {
+        "text": "That the counter is correct and the detector is wrong",
+        "correct": false,
+        "why": "A plausible number is not evidence of order. Nothing synchronised the two goroutines."
+      }
+    ]
+  },
+  {
+    "id": "ex-20d6sf8j",
+    "version": 1,
+    "section": "reading-the-output",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report's read stack ends in `runtime.mapaccess1_faststr` and never reaches your files, but the previous write names `tally.go:17`. What do you do?",
+    "hint": "Both accesses were to the same address.",
+    "choices": [
+      {
+        "text": "Report a bug in Go's map implementation",
+        "correct": false,
+        "why": "The runtime frames are where the map's memory is touched; the race is in the code that called it."
+      },
+      {
+        "text": "Rerun until the read stack names a line, then fix",
+        "correct": false,
+        "why": "Nothing is missing: one side naming your line is enough."
+      },
+      {
+        "text": "Fix the map that line 17 updates",
+        "correct": true,
+        "why": "Right. Same address, so both accesses are that `counts[w]++`."
+      },
+      {
+        "text": "Ignore it, because a runtime frame means a false alarm",
+        "correct": false,
+        "why": "The plain runs agreeing does not make the map safe; the detector saw two unordered accesses."
+      }
+    ]
+  },
+  {
+    "id": "ex-3r0exj7v",
+    "version": 1,
+    "section": "reading-the-output",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `GORACE=halt_on_error=1` change?",
+    "hint": "`tally.go` had four reports without it.",
+    "choices": [
+      {
+        "text": "It makes the detector look for more kinds of race",
+        "correct": false,
+        "why": "It changes nothing about what is detected, only what happens after the first report."
+      },
+      {
+        "text": "It turns the race build back into a plain build",
+        "correct": false,
+        "why": "`GORACE` is read by the detector inside a race build; a plain build has no detector to read it."
+      },
+      {
+        "text": "The program stops at the first report",
+        "correct": true,
+        "why": "Right. One report is easier to read, and you fix them one at a time anyway."
+      },
+      {
+        "text": "It hides reports that point inside the runtime",
+        "correct": false,
+        "why": "The one report it printed started in `runtime.mapaccess2_faststr`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgw563cb",
+    "version": 1,
+    "section": "fixing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each shared thing with the fix the lesson chose for it.",
+    "hint": "Ask what is shared, and how many steps an update takes.",
+    "pairs": [
+      {
+        "left": "the `served` counter in `stats.go`",
+        "right": "`atomic.Int64`"
+      },
+      {
+        "left": "the `counts` map in `tally.go`",
+        "right": "`sync.Mutex`"
+      },
+      {
+        "left": "the `results` slice in `collect.go`",
+        "right": "one element per goroutine"
+      },
+      {
+        "left": "a value handed from a worker to a collector",
+        "right": "a channel"
+      }
+    ],
+    "right_distractors": [
+      "`time.Sleep` between the accesses"
+    ]
+  },
+  {
+    "id": "ex-fnxgcz63",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `tally.go` given a mutex rather than an atomic?",
+    "hint": "What does `counts[w]++` do to a map?",
+    "choices": [
+      {
+        "text": "Atomics are slower than a mutex",
+        "correct": false,
+        "why": "Speed was not the reason. An atomic cannot make several steps on a map look like one."
+      },
+      {
+        "text": "Each update is several steps on one structure, done as one",
+        "correct": true,
+        "why": "Right: look up, add, store, perhaps grow. A mutex makes the sequence one step to everyone else."
+      },
+      {
+        "text": "The map was too large for an atomic",
+        "correct": false,
+        "why": "Size is not the issue; an atomic type holds one value, and a map update is not one operation."
+      },
+      {
+        "text": "`sync/atomic` cannot be imported in a `main` package",
+        "correct": false,
+        "why": "`stats.go`, a `main` package, imported it a section earlier."
+      }
+    ]
+  },
+  {
+    "id": "ex-j19mkwx2",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`collect.go` was fixed with no lock, no atomic and no channel. Why is writing `results[i]` from a thousand goroutines not a race?",
+    "hint": "A race needs the same memory.",
+    "choices": [
+      {
+        "text": "Writes to a slice are atomic in Go",
+        "correct": false,
+        "why": "They are not; `append` raced on that same slice a moment earlier."
+      },
+      {
+        "text": "`wg.Wait` orders the goroutines against each other",
+        "correct": false,
+        "why": "`wg.Wait` orders the goroutines against main, not against each other."
+      },
+      {
+        "text": "`make` locks the slice for the rest of the program",
+        "correct": false,
+        "why": "`make` only allocates. Nothing is locked."
+      },
+      {
+        "text": "Each goroutine writes a different element of the slice",
+        "correct": true,
+        "why": "Right. Different elements are different memory, so no two accesses meet."
+      }
+    ]
+  },
+  {
+    "id": "ex-eydb2e76",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the mutex went into `tally.go`, the program printed exactly the map it printed before. What had the fix changed?",
+    "hint": "Was the old answer right by construction?",
+    "choices": [
+      {
+        "text": "It is right by construction now, and the detector agrees",
+        "correct": true,
+        "why": "Right, and the detector, run again, agrees."
+      },
+      {
+        "text": "Nothing, so the mutex can be removed",
+        "correct": false,
+        "why": "Without it the detector reported four races; the plain runs were right by luck."
+      },
+      {
+        "text": "The order in which the words are printed",
+        "correct": false,
+        "why": "`fmt` prints a map sorted by key either way."
+      },
+      {
+        "text": "The program now runs on one processor",
+        "correct": false,
+        "why": "A mutex does not change `GOMAXPROCS`; it orders the accesses to the map."
+      }
+    ]
+  },
+  {
+    "id": "ex-nt0wc6z8",
+    "version": 1,
+    "section": "fixing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A type keeps a `count` and a `total` that must always change together. A colleague makes both `atomic.Int64`. What is still wrong?",
+    "hint": "What can a reader see between the two updates?",
+    "choices": [
+      {
+        "text": "Nothing, because each field is now safe",
+        "correct": false,
+        "why": "Each field is safe on its own; the pair is not."
+      },
+      {
+        "text": "`atomic.Int64` cannot hold a total",
+        "correct": false,
+        "why": "It holds any 64-bit integer. The problem is the gap between two updates."
+      },
+      {
+        "text": "Between the two Adds, a reader sees a half-made pair",
+        "correct": true,
+        "why": "Right. Two values that move together are a structure, and a structure needs a mutex."
+      },
+      {
+        "text": "The detector will report every `Add` as a race",
+        "correct": false,
+        "why": "Atomic operations are synchronised and the detector knows it; it reports nothing, which is why this one is subtle."
+      }
+    ]
+  },
+  {
+    "id": "ex-dfg1w06h",
+    "version": 1,
+    "section": "in-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go test ./cache` and `go test -count=5 ./cache` both passed on the unfixed `Cache`. Why did the checks on the answers not catch the race?",
+    "hint": "What was the risk: a wrong answer, or something else?",
+    "choices": [
+      {
+        "text": "The tests did not call `Get` from several goroutines",
+        "correct": false,
+        "why": "`TestGetFromManyGoroutines` did exactly that, six at once."
+      },
+      {
+        "text": "The risk was two map writes at once",
+        "correct": true,
+        "why": "Right. Only the detector sees unordered accesses that happened to give the right answer."
+      },
+      {
+        "text": "`-count=5` reused a cached result",
+        "correct": false,
+        "why": "`-count` forces the tests to run; the output showed a fresh time, not `(cached)`."
+      },
+      {
+        "text": "`strings.ToUpper` is too fast to race",
+        "correct": false,
+        "why": "Speed changes how often the accesses overlap, never whether they are ordered."
+      }
+    ]
+  },
+  {
+    "id": "ex-err3jj80",
+    "version": 1,
+    "section": "in-tests",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under `go test -race`, what turns a race report into a failing test?",
+    "hint": "Read the end of `race.log`.",
+    "choices": [
+      {
+        "text": "A `t.Errorf` the test author has to write",
+        "correct": false,
+        "why": "No assertion was added; the test failed with the same code that passed."
+      },
+      {
+        "text": "The testing package fails it by itself",
+        "correct": true,
+        "why": "Right, so CI goes red without anybody reading the report."
+      },
+      {
+        "text": "Exit status 66 from the test binary",
+        "correct": false,
+        "why": "The go command reported FAIL and the shell saw 1; it is the test's verdict that matters."
+      },
+      {
+        "text": "A panic inside `Get`",
+        "correct": false,
+        "why": "`Get` never panicked; the answers were right every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3zrek0c",
+    "version": 1,
+    "section": "in-tests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why would running the `cache` package's own code with `-race`, without `TestGetFromManyGoroutines`, find nothing?",
+    "hint": "The detector reports races that happen in the run it watches.",
+    "choices": [
+      {
+        "text": "Packages that are not `main` cannot be built with `-race`",
+        "correct": false,
+        "why": "`go test -race ./cache` built that package with the detector."
+      },
+      {
+        "text": "The mutex hides the race",
+        "correct": false,
+        "why": "The unfixed `Cache` had no mutex."
+      },
+      {
+        "text": "No code in it ever runs concurrently",
+        "correct": true,
+        "why": "Right. A test has to make the goroutines meet before the detector can see them collide."
+      },
+      {
+        "text": "`TestGet` runs first and warms the cache",
+        "correct": false,
+        "why": "Each test makes its own `Cache` with `New`; nothing carries over."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcfswrpx",
+    "version": 1,
+    "section": "in-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The fix holds the mutex for the whole of `Get`, including the slow `lookup`. What does that cost?",
+    "hint": "Two goroutines want two different keys.",
+    "choices": [
+      {
+        "text": "A race between `lookup` and `seen`",
+        "correct": false,
+        "why": "The detector ran twenty times and reported nothing."
+      },
+      {
+        "text": "A deadlock when the same key is asked twice",
+        "correct": false,
+        "why": "The second call waits for the first to unlock and then finds the answer remembered."
+      },
+      {
+        "text": "Lookups of different keys wait in line",
+        "correct": true,
+        "why": "Right. Correct first; lessons 8 and 9 show how to hold the lock for less time."
+      },
+      {
+        "text": "Twice the memory of the unfixed version",
+        "correct": false,
+        "why": "A mutex is a few bytes; the cost is waiting, not memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrpwmn8z",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of handling a race report in order.",
+    "hint": "Diagnose before touching the code, and prove the fix after.",
+    "items": [
+      "read the two accesses and their lines",
+      "say what is shared and how it is updated",
+      "choose an atomic, a mutex, ownership or a channel",
+      "run the detector again over the same tests"
+    ]
+  },
+  {
+    "id": "ex-3582a0ms",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler increments `hits[path]++` in a package-level map on every request. Tests call the handler once each and pass under `-race`. In production the server sometimes dies with a map error. Which test would have shown the race?",
+    "hint": "Section 05: make the goroutines meet.",
+    "choices": [
+      {
+        "text": "The same tests with `-count=100`",
+        "correct": false,
+        "why": "Repeating one call at a time never puts two goroutines on the map together."
+      },
+      {
+        "text": "Several goroutines calling it at once, with `-race`",
+        "correct": true,
+        "why": "Right. That is the shape of `TestGetFromManyGoroutines`."
+      },
+      {
+        "text": "A test without `-race`, so the race is not slowed down",
+        "correct": false,
+        "why": "Without the detector a race is visible only by luck, as `tally.go` showed."
+      },
+      {
+        "text": "A test that checks the final count of `hits` is right",
+        "correct": false,
+        "why": "A right count proves nothing; `tally.go` printed right counts with four races in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttwar7dd",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The command that runs every test of every package in a module with the detector watching is `go test ___ ./...`.",
+    "hint": "The flag this lesson is named after.",
+    "blanks": [
+      {
+        "accept": [
+          "-race"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

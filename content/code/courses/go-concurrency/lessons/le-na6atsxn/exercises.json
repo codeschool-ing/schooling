@@ -1,0 +1,569 @@
+[
+  {
+    "id": "ex-m0wcc07a",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this course add a C compiler to the machine the `go` course built?",
+    "hint": "Think about what the race detector is written in.",
+    "choices": [
+      {
+        "text": "Go 1.27.1 compiles goroutines through C",
+        "correct": false,
+        "why": "Goroutines are ordinary Go and build with no C at all; `spin.go` would build on a machine with no `gcc`."
+      },
+      {
+        "text": "The race detector is a C++ runtime that is linked in through cgo",
+        "correct": true,
+        "why": "Right. `-race` links ThreadSanitizer through cgo, and cgo needs a C compiler on the machine."
+      },
+      {
+        "text": "The `testing` package of lessons 25 to 30 is written in C",
+        "correct": false,
+        "why": "`testing` is Go. Only the race detector needs cgo, and with it the compiler."
+      },
+      {
+        "text": "`gofmt` refuses to format files when `gcc` is missing",
+        "correct": false,
+        "why": "`gofmt` is a Go program with nothing to do with C. The section's check found it in `/usr/local/go/bin` beside `go`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nmwhgyn",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana runs `go env CGO_ENABLED CC` on a fresh machine and gets `1` and `gcc`. Nobody set either value. What does the `1` tell her?",
+    "hint": "Section 05 shows the same command printing `0`.",
+    "choices": [
+      {
+        "text": "That one goroutine at a time is allowed to run",
+        "correct": false,
+        "why": "That would be `GOMAXPROCS=1`, a different setting entirely."
+      },
+      {
+        "text": "That the race detector is switched on for every build",
+        "correct": false,
+        "why": "The detector is on only when `-race` is passed. `CGO_ENABLED` says whether it could be."
+      },
+      {
+        "text": "The go command looked for `gcc` and found it",
+        "correct": true,
+        "why": "Right. With no compiler in sight the default turns to `0`, as section 05 showed."
+      },
+      {
+        "text": "That the installed Go is release 1 of the language",
+        "correct": false,
+        "why": "`go version` reports the release, `go1.27.1`. `CGO_ENABLED` is a switch, on or off."
+      }
+    ]
+  },
+  {
+    "id": "ex-w903me6g",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course recommend against learning it on the Go Playground, although the Playground runs Go programs?",
+    "hint": "What does the course ask you to read, besides the program?",
+    "choices": [
+      {
+        "text": "There is no terminal to type `go run -race` or `go test` in",
+        "correct": true,
+        "why": "Right. Half the course is reading what the go command prints, and the Playground gives you no go command to type."
+      },
+      {
+        "text": "It runs a release of Go older than the one with `WaitGroup.Go`",
+        "correct": false,
+        "why": "The section makes no claim about the Playground's release. Its objection is what is missing around the program."
+      },
+      {
+        "text": "Goroutines are disabled there",
+        "correct": false,
+        "why": "The section does not say so, and it recommends the Playground for trying fragments."
+      },
+      {
+        "text": "It needs a paid account",
+        "correct": false,
+        "why": "It costs nothing. The objection is the missing terminal."
+      }
+    ]
+  },
+  {
+    "id": "ex-q72gvqcg",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A classmate has Go 1.27.1 in `/usr/local/go` and an old Go from a package manager in `/usr/bin`. Their `~/.profile` appends `/usr/local/go/bin` to the end of `PATH`. What does `go version` report?",
+    "hint": "The shell runs the first match it finds, reading `PATH` from left to right.",
+    "choices": [
+      {
+        "text": "1.27.1, because the newest release wins",
+        "correct": false,
+        "why": "The shell knows nothing about releases. It takes the first `go` along `PATH`."
+      },
+      {
+        "text": "The old release in `/usr/bin`",
+        "correct": true,
+        "why": "Right. `/usr/bin` comes earlier in `PATH`, so its `go` runs. `command -v go` would name that file."
+      },
+      {
+        "text": "An error, because two programs with the same name conflict",
+        "correct": false,
+        "why": "Nothing conflicts: the shell stops at the first match and never sees the second."
+      },
+      {
+        "text": "Both releases, one per line",
+        "correct": false,
+        "why": "One program runs, and it prints one line."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8aj0sx2",
+    "version": 1,
+    "section": "two-words",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Rob Pike's terms, which of these is a property of the PROGRAM rather than of a run?",
+    "hint": "One of the two words describes how the code is written.",
+    "choices": [
+      {
+        "text": "Parallelism",
+        "correct": false,
+        "why": "Parallelism is whether, at an instant, more than one activity is executing. The same program had different amounts of it in three runs."
+      },
+      {
+        "text": "Concurrency",
+        "correct": true,
+        "why": "Right. It is how the program is structured, as independent activities, and it was the same in every run of `spin.go`."
+      },
+      {
+        "text": "The number of processors",
+        "correct": false,
+        "why": "That belongs to the machine, and `nproc` reports it."
+      },
+      {
+        "text": "The value of `GOMAXPROCS`",
+        "correct": false,
+        "why": "`GOMAXPROCS` was changed between runs without touching the source, so it belongs to the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh26rgf1",
+    "version": 1,
+    "section": "two-words",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`spin.go` took 400 ms with `GOMAXPROCS=4` and 1.57 s with `GOMAXPROCS=1`. Roughly how many times longer did the run with one processor take? Give a whole number.",
+    "hint": "1,570 divided by 400.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-qhzxedaa",
+    "version": 1,
+    "section": "two-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`wait.go` runs four goroutines that each sleep one second. With `GOMAXPROCS=1` it finished in one second, not four. Why?",
+    "hint": "What does a sleeping goroutine need a processor for?",
+    "choices": [
+      {
+        "text": "`GOMAXPROCS` is ignored for sleeping goroutines",
+        "correct": false,
+        "why": "It is not ignored; it is simply not a limit on anything that waits. It limits goroutines executing Go code."
+      },
+      {
+        "text": "The runtime cut the sleeps short to save time",
+        "correct": false,
+        "why": "Each sleep lasted its full second. They overlapped instead of running one after another."
+      },
+      {
+        "text": "A sleeping goroutine needs no processor",
+        "correct": true,
+        "why": "Right. While one waits there is nothing to run for it, and all four wait at once."
+      },
+      {
+        "text": "The machine has four processors whatever `GOMAXPROCS` says",
+        "correct": false,
+        "why": "`GOMAXPROCS=1` really did limit Go code to one processor: `spin.go` took 1.57 s with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-p31e414p",
+    "version": 1,
+    "section": "two-words",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program fetches 200 web pages, one after another, and spends almost all its time waiting for the network. It runs on a one-processor machine. What does rewriting it with one goroutine per page buy?",
+    "hint": "This is `wait.go` with a network in place of `time.Sleep`.",
+    "choices": [
+      {
+        "text": "Nothing, since one processor leaves no room for parallelism",
+        "correct": false,
+        "why": "No parallelism, yes. But the waits overlap, as `wait.go` showed with `GOMAXPROCS=1`."
+      },
+      {
+        "text": "Much less time on the clock, because the waits overlap",
+        "correct": true,
+        "why": "Right. Concurrency pays even without parallelism when the work is mostly waiting."
+      },
+      {
+        "text": "Roughly half the time, the most one processor allows",
+        "correct": false,
+        "why": "There is no such ceiling for waiting: four one-second sleeps took one second, a quarter."
+      },
+      {
+        "text": "Faster arithmetic in each request",
+        "correct": false,
+        "why": "The arithmetic is the same and there is little of it. What changes is that waiting stops being sequential."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9mhrzte",
+    "version": 1,
+    "section": "two-words",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each run of `spin.go` with the time it printed.",
+    "hint": "One processor took about four times as long as four.",
+    "pairs": [
+      {
+        "left": "`GOMAXPROCS=1`",
+        "right": "1.57s"
+      },
+      {
+        "left": "`GOMAXPROCS=2`",
+        "right": "800ms"
+      },
+      {
+        "left": "`GOMAXPROCS=4`",
+        "right": "400ms"
+      }
+    ],
+    "right_distractors": [
+      "100ms"
+    ]
+  },
+  {
+    "id": "ex-w0bxbjdz",
+    "version": 1,
+    "section": "what-go-promises",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`order.go` printed `caio` first in five runs out of five. What may a program built on it assume about the order of the greetings?",
+    "hint": "Is the order part of the language, or of one release's scheduler?",
+    "choices": [
+      {
+        "text": "That `caio` comes first, since five runs agreed",
+        "correct": false,
+        "why": "Five agreeing runs describe this scheduler on this machine. The `-race` build of the same program printed `ana` first."
+      },
+      {
+        "text": "That they come in the order the loop started them",
+        "correct": false,
+        "why": "The loop started `ana` first, and `ana` was last in four of the five runs."
+      },
+      {
+        "text": "Nothing: the order is not part of the language",
+        "correct": true,
+        "why": "Right. If order matters, the program has to impose it, with a channel or a lock."
+      },
+      {
+        "text": "That they come in alphabetical order",
+        "correct": false,
+        "why": "The runs printed `caio`, `ana`, `bia`, which is not alphabetical, and nothing sorts goroutines."
+      }
+    ]
+  },
+  {
+    "id": "ex-3q8hxsq8",
+    "version": 1,
+    "section": "what-go-promises",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of the five runs of `count.go` printed `total: 400000`, the right answer. Why does the lesson call that the most dangerous line on the screen?",
+    "hint": "Imagine a test that ran the program once.",
+    "choices": [
+      {
+        "text": "One run like it passes a test with the race still inside",
+        "correct": true,
+        "why": "Right. The defect is in the program whether or not a given run shows it."
+      },
+      {
+        "text": "It proves that the race detector was switched off for that one run",
+        "correct": false,
+        "why": "It was switched off, since these runs had no `-race`, but a right total proves nothing about the detector."
+      },
+      {
+        "text": "It overflows an `int` and wraps around",
+        "correct": false,
+        "why": "400,000 fits an `int` with room to spare. Lost updates make the total smaller, never larger."
+      },
+      {
+        "text": "It means two goroutines never started",
+        "correct": false,
+        "why": "If two had never started the total would be at most 200,000."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bf7dyev",
+    "version": 1,
+    "section": "what-go-promises",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the lost update in the lesson's figure in order. `total` starts at 7.",
+    "hint": "Both reads happen before either write.",
+    "items": [
+      "goroutine 10 reads 7",
+      "goroutine 11 reads 7",
+      "goroutine 10 writes 8",
+      "goroutine 11 writes 8"
+    ]
+  },
+  {
+    "id": "ex-v90rxn4v",
+    "version": 1,
+    "section": "what-go-promises",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these make something one goroutine did visible to another, by Go's promises? Choose all that apply.",
+    "hint": "Go's promises are about synchronisation, not about timing.",
+    "choices": [
+      {
+        "text": "A value sent on a channel and received by the other",
+        "correct": true,
+        "why": "Yes. What the sender did before the send is visible to the receiver after the receive."
+      },
+      {
+        "text": "`wg.Wait` returning after the goroutine finished",
+        "correct": true,
+        "why": "Yes. That is why `count.go` may read `total` after `wg.Wait`."
+      },
+      {
+        "text": "Waiting long enough with `time.Sleep`",
+        "correct": false,
+        "why": "A sleep is timing, not synchronisation. Go promises nothing about what a pause makes visible."
+      },
+      {
+        "text": "Both goroutines writing to the same variable",
+        "correct": false,
+        "why": "That is the data race itself, the thing the promises do not cover."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv4jykdw",
+    "version": 1,
+    "section": "what-go-promises",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go run -race count.go` printed two race reports and a wrong total. A colleague runs the race detector once over a program and sees no report. What can they conclude?",
+    "hint": "What does the detector watch?",
+    "choices": [
+      {
+        "text": "That the program has no data race",
+        "correct": false,
+        "why": "The detector reports races that happen in the run it watches. A path the run never took is unexamined."
+      },
+      {
+        "text": "That no race happened on the paths that run took",
+        "correct": true,
+        "why": "Right. It is evidence about one run, which is why lesson 16 runs it over tests that exercise the code."
+      },
+      {
+        "text": "That the detector was not linked in",
+        "correct": false,
+        "why": "If `-race` could not be linked, the go command refuses with `-race requires cgo` rather than staying quiet."
+      },
+      {
+        "text": "That the program will print the same output every time",
+        "correct": false,
+        "why": "Even a race-free program like `order.go` prints its lines in different orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-t43t6eax",
+    "version": 1,
+    "section": "what-go-promises",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program run with the race detector that finds a race exits with status ___, so a script can notice.",
+    "hint": "The last line of the `go run -race count.go` transcript.",
+    "blanks": [
+      {
+        "accept": [
+          "66"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xp90j267",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a machine with no C compiler, `go run -race` says `-race requires cgo; enable cgo by setting CGO_ENABLED=1`. What happens if the student does exactly that?",
+    "hint": "Section 05 tried it.",
+    "choices": [
+      {
+        "text": "The program runs, with the race detector inside it",
+        "correct": false,
+        "why": "cgo still needs a compiler to build the C half of the runtime, and there is none."
+      },
+      {
+        "text": "It fails one step later, naming the missing `gcc`",
+        "correct": true,
+        "why": "Right: `cgo: C compiler \"gcc\" not found`. The repair is to install the compiler."
+      },
+      {
+        "text": "The go command downloads a C compiler from the module proxy",
+        "correct": false,
+        "why": "The module proxy serves Go modules and toolchains. A C compiler comes from your system's packages."
+      },
+      {
+        "text": "The same message again, word for word",
+        "correct": false,
+        "why": "The message changes: it now names the compiler it looked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn7s6etz",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A student has `gcc` installed and `command -v gcc` finds it, yet `go test -race` still says `-race requires cgo`. Where should they look first?",
+    "hint": "If the compiler is there, the switch was turned off by somebody.",
+    "choices": [
+      {
+        "text": "Reinstall Go, because the toolchain is damaged",
+        "correct": false,
+        "why": "Nothing points at the toolchain. The message is about cgo being off."
+      },
+      {
+        "text": "Install a second C compiler such as `clang`",
+        "correct": false,
+        "why": "The first compiler is found. Another would change nothing while cgo is switched off."
+      },
+      {
+        "text": "`go env -changed`, looking for `CGO_ENABLED=0`",
+        "correct": true,
+        "why": "Right. It lists every setting that differs from the default, whether it came from the shell or from `go env -w`."
+      },
+      {
+        "text": "Lower `GOMAXPROCS` to 1",
+        "correct": false,
+        "why": "`GOMAXPROCS` decides parallelism and has nothing to do with cgo."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnr2yh31",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message with its cause.",
+    "hint": "Two of them come from the go command and one from the shell.",
+    "pairs": [
+      {
+        "left": "`-race requires cgo`",
+        "right": "cgo is off, by default or by hand"
+      },
+      {
+        "left": "`cgo: C compiler \"gcc\" not found`",
+        "right": "cgo forced on with no compiler installed"
+      },
+      {
+        "left": "`go: command not found`",
+        "right": "no `go` in any directory of `PATH`"
+      }
+    ],
+    "right_distractors": [
+      "two goroutines wrote the same variable"
+    ]
+  },
+  {
+    "id": "ex-0d29h86g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lab's checks in the order section 02 ran them, from the toolchain outwards.",
+    "hint": "The race check comes last, because it needs everything before it.",
+    "items": [
+      "`go version`",
+      "`command -v go gofmt gcc`",
+      "`gcc --version | head -1`",
+      "`go env CGO_ENABLED CC`",
+      "`go run -race order.go`"
+    ]
+  },
+  {
+    "id": "ex-g4sq07nq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its service from a four-processor machine to a container limited to one processor. Its requests mostly wait on a database. Which of the lesson's two programs predicts what happens to it?",
+    "hint": "Is the service's time spent computing or waiting?",
+    "choices": [
+      {
+        "text": "`spin.go`: it will take about four times as long",
+        "correct": false,
+        "why": "That is the prediction for work that computes. This service mostly waits."
+      },
+      {
+        "text": "`wait.go`: waiting overlaps on a single processor as well",
+        "correct": true,
+        "why": "Right. Requests that wait barely need the processor, so losing three of them costs far less than four times."
+      },
+      {
+        "text": "`count.go`: one processor removes the data race",
+        "correct": false,
+        "why": "A race does not need two processors: goroutines interleave on one as well, and the memory model makes no exception for it."
+      },
+      {
+        "text": "`order.go`: the requests will be answered in order",
+        "correct": false,
+        "why": "Nothing about one processor makes goroutines run in the order they were started."
+      }
+    ]
+  }
+]

@@ -1,0 +1,497 @@
+[
+  {
+    "id": "ex-jsysgpeh",
+    "version": 1,
+    "section": "send-and-receive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `hand.go`, `main` reads two values with `<-results` and has no `WaitGroup`. What stops it from printing before the goroutines have finished?",
+    "hint": "What does a receive do when no value has been sent yet?",
+    "choices": [
+      {
+        "text": "Each receive waits until a value has been sent",
+        "correct": true,
+        "why": "Right. The value arriving is itself the proof that the goroutine got that far."
+      },
+      {
+        "text": "The `time.Sleep` inside `sum` holds `main` back as well",
+        "correct": false,
+        "why": "A sleep blocks only the goroutine that calls it. `main` is held by its receive."
+      },
+      {
+        "text": "Nothing: it may print before them, and did in one run",
+        "correct": false,
+        "why": "It cannot print a total before receiving it, and it cannot receive before a send."
+      },
+      {
+        "text": "`make(chan int)` makes `main` the last goroutine to run",
+        "correct": false,
+        "why": "Making a channel decides nothing about order. Receiving from it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-8h8xqxx1",
+    "version": 1,
+    "section": "send-and-receive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both totals of `hand.go` arrived at about 200 ms, though each goroutine slept 200 ms. Why not 200 ms and then 400 ms?",
+    "hint": "Look at the figure in section 02.",
+    "choices": [
+      {
+        "text": "The channel holds both values, so the second send did not wait",
+        "correct": false,
+        "why": "`make(chan int)` has no room for values at all; each send waited for a receive."
+      },
+      {
+        "text": "The two goroutines slept at the same time",
+        "correct": true,
+        "why": "Right. Their waits overlapped, and each send only waited for `main` to be ready."
+      },
+      {
+        "text": "The second goroutine skipped its sleep because the first had slept",
+        "correct": false,
+        "why": "Each goroutine runs its own copy of `sum`, sleep included."
+      },
+      {
+        "text": "Rounding to 10 ms hid the difference",
+        "correct": false,
+        "why": "A 200 ms difference would survive rounding to 10 ms easily."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2r965sm",
+    "version": 1,
+    "section": "send-and-receive",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague needs to know which list each total in `hand.go` came from. In one run the first value received was 60. What should they change?",
+    "hint": "Which goroutine finishes first is not promised.",
+    "choices": [
+      {
+        "text": "Start the goroutines in the order the totals are wanted",
+        "correct": false,
+        "why": "That is what the program already does, and 60 still came first."
+      },
+      {
+        "text": "Add a short sleep between the two `go` statements",
+        "correct": false,
+        "why": "A sleep makes one order likely on one machine. It promises nothing."
+      },
+      {
+        "text": "Send the list's name along with its total",
+        "correct": true,
+        "why": "Right. If the value says where it came from, the order it arrives in no longer matters."
+      },
+      {
+        "text": "Use two receives on two separate lines",
+        "correct": false,
+        "why": "It already does, and both read from one shared channel, which carries no origin."
+      }
+    ]
+  },
+  {
+    "id": "ex-65w1xxd7",
+    "version": 1,
+    "section": "send-and-receive",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A channel declared with `var ch chan int` and never made has the zero value ___.",
+    "hint": "The same zero value as a map or a pointer.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jddbt2z6",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`closed.go` sent two strings, closed the channel and received four times. What did the third receive return?",
+    "hint": "The channel was closed and empty by then.",
+    "choices": [
+      {
+        "text": "`\"second\"` again, the last value sent",
+        "correct": false,
+        "why": "A closed channel does not repeat its last value. It answers with the zero value."
+      },
+      {
+        "text": "It blocked until the program ended",
+        "correct": false,
+        "why": "Receiving from a closed, empty channel never blocks; that is what close is for."
+      },
+      {
+        "text": "`\"\"` and `false`",
+        "correct": true,
+        "why": "Right: the element type's zero value, and `ok` false to say the channel is closed."
+      },
+      {
+        "text": "A panic: receive from closed channel",
+        "correct": false,
+        "why": "Receiving after close is allowed and answers at once. Sending after close is what panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-haz3rrqb",
+    "version": 1,
+    "section": "closing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each operation on a closed channel with what it does.",
+    "hint": "Two of them panic.",
+    "pairs": [
+      {
+        "left": "`v, ok := <-ch` with values left",
+        "right": "the next value and `true`"
+      },
+      {
+        "left": "`v, ok := <-ch` once empty",
+        "right": "the zero value and `false`, at once"
+      },
+      {
+        "left": "`ch <- v`",
+        "right": "panic: send on closed channel"
+      },
+      {
+        "left": "`close(ch)`",
+        "right": "panic: close of closed channel"
+      }
+    ],
+    "right_distractors": [
+      "blocks until somebody reopens it"
+    ]
+  },
+  {
+    "id": "ex-03ndsv4k",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say only the sending side should close a channel?",
+    "hint": "What can a receiver not know about the senders?",
+    "choices": [
+      {
+        "text": "Closing from the receiving side is a compile error",
+        "correct": false,
+        "why": "Only when the receiver holds a `<-chan` type. With a plain `chan` it compiles, and that is the danger."
+      },
+      {
+        "text": "Nobody else can be sure the sending is over",
+        "correct": true,
+        "why": "Right. The goroutine that owns the sending is the one that knows it has finished."
+      },
+      {
+        "text": "Closing discards the values still in the channel",
+        "correct": false,
+        "why": "It does not: `closed.go` received both values sent before the close."
+      },
+      {
+        "text": "A receiver may check whether the channel is closed first",
+        "correct": false,
+        "why": "There is no such check, and an answer could be out of date by the time it arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-fffsfd9h",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`func drain(in <-chan int)` contains `in <- 1`. When is the mistake found?",
+    "hint": "`oops.go`.",
+    "choices": [
+      {
+        "text": "When `drain` runs, as a panic",
+        "correct": false,
+        "why": "It never gets that far. A direction is part of the type."
+      },
+      {
+        "text": "Only by the race detector, with `-race`",
+        "correct": false,
+        "why": "This is not a race; it is a type error."
+      },
+      {
+        "text": "Never: the direction is a comment for readers",
+        "correct": false,
+        "why": "The compiler enforces it, and refused `oops.go`."
+      },
+      {
+        "text": "At compile time: cannot send to receive-only channel",
+        "correct": true,
+        "why": "Right. `go build` refused before anything ran, naming the type `<-chan int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0wrh2mc",
+    "version": 1,
+    "section": "ranging",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What ends `for w := range words` in `words.go`?",
+    "hint": "Delete one line and the loop never ends.",
+    "choices": [
+      {
+        "text": "Receiving as many values as `strings.Fields` returned",
+        "correct": false,
+        "why": "`main` does not know how many words there are; that is why it ranges."
+      },
+      {
+        "text": "`split` closing the channel after the last word",
+        "correct": true,
+        "why": "Right. The loop receives until the channel is closed and empty."
+      },
+      {
+        "text": "`split` returning",
+        "correct": false,
+        "why": "In `forgot.go`, `split` returned and the loop waited on."
+      },
+      {
+        "text": "A receive that waits longer than a second",
+        "correct": false,
+        "why": "A range has no timeout of its own. Lesson 5 adds timeouts with `select`."
+      }
+    ]
+  },
+  {
+    "id": "ex-b1jt22zp",
+    "version": 1,
+    "section": "ranging",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`forgot.go` printed all four words and then `fatal error: all goroutines are asleep - deadlock!`. What told the runtime the program was stuck?",
+    "hint": "Read the message literally.",
+    "choices": [
+      {
+        "text": "The channel had been open too long",
+        "correct": false,
+        "why": "The runtime has no notion of a channel being open too long."
+      },
+      {
+        "text": "`main` had received more values than were sent",
+        "correct": false,
+        "why": "It received exactly the four that were sent, then waited for a fifth."
+      },
+      {
+        "text": "Every goroutine in the program was blocked",
+        "correct": true,
+        "why": "Right. `split` had returned and `main` waited on a receive, so nothing could ever move."
+      },
+      {
+        "text": "The compiler marked the missing `close`",
+        "correct": false,
+        "why": "It compiled without complaint. The error came at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-4d3cpfnn",
+    "version": 1,
+    "section": "ranging",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same forgotten `close` sits in a server, where other goroutines are waiting for connections. What does the student see?",
+    "hint": "When does the runtime's deadlock check fire?",
+    "choices": [
+      {
+        "text": "The same fatal error, as soon as the words run out",
+        "correct": false,
+        "why": "The check fires only when every goroutine is blocked, and the server's are alive."
+      },
+      {
+        "text": "Nothing: the ranging goroutine waits forever, silently",
+        "correct": true,
+        "why": "Right. That is a goroutine leak, lesson 6's subject."
+      },
+      {
+        "text": "A panic: receive on a channel nobody sends to",
+        "correct": false,
+        "why": "No such panic exists. Waiting is legal."
+      },
+      {
+        "text": "The loop ends after a timeout the runtime adds",
+        "correct": false,
+        "why": "The runtime adds no timeouts to channel operations."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jjmecbp",
+    "version": 1,
+    "section": "ranging",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the events of `words.go` in order.",
+    "hint": "A close never overtakes values already sent.",
+    "items": [
+      "`main` makes the channel and starts `split`",
+      "`split` sends `share` and `main` prints it",
+      "`split` sends `communicating` and `main` prints it",
+      "`split` closes the channel",
+      "the range ends and `main` prints its last line"
+    ]
+  },
+  {
+    "id": "ex-jfwpxp1d",
+    "version": 1,
+    "section": "ranging",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`words.go` printed `13 communicating`. How many words did the loop receive in all?",
+    "hint": "`share memory by communicating`.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "words"
+  },
+  {
+    "id": "ex-6fxekmeh",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a channel do in `hand.go`? Choose all that apply.",
+    "hint": "Think about the value and about the timing.",
+    "choices": [
+      {
+        "text": "Carries each goroutine's total to `main`",
+        "correct": true,
+        "why": "Yes. It replaces the return value the `go` statement throws away."
+      },
+      {
+        "text": "Makes `main` wait until each total exists",
+        "correct": true,
+        "why": "Yes. A receive cannot finish before a send."
+      },
+      {
+        "text": "Puts the totals in the order the goroutines started",
+        "correct": false,
+        "why": "60 arrived first, from the second goroutine started."
+      },
+      {
+        "text": "Copies the slices so the goroutines cannot share them",
+        "correct": false,
+        "why": "The slices are arguments, copied (as headers) by the call, not by the channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-swpjh77k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three goroutines send results on one channel and `main` ranges over it. Which goroutine should close the channel?",
+    "hint": "Closing early panics the others; closing never hangs `main`.",
+    "choices": [
+      {
+        "text": "Whichever of the three finishes first",
+        "correct": false,
+        "why": "The other two may still send, and a send after close panics."
+      },
+      {
+        "text": "`main`, as soon as it has received its first value from them",
+        "correct": false,
+        "why": "A receiver cannot know the senders are done, and closing under them panics."
+      },
+      {
+        "text": "One that waits until all three are done, then closes",
+        "correct": true,
+        "why": "Right. None of the three can close alone; lesson 14 builds that waiting goroutine."
+      },
+      {
+        "text": "Each of the three, after its own last send",
+        "correct": false,
+        "why": "The second close would panic: close of closed channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-qab3t1w8",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`main` makes `ch := make(chan int)` and calls `produce(ch)`, where `func produce(out chan<- int)`. What happens to the type?",
+    "hint": "A plain channel converts to either direction.",
+    "choices": [
+      {
+        "text": "A compile error: `chan int` is not `chan<- int`",
+        "correct": false,
+        "why": "The conversion from a two-way channel to one direction is implicit."
+      },
+      {
+        "text": "Inside `produce` it is send-only; `main` keeps both directions",
+        "correct": true,
+        "why": "Right. Same channel, two views of it: that is how `words.go` gives `split` only the half it needs."
+      },
+      {
+        "text": "A copy of the channel is made for `produce`",
+        "correct": false,
+        "why": "A channel is a reference; both names point at the one channel."
+      },
+      {
+        "text": "`main` loses the right to receive from `ch`",
+        "correct": false,
+        "why": "`main`'s variable keeps its own type, `chan int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcfcks2v",
+    "version": 1,
+    "section": "ranging",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loop that receives until a channel is closed and empty is written `for v := ___ ch`.",
+    "hint": "The same keyword that walks a slice.",
+    "blanks": [
+      {
+        "accept": [
+          "range"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-47tsx0fe",
+    "version": 1,
+    "section": "closing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go run sendclosed.go` panicked. With what exit status did the program end, by the line `go run` printed?",
+    "hint": "`exit status …`.",
+    "value": 2,
+    "tolerance": 0
+  }
+]

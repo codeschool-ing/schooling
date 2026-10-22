@@ -1,0 +1,466 @@
+[
+  {
+    "id": "ex-11zzdtzq",
+    "version": 1,
+    "section": "the-seam",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is the `Source` interface declared?",
+    "hint": "Who needs it?",
+    "choices": [
+      {
+        "text": "Beside each implementation, so it can say it implements it",
+        "correct": false,
+        "why": "Go interfaces are satisfied implicitly; an implementation never names the interface."
+      },
+      {
+        "text": "In `wordcount`, beside `TopOf`",
+        "correct": true,
+        "why": "Right: in the package that uses it."
+      },
+      {
+        "text": "In the test file only",
+        "correct": false,
+        "why": "Then `TopOf` itself could not name it as a parameter type."
+      },
+      {
+        "text": "In the standard library's `io` package",
+        "correct": false,
+        "why": "`io` has `ReadCloser`, which `Source` returns; `Source` itself is this package's."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfqbem3f",
+    "version": 1,
+    "section": "the-seam",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson insist that `Source` have one method rather than mirror a real client's interface?",
+    "hint": "Count what each test would have to write.",
+    "choices": [
+      {
+        "text": "Go forbids interfaces with more than one method",
+        "correct": false,
+        "why": "`io.ReadCloser` itself has two methods."
+      },
+      {
+        "text": "One method makes `TopOf` run faster",
+        "correct": false,
+        "why": "The number of methods has nothing to do with speed here."
+      },
+      {
+        "text": "Real clients cannot be used from Go",
+        "correct": false,
+        "why": "They can; lesson 28 writes one. The point is what a test must implement."
+      },
+      {
+        "text": "A double then costs a few lines",
+        "correct": true,
+        "why": "Right. A small interface is what makes a double cheap."
+      }
+    ]
+  },
+  {
+    "id": "ex-phrgjrdd",
+    "version": 1,
+    "section": "the-seam",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`TopOf` takes a `ctx` and only passes it on. Why is it a parameter at all?",
+    "hint": "Which `Source` will look at it?",
+    "choices": [
+      {
+        "text": "A network source needs to be cancellable",
+        "correct": true,
+        "why": "Right. The call may wait, so it carries a context, as lesson 11 asked."
+      },
+      {
+        "text": "`go vet` refuses exported functions without one",
+        "correct": false,
+        "why": "No such check exists; it is a convention, not a rule the tools enforce."
+      },
+      {
+        "text": "`Count` reads its deadline from the context",
+        "correct": false,
+        "why": "`Count` takes only a reader."
+      },
+      {
+        "text": "To store values for the tests",
+        "correct": false,
+        "why": "Lesson 10 kept values in a context for request-scoped data, not for tests."
+      }
+    ]
+  },
+  {
+    "id": "ex-25de7h8p",
+    "version": 1,
+    "section": "fakes-and-stubs",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each test double with what it is.",
+    "hint": "Canned, working, or taking notes.",
+    "pairs": [
+      {
+        "left": "stub",
+        "right": "returns a canned answer"
+      },
+      {
+        "left": "fake",
+        "right": "a working, simplified implementation"
+      },
+      {
+        "left": "spy",
+        "right": "records how it was used"
+      },
+      {
+        "left": "mock",
+        "right": "a spy told in advance what to expect"
+      }
+    ],
+    "right_distractors": [
+      "a real server on a local port"
+    ]
+  },
+  {
+    "id": "ex-68jhhn9k",
+    "version": 1,
+    "section": "fakes-and-stubs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which double in `source_test.go` drives `TopOf` down its error path?",
+    "hint": "It always gives the same answer.",
+    "choices": [
+      {
+        "text": "`mapSource`, by asking it for a name it does not hold",
+        "correct": false,
+        "why": "That would also work, but the lesson's test uses a double that fails with an error the test chose."
+      },
+      {
+        "text": "`failingSource`",
+        "correct": true,
+        "why": "Right, the stub: every `Open` returns the error it was built with."
+      },
+      {
+        "text": "`spySource`",
+        "correct": false,
+        "why": "The spy always succeeds; it exists to watch how the document is treated."
+      },
+      {
+        "text": "`fstest.MapFS`",
+        "correct": false,
+        "why": "That is section 04's real file system, not a double in this file."
+      }
+    ]
+  },
+  {
+    "id": "ex-2x0fxqb3",
+    "version": 1,
+    "section": "fakes-and-stubs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first version of `TopOf` passed the fake and the stub tests. Why did only the spy find its defect?",
+    "hint": "What did the defect change in the return values?",
+    "choices": [
+      {
+        "text": "Because the spy used a longer text",
+        "correct": false,
+        "why": "Its text is `a b a`, shorter than the fake's."
+      },
+      {
+        "text": "Because the fake and the stub ran with `-short`",
+        "correct": false,
+        "why": "No test used `-short`; all three ran the same way."
+      },
+      {
+        "text": "A missing `Close` changes no return value",
+        "correct": true,
+        "why": "Right. Only a test that records the call can see it."
+      },
+      {
+        "text": "Because `io.NopCloser` closes the document by itself",
+        "correct": false,
+        "why": "Its `Close` does nothing at all, which is why the fake could not tell."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ac9f4c4",
+    "version": 1,
+    "section": "fakes-and-stubs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds to the spy a check that `TopOf` reads the document in exactly three calls to `Read`. What does the lesson say about it?",
+    "hint": "Is the number of reads part of what callers rely on?",
+    "choices": [
+      {
+        "text": "Good: more checks make a stronger test",
+        "correct": false,
+        "why": "More checks of the wrong kind make a test that fails when nothing is broken."
+      },
+      {
+        "text": "It describes the implementation, and would break on a harmless `bufio` wrap",
+        "correct": true,
+        "why": "Right. Check the contract, such as closing, and leave the rest alone."
+      },
+      {
+        "text": "It is needed, because `Count` must not read more than three times",
+        "correct": false,
+        "why": "Nothing promises a number of reads; `Count` reads until the end."
+      },
+      {
+        "text": "It would make the race detector report the spy",
+        "correct": false,
+        "why": "Counting reads in one goroutine involves no race."
+      }
+    ]
+  },
+  {
+    "id": "ex-9y7pfcwn",
+    "version": 1,
+    "section": "fakes-and-stubs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To give a plain reader a `Close` method that does nothing, wrap it with `io.___`.",
+    "hint": "No-op closer.",
+    "blanks": [
+      {
+        "accept": [
+          "NopCloser"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t2vsd8q4",
+    "version": 1,
+    "section": "what-not-to-mock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A function takes an `io.Reader`. What should its test pass in?",
+    "hint": "Real things that are cheap.",
+    "choices": [
+      {
+        "text": "A `strings.Reader`",
+        "correct": true,
+        "why": "Right: the real thing, and it costs nothing."
+      },
+      {
+        "text": "A hand-written spy that counts calls to `Read`",
+        "correct": false,
+        "why": "The number of reads is not part of the contract, and a real reader is free."
+      },
+      {
+        "text": "A file written to a fixed path in `/tmp`",
+        "correct": false,
+        "why": "That collides between runs, and a reader does not need a file at all."
+      },
+      {
+        "text": "A mock generated by a framework",
+        "correct": false,
+        "why": "There is nothing to generate: the standard library has the real one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctms54ce",
+    "version": 1,
+    "section": "what-not-to-mock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `FSSource.Open` check `err` instead of writing `return s.FS.Open(name)`?",
+    "hint": "What does a nil `fs.File` become when returned as an `io.ReadCloser`?",
+    "choices": [
+      {
+        "text": "`fs.FS.Open` panics on a missing file",
+        "correct": false,
+        "why": "It returns `fs.ErrNotExist`, as the test checks."
+      },
+      {
+        "text": "The compiler rejects returning an `fs.File` where an `io.ReadCloser` is expected",
+        "correct": false,
+        "why": "It accepts it: an `fs.File` has `Read` and `Close`."
+      },
+      {
+        "text": "A nil file would become a non-nil interface holding nil",
+        "correct": true,
+        "why": "Right, and a caller testing `rc != nil` would be fooled."
+      },
+      {
+        "text": "To wrap the error with the file's name",
+        "correct": false,
+        "why": "It returns `err` unchanged; `TopOf` adds the name."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dav0qye",
+    "version": 1,
+    "section": "what-not-to-mock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson call `fstest.MapFS`?",
+    "hint": "Is it a double?",
+    "choices": [
+      {
+        "text": "A spy of the file system",
+        "correct": false,
+        "why": "It records nothing about how it is used."
+      },
+      {
+        "text": "A stub that always returns the same file",
+        "correct": false,
+        "why": "It holds many files, by path, and a missing one gives `fs.ErrNotExist`."
+      },
+      {
+        "text": "A real file system, kept in memory",
+        "correct": true,
+        "why": "Right. The same `FSSource` code runs against it and against `os.DirFS`."
+      },
+      {
+        "text": "A mock generated from `fs.FS`",
+        "correct": false,
+        "why": "Nothing is generated; it is an ordinary type in the standard library."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gb85xw6",
+    "version": 1,
+    "section": "what-not-to-mock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service calls a payment provider through its official Go client. Following the lesson's rule, what do you double in the service's tests?",
+    "hint": "Replace what you own the interface of.",
+    "choices": [
+      {
+        "text": "The provider's client type, method by method",
+        "correct": false,
+        "why": "That is faking behaviour somebody else wrote, and the guess fails in the errors."
+      },
+      {
+        "text": "Nothing: call the real provider from every test",
+        "correct": false,
+        "why": "Slow, flaky, perhaps charged: exactly the case for a double."
+      },
+      {
+        "text": "A small interface of your own, placed between the service and the client",
+        "correct": true,
+        "why": "Right. Test the service against doubles of it, and its real implementation against the real thing."
+      },
+      {
+        "text": "`net/http`, so every request fails the same way",
+        "correct": false,
+        "why": "Replacing the standard library is replacing what you own even less."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h6e89g0",
+    "version": 1,
+    "section": "what-not-to-mock",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which reasons justify replacing a dependency with a double? Choose all that apply.",
+    "hint": "Section 04's first sentence lists them.",
+    "choices": [
+      {
+        "text": "The real one is slow",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "The real one fails for reasons unrelated to your code",
+        "correct": true,
+        "why": "Yes, flaky."
+      },
+      {
+        "text": "The real one is in the standard library",
+        "correct": false,
+        "why": "Those are usually the cheapest real things to use."
+      },
+      {
+        "text": "The real one has more than one method",
+        "correct": false,
+        "why": "The size of its interface is not a reason; put your own small one in front instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-r23ts6aa",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `TopOf`, as fixed in section 03, in order.",
+    "hint": "The `defer` comes straight after the error check.",
+    "items": [
+      "`src.Open(ctx, name)`",
+      "return the error, wrapped with the name",
+      "`defer rc.Close()`",
+      "`Count(rc)`",
+      "`Top(counts, n)`"
+    ]
+  },
+  {
+    "id": "ex-0323ytme",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestTopOfOpenFails` checks `errors.Is(err, boom)`. What would make it fail?",
+    "hint": "What does `%w` do that `%v` does not?",
+    "choices": [
+      {
+        "text": "Adding the document's name to the message",
+        "correct": false,
+        "why": "The name is already in it, and the test asks for it."
+      },
+      {
+        "text": "Wrapping with `%v` instead of `%w`",
+        "correct": true,
+        "why": "Right. `%v` keeps the text and loses the error, so `errors.Is` finds nothing."
+      },
+      {
+        "text": "Returning a nil slice with the error",
+        "correct": false,
+        "why": "The test ignores the slice on this path."
+      },
+      {
+        "text": "Using `t.Context()` instead of `context.Background()`",
+        "correct": false,
+        "why": "The stub ignores the context entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-wy5bdg2q",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many test functions did `go test -v -run TopOf` run in section 03?",
+    "hint": "One per double.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "tests"
+  }
+]

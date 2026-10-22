@@ -1,0 +1,338 @@
+{
+  "ex-vbtpe0v6": {
+    "prompt": "Onde a documentação do pacote `context` diz que um contexto entra na assinatura de uma função?",
+    "hint": "O `go doc context` imprimiu a convenção com um exemplo.",
+    "choices": [
+      {
+        "text": "Por último, depois dos argumentos que ele qualifica",
+        "why": "A convenção documentada é a ponta oposta: primeiro."
+      },
+      {
+        "text": "O primeiro parâmetro, chamado `ctx` por convenção",
+        "why": "Isso: `func DoSomething(ctx context.Context, arg Arg) error`."
+      },
+      {
+        "text": "Num campo da struct a que o método pertence",
+        "why": "É justamente o que a documentação diz para não fazer."
+      },
+      {
+        "text": "Numa variável de pacote definida uma vez em `main`",
+        "why": "Uma variável de pacote seria compartilhada por todas as requisições; um contexto pertence a uma chamada."
+      }
+    ]
+  },
+  "ex-cvfnc98g": {
+    "prompt": "No `layers.go`, `report` nunca chama `ctx.Done()` nem `ctx.Err()`. Por que ele parou mesmo assim quando os 150 milissegundos acabaram?",
+    "hint": "O que `report` fez com `ctx`, e o que fez a função abaixo dele?",
+    "choices": [
+      {
+        "text": "O runtime para toda função de uma goroutine cujo contexto terminou",
+        "why": "O runtime não para nada. Só o código que olha o contexto reage a ele."
+      },
+      {
+        "text": "Entregou `ctx` a `fetch`",
+        "why": "Isso. Repassar `ctx` era tudo o que a camada do meio precisava fazer."
+      },
+      {
+        "text": "O `WithTimeout` provoca um panic em toda função abaixo dele",
+        "why": "Não houve panic: o programa imprimiu um erro e saiu normalmente."
+      },
+      {
+        "text": "`report` tinha um timer próprio de 150 ms",
+        "why": "Só `handle` definiu um prazo; `report` não menciona tempo nenhum."
+      }
+    ]
+  },
+  "ex-m5mbf0wb": {
+    "prompt": "O erro do `layers.go` foi `report for ana: fetch mar: context deadline exceeded`. O que permitiu que `errors.Is(err, context.DeadlineExceeded)` ainda respondesse `true`?",
+    "hint": "Olhe o verbo nas duas chamadas de `fmt.Errorf`.",
+    "choices": [
+      {
+        "text": "A string contém as palavras \"deadline exceeded\"",
+        "why": "O `errors.Is` nunca compara texto; ele percorre a corrente de erros embrulhados."
+      },
+      {
+        "text": "`context.DeadlineExceeded` combina com qualquer erro",
+        "why": "Ele só combina consigo mesmo, encontrado em algum ponto da corrente."
+      },
+      {
+        "text": "Cada camada embrulhou o erro que recebeu usando `%w`",
+        "why": "Isso. O `%w` mantém o original alcançável para o `errors.Is`, como a lição 34 de `go` mostrou."
+      },
+      {
+        "text": "`fetch` devolveu `ctx.Err()` sem embrulho nenhum",
+        "why": "`fetch` embrulhou, como `fetch mar: …`; o embrulho com `%w` é que fez ainda combinar."
+      }
+    ]
+  },
+  "ex-8dhvzgag": {
+    "prompt": "Um time guarda num campo o contexto da requisição que construiu o `Client` deles, e o usa em toda chamada seguinte. O que dá errado?",
+    "hint": "De quem é esse contexto, e quanto tempo ele vive?",
+    "choices": [
+      {
+        "text": "Nada, desde que o campo não seja exportado",
+        "why": "A visibilidade não é o problema; o tempo de vida do contexto é."
+      },
+      {
+        "text": "Ele pertence a uma requisição encerrada",
+        "why": "Isso. A struct vive mais que a chamada, então o contexto dela pertence à requisição de outra pessoa."
+      },
+      {
+        "text": "O compilador recusa um campo do tipo `context.Context`",
+        "why": "Compila; a regra é uma convenção, e por isso precisa ser aprendida."
+      },
+      {
+        "text": "Cada chamada ganha um prazo novo a partir desse campo",
+        "why": "O prazo de um contexto é fixado quando ele é criado; nada nele se renova."
+      }
+    ]
+  },
+  "ex-4xqns3rm": {
+    "prompt": "No `tree.go`, `child` pediu um segundo, mas o pai, `root`, tinha 100 milissegundos. Quando `child` terminou?",
+    "hint": "A última linha da saída.",
+    "choices": [
+      {
+        "text": "Aos 100 ms, com o prazo de root",
+        "why": "Isso: `child done after 100ms`. O prazo de um filho é o mais cedo entre o dele e o do pai."
+      },
+      {
+        "text": "Em um segundo, como pediu",
+        "why": "Um filho não vive mais que o pai; ele informou o prazo de root como o dele."
+      },
+      {
+        "text": "Em 1,1 s, somando os dois timeouts",
+        "why": "Timeouts não se somam. O prazo mais cedo vence."
+      },
+      {
+        "text": "Na hora, quando `sibling` foi cancelado",
+        "why": "Logo depois desse cancelamento, `child` ainda respondia `<nil>`."
+      }
+    ]
+  },
+  "ex-75056cas": {
+    "prompt": "`sibling` foi derivado de `root` e cancelado à mão. Quais ainda estavam ativos logo depois? Escolha todas as que se aplicam.",
+    "hint": "Um fim desce pela árvore.",
+    "choices": [
+      {
+        "text": "`root`",
+        "why": "Sim: `root: <nil>`. Cancelar um filho não toca no pai."
+      },
+      {
+        "text": "`child`",
+        "why": "Sim: `child: <nil>`. Irmãos são independentes."
+      },
+      {
+        "text": "`sibling`",
+        "why": "Foi o cancelado: `context canceled`."
+      },
+      {
+        "text": "Um contexto derivado de `sibling`",
+        "why": "Tudo o que deriva de `sibling` termina com ele."
+      }
+    ]
+  },
+  "ex-grn7fek0": {
+    "prompt": "Um contexto derivado vem com uma função que o encerra, e a linha logo depois de derivá-lo é `defer ___()`.",
+    "hint": "O nome que `tree.go` e `layers.go` deram a essa função.",
+    "blanks": [
+      {
+        "accept": [
+          "cancel"
+        ]
+      }
+    ]
+  },
+  "ex-x5hmjj63": {
+    "prompt": "O que o `go vet` aponta em `ctx, _ := context.WithTimeout(parent, time.Second)`?",
+    "hint": "O que acontece com um filho que ninguém cancela?",
+    "choices": [
+      {
+        "text": "Que um segundo é tempo demais para um timeout",
+        "why": "O `vet` não tem opinião sobre durações."
+      },
+      {
+        "text": "Que `parent` pode ser `nil`",
+        "why": "Essa é outra regra da documentação, e não o que o `vet` aponta aqui."
+      },
+      {
+        "text": "Nada, já que o prazo termina o filho de qualquer jeito",
+        "why": "Ele aponta, sim, porque até lá o controle do filho fica guardado à toa."
+      },
+      {
+        "text": "A função de cancelamento descartada vaza o contexto",
+        "why": "Isso: `the cancel function returned by context.WithTimeout should be called, not discarded`."
+      }
+    ]
+  },
+  "ex-nh3wq3rd": {
+    "prompt": "No `detach.go`, `stop()` devolveu `false`. O que isso significou?",
+    "hint": "Quando `stop` foi chamado, em relação a `cancel`?",
+    "choices": [
+      {
+        "text": "Que o `AfterFunc` não conseguiu registrar a função",
+        "why": "Ele registrou e rodou: a linha dela foi a primeira impressa."
+      },
+      {
+        "text": "Chegou tarde: a função já tinha rodado",
+        "why": "Isso. `stop` só devolve true se impediu a chamada."
+      },
+      {
+        "text": "Que o contexto ainda não tinha sido cancelado",
+        "why": "`ctx` informou `context canceled`."
+      },
+      {
+        "text": "Que o `WithoutCancel` tinha desligado o `AfterFunc`",
+        "why": "O `WithoutCancel` criou um contexto novo, `audit`; o `ctx` original e o `AfterFunc` dele ficaram intactos."
+      }
+    ]
+  },
+  "ex-n5bprhxh": {
+    "prompt": "Um handler precisa gravar um registro de auditoria mesmo quando o cliente desliga no meio da requisição, e o registro deve levar o id da requisição. Que contexto a gravação recebe?",
+    "hint": "Ela precisa dos valores e não do fim.",
+    "choices": [
+      {
+        "text": "O contexto da requisição, sem mudança",
+        "why": "Esse termina quando o cliente desliga, e a gravação seria cancelada junto."
+      },
+      {
+        "text": "`context.Background()`",
+        "why": "Ele nunca termina, mas não tem nenhum dos valores da requisição, então o id se perde."
+      },
+      {
+        "text": "`context.WithoutCancel` aplicado ao contexto da requisição",
+        "why": "Isso: os valores ficam, como `audit` manteve `req-7f3a`, e o fim não o alcança."
+      },
+      {
+        "text": "Um filho criado com `context.WithTimeout` de um minuto",
+        "why": "Um filho termina quando o pai termina, então o desligamento ainda o cancela."
+      }
+    ]
+  },
+  "ex-w5daf080": {
+    "prompt": "O `polite` do `loop.go` consulta `ctx.Err()` antes de cada item. Quantos dos 300 itens ele terminou antes que o prazo de 50 ms o parasse?",
+    "hint": "A segunda linha da saída.",
+    "unit": "itens"
+  },
+  "ex-9j2skt7r": {
+    "prompt": "`deaf` recebeu um contexto com prazo de 50 ms e voltou depois de 350 ms. O que isso diz sobre o cancelamento?",
+    "hint": "O que `deaf` fez com o parâmetro `ctx`?",
+    "choices": [
+      {
+        "text": "Um contexto não para nada sozinho; o trabalho tem de olhar",
+        "why": "Isso. `deaf` aceitou `ctx` e nunca o consultou."
+      },
+      {
+        "text": "O prazo era curto demais para o escalonador entregar",
+        "why": "`polite` recebeu o mesmo prazo e parou aos 50 ms."
+      },
+      {
+        "text": "`time.Sleep` bloqueia o cancelamento dentro de uma goroutine",
+        "why": "`polite` dorme o mesmo milissegundo por item e parou na hora."
+      },
+      {
+        "text": "O contexto foi cancelado aos 350 ms, e não aos 50",
+        "why": "Ele terminou aos 50 ms; nada o leu até o laço acabar."
+      }
+    ]
+  },
+  "ex-jw3ktej0": {
+    "prompt": "Um laço espera, a cada volta, um valor de um canal, `v := <-results`. Por que consultar `ctx.Err()` no topo do laço não basta?",
+    "hint": "Onde o laço passa o tempo?",
+    "choices": [
+      {
+        "text": "`ctx.Err()` não é seguro de chamar dentro de um laço como este",
+        "why": "Ele é seguro em qualquer goroutine, como `polite` mostrou."
+      },
+      {
+        "text": "Ele fica parado no recebimento, onde nenhuma consulta roda",
+        "why": "Isso. A consulta tem de acontecer durante a espera, e só um `select` faz isso."
+      },
+      {
+        "text": "Canais ignoram contextos até serem fechados",
+        "why": "Um canal não sabe nada de contextos de um jeito ou de outro; a questão é o que o laço espera."
+      },
+      {
+        "text": "`ctx.Err()` devolve `nil` até o laço acabar",
+        "why": "Ele devolve o motivo assim que o contexto termina."
+      }
+    ]
+  },
+  "ex-7fe3fpf5": {
+    "prompt": "Um laço de passos muito rápidos, de poucos nanossegundos cada, recebe um contexto. O que a lição recomenda?",
+    "hint": "A regra é sobre tempo, não sobre contagem.",
+    "choices": [
+      {
+        "text": "Consultar antes de cada passo, exatamente como `polite`",
+        "why": "Funciona, mas consultar em cada um de um bilhão de passos minúsculos não compra nada: o atraso seria de nanossegundos de qualquer jeito."
+      },
+      {
+        "text": "Pular a consulta, porque laços rápidos acabam de qualquer jeito",
+        "why": "Um bilhão de passos rápidos ainda leva segundos; o laço precisa olhar de vez em quando."
+      },
+      {
+        "text": "Consultar a cada tantos passos",
+        "why": "Isso: olhar com frequência suficiente para que o laço passe do prazo por uma quantia que não incomode, a cada mil, por exemplo."
+      },
+      {
+        "text": "Rodar numa goroutine separada que o contexto mata",
+        "why": "Nada mata uma goroutine de fora; ela tem de retornar sozinha."
+      }
+    ]
+  },
+  "ex-mqzsmt2b": {
+    "prompt": "Ponha em ordem os papéis das três camadas do `layers.go`, de onde a requisição chega até onde ela espera.",
+    "hint": "Decidir, repassar, respeitar.",
+    "items": [
+      "`handle` deriva um contexto com timeout de 150 ms",
+      "`report` repassa `ctx` a cada busca",
+      "`fetch` espera a chamada lenta ou `ctx.Done()`"
+    ]
+  },
+  "ex-b8mg8wgy": {
+    "prompt": "Associe cada função ao seu propósito.",
+    "hint": "Duas delas ficam nas bordas de uma requisição.",
+    "pairs": [
+      {
+        "left": "`context.AfterFunc`",
+        "right": "rodar uma limpeza quando um contexto termina"
+      },
+      {
+        "left": "`context.WithoutCancel`",
+        "right": "manter os valores, descartar o fim"
+      },
+      {
+        "left": "`context.TODO`",
+        "right": "marcar onde ainda falta um contexto"
+      },
+      {
+        "left": "`context.WithTimeout`",
+        "right": "dar a parte do trabalho um limite mais curto"
+      }
+    ],
+    "right_distractors": [
+      "fazer um filho viver mais que o pai"
+    ]
+  },
+  "ex-6t30s0fd": {
+    "prompt": "Uma função recebe um contexto que já foi cancelado, e o primeiro ato dela seria abrir um arquivo e iniciar três goroutines. O que ela deve fazer?",
+    "hint": "O último parágrafo da seção 04.",
+    "choices": [
+      {
+        "text": "Iniciar as goroutines e deixar cada uma perceber o cancelamento",
+        "why": "Ela abriria um arquivo e começaria um trabalho cuja resposta ninguém espera."
+      },
+      {
+        "text": "Devolver o erro do contexto na hora, antes de abrir qualquer coisa",
+        "why": "Isso: consultar antes mesmo de começar um trabalho caro."
+      },
+      {
+        "text": "Derivar um contexto novo com `WithoutCancel` e seguir em frente",
+        "why": "Isso ignora a decisão de quem chamou, que é o mau uso contra o qual a seção 03 alertou."
+      },
+      {
+        "text": "Provocar um panic, já que um contexto cancelado é erro de programação",
+        "why": "Um contexto cancelado é coisa comum: um cliente saiu, um prazo passou. Responde-se com um erro."
+      }
+    ]
+  }
+}

@@ -1,0 +1,461 @@
+[
+  {
+    "id": "ex-5nada046",
+    "version": 1,
+    "section": "starting-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`early.go` starts a goroutine that prints a greeting, then `main` prints its own line and returns. In five runs the greeting never appeared. Why?",
+    "hint": "What happens to every goroutine when `main` returns?",
+    "choices": [
+      {
+        "text": "The `go` statement delays a goroutine until `main` blocks",
+        "correct": false,
+        "why": "A goroutine is ready to run the moment it is created. Nothing guarantees it gets a processor before `main` returns, and nothing guarantees it does not."
+      },
+      {
+        "text": "Returning from `main` ends the process, goroutines and all",
+        "correct": true,
+        "why": "Right. The goroutine had not been given a processor yet, and nothing asked anybody to wait for it."
+      },
+      {
+        "text": "`fmt.Println` cannot be called from a goroutine",
+        "correct": false,
+        "why": "`waited.go` calls the same function from a goroutine and printed it five times."
+      },
+      {
+        "text": "The output of a goroutine goes to standard error, which the loop did not show",
+        "correct": false,
+        "why": "A goroutine writes wherever its code writes. `Println` writes to standard output whoever calls it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvtpfjjt",
+    "version": 1,
+    "section": "starting-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone fixes `early.go` by adding `time.Sleep(100 * time.Millisecond)` at the end of `main`. The greeting now appears on their machine. What is wrong with the fix?",
+    "hint": "Is the order now promised, or only likely?",
+    "choices": [
+      {
+        "text": "Nothing: 100 ms is longer than any goroutine needs to start",
+        "correct": false,
+        "why": "Usually long enough is not the same as promised. A loaded machine can take longer, and the program says nothing about what it is waiting for."
+      },
+      {
+        "text": "It is a guess about timing, where `wg.Wait` would be a promise",
+        "correct": true,
+        "why": "Right. `wg.Wait` returns only after the goroutine has, on every machine and every run."
+      },
+      {
+        "text": "`time.Sleep` blocks every goroutine, so the greeting cannot print",
+        "correct": false,
+        "why": "A sleep blocks only the goroutine that calls it. Lesson 1's `wait.go` overlapped four of them."
+      },
+      {
+        "text": "The sleep makes the program use a second processor",
+        "correct": false,
+        "why": "Sleeping needs no processor at all; it changes timing, not parallelism."
+      }
+    ]
+  },
+  {
+    "id": "ex-se79wjze",
+    "version": 1,
+    "section": "starting-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A goroutine started with `wg.Go` writes to a nil map and panics. `main` has a `defer` that prints a line. What does the run show?",
+    "hint": "`crash.go`.",
+    "choices": [
+      {
+        "text": "The deferred line, then the panic, because `main` unwinds first",
+        "correct": false,
+        "why": "The deferred call belongs to `main`'s goroutine, and the panic happened in another one. The process ended under `main` without running it."
+      },
+      {
+        "text": "Nothing: `wg.Go` recovers the panic and the program goes on",
+        "correct": false,
+        "why": "`wg.Go` recovers it only to raise it again, which is the `[recovered, repanicked]` note in the trace."
+      },
+      {
+        "text": "A panic trace and exit status 2, with no deferred line",
+        "correct": true,
+        "why": "Right. A panic in any goroutine ends the whole program, and `main`'s defer never runs."
+      },
+      {
+        "text": "`main is done`, because `wg.Wait` returns when a goroutine fails",
+        "correct": false,
+        "why": "`wg.Wait` never returned: the process was gone before it could."
+      }
+    ]
+  },
+  {
+    "id": "ex-08r2trg6",
+    "version": 1,
+    "section": "starting-one",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a panic trace, the line `created by sync.(*WaitGroup).Go in goroutine 1` says the failing goroutine was started from goroutine number ___, which is `main`.",
+    "hint": "The number at the end of that line.",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "one"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ck5e6chc",
+    "version": 1,
+    "section": "starting-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`x := 1; go show(x); x = 2` — the goroutine runs a moment after `x = 2`. What does `show` receive?",
+    "hint": "When are the arguments of a `go` statement evaluated?",
+    "choices": [
+      {
+        "text": "1",
+        "correct": true,
+        "why": "Right. The arguments are evaluated by the goroutine running the `go` statement, at that moment, and copied."
+      },
+      {
+        "text": "2, because the goroutine reads `x` when it starts running",
+        "correct": false,
+        "why": "That is what a closure reading `x` would do. A call's arguments were already copied when the statement ran."
+      },
+      {
+        "text": "Either 1 or 2, depending on the scheduler",
+        "correct": false,
+        "why": "There is no race here: the value was copied before the goroutine existed."
+      },
+      {
+        "text": "A compile error, since `x` is changed after `go`",
+        "correct": false,
+        "why": "Nothing forbids changing a variable after passing its value to a call."
+      }
+    ]
+  },
+  {
+    "id": "ex-3nnq6wgc",
+    "version": 1,
+    "section": "the-cost",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`many.go` reported `per goroutine: 2048 bytes` of stack. How many kilobytes is that?",
+    "hint": "1024 bytes to the kilobyte.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "KiB"
+  },
+  {
+    "id": "ex-yc8qna0c",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ulimit -s` printed `8192` and a goroutine started with 2048 bytes. Why does the lesson say a thread costs more than its raw size suggests?",
+    "hint": "Two differences: when the stack is reserved, and what creating one involves.",
+    "choices": [
+      {
+        "text": "Threads use 8192 bytes, four times a goroutine",
+        "correct": false,
+        "why": "`ulimit -s` reports kilobytes: 8192 KiB is 8 MiB, four thousand times a goroutine's start."
+      },
+      {
+        "text": "Its 8 MiB stack is reserved up front, and each one is a system call",
+        "correct": true,
+        "why": "Right. A goroutine's stack starts at two kilobytes, grows only when needed, and starting one never leaves the process."
+      },
+      {
+        "text": "A thread's stack can never grow, so it is sized for the worst case",
+        "correct": false,
+        "why": "The section's point is the reservation and the system call, not a rule about growth."
+      },
+      {
+        "text": "The kernel copies every thread's stack on each switch",
+        "correct": false,
+        "why": "No copying happens on a switch. The runtime copies a goroutine's stack only when it grows."
+      }
+    ]
+  },
+  {
+    "id": "ex-50tw4yts",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`many.go` printed `goroutines: 100001` while the goroutines waited, and `after they return: 1`. What is the extra one in 100001?",
+    "hint": "Which goroutine was alive before the loop and after it?",
+    "choices": [
+      {
+        "text": "The goroutine that closes `release`",
+        "correct": false,
+        "why": "`main` closes it itself; no separate goroutine does."
+      },
+      {
+        "text": "The garbage collector, counted as a goroutine",
+        "correct": false,
+        "why": "`NumGoroutine` left it out: after they returned the count was 1, and that one is `main`."
+      },
+      {
+        "text": "`main`",
+        "correct": true,
+        "why": "Right. `main` runs in a goroutine of its own, the one still alive at the end."
+      },
+      {
+        "text": "An off-by-one in `wg.Go`",
+        "correct": false,
+        "why": "`wg.Go` started exactly one goroutine per call. The extra is the one that called it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7e1r20x",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server holds one goroutine per open connection. Under load it uses 3 GB and keeps 40,000 goroutines. Going by section 03, where does most of the memory go?",
+    "hint": "40,000 times two kilobytes is about 80 MB.",
+    "choices": [
+      {
+        "text": "Into the goroutines' starting stacks, two kilobytes each",
+        "correct": false,
+        "why": "Those come to about 80 MB, a small part of 3 GB."
+      },
+      {
+        "text": "Into what the goroutines hold: buffers, connections and their data",
+        "correct": true,
+        "why": "Right. The goroutine itself is the floor; a real one holds what it works on, and that fills memory."
+      },
+      {
+        "text": "Into 40,000 operating-system threads",
+        "correct": false,
+        "why": "Goroutines are placed on a few threads, about as many as `GOMAXPROCS` plus a spare or two."
+      },
+      {
+        "text": "Into the scheduler's run queues",
+        "correct": false,
+        "why": "A queue holds references to goroutines, not copies of them, and costs next to nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x38mt0t",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each of the scheduler's letters with what it stands for.",
+    "hint": "One is code, one is an operating-system thing, one is a licence.",
+    "pairs": [
+      {
+        "left": "G",
+        "right": "a goroutine: its stack and where it had got to"
+      },
+      {
+        "left": "M",
+        "right": "an operating-system thread"
+      },
+      {
+        "left": "P",
+        "right": "a licence to run Go code, `GOMAXPROCS` of them"
+      }
+    ],
+    "right_distractors": [
+      "a lock that protects shared memory"
+    ]
+  },
+  {
+    "id": "ex-qyy31hnh",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 505ms the trace showed `runqueue=2` and local queues `[ 1 0 0 1 ]`, with all four Ps busy. How many goroutines of `busy.go` were waiting rather than running?",
+    "hint": "The global queue plus every local queue.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "goroutines"
+  },
+  {
+    "id": "ex-s1b3v2fn",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A P's local run queue is empty while another P has a backlog. What does the scheduler do?",
+    "hint": "Section 03 names the move with a verb from crime.",
+    "choices": [
+      {
+        "text": "It leaves the idle P waiting until `main` hands it work",
+        "correct": false,
+        "why": "`main` does not distribute goroutines; the scheduler does, on its own."
+      },
+      {
+        "text": "It starts another thread for each waiting goroutine",
+        "correct": false,
+        "why": "Threads stay few. Eight goroutines ran on five threads."
+      },
+      {
+        "text": "The idle P steals half of the other's queue",
+        "correct": true,
+        "why": "Right, after looking at the global queue. Work stealing keeps every processor busy while there is work."
+      },
+      {
+        "text": "It raises `GOMAXPROCS` to match the backlog",
+        "correct": false,
+        "why": "`GOMAXPROCS` is fixed for the run unless the program changes it. The trace said 4 throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-rztj45f6",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A goroutine makes a system call that blocks for two seconds. `GOMAXPROCS` is 4 and three other goroutines are ready. What happens to its P?",
+    "hint": "The thread is stuck in the kernel; the licence does not have to be.",
+    "choices": [
+      {
+        "text": "It is stuck with the thread, leaving three Ps for the ready goroutines",
+        "correct": false,
+        "why": "The runtime does not let a blocked thread hold a licence it cannot use."
+      },
+      {
+        "text": "It is handed to another thread, so all four Ps keep running Go code",
+        "correct": true,
+        "why": "Right. That handover is why a Go program has a few more threads than processors."
+      },
+      {
+        "text": "The whole program pauses until the call returns",
+        "correct": false,
+        "why": "Only that goroutine and its thread wait. The others carry on."
+      },
+      {
+        "text": "The goroutine is preempted by a signal and its call cancelled",
+        "correct": false,
+        "why": "Preemption interrupts Go code that runs too long; it does not cancel a system call."
+      }
+    ]
+  },
+  {
+    "id": "ex-22qhh35r",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hog.go` loops with `for {}` on one processor. With default settings `main` still printed; with `GODEBUG=asyncpreemptoff=1` the program hung. What did that setting remove?",
+    "hint": "Since Go 1.14 the runtime interrupts a long-running goroutine in a particular way.",
+    "choices": [
+      {
+        "text": "The second processor `main` was running on",
+        "correct": false,
+        "why": "`hog.go` set `GOMAXPROCS` to 1 itself, in both runs."
+      },
+      {
+        "text": "The timer that wakes `main` from its sleep",
+        "correct": false,
+        "why": "The timer fired; `main` simply never got the processor back to act on it."
+      },
+      {
+        "text": "Preemption by signal, leaving only the kind at a function call",
+        "correct": true,
+        "why": "Right. The loop calls no function, so nothing could take the processor back."
+      },
+      {
+        "text": "The garbage collector's pauses",
+        "correct": false,
+        "why": "The setting is about preemption; the collector has nothing to do with this hang."
+      }
+    ]
+  },
+  {
+    "id": "ex-83vyskr9",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`timeout` stopped the hung `hog` after three seconds, and the shell reported its exit status as ___.",
+    "hint": "The last line of the `hog` transcript.",
+    "blanks": [
+      {
+        "accept": [
+          "124"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rx9h6qeg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these by how much each one starts with, smallest first.",
+    "hint": "A goroutine's stack, a thread's stack, and what a hundred thousand goroutines took.",
+    "items": [
+      "one goroutine's stack, 2 KiB",
+      "one thread's stack, 8 MiB",
+      "a hundred thousand goroutines' stacks, 195 MiB"
+    ]
+  },
+  {
+    "id": "ex-yea0epff",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program starts a goroutine per file to hash 10,000 files, then `main` prints \"all hashed\" and returns. Some runs print fewer hashes than files. Which change fixes it for every run?",
+    "hint": "Lesson 2 section 02.",
+    "choices": [
+      {
+        "text": "Lower the count to 1,000 goroutines at a time",
+        "correct": false,
+        "why": "The cost of goroutines is not the problem; `main` returning before they finish is."
+      },
+      {
+        "text": "Set `GOMAXPROCS` to the number of files",
+        "correct": false,
+        "why": "More parallelism makes them faster, and still leaves `main` free to return first."
+      },
+      {
+        "text": "Start them with `wg.Go` and call `wg.Wait` before printing",
+        "correct": true,
+        "why": "Right. `wg.Wait` returns only after every goroutine has, which is a promise rather than a timing."
+      },
+      {
+        "text": "Sleep one second per thousand files before printing",
+        "correct": false,
+        "why": "A sleep long enough on this machine is a guess about the next one."
+      }
+    ]
+  }
+]

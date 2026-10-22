@@ -1,0 +1,297 @@
+{
+  "ex-rwzph411": {
+    "prompt": "O que permite que `sq(sq(gen(1, 2, 3)))` funcione sem código novo?",
+    "hint": "Compare o tipo que `sq` recebe com o tipo que devolve.",
+    "choices": [
+      {
+        "text": "`sq` guarda uma lista dos números que viu",
+        "why": "Ele não guarda nada; cada valor passa direto."
+      },
+      {
+        "text": "A entrada e a saída dele são ambas `<-chan int`",
+        "why": "Isso. Um estágio cujo tipo de saída é o tipo de entrada pode ser encadeado a si mesmo."
+      },
+      {
+        "text": "Go roda chamadas aninhadas em paralelo",
+        "why": "As chamadas em si rodam em ordem; cada uma inicia uma goroutine e retorna na hora."
+      },
+      {
+        "text": "`gen` foi escrito para ser chamado duas vezes",
+        "why": "`gen` foi chamado uma vez; foi `sq` que foi usado duas vezes."
+      }
+    ]
+  },
+  "ex-wk3f7115": {
+    "prompt": "O `overlap.go` passou cinco itens por dois estágios de 20 ms cada: 200 ms de trabalho. Em quantos milissegundos ele terminou?",
+    "hint": "A última linha da saída.",
+    "unit": "ms"
+  },
+  "ex-7yzbj1dy": {
+    "prompt": "Um pipeline tem três estágios que levam 5 ms, 40 ms e 10 ms por item. Um colega deixa o primeiro estágio duas vezes mais rápido. O que acontece com o tempo para 1.000 itens?",
+    "hint": "O que dá o ritmo de um pipeline?",
+    "choices": [
+      {
+        "text": "Cai pela metade",
+        "why": "Só o pipeline inteiro duas vezes mais rápido cortaria pela metade, e o primeiro estágio não é o que dá o ritmo."
+      },
+      {
+        "text": "Cai cerca de um terço",
+        "why": "Isso exigiria que o primeiro estágio fosse grande parte do ritmo, e ele não é o mais lento."
+      },
+      {
+        "text": "Quase não muda: o estágio de 40 ms dá o ritmo",
+        "why": "Isso. Os itens saem no ritmo do estágio mais lento; alargue esse em vez disso."
+      },
+      {
+        "text": "Aumenta, porque o estágio rápido inunda o seguinte",
+        "why": "Um canal sem buffer faz o estágio rápido esperar; nada inunda."
+      }
+    ]
+  },
+  "ex-94zhkb53": {
+    "prompt": "No `overlap.go`, dos 40 ms em diante, cada linha vem em par com outra no mesmo instante. O que um par mostra?",
+    "hint": "Sobre quais itens são as duas linhas?",
+    "choices": [
+      {
+        "text": "Os dois estágios ocupados juntos",
+        "why": "Isso: o item n é guardado enquanto o item n+1 é lido."
+      },
+      {
+        "text": "Um item sendo lido duas vezes",
+        "why": "Cada par nomeia dois itens diferentes."
+      },
+      {
+        "text": "O canal guardando dois itens",
+        "why": "O canal não tem buffer e não guarda nada."
+      },
+      {
+        "text": "O relógio arredondando dois momentos separados para o mesmo",
+        "why": "Arredondar para 10 ms poderia juntar momentos, mas o pareamento constante dos 40 ms em diante é a sobreposição dos estágios, que o total de 120 ms confirma."
+      }
+    ]
+  },
+  "ex-9nx80zh9": {
+    "prompt": "Num pipeline, que canal cada estágio fecha?",
+    "hint": "A regra da lição 3: quem envia fecha.",
+    "choices": [
+      {
+        "text": "A entrada, depois de ler tudo",
+        "why": "Isso seria um receptor fechando um canal em que outra goroutine envia."
+      },
+      {
+        "text": "Aquele em que envia",
+        "why": "Isso, com `defer close(out)`, depois que a entrada fechou."
+      },
+      {
+        "text": "Os dois, entrada e saída",
+        "why": "Fechar a entrada causaria panic no estágio anterior."
+      },
+      {
+        "text": "Nenhum; o `main` fecha todos os canais no fim",
+        "why": "O `main` nem tem acesso aos canais do meio."
+      }
+    ]
+  },
+  "ex-0rk40ns3": {
+    "prompt": "O `cascade.go` imprimiu `gen: no more numbers, closing` antes de `main: 1`. O que isso mostra?",
+    "hint": "As linhas vêm de goroutines diferentes.",
+    "choices": [
+      {
+        "text": "Que `gen` fechou cedo demais e perdeu um número",
+        "why": "Os dois quadrados, 1 e 4, chegaram."
+      },
+      {
+        "text": "Que o `main` recebeu de `gen` diretamente",
+        "why": "O `main` percorre a saída de `sq`."
+      },
+      {
+        "text": "A ordem de impressão entre goroutines não é a ordem dos dados",
+        "why": "Isso. `gen` já tinha entregado o último número e fechado enquanto os quadrados ainda estavam a caminho."
+      },
+      {
+        "text": "Que o `defer` roda antes do corpo da função",
+        "why": "Uma chamada adiada roda quando a função retorna."
+      }
+    ]
+  },
+  "ex-w3k8cvna": {
+    "prompt": "O `wide.go` roda o estágio lento em três goroutines. Quem fecha a saída desse estágio?",
+    "hint": "Três goroutines enviam nela.",
+    "choices": [
+      {
+        "text": "Cada uma das três, com `defer close(out)`",
+        "why": "O segundo fechamento provocaria panic, e o primeiro atingiria os envios das outras."
+      },
+      {
+        "text": "A goroutine que terminar por último, conferindo `len(out)`",
+        "why": "O `len` de um canal sem buffer não diz nada sobre quem ainda envia."
+      },
+      {
+        "text": "`gen`, quando os números acabam",
+        "why": "`gen` fecha só a própria saída."
+      },
+      {
+        "text": "Uma goroutine que espera um `WaitGroup`",
+        "why": "Isso: o fechador da lição 14, porque só uma contagem sabe qual é o último remetente."
+      }
+    ]
+  },
+  "ex-fjrwwaha": {
+    "prompt": "No `wide.go`, seis itens de 30 ms levaram 180 ms com largura 1. Quantos milissegundos levaram com largura 3?",
+    "hint": "A segunda linha da saída.",
+    "unit": "ms"
+  },
+  "ex-fhwbx7k3": {
+    "prompt": "O `stuck.go` leu dois resultados e imprimiu `goroutines still alive: 3`. Quais eram essas goroutines?",
+    "hint": "Conte os estágios, e quem lê.",
+    "choices": [
+      {
+        "text": "Três cópias de `sq`",
+        "why": "O `stuck.go` chamou `sq` uma vez."
+      },
+      {
+        "text": "`main`, `gen` e `sq`",
+        "why": "Isso: os dois estágios estão presos em envios que ninguém vai receber."
+      },
+      {
+        "text": "`main`, o coletor de lixo e o timer",
+        "why": "Aqui o `runtime.NumGoroutine` conta as goroutines do próprio programa, e duas delas são os estágios."
+      },
+      {
+        "text": "Três estágios esperando o `main` fechá-los",
+        "why": "São dois estágios, e eles esperam para enviar."
+      }
+    ]
+  },
+  "ex-t2kds7ha": {
+    "prompt": "Por que a cascata de fechamentos da seção 03 não consegue liberar os estágios do `stuck.go`?",
+    "hint": "Em que sentido o fechamento anda?",
+    "choices": [
+      {
+        "text": "O `main` não chama `close` em `results`",
+        "why": "Um leitor fechando um canal em que outros enviam os faria entrar em panic; essa não é a saída."
+      },
+      {
+        "text": "O fechamento desce; eles estão acima",
+        "why": "Isso. Só um sinal que sobe, um contexto, consegue alcançá-los."
+      },
+      {
+        "text": "O `defer close(out)` roda quando o `main` sai",
+        "why": "Ele roda quando a goroutine do próprio estágio retorna, o que aqui nunca acontece."
+      },
+      {
+        "text": "Os mil números ainda não foram todos gerados",
+        "why": "É verdade, e o motivo é que `gen` está preso, que é o próprio problema."
+      }
+    ]
+  },
+  "ex-p14b7q3a": {
+    "prompt": "No `stoppable.go`, o `main` espera com `stages.Wait()` antes de contar goroutines. O que contar logo depois de `cancel()` arriscaria?",
+    "hint": "O `cancel` espera alguma coisa?",
+    "choices": [
+      {
+        "text": "Nada; o `cancel` retorna depois que os estágios pararam",
+        "why": "O `cancel` fecha o canal `Done` e retorna; os estágios param depois, no tempo deles."
+      },
+      {
+        "text": "Um número tirado cedo demais, que ainda mostraria 3",
+        "why": "Isso. Cancelar pede; o `WaitGroup` é que sabe que os estágios terminaram."
+      },
+      {
+        "text": "Um panic por contar uma goroutine cancelada",
+        "why": "Contar nunca provoca panic, e goroutines não são canceladas elas mesmas."
+      },
+      {
+        "text": "Um relatório de corrida em `runtime.NumGoroutine`",
+        "why": "Ele é seguro de chamar a qualquer momento; o risco é um número errado, não uma corrida."
+      }
+    ]
+  },
+  "ex-1b9yxs52": {
+    "prompt": "Num estágio que pode parar, todo envio fica dentro de um `select` com um segundo case, `case <-ctx.___():`.",
+    "hint": "O método que devolve o canal que um contexto fecha quando termina.",
+    "blanks": [
+      {
+        "accept": [
+          "Done"
+        ]
+      }
+    ]
+  },
+  "ex-gn8n9hzn": {
+    "prompt": "Ponha em ordem o desligamento do `stoppable.go`, a partir do momento em que o `main` tem os dois resultados.",
+    "hint": "Cancelar pede; esperar confirma.",
+    "items": [
+      "o `main` chama `cancel()`",
+      "o `select` dos estágios pega o case `ctx.Done()`",
+      "o `close(out)` adiado de cada estágio roda",
+      "o `stages.Wait()` retorna",
+      "o `main` imprime `goroutines still alive: 1`"
+    ]
+  },
+  "ex-wa6ma727": {
+    "prompt": "Associe cada hábito de pipeline à falha que ele evita.",
+    "hint": "Três hábitos, três falhas das lições 6 e 14.",
+    "pairs": [
+      {
+        "left": "`defer close(out)` em todo estágio",
+        "right": "um leitor percorrendo para sempre"
+      },
+      {
+        "left": "fechar só o canal em que você envia",
+        "right": "um envio num canal fechado"
+      },
+      {
+        "left": "um `select` com `ctx.Done()` em volta de cada envio",
+        "right": "estágios presos depois que o leitor saiu"
+      }
+    ],
+    "right_distractors": [
+      "resultados chegando fora de ordem"
+    ]
+  },
+  "ex-70zdqmw9": {
+    "prompt": "Quais destas coisas um estágio do `stoppable.go` faz? Escolha todas as que se aplicam.",
+    "hint": "O último parágrafo da seção 04 lista o padrão completo.",
+    "choices": [
+      {
+        "text": "Recebe a entrada com `range`",
+        "why": "Sim, para que o fechamento da entrada encerre o laço."
+      },
+      {
+        "text": "Envia dentro de um `select` com `ctx.Done()`",
+        "why": "Sim, para que um cancelamento o alcance enquanto espera."
+      },
+      {
+        "text": "Fecha a entrada quando é cancelado",
+        "why": "Ele fecha só a saída; a entrada pertence ao estágio anterior."
+      },
+      {
+        "text": "Chama `cancel` quando o trabalho acaba",
+        "why": "Acabar o trabalho é sinalizado fechando, não cancelando; só o `main` cancela."
+      }
+    ]
+  },
+  "ex-vreyy3tf": {
+    "prompt": "Um servidor monta o pipeline do `stuck.go` a cada requisição e lê dois resultados. Depois de 10.000 requisições, mais ou menos quantas goroutines de estágio ficaram presas?",
+    "hint": "Cada requisição deixa os seus dois estágios para trás.",
+    "choices": [
+      {
+        "text": "Nenhuma, porque as goroutines de cada requisição terminam com ela",
+        "why": "Nada termina uma goroutine a não ser retornar, e estas nunca retornam."
+      },
+      {
+        "text": "Duas, já que os estágios são compartilhados",
+        "why": "Cada requisição montou o próprio pipeline, com os próprios estágios."
+      },
+      {
+        "text": "10.000, uma por requisição",
+        "why": "São dois estágios por pipeline."
+      },
+      {
+        "text": "20.000",
+        "why": "Isso: duas por requisição, para sempre, o vazamento da lição 6."
+      }
+    ]
+  }
+}
