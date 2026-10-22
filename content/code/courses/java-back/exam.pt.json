@@ -1,0 +1,1819 @@
+{
+  "ex-d471r1ys": {
+    "prompt": "O seu pom declara a biblioteca A e depois a B. A precisa de Z 1.2 e B precisa de Z 1.5, e mais nada menciona Z. Que Z o Maven põe no classpath?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "Z 1.5, já que a versão mais nova vence o conflito",
+        "why": "Essa é a regra do Gradle. A do Maven é sobre a posição no grafo e não compara versões."
+      },
+      {
+        "text": "As duas, cada uma carregada pela biblioteca que pediu",
+        "why": "Um classpath tem uma cópia de cada biblioteca; a árvore marca o outro pedido como omitido por conflito."
+      },
+      {
+        "text": "Z 1.2",
+        "why": "Os dois pedidos estão a dois passos do projeto, e no empate vence o declarado primeiro. A vem antes no pom."
+      },
+      {
+        "text": "Nenhuma: o build para até uma exclusão escolher",
+        "why": "O Maven resolve o conflito sozinho e só conta isso no `dependency:tree -Dverbose`; o build segue."
+      }
+    ]
+  },
+  "ex-qdd2grq9": {
+    "prompt": "Quantos jars o `mvn dependency:build-classpath -DincludeScope=runtime` listou para o verificador de ISBN da aula 1?",
+    "hint": "Aula 1.",
+    "unit": "jars"
+  },
+  "ex-sa56twmq": {
+    "prompt": "Uma `<dependency>` escrita sem o elemento `<scope>` recebe o escopo ___.",
+    "hint": "Aula 1.",
+    "blanks": [
+      {
+        "accept": [
+          "compile"
+        ]
+      }
+    ]
+  },
+  "ex-n5x06jee": {
+    "prompt": "O seu código compila contra uma API que o servidor onde ele vai rodar já traz. Que escopo compila contra o jar e o deixa fora do que roda?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "`provided`",
+        "why": "Presente para compilar o programa e os testes, ausente quando ele roda, porque o lugar onde roda o fornece."
+      },
+      {
+        "text": "`runtime`, que é para o que o servidor fornece na execução",
+        "why": "O inverso: `runtime` fica ausente na compilação e presente na execução, como um driver de banco que o código nunca nomeia."
+      },
+      {
+        "text": "`test`",
+        "why": "O código principal nem conseguiria importá-lo; um jar `test` só é visível em `src/test/java`."
+      },
+      {
+        "text": "`compile`, com um elemento `<exclusions>`",
+        "why": "Uma exclusão remove uma biblioteca transitiva que uma dependência arrasta, e `compile` ainda levaria esta."
+      }
+    ]
+  },
+  "ex-5yn6navp": {
+    "prompt": "O pom fixou sete plugins em `pluginManagement`, e mesmo assim o `mvn dependency:tree` rodou o `maven-dependency-plugin:2.8`. Por que essa versão?",
+    "hint": "Aula 1.",
+    "choices": [
+      {
+        "text": "2.8 é a versão mais recente no Central",
+        "why": "O Central tinha a 3.11.0; nada escolheu a 2.8 por ser nova."
+      },
+      {
+        "text": "Goals pedidos pelo nome na linha de comando pulam o `pluginManagement` e usam as versões do próprio Maven",
+        "why": "Fixado lá, o mesmo goal rodou como 3.11.0: o `pluginManagement` vale também para um goal que você nomeia."
+      },
+      {
+        "text": "O repositório local só tinha a 2.8 e o Maven nunca baixa de novo",
+        "why": "O Maven busca qualquer versão pedida que não tenha; a questão é qual versão ele pediu."
+      },
+      {
+        "text": "Nada no pom o nomeava, então o Maven 3.8.7 recorreu à própria lista embutida",
+        "why": "Nenhuma fase liga o plugin de dependências, então ele ficou fora do bloco; um plugin sem versão fixa recebe a que o Maven em uso traz."
+      }
+    ]
+  },
+  "ex-bzs1ehxs": {
+    "prompt": "Trocar para outro branch do Git e voltar deixa todo arquivo-fonte com data nova e os mesmos bytes. O que o próximo `./gradlew build` faz?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Recompila todo fonte, já que toda data mudou",
+        "why": "É assim que o plugin de compilação do Maven decide o que está velho; o mesmo `touch` mandaria o Maven de volta ao `javac`."
+      },
+      {
+        "text": "Informa as tarefas como `UP-TO-DATE`",
+        "why": "O Gradle tira a impressão digital das entradas pelo conteúdo, e o conteúdo é o mesmo de quando as saídas foram feitas."
+      },
+      {
+        "text": "Recompila o código principal e mantém as classes de teste",
+        "why": "Nada recompila; e uma mudança real no principal não pouparia os testes por causa de datas."
+      },
+      {
+        "text": "Pega toda tarefa `FROM-CACHE`",
+        "why": "O cache de build serve para saídas que sumiram, depois de `clean` ou num clone novo; aqui elas continuam em `build/`."
+      }
+    ]
+  },
+  "ex-yjdv67h4": {
+    "prompt": "Numa máquina que nunca rodou este projeto, ponha em ordem o que o primeiro `./gradlew build` faz.",
+    "hint": "Aula 2.",
+    "items": [
+      "Lê o `distributionUrl` do `gradle-wrapper.properties`",
+      "Baixa esse zip para `~/.gradle/wrapper/dists`",
+      "Compara os bytes com o `distributionSha256Sum`",
+      "Compila os scripts de build e monta o grafo de tarefas",
+      "Roda o `compileJava`"
+    ],
+    "trap": "O wrapper não procura um Gradle instalado, e nada roda de um zip antes de o checksum bater."
+  },
+  "ex-myfwz4f5": {
+    "prompt": "Ligue cada palavra que o console plain do Gradle imprime ao lado de uma tarefa ao que ela significa.",
+    "hint": "Aula 2.",
+    "pairs": [
+      {
+        "left": "`UP-TO-DATE`",
+        "right": "entradas e saídas estão como registradas, então nada rodou"
+      },
+      {
+        "left": "`FROM-CACHE`",
+        "right": "as saídas foram copiadas do cache de build"
+      },
+      {
+        "left": "`NO-SOURCE`",
+        "right": "não havia arquivos de entrada para ler"
+      },
+      {
+        "left": "`FAILED`",
+        "right": "rodou e o build parou ali"
+      }
+    ],
+    "right_distractors": [
+      "rodou no daemon em vez de numa JVM nova"
+    ]
+  },
+  "ex-w4j19pat": {
+    "prompt": "Você renomeia um método público de `IsbnCheck` que nenhum teste chama, e roda o build. O que acontece com `compileTestJava`?",
+    "hint": "Aula 2.",
+    "choices": [
+      {
+        "text": "Continua `UP-TO-DATE`, porque nenhum teste chama esse método",
+        "why": "O Gradle não rastreia quais métodos um teste usa; compara as assinaturas públicas como um todo."
+      },
+      {
+        "text": "Roda de novo, porque as assinaturas públicas das classes principais mudaram",
+        "why": "O compile avoidance compara a ABI daquilo contra o que os testes compilam, não quais partes eles usam; um método público renomeado é uma ABI nova."
+      },
+      {
+        "text": "Continua `UP-TO-DATE`, exatamente como depois da troca do separador feita antes na aula",
+        "why": "Aquela edição foi dentro do corpo de um método e deixou toda assinatura igual; um renome não."
+      },
+      {
+        "text": "Vem `FROM-CACHE`",
+        "why": "Só uma impressão digital de entrada já vista sai do cache, e essa ABI é nova."
+      }
+    ]
+  },
+  "ex-kh0b1j8a": {
+    "prompt": "Com o cache de build e o de configuração ligados, o segundo `./gradlew clean build` da aula 2 pegou algumas tarefas `FROM-CACHE`. Quantas?",
+    "hint": "Aula 2.",
+    "unit": "tarefas"
+  },
+  "ex-jz8ndw7x": {
+    "prompt": "Pelas contas da aula 3, qual destes é o caso em que o Bazel paga o que custa?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Cinco pessoas cujo único serviço Spring Boot leva um minuto para compilar com Maven",
+        "why": "Esse é o time para o qual a aula diz que o Bazel custa mais do que devolve: um serviço, uma linguagem, um build já curto."
+      },
+      {
+        "text": "Uma biblioteca que precisa ser publicada no Maven Central",
+        "why": "Publicar no Central é o que Maven e Gradle fazem de fábrica; nada nisso pede Bazel."
+      },
+      {
+        "text": "Um projeto cujos testes deveriam rodar em todo build",
+        "why": "Rodar todo teste toda vez é o padrão do Maven; o forte do Bazel é o oposto, pular testes cujas entradas não mudaram."
+      },
+      {
+        "text": "Quarenta times dividem um repositório de Java, Go e Protocol Buffers, e o CI passa a maior parte do tempo retestando código que nenhum commit tocou",
+        "why": "Várias condições ao mesmo tempo: muitos times, linguagens que dependem umas das outras e tempo de CI gasto em código intocado."
+      }
+    ]
+  },
+  "ex-2qqxsx03": {
+    "prompt": "Uma ação é ___ quando nada fora das entradas declaradas pode mudar o seu resultado.",
+    "hint": "Aula 3.",
+    "blanks": [
+      {
+        "accept": [
+          "hermética",
+          "hermético"
+        ]
+      }
+    ]
+  },
+  "ex-cqxwpz9p": {
+    "prompt": "Depois de o `bazel test //...` imprimir `(cached) PASSED`, você muda uma linha dentro de um método de `IsbnCheck.java` e roda de novo. O que acontece com `IsbnCheckTest`?",
+    "hint": "Aula 3.",
+    "choices": [
+      {
+        "text": "Roda de novo",
+        "why": "A biblioteca da qual o teste depende é uma das entradas dele; um jar novo da biblioteca é uma chave de ação nova, e o resultado em cache deixa de valer."
+      },
+      {
+        "text": "`(cached) PASSED`, porque o arquivo-fonte do próprio teste não mudou",
+        "why": "O resultado de um teste é indexado por todas as entradas, não só o fonte: a biblioteca, cada jar e as flags também contam."
+      },
+      {
+        "text": "`(cached) PASSED`, porque nenhuma assinatura pública mudou",
+        "why": "Isso é o compile avoidance do Gradle, que decide se recompila; o teste ainda roda contra o código novo."
+      },
+      {
+        "text": "O Bazel recompila a biblioteca e deixa o teste para o CI",
+        "why": "O `bazel test` constrói o que está desatualizado e roda aqui mesmo todo alvo de teste cuja chave mudou."
+      }
+    ]
+  },
+  "ex-x63qp6na": {
+    "prompt": "Ligue cada arquivo do projeto Bazel da aula 3 ao que ele guarda.",
+    "hint": "Aula 3.",
+    "pairs": [
+      {
+        "left": "`.bazelversion`",
+        "right": "a versão do Bazel que o Bazelisk baixa e roda"
+      },
+      {
+        "left": "`MODULE.bazel`",
+        "right": "os conjuntos de regras e jars externos de que o módulo depende"
+      },
+      {
+        "left": "`MODULE.bazel.lock`",
+        "right": "no que essas dependências se resolveram, com o hash de cada arquivo"
+      },
+      {
+        "left": "`BUILD.bazel`",
+        "right": "os alvos de um pacote"
+      }
+    ],
+    "right_distractors": [
+      "as saídas do último build"
+    ]
+  },
+  "ex-8ye4czfh": {
+    "prompt": "O `application.properties` do jar diz `server.port=7070`, o `application-dev.properties` ao lado diz `server.port=8081`, e o jar sobe com `SPRING_PROFILES_ACTIVE=dev` e mais nada. Que porta o Tomcat usa?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "7070, porque o arquivo principal é lido por último",
+        "why": "O arquivo do perfil é lido por cima do principal, não por baixo."
+      },
+      {
+        "text": "8080, porque foi uma variável que escolheu o perfil, e não um argumento",
+        "why": "O ambiente é um lugar legítimo para escolher o perfil; ele fica ativo de qualquer jeito e o seu arquivo vale."
+      },
+      {
+        "text": "8081",
+        "why": "Os dois arquivos são lidos e, onde discordam, vence o do perfil ativo."
+      },
+      {
+        "text": "Nenhuma: dois arquivos definindo a mesma propriedade param a subida",
+        "why": "O Boot não reclama de propriedade definida duas vezes; pega o lugar mais forte e ignora o resto."
+      }
+    ]
+  },
+  "ex-reptgdvm": {
+    "prompt": "Quantos jars o primeiro jar executável da livraria levava em `BOOT-INF/lib`?",
+    "hint": "Aula 4.",
+    "unit": "jars"
+  },
+  "ex-ejfbxxrp": {
+    "prompt": "Quais destes estão dentro do `bookshop-0.1.0.jar` de 19 MB que o `repackage` produziu? Marque todas que se aplicam.",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "As classes compiladas da própria livraria",
+        "why": "Em `BOOT-INF/classes`, ao lado das bibliotecas."
+      },
+      {
+        "text": "O jar `spring-boot-starter-webmvc`",
+        "why": "Starters não têm código, então o `repackage` os deixa de fora: por isso 39 linhas da árvore viraram 34 jars."
+      },
+      {
+        "text": "O `tomcat-embed-core` do Tomcat",
+        "why": "O servidor é uma biblioteca dentro da aplicação, então viaja em `BOOT-INF/lib`."
+      },
+      {
+        "text": "Um runtime Java para iniciá-lo",
+        "why": "O jar precisa de um Java na máquina; nada nele substitui isso."
+      },
+      {
+        "text": "`spring-boot-jarmode-tools`",
+        "why": "O único jar que o Boot acrescenta por conta própria, que a aula 23 usa para dividir o jar em camadas."
+      }
+    ]
+  },
+  "ex-yg3y7y8n": {
+    "prompt": "O `spring-boot-starter-parent` herda de `spring-boot-___`, cujo `<dependencyManagement>` dá uma versão a cada biblioteca que o Boot sabe configurar.",
+    "hint": "Aula 4.",
+    "blanks": [
+      {
+        "accept": [
+          "dependencies"
+        ]
+      }
+    ]
+  },
+  "ex-zgwwa93p": {
+    "prompt": "Uma ferramenta de relatório de linha de comando feita com `spring-boot-starter` ganha o `spring-boot-starter-webmvc` para usar um cliente REST. Agora, depois de imprimir o relatório, o processo não termina. Por quê?",
+    "hint": "Aula 4.",
+    "choices": [
+      {
+        "text": "O `SpringApplication.run` bloqueia até alguém chamar `System.exit`",
+        "why": "Sem starter web a mesma chamada retornava e a JVM saía sozinha; o `run` não bloqueia."
+      },
+      {
+        "text": "O relatório ainda espera num buffer que o Boot esvazia no desligamento",
+        "why": "O relatório foi impresso; nada está pendente, e buffer de saída não segura a JVM."
+      },
+      {
+        "text": "Um starter novo faz o Boot esperar a escolha de um perfil",
+        "why": "Nenhum perfil é obrigatório: sem nenhum, o Boot registra que usa o `default` e segue."
+      },
+      {
+        "text": "O Tomcat está no classpath, então um servidor embutido subiu, e as threads dele esperando conexões mantêm a JVM viva",
+        "why": "O Tomcat do starter web faz as condições valerem; o `main` retorna e as threads do servidor continuam lá, então a JVM fica."
+      }
+    ]
+  },
+  "ex-tavj4kcm": {
+    "prompt": "Ligue cada anotação que o component scanning lê ao que ela diz sobre a classe.",
+    "hint": "Aula 5.",
+    "pairs": [
+      {
+        "left": "`@Service`",
+        "right": "um bean que guarda as regras da aplicação"
+      },
+      {
+        "left": "`@Repository`",
+        "right": "um bean que guarda ou busca dados, cujas exceções da biblioteca o Spring traduz"
+      },
+      {
+        "left": "`@Configuration`",
+        "right": "um bean cujos métodos `@Bean` definem outros beans"
+      },
+      {
+        "left": "`@RestController`",
+        "right": "um bean que responde a requisições web"
+      }
+    ],
+    "right_distractors": [
+      "um bean criado de novo toda vez que é pedido"
+    ]
+  },
+  "ex-wpw76ew8": {
+    "prompt": "O Spring criou 78 beans numa execução da livraria da aula 5. Quantos deles o próprio código da livraria definia, contando o `bookshopApplication`?",
+    "hint": "Aula 5.",
+    "unit": "beans"
+  },
+  "ex-p3s3dmdt": {
+    "prompt": "Um projeto acrescenta `AuditedBookRepository` ao lado de `InMemoryBookRepository`. Duas classes de trinta devem receber a auditada, e as outras vinte e oito a em memória. Que correção combina com isso?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "`@Primary` em `AuditedBookRepository`",
+        "why": "Isso faz do repositório auditado a resposta para as trinta classes, não para duas."
+      },
+      {
+        "text": "Chamar os dois parâmetros de construtor de `auditedBookRepository`, e deixar o nome decidir",
+        "why": "Sobe, mas apoiado num nome de parâmetro que um renome de aparência inocente muda; e as outras vinte e oito ainda acham dois candidatos."
+      },
+      {
+        "text": "`@Primary` no repositório padrão, e `@Qualifier` nesses dois pontos de injeção",
+        "why": "O candidato decide o padrão de todos, e cada um dos dois consumidores o substitui para si; o qualifier vence o `@Primary`."
+      },
+      {
+        "text": "Fazer toda classe receber uma `List<BookRepository>` e escolher uma",
+        "why": "Isso é para uma classe que vai usar todos os candidatos; aqui cada classe quer exatamente um."
+      }
+    ]
+  },
+  "ex-gtxmhxv1": {
+    "prompt": "Um bean de escopo request é injetado num singleton. O que o singleton guarda nesse campo?",
+    "hint": "Aula 5.",
+    "choices": [
+      {
+        "text": "Um proxy que acha a instância da requisição atual a cada chamada",
+        "why": "O singleton sobrevive a todas as requisições, então não pode guardar o objeto de uma só; o proxy busca o certo sempre que é usado."
+      },
+      {
+        "text": "A instância da primeira requisição, guardada para sempre",
+        "why": "Isso é o que acontece com um prototype injetado num singleton; o bean de request é entregue como proxy justamente para evitar isso."
+      },
+      {
+        "text": "Nada: a subida falha porque um singleton não pode depender de um escopo mais estreito",
+        "why": "O Spring permite e resolve com um proxy; nenhum relatório é impresso."
+      },
+      {
+        "text": "Uma instância nova, criada toda vez que o campo é lido",
+        "why": "Ler um campo não executa código; só uma chamada de método no proxy chega à instância da requisição atual."
+      }
+    ]
+  },
+  "ex-f2qkt2vv": {
+    "prompt": "O Spring só pode recorrer ao nome de um parâmetro do construtor porque o compilador o guarda no arquivo de classe quando recebe a flag `-___`, que o parent do Spring Boot liga.",
+    "hint": "Aula 5.",
+    "blanks": [
+      {
+        "accept": [
+          "parameters"
+        ]
+      }
+    ]
+  },
+  "ex-8nasytcz": {
+    "prompt": "Ligue cada status que a livraria respondeu na aula 6 à requisição que o recebeu.",
+    "hint": "Aula 6.",
+    "pairs": [
+      {
+        "left": "201",
+        "right": "um POST que guardou um livro novo"
+      },
+      {
+        "left": "405",
+        "right": "`DELETE /books/1`"
+      },
+      {
+        "left": "415",
+        "right": "um POST cujo corpo foi enviado sem `Content-Type: application/json`"
+      },
+      {
+        "left": "400",
+        "right": "`GET /books/abc`"
+      }
+    ],
+    "right_distractors": [
+      "um GET de um livro sem estoque"
+    ]
+  },
+  "ex-7kqvq5bq": {
+    "prompt": "O `BookRequest` ganha um componente opcional, `@Size(max = 500) String blurb`, sem outra restrição. Um cliente posta um livro válido e deixa `blurb` de fora. O que acontece?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "Um 400 com erro de campo em `blurb`, já que um valor ausente não tem tamanho",
+        "why": "Isso tornaria todo campo opcional obrigatório; a convenção é que uma restrição que não seja `@NotNull` não diz nada sobre `null`."
+      },
+      {
+        "text": "O livro é guardado com `blurb` `null`",
+        "why": "Toda restrição padrão trata `null` como válido e o deixa para o `@NotNull`; o `@Size` só julga uma string que existe."
+      },
+      {
+        "text": "Um 400 do Jackson, como o do preço `int` ausente",
+        "why": "O Jackson só recusa valor ausente num primitivo; uma `String` guarda `null` sem reclamar."
+      },
+      {
+        "text": "O livro é guardado com string vazia em `blurb`",
+        "why": "O Jackson não inventa valor para uma propriedade que não veio; o componente fica `null`."
+      }
+    ]
+  },
+  "ex-sqe2fqye": {
+    "prompt": "Com os dois métodos `GET`, o log do perfil dev dizia `4 mappings in 'requestMappingHandlerMapping'`. Quantos ele diz quando o `BookController` também tem o seu `@PostMapping`?",
+    "hint": "Aula 6.",
+    "unit": "mapeamentos"
+  },
+  "ex-vxy1y9se": {
+    "prompt": "O Tomcat entrega toda requisição a um único `DispatcherServlet`, que a encaminha aos seus métodos. O padrão se chama front ___.",
+    "hint": "Aula 6.",
+    "blanks": [
+      {
+        "accept": [
+          "controller"
+        ]
+      }
+    ]
+  },
+  "ex-1pfd3mxd": {
+    "prompt": "A loja acrescenta `costCents`, o que pagou ao fornecedor, ao `Book`. O controller continua devolvendo `BookResponse`. O que os clientes de `GET /books/1` veem?",
+    "hint": "Aula 6.",
+    "choices": [
+      {
+        "text": "O mesmo JSON de antes",
+        "why": "Um campo só chega à API quando alguém o acrescenta ao `BookResponse`; o domínio pode crescer sem publicar nada."
+      },
+      {
+        "text": "Uma propriedade `costCents` nova, já que o Jackson escreve todo campo do objeto",
+        "why": "O Jackson escreve o objeto que recebe, e recebe um `BookResponse`, que não tem esse componente."
+      },
+      {
+        "text": "Um 500, porque o `BookResponse.from` não bate mais com o `Book`",
+        "why": "O `from` lê os componentes que nomeia e compila como antes; um componente a mais em `Book` não quebra nada."
+      },
+      {
+        "text": "O custo, mas só para clientes que mandam `Accept: application/json`",
+        "why": "A negociação de conteúdo escolhe um formato, não um conjunto de campos."
+      }
+    ]
+  },
+  "ex-q09eg6vh": {
+    "prompt": "No Spring Boot 4, alguém põe `server.error.include-stacktrace=always` no `application.properties` para depurar um 500. O que traz o corpo do próximo 500?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Um membro `trace` com a pilha inteira",
+        "why": "Isso é o que `spring.web.error.include-stacktrace=always` faz; o nome escrito aqui é o do Boot 3."
+      },
+      {
+        "text": "Nenhum trace: a propriedade virou `spring.web.error.*` e o nome antigo é ignorado",
+        "why": "O Boot 4 aceita o nome antigo sem reclamar e não faz nada com ele; o `spring-boot-properties-migrator` é o módulo que aponta esses renomes."
+      },
+      {
+        "text": "Nada: a aplicação se recusa a subir, porque não reconhece uma propriedade do seu próprio arquivo",
+        "why": "O Boot não valida nomes de propriedade na subida; um desconhecido só nunca é lido."
+      },
+      {
+        "text": "O trace, mas só no perfil `dev`",
+        "why": "Nenhum perfil entra nisso; a propriedade não tem efeito em nenhum."
+      }
+    ]
+  },
+  "ex-rzs8v9ta": {
+    "prompt": "Ligue cada exceção que o Spring MVC lançou ao status que a livraria reconstruída respondeu.",
+    "hint": "Aula 7.",
+    "pairs": [
+      {
+        "left": "`HttpMessageNotReadableException`",
+        "right": "400"
+      },
+      {
+        "left": "`NoResourceFoundException`",
+        "right": "404"
+      },
+      {
+        "left": "`HttpRequestMethodNotSupportedException`",
+        "right": "405"
+      },
+      {
+        "left": "`HttpMediaTypeNotSupportedException`",
+        "right": "415"
+      }
+    ],
+    "right_distractors": [
+      "409"
+    ]
+  },
+  "ex-g628fyv9": {
+    "prompt": "Uma classe cujos métodos `@ExceptionHandler` valem para todo controller da aplicação, escrevendo o que devolvem como corpo, leva a anotação `@___`.",
+    "hint": "Aula 7.",
+    "blanks": [
+      {
+        "accept": [
+          "RestControllerAdvice"
+        ]
+      }
+    ]
+  },
+  "ex-3sahtwpy": {
+    "prompt": "Um colega acrescenta um handler para a exceção de violação de restrição de uma biblioteca de persistência, respondendo 409 com `e.getMessage()` como `detail`. O que há de errado?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "O 409 é reservado ao `DuplicateIsbnException` da loja",
+        "why": "Um status não pertence a uma exceção; um conflito com o estado guardado é 409 seja quem for que o detecte."
+      },
+      {
+        "text": "Faz a aplicação não subir por handler ambíguo",
+        "why": "Isso acontece com um segundo handler para uma exceção que o `ResponseEntityExceptionHandler` já trata, e a de uma biblioteca não é uma delas."
+      },
+      {
+        "text": "O texto é da biblioteca, escrito para um desenvolvedor, e entrega SQL, nomes de tabela e valores de outras linhas a um estranho",
+        "why": "Uma mensagem só entra na resposta quando você escreveu a exceção; o texto da própria biblioteca é para o log."
+      },
+      {
+        "text": "A exceção tratada é registrada duas vezes no log",
+        "why": "O risco é o oposto: uma exceção tratada não é registrada pelo Spring, então nada vai ao log a menos que o handler escreva."
+      }
+    ]
+  },
+  "ex-xvpd4rrq": {
+    "prompt": "Um cliente escrito para a livraria lê `type` de todo erro que recebe. Apontado para o `javalin-hello`, ele pede `GET /books/9`. O que recebe?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "O mesmo `application/problem+json` que a livraria manda",
+        "why": "Os problem details foram trabalho da aula 7 dentro do Spring; o Javalin não traz nada disso."
+      },
+      {
+        "text": "Um 500, já que o `javalin-hello` não tem mapper de JSON para escrever o corpo do erro",
+        "why": "Isso foi no primeiro build; com o `jackson-databind` 2 no pom, o 404 é respondido sem precisar de JSON."
+      },
+      {
+        "text": "Um 200 com um objeto JSON vazio",
+        "why": "O handler lança exceção quando nenhum livro bate; ele não escreve corpo vazio."
+      },
+      {
+        "text": "Um 404 em texto puro, `No book with id 9`, sem `type` para ler",
+        "why": "O Javalin transforma o `NotFoundResponse` num 404 em texto puro; o formato de problema só existe quando alguém registra um handler de exceção que o escreva."
+      }
+    ]
+  },
+  "ex-7kxqa3rp": {
+    "prompt": "Na primeira execução medida, a livraria registrou `Started BookshopApplication in 3.249 seconds`, e o `first-answer.sh` informou `first answer after 4076 ms`. Quantos milissegundos o cliente esperou que a linha do próprio Spring não conta?",
+    "hint": "Aula 8.",
+    "unit": "ms"
+  },
+  "ex-chtmhs40": {
+    "prompt": "Um time escreve uma função que a nuvem inicia a cada rajada de requisições, então um usuário espera a cada cold start. Eles querem anotações e injeção parecidas com as do Spring. O que serve melhor, pela aula 8?",
+    "hint": "Aula 8.",
+    "choices": [
+      {
+        "text": "Play, cujo modo de desenvolvimento recompila na próxima requisição",
+        "why": "A API Java do Play monta tudo com Guice na subida, por reflexão, no mesmo momento que o Spring Boot."
+      },
+      {
+        "text": "Javalin, já que mantém as facilidades do Spring sem contêiner",
+        "why": "O Javalin sobe rápido justamente por abrir mão dessas facilidades; a injeção é `new` no `main`, sem anotação nenhuma."
+      },
+      {
+        "text": "Micronaut",
+        "why": "Os processadores de anotação dele montam a aplicação dentro do `javac`, então a subida não tem nada a varrer nem refletir, e as anotações lembram as do Spring de propósito."
+      },
+      {
+        "text": "Spring Boot como o curso o constrói, com mais memória",
+        "why": "Memória não tira a montagem da subida: continua sendo varredura e reflexão a cada início."
+      }
+    ]
+  },
+  "ex-rxma5ymy": {
+    "prompt": "O `native-image` do GraalVM compila o programa antecipadamente num único executável, e tudo o que o programa alcança por ___ precisa ser declarado antes desse build.",
+    "hint": "Aula 8.",
+    "blanks": [
+      {
+        "accept": [
+          "reflexão",
+          "reflexao"
+        ]
+      }
+    ]
+  },
+  "ex-jhx98dwh": {
+    "prompt": "A tabela `book` tem os ids de 1 a 4, tirados da sua sequência `bigserial`. Um `INSERT` é recusado pela regra `UNIQUE`, o seguinte pelo `CHECK`, e um terceiro dá certo. Que id a terceira linha recebe?",
+    "hint": "Aula 9."
+  },
+  "ex-drmwzy1v": {
+    "prompt": "A livraria não sobe, e o último `Caused by` é `PSQLException: FATAL: database \"shop\" does not exist`. Quais destes essa linha comprova? Marque todas que se aplicam.",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O driver do PostgreSQL está no class path",
+        "why": "A mensagem é a exceção do próprio driver; sem driver a falha seria `No suitable driver found`."
+      },
+      {
+        "text": "Algo aceita conexões no host e na porta da URL",
+        "why": "Uma linha `FATAL:` é o servidor respondendo; sem ninguém escutando seria `Connection ... refused`."
+      },
+      {
+        "text": "O usuário e a senha foram aceitos",
+        "why": "O login funcionou: papel ou senha errados param antes, com `password authentication failed`."
+      },
+      {
+        "text": "A tabela `book` existe",
+        "why": "Nada chegou até uma tabela; o banco nomeado no fim da URL nem existe."
+      }
+    ]
+  },
+  "ex-xvkg5znk": {
+    "prompt": "Quando o código da livraria chama `close()` numa conexão emprestada do HikariCP, a conexão não é fechada: ela volta para o ___.",
+    "hint": "Aula 9.",
+    "blanks": [
+      {
+        "accept": [
+          "pool",
+          "pool de conexões",
+          "pool de conexoes"
+        ]
+      }
+    ]
+  },
+  "ex-dsjpda9g": {
+    "prompt": "Por que a dependência `postgresql` da livraria leva `<scope>runtime</scope>`?",
+    "hint": "Aula 9.",
+    "choices": [
+      {
+        "text": "O código não nomeia classe nenhuma do driver; ele só é necessário quando a aplicação roda",
+        "why": "O código compila contra `java.sql` e as classes do Spring, e o driver por trás dessas interfaces é achado quando a aplicação sobe."
+      },
+      {
+        "text": "Para que o jar executável o deixe de fora e a máquina que roda o jar forneça a sua própria cópia",
+        "why": "Isso é `provided`. Um jar `runtime` viaja em `BOOT-INF/lib` justamente porque a aplicação precisa dele para rodar."
+      },
+      {
+        "text": "Para que os testes não abram um banco de verdade por acidente",
+        "why": "Uma dependência `runtime` também fica no classpath de teste; o escopo não diz nada sobre qual banco um teste alcança."
+      },
+      {
+        "text": "O parent do Spring Boot exige isso de todo driver",
+        "why": "O parent cuida da versão; o escopo é decisão do projeto, tomada a partir do que o código importa."
+      }
+    ]
+  },
+  "ex-hectnz8c": {
+    "prompt": "Dentro de um método marcado `@Transactional(readOnly = true)`, o código carrega um livro e chama um método que muda o preço no objeto. O que chega ao banco quando o método retorna?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "Um `UPDATE` só da coluna de preço",
+        "why": "Mesmo numa transação de escrita, o `UPDATE` padrão do Hibernate define toda coluna mapeada; e aqui a checagem de sujeira nem acontece."
+      },
+      {
+        "text": "Um `UPDATE` de todas as colunas, como no `RepriceOnce`",
+        "why": "O `RepriceOnce.run` era um `@Transactional` comum; a marca de só leitura é o que muda o desfecho aqui."
+      },
+      {
+        "text": "Uma `LazyInitializationException` no commit",
+        "why": "O livro está gerenciado durante todo o método; essa exceção é sobre carregar campo lazy depois que o contexto fechou."
+      },
+      {
+        "text": "Nenhum `UPDATE`",
+        "why": "O `readOnly` avisa ao Hibernate que nada lido ali volta a ser gravado, então ele pula o trabalho de notar mudanças; o preço novo fica só na memória."
+      }
+    ]
+  },
+  "ex-c87q1x9j": {
+    "prompt": "Um serviço devolve uma entidade `Book` do seu método `@Transactional`, e o controller então muda o preço no objeto devolvido. O que acontece com a linha?",
+    "hint": "Aula 10.",
+    "choices": [
+      {
+        "text": "O Hibernate grava um `UPDATE` no fim da requisição",
+        "why": "Isso exigiria um contexto ainda aberto e um commit depois da mudança; a transação do serviço já acabou."
+      },
+      {
+        "text": "Nada: o objeto está desanexado, e ninguém mais o compara com a linha",
+        "why": "Quando a transação terminou, o contexto de persistência fechou; uma mudança em entidade desanexada nunca é gravada."
+      },
+      {
+        "text": "O Hibernate grava o `UPDATE` na hora, já que toda mudança numa entidade carregada é interceptada no ato",
+        "why": "Nada roda quando um campo de um livro carregado muda; o Hibernate acha mudanças comparando valores no flush, e este objeto não está mais em contexto nenhum."
+      },
+      {
+        "text": "A chamada lança `LazyInitializationException`",
+        "why": "Mudar um campo que o objeto já tem não precisa do banco; só carregar algo não carregado lança exceção."
+      }
+    ]
+  },
+  "ex-w8gadz83": {
+    "prompt": "Ligue cada termo da aula 10 ao que ele é.",
+    "hint": "Aula 10.",
+    "pairs": [
+      {
+        "left": "contexto de persistência",
+        "right": "um mapa, por transação, de cada chave para o único objeto daquela linha"
+      },
+      {
+        "left": "flush",
+        "right": "o envio dos comandos pendentes ao banco"
+      },
+      {
+        "left": "proxy",
+        "right": "um objeto de subclasse gerada que só conhece o id"
+      },
+      {
+        "left": "JPQL",
+        "right": "uma linguagem de consulta que nomeia entidades e seus campos"
+      }
+    ],
+    "right_distractors": [
+      "uma tabela que o Hibernate cria a partir das entidades"
+    ]
+  },
+  "ex-xntb4jzc": {
+    "prompt": "Para a lista de livros chegar com autores de verdade em vez de proxies, num só comando, a consulta fica `select b from Book b join ___ b.author order by b.id`.",
+    "hint": "Aula 10.",
+    "blanks": [
+      {
+        "accept": [
+          "fetch"
+        ]
+      }
+    ]
+  },
+  "ex-xsjs6z0r": {
+    "prompt": "O catálogo tem sete livros. Quantos livros vêm em `content` para `GET /books?size=3&page=2`?",
+    "hint": "Aula 11.",
+    "unit": "livros"
+  },
+  "ex-n6kab7np": {
+    "prompt": "A loja quer todo livro cujo autor esteja numa coleção de nomes dada, do mais barato ao mais caro. Que método do `BookRepository` pede isso como consulta derivada?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "`List<Book> findByAuthorNameInOrderByPriceAsc(Collection<String> names)`",
+        "why": "`Book` não tem a propriedade `price`; a checagem na subida a recusa com `No property 'price' found`."
+      },
+      {
+        "text": "`List<Book> findByAuthorNameInOrderByPriceCentsAsc(Collection<String> names)`",
+        "why": "O sujeito termina no `By`; `AuthorName` é um caminho pela relação, `In` compara com qualquer valor da coleção e `OrderBy…Asc` ordena pelo campo."
+      },
+      {
+        "text": "`List<Book> findByAuthorNameInOrderByPrice_centsAsc(Collection<String> names)`",
+        "why": "Uma consulta derivada nomeia os campos da entidade, nunca a coluna; `price_cents` é a grafia da tabela."
+      },
+      {
+        "text": "`List<Book> findAuthorNameInByPriceCentsAsc(Collection<String> names)`",
+        "why": "Tudo antes do primeiro `By` é o sujeito; aqui a condição seria lida como parte dele e `PriceCentsAsc` como predicado."
+      }
+    ]
+  },
+  "ex-tg8n05xb": {
+    "prompt": "Um colega escreve `@Query(value = \"select title from book where pric_cents < ?1\", nativeQuery = true)`, com a coluna escrita errado. Quando o erro aparece?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "Na subida, como o `b.price` errado no JPQL",
+        "why": "Essa checagem analisa JPQL contra as entidades; com `nativeQuery = true` não há JPQL para analisar."
+      },
+      {
+        "text": "Na compilação",
+        "why": "Para o `javac` a consulta é uma string dentro de uma anotação; nada a lê até a aplicação rodar."
+      },
+      {
+        "text": "Na primeira subida, como `PropertyReferenceException`",
+        "why": "Essa exceção vem da leitura do nome de um método de consulta derivada; o nome deste método nem é analisado."
+      },
+      {
+        "text": "Na primeira chamada, quando o PostgreSQL rejeita o SQL",
+        "why": "Uma consulta nativa vai ao banco como SQL, e o Hibernate não confere nada dela contra as entidades, então a subida passa."
+      }
+    ]
+  },
+  "ex-tcre2x0y": {
+    "prompt": "Num feed sem fim, o `offset` obriga o PostgreSQL a achar e descartar toda linha anterior. A paginação ___ pede, em vez disso, as linhas depois da última vista, como `where title > ?`.",
+    "hint": "Aula 11.",
+    "blanks": [
+      {
+        "accept": [
+          "keyset"
+        ]
+      }
+    ]
+  },
+  "ex-k01wdsz4": {
+    "prompt": "Por que o controller embrulha o `Page` do serviço num `PagedModel` antes de devolvê-lo?",
+    "hint": "Aula 11.",
+    "choices": [
+      {
+        "text": "O `Page` é uma interface para código Java; o `PagedModel` é o formato JSON que o Spring Data mantém estável",
+        "why": "Devolver `PagedModel` diz no tipo do método exatamente o que o cliente recebe: `content` e os quatro números."
+      },
+      {
+        "text": "Sem ele o Spring Data pularia o `count(*)`",
+        "why": "Se a contagem roda é decidido pela chamada ao repositório; o embrulho só molda o JSON depois."
+      },
+      {
+        "text": "O `PagedModel` limita o tamanho da página a 2000",
+        "why": "O limite é do suporte web que monta o `Pageable` a partir da requisição."
+      },
+      {
+        "text": "Um `Page` guarda entidades, e o `PagedModel` as converte em DTOs",
+        "why": "O serviço já converteu as entidades com `Page.map`; a página que chega ao controller guarda registros `BookResponse`."
+      }
+    ]
+  },
+  "ex-r6xqq7k9": {
+    "prompt": "Só o preço de um livro mudou, e a mudança é gravada. Como diferem os `UPDATE` do EBean e do Hibernate, no padrão?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "São o mesmo comando, já que os dois terminam nas mesmas chamadas JDBC",
+        "why": "Terminar em JDBC diz como o comando viaja, não o que ele diz; quem escreve o SQL é que decide."
+      },
+      {
+        "text": "O do Hibernate nomeia só a coluna de preço; o do EBean reescreve toda coluna da linha que carregou",
+        "why": "É o inverso: o objeto que registra as próprias propriedades alteradas é o do EBean."
+      },
+      {
+        "text": "O do EBean nomeia só a coluna de preço; o do Hibernate define toda coluna mapeada",
+        "why": "O enhancement deixa cada objeto EBean registrar quais propriedades mudaram, enquanto o Hibernate, por padrão, manda um `UPDATE` por entidade cobrindo todas as colunas."
+      },
+      {
+        "text": "O EBean não manda nenhum até o contexto de persistência fazer flush",
+        "why": "O EBean não tem contexto de persistência; gravar é a própria chamada `DB.save(book)`."
+      }
+    ]
+  },
+  "ex-fpkfdhnn": {
+    "prompt": "O `search` do MyBatis da aula 12 é chamado com `title` e `maxPrice` ambos nulos. Que SQL chega ao PostgreSQL?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "`... WHERE ORDER BY title`, que o PostgreSQL recusa",
+        "why": "Esse é o defeito de montar a cláusula na mão; o `<where>` existe para evitá-lo."
+      },
+      {
+        "text": "`... WHERE title ILIKE '%' || NULL || '%'`, que não casa com nada",
+        "why": "Um `<if>` cujo teste falha não contribui texto nenhum para o comando."
+      },
+      {
+        "text": "Nada: o MyBatis lança exceção porque um argumento do mapper é nulo",
+        "why": "Argumentos nulos são justamente o que as expressões `test` verificam."
+      },
+      {
+        "text": "`SELECT title, price_cents FROM book ORDER BY title`, sem `WHERE` nenhum",
+        "why": "O `<where>` só escreve `WHERE` quando alguma condição sobrou, e aqui nenhum `<if>` sobrou."
+      }
+    ]
+  },
+  "ex-k59fejn6": {
+    "prompt": "O classpath do `jdbi-look` listou seis jars. Deixando de fora o driver do PostgreSQL, o `slf4j-api` e o `slf4j-nop`, quantos jars são o JDBI e aquilo de que ele depende?",
+    "hint": "Aula 12.",
+    "unit": "jars"
+  },
+  "ex-kq1rxvd9": {
+    "prompt": "Um método `@Transactional` de serviço grava um pedido pelo Spring Data JPA e depois insere uma linha de relatório com `JdbcClient`. O insert falha e o método lança exceção. O que acontece com o pedido?",
+    "hint": "Aula 12.",
+    "choices": [
+      {
+        "text": "Fica gravado, já que JPA e JDBC têm transações separadas",
+        "why": "Misturá-los é seguro justamente porque não têm: um `DataSource`, uma transação."
+      },
+      {
+        "text": "Fica gravado, porque o Hibernate fez flush antes do insert",
+        "why": "O flush manda comandos dentro da transação; só o commit os torna permanentes, e não houve commit."
+      },
+      {
+        "text": "É desfeito junto com o resto",
+        "why": "As duas ferramentas usam o mesmo `DataSource` e entram na mesma transação, então a falha desfaz tudo o que o método fez."
+      },
+      {
+        "text": "A aplicação não sobe com duas ferramentas de persistência",
+        "why": "Nada impede uma aplicação de usar as duas; a aula 12 recomenda isso para um relatório pesado."
+      }
+    ]
+  },
+  "ex-1w2sj2bj": {
+    "prompt": "A livraria sobe contra um banco vazio com `V1__catalogue.sql` e `V2__first_titles.sql` no jar e `ddl-auto=validate`. Ponha em ordem o que acontece.",
+    "hint": "Aula 13.",
+    "items": [
+      "O Flyway valida as duas migrações que encontrou",
+      "O Flyway cria a `flyway_schema_history`",
+      "O Flyway aplica a versão 1, depois a versão 2",
+      "O Hibernate monta o seu `EntityManagerFactory` e compara as entidades com as tabelas",
+      "O log diz `Tomcat started on port 8080`"
+    ],
+    "trap": "O Flyway roda antes de o `EntityManagerFactory` ser montado, então o Hibernate nunca vê um esquema no meio de uma migração."
+  },
+  "ex-mry8jfrv": {
+    "prompt": "Alguém corrigiu um erro de digitação num comentário dentro do `V2__first_titles.sql`, que a produção rodou há meses, e agora a produção não sobe por checksum divergente. Qual é o conserto certo?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Rodar o `repair` do Flyway",
+        "why": "A edição não mudou nada do que o banco teria feito, que é o caso para o qual o `repair` existe: ele reescreve o checksum guardado e não roda nada."
+      },
+      {
+        "text": "Escrever um `V3` que repete o comentário",
+        "why": "Uma migração nova é como se corrige uma mudança nos dados; aqui nada nos dados difere, e a divergência no V2 continuaria."
+      },
+      {
+        "text": "Apagar o banco de produção e deixar o Flyway reconstruí-lo",
+        "why": "Apagar é para um banco cujos dados não importam, e os da produção importam."
+      },
+      {
+        "text": "Ligar `baseline-on-migrate=true` e reiniciar",
+        "why": "Baseline é para um banco sem tabela de histórico; este tem uma, e a divergência está nela."
+      }
+    ]
+  },
+  "ex-txbr3bcy": {
+    "prompt": "O projeto acrescenta `R__book_summary.sql`, que substitui uma view. Quando o Flyway o roda?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Uma vez, como uma versionada, e depois divergência de checksum se editado",
+        "why": "Essa é a regra dos arquivos `V`; os `R` existem justamente para ser editados e rodar de novo."
+      },
+      {
+        "text": "De novo sempre que o conteúdo do arquivo muda",
+        "why": "Uma migração repetível não tem versão; ela roda de novo cada vez que o checksum difere do da última execução."
+      },
+      {
+        "text": "Em toda subida, mudando ou não",
+        "why": "O Flyway compara o checksum antes; um arquivo repetível inalterado é pulado."
+      },
+      {
+        "text": "Nunca, porque arquivo sem versão é ignorado",
+        "why": "O Flyway lê os dois tipos de `db/migration`; o prefixo `R__` é o que marca este."
+      }
+    ]
+  },
+  "ex-sr4w4wt5": {
+    "prompt": "Além da `databasechangelog`, o Liquibase criou a `databasechangeloglock`. Para que serve a segunda tabela?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "Impedir que duas cópias da aplicação subindo ao mesmo tempo apliquem o mesmo changeset duas vezes",
+        "why": "Quem tem a trava migra; a outra espera e depois não acha nada para rodar."
+      },
+      {
+        "text": "Guardar o checksum de cada changeset",
+        "why": "A coluna `md5sum` da `databasechangelog` guarda isso."
+      },
+      {
+        "text": "Guardar o rollback de cada changeset",
+        "why": "Os rollbacks são gerados a partir do changeset ou escritos ao lado dele no changelog."
+      },
+      {
+        "text": "Travar as tabelas que um changeset altera até o fim do release",
+        "why": "Ela não trava tabela da aplicação; só protege o passo da migração."
+      }
+    ]
+  },
+  "ex-15k3q5mq": {
+    "prompt": "Por que a aula 13 passa `--spring.flyway.baseline-on-migrate=true` uma vez na linha de comando em vez de escrevê-lo no `application.properties`?",
+    "hint": "Aula 13.",
+    "choices": [
+      {
+        "text": "O Flyway só lê `spring.flyway.*` da linha de comando",
+        "why": "Toda propriedade `spring.flyway` pode ficar no `application.properties`; esta é que não deve."
+      },
+      {
+        "text": "No arquivo ele faria baseline em silêncio de qualquer banco não vazio para o qual a aplicação aponte, inclusive o errado",
+        "why": "Um baseline é uma afirmação que o Flyway não pode conferir; feito automaticamente, ele pula migrações num banco que nunca as teve."
+      },
+      {
+        "text": "No arquivo ele faria baseline de um banco vazio e pularia V1 e V2",
+        "why": "Num banco vazio não há o que fazer baseline; o Flyway aplica V1 e V2 normalmente."
+      },
+      {
+        "text": "Ele deixa toda subida mais lenta enquanto estiver ligado",
+        "why": "Depois que existe tabela de histórico a configuração não faz nada; o perigo é a primeira subida contra o banco errado."
+      }
+    ]
+  },
+  "ex-9tx0pe9z": {
+    "prompt": "O `max_connections` do PostgreSQL é 100. Quatro cópias da livraria rodam com `maximum-pool-size=10` cada. Quantas conexões sobram para todos os outros clientes desse servidor?",
+    "hint": "Aula 14.",
+    "unit": "conexões"
+  },
+  "ex-sx90x04k": {
+    "prompt": "A primeira linha de um pedido já baixou um estoque quando a segunda lança `OutOfStockException`. Quais destas mudanças no `OrderService` deixariam no banco trabalho desse pedido? Marque todas que se aplicam.",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "O `place` captura a `OutOfStockException` e retorna normalmente",
+        "why": "Retornar normalmente diz ao proxy que tudo correu bem, e ele confirma o que rodou antes da exceção."
+      },
+      {
+        "text": "A `OutOfStockException` vira exceção checada que o `place` declara",
+        "why": "Por padrão o Spring faz commit quando uma exceção checada sai do método."
+      },
+      {
+        "text": "O `take` passa a lançar `IllegalStateException`",
+        "why": "Continua sendo `RuntimeException`, então o proxy desfaz tudo como antes."
+      },
+      {
+        "text": "O `place` perde o `@Transactional`, e cada linha chama `books.save(book)` logo depois do `take`",
+        "why": "Sem transação em volta do `place`, cada `save` roda numa transação curta própria e confirma o estoque da primeira linha antes de a segunda lançar exceção."
+      }
+    ]
+  },
+  "ex-crc9qasn": {
+    "prompt": "Dentro do `place`, a chamada a outro bean roda com `REQUIRES_NEW` para registrar a tentativa. Enquanto essa chamada roda, quantas conexões do pool a requisição segura?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Uma, dividida pelas duas transações",
+        "why": "Uma conexão leva uma transação de cada vez; uma segunda transação precisa de uma segunda conexão."
+      },
+      {
+        "text": "Uma, porque a transação suspensa devolve a conexão ao pool",
+        "why": "Suspensa não é terminada; ela é retomada na mesma conexão quando a chamada interna volta."
+      },
+      {
+        "text": "Duas",
+        "why": "A transação de quem chamou fica suspensa, não encerrada, e mantém a sua conexão enquanto a nova pega uma segunda."
+      },
+      {
+        "text": "Nenhuma até a chamada interna fazer commit",
+        "why": "Uma transação pega a sua conexão quando começa, não quando faz commit."
+      }
+    ]
+  },
+  "ex-069jzpjg": {
+    "prompt": "Em vez da trava, a loja tenta `update book set stock = stock - 1 where id = 3 and stock >= 1`, e o banco responde que 0 linhas foram alteradas. O que isso significa?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "Outra transação segura a linha naquele momento, então o update foi pulado sem aviso",
+        "why": "Um update comum espera pela linha que outra transação segura; não a pula."
+      },
+      {
+        "text": "A restrição `CHECK (stock >= 0)` recusou a linha",
+        "why": "Uma restrição recusada é um erro, não uma contagem zero; aqui o `where` só não casou com nada."
+      },
+      {
+        "text": "É uma atualização perdida, e o estoque agora está errado",
+        "why": "A conta acontece no banco, na linha travada, e é exatamente isso que descarta a atualização perdida."
+      },
+      {
+        "text": "Não havia exemplares suficientes, e o estoque ficou como estava",
+        "why": "A condição é conferida na linha que o update trava de qualquer jeito; zero linhas é a recusa, que o código transforma em resposta de falta de estoque."
+      }
+    ]
+  },
+  "ex-bems6zwy": {
+    "prompt": "Que anomalia nunca acontece no PostgreSQL, mesmo numa transação que pede `READ UNCOMMITTED`?",
+    "hint": "Aula 14.",
+    "choices": [
+      {
+        "text": "A leitura não repetível",
+        "why": "Essa é permitida em `READ COMMITTED`, onde cada comando vê o que estava confirmado quando começou."
+      },
+      {
+        "text": "O fantasma",
+        "why": "Só `SERIALIZABLE` descarta fantasmas na tabela do padrão, e nada elevou o nível aqui."
+      },
+      {
+        "text": "A leitura suja",
+        "why": "O PostgreSQL aceita `READ UNCOMMITTED` e o trata como `READ COMMITTED`, então a mudança não confirmada de outra transação nunca é vista."
+      },
+      {
+        "text": "A atualização perdida",
+        "why": "A aula 14 produziu uma de propósito em `READ COMMITTED`, tirando a trava."
+      }
+    ]
+  },
+  "ex-vc8d9vt9": {
+    "prompt": "Um cliente manda um token expirado com `GET /books/1`, requisição que o `permitAll()` deixa qualquer um fazer. O que ele recebe?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "401, com `Jwt expired` no cabeçalho `WWW-Authenticate`",
+        "why": "O filtro de bearer confere todo token que recebe antes de as regras serem lidas, então um token que falha é recusado até onde nenhum é exigido."
+      },
+      {
+        "text": "200, já que o livro é público",
+        "why": "A regra permitiria uma requisição anônima; esta não é anônima, leva um token que falha na conferência."
+      },
+      {
+        "text": "403, já que o token não concede mais escopo",
+        "why": "O 403 é para um token válido sem a autoridade; um token expirado nem chega às regras."
+      },
+      {
+        "text": "200 por mais 60 segundos, depois 401",
+        "why": "Os 60 segundos de tolerância contam a partir do `exp`, e este token já passou deles: está expirado, não quase."
+      }
+    ]
+  },
+  "ex-sp8swjzy": {
+    "prompt": "Que claims o `TokenController` da livraria põe num token? Marque todas que se aplicam.",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "`sub`, o nome de usuário",
+        "why": "O subject, de quem é o token, e depois o cliente de todo pedido."
+      },
+      {
+        "text": "`exp`, quando deixa de ser aceito",
+        "why": "Quinze minutos depois do `iat` com a configuração da livraria."
+      },
+      {
+        "text": "`jti`, um id para revogá-lo",
+        "why": "Um `jti` é o que uma lista de tokens revogados exigiria; a livraria não tem essa lista e não o define."
+      },
+      {
+        "text": "`scope`, as autoridades do usuário",
+        "why": "Copiado das autoridades do usuário, deixando de fora o que começa com `FACTOR_`."
+      },
+      {
+        "text": "o hash bcrypt da senha",
+        "why": "Quem tem o token lê o payload; nada sobre a senha cabe nele."
+      }
+    ]
+  },
+  "ex-ngnncjnc": {
+    "prompt": "Ponha as partes de uma senha guardada como a da ana na ordem em que aparecem, da esquerda para a direita.",
+    "hint": "Aula 15.",
+    "items": [
+      "O rótulo do Spring que nomeia o encoder",
+      "A versão do bcrypt",
+      "O custo",
+      "O salt de 22 caracteres",
+      "O hash do salt com a senha"
+    ],
+    "trap": "`{bcrypt}$2a$10$` e depois o salt: o hash vem por último, e tudo o que é preciso para conferir uma senha fica antes dele."
+  },
+  "ex-kahhehpc": {
+    "prompt": "Alguém escreve `.anyRequest().authenticated()` primeiro no `apiChain` e o `permitAll()` de `GET /books` depois dele. O que acontece?",
+    "hint": "Aula 15.",
+    "choices": [
+      {
+        "text": "Sobe, e todo livro passa a exigir token",
+        "why": "É o que uma regra geral alcançável acima de uma estreita faria; o Spring recusa esse arranjo antes que aconteça."
+      },
+      {
+        "text": "Sobe, e o `permitAll()`, mais específico, vence",
+        "why": "As regras são lidas de cima e a primeira que casa decide; especificidade não conta."
+      },
+      {
+        "text": "Sobe, e a cadeia 1 assume `/books`",
+        "why": "Qual cadeia é dona de uma requisição depende do `securityMatcher`, e a cadeia 1 só cuida de `/auth/token`."
+      },
+      {
+        "text": "A aplicação se recusa a subir",
+        "why": "O Spring Security não aceita regra depois de `anyRequest()`, já que ela nunca seria alcançada."
+      }
+    ]
+  },
+  "ex-cf1s3t7a": {
+    "prompt": "O limiar está em `INFO`, e o código diz `log.debug(\"Stock {}\", books.count())`. A consulta `count` roda?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Não: com placeholders o SLF4J confere o limiar antes e nunca chama `count`",
+        "why": "A conferência do limiar acontece dentro do `debug`, e o Java já avaliou `books.count()` antes de essa chamada começar."
+      },
+      {
+        "text": "Sim: os argumentos são avaliados antes de `debug` ser chamado, e só a formatação é pulada",
+        "why": "Os placeholders poupam a montagem da string; um argumento caro precisa da forma fluente com um supplier, chamado só quando a linha fica."
+      },
+      {
+        "text": "Não: uma linha `debug` abaixo do limiar é removida na compilação da classe",
+        "why": "Os limiares são lidos em tempo de execução, e é por isso que uma propriedade os muda sem recompilar."
+      },
+      {
+        "text": "Só quando o backend é o Logback",
+        "why": "A avaliação é Java puro, antes de qualquer backend entrar; todo backend recebe a mesma chamada."
+      }
+    ]
+  },
+  "ex-ppt8jgn8": {
+    "prompt": "Ligue cada nível ao que uma linha nesse nível deve significar.",
+    "hint": "Aula 16.",
+    "pairs": [
+      {
+        "left": "`ERROR`",
+        "right": "algo falhou e alguém precisa agir"
+      },
+      {
+        "left": "`WARN`",
+        "right": "algo inesperado foi tratado, e importaria se continuasse acontecendo"
+      },
+      {
+        "left": "`INFO`",
+        "right": "um evento do negócio ou da vida da aplicação"
+      },
+      {
+        "left": "`DEBUG`",
+        "right": "detalhe para quem caça um problema, desligado até alguém ligar"
+      }
+    ],
+    "right_distractors": [
+      "uma requisição que a resposta já recusou, como um pedido de exemplares demais"
+    ]
+  },
+  "ex-rff216vs": {
+    "prompt": "Em dezembro de 2021, o que mostrava se um serviço Spring Boot com o starter de log padrão estava exposto ao Log4Shell?",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "Se as classes do próprio serviço importavam `org.slf4j`",
+        "why": "A fachada repassa toda mensagem ao backend sem mudança, então falar SLF4J não protegia ninguém."
+      },
+      {
+        "text": "Se o `log4j-core` aparecia em algum lugar da árvore de dependências",
+        "why": "A falha estava no backend; o starter padrão traz `log4j-api` e `log4j-to-slf4j`, e qualquer `log4j-core` tinha chegado por outra biblioteca."
+      },
+      {
+        "text": "Se o `log4j-api` estava no classpath",
+        "why": "O starter padrão o tem, e as chamadas dele vão para o Logback, que não tem lookups em mensagem."
+      },
+      {
+        "text": "Se ele registrava algum cabeçalho de requisição em `INFO`",
+        "why": "Registrar um cabeçalho era por onde o ataque chegava, mas sem backend vulnerável a string era só texto."
+      }
+    ]
+  },
+  "ex-3s2j3hms": {
+    "prompt": "O MDC é um pequeno mapa que pertence à ___ atual, e por isso o `RequestIdFilter` o esvazia num `finally` antes de o Tomcat reaproveitá-la.",
+    "hint": "Aula 16.",
+    "blanks": [
+      {
+        "accept": [
+          "thread"
+        ]
+      }
+    ]
+  },
+  "ex-34zrcqct": {
+    "prompt": "Na livraria, quais destas chamadas acabam escritas pelo Logback? Marque todas que se aplicam.",
+    "hint": "Aula 16.",
+    "choices": [
+      {
+        "text": "As próprias classes do Spring, registrando por `commons-logging`",
+        "why": "As linhas do Spring chegam ao SLF4J e daí ao Logback; o formato JSON até as marca como `COMMONS-LOGGING`."
+      },
+      {
+        "text": "Uma biblioteca que chama `java.util.logging`",
+        "why": "O `jul-to-slf4j` do starter de log do Boot entrega essas chamadas ao SLF4J."
+      },
+      {
+        "text": "Uma biblioteca que chama o `org.tinylog.Logger.info` estático do TinyLog",
+        "why": "Nada na livraria faz ponte para a API própria do TinyLog; o suporte do Boot cobre Logback, Log4j2 e `java.util.logging`."
+      },
+      {
+        "text": "Uma biblioteca que chama o `LogManager.getLogger` da API do Log4j",
+        "why": "O `log4j-to-slf4j` encaminha a API do Log4j para o SLF4J, sem `log4j-core` no meio."
+      }
+    ]
+  },
+  "ex-kws0csa6": {
+    "prompt": "Um navegador abre `http://localhost:8080/swagger-ui.html` na livraria terminada. Ponha em ordem o que acontece.",
+    "hint": "Aula 17.",
+    "items": [
+      "A livraria responde 302 com `Location: /swagger-ui/index.html`",
+      "O navegador carrega a página estática e o seu JavaScript",
+      "A página pede `/v3/api-docs/swagger-config`",
+      "A página busca o documento em `/v3/api-docs`",
+      "As operações são desenhadas, agrupadas por tag"
+    ],
+    "trap": "O Swagger UI não sabe nada dos controllers: tudo o que ele desenha vem do documento nomeado na sua configuração."
+  },
+  "ex-dqy2wqv1": {
+    "prompt": "O springdoc lê a aplicação em execução. Quais destes itens do `BookController` ele consegue ver? Marque todas que se aplicam.",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "`@Operation(summary = \"Get one book\")`",
+        "why": "As anotações do OpenAPI são mantidas em tempo de execução, então o summary está no arquivo de classe."
+      },
+      {
+        "text": "A linha `@throws BookNotFoundException` do Javadoc",
+        "why": "Comentários param no `javac`; nada deles chega ao arquivo de classe."
+      },
+      {
+        "text": "O `\"/{id}\"` do `@GetMapping`",
+        "why": "O springdoc monta os caminhos a partir dos mesmos mapeamentos que o `DispatcherServlet` usa."
+      },
+      {
+        "text": "O `size = 20` do `@PageableDefault`",
+        "why": "Ele virou o `default` do parâmetro `size` quando o `@ParameterObject` foi acrescentado."
+      },
+      {
+        "text": "O `catalogue:write` escrito no Javadoc da classe",
+        "why": "Essa frase mora num comentário; o documento diz que precisa de token e nada sobre o escopo."
+      }
+    ]
+  },
+  "ex-fmn29vw0": {
+    "prompt": "Um time contract first gera as interfaces do servidor a partir do `openapi.yaml`, e lá `isbn` é uma string de exatamente treze dígitos. Onde a regra do dígito verificador é aplicada?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "Na interface gerada, a partir do pattern do schema",
+        "why": "Um pattern exige treze dígitos; os pesos 1 e 3 e a distância até a próxima dezena estão fora do seu alcance."
+      },
+      {
+        "text": "No cliente gerado, para que o servidor nunca veja um ISBN errado",
+        "why": "Um servidor não pode confiar que todo chamador usou o cliente gerado; a regra precisa valer no servidor."
+      },
+      {
+        "text": "Em lugar nenhum: o contract first deixa de fora o que o schema não diz",
+        "why": "O contrato fixa o formato da API; as regras do domínio continuam sendo trabalho do servidor."
+      },
+      {
+        "text": "Em código escrito à mão no servidor, como foi o `@ValidIsbn`",
+        "why": "Um schema descreve treze dígitos, mas não a conta sobre eles, então o gerador não tem o que gerar para isso."
+      }
+    ]
+  },
+  "ex-y5w0gx87": {
+    "prompt": "O `OrderController` não tem `@Tag`. Sob que nome o Swagger UI agrupa as suas operações?",
+    "hint": "Aula 17.",
+    "choices": [
+      {
+        "text": "`order-controller`",
+        "why": "Sem tag, o springdoc dá ao grupo o nome da classe."
+      },
+      {
+        "text": "`Catalogue`, a tag que a livraria declarou",
+        "why": "O `@Tag(name = \"Catalogue\")` está no `BookController` e vale só para essa classe."
+      },
+      {
+        "text": "`/orders`, o caminho do seu `@RequestMapping`",
+        "why": "Os caminhos listam as operações; o nome do grupo não vem deles."
+      },
+      {
+        "text": "Nenhum: um controller sem tag fica fora da página",
+        "why": "Toda operação mapeada está no documento, e o Swagger UI desenha todas, com tag ou sem."
+      }
+    ]
+  },
+  "ex-8mba2fmz": {
+    "prompt": "Um `OrderTest` como o da aula 18 acrescenta três exemplares de Dom Casmurro a 3990 e dois de Quincas Borba a 3690. Que número o `assertThat(order.totalCents()).isEqualTo(...)` deve esperar?",
+    "hint": "Aula 18.",
+    "unit": "centavos"
+  },
+  "ex-8sfrxygt": {
+    "prompt": "O `mvn test` roda o `IsbnTest`. Ponha em ordem o que acontece, do Maven até o método de teste.",
+    "hint": "Aula 18.",
+    "items": [
+      "O Maven chega à fase `test` e roda o surefire",
+      "O surefire escolhe as classes cujos nomes casam com os seus padrões e inicia uma JVM para elas",
+      "A JUnit Platform descobre os testes e entrega cada um ao seu engine",
+      "O engine Jupiter roda o método marcado com `@Test`",
+      "O surefire grava os relatórios em `target/surefire-reports`"
+    ],
+    "trap": "O Maven só conhece o surefire, o surefire conhece a Platform, e só um engine sabe o que `@Test` significa."
+  },
+  "ex-r57g6nv0": {
+    "prompt": "Que preparação cabe num método `static` marcado com `@BeforeAll`?",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "O `Book` com dois exemplares que todo teste de `take` altera",
+        "why": "Esse é o desvio que derrubou dois testes de três: o primeiro teste esvaziou o livro compartilhado."
+      },
+      {
+        "text": "Qualquer coisa, já que o JUnit cria uma só instância da classe de teste e roda todos os métodos nela",
+        "why": "O JUnit cria uma instância nova por teste; uma instância compartilhada é a escolha do TestNG."
+      },
+      {
+        "text": "Subir um servidor lento para iniciar e do qual os testes só leem",
+        "why": "O `@BeforeAll` roda uma vez por classe; isso só é seguro para uma preparação cara que nenhum teste altera."
+      },
+      {
+        "text": "Os argumentos de um teste parametrizado",
+        "why": "Argumentos vêm de uma fonte como `@ValueSource` ou `@CsvSource`, uma invocação cada."
+      }
+    ]
+  },
+  "ex-76n2w9y2": {
+    "prompt": "Quais destas execuções de `mvn test` terminam em `BUILD SUCCESS`? Marque todas que se aplicam.",
+    "hint": "Aula 18.",
+    "choices": [
+      {
+        "text": "Um projeto sem classe de teste nenhuma",
+        "why": "O surefire imprime `No tests to run.`, e uma execução vazia é sucesso para o Maven."
+      },
+      {
+        "text": "Um teste cujo código testado lança `NullPointerException`",
+        "why": "Uma exceção escapando de um teste é um erro, e erro derruba o build como a falha."
+      },
+      {
+        "text": "Três métodos `@Test` numa classe chamada `IsbnChecks`",
+        "why": "O nome não casa com nenhum padrão do surefire, então a classe compila e nunca roda."
+      },
+      {
+        "text": "Uma invocação de dez falhando num teste parametrizado",
+        "why": "Cada invocação é um teste próprio, e uma falha entre elas é um build quebrado."
+      },
+      {
+        "text": "Uma regra quebrada que nenhuma linha do teste distingue da certa",
+        "why": "Os testes passam porque só conferem os casos que alguém escreveu, como quando a linha do Frankenstein foi tirada."
+      }
+    ]
+  },
+  "ex-j2n6knx2": {
+    "prompt": "No `OrderServiceTest`, alguém copia o stub `thenAnswer` de `orders.save` também para `anOrderForMoreThanTheStockIsNeverSaved`. A classe roda com `MockitoExtension`. O que acontece com esse teste?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Passa, já que um stub a mais não muda nada",
+        "why": "Sem stubs estritos passaria; o `MockitoExtension` trata um stub não usado como sinal de que o teste descreve um caminho que o código não tomou."
+      },
+      {
+        "text": "Falha no `verify(orders, never()).save(any())`, porque o `save` agora tem stub",
+        "why": "Fazer stub de um método não o chama; o `verify` conta chamadas, e continua não havendo nenhuma."
+      },
+      {
+        "text": "Falha com `PotentialStubbingProblem`",
+        "why": "Esse é para uma chamada cujos argumentos diferem de um stub; aqui nenhuma chamada a `save` acontece."
+      },
+      {
+        "text": "Falha com `UnnecessaryStubbingException`",
+        "why": "O pedido é recusado antes do `save`, então o stub nunca é usado, e stubs estritos derrubam o teste por um stub que nada chamou."
+      }
+    ]
+  },
+  "ex-2jr06dbc": {
+    "prompt": "Um colega propõe rodar os testes de integração contra o H2 em memória em vez do PostgreSQL num contêiner, para economizar a subida. Qual é a objeção da aula 19?",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "O H2 não consegue rodar migrações do Flyway",
+        "why": "O Flyway suporta muitos bancos; a questão é o que uma migração significa em cada um, não se ela roda."
+      },
+      {
+        "text": "O H2 seria mais lento que o contêiner",
+        "why": "O H2 é o mais rápido para subir; velocidade é o argumento a favor dele, não contra."
+      },
+      {
+        "text": "O H2 é outro banco, então um tipo como `char(13)` ou uma consulta que depende do PostgreSQL passa ou falha pelos motivos do H2",
+        "why": "O sentido do teste de integração é o banco de verdade; e os contêineres se mostraram a parte barata da execução."
+      },
+      {
+        "text": "O `@DataJpaTest` se recusa a subir sem Testcontainers",
+        "why": "O `@DataJpaTest` sobe a fatia de persistência contra a fonte de dados que receber."
+      }
+    ]
+  },
+  "ex-yb2nt8x9": {
+    "prompt": "Um novo `CatalogueIT` leva `@SpringBootTest`, `@ActiveProfiles({\"test\", \"sql\"})` e `@Import(TestcontainersConfiguration.class)`, ao lado do `BookshopApplicationIT` e do `BookRepositoryIT` da aula. Quantos contêineres `postgres:16-alpine` um `mvn verify` sobe?",
+    "hint": "Aula 19.",
+    "unit": "contêineres"
+  },
+  "ex-0ws1kxc3": {
+    "prompt": "Quais destes o `OrderServiceTest`, com os dois repositórios simulados, consegue pegar? Marque todas que se aplicam.",
+    "hint": "Aula 19.",
+    "choices": [
+      {
+        "text": "Um pedido acima do estoque que é gravado mesmo assim",
+        "why": "A decisão do próprio serviço está em teste, e o `verify(orders, never()).save(any())` a confere."
+      },
+      {
+        "text": "Um erro no JPQL de `findTitlesByAuthor`",
+        "why": "Um mock responde o que o teste mandou; a consulta do próprio repositório nunca roda."
+      },
+      {
+        "text": "Um total que soma as linhas errado",
+        "why": "O pedido e as suas linhas são objetos reais, então o `totalCents` é calculado como em produção."
+      },
+      {
+        "text": "Uma migração que deixa de fora uma coluna que as entidades esperam",
+        "why": "Só um teste contra um esquema real montado pelo Flyway enxerga isso."
+      },
+      {
+        "text": "Um pedido marcado com o instante errado",
+        "why": "O relógio é um `Clock` fixo entregue ao construtor, então o teste pode afirmar o instante exato."
+      }
+    ]
+  },
+  "ex-wtvf0b8a": {
+    "prompt": "Para poupar uma requisição, o teste de API de um colega assina o próprio JWT com o segredo do perfil `test` em vez de chamar `/auth/token`. Que defeito agora pode chegar à produção sem ser visto?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "O `TokenController` deixar um escopo de fora dos tokens que emite",
+        "why": "As cadeias de filtros ainda rodam, mas contra um token que o controller não fez, então um erro nas claims que ele escreve passa."
+      },
+      {
+        "text": "Uma regra no `apiChain` que deixa qualquer um postar livro",
+        "why": "A requisição ainda atravessa a cadeia de filtros real, então uma regra errada ainda aparece na resposta."
+      },
+      {
+        "text": "Um controller que responde 200 em vez de 201",
+        "why": "O teste ainda confere o status do `POST` real; o jeito de fazer o token não mexe nisso."
+      },
+      {
+        "text": "Nenhum: um token assinado com o mesmo segredo é exatamente o token que a aplicação emitiria",
+        "why": "Ele leva as claims que o teste escolheu, não as que a aplicação teria escrito."
+      }
+    ]
+  },
+  "ex-gm07krr5": {
+    "prompt": "A aula 20 chama o `MockMvc` de escolha razoável para testar o mapeamento de um controller, e mesmo assim usa uma porta real. O que o `MockMvc` pula?",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "O `DispatcherServlet` e o mapeamento de caminhos para métodos",
+        "why": "Isso é justamente o que ele testa; é a rede na frente disso que ele deixa de fora."
+      },
+      {
+        "text": "O socket e o Tomcat",
+        "why": "Ele entrega a requisição ao Spring na mesma thread; um cliente da API chega por um socket."
+      },
+      {
+        "text": "O contexto da aplicação",
+        "why": "O `MOCK` ainda sobe o contexto inteiro, com um ambiente de servlet simulado no lugar do servidor."
+      },
+      {
+        "text": "A conversão do corpo pelo Jackson",
+        "why": "O corpo é convertido como seria numa requisição real; só falta o transporte."
+      }
+    ]
+  },
+  "ex-997hzewc": {
+    "prompt": "Ponha em ordem os passos de `aCustomerWithATokenCanPlaceAnOrder`.",
+    "hint": "Aula 20.",
+    "items": [
+      "`POST /auth/token` com a senha da ana em HTTP Basic",
+      "Esperar status 200 do pedido de token",
+      "Extrair `accessToken` da resposta para uma variável local",
+      "`POST /orders` com `Authorization: Bearer` e o token",
+      "Esperar 201 com `customer` igual a `ana`"
+    ],
+    "trap": "O `extract()` só lê o campo depois de as expectativas acima dele passarem, e a segunda requisição não pode ser montada antes disso."
+  },
+  "ex-f9xm5cq2": {
+    "prompt": "A primeira execução do JMeter depois da subida da livraria teve média de 9 ms, e a seguinte 5 ms com o mesmo plano. Que motivos a aula 20 dá? Marque todas que se aplicam.",
+    "hint": "Aula 20.",
+    "choices": [
+      {
+        "text": "A JVM só compila os métodos mais usados para código de máquina conforme a carga avança",
+        "why": "Na subida a maior parte do código é interpretada; os caminhos quentes são compilados quando se mostram ocupados."
+      },
+      {
+        "text": "Muitas classes só são carregadas quando a primeira requisição precisa delas",
+        "why": "As primeiras requisições pagam o carregamento do que as seguintes já encontram pronto."
+      },
+      {
+        "text": "A primeira execução mandou mais requisições que a segunda",
+        "why": "As duas execuções mandaram as mesmas 20000 requisições com o mesmo plano."
+      },
+      {
+        "text": "A segunda execução teve `-f`, que deixa o JMeter mais rápido",
+        "why": "O `-f` só apaga os resultados e o relatório antigos antes da execução."
+      }
+    ]
+  },
+  "ex-h429kxyz": {
+    "prompt": "Um colega põe uma nova classe de step definitions em `com.example.bookshop.ordering` em vez de `com.example.bookshop.acceptance`. O feature file usa a frase dela. O que a execução informa?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "Um step indefinido, com um snippet para o método",
+        "why": "A glue só é carregada do pacote que o `cucumber.glue` nomeia, então um método em outro lugar parece exatamente uma frase sem código."
+      },
+      {
+        "text": "Nada: o Cucumber varre todo o classpath de teste atrás de step definitions",
+        "why": "Ele só procura nos pacotes de glue que lhe foram indicados."
+      },
+      {
+        "text": "Um erro nomeando dois métodos que casam com a frase",
+        "why": "Isso é para dois casamentos na glue; aqui a glue não tem nenhum."
+      },
+      {
+        "text": "O cenário é pulado, e o build continua verde",
+        "why": "O Cucumber 8 não tem configuração que deixe passar um step indefinido; é erro e derruba o build."
+      }
+    ]
+  },
+  "ex-zxhb062y": {
+    "prompt": "O parent do Spring Boot não gerencia o Cucumber, então o pom importa um pom que só contém versões, o `cucumber-bom`. Um pom assim se chama bill of ___.",
+    "hint": "Aula 21.",
+    "blanks": [
+      {
+        "accept": [
+          "materials"
+        ]
+      }
+    ]
+  },
+  "ex-ktap2vkw": {
+    "prompt": "Uma frase nova diz `When she looks up Persuasion`, com o título sem aspas. Que buraco no padrão `\"she looks up {…}\"` casa com ela?",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "`{string}`",
+        "why": "O `{string}` só casa com texto entre aspas duplas ou simples."
+      },
+      {
+        "text": "`{word}`",
+        "why": "Uma palavra sem espaços, entregue como `String`."
+      },
+      {
+        "text": "`{text}`",
+        "why": "O Cucumber não tem `{text}` embutido; os buracos que conhece são os tipos numéricos, `{word}` e `{string}`."
+      },
+      {
+        "text": "`{int}`",
+        "why": "Esse casa com um número inteiro como 6, e `Persuasion` não é número."
+      }
+    ]
+  },
+  "ex-ekydjtdk": {
+    "prompt": "Na execução Cucumber da livraria, quais destes começam do zero a cada cenário? Marque todas que se aplicam.",
+    "hint": "Aula 21.",
+    "choices": [
+      {
+        "text": "O objeto `OrderingSteps`",
+        "why": "O cucumber-spring cria toda classe de glue como bean, uma nova a cada cenário."
+      },
+      {
+        "text": "O contexto Spring e o seu Tomcat",
+        "why": "O contexto sobe uma vez e fica em cache para qualquer classe de teste com a mesma configuração."
+      },
+      {
+        "text": "O campo `token` que o background preenche",
+        "why": "Ele começa vazio em cada objeto de glue novo, então nada que um cenário deixou ali vaza para o próximo."
+      },
+      {
+        "text": "As linhas de estoque no PostgreSQL",
+        "why": "Nada desfaz o banco entre cenários; toda escrita foi confirmada, e é por isso que cada `Given` define o estoque."
+      }
+    ]
+  },
+  "ex-g18wn6ef": {
+    "prompt": "Duas coletas com 60 segundos de intervalo leem `bookshop_orders_total{outcome=\"out-of-stock\"}` como 12.0 e depois 30.0, sem reinício no meio. A que taxa, por segundo, pedidos foram recusados?",
+    "hint": "Aula 22.",
+    "unit": "por segundo"
+  },
+  "ex-sy0hk79d": {
+    "prompt": "A livraria precisa carregar uma tabela de preços de um arquivo antes de atender a primeira requisição. Onde esse trabalho deve ficar, para que uma plataforma que respeita a readiness não mande nada antes de terminar?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "No grupo liveness, como um health indicator",
+        "why": "A liveness decide se o processo é reiniciado; uma carga lenta ali faria a livraria ser morta durante a própria subida."
+      },
+      {
+        "text": "Em qualquer lugar: a readiness fica pronta no `Started BookshopApplication`",
+        "why": "A liveness vira `CORRECT` logo depois dessa linha; a readiness espera os runners que vêm depois."
+      },
+      {
+        "text": "Num runner, como o `CatalogueReport`",
+        "why": "A readiness só vira `ACCEPTING_TRAFFIC` quando o último runner retorna, então a plataforma espera por ele."
+      },
+      {
+        "text": "No handler da primeira requisição, carregada sob demanda",
+        "why": "Aí o primeiro cliente paga pela carga, que é exatamente o que a readiness existe para evitar."
+      }
+    ]
+  },
+  "ex-ae8m8363": {
+    "prompt": "Por que a aula 22 acrescenta `management.server.port=0` ao `application-test.properties`?",
+    "hint": "Aula 22.",
+    "choices": [
+      {
+        "text": "Para desligar os endpoints do Actuator nos testes",
+        "why": "A porta 0 é uma porta livre escolhida na subida, não ausência de porta; os endpoints continuam respondendo."
+      },
+      {
+        "text": "Para pôr os endpoints na mesma porta da API",
+        "why": "Isso exige que as duas propriedades tenham o mesmo número, e com endereço de loopback impede a subida."
+      },
+      {
+        "text": "Porque o `RANDOM_PORT` se recusa a subir ao lado de uma porta de gerenciamento fixa",
+        "why": "O `RANDOM_PORT` escolhe a porta da API; o choque evitado é com outro processo na 8081."
+      },
+      {
+        "text": "Para que os testes de integração não falhem enquanto uma livraria já roda na 8081",
+        "why": "Os testes sobem a aplicação inteira, servidor de gerenciamento incluído, e a porta 0 pede ao sistema operacional qualquer uma livre."
+      }
+    ]
+  },
+  "ex-1vcfnzjp": {
+    "prompt": "A livraria não envia os seus números a lugar nenhum. O Prometheus os ___ de cada instância num intervalo fixo, perguntando a `/actuator/prometheus`.",
+    "hint": "Aula 22.",
+    "blanks": [
+      {
+        "accept": [
+          "puxa",
+          "coleta",
+          "busca",
+          "raspa"
+        ]
+      }
+    ]
+  },
+  "ex-s08tbehy": {
+    "prompt": "Uma parada limpa por SIGTERM, o sinal 15, deixou o código de saída 143. Que código o `docker inspect` informa para um contêiner cujo processo foi encerrado por SIGKILL, o sinal 9?",
+    "hint": "Aula 23."
+  },
+  "ex-1y3y9jmb": {
+    "prompt": "A pilha do Compose já rodou uma vez. Depois alguém muda o `BOOKSHOP_DB_PASSWORD` no `.env` e roda `docker compose up -d` de novo, mantendo o volume. O que acontece?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "O PostgreSQL adota a senha nova na próxima subida",
+        "why": "A variável é ignorada quando o diretório de dados já existe; mudar a senha exige mudar o papel dentro do banco."
+      },
+      {
+        "text": "O Compose se recusa a subir, como com variável ausente",
+        "why": "O `:?` recusa valor vazio, não valor mudado; os dois contêineres sobem."
+      },
+      {
+        "text": "A livraria é recusada: o banco continua com a senha antiga",
+        "why": "A imagem do PostgreSQL só lê `POSTGRES_PASSWORD` quando cria o banco num volume vazio; o papel mantém a senha com que foi criado."
+      },
+      {
+        "text": "O Flyway percebe a variável mudada e recria o banco com a senha nova",
+        "why": "O Flyway migra o esquema dentro de um banco em que consegue entrar; não cria papéis nem senhas."
+      }
+    ]
+  },
+  "ex-z5dr1h4k": {
+    "prompt": "`docker compose stop app` para a livraria construída com o `ENTRYPOINT` na forma exec. Ponha em ordem o que acontece.",
+    "hint": "Aula 23.",
+    "items": [
+      "O Docker manda SIGTERM ao PID 1, que é o Java",
+      "Cada Tomcat para de aceitar conexões e espera as requisições em andamento",
+      "O `EntityManagerFactory` do JPA é fechado",
+      "O pool de conexões é desligado, fechando as conexões com o PostgreSQL",
+      "O contêiner sai com o código 143"
+    ],
+    "trap": "O entity manager fecha antes do pool, então o PostgreSQL vê as conexões fechadas, e não derrubadas."
+  },
+  "ex-7zqdcxe0": {
+    "prompt": "Para dar mais espaço ao Hibernate, alguém muda o Dockerfile para `-XX:MaxRAMPercentage=100` no contêiner de 1 GiB. Qual é o risco?",
+    "hint": "Aula 23.",
+    "choices": [
+      {
+        "text": "A memória fora do heap leva o processo além do limite, e o kernel o mata sem desligamento nenhum",
+        "why": "Metadados de classes, pilhas de threads, código do JIT e buffers de rede ficam fora do heap; com o heap do tamanho do limite inteiro, nada sobra para eles."
+      },
+      {
+        "text": "Nenhum: a JVM nunca usa mais que o heap",
+        "why": "O heap não é tudo o que a JVM usa, e é exatamente por isso que o curso deixa um quarto do limite fora dele."
+      },
+      {
+        "text": "A JVM ignora o limite e dimensiona o heap pela máquina inteira",
+        "why": "A JVM lê o limite do contêiner e acredita nele; só a fatia muda."
+      },
+      {
+        "text": "O Docker se recusa a subir um contêiner cujo heap iguala o limite",
+        "why": "O Docker não sabe nada de heap; o problema chega em tempo de execução, quando o processo cresce."
+      }
+    ]
+  }
+}

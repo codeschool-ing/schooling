@@ -1,0 +1,2620 @@
+[
+  {
+    "id": "ex-d471r1ys",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Your pom declares library A and then library B. A needs Z 1.2 and B needs Z 1.5, and nothing else mentions Z. Which Z does Maven put on the classpath?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "Z 1.5, since the newer version wins a conflict",
+        "correct": false,
+        "why": "That is Gradle's rule. Maven's is about position in the graph and never compares the versions."
+      },
+      {
+        "text": "Both, each loaded by the library that asked for it",
+        "correct": false,
+        "why": "A classpath holds one copy of a library; the tree marks the other request as omitted for conflict."
+      },
+      {
+        "text": "Z 1.2",
+        "correct": true,
+        "why": "Both requests sit two steps from the project, and on a tie the one declared first wins. A comes first in the pom."
+      },
+      {
+        "text": "Neither: the build stops until an exclusion picks one",
+        "correct": false,
+        "why": "Maven resolves the conflict itself and says so only in `dependency:tree -Dverbose`; the build carries on."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdd2grq9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "How many jars did `mvn dependency:build-classpath -DincludeScope=runtime` list for the ISBN checker in lesson 1?",
+    "hint": "Lesson 1.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "jars"
+  },
+  {
+    "id": "ex-sa56twmq",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A `<dependency>` written with no `<scope>` element gets the scope ___.",
+    "hint": "Lesson 1.",
+    "blanks": [
+      {
+        "accept": [
+          "compile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n5x06jee",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Your code compiles against an API that the server it will be deployed to already carries. Which scope compiles against the jar and leaves it out of what runs?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "`provided`",
+        "correct": true,
+        "why": "Present for compiling the program and its tests, absent when it runs, because the place it runs supplies it."
+      },
+      {
+        "text": "`runtime`, which is for what the server supplies at run time",
+        "correct": false,
+        "why": "The reverse: `runtime` is absent when compiling and present when running, as for a database driver the code never names."
+      },
+      {
+        "text": "`test`",
+        "correct": false,
+        "why": "The main code could not import it at all; a `test` jar is visible only to `src/test/java`."
+      },
+      {
+        "text": "`compile`, with an `<exclusions>` element",
+        "correct": false,
+        "why": "An exclusion removes a transitive library a dependency drags in, and `compile` would still ship this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-5yn6navp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The pom pinned seven plugins under `pluginManagement`, and `mvn dependency:tree` still ran `maven-dependency-plugin:2.8`. Why that version?",
+    "hint": "Lesson 1.",
+    "choices": [
+      {
+        "text": "2.8 is the newest release on Central",
+        "correct": false,
+        "why": "Central had 3.11.0; nothing chose 2.8 for being new."
+      },
+      {
+        "text": "Goals asked for by name on the command line skip `pluginManagement` and take Maven's own versions",
+        "correct": false,
+        "why": "Pinned there, the same goal ran as 3.11.0: `pluginManagement` applies to a goal you name too."
+      },
+      {
+        "text": "The local repository held only 2.8 and Maven never re-downloads",
+        "correct": false,
+        "why": "Maven fetches any version it is asked for and lacks; the question is which version it asked for."
+      },
+      {
+        "text": "Nothing in the pom named it, so Maven 3.8.7 fell back on its own built-in list",
+        "correct": true,
+        "why": "No phase binds the dependency plugin, so it was left out of the block; an unpinned plugin gets whatever version the running Maven carries."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzs1ehxs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Switching to another Git branch and back leaves every source file with a new date and the same bytes. What does the next `./gradlew build` do?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "Recompiles every source, since every date moved",
+        "correct": false,
+        "why": "That is how Maven's compiler plugin decides staleness; the same `touch` would send Maven back to `javac`."
+      },
+      {
+        "text": "Reports the tasks `UP-TO-DATE`",
+        "correct": true,
+        "why": "Gradle fingerprints inputs by their contents, and the contents are what they were when the outputs were made."
+      },
+      {
+        "text": "Recompiles the main code and keeps the test classes",
+        "correct": false,
+        "why": "Nothing recompiles at all; and a real change to main would not spare the tests on dates either."
+      },
+      {
+        "text": "Takes every task `FROM-CACHE`",
+        "correct": false,
+        "why": "The build cache is for outputs that are gone, after `clean` or in a fresh clone; here they are still in `build/`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjdv67h4",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On a machine that has never run this project, put what the first `./gradlew build` does in order.",
+    "hint": "Lesson 2.",
+    "items": [
+      "Reads `distributionUrl` from `gradle-wrapper.properties`",
+      "Downloads that zip into `~/.gradle/wrapper/dists`",
+      "Compares the bytes with `distributionSha256Sum`",
+      "Compiles the build scripts and works out the task graph",
+      "Runs `compileJava`"
+    ],
+    "trap": "The wrapper never looks for an installed Gradle, and nothing is run from a zip before its checksum matches."
+  },
+  {
+    "id": "ex-myfwz4f5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Match each word Gradle's plain console prints beside a task to what it means.",
+    "hint": "Lesson 2.",
+    "pairs": [
+      {
+        "left": "`UP-TO-DATE`",
+        "right": "its inputs and outputs are as recorded, so nothing ran"
+      },
+      {
+        "left": "`FROM-CACHE`",
+        "right": "its outputs were copied in from the build cache"
+      },
+      {
+        "left": "`NO-SOURCE`",
+        "right": "it had no input files to read"
+      },
+      {
+        "left": "`FAILED`",
+        "right": "it ran and the build stopped there"
+      }
+    ],
+    "right_distractors": [
+      "it ran on the daemon instead of a new JVM"
+    ]
+  },
+  {
+    "id": "ex-w4j19pat",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "You rename a public method of `IsbnCheck` that no test calls, and build. What happens to `compileTestJava`?",
+    "hint": "Lesson 2.",
+    "choices": [
+      {
+        "text": "It stays `UP-TO-DATE`, because no test calls that method",
+        "correct": false,
+        "why": "Gradle does not trace which methods a test uses; it compares the public signatures as a whole."
+      },
+      {
+        "text": "It runs again, because the main classes' public signatures are different",
+        "correct": true,
+        "why": "Compile avoidance compares the ABI of what the tests compile against, not which parts the tests use; a renamed public method is a new ABI."
+      },
+      {
+        "text": "It stays `UP-TO-DATE`, just as it did after the separator edit earlier in the lesson",
+        "correct": false,
+        "why": "That edit was inside a method body, which left every signature as it was; a rename does not."
+      },
+      {
+        "text": "It comes `FROM-CACHE`",
+        "correct": false,
+        "why": "Only an input fingerprint seen before can come from the cache, and this ABI is new."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh0b1j8a",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "With the build cache and the configuration cache on, the second `./gradlew clean build` in lesson 2 took some tasks `FROM-CACHE`. How many?",
+    "hint": "Lesson 2.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "tasks"
+  },
+  {
+    "id": "ex-jz8ndw7x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "By lesson 3's reckoning, which of these is the case where Bazel earns its cost?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "Five developers whose one Spring Boot service takes a minute to build with Maven",
+        "correct": false,
+        "why": "That is the team the lesson says Bazel costs more than it returns for: one service, one language, a build that is already short."
+      },
+      {
+        "text": "A library that has to be published to Maven Central",
+        "correct": false,
+        "why": "Publishing to Central is what Maven and Gradle are shaped for; nothing about it calls for Bazel."
+      },
+      {
+        "text": "A project whose tests ought to run on every single build",
+        "correct": false,
+        "why": "Running every test every time is Maven's default; Bazel's selling point is the opposite, skipping tests whose inputs did not change."
+      },
+      {
+        "text": "Forty teams share one repository of Java, Go and Protocol Buffers, and CI spends most of its time retesting code no commit touched",
+        "correct": true,
+        "why": "Several of the conditions at once: many teams, languages that depend on each other, and CI time wasted on untouched code."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qqxsx03",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "An action is ___ when nothing outside its declared inputs can change its result.",
+    "hint": "Lesson 3.",
+    "blanks": [
+      {
+        "accept": [
+          "hermetic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cqxwpz9p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "After `bazel test //...` printed `(cached) PASSED`, you change one line inside a method of `IsbnCheck.java` and run it again. What happens to `IsbnCheckTest`?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "It runs again",
+        "correct": true,
+        "why": "The library the test depends on is one of the test's inputs; a new library jar is a new action key, so the cached result no longer applies."
+      },
+      {
+        "text": "`(cached) PASSED`, because the test's own source file did not change",
+        "correct": false,
+        "why": "A test result is keyed by every input, not only its source: the library, each jar and the flags count too."
+      },
+      {
+        "text": "`(cached) PASSED`, because no public signature changed",
+        "correct": false,
+        "why": "That is Gradle's compile avoidance, which decides whether to recompile; a test still runs against the new code."
+      },
+      {
+        "text": "Bazel rebuilds the library and leaves the test for CI",
+        "correct": false,
+        "why": "`bazel test` builds what is out of date and runs every test target whose key changed, here and now."
+      }
+    ]
+  },
+  {
+    "id": "ex-x63qp6na",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each file of lesson 3's Bazel project to what it holds.",
+    "hint": "Lesson 3.",
+    "pairs": [
+      {
+        "left": "`.bazelversion`",
+        "right": "the Bazel release Bazelisk downloads and runs"
+      },
+      {
+        "left": "`MODULE.bazel`",
+        "right": "the rule sets and external jars the module depends on"
+      },
+      {
+        "left": "`MODULE.bazel.lock`",
+        "right": "what those dependencies resolved to, with each file's hash"
+      },
+      {
+        "left": "`BUILD.bazel`",
+        "right": "the targets of one package"
+      }
+    ],
+    "right_distractors": [
+      "the outputs of the last build"
+    ]
+  },
+  {
+    "id": "ex-8ye4czfh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`application.properties` in the jar says `server.port=7070`, `application-dev.properties` beside it says `server.port=8081`, and the jar starts with `SPRING_PROFILES_ACTIVE=dev` and nothing else. Which port does Tomcat take?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "7070, because the main file is read last",
+        "correct": false,
+        "why": "The profile file is read on top of the main one, not under it."
+      },
+      {
+        "text": "8080, because a variable chose the profile instead of an argument",
+        "correct": false,
+        "why": "The environment is a perfectly good place to choose a profile; the profile is active either way and its file applies."
+      },
+      {
+        "text": "8081",
+        "correct": true,
+        "why": "Both files are read and, where they disagree, the active profile's file wins."
+      },
+      {
+        "text": "Neither: two files setting one property stop the start-up",
+        "correct": false,
+        "why": "Boot never complains about a property set twice; it takes the stronger place and ignores the rest."
+      }
+    ]
+  },
+  {
+    "id": "ex-reptgdvm",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "How many jars did the bookshop's first executable jar carry under `BOOT-INF/lib`?",
+    "hint": "Lesson 4.",
+    "value": 34,
+    "tolerance": 0,
+    "unit": "jars"
+  },
+  {
+    "id": "ex-ejfbxxrp",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are inside the 19 MB `bookshop-0.1.0.jar` that `repackage` produced? Choose all that apply.",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "The bookshop's own compiled classes",
+        "correct": true,
+        "why": "Under `BOOT-INF/classes`, beside the libraries."
+      },
+      {
+        "text": "The `spring-boot-starter-webmvc` jar",
+        "correct": false,
+        "why": "Starters hold no code, so `repackage` leaves them out: that is why 39 lines of tree became 34 jars."
+      },
+      {
+        "text": "Tomcat's `tomcat-embed-core`",
+        "correct": true,
+        "why": "The server is a library inside the application, so it travels in `BOOT-INF/lib`."
+      },
+      {
+        "text": "A Java runtime to start it with",
+        "correct": false,
+        "why": "The jar needs a Java on the machine; nothing in it replaces one."
+      },
+      {
+        "text": "`spring-boot-jarmode-tools`",
+        "correct": true,
+        "why": "The one jar Boot adds of its own, which lesson 23 uses to split the jar into layers."
+      }
+    ]
+  },
+  {
+    "id": "ex-yg3y7y8n",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "`spring-boot-starter-parent` inherits from `spring-boot-___`, whose `<dependencyManagement>` names a version for every library Boot knows how to configure.",
+    "hint": "Lesson 4.",
+    "blanks": [
+      {
+        "accept": [
+          "dependencies"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zgwwa93p",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A command-line report tool built on `spring-boot-starter` gains `spring-boot-starter-webmvc` so that it can call a REST client. Now, after printing its report, the process never exits. Why?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "`SpringApplication.run` blocks until somebody calls `System.exit`",
+        "correct": false,
+        "why": "Without a web starter the same call returned and the JVM exited on its own; `run` does not block."
+      },
+      {
+        "text": "The report is still waiting in a buffer that Boot flushes at shutdown",
+        "correct": false,
+        "why": "The report was printed; nothing is pending, and output buffers do not keep a JVM running."
+      },
+      {
+        "text": "A new starter makes Boot wait for a profile to be chosen",
+        "correct": false,
+        "why": "No profile is ever required: with none set Boot logs that it falls back to `default` and carries on."
+      },
+      {
+        "text": "Tomcat is on the classpath, so an embedded server started, and its threads waiting for connections keep the JVM alive",
+        "correct": true,
+        "why": "The web starter's Tomcat makes its conditions hold; `main` returns and the server's threads are still there, so the JVM stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-tavj4kcm",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Match each annotation that component scanning reads to what it says about the class.",
+    "hint": "Lesson 5.",
+    "pairs": [
+      {
+        "left": "`@Service`",
+        "right": "a bean that holds the application's rules"
+      },
+      {
+        "left": "`@Repository`",
+        "right": "a bean that keeps or fetches data, whose library's exceptions Spring translates"
+      },
+      {
+        "left": "`@Configuration`",
+        "right": "a bean whose `@Bean` methods define further beans"
+      },
+      {
+        "left": "`@RestController`",
+        "right": "a bean that answers web requests"
+      }
+    ],
+    "right_distractors": [
+      "a bean created anew every time it is asked for"
+    ]
+  },
+  {
+    "id": "ex-wpw76ew8",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Spring created 78 beans in one run of lesson 5's bookshop. How many of them did the bookshop's own code define, counting `bookshopApplication`?",
+    "hint": "Lesson 5.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "beans"
+  },
+  {
+    "id": "ex-p3s3dmdt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A project adds `AuditedBookRepository` beside `InMemoryBookRepository`. Two classes out of thirty must get the audited one, and the other twenty-eight the in-memory one. Which repair matches that?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "`@Primary` on `AuditedBookRepository`",
+        "correct": false,
+        "why": "That makes the audited store the answer for all thirty classes, not two."
+      },
+      {
+        "text": "Name the two constructor parameters `auditedBookRepository`, and let the parameter name decide",
+        "correct": false,
+        "why": "It starts, and it rests on a parameter name that a harmless-looking rename would change; and the other twenty-eight still find two candidates."
+      },
+      {
+        "text": "`@Primary` on the default store, and `@Qualifier` at those two injection points",
+        "correct": true,
+        "why": "The candidate decides the default for everybody, and each of the two consumers overrides it for itself; a qualifier wins over `@Primary`."
+      },
+      {
+        "text": "Let every class take a `List<BookRepository>` and pick one",
+        "correct": false,
+        "why": "That is for a class meant to use every candidate; here each class wants exactly one."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtxmhxv1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A request-scoped bean is injected into a singleton. What does the singleton hold in that field?",
+    "hint": "Lesson 5.",
+    "choices": [
+      {
+        "text": "A proxy that finds the current request's instance on each call",
+        "correct": true,
+        "why": "The singleton outlives every request, so it cannot keep one request's object; the proxy looks the right one up whenever it is used."
+      },
+      {
+        "text": "The instance of the first request, kept for ever",
+        "correct": false,
+        "why": "That is what happens to a prototype injected into a singleton; a request-scoped bean is handed over as a proxy precisely to avoid it."
+      },
+      {
+        "text": "Nothing: start-up fails because a singleton may not depend on a narrower scope",
+        "correct": false,
+        "why": "Spring allows it and solves it with a proxy; no report is printed."
+      },
+      {
+        "text": "A new instance, created every time the field is read",
+        "correct": false,
+        "why": "Reading a field runs no code; only a method call on the proxy reaches the current request's instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2qkt2vv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Spring can fall back on a constructor parameter's name only because the compiler keeps it in the class file when given the flag `-___`, which Spring Boot's parent turns on.",
+    "hint": "Lesson 5.",
+    "blanks": [
+      {
+        "accept": [
+          "parameters"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8nasytcz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Match each status the bookshop answered in lesson 6 to the request that got it.",
+    "hint": "Lesson 6.",
+    "pairs": [
+      {
+        "left": "201",
+        "right": "a POST that stored a new book"
+      },
+      {
+        "left": "405",
+        "right": "`DELETE /books/1`"
+      },
+      {
+        "left": "415",
+        "right": "a POST whose body was sent without `Content-Type: application/json`"
+      },
+      {
+        "left": "400",
+        "right": "`GET /books/abc`"
+      }
+    ],
+    "right_distractors": [
+      "a GET for a book that is out of stock"
+    ]
+  },
+  {
+    "id": "ex-7kqvq5bq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "`BookRequest` gains an optional component, `@Size(max = 500) String blurb`, with no other constraint. A client posts a valid book and leaves `blurb` out. What happens?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "A 400 with a field error on `blurb`, since a missing value has no size",
+        "correct": false,
+        "why": "That would make every optional field mandatory; the convention is that a constraint other than `@NotNull` says nothing about `null`."
+      },
+      {
+        "text": "The book is stored with a `null` blurb",
+        "correct": true,
+        "why": "Every standard constraint treats `null` as valid and leaves it to `@NotNull`; `@Size` only judges a string that is there."
+      },
+      {
+        "text": "A 400 from Jackson, as with the missing `int` price",
+        "correct": false,
+        "why": "Jackson refuses a missing value only for a primitive; a `String` holds `null` without complaint."
+      },
+      {
+        "text": "The book is stored with an empty string in `blurb`",
+        "correct": false,
+        "why": "Jackson does not invent a value for a property that was not sent; the component is `null`."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqe2fqye",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "With the two `GET` methods, the dev log said `4 mappings in 'requestMappingHandlerMapping'`. How many does it say once `BookController` also has its `@PostMapping`?",
+    "hint": "Lesson 6.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "mappings"
+  },
+  {
+    "id": "ex-vxy1y9se",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Tomcat hands every request to one `DispatcherServlet`, which routes it to your methods. The pattern is called a front ___.",
+    "hint": "Lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "controller"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1pfd3mxd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The shop adds `costCents`, what it paid the supplier, to `Book`. The controller still returns `BookResponse`. What do clients of `GET /books/1` see?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "The same JSON as before",
+        "correct": true,
+        "why": "A field reaches the API only when somebody adds it to `BookResponse`; the domain can grow without publishing anything."
+      },
+      {
+        "text": "A new `costCents` property, since Jackson writes every field of the object",
+        "correct": false,
+        "why": "Jackson writes the object it is given, and it is given a `BookResponse`, which has no such component."
+      },
+      {
+        "text": "A 500, because `BookResponse.from` no longer matches `Book`",
+        "correct": false,
+        "why": "`from` reads the components it names and compiles as before; an extra component on `Book` breaks nothing."
+      },
+      {
+        "text": "The cost, but only to clients that send `Accept: application/json`",
+        "correct": false,
+        "why": "Content negotiation picks a format, not a set of fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-q09eg6vh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On Spring Boot 4, somebody puts `server.error.include-stacktrace=always` in `application.properties` to debug a 500. What does the next 500's body contain?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "A `trace` member with the whole stack trace",
+        "correct": false,
+        "why": "That is what `spring.web.error.include-stacktrace=always` does; the name written here is Boot 3's."
+      },
+      {
+        "text": "No trace at all: the property was renamed to `spring.web.error.*` and the old name is ignored",
+        "correct": true,
+        "why": "Boot 4 accepts the old name without complaint and does nothing with it; `spring-boot-properties-migrator` is the module that reports such renames."
+      },
+      {
+        "text": "Nothing: the application refuses to start, because it does not recognise a property in its own file",
+        "correct": false,
+        "why": "Boot does not validate property names at start-up; an unknown one is simply never read."
+      },
+      {
+        "text": "The trace, but only in the `dev` profile",
+        "correct": false,
+        "why": "No profile is involved; the property has no effect in any of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzs8v9ta",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each exception Spring MVC raised to the status the rebuilt bookshop answered with.",
+    "hint": "Lesson 7.",
+    "pairs": [
+      {
+        "left": "`HttpMessageNotReadableException`",
+        "right": "400"
+      },
+      {
+        "left": "`NoResourceFoundException`",
+        "right": "404"
+      },
+      {
+        "left": "`HttpRequestMethodNotSupportedException`",
+        "right": "405"
+      },
+      {
+        "left": "`HttpMediaTypeNotSupportedException`",
+        "right": "415"
+      }
+    ],
+    "right_distractors": [
+      "409"
+    ]
+  },
+  {
+    "id": "ex-g628fyv9",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A class whose `@ExceptionHandler` methods apply to every controller in the application, writing what they return as the body, is annotated `@___`.",
+    "hint": "Lesson 7.",
+    "blanks": [
+      {
+        "accept": [
+          "RestControllerAdvice"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3sahtwpy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A teammate adds a handler for a persistence library's constraint-violation exception, answering 409 with `e.getMessage()` as the `detail`. What is wrong with it?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "409 is reserved for the shop's `DuplicateIsbnException`",
+        "correct": false,
+        "why": "A status code is not owned by one exception; a conflict with the stored state is a 409 whoever detects it."
+      },
+      {
+        "text": "It makes the application fail to start with an ambiguous handler",
+        "correct": false,
+        "why": "That happens to a second handler for an exception `ResponseEntityExceptionHandler` already handles, which a library's exception is not."
+      },
+      {
+        "text": "The text is the library's, written for a developer, and it hands SQL, table names and other rows' values to a stranger",
+        "correct": true,
+        "why": "A message goes into a response only when you wrote the exception; a library's own text is for the log."
+      },
+      {
+        "text": "The handled exception is logged twice",
+        "correct": false,
+        "why": "The opposite risk: a handled exception is not logged by Spring at all, so nothing reaches the log unless the handler writes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvpd4rrq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A client written for the bookshop reads `type` from every error it gets. Pointed at `javalin-hello`, it asks for `GET /books/9`. What does it receive?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "The same `application/problem+json` the bookshop sends",
+        "correct": false,
+        "why": "Problem details were lesson 7's work inside Spring; Javalin brings none of it."
+      },
+      {
+        "text": "A 500, since `javalin-hello` has no JSON mapper to write the error body with",
+        "correct": false,
+        "why": "That was the first build; with `jackson-databind` 2 in the pom, the 404 is answered without needing JSON at all."
+      },
+      {
+        "text": "A 200 with an empty JSON object",
+        "correct": false,
+        "why": "The handler throws when no book matches; it never writes an empty body."
+      },
+      {
+        "text": "A 404 in plain text, `No book with id 9`, with no `type` to read",
+        "correct": true,
+        "why": "Javalin turns `NotFoundResponse` into a plain-text 404; the problem shape exists only once somebody registers an exception handler that writes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7kxqa3rp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "On its first measured run the bookshop logged `Started BookshopApplication in 3.249 seconds`, and `first-answer.sh` reported `first answer after 4076 ms`. How many milliseconds did the client wait that Spring's own line does not count?",
+    "hint": "Lesson 8.",
+    "value": 827,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-chtmhs40",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A team writes a function that cloud infrastructure starts on each burst of requests, so a user waits on every cold start. They want annotations and injection close to Spring's. Which fits that best, by lesson 8?",
+    "hint": "Lesson 8.",
+    "choices": [
+      {
+        "text": "Play, whose development mode recompiles on the next request",
+        "correct": false,
+        "why": "Play's Java API wires with Guice at start, by reflection, the same moment Spring Boot does."
+      },
+      {
+        "text": "Javalin, since it keeps Spring's conveniences without a container",
+        "correct": false,
+        "why": "Javalin starts quickly by giving those conveniences up; injection is `new` in `main`, with no annotations at all."
+      },
+      {
+        "text": "Micronaut",
+        "correct": true,
+        "why": "Its annotation processors wire the application inside `javac`, so the start has nothing to scan or reflect on, and its annotations resemble Spring's on purpose."
+      },
+      {
+        "text": "Spring Boot as the course builds it, given more memory",
+        "correct": false,
+        "why": "Memory does not move the wiring out of the start: it is still scanning and reflection on every launch."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxma5ymy",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "GraalVM's `native-image` compiles a program ahead of time into one executable, and anything the program reaches by ___ has to be declared before that build.",
+    "hint": "Lesson 8.",
+    "blanks": [
+      {
+        "accept": [
+          "reflection"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jhx98dwh",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The `book` table holds ids 1 to 4, taken from its `bigserial` sequence. One `INSERT` is refused by the `UNIQUE` rule, the next by the `CHECK`, and a third succeeds. Which id does the third row get?",
+    "hint": "Lesson 9.",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-drmwzy1v",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The bookshop refuses to start, and its last `Caused by` is `PSQLException: FATAL: database \"shop\" does not exist`. Which of these does that line establish? Choose all that apply.",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The PostgreSQL driver is on the class path",
+        "correct": true,
+        "why": "The message is the driver's own exception; with no driver the failure would be `No suitable driver found`."
+      },
+      {
+        "text": "Something accepts connections at the host and port in the URL",
+        "correct": true,
+        "why": "A `FATAL:` line is the server answering; nothing listening would be `Connection ... refused`."
+      },
+      {
+        "text": "The user name and password were accepted",
+        "correct": true,
+        "why": "The login worked: a wrong role or password stops earlier, with `password authentication failed`."
+      },
+      {
+        "text": "The `book` table exists",
+        "correct": false,
+        "why": "Nothing got as far as a table; the database named at the end of the URL is missing altogether."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvkg5znk",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "When the bookshop's code calls `close()` on a connection it borrowed from HikariCP, the connection is not closed: it goes back to the ___.",
+    "hint": "Lesson 9.",
+    "blanks": [
+      {
+        "accept": [
+          "pool",
+          "connection pool"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dsjpda9g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the bookshop's `postgresql` dependency carry `<scope>runtime</scope>`?",
+    "hint": "Lesson 9.",
+    "choices": [
+      {
+        "text": "The code never names a driver class; it is needed only once the application runs",
+        "correct": true,
+        "why": "The code compiles against `java.sql` and Spring's classes, and the driver behind those interfaces is found when the application starts."
+      },
+      {
+        "text": "So that the executable jar leaves it out and the machine that runs the jar supplies its own copy",
+        "correct": false,
+        "why": "That is `provided`. A `runtime` jar travels in `BOOT-INF/lib` exactly because the application needs it to run."
+      },
+      {
+        "text": "So that tests cannot open a real database by accident",
+        "correct": false,
+        "why": "A `runtime` dependency is on the test classpath too; scope says nothing about which database a test reaches."
+      },
+      {
+        "text": "Spring Boot's parent requires it of every driver",
+        "correct": false,
+        "why": "The parent manages the version; the scope is the project's own decision, made from what the code imports."
+      }
+    ]
+  },
+  {
+    "id": "ex-hectnz8c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Inside a method marked `@Transactional(readOnly = true)`, code loads a book and calls a method that changes its price on the object. What reaches the database when the method returns?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "An `UPDATE` of the price column alone",
+        "correct": false,
+        "why": "Even in a writing transaction Hibernate's default `UPDATE` sets every mapped column; and here dirty checking is skipped altogether."
+      },
+      {
+        "text": "An `UPDATE` of every column, as with `RepriceOnce`",
+        "correct": false,
+        "why": "`RepriceOnce.run` was a plain `@Transactional`; the read-only flag is what changes the outcome here."
+      },
+      {
+        "text": "A `LazyInitializationException` at the commit",
+        "correct": false,
+        "why": "The book is managed throughout the method; that exception is about loading a lazy field after the context closed."
+      },
+      {
+        "text": "No `UPDATE`",
+        "correct": true,
+        "why": "`readOnly` tells Hibernate nothing read here will be written back, so it skips the work of noticing changes; the new price stays in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-c87q1x9j",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A service method returns a `Book` entity from its `@Transactional` method, and the controller then changes the book's price on the returned object. What happens to the row?",
+    "hint": "Lesson 10.",
+    "choices": [
+      {
+        "text": "Hibernate writes an `UPDATE` at the end of the request",
+        "correct": false,
+        "why": "That would need a context still open and a commit after the change; the service's transaction is already over."
+      },
+      {
+        "text": "Nothing: the object is detached, and no one compares it with the row any more",
+        "correct": true,
+        "why": "When the transaction ended the persistence context closed; a change to a detached entity is never written."
+      },
+      {
+        "text": "Hibernate writes the `UPDATE` at once, since every change to a loaded entity is intercepted as it happens",
+        "correct": false,
+        "why": "Nothing runs when a field of a loaded book changes; Hibernate finds changes by comparing values at flush, and this object is no longer in any context."
+      },
+      {
+        "text": "The call throws `LazyInitializationException`",
+        "correct": false,
+        "why": "Changing a field it already holds needs no database; only loading something unloaded throws."
+      }
+    ]
+  },
+  {
+    "id": "ex-w8gadz83",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each term from lesson 10 to what it is.",
+    "hint": "Lesson 10.",
+    "pairs": [
+      {
+        "left": "persistence context",
+        "right": "a map, for one transaction, from each key to the one object for that row"
+      },
+      {
+        "left": "flush",
+        "right": "sending the pending statements to the database"
+      },
+      {
+        "left": "proxy",
+        "right": "a generated subclass object that knows only the id"
+      },
+      {
+        "left": "JPQL",
+        "right": "a query language that names entities and their fields"
+      }
+    ],
+    "right_distractors": [
+      "a table Hibernate creates from the entities"
+    ]
+  },
+  {
+    "id": "ex-xntb4jzc",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "So that the list of books arrives with real authors instead of proxies, in one statement, the query reads `select b from Book b join ___ b.author order by b.id`.",
+    "hint": "Lesson 10.",
+    "blanks": [
+      {
+        "accept": [
+          "fetch"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-xsjs6z0r",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The catalogue holds seven books. How many books are in `content` for `GET /books?size=3&page=2`?",
+    "hint": "Lesson 11.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "books"
+  },
+  {
+    "id": "ex-n6kab7np",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The shop wants every book whose author is one of a given collection of names, cheapest first. Which method on `BookRepository` asks for that as a derived query?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "`List<Book> findByAuthorNameInOrderByPriceAsc(Collection<String> names)`",
+        "correct": false,
+        "why": "`Book` has no property `price`; the startup check refuses it with `No property 'price' found`."
+      },
+      {
+        "text": "`List<Book> findByAuthorNameInOrderByPriceCentsAsc(Collection<String> names)`",
+        "correct": true,
+        "why": "The subject ends at `By`; `AuthorName` is a path through the relationship, `In` compares with any value in the collection, and `OrderBy…Asc` sorts by the field."
+      },
+      {
+        "text": "`List<Book> findByAuthorNameInOrderByPrice_centsAsc(Collection<String> names)`",
+        "correct": false,
+        "why": "A derived query names the entity's fields, never the column; `price_cents` is the table's spelling."
+      },
+      {
+        "text": "`List<Book> findAuthorNameInByPriceCentsAsc(Collection<String> names)`",
+        "correct": false,
+        "why": "Everything before the first `By` is the subject; here the condition would be read as part of it and `PriceCentsAsc` as the predicate."
+      }
+    ]
+  },
+  {
+    "id": "ex-tg8n05xb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A teammate writes `@Query(value = \"select title from book where pric_cents < ?1\", nativeQuery = true)`, with the column misspelt. When does the mistake show?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "At start-up, as with the misspelt `b.price` in JPQL",
+        "correct": false,
+        "why": "That check parses JPQL against the entities; with `nativeQuery = true` there is no JPQL to parse."
+      },
+      {
+        "text": "At compile time",
+        "correct": false,
+        "why": "To `javac` the query is a string inside an annotation; nothing reads it until the application runs."
+      },
+      {
+        "text": "At the first start, as `PropertyReferenceException`",
+        "correct": false,
+        "why": "That exception comes from reading a derived query's method name; this method's name is not parsed at all."
+      },
+      {
+        "text": "At the first call, when PostgreSQL rejects the SQL",
+        "correct": true,
+        "why": "A native query goes to the database as SQL, and Hibernate checks nothing in it against the entities, so start-up passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcre2x0y",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "For an endless feed, `offset` makes PostgreSQL find and discard every earlier row. ___ pagination asks instead for the rows after the last one seen, such as `where title > ?`.",
+    "hint": "Lesson 11.",
+    "blanks": [
+      {
+        "accept": [
+          "keyset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-k01wdsz4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does the controller wrap the service's `Page` in a `PagedModel` before returning it?",
+    "hint": "Lesson 11.",
+    "choices": [
+      {
+        "text": "`Page` is an interface for Java code; `PagedModel` is the JSON shape Spring Data keeps stable",
+        "correct": true,
+        "why": "Returning `PagedModel` says in the method's type exactly what a client receives: `content` and the four numbers."
+      },
+      {
+        "text": "Without it Spring Data would skip the `count(*)` query",
+        "correct": false,
+        "why": "Whether the count runs is decided by the repository call; the wrapper only shapes the JSON afterwards."
+      },
+      {
+        "text": "`PagedModel` caps the page size at 2000",
+        "correct": false,
+        "why": "The cap belongs to the web support that builds the `Pageable` from the request."
+      },
+      {
+        "text": "A `Page` holds entities, and `PagedModel` maps them to DTOs",
+        "correct": false,
+        "why": "The service already mapped the entities with `Page.map`; the page that reaches the controller holds `BookResponse` records."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6xqq7k9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A book's price is the only thing changed, and the change is saved. How do the `UPDATE` statements of EBean and of Hibernate, at its default, differ?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "They are the same statement, since both end in the same JDBC calls",
+        "correct": false,
+        "why": "Ending in JDBC says how the statement travels, not what it says; who writes the SQL decides that."
+      },
+      {
+        "text": "Hibernate's names only the price column; EBean's rewrites every column of the row it loaded",
+        "correct": false,
+        "why": "The reverse: the object that tracks its own changed properties is EBean's."
+      },
+      {
+        "text": "EBean's names only the price column; Hibernate's sets every mapped column",
+        "correct": true,
+        "why": "Enhancement lets each EBean object record which properties changed, while Hibernate by default sends one `UPDATE` per entity covering all its columns."
+      },
+      {
+        "text": "EBean sends none until the persistence context flushes",
+        "correct": false,
+        "why": "EBean has no persistence context; saving is the `DB.save(book)` call itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpkfdhnn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The MyBatis `search` statement from lesson 12 is called with both `title` and `maxPrice` null. What SQL reaches PostgreSQL?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "`... WHERE ORDER BY title`, which PostgreSQL refuses",
+        "correct": false,
+        "why": "That is the bug of building the clause by hand; `<where>` exists to avoid it."
+      },
+      {
+        "text": "`... WHERE title ILIKE '%' || NULL || '%'`, which matches nothing",
+        "correct": false,
+        "why": "An `<if>` whose test fails contributes no text at all to the statement."
+      },
+      {
+        "text": "Nothing: MyBatis throws because a mapper argument is null",
+        "correct": false,
+        "why": "Null arguments are exactly what the `test` expressions are written to check."
+      },
+      {
+        "text": "`SELECT title, price_cents FROM book ORDER BY title`, with no `WHERE` at all",
+        "correct": true,
+        "why": "`<where>` writes `WHERE` only when a condition survived, and here neither `<if>` did."
+      }
+    ]
+  },
+  {
+    "id": "ex-k59fejn6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`jdbi-look`'s classpath listed six jars. Leaving out the PostgreSQL driver, `slf4j-api` and `slf4j-nop`, how many jars are JDBI and what it depends on?",
+    "hint": "Lesson 12.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "jars"
+  },
+  {
+    "id": "ex-kq1rxvd9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A `@Transactional` service method saves an order through Spring Data JPA, then inserts a report row with `JdbcClient`. The insert fails and the method throws. What happens to the order?",
+    "hint": "Lesson 12.",
+    "choices": [
+      {
+        "text": "It stays, since JPA and JDBC keep separate transactions",
+        "correct": false,
+        "why": "Mixing them is safe precisely because they do not: one `DataSource`, one transaction."
+      },
+      {
+        "text": "It stays, because Hibernate flushed it before the insert ran",
+        "correct": false,
+        "why": "A flush sends statements inside the transaction; only the commit makes them permanent, and there is none."
+      },
+      {
+        "text": "It is rolled back with the rest",
+        "correct": true,
+        "why": "Both tools use the same `DataSource` and join the same transaction, so the failure undoes everything the method did."
+      },
+      {
+        "text": "The application refuses to start with two persistence tools",
+        "correct": false,
+        "why": "Nothing stops one application from using both; lesson 12 recommends it for one heavy report."
+      }
+    ]
+  },
+  {
+    "id": "ex-1w2sj2bj",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The bookshop starts against an empty database with `V1__catalogue.sql` and `V2__first_titles.sql` in its jar and `ddl-auto=validate`. Put what happens in order.",
+    "hint": "Lesson 13.",
+    "items": [
+      "Flyway validates the two migrations it found",
+      "Flyway creates `flyway_schema_history`",
+      "Flyway applies version 1, then version 2",
+      "Hibernate builds its `EntityManagerFactory` and compares the entities with the tables",
+      "The log says `Tomcat started on port 8080`"
+    ],
+    "trap": "Flyway runs before the `EntityManagerFactory` is built, so Hibernate never sees a schema halfway through a migration."
+  },
+  {
+    "id": "ex-mry8jfrv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Somebody fixed a typo in a comment inside `V2__first_titles.sql`, which production ran months ago, and production now refuses to start with a checksum mismatch. What is the right repair?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Run Flyway's `repair`",
+        "correct": true,
+        "why": "The edit changed nothing the database would have done, which is the case `repair` is for: it rewrites the stored checksum and runs nothing."
+      },
+      {
+        "text": "Write a `V3` that repeats the comment",
+        "correct": false,
+        "why": "A new migration is how a change to the data is corrected; here nothing in the data differs, and the mismatch on V2 would remain."
+      },
+      {
+        "text": "Drop the production database and let Flyway rebuild it",
+        "correct": false,
+        "why": "Dropping is for a database whose data does not matter, which production's always does."
+      },
+      {
+        "text": "Set `baseline-on-migrate=true` and restart",
+        "correct": false,
+        "why": "A baseline is for a database with no history table; this one has one, and the mismatch is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-txbr3bcy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The project adds `R__book_summary.sql`, which replaces a view. When does Flyway run it?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Once, like a versioned migration, and then a checksum mismatch if edited",
+        "correct": false,
+        "why": "That is the rule for `V` files; `R` files exist precisely to be edited and run again."
+      },
+      {
+        "text": "Again whenever the file's contents change",
+        "correct": true,
+        "why": "A repeatable migration has no version; it runs again each time its checksum differs from the last run."
+      },
+      {
+        "text": "On every start, whether it changed or not",
+        "correct": false,
+        "why": "Flyway compares the checksum first; an unchanged repeatable file is skipped."
+      },
+      {
+        "text": "Never, because a file without a version is ignored",
+        "correct": false,
+        "why": "Flyway reads both kinds from `db/migration`; the `R__` prefix is what marks this one."
+      }
+    ]
+  },
+  {
+    "id": "ex-sr4w4wt5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Besides `databasechangelog`, Liquibase created `databasechangeloglock`. What is the second table for?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Stopping two copies of an application that start at once from applying the same changeset twice",
+        "correct": true,
+        "why": "Whoever holds the lock migrates; the other waits, and then finds nothing left to run."
+      },
+      {
+        "text": "Keeping each changeset's checksum",
+        "correct": false,
+        "why": "The `md5sum` column of `databasechangelog` holds those."
+      },
+      {
+        "text": "Storing the rollback of every changeset",
+        "correct": false,
+        "why": "Rollbacks are generated from the changeset or written beside it in the changelog."
+      },
+      {
+        "text": "Locking the tables a changeset alters until the release is finished",
+        "correct": false,
+        "why": "It locks no application table; it only guards the migration step itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-15k3q5mq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Why does lesson 13 pass `--spring.flyway.baseline-on-migrate=true` once on a command line rather than writing it into `application.properties`?",
+    "hint": "Lesson 13.",
+    "choices": [
+      {
+        "text": "Flyway reads `spring.flyway.*` only from the command line",
+        "correct": false,
+        "why": "Every `spring.flyway` property can live in `application.properties`; this one should not."
+      },
+      {
+        "text": "In the file it would quietly baseline any non-empty database the application is pointed at, the wrong one included",
+        "correct": true,
+        "why": "A baseline is a claim Flyway cannot check; made automatically, it skips migrations on a database that never had them."
+      },
+      {
+        "text": "In the file it would baseline an empty database and skip V1 and V2",
+        "correct": false,
+        "why": "On an empty database there is nothing to baseline; Flyway applies V1 and V2 as usual."
+      },
+      {
+        "text": "It makes every start slower while it stays set",
+        "correct": false,
+        "why": "Once a history table exists the setting does nothing at all; the danger is the first start against the wrong database."
+      }
+    ]
+  },
+  {
+    "id": "ex-9tx0pe9z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "PostgreSQL's `max_connections` is 100. Four copies of the bookshop run with `maximum-pool-size=10` each. How many connections are left for every other client of that server?",
+    "hint": "Lesson 14.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-sx90x04k",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "An order's first line has already lowered a stock when its second line throws `OutOfStockException`. Which of these changes to `OrderService` would leave work from that order in the database? Choose all that apply.",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "`place` catches `OutOfStockException` and returns normally",
+        "correct": true,
+        "why": "Returning normally tells the proxy all went well, and it commits what ran before the throw."
+      },
+      {
+        "text": "`OutOfStockException` is made a checked exception that `place` declares",
+        "correct": true,
+        "why": "By default Spring commits when a checked exception leaves the method."
+      },
+      {
+        "text": "`take` throws `IllegalStateException` instead",
+        "correct": false,
+        "why": "That is still a `RuntimeException`, so the proxy rolls back as before."
+      },
+      {
+        "text": "`place` loses `@Transactional`, and each line calls `books.save(book)` straight after `take`",
+        "correct": true,
+        "why": "With no transaction around `place`, each `save` runs in a short transaction of its own and commits the first line's stock before the second line throws."
+      }
+    ]
+  },
+  {
+    "id": "ex-crc9qasn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Inside `place`, a call to another bean runs with `REQUIRES_NEW` to record the attempt. While that call runs, how many pool connections does the request hold?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "One, shared by both transactions",
+        "correct": false,
+        "why": "One connection carries one transaction at a time; a second transaction needs a second connection."
+      },
+      {
+        "text": "One, because the suspended transaction hands its connection back to the pool",
+        "correct": false,
+        "why": "Suspended is not finished; it is resumed on the same connection when the inner call returns."
+      },
+      {
+        "text": "Two",
+        "correct": true,
+        "why": "The caller's transaction is suspended, not ended, and keeps its connection while the new one borrows a second."
+      },
+      {
+        "text": "None until the inner call commits",
+        "correct": false,
+        "why": "A transaction borrows its connection when it begins, not when it commits."
+      }
+    ]
+  },
+  {
+    "id": "ex-069jzpjg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Instead of the lock, the shop tries `update book set stock = stock - 1 where id = 3 and stock >= 1`, and the database answers that 0 rows were updated. What does that mean?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "Another transaction holds the row at that moment, so the update was skipped over",
+        "correct": false,
+        "why": "A plain update waits for a row another transaction holds; it does not skip it."
+      },
+      {
+        "text": "The `CHECK (stock >= 0)` constraint refused the row",
+        "correct": false,
+        "why": "A refused constraint is an error, not a count of zero; here the `where` simply matched nothing."
+      },
+      {
+        "text": "It is a lost update, and the stock is now wrong",
+        "correct": false,
+        "why": "The arithmetic happens in the database on the locked row, which is exactly what rules a lost update out."
+      },
+      {
+        "text": "There were not enough copies, and the stock was left as it was",
+        "correct": true,
+        "why": "The condition is checked on the row the update locks anyway; zero rows is the refusal, which the code turns into an out-of-stock answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-bems6zwy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Which anomaly can never happen in PostgreSQL, even in a transaction that asks for `READ UNCOMMITTED`?",
+    "hint": "Lesson 14.",
+    "choices": [
+      {
+        "text": "A non-repeatable read",
+        "correct": false,
+        "why": "That is allowed at `READ COMMITTED`, where each statement sees what was committed when it began."
+      },
+      {
+        "text": "A phantom",
+        "correct": false,
+        "why": "Only `SERIALIZABLE` rules phantoms out in the standard's table, and nothing raised the level here."
+      },
+      {
+        "text": "A dirty read",
+        "correct": true,
+        "why": "PostgreSQL accepts `READ UNCOMMITTED` and treats it as `READ COMMITTED`, so another transaction's uncommitted change is never seen."
+      },
+      {
+        "text": "A lost update",
+        "correct": false,
+        "why": "Lesson 14 produced one on purpose at `READ COMMITTED`, by taking the lock out."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc8d9vt9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A client sends an expired token with `GET /books/1`, a request that `permitAll()` lets anybody make. What does it get?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "401, with `Jwt expired` in the `WWW-Authenticate` header",
+        "correct": true,
+        "why": "The bearer filter checks any token it is given before the rules are read, so a token that fails is refused even where none is needed."
+      },
+      {
+        "text": "200, since the book is public",
+        "correct": false,
+        "why": "The rule would allow an anonymous request; this one is not anonymous, it carries a token that fails its check."
+      },
+      {
+        "text": "403, since the token no longer grants a scope",
+        "correct": false,
+        "why": "403 is for a valid token without the authority; an expired token never gets as far as the rules."
+      },
+      {
+        "text": "200 for another 60 seconds, then 401",
+        "correct": false,
+        "why": "The 60 seconds of clock skew run from `exp`, and this token is already past them: it is expired, not nearly expired."
+      }
+    ]
+  },
+  {
+    "id": "ex-sp8swjzy",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Which claims does the bookshop's `TokenController` put in a token? Choose all that apply.",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "`sub`, the user name",
+        "correct": true,
+        "why": "The subject, whose token it is, and later the customer of every order."
+      },
+      {
+        "text": "`exp`, when it stops being accepted",
+        "correct": true,
+        "why": "Fifteen minutes after `iat` with the bookshop's settings."
+      },
+      {
+        "text": "`jti`, an id for revoking it",
+        "correct": false,
+        "why": "A `jti` is what a list of revoked tokens would need; the bookshop keeps no such list and sets none."
+      },
+      {
+        "text": "`scope`, the user's authorities",
+        "correct": true,
+        "why": "Copied from the user's authorities, with anything starting `FACTOR_` left out."
+      },
+      {
+        "text": "the password's bcrypt hash",
+        "correct": false,
+        "why": "Anybody holding a token reads its payload; nothing about the password belongs in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngnncjnc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the pieces of a stored password such as ana's in the order they appear, left to right.",
+    "hint": "Lesson 15.",
+    "items": [
+      "Spring's label naming the encoder",
+      "The version of bcrypt",
+      "The cost",
+      "The 22-character salt",
+      "The hash of the salt and the password"
+    ],
+    "trap": "`{bcrypt}$2a$10$` and then the salt: the hash itself comes last, and everything needed to check a password sits in front of it."
+  },
+  {
+    "id": "ex-kahhehpc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Somebody writes `.anyRequest().authenticated()` first in `apiChain` and the `permitAll()` for `GET /books` after it. What happens?",
+    "hint": "Lesson 15.",
+    "choices": [
+      {
+        "text": "It starts, and every book now needs a token",
+        "correct": false,
+        "why": "That is what a reachable general rule above a narrow one would do; Spring refuses this arrangement before it can happen."
+      },
+      {
+        "text": "It starts, and the narrower `permitAll()` wins",
+        "correct": false,
+        "why": "The rules are read from the top and the first that matches decides; specificity plays no part."
+      },
+      {
+        "text": "It starts, and chain 1 takes over `/books`",
+        "correct": false,
+        "why": "Which chain owns a request depends on `securityMatcher`, and chain 1 owns `/auth/token` alone."
+      },
+      {
+        "text": "The application refuses to start",
+        "correct": true,
+        "why": "Spring Security will not accept a rule after `anyRequest()`, since that rule could never be reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-cf1s3t7a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The threshold is `INFO`, and the code says `log.debug(\"Stock {}\", books.count())`. Does the `count` query run?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "No: with placeholders SLF4J checks the threshold first and never calls `count`",
+        "correct": false,
+        "why": "The threshold check happens inside `debug`, and Java has evaluated `books.count()` before that call begins."
+      },
+      {
+        "text": "Yes: arguments are evaluated before `debug` is called, and only the formatting is skipped",
+        "correct": true,
+        "why": "Placeholders save building the string; an expensive argument needs the fluent form with a supplier, called only when the line is kept."
+      },
+      {
+        "text": "No: a `debug` line below the threshold is removed when the class is compiled",
+        "correct": false,
+        "why": "Thresholds are read at run time, which is why one property can change them without a rebuild."
+      },
+      {
+        "text": "Only when Logback is the backend",
+        "correct": false,
+        "why": "The evaluation is plain Java, before any backend is involved; every backend sees the same call."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppt8jgn8",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Match each level to what a line at that level should mean.",
+    "hint": "Lesson 16.",
+    "pairs": [
+      {
+        "left": "`ERROR`",
+        "right": "something failed and somebody has to act"
+      },
+      {
+        "left": "`WARN`",
+        "right": "something unexpected was handled, and would matter if it kept happening"
+      },
+      {
+        "left": "`INFO`",
+        "right": "an event of the business or of the application's life"
+      },
+      {
+        "left": "`DEBUG`",
+        "right": "detail for a developer chasing a problem, off unless turned on"
+      }
+    ],
+    "right_distractors": [
+      "a request the response already refused, such as an order for too many copies"
+    ]
+  },
+  {
+    "id": "ex-rff216vs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In December 2021, what showed whether a Spring Boot service on the default logging starter was exposed to Log4Shell?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Whether its own classes imported `org.slf4j`",
+        "correct": false,
+        "why": "The facade forwards every message to the backend unchanged, so speaking SLF4J protected nobody."
+      },
+      {
+        "text": "Whether `log4j-core` appeared anywhere in its dependency tree",
+        "correct": true,
+        "why": "The flaw lived in the backend; the default starter brings `log4j-api` and `log4j-to-slf4j`, and any `log4j-core` had arrived through some other library."
+      },
+      {
+        "text": "Whether `log4j-api` was on the classpath",
+        "correct": false,
+        "why": "The default starter has it, and its calls go to Logback, which has no message lookups."
+      },
+      {
+        "text": "Whether it logged any request headers at `INFO`",
+        "correct": false,
+        "why": "Logging a header was how the attack arrived, but with no vulnerable backend the string was only text."
+      }
+    ]
+  },
+  {
+    "id": "ex-3s2j3hms",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The MDC is a small map that belongs to the current ___, which is why `RequestIdFilter` empties it in a `finally` before Tomcat reuses it.",
+    "hint": "Lesson 16.",
+    "blanks": [
+      {
+        "accept": [
+          "thread"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-34zrcqct",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the bookshop, which of these calls end up written by Logback? Choose all that apply.",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "Spring's own classes, logging through `commons-logging`",
+        "correct": true,
+        "why": "Spring's lines reach SLF4J and so Logback; the JSON format even tags them `COMMONS-LOGGING`."
+      },
+      {
+        "text": "A library calling `java.util.logging`",
+        "correct": true,
+        "why": "`jul-to-slf4j` in Boot's logging starter hands those calls to SLF4J."
+      },
+      {
+        "text": "A library calling TinyLog's static `org.tinylog.Logger.info`",
+        "correct": false,
+        "why": "Nothing in the bookshop bridges TinyLog's own API; Boot's logging support covers Logback, Log4j2 and `java.util.logging`."
+      },
+      {
+        "text": "A library calling the Log4j API's `LogManager.getLogger`",
+        "correct": true,
+        "why": "`log4j-to-slf4j` routes the Log4j API to SLF4J, with no `log4j-core` in between."
+      }
+    ]
+  },
+  {
+    "id": "ex-kws0csa6",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A browser opens `http://localhost:8080/swagger-ui.html` on the finished bookshop. Put what happens in order.",
+    "hint": "Lesson 17.",
+    "items": [
+      "The bookshop answers 302 with `Location: /swagger-ui/index.html`",
+      "The browser loads the static page and its JavaScript",
+      "The page asks for `/v3/api-docs/swagger-config`",
+      "The page fetches the document at `/v3/api-docs`",
+      "The operations are drawn, grouped by tag"
+    ],
+    "trap": "Swagger UI knows nothing about the controllers: everything it draws comes from the document named in its configuration."
+  },
+  {
+    "id": "ex-dqy2wqv1",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "springdoc reads the running application. Which of these from `BookController` can it see? Choose all that apply.",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "`@Operation(summary = \"Get one book\")`",
+        "correct": true,
+        "why": "The OpenAPI annotations are kept at run time, so the summary is in the class file."
+      },
+      {
+        "text": "The `@throws BookNotFoundException` line of the Javadoc",
+        "correct": false,
+        "why": "Comments stop at `javac`; nothing of them reaches the class file."
+      },
+      {
+        "text": "The `\"/{id}\"` of `@GetMapping`",
+        "correct": true,
+        "why": "springdoc builds its paths from the same mappings the `DispatcherServlet` uses."
+      },
+      {
+        "text": "The `size = 20` of `@PageableDefault`",
+        "correct": true,
+        "why": "It became the `default` of the `size` parameter once `@ParameterObject` was added."
+      },
+      {
+        "text": "The `catalogue:write` written in the class's Javadoc",
+        "correct": false,
+        "why": "That sentence lives in a comment; the document says a token is needed and nothing about its scope."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmn29vw0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A contract-first team generates its server interfaces from `openapi.yaml`, and `isbn` there is a string of exactly thirteen digits. Where does the check-digit rule get enforced?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "In the generated interface, from the schema's pattern",
+        "correct": false,
+        "why": "A pattern can demand thirteen digits; the weights of 1 and 3 and the distance to the next ten are beyond it."
+      },
+      {
+        "text": "In the generated client, so the server never sees a bad ISBN",
+        "correct": false,
+        "why": "A server cannot trust that every caller used the generated client; the rule has to hold on the server."
+      },
+      {
+        "text": "Nowhere: contract first leaves out what a schema cannot say",
+        "correct": false,
+        "why": "The contract fixes the shape of the API; rules of the domain are still the server's job."
+      },
+      {
+        "text": "In code written by hand on the server, as `@ValidIsbn` was",
+        "correct": true,
+        "why": "A schema can describe thirteen digits but not the arithmetic on them, so the generator has nothing to generate for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5w0gx87",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "`OrderController` carries no `@Tag`. Under which name does Swagger UI group its operations?",
+    "hint": "Lesson 17.",
+    "choices": [
+      {
+        "text": "`order-controller`",
+        "correct": true,
+        "why": "Without a tag, springdoc names the group after the class."
+      },
+      {
+        "text": "`Catalogue`, the tag the bookshop declared",
+        "correct": false,
+        "why": "`@Tag(name = \"Catalogue\")` sits on `BookController` and applies to that class alone."
+      },
+      {
+        "text": "`/orders`, the path in its `@RequestMapping`",
+        "correct": false,
+        "why": "Paths list the operations; the group's name does not come from them."
+      },
+      {
+        "text": "None: an untagged controller is left out of the page",
+        "correct": false,
+        "why": "Every mapped operation is in the document, and Swagger UI draws every one, tagged or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mba2fmz",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "An `OrderTest` like lesson 18's adds three copies of Dom Casmurro at 3990 and two of Quincas Borba at 3690. Which number should `assertThat(order.totalCents()).isEqualTo(...)` expect?",
+    "hint": "Lesson 18.",
+    "value": 19350,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-8sfrxygt",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`mvn test` runs `IsbnTest`. Put what happens in order, from Maven to the test method.",
+    "hint": "Lesson 18.",
+    "items": [
+      "Maven reaches the `test` phase and runs surefire",
+      "Surefire picks the classes whose names match its patterns and starts a JVM for them",
+      "The JUnit Platform discovers the tests and hands each to its engine",
+      "The Jupiter engine runs the method marked `@Test`",
+      "Surefire writes its reports into `target/surefire-reports`"
+    ],
+    "trap": "Maven knows only surefire, surefire knows the Platform, and only an engine knows what `@Test` means."
+  },
+  {
+    "id": "ex-r57g6nv0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which set-up belongs in a `static` method marked `@BeforeAll`?",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "The `Book` with two copies that every `take` test changes",
+        "correct": false,
+        "why": "That is the detour that failed two tests of three: the first test emptied the shared book."
+      },
+      {
+        "text": "Anything, since JUnit builds one instance of the test class and runs all its methods on it",
+        "correct": false,
+        "why": "JUnit builds a new instance per test; one shared instance is TestNG's choice."
+      },
+      {
+        "text": "Starting a server that is slow to start and that the tests only read from",
+        "correct": true,
+        "why": "`@BeforeAll` runs once per class; that is safe only for an expensive fixture no test changes."
+      },
+      {
+        "text": "The arguments of a parameterised test",
+        "correct": false,
+        "why": "Arguments come from a source such as `@ValueSource` or `@CsvSource`, one invocation each."
+      }
+    ]
+  },
+  {
+    "id": "ex-76n2w9y2",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these runs of `mvn test` end in `BUILD SUCCESS`? Choose all that apply.",
+    "hint": "Lesson 18.",
+    "choices": [
+      {
+        "text": "A project with no test class at all",
+        "correct": true,
+        "why": "Surefire prints `No tests to run.`, and an empty run is a success as far as Maven is concerned."
+      },
+      {
+        "text": "A test whose code under test throws `NullPointerException`",
+        "correct": false,
+        "why": "An exception escaping a test is an error, and an error fails the build just as a failure does."
+      },
+      {
+        "text": "Three `@Test` methods in a class named `IsbnChecks`",
+        "correct": true,
+        "why": "The name matches none of surefire's patterns, so the class compiles and never runs."
+      },
+      {
+        "text": "One invocation of ten failing in a parameterised test",
+        "correct": false,
+        "why": "Each invocation is a test of its own, and one failure among them is a failed build."
+      },
+      {
+        "text": "A broken rule that none of the test's rows can tell apart from the right one",
+        "correct": true,
+        "why": "The tests pass because they only check the cases somebody wrote down, as when Frankenstein's row was removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2n6knx2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "In `OrderServiceTest`, somebody copies the `thenAnswer` stubbing of `orders.save` into `anOrderForMoreThanTheStockIsNeverSaved` as well. The class runs with `MockitoExtension`. What happens to that test?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "It passes, since an extra stubbing changes nothing",
+        "correct": false,
+        "why": "Without strict stubs it would; `MockitoExtension` treats an unused stubbing as a sign the test describes a path the code never took."
+      },
+      {
+        "text": "It fails at `verify(orders, never()).save(any())`, because `save` is now stubbed",
+        "correct": false,
+        "why": "Stubbing a method does not call it; `verify` counts calls, and there are still none."
+      },
+      {
+        "text": "It fails with `PotentialStubbingProblem`",
+        "correct": false,
+        "why": "That one is for a call whose arguments differ from a stubbing; here no call to `save` happens at all."
+      },
+      {
+        "text": "It fails with `UnnecessaryStubbingException`",
+        "correct": true,
+        "why": "The order is refused before `save`, so the stubbing is never used, and strict stubs fail a test for a stubbing nothing called."
+      }
+    ]
+  },
+  {
+    "id": "ex-2jr06dbc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A colleague proposes running the integration tests against H2 in memory instead of PostgreSQL in a container, to save the start-up. What is lesson 19's objection?",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "H2 cannot run Flyway migrations",
+        "correct": false,
+        "why": "Flyway supports many databases; the issue is what a migration means on each, not whether it runs."
+      },
+      {
+        "text": "H2 would be slower than the container",
+        "correct": false,
+        "why": "H2 is the faster one to start; speed is the argument for it, not against it."
+      },
+      {
+        "text": "H2 is a different database, so a type such as `char(13)` or a query that depends on PostgreSQL passes or fails for H2's reasons",
+        "correct": true,
+        "why": "The point of the integration test is the real database; the containers turned out to be the cheap part of the run anyway."
+      },
+      {
+        "text": "`@DataJpaTest` refuses to start without Testcontainers",
+        "correct": false,
+        "why": "`@DataJpaTest` starts the persistence slice against whatever data source it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb2nt8x9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "A new `CatalogueIT` carries `@SpringBootTest`, `@ActiveProfiles({\"test\", \"sql\"})` and `@Import(TestcontainersConfiguration.class)`, beside the lesson's `BookshopApplicationIT` and `BookRepositoryIT`. How many `postgres:16-alpine` containers does one `mvn verify` start?",
+    "hint": "Lesson 19.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "containers"
+  },
+  {
+    "id": "ex-0ws1kxc3",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these can `OrderServiceTest`, with both repositories mocked, catch? Choose all that apply.",
+    "hint": "Lesson 19.",
+    "choices": [
+      {
+        "text": "An order for more than the stock that is saved anyway",
+        "correct": true,
+        "why": "The service's own decision is under test, and `verify(orders, never()).save(any())` checks it."
+      },
+      {
+        "text": "A mistake in the JPQL of `findTitlesByAuthor`",
+        "correct": false,
+        "why": "A mock answers what the test told it; the repository's own query never runs."
+      },
+      {
+        "text": "A total that adds the lines up wrongly",
+        "correct": true,
+        "why": "The order and its lines are real objects, so `totalCents` is computed as in production."
+      },
+      {
+        "text": "A migration that leaves a column the entities expect missing",
+        "correct": false,
+        "why": "Only a test against a real schema built by Flyway can see that."
+      },
+      {
+        "text": "An order stamped with the wrong instant",
+        "correct": true,
+        "why": "The clock is a fixed `Clock` handed to the constructor, so the test can assert the exact instant."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtvf0b8a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "To save a request, a teammate's API test signs its own JWT with the `test` profile's secret instead of calling `/auth/token`. Which bug could now reach production unseen?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "`TokenController` leaving a scope out of the tokens it issues",
+        "correct": true,
+        "why": "The filter chains still run, but against a token the controller never made, so a mistake in the claims it writes passes."
+      },
+      {
+        "text": "A rule in `apiChain` that lets anyone post a book",
+        "correct": false,
+        "why": "The request still crosses the real filter chain, so a wrong rule still shows up in the answer."
+      },
+      {
+        "text": "A controller that answers 200 instead of 201",
+        "correct": false,
+        "why": "The test still checks the status of the real `POST`; how the token was made does not touch that."
+      },
+      {
+        "text": "None: a token signed with the same secret is the very same token the application would issue",
+        "correct": false,
+        "why": "It carries whatever claims the test chose, not the ones the application would have written."
+      }
+    ]
+  },
+  {
+    "id": "ex-gm07krr5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Lesson 20 calls `MockMvc` a fair choice for testing a controller's mapping, and still uses a real port. What does `MockMvc` skip?",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "The `DispatcherServlet` and the mapping of paths to methods",
+        "correct": false,
+        "why": "Those are exactly what it does test; it is the network in front of them that it leaves out."
+      },
+      {
+        "text": "The socket and Tomcat",
+        "correct": true,
+        "why": "It hands the request to Spring in the same thread; a client of the API arrives through a socket."
+      },
+      {
+        "text": "The application context",
+        "correct": false,
+        "why": "`MOCK` still starts the whole context, with a mock servlet environment in place of a server."
+      },
+      {
+        "text": "Jackson's conversion of the body",
+        "correct": false,
+        "why": "The body is converted as it would be for a real request; only the transport is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-997hzewc",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Put the steps of `aCustomerWithATokenCanPlaceAnOrder` in order.",
+    "hint": "Lesson 20.",
+    "items": [
+      "`POST /auth/token` with ana's password in HTTP Basic",
+      "Expect status 200 from the token request",
+      "Extract `accessToken` from the answer into a local variable",
+      "`POST /orders` with `Authorization: Bearer` and the token",
+      "Expect 201 with `customer` equal to `ana`"
+    ],
+    "trap": "`extract()` reads the field only after the expectations above it have passed, and the second request cannot be written until it has."
+  },
+  {
+    "id": "ex-f9xm5cq2",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The first JMeter run after the bookshop started averaged 9 ms, and the next one 5 ms with the same plan. Which reasons does lesson 20 give? Choose all that apply.",
+    "hint": "Lesson 20.",
+    "choices": [
+      {
+        "text": "The JVM compiles busy methods to machine code only as the load goes on",
+        "correct": true,
+        "why": "At start-up most code is interpreted; the hot paths are compiled as they prove busy."
+      },
+      {
+        "text": "Many classes are loaded only when the first request needs them",
+        "correct": true,
+        "why": "The first requests pay for loading what later requests find already there."
+      },
+      {
+        "text": "The first run sent more requests than the second",
+        "correct": false,
+        "why": "Both runs sent the same 20000 requests with the same plan."
+      },
+      {
+        "text": "The second run had `-f`, which makes JMeter faster",
+        "correct": false,
+        "why": "`-f` only deletes the old results and report before the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-h429kxyz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A teammate puts a new step definition class in `com.example.bookshop.ordering` instead of `com.example.bookshop.acceptance`. The feature file uses its sentence. What does the run report?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "An undefined step, with a snippet for the method",
+        "correct": true,
+        "why": "Glue is loaded only from the package `cucumber.glue` names, so a method elsewhere looks exactly like a sentence nobody wrote code for."
+      },
+      {
+        "text": "Nothing: Cucumber scans the whole test classpath for step definitions",
+        "correct": false,
+        "why": "It looks only in the glue packages it is told about."
+      },
+      {
+        "text": "An error naming two methods that match the sentence",
+        "correct": false,
+        "why": "That is for two matches in the glue; here the glue holds none."
+      },
+      {
+        "text": "The scenario is skipped, and the build stays green",
+        "correct": false,
+        "why": "Cucumber 8 has no setting that lets an undefined step pass; it is an error and fails the build."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxhb062y",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "Spring Boot's parent does not manage Cucumber, so the pom imports a pom that holds nothing but versions, `cucumber-bom`. Such a pom is called a bill of ___.",
+    "hint": "Lesson 21.",
+    "blanks": [
+      {
+        "accept": [
+          "materials"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ktap2vkw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "A new sentence reads `When she looks up Persuasion`, with the title not in quotes. Which hole in the pattern `\"she looks up {…}\"` matches it?",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "`{string}`",
+        "correct": false,
+        "why": "`{string}` matches only text in double or single quotes."
+      },
+      {
+        "text": "`{word}`",
+        "correct": true,
+        "why": "One word with no spaces, handed over as a `String`."
+      },
+      {
+        "text": "`{text}`",
+        "correct": false,
+        "why": "Cucumber has no built-in `{text}`; the holes it knows are the number types, `{word}` and `{string}`."
+      },
+      {
+        "text": "`{int}`",
+        "correct": false,
+        "why": "That one matches a whole number such as 6, and `Persuasion` is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekydjtdk",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "In the bookshop's Cucumber run, which of these start afresh for every scenario? Choose all that apply.",
+    "hint": "Lesson 21.",
+    "choices": [
+      {
+        "text": "The `OrderingSteps` object",
+        "correct": true,
+        "why": "cucumber-spring creates every glue class as a bean, a new one for each scenario."
+      },
+      {
+        "text": "The Spring context and its Tomcat",
+        "correct": false,
+        "why": "The context is started once and cached for any test class with the same configuration."
+      },
+      {
+        "text": "The `token` field the background fills",
+        "correct": true,
+        "why": "It starts empty in each new glue object, so nothing one scenario left there leaks into the next."
+      },
+      {
+        "text": "The stock rows in PostgreSQL",
+        "correct": false,
+        "why": "Nothing rolls the database back between scenarios; every write was committed, which is why each `Given` sets the stock."
+      }
+    ]
+  },
+  {
+    "id": "ex-g18wn6ef",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Two scrapes 60 seconds apart read `bookshop_orders_total{outcome=\"out-of-stock\"}` as 12.0 and then 30.0, with no restart in between. At what rate, per second, were orders refused?",
+    "hint": "Lesson 22.",
+    "value": 0.3,
+    "tolerance": 0.001,
+    "unit": "per second"
+  },
+  {
+    "id": "ex-sy0hk79d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "The bookshop must load a price list from a file before it serves its first request. Where should that work go, so that a platform respecting readiness sends nothing until it is done?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "In the liveness group, as a health indicator",
+        "correct": false,
+        "why": "Liveness decides whether the process is restarted; a slow load there would get the bookshop killed during its own start-up."
+      },
+      {
+        "text": "Anywhere: readiness turns ready at `Started BookshopApplication`",
+        "correct": false,
+        "why": "Liveness turns `CORRECT` right after that line; readiness waits for the runners that follow it."
+      },
+      {
+        "text": "In a runner, like `CatalogueReport`",
+        "correct": true,
+        "why": "Readiness turns `ACCEPTING_TRAFFIC` only when the last runner returns, so the platform waits for it."
+      },
+      {
+        "text": "In the first request's handler, loaded on demand",
+        "correct": false,
+        "why": "Then the first client pays for the load, which is exactly what readiness exists to prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-ae8m8363",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Why does lesson 22 add `management.server.port=0` to `application-test.properties`?",
+    "hint": "Lesson 22.",
+    "choices": [
+      {
+        "text": "To switch the Actuator endpoints off in tests",
+        "correct": false,
+        "why": "Port 0 is a free port chosen at start-up, not no port; the endpoints still answer."
+      },
+      {
+        "text": "To put the endpoints on the same port as the API",
+        "correct": false,
+        "why": "That needs both properties to hold the same number, and with a loopback address it stops start-up."
+      },
+      {
+        "text": "Because `RANDOM_PORT` refuses to start next to a fixed management port",
+        "correct": false,
+        "why": "`RANDOM_PORT` picks the API's port; the clash it avoids is with another process on 8081."
+      },
+      {
+        "text": "So the integration tests do not fail while a bookshop is already running on 8081",
+        "correct": true,
+        "why": "The tests start the whole application, management server included, and port 0 asks the operating system for any free one."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vcfnzjp",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": false,
+    "prompt": "The bookshop sends its numbers nowhere. Prometheus ___ them from every instance at a fixed interval, by asking `/actuator/prometheus`.",
+    "hint": "Lesson 22.",
+    "blanks": [
+      {
+        "accept": [
+          "pulls",
+          "scrapes",
+          "collects",
+          "fetches"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s08tbehy",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "A clean stop by SIGTERM, signal 15, left the exit code 143. Which exit code does `docker inspect` report for a container whose process was ended by SIGKILL, signal 9?",
+    "hint": "Lesson 23.",
+    "value": 137,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1y3y9jmb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "The Compose stack has run once. Somebody then changes `BOOKSHOP_DB_PASSWORD` in `.env` and runs `docker compose up -d` again, keeping the volume. What happens?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "PostgreSQL takes the new password on its next start",
+        "correct": false,
+        "why": "The variable is ignored once the data directory exists; changing the password means changing the role inside the database."
+      },
+      {
+        "text": "Compose refuses to start, as with a missing variable",
+        "correct": false,
+        "why": "`:?` refuses an empty value, not a changed one; both containers start."
+      },
+      {
+        "text": "The application is refused at login: the database kept the old one",
+        "correct": true,
+        "why": "The PostgreSQL image reads `POSTGRES_PASSWORD` only when it creates the database on an empty volume; the role keeps the password it was made with."
+      },
+      {
+        "text": "Flyway notices the changed variable and recreates the database with the new password",
+        "correct": false,
+        "why": "Flyway migrates the schema inside a database it can log in to; it creates neither roles nor passwords."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5dr1h4k",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "`docker compose stop app` stops the bookshop built with the exec-form `ENTRYPOINT`. Put what happens in order.",
+    "hint": "Lesson 23.",
+    "items": [
+      "Docker sends SIGTERM to PID 1, which is Java",
+      "Each Tomcat stops accepting connections and waits for the requests already running",
+      "The JPA `EntityManagerFactory` is closed",
+      "The connection pool shuts down, closing its connections to PostgreSQL",
+      "The container exits with code 143"
+    ],
+    "trap": "The entity manager closes before the pool, so PostgreSQL sees its connections closed rather than dropped."
+  },
+  {
+    "id": "ex-7zqdcxe0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "To give Hibernate more room, somebody changes the Dockerfile to `-XX:MaxRAMPercentage=100` in the 1 GiB container. What is the risk?",
+    "hint": "Lesson 23.",
+    "choices": [
+      {
+        "text": "Memory outside the heap pushes the process over the limit, and the kernel kills it with no shutdown at all",
+        "correct": true,
+        "why": "Class metadata, thread stacks, JIT code and network buffers live outside the heap; with the heap sized to the whole limit, nothing is left for them."
+      },
+      {
+        "text": "None: the JVM never uses more than its heap",
+        "correct": false,
+        "why": "The heap is not all the JVM uses, which is exactly why the course leaves a quarter of the limit outside it."
+      },
+      {
+        "text": "The JVM ignores the limit and sizes the heap from the whole machine",
+        "correct": false,
+        "why": "The JVM reads the container's limit and believes it; only the share of it changes."
+      },
+      {
+        "text": "Docker refuses to start a container whose heap equals its limit",
+        "correct": false,
+        "why": "Docker knows nothing about heaps; the trouble arrives at run time, when the process grows."
+      }
+    ]
+  }
+]
