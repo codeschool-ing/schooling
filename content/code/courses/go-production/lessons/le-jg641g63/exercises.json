@@ -1,0 +1,631 @@
+[
+  {
+    "id": "ex-bkhm3cc1",
+    "version": 1,
+    "section": "flat-and-cum",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `go tool pprof -top`, what does a function's `cum` column count?",
+    "hint": "Compare it with `flat` on the row of `strings.Fields`.",
+    "choices": [
+      {
+        "text": "Samples in which it was anywhere on the stack",
+        "correct": true,
+        "why": "Right. Its own code and everything it called, which is why `strings.Fields` had 1.20 s flat and 2.53 s cum."
+      },
+      {
+        "text": "The number of times it was called during the profile",
+        "correct": false,
+        "why": "A CPU profile counts no calls at all; `cum` is time, in samples of 10 ms."
+      },
+      {
+        "text": "Samples in which it was the function running at the top of the stack",
+        "correct": false,
+        "why": "That is `flat`. `cum` adds the samples spent in the functions it called."
+      },
+      {
+        "text": "The running total of the column to its left, down the list",
+        "correct": false,
+        "why": "That is `sum%`, which adds up `flat%` row by row."
+      }
+    ]
+  },
+  {
+    "id": "ex-q82xmf4c",
+    "version": 1,
+    "section": "flat-and-cum",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tally.Count` shows 0.22 s flat and 4.95 s cum, 82.50%. A colleague proposes rewriting `Count`'s own loop to make the program faster. What is the most the rewrite of that loop alone can save?",
+    "hint": "Which column is the function's own code?",
+    "choices": [
+      {
+        "text": "Half of the cum, because flat and cum are split evenly",
+        "correct": false,
+        "why": "There is no such split; the two columns are independent measurements."
+      },
+      {
+        "text": "About 82% of the time, since `Count` is on 82.50% of the stacks",
+        "correct": false,
+        "why": "That time is mostly spent in the functions `Count` calls; its own instructions account for the flat column only."
+      },
+      {
+        "text": "About 3.7%, its flat",
+        "correct": true,
+        "why": "Right. A delegating function's own code is its flat; the big savings are in what it calls, or how often."
+      },
+      {
+        "text": "Nothing: a function with any cum cannot be optimised",
+        "correct": false,
+        "why": "Its own 0.22 s is real time; it is just small next to what it delegates."
+      }
+    ]
+  },
+  {
+    "id": "ex-qaammcg0",
+    "version": 1,
+    "section": "flat-and-cum",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`strings.Fields` was on the stack for 2.53 s during 200 iterations over 100,000 lines, one call per line. About how many nanoseconds did one call cost?",
+    "hint": "2.53 s divided by 20 million calls.",
+    "value": 126.5,
+    "tolerance": 3,
+    "unit": "ns"
+  },
+  {
+    "id": "ex-5mg13tcr",
+    "version": 1,
+    "section": "flat-and-cum",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `-sample_index=alloc_objects`, `strings.Fields` and `Scanner.Text` were level at about 20 million allocations each; with `alloc_space`, `Fields` had 1,552.12 MB against 997.55 MB. What explains the difference?",
+    "hint": "Same number of calls, different things allocated.",
+    "choices": [
+      {
+        "text": "`Text` frees its memory at once, so its bytes are not counted",
+        "correct": false,
+        "why": "`alloc_space` counts every byte allocated, freed or not; that is what distinguishes it from `inuse_space`."
+      },
+      {
+        "text": "`Fields` is called twice per line",
+        "correct": false,
+        "why": "The equal object counts say the opposite: one call each per line."
+      },
+      {
+        "text": "The sampler picked `Fields` more often by chance",
+        "correct": false,
+        "why": "Chance explains the few percent between the counts; it cannot make one allocator's bytes half as large again as the other's."
+      },
+      {
+        "text": "Both allocate once per line, but a five-string slice is bigger than a line",
+        "correct": true,
+        "why": "Right. 5 × 16 = 80 bytes for the slice headers, against a copy of the line of about 45 bytes rounded to 48 or 64."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5tcagkk",
+    "version": 1,
+    "section": "down-to-the-line",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which `go tool pprof` option prints a function's source with flat and cum beside every line?",
+    "hint": "Section 03 used it on `tally.Parse`.",
+    "choices": [
+      {
+        "text": "`-peek`",
+        "correct": false,
+        "why": "`-peek` shows callers and callees with their times, not the source lines."
+      },
+      {
+        "text": "`-list`",
+        "correct": true,
+        "why": "Right. `-list \"tally.Parse\"` put 2.53 s on line 27, the `strings.Fields` call."
+      },
+      {
+        "text": "`-traces`",
+        "correct": false,
+        "why": "`-traces` prints every distinct stack with its time; it does not open source files."
+      },
+      {
+        "text": "`-focus`",
+        "correct": false,
+        "why": "`-focus` filters samples by a function on the stack; the report it filters is still a list of functions."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4vfem0k",
+    "version": 1,
+    "section": "down-to-the-line",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `-ignore=runtime`, `tally.Count` dropped from 82.50% to 37.67%. Why?",
+    "hint": "What does `-ignore` do to a sample?",
+    "choices": [
+      {
+        "text": "Samples touching the runtime were discarded",
+        "correct": true,
+        "why": "Right. Allocation, write barriers and preemption all happen inside `Count`'s calls, so their samples left with them."
+      },
+      {
+        "text": "`Count` is itself in the runtime package",
+        "correct": false,
+        "why": "`Count` is in `example.com/hits/internal/tally`; the pattern matched the frames above it."
+      },
+      {
+        "text": "The option rounds small functions down to zero",
+        "correct": false,
+        "why": "That is closer to `-nodefraction`, and it hides rows rather than changing any percentage."
+      },
+      {
+        "text": "The runtime was charged to `Count`'s callers instead",
+        "correct": false,
+        "why": "That is `-hide`, which keeps the samples and moves their time to the caller."
+      }
+    ]
+  },
+  {
+    "id": "ex-mnx50zkc",
+    "version": 1,
+    "section": "down-to-the-line",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `go tool pprof` option with what it does to a report.",
+    "hint": "Two of them are easy to confuse, and one description fits none.",
+    "pairs": [
+      {
+        "left": "`-focus=tally.Parse`",
+        "right": "keeps only samples whose stack contains a match"
+      },
+      {
+        "left": "`-hide=runtime`",
+        "right": "removes matching frames, charging their time to the caller"
+      },
+      {
+        "left": "`-ignore=runtime`",
+        "right": "drops every sample whose stack contains a match"
+      },
+      {
+        "left": "`-nodefraction=0.05`",
+        "right": "hides rows whose cum is under 5% of the total"
+      }
+    ],
+    "right_distractors": [
+      "counts how many times each function was called"
+    ]
+  },
+  {
+    "id": "ex-w4vbas60",
+    "version": 1,
+    "section": "down-to-the-line",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You suspect `time.Parse` and are about to write your own timestamp parser. `-list tally.Parse` shows line 31, the `time.Parse` call, at 670 ms and line 27, `strings.Fields`, at 2.53 s. What does the listing tell you about your plan?",
+    "hint": "Compare the two lines before choosing which to rewrite.",
+    "choices": [
+      {
+        "text": "Go ahead: dates are always the slow part of a log parser",
+        "correct": false,
+        "why": "The listing measures this parser, and here the timestamp is about a quarter of the splitting."
+      },
+      {
+        "text": "Rewrite both, since together they are over 3 seconds",
+        "correct": false,
+        "why": "Each change is paid for separately; the one on line 27 buys nearly four times as much as the one on line 31."
+      },
+      {
+        "text": "Start with line 27; the timestamp costs a quarter as much",
+        "correct": true,
+        "why": "Right. The profile ruled out the plan before it cost an afternoon; the timestamp already takes a path written for RFC 3339."
+      },
+      {
+        "text": "The listing cannot compare lines, only functions",
+        "correct": false,
+        "why": "Comparing lines is exactly what `-list` is for: flat and cum per line."
+      }
+    ]
+  },
+  {
+    "id": "ex-7bstwxmd",
+    "version": 1,
+    "section": "the-flame-graph",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a flame graph, what does the width of a box show?",
+    "hint": "`tally.Count`'s box spans 82.5% of the picture.",
+    "choices": [
+      {
+        "text": "When in the run the function was running",
+        "correct": false,
+        "why": "Left to right is not time; the order of siblings is a drawing choice and means nothing."
+      },
+      {
+        "text": "How many times the function was called",
+        "correct": false,
+        "why": "A flame graph is drawn from samples; like the table, it has no call counts."
+      },
+      {
+        "text": "The function's flat time",
+        "correct": false,
+        "why": "Flat is the top edge that nothing covers. Width includes the children above."
+      },
+      {
+        "text": "Its cum: the samples that passed through it",
+        "correct": true,
+        "why": "Right. A box is as wide as the number of stacks it appears on."
+      }
+    ]
+  },
+  {
+    "id": "ex-28vrt0nt",
+    "version": 1,
+    "section": "the-flame-graph",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the flame graph of section 04, `tally.Count` is very wide and almost entirely covered by boxes above it. What does that shape say?",
+    "hint": "Width and the bare top edge answer different questions.",
+    "choices": [
+      {
+        "text": "The boxes above hide some of `Count`'s time from the profile",
+        "correct": false,
+        "why": "Covering is not hiding: the boxes above are where `Count`'s cum was spent."
+      },
+      {
+        "text": "Count delegates: a big cum, a thin flat",
+        "correct": true,
+        "why": "Right. Its time is spent in the functions above it, which is the shape of the 0.22 s flat against 4.95 s cum in the table."
+      },
+      {
+        "text": "`Count` is called more often than anything else",
+        "correct": false,
+        "why": "Nothing in a flame graph counts calls; `Count` ran 200 times and `Parse` 20 million."
+      },
+      {
+        "text": "`Count` is the hot spot to rewrite first",
+        "correct": false,
+        "why": "Its own code is thin; rewriting its loop buys at most its flat."
+      }
+    ]
+  },
+  {
+    "id": "ex-95jsqbvk",
+    "version": 1,
+    "section": "the-flame-graph",
+    "type": "labelling",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "This is the flame graph of the `hits` benchmark, root at the bottom. Put each label on the box it describes.",
+    "hint": "Width is cum; a bare top edge is flat. Look for the names in the boxes.",
+    "image": "flame-count.svg",
+    "labels": [
+      {
+        "text": "the widest bare top edge: the most flat time",
+        "x": 0.3316,
+        "y": 0.6594,
+        "radius": 0.04
+      },
+      {
+        "text": "the call in package tally that costs most in total",
+        "x": 0.7361,
+        "y": 0.7657,
+        "radius": 0.04
+      },
+      {
+        "text": "the timestamp being parsed",
+        "x": 0.4788,
+        "y": 0.6594,
+        "radius": 0.04
+      },
+      {
+        "text": "each line being copied out of the scanner's buffer",
+        "x": 0.6613,
+        "y": 0.7126,
+        "radius": 0.04
+      }
+    ]
+  },
+  {
+    "id": "ex-sv9t39a3",
+    "version": 1,
+    "section": "the-flame-graph",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go tool pprof -http=localhost:8080 cpu.out` draws its flame graph with the root at the top and the callees hanging below. Reading it, where is a function's flat time?",
+    "hint": "Turn section 04's rules upside down.",
+    "choices": [
+      {
+        "text": "The bare lower edge, where no callee hangs",
+        "correct": true,
+        "why": "Right. The picture is the same, inverted: the part of a box with no child under it is where samples ended."
+      },
+      {
+        "text": "In the box's colour, which marks the hot functions",
+        "correct": false,
+        "why": "Colour means nothing in a flame graph, in either orientation."
+      },
+      {
+        "text": "Nowhere: an inverted graph shows only cum",
+        "correct": false,
+        "why": "Turning the picture over changes no number; the bare edge is still there, on the other side."
+      },
+      {
+        "text": "At the top edge of its box, as in section 04",
+        "correct": false,
+        "why": "Upside down, the box's children are below it, so the bare edge is the bottom one."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypnxhgnb",
+    "version": 1,
+    "section": "a-faster-parse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `split5` declines a line, what does the new `Parse` do?",
+    "hint": "Read the `if !ok` block.",
+    "choices": [
+      {
+        "text": "Retries `split5` with the tabs replaced by spaces",
+        "correct": false,
+        "why": "No rewriting happens; the line goes to `strings.Fields` as it is."
+      },
+      {
+        "text": "Returns an error saying the line is not plain",
+        "correct": false,
+        "why": "Declining is not an error; plenty of valid lines, with tabs or accents, are not the plain case."
+      },
+      {
+        "text": "Falls back to `strings.Fields`, the old code",
+        "correct": true,
+        "why": "Right. The old path runs unchanged, so an odd line gets exactly the answer, or the error, it got before."
+      },
+      {
+        "text": "Skips the line and goes on to the next one",
+        "correct": false,
+        "why": "`Parse` handles one line and returns; nothing in it skips."
+      }
+    ]
+  },
+  {
+    "id": "ex-48mnrrqa",
+    "version": 1,
+    "section": "a-faster-parse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `split5` decline any byte outside `!` to `~`, and not only the tab?",
+    "hint": "What else does `strings.Fields` split on?",
+    "choices": [
+      {
+        "text": "`strconv.Atoi` cannot read bytes above `~`",
+        "correct": false,
+        "why": "`Atoi` only sees the status field, and the check covers the whole line."
+      },
+      {
+        "text": "Because non-ASCII paths are invalid in an access log",
+        "correct": false,
+        "why": "They are valid, and `Parse` still accepts them; it only sends them down the old path."
+      },
+      {
+        "text": "To make the loop faster, since one comparison is cheaper than two",
+        "correct": false,
+        "why": "The reason is correctness: the speed comes from not allocating."
+      },
+      {
+        "text": "`strings.Fields` also splits on Unicode spaces",
+        "correct": true,
+        "why": "Right. Their bytes lie outside printable ASCII; the test broke on exactly those when the check was removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5s5reg9",
+    "version": 1,
+    "section": "a-faster-parse",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test` runs a fuzz target on its seeds every time; to generate new inputs for ten seconds you add `-fuzz FuzzSplit5 -___ 10s`.",
+    "hint": "The flag that limits how long the fuzzer runs.",
+    "blanks": [
+      {
+        "accept": [
+          "fuzztime"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fzr1ypcm",
+    "version": 1,
+    "section": "a-faster-parse",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's version of `split5` returns `ok` for every line with exactly four single spaces and no other checks. All of lesson 5's tests and lesson 1's tests pass. Why is that not enough?",
+    "hint": "What do those tests feed `Parse`?",
+    "choices": [
+      {
+        "text": "They pass only because the tests are cached",
+        "correct": false,
+        "why": "A change to `split5` changes the package, so the go command reruns its tests."
+      },
+      {
+        "text": "Their lines contain no tabs or Unicode spaces, so the bug never runs",
+        "correct": true,
+        "why": "Right. Tests only find what they feed in; the tricky lines and the fuzz target exist for the inputs nobody wrote a row for."
+      },
+      {
+        "text": "Lesson 5's tests check error messages, not fields",
+        "correct": false,
+        "why": "They also check a good line's status; the point is that none of their lines is one the colleague's version gets wrong."
+      },
+      {
+        "text": "Passing tests prove nothing until the benchmark also passes",
+        "correct": false,
+        "why": "A benchmark measures time and fails only on an error; it would not notice wrong fields either."
+      }
+    ]
+  },
+  {
+    "id": "ex-qzscmf0y",
+    "version": 1,
+    "section": "measuring-the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do both CPU profiles compared with `-diff_base` use `-benchtime 200x` rather than `-benchtime 5s`?",
+    "hint": "What would two runs of five seconds each contain?",
+    "choices": [
+      {
+        "text": "Same work in both, so the subtraction compares like with like",
+        "correct": true,
+        "why": "Right. Five seconds of a faster program is more iterations, and every row would grow just from doing more work."
+      },
+      {
+        "text": "benchstat needs exactly 200 samples per side",
+        "correct": false,
+        "why": "benchstat reads the `-count 10` result files, not the profiles."
+      },
+      {
+        "text": "`-diff_base` refuses profiles of different durations",
+        "correct": false,
+        "why": "It subtracts whatever it is given; the trouble is that the result would mean little."
+      },
+      {
+        "text": "200 iterations are faster to profile than five seconds",
+        "correct": false,
+        "why": "The old run took about six seconds; speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgja86mq",
+    "version": 1,
+    "section": "measuring-the-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "benchstat printed `33.52m ± 7%   18.33m ± 7%  -45.31% (p=0.000 n=10)`. What would it have printed in place of `-45.31%` if the ten new runs had been indistinguishable from the ten old ones?",
+    "hint": "The symbol benchstat uses for \"no significant change\".",
+    "choices": [
+      {
+        "text": "`n=0`",
+        "correct": false,
+        "why": "`n` is the number of runs used, ten on each side here."
+      },
+      {
+        "text": "`+0.00%`",
+        "correct": false,
+        "why": "Two noisy samples almost never have identical medians; benchstat reports the verdict, not a zero."
+      },
+      {
+        "text": "`~`",
+        "correct": true,
+        "why": "Right. A tilde means the difference was not significant at the p-value threshold, whatever the medians say."
+      },
+      {
+        "text": "`± 0%`",
+        "correct": false,
+        "why": "`±` is the confidence interval of each column, not the verdict on the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc8600dy",
+    "version": 1,
+    "section": "measuring-the-fix",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of section 05 and 06 in the order the lesson did them.",
+    "hint": "The baseline has to exist before the code changes.",
+    "items": [
+      "record ten runs of the benchmark into `old.txt`",
+      "write `split5` and the new `Parse`",
+      "run the tests, then the fuzzer",
+      "record ten new runs into `new.txt` and run benchstat",
+      "profile again and compare with `-diff_base`"
+    ]
+  },
+  {
+    "id": "ex-xgrvz3bv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the fix, the top row is `split5` at 19.15% flat and the next is 7.04%. Your manager asks for another 30% off the count. What does the profile say about that request?",
+    "hint": "What is the most that removing the top row entirely could buy?",
+    "choices": [
+      {
+        "text": "Remove `runtime.asyncPreempt`, which is 7% of pure waste",
+        "correct": false,
+        "why": "It is the runtime interrupting goroutines; there is no code of `hits` to delete there."
+      },
+      {
+        "text": "Run the benchmark with `-count 20`, which gives a better number",
+        "correct": false,
+        "why": "More runs narrow the confidence interval; they do not make the code faster."
+      },
+      {
+        "text": "Rewrite `split5` again; it is the top row, so it holds the 30%",
+        "correct": false,
+        "why": "It holds 19%. Even a free `split5` would not reach 30%."
+      },
+      {
+        "text": "No single change will do; it needs several, or a new design",
+        "correct": true,
+        "why": "Right. The profile is flat now: the biggest row is under 20%, so 30% means changing the design, such as not copying each line."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8p669nd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The new memory profile shows 1.02 GB allocated, nearly all of it by `Scanner.Text`. Why is that allocation still there?",
+    "hint": "What does `Count` pass to `Parse`, and what does a map key need?",
+    "choices": [
+      {
+        "text": "`split5` failed to remove it because of a bug",
+        "correct": false,
+        "why": "`split5` removed the slice, the allocation it was written for; `Text` is a different one."
+      },
+      {
+        "text": "`Text` copies each line to make a string",
+        "correct": true,
+        "why": "Right. Removing it means working on the scanner's bytes and converting only what must outlive the line, a bigger change with its own tests."
+      },
+      {
+        "text": "The garbage collector keeps old lines alive for reuse",
+        "correct": false,
+        "why": "The live heap was nearly empty in lesson 12; the bytes are allocated and freed, again and again."
+      },
+      {
+        "text": "`-memprofile` counts the benchmark's `os.ReadFile` 200 times",
+        "correct": false,
+        "why": "The file is read once, before the loop, and it showed as 4.37 MB in lesson 12."
+      }
+    ]
+  }
+]
