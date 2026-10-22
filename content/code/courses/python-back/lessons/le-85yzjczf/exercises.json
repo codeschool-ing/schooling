@@ -1,0 +1,688 @@
+[
+  {
+    "id": "ex-ax08km8q",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does FastAPI get the information for /openapi.json?",
+    "choices": [
+      {
+        "text": "From a YAML file you keep beside main.py",
+        "correct": false,
+        "why": "Nobody wrote a file."
+      },
+      {
+        "text": "From the routes, type hints and models",
+        "correct": true,
+        "why": "Right, so it is as current as the code."
+      },
+      {
+        "text": "From the requests it has served",
+        "correct": false,
+        "why": "It describes routes whether or not they were called."
+      },
+      {
+        "text": "From the docstrings only",
+        "correct": false,
+        "why": "Docstrings add descriptions; the shapes come from types."
+      }
+    ]
+  },
+  {
+    "id": "ex-6d381nn6",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The schema lists HTTPValidationError although agenda-api never defined it. Why is it there?",
+    "hint": "Lesson 7's 422.",
+    "choices": [
+      {
+        "text": "It is a leftover from the hello project",
+        "correct": false,
+        "why": "Each app has its own schema."
+      },
+      {
+        "text": "FastAPI adds it for every 422",
+        "correct": true,
+        "why": "Right, so clients know the error's shape in advance."
+      },
+      {
+        "text": "Pydantic adds it to every model",
+        "correct": false,
+        "why": "It belongs to the schema, not to each model."
+      },
+      {
+        "text": "Because a route raised an error at start-up",
+        "correct": false,
+        "why": "Nothing failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6m7771z",
+    "version": 1,
+    "section": "the-schema",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each Python declaration to what it became in the JSON Schema.",
+    "pairs": [
+      {
+        "left": "Field(min_length=1)",
+        "right": "\"minLength\": 1"
+      },
+      {
+        "left": "Field(max_length=100)",
+        "right": "\"maxLength\": 100"
+      },
+      {
+        "left": "EmailStr",
+        "right": "\"format\": \"email\""
+      },
+      {
+        "left": "two fields without defaults",
+        "right": "\"required\": [\"name\", \"email\"]"
+      }
+    ],
+    "right_distractors": [
+      "\"pattern\": \"email\""
+    ]
+  },
+  {
+    "id": "ex-9g6hyc3t",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate renames a field in RegistrationOut. Which practice from the lesson catches the impact on clients?",
+    "hint": "A one-line diff in Python.",
+    "choices": [
+      {
+        "text": "Running the server with --reload",
+        "correct": false,
+        "why": "Reloading shows nothing about clients."
+      },
+      {
+        "text": "Diffing the schema in review",
+        "correct": true,
+        "why": "Right: a schema change is a contract change."
+      },
+      {
+        "text": "Disabling /docs",
+        "correct": false,
+        "why": "That hides the documentation, not the change."
+      },
+      {
+        "text": "Adding a docstring to the route",
+        "correct": false,
+        "why": "A description does not flag a rename."
+      }
+    ]
+  },
+  {
+    "id": "ex-qq5fhxzj",
+    "version": 1,
+    "section": "docs-pages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did curl find inside the /docs page?",
+    "choices": [
+      {
+        "text": "Links to a CDN",
+        "correct": true,
+        "why": "Right: the page loads its program from a CDN."
+      },
+      {
+        "text": "The whole Swagger UI program, inline",
+        "correct": false,
+        "why": "Only a small HTML file is served."
+      },
+      {
+        "text": "A copy of /openapi.json",
+        "correct": false,
+        "why": "The page fetches it; it is not inside."
+      },
+      {
+        "text": "Nothing; /docs answered 404",
+        "correct": false,
+        "why": "It answered with HTML."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecptp7b9",
+    "version": 1,
+    "section": "docs-pages",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which consequences of /docs and /redoc loading files from other sites does the lesson name? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A machine with no internet shows a blank page",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The reader's browser contacts those companies",
+        "correct": true,
+        "why": "Right, which a privacy policy may have to say."
+      },
+      {
+        "text": "The API itself stops answering when the CDN is down",
+        "correct": false,
+        "why": "The API does not use the CDN."
+      },
+      {
+        "text": "The version loaded is whatever @5 or @2 is that day",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The schema is uploaded to jsdelivr",
+        "correct": false,
+        "why": "Nothing is uploaded."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8danhsg",
+    "version": 1,
+    "section": "docs-pages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An internal API should publish neither the pages nor the schema. What does the lesson suggest?",
+    "choices": [
+      {
+        "text": "Deleting the routes from the schema by hand",
+        "correct": false,
+        "why": "There is no hand-written schema to edit."
+      },
+      {
+        "text": "Blocking cdn.jsdelivr.net",
+        "correct": false,
+        "why": "That breaks the pages and leaves the schema."
+      },
+      {
+        "text": "docs_url=None, redoc_url=None, openapi_url=None",
+        "correct": true,
+        "why": "Right: one line, if nothing else needs the schema."
+      },
+      {
+        "text": "Running Uvicorn without --reload",
+        "correct": false,
+        "why": "Reload is about development."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mc17pmw",
+    "version": 1,
+    "section": "describing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each route argument to what it changes in the schema.",
+    "hint": "The describing section.",
+    "pairs": [
+      {
+        "left": "tags",
+        "right": "how operations are grouped on the page"
+      },
+      {
+        "left": "summary",
+        "right": "the operation's title"
+      },
+      {
+        "left": "responses",
+        "right": "answers the code alone does not reveal"
+      },
+      {
+        "left": "the docstring",
+        "right": "the operation's description"
+      }
+    ],
+    "right_distractors": [
+      "the response's speed"
+    ]
+  },
+  {
+    "id": "ex-rcxh6g9z",
+    "version": 1,
+    "section": "describing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the 409 need responses= while the 422 appeared in the schema on its own?",
+    "hint": "What can FastAPI see?",
+    "choices": [
+      {
+        "text": "409 is not a standard code",
+        "correct": false,
+        "why": "It is standard."
+      },
+      {
+        "text": "FastAPI cannot read HTTPException raises in the code",
+        "correct": true,
+        "why": "Right: it sees status_code and validation, not raises."
+      },
+      {
+        "text": "The 422 is a Pydantic model and the 409 is not",
+        "correct": false,
+        "why": "The 409 body is plain; that is not why."
+      },
+      {
+        "text": "Only one error code per route is documented automatically",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2tv3b0g",
+    "version": 1,
+    "section": "describing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these belongs in a route's published description?",
+    "hint": "Descriptions are public.",
+    "choices": [
+      {
+        "text": "The name of the table the route writes to",
+        "correct": false,
+        "why": "Implementation stays in comments."
+      },
+      {
+        "text": "An internal hostname the route calls",
+        "correct": false,
+        "why": "Never publish infrastructure."
+      },
+      {
+        "text": "That a full event answers 409",
+        "correct": true,
+        "why": "Right: what to send and what comes back."
+      },
+      {
+        "text": "A note about a bug being fixed",
+        "correct": false,
+        "why": "That belongs in the tracker."
+      }
+    ]
+  },
+  {
+    "id": "ex-jgd8ye9r",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In def get_event(slug: str), where does slug come from when a route declares event: EventDep?",
+    "hint": "A dependency's parameters are read like a route's.",
+    "choices": [
+      {
+        "text": "From the route's body",
+        "correct": false,
+        "why": "Bodies come from models."
+      },
+      {
+        "text": "From the path",
+        "correct": true,
+        "why": "Right: {slug} is in the route's path."
+      },
+      {
+        "text": "From a global variable",
+        "correct": false,
+        "why": "Nothing global is read."
+      },
+      {
+        "text": "The route must pass it explicitly",
+        "correct": false,
+        "why": "FastAPI fills it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0n6g0xg",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "GET /events/nope and GET /events/nope/registrations both answered 404 with the same message. Why?",
+    "choices": [
+      {
+        "text": "FastAPI caches 404s per slug",
+        "correct": false,
+        "why": "Nothing is cached between requests."
+      },
+      {
+        "text": "The two routes are one route",
+        "correct": false,
+        "why": "They are two functions."
+      },
+      {
+        "text": "Both declare EventDep",
+        "correct": true,
+        "why": "Right: one function, one message."
+      },
+      {
+        "text": "Uvicorn rewrites error messages",
+        "correct": false,
+        "why": "Uvicorn sends what it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-946d0hwx",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PageDep is Annotated[Page, Depends()]. What does Depends() with no argument call?",
+    "choices": [
+      {
+        "text": "The annotated class, Page",
+        "correct": true,
+        "why": "Right, with the query parameters."
+      },
+      {
+        "text": "Nothing; it is a placeholder",
+        "correct": false,
+        "why": "It calls the class."
+      },
+      {
+        "text": "The route itself, again",
+        "correct": false,
+        "why": "That would recurse."
+      },
+      {
+        "text": "A default Page FastAPI ships",
+        "correct": false,
+        "why": "Page is agenda's own class."
+      }
+    ]
+  },
+  {
+    "id": "ex-ys4pb19w",
+    "version": 1,
+    "section": "dependencies",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which advantages of declaring a dependency, over calling the function in the route, does the lesson list? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Its parameters appear in the schema",
+        "correct": true,
+        "why": "Right, as limit and offset did."
+      },
+      {
+        "text": "Dependencies can depend on others, resolved once",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It can be replaced from outside",
+        "correct": true,
+        "why": "Right: overrides."
+      },
+      {
+        "text": "It runs in a separate process",
+        "correct": false,
+        "why": "It runs in the request."
+      },
+      {
+        "text": "It makes the route asynchronous",
+        "correct": false,
+        "why": "That is async def's business."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqbfn21n",
+    "version": 1,
+    "section": "yield-dependencies",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the successful registration, put the log lines in the order the server printed them.",
+    "items": [
+      "lock held",
+      "registered gil@example.org",
+      "... 201 Created",
+      "lock released"
+    ]
+  },
+  {
+    "id": "ex-5gagjp9f",
+    "version": 1,
+    "section": "yield-dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does registration_lock put its second half in finally?",
+    "hint": "What arrives at the yield when the route raises?",
+    "choices": [
+      {
+        "text": "finally runs before the route",
+        "correct": false,
+        "why": "It runs after."
+      },
+      {
+        "text": "Python requires finally after yield",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "The exception lands at the yield",
+        "correct": true,
+        "why": "Right; without finally the line would be skipped."
+      },
+      {
+        "text": "To release the lock twice",
+        "correct": false,
+        "why": "It is released once, by the with."
+      }
+    ]
+  },
+  {
+    "id": "ex-bh4jg90c",
+    "version": 1,
+    "section": "yield-dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lock serialises registrations. Why is it still not the real fix?",
+    "hint": "Lesson 16.",
+    "choices": [
+      {
+        "text": "threading.Lock is slower than a database",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "FastAPI forbids locks in dependencies",
+        "correct": false,
+        "why": "The lesson used one."
+      },
+      {
+        "text": "Each process has its own",
+        "correct": true,
+        "why": "Right. Lesson 10's row lock is shared by all of them."
+      },
+      {
+        "text": "It releases before the response every time",
+        "correct": false,
+        "why": "It released after the 201."
+      }
+    ]
+  },
+  {
+    "id": "ex-dsga4kg3",
+    "version": 1,
+    "section": "yield-dependencies",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a dependency, the value placed after the keyword ___ is what the route receives.",
+    "hint": "Not return.",
+    "blanks": [
+      {
+        "accept": [
+          "yield"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kb9qh8s5",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is app.dependency_overrides?",
+    "choices": [
+      {
+        "text": "A dict of replacements",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A list of routes to skip",
+        "correct": false,
+        "why": "It replaces dependencies, not routes."
+      },
+      {
+        "text": "A setting that turns validation off",
+        "correct": false,
+        "why": "Validation still runs."
+      },
+      {
+        "text": "Uvicorn's reload list",
+        "correct": false,
+        "why": "Uvicorn has nothing to do with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvn75cab",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With get_event overridden, POST /events/anything/registrations answered 409 full. Why not 404?",
+    "choices": [
+      {
+        "text": "TestClient ignores 404s",
+        "correct": false,
+        "why": "It reports whatever the app answers."
+      },
+      {
+        "text": "The replacement returned an event with capacity 0",
+        "correct": true,
+        "why": "Right: the route never looked the slug up."
+      },
+      {
+        "text": "anything is a real event",
+        "correct": false,
+        "why": "There is no such event."
+      },
+      {
+        "text": "The lock refused the request",
+        "correct": false,
+        "why": "The lock only waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-trb733fc",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was httpx2 added with --dev?",
+    "choices": [
+      {
+        "text": "It is needed to serve requests in production",
+        "correct": false,
+        "why": "Uvicorn serves them."
+      },
+      {
+        "text": "Only tests need it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "--dev makes it install faster",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "Starlette refuses non-dev packages",
+        "correct": false,
+        "why": "It refuses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-n55ztk16",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test sets an override and forgets to clear it. What does the lesson warn will happen?",
+    "choices": [
+      {
+        "text": "The test fails at once",
+        "correct": false,
+        "why": "The test that set it may pass."
+      },
+      {
+        "text": "The replacement leaks into later tests",
+        "correct": true,
+        "why": "Right: clear after each test."
+      },
+      {
+        "text": "FastAPI clears it at the end of the request",
+        "correct": false,
+        "why": "Overrides last until cleared."
+      },
+      {
+        "text": "The schema loses the route",
+        "correct": false,
+        "why": "The schema is unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-7q8cw618",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put FastAPI's work for POST /events/django-night/registrations in order.",
+    "items": [
+      "match the route",
+      "resolve get_event from the path",
+      "take the lock",
+      "call register()",
+      "release the lock in finally"
+    ]
+  }
+]

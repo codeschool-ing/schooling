@@ -55,7 +55,7 @@ ana@vm:~/agenda-api$ curl -s http://127.0.0.1:8001/events/testing-dojo | python3
 ```
 
 The duplicate was refused with 409, and the event's `taken` counts the one registration that was
-made. **These rules are the same check-then-append as Django's lesson 3**, over a Python list, and
-they have the same flaw: FastAPI runs a `def` route in a pool of threads, so two requests can
-interleave between the count and the append. Lesson 10 moves them onto PostgreSQL, with the same lock
-lesson 4 used.
+made. **These rules hold only while one process holds the list.** They are the same check-then-append
+as Django's lesson 3, two steps nothing ties together, and lesson 16 runs several worker processes,
+each with its own copy of `REGISTRATIONS` that the others never see. Lesson 10 moves them onto
+PostgreSQL, which every process shares, with the same lock lesson 4 used.

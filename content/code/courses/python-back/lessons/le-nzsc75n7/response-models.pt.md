@@ -55,7 +55,7 @@ ana@vm:~/agenda-api$ curl -s http://127.0.0.1:8001/events/testing-dojo | python3
 ```
 
 O duplicado foi recusado com 409, e o `taken` do evento conta a inscrição que foi feita. **Essas regras
-são o mesmo confere-depois-acrescenta da aula 3 do Django**, sobre uma lista Python, e têm o mesmo
-defeito: o FastAPI roda uma rota `def` numa pool de threads, então duas requisições podem se
-intercalar entre a contagem e o append. A aula 10 as leva para o PostgreSQL, com a mesma trava que a
-aula 4 usou.
+só valem enquanto um processo segura a lista.** São o mesmo confere-depois-acrescenta da aula 3 do
+Django, dois passos que nada amarra, e a aula 16 roda vários processos de trabalho, cada um com a
+própria cópia de `REGISTRATIONS`, que os outros nunca veem. A aula 10 as leva para o PostgreSQL, que
+todo processo compartilha, com a mesma trava que a aula 4 usou.
