@@ -1,0 +1,485 @@
+[
+  {
+    "id": "ex-x5tsf2gc",
+    "version": 1,
+    "section": "http",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `abandon.go`, what made the client give up after 100 milliseconds?",
+    "hint": "Look at how the request was built.",
+    "choices": [
+      {
+        "text": "`http.DefaultClient` has a timeout of 100 ms",
+        "correct": false,
+        "why": "The default client has no timeout at all; the limit came from the request's context."
+      },
+      {
+        "text": "Its context ended at 100 ms",
+        "correct": true,
+        "why": "Right: `http.NewRequestWithContext(ctx, …)` with a 100 ms timeout."
+      },
+      {
+        "text": "The server closed the connection",
+        "correct": false,
+        "why": "It was the other way round: the client left, and the server noticed."
+      },
+      {
+        "text": "`net.Listen` limits connections to 100 ms on 127.0.0.1",
+        "correct": false,
+        "why": "The listener sets no time limit on anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-rszk72gz",
+    "version": 1,
+    "section": "http",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The client's error said `context deadline exceeded` and the server's line said `context canceled`. Why the different reasons?",
+    "hint": "What does the server actually observe?",
+    "choices": [
+      {
+        "text": "The server's clock runs behind the client's",
+        "correct": false,
+        "why": "They are one process with one clock."
+      },
+      {
+        "text": "`r.Context()` has its own deadline of two seconds",
+        "correct": false,
+        "why": "The two seconds are the handler's `time.After`, not a deadline on the context."
+      },
+      {
+        "text": "The server sees the connection close, not the client's reason",
+        "correct": true,
+        "why": "Right. It cancels the request's context because the client left; why it left never crosses the wire."
+      },
+      {
+        "text": "A server always reports canceled, whatever happens",
+        "correct": false,
+        "why": "When the handler finished normally there was no error at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mc1k66b",
+    "version": 1,
+    "section": "http",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A handler ignores `r.Context()` and always spends two seconds building its report. Clients give up after 100 ms under load. What happens to the server?",
+    "hint": "Who is the work for, once the client has gone?",
+    "choices": [
+      {
+        "text": "It works for nobody and falls behind",
+        "correct": true,
+        "why": "Right. Every timed-out request still costs its full two seconds."
+      },
+      {
+        "text": "The runtime stops the handler when the client leaves",
+        "correct": false,
+        "why": "Nothing stops a handler from outside; it has to look at its context."
+      },
+      {
+        "text": "The client's timeout makes the handler panic",
+        "correct": false,
+        "why": "No panic: the handler simply carries on, which is the problem."
+      },
+      {
+        "text": "Nothing changes, because clients retry",
+        "correct": false,
+        "why": "Retries add more work, so the backlog grows faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7skvxyz",
+    "version": 1,
+    "section": "http",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler replies at once and starts a goroutine to send a confirmation e-mail that may take ten seconds. Which context should the goroutine use?",
+    "hint": "When does `r.Context()` end?",
+    "choices": [
+      {
+        "text": "`r.Context()`, so the e-mail is tied to the request",
+        "correct": false,
+        "why": "That context ends when the handler returns, which here is at once, cancelling the e-mail."
+      },
+      {
+        "text": "`context.WithoutCancel`, plus a timeout",
+        "correct": true,
+        "why": "Right: keep the request's values, drop its ending, and bound the e-mail separately."
+      },
+      {
+        "text": "A context stored in the server struct",
+        "correct": false,
+        "why": "Lesson 11 gave the reason not to keep contexts in structs."
+      },
+      {
+        "text": "No context, since the e-mail is in a goroutine",
+        "correct": false,
+        "why": "A goroutine is exactly where a context is needed, to be able to stop it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jy085jx3",
+    "version": 1,
+    "section": "http",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The method of `*http.Request` that returns the context the server gives each handler is `r.___()`.",
+    "hint": "The handler in `abandon.go` waited on it in a `select`.",
+    "blanks": [
+      {
+        "accept": [
+          "Context"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5r1m3wms",
+    "version": 1,
+    "section": "database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `nodb.go` stop at `open: sql: unknown driver \"postgres\"`?",
+    "hint": "`go doc database/sql.Open` answered it.",
+    "choices": [
+      {
+        "text": "The query's SQL had a syntax error",
+        "correct": false,
+        "why": "The query never ran; the program stopped at `sql.Open`."
+      },
+      {
+        "text": "The two-second timeout ran out",
+        "correct": false,
+        "why": "The failure came before any query, and instantly."
+      },
+      {
+        "text": "No driver is registered; the standard library ships none",
+        "correct": true,
+        "why": "Right: \"No database drivers are included in the Go standard library.\""
+      },
+      {
+        "text": "PostgreSQL refused the user `ana`",
+        "correct": false,
+        "why": "Nothing reached a database; there is none on this machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-z3rbw78h",
+    "version": 1,
+    "section": "database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What context does `db.Query(...)`, without `Context` in its name, use?",
+    "hint": "Its documentation says it in one sentence.",
+    "choices": [
+      {
+        "text": "The context of the goroutine that calls it",
+        "correct": false,
+        "why": "Goroutines have no context of their own; a context is a value passed by hand."
+      },
+      {
+        "text": "`context.Background()`, which never ends",
+        "correct": true,
+        "why": "Right: \"Query uses context.Background internally.\" A query made with it waits as long as the database takes."
+      },
+      {
+        "text": "A context with the driver's default timeout",
+        "correct": false,
+        "why": "The documentation names `context.Background`, which has no timeout."
+      },
+      {
+        "text": "The last context passed to `QueryContext`",
+        "correct": false,
+        "why": "`*sql.DB` keeps no context between calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtz8wr58",
+    "version": 1,
+    "section": "database",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function loops over `rows.Next()` and returns what it collected, without calling `rows.Err()`. The request's context ends halfway through the rows. What does the caller get?",
+    "hint": "Where does an error that ends the iteration show up?",
+    "choices": [
+      {
+        "text": "A panic from `rows.Next()`",
+        "correct": false,
+        "why": "`rows.Next()` returns false; it does not panic."
+      },
+      {
+        "text": "The context's error, from `rows.Scan`",
+        "correct": false,
+        "why": "`Scan` is not called once `Next` has returned false."
+      },
+      {
+        "text": "An empty slice and an error",
+        "correct": false,
+        "why": "The rows read before the end are in the slice, and without `rows.Err()` there is no error."
+      },
+      {
+        "text": "Half the rows and a nil error",
+        "correct": true,
+        "why": "Right. The error is only in `rows.Err()`, so skipping it passes half a result off as all of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8w6g4j5",
+    "version": 1,
+    "section": "database",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `nodb.go` show, even though it never reaches a database? Choose all that apply.",
+    "hint": "What compiled and passed `go vet`?",
+    "choices": [
+      {
+        "text": "The query takes the context first, through `QueryContext`",
+        "correct": true,
+        "why": "Yes, the same convention as lesson 11."
+      },
+      {
+        "text": "`orders` derives a child with its own limit",
+        "correct": true,
+        "why": "Yes, two seconds, and a caller with less time still wins."
+      },
+      {
+        "text": "How PostgreSQL cancels a running query",
+        "correct": false,
+        "why": "Nothing here reached PostgreSQL. That is for a course with a database, `go-back`."
+      },
+      {
+        "text": "How long the query took",
+        "correct": false,
+        "why": "No query ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-egq1p609",
+    "version": 1,
+    "section": "shutdown",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `demo.sh`, the request for `/late` came a tenth of a second after the interrupt. What did `curl` get?",
+    "hint": "What does `Shutdown` do first?",
+    "choices": [
+      {
+        "text": "A slow answer, delivered after the first",
+        "correct": false,
+        "why": "Only `/report` was answered; it was already inside."
+      },
+      {
+        "text": "`Couldn't connect to server`",
+        "correct": true,
+        "why": "Right. `Shutdown` closes the listener at once, so nobody was listening."
+      },
+      {
+        "text": "An HTTP 503 from the server",
+        "correct": false,
+        "why": "There was no server listening to send one."
+      },
+      {
+        "text": "A reset in the middle of the reply",
+        "correct": false,
+        "why": "It never connected, so there was no reply to cut."
+      }
+    ]
+  },
+  {
+    "id": "ex-wh30t8nx",
+    "version": 1,
+    "section": "shutdown",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `shutdown.go` printed, and what happened around it, in order.",
+    "hint": "The door closes before the work inside is finished.",
+    "items": [
+      "`listening on 127.0.0.1:8412`",
+      "`signal received, shutting down`",
+      "`/late` is refused",
+      "`answered /report`",
+      "`stopped cleanly`"
+    ]
+  },
+  {
+    "id": "ex-a08tyxzh",
+    "version": 1,
+    "section": "shutdown",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `shutdown.go` give `Shutdown` a new context of five seconds instead of the signal context `ctx`?",
+    "hint": "What state is `ctx` in at that moment?",
+    "choices": [
+      {
+        "text": "`Shutdown` refuses contexts made by `signal.NotifyContext`",
+        "correct": false,
+        "why": "It accepts any context; the issue is that this one has ended."
+      },
+      {
+        "text": "Five seconds is the time a signal takes to arrive",
+        "correct": false,
+        "why": "The signal had already arrived; that is why the code reached this line."
+      },
+      {
+        "text": "`ctx` has already ended",
+        "correct": true,
+        "why": "Right. A fresh context gives the requests inside up to five seconds to finish."
+      },
+      {
+        "text": "To reset `GOMAXPROCS` before the program exits",
+        "correct": false,
+        "why": "Contexts have nothing to do with `GOMAXPROCS`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0604cqg9",
+    "version": 1,
+    "section": "shutdown",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A platform sends `SIGTERM` and kills the process outright 10 seconds later. A team sets the `Shutdown` limit to 30 seconds. What goes wrong?",
+    "hint": "The limit is a promise to whoever sent the signal.",
+    "choices": [
+      {
+        "text": "Nothing: a longer limit is safer",
+        "correct": false,
+        "why": "Longer than the platform's patience means the platform decides, mid-request."
+      },
+      {
+        "text": "Requests still running at 10 s die mid-reply",
+        "correct": true,
+        "why": "Right. The limit has to be shorter than the platform's wait for it to mean anything."
+      },
+      {
+        "text": "`Shutdown` returns an error at once",
+        "correct": false,
+        "why": "It would wait happily; it is the platform that does not."
+      },
+      {
+        "text": "`SIGTERM` is ignored by `signal.NotifyContext`",
+        "correct": false,
+        "why": "`shutdown.go` lists `syscall.SIGTERM` among its signals."
+      }
+    ]
+  },
+  {
+    "id": "ex-cawwq17q",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of the standard library with what it does with a context.",
+    "hint": "One makes a context, three take one.",
+    "pairs": [
+      {
+        "left": "`signal.NotifyContext`",
+        "right": "ends a context when a signal arrives"
+      },
+      {
+        "left": "`http.NewRequestWithContext`",
+        "right": "lets a client give up on a request"
+      },
+      {
+        "left": "`r.Context()`",
+        "right": "tells a handler its client has gone"
+      },
+      {
+        "left": "`http.Server.Shutdown`",
+        "right": "bounds the wait for requests in flight"
+      }
+    ],
+    "right_distractors": [
+      "cancels every running handler at once"
+    ]
+  },
+  {
+    "id": "ex-d1kznsmn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During a `Shutdown`, a handler is in the middle of a five-minute export and never looks at `r.Context()`. The `Shutdown` limit is five seconds. What happens?",
+    "hint": "`Shutdown` waits; does it cancel?",
+    "choices": [
+      {
+        "text": "`Shutdown` cancels the handler after five seconds",
+        "correct": false,
+        "why": "`Shutdown` waits for handlers; it does not cancel them."
+      },
+      {
+        "text": "The export finishes, and `Shutdown` waits all five minutes",
+        "correct": false,
+        "why": "`Shutdown` stops waiting when its own context ends, after five seconds."
+      },
+      {
+        "text": "It gives up at five seconds, export unfinished",
+        "correct": true,
+        "why": "Right. It returns its context's error and `main` goes on to exit, killing the export halfway."
+      },
+      {
+        "text": "The export moves to another server",
+        "correct": false,
+        "why": "Nothing in the standard library moves work between processes."
+      }
+    ]
+  },
+  {
+    "id": "ex-3vz0qt0e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the three cases in this lesson was NOT run end to end on the lab machine?",
+    "hint": "One of them stopped at `sql.Open`.",
+    "choices": [
+      {
+        "text": "The abandoned HTTP request",
+        "correct": false,
+        "why": "It ran: both lines, client and server, are a capture."
+      },
+      {
+        "text": "The query with a deadline",
+        "correct": true,
+        "why": "Right. There is no database here; the code compiled and stopped at the missing driver."
+      },
+      {
+        "text": "The graceful shutdown",
+        "correct": false,
+        "why": "It ran, signal and all, through `demo.sh`."
+      },
+      {
+        "text": "None; all three ran in full",
+        "correct": false,
+        "why": "The database case could not, and the lesson says so."
+      }
+    ]
+  }
+]

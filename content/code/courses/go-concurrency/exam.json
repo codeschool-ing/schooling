@@ -1,0 +1,2758 @@
+[
+  {
+    "id": "ex-xeqnan5m",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 1. A program's four goroutines each compute for 400 ms and share nothing. On a machine with `GOMAXPROCS=1` the run takes about 1.6 s. What changed between that run and one taking 0.4 s on four processors?",
+    "hint": "One word is about the program, the other about the run.",
+    "choices": [
+      {
+        "text": "The program's concurrency",
+        "correct": false,
+        "why": "The program, four independent goroutines, was the same in both runs."
+      },
+      {
+        "text": "Only the parallelism the run was given",
+        "correct": true,
+        "why": "Right. Concurrency is written; parallelism is how many processors run it at once."
+      },
+      {
+        "text": "The number of goroutines the runtime created",
+        "correct": false,
+        "why": "The loop started four in both runs."
+      },
+      {
+        "text": "The amount of arithmetic each goroutine did",
+        "correct": false,
+        "why": "Each did the same half-billion multiplications."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0pv44bm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 1. A service mostly waits on a network. Moved from four processors to one, which prediction does the course support?",
+    "hint": "A waiting goroutine needs no processor.",
+    "choices": [
+      {
+        "text": "It slows down about four times, like CPU-bound work",
+        "correct": false,
+        "why": "That is the prediction for work that computes."
+      },
+      {
+        "text": "It stops working, since goroutines need a processor each",
+        "correct": false,
+        "why": "Goroutines share processors; a hundred thousand ran on four in lesson 2."
+      },
+      {
+        "text": "It slows down much less, because waits overlap on one processor",
+        "correct": true,
+        "why": "Right: four one-second waits took one second with `GOMAXPROCS=1`."
+      },
+      {
+        "text": "Its data races disappear",
+        "correct": false,
+        "why": "Goroutines interleave on one processor too; a race needs no parallelism."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nyddns2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 1. `go run -race` printed `WARNING: DATA RACE` and the program exited with status 66. What did the detector do about the race?",
+    "hint": "Did the total come out right?",
+    "choices": [
+      {
+        "text": "Reported it, with both places in the source",
+        "correct": true,
+        "why": "Right. It reports rather than repairs; the total was still wrong."
+      },
+      {
+        "text": "Serialised the two goroutines so the total was right",
+        "correct": false,
+        "why": "The run printed a wrong total after the reports."
+      },
+      {
+        "text": "Stopped the program at the first conflicting write",
+        "correct": false,
+        "why": "The program ran to the end and printed its total."
+      },
+      {
+        "text": "Rewrote `total++` as an atomic operation",
+        "correct": false,
+        "why": "The detector changes nothing in your code."
+      }
+    ]
+  },
+  {
+    "id": "ex-kz0y568f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 1. On a machine with no C compiler, what does `go env CGO_ENABLED` print, and what does `go test -race` then do?",
+    "hint": "The go command looks for `gcc` itself.",
+    "choices": [
+      {
+        "text": "`1`; it runs without the detector",
+        "correct": false,
+        "why": "With no compiler found the default is `0`, and `-race` refuses rather than running without itself."
+      },
+      {
+        "text": "`0`; it refuses: `-race requires cgo`",
+        "correct": true,
+        "why": "Right. Installing `gcc` turns the default back to `1`."
+      },
+      {
+        "text": "`0`; it downloads a compiler and carries on",
+        "correct": false,
+        "why": "The go command never fetches a C compiler."
+      },
+      {
+        "text": "An error; Go needs `gcc` for every build",
+        "correct": false,
+        "why": "Ordinary builds need no C at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-sarh1qy9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. `main` starts a goroutine with `go save(record)` and then returns. What happens to `save`?",
+    "hint": "What does returning from `main` do to the process?",
+    "choices": [
+      {
+        "text": "It finishes first, because the runtime waits for every goroutine",
+        "correct": false,
+        "why": "The runtime waits for none; `early.go` printed its greeting in none of five runs."
+      },
+      {
+        "text": "It moves to another process and continues there",
+        "correct": false,
+        "why": "Goroutines live inside one process and end with it."
+      },
+      {
+        "text": "It ends with the process, possibly before doing anything",
+        "correct": true,
+        "why": "Right. `main` has to wait on purpose, with `wg.Wait` or a receive."
+      },
+      {
+        "text": "Its return value is stored for the next run",
+        "correct": false,
+        "why": "A `go` statement throws return values away."
+      }
+    ]
+  },
+  {
+    "id": "ex-tnyk81tw",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. A goroutine's stack started at 2048 bytes in `many.go`. How many megabytes (MiB) of stack would 512,000 such goroutines take at the start?",
+    "hint": "2 KiB times 512,000, divided by 1024.",
+    "value": 1000,
+    "tolerance": 0,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-myagj2jg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 2. A goroutine started with `go` panics while `main` is inside a `defer`-protected function with `recover`. What happens?",
+    "hint": "A panic does not travel to the goroutine that started this one.",
+    "choices": [
+      {
+        "text": "`main`'s `recover` catches it and the program carries on",
+        "correct": false,
+        "why": "A `recover` only stops a panic in its own goroutine."
+      },
+      {
+        "text": "The whole program ends with the panic's trace",
+        "correct": true,
+        "why": "Right. A panic in any goroutine ends the process unless that goroutine recovers it."
+      },
+      {
+        "text": "Only the panicking goroutine ends; `main` never notices",
+        "correct": false,
+        "why": "`crash.go` showed the whole process ending, `main` included."
+      },
+      {
+        "text": "The runtime restarts the goroutine",
+        "correct": false,
+        "why": "Go never restarts a goroutine."
+      }
+    ]
+  },
+  {
+    "id": "ex-2k7rxdak",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Lesson 2. Match each scheduler term with its meaning.",
+    "hint": "G, M, P.",
+    "pairs": [
+      {
+        "left": "G",
+        "right": "a goroutine"
+      },
+      {
+        "left": "M",
+        "right": "an operating-system thread"
+      },
+      {
+        "left": "P",
+        "right": "one of `GOMAXPROCS` licences to run Go code"
+      },
+      {
+        "left": "work stealing",
+        "right": "an idle P taking half of another P's queue"
+      }
+    ],
+    "right_distractors": [
+      "a goroutine waiting on a channel forever"
+    ]
+  },
+  {
+    "id": "ex-hasvrh7q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 3. Which goroutine should close a channel?",
+    "hint": "A send after close panics.",
+    "choices": [
+      {
+        "text": "Any receiver that has read enough",
+        "correct": false,
+        "why": "A receiver cannot know no sender is about to send."
+      },
+      {
+        "text": "The sender, once it has sent everything",
+        "correct": true,
+        "why": "Right, once. With several senders, a goroutine that waits for all of them."
+      },
+      {
+        "text": "The garbage collector, when nobody refers to it",
+        "correct": false,
+        "why": "The collector frees channels; it never closes them."
+      },
+      {
+        "text": "Whichever goroutine made it with `make`",
+        "correct": false,
+        "why": "Making a channel says nothing about who sends on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pf3tgpmj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 3. `v, ok := <-ch` returns `0` and `false`. What does that tell you?",
+    "hint": "Somebody may also send a genuine 0.",
+    "choices": [
+      {
+        "text": "Somebody sent 0",
+        "correct": false,
+        "why": "A sent 0 arrives with `ok` true."
+      },
+      {
+        "text": "The channel is nil",
+        "correct": false,
+        "why": "A receive on a nil channel blocks forever and returns nothing."
+      },
+      {
+        "text": "The channel is closed and has no values left",
+        "correct": true,
+        "why": "Right. Values sent before the close come first, with `ok` true."
+      },
+      {
+        "text": "The buffer is empty but the channel is open",
+        "correct": false,
+        "why": "On an open, empty channel the receive would wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-5wh39w3s",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Lesson 3. A parameter of type `___ int` lets a function only send on a channel, and the compiler refuses a receive from it.",
+    "hint": "The arrow sits after the keyword.",
+    "blanks": [
+      {
+        "accept": [
+          "chan<-"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vmbeqr59",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. A send on an unbuffered channel has returned. What does the sender know?",
+    "hint": "There is nowhere for the value to wait.",
+    "choices": [
+      {
+        "text": "That the value sits in the channel for later",
+        "correct": false,
+        "why": "An unbuffered channel holds nothing."
+      },
+      {
+        "text": "That the receiver has finished processing it",
+        "correct": false,
+        "why": "It knows the value was taken, not what came of it."
+      },
+      {
+        "text": "Nothing more than with a buffered channel",
+        "correct": false,
+        "why": "A buffered send that returns only says the value is in the buffer."
+      },
+      {
+        "text": "That a receiver has taken the value",
+        "correct": true,
+        "why": "Right. That meeting is the rendezvous."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dts5phn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. Order these channels by how many values a sender can leave in them without anybody receiving, fewest first.",
+    "hint": "The size after the type is the room.",
+    "items": [
+      "`make(chan int)`",
+      "`make(chan int, 1)`",
+      "`make(chan int, 3)`",
+      "`make(chan int, 100)`"
+    ]
+  },
+  {
+    "id": "ex-kfsy7fav",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 4. A server goroutine is stuck forever on a send nobody will receive, while other goroutines keep serving. What reports it?",
+    "hint": "When does the runtime's deadlock check fire?",
+    "choices": [
+      {
+        "text": "The runtime, with `all goroutines are asleep`",
+        "correct": false,
+        "why": "That fires only when every goroutine is blocked."
+      },
+      {
+        "text": "`go vet`, before the program runs",
+        "correct": false,
+        "why": "`go vet` passed even the plain deadlock of `stuck.go`."
+      },
+      {
+        "text": "Nothing by itself: it is a silent leak",
+        "correct": true,
+        "why": "Right. Lesson 6 is about finding such goroutines."
+      },
+      {
+        "text": "A panic after the send has waited too long",
+        "correct": false,
+        "why": "A send has no time limit of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-35rgzgtt",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 4. A producer makes 1,000 items a second, the consumer handles 900, and the buffer holds 5,000. After how many seconds is the buffer full?",
+    "hint": "The buffer grows by the difference each second.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-s67xzq92",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 5. Two cases of a `select` are ready at the same moment. Which runs?",
+    "hint": "`fair.go` counted it.",
+    "choices": [
+      {
+        "text": "The one written first",
+        "correct": false,
+        "why": "Written order gives no priority."
+      },
+      {
+        "text": "One of them, chosen at random",
+        "correct": true,
+        "why": "Right, uniformly, so a busy channel cannot starve another."
+      },
+      {
+        "text": "Both, one after the other",
+        "correct": false,
+        "why": "A `select` runs exactly one case."
+      },
+      {
+        "text": "Neither: the `select` reports a conflict",
+        "correct": false,
+        "why": "Several ready cases are the ordinary situation."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g9jzrbw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 5. A handler has 300 ms to answer and collects partial results from a channel in a loop. Where should the `time.After` go?",
+    "hint": "One clock for the whole answer, or a fresh one each step?",
+    "choices": [
+      {
+        "text": "Inside the loop, so each receive gets 300 ms",
+        "correct": false,
+        "why": "Then a steady trickle of results could keep the handler going for ever."
+      },
+      {
+        "text": "Before the loop, made once",
+        "correct": true,
+        "why": "Right: one deadline for the whole collection, as the `overall` loop of `budget.go`."
+      },
+      {
+        "text": "In a `default` case",
+        "correct": false,
+        "why": "A `default` never waits, so it is no timeout at all."
+      },
+      {
+        "text": "Nowhere: a buffered channel makes it unnecessary",
+        "correct": false,
+        "why": "A buffer does nothing about a source that answers slowly."
+      }
+    ]
+  },
+  {
+    "id": "ex-51r0z28s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 5. Why is `for { select { case v := <-ch: …; default: } }` a bad way to wait for a value?",
+    "hint": "Compare the `user` times of `patient` and `restless`.",
+    "choices": [
+      {
+        "text": "It misses values that arrive while `default` runs",
+        "correct": false,
+        "why": "A value sent on a channel waits for its receiver; none are missed."
+      },
+      {
+        "text": "It deadlocks when the channel is empty",
+        "correct": false,
+        "why": "It never blocks at all, which is the problem."
+      },
+      {
+        "text": "It keeps a processor busy the whole time",
+        "correct": true,
+        "why": "Right: 994 ms of processor in one second, against 3 for a plain receive."
+      },
+      {
+        "text": "`select` refuses a `default` inside a loop",
+        "correct": false,
+        "why": "It compiles and runs; it just spins."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1t1pngj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A function starts three goroutines that each send a result on an unbuffered channel, receives one result and returns. What happens to the other two goroutines?",
+    "hint": "Who receives their sends?",
+    "choices": [
+      {
+        "text": "They are stopped when the function returns",
+        "correct": false,
+        "why": "Nothing stops a goroutine from outside; returning does not end the goroutines it started."
+      },
+      {
+        "text": "They block on their sends for the rest of the program",
+        "correct": true,
+        "why": "Right: a leak of two goroutines per call."
+      },
+      {
+        "text": "Their values wait in the channel for the next call",
+        "correct": false,
+        "why": "An unbuffered channel holds no values; each call also makes a new channel."
+      },
+      {
+        "text": "The program panics with a send on a closed channel",
+        "correct": false,
+        "why": "Nothing closes the channel; the sends simply wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-96yqp56x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A service's `goroutineleak` profile reports `total 0`, yet `runtime.NumGoroutine` climbs every hour at rest. What is the most likely explanation?",
+    "hint": "What does the leak profile have to prove?",
+    "choices": [
+      {
+        "text": "The goroutine count is wrong",
+        "correct": false,
+        "why": "The count is exact; the profile is the one that can only report what it proves."
+      },
+      {
+        "text": "The goroutines are running, so they are not a leak",
+        "correct": false,
+        "why": "A service at rest whose count keeps rising is leaking, whatever they are doing."
+      },
+      {
+        "text": "They wait on something still reachable, such as a channel kept in a global",
+        "correct": true,
+        "why": "Right: reachability defeats the proof, as in `hidden.go`."
+      },
+      {
+        "text": "The leak profile needs the race detector",
+        "correct": false,
+        "why": "It needs no race detector; it runs a garbage collection that looks for stuck goroutines."
+      }
+    ]
+  },
+  {
+    "id": "ex-gkm5b0z7",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which changes stop a goroutine that ranges over a channel from leaking when its caller returns early? Choose all that apply.",
+    "hint": "The range ends when the channel is closed.",
+    "choices": [
+      {
+        "text": "`defer close(ch)` right after `make`",
+        "correct": true,
+        "why": "Yes, it runs on every path."
+      },
+      {
+        "text": "A `time.Sleep` before the early `return`",
+        "correct": false,
+        "why": "Waiting closes nothing."
+      },
+      {
+        "text": "A `close(ch)` before every `return`",
+        "correct": true,
+        "why": "Yes, though the next `return` somebody adds will need one too."
+      },
+      {
+        "text": "Making the channel buffered",
+        "correct": false,
+        "why": "A buffer helps a sender; the receiver still waits for a close."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n4ndzzt",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "The function in package `runtime` that reports how many goroutines exist right now is `runtime.___`.",
+    "hint": "It was on every dashboard in lesson 6.",
+    "blanks": [
+      {
+        "accept": [
+          "NumGoroutine",
+          "NumGoroutine()"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-087w3sfb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a worker pool, which goroutine should close the results channel?",
+    "hint": "It has to know that every worker has finished.",
+    "choices": [
+      {
+        "text": "The last worker to finish",
+        "correct": false,
+        "why": "No worker knows it is the last."
+      },
+      {
+        "text": "The producer, after sending the last job",
+        "correct": false,
+        "why": "Workers may still be sending results then."
+      },
+      {
+        "text": "One that waits on the workers' `WaitGroup` first",
+        "correct": true,
+        "why": "Right: after `wg.Wait`, nothing will send again."
+      },
+      {
+        "text": "The reader, when it has the results it wants",
+        "correct": false,
+        "why": "Closing from the receiving side makes the workers' next send panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4de3prm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A job mostly waits for a database that accepts 40 connections, 10 of which other services use. The machine has 8 processors. What pool size does lesson 7's reasoning give?",
+    "hint": "For waiting work, look at the other end.",
+    "choices": [
+      {
+        "text": "8, one per processor",
+        "correct": false,
+        "why": "That is the rule for computing work."
+      },
+      {
+        "text": "About 30",
+        "correct": true,
+        "why": "Right: the limit on the other end minus its other users."
+      },
+      {
+        "text": "40, the database's limit",
+        "correct": false,
+        "why": "Ten of those are already in use elsewhere."
+      },
+      {
+        "text": "As many as there are jobs",
+        "correct": false,
+        "why": "That is the unbounded program that ran out of files."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pf19t6v",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A pool of 20 workers runs 400 jobs of 50 ms each, all waiting, nothing else limiting them. About how many milliseconds should the run take?",
+    "hint": "How many rounds of twenty?",
+    "value": 1000,
+    "tolerance": 50,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-zabfre1e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In the semaphore pattern, why is the place taken with `sem <- struct{}{}` before the `go` statement rather than inside the goroutine?",
+    "hint": "What would exist at once otherwise?",
+    "choices": [
+      {
+        "text": "Inside the goroutine the send would panic",
+        "correct": false,
+        "why": "It would work; it would just limit less."
+      },
+      {
+        "text": "So the number of goroutines is bounded too, not only the work",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "So the jobs run in the order they were listed",
+        "correct": false,
+        "why": "Goroutines finish in no promised order either way."
+      },
+      {
+        "text": "Because a buffered channel cannot be used inside a goroutine",
+        "correct": false,
+        "why": "Channels work in any goroutine."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnqpy4qs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Four goroutines increment a shared `int` 100,000 times each with `mu.Lock(); n++; mu.Unlock()`. What does the program print?",
+    "hint": "The mutex makes the increment one step.",
+    "choices": [
+      {
+        "text": "A different total below 400,000 each run",
+        "correct": false,
+        "why": "That was lesson 1's program without the mutex."
+      },
+      {
+        "text": "400,000 every run",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "100,000, because only one goroutine gets the lock",
+        "correct": false,
+        "why": "Each takes it in turn, many times over."
+      },
+      {
+        "text": "Nothing: the goroutines deadlock",
+        "correct": false,
+        "why": "Every `Lock` is followed by an `Unlock`, so nobody waits forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9np5k0q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A struct with a `sync.Mutex` field has a method `func (s Store) Put(k, v string)` that locks and writes to a map field. The program has data races and loses no writes in tests. What is wrong?",
+    "hint": "What does a value receiver copy, and what does it share?",
+    "choices": [
+      {
+        "text": "The map should be a `sync.Map`",
+        "correct": false,
+        "why": "The real fault is the copied lock; the map itself is guarded once the receiver is fixed."
+      },
+      {
+        "text": "Each call locks its own copy of the mutex, while the map inside is shared",
+        "correct": true,
+        "why": "Right. Copying the struct copies the mutex, but a map value is a reference, so every copy writes to the same map unguarded. A pointer receiver fixes it."
+      },
+      {
+        "text": "`defer` must not be used with `Unlock`",
+        "correct": false,
+        "why": "`defer mu.Unlock()` is the recommended habit."
+      },
+      {
+        "text": "Methods cannot lock a mutex they did not create",
+        "correct": false,
+        "why": "Any code holding the mutex may lock it."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvmx0tdy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "When is an `RWMutex` likely to beat a plain `Mutex`, by lesson 8's measurements?",
+    "hint": "Compare the `work 200` and `work 0` runs.",
+    "choices": [
+      {
+        "text": "Many readers that hold the lock long enough to overlap",
+        "correct": true,
+        "why": "Right: three times faster with work under the lock, slower without."
+      },
+      {
+        "text": "Any time there are more readers than writers",
+        "correct": false,
+        "why": "With a single lookup under the lock, it was slower."
+      },
+      {
+        "text": "When writers are frequent and long",
+        "correct": false,
+        "why": "A writer holds an `RWMutex` alone; frequent writers remove its advantage."
+      },
+      {
+        "text": "When a reader must upgrade its lock to write",
+        "correct": false,
+        "why": "An `RLock` cannot be upgraded; trying waits forever."
+      }
+    ]
+  },
+  {
+    "id": "ex-g61mc592",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each piece of shared state with the tool lesson 8 recommends for it.",
+    "hint": "One value, several values, or a handover.",
+    "pairs": [
+      {
+        "left": "a request counter",
+        "right": "`sync/atomic`"
+      },
+      {
+        "left": "a cache map changed in place",
+        "right": "a `sync.Mutex`"
+      },
+      {
+        "left": "a result handed from one goroutine to another",
+        "right": "a channel"
+      }
+    ],
+    "right_distractors": [
+      "a `sync.Once`"
+    ]
+  },
+  {
+    "id": "ex-n2bjrm6w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why must `wg.Add(1)` be called before the `go` statement rather than as the goroutine's first line?",
+    "hint": "What if `Wait` runs before the goroutine is scheduled?",
+    "choices": [
+      {
+        "text": "`Add` panics inside a goroutine",
+        "correct": false,
+        "why": "It does not panic; it is just too late."
+      },
+      {
+        "text": "`Wait` finds the counter at zero and returns at once",
+        "correct": true,
+        "why": "Right, whenever the goroutines have not run yet: `late.go` printed 0 finished."
+      },
+      {
+        "text": "The goroutine cannot see the `WaitGroup`",
+        "correct": false,
+        "why": "The closure captures it."
+      },
+      {
+        "text": "It makes `Done` run twice",
+        "correct": false,
+        "why": "`Done` runs once per goroutine either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-mkjxg6t0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A configuration loader uses `sync.OnceValues`. The first call fails because a file is missing; the file is created a second later. What do later calls return?",
+    "hint": "Once means once.",
+    "choices": [
+      {
+        "text": "The configuration, read from the new file",
+        "correct": false,
+        "why": "The function is never run again."
+      },
+      {
+        "text": "The same error as the first call",
+        "correct": true,
+        "why": "Right: errors are cached like results."
+      },
+      {
+        "text": "A zero configuration and a nil error",
+        "correct": false,
+        "why": "The cached pair is returned exactly as the first call produced it."
+      },
+      {
+        "text": "A panic, because the first call failed",
+        "correct": false,
+        "why": "An error is a returned value; nothing panics."
+      }
+    ]
+  },
+  {
+    "id": "ex-ascza1pk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "What does the runtime do when two goroutines write to an ordinary map at the same moment, with no lock?",
+    "hint": "`crash.go`.",
+    "choices": [
+      {
+        "text": "It serialises the writes for you",
+        "correct": false,
+        "why": "It does not; that is what a lock or `sync.Map` is for."
+      },
+      {
+        "text": "It raises a panic that `recover` can catch",
+        "correct": false,
+        "why": "It is a fatal error, beyond `recover`."
+      },
+      {
+        "text": "It stops the program with `fatal error: concurrent map writes` when it detects them",
+        "correct": true,
+        "why": "Right; the check is cheap and does not catch every case."
+      },
+      {
+        "text": "It keeps the last value written and carries on",
+        "correct": false,
+        "why": "When it detects the writes it stops the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-67xrq4v5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which goroutine should call the `cancel` function returned by `context.WithCancel`?",
+    "hint": "The worker only listens.",
+    "choices": [
+      {
+        "text": "The one that created the context",
+        "correct": true,
+        "why": "Right, with `defer cancel()` as the habit."
+      },
+      {
+        "text": "Every worker given the context",
+        "correct": false,
+        "why": "Workers listen on `Done`; one of them cancelling would stop the others."
+      },
+      {
+        "text": "The garbage collector",
+        "correct": false,
+        "why": "The collector calls no functions of yours."
+      },
+      {
+        "text": "Nobody: it is called when the deadline passes",
+        "correct": false,
+        "why": "`WithCancel` has no deadline at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-w9m58dff",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order these contexts from the root of the tree downwards.",
+    "hint": "Each `With…` makes a child of what it is given.",
+    "items": [
+      "`context.Background()`",
+      "`ctx, cancel := context.WithCancel(context.Background())`",
+      "`tctx, _ := context.WithTimeout(ctx, time.Second)`",
+      "`vctx := context.WithValue(tctx, key, id)`"
+    ]
+  },
+  {
+    "id": "ex-ybkxndgg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two code paths share one request context with a 3 s deadline: a database call and a cache call, each wrapped in its own `WithTimeoutCause`. A log line shows `context deadline exceeded`. What tells you which budget ran out?",
+    "hint": "`Err()` is one of two values.",
+    "choices": [
+      {
+        "text": "`ctx.Err()`, compared with `errors.Is`",
+        "correct": false,
+        "why": "It is `DeadlineExceeded` for both."
+      },
+      {
+        "text": "`context.Cause(ctx)`, which returns the error each timeout was given",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`ctx.Deadline()`",
+        "correct": false,
+        "why": "It reports when, not why."
+      },
+      {
+        "text": "`ctx.Value(\"cause\")`",
+        "correct": false,
+        "why": "Causes are not stored as values, and a string key is a collision waiting to happen."
+      }
+    ]
+  },
+  {
+    "id": "ex-mj1jqwj5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 11. A function `func Fetch(id string, ctx context.Context) error` is reviewed. What does the convention ask to change?",
+    "hint": "Where does the context go?",
+    "choices": [
+      {
+        "text": "Nothing; a context may go anywhere in the list",
+        "correct": false,
+        "why": "The `context` package's documentation fixes its place."
+      },
+      {
+        "text": "Move `ctx` to be the first parameter",
+        "correct": true,
+        "why": "Right: `func Fetch(ctx context.Context, id string) error`."
+      },
+      {
+        "text": "Replace `ctx` with a field on the receiver",
+        "correct": false,
+        "why": "Keeping a context in a struct is exactly what the convention forbids."
+      },
+      {
+        "text": "Rename `ctx` to `context`",
+        "correct": false,
+        "why": "That would shadow the package name; `ctx` is the conventional name."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zrsdsvm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. A parent context has 200 ms left. A function derives a child with `context.WithTimeout(parent, 5*time.Second)`. When does the child end, if nothing else cancels it?",
+    "hint": "A child cannot outlive its parent.",
+    "choices": [
+      {
+        "text": "After 5 seconds",
+        "correct": false,
+        "why": "The parent ends first, and its end reaches the child."
+      },
+      {
+        "text": "After 5.2 seconds",
+        "correct": false,
+        "why": "Timeouts do not add up."
+      },
+      {
+        "text": "After about 200 ms, with its parent",
+        "correct": true,
+        "why": "Right: the earlier deadline wins."
+      },
+      {
+        "text": "At once, because the timeouts disagree",
+        "correct": false,
+        "why": "Nothing is in conflict; the child simply keeps the earlier deadline."
+      }
+    ]
+  },
+  {
+    "id": "ex-amcaa8wt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 11. A loop processes items of about 2 seconds each and checks `ctx.Err()` at the top of every iteration. Its context is cancelled. How late can the loop be in noticing?",
+    "hint": "How long does the loop go between two looks?",
+    "choices": [
+      {
+        "text": "Not at all: cancellation interrupts the item",
+        "correct": false,
+        "why": "Nothing interrupts code that does not look; the check is at the top only."
+      },
+      {
+        "text": "Up to one item, about 2 seconds",
+        "correct": true,
+        "why": "Right. The overrun is the cost of one step; a 2-second step needs a context passed into it."
+      },
+      {
+        "text": "Until the whole loop has finished",
+        "correct": false,
+        "why": "That is a loop that never checks, like `deaf` in lesson 11."
+      },
+      {
+        "text": "One scheduler tick, about 10 ms",
+        "correct": false,
+        "why": "The scheduler does not stop work on behalf of a context."
+      }
+    ]
+  },
+  {
+    "id": "ex-yf6zzf79",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 11. Which function returns a context that keeps its parent's values but is never cancelled when the parent is?",
+    "hint": "It is meant for work at the edge of a request.",
+    "choices": [
+      {
+        "text": "`context.Background()`",
+        "correct": false,
+        "why": "It is never cancelled, but it carries no values at all."
+      },
+      {
+        "text": "`context.AfterFunc`",
+        "correct": false,
+        "why": "That runs a function when a context ends; it makes no context."
+      },
+      {
+        "text": "`context.TODO()`",
+        "correct": false,
+        "why": "Like `Background`, it has no parent and no values."
+      },
+      {
+        "text": "`context.WithoutCancel`",
+        "correct": true,
+        "why": "Right: values kept, ending dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvj0vnk3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 12. A client builds its request with `http.NewRequestWithContext` and a 100 ms timeout, and the server takes 2 seconds. What does the client's `Do` return?",
+    "hint": "Which side gives up first?",
+    "choices": [
+      {
+        "text": "The context's error, after 100 ms",
+        "correct": true,
+        "why": "Right. The client stops waiting when its context ends."
+      },
+      {
+        "text": "The response, after 2 seconds",
+        "correct": false,
+        "why": "That is `http.NewRequest` without a context."
+      },
+      {
+        "text": "An HTTP 504 from the server",
+        "correct": false,
+        "why": "The server sends nothing; the client left."
+      },
+      {
+        "text": "A partial body",
+        "correct": false,
+        "why": "No body had been sent when the client gave up."
+      }
+    ]
+  },
+  {
+    "id": "ex-w58x9bjg",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. A handler waits on `r.Context().Done()`. Its client disconnects after 100 ms because of its own deadline. Which error does the handler see from `r.Context().Err()`?",
+    "hint": "Does the client's reason travel to the server?",
+    "choices": [
+      {
+        "text": "`context.DeadlineExceeded`, the client's reason",
+        "correct": false,
+        "why": "The reason stays with the client; the server only sees the connection close."
+      },
+      {
+        "text": "`context.Canceled`",
+        "correct": true,
+        "why": "Right: the server cancels the request's context when its client leaves."
+      },
+      {
+        "text": "`http.ErrServerClosed`",
+        "correct": false,
+        "why": "That is what `ListenAndServe` returns after `Shutdown`."
+      },
+      {
+        "text": "`nil`, because the handler did not fail",
+        "correct": false,
+        "why": "Once the context has ended, `Err` is never nil."
+      }
+    ]
+  },
+  {
+    "id": "ex-11qfecg4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. What happens when `http.Server.Shutdown` is called while one request is half answered?",
+    "hint": "Door first, then the work inside.",
+    "choices": [
+      {
+        "text": "The request is cut off and the server stops at once",
+        "correct": false,
+        "why": "That is what dying does; `Shutdown` exists to avoid it."
+      },
+      {
+        "text": "New connections are accepted until the request finishes",
+        "correct": false,
+        "why": "The listener closes first, so new connections are refused."
+      },
+      {
+        "text": "New connections are refused, and the request is finished",
+        "correct": true,
+        "why": "Right, within the limit of the context given to `Shutdown`."
+      },
+      {
+        "text": "The request's context is cancelled so it can stop quickly",
+        "correct": false,
+        "why": "`Shutdown` waits for handlers; it does not cancel them."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjndbfw7",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Lesson 12. A platform sends `SIGTERM` and kills the process 30 seconds later. The longest request a service handles takes 12 seconds. To the nearest second, what is the largest `Shutdown` limit that still ends before the kill, leaving 3 seconds of margin?",
+    "hint": "30 minus the margin.",
+    "value": 27,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ehq2vv7a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 13. Twelve jobs are sent on one channel read by three workers. How is each job assigned?",
+    "hint": "Nobody deals.",
+    "choices": [
+      {
+        "text": "In turn: job 1 to the first worker, job 2 to the second",
+        "correct": false,
+        "why": "Channels do not deal in turns."
+      },
+      {
+        "text": "To all three, and the first result wins",
+        "correct": false,
+        "why": "A value is received by exactly one goroutine."
+      },
+      {
+        "text": "To whichever worker receives next",
+        "correct": true,
+        "why": "Right, so the split follows speed and varies between runs."
+      },
+      {
+        "text": "By job number modulo three",
+        "correct": false,
+        "why": "Nothing computes an assignment."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ap3thda",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 13. Eight goroutines each compute one result and must leave them in input order, with no channel. Which arrangement is free of data races?",
+    "hint": "Which memory does each goroutine write?",
+    "choices": [
+      {
+        "text": "Each appends its result to a shared slice",
+        "correct": false,
+        "why": "`append` reads and writes the shared length: a race."
+      },
+      {
+        "text": "Each writes `results[i]` of a length-8 slice",
+        "correct": true,
+        "why": "Right: separate elements are separate memory, read after `wg.Wait`."
+      },
+      {
+        "text": "Each writes into a shared map keyed by its index",
+        "correct": false,
+        "why": "A map is one shared structure; concurrent writes race."
+      },
+      {
+        "text": "Each prints its result, in input order",
+        "correct": false,
+        "why": "Print order across goroutines is not input order."
+      }
+    ]
+  },
+  {
+    "id": "ex-w14kqcz3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 13. In a fan-out, the first error must stop the rest and the caller must learn which error it was. Which standard-library call records that reason?",
+    "hint": "A cancel function that takes an argument.",
+    "choices": [
+      {
+        "text": "`context.WithCancel`",
+        "correct": false,
+        "why": "Its cancel takes no argument; `Err` then says only `context canceled`."
+      },
+      {
+        "text": "`errors.Join`",
+        "correct": false,
+        "why": "It combines errors; it cancels nothing."
+      },
+      {
+        "text": "`context.WithCancelCause`",
+        "correct": true,
+        "why": "Right: `cancel(err)` records it and `context.Cause` returns it."
+      },
+      {
+        "text": "`sync.WaitGroup.Wait`",
+        "correct": false,
+        "why": "It waits; it records no error."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfk5hpt5",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 14. A merge with three copier goroutines must close its output. When?",
+    "hint": "The last sender closes.",
+    "choices": [
+      {
+        "text": "When the first input closes",
+        "correct": false,
+        "why": "The other copiers would send on a closed channel and panic."
+      },
+      {
+        "text": "After all three copiers have finished",
+        "correct": true,
+        "why": "Right, which a goroutine waiting on a `WaitGroup` knows."
+      },
+      {
+        "text": "Never; the garbage collector closes it",
+        "correct": false,
+        "why": "Nothing closes channels for you, and a reader ranging over it waits for ever."
+      },
+      {
+        "text": "When the reader has received enough values",
+        "correct": false,
+        "why": "A reader closing a channel others send on causes the same panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-a190nr5q",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Lesson 14. A `select` loop merges two channels with plain `v := <-a` and `v := <-b`, and runs until both are closed. What happens once they are?",
+    "hint": "Is a closed channel ready?",
+    "choices": [
+      {
+        "text": "The `select` blocks, waiting for a value",
+        "correct": false,
+        "why": "A closed channel never blocks a receive."
+      },
+      {
+        "text": "The program panics with `receive from closed channel`",
+        "correct": false,
+        "why": "Receiving from a closed channel is allowed; sending is what panics."
+      },
+      {
+        "text": "The loop ends by itself",
+        "correct": false,
+        "why": "Nothing in a plain receive ends a `select` loop."
+      },
+      {
+        "text": "It spins, receiving zero values without pause",
+        "correct": true,
+        "why": "Right: lesson 14's `spin.go` counted 972,922 in 100 ms. Comma-ok and nil fix it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5gwawvv",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "Lesson 14. Inside a `select` loop, assigning ___ to a channel variable switches its case off, because such a channel is never ready.",
+    "hint": "The zero value of a channel type.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-240c0ka3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Lesson 15. A pipeline's consumer reads three results and returns, and the stages have no context. What is left behind?",
+    "hint": "Which direction does closing travel?",
+    "choices": [
+      {
+        "text": "Stages blocked on sends nobody will receive",
+        "correct": true,
+        "why": "Right: a leak, because closing only travels downstream."
+      },
+      {
+        "text": "Nothing; the stages see the reader leave and close",
+        "correct": false,
+        "why": "A stage cannot see its reader leave without a context."
+      },
+      {
+        "text": "A deadlock report from the runtime",
+        "correct": false,
+        "why": "Only if every goroutine is blocked; the consumer's goroutine carries on."
+      },
+      {
+        "text": "A panic in the first stage",
+        "correct": false,
+        "why": "Nothing is closed wrongly; the stages simply wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-8akwgxjn",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Lesson 15. Put the normal shutdown of the pipeline `main ← sq ← gen` in order.",
+    "hint": "The close travels with the data.",
+    "items": [
+      "`gen` sends its last number and closes its output",
+      "`sq`'s `range` over that channel ends",
+      "`sq` closes its own output",
+      "`main`'s `range` ends"
+    ]
+  },
+  {
+    "id": "ex-mcay9k6w",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "Lessons 13 to 15. Which of these are true? Choose all that apply.",
+    "hint": "One pattern per lesson, and their rules.",
+    "choices": [
+      {
+        "text": "A pipeline goes no faster than its slowest stage",
+        "correct": true,
+        "why": "Yes: items leave at that stage's pace."
+      },
+      {
+        "text": "A stage may run on several goroutines and still close once",
+        "correct": true,
+        "why": "Yes: with a `WaitGroup` and a closer, as in `wide.go`."
+      },
+      {
+        "text": "Fan-in keeps values in the order their sources were listed",
+        "correct": false,
+        "why": "It delivers in arrival order."
+      },
+      {
+        "text": "Fan-out gives each job to every worker",
+        "correct": false,
+        "why": "Each job reaches exactly one worker."
+      }
+    ]
+  },
+  {
+    "id": "ex-f28e3r38",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program built with `-race` prints a report and keeps running. How can a CI script tell the run found a race without reading the text?",
+    "hint": "The detector reports rather than stops.",
+    "choices": [
+      {
+        "text": "The program prints nothing on standard output",
+        "correct": false,
+        "why": "The program's own output is unchanged; the report goes beside it."
+      },
+      {
+        "text": "The exit status is 66",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The binary deletes itself after a race",
+        "correct": false,
+        "why": "Nothing of the kind happens."
+      },
+      {
+        "text": "The race build refuses to start a second time",
+        "correct": false,
+        "why": "Every run is independent."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7h15e6z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A race report's two stacks both end in your function `Save` at line 40, called from two different goroutines. The variable is a field of a struct both goroutines share. Which fix does the lesson's table point to first?",
+    "hint": "Ask what is shared and how it is updated.",
+    "choices": [
+      {
+        "text": "Add `time.Sleep` before line 40",
+        "correct": false,
+        "why": "A pause is timing, not synchronisation."
+      },
+      {
+        "text": "Run with `GORACE=halt_on_error=1`",
+        "correct": false,
+        "why": "That changes how many reports are printed, not the race."
+      },
+      {
+        "text": "Depends on the field: an atomic if one number, a mutex if a structure",
+        "correct": true,
+        "why": "Right: choose by what is shared."
+      },
+      {
+        "text": "Build without `-race` so the report goes away",
+        "correct": false,
+        "why": "The race stays; only its witness goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-x0ee2p1n",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these describe the race detector as lesson 16 measured and used it? Choose all that apply.",
+    "hint": "Cost, scope and behaviour.",
+    "choices": [
+      {
+        "text": "It slowed `cost` down roughly twelve times",
+        "correct": true,
+        "why": "Yes, 0.156 s to 1.852 s."
+      },
+      {
+        "text": "It sees only races that happen during the run",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "It proves a program free of races when silent",
+        "correct": false,
+        "why": "Silence covers only the paths the run took."
+      },
+      {
+        "text": "`go test -race` fails a test during which a race happened",
+        "correct": true,
+        "why": "Yes."
+      }
+    ]
+  },
+  {
+    "id": "ex-11qhqmvw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why do tests of a type that claims to be safe for concurrent use need a test that calls it from several goroutines at once?",
+    "hint": "What does the detector need in order to see a race?",
+    "choices": [
+      {
+        "text": "So the accesses actually meet while the detector watches",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because `go test` refuses single-goroutine tests",
+        "correct": false,
+        "why": "`TestGet` ran on one goroutine and passed."
+      },
+      {
+        "text": "To make the test faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Because answers are checked only in parallel tests",
+        "correct": false,
+        "why": "Any test checks answers; races are what need concurrency."
+      }
+    ]
+  },
+  {
+    "id": "ex-58tz14ax",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A Reader holding 30 bytes is read with an 8-byte buffer by a Reader that returns `0, io.EOF` on a separate call at the end, as `strings.Reader` did. How many calls to `Read` are made in all?",
+    "hint": "8 + 8 + 8 + 6, then one more.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-xpsbsjv7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A custom Reader returns its last 4 bytes together with `io.EOF`. A caller's loop does `n, err := r.Read(buf); if err != nil { break }; use(buf[:n])`. What is wrong?",
+    "hint": "The contract says what to process before looking at `err`.",
+    "choices": [
+      {
+        "text": "Nothing, since the contract forbids data with EOF",
+        "correct": false,
+        "why": "The contract allows it, and `alphabet` did it."
+      },
+      {
+        "text": "The last 4 bytes are dropped",
+        "correct": true,
+        "why": "Right: use `n` bytes first, then look at `err`."
+      },
+      {
+        "text": "The loop never ends",
+        "correct": false,
+        "why": "It ends on the EOF, too early."
+      },
+      {
+        "text": "`buf[:n]` panics when `n` is 4",
+        "correct": false,
+        "why": "Slicing to 4 of 8 is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ze8sgfe",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each `io` helper with what it makes of its arguments.",
+    "hint": "Readers in, Readers or Writers out.",
+    "pairs": [
+      {
+        "left": "`io.TeeReader(r, w)`",
+        "right": "reads r, copying what it reads into w"
+      },
+      {
+        "left": "`io.MultiWriter(a, b)`",
+        "right": "writes every chunk to a and to b"
+      },
+      {
+        "left": "`io.LimitReader(r, 5)`",
+        "right": "stops after five bytes"
+      },
+      {
+        "left": "`io.MultiReader(a, b)`",
+        "right": "all of a, then all of b"
+      }
+    ],
+    "right_distractors": [
+      "a and b interleaved byte by byte"
+    ]
+  },
+  {
+    "id": "ex-h6ckmc84",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`io.Pipe` has no buffer. What does that oblige a program to do?",
+    "hint": "Lesson 4's unbuffered channel.",
+    "choices": [
+      {
+        "text": "Call `Flush` after every write",
+        "correct": false,
+        "why": "A pipe has nothing to flush."
+      },
+      {
+        "text": "Write and read from different goroutines",
+        "correct": true,
+        "why": "Right: each write waits for a read."
+      },
+      {
+        "text": "Use it only with files",
+        "correct": false,
+        "why": "It connects any writer to any reader."
+      },
+      {
+        "text": "Lock a mutex around each write",
+        "correct": false,
+        "why": "The pipe already synchronises the two ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-58w5azyt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A function writes its output with `fmt.Printf`. Why is it harder to test than one taking an `io.Writer`?",
+    "hint": "Where could a test catch the output?",
+    "choices": [
+      {
+        "text": "`Printf` output cannot be compared with a string",
+        "correct": false,
+        "why": "It can, once captured; the problem is capturing it."
+      },
+      {
+        "text": "`Printf` is slower than `Fprintf`",
+        "correct": false,
+        "why": "`Printf` is `Fprintf` to `os.Stdout`."
+      },
+      {
+        "text": "The destination is fixed; a test cannot hand it a `bytes.Buffer`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Tests cannot run code that prints",
+        "correct": false,
+        "why": "They can; the output just lands on the terminal."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7sgqxce",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A program writes 20,000 bytes through `bufio.NewWriter` and closes the file without calling `Flush`. The file comes out short, and the missing bytes are all at the end. Why the end?",
+    "hint": "Which buffers reached the file?",
+    "choices": [
+      {
+        "text": "The last, partly filled buffer never left memory",
+        "correct": true,
+        "why": "Right: only full buffers are written before a Flush."
+      },
+      {
+        "text": "Close truncates files opened by `os.Create`",
+        "correct": false,
+        "why": "Close does not cut anything."
+      },
+      {
+        "text": "The disk was full",
+        "correct": false,
+        "why": "Nothing reported an error."
+      },
+      {
+        "text": "`bufio.Writer` keeps every other buffer",
+        "correct": false,
+        "why": "It passes every full buffer on."
+      }
+    ]
+  },
+  {
+    "id": "ex-etm0s0pw",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "A `bufio.Scanner` that stops on a long line returns false from `Scan`, and only `s.___()` says why.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "Err"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c2dt7khx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A server unpacks archives whose entry names come from users. Which tool from lesson 18 keeps a name like `../../etc/passwd` from leaving the target directory?",
+    "hint": "A type since Go 1.24.",
+    "choices": [
+      {
+        "text": "`filepath.Join`, which removes `..`",
+        "correct": false,
+        "why": "`Join` cleans the path and keeps the `..`, which leads out."
+      },
+      {
+        "text": "`os.MkdirAll` with mode `0o700`",
+        "correct": false,
+        "why": "Permissions say who may enter, not where a name leads."
+      },
+      {
+        "text": "An `os.Root` opened where the files go",
+        "correct": true,
+        "why": "Right: names resolve inside it or are refused."
+      },
+      {
+        "text": "`filepath.WalkDir` with `SkipDir`",
+        "correct": false,
+        "why": "That walks existing trees; it does not guard new names."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gnhsb9c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Which error test should a program use to learn that a file it tried to open does not exist?",
+    "hint": "`io/fs` holds the values.",
+    "choices": [
+      {
+        "text": "`err.Error() == \"file not found\"`",
+        "correct": false,
+        "why": "The text is for people, and it is not even that text."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`err == io.EOF`",
+        "correct": false,
+        "why": "EOF is the end of data, not a missing file."
+      },
+      {
+        "text": "`os.IsExist(err)`",
+        "correct": false,
+        "why": "That asks the opposite question."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1tqs0bk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A struct field is `Retired time.Time` with tag `json:\"retired,omitempty\"`, and it is never set. What appears in the JSON?",
+    "hint": "Is a struct ever empty for `omitempty`?",
+    "choices": [
+      {
+        "text": "No `retired` key",
+        "correct": false,
+        "why": "That is what `omitzero` would give."
+      },
+      {
+        "text": "`\"retired\": null`",
+        "correct": false,
+        "why": "A `time.Time` is never written as null."
+      },
+      {
+        "text": "`\"retired\": \"0001-01-01T00:00:00Z\"`",
+        "correct": true,
+        "why": "Right: the zero time, written out."
+      },
+      {
+        "text": "A `json: unsupported type` error",
+        "correct": false,
+        "why": "Times are supported."
+      }
+    ]
+  },
+  {
+    "id": "ex-y7vy5mbm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "JSON decoded into `map[string]any` gives `float64` for every number. Which kind of value is most at risk?",
+    "hint": "Above 2^53.",
+    "choices": [
+      {
+        "text": "A quantity like 2",
+        "correct": false,
+        "why": "Small integers are exact in a float64."
+      },
+      {
+        "text": "A price already in cents, like 24990",
+        "correct": false,
+        "why": "Far below 2^53, so exact."
+      },
+      {
+        "text": "A 64-bit identifier",
+        "correct": true,
+        "why": "Right; `UseNumber` keeps it as text."
+      },
+      {
+        "text": "A boolean",
+        "correct": false,
+        "why": "Booleans decode as `bool`."
+      }
+    ]
+  },
+  {
+    "id": "ex-29092ygp",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order what `json.Unmarshal` checks, from the first failure possible to the last.",
+    "hint": "A document that is not JSON fails before any field is looked at.",
+    "items": [
+      "that the bytes are valid JSON",
+      "which field each key matches",
+      "that each value fits its field's type"
+    ]
+  },
+  {
+    "id": "ex-fzkxwghv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A function signature is `func Retry(n int, wait time.Duration)`. A caller has `secs := 3`. Which call compiles and waits three seconds between tries?",
+    "hint": "A variable has a type already.",
+    "choices": [
+      {
+        "text": "`Retry(5, secs)`",
+        "correct": false,
+        "why": "An `int` is not a `Duration`, and would be nanoseconds if it were."
+      },
+      {
+        "text": "`Retry(5, secs * time.Second)`",
+        "correct": false,
+        "why": "Mismatched types `int` and `time.Duration`."
+      },
+      {
+        "text": "`Retry(5, time.Duration(secs) * time.Second)`",
+        "correct": true,
+        "why": "Right: convert, then multiply by the unit."
+      },
+      {
+        "text": "`Retry(5, time.Second(secs))`",
+        "correct": false,
+        "why": "`time.Second` is a constant, not a function."
+      }
+    ]
+  },
+  {
+    "id": "ex-q07t4q0g",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A job records `start := time.Now()`, writes `start` to a database, and an hour later another process reads it back and computes `time.Since(start)`. What does the second process's measurement rely on?",
+    "hint": "Does the monotonic reading survive leaving the process?",
+    "choices": [
+      {
+        "text": "The wall clock alone",
+        "correct": true,
+        "why": "Right. The monotonic reading means nothing outside the process that took it."
+      },
+      {
+        "text": "The monotonic clock, which the database stores",
+        "correct": false,
+        "why": "A stored time keeps the wall clock; the monotonic part does not travel."
+      },
+      {
+        "text": "Neither: `Since` refuses times from other processes",
+        "correct": false,
+        "why": "It computes; it just has only the wall clock to use."
+      },
+      {
+        "text": "The time zone of the first process",
+        "correct": false,
+        "why": "Zones change how a time prints, not the interval."
+      }
+    ]
+  },
+  {
+    "id": "ex-55eaqqnx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A loop must refresh a cache every minute and also stop when a `done` channel closes. Which tool fits it?",
+    "hint": "Something that fires repeatedly and can sit in a `select`.",
+    "choices": [
+      {
+        "text": "`time.Sleep(time.Minute)` in the loop",
+        "correct": false,
+        "why": "A sleeping goroutine cannot notice `done` until it wakes."
+      },
+      {
+        "text": "A `time.Ticker` in the `select`",
+        "correct": true,
+        "why": "Right, and `Stop` it when the loop ends."
+      },
+      {
+        "text": "`time.AfterFunc` once",
+        "correct": false,
+        "why": "That runs a function once, in its own goroutine."
+      },
+      {
+        "text": "A `time.Timer` that is never reset",
+        "correct": false,
+        "why": "It would fire once and the refresh would stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-x36xnr40",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`time.Date(2026, 3, 5, 9, 0, 0, 0, time.UTC).Format(\"2006-02-01\")` prints `2026-05-03`. Why?",
+    "hint": "In the reference moment, which number is the day and which the month?",
+    "choices": [
+      {
+        "text": "The layout is read right to left",
+        "correct": false,
+        "why": "It is read as written; the numbers name the fields."
+      },
+      {
+        "text": "UTC swaps day and month",
+        "correct": false,
+        "why": "Zones move hours, never fields."
+      },
+      {
+        "text": "`02` is the day and `01` the month",
+        "correct": true,
+        "why": "Right: the layout asked for year, day, month."
+      },
+      {
+        "text": "`Format` rejects the layout and falls back to another",
+        "correct": false,
+        "why": "Nothing was rejected; it did what was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9ye31xr",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "Go's reference time is Monday, January 2nd 2006, at 15:04:05. In a layout, what number stands for the minutes?",
+    "hint": "Hour 15, then…",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-fakf9xnr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A tool is run as `tool -verbose false input.txt`, and `-verbose` is a `flag.Bool`. What does the program see?",
+    "hint": "Does a bool flag take the next word as its value?",
+    "choices": [
+      {
+        "text": "`verbose` false and `input.txt` in the arguments",
+        "correct": false,
+        "why": "That needs `-verbose=false`."
+      },
+      {
+        "text": "`verbose` true, and `false input.txt` left over",
+        "correct": true,
+        "why": "Right: parsing stopped at `false`."
+      },
+      {
+        "text": "A refusal with status 2",
+        "correct": false,
+        "why": "Nothing invalid was given; `false` is just a word."
+      },
+      {
+        "text": "`verbose` true and only `input.txt` left over",
+        "correct": false,
+        "why": "`false` was not consumed by the flag."
+      }
+    ]
+  },
+  {
+    "id": "ex-84bbfwv1",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A flag `-ratio` must be a number between 0 and 1. With the standard library alone, what is the shortest way to refuse `1.5` with a clear message?",
+    "hint": "A check written as a function.",
+    "choices": [
+      {
+        "text": "`flag.Float64`, then `os.Exit(1)` if out of range",
+        "correct": false,
+        "why": "It works, but with the wrong status and no usage text; `flag.Func` does both."
+      },
+      {
+        "text": "`flag.Func` returning an error",
+        "correct": true,
+        "why": "Right: `Parse` prints it and exits with 2."
+      },
+      {
+        "text": "`flag.TextVar` with a `float64`",
+        "correct": false,
+        "why": "`float64` has no `UnmarshalText`."
+      },
+      {
+        "text": "A `FlagSet` with `PanicOnError`",
+        "correct": false,
+        "why": "A panic is not a clear message, and the range is still unchecked."
+      }
+    ]
+  },
+  {
+    "id": "ex-ec046d3f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A service logs with a `JSONHandler` and someone adds `slog.Info(\"login\", \"user\", u.Email, \"password\", pw)` while debugging. Which change protects every future call, whoever writes it?",
+    "hint": "Put the rule where every call meets it.",
+    "choices": [
+      {
+        "text": "Delete the line and remind the team",
+        "correct": false,
+        "why": "That fixes this call and relies on memory for the next."
+      },
+      {
+        "text": "Raise the level to `WARN`",
+        "correct": false,
+        "why": "A warning with a password in it would still be written."
+      },
+      {
+        "text": "A `Password` type whose `LogValue` hides it",
+        "correct": true,
+        "why": "Right: the type decides how it is logged, under any handler."
+      },
+      {
+        "text": "Switch to `TextHandler`",
+        "correct": false,
+        "why": "Text writes the same values, in another shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-rg9gkya5",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Order these `slog` levels from least to most severe.",
+    "hint": "The default logger hides the first.",
+    "items": [
+      "`DEBUG`",
+      "`INFO`",
+      "`WARN`",
+      "`ERROR`"
+    ]
+  },
+  {
+    "id": "ex-5s41d8ym",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a server, every function receives `ctx` first and logs with `InfoContext(ctx, …)`. How does a request id set once at the top reach each record?",
+    "hint": "Who reads the context?",
+    "choices": [
+      {
+        "text": "Each function adds it to its own calls",
+        "correct": false,
+        "why": "That is the repetition the design avoids."
+      },
+      {
+        "text": "A handler reads it from the context",
+        "correct": true,
+        "why": "Right: a wrapping handler adds it in `Handle`."
+      },
+      {
+        "text": "`slog` reads it from a global variable",
+        "correct": false,
+        "why": "Nothing global is involved; the context carries it."
+      },
+      {
+        "text": "`InfoContext` prints every value in the context",
+        "correct": false,
+        "why": "It passes the context to the handler; printing is the handler's choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-ryggntcy",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A pattern from a configuration file is compiled with `regexp.MustCompile` in an `init` function. What happens the day somebody saves the file with a typo in the pattern?",
+    "hint": "Who wrote the pattern, the programmer or the operator?",
+    "choices": [
+      {
+        "text": "The pattern is ignored and everything matches",
+        "correct": false,
+        "why": "Nothing is ignored; `MustCompile` panics."
+      },
+      {
+        "text": "The build fails before deployment",
+        "correct": false,
+        "why": "The file is read at run time; the build never saw it."
+      },
+      {
+        "text": "A panic at start-up",
+        "correct": true,
+        "why": "Right. `MustCompile` is for patterns in the source."
+      },
+      {
+        "text": "It is compiled lazily on the first match",
+        "correct": false,
+        "why": "Compilation happens in the call, in `init`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a55n59sw",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these patterns does Go's `regexp` refuse to compile? Choose all that apply.",
+    "hint": "Backreferences and lookaround break the linear-time promise.",
+    "choices": [
+      {
+        "text": "`(a)\\1`",
+        "correct": true,
+        "why": "Yes: a backreference."
+      },
+      {
+        "text": "`^(a+)+$`",
+        "correct": false,
+        "why": "It compiles; RE2 runs it in linear time."
+      },
+      {
+        "text": "`foo(?=bar)`",
+        "correct": true,
+        "why": "Yes: lookahead."
+      },
+      {
+        "text": "`(?P<id>\\d+)`",
+        "correct": false,
+        "why": "Named groups are supported."
+      }
+    ]
+  },
+  {
+    "id": "ex-f44xexp4",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "Go's regular expressions follow the syntax and the guarantees of the engine called ___, which runs in time linear in the input.",
+    "hint": "Two letters and a digit.",
+    "blanks": [
+      {
+        "accept": [
+          "RE2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qv1kq1m3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A binary serves pages embedded with `//go:embed static`. After deploying it, someone edits `static/index.html` on the server's disk. What do visitors see?",
+    "hint": "When were the files copied?",
+    "choices": [
+      {
+        "text": "The edited page, at once",
+        "correct": false,
+        "why": "The binary never reads the disk for embedded files."
+      },
+      {
+        "text": "The page from the build",
+        "correct": true,
+        "why": "Right: a change needs a new build and deployment."
+      },
+      {
+        "text": "A 404, since the file changed",
+        "correct": false,
+        "why": "The embedded copy is untouched and still served."
+      },
+      {
+        "text": "The edited page after a restart",
+        "correct": false,
+        "why": "A restart runs the same binary with the same copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzkcpcbw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A directory embedded with `//go:embed config` holds `app.json` and `.secrets.json`. Which file ends up inside the binary?",
+    "hint": "What does a plain directory pattern leave out?",
+    "choices": [
+      {
+        "text": "Both, since the directory is named",
+        "correct": false,
+        "why": "Names starting with `.` are skipped without `all:`."
+      },
+      {
+        "text": "`app.json` only",
+        "correct": true,
+        "why": "Right. `all:config` would take the secret too."
+      },
+      {
+        "text": "`.secrets.json` only",
+        "correct": false,
+        "why": "The rule excludes it, not `app.json`."
+      },
+      {
+        "text": "Neither: the build fails on the hidden file",
+        "correct": false,
+        "why": "Hidden files are skipped silently, not refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5yqrx2w",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each standard library piece with the job it does in these lessons.",
+    "hint": "Five lessons, five packages.",
+    "pairs": [
+      {
+        "left": "`time.ParseDuration`",
+        "right": "reads `1h15m30.5s`"
+      },
+      {
+        "left": "`flag.NewFlagSet`",
+        "right": "flags for one subcommand"
+      },
+      {
+        "left": "`slog.LevelVar`",
+        "right": "a level that changes at run time"
+      },
+      {
+        "left": "`fs.Sub`",
+        "right": "a sub-directory as a file system"
+      }
+    ],
+    "right_distractors": [
+      "a pattern compiled once"
+    ]
+  },
+  {
+    "id": "ex-j3hzvhmr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Lesson 25's first test failed on `fun` and `fast`. What was changed to make it pass?",
+    "hint": "The test asked the right question.",
+    "choices": [
+      {
+        "text": "The expected counts in the test",
+        "correct": false,
+        "why": "The test was right; changing it would have hidden the defect."
+      },
+      {
+        "text": "`Count`, so it trims punctuation",
+        "correct": true,
+        "why": "Right: `strings.TrimFunc` with `notLetter`."
+      },
+      {
+        "text": "The sentence, to remove its full stops",
+        "correct": false,
+        "why": "That would test an easier input and leave the defect in place."
+      },
+      {
+        "text": "`t.Errorf` replaced with `t.Logf`",
+        "correct": false,
+        "why": "A log line does not fail a test, so the defect would pass silently."
+      }
+    ]
+  },
+  {
+    "id": "ex-y3144km9",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test helper reports failures without calling `t.Helper()`. What does the failure report point at?",
+    "hint": "Lesson 25's demonstration printed line 7.",
+    "choices": [
+      {
+        "text": "The test function's declaration",
+        "correct": false,
+        "why": "Reports point at the line that recorded the failure."
+      },
+      {
+        "text": "The last line of the test file",
+        "correct": false,
+        "why": "Position in the file plays no part."
+      },
+      {
+        "text": "The `t.Errorf` inside the helper",
+        "correct": true,
+        "why": "Right; `t.Helper()` makes it name the caller."
+      },
+      {
+        "text": "Nothing: the failure is not reported",
+        "correct": false,
+        "why": "The failure is reported, at an unhelpful line."
+      }
+    ]
+  },
+  {
+    "id": "ex-qy4w5zat",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In the report, a subtest started with `t.Run(\"only punctuation\", …)` inside `TestCount` is named `TestCount/___`.",
+    "hint": "A space does not survive.",
+    "blanks": [
+      {
+        "accept": [
+          "only_punctuation"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sx39s4zp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A table test compares slices built from a map and fails in some runs and not others, with no code changed. Which change to the code under test fixes the cause rather than the symptom?",
+    "hint": "Lesson 26's `Top`.",
+    "choices": [
+      {
+        "text": "Running the test with `-count=1`",
+        "correct": false,
+        "why": "That disables the cache; the order still changes between runs."
+      },
+      {
+        "text": "Marking the row with `t.Skip`",
+        "correct": false,
+        "why": "That hides the failure and keeps the defect."
+      },
+      {
+        "text": "Sorting the expected slice in the test",
+        "correct": false,
+        "why": "The result is still in map order, so it still differs from run to run."
+      },
+      {
+        "text": "Breaking ties in the sort",
+        "correct": true,
+        "why": "Right: the code imposes an order, so the result no longer depends on the map."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bsr0k2d",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "Why does `go test .` print `(cached)` on a second run with nothing changed?",
+    "hint": "It names a package.",
+    "choices": [
+      {
+        "text": "It replays a passing result while code and tests are unchanged",
+        "correct": true,
+        "why": "Right; `-count=1` forces a real run."
+      },
+      {
+        "text": "It skips tests that passed in the last hour",
+        "correct": false,
+        "why": "The cache is keyed on content, not on time."
+      },
+      {
+        "text": "The second run used the race detector",
+        "correct": false,
+        "why": "Nothing in the command asked for `-race`."
+      },
+      {
+        "text": "The test binary was too large to rebuild",
+        "correct": false,
+        "why": "Size plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqsns4m5",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each double with the job it did for `TopOf` in lesson 27.",
+    "hint": "Canned, working, watching.",
+    "pairs": [
+      {
+        "left": "`mapSource`",
+        "right": "served documents from memory"
+      },
+      {
+        "left": "`failingSource`",
+        "right": "drove the error path"
+      },
+      {
+        "left": "`spySource`",
+        "right": "caught a document never closed"
+      }
+    ],
+    "right_distractors": [
+      "measured how long `Count` took"
+    ]
+  },
+  {
+    "id": "ex-b2jkydj8",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Why is `Source` declared in `wordcount` rather than in the package of each implementation?",
+    "hint": "Go interfaces are satisfied implicitly.",
+    "choices": [
+      {
+        "text": "Because an interface must live with its first implementation",
+        "correct": false,
+        "why": "There is no such rule in Go."
+      },
+      {
+        "text": "The code that needs the behaviour declares it",
+        "correct": true,
+        "why": "Right; implementations need not import it or know it exists."
+      },
+      {
+        "text": "To stop other packages from implementing it",
+        "correct": false,
+        "why": "Any type with the method satisfies it, from any package."
+      },
+      {
+        "text": "Because `go vet` reports interfaces declared beside their implementations",
+        "correct": false,
+        "why": "`go vet` has no such check."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2ymnym2",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A function needs a file system in a test. Following lesson 27, what do you hand it?",
+    "hint": "Real things that are cheap.",
+    "choices": [
+      {
+        "text": "A hand-written spy of `os.File`",
+        "correct": false,
+        "why": "That fakes something you do not own; the guess goes wrong in the errors."
+      },
+      {
+        "text": "A directory under `/tmp` at a fixed path",
+        "correct": false,
+        "why": "It collides between runs; `t.TempDir` or an in-memory one is better."
+      },
+      {
+        "text": "An `fstest.MapFS` through an `fs.FS` parameter",
+        "correct": true,
+        "why": "Right: a real file system, kept in memory."
+      },
+      {
+        "text": "Nothing: the test reads the developer's home directory",
+        "correct": false,
+        "why": "A test that depends on one machine's files fails on every other."
+      }
+    ]
+  },
+  {
+    "id": "ex-c4r332j7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A handler sets `Content-Type` after writing the body. Which check in a recorder test catches it?",
+    "hint": "One of the two shows what was sent.",
+    "choices": [
+      {
+        "text": "`rec.Header().Get(\"Content-Type\")`",
+        "correct": false,
+        "why": "That is the live map, and it shows the late value as if sent."
+      },
+      {
+        "text": "`rec.Result().Header.Get(\"Content-Type\")`",
+        "correct": true,
+        "why": "Right: the headers as a client received them."
+      },
+      {
+        "text": "`rec.Body.String()`",
+        "correct": false,
+        "why": "The body was correct; the label was wrong."
+      },
+      {
+        "text": "`rec.Code`",
+        "correct": false,
+        "why": "The status was 200, as it should be."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3acwee0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A test server's handler sleeps six seconds and ignores the request's context. The client gives up after 50 ms. How long does the test take, and why?",
+    "hint": "What does `srv.Close` wait for?",
+    "choices": [
+      {
+        "text": "50 ms, because the client gave up",
+        "correct": false,
+        "why": "The client returned then; the test still had to close the server."
+      },
+      {
+        "text": "Five seconds, the limit of `srv.Close`",
+        "correct": false,
+        "why": "At five seconds it logs a warning and keeps waiting."
+      },
+      {
+        "text": "About six seconds: `srv.Close` waits for what is still running",
+        "correct": true,
+        "why": "Right; lesson 28 measured 6.02 s."
+      },
+      {
+        "text": "For ever, because the handler never returns",
+        "correct": false,
+        "why": "It returns when its sleep ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-kb38xvgj",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "Which of these make an `HTTPSource` request stop waiting on a silent server? Choose all that apply.",
+    "hint": "One belongs to the call, one to the client.",
+    "choices": [
+      {
+        "text": "A context with a deadline passed to `Open`",
+        "correct": true,
+        "why": "Yes, as lesson 28's timeout test did."
+      },
+      {
+        "text": "A client with its `Timeout` field set",
+        "correct": true,
+        "why": "Yes, a limit on every request through it."
+      },
+      {
+        "text": "`http.DefaultClient`",
+        "correct": false,
+        "why": "It has no timeout."
+      },
+      {
+        "text": "`context.Background()`",
+        "correct": false,
+        "why": "It has no deadline."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tygsqty",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "easy",
+    "prompt": "In a benchmark using `for b.Loop()`, what about the code before the loop?",
+    "hint": "Setup.",
+    "choices": [
+      {
+        "text": "It runs once per round",
+        "correct": false,
+        "why": "It runs once in all; only the loop body repeats."
+      },
+      {
+        "text": "It is not timed",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It must call `b.ResetTimer()`",
+        "correct": false,
+        "why": "That is needed in the old `b.N` style, not with `b.Loop`."
+      },
+      {
+        "text": "It is reported in a separate column",
+        "correct": false,
+        "why": "No column reports setup."
+      }
+    ]
+  },
+  {
+    "id": "ex-zny03ytv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A benchmark reports `16104 B/op` and `2311 allocs/op` for a text of 2048 words. About how many allocations is that per word? Give a whole number.",
+    "hint": "2311 divided by 2048.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "allocations"
+  },
+  {
+    "id": "ex-bsgw56ct",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A `b.N` benchmark of a small pure function reports a time far below the same function under `b.Loop`. What is the most likely explanation?",
+    "hint": "Lesson 29 disassembled one.",
+    "choices": [
+      {
+        "text": "`b.Loop` adds a large fixed cost per round",
+        "correct": false,
+        "why": "The difference was the arithmetic the `b.N` version lost."
+      },
+      {
+        "text": "The compiler removed the unused work",
+        "correct": true,
+        "why": "Right: the result was discarded, so the work went too."
+      },
+      {
+        "text": "The `b.N` version ran on more processors",
+        "correct": false,
+        "why": "Both ran with the same `GOMAXPROCS`."
+      },
+      {
+        "text": "The function was cached after its first call",
+        "correct": false,
+        "why": "Go does not cache function results."
+      }
+    ]
+  },
+  {
+    "id": "ex-1dqwsaxf",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put these in the order the lesson 29 workflow uses them when judging a candidate change.",
+    "hint": "Correctness before speed.",
+    "items": [
+      "`go test . -count=1` on the candidate",
+      "`-bench Count -benchmem -count 5` on the candidate",
+      "compare its spread with the original's",
+      "decide whether the gain is worth the code"
+    ]
+  },
+  {
+    "id": "ex-b5qsmacp",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A package reports 100% coverage. Which conclusion does lesson 30 allow?",
+    "hint": "What does a covered statement record?",
+    "choices": [
+      {
+        "text": "Every input has been tried",
+        "correct": false,
+        "why": "`Top` was at 100% and had never met `-1`."
+      },
+      {
+        "text": "The package has no data race",
+        "correct": false,
+        "why": "Coverage cannot see a race."
+      },
+      {
+        "text": "Each statement ran at least once",
+        "correct": true,
+        "why": "Right, and nothing more than that."
+      },
+      {
+        "text": "Every result was checked by an assertion",
+        "correct": false,
+        "why": "A test with no assertion covers every line it reaches."
+      }
+    ]
+  },
+  {
+    "id": "ex-a1c6pnc2",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "To build a program that records its own coverage while it runs, add the flag ___ to `go build`.",
+    "hint": "The same word `go test` uses for a percentage.",
+    "blanks": [
+      {
+        "accept": [
+          "-cover"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kdxc69p7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Two runs of an instrumented `topwords` left `Handler` at 0% and `main` at 85.7%. What does that say about where to look first?",
+    "hint": "Program coverage answers what realistic runs never touch.",
+    "choices": [
+      {
+        "text": "`Handler` is dead code and should be deleted",
+        "correct": false,
+        "why": "It is used by a server, just not by this program."
+      },
+      {
+        "text": "The unit tests are worthless",
+        "correct": false,
+        "why": "They reached `Handler` fully; the two measurements answer different questions."
+      },
+      {
+        "text": "Coverage below 100% means the build failed",
+        "correct": false,
+        "why": "Both runs completed and wrote their counters."
+      },
+      {
+        "text": "The usage branch of `main`",
+        "correct": true,
+        "why": "Right: the part of the program a real invocation reaches and the runs did not."
+      }
+    ]
+  }
+]
