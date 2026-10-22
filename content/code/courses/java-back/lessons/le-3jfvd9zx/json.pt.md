@@ -8,7 +8,12 @@ conversor é o **Jackson**, a biblioteca que transforma objetos Java em JSON e d
 acrescentou. O starter web depende dele, e a árvore de dependências do Maven mostra o caminho:
 
 ```
-(pending jackson-tree)
+ana@vm:~/bookshop$ mvn dependency:tree -Dincludes=tools.jackson.core,com.fasterxml.jackson.core | grep jackson
+[INFO]    \- org.springframework.boot:spring-boot-starter-jackson:jar:4.1.1:compile
+[INFO]       \- org.springframework.boot:spring-boot-jackson:jar:4.1.1:compile
+[INFO]          \- tools.jackson.core:jackson-databind:jar:3.1.5:compile
+[INFO]             +- com.fasterxml.jackson.core:jackson-annotations:jar:2.21:compile
+[INFO]             \- tools.jackson.core:jackson-core:jar:3.1.5:compile
 ```
 
 `-Dincludes` limita a árvore aos grupos citados, e `grep jackson` descarta as outras linhas do Maven.
@@ -28,7 +33,30 @@ mesma classe anotada funcione com as duas versões. `@JsonProperty` continua sen
 a lista legível. O Python 3 vem com o Ubuntu.
 
 ```
-(pending json-list)
+ana@vm:~/bookshop$ curl -s localhost:8080/books | python3 -m json.tool
+[
+    {
+        "id": 1,
+        "isbn": "9786500000016",
+        "title": "Dom Casmurro",
+        "author": "Machado de Assis",
+        "priceCents": 3990
+    },
+    {
+        "id": 2,
+        "isbn": "9786500000023",
+        "title": "The Time Machine",
+        "author": "H. G. Wells",
+        "priceCents": 2950
+    },
+    {
+        "id": 3,
+        "isbn": "9786500000030",
+        "title": "Frankenstein",
+        "author": "Mary Shelley",
+        "priceCents": 3500
+    }
+]
 ```
 
 As regras que o Jackson aplicou, todas visíveis acima:

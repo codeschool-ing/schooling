@@ -73,7 +73,21 @@ Two more flags. `-d '...'` sends the text as the body, and makes the request a `
 so. `-H 'Content-Type: application/json'` adds the header that tells the server the body is JSON.
 
 ```
-(pending post-201)
+ana@vm:~/bookshop$ curl -si -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}' localhost:8080/books
+HTTP/1.1 201 
+Location: /books/4
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:14 GMT
+
+{"id":4,"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/4
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:14 GMT
+
+{"id":4,"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}
 ```
 
 A 201, `Location: /books/4` and the new book in the body. Asking for the `Location` gives the same
@@ -84,7 +98,10 @@ book back: the header is an address a client can use straight away.
 This body says `"id": 1`, the id of *Dom Casmurro*:
 
 ```
-(pending post-id)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"id":1,"isbn":"9786500000054","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+{"id":5,"isbn":"9786500000054","title":"Senhora","author":"José de Alencar","priceCents":3100}
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books/1
+{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
 ```
 
 The new book is number 5, and book 1 is untouched. Jackson found no `id` component in `BookRequest`
@@ -94,7 +111,14 @@ client is allowed to say.
 ## Forgetting the header
 
 ```
-(pending post-415)
+ana@vm:~/bookshop$ curl -si -w '\n' -d '{"isbn":"9786500000054","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+HTTP/1.1 415 
+Accept: application/json, application/*+json
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:14 GMT
+
+{"timestamp":"2026-10-16T23:32:14.666Z","status":415,"error":"Unsupported Media Type","path":"/books"}
 ```
 
 Without `-H`, curl labels a `-d` body `application/x-www-form-urlencoded`, the format an HTML form
@@ -105,7 +129,8 @@ the `Content-Type` is the first thing to check.
 ## A body that makes no sense
 
 ```
-(pending post-junk)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}' localhost:8080/books
+{"id":6,"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}
 ```
 
 A five-digit ISBN, an empty title and a price below zero, accepted and stored as book 6. Jackson made

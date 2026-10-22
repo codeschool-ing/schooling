@@ -8,7 +8,13 @@ encheu de beans, um serviço e um repositório com três livros, mas nada liga u
 na porta 8080 a qualquer um deles. Compile o projeto da aula 5, inicie-o e peça os livros:
 
 ```
-(pending lesson5-404)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books
+HTTP/1.1 404 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:40 GMT
+
+{"timestamp":"2026-10-16T23:31:40.711Z","status":404,"error":"Not Found","path":"/books"}
 ```
 
 Um 404, com um pequeno corpo JSON que o Spring Boot escreve para qualquer caminho que ninguém trata.
@@ -97,7 +103,7 @@ requisições `GET`; a seção sobre POST acrescenta um terceiro método.
 `-q` diz ao Maven para imprimir só avisos e erros, então um build que não imprime nada funcionou:
 
 ```
-(pending build)
+ana@vm:~/bookshop$ mvn -q package
 ```
 
 Inicie a aplicação num **segundo terminal** e deixe-a rodando ali. Daqui em diante, toda mudança no
@@ -110,7 +116,17 @@ java -jar target/bookshop-0.1.0.jar
 De volta ao primeiro terminal, o **curl** é o cliente. Ele envia uma requisição e imprime a resposta:
 
 ```
-(pending get-one)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/1
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+
+{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/99
+HTTP/1.1 404 
+Content-Length: 0
+Date: Fri, 16 Oct 2026 23:31:50 GMT
 ```
 
 Três opções, usadas a aula inteira. `-i` imprime a linha de status e os cabeçalhos antes do corpo.
@@ -128,13 +144,28 @@ O livro 99 é um 404 com `Content-Length: 0`: o controlador achou um `Optional` 
 Sem `-i`, o curl imprime só o corpo. A lista inteira é um array JSON, numa linha só:
 
 ```
-(pending list)
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books
+[{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990},{"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950},{"id":3,"isbn":"9786500000030","title":"Frankenstein","author":"Mary Shelley","priceCents":3500}]
 ```
 
 ## Respostas que você não escreveu
 
 ```
-(pending not-mapped)
+ana@vm:~/bookshop$ curl -si -w '\n' -X DELETE localhost:8080/books/1
+HTTP/1.1 405 
+Allow: GET
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+
+{"timestamp":"2026-10-16T23:31:50.096Z","status":405,"error":"Method Not Allowed","path":"/books/1"}
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/authors
+HTTP/1.1 404 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+
+{"timestamp":"2026-10-16T23:31:50.135Z","status":404,"error":"Not Found","path":"/authors"}
 ```
 
 `DELETE /books/1` recebe **405** e um cabeçalho, `Allow: GET`. O Spring sabe que `/books/{id}` existe e
@@ -145,13 +176,20 @@ Spring Boot, que escreve `timestamp`, `status`, `error` e `path`.
 Uma variável de caminho que não vira `long` é recusada antes de o método rodar:
 
 ```
-(pending path-abc)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/abc
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:31:50.803Z","status":400,"error":"Bad Request","path":"/books/abc"}
 ```
 
 O segundo terminal diz por quê, numa linha que a aplicação registrou em `WARN`:
 
 ```
-(pending path-abc-log)
+2026-10-16T20:31:50.802-03:00  WARN 31145 --- [bookshop] [nio-8080-exec-8] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: "abc"]
 ```
 
 Então já existem dois tipos de resposta de erro: as que o seu controlador decide, como o 404 vazio do

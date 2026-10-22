@@ -8,7 +8,13 @@ filled it with beans, a service and a repository holding three books, but nothin
 arriving on port 8080 to any of them. Build lesson 5's project, start it, and ask it for the books:
 
 ```
-(pending lesson5-404)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books
+HTTP/1.1 404 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:40 GMT
+
+{"timestamp":"2026-10-16T23:31:40.711Z","status":404,"error":"Not Found","path":"/books"}
 ```
 
 A 404, with a small JSON body that Spring Boot writes for any path nobody handles. This lesson writes
@@ -97,7 +103,7 @@ requests; the section on POST adds a third method.
 `-q` tells Maven to print only warnings and errors, so a build that prints nothing has worked:
 
 ```
-(pending build)
+ana@vm:~/bookshop$ mvn -q package
 ```
 
 Start the application in a **second terminal** and leave it running there. Every change to the code
@@ -110,7 +116,17 @@ java -jar target/bookshop-0.1.0.jar
 Back in the first terminal, **curl** is the client. It sends one request and prints the answer:
 
 ```
-(pending get-one)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/1
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+
+{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/99
+HTTP/1.1 404 
+Content-Length: 0
+Date: Fri, 16 Oct 2026 23:31:50 GMT
 ```
 
 Three flags, used throughout this lesson. `-i` prints the status line and the headers before the
@@ -128,13 +144,28 @@ Book 99 is a 404 with `Content-Length: 0`: the controller found an empty `Option
 Without `-i`, curl prints only the body. The whole list is a JSON array, on one line:
 
 ```
-(pending list)
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books
+[{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990},{"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950},{"id":3,"isbn":"9786500000030","title":"Frankenstein","author":"Mary Shelley","priceCents":3500}]
 ```
 
 ## Answers you did not write
 
 ```
-(pending not-mapped)
+ana@vm:~/bookshop$ curl -si -w '\n' -X DELETE localhost:8080/books/1
+HTTP/1.1 405 
+Allow: GET
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+
+{"timestamp":"2026-10-16T23:31:50.096Z","status":405,"error":"Method Not Allowed","path":"/books/1"}
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/authors
+HTTP/1.1 404 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+
+{"timestamp":"2026-10-16T23:31:50.135Z","status":404,"error":"Not Found","path":"/authors"}
 ```
 
 `DELETE /books/1` gets **405** and a header, `Allow: GET`. Spring knows that `/books/{id}` exists and
@@ -145,13 +176,20 @@ nothing is mapped to that path, so the request ended in Spring Boot's own error 
 A path variable that cannot become a `long` is refused before the method runs:
 
 ```
-(pending path-abc)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/abc
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:31:50 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:31:50.803Z","status":400,"error":"Bad Request","path":"/books/abc"}
 ```
 
 The second terminal says why, in a line the application logged at `WARN`:
 
 ```
-(pending path-abc-log)
+2026-10-16T20:31:50.802-03:00  WARN 31145 --- [bookshop] [nio-8080-exec-8] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: "abc"]
 ```
 
 So there are already two kinds of error answer: the ones your controller decides, like the empty 404

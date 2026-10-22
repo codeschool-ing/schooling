@@ -42,14 +42,21 @@ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=dev
 Ask for a book on the new port:
 
 ```
-(pending dev-curl)
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8081/books/2
+{"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950}
 ```
 
 The second terminal printed these lines among many others. The start-up lines around them are left
 out here:
 
 ```
-(pending dev-log)
+2026-10-16T20:31:56.197-03:00 DEBUG 31546 --- [bookshop] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 4 mappings in 'requestMappingHandlerMapping'
+2026-10-16T20:31:57.074-03:00  INFO 31546 --- [bookshop] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-16T20:31:57.087-03:00 DEBUG 31546 --- [bookshop] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/books/2", parameters={}
+2026-10-16T20:31:57.125-03:00 DEBUG 31546 --- [bookshop] [nio-8081-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.example.bookshop.catalogue.BookController#get(long)
+2026-10-16T20:31:57.192-03:00 DEBUG 31546 --- [bookshop] [nio-8081-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2026-10-16T20:31:57.220-03:00 DEBUG 31546 --- [bookshop] [nio-8081-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [BookResponse[id=2, isbn=9786500000023, title=The Time Machine, author=H. G. Wells, priceCents=2950]]
+2026-10-16T20:31:57.265-03:00 DEBUG 31546 --- [bookshop] [nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
 ```
 
 Each line is one of the steps in the figure:

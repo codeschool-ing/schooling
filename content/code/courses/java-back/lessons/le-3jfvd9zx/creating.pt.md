@@ -73,7 +73,21 @@ dizer. `-H 'Content-Type: application/json'` acrescenta o cabeçalho que diz ao 
 JSON.
 
 ```
-(pending post-201)
+ana@vm:~/bookshop$ curl -si -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}' localhost:8080/books
+HTTP/1.1 201 
+Location: /books/4
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:14 GMT
+
+{"id":4,"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/4
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:14 GMT
+
+{"id":4,"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}
 ```
 
 Um 201, `Location: /books/4` e o livro novo no corpo. Pedir o `Location` devolve o mesmo livro: o
@@ -84,7 +98,10 @@ cabeçalho é um endereço que um cliente pode usar na hora.
 Este corpo diz `"id": 1`, o id de *Dom Casmurro*:
 
 ```
-(pending post-id)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"id":1,"isbn":"9786500000054","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+{"id":5,"isbn":"9786500000054","title":"Senhora","author":"José de Alencar","priceCents":3100}
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books/1
+{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
 ```
 
 O livro novo é o número 5, e o livro 1 está intacto. O Jackson não achou componente `id` em
@@ -94,7 +111,14 @@ que um cliente tem permissão de dizer.
 ## Esquecendo o cabeçalho
 
 ```
-(pending post-415)
+ana@vm:~/bookshop$ curl -si -w '\n' -d '{"isbn":"9786500000054","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+HTTP/1.1 415 
+Accept: application/json, application/*+json
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:14 GMT
+
+{"timestamp":"2026-10-16T23:32:14.666Z","status":415,"error":"Unsupported Media Type","path":"/books"}
 ```
 
 Sem `-H`, o curl rotula um corpo de `-d` como `application/x-www-form-urlencoded`, o formato que um
@@ -105,7 +129,8 @@ que funcionasse responde 415, o `Content-Type` é a primeira coisa a conferir.
 ## Um corpo sem sentido
 
 ```
-(pending post-junk)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}' localhost:8080/books
+{"id":6,"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}
 ```
 
 Um ISBN de cinco dígitos, um título vazio e um preço abaixo de zero, aceitos e guardados como o livro

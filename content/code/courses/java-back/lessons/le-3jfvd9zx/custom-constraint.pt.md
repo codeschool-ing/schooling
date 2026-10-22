@@ -145,28 +145,37 @@ public record BookRequest(
 Compile, reinicie e envie o ISBN que passava antes:
 
 ```
-(pending wrong-check-400)
+ana@vm:~/bookshop$ curl -si -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000048","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:41 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:32:41.978Z","status":400,"error":"Bad Request","path":"/books"}
 ```
 
 ```
-(pending wrong-check-400-log)
+2026-10-16T20:32:41.971-03:00  WARN 1347 --- [bookshop] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.example.bookshop.catalogue.BookResponse> com.example.bookshop.catalogue.BookController.add(com.example.bookshop.catalogue.BookRequest): [Field error in object 'bookRequest' on field 'isbn': rejected value [9786500000048]; codes [ValidIsbn.bookRequest.isbn,ValidIsbn.isbn,ValidIsbn.java.lang.String,ValidIsbn]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [bookRequest.isbn,isbn]; arguments []; default message [isbn]]; default message [must be a valid ISBN-13]] ]
 ```
 
 O erro de campo traz o código `ValidIsbn` e a mensagem da anotação. Uma requisição sem ISBN nenhum
 quebra só o `@NotNull`, então recebe um erro e não dois:
 
 ```
-(pending no-isbn)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+{"timestamp":"2026-10-16T23:32:42.601Z","status":400,"error":"Bad Request","path":"/books"}
 ```
 
 ```
-(pending no-isbn-log)
+2026-10-16T20:32:42.600-03:00  WARN 1347 --- [bookshop] [nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.example.bookshop.catalogue.BookResponse> com.example.bookshop.catalogue.BookController.add(com.example.bookshop.catalogue.BookRequest): [Field error in object 'bookRequest' on field 'isbn': rejected value [null]; codes [NotNull.bookRequest.isbn,NotNull.isbn,NotNull.java.lang.String,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [bookRequest.isbn,isbn]; arguments []; default message [isbn]]; default message [must not be null]] ]
 ```
 
 E um dígito verificador de verdade passa:
 
 ```
-(pending valid-201)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}' localhost:8080/books
+{"id":4,"isbn":"9786500000047","title":"Iracema","author":"José de Alencar","priceCents":2800}
 ```
 
 O repositório em memória recomeçou junto com a aplicação, e por isso este livro é o número 4 outra
@@ -177,11 +186,14 @@ vez.
 Tire `FIELD` do `@Target`, compile, reinicie e envie de novo o dígito verificador errado:
 
 ```
-(pending no-field)
+ana@vm:~/bookshop$ sed -i 's/ElementType.FIELD, //' src/main/java/com/example/bookshop/catalogue/ValidIsbn.java && grep -n '@Target' src/main/java/com/example/bookshop/catalogue/ValidIsbn.java
+14:@Target({ElementType.PARAMETER, ElementType.RECORD_COMPONENT})
+ana@vm:~/bookshop$ mvn -q package
 ```
 
 ```
-(pending no-field-201)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000048","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+{"id":4,"isbn":"9786500000048","title":"Senhora","author":"José de Alencar","priceCents":3100}
 ```
 
 O projeto compilou sem aviso, a anotação continua escrita no record, e a requisição foi aceita. Sem
@@ -191,5 +203,6 @@ requisição que devia falhar. Enviar uma toda vez é trabalho de teste, e a aul
 Ponha `FIELD` de volta e compile de novo:
 
 ```
-(pending field-back)
+ana@vm:~/bookshop$ sed -i 's/@Target({ElementType.PARAMETER/@Target({ElementType.FIELD, ElementType.PARAMETER/' src/main/java/com/example/bookshop/catalogue/ValidIsbn.java && grep -n '@Target' src/main/java/com/example/bookshop/catalogue/ValidIsbn.java
+14:@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.RECORD_COMPONENT})
 ```

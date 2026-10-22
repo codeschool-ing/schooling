@@ -6,13 +6,20 @@ version: 1
 Antes de mudar qualquer coisa, envie à aplicação como está um livro sem preço:
 
 ```
-(pending no-price-int)
+ana@vm:~/bookshop$ curl -si -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000061","title":"Lucíola","author":"José de Alencar"}' localhost:8080/books
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:15 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:32:15.242Z","status":400,"error":"Bad Request","path":"/books"}
 ```
 
 O segundo terminal diz o que aconteceu:
 
 ```
-(pending no-price-int-log)
+2026-10-16T20:32:15.240-03:00  WARN 393 --- [bookshop] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot map `null` into type `int` (set `DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES` to 'false' to allow)]
 ```
 
 Um 400, e uma recusa do **Jackson**: um preço ausente não cabe num `int`, e o Jackson 3 recusa em vez
@@ -108,7 +115,8 @@ ao lado de qualquer outro. O ISBN tem só `@NotNull` por enquanto.
 Compile, reinicie e envie de novo o absurdo da seção anterior:
 
 ```
-(pending constraints-alone)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}' localhost:8080/books
+{"id":4,"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}
 ```
 
 **Aceito, como antes.** As restrições estão no record e nada as lê. O Spring valida um argumento
@@ -170,14 +178,21 @@ public class BookController {
 ele não informar nada. Compile, reinicie e tente o absurdo mais uma vez:
 
 ```
-(pending junk-400)
+ana@vm:~/bookshop$ curl -si -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"12345","title":"","author":"José de Alencar","priceCents":-5}' localhost:8080/books
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:32:33 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:32:33.177Z","status":400,"error":"Bad Request","path":"/books"}
 ```
 
 Um 400, enfim, com o corpo que o Spring Boot escreve para qualquer erro: um horário, o status, o nome
 dele e o caminho. Ele diz que a requisição falhou e não por quê. O segundo terminal sabe por quê:
 
 ```
-(pending junk-400-log)
+2026-10-16T20:32:33.171-03:00  WARN 1083 --- [bookshop] [nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.example.bookshop.catalogue.BookResponse> com.example.bookshop.catalogue.BookController.add(com.example.bookshop.catalogue.BookRequest) with 2 errors: [Field error in object 'bookRequest' on field 'title': rejected value []; codes [NotBlank.bookRequest.title,NotBlank.title,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [bookRequest.title,title]; arguments []; default message [title]]; default message [must not be blank]] [Field error in object 'bookRequest' on field 'priceCents': rejected value [-5]; codes [PositiveOrZero.bookRequest.priceCents,PositiveOrZero.priceCents,PositiveOrZero.java.lang.Integer,PositiveOrZero]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [bookRequest.priceCents,priceCents]; arguments []; default message [priceCents]]; default message [must be greater than or equal to 0]] ]
 ```
 
 `MethodArgumentNotValidException` é o que o Spring lança quando o `@Valid` acha violações, e a linha
@@ -192,11 +207,12 @@ há de errado com ele.
 Um preço ausente agora é um erro de campo como os outros:
 
 ```
-(pending no-price-null)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000061","title":"Lucíola","author":"José de Alencar"}' localhost:8080/books
+{"timestamp":"2026-10-16T23:32:33.744Z","status":400,"error":"Bad Request","path":"/books"}
 ```
 
 ```
-(pending no-price-null-log)
+2026-10-16T20:32:33.743-03:00  WARN 1083 --- [bookshop] [nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.example.bookshop.catalogue.BookResponse> com.example.bookshop.catalogue.BookController.add(com.example.bookshop.catalogue.BookRequest): [Field error in object 'bookRequest' on field 'priceCents': rejected value [null]; codes [NotNull.bookRequest.priceCents,NotNull.priceCents,NotNull.java.lang.Integer,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [bookRequest.priceCents,priceCents]; arguments []; default message [priceCents]]; default message [must not be null]] ]
 ```
 
 ## Dois portões, e o método atrás dos dois
@@ -204,11 +220,12 @@ Um preço ausente agora é um erro de campo como os outros:
 O Jackson não foi embora. Envie um corpo que nem é JSON, cortado depois do ISBN:
 
 ```
-(pending malformed)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000061",' localhost:8080/books
+{"timestamp":"2026-10-16T23:32:34.280Z","status":400,"error":"Bad Request","path":"/books"}
 ```
 
 ```
-(pending malformed-log)
+2026-10-16T20:32:34.279-03:00  WARN 1083 --- [bookshop] [nio-8080-exec-3] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input within/between Object entries]
 ```
 
 Então um corpo passa por dois portões antes de `add` rodar, e cada um falha do seu jeito:
@@ -224,7 +241,8 @@ quando `add` roda, a requisição está bem formada e toda regra foi cumprida.
 ## O que as restrições padrão não sabem dizer
 
 ```
-(pending wrong-check-201)
+ana@vm:~/bookshop$ curl -s -w '\n' -H 'Content-Type: application/json' -d '{"isbn":"9786500000048","title":"Senhora","author":"José de Alencar","priceCents":3100}' localhost:8080/books
+{"id":4,"isbn":"9786500000048","title":"Senhora","author":"José de Alencar","priceCents":3100}
 ```
 
 `9786500000048` tem treze dígitos, então o `@NotNull` fica satisfeito e nada mais é perguntado. Não é
