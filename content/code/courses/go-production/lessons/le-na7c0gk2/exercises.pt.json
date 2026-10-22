@@ -1,0 +1,383 @@
+{
+  "ex-rpcjrtrp": {
+    "prompt": "O que `go build -buildmode=plugin -o csv.so ./plugins/csv` produz, e como um programa Go o usa?",
+    "hint": "Duas funções e um tipo formam o pacote inteiro.",
+    "choices": [
+      {
+        "text": "Um arquivo de código-fonte Go que o hospedeiro compila na primeira vez que inicia",
+        "why": "Nada é compilado em tempo de execução. O arquivo já é código de máquina; o hospedeiro só o mapeia."
+      },
+      {
+        "text": "Um objeto compartilhado que o hospedeiro abre e consulta por nome",
+        "why": "Isso. O `.so` é carregado no processo do hospedeiro, os `init` dos pacotes novos rodam e os nomes exportados são achados por string."
+      },
+      {
+        "text": "Um executável separado que o hospedeiro inicia e com quem conversa por um pipe",
+        "why": "Esse é o reporter em subprocesso da seção 04. Um plugin roda dentro do próprio processo do hospedeiro."
+      },
+      {
+        "text": "Uma biblioteca estática ligada ao `hits-plugin` quando ele é compilado",
+        "why": "O hospedeiro foi compilado antes do plugin e não sabe nada do `csv.so` até ele ser citado na linha de comando."
+      }
+    ]
+  },
+  "ex-e3c8xyba": {
+    "prompt": "O `plugins/csv/main.go` declara `var Reporter report.Reporter = csv.Reporter{}`. Qual é o tipo dinâmico do valor que `p.Lookup(\"Reporter\")` devolve?",
+    "hint": "Uma variável e uma função voltam de jeitos diferentes.",
+    "choices": [
+      {
+        "text": "`report.Reporter`",
+        "why": "Esse é o tipo da variável, mas o `Lookup` devolve o endereço dela. Afirmar `sym.(report.Reporter)` falha, porque um ponteiro para interface não tem métodos."
+      },
+      {
+        "text": "`*report.Reporter`",
+        "why": "Isso. Uma variável volta como ponteiro para a variável, então o hospedeiro afirma `*report.Reporter` e o desreferencia."
+      },
+      {
+        "text": "`csv.Reporter`, o tipo concreto guardado na interface",
+        "why": "O hospedeiro não vê o tipo concreto a não ser que abra a interface; o que o `Lookup` devolve é um ponteiro para a variável de interface."
+      },
+      {
+        "text": "`func() report.Reporter`",
+        "why": "Isso é o que o `plugins/mean` devolve, porque lá `Reporter` é declarado como função."
+      }
+    ]
+  },
+  "ex-f8w6zdrj": {
+    "prompt": "`./hits-plugin access.log csv.so csv.so` imprimiu 22 linhas e `hits-plugin: registered [csv]`. O `report.Register` entra em pânico com nome repetido. Por que não entrou?",
+    "hint": "Conte quantas vezes o `init` rodou, não quantas vezes o reporter rodou.",
+    "choices": [
+      {
+        "text": "O `Register` ignora em silêncio uma segunda chamada que passe exatamente o mesmo valor de reporter",
+        "why": "O `Register` entra em pânico com qualquer nome que já esteja no mapa, seja qual for o valor; o arquivo da seção 02 mostra isso."
+      },
+      {
+        "text": "O segundo `.so` recebeu um registro só dele",
+        "why": "Há um único pacote `report` no processo, o do hospedeiro. É por isso que os nomes dos plugins aparecem no registro do hospedeiro."
+      },
+      {
+        "text": "Abrir de novo um caminho devolve o plugin já carregado, sem rodar `init`",
+        "why": "Isso. O reporter rodou duas vezes, por isso o CSV aparece duas vezes, mas o plugin foi inicializado uma vez."
+      },
+      {
+        "text": "O hospedeiro pula o segundo argumento porque repete o primeiro",
+        "why": "O hospedeiro percorre todos os argumentos e roda o reporter duas vezes: 22 linhas são o CSV de 11 linhas duas vezes."
+      }
+    ]
+  },
+  "ex-gcjt714b": {
+    "prompt": "Carregar um objeto compartilhado em tempo de execução é o `dlopen` da biblioteca C, então um hospedeiro que importa `plugin` é ligado dinamicamente: `readelf -d hits-plugin | grep NEEDED` imprime `Shared library: [___]`.",
+    "hint": "A biblioteca que todo programa ligado dinamicamente no Linux pede.",
+    "blanks": [
+      {
+        "accept": [
+          "libc.so.6",
+          "libc"
+        ]
+      }
+    ]
+  },
+  "ex-2re88qj8": {
+    "prompt": "Depois que o `internal/tally/errors.go` acrescentou um método `Errors`, só o hospedeiro foi recompilado, e o `csv.so` antigo falhou com `plugin was built with a different version of package example.com/hits/internal/tally`. O reporter de CSV nunca chama `Errors`. Por que falha mesmo assim?",
+    "hint": "O que o runtime compara no `Open`, e para quais pacotes?",
+    "choices": [
+      {
+        "text": "O runtime compara um hash de cada pacote que os dois têm em comum, o plugin chamando o pacote ou não",
+        "why": "Isso. A conferência é por pacote em comum e roda antes de qualquer `init`; um método a mais muda o hash do `tally`."
+      },
+      {
+        "text": "O `csv.so` chama `Errors` indiretamente pelo `report`",
+        "why": "Nem o `report` nem o `reporters/csv` citam `Errors`. A falha não depende de chamada nenhuma."
+      },
+      {
+        "text": "O hospedeiro recompilou o `csv.so` sozinho e o build falhou",
+        "why": "O hospedeiro nunca compila nada; ele abriu o arquivo que tinha sobrado de antes, que é justamente o problema."
+      },
+      {
+        "text": "Um método em `Summary` muda o tamanho da struct",
+        "why": "Um método não acrescenta campo, então a struct tem o mesmo tamanho. O hash cobre o que o pacote exporta, e isso mudou."
+      }
+    ]
+  },
+  "ex-t67jap2p": {
+    "prompt": "Quais destas situações fizeram o `hits-plugin` recusar um plugin no `plugin.Open`? Marque todas as que se aplicam.",
+    "hint": "Três recusas citaram um pacote no fundo do runtime; dois arranjos carregaram sem problema.",
+    "choices": [
+      {
+        "text": "O hospedeiro compilado com `-trimpath`, o plugin sem",
+        "why": "Isso: `different version of package internal/goarch`."
+      },
+      {
+        "text": "O hospedeiro compilado com `-race`, o plugin sem",
+        "why": "Isso: `different version of package internal/runtime/sys`."
+      },
+      {
+        "text": "O plugin compilado com Go 1.27.2, o hospedeiro com 1.27.1",
+        "why": "Isso: uma versão de correção de diferença, e a mensagem cita `internal/goarch`."
+      },
+      {
+        "text": "Hospedeiro e os dois plugins recompilados depois de acrescentado o `errors.go`",
+        "why": "Compilados juntos a partir do mesmo código, carregaram e imprimiram `registered [csv mean]`."
+      },
+      {
+        "text": "O mesmo `csv.so` citado duas vezes na mesma linha de comando",
+        "why": "A segunda abertura devolveu o plugin que já estava na memória, e o CSV saiu duas vezes."
+      }
+    ]
+  },
+  "ex-8tdw39d9": {
+    "prompt": "O `go list -deps -buildmode=plugin ./plugins/csv` listou 69 pacotes e o `go list -deps ./cmd/hits-plugin` listou 68. O `comm -23` imprimiu os três que só o plugin tem. Quantos pacotes o `csv.so` tem em comum com o hospedeiro?",
+    "hint": "69 menos os próprios do plugin.",
+    "unit": "pacotes"
+  },
+  "ex-atmq5hqw": {
+    "prompt": "Uma equipe compila o hospedeiro com `CGO_ENABLED=0`, para caber numa imagem estática, e carrega reporters de arquivos `.so` compilados corretamente em outra máquina. O que acontece?",
+    "hint": "Uma das quatro recusas da seção não era erro de build.",
+    "choices": [
+      {
+        "text": "O `go build` recusa: `-buildmode=plugin requires external (cgo) linking`",
+        "why": "Essa mensagem é para compilar um plugin com cgo desligado. O hospedeiro é um programa comum e compila."
+      },
+      {
+        "text": "Funciona, porque cada `.so` traz o próprio runtime",
+        "why": "As cópias próprias do plugin nunca são usadas, e aqui nem há carregador: o próprio `Open` é um esboço vazio."
+      },
+      {
+        "text": "Compila, e o `plugin.Open` falha em tempo de execução com `plugin: not implemented`",
+        "why": "Isso. Sem cgo o pacote `plugin` compila como esboços, então o erro só aparece quando o programa roda."
+      },
+      {
+        "text": "O `plugin.Open` funciona e o `Lookup` falha para todo símbolo",
+        "why": "Os dois são esboços sem cgo, e o `Open` já devolve o erro."
+      }
+    ]
+  },
+  "ex-c28w6qwn": {
+    "prompt": "Um servidor abriu o `reporter.so`. Um bug é corrigido, o mesmo pacote é recompilado como `reporter-v2.so`, e o servidor abre esse arquivo sem reiniciar. O que ele recebe?",
+    "hint": "Pense em como o runtime identifica um plugin.",
+    "choices": [
+      {
+        "text": "A versão nova, substituindo a antiga",
+        "why": "Nada pode ser descarregado, e um segundo plugin com o mesmo caminho de pacote não carrega ao lado do primeiro."
+      },
+      {
+        "text": "As duas versões lado a lado, cada uma com seus símbolos",
+        "why": "É o que um nome de arquivo novo poderia sugerir, mas até uma cópia idêntica byte a byte foi recusada com `plugin already loaded`."
+      },
+      {
+        "text": "Um erro, `plugin already loaded`",
+        "why": "Isso. O plugin é identificado pelo caminho do pacote, que já está no processo; só um processo novo roda a versão nova."
+      },
+      {
+        "text": "A versão antiga de novo, porque o `Open` guarda em cache pelo conteúdo do arquivo",
+        "why": "O cache é por caminho; um caminho novo é recusado por outro motivo, o caminho do pacote."
+      }
+    ]
+  },
+  "ex-e66rdz6h": {
+    "prompt": "Com um log vazio, o `hits-plugin` morreu com status de saída 2, enquanto o `hits-exec` informou `./mean-exec: exit status 2`, rodou o reporter em Python e saiu com 1. O que explica a diferença?",
+    "hint": "Os dois rodaram o mesmo código do `mean`, com o mesmo bug.",
+    "choices": [
+      {
+        "text": "O `hits-exec` recupera pânicos e o `hits-plugin` não",
+        "why": "Nenhum dos hospedeiros chama `recover`. No caso do `hits-exec`, o pânico aconteceu em outro processo."
+      },
+      {
+        "text": "O pânico rodou no filho, e o hospedeiro só viu um status de saída",
+        "why": "Isso. No plugin o mesmo pânico é do próprio hospedeiro; pelo `os/exec`, é um comando que falhou."
+      },
+      {
+        "text": "O `GOTRACEBACK=none` transforma o pânico em erro no subprocesso",
+        "why": "Ele só encurta o que o pânico imprime; o filho morreu com status 2 do mesmo jeito."
+      },
+      {
+        "text": "O JSON não carrega um resumo vazio, então o `mean-exec` nem foi chamado",
+        "why": "Ele foi chamado e entrou em pânico: `panic: runtime error: integer divide by zero` está na transcrição."
+      }
+    ]
+  },
+  "ex-crfqygkz": {
+    "prompt": "O `hits-exec` envia `{\"protocol\":1,\"summary\":…}` a cada reporter. Para que serve o número?",
+    "hint": "`echo '{\"protocol\":2}' | ./mean-exec` respondeu com uma frase.",
+    "choices": [
+      {
+        "text": "Diz ao reporter qual versão do Go compilou o hospedeiro",
+        "why": "O reporter não consegue nem precisa saber disso; nenhum pacote é compartilhado entre os dois processos."
+      },
+      {
+        "text": "Numera os reporters, para a saída voltar em ordem",
+        "why": "Todo reporter recebe os mesmos bytes, e a ordem vem do laço sobre os argumentos."
+      },
+      {
+        "text": "A versão da mensagem",
+        "why": "Isso. O `mean-exec` respondeu `protocol 2, and this reporter speaks 1` e saiu com 1, em vez de interpretar a mensagem errado."
+      },
+      {
+        "text": "O `encoding/json` exige um primeiro campo numérico",
+        "why": "Objetos JSON não têm campo obrigatório nenhum; o campo é decisão do próprio programa."
+      }
+    ]
+  },
+  "ex-9efdz0qb": {
+    "prompt": "O `hits-static` nunca chama `report.Register`, e mesmo assim `-r xml` responde `have [csv mean]`. Como os dois reporters entraram no registro?",
+    "hint": "Olhe o bloco de imports.",
+    "choices": [
+      {
+        "text": "O `report` varre o diretório `reporters` do módulo quando o programa inicia",
+        "why": "Um binário Go não tem árvore de código para varrer em tempo de execução; o registro só tem o que algum código pôs lá."
+      },
+      {
+        "text": "Os imports em branco ligaram os dois pacotes, e as funções `init` deles os registraram na inicialização",
+        "why": "Isso. `import _` mantém um pacote pelo efeito colateral, e aqui o efeito colateral é o `Register`, como no `image/png`."
+      },
+      {
+        "text": "O `flag` carrega o pacote citado em `-r` quando lê a flag",
+        "why": "O `flag` só guarda uma string. Nada em Go carrega um pacote pelo nome em tempo de execução, a não ser o `plugin`."
+      },
+      {
+        "text": "O `go generate` escreveu as chamadas no `main.go`",
+        "why": "O `go generate` poderia escrever a lista de imports, mas este arquivo foi escrito à mão e não chama nada."
+      }
+    ]
+  },
+  "ex-0rnwnt7h": {
+    "prompt": "Ligue cada jeito de acrescentar código de fora ao lugar em que a seção o cita.",
+    "hint": "Uma descrição não pertence a nenhum.",
+    "pairs": [
+      {
+        "left": "`init` mais um import em branco",
+        "right": "os drivers do `database/sql` e o `image/png`"
+      },
+      {
+        "left": "um processo filho alimentado com JSON por um pipe",
+        "right": "o `hits-exec` e o `exec/top.py`"
+      },
+      {
+        "left": "um processo de plugin de longa duração chamado por RPC",
+        "right": "o `go-plugin` da HashiCorp"
+      },
+      {
+        "left": "um módulo rodado dentro do hospedeiro por um runtime em Go puro",
+        "right": "WebAssembly com `wazero`"
+      }
+    ],
+    "right_distractors": [
+      "uma `.dll` aberta com `plugin.Open` no Windows"
+    ]
+  },
+  "ex-mkxnyk5v": {
+    "prompt": "No benchmark, o `BenchmarkProcess` levou 1581082 ns/op e o `BenchmarkCompiledIn` levou 132,0 ns/op. Cerca de quantas vezes mais cara é uma chamada por um processo novo? Responda com o milhar mais próximo.",
+    "hint": "Divida o primeiro pelo segundo.",
+    "unit": "vezes"
+  },
+  "ex-h6c3r60r": {
+    "prompt": "Na `gcr.io/distroless/static-debian12`, o `./hits-plugin` falhou com `exec ./hits-plugin: no such file or directory`, embora o arquivo estivesse montado e o `./hits-static` tenha rodado ao lado. O que faltava?",
+    "hint": "`readelf -l hits-plugin | grep interpreter`.",
+    "choices": [
+      {
+        "text": "Permissão de execução no arquivo montado",
+        "why": "Falta de permissão diz `permission denied`, e o `hits-static`, compilado do mesmo jeito, rodou."
+      },
+      {
+        "text": "O carregador dinâmico `/lib64/ld-linux-x86-64.so.2`, que a imagem estática não tem",
+        "why": "Isso. Um programa ligado dinamicamente pede ao kernel para rodar o interpretador primeiro, e o erro cita o programa porque o interpretador não está lá."
+      },
+      {
+        "text": "Os plugins, que não foram copiados para a imagem",
+        "why": "O diretório inteiro foi montado, `csv.so` incluído; o programa nem iniciou, então nunca tentou abrir um."
+      },
+      {
+        "text": "Uma rede, por causa do `--network=none`",
+        "why": "Nenhum destes programas usa rede, e o `hits-static` rodou com a mesma flag."
+      }
+    ]
+  },
+  "ex-9yd8r2w7": {
+    "prompt": "Um enviador de logs deixa os clientes escreverem filtros em qualquer linguagem e trocá-los sem reiniciar o enviador. Um filtro é chamado uma vez por lote de uns 5.000 eventos. Que desenho serve?",
+    "hint": "Pese cada coluna da tabela contra as duas exigências, e depois a frequência de chamadas.",
+    "choices": [
+      {
+        "text": "Plugins Go, porque uma chamada custa o mesmo que uma compilada dentro",
+        "why": "Os clientes precisariam do toolchain, das flags e dos pacotes exatos do shipper, os filtros teriam de ser em Go, e uma versão nova é recusada com `plugin already loaded`."
+      },
+      {
+        "text": "Filtros compilados dentro do shipper por imports em branco",
+        "why": "Rápido e simples, mas cada filtro novo exige recompilar o shipper, coisa que os clientes não podem fazer."
+      },
+      {
+        "text": "Programas de filtro separados, cada um mantido rodando e recebendo lotes por pipe ou RPC",
+        "why": "Isso. Qualquer linguagem, troca iniciando o programa novo, e um processo de longa duração paga o início uma vez, não a cada lote."
+      },
+      {
+        "text": "Um processo novo para cada evento, como o `hits-exec` faz",
+        "why": "O formato está certo, mas a frequência não: cerca de 1,6 ms por início de processo, 5.000 vezes por lote, dá uns oito segundos por lote."
+      }
+    ]
+  },
+  "ex-41arxb2b": {
+    "prompt": "O `BenchmarkPlugin` mediu 136,1 ns/op e o `BenchmarkCompiledIn` 132,0 ns/op. Qual é a leitura certa?",
+    "hint": "O que é o `Report` de um plugin depois que o `Lookup` retornou?",
+    "choices": [
+      {
+        "text": "Cada chamada a plugin passa pelo `dlsym`, que custa uns quatro nanossegundos",
+        "why": "O símbolo é resolvido uma vez, no `Lookup`; o laço depois disso nunca toca o carregador."
+      },
+      {
+        "text": "O plugin é 3 por cento mais lento, então convém evitá-lo num laço quente",
+        "why": "Três por cento entre duas execuções de benchmark é ruído que outra execução pode zerar ou inverter."
+      },
+      {
+        "text": "Custo igual: depois do `Lookup`, os dois são chamada por interface",
+        "why": "Isso. A velocidade é a vantagem real do plugin, e o reporter compilado dentro também a tem."
+      },
+      {
+        "text": "A cópia de `fmt` do plugin é mais lenta que a do hospedeiro",
+        "why": "As cópias próprias do plugin não são usadas; as chamadas dele vão para o `fmt` do hospedeiro."
+      }
+    ]
+  },
+  "ex-1ccfq0sd": {
+    "prompt": "Ponha em ordem o que acontece quando o `hits-plugin` carrega o `csv.so` e o usa.",
+    "hint": "A conferência de hash vem antes de qualquer código do plugin rodar.",
+    "items": [
+      "o `plugin.Open` mapeia o `csv.so` no processo",
+      "o runtime compara o hash de cada pacote em comum com o do hospedeiro",
+      "as funções `init` dos pacotes novos rodam, e o `csv` se registra",
+      "o `Lookup(\"Reporter\")` devolve um `*report.Reporter`",
+      "o hospedeiro o desreferencia e chama `Report`"
+    ]
+  },
+  "ex-zxrxv7y4": {
+    "prompt": "O CI compila o hospedeiro com `go build -trimpath` a partir da tag v2.3.0. O autor de um plugin faz checkout da mesma tag, roda um `go build -buildmode=plugin` simples com o mesmo Go 1.27.1, e o `plugin.Open` falha citando `internal/goarch`. O que resolve?",
+    "hint": "Mesmo código e mesmo toolchain não bastaram na seção 03.",
+    "choices": [
+      {
+        "text": "Atualizar o hospedeiro e o plugin para a próxima versão do Go",
+        "why": "Uma versão nova não muda nada no desencontro; as flags continuariam diferentes."
+      },
+      {
+        "text": "Compilar o plugin com as flags exatas do hospedeiro",
+        "why": "Isso. O `-trimpath` muda como cada pacote é compilado, então o plugin também precisa dele; compilar os dois no mesmo job mantém todas as flags iguais."
+      },
+      {
+        "text": "Apagar o `internal/goarch` da lista de imports do pacote do plugin",
+        "why": "Ninguém o importa diretamente; ele faz parte do runtime que todo programa Go carrega."
+      },
+      {
+        "text": "Definir `GOTOOLCHAIN=local` na máquina em que o autor do plugin compila",
+        "why": "Os dois já usavam 1.27.1; não é o toolchain que difere."
+      }
+    ]
+  },
+  "ex-5zvvzp94": {
+    "prompt": "`import _ \"image/png\"` mantém o pacote só pelo efeito colateral: a função ___ dele chama `image.RegisterFormat(\"png\", …)`, do mesmo jeito que o `reporters/csv` se registra no `report`.",
+    "hint": "A função que roda antes do `main` e que o `plugin.Open` também roda.",
+    "blanks": [
+      {
+        "accept": [
+          "init"
+        ]
+      }
+    ]
+  }
+}
