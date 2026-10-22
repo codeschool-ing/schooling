@@ -1,0 +1,253 @@
+{
+  "ex-hy2kz6mx": {
+    "prompt": "O que o `volatile` em `stop` proíbe o compilador de fazer?",
+    "hint": "A liberdade que quebrou o programa da aula 12.",
+    "choices": [
+      {
+        "text": "Rodar o worker num processador diferente da `main`",
+        "why": "O escalonamento não muda."
+      },
+      {
+        "text": "Compilar o laço",
+        "why": "O laço foi compilado, e rodou 3,7 bilhões de vezes."
+      },
+      {
+        "text": "Ler o campo uma vez e guardá-lo",
+        "why": "Isso: toda leitura vai à memória."
+      },
+      {
+        "text": "Escrever o campo de mais de uma thread ao mesmo tempo",
+        "why": "Qualquer thread ainda pode escrevê-lo."
+      }
+    ]
+  },
+  "ex-5vqcp7sk": {
+    "prompt": "O laço `volatile` deu cerca de 3,7 bilhões de voltas em um segundo. O que isso diz do custo de uma leitura `volatile` no x86?",
+    "hint": "Compare com o laço interpretado.",
+    "choices": [
+      {
+        "text": "Pouco mais que uma leitura comum",
+        "why": "Isso: o x86 já mantém leituras em ordem."
+      },
+      {
+        "text": "Não custa nada, porque o JIT a remove",
+        "why": "O JIT não pode removê-la; esse é o ponto."
+      },
+      {
+        "text": "Custa tanto quanto um lock obtido a cada volta do laço",
+        "why": "Nada na execução sugere isso."
+      },
+      {
+        "text": "É cara, e o laço seria mais rápido sem ela",
+        "why": "Sem ela o laço nem terminava."
+      }
+    ]
+  },
+  "ex-shraec69": {
+    "prompt": "Que duas promessas o `volatile` faz? Marque todas as que se aplicam.",
+    "hint": "A lista numerada da seção 03.",
+    "choices": [
+      {
+        "text": "Escritas antes dela ficam visíveis após uma leitura que a vê",
+        "why": "Sim: ordem."
+      },
+      {
+        "text": "Uma leitura vê a última escrita no campo",
+        "why": "Sim: visibilidade."
+      },
+      {
+        "text": "`count++` nele roda como um passo",
+        "why": "Não: seção 04."
+      },
+      {
+        "text": "Só uma thread pode escrevê-lo",
+        "why": "Não há essa restrição."
+      }
+    ]
+  },
+  "ex-bwzpycr2": {
+    "prompt": "Em `Handoff.java`, `ready = true` sobe para antes de `copies = 3`. O que o consumidor pode imprimir agora?",
+    "hint": "Que escritas a promessa cobre?",
+    "choices": [
+      {
+        "text": "A mesma linha, toda vez",
+        "why": "Pode; nada mais garante."
+      },
+      {
+        "text": "Nada: compila mas nunca começa",
+        "why": "O consumidor ainda vê `ready` e imprime."
+      },
+      {
+        "text": "Um erro de compilação sobre a ordem",
+        "why": "O compilador não confere nada aqui."
+      },
+      {
+        "text": "`0 copies`",
+        "why": "Isso: essa escrita não vem mais antes da flag."
+      }
+    ]
+  },
+  "ex-brat52j4": {
+    "prompt": "Dentro de um laço de espera ativa, `Thread.___()` avisa o processador que a thread está girando.",
+    "hint": "On spin, wait.",
+    "blanks": [
+      {
+        "accept": [
+          "onSpinWait"
+        ]
+      }
+    ]
+  },
+  "ex-7qnmqc55": {
+    "prompt": "Quatro threads fizeram `count++` um milhão de vezes cada num `volatile long`. Por que o total saiu curto?",
+    "hint": "Ler, somar, escrever.",
+    "choices": [
+      {
+        "text": "As duas leram o mesmo valor e as duas escreveram mais um",
+        "why": "Isso: uma atualização perdida."
+      },
+      {
+        "text": "Escritas `volatile` às vezes são descartadas",
+        "why": "Toda escrita aconteceu; algumas sobrescreveram outras."
+      },
+      {
+        "text": "Algumas threads acabaram antes de outras começarem",
+        "why": "Isso daria o total certo."
+      },
+      {
+        "text": "Um `long` é pequeno demais para quatro milhões",
+        "why": "Ele guarda muito mais."
+      }
+    ]
+  },
+  "ex-nebnggvj": {
+    "prompt": "Ligue cada ferramenta ao que ela faz com o `count++`.",
+    "hint": "A última lista da seção 04.",
+    "pairs": [
+      {
+        "left": "`volatile`",
+        "right": "torna cada leitura e escrita visível, e nada mais"
+      },
+      {
+        "left": "um lock",
+        "right": "deixa uma thread por vez rodar os três passos"
+      },
+      {
+        "left": "`AtomicLong`",
+        "right": "faz os três passos como uma operação"
+      }
+    ],
+    "right_distractors": [
+      "roda os três passos em três processadores"
+    ]
+  },
+  "ex-s7gnbaxb": {
+    "prompt": "Ler um valor, mudá-lo e escrevê-lo de volta é um ___-modify-write.",
+    "hint": "O primeiro dos três passos.",
+    "blanks": [
+      {
+        "accept": [
+          "read"
+        ]
+      }
+    ]
+  },
+  "ex-gq0jsven": {
+    "prompt": "Que campo combina bem com `volatile`?",
+    "hint": "Cada escrita independente do valor atual.",
+    "choices": [
+      {
+        "text": "Uma flag de desligamento ligada por uma thread",
+        "why": "Isso."
+      },
+      {
+        "text": "Um mínimo e um máximo que precisam concordar",
+        "why": "São visíveis um por vez, nunca como par."
+      },
+      {
+        "text": "Uma contagem de requisições",
+        "why": "O mesmo problema do `count++`."
+      },
+      {
+        "text": "Um total corrente de vendas",
+        "why": "O novo total depende do antigo."
+      }
+    ]
+  },
+  "ex-wcaw76t6": {
+    "prompt": "Em `Lazy.java`, o que daria errado se `index` não fosse `volatile`?",
+    "hint": "O caminho rápido não usa lock.",
+    "choices": [
+      {
+        "text": "O índice seria montado duas vezes, uma por thread",
+        "why": "A segunda verificação, dentro do lock, impede isso."
+      },
+      {
+        "text": "O `synchronized` pararia de funcionar",
+        "why": "Funciona; o caminho rápido não o usa."
+      },
+      {
+        "text": "O programa não compilaria sem a palavra",
+        "why": "Compila de qualquer jeito."
+      },
+      {
+        "text": "Uma thread rápida veria o objeto inacabado",
+        "why": "Isso: publicação insegura."
+      }
+    ]
+  },
+  "ex-c6fxrsf2": {
+    "prompt": "Antes de escrever o double-checked locking, o que a aula sugere considerar?",
+    "hint": "Jeitos mais simples primeiro.",
+    "choices": [
+      {
+        "text": "Chamar `System.gc()` antes",
+        "why": "Irrelevante."
+      },
+      {
+        "text": "Uma classe aninhada, ou montar logo",
+        "why": "Isso."
+      },
+      {
+        "text": "Um stream paralelo para montar em todo processador",
+        "why": "Irrelevante para inicializar uma vez."
+      },
+      {
+        "text": "Tornar `volatile` também todo campo da classe",
+        "why": "Isso não faz a montagem acontecer uma vez."
+      }
+    ]
+  },
+  "ex-p7sqxfv5": {
+    "prompt": "Ponha em ordem a atualização perdida da figura.",
+    "hint": "As duas leituras antes de qualquer escrita.",
+    "items": [
+      "a thread 1 lê 41",
+      "a thread 2 lê 41",
+      "a thread 1 escreve 42",
+      "a thread 2 escreve 42"
+    ]
+  },
+  "ex-f50dkjac": {
+    "prompt": "Uma lista de preços é compartilhada como `static volatile List<Long> prices`, e uma thread de administração chama `prices.add(...)` nela. É seguro?",
+    "hint": "O que é volatile: o campo ou a lista?",
+    "choices": [
+      {
+        "text": "Sim, se a thread de administração for a única que escreve",
+        "why": "Quem lê ainda pode ver a lista no meio da mudança."
+      },
+      {
+        "text": "Não, porque `List<Long>` não pode ser volatile",
+        "why": "Qualquer campo pode ser volatile."
+      },
+      {
+        "text": "Sim: o `volatile` cobre o conteúdo da lista",
+        "why": "Ele cobre o campo, a referência."
+      },
+      {
+        "text": "Não: só a referência é volatile",
+        "why": "Isso: troque uma lista imutável inteira, o padrão `PriceList` da aula 12."
+      }
+    ]
+  }
+}
