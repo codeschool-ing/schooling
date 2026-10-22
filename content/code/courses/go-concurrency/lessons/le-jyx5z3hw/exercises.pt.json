@@ -1,0 +1,290 @@
+{
+  "ex-78a3s1yf": {
+    "prompt": "Depois de compilado o `bin/version`, o `version.txt` mudou para `1.5.0` e o mesmo binário rodou de novo. O que ele imprimiu, e por quê?",
+    "hint": "Quando o conteúdo é copiado?",
+    "choices": [
+      {
+        "text": "`1.5.0`, porque o arquivo é lido na partida",
+        "why": "Nada lê o disco; a variável foi preenchida na compilação."
+      },
+      {
+        "text": "`1.4.2`, copiado na compilação",
+        "why": "Isso. Só um build novo pegou o `1.5.0`."
+      },
+      {
+        "text": "Um erro, porque o arquivo embutido mudou",
+        "why": "O binário não sabe que o arquivo mudou."
+      },
+      {
+        "text": "Uma versão vazia",
+        "why": "O conteúdo está dentro do binário e não some."
+      }
+    ]
+  },
+  "ex-tc411xde": {
+    "prompt": "Um colega apaga `logo.txt` por engano e recompila. O que acontece?",
+    "hint": "O primeiro build da lição ainda não tinha o banner.",
+    "choices": [
+      {
+        "text": "Compila, e `logo` fica vazio",
+        "why": "Um padrão que não casa com nada é recusado, então nenhum binário sai sem o seu arquivo."
+      },
+      {
+        "text": "Compila, e o banner antigo é reaproveitado do cache",
+        "why": "O build lê a árvore de código; um arquivo ausente é erro."
+      },
+      {
+        "text": "O build falha no padrão sem arquivo",
+        "why": "Isso, e é o que torna seguro confiar num arquivo embutido."
+      },
+      {
+        "text": "Dá panic na partida",
+        "why": "Não chega tão longe: não há binário."
+      }
+    ]
+  },
+  "ex-xtkgf1yn": {
+    "prompt": "Por que um arquivo com `//go:embed` precisa importar `embed`, nem que seja como `import _ \"embed\"`?",
+    "hint": "Como ficaria uma diretiva esquecida sem a conferência?",
+    "choices": [
+      {
+        "text": "Uma esquecida falha em vez de ficar vazia",
+        "why": "Isso. Uma diretiva é um comentário, e a importação é o que o comando go confere."
+      },
+      {
+        "text": "Porque o `embed` contém os arquivos na execução",
+        "why": "Os arquivos estão na variável; o pacote é a marca."
+      },
+      {
+        "text": "A importação deixa o binário menor",
+        "why": "Não tem nada a ver com tamanho."
+      },
+      {
+        "text": "Só para uma variável `[]byte`",
+        "why": "`version` era uma `string` e a regra valeu ali também."
+      }
+    ]
+  },
+  "ex-0qr7a4er": {
+    "prompt": "A diretiva é escrita como comentário, sem espaço depois das barras: `//go:___ version.txt`.",
+    "hint": "O nome da lição.",
+    "blanks": [
+      {
+        "accept": [
+          "embed"
+        ]
+      }
+    ]
+  },
+  "ex-3bmbsw6k": {
+    "prompt": "`//go:embed static` trouxe `index.html` e `style.css`, mas não `.draft.html` nem `_notes.txt`. O que traz os quatro?",
+    "hint": "Um prefixo no padrão.",
+    "choices": [
+      {
+        "text": "`//go:embed static/*.*`",
+        "why": "A lição usou um prefixo, não um glob; o `all:` é o que ela mostrou levando tudo."
+      },
+      {
+        "text": "`//go:embed all:static`",
+        "why": "Isso: a segunda variável recebeu os quatro."
+      },
+      {
+        "text": "Renomeá-los sem os caracteres do prefixo",
+        "why": "Isso muda os arquivos, não o padrão; o `all:` mantém os nomes."
+      },
+      {
+        "text": "Um `embed.FS` não consegue guardá-los",
+        "why": "O `everything` os guardou."
+      }
+    ]
+  },
+  "ex-1xyn1qb6": {
+    "prompt": "Por que `//go:embed` deixa de fora por padrão os arquivos começados por `.` ou `_`?",
+    "hint": "Pense num `.env` no diretório.",
+    "choices": [
+      {
+        "text": "Arquivos ocultos não podem ser lidos pelo comando go",
+        "why": "O `all:` os lê sem problema."
+      },
+      {
+        "text": "Para um `.env` não sair por acidente",
+        "why": "Isso. Deixá-los de fora é o padrão seguro; o `all:` é uma decisão."
+      },
+      {
+        "text": "Para manter o binário abaixo de um limite de tamanho",
+        "why": "Não existe esse limite na lição."
+      },
+      {
+        "text": "Porque o Windows proíbe esses nomes",
+        "why": "A regra é sobre o que tende a ser privado, não sobre um sistema."
+      }
+    ]
+  },
+  "ex-h8krzspr": {
+    "prompt": "`static.ReadFile(\"index.html\")` falhou com `file does not exist`, embora a página tenha sido embutida. Por quê?",
+    "hint": "Olhe os caminhos que a listagem imprimiu.",
+    "choices": [
+      {
+        "text": "Arquivos embutidos só são lidos uma vez",
+        "why": "A linha anterior o leu bem como `static/index.html`."
+      },
+      {
+        "text": "Arquivos HTML precisam do `all:`",
+        "why": "O `all:` é sobre nomes começados por `.` ou `_`."
+      },
+      {
+        "text": "O caminho mantém o diretório: `static/index.html`",
+        "why": "Isso. O `fs.Sub` é como a próxima seção tira o prefixo."
+      },
+      {
+        "text": "O `ReadFile` só funciona em disco",
+        "why": "É um método do `embed.FS` e funcionou com o caminho completo."
+      }
+    ]
+  },
+  "ex-fkn483tj": {
+    "prompt": "Uma função recebe um `fs.FS` e lê `config.json` dele. Nos testes ela recebe `os.DirFS(\"testdata\")`; em produção, um `embed.FS` reduzido com `fs.Sub`. O que faz isso funcionar?",
+    "hint": "O que os dois valores têm em comum, erros incluídos?",
+    "choices": [
+      {
+        "text": "O `embed.FS` se converte num diretório em disco",
+        "why": "Nada é gravado em disco; ele é somente leitura e está na memória."
+      },
+      {
+        "text": "Os dois são `fs.FS`, com os mesmos erros",
+        "why": "Isso: `fs.ErrNotExist` nos dois, então a função não precisa saber qual é."
+      },
+      {
+        "text": "O `fs.Sub` copia os arquivos embutidos para `testdata`",
+        "why": "O `fs.Sub` só reduz a visão a um subdiretório."
+      },
+      {
+        "text": "O comando go os troca durante o `go test`",
+        "why": "O teste passa outro valor; nada é trocado por trás."
+      }
+    ]
+  },
+  "ex-7tcqnqkc": {
+    "prompt": "Por que uma requisição para `/` achou `index.html`, quando o caminho embutido é `static/index.html`?",
+    "hint": "O que o programa fez com `files` antes de servi-lo?",
+    "choices": [
+      {
+        "text": "O `FileServerFS` tira qualquer primeiro diretório",
+        "why": "Ele serve os caminhos que recebe; a retirada aconteceu antes."
+      },
+      {
+        "text": "O navegador acrescenta `/static`",
+        "why": "O curl pediu `/` e nada acrescentou coisa alguma."
+      },
+      {
+        "text": "Foi usado o `all:`",
+        "why": "O `serve/main.go` embute `static` simples; `_notes.txt` deu 404."
+      },
+      {
+        "text": "`fs.Sub(files, \"static\")` fez de `static` a raiz",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-ma7n41ms": {
+    "prompt": "Depois de `rm -r serve/static`, o servidor rodando ainda devolveu `<h1>Orders</h1>`. O que isso mostra?",
+    "hint": "Quando o diretório importou?",
+    "choices": [
+      {
+        "text": "O diretório só era necessário para o build",
+        "why": "Isso. Implantar o servidor é copiar um arquivo."
+      },
+      {
+        "text": "O servidor mantém um cache que expira depois",
+        "why": "Não há cache: os arquivos fazem parte do programa."
+      },
+      {
+        "text": "O `rm` não consegue apagar arquivos que um servidor tem abertos",
+        "why": "O servidor nunca os abriu; eles foram apagados."
+      },
+      {
+        "text": "O curl serviu a página do próprio cache",
+        "why": "O curl não guarda cache entre execuções."
+      }
+    ]
+  },
+  "ex-qct8g9ak": {
+    "prompt": "Que status HTTP o servidor respondeu para `/_notes.txt`?",
+    "hint": "O padrão simples nunca o embutiu."
+  },
+  "ex-q43yg1g1": {
+    "prompt": "Um time quer embutir com `//go:embed` as configurações por ambiente do serviço, um endereço de banco que muda entre homologação e produção. O que a lição diz?",
+    "hint": "Quando arquivos embutidos ficam fixos?",
+    "choices": [
+      {
+        "text": "Tudo bem, e o `fs.Sub` escolhe o ambiente",
+        "why": "O `fs.Sub` reduz uma árvore; não sabe nada de ambientes."
+      },
+      {
+        "text": "Tudo bem, se o arquivo começar com `_`",
+        "why": "Isso só o deixaria fora de um padrão simples."
+      },
+      {
+        "text": "Não: muda, então é lido na execução",
+        "why": "Isso. Arquivos embutidos ficam fixos na compilação, iguais em toda cópia."
+      },
+      {
+        "text": "Não: um `embed.FS` não guarda JSON",
+        "why": "Ele guarda qualquer arquivo."
+      }
+    ]
+  },
+  "ex-fe23sevk": {
+    "prompt": "Ponha em ordem os passos do servidor da lição, do código à resposta.",
+    "hint": "O diretório só importa antes de o binário existir.",
+    "items": [
+      "escrever os arquivos em `serve/static`",
+      "o `go build` os copia para o binário",
+      "o `fs.Sub` faz de `static` a raiz",
+      "o `FileServerFS` responde `/` com `index.html`"
+    ]
+  },
+  "ex-kc6ymksq": {
+    "prompt": "Associe cada tipo de variável ao que `//go:embed` põe nela.",
+    "hint": "Um arquivo como texto, um como bytes, uma árvore.",
+    "pairs": [
+      {
+        "left": "`string`",
+        "right": "o conteúdo de um arquivo como texto"
+      },
+      {
+        "left": "`[]byte`",
+        "right": "o conteúdo de um arquivo como bytes"
+      },
+      {
+        "left": "`embed.FS`",
+        "right": "uma árvore de arquivos somente leitura"
+      }
+    ],
+    "right_distractors": [
+      "um caminho para ler na execução"
+    ]
+  },
+  "ex-hy5ttvf6": {
+    "prompt": "Quais destas são verdade sobre `//go:embed`? Escolha todas as que se aplicam.",
+    "hint": "Compilação, recusas e padrões.",
+    "choices": [
+      {
+        "text": "Um padrão que não casa com arquivo nenhum para o build",
+        "why": "Sim: `no matching files found`."
+      },
+      {
+        "text": "O programa relê o arquivo quando ele muda",
+        "why": "Ele imprimiu `1.4.2` depois de o arquivo dizer `1.5.0`."
+      },
+      {
+        "text": "Arquivos começados por `_` ficam de fora sem o `all:`",
+        "why": "Sim, como os começados por `.`."
+      },
+      {
+        "text": "Funciona numa variável declarada dentro de uma função",
+        "why": "A lição a põe acima de uma variável de pacote."
+      }
+    ]
+  }
+}

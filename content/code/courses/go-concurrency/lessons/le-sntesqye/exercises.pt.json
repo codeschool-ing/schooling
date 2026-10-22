@@ -1,0 +1,335 @@
+{
+  "ex-x5tsf2gc": {
+    "prompt": "No `abandon.go`, o que fez o cliente desistir depois de 100 milissegundos?",
+    "hint": "Olhe como a requisição foi montada.",
+    "choices": [
+      {
+        "text": "O `http.DefaultClient` tem um timeout de 100 ms",
+        "why": "O cliente padrão não tem timeout nenhum; o limite veio do contexto da requisição."
+      },
+      {
+        "text": "O contexto dela terminou aos 100 ms",
+        "why": "Isso: `http.NewRequestWithContext(ctx, …)` com timeout de 100 ms."
+      },
+      {
+        "text": "O servidor fechou a conexão",
+        "why": "Foi o contrário: o cliente saiu, e o servidor percebeu."
+      },
+      {
+        "text": "O `net.Listen` limita conexões a 100 ms em 127.0.0.1",
+        "why": "O listener não impõe limite de tempo a nada."
+      }
+    ]
+  },
+  "ex-rszk72gz": {
+    "prompt": "O erro do cliente disse `context deadline exceeded` e a linha do servidor disse `context canceled`. Por que motivos diferentes?",
+    "hint": "O que o servidor de fato observa?",
+    "choices": [
+      {
+        "text": "O relógio do servidor está atrasado em relação ao do cliente",
+        "why": "Eles são um processo só, com um relógio só."
+      },
+      {
+        "text": "O `r.Context()` tem um prazo próprio de dois segundos",
+        "why": "Os dois segundos são o `time.After` do handler, e não um prazo do contexto."
+      },
+      {
+        "text": "O servidor vê a conexão fechar, e não o motivo do cliente",
+        "why": "Isso. Ele cancela o contexto da requisição porque o cliente saiu; o porquê nunca atravessa a conexão."
+      },
+      {
+        "text": "Um servidor sempre informa canceled, aconteça o que acontecer",
+        "why": "Quando o handler termina normalmente não há erro nenhum."
+      }
+    ]
+  },
+  "ex-7mc1k66b": {
+    "prompt": "Um handler ignora `r.Context()` e sempre gasta dois segundos montando o relatório. Sob carga, os clientes desistem depois de 100 ms. O que acontece com o servidor?",
+    "hint": "Para quem é o trabalho, depois que o cliente saiu?",
+    "choices": [
+      {
+        "text": "Trabalha para ninguém e fica para trás",
+        "why": "Isso. Cada requisição que estourou o tempo ainda custa os dois segundos inteiros."
+      },
+      {
+        "text": "O runtime para o handler quando o cliente sai",
+        "why": "Nada para um handler de fora; ele tem de olhar o contexto."
+      },
+      {
+        "text": "O timeout do cliente faz o handler entrar em panic",
+        "why": "Sem panic: o handler só continua, e é esse o problema."
+      },
+      {
+        "text": "Nada muda, porque os clientes tentam de novo",
+        "why": "Tentativas a mais acrescentam trabalho, então o atraso cresce mais rápido."
+      }
+    ]
+  },
+  "ex-t7skvxyz": {
+    "prompt": "Um handler responde na hora e inicia uma goroutine para enviar um e-mail de confirmação que pode levar dez segundos. Que contexto a goroutine deve usar?",
+    "hint": "Quando o `r.Context()` termina?",
+    "choices": [
+      {
+        "text": "O `r.Context()`, para o e-mail ficar ligado à requisição",
+        "why": "Esse contexto termina quando o handler retorna, que aqui é na hora, cancelando o e-mail."
+      },
+      {
+        "text": "`context.WithoutCancel`, mais um timeout",
+        "why": "Isso: manter os valores da requisição, descartar o fim dela, e limitar o e-mail à parte."
+      },
+      {
+        "text": "Um contexto guardado na struct do servidor",
+        "why": "A lição 11 deu o motivo para não guardar contextos em structs."
+      },
+      {
+        "text": "Nenhum contexto, já que o e-mail está numa goroutine",
+        "why": "Uma goroutine é justamente onde um contexto faz falta, para poder pará-la."
+      }
+    ]
+  },
+  "ex-jy085jx3": {
+    "prompt": "O método de `*http.Request` que devolve o contexto que o servidor entrega a cada handler é `r.___()`.",
+    "hint": "O handler do `abandon.go` o esperou num `select`.",
+    "blanks": [
+      {
+        "accept": [
+          "Context"
+        ]
+      }
+    ]
+  },
+  "ex-5r1m3wms": {
+    "prompt": "Por que o `nodb.go` parou em `open: sql: unknown driver \"postgres\"`?",
+    "hint": "O `go doc database/sql.Open` respondeu.",
+    "choices": [
+      {
+        "text": "O SQL da consulta tinha um erro de sintaxe",
+        "why": "A consulta nem rodou; o programa parou no `sql.Open`."
+      },
+      {
+        "text": "O timeout de dois segundos acabou",
+        "why": "A falha veio antes de qualquer consulta, e na hora."
+      },
+      {
+        "text": "Nenhum driver está registrado; a biblioteca padrão não traz nenhum",
+        "why": "Isso: \"No database drivers are included in the Go standard library.\""
+      },
+      {
+        "text": "O PostgreSQL recusou o usuário `ana`",
+        "why": "Nada chegou a um banco; não há nenhum nesta máquina."
+      }
+    ]
+  },
+  "ex-z3rbw78h": {
+    "prompt": "Que contexto o `db.Query(...)`, sem `Context` no nome, usa?",
+    "hint": "A documentação dele diz isso numa frase.",
+    "choices": [
+      {
+        "text": "O contexto da goroutine que o chama",
+        "why": "Goroutines não têm contexto próprio; um contexto é um valor passado à mão."
+      },
+      {
+        "text": "`context.Background()`, que nunca termina",
+        "why": "Isso: \"Query uses context.Background internally.\" Uma consulta feita com ele espera o quanto o banco demorar."
+      },
+      {
+        "text": "Um contexto com o timeout padrão do driver",
+        "why": "A documentação nomeia `context.Background`, que não tem timeout."
+      },
+      {
+        "text": "O último contexto passado ao `QueryContext`",
+        "why": "O `*sql.DB` não guarda contexto entre chamadas."
+      }
+    ]
+  },
+  "ex-vtz8wr58": {
+    "prompt": "Uma função percorre `rows.Next()` e devolve o que juntou, sem chamar `rows.Err()`. O contexto da requisição termina no meio das linhas. O que quem chamou recebe?",
+    "hint": "Onde aparece um erro que encerra a iteração?",
+    "choices": [
+      {
+        "text": "Um panic vindo de `rows.Next()`",
+        "why": "O `rows.Next()` devolve false; ele não entra em panic."
+      },
+      {
+        "text": "O erro do contexto, vindo do `rows.Scan`",
+        "why": "O `Scan` nem é chamado depois que o `Next` devolve false."
+      },
+      {
+        "text": "Uma slice vazia e um erro",
+        "why": "As linhas lidas antes do fim estão na slice, e sem `rows.Err()` não há erro."
+      },
+      {
+        "text": "Metade das linhas e um erro nil",
+        "why": "Isso. O erro só está em `rows.Err()`, então pulá-lo faz meio resultado passar por inteiro."
+      }
+    ]
+  },
+  "ex-h8w6g4j5": {
+    "prompt": "Quais destas coisas o `nodb.go` mostra, mesmo sem nunca chegar a um banco? Escolha todas as que se aplicam.",
+    "hint": "O que compilou e passou no `go vet`?",
+    "choices": [
+      {
+        "text": "A consulta recebe o contexto primeiro, por meio do `QueryContext`",
+        "why": "Sim, a mesma convenção da lição 11."
+      },
+      {
+        "text": "`orders` deriva um filho com limite próprio",
+        "why": "Sim, dois segundos, e quem chama com menos tempo ainda vence."
+      },
+      {
+        "text": "Como o PostgreSQL cancela uma consulta em andamento",
+        "why": "Nada aqui chegou ao PostgreSQL. Isso é para um curso com banco, o `go-back`."
+      },
+      {
+        "text": "Quanto tempo a consulta levou",
+        "why": "Nenhuma consulta rodou."
+      }
+    ]
+  },
+  "ex-egq1p609": {
+    "prompt": "No `demo.sh`, a requisição de `/late` veio um décimo de segundo depois da interrupção. O que o `curl` recebeu?",
+    "hint": "O que o `Shutdown` faz primeiro?",
+    "choices": [
+      {
+        "text": "Uma resposta lenta, entregue depois da primeira",
+        "why": "Só `/report` foi respondida; ela já estava dentro."
+      },
+      {
+        "text": "`Couldn't connect to server`",
+        "why": "Isso. O `Shutdown` fecha a porta na hora, então ninguém estava escutando."
+      },
+      {
+        "text": "Um HTTP 503 do servidor",
+        "why": "Não havia servidor escutando para enviar um."
+      },
+      {
+        "text": "Um reset no meio da resposta",
+        "why": "Ela nem conectou, então não havia resposta para cortar."
+      }
+    ]
+  },
+  "ex-wh30t8nx": {
+    "prompt": "Ponha em ordem o que o `shutdown.go` imprimiu, e o que aconteceu em volta.",
+    "hint": "A porta fecha antes de o trabalho de dentro terminar.",
+    "items": [
+      "`listening on 127.0.0.1:8412`",
+      "`signal received, shutting down`",
+      "`/late` é recusada",
+      "`answered /report`",
+      "`stopped cleanly`"
+    ]
+  },
+  "ex-a08tyxzh": {
+    "prompt": "Por que o `shutdown.go` dá ao `Shutdown` um contexto novo de cinco segundos em vez do contexto do sinal, `ctx`?",
+    "hint": "Em que estado está `ctx` nesse momento?",
+    "choices": [
+      {
+        "text": "O `Shutdown` recusa contextos criados pelo `signal.NotifyContext`",
+        "why": "Ele aceita qualquer contexto; a questão é que este já terminou."
+      },
+      {
+        "text": "Cinco segundos é o tempo que um sinal leva para chegar",
+        "why": "O sinal já tinha chegado; é por isso que o código chegou a essa linha."
+      },
+      {
+        "text": "`ctx` já terminou",
+        "why": "Isso. Um contexto novo dá às requisições de dentro até cinco segundos para terminar."
+      },
+      {
+        "text": "Para reajustar o `GOMAXPROCS` antes de o programa sair",
+        "why": "Contextos não têm nada a ver com `GOMAXPROCS`."
+      }
+    ]
+  },
+  "ex-0604cqg9": {
+    "prompt": "Uma plataforma envia `SIGTERM` e mata o processo de vez 10 segundos depois. Um time define o limite do `Shutdown` em 30 segundos. O que dá errado?",
+    "hint": "O limite é uma promessa a quem enviou o sinal.",
+    "choices": [
+      {
+        "text": "Nada: um limite maior é mais seguro",
+        "why": "Mais longo que a paciência da plataforma significa que a plataforma decide, no meio de uma requisição."
+      },
+      {
+        "text": "Requisições ainda ativas aos 10 s morrem no meio",
+        "why": "Isso. O limite precisa ser menor que a espera da plataforma para significar alguma coisa."
+      },
+      {
+        "text": "O `Shutdown` devolve um erro na hora",
+        "why": "Ele esperaria tranquilo; quem não espera é a plataforma."
+      },
+      {
+        "text": "O `SIGTERM` é ignorado pelo `signal.NotifyContext`",
+        "why": "O `shutdown.go` lista `syscall.SIGTERM` entre os seus sinais."
+      }
+    ]
+  },
+  "ex-cawwq17q": {
+    "prompt": "Associe cada peça da biblioteca padrão ao que ela faz com um contexto.",
+    "hint": "Uma cria um contexto, três recebem um.",
+    "pairs": [
+      {
+        "left": "`signal.NotifyContext`",
+        "right": "termina um contexto quando chega um sinal"
+      },
+      {
+        "left": "`http.NewRequestWithContext`",
+        "right": "deixa um cliente desistir de uma requisição"
+      },
+      {
+        "left": "`r.Context()`",
+        "right": "avisa um handler que o cliente foi embora"
+      },
+      {
+        "left": "`http.Server.Shutdown`",
+        "right": "limita a espera pelas requisições em andamento"
+      }
+    ],
+    "right_distractors": [
+      "cancela todos os handlers em execução de uma vez"
+    ]
+  },
+  "ex-d1kznsmn": {
+    "prompt": "Durante um `Shutdown`, um handler está no meio de uma exportação de cinco minutos e nunca olha `r.Context()`. O limite do `Shutdown` é de cinco segundos. O que acontece?",
+    "hint": "O `Shutdown` espera; ele cancela?",
+    "choices": [
+      {
+        "text": "O `Shutdown` cancela o handler depois de cinco segundos",
+        "why": "O `Shutdown` espera os handlers; ele não os cancela."
+      },
+      {
+        "text": "A exportação termina, e o `Shutdown` espera os cinco minutos",
+        "why": "O `Shutdown` para de esperar quando o próprio contexto termina, depois de cinco segundos."
+      },
+      {
+        "text": "Desiste aos cinco segundos, exportação pela metade",
+        "why": "Isso. Ele devolve o erro do seu contexto e o `main` segue para sair, matando a exportação no meio."
+      },
+      {
+        "text": "A exportação passa para outro servidor",
+        "why": "Nada na biblioteca padrão move trabalho entre processos."
+      }
+    ]
+  },
+  "ex-3vz0qt0e": {
+    "prompt": "Qual dos três casos desta lição NÃO foi executado de ponta a ponta na máquina do laboratório?",
+    "hint": "Um deles parou no `sql.Open`.",
+    "choices": [
+      {
+        "text": "A requisição HTTP abandonada",
+        "why": "Ela rodou: as duas linhas, cliente e servidor, são uma captura."
+      },
+      {
+        "text": "A consulta com prazo",
+        "why": "Isso. Não há banco aqui; o código compilou e parou no driver que falta."
+      },
+      {
+        "text": "O desligamento gracioso",
+        "why": "Ele rodou, com sinal e tudo, pelo `demo.sh`."
+      },
+      {
+        "text": "Nenhum; os três rodaram por inteiro",
+        "why": "O caso do banco não podia, e a lição diz isso."
+      }
+    ]
+  }
+}

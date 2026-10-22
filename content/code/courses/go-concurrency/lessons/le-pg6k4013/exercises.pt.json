@@ -1,0 +1,295 @@
+{
+  "ex-58w9f14b": {
+    "prompt": "Associe cada método do `WaitGroup` ao que ele faz com o contador.",
+    "hint": "Um deles não muda o contador.",
+    "pairs": [
+      {
+        "left": "`Add(1)`",
+        "right": "aumenta em um"
+      },
+      {
+        "left": "`Done()`",
+        "right": "diminui em um"
+      },
+      {
+        "left": "`Wait()`",
+        "right": "bloqueia até ele chegar a zero"
+      },
+      {
+        "left": "`Go(f)`",
+        "right": "aumenta, roda `f` numa goroutine, diminui depois"
+      }
+    ],
+    "right_distractors": [
+      "zera na hora"
+    ]
+  },
+  "ex-6gc955yy": {
+    "prompt": "O `late.go` imprimiu `finished when Wait returned: 0`. Por que o `Wait` não esperou?",
+    "hint": "Quanto valia o contador quando o `main` chegou ao `Wait`?",
+    "choices": [
+      {
+        "text": "O `time.Sleep` dentro das goroutines impede o `Wait` de vê-las",
+        "why": "Uma espera não esconde nada do `Wait`; o contador é tudo o que ele lê."
+      },
+      {
+        "text": "Nenhuma goroutine tinha rodado o seu `Add`, então o contador era zero",
+        "why": "Isso. O `Add` tem de acontecer antes do `go`, na goroutine que espera."
+      },
+      {
+        "text": "O `defer wg.Done()` rodou antes do trabalho",
+        "why": "Uma chamada adiada roda quando a função retorna, depois da espera e da contagem."
+      },
+      {
+        "text": "O `atomic.Int64` não é visível para o `main`",
+        "why": "`Load` é exatamente como o `main` o lê, com segurança; a contagem era 0 porque nada tinha terminado."
+      }
+    ]
+  },
+  "ex-qjn60dm7": {
+    "prompt": "O que um `WaitGroup` faz quando `Done` é chamado uma vez a mais do que o `Add` aumentou?",
+    "hint": "O `negative.go` mostrou.",
+    "choices": [
+      {
+        "text": "Fica parado em zero e ignora em silêncio a chamada a mais",
+        "why": "Ele não ignora; um contador abaixo de zero é um defeito que ele relata."
+      },
+      {
+        "text": "O `Wait` espera para sempre",
+        "why": "Isso é o que um `Done` que falta faz. Um a mais falha de forma barulhenta."
+      },
+      {
+        "text": "Entra em pânico: `sync: negative WaitGroup counter`",
+        "why": "Isso, com a linha do `Done` a mais no rastro."
+      },
+      {
+        "text": "Dá a volta para um número muito grande",
+        "why": "A mensagem de pânico mostra o `Add` de menos um sendo recusado, não dando a volta."
+      }
+    ]
+  },
+  "ex-7a89mj74": {
+    "prompt": "Uma auxiliar é declarada `func fetch(url string, wg sync.WaitGroup)` e chama `defer wg.Done()`. O `main` chama `wg.Add(1)` e `go fetch(u, wg)` para três URLs, e depois `wg.Wait()`. O que acontece?",
+    "hint": "O que `fetch` recebe: o `WaitGroup` ou uma cópia?",
+    "choices": [
+      {
+        "text": "Funciona, já que o `Add` é chamado antes de cada instrução `go`",
+        "why": "O `Add` está certo; o `Done` cai numa cópia."
+      },
+      {
+        "text": "O `main` espera para sempre: cada `Done` cai numa cópia",
+        "why": "Isso. Passe `*sync.WaitGroup`, ou use `wg.Go`."
+      },
+      {
+        "text": "Entra em pânico com contador negativo",
+        "why": "Cada cópia começa no valor com que foi copiada, três ou menos, e desce um; nenhuma fica abaixo de zero."
+      },
+      {
+        "text": "Não compila",
+        "why": "Passar uma struct por valor compila; quem reclama é o `go vet`."
+      }
+    ]
+  },
+  "ex-8h0g64v5": {
+    "prompt": "Desde o Go 1.25, `wg.___(f)` inicia `f` como goroutine e cuida do `Add` e do `Done` para ela.",
+    "hint": "Duas letras.",
+    "blanks": [
+      {
+        "accept": [
+          "Go"
+        ]
+      }
+    ]
+  },
+  "ex-qgkpaa3g": {
+    "prompt": "No `once.go`, oito goroutines chamaram `Get` no mesmo momento. Quantas vezes o `load` rodou?",
+    "hint": "Leia `loads:` na saída.",
+    "choices": [
+      {
+        "text": "Oito, uma por chamador",
+        "why": "Isso é o que acontece sem `Once`; a saída diz outra coisa."
+      },
+      {
+        "text": "Uma",
+        "why": "Isso: `loads: 1`."
+      },
+      {
+        "text": "Entre uma e oito, conforme o tempo",
+        "why": "O `Once` faz ser uma, seja qual for o tempo."
+      },
+      {
+        "text": "Nenhuma, porque `config` já estava definido",
+        "why": "`config` começa no valor zero; o primeiro `Do` o preenche."
+      }
+    ]
+  },
+  "ex-6cw5n02b": {
+    "prompt": "O que o `sync.Once` dá que um booleano `loaded` conferido antes de carregar não dá?",
+    "hint": "O que os outros chamadores fazem enquanto o primeiro carrega?",
+    "choices": [
+      {
+        "text": "Ele é mais rápido que ler um booleano",
+        "why": "Velocidade não é o ponto; correção é."
+      },
+      {
+        "text": "Os outros esperam a primeira carga terminar",
+        "why": "Isso. Uma flag diz que alguém começou, não que o valor está pronto, e lê-la sem sincronização é uma corrida."
+      },
+      {
+        "text": "Ele recarrega o valor sempre que o arquivo muda no disco",
+        "why": "Ele nunca roda a função de novo; o `oncevalues.go` mostrou que até um erro fica."
+      },
+      {
+        "text": "Ele tenta de novo quando a função entra em pânico",
+        "why": "Depois de um pânico, o `Do` considera o trabalho feito e não o chama de novo."
+      }
+    ]
+  },
+  "ex-pe2jq8mr": {
+    "prompt": "Um serviço lê uma chave de API com `sync.OnceValues` na primeira requisição. No dia em que ele sobe, o cofre de segredos fica fora do ar por um minuto. O que a lição prevê?",
+    "hint": "Olhe a linha depois de o arquivo ser escrito no `oncevalues.go`.",
+    "choices": [
+      {
+        "text": "As primeiras requisições falham e as seguintes funcionam quando o cofre volta",
+        "why": "Isso precisaria de uma nova tentativa. O `OnceValues` devolveu o primeiro erro depois de o arquivo existir."
+      },
+      {
+        "text": "Toda requisição recebe o erro guardado",
+        "why": "Isso. Uma vez quer dizer uma vez, falhas incluídas; tentar de novo pede uma trava e uma flag ligada no sucesso."
+      },
+      {
+        "text": "O serviço entra em pânico na primeira requisição",
+        "why": "Um erro é devolvido, não vira pânico; o `oncevalues.go` o imprimiu e continuou."
+      },
+      {
+        "text": "O `OnceValues` bloqueia até o cofre responder",
+        "why": "Ele só espera a função retornar, e a função devolve o erro."
+      }
+    ]
+  },
+  "ex-pmcgckjr": {
+    "prompt": "Ponha os eventos do `oncevalues.go` na ordem em que aconteceram.",
+    "hint": "O arquivo é escrito depois de três chamadas.",
+    "items": [
+      "a função roda e não consegue ler `token.txt`",
+      "mais duas chamadas devolvem o erro guardado",
+      "o `main` escreve `token.txt`",
+      "uma quarta chamada ainda devolve o erro",
+      "`attempts: 1` é impresso"
+    ]
+  },
+  "ex-afwcsn6e": {
+    "prompt": "O que aconteceu quando o `crash.go` escreveu num map comum a partir de quatro goroutines?",
+    "hint": "Leia a primeira linha da saída.",
+    "choices": [
+      {
+        "text": "Algumas entradas se perderam e ele imprimiu uma contagem menor",
+        "why": "Ele nunca chegou ao print; o runtime o parou antes."
+      },
+      {
+        "text": "Um pânico que um `recover` poderia ter pegado",
+        "why": "É um erro fatal, que nenhum `recover` pega."
+      },
+      {
+        "text": "`fatal error: concurrent map writes`",
+        "why": "Isso, na linha 15, a atribuição."
+      },
+      {
+        "text": "Funcionou, já que cada goroutine usou as próprias chaves",
+        "why": "Chaves disjuntas não tornam seguro um map comum; o interior do map é compartilhado."
+      }
+    ]
+  },
+  "ex-z0jepfsg": {
+    "prompt": "Pela própria documentação, para que situação o `sync.Map` é otimizado?",
+    "hint": "Dois casos são citados; um deles está aqui.",
+    "choices": [
+      {
+        "text": "Qualquer map compartilhado por goroutines",
+        "why": "A documentação diz que a maior parte do código deve usar um map comum com a sua própria trava."
+      },
+      {
+        "text": "Um map que é escrito muito mais do que lido",
+        "why": "Muitas escritas em chaves compartilhadas não são um dos dois casos."
+      },
+      {
+        "text": "Chaves escritas uma vez e lidas muitas",
+        "why": "Isso, o primeiro dos dois casos; chaves disjuntas por goroutine é o segundo."
+      },
+      {
+        "text": "Um map cujo `Range` precisa ser um retrato coerente",
+        "why": "O `Range` dele explicitamente não é um retrato de um momento."
+      }
+    ]
+  },
+  "ex-6m0zs5c8": {
+    "prompt": "No `syncmap.go`, por que o programa imprime o primeiro visitante de `/blog` mas não o de `/home`?",
+    "hint": "Quantas visitas cada página teve?",
+    "choices": [
+      {
+        "text": "`/blog` teve uma visita; `/home` teve três, sem ordem fixa",
+        "why": "Isso. Qual goroutine chegou primeiro ao `LoadOrStore` varia por execução."
+      },
+      {
+        "text": "O `LoadOrStore` guarda o último valor para chaves repetidas",
+        "why": "Ele guarda o primeiro valor e ignora os seguintes."
+      },
+      {
+        "text": "O `sync.Map` não consegue guardar mais de um visitante",
+        "why": "Ele guarda um valor por chave, de propósito aqui; a questão é qual."
+      },
+      {
+        "text": "O `/home` foi apagado pelo `Range`",
+        "why": "O `Range` visita entradas; devolver `true` continua e não apaga nada."
+      }
+    ]
+  },
+  "ex-503m876b": {
+    "prompt": "O `syncmap.go` registrou seis visitas a `/home`, `/docs` e `/blog`. Que número ele imprimiu depois de `pages:`?",
+    "hint": "Uma entrada por chave."
+  },
+  "ex-0ec0qnb8": {
+    "prompt": "Um time protege um map de preferências de usuário, lido a cada requisição e alterado por qualquer requisição, com `sync.Map` 'porque é o concorrente'. O que a lição diz para preferir?",
+    "hint": "O padrão de acesso é um dos dois casos?",
+    "choices": [
+      {
+        "text": "O `sync.Map`, já que tem a trava dentro",
+        "why": "Ter a trava dentro não basta; o padrão de acesso não é nenhum dos dois casos."
+      },
+      {
+        "text": "Um map comum com um `Mutex`",
+        "why": "Isso: tipado, mais simples, e um `RWMutex` só se a medição mostrar leitores esperando."
+      },
+      {
+        "text": "Um map comum sem trava, já que as escritas são curtas",
+        "why": "O `crash.go` é o que isso vira: um erro fatal."
+      },
+      {
+        "text": "Um `sync.Once` por chave",
+        "why": "Preferências mudam; o `Once` congelaria o primeiro valor para sempre."
+      }
+    ]
+  },
+  "ex-k6bft57v": {
+    "prompt": "Quais destes são erros que o `go vet` ou o runtime apontaram nesta lição? Escolha todas as que se aplicam.",
+    "hint": "Um foi o `go vet`, dois foram o runtime.",
+    "choices": [
+      {
+        "text": "`WaitGroup.Add` chamado de dentro da goroutine nova",
+        "why": "Sim, o `go vet` no `late.go`."
+      },
+      {
+        "text": "Um contador de `WaitGroup` negativo",
+        "why": "Sim, um pânico no `negative.go`."
+      },
+      {
+        "text": "Escritas concorrentes num map comum",
+        "why": "Sim, um erro fatal no `crash.go`."
+      },
+      {
+        "text": "Um erro guardado pelo `OnceValues`",
+        "why": "Esse é o comportamento documentado, e nada o aponta."
+      }
+    ]
+  }
+}

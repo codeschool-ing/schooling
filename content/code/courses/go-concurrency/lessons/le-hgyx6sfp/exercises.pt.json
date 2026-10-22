@@ -1,0 +1,344 @@
+{
+  "ex-zr7xznsg": {
+    "prompt": "Como um `io.Reader` diz que os dados acabaram?",
+    "hint": "Olhe a última linha que o `reader.go` imprimiu.",
+    "choices": [
+      {
+        "text": "Devolve `n` igual a `-1`",
+        "why": "`n` nunca é negativo; o contrato diz 0 <= n <= len(p)."
+      },
+      {
+        "text": "Devolve o valor de erro `io.EOF`",
+        "why": "Isso: o fim dos dados é informado como um valor de erro."
+      },
+      {
+        "text": "Devolve um slice `nil`",
+        "why": "O `Read` enche um slice que é de quem chama; devolve só uma contagem e um erro."
+      },
+      {
+        "text": "Dá panic com uma mensagem dizendo que o fluxo terminou",
+        "why": "Terminar é comum, então é um valor de retorno comum."
+      }
+    ]
+  },
+  "ex-v9ferkv6": {
+    "prompt": "O `reader.go` leu 30 bytes de oito em oito. Por que ele imprime `buf[:n]` e não `buf`?",
+    "hint": "O que havia nos dois últimos bytes de `buf` depois da quarta chamada?",
+    "choices": [
+      {
+        "text": "`buf` não é exportado e não pode ser impresso",
+        "why": "Uma variável local imprime sem problema. A questão é o que ela guarda."
+      },
+      {
+        "text": "Depois de `n`, `buf` ainda guarda bytes de uma chamada anterior",
+        "why": "Isso: depois da quarta chamada os dois últimos bytes ainda eram `al`."
+      },
+      {
+        "text": "Imprimir `buf` consumiria o reader",
+        "why": "Imprimir um slice lê memória, não o Reader."
+      },
+      {
+        "text": "`%q` não consegue citar um slice de tamanho fixo",
+        "why": "`%q` cita qualquer `[]byte`; `buf[:n]` também é um slice."
+      }
+    ]
+  },
+  "ex-kmqkt878": {
+    "prompt": "Um laço chama `r.Read(buf)` e faz `if err == io.EOF { break }` antes de usar `buf[:n]`. Com o Reader `alphabet`, o que se perde?",
+    "hint": "A última chamada devolveu dados e um erro juntos.",
+    "choices": [
+      {
+        "text": "Nada: o `EOF` sempre vem com `n` igual a 0",
+        "why": "Foi o que o `strings.Reader` fez. O contrato também permite dados e `EOF` numa chamada, e o `alphabet` faz isso."
+      },
+      {
+        "text": "As dez primeiras letras",
+        "why": "As duas primeiras chamadas devolveram erro `nil`, então o laço as usou."
+      },
+      {
+        "text": "As letras `uvwxyz`",
+        "why": "Isso. Use os `n` bytes primeiro, depois olhe o `err`."
+      },
+      {
+        "text": "O alfabeto inteiro, porque o laço nem começa",
+        "why": "O laço roda; só a chamada que traz o `EOF` é mal tratada."
+      }
+    ]
+  },
+  "ex-vezmq5cy": {
+    "prompt": "`io.ReadAll(&alphabet{})` devolveu as letras e erro `nil`, embora o Reader tenha devolvido `io.EOF`. Por quê?",
+    "hint": "O que pediram ao `ReadAll`?",
+    "choices": [
+      {
+        "text": "O `alphabet` só devolvia `EOF` para buffers pequenos",
+        "why": "Ele devolve `EOF` sempre que passa do `z`, seja qual for o buffer."
+      },
+      {
+        "text": "Chegar ao fim é o que pediram a ele",
+        "why": "Isso; `ReadAll` e `io.Copy` tratam o `EOF` como linha de chegada."
+      },
+      {
+        "text": "O `ReadAll` ignora todo erro do Reader",
+        "why": "Uma falha real, uma conexão quebrada por exemplo, volta do `ReadAll` como erro."
+      },
+      {
+        "text": "O `fmt` imprime `io.EOF` como `<nil>`",
+        "why": "O `reader.go` imprimiu `err=EOF`, então o `fmt` o mostra."
+      }
+    ]
+  },
+  "ex-dd635a6f": {
+    "prompt": "Um `io.Reader` tem exatamente um método, chamado ___.",
+    "hint": "O `go doc io.Reader` o imprimiu.",
+    "blanks": [
+      {
+        "accept": [
+          "Read"
+        ]
+      }
+    ]
+  },
+  "ex-ajh8t6dg": {
+    "prompt": "O `Write` de um Writer devolve `n` menor que `len(p)`. O que ele também precisa devolver?",
+    "hint": "O contrato é mais rígido que o do Read exatamente nisso.",
+    "choices": [
+      {
+        "text": "Nada; quem chama chama `Write` de novo com o resto",
+        "why": "Esse é o mundo do Reader. Uma escrita curta sem erro quebra o contrato do Writer."
+      },
+      {
+        "text": "Um erro não nulo explicando por que a escrita ficou curta",
+        "why": "Isso, então quem chama pode conferir só o `err`."
+      },
+      {
+        "text": "`io.EOF`, para dizer que o destino está cheio",
+        "why": "`EOF` significa fim da entrada; não é a palavra do Writer para disco cheio."
+      },
+      {
+        "text": "Os bytes que não foram escritos",
+        "why": "O `Write` devolve uma contagem e um erro, mais nada."
+      }
+    ]
+  },
+  "ex-86pha8dg": {
+    "prompt": "Em quais destes o `report` escreveu, sem mudança, no `writer.go`? Escolha todas as que se aplicam.",
+    "hint": "Três chamadas a `report`.",
+    "choices": [
+      {
+        "text": "`os.Stdout`",
+        "why": "Sim, o terminal."
+      },
+      {
+        "text": "um `bytes.Buffer`",
+        "why": "Sim, 38 bytes guardados na memória."
+      },
+      {
+        "text": "um hash SHA-256",
+        "why": "Sim, `sha256.New()` devolve um Writer."
+      },
+      {
+        "text": "um arquivo em disco",
+        "why": "Não neste programa; arquivos são a lição 18, e funcionariam do mesmo jeito."
+      }
+    ]
+  },
+  "ex-qf41rp2c": {
+    "prompt": "O hash do programa e o `sha256sum` das mesmas duas linhas concordaram. O que essa conferência estabelece?",
+    "hint": "Um hash de bytes diferentes seria diferente.",
+    "choices": [
+      {
+        "text": "Que o `crypto/sha256` é mais rápido que o shell",
+        "why": "Nada foi cronometrado."
+      },
+      {
+        "text": "Que o buffer e o terminal receberam bytes diferentes",
+        "why": "O contrário: a mesma função escreveu os mesmos bytes em cada um."
+      },
+      {
+        "text": "O `report` escreveu exatamente aqueles 38 bytes",
+        "why": "Isso; qualquer diferença, até uma quebra de linha faltando, muda o hash."
+      },
+      {
+        "text": "Que o hash guardou o relatório para ser lido de volta",
+        "why": "Um hash não guarda cópia; o que entra só é digerido."
+      }
+    ]
+  },
+  "ex-j4ggj8jj": {
+    "prompt": "O `counting.go` escreveu `one line` e `and another` com `Fprintln`. Quantos bytes o contador informou?",
+    "hint": "Conte cada quebra de linha como um byte.",
+    "unit": "bytes"
+  },
+  "ex-7qmj31mz": {
+    "prompt": "Duas goroutines escrevem pelo mesmo `counter` do `counting.go`. O que está errado?",
+    "hint": "O que o `Write` faz com o campo do próprio contador?",
+    "choices": [
+      {
+        "text": "Nada, porque o `os.Stdout` é seguro para compartilhar",
+        "why": "O terminal é; o `c.n` não."
+      },
+      {
+        "text": "`c.n += int64(n)` é uma corrida de dados",
+        "why": "Isso: a atualização perdida da lição 1, que um mutex ou um atômico consertam."
+      },
+      {
+        "text": "As linhas chegam em ordem alfabética",
+        "why": "Nada ordena escritas; a ordem é a que as goroutines fizeram."
+      },
+      {
+        "text": "O `Fprintln` recusa um Writer que não é arquivo",
+        "why": "Ele aceitou o `counter` na execução de uma goroutine só."
+      }
+    ]
+  },
+  "ex-s90dcw9t": {
+    "prompt": "Associe cada função de `io` ao que ela devolve.",
+    "hint": "Algumas devolvem um Reader, uma devolve um Writer, uma devolve os dois.",
+    "pairs": [
+      {
+        "left": "`io.LimitReader`",
+        "right": "um Reader que para depois de n bytes"
+      },
+      {
+        "left": "`io.TeeReader`",
+        "right": "um Reader que também escreve o que lê"
+      },
+      {
+        "left": "`io.MultiWriter`",
+        "right": "um Writer que escreve em vários"
+      },
+      {
+        "left": "`io.Pipe`",
+        "right": "um Reader e um Writer ligados"
+      }
+    ],
+    "right_distractors": [
+      "um Reader que ordena a entrada"
+    ]
+  },
+  "ex-bt5jkghb": {
+    "prompt": "Por que o `pipe.go` escreve no pipe de uma goroutine separada?",
+    "hint": "O `io.Pipe` não tem buffer, como um canal sem buffer.",
+    "choices": [
+      {
+        "text": "Só goroutines podem segurar a ponta de escrita",
+        "why": "Qualquer código pode; o problema é a espera."
+      },
+      {
+        "text": "Para a cópia rodar duas vezes mais rápido",
+        "why": "Velocidade não é o ponto; com uma goroutine só o programa nem termina."
+      },
+      {
+        "text": "Cada escrita bloqueia até que alguém leia do outro lado",
+        "why": "Isso: escrito de `main`, o primeiro `Fprintf` esperaria um leitor que nunca roda."
+      },
+      {
+        "text": "O detector de corridas exige isso",
+        "why": "O detector não tem nada a dizer de nenhum jeito; o pipe sincroniza."
+      }
+    ]
+  },
+  "ex-sphcjtg6": {
+    "prompt": "Alguém apaga o `pw.Close()` do `pipe.go`. O que acontece?",
+    "hint": "Como o lado de leitura descobre que os dados acabaram?",
+    "choices": [
+      {
+        "text": "O `io.Copy` fica esperando e o programa trava",
+        "why": "Isso: sem o close não há `EOF`, e `main` fica esperando."
+      },
+      {
+        "text": "O hash sai diferente",
+        "why": "O programa nem chega à linha que o imprime."
+      },
+      {
+        "text": "Nada, porque a goroutine termina de qualquer jeito",
+        "why": "A goroutine terminar não diz nada ao leitor; só o `Close` diz."
+      },
+      {
+        "text": "O `io.Copy` devolve 69 e um erro",
+        "why": "Ele nem retorna."
+      }
+    ]
+  },
+  "ex-mfb2xs9z": {
+    "prompt": "`go run -race pipe.go` saiu com 0 e nada no erro padrão. Duas goroutines lidaram com os mesmos bytes. Por que não há corrida?",
+    "hint": "Seção 04 da lição 16: um valor que se move.",
+    "choices": [
+      {
+        "text": "O detector não confere código do pacote `io`",
+        "why": "Ele confere o programa inteiro, biblioteca padrão incluída."
+      },
+      {
+        "text": "A goroutine rodou antes de `main` começar a ler",
+        "why": "Não podia: cada escrita esperou uma leitura."
+      },
+      {
+        "text": "O pipe entrega cada pedaço, então nada é compartilhado",
+        "why": "Isso, como um canal faz."
+      },
+      {
+        "text": "O `os.Stdout` foi redirecionado para `/dev/null`",
+        "why": "O redirecionamento esconde a saída; não muda o que as goroutines fizeram."
+      }
+    ]
+  },
+  "ex-35knrq9d": {
+    "prompt": "Ordene o caminho que um pedaço de bytes faz pelo `pipe.go`.",
+    "hint": "Ele começa na goroutine e termina em dois lugares ao mesmo tempo.",
+    "items": [
+      "o `Fprintf` o escreve em `pw`",
+      "o `io.Copy` o lê do tee sobre `pr`",
+      "o tee o escreve no hash",
+      "o multi-writer o escreve no terminal e em `kept`"
+    ]
+  },
+  "ex-hr5hv445": {
+    "prompt": "Uma função `CountLines(f *os.File) int` é difícil de testar. Que mudança a lição recomenda?",
+    "hint": "O que um teste passaria para ela?",
+    "choices": [
+      {
+        "text": "Escrever a entrada do teste num arquivo temporário antes",
+        "why": "Isso funciona, e é o custo que a mudança evita."
+      },
+      {
+        "text": "Receber um `io.Reader` em vez de `*os.File`",
+        "why": "Isso: um arquivo continua funcionando, e um teste passa um `strings.Reader`."
+      },
+      {
+        "text": "Devolver um `[]byte` em vez de um `int`",
+        "why": "O resultado não é o que dificulta o teste; a entrada é."
+      },
+      {
+        "text": "Torná-la um método de um tipo que guarda o caminho do arquivo",
+        "why": "Ainda presa ao disco, só um passo mais longe."
+      }
+    ]
+  },
+  "ex-d94d41wf": {
+    "prompt": "O `reader.go` leu uma string de 30 bytes com um buffer de 8. Quantas chamadas a `Read` ele fez, contando a que devolveu `EOF`?",
+    "hint": "Conte as linhas que ele imprimiu.",
+    "unit": "chamadas"
+  },
+  "ex-qr5whc25": {
+    "prompt": "O que o `io.ReadAll` devolve para `io.MultiReader(strings.NewReader(\"ab\"), strings.NewReader(\"cd\"))`?",
+    "hint": "A tabela: um depois do outro, como se concatenados.",
+    "choices": [
+      {
+        "text": "`abcd`",
+        "why": "Isso: o segundo Reader começa onde o primeiro termina."
+      },
+      {
+        "text": "`ab`, já que o primeiro Reader termina com `EOF`",
+        "why": "O MultiReader engole cada `EOF` de dentro até o último Reader acabar."
+      },
+      {
+        "text": "`acbd`, um byte de cada por vez",
+        "why": "Isso seria intercalar; o MultiReader os lê um depois do outro."
+      },
+      {
+        "text": "um erro: dois Readers não dividem um `EOF`",
+        "why": "Há um `EOF`, no fim do último Reader, e o `ReadAll` não informa erro por ele."
+      }
+    ]
+  }
+}

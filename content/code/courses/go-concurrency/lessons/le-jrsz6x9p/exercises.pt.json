@@ -1,0 +1,307 @@
+{
+  "ex-4f28vmy4": {
+    "prompt": "O que `mu.Lock()` faz quando outra goroutine já segura `mu`?",
+    "hint": "Só uma goroutine de cada vez fica dentro da seção crítica.",
+    "choices": [
+      {
+        "text": "Retorna um erro que quem chamou precisa conferir",
+        "why": "`Lock` não retorna nada. Ele não falha; ele espera."
+      },
+      {
+        "text": "Espera até o mutex ser destravado",
+        "why": "Isso, e então toma a trava para si."
+      },
+      {
+        "text": "Entra em pânico, porque um mutex não pode ser compartilhado",
+        "why": "Ser compartilhado entre goroutines é para o que serve um mutex; copiá-lo é que é o erro."
+      },
+      {
+        "text": "Deixa as duas goroutines entrarem, uma lendo e outra escrevendo",
+        "why": "Isso lembra mais um `RWMutex`, e mesmo nele um escritor fica sozinho."
+      }
+    ]
+  },
+  "ex-hxhh2001": {
+    "prompt": "O `copied.go` chamou `Inc` 400.000 vezes e imprimiu `total: 0`, e o detector de corridas não diria nada. Por quê?",
+    "hint": "Olhe o receptor de `Inc`.",
+    "choices": [
+      {
+        "text": "O mutex bloqueou toda chamada, então nenhuma rodou",
+        "why": "As chamadas rodaram; o programa terminou. Elas alteraram cópias."
+      },
+      {
+        "text": "Cada chamada trabalhou numa cópia da struct",
+        "why": "Isso. Um receptor por valor copia o `Counter`, com mutex e tudo, e a cópia é jogada fora."
+      },
+      {
+        "text": "O `defer` rodou o `Unlock` antes do incremento",
+        "why": "Uma chamada adiada roda quando a função retorna, depois de `c.n++`."
+      },
+      {
+        "text": "Quatro goroutines não podem compartilhar um `Counter`",
+        "why": "Com um receptor ponteiro podem, e esse é o conserto."
+      }
+    ]
+  },
+  "ex-sa6hffyn": {
+    "prompt": "A ferramenta que informou `Inc passes lock by value` é o `go ___`.",
+    "hint": "Ela foi apresentada na lição 4 de `go`, ao lado do `go fmt`.",
+    "blanks": [
+      {
+        "accept": [
+          "vet"
+        ]
+      }
+    ]
+  },
+  "ex-5wtvdjy8": {
+    "prompt": "Por que a seção recomenda `defer mu.Unlock()` logo depois de `mu.Lock()`?",
+    "hint": "O que acontece com um mutex deixado travado?",
+    "choices": [
+      {
+        "text": "Adiar deixa a seção crítica mais curta",
+        "why": "Ele a faz durar até a função retornar, o que no mínimo é mais longo."
+      },
+      {
+        "text": "`Unlock` só é permitido numa chamada adiada",
+        "why": "O `count.go` chama `mu.Unlock()` direto, e isso está certo para uma seção de uma linha."
+      },
+      {
+        "text": "Um `return` ou pânico no meio o deixaria travado de vez",
+        "why": "Isso. Toda goroutine que viesse depois esperaria para sempre."
+      },
+      {
+        "text": "O detector de corridas exige isso",
+        "why": "O detector de corridas aceita as duas formas; o `count.go` passou nele com um `Unlock` direto."
+      }
+    ]
+  },
+  "ex-wxvs7wyg": {
+    "prompt": "Qual destas pode ser segurada por várias goroutines ao mesmo tempo?",
+    "hint": "Leitores não estragam nada um para o outro.",
+    "choices": [
+      {
+        "text": "A trava de leitura de um `RWMutex`",
+        "why": "Isso: qualquer número de leitores segura `RLock` junto."
+      },
+      {
+        "text": "Um `Mutex`",
+        "why": "Um `Mutex` tem um dono de cada vez."
+      },
+      {
+        "text": "A trava de escrita de um `RWMutex`",
+        "why": "O escritor fica sozinho, leitores incluídos."
+      },
+      {
+        "text": "Um `Mutex` dentro de uma struct com receptor por valor",
+        "why": "Isso só parece funcionar porque cada chamada tem a sua cópia, que é o defeito do `copied.go`."
+      }
+    ]
+  },
+  "ex-6m43herc": {
+    "prompt": "O `cache.go` sem trabalho sob a trava levou 79 ms com um `RWMutex` e 65 ms com um `Mutex`. Por que a trava de leitura foi mais lenta ali?",
+    "hint": "O que um `RWMutex` controla que um `Mutex` não controla?",
+    "choices": [
+      {
+        "text": "Leitores não se sobrepõem quando o trabalho é zero",
+        "why": "Eles podem se sobrepor; só que quase não há o que sobrepor."
+      },
+      {
+        "text": "Contar leitores custa mais que a seção minúscula que ela protege",
+        "why": "Isso. A contabilidade dela vira quase todo o custo quando a seção é uma consulta a um map."
+      },
+      {
+        "text": "Um escritor à espera ficou barrando os leitores",
+        "why": "Não há escritor nenhum no `cache.go`."
+      },
+      {
+        "text": "Leituras de map não são seguras sob uma trava de leitura",
+        "why": "Leituras concorrentes de um map são seguras; o que não é seguro é uma escrita junto delas."
+      }
+    ]
+  },
+  "ex-kasrjm5f": {
+    "prompt": "Uma função segura `rw.RLock()`, descobre que falta uma entrada e chama `rw.Lock()` para acrescentá-la antes de soltar a trava de leitura. O que acontece?",
+    "hint": "`Lock` espera todos os leitores saírem.",
+    "choices": [
+      {
+        "text": "A trava de leitura é promovida a trava de escrita",
+        "why": "A documentação diz que um `RLock` não pode ser promovido a `Lock`."
+      },
+      {
+        "text": "`Lock` entra em pânico com uma mensagem sobre recursão",
+        "why": "Não há pânico nem mensagem; é isso que torna difícil achar."
+      },
+      {
+        "text": "Ela espera a si mesma sair, e espera para sempre",
+        "why": "Isso. Solte a trava de leitura, tome a de escrita e confira a entrada de novo."
+      },
+      {
+        "text": "A entrada é acrescentada e as duas travas são soltas no fim",
+        "why": "O código nunca passa do `Lock`."
+      }
+    ]
+  },
+  "ex-0se0stzq": {
+    "prompt": "Com 200 passos de trabalho sob a trava, o `cache.go` levou 641 ms com um `Mutex` e 200 ms com um `RWMutex`. Quantas vezes mais rápida foi a trava de leitura? Arredonde para um número inteiro.",
+    "hint": "641 dividido por 200.",
+    "unit": "vezes"
+  },
+  "ex-jrk5d8p3": {
+    "prompt": "Que ferramenta a seção recomenda quando todo o estado compartilhado é um contador?",
+    "hint": "Foi a mais rápida no `three.go`.",
+    "choices": [
+      {
+        "text": "Um canal até uma goroutine dona do contador",
+        "why": "Funciona, e foi a mais lenta e a mais longa das três."
+      },
+      {
+        "text": "Um `RWMutex`",
+        "why": "Um incremento é uma escrita, então leitores dividindo a trava não ajudam."
+      },
+      {
+        "text": "`sync/atomic`, como `atomic.Int64`",
+        "why": "Isso: um valor, uma operação indivisível."
+      },
+      {
+        "text": "Um `int` comum lido depois do `wg.Wait`",
+        "why": "Ler depois do `Wait` é seguro; os incrementos antes dele, de quatro goroutines, são a corrida."
+      }
+    ]
+  },
+  "ex-57vek8d3": {
+    "prompt": "Um serviço mantém `requests` e `bytes` como dois `atomic.Int64`, atualizados um depois do outro. Um relatório lê os dois e divide. O que pode dar errado?",
+    "hint": "Cada atômico é indivisível sozinho.",
+    "choices": [
+      {
+        "text": "Nada, porque cada atualização é atômica",
+        "why": "Cada uma é, mas o par não: o relatório pode cair entre as duas atualizações."
+      },
+      {
+        "text": "Ela lê uma já atualizada e a outra ainda não",
+        "why": "Isso. Manter dois valores coerentes entre si é trabalho de um mutex."
+      },
+      {
+        "text": "O detector de corridas relata as duas variáveis",
+        "why": "Operações atômicas são sincronizadas, então não há corrida de dados a relatar; o defeito está na lógica."
+      },
+      {
+        "text": "`atomic.Int64` não pode ser lido por outra goroutine",
+        "why": "`Load` é exatamente isso, e é seguro."
+      }
+    ]
+  },
+  "ex-qt034gsr": {
+    "prompt": "Associe cada trabalho à ferramenta que a tabela da seção dá a ele.",
+    "hint": "A posse passa por canais; o estado fica no lugar sob uma trava.",
+    "pairs": [
+      {
+        "left": "entregar um valor a outra goroutine que passa a ser dona dele",
+        "right": "um canal"
+      },
+      {
+        "left": "um cache que goroutines leem e alteram no lugar",
+        "right": "um mutex"
+      },
+      {
+        "left": "uma flag que diz que o serviço está desligando",
+        "right": "`sync/atomic`"
+      }
+    ],
+    "right_distractors": [
+      "`time.Sleep`"
+    ]
+  },
+  "ex-wgdampqd": {
+    "prompt": "No `three.go`, por que `withChannel` não precisa de trava em volta de `total`?",
+    "hint": "Quantas goroutines tocam `total` ali?",
+    "choices": [
+      {
+        "text": "Canais tornam toda variável segura",
+        "why": "Só as variáveis de que uma goroutine é dona; quatro goroutines escrevendo uma variável ainda teriam corrida."
+      },
+      {
+        "text": "Os incrementos são atômicos neste processador",
+        "why": "`total += n` é uma leitura, soma e escrita comuns."
+      },
+      {
+        "text": "Só a goroutine dona dele o lê ou escreve",
+        "why": "Isso: as outras enviam incrementos; nunca tocam o número."
+      },
+      {
+        "text": "O `wg.Wait` roda antes de cada incremento",
+        "why": "O `wg.Wait` roda uma vez, depois de todos os envios."
+      }
+    ]
+  },
+  "ex-d320137c": {
+    "prompt": "Ordene os três jeitos do `three.go` do mais rápido ao mais lento, como as duas execuções os imprimiram.",
+    "hint": "Um deles foi mais de dez vezes mais lento que outro.",
+    "items": [
+      "atomic",
+      "mutex",
+      "channel"
+    ]
+  },
+  "ex-jy7zkzvy": {
+    "prompt": "Quais destes copiam um `sync.Mutex` e por isso o quebram depois do primeiro uso? Escolha todas as que se aplicam.",
+    "hint": "Uma cópia é feita sempre que um valor de struct é passado ou atribuído.",
+    "choices": [
+      {
+        "text": "Um método com receptor por valor na struct que o contém",
+        "why": "Sim: o `copied.go`."
+      },
+      {
+        "text": "`d := c`, onde `c` é essa struct",
+        "why": "Sim, uma atribuição copia todo campo."
+      },
+      {
+        "text": "Um método com receptor ponteiro",
+        "why": "Um receptor ponteiro compartilha a mesma struct; esse é o conserto."
+      },
+      {
+        "text": "Passar `&c` a uma função",
+        "why": "Isso passa um ponteiro, e a struct fica onde está."
+      }
+    ]
+  },
+  "ex-h9d9r0cc": {
+    "prompt": "Um map de sessões de usuário é lido a cada requisição e escrito quando alguém entra, mais ou menos uma vez por minuto. As leituras seguram a trava só durante a consulta. O que a lição sugere?",
+    "hint": "Lembre as execuções com `work 0` do `cache.go`.",
+    "choices": [
+      {
+        "text": "Um `RWMutex`, porque as leituras são maioria",
+        "why": "Muitos leitores é metade da condição; a outra metade é segurar a trava o bastante para se sobrepor."
+      },
+      {
+        "text": "Um canal até uma goroutine dona do map",
+        "why": "Esse é o mutex disfarçado contra o qual a seção avisa, e a mais lenta das opções."
+      },
+      {
+        "text": "Um `Mutex`, depois medir um `RWMutex`",
+        "why": "Isso. Com uma única consulta sob a trava, o `RWMutex` foi o mais lento dos dois no `cache.go`."
+      },
+      {
+        "text": "Nenhuma trava, já que escritas são raras",
+        "why": "Uma escrita por minuto junto com leituras ainda é corrida de dados, e Go pode parar o programa por isso."
+      }
+    ]
+  },
+  "ex-w1w23xrq": {
+    "prompt": "Todo `RLock` num `RWMutex` é liberado por exatamente uma chamada de `___`.",
+    "hint": "O gêmeo de leitura do `Unlock`.",
+    "blanks": [
+      {
+        "accept": [
+          "RUnlock",
+          "RUnlock()"
+        ]
+      }
+    ]
+  },
+  "ex-201pexsm": {
+    "prompt": "Na primeira execução do `three.go`, o mutex levou 26 ms e o canal 80 ms. Mais ou menos quantas vezes mais o canal demorou? Dê um número inteiro.",
+    "hint": "80 dividido por 26.",
+    "unit": "vezes"
+  }
+}
