@@ -1,0 +1,584 @@
+[
+  {
+    "id": "ex-jrsewq0m",
+    "version": 1,
+    "section": "recording",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an execution trace record that lesson 12's CPU profile does not?",
+    "hint": "One of them samples, the other writes down.",
+    "choices": [
+      {
+        "text": "Every scheduling event, as it happens, with a timestamp",
+        "correct": true,
+        "why": "Right. A trace writes down each creation, block, wake-up and system call with its time; a CPU profile asks what is running about a hundred times a second and counts."
+      },
+      {
+        "text": "The same samples as the CPU profile, taken a thousand times more often",
+        "correct": false,
+        "why": "A trace takes no samples of that kind. Its cost follows how many events happen, which is why its size follows the events rather than the run's length."
+      },
+      {
+        "text": "The source line of every function call the program makes",
+        "correct": false,
+        "why": "Calls are not events in a trace. Stacks are attached to events such as a goroutine blocking, not to each call."
+      },
+      {
+        "text": "How much memory each line of code allocated",
+        "correct": false,
+        "why": "That is lesson 12's memory profile. A trace carries heap-size metrics over time, not allocations per line."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4yw70cg",
+    "version": 1,
+    "section": "recording",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pcount`'s `main` is only `os.Exit(run())`, and the tracing is stopped by a call deferred inside `run`. What would go wrong if `run` called `os.Exit(0)` itself at the end instead of returning 0?",
+    "hint": "Think about what `os.Exit` does to deferred calls.",
+    "choices": [
+      {
+        "text": "The trace would record the exit as a goroutine leak",
+        "correct": false,
+        "why": "No event of that kind exists. The problem is that the trace would never be completed at all."
+      },
+      {
+        "text": "The exit code would be 2 instead of 0",
+        "correct": false,
+        "why": "`os.Exit(0)` exits with 0. What it skips is the deferred work, not the code."
+      },
+      {
+        "text": "Nothing: `os.Exit` flushes the trace before the process ends",
+        "correct": false,
+        "why": "`os.Exit` ends the process at once and runs no deferred function, so nothing would call `trace.Stop`."
+      },
+      {
+        "text": "The deferred stop would never run, so the trace file would be left unfinished",
+        "correct": true,
+        "why": "Right. Deferred calls are skipped by `os.Exit`; `trace.Stop` is what waits for the last writes, so the file would be cut short."
+      }
+    ]
+  },
+  {
+    "id": "ex-cxp58vr6",
+    "version": 1,
+    "section": "recording",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`startTrace` opens the file and calls `trace.Start(f)`; the function it returns calls ___ first and closes the file after, because that call returns only once every write has completed.",
+    "hint": "The other half of `trace.Start`.",
+    "blanks": [
+      {
+        "accept": [
+          "trace.Stop",
+          "trace.Stop()",
+          "Stop",
+          "Stop()"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kvt14618",
+    "version": 1,
+    "section": "recording",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three pairs of runs of `pcount`, plain then traced, gave 1.021s/689ms, 953ms/878ms and 883ms/737ms. What may you conclude about the cost of tracing?",
+    "hint": "Is it plausible that recording more makes the program faster?",
+    "choices": [
+      {
+        "text": "Tracing costs about 20%, the average gap between the pairs",
+        "correct": false,
+        "why": "The gap points the other way, which is the sign it is noise. An average of three noisy pairs measures the machine, not the tracer."
+      },
+      {
+        "text": "Only that the run-to-run noise was larger than the cost",
+        "correct": true,
+        "why": "Right. The cost is too small to show through that noise; measuring it takes many runs on a quiet machine and a statistical comparison."
+      },
+      {
+        "text": "Tracing has no cost at all, since no pair shows one",
+        "correct": false,
+        "why": "Not seeing a cost through noise is not the same as its absence: the tracer does work for every event."
+      },
+      {
+        "text": "Tracing makes the program faster, so it should be left on",
+        "correct": false,
+        "why": "No mechanism makes recording events speed the work up. Three faster traced runs are noise on a busy machine, not a result."
+      }
+    ]
+  },
+  {
+    "id": "ex-b81s4c05",
+    "version": 1,
+    "section": "what-a-trace-holds",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each field of a line of `go tool trace -d=parsed` to what it names.",
+    "hint": "Three of them are the scheduler's three parts.",
+    "pairs": [
+      {
+        "left": "`M=`",
+        "right": "an operating-system thread"
+      },
+      {
+        "left": "`P=`",
+        "right": "a processor: the permission to run Go code"
+      },
+      {
+        "left": "`G=`",
+        "right": "a goroutine"
+      },
+      {
+        "left": "`Time=`",
+        "right": "when it happened, in nanoseconds"
+      }
+    ],
+    "right_distractors": [
+      "a mutex the goroutine holds",
+      "the memory the event used"
+    ]
+  },
+  {
+    "id": "ex-q5srjpqd",
+    "version": 1,
+    "section": "what-a-trace-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the four-worker trace, 1,045 transitions read `Running->Waiting Reason=\"chan receive\"`. What were those goroutines doing?",
+    "hint": "Find the channel receive in `pcount`.",
+    "choices": [
+      {
+        "text": "Goroutines waiting for a free P",
+        "correct": false,
+        "why": "A goroutine with nothing to wait for but a P is `Runnable`, not `Waiting`."
+      },
+      {
+        "text": "The merge loop reading every worker's `part`",
+        "correct": false,
+        "why": "That happens once, at the end. A thousand waits come from the loop that runs a thousand times."
+      },
+      {
+        "text": "Workers finding `batches` empty, waiting for the reader's next batch",
+        "correct": true,
+        "why": "Right. A worker's `range batches` blocks on an empty channel; each of these is a worker that finished before the reader had more ready."
+      },
+      {
+        "text": "The reader waiting for room in a full channel",
+        "correct": false,
+        "why": "That is a send blocking, and it shows as `chan send`, 396 times in the same trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-bae5z78x",
+    "version": 1,
+    "section": "what-a-trace-holds",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pcount` sends lines in batches of 1,000 and marks each batch as a `parse` region. How many `parse` regions does its trace of the 3,000,000-line log hold?",
+    "hint": "Count what the reader sends after its loop, too.",
+    "value": 3001,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2p8t56se",
+    "version": 1,
+    "section": "what-a-trace-holds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A request is handled by three goroutines, and you want the trace to tie their work together as one operation with a measured latency. Which annotation does that?",
+    "hint": "One of the three can span goroutines; one cannot.",
+    "choices": [
+      {
+        "text": "A `trace.Log` with the request id as its category",
+        "correct": false,
+        "why": "A log is one moment. It can be attached to a task, but it does not measure a span by itself."
+      },
+      {
+        "text": "A region named after the request id",
+        "correct": false,
+        "why": "Region types should be a handful, since they group regions; and a region still cannot cross goroutines."
+      },
+      {
+        "text": "A region from `trace.WithRegion`",
+        "correct": false,
+        "why": "A region must start and end on the same goroutine, so it cannot cover work spread across three."
+      },
+      {
+        "text": "A task, created with `trace.NewTask` and passed in the context",
+        "correct": true,
+        "why": "Right. A task travels in the context, so every goroutine that uses it is attached to it, and `task.End` gives its latency."
+      }
+    ]
+  },
+  {
+    "id": "ex-4a4mdq3v",
+    "version": 1,
+    "section": "latency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`pcount -workers 4 -shared` used 1.213 s of processor time against 1.111 s for one worker, and took about as long. What would lesson 12's CPU profile of the `-shared` run show?",
+    "hint": "A goroutine parked on a lock is on no processor.",
+    "choices": [
+      {
+        "text": "The parsing functions, in much the same shares as one worker",
+        "correct": true,
+        "why": "Right. The same work and nearly the same processor time, so the same functions; nothing in it says three goroutines stood still."
+      },
+      {
+        "text": "Four times the samples of the one-worker run",
+        "correct": false,
+        "why": "Samples follow processor time, and that was nearly equal: 1.213 s against 1.111 s."
+      },
+      {
+        "text": "Mostly time in the scheduler, switching goroutines",
+        "correct": false,
+        "why": "Handing a lock over costs something, but the bulk of 1.2 s of processor time is still the parsing."
+      },
+      {
+        "text": "Mostly `sync.(*Mutex).Lock`, where the workers spent their time",
+        "correct": false,
+        "why": "The waiting happens off the processor, so the sampler never sees it; the trace's sync profile is where 1.71 s of `Lock` appeared."
+      }
+    ]
+  },
+  {
+    "id": "ex-njseqmpm",
+    "version": 1,
+    "section": "latency",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these parts of a goroutine's time does an execution trace show and a CPU profile does not? Choose every one.",
+    "hint": "The CPU profile samples only what is on a processor.",
+    "choices": [
+      {
+        "text": "Runnable: ready, with no P free",
+        "correct": true,
+        "why": "Right. Scheduler latency is in no pprof profile; the trace has it, and `-pprof=sched` turns it into one."
+      },
+      {
+        "text": "Blocked on a mutex",
+        "correct": true,
+        "why": "Right. Parked off the processor; the trace records when it blocked and when it woke."
+      },
+      {
+        "text": "Blocked on a channel receive",
+        "correct": true,
+        "why": "Right. The same: waiting is an event pair in the trace and invisible to the sampler."
+      },
+      {
+        "text": "Running Go code on a P",
+        "correct": false,
+        "why": "Both see this one. Running is the only state the CPU profile samples."
+      }
+    ]
+  },
+  {
+    "id": "ex-3xtqnca2",
+    "version": 1,
+    "section": "latency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`go tool trace -pprof=sched` on the `GOMAXPROCS=1` run charged 2,437.01ms to `runtime.chansend1` under `main.count`. Why does a send by the reader carry the workers' waiting time?",
+    "hint": "Which stack does the sched profile keep: where the goroutine waited, or where it became runnable?",
+    "choices": [
+      {
+        "text": "`-focus=main` moved the workers' time onto `main.count`",
+        "correct": false,
+        "why": "A focus only keeps or drops stacks; it never moves time from one to another."
+      },
+      {
+        "text": "The reader itself waited 2.4 s to send",
+        "correct": false,
+        "why": "The run lasted 768ms; one goroutine cannot wait 2.4 s in it. The time belongs to the goroutines the sends woke."
+      },
+      {
+        "text": "It charges the stack that made a goroutine runnable",
+        "correct": true,
+        "why": "Right. Each send woke a worker; the time until that worker got the one P is charged to the send that woke it."
+      },
+      {
+        "text": "The channel was unbuffered, so every send blocked",
+        "correct": false,
+        "why": "`batches` has one slot per worker, and blocking would be sync time, not scheduler latency."
+      }
+    ]
+  },
+  {
+    "id": "ex-eyvzzz08",
+    "version": 1,
+    "section": "latency",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one worker's states in the order a trace records them, from waiting for a batch to waiting for the next one.",
+    "hint": "Being woken and being run are two events.",
+    "items": [
+      "The worker blocks in `range batches` with the channel empty: Waiting",
+      "The reader sends a batch and the worker becomes Runnable",
+      "A P comes free and the worker is Running",
+      "It parses the thousand lines of the batch",
+      "It finds the channel empty again and goes back to Waiting"
+    ]
+  },
+  {
+    "id": "ex-kxe352k0",
+    "version": 1,
+    "section": "latency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With four workers sharing nothing, the trace's sync profile showed no mutex at all, yet the workers waited 172ms each in `sync`. Where did those waits come from?",
+    "hint": "Read the two runtime functions at the top of that profile.",
+    "choices": [
+      {
+        "text": "A hidden mutex inside `tally.Parse`",
+        "correct": false,
+        "why": "`Parse` takes no lock. The functions named are `runtime.gcStart` and `runtime.gcMarkDone`."
+      },
+      {
+        "text": "The garbage collector's semaphores",
+        "correct": true,
+        "why": "Right. Workers that allocated enough to start or help finish a collection waited for it, which is how 94 collections showed up as `sync`."
+      },
+      {
+        "text": "`sync.WaitGroup.Wait` in every worker",
+        "correct": false,
+        "why": "Only the reading goroutine calls `Wait`, once, at the end."
+      },
+      {
+        "text": "The operating system pausing their threads",
+        "correct": false,
+        "why": "The trace cannot see the OS taking a CPU away; a goroutine on a paused thread still counts as running."
+      }
+    ]
+  },
+  {
+    "id": "ex-544esbh6",
+    "version": 1,
+    "section": "flight-recorder",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `trace.FlightRecorder` do between `Start` and a call to `WriteTo`?",
+    "hint": "It is called a recorder, and it writes nothing.",
+    "choices": [
+      {
+        "text": "It keeps a moving window of recent trace in memory",
+        "correct": true,
+        "why": "Right. Older data is dropped as new data arrives, and `WriteTo` copies the window out when the program asks."
+      },
+      {
+        "text": "It samples the stack every few milliseconds, like a CPU profile",
+        "correct": false,
+        "why": "It runs the execution tracer, which records events; it takes no samples."
+      },
+      {
+        "text": "Nothing: tracing begins only when `WriteTo` is called",
+        "correct": false,
+        "why": "Then the snapshot could hold nothing from before the incident, which is the part worth having."
+      },
+      {
+        "text": "It writes the whole trace to disk and keeps the newest file",
+        "correct": false,
+        "why": "It writes nothing until asked. Writing everything is exactly the cost it exists to avoid."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk6bcdp0",
+    "version": 1,
+    "section": "flight-recorder",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A flight recorder is configured with `MinAge: 10 * time.Second` and `MaxBytes: 1 << 20`, and the program produces about 6 MB of trace a second. What does a snapshot hold?",
+    "hint": "One of the two settings takes precedence.",
+    "choices": [
+      {
+        "text": "Nothing: the two settings contradict, so `Start` returns an error",
+        "correct": false,
+        "why": "They are not checked against each other; one simply takes precedence."
+      },
+      {
+        "text": "The first ten seconds of the program",
+        "correct": false,
+        "why": "The window moves: it always holds the most recent data, never the beginning."
+      },
+      {
+        "text": "Ten seconds, since `MinAge` is a lower bound",
+        "correct": false,
+        "why": "Ten seconds at 6 MB a second is 60 MB, far over the cap; `go doc` says `MaxBytes` takes precedence."
+      },
+      {
+        "text": "About a megabyte of the most recent trace, well under ten seconds",
+        "correct": true,
+        "why": "Right. `MaxBytes` wins over `MinAge`, so the window shrinks to roughly the byte cap, and both are hints."
+      }
+    ]
+  },
+  {
+    "id": "ex-e3kegy2r",
+    "version": 1,
+    "section": "flight-recorder",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `snapshot`, the window held in memory is copied into the new file with `n, err := fr.___(f)`, which returns the number of bytes written.",
+    "hint": "The method's name says where the bytes go.",
+    "blanks": [
+      {
+        "accept": [
+          "WriteTo"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-mkn0d1hx",
+    "version": 1,
+    "section": "flight-recorder",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add a flight recorder to an HTTP server and call `WriteTo` for every request slower than 500ms. During one bad minute, 2,000 requests are slow. What goes wrong first?",
+    "hint": "`go doc` limits how many `WriteTo` calls may run, and think about what 2,000 files would add.",
+    "choices": [
+      {
+        "text": "Nothing: each slow request gets its own snapshot, which is ideal",
+        "correct": false,
+        "why": "Thousands of snapshots of one stall explain nothing more than one, and they are written while the server is already struggling."
+      },
+      {
+        "text": "Concurrent `WriteTo` calls fail, and the rest pile snapshots onto an overloaded server",
+        "correct": true,
+        "why": "Right. Only one `WriteTo` may run at a time; rate-limit to one snapshot per incident, as `flight` does by stopping after the first."
+      },
+      {
+        "text": "The flight recorder stops recording after the first snapshot",
+        "correct": false,
+        "why": "`WriteTo` leaves it running; `Stop` is what ends it."
+      },
+      {
+        "text": "Each snapshot only holds that request's goroutine",
+        "correct": false,
+        "why": "A snapshot holds the whole window, every goroutine in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mrk9t7h",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `go tool trace -pprof=` type to the waiting it turns into a profile.",
+    "hint": "Four types; two descriptions are left over.",
+    "pairs": [
+      {
+        "left": "`sync`",
+        "right": "blocked on a channel, a `select`, a mutex or a semaphore"
+      },
+      {
+        "left": "`sched`",
+        "right": "runnable, waiting for a P"
+      },
+      {
+        "left": "`syscall`",
+        "right": "inside a system call"
+      },
+      {
+        "left": "`net`",
+        "right": "blocked waiting for the network"
+      }
+    ],
+    "right_distractors": [
+      "time spent allocating memory",
+      "time spent running Go code"
+    ]
+  },
+  {
+    "id": "ex-agc1jbt2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service's p99 latency doubled. Lesson 12's CPU profile looks the same as last week and the CPUs are half idle. What is the most direct next step?",
+    "hint": "Low CPU use and slow requests: where is the time going?",
+    "choices": [
+      {
+        "text": "Add workers, as `pcount` did, to parallelise the slow part",
+        "correct": false,
+        "why": "In `pcount` more workers did not help, because the limit was not the parsing; find the limit first."
+      },
+      {
+        "text": "A longer CPU profile, to catch the rare expensive call",
+        "correct": false,
+        "why": "Half-idle CPUs say the time is not being spent computing; more samples of computation will not find it."
+      },
+      {
+        "text": "A trace, then its `-pprof=sync` and `-pprof=sched` views",
+        "correct": true,
+        "why": "Right. Slow with idle CPUs means waiting, and the trace is the tool that records waiting, by cause."
+      },
+      {
+        "text": "Raise `GOMAXPROCS`, since the program needs more processors",
+        "correct": false,
+        "why": "Idle CPUs are not a shortage of processors; more Ps would not shorten a wait on a lock or a channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxnnqbvg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `pcount`'s four-worker trace the workers ran 31% of their time. Which reading of the rest is right?",
+    "hint": "The figure split the rest into runnable, sync and chan receive.",
+    "choices": [
+      {
+        "text": "They were blocked on the shared mutex",
+        "correct": false,
+        "why": "Without `-shared` there is no shared mutex; the sync profile of that trace named no lock."
+      },
+      {
+        "text": "The trace lost the rest, because tracing slows the program",
+        "correct": false,
+        "why": "Every nanosecond of each worker's life is accounted for in a state; nothing is lost."
+      },
+      {
+        "text": "The workers were too slow at parsing, so adding more workers would have helped",
+        "correct": false,
+        "why": "Running was the smallest part; adding workers adds runnable goroutines for the same four Ps."
+      },
+      {
+        "text": "They queued for a P, waited for the collector and waited for the reader",
+        "correct": true,
+        "why": "Right. 35% runnable, 18% in the collector's sync waits and 15% on `chan receive`: the limit is the reader and its allocations, not the parsing."
+      }
+    ]
+  }
+]
