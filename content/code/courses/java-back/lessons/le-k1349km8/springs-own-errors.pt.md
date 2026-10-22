@@ -98,7 +98,7 @@ Toda resposta é `application/problem+json` agora, e cada status é o que o HTTP
 
 O 405 e o 415 trazem também um cabeçalho, que diz ao cliente o que teria funcionado. `Allow: GET` lista os métodos que
 `/books/1` aceita, e `Accept` lista os media types que `/books` consegue ler. O 404 de `/nope` fala em
-recurso estático por causa de como o Spring MVC procura: um caminho que nenhum controller mapeia é
+recurso estático por causa de como o Spring MVC procura. Um caminho que nenhum controller mapeia é
 oferecido por último ao handler que serve arquivos de `src/main/resources/static`, e a exceção desse
 handler é o jeito de informar "não há nada aqui".
 

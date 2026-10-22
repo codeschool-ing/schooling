@@ -87,7 +87,7 @@ mensagem é uma frase que o cliente pode ler, montada só com o que o próprio c
 seção desta aula diz por que isso importa.
 
 Substitua o `BookService.java` por este. O `find`, que devolvia um `Optional`, vira `get`, que devolve o
-livro ou lança a exceção, e o `add` recusa um ISBN que o catálogo já tem:
+livro ou lança a exceção. E o `add` recusa um ISBN que o catálogo já tem:
 
 ```java
 package com.example.bookshop.catalogue;

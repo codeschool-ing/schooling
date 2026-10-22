@@ -121,8 +121,8 @@ ana@vm:~/javalin-hello$ find . -type f | sort
 ```
 ana@vm:~/javalin-hello$ mvn -B -q package
 ana@vm:~/javalin-hello$ ls -l target/*.jar
--rw-r--r-- 1 ana ana 7170648 Oct 22 19:20 target/javalin-hello-0.1.0.jar
--rw-r--r-- 1 ana ana    5188 Oct 22 19:20 target/original-javalin-hello-0.1.0.jar
+-rw-r--r-- 1 ana ana 7170648 Oct 22 19:44 target/javalin-hello-0.1.0.jar
+-rw-r--r-- 1 ana ana    5188 Oct 22 19:44 target/original-javalin-hello-0.1.0.jar
 ```
 
 Two jars. `original-javalin-hello-0.1.0.jar` is the one before shading, 5,188 bytes: your class
@@ -143,8 +143,8 @@ ana@vm:~/javalin-hello$ java -jar target/javalin-hello-0.1.0.jar
 [main] INFO org.eclipse.jetty.session.DefaultSessionIdManager - Session workerName=node0
 [main] INFO org.eclipse.jetty.server.handler.ContextHandler - Started oeje10s.ServletContextHandler@611889f4{ROOT,/,b=null,a=AVAILABLE,h=oeje10s.SessionHandler@1da2cb77{STARTED}}
 [main] INFO org.eclipse.jetty.ee10.servlet.ServletContextHandler - Started oeje10s.ServletContextHandler@611889f4{ROOT,/,b=null,a=AVAILABLE,h=oeje10s.SessionHandler@1da2cb77{STARTED}}
-[main] INFO org.eclipse.jetty.server.AbstractConnector - Started oejs.ServerConnector@59505b48{HTTP/1.1, (http/1.1)}{0.0.0.0:7070}
-[main] INFO org.eclipse.jetty.server.Server - Started oejs.Server@48aca48b{STARTING}[12.1.12,sto=0] @611ms
+[main] INFO org.eclipse.jetty.server.AbstractConnector - Started oejs.ServerConnector@41d11284{HTTP/1.1, (http/1.1)}{0.0.0.0:7070}
+[main] INFO org.eclipse.jetty.server.Server - Started oejs.Server@6bd61f98{STARTING}[12.1.12,sto=0] @152ms
 [main] INFO io.javalin.Javalin - 
        __                  ___          _____
       / /___ __   ______ _/ (_)___     /__  /
@@ -154,7 +154,7 @@ ana@vm:~/javalin-hello$ java -jar target/javalin-hello-0.1.0.jar
 
        https://javalin.io/documentation
 
-[main] INFO io.javalin.Javalin - Javalin started in 2209ms \o/
+[main] INFO io.javalin.Javalin - Javalin started in 647ms \o/
 [main] INFO io.javalin.Javalin - Listening on http://localhost:7070/
 [main] INFO io.javalin.Javalin - You are running Javalin 7.2.3 (released August 11, 2026).
 [JettyServerThreadPool-33] WARN io.javalin.Javalin - 
@@ -214,7 +214,7 @@ Build again, and the jar grows by Jackson:
 ```
 ana@vm:~/javalin-hello$ mvn -B -q package
 ana@vm:~/javalin-hello$ ls -l target/javalin-hello-0.1.0.jar
--rw-r--r-- 1 ana ana 9534256 Oct 22 19:20 target/javalin-hello-0.1.0.jar
+-rw-r--r-- 1 ana ana 9534256 Oct 22 19:44 target/javalin-hello-0.1.0.jar
 ```
 
 Start it in the first terminal:
@@ -226,8 +226,8 @@ ana@vm:~/javalin-hello$ java -jar target/javalin-hello-0.1.0.jar
 [main] INFO org.eclipse.jetty.session.DefaultSessionIdManager - Session workerName=node0
 [main] INFO org.eclipse.jetty.server.handler.ContextHandler - Started oeje10s.ServletContextHandler@611889f4{ROOT,/,b=null,a=AVAILABLE,h=oeje10s.SessionHandler@1da2cb77{STARTED}}
 [main] INFO org.eclipse.jetty.ee10.servlet.ServletContextHandler - Started oeje10s.ServletContextHandler@611889f4{ROOT,/,b=null,a=AVAILABLE,h=oeje10s.SessionHandler@1da2cb77{STARTED}}
-[main] INFO org.eclipse.jetty.server.AbstractConnector - Started oejs.ServerConnector@59505b48{HTTP/1.1, (http/1.1)}{0.0.0.0:7070}
-[main] INFO org.eclipse.jetty.server.Server - Started oejs.Server@48aca48b{STARTING}[12.1.12,sto=0] @145ms
+[main] INFO org.eclipse.jetty.server.AbstractConnector - Started oejs.ServerConnector@e2133f4{HTTP/1.1, (http/1.1)}{0.0.0.0:7070}
+[main] INFO org.eclipse.jetty.server.Server - Started oejs.Server@4efac082{STARTING}[12.1.12,sto=0] @140ms
 [main] INFO io.javalin.Javalin - 
        __                  ___          _____
       / /___ __   ______ _/ (_)___     /__  /
@@ -237,12 +237,12 @@ ana@vm:~/javalin-hello$ java -jar target/javalin-hello-0.1.0.jar
 
        https://javalin.io/documentation
 
-[main] INFO io.javalin.Javalin - Javalin started in 749ms \o/
+[main] INFO io.javalin.Javalin - Javalin started in 602ms \o/
 [main] INFO io.javalin.Javalin - Listening on http://localhost:7070/
 [main] INFO io.javalin.Javalin - You are running Javalin 7.2.3 (released August 11, 2026).
 ```
 
-`Javalin started in 749ms` is Javalin's own stopwatch; the next section says why it is not
+`Javalin started in 602ms` is Javalin's own stopwatch; the next section says why it is not
 the number to compare. Now the second terminal:
 
 ```
@@ -272,14 +272,14 @@ ana@vm:~/javalin-hello$ curl -s localhost:7070/books | python3 -m json.tool
 ]
 ana@vm:~/javalin-hello$ curl -si -w '\n' localhost:7070/books/2
 HTTP/1.1 200 OK
-Date: Thu, 22 Oct 2026 22:20:24 GMT
+Date: Thu, 22 Oct 2026 22:44:26 GMT
 Content-Type: application/json
 Content-Length: 99
 
 {"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950}
 ana@vm:~/javalin-hello$ curl -si -w '\n' localhost:7070/books/9
 HTTP/1.1 404 Not Found
-Date: Thu, 22 Oct 2026 22:20:24 GMT
+Date: Thu, 22 Oct 2026 22:44:26 GMT
 Content-Type: text/plain
 Content-Length: 17
 

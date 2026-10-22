@@ -4,7 +4,7 @@ version: 1
 ---
 
 A crença tentadora é que mais detalhe num erro ajuda todo mundo: o cliente vê exatamente o que quebrou e
-pode relatar. Mas o cliente de uma API é um estranho, e os detalhes de uma falha dentro do servidor são
+pode relatar. Mas o cliente de uma API é um estranho. Os detalhes de uma falha dentro do servidor são
 coisas sobre as quais ele não pode fazer nada: um banco que recusou uma conexão, um comando SQL, um nome
 de classe, a versão de uma biblioteca. Para um cliente de boa-fé, isso é ruído. Para alguém sondando a
 API, é um mapa do lado de dentro, dizendo qual banco roda em qual máquina com qual usuário. **A resposta
@@ -145,7 +145,7 @@ acontecer.
 Todo `detail` da livraria é uma frase que alguém escreveu para o cliente, montada com o que o cliente
 mandou. "No book has id 99" devolve o id que foi pedido e nada mais. As mensagens das restrições foram
 escritas para quem preenche o formulário. E os handlers do próprio Spring seguem a mesma regra: um corpo
-que não é JSON recebe "Failed to read request", enquanto o log do perfil `dev`
+que não é JSON recebe "Failed to read request". Já o log do perfil `dev`
 em "Os erros do próprio Spring" mostrou as palavras do próprio Jackson, `JSON parse error: Unexpected
 end-of-input within/between Object entries`. Essas palavras são inofensivas. As da próxima biblioteca
 podem não ser.

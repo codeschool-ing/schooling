@@ -13,8 +13,8 @@ Faça o build do bookshop, liste os dois jars e conte as bibliotecas empacotadas
 ```
 ana@vm:~/bookshop$ mvn -B -q package
 ana@vm:~/bookshop$ ls -l target/bookshop-0.1.0.jar ~/javalin-hello/target/javalin-hello-0.1.0.jar
--rw-r--r-- 1 ana ana  9534256 Oct 22 19:20 /home/ana/javalin-hello/target/javalin-hello-0.1.0.jar
--rw-r--r-- 1 ana ana 21580405 Oct 22 19:20 target/bookshop-0.1.0.jar
+-rw-r--r-- 1 ana ana  9534256 Oct 22 19:44 /home/ana/javalin-hello/target/javalin-hello-0.1.0.jar
+-rw-r--r-- 1 ana ana 21580405 Oct 22 19:44 target/bookshop-0.1.0.jar
 ```
 
 ```
@@ -61,27 +61,27 @@ próprio framework ao lado do número medido de fora, para o processo pelo pid e
 
 ```
 ana@vm:~$ for i in 1 2 3; do bash first-answer.sh javalin-hello/target/javalin-hello-0.1.0.jar localhost:7070/books; done
-first answer after 4877 ms
-[main] INFO io.javalin.Javalin - Javalin started in 2660ms \o/
-first answer after 3270 ms
-[main] INFO io.javalin.Javalin - Javalin started in 1398ms \o/
-first answer after 2752 ms
-[main] INFO io.javalin.Javalin - Javalin started in 2054ms \o/
+first answer after 1189 ms
+[main] INFO io.javalin.Javalin - Javalin started in 612ms \o/
+first answer after 950 ms
+[main] INFO io.javalin.Javalin - Javalin started in 490ms \o/
+first answer after 1204 ms
+[main] INFO io.javalin.Javalin - Javalin started in 618ms \o/
 ana@vm:~$ for i in 1 2 3; do bash first-answer.sh bookshop/target/bookshop-0.1.0.jar localhost:8080/books; done
-first answer after 8944 ms
-2026-10-22T19:20:56.233-03:00  INFO 26069 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 7.065 seconds (process running for 8.64)
-first answer after 11704 ms
-2026-10-22T19:21:08.196-03:00  INFO 26477 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 9.287 seconds (process running for 11.413)
-first answer after 11474 ms
-2026-10-22T19:21:19.841-03:00  INFO 26784 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 9.082 seconds (process running for 11.234)
+first answer after 4076 ms
+2026-10-22T19:44:39.366-03:00  INFO 30387 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 3.249 seconds (process running for 3.886)
+first answer after 8039 ms
+2026-10-22T19:44:47.337-03:00  INFO 1779 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 6.985 seconds (process running for 7.716)
+first answer after 6981 ms
+2026-10-22T19:44:54.613-03:00  INFO 6792 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.833 seconds (process running for 6.862)
 ```
 
-Leia as primeiras respostas, não os relatos dos frameworks: 2752 a 4877 ms para o Javalin, 8944 a 11704
-ms para o bookshop. Em média o bookshop levou cerca de 2,9 vezes o tempo do Javalin para
+Leia as primeiras respostas, não os relatos dos frameworks: 950 a 1204 ms para o Javalin, 4076 a 8039
+ms para o bookshop. Em média o bookshop levou cerca de 5,7 vezes o tempo do Javalin para
 responder, e as linhas no meio mostram por que os relatos enganam: na primeira execução, o próprio
-`Started ... in` do Spring diz 7,065 segundos para um início pelo qual um cliente esperou
-8944 ms. As execuções também discordam entre si, em 2125 ms entre a mais rápida e a
-mais lenta do Javalin e 2760 ms entre as do bookshop, e é por isso que uma execução só não
+`Started ... in` do Spring diz 3,249 segundos para um início pelo qual um cliente esperou
+4076 ms. As execuções também discordam entre si, em 254 ms entre a mais rápida e a
+mais lenta do Javalin e 3963 ms entre as do bookshop, e é por isso que uma execução só não
 prova nada.
 
 O que os números **não** dizem importa tanto quanto:

@@ -86,7 +86,7 @@ back on a `RuntimeException` and, by default, not on a checked one. Each message
 may read, built only from what the client sent; the last section of this lesson says why that matters.
 
 Replace `BookService.java` with this. `find`, which returned an `Optional`, becomes `get`, which returns
-the book or throws, and `add` refuses an ISBN the catalogue already has:
+the book or throws. And `add` refuses an ISBN the catalogue already has:
 
 ```java
 package com.example.bookshop.catalogue;
