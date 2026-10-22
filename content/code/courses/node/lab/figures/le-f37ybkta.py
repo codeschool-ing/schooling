@@ -31,4 +31,32 @@ def install_ci(T):
     return c
 
 
-FIGURES = [("npm-ci", install_ci)]
+def ranges(T):
+    c = Canvas(720, 210, T(
+        "A line of Express versions from 5.0.0 to 6.0.0 and beyond. The range ^5.1.0 covers 5.1.0 up to, but not "
+        "including, 6.0.0. Current is 5.1.0, what node_modules holds; Wanted and Latest are both 5.3.0, the newest the "
+        "range accepts. A 6.0.0, if one were published, would be Latest and outside the range, and npm update would not "
+        "move to it.",
+        "Uma linha de versões do Express de 5.0.0 a 6.0.0 e além. A faixa ^5.1.0 cobre de 5.1.0 até 6.0.0, sem incluir "
+        "o 6.0.0. O Current é 5.1.0, o que o node_modules tem; Wanted e Latest são os dois 5.3.0, o mais novo que a faixa "
+        "aceita. Um 6.0.0, se fosse publicado, seria o Latest e ficaria fora da faixa, e o npm update não iria até ele."))
+    xs = {"5.0.0": 60, "5.1.0": 170, "5.2.0": 280, "5.3.0": 390, "6.0.0": 560}
+    c.line(30, 110, 700, 110, stroke="var(--wire)", arrow=True)
+    for v, x in xs.items():
+        c.line(x, 104, x, 116, stroke="var(--paper-dim)")
+        c.text(x, 130, v, mono=True, size=10, fill="var(--paper-dim)" if v != "6.0.0" else "var(--amber)")
+    c.rect(170, 78, 385, 18, fill="var(--ink)", stroke="var(--phosphor)", rx=2)
+    c.text(362, 87, "^5.1.0", mono=True, size=10, fill="var(--phosphor)")
+    c.text(170, 60, "Current", mono=True, size=10)
+    c.line(170, 66, 170, 76, stroke="var(--paper)")
+    c.text(390, 60, "Wanted = Latest", mono=True, size=10, fill="var(--phosphor)")
+    c.line(390, 66, 390, 76, stroke="var(--phosphor)")
+    c.text(560, 160, T("a new major: outside the range", "um major novo: fora da faixa"), size=10, fill="var(--amber)")
+    c.text(560, 178, T("npm update leaves it alone", "o npm update não mexe"), size=10, fill="var(--amber)")
+    c.text(280, 160, T("npm update moves here", "o npm update vem até aqui"), size=10, fill="var(--phosphor)")
+    c.caption = T("A caret range accepts every minor and patch release of its major, and nothing past it.",
+                  "Uma faixa com circunflexo aceita toda versão minor e patch do seu major, e nada além dele.")
+    return c
+
+
+FIGURES = [("npm-ci", install_ci), ("updating", ranges)]

@@ -39,4 +39,32 @@ def one_thread(T):
     return c
 
 
-FIGURES = [("what-node-is-for", one_thread)]
+def path_search(T):
+    c = Canvas(720, 200, T(
+        "The shell looking for the command node. It tries the folders of PATH from left to right: ~/.local/bin, which "
+        "holds a link to the course's Node 22, then /usr/sbin, /usr/bin, which holds Ubuntu's Node 18, /sbin and /bin. "
+        "It stops at the first folder that has a node, so Node 22 answers.",
+        "O shell procurando o comando node. Ele tenta as pastas do PATH da esquerda para a direita: ~/.local/bin, que "
+        "tem um link para o Node 22 do curso, depois /usr/sbin, /usr/bin, que tem o Node 18 do Ubuntu, /sbin e /bin. Ele "
+        "para na primeira pasta que tem um node, então quem responde é o Node 22."))
+    c.text(20, 24, "$ node --version", mono=True, size=11, anchor="start")
+    dirs = [("~/.local/bin", "node → v22", True), ("/usr/sbin", "", False), ("/usr/bin", "node: v18", False),
+            ("/sbin", "", False), ("/bin", T("= /usr/bin", "= /usr/bin"), False)]
+    x = 20
+    for name, has, first in dirs:
+        w = 150 if first else 120
+        c.rect(x, 50, w, 70, fill="var(--ink)" if first else "var(--panel)", stroke="var(--phosphor)" if first else "var(--wire)")
+        c.text(x + w / 2, 72, name, mono=True, size=10)
+        if has:
+            c.text(x + w / 2, 98, has, mono=True, size=9.5, fill="var(--phosphor)" if first else "var(--paper-dim)")
+        x += w + 12
+    c.line(20, 145, 700, 145, stroke="var(--paper-dim)", arrow=True)
+    c.text(20, 162, T("the order the shell tries them: PATH, left to right", "a ordem em que o shell as tenta: o PATH, da esquerda para a direita"),
+           size=10, anchor="start", fill="var(--paper-dim)")
+    c.text(95, 185, T("first match: it stops here", "primeiro achado: para aqui"), size=10, fill="var(--phosphor)")
+    c.caption = T("Two Nodes on one PATH: the first folder that has one decides, and the other is never asked.",
+                  "Dois Nodes num PATH: decide a primeira pasta que tem um, e o outro nunca é consultado.")
+    return c
+
+
+FIGURES = [("what-node-is-for", one_thread), ("when-setup-fails", path_search)]

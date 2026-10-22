@@ -39,4 +39,64 @@ def chain(T):
     return c
 
 
-FIGURES = [("middleware", chain)]
+def files(T):
+    c = Canvas(720, 230, T(
+        "The five files of the links service and who imports whom. server.js imports app.js and starts it listening. "
+        "app.js builds the application and mounts the router from links.js. links.js holds the routes and imports "
+        "admin.js, for the key, and store.js, for the links. store.js imports code.js, which makes the codes.",
+        "Os cinco arquivos do serviço links e quem importa quem. O server.js importa o app.js e o põe para escutar. O "
+        "app.js monta a aplicação e pendura o roteador do links.js. O links.js tem as rotas e importa o admin.js, para a "
+        "chave, e o store.js, para os links. O store.js importa o code.js, que faz os códigos."))
+    boxes = {"server.js": (20, 90, T("listens", "escuta")), "src/app.js": (180, 90, T("builds the app", "monta o app")),
+             "src/links.js": (350, 90, T("the routes", "as rotas")), "src/admin.js": (540, 30, T("the key", "a chave")),
+             "src/store.js": (540, 150, T("the links", "os links")), "src/code.js": (540, 210 - 20, "")}
+    for name, (x, y, what) in list(boxes.items())[:5]:
+        c.rect(x, y, 140, 46, fill="var(--ink)" if name == "src/links.js" else "var(--panel)",
+               stroke="var(--phosphor)" if name == "src/links.js" else "var(--wire)")
+        c.text(x + 70, y + 16, name, mono=True, size=10)
+        c.text(x + 70, y + 33, what, size=9.5, fill="var(--paper-dim)")
+    c.line(160, 113, 178, 113, stroke="var(--paper-dim)", arrow=True)
+    c.line(320, 113, 348, 113, stroke="var(--paper-dim)", arrow=True)
+    c.line(490, 105, 538, 60, stroke="var(--paper-dim)", arrow=True)
+    c.line(490, 121, 538, 168, stroke="var(--paper-dim)", arrow=True)
+    c.rect(380, 175, 140, 40, fill="var(--panel)", stroke="var(--wire)")
+    c.text(450, 189, "src/code.js", mono=True, size=10)
+    c.text(450, 205, T("makes the codes", "faz os códigos"), size=9.5, fill="var(--paper-dim)")
+    c.line(540, 186, 522, 192, stroke="var(--paper-dim)", arrow=True)
+    c.text(20, 30, T("an arrow: imports", "uma seta: importa"), size=10, anchor="start", fill="var(--paper-dim)")
+    c.caption = T("One job per file: the rules of the service sit in links.js, and the plumbing around it.",
+                  "Um trabalho por arquivo: as regras do serviço ficam no links.js, e o encanamento em volta.")
+    return c
+
+
+def errpath(T):
+    c = Canvas(720, 210, T(
+        "The path of a request through the Express chain. Normally it passes the logger, the JSON parser and the router, "
+        "and a route answers. When a route throws, or its promise rejects, Express skips every ordinary middleware still "
+        "ahead and goes straight to the error handler, the one with four parameters, which answers with a status and a "
+        "JSON body.",
+        "O caminho de um pedido pela cadeia do Express. Normalmente ele passa pelo log, pelo leitor de JSON e pelo "
+        "roteador, e uma rota responde. Quando uma rota lança um erro, ou a promise dela rejeita, o Express pula todo "
+        "middleware comum que ainda falta e vai direto ao handler de erro, o de quatro parâmetros, que responde com um "
+        "status e um corpo JSON."))
+    names = [(T("log", "log"), False), ("express.json", True), (T("router", "roteador"), False),
+             (T("route", "rota"), False), ("404", True), ("(err, req, res, next)", True)]
+    xs = [20, 130, 260, 370, 480, 560]
+    ws = [96, 116, 96, 96, 66, 140]
+    for (name, mono), x, w in zip(names, xs, ws):
+        last = x == 560
+        c.rect(x, 60, w, 44, fill="var(--ink)" if last else "var(--panel)", stroke="var(--amber)" if last else "var(--wire)")
+        c.text(x + w / 2, 82, name, mono=mono, size=9.5 if last else 10, fill="var(--amber)" if last else "var(--paper)")
+    for a, b in ((116, 128), (246, 258), (356, 368)):
+        c.line(a, 82, b, 82, stroke="var(--phosphor)", arrow=True)
+    c.text(418, 128, T("answers: 200, 201…", "responde: 200, 201…"), size=9.5, fill="var(--phosphor)")
+    c.path("M418 104 C 418 170, 630 170, 630 108", stroke="var(--amber)")
+    c.line(630, 116, 630, 106, stroke="var(--amber)", arrow=True)
+    c.text(520, 182, T("throws, or rejects: everything between is skipped", "lança, ou rejeita: tudo no meio é pulado"), size=10, fill="var(--amber)")
+    c.text(20, 36, T("one request, left to right", "um pedido, da esquerda para a direita"), size=10, anchor="start", fill="var(--paper-dim)")
+    c.caption = T("An error does not travel the chain: it jumps to the one middleware that takes four arguments.",
+                  "Um erro não percorre a cadeia: ele pula para o único middleware que recebe quatro argumentos.")
+    return c
+
+
+FIGURES = [("middleware", chain), ("the-links-app", files), ("error-handlers", errpath)]

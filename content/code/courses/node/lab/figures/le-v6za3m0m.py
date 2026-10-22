@@ -58,4 +58,66 @@ def pressure(T):
     return c
 
 
-FIGURES = [("readable-and-writable", flow), ("backpressure", pressure)]
+def torn(T):
+    c = Canvas(720, 230, T(
+        "Two ways to replace a file, as timelines with a crash in the middle. writeFile straight onto store.json first "
+        "empties it, then writes: a crash in between leaves zero bytes, and both the old and the new data are gone. "
+        "Writing to a temporary file beside it and then renaming leaves store.json whole until the rename, which happens "
+        "in one step: a crash before it leaves the old file, after it the new one.",
+        "Dois jeitos de substituir um arquivo, como linhas do tempo com uma queda no meio. O writeFile direto no store.json "
+        "primeiro o esvazia, depois escreve: uma queda no meio deixa zero bytes, e os dados velhos e os novos se perdem. "
+        "Escrever num arquivo temporário ao lado e depois renomear deixa o store.json inteiro até o rename, que acontece "
+        "num passo só: uma queda antes deixa o arquivo velho, depois, o novo."))
+    c.text(20, 26, "writeFile(\"store.json\", …)", mono=True, size=10.5, anchor="start", fill="var(--amber)")
+    c.rect(20, 40, 150, 34, fill="var(--panel)", stroke="var(--wire)")
+    c.text(95, 57, T("old data", "dados velhos"), size=10)
+    c.rect(180, 40, 150, 34, fill="var(--ink)", stroke="var(--amber)", dash="3 3")
+    c.text(255, 57, T("emptied: 0 bytes", "esvaziado: 0 bytes"), size=10, fill="var(--amber)")
+    c.rect(340, 40, 360, 34, fill="var(--panel)", stroke="var(--wire)")
+    c.text(520, 57, T("new bytes, arriving", "bytes novos, chegando"), size=10)
+    c.line(300, 30, 300, 86, stroke="var(--amber)", sw=2)
+    c.text(300, 98, T("crash here: nothing survives", "queda aqui: nada sobrevive"), size=10, fill="var(--amber)")
+    c.text(20, 130, "writeFile(temp) + rename(temp, \"store.json\")", mono=True, size=10.5, anchor="start", fill="var(--phosphor)")
+    c.rect(20, 144, 470, 34, fill="var(--panel)", stroke="var(--wire)")
+    c.text(255, 161, T("store.json: old data, whole, the whole time", "store.json: dados velhos, inteiros, o tempo todo"), size=10)
+    c.rect(500, 144, 200, 34, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(600, 161, T("store.json: new data", "store.json: dados novos"), size=10, fill="var(--phosphor)")
+    c.line(495, 136, 495, 190, stroke="var(--phosphor)", sw=2)
+    c.text(495, 204, T("rename: one step", "rename: um passo só"), size=10, fill="var(--phosphor)")
+    c.text(250, 218, T("crash anywhere: one whole file or the other", "queda em qualquer ponto: um arquivo inteiro ou o outro"), size=10, fill="var(--paper-dim)")
+    c.caption = T("Never overwrite what you cannot afford to lose: write beside it, then swap.",
+                  "Nunca sobrescreva o que não pode perder: escreva ao lado, depois troque.")
+    return c
+
+
+def bytes_of(T):
+    c = Canvas(720, 200, T(
+        "The word olá as characters and as bytes. o is the byte 6f and l is 6c, one byte each; á is two bytes, c3 a1, in "
+        "UTF-8. So the string has 3 characters and the buffer 4 bytes. Cutting the buffer after 3 bytes splits á in half, "
+        "and the half byte c3 decodes as the replacement character.",
+        "A palavra olá como caracteres e como bytes. O o é o byte 6f e o l é 6c, um byte cada; o á são dois bytes, c3 a1, "
+        "em UTF-8. Então a string tem 3 caracteres e o buffer 4 bytes. Cortar o buffer depois de 3 bytes divide o á ao "
+        "meio, e o meio byte c3 vira o caractere de substituição."))
+    c.text(20, 40, T("characters: 3", "caracteres: 3"), size=10.5, anchor="start", fill="var(--paper-dim)")
+    c.text(20, 100, T("bytes: 4", "bytes: 4"), size=10.5, anchor="start", fill="var(--paper-dim)")
+    chars = [("o", 1), ("l", 1), ("á", 2)]
+    x = 150
+    for ch, n in chars:
+        w = 60 * n + 8 * (n - 1)
+        c.rect(x, 22, w, 36, fill="var(--panel)", stroke="var(--wire)")
+        c.text(x + w / 2, 40, ch, mono=True, size=14)
+        x += w + 8
+    for i, b in enumerate(["6f", "6c", "c3", "a1"]):
+        bx = 150 + i * 68
+        c.rect(bx, 82, 60, 36, fill="var(--ink)", stroke="var(--phosphor)" if i < 3 else "var(--wire)")
+        c.text(bx + 30, 100, b, mono=True, size=12, fill="var(--phosphor)" if i < 3 else "var(--paper-dim)")
+    c.line(354, 72, 354, 128, stroke="var(--amber)", sw=2, dash="4 3")
+    c.text(354, 142, "subarray(0, 3)", mono=True, size=10, fill="var(--amber)")
+    c.text(500, 100, '→ "ol�"', mono=True, size=13, fill="var(--amber)", anchor="start")
+    c.text(360, 178, T("a cut in the middle of a character decodes as a replacement character", "um corte no meio de um caractere vira um caractere de substituição"), size=10, fill="var(--paper-dim)")
+    c.caption = T("length counts characters, byteLength counts bytes, and a byte boundary is not a character boundary.",
+                  "O length conta caracteres, o byteLength conta bytes, e uma fronteira de byte não é uma fronteira de caractere.")
+    return c
+
+
+FIGURES = [("readable-and-writable", flow), ("backpressure", pressure), ("atomic-writes", torn), ("buffers", bytes_of)]

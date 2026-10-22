@@ -36,4 +36,34 @@ def request(T):
     return c
 
 
-FIGURES = [("the-http-module", request)]
+def gates(T):
+    c = Canvas(720, 210, T(
+        "A request body passing three checks in order. First the content-type: anything but JSON is answered 415 before a "
+        "byte is read. Then the size, counted as the pieces arrive: past the limit, 413. Then the parse, once every piece "
+        "is in: bad JSON is 400. A body that passes all three is the parsed value, and the answer is 200.",
+        "O corpo de um pedido passando por três conferências em ordem. Primeiro o content-type: qualquer coisa que não seja "
+        "JSON é respondida com 415 antes de se ler um byte. Depois o tamanho, contado conforme os pedaços chegam: além do "
+        "limite, 413. Depois a leitura, quando todos os pedaços chegaram: JSON ruim é 400. Um corpo que passa pelas três é "
+        "o valor lido, e a resposta é 200."))
+    steps = [(T("what it claims", "o que diz ser"), "content-type", "415"),
+             (T("how big it is", "o tamanho"), T("counted per piece", "contado por pedaço"), "413"),
+             (T("whether it parses", "se é válido"), "JSON.parse", "400")]
+    for i, (what, how, code) in enumerate(steps):
+        x = 20 + i * 180
+        c.rect(x, 50, 150, 60, fill="var(--panel)", stroke="var(--wire)")
+        c.text(x + 75, 70, what, size=10.5)
+        c.text(x + 75, 92, how, mono=(i != 1), size=9.5, fill="var(--paper-dim)")
+        c.line(x + 150, 80, x + 178, 80, stroke="var(--phosphor)", arrow=True)
+        c.line(x + 75, 110, x + 75, 150, stroke="var(--amber)", arrow=True)
+        c.text(x + 75, 168, code, mono=True, size=11, fill="var(--amber)")
+    c.rect(560, 50, 140, 60, fill="var(--ink)", stroke="var(--phosphor)")
+    c.text(630, 70, T("the value", "o valor"), size=10.5, fill="var(--phosphor)")
+    c.text(630, 92, "200", mono=True, size=11, fill="var(--phosphor)")
+    c.text(20, 30, T("the request arrives", "o pedido chega"), size=10, anchor="start", fill="var(--paper-dim)")
+    c.text(290, 195, T("each refusal has its own status code", "cada recusa tem o seu código de status"), size=10, fill="var(--amber)")
+    c.caption = T("Cheapest first: the type costs nothing to check, the size is checked while reading, the parse comes last.",
+                  "O mais barato primeiro: o tipo não custa nada, o tamanho é conferido durante a leitura, a leitura vem por último.")
+    return c
+
+
+FIGURES = [("the-http-module", request), ("reading-a-body", gates)]
