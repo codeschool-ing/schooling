@@ -16,7 +16,9 @@ that `data.sql` puts there. The bookshop itself does not have to be running; Pos
 JDBI gets a small project beside the bookshop, so that nothing in `~/bookshop` changes. Create its
 directories:
 
-TRANSCRIPT-MKDIR
+```
+ana@vm:~$ mkdir -p jdbi-look/src/main/java/com/example/look
+```
 
 `~/jdbi-look/pom.xml`:
 
@@ -127,7 +129,23 @@ A program with dependencies needs them on its classpath, and lesson 1 showed how
 `compile` builds the class, and `dependency:build-classpath` writes the path of every jar it needs
 into `cp.txt`. The first run downloads JDBI; `-q` keeps that quiet.
 
-TRANSCRIPT-RUN
+```
+ana@vm:~$ cd jdbi-look
+ana@vm:~/jdbi-look$ mvn -q compile dependency:build-classpath -Dmdep.outputFile=cp.txt
+ana@vm:~/jdbi-look$ tr ':' '\n' < cp.txt; echo
+/home/ana/.m2/repository/org/jdbi/jdbi3-core/3.55.0/jdbi3-core-3.55.0.jar
+/home/ana/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar
+/home/ana/.m2/repository/io/leangen/geantyref/geantyref/2.0.1/geantyref-2.0.1.jar
+/home/ana/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar
+/home/ana/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar
+/home/ana/.m2/repository/org/slf4j/slf4j-nop/2.0.17/slf4j-nop-2.0.17.jar
+ana@vm:~/jdbi-look$ java -cp "target/classes:$(cat cp.txt)" com.example.look.Titles 'Machado de Assis'
+TitleAndPrice[title=Dom Casmurro, priceCents=3990]
+TitleAndPrice[title=Quincas Borba, priceCents=3690]
+ana@vm:~/jdbi-look$ java -cp "target/classes:$(cat cp.txt)" com.example.look.Titles 'H. G. Wells'
+TitleAndPrice[title=The Time Machine, priceCents=2950]
+TitleAndPrice[title=The War of the Worlds, priceCents=3200]
+```
 
 The classpath is the measure of how thin JDBI is. Apart from the driver and the logging pair, it is
 `jdbi3-core` and two small jars it depends on. **The program is JDBC with the plumbing done for you**:
@@ -136,15 +154,20 @@ closed.
 
 ## A mistake, and when it surfaces
 
-The SQL is a string, and it is worth seeing what that costs. As a detour, change `b.price_cents` to
+The SQL is a string, and a detour shows what that costs. Change `b.price_cents` to
 `b.price` in the `SELECT` line of `Titles.java`, and compile and run again:
 
-TRANSCRIPT-TYPO
+```
+ana@vm:~/jdbi-look$ mvn -q compile
+ana@vm:~/jdbi-look$ java -cp "target/classes:$(cat cp.txt)" com.example.look.Titles 'Machado de Assis' 2>&1 | head -n 1
+Exception in thread "main" org.jdbi.v3.core.statement.UnableToExecuteStatementException: org.postgresql.util.PSQLException: ERROR: column b.price does not exist
+```
 
 The compile printed nothing, because to javac a SQL string is a string like any other. The mistake
 surfaced when PostgreSQL read the statement, at run time, which for a real application means in front
-of whoever made the request. `head -n 3` cut the stack trace below it. Put `b.price_cents` back before
-moving on.
+of whoever made the request. The line carries two layers: JDBI's `UnableToExecuteStatementException`,
+wrapped around the `PSQLException` that holds PostgreSQL's own words. `head -n 1` kept that first line
+and cut the statement text and the stack trace below it. Put `b.price_cents` back before moving on.
 
 That is the same for every library whose SQL is text: `JdbcClient`, JDBI and MyBatis. The other
 columns of this lesson's figure catch it earlier. **jOOQ and EBean's query beans catch it at compile
