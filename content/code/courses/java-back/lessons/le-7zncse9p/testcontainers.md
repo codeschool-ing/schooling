@@ -271,23 +271,23 @@ run too:
 ```
 ana@vm:~/bookshop$ mvn -B verify 2>&1 | tee /tmp/verify.log | grep -E '^WARNING|Running |Tests run:|BUILD|Total time'
 [INFO] Running com.example.bookshop.ordering.OrderTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.102 s -- in com.example.bookshop.ordering.OrderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.example.bookshop.ordering.OrderTest
 [INFO] Running com.example.bookshop.ordering.OrderServiceTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.667 s -- in com.example.bookshop.ordering.OrderServiceTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.527 s -- in com.example.bookshop.ordering.OrderServiceTest
 [INFO] Running com.example.bookshop.catalogue.BookTest
 [INFO] Running take
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in take
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.example.bookshop.catalogue.BookTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in take
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.example.bookshop.catalogue.BookTest
 [INFO] Running com.example.bookshop.catalogue.IsbnTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.082 s -- in com.example.bookshop.catalogue.IsbnTest
 [INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0
 [INFO] Running com.example.bookshop.BookshopApplicationIT
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.459 s -- in com.example.bookshop.BookshopApplicationIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.733 s -- in com.example.bookshop.BookshopApplicationIT
 [INFO] Running com.example.bookshop.catalogue.BookRepositoryIT
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.834 s -- in com.example.bookshop.catalogue.BookRepositoryIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.070 s -- in com.example.bookshop.catalogue.BookRepositoryIT
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
-[INFO] Total time:  15.395 s
+[INFO] Total time:  14.740 s
 ```
 
 No warning this time. Surefire's seventeen unit tests passed first, as before. Then failsafe ran
@@ -295,16 +295,15 @@ three tests in two classes, and the build succeeded. The log in `/tmp/verify.log
 happened in between, and the first thing is Testcontainers finding the engine:
 
 ```
-ana@vm:~/bookshop$ grep -E 'DockerClientProviderStrategy|DockerClientFactory   : (Testcontainers|Docker host|Connected)|ryuk|Ryuk' /tmp/verify.log
-2026-10-22T20:18:24.474-03:00  INFO 4227 --- [bookshop] [           main] [] org.testcontainers.DockerClientFactory   : Testcontainers version: 2.0.5
-2026-10-22T20:18:24.836-03:00  INFO 4227 --- [bookshop] [           main] [] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
-2026-10-22T20:18:24.841-03:00  INFO 4227 --- [bookshop] [           main] [] org.testcontainers.DockerClientFactory   : Docker host IP address is localhost
-2026-10-22T20:18:24.855-03:00  INFO 4227 --- [bookshop] [           main] [] org.testcontainers.DockerClientFactory   : Connected to docker: 
-2026-10-22T20:18:24.930-03:00  INFO 4227 --- [bookshop] [           main] [] tc.testcontainers/ryuk:0.14.0            : Creating container for image: testcontainers/ryuk:0.14.0
-2026-10-22T20:18:24.933-03:00  INFO 4227 --- [bookshop] [           main] [] o.t.utility.RegistryAuthLocator          : Failure when attempting to lookup auth config. Please ignore if you don't have images in an authenticated registry. Details: (dockerImageName: testcontainers/ryuk:0.14.0, configFile: /home/ana/.docker/config.json, configEnv: DOCKER_AUTH_CONFIG). Falling back to docker-java default behaviour. Exception message: Status 404: No config supplied. Checked in order: /home/ana/.docker/config.json (file not found), DOCKER_AUTH_CONFIG (not set)
-2026-10-22T20:18:25.076-03:00  INFO 4227 --- [bookshop] [           main] [] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 is starting: 16eb9daa5c37ab3cabd5cf505c62e53902de1e644f8fc88e774d5c2f6c077d17
-2026-10-22T20:18:25.333-03:00  INFO 4227 --- [bookshop] [           main] [] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 started in PT0.40297714S
-2026-10-22T20:18:25.337-03:00  INFO 4227 --- [bookshop] [           main] [] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+ana@vm:~/bookshop$ grep -E 'DockerClientProviderStrategy|DockerClientFactory   : (Testcontainers|Docker host|Connected)|tc.testcontainers/ryuk|RyukResourceReaper' /tmp/verify.log
+2026-10-22T20:29:33.651-03:00  INFO 30480 --- [bookshop] [           main] [] org.testcontainers.DockerClientFactory   : Testcontainers version: 2.0.5
+2026-10-22T20:29:34.031-03:00  INFO 30480 --- [bookshop] [           main] [] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+2026-10-22T20:29:34.035-03:00  INFO 30480 --- [bookshop] [           main] [] org.testcontainers.DockerClientFactory   : Docker host IP address is localhost
+2026-10-22T20:29:34.049-03:00  INFO 30480 --- [bookshop] [           main] [] org.testcontainers.DockerClientFactory   : Connected to docker: 
+2026-10-22T20:29:34.120-03:00  INFO 30480 --- [bookshop] [           main] [] tc.testcontainers/ryuk:0.14.0            : Creating container for image: testcontainers/ryuk:0.14.0
+2026-10-22T20:29:34.273-03:00  INFO 30480 --- [bookshop] [           main] [] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 is starting: 10b9cde176b8d7220d95e2f098467e51b85098a2cd0a81a9cc3f3a0a3da03149
+2026-10-22T20:29:34.547-03:00  INFO 30480 --- [bookshop] [           main] [] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 started in PT0.427031218S
+2026-10-22T20:29:34.552-03:00  INFO 30480 --- [bookshop] [           main] [] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
 ```
 
 It looked for the socket where Docker's packages put it, connected, and started a first container
@@ -322,14 +321,14 @@ Then the database:
 
 ```
 ana@vm:~/bookshop$ grep -E 'FlywayExecutor|DbMigrate|Started BookshopApplicationIT|Catalogue opened' /tmp/verify.log | head -n 8
-2026-10-22T20:18:26.764-03:00  INFO 4227 --- [bookshop] [           main] [] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32844/test?loggerLevel=OFF (PostgreSQL 16.15)
-2026-10-22T20:18:26.868-03:00  INFO 4227 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
-2026-10-22T20:18:26.876-03:00  INFO 4227 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - catalogue"
-2026-10-22T20:18:26.905-03:00  INFO 4227 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - first titles"
-2026-10-22T20:18:26.914-03:00  INFO 4227 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - stock and orders"
-2026-10-22T20:18:26.928-03:00  INFO 4227 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.027s)
-2026-10-22T20:18:29.256-03:00  INFO 4227 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 5.963 seconds (process running for 6.932)
-2026-10-22T20:18:29.315-03:00  INFO 4227 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
+2026-10-22T20:29:36.176-03:00  INFO 30480 --- [bookshop] [           main] [] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:32869/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-22T20:29:36.270-03:00  INFO 30480 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-22T20:29:36.276-03:00  INFO 30480 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - catalogue"
+2026-10-22T20:29:36.299-03:00  INFO 30480 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - first titles"
+2026-10-22T20:29:36.308-03:00  INFO 30480 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - stock and orders"
+2026-10-22T20:29:36.324-03:00  INFO 30480 --- [bookshop] [           main] [] o.f.core.internal.command.DbMigrate      : Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.028s)
+2026-10-22T20:29:38.617-03:00  INFO 30480 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 6.221 seconds (process running for 7.114)
+2026-10-22T20:29:38.674-03:00  INFO 30480 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 PostgreSQL 16.15 in a container, the database `test`, Flyway applying lesson 13's and lesson 14's
@@ -340,10 +339,10 @@ counted. The port in the JDBC URL is the one Docker chose this time.
 
 ```
 ana@vm:~/bookshop$ grep -E 'BookRepositoryIT  : (Started|No active)|tc.postgres.*(started in|JDBC URL)|^Hibernate:' /tmp/verify.log | tail -n 6
-2026-10-22T20:18:30.624-03:00  INFO 4227 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.127427336S
-2026-10-22T20:18:30.624-03:00  INFO 4227 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://localhost:32845/test?loggerLevel=OFF)
-2026-10-22T20:18:30.656-03:00  INFO 4227 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : No active profile set, falling back to 1 default profile: "default"
-2026-10-22T20:18:31.018-03:00  INFO 4227 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.384 seconds (process running for 8.694)
+2026-10-22T20:29:40.196-03:00  INFO 30480 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.34241367S
+2026-10-22T20:29:40.196-03:00  INFO 30480 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container is started (JDBC URL: jdbc:postgresql://localhost:32870/test?loggerLevel=OFF)
+2026-10-22T20:29:40.219-03:00  INFO 30480 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T20:29:40.575-03:00  INFO 30480 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.372 seconds (process running for 9.072)
 Hibernate: select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.stock,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id where upper(b1_0.title) like upper(?) escape '\' order by b1_0.title
 Hibernate: select b1_0.title,b1_0.price_cents from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id where a1_0.name=? order by b1_0.title
 ```
@@ -354,7 +353,7 @@ that carries Testcontainers' label, running or not:
 
 ```
 ana@vm:~/bookshop$ docker ps -a --filter label=org.testcontainers=true --format '{{.Image}}  {{.Status}}'
-testcontainers/ryuk:0.14.0  Up 8 seconds
+testcontainers/ryuk:0.14.0  Up 9 seconds
 ana@vm:~/bookshop$ sleep 15; docker ps -a --filter label=org.testcontainers=true --format '{{.Image}}  {{.Status}}'
 ```
 

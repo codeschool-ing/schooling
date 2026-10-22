@@ -166,7 +166,47 @@ file the team versions beside the tests.
 The first run downloads TestNG and surefire's TestNG provider. After that:
 
 ```
-(capture tng-run missing)
+ana@vm:~/testng-look$ mvn test
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.example:testng-look >-----------------------
+[INFO] Building testng-look 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ testng-look ---
+[INFO] skip non existing resourceDirectory /home/ana/testng-look/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ testng-look ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ testng-look ---
+[INFO] skip non existing resourceDirectory /home/ana/testng-look/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ testng-look ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ testng-look ---
+[INFO] Using auto detected provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running TestSuite
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.392 s -- in TestSuite
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.161 s
+[INFO] Finished at: 2026-10-22T20:21:07-03:00
+[INFO] ------------------------------------------------------------------------
 ```
 
 Three differences from the bookshop's runs, each with a reason:
@@ -187,24 +227,42 @@ Three differences from the bookshop's runs, each with a reason:
 Make `addsCopies` expect three copies instead of two, as if the code had a bug that only it can see:
 
 ```
-(capture tng-skip missing)
+ana@vm:~/testng-look$ sed -i 's/assertEquals(shelf.count("Dom Casmurro"), 2);/assertEquals(shelf.count("Dom Casmurro"), 3);/' src/test/java/look/ShelfTest.java
+ana@vm:~/testng-look$ mvn test | grep -E "Tests run:|FAILURE!|expected|BUILD"
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 1, Time elapsed: 0.368 s <<< FAILURE! -- in TestSuite
+[ERROR] look.ShelfTest.addsCopies -- Time elapsed: 0.005 s <<< FAILURE!
+java.lang.AssertionError: expected [3] but found [2]
+[ERROR]   ShelfTest.addsCopies:20 expected [3] but found [2]
+[ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 1
+[INFO] BUILD FAILURE
 ```
 
-One failure, and **`Skipped: 1`**. TestNG's own result file says which test was skipped:
+One failure, and **`Skipped: 1`**. The message, `expected [3] but found [2]`, has the two numbers the
+right way round only because the call put them in TestNG's order, actual first. TestNG's own result
+file says which test was skipped:
 
 ```
-(capture tng-results missing)
+ana@vm:~/testng-look$ grep -o '<test-method [^>]*status="[A-Z]*"' target/surefire-reports/testng-results.xml | grep -o 'name="[^"]*"\|status="[A-Z]*"' | paste - -
+name="startsEmpty"	status="PASS"
+name="addsUpTwoDeliveries"	status="PASS"
+name="addsUpTwoDeliveries"	status="PASS"
+name="addsUpTwoDeliveries"	status="PASS"
+name="addsCopies"	status="FAIL"
+name="takesOne"	status="SKIP"
 ```
 
 `takesOne` never ran: `addsCopies`, which it depends on, failed. That is the point of the feature and
 its whole cost in one line. The report is honest, one failure and one test that could not tell you
 anything, instead of a second failure that is only an echo of the first. But it also means the test
 class is a sequence: `takesOne` cannot be understood, or run, without the two tests before it, and
-all three share the one `shelf`. **JUnit makes the opposite choice, a fresh instance
-per test, so that no test can depend on another by accident.** Put the expectation back:
+all three share the one `shelf`. **JUnit makes the opposite choice, a fresh
+instance per test, so that no test can depend on another by accident.** Put the expectation back:
 
 ```
-(capture tng-skip-back missing)
+ana@vm:~/testng-look$ sed -i 's/assertEquals(shelf.count("Dom Casmurro"), 3);/assertEquals(shelf.count("Dom Casmurro"), 2);/' src/test/java/look/ShelfTest.java
 ```
 
 ## Groups
@@ -213,7 +271,23 @@ The suite file excludes `stress`. Turn the exclusion into an inclusion and only 
 it back and the six run again:
 
 ```
-(capture tng-groups missing)
+ana@vm:~/testng-look$ sed -i 's/<exclude name="stress"\/>/<include name="stress"\/>/' testng.xml && grep -n 'stress' testng.xml
+3:  <test name="everything but stress">
+6:        <include name="stress"/>
+ana@vm:~/testng-look$ mvn test | grep -E "Tests run:|BUILD"
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.354 s -- in TestSuite
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+ana@vm:~/testng-look$ sed -i 's/<include name="stress"\/>/<exclude name="stress"\/>/' testng.xml && mvn test | grep -E "Tests run:|BUILD"
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.355 s -- in TestSuite
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
 ```
 
 Nothing in the Java changed between the two runs. Which tests make up "the fast suite" or "the
@@ -232,9 +306,9 @@ The reason Spring projects use JUnit is not a feature comparison. It is what is 
 `spring-boot-starter-test` brings JUnit Jupiter and nothing of TestNG. **`@SpringBootTest`, and the
 `@DataJpaTest` lesson 19 uses, carry `@ExtendWith(SpringExtension.class)`**, which is a Jupiter
 extension: put either on a TestNG class and nothing reads it. Spring still supports
-TestNG, through a base class your test extends, `AbstractTestNGSpringContextTests`, and you lose the
-starter's choices and every guide written for it. Spring Framework 7 went the other way with the
-older JUnit: its JUnit 4 runner, `SpringRunner`, is deprecated since 7.0.
+TestNG, through a base class your test extends, `AbstractTestNGSpringContextTests`; what you give up
+is the starter's choices and every guide written against them. The older JUnit is the one Spring is
+retiring: its JUnit 4 runner, `SpringRunner`, is deprecated since Spring Framework 7.0.
 
 So TestNG is worth reading when you inherit it, and worth choosing for a suite of long ordered
 scenarios that would otherwise repeat their set-up in every test. For the bookshop, and for the

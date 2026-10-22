@@ -240,9 +240,9 @@ ana@vm:~/bookshop$ grep BookController ~/missing.txt
 [WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/catalogue/BookController.java:30: warning: no comment
 ```
 
-Noventa e dois elementos públicos sem comentário. Os três primeiros são os tratadores do
-`ApiErrorHandler` da aula 7, e o construtor do controller também está na lista, na linha 30. Eles
-são públicos porque o Spring os chama, e ninguém que leia uma página de Javadoc vai chamá-los
+Noventa e dois elementos públicos sem comentário. Os três primeiros estão no `ApiErrorHandler` da
+aula 7: a própria classe, na linha 24, e dois de seus tratadores. O construtor do controller também
+está na lista, na linha 30. Eles são públicos porque o Spring os encontra e os chama, e ninguém que leia uma página de Javadoc vai chamá-los
 diretamente. Uma frase em cada um seria exatamente o tipo de comentário contra o qual a parte
 anterior alertou. `-missing` mantém todas as verificações sobre os comentários que existem e tira a
 exigência de comentário em tudo. Volte para `<doclint>all,-missing</doclint>`.

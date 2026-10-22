@@ -101,7 +101,7 @@ ana@vm:~/bookshop$ mvn test 2>&1 | sed -n '/T E S T S/,$p'
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.bookshop.ordering.OrderTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in com.example.bookshop.ordering.OrderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.089 s -- in com.example.bookshop.ordering.OrderTest
 [INFO] Running com.example.bookshop.ordering.OrderServiceTest
 Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
 WARNING: A Java agent has been loaded dynamically (/home/ana/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
@@ -109,14 +109,14 @@ WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicA
 WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future release
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-20:17:46.906 [main] INFO com.example.bookshop.ordering.OrderService -- Order 7 placed by ana: 1 line(s), 3500 cents
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.754 s -- in com.example.bookshop.ordering.OrderServiceTest
+20:28:54.044 [main] INFO com.example.bookshop.ordering.OrderService -- Order 7 placed by ana: 1 line(s), 3500 cents
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.795 s -- in com.example.bookshop.ordering.OrderServiceTest
 [INFO] Running com.example.bookshop.catalogue.BookTest
 [INFO] Running take
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s -- in take
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.example.bookshop.catalogue.BookTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in take
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.example.bookshop.catalogue.BookTest
 [INFO] Running com.example.bookshop.catalogue.IsbnTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.093 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in com.example.bookshop.catalogue.IsbnTest
 [INFO] 
 [INFO] Results:
 [INFO] 
@@ -125,8 +125,8 @@ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader clas
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.941 s
-[INFO] Finished at: 2026-10-22T20:17:47-03:00
+[INFO] Total time:  2.964 s
+[INFO] Finished at: 2026-10-22T20:28:54-03:00
 [INFO] ------------------------------------------------------------------------
 ```
 
@@ -176,7 +176,10 @@ is prepared for a call that never comes:
 ana@vm:~/bookshop$ sed -i '0,/findByIdForUpdate(3L)/s//findByIdForUpdate(4L)/' src/test/java/com/example/bookshop/ordering/OrderServiceTest.java && grep -n 'findByIdForUpdate' src/test/java/com/example/bookshop/ordering/OrderServiceTest.java
 50:        when(books.findByIdForUpdate(4L)).thenReturn(Optional.of(frankenstein));
 67:        when(books.findByIdForUpdate(3L)).thenReturn(Optional.of(frankenstein));
-ana@vm:~/bookshop$ mvn -B test -Dtest=OrderServiceTest 2>&1 | grep -m 1 -A 6 'Strict stubbing'
+ana@vm:~/bookshop$ mvn -B test -Dtest=OrderServiceTest 2>&1 | sed -n '/<<< ERROR!$/,/OrderServiceTest.java:50)$/p'
+[ERROR] com.example.bookshop.ordering.OrderServiceTest.placingAnOrderTakesTheStockAndSavesTheOrder -- Time elapsed: 0.742 s <<< ERROR!
+org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+
 Strict stubbing argument mismatch. Please check:
  - this invocation of 'findByIdForUpdate' method:
     books.findByIdForUpdate(3L);

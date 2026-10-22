@@ -46,7 +46,15 @@ to only one of them:
 At the end of lesson 17 the bookshop had no test, and `mvn test` said so without complaint:
 
 ```
-(capture no-tests missing)
+ana@vm:~/bookshop$ mvn test | tail -n 8
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ bookshop ---
+[INFO] No tests to run.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.187 s
+[INFO] Finished at: 2026-10-22T20:20:02-03:00
+[INFO] ------------------------------------------------------------------------
 ```
 
 `No tests to run.` and `BUILD SUCCESS` together are worth remembering: an empty test run is a
@@ -146,7 +154,24 @@ No version again: the parent manages it, as it manages the other starters. Ask M
 brought, filtered to the libraries that matter here:
 
 ```
-(capture tree missing)
+ana@vm:~/bookshop$ mvn -q dependency:tree -DoutputFile=/tmp/tree.txt && grep -E "junit|assertj|mockito|hamcrest|jsonpath|xmlunit|awaitility|starter-test|spring-test|boot-test" /tmp/tree.txt
++- org.springframework.boot:spring-boot-starter-test:jar:4.1.1:test
+|  +- org.springframework.boot:spring-boot-test:jar:4.1.1:test
+|  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:4.1.1:test
+|  +- com.jayway.jsonpath:json-path:jar:2.10.0:test
+|  +- org.assertj:assertj-core:jar:3.27.7:test
+|  +- org.awaitility:awaitility:jar:4.3.0:test
+|  +- org.hamcrest:hamcrest:jar:3.0:test
+|  +- org.junit.jupiter:junit-jupiter:jar:6.0.3:test
+|  |  +- org.junit.jupiter:junit-jupiter-api:jar:6.0.3:test
+|  |  |  +- org.junit.platform:junit-platform-commons:jar:6.0.3:test
+|  |  +- org.junit.jupiter:junit-jupiter-params:jar:6.0.3:test
+|  |  \- org.junit.jupiter:junit-jupiter-engine:jar:6.0.3:test
+|  |     \- org.junit.platform:junit-platform-engine:jar:6.0.3:test
+|  +- org.mockito:mockito-core:jar:5.23.0:test
+|  +- org.mockito:mockito-junit-jupiter:jar:5.23.0:test
+|  +- org.springframework:spring-test:jar:7.0.9:test
+|  \- org.xmlunit:xmlunit-core:jar:2.11.0:test
 ```
 
 Read from the top:
@@ -167,5 +192,10 @@ these jars reaches `src/main/java` or the executable jar.
 The surefire version is the parent's choice too, and it is the same 3.5.6 lesson 1 pinned by hand:
 
 ```
-(capture surefire missing)
+ana@vm:~/bookshop$ mvn help:effective-pom | grep -A1 "<artifactId>maven-surefire-plugin"
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.5.6</version>
+--
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.6</version>
 ```

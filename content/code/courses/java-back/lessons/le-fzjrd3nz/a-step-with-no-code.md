@@ -65,7 +65,7 @@ The price is paid in three places. The first is **indirection**: to find what a 
 from the sentence to the method by its text, which an editor with a Cucumber plugin makes a click
 and anything else makes a search. The second is a vocabulary to look after. Sentences are global
 across the glue, so the next feature that wants *the shop has 5 copies of …* reuses it, and one that
-wants almost the same words either bends to fit or adds a near-duplicate; somebody has to keep the
+wants almost the same words either bends to fit or adds a near-duplicate. Somebody has to keep the
 steps a language rather than a pile. The third is that every renamed sentence detaches from its
 code. Cucumber says so loudly, as the snippet above showed, but somebody still has to mend it.
 

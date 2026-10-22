@@ -67,13 +67,16 @@ que o JUnit resolver usar.
 que contam a história dos testes de integração:
 
 ```
-ana@vm:~/bookshop$ mvn verify | grep -E 'postgres:16-alpine started|Tomcat started|Tests run:.*IT$|BUILD'
+ana@vm:~/bookshop$ mvn verify | grep -E 'postgres:16-alpine started|Tomcat started|Tests run:.*[a-z]IT|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-2026-10-22T20:13:45.180-03:00  INFO 30360 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.448122278S
-2026-10-22T20:13:50.006-03:00  INFO 30360 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.449991375S
-2026-10-22T20:13:53.714-03:00  INFO 30360 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.418075091S
-2026-10-22T20:13:54.195-03:00  INFO 30360 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 42599 (http) with context path '/'
+2026-10-22T20:25:06.641-03:00  INFO 25149 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.483050724S
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.072 s -- in com.example.bookshop.BookshopApplicationIT
+2026-10-22T20:25:11.198-03:00  INFO 25149 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.405204285S
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.278 s -- in com.example.bookshop.catalogue.BookRepositoryIT
+2026-10-22T20:25:14.788-03:00  INFO 25149 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.364570635S
+2026-10-22T20:25:15.197-03:00  INFO 25149 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 34317 (http) with context path '/'
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.612 s -- in com.example.bookshop.BooksApiIT
 [INFO] BUILD SUCCESS
 ```
 
@@ -91,7 +94,8 @@ classes de teste, manter as configurações idênticas é o que mantém a suíte
 O teste de pedido fez um pedido de verdade, e o banco naquele contêiner agora o guarda, com o
 estoque do livro 2 um exemplar menor. Nada mais nesta classe lê estoque, então ninguém percebe. Um
 teste escrito depois que espere o estoque da migração passaria sozinho e falharia ao lado deste, que
-é o tipo de falha que só aparece no servidor de build. Dois hábitos a mantêm longe: afirmar sobre o
+então falharia num build completo e passaria toda vez que alguém o rodasse sozinho para investigar.
+Dois hábitos a mantêm longe: afirmar sobre o
 que o seu próprio teste criou em vez de totais, e dar a um teste que precisa de um estado conhecido
 os seus próprios dados. A lição 3 de `testing-cicd` trata de fixtures e conjuntos de dados de teste
 direito.

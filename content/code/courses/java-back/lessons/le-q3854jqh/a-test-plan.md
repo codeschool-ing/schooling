@@ -80,12 +80,12 @@ WARNING: Please consider reporting this to the maintainers of class com.thoughtw
 WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
 Creating summariser <summary>
 Created the tree successfully using src/test/jmeter/books.jmx
-Starting standalone test @ 2026 Oct 22 20:16:04 GMT-03:00 (1792710964849)
+Starting standalone test @ 2026 Oct 22 20:27:27 GMT-03:00 (1792711647193)
 Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
-summary +      1 in 00:00:00 =    3.5/s Avg:   174 Min:   174 Max:   174 Err:     0 (0.00%) Active: 3 Started: 3 Finished: 0
-summary +  19999 in 00:00:15 = 1347.6/s Avg:    13 Min:     0 Max:   137 Err:     0 (0.00%) Active: 0 Started: 20 Finished: 20
-summary =  20000 in 00:00:15 = 1322.4/s Avg:    13 Min:     0 Max:   174 Err:     0 (0.00%)
-Tidying up ...    @ 2026 Oct 22 20:16:20 GMT-03:00 (1792710980041)
+summary +   2306 in 00:00:03 =  837.9/s Avg:    15 Min:     2 Max:   162 Err:     0 (0.00%) Active: 20 Started: 20 Finished: 0
+summary +  17694 in 00:00:08 = 2240.9/s Avg:     8 Min:     0 Max:   122 Err:     0 (0.00%) Active: 0 Started: 20 Finished: 20
+summary =  20000 in 00:00:11 = 1878.3/s Avg:     9 Min:     0 Max:   162 Err:     0 (0.00%)
+Tidying up ...    @ 2026 Oct 22 20:27:37 GMT-03:00 (1792711657897)
 ... end of run
 ```
 
@@ -102,7 +102,7 @@ JMeter, not about the bookshop, and the next step silences them.
 While a run goes on, JMeter prints a `summary +` line for each stretch of it, with `Active` saying
 how many threads were running. The line that matters comes at the end: `summary =`, for the whole
 run. It counts 20000 requests, the twenty threads times 500 rounds times two samplers, in
-COLD-TIME, at COLD-RATE requests a second. Then come the average, smallest and largest response
+11 seconds, at 1878.3 requests a second. Then come the average, smallest and largest response
 time in milliseconds, and the errors. None failed. The next section reads those numbers. First, run the same command
 again:
 
@@ -135,17 +135,15 @@ WARN StatusConsoleListener The use of package scanning to locate plugins is depr
 WARN StatusConsoleListener The use of package scanning to locate plugins is deprecated and will be removed in a future release
 Creating summariser <summary>
 Created the tree successfully using src/test/jmeter/books.jmx
-Starting standalone test @ 2026 Oct 22 20:16:24 GMT-03:00 (1792710984070)
+Starting standalone test @ 2026 Oct 22 20:27:41 GMT-03:00 (1792711661569)
 Waiting for possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445
-summary +  10497 in 00:00:06 = 1790.7/s Avg:     9 Min:     0 Max:   108 Err:     0 (0.00%) Active: 20 Started: 20 Finished: 0
-summary +   9503 in 00:00:04 = 2533.5/s Avg:     7 Min:     0 Max:   167 Err:     0 (0.00%) Active: 0 Started: 20 Finished: 20
-summary =  20000 in 00:00:10 = 2080.3/s Avg:     8 Min:     0 Max:   167 Err:     0 (0.00%)
-Tidying up ...    @ 2026 Oct 22 20:16:33 GMT-03:00 (1792710993752)
+summary =  20000 in 00:00:07 = 2787.8/s Avg:     5 Min:     0 Max:   103 Err:     0 (0.00%)
+Tidying up ...    @ 2026 Oct 22 20:27:48 GMT-03:00 (1792711668806)
 ... end of run
 
-real	0m12.874s
-user	0m10.597s
-sys	0m0.892s
+real	0m10.354s
+user	0m10.744s
+sys	0m0.844s
 ```
 
 `time` is the shell's, and it measures JMeter itself: the elapsed time, and the processor time JMeter used. The next section needs both.

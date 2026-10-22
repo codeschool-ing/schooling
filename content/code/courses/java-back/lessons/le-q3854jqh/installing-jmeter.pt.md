@@ -10,7 +10,10 @@ continua sendo a ferramenta que a maioria das equipes Java encontra primeiro.
 O repositório do Ubuntu tem um pacote `jmeter`, e ele é o pacote errado para instalar:
 
 ```
-RUN-APT
+ana@vm:~$ apt-cache policy jmeter | head -n 3
+jmeter:
+  Installed: (none)
+  Candidate: 2.13-5
 ```
 
 A 2.13 é uma versão de 2015, três versões principais atrás. O JMeter vem, em vez disso, dos
@@ -27,8 +30,8 @@ pacote:
 ana@vm:~$ curl -sLO https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
 ana@vm:~$ curl -sLO https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz.sha512
 ana@vm:~$ ls -l apache-jmeter-5.6.3.tgz*
--rw-r--r-- 1 ana ana 87414762 Oct 22 20:15 apache-jmeter-5.6.3.tgz
--rw-r--r-- 1 ana ana      154 Oct 22 20:15 apache-jmeter-5.6.3.tgz.sha512
+-rw-r--r-- 1 ana ana 87414762 Oct 22 20:27 apache-jmeter-5.6.3.tgz
+-rw-r--r-- 1 ana ana      154 Oct 22 20:27 apache-jmeter-5.6.3.tgz.sha512
 ```
 
 A lição 2 comparou um checksum de olho. O arquivo `.sha512` da Apache vem no formato que o próprio
@@ -53,8 +56,7 @@ confere.
 
 ```
 ana@vm:~$ mkdir -p ~/opt && tar -xzf apache-jmeter-5.6.3.tgz -C ~/opt
-ana@vm:~$ ls ~/opt/apache-jmeter-5.6.3 ~/opt/apache-jmeter-5.6.3/bin | head -n 14
-/home/ana/opt/apache-jmeter-5.6.3:
+ana@vm:~$ ls ~/opt/apache-jmeter-5.6.3
 LICENSE
 NOTICE
 README.md
@@ -64,10 +66,6 @@ extras
 lib
 licenses
 printable_docs
-
-/home/ana/opt/apache-jmeter-5.6.3/bin:
-ApacheJMeter.jar
-BeanShellAssertion.bshrc
 ```
 
 `bin` guarda o script `jmeter` e as configurações dele, `lib` os jars, `docs` o manual. Vale abrir

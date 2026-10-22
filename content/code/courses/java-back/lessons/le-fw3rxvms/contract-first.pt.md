@@ -14,8 +14,8 @@ diferença está em qual dos dois tem o direito de mudar o outro.
 
 ## O que o código primeiro não pega
 
-Um documento derivado do código sempre bate com o código, e isso é tanto o ponto fraco quanto o
-ponto forte dele. Renomeie o parâmetro de busca de `q` para `text`, uma mudança que parece
+Um documento derivado do código sempre bate com o código, inclusive quando o código muda algo que
+não devia. Renomeie o parâmetro de busca de `q` para `text`, uma mudança que parece
 arrumação:
 
 ```
@@ -61,14 +61,14 @@ anterior, gere o build e reinicie.
 
 Uma equipe de contrato primeiro começa por um arquivo, em geral `openapi.yaml`, escrito à mão e
 revisado como código pelas pessoas dos dois lados. Um gerador, quase sempre o **OpenAPI Generator**,
-o lê e escreve as partes que precisam concordar com ele: no servidor, interfaces Java com as
-anotações de mapeamento já colocadas, que seus controllers implementam; do lado do cliente, uma
+o lê e escreve as partes que precisam concordar com ele. No servidor, são interfaces Java com as
+anotações de mapeamento já colocadas, que seus controllers implementam. Do lado do cliente, é uma
 biblioteca na linguagem de quem chama a API. Renomear `q` passa a ser uma mudança no contrato, feita
 de propósito e revisada, e um controller que ainda diz `q` deixa de bater com a interface que
 implementa.
 
-Isso tem um custo. O gerador é mais uma ferramenta para configurar e atualizar, o código gerado é
-escrito no estilo dele e não no seu, e uma regra como o dígito verificador do ISBN continua escrita
+Isso tem um custo. O gerador é mais uma ferramenta para configurar e atualizar, e o código que ele
+escreve segue o estilo dele, não o seu. Uma regra como o dígito verificador do ISBN continua escrita
 à mão no servidor, porque um schema consegue descrever uma string de treze dígitos, mas não a conta
 feita sobre eles.
 

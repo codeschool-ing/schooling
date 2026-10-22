@@ -41,7 +41,7 @@ words. Which means **one sentence cannot both arrange and check**, and the featu
 sentences about stock for that reason. *The shop has 5 copies of …* sets the stock. *… has 3 copies
 left* reads it. Written as one sentence used in both places, the method behind it would have to
 choose. If it only checked, the `Given` would pass only while the database still held the five
-copies it was seeded with; against a database another test had already ordered from, it would fail
+copies it was seeded with. Against a database another test had already ordered from, it would fail
 for a reason that has nothing to do with the rule. If it only set, the
 `Then` would check nothing at all.
 

@@ -41,7 +41,11 @@ Replace `IsbnTest.java` with its final version:
 Run only this class with `-Dtest`, and keep the lines that count:
 
 ```
-(capture param-run missing)
+ana@vm:~/bookshop$ mvn test -Dtest=IsbnTest | grep -E "Running|Tests run|BUILD"
+[INFO] Running com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.152 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
 ```
 
 **Ten tests from three methods**: four invocations of the first, five of the second and one plain
@@ -53,7 +57,17 @@ the other nine still run and still report.
 Surefire's report names an invocation by its method's signature and its index:
 
 ```
-(capture param-xml missing)
+ana@vm:~/bookshop$ grep -o "testcase name=\"[^\"]*\"" target/surefire-reports/TEST-com.example.bookshop.catalogue.IsbnTest.xml
+testcase name="refusesNull"
+testcase name="acceptsAValidIsbn13(String)[1]"
+testcase name="acceptsAValidIsbn13(String)[2]"
+testcase name="acceptsAValidIsbn13(String)[3]"
+testcase name="acceptsAValidIsbn13(String)[4]"
+testcase name="refusesAnythingElse(String, String)[1]"
+testcase name="refusesAnythingElse(String, String)[2]"
+testcase name="refusesAnythingElse(String, String)[3]"
+testcase name="refusesAnythingElse(String, String)[4]"
+testcase name="refusesAnythingElse(String, String)[5]"
 ```
 
 That is all Maven will ever print about them, and `[3]` does not say which ISBN was third. The
@@ -64,14 +78,39 @@ get. The first copies the launcher, a single jar on Maven Central, into `target`
 the test classpath to a file:
 
 ```
-(capture launcher-get missing)
+ana@vm:~/bookshop$ mvn -q dependency:copy -Dartifact=org.junit.platform:junit-platform-console-standalone:6.0.3 -DoutputDirectory=target
+ana@vm:~/bookshop$ mvn -q dependency:build-classpath -Dmdep.outputFile=target/test.cp
 ```
 
 Then run the class through it. `--details=testfeed` prints a line as each test starts and as it
 ends, and `grep -v STARTED` keeps the second of the two:
 
 ```
-(capture launcher-isbn missing)
+ana@vm:~/bookshop$ java -jar target/junit-platform-console-standalone-6.0.3.jar execute --disable-banner --disable-ansi-colors --details=testfeed --class-path "target/test-classes:target/classes:$(cat target/test.cp)" --select-class com.example.bookshop.catalogue.IsbnTest | grep -v STARTED
+JUnit Jupiter > IsbnTest > refusesNull() :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > acceptsAValidIsbn13(String) > [1] isbn = "9786500000016" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > acceptsAValidIsbn13(String) > [2] isbn = "9786500000023" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > acceptsAValidIsbn13(String) > [3] isbn = "9786500000030" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > acceptsAValidIsbn13(String) > [4] isbn = "9780306406157" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > refusesAnythingElse(String, String) > "wrong check digit": "9786500000017" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > refusesAnythingElse(String, String) > "twelve digits": "978650000001" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > refusesAnythingElse(String, String) > "fourteen digits": "97865000000160" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > refusesAnythingElse(String, String) > "a hyphen": "978-6500000016" :: SUCCESSFUL
+JUnit Jupiter > IsbnTest > refusesAnythingElse(String, String) > "a letter": "97865000000X6" :: SUCCESSFUL
+
+Test run finished after 251 ms
+[         6 containers found      ]
+[         0 containers skipped    ]
+[         6 containers started    ]
+[         0 containers aborted    ]
+[         6 containers successful ]
+[         0 containers failed     ]
+[        10 tests found           ]
+[         0 tests skipped         ]
+[        10 tests started         ]
+[         0 tests aborted         ]
+[        10 tests successful      ]
+[         0 tests failed          ]
 ```
 
 Two kinds of name are there. `acceptsAValidIsbn13` has no pattern, so each invocation is named by
@@ -80,9 +119,10 @@ list. `refusesAnythingElse` has `"{1}: {0}"`, so its invocations are named `"wro
 "9786500000017"` and so on, the reason first. Both are better than `[3]`; the second reads as a list
 of the cases the rule refuses, which is what a reviewer wants to check is complete.
 
-The launcher's own summary at the bottom counts **containers** as well as tests: the engine, each
-class, and each parameterised method are containers, and only the invocations and the plain test
-are tests. Ten tests, as surefire counted.
+The launcher's own summary at the bottom counts **containers** as well as tests. The six
+containers are the three engines the launcher jar carries (it brings JUnit Vintage and a suite
+engine along with Jupiter, whether the project uses them or not), the class, and the two
+parameterised methods. The ten tests are the invocations and the plain test, as surefire counted.
 
 ## When to stop adding rows
 

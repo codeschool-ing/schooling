@@ -257,7 +257,7 @@
     "items": [
       "Tomcat starts on port 8080",
       "Tomcat starts on port 8081, for the endpoints",
-      "Liveness becomes CORRECT, and the start-up is logged as finished",
+      "The start-up is logged as finished, and liveness becomes CORRECT",
       "CatalogueReport runs, while readiness still answers 503",
       "Readiness becomes ACCEPTING_TRAFFIC"
     ],
@@ -681,7 +681,7 @@
     "difficulty": "hard",
     "drillable": true,
     "prompt": "During the outage of the health section, which of the four rules in the rules file would have fired if it had lasted ten minutes, with requests arriving all the time? Choose all that apply.",
-    "hint": "Remember how the failed requests were recorded, and that the scrapes still answered.",
+    "hint": "Remember what the timer recorded for the failed requests, and that the scrapes still answered.",
     "choices": [
       {
         "text": "`BookshopDown`, on `up == 0`",
@@ -690,8 +690,8 @@
       },
       {
         "text": "`BookshopServerErrors`, on the share of `SERVER_ERROR`",
-        "correct": false,
-        "why": "The failures were recorded as 401, `CLIENT_ERROR`, so the numerator never moved. The defect in the error path hid the outage from this rule."
+        "correct": true,
+        "why": "Right. The client was told 401, but the timer recorded `status=\"500\"` and `SERVER_ERROR` with the exception, and nearly every request needs the database."
       },
       {
         "text": "`BookshopPoolWaiting`, on `hikaricp_connections_pending > 0` for two minutes",

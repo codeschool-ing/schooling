@@ -17,7 +17,9 @@
 #     where the student uses `openssl rand -base64 32` (lesson 15);
 #   - the readiness loop the lesson runs in "a third terminal" is started in
 #     the background just before the application, exactly as typed, and its
-#     output is printed when it has finished;
+#     output is printed when it has finished. The window it looks for lasts
+#     about 0.2 s and a loop can miss it, so the start is repeated, up to four
+#     times, until one run lands a round in it (the lesson says so);
 #   - ana has no sudo in the lab, so a command the lesson shows with `sudo` is
 #     printed with ana's prompt and run by root, exactly as written;
 #   - the detours are applied by this script, run, and undone: SecurityConfig
@@ -114,12 +116,19 @@ stop
 
 block readiness-loop
 LOOP="for i in \$(seq 1500); do echo \$(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/\$p; done); done | uniq -c"
-runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
-LOOPPID=$!
-sleep 1
-EXTRA_ENV="$SECRET" start --logging.level.org.springframework.boot.availability=debug
-ready
-wait $LOOPPID
+# The window between "Started" and readiness is about 0.2 s, and a loop can
+# miss it: start again, up to four times, and keep the first run that landed in it.
+for attempt in 1 2 3 4; do
+  stop
+  runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
+  LOOPPID=$!
+  sleep 1
+  EXTRA_ENV="$SECRET" start --logging.level.org.springframework.boot.availability=debug
+  ready
+  wait $LOOPPID
+  grep -q ' 503' /tmp/l22-loop.txt && break
+  echo "(attempt $attempt landed no round in the window)" >&2
+done
 printf 'ana@vm:%s$ %s\n' '~/bookshop' "$LOOP"
 cat /tmp/l22-loop.txt
 rm -f /tmp/l22-loop.txt

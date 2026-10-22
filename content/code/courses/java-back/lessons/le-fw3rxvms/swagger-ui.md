@@ -41,8 +41,8 @@ much, because nothing told springdoc. At the bottom are the schemas, `ProblemDet
 
 ## Sending a request from it
 
-Every operation has a **Try it out** button, which turns the fields into a form, and **Execute**,
-which sends the request from your browser to the bookshop and shows what came back, with a `curl`
+Every operation has a **Try it out** button, which turns the fields into a form. The **Execute** button
+that appears then sends the request from your browser to the bookshop and shows what came back, with a `curl`
 command that sends the same request. The reading operations work as they are.
 
 Adding a book needs a token with `catalogue:write`, which the clerk has. Get one in the terminal
@@ -80,9 +80,9 @@ The second terminal has been printing two warnings at every start since springdo
 ```
 
 springdoc is telling you that its defaults are for development. In production, a full description
-of every endpoint and a form for calling them are a gift to anybody looking for a way in: they do
-not open a single lock, since every operation still checks its token, but they save the visitor
-the work of finding the doors. Some APIs are public and publish their document on purpose. An API
+of every endpoint and a form for calling them are a gift to anybody looking for a way in. They do
+not open a single lock, since every operation still checks its token. They save the visitor the
+work of finding the doors. Some APIs are public and publish their document on purpose. An API
 like the bookshop's, called by its own web page, has no reason to.
 
 The property in the first warning is enough. Stop the application in the second terminal and start it with the
@@ -101,9 +101,10 @@ ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/swagg
 
 Both paths are 404, the page as well as the document, because Swagger UI has nothing to draw
 without one. The warnings are gone from the second terminal, too. The property is ordinary Spring
-configuration, so it goes wherever the rest of a deployment's configuration goes: a line in the
-properties file of a production profile, as lesson 4 set up `dev`, or an environment variable,
-whose name is the property in capitals with the dots turned into underscores and the dash removed:
+configuration, so it goes wherever the rest of a deployment's configuration goes. That can be a line
+in the properties file of a production profile, as lesson 4 set up `dev`. It can also be an
+environment variable, named after the property in capitals, with the dots turned into underscores
+and the dash removed:
 
 ```sh
 SPRINGDOC_APIDOCS_ENABLED=false java -jar target/bookshop-0.1.0.jar

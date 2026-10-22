@@ -42,9 +42,9 @@ entre eles.
 
 ## Enviando uma requisição por ela
 
-Toda operação tem um botão **Try it out**, que transforma os campos num formulário, e **Execute**,
-que envia a requisição do seu navegador para a livraria e mostra o que voltou, com um comando `curl`
-que envia a mesma requisição. As operações de leitura funcionam como estão.
+Toda operação tem um botão **Try it out**, que transforma os campos num formulário. O botão **Execute**,
+que aparece em seguida, envia a requisição do seu navegador para a livraria e mostra o que voltou, com um comando
+`curl` que envia a mesma requisição. As operações de leitura funcionam como estão.
 
 Acrescentar um livro pede um token com `catalogue:write`, que o clerk tem. Pegue um no terminal,
 como a aula 15 fez:
@@ -82,8 +82,8 @@ O segundo terminal vem imprimindo dois avisos a cada subida desde que o springdo
 
 O springdoc está dizendo que os padrões dele são para desenvolvimento. Em produção, uma descrição
 completa de cada endpoint e um formulário para chamá-los são um presente para quem procura uma
-entrada: não abrem fechadura nenhuma, já que toda operação continua conferindo o token, mas poupam
-o visitante do trabalho de achar as portas. Algumas APIs são públicas e publicam o documento de
+entrada. Não abrem fechadura nenhuma, já que toda operação continua conferindo o token. Poupam o
+visitante do trabalho de achar as portas. Algumas APIs são públicas e publicam o documento de
 propósito. Uma API como a da livraria, chamada pela própria página web, não tem motivo para isso.
 
 Basta a propriedade do primeiro aviso. Pare a aplicação no segundo terminal e suba-a com a propriedade na
@@ -102,9 +102,10 @@ ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/swagg
 
 Os dois caminhos dão 404, a página e também o documento, porque o Swagger UI não tem o que desenhar
 sem ele. Os avisos também sumiram do segundo terminal. A propriedade é configuração comum do Spring,
-então vai para onde vai o resto da configuração de uma implantação: uma linha no arquivo de
-propriedades de um perfil de produção, como a aula 4 montou o `dev`, ou uma variável de ambiente,
-cujo nome é a propriedade em maiúsculas, com os pontos trocados por sublinhados e o hífen removido:
+então vai para onde vai o resto da configuração de uma implantação. Pode ser uma linha no arquivo de
+propriedades de um perfil de produção, como a aula 4 montou o `dev`. Pode ser também uma variável de
+ambiente, com o nome da propriedade em maiúsculas, os pontos trocados por sublinhados e o hífen
+removido:
 
 ```sh
 SPRINGDOC_APIDOCS_ENABLED=false java -jar target/bookshop-0.1.0.jar

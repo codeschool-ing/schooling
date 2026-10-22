@@ -333,8 +333,8 @@ type, and its media type is `*/*` because the controller never declared one. The
 What is missing is the 404. The method throws `BookNotFoundException`, lesson 7's handler turns it
 into a 404, and none of that shows in a signature that returns a `BookResponse`.
 
-The request body of `POST /books` is described by a schema, built from the `BookRequest` record of
-lesson 6, with the `stock` that lesson 14 added, and the Bean Validation constraints on it:
+The request body of `POST /books` is described by a schema. springdoc built it from the `BookRequest`
+record of lesson 6, with the `stock` that lesson 14 added, and from its Bean Validation constraints:
 
 ```
 ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json components schemas BookRequest

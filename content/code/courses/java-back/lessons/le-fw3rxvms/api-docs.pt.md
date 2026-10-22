@@ -334,8 +334,8 @@ e `get_1` é um id de operação tornado único porque o `OrderController` tamb�
 O que falta é o 404. O método lança `BookNotFoundException`, o tratador da aula 7 a transforma num
 404, e nada disso aparece numa assinatura que devolve um `BookResponse`.
 
-O corpo da requisição de `POST /books` é descrito por um schema, montado a partir do record
-`BookRequest` da aula 6, com o `stock` que a aula 14 acrescentou, e das restrições de Bean
+O corpo da requisição de `POST /books` é descrito por um schema. O springdoc o montou a partir do
+record `BookRequest` da aula 6, com o `stock` que a aula 14 acrescentou, e das restrições de Bean
 Validation que ele carrega:
 
 ```

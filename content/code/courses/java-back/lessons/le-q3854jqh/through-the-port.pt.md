@@ -196,7 +196,7 @@ dependência perto do fim de `<dependencies>`, no escopo `test`.
 </project>
 ```
 
-As dependências dele merecem uma olhada, porque duas delas surpreendem:
+Vale conhecer duas das dependências dele:
 
 ```
 ana@vm:~/bookshop$ mvn dependency:tree -Dincludes=io.rest-assured,org.apache.groovy,org.apache.httpcomponents,org.hamcrest | grep -E 'rest-assured|groovy|httpc|hamcrest'

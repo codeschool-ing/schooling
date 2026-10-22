@@ -196,7 +196,7 @@ one. Two things are new: the `rest-assured.version` property, and the dependency
 </project>
 ```
 
-Its dependencies are worth one look, because two of them surprise people:
+Two of its dependencies are worth knowing about:
 
 ```
 ana@vm:~/bookshop$ mvn dependency:tree -Dincludes=io.rest-assured,org.apache.groovy,org.apache.httpcomponents,org.hamcrest | grep -E 'rest-assured|groovy|httpc|hamcrest'

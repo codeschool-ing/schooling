@@ -215,6 +215,7 @@ Create `src/test/java/com/example/bookshop/acceptance/CucumberIT.java`:
 ```java
 package com.example.bookshop.acceptance;
 
+import static io.cucumber.junit.platform.engine.Constants.ANSI_COLORS_DISABLED_PROPERTY_NAME;
 import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 
@@ -228,6 +229,7 @@ import org.junit.platform.suite.api.Suite;
 @SelectPackages("features")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.example.bookshop.acceptance")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
+@ConfigurationParameter(key = ANSI_COLORS_DISABLED_PROPERTY_NAME, value = "true")
 class CucumberIT {
 }
 ```
@@ -302,8 +304,8 @@ context** is started once, with Tomcat on its random port and PostgreSQL in its 
 keeps it in a cache for any later test class that asks for the same configuration. The **glue** is
 created again for every scenario, so `token` and `lastOrder` start empty each time and nothing one
 scenario left in a field can leak into the next. The **database** is neither: it lives as long as
-the context, and nothing rolls it back between scenarios, because every write went through HTTP and
-was committed by the application.
+the context, and nothing rolls it back between scenarios, because every write, the steps' own
+included, was committed the moment it was made.
 
 The cache reaches further than Cucumber. Run the whole of `verify` and count the containers:
 

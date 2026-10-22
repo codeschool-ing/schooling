@@ -67,18 +67,21 @@ JUnit happens to choose.
 the story of the integration tests:
 
 ```
-ana@vm:~/bookshop$ mvn verify | grep -E 'postgres:16-alpine started|Tomcat started|Tests run:.*IT$|BUILD'
+ana@vm:~/bookshop$ mvn verify | grep -E 'postgres:16-alpine started|Tomcat started|Tests run:.*[a-z]IT|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-2026-10-22T20:13:45.180-03:00  INFO 30360 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.448122278S
-2026-10-22T20:13:50.006-03:00  INFO 30360 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.449991375S
-2026-10-22T20:13:53.714-03:00  INFO 30360 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.418075091S
-2026-10-22T20:13:54.195-03:00  INFO 30360 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 42599 (http) with context path '/'
+2026-10-22T20:25:06.641-03:00  INFO 25149 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.483050724S
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.072 s -- in com.example.bookshop.BookshopApplicationIT
+2026-10-22T20:25:11.198-03:00  INFO 25149 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.405204285S
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.278 s -- in com.example.bookshop.catalogue.BookRepositoryIT
+2026-10-22T20:25:14.788-03:00  INFO 25149 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Container postgres:16-alpine started in PT1.364570635S
+2026-10-22T20:25:15.197-03:00  INFO 25149 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 34317 (http) with context path '/'
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.612 s -- in com.example.bookshop.BooksApiIT
 [INFO] BUILD SUCCESS
 ```
 
-The three `Tests run` lines add up to seven integration tests, four of them this lesson's, and all passed. Count the containers, though:
-**three PostgreSQL containers for three test classes.** `BookRepositoryIT` declares its own, as
+The three `Tests run` lines add up to seven integration tests, four of them this lesson's, and all
+passed. Count the containers, though: **three PostgreSQL containers for three test classes.** `BookRepositoryIT` declares its own, as
 lesson 19 wrote it. The other two each import `TestcontainersConfiguration`, where the container
 is a bean, and a bean lives in an application context. `BookshopApplicationIT` runs in a `MOCK`
 context and `BooksApiIT` in a `RANDOM_PORT` one; Spring caches a context and reuses it for every
@@ -92,6 +95,7 @@ fast.
 The order test placed a real order, and the database in that container now holds it, with the
 stock of book 2 one copy lower. Nothing else in this class reads stock, so nothing notices. A
 test written later that expects the stock of the migration would pass alone and fail beside this
-one, which is the kind of failure that appears only on the build server. Two habits keep it away:
+one, so it would fail in a full build and pass every time somebody ran it alone to look. Two habits
+keep it away:
 assert on what your own test created rather than on totals, and give a test that needs a known
 state its own data. `testing-cicd` lesson 3 treats fixtures and test data sets properly.

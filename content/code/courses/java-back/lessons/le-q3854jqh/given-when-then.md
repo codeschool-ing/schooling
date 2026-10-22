@@ -4,9 +4,9 @@ version: 1
 ---
 
 A REST Assured test is written in three clauses, and the names are the library's own methods.
-**`given()`** describes the request: headers, a body, credentials. **`when()`** sends it, with a
-method and a path. **`then()`** states what the answer must be, and each statement after it is an
-expectation that fails the test if the answer disagrees. The shape is borrowed from behaviour-driven
+`given()` describes the request: headers, a body, credentials. `when()` sends it, with a method and
+a path. `then()` states what the answer must be, and **each statement after it is an expectation**
+that fails the test if the answer disagrees. The shape is borrowed from behaviour-driven
 development, which lesson 21 meets properly; here it is only a way of reading a test from top to
 bottom.
 
@@ -63,9 +63,9 @@ the lines worth reading here:
 ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -E 'Tomcat started|Started BooksApiIT|Tests run:.*BooksApiIT|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-2026-10-22T20:12:57.816-03:00  INFO 28469 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 38633 (http) with context path '/'
-2026-10-22T20:12:57.827-03:00  INFO 28469 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 7.202 seconds (process running for 7.992)
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.959 s -- in com.example.bookshop.BooksApiIT
+2026-10-22T20:24:29.074-03:00  INFO 23319 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 41725 (http) with context path '/'
+2026-10-22T20:24:29.079-03:00  INFO 23319 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 6.12 seconds (process running for 6.92)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.630 s -- in com.example.bookshop.BooksApiIT
 [INFO] BUILD SUCCESS
 ```
 
@@ -84,20 +84,26 @@ before these, under surefire, which is the first of the two warnings.
 
 ## A test that fails, read
 
-A test is only worth what it says when it fails. As a detour, put a wrong expectation into the
+Before trusting the test, see what it says when it fails. As a detour, put a wrong expectation into the
 second test: the belief that an error answer is `application/json`, like every other answer of the
 bookshop.
 
 ```
 ana@vm:~/bookshop$ sed -i 's|"application/problem+json"|"application/json"|' src/test/java/com/example/bookshop/BooksApiIT.java
-ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -A4 '<<< FAILURE'
+ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -A9 '<<< FAILURE'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 8.704 s <<< FAILURE! -- in com.example.bookshop.BooksApiIT
-[ERROR] com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail -- Time elapsed: 0.810 s <<< FAILURE!
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 7.330 s <<< FAILURE! -- in com.example.bookshop.BooksApiIT
+[ERROR] com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail -- Time elapsed: 0.796 s <<< FAILURE!
 java.lang.AssertionError: 
 1 expectation failed.
 Expected content-type "application/json" doesn't match actual content-type "application/problem+json".
+
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure.validate(ResponseSpecificationImpl.groovy:527)
+	at io.restassured.internal.ResponseSpecificationImpl.validateResponseIfRequired(ResponseSpecificationImpl.groovy:725)
+	at io.restassured.internal.ResponseSpecificationImpl.contentType(ResponseSpecificationImpl.groovy:458)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.contentType(ValidatableResponseOptionsImpl.java:226)
+	at com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail(BooksApiIT.java:50)
 ```
 
 **`1 expectation failed.`** is REST Assured's own report, and the line under it says exactly which
@@ -107,8 +113,8 @@ differently from a book. That difference is what the test exists to protect.
 
 The stack trace below it reads from the inside out. The four `io.restassured` lines are the
 library, and three of them name `.groovy` files: REST Assured is partly written in the Groovy the
-dependency tree showed. The last line is yours: `BooksApiIT.java:50` is the line of the `contentType` expectation, not of the request, so a
-failing test points at the claim that broke.
+dependency tree showed. The last line is yours: `BooksApiIT.java:50` is the line of the `contentType` expectation, not of the request, so
+a failing test points at the claim that broke.
 
 Put the expectation back:
 
@@ -117,6 +123,6 @@ ana@vm:~/bookshop$ sed -i 's|contentType("application/json")|contentType("applic
 ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -E 'Tests run:.*BooksApiIT|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.175 s -- in com.example.bookshop.BooksApiIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.910 s -- in com.example.bookshop.BooksApiIT
 [INFO] BUILD SUCCESS
 ```

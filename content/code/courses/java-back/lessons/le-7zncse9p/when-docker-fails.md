@@ -38,7 +38,7 @@ failed to connect to the docker API at unix:///run/not-running.sock; check if th
 
 **Nothing answered at all**, which is a different failure from a refusal. Either the engine is
 stopped, and `sudo systemctl start docker` starts it, or `docker` was pointed at a socket where no
-engine listens. The lab produced it with `DOCKER_HOST`, the variable that points the client
+engine listens. This transcript produced it with `DOCKER_HOST`, the variable that points the client
 elsewhere, and a `DOCKER_HOST` left over in `~/.bashrc` from some tutorial is how it happens by
 accident. The path in the message says which socket was tried.
 
@@ -50,8 +50,8 @@ without the group, with the integration tests of the next section in place:
 ```
 ana@vm:~/bookshop$ mvn -B verify 2>&1 | grep -E 'o.t.d.DockerClientProviderStrategy|valid Docker environment for|Skipped: 0$|BUILD'
 [INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0
-2026-10-22T20:18:58.446-03:00  WARN 5316 --- [bookshop] [           main] [] o.t.d.DockerClientProviderStrategy       : DOCKER_HOST unix:///var/run/docker.sock is not listening
-2026-10-22T20:18:58.463-03:00 ERROR 5316 --- [bookshop] [           main] [] o.t.d.DockerClientProviderStrategy       : Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
+2026-10-22T20:30:04.372-03:00  WARN 31296 --- [bookshop] [           main] [] o.t.d.DockerClientProviderStrategy       : DOCKER_HOST unix:///var/run/docker.sock is not listening
+2026-10-22T20:30:04.378-03:00 ERROR 31296 --- [bookshop] [           main] [] o.t.d.DockerClientProviderStrategy       : Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
 Could not find a valid Docker environment for Testcontainers.
 [ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0
 [INFO] BUILD FAILURE

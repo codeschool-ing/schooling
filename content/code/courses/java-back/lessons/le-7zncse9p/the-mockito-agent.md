@@ -91,15 +91,15 @@ ana@vm:~/bookshop$ mvn test 2>&1 | sed -n '/T E S T S/,$p'
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running com.example.bookshop.ordering.OrderTest
-OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in com.example.bookshop.ordering.OrderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in com.example.bookshop.ordering.OrderTest
 [INFO] Running com.example.bookshop.ordering.OrderServiceTest
-20:17:57.641 [main] INFO com.example.bookshop.ordering.OrderService -- Order 7 placed by ana: 1 line(s), 3500 cents
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.566 s -- in com.example.bookshop.ordering.OrderServiceTest
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+20:29:04.845 [main] INFO com.example.bookshop.ordering.OrderService -- Order 7 placed by ana: 1 line(s), 3500 cents
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.545 s -- in com.example.bookshop.ordering.OrderServiceTest
 [INFO] Running com.example.bookshop.catalogue.BookTest
 [INFO] Running take
 [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in take
-[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.example.bookshop.catalogue.BookTest
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.example.bookshop.catalogue.BookTest
 [INFO] Running com.example.bookshop.catalogue.IsbnTest
 [INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in com.example.bookshop.catalogue.IsbnTest
 [INFO] 
@@ -110,16 +110,15 @@ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader clas
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  3.037 s
-[INFO] Finished at: 2026-10-22T20:17:57-03:00
+[INFO] Total time:  2.915 s
+[INFO] Finished at: 2026-10-22T20:29:04-03:00
 [INFO] ------------------------------------------------------------------------
 ```
 
 Mockito's message and the four warnings are gone, because nothing attaches any more: the agent was
 there from the first instruction. **One line stays, and it is harmless.** The agent adds classes to
 the boot class path, the classes the JVM loads before any other, and the JVM's class data sharing, a
-cache of classes it keeps between runs to start faster, then covers fewer of them. It now comes as
-the fork starts, before the first test, because that is when the agent is loaded. The tests do not
+cache of classes it keeps between runs to start faster, then covers fewer of them. The tests do not
 see it.
 
 The other way out, `-XX:+EnableDynamicAgentLoading` in the same `argLine`, would only hide the JDK's

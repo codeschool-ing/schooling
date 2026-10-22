@@ -4,9 +4,9 @@ version: 1
 ---
 
 Um teste com REST Assured se escreve em três cláusulas, e os nomes são métodos da própria
-biblioteca. **`given()`** descreve a requisição: cabeçalhos, um corpo, credenciais. **`when()`** a
-envia, com um método e um caminho. **`then()`** diz o que a resposta tem de ser, e cada afirmação
-depois dele é uma expectativa que reprova o teste se a resposta discordar. A forma vem do
+biblioteca. `given()` descreve a requisição: cabeçalhos, um corpo, credenciais. `when()` a envia,
+com um método e um caminho. `then()` diz o que a resposta tem de ser, e **cada afirmação depois
+dele é uma expectativa** que reprova o teste se a resposta discordar. A forma vem do
 desenvolvimento guiado por comportamento, que a lição 21 apresenta direito; aqui ela é só um jeito
 de ler um teste de cima para baixo.
 
@@ -63,9 +63,9 @@ inteiro é longa, então o `grep` guarda as linhas que interessam aqui:
 ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -E 'Tomcat started|Started BooksApiIT|Tests run:.*BooksApiIT|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-2026-10-22T20:12:57.816-03:00  INFO 28469 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 38633 (http) with context path '/'
-2026-10-22T20:12:57.827-03:00  INFO 28469 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 7.202 seconds (process running for 7.992)
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.959 s -- in com.example.bookshop.BooksApiIT
+2026-10-22T20:24:29.074-03:00  INFO 23319 --- [bookshop] [           main] [] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 41725 (http) with context path '/'
+2026-10-22T20:24:29.079-03:00  INFO 23319 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 6.12 seconds (process running for 6.92)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.630 s -- in com.example.bookshop.BooksApiIT
 [INFO] BUILD SUCCESS
 ```
 
@@ -84,20 +84,26 @@ antes destes, no surefire, que é o primeiro dos dois avisos.
 
 ## Um teste que falha, lido
 
-Um teste só vale o que ele diz quando falha. Como desvio, ponha uma expectativa errada no segundo
+Antes de confiar no teste, veja o que ele diz quando falha. Como desvio, ponha uma expectativa errada no segundo
 teste: a crença de que uma resposta de erro é `application/json`, como toda outra resposta da
 livraria.
 
 ```
 ana@vm:~/bookshop$ sed -i 's|"application/problem+json"|"application/json"|' src/test/java/com/example/bookshop/BooksApiIT.java
-ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -A4 '<<< FAILURE'
+ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -A9 '<<< FAILURE'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 8.704 s <<< FAILURE! -- in com.example.bookshop.BooksApiIT
-[ERROR] com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail -- Time elapsed: 0.810 s <<< FAILURE!
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 7.330 s <<< FAILURE! -- in com.example.bookshop.BooksApiIT
+[ERROR] com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail -- Time elapsed: 0.796 s <<< FAILURE!
 java.lang.AssertionError: 
 1 expectation failed.
 Expected content-type "application/json" doesn't match actual content-type "application/problem+json".
+
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure.validate(ResponseSpecificationImpl.groovy:527)
+	at io.restassured.internal.ResponseSpecificationImpl.validateResponseIfRequired(ResponseSpecificationImpl.groovy:725)
+	at io.restassured.internal.ResponseSpecificationImpl.contentType(ResponseSpecificationImpl.groovy:458)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.contentType(ValidatableResponseOptionsImpl.java:226)
+	at com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail(BooksApiIT.java:50)
 ```
 
 **`1 expectation failed.`** é o relatório do próprio REST Assured, e a linha de baixo diz
@@ -118,6 +124,6 @@ ana@vm:~/bookshop$ sed -i 's|contentType("application/json")|contentType("applic
 ana@vm:~/bookshop$ mvn verify -Dit.test=BooksApiIT | grep -E 'Tests run:.*BooksApiIT|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.175 s -- in com.example.bookshop.BooksApiIT
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.910 s -- in com.example.bookshop.BooksApiIT
 [INFO] BUILD SUCCESS
 ```

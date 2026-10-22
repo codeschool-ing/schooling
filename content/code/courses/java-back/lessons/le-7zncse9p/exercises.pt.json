@@ -1,0 +1,534 @@
+{
+  "ex-z6aa8cq8": {
+    "prompt": "Em `OrderServiceTest`, não houve stub para `books.findByIdForUpdate(3L)`. O que o mock devolve?",
+    "hint": "Olhe o tipo de retorno do método.",
+    "choices": [
+      {
+        "text": "`null`, o padrão para todo objeto",
+        "why": "O Mockito devolve `null` para a maioria dos tipos de objeto, mas não para `Optional`: ele dá um vazio, para que o código que chama `orElseThrow` não quebre com `NullPointerException`."
+      },
+      {
+        "text": "Um `Optional` vazio",
+        "why": "Certo. Por isso o desvio sem stub recebeu `BookNotFoundException`: o serviço tratou a resposta vazia como um livro que não existe."
+      },
+      {
+        "text": "Nada: o mock lança uma exceção, porque a chamada nunca recebeu stub",
+        "why": "Um mock do Mockito não recusa uma chamada sem stub; responde com um valor vazio. Sob stubs estritos, só um stub com argumentos que não batem é recusado."
+      },
+      {
+        "text": "O livro que um teste anterior programou, já que o mock é compartilhado",
+        "why": "A `MockitoExtension` cria um mock novo para cada teste, então nada programado num teste aparece no seguinte."
+      }
+    ]
+  },
+  "ex-11k3te2g": {
+    "prompt": "Por que o primeiro teste programa `orders.save` com `thenAnswer` em vez de `thenReturn`?",
+    "choices": [
+      {
+        "text": "`thenReturn` não devolve entidades, só valores simples",
+        "why": "`thenReturn` devolve qualquer objeto, entidades incluídas; o stub de `findByIdForUpdate` devolve uma."
+      },
+      {
+        "text": "`thenReturn` chamaria o `save` real do Spring Data",
+        "why": "Nenhum stub chama o método real; um mock não tem método real por trás. Um spy chamaria, e não há nenhum aqui."
+      },
+      {
+        "text": "O pedido é criado dentro de `place`, então o teste não tem o que devolver de antemão",
+        "why": "Certo. A resposta roda na hora da chamada, pega o pedido dos argumentos, dá a ele o id 7 e o devolve."
+      },
+      {
+        "text": "`thenAnswer` deixa o teste mais rápido porque pula o Hibernate",
+        "why": "Nenhuma das duas formas toca no Hibernate: ambas programam um mock, e a velocidade é a mesma."
+      }
+    ]
+  },
+  "ex-t9bnv03k": {
+    "prompt": "O segundo teste termina com `verify(orders, never()).save(any())`. Quais afirmações sobre essa linha são verdadeiras? Escolha todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Ela pergunta ao mock quais chamadas ele recebeu durante o teste",
+        "why": "Certo. Um mock registra cada chamada, e o `verify` lê esse registro depois."
+      },
+      {
+        "text": "Ela faz o teste falhar se `save` foi chamado, qualquer que fosse o argumento",
+        "why": "Certo. `any()` aceita qualquer argumento, e `never()` permite zero chamadas."
+      },
+      {
+        "text": "Ela impede o serviço de chamar `save` enquanto o teste roda",
+        "why": "O `verify` roda depois da chamada testada e só confere; não muda nada do que o serviço faz."
+      },
+      {
+        "text": "Ela também confere que `books` não recebeu chamadas",
+        "why": "Ela nomeia o mock `orders` e o método `save`, e não diz nada sobre `books`, que de fato foi chamado."
+      },
+      {
+        "text": "Um stub sozinho não conseguiria expressá-la",
+        "why": "Certo. Um stub só responde chamadas; saber se uma chamada aconteceu é pergunta para o registro que um mock guarda."
+      }
+    ]
+  },
+  "ex-n11geptw": {
+    "prompt": "Associe cada tipo de dublê de teste ao que ele faz.",
+    "pairs": [
+      {
+        "left": "dummy",
+        "right": "preenche um parâmetro e nunca é usado"
+      },
+      {
+        "left": "stub",
+        "right": "devolve respostas que o teste escolheu de antemão"
+      },
+      {
+        "left": "fake",
+        "right": "uma implementação que funciona, mais simples"
+      },
+      {
+        "left": "spy",
+        "right": "um objeto real que também registra as chamadas"
+      }
+    ],
+    "right_distractors": [
+      "uma cópia do banco de produção"
+    ]
+  },
+  "ex-0rsbzt8t": {
+    "prompt": "Um teste programa `books.findByIdForUpdate(5L)`, e o serviço, recebendo um pedido do livro 3, chama `findByIdForUpdate(3L)`. A classe usa `MockitoExtension`. O que acontece?",
+    "choices": [
+      {
+        "text": "A chamada devolve um `Optional` vazio e o teste segue para as asserções",
+        "why": "É o que faz um método sem stub; aqui existe um stub do mesmo método com argumentos diferentes, e os stubs estritos recusam essa combinação."
+      },
+      {
+        "text": "O mock devolve o livro programado mesmo assim, já que o método é o mesmo",
+        "why": "Um stub casa pelos argumentos; 5 não é 3, então ele não se aplica."
+      },
+      {
+        "text": "O teste falha com um `PotentialStubbingProblem` antes de qualquer asserção rodar",
+        "why": "Certo. É o segundo desvio da aula: o Mockito aponta a chamada que recebeu e o stub que tinha."
+      },
+      {
+        "text": "O Mockito imprime um aviso e deixa o teste passar",
+        "why": "Os stubs estritos transformam a divergência num erro, não num aviso; o build falha."
+      }
+    ]
+  },
+  "ex-d1x4tm6v": {
+    "prompt": "O que `-javaagent:${org.mockito:mockito-core:jar}` no `argLine` do surefire muda?",
+    "choices": [
+      {
+        "text": "Permite que o Mockito faça mock de classes finais, o que antes não conseguia",
+        "why": "O inline mock maker do Mockito 5 já fazia isso se anexando sozinho; a opção muda quando o agente chega, não o que ele faz."
+      },
+      {
+        "text": "O agente é carregado quando a JVM dos testes inicia, então o Mockito não se anexa mais no meio da execução",
+        "why": "Certo, e sem nada se anexando somem tanto a mensagem do Mockito quanto os quatro avisos do JDK."
+      },
+      {
+        "text": "Esconde o aviso do JDK enquanto o Mockito continua se anexando como antes",
+        "why": "Isso é o que `-XX:+EnableDynamicAgentLoading` faria, e a aula o descarta exatamente por isso."
+      },
+      {
+        "text": "Faz os testes iniciarem mais rápido, compartilhando as classes do Mockito entre execuções",
+        "why": "O class data sharing é um cache da própria JVM, e a linha que sobrou diz que ele passou a cobrir menos classes, não mais."
+      }
+    ]
+  },
+  "ex-mmgcc9v4": {
+    "prompt": "O goal do `maven-dependency-plugin` que dá a cada dependência uma variável chamada `groupId:artifactId:type`, com o caminho do jar no repositório local, se chama `___`.",
+    "hint": "Ele roda na fase initialize.",
+    "blanks": [
+      {
+        "accept": [
+          "properties"
+        ]
+      }
+    ]
+  },
+  "ex-1nkyxpx1": {
+    "prompt": "Depois que o agente entra no `argLine`, uma linha continua: `Sharing is only supported for boot loader classes because bootstrap classpath has been appended`. O que ela é?",
+    "choices": [
+      {
+        "text": "Um sinal de que o agente não carregou e o Mockito continua se anexando",
+        "why": "Se o Mockito ainda se anexasse, a mensagem dele e as quatro linhas `WARNING:` voltariam, e elas sumiram."
+      },
+      {
+        "text": "Uma falha de teste que o Maven mostra em outro formato",
+        "why": "Os dezessete testes passaram naquela execução; a linha vem da JVM, não de um teste."
+      },
+      {
+        "text": "Um aviso de que o jar do agente é velho demais para o JDK 25",
+        "why": "Nada na linha fala de versão, e o agente funciona: as mensagens de anexo sumiram."
+      },
+      {
+        "text": "A JVM avisando que o class data sharing cobre menos classes, o que é inofensivo",
+        "why": "Certo. O agente acrescenta classes ao boot class path, e o cache de classes compartilhadas da JVM passa a cobrir menos dele."
+      }
+    ]
+  },
+  "ex-hd55embj": {
+    "prompt": "Um colega propõe `-XX:+EnableDynamicAgentLoading` no `argLine` no lugar da opção `-javaagent:`, já que \"os avisos somem também\". O que isso deixa como está?",
+    "choices": [
+      {
+        "text": "O Mockito continua se anexando no meio de cada execução",
+        "why": "Certo. A flag só diz ao JDK para não relatar; o anexo que o JDK anunciou que vai deixar de permitir continua sendo como o Mockito entra."
+      },
+      {
+        "text": "Nada: as duas opções são jeitos equivalentes de carregar o agente",
+        "why": "Uma carrega o agente no início; a outra permite carregá-lo depois. Só a primeira elimina o anexo tardio."
+      },
+      {
+        "text": "Os testes falhando, porque a flag proíbe agentes",
+        "why": "A flag faz o contrário: permite o carregamento dinâmico, então os testes passam."
+      },
+      {
+        "text": "A mensagem do próprio Mockito, enquanto as quatro linhas do JDK somem",
+        "why": "Em parte verdade, e não é o ponto: o que importa que continua é o próprio anexo tardio, que é o assunto da mensagem."
+      }
+    ]
+  },
+  "ex-jdzefyhv": {
+    "prompt": "Associe cada fase que `mvn verify` roda ao que acontece nela no bookshop.",
+    "pairs": [
+      {
+        "left": "test",
+        "right": "o surefire roda as classes com nome *Test"
+      },
+      {
+        "left": "package",
+        "right": "o jar é montado e reempacotado pelo Boot"
+      },
+      {
+        "left": "integration-test",
+        "right": "o failsafe roda as classes com nome *IT e registra os resultados"
+      },
+      {
+        "left": "verify",
+        "right": "o failsafe lê o registro e faz o build falhar se um teste falhou"
+      }
+    ],
+    "right_distractors": [
+      "o Flyway migra o banco do próprio bookshop"
+    ]
+  },
+  "ex-86cn41bk": {
+    "prompt": "Alguém dá o nome `BookRepositoryTests` a uma classe nova que sobe um contêiner PostgreSQL. O que muda?",
+    "choices": [
+      {
+        "text": "Nada, porque o Maven vê o contêiner e entrega a classe ao failsafe",
+        "why": "Nenhum plugin olha dentro da classe; eles escolhem pelo nome, e `*Tests` é do surefire."
+      },
+      {
+        "text": "Nenhum plugin a roda, então os testes dela são pulados sem aviso",
+        "why": "`*Tests` é um dos padrões do surefire, então ela roda, só que no lugar errado."
+      },
+      {
+        "text": "O surefire a roda com os testes de unidade, então cada `mvn test` precisa do Docker e sobe um contêiner",
+        "why": "Certo. O sufixo é a chave inteira, e este põe um teste lento no ciclo rápido."
+      },
+      {
+        "text": "O Maven se recusa a compilar uma classe de teste com esse sufixo",
+        "why": "O nome é Java válido e o Maven compila; só qual plugin a roda depende do nome."
+      }
+    ]
+  },
+  "ex-sp3nmvg8": {
+    "prompt": "Por que o failsafe só registra as falhas em `integration-test` e faz o build falhar depois, em `verify`?",
+    "choices": [
+      {
+        "text": "Porque testes de integração podem falhar sem quebrar o build",
+        "why": "Não podem: uma falha ainda derruba o build, uma fase depois."
+      },
+      {
+        "text": "Para que os testes de unidade rodem entre as duas fases",
+        "why": "Os testes de unidade rodaram bem antes, em `test`; nada deles acontece depois de `integration-test`."
+      },
+      {
+        "text": "Porque ler os resultados é lento e fica para o fim",
+        "why": "Ler um arquivo de resumo é rápido; a ordem existe pelo que precisa rodar entre as duas."
+      },
+      {
+        "text": "Para que `post-integration-test` ainda rode e pare o que foi iniciado para os testes",
+        "why": "Certo. Um servidor ou banco iniciado antes dos testes precisa ser parado mesmo quando eles falharam."
+      }
+    ]
+  },
+  "ex-dkv6htcs": {
+    "prompt": "Ponha em ordem as fases que `mvn verify` roda e para as quais o `grep` da aula mostrou plugins.",
+    "hint": "O jar é montado antes de qualquer teste de integração rodar.",
+    "items": [
+      "compile",
+      "test",
+      "package",
+      "integration-test",
+      "verify"
+    ]
+  },
+  "ex-yetktybd": {
+    "prompt": "Por que fazer parte do grupo `docker` equivale a ser root naquela máquina?",
+    "choices": [
+      {
+        "text": "O engine roda como root e faz o que um membro pede, como iniciar um contêiner que monta o disco inteiro",
+        "why": "Certo. O socket é a porta do engine, e o grupo é a chave dela."
+      },
+      {
+        "text": "`usermod -aG docker` também põe o usuário no `sudo`",
+        "why": "`usermod -aG docker` acrescenta exatamente um grupo, e `id -nG` mostrou só `ana docker`."
+      },
+      {
+        "text": "O grupo `docker` é o grupo número 0, o mesmo do root",
+        "why": "É um grupo comum, com um número comum; o poder vem do que o engine faz a pedido."
+      },
+      {
+        "text": "Membros podem ler qualquer arquivo diretamente, sem o engine",
+        "why": "Fazer parte do grupo não dá nada sobre arquivos por si só; tudo passa pelo socket, até um engine que roda como root."
+      }
+    ]
+  },
+  "ex-k3xvsgt2": {
+    "prompt": "`docker version` imprime o bloco `Client` e depois um erro, sem o bloco `Server`. O que isso diz?",
+    "choices": [
+      {
+        "text": "O Docker não está instalado",
+        "why": "Aí não haveria comando `docker` para imprimir bloco `Client` nenhum."
+      },
+      {
+        "text": "O comando está instalado e o engine não pôde ser alcançado",
+        "why": "Certo. O cliente imprimiu o que sabe de si e não conseguiu chegar ao servidor pelo socket."
+      },
+      {
+        "text": "O cliente e o engine têm versões diferentes",
+        "why": "Uma diferença de versão ainda mostraria os dois blocos, cada um com sua versão."
+      },
+      {
+        "text": "A imagem `hello-world` ainda não foi baixada",
+        "why": "`docker version` não usa imagem nenhuma; só pergunta ao engine sobre ele mesmo."
+      }
+    ]
+  },
+  "ex-pwc0gtbf": {
+    "prompt": "Associe cada mensagem ao que ela quer dizer.",
+    "pairs": [
+      {
+        "left": "permission denied while trying to connect to the docker API",
+        "right": "o engine está rodando e recusou este processo"
+      },
+      {
+        "left": "failed to connect to the docker API",
+        "right": "nada escuta naquele socket"
+      },
+      {
+        "left": "Could not find a valid Docker environment",
+        "right": "o Testcontainers não achou um engine que pudesse usar"
+      },
+      {
+        "left": "429 Too Many Requests",
+        "right": "o limite do Docker Hub para downloads sem conta"
+      }
+    ],
+    "right_distractors": [
+      "o checksum da imagem não bateu"
+    ]
+  },
+  "ex-2av58wqy": {
+    "prompt": "Logo depois de `sudo usermod -aG docker $USER`, `docker ps` responde `permission denied`. Quais destes fazem parte da saída certa? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Sair da VM e fazer login de novo",
+        "why": "Certo. Um processo mantém os grupos com que começou, e só um login novo começa com o grupo novo."
+      },
+      {
+        "text": "Rodar `id -nG` e procurar `docker` na lista",
+        "why": "Certo. Ele mostra os grupos deste shell, que é exatamente o que o engine confere."
+      },
+      {
+        "text": "`sudo chmod 666 /var/run/docker.sock`",
+        "why": "Entrega o engine, e com ele o root, a todas as contas da máquina, e o próximo reinício do engine desfaz isso."
+      },
+      {
+        "text": "Rodar os testes como `sudo mvn verify` daqui em diante",
+        "why": "O Maven passaria a gravar arquivos do root em `target/` e `~/.m2`, e o problema do grupo continua para todos os outros comandos."
+      }
+    ]
+  },
+  "ex-c95be3j0": {
+    "prompt": "`mvn verify` falha com `DOCKER_HOST unix:///var/run/docker.sock is not listening`, mas o engine está rodando e `id -nG` naquele terminal mostra só o seu próprio nome. Qual é a causa?",
+    "choices": [
+      {
+        "text": "O engine escuta em outro socket, e é preciso definir `DOCKER_HOST`",
+        "why": "O socket está onde os pacotes da Docker o põem, e o engine está rodando ali; é o texto da mensagem que engana."
+      },
+      {
+        "text": "A imagem do PostgreSQL não existe e precisa ser baixada à mão",
+        "why": "O Testcontainers baixa sozinho as imagens que faltam, e ele nem chegou a pedir uma."
+      },
+      {
+        "text": "O socket recusou um shell sem o grupo `docker`, e o Testcontainers relata isso como not listening",
+        "why": "Certo. `docker ps` no mesmo terminal diria `permission denied`, e um login novo resolve os dois."
+      },
+      {
+        "text": "O failsafe cria o fork da JVM sem acesso a sockets Unix",
+        "why": "O fork é um processo comum do seu usuário, com os grupos do seu usuário; o problema aqui é esse, não uma capacidade que falta."
+      }
+    ]
+  },
+  "ex-ft8m5cj7": {
+    "prompt": "O que `@ServiceConnection` no bean do contêiner faz?",
+    "choices": [
+      {
+        "text": "Publica a porta 5432 do contêiner na porta 5432 da máquina",
+        "why": "O Docker a publica em qualquer porta livre, 32844 numa das execuções; nada a prende à 5432 da máquina."
+      },
+      {
+        "text": "Diz ao Flyway quais migrações aplicar ao contêiner",
+        "why": "O Flyway lê `db/migration` como sempre; o que mudou foi o banco ao qual ele se conecta."
+      },
+      {
+        "text": "O Spring Boot usa endereço, banco, usuário e senha do contêiner no lugar de `spring.datasource.*`",
+        "why": "Certo. Por isso o teste não cita porta nenhuma, e o log do Flyway mostra a URL JDBC do contêiner."
+      },
+      {
+        "text": "Inicia o Docker Engine se ele não estiver rodando",
+        "why": "Nada num teste inicia o engine; sem ele, a execução falha com `Could not find a valid Docker environment`."
+      }
+    ]
+  },
+  "ex-gbx4z2k1": {
+    "prompt": "`BookRepositoryIT` usa `@DataJpaTest`. O que isso sobe?",
+    "choices": [
+      {
+        "text": "A aplicação inteira sem servidor web, como o `@SpringBootTest`",
+        "why": "Isso é o `@SpringBootTest`; a fatia deixa de fora controllers, filtros de segurança e serviços."
+      },
+      {
+        "text": "Só o Hibernate, com o esquema criado a partir das entidades em vez das migrações",
+        "why": "O Flyway também rodou nessa fatia: o log mostra as três migrações aplicadas ao contêiner dela."
+      },
+      {
+        "text": "Os repositórios com um banco em memória no lugar do PostgreSQL",
+        "why": "O log mostra a URL JDBC de um contêiner PostgreSQL 16; nada em memória tomou o lugar dele."
+      },
+      {
+        "text": "O data source, o Flyway, o Hibernate e os repositórios, cada teste numa transação desfeita no fim",
+        "why": "Certo, e é por isso que o contexto dela ficou pronto numa fração de segundo."
+      }
+    ]
+  },
+  "ex-bv5wgfgf": {
+    "prompt": "Numa execução de `mvn verify` do bookshop desta aula, quantos contêineres da imagem `postgres:16-alpine` foram iniciados?",
+    "hint": "Um por dono: um contexto e uma classe de teste."
+  },
+  "ex-rb3b801n": {
+    "prompt": "Um servidor de build imprime o aviso de `restricted method` do JNA em todo build, enquanto a sua máquina o imprimiu uma vez. Nenhum dos dois tem `--enable-native-access`. Por que a diferença?",
+    "choices": [
+      {
+        "text": "O servidor roda um JDK mais antigo, que avisa com mais frequência",
+        "why": "O aviso existe desde o JDK 24 e aparece do mesmo jeito nos mais novos; a versão não é o que muda."
+      },
+      {
+        "text": "Cada build do servidor começa limpo, sem `~/.testcontainers.properties`, então a busca que carrega o JNA roda toda vez",
+        "why": "Certo. A sua máquina gravou esse arquivo depois da primeira execução bem-sucedida e desde então vai direto ao socket."
+      },
+      {
+        "text": "O Docker do servidor é um engine remoto, que sempre precisa de código nativo",
+        "why": "Nada aqui diz que o engine do servidor é remoto, e o aviso dependeu do arquivo, não de onde estava o engine."
+      },
+      {
+        "text": "A sua máquina silenciou o aviso depois de mostrá-lo a primeira vez",
+        "why": "A JVM não guarda memória de avisos entre execuções; foi outra coisa que fez as execuções seguintes pularem a chamada."
+      }
+    ]
+  },
+  "ex-trrgpmhp": {
+    "prompt": "No `mvn verify` medido, o que levou a maior parte do tempo que os testes de integração acrescentaram?",
+    "choices": [
+      {
+        "text": "Iniciar os dois contêineres PostgreSQL",
+        "why": "Cada um levou cerca de 1,3 segundo, a espera por conexões incluída; juntos, menos da metade do contexto."
+      },
+      {
+        "text": "Baixar as imagens",
+        "why": "As imagens já estavam na máquina; nenhuma das execuções medidas baixou nada."
+      },
+      {
+        "text": "Iniciar o contexto inteiro da aplicação para o `BookshopApplicationIT`",
+        "why": "Certo: 6,2 segundos naquela execução, contra menos de 0,4 da fatia de persistência."
+      },
+      {
+        "text": "O Flyway aplicando as três migrações",
+        "why": "O Flyway relatou um tempo de execução de alguns centésimos de segundo para as três."
+      }
+    ]
+  },
+  "ex-f4j6eve3": {
+    "prompt": "Ponha em ordem o que acontece durante o `BookshopApplicationIT`, do momento em que a JVM dos testes precisa de um banco até não sobrar nada da execução.",
+    "items": [
+      "o Testcontainers inicia o Ryuk e mantém uma conexão aberta com ele",
+      "o contêiner PostgreSQL inicia, com a 5432 publicada numa porta livre",
+      "o Testcontainers espera o PostgreSQL aceitar conexões",
+      "o Flyway migra o esquema vazio até a versão 3",
+      "o teste conta seis livros",
+      "a JVM termina e o Ryuk, depois de alguns segundos, remove a si mesmo"
+    ]
+  },
+  "ex-w44pj4kb": {
+    "prompt": "Você acrescenta `CatalogueIT`, anotada exatamente como o `BookshopApplicationIT`: `@SpringBootTest`, `@ActiveProfiles(\"test\")`, `@Import(TestcontainersConfiguration.class)`. Quantos contêineres PostgreSQL a mais o `mvn verify` sobe para ela?",
+    "choices": [
+      {
+        "text": "Um, porque cada classe de teste ganha o próprio contêiner",
+        "why": "Esse é o comportamento do campo `static @Container`; esta classe usa o bean, que pertence a um contexto."
+      },
+      {
+        "text": "Nenhum: o Spring reaproveita o contexto em cache, e o bean do contêiner vem junto",
+        "why": "Certo. Mesma configuração, mesmo contexto, mesmo banco, e nenhum segundo extra de subida de contexto."
+      },
+      {
+        "text": "Dois, um para o contexto e um para o Ryuk",
+        "why": "O Ryuk não é PostgreSQL, e um único Ryuk atende a execução inteira."
+      },
+      {
+        "text": "Depende de o Ryuk ter removido o primeiro contêiner no meio",
+        "why": "O primeiro contêiner vive enquanto o contexto dele, que fica em cache a execução inteira; o Ryuk só age quando a JVM já foi."
+      }
+    ]
+  },
+  "ex-53pr1ew5": {
+    "prompt": "Uma mudança no `@Query` de `findTitlesByAuthor` faz a consulta devolver os títulos certos na ordem errada. Quais destes pegariam o erro? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "`BookRepositoryIT`",
+        "why": "Certo. Ele roda a consulta real no PostgreSQL e confere a ordem exata com `containsExactly`."
+      },
+      {
+        "text": "`mvn verify`",
+        "why": "Certo. Ele roda o `BookRepositoryIT`, registra a falha e derruba o build em `verify`."
+      },
+      {
+        "text": "`mvn test`",
+        "why": "Ele para antes de `package` e nunca roda uma classe com nome `*IT`."
+      },
+      {
+        "text": "`OrderServiceTest`",
+        "why": "Ele faz mock dos repositórios, então nenhuma consulta deles roda ali."
+      },
+      {
+        "text": "`BookshopApplicationIT`",
+        "why": "Ele sobe tudo e conta os livros; nunca chama essa consulta, então a ordem é invisível para ele."
+      }
+    ]
+  },
+  "ex-c6jfx7m3": {
+    "prompt": "Uma classe de teste que deve rodar com os testes de integração, em `mvn verify` e nunca em `mvn test`, recebe um nome terminado em `___`.",
+    "hint": "Os padrões do failsafe estão na tabela do surefire e do failsafe.",
+    "blanks": [
+      {
+        "accept": [
+          "IT"
+        ]
+      }
+    ]
+  },
+  "ex-fb9k7bhj": {
+    "prompt": "Com o bookshop como esta aula o deixa, quantos testes uma execução bem-sucedida de `mvn verify` roda no total, de unidade e de integração juntos?",
+    "hint": "Some o total do surefire com o do failsafe."
+  }
+}

@@ -65,14 +65,102 @@ on it.
 
 `@BeforeAll` runs once per class, before any test, and has to be `static` because no instance exists
 yet. It is the place for set-up that is expensive and that no test changes, such as starting a
-server the tests only read from. Use it here for the book, which every test changes, and see what happens:
+server the tests only read from. Use it here for the book, which every test changes, and see what
+happens:
 
 ```
-(capture beforeall-edit missing)
+ana@vm:~/bookshop$ sed -i 's/import org.junit.jupiter.api.BeforeEach;/import org.junit.jupiter.api.BeforeAll;/; s/    private Book book;/    private static Book book;/; s/    @BeforeEach/    @BeforeAll/; s/    void aBookWithTwoCopies/    static void aBookWithTwoCopies/' src/test/java/com/example/bookshop/catalogue/BookTest.java && sed -n '11,18p' src/test/java/com/example/bookshop/catalogue/BookTest.java
+class BookTest {
+
+    private static Book book;
+
+    @BeforeAll
+    static void aBookWithTwoCopies() {
+        book = new Book("9786500000016", "Dom Casmurro", new Author("Machado de Assis"), 3990, 2);
+    }
 ```
 
+Run the class. The pattern is `BookTest*`, with a star, so that it also covers the nested class,
+whose compiled name is `BookTest$Take`:
+
 ```
-(capture beforeall-run missing)
+ana@vm:~/bookshop$ mvn test -Dtest='BookTest*'
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:bookshop >------------------------
+[INFO] Building bookshop 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ bookshop ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ bookshop ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ bookshop ---
+[INFO] skip non existing resourceDirectory /home/ana/bookshop/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ bookshop ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 2 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ bookshop ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.bookshop.catalogue.BookTest
+[INFO] Running take
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.071 s <<< FAILURE! -- in take
+[ERROR] com.example.bookshop.catalogue.BookTest.refusesMoreThanThereIs -- Time elapsed: 0.010 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <Only 2 of 'Dom Casmurro' left, 3 wanted> but was: <Only 0 of 'Dom Casmurro' left, 3 wanted>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:201)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:184)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:179)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1188)
+	at com.example.bookshop.catalogue.BookTest$Take.refusesMoreThanThereIs(BookTest.java:33)
+
+[ERROR] com.example.bookshop.catalogue.BookTest.leavesTheStockAloneWhenItRefuses -- Time elapsed: 0.002 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <2> but was: <0>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:139)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:201)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:152)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:147)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:558)
+	at com.example.bookshop.catalogue.BookTest$Take.leavesTheStockAloneWhenItRefuses(BookTest.java:39)
+
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 s -- in com.example.bookshop.catalogue.BookTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   BookTest.leavesTheStockAloneWhenItRefuses expected: <2> but was: <0>
+[ERROR]   BookTest.refusesMoreThanThereIs expected: <Only 2 of 'Dom Casmurro' left, 3 wanted> but was: <Only 0 of 'Dom Casmurro' left, 3 wanted>
+[INFO] 
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.625 s
+[INFO] Finished at: 2026-10-22T20:20:48-03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project bookshop: There are test failures.
+[ERROR] 
+[ERROR] See /home/ana/bookshop/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
 ```
 
 Two of three fail, and the messages say why: `but was: <0>`, `Only 0 of 'Dom Casmurro' left`.
@@ -82,7 +170,15 @@ bigger class the symptom is worse than this, because it moves: a test that passe
 the full run, or the other way round, depending on what ran before it. Put the file back:
 
 ```
-(capture beforeall-back missing)
+ana@vm:~/bookshop$ sed -i 's/import org.junit.jupiter.api.BeforeAll;/import org.junit.jupiter.api.BeforeEach;/; s/    private static Book book;/    private Book book;/; s/    @BeforeAll/    @BeforeEach/; s/    static void aBookWithTwoCopies/    void aBookWithTwoCopies/' src/test/java/com/example/bookshop/catalogue/BookTest.java && sed -n '11,18p' src/test/java/com/example/bookshop/catalogue/BookTest.java
+class BookTest {
+
+    private Book book;
+
+    @BeforeEach
+    void aBookWithTwoCopies() {
+        book = new Book("9786500000016", "Dom Casmurro", new Author("Machado de Assis"), 3990, 2);
+    }
 ```
 
 ## OrderTest, with AssertJ
@@ -123,7 +219,52 @@ and `OrderTest` uses it. Create `src/test/java/com/example/bookshop/ordering/Ord
 Run every test in the project:
 
 ```
-(capture all-run missing)
+ana@vm:~/bookshop$ mvn test
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:bookshop >------------------------
+[INFO] Building bookshop 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ bookshop ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ bookshop ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ bookshop ---
+[INFO] skip non existing resourceDirectory /home/ana/bookshop/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ bookshop ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 3 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ bookshop ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.bookshop.ordering.OrderTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.116 s -- in com.example.bookshop.ordering.OrderTest
+[INFO] Running com.example.bookshop.catalogue.BookTest
+[INFO] Running take
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in take
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in com.example.bookshop.catalogue.BookTest
+[INFO] Running com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.138 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.939 s
+[INFO] Finished at: 2026-10-22T20:20:52-03:00
+[INFO] ------------------------------------------------------------------------
 ```
 
 Fifteen tests in three classes. One line is odd: `Running take` and `Tests run: 3 ... in take`,
@@ -133,7 +274,24 @@ methods directly, as zero. The three tests ran once each. The console launcher s
 JUnit sees:
 
 ```
-(capture launcher-book missing)
+ana@vm:~/bookshop$ java -jar target/junit-platform-console-standalone-6.0.3.jar execute --disable-banner --disable-ansi-colors --details=testfeed --class-path "target/test-classes:target/classes:$(cat target/test.cp)" --select-class com.example.bookshop.catalogue.BookTest | grep -v STARTED
+JUnit Jupiter > BookTest > take > lowersTheStock() :: SUCCESSFUL
+JUnit Jupiter > BookTest > take > refusesMoreThanThereIs() :: SUCCESSFUL
+JUnit Jupiter > BookTest > take > leavesTheStockAloneWhenItRefuses() :: SUCCESSFUL
+
+Test run finished after 102 ms
+[         5 containers found      ]
+[         0 containers skipped    ]
+[         5 containers started    ]
+[         0 containers aborted    ]
+[         5 containers successful ]
+[         0 containers failed     ]
+[         3 tests found           ]
+[         0 tests skipped         ]
+[         3 tests started         ]
+[         0 tests aborted         ]
+[         3 tests successful      ]
+[         0 tests failed          ]
 ```
 
 ## What AssertJ says when it fails
@@ -142,7 +300,82 @@ The reason to prefer it is the message. Change the expected quantities to `conta
 the wrong order, and run the class:
 
 ```
-(capture assertj-order missing)
+ana@vm:~/bookshop$ sed -i 's/containsExactly(2, 1)/containsExactly(1, 2)/' src/test/java/com/example/bookshop/ordering/OrderTest.java
+ana@vm:~/bookshop$ mvn test -Dtest=OrderTest
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:bookshop >------------------------
+[INFO] Building bookshop 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ bookshop ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ bookshop ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ bookshop ---
+[INFO] skip non existing resourceDirectory /home/ana/bookshop/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ bookshop ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 3 source files with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ bookshop ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.bookshop.ordering.OrderTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.119 s <<< FAILURE! -- in com.example.bookshop.ordering.OrderTest
+[ERROR] com.example.bookshop.ordering.OrderTest.totalIsTheSumOfQuantityTimesPrice -- Time elapsed: 0.081 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+Expecting actual:
+  [2, 1]
+to contain exactly (and in same order):
+  [1, 2]
+but there were differences at these indexes:
+  - element at index 0: expected "1" but was "2"
+  - element at index 1: expected "2" but was "1"
+
+	at com.example.bookshop.ordering.OrderTest.totalIsTheSumOfQuantityTimesPrice(OrderTest.java:23)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   OrderTest.totalIsTheSumOfQuantityTimesPrice:23 
+Expecting actual:
+  [2, 1]
+to contain exactly (and in same order):
+  [1, 2]
+but there were differences at these indexes:
+  - element at index 0: expected "1" but was "2"
+  - element at index 1: expected "2" but was "1"
+
+[INFO] 
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.647 s
+[INFO] Finished at: 2026-10-22T20:20:57-03:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project bookshop: There are test failures.
+[ERROR] 
+[ERROR] See /home/ana/bookshop/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
 ```
 
 The message shows the whole list it got, the whole list it expected, and **each position where the
@@ -151,14 +384,26 @@ two differ**. A bare `assertTrue(quantities.equals(List.of(1, 2)))` would have p
 the order back and break the total instead:
 
 ```
-(capture assertj-total missing)
+ana@vm:~/bookshop$ sed -i 's/containsExactly(1, 2)/containsExactly(2, 1)/; s/isEqualTo(11670)/isEqualTo(11680)/' src/test/java/com/example/bookshop/ordering/OrderTest.java
+ana@vm:~/bookshop$ mvn test -Dtest=OrderTest | grep -A3 "AssertionFailedError"
+org.opentest4j.AssertionFailedError: 
+
+expected: 11680
+ but was: 11670
 ```
 
 `expected: 11680` and `but was: 11670`, each on its own line, so the two numbers sit one above the
 other. Put the file back and check that all fifteen pass:
 
 ```
-(capture assertj-back missing)
+ana@vm:~/bookshop$ sed -i 's/isEqualTo(11680)/isEqualTo(11670)/' src/test/java/com/example/bookshop/ordering/OrderTest.java
+ana@vm:~/bookshop$ mvn test | grep -E "Tests run:|BUILD"
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.example.bookshop.ordering.OrderTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in take
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.example.bookshop.catalogue.BookTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.083 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
 ```
 
 Both libraries are on the classpath and the bookshop uses both, which is common: JUnit's

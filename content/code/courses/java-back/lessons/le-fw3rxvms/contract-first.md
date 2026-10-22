@@ -14,8 +14,8 @@ Both are common, and the difference is which of the two is allowed to change the
 
 ## What code first cannot catch
 
-A document derived from the code always matches the code, and that is its weakness as much as its
-strength. Rename the search parameter from `q` to `text`, a change that reads like tidying:
+A document derived from the code always matches the code, including when the code changes
+something it should not have. Rename the search parameter from `q` to `text`, a change that reads like tidying:
 
 ```
 ana@vm:~/bookshop$ sed -i 's/String q)/String text)/; s/search(q)/search(text)/; s/@param q the/@param text the/' src/main/java/com/example/bookshop/catalogue/BookController.java && grep -n 'text' src/main/java/com/example/bookshop/catalogue/BookController.java
@@ -60,15 +60,14 @@ previous section again, build and restart.
 
 A contract-first team starts from a file, usually `openapi.yaml`, written by hand and reviewed like
 code by the people on both sides. A generator, most often **OpenAPI Generator**, reads it and
-writes the parts that must agree with it: on the server, Java interfaces with the mapping
-annotations already on them, which your controllers implement; on the client side, a library in
-whatever language calls the API. Renaming `q` is now a change to the contract, made on purpose and
+writes the parts that must agree with it. On the server those are Java interfaces with the mapping
+annotations already on them, which your controllers implement. On the client side it is a library
+in whatever language calls the API. Renaming `q` is now a change to the contract, made on purpose and
 reviewed, and a controller that still says `q` no longer matches the interface it implements.
 
-It costs something. The generator is one more tool to configure and upgrade, the generated code is
-written in its style and not yours, and a rule like the ISBN check digit still has to be written by
-hand on the server, because a schema can describe a string of thirteen digits but not the arithmetic
-on them.
+It costs something. The generator is one more tool to configure and upgrade, and the code it writes
+is in its style and not yours. A rule like the ISBN check digit is still written by hand on the
+server, because a schema can describe a string of thirteen digits but not the arithmetic on them.
 
 Which way suits a team depends on who calls the API. An API with one client, written by the same
 people in the same week, is well served by code first and a document kept in the repository. An

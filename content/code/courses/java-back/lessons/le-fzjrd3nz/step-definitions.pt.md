@@ -41,7 +41,7 @@ palavras. Isso quer dizer que **uma frase não consegue preparar e conferir ao m
 isso que o arquivo de *feature* tem duas frases sobre estoque. *The shop has 5 copies of …* define o
 estoque. *… has 3 copies left* o lê. Escrita como uma frase só, usada nos dois lugares, o método por
 trás dela teria de escolher. Se só conferisse, o `Given` só passaria enquanto o banco ainda tivesse
-os cinco exemplares com que foi semeado; contra um banco em que outro teste já tivesse feito pedidos,
+os cinco exemplares com que foi semeado. Contra um banco em que outro teste já tivesse feito pedidos,
 ele falharia por um motivo que não tem nada a ver com a regra. Se só definisse, o `Then` não
 conferiria nada.
 

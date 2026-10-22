@@ -176,7 +176,7 @@
     "items": [
       "O Tomcat sobe na porta 8080",
       "O Tomcat sobe na porta 8081, para os endpoints",
-      "O liveness passa a CORRECT, e o fim da inicialização vai para o log",
+      "O fim da inicialização vai para o log, e o liveness passa a CORRECT",
       "O CatalogueReport roda, enquanto o readiness ainda responde 503",
       "O readiness passa a ACCEPTING_TRAFFIC"
     ],
@@ -465,7 +465,7 @@
   },
   "ex-7bsw05wv": {
     "prompt": "Durante a falha da seção de health, quais das quatro regras do arquivo teriam disparado se ela durasse dez minutos, com requisições chegando o tempo todo? Marque todas as que se aplicam.",
-    "hint": "Lembre como as requisições que falharam foram registradas, e que as coletas continuaram respondendo.",
+    "hint": "Lembre o que o timer registrou para as requisições que falharam, e que as coletas continuaram respondendo.",
     "choices": [
       {
         "text": "`BookshopDown`, com `up == 0`",
@@ -473,7 +473,7 @@
       },
       {
         "text": "`BookshopServerErrors`, com a fração de `SERVER_ERROR`",
-        "why": "As falhas foram registradas como 401, `CLIENT_ERROR`, e o numerador nunca andou. O defeito no caminho de erro escondeu a falha desta regra."
+        "why": "Isso. O cliente recebeu 401, mas o timer registrou `status=\"500\"` e `SERVER_ERROR` com a exceção, e quase toda requisição precisa do banco."
       },
       {
         "text": "`BookshopPoolWaiting`, com `hikaricp_connections_pending > 0` por dois minutos",

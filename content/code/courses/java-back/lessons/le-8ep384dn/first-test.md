@@ -4,8 +4,8 @@ version: 1
 ---
 
 The first class to test is `Isbn`, from lesson 6: one static method, a string in, a boolean out, and
-nothing else in the bookshop involved. Lesson 1's project had a test class of the same shape, which
-`mvn package` ran without anybody reading it. This one is read.
+nothing else in the bookshop involved. Lesson 1's project had a test class of the same shape, there so
+that `mvn package` had something to run. This lesson reads one.
 
 Create `src/test/java/com/example/bookshop/catalogue/IsbnTest.java`. This is a first version, and the
 next section replaces it:
@@ -56,7 +56,46 @@ Five things about its shape, each of which matters:
 ## Running it
 
 ```
-(capture first-run missing)
+ana@vm:~/bookshop$ mvn test
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:bookshop >------------------------
+[INFO] Building bookshop 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:resources (default-resources) @ bookshop ---
+[INFO] Copying 4 resources from src/main/resources to target/classes
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:compile (default-compile) @ bookshop ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.5.0:testResources (default-testResources) @ bookshop ---
+[INFO] skip non existing resourceDirectory /home/ana/bookshop/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ bookshop ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ bookshop ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.431 s
+[INFO] Finished at: 2026-10-22T20:20:11-03:00
+[INFO] ------------------------------------------------------------------------
 ```
 
 Read it bottom up, the way you will read every run after this one:
@@ -75,16 +114,28 @@ Read it bottom up, the way you will read every run after this one:
 Surefire also writes a report per class into `target/surefire-reports`, as text and as XML:
 
 ```
-(capture reports missing)
+ana@vm:~/bookshop$ ls target/surefire-reports
+TEST-com.example.bookshop.catalogue.IsbnTest.xml
+com.example.bookshop.catalogue.IsbnTest.txt
+ana@vm:~/bookshop$ cat target/surefire-reports/com.example.bookshop.catalogue.IsbnTest.txt
+-------------------------------------------------------------------------------
+Test set: com.example.bookshop.catalogue.IsbnTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s -- in com.example.bookshop.catalogue.IsbnTest
 ```
 
-The XML files are the ones a CI server reads to draw its list of tests. `testing-cicd` reads them.
+The XML files are what a CI server reads to draw its list of tests; the `testing-cicd` course sets
+one up.
 
 Two ways to run less. `-q` keeps only warnings and errors, so a passing run prints nothing at all and
 only the exit code is left to say it passed; `-Dtest` picks a class, or one method with `#`:
 
 ```
-(capture quiet missing)
+ana@vm:~/bookshop$ mvn -q test; echo "exit $?"
+exit 0
+ana@vm:~/bookshop$ mvn test -Dtest='IsbnTest#refusesNull' | grep 'Tests run'
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.060 s -- in com.example.bookshop.catalogue.IsbnTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 One more consequence of the lifecycle lesson 1 drew: `package` comes after `test`. From now on
@@ -98,7 +149,20 @@ Surefire does not run every class in `src/test/java`. It runs the ones whose nam
 class to something that reads just as well, `IsbnChecks`:
 
 ```
-(capture badname missing)
+ana@vm:~/bookshop$ mv src/test/java/com/example/bookshop/catalogue/IsbnTest.java src/test/java/com/example/bookshop/catalogue/IsbnChecks.java && sed -i 's/class IsbnTest/class IsbnChecks/' src/test/java/com/example/bookshop/catalogue/IsbnChecks.java
+ana@vm:~/bookshop$ mvn test | tail -n 12
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.15.0:testCompile (default-testCompile) @ bookshop ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 25] to target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.5.6:test (default-test) @ bookshop ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.672 s
+[INFO] Finished at: 2026-10-22T20:20:20-03:00
+[INFO] ------------------------------------------------------------------------
 ```
 
 The class compiled (`Compiling 1 source file`), surefire ran, and the `T E S T S` banner never
@@ -108,5 +172,5 @@ uses the same patterns on purpose, naming integration tests `*IT` so that surefi
 another plugin. Rename the class back:
 
 ```
-(capture badname-back missing)
+ana@vm:~/bookshop$ mv src/test/java/com/example/bookshop/catalogue/IsbnChecks.java src/test/java/com/example/bookshop/catalogue/IsbnTest.java && sed -i 's/class IsbnChecks/class IsbnTest/' src/test/java/com/example/bookshop/catalogue/IsbnTest.java
 ```

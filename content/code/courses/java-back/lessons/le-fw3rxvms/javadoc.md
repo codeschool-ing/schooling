@@ -238,9 +238,9 @@ ana@vm:~/bookshop$ grep BookController ~/missing.txt
 [WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/catalogue/BookController.java:30: warning: no comment
 ```
 
-Ninety-two public elements with no comment. The first three are the handlers of lesson 7's
-`ApiErrorHandler`, and the controller's constructor is in the list too, on line 30. They are
-public because Spring calls them, and nobody who reads a page of Javadoc will ever call them
+Ninety-two public elements with no comment. The first three are in lesson 7's `ApiErrorHandler`:
+the class itself, on line 24, and two of its handlers. The controller's constructor is in the list
+too, on line 30. They are public because Spring finds and calls them, and nobody who reads a page of Javadoc will ever call them
 directly. A sentence on each would be exactly the kind of comment the previous part warned about.
 `-missing` keeps every check on the comments that exist and drops the demand for a comment on
 everything. Put `<doclint>all,-missing</doclint>` back.

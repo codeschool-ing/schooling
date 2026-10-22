@@ -57,8 +57,8 @@ One more line lets your user talk to the engine without `sudo`:
 sudo usermod -aG docker $USER
 ```
 
-**A new group takes effect at the next login.** Log out of the VM and back in, or close the
-terminal and open another. Nothing above was run on the machine this course was recorded on, which
+**A new group takes effect at the next login.** Log out of the VM and log in again; a new tab in a
+terminal that was already open is not a new login. Nothing above was run on the machine this course was recorded on, which
 had Docker's packages installed before the course began; what follows is how the result is checked,
 and it was.
 
@@ -115,6 +115,14 @@ reachable, and the next section is about exactly that.
 
 ```
 ana@vm:~/bookshop$ docker run --rm hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+4f55086f7dd0: Pulling fs layer
+4f55086f7dd0: Download complete
+4f55086f7dd0: Pull complete
+d5e71e642bf5: Download complete
+Digest: sha256:11a3eb1597e864c51b3f56733cb2e8a90bf0c284bfc05f9444d81c558bc848aa
+Status: Downloaded newer image for hello-world:latest
 
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
