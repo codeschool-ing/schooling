@@ -1,0 +1,688 @@
+{
+  "ex-rf7rg5jh": {
+    "prompt": "Três mil pessoas mantêm a página de um evento aberta, e a página faz polling a cada três segundos. Quantas requisições por segundo o boxoffice recebe delas?",
+    "hint": "Pessoas divididas pelo intervalo.",
+    "unit": "requisições por segundo"
+  },
+  "ex-nfege86d": {
+    "prompt": "Uma dúzia de funcionários olha um painel de vendas que se atualiza a cada minuto. Que técnica a aula diz que serve para ele?",
+    "hint": "Pouca gente, notícia que não é urgente.",
+    "choices": [
+      {
+        "text": "Um WebSocket, porque o painel é uma tela ao vivo",
+        "why": "Um WebSocket compensa a maquinaria quando o cliente fala o tempo todo; este só lê."
+      },
+      {
+        "text": "Centrifugo, para que os deploys não derrubem o painel",
+        "why": "Um segundo servidor para doze leitores é o oposto do conselho da aula."
+      },
+      {
+        "text": "Long polling, já que o polling simples desperdiça o servidor",
+        "why": "Doze requisições por minuto não desperdiçam nada que valha uma requisição presa por espectador."
+      },
+      {
+        "text": "Polling",
+        "why": "Certo. Uma dúzia de requisições por minuto não custa nada, e não há conexão para manter viva."
+      }
+    ]
+  },
+  "ex-769cnapb": {
+    "prompt": "Ligue cada técnica ao jeito como ela funciona.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "polling",
+        "right": "a página pergunta de novo a cada poucos segundos"
+      },
+      {
+        "left": "long polling",
+        "right": "o servidor segura a requisição até algo mudar"
+      },
+      {
+        "left": "server-sent events",
+        "right": "um GET cuja resposta nunca termina"
+      },
+      {
+        "left": "WebSocket",
+        "right": "uma requisição HTTP que vira um canal nos dois sentidos"
+      }
+    ],
+    "right_distractors": [
+      "um datagrama UDP por mudança"
+    ]
+  },
+  "ex-v8ey9fct": {
+    "prompt": "Por que a aula considera server-sent events, e não um WebSocket, suficientes para a disponibilidade de lugares?",
+    "hint": "Quem fala com quem.",
+    "choices": [
+      {
+        "text": "Os navegadores limitam os WebSockets a seis por site",
+        "why": "O limite de seis conexões é do HTTP/1.1, e atinge os fluxos de server-sent events, não os WebSockets."
+      },
+      {
+        "text": "Server-sent events levam dados binários, de que uma contagem de lugares precisa",
+        "why": "Server-sent events são só texto, e uma contagem é um texto curto."
+      },
+      {
+        "text": "A notícia anda num sentido só, do servidor para quem olha",
+        "why": "Certo. Quem olha nunca envia nada, então um canal de dois sentidos não compra nada."
+      },
+      {
+        "text": "O Go não tem suporte nenhum a WebSocket",
+        "why": "A seção 05 constrói um com o coder/websocket."
+      }
+    ]
+  },
+  "ex-6h6g2tyh": {
+    "prompt": "Uma compra roda o `UPDATE` em `sold`, e depois a transação é desfeita. O que uma sessão com `LISTEN availability` recebe?",
+    "hint": "Quando as notificações são entregues?",
+    "choices": [
+      {
+        "text": "Uma notificação com o número de antes do update",
+        "why": "Nada é enviado por essa transação."
+      },
+      {
+        "text": "A notificação, seguida de uma segunda que a desfaz",
+        "why": "O PostgreSQL não manda correção; a primeira nunca saiu."
+      },
+      {
+        "text": "A notificação, enviada no instante em que o gatilho rodou",
+        "why": "O pg_notify enfileira a mensagem; a entrega espera o commit."
+      },
+      {
+        "text": "Nada",
+        "why": "Certo. Notificações são entregues no commit, e um rollback as descarta."
+      }
+    ]
+  },
+  "ex-qhfebq0e": {
+    "prompt": "O hub descarta um valor quando o canal de um observador está cheio. Por que isso é seguro para o boxoffice?",
+    "hint": "O que cada mensagem diz?",
+    "choices": [
+      {
+        "text": "O PostgreSQL manda cada notificação duas vezes",
+        "why": "Cada notificação é entregue uma vez a cada sessão que escuta."
+      },
+      {
+        "text": "Valores descartados vão para o log e o hub os reenvia depois",
+        "why": "O ramo `default` não faz nada; nada é reenviado."
+      },
+      {
+        "text": "A próxima mensagem substitui a perdida",
+        "why": "Certo. Um valor perdido é corrigido pela mensagem da próxima venda."
+      },
+      {
+        "text": "Um canal cheio quer dizer que o navegador fechou",
+        "why": "Um canal cheio quer dizer um leitor lento; um fechado cancela a inscrição."
+      }
+    ]
+  },
+  "ex-p1bnpvy0": {
+    "prompt": "Por que o `publish` oferece cada valor com um `select` e um `default`, em vez de um envio simples?",
+    "hint": "Ele segura a trava enquanto envia.",
+    "choices": [
+      {
+        "text": "Um envio simples num canal com buffer dentro de um laço sobre um mapa não compila",
+        "why": "Compila; bloqueia quando o buffer está cheio."
+      },
+      {
+        "text": "O `select` envia para todos os canais ao mesmo tempo",
+        "why": "Cada `select` aqui oferece um valor a um canal."
+      },
+      {
+        "text": "O PostgreSQL exige uma resposta antes da próxima notificação",
+        "why": "Notificações não exigem resposta."
+      },
+      {
+        "text": "Um observador lento travaria todos os outros",
+        "why": "Certo. Um envio bloqueado sob o mutex trava o repasse para todo mundo."
+      }
+    ]
+  },
+  "ex-c2605gpv": {
+    "prompt": "O pool do boxoffice tem `MaxConns` 10. Quantas conexões sobram para consultas depois que o `listen` está rodando?",
+    "hint": "O `listen` pega uma e nunca a devolve.",
+    "unit": "conexões"
+  },
+  "ex-e4hjmw2y": {
+    "prompt": "Por que a migration envolve a função em `-- +goose StatementBegin` e `-- +goose StatementEnd`?",
+    "hint": "Conte os pontos e vírgulas no corpo da função.",
+    "choices": [
+      {
+        "text": "Elas fazem a função rodar dentro de uma transação própria",
+        "why": "O goose já roda cada migration numa transação; as marcas tratam da divisão."
+      },
+      {
+        "text": "O PostgreSQL rejeita o corpo de uma função plpgsql sem elas",
+        "why": "São comentários SQL; o PostgreSQL nunca os vê como outra coisa."
+      },
+      {
+        "text": "O goose corta os comandos nos pontos e vírgulas",
+        "why": "Certo. Entre as marcas ele manda tudo como um comando só."
+      },
+      {
+        "text": "Elas marcam a parte que o `Down` desfaz",
+        "why": "Quem marca isso é o `-- +goose Down`."
+      }
+    ]
+  },
+  "ex-e2aqv8gd": {
+    "prompt": "O conteúdo de um `NOTIFY` tem de ficar abaixo de ___ bytes, e é por isso que o boxoffice manda um id e um número.",
+    "hint": "A seção 03 diz o limite.",
+    "blanks": [
+      {
+        "accept": [
+          "8000",
+          "8.000",
+          "8 000"
+        ]
+      }
+    ]
+  },
+  "ex-fczd508s": {
+    "prompt": "O `liveEvents` se inscreve no hub antes de ler o evento no store. O que dá errado na ordem inversa?",
+    "hint": "Imagine uma venda entre os dois passos.",
+    "choices": [
+      {
+        "text": "O store recusa leituras de um handler que ainda não tem inscrição no hub",
+        "why": "O store não sabe nada do hub."
+      },
+      {
+        "text": "A primeira mensagem é enviada duas vezes",
+        "why": "Duplicatas são o risco da ordem escolhida, e são inofensivas."
+      },
+      {
+        "text": "O handler trava no mutex do hub",
+        "why": "Nenhuma das ordens segura o mutex durante a leitura."
+      },
+      {
+        "text": "Uma venda entre eles se perde até a próxima venda",
+        "why": "Certo. Inscrever-se primeiro, no pior caso, entrega o mesmo número duas vezes."
+      }
+    ]
+  },
+  "ex-sgwh594w": {
+    "prompt": "O que aconteceria com o fluxo aos dez segundos sem `rc.SetWriteDeadline(time.Time{})`?",
+    "hint": "As configurações do servidor da aula 1.",
+    "choices": [
+      {
+        "text": "Nada; prazos só valem para corpos de requisição",
+        "why": "O `WriteTimeout` vale para escrever a resposta."
+      },
+      {
+        "text": "O `EventSource` recusaria um fluxo com mais de dez segundos",
+        "why": "O navegador não tem esse limite; o `WriteTimeout` do servidor tem."
+      },
+      {
+        "text": "O `WriteTimeout` cortaria a conexão",
+        "why": "Certo. O tempo zero suspende o prazo só para esta resposta."
+      },
+      {
+        "text": "O hub cancelaria a inscrição do handler",
+        "why": "O hub não tem relógio."
+      }
+    ]
+  },
+  "ex-vxm7t2sb": {
+    "prompt": "O handler tem o `statusRecorder` da aula 2, não o writer da conexão. Como o `http.ResponseController` ainda consegue fazer flush?",
+    "hint": "Um método que a aula 2 acrescentou para esta aula.",
+    "choices": [
+      {
+        "text": "O `statusRecorder` implementa `Flush` ele mesmo",
+        "why": "Ele declara só `WriteHeader`, `Write` e `Unwrap`; o embrulho esconde o `Flush`."
+      },
+      {
+        "text": "Ele chama `Unwrap` para chegar ao writer de baixo",
+        "why": "Certo. `Unwrap` é a convenção que ele segue através dos embrulhos."
+      },
+      {
+        "text": "Ele abre uma segunda conexão com o cliente",
+        "why": "Um servidor nunca abre conexões para um navegador."
+      },
+      {
+        "text": "O flush acontece de qualquer jeito quando o handler retorna",
+        "why": "Este handler só retorna quando o visitante sai."
+      }
+    ]
+  },
+  "ex-dypgetdt": {
+    "prompt": "Ponha em ordem o que o `liveEvents` faz.",
+    "hint": "Ele se inscreve antes de tudo.",
+    "items": [
+      "inscrever-se na disponibilidade do evento no hub",
+      "ler o evento no store",
+      "suspender o prazo de escrita e definir `text/event-stream`",
+      "escrever e fazer flush da disponibilidade atual",
+      "escrever cada valor novo até o contexto da requisição terminar"
+    ]
+  },
+  "ex-q3cb5phb": {
+    "prompt": "O que termina uma mensagem numa resposta `text/event-stream`?",
+    "hint": "Olhe o `data: 118` na transcrição.",
+    "choices": [
+      {
+        "text": "Um `}` de fechamento",
+        "why": "O formato é de linhas, não JSON."
+      },
+      {
+        "text": "O fim da resposta HTTP",
+        "why": "A resposta nunca termina; as mensagens precisam de um fim próprio."
+      },
+      {
+        "text": "Uma linha vazia depois da linha `data:`",
+        "why": "Certo. O handler escreve `data: %d` seguido de duas quebras de linha."
+      },
+      {
+        "text": "Um cabeçalho `Content-Length` por mensagem",
+        "why": "Os cabeçalhos são enviados uma vez, antes da primeira mensagem."
+      }
+    ]
+  },
+  "ex-9b85tnsp": {
+    "prompt": "Uma página em `https://elsewhere.example.net` abre um WebSocket para o boxoffice. Por que o middleware de CORS do boxoffice não o protege?",
+    "hint": "O que o CORS rege?",
+    "choices": [
+      {
+        "text": "O middleware roda depois do upgrade",
+        "why": "A ordem não é o motivo; as regras de CORS não cobrem WebSockets."
+      },
+      {
+        "text": "O CORS rege o `fetch`, e os navegadores não aplicam regra de mesma origem a WebSockets",
+        "why": "Certo. Então o próprio servidor verifica o `Origin`, no `Accept`."
+      },
+      {
+        "text": "WebSockets nunca mandam cabeçalho `Origin`",
+        "why": "Os navegadores mandam um em todo handshake de WebSocket."
+      },
+      {
+        "text": "O CORS só protege `POST`",
+        "why": "O CORS cobre todo método que um `fetch` envia."
+      }
+    ]
+  },
+  "ex-p79kffbd": {
+    "prompt": "O handshake do `curl` não levava cabeçalho `Origin` nenhum. O que o `Accept` respondeu?",
+    "hint": "A primeira transcrição da seção 05.",
+    "choices": [
+      {
+        "text": "403, porque toda requisição precisa de um Origin",
+        "why": "Uma requisição sem Origin passa; só navegadores mandam um."
+      },
+      {
+        "text": "400, porque a chave não era aleatória",
+        "why": "A chave de exemplo da RFC é uma chave válida."
+      },
+      {
+        "text": "101 Switching Protocols",
+        "why": "Certo. Programas não mandam Origin e não são de onde esse ataque vem."
+      },
+      {
+        "text": "200 com a disponibilidade em JSON",
+        "why": "Um upgrade bem-sucedido responde 101, e os dados vêm em frames."
+      }
+    ]
+  },
+  "ex-qskt93e3": {
+    "prompt": "O boxoffice não espera mensagens do cliente. Por que o `liveSocket` ainda chama `CloseRead`?",
+    "hint": "Close e ping chegam como frames.",
+    "choices": [
+      {
+        "text": "O `wsjson.Write` se recusa a escrever até algo ser lido",
+        "why": "Escrever não depende de ler."
+      },
+      {
+        "text": "Sem leitura, frames de close e ping ficam sem resposta",
+        "why": "Certo. O CloseRead os lê numa goroutine própria e encerra o contexto no close."
+      },
+      {
+        "text": "Ele suspende o prazo de escrita",
+        "why": "Os prazos já foram limpos pelo hijack."
+      },
+      {
+        "text": "Ele envia a primeira disponibilidade",
+        "why": "Quem faz isso é o `send`."
+      }
+    ]
+  },
+  "ex-t88j0ckh": {
+    "prompt": "Por que o `liveSocket` não precisa de `SetWriteDeadline`, ao contrário do `liveEvents`?",
+    "hint": "O que o `Accept` faz com a conexão.",
+    "choices": [
+      {
+        "text": "Conexões WebSocket duram menos de dez segundos",
+        "why": "Elas duram enquanto o cliente ficar."
+      },
+      {
+        "text": "O `routes.go` serve `/ws` num servidor sem prazos",
+        "why": "As duas rotas dividem o mesmo `http.Server` com seus prazos."
+      },
+      {
+        "text": "O hijack limpa os prazos da conexão",
+        "why": "Certo. Dali em diante os prazos são assunto do WebSocket."
+      },
+      {
+        "text": "O coder/websocket define um prazo infinito antes de toda escrita",
+        "why": "O handler dá a cada escrita cinco segundos."
+      }
+    ]
+  },
+  "ex-7jbjgatv": {
+    "prompt": "Um servidor que aceita um handshake de WebSocket responde com o status HTTP ___.",
+    "hint": "Switching Protocols.",
+    "blanks": [
+      {
+        "accept": [
+          "101"
+        ]
+      }
+    ]
+  },
+  "ex-3esc4883": {
+    "prompt": "Por que toda escrita no `liveSocket` recebe um prazo de cinco segundos?",
+    "hint": "Um cliente que para de ler.",
+    "choices": [
+      {
+        "text": "Os navegadores descartam frames com mais de cinco segundos",
+        "why": "Os navegadores guardam todo frame que recebem."
+      },
+      {
+        "text": "A RFC limita um frame a cinco segundos",
+        "why": "A RFC 6455 não define esse limite."
+      },
+      {
+        "text": "Ele espaça as mensagens para que o cliente acompanhe o ritmo",
+        "why": "Um prazo limita uma escrita; nunca a atrasa."
+      },
+      {
+        "text": "Um buffer cheio a bloquearia para sempre",
+        "why": "Certo. A escrita falha, o handler retorna, e a limpeza adiada roda."
+      }
+    ]
+  },
+  "ex-bkgtk7ag": {
+    "prompt": "Dois clientes estão na sala e o segundo envia `doors open at 19:00`. Quem a recebe?",
+    "hint": "Olhe o `HandleMessage`.",
+    "choices": [
+      {
+        "text": "Só o primeiro cliente",
+        "why": "Isso é o `BroadcastOthers`; a sala usa `Broadcast`."
+      },
+      {
+        "text": "Ninguém, até um terceiro cliente entrar",
+        "why": "As duas transcrições mostram a mensagem."
+      },
+      {
+        "text": "Os dois clientes, inclusive quem enviou",
+        "why": "Certo. O `Broadcast` envia para todas as sessões."
+      },
+      {
+        "text": "Só o log do servidor",
+        "why": "O log registra entradas e saídas, não mensagens."
+      }
+    ]
+  },
+  "ex-f5rvjc1a": {
+    "prompt": "Ligue cada padrão do Melody ao seu valor.",
+    "hint": "Do `config.go` dele.",
+    "pairs": [
+      {
+        "left": "MessageBufferSize",
+        "right": "256 mensagens"
+      },
+      {
+        "left": "PingPeriod",
+        "right": "54 segundos"
+      },
+      {
+        "left": "PongWait",
+        "right": "60 segundos"
+      },
+      {
+        "left": "MaxMessageSize",
+        "right": "512 bytes"
+      }
+    ],
+    "right_distractors": [
+      "8 mensagens"
+    ]
+  },
+  "ex-x9d97hf9": {
+    "prompt": "O que o `melody.New` faz com o `Origin` de um handshake, e o que a aula faz a respeito?",
+    "hint": "Compare com o padrão do coder/websocket.",
+    "choices": [
+      {
+        "text": "Aceita só o próprio host do servidor, como o coder/websocket",
+        "why": "O padrão do Melody é o oposto."
+      },
+      {
+        "text": "Rejeita todo navegador",
+        "why": "A página de qualquer site entra na sala."
+      },
+      {
+        "text": "Aceita todas; defina o `CheckOrigin` você mesmo",
+        "why": "Certo. O `CheckOrigin` dele devolve true para tudo."
+      },
+      {
+        "text": "Lê as origens permitidas do `config.go`",
+        "why": "O `config.go` guarda configurações de buffer e de tempo, não origens."
+      }
+    ]
+  },
+  "ex-mgtpmhq3": {
+    "prompt": "Por que a aula roda `sha256sum -c` antes de extrair o Centrifugo?",
+    "hint": "É o passo que as pessoas pulam.",
+    "choices": [
+      {
+        "text": "O `tar` se recusa a extrair um arquivo que não tem checksum verificado ao lado",
+        "why": "O `tar` não verifica nada disso."
+      },
+      {
+        "text": "Para escolher o binário da plataforma certa",
+        "why": "O nome do arquivo já escolhe a plataforma."
+      },
+      {
+        "text": "Para saber com que versão do Go ele foi compilado",
+        "why": "Quem mostra isso é o `centrifugo version`."
+      },
+      {
+        "text": "Para conferir que o download é o arquivo publicado",
+        "why": "Certo. O arquivo de checksums é publicado ao lado dos arquivos compactados."
+      }
+    ]
+  },
+  "ex-06tbcvbh": {
+    "prompt": "Ligue cada chave do `config.json` do Centrifugo ao que ela serve.",
+    "hint": "Seção 07.",
+    "pairs": [
+      {
+        "left": "client.token.hmac_secret_key",
+        "right": "assina os tokens com que os clientes se conectam"
+      },
+      {
+        "left": "http_api.key",
+        "right": "a senha com que um programa publica"
+      },
+      {
+        "left": "client.allowed_origins",
+        "right": "os sites cujas páginas são aceitas"
+      },
+      {
+        "left": "http_server",
+        "right": "o endereço e a porta em que ele escuta"
+      }
+    ],
+    "right_distractors": [
+      "a senha do Redis"
+    ]
+  },
+  "ex-t2h1gs19": {
+    "prompt": "O log diz `\"engine\":\"memory\"`. O que acontece se um segundo nó com o mesmo engine for acrescentado?",
+    "hint": "Onde as inscrições ficam guardadas?",
+    "choices": [
+      {
+        "text": "Os nós dividem os inscritos automaticamente",
+        "why": "Dividi-los é para o que serve o engine Redis."
+      },
+      {
+        "text": "Ele não sabe nada dos inscritos do primeiro nó",
+        "why": "Certo. O engine Redis é o que permite que vários nós os dividam."
+      },
+      {
+        "text": "Ele se recusa a iniciar",
+        "why": "Ele inicia; só não sabe nada dos inscritos do primeiro nó."
+      },
+      {
+        "text": "Os dois nós entregam cada mensagem duas vezes",
+        "why": "Cada nó entrega só para os seus inscritos."
+      }
+    ]
+  },
+  "ex-m5rfb0k9": {
+    "prompt": "A resposta ao `connect` trouxe `\"ping\":25`. A cada quantos segundos o Centrifugo manda ping para a conexão?",
+    "hint": "Leia o campo.",
+    "unit": "segundos"
+  },
+  "ex-ep27c6nb": {
+    "prompt": "Duas cópias do boxoffice rodam atrás de um balanceador de carga. Um espectador está na cópia A e a venda acontece na cópia B. Como o espectador fica sabendo?",
+    "hint": "Quem roda `LISTEN`?",
+    "choices": [
+      {
+        "text": "O PostgreSQL notifica as duas cópias, e o hub da A avisa o próprio espectador",
+        "why": "Certo. Tirar a notícia do banco é o que faz isso funcionar."
+      },
+      {
+        "text": "A cópia B repassa a venda para a cópia A por HTTP",
+        "why": "Nenhuma cópia fala com a outra."
+      },
+      {
+        "text": "O espectador só fica sabendo ao se reconectar à B",
+        "why": "Isso é o que faria um hub alimentado pelo `Sell`."
+      },
+      {
+        "text": "O balanceador copia o fluxo para as duas cópias",
+        "why": "Um balanceador manda cada conexão para uma cópia."
+      }
+    ]
+  },
+  "ex-85a7k3pg": {
+    "prompt": "A conexão de escuta de uma cópia ficou fora por dez segundos. O que acontece com as notificações enviadas nesse tempo?",
+    "hint": "As notificações ficam guardadas?",
+    "choices": [
+      {
+        "text": "O PostgreSQL as reenvia quando a cópia roda `LISTEN` de novo",
+        "why": "Nada as reenvia; essa cópia nunca as vê."
+      },
+      {
+        "text": "Esperam no buffer do hub",
+        "why": "O hub só recebe o que o `listen` lhe entrega."
+      },
+      {
+        "text": "Perdidas; a próxima venda corrige essa cópia",
+        "why": "Certo. Cada mensagem leva o número inteiro, então a próxima corrige todas as telas."
+      },
+      {
+        "text": "As transações que as enviaram falham no commit",
+        "why": "Os commits funcionam com ou sem alguém escutando."
+      }
+    ]
+  },
+  "ex-nck5eh7a": {
+    "prompt": "Um proxy fecha conexões que não enviam nada por sessenta segundos. O que a aula propõe para o `liveEvents`?",
+    "hint": "Uma linha que o `EventSource` ignora.",
+    "choices": [
+      {
+        "text": "Subir o `WriteTimeout` para uma hora",
+        "why": "O prazo já foi suspenso; o problema é o tempo de ociosidade do proxy."
+      },
+      {
+        "text": "Um ticker que escreve `: ping` a cada trinta segundos",
+        "why": "Certo. Linhas que começam com dois-pontos são comentários para o `EventSource`."
+      },
+      {
+        "text": "Mandar a disponibilidade de novo a cada segundo",
+        "why": "Isso é polling com passos a mais; uma linha de comentário custa menos."
+      },
+      {
+        "text": "Trocar a rota para long polling",
+        "why": "Uma requisição presa encontra o mesmo tempo de ociosidade."
+      }
+    ]
+  },
+  "ex-yn4kgm2b": {
+    "prompt": "Por que os clientes devem reconectar depois de um deploy com um atraso aleatório?",
+    "hint": "Toda conexão do processo parado fecha de uma vez.",
+    "choices": [
+      {
+        "text": "Porque o `EventSource` se recusa a reconectar na hora",
+        "why": "Ele reconecta sozinho alguns segundos depois."
+      },
+      {
+        "text": "Para esconder o deploy do log de acesso",
+        "why": "O log registra toda requisição de qualquer jeito."
+      },
+      {
+        "text": "Para que dez mil não cheguem no mesmo segundo",
+        "why": "Certo. O atraso espalha as reconexões."
+      },
+      {
+        "text": "Para o banco rodar `LISTEN` primeiro",
+        "why": "Os clientes não afetam o `LISTEN` do servidor."
+      }
+    ]
+  },
+  "ex-rd5pdycp": {
+    "prompt": "Quais afirmações sobre o desenho desta aula são verdadeiras? Marque todas as que se aplicam.",
+    "hint": "Seções 03, 04 e 08.",
+    "choices": [
+      {
+        "text": "Descartar um valor é certo para uma contagem de lugares e errado para mensagens de chat",
+        "why": "Certo. Um número descartado é substituído; uma frase descartada se perde."
+      },
+      {
+        "text": "O gatilho faz todo jeito de mudar `sold` se anunciar",
+        "why": "Certo. Até um `UPDATE` manual no psql o dispara."
+      },
+      {
+        "text": "Cada canal do hub guarda todo valor até o navegador lê-lo",
+        "why": "Cada um guarda oito, e um nono é descartado."
+      },
+      {
+        "text": "O `listen` devolve a conexão ao pool depois de cada notificação",
+        "why": "Ele a guarda para sempre, porque o `LISTEN` pertence à sessão."
+      }
+    ]
+  },
+  "ex-dm7e2t2z": {
+    "prompt": "Ordene o caminho de uma venda até uma página mostrar o número novo.",
+    "hint": "A figura da seção 03.",
+    "items": [
+      "o `Sell` atualiza `sold` dentro da transação",
+      "o gatilho chama `pg_notify`",
+      "a transação faz commit e a notificação é entregue",
+      "o `listen` entrega o número ao hub",
+      "o handler o escreve para a página"
+    ]
+  },
+  "ex-h63rcm35": {
+    "prompt": "Uma equipe quer contagens de lugares ao vivo para vinte mil espectadores, e faz deploy várias vezes por dia. Que escolha bate com o conselho da aula?",
+    "hint": "O que os deploys não devem fazer?",
+    "choices": [
+      {
+        "text": "Centrifugo, alimentado pelo `listen` pela API de publicação",
+        "why": "Certo. As conexões saem do boxoffice, e o banco continua sendo a fonte das notícias."
+      },
+      {
+        "text": "Melody, já que o buffer de 256 mensagens dá conta da carga",
+        "why": "As conexões do Melody vivem no processo, então um deploy ainda as derruba."
+      },
+      {
+        "text": "Polling a cada segundo por todo espectador",
+        "why": "Isso dá vinte mil requisições por segundo."
+      },
+      {
+        "text": "Um buffer maior no hub do boxoffice",
+        "why": "Um buffer não faz nada pelas conexões derrubadas num deploy."
+      }
+    ]
+  }
+}
