@@ -81,3 +81,15 @@ repl() {
   printf 'ana@dev:%s$ node\n' "$dir"
   bash "$LAB_SH" script "cd $dir; ($feed; sleep 0.5) | script -qec node /dev/null" 2>&1 | tr -d '\r'
 }
+
+# bg_logpid NAME: the pid a program in "a second terminal" printed as "pid N",
+# which is the number a person would read off the screen and type into kill.
+bg_logpid() {
+  local p
+  for _ in $(seq 50); do
+    p=$(grep -oE 'pid [0-9]+' $STATE/$1.log 2>/dev/null | head -1 | cut -d' ' -f2)
+    [ -n "$p" ] && { echo "$p"; return 0; }
+    sleep 0.1
+  done
+  echo "bg_logpid: $1 printed no pid" >&2
+}

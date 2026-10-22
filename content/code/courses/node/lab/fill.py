@@ -17,8 +17,13 @@ PROMPT = re.compile(r"^ana@dev:[^$]*\$ ")
 # code masked: a draft fence may say CODE where the run will have a real one.
 CODE = re.compile(r"(?<=:3000/)(links/)?[2-9a-hjkmnp-z]{6}(?![\w-])|(?<=:3000/)(links/)?CODE")
 
+# A process id is different on every run too, so `kill -SIGNAL 1234` compares as
+# `kill -SIGNAL PID`.
+PID = re.compile(r"(kill -[A-Z0-9]+ )(\d+|PID)\b")
+
 def typed(body):
-    return [CODE.sub(lambda m: (m.group(1) or m.group(2) or "") + "CODE", l) for l in body.split("\n") if PROMPT.match(l)]
+    return [PID.sub(r"\1PID", CODE.sub(lambda m: (m.group(1) or m.group(2) or "") + "CODE", l))
+            for l in body.split("\n") if PROMPT.match(l)]
 
 md, cap = sys.argv[1], sys.argv[2]
 check = "--check" in sys.argv
