@@ -83,6 +83,7 @@ on tags 'cp progress_darwin.go progress_mac.go; go vet .; rm progress_mac.go'
 on tags "go list -f '{{join .GoFiles \"\\n\"}}' syscall | grep _linux_"
 on tags "GOARCH=arm64 go list -f '{{join .GoFiles \"\\n\"}}' syscall | grep _linux_"
 on tags "for os in linux darwin windows; do echo \"\$os: \$(GOOS=\$os go list -f '{{len .GoFiles}} files, {{len .IgnoredGoFiles}} left out' os)\"; done"
+on tags 'ls $(go env GOROOT)/src/os/*.go | grep -vc _test.go'
 
 block debug
 place custom-tags debug.go tags
@@ -111,7 +112,7 @@ on tags 'for t in linux/amd64 linux/arm64 darwin/arm64 windows/amd64 freebsd/amd
 block hint
 place every-platform progress_unix.go tags
 place every-platform debug.go tags
-on tags 'go build -tags debug -o hits-debug . && ./hits-debug top -n 1 access.log'
+on tags 'go build -tags debug -o hits-debug . && ./hits-debug top -n 2 access.log'
 on tags 'for t in linux/amd64 linux/arm64 darwin/arm64 windows/amd64 freebsd/amd64; do GOOS=${t%/*} GOARCH=${t#*/} go vet ./... && echo "ok  $t"; done'
 
 block check

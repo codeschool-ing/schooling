@@ -26,7 +26,7 @@ ana@vm:~/fmt$ goimports -d . > /dev/null; echo $?
 ```
 
 **O `gofmt -l` citou o arquivo e saiu com 0.** Listar arquivos é o que pediram, e ele listou, então
-pelas contas dele deu certo; um passo de CI que roda `gofmt -l .` sozinho fica verde com uma lista de
+pelas contas dele deu certo. Um passo de CI que roda `gofmt -l .` sozinho fica verde com uma lista de
 arquivos desformatados parada no log. A correção é tratar a saída como a resposta: `$(...)` captura o
 que o `gofmt` imprimiu, e o `test -z` só tem sucesso quando isso está vazio, então a segunda linha
 falha como uma verificação deve falhar.
@@ -151,7 +151,7 @@ segunda forma; o `exit status 2` dele é o `go run` dizendo como terminou o prog
 ## O que não conferir
 
 `gofmt -l .` e `goimports -l .` leem todo arquivo `.go` dentro do diretório, e a seção 02 mostrou que
-não é isso que o `go fmt` faz: o `go fmt ./...` formata os arquivos de pacotes, e o padrão de pacotes
+não é isso que o `go fmt` faz. O `go fmt ./...` formata os arquivos de pacotes, e o padrão de pacotes
 `./...` deixa dois tipos de diretório de fora. Uma verificação em `.` os lê assim mesmo:
 
 | diretório | o que tem dentro | por que a verificação deve pulá-lo |

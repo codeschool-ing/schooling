@@ -181,7 +181,7 @@ ana@vm:~/std-hits$ go build -o hits . && stat -c "%s bytes  %n" hits ../cli-hits
 5107200 bytes  ../cobra-cmp/hits
 ```
 
-The standard library version is 80 bytes away from lesson 1's **4,031,903** for the same source,
+The standard library version is 80 bytes away from lesson 1's 4,031,903 for the same source,
 because a Go binary records the paths of the files it was compiled from, and these were compiled in
 `~/std-hits` instead of `~/hits`. The other two numbers are the measurement: **the
 urfave/cli version is the largest of the three, 1,168,976 bytes larger than the Cobra one**. Whatever
@@ -245,7 +245,7 @@ ana@vm:~/std-hits$ wc -l main.go ../cli-hits/main.go ../cli-hits/report.go ../co
   440 total
 ```
 
-The library version is the longest, **177 lines against 144**, and the count hides more than it
+The library version is the longest, 177 lines against 144, and the count hides more than it
 shows. Much of lesson 1's 144 is a hand-written usage text and the dispatch `switch`, and much of
 urfave/cli's 177 is struct literals declaring things lesson 1 did not have at all. The Cobra version
 is shorter than both because it does less. It has no environment variable and no validator, so the

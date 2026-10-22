@@ -181,7 +181,7 @@ ana@vm:~/std-hits$ go build -o hits . && stat -c "%s bytes  %n" hits ../cli-hits
 5107200 bytes  ../cobra-cmp/hits
 ```
 
-A versão só com a biblioteca padrão fica a 80 bytes dos **4.031.903** da lição 1 com o mesmo
+A versão só com a biblioteca padrão fica a 80 bytes dos 4.031.903 da lição 1 com o mesmo
 código-fonte, porque um binário Go registra os caminhos dos arquivos de que foi compilado, e estes
 foram compilados em `~/std-hits` e não em `~/hits`. Os outros dois números são a medida: **a versão
 com urfave/cli é a maior das três, 1.168.976 bytes maior que a com Cobra**. Seja o que for que
@@ -245,7 +245,7 @@ ana@vm:~/std-hits$ wc -l main.go ../cli-hits/main.go ../cli-hits/report.go ../co
   440 total
 ```
 
-A versão com a biblioteca é a mais longa, **177 linhas contra 144**, e a contagem esconde mais do
+A versão com a biblioteca é a mais longa, 177 linhas contra 144, e a contagem esconde mais do
 que mostra. Boa parte das 144 da lição 1 é um texto de uso escrito à mão e o `switch` do despacho, e
 boa parte das 177 da urfave/cli são literais de struct declarando coisas que a lição 1 nem tinha. A
 versão com Cobra é mais curta que as duas porque faz menos. Ela não tem variável de ambiente nem

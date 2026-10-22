@@ -26,7 +26,7 @@ ana@vm:~/fmt$ goimports -d . > /dev/null; echo $?
 ```
 
 **`gofmt -l` named the file and exited 0.** Listing files is what it was asked to do, and it did it,
-so by its own account it succeeded; a CI step that runs `gofmt -l .` on its own goes green with a
+so by its own account it succeeded. A CI step that runs `gofmt -l .` on its own goes green with a
 list of unformatted files sitting in its log. The fix is to treat the output as the answer:
 `$(...)` captures what `gofmt` printed, and `test -z` succeeds only when that is empty, so the
 second line fails as a check should.
@@ -149,7 +149,7 @@ way; its `exit status 2` is `go run` reporting how the program it ran ended.
 ## What not to check
 
 `gofmt -l .` and `goimports -l .` read every `.go` file under the directory, and section 02 showed
-that this is not what `go fmt` does: `go fmt ./...` formats the files of packages, and the package
+that this is not what `go fmt` does. `go fmt ./...` formats the files of packages, and the package
 pattern `./...` leaves two kinds of directory out. A check on `.` reads them anyway:
 
 | directory | what is in it | why a check should skip it |

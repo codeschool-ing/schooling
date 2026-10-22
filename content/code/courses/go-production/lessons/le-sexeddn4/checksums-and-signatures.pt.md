@@ -112,8 +112,7 @@ bases consegue conferir.
 ## Assinando com o cosign
 
 O cosign, do projeto Sigstore, assina arquivos e imagens de contêiner. É um programa Go, então se
-instala como toda ferramenta deste curso; o build leva uns três minutos e o binário tem cerca de
-139 MB:
+instala como toda ferramenta deste curso; o build leva uns três minutos:
 
 ```
 ana@vm:~/ship$ go install github.com/sigstore/cosign/v3/cmd/cosign@v3.1.3

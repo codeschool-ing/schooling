@@ -109,8 +109,7 @@ the source tree and can be checked by anybody with the same two bases.
 ## Signing with cosign
 
 cosign, from the Sigstore project, signs files and container images. It is a Go program, so it
-installs like every tool in this course; the build takes about three minutes and the binary is about
-139 MB:
+installs like every tool in this course; the build takes about three minutes:
 
 ```
 ana@vm:~/ship$ go install github.com/sigstore/cosign/v3/cmd/cosign@v3.1.3

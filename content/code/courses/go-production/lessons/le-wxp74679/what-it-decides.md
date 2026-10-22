@@ -58,14 +58,14 @@ ana@vm:~/fmt$ awk 'length > 100 {print NR ": " length " characters"}' internal/t
 
 The rest of the list is shorter to state:
 
-- **Line breaks you chose.** Break a long call after a comma and `gofmt` keeps the break and
+- Line breaks you chose. Break a long call after a comma and `gofmt` keeps the break and
   indents the continuation one tab deeper; it does not join lines back up. Where to break that
   109-character line, if anywhere, is yours to decide.
-- **Names.** `rows`, `n` and `c` stay as they are. Whether a name is clear, or exported when it
+- Names. `rows`, `n` and `c` stay as they are. Whether a name is clear, or exported when it
   should not be, is a question for the linters of lesson 8.
-- **Blank lines you put in**, up to one in a row. Three blank lines after the struct became one;
+- Blank lines you put in, up to one in a row. Three blank lines after the struct became one;
   a single blank line between two groups of statements stays where you put it.
-- **The text of comments.** A comment is moved and indented with its code, and never re-wrapped or
+- The text of comments. A comment is moved and indented with its code, and never re-wrapped or
   reworded.
 
 ## `-s`: simplifications that keep the meaning

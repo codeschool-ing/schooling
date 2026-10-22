@@ -127,8 +127,7 @@ The command waited five seconds for the profile, then **saved a copy under `~/pp
 read again after the process has gone, and printed the report. 7.52 seconds of samples in 5 seconds
 of wall time means one and a half processors busy on average: the counts overlap, because each round
 starts a new one before the old one has finished. And the top row is the one sections 03 and 04
-found, `strings.Fields`, at 36.70% counting what it calls. **Three ways of taking a profile, of two
-different programs, agree on where the time goes**, which is what makes the finding worth acting on in
+found, `strings.Fields`, at 36.70% counting what it calls. **Three ways of taking a profile, of three different programs, agree on where the time goes**, which is what makes the finding worth acting on in
 lesson 13.
 
 ## The goroutines

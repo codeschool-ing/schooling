@@ -127,7 +127,7 @@ ser lida de novo depois que o processo sumir, e imprimiu o relatório. 7,52 segu
 segundos de relógio significam um processador e meio ocupado em média: as contagens se sobrepõem,
 porque cada rodada começa uma nova antes de a anterior terminar. E a primeira linha é a que as seções
 03 e 04 encontraram, `strings.Fields`, com 36,70% contando o que ela chama. **Três jeitos de tirar um
-profile, de dois programas diferentes, concordam sobre para onde vai o tempo**, e é isso que faz a
+profile, de três programas diferentes, concordam sobre para onde vai o tempo**, e é isso que faz a
 descoberta valer uma ação na lição 13.
 
 ## As goroutines

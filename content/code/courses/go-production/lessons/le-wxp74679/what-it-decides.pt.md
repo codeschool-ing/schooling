@@ -58,14 +58,14 @@ ana@vm:~/fmt$ awk 'length > 100 {print NR ": " length " characters"}' internal/t
 
 O resto da lista é mais curto de dizer:
 
-- **Quebras de linha que você escolheu.** Quebre uma chamada longa depois de uma vírgula e o `gofmt`
+- Quebras de linha que você escolheu. Quebre uma chamada longa depois de uma vírgula e o `gofmt`
   mantém a quebra e recua a continuação um tab a mais; ele não junta linhas de volta. Onde quebrar
   aquela linha de 109 caracteres, se for o caso, é decisão sua.
-- **Nomes.** `rows`, `n` e `c` ficam como estão. Se um nome é claro, ou se está exportado quando não
+- Nomes. `rows`, `n` e `c` ficam como estão. Se um nome é claro, ou se está exportado quando não
   deveria, é pergunta para os linters da lição 8.
-- **Linhas em branco que você pôs**, até uma seguida. As três linhas em branco depois da struct
+- Linhas em branco que você pôs, até uma seguida. As três linhas em branco depois da struct
   viraram uma; uma única linha em branco entre dois grupos de instruções fica onde você a pôs.
-- **O texto dos comentários.** Um comentário é movido e recuado junto com o código, e nunca é
+- O texto dos comentários. Um comentário é movido e recuado junto com o código, e nunca é
   requebrado nem reescrito.
 
 ## `-s`: simplificações que mantêm o significado
