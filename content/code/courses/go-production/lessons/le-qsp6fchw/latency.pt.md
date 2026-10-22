@@ -200,8 +200,7 @@ debaixo de `main.count` é a leitora enviando um lote: cada envio acordou um wor
 acordados assim esperaram 2.437,01ms no total pela vez deles.
 
 A barra dessa execução na figura é 80% executável, e mesmo assim 768ms é a execução mais curta da
-lição. **O paralelismo não rendeu nada a este programa naquela máquina**, porque o limite dele nunca
-foi o parse: era uma goroutine lendo e alocando uma string por linha, e um coletor limpando atrás
+lição. **O paralelismo não rendeu nada a este programa naquela máquina**, porque o limite dele nunca foi o parse. Era uma goroutine lendo e alocando uma string por linha, e um coletor limpando atrás
 dela, 94 vezes nos 958ms da execução de quatro workers. É o trace que diz isso, e ele também diz
 onde olhar em seguida. As lições 12 e 13 medem as alocações; as lições 19 e 20 explicam por que
 custam o que custam.

@@ -51,7 +51,7 @@ holds their lock far too long. Nothing in the counting loop knows that. `cmd/fli
     },
     {
       "code": "\tvar mu sync.Mutex\n\ts := tally.Summary{ByStatus: map[int]int{}, ByPath: map[string]int{}}\n\tdone := make(chan struct{})\n\tdefer close(done)\n\tgo publish(&mu, &s, done)\n",
-      "note": "The counts are shared with a second goroutine, `publish`, through a mutex. That goroutine is the cause of the slow batches, and the point is that nothing in the counting loop says so."
+      "note": "The counts are shared with a second goroutine, `publish`, through a mutex. That goroutine is the cause of the slow batches, and nothing in the counting loop says so."
     },
     {
       "code": "\tctx := context.Background()\n\tvar batches int\n\tvar worst time.Duration\n\tsaved := false\n\tbatch := func(b []string) error {\n\t\tstart := time.Now()\n\t\ttrace.WithRegion(ctx, \"batch\", func() {\n\t\t\tmu.Lock()\n\t\t\tdefer mu.Unlock()\n\t\t\tfor _, line := range b {\n\t\t\t\tif e, err := tally.Parse(line); err == nil {\n\t\t\t\t\ts.Lines++\n\t\t\t\t\ts.ByPath[e.Path]++\n\t\t\t\t}\n\t\t\t}\n\t\t})",

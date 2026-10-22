@@ -118,8 +118,8 @@ ana@vm:~/lint$ revive -config revive.toml -formatter ndjson ./... | grep -o '"Se
 **Five findings and exit status 1.** The new one is `os.WriteFile` in `Save`, the bug section 02's
 staticcheck had no check for: the write can fail and the function returns `nil` anyway. Two of the
 five are errors, and those two are what failed the run. The default output does not show severity,
-and the `ndjson` formatter, one JSON object per finding, does: the `grep` picked out the two. `main_test.go` stayed out of it: `TestRun` has a cognitive complexity of 11, over the limit,
-and `exclude = ["TEST"]` keeps the rule away from every `_test.go` file, where a table-driven test
+and the `ndjson` formatter, one JSON object per finding, does: the `grep` picked out the two.
+`main_test.go` stayed out of it: `TestRun` has a cognitive complexity of 11, over the limit, and `exclude = ["TEST"]` keeps the rule away from every `_test.go` file, where a table-driven test
 is supposed to look like that.
 
 ## Switching a rule off for one line
@@ -145,7 +145,7 @@ still reports. Delete the directive line before section 04.
 ## Why a team picks it
 
 Some of revive's 23 defaults overlap staticcheck's style family, `error-strings` and `ST1005` among
-them, and the rest of its value is in the rules nobody else has and in the arguments they take: a
+them. The rest of its value is in the rules nobody else has and in the arguments they take: a
 complexity limit, a maximum line length, a list of imports a package may not use, a header every
 file must start with. **revive is where a team writes down its own conventions**, the ones that are
 not the Go project's and not bugs. Most teams that do never run it on its own: section 04 runs the

@@ -24,8 +24,8 @@ ana@vm:~/mem-hits$ ./slowest big.log && ./slowest -hint $(wc -l < big.log) big.l
 ```
 
 **Two collections instead of twenty-one, a peak of 330,968 kB instead of 501,884, and half the
-time.** The collections fell for a reason section 04's arithmetic explains: the first large thing
-the program allocated was one array big enough for every entry, the heap was large from the start,
+time.** The collections fell for a reason section 04's arithmetic explains. The first large thing
+the program allocated was one array big enough for every entry, so the heap was large from the start,
 and the goal, twice the live heap, was large with it. The peak fell because no array ever had to
 exist beside a bigger copy of itself.
 
@@ -290,7 +290,7 @@ ana@vm:~/mem-pool$ sed -n 163,167p /usr/local/go/src/fmt/print.go
 ```
 
 **A buffer over 64 KiB is not put back.** One enormous line would otherwise leave an enormous buffer
-in the pool, handed to every later caller that wanted a few bytes, and a pool in constant use would
+in the pool, handed to every later caller that wanted a few bytes. A pool in constant use would
 go on holding the largest thing it had ever seen. A pool of buffers whose size depends on the input
 needs the same check.
 

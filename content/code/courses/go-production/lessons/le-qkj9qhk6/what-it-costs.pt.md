@@ -90,17 +90,14 @@ ok  	example.com/hits/internal/tally	0.013s
 ```
 
 Três milissegundos sem detector e 1,017 segundo com ele, para testes que quase não levam tempo.
-**Um programa compilado com `-race` espera um segundo antes de sair**, o que a própria descrição das
-opções do detector chama de `atexit_sleep_ms`, em 1.000, "useful to catch 'at exit' races": uma
-goroutine ainda rodando quando o `main` retorna ganha um momento para fazer seus acessos e ser
+**Um programa compilado com `-race` espera um segundo antes de sair.** A própria descrição das opções do detector chama isso de `atexit_sleep_ms`, em 1.000, "useful to catch 'at exit' races". Uma goroutine ainda rodando quando o `main` retorna ganha um momento para fazer seus acessos e ser
 acusada. Com `GORACE=atexit_sleep_ms=0` a mesma execução levou 0,013 segundo.
 
 Todo binário de teste de um módulo paga esse segundo, então um módulo de trinta pacotes paga cerca de
 trinta segundos de espera, divididos entre as execuções paralelas que o `go test` faz. Ele também
 entra em qualquer medição de um programa `-race` curto com o `time` do shell, o que é mais um motivo
 para medir com benchmark: o `ns/op` é tomado dentro da execução e nunca inclui a saída. Zerar isso no
-CI troca esses segundos pelas corridas que acontecem quando o programa termina; **mantenha o padrão a
-menos que os segundos doam**, e se mudar, mude sabendo quais goroutines do seu código sobrevivem ao
+CI troca esses segundos pelas corridas que acontecem quando o programa termina. **Mantenha o padrão a menos que os segundos doam**, e se mudar, mude sabendo quais goroutines do seu código sobrevivem ao
 `main`.
 
 ## Do que ele precisa

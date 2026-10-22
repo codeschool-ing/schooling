@@ -132,7 +132,7 @@ pedaços:
     },
     {
       "code": "func main() {\n\tos.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))\n}\n",
-      "note": "**O `main` faz uma coisa só: passa os argumentos e os fluxos do processo para o `run` e sai com o que o `run` devolver.** Tudo o que dá para testar fica no `run`, que a seção 04 testa sem iniciar processo nenhum."
+      "note": "**O `main` faz uma coisa só: passa os argumentos e os fluxos do processo para o `run` e sai com o que o `run` devolver.** Tudo o que dá para testar fica no `run`, que a seção 05 testa sem iniciar processo nenhum."
     },
     {
       "code": "func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {\n\tif len(args) == 0 {\n\t\tfmt.Fprint(stderr, usage)\n\t\treturn 2\n\t}\n\tswitch args[0] {\n\tcase \"count\":\n\t\treturn count(args[1:], stdin, stdout, stderr)\n\tcase \"top\":\n\t\treturn top(args[1:], stdin, stdout, stderr)\n\tcase \"help\", \"-h\", \"-help\", \"--help\":\n\t\tfmt.Fprint(stdout, usage)\n\t\treturn 0\n\t}\n\tfmt.Fprintf(stderr, \"hits: unknown command %q\\n\\n%s\", args[0], usage)\n\treturn 2\n}\n",
@@ -206,7 +206,7 @@ padrão que ele usa; a lição 17 o desmonta.
 
 ## Erros, e de quem são
 
-O despacho escrito à mão precisa cuidar do que o pacote flag cuidava de graça na seção 02. Aqui
+O despacho escrito à mão precisa cuidar do que o pacote flag cuidava de graça na seção 03. Aqui
 está o programa chamado sem nada, com um erro de digitação, com um pedido de ajuda e com um valor
 inválido:
 
@@ -254,6 +254,6 @@ descreve apenas as próprias flags.
 
 O que ele não faz também fica à vista. `cont` está a uma letra de `count`, e o programa não avisa.
 `hits help top` imprime o uso geral, não o do `top`. Não há como completar o nome de um subcomando
-com a tecla Tab. Cada uma dessas coisas são vinte linhas que você poderia escrever à mão, e **essa
+com a tecla Tab. Cada uma dessas coisas são vinte linhas que você poderia escrever à mão. **Essa
 pilha de recursos de vinte linhas é exatamente o Cobra da lição 2**: o mesmo programa, com o
 despacho, a ajuda, as sugestões e o autocompletar escritos uma vez por outra pessoa.

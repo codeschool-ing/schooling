@@ -3,8 +3,7 @@ title: Um Parse mais rápido
 version: 1
 ---
 
-O profile disse três coisas. O `strings.Fields` leva dois terços do `Parse`; quase metade do custo
-dele é alocar a fatia que devolve e os write barriers que preenchê-la exige; e o horário, o suspeito de
+O profile disse três coisas. O `strings.Fields` leva dois terços do `Parse`; cerca de dois quintos do custo dele é alocar a fatia que devolve e os write barriers que preenchê-la exige; e o horário, o suspeito de
 sempre, custa um quarto disso. **A mudança que vale fazer é a que remove a fatia**, e ela tem de deixar
 toda resposta do `Parse` exatamente como era, porque o `hits` está correto hoje e um programa mais
 rápido e errado não é melhoria.
@@ -75,9 +74,7 @@ E o `Parse` muda só nas primeiras linhas. `internal/tally/tally.go`, inteiro:
 }
 ```
 
-O desenho é o ponto. **O `split5` nunca precisa acertar uma linha difícil, só as linhas que aceita**, e
-ele só aceita aquelas em que o espaço simples é o único espaço em branco, então o `strings.Fields` as
-teria cortado exatamente nos mesmos lugares. Todo o resto, tabs, espaços dobrados, um caminho
+**O `split5` nunca precisa acertar uma linha difícil, só as linhas que aceita.** Ele só aceita aquelas em que o espaço simples é o único espaço em branco, e nessas o `strings.Fields` teria cortado exatamente nos mesmos lugares. Todo o resto, tabs, espaços dobrados, um caminho
 acentuado, um sexto campo, desce pelo caminho que sempre o tratou.
 
 ## Provando que concorda
@@ -177,8 +174,7 @@ ok  	example.com/hits/internal/tally	10.972s
 
 **Cerca de 1,4 milhão de strings geradas em dez segundos, e nenhuma em que o `split5` e o
 `strings.Fields` discordem.** "new interesting" conta as entradas que levaram o código por um caminho
-que nenhuma entrada anterior tinha seguido. O fuzzer guarda essas no cache do comando go e parte delas
-da próxima vez, e por isso esta execução começou de 26 entradas, as nove sementes e o que fuzzing
+que nenhuma entrada anterior tinha seguido. O fuzzer guarda essas no cache do comando go e parte delas da próxima vez. Por isso esta execução começou de 26 entradas, as nove sementes e o que fuzzing
 anterior nesta máquina tinha guardado; uma primeira execução começa das nove. Uma falha teria sido
 gravada em `testdata/fuzz/FuzzSplit5/` dentro do pacote, como um arquivo que o `go test` passa a rodar
 como semente para sempre, então um bug encontrado uma vez continua testado. Fuzzing não é prova, mas,

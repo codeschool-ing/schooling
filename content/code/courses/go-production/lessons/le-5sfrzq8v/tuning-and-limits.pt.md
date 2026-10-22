@@ -31,7 +31,7 @@ de precisão da seção 02 é o que deveria torná-lo desnecessário.
 
 A maioria dos programas ganha uma função auxiliar de log que recebe um formato e argumentos, e **uma
 string de formato só é checada quando o vet sabe que a função é um `printf`**. Ele deduz isso sozinho
-na maioria dos casos: uma função que repassa o `format` e o `args...` direto ao `fmt.Sprintf`, ao
+na maioria dos casos. Uma função que repassa o `format` e o `args...` direto ao `fmt.Sprintf`, ao
 `fmt.Printf` ou a qualquer outra função que ele já sabe que formata é um *printf wrapper*, e quem a
 chama é checado como quem chama o `fmt.Printf`. O `applog/main.go` tem duas auxiliares, escritas de
 dois jeitos:
@@ -152,7 +152,7 @@ panic: runtime error: invalid memory address or nil pointer dereference
 O vet deixou passar e o programa quebrou. **`cfg, err := parse(data)` declarou um segundo `cfg` dentro
 do `if`**, preencheu esse e o largou na chave de fechamento, então o `load` devolveu o `cfg` de fora,
 ainda nulo. Sombrear é válido e geralmente intencional, e separar o acidente da intenção é a parte
-difícil: o analisador que procura isso diz na própria documentação que "generates too many false
+difícil. O analisador que procura isso diz na própria documentação que "generates too many false
 positives and is not yet enabled by default", gera alarmes falsos demais e ainda não vem ligado. É o
 critério de precisão, aplicado.
 

@@ -57,16 +57,16 @@ why/makes.go:17:11:     from make([]int, 10000) (too large for stack) at why/mak
 why/makes.go:23:6:     from g (too large for stack) at why/makes.go:23:6
 ```
 
-O `Fixed` cria 64 ints, 512 bytes, e eles ficam na pilha. O `Huge` cria 10.000, 80.000 bytes, o que
-passa do limite de 64 KiB para um valor que o `make` cria, e o `Grid` declara 1 MiB, acima do limite
-de 128 KiB para uma variável declarada; o `-m=2` dá aos dois o mesmo motivo, **`too large for stack`**.
+O `Fixed` cria 64 ints, 512 bytes, e eles ficam na pilha. O `Huge` cria 10.000 deles, 80.000 bytes, o que
+passa do limite de 64 KiB para um valor que o `make` cria. O `Grid` declara 1 MiB, acima do limite
+de 128 KiB para uma variável declarada, e o `-m=2` dá aos dois o mesmo motivo, **`too large for stack`**.
 Nada aponta para nenhum dos dois de fora, e nada mais nas funções difere do `Fixed`.
 
 **O `Sized` é o caso em que "does not escape" não quer dizer "nunca aloca".** O tamanho chega como
-argumento, então o compilador não consegue reservar a quantidade certa no quadro. O que ele faz em
-vez disso está descrito num comentário do seu código, `cmd/compile/internal/walk/builtin.go`: reserva
-32 bytes fixos no quadro e compila uma verificação, para que uma fatia que caiba neles os use e uma
-que não caiba seja alocada no heap, em execução. 32 bytes são quatro `int`s. `make([]int, 4)` não
+argumento, então o compilador não consegue reservar a quantidade certa no quadro. Um comentário no
+código do compilador, `cmd/compile/internal/walk/builtin.go`, descreve o que ele faz em vez disso.
+Ele reserva 32 bytes fixos no quadro e compila uma verificação: uma fatia que caiba neles os usa, e
+uma que não caiba é alocada no heap, em execução. 32 bytes são quatro `int`s. `make([]int, 4)` não
 custa nada e `make([]int, 5)` custa uma alocação, da mesma linha, e a seção 05 conta as duas. O
 relatório diz `does not escape` para as duas, porque escapar é sobre tempo de vida, e a fatia não
 sobrevive ao `Sized`.

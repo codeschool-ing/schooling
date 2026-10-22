@@ -12,7 +12,7 @@ urfave/cli version of sections 02 to 04, and a Cobra version.
 ## The three programs
 
 Lesson 1's version goes in a directory of its own, `~/std-hits`, with its `main.go` and the `tally`
-package placed exactly as lesson 1 section 03 prints them. The urfave/cli version is `~/cli-hits` as
+package placed exactly as lesson 1 section 04 prints them. The urfave/cli version is `~/cli-hits` as
 section 04 left it. For Cobra, lesson 2 explains the pieces; the program below is only here to be
 measured, and it keeps the same output and the same exit codes, with `-n` checked for at least 1.
 In `~/cobra-cmp`, beside the same `internal/tally/tally.go`, with a module made by
@@ -294,7 +294,7 @@ all three named in Cobra's own README. It brings a generator, documentation outp
 pages, and the shape of many well-known Go tools, so its users meet something familiar. Lesson 2 covers it. What it costs is two modules compiled in, `net` among the packages, and a
 second library the day a flag should come from the environment.
 
-None of the three changes `tally`, and that is the decision of lesson 1 section 03 paying off a
+None of the three changes `tally`, and that is the decision of lesson 1 section 04 paying off a
 second time: **the command line is a thin layer over a package that knows nothing about it**, so
 replacing the layer is an afternoon, and the measurements above can be taken again when the next
 version of any of the three is released.

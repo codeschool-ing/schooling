@@ -88,17 +88,14 @@ ok  	example.com/hits/internal/tally	0.013s
 ```
 
 Three milliseconds plainly and 1.017 seconds with the detector, for tests that take almost no time.
-**A program built with `-race` waits one second before it exits**, which the detector's own
-description of its options gives as `atexit_sleep_ms`, at 1,000, "useful to catch 'at exit' races":
-a goroutine still running when `main` returns gets a moment to make its accesses and be reported.
+**A program built with `-race` waits one second before it exits.** The detector's own description of its options gives it as `atexit_sleep_ms`, at 1,000, "useful to catch 'at exit' races". A goroutine still running when `main` returns gets a moment to make its accesses and be reported.
 With `GORACE=atexit_sleep_ms=0` the same run took 0.013 seconds.
 
 Every test binary in a module pays that second, so a module of thirty packages pays about thirty
 seconds of sleeping, spread across the parallel runs `go test` makes. It is also part of any timing
 of a short `-race` program with the shell's `time`, which is one more reason to measure with a
 benchmark: `ns/op` is taken inside the run and never includes the exit. Setting it to 0 in CI trades
-those seconds for the races that happen as the program ends; **keep the default unless the seconds
-hurt**, and if you change it, change it knowing which goroutines in your code outlive `main`.
+those seconds for the races that happen as the program ends. **Keep the default unless the seconds hurt**, and if you change it, change it knowing which goroutines in your code outlive `main`.
 
 ## What it needs
 

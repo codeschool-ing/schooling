@@ -135,11 +135,11 @@ GOGC=off: 1.287s, 0 collections, peak 1016500 kB
 
 Read the columns separately, because they do not move together.
 
-- **Collections fall cleanly**: 25, 15, 9, 5, 0. Doubling `GOGC` roughly halves them, because each
+- Collections fall cleanly: 25, 15, 9, 5, 0. Doubling `GOGC` roughly halves them, because each
   cycle may let the heap grow twice as far.
-- **Time falls a little**: from 1.85 to 1.29 seconds, end to end, on four processors where most of
+- Time falls a little: from 1.85 to 1.29 seconds, end to end, on four processors where most of
   the marking ran in parallel with the program.
-- **The peak does not follow the setting** between 50 and 400: 518,160 kB, then 682,448, 577,992
+- The peak does not follow the setting between 50 and 400: 518,160 kB, then 682,448, 577,992
   and 746,924. Only `off` stands apart, at 1,016,500 kB, everything the program ever allocated.
 
 The peak is noisy because **the largest allocations in this program are its own**. `Load` grows its
@@ -164,7 +164,7 @@ sys	0m0.596s
 ```
 
 **Without collection the program used 0.74 seconds of user time instead of 1.26**, the marking it no
-longer did, while the wall clock moved only from 1.61 to 1.39 seconds, because that marking had been
+longer did. The wall clock moved only from 1.61 to 1.39 seconds, because that marking had been
 running on processors that were otherwise idle. On a machine with spare processors and spare memory,
 a larger `GOGC` is nearly free. On a busy one, or a small one, those 0.5 seconds of processor are
 taken from something else.

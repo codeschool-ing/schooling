@@ -11,8 +11,8 @@ somebody has to choose, and the defaults choose wrongly for an old codebase.
 ## The same answer everywhere
 
 Asking for whatever release is newest is the common wrong idea here: "the latest golangci-lint"
-sounds like the safest choice, and it is the one that turns a green build red on a morning when nobody changed a
-line. **Each release changes what gets reported.** Section 04 met two instances: 2.0.0 dropped every
+sounds like the safest choice, and it is the one that turns a green build red on a morning when
+nobody changed a line. **Each release changes what gets reported.** Section 04 met two instances: 2.0.0 dropped every
 default exclusion, which made `errcheck` report printing and closing again, and 2.14.0 moved revive
 from 1.15.0 to 1.17.0, which brought a new rule, and switched one of `gosec`'s checks, `G407`, back
 on. Pinning golangci-lint pins every linter inside it, since their versions are fixed in its own
@@ -96,8 +96,8 @@ level=error msg="[linters_context] typechecking error: pattern ./cmd/...: lstat 
 **The same single finding, now measured against the branch point**, however many commits the branch
 has. Both flags have a blind spot that comes from how they work: they keep findings on changed lines.
 A change that deletes the only call to an old function would make `unused` report that function, on a
-line the change never touched, so the new problem would be filtered out with the old ones. That is the price of
-the approach, and it is why the old pile has to shrink as well, by separate pull requests, until the
+line the change never touched, so the new problem would be filtered out with the old ones.
+That is the price of the approach, and it is why the old pile has to shrink as well, by separate pull requests, until the
 flag can come off.
 
 ## What the exit code says

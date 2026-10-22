@@ -21,7 +21,7 @@ passa um `context.Context` no lugar.
 Esta versão fica em `~/cli-hits`, ao lado do `~/hits` da lição 1, para que as duas possam ser
 medidas uma contra a outra na seção 05. Ela reaproveita a contagem da lição 1 sem mudança: coloque
 o pacote `tally` da lição 1 em `internal/tally/tally.go` e o `genlog` em `tools/genlog/main.go`,
-exatamente como a seção 03 e a seção 02 da lição 1 os imprimem, e crie o módulo com o mesmo nome:
+exatamente como a seção 04 e a seção 03 da lição 1 os imprimem, e crie o módulo com o mesmo nome:
 
 ```
 ana@vm:~/cli-hits$ go mod init example.com/hits
@@ -217,7 +217,7 @@ path            requests
 /api/orders/42  2503
 ```
 
-**As contagens batem linha a linha com a seção 03 da lição 1**, porque a contagem é o mesmo pacote
+**As contagens batem linha a linha com a seção 04 da lição 1**, porque a contagem é o mesmo pacote
 lendo as mesmas 20.000 linhas; só mudou o código que lê a linha de comando. O binário é outra
 história. **6.257.727 bytes contra os 4.031.903 da lição 1**: a biblioteca e o que ela puxa da
 biblioteca padrão somaram cerca de 2,2 MB a um programa que faz exatamente o mesmo trabalho. A

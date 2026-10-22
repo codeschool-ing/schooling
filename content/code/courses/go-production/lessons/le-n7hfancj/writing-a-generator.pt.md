@@ -117,7 +117,7 @@ diretiva passou em `-in`. Compare as entradas com o template que as escreveu. **
 entrada no começo da linha, com um espaço depois dos dois-pontos; o arquivo tem um tab na frente e
 os valores alinhados numa coluna**, e isso é o `format.Source`. O `gofmt -l` lista os arquivos que
 mudaria e não listou nenhum. Um gerador que pula esse passo escreve arquivos que a verificação de
-formato da lição 6 reprova a cada execução, e a correção tem de ir no gerador, já que uma edição na
+formato da lição 6 reprova a cada execução. A correção tem de ir no gerador, já que uma edição na
 saída dura até o próximo `go generate`.
 
 O mapa em uso, no `cmd/teams/main.go`, que conta o log por equipe:

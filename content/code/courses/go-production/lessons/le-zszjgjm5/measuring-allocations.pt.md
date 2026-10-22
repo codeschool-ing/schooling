@@ -210,7 +210,7 @@ PASS
 ok  	example.com/hits/internal/keep	0.002s
 ```
 
-Hoje ele passa. **No dia em que alguém mudar o `BySlowest` de um jeito que aloque**, copiando a fatia
-antes de ordenar, digamos, ou passando-a por uma interface que o compilador não enxerga, o teste
-falha e diz o número, muito antes de alguém fazer o perfil do programa que o chama. Um orçamento de
+Hoje ele passa. **No dia em que alguém mudar o `BySlowest` de um jeito que aloque**, o teste falha e
+diz o número, muito antes de alguém fazer o perfil do programa que o chama. Copiar a fatia antes de
+ordenar faria isso, ou passá-la por uma interface que o compilador não enxerga. Um orçamento de
 0 é o mais rígido; uma função que precisa alocar uma vez pode ser presa a 1 do mesmo jeito.

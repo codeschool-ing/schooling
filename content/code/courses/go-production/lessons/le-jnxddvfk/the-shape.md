@@ -21,7 +21,7 @@ function, and most answers on the web still show them. v3 has one type for both 
 This version lives in `~/cli-hits`, beside lesson 1's `~/hits`, so the two can be measured against
 each other in section 05. It reuses lesson 1's counting unchanged: place the `tally` package from
 lesson 1 at `internal/tally/tally.go` and `genlog` at `tools/genlog/main.go`, exactly as lesson 1
-section 03 and section 02 print them, then make the module with the same name:
+section 04 and section 03 print them, then make the module with the same name:
 
 ```
 ana@vm:~/cli-hits$ go mod init example.com/hits
@@ -217,7 +217,7 @@ path            requests
 /api/orders/42  2503
 ```
 
-**The counts match lesson 1 section 03 line for line**, because the counting is the same package
+**The counts match lesson 1 section 04 line for line**, because the counting is the same package
 reading the same 20,000 lines; only the code that reads the command line changed. The binary is
 another matter. **6,257,727 bytes against lesson 1's 4,031,903**: the library and what it pulls
 from the standard library added about 2.2 MB to a program that does exactly the same work. Section

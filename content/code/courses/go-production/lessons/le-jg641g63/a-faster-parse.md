@@ -3,8 +3,7 @@ title: A faster Parse
 version: 1
 ---
 
-The profile has said three things. `strings.Fields` takes two thirds of `Parse`; nearly half of its
-cost is allocating the slice it returns and the write barriers that filling it needs; and the
+The profile has said three things. `strings.Fields` takes two thirds of `Parse`; about two fifths of its cost is allocating the slice it returns and the write barriers that filling it needs; and the
 timestamp, the usual suspect, is a quarter of that. **The change worth making is the one that removes
 the slice**, and it has to leave every answer `Parse` gives exactly as it was, because `hits` is
 correct today and a faster wrong program is not an improvement.
@@ -76,9 +75,7 @@ And `Parse` changes in its first lines only. `internal/tally/tally.go`, in full:
 ```
 
 
-The design is the point. **`split5` never has to be right about a hard line, only about the lines it
-accepts**, and it accepts only the ones where single spaces are the only white space, so
-`strings.Fields` would have cut them in exactly the same places. Everything else, tabs, doubled
+**`split5` never has to be right about a hard line, only about the lines it accepts.** It accepts only the ones where single spaces are the only white space, and on those `strings.Fields` would have cut in exactly the same places. Everything else, tabs, doubled
 spaces, an accented path, a sixth field, goes down the path that has always handled it.
 
 ## Proving it agrees
@@ -179,8 +176,7 @@ ok  	example.com/hits/internal/tally	10.972s
 
 **About 1.4 million generated strings in ten seconds, and none on which `split5` and `strings.Fields`
 disagree.** "new interesting" counts inputs that took the code down a path no earlier input had
-taken. The fuzzer keeps those in the go command's cache and starts from them next time, which is why
-this run began from 26 inputs, the nine seeds and what earlier fuzzing on this machine had kept; a
+taken. The fuzzer keeps those in the go command's cache and starts from them next time. That is why this run began from 26 inputs, the nine seeds and what earlier fuzzing on this machine had kept; a
 first run begins from the nine. A failure would have
 been written to `testdata/fuzz/FuzzSplit5/` inside the package, as a file `go test` then runs as a
 seed for ever after, so a bug found once stays tested. Fuzzing is not proof, but together with the

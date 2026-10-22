@@ -121,7 +121,7 @@ ana@vm:~/trace-hits$ stat -c "%s bytes  %n" w1.trace w4.trace
 
 **O tamanho de um trace acompanha os eventos, não o trabalho.** As duas execuções leram os mesmos
 três milhões de linhas, e a de um worker gravou 9.453.261 bytes contra 5.257.509, porque rodou por
-mais tempo e o runtime continuou produzindo eventos o tempo todo: só o coletor de lixo já é uma
+mais tempo e o runtime continuou produzindo eventos o tempo todo. Só o coletor de lixo já é uma
 torrente deles, como a seção 03 conta. Isso dá entre cinco e sete megabytes por segundo deste
 programa; uma hora nesse ritmo seriam uns vinte gigabytes, e esse é o problema que a seção 05
 resolve.

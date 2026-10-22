@@ -197,11 +197,11 @@ nanossegundos para a linha, mais de um microssegundo para a página. A conversã
 cabeçalho e não copia nada, então leva menos de um nanossegundo, seja qual for o tamanho.
 
 As cinco últimas são a acusação contra recorrer a ela. `hits[string(path)]`, escrito dentro da
-expressão de índice, **não alocou nada, nem para uma chave de 10 bytes nem para uma de 41**. O
+expressão de índice, **não alocou nada, nem para uma chave de 10 bytes nem para uma de 40**. O
 compilador reconhece uma conversão usada só para consultar uma chave e passa os bytes ao mapa sem
 montar string nenhuma. Suba a mesma conversão uma linha, para uma variável, e a chave de 10 bytes
 continua sem custar nada, por outro motivo: **uma string convertida que não escapa e cabe em 32
-bytes é montada num buffer na pilha** (`tmpStringBufSize`, em `runtime/string.go`). A chave de 41
+bytes é montada num buffer na pilha** (`tmpStringBufSize`, em `runtime/string.go`). A chave de 40
 bytes não cabe, e volta a custar sua alocação.
 
 O incremento é o caso interessante. `hits[string(path)]++` alocou 16 bytes em toda chamada, mesmo

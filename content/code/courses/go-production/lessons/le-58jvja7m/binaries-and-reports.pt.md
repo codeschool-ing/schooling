@@ -152,7 +152,7 @@ ana@vm:~/langs$ jq -c 'select(.config) | .config | {scan_level, scan_mode, go_ve
 
 A sequência traz as configurações da varredura, os módulos que ela viu, toda entrada OSV que toca um
 deles, 191 aqui, e os achados. **O trace de um achado vai da função vulnerável até o seu ponto de
-entrada**, o inverso de `-show traces`, e até onde o primeiro quadro desce diz o nível: um módulo e
+entrada**, o inverso de `-show traces`. Até onde o primeiro quadro desce diz o nível: um módulo e
 uma versão num achado de nível de módulo, também um pacote num de nível de pacote, e uma função com
 posição só num de nível de símbolo. É por isso que o filtro `jq` acima, que guarda os achados cujo
 primeiro quadro cita uma função, separou exatamente o que o relatório em texto pôs em Symbol Results.

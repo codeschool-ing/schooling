@@ -68,8 +68,8 @@ prova de que era o `x` de verdade.
 ```
 
 A struct funciona do mesmo jeito. **`ValueOf(&c).Elem()` é a própria struct `c`, e todo campo
-exportado abaixo dela pode ser alterado**, e `Limit` foi de 3 para 10. `secret` é alcançável e mesmo assim dá
-`CanSet() false`, pelo motivo que a seção 03 deu, e a recusa vale até aqui, dentro do pacote `main`,
+exportado abaixo dela pode ser alterado**: `Limit` foi de 3 para 10. `secret` é alcançável e mesmo assim dá
+`CanSet() false`, pelo motivo que a seção 03 deu. A recusa vale até aqui, dentro do pacote `main`,
 onde `Config` foi declarado e o código comum pode escrever `c.secret` à vontade. O `%+v` imprimiu
 `secret:` com o valor vazio, o que mostra que o `fmt` lê campos não exportados quando imprime; ler é
 permitido, escrever não.

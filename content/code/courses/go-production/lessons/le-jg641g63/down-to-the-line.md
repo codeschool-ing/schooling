@@ -127,8 +127,7 @@ Dropped 2 nodes (cum <= 0.03s)
 ```
 
 With the runtime hidden, **`strings.Fields` has 2.53 seconds flat, the same as its cum**: the
-allocation and write barriers it caused are now charged to it, which is the question "how much does
-this line of my code cost, all in" answered directly. `Scanner.Text` appears with 0.41 seconds flat,
+allocation and write barriers it caused are now charged to it. That answers directly the question "how much does this line of my code cost, all in". `Scanner.Text` appears with 0.41 seconds flat,
 which was the runtime copying the line and allocating its string. With the runtime ignored instead,
 every sample that touched any `runtime.` function is gone, and **`tally.Count` drops from 82.50% to
 37.67%**: the report now describes a different, imaginary program, one that never allocates.

@@ -119,7 +119,7 @@ ana@vm:~/trace-hits$ stat -c "%s bytes  %n" w1.trace w4.trace
 
 **A trace's size follows the events, not the work.** Both runs parsed the same three million
 lines, and the one-worker run wrote 9,453,261 bytes against 5,257,509, because it ran longer and
-the runtime kept producing events the whole time: the garbage collector alone is a stream of them,
+the runtime kept producing events the whole time. The garbage collector alone is a stream of them,
 as section 03 counts. That is between five and seven megabytes for every second of this program;
 an hour at that rate would be some twenty gigabytes, which is the problem section 05 solves.
 

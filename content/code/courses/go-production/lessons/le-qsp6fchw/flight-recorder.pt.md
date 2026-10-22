@@ -52,7 +52,7 @@ segundo, segura o lock delas por tempo demais. Nada no laço de contagem sabe di
     },
     {
       "code": "\tvar mu sync.Mutex\n\ts := tally.Summary{ByStatus: map[int]int{}, ByPath: map[string]int{}}\n\tdone := make(chan struct{})\n\tdefer close(done)\n\tgo publish(&mu, &s, done)\n",
-      "note": "As contagens são divididas com uma segunda goroutine, `publish`, por meio de um mutex. Essa goroutine é a causa dos lotes lentos, e a questão é que nada no laço de contagem diz isso."
+      "note": "As contagens são divididas com uma segunda goroutine, `publish`, por meio de um mutex. Essa goroutine é a causa dos lotes lentos, e nada no laço de contagem diz isso."
     },
     {
       "code": "\tctx := context.Background()\n\tvar batches int\n\tvar worst time.Duration\n\tsaved := false\n\tbatch := func(b []string) error {\n\t\tstart := time.Now()\n\t\ttrace.WithRegion(ctx, \"batch\", func() {\n\t\t\tmu.Lock()\n\t\t\tdefer mu.Unlock()\n\t\t\tfor _, line := range b {\n\t\t\t\tif e, err := tally.Parse(line); err == nil {\n\t\t\t\t\ts.Lines++\n\t\t\t\t\ts.ByPath[e.Path]++\n\t\t\t\t}\n\t\t\t}\n\t\t})",

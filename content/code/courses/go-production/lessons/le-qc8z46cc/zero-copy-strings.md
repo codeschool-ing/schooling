@@ -196,11 +196,11 @@ nanoseconds for the line, over a microsecond for the page. The unsafe conversion
 copies nothing, so it takes under a nanosecond whatever the size.
 
 The last five are the case against reaching for it. `hits[string(path)]`, written inside the index
-expression, **allocated nothing at all, for a 10-byte key and for a 41-byte one**. The compiler
+expression, **allocated nothing at all, for a 10-byte key and for a 40-byte one**. The compiler
 recognises a conversion used only to look a key up and passes the bytes to the map without building
 a string. Move the same conversion one line up, into a variable, and the 10-byte key still costs
 nothing, for a different reason: **a converted string that does not escape and fits in 32 bytes is
-built in a buffer on the stack** (`tmpStringBufSize` in `runtime/string.go`). The 41-byte key does
+built in a buffer on the stack** (`tmpStringBufSize` in `runtime/string.go`). The 40-byte key does
 not fit, and costs its allocation again.
 
 The increment is the interesting one. `hits[string(path)]++` allocated 16 bytes on every call,

@@ -31,8 +31,7 @@ Este é o profile da seção 02, desenhado a partir das 600 amostras:
 ```
 
 O desenho se lê na ordem que a tabela não dava. **A caixa mais larga perto do alto da torre grande é
-o `strings.Fields`**, e quase toda a borda de cima dela está descoberta: esse trecho descoberto é o
-1,20 segundo de flat, a borda exposta mais larga da figura, então é o código mais vezes encontrado
+o `strings.Fields`**, e quase toda a borda de cima dela está descoberta. Esse trecho descoberto é o 1,20 segundo de flat, a borda exposta mais larga da figura, então é o código mais vezes encontrado
 rodando. Sobre a parte esquerda dela ficam `makeslice` e `mallocgc`, a alocação que o `-peek` apontou.
 À direita, na mesma fileira, o `time.Parse` tem um quarto da largura dela. **O `tally.Count` é largo e
 quase todo coberto**: cum grande e flat fino, a função que delega da seção 02 desenhada como forma. As

@@ -128,7 +128,7 @@ Dropped 2 nodes (cum <= 0.03s)
 ```
 
 Com o runtime escondido, **`strings.Fields` tem 2,53 segundos de flat, igual ao cum**: a alocação e
-os write barriers que ela causou agora são cobrados dela, o que responde direto à pergunta "quanto
+os write barriers que ela causou agora são cobrados dela. Isso responde direto à pergunta "quanto
 custa esta linha do meu código, com tudo". O `Scanner.Text` aparece com 0,41 segundo de flat, que
 era o runtime copiando a linha e alocando a string dela. Com o runtime ignorado, em vez disso, toda
 amostra que tocou qualquer função `runtime.` some, e **o `tally.Count` cai de 82,50% para 37,67%**:

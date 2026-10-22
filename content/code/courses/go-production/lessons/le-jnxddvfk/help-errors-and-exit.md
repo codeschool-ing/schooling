@@ -4,7 +4,7 @@ version: 1
 ---
 
 A library that writes your help and parses your flags also decides what happens when the parse
-fails, and **its defaults are not lesson 1's contract**. Lesson 1 section 04 fixed three promises:
+fails, and **its defaults are not lesson 1's contract**. Lesson 1 section 05 fixed three promises:
 results on standard output, complaints on standard error, and an exit status of 0, 1 or 2 that a
 script can act on. Section 02's `main.go` uses the shape urfave/cli's own documentation shows, and
 it breaks all three on the first mistyped flag. This section shows where, then rewrites `main.go`

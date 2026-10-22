@@ -132,7 +132,7 @@ Read it in pieces:
     },
     {
       "code": "func main() {\n\tos.Exit(run(os.Args[1:], os.Stdin, os.Stdout, os.Stderr))\n}\n",
-      "note": "**`main` does one thing: it passes the process's arguments and streams to `run` and exits with what `run` returns.** Everything that can be tested lives in `run`, which section 04 tests without starting a process."
+      "note": "**`main` does one thing: it passes the process's arguments and streams to `run` and exits with what `run` returns.** Everything that can be tested lives in `run`, which section 05 tests without starting a process."
     },
     {
       "code": "func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {\n\tif len(args) == 0 {\n\t\tfmt.Fprint(stderr, usage)\n\t\treturn 2\n\t}\n\tswitch args[0] {\n\tcase \"count\":\n\t\treturn count(args[1:], stdin, stdout, stderr)\n\tcase \"top\":\n\t\treturn top(args[1:], stdin, stdout, stderr)\n\tcase \"help\", \"-h\", \"-help\", \"--help\":\n\t\tfmt.Fprint(stdout, usage)\n\t\treturn 0\n\t}\n\tfmt.Fprintf(stderr, \"hits: unknown command %q\\n\\n%s\", args[0], usage)\n\treturn 2\n}\n",
@@ -207,7 +207,7 @@ uses; lesson 17 takes it apart.
 
 ## Mistakes, and who made them
 
-The hand-written dispatch has to handle what the flag package handled for free in section 02. Here is
+The hand-written dispatch has to handle what the flag package handled for free in section 03. Here is
 the program called with nothing, with a typo, with a request for help and with a bad value:
 
 ```
@@ -254,6 +254,6 @@ each `FlagSet` describes only its own flags.
 
 What it does not do is just as visible. `cont` is one letter from `count` and the program does not
 say so. `hits help top` prints the general usage, not `top`'s. There is no way to complete a
-subcommand's name with the Tab key. Each of those is twenty lines you could write by hand, and
-**that pile of twenty-line features is exactly what lesson 2's Cobra is**: the same program, with the
+subcommand's name with the Tab key. Each of those is twenty lines you could write by hand.
+**That pile of twenty-line features is exactly what lesson 2's Cobra is**: the same program, with the
 dispatch, the help, the suggestions and the completion written once by somebody else.

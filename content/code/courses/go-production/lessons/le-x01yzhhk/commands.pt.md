@@ -22,8 +22,8 @@ a lição.
 ## O mesmo projeto, uma nova frente
 
 O programa mora num módulo novo, `~/cobra-hits`, para que o `~/hits` da lição 1 fique como está e
-os dois possam ser comparados. Monte-o do jeito que a lição 1 montou o `~/hits`:
-`go mod init example.com/hits`, depois copie dois arquivos sem mudança, **o pacote `tally` da lição
+os dois possam ser comparados. Monte-o do jeito que a lição 1 montou o `~/hits`, com
+`go mod init example.com/hits`. Depois copie dois arquivos sem mudança, **o pacote `tally` da lição
 1** (`internal/tally/tally.go`) e o gerador de log (`tools/genlog/main.go`), e escreva o mesmo
 `access.log` com `go run ./tools/genlog -n 20000 > access.log`. O caminho do módulo é o mesmo da
 lição 1, então o import do `tally` não muda um caractere.
@@ -179,9 +179,9 @@ text/template
 
 **O `go list -m all` imprime o grafo de módulos, e ele é maior do que o que se compila.** O `hits`
 da lição 1 tinha uma linha aqui, o próprio módulo; este tem oito. Três são os módulos que o `go get`
-acrescentou. Os outros quatro chegam pelo `go.mod` do Cobra e pelos arquivos a que ele leva: o
+acrescentou. Os outros quatro chegam pelo `go.mod` do Cobra e pelos arquivos a que ele leva. O
 `go-md2man`, e o `blackfriday` de que ele precisa, servem ao gerador de páginas de manual do pacote
-`doc` do Cobra, o `yaml` serve à saída YAML do mesmo pacote, e o `check.v1` é com o que o `yaml`
+`doc` do Cobra; o `yaml` serve à saída YAML do mesmo pacote, e o `check.v1` é com o que o `yaml`
 testa a si mesmo. O comando go precisa das versões deles para resolver o grafo, embora o `hits` não
 importe nenhum. O `go version -m` lê a lista que o linker gravou no binário, e **só dois módulos
 foram compilados**: Cobra e `pflag`. A biblioteca padrão também cresceu: o Cobra monta a ajuda com o

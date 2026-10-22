@@ -86,8 +86,7 @@ Dropped 70 nodes (cum <= 0.03s)
 ```
 
 Números negativos são tempo que foi embora. **O `strings.Fields` perdeu todos os 2,53 segundos dele
-e o `split5` acrescentou 0,72**, então as mesmas linhas foram separadas em menos de um terço do
-tempo; o `tally.Parse` inteiro ficou 1,63 segundo mais leve, e o alocador e os locks do runtime
+e o `split5` acrescentou 0,72**, então as mesmas linhas foram separadas em menos de um terço do tempo. O `tally.Parse` inteiro ficou 1,63 segundo mais leve, e o alocador e os locks do runtime
 ficaram mais leves junto. O profile novo tem 3,55 segundos de amostras contra os 6 do antigo para as
 mesmas 200 iterações, o que concorda com o benchstat na direção e, mais ou menos, no tamanho, como
 duas medições independentes de uma mudança devem concordar.

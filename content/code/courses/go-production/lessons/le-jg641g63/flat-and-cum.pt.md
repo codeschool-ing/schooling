@@ -101,8 +101,7 @@ quadros abaixo dele, a estrutura do benchmark, que não gasta tempo próprio nen
 **Cum alto com flat minúsculo é uma função que delega.** Otimizar o código dela rende no máximo o
 flat, 3,67% aqui; o que ela rende mudando o que chama, ou quantas vezes, vai até o cum. Flat alto é
 o contrário: o trabalho está no laço da própria função, e é esse laço que se olha. Os 17,5%
-restantes das amostras nem estão sob o `Count`: são as goroutines do próprio runtime, o coletor de
-lixo varrendo memória, uma goroutine sendo reescalonada, que trabalham em outras threads e aparecem
+restantes das amostras nem estão sob o `Count`. São as goroutines do próprio runtime, o coletor de lixo varrendo memória e uma goroutine sendo reescalonada, que trabalham em outras threads e aparecem
 no profile como qualquer outro código.
 
 Duas linhas do runtime merecem uma frase, porque aparecem em quase todo profile de Go.

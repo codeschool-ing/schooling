@@ -260,7 +260,7 @@ slices
 ```
 
 `encoding/json` serialises structs it has never seen, `fmt` prints them, `text/template` calls
-their methods by the names in a template, and `flag` reflects to work out a flag's zero value, which
+their methods by the names in a template. `flag` reflects to work out a flag's zero value, which
 is how lesson 1's `-h` knew to print `(default 3)` for `-n` and nothing for `-json`. `strconv` and
 `slices` work on types they know or take as type parameters, and need none of it. In tests,
 `reflect.DeepEqual` compares two values of any type field by field, unexported fields included,

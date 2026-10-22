@@ -56,16 +56,16 @@ why/makes.go:17:11:     from make([]int, 10000) (too large for stack) at why/mak
 why/makes.go:23:6:     from g (too large for stack) at why/makes.go:23:6
 ```
 
-`Fixed` makes 64 ints, 512 bytes, and they stay on the stack. `Huge` makes 10,000, 80,000 bytes,
-which is over the 64 KiB limit for a value `make` creates, and `Grid` declares 1 MiB, over the
-128 KiB limit for a declared variable; `-m=2` gives both the same reason, **`too large for stack`**.
+`Fixed` makes 64 ints, 512 bytes, and they stay on the stack. `Huge` makes 10,000 of them, 80,000 bytes,
+which is over the 64 KiB limit for a value `make` creates. `Grid` declares 1 MiB, over the
+128 KiB limit for a declared variable, and `-m=2` gives both the same reason, **`too large for stack`**.
 Nothing points at either from outside, and nothing else in the functions differs from `Fixed`.
 
 **`Sized` is the case where "does not escape" does not mean "never allocates".** Its length arrives as
-an argument, so the compiler cannot reserve the right amount of frame. What it does instead is
-described in a comment in its source, `cmd/compile/internal/walk/builtin.go`: it reserves a fixed
-32 bytes in the frame and compiles a check, so that a slice that fits in them uses them and one that
-does not is allocated on the heap, at run time. 32 bytes is four `int`s. `make([]int, 4)` costs
+an argument, so the compiler cannot reserve the right amount of frame. A comment in the
+compiler's source, `cmd/compile/internal/walk/builtin.go`, describes what it does instead. It
+reserves a fixed 32 bytes in the frame and compiles a check: a slice that fits in them uses them, and
+one that does not is allocated on the heap, at run time. 32 bytes is four `int`s. `make([]int, 4)` costs
 nothing and `make([]int, 5)` costs an allocation, from the same line, and section 05 counts both.
 The report says `does not escape` for both, because escaping is about lifetime, and the slice does
 not outlive `Sized`.

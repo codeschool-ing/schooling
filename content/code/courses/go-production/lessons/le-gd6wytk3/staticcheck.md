@@ -7,8 +7,8 @@ Lesson 7 ended with a table of what `go vet` will never tell you, and its precis
 the reason: a check that is right nine times in ten is not good enough for vet. **`staticcheck` is a
 suite of analyzers on the same framework that makes a different trade**: it reports a bug that is
 very likely rather than certain, code with a simpler spelling, a call to something deprecated, and
-code nobody calls. It still aims for few false alarms, which is what lets a project run it with its defaults and
-leave it on in CI.
+code nobody calls. It still aims for few false alarms, which is what lets a project run it with its
+defaults and leave it on in CI.
 
 ## A file vet passes
 
@@ -164,11 +164,12 @@ a check is for and where its full page lives, which is the quickest way to decid
 a CI log is worth arguing with.
 
 **Not all 149 run by default.** Eight are off, because they flag code that many projects write on
-purpose: `ST1000`, a missing or misshapen package comment; `ST1003`, names such as `ToCsv` that
-break Go's initialism convention; `ST1016`, methods whose receivers have different names;
-`ST1020` to `ST1022`, doc comments that do not start with the name they document; `ST1023`, a
-variable declared with a type its value already states; and `SA9003`, an empty branch. The rest are on, and that default is the point: **a check that is on for every
-project is one whose false alarms the maintainers have had to answer for**.
+purpose. `ST1000` is a missing or misshapen package comment, `ST1003` a name such as `ToCsv` that
+breaks Go's initialism convention, and `ST1016` methods whose receivers have different names.
+`ST1020` to `ST1022` report doc comments that do not start with the name they document, `ST1023` a
+variable declared with a type its value already states, and `SA9003` an empty branch. The rest are
+on, and that default is the point: **a check that is on for every project is one whose false alarms
+the maintainers have had to answer for**.
 
 ## Choosing the checks
 

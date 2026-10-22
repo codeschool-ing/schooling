@@ -12,7 +12,7 @@ biblioteca padrão da lição 1, a versão com urfave/cli das seções 02 a 04, 
 ## Os três programas
 
 A versão da lição 1 vai para um diretório próprio, `~/std-hits`, com o `main.go` e o pacote `tally`
-colocados exatamente como a seção 03 da lição 1 os imprime. A versão com urfave/cli é o
+colocados exatamente como a seção 04 da lição 1 os imprime. A versão com urfave/cli é o
 `~/cli-hits` como a seção 04 o deixou. Para o Cobra, a lição 2 explica as peças; o programa abaixo
 está aqui só para ser medido, e mantém a mesma saída e os mesmos códigos de saída, com o `-n`
 checado para ser pelo menos 1. Em `~/cobra-cmp`, ao lado do mesmo `internal/tally/tally.go`, com um
@@ -296,7 +296,7 @@ páginas de manual, e o formato de muitas ferramentas Go conhecidas, então quem
 familiar. A lição 2 trata dele. O que ele custa são dois módulos compilados, o `net` entre os
 pacotes, e uma segunda biblioteca no dia em que uma flag precisar vir do ambiente.
 
-Nenhuma das três muda o `tally`, e é a decisão da seção 03 da lição 1 rendendo pela segunda vez:
+Nenhuma das três muda o `tally`, e é a decisão da seção 04 da lição 1 rendendo pela segunda vez:
 **a linha de comando é uma camada fina sobre um pacote que não sabe nada dela**, então trocar a
 camada é coisa de uma tarde, e as medidas acima podem ser tiradas de novo quando sair a próxima
 versão de qualquer uma das três.

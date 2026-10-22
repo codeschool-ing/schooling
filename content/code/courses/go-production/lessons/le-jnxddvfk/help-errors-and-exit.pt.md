@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma biblioteca que escreve a sua ajuda e lê as suas flags também decide o que acontece quando a
-leitura falha, e **os padrões dela não são o contrato da lição 1**. A seção 04 da lição 1 fixou três
+leitura falha, e **os padrões dela não são o contrato da lição 1**. A seção 05 da lição 1 fixou três
 promessas: resultados na saída padrão, reclamações na saída de erro, e um status de saída 0, 1 ou 2
 com que um script possa agir. O `main.go` da seção 02 usa o formato que a própria documentação da
 urfave/cli mostra, e quebra as três na primeira flag digitada errado. Esta seção mostra onde, depois

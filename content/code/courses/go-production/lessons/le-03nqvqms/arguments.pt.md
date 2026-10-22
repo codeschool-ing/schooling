@@ -109,7 +109,7 @@ Usage of ./args:
 para "você me chamou errado". Quando pedem ajuda, ele imprime a mesma listagem e sai com 0, porque
 nada deu errado. A listagem é montada com os textos de ajuda passados a `flag.Int` e `flag.Bool`, e
 o padrão aparece quando não é o valor zero. Esse é o comportamento das funções de pacote; a seção
-03 monta uma ferramenta em que cada subcomando tem flags próprias e decide sozinho o que significa
+04 monta uma ferramenta em que cada subcomando tem flags próprias e decide sozinho o que significa
 uma leitura que falhou.
 
 ## Um log para ler

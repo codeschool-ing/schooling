@@ -9,8 +9,8 @@ Add `errcheck` for dropped errors and a few more, and the CI step becomes a scri
 **`golangci-lint` is a runner: it carries more than a hundred linters inside one binary, runs the
 ones a single YAML file names, and reports them in one format with one exit code.** Most of the
 linters it carries are analyzers on the same framework as vet, so it loads and type-checks each
-package once and hands the result to all of them, in parallel, and it caches what it found for
-files that have not changed.
+package once and hands the result to all of them, in parallel. It also caches what it found
+for files that have not changed.
 
 ## Installing it, and what is inside
 
@@ -90,8 +90,8 @@ project looks like, and it is worth reading the ten before deciding what they me
 
 One real bug, one judgement call and eight lines of noise. **golangci-lint 2 reports every one of
 them, on purpose**: version 1 hid the printing and closing cases by default, and the changelog of
-2.0.0 lists "No exclusions by default", which leaves the choice to each project. The two lines from `govet` and
-`staticcheck` on `report.go` show two smaller things. `govet` here runs one analyzer that `go vet`
+2.0.0 lists "No exclusions by default", which leaves the choice to each project.
+The two lines from `govet` and `staticcheck` on `report.go` show two smaller things. `govet` here runs one analyzer that `go vet`
 does not, `inline`, which reports calls to functions marked `//go:fix inline`, and in Go 1.27.1
 `ioutil.ReadFile` is one of them; it is the analyzer `go fix` uses to rewrite such calls. And there
 is one `ST1005` line where staticcheck alone printed two, because by default golangci-lint keeps one

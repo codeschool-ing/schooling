@@ -146,8 +146,7 @@ ana@vm:~/race-hits$ go build -o pcount ./tools/pcount && for i in 1 2 3 4 5 6; d
 ```
 
 **O `go vet` não achou nada e os dois pacotes de teste passaram.** Depois, seis execuções do
-`pcount` sobre o mesmo arquivo de 20.000 linhas imprimiram seis contagens diferentes. A primeira
-acertou; as outras cinco ficaram entre 1 e 91 linhas abaixo, e nenhuma parecia errada: 19.994 é um
+`pcount` sobre o mesmo arquivo de 20.000 linhas imprimiram seis contagens diferentes. A primeira acertou. As outras cinco ficaram entre 1 e 91 linhas abaixo, e nenhuma parecia errada: 19.994 é um
 número de requisições perfeitamente crível, e nada na saída diz que ele esteve em dúvida algum dia.
 O tempo total oscilou junto com a contagem, descendo até `1h6m18.232s` a partir do `1h6m37.778s` da
 execução certa. Se a primeira tivesse sido a única, como seria numa conferência rápida à mão, o bug
@@ -210,8 +209,7 @@ FAIL
 **O teste que passou há pouco agora falha, e falha sempre**: o detector não espera dois incrementos
 colidirem, ele percebe que duas goroutines tocaram `s.Lines` sem nada ordenando os dois acessos. O
 relatório se lê do jeito que a lição 16 de `go-concurrency` ensinou. Os dois acessos estão na linha
-40 de `parallel.go`, `s.Lines++`, uma leitura pela goroutine 9 e uma escrita anterior pela goroutine
-10: o `++` lê o valor antigo e grava o novo, e as duas goroutines fizeram isso sem lock entre elas.
+40 de `parallel.go`, `s.Lines++`, uma leitura pela goroutine 9 e uma escrita anterior pela goroutine 10. O `++` lê o valor antigo e grava o novo, e as duas goroutines fizeram isso sem lock entre elas.
 
 Os locais de nascimento pedem um fato a mais do que aquela lição deu. Abaixo de
 `sync.(*WaitGroup).Go()` o quadro seguinte é `checkParallel()` na linha 21 do teste, a chamada ao `CountParallel`.

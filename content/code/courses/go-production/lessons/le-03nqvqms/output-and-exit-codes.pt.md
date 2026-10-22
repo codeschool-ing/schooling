@@ -43,8 +43,8 @@ linha na tela dizendo `open nope.log: no such file or directory` não diz quem n
 | `2` | foi chamado errado | sem comando, comando desconhecido, flag errada, dois arquivos |
 
 Só o `0` é universal: ele quer dizer sucesso para todo shell, todo `make`, todo sistema de CI. A
-separação entre 1 e 2 é uma convenção que o pacote flag segue, o `grep` segue e o `hits` segue, e
-vale mantê-la porque um script distingue "conserte a chamada" de "conserte os dados" sem ler uma
+separação entre 1 e 2 é uma convenção que o pacote flag segue, o `grep` segue e o `hits` segue.
+Vale mantê-la porque um script distingue "conserte a chamada" de "conserte os dados" sem ler uma
 palavra em inglês. Um script de shell a usa direto, em `if ./hits count "$f"; then` ou com
 `set -e`, que para o script no primeiro comando que devolver qualquer coisa diferente de 0.
 
@@ -67,7 +67,7 @@ ana@vm:~/hits$ ./hits count -json - < access.log
 O erro cita a linha, porque a entrada pode ter um milhão de linhas e vir de um programa que já foi
 embora. O `genlog` e o `hits` rodaram ao mesmo tempo no segundo comando, um escrevendo e o outro
 lendo, e nenhum arquivo foi criado. O terceiro lê o mesmo arquivo pelo `<` do shell, e as contagens
-batem exatamente com a tabela da seção 03.
+batem exatamente com a tabela da seção 04.
 
 ## Quando o leitor para antes
 

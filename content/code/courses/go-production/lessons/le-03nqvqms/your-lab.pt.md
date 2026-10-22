@@ -5,7 +5,7 @@ version: 1
 
 Toda lição deste curso pede que você digite algo e leia o que volta, então ela precisa de uma
 máquina em que dê para digitar. **A plataforma não fornece nenhuma.** Você monta a sua, e já tem
-quase tudo se fez os dois cursos anteriores: este curso roda no mesmo laboratório, nas mesmas
+quase tudo se fez os dois cursos anteriores. Este curso roda no mesmo laboratório, nas mesmas
 versões, e só acrescenta algo onde uma lição precisa de coisa nova.
 
 | o quê | qual | montado por completo em |
@@ -22,8 +22,8 @@ linters da lição 8, são baixadas pelo comando go quando a lição pede, e vã
 ## Os passos, em resumo
 
 No Ubuntu 24.04 o caminho é este. As duas primeiras linhas desempacotam o arquivo baixado de
-go.dev/dl, depois de você conferir o SHA-256 dele com o que aparece ao lado; as duas seguintes
-colocam os dois diretórios no seu `PATH` a partir do próximo login; a última instala o compilador:
+go.dev/dl, depois de você conferir o SHA-256 dele com o que aparece ao lado. As duas seguintes
+colocam os dois diretórios no seu `PATH` a partir do próximo login, e a última instala o compilador:
 
 ```sh
 sudo rm -rf /usr/local/go
@@ -33,7 +33,7 @@ echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.profile
 sudo apt install gcc
 ```
 
-**As duas linhas com `tar` não foram executadas neste laboratório**, porque esta máquina não
+**As duas primeiras linhas não foram executadas neste laboratório**, porque esta máquina não
 alcança go.dev. O laboratório pegou a mesma versão pelo proxy de módulos do Go, que é o caminho que
 a lição 3 do curso `go` mostra e confere, e o `gcc` já estava instalado. Todo o resto deste curso
 foi digitado como você vê.

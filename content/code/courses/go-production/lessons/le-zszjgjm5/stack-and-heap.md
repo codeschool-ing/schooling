@@ -27,8 +27,8 @@ ana@vm:~/mem-stacks$ sed -n 77,78p /usr/local/go/src/runtime/stack.go
 **8,192 KiB against 2,048 bytes, a factor of four thousand.** A thread's stack has to be large,
 because nothing can enlarge it later: a program that recurses past it is killed. A goroutine's can
 be small because the runtime enlarges it the moment it is about to run out. Almost every Go function
-begins with a few instructions that compare the stack pointer with the end of the current stack;
-when the next frame would not fit, the runtime allocates a block twice the size, copies the stack
+begins with a few instructions that compare the stack pointer with the end of the current stack.
+When the next frame would not fit, the runtime allocates a block twice the size, copies the stack
 into it and carries on.
 
 A program in `~/mem-stacks` watches that happen. It starts ten thousand goroutines that wait, then

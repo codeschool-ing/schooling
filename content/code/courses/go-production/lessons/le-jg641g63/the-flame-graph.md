@@ -31,7 +31,7 @@ Here is the profile of section 02, drawn from its 600 samples:
 ```
 
 The drawing reads in the order the table could not give. **The widest box near the top of the tall
-tower is `strings.Fields`**, and most of its top edge is bare: that bare stretch is its 1.20 seconds
+tower is `strings.Fields`**, and most of its top edge is bare. That bare stretch is its 1.20 seconds
 of flat, the widest exposed edge in the picture, so it is the code most often found running. Over its
 left part stand `makeslice` and `mallocgc`, the allocation that `-peek` named. To its right, on the
 same row, `time.Parse` is a quarter of its width. **`tally.Count` is wide and almost entirely

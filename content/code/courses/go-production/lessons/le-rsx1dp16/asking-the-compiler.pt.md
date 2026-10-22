@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Nada na sintaxe do Go diz onde um valor mora.** A crença trazida de C e de Java é que `new` e `&`
-põem um valor no heap e todo o resto fica na pilha, e em Go nenhuma das duas metades vale: `&Point{}`
+põem um valor no heap e todo o resto fica na pilha. Em Go nenhuma das duas metades vale: `&Point{}`
 pode morar na pilha, e um simples `int` pode acabar no heap. Quem decide é o compilador, valor por
 valor, numa etapa chamada análise de escape. Um valor só pode ficar no quadro de pilha da sua função
 se nada puder alcançá-lo depois que a função retorna e se o tamanho dele for conhecido quando o
@@ -95,8 +95,8 @@ frases**:
 estar nesse quadro. O `Sum` lê através do ponteiro e não guarda nada, e é isso que torna `Sum(&q)` de
 graça para qualquer chamador: `q` pode ficar na pilha de quem chama.
 
-O `Farther` é o sutil. **"Leaking param" não é uma alocação**; é um resumo que o compilador escreve
-para cada parâmetro, porque ele analisa uma função de cada vez, as chamadas primeiro, e quem chama
+O `Farther` é o sutil. **"Leaking param" não é uma alocação.** É um resumo que o compilador escreve
+para cada parâmetro. Ele analisa uma função de cada vez, as chamadas primeiro, e quem chama
 precisa saber o que a função chamada faz com um ponteiro que recebe. O `to result ~r0` diz para onde
 `a` vai: para o primeiro resultado, que não tem nome no código, então o compilador o chama de `~r0`.
 O `level=0` diz que é o próprio ponteiro que vai para lá, não algo alcançado através dele. Se o

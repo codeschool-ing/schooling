@@ -30,8 +30,8 @@ section 02 is what is supposed to make one unnecessary.
 ## Your own `printf`
 
 Most programs grow a logging helper that takes a format and arguments, and **a format string is
-checked only when vet knows the function is a `printf`**. It works most of them out for itself: a
-function that passes its `format` and `args...` straight on to `fmt.Sprintf`, `fmt.Printf` or any
+checked only when vet knows the function is a `printf`**. It works most of them out for itself.
+A function that passes its `format` and `args...` straight on to `fmt.Sprintf`, `fmt.Printf` or any
 other function already known to format is a *printf wrapper*, and its callers are checked like callers
 of `fmt.Printf`. `applog/main.go` has two helpers, written two ways:
 
@@ -151,7 +151,7 @@ panic: runtime error: invalid memory address or nil pointer dereference
 Vet passed it and the program crashed. **`cfg, err := parse(data)` declared a second `cfg` inside the
 `if`**, filled that one, and let it go at the closing brace, so `load` returned the outer `cfg`, still
 nil. Shadowing is legal and usually intended, and telling the accident from the intention is the hard
-part: the analyzer that looks for it says in its own documentation that it "generates too many false
+part. The analyzer that looks for it says in its own documentation that it "generates too many false
 positives and is not yet enabled by default". That is the precision criterion, applied.
 
 ## A vet that runs other analyzers

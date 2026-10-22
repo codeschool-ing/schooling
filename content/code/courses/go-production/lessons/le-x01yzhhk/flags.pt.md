@@ -17,7 +17,7 @@ qualquer ponto entre os argumentos**, não só antes deles.
 
 ## Uma flag depois do nome do arquivo
 
-A lição 1 seção 02 mostrou a biblioteca padrão parar de ler flags na primeira palavra que não é
+A lição 1 seção 03 mostrou a biblioteca padrão parar de ler flags na primeira palavra que não é
 flag, de modo que `./args jan.log -v` deixava o `-v` como argumento. O pflag continua lendo:
 
 ```

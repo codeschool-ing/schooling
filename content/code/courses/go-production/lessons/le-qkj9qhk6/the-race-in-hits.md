@@ -146,7 +146,7 @@ ana@vm:~/race-hits$ go build -o pcount ./tools/pcount && for i in 1 2 3 4 5 6; d
 ```
 
 **`go vet` found nothing and both test packages passed.** Then six runs of `pcount` over the same
-20,000-line file printed six different counts. The first run was right; the other five were short
+20,000-line file printed six different counts. The first run was right. The other five were short
 by between 1 and 91 lines, and not one of them looked wrong: 19,994 is a perfectly believable number
 of requests, and nothing in the output says that it was ever in doubt. The total time drifted with
 the count, down to `1h6m18.232s` from the `1h6m37.778s` of the right run. Had the first run been the
@@ -207,7 +207,7 @@ FAIL
 **The test that passed a moment ago now fails, and it fails every time**: the detector does not wait
 for two increments to collide, it notices that two goroutines touched `s.Lines` with nothing
 ordering the two accesses. The report reads the way `go-concurrency` lesson 16 taught. Both accesses are at line 40 of
-`parallel.go`, `s.Lines++`, a read by goroutine 9 and an earlier write by goroutine 10: the `++` reads
+`parallel.go`, `s.Lines++`, a read by goroutine 9 and an earlier write by goroutine 10. The `++` reads
 the old value and writes the new one, and the two goroutines did that with no lock between them.
 
 The birthplaces need one more fact than that lesson gave. Under `sync.(*WaitGroup).Go()` the next frame

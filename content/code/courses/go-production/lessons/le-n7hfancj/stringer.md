@@ -205,9 +205,8 @@ built
 
 **A stale `String` method became a compile error instead of a wrong name on a report.** Without the
 guard, `Success` would now be 1, and the old `String` would subtract 1 and print `Informational` for
-it. The comment inside `_()` promises an "invalid array
-index" error and the compiler words it differently today, as "must not be negative"; the line it
-points at is the same. The second `sed` put `+ 1` back, and the build passed again.
+it. The comment inside `_()` promises an "invalid array index" error and the compiler words it
+differently today, as "must not be negative"; the line it points at is the same. The second `sed` put `+ 1` back, and the build passed again.
 
 The guard has an edge. **It checks the constants stringer saw, and nothing else**: a sixth constant
 added after `ServerError`, with the value 6, has no line in `_()`, so the build passes and `String`

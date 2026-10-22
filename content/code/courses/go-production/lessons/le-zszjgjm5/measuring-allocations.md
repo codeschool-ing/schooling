@@ -210,7 +210,7 @@ PASS
 ok  	example.com/hits/internal/keep	0.002s
 ```
 
-It passes today. **The day somebody changes `BySlowest` so that it allocates**, by copying the slice
-before sorting it, say, or by passing it through an interface the compiler cannot see past, the test
-fails and names the number, long before anybody profiles the program that calls it. A budget of 0 is
+It passes today. **The day somebody changes `BySlowest` so that it allocates**, the test fails and
+names the number, long before anybody profiles the program that calls it. Copying the slice before
+sorting it would do that, or passing it through an interface the compiler cannot see past. A budget of 0 is
 the strictest; a function that must allocate once can be held to 1 the same way.

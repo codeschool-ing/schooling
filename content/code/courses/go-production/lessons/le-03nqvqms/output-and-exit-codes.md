@@ -43,7 +43,7 @@ on the screen saying `open nope.log: no such file or directory` does not say who
 | `2` | it was called wrongly | no command, an unknown one, a bad flag, two files |
 
 Only `0` is universal: it means success to every shell, every `make`, every CI system. The split
-between 1 and 2 is a convention the flag package follows, `grep` follows and `hits` follows, and it
+between 1 and 2 is a convention the flag package follows, `grep` follows and `hits` follows. It
 is worth keeping because a script can tell "fix your invocation" from "fix your data" without reading
 a word of English. A shell script uses it directly, in `if ./hits count "$f"; then` or under
 `set -e`, which stops a script at the first command that returns anything but 0.
@@ -67,7 +67,7 @@ ana@vm:~/hits$ ./hits count -json - < access.log
 The error names the line, because the input might be a million lines long and arrive from a program
 that has already gone. `genlog` and `hits` ran at the same time in the second command, one writing
 and the other reading, and no file was made. The third reads the same file through the shell's `<`,
-and the counts match section 03's table exactly.
+and the counts match section 04's table exactly.
 
 ## When the reader stops early
 

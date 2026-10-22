@@ -5,7 +5,8 @@ version: 1
 
 A generator is not a special kind of program. **It is an ordinary Go program that reads something
 and writes a `.go` file**, and the directive that runs it is one line. The Go source tree's 78
-`go run` directives work that way: a program run from source, with no installation step. This section writes one for `hits`, small enough to read whole.
+`go run` directives work that way: a program run from source, with no installation step. This section writes one for `hits`, small
+enough to read whole.
 
 ## A list somebody else keeps
 
@@ -114,7 +115,7 @@ directive passed as `-in`. Compare the entries with the template that wrote them
 each entry at the start of its line with one space after the colon; the file has a tab in front and
 the values aligned in a column**, and that is `format.Source`. `gofmt -l` lists the files it would
 change and listed none. A generator that skips this step writes files that the formatting check of
-lesson 6 then fails on every run, and the fix has to go in the generator, since an edit to the output
+lesson 6 then fails on every run. The fix has to go in the generator, since an edit to the output
 lasts until the next `go generate`.
 
 The map in use, from `cmd/teams/main.go`, which counts the log by team:

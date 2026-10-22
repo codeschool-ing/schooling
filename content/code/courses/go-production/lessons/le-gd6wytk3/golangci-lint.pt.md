@@ -9,8 +9,8 @@ código de saída quer dizer. Acrescente o `errcheck` para erros descartados e m
 CI vira um script próprio. **O `golangci-lint` é um executor: carrega mais de cem linters dentro de um
 binário, roda os que um único arquivo YAML nomeia, e os relata num formato com um código de saída.** A
 maioria dos linters que ele carrega são analisadores sobre o mesmo framework do vet, então ele carrega
-e verifica os tipos de cada pacote uma vez e entrega o resultado a todos, em paralelo, e guarda em
-cache o que achou para arquivos que não mudaram.
+e verifica os tipos de cada pacote uma vez e entrega o resultado a todos, em paralelo. Também guarda
+em cache o que achou para arquivos que não mudaram.
 
 ## Instalando, e o que vem dentro
 

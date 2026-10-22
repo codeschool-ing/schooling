@@ -107,7 +107,7 @@ Usage of ./args:
 code for "you called me wrongly". Asked for help, it prints the same listing and exits 0, because
 nothing went wrong. The listing is built from the help texts given to `flag.Int` and `flag.Bool`,
 with the default shown when it is not the zero value. That is the behaviour of the package-level
-functions; section 03 builds a tool where each subcommand has a set of flags of its own and decides
+functions; section 04 builds a tool where each subcommand has a set of flags of its own and decides
 for itself what a failed parse means.
 
 ## A log to read

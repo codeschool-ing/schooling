@@ -67,8 +67,8 @@ instead, a copy of the address, and `Elem` follows the address back to the varia
 ```
 
 The struct works the same way. **`ValueOf(&c).Elem()` is the struct `c` itself, and every exported
-field below it is settable**, and `Limit` went from 3 to 10. `secret` is reachable and still `CanSet() false`,
-for the reason section 03 gave, and the refusal holds even here, inside package `main`, where
+field below it is settable**: `Limit` went from 3 to 10. `secret` is reachable and still `CanSet() false`,
+for the reason section 03 gave. The refusal holds even here, inside package `main`, where
 `Config` was declared and ordinary code may write `c.secret` freely. `%+v` printed `secret:` with its empty value, which shows that `fmt`
 reads unexported fields when it prints; reading is allowed, writing is not.
 

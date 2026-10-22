@@ -164,10 +164,11 @@ checagem e onde fica a página completa dela, que é o jeito mais rápido de dec
 uma linha num log de CI.
 
 **Nem todas as 149 rodam por padrão.** Oito ficam desligadas, porque apontam código que muitos projetos
-escrevem de propósito: `ST1000`, um comentário de pacote ausente ou malformado; `ST1003`, nomes como
-`ToCsv` que quebram a convenção de siglas do Go; `ST1016`, métodos cujos receptores têm nomes
-diferentes; `ST1020` a `ST1022`, comentários de documentação que não começam com o nome que documentam;
-`ST1023`, uma variável declarada com um tipo que o valor já informa; e `SA9003`, um ramo vazio. As
+escrevem de propósito. `ST1000` é um comentário de pacote ausente ou malformado, `ST1003` um nome como
+`ToCsv` que quebra a convenção de siglas do Go, e `ST1016` métodos cujos receptores têm nomes
+diferentes. `ST1020` a `ST1022` apontam comentários de documentação que não começam com o nome que
+documentam, `ST1023` uma variável declarada com um tipo que o valor já informa, e `SA9003` um ramo
+vazio. As
 outras ficam ligadas, e esse padrão é o ponto: **uma checagem ligada em todo projeto é uma cujos alarmes
 falsos os mantenedores tiveram de responder**.
 

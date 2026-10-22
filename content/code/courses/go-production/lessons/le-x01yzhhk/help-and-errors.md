@@ -6,7 +6,7 @@ version: 1
 Cobra writes the help and finds the mistakes. **It does not decide the exit code**: `Execute`
 returns an error or `nil`, and what the process exits with is up to `main`. The generator's template
 settles it in the bluntest way, with `os.Exit(1)` for any error at all, which would make a typo and
-a missing file look the same to a script. Lesson 1 section 04 promised more than that, three codes
+a missing file look the same to a script. Lesson 1 section 05 promised more than that, three codes
 with three meanings, and this section keeps the promise.
 
 ## Help that nobody wrote
@@ -49,7 +49,7 @@ lesson 1's list of what was missing. Lesson 1's hand-written usage text, its `ca
 
 ## Mistakes, and who made them
 
-The same mistakes lesson 1 section 03 made, against the new program:
+The same mistakes lesson 1 section 04 made, against the new program:
 
 ```
 ana@vm:~/cobra-hits$ ./hits cont access.log; echo $?
@@ -83,7 +83,7 @@ whose name starts with it; `cont` is one letter short of `count`. The wording of
 and pflag's, more technical than lesson 1's. `accepts at most 1 arg(s)` comes from
 `cobra.MaximumNArgs(1)`, which checked the arguments before `RunE` ran. And every line went to
 standard error, every mistake ended in 2 and the file that would not open ended in 1, **as the table
-in lesson 1 section 04 says it should**.
+in lesson 1 section 05 says it should**.
 
 ## How `run` tells them apart
 
@@ -120,7 +120,7 @@ line it wants, for a reason that is easy to miss. **Cobra prints the usage with 
 writes to the writer given to `SetOut`, and only falls back to standard error when there is none.**
 `run` gives the tree its standard output, so the listing after a bad flag or a wrong number of
 arguments would have gone to standard output, into whatever pipe or file the results were meant for. Silencing both and printing
-in `run` puts every complaint on standard error, where lesson 1 section 04 put them.
+in `run` puts every complaint on standard error, where lesson 1 section 05 put them.
 
 One gap is left, and it is Cobra's:
 

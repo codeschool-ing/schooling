@@ -117,7 +117,7 @@ Each answers a question a pipeline asks:
 
 In a test run, keep `halt_on_error` off: a test binary that stops at the first report loses the
 results of every test after it, and CI should show every race in one run. `exitcode` matters where
-66 already means something else to a script. A test binary ignores it: one that finds a race fails
+66 already means something else to a script. A test binary ignores it. One that finds a race fails
 with status 1 even under `GORACE=exitcode=0`, because the `testing` package notices the report
 itself and fails the test, with the `race detected during execution of test` line section 03 showed. The other two are for staging:
 

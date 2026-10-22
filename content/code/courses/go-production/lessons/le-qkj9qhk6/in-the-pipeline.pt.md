@@ -122,8 +122,7 @@ Cada uma responde a uma pergunta que um pipeline faz:
 
 Numa execução de testes, deixe `halt_on_error` desligada: um binário de teste que para no primeiro
 relatório perde o resultado de todos os testes depois dele, e o CI deve mostrar todas as corridas numa
-execução. O `exitcode` importa quando 66 já significa outra coisa para um script. Um binário de teste
-o ignora: um que acha uma corrida falha com status 1 mesmo sob `GORACE=exitcode=0`, porque o pacote
+execução. O `exitcode` importa quando 66 já significa outra coisa para um script. Um binário de teste o ignora. Um que acha uma corrida falha com status 1 mesmo sob `GORACE=exitcode=0`, porque o pacote
 `testing` percebe o relatório por conta própria e reprova o teste, com a linha `race detected during
 execution of test` que a seção 03 mostrou. As outras duas são para a homologação:
 

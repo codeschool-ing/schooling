@@ -6,7 +6,7 @@ version: 1
 O pacote flag da lição 1 lê as flags do começo da lista e para na primeira palavra que não é flag.
 **A urfave/cli v3 lê a lista inteira**: uma palavra que começa com traço é flag onde quer que
 esteja, e as palavras que não são flags, na ordem em que vieram, são o que o `cmd.Args()` devolve.
-Essa diferença elimina a surpresa mais comum da seção 02 da lição 1, em que o `-v` depois de
+Essa diferença elimina a surpresa mais comum da seção 03 da lição 1, em que o `-v` depois de
 `jan.log` foi tomado por nome de arquivo. Uma flag na v3 também é mais que um nome e um padrão, como
 o `-n` do `top` mostrou na seção 02, e vale rodar cada campo extra uma vez.
 
@@ -41,7 +41,7 @@ hits: open -n: no such file or directory
 ```
 
 O `-` não é flag para ninguém, então chega ao `summarise`, que lê a entrada padrão como o da lição 1
-lia; os dois caminhos e suas contagens são os da seção 04 da lição 1. **Depois de `--`, nada é
+lia; os dois caminhos e suas contagens são os da seção 05 da lição 1. **Depois de `--`, nada é
 flag**, então `-n` virou nome de arquivo e a abertura falhou. É assim que se entrega ao `hits` um
 arquivo que se chama mesmo `-n`.
 

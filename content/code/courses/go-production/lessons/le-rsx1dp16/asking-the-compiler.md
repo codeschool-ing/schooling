@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Nothing in Go's syntax says where a value lives.** The belief carried over from C and Java is that
-`new` and `&` put a value on the heap and everything else sits on the stack, and in Go neither half
+`new` and `&` put a value on the heap and everything else sits on the stack. In Go neither half
 holds: `&Point{}` can live on the stack, and a plain `int` can end up on the heap. The compiler decides,
 value by value, with a pass called escape analysis. A value may stay in its function's stack frame
 only if nothing can reach it after the function returns and its size is known when the code is
@@ -95,8 +95,8 @@ spellings: **a pointer returned to the caller outlives the frame it was made in*
 cannot be in that frame. `Sum` reads through its pointer and keeps nothing, which is what makes
 `Sum(&q)` free for any caller: `q` can stay on the caller's stack.
 
-`Farther` is the subtle one. **"Leaking param" is not an allocation**; it is a summary the compiler
-writes for each parameter, because it analyses one function at a time, callees first, and a caller
+`Farther` is the subtle one. **"Leaking param" is not an allocation.** It is a summary the compiler
+writes for each parameter. It analyses one function at a time, callees first, and a caller
 needs to know what a callee does with a pointer it is handed. `to result ~r0` names where `a` goes:
 into the first result, which has no name in the source, so the compiler calls it `~r0`. `level=0`
 says the pointer itself goes there, not something reached through it. Whether `a`'s `Point` then

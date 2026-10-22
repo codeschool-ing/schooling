@@ -22,8 +22,8 @@ need it to follow the lesson.
 ## The same project, a new front
 
 The program lives in a new module, `~/cobra-hits`, so that lesson 1's `~/hits` stays as it is and
-the two can be compared. Make it the way lesson 1 made `~/hits`: `go mod init example.com/hits`,
-then copy two files across unchanged, **the `tally` package from lesson 1** (`internal/tally/tally.go`)
+the two can be compared. Make it the way lesson 1 made `~/hits`, with `go mod init example.com/hits`.
+Then copy two files across unchanged, **the `tally` package from lesson 1** (`internal/tally/tally.go`)
 and its log generator (`tools/genlog/main.go`), and write the same `access.log` with
 `go run ./tools/genlog -n 20000 > access.log`. The module path is the same as lesson 1's, so the
 import of `tally` does not change by a character.
@@ -177,8 +177,8 @@ text/template
 
 **`go list -m all` prints the module graph, and it is larger than what gets compiled.** Lesson 1's
 `hits` had one line here, its own module; this one has eight. Three are the modules `go get` added.
-The other four arrive through Cobra's `go.mod` and the files it leads to: `go-md2man`, and the
-`blackfriday` it requires, serve the man-page generator in Cobra's `doc` package, `yaml` serves the same package's
+The other four arrive through Cobra's `go.mod` and the files it leads to. `go-md2man`, and the
+`blackfriday` it requires, serve the man-page generator in Cobra's `doc` package; `yaml` serves the same package's
 YAML output, and `check.v1` is what `yaml` tests itself with. The go command needs their versions to
 resolve the graph although `hits` imports none of them. `go version -m` reads the list the linker
 wrote into the binary, and **only two modules were compiled in**: Cobra and `pflag`. The standard

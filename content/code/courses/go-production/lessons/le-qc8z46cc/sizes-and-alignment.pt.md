@@ -5,7 +5,7 @@ version: 1
 
 A imagem comum de uma struct é uma fileira de campos encostados um no outro, de modo que o tamanho
 dela seja a soma dos deles. **O compilador muitas vezes deixa lacunas entre os campos, e o `unsafe`
-tem três funções que mostram onde elas estão**: `unsafe.Sizeof` responde quantos bytes um valor
+tem três funções que mostram onde elas estão.** `unsafe.Sizeof` responde quantos bytes um valor
 ocupa, `unsafe.Alignof` em que endereços ele pode começar, e `unsafe.Offsetof` onde, dentro da
 struct, um campo começa. Elas não leem memória nem escrevem nela. **Cada chamada é uma constante
 que o compilador calcula enquanto monta o programa**, o que faz delas o único canto do pacote que
@@ -41,7 +41,7 @@ em ordens diferentes. Salve-o como `layout/main.go`:
     },
     {
       "code": "func main() {\n\tvar e tally.Entry\n\tfmt.Printf(\"tally.Entry  size %d  align %d\\n\", unsafe.Sizeof(e), unsafe.Alignof(e))\n\trow(\"Time\", unsafe.Offsetof(e.Time), unsafe.Sizeof(e.Time))\n\trow(\"Method\", unsafe.Offsetof(e.Method), unsafe.Sizeof(e.Method))\n\trow(\"Path\", unsafe.Offsetof(e.Path), unsafe.Sizeof(e.Path))\n\trow(\"Status\", unsafe.Offsetof(e.Status), unsafe.Sizeof(e.Status))\n\trow(\"Duration\", unsafe.Offsetof(e.Duration), unsafe.Sizeof(e.Duration))\n",
-      "note": "`unsafe.Offsetof` recebe um seletor de campo, `e.Time`, e responde a quantos bytes do começo da struct esse campo começa. **Cada uma dessas chamadas é uma constante que o compilador calcula**: nenhuma memória é lida, e por isso este canto do `unsafe` é o que não tem como corromper nada."
+      "note": "`unsafe.Offsetof` recebe um seletor de campo, `e.Time`, e responde a quantos bytes do começo da struct esse campo começa."
     },
     {
       "code": "\tvar l Loose\n\tfmt.Printf(\"Loose        size %d  align %d\\n\", unsafe.Sizeof(l), unsafe.Alignof(l))\n\trow(\"Cached\", unsafe.Offsetof(l.Cached), unsafe.Sizeof(l.Cached))\n\trow(\"Bytes\", unsafe.Offsetof(l.Bytes), unsafe.Sizeof(l.Bytes))\n\trow(\"TLS\", unsafe.Offsetof(l.TLS), unsafe.Sizeof(l.TLS))\n\trow(\"Status\", unsafe.Offsetof(l.Status), unsafe.Sizeof(l.Status))\n\trow(\"Retry\", unsafe.Offsetof(l.Retry), unsafe.Sizeof(l.Retry))\n\n\tvar t Tight\n\tfmt.Printf(\"Tight        size %d  align %d\\n\", unsafe.Sizeof(t), unsafe.Alignof(t))\n\trow(\"Bytes\", unsafe.Offsetof(t.Bytes), unsafe.Sizeof(t.Bytes))\n\trow(\"Status\", unsafe.Offsetof(t.Status), unsafe.Sizeof(t.Status))\n\trow(\"Cached\", unsafe.Offsetof(t.Cached), unsafe.Sizeof(t.Cached))\n\trow(\"TLS\", unsafe.Offsetof(t.TLS), unsafe.Sizeof(t.TLS))\n\trow(\"Retry\", unsafe.Offsetof(t.Retry), unsafe.Sizeof(t.Retry))\n"

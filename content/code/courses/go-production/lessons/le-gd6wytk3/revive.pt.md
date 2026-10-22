@@ -144,7 +144,7 @@ linha de código, continua relatando. Apague a linha da diretiva antes da seçã
 ## Por que uma equipe o escolhe
 
 Algumas das 23 regras padrão do revive se sobrepõem à família de estilo do staticcheck, `error-strings`
-e `ST1005` entre elas, e o resto do valor dele está nas regras que mais ninguém tem e nos argumentos
+e `ST1005` entre elas. O resto do valor dele está nas regras que mais ninguém tem e nos argumentos
 que elas recebem: um limite de complexidade, um tamanho máximo de linha, uma lista de imports que um
 pacote não pode usar, um cabeçalho com que todo arquivo deve começar. **O revive é onde uma equipe
 escreve as próprias convenções**, as que não são do projeto Go nem são bugs. A maioria das equipes que

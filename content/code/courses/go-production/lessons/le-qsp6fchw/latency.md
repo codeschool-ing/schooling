@@ -197,8 +197,7 @@ sending a batch: each send woke a worker, and the workers woken that way waited 
 for their turn.
 
 The bar for this run in the figure is 80% runnable, and yet 768ms is the shortest run in this
-lesson. **Parallelism bought this program nothing on that machine**, because its limit was never
-the parsing: it was one goroutine reading and allocating a string per line, and a collector
+lesson. **Parallelism bought this program nothing on that machine**, because its limit was never the parsing. It was one goroutine reading and allocating a string per line, and a collector
 cleaning up after it, 94 times in the four-worker run's 958ms. The trace is what says so, and it also says where to look
 next. Lessons 12 and 13 measure the allocations; lessons 19 and 20 explain why they cost what they
 do.

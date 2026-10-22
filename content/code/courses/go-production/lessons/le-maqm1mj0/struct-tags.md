@@ -131,7 +131,7 @@ tags/main.go:20:2: struct field comment has json tag but is not exported
 
 Lesson 1's `hits top -json` prints `path` and `hits`, the names in `tally.PathCount`'s tags. A small
 command that prints chosen columns of that table by the same names is a realistic job for
-reflection: the names a user types are the names in the tags, and the code that finds them knows
+reflection. The names a user types are the names in the tags, and the code that finds them knows
 nothing about `PathCount`. It lives in a new module, `~/reflect-hits`, made with
 `go mod init example.com/hits`, holding the `tally` package from lesson 1 (`internal/tally/tally.go`),
 its `tools/genlog`, and an `access.log` written by lesson 1's

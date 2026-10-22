@@ -30,7 +30,7 @@ ana@vm:~/mem-stacks$ sed -n 77,78p /usr/local/go/src/runtime/stack.go
 porque nada pode aumentá-la depois: um programa que passa dela na recursão é encerrado. A de uma
 goroutine pode ser pequena porque o runtime a aumenta no instante em que ela está para acabar. Quase
 toda função Go começa com algumas instruções que comparam o ponteiro de pilha com o fim da pilha
-atual; quando o próximo frame não caberia, o runtime aloca um bloco com o dobro do tamanho, copia a
+atual. Quando o próximo frame não caberia, o runtime aloca um bloco com o dobro do tamanho, copia a
 pilha para ele e segue em frente.
 
 Um programa em `~/mem-stacks` observa isso acontecer. Ele inicia dez mil goroutines que ficam

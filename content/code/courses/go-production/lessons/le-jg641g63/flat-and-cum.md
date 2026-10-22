@@ -100,9 +100,7 @@ the frames below it, the benchmark harness, which spends no time of its own at a
 **A high cum with a tiny flat is a function that delegates.** Optimising its own code buys at most
 its flat, 3.67% here; what it buys by changing what it calls, or how often, is up to its cum. A high
 flat is the opposite: the work is in the function's own loop, and that loop is what to look at. The
-remaining 17.5% of the samples are not under `Count` at all: they are the runtime's own goroutines,
-the garbage collector sweeping memory, a goroutine being rescheduled, which do their work on other
-threads and show up in the profile like any other code.
+remaining 17.5% of the samples are not under `Count` at all. They are the runtime's own goroutines, the garbage collector sweeping memory and a goroutine being rescheduled, which do their work on other threads and show up in the profile like any other code.
 
 Two runtime rows deserve a sentence, because they appear in almost every Go profile.
 `runtime.mallocgc` and its relatives are **allocation**: 17.50% cum here, the price of two

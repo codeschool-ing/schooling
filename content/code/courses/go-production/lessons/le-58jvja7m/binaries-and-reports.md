@@ -60,8 +60,8 @@ Use '-show verbose' for more details.
 ```
 
 The verdicts match section 03, and two things changed. **`Example traces found` became
-`Vulnerable symbols found`**: the binary says the function is there and cannot say who calls it, so there is no
-line of your code to go to. And the package count fell by one for each program. The binary records
+`Vulnerable symbols found`**: the binary says the function is there and cannot say who calls it, so
+there is no line of your code to go to. And the package count fell by one for each program. The binary records
 that it was built with `GOOS=linux`, so the Windows-only `os` entry no longer applies to it, while
 source, which could be built for any system, keeps it.
 
@@ -150,7 +150,7 @@ ana@vm:~/langs$ jq -c 'select(.config) | .config | {scan_level, scan_mode, go_ve
 
 The stream holds the scan's settings, the modules it saw, every OSV entry that touches one of them,
 191 here, and the findings. **A finding's trace runs from the vulnerable function up to your entry
-point**, the reverse of `-show traces`, and how far down its first frame goes tells you the level: a
+point**, the reverse of `-show traces`. How far down its first frame goes tells you the level: a
 module and a version for a module-level finding, a package as well for a package-level one, and a
 function with a position only for a symbol-level one. That is why the `jq` filter above, which keeps
 findings whose first frame names a function, picked out exactly the one the text report put under

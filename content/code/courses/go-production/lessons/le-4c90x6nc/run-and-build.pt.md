@@ -68,7 +68,7 @@ exit status 2
 1
 ```
 
-O `hits` devolveu 2, por uma linha de comando sem subcomando, como a seção 04 da lição 1 o
+O `hits` devolveu 2, por uma linha de comando sem subcomando, como a seção 05 da lição 1 o
 projetou. O `go run` imprimiu `exit status 2` como mensagem e saiu com **1**, o mesmo que faz para
 qualquer falha própria. O `go help run` diz isso numa linha: o status de saída do `go run` não é o
 status de saída do binário compilado. **Um script, um `Makefile` ou um passo de CI que testa um

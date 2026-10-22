@@ -6,7 +6,7 @@ version: 1
 The flag package of lesson 1 reads flags from the front of the list and stops at the first word that
 is not one. **urfave/cli v3 reads the whole list**: a word starting with a dash is a flag wherever it
 sits, and the words that are not flags, in their order, are what `cmd.Args()` returns. That one
-difference removes the most common surprise of lesson 1 section 02, where `-v` after `jan.log` was
+difference removes the most common surprise of lesson 1 section 03, where `-v` after `jan.log` was
 taken for a file name. A flag in v3 is also more than a name and a default, as `top`'s `-n` showed in
 section 02, and each of the extra fields is worth running once.
 
@@ -42,7 +42,7 @@ hits: open -n: no such file or directory
 ```
 
 `-` is not a flag to anyone, so it reaches `summarise`, which reads standard input as lesson 1's did;
-the two paths and their counts are lesson 1 section 04's. **After `--`, nothing is a flag**, so `-n`
+the two paths and their counts are lesson 1 section 05's. **After `--`, nothing is a flag**, so `-n`
 became a file name and the open failed. That is the way to hand `hits` a file that really is called
 `-n`.
 

@@ -6,7 +6,7 @@ version: 1
 O Cobra escreve a ajuda e encontra os erros. **Ele não decide o código de saída**: o `Execute`
 devolve um erro ou `nil`, e com que status o processo sai fica por conta do `main`. O modelo do
 gerador resolve isso do jeito mais bruto, com `os.Exit(1)` para qualquer erro, o que faria um erro
-de digitação e um arquivo inexistente parecerem iguais para um script. A lição 1 seção 04 prometeu
+de digitação e um arquivo inexistente parecerem iguais para um script. A lição 1 seção 05 prometeu
 mais do que isso, três códigos com três significados, e esta seção cumpre a promessa.
 
 ## Ajuda que ninguém escreveu
@@ -49,7 +49,7 @@ segundo item da lista da lição 1 do que faltava. O texto de uso escrito à mã
 
 ## Erros, e quem os cometeu
 
-Os mesmos erros da lição 1 seção 03, contra o programa novo:
+Os mesmos erros da lição 1 seção 04, contra o programa novo:
 
 ```
 ana@vm:~/cobra-hits$ ./hits cont access.log; echo $?
@@ -83,7 +83,7 @@ edições dela, ou cujo nome comece por ela; `cont` está a uma letra de `count`
 são do Cobra e do pflag, mais técnicas que as da lição 1. `accepts at most 1 arg(s)` vem do
 `cobra.MaximumNArgs(1)`, que conferiu os argumentos antes de o `RunE` rodar. E cada linha foi para a
 saída de erro, cada engano terminou em 2 e o arquivo que não abriu terminou em 1, **como manda a
-tabela da lição 1 seção 04**.
+tabela da lição 1 seção 05**.
 
 ## Como o `run` separa um do outro
 
@@ -121,7 +121,7 @@ que escreve no writer dado ao `SetOut` e só recorre à saída de erro quando n�
 dá à árvore a saída padrão dele, então a listagem depois de uma flag ruim ou de argumentos em
 número errado teria ido para a saída padrão, para dentro do pipe ou do arquivo destinado aos
 resultados. Silenciar os dois e imprimir no `run` põe toda reclamação na saída de erro, onde a lição
-1 seção 04 as pôs.
+1 seção 05 as pôs.
 
 Sobra uma brecha, e ela é do Cobra:
 

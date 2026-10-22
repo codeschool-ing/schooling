@@ -135,11 +135,11 @@ GOGC=off: 1.287s, 0 collections, peak 1016500 kB
 
 Leia as colunas separadamente, porque elas não andam juntas.
 
-- **As coletas caem com limpeza**: 25, 15, 9, 5, 0. Dobrar o `GOGC` corta-as mais ou menos pela
+- As coletas caem com limpeza: 25, 15, 9, 5, 0. Dobrar o `GOGC` corta-as mais ou menos pela
   metade, porque cada ciclo deixa o heap crescer o dobro.
-- **O tempo cai um pouco**: de 1,85 para 1,29 segundo, do início ao fim, em quatro processadores
+- O tempo cai um pouco: de 1,85 para 1,29 segundo, do início ao fim, em quatro processadores
   onde a maior parte da marcação rodou em paralelo com o programa.
-- **O pico não acompanha o ajuste** entre 50 e 400: 518.160 kB, depois 682.448, 577.992 e 746.924.
+- O pico não acompanha o ajuste entre 50 e 400: 518.160 kB, depois 682.448, 577.992 e 746.924.
   Só o `off` se destaca, com 1.016.500 kB, tudo o que o programa alocou na vida.
 
 O pico é ruidoso porque **as maiores alocações deste programa são dele mesmo**. O `Load` faz a fatia
@@ -164,7 +164,7 @@ sys	0m0.596s
 ```
 
 **Sem coleta, o programa usou 0,74 segundo de tempo de usuário em vez de 1,26**, a marcação que ele
-deixou de fazer, enquanto o relógio andou só de 1,61 para 1,39 segundo, porque essa marcação vinha
+deixou de fazer. O relógio andou só de 1,61 para 1,39 segundo, porque essa marcação vinha
 rodando em processadores que estariam ociosos. Numa máquina com processadores e memória sobrando, um
 `GOGC` maior sai quase de graça. Numa ocupada, ou pequena, esses 0,5 segundo de processador são
 tirados de outra coisa.

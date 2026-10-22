@@ -5,7 +5,7 @@ version: 1
 
 Every lesson in this course has you type something and read what comes back, so it needs a machine
 you can type at. **The platform gives you none.** You build it, and you already have most of it if
-you took the two courses before this one: this course runs on the same lab, at the same versions,
+you took the two courses before this one. This course runs on the same lab, at the same versions,
 and adds to it only where a lesson needs something new.
 
 | what | which | built in full by |
@@ -22,8 +22,8 @@ lesson 8, are downloaded by the go command when their lesson asks for them, and 
 ## The steps, in brief
 
 On Ubuntu 24.04 it comes to this. The first two lines unpack the archive you downloaded from
-go.dev/dl, after checking its SHA-256 against the one printed beside it; the next two put both
-directories on your `PATH` at your next login; the last one installs the compiler:
+go.dev/dl, after checking its SHA-256 against the one printed beside it. The next two put both
+directories on your `PATH` at your next login, and the last one installs the compiler:
 
 ```sh
 sudo rm -rf /usr/local/go
@@ -33,7 +33,7 @@ echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.profile
 sudo apt install gcc
 ```
 
-**The two `tar` lines were not run in this lab**, because this machine cannot reach go.dev. The lab
+**The first two lines were not run in this lab**, because this machine cannot reach go.dev. The lab
 took the same release from the Go module proxy instead, which is the route `go` lesson 3 shows and
 checks, and `gcc` was already installed. Everything else in this course was typed as you see it.
 

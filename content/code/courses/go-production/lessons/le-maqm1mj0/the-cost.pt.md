@@ -262,7 +262,7 @@ slices
 ```
 
 O `encoding/json` serializa structs que nunca viu, o `fmt` as imprime, o `text/template` chama os
-métodos delas pelos nomes escritos num template, e o `flag` usa reflexão para descobrir o valor zero
+métodos delas pelos nomes escritos num template. O `flag` usa reflexão para descobrir o valor zero
 de uma flag, e foi assim que o `-h` da lição 1 soube imprimir `(default 3)` para `-n` e nada para
 `-json`. O `strconv` e o `slices` trabalham com tipos que conhecem ou recebem como parâmetros de tipo,
 e não precisam de nada disso. Nos testes, o `reflect.DeepEqual` compara dois valores de qualquer tipo

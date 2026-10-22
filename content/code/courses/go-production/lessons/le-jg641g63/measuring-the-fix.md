@@ -86,8 +86,7 @@ Dropped 70 nodes (cum <= 0.03s)
 ```
 
 Negative numbers are time that went away. **`strings.Fields` lost all of its 2.53 seconds and
-`split5` added 0.72**, so the same lines were split for less than a third of the time; `tally.Parse`
-as a whole is 1.63 seconds lighter, and the allocator and the runtime's locks are lighter with it.
+`split5` added 0.72**, so the same lines were split for less than a third of the time. `tally.Parse` as a whole is 1.63 seconds lighter, and the allocator and the runtime's locks are lighter with it.
 The new profile holds 3.55 seconds of samples against the old one's 6 for the same 200 iterations,
 which agrees with benchstat in direction and roughly in size, as two independent measurements of one
 change should.

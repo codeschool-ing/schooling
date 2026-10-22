@@ -17,7 +17,7 @@ arguments**, not only before them.
 
 ## A flag after the file name
 
-Lesson 1 section 02 showed the standard library stop reading flags at the first word that is not
+Lesson 1 section 03 showed the standard library stop reading flags at the first word that is not
 one, so `./args jan.log -v` left `-v` as an argument. pflag keeps going:
 
 ```

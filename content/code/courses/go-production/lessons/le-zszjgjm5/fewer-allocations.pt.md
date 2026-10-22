@@ -25,8 +25,8 @@ ana@vm:~/mem-hits$ ./slowest big.log && ./slowest -hint $(wc -l < big.log) big.l
 ```
 
 **Duas coletas em vez de vinte e uma, um pico de 330.968 kB em vez de 501.884, e metade do tempo.**
-As coletas caíram por um motivo que a aritmética da seção 04 explica: a primeira coisa grande que o
-programa alocou foi um array com espaço para todas as entradas, o heap ficou grande desde o início,
+As coletas caíram por um motivo que a aritmética da seção 04 explica. A primeira coisa grande que o
+programa alocou foi um array com espaço para todas as entradas, então o heap ficou grande desde o início,
 e a meta, o dobro do heap vivo, ficou grande junto. O pico caiu porque nenhum array precisou existir
 ao lado de uma cópia maior de si mesmo.
 
@@ -291,7 +291,7 @@ ana@vm:~/mem-pool$ sed -n 163,167p /usr/local/go/src/fmt/print.go
 ```
 
 **Um buffer acima de 64 KiB não volta para o pool.** Uma linha enorme deixaria um buffer enorme no
-pool, entregue a cada chamador seguinte que queria uns poucos bytes, e um pool em uso constante
+pool, entregue a cada chamador seguinte que queria uns poucos bytes. Um pool em uso constante
 continuaria segurando a maior coisa que já viu. Um pool de buffers cujo tamanho depende da entrada
 precisa da mesma verificação.
 

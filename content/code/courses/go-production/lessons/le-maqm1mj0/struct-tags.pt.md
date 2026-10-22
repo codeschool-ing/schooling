@@ -131,7 +131,7 @@ tags/main.go:20:2: struct field comment has json tag but is not exported
 
 O `hits top -json` da lição 1 imprime `path` e `hits`, os nomes das tags de `tally.PathCount`. Um
 comando pequeno que imprime colunas escolhidas dessa tabela pelos mesmos nomes é um trabalho
-realista para a reflexão: os nomes que um usuário digita são os nomes das tags, e o código que os
+realista para a reflexão. Os nomes que um usuário digita são os nomes das tags, e o código que os
 procura não sabe nada sobre `PathCount`. Ele fica num módulo novo, `~/reflect-hits`, criado com
 `go mod init example.com/hits`, com o pacote `tally` da lição 1 (`internal/tally/tally.go`), o
 `tools/genlog` dela e um `access.log` escrito pelo comando da lição 1,
