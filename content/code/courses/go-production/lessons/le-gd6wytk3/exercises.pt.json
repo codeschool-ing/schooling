@@ -1,0 +1,379 @@
+{
+  "ex-0qme65m9": {
+    "prompt": "O `report.go` tem `n := uint(r.lines)` seguido de `if n >= 0 { return float64(r.errors) / float64(n) }`, e o staticcheck relata `SA4003`. O que o `ErrorShare` devolve para um log vazio?",
+    "hint": "Pergunte o que `>= 0` exclui num número sem sinal, e o que o Go faz com 0.0 / 0.0.",
+    "choices": [
+      {
+        "text": "Zero, pelo `return 0` abaixo do `if`",
+        "why": "Essa linha nunca é alcançada: todo `uint` é `>= 0`, que é exatamente o que o `SA4003` diz."
+      },
+      {
+        "text": "`NaN`",
+        "why": "Isso. A guarda não guarda nada, então divide 0.0 por 0.0, e a divisão de ponto flutuante por zero devolve `NaN` em Go em vez de entrar em pânico."
+      },
+      {
+        "text": "Entra em pânico com `integer divide by zero`",
+        "why": "Os dois operandos foram convertidos para `float64` antes; só a divisão inteira por zero entra em pânico."
+      },
+      {
+        "text": "Não compila, porque o staticcheck achou um bug",
+        "why": "O staticcheck lê código que já compila, e o que ele acha nunca impede o `go build`."
+      }
+    ]
+  },
+  "ex-bm4ad851": {
+    "prompt": "Associe cada achado que o staticcheck imprimiu para o `report.go` à família a que a checagem pertence.",
+    "hint": "As letras antes dos dígitos dão o nome da família.",
+    "pairs": [
+      {
+        "left": "`SA4003`: every value of type uint is >= 0",
+        "right": "código errado, ou muito provavelmente errado"
+      },
+      {
+        "left": "`S1003`: should use strings.Contains",
+        "right": "um jeito mais curto de dizer a mesma coisa"
+      },
+      {
+        "left": "`ST1005`: error strings should not be capitalized",
+        "right": "uma convenção que o projeto Go escreveu"
+      },
+      {
+        "left": "`U1000`: func percent is unused",
+        "right": "código que nada usa"
+      }
+    ],
+    "right_distractors": [
+      "uma corrida de dados entre duas goroutines"
+    ]
+  },
+  "ex-vkhp81ys": {
+    "prompt": "Ana põe `//lint:ignore S1003 a loop over paths` na linha acima de `for path, n := range s.ByPath {`. O `strings.Index` que ela queria desculpar está no `if` dentro do laço. O que o staticcheck imprime?",
+    "hint": "Quantas linhas uma diretiva cobre?",
+    "choices": [
+      {
+        "text": "Nada sobre `S1003`: a diretiva cobre o laço inteiro",
+        "why": "Ela cobre uma linha, a do `for`, e o achado está duas linhas abaixo."
+      },
+      {
+        "text": "Um erro, porque diretiva dentro de função não é permitida",
+        "why": "Diretivas funcionam em qualquer lugar; a de `U1000` acima de `func percent` funcionou, e dentro do corpo de uma função também vale."
+      },
+      {
+        "text": "O achado `S1003` e um aviso de que a diretiva não casou com nada",
+        "why": "Isso. A diretiva não desculpou nada na própria linha, então o staticcheck a relata com `didn't match anything; should it be removed?`, e o `S1003` continua saindo."
+      },
+      {
+        "text": "Só o achado `S1003`; diretiva sem uso é ignorada",
+        "why": "O staticcheck relata uma diretiva que não casou com nada, para que uma velha não fique esquecida."
+      }
+    ]
+  },
+  "ex-2nvkc67a": {
+    "prompt": "Uma linha de `staticcheck.conf` que mantém as checagens que o diretório pai escolheu e liga também o `ST1003` fica `checks = [\"___\", \"ST1003\"]`.",
+    "hint": "A palavra quer dizer: o que já valia acima.",
+    "blanks": [
+      {
+        "accept": [
+          "inherit"
+        ]
+      }
+    ]
+  },
+  "ex-35f7fg71": {
+    "prompt": "Um passo de CI roda `revive ./...` sem flags e sem arquivo de configuração. O revive imprime quatro achados. O que o passo informa?",
+    "hint": "Veja os dois códigos de saída do revive nos padrões.",
+    "choices": [
+      {
+        "text": "Falha, já que qualquer achado é status 1",
+        "why": "Isso é o que fazem o `staticcheck` e o `golangci-lint`. O revive saiu com 0 e quatro achados impressos."
+      },
+      {
+        "text": "Sucesso, e o que ele viu fica só no log",
+        "why": "Isso. Os padrões dele põem `error-code` e `warning-code` em 0, então só `-set_exit_status` ou um arquivo de configuração o fazem falhar."
+      },
+      {
+        "text": "Falha, mas só pelo achado `exported`",
+        "why": "Nenhuma regra padrão é erro, e mesmo um erro sai com 0 enquanto `error-code` é 0."
+      },
+      {
+        "text": "Nada: o revive se recusa a rodar sem `revive.toml`",
+        "why": "Sem arquivo ele aplica suas 23 regras padrão; foi assim que achou quatro coisas."
+      }
+    ]
+  },
+  "ex-1wny95hq": {
+    "prompt": "O `revive.toml` de uma equipe tem as configurações globais e uma tabela, `[rule.unhandled-error]`, sem `enable-default-rules`. No `report.go`, quais regras rodam?",
+    "hint": "Nomear uma regra muda o que acontece com as não nomeadas.",
+    "choices": [
+      {
+        "text": "`unhandled-error` e mais nada",
+        "why": "Isso. Nomear qualquer regra desliga todas as padrão não nomeadas; `exported`, `error-strings` e as outras param de rodar sem aviso."
+      },
+      {
+        "text": "As 23 padrão, com `unhandled-error` somada",
+        "why": "Isso é o que `enable-default-rules = true` dá; sem ela o arquivo quer dizer exatamente as regras que nomeia."
+      },
+      {
+        "text": "As 105 regras, porque uma tabela foi dada",
+        "why": "Isso seria `enable-all-rules = true`, uma configuração à parte."
+      },
+      {
+        "text": "Nenhuma: o revive relata as padrão ausentes como erro",
+        "why": "O arquivo é válido e o revive o roda; as padrão apenas não fazem parte dele."
+      }
+    ]
+  },
+  "ex-d39vk6yp": {
+    "prompt": "O `[rule.unhandled-error]` tem `arguments = ['^fmt\\.Fprint']`, e o revive ainda relata `Unhandled error in call to function fmt.Fprintf`. Por quê?",
+    "hint": "A expressão é comparada com o nome da função de um jeito específico.",
+    "choices": [
+      {
+        "text": "Os argumentos de uma regra são ignorados se a severidade não for definida",
+        "why": "Severidade e argumentos são independentes; a regra leu o argumento e viu que não casava."
+      },
+      {
+        "text": "O casamento precisa cobrir o nome inteiro",
+        "why": "Isso. `^fmt\\.Fprint` casa só com o começo de `fmt.Fprintf`; o arquivo da seção 03 escreve `'^fmt\\.Fprint(f|ln)?$'`."
+      },
+      {
+        "text": "Strings TOML com aspas simples não são expressões regulares",
+        "why": "Aspas simples são as strings literais do TOML, e é por isso que a barra invertida sobrevive; a expressão é lida como foi escrita."
+      },
+      {
+        "text": "Funções do `fmt` não podem ser desculpadas, porque seus erros são sempre reais",
+        "why": "A regra desculpa o que a lista casar; a configuração da seção 03 libera as três formas de `fmt.Fprint`."
+      }
+    ]
+  },
+  "ex-rgpgg0mp": {
+    "prompt": "Com o `revive.toml` da seção 03, a execução em `~/lint` sai com 1 por causa de `context-as-argument` e `unhandled-error`, enquanto o `exported` só imprime. Quais configurações do arquivo produzem essa divisão? Marque todas as que valem.",
+    "hint": "Uma configuração sobe duas regras; duas decidem quanto vale cada severidade.",
+    "choices": [
+      {
+        "text": "`severity = \"error\"` nessas duas regras",
+        "why": "Sim. Ela as põe acima do `severity = \"warning\"` global que o `exported` mantém."
+      },
+      {
+        "text": "`error-code = 1`",
+        "why": "Sim. É o código de saída quando o pior achado é um erro."
+      },
+      {
+        "text": "`warning-code = 0`",
+        "why": "Sim. Avisos continuam saindo e a execução continua passando, e é por isso que o `exported` sozinho não a faria falhar."
+      },
+      {
+        "text": "`confidence = 0.8`",
+        "why": "A confiança filtra achados de que a regra não tem certeza; nada tem a ver com códigos de saída."
+      },
+      {
+        "text": "`exclude = [\"TEST\"]`",
+        "why": "Isso afasta o `cognitive-complexity` dos arquivos de teste e não toca em nenhuma das duas regras."
+      }
+    ]
+  },
+  "ex-yhpqgrhy": {
+    "prompt": "O `golangci-lint run --no-config` em `~/lint` relatou 16 problemas. Quantos vieram do `errcheck`?",
+    "hint": "Veja o resumo embaixo da lista."
+  },
+  "ex-dwms9zdh": {
+    "prompt": "O staticcheck sozinho imprimiu duas linhas de `ST1005` para a linha 45 do `report.go`; o `golangci-lint run --no-config` imprimiu uma. Para onde foi a outra?",
+    "hint": "É um padrão da saída, não do linter.",
+    "choices": [
+      {
+        "text": "O staticcheck do golangci-lint é mais velho e não tem metade do `ST1005`",
+        "why": "É o v0.8.1 contra o v0.8.2, mas com `uniq-by-line: false` as duas mensagens voltam, então a checagem achou as duas."
+      },
+      {
+        "text": "O `max-same-issues` o escondeu como repetição",
+        "why": "Esse limite é de três achados com o mesmo texto, e as duas mensagens são diferentes."
+      },
+      {
+        "text": "Por padrão o golangci-lint mantém um achado por linha",
+        "why": "Isso. O `uniq-by-line` vem ligado; o arquivo da seção 04 o desliga e as duas linhas de `ST1005` voltam, ao lado da do revive na mesma linha."
+      },
+      {
+        "text": "O preset `comments` exclui mensagens de estilo",
+        "why": "Nenhum preset estava ligado nessa execução: `--no-config` não lê arquivo nenhum."
+      }
+    ]
+  },
+  "ex-5c0rbn98": {
+    "prompt": "Um colega copia um `.golangci.yml` antigo que começa com `linters:` e não tem a chave `version`, e roda o golangci-lint 2.14.0. O que acontece?",
+    "hint": "A versão 2 da ferramenta espera um arquivo da versão 2.",
+    "choices": [
+      {
+        "text": "Roda o conjunto standard e ignora o arquivo",
+        "why": "Uma chave desconhecida é ignorada; um arquivo sem versão é recusado antes de qualquer coisa rodar."
+      },
+      {
+        "text": "Recusa com `unsupported version of the configuration` e sai com 3",
+        "why": "Isso. A mensagem aponta para o guia de migração, e o `golangci-lint migrate` converte um arquivo da versão 1."
+      },
+      {
+        "text": "Converte o arquivo para a versão 2 ali mesmo",
+        "why": "A conversão é um comando à parte, `golangci-lint migrate`; o `run` nunca reescreve a configuração."
+      },
+      {
+        "text": "Trata o arquivo como versão 2 e o lê",
+        "why": "Sem a chave a versão fica vazia, e o golangci-lint 2 diz isso em vez de adivinhar."
+      }
+    ]
+  },
+  "ex-tp0zp122": {
+    "prompt": "Com o `.golangci.yml` da seção 04 (`nolintlint` com `require-specific` e `require-explanation`), alguém termina a linha do `os.WriteFile` com um `//nolint` sem nome para deixar o build verde. O que o `golangci-lint run` relata sobre essa linha?",
+    "hint": "Dois linters tinham algo a dizer sobre ela antes; um deles ainda tem.",
+    "choices": [
+      {
+        "text": "Nada: a diretiva sem nome silencia todos os linters da linha",
+        "why": "Ela silencia os linters que cobre, e o `nolintlint` relata a própria diretiva; é para isso que ele existe."
+      },
+      {
+        "text": "O achado do `errcheck`, porque diretiva sem motivo é ignorada",
+        "why": "O `//nolint` sem nome escondeu sim o `errcheck`; a falta de nome e motivo é relatada, não usada para anular a diretiva."
+      },
+      {
+        "text": "O achado do `errcheck` e um do `nolintlint`",
+        "why": "A linha do `errcheck` na coluna 14 sumiu da saída; só a diretiva foi relatada."
+      },
+      {
+        "text": "Uma queixa, sobre a própria diretiva",
+        "why": "Isso. `directive //nolint should mention specific linter`, enquanto o erro descartado que ela escondeu some da lista."
+      }
+    ]
+  },
+  "ex-7pvxw7qn": {
+    "prompt": "Ponha em ordem os passos para implantar o golangci-lint num código antigo.",
+    "hint": "Relatar antes de barrar, e barrar código novo antes do velho.",
+    "items": [
+      "começar de `default: standard` com o preset `std-error-handling`",
+      "rodar no CI com `--issues-exit-code=0` e ler o que ele diz",
+      "corrigir os achados baratos, excluir os errados e ligar `--new-from-merge-base`",
+      "quitar os achados antigos pacote por pacote até a flag poder sair",
+      "acrescentar outros linters um de cada vez, cada um com uma mudança que faz o código passar"
+    ]
+  },
+  "ex-3e9x0sbp": {
+    "prompt": "Depois do commit de base, o `share.go` é acrescentado e o `golangci-lint run` relata 12 problemas, enquanto o `golangci-lint run --new-from-rev=HEAD` relata 1. O que a flag fez?",
+    "hint": "Compare com o que o commit já continha.",
+    "choices": [
+      {
+        "text": "Rodou só os linters que mudaram desde o `HEAD`",
+        "why": "O conjunto de linters é o mesmo nas duas execuções; o que muda é quais achados ficam."
+      },
+      {
+        "text": "Manteve só os achados em linhas que diferem desse commit",
+        "why": "Isso. Os onze do `report.go` estão em linhas já commitadas, e o `S1002` do `share.go` está em linhas novas."
+      },
+      {
+        "text": "Analisou só os arquivos que o Git ainda não rastreia, pulando todos os commitados",
+        "why": "Funciona com linhas alteradas em qualquer arquivo; no branch, o `--new-from-merge-base` deu a mesma resposta com o `share.go` commitado."
+      },
+      {
+        "text": "Corrigiu sozinho os onze achados antigos",
+        "why": "Nada foi corrigido; eles continuam no `report.go`, filtrados do relatório."
+      }
+    ]
+  },
+  "ex-gzcnk14a": {
+    "prompt": "Um pull request apaga a única chamada a uma função auxiliar antiga, deixando a definição dela intocada. O CI roda `golangci-lint run --new-from-merge-base=origin/main`. O `unused` impede o merge?",
+    "hint": "Onde o `unused` é relatado, e quais linhas a flag mantém?",
+    "choices": [
+      {
+        "text": "Sim, porque o `unused` olha o pacote inteiro",
+        "why": "Ele analisa o pacote inteiro, sim, e depois a flag descarta todo achado numa linha que a mudança não tocou."
+      },
+      {
+        "text": "Sim, porque linha apagada conta como alterada",
+        "why": "O achado fica na definição da função, que a mudança não tocou, e não na chamada apagada."
+      },
+      {
+        "text": "Não: o achado cai numa linha velha e é filtrado",
+        "why": "Isso. É o ponto cego de manter achados por linha alterada, e é por isso que a pilha antiga precisa diminuir até a flag poder sair."
+      },
+      {
+        "text": "Não, porque o `unused` não está no conjunto standard",
+        "why": "Ele é um dos cinco, ao lado de `errcheck`, `govet`, `ineffassign` e `staticcheck`."
+      }
+    ]
+  },
+  "ex-d159mxv0": {
+    "prompt": "Associe cada status de saída do golangci-lint ao que ele diz.",
+    "hint": "A tabela da seção 05, e as execuções que produziram cada código.",
+    "pairs": [
+      {
+        "left": "0",
+        "right": "rodou e não achou nada que devesse relatar"
+      },
+      {
+        "left": "1",
+        "right": "achou problemas, um erro de sintaxe entre eles"
+      },
+      {
+        "left": "3",
+        "right": "recusou o arquivo de configuração"
+      },
+      {
+        "left": "7",
+        "right": "rodou e registrou um erro, como um padrão que não nomeia pacote"
+      }
+    ],
+    "right_distractors": [
+      "ficou sem memória e foi encerrado"
+    ]
+  },
+  "ex-m0gj0t1j": {
+    "prompt": "O preset `std-error-handling` da seção 04 também silenciou o `defer w.Flush()` do `genlog`. Quanto isso pode custar?",
+    "hint": "O que o `Flush` escreve, e o que acontece agora com o erro dele?",
+    "choices": [
+      {
+        "text": "Nada: o `Flush` não falha num `bufio.Writer`",
+        "why": "O `Flush` escreve os bytes do buffer no arquivo de baixo, e essa escrita pode falhar como qualquer outra."
+      },
+      {
+        "text": "Um pânico ao fim de toda execução",
+        "why": "Um erro descartado é silencioso; nada entra em pânico, e é esse o problema."
+      },
+      {
+        "text": "Um log truncado com o disco cheio, e o `genlog` saindo com 0",
+        "why": "Isso. As últimas linhas do buffer nunca chegam ao arquivo e ninguém fica sabendo. Um preset é uma troca, feita de propósito por oito linhas de ruído."
+      },
+      {
+        "text": "Um log mais lento, já que o buffer nunca é esvaziado",
+        "why": "O `defer` ainda roda o `Flush`; só o erro dele é jogado fora."
+      }
+    ]
+  },
+  "ex-zt11azy0": {
+    "prompt": "Num pull request, a flag que mantém só os achados em linhas alteradas desde que o branch saiu do `main` é `golangci-lint run --new-from-___=main`.",
+    "hint": "Ela nomeia o commit que o Git acha com o comando de mesmo nome.",
+    "blanks": [
+      {
+        "accept": [
+          "merge-base"
+        ]
+      }
+    ]
+  },
+  "ex-fd1yyv1c": {
+    "prompt": "Por que a seção 05 fixa `version: v2.14.0` no workflow em vez de pedir o golangci-lint mais recente?",
+    "hint": "O que mais muda quando o golangci-lint muda?",
+    "choices": [
+      {
+        "text": "As versões mudam os linters embutidos, e com eles o que sai no relatório",
+        "why": "Isso. Só a 2.14.0 levou o revive de 1.15.0 para 1.17.0 e religou o `G407` do `gosec`; fixar a versão transforma isso num pull request à parte."
+      },
+      {
+        "text": "A action se recusa a rodar sem versão exata",
+        "why": "O próprio workflow do golangci-lint passa `version: latest` para a mesma action."
+      },
+      {
+        "text": "Versões novas pedem um Go mais novo",
+        "why": "Isso até acontece, mas o motivo dado é que os achados mudam entre versões sem mudança no código."
+      },
+      {
+        "text": "Fixar a versão faz o cache funcionar",
+        "why": "O cache nada tem a ver com a versão que o workflow nomeia; o motivo são achados que mudam entre versões."
+      }
+    ]
+  }
+}
