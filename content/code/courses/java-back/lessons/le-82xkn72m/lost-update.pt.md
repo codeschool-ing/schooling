@@ -72,6 +72,10 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=
 2026-10-22T19:39:19.067-03:00 DEBUG 2369 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.stock,b1_0.title from book b1_0 where b1_0.id=? for no key update of b1_0
 ```
 
+`for no key update` é a trava de linha do PostgreSQL para uma gravação que não mexe na chave. Ela
+bloqueia outra leitura com trava da linha, que é o objetivo, e ainda deixa inserir uma `order_line` que
+aponta para o livro.
+
 Uma segunda transação que pede a mesma linha com uma leitura com trava espera até a primeira confirmar
 ou desfazer. Em `READ COMMITTED` a leitura dela então enxerga o resultado confirmado, 0 exemplares, e
 `take` recusa. Os mesmos dois pedidos, com a trava, contra um estoque de volta a 1:

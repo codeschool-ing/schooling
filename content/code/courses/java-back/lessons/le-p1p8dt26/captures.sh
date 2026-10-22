@@ -99,20 +99,20 @@ block db-down
 sudorun "sudo -u postgres psql -c 'ALTER ROLE bookshop NOLOGIN'"
 sudorun "sudo -u postgres psql -c \"SELECT count(pg_terminate_backend(pid)) FROM pg_stat_activity WHERE usename = 'bookshop'\""
 run 'curl -s -w "%{http_code} after %{time_total} s\n" -o health.json localhost:8081/actuator/health'
-run 'python3 -m json.tool health.json | head -12'
+run 'python3 -m json.tool health.json | head -9'
 run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health/liveness'
 run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health/readiness'
-run 'curl -s -o /dev/null -w "%{http_code}\n" localhost:8080/books'
+run 'curl -s -o /dev/null -w "%{http_code} after %{time_total} s\n" localhost:8080/books'
 block db-down-log
 grep -E 'WARN|ERROR' $LOG | tail -n 3
 block db-back
 sudorun "sudo -u postgres psql -c 'ALTER ROLE bookshop LOGIN'"
-run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health | cut -c1-60'
+run 'curl -s -w "\n" localhost:8081/actuator/health/db'
 quiet 'rm -f health.json'
 stop
 
 block readiness-loop
-LOOP="for i in \$(seq 200); do echo \$(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/\$p; done); sleep 0.1; done | uniq -c"
+LOOP="for i in \$(seq 1000); do echo \$(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/\$p; done); sleep 0.02; done | uniq -c"
 runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
 LOOPPID=$!
 sleep 1
@@ -138,7 +138,7 @@ quiet 'curl -s -o /dev/null localhost:8080/books/2'
 quiet 'curl -s -o /dev/null localhost:8080/books/99'
 run 'for path in /books /books /books/1 /books/2 /books/99; do curl -s -o /dev/null -w "%{http_code} $path\n" localhost:8080$path; done'
 run 'curl -s localhost:8081/actuator/metrics/http.server.requests | python3 -m json.tool'
-run 'curl -s "localhost:8081/actuator/metrics/http.server.requests?tag=uri:/books/{id}&tag=status:404" | python3 -m json.tool | tail -n 16'
+run 'curl -s -g "localhost:8081/actuator/metrics/http.server.requests?tag=uri:/books/{id}&tag=status:404" | python3 -m json.tool | tail -n 16'
 
 block pool
 run 'for m in active idle pending max; do printf "%-8s" $m; curl -s localhost:8081/actuator/metrics/hikaricp.connections.$m | python3 -c "import json,sys; print(json.load(sys.stdin)[\"measurements\"][0][\"value\"])"; done'
@@ -161,10 +161,8 @@ run 'curl -s localhost:8081/actuator/prometheus | grep -E "bookshop_orders|^hika
 run 'curl -s localhost:8081/actuator/prometheus | grep -E "^http_server_requests_seconds_(count|sum)" | grep "/books\""'
 block rate
 run 'curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T'
-quiet "for i in 1 2 3 4 5 6; do curl -s -o /dev/null -H \"Authorization: Bearer \$(cat ana.token)\" -H 'Content-Type: application/json' -d '{\"lines\":[{\"bookId\":4,\"quantity\":1}]}' localhost:8080/orders; done"
-quiet "for i in 1 2; do curl -s -o /dev/null -H \"Authorization: Bearer \$(cat ana.token)\" -H 'Content-Type: application/json' -d '{\"lines\":[{\"bookId\":3,\"quantity\":1}]}' localhost:8080/orders; done"
-sleep 20
-run 'curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T'
+run "for book in 4 4 4 4 4 4 3 3; do curl -s -o /dev/null -w '%{http_code} ' -H \"Authorization: Bearer \$(cat ana.token)\" -H 'Content-Type: application/json' -d \"{\\\"lines\\\":[{\\\"bookId\\\":\$book,\\\"quantity\\\":1}]}\" localhost:8080/orders; done; echo"
+run 'sleep 15; curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T'
 stop
 
 # --- detour: the actuator behind the API's security ------------------------------------
@@ -183,7 +181,7 @@ block dev
 build
 EXTRA_ENV="$SECRET" start --spring.profiles.active=dev
 ready
-grep -E "Tomcat started on port|Exposing" $LOG
+grep -E "Tomcat started on port|Exposing|already in use|APPLICATION FAILED|^Description|^Action|^Web server|^Identify" -A1 $LOG | grep -v '^--$'
 run 'curl -s -o /dev/null -w "%{http_code}\n" 192.0.2.2:8081/actuator/health'
 stop
 

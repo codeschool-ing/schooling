@@ -83,6 +83,8 @@ quiet 'rm -rf /tmp/extracted /tmp/layers-before.txt /tmp/layers-after.txt'
 block package
 run 'mvn -q package -DskipTests'
 run 'ls -lh target/bookshop-0.1.0.jar*'
+block original
+run 'java -jar target/bookshop-0.1.0.jar.original'
 block inside
 run "jar tf target/bookshop-0.1.0.jar | grep -v '/\$' | cut -d/ -f1-2 | sort | uniq -c"
 run "jar tf target/bookshop-0.1.0.jar | grep '^BOOT-INF/lib/' | head -n 5"
@@ -98,7 +100,7 @@ take from-the-environment.md 'spring.application.name' bookshop/src/main/resourc
 same_as_stage src/main/resources/application.properties
 block no-password
 run 'mvn -q package -DskipTests'
-run "java -jar target/bookshop-0.1.0.jar | grep -E -m 2 'SCRAM|APPLICATION FAILED'"
+run "java -jar target/bookshop-0.1.0.jar | grep -m 1 '^Message'"
 block export
 run 'export SPRING_DATASOURCE_PASSWORD=bookshop'
 export EXTRA_ENV="$JWT SPRING_DATASOURCE_PASSWORD=bookshop"
@@ -138,7 +140,7 @@ asroot "cp $BS/src/main/java/com/example/bookshop/catalogue/CatalogueReport.java
 run "docker inspect --format '{{range .RootFS.Layers}}{{println .}}{{end}}' bookshop:0.1.0 > /tmp/layers-before.txt"
 run "sed -i 's/with {} books/with {} titles/' src/main/java/com/example/bookshop/catalogue/CatalogueReport.java"
 run 'mvn -q package -DskipTests'
-run 'docker build -t bookshop:0.1.0 .'
+run "docker build -t bookshop:0.1.0 . 2>&1 | grep --no-group-separator -A 1 -E '^#[0-9]+ \\[(layers|stage-1)'"
 run "docker inspect --format '{{range .RootFS.Layers}}{{println .}}{{end}}' bookshop:0.1.0 > /tmp/layers-after.txt"
 run 'diff /tmp/layers-before.txt /tmp/layers-after.txt'
 block undo
@@ -172,11 +174,22 @@ block again
 run 'docker compose down'
 run 'docker compose up -d --wait'
 run "docker compose logs app | grep -E 'Schema|Started BookshopApplication'"
+block management
+edit compose.yaml '      MANAGEMENT_SERVER_ADDRESS: 0.0.0.0
+' ''
+run 'docker compose up -d --wait 2>&1 | tail -n 1'
+run "docker compose ps --format '{{.Name}}  {{.Status}}' app"
+run 'curl -sS 127.0.0.1:8081/actuator/health/readiness'
+asroot "cp $STAGE/compose.yaml $BS/compose.yaml && chown ana:ana $BS/compose.yaml"
+block management-back
+run 'docker compose up -d --wait 2>&1 | tail -n 1'
+run 'curl -sS 127.0.0.1:8081/actuator/health/readiness'
+echo
 
 # --- stopping, and memory --------------------------------------------------------
 block stop
 run 'time docker compose stop app'
-run 'docker compose logs app | tail -n 7'
+run "docker compose logs app | grep -E 'graceful|Shutdown'"
 run "docker inspect --format '{{.State.ExitCode}}' bookshop-app-1"
 block shell-form
 SHELLFORM=$(python3 "$COURSE/lab/fence.py" extract stopping-and-memory.md 'ENTRYPOINT java')
@@ -184,7 +197,7 @@ edit Dockerfile 'ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "org.springframe
 run 'docker compose up -d --build --wait 2>&1 | tail -n 3'
 run 'docker compose exec app ps -o pid,user,args'
 run 'time docker compose stop app'
-run 'docker compose logs app | tail -n 2'
+run "docker compose logs app | grep -E 'graceful|Shutdown'"
 run "docker inspect --format '{{.State.ExitCode}}' bookshop-app-1"
 asroot "cp $STAGE/Dockerfile $BS/Dockerfile && chown ana:ana $BS/Dockerfile"
 block restored

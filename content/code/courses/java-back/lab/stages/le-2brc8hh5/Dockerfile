@@ -4,7 +4,7 @@ COPY target/bookshop-0.1.0.jar app.jar
 RUN java -Djarmode=tools -jar app.jar extract --layers --launcher --destination extracted
 
 FROM eclipse-temurin:25-jre-noble
-RUN useradd --system --uid 10001 bookshop
+RUN useradd --uid 10001 --user-group --no-create-home bookshop
 USER bookshop
 WORKDIR /app
 COPY --from=layers /build/extracted/dependencies/ ./

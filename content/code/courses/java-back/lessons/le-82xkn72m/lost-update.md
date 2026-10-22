@@ -72,6 +72,10 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=
 2026-10-22T19:39:19.067-03:00 DEBUG 2369 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.stock,b1_0.title from book b1_0 where b1_0.id=? for no key update of b1_0
 ```
 
+`for no key update` is PostgreSQL's row lock for a write that leaves the key alone. It blocks
+another locking read of the row, which is the point, and still lets an `order_line` that refers to
+the book be inserted.
+
 A second transaction that asks for the same row with a locking read waits until the first one
 commits or rolls back. At `READ COMMITTED` its read then sees the committed result, 0 copies, and
 `take` refuses. The same two orders, with the lock, against a stock put back to 1:

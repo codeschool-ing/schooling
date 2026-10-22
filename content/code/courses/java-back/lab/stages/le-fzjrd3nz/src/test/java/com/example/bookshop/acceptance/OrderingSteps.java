@@ -14,16 +14,22 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 public class OrderingSteps {
 
     private static final Map<String, String> PASSWORDS = Map.of("ana", "ana-reads-books");
 
-    @LocalServerPort
-    int port;
+    private final JdbcClient jdbc;
+    private final int port;
 
     private String token;
     private Response lastOrder;
+
+    public OrderingSteps(JdbcClient jdbc, @LocalServerPort int port) {
+        this.jdbc = jdbc;
+        this.port = port;
+    }
 
     @Before
     public void pointRestAssuredAtTheServer() {
@@ -38,9 +44,12 @@ public class OrderingSteps {
                 .extract().path("accessToken");
     }
 
-    @Given("{string} has {int} copies in stock")
-    public void hasCopiesInStock(String title, int copies) {
-        assertThat(book(title).<Integer>path("stock")).isEqualTo(copies);
+    @Given("the shop has {int} copies of {string}")
+    public void theShopHas(int copies, String title) {
+        int rows = jdbc.sql("UPDATE book SET stock = ? WHERE title = ?")
+                .params(copies, title)
+                .update();
+        assertThat(rows).as("books titled %s", title).isEqualTo(1);
     }
 
     @When("she orders {int} copies of {string}")
@@ -62,6 +71,11 @@ public class OrderingSteps {
     public void theOrderIsRefused() {
         assertThat(lastOrder.statusCode()).isEqualTo(409);
         assertThat(lastOrder.<String>path("title")).isEqualTo("Out of stock");
+    }
+
+    @Then("{string} has {int} copies left")
+    public void hasCopiesLeft(String title, int copies) {
+        assertThat(book(title).<Integer>path("stock")).isEqualTo(copies);
     }
 
     private Response book(String title) {

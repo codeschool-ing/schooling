@@ -6,13 +6,18 @@ Feature: Ordering books
     Given the customer "ana" has signed in
 
   Scenario: An order takes copies out of stock
-    Given "The War of the Worlds" has 5 copies in stock
+    Given the shop has 5 copies of "The War of the Worlds"
     When she orders 2 copies of "The War of the Worlds"
     Then the order is accepted with a total of 6400 cents
-    And "The War of the Worlds" has 3 copies in stock
+    And "The War of the Worlds" has 3 copies left
 
-  Scenario: An order for more copies than the shop has is refused
-    Given "Persuasion" has 5 copies in stock
-    When she orders 6 copies of "Persuasion"
+  Scenario Outline: An order for more copies than the shop has is refused
+    Given the shop has <stock> copies of "Persuasion"
+    When she orders <ordered> copies of "Persuasion"
     Then the order is refused as out of stock
-    And "Persuasion" has 5 copies in stock
+    And "Persuasion" has <stock> copies left
+
+    Examples:
+      | stock | ordered |
+      | 5     | 6       |
+      | 0     | 2       |

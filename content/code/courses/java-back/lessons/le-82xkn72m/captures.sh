@@ -21,6 +21,9 @@
 #   - the two detours (OrderService calling itself, and OrderService reading
 #     with findById) are written over the stage's file, built and run, and the
 #     stage's file is put back; `shown` checks it at the end.
+#   - a last, unquoted block runs both detours together, to check the
+#     sentence in the-proxy.md saying that combination answers 201 and
+#     never writes the stock.
 # Timestamps, PIDs, object hashes, curl's timings and which of two parallel
 # orders wins change on every run.
 #
@@ -163,6 +166,21 @@ block exhaustlog
 applog '--spring.datasource.hikari.maximum-pool-size=2' 'Connection is not available'
 stop
 block end
+
+# Not quoted: the claim in the-proxy.md that self-invocation WITHOUT the lock
+# is silent (a 201, and the stock never written). Both detours at once.
+python3 - "$(realpath the-proxy.md)" <<'PY' | sed 's/books.findByIdForUpdate(line.bookId())/books.findById(line.bookId())/' | put "bookshop/$SVC"
+import json, sys
+body = open(sys.argv[1]).read().split('```schooling-example\n')[1].split('\n```')[0]
+print('\n'.join(p['code'] for p in json.loads(body)['parts']))
+PY
+build
+start
+block silent
+run "$(order ana "$(line 4 1)")"
+run "curl -s -w '\n' localhost:8080/books/4"
+stop
+put "bookshop/$SVC" < "$STAGED"
 
 # ---------------------------------------------------------------- what the lesson shows is what was built
 shown orders.md \

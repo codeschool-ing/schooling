@@ -254,26 +254,26 @@
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "During `place`, the debug log shows `Participating in existing transaction` for a repository call. What happened?",
+    "prompt": "At startup the debug log shows `Creating new transaction` for `BookService.count`, then `Participating in existing transaction` as Spring Data's `count()` runs. What happened?",
     "hint": "`PROPAGATION_REQUIRED`.",
     "choices": [
       {
-        "text": "The repository started a transaction of its own and committed it at once",
+        "text": "`count()` started a transaction of its own and committed it at once",
         "correct": false,
         "why": "That is what `Creating new transaction` would say; this line says it joined."
       },
       {
-        "text": "The repository joined the transaction `place` had begun",
+        "text": "`count()` became part of the one already running",
         "correct": true,
-        "why": "Right. With the default propagation a call inside a transaction becomes part of it, so the rollback covers it too."
+        "why": "Right. With the default propagation a call inside a transaction becomes part of it, and commits or rolls back with it."
       },
       {
-        "text": "The repository borrowed a second connection from the pool",
+        "text": "`count()` borrowed a second connection from the pool",
         "correct": false,
         "why": "Joining uses the same connection; a second one is what `REQUIRES_NEW` costs."
       },
       {
-        "text": "The repository ran with no transaction, because the service already had one",
+        "text": "`count()` ran with no transaction, because the service already had one",
         "correct": false,
         "why": "It ran inside the service's transaction, which is the point of participating."
       }
