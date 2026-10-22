@@ -73,7 +73,13 @@ The new starter brings Hibernate and the JPA annotations, and it still brings ev
 starter did, because it depends on it:
 
 ```
-(capture tree)
+ana@vm:~/bookshop$ mvn dependency:tree | grep -E 'starter-data-jpa|starter-jdbc|HikariCP|persistence-api|hibernate-core|spring-data-jpa'
+[INFO] +- org.springframework.boot:spring-boot-starter-data-jpa:jar:4.1.1:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:4.1.1:compile
+[INFO] |  |  \- com.zaxxer:HikariCP:jar:7.0.2:compile
+[INFO] |  |  |  |  \- jakarta.persistence:jakarta.persistence-api:jar:3.2.0:compile
+[INFO] |  |  |  +- org.hibernate.orm:hibernate-core:jar:7.4.5.Final:compile
+[INFO] |  |  +- org.springframework.data:spring-data-jpa:jar:4.1.1:compile
 ```
 
 `spring-data-jpa` is in there too. It is lesson 11's subject; this lesson uses the mapper underneath
@@ -160,7 +166,8 @@ that exists; that is exactly the problem lesson 13 solves. For now, drop the dat
 again, empty, owned by the same role:
 
 ```
-(capture recreate)
+ana@vm:~/bookshop$ sudo -u postgres dropdb bookshop
+ana@vm:~/bookshop$ sudo -u postgres createdb -O bookshop bookshop
 ```
 
 Neither command prints anything when it works. The data was only the sample books, and the

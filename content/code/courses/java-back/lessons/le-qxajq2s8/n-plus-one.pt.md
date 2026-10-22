@@ -16,13 +16,18 @@ O bookshop tem esse problema agora mesmo. O `findAll` ainda é a versão da seç
 que lê `getAuthor().getName()`. Com a aplicação rodando com o perfil `sql`, peça a lista:
 
 ```
-(capture nplus1)
+ana@vm:~/bookshop$ curl -s -o /dev/null -w "%{http_code}\n" localhost:8080/books
+200
 ```
 
 e olhe o segundo terminal:
 
 ```
-(capture nplus1-log)
+2026-10-16T20:33:50.361-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
+2026-10-16T20:33:50.367-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-16T20:33:50.368-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-16T20:33:50.369-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-16T20:33:50.370-03:00 DEBUG 3000 --- [bookshop] [nio-8080-exec-3] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 Um `select` em `book`, com `author_id` entre as colunas e nenhum nome, e depois um `select` em `author`
@@ -42,7 +47,11 @@ Trocar o relacionamento para `FetchType.EAGER` parece a cura, e vale ver por que
 por `EAGER` em `Book`, recompile, suba de novo e peça a lista outra vez:
 
 ```
-(capture eager-list-log)
+2026-10-16T20:33:59.039-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 order by b1_0.id
+2026-10-16T20:33:59.041-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-16T20:33:59.042-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-16T20:33:59.045-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
+2026-10-16T20:33:59.046-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 Os mesmos cinco comandos. O `EAGER` decide que o autor é carregado *junto* com o livro, mas uma
@@ -52,7 +61,7 @@ Onde o `EAGER` ajuda é no `find`, que o próprio Hibernate escreve e pode fazer
 é um comando só:
 
 ```
-(capture eager-one-log)
+2026-10-16T20:33:59.077-03:00 DEBUG 3216 --- [bookshop] [nio-8080-exec-4] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id where b1_0.id=?
 ```
 
 Volte para `LAZY` antes de seguir. O `EAGER` muda o problema de lugar em vez de resolvê-lo, e faz toda
@@ -77,13 +86,15 @@ Recompile e suba de novo com o perfil `sql`. O relatório do catálogo na inicia
 comando:
 
 ```
-(capture fetch-startup)
+2026-10-16T20:34:10.652-03:00  INFO 3471 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.987 seconds (process running for 6.566)
+2026-10-16T20:34:11.122-03:00 DEBUG 3471 --- [bookshop] [           main] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id order by b1_0.id
+2026-10-16T20:34:11.159-03:00  INFO 3471 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
 ```
 
 e a lista também:
 
 ```
-(capture fetch-log)
+2026-10-16T20:34:12.459-03:00 DEBUG 3471 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,a1_0.id,a1_0.name,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 join author a1_0 on a1_0.id=b1_0.author_id order by b1_0.id
 ```
 
 Um comando. O `join` está no SQL, o `id` e o `name` do autor estão entre as colunas, e cada `Book`

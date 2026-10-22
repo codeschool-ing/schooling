@@ -73,7 +73,13 @@ O starter novo traz o Hibernate e as anotações do JPA, e continua trazendo tud
 JDBC trazia, porque depende dele:
 
 ```
-(capture tree)
+ana@vm:~/bookshop$ mvn dependency:tree | grep -E 'starter-data-jpa|starter-jdbc|HikariCP|persistence-api|hibernate-core|spring-data-jpa'
+[INFO] +- org.springframework.boot:spring-boot-starter-data-jpa:jar:4.1.1:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:4.1.1:compile
+[INFO] |  |  \- com.zaxxer:HikariCP:jar:7.0.2:compile
+[INFO] |  |  |  |  \- jakarta.persistence:jakarta.persistence-api:jar:3.2.0:compile
+[INFO] |  |  |  +- org.hibernate.orm:hibernate-core:jar:7.4.5.Final:compile
+[INFO] |  |  +- org.springframework.data:spring-data-jpa:jar:4.1.1:compile
 ```
 
 O `spring-data-jpa` também está ali. Ele é o assunto da aula 11; esta aula usa diretamente o
@@ -162,7 +168,8 @@ tabela que já existe; é exatamente o problema que a aula 13 resolve. Por enqua
 crie de novo, vazio, com o mesmo dono:
 
 ```
-(capture recreate)
+ana@vm:~/bookshop$ sudo -u postgres dropdb bookshop
+ana@vm:~/bookshop$ sudo -u postgres createdb -O bookshop bookshop
 ```
 
 Nenhum dos dois comandos imprime nada quando funciona. Os dados eram só os livros de exemplo, e a

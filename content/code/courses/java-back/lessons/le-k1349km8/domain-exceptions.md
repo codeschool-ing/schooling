@@ -10,7 +10,30 @@ This lesson starts from the bookshop as lesson 6 left it, built and running in a
 the status line and the headers before the body, and `-w '\n'` adds a line break after the body, which a
 JSON answer does not end with:
 
-@@CAP before@@
+```
+ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
+HTTP/1.1 404 
+Content-Length: 0
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+
+
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000017", "title": "", "priceCents": -1}' -w '\n'
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:42:22.264Z","status":400,"error":"Bad Request","path":"/books"}
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "title": "Dom Casmurro", "author": "Machado de Assis", "priceCents": 3990}' -w '\n'
+HTTP/1.1 201 
+Location: /books/4
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+
+{"id":4,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
+```
 
 Each answer is wrong in its own way. The first is a 404 with `Content-Length: 0`, which is correct and
 says nothing: a client cannot tell "there is no book 99" from "there is no such address". The second is
@@ -154,14 +177,28 @@ public class BookController {
 Build with `mvn -q package`. `-q` prints errors and nothing else, so silence is success. Stop the
 application in the second terminal with Ctrl+C, start it again, and ask for book 99:
 
-@@CAP no-handler@@
+```
+ana@vm:~/bookshop$ mvn -q package
+ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
+HTTP/1.1 500 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:30 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:42:30.119Z","status":500,"error":"Internal Server Error","path":"/books/99"}
+```
 
 A **500**, Internal Server Error, for a book that is simply not there. The exception left the
 controller, crossed Spring MVC with nothing claiming it and reached the servlet container, and Spring
 Boot's error page answered with the only status it has for that case: the server failed. The second
 terminal logged it, and the stack trace runs on below these lines:
 
-@@CAP no-handler-log@@
+```
+2026-10-16T20:42:30.104-03:00 ERROR 16421 --- [bookshop] [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.example.bookshop.catalogue.BookNotFoundException: No book has id 99] with root cause
+
+com.example.bookshop.catalogue.BookNotFoundException: No book has id 99
+```
 
 That is the right answer to an exception nobody planned for, and the wrong one for this exception,
 which was planned. The next section gives it its 404.

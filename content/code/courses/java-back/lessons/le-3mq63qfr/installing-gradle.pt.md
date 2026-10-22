@@ -96,7 +96,7 @@ O texto de boas-vindas aparece na primeira vez que cada versão do Gradle roda p
 não volta. Abaixo dele, leia três linhas. `Kotlin: 2.4.10` é a linguagem em que o build script da
 próxima seção é escrito, e o Gradle traz o próprio compilador dela, então não há mais nada a
 instalar. `Launcher JVM` é o Java que iniciou o Gradle: o JDK 25 do repositório do Ubuntu, o mesmo
-que o curso `java` instalou. `Daemon JVM` é o Java do processo em segundo plano que faz o build de
+que a lição 1 de `java` instalou. `Daemon JVM` é o Java do processo em segundo plano que faz o build de
 verdade, que a última seção desta lição apresenta, e aqui é o mesmo JDK.
 
 **O `gradle` fica fora do `PATH` de propósito.** A maioria dos guias o coloca lá. Esta lição não

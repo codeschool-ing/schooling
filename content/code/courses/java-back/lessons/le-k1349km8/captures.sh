@@ -137,7 +137,7 @@ run "curl -s localhost:8080/books/1 -w '\n'"
 stop
 block include-message-3
 start --spring.web.error.include-stacktrace=always
-run "curl -s localhost:8080/books/1 | python3 -m json.tool | head -n 7"
+run "curl -s localhost:8080/books/1 | python3 -c 'import json, sys; print(*json.load(sys.stdin)[\"trace\"].splitlines()[:6], sep=\"\\n\")'"
 stop
 block catch-all
 detour "$LESSON/what-not-to-leak.md" '    @ExceptionHandler(Exception.class)' \

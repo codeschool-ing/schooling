@@ -220,20 +220,64 @@ public class BookController {
 Build, and start the application in a second terminal with `java -jar target/bookshop-0.1.0.jar`:
 
 ```
-(capture build)
+ana@vm:~/bookshop$ mvn -q package
 ```
 
 The catalogue report from lesson 5 runs at start-up and calls `list()`, so its line in the second
 terminal is the first sign the mapper works:
 
 ```
-(capture report)
+2026-10-16T20:33:16.175-03:00  INFO 2270 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
 ```
 
 And the API answers as it did in lesson 9, with three more books and a different shape underneath:
 
 ```
-(capture books)
+ana@vm:~/bookshop$ curl -s localhost:8080/books | python3 -m json.tool
+[
+    {
+        "id": 1,
+        "isbn": "9786500000016",
+        "title": "Dom Casmurro",
+        "author": "Machado de Assis",
+        "priceCents": 3990
+    },
+    {
+        "id": 2,
+        "isbn": "9786500000023",
+        "title": "The Time Machine",
+        "author": "H. G. Wells",
+        "priceCents": 2950
+    },
+    {
+        "id": 3,
+        "isbn": "9786500000030",
+        "title": "Frankenstein",
+        "author": "Mary Shelley",
+        "priceCents": 3500
+    },
+    {
+        "id": 4,
+        "isbn": "9786500000047",
+        "title": "Persuasion",
+        "author": "Jane Austen",
+        "priceCents": 3100
+    },
+    {
+        "id": 5,
+        "isbn": "9786500000054",
+        "title": "Quincas Borba",
+        "author": "Machado de Assis",
+        "priceCents": 3690
+    },
+    {
+        "id": 6,
+        "isbn": "9786500000061",
+        "title": "The War of the Worlds",
+        "author": "H. G. Wells",
+        "priceCents": 3200
+    }
+]
 ```
 
 ## If you skipped the drop
@@ -242,7 +286,9 @@ If the database still holds lesson 9's table, the application does not start. Th
 second terminal prints, cut down with `grep` to the line that matters:
 
 ```
-(capture stale)
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'Application run failed|PSQLException'
+2026-10-16T20:33:11.667-03:00 ERROR 2209 --- [bookshop] [           main] o.s.boot.SpringApplication               : Application run failed
+Caused by: org.postgresql.util.PSQLException: ERROR: column "author_id" of relation "book" does not exist
 ```
 
 `data.sql` asked for a column the old table does not have, and Spring stops the application rather
@@ -263,13 +309,15 @@ That file only counts when the `sql` profile is active (lesson 4), so the noise 
 run. Stop the application, start it again with the profile, and ask for one book:
 
 ```
-(capture one-book)
+ana@vm:~/bookshop$ curl -s localhost:8080/books/2
+{"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950}
 ```
 
 The second terminal shows what that request cost:
 
 ```
-(capture one-book-log)
+2026-10-16T20:33:22.952-03:00 DEBUG 2406 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select b1_0.id,b1_0.author_id,b1_0.isbn,b1_0.price_cents,b1_0.title from book b1_0 where b1_0.id=?
+2026-10-16T20:33:22.955-03:00 DEBUG 2406 --- [bookshop] [nio-8080-exec-2] org.hibernate.SQL                        : select a1_0.id,a1_0.name from author a1_0 where a1_0.id=?
 ```
 
 **Two statements for one book.** `find` loaded the row of `book` and nothing more; the author was a

@@ -107,7 +107,7 @@ run "$(order ana "$(line 1 1)")"
 run "curl -s -w '\n' localhost:8080/books/1"
 sleep 1
 block selflog
-applog "$TX" 'Creating new|Participating|rollback|Committing'
+applog "$TX" 'Creating new|Participating|rollback|Committing|TransactionRequired'
 stop
 put "bookshop/$SVC" < "$STAGED"
 build

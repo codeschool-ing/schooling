@@ -47,7 +47,9 @@ this method above the override, build and restart.
 
 It compiles. The application does not start, and the last cause in the second terminal says why:
 
-@@CAP ambiguous@@
+```
+Caused by: java.lang.IllegalStateException: Ambiguous @ExceptionHandler method mapped for [ExceptionHandler{exceptionType=org.springframework.web.bind.MethodArgumentNotValidException, mediaType=*/*}]: {public org.springframework.http.ProblemDetail com.example.bookshop.web.ApiErrorHandler.invalid(org.springframework.web.bind.MethodArgumentNotValidException), public final org.springframework.http.ResponseEntity org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler.handleException(java.lang.Exception,org.springframework.web.context.request.WebRequest) throws java.lang.Exception}
+```
 
 The class now has two handlers for one exception, the inherited one and the new one, and Spring refuses
 to pick between them rather than letting a choice nobody wrote down decide the answer. Delete the method
@@ -59,7 +61,22 @@ called by the inherited handler, and overriding that method is how you change th
 Build, restart, and send lesson 6's bad book again. `python3 -m json.tool` prints the JSON one member
 per line:
 
-@@CAP validation-1@@
+```
+ana@vm:~/bookshop$ curl -s localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000017", "title": "", "priceCents": -1}' | python3 -m json.tool
+{
+    "detail": "4 field(s) failed validation",
+    "instance": "/books",
+    "status": 400,
+    "title": "Invalid request",
+    "type": "https://bookshop.example/problems/invalid-request",
+    "errors": {
+        "author": "must not be blank",
+        "isbn": "must be a valid ISBN-13",
+        "priceCents": "must be greater than or equal to 0",
+        "title": "must not be blank"
+    }
+}
+```
 
 Four fields, four messages, and a client that can act on each. The keys arrive in alphabetical order
 because the map is a **`TreeMap`**. Bean Validation reports violations in no particular order, so a
@@ -69,7 +86,22 @@ comparing two responses would, and so would a test that compares a whole body.
 The messages are the constraints' own, and three of them come from Hibernate Validator, the
 implementation the validation starter brings. They follow the language the request asks for:
 
-@@CAP validation-2@@
+```
+ana@vm:~/bookshop$ curl -s localhost:8080/books -H 'Content-Type: application/json' -H 'Accept-Language: pt-BR' -d '{"isbn": "9786500000017", "title": "", "priceCents": -1}' | python3 -m json.tool
+{
+    "detail": "4 field(s) failed validation",
+    "instance": "/books",
+    "status": 400,
+    "title": "Invalid request",
+    "type": "https://bookshop.example/problems/invalid-request",
+    "errors": {
+        "author": "n\u00e3o deve estar em branco",
+        "isbn": "must be a valid ISBN-13",
+        "priceCents": "deve ser maior ou igual a 0",
+        "title": "n\u00e3o deve estar em branco"
+    }
+}
+```
 
 `must be a valid ISBN-13` stayed in English because `@ValidIsbn` declares its message as a plain
 sentence. The standard constraints declare theirs as keys in braces, such as
@@ -79,11 +111,24 @@ language, and Spring hands it the request's `Accept-Language`.
 ## One message per field
 
 A map from a field to one message keeps one message per field. A title of 201 spaces is blank and too
-long at the same time:
+long at the same time, and the rest of this book is valid:
 
-@@CAP validation-3@@
+```
+ana@vm:~/bookshop$ python3 -c 'import json; print(json.dumps({"isbn": "9786500000078", "title": " " * 201, "author": "Jane Austen", "priceCents": 2500}))' | curl -s localhost:8080/books -H 'Content-Type: application/json' -d @- | python3 -m json.tool
+{
+    "detail": "1 field(s) failed validation",
+    "instance": "/books",
+    "status": 400,
+    "title": "Invalid request",
+    "type": "https://bookshop.example/problems/invalid-request",
+    "errors": {
+        "title": "must not be blank"
+    }
+}
+```
 
-Only one of the two failures reached the client, and which one wins is not defined. For a form that is
+Two constraints failed and one message reached the client; `detail` says one field, because it counts
+the map's entries. Which of the two messages wins is not defined. For a form that is
 enough: the person fixes the title, sends it again, and meets the other message if it still applies. A
 client that must show every reason at once needs a list per field, `Map<String, List<String>>`, which is
 a small change the bookshop does not need.

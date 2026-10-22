@@ -10,7 +10,30 @@ Esta aula parte da livraria como a aula 6 a deixou, compilada e rodando num segu
 imprimir a linha de status e os cabeçalhos antes do corpo, e o `-w '\n'` acrescenta uma quebra de linha
 depois do corpo, coisa com que uma resposta JSON não termina:
 
-@@CAP before@@
+```
+ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
+HTTP/1.1 404 
+Content-Length: 0
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+
+
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000017", "title": "", "priceCents": -1}' -w '\n'
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:42:22.264Z","status":400,"error":"Bad Request","path":"/books"}
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "title": "Dom Casmurro", "author": "Machado de Assis", "priceCents": 3990}' -w '\n'
+HTTP/1.1 201 
+Location: /books/4
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+
+{"id":4,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
+```
 
 Cada resposta está errada de um jeito. A primeira é um 404 com `Content-Length: 0`: correta, e não diz
 nada, então um cliente não consegue distinguir "não existe livro 99" de "não existe esse endereço". A
@@ -155,14 +178,28 @@ public class BookController {
 Compile com `mvn -q package`. O `-q` imprime erros e mais nada, então silêncio quer dizer sucesso. Pare a
 aplicação no segundo terminal com Ctrl+C, inicie de novo e peça o livro 99:
 
-@@CAP no-handler@@
+```
+ana@vm:~/bookshop$ mvn -q package
+ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
+HTTP/1.1 500 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:30 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:42:30.119Z","status":500,"error":"Internal Server Error","path":"/books/99"}
+```
 
 Um **500**, Internal Server Error, para um livro que simplesmente não existe. A exceção saiu do
 controller, atravessou o Spring MVC sem que nada a reclamasse e chegou ao contêiner de servlets, e a
 página de erro do Spring Boot respondeu com o único status que tem para esse caso: o servidor falhou. O
 segundo terminal registrou o erro, e o stack trace continua abaixo destas linhas:
 
-@@CAP no-handler-log@@
+```
+2026-10-16T20:42:30.104-03:00 ERROR 16421 --- [bookshop] [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.example.bookshop.catalogue.BookNotFoundException: No book has id 99] with root cause
+
+com.example.bookshop.catalogue.BookNotFoundException: No book has id 99
+```
 
 Essa é a resposta certa para uma exceção que ninguém previu, e a errada para esta, que foi prevista. A
 próxima seção dá a ela o seu 404.

@@ -8,7 +8,23 @@ corresponde a nenhum controller, o método é um que o caminho não aceita. O Sp
 próprias para esses casos, e a livraria da aula 6 respondia a elas com a página de erro do Spring Boot,
 num formato só dela:
 
-@@CAP before-spring@@
+```
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "title": ' -w '\n'
+HTTP/1.1 400 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+Connection: close
+
+{"timestamp":"2026-10-16T23:42:22.353Z","status":400,"error":"Bad Request","path":"/books"}
+ana@vm:~/bookshop$ curl -si localhost:8080/nope -w '\n'
+HTTP/1.1 404 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:22 GMT
+
+{"timestamp":"2026-10-16T23:42:22.385Z","status":404,"error":"Not Found","path":"/nope"}
+```
 
 Dois formatos numa mesma API é pior que qualquer um dos dois sozinho. Um cliente que lê `type` e
 `detail` de um 400 e encontra `timestamp` e `error` no seguinte precisa tratar os dois, e nada diz a ele
@@ -20,7 +36,55 @@ cada um responde com uma `ProblemDetail`. Estendê-la põe todos eles dentro do 
 lado dos handlers da própria livraria. Peça à livraria recompilada o mesmo tipo de coisa, e um pouco
 mais:
 
-@@CAP spring@@
+```
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "title": ' -w '\n'
+HTTP/1.1 400 
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:38 GMT
+Connection: close
+
+{"detail":"Failed to read request","instance":"/books","status":400,"title":"Bad Request"}
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "priceCents": "cheap"}' -w '\n'
+HTTP/1.1 400 
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:38 GMT
+Connection: close
+
+{"detail":"Failed to read request","instance":"/books","status":400,"title":"Bad Request"}
+ana@vm:~/bookshop$ curl -si localhost:8080/books/abc -w '\n'
+HTTP/1.1 400 
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:38 GMT
+Connection: close
+
+{"detail":"Failed to convert 'id' with value: 'abc'","instance":"/books/abc","status":400,"title":"Bad Request"}
+ana@vm:~/bookshop$ curl -si localhost:8080/nope -w '\n'
+HTTP/1.1 404 
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:38 GMT
+
+{"detail":"No static resource nope.","instance":"/nope","status":404,"title":"Not Found"}
+ana@vm:~/bookshop$ curl -si -X DELETE localhost:8080/books/1 -w '\n'
+HTTP/1.1 405 
+Allow: GET
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:38 GMT
+
+{"detail":"Method 'DELETE' is not supported.","instance":"/books/1","status":405,"title":"Method Not Allowed"}
+ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: text/plain' -d 'hello' -w '\n'
+HTTP/1.1 415 
+Accept: application/json, application/*+json
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Fri, 16 Oct 2026 23:42:38 GMT
+
+{"detail":"Content-Type 'text/plain;charset=UTF-8' is not supported.","instance":"/books","status":415,"title":"Unsupported Media Type"}
+```
 
 Toda resposta é `application/problem+json` agora, e cada status é o que o HTTP tem para o caso:
 
@@ -45,12 +109,22 @@ mais específico que a livraria pudesse dizer a um cliente.
 
 A coluna da direita da tabela não é palpite. O perfil `dev` da aula 4 registra as classes web do Spring
 em `debug`, e entre essas linhas está a exceção por trás de cada resposta de erro, que é o primeiro lugar
-para olhar quando uma resposta surpreende. Iniciada com `--spring.profiles.active=dev`, na porta 8081, a
-aplicação deixou estas linhas no segundo terminal para as cinco primeiras requisições acima:
+para olhar quando uma resposta surpreende. Com a aplicação iniciada com
+`--spring.profiles.active=dev`, na porta 8081, cinco das requisições acima deixaram estas linhas no segundo terminal. A sexta, com `"cheap"`, ficou de fora;
+a resposta dela foi a da primeira, palavra por palavra.
 
-@@CAP resolved@@
+```
+2026-10-16T20:42:41.715-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input within/between Object entries]
+2026-10-16T20:42:41.746-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: "abc"]
+2026-10-16T20:42:41.792-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource nope for request '/nope'.]
+2026-10-16T20:42:41.818-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported]
+2026-10-16T20:42:41.874-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'text/plain;charset=UTF-8' is not supported]
+```
 
-@@RESOLVED-NOTE@@
+Cada linha nomeia a exceção e a mensagem dela, que muitas vezes diz mais que a resposta disse. A
+primeira mostra isso com mais clareza: o cliente ouviu "Failed to read request", e o log tem o
+`JSON parse error: Unexpected end-of-input within/between Object entries` do Jackson. A diferença é de
+propósito, e a última seção desta aula trata dela.
 
 Então uma exceção agora encontra três camadas no caminho de saída, e a primeira que a reclama responde:
 

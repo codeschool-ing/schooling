@@ -95,7 +95,7 @@ not on PATH
 The welcome text appears the first time each Gradle version runs for a user, and not again. Below
 it, read three lines. `Kotlin: 2.4.10` is the language the build script in the next section is
 written in, and Gradle carries its own compiler for it, so nothing else needs installing. `Launcher
-JVM` is the Java that started Gradle: the JDK 25 from Ubuntu's archive, the one the `java` course
+JVM` is the Java that started Gradle: the JDK 25 from Ubuntu's archive, the one `java` lesson 1
 installed. `Daemon JVM` is the Java of the background process that does the actual building,
 which the last section of this lesson meets, and here it is the same JDK.
 

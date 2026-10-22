@@ -50,7 +50,8 @@
 source "$(dirname "$0")/../../capture.sh"
 cd "$(dirname "$0")"
 LESSON=$(pwd)
-export EXTRA_ENV='PATH=/home/ana/bin:/usr/local/bin:/usr/bin:/bin HTTPS_PROXY=http://127.0.0.1:40917 BAZELISK_BASE_URL=https://github.com/bazelbuild/bazel/releases/download'
+# The proxy's port changes when the sandbox restarts: take it from root's environment.
+export EXTRA_ENV="PATH=/home/ana/bin:/usr/local/bin:/usr/bin:/bin HTTPS_PROXY=${HTTPS_PROXY:-http://127.0.0.1:40917} BAZELISK_BASE_URL=https://github.com/bazelbuild/bazel/releases/download"
 
 # A schooling-example the lesson shows, written as ana: the parts joined with
 # newlines, as the copy button joins them.

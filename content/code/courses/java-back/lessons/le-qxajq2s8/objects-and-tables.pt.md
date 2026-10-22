@@ -41,7 +41,7 @@ implementação que o Spring Boot usa; o EclipseLink é outra. O código desta a
 num import:
 
 ```
-(capture hibernate-version)
+2026-10-16T20:33:20.403-03:00  INFO 2406 --- [bookshop] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
 ```
 
 ## O que ele custa

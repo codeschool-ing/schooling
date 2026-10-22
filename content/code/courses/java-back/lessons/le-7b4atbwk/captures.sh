@@ -66,7 +66,7 @@ block run
 run 'cd jdbi-look'
 at '~/jdbi-look'
 run 'mvn -q compile dependency:build-classpath -Dmdep.outputFile=cp.txt'
-run "tr ':' '\n' < cp.txt"
+run "tr ':' '\n' < cp.txt; echo"
 run "java -cp \"target/classes:\$(cat cp.txt)\" com.example.look.Titles 'Machado de Assis'"
 run "java -cp \"target/classes:\$(cat cp.txt)\" com.example.look.Titles 'H. G. Wells'"
 
@@ -75,7 +75,7 @@ quiet "sed -i 's/SELECT b.title, b.price_cents/SELECT b.title, b.price/' src/mai
 grep -q 'SELECT b.title, b.price$' /home/ana/jdbi-look/src/main/java/com/example/look/Titles.java \
   || echo '!!! the detour edit did not apply'
 run 'mvn -q compile'
-run "java -cp \"target/classes:\$(cat cp.txt)\" com.example.look.Titles 'Machado de Assis' 2>&1 | head -n 3"
+run "java -cp \"target/classes:\$(cat cp.txt)\" com.example.look.Titles 'Machado de Assis' 2>&1 | head -n 1"
 quiet "sed -i 's/SELECT b.title, b.price\$/SELECT b.title, b.price_cents/' src/main/java/com/example/look/Titles.java && mvn -q compile"
 
 block restored

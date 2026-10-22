@@ -35,8 +35,7 @@ Build and start, with `grep` keeping the one line that says why:
 Read it from the end. Hibernate expected `varchar(255)`, which is what it maps a `String` field to when
 nothing says otherwise, and found `bpchar`, PostgreSQL's internal name for `char(n)`, the blank-padded
 fixed-length type that `isbn char(13)` declares. **This mismatch has been there since lesson 10.** Under
-`none` nobody compared the two, and it did no harm only because PostgreSQL converts between the two
-types when a query compares them. `validate` is the first setting that looked.
+`none` nobody compared the two, and `validate` is the first setting that looked.
 
 There are two ways to make them agree: change the column with a new migration, or tell Hibernate the
 truth about the column. The column is right, since an ISBN-13 is always thirteen characters, so the

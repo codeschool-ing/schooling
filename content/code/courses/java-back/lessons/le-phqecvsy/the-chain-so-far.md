@@ -3,10 +3,10 @@ title: The JDK and Maven, as the course before left them
 version: 1
 ---
 
-This course is the third of a chain, and the `java` course installed its tools. If you came
-through it, **you have them already and install nothing twice**: skip to the next section, which
-checks what is there. If you came straight here, the setup is two commands on the Ubuntu machine
-from the last section.
+This course is the third of a chain, and `java` lesson 1 installed its tools. If you came through
+it, **you have them already and install nothing twice**: skip the two commands below, and read on
+from the warnings. If you came straight here, the setup is two commands on the Ubuntu machine from
+the last section.
 
 ```sh
 sudo apt update
@@ -18,21 +18,26 @@ and `javac`, the compiler, which a runtime alone does not have. `maven` is Maven
 packaging of it, which puts the `mvn` command on your path. `apt` prints a screen of progress for
 a minute or two.
 
-## Four warnings, and the line that silences them
+## Four lines of warning, and the line that silences them
 
-The first time Maven runs on Java 25 it says this before anything else:
+`java` lesson 18 built a first Maven project and left four `WARNING:` lines at the top of every
+build. Any Maven run that does real work prints them, even one that fails at once, and `-q`, which
+otherwise hides everything but errors, does not hide them. Here Maven is asked to check a project
+in your home directory, where there is none:
 
 @@CAPTURE unsafe-1@@
 
-The warnings are not about your code, and there is no code yet. They name Guava, a library that
-**Maven itself** is built with, calling a part of the JDK that Java 25 is retiring. Maven 3.8.7
-cannot be changed, and the JDK prints them on every run, so a build of yours would start with
-four lines about somebody else's code.
+The error at the end is expected; there is no `pom.xml` in `~`. The four lines above it are one
+warning, and **it is not about your code**: it names `guava.jar` in `/usr/share/maven/lib`, a
+library Maven itself is built with, calling a part of the JDK that Java 25 says will be removed.
+You cannot change Maven 3.8.7's Guava, and the JDK prints the warning on every run, so every build
+of yours would open with four lines about somebody else's code.
 
-One flag tells the JDK that access is allowed, and `~/.mavenrc` is the file the `mvn` command
-reads its options from before it starts. Append the line to it:
+One JDK flag says that access is allowed, and `~/.mavenrc` is a file the `mvn` command reads its
+options from before it starts Java. Append the line to it, and ask again:
 
 @@CAPTURE unsafe-2@@
 
-It affects Maven and nothing else: a program you run with `java` is not started through `mvn`,
-and it does not read this file.
+The error is still there, because there is still no project, and the warning is gone. The line
+reaches Maven and nothing else: a program you run with `java` is not started through `mvn`, and it
+never reads this file.
