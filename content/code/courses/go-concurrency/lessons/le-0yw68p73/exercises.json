@@ -1,0 +1,479 @@
+[
+  {
+    "id": "ex-qctzsypn",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does fan-in do?",
+    "hint": "It is the opposite of lesson 13's pattern.",
+    "choices": [
+      {
+        "text": "Sends one stream of work to several goroutines",
+        "correct": false,
+        "why": "That is fan-out, lesson 13."
+      },
+      {
+        "text": "Merges several channels into one",
+        "correct": true,
+        "why": "Right: one loop reads whatever any input produces."
+      },
+      {
+        "text": "Sorts the values of a channel by the time they were sent",
+        "correct": false,
+        "why": "Nothing sorts; values arrive in the order they are copied across."
+      },
+      {
+        "text": "Limits how many goroutines run at once",
+        "correct": false,
+        "why": "That is the worker pool's job, lesson 7."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjewcz4s",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `merge` start one copier goroutine per input instead of reading the inputs one after another in a loop?",
+    "hint": "What happens to the others while one input has nothing to send?",
+    "choices": [
+      {
+        "text": "Goroutines copy values faster than a loop does",
+        "correct": false,
+        "why": "Speed is not the reason; blocking is."
+      },
+      {
+        "text": "A loop waiting on one quiet input would hold up the rest",
+        "correct": true,
+        "why": "Right. Each input can block at any moment, so each needs its own goroutine to wait on it."
+      },
+      {
+        "text": "Generic functions require one goroutine per argument",
+        "correct": false,
+        "why": "Generics have nothing to do with goroutines."
+      },
+      {
+        "text": "A channel can be read by only one goroutine at a time",
+        "correct": false,
+        "why": "Lesson 13 had three workers reading one channel at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-s766rphr",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague moves `wg.Wait()` and `close(out)` out of their goroutine, into `merge` itself just before `return out`. What happens when `main` calls `merge`?",
+    "hint": "Who is reading `out` while `merge` waits?",
+    "choices": [
+      {
+        "text": "It works the same, one goroutine fewer",
+        "correct": false,
+        "why": "`merge` has not returned `out` yet, so nobody can receive what the copiers send."
+      },
+      {
+        "text": "`out` is closed before any value is sent",
+        "correct": false,
+        "why": "`wg.Wait()` comes first, and it never returns."
+      },
+      {
+        "text": "It never returns: the copiers block sending to a channel nobody reads",
+        "correct": true,
+        "why": "Right. `merge` waits for copiers that wait for a reader that is waiting for `merge` to return."
+      },
+      {
+        "text": "The copiers panic with `send on closed channel`",
+        "correct": false,
+        "why": "Nothing is closed: the program is stuck before reaching `close`."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v7ycpc6",
+    "version": 1,
+    "section": "merge",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`merge.go` merged three sources: `disk` sent 3 readings, `net` 4 and `cpu` 2. How many readings did `main` print before `all sources closed`?",
+    "hint": "A merge loses nothing and adds nothing.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "readings"
+  },
+  {
+    "id": "ex-fqqpmdj4",
+    "version": 1,
+    "section": "select-merge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`spin.go` counted 972,922 zero values in 100 ms although only six numbers were sent. Where did the zeros come from?",
+    "hint": "What does a receive from a closed channel do?",
+    "choices": [
+      {
+        "text": "From the closed channels, which are always ready",
+        "correct": true,
+        "why": "Right. A receive from a closed channel returns the zero value at once, every time."
+      },
+      {
+        "text": "From `numbers`, which sends a zero after its last value as an end marker",
+        "correct": false,
+        "why": "`numbers` sends 1 to 3 and closes; nobody sends a zero."
+      },
+      {
+        "text": "From the timer, which ticks every nanosecond",
+        "correct": false,
+        "why": "`time.After` delivers once, after 100 ms, and ends the loop."
+      },
+      {
+        "text": "From the `select` picking an empty case",
+        "correct": false,
+        "why": "There is no empty case; the two receives were simply always ready."
+      }
+    ]
+  },
+  {
+    "id": "ex-sscs31e2",
+    "version": 1,
+    "section": "select-merge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `pair.go`, what does `b = nil` do once `b` has closed?",
+    "hint": "Lesson 5: a nil channel in a `select`.",
+    "choices": [
+      {
+        "text": "It closes `b` a second time, harmlessly",
+        "correct": false,
+        "why": "It closes nothing, and closing twice would panic."
+      },
+      {
+        "text": "It frees the memory of the channel for the garbage collector straight away",
+        "correct": false,
+        "why": "It changes the loop's variable; collection is not the point."
+      },
+      {
+        "text": "Switches that case off for the rest of the loop",
+        "correct": true,
+        "why": "Right. A nil channel is never ready, so its case is never chosen again."
+      },
+      {
+        "text": "It makes the `numbers` goroutine stop sending",
+        "correct": false,
+        "why": "That goroutine had already finished; the variable is the loop's own handle."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwn2gj89",
+    "version": 1,
+    "section": "select-merge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program merges a list of channels whose length is known only when it runs. Which merge fits?",
+    "hint": "How many `case` lines does a `select` have?",
+    "choices": [
+      {
+        "text": "A `select` with one case per channel",
+        "correct": false,
+        "why": "Each case is written in the source, so the number is fixed when the code is written."
+      },
+      {
+        "text": "Section 02's `merge`",
+        "correct": true,
+        "why": "Right: one goroutine per input, however many there turn out to be."
+      },
+      {
+        "text": "Reading the channels in turn in a `for` loop",
+        "correct": false,
+        "why": "A quiet channel would hold up all the others."
+      },
+      {
+        "text": "Any, since `range` works over a list of channels",
+        "correct": false,
+        "why": "`range` over a slice gives you the channels, not their values."
+      }
+    ]
+  },
+  {
+    "id": "ex-vczqcx7f",
+    "version": 1,
+    "section": "select-merge",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To tell a closed channel from a real value, receive with the comma-ok form, `v, ___ := <-a`, which is false once `a` is closed and drained.",
+    "hint": "The second variable in `pair.go`'s cases.",
+    "blanks": [
+      {
+        "accept": [
+          "ok"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cp2gnyve",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`early.go` closed `out` right after the first copier's loop. What did the program end with?",
+    "hint": "The other copier was still sending.",
+    "choices": [
+      {
+        "text": "`fatal error: all goroutines are asleep - deadlock!`",
+        "correct": false,
+        "why": "That is `never.go`, the opposite mistake."
+      },
+      {
+        "text": "`panic: send on closed channel`",
+        "correct": true,
+        "why": "Right, at line 26, the slow copier's `out <- v`."
+      },
+      {
+        "text": "Three slow readings after the fast one",
+        "correct": false,
+        "why": "Only one slow reading arrived before the panic."
+      },
+      {
+        "text": "`main is done`, after a pause",
+        "correct": false,
+        "why": "The panic ended the program first."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr3bh7f8",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`never.go` stopped with `fatal error: all goroutines are asleep - deadlock!`. Why might the same bug in a server raise no error at all?",
+    "hint": "When does the runtime report a deadlock?",
+    "choices": [
+      {
+        "text": "Servers disable the deadlock check",
+        "correct": false,
+        "why": "There is no switch; the check needs every goroutine blocked."
+      },
+      {
+        "text": "A server closes every channel when a request ends",
+        "correct": false,
+        "why": "Nothing closes channels on your behalf."
+      },
+      {
+        "text": "Other parts of the server are still running",
+        "correct": true,
+        "why": "Right. The stuck reader just waits for ever, a leak only a goroutine count shows."
+      },
+      {
+        "text": "In a server the `range` ends after a timeout",
+        "correct": false,
+        "why": "`range` over a channel has no timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-2s2tax3p",
+    "version": 1,
+    "section": "closing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A merge has three copiers. Which code may close its output channel?",
+    "hint": "The last sender closes; who knows which one is last?",
+    "choices": [
+      {
+        "text": "Whichever copier finishes first",
+        "correct": false,
+        "why": "That is `early.go`: the others still send."
+      },
+      {
+        "text": "Each copier, guarded by a recover",
+        "correct": false,
+        "why": "Recovering hides a panic; the second close and the later sends are still wrong."
+      },
+      {
+        "text": "`main`, after reading a fixed number of values",
+        "correct": false,
+        "why": "A receiver closing a channel others send on is the early close again, from the other side."
+      },
+      {
+        "text": "A goroutine that waits on a `WaitGroup` the copiers count down",
+        "correct": true,
+        "why": "Right. Only something that counts them knows when all three are done."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7m03egs",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of section 02's `merge` in order, from the call to the end of `main`'s loop.",
+    "hint": "The closer starts before any value moves.",
+    "items": [
+      "one copier goroutine starts per input",
+      "a goroutine starts waiting on the `WaitGroup`",
+      "`merge` returns `out` to `main`",
+      "every input closes and every copier calls `Done`",
+      "`close(out)` ends `main`'s `range`"
+    ]
+  },
+  {
+    "id": "ex-k0qfpcxv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each program of this lesson with what it printed last.",
+    "hint": "Two of them ended badly.",
+    "pairs": [
+      {
+        "left": "`merge.go`",
+        "right": "`all sources closed`"
+      },
+      {
+        "left": "`pair.go`",
+        "right": "`both closed`"
+      },
+      {
+        "left": "`early.go`",
+        "right": "a `send on closed channel` panic"
+      },
+      {
+        "left": "`never.go`",
+        "right": "a deadlock report"
+      }
+    ],
+    "right_distractors": [
+      "`main is done`"
+    ]
+  },
+  {
+    "id": "ex-bse72k76",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these merges end with every value delivered and nothing left running? Choose all that apply.",
+    "hint": "Check who closes, and whether a closed case is switched off.",
+    "choices": [
+      {
+        "text": "Copiers plus a goroutine that closes after `wg.Wait()`",
+        "correct": true,
+        "why": "Yes: section 02's `merge`."
+      },
+      {
+        "text": "A `select` loop that sets each channel to nil when it closes",
+        "correct": true,
+        "why": "Yes: `pair.go`."
+      },
+      {
+        "text": "A `select` loop with plain receives and no exit condition",
+        "correct": false,
+        "why": "That is `spin.go`: it spins on zeros for ever."
+      },
+      {
+        "text": "Copiers that each close the output when their input ends",
+        "correct": false,
+        "why": "That is `early.go`: a panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj9vbgtg",
+    "version": 1,
+    "section": "merge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run of `merge.go`, `net-3` and `disk-2` both arrived at 60ms. What decided which of the two `main` printed first?",
+    "hint": "Who sends on `out`, and in what order do sends complete?",
+    "choices": [
+      {
+        "text": "The order of the arguments to `merge`",
+        "correct": false,
+        "why": "`disk` was the first argument and printed second."
+      },
+      {
+        "text": "Which copier's send happened first",
+        "correct": true,
+        "why": "Right. Two copiers raced to send on `out`; the merge keeps arrival order and promises nothing about ties."
+      },
+      {
+        "text": "Alphabetical order of the source names",
+        "correct": false,
+        "why": "Nothing in `merge` compares values."
+      },
+      {
+        "text": "`net` has priority because it sends most",
+        "correct": false,
+        "why": "Channels have no priorities."
+      }
+    ]
+  },
+  {
+    "id": "ex-vygy46wj",
+    "version": 1,
+    "section": "select-merge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A merge with `select` must handle a channel whose zero value is a legal reading, such as a temperature of 0. Which part of `pair.go` makes that safe?",
+    "hint": "How does `pair.go` know a value is real rather than a closed channel's zero?",
+    "choices": [
+      {
+        "text": "Checking `if v == 0` as `spin.go` did",
+        "correct": false,
+        "why": "That would throw away a real reading of 0 along with the closed channel's zeros."
+      },
+      {
+        "text": "The `for a != nil || b != nil` condition",
+        "correct": false,
+        "why": "It ends the loop; it is the `ok` that tells a value from a close."
+      },
+      {
+        "text": "The `ok` of `v, ok := <-a`",
+        "correct": true,
+        "why": "Right. `ok` is true for every value sent, zero included, and false only once the channel is closed."
+      },
+      {
+        "text": "Sending values as pointers so nil marks the end",
+        "correct": false,
+        "why": "That changes the type to work around a problem `ok` already solves."
+      }
+    ]
+  },
+  {
+    "id": "ex-87x7tkxr",
+    "version": 1,
+    "section": "closing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`never.go`'s two inputs sent two values each, and `main` printed all of them before the deadlock. How many values did `main` print?",
+    "hint": "1, 2, 10 and 11.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "values"
+  }
+]

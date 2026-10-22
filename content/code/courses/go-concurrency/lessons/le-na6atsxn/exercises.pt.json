@@ -1,0 +1,389 @@
+{
+  "ex-m0wcc07a": {
+    "prompt": "Por que este curso acrescenta um compilador de C à máquina que o curso `go` montou?",
+    "hint": "Pense em que linguagem o detector de corridas é escrito.",
+    "choices": [
+      {
+        "text": "O Go 1.27.1 compila goroutines por meio de C",
+        "why": "Goroutines são Go comum e compilam sem C nenhum; o `spin.go` compilaria numa máquina sem `gcc`."
+      },
+      {
+        "text": "O detector de corridas é um runtime em C++ que entra por meio do cgo",
+        "why": "Isso. `-race` liga o ThreadSanitizer por meio do cgo, e o cgo precisa de um compilador de C na máquina."
+      },
+      {
+        "text": "O pacote `testing` das lições 25 a 30 é escrito em C",
+        "why": "`testing` é Go. Só o detector de corridas precisa do cgo, e com ele o compilador."
+      },
+      {
+        "text": "O `gofmt` se recusa a formatar arquivos quando falta o `gcc`",
+        "why": "O `gofmt` é um programa Go sem nada a ver com C. A conferência da seção o achou em `/usr/local/go/bin`, ao lado do `go`."
+      }
+    ]
+  },
+  "ex-3nmwhgyn": {
+    "prompt": "A Ana roda `go env CGO_ENABLED CC` numa máquina nova e recebe `1` e `gcc`. Ninguém definiu nenhum dos dois valores. O que o `1` diz a ela?",
+    "hint": "A seção 05 mostra o mesmo comando imprimindo `0`.",
+    "choices": [
+      {
+        "text": "Que uma goroutine por vez tem permissão para rodar",
+        "why": "Isso seria `GOMAXPROCS=1`, outra configuração completamente diferente."
+      },
+      {
+        "text": "Que o detector de corridas está ligado em todo build",
+        "why": "O detector só liga quando se passa `-race`. `CGO_ENABLED` diz se ele poderia ligar."
+      },
+      {
+        "text": "O comando go procurou o `gcc` e o encontrou",
+        "why": "Isso. Sem compilador à vista o padrão vira `0`, como a seção 05 mostrou."
+      },
+      {
+        "text": "Que o Go instalado é a versão 1 da linguagem",
+        "why": "`go version` informa a versão, `go1.27.1`. `CGO_ENABLED` é uma chave, ligada ou desligada."
+      }
+    ]
+  },
+  "ex-w903me6g": {
+    "prompt": "Por que o curso recomenda não aprendê-lo no Go Playground, embora o Playground rode programas Go?",
+    "hint": "O que o curso pede que você leia, além do programa?",
+    "choices": [
+      {
+        "text": "Não há terminal onde digitar `go run -race` nem `go test`",
+        "why": "Isso. Metade do curso é ler o que o comando go imprime, e o Playground não dá um comando go para digitar."
+      },
+      {
+        "text": "Ele roda uma versão de Go mais antiga que a que tem `WaitGroup.Go`",
+        "why": "A seção não afirma nada sobre a versão do Playground. A objeção é o que falta em volta do programa."
+      },
+      {
+        "text": "As goroutines são desativadas lá",
+        "why": "A seção não diz isso, e recomenda o Playground para testar trechos."
+      },
+      {
+        "text": "Ele exige uma conta paga",
+        "why": "Ele não custa nada. A objeção é a falta de terminal."
+      }
+    ]
+  },
+  "ex-q72gvqcg": {
+    "prompt": "Um colega tem o Go 1.27.1 em `/usr/local/go` e um Go antigo de um gerenciador de pacotes em `/usr/bin`. O `~/.profile` dele acrescenta `/usr/local/go/bin` ao fim do `PATH`. O que `go version` informa?",
+    "hint": "O shell roda a primeira correspondência que encontra, lendo o `PATH` da esquerda para a direita.",
+    "choices": [
+      {
+        "text": "1.27.1, porque a versão mais nova vence",
+        "why": "O shell não sabe nada de versões. Ele pega o primeiro `go` ao longo do `PATH`."
+      },
+      {
+        "text": "A versão antiga de `/usr/bin`",
+        "why": "Isso. `/usr/bin` vem antes no `PATH`, então o `go` de lá roda. `command -v go` daria o nome desse arquivo."
+      },
+      {
+        "text": "Um erro, porque dois programas com o mesmo nome entram em conflito",
+        "why": "Nada entra em conflito: o shell para na primeira correspondência e nem vê a segunda."
+      },
+      {
+        "text": "As duas versões, uma por linha",
+        "why": "Um programa roda, e ele imprime uma linha."
+      }
+    ]
+  },
+  "ex-t8aj0sx2": {
+    "prompt": "Nos termos de Rob Pike, qual destas é uma propriedade do PROGRAMA, e não de uma execução?",
+    "hint": "Uma das duas palavras descreve como o código é escrito.",
+    "choices": [
+      {
+        "text": "Paralelismo",
+        "why": "Paralelismo é saber se, num instante, mais de uma atividade está executando. O mesmo programa teve quantidades diferentes dele em três execuções."
+      },
+      {
+        "text": "Concorrência",
+        "why": "Isso. É como o programa é estruturado, em atividades independentes, e foi a mesma em toda execução do `spin.go`."
+      },
+      {
+        "text": "O número de processadores",
+        "why": "Isso pertence à máquina, e o `nproc` o informa."
+      },
+      {
+        "text": "O valor de `GOMAXPROCS`",
+        "why": "`GOMAXPROCS` mudou entre execuções sem tocar no código, então pertence à execução."
+      }
+    ]
+  },
+  "ex-nh26rgf1": {
+    "prompt": "O `spin.go` levou 400 ms com `GOMAXPROCS=4` e 1,57 s com `GOMAXPROCS=1`. Mais ou menos quantas vezes mais demorou a execução com um processador? Dê um número inteiro.",
+    "hint": "1.570 dividido por 400.",
+    "unit": "vezes"
+  },
+  "ex-qhzxedaa": {
+    "prompt": "O `wait.go` roda quatro goroutines que dormem um segundo cada. Com `GOMAXPROCS=1` ele terminou em um segundo, e não em quatro. Por quê?",
+    "hint": "Para que uma goroutine dormindo precisa de um processador?",
+    "choices": [
+      {
+        "text": "`GOMAXPROCS` é ignorado para goroutines que dormem",
+        "why": "Ele não é ignorado; só não limita nada que espera. Ele limita goroutines executando código Go."
+      },
+      {
+        "text": "O runtime encurtou as esperas para ganhar tempo",
+        "why": "Cada espera durou o segundo inteiro. Elas se sobrepuseram em vez de rodar uma depois da outra."
+      },
+      {
+        "text": "Uma goroutine dormindo não precisa de processador",
+        "why": "Isso. Enquanto uma espera não há nada a rodar por ela, e as quatro esperam ao mesmo tempo."
+      },
+      {
+        "text": "A máquina tem quatro processadores, diga o `GOMAXPROCS` o que disser",
+        "why": "`GOMAXPROCS=1` de fato limitou o código Go a um processador: o `spin.go` levou 1,57 s com ele."
+      }
+    ]
+  },
+  "ex-p31e414p": {
+    "prompt": "Um programa busca 200 páginas web, uma depois da outra, e passa quase todo o tempo esperando a rede. Ele roda numa máquina de um processador. O que reescrevê-lo com uma goroutine por página compra?",
+    "hint": "É o `wait.go` com uma rede no lugar do `time.Sleep`.",
+    "choices": [
+      {
+        "text": "Nada, já que um processador não deixa espaço para paralelismo",
+        "why": "Paralelismo nenhum, sim. Mas as esperas se sobrepõem, como o `wait.go` mostrou com `GOMAXPROCS=1`."
+      },
+      {
+        "text": "Bem menos tempo no relógio, porque as esperas se sobrepõem",
+        "why": "Isso. A concorrência compensa mesmo sem paralelismo quando o trabalho é quase todo espera."
+      },
+      {
+        "text": "Mais ou menos metade do tempo, o máximo que um processador permite",
+        "why": "Não existe esse teto para esperas: quatro esperas de um segundo levaram um segundo, um quarto."
+      },
+      {
+        "text": "Contas mais rápidas em cada requisição",
+        "why": "As contas são as mesmas e são poucas. O que muda é que a espera deixa de ser sequencial."
+      }
+    ]
+  },
+  "ex-y9mhrzte": {
+    "prompt": "Associe cada execução do `spin.go` ao tempo que ela imprimiu.",
+    "hint": "Um processador levou cerca de quatro vezes o que levaram quatro.",
+    "pairs": [
+      {
+        "left": "`GOMAXPROCS=1`",
+        "right": "1.57s"
+      },
+      {
+        "left": "`GOMAXPROCS=2`",
+        "right": "800ms"
+      },
+      {
+        "left": "`GOMAXPROCS=4`",
+        "right": "400ms"
+      }
+    ],
+    "right_distractors": [
+      "100ms"
+    ]
+  },
+  "ex-w0bxbjdz": {
+    "prompt": "O `order.go` imprimiu `caio` primeiro em cinco execuções de cinco. O que um programa construído sobre ele pode supor sobre a ordem das saudações?",
+    "hint": "A ordem faz parte da linguagem, ou do escalonador de uma versão?",
+    "choices": [
+      {
+        "text": "Que `caio` vem primeiro, já que cinco execuções concordaram",
+        "why": "Cinco execuções concordando descrevem este escalonador nesta máquina. O build com `-race` do mesmo programa imprimiu `ana` primeiro."
+      },
+      {
+        "text": "Que elas vêm na ordem em que o laço as iniciou",
+        "why": "O laço iniciou `ana` primeiro, e `ana` foi a última em quatro das cinco execuções."
+      },
+      {
+        "text": "Nada: a ordem não faz parte da linguagem",
+        "why": "Isso. Se a ordem importa, o programa tem de impô-la, com um canal ou uma trava."
+      },
+      {
+        "text": "Que elas vêm em ordem alfabética",
+        "why": "As execuções imprimiram `caio`, `ana`, `bia`, que não é ordem alfabética, e nada ordena goroutines."
+      }
+    ]
+  },
+  "ex-3q8hxsq8": {
+    "prompt": "Uma das cinco execuções do `count.go` imprimiu `total: 400000`, a resposta certa. Por que a lição chama essa de a linha mais perigosa da tela?",
+    "hint": "Imagine um teste que rodasse o programa uma vez.",
+    "choices": [
+      {
+        "text": "Uma execução assim passa num teste com a corrida ainda dentro",
+        "why": "Isso. O defeito está no programa, mostre-o ou não uma dada execução."
+      },
+      {
+        "text": "Ela prova que o detector de corridas estava desligado naquela execução",
+        "why": "Ele estava desligado, já que essas execuções não tinham `-race`, mas um total certo não prova nada sobre o detector."
+      },
+      {
+        "text": "Ele estoura um `int` e dá a volta",
+        "why": "400.000 cabe num `int` com folga. Atualizações perdidas deixam o total menor, nunca maior."
+      },
+      {
+        "text": "Ela significa que duas goroutines nem começaram",
+        "why": "Se duas nem tivessem começado, o total seria no máximo 200.000."
+      }
+    ]
+  },
+  "ex-3bf7dyev": {
+    "prompt": "Ponha em ordem os passos da atualização perdida da figura da lição. `total` começa em 7.",
+    "hint": "As duas leituras acontecem antes de qualquer escrita.",
+    "items": [
+      "a goroutine 10 lê 7",
+      "a goroutine 11 lê 7",
+      "a goroutine 10 escreve 8",
+      "a goroutine 11 escreve 8"
+    ]
+  },
+  "ex-v90rxn4v": {
+    "prompt": "Quais destes tornam algo que uma goroutine fez visível para outra, pelas promessas de Go? Escolha todas as que se aplicam.",
+    "hint": "As promessas de Go são sobre sincronização, não sobre tempo.",
+    "choices": [
+      {
+        "text": "Um valor enviado num canal e recebido pela outra",
+        "why": "Sim. O que quem enviou fez antes do envio fica visível para quem recebe depois do recebimento."
+      },
+      {
+        "text": "`wg.Wait` retornando depois que a goroutine terminou",
+        "why": "Sim. É por isso que o `count.go` pode ler `total` depois de `wg.Wait`."
+      },
+      {
+        "text": "Esperar tempo suficiente com `time.Sleep`",
+        "why": "Uma espera é tempo, não sincronização. Go não promete nada sobre o que uma pausa torna visível."
+      },
+      {
+        "text": "As duas goroutines escrevendo na mesma variável",
+        "why": "Isso é a própria corrida de dados, o que as promessas não cobrem."
+      }
+    ]
+  },
+  "ex-zv4jykdw": {
+    "prompt": "`go run -race count.go` imprimiu dois relatórios de corrida e um total errado. Um colega roda o detector de corridas uma vez num programa e não vê relatório nenhum. O que ele pode concluir?",
+    "hint": "O que o detector observa?",
+    "choices": [
+      {
+        "text": "Que o programa não tem corrida de dados",
+        "why": "O detector relata corridas que acontecem na execução que ele observa. Um caminho que a execução não percorreu fica sem exame."
+      },
+      {
+        "text": "Que nenhuma corrida ocorreu nos caminhos daquela execução",
+        "why": "Isso. É evidência sobre uma execução, e é por isso que a lição 16 o roda sobre testes que exercitam o código."
+      },
+      {
+        "text": "Que o detector não foi ligado ao programa",
+        "why": "Se o `-race` não pudesse ser ligado, o comando go recusaria com `-race requires cgo` em vez de ficar quieto."
+      },
+      {
+        "text": "Que o programa imprimirá a mesma saída quando for rodado de novo",
+        "why": "Até um programa sem corrida como o `order.go` imprime as linhas em ordens diferentes."
+      }
+    ]
+  },
+  "ex-t43t6eax": {
+    "prompt": "Um programa rodado com o detector de corridas que encontra uma corrida sai com o status ___, para um script perceber.",
+    "hint": "A última linha da transcrição de `go run -race count.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "66"
+        ]
+      }
+    ]
+  },
+  "ex-xp90j267": {
+    "prompt": "Numa máquina sem compilador de C, `go run -race` diz `-race requires cgo; enable cgo by setting CGO_ENABLED=1`. O que acontece se o aluno fizer exatamente isso?",
+    "hint": "A seção 05 tentou.",
+    "choices": [
+      {
+        "text": "O programa roda, com o detector de corridas dentro",
+        "why": "O cgo ainda precisa de um compilador para compilar a metade em C do runtime, e não há nenhum."
+      },
+      {
+        "text": "Falha um passo adiante, dando o nome do `gcc` que falta",
+        "why": "Isso: `cgo: C compiler \"gcc\" not found`. O conserto é instalar o compilador."
+      },
+      {
+        "text": "O comando go baixa um compilador de C do proxy de módulos",
+        "why": "O proxy de módulos serve módulos e toolchains de Go. Um compilador de C vem dos pacotes do seu sistema."
+      },
+      {
+        "text": "A mesma mensagem de novo, palavra por palavra",
+        "why": "A mensagem muda: agora ela dá o nome do compilador que procurou."
+      }
+    ]
+  },
+  "ex-pn7s6etz": {
+    "prompt": "Um aluno tem o `gcc` instalado e `command -v gcc` o encontra, mas `go test -race` ainda diz `-race requires cgo`. Onde ele deve olhar primeiro?",
+    "hint": "Se o compilador está lá, a chave foi desligada por alguém.",
+    "choices": [
+      {
+        "text": "Reinstalar o Go, porque o toolchain está danificado",
+        "why": "Nada aponta para o toolchain. A mensagem é sobre o cgo estar desligado."
+      },
+      {
+        "text": "Instalar um segundo compilador de C, como o `clang`",
+        "why": "O primeiro compilador é encontrado. Outro não mudaria nada enquanto o cgo estiver desligado."
+      },
+      {
+        "text": "`go env -changed`, procurando um `CGO_ENABLED=0`",
+        "why": "Isso. Ele lista toda configuração diferente do padrão, venha do shell ou de `go env -w`."
+      },
+      {
+        "text": "Baixar o `GOMAXPROCS` para 1",
+        "why": "O `GOMAXPROCS` decide o paralelismo e não tem nada a ver com o cgo."
+      }
+    ]
+  },
+  "ex-pnr2yh31": {
+    "prompt": "Associe cada mensagem à sua causa.",
+    "hint": "Duas delas vêm do comando go e uma do shell.",
+    "pairs": [
+      {
+        "left": "`-race requires cgo`",
+        "right": "o cgo está desligado, por padrão ou à mão"
+      },
+      {
+        "left": "`cgo: C compiler \"gcc\" not found`",
+        "right": "o cgo forçado a ligar sem compilador instalado"
+      },
+      {
+        "left": "`go: command not found`",
+        "right": "nenhum `go` em nenhum diretório do `PATH`"
+      }
+    ],
+    "right_distractors": [
+      "duas goroutines escreveram na mesma variável"
+    ]
+  },
+  "ex-0d29h86g": {
+    "prompt": "Ponha as conferências do laboratório na ordem em que a seção 02 as rodou, do toolchain para fora.",
+    "hint": "A conferência com corrida vem por último, porque precisa de tudo antes dela.",
+    "items": [
+      "`go version`",
+      "`command -v go gofmt gcc`",
+      "`gcc --version | head -1`",
+      "`go env CGO_ENABLED CC`",
+      "`go run -race order.go`"
+    ]
+  },
+  "ex-g4sq07nq": {
+    "prompt": "Um time move o seu serviço de uma máquina de quatro processadores para um contêiner limitado a um processador. As requisições dele esperam quase sempre um banco de dados. Qual dos dois programas da lição prevê o que acontece com ele?",
+    "hint": "O tempo do serviço é gasto calculando ou esperando?",
+    "choices": [
+      {
+        "text": "`spin.go`: ele vai levar cerca de quatro vezes mais",
+        "why": "Essa é a previsão para trabalho que calcula. Este serviço quase sempre espera."
+      },
+      {
+        "text": "`wait.go`: as esperas se sobrepõem mesmo num processador só",
+        "why": "Isso. Requisições que esperam quase não precisam do processador, então perder três deles custa bem menos que quatro vezes."
+      },
+      {
+        "text": "`count.go`: um processador elimina a corrida de dados",
+        "why": "Uma corrida não precisa de dois processadores: goroutines se intercalam num só também, e o modelo de memória não abre exceção para isso."
+      },
+      {
+        "text": "`order.go`: as requisições serão respondidas em ordem",
+        "why": "Nada num processador só faz goroutines rodarem na ordem em que foram iniciadas."
+      }
+    ]
+  }
+}

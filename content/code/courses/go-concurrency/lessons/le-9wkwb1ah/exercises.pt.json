@@ -1,0 +1,335 @@
+{
+  "ex-dxkr6twd": {
+    "prompt": "Num teste guiado por tabela, quanto custa acrescentar um caso novo?",
+    "hint": "A lição 26 acrescentou dois casos ao `TestCount`.",
+    "choices": [
+      {
+        "text": "Uma nova função `Test` com a sua própria preparação",
+        "why": "É isso que a tabela substitui: a preparação é escrita uma vez, no laço."
+      },
+      {
+        "text": "Uma linha",
+        "why": "Isso. `only punctuation` e `digits` foram uma linha cada um."
+      },
+      {
+        "text": "Um subteste novo escrito à mão dentro do laço",
+        "why": "O laço chama `t.Run` uma vez por linha; nada é escrito dentro dele por caso."
+      },
+      {
+        "text": "Uma mudança nos campos da struct anônima",
+        "why": "Os campos só mudam quando um novo tipo de coisa passa a variar entre os casos."
+      }
+    ]
+  },
+  "ex-q6v24zaw": {
+    "prompt": "Por que a tabela compara o map inteiro com `maps.Equal` em vez de conferir algumas palavras, como a lição 25 fazia?",
+    "hint": "O que um `Count` que também produzisse um `fun.` perdido faria com cada tipo de conferência?",
+    "choices": [
+      {
+        "text": "Porque indexar um map num teste não é permitido",
+        "why": "A lição 25 indexou o map em toda conferência, e esses testes compilaram e rodaram."
+      },
+      {
+        "text": "Porque `maps.Equal` é mais rápido",
+        "why": "Velocidade não é a questão para maps de um punhado de palavras."
+      },
+      {
+        "text": "Pega uma palavra sobre a qual o teste não perguntou",
+        "why": "Isso. Conferir só `fun` aprova um map que também tem um `fun.` errado; comparar tudo não aprova."
+      },
+      {
+        "text": "Porque uma linha da tabela não pode ter mais de uma expectativa",
+        "why": "Uma linha pode ter quantos campos os casos precisarem."
+      }
+    ]
+  },
+  "ex-c14548d1": {
+    "prompt": "Um colega quer pôr o `TestCountFile` dentro da tabela do `TestCount` com uma coluna `file bool`. O que a lição diz contra isso?",
+    "hint": "Todas as linhas passam pelos mesmos passos?",
+    "choices": [
+      {
+        "text": "Um caso com passos próprios é um teste próprio",
+        "why": "Isso. Toda outra linha carregaria um campo que ignora, e o laço um `if` para um caso só."
+      },
+      {
+        "text": "Tabelas não podem conter campos `bool`",
+        "why": "Um campo de struct pode ser de qualquer tipo; a objeção é sobre passos, não sobre tipos."
+      },
+      {
+        "text": "`t.TempDir` não funciona dentro de um subteste da tabela",
+        "why": "Funciona em qualquer teste ou subteste; cada um ganha o seu diretório."
+      },
+      {
+        "text": "Arquivos são mais lentos de ler que strings",
+        "why": "O argumento da seção é sobre a forma do teste, não a velocidade."
+      }
+    ]
+  },
+  "ex-3za387j7": {
+    "prompt": "Antes do Go 1.22, um laço de tabela que iniciava closures copiava a linha antes com a linha `tc ___ tc`.",
+    "hint": "O operador de declaração curta de variável.",
+    "blanks": [
+      {
+        "accept": [
+          ":="
+        ]
+      }
+    ]
+  },
+  "ex-bhjpgqxd": {
+    "prompt": "Uma linha se chama `only punctuation`. Com que nome o relatório mostra o subteste dela?",
+    "hint": "Olhe a saída do `-v`.",
+    "choices": [
+      {
+        "text": "`TestCount/only punctuation`",
+        "why": "O espaço não sobrevive no nome relatado."
+      },
+      {
+        "text": "`TestCount/\"only punctuation\"`",
+        "why": "Nenhuma aspa é acrescentada; o nome é reescrito."
+      },
+      {
+        "text": "`TestCount/6`",
+        "why": "Linhas não são numeradas; o campo `name` é usado."
+      },
+      {
+        "text": "`TestCount/only_punctuation`",
+        "why": "Isso: o espaço vira sublinhado."
+      }
+    ]
+  },
+  "ex-kgqbjaw3": {
+    "prompt": "`go test -v -run 'TestCount/only punctuation'` também rodou o `TestCountFile` inteiro. Por quê?",
+    "hint": "Com o que casa o primeiro nível do padrão?",
+    "choices": [
+      {
+        "text": "Porque um espaço num padrão de `-run` casa com qualquer teste",
+        "why": "O espaço é reescrito para sublinhado e comparado normalmente; `only_punctuation` foi a única linha do `TestCount` que rodou."
+      },
+      {
+        "text": "O primeiro nível não está ancorado",
+        "why": "Isso, e o `TestCountFile` não tem subtestes para o segundo nível filtrar. `^TestCount$` resolve."
+      },
+      {
+        "text": "Porque o `go test` sempre roda todo teste que usa `t.TempDir`",
+        "why": "Nada no `t.TempDir` afeta quais testes são escolhidos."
+      },
+      {
+        "text": "Porque o `-v` desliga o `-run`",
+        "why": "O `-v` muda a saída, não a seleção; o `TestCount` rodou só uma linha."
+      }
+    ]
+  },
+  "ex-f8v3bkez": {
+    "prompt": "Por que `case 3` é um nome ruim para uma linha, além de não dizer nada sobre o caso?",
+    "hint": "O que acontece com os números quando uma linha é inserida acima dela?",
+    "choices": [
+      {
+        "text": "Dígitos não são permitidos em nomes de subteste",
+        "why": "São permitidos; o relatório imprimiria `TestCount/case_3`."
+      },
+      {
+        "text": "Nomes com números rodam em ordem numérica",
+        "why": "Subtestes rodam na ordem da tabela, sejam quais forem os nomes."
+      },
+      {
+        "text": "Uma inserção afasta os números das linhas",
+        "why": "Isso. Um nome preso à posição deixa de nomear o caso no dia em que a tabela muda."
+      },
+      {
+        "text": "Ele colide com `go test -count=3`",
+        "why": "O `-count` repete execuções; não tem nada a ver com nomes."
+      }
+    ]
+  },
+  "ex-jg8e8k4g": {
+    "prompt": "Um caso falha em máquinas sem rede e a causa está sendo trabalhada. Por que a lição prefere `t.Skip` a comentar a linha?",
+    "hint": "Qual dos dois ainda aparece em todo relatório?",
+    "choices": [
+      {
+        "text": "Uma linha comentada faz o arquivo não compilar",
+        "why": "Um comentário compila sem problema; é exatamente por isso que é fácil esquecê-lo."
+      },
+      {
+        "text": "Um skip fica no relatório, com o motivo",
+        "why": "Isso. Uma linha comentada some da vista de todos; um skip é relatado em toda execução."
+      },
+      {
+        "text": "`t.Skip` faz o teste passar, o que mantém o CI verde",
+        "why": "Ele encerra o teste como pulado, não como aprovado, e diz por quê."
+      },
+      {
+        "text": "`t.Skip` tenta o caso de novo até a rede voltar",
+        "why": "Ele não tenta nada de novo; encerra o teste ali."
+      }
+    ]
+  },
+  "ex-hqvx054s": {
+    "prompt": "Qual mensagem de falha segue a convenção de Go?",
+    "hint": "Chamada, depois o que ela devolveu, depois o que se queria.",
+    "choices": [
+      {
+        "text": "`wrong result`",
+        "why": "Não diz nem a chamada, nem a entrada, nem nenhum dos valores."
+      },
+      {
+        "text": "`expected 4 entries`",
+        "why": "Dá a expectativa sem o que voltou nem o que foi chamado."
+      },
+      {
+        "text": "`Top(counts, 4) = [{is 3} {go 3}], want [{go 3} {is 3}]`",
+        "why": "Isso: a chamada como foi feita, `=`, o que ela devolveu, `want` e a expectativa."
+      },
+      {
+        "text": "`want [{go 3} {is 3}] but got something else entirely`",
+        "why": "Sem o valor que voltou, quem lê tem de rodar o teste de novo para vê-lo."
+      }
+    ]
+  },
+  "ex-fn6pgzbe": {
+    "prompt": "Em vinte execuções do `TestTop` com defeito, em quantas a linha `first` falhou?",
+    "hint": "A contagem do `uniq -c` ao lado de `TestTop/first`.",
+    "unit": "execuções"
+  },
+  "ex-5b7qj8dk": {
+    "prompt": "Por que o `Top` com defeito devolvia palavras empatadas numa ordem diferente a cada execução?",
+    "hint": "De onde veio a ordem inicial do slice?",
+    "choices": [
+      {
+        "text": "`slices.SortFunc` embaralha a entrada antes de ordenar",
+        "why": "A ordenação é determinística para uma dada entrada; a própria entrada mudou."
+      },
+      {
+        "text": "A ordem do map é aleatória e os empates a mantinham",
+        "why": "Isso. Empates mantinham a ordem que o map produzia, e essa ordem muda de propósito."
+      },
+      {
+        "text": "As goroutines de `Top` competiam",
+        "why": "`Top` não inicia goroutine nenhuma."
+      },
+      {
+        "text": "`cmp.Compare` devolve um sinal aleatório para valores iguais",
+        "why": "Ele devolve 0 para valores iguais, e a ordenação fica livre para manter a ordem que a entrada tinha."
+      }
+    ]
+  },
+  "ex-mxb2zw8m": {
+    "prompt": "Você roda `go test .` duas vezes e a segunda imprime `(cached)`. Depois muda um arquivo que o `Count` lê do disco, fora do pacote. O que faz um terceiro `go test .`?",
+    "hint": "O cache é indexado pelo código e pelo teste. Do que mais um teste poderia depender?",
+    "choices": [
+      {
+        "text": "Ele falha, porque o cache detecta qualquer arquivo alterado na máquina",
+        "why": "A lição diz que o cache acompanha o código e o teste, não todo arquivo da máquina."
+      },
+      {
+        "text": "Ele se recusa a rodar até usarem `go clean`",
+        "why": "Nada se recusa; uma aprovação em cache só é repetida."
+      },
+      {
+        "text": "Ele roda de novo, porque uma terceira execução sempre ignora o cache",
+        "why": "Não existe essa regra; o cache é repetido enquanto código e teste não mudarem."
+      },
+      {
+        "text": "Repete a aprovação do cache; `-count=1` a rodaria de novo",
+        "why": "Isso. Um teste que depende de algo fora do pacote é exatamente quando usar `-count=1`."
+      }
+    ]
+  },
+  "ex-gahc18gv": {
+    "prompt": "Associe cada comparação ao que ela serve.",
+    "hint": "Três vêm de pacotes, uma é um operador.",
+    "pairs": [
+      {
+        "left": "`maps.Equal`",
+        "right": "dois maps com valores comparáveis"
+      },
+      {
+        "left": "`slices.Equal`",
+        "right": "dois slices, elemento a elemento"
+      },
+      {
+        "left": "`reflect.DeepEqual`",
+        "right": "quaisquer dois valores, inclusive aninhados"
+      },
+      {
+        "left": "`==`",
+        "right": "uma struct cujos campos são todos comparáveis"
+      }
+    ],
+    "right_distractors": [
+      "a visão de duas goroutines sobre uma variável"
+    ]
+  },
+  "ex-cxq13b60": {
+    "prompt": "Ponha as partes de uma mensagem de falha de Go na ordem convencional.",
+    "hint": "Ela se lê como a própria chamada.",
+    "items": [
+      "a chamada com os argumentos",
+      "`=`",
+      "o que ela devolveu",
+      "`want`",
+      "o valor esperado"
+    ]
+  },
+  "ex-e06snym7": {
+    "prompt": "Um teste de tabela passa no seu notebook e falha uma vez em dez no CI, sempre numa linha cujo slice esperado veio de um map. Qual é a primeira coisa a suspeitar?",
+    "hint": "A lição 26 encontrou exatamente essa forma.",
+    "choices": [
+      {
+        "text": "A máquina de CI tem outro número de processadores",
+        "why": "Nada no percurso de um map depende de processadores; o embaralhamento é por execução, em qualquer máquina."
+      },
+      {
+        "text": "Uma ordem que vem de percorrer um map, que Go embaralha",
+        "why": "Isso. Ela muda entre execuções idênticas; ou o código impõe uma ordem, ou o teste deixa de depender de uma."
+      },
+      {
+        "text": "Um resultado `(cached)` antigo no notebook",
+        "why": "Um cache mostraria o mesmo veredito toda vez, não uma falha em dez no CI."
+      },
+      {
+        "text": "Um `t.Helper()` faltando no laço",
+        "why": "O `t.Helper` muda qual linha uma falha nomeia, não se ela acontece."
+      }
+    ]
+  },
+  "ex-7mkt9ygj": {
+    "prompt": "Quais destes cabem na tabela, como linhas do `TestCount`? Escolha todos os que se aplicam.",
+    "hint": "Uma linha passa pelos mesmos passos que as outras.",
+    "choices": [
+      {
+        "text": "Um texto com uma tabulação entre duas palavras",
+        "why": "Sim: outra entrada e o seu map esperado."
+      },
+      {
+        "text": "Um texto em português com `não` e `NÃO`",
+        "why": "Sim: mesmos passos, dados diferentes."
+      },
+      {
+        "text": "Contar um arquivo que não existe",
+        "why": "Isso precisa de sistema de arquivos e de conferência de erro, que é o trabalho do `TestCountFile`."
+      },
+      {
+        "text": "Conferir que `Top` devolve empates em ordem alfabética",
+        "why": "Outra função, outros passos: isso é o `TestTop`."
+      }
+    ]
+  },
+  "ex-2z0zn0bv": {
+    "prompt": "Quantas linhas a tabela do `TestCount` tem no fim da lição 26?",
+    "hint": "Os cinco casos da lição 25, mais os dois novos.",
+    "unit": "linhas"
+  },
+  "ex-mfb268fq": {
+    "prompt": "Para forçar o `go test` a rodar um teste de novo em vez de repetir uma aprovação em cache, a flag usual é ___.",
+    "hint": "Uma contagem de um.",
+    "blanks": [
+      {
+        "accept": [
+          "-count=1",
+          "-count 1"
+        ]
+      }
+    ]
+  }
+}

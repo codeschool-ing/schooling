@@ -1,0 +1,480 @@
+[
+  {
+    "id": "ex-xez3wbkk",
+    "version": 1,
+    "section": "spreading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `spread.go`, three workers range over the same channel `jobs`. How many workers receive job 5?",
+    "hint": "Count how often each number appears across the three lists.",
+    "choices": [
+      {
+        "text": "All three, and the fastest result is kept",
+        "correct": false,
+        "why": "Each number appeared once across the lists. A channel gives each value to one receiver."
+      },
+      {
+        "text": "Exactly one",
+        "correct": true,
+        "why": "Right. A value sent on a channel is received once, by whichever goroutine gets it."
+      },
+      {
+        "text": "Two, so that one can take over if the other fails",
+        "correct": false,
+        "why": "Nothing in a channel duplicates a value; redundancy would have to be built by hand."
+      },
+      {
+        "text": "w2, because jobs are dealt in turn",
+        "correct": false,
+        "why": "Nobody deals: in the two runs job 5 went to w1, and the lists did not follow turns."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8ww9yhs",
+    "version": 1,
+    "section": "spreading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Between the two runs of `spread.go`, the jobs each worker took changed. Why?",
+    "hint": "When does a worker ask for its next job?",
+    "choices": [
+      {
+        "text": "The channel shuffles values before delivering them",
+        "correct": false,
+        "why": "A channel delivers in the order values were sent; who receives each one is what varies."
+      },
+      {
+        "text": "Go assigns jobs to workers by a random number",
+        "correct": false,
+        "why": "No assignment happens; each worker takes the next job when it is free."
+      },
+      {
+        "text": "Each takes the next job when it is free",
+        "correct": true,
+        "why": "Right. The split follows speed, which is why it is not the same from run to run."
+      },
+      {
+        "text": "The second run had fewer processors",
+        "correct": false,
+        "why": "Both ran on the same four-processor machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-2je2d6zm",
+    "version": 1,
+    "section": "spreading",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`spread.go` gave three workers 300 ms of work in total. Divided perfectly, how many milliseconds would it take? The run took 120.",
+    "hint": "300 divided among three.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-ewvwjnyy",
+    "version": 1,
+    "section": "spreading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague changes `spread.go` so that each worker closes `jobs` when it sees the channel is empty. What goes wrong?",
+    "hint": "Who knows that sending is over?",
+    "choices": [
+      {
+        "text": "A later send from `main` panics",
+        "correct": true,
+        "why": "Right. An empty channel is not a finished one; only the sender knows when it has sent the last job, as lesson 3 put it."
+      },
+      {
+        "text": "Nothing, as long as only one worker closes it",
+        "correct": false,
+        "why": "Even one early close breaks the next send from `main`."
+      },
+      {
+        "text": "The other workers keep waiting for ever",
+        "correct": false,
+        "why": "Closing ends every `range` over the channel; waiting is not the failure here."
+      },
+      {
+        "text": "The jobs are done twice",
+        "correct": false,
+        "why": "A channel still delivers each value once, closed or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvq67z8r",
+    "version": 1,
+    "section": "ordering-results",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`arrival.go` measured `concurrency is not parallelism` and printed `is` first. Why?",
+    "hint": "A longer word takes longer to measure.",
+    "choices": [
+      {
+        "text": "Its goroutine was started first",
+        "correct": false,
+        "why": "`concurrency` was started first, at index 0, and printed third."
+      },
+      {
+        "text": "The channel sorts results by size",
+        "correct": false,
+        "why": "A channel delivers in the order values were sent, and nothing sorts them."
+      },
+      {
+        "text": "`main` prints the shortest word first",
+        "correct": false,
+        "why": "`main` prints whatever arrives; it does no comparing."
+      },
+      {
+        "text": "Its job finished first",
+        "correct": true,
+        "why": "Right. Results arrive in the order the work finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-m39fza5g",
+    "version": 1,
+    "section": "ordering-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`inplace.go` has four goroutines writing into one slice at the same moment, and `-race` reported nothing. Why is it not a race?",
+    "hint": "What memory does each goroutine touch?",
+    "choices": [
+      {
+        "text": "Slices are safe for concurrent use",
+        "correct": false,
+        "why": "They are not: `append` from several goroutines races, as lesson 16 shows."
+      },
+      {
+        "text": "Each writes only its own element",
+        "correct": true,
+        "why": "Right, and `main` reads only after `wg.Wait`."
+      },
+      {
+        "text": "The race detector skips slices",
+        "correct": false,
+        "why": "It watches slice elements like any memory."
+      },
+      {
+        "text": "The writes were too quick to overlap",
+        "correct": false,
+        "why": "Speed does not make a race safe; separate memory does."
+      }
+    ]
+  },
+  {
+    "id": "ex-hy0d8sy8",
+    "version": 1,
+    "section": "ordering-results",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Results of a fan-out must feed a further stage in the input's order, and the stage reads from a channel. Which fix fits?",
+    "hint": "One of the two fixes keeps the channel.",
+    "choices": [
+      {
+        "text": "Write into a slice by index and skip the channel",
+        "correct": false,
+        "why": "That gives order only once everything is done, and the next stage wants a channel."
+      },
+      {
+        "text": "Use a single worker so results come in order",
+        "correct": false,
+        "why": "It restores order by giving up the fan-out, which was the point."
+      },
+      {
+        "text": "Carry an index in each result",
+        "correct": true,
+        "why": "Right. The receiver can put each result back in place and pass them on in order."
+      },
+      {
+        "text": "Add `time.Sleep` so earlier jobs finish first",
+        "correct": false,
+        "why": "A sleep is timing, not order; lesson 1 showed it promises nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-arhbjzmj",
+    "version": 1,
+    "section": "ordering-results",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Several goroutines calling ___ on one shared slice is a race, because they all read and write its length.",
+    "hint": "The built-in that grows a slice.",
+    "blanks": [
+      {
+        "accept": [
+          "append",
+          "append()"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-asgmz4zf",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `firsterr.go`, what does `context.Cause(ctx)` return that `ctx.Err()` does not?",
+    "hint": "Compare `cancel()` with `cancel(err)`.",
+    "choices": [
+      {
+        "text": "How long the context lived",
+        "correct": false,
+        "why": "Neither reports a duration."
+      },
+      {
+        "text": "The error passed to `cancel(err)`",
+        "correct": true,
+        "why": "Right: `file 4: checksum mismatch`, where `ctx.Err()` only says `context canceled`."
+      },
+      {
+        "text": "Every error the workers collected",
+        "correct": false,
+        "why": "That is `errors.Join` of the collected list; the cause is one error, the first."
+      },
+      {
+        "text": "The goroutine that cancelled the context",
+        "correct": false,
+        "why": "Contexts record no goroutine; the cause is an error value."
+      }
+    ]
+  },
+  {
+    "id": "ex-z6s5zny0",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Files 3 and 4 were both damaged, and both errors were printed although the first one cancelled the context. Why was the second not prevented?",
+    "hint": "When does `check` look at the context?",
+    "choices": [
+      {
+        "text": "Both files were already being read when the cancel came",
+        "correct": true,
+        "why": "Right. `check` looks before it starts, so work in flight finishes and its error is kept."
+      },
+      {
+        "text": "`cancel(err)` takes 20 ms to reach other goroutines",
+        "correct": false,
+        "why": "Cancelling is immediate; the second check had simply started already."
+      },
+      {
+        "text": "`WithCancelCause` ignores the first cancel",
+        "correct": false,
+        "why": "It is the later calls that change nothing; the first sets the cause."
+      },
+      {
+        "text": "The feeding loop sent file 4 after the cancel",
+        "correct": false,
+        "why": "Files 1 to 4 went out in the first wave, before any failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqrrnxy6",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a worker in `firsterr.go` skip an error that `errors.Is(err, context.Canceled)` recognises?",
+    "hint": "Is a cancellation one of the failures being reported?",
+    "choices": [
+      {
+        "text": "Cancelled errors cannot be joined",
+        "correct": false,
+        "why": "`errors.Join` accepts any error."
+      },
+      {
+        "text": "To keep the count of clean files right",
+        "correct": false,
+        "why": "Skipping with `continue` also skips the count; the reason is what the error list should say."
+      },
+      {
+        "text": "It is a consequence of a failure, not one",
+        "correct": true,
+        "why": "Right. Listing it would bury the damaged files under lines saying `context canceled`."
+      },
+      {
+        "text": "Because `check` returns it as a panic",
+        "correct": false,
+        "why": "`check` returns `ctx.Err()` as an ordinary error."
+      }
+    ]
+  },
+  {
+    "id": "ex-72tahj98",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The feeding loop in `firsterr.go` sends with `select { case files <- f: case <-ctx.Done(): break feed }`. What would a plain `files <- f` risk once the workers stop taking files?",
+    "hint": "Do the workers stop reading the channel after the cancel?",
+    "choices": [
+      {
+        "text": "A panic, because the context closes `files`",
+        "correct": false,
+        "why": "A context closes nothing but its own `Done` channel."
+      },
+      {
+        "text": "Nothing here, but it would hand out files nobody checks",
+        "correct": false,
+        "why": "That is part of it: the workers here still drain the channel, skipping each file, so the loop would feed all twenty for nothing."
+      },
+      {
+        "text": "`main` would sit blocked on its send for ever",
+        "correct": true,
+        "why": "Right. A send needs a receiver; the `select` gives `main` a way out, the leak lesson 6 described."
+      },
+      {
+        "text": "The files would be sent in the wrong order",
+        "correct": false,
+        "why": "The loop sends in order either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-chxpdn1w",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `firsterr.go` in order, from the first failure to the final report.",
+    "hint": "The cause is set by the first failure, the list is printed last.",
+    "items": [
+      "a worker's check of a damaged file fails",
+      "that worker calls `cancel(err)`",
+      "the feeding loop stops and closes `files`",
+      "`wg.Wait` returns",
+      "`errors.Join` prints every real failure"
+    ]
+  },
+  {
+    "id": "ex-qrrmxpr0",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem of a fan-out with the tool this lesson used for it.",
+    "hint": "One per section.",
+    "pairs": [
+      {
+        "left": "results arrive in finishing order",
+        "right": "an index carried in each result"
+      },
+      {
+        "left": "stop the rest at the first failure",
+        "right": "`context.WithCancelCause`"
+      },
+      {
+        "left": "keep every failure that happened",
+        "right": "`errors.Join`"
+      },
+      {
+        "left": "tell the workers there is no more work",
+        "right": "`close(jobs)` by the sender"
+      }
+    ],
+    "right_distractors": [
+      "a `time.Sleep` between sends"
+    ]
+  },
+  {
+    "id": "ex-t9g0wz98",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of fan-out as `spread.go` builds it? Choose all that apply.",
+    "hint": "Think of what the channel guarantees and what it leaves to timing.",
+    "choices": [
+      {
+        "text": "No job is done twice",
+        "correct": true,
+        "why": "Yes: each value is received once."
+      },
+      {
+        "text": "Each worker gets the same number of jobs",
+        "correct": false,
+        "why": "The lists had three, four and five jobs."
+      },
+      {
+        "text": "A faster worker ends up doing more jobs",
+        "correct": true,
+        "why": "Yes: it comes back to the channel sooner."
+      },
+      {
+        "text": "The results come back in the order the jobs were sent",
+        "correct": false,
+        "why": "They come back in finishing order, as section 03 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mdexn3w",
+    "version": 1,
+    "section": "errors",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the run of `firsterr.go` the lesson quotes, how many of the 20 files were checked cleanly before the first failure stopped the rest?",
+    "hint": "The first line of the output; other runs printed a different number.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "files"
+  },
+  {
+    "id": "ex-e31yk8rg",
+    "version": 1,
+    "section": "spreading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Three workers shared 300 ms of jobs in `spread.go`, and the run took 120 ms rather than 100. Where did the extra 20 ms come from?",
+    "hint": "Can the last job be split between two workers?",
+    "choices": [
+      {
+        "text": "Starting three goroutines costs about 20 ms",
+        "correct": false,
+        "why": "Starting a goroutine costs far less than a millisecond; lesson 2 measures it."
+      },
+      {
+        "text": "Jobs are indivisible, so some worker finishes last",
+        "correct": true,
+        "why": "Right. The work cannot be cut into exact thirds, so the run lasts as long as the busiest worker."
+      },
+      {
+        "text": "The mutex around `took` serialised the jobs",
+        "correct": false,
+        "why": "The lock covers one `append`, a tiny part of each job; the sleeps ran in parallel."
+      },
+      {
+        "text": "The channel is unbuffered, so each send waits 20 ms",
+        "correct": false,
+        "why": "An unbuffered send waits for a receiver, not for a fixed time."
+      }
+    ]
+  }
+]
