@@ -61,14 +61,29 @@ Spring creates the object with the constructor Java writes when a class declares
 compiles:
 
 ```
-!!! MISSING BLOCK field-a
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep Catalogue
+2026-10-22T19:16:20.473-03:00  INFO 16202 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
+ana@vm:~/bookshop$ java -cp target/classes:$(cat target/classpath.txt) ~/Wiring.java
+/home/ana/Wiring.java:9: error: constructor BookService in class BookService cannot be applied to given types;
+    var service = new BookService(repository);
+                  ^
+  required: no arguments
+  found:    InMemoryBookRepository
+  reason: actual and formal argument lists differ in length
+1 error
+error: compilation failed
 ```
 
 The class has no constructor that takes a repository any more. The obvious repair, `new
 BookService()`, compiles and fails somewhere else:
 
 ```
-!!! MISSING BLOCK field-b
+ana@vm:~/bookshop$ sed -i 's/new BookService(repository)/new BookService()/' ~/Wiring.java
+ana@vm:~/bookshop$ java -cp target/classes:$(cat target/classpath.txt) ~/Wiring.java
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke "com.example.bookshop.catalogue.BookRepository.findAll()" because "this.books" is null
+	at com.example.bookshop.catalogue.BookService.list(BookService.java:16)
+	at com.example.bookshop.catalogue.CatalogueReport.run(CatalogueReport.java:27)
+	at Wiring.main(Wiring.java:12)
 ```
 
 That `NullPointerException` is the cost. The object exists without its dependency, and nothing

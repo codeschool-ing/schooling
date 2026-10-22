@@ -154,7 +154,7 @@ spring.jpa.open-in-view=false
 
 Duas linhas são novas. **`spring.jpa.hibernate.ddl-auto=none`** impede o Hibernate de mexer nas
 tabelas. Ele sabe criá-las a partir das entidades (`create`) ou alterá-las para bater com elas
-(`update`), e as duas opções são tentadoras no primeiro dia, mas aí o esquema passa a ser o que o Java
+(`update`). As duas opções são tentadoras no primeiro dia, e aí o esquema passa a ser o que o Java
 diz naquela manhã, sem registro de como chegou ali. Aqui quem manda nas tabelas é o `schema.sql`, e a
 aula 13 as entrega a uma ferramenta de migração. **`spring.jpa.open-in-view=false`** ganha a última
 seção inteira.

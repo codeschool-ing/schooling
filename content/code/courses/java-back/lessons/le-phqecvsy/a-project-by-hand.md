@@ -97,4 +97,27 @@ class IsbnCheckTest {
 }
 ```
 
-@@CAPTURE project@@
+## The first build
+
+Three files, each in the place the layout reserves for it:
+
+@@CAPTURE find@@
+
+`mvn compile` is the first build, run in the directory that holds `pom.xml`:
+
+@@CAPTURE compile@@
+
+Maven read the pom, found one source file where the layout says the program is, and compiled it
+for Java 25 (`release 25`) into `target/classes`. Two plugins ran, each named with its version, and
+the section on the lifecycle reads lines like these properly. The resources plugin had nothing to
+do, since this project has no `src/main/resources`, and said so.
+
+Nothing was downloaded, because these transcripts were recorded on a machine whose cache was
+already full. On your first build the screen fills with `Downloading from central` lines before
+any of this, one for every jar and pom Maven had never seen, and that happens once per version of
+each file. The section on repositories says where they go.
+
+@@CAPTURE classes@@
+
+**`target/` belongs to Maven**: everything a build produces goes there, and nothing in it is yours
+to edit, because the next build overwrites it.

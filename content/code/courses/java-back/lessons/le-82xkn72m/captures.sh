@@ -86,12 +86,12 @@ run "curl -s -w '\n' localhost:8080/books/2"
 stop
 
 # ---------------------------------------------------------------- the proxy
-start "$TX"
+start --spring.profiles.active=sql "$TX"
 block txorder
 run "$(order ana "$(line 1 1),$(line 3 2)")"
 sleep 1
 block txlog
-applog "$TX" 'Creating new|Participating|rollback|Committing'
+applog "--spring.profiles.active=sql $TX" 'Creating new|Participating|rollback|Committing|org.hibernate.SQL'
 stop
 
 # the detour: self-invocation

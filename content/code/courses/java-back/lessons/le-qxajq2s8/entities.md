@@ -108,7 +108,7 @@ else. The first time code calls a method on it that needs data, such as `getName
 the database for the row.
 
 That one decision is behind the two problems in the rest of this lesson. A proxy that loads itself
-is a query nobody wrote, which is where the N+1 problem comes from; and a proxy that tries to load
+is a query nobody wrote, which is where the N+1 problem comes from. And a proxy that tries to load
 itself after its connection to the database is gone throws instead, which is the last section.
 
 ## What is not here

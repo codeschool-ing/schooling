@@ -55,7 +55,7 @@ por `EAGER` em `Book`, recompile, suba de novo e peça a lista outra vez:
 ```
 
 Os mesmos cinco comandos. O `EAGER` decide que o autor é carregado *junto* com o livro, mas uma
-consulta JPQL é traduzida como foi escrita, e esta não cita autor nenhum; então o Hibernate a roda,
+consulta JPQL é traduzida como foi escrita, e esta não cita autor nenhum. Então o Hibernate a roda,
 encontra seis livros cujos autores prometeu carregar e os carrega um a um, na hora em vez de depois.
 Onde o `EAGER` ajuda é no `find`, que o próprio Hibernate escreve e pode fazer com join. Um livro agora
 é um comando só:

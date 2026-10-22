@@ -36,7 +36,7 @@ spring.jpa.open-in-view=false
 bookshop.jwt.secret=${BOOKSHOP_JWT_SECRET}
 bookshop.jwt.lifetime=15m
 
-logging.pattern.correlation=[%X{requestId:-}]
+logging.pattern.correlation=[%X{requestId:-}] 
 ```
 
 And replace `src/main/java/com/example/bookshop/ordering/OrderService.java`, which until now placed

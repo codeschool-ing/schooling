@@ -40,7 +40,11 @@
 source "$(dirname "$0")/../../capture.sh"
 cd "$(dirname "$0")"
 LESSON=$(pwd)
-PROXY='https_proxy=http://127.0.0.1:40917'
+# The sandbox's proxy, wherever it listens today (its port changes when the
+# machine restarts).
+PROXY_URL=${HTTPS_PROXY:-${https_proxy:?the sandbox proxy is not set}}
+PROXY_PORT=${PROXY_URL##*:}; PROXY_PORT=${PROXY_PORT%/}
+PROXY="https_proxy=$PROXY_URL"
 
 # The build script the lesson shows as an annotated example, written as ana:
 # the parts joined with newlines, as the copy button joins them.
@@ -70,9 +74,9 @@ PY
 quiet 'cd ~/isbn-gradle 2>/dev/null && ./gradlew --stop'
 quiet 'rm -rf ~/isbn-check ~/isbn-gradle ~/opt ~/gradle-9.8.1-bin.zip ~/.gradle'
 asroot "cp -a '$COURSE/lab/projects/isbn-check' /home/ana/isbn-check && chown -R ana:ana /home/ana/isbn-check"
-put .gradle/gradle.properties <<'EOF'
+put .gradle/gradle.properties <<EOF
 systemProp.https.proxyHost=127.0.0.1
-systemProp.https.proxyPort=40917
+systemProp.https.proxyPort=$PROXY_PORT
 systemProp.http.nonProxyHosts=localhost|127.0.0.1
 EOF
 put .gradle/init.d/central-mirror.init.gradle.kts <<'EOF'

@@ -5,8 +5,8 @@ version: 1
 
 A lazy author can load itself only while the persistence context that produced it is open. Read it
 after that and Hibernate does not quietly run the query anyway: it throws a
-**`LazyInitializationException`**. Every Hibernate developer meets it, and the usual first reaction
-is to make it go away rather than to read it.
+**`LazyInitializationException`**. It names the entity and the id it could not
+load, and its last two words say why.
 
 ## Making it happen
 

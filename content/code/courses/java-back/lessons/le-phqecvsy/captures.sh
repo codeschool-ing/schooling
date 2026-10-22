@@ -108,7 +108,7 @@ block old-jdk-build
 quiet 'mv ~/.mavenrc ~/.mavenrc.lab'
 EXTRA_ENV='JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' run 'mvn -q clean compile'
 quiet 'mv ~/.mavenrc.lab ~/.mavenrc'
-run 'mvn -q compile'
+EXTRA_ENV='JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' run 'unset JAVA_HOME; mvn -q compile && echo compiled'
 
 block tree
 run 'mvn dependency:tree'
@@ -124,8 +124,8 @@ run 'ls ~/.m2/repository/com/example/isbn-check/1.0.0'
 block defaults
 run 'cp pom.xml pom.xml.keep'
 run "sed -i '/<build>/,/<\\/build>/d' pom.xml"
-run 'mvn -q package'
-run "mvn package -Dmaven.compiler.source=25 -Dmaven.compiler.target=25 | grep -E 'plugin:|Tests run|BUILD'"
+run 'mvn -q clean package'
+run "mvn clean package -Dmaven.compiler.source=25 -Dmaven.compiler.target=25 | grep -E 'plugin:|Tests run|BUILD'"
 run 'mv pom.xml.keep pom.xml'
 
 block pin
@@ -144,6 +144,6 @@ run 'mvn dependency:tree | grep maven-dependency-plugin'
 block run
 run 'jar tf target/isbn-check-1.0.0.jar'
 run 'java -cp target/isbn-check-1.0.0.jar com.example.isbn.IsbnCheck 978-0-306-40615-7'
-run 'mvn -q dependency:build-classpath -Dmdep.includeScope=runtime -Dmdep.outputFile=classpath.txt'
-run "tr ':' '\\n' < classpath.txt"
+run 'mvn -q dependency:build-classpath -DincludeScope=runtime -Dmdep.outputFile=classpath.txt'
+run "tr ':' '\\n' < classpath.txt; echo"
 run 'java -cp target/isbn-check-1.0.0.jar:$(cat classpath.txt) com.example.isbn.IsbnCheck 978-0-306-40615-7 0-306-40615-2 978-0-306-40615-8'

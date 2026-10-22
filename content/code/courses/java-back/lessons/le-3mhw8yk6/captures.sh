@@ -8,10 +8,13 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo bash captures.sh
 #
-# What is STAGED rather than typed: ~/bookshop as this lesson leaves it (the
-# stage of le-3mhw8yk6: RequestIdFilter, the correlation pattern, the log line
+# What is STAGED rather than typed: ~/bookshop as this lesson leaves it, laid
+# whole before the first command, so the first build already holds all four
+# changes the lesson makes one section at a time (none of them writes a line
+# at start-up, and `mvn -q package` prints nothing either way). The stage of
+# le-3mhw8yk6 is: RequestIdFilter, the correlation pattern, the log line
 # in OrderService and application-json.properties, each shown whole in the
-# lesson and checked below with `shown`), and a fresh bookshop database, so
+# lesson and checked below with `shown`; and a fresh bookshop database, so
 # the order ids start at 1 where a student's do not. BOOKSHOP_JWT_SECRET is a
 # fixed value here; the student exported a random one in lesson 15.
 #
@@ -65,8 +68,6 @@ db
 
 # ---------------------------------------------------------------- the facade
 at '~/bookshop'
-block build
-run 'mvn -q package'
 block tree
 run 'mvn dependency:tree -Dincludes=org.slf4j,ch.qos.logback,org.apache.logging.log4j,commons-logging,org.jboss.logging'
 
@@ -85,6 +86,8 @@ run 'java -cp "$(cat cp.txt)" Hello.java'
 
 # ------------------------------------------------------- levels in the bookshop
 at '~/bookshop'
+block build
+run 'mvn -q package'
 block default
 launch
 run "grep -E 'Starting Bookshop|Started|Catalogue' app.log"
@@ -99,6 +102,8 @@ run 'grep INFO app.log'
 halt
 
 # ---------------------------------------------------------------- request ids
+block build-again
+run 'mvn -q package'
 block ids
 launch
 run "curl -si localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'"
@@ -144,4 +149,7 @@ run "for p in logback log4j2 tinylog; do mvn -q dependency:build-classpath -Dmde
 
 # ------------------------------------------------- what the lesson shows, byte for byte
 block shown
-#SHOWN
+shown levels-and-messages.md src/main/resources/application.properties src/main/java/com/example/bookshop/ordering/OrderService.java
+shown request-ids.md src/main/java/com/example/bookshop/web/RequestIdFilter.java
+shown structured-logs.md src/main/resources/application-json.properties
+echo 'every file shown is the file built'

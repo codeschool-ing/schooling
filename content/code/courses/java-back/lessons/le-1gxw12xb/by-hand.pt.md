@@ -241,7 +241,10 @@ saída de progresso, e `-q` o mantém calado a menos que algo falhe. Depois, o o
 e o comando `java` o lê de volta com `$(cat ...)`:
 
 ```
-!!! MISSING BLOCK by-hand
+ana@vm:~/bookshop$ mvn -B -q package
+ana@vm:~/bookshop$ mvn -B -q dependency:build-classpath -Dmdep.outputFile=target/classpath.txt
+ana@vm:~/bookshop$ java -cp target/classes:$(cat target/classpath.txt) ~/Wiring.java
+19:16:14.569 [main] INFO com.example.bookshop.catalogue.CatalogueReport -- Catalogue opened on 2026-10-22 with 3 books
 ```
 
 O relatório rodou e contou três livros. Os jars do Spring estavam no class path e o Spring nunca

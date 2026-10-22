@@ -54,14 +54,28 @@ directly, by type. Ordinary code should not need to: a class that looks its depe
 back to fetching them. Here it is the quickest way to ask twice.
 
 ```
-!!! MISSING BLOCK scope
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep -E 'Catalogue|object'
+asked twice, the same object: true
+the injected one is the same object: true
+2026-10-22T19:17:05.652-03:00  INFO 18250 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
 ```
 
 Now make `BookService` a **prototype**, a bean created anew every time it is asked for. Add
 `@Scope("prototype")` under `@Service`, with its import:
 
 ```
-!!! MISSING BLOCK prototype
+ana@vm:~/bookshop$ sed -n '6,12p' src/main/java/com/example/bookshop/catalogue/BookService.java
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+@Service
+@Scope("prototype")
+public class BookService {
+
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep -E 'Catalogue|object'
+2026-10-22T19:17:08.938-03:00  INFO 18369 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
+asked twice, the same object: false
+the injected one is the same object: false
 ```
 
 Both comparisons turned false. Each `getBean` built a new `BookService`, and so did the constructor

@@ -223,7 +223,7 @@ Build, and start the application in a second terminal with `java -jar target/boo
 ana@vm:~/bookshop$ mvn -q package
 ```
 
-The catalogue report from lesson 5 runs at start-up and calls `list()`, so its line in the second
+`-q` keeps Maven quiet, so a build that prints nothing is a build that worked. The catalogue report from lesson 5 runs at start-up and calls `list()`, so its line in the second
 terminal is the first sign the mapper works:
 
 ```

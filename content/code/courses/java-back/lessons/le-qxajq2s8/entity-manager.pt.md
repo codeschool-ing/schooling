@@ -223,7 +223,7 @@ Compile, e suba a aplicação num segundo terminal com `java -jar target/booksho
 ana@vm:~/bookshop$ mvn -q package
 ```
 
-O relatório do catálogo da aula 5 roda na inicialização e chama `list()`, então a linha dele no
+O `-q` deixa o Maven em silêncio, então um build que não imprime nada é um build que deu certo. O relatório do catálogo da aula 5 roda na inicialização e chama `list()`, então a linha dele no
 segundo terminal é o primeiro sinal de que o mapeador funciona:
 
 ```

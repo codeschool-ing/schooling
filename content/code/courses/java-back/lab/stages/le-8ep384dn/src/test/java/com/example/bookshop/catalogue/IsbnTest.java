@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class IsbnTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"9786500000016", "9786500000023", "9780306406157"})
+    @ValueSource(strings = {"9786500000016", "9786500000023", "9786500000030", "9780306406157"})
     void acceptsAValidIsbn13(String isbn) {
         assertTrue(Isbn.isValid(isbn));
     }

@@ -52,9 +52,6 @@ run 'export BOOKSHOP_JWT_SECRET=$(openssl rand -base64 32); echo ${#BOOKSHOP_JWT
 
 block filter-list
 EXTRA_ENV="$SECRET" run "timeout 40 java -jar target/bookshop-0.1.0.jar --logging.level.org.springframework.security.web.DefaultSecurityFilterChain=debug | grep -o 'Will secure .*' | tr ',' '\\n' | sed 's/^ *//'"
-block filter-raw
-EXTRA_ENV="$SECRET" run "timeout 40 java -jar target/bookshop-0.1.0.jar --logging.level.org.springframework.security.web.DefaultSecurityFilterChain=debug | grep DefaultSecurityFilterChain | cut -c1-3000"
-
 EXTRA_ENV="$SECRET" start
 block wrong-password
 run "curl -s -o /dev/null -w '%{http_code}\n' -u ana:wrong -X POST localhost:8080/auth/token"
@@ -118,6 +115,7 @@ stop
 stage le-pgz0jxe9
 block hash
 run 'mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt'
+run 'cd'
 at '~'
 take passwords.md 'import org.springframework.security.crypto' HashPassword.java
 run 'java -cp "$(cat bookshop/cp.txt)" HashPassword.java ana-reads-books'

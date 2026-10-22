@@ -57,7 +57,7 @@ is not. Change `LAZY` to `EAGER` in `Book`, rebuild, restart, and ask for the li
 ```
 
 The same five statements. `EAGER` decides that the author is loaded *with* the book, but a JPQL
-query is translated as written, and this one names no author; so Hibernate runs it, finds six books
+query is translated as written, and this one names no author. So Hibernate runs it, finds six books
 whose authors it promised to load, and loads them one by one, straight away instead of later. Where
 `EAGER` does help is `find`, which Hibernate writes itself and can join. One book is now one
 statement:

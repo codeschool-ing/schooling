@@ -30,7 +30,37 @@ place it fails before Maven even starts:
 
 @@CAPTURE oldjdk@@
 
-@@OLDJDK-PROSE@@
+`JAVA_HOME` names JDK 21, so `mvn` started Java 21 with the flag from `~/.mavenrc`, and JDK 21
+does not know that flag: **the JVM refused to start**, before Maven could print anything of its own.
+The same JDK without the `~/.mavenrc` line gets further, into a project, and fails at the compiler,
+which cannot produce the Java 25 classes the pom asks for:
+
+@@CAPTURE oldjdk-build@@
+
+Two different sentences, one cause. The fix is to stop pointing at the old JDK. If the variable is
+set in `~/.bashrc`, delete that line and open a new terminal; for the terminal you are in, `unset`
+removes it, and Maven falls back to the `java` on your path:
+
+@@CAPTURE oldjdk-fix@@
+
+If something you use really needs `JAVA_HOME`, set it to `/usr/lib/jvm/java-25-openjdk-amd64`
+instead of removing it.
+
+The other place is the `java` on your path. When `JAVA_HOME` is not set and `java -version` still
+says 21, Ubuntu's alternatives point the `java` command at the older JDK. This lists the JDKs it
+knows, with the one ending in `25` as the second line here:
+
+@@CAPTURE alternatives@@
+
+and this makes JDK 25 the one every `java`, `javac` and `mvn` on the machine uses. It asks for your
+password and changes the default for every user of the machine, which is why the transcripts of
+this course show it without running it:
+
+```sh
+sudo update-java-alternatives -s java-1.25.0-openjdk-amd64
+```
+
+Then `mvn -v` should name the 25 runtime, as in the last section.
 
 ## Four `WARNING:` lines before every build
 

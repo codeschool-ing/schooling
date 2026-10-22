@@ -240,7 +240,10 @@ output, and `-q` keeps it silent unless something fails. Then the dependency plu
 reads back with `$(cat ...)`:
 
 ```
-!!! MISSING BLOCK by-hand
+ana@vm:~/bookshop$ mvn -B -q package
+ana@vm:~/bookshop$ mvn -B -q dependency:build-classpath -Dmdep.outputFile=target/classpath.txt
+ana@vm:~/bookshop$ java -cp target/classes:$(cat target/classpath.txt) ~/Wiring.java
+19:16:14.569 [main] INFO com.example.bookshop.catalogue.CatalogueReport -- Catalogue opened on 2026-10-22 with 3 books
 ```
 
 The report ran and counted three books. Spring's jars were on the class path and Spring never

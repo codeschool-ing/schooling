@@ -1,0 +1,763 @@
+[
+  {
+    "id": "ex-z2642pqf",
+    "version": 1,
+    "section": "a-server-of-your-own",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bookshop's `pom.xml` gains the `org.postgresql:postgresql` dependency. What does that jar give the application?",
+    "hint": "Think about what still has to be running before the application starts.",
+    "choices": [
+      {
+        "text": "A copy of PostgreSQL that starts inside the application's own JVM",
+        "correct": false,
+        "why": "That is an embedded database, like H2. PostgreSQL is a separate server process; the jar contains none of it."
+      },
+      {
+        "text": "The driver, which speaks PostgreSQL's protocol to a server running elsewhere",
+        "correct": true,
+        "why": "Right. The jar is a client. A server must already be listening, on this machine or another, before the bookshop can connect."
+      },
+      {
+        "text": "The PostgreSQL server, which Maven installs on the machine during the build",
+        "correct": false,
+        "why": "Maven only puts jars on a class path. Installing a server is `apt`'s job, which is why the lesson installs one first."
+      },
+      {
+        "text": "The SQL language, which the JDK cannot read without an extra library",
+        "correct": false,
+        "why": "Java never reads SQL at all: it sends the text to the server, and the server parses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-5wtbrp8h",
+    "version": 1,
+    "section": "a-server-of-your-own",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You took the online path: a hosted PostgreSQL with its own address, user and password. What do you change in the bookshop so it connects there?",
+    "hint": "Which file names where the database is?",
+    "choices": [
+      {
+        "text": "The driver dependency, since a hosted server speaks another protocol",
+        "correct": false,
+        "why": "A hosted PostgreSQL is still PostgreSQL, and the same driver talks to it. Only the address and the credentials differ."
+      },
+      {
+        "text": "Nothing: Spring Boot finds a hosted database on the network by itself",
+        "correct": false,
+        "why": "Boot discovers nothing on a network. It connects to exactly the URL it is given, and `localhost` is not the hosted server."
+      },
+      {
+        "text": "The `spring.datasource` URL, user and password in `application.properties`",
+        "correct": true,
+        "why": "Right. Those three lines are where the server is and who logs in. The service's page gives the values, usually with an encryption option in the URL."
+      },
+      {
+        "text": "The SQL in `schema.sql`, because a hosted server uses a different dialect",
+        "correct": false,
+        "why": "The dialect is PostgreSQL's wherever the server runs. The script does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5kavzky",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after installing, `psql` answers `FATAL:  role \"ana\" does not exist`. What does that tell you?",
+    "hint": "The word FATAL comes from the server.",
+    "choices": [
+      {
+        "text": "PostgreSQL did not install, so there is nothing to connect to",
+        "correct": false,
+        "why": "A server that is not running answers nothing at all, and psql says so differently. A FATAL line is the server refusing you, so it is running."
+      },
+      {
+        "text": "The password for `ana` is wrong",
+        "correct": false,
+        "why": "No password was asked. Over the local socket the server checks who you are on the computer, and the problem is that it has no such database user."
+      },
+      {
+        "text": "The server is up and has no database user called `ana`",
+        "correct": true,
+        "why": "Right. Database users, called roles, are a list of the server's own, separate from the machine's users. The installer creates only `postgres`."
+      },
+      {
+        "text": "The machine has no Linux user called `ana`",
+        "correct": false,
+        "why": "You are logged in as `ana`, so that user exists. The missing one is the server's role of that name."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdkvk5w5",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`psql -U bookshop bookshop` fails with `Peer authentication failed`, yet `psql postgresql://bookshop:bookshop@localhost:5432/bookshop` gets in. Why the difference?",
+    "hint": "The two commands reach the server by different doors.",
+    "choices": [
+      {
+        "text": "The role was created without `LOGIN`, which only TCP connections ignore",
+        "correct": false,
+        "why": "Without `LOGIN` both would be refused. The URL version got in, so the role can log in."
+      },
+      {
+        "text": "They use different doors: the socket checks by peer, TCP by password",
+        "correct": true,
+        "why": "Right. Over the socket the server compares the computer's user, `ana`, with `bookshop`; over TCP it asks for the password. Ubuntu's `pg_hba.conf` uses peer for the socket and a password for `localhost`. JDBC always connects over TCP, so the password rule is the one the bookshop meets."
+      },
+      {
+        "text": "`-U` is not supported by PostgreSQL 16, and a URL is the only way to name a user",
+        "correct": false,
+        "why": "`-U` works; the refusal came from the server, after it read the user name."
+      },
+      {
+        "text": "The password `bookshop` is wrong for the socket and right for TCP",
+        "correct": false,
+        "why": "No password was asked on the socket at all. Peer authentication never looks at one."
+      }
+    ]
+  },
+  {
+    "id": "ex-07phb8df",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the setup of the bookshop's database in the order it has to happen.",
+    "hint": "Each step needs the one before it to exist.",
+    "items": [
+      "Install the postgresql package",
+      "Create the role bookshop, with LOGIN and a password",
+      "Create the database bookshop, owned by that role",
+      "Connect as bookshop over localhost and run a SELECT"
+    ],
+    "trap": "createdb -O bookshop names an owner, so the role has to exist before the database does."
+  },
+  {
+    "id": "ex-rs7g5t52",
+    "version": 1,
+    "section": "just-enough-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inserting The Time Machine a second time, with the same ISBN, is refused. Which part of the table's definition refuses it?",
+    "hint": "The new row would have had a new `id`.",
+    "choices": [
+      {
+        "text": "`PRIMARY KEY` on `id`, because the row is a duplicate",
+        "correct": false,
+        "why": "The second row would get a fresh `id` from the sequence, so the primary key never sees a repeat. It only guards `id`."
+      },
+      {
+        "text": "`UNIQUE` on `isbn`",
+        "correct": true,
+        "why": "Right. The error names the constraint `book_isbn_key`, which PostgreSQL made from `UNIQUE`, and the detail names the ISBN that already exists."
+      },
+      {
+        "text": "`NOT NULL` on `title`",
+        "correct": false,
+        "why": "The title was given. `NOT NULL` refuses a missing value, not a repeated one."
+      },
+      {
+        "text": "`CHECK (price_cents >= 0)`",
+        "correct": false,
+        "why": "2950 passes that check. The CHECK is what refused Frankenstein's -1."
+      }
+    ]
+  },
+  {
+    "id": "ex-17dh5qqr",
+    "version": 1,
+    "section": "just-enough-sql",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The column type that makes PostgreSQL number the rows itself, 1, 2, 3, from a sequence of its own, is `___`.",
+    "hint": "It is the type of `id` in the CREATE TABLE.",
+    "blanks": [
+      {
+        "accept": [
+          "bigserial"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-khygwjdj",
+    "version": 1,
+    "section": "just-enough-sql",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these rows does the `book` table refuse? Choose all that apply.",
+    "hint": "Read the four constraints in the CREATE TABLE, one per column that has one.",
+    "choices": [
+      {
+        "text": "A book priced at -100 cents",
+        "correct": true,
+        "why": "Right: `CHECK (price_cents >= 0)` refuses it."
+      },
+      {
+        "text": "A book whose ISBN is already in the table",
+        "correct": true,
+        "why": "Right: `UNIQUE` on `isbn` refuses it."
+      },
+      {
+        "text": "A book with no title",
+        "correct": true,
+        "why": "Right: `title` is `NOT NULL`, and a missing value is a null."
+      },
+      {
+        "text": "A third book by H. G. Wells",
+        "correct": false,
+        "why": "Nothing constrains `author`. Many books by one author is the normal case."
+      },
+      {
+        "text": "A second book called Dom Casmurro, with a different ISBN",
+        "correct": false,
+        "why": "Titles are not unique, and should not be: two editions share a title and differ in ISBN."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsdcnwkv",
+    "version": 1,
+    "section": "plain-jdbc",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`java Jdbc.java 'H. G. Wells'`, run without `-cp`, fails with `No suitable driver found for jdbc:postgresql://localhost:5432/bookshop`. What is missing?",
+    "hint": "`DriverManager` asks every driver it can see.",
+    "choices": [
+      {
+        "text": "The PostgreSQL driver jar on the class path",
+        "correct": true,
+        "why": "Right. Without it no driver claims a `jdbc:postgresql:` URL, and `DriverManager` gives up before any network traffic."
+      },
+      {
+        "text": "A running server on port 5432",
+        "correct": false,
+        "why": "A missing server gives a different message, about a refused connection. This one is raised before anything is sent."
+      },
+      {
+        "text": "A correctly spelt URL",
+        "correct": false,
+        "why": "The URL is the one that works with `-cp`. Nothing claimed it because nothing able to was loaded."
+      },
+      {
+        "text": "`Class.forName(\"org.postgresql.Driver\")` at the start of `main`",
+        "correct": false,
+        "why": "That line was needed before JDBC 4. Today a driver jar registers itself when it is on the class path, and without the jar the line would fail too."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2gy1be7",
+    "version": 1,
+    "section": "plain-jdbc",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Jdbc.java 'Mary Shelley'` runs while no book by her is in the table. What happens?",
+    "hint": "Where does a `ResultSet` start?",
+    "choices": [
+      {
+        "text": "`executeQuery` throws an `SQLException`, because the query found nothing",
+        "correct": false,
+        "why": "No rows is a perfectly good answer to a query. JDBC reports it as an empty result, not as an error."
+      },
+      {
+        "text": "`rows` is `null`, and the `while` throws a `NullPointerException`",
+        "correct": false,
+        "why": "`executeQuery` always returns a `ResultSet`. An empty one is still an object."
+      },
+      {
+        "text": "The first `next()` answers `false`, the loop body never runs, and nothing is printed",
+        "correct": true,
+        "why": "Right. The cursor starts before the first row; with no rows there is nowhere to move to. The program exits normally with no output."
+      },
+      {
+        "text": "`getLong(\"id\")` throws, because there is no current row to read",
+        "correct": false,
+        "why": "It would, if it were reached. The loop condition stops the program before any getter runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-43b5enm4",
+    "version": 1,
+    "section": "plain-jdbc",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each JDBC type in `Jdbc.java` to what it is.",
+    "hint": "Follow the program from the top: open, prepare, run, read.",
+    "pairs": [
+      {
+        "left": "DriverManager",
+        "right": "finds the driver that accepts the URL and opens a connection"
+      },
+      {
+        "left": "Connection",
+        "right": "one logged-in session with the server"
+      },
+      {
+        "left": "PreparedStatement",
+        "right": "SQL with ? placeholders, whose values are set separately"
+      },
+      {
+        "left": "ResultSet",
+        "right": "a cursor over the rows a query returned"
+      }
+    ],
+    "right_distractors": [
+      "a pool that lends out connections that are already open"
+    ]
+  },
+  {
+    "id": "ex-f03s4289",
+    "version": 1,
+    "section": "plain-jdbc",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Inside the `while` loop of `Jdbc.java`, `getInt(\"price_cents\")` throws an `SQLException`. Nothing in the program catches it. What happens to the connection?",
+    "hint": "What does try-with-resources promise about the way out?",
+    "choices": [
+      {
+        "text": "It stays open until the garbage collector finds the `Connection` object",
+        "correct": false,
+        "why": "That was the risk before try-with-resources, and it is how a server runs out of connections. The `try` closes it on any exit."
+      },
+      {
+        "text": "It is closed only if a `catch` block is added for the `SQLException`",
+        "correct": false,
+        "why": "A `catch` is not needed for closing. The resources close whether the block ends normally or by an exception, and then the exception carries on."
+      },
+      {
+        "text": "It is closed first, so that the result set and the statement can close cleanly after it",
+        "correct": false,
+        "why": "The order is the reverse of opening: the result set first, the statement next, the connection last."
+      },
+      {
+        "text": "All three close, innermost first, then the exception leaves `main`",
+        "correct": true,
+        "why": "Right. The result set, then the statement, then the connection. Each `try` closes what it opened, innermost first, before the exception propagates. The program then ends with the stack trace."
+      }
+    ]
+  },
+  {
+    "id": "ex-agrptsz1",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Unsafe.java \"Flannery O'Connor\"` fails with a syntax error, while `Jdbc.java` with the same name finds Wise Blood. What went wrong in `Unsafe.java`?",
+    "hint": "Read the SQL that `Unsafe.java` printed before it failed.",
+    "choices": [
+      {
+        "text": "PostgreSQL cannot store an apostrophe in a `text` column",
+        "correct": false,
+        "why": "It stored one: Wise Blood is in the table, and `Jdbc.java` read the name back."
+      },
+      {
+        "text": "Java needs the apostrophe escaped as `\\'` inside the `String`",
+        "correct": false,
+        "why": "The Java string is fine; the program compiled and printed it. The problem is what the text means as SQL."
+      },
+      {
+        "text": "The apostrophe closed the quoted text, and the rest became SQL",
+        "correct": true,
+        "why": "Right. Pasted into the statement, the input stopped being a value and became SQL. Here the driver, reading that SQL, found a string that never ends."
+      },
+      {
+        "text": "The driver rejects any character outside ASCII before sending the query",
+        "correct": false,
+        "why": "An apostrophe is ASCII. The driver did stop the query, but because its own reading of the SQL found a quoted string with no end."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5pnkb6d",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague fixes `Unsafe.java` by doubling every apostrophe in the input before concatenating, which is valid SQL. Why is a `PreparedStatement` still the fix to keep?",
+    "hint": "Count the places that have to remember the rule.",
+    "choices": [
+      {
+        "text": "Doubling apostrophes is not accepted by PostgreSQL",
+        "correct": false,
+        "why": "It is accepted: the lesson inserts `'Flannery O''Connor'` exactly that way, by hand."
+      },
+      {
+        "text": "The value never enters the SQL text, so there is nothing to escape",
+        "correct": true,
+        "why": "Right. Escaping has to be correct in every query that builds text, for every type of value. A parameter removes the question instead of answering it."
+      },
+      {
+        "text": "A prepared statement is faster, and speed is the reason to prefer it",
+        "correct": false,
+        "why": "It can be, when a statement is reused, but that is a side effect. The reason in this lesson is that data cannot become SQL."
+      },
+      {
+        "text": "Doubling apostrophes would corrupt every ISBN in the catalogue",
+        "correct": false,
+        "why": "An ISBN has no apostrophe, so doubling changes nothing in it. The objection is not about damage to the data."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvq3c6g5",
+    "version": 1,
+    "section": "parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A search screen lets the user pick the column to sort by. Which part of `SELECT ... FROM book WHERE author = ? ORDER BY title` can a `?` stand for?",
+    "hint": "A parameter is sent as a value.",
+    "choices": [
+      {
+        "text": "The table name, `book`",
+        "correct": false,
+        "why": "A table name is part of the statement the server plans, so it cannot arrive later as a value. Names have to be in the SQL text."
+      },
+      {
+        "text": "The column after `ORDER BY`, as the user chose it",
+        "correct": false,
+        "why": "Same reason: a column name is a name. To let a user choose, map their choice to one of a fixed list of names written in the code."
+      },
+      {
+        "text": "The value compared with `author`",
+        "correct": true,
+        "why": "Right. That is the only one of the four that is data. Everything else shapes the statement and must be written in it."
+      },
+      {
+        "text": "The keyword `WHERE`",
+        "correct": false,
+        "why": "A keyword is the statement's grammar. A parameter only fills a place where a value goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-s0krkyac",
+    "version": 1,
+    "section": "the-bookshop-gets-a-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `application.properties` set `spring.sql.init.mode=always`?",
+    "hint": "What does Boot do with `schema.sql` by default?",
+    "choices": [
+      {
+        "text": "To drop the tables and create them again on every start",
+        "correct": false,
+        "why": "Nothing in the scripts drops anything: `CREATE TABLE IF NOT EXISTS` leaves an existing table alone."
+      },
+      {
+        "text": "Boot runs them alone only for an embedded database",
+        "correct": true,
+        "why": "Right. PostgreSQL is not embedded, and for a real server the default is to run nothing, and this property asks for the scripts every time."
+      },
+      {
+        "text": "To switch on JDBC, which is off until a property enables it",
+        "correct": false,
+        "why": "The starter on the class path is what brings JDBC in. This property is only about the two scripts."
+      },
+      {
+        "text": "To have Flyway apply the scripts as migrations",
+        "correct": false,
+        "why": "There is no Flyway yet. Lesson 13 brings it, and removes these two scripts when it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-541cdg16",
+    "version": 1,
+    "section": "the-bookshop-gets-a-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`data.sql` runs on every start of the bookshop. Why does the catalogue not gain three more copies of the same books each time?",
+    "hint": "Read the last line of `data.sql`, and the column it names.",
+    "choices": [
+      {
+        "text": "Boot records which scripts it has already run and skips them",
+        "correct": false,
+        "why": "Boot keeps no record; that history is what Flyway adds in lesson 13. The script really does run every time."
+      },
+      {
+        "text": "`schema.sql` drops the table first, so the three rows start again from nothing",
+        "correct": false,
+        "why": "It does not drop anything, and the book added through the API survives the restart, which a drop would have removed."
+      },
+      {
+        "text": "`ON CONFLICT (isbn) DO NOTHING` skips the existing ISBNs",
+        "correct": true,
+        "why": "Right. The insert is attempted every time, and each row that would break the constraint is quietly left out."
+      },
+      {
+        "text": "`JdbcClient` ignores a duplicate row when it reads the table",
+        "correct": false,
+        "why": "The rows would really be in the table. Reading cannot undo a write; the duplicates are prevented at the insert."
+      }
+    ]
+  },
+  {
+    "id": "ex-wk993sfq",
+    "version": 1,
+    "section": "jdbc-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`query(Book.class)` fills the record `Book(long id, String isbn, String title, String author, int priceCents)` from the columns `id, isbn, title, author, price_cents`. How does `priceCents` get its value?",
+    "hint": "`Book` is a record, so it has one constructor.",
+    "choices": [
+      {
+        "text": "By position: the fifth column goes to the fifth component",
+        "correct": false,
+        "why": "The mapping is by name. Reordering the columns in the `SELECT` would not move the values."
+      },
+      {
+        "text": "From a `@Column(\"price_cents\")` annotation that the record needs",
+        "correct": false,
+        "why": "There is no annotation on `Book`. Mapping by annotation is JPA's way, in lesson 10."
+      },
+      {
+        "text": "By name: each constructor parameter is matched to a column",
+        "correct": true,
+        "why": "Right. Spring calls the record's constructor, and matches each constructor parameter to a column, treating an underscore and the next capital letter as the same name."
+      },
+      {
+        "text": "Jackson turns the row into JSON and reads it back into the record",
+        "correct": false,
+        "why": "Jackson is the web layer's, for the HTTP body. Rows never become JSON on their way into a record."
+      }
+    ]
+  },
+  {
+    "id": "ex-xg6x6bp0",
+    "version": 1,
+    "section": "jdbc-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the `INSERT` in `JdbcBookRepository.save` end with `RETURNING id`?",
+    "hint": "Who chooses the new book's id?",
+    "choices": [
+      {
+        "text": "Because the database generates the id, and this hands it back in the same statement",
+        "correct": true,
+        "why": "Right. `bigserial` takes the next number from a sequence, which only the server knows. `RETURNING` returns it, and `withId` puts it in the record."
+      },
+      {
+        "text": "To confirm the insert succeeded; without it a failure would be silent",
+        "correct": false,
+        "why": "A failed insert throws an exception either way. `RETURNING` is about getting a value back, not about errors."
+      },
+      {
+        "text": "Because `JdbcClient` cannot run an `INSERT` without a result to read",
+        "correct": false,
+        "why": "`JdbcClient` has `update()` for statements that return nothing. This one uses `query` because it does return something."
+      },
+      {
+        "text": "To send the id that `BookService` chose to the database",
+        "correct": false,
+        "why": "The service passes 0, and the `INSERT` names no `id` column at all. The value comes from the server."
+      }
+    ]
+  },
+  {
+    "id": "ex-hcr2basp",
+    "version": 1,
+    "section": "jdbc-client",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `save`, the named placeholders `:isbn`, `:title`, `:author` and `:priceCents` are filled from the record's accessors by the call `.___(book)`.",
+    "hint": "It is the line between the SQL text and `.query(Long.class)`.",
+    "blanks": [
+      {
+        "accept": [
+          "paramSource"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bm8gdvwy",
+    "version": 1,
+    "section": "jdbc-client",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the bookshop running and nobody using it, `pg_stat_activity` counted the connections the pool held open. How many were there?",
+    "hint": "HikariCP's default size, unchanged by any property in this lesson.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-fps557v5",
+    "version": 1,
+    "section": "when-the-connection-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message the bookshop or `Jdbc.java` printed to what it means.",
+    "hint": "Ask how far each attempt got: the class path, the network, the login, the database.",
+    "pairs": [
+      {
+        "left": "No suitable driver found for jdbc:postgresql://…",
+        "right": "no driver on the class path accepts the URL"
+      },
+      {
+        "left": "Connection to localhost:5433 refused",
+        "right": "nothing is listening on that host and port"
+      },
+      {
+        "left": "FATAL: password authentication failed for user \"bookshp\"",
+        "right": "the login was refused, and only the server's log says why"
+      },
+      {
+        "left": "FATAL: database \"bookshp\" does not exist",
+        "right": "the login worked, and the database is missing"
+      }
+    ],
+    "right_distractors": [
+      "the table book has not been created yet"
+    ]
+  },
+  {
+    "id": "ex-2r05psb8",
+    "version": 1,
+    "section": "when-the-connection-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's copy of the bookshop fails with `password authentication failed for user \"bookshop\"`. They have checked the password three times against the one they set with `CREATE ROLE`. What is the most useful next step?",
+    "hint": "The client is told less than the server knows.",
+    "choices": [
+      {
+        "text": "Reset the role's password and try again",
+        "correct": false,
+        "why": "If the password really matches, resetting changes nothing. The same message also covers a role that does not exist, and a reset would hide that."
+      },
+      {
+        "text": "Raise HikariCP's connection timeout, since the server may be slow to answer",
+        "correct": false,
+        "why": "A slow server gives a timeout, not a FATAL line. This answer came back quickly and definitely."
+      },
+      {
+        "text": "Read the server's log, whose DETAIL line says whether the role exists",
+        "correct": true,
+        "why": "Right. The server tells the client only that the login failed, so that strangers cannot test which names exist. The log names the real cause, for example a role spelt differently."
+      },
+      {
+        "text": "Change `localhost` to `127.0.0.1` in the URL",
+        "correct": false,
+        "why": "Both reach the same TCP door and the same password rule. The server answered, so the address is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0b2534q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `POST /books` with a new ISBN reaches the bookshop. Put what happens in order.",
+    "hint": "The service checks before it saves, and the connection is only borrowed.",
+    "items": [
+      "BookService asks findByIsbn whether the ISBN is taken",
+      "JdbcClient borrows a connection from the pool for the INSERT",
+      "PostgreSQL takes the next id from the sequence and returns it",
+      "The connection goes back to the pool",
+      "The controller answers 201 with a Location naming the new id"
+    ],
+    "trap": "The connection is returned before the response is written: it is borrowed for the statement, not for the request."
+  },
+  {
+    "id": "ex-zgqye9wj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two `POST /books` requests with the same new ISBN arrive at the same instant. Both run `findByIsbn` before either has inserted, so both see nothing. What stops the catalogue from holding two rows with that ISBN?",
+    "hint": "Which rule holds whatever program does the writing?",
+    "choices": [
+      {
+        "text": "`BookService`'s check, because it runs before every `save`",
+        "correct": false,
+        "why": "It ran, twice, and both times truthfully found nothing. A check and a later insert leave a gap that two requests can both pass through."
+      },
+      {
+        "text": "The pool, which gives out one connection at a time so the requests cannot overlap",
+        "correct": false,
+        "why": "The pool held ten connections, so two requests run side by side on two of them."
+      },
+      {
+        "text": "`ON CONFLICT (isbn) DO NOTHING`, which skips the second row",
+        "correct": false,
+        "why": "That clause is in `data.sql` only. The repository's `INSERT` has none, so its second insert is refused rather than skipped."
+      },
+      {
+        "text": "The `UNIQUE` constraint on `isbn`, in the database",
+        "correct": true,
+        "why": "Right. The database refuses the second `INSERT`, and it fails with an exception. The table is the last line, and it holds. The second request gets an error rather than a 409, which is what lesson 14 deals with."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2kmdh55",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate writes `connection.prepareStatement(String.format(\"SELECT id, title FROM book WHERE author = '%s'\", author))` and says it is safe because it uses a prepared statement. Is it?",
+    "hint": "What reaches the server as SQL text?",
+    "choices": [
+      {
+        "text": "Yes: `prepareStatement` escapes whatever text it is given, quotes included",
+        "correct": false,
+        "why": "It escapes nothing in the SQL text. It only keeps apart the values set through `?`, and there are none here."
+      },
+      {
+        "text": "No: the name is in the SQL text before `prepareStatement` sees it",
+        "correct": true,
+        "why": "Right. It is exactly `Unsafe.java`. The protection is the placeholder and the separate value. Built with `String.format`, the statement is concatenation with a different method name."
+      },
+      {
+        "text": "Yes, as long as the `author` column is declared with the type `text`",
+        "correct": false,
+        "why": "The column type does not matter. Flannery O'Connor breaks this statement in the same way as `Unsafe.java`."
+      },
+      {
+        "text": "No, because `String.format` cannot be used with JDBC at all",
+        "correct": false,
+        "why": "It can build any string, and that string is the problem. Formatting is fine for text that is not SQL."
+      }
+    ]
+  }
+]

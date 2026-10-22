@@ -52,7 +52,28 @@ public class EmptyBookRepository implements BookRepository {
 ```
 
 ```
-!!! MISSING BLOCK two
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | tail -n 23
+2026-10-22T19:16:28.700-03:00 ERROR 16659 --- [bookshop] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.example.bookshop.catalogue.BookService required a single bean, but 2 were found:
+	- emptyBookRepository: defined in URL [jar:nested:/home/ana/bookshop/target/bookshop-0.1.0.jar/!BOOT-INF/classes/!/com/example/bookshop/catalogue/EmptyBookRepository.class]
+	- inMemoryBookRepository: defined in URL [jar:nested:/home/ana/bookshop/target/bookshop-0.1.0.jar/!BOOT-INF/classes/!/com/example/bookshop/catalogue/InMemoryBookRepository.class]
+
+This may be due to missing parameter name information
+
+Action:
+
+Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+
+Ensure that your compiler is configured to use the '-parameters' flag.
+You may need to update both your build tool settings as well as your IDE.
+(See https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes#parameter-name-retention)
 ```
 
 Read the description from its first line. **Parameter 0** of `BookService`'s constructor wants one
@@ -64,14 +85,35 @@ the one chosen whenever a single bean of its type is wanted. Add it to `InMemory
 above the class, with its import:
 
 ```
-!!! MISSING BLOCK primary
+ana@vm:~/bookshop$ sed -n '9,14p' src/main/java/com/example/bookshop/catalogue/InMemoryBookRepository.java
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Primary
+public class InMemoryBookRepository implements BookRepository {
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep Catalogue
+2026-10-22T19:16:31.989-03:00  INFO 16831 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
 ```
 
 `@Qualifier` goes at the injection point and names the bean that consumer wants, and it wins over
 `@Primary`. Take `@Primary` off again and qualify the parameter instead:
 
 ```
-!!! MISSING BLOCK qualifier
+ana@vm:~/bookshop$ sed -n '6,16p' src/main/java/com/example/bookshop/catalogue/BookService.java
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+@Service
+public class BookService {
+
+    private final BookRepository books;
+
+    public BookService(@Qualifier("inMemoryBookRepository") BookRepository books) {
+        this.books = books;
+    }
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep Catalogue
+2026-10-22T19:16:35.215-03:00  INFO 16982 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
 ```
 
 The two differ in **who decides**. `@Primary` is decided by the candidate and applies to every
@@ -87,7 +129,12 @@ keeps parameter names in the class files only when it is given `-parameters`, an
 parent POM turns that on. Remove the qualifier and rename the parameter after one of the beans:
 
 ```
-!!! MISSING BLOCK paramname
+ana@vm:~/bookshop$ grep -n -A2 'public BookService' src/main/java/com/example/bookshop/catalogue/BookService.java
+13:    public BookService(BookRepository inMemoryBookRepository) {
+14-        this.books = inMemoryBookRepository;
+15-    }
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep Catalogue
+2026-10-22T19:16:38.520-03:00  INFO 17132 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
 ```
 
 It starts, with no annotation anywhere, and that is the reason not to rely on it. Renaming a
@@ -103,7 +150,22 @@ The opposite failure is a type that nothing provides. Delete the `@Repository` l
 `InMemoryBookRepository`:
 
 ```
-!!! MISSING BLOCK missing
+ana@vm:~/bookshop$ sed -i '/^@Repository$/d' src/main/java/com/example/bookshop/catalogue/InMemoryBookRepository.java
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | tail -n 15
+2026-10-22T19:16:44.911-03:00 ERROR 17393 --- [bookshop] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.example.bookshop.catalogue.BookService required a bean of type 'com.example.bookshop.catalogue.BookRepository' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.example.bookshop.catalogue.BookRepository' in your configuration.
 ```
 
 Without its stereotype the class is invisible to component scanning, so no bean of type
@@ -115,12 +177,29 @@ packages. Move `ClockConfig` from `com.example.bookshop.config` to a package bes
 instead of inside it:
 
 ```
-!!! MISSING BLOCK outside
+ana@vm:~/bookshop$ mkdir src/main/java/com/example/clock
+ana@vm:~/bookshop$ mv src/main/java/com/example/bookshop/config/ClockConfig.java src/main/java/com/example/clock/
+ana@vm:~/bookshop$ sed -i 's/^package com.example.bookshop.config;/package com.example.clock;/' src/main/java/com/example/clock/ClockConfig.java
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | tail -n 15
+2026-10-22T19:16:51.353-03:00 ERROR 17700 --- [bookshop] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of constructor in com.example.bookshop.catalogue.CatalogueReport required a bean of type 'java.time.Clock' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'java.time.Clock' in your configuration.
 ```
 
 **Parameter 1** this time, `CatalogueReport`'s clock. `ClockConfig` still carries `@Configuration`
 and its class is in the jar, but `com.example.clock` is not below `com.example.bookshop`, so scanning
-never looked there. Move it back by reversing the three commands. When this report names a bean you
+never looked there. Move it back by reversing the `mv` and the `sed`, and run `mvn -B -q package`. When this report names a bean you
 are sure you wrote, check its package before anything else.
 
 ## A cycle
@@ -129,7 +208,28 @@ The third failure needs two beans that each want the other. Give `BookService`'s
 `CatalogueReport` as well, as if adding a book should update the report:
 
 ```
-!!! MISSING BLOCK cycle
+ana@vm:~/bookshop$ sed -i 's/public BookService(BookRepository books) {/public BookService(BookRepository books, CatalogueReport report) {/' src/main/java/com/example/bookshop/catalogue/BookService.java
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | tail -n 21
+2026-10-22T19:16:57.856-03:00 ERROR 17949 --- [bookshop] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+┌─────┐
+|  bookService defined in URL [jar:nested:/home/ana/bookshop/target/bookshop-0.1.0.jar/!BOOT-INF/classes/!/com/example/bookshop/catalogue/BookService.class]
+↑     ↓
+|  catalogueReport defined in URL [jar:nested:/home/ana/bookshop/target/bookshop-0.1.0.jar/!BOOT-INF/classes/!/com/example/bookshop/catalogue/CatalogueReport.class]
+└─────┘
+
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
 ```
 
 The drawing is the cycle: `bookService` needs `catalogueReport`, which needs `bookService`. With
@@ -139,7 +239,27 @@ setter injection, where Spring can hand one object over half-built and finish it
 constructors it cannot, and the report says so:
 
 ```
-!!! MISSING BLOCK cycle-flag
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none --spring.main.allow-circular-references=true | tail -n 21
+2026-10-22T19:16:58.976-03:00 ERROR 17988 --- [bookshop] [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+┌─────┐
+|  bookService defined in URL [jar:nested:/home/ana/bookshop/target/bookshop-0.1.0.jar/!BOOT-INF/classes/!/com/example/bookshop/catalogue/BookService.class]
+↑     ↓
+|  catalogueReport defined in URL [jar:nested:/home/ana/bookshop/target/bookshop-0.1.0.jar/!BOOT-INF/classes/!/com/example/bookshop/catalogue/CatalogueReport.class]
+└─────┘
+
+
+Action:
+
+Despite circular references being allowed, the dependency cycle between beans could not be broken. Update your application to remove the dependency cycle.
 ```
 
 The repair is in the design. Here it is easy, because the dependency was invented and the service does

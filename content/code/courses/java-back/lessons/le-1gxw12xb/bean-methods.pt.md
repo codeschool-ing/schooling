@@ -50,7 +50,8 @@ void main() {
 ```
 
 ```
-!!! MISSING BLOCK fixed
+ana@vm:~/bookshop$ java -cp target/classes:$(cat target/classpath.txt) ~/FixedClock.java
+19:16:25.572 [main] INFO com.example.bookshop.catalogue.CatalogueReport -- Catalogue opened on 2026-01-01 with 3 books
 ```
 
 O relatório diz 1º de janeiro de 2026 em qualquer dia em que rode. O teste do serviço de pedidos da

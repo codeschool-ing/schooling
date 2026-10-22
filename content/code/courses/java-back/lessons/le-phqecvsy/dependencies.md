@@ -45,12 +45,14 @@ shows the losers too, and `includes` cuts the output to the libraries concerned:
 
 @@CAPTURE verbose@@
 
-@@VERBOSE-PROSE@@
+Validator declares Commons Logging 1.4.0 itself, two steps from your project. BeanUtils asks for
+1.3.5 one step further down, and the line in brackets says that request was **omitted for
+conflict**: the build has one Commons Logging on its classpath, and it is 1.4.0.
 
 **Nearest wins** is Maven's rule: of two versions of one library, the one fewer steps from your
 project is used, and when they are equally near, the one declared first. It is a rule about
-position in the graph and not about which version is newer, and that surprises people the first
-time an old version wins. The fix is the same in every case: **declare the library yourself**, at
+position in the graph and not about which version is newer. Here the nearer one happens to be the
+newer one too, which hides the rule; the day an old version wins, it is the rule that explains it. The fix is the same in every case: **declare the library yourself**, at
 the version you want, and your own declaration is the nearest there is. An `<exclusions>` element
 inside a dependency does the opposite job, removing one transitive library a dependency drags in
 that your program must not have.
@@ -62,4 +64,8 @@ the **local repository**:
 
 @@CAPTURE m2@@
 
-@@M2-PROSE@@
+Four kinds of file. The jar is the library. The pom is the library's own description, and it is
+where Maven read that Validator needs four more. Each `.sha1` is a checksum Maven compared with
+what it downloaded, so a jar damaged on the way is noticed. `_remote.repositories`
+is Maven's note of which repository the files came from. And the path is the coordinates, group,
+artifact and version, one directory each: the section on plugins and repositories draws it.

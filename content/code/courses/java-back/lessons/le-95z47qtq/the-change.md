@@ -7,7 +7,7 @@ Eight files of the catalogue change. Two of them leave, because lesson 10's hand
 nothing left to do once Spring Data implements both interfaces:
 
 ```
-@@remove@@
+ana@vm:~/bookshop$ rm src/main/java/com/example/bookshop/catalogue/JpaBookRepository.java src/main/java/com/example/bookshop/catalogue/JpaAuthorRepository.java
 ```
 
 `AuthorRepository.java` becomes the interface in the previous section; replace it now if you have not.
@@ -169,7 +169,7 @@ Build it. `-q` keeps Maven quiet unless something fails, so a build with nothing
 nothing:
 
 ```
-@@build@@
+ana@vm:~/bookshop$ mvn -q package
 ```
 
 Then start the application in a **second terminal**, with lesson 10's `sql` profile, which logs every
@@ -177,7 +177,10 @@ statement Hibernate sends. The `grep` keeps three kinds of line out of the start
 of the repositories it found, the SQL, and the catalogue report.
 
 ```
-@@startup@@
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=sql | grep -E 'interfaces|hibernate.SQL|Catalogue'
+2026-10-22T19:18:03.006-03:00  INFO 21638 --- [bookshop] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 50 ms. Found 2 JPA repository interfaces.
+2026-10-22T19:18:07.935-03:00 DEBUG 21638 --- [bookshop] [           main] org.hibernate.SQL                        : select count(*) from book b1_0
+2026-10-22T19:18:07.962-03:00  INFO 21638 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 **`Found 2 JPA repository interfaces`** is the scan from the first section, and it happened before the

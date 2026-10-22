@@ -1,0 +1,712 @@
+[
+  {
+    "id": "ex-az2n211n",
+    "version": 1,
+    "section": "facade-and-backend",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A program logs through SLF4J and its classpath holds `slf4j-api` and nothing else to do with logging. What happens when it runs?",
+    "hint": "The first run of Hello.java.",
+    "choices": [
+      {
+        "text": "Three warnings, then none of its lines",
+        "correct": true,
+        "why": "Right. With no provider SLF4J falls back to a no-operation logger that discards everything, which is why those warnings are worth recognising."
+      },
+      {
+        "text": "It throws an exception at the first call to getLogger",
+        "correct": false,
+        "why": "SLF4J does not fail: a missing provider is a warning, and the program carries on."
+      },
+      {
+        "text": "It writes every line to the console in a plain default format",
+        "correct": false,
+        "why": "That is what Logback does with no configuration. With no backend at all there is nobody to write a line."
+      },
+      {
+        "text": "It writes only the ERROR line, because errors are never discarded",
+        "correct": false,
+        "why": "That was Log4j2 without a configuration file. The no-operation logger discards errors as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t1qmaed",
+    "version": 1,
+    "section": "facade-and-backend",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program written against SLF4J writes its lines through Logback, and the team wants Log4j2 instead. What has to change?",
+    "hint": "What differed between the runs of Hello.java?",
+    "choices": [
+      {
+        "text": "Replace every LoggerFactory call with the new library's own factory",
+        "correct": false,
+        "why": "That is the work the facade exists to avoid. Code written against SLF4J never names the backend."
+      },
+      {
+        "text": "Recompile against a different version of slf4j-api",
+        "correct": false,
+        "why": "The API is the same whichever backend is used; the version of the facade does not choose the backend."
+      },
+      {
+        "text": "Set a system property naming the backend when the JVM starts",
+        "correct": false,
+        "why": "SLF4J finds its provider on the classpath. No property was set in any of the four runs of Hello.java."
+      },
+      {
+        "text": "The dependencies: another provider on the classpath",
+        "correct": true,
+        "why": "Right. Hello.java ran unchanged with Logback, Log4j2 and TinyLog; only the profile, and so the classpath, changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-g852k9m2",
+    "version": 1,
+    "section": "facade-and-backend",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each jar in the bookshop's tree to what it does.",
+    "hint": "One is the facade, one the backend, and two are bridges.",
+    "pairs": [
+      {
+        "left": "slf4j-api",
+        "right": "the interface the bookshop's code calls"
+      },
+      {
+        "left": "logback-classic",
+        "right": "formats each line and writes it"
+      },
+      {
+        "left": "jul-to-slf4j",
+        "right": "sends java.util.logging calls to SLF4J"
+      },
+      {
+        "left": "log4j-to-slf4j",
+        "right": "sends calls to the Log4j API to SLF4J"
+      }
+    ],
+    "right_distractors": [
+      "a second backend that writes beside Logback"
+    ]
+  },
+  {
+    "id": "ex-bhexktc2",
+    "version": 1,
+    "section": "levels-and-messages",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the five levels in order, from the most talkative to the most serious.",
+    "hint": "The root threshold in Boot sits in the middle.",
+    "items": [
+      "TRACE",
+      "DEBUG",
+      "INFO",
+      "WARN",
+      "ERROR"
+    ]
+  },
+  {
+    "id": "ex-eghq8bmf",
+    "version": 1,
+    "section": "levels-and-messages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop starts with `--logging.level.root=warn --logging.level.com.example.bookshop=info`. Which INFO lines does the start-up write?",
+    "hint": "Look at the logger names in that run, not only at who wrote the code.",
+    "choices": [
+      {
+        "text": "Only the catalogue line, because CatalogueReport is the only class of the bookshop that logs at start-up",
+        "correct": false,
+        "why": "The run showed four INFO lines. Three were written by Spring Boot under the application class's name."
+      },
+      {
+        "text": "Every INFO line of the start-up, because a more specific setting replaces the root one for all loggers",
+        "correct": false,
+        "why": "A setting for com.example.bookshop applies to the loggers under that name only; Hikari and Flyway stayed at WARN."
+      },
+      {
+        "text": "The catalogue line and Boot's \"Starting\" and \"Started\" lines, which Boot logs under the name of BookshopApplication",
+        "correct": true,
+        "why": "Right. A threshold filters by the logger's name, and the name is whatever the caller asked for, here the bookshop's own class."
+      },
+      {
+        "text": "None, because the root threshold of WARN wins over any setting below it",
+        "correct": false,
+        "why": "It is the other way round: the most specific name that has a setting decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-nasysksh",
+    "version": 1,
+    "section": "levels-and-messages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a loop with the threshold at INFO, what does `log.debug(\"Line \" + line)` cost that `log.debug(\"Line {}\", line)` does not?",
+    "hint": "When is each string put together?",
+    "choices": [
+      {
+        "text": "The string is built even for a line thrown away",
+        "correct": true,
+        "why": "Right. With placeholders the backend checks the threshold first and formats only the lines it keeps."
+      },
+      {
+        "text": "The two print different text when the line is written",
+        "correct": false,
+        "why": "They print the same line. The difference is in the work done when the line is not written."
+      },
+      {
+        "text": "Concatenation cannot be used with SLF4J and does not compile",
+        "correct": false,
+        "why": "It compiles: info takes a String, and a joined string is one."
+      },
+      {
+        "text": "Placeholders skip evaluating the arguments when debug is off",
+        "correct": false,
+        "why": "The arguments are evaluated either way; that is what the supplier form of the fluent API is for."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h9vv0r6",
+    "version": 1,
+    "section": "levels-and-messages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To log a caught exception with its stack trace, SLF4J expects it as the ___ argument, with no `{}` written for it.",
+    "blanks": [
+      {
+        "accept": [
+          "last",
+          "final"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v176ee5c",
+    "version": 1,
+    "section": "levels-and-messages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer orders two copies of Frankenstein with one left, and gets a 409. If this were logged, which level fits?",
+    "hint": "Who has to act on an ERROR?",
+    "choices": [
+      {
+        "text": "ERROR, because the order failed",
+        "correct": false,
+        "why": "An ERROR asks somebody to act. A customer asking for more copies than exist is the application working, and the 409 already tells them."
+      },
+      {
+        "text": "At most INFO, and OrderService does not log it at all",
+        "correct": true,
+        "why": "Right. It is an ordinary business outcome; the response says it, and an ERROR here would wake whoever is on call."
+      },
+      {
+        "text": "WARN, because it is unexpected and the application handled it",
+        "correct": false,
+        "why": "It is not unexpected: refusing an order the stock cannot cover is one of the bookshop's rules."
+      },
+      {
+        "text": "DEBUG, because only developers care about stock",
+        "correct": false,
+        "why": "Stock running out matters to the business. The point is that it is not a failure of the application."
+      }
+    ]
+  },
+  {
+    "id": "ex-5n575pa9",
+    "version": 1,
+    "section": "request-ids",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does RequestIdFilter call `MDC.remove(\"requestId\")` in a `finally` block?",
+    "hint": "Where does the thread go after the response?",
+    "choices": [
+      {
+        "text": "To free the memory the map uses",
+        "correct": false,
+        "why": "The map is tiny. What matters is who uses the thread next."
+      },
+      {
+        "text": "So that the header is removed from the response before it is sent",
+        "correct": false,
+        "why": "The header was set on the response, not in the MDC; removing the MDC entry does not touch it."
+      },
+      {
+        "text": "Because Logback refuses to write a line while an MDC key is set",
+        "correct": false,
+        "why": "Logback writes lines with MDC keys set all the time; that is how the id reaches them."
+      },
+      {
+        "text": "A pooled thread would carry this id into the next request",
+        "correct": true,
+        "why": "Right. The MDC belongs to the thread, and a pooled thread outlives the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw0bs5w9",
+    "version": 1,
+    "section": "request-ids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client sends `X-Request-Id: two words`. What happens to that value?",
+    "hint": "Read the pattern the filter matches against, and the curl run.",
+    "choices": [
+      {
+        "text": "It is too long, so the filter cuts it to eight characters",
+        "correct": false,
+        "why": "Two words is short. The replacement is eight characters of a random UUID, not a cut of what was sent."
+      },
+      {
+        "text": "It is kept, because the filter trusts whatever the caller sends",
+        "correct": false,
+        "why": "The run showed `29aba6be` coming back, not `two words`."
+      },
+      {
+        "text": "It is replaced, since the filter never accepts a space",
+        "correct": true,
+        "why": "Right. Only letters, digits and hyphens are kept, so a value from outside cannot carry anything that would forge a line."
+      },
+      {
+        "text": "The request is refused with a 400",
+        "correct": false,
+        "why": "The request got a 200. The filter replaces a bad id; it does not reject the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v3stap9",
+    "version": 1,
+    "section": "request-ids",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When a request arrives with no usable id, how many characters long is the id RequestIdFilter makes up?",
+    "hint": "`substring(0, 8)`.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-kn1tayab",
+    "version": 1,
+    "section": "request-ids",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `@Order(Ordered.HIGHEST_PRECEDENCE)` on RequestIdFilter change for a POST to /orders with no token?",
+    "hint": "The last curl before the order.",
+    "choices": [
+      {
+        "text": "The 401 has no X-Request-Id, because Spring Security answers before any filter of the application runs",
+        "correct": false,
+        "why": "The run showed `6bd16e4a` on the 401. The order of filters is exactly what @Order decides."
+      },
+      {
+        "text": "The 401 still carries an id, since the filter runs first",
+        "correct": true,
+        "why": "Right. HIGHEST_PRECEDENCE puts it ahead of the security filters, so even a refused request can be found in the log."
+      },
+      {
+        "text": "The 401 carries the id, but only because Spring Security copies the header itself",
+        "correct": false,
+        "why": "Spring Security knows nothing of this header; the bookshop's filter set it before the security chain ran."
+      },
+      {
+        "text": "There is no response at all to a POST without a token",
+        "correct": false,
+        "why": "There is: a 401 with a WWW-Authenticate header, as lesson 15 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc2257cc",
+    "version": 1,
+    "section": "request-ids",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "OrderService starts sending a confirmation e-mail with `CompletableFuture.runAsync(...)`, and the e-mail code logs a line. What does that line show in the correlation slot?",
+    "hint": "Whose map is the MDC?",
+    "choices": [
+      {
+        "text": "An empty `[]`, unless the code copied the MDC map to the other thread",
+        "correct": true,
+        "why": "Right. The other thread starts with its own, empty MDC; getCopyOfContextMap and setContextMap carry it across."
+      },
+      {
+        "text": "The request id, because the MDC is shared by every thread of the application",
+        "correct": false,
+        "why": "The MDC is per thread. That is the property that keeps fifty concurrent requests apart."
+      },
+      {
+        "text": "The id of whichever request that pool thread served last",
+        "correct": false,
+        "why": "The filter removes the id in finally, and a pool thread that is not running a request has none."
+      },
+      {
+        "text": "A new random id, made by RequestIdFilter for the other thread",
+        "correct": false,
+        "why": "The filter runs once per HTTP request, on the request's thread. It never sees the other thread."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6hp7035",
+    "version": 1,
+    "section": "structured-logs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `logging.structured.format.console=ecs` change about the bookshop's log?",
+    "hint": "Compare the order line before and after the json profile.",
+    "choices": [
+      {
+        "text": "The log is written to a file instead of the console",
+        "correct": false,
+        "why": "It still goes to the console: the property ends in `.console`. What changes is the shape of each line."
+      },
+      {
+        "text": "Only the bookshop's own lines become JSON; Spring's stay as text",
+        "correct": false,
+        "why": "Every line became JSON, Spring's included; the 14 tagged COMMONS-LOGGING are Spring's."
+      },
+      {
+        "text": "The lines are compressed before they are written",
+        "correct": false,
+        "why": "Nothing is compressed; a JSON line is longer than the text one."
+      },
+      {
+        "text": "Each event becomes one JSON object on a single line, MDC included",
+        "correct": true,
+        "why": "Right. That is why `requestId` could be filtered on as a field rather than searched for as text."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbwd35tn",
+    "version": 1,
+    "section": "structured-logs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop can write ECS, Logstash or GELF. What decides which one it should use?",
+    "hint": "What changed between the ecs and the logstash run?",
+    "choices": [
+      {
+        "text": "ECS is for development and Logstash for production",
+        "correct": false,
+        "why": "Neither is tied to an environment. Both are JSON for a collector, and the json profile is what keeps them out of development."
+      },
+      {
+        "text": "Whatever collects the log, not the code that writes it",
+        "correct": true,
+        "why": "Right. The logstash run changed one property; OrderService and the MDC did not change."
+      },
+      {
+        "text": "Only ECS carries MDC entries such as requestId",
+        "correct": false,
+        "why": "The Logstash line carried `requestId` too."
+      },
+      {
+        "text": "Switching formats needs a change to the logging code in OrderService",
+        "correct": false,
+        "why": "The switch was `--logging.structured.format.console=logstash` on the command line and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-9mb94ayq",
+    "version": 1,
+    "section": "structured-logs",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should never be written to the bookshop's log? Choose all that apply.",
+    "hint": "Credentials, and personal data the line does not need.",
+    "choices": [
+      {
+        "text": "The value of the Authorization header",
+        "correct": true,
+        "why": "Right. Anybody who reads a token in a log can use it until it expires."
+      },
+      {
+        "text": "The password typed in a failed login",
+        "correct": true,
+        "why": "Right. A wrong password is often one character away from the right one."
+      },
+      {
+        "text": "The id of the order that was placed",
+        "correct": false,
+        "why": "An order id identifies a record, not a person or a secret; it is what makes the line useful."
+      },
+      {
+        "text": "The customer's e-mail address, on every order line",
+        "correct": true,
+        "why": "Right. Personal data the line does not need stays out; an opaque account id does the same job."
+      },
+      {
+        "text": "The request id",
+        "correct": false,
+        "why": "It was made to be logged: it carries no secret and no personal data."
+      }
+    ]
+  },
+  {
+    "id": "ex-xswnx80q",
+    "version": 1,
+    "section": "other-backends",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In which jar did the Log4Shell vulnerability live?",
+    "hint": "The backend, not an API.",
+    "choices": [
+      {
+        "text": "log4j-core, the Log4j2 backend that formats each message",
+        "correct": true,
+        "why": "Right. Versions 2.0-beta9 to 2.14.1 of log4j-core expanded lookups found inside messages."
+      },
+      {
+        "text": "slf4j-api, because every call passed through it",
+        "correct": false,
+        "why": "The facade forwards the message untouched. The lookups happened in the code that formats it."
+      },
+      {
+        "text": "log4j-api, the Log4j interface that the bookshop also carries",
+        "correct": false,
+        "why": "The bookshop carries log4j-api and was not exposed: its calls go to Logback through log4j-to-slf4j."
+      },
+      {
+        "text": "logback-classic, which the bridges sent every call to",
+        "correct": false,
+        "why": "Logback has no message lookups; Boot applications on the default starter were not exposed."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbzbtex1",
+    "version": 1,
+    "section": "other-backends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In 2021, what did logging through SLF4J do for an application whose backend was Log4j2 2.14.1?",
+    "hint": "Where were the lookups expanded?",
+    "choices": [
+      {
+        "text": "SLF4J filtered out messages containing `${`, so only Log4j2's own API was affected",
+        "correct": false,
+        "why": "SLF4J does not inspect messages. It handed the attacker's string, unchanged, to whichever backend was behind it."
+      },
+      {
+        "text": "They were safe, because a facade keeps the backend from seeing the original text",
+        "correct": false,
+        "why": "The backend formats the original text; that is the only way it can write the line."
+      },
+      {
+        "text": "Nothing: the facade passed the message to the same log4j-core",
+        "correct": true,
+        "why": "Right. What the facade bought was the cure: moving to a fixed backend was a change of dependencies, with no class touched."
+      },
+      {
+        "text": "They were safe as long as the code used `{}` placeholders instead of concatenation",
+        "correct": false,
+        "why": "A placeholder's value is still part of the message log4j-core formatted, and the attacker's string usually arrived as that value."
+      }
+    ]
+  },
+  {
+    "id": "ex-21nh1heq",
+    "version": 1,
+    "section": "other-backends",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each classpath to what `Hello.java` printed with it and no configuration file.",
+    "hint": "Four runs of the same file.",
+    "pairs": [
+      {
+        "left": "slf4j-api alone",
+        "right": "three SLF4J warnings, and none of its lines"
+      },
+      {
+        "left": "with Logback",
+        "right": "all four lines, one line each"
+      },
+      {
+        "left": "with Log4j2",
+        "right": "only the ERROR, with the time in UTC"
+      },
+      {
+        "left": "with TinyLog",
+        "right": "all four, each on two lines with the method name"
+      }
+    ],
+    "right_distractors": [
+      "one JSON object per line"
+    ]
+  },
+  {
+    "id": "ex-mdzhs6me",
+    "version": 1,
+    "section": "other-backends",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves the bookshop to TinyLog: they exclude the logging starter and add slf4j-tinylog. What does the bookshop lose?",
+    "hint": "What did this lesson configure through Boot's properties?",
+    "choices": [
+      {
+        "text": "Nothing: Boot detects TinyLog and configures it like Logback",
+        "correct": false,
+        "why": "Boot's logging support covers Logback, Log4j2 and java.util.logging, and nothing else."
+      },
+      {
+        "text": "The level properties, the correlation pattern and the JSON formats",
+        "correct": true,
+        "why": "Right. Those are Boot configuring its backend; with a backend Boot does not know, tinylog.properties does that job."
+      },
+      {
+        "text": "The application stops compiling, because Spring's classes need Logback",
+        "correct": false,
+        "why": "Spring's classes log through commons-logging and SLF4J; they compile and run with any provider."
+      },
+      {
+        "text": "Only the ability to log exceptions with their stack traces",
+        "correct": false,
+        "why": "TinyLog printed the stack trace in the Hello run."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxj8ddw1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put in order what happens to OrderService's line, from the call to the text in app.log.",
+    "hint": "The facade first, the threshold before the formatting.",
+    "items": [
+      "OrderService calls log.info on its SLF4J Logger",
+      "SLF4J hands the call to its provider, Logback",
+      "Logback compares INFO with the threshold of the logger's name",
+      "Logback formats the message, filling each {} and reading requestId from the MDC",
+      "The line is written to standard output, which the shell sends to app.log"
+    ],
+    "trap": "Formatting before the threshold check would build every line, kept or not, which is the cost placeholders avoid."
+  },
+  {
+    "id": "ex-4nsprf9f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A customer's checkout failed, and the support ticket quotes the `X-Request-Id` from the error response. What is the quickest way to everything the bookshop logged about it?",
+    "hint": "The id was returned so that somebody could quote it.",
+    "choices": [
+      {
+        "text": "Search the log for the customer's name around the time of the call",
+        "correct": false,
+        "why": "The order line holds an account name, not a name, and searching by time mixes in every other request of that minute."
+      },
+      {
+        "text": "Search for the thread name from the error, then read every line of that thread",
+        "correct": false,
+        "why": "A pool thread serves one request after another, so its lines belong to many customers."
+      },
+      {
+        "text": "Turn logging up to DEBUG and ask the customer to try again",
+        "correct": false,
+        "why": "That may help with the next attempt and tells nothing about the one that failed, which is already in the log."
+      },
+      {
+        "text": "Search for that id, which every line of that request carries",
+        "correct": true,
+        "why": "Right. That is the whole purpose of the filter and the correlation slot; in JSON it is even a field to filter on."
+      }
+    ]
+  },
+  {
+    "id": "ex-1vpb2cc0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new BookController method logs `log.info(\"Search for {}\", q)` with the text a visitor typed. With the text format, what is the risk, and does the json profile change it?",
+    "hint": "What did the filter refuse in X-Request-Id, and how does each format write a message that holds a newline?",
+    "choices": [
+      {
+        "text": "A line break in the text could add a fake line of its own; JSON escapes it, the text pattern does not",
+        "correct": true,
+        "why": "Right. In the ECS output a newline inside a message is written as \\n within one object, while the text pattern prints it as a real line break."
+      },
+      {
+        "text": "Nothing, because a request id never goes in the log as it came",
+        "correct": false,
+        "why": "That rule belongs to RequestIdFilter only. A search box value logged by another class goes through no filter."
+      },
+      {
+        "text": "The search text could run as code inside Logback, as it did in Log4j2",
+        "correct": false,
+        "why": "Logback has no message lookups. The risk with Logback is a forged line, not code being run."
+      },
+      {
+        "text": "There is no risk, because `{}` placeholders escape whatever they are given",
+        "correct": false,
+        "why": "Placeholders insert the value as it is; they escape nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5t25nsq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A library added to the bookshop logs an INFO line through the Log4j API, `LogManager.getLogger(...)`. Where does the line end up?",
+    "hint": "Read the tree again: which Log4j jars are there, and which is absent?",
+    "choices": [
+      {
+        "text": "Nowhere, because log4j-core is not in the bookshop",
+        "correct": false,
+        "why": "log4j-core would be a backend, and the bookshop does not need it: log4j-to-slf4j is the Log4j API's way out to SLF4J."
+      },
+      {
+        "text": "Nowhere, because Log4j2 with no configuration keeps only ERROR",
+        "correct": false,
+        "why": "That was Hello with log4j-core behind it. Here no Log4j2 backend runs at all, so its default never applies."
+      },
+      {
+        "text": "In app.log, through log4j-to-slf4j, SLF4J and Logback",
+        "correct": true,
+        "why": "Right. That bridge is why a library's choice of API does not decide where its lines go."
+      },
+      {
+        "text": "In a separate file that the Log4j API creates beside app.log",
+        "correct": false,
+        "why": "An API writes nothing; it hands each call to whatever is behind it."
+      }
+    ]
+  }
+]

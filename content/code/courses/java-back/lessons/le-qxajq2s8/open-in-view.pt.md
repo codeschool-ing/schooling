@@ -5,8 +5,8 @@ version: 1
 
 Um autor lazy só consegue se carregar enquanto o contexto de persistência que o produziu está aberto.
 Leia-o depois disso e o Hibernate não roda a consulta discretamente mesmo assim: ele lança uma
-**`LazyInitializationException`**. Todo desenvolvedor Hibernate a encontra, e a primeira reação de
-costume é fazê-la sumir em vez de lê-la.
+**`LazyInitializationException`**. Ela cita a entidade e o id que não conseguiu
+carregar, e as duas últimas palavras dizem por quê.
 
 ## Provocando a exceção
 

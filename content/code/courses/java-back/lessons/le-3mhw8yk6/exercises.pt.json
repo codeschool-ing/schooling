@@ -1,0 +1,491 @@
+{
+  "ex-az2n211n": {
+    "prompt": "Um programa registra pelo SLF4J e o classpath dele tem `slf4j-api` e mais nada de logging. O que acontece quando ele roda?",
+    "hint": "A primeira execução do Hello.java.",
+    "choices": [
+      {
+        "text": "Três avisos do SLF4J, e depois nenhuma das linhas do programa",
+        "why": "Certo. Sem provider, o SLF4J cai num logger que não faz nada e descarta tudo, e por isso vale reconhecer esses avisos."
+      },
+      {
+        "text": "Lança uma exceção na primeira chamada a getLogger",
+        "why": "O SLF4J não falha: faltar um provider é um aviso, e o programa segue."
+      },
+      {
+        "text": "Escreve toda linha no console num formato padrão simples",
+        "why": "Isso é o que o Logback faz sem configuração. Sem backend nenhum, não há quem escreva a linha."
+      },
+      {
+        "text": "Escreve só a linha de ERROR, porque erros nunca são descartados",
+        "why": "Isso foi o Log4j2 sem arquivo de configuração. O logger que não faz nada descarta os erros também."
+      }
+    ]
+  },
+  "ex-7t1qmaed": {
+    "prompt": "Um programa escrito contra o SLF4J escreve as linhas pelo Logback, e a equipe quer o Log4j2. O que precisa mudar?",
+    "hint": "O que mudou entre as execuções do Hello.java?",
+    "choices": [
+      {
+        "text": "Trocar toda chamada a LoggerFactory pela fábrica da biblioteca nova",
+        "why": "Esse é o trabalho que a fachada existe para evitar. Código escrito contra o SLF4J nunca nomeia o backend."
+      },
+      {
+        "text": "Recompilar contra outra versão do slf4j-api",
+        "why": "A API é a mesma seja qual for o backend; a versão da fachada não escolhe o backend."
+      },
+      {
+        "text": "Definir uma propriedade de sistema com o nome do backend ao iniciar a JVM",
+        "why": "O SLF4J acha o provider no classpath. Nenhuma propriedade foi definida nas quatro execuções do Hello.java."
+      },
+      {
+        "text": "As dependências: outro provider no classpath",
+        "why": "Certo. O Hello.java rodou sem mudança com Logback, Log4j2 e TinyLog; só o perfil, e portanto o classpath, mudou."
+      }
+    ]
+  },
+  "ex-g852k9m2": {
+    "prompt": "Ligue cada jar da árvore da livraria ao que ele faz.",
+    "hint": "Um é a fachada, um é o backend, e dois são pontes.",
+    "pairs": [
+      {
+        "left": "slf4j-api",
+        "right": "a interface que o código da livraria chama"
+      },
+      {
+        "left": "logback-classic",
+        "right": "formata cada linha e a escreve"
+      },
+      {
+        "left": "jul-to-slf4j",
+        "right": "manda chamadas ao java.util.logging para o SLF4J"
+      },
+      {
+        "left": "log4j-to-slf4j",
+        "right": "manda chamadas à API do Log4j para o SLF4J"
+      }
+    ],
+    "right_distractors": [
+      "um segundo backend que escreve ao lado do Logback"
+    ]
+  },
+  "ex-bhexktc2": {
+    "prompt": "Ponha os cinco níveis em ordem, do mais falante ao mais grave.",
+    "hint": "O limiar da raiz no Boot fica no meio.",
+    "items": [
+      "TRACE",
+      "DEBUG",
+      "INFO",
+      "WARN",
+      "ERROR"
+    ]
+  },
+  "ex-eghq8bmf": {
+    "prompt": "A livraria parte com `--logging.level.root=warn --logging.level.com.example.bookshop=info`. Que linhas INFO a partida escreve?",
+    "hint": "Olhe os nomes dos loggers nessa execução, não só quem escreveu o código.",
+    "choices": [
+      {
+        "text": "Só a linha do catálogo, porque CatalogueReport é a única classe da livraria que registra na partida",
+        "why": "A execução mostrou quatro linhas INFO. Três foram escritas pelo Spring Boot com o nome da classe da aplicação."
+      },
+      {
+        "text": "Toda linha INFO da partida, porque uma configuração mais específica substitui a da raiz para todos os loggers",
+        "why": "Uma configuração para com.example.bookshop vale só para os loggers abaixo desse nome; Hikari e Flyway ficaram em WARN."
+      },
+      {
+        "text": "A linha do catálogo e as linhas \"Starting\" e \"Started\" do Boot, que o Boot registra com o nome de BookshopApplication",
+        "why": "Certo. Um limiar filtra pelo nome do logger, e o nome é o que quem chamou pediu, aqui a própria classe da livraria."
+      },
+      {
+        "text": "Nenhuma, porque o limiar WARN da raiz vence qualquer configuração abaixo dele",
+        "why": "É o contrário: decide o nome mais específico que tiver uma configuração."
+      }
+    ]
+  },
+  "ex-nasysksh": {
+    "prompt": "Dentro de um laço com o limiar em INFO, o que `log.debug(\"Line \" + line)` custa e `log.debug(\"Line {}\", line)` não?",
+    "hint": "Quando cada string é montada?",
+    "choices": [
+      {
+        "text": "A string é montada antes da chamada, mesmo para uma linha descartada",
+        "why": "Certo. Com placeholders o backend confere o limiar primeiro e formata só as linhas que mantém."
+      },
+      {
+        "text": "As duas imprimem textos diferentes quando a linha é escrita",
+        "why": "Imprimem a mesma linha. A diferença está no trabalho feito quando a linha não é escrita."
+      },
+      {
+        "text": "A concatenação não pode ser usada com o SLF4J e não compila",
+        "why": "Compila: info recebe uma String, e uma string concatenada é uma."
+      },
+      {
+        "text": "Os placeholders deixam de avaliar os argumentos quando debug está desligado",
+        "why": "Os argumentos são avaliados de qualquer jeito; é para isso que existe a forma com supplier da API fluente."
+      }
+    ]
+  },
+  "ex-2h9vv0r6": {
+    "prompt": "Para registrar uma exceção capturada com o stack trace, o SLF4J a espera como ___ argumento, sem `{}` para ela.",
+    "blanks": [
+      {
+        "accept": [
+          "último",
+          "o último"
+        ]
+      }
+    ]
+  },
+  "ex-v176ee5c": {
+    "prompt": "Uma cliente pede dois exemplares de Frankenstein com um só no estoque, e recebe um 409. Se isso fosse registrado, que nível caberia?",
+    "hint": "Quem precisa agir num ERROR?",
+    "choices": [
+      {
+        "text": "ERROR, porque o pedido falhou",
+        "why": "Um ERROR pede que alguém aja. Um cliente pedindo mais cópias do que existem é a aplicação funcionando, e o 409 já avisa."
+      },
+      {
+        "text": "No máximo INFO, e o OrderService nem registra",
+        "why": "Certo. É um resultado comum do negócio; a resposta já diz, e um ERROR aqui acordaria quem estiver de plantão."
+      },
+      {
+        "text": "WARN, porque é inesperado e a aplicação tratou",
+        "why": "Não é inesperado: recusar um pedido que o estoque não cobre é uma das regras da livraria."
+      },
+      {
+        "text": "DEBUG, porque só desenvolvedores se importam com estoque",
+        "why": "Estoque acabando importa ao negócio. A questão é que não é uma falha da aplicação."
+      }
+    ]
+  },
+  "ex-5n575pa9": {
+    "prompt": "Por que o RequestIdFilter chama `MDC.remove(\"requestId\")` num bloco `finally`?",
+    "hint": "Para onde vai a thread depois da resposta?",
+    "choices": [
+      {
+        "text": "Para liberar a memória que o mapa usa",
+        "why": "O mapa é minúsculo. O que importa é quem usa a thread em seguida."
+      },
+      {
+        "text": "Para que o cabeçalho saia da resposta antes do envio",
+        "why": "O cabeçalho foi definido na resposta, não no MDC; tirar a entrada do MDC não mexe nele."
+      },
+      {
+        "text": "Porque o Logback se recusa a escrever enquanto há uma chave no MDC",
+        "why": "O Logback escreve linhas com chaves no MDC o tempo todo; é assim que o id chega a elas."
+      },
+      {
+        "text": "Uma thread do pool levaria este id à próxima requisição",
+        "why": "Certo. O MDC pertence à thread, e uma thread do pool vive mais que a requisição."
+      }
+    ]
+  },
+  "ex-jw0bs5w9": {
+    "prompt": "Um cliente manda `X-Request-Id: two words`. O que acontece com esse valor?",
+    "hint": "Leia o padrão que o filtro confere, e a execução do curl.",
+    "choices": [
+      {
+        "text": "É longo demais, então o filtro o corta em oito caracteres",
+        "why": "Duas palavras é curto. O substituto são oito caracteres de um UUID aleatório, não um corte do que foi enviado."
+      },
+      {
+        "text": "É mantido, porque o filtro confia no que quem chama mandar",
+        "why": "A execução mostrou `29aba6be` voltando, não `two words`."
+      },
+      {
+        "text": "É trocado, porque o filtro nunca aceita um espaço",
+        "why": "Certo. Só letras, dígitos e hífens ficam, então um valor de fora não pode trazer nada que forje uma linha."
+      },
+      {
+        "text": "A requisição é recusada com 400",
+        "why": "A requisição recebeu 200. O filtro troca um id ruim; não rejeita a requisição."
+      }
+    ]
+  },
+  "ex-8v3stap9": {
+    "prompt": "Quando uma requisição chega sem id utilizável, quantos caracteres tem o id que o RequestIdFilter inventa?",
+    "hint": "`substring(0, 8)`.",
+    "unit": "caracteres"
+  },
+  "ex-kn1tayab": {
+    "prompt": "O que `@Order(Ordered.HIGHEST_PRECEDENCE)` no RequestIdFilter muda para um POST em /orders sem token?",
+    "hint": "O último curl antes do pedido.",
+    "choices": [
+      {
+        "text": "O 401 vem sem X-Request-Id, porque o Spring Security responde antes de qualquer filtro da aplicação",
+        "why": "A execução mostrou `6bd16e4a` no 401. A ordem dos filtros é exatamente o que o @Order decide."
+      },
+      {
+        "text": "O 401 ainda traz um id, porque o filtro roda primeiro",
+        "why": "Certo. HIGHEST_PRECEDENCE o põe à frente dos filtros de segurança, então até uma requisição recusada pode ser achada no log."
+      },
+      {
+        "text": "O 401 traz o id, mas só porque o Spring Security copia o cabeçalho por conta própria",
+        "why": "O Spring Security não sabe nada desse cabeçalho; o filtro da livraria o definiu antes de a cadeia de segurança rodar."
+      },
+      {
+        "text": "Não há resposta nenhuma a um POST sem token",
+        "why": "Há: um 401 com cabeçalho WWW-Authenticate, como a aula 15 mostrou."
+      }
+    ]
+  },
+  "ex-tc2257cc": {
+    "prompt": "O OrderService passa a enviar um e-mail de confirmação com `CompletableFuture.runAsync(...)`, e o código do e-mail registra uma linha. O que essa linha mostra no espaço de correlação?",
+    "hint": "De quem é o mapa do MDC?",
+    "choices": [
+      {
+        "text": "Um `[]` vazio, a menos que o código copie o mapa do MDC para a outra thread",
+        "why": "Certo. A outra thread começa com o seu próprio MDC, vazio; getCopyOfContextMap e setContextMap o levam junto."
+      },
+      {
+        "text": "O id da requisição, porque o MDC é compartilhado por toda thread da aplicação",
+        "why": "O MDC é por thread. É a propriedade que mantém separadas cinquenta requisições simultâneas."
+      },
+      {
+        "text": "O id da última requisição que essa thread do pool atendeu",
+        "why": "O filtro remove o id no finally, e uma thread do pool que não roda uma requisição não tem nenhum."
+      },
+      {
+        "text": "Um id aleatório novo, feito pelo RequestIdFilter para a outra thread",
+        "why": "O filtro roda uma vez por requisição HTTP, na thread da requisição. Ele nunca vê a outra thread."
+      }
+    ]
+  },
+  "ex-k6hp7035": {
+    "prompt": "O que `logging.structured.format.console=ecs` muda no log da livraria?",
+    "hint": "Compare a linha do pedido antes e depois do perfil json.",
+    "choices": [
+      {
+        "text": "O log é escrito num arquivo em vez do console",
+        "why": "Continua indo ao console: a propriedade termina em `.console`. O que muda é a forma de cada linha."
+      },
+      {
+        "text": "Só as linhas da própria livraria viram JSON; as do Spring continuam texto",
+        "why": "Toda linha virou JSON, inclusive as do Spring; as 14 com a tag COMMONS-LOGGING são do Spring."
+      },
+      {
+        "text": "As linhas são comprimidas antes de serem escritas",
+        "why": "Nada é comprimido; uma linha JSON é mais longa que a de texto."
+      },
+      {
+        "text": "Cada evento vira um objeto JSON numa linha só, com o MDC em campos",
+        "why": "Certo. Por isso `requestId` pode ser filtrado como campo em vez de buscado como texto."
+      }
+    ]
+  },
+  "ex-dbwd35tn": {
+    "prompt": "A livraria pode escrever ECS, Logstash ou GELF. O que decide qual ela deve usar?",
+    "hint": "O que mudou entre a execução ecs e a logstash?",
+    "choices": [
+      {
+        "text": "ECS é para desenvolvimento e Logstash para produção",
+        "why": "Nenhum está preso a um ambiente. Os dois são JSON para um coletor, e é o perfil json que os mantém fora do desenvolvimento."
+      },
+      {
+        "text": "Quem coleta o log, e não o código que escreve as linhas",
+        "why": "Certo. A execução logstash mudou uma propriedade; o OrderService e o MDC não mudaram."
+      },
+      {
+        "text": "Só o ECS leva entradas do MDC como requestId",
+        "why": "A linha Logstash também trouxe `requestId`."
+      },
+      {
+        "text": "Trocar de formato exige mudar o código de log no OrderService",
+        "why": "A troca foi `--logging.structured.format.console=logstash` na linha de comando e mais nada."
+      }
+    ]
+  },
+  "ex-9mb94ayq": {
+    "prompt": "Quais destes nunca deveriam ser escritos no log da livraria? Escolha todos que se aplicam.",
+    "hint": "Credenciais, e dados pessoais que a linha não precisa.",
+    "choices": [
+      {
+        "text": "O valor do cabeçalho Authorization",
+        "why": "Certo. Quem lê um token num log pode usá-lo até ele expirar."
+      },
+      {
+        "text": "A senha digitada num login que falhou",
+        "why": "Certo. Uma senha errada muitas vezes está a um caractere da certa."
+      },
+      {
+        "text": "O id do pedido que foi feito",
+        "why": "Um id de pedido identifica um registro, não uma pessoa nem um segredo; é o que torna a linha útil."
+      },
+      {
+        "text": "O endereço de e-mail do cliente, em toda linha de pedido",
+        "why": "Certo. Dado pessoal que a linha não precisa fica de fora; um id de conta opaco faz o mesmo papel."
+      },
+      {
+        "text": "O id da requisição",
+        "why": "Ele foi feito para ser registrado: não carrega segredo nem dado pessoal."
+      }
+    ]
+  },
+  "ex-xswnx80q": {
+    "prompt": "Em que jar estava a vulnerabilidade Log4Shell?",
+    "hint": "O backend, não uma API.",
+    "choices": [
+      {
+        "text": "log4j-core, o backend do Log4j2 que formata mensagens",
+        "why": "Certo. As versões 2.0-beta9 a 2.14.1 do log4j-core expandiam lookups achadas dentro das mensagens."
+      },
+      {
+        "text": "slf4j-api, porque toda chamada passava por ele",
+        "why": "A fachada repassa a mensagem intacta. As lookups aconteciam no código que a formata."
+      },
+      {
+        "text": "log4j-api, a interface do Log4j que a livraria também tem",
+        "why": "A livraria tem log4j-api e não ficou exposta: as chamadas dela vão ao Logback pelo log4j-to-slf4j."
+      },
+      {
+        "text": "logback-classic, para onde as pontes mandavam toda chamada",
+        "why": "O Logback não tem lookups em mensagens; aplicações Boot no starter padrão não ficaram expostas."
+      }
+    ]
+  },
+  "ex-zbzbtex1": {
+    "prompt": "Em 2021, o que registrar pelo SLF4J fazia por uma aplicação cujo backend era o Log4j2 2.14.1?",
+    "hint": "Onde as lookups eram expandidas?",
+    "choices": [
+      {
+        "text": "O SLF4J filtrava mensagens com `${`, então só a API do próprio Log4j2 foi afetada",
+        "why": "O SLF4J não inspeciona mensagens. Ele entregava a string do atacante, intacta, ao backend que estivesse atrás."
+      },
+      {
+        "text": "Estavam seguras, porque uma fachada impede o backend de ver o texto original",
+        "why": "O backend formata o texto original; é o único jeito de escrever a linha."
+      },
+      {
+        "text": "Nada: a fachada passava a mensagem ao mesmo log4j-core",
+        "why": "Certo. O que a fachada comprou foi a cura: trocar para um backend corrigido era uma mudança de dependências, sem tocar em classe nenhuma."
+      },
+      {
+        "text": "Estavam seguras desde que o código usasse placeholders `{}` em vez de concatenação",
+        "why": "O valor de um placeholder ainda faz parte da mensagem que o log4j-core formatava, e a string do atacante costumava chegar como esse valor."
+      }
+    ]
+  },
+  "ex-21nh1heq": {
+    "prompt": "Ligue cada classpath ao que o `Hello.java` imprimiu com ele e sem arquivo de configuração.",
+    "hint": "Quatro execuções do mesmo arquivo.",
+    "pairs": [
+      {
+        "left": "só o slf4j-api",
+        "right": "três avisos do SLF4J, e nenhuma das linhas"
+      },
+      {
+        "left": "com Logback",
+        "right": "as quatro linhas, uma linha cada"
+      },
+      {
+        "left": "com Log4j2",
+        "right": "só o ERROR, com a hora em UTC"
+      },
+      {
+        "left": "com TinyLog",
+        "right": "as quatro, cada uma em duas linhas com o nome do método"
+      }
+    ],
+    "right_distractors": [
+      "um objeto JSON por linha"
+    ]
+  },
+  "ex-mdzhs6me": {
+    "prompt": "Uma equipe passa a livraria para o TinyLog: exclui o starter de logging e adiciona slf4j-tinylog. O que a livraria perde?",
+    "hint": "O que esta aula configurou pelas propriedades do Boot?",
+    "choices": [
+      {
+        "text": "Nada: o Boot detecta o TinyLog e o configura como o Logback",
+        "why": "O suporte de logging do Boot cobre Logback, Log4j2 e java.util.logging, e mais nada."
+      },
+      {
+        "text": "As propriedades de nível, o padrão de correlação e os formatos JSON",
+        "why": "Certo. Isso é o Boot configurando o seu backend; com um backend que o Boot não conhece, o tinylog.properties faz esse papel."
+      },
+      {
+        "text": "A aplicação para de compilar, porque as classes do Spring precisam do Logback",
+        "why": "As classes do Spring registram pelo commons-logging e pelo SLF4J; compilam e rodam com qualquer provider."
+      },
+      {
+        "text": "Só a capacidade de registrar exceções com o stack trace",
+        "why": "O TinyLog imprimiu o stack trace na execução do Hello."
+      }
+    ]
+  },
+  "ex-jxj8ddw1": {
+    "prompt": "Ponha em ordem o que acontece com a linha do OrderService, da chamada ao texto no app.log.",
+    "hint": "A fachada primeiro, o limiar antes da formatação.",
+    "items": [
+      "O OrderService chama log.info no seu Logger do SLF4J",
+      "O SLF4J passa a chamada ao seu provider, o Logback",
+      "O Logback compara INFO com o limiar do nome do logger",
+      "O Logback formata a mensagem, preenchendo cada {} e lendo requestId do MDC",
+      "A linha é escrita na saída padrão, que o shell manda para o app.log"
+    ],
+    "trap": "Formatar antes de conferir o limiar montaria toda linha, mantida ou não, que é o custo que os placeholders evitam."
+  },
+  "ex-4nsprf9f": {
+    "prompt": "O checkout de um cliente falhou, e o chamado de suporte cita o `X-Request-Id` da resposta de erro. Qual o jeito mais rápido de chegar a tudo que a livraria registrou sobre ele?",
+    "hint": "O id foi devolvido para que alguém pudesse citá-lo.",
+    "choices": [
+      {
+        "text": "Buscar o nome do cliente no log por volta da hora da ligação",
+        "why": "A linha do pedido traz um nome de conta, não um nome, e buscar pela hora mistura toda outra requisição daquele minuto."
+      },
+      {
+        "text": "Buscar o nome da thread do erro e ler toda linha dessa thread",
+        "why": "Uma thread do pool atende uma requisição depois da outra, então as linhas dela são de muitos clientes."
+      },
+      {
+        "text": "Subir o log para DEBUG e pedir ao cliente para tentar de novo",
+        "why": "Isso pode ajudar na próxima tentativa e não diz nada da que falhou, que já está no log."
+      },
+      {
+        "text": "Buscar esse id no log: toda linha daquela requisição o carrega",
+        "why": "Certo. Esse é todo o propósito do filtro e do espaço de correlação; em JSON é até um campo para filtrar."
+      }
+    ]
+  },
+  "ex-1vpb2cc0": {
+    "prompt": "Um método novo do BookController registra `log.info(\"Search for {}\", q)` com o texto que um visitante digitou. Com o formato de texto, qual é o risco, e o perfil json muda isso?",
+    "hint": "O que o filtro recusou no X-Request-Id, e como cada formato escreve uma mensagem que tem uma quebra de linha?",
+    "choices": [
+      {
+        "text": "Uma quebra de linha no texto poderia acrescentar uma linha falsa; o JSON a escapa, o padrão de texto não",
+        "why": "Certo. Na saída ECS uma quebra de linha dentro de uma mensagem vira \\n dentro de um objeto, enquanto o padrão de texto a imprime como quebra de verdade."
+      },
+      {
+        "text": "Nada, porque um id de requisição nunca entra no log do jeito que chegou",
+        "why": "Essa regra é só do RequestIdFilter. Um valor de caixa de busca registrado por outra classe não passa por filtro nenhum."
+      },
+      {
+        "text": "O texto da busca poderia rodar como código dentro do Logback, como aconteceu no Log4j2",
+        "why": "O Logback não tem lookups em mensagens. O risco com o Logback é uma linha forjada, não código rodando."
+      },
+      {
+        "text": "Não há risco, porque placeholders `{}` escapam o que recebem",
+        "why": "Placeholders inserem o valor como ele é; não escapam nada."
+      }
+    ]
+  },
+  "ex-c5t25nsq": {
+    "prompt": "Uma biblioteca adicionada à livraria registra uma linha INFO pela API do Log4j, `LogManager.getLogger(...)`. Onde a linha vai parar?",
+    "hint": "Leia a árvore de novo: que jars do Log4j estão lá, e qual falta?",
+    "choices": [
+      {
+        "text": "Em lugar nenhum, porque o log4j-core não está na livraria",
+        "why": "O log4j-core seria um backend, e a livraria não precisa dele: o log4j-to-slf4j é a saída da API do Log4j para o SLF4J."
+      },
+      {
+        "text": "Em lugar nenhum, porque o Log4j2 sem configuração só mantém ERROR",
+        "why": "Isso foi o Hello com log4j-core atrás. Aqui nenhum backend Log4j2 roda, então o padrão dele nunca vale."
+      },
+      {
+        "text": "No app.log, passando pelo log4j-to-slf4j, pelo SLF4J e pelo Logback",
+        "why": "Certo. Essa ponte é o motivo de a escolha de API de uma biblioteca não decidir para onde vão as linhas dela."
+      },
+      {
+        "text": "Num arquivo separado que a API do Log4j cria ao lado do app.log",
+        "why": "Uma API não escreve nada; ela entrega cada chamada ao que estiver atrás."
+      }
+    ]
+  }
+}

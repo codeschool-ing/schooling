@@ -152,8 +152,8 @@ spring.jpa.open-in-view=false
 ```
 
 Two lines are new. **`spring.jpa.hibernate.ddl-auto=none`** stops Hibernate from touching the
-tables. It can create them from the entities (`create`) or alter them to match (`update`), and both
-are tempting on the first day, but then the schema is whatever the Java says this morning, with no
+tables. It can create them from the entities (`create`) or alter them to match (`update`). Both are
+tempting on the first day, and then the schema is whatever the Java says this morning, with no
 record of how it got there. Here `schema.sql` owns the tables, and lesson 13 hands them to a
 migration tool. **`spring.jpa.open-in-view=false`** gets the whole of the last section.
 

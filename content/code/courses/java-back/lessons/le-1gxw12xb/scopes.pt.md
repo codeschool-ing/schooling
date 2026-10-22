@@ -54,14 +54,28 @@ diretamente, pelo tipo. Código comum não deveria precisar disso: uma classe qu
 dependências voltou a ir buscá-las. Aqui é o jeito mais rápido de pedir duas vezes.
 
 ```
-!!! MISSING BLOCK scope
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep -E 'Catalogue|object'
+asked twice, the same object: true
+the injected one is the same object: true
+2026-10-22T19:17:05.652-03:00  INFO 18250 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
 ```
 
 Agora faça de `BookService` um **prototype**, um bean criado de novo cada vez que é pedido. Acrescente
 `@Scope("prototype")` abaixo de `@Service`, com o import:
 
 ```
-!!! MISSING BLOCK prototype
+ana@vm:~/bookshop$ sed -n '6,12p' src/main/java/com/example/bookshop/catalogue/BookService.java
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+@Service
+@Scope("prototype")
+public class BookService {
+
+ana@vm:~/bookshop$ mvn -B -q package && java -jar target/bookshop-0.1.0.jar --spring.main.web-application-type=none | grep -E 'Catalogue|object'
+2026-10-22T19:17:08.938-03:00  INFO 18369 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 3 books
+asked twice, the same object: false
+the injected one is the same object: false
 ```
 
 As duas comparações viraram falsas. Cada `getBean` montou um `BookService` novo, e o parâmetro do

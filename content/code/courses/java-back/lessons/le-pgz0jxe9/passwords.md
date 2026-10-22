@@ -53,10 +53,17 @@ public class HashPassword {
 It needs `spring-security-crypto` and the logging library that jar writes through. Both are already
 in `~/.m2`, and the dependency plugin of lesson 1 can write the project's whole class path to a file,
 which `java` then reads. Run the program twice with the same password, and the second time give it
-the hash stored for ana:
+the hash stored for ana. The `cd` with no argument goes back to your home directory:
 
 ```
-ana@vm:~$ PENDING hash
+ana@vm:~/bookshop$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt
+ana@vm:~$ java -cp "$(cat bookshop/cp.txt)" HashPassword.java ana-reads-books
+$2a$10$DJb4Yi9p3JRJ7npM1TZxteGJDauIkBKZYZY0fl/493FyqKq4XBWW6
+matches its own hash: true
+ana@vm:~$ java -cp "$(cat bookshop/cp.txt)" HashPassword.java ana-reads-books '$2a$10$ZGOqa4SybKybYWez.kObuOlRJidwtH0M8N11oKrIWVxl4mA422MiG'
+$2a$10$cdk7/w3ZVeMjBIJTWFk22eJZgPVl0KD8qpp1hfNKoxtCRmmGXCarW
+matches its own hash: true
+matches the hash given: true
 ```
 
 **The same password gave two different hashes, and each one checks.** The salt differs, and the salt
@@ -85,12 +92,24 @@ It would also cost a bcrypt check on every request. Here is that cost, measured:
 token, which run bcrypt, and then five requests carrying a token, which do not:
 
 ```
-ana@vm:~$ PENDING timing
+ana@vm:~/bookshop$ for i in 1 2 3 4 5; do curl -s -o /dev/null -w '%{time_total}\n' -u ana:ana-reads-books -X POST localhost:8080/auth/token; done
+0.068564
+0.067145
+0.067239
+0.069804
+0.069891
+ana@vm:~/bookshop$ curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' > ana.token
+ana@vm:~/bookshop$ for i in 1 2 3 4 5; do curl -s -o /dev/null -w '%{time_total}\n' -H "Authorization: Bearer $(cat ana.token)" localhost:8080/books/1; done
+0.047668
+0.009704
+0.007936
+0.007902
+0.007915
 ```
 
-The printed numbers are seconds per request, and they vary from run to run. The ones that run bcrypt
-are the slow ones, and that slowness is the protection.
-So the bookshop asks for the password once, at `/auth/token`, and answers with a token that every
+The numbers are seconds per request and differ on every run, but the shape does not: about 0.068 with
+bcrypt, and about 0.008 with a token once the first request has warmed up. That slowness is the
+protection, and nobody wants to pay it on every request. So the bookshop asks for the password once, at `/auth/token`, and answers with a token that every
 later request carries instead:
 
 ```schooling-figure
@@ -100,7 +119,21 @@ later request carries instead:
 A wrong password gets 401 and the right one gets the token:
 
 ```
-ana@vm:~$ PENDING wrong-password
+ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -u ana:wrong -X POST localhost:8080/auth/token
+401
+ana@vm:~/bookshop$ curl -si -w '\n' -u ana:ana-reads-books -X POST localhost:8080/auth/token
+HTTP/1.1 200 
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Content-Length: 298
+Date: Thu, 22 Oct 2026 22:14:05 GMT
+
+{"accessToken":"eyJraWQiOiJPWk9odmt2Ui1tOVpKOUM3N2xxUm5yN0E0VVMxdk1obkpuR0hLcDl1eGJnIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJib29rc2hvcCIsInN1YiI6ImFuYSIsImV4cCI6MTc5MjcwODE0NSwiaWF0IjoxNzkyNzA3MjQ1LCJzY29wZSI6Im9yZGVycyJ9.MpSSa089W22PreCSDmsz487vOif-x5m4WV5aRyScMgQ","tokenType":"Bearer","expiresIn":900}
 ```
 
 The users here live in memory, in `SecurityConfig`, which is enough for two accounts and wrong for a

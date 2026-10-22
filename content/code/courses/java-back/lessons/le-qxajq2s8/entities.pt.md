@@ -107,7 +107,7 @@ que o código chama nele um método que precisa de dados, como `getName()`, o pr
 banco.
 
 Essa decisão está por trás dos dois problemas do resto desta aula. Um proxy que se carrega sozinho é
-uma consulta que ninguém escreveu, e é daí que vem o problema N+1; e um proxy que tenta se carregar
+uma consulta que ninguém escreveu, e é daí que vem o problema N+1. E um proxy que tenta se carregar
 depois que a ligação com o banco acabou lança uma exceção em vez disso, que é a última seção.
 
 ## O que não está aqui
