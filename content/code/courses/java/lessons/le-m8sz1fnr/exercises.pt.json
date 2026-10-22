@@ -1,0 +1,359 @@
+{
+  "ex-8hc5px1q": {
+    "prompt": "Depois de `javac -d out Greet.java`, onde está o `Greet.class`?",
+    "hint": "O `-d` nomeia um diretório.",
+    "choices": [
+      {
+        "text": "Ao lado do `Greet.java`, como na lição 1",
+        "why": "É onde ele vai sem o `-d`; com ele, o diretório do fonte ficou só com o fonte."
+      },
+      {
+        "text": "Em `out`, um diretório que o `javac` criou para ela",
+        "why": "Isso: o `javac` criou `out` porque não existia e gravou a classe ali."
+      },
+      {
+        "text": "Em lugar nenhum do disco até o `java` pedir",
+        "why": "Isso descreve o modo de arquivo-fonte, `java Greet.java`; o `javac` sempre grava um arquivo."
+      },
+      {
+        "text": "Em `~/.cache`, onde o JDK guarda as classes compiladas",
+        "why": "O JDK não tem cache assim; a classe foi exatamente para onde o `-d` mandou."
+      }
+    ]
+  },
+  "ex-8bfgrg2z": {
+    "prompt": "`java -cp out Greet Ana Bruno` roda. Quanto vale `args.length` dentro do `main`?",
+    "hint": "Conte só o que vem depois do nome da classe.",
+    "choices": [
+      {
+        "text": "4, uma para cada palavra depois de `java`",
+        "why": "`-cp`, `out` e `Greet` são para o próprio `java`; o programa nunca os vê."
+      },
+      {
+        "text": "3, o nome da classe e os dois nomes",
+        "why": "O nome da classe não é passado ao programa, ao contrário do `argv[0]` do C."
+      },
+      {
+        "text": "2",
+        "why": "Isso: `Ana` e `Bruno`, e o programa imprimiu duas linhas."
+      }
+    ]
+  },
+  "ex-rs2hhf57": {
+    "prompt": "`java -cp out Greet` sem nomes: que número o `echo $?` imprimiu?",
+    "hint": "O número passado ao `System.exit`."
+  },
+  "ex-vcktgaxr": {
+    "prompt": "Por que o `Greet` imprime a linha de uso com `System.err` em vez de `System.out`?",
+    "hint": "Pense em `java -cp out Greet > names.txt`.",
+    "choices": [
+      {
+        "text": "Para que um redirecionamento da saída não engula a mensagem",
+        "why": "Isso: o `>` captura só a saída padrão, e a reclamação continua chegando à tela."
+      },
+      {
+        "text": "Porque só o `System.err` pode vir seguido de `System.exit`",
+        "why": "O `System.exit` pode vir depois de qualquer coisa; o fluxo e o status não têm relação."
+      },
+      {
+        "text": "Porque o `System.err` imprime em vermelho, o que marca um erro",
+        "why": "Nada na transcrição tem cor; a diferença é para onde o texto vai."
+      },
+      {
+        "text": "Porque o shell define o `$?` a partir do que é escrito em `System.err`",
+        "why": "O `$?` vem do `System.exit`, ou do retorno do `main`, nunca do texto."
+      }
+    ]
+  },
+  "ex-244qec1z": {
+    "prompt": "`java -cp out Greet.class` falha com `ClassNotFoundException: Greet.class`. O que o `java` procurou?",
+    "hint": "O `java` lê um nome de classe, e um ponto significa algo nele.",
+    "choices": [
+      {
+        "text": "Um arquivo chamado `Greet.class.class` em `out`",
+        "why": "Perto da ideia, mas o ponto muda o sentido: separa um pacote de uma classe."
+      },
+      {
+        "text": "Uma classe chamada `class` num pacote chamado `Greet`",
+        "why": "Isso: o ponto é separador de pacote, e por isso a correção é tirar a extensão."
+      },
+      {
+        "text": "O arquivo `Greet.class` no diretório atual, ignorando o `-cp`",
+        "why": "O `-cp out` foi respeitado; o class path estava certo e o nome estava errado."
+      },
+      {
+        "text": "Um arquivo-fonte `Greet.class` para compilar na memória",
+        "why": "O modo de arquivo-fonte só começa para um nome terminado em `.java`, ou com `--source`."
+      }
+    ]
+  },
+  "ex-82gzp9j5": {
+    "prompt": "Quais destes comandos falham com `Could not find or load main class`, rodados em `~/life`, com a classe em `out`? Escolha todos os que se aplicam.",
+    "hint": "O nome tem de ser exato, e o lugar tem de estar no class path.",
+    "choices": [
+      {
+        "text": "`java Greet Ana`",
+        "why": "Sim: sem `-cp` o class path é o diretório atual, e a classe não está nele."
+      },
+      {
+        "text": "`java -cp out greet Ana`",
+        "why": "Sim: nomes de classe diferenciam maiúsculas."
+      },
+      {
+        "text": "`java -cp out Greet`",
+        "why": "Não: ele encontra a classe e a executa; imprime a linha de uso e sai com 2, que é o programa funcionando."
+      },
+      {
+        "text": "`java Greet.java Ana`",
+        "why": "Não: o arquivo-fonte está ali, e o modo de arquivo-fonte o compila e executa."
+      }
+    ]
+  },
+  "ex-gha7be2j": {
+    "prompt": "O que `java Greet.java Ana` deixa no disco?",
+    "hint": "O `ls` foi rodado logo depois.",
+    "choices": [
+      {
+        "text": "`Greet.class`, ao lado do fonte",
+        "why": "Isso é o que o `javac` faz; o `ls` mostrou só o `Greet.java`."
+      },
+      {
+        "text": "Uma classe em cache em `~/.java`, reaproveitada na vez seguinte",
+        "why": "Não existe esse cache: a classe viveu na memória da JVM e cada execução compila de novo."
+      },
+      {
+        "text": "Nada novo: a classe viveu na memória",
+        "why": "Isso: compilou na memória, executou e não gravou nada."
+      }
+    ]
+  },
+  "ex-ahwzms2m": {
+    "prompt": "O `time` mediu 1,093 s para `java Greet.java Ana` e 0,206 s para `java Greet Ana` a partir de uma classe compilada. A execução a partir do fonte levou umas quantas vezes mais? Dê um número inteiro.",
+    "hint": "Divida o primeiro pelo segundo.",
+    "unit": "vezes"
+  },
+  "ex-9pk8jxr0": {
+    "prompt": "O `Main.java` usa o `Shout`, que está no `Shout.java` ao lado. No Java 25, o que faz `java Main.java`?",
+    "hint": "O Java 22 mudou a resposta.",
+    "choices": [
+      {
+        "text": "Falha, porque o modo de arquivo-fonte compila um arquivo só",
+        "why": "Isso valia até o 21; desde o 22 ele compila as outras classes de que precisa, no mesmo diretório."
+      },
+      {
+        "text": "Compila os dois na memória e executa o `Main`",
+        "why": "Isso: encontrou o `Shout.java` pelo nome da classe e imprimiu `HELLO FROM TWO FILES!`."
+      },
+      {
+        "text": "Compila todo arquivo `.java` do diretório, depois executa o `Main`",
+        "why": "Só o necessário: um `Broken.java` quebrado ao lado nunca foi lido."
+      },
+      {
+        "text": "Pergunta qual arquivo tem o `main`, porque as duas são classes públicas",
+        "why": "O arquivo que você nomeia é o que tem o `main` executado; nada é perguntado."
+      }
+    ]
+  },
+  "ex-c0avgn33": {
+    "prompt": "Você copia o script `greet`, com a linha `#!` e tudo, para `greet.java` e roda `java greet.java Ana`. Por que falha?",
+    "hint": "O que o `--source 25` faz por um arquivo sem extensão?",
+    "choices": [
+      {
+        "text": "Um script não pode ser executado nomeando-o depois do `java`",
+        "why": "Pode; o que mudou foi a extensão, não o jeito de iniciar."
+      },
+      {
+        "text": "Um arquivo `.java` é compilado como Java comum, em que `#` é caractere ilegal",
+        "why": "Isso: o compilador parou na linha 1, e só um arquivo sem extensão rodado com `--source` tem a linha `#!` ignorada."
+      },
+      {
+        "text": "O arquivo não fica executável depois do `cp`",
+        "why": "`java greet.java` lê o arquivo; não precisa da permissão de execução."
+      }
+    ]
+  },
+  "ex-zce04617": {
+    "prompt": "Ligue o que você tem ao comando que o executa.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "Uma classe compilada em `out`",
+        "right": "`java -cp out Greet Ana`"
+      },
+      {
+        "left": "Um arquivo-fonte",
+        "right": "`java Greet.java Ana`"
+      },
+      {
+        "left": "Um arquivo executável com linha `#!`",
+        "right": "`./greet Ana`"
+      }
+    ],
+    "right_distractors": [
+      "`javac Greet Ana`"
+    ]
+  },
+  "ex-97va26nh": {
+    "prompt": "Qual ferramenta do JDK lista as JVMs rodando com o seu usuário, com os números de processo?",
+    "hint": "O nome é o `ps` do shell com um `j`.",
+    "choices": [
+      {
+        "text": "`jps`",
+        "why": "Isso: e o `-l` acrescenta a classe principal."
+      },
+      {
+        "text": "`jcmd`",
+        "why": "O `jcmd` manda um comando a uma JVM; quem lista é o `jps`."
+      },
+      {
+        "text": "`javap`",
+        "why": "O `javap` lê arquivos de classe no disco, não processos em execução."
+      },
+      {
+        "text": "`jshell`",
+        "why": "O `jshell` executa Java linha a linha; não lista nada."
+      }
+    ]
+  },
+  "ex-7pqvb5xg": {
+    "prompt": "O `Wait` não cria threads, e o `jcmd Wait Thread.print` contou 18. De onde vêm as outras 17?",
+    "hint": "De quem é o processo?",
+    "choices": [
+      {
+        "text": "Do `Thread.sleep`, que cria uma thread por segundo de espera",
+        "why": "O `sleep` pausa a thread que o chama; não cria nada."
+      },
+      {
+        "text": "Do `jcmd`, que copia as próprias threads para o alvo",
+        "why": "Uma thread respondeu ao `jcmd`, e ela é da JVM alvo; o `jcmd` não copia nada."
+      },
+      {
+        "text": "Da própria JVM: o coletor de lixo, os compiladores JIT e outras",
+        "why": "Isso: o processo é a JVM, e a `main` é uma thread entre as dela."
+      },
+      {
+        "text": "De outros programas Java seus, que dividem uma JVM",
+        "why": "Cada comando `java` é um processo próprio; o `jps` os lista separados."
+      }
+    ]
+  },
+  "ex-16za82f2": {
+    "prompt": "Para perguntar a uma JVM em execução em que JDK ela roda, você digita `jcmd Wait ___`.",
+    "hint": "Duas palavras unidas por um ponto.",
+    "blanks": [
+      {
+        "accept": [
+          "VM.version"
+        ]
+      }
+    ]
+  },
+  "ex-5ssw0yvc": {
+    "prompt": "O `-Xlog:class+load` imprimiu 605 linhas para o `Greet`, e 600 vieram do shared objects file. O que esse arquivo compra?",
+    "hint": "Ele foi preparado antes de o programa existir.",
+    "choices": [
+      {
+        "text": "Um programa menor: as classes dele não contam na memória",
+        "why": "Elas estão na memória do mesmo jeito; o que muda é como chegaram lá."
+      },
+      {
+        "text": "Uma partida mais rápida: as classes da biblioteca chegam já lidas e verificadas, mapeadas em vez de carregadas uma a uma",
+        "why": "Isso: é o `sharing` da última linha do `java -version`."
+      },
+      {
+        "text": "As suas classes compiladas em código de máquina de antemão",
+        "why": "O seu `Greet` veio de `out`; o arquivo guarda a biblioteca do JDK."
+      }
+    ]
+  },
+  "ex-ep73ady8": {
+    "prompt": "O `ps` informou 44.080 KB para `java Wait`, um programa que guarda uma string. Para onde vai a maior parte dessa memória?",
+    "hint": "Conte o que há no processo além do seu código.",
+    "choices": [
+      {
+        "text": "Para a string, que o Java guarda com muito preenchimento",
+        "why": "Uma string curta tem algumas dezenas de bytes; nem chega perto do total."
+      },
+      {
+        "text": "Para os 60.000 milissegundos que o `sleep` reserva",
+        "why": "Dormir não reserva memória; é uma pausa."
+      },
+      {
+        "text": "À própria JVM e às classes da biblioteca que ela carregou",
+        "why": "Isso: a JVM, as threads dela e centenas de classes são o grosso."
+      }
+    ]
+  },
+  "ex-bdh6v87x": {
+    "prompt": "Um script roda `java -cp app/classes Report` e depois decide pelo `$?` se manda o resultado por e-mail. O `Report` termina com uma exceção que nunca captura. O que o script vê?",
+    "hint": "Uma exceção escapando do `main` tem um status próprio.",
+    "choices": [
+      {
+        "text": "0, porque a própria JVM terminou normalmente",
+        "why": "Uma exceção que escapa é uma falha, e a JVM a reporta."
+      },
+      {
+        "text": "1, o status de uma exceção escapando do `main`",
+        "why": "Isso: 0 quando o `main` retorna, 1 quando uma exceção escapa dele, ou o que for passado ao `System.exit`."
+      },
+      {
+        "text": "127, porque a classe não terminou de carregar",
+        "why": "127 é o código do shell para comando inexistente; o `java` existia."
+      },
+      {
+        "text": "2, o status usado para erros de uso",
+        "why": "2 foi o que o `Greet` escolheu para si; nada o torna um padrão."
+      }
+    ]
+  },
+  "ex-tp5swcke": {
+    "prompt": "Ponha em ordem os passos de `java -cp out Greet Ana`.",
+    "hint": "O processo existe antes de qualquer código seu.",
+    "items": [
+      "O sistema operacional inicia o processo da JVM",
+      "A JVM encontra o `Greet.class` em `out` e o carrega",
+      "O `main` roda com `args` contendo `Ana`",
+      "O processo termina com status 0"
+    ]
+  },
+  "ex-9wpvdaxk": {
+    "prompt": "O serviço de um colega num servidor compartilhado se comporta mal, e há três JDKs instalados lá. Que comando, sozinho, diz qual deles esse serviço em execução está usando?",
+    "hint": "Pergunte ao processo, não à máquina.",
+    "choices": [
+      {
+        "text": "`java -version`",
+        "why": "Isso informa o `java` que o seu shell iniciaria agora, que pode não ser o que iniciou o serviço."
+      },
+      {
+        "text": "`update-alternatives --display java`",
+        "why": "Isso diz para onde aponta o `/usr/bin/java`; o serviço pode ter sido iniciado por um caminho completo."
+      },
+      {
+        "text": "`jcmd <pid> VM.version`, com o número de processo do serviço",
+        "why": "Isso: a JVM em execução responde por si mesma, seja lá quem a iniciou."
+      },
+      {
+        "text": "`ls /usr/lib/jvm`",
+        "why": "Isso lista os três JDKs; não diz qual está rodando."
+      }
+    ]
+  },
+  "ex-d3j54sx9": {
+    "prompt": "Qual jeito de executar um programa não grava arquivo `.class` no disco?",
+    "hint": "Um deles compila na memória.",
+    "choices": [
+      {
+        "text": "`javac -d out Greet.java` e depois `java -cp out Greet`",
+        "why": "O `javac` gravou `out/Greet.class`."
+      },
+      {
+        "text": "`java Greet.java`",
+        "why": "Isso: o modo de arquivo-fonte compila na memória e não guarda nada."
+      },
+      {
+        "text": "`javac Greet.java` e depois `java Greet`",
+        "why": "Isso grava o `Greet.class` ao lado do fonte, como na lição 1."
+      }
+    ]
+  }
+}

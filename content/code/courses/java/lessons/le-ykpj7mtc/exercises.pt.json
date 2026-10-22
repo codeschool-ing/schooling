@@ -1,0 +1,357 @@
+{
+  "ex-xjx7vpez": {
+    "prompt": "O `Leak` imprimiu `open loans.db` e `use loans.db`, e depois a exceção. Por que não há a linha `close loans.db`?",
+    "hint": "Que linha do `main` estava rodando quando a exceção foi lançada?",
+    "choices": [
+      {
+        "text": "A JVM pula o `close` quando um programa está para terminar",
+        "why": "A JVM não pula nada de propósito; a linha 6 simplesmente nunca foi alcançada."
+      },
+      {
+        "text": "A exceção saiu do `main` na linha 5, então a linha 6 nunca rodou",
+        "why": "Isso: uma exceção sai do método na hora, e toda linha depois dela é pulada."
+      },
+      {
+        "text": "O `close` rodou, mas a saída dele se perdeu atrás do stack trace",
+        "why": "O trace e os prints dividem o terminal; um `close` que rodou teria impresso a linha dele."
+      },
+      {
+        "text": "O `Resource` não implementa `AutoCloseable`",
+        "why": "Isso só importa para o try-with-resources; o `Leak` chama `close()` à mão."
+      }
+    ]
+  },
+  "ex-dcxzz2yt": {
+    "prompt": "Um servidor captura toda exceção de uma requisição e passa para a próxima. Cada requisição abre uma conexão com o banco do jeito que o `Leak` abre o recurso dele. O que acontece ao longo de um dia?",
+    "hint": "O processo não termina, então ninguém recebe as conexões de volta.",
+    "choices": [
+      {
+        "text": "Nada mesmo: o coletor de lixo fecha qualquer conexão que nenhuma variável referencia mais",
+        "why": "O coletor devolve memória; uma conexão também é mantida pelo banco, e nada a fecha."
+      },
+      {
+        "text": "O servidor cai na primeira requisição que falha",
+        "why": "Ele capturou a exceção, então segue em frente; é isso que deixa o vazamento crescer."
+      },
+      {
+        "text": "Vaza uma conexão por falha até não sobrar nenhuma e as requisições ficarem esperando",
+        "why": "Isso: um processo que termina devolve tudo; um servidor que roda por dias, não."
+      }
+    ]
+  },
+  "ex-2hp2yq01": {
+    "prompt": "O `Masked` falha no `use` e depois no `close`. O que o stack trace dele mostra?",
+    "hint": "Quando o `finally` lança, a exceção dele substitui a que já estava saindo.",
+    "choices": [
+      {
+        "text": "Só a falha no `close`",
+        "why": "Isso: o `use of loans.db failed` sumiu, e o trace aponta para o problema errado."
+      },
+      {
+        "text": "Só a falha no `use`, porque aconteceu primeiro",
+        "why": "Isso é o que o try-with-resources faz; um `finally` escrito à mão fica com a mais recente."
+      },
+      {
+        "text": "As duas, a segunda debaixo de uma linha começando com `Suppressed:`",
+        "why": "Linhas `Suppressed:` vêm do try-with-resources, na seção 04; o `Masked` não tem nenhuma."
+      },
+      {
+        "text": "Nenhuma, porque duas exceções ao mesmo tempo encerram a JVM sem mensagem",
+        "why": "A JVM imprimiu uma exceção e status 1; só que era a errada."
+      }
+    ]
+  },
+  "ex-rk1jpsn0": {
+    "prompt": "O que o `finally` escrito à mão em `Finally.java` custou, comparado com a versão que vaza? Escolha todas as que se aplicam.",
+    "hint": "Veja onde a variável é declarada e do que um segundo recurso precisaria.",
+    "choices": [
+      {
+        "text": "Uma variável declarada fora do `try`, ainda visível depois do fechamento",
+        "why": "Sim: o `finally` precisa enxergar o `r`, então o `r` continua existindo depois de fechado."
+      },
+      {
+        "text": "Blocos `try` aninhados assim que há dois recursos",
+        "why": "Sim: o segundo precisa ser fechado mesmo quando fechar o primeiro falha."
+      },
+      {
+        "text": "A exceção deixar de chegar a quem chamou",
+        "why": "Ela ainda chegou a quem chamou; o trace depois de `close loans.db` mostra isso."
+      },
+      {
+        "text": "Um programa mais lento, porque o `finally` roda numa thread separada",
+        "why": "O `finally` roda na mesma thread, logo depois de sair do bloco `try`."
+      }
+    ]
+  },
+  "ex-76m4yapy": {
+    "prompt": "Por que o coletor de lixo não resolve o problema da seção 02?",
+    "hint": "O que ele devolve?",
+    "choices": [
+      {
+        "text": "Ele não roda enquanto uma exceção está sendo lançada",
+        "why": "Ele roda quando a JVM decide; o problema é o que ele devolve, não quando."
+      },
+      {
+        "text": "Ele devolve memória e mais nada",
+        "why": "Isso: um arquivo aberto ou uma conexão ficam presos fora da memória do programa."
+      },
+      {
+        "text": "Ele só recolhe objetos criados com `new`",
+        "why": "Todo objeto é criado com `new`, o recurso também."
+      }
+    ]
+  },
+  "ex-w99bybc3": {
+    "prompt": "O que uma classe precisa fazer para que os objetos dela possam ser declarados num try-with-resources?",
+    "hint": "O `StringBuilder` foi recusado, e o primeiro `Resource` também teria sido.",
+    "choices": [
+      {
+        "text": "Ter um método público chamado `close`",
+        "why": "O primeiro `Resource` tinha um e mesmo assim seria recusado; a regra é a interface."
+      },
+      {
+        "text": "Guardar algo que não é memória",
+        "why": "O compilador não enxerga o que uma classe guarda; ele confere o tipo."
+      },
+      {
+        "text": "Implementar `AutoCloseable`",
+        "why": "Isso: uma interface com um método, `close()`, e o compilador confere."
+      },
+      {
+        "text": "Ser declarada `final` para não ser trocada dentro do bloco",
+        "why": "A variável do recurso é implicitamente final; a classe em si não precisa ser."
+      }
+    ]
+  },
+  "ex-0146jgh1": {
+    "prompt": "O `Order` abre `loans.db`, depois `audit.log`, e o corpo lança. Ponha o que aconteceu em ordem.",
+    "hint": "Ordem inversa nos fechamentos, e os tratadores vêm depois deles.",
+    "items": [
+      "`close audit.log`",
+      "`close loans.db`",
+      "o `catch` imprime `caught: use of audit.log failed`",
+      "o `finally` imprime `finally`"
+    ]
+  },
+  "ex-3s06j3rk": {
+    "prompt": "Um writer é construído em cima de um arquivo, e os dois são declarados num try-with-resources, o arquivo primeiro. Por que fechar em ordem inversa importa aqui?",
+    "hint": "Qual depende do outro?",
+    "choices": [
+      {
+        "text": "Não importa: a ordem é alfabética pelo nome da variável",
+        "why": "O `audit.log` fechou antes do `loans.db` por ter sido aberto em segundo, não pelo nome."
+      },
+      {
+        "text": "O writer descarrega dados no arquivo enquanto fecha, então o arquivo tem de estar aberto nessa hora",
+        "why": "Isso: o recurso posterior depende do anterior, e a ordem inversa nunca tira o chão de debaixo dele."
+      },
+      {
+        "text": "Fechar o arquivo primeiro faria o compilador recusar o bloco",
+        "why": "A ordem é fixada pela linguagem; não há nada para o compilador recusar."
+      }
+    ]
+  },
+  "ex-hzff6f24": {
+    "prompt": "Dentro do `catch` do `Order`, o tratador ainda pode chamar `db.use(false)`?",
+    "hint": "Onde a variável `db` existe, e quando ela foi fechada?",
+    "choices": [
+      {
+        "text": "Sim, porque o recurso só é fechado depois que o bloco `catch` e o `finally` terminam, os dois",
+        "why": "A saída diz o contrário: os dois fechamentos imprimiram antes de `caught:`."
+      },
+      {
+        "text": "Sim, mas só se a classe estiver marcada com `@Override`",
+        "why": "O `@Override` marca um método, e não tem nada a ver com escopo."
+      },
+      {
+        "text": "Não: o `db` só existe dentro do bloco `try`, e já está fechado",
+        "why": "Isso: o compilador recusa o nome, e o objeto por trás dele já foi devolvido."
+      }
+    ]
+  },
+  "ex-qtb26tm4": {
+    "prompt": "`java CountLines missing.txt` lançou `NoSuchFileException`. Que `close` rodou?",
+    "hint": "O reader chegou a existir?",
+    "choices": [
+      {
+        "text": "Nenhum: o inicializador do reader lançou, então não havia nada a fechar",
+        "why": "Isso: o try-with-resources fecha só o que de fato foi aberto."
+      },
+      {
+        "text": "O do reader, com um `null` que depois foi ignorado",
+        "why": "Nenhum `close` é chamado num recurso que nunca foi atribuído; não há `null` para ignorar."
+      },
+      {
+        "text": "O do reader, e a exceção dele ficou suprimida dentro da `NoSuchFileException` que chegou ao `main`",
+        "why": "Uma exceção suprimida teria impresso uma linha `Suppressed:`; não houve nenhuma."
+      },
+      {
+        "text": "O do próprio sistema de arquivos, dentro de `Files.newBufferedReader`",
+        "why": "Nada foi aberto, então os métodos do JDK também não tinham o que fechar."
+      }
+    ]
+  },
+  "ex-59h6ck5y": {
+    "prompt": "`BufferedReader`, arquivos, sockets e conexões com banco servem para o try-with-resources porque implementam `AutoCloseable`, a maioria pela sub-interface mais antiga `java.io.___`.",
+    "hint": "Tem o mesmo método e um nome mais antigo.",
+    "blanks": [
+      {
+        "accept": [
+          "Closeable"
+        ]
+      }
+    ]
+  },
+  "ex-20yk82en": {
+    "prompt": "O `javac NotCloseable.java` recusou `try (StringBuilder sb = new StringBuilder())`. Por quê?",
+    "hint": "Leia a segunda linha do erro.",
+    "choices": [
+      {
+        "text": "Um `StringBuilder` não pode ser criado dentro de parênteses",
+        "why": "Qualquer expressão pode inicializar um recurso; o que foi recusado é o tipo."
+      },
+      {
+        "text": "`StringBuilder` não pode ser convertido para `AutoCloseable`",
+        "why": "Isso: ele guarda só memória e não tem `close`, e o compilador diz isso."
+      },
+      {
+        "text": "O bloco não tem cláusula `catch`, e um recurso declarado entre parênteses precisa de uma para compilar",
+        "why": "O `Twr` não tinha `catch` e compilou; o `catch` é opcional."
+      }
+    ]
+  },
+  "ex-e54bxzpd": {
+    "prompt": "No try-with-resources, o corpo lança e depois o `close` lança. Que exceção chega a quem chamou?",
+    "hint": "O contrário do `Masked`.",
+    "choices": [
+      {
+        "text": "A do `close`, porque aconteceu por último",
+        "why": "Esse é o `finally` escrito à mão da seção 02, que perdeu a causa."
+      },
+      {
+        "text": "Uma exceção nova que embrulha as duas, com a falha do corpo como causa",
+        "why": "Nenhuma exceção nova é criada; a do corpo é mantida e a outra é anexada a ela."
+      },
+      {
+        "text": "A do corpo, levando a do `close` como suprimida",
+        "why": "Isso: a causa é o que você lê primeiro, e a falha no fechamento continua no relatório."
+      }
+    ]
+  },
+  "ex-aepe93f2": {
+    "prompt": "Todo `Throwable` devolve as exceções suprimidas como um array pelo método `___()`.",
+    "hint": "O `Inspect` percorreu esse array.",
+    "blanks": [
+      {
+        "accept": [
+          "getSuppressed"
+        ]
+      }
+    ]
+  },
+  "ex-q9hts4kh": {
+    "prompt": "O `Inspect` imprimiu `suppressed: close of audit.log failed` antes de `suppressed: close of loans.db failed`. Por que essa ordem?",
+    "hint": "Elas são acrescentadas à medida que os fechamentos acontecem.",
+    "choices": [
+      {
+        "text": "As exceções suprimidas são ordenadas em ordem alfabética pelo texto da mensagem",
+        "why": "Não há ordenação; a lista está na ordem em que as falhas foram acrescentadas."
+      },
+      {
+        "text": "O `audit.log` foi aberto em segundo, então foi fechado, e falhou, primeiro",
+        "why": "Isso: os fechamentos rodam em ordem inversa e cada falha entra quando acontece."
+      },
+      {
+        "text": "O array é preenchido pelo fim, então a mais nova vem primeiro",
+        "why": "A mais nova vem por último; a falha do `audit.log` é simplesmente a mais antiga."
+      },
+      {
+        "text": "O `getSuppressed` devolve a ordem de declaração dos recursos, invertida por segurança",
+        "why": "Ele devolve a ordem de inclusão; a inversão vem da ordem de fechamento, não do método."
+      }
+    ]
+  },
+  "ex-jtp0g8ge": {
+    "prompt": "A falha no `close` estava em `Resource.java:22` no `Masked` e em `Resource.java:23` no `Suppressed`, embora a instrução throw seja a mesma. Por quê?",
+    "hint": "Qual `Resource.java` foi compilado em cada caso?",
+    "choices": [
+      {
+        "text": "O trace suprimido conta as linhas a partir de um, e não de zero",
+        "why": "Os dois traces contam a partir de um; os arquivos eram diferentes."
+      },
+      {
+        "text": "O try-with-resources acrescenta uma linha escondida ao `Resource`, que empurra cada linha seguinte uma posição para baixo",
+        "why": "O código gerado fica na classe que chama, não no `Resource`; os números de linha dele não mudam."
+      },
+      {
+        "text": "O segundo arquivo tem `@Override` numa linha a mais",
+        "why": "Isso: um stack trace numera as linhas do arquivo que foi compilado."
+      }
+    ]
+  },
+  "ex-kydcgqwv": {
+    "prompt": "No try-with-resources, ligue o que falhou ao que quem chamou recebe.",
+    "hint": "A tabela no fim da seção 04.",
+    "pairs": [
+      {
+        "left": "só o corpo",
+        "right": "a exceção do corpo"
+      },
+      {
+        "left": "só o `close`",
+        "right": "a exceção do `close`"
+      },
+      {
+        "left": "o corpo, depois o `close`",
+        "right": "a exceção do corpo, com a do fechamento suprimida nela"
+      }
+    ],
+    "right_distractors": [
+      "a exceção do `close`, com a do corpo como causa"
+    ]
+  },
+  "ex-x48t0ktz": {
+    "prompt": "Um método abre um arquivo num try-with-resources e retorna de dentro do bloco. Antes de quem chamou receber o valor, o que aconteceu com o arquivo?",
+    "hint": "O código gerado é um `finally`, e a lição 36 disse quando o `finally` roda.",
+    "choices": [
+      {
+        "text": "Foi fechado, porque sair do bloco por `return` também fecha o recurso",
+        "why": "Isso: toda saída do bloco o fecha, um `return` inclusive."
+      },
+      {
+        "text": "Fica aberto até o coletor de lixo achar o reader inalcançável",
+        "why": "Isso seria o vazamento; o bloco o fecha na saída."
+      },
+      {
+        "text": "Fica aberto, porque o `return` pula o fechamento gerado",
+        "why": "O `return` não pula um `finally`, e o try-with-resources é um."
+      },
+      {
+        "text": "O compilador recusa um `return` dentro do try-with-resources",
+        "why": "Retornar de dentro do bloco é comum e compila."
+      }
+    ]
+  },
+  "ex-tqgdbpwm": {
+    "prompt": "Você revisa um código com `try { conn = open(); ... } finally { conn.close(); }`. Qual é o motivo mais forte para reescrevê-lo com try-with-resources?",
+    "hint": "Pense no dia em que o trabalho e o fechamento falham juntos.",
+    "choices": [
+      {
+        "text": "O try-with-resources roda mais rápido, porque pula o código do `finally` gerado",
+        "why": "Os dois compilam para quase o mesmo código; velocidade não é o argumento."
+      },
+      {
+        "text": "Um bloco `finally` está obsoleto desde o Java 7, a versão em que o try-with-resources o substituiu",
+        "why": "O `finally` está vivo e bem; o try-with-resources é construído com um."
+      },
+      {
+        "text": "A exceção original sobrevive quando o `close` também falha",
+        "why": "Isso: a versão escrita à mão relata a falha no fechamento e perde a causa."
+      }
+    ]
+  },
+  "ex-kzh6jkkr": {
+    "prompt": "Um try-with-resources declara três recursos. Os três abrem, o corpo lança, e todo `close` lança também. Quantas exceções suprimidas a exceção do corpo carrega?",
+    "hint": "Uma por fechamento que falhou."
+  }
+}

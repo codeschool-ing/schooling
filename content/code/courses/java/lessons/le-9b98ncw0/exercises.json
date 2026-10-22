@@ -1,0 +1,544 @@
+[
+  {
+    "id": "ex-7hxey2gz",
+    "version": 1,
+    "section": "enum-basics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `Genre.HISTORY.ordinal()` return for `enum Genre { FICTION, HISTORY, SCIENCE, POETRY }`?",
+    "hint": "Positions are counted from 0.",
+    "choices": [
+      {
+        "text": "2",
+        "correct": false,
+        "why": "That would be counting from 1; `values()` printed `1 HISTORY`."
+      },
+      {
+        "text": "1",
+        "correct": true,
+        "why": "Right: its position in the declared order, starting at 0."
+      },
+      {
+        "text": "The string `\"HISTORY\"`",
+        "correct": false,
+        "why": "That is `name()`; `ordinal()` is a number."
+      },
+      {
+        "text": "A number that changes on every run",
+        "correct": false,
+        "why": "It is fixed by the source: the order the constants are written in."
+      }
+    ]
+  },
+  {
+    "id": "ex-436722m1",
+    "version": 1,
+    "section": "enum-basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 7 warned against `==` for strings. Why is `picked == Genre.HISTORY` correct for an enum?",
+    "hint": "How many `HISTORY` objects exist in a running program?",
+    "choices": [
+      {
+        "text": "Because `==` on an enum compares the names letter by letter",
+        "correct": false,
+        "why": "`==` compares references for every object; it works here for another reason."
+      },
+      {
+        "text": "Because each constant is one object, made once",
+        "correct": true,
+        "why": "Right: `valueOf` returned that same object, so identity and equality coincide."
+      },
+      {
+        "text": "Because the compiler rewrites `==` into `equals` for enums",
+        "correct": false,
+        "why": "The compiler rewrites nothing; there is just no second `HISTORY` to compare against."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwv6y74k",
+    "version": 1,
+    "section": "enum-basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Genre.valueOf(\"history\")` ended the program. With what?",
+    "hint": "`valueOf` is exact about names.",
+    "choices": [
+      {
+        "text": "It returned `null`, and the next line threw `NullPointerException`",
+        "correct": false,
+        "why": "It never returned; the exception came from inside `valueOf`."
+      },
+      {
+        "text": "It returned `HISTORY`, because enum names ignore case",
+        "correct": false,
+        "why": "Case matters: there is no constant called `history`."
+      },
+      {
+        "text": "`IllegalArgumentException: No enum constant Genre.history`",
+        "correct": true,
+        "why": "Right: a name the enum does not have is refused loudly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4cddqepk",
+    "version": 1,
+    "section": "enum-basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Floors` has a `switch` expression over `Genre` with no case for `POETRY`. What happens?",
+    "hint": "A switch expression must produce a value for every input.",
+    "choices": [
+      {
+        "text": "It compiles, and `floor(POETRY)` returns `null`",
+        "correct": false,
+        "why": "It never compiles; the compiler knows `POETRY` exists."
+      },
+      {
+        "text": "It compiles, and throws at run time when `POETRY` arrives",
+        "correct": false,
+        "why": "The error came from `javac`, before anything ran."
+      },
+      {
+        "text": "`javac` refuses it, pointing at the incomplete switch",
+        "correct": true,
+        "why": "Right: the compiler knows every constant and finds the missing one."
+      }
+    ]
+  },
+  {
+    "id": "ex-53ys8zfa",
+    "version": 1,
+    "section": "enum-basics",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Every genre has a real answer in a `switch`. Why does the section advise leaving `default` out?",
+    "hint": "Think about a genre added next year.",
+    "choices": [
+      {
+        "text": "So a constant added later fails to compile here",
+        "correct": true,
+        "why": "Right: with `default`, the new genre falls into it and nothing points at this `switch`."
+      },
+      {
+        "text": "Because `default` is not allowed in a switch over an enum",
+        "correct": false,
+        "why": "It is allowed and compiles; the cost is the check it switches off."
+      },
+      {
+        "text": "Because `default` makes the switch slower",
+        "correct": false,
+        "why": "Speed is not the issue; what is lost is the compiler's help."
+      },
+      {
+        "text": "Because `default` runs for every constant before its own case",
+        "correct": false,
+        "why": "A `default` branch runs only when no case matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpgq7xyw",
+    "version": 1,
+    "section": "enum-with-behaviour",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `STANDARD(14, 50)`, what are `14` and `50`?",
+    "hint": "Each constant's argument list is a call to something.",
+    "choices": [
+      {
+        "text": "Its ordinal and its hash code",
+        "correct": false,
+        "why": "The ordinal comes from the position; these are values the constant carries."
+      },
+      {
+        "text": "Constructor arguments, kept in fields",
+        "correct": true,
+        "why": "Right: `days` becomes 14 and `centsPerDay` becomes 50 for that constant."
+      },
+      {
+        "text": "Its minimum and its maximum",
+        "correct": false,
+        "why": "Nothing in the enum checks a range; the constructor just stores them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8kfz7b9b",
+    "version": 1,
+    "section": "enum-with-behaviour",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`SHORT` was built as `SHORT(3, 200)`. What does `LoanType.SHORT.feeCents(6)` return, in cents?",
+    "hint": "Days late times cents per day.",
+    "value": 1200,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-7wc6f5qp",
+    "version": 1,
+    "section": "enum-with-behaviour",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`LoanType.REFERENCE.getClass()` printed `class LoanType$1`, while `SHORT.getClass()` printed `class LoanType`. Why?",
+    "hint": "`REFERENCE` is the only constant with braces of its own.",
+    "choices": [
+      {
+        "text": "Because `REFERENCE` is the third constant",
+        "correct": false,
+        "why": "Position does not create classes; `$1` numbers anonymous classes."
+      },
+      {
+        "text": "Its body made it an object of an anonymous subclass",
+        "correct": true,
+        "why": "Right: the compiler wrote `LoanType$1.class` for that body, and its `feeCents` overrides the default."
+      },
+      {
+        "text": "Because its constructor arguments are both 0",
+        "correct": false,
+        "why": "`REFERENCE(0, 0)` without a body would be a plain `LoanType`."
+      },
+      {
+        "text": "Because enums put each constant in its own class file",
+        "correct": false,
+        "why": "`STANDARD` and `SHORT` share `LoanType.class`; only the constant with a body got its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-feczfefd",
+    "version": 1,
+    "section": "enum-with-behaviour",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `REFERENCE.feeCents` throw an exception instead of returning 0?",
+    "hint": "What would a 0 mean to the code that adds fees up?",
+    "choices": [
+      {
+        "text": "Because an enum method may not return 0",
+        "correct": false,
+        "why": "Any `long` may be returned; the choice is about meaning."
+      },
+      {
+        "text": "Because `long` arithmetic overflows when `centsPerDay` is 0",
+        "correct": false,
+        "why": "Multiplying by 0 gives 0 and overflows nothing."
+      },
+      {
+        "text": "Because 0 would read as \"no fee\"",
+        "correct": true,
+        "why": "Right: asking for the fee of a loan that cannot exist is a mistake, and the refusal makes it loud."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pf7mnwg",
+    "version": 1,
+    "section": "enum-with-behaviour",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can an enum do? Choose all that apply.",
+    "hint": "It already extends `java.lang.Enum`, and it is final.",
+    "choices": [
+      {
+        "text": "Have fields, a constructor and methods",
+        "correct": true,
+        "why": "Yes: `LoanType` has all three."
+      },
+      {
+        "text": "Implement an interface",
+        "correct": true,
+        "why": "Yes: that is how an enum joins a design with other implementations, in lesson 23."
+      },
+      {
+        "text": "Extend another class of yours",
+        "correct": false,
+        "why": "It already extends `java.lang.Enum`, and a class has one superclass."
+      },
+      {
+        "text": "Be extended by an ordinary class",
+        "correct": false,
+        "why": "An enum is `final`, as `javap` showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-h751vn2d",
+    "version": 1,
+    "section": "enumset-enummap",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`EnumSet.of(Genre.POETRY, Genre.FICTION)` printed `[FICTION, POETRY]`. Why that order?",
+    "hint": "What order did `values()` print?",
+    "choices": [
+      {
+        "text": "Alphabetical order of the constants' names, A to Z",
+        "correct": false,
+        "why": "It happens to match here; the rule is the declaration order, as `range` showed."
+      },
+      {
+        "text": "The order the enum declares its constants",
+        "correct": true,
+        "why": "Right: an `EnumSet` walks its bits in ordinal order."
+      },
+      {
+        "text": "The reverse of the order they were added",
+        "correct": false,
+        "why": "They were added `POETRY` first; the set ignores insertion order entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-4bygqqcx",
+    "version": 1,
+    "section": "enumset-enummap",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`EnumSet.___(set)` returns every constant of the enum that is not in `set`.",
+    "hint": "Section 04 printed `[HISTORY, SCIENCE]` with it.",
+    "blanks": [
+      {
+        "accept": [
+          "complementOf"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ypd7sz91",
+    "version": 1,
+    "section": "enumset-enummap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `new EnumMap<>(Genre.class)` take the enum's class as an argument?",
+    "hint": "Underneath, it is an array indexed by ordinal.",
+    "choices": [
+      {
+        "text": "To know how long its internal array has to be",
+        "correct": true,
+        "why": "Right: an array needs its length up front, and the class tells it."
+      },
+      {
+        "text": "So that it can sort the keys alphabetically",
+        "correct": false,
+        "why": "It keeps the declaration order, not the alphabet."
+      },
+      {
+        "text": "Because generic type arguments are required at run time",
+        "correct": false,
+        "why": "Lesson 35 shows they are erased; that is exactly why the class is passed explicitly."
+      },
+      {
+        "text": "So that it can reject keys from other maps",
+        "correct": false,
+        "why": "It rejects keys of other types, but that is not why the class is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-svk542m3",
+    "version": 1,
+    "section": "enumset-enummap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program saved `SCIENCE` as its ordinal, 2. Somebody adds `BIOGRAPHY` at the top of the enum. What does the saved 2 read back as?",
+    "hint": "Every constant after the insertion moves one place.",
+    "choices": [
+      {
+        "text": "As `SCIENCE`, because ordinals are fixed when a constant is first created",
+        "correct": false,
+        "why": "Ordinals are positions in the current source, recomputed on every build."
+      },
+      {
+        "text": "As an `IllegalArgumentException`, because 2 no longer matches",
+        "correct": false,
+        "why": "Position 2 still exists, so nothing fails; that is the danger."
+      },
+      {
+        "text": "As `HISTORY`, with no error at all",
+        "correct": true,
+        "why": "Right: `Ordinals` printed `by ordinal: HISTORY`, a valid genre and the wrong one."
+      },
+      {
+        "text": "As `BIOGRAPHY`, the new constant",
+        "correct": false,
+        "why": "`BIOGRAPHY` is at 0; position 2 is now `HISTORY`."
+      }
+    ]
+  },
+  {
+    "id": "ex-6df1sm8w",
+    "version": 1,
+    "section": "enumset-enummap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the section recommend storing, for data that must outlive any edit to the enum, a rename included?",
+    "hint": "Even `name()` breaks on a rename.",
+    "choices": [
+      {
+        "text": "The ordinal, with a comment saying that the list must never be reordered",
+        "correct": false,
+        "why": "A comment is a habit; the first tidy-up breaks it, silently."
+      },
+      {
+        "text": "`name()`, because names never change",
+        "correct": false,
+        "why": "Names survive reordering but not renaming, which is why the section goes one step further."
+      },
+      {
+        "text": "A code of your own, kept in a field of each constant",
+        "correct": true,
+        "why": "Right: `SCIENCE(\"sci\")` keeps its code through a reorder and a rename."
+      }
+    ]
+  },
+  {
+    "id": "ex-hawx1np5",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these in the order they happen for `enum Genre { ... }` in a program that prints `Genre.FICTION`.",
+    "hint": "Lesson 27's order, and section 02's `javap`.",
+    "items": [
+      "`javac` writes `Genre.class` with a field per constant",
+      "The program uses `Genre` for the first time",
+      "`Genre`'s class initialiser creates the four constants",
+      "`println` prints `FICTION`"
+    ]
+  },
+  {
+    "id": "ex-hzj7c59n",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each method to what it gives for `Genre.SCIENCE`.",
+    "hint": "`SCIENCE` is the third constant.",
+    "pairs": [
+      {
+        "left": "`ordinal()`",
+        "right": "`2`"
+      },
+      {
+        "left": "`name()`",
+        "right": "`\"SCIENCE\"`"
+      },
+      {
+        "left": "`getDeclaringClass()`",
+        "right": "`Genre`"
+      }
+    ],
+    "right_distractors": [
+      "`3`"
+    ]
+  },
+  {
+    "id": "ex-pwsrjskw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague replaces `Genre` with `static final int FICTION = 0, HISTORY = 1, ...` \"to keep it simple\". Which check from this lesson is lost?",
+    "hint": "What did `Floors` get from the compiler?",
+    "choices": [
+      {
+        "text": "None: `int` constants are checked the same way",
+        "correct": false,
+        "why": "The compiler cannot know which `int`s are genres, so it cannot check a `switch` or a parameter."
+      },
+      {
+        "text": "A method taking a genre now accepts `7`, and a switch missing one compiles",
+        "correct": true,
+        "why": "Right: both checks need the compiler to know every value there is."
+      },
+      {
+        "text": "Only `valueOf`, which has no `int` equivalent",
+        "correct": false,
+        "why": "That is the smaller loss; the type check on every use is the larger one."
+      }
+    ]
+  },
+  {
+    "id": "ex-6qfjs5z2",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `LoanType` needs a new kind, `SUMMER`, lent for 30 days at 25 cents a day. What has to change?",
+    "hint": "Where do `days()` and `feeCents` get their numbers?",
+    "choices": [
+      {
+        "text": "One line in the list of constants: `SUMMER(30, 25)`",
+        "correct": true,
+        "why": "Right: the methods read fields, so the new constant answers them at once."
+      },
+      {
+        "text": "The new line plus a case in each method",
+        "correct": false,
+        "why": "Those methods have no `switch`; they read the constant's own fields."
+      },
+      {
+        "text": "A new subclass of `LoanType`",
+        "correct": false,
+        "why": "Nothing can extend an enum; a constant is enough."
+      },
+      {
+        "text": "A constant-specific body overriding both methods",
+        "correct": false,
+        "why": "Only behaviour that differs needs a body; these numbers fit the fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0c30r6d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does an `EnumMap<Genre, Integer>` fit better than a `HashMap<Genre, Integer>`?",
+    "hint": "The keys are the constants of one enum.",
+    "choices": [
+      {
+        "text": "Only when the map holds every constant of the enum",
+        "correct": false,
+        "why": "It works with any subset; `counts` held three of four."
+      },
+      {
+        "text": "Only when the program must store ordinals on disk",
+        "correct": false,
+        "why": "An `EnumMap` uses ordinals in memory, which is safe; storing them is the mistake."
+      },
+      {
+        "text": "Wherever the keys are an enum: it is smaller, faster and keeps the enum's order",
+        "correct": true,
+        "why": "Right: that is why the section calls it the default choice."
+      }
+    ]
+  }
+]

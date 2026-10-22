@@ -1,0 +1,370 @@
+{
+  "ex-adc2hrvc": {
+    "prompt": "Um número inteiro escrito no código, como `42`, tem que tipo?",
+    "hint": "É um dos dois padrões.",
+    "choices": [
+      {
+        "text": "`long`, porque é o mais seguro",
+        "why": "Um inteiro simples é `int`; o `long` precisa do sufixo `L`."
+      },
+      {
+        "text": "`int`",
+        "why": "Isso: e um número com ponto é um `double`."
+      },
+      {
+        "text": "O menor que couber, aqui `byte`",
+        "why": "O Java não encolhe um literal para caber; `42` é `int` seja qual for o tamanho."
+      },
+      {
+        "text": "O tipo da variável que o recebe",
+        "why": "`8_000_000_000` num `long` falhou exatamente por isso: o literal ganha o tipo antes."
+      }
+    ]
+  },
+  "ex-kvjr33bf": {
+    "prompt": "Quantos bits ocupa um `int`?",
+    "hint": "O `Integer.SIZE` o imprimiu.",
+    "unit": "bits"
+  },
+  "ex-nhymye26": {
+    "prompt": "O `Overflow` imprimiu `Integer.MAX_VALUE + 1`. O que saiu, e por quê?",
+    "hint": "O Java não para no maior valor.",
+    "choices": [
+      {
+        "text": "`2147483648`, porque o Java alarga o resultado para `long`",
+        "why": "Isso foi o que a versão `long` imprimiu; a soma de `int` continua `int`."
+      },
+      {
+        "text": "`-2147483648`: deu a volta para o menor `int`, em silêncio",
+        "why": "Isso: sem erro, sem aviso, e esse é o perigo."
+      },
+      {
+        "text": "Um `ArithmeticException` dizendo que o valor estourou",
+        "why": "A aritmética simples nunca lança exceção no estouro; o `Math.addExact` da lição 8 lança."
+      },
+      {
+        "text": "`2147483647` de novo, porque o valor trava no máximo",
+        "why": "Não há trava: passou do fim e voltou pelo outro lado."
+      }
+    ]
+  },
+  "ex-qwy8sfre": {
+    "prompt": "`long people = 8_000_000_000;` não compila. Qual é a menor correção?",
+    "hint": "O tipo do literal é decidido antes de olhar a variável.",
+    "choices": [
+      {
+        "text": "Tirar os sublinhados",
+        "why": "O compilador ignora os sublinhados; o número continua grande demais para um `int`."
+      },
+      {
+        "text": "Declarar `people` como `double`",
+        "why": "O literal é lido como `int` antes de o tipo da variável importar, então falha do mesmo jeito."
+      },
+      {
+        "text": "Acrescentar o sufixo: `8_000_000_000L`",
+        "why": "Isso: o `L` faz do literal um `long`."
+      }
+    ]
+  },
+  "ex-0xeyfsrd": {
+    "prompt": "Uma loja online guarda o total de visualizações de cada produto num `int`. Um produto foi visto 2.147.483.647 vezes. O que acontece na próxima visualização?",
+    "hint": "Esse número é conhecido.",
+    "choices": [
+      {
+        "text": "O programa para com um erro que os logs da loja vão mostrar",
+        "why": "O estouro não lança nada; não há erro para um log mostrar."
+      },
+      {
+        "text": "A contagem vira -2.147.483.648, e nada avisa",
+        "why": "Isso: é o `Integer.MAX_VALUE`, e mais um o faz dar a volta para o menor `int`."
+      },
+      {
+        "text": "A contagem fica em 2.147.483.647 daí em diante",
+        "why": "Nada trava um `int`; ele dá a volta."
+      },
+      {
+        "text": "O Java passa o valor para um `long` na primeira vez em que precisar",
+        "why": "O Java nunca muda o tipo de uma variável; ele foi decidido na compilação."
+      }
+    ]
+  },
+  "ex-qc4s4dep": {
+    "prompt": "`char letter = 'A';` e depois `letter++;`. O que `System.out.println(letter)` imprime?",
+    "hint": "Um `char` é um número por baixo.",
+    "choices": [
+      {
+        "text": "`66`",
+        "why": "Isso é o que `letter + 0` imprimiria depois do incremento; impresso como `char` é uma letra."
+      },
+      {
+        "text": "`B`",
+        "why": "Isso: o código 65 virou 66, que é `B`."
+      },
+      {
+        "text": "`A1`",
+        "why": "Isso seria juntar texto; o `++` soma um ao número."
+      },
+      {
+        "text": "Nada: `++` é erro de compilação num `char`",
+        "why": "Compilou e rodou no `Overflow`."
+      }
+    ]
+  },
+  "ex-3rj0nz60": {
+    "prompt": "Ligue cada literal ao seu tipo.",
+    "hint": "O sufixo e as aspas decidem.",
+    "pairs": [
+      {
+        "left": "`42L`",
+        "right": "`long`"
+      },
+      {
+        "left": "`39.90`",
+        "right": "`double`"
+      },
+      {
+        "left": "`39.90f`",
+        "right": "`float`"
+      },
+      {
+        "left": "`'A'`",
+        "right": "`char`"
+      }
+    ],
+    "right_distractors": [
+      "`short`"
+    ]
+  },
+  "ex-c017czvj": {
+    "prompt": "Por que o Java precisa do `Integer` se já tem o `int`?",
+    "hint": "Pense no que as coleções guardam.",
+    "choices": [
+      {
+        "text": "Porque o `Integer` guarda números maiores que o `int`",
+        "why": "Ele guarda exatamente a faixa do `int`; o wrapper põe um objeto em volta, não bits."
+      },
+      {
+        "text": "Porque boa parte do Java só trabalha com objetos, como as coleções",
+        "why": "Isso: uma lista de números é uma lista de `Integer`."
+      },
+      {
+        "text": "Porque a aritmética com `int` é mais lenta que com `Integer`",
+        "why": "O contrário: a aritmética com `Integer` desempacota para `int` primeiro."
+      }
+    ]
+  },
+  "ex-fpbzsch5": {
+    "prompt": "`Integer a = 127, b = 127;` dá `a == b` true, e `Integer c = 128, d = 128;` dá `c == d` false. O que explica a diferença?",
+    "hint": "O `==` entre objetos compara referências.",
+    "choices": [
+      {
+        "text": "128 não cabe num byte, então é guardado com menos precisão",
+        "why": "Os dois são valores `int` guardados exatamente; precisão não tem nada a ver."
+      },
+      {
+        "text": "O `==` compara valores até 127 e referências acima disso",
+        "why": "O `==` sempre compara referências em objetos; os valores é que dividiam um objeto."
+      },
+      {
+        "text": "O boxing reaproveita objetos do cache de -128 a 127, então `a` e `b` são um objeto só",
+        "why": "Isso: 128 fica fora do cache, então `c` e `d` são dois objetos."
+      }
+    ]
+  },
+  "ex-49ffwkct": {
+    "prompt": "Duas variáveis `Integer` guardam o mesmo valor. Qual comparação está certa seja qual for o valor?",
+    "hint": "A regra da seção para objetos.",
+    "choices": [
+      {
+        "text": "`x.equals(y)`",
+        "why": "Isso: compara os valores, e disse `true` para 128."
+      },
+      {
+        "text": "`x == y`",
+        "why": "Compara referências, e disse `false` para dois 128 empacotados."
+      },
+      {
+        "text": "`x == y`, desde que os dois tenham sido atribuídos a partir de literais",
+        "why": "Foi com literais que o cache entrou: 127 passou e 128 falhou."
+      }
+    ]
+  },
+  "ex-bkjycjpw": {
+    "prompt": "Transformar um `int` num `Integer` automaticamente se chama ___, e tirar o `int` de volta se chama unboxing.",
+    "hint": "O contrário da outra palavra.",
+    "blanks": [
+      {
+        "accept": [
+          "boxing",
+          "autoboxing"
+        ]
+      }
+    ]
+  },
+  "ex-8h32qxjc": {
+    "prompt": "`int copies = copiesLeft;` lança um `NullPointerException` que menciona `intValue()`, e a linha não tem chamada de método. De onde veio a chamada?",
+    "hint": "Alguém escreveu a conversão por você.",
+    "choices": [
+      {
+        "text": "Da JVM, que confere toda atribuição atrás de `null`",
+        "why": "A JVM não confere nada a mais; executou uma chamada que estava no bytecode."
+      },
+      {
+        "text": "O compilador a escreveu, para desempacotar o `Integer` num `int`",
+        "why": "Isso: o unboxing é uma chamada a `intValue()`, e chamá-la em `null` falha."
+      },
+      {
+        "text": "Do `System.out.println` da linha seguinte",
+        "why": "O rastro de pilha aponta a linha 5, a atribuição, antes de qualquer impressão."
+      }
+    ]
+  },
+  "ex-pz3wwtad": {
+    "prompt": "A primeira execução chamou a variável nula de `<local1>`, e a segunda a chamou de `copiesLeft`. O que mudou?",
+    "hint": "A segunda execução foi compilada de outro jeito.",
+    "choices": [
+      {
+        "text": "A segunda execução usou o Java 21, que imprime nomes",
+        "why": "As duas rodaram no 25; o que diferia era o arquivo de classe."
+      },
+      {
+        "text": "A variável foi renomeada entre as execuções",
+        "why": "O mesmo `Missing.java` foi usado nas duas vezes."
+      },
+      {
+        "text": "O `javac -g` manteve os nomes das variáveis locais no arquivo de classe",
+        "why": "Isso: sem eles a JVM só consegue numerar as variáveis locais."
+      }
+    ]
+  },
+  "ex-q0hefwmv": {
+    "prompt": "`var year = 1899;` Qual é o tipo de `year`?",
+    "hint": "O literal decide.",
+    "choices": [
+      {
+        "text": "Nenhum: variáveis `var` não têm tipo",
+        "why": "Têm, escrito pelo compilador; o `/vars` o imprimiu."
+      },
+      {
+        "text": "`int`",
+        "why": "Isso: um inteiro simples é `int`."
+      },
+      {
+        "text": "`long`, já que anos crescem",
+        "why": "Só `1899L` seria `long`."
+      },
+      {
+        "text": "`Integer`, já que `var` cria objetos",
+        "why": "O `var` deduz o tipo do literal, aqui um primitivo."
+      }
+    ]
+  },
+  "ex-sqhv4pmb": {
+    "prompt": "Quais destas linhas o compilador recusa? Escolha todas as que se aplicam.",
+    "hint": "O tipo é decidido uma vez, pelo valor na declaração.",
+    "choices": [
+      {
+        "text": "`var title;`",
+        "why": "Sim: sem valor, nada de onde deduzir."
+      },
+      {
+        "text": "`var author = null;`",
+        "why": "Sim: `null` não tem tipo próprio."
+      },
+      {
+        "text": "`var initial = 'D';`",
+        "why": "Não: é um `char`, como o `/vars` mostrou."
+      },
+      {
+        "text": "`year = \"nineteenth century\";` depois de `var year = 1899;`",
+        "why": "Sim: `year` é `int`, e continua sendo."
+      }
+    ]
+  },
+  "ex-3g6rckpf": {
+    "prompt": "Onde a seção diz que o `var` cobra algo de quem lê?",
+    "hint": "Quem lê precisa tirar o tipo de algum lugar.",
+    "choices": [
+      {
+        "text": "`var members = new java.util.ArrayList<String>();`",
+        "why": "Ali o tipo está na mesma linha, então o `var` poupa escrevê-lo duas vezes."
+      },
+      {
+        "text": "`var total = calculate();`",
+        "why": "Isso: nada na linha diz se `total` é `int`, `long` ou `double`."
+      },
+      {
+        "text": "`var title = \"Dom Casmurro\";`",
+        "why": "As aspas deixam a `String` clara para qualquer leitor."
+      }
+    ]
+  },
+  "ex-e609p2fj": {
+    "prompt": "Onde o `var` pode ser usado?",
+    "hint": "Campos e parâmetros são lidos por outro código.",
+    "choices": [
+      {
+        "text": "Em qualquer lugar onde se escreve um tipo",
+        "why": "Não em campos, parâmetros ou tipos de retorno, que sempre vão por extenso."
+      },
+      {
+        "text": "Em campos de uma classe, para a classe ficar mais curta",
+        "why": "Campos mantêm os tipos escritos; o `var` é para variáveis locais."
+      },
+      {
+        "text": "Em variáveis locais, dentro de um método, com um valor",
+        "why": "Isso: e só onde esse valor dá um tipo ao compilador."
+      }
+    ]
+  },
+  "ex-fjzrv37y": {
+    "prompt": "Uma biblioteca conta os milissegundos desde 1970 numa variável. Que tipo, e por quê?",
+    "hint": "Quantos milissegundos há em cinquenta anos?",
+    "choices": [
+      {
+        "text": "`int`, porque é o padrão para inteiros",
+        "why": "O padrão estoura aqui: dois bilhões de milissegundos é menos de um mês."
+      },
+      {
+        "text": "`double`, porque tempo é uma medida",
+        "why": "Milissegundos são inteiros, e um `double` arredondaria valores grandes."
+      },
+      {
+        "text": "`long`, porque a contagem passa de dois bilhões",
+        "why": "Isso: é o próprio exemplo da seção de valor que estoura um `int`."
+      }
+    ]
+  },
+  "ex-zssncgz4": {
+    "prompt": "Um método devolve `Integer` e retorna `null` quando um livro não é encontrado. Quem chama escreve `int stock = findStock(isbn);`. O que acontece com um livro que falta?",
+    "hint": "A atribuição desempacota.",
+    "choices": [
+      {
+        "text": "`stock` vira 0, o padrão de um `int`",
+        "why": "Não há padrão aqui: desempacotar `null` lança exceção antes de atribuir qualquer coisa."
+      },
+      {
+        "text": "Um `NullPointerException` naquela linha",
+        "why": "Isso: o unboxing chama `intValue()` em `null`."
+      },
+      {
+        "text": "Um erro de compilação, porque `null` não vira `int`",
+        "why": "O compilador não tem como saber que o método devolve `null`; falha na execução."
+      },
+      {
+        "text": "`stock` guarda `null` até um valor ser conhecido",
+        "why": "Um `int` não guarda `null` de jeito nenhum."
+      }
+    ]
+  },
+  "ex-1yv9cqme": {
+    "prompt": "Ordene estes tipos inteiros do menor para o maior.",
+    "hint": "8, 16, 32 e 64 bits.",
+    "items": [
+      "`byte`",
+      "`short`",
+      "`int`",
+      "`long`"
+    ]
+  }
+}

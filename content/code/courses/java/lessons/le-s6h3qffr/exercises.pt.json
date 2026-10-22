@@ -1,0 +1,363 @@
+{
+  "ex-e2747mz7": {
+    "prompt": "Para `record Book(Isbn isbn, String title, int year)`, como você lê o título?",
+    "hint": "Os acessores têm o nome dos componentes.",
+    "choices": [
+      {
+        "text": "`book.getTitle()`",
+        "why": "Esse é o nome comum numa classe escrita à mão; o acessor de um record não tem `get`."
+      },
+      {
+        "text": "`book.title()`",
+        "why": "Isso: um acessor por componente, com o nome do próprio componente."
+      },
+      {
+        "text": "`book.title`, porque o campo é público",
+        "why": "O campo é `private final`, como mostrou o `javap -p`."
+      },
+      {
+        "text": "`book.get(\"title\")`",
+        "why": "Records não têm busca por nome; cada componente tem o seu método."
+      }
+    ]
+  },
+  "ex-rnadv09w": {
+    "prompt": "`a` e `b` são dois records `Book` construídos com componentes iguais. `a == b` imprimiu `false` e `a.equals(b)` imprimiu `true`. Por que a diferença?",
+    "hint": "O `new` rodou duas vezes.",
+    "choices": [
+      {
+        "text": "`==` compara referências e o `equals` gerado compara componentes",
+        "why": "Isso: dois objetos, valores iguais."
+      },
+      {
+        "text": "O `equals` quebra para records cujo componente é outro record",
+        "why": "O `Isbn` também é record, e o `equals` dele comparou os valores; nada quebrou."
+      },
+      {
+        "text": "A JVM reaproveita um objeto para records iguais, mas o `==` ignora isso",
+        "why": "Nenhum objeto foi reaproveitado: o `==` deu `false` justamente porque havia dois."
+      }
+    ]
+  },
+  "ex-76k29gm3": {
+    "prompt": "O `javap -p Book` mostrou o que o compilador escreveu para o record. Quais destes estavam lá? Escolha todos os que se aplicam.",
+    "hint": "Leia a listagem de cima para baixo.",
+    "choices": [
+      {
+        "text": "Campos `private final`, um por componente",
+        "why": "Sim: `isbn`, `title` e `year`."
+      },
+      {
+        "text": "`equals`, `hashCode` e `toString`",
+        "why": "Sim, os três, gerados a partir dos componentes."
+      },
+      {
+        "text": "Um setter para cada componente",
+        "why": "Não há nenhum, nem pode haver; os campos são finais."
+      },
+      {
+        "text": "Um construtor sem parâmetros",
+        "why": "O único construtor recebe todos os componentes, em ordem: `Book(Isbn, java.lang.String, int)`."
+      }
+    ]
+  },
+  "ex-1p5trw95": {
+    "prompt": "O cabeçalho de um record lista os seus ___, e o compilador constrói a partir deles os campos, o construtor e os acessores.",
+    "hint": "A palavra que a seção 02 dá aos valores declarados do record.",
+    "blanks": [
+      {
+        "accept": [
+          "componentes",
+          "componente"
+        ]
+      }
+    ]
+  },
+  "ex-3ex656nf": {
+    "prompt": "Você acrescenta um componente, `String author`, ao cabeçalho de `Book` e recompila. O que mais precisa mudar para o `equals` e o `toString` o incluírem?",
+    "hint": "Quem escreveu esses métodos?",
+    "choices": [
+      {
+        "text": "Os dois métodos, à mão, e o construtor",
+        "why": "Nenhum deles é seu para editar; são gerados a partir do cabeçalho em cada compilação."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: o cabeçalho é o único lugar onde os componentes são citados, então nada fica fora de compasso."
+      },
+      {
+        "text": "Só o `hashCode`, que o compilador não consegue gerar para strings",
+        "why": "Ele gera o `hashCode` para qualquer tipo de componente."
+      },
+      {
+        "text": "Uma anotação no componente pedindo para incluí-lo",
+        "why": "Todo componente é incluído; não há nada a pedir."
+      }
+    ]
+  },
+  "ex-zxyv7qxn": {
+    "prompt": "No construtor compacto de `Isbn`, `value = value.replace(\"-\", \"\").strip();` reatribui o quê?",
+    "hint": "O construtor compacto roda antes de os campos serem atribuídos.",
+    "choices": [
+      {
+        "text": "O campo `value`, que é final e por isso não pode ser reatribuído de novo",
+        "why": "O campo é atribuído uma vez, depois do bloco; esta linha muda outra coisa."
+      },
+      {
+        "text": "O parâmetro, cujo valor final o campo então recebe",
+        "why": "Isso: o compilador atribui o campo a partir do parâmetro no fim do bloco."
+      },
+      {
+        "text": "A string que quem chamou passou, que agora perde os hífens também",
+        "why": "Strings são imutáveis; o `replace` devolveu uma string nova e a de quem chamou fica intacta."
+      }
+    ]
+  },
+  "ex-e5v6g1k5": {
+    "prompt": "`new Isbn(\"978-85-359\")` lançou `IllegalArgumentException`. O que o resto do programa pode agora supor sobre todo `Isbn` que recebe?",
+    "hint": "Um ruim é recusado antes de existir.",
+    "choices": [
+      {
+        "text": "Nada, até chamar um método `validate()`",
+        "why": "Esse método não existe; a conferência está no construtor, pelo qual todo `Isbn` passou."
+      },
+      {
+        "text": "Que ele tem hífens nos lugares de sempre",
+        "why": "O construtor tirou os hífens; ele guarda treze dígitos."
+      },
+      {
+        "text": "Que ele guarda treze caracteres, sem hífens nem espaços",
+        "why": "Isso: válido por construção, então nenhum método precisa conferir de novo."
+      }
+    ]
+  },
+  "ex-pdqwnxh8": {
+    "prompt": "`new Isbn(\" 978-85-359-0277-1 \")` imprimiu `Isbn[value=9788535902771]`. Quantos caracteres o construtor removeu?",
+    "hint": "Quatro hífens e dois espaços.",
+    "unit": "caracteres"
+  },
+  "ex-qamtnqvc": {
+    "prompt": "Depois de `titles.add(\"Iracema\")` no `main`, o `Shelf` mostrou dois títulos e o `SafeShelf` um. O que fez a diferença?",
+    "hint": "Para onde aponta o campo de cada record?",
+    "choices": [
+      {
+        "text": "O campo de `SafeShelf` é `final` e o de `Shelf` não",
+        "why": "Os dois campos são `final`; um record não tem outro tipo."
+      },
+      {
+        "text": "O `SafeShelf` copiou a lista; o `Shelf` guardou a de quem chamou",
+        "why": "Isso: o `List.copyOf` no construtor compacto cortou a ligação com a lista de quem chamou."
+      },
+      {
+        "text": "O `toString` de `Shelf` lê a lista de novo a cada vez e o de `SafeShelf` não",
+        "why": "Os dois `toString` leem o seu campo; os campos apontam para listas diferentes."
+      },
+      {
+        "text": "Records copiam os componentes por padrão, e o `Shelf` desligou isso",
+        "why": "Records não copiam nada por padrão; é por isso que o `SafeShelf` precisou copiar."
+      }
+    ]
+  },
+  "ex-b51cn7f3": {
+    "prompt": "Que tipo de componente precisa de uma cópia no construtor compacto para o record ser imutável de verdade?",
+    "hint": "Qual destes pode mudar depois de entregue?",
+    "choices": [
+      {
+        "text": "`String`",
+        "why": "Strings já são imutáveis."
+      },
+      {
+        "text": "`int`",
+        "why": "Um primitivo é copiado por valor; nada de fora consegue mudá-lo."
+      },
+      {
+        "text": "`List<String>`",
+        "why": "Isso: o campo é uma referência final a uma lista que qualquer um que a tenha consegue mudar."
+      },
+      {
+        "text": "Outro record, como o `Isbn`",
+        "why": "Um record cujos componentes são imutáveis também é imutável."
+      }
+    ]
+  },
+  "ex-g00mra0s": {
+    "prompt": "O que `case Book(String title, int pages)` faz quando `item` é um `Book`?",
+    "hint": "Um padrão faz dois trabalhos.",
+    "choices": [
+      {
+        "text": "Chama o construtor de `Book` com os dois valores",
+        "why": "Nada é construído; o record que já existe é desmontado."
+      },
+      {
+        "text": "Casa, e deixa você converter `item` para `Book` por conta própria",
+        "why": "Nenhum cast é necessário; essa é metade do que o padrão faz por você."
+      },
+      {
+        "text": "Casa com ele, e põe os componentes em duas variáveis novas",
+        "why": "Isso: testa e desmonta num passo só."
+      }
+    ]
+  },
+  "ex-w90n27p7": {
+    "prompt": "Por que o `describe` compilou sem um ramo `default`?",
+    "hint": "O que o `sealed` diz ao compilador?",
+    "choices": [
+      {
+        "text": "O `permits` lista todo `Item` possível, e cada um tem um caso",
+        "why": "Isso: o compilador conferiu os casos contra uma lista completa."
+      },
+      {
+        "text": "Porque um switch sobre records nunca precisa de `default`",
+        "why": "Sobre um tipo que não é selado precisa; os records sozinhos não completam a lista."
+      },
+      {
+        "text": "Porque o caso com guarda pega o que os outros deixam passar",
+        "why": "Uma guarda estreita um caso; não consegue pegar tipos que o caso não cita."
+      },
+      {
+        "text": "Porque o `describe` devolve uma `String`, e o `null` preenche a lacuna",
+        "why": "Uma expressão switch não tem lacuna para preencher; ela precisa produzir um valor para toda entrada."
+      }
+    ]
+  },
+  "ex-z20a286b": {
+    "prompt": "`Os Sertões` (640 páginas) imprimiu `a long book`, e `Dom Casmurro` (256) imprimiu o número de páginas. Por quê?",
+    "hint": "Os casos são testados de cima para baixo.",
+    "choices": [
+      {
+        "text": "Porque o caso `Book` sem guarda é pulado para livros com mais de 500 páginas",
+        "why": "Ele não é pulado; o caso com guarda simplesmente casou antes."
+      },
+      {
+        "text": "O caso com guarda vem antes e só o livro de 640 páginas passa em `pages > 500`",
+        "why": "Isso: o outro livro caiu no caso `Book` sem guarda."
+      },
+      {
+        "text": "Porque o `when` ordena os livros pelo número de páginas",
+        "why": "O `when` é uma condição de um caso; não ordena nada."
+      }
+    ]
+  },
+  "ex-9h3radxe": {
+    "prompt": "Complete com a palavra-chave que acrescenta uma guarda: `case Book(String t, int p) ___ p > 500 -> ...`",
+    "hint": "A seção 04 a usou nos livros longos.",
+    "blanks": [
+      {
+        "accept": [
+          "when"
+        ]
+      }
+    ]
+  },
+  "ex-9ccn62x9": {
+    "prompt": "`record Loan(String isbn, String member) { private String dueDate; }` não compila. O que o erro diz, e por quê?",
+    "hint": "O `equals` e o `toString` são construídos a partir do cabeçalho.",
+    "choices": [
+      {
+        "text": "Que `dueDate` precisa ser `final`",
+        "why": "A mensagem pediu `static`, e ofereceu um componente no lugar."
+      },
+      {
+        "text": "Que um campo precisa ser static: estado fora do cabeçalho ficaria escondido do `equals`",
+        "why": "Isso: o estado de instância de um record são os componentes e nada mais."
+      },
+      {
+        "text": "Que records não podem guardar datas",
+        "why": "Qualquer tipo pode ser componente; o problema é onde o campo foi declarado."
+      }
+    ]
+  },
+  "ex-eqkmnvq3": {
+    "prompt": "Um empréstimo é renovado: mesmo livro, mesmo membro, nova data de devolução. Por que a seção faz dele uma classe e não um record?",
+    "hint": "É o mesmo empréstimo depois da renovação?",
+    "choices": [
+      {
+        "text": "Porque um record não consegue guardar uma `LocalDate`",
+        "why": "Consegue; `record Loan(String isbn, String member, LocalDate dueDate)` compila."
+      },
+      {
+        "text": "Porque records são mais lentos que classes",
+        "why": "Velocidade não é o argumento; identidade é."
+      },
+      {
+        "text": "Ele mantém uma identidade enquanto os valores mudam, e records iguais contam como uma coisa só",
+        "why": "Isso: dois empréstimos com campos iguais seriam `equals`, e mesmo assim são empréstimos diferentes."
+      },
+      {
+        "text": "Porque um record precisaria de um setter para a data",
+        "why": "Um record não pode ter um; mas o motivo de escolher uma classe é a identidade, não o setter que falta."
+      }
+    ]
+  },
+  "ex-ghv4tz9n": {
+    "prompt": "Ligue cada coisa à escolha melhor para ela.",
+    "hint": "Dois com campos iguais são a mesma coisa?",
+    "pairs": [
+      {
+        "left": "um ISBN",
+        "right": "um record"
+      },
+      {
+        "left": "a conta de um membro, cujo saldo muda",
+        "right": "uma classe com campos privados"
+      },
+      {
+        "left": "um de exatamente quatro gêneros",
+        "right": "um enum"
+      }
+    ],
+    "right_distractors": [
+      "uma interface"
+    ]
+  },
+  "ex-9zzbfrdv": {
+    "prompt": "`record Point(int x, int y)` e `p.x = 3;` — o que acontece?",
+    "hint": "Que tipo de campo é o `x`?",
+    "choices": [
+      {
+        "text": "Compila, e `p` passa a ter `x` igual a 3",
+        "why": "O campo é privado e final; nem o acesso nem a atribuição são permitidos."
+      },
+      {
+        "text": "Não compila",
+        "why": "Isso: o campo é `private final`. O caminho para um ponto com outro `x` é `new Point(3, p.y())`."
+      },
+      {
+        "text": "Compila e lança `UnsupportedOperationException` ao rodar",
+        "why": "Essa exceção veio de uma lista na seção 03; uma atribuição de campo é conferida na compilação."
+      }
+    ]
+  },
+  "ex-t08rmtsn": {
+    "prompt": "Ponha em ordem o que acontece em `new Isbn(\" 978-85-359-0277-1 \")`.",
+    "hint": "O campo é atribuído por último.",
+    "items": [
+      "O construtor canônico é chamado com a string",
+      "O bloco compacto tira os hífens e os espaços do parâmetro",
+      "O bloco confere que sobraram treze caracteres",
+      "O campo `value` é atribuído a partir do parâmetro"
+    ]
+  },
+  "ex-mxpz4q65": {
+    "prompt": "Quais destes um record pode declarar? Escolha todos os que se aplicam.",
+    "hint": "A seção 05 listou o que é permitido e o que não é.",
+    "choices": [
+      {
+        "text": "Um método de instância, como `boolean isLong()`",
+        "why": "Sim: métodos são permitidos; só estado de instância extra é que não."
+      },
+      {
+        "text": "Um campo estático",
+        "why": "Sim: a mensagem de erro pediu exatamente isso."
+      },
+      {
+        "text": "`implements Item`",
+        "why": "Sim: os records da seção 04 implementaram uma interface selada."
+      },
+      {
+        "text": "`extends Item`, quando `Item` é uma classe",
+        "why": "Não: um record já estende `java.lang.Record`."
+      }
+    ]
+  }
+}

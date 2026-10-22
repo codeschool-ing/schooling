@@ -1,0 +1,357 @@
+{
+  "ex-1b8fv0s7": {
+    "prompt": "Depois de `swap(x, y)` com `x = 1` e `y = 2`, o que o `main` imprimiu?",
+    "hint": "O `swap` trabalhou com cópias.",
+    "choices": [
+      {
+        "text": "`x=2 y=1`",
+        "why": "Isso foi o que o `swap` imprimiu lá dentro, sobre as próprias cópias `a` e `b`."
+      },
+      {
+        "text": "`x=1 y=2`",
+        "why": "Isso: as variáveis de quem chamou nunca foram tocadas."
+      },
+      {
+        "text": "`x=2 y=2`",
+        "why": "Nada foi atribuído a `x`; o `swap` só tinha cópias."
+      },
+      {
+        "text": "Nada: o programa não compila",
+        "why": "Compila; atribuir a um parâmetro é permitido."
+      }
+    ]
+  },
+  "ex-qkbwszx2": {
+    "prompt": "No bytecode do `main`, que instruções entregaram `x` e `y` ao `swap`?",
+    "hint": "Elas empilham valores, não variáveis.",
+    "choices": [
+      {
+        "text": "`istore_1` e `istore_2`",
+        "why": "Essas põem 1 e 2 nos slots do `main`, antes da chamada."
+      },
+      {
+        "text": "`iload_1` e `iload_2`, depois `invokestatic`",
+        "why": "Isso: os dois valores foram empilhados e a chamada os levou."
+      },
+      {
+        "text": "`iload_0` e `istore_0`, dentro do `swap`",
+        "why": "Essas rodam dentro do `swap`, nos slots dele, depois da entrega."
+      }
+    ]
+  },
+  "ex-gh69w311": {
+    "prompt": "O que é um parâmetro de método, do ponto de vista da JVM?",
+    "hint": "O frame da lição 5.",
+    "choices": [
+      {
+        "text": "Uma variável local do método, preenchida por quem chama",
+        "why": "Isso: os parâmetros do `swap` eram os slots 0 e 1 dele."
+      },
+      {
+        "text": "Um ponteiro para o frame de quem chamou, que leva as escritas de volta",
+        "why": "Nenhuma instrução da JVM alcança o frame de outro método."
+      },
+      {
+        "text": "Um campo da classe, compartilhado por todas as chamadas do método",
+        "why": "Cada chamada ganha parâmetros novos num frame novo."
+      },
+      {
+        "text": "Um segundo nome para a variável de quem chamou, como na passagem por referência",
+        "why": "Isso é passagem por referência, que o Java não tem."
+      }
+    ]
+  },
+  "ex-1rmx41ye": {
+    "prompt": "O Java passa todo argumento por ___: o método recebe uma cópia do que a variável de quem chama guarda.",
+    "hint": "O contrário de \"por referência\".",
+    "blanks": [
+      {
+        "accept": [
+          "valor"
+        ]
+      }
+    ]
+  },
+  "ex-epnwgjn5": {
+    "prompt": "O `renew(mine)` mudou o livro de `mine`. O que o `renew` recebeu?",
+    "hint": "O que uma variável de tipo classe guarda?",
+    "choices": [
+      {
+        "text": "A própria variável `mine`, com outro nome",
+        "why": "Aí o `replace` também teria mudado `mine`, e não mudou."
+      },
+      {
+        "text": "Uma cópia do objeto `Book`",
+        "why": "Uma cópia do objeto teria sido mudada no lugar do original; o `main` viu a mudança."
+      },
+      {
+        "text": "Uma cópia da referência em `mine`",
+        "why": "Isso: duas setas para um objeto, então uma mudança por qualquer uma é vista pelas duas."
+      }
+    ]
+  },
+  "ex-x7g3nhke": {
+    "prompt": "Depois de `replace(mine)`, `mine` continuava *Dom Casmurro*, renovado uma vez. O que aconteceu com o objeto *Iracema*?",
+    "hint": "Quem apontava para ele quando o `replace` retornou?",
+    "choices": [
+      {
+        "text": "Tomou o lugar de *Dom Casmurro* no heap, no mesmo endereço",
+        "why": "Nada é trocado no lugar; o `new` fez um segundo objeto."
+      },
+      {
+        "text": "Virou lixo, inalcançável, quando o `replace` retornou",
+        "why": "Isso: só o `b` apontava para ele, e o `b` foi embora com o frame."
+      },
+      {
+        "text": "Foi copiado de volta para `mine` e depois descartado pelo `main`",
+        "why": "Nada volta de um método a não ser o valor de retorno, e o `replace` não devolve nada."
+      }
+    ]
+  },
+  "ex-jqq2ct7p": {
+    "prompt": "No bytecode do `replace`, o `astore_0` vem depois da construção do `Book` novo. O que ele guarda, e onde?",
+    "hint": "O slot 0 de um método estático é o primeiro parâmetro.",
+    "choices": [
+      {
+        "text": "O objeto novo, na variável `mine` de quem chamou",
+        "why": "Nenhuma instrução alcança o frame do `main`."
+      },
+      {
+        "text": "A referência ao objeto novo, no próprio parâmetro `b` do `replace`",
+        "why": "Isso: um armazenamento comum no próprio frame, como o `istore_0` para um `int`."
+      },
+      {
+        "text": "A string `Iracema`, escrita no campo do livro para o qual `mine` aponta",
+        "why": "Isso seria `putfield`; o `astore` escreve num slot local."
+      }
+    ]
+  },
+  "ex-bz363wdk": {
+    "prompt": "Um método recebe `Book b`. Quais destas coisas quem chamou consegue ver depois que o método retorna? Escolha todas as que se aplicam.",
+    "hint": "Pela seta, ou na seta?",
+    "choices": [
+      {
+        "text": "`b.renewals = 5;`",
+        "why": "Sim: escreve um campo do objeto compartilhado."
+      },
+      {
+        "text": "`b = new Book(\"X\");`",
+        "why": "Não: aponta de novo a cópia do próprio método."
+      },
+      {
+        "text": "`b.title = b.title.toUpperCase();`",
+        "why": "Sim: o campo do objeto compartilhado agora guarda uma string nova."
+      },
+      {
+        "text": "`b = null;`",
+        "why": "Não: só a cópia do método vira `null`."
+      }
+    ]
+  },
+  "ex-2shaf7vm": {
+    "prompt": "Que frase descreve a passagem de argumentos no Java?",
+    "hint": "A seção 03 tem uma frase para guardar.",
+    "choices": [
+      {
+        "text": "Primitivos por valor, objetos por referência",
+        "why": "A crença comum; o `replace` e a troca de duas strings a desmentem."
+      },
+      {
+        "text": "Tudo por referência, primitivos copiados",
+        "why": "Não existe passagem por referência no Java."
+      },
+      {
+        "text": "Tudo por valor; para um objeto, o valor é uma referência",
+        "why": "Isso: uma regra, sem exceções."
+      }
+    ]
+  },
+  "ex-ch1hvssz": {
+    "prompt": "O `shout(name)` roda `s = s.toUpperCase();` e `name` continua imprimindo `ana`. Por quê?",
+    "hint": "O que o `toUpperCase` devolve?",
+    "choices": [
+      {
+        "text": "Ele devolve uma string nova, e o `s =` aponta de novo só a cópia do método",
+        "why": "Isso: a string original não muda, como nenhuma string muda."
+      },
+      {
+        "text": "Strings são passadas por valor, ao contrário dos outros objetos",
+        "why": "Strings são passadas como qualquer outro objeto: uma cópia da referência."
+      },
+      {
+        "text": "O `toUpperCase` falha em silêncio com entrada minúscula",
+        "why": "Ele funcionou; a string em maiúsculas só nunca foi guardada onde o `main` pudesse ver."
+      }
+    ]
+  },
+  "ex-egvvpa6y": {
+    "prompt": "Qual experimento resolve que o Java não passa objetos por referência?",
+    "hint": "Numa linguagem com passagem por referência, um destes teria funcionado.",
+    "choices": [
+      {
+        "text": "O `zero(numbers)` mudando o array",
+        "why": "Isso funciona igual nos dois modelos, então não decide nada."
+      },
+      {
+        "text": "O `empty(titles)` limpando a lista",
+        "why": "Uma chamada de método no objeto compartilhado funciona nos dois modelos."
+      },
+      {
+        "text": "O `swap(first, second)` deixando-as como `AB`",
+        "why": "Isso: por referência, as duas variáveis de quem chamou teriam trocado."
+      },
+      {
+        "text": "O `increment(count)` deixando 5, já que um objeto voltou sem mudança",
+        "why": "Sugere, mas o `Integer` ser imutável confunde; a troca de dois objetos é o teste limpo."
+      }
+    ]
+  },
+  "ex-jxf2nt1r": {
+    "prompt": "O `increment(Integer n)` roda `n++`, e `count` continua 5. O que o `n++` fez?",
+    "hint": "O `Integer` é imutável.",
+    "choices": [
+      {
+        "text": "Mudou o `Integer` compartilhado, que o `main` então guardou em cache",
+        "why": "Nenhum `Integer` muda; não existe método que consiga mudar um."
+      },
+      {
+        "text": "Criou um `Integer` novo com 6 e apontou o próprio `n` para ele",
+        "why": "Isso: desembrulha, soma, embrulha um novo, reatribui a cópia do próprio método."
+      },
+      {
+        "text": "Nada, porque o `++` não funciona em `Integer`",
+        "why": "Compila e funciona na cópia do método, por meio do boxing."
+      }
+    ]
+  },
+  "ex-cyp7nd5v": {
+    "prompt": "Ligue cada corpo de método ao que quem chamou vê depois.",
+    "hint": "Pela referência, ou no parâmetro?",
+    "pairs": [
+      {
+        "left": "`numbers[0] = 0;`",
+        "right": "o primeiro elemento do array é 0"
+      },
+      {
+        "left": "`list.clear();`",
+        "right": "a lista está vazia"
+      },
+      {
+        "left": "`list = new ArrayList<>();`",
+        "right": "nada mudou"
+      }
+    ],
+    "right_distractors": [
+      "uma lista vazia nova na variável de quem chamou"
+    ]
+  },
+  "ex-8geknxf7": {
+    "prompt": "Por que o Java não tem sintaxe de parâmetro `ref` ou `&`, como o C# e o C++?",
+    "hint": "Para que serviria essa sintaxe?",
+    "choices": [
+      {
+        "text": "Porque todo parâmetro de objeto já é um parâmetro `ref`",
+        "why": "Aí uma troca de dois objetos funcionaria, e a linha 3 mostra que não."
+      },
+      {
+        "text": "Porque o Java não tem passagem por referência",
+        "why": "Isso: um método que precisa devolver algo novo o retorna."
+      },
+      {
+        "text": "Porque parâmetros `final` fazem o mesmo trabalho",
+        "why": "O `final` impede reatribuição; não devolve nada a quem chamou."
+      }
+    ]
+  },
+  "ex-7gbrk16q": {
+    "prompt": "Um método precisa dar a quem chama o menor e o maior valor de um array. Como a seção 05 faz isso?",
+    "hint": "Um método devolve um valor.",
+    "choices": [
+      {
+        "text": "Dois parâmetros `int` que o método preenche",
+        "why": "Atribuí-los mudaria só as cópias do método."
+      },
+      {
+        "text": "Devolve um record com os dois",
+        "why": "Isso: `MinMax(min, max)`, lido com `min()` e `max()`."
+      },
+      {
+        "text": "Dois campos estáticos que quem chamou lê depois",
+        "why": "Isso funciona e compartilha estado mutável entre todas as chamadas, o que a lição 15 desaconselhou."
+      }
+    ]
+  },
+  "ex-xwpn359f": {
+    "prompt": "Depois de `sortedCopy(pages)`, `pages` continuava `[256, 640, 180]`; depois de `sortInPlace(pages)` estava ordenado. O que fez a diferença?",
+    "hint": "Que array cada um ordenou?",
+    "choices": [
+      {
+        "text": "O `sortedCopy` recebeu uma cópia do array, e o `sortInPlace` o próprio array",
+        "why": "Os dois receberam uma cópia da mesma referência; um deles é que clonou o array."
+      },
+      {
+        "text": "Um deles clonou o array antes de ordenar",
+        "why": "Isso: o `values.clone()` fez um segundo array, e só ele foi ordenado."
+      },
+      {
+        "text": "O `Arrays.sort` só muda arrays que ele mesmo cria",
+        "why": "Ele ordena qualquer array que receber, como o `sortInPlace` mostrou."
+      }
+    ]
+  },
+  "ex-rdkpc23p": {
+    "prompt": "`static void replace(final StringBuilder b)` contém `b.append(\"!\");` e `b = new StringBuilder(\"other\");`. Que linha o `javac` recusa?",
+    "hint": "O `final` é sobre a seta, não sobre o objeto.",
+    "choices": [
+      {
+        "text": "`b.append(\"!\");`, porque `b` é final",
+        "why": "O `final` não congela o objeto; a chamada compilou."
+      },
+      {
+        "text": "As duas linhas",
+        "why": "Só a atribuição quebrou a regra."
+      },
+      {
+        "text": "`b = new StringBuilder(\"other\");`",
+        "why": "Isso: `final parameter b may not be assigned`."
+      }
+    ]
+  },
+  "ex-bjbgfw7t": {
+    "prompt": "Ponha em ordem o que acontece durante `replace(mine)`.",
+    "hint": "Primeiro a cópia, por último a nova direção.",
+    "items": [
+      "O `main` empilha a referência guardada em `mine`",
+      "O frame do `replace` é criado, com essa referência em `b`",
+      "Um `Book` novo é construído no heap",
+      "O `b` passa a apontar para o `Book` novo",
+      "O `replace` retorna e o frame dele, com o `b`, é descartado"
+    ]
+  },
+  "ex-7m5jfnds": {
+    "prompt": "Um colega escreve `void reset(Book b) { b = new Book(b.title); }` para zerar as renovações de um livro. O que quem chamou vê?",
+    "hint": "Alguma coisa é escrita pela referência?",
+    "choices": [
+      {
+        "text": "O livro com 0 renovações, como pretendido",
+        "why": "O livro novo foi para a cópia da seta do método e depois foi descartado."
+      },
+      {
+        "text": "O mesmo livro, com as renovações sem mudança",
+        "why": "Isso: a correção é `b.renewals = 0;`, ou devolver o livro novo."
+      },
+      {
+        "text": "Uma `NullPointerException`, porque o livro antigo é recolhido",
+        "why": "Quem chamou ainda aponta para o livro antigo, então ele não é lixo."
+      },
+      {
+        "text": "Um erro de compilação, porque um parâmetro não pode ser reatribuído",
+        "why": "Pode, a não ser que seja `final`; compila e não faz nada visível."
+      }
+    ]
+  },
+  "ex-nf25jxhx": {
+    "prompt": "`int[] a = {1, 2, 3};` e `void f(int[] x) { x[1] = 10; x = new int[]{0, 0, 0}; x[2] = 20; }`. Depois de `f(a)`, quanto vale `a[1] + a[2]`?",
+    "hint": "Quais escritas acontecem antes de `x` ser apontado de novo?"
+  }
+}

@@ -1,0 +1,524 @@
+[
+  {
+    "id": "ex-dwwbpq0b",
+    "version": 1,
+    "section": "extends",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Book` declares no `describe()`. Why does `book.describe()` compile and run?",
+    "hint": "What does `extends Item` give `Book`?",
+    "choices": [
+      {
+        "text": "`Book` inherits it from `Item`, which `extends` made its superclass",
+        "correct": true,
+        "why": "Right: a subclass has every method its superclass has."
+      },
+      {
+        "text": "The compiler copies `describe()` into `Book.class`",
+        "correct": false,
+        "why": "`javap -p Book` showed no `describe()` in `Book.class`; it is found in `Item` when called."
+      },
+      {
+        "text": "Every class gets a `describe()` from `java.lang.Object`",
+        "correct": false,
+        "why": "`Object` gives `toString`, `equals` and `hashCode`, not `describe`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nhjgwb1",
+    "version": 1,
+    "section": "extends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`describe()` is written once, in `Item`, and calls `loanDays()`. Why does the DVD's line say 7 days and the book's 14?",
+    "hint": "Which `loanDays()` exists on a `Dvd` object?",
+    "choices": [
+      {
+        "text": "`describe()` checks whether the item is a `Dvd` before choosing the number",
+        "correct": false,
+        "why": "There is no check in `describe()`; it just calls `loanDays()`."
+      },
+      {
+        "text": "`Dvd` overrides `loanDays()`, and the call runs the version of the object it is made on",
+        "correct": true,
+        "why": "Right: on a DVD the overriding `loanDays()` runs; lesson 25 explains how."
+      },
+      {
+        "text": "Because `Dvd`'s constructor passes 7 to `super`",
+        "correct": false,
+        "why": "The constructor passes a title and a year; the 7 comes from a method."
+      },
+      {
+        "text": "`@Override` copies the new value into `Item`",
+        "correct": false,
+        "why": "`@Override` asks for a check and changes nothing in `Item`."
+      }
+    ]
+  },
+  {
+    "id": "ex-y12t8v9d",
+    "version": 1,
+    "section": "extends",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `super(title, year);` removed from `Book`'s constructor, the compiler said `required: String,int`, `found: no arguments`. What had it done?",
+    "hint": "A constructor always starts with a call to another one.",
+    "choices": [
+      {
+        "text": "Looked for a `Book()` constructor with no arguments",
+        "correct": false,
+        "why": "The message names `Item`'s constructor, not `Book`'s."
+      },
+      {
+        "text": "Inserted a call to `super()` with no arguments, which `Item` cannot accept",
+        "correct": true,
+        "why": "Right: with no explicit call, an argument-less `super()` is inserted, and `Item` has no such constructor."
+      },
+      {
+        "text": "Refused because `title` and `year` were never assigned",
+        "correct": false,
+        "why": "Unassigned fields would be a different error; this one is about a constructor call."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5n87s4b",
+    "version": 1,
+    "section": "extends",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Book.author()` tried to read `year`, which `Item` declares `private`. What happened?",
+    "hint": "A book has a year. May its code touch it?",
+    "choices": [
+      {
+        "text": "It compiled, because a subclass sees everything its superclass declares",
+        "correct": false,
+        "why": "It did not: `private` is private to the declaring class, subclasses included."
+      },
+      {
+        "text": "It compiled and printed 0, because the subclass gets its own empty copy",
+        "correct": false,
+        "why": "There is one `year`, set by `Item`'s constructor; the compiler refused the read."
+      },
+      {
+        "text": "A compile error: `year has private access in Item`",
+        "correct": true,
+        "why": "Right: `protected` would have opened it; `private` did not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c0cp8xx",
+    "version": 1,
+    "section": "extends",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The modifier that lets a subclass read a field its superclass declares, as `Item` does with `title`, is ___.",
+    "hint": "Between private and public.",
+    "blanks": [
+      {
+        "accept": [
+          "protected"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d8eejhx6",
+    "version": 1,
+    "section": "overriding-basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside `Dvd.describe()`, `super.describe()` runs `Item`'s version. Which `loanDays()` does that version call?",
+    "hint": "`super` picks a method, not an object.",
+    "choices": [
+      {
+        "text": "`Item`'s, because `super` switches the whole call to the parent",
+        "correct": false,
+        "why": "The line printed 7 days, which is `Dvd`'s `loanDays()`."
+      },
+      {
+        "text": "`Dvd`'s: the object is still the DVD",
+        "correct": true,
+        "why": "Right: `super` chose which `describe()` ran, and the object stayed a DVD."
+      },
+      {
+        "text": "Neither: a method called through `super` cannot call others",
+        "correct": false,
+        "why": "It called `loanDays()` and the result appeared in the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-84568thg",
+    "version": 1,
+    "section": "overriding-basics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the superclass of `Item`, which declares none?",
+    "hint": "`Chain` printed it.",
+    "choices": [
+      {
+        "text": "None: `getSuperclass()` returns `null` for it",
+        "correct": false,
+        "why": "`null` came after `java.lang.Object`, the parent of `Item`."
+      },
+      {
+        "text": "`java.lang.Object`, the root every class sits under",
+        "correct": true,
+        "why": "Right: a class that does not say `extends` extends `Object`."
+      },
+      {
+        "text": "`Book`, since it is the first class to extend `Item`",
+        "correct": false,
+        "why": "The arrow goes the other way: `Book` extends `Item`."
+      }
+    ]
+  },
+  {
+    "id": "ex-bjf9qf4q",
+    "version": 1,
+    "section": "overriding-basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two `Book` objects with the same title, year and author: why is `a.equals(b)` false?",
+    "hint": "Which class wrote the `equals` that ran?",
+    "choices": [
+      {
+        "text": "Because `equals` compares the hash codes, and those differ",
+        "correct": false,
+        "why": "`Object.equals` compares identity directly; the hash codes differing is a second symptom."
+      },
+      {
+        "text": "Because `author` is private, so `equals` cannot compare it",
+        "correct": false,
+        "why": "Object's `equals` compares no fields at all, private or not."
+      },
+      {
+        "text": "`Book` inherits `Object.equals`, which is the same as `==`",
+        "correct": true,
+        "why": "Right: two different objects, so false, until a class overrides `equals` and `hashCode`."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs9gsd1m",
+    "version": 1,
+    "section": "overriding-basics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`System.out.println(a)` printed `Book@7ad041f3`. Run the program again and what changes?",
+    "hint": "The number is derived from the object's identity.",
+    "choices": [
+      {
+        "text": "Nothing: it is the book's position in memory, which is fixed",
+        "correct": false,
+        "why": "It is derived from identity, and it differs on every run."
+      },
+      {
+        "text": "The number after `@`",
+        "correct": true,
+        "why": "Right: `Object.toString` prints a value tied to that object's identity, which is new on every run."
+      },
+      {
+        "text": "The class name, if `Book` is compiled again",
+        "correct": false,
+        "why": "The class name comes from the class and stays `Book`."
+      },
+      {
+        "text": "It prints the title instead, once the object has been used",
+        "correct": false,
+        "why": "`toString` prints the same shape until a class overrides it."
+      }
+    ]
+  },
+  {
+    "id": "ex-scs3fxmq",
+    "version": 1,
+    "section": "overriding-basics",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each method inherited from `Object` to what its default does.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "`toString()`",
+        "right": "Class name, `@`, and a number from the object's identity"
+      },
+      {
+        "left": "`equals(Object)`",
+        "right": "True only for the very same object"
+      },
+      {
+        "left": "`hashCode()`",
+        "right": "A number derived from the object's identity"
+      }
+    ],
+    "right_distractors": [
+      "Compares every field of the two objects"
+    ]
+  },
+  {
+    "id": "ex-135wnfh1",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the compiler say about `public class Book extends Item, Dvd`?",
+    "hint": "It expected the class body.",
+    "choices": [
+      {
+        "text": "`'{' expected`, at the comma",
+        "correct": true,
+        "why": "Right: single inheritance is a rule of the grammar."
+      },
+      {
+        "text": "That `Dvd` and `Item` both declare `loanDays()`",
+        "correct": false,
+        "why": "It never got that far; the error was at the comma."
+      },
+      {
+        "text": "Nothing: it compiled, and `Book` took `Dvd`'s methods",
+        "correct": false,
+        "why": "It refused; a class extends exactly one class."
+      }
+    ]
+  },
+  {
+    "id": "ex-d926yy36",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these passes the is-a test for `extends`?",
+    "hint": "Say the sentence: every X is a Y.",
+    "choices": [
+      {
+        "text": "`Loan extends Book`, since a loan needs a book's title",
+        "correct": false,
+        "why": "A loan has a book; that is a field."
+      },
+      {
+        "text": "`Member extends HashSet<String>`, to keep a member's ISBNs",
+        "correct": false,
+        "why": "A member is not a set; the set belongs in a field."
+      },
+      {
+        "text": "`Magazine extends Item`",
+        "correct": true,
+        "why": "Right: a magazine is something the library lends, with a title and a year."
+      },
+      {
+        "text": "`Item extends Book`, so items get an author",
+        "correct": false,
+        "why": "Not every item is a book; a DVD would get an author it does not have."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4cst4wr",
+    "version": 1,
+    "section": "limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`CountingSet` was given three ISBNs in one `addAll`. What count did it report?",
+    "hint": "Each one was counted twice.",
+    "value": 6,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z0m619th",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did `CountingSet` count each ISBN twice, when neither of its methods is wrong on its own?",
+    "hint": "What does `HashSet.addAll` do inside?",
+    "choices": [
+      {
+        "text": "`List.of` hands each element over twice, once per method that adds",
+        "correct": false,
+        "why": "`size()` was 3: the list had three elements and the set three."
+      },
+      {
+        "text": "`addAll` calls `add` inside, and `add` is overridden too",
+        "correct": true,
+        "why": "Right: a detail of how `HashSet` is written, which the subclass came to depend on."
+      },
+      {
+        "text": "`@Override` makes each overriding method run twice",
+        "correct": false,
+        "why": "`@Override` only asks for a check; it runs nothing."
+      },
+      {
+        "text": "The counter is shared by the set and its superclass",
+        "correct": false,
+        "why": "There is one `added` field, in `CountingSet`; it was incremented twice per ISBN."
+      }
+    ]
+  },
+  {
+    "id": "ex-xncgzswz",
+    "version": 1,
+    "section": "limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`CountingShelf` reported 3 for the same three ISBNs. What made it immune to `HashSet`'s internals?",
+    "hint": "It has a set; it is not one.",
+    "choices": [
+      {
+        "text": "It calls `add` in a loop, which `HashSet` does not",
+        "correct": false,
+        "why": "`HashSet.addAll` also calls `add`; the difference is whose `add`."
+      },
+      {
+        "text": "It keeps the set in a field, out of `HashSet`'s reach",
+        "correct": true,
+        "why": "Right: composition; the set is used only through its public methods."
+      },
+      {
+        "text": "Its field is `private`, which stops `HashSet` from double-counting",
+        "correct": false,
+        "why": "Visibility of the field is not what changed the count; who calls whom is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5b8ec12",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the classes in order from the root of the hierarchy down to the class `Lending` created.",
+    "hint": "`Chain` printed them the other way round.",
+    "items": [
+      "`java.lang.Object`",
+      "`Item`",
+      "`Book`"
+    ]
+  },
+  {
+    "id": "ex-kqye9rd3",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `Book` object has which of these, without `Book.java` declaring them? Choose all that apply.",
+    "hint": "Everything from `Item` and from `Object`.",
+    "choices": [
+      {
+        "text": "`loanDays()`",
+        "correct": true,
+        "why": "Yes: inherited from `Item`."
+      },
+      {
+        "text": "`hashCode()`",
+        "correct": true,
+        "why": "Yes: inherited from `Object`, through `Item`."
+      },
+      {
+        "text": "a `year` field, though its code cannot read it",
+        "correct": true,
+        "why": "Yes: the object has it, set by `Item`'s constructor; `private` stops `Book`'s code reading it."
+      },
+      {
+        "text": "a `minutes` field",
+        "correct": false,
+        "why": "That is `Dvd`'s; siblings share nothing but their parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxsfkeg6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a `Catalogue` that holds books and can be searched by author. A colleague proposes `Catalogue extends ArrayList<Book>`. What does the lesson say?",
+    "hint": "Say the sentence, then think about `CountingSet`.",
+    "choices": [
+      {
+        "text": "Good: a catalogue is a list, and it inherits `add` and `get` for free",
+        "correct": false,
+        "why": "It inherits every list method, including ones that bypass any rule the catalogue keeps, and ties it to `ArrayList`'s internals."
+      },
+      {
+        "text": "Keep the list in a private field; offer only what a catalogue needs",
+        "correct": true,
+        "why": "Right: composition keeps `ArrayList`'s details out of `Catalogue`'s behaviour."
+      },
+      {
+        "text": "Extend `Book` instead, since a catalogue is made of books",
+        "correct": false,
+        "why": "A catalogue is not a book; that fails the is-a test outright."
+      }
+    ]
+  },
+  {
+    "id": "ex-njw7fcws",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where may `super(...)` appear in a constructor, in the code this lesson wrote?",
+    "hint": "The item part is built before the book part.",
+    "choices": [
+      {
+        "text": "Anywhere, as long as it is called once",
+        "correct": false,
+        "why": "The superclass part must exist before the subclass part uses it."
+      },
+      {
+        "text": "Only in classes that extend something other than `Object`",
+        "correct": false,
+        "why": "Every constructor calls a superclass constructor, `Object`'s included; it is just inserted for you."
+      },
+      {
+        "text": "As the first thing, before `this.author = author`",
+        "correct": true,
+        "why": "Right: lesson 27 shows the statements Java 25 allows before it, and what they may not touch."
+      }
+    ]
+  },
+  {
+    "id": "ex-wqvjz9mv",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Holding an object in a field and using its public methods, instead of extending its class, is called ___.",
+    "hint": "`CountingShelf` does it.",
+    "blanks": [
+      {
+        "accept": [
+          "composition"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,354 @@
+{
+  "ex-9z31w9f1": {
+    "prompt": "No `Walk.java`, o que aconteceu quando `next()` foi chamado depois de o `hasNext()` responder `false`?",
+    "hint": "A última linha do programa.",
+    "choices": [
+      {
+        "text": "Recomeçou do `Dune`, na cabeça da lista",
+        "why": "Um iterador nunca reinicia; um novo percurso precisa de um iterador novo."
+      },
+      {
+        "text": "Devolveu `null`, como valor de fim de percurso",
+        "why": "Devolver `null` é o `poll` de uma fila; o `next` de um iterador lança exceção."
+      },
+      {
+        "text": "Lançou `NoSuchElementException`",
+        "why": "Isso: de `ImmutableCollections$ListItr.next`, o iterador que o `List.of` criou."
+      }
+    ]
+  },
+  "ex-00bxvv1x": {
+    "prompt": "O `javap -c Shelf` mostrou três chamadas de interface para um laço `for-each`. Quais eram?",
+    "hint": "O laço primeiro pede algo à lista.",
+    "choices": [
+      {
+        "text": "`List.size`, `List.get` e `String.length`",
+        "why": "Isso seria um laço por índice; o `for-each` numa lista nunca chama `get`."
+      },
+      {
+        "text": "`List.iterator`, `Iterator.hasNext` e `Iterator.next`",
+        "why": "Isso: o compilador reescreveu o laço no protocolo do iterador."
+      },
+      {
+        "text": "`Iterable.forEach`, chamado uma vez com o corpo do laço",
+        "why": "Esse método existe, mas o bytecode mostra as três chamadas de um laço comum."
+      },
+      {
+        "text": "Uma única instrução `foreach` da JVM, com duas chamadas auxiliares",
+        "why": "Essa instrução não existe; a JVM só vê chamadas."
+      }
+    ]
+  },
+  "ex-ps69an38": {
+    "prompt": "Um laço `for-each` compila sobre um array, ou sobre qualquer coisa que implemente a interface `___`.",
+    "hint": "O único método dela é `iterator()`.",
+    "blanks": [
+      {
+        "accept": [
+          "Iterable",
+          "java.lang.Iterable"
+        ]
+      }
+    ]
+  },
+  "ex-qqk2g16k": {
+    "prompt": "Por que não dá para escrever `for (var e : map)` diretamente sobre um `Map`?",
+    "hint": "Que interface faz um `for-each` compilar?",
+    "choices": [
+      {
+        "text": "`Map` não é `Iterable`; percorre-se uma visão",
+        "why": "Isso: `keySet()`, `values()` ou `entrySet()`, cada uma delas iterável."
+      },
+      {
+        "text": "Mapas só podem ser lidos por chave, com `get`",
+        "why": "Eles podem ser percorridos; só não diretamente, como `Map`."
+      },
+      {
+        "text": "A ordem de um mapa é indefinida, então o Java proíbe percorrê-lo",
+        "why": "O `TreeMap` tem ordem definida e mesmo assim não é `Iterable`; o motivo é a interface."
+      }
+    ]
+  },
+  "ex-4dq5yp5a": {
+    "prompt": "Dois laços chamam `shelf.iterator()` na mesma lista. O primeiro está na metade quando o segundo começa. De onde o segundo parte?",
+    "hint": "Quem guarda a posição?",
+    "choices": [
+      {
+        "text": "Da metade, onde o primeiro está",
+        "why": "A posição pertence a cada iterador, não à lista."
+      },
+      {
+        "text": "Antes do primeiro elemento, com uma posição só sua",
+        "why": "Isso: cada chamada a `iterator()` cria um objeto novo com a sua própria posição."
+      },
+      {
+        "text": "Lança `ConcurrentModificationException`, já que há dois iteradores abertos",
+        "why": "Ler com dois iteradores não muda nada; só uma mudança estrutural dispara a verificação."
+      }
+    ]
+  },
+  "ex-kxwaaj8s": {
+    "prompt": "Por que a exceção no `Walk.java` citou uma classe, `ImmutableCollections$ListItr`, que o programa nunca menciona?",
+    "hint": "Quem criou o iterador?",
+    "choices": [
+      {
+        "text": "Porque o `Walk` declarou a sua própria classe de iterador sem lhe dar nome",
+        "why": "O `Walk` não declara classe além dele mesmo; o iterador veio da lista."
+      },
+      {
+        "text": "Porque o `List.of` devolve uma lista que não pode ser percorrida",
+        "why": "Ela foi percorrida sem problema; a exceção só veio depois do fim."
+      },
+      {
+        "text": "É a classe de iterador das listas do `List.of`",
+        "why": "Isso: o `iterator()` devolveu um objeto de uma classe do JDK escrita para aquela lista."
+      }
+    ]
+  },
+  "ex-3x10hw3v": {
+    "prompt": "O `Overdue.java` removeu um elemento de `loans` dentro de um `for-each` sobre `loans`. O que aconteceu?",
+    "hint": "O `next()` seguinte percebeu.",
+    "choices": [
+      {
+        "text": "`ConcurrentModificationException`, no `next()` seguinte",
+        "why": "Isso: a lista tinha mudado pelas costas do iterador."
+      },
+      {
+        "text": "Imprimiu `[Dune, Ulysses, Beloved]`",
+        "why": "Ele nunca chegou ao `println`."
+      },
+      {
+        "text": "Não compilaria",
+        "why": "Compilou; a falha aconteceu em tempo de execução."
+      }
+    ]
+  },
+  "ex-mndxp6nh": {
+    "prompt": "O `Overdue.java` tem uma thread. Por que a exceção se chama *Concurrent*ModificationException?",
+    "hint": "Duas coisas mexiam na lista ao mesmo tempo.",
+    "choices": [
+      {
+        "text": "Porque a JVM inicia uma thread escondida para rodar cada `for-each`",
+        "why": "Nenhuma thread é iniciada; o laço roda na thread do `main`."
+      },
+      {
+        "text": "Dois usos da mesma lista se sobrepuseram: o percurso e o `remove`",
+        "why": "Isso: uma thread, dois jeitos de mexer na lista ao mesmo tempo."
+      },
+      {
+        "text": "Porque o coletor de lixo moveu a lista durante o laço",
+        "why": "O coletor mover objetos é invisível aos programas; o que diferiu foi a contagem de mudanças."
+      }
+    ]
+  },
+  "ex-ppqc4wz0": {
+    "prompt": "Como um iterador de `ArrayList` sabe que a lista mudou pelas costas dele?",
+    "hint": "Um número, copiado e comparado.",
+    "choices": [
+      {
+        "text": "Guarda uma cópia de cada elemento e as compara a cada `next()`",
+        "why": "Isso dobraria a memória; ele guarda um número."
+      },
+      {
+        "text": "A lista lhe manda uma mensagem sempre que o `remove` é chamado",
+        "why": "Listas não acompanham os seus iteradores; é o iterador que confere."
+      },
+      {
+        "text": "Compara o `modCount` da lista com o valor que copiou",
+        "why": "Isso: uma diferença no `next()` quer dizer que houve mudança estrutural."
+      }
+    ]
+  },
+  "ex-n1hqb1wm": {
+    "prompt": "O `Quiet.java` removeu `Ulysses:late` dentro do laço e terminou sem exceção. O que deu errado?",
+    "hint": "Conte as linhas `checking`.",
+    "choices": [
+      {
+        "text": "Nada: a verificação só dispara quando o elemento removido é o primeiro",
+        "why": "Ele removeu um atrasado e deixou outro na lista, o que está errado."
+      },
+      {
+        "text": "O `remove` falhou em silêncio e `Ulysses:late` continua na lista",
+        "why": "A lista impressa não tem `Ulysses:late`; ele foi removido."
+      },
+      {
+        "text": "O `hasNext()` parou cedo, e o laço nunca chegou a conferir `Beloved:late`",
+        "why": "Isso: o `hasNext()` viu o cursor igual ao tamanho e parou, depois de três linhas `checking` para quatro empréstimos."
+      }
+    ]
+  },
+  "ex-m8y2xtmt": {
+    "prompt": "Na figura, depois de `Ulysses:late` ser removido, o cursor era 3. Qual era o tamanho da lista?",
+    "hint": "Quatro elementos, um removido."
+  },
+  "ex-t5mv5m3b": {
+    "prompt": "Dentro de um `for-each` sobre um `ArrayList`, qual destes não dispara a verificação fail-fast?",
+    "hint": "Só mudanças estruturais mexem no `modCount`.",
+    "choices": [
+      {
+        "text": "`list.add(x)`",
+        "why": "Acrescentar muda a estrutura e mexe no `modCount`."
+      },
+      {
+        "text": "`list.set(i, x)`",
+        "why": "Isso: substituir um elemento não é mudança estrutural."
+      },
+      {
+        "text": "`list.remove(x)`",
+        "why": "Remover é a mudança em que a seção 03 tropeçou."
+      },
+      {
+        "text": "`list.clear()`",
+        "why": "Limpar remove cada elemento, uma mudança estrutural."
+      }
+    ]
+  },
+  "ex-mjg79yvb": {
+    "prompt": "Que chamada remove de `b` cada empréstimo terminado em `:late` sem escrever um laço?",
+    "hint": "Ela recebe uma condição.",
+    "choices": [
+      {
+        "text": "`b.removeAll(\":late\")`",
+        "why": "O `removeAll` recebe uma coleção de elementos a remover, não um padrão."
+      },
+      {
+        "text": "`b.removeIf(loan -> loan.endsWith(\":late\"))`",
+        "why": "Isso: ele percorre a lista sozinho, com segurança."
+      },
+      {
+        "text": "`b.remove(\":late\")`",
+        "why": "Isso remove um elemento igual à string `:late`, e não há nenhum."
+      }
+    ]
+  },
+  "ex-ghz8sqf3": {
+    "prompt": "Por que o `it.remove()` não causa a exceção que o `loans.remove(loan)` causou?",
+    "hint": "Quem fez a mudança?",
+    "choices": [
+      {
+        "text": "O `it.remove()` só marca; a lista remove depois",
+        "why": "Ele remove na hora; a lista impressa depois do laço não tinha atrasados."
+      },
+      {
+        "text": "Foi o iterador que fez a mudança, então ele atualiza a contagem e o cursor",
+        "why": "Isso: a mudança não acontece mais pelas costas dele."
+      },
+      {
+        "text": "Porque um `Iterator` explícito não é conferido, só o `for-each` é",
+        "why": "O `for-each` usa o mesmo iterador; a diferença é quem remove."
+      }
+    ]
+  },
+  "ex-86h5bb8e": {
+    "prompt": "O laço com `ListIterator` transformou quatro empréstimos em sete elementos. Por que ele não visitou depois as cartas que inseriu?",
+    "hint": "Onde o `add` põe o elemento novo?",
+    "choices": [
+      {
+        "text": "Porque o `add` põe os elementos novos no fim da lista",
+        "why": "As cartas ficam logo depois de cada empréstimo multado, não no fim."
+      },
+      {
+        "text": "Ele as visitou, sim, e as pulou porque não terminam em `:late`",
+        "why": "Elas seriam puladas pelo `if`, mas o `next()` nunca as devolveu."
+      },
+      {
+        "text": "O `add` o põe atrás do cursor, fora do caminho do `next()`",
+        "why": "Isso: o iterador segue a partir de depois da inserção."
+      }
+    ]
+  },
+  "ex-a9czd6zn": {
+    "prompt": "Ligue cada necessidade à técnica que a tabela da seção dá para ela.",
+    "hint": "A tabela abaixo da transcrição.",
+    "pairs": [
+      {
+        "left": "Remover o que satisfaz uma condição",
+        "right": "`removeIf`"
+      },
+      {
+        "left": "Decidir elemento a elemento, com efeito colateral",
+        "right": "Um `Iterator` explícito e `it.remove()`"
+      },
+      {
+        "left": "Substituir ou inserir enquanto percorre uma lista",
+        "right": "Um `ListIterator`"
+      },
+      {
+        "left": "Chamar de dentro do laço um método que muda a lista",
+        "right": "Percorrer `List.copyOf(...)`"
+      }
+    ]
+  },
+  "ex-qss3ke9z": {
+    "prompt": "Um laço sobre `member.loans()` chama `member.returnLoan(loan)`, que remove o empréstimo dessa mesma lista dentro de `Member`. Que técnica serve?",
+    "hint": "O laço não alcança o iterador que precisaria remover.",
+    "choices": [
+      {
+        "text": "Um `Iterator` explícito e `it.remove()`",
+        "why": "A remoção acontece dentro do `returnLoan`, não pelo seu iterador."
+      },
+      {
+        "text": "Percorrer uma cópia, `List.copyOf(member.loans())`",
+        "why": "Isso: a cópia não muda, e o `returnLoan` muda a lista de verdade à vontade."
+      },
+      {
+        "text": "Um `ListIterator`, para a remoção ser permitida",
+        "why": "Um iterador de lista só protege as mudanças que ele mesmo faz."
+      },
+      {
+        "text": "Capturar `ConcurrentModificationException` e continuar o laço",
+        "why": "A verificação é de melhor esforço; capturá-la esconde um defeito que pode também pular elementos."
+      }
+    ]
+  },
+  "ex-t58gwy5m": {
+    "prompt": "Ponha os passos de um `for-each` sobre uma lista na ordem em que o código compilado os faz.",
+    "hint": "Primeiro pedir o iterador.",
+    "items": [
+      "Chamar `iterator()` na lista",
+      "Chamar `hasNext()`",
+      "Chamar `next()` e atribuir a variável do laço",
+      "Executar o corpo do laço"
+    ]
+  },
+  "ex-kh175x84": {
+    "prompt": "Um programa captura `ConcurrentModificationException` em volta do laço e a registra em log, \"por via das dúvidas\". O que a seção 03 diz que há de errado nisso?",
+    "hint": "Melhor esforço.",
+    "choices": [
+      {
+        "text": "A exceção é um `Error`, e um `Error` não pode ser capturado por um bloco `catch`",
+        "why": "Ela é uma `RuntimeException` comum e pode ser capturada; o problema é contar com ela."
+      },
+      {
+        "text": "A verificação é de melhor esforço, e o defeito do `Quiet.java` não lançou nada",
+        "why": "Isso: o `Quiet.java` estava errado e não lançou nada para capturar."
+      },
+      {
+        "text": "Registrar em log é lento, e o laço deveria ser rápido",
+        "why": "Velocidade não é a questão; correção é."
+      }
+    ]
+  },
+  "ex-npcahhk6": {
+    "prompt": "Quais destes mudam um `HashMap` com segurança enquanto ele é percorrido? Escolha todos os que se aplicam.",
+    "hint": "Pela visão, ou de jeito nenhum.",
+    "choices": [
+      {
+        "text": "`map.entrySet().removeIf(e -> e.getValue() == 0)`",
+        "why": "Sim: a visão percorre e remove, e remover de uma visão remove do mapa."
+      },
+      {
+        "text": "Um `for-each` sobre `map.keySet()` chamando `map.remove(key)`",
+        "why": "Esse é o erro da seção 03, por um mapa."
+      },
+      {
+        "text": "Um iterador sobre `map.values()` chamando `it.remove()`",
+        "why": "Sim: a mudança é feita pelo iterador que percorre."
+      },
+      {
+        "text": "Um `for-each` sobre `map.entrySet()` chamando `map.put` com uma chave nova",
+        "why": "Acrescentar uma chave é mudança estrutural feita fora do iterador."
+      }
+    ]
+  }
+}

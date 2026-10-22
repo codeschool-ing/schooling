@@ -1,0 +1,519 @@
+[
+  {
+    "id": "ex-8r09bnwz",
+    "version": 1,
+    "section": "throwable-hierarchy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What decides whether an exception class is checked?",
+    "hint": "Follow `getSuperclass()` upwards.",
+    "choices": [
+      {
+        "text": "A `checked` flag the class declares in its header",
+        "correct": false,
+        "why": "There is no such flag; nothing in the class's own header says it."
+      },
+      {
+        "text": "Its ancestors",
+        "correct": true,
+        "why": "Right: under `RuntimeException` or `Error` it is unchecked, and anywhere else under `Throwable` it is checked."
+      },
+      {
+        "text": "Whether its name ends in `Exception` or in `Error`",
+        "correct": false,
+        "why": "The suffix is a convention for readers; `NumberFormatException` ends in `Exception` and is unchecked."
+      },
+      {
+        "text": "Whether the JDK or your own program defines it",
+        "correct": false,
+        "why": "`IOException` is the JDK's and checked; `CatalogueUnavailableException` is yours and unchecked."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzshe4we",
+    "version": 1,
+    "section": "throwable-hierarchy",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each class to the branch `Ancestry` printed for it.",
+    "hint": "Three lines of output, three branches.",
+    "pairs": [
+      {
+        "left": "`NoSuchFileException`",
+        "right": "through `IOException`: checked"
+      },
+      {
+        "left": "`NumberFormatException`",
+        "right": "through `RuntimeException`: unchecked"
+      },
+      {
+        "left": "`StackOverflowError`",
+        "right": "through `Error`, never meeting `Exception`"
+      }
+    ],
+    "right_distractors": [
+      "through `Exception` directly: unchecked"
+    ]
+  },
+  {
+    "id": "ex-0x8skshc",
+    "version": 1,
+    "section": "throwable-hierarchy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Deep` wrapped its recursion in `try { ... } catch (Exception e)`. Why did `after the try` never print?",
+    "hint": "What does `StackOverflowError` descend from?",
+    "choices": [
+      {
+        "text": "The `catch` ran, but printing needs stack space that was already gone",
+        "correct": false,
+        "why": "If the `catch` had matched, `caught an Exception` would have printed first; `grep` counted nothing of the kind."
+      },
+      {
+        "text": "`StackOverflowError` is an `Error`, so `catch (Exception e)` did not match it",
+        "correct": true,
+        "why": "Right: it never meets `Exception` on its way to `Throwable`."
+      },
+      {
+        "text": "Errors cannot be caught by any `catch` clause",
+        "correct": false,
+        "why": "`catch (Throwable t)` would have caught it; the section says why that is a bad idea, not an impossible one."
+      }
+    ]
+  },
+  {
+    "id": "ex-r88pemer",
+    "version": 1,
+    "section": "throwable-hierarchy",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Deep`'s output had 1025 lines: one header line and the frames. At how many frames does the JVM stop printing a stack trace?",
+    "hint": "Subtract the header.",
+    "value": 1024,
+    "tolerance": 0,
+    "unit": "frames"
+  },
+  {
+    "id": "ex-bqe11286",
+    "version": 1,
+    "section": "throwable-hierarchy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes `catch (Throwable t) { log(t); }` around a whole request handler, so that \"nothing can ever crash the server\". What is wrong with it?",
+    "hint": "What does an `Error` say about the JVM?",
+    "choices": [
+      {
+        "text": "It does not compile, because `Throwable` is abstract",
+        "correct": false,
+        "why": "`Throwable` is a concrete class, and catching it compiles."
+      },
+      {
+        "text": "Nothing: catching the widest type is the safest choice, since no failure can escape it",
+        "correct": false,
+        "why": "It is the widest and so the least safe: it also swallows the failures the JVM uses to say it is in trouble."
+      },
+      {
+        "text": "It also catches `Error`s and keeps running on a JVM in trouble",
+        "correct": true,
+        "why": "Right: after an `OutOfMemoryError` the recovery code itself may not run correctly."
+      }
+    ]
+  },
+  {
+    "id": "ex-00wc6dey",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`LoanNotAllowedException` extends `Exception`. What does that choice make it?",
+    "hint": "It does not pass through `RuntimeException`.",
+    "choices": [
+      {
+        "text": "Checked",
+        "correct": true,
+        "why": "Right: every caller of `lend` must catch it or declare it."
+      },
+      {
+        "text": "Unchecked, because it is a class of your own",
+        "correct": false,
+        "why": "Who wrote the class does not matter; its ancestors do."
+      },
+      {
+        "text": "An `Error`, because a refused loan stops the program",
+        "correct": false,
+        "why": "The program carried on and refused politely; nothing about it is an `Error`."
+      }
+    ]
+  },
+  {
+    "id": "ex-27wyfbkw",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `LoanNotAllowedException` keep `memberId` as a field when the message already contains it?",
+    "hint": "Look at what the `catch` in `Desk.main` did with each.",
+    "choices": [
+      {
+        "text": "The message is lost when the exception is caught",
+        "correct": false,
+        "why": "`getMessage()` returned it inside the `catch`; nothing was lost."
+      },
+      {
+        "text": "Java requires every custom exception to declare at least one field of its own",
+        "correct": false,
+        "why": "There is no such rule; `CatalogueUnavailableException` has no field."
+      },
+      {
+        "text": "So a caller uses it as data, not as text",
+        "correct": true,
+        "why": "Right: `e.memberId()` went to the next step, and the message went to the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-w35e35px",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`javac Careless.java` failed with `unreported exception LoanNotAllowedException`. Which change fixes it?",
+    "hint": "Read the rest of the error message.",
+    "choices": [
+      {
+        "text": "Making `lend` `static`",
+        "correct": false,
+        "why": "Static or not, `lend` still declares the exception, and the caller still has to deal with it."
+      },
+      {
+        "text": "Catching it in `main`, or adding `throws LoanNotAllowedException` to `main`",
+        "correct": true,
+        "why": "Right: \"must be caught or declared to be thrown\" names both ways."
+      },
+      {
+        "text": "Importing `LoanNotAllowedException` at the top of `Careless.java`",
+        "correct": false,
+        "why": "Both classes are in the same directory and package; the compiler found it, as the message shows."
+      },
+      {
+        "text": "Compiling `Desk.java` and `Careless.java` together, in a single `javac` command, so it sees both",
+        "correct": false,
+        "why": "The order of compilation changes nothing about what the caller has to do."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv5k6wwe",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is `CatalogueUnavailableException` unchecked while `LoanNotAllowedException` is checked?",
+    "hint": "Ask what the immediate caller can do about each.",
+    "choices": [
+      {
+        "text": "Unchecked exceptions are faster to throw",
+        "correct": false,
+        "why": "Checked or not is a compile-time matter; both are thrown the same way at run time."
+      },
+      {
+        "text": "A cause can only be attached to a `RuntimeException`, never to a checked `Exception`",
+        "correct": false,
+        "why": "Every `Exception` constructor family has a form with a cause, checked ones included."
+      },
+      {
+        "text": "A caller can tell a member a loan was refused; it cannot fix an unreadable file",
+        "correct": true,
+        "why": "Right: forcing every caller to catch what it cannot handle only breeds empty `catch` blocks."
+      }
+    ]
+  },
+  {
+    "id": "ex-kde5e4t6",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a stack trace, the original exception passed to the constructor of the new one appears after the words `___ by:`.",
+    "hint": "`getCause()` returns it.",
+    "blanks": [
+      {
+        "accept": [
+          "Caused"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wy29rh81",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The catalogue trace ended with `... 1 more`. What does that line mean?",
+    "hint": "Compare the last frames of the two parts.",
+    "choices": [
+      {
+        "text": "The cause shares one frame with the trace above",
+        "correct": true,
+        "why": "Right: the cause's trace continues into frames the outer trace already printed."
+      },
+      {
+        "text": "There is one more cause, which the JVM did not print",
+        "correct": false,
+        "why": "A further cause would print as another `Caused by:` section."
+      },
+      {
+        "text": "One frame hit the 1024 limit",
+        "correct": false,
+        "why": "The limit is about 1024 frames; this trace had about fifteen."
+      },
+      {
+        "text": "The exception was thrown once more after being caught",
+        "correct": false,
+        "why": "It was thrown once, by `load`, and nothing caught it after that."
+      }
+    ]
+  },
+  {
+    "id": "ex-1bd0cnej",
+    "version": 1,
+    "section": "your-own-exception",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `Catalogue.load` on a missing file in order.",
+    "hint": "From the JDK's failure to the line printed at the top.",
+    "items": [
+      "`Files.readAllLines` throws `NoSuchFileException`",
+      "`catch (IOException e)` in `load` receives it",
+      "`load` throws `CatalogueUnavailableException` with `e` as its cause",
+      "the JVM prints the outer exception, then `Caused by:` and the original"
+    ]
+  },
+  {
+    "id": "ex-fvvtnaxp",
+    "version": 1,
+    "section": "good-practice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Fines` printed `fines owed, in cents: 350`. What went wrong?",
+    "hint": "Look at the `catch` block.",
+    "choices": [
+      {
+        "text": "`Integer.parseInt` rounded `1O0` down to zero",
+        "correct": false,
+        "why": "`parseInt` rounds nothing; it threw `NumberFormatException`."
+      },
+      {
+        "text": "An empty `catch` swallowed the failure on line 2 and the loop carried on",
+        "correct": true,
+        "why": "Right: a failure with a name and a message became a wrong total."
+      },
+      {
+        "text": "The program crashed and printed a partial total",
+        "correct": false,
+        "why": "It did not crash; that is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-qxkc9f1h",
+    "version": 1,
+    "section": "good-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `FinesLoud`'s message add that `NumberFormatException` alone did not have?",
+    "hint": "What did `parseInt` know, and what did the loop know?",
+    "choices": [
+      {
+        "text": "The bad value, `1O0`",
+        "correct": false,
+        "why": "`For input string: \"1O0\"` already named it; the cause still shows it."
+      },
+      {
+        "text": "Which ledger line, and what it should hold",
+        "correct": true,
+        "why": "Right: only the loop knew it was line 2 and a number of cents."
+      },
+      {
+        "text": "The stack frames inside `Integer.parseInt`",
+        "correct": false,
+        "why": "Those came from the cause, which `FinesLoud` kept but did not add."
+      },
+      {
+        "text": "A total of the lines that did parse, so the other members' fines are not lost",
+        "correct": false,
+        "why": "It printed no total at all, on purpose: no total is better than a wrong one."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rk3a0j7",
+    "version": 1,
+    "section": "good-practice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `catch` block reads `catch (IOException e) { throw new RuntimeException(e.getMessage()); }`. What does it lose?",
+    "hint": "Which constructor did it call?",
+    "choices": [
+      {
+        "text": "Nothing: the message is carried over word for word",
+        "correct": false,
+        "why": "The words survive; the original's type and stack trace do not."
+      },
+      {
+        "text": "The original exception and its stack trace",
+        "correct": true,
+        "why": "Right: without the cause there is no `Caused by:`, so where the I/O failed is gone."
+      },
+      {
+        "text": "The checked status, which makes the code refuse to compile",
+        "correct": false,
+        "why": "Turning a checked exception into an unchecked one compiles; it is a legitimate choice when no caller can handle it."
+      }
+    ]
+  },
+  {
+    "id": "ex-37nvefg0",
+    "version": 1,
+    "section": "good-practice",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with `Flow`, which leaves its loop by catching `ArrayIndexOutOfBoundsException`? Choose all that apply.",
+    "hint": "It printed the right total.",
+    "choices": [
+      {
+        "text": "The loop has no condition, so a reader must find the `catch` to see where it ends",
+        "correct": true,
+        "why": "Yes: the intent is hidden in a handler."
+      },
+      {
+        "text": "A real indexing bug would be caught by the same `catch` and print a wrong total",
+        "correct": true,
+        "why": "Yes: the handler cannot tell the expected end from a mistake."
+      },
+      {
+        "text": "It prints the wrong total",
+        "correct": false,
+        "why": "It printed 425, which is right; the trouble is what it would do after the next change."
+      },
+      {
+        "text": "The compiler refuses a `for` loop without a condition",
+        "correct": false,
+        "why": "`for (int i = 0; ; i++)` compiles; an empty condition means true."
+      }
+    ]
+  },
+  {
+    "id": "ex-n6p4601x",
+    "version": 1,
+    "section": "good-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is an empty `catch` block acceptable?",
+    "hint": "The section says what the block must contain.",
+    "choices": [
+      {
+        "text": "When the exception is unchecked",
+        "correct": false,
+        "why": "`Fines` swallowed an unchecked exception and produced a wrong total."
+      },
+      {
+        "text": "When the exception is \"not fatal\"",
+        "correct": false,
+        "why": "\"Not fatal\" is not a reason on its own; the section asks what would go wrong and why that is acceptable."
+      },
+      {
+        "text": "When a comment in it says why ignoring it is right",
+        "correct": true,
+        "why": "Right: the next reader can then disagree with a reason instead of guessing at a silence."
+      }
+    ]
+  },
+  {
+    "id": "ex-2syt4be4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You write `BookNotFoundException` for a lookup by ISBN that finds nothing, and the caller can offer to reserve the book instead. How should it be declared?",
+    "hint": "Can the caller do something sensible with it?",
+    "choices": [
+      {
+        "text": "`extends Error`, because a missing book is serious",
+        "correct": false,
+        "why": "An `Error` is the JVM reporting trouble with itself, not a missing record."
+      },
+      {
+        "text": "`extends Exception`, with the ISBN kept as a field",
+        "correct": true,
+        "why": "Right: checked, because the caller has a sensible next step, and the ISBN as data for it."
+      },
+      {
+        "text": "`extends Throwable`, so that neither `catch (Exception e)` nor `catch (Error e)` can swallow it",
+        "correct": false,
+        "why": "Extending `Throwable` directly fits neither branch and surprises every reader; it is not done."
+      }
+    ]
+  },
+  {
+    "id": "ex-eene6b7f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 37's suppressed exception and this lesson's cause both put two exceptions in one trace. What is the difference?",
+    "hint": "Beside, or underneath?",
+    "choices": [
+      {
+        "text": "A cause is printed first, and a suppressed exception last",
+        "correct": false,
+        "why": "Both are printed after the main trace; the order is not the difference."
+      },
+      {
+        "text": "Suppressed is for checked exceptions; cause is for unchecked",
+        "correct": false,
+        "why": "Either kind can be a cause or be suppressed."
+      },
+      {
+        "text": "A suppressed one happened beside it; a cause is why it was thrown",
+        "correct": true,
+        "why": "Right: a failed close beside a failed use, against a missing file under an unavailable catalogue."
+      }
+    ]
+  },
+  {
+    "id": "ex-73rxw1p8",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Desk.LIMIT` is 2 and `main` tries to lend three books to `ana`. How many `lent` lines does it print?",
+    "hint": "The third attempt is refused.",
+    "value": 2,
+    "tolerance": 0
+  }
+]

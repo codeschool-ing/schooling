@@ -1,0 +1,343 @@
+{
+  "ex-8r09bnwz": {
+    "prompt": "O que decide se uma classe de exceção é verificada?",
+    "hint": "Siga o `getSuperclass()` para cima.",
+    "choices": [
+      {
+        "text": "Uma marca `checked` que a classe declara no cabeçalho",
+        "why": "Não existe essa marca; nada no cabeçalho da própria classe diz isso."
+      },
+      {
+        "text": "Os seus ancestrais",
+        "why": "Isso: abaixo de `RuntimeException` ou de `Error` ela é não verificada, e em qualquer outro ponto abaixo de `Throwable` é verificada."
+      },
+      {
+        "text": "Se o nome termina em `Exception` ou em `Error`",
+        "why": "O sufixo é uma convenção para quem lê; `NumberFormatException` termina em `Exception` e é não verificada."
+      },
+      {
+        "text": "Se é o JDK ou o seu programa que a define",
+        "why": "`IOException` é do JDK e verificada; `CatalogueUnavailableException` é sua e não verificada."
+      }
+    ]
+  },
+  "ex-vzshe4we": {
+    "prompt": "Ligue cada classe ao ramo que o `Ancestry` imprimiu para ela.",
+    "hint": "Três linhas de saída, três ramos.",
+    "pairs": [
+      {
+        "left": "`NoSuchFileException`",
+        "right": "passando por `IOException`: verificada"
+      },
+      {
+        "left": "`NumberFormatException`",
+        "right": "passando por `RuntimeException`: não verificada"
+      },
+      {
+        "left": "`StackOverflowError`",
+        "right": "passando por `Error`, sem nunca encontrar `Exception`"
+      }
+    ],
+    "right_distractors": [
+      "direto por `Exception`: não verificada"
+    ]
+  },
+  "ex-0x8skshc": {
+    "prompt": "O `Deep` envolveu a recursão em `try { ... } catch (Exception e)`. Por que `after the try` nunca foi impresso?",
+    "hint": "De onde descende o `StackOverflowError`?",
+    "choices": [
+      {
+        "text": "O `catch` rodou, mas imprimir precisa de espaço de pilha que já tinha acabado",
+        "why": "Se o `catch` tivesse casado, `caught an Exception` teria saído antes; o `grep` não contou nada disso."
+      },
+      {
+        "text": "O `StackOverflowError` é um `Error`, então o `catch (Exception e)` não casou com ele",
+        "why": "Isso: ele nunca encontra `Exception` no caminho até `Throwable`."
+      },
+      {
+        "text": "Erros não podem ser capturados por nenhuma cláusula `catch`",
+        "why": "Um `catch (Throwable t)` o teria capturado; a seção diz por que isso é má ideia, não impossível."
+      }
+    ]
+  },
+  "ex-r88pemer": {
+    "prompt": "A saída do `Deep` teve 1025 linhas: uma linha de cabeçalho e os frames. Em quantos frames a JVM para de imprimir um stack trace?",
+    "hint": "Tire o cabeçalho.",
+    "unit": "frames"
+  },
+  "ex-bqe11286": {
+    "prompt": "Um colega escreve `catch (Throwable t) { log(t); }` em volta de um tratador de requisição inteiro, para que \"nada jamais derrube o servidor\". O que há de errado nisso?",
+    "hint": "O que um `Error` diz sobre a JVM?",
+    "choices": [
+      {
+        "text": "Não compila, porque `Throwable` é abstrata",
+        "why": "`Throwable` é uma classe concreta, e capturá-la compila."
+      },
+      {
+        "text": "Nada: capturar o tipo mais amplo é a escolha mais segura, já que nenhuma falha escapa",
+        "why": "É o mais amplo e por isso o menos seguro: engole também as falhas com que a JVM diz que está em apuros."
+      },
+      {
+        "text": "Captura também `Error`s e segue rodando numa JVM em apuros",
+        "why": "Isso: depois de um `OutOfMemoryError`, o próprio código de recuperação pode não rodar direito."
+      }
+    ]
+  },
+  "ex-00wc6dey": {
+    "prompt": "`LoanNotAllowedException` estende `Exception`. O que essa escolha faz dela?",
+    "hint": "Ela não passa por `RuntimeException`.",
+    "choices": [
+      {
+        "text": "Verificada",
+        "why": "Isso: todo chamador de `lend` precisa capturá-la ou declará-la."
+      },
+      {
+        "text": "Não verificada, porque é uma classe sua",
+        "why": "Quem escreveu a classe não importa; os ancestrais dela importam."
+      },
+      {
+        "text": "Um `Error`, porque um empréstimo recusado para o programa",
+        "why": "O programa seguiu e recusou com educação; nada nisso é um `Error`."
+      }
+    ]
+  },
+  "ex-27wyfbkw": {
+    "prompt": "Por que a `LoanNotAllowedException` guarda o `memberId` num campo, se a mensagem já o contém?",
+    "hint": "Veja o que o `catch` do `Desk.main` fez com cada um.",
+    "choices": [
+      {
+        "text": "A mensagem se perde quando a exceção é capturada",
+        "why": "O `getMessage()` a devolveu dentro do `catch`; nada se perdeu."
+      },
+      {
+        "text": "O Java exige que toda exceção própria declare pelo menos um campo seu",
+        "why": "Não existe essa regra; a `CatalogueUnavailableException` não tem campo nenhum."
+      },
+      {
+        "text": "Para usá-lo como dado, não como texto",
+        "why": "Isso: o `e.memberId()` foi para o passo seguinte, e a mensagem foi para o log."
+      }
+    ]
+  },
+  "ex-w35e35px": {
+    "prompt": "O `javac Careless.java` falhou com `unreported exception LoanNotAllowedException`. Que mudança resolve?",
+    "hint": "Leia o resto da mensagem de erro.",
+    "choices": [
+      {
+        "text": "Tornar o `lend` `static`",
+        "why": "Estático ou não, o `lend` continua declarando a exceção, e quem chama continua tendo de lidar com ela."
+      },
+      {
+        "text": "Capturá-la no `main`, ou acrescentar `throws LoanNotAllowedException` ao `main`",
+        "why": "Isso: \"must be caught or declared to be thrown\" nomeia os dois jeitos."
+      },
+      {
+        "text": "Importar a `LoanNotAllowedException` no topo do `Careless.java`",
+        "why": "As duas classes estão no mesmo diretório e pacote; o compilador a encontrou, como a mensagem mostra."
+      },
+      {
+        "text": "Compilar `Desk.java` e `Careless.java` juntos, num único comando `javac`, para ele ver os dois",
+        "why": "A ordem de compilação não muda nada no que quem chama tem de fazer."
+      }
+    ]
+  },
+  "ex-yv5k6wwe": {
+    "prompt": "Por que a `CatalogueUnavailableException` é não verificada enquanto a `LoanNotAllowedException` é verificada?",
+    "hint": "Pergunte o que quem chama diretamente pode fazer com cada uma.",
+    "choices": [
+      {
+        "text": "Exceções não verificadas são lançadas mais rápido",
+        "why": "Verificada ou não é assunto da compilação; as duas são lançadas do mesmo jeito em execução."
+      },
+      {
+        "text": "Só se pode anexar uma causa a uma `RuntimeException`, nunca a uma `Exception` verificada",
+        "why": "Toda família de construtores de `Exception` tem uma forma com causa, as verificadas também."
+      },
+      {
+        "text": "Quem chama pode avisar o membro; ninguém conserta dali um arquivo ilegível",
+        "why": "Isso: obrigar todo chamador a capturar o que não consegue tratar só gera blocos `catch` vazios."
+      }
+    ]
+  },
+  "ex-kde5e4t6": {
+    "prompt": "Num stack trace, a exceção original passada ao construtor da nova aparece depois das palavras `___ by:`.",
+    "hint": "O `getCause()` a devolve.",
+    "blanks": [
+      {
+        "accept": [
+          "Caused"
+        ]
+      }
+    ]
+  },
+  "ex-wy29rh81": {
+    "prompt": "O trace do catálogo terminou com `... 1 more`. O que essa linha quer dizer?",
+    "hint": "Compare os últimos frames das duas partes.",
+    "choices": [
+      {
+        "text": "A causa divide um frame com o trace de cima",
+        "why": "Isso: o trace da causa continua em frames que o trace de fora já imprimiu."
+      },
+      {
+        "text": "Há mais uma causa, que a JVM não imprimiu",
+        "why": "Uma causa a mais sairia como outra seção `Caused by:`."
+      },
+      {
+        "text": "Um frame bateu no limite de 1024",
+        "why": "O limite é de 1024 frames; este trace tinha uns quinze."
+      },
+      {
+        "text": "A exceção foi lançada mais uma vez depois de capturada",
+        "why": "Ela foi lançada uma vez, pelo `load`, e nada a capturou depois disso."
+      }
+    ]
+  },
+  "ex-1bd0cnej": {
+    "prompt": "Ponha em ordem os passos do `Catalogue.load` com um arquivo inexistente.",
+    "hint": "Da falha do JDK até a linha impressa no topo.",
+    "items": [
+      "`Files.readAllLines` lança `NoSuchFileException`",
+      "o `catch (IOException e)` do `load` a recebe",
+      "o `load` lança `CatalogueUnavailableException` com `e` como causa",
+      "a JVM imprime a exceção de fora, depois `Caused by:` e a original"
+    ]
+  },
+  "ex-fvvtnaxp": {
+    "prompt": "O `Fines` imprimiu `fines owed, in cents: 350`. O que deu errado?",
+    "hint": "Olhe o bloco `catch`.",
+    "choices": [
+      {
+        "text": "O `Integer.parseInt` arredondou `1O0` para zero",
+        "why": "O `parseInt` não arredonda nada; ele lançou `NumberFormatException`."
+      },
+      {
+        "text": "Um `catch` vazio engoliu a falha da linha 2 e o laço seguiu",
+        "why": "Isso: uma falha com nome e mensagem virou um total errado."
+      },
+      {
+        "text": "O programa caiu e imprimiu um total parcial",
+        "why": "Ele não caiu; esse é o problema."
+      }
+    ]
+  },
+  "ex-qxkc9f1h": {
+    "prompt": "O que a mensagem do `FinesLoud` acrescenta que a `NumberFormatException` sozinha não tinha?",
+    "hint": "O que o `parseInt` sabia, e o que o laço sabia?",
+    "choices": [
+      {
+        "text": "O valor errado, `1O0`",
+        "why": "`For input string: \"1O0\"` já o nomeava; a causa continua mostrando."
+      },
+      {
+        "text": "A linha e o que ela deveria conter",
+        "why": "Isso: só o laço sabia que era a linha 2 e um número de centavos."
+      },
+      {
+        "text": "Os frames de dentro do `Integer.parseInt`",
+        "why": "Esses vieram da causa, que o `FinesLoud` guardou mas não acrescentou."
+      },
+      {
+        "text": "O total das linhas que deram certo, para as multas dos outros membros não se perderem",
+        "why": "Ele não imprimiu total nenhum, de propósito: nenhum total é melhor que um errado."
+      }
+    ]
+  },
+  "ex-7rk3a0j7": {
+    "prompt": "Um bloco `catch` diz `catch (IOException e) { throw new RuntimeException(e.getMessage()); }`. O que ele perde?",
+    "hint": "Que construtor ele chamou?",
+    "choices": [
+      {
+        "text": "Nada: a mensagem é levada palavra por palavra",
+        "why": "As palavras sobrevivem; o tipo e o stack trace da original, não."
+      },
+      {
+        "text": "A exceção original e o stack trace dela",
+        "why": "Isso: sem a causa não há `Caused by:`, e onde a E/S falhou some."
+      },
+      {
+        "text": "O status de verificada, o que faz o código não compilar",
+        "why": "Transformar uma exceção verificada em não verificada compila; é uma escolha legítima quando nenhum chamador consegue tratá-la."
+      }
+    ]
+  },
+  "ex-37nvefg0": {
+    "prompt": "O que há de errado com o `Flow`, que sai do laço capturando `ArrayIndexOutOfBoundsException`? Escolha todas as que se aplicam.",
+    "hint": "Ele imprimiu o total certo.",
+    "choices": [
+      {
+        "text": "O laço não tem condição, então quem lê precisa achar o `catch` para ver onde ele termina",
+        "why": "Sim: a intenção fica escondida num tratador."
+      },
+      {
+        "text": "Um erro de índice de verdade seria capturado pelo mesmo `catch` e imprimiria um total errado",
+        "why": "Sim: o tratador não distingue o fim esperado de um engano."
+      },
+      {
+        "text": "Ele imprime o total errado",
+        "why": "Ele imprimiu 425, que está certo; o problema é o que faria depois da próxima mudança."
+      },
+      {
+        "text": "O compilador recusa um `for` sem condição",
+        "why": "`for (int i = 0; ; i++)` compila; uma condição vazia quer dizer verdadeiro."
+      }
+    ]
+  },
+  "ex-n6p4601x": {
+    "prompt": "Quando um bloco `catch` vazio é aceitável?",
+    "hint": "A seção diz o que o bloco precisa conter.",
+    "choices": [
+      {
+        "text": "Quando a exceção é não verificada",
+        "why": "O `Fines` engoliu uma exceção não verificada e produziu um total errado."
+      },
+      {
+        "text": "Quando a exceção \"não é fatal\"",
+        "why": "\"Não é fatal\" não é motivo por si só; a seção pergunta o que daria errado e por que isso é aceitável."
+      },
+      {
+        "text": "Quando um comentário nele diz por que ignorá-la é o certo",
+        "why": "Isso: aí o próximo leitor pode discordar de um motivo em vez de adivinhar um silêncio."
+      }
+    ]
+  },
+  "ex-2syt4be4": {
+    "prompt": "Você escreve `BookNotFoundException` para uma busca por ISBN que não acha nada, e quem chama pode oferecer a reserva do livro. Como ela deve ser declarada?",
+    "hint": "Quem chama consegue fazer algo sensato com ela?",
+    "choices": [
+      {
+        "text": "`extends Error`, porque um livro sumido é coisa séria",
+        "why": "Um `Error` é a JVM relatando um problema consigo mesma, não um registro que falta."
+      },
+      {
+        "text": "`extends Exception`, com o ISBN guardado num campo",
+        "why": "Isso: verificada, porque quem chama tem um próximo passo sensato, e o ISBN como dado para ele."
+      },
+      {
+        "text": "`extends Throwable`, para que nem `catch (Exception e)` nem `catch (Error e)` consigam engoli-la",
+        "why": "Estender `Throwable` direto não cabe em ramo nenhum e surpreende quem lê; não se faz."
+      }
+    ]
+  },
+  "ex-eene6b7f": {
+    "prompt": "A exceção suprimida da lição 37 e a causa desta lição põem duas exceções num trace. Qual é a diferença?",
+    "hint": "Ao lado, ou embaixo?",
+    "choices": [
+      {
+        "text": "A causa é impressa primeiro, e a suprimida por último",
+        "why": "As duas saem depois do trace principal; a ordem não é a diferença."
+      },
+      {
+        "text": "Suprimida é para verificadas; causa é para não verificadas",
+        "why": "Os dois tipos podem ser causa ou ser suprimidos."
+      },
+      {
+        "text": "A suprimida aconteceu ao lado; a causa é o motivo do lançamento",
+        "why": "Isso: um close que falhou ao lado de um uso que falhou, contra um arquivo que falta embaixo de um catálogo indisponível."
+      }
+    ]
+  },
+  "ex-73rxw1p8": {
+    "prompt": "O `Desk.LIMIT` vale 2 e o `main` tenta emprestar três livros à `ana`. Quantas linhas `lent` ele imprime?",
+    "hint": "A terceira tentativa é recusada."
+  }
+}
