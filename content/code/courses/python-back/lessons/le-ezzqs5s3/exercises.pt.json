@@ -1,0 +1,459 @@
+{
+  "ex-nepva4pd": {
+    "prompt": "O que o async muda num único pedaço de código Python?",
+    "choices": [
+      {
+        "text": "Ele roda em vários processadores ao mesmo tempo, e a conta termina antes",
+        "why": "Uma corrotina roda por vez, numa thread."
+      },
+      {
+        "text": "Nada; outro trabalho roda enquanto ele espera",
+        "why": "Isso. A espera se sobrepõe; o cálculo não fica mais rápido."
+      },
+      {
+        "text": "Ele compila a função para código de máquina antes de a requisição chegar",
+        "why": "Nenhuma compilação está envolvida."
+      },
+      {
+        "text": "Ele guarda em cache toda resposta que a função já devolveu",
+        "why": "Nada fica em cache."
+      }
+    ]
+  },
+  "ex-hyw41qxz": {
+    "prompt": "O three.py fez três perguntas ao parceiro lento, uma depois da outra. Quantos segundos isso levou, como impresso?",
+    "hint": "Três esperas de um segundo, somadas.",
+    "unit": "s"
+  },
+  "ex-7c09dm62": {
+    "prompt": "Ligue cada coisa lenta ao que o servidor faz durante esse tempo.",
+    "pairs": [
+      {
+        "left": "uma consulta ao PostgreSQL",
+        "right": "esperando outro processo na mesma máquina"
+      },
+      {
+        "left": "uma chamada a um gateway de pagamento",
+        "right": "esperando um servidor do outro lado da internet"
+      },
+      {
+        "left": "redimensionar uma foto enviada",
+        "right": "calculando sobre pixels que já tem"
+      },
+      {
+        "left": "somar vinte milhões de quadrados",
+        "right": "calculando números, sem nada a esperar"
+      }
+    ]
+  },
+  "ex-v620vtvz": {
+    "prompt": "No loop.py, por que made a coroutine saiu antes de alone starts waiting?",
+    "choices": [
+      {
+        "text": "Chamar um async def só monta a corrotina",
+        "why": "Isso. Ela roda quando aguardada."
+      },
+      {
+        "text": "Comandos print sempre rodam antes do asyncio.sleep",
+        "why": "A ordem depende dos awaits, não do tipo de comando."
+      },
+      {
+        "text": "O event loop ainda não tinha começado",
+        "why": "O asyncio.run já o tinha começado."
+      },
+      {
+        "text": "O stamp é uma corrotina e rodou primeiro",
+        "why": "O stamp é uma função comum."
+      }
+    ]
+  },
+  "ex-fwwe5wnx": {
+    "prompt": "gather(wait(\"a\", 2), wait(\"b\", 1), wait(\"c\", 1.5)) devolveu ['a', 'b', 'c']. Por que nessa ordem, se b terminou primeiro?",
+    "choices": [
+      {
+        "text": "O gather ordena os resultados em ordem alfabética",
+        "why": "Ele não ordena."
+      },
+      {
+        "text": "O b foi cancelado e recomeçado",
+        "why": "Nada foi cancelado."
+      },
+      {
+        "text": "Os resultados seguem a ordem passada",
+        "why": "Isso, não a ordem de término."
+      },
+      {
+        "text": "O loop roda corrotinas estritamente uma depois da outra",
+        "why": "Elas se sobrepuseram; o b terminou em 2.0 s."
+      }
+    ]
+  },
+  "ex-91d9hqpc": {
+    "prompt": "Onde o event loop pode trocar de uma corrotina para outra?",
+    "choices": [
+      {
+        "text": "Depois de cada linha de Python, quando o sistema operacional decidir",
+        "why": "Isso descreve threads, não corrotinas."
+      },
+      {
+        "text": "Só num await",
+        "why": "Isso, e é por isso que uma chamada bloqueante segura toda corrotina."
+      },
+      {
+        "text": "Só quando uma corrotina retorna",
+        "why": "Ele troca em todo await de algo que não está pronto."
+      },
+      {
+        "text": "A cada dez milissegundos, num timer que ele define",
+        "why": "Não existe preempção."
+      }
+    ]
+  },
+  "ex-f59yc30m": {
+    "prompt": "Dentro de uma corrotina, esperar com time.___(1) bloqueia o loop, enquanto await asyncio.___(1) o devolve.",
+    "hint": "O mesmo nome de função, duas vezes.",
+    "blanks": [
+      {
+        "accept": [
+          "sleep"
+        ]
+      },
+      {
+        "accept": [
+          "sleep"
+        ]
+      }
+    ]
+  },
+  "ex-zbh7nder": {
+    "prompt": "Ligue cada ferramenta a quando a aula diz para usá-la.",
+    "pairs": [
+      {
+        "left": "asyncio.gather",
+        "right": "você precisa de todas as respostas"
+      },
+      {
+        "left": "asyncio.TaskGroup",
+        "right": "uma falha deve parar as outras"
+      },
+      {
+        "left": "asyncio.create_task",
+        "right": "o trabalho começa antes de você saber o que mais precisa"
+      },
+      {
+        "left": "asyncio.wait_for",
+        "right": "um parceiro pode nunca responder"
+      }
+    ]
+  },
+  "ex-r1b75tvz": {
+    "prompt": "Com um gather simples, uma de três corrotinas levanta erro. O que acontece com as outras duas?",
+    "choices": [
+      {
+        "text": "São canceladas na hora",
+        "why": "Esse é o comportamento do TaskGroup."
+      },
+      {
+        "text": "Continuam rodando, e os resultados se perdem",
+        "why": "Isso, a menos que return_exceptions=True."
+      },
+      {
+        "text": "O gather tenta de novo a que falhou até dar certo",
+        "why": "O gather nunca tenta de novo."
+      },
+      {
+        "text": "O event loop para",
+        "why": "Só o código que aguardava vê a exceção."
+      }
+    ]
+  },
+  "ex-jy4e36dg": {
+    "prompt": "Por que a aula insiste num timeout para toda chamada a algo fora do processo?",
+    "hint": "Pense no dia em que um parceiro leva trinta segundos.",
+    "choices": [
+      {
+        "text": "O httpx2 se recusa a mandar requisição sem um",
+        "why": "Ele tem um padrão; o ponto é escolher um."
+      },
+      {
+        "text": "Timeouts fazem o parceiro responder mais rápido",
+        "why": "Eles só limitam quanto você espera."
+      },
+      {
+        "text": "Corrotinas esperando se acumulam quando ele fica lento",
+        "why": "Isso: toda requisição presa no mesmo parceiro lento."
+      },
+      {
+        "text": "O event loop cancela o que não tem timeout depois de um minuto",
+        "why": "O loop não cancela nada sozinho."
+      }
+    ]
+  },
+  "ex-980k6v6f": {
+    "prompt": "Ligue cada rota do FastAPI ao lugar onde ela roda.",
+    "pairs": [
+      {
+        "left": "async def",
+        "right": "no event loop"
+      },
+      {
+        "left": "def",
+        "right": "numa pool de threads"
+      }
+    ],
+    "right_distractors": [
+      "num processo separado"
+    ]
+  },
+  "ex-6hjcw9h2": {
+    "prompt": "Quantas threads a pool do FastAPI dá às rotas def por padrão?",
+    "hint": "Cem requisições passaram em três ondas.",
+    "unit": "threads"
+  },
+  "ex-m5wcm9tw": {
+    "prompt": "100 requisições levaram 3,3 s com async def e 5,2 s com def. O que explica a diferença?",
+    "choices": [
+      {
+        "text": "O def ficou sem threads e foi em ondas",
+        "why": "Isso: quarenta de cada vez, umas três ondas."
+      },
+      {
+        "text": "O parceiro responde mais rápido a clientes async",
+        "why": "Ele responde a todo mundo depois de um segundo."
+      },
+      {
+        "text": "Rotas async def pulam a validação, o que poupa tempo",
+        "why": "As duas validam do mesmo jeito."
+      },
+      {
+        "text": "Rotas def rodam no event loop e o bloqueiam",
+        "why": "Rotas def rodam em threads."
+      }
+    ]
+  },
+  "ex-rx17zfx4": {
+    "prompt": "Para onde a aula diz que foi a maior parte dos 3,3 s que sobraram da rota async?",
+    "choices": [
+      {
+        "text": "Esperar o banco",
+        "why": "O agenda-api ainda não tem banco."
+      },
+      {
+        "text": "O segundo do parceiro, cem vezes seguidas",
+        "why": "Os segundos se sobrepuseram."
+      },
+      {
+        "text": "Um cliente novo por requisição",
+        "why": "Isso; uma aplicação de verdade mantém um AsyncClient aberto."
+      },
+      {
+        "text": "A validação JSON da previsão",
+        "why": "Isso custa microssegundos."
+      }
+    ]
+  },
+  "ex-nm2bk2z3": {
+    "prompt": "Dez requisições à rota async def com uma chamada bloqueante levaram quantos segundos?",
+    "hint": "Mais ou menos um por requisição.",
+    "unit": "s"
+  },
+  "ex-h13kh36f": {
+    "prompt": "Enquanto a rota bloqueante espera o seu segundo, o que mais o processo faz?",
+    "choices": [
+      {
+        "text": "Atende as outras requisições nas quarenta threads",
+        "why": "Rotas async def não usam a pool."
+      },
+      {
+        "text": "Responde outras requisições a partir de um cache",
+        "why": "Não há cache."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso: o loop fica preso até a chamada voltar."
+      },
+      {
+        "text": "Enfileira nas threads do próprio Uvicorn",
+        "why": "O Uvicorn tem um loop e nada mais em que rodá-las."
+      }
+    ]
+  },
+  "ex-a31j5y6q": {
+    "prompt": "Uma biblioteca de que você precisa não tem versão async. Quais são jeitos corretos de chamá-la no FastAPI? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "De uma rota def",
+        "why": "Isso: ela bloqueia uma thread."
+      },
+      {
+        "text": "Com await asyncio.to_thread(...) num async def",
+        "why": "Isso."
+      },
+      {
+        "text": "Direto num async def, já que funciona uma por vez",
+        "why": "Ela bloqueia o loop sob carga."
+      },
+      {
+        "text": "Embrulhada antes num asyncio.sleep(0)",
+        "why": "Isso cede uma vez e depois bloqueia mesmo assim."
+      }
+    ]
+  },
+  "ex-wcr0mtd9": {
+    "prompt": "Quatro requisições de cálculo levaram umas quatro vezes uma, mesmo como def. Por que as threads não ajudaram?",
+    "choices": [
+      {
+        "text": "O FastAPI só roda uma rota def por vez",
+        "why": "Ele roda até quarenta."
+      },
+      {
+        "text": "A trava do interpretador deixa uma thread rodar Python por vez",
+        "why": "Isso: calcular precisa de processos."
+      },
+      {
+        "text": "A máquina tem um processador",
+        "why": "Ela tem quatro."
+      },
+      {
+        "text": "O load.py as mandou uma depois da outra",
+        "why": "Ele as manda ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-hdgsqcjg": {
+    "prompt": "Dentro de uma função async, Event.objects.get(...) levantou o quê?",
+    "choices": [
+      {
+        "text": "Event.DoesNotExist",
+        "why": "O evento existe."
+      },
+      {
+        "text": "TimeoutError",
+        "why": "Nada expirou."
+      },
+      {
+        "text": "SynchronousOnlyOperation",
+        "why": "Isso: use aget, ou sync_to_async."
+      },
+      {
+        "text": "RuntimeWarning",
+        "why": "Esse é de uma corrotina não aguardada."
+      }
+    ]
+  },
+  "ex-gx1gmwm6": {
+    "prompt": "Por que o projeto agenda precisou de uv add uvicorn antes de servir a view async?",
+    "choices": [
+      {
+        "text": "Views async se recusam a rodar no runserver",
+        "why": "Elas rodam sob WSGI também, sem sobrepor esperas."
+      },
+      {
+        "text": "O runserver é um servidor WSGI",
+        "why": "Isso: ASGI precisa de um servidor ASGI."
+      },
+      {
+        "text": "O httpx2 depende do uvicorn",
+        "why": "Não depende."
+      },
+      {
+        "text": "O Django 6.1 removeu o config/asgi.py",
+        "why": "O arquivo está lá."
+      }
+    ]
+  },
+  "ex-w2btkfbq": {
+    "prompt": "Por que o agenda mantém WSGI e Gunicorn na aula 16, mesmo com a view async funcionando?",
+    "choices": [
+      {
+        "text": "O Gunicorn não serve Django",
+        "why": "Ele é o servidor de costume do Django."
+      },
+      {
+        "text": "O ASGI proíbe o admin",
+        "why": "O admin roda sob ASGI, em threads."
+      },
+      {
+        "text": "As views dele quase só leem um banco próximo",
+        "why": "Isso: pouca espera para sobrepor."
+      },
+      {
+        "text": "Views async são mais lentas em qualquer servidor",
+        "why": "A medição mostrou o contrário."
+      }
+    ]
+  },
+  "ex-g3qgktxq": {
+    "prompt": "Que aplicação ganha mais com async def, pelas perguntas da aula?",
+    "choices": [
+      {
+        "text": "Um gateway que chama três parceiros por requisição",
+        "why": "Isso: muita espera, ao mesmo tempo."
+      },
+      {
+        "text": "Um site que redimensiona toda foto enviada enquanto o visitante espera",
+        "why": "Isso é cálculo."
+      },
+      {
+        "text": "Um blog que lê uma linha por página de um banco local",
+        "why": "Pouco a ganhar."
+      },
+      {
+        "text": "Um gerador de relatórios que monta uma planilha da memória",
+        "why": "Isso é cálculo."
+      }
+    ]
+  },
+  "ex-pn7pvqsb": {
+    "prompt": "Por que a aula diz que código async é mais difícil de revisar que de escrever?",
+    "choices": [
+      {
+        "text": "A sintaxe é mais longa",
+        "why": "Tamanho não é o problema."
+      },
+      {
+        "text": "Uma chamada bloqueante parece código correto",
+        "why": "Isso: ela passa em testes de uma por vez."
+      },
+      {
+        "text": "Quem revisa não consegue rodá-lo",
+        "why": "Consegue."
+      },
+      {
+        "text": "Verificadores de tipo ignoram funções async",
+        "why": "Eles as verificam."
+      }
+    ]
+  },
+  "ex-hkp6f6z7": {
+    "prompt": "Ponha as linhas done do loop.py na ordem em que foram impressas.",
+    "hint": "A menor espera depois do alone termina primeiro.",
+    "items": [
+      "alone is done",
+      "b is done",
+      "c is done",
+      "a is done"
+    ]
+  },
+  "ex-fmtsf6dp": {
+    "prompt": "Um colega transforma toda rota def do agenda-api em async def sem mudar nada dentro. Qual é o risco?",
+    "choices": [
+      {
+        "text": "Nenhum; async def é sempre mais rápido",
+        "why": "Não com chamadas bloqueantes dentro."
+      },
+      {
+        "text": "Toda chamada bloqueante dentro agora segura o loop",
+        "why": "Isso: a versão def estava segura na thread dela."
+      },
+      {
+        "text": "A validação para de funcionar",
+        "why": "A validação não muda."
+      },
+      {
+        "text": "O esquema perde essas rotas",
+        "why": "O esquema não muda."
+      }
+    ]
+  }
+}
