@@ -30,7 +30,7 @@ Feature: Ordering books
     Examples:
       | stock | ordered |
       | 5     | 6       |
-      | 0     | 1       |
+      | 0     | 2       |
 ```
 
 Leia de cima para baixo.
@@ -61,7 +61,7 @@ duas ações são dois exemplos, e quando ele falha ninguém sabe dizer qual dos
 **`Scenario Outline:`** é um cenário com buracos. Os nomes entre sinais de menor e maior, `<stock>`
 e `<ordered>`, são preenchidos pela tabela **`Examples:`** logo abaixo, e o esquema roda uma vez por
 linha. Os outros dois exemplos da conversa só diferem nos números, então viram um esquema com duas
-linhas: cinco exemplares contra um pedido de seis, e nenhum contra um pedido de um. O arquivo guarda,
+linhas: cinco exemplares contra um pedido de seis, e nenhum contra um pedido de dois. O arquivo guarda,
 portanto, três cenários, e o *background* roda três vezes.
 
 ## Escreva o que acontece, não como

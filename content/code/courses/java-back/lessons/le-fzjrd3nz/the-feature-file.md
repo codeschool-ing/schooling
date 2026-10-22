@@ -30,7 +30,7 @@ Feature: Ordering books
     Examples:
       | stock | ordered |
       | 5     | 6       |
-      | 0     | 1       |
+      | 0     | 2       |
 ```
 
 Read it from the top.
@@ -61,7 +61,7 @@ two examples, and when it fails nobody can tell which of them broke.
 **`Scenario Outline:`** is a scenario with holes in it. The names in angle brackets, `<stock>` and
 `<ordered>`, are filled from the **`Examples:`** table below, and the outline runs once per row. The
 other two examples from the conversation differ only in their numbers, so they are one outline with
-two rows: five copies against an order of six, and none against an order of one. The file
+two rows: five copies against an order of six, and none against an order of two. The file
 therefore holds three scenarios, and the background runs three times.
 
 ## Write what happens, not how
