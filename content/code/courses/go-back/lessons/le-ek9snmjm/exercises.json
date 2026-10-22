@@ -1,0 +1,960 @@
+[
+  {
+    "id": "ex-7gedbanh",
+    "version": 1,
+    "section": "installing-docker",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On macOS or Windows, why is every path to running a container a virtual machine?",
+    "hint": "What is a container, underneath?",
+    "choices": [
+      {
+        "text": "Containers need a Linux kernel",
+        "correct": true,
+        "why": "Right. A container is a Linux process. Docker Desktop hides that VM; lesson 1's Ubuntu VM shows it."
+      },
+      {
+        "text": "Docker's licence forbids installing on those systems",
+        "correct": false,
+        "why": "The licence asks larger companies for a subscription; it forbids no system."
+      },
+      {
+        "text": "Go builds no binaries for macOS or Windows",
+        "correct": false,
+        "why": "Section 04 builds both from one Linux machine."
+      },
+      {
+        "text": "Their file systems are too slow for image layers",
+        "correct": false,
+        "why": "Speed is not the reason; the kernel is."
+      }
+    ]
+  },
+  {
+    "id": "ex-1byzhbte",
+    "version": 1,
+    "section": "installing-docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson install Docker Engine from Docker's own repository?",
+    "hint": "Compare with Ubuntu's package.",
+    "choices": [
+      {
+        "text": "Ubuntu ships no container engine of any kind in its archive",
+        "correct": false,
+        "why": "Ubuntu packages both `docker.io` and `podman`."
+      },
+      {
+        "text": "Only Docker's packages run containers as root",
+        "correct": false,
+        "why": "Running as root is a property of the daemon, not of who packaged it."
+      },
+      {
+        "text": "Ubuntu's `docker.io` package lags behind",
+        "correct": true,
+        "why": "Right. Docker's repository carries the current engine and the Compose and Buildx plugins."
+      },
+      {
+        "text": "`apt` refuses unsigned packages from Ubuntu",
+        "correct": false,
+        "why": "Ubuntu's packages are signed; the key in the commands is Docker's."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbzk8g55",
+    "version": 1,
+    "section": "installing-docker",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each package on the lab machine to what it gives.",
+    "hint": "Section 02's `dpkg-query`.",
+    "pairs": [
+      {
+        "left": "`docker-ce`",
+        "right": "the engine, the daemon"
+      },
+      {
+        "left": "`docker-ce-cli`",
+        "right": "the `docker` command"
+      },
+      {
+        "left": "`docker-buildx-plugin`",
+        "right": "`docker buildx`"
+      },
+      {
+        "left": "`containerd.io`",
+        "right": "the runtime underneath the engine"
+      }
+    ],
+    "right_distractors": [
+      "the Go toolchain"
+    ]
+  },
+  {
+    "id": "ex-hprj6zeb",
+    "version": 1,
+    "section": "installing-docker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What sets Podman apart from Docker Engine, as section 02 describes it?",
+    "hint": "Think about the daemon.",
+    "choices": [
+      {
+        "text": "It reads a different file format instead of a Dockerfile",
+        "correct": false,
+        "why": "`podman build` takes the same Dockerfile."
+      },
+      {
+        "text": "It runs only on macOS",
+        "correct": false,
+        "why": "Ubuntu packages it as `podman`."
+      },
+      {
+        "text": "It builds Go binaries for other processors",
+        "correct": false,
+        "why": "Cross-compiling is Go's job, in section 04."
+      },
+      {
+        "text": "It has no daemon and is rootless by default",
+        "correct": true,
+        "why": "Right. Its `build` and `run` take nearly the same flags as Docker's."
+      }
+    ]
+  },
+  {
+    "id": "ex-enwmdjvw",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker ps` answers `permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`. What is wrong?",
+    "hint": "Who may open that socket?",
+    "choices": [
+      {
+        "text": "The daemon is not installed",
+        "correct": false,
+        "why": "The socket exists; the user is refused it."
+      },
+      {
+        "text": "The user is not in the `docker` group",
+        "correct": true,
+        "why": "Right. Only root and the group `docker` open the socket."
+      },
+      {
+        "text": "The image it asks for was never pulled to this machine",
+        "correct": false,
+        "why": "`docker ps` needs no image at all."
+      },
+      {
+        "text": "Docker Hub refused the request",
+        "correct": false,
+        "why": "Docker Hub answers `429`; this message is the local socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-yk26e8wb",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say membership of the `docker` group is root by another route?",
+    "hint": "What does the daemon do for a member?",
+    "choices": [
+      {
+        "text": "The group's members share root's password",
+        "correct": false,
+        "why": "No password is shared; the daemon acts for them."
+      },
+      {
+        "text": "The group lets its members edit `/etc/sudoers` and grant themselves any command",
+        "correct": false,
+        "why": "The group owns one socket, nothing in `/etc`."
+      },
+      {
+        "text": "The root daemon mounts any host directory a member asks for",
+        "correct": true,
+        "why": "Right. A container with `/` mounted reads every file root reads."
+      },
+      {
+        "text": "Every container a member starts runs with the host's network and ports",
+        "correct": false,
+        "why": "Containers get their own network unless told otherwise; the danger is the mount."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8hwpxhf",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `sudo usermod -aG docker $USER`, `docker ps` is still refused in the same terminal. Why?",
+    "hint": "`id -nG` shows what the shell has.",
+    "choices": [
+      {
+        "text": "A running session keeps the groups it started with",
+        "correct": true,
+        "why": "Right. Log out and in again, and the new group is there."
+      },
+      {
+        "text": "`usermod` takes effect only after the Docker daemon restarts",
+        "correct": false,
+        "why": "The daemon is untouched; the shell is what lacks the group."
+      },
+      {
+        "text": "Group changes take about an hour to spread across the system",
+        "correct": false,
+        "why": "There is no delay; the session simply started before the change."
+      },
+      {
+        "text": "`-aG` removes every other group",
+        "correct": false,
+        "why": "`-a` appends; it keeps the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p81gz3j",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each failure to its cause.",
+    "hint": "Section 03.",
+    "pairs": [
+      {
+        "left": "`permission denied … docker.sock`",
+        "right": "not in the `docker` group"
+      },
+      {
+        "left": "`failed to connect … check if the path is correct and if the daemon is running`",
+        "right": "no daemon listening on the socket"
+      },
+      {
+        "left": "`429 Too Many Requests`",
+        "right": "Docker Hub's limit on anonymous pulls"
+      },
+      {
+        "left": "no space left on the device",
+        "right": "images and build caches piling up"
+      }
+    ]
+  },
+  {
+    "id": "ex-9da8h2f7",
+    "version": 1,
+    "section": "cross-compiling",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two environment variables choose the target of `go build`: `GOOS` for the operating system and ___ for the processor.",
+    "hint": "Arch.",
+    "blanks": [
+      {
+        "accept": [
+          "GOARCH"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-964phzjk",
+    "version": 1,
+    "section": "cross-compiling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many targets did `go tool dist list | wc -l` count?",
+    "hint": "Section 04's first transcript.",
+    "value": 47,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-nb1wm430",
+    "version": 1,
+    "section": "cross-compiling",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each binary of the loop to the format `file` reported.",
+    "hint": "Section 04's `file dist/try-*`.",
+    "pairs": [
+      {
+        "left": "`try-darwin-arm64`",
+        "right": "Mach-O"
+      },
+      {
+        "left": "`try-windows-amd64`",
+        "right": "PE32+"
+      },
+      {
+        "left": "`try-linux-arm64`",
+        "right": "ELF, statically linked"
+      },
+      {
+        "left": "`try-linux-amd64`",
+        "right": "ELF, dynamically linked"
+      }
+    ]
+  },
+  {
+    "id": "ex-ccf1g9a8",
+    "version": 1,
+    "section": "cross-compiling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Built by the same loop, why did the `linux/arm64` binary come out static and the `linux/amd64` one dynamic?",
+    "hint": "Which one was built for the machine it ran on?",
+    "choices": [
+      {
+        "text": "ARM processors forbid shared libraries",
+        "correct": false,
+        "why": "ARM Linux uses shared libraries like any other Linux."
+      },
+      {
+        "text": "Cross-compiling turns cgo off; the native build kept it on",
+        "correct": true,
+        "why": "Right. There is no C compiler for the target, so cgo defaults to off there."
+      },
+      {
+        "text": "The arm64 build used `-trimpath`",
+        "correct": false,
+        "why": "The loop passed no flags; `-trimpath` removes paths, not libraries."
+      },
+      {
+        "text": "The amd64 build ran out of memory while linking",
+        "correct": false,
+        "why": "Both builds succeeded; the difference is cgo."
+      }
+    ]
+  },
+  {
+    "id": "ex-zwbat8t7",
+    "version": 1,
+    "section": "static-binaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "boxoffice has no C code. Why did the native build still link the C library?",
+    "hint": "Two packages of the standard library.",
+    "choices": [
+      {
+        "text": "pgx is written in C",
+        "correct": false,
+        "why": "pgx is pure Go."
+      },
+      {
+        "text": "`net` and `os/user` use libc when cgo is on",
+        "correct": true,
+        "why": "Right. `net` resolves names and `os/user` looks up users through the C library."
+      },
+      {
+        "text": "Every Go binary on Linux needs libc to start",
+        "correct": false,
+        "why": "`dist/try-static` starts with no libc at all."
+      },
+      {
+        "text": "The race detector was compiled in",
+        "correct": false,
+        "why": "No `-race` flag was passed to that build."
+      }
+    ]
+  },
+  {
+    "id": "ex-s714qx0q",
+    "version": 1,
+    "section": "static-binaries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each build flag to what it does.",
+    "hint": "Section 05's list.",
+    "pairs": [
+      {
+        "left": "`CGO_ENABLED=0`",
+        "right": "a static binary, with no C library"
+      },
+      {
+        "left": "`-trimpath`",
+        "right": "the machine's paths left out of stack traces"
+      },
+      {
+        "left": "`-ldflags \"-s -w\"`",
+        "right": "no symbol table and no debugging information"
+      },
+      {
+        "left": "`-ldflags \"-X main.version=v0.16.0\"`",
+        "right": "a string variable set at link time"
+      }
+    ]
+  },
+  {
+    "id": "ex-303sx24r",
+    "version": 1,
+    "section": "static-binaries",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A release script passes `-X main.verison=v1.0.0`, misspelt. What happens?",
+    "hint": "Section 05 warns about it.",
+    "choices": [
+      {
+        "text": "The build stops with `undefined: main.verison`",
+        "correct": false,
+        "why": "The linker does not complain about a name it never finds."
+      },
+      {
+        "text": "The build succeeds and the binary says `dev`",
+        "correct": true,
+        "why": "Right. The value goes nowhere, which is why the default is a word no release uses."
+      },
+      {
+        "text": "Go creates the variable `verison` and sets it",
+        "correct": false,
+        "why": "`-X` only sets a variable that already exists."
+      },
+      {
+        "text": "`go vet` reports the typo before the build",
+        "correct": false,
+        "why": "`go vet` reads source; the flag is never in the source."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s216ekj",
+    "version": 1,
+    "section": "static-binaries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `-ldflags \"-s -w\"`, what happens when boxoffice panics?",
+    "hint": "What goes is what a debugger needs.",
+    "choices": [
+      {
+        "text": "The panic prints no stack trace at all",
+        "correct": false,
+        "why": "Stack traces use other tables, which stay."
+      },
+      {
+        "text": "The process restarts itself",
+        "correct": false,
+        "why": "Nothing in a Go binary restarts it; a supervisor does that."
+      },
+      {
+        "text": "The trace shows addresses with no function names",
+        "correct": false,
+        "why": "Function names remain in the trace."
+      },
+      {
+        "text": "The panic still prints its stack trace",
+        "correct": true,
+        "why": "Right. The symbol table and DWARF go; the tables a trace uses stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-ragmxvzs",
+    "version": 1,
+    "section": "static-binaries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The plain static build was 26.0 MB. How many MB was the release build with `-trimpath -ldflags \"-s -w …\"`?",
+    "hint": "Section 05's `ls -l`.",
+    "value": 17.8,
+    "tolerance": 0.1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-4bt9tv9z",
+    "version": 1,
+    "section": "distroless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `gcr.io/distroless/static-debian12:nonroot` contain?",
+    "hint": "Made for static binaries.",
+    "choices": [
+      {
+        "text": "A shell, for `docker exec`",
+        "correct": false,
+        "why": "There is no shell; section 06's `sh` failed to start."
+      },
+      {
+        "text": "The C library, and the dynamic loader that links it in",
+        "correct": false,
+        "why": "Their absence is why the dynamic binary failed."
+      },
+      {
+        "text": "`apt`, so that packages are added to the image later",
+        "correct": false,
+        "why": "No package manager is in it."
+      },
+      {
+        "text": "CA certificates and time-zone data",
+        "correct": true,
+        "why": "Right. Plus `/etc/passwd`, and a default user `nonroot`, uid 65532."
+      }
+    ]
+  },
+  {
+    "id": "ex-t23d5cpe",
+    "version": 1,
+    "section": "distroless",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The dynamically linked binary in distroless fails with `exec /boxoffice: no such file or directory`. Which file is missing?",
+    "hint": "Read the binary's header in section 04.",
+    "choices": [
+      {
+        "text": "`/boxoffice`, because `COPY` failed",
+        "correct": false,
+        "why": "The binary is there; the message names it because it was executed."
+      },
+      {
+        "text": "`/lib64/ld-linux-x86-64.so.2`, the loader",
+        "correct": true,
+        "why": "Right. The header names that interpreter, and the image has no loader and no C library."
+      },
+      {
+        "text": "`/etc/passwd`, which holds the image's users",
+        "correct": false,
+        "why": "distroless has one; the kernel never got as far as users."
+      },
+      {
+        "text": "`/bin/sh`, which the entrypoint needs in order to start",
+        "correct": false,
+        "why": "The exec form of `ENTRYPOINT` uses no shell."
+      }
+    ]
+  },
+  {
+    "id": "ex-wr939p7k",
+    "version": 1,
+    "section": "distroless",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the Dockerfile set `BOXOFFICE_HTTP=:8080`?",
+    "hint": "Where is `localhost` inside a container?",
+    "choices": [
+      {
+        "text": "Port 8080 is free only inside containers",
+        "correct": false,
+        "why": "The port number is unchanged; the interface is the point."
+      },
+      {
+        "text": "`EXPOSE` requires an `ENV` for every port",
+        "correct": false,
+        "why": "`EXPOSE` only documents ports."
+      },
+      {
+        "text": "Inside a container, `localhost` is the container itself",
+        "correct": true,
+        "why": "Right. Listening on every interface is what lets a published port reach it."
+      },
+      {
+        "text": "distroless forbids loopback addresses",
+        "correct": false,
+        "why": "Loopback exists in every container; nothing outside reaches it."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2cws7fg",
+    "version": 1,
+    "section": "distroless",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `EXPOSE 8080 9090` do?",
+    "hint": "Publishing is somebody else's job.",
+    "choices": [
+      {
+        "text": "Publishes both ports on the host",
+        "correct": false,
+        "why": "That is `docker run -p`; gRPC stayed unreachable in section 07."
+      },
+      {
+        "text": "Opens both ports in the host's firewall for incoming traffic",
+        "correct": false,
+        "why": "A Dockerfile touches no firewall."
+      },
+      {
+        "text": "Makes boxoffice listen on those two ports inside the container",
+        "correct": false,
+        "why": "The `ENV` line does that, through lesson 14's configuration."
+      },
+      {
+        "text": "Documents the ports and publishes nothing",
+        "correct": true,
+        "why": "Right. `docker run` decides what reaches the host."
+      }
+    ]
+  },
+  {
+    "id": "ex-dd816xqw",
+    "version": 1,
+    "section": "distroless",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What `CONTENT SIZE`, in MB, did `docker image ls` report for `boxoffice:v0.16.0`?",
+    "hint": "What a server downloads.",
+    "value": 7.35,
+    "tolerance": 0.01,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-vpptf0gh",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the container, pgx tried to connect with `user=` empty. Why?",
+    "hint": "Where does pgx look when the URL names no user?",
+    "choices": [
+      {
+        "text": "The token file was mounted read-only",
+        "correct": false,
+        "why": "The token has nothing to do with the database user."
+      },
+      {
+        "text": "PostgreSQL refuses every connection that comes from inside a container",
+        "correct": false,
+        "why": "The second run connected through the same socket."
+      },
+      {
+        "text": "`TZ` was not set, so the connection string broke",
+        "correct": false,
+        "why": "`TZ` changes timestamps, not the connection."
+      },
+      {
+        "text": "Its `/etc/passwd` has no name for your uid",
+        "correct": true,
+        "why": "Right. With `--user` set to your uid, the image knows no name to send; the URL has to carry one."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbaj4yw2",
+    "version": 1,
+    "section": "running-it",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing boxoffice needs in the container to the `docker run` flag that gives it.",
+    "hint": "Section 07's table.",
+    "pairs": [
+      {
+        "left": "to be reachable from the host",
+        "right": "`-p 8080:8080`"
+      },
+      {
+        "left": "the database's socket",
+        "right": "`-v /var/run/postgresql:/var/run/postgresql`"
+      },
+      {
+        "left": "to pass peer authentication",
+        "right": "`--user \"$(id -u):$(id -g)\"`"
+      },
+      {
+        "left": "the manager's token",
+        "right": "a read-only mount and `BOXOFFICE_MANAGER_TOKEN_FILE`"
+      }
+    ]
+  },
+  {
+    "id": "ex-5td4kbpx",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first container's log lines ended in `Z`. What did the second run add to show São Paulo time?",
+    "hint": "The image has time-zone data and no local zone.",
+    "choices": [
+      {
+        "text": "A mount of the host's `/etc/localtime`",
+        "correct": false,
+        "why": "No such mount was made; one variable sufficed."
+      },
+      {
+        "text": "A rebuild with `-trimpath`",
+        "correct": false,
+        "why": "`-trimpath` concerns paths, not time."
+      },
+      {
+        "text": "`-e TZ=America/Sao_Paulo`",
+        "correct": true,
+        "why": "Right. Go reads `TZ` and finds the zone in the image's time-zone data."
+      },
+      {
+        "text": "A new `ENV` line in the Dockerfile",
+        "correct": false,
+        "why": "The image was not rebuilt; the variable went on `docker run`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zbr44bw",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `database: migrating: …` come out at level `INFO` though `log.Fatalf` wrote it?",
+    "hint": "Lesson 12's bridge.",
+    "choices": [
+      {
+        "text": "Docker lowers the level of every line",
+        "correct": false,
+        "why": "`docker logs` prints what the process wrote, unchanged."
+      },
+      {
+        "text": "`slog.SetDefault` routes `log` calls at `INFO`",
+        "correct": true,
+        "why": "Right. Every old `log` call becomes an `INFO` line: the `log` package has no levels, so its lines arrive at that one."
+      },
+      {
+        "text": "The error was not fatal",
+        "correct": false,
+        "why": "The process exited; only the level was wrong."
+      },
+      {
+        "text": "`TZ` was missing",
+        "correct": false,
+        "why": "The time zone changes the timestamp, not the level."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz0za3sb",
+    "version": 1,
+    "section": "running-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker stop boxoffice` took about a fifth of a second. Why so quick?",
+    "hint": "What does boxoffice do with `SIGTERM`?",
+    "choices": [
+      {
+        "text": "Docker sends `SIGKILL` first",
+        "correct": false,
+        "why": "It sends `SIGTERM` first and waits up to ten seconds before `SIGKILL`."
+      },
+      {
+        "text": "distroless has no signals",
+        "correct": false,
+        "why": "Signals belong to the kernel, not to the image."
+      },
+      {
+        "text": "The container had served no requests",
+        "correct": false,
+        "why": "It had served one, and the stop would be as quick with a hundred."
+      },
+      {
+        "text": "boxoffice does nothing about `SIGTERM`",
+        "correct": true,
+        "why": "Right. Go's default ends it at once and requests in flight are cut off; lesson 17 fixes that."
+      }
+    ]
+  },
+  {
+    "id": "ex-twdczyj4",
+    "version": 1,
+    "section": "other-machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `docker buildx build --platform linux/arm64` need no emulation?",
+    "hint": "What does the Dockerfile run?",
+    "choices": [
+      {
+        "text": "buildx emulates every platform for free",
+        "correct": false,
+        "why": "Nothing was emulated at all here."
+      },
+      {
+        "text": "arm64 and amd64 share one instruction set",
+        "correct": false,
+        "why": "They differ; that is why the image fails on this machine."
+      },
+      {
+        "text": "distroless contains an arm64 emulator",
+        "correct": false,
+        "why": "distroless contains no programs at all."
+      },
+      {
+        "text": "Nothing in the Dockerfile runs",
+        "correct": true,
+        "why": "Right. Go already compiled for arm64; the build only copies `dist/boxoffice-linux-arm64` onto the arm64 distroless."
+      }
+    ]
+  },
+  {
+    "id": "ex-285hctfb",
+    "version": 1,
+    "section": "other-machines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Running `boxoffice:v0.16.0-arm64` on the amd64 lab machine ended in which error?",
+    "hint": "The kernel's word for it.",
+    "choices": [
+      {
+        "text": "`no such file or directory`",
+        "correct": false,
+        "why": "That was the missing loader, in section 06."
+      },
+      {
+        "text": "`exec format error`",
+        "correct": true,
+        "why": "Right. The kernel was handed an arm64 program on an amd64 processor."
+      },
+      {
+        "text": "`permission denied`",
+        "correct": false,
+        "why": "That was the socket, in section 03."
+      },
+      {
+        "text": "`429 Too Many Requests`",
+        "correct": false,
+        "why": "That is a registry's answer, not the kernel's."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kzky0mn",
+    "version": 1,
+    "section": "other-machines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the two-stage Dockerfile, what does `FROM --platform=$BUILDPLATFORM golang:1.27.1 AS build` achieve?",
+    "hint": "Compare with emulating the target.",
+    "choices": [
+      {
+        "text": "The build stage runs natively",
+        "correct": true,
+        "why": "Right. Go cross-compiles from there; emulating the target for the whole build would be many times slower."
+      },
+      {
+        "text": "It copies the Go toolchain into the final image",
+        "correct": false,
+        "why": "`COPY --from=build` takes one file; the toolchain stays behind."
+      },
+      {
+        "text": "It pulls the image without Docker Hub's limit",
+        "correct": false,
+        "why": "The flag picks a platform; the lab's pull still got `429`."
+      },
+      {
+        "text": "It turns cgo on for the build",
+        "correct": false,
+        "why": "The stage sets `CGO_ENABLED=0`."
+      }
+    ]
+  },
+  {
+    "id": "ex-cm78gah5",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which statements match this lesson? Choose all that apply.",
+    "hint": "Sections 04 to 07.",
+    "choices": [
+      {
+        "text": "`go version -m` reads back how a binary was built",
+        "correct": true,
+        "why": "Right. It showed `-trimpath=true`, `CGO_ENABLED=0` and the target."
+      },
+      {
+        "text": "`.dockerignore` keeps the build context to the release binaries",
+        "correct": true,
+        "why": "Right. It ignores everything and lets `dist/boxoffice-linux-*` back in."
+      },
+      {
+        "text": "The image runs boxoffice as root",
+        "correct": false,
+        "why": "The `nonroot` tag makes the default user `nonroot`, uid 65532."
+      },
+      {
+        "text": "`CGO_ENABLED=0` was the fix for the loader error",
+        "correct": true,
+        "why": "Right. A static binary needs no loader."
+      },
+      {
+        "text": "Cross-compiling for Windows needed a Windows SDK",
+        "correct": false,
+        "why": "Go needed nothing installed beyond itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-p08mfpa3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps from source to a serving container, as this lesson took them.",
+    "hint": "Build, image, run.",
+    "items": [
+      "build with `CGO_ENABLED=0 -trimpath -ldflags \"-s -w -X …\"`",
+      "`docker build` the distroless image",
+      "`docker run` with the port, the socket, the user, the token and the URL",
+      "`curl` the event and read `docker logs`"
+    ]
+  },
+  {
+    "id": "ex-bfgxc104",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate's boxoffice image fails in distroless with `exec /boxoffice: no such file or directory`. What do you check first?",
+    "hint": "Section 06's rule.",
+    "choices": [
+      {
+        "text": "Whether `COPY` put the binary at `/boxoffice`",
+        "correct": false,
+        "why": "The message names the program even when it is there."
+      },
+      {
+        "text": "Whether port 8080 is published",
+        "correct": false,
+        "why": "The process never started; ports are not involved."
+      },
+      {
+        "text": "Whether the `docker` group exists",
+        "correct": false,
+        "why": "The daemon ran the container; the failure is inside it."
+      },
+      {
+        "text": "Whether the binary was built with cgo on",
+        "correct": true,
+        "why": "Right. `file` or `ldd` on it shows a loader, and `CGO_ENABLED=0` is the fix."
+      }
+    ]
+  }
+]

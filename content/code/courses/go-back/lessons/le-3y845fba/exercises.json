@@ -1,0 +1,919 @@
+[
+  {
+    "id": "ex-cqxh00ya",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after `apt install postgresql`, `psql -c \"SELECT 1\"` answers `role \"ana\" does not exist`. What is missing?",
+    "hint": "PostgreSQL keeps its own list of users.",
+    "choices": [
+      {
+        "text": "A password for the operating system user ana in `/etc/passwd`",
+        "correct": false,
+        "why": "The message is about PostgreSQL's list of roles, which is separate from the system's users."
+      },
+      {
+        "text": "The server, which the installer leaves stopped",
+        "correct": false,
+        "why": "`pg_lsclusters` showed the cluster online; a stopped server gives a different message about the socket."
+      },
+      {
+        "text": "A role named after your login",
+        "correct": true,
+        "why": "Right. The installer created only `postgres`; `sudo -u postgres createuser --superuser $USER` adds yours."
+      },
+      {
+        "text": "A database called `boxoffice` for psql to open",
+        "correct": false,
+        "why": "A missing database says `database ... does not exist`; this refusal comes before any database is chosen."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjx243n2",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does boxoffice's `DATABASE_URL` carry `host=/var/run/postgresql` and no password?",
+    "hint": "How does Ubuntu's PostgreSQL treat a socket connection?",
+    "choices": [
+      {
+        "text": "A header pgx adds",
+        "correct": false,
+        "why": "There is no such header; no password exists for this role at all."
+      },
+      {
+        "text": "PostgreSQL accepts every TCP connection from localhost without a password",
+        "correct": false,
+        "why": "The opposite: `psql -h localhost -w` failed with `no password supplied`."
+      },
+      {
+        "text": "Peer authentication on the socket",
+        "correct": true,
+        "why": "Right. Over the Unix socket no password is asked for."
+      },
+      {
+        "text": "The `--superuser` flag removes the need for any password",
+        "correct": false,
+        "why": "Superuser is about what the role may do, not about how it signs in."
+      }
+    ]
+  },
+  {
+    "id": "ex-ng3vs6kh",
+    "version": 1,
+    "section": "installing-postgresql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a hosted cloud database not one of the course's three paths?",
+    "hint": "The section names two reasons.",
+    "choices": [
+      {
+        "text": "PostgreSQL 16 does not exist in any cloud",
+        "correct": false,
+        "why": "Not the reason given; the objection is about accounts and dependence."
+      },
+      {
+        "text": "pgx refuses to connect to a server on another machine",
+        "correct": false,
+        "why": "pgx connects over TCP to any host; the choice is about the student's setup."
+      },
+      {
+        "text": "Cloud databases have no SQLSTATE codes",
+        "correct": false,
+        "why": "A hosted PostgreSQL speaks the same protocol and the same codes."
+      },
+      {
+        "text": "An account, and one company's free tier",
+        "correct": true,
+        "why": "Right, and every query would also cross the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-1cjvczjr",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to its cause.",
+    "hint": "Read the last clause of each.",
+    "pairs": [
+      {
+        "left": "`FATAL:  role \"ana\" does not exist`",
+        "right": "the createuser step was skipped"
+      },
+      {
+        "left": "`FATAL:  database \"ana\" does not exist`",
+        "right": "psql was given no database name"
+      },
+      {
+        "left": "`No such file or directory` on the socket",
+        "right": "the server is stopped"
+      },
+      {
+        "left": "`fe_sendauth: no password supplied`",
+        "right": "a TCP connection instead of the socket"
+      }
+    ],
+    "right_distractors": [
+      "the disk is full"
+    ]
+  },
+  {
+    "id": "ex-4p07hwmm",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`psql boxoffice` says `No such file or directory` about `/var/run/postgresql/.s.PGSQL.5432`. What do you run first?",
+    "hint": "The socket file exists only while something listens.",
+    "choices": [
+      {
+        "text": "`pg_lsclusters`, then start the cluster",
+        "correct": true,
+        "why": "Right. The message means nothing is listening."
+      },
+      {
+        "text": "`createdb boxoffice`, since the database is what the socket path names",
+        "correct": false,
+        "why": "createdb needs a running server too; the database is not what is missing."
+      },
+      {
+        "text": "`sudo apt install postgresql` again",
+        "correct": false,
+        "why": "The install is fine; the server is stopped."
+      },
+      {
+        "text": "`ALTER ROLE` to give ana a password",
+        "correct": false,
+        "why": "A password helps a TCP login, not a server that is down."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zmm5t8f",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A tool on your machine only speaks TCP and fails with `fe_sendauth: no password supplied`. What does the section recommend?",
+    "hint": "The socket is preferred, and TCP has its own way.",
+    "choices": [
+      {
+        "text": "Give the role a password with ALTER ROLE, and pass it in the URL or ~/.pgpass",
+        "correct": true,
+        "why": "Right. For everything else, the socket avoids the question."
+      },
+      {
+        "text": "Switch PostgreSQL to accept TCP logins with no password at all",
+        "correct": false,
+        "why": "The section never weakens authentication; it uses the socket or a password."
+      },
+      {
+        "text": "Run the tool as the postgres user",
+        "correct": false,
+        "why": "Peer trust is a socket matter; over TCP postgres would need a password too."
+      },
+      {
+        "text": "Add `-w` so psql stops prompting",
+        "correct": false,
+        "why": "`-w` only makes the failure immediate; it supplies nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tz9p62y1",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does boxoffice call `pool.Ping` in `main` before opening its port?",
+    "hint": "What does `pgxpool.New` do on its own?",
+    "choices": [
+      {
+        "text": "To warm a cache of query plans",
+        "correct": false,
+        "why": "Ping runs no query of yours; it opens a connection."
+      },
+      {
+        "text": "To fail at start, not on a request",
+        "correct": true,
+        "why": "Right. pgxpool.New builds the pool without connecting."
+      },
+      {
+        "text": "pgx requires a ping before every query",
+        "correct": false,
+        "why": "One ping at start; queries connect as needed."
+      },
+      {
+        "text": "To create the database when it is missing",
+        "correct": false,
+        "why": "It reported `database \"nowhere\" does not exist` and the program stopped."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnacdprk",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the `events` table repeat rules that `memStore` already enforced in Go, like `CHECK (sold BETWEEN 0 AND seats)`?",
+    "hint": "Who else writes to a database?",
+    "choices": [
+      {
+        "text": "Because Go cannot compare integers inside a transaction",
+        "correct": false,
+        "why": "Go compared them fine in lesson 3; the point is who else writes."
+      },
+      {
+        "text": "Other writers exist besides this handler",
+        "correct": true,
+        "why": "Right. The database keeps the promise even against code that forgot it."
+      },
+      {
+        "text": "CHECK constraints make queries faster",
+        "correct": false,
+        "why": "They protect data; speed is not their purpose."
+      },
+      {
+        "text": "pgx refuses tables with no constraints",
+        "correct": false,
+        "why": "pgx works with any table."
+      }
+    ]
+  },
+  {
+    "id": "ex-naxp0w5r",
+    "version": 1,
+    "section": "the-schema",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PostgreSQL named the uniqueness constraint on `name` `events_name_key` and the rule on `sold` `events____`.",
+    "hint": "`\\d events` lists the check constraints.",
+    "blanks": [
+      {
+        "accept": [
+          "check"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vny9sh99",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens if you run `psql boxoffice -f schema.sql` a second time?",
+    "hint": "The file starts with CREATE TABLE.",
+    "choices": [
+      {
+        "text": "The table is replaced and the rows reset",
+        "correct": false,
+        "why": "CREATE TABLE never replaces anything."
+      },
+      {
+        "text": "Nothing; PostgreSQL skips files it has run before",
+        "correct": false,
+        "why": "PostgreSQL keeps no record of files; lesson 9 adds one."
+      },
+      {
+        "text": "It fails on `CREATE TABLE`, because the table exists",
+        "correct": true,
+        "why": "Right, the problem lesson 9's migrations solve."
+      },
+      {
+        "text": "Two more copies of each event are inserted",
+        "correct": false,
+        "why": "The run stops at CREATE TABLE, and the names are UNIQUE anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-3bspshp5",
+    "version": 1,
+    "section": "database-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague calls `sql.Open` inside every handler \"to get a fresh connection\". What is wrong?",
+    "hint": "What does `sql.Open` return?",
+    "choices": [
+      {
+        "text": "Each call makes a new pool",
+        "correct": true,
+        "why": "Right. Open one `sql.DB` at start and share it."
+      },
+      {
+        "text": "It connects over TLS",
+        "correct": false,
+        "why": "`sql.Open` does not connect at all."
+      },
+      {
+        "text": "A `*sql.DB` is not safe to share between goroutines",
+        "correct": false,
+        "why": "It is safe for exactly that."
+      },
+      {
+        "text": "Handlers have no context to pass to it",
+        "correct": false,
+        "why": "`r.Context()` is there; the problem is the pool."
+      }
+    ]
+  },
+  {
+    "id": "ex-5z5sgsnn",
+    "version": 1,
+    "section": "database-sql",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `rows` loop ends early because the network dropped. Which call tells you, and what does the loop look like without it?",
+    "hint": "Check after the loop.",
+    "choices": [
+      {
+        "text": "`rows.Close()`; without it the program panics",
+        "correct": false,
+        "why": "Close returns the connection; a forgotten Close leaks it, silently."
+      },
+      {
+        "text": "`rows.Scan`; it returns the network error on the next row",
+        "correct": false,
+        "why": "There is no next row to scan once Next returned false."
+      },
+      {
+        "text": "`db.Stats()`; it counts failed reads",
+        "correct": false,
+        "why": "Stats reports connections, not this loop's error."
+      },
+      {
+        "text": "`rows.Err()`; it looks finished",
+        "correct": true,
+        "why": "Right. Both endings make `rows.Next` return false."
+      }
+    ]
+  },
+  {
+    "id": "ex-rrwr1vx4",
+    "version": 1,
+    "section": "database-sql",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the underscore import `_ \"github.com/jackc/pgx/v5/stdlib\"` do?",
+    "hint": "It is imported only for what it does when it loads.",
+    "choices": [
+      {
+        "text": "It replaces `database/sql` with pgx's own interface",
+        "correct": false,
+        "why": "The program still calls `database/sql`; the driver sits under it."
+      },
+      {
+        "text": "It opens the first connection while the program loads",
+        "correct": false,
+        "why": "Nothing connects until a query; the pool opened one then."
+      },
+      {
+        "text": "It registers the \"pgx\" driver",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It silences unused-import errors for pgx's types",
+        "correct": false,
+        "why": "It exists for its registration, which is a side effect."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rpcp3fb",
+    "version": 1,
+    "section": "database-sql",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `dbsql` ran its queries, how many idle connections did `db.Stats()` report?",
+    "hint": "The last line of its output.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "connections"
+  },
+  {
+    "id": "ex-1abzj67n",
+    "version": 1,
+    "section": "pgx",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two buyers ask for the last seat of event 1 at the same instant. Why can `pgStore.Sell` not sell it twice?",
+    "hint": "Look at the WHERE of the UPDATE.",
+    "choices": [
+      {
+        "text": "One statement checks and changes",
+        "correct": true,
+        "why": "Right. The second buyer's UPDATE finds no row that passes the check."
+      },
+      {
+        "text": "A Go mutex in pgStore lets one buyer in at a time",
+        "correct": false,
+        "why": "pgStore has no mutex; the database does the work."
+      },
+      {
+        "text": "pgx retries a sale that collides with another until one gives up",
+        "correct": false,
+        "why": "No retry is involved; the check and the change are one statement."
+      },
+      {
+        "text": "The handler reads the event first and compares in Go",
+        "correct": false,
+        "why": "That read-then-write is exactly the race the single statement avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6hks73r",
+    "version": 1,
+    "section": "pgx",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When the UPDATE in `Sell` returns no row, why does pgStore run a second query?",
+    "hint": "No row has two possible reasons.",
+    "choices": [
+      {
+        "text": "To retry the sale once",
+        "correct": false,
+        "why": "The second query is a Get, not another UPDATE."
+      },
+      {
+        "text": "To release the row lock the UPDATE left behind",
+        "correct": false,
+        "why": "The statement finished; nothing is held."
+      },
+      {
+        "text": "Because `RETURNING` is not allowed on UPDATE",
+        "correct": false,
+        "why": "The UPDATE uses RETURNING in the same file."
+      },
+      {
+        "text": "To tell a missing event, 404, from a sold-out one, 409",
+        "correct": true,
+        "why": "Right, and it costs a round trip only on failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1wj36gy",
+    "version": 1,
+    "section": "pgx",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pgx.RowToStructByPos[Event]` fills `Event` from the columns. What does that require of the SELECT?",
+    "hint": "By position.",
+    "choices": [
+      {
+        "text": "Columns named exactly like the JSON tags",
+        "correct": false,
+        "why": "That would be by name; this one goes by order."
+      },
+      {
+        "text": "A `SELECT *`",
+        "correct": false,
+        "why": "Naming the columns is what fixes their order."
+      },
+      {
+        "text": "Columns in field order",
+        "correct": true,
+        "why": "Right: id, name, seats, sold."
+      },
+      {
+        "text": "A separate `rows.Close` after the call",
+        "correct": false,
+        "why": "`CollectRows` closes the rows itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8cxgw74",
+    "version": 1,
+    "section": "placeholders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The glued query with *Rock 'n' Roll Night* failed with SQLSTATE 42601. What happened?",
+    "hint": "Where did the string PostgreSQL was reading end?",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses names longer than 16 characters",
+        "correct": false,
+        "why": "The limit is 100 and only for inserts; this was a syntax error."
+      },
+      {
+        "text": "pgx blocked the query as an attack",
+        "correct": false,
+        "why": "PostgreSQL's parser failed; pgx just passed the error on."
+      },
+      {
+        "text": "The event does not exist, so the count failed",
+        "correct": false,
+        "why": "The parameter version counted 0 with no error."
+      },
+      {
+        "text": "The apostrophe closed the string",
+        "correct": true,
+        "why": "Right, a syntax error near `n`."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8kja2qf",
+    "version": 1,
+    "section": "placeholders",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why is a placeholder a defence against SQL injection, where escaping quotes is not?",
+    "hint": "When is the value parsed?",
+    "choices": [
+      {
+        "text": "pgx escapes every quote more carefully than you would",
+        "correct": false,
+        "why": "Nothing is escaped; value and statement travel apart."
+      },
+      {
+        "text": "Placeholders reject values containing apostrophes",
+        "correct": false,
+        "why": "The apostrophes arrived as three characters, and the count worked."
+      },
+      {
+        "text": "PostgreSQL logs every placeholder query for review",
+        "correct": false,
+        "why": "No log is involved in the defence."
+      },
+      {
+        "text": "The value is never parsed as SQL",
+        "correct": true,
+        "why": "Right. There is no input for which it goes wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2qb2r0g",
+    "version": 1,
+    "section": "placeholders",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An endpoint takes `?sort=` and must order by `name` or `seats`. How does the section make it safe?",
+    "hint": "A placeholder stands for a value only.",
+    "choices": [
+      {
+        "text": "`ORDER BY $1`, with the client's word as the parameter",
+        "correct": false,
+        "why": "A column name is not a value, so a placeholder there orders by a constant."
+      },
+      {
+        "text": "Strip quotes and semicolons from the word, then glue it in",
+        "correct": false,
+        "why": "Cleaning values up is the approach the section says fails."
+      },
+      {
+        "text": "Sort in Go after reading every row",
+        "correct": false,
+        "why": "That works, but it is not the section's answer and reads the whole table."
+      },
+      {
+        "text": "A map of allowed words to constant strings; anything else falls back to `id`",
+        "correct": true,
+        "why": "Right. The client's input only chooses among strings you wrote."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gv4w4z8",
+    "version": 1,
+    "section": "errors-and-null",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SELECT NULL::text` scanned into a `string`. What did pgx do?",
+    "hint": "The first line of the nulls program.",
+    "choices": [
+      {
+        "text": "Stored `\"\"` and returned no error",
+        "correct": false,
+        "why": "That would make a missing value look like an empty one; pgx refused."
+      },
+      {
+        "text": "Stored the text `NULL`",
+        "correct": false,
+        "why": "That is psql's display setting, not a scan result."
+      },
+      {
+        "text": "Returned `cannot scan NULL into *string`",
+        "correct": true,
+        "why": "Right. Use `*string` or `pgtype.Text` for a nullable column."
+      },
+      {
+        "text": "Panicked inside the driver",
+        "correct": false,
+        "why": "It returned an ordinary error."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbbcvqqy",
+    "version": 1,
+    "section": "errors-and-null",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each SQLSTATE to what it meant in this lesson.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "`23505`",
+        "right": "a duplicate event name"
+      },
+      {
+        "left": "`23514`",
+        "right": "sold above seats"
+      },
+      {
+        "left": "`42601`",
+        "right": "the glued apostrophe"
+      },
+      {
+        "left": "`3D000`",
+        "right": "a database that does not exist"
+      }
+    ],
+    "right_distractors": [
+      "a role that does not exist"
+    ]
+  },
+  {
+    "id": "ex-9a9988v6",
+    "version": 1,
+    "section": "errors-and-null",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does pgStore turn `23505` into an answer for the client but let `23514` become a 500?",
+    "hint": "Which one can a client cause with a valid request?",
+    "choices": [
+      {
+        "text": "23514 is not a real PostgreSQL code",
+        "correct": false,
+        "why": "It is check_violation, printed by the nulls program."
+      },
+      {
+        "text": "Check violations are retried automatically by pgx",
+        "correct": false,
+        "why": "pgx retries nothing here."
+      },
+      {
+        "text": "Only 23505 is the client's doing",
+        "correct": true,
+        "why": "Right: one is the client's to fix, the other the operator's to hear about."
+      },
+      {
+        "text": "The message of 23514 is in Portuguese",
+        "correct": false,
+        "why": "The messages are English; the code is what is matched."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4dtm7hx",
+    "version": 1,
+    "section": "errors-and-null",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `pgStore.Add` compare `pgErr.Code` with `\"23505\"` and not search the message for \"duplicate\"?",
+    "hint": "Which of the two is a contract?",
+    "choices": [
+      {
+        "text": "String search is slow",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "pgx hides the message from Go code",
+        "correct": false,
+        "why": "The message was printed in full by the nulls program."
+      },
+      {
+        "text": "The code is the contract",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The message is translated to the user's language by PostgreSQL",
+        "correct": false,
+        "why": "The point is that text is unstable; the code is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-yjadrpyd",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Organ Recital was created after events 1 and 2, and got id 5. Why?",
+    "hint": "Two inserts failed before it.",
+    "choices": [
+      {
+        "text": "Failed inserts spent 3 and 4",
+        "correct": true,
+        "why": "Right. Identity numbers are unique and increasing, never gapless."
+      },
+      {
+        "text": "Rows 3 and 4 were deleted by the lab",
+        "correct": false,
+        "why": "Nothing was deleted."
+      },
+      {
+        "text": "PostgreSQL skips numbers to make ids hard to guess",
+        "correct": false,
+        "why": "The gaps came from the two failed inserts."
+      },
+      {
+        "text": "pgx numbers events itself, counting every request",
+        "correct": false,
+        "why": "The database numbers them, with `GENERATED ALWAYS AS IDENTITY`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ejmfqnm",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `Store` an interface defined in boxoffice's own package with exactly four methods?",
+    "hint": "Who calls it, and what else satisfies it?",
+    "choices": [
+      {
+        "text": "Go requires it",
+        "correct": false,
+        "why": "Interfaces are optional and satisfied implicitly."
+      },
+      {
+        "text": "pgx only accepts an interface as its pool argument",
+        "correct": false,
+        "why": "pgx knows nothing about Store."
+      },
+      {
+        "text": "To hide the four methods from other packages",
+        "correct": false,
+        "why": "The methods are what the handlers call; nothing is hidden."
+      },
+      {
+        "text": "Two stores satisfy it",
+        "correct": true,
+        "why": "Right, the small-interface habit from `go` lesson 27."
+      }
+    ]
+  },
+  {
+    "id": "ex-s4dz9zp7",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lesson 2's log measured tens of microseconds per request; this lesson's measured milliseconds. What changed?",
+    "hint": "Where does the handler's time go now?",
+    "choices": [
+      {
+        "text": "Every handler now waits on a round trip to PostgreSQL",
+        "correct": true,
+        "why": "Right, and writes to disk cost the most."
+      },
+      {
+        "text": "Problem details are slower to encode than text",
+        "correct": false,
+        "why": "Lesson 3 encoded them in microseconds against the map."
+      },
+      {
+        "text": "The middleware chain grew longer in this lesson",
+        "correct": false,
+        "why": "The chain is lesson 2's, unchanged."
+      },
+      {
+        "text": "`go run` compiles once per request",
+        "correct": false,
+        "why": "It compiles once, before the server starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-b9gnk3cj",
+    "version": 1,
+    "section": "boxoffice",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these changed in the handlers when boxoffice moved to PostgreSQL? Choose all that apply.",
+    "hint": "Compare events.go with lesson 3's.",
+    "choices": [
+      {
+        "text": "They pass `r.Context()` to every store call",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They handle an error from `List`, which could not fail before",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They take a `Store` instead of a `*memStore`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They write SQL with placeholders themselves",
+        "correct": false,
+        "why": "The SQL lives in pgStore; handlers never see it."
+      },
+      {
+        "text": "They match SQLSTATE codes",
+        "correct": false,
+        "why": "pgStore matches them; handlers see only store errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-jspfv51t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the setup of a fresh machine in order, up to boxoffice answering from PostgreSQL.",
+    "hint": "Each step needs the one before.",
+    "items": [
+      "`sudo apt install -y postgresql`",
+      "`sudo -u postgres createuser --superuser $USER`",
+      "`createdb boxoffice`",
+      "`psql boxoffice -f schema.sql`",
+      "export `DATABASE_URL` and `go run .`"
+    ],
+    "trap": "The role comes before the database it owns."
+  },
+  {
+    "id": "ex-18sv2jk3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a restart, `GET /events` still lists the Organ Recital. In lesson 3 the same restart lost it. What is the whole reason?",
+    "hint": "Where do the events live now?",
+    "choices": [
+      {
+        "text": "pgx caches the last answer on disk between runs",
+        "correct": false,
+        "why": "pgx caches nothing between runs; the table holds the rows."
+      },
+      {
+        "text": "`go run` keeps memory",
+        "correct": false,
+        "why": "A new process starts empty."
+      },
+      {
+        "text": "memStore now writes a file when it stops",
+        "correct": false,
+        "why": "memStore still lives only in memory; main uses pgStore."
+      },
+      {
+        "text": "The rows outlive the process",
+        "correct": true,
+        "why": "Right. The map died with the process; the table did not."
+      }
+    ]
+  }
+]
