@@ -12,7 +12,7 @@ and adds to it only where a lesson needs something new.
 |---|---|---|
 | the Go toolchain | **Go 1.27.1**, the official archive in `/usr/local/go` | `go`, lesson 3 |
 | two directories on `PATH` | `/usr/local/go/bin` and `~/go/bin` | `go`, lesson 3 |
-| a C compiler | `gcc` from Ubuntu 24.04's archive | `go-concurrency`, lesson 16, for the race detector |
+| a C compiler | `gcc` from Ubuntu 24.04's archive | `go-concurrency`, lesson 1, for the race detector of its lesson 16 |
 | a container runtime | Podman from Ubuntu 24.04's archive | this course, lesson 17, before lesson 18 uses it |
 
 The C compiler waits until lesson 15, where the race detector needs it, and lesson 23, where Go

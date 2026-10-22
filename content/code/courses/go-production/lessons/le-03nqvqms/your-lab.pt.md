@@ -12,7 +12,7 @@ versões, e só acrescenta algo onde uma lição precisa de coisa nova.
 |---|---|---|
 | o toolchain do Go | **Go 1.27.1**, o arquivo oficial em `/usr/local/go` | `go`, lição 3 |
 | dois diretórios no `PATH` | `/usr/local/go/bin` e `~/go/bin` | `go`, lição 3 |
-| um compilador C | `gcc` do repositório do Ubuntu 24.04 | `go-concurrency`, lição 16, para o detector de corrida |
+| um compilador C | `gcc` do repositório do Ubuntu 24.04 | `go-concurrency`, lição 1, para o detector de corrida da lição 16 |
 | um runtime de containers | Podman do repositório do Ubuntu 24.04 | este curso, lição 17, antes de a lição 18 usá-lo |
 
 O compilador C só entra na lição 15, onde o detector de corrida precisa dele, e na lição 23, onde o
