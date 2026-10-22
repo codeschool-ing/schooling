@@ -1,0 +1,323 @@
+{
+  "ex-86f3waay": {
+    "prompt": "No `meet.go` quem envia chegou a `ch <- \"ping\"` em 0 ms num canal sem buffer, e quem recebe chegou em 300 ms. Quando o envio retornou?",
+    "hint": "Um canal sem buffer não tem espaço para o valor.",
+    "choices": [
+      {
+        "text": "Em 0 ms, deixando o valor no canal",
+        "why": "Num canal sem buffer não há onde deixá-lo."
+      },
+      {
+        "text": "Aos 300 ms, no instante da passagem",
+        "why": "Isso. O envio espera quem recebe; esse encontro é o rendezvous."
+      },
+      {
+        "text": "Nunca: o programa travou",
+        "why": "Quem recebe veio, então os dois seguiram em 300 ms."
+      },
+      {
+        "text": "Em 600 ms, depois de uma segunda ida e volta",
+        "why": "Há uma travessia só e nenhuma confirmação voltando."
+      }
+    ]
+  },
+  "ex-36wtnbn2": {
+    "prompt": "Na execução do `meet.go`, `receiver: got ping` saiu antes de `sender: the send returned`, ambos em 300ms. Em outra execução, as duas linhas podem trocar de lugar?",
+    "hint": "O que é prometido é sobre o valor atravessar, não sobre o próximo `Println`.",
+    "choices": [
+      {
+        "text": "Sim: depois da passagem as duas voltam a ser independentes",
+        "why": "Isso. Cada linha só espera a travessia, não o print da outra goroutine."
+      },
+      {
+        "text": "Não: a linha de quem recebe sempre vem antes",
+        "why": "Nada ordena os dois prints depois da travessia."
+      },
+      {
+        "text": "Não: a linha de quem envia sempre vem antes, já que enviou antes",
+        "why": "Na execução capturada ela veio depois, o que já descarta isso."
+      },
+      {
+        "text": "Só com o detector de corridas ligado",
+        "why": "Não há corrida aqui; a ordem de dois prints independentes só está em aberto."
+      }
+    ]
+  },
+  "ex-gw9hrd20": {
+    "prompt": "Um worker envia `\"done\"` num canal sem buffer quando termina. Quando o envio retorna, o que o worker sabe que não saberia com um canal com buffer?",
+    "hint": "A seção 03 lista o que um buffer tira.",
+    "choices": [
+      {
+        "text": "Que o canal foi fechado",
+        "why": "Nada num envio diz algo sobre um close."
+      },
+      {
+        "text": "Que nenhuma outra goroutine está rodando",
+        "why": "Outras goroutines podem rodar à vontade; o envio diz respeito a duas delas."
+      },
+      {
+        "text": "Que alguém recebeu a mensagem",
+        "why": "Isso. Um envio com buffer que retorna só diz que o valor está no buffer."
+      },
+      {
+        "text": "Que quem recebe terminou de tratar a mensagem",
+        "why": "Ele sabe que o valor foi recebido, não o que quem recebe fez com ele depois."
+      }
+    ]
+  },
+  "ex-p3hp2jtg": {
+    "prompt": "O `buffered.go` enviou em `make(chan int, 3)` sem ninguém recebendo até 300 ms. Quantos envios retornaram em 0 ms?",
+    "hint": "Tantos quanto o buffer guarda.",
+    "unit": "envios"
+  },
+  "ex-4aq7na8w": {
+    "prompt": "No `buffered.go` o quarto envio retornou em 300 ms. O que o liberou?",
+    "hint": "Olhe a linha impressa logo antes dele.",
+    "choices": [
+      {
+        "text": "O buffer cresceu para guardar quatro",
+        "why": "A capacidade de um canal é fixa quando ele é criado; `cap` imprimiu 3 o tempo todo."
+      },
+      {
+        "text": "Quem recebe pegou o `1`, liberando uma posição",
+        "why": "Isso: `received 1` em 300 ms, e logo `sent 4`, com `len` de volta a 3."
+      },
+      {
+        "text": "A goroutine de quem envia foi preemptada depois de 300 ms",
+        "why": "A preempção passa um processador adiante; não abre espaço num canal."
+      },
+      {
+        "text": "O `close(ch)` no fim do laço",
+        "why": "O close vem depois do quinto envio, e um close nunca libera espaço."
+      }
+    ]
+  },
+  "ex-gasm87c0": {
+    "prompt": "Um produtor gera 1.000 itens por segundo e o consumidor trata 800. Alguém aumenta o buffer de 100 para 10.000. O que acontece?",
+    "hint": "Um buffer absorve uma rajada; e uma diferença que dura?",
+    "choices": [
+      {
+        "text": "O consumidor acelera para o buffer não encher",
+        "why": "Um buffer não muda nada na velocidade do consumidor."
+      },
+      {
+        "text": "O descompasso some, já que o buffer agora é grande o bastante",
+        "why": "200 itens por segundo se acumulam qualquer que seja o tamanho; um buffer maior só enche depois."
+      },
+      {
+        "text": "Enche lá pelos 50 s, e aí os envios bloqueiam de novo",
+        "why": "Isso. O excesso de 200 por segundo enche 10.000 posições em 50 s; aí os envios bloqueiam, como antes."
+      },
+      {
+        "text": "O programa trava quando o buffer enche",
+        "why": "O consumidor continua recebendo, então um buffer cheio desacelera o produtor em vez de parar tudo."
+      }
+    ]
+  },
+  "ex-s8spkjr7": {
+    "prompt": "Associe cada estado de canal ao que um envio faz nele.",
+    "hint": "Só o espaço decide, a não ser que não haja espaço.",
+    "pairs": [
+      {
+        "left": "sem buffer, quem recebe esperando",
+        "right": "retorna quando o valor atravessa"
+      },
+      {
+        "left": "sem buffer, ninguém recebendo ainda",
+        "right": "espera alguém receber"
+      },
+      {
+        "left": "com buffer, `len` abaixo de `cap`",
+        "right": "retorna na hora"
+      },
+      {
+        "left": "com buffer, `len` igual a `cap`",
+        "right": "espera uma posição livre"
+      }
+    ],
+    "right_distractors": [
+      "dá panic"
+    ]
+  },
+  "ex-hy4efj0k": {
+    "prompt": "O `stuck.go` terminou com `goroutine 1 [chan send]`. O que diz a parte entre colchetes?",
+    "hint": "Toda goroutine num relatório de deadlock carrega uma.",
+    "choices": [
+      {
+        "text": "O tipo do canal envolvido",
+        "why": "O tipo era `chan int`; os colchetes dizem o que a goroutine fazia."
+      },
+      {
+        "text": "Há quanto tempo a goroutine estava bloqueada",
+        "why": "Uma duração aparece em alguns relatórios, mas `chan send` é uma operação, não um tempo."
+      },
+      {
+        "text": "Que o canal tinha sido fechado",
+        "why": "Enviar num canal fechado dá panic com mensagem própria. Este estava aberto."
+      },
+      {
+        "text": "O que ela esperava fazer: enviar num canal",
+        "why": "Isso, na linha 8, `ch <- 42`."
+      }
+    ]
+  },
+  "ex-gxjwvjj0": {
+    "prompt": "Trocar `make(chan int)` por `make(chan int, 1)` fez o `stuck.go` imprimir 42. Um colega conclui que canais com buffer não travam. O que há de errado nisso?",
+    "hint": "E se o programa enviasse dois valores antes de receber?",
+    "choices": [
+      {
+        "text": "Nada: um buffer elimina a necessidade de quem recebe",
+        "why": "Elimina só até o buffer encher."
+      },
+      {
+        "text": "Um segundo envio antes de receber bloquearia",
+        "why": "Isso. Um buffer muda o ponto em que o programa trava; não decide se ele trava."
+      },
+      {
+        "text": "Canais com buffer travam mais do que os sem buffer",
+        "why": "A lição não faz essa comparação; o tamanho só muda onde o bloqueio começa."
+      },
+      {
+        "text": "O `go vet` teria apontado a versão com buffer",
+        "why": "O `go vet` aprovou também a versão sem buffer; ele não vê isso."
+      }
+    ]
+  },
+  "ex-cwfmw928": {
+    "prompt": "O `partial.go` deixou uma goroutine presa num envio a execução inteira, e mesmo assim saiu com status 0 e sem erro. Por que o runtime não disse nada?",
+    "hint": "Quando exatamente a conferência de deadlock dispara?",
+    "choices": [
+      {
+        "text": "A goroutine não foi contada pelo `NumGoroutine`",
+        "why": "Foi: a contagem deu 2 todas as vezes."
+      },
+      {
+        "text": "Um envio dentro de uma goroutine nunca é conferido",
+        "why": "A conferência é sobre todas as goroutines juntas, onde quer que esteja o envio."
+      },
+      {
+        "text": "`main` dormia, não estava bloqueado",
+        "why": "Isso. A conferência só dispara quando toda goroutine está bloqueada."
+      },
+      {
+        "text": "O comentário no envio mandou o compilador ignorá-lo",
+        "why": "Comentários não significam nada para o compilador nem para o runtime."
+      }
+    ]
+  },
+  "ex-98r5cx3p": {
+    "prompt": "Quando toda goroutine de um programa está bloqueada, o runtime o para com `fatal error: all goroutines are asleep - ___!`",
+    "hint": "A palavra que dá nome à lição.",
+    "blanks": [
+      {
+        "accept": [
+          "deadlock"
+        ]
+      }
+    ]
+  },
+  "ex-sw0s3nbh": {
+    "prompt": "O `partial.go` imprimiu `goroutines alive: 2` três vezes. Quantas dessas duas goroutines estavam presas de vez?",
+    "hint": "Uma das duas é `main`.",
+    "unit": "goroutines"
+  },
+  "ex-z3tyrn32": {
+    "prompt": "Ponha as linhas da execução do `buffered.go` na ordem em que foram impressas.",
+    "hint": "Três envios primeiro, depois quem recebe libera uma posição por vez.",
+    "items": [
+      "sent 3, len 3 of cap 3",
+      "received 1",
+      "sent 4, len 3 of cap 3",
+      "received 2",
+      "sent 5, len 3 of cap 3"
+    ]
+  },
+  "ex-ttv0qa5k": {
+    "prompt": "Um handler inicia uma goroutine que envia o resultado em `ch := make(chan Result)`, e depois retorna cedo num erro sem receber. O servidor roda por semanas. O que acontece a cada erro desses?",
+    "hint": "É o `partial.go` dentro de um programa que nunca acaba.",
+    "choices": [
+      {
+        "text": "O runtime relata um deadlock no primeiro",
+        "why": "Outras goroutines estão vivas atendendo, então a conferência nunca dispara."
+      },
+      {
+        "text": "O envio dá panic quando o handler retornou",
+        "why": "Nada fecha o canal; o envio só espera."
+      },
+      {
+        "text": "A goroutine é recolhida quando o handler retorna",
+        "why": "Uma goroutine bloqueada nunca é recolhida; ela segura a pilha e tudo a que se refere."
+      },
+      {
+        "text": "Mais uma goroutine fica presa, em silêncio, e a memória cresce",
+        "why": "Isso. Um vazamento, o assunto da lição 6; um buffer de um deixaria esse envio terminar."
+      }
+    ]
+  },
+  "ex-qkbjyg43": {
+    "prompt": "O que `len(ch)` e `cap(ch)` informam para um canal com buffer?",
+    "hint": "`sent 2, len 2 of cap 3`.",
+    "choices": [
+      {
+        "text": "Valores enviados até agora, e valores recebidos até agora",
+        "why": "Nenhum dos dois conta histórico. O `buffered.go` enviou cinco, e `len` nunca passou de 3."
+      },
+      {
+        "text": "Valores à espera no buffer, e o tamanho dele",
+        "why": "Isso. `cap` é fixo quando o canal é criado; `len` muda conforme valores entram e saem."
+      },
+      {
+        "text": "Goroutines esperando para enviar, e goroutines esperando para receber",
+        "why": "Nenhum dos dois conta goroutines; o `runtime.NumGoroutine` faz isso, para o programa inteiro."
+      },
+      {
+        "text": "O tamanho de um elemento em bytes, e o tamanho do buffer em bytes",
+        "why": "Os dois contam valores, não bytes."
+      }
+    ]
+  },
+  "ex-fcp7za8j": {
+    "prompt": "Durante os 300 ms em que quem envia no `meet.go` esperou no envio, o que a goroutine dela fazia?",
+    "hint": "Compare com uma goroutine em `time.Sleep`.",
+    "choices": [
+      {
+        "text": "Conferindo o canal num laço, usando um processador",
+        "why": "Um envio bloqueado não fica girando; o escalonador estaciona a goroutine."
+      },
+      {
+        "text": "Segurando o canal travado para quem recebe não usá-lo",
+        "why": "Quem recebe o usou no momento em que chegou."
+      },
+      {
+        "text": "Nada: estava estacionada, sem usar processador",
+        "why": "Isso, exatamente como uma goroutine em `time.Sleep`."
+      },
+      {
+        "text": "Copiando o valor para um buffer que o runtime criou para ela",
+        "why": "Um canal sem buffer não ganha buffer escondido; o valor atravessa no encontro."
+      }
+    ]
+  },
+  "ex-vdnf5gfq": {
+    "prompt": "Duas goroutines enviam cada uma num canal sem buffer de que a outra deveria receber, e cada uma envia antes de receber. Nada mais roda. O que acontece?",
+    "hint": "Cada envio espera alguém receber que está, ele mesmo, esperando para enviar.",
+    "choices": [
+      {
+        "text": "Uma das duas ganha e a outra vai atrás",
+        "why": "Nenhuma pode ganhar: cada envio precisa da outra goroutine no recebimento, e nenhuma chega lá."
+      },
+      {
+        "text": "Um erro fatal de deadlock, se `main` também estiver bloqueado",
+        "why": "Isso. As duas estão em `[chan send]`; se nada mais pode andar, o runtime para o programa."
+      },
+      {
+        "text": "Os valores atravessam nos dois sentidos ao mesmo tempo",
+        "why": "Um envio e um recebimento têm de se encontrar no mesmo canal; dois envios não se encontram."
+      },
+      {
+        "text": "Um panic: envio num canal sem receptor",
+        "why": "Esse panic não existe; um envio sem receptor espera."
+      }
+    ]
+  }
+}

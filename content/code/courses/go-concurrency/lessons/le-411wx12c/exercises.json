@@ -1,0 +1,464 @@
+[
+  {
+    "id": "ex-7z7wb92p",
+    "version": 1,
+    "section": "handlers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`first/main.go` called `slog.Debug(\"not shown\")` and nothing appeared. Why?",
+    "hint": "What level does the default logger record from?",
+    "choices": [
+      {
+        "text": "Debug records go to standard error",
+        "correct": false,
+        "why": "The capture showed both outputs together; nothing was written anywhere."
+      },
+      {
+        "text": "The default logger records `INFO` and above",
+        "correct": true,
+        "why": "Right. The options of the next program lowered the level to `DEBUG`."
+      },
+      {
+        "text": "`slog.Debug` needs a context argument",
+        "correct": false,
+        "why": "`DebugContext` is the variant with one; `Debug` works without."
+      },
+      {
+        "text": "A message with a space in it is dropped",
+        "correct": false,
+        "why": "`order placed` has a space and was logged."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n3h4kh1",
+    "version": 1,
+    "section": "handlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a `JSONHandler` record keep that a sentence written with `fmt.Printf` loses?",
+    "hint": "Look at `\"order\":1042`.",
+    "choices": [
+      {
+        "text": "The colours of the terminal",
+        "correct": false,
+        "why": "Neither has colour; the difference is structure."
+      },
+      {
+        "text": "Typed, named values",
+        "correct": true,
+        "why": "Right. A number stays a number that a log search can sum or filter."
+      },
+      {
+        "text": "The exact time down to the nanosecond",
+        "correct": false,
+        "why": "Time is an attribute of both, and this lesson removed it on purpose."
+      },
+      {
+        "text": "The name of the function that logged",
+        "correct": false,
+        "why": "That needs `AddSource`, for either handler."
+      }
+    ]
+  },
+  {
+    "id": "ex-15m3b4cq",
+    "version": 1,
+    "section": "handlers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team moves a program from `TextHandler` to `JSONHandler`. What has to change in the calls that write the records?",
+    "hint": "Where is the handler chosen?",
+    "choices": [
+      {
+        "text": "Every call's arguments, to JSON strings",
+        "correct": false,
+        "why": "The handler encodes; the calls pass plain values."
+      },
+      {
+        "text": "Every call, from `Info` to `InfoJSON`",
+        "correct": false,
+        "why": "There is no such method."
+      },
+      {
+        "text": "Nothing; only where the logger is made",
+        "correct": true,
+        "why": "Right. `handlers/main.go` wrote the same calls through both."
+      },
+      {
+        "text": "The levels, since JSON has no `WARN`",
+        "correct": false,
+        "why": "JSON records carry the level as a string like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-gmgpzczb",
+    "version": 1,
+    "section": "handlers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The option that removes or rewrites an attribute before it is written, used here to drop the time, is `ReplaceAttr` in `slog.___Options`.",
+    "hint": "The struct passed to both handlers.",
+    "blanks": [
+      {
+        "accept": [
+          "Handler"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e3yj4kyd",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `log.With(\"request_id\", \"r-81f3\", \"user\", 7)` return?",
+    "hint": "Was `log` itself changed?",
+    "choices": [
+      {
+        "text": "Nothing; it adds the attributes to `log`",
+        "correct": false,
+        "why": "`log` is unchanged. `With` returns a new logger, `req` in the program."
+      },
+      {
+        "text": "A new logger that adds them to every record",
+        "correct": true,
+        "why": "Right. Every line from `req` began with `request_id` and `user`."
+      },
+      {
+        "text": "A record, ready to be written",
+        "correct": false,
+        "why": "Records are made by the logging calls, not by `With`."
+      },
+      {
+        "text": "A group called `request_id`",
+        "correct": false,
+        "why": "Groups come from `slog.Group` or `WithGroup`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fwv2r3y1",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`req.Info(\"odd number of arguments\", \"order\")` wrote `\"!BADKEY\":\"order\"`. Why did `slog` write the record at all instead of failing?",
+    "hint": "What would a failed logging call hide?",
+    "choices": [
+      {
+        "text": "Because `!BADKEY` is a valid key a program may choose",
+        "correct": false,
+        "why": "It is the marker `slog` uses for a value with no key, not a choice."
+      },
+      {
+        "text": "It panicked and recovered",
+        "correct": false,
+        "why": "No panic happened; the record was written normally."
+      },
+      {
+        "text": "A failing log call would hide the line someone needs",
+        "correct": true,
+        "why": "Right, and `go vet` catches the mistake before the program runs."
+      },
+      {
+        "text": "Logging calls cannot return errors",
+        "correct": false,
+        "why": "They are designed not to, for the reason in the right answer; nothing stopped the designers otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-3zqgjd8p",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A payment library logs a struct that holds a card number, through whatever handler the application chose. Where should the rule \"never log the number\" live?",
+    "hint": "Which piece of code is present in every application that logs the struct?",
+    "choices": [
+      {
+        "text": "In each application's `ReplaceAttr`",
+        "correct": false,
+        "why": "That depends on every application remembering, and some will not."
+      },
+      {
+        "text": "In a `LogValue` method on the struct",
+        "correct": true,
+        "why": "Right. The type says once how it is logged, under any handler."
+      },
+      {
+        "text": "In a code review checklist",
+        "correct": false,
+        "why": "A checklist is a habit; `LogValue` is a guarantee in the type."
+      },
+      {
+        "text": "In the log storage, by deleting matching lines",
+        "correct": false,
+        "why": "By then the number has already been copied somewhere with weaker protection."
+      }
+    ]
+  },
+  {
+    "id": "ex-30h2gy86",
+    "version": 1,
+    "section": "attributes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did `slog.Group(\"address\", \"city\", \"Recife\", \"zip\", \"50000-000\")` appear in the JSON?",
+    "hint": "The `shipping` line.",
+    "choices": [
+      {
+        "text": "As two keys, `address.city` and `address.zip`",
+        "correct": false,
+        "why": "That dotted form is what the text handler writes; JSON nests."
+      },
+      {
+        "text": "As one string, `Recife 50000-000`",
+        "correct": false,
+        "why": "The values kept their own keys."
+      },
+      {
+        "text": "As an object inside the record's object",
+        "correct": true,
+        "why": "Right: `\"address\":{\"city\":\"Recife\",\"zip\":\"50000-000\"}`."
+      },
+      {
+        "text": "It was dropped as personal data",
+        "correct": false,
+        "why": "Nothing in `slog` judges data; it was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwxc98ja",
+    "version": 1,
+    "section": "attributes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With what exit status did `go vet ./attrs` end, after reporting the call missing a final value?",
+    "hint": "The last line of that transcript.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rf3wd75n",
+    "version": 1,
+    "section": "levels-and-context",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a `slog.LevelVar` different from a fixed `Level` in the handler options?",
+    "hint": "When does the handler read it?",
+    "choices": [
+      {
+        "text": "It holds several levels at once",
+        "correct": false,
+        "why": "It holds one level, which can change."
+      },
+      {
+        "text": "It applies only to `Debug` calls",
+        "correct": false,
+        "why": "It is the minimum level for every call."
+      },
+      {
+        "text": "It changes at run time",
+        "correct": true,
+        "why": "Right. The handler reads it on every record, so `level.Set` took effect at once."
+      },
+      {
+        "text": "It is stored in the context",
+        "correct": false,
+        "why": "It is a variable the handler points at; the context carried the request id."
+      }
+    ]
+  },
+  {
+    "id": "ex-c702d0aa",
+    "version": 1,
+    "section": "levels-and-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `levels/main.go`, why did `log.Info(\"no context, no request id\")` get no `request_id`?",
+    "hint": "What context reaches the handler from a call without one?",
+    "choices": [
+      {
+        "text": "It reached the handler with an empty context",
+        "correct": true,
+        "why": "Right. Only the `…Context` calls carried the id along."
+      },
+      {
+        "text": "`withRequest` skips records at `INFO`",
+        "correct": false,
+        "why": "`InfoContext` at `INFO` got the id."
+      },
+      {
+        "text": "The level was set to `DEBUG` just before",
+        "correct": false,
+        "why": "The level decides whether a record is written, not what it carries."
+      },
+      {
+        "text": "Request ids are added only once per program",
+        "correct": false,
+        "why": "Two records got the same id; nothing counts them."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfjva9br",
+    "version": 1,
+    "section": "levels-and-context",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson put only the request id in the context, rather than a whole logger?",
+    "hint": "Where is the decision about how to write records kept?",
+    "choices": [
+      {
+        "text": "A logger is too large to fit in a context",
+        "correct": false,
+        "why": "A context can hold any value; size is not the argument."
+      },
+      {
+        "text": "Contexts may hold only strings",
+        "correct": false,
+        "why": "`WithValue` takes any value."
+      },
+      {
+        "text": "A logger in a context leaks a goroutine",
+        "correct": false,
+        "why": "No goroutine is involved."
+      },
+      {
+        "text": "The handler stays put",
+        "correct": true,
+        "why": "Right. Functions log with `InfoContext` and know nothing about ids."
+      }
+    ]
+  },
+  {
+    "id": "ex-smf55er5",
+    "version": 1,
+    "section": "levels-and-context",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An operator turns `DEBUG` on in production to investigate an incident. What cost does the lesson name?",
+    "hint": "What happens to every record that is written?",
+    "choices": [
+      {
+        "text": "The program has to be restarted",
+        "correct": false,
+        "why": "With a `LevelVar` nothing restarts."
+      },
+      {
+        "text": "Volume, a hundred times more",
+        "correct": true,
+        "why": "Right. So it is turned on for as long as needed and set back."
+      },
+      {
+        "text": "Debug records lose their attributes",
+        "correct": false,
+        "why": "They carry attributes like any other."
+      },
+      {
+        "text": "Errors stop being logged",
+        "correct": false,
+        "why": "Lowering the level adds records; it removes none."
+      }
+    ]
+  },
+  {
+    "id": "ex-zc6jh7jk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to `log.InfoContext(ctx, \"order placed\", \"order\", 1042)` in `levels/main.go`.",
+    "hint": "The level is checked before anything is built.",
+    "items": [
+      "the level `INFO` is compared with the `LevelVar`",
+      "a record is made with the message and `order`",
+      "`withRequest` adds `request_id` from the context",
+      "the text handler writes the line"
+    ]
+  },
+  {
+    "id": "ex-ch3msvav",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each need with the piece of `slog` that answers it.",
+    "hint": "Four pieces, four needs, one spare.",
+    "pairs": [
+      {
+        "left": "the same id on every line about a request",
+        "right": "`Logger.With`"
+      },
+      {
+        "left": "a credential that must never be written",
+        "right": "`LogValue`"
+      },
+      {
+        "left": "more detail now, without a restart",
+        "right": "`LevelVar`"
+      },
+      {
+        "left": "logs a search service reads",
+        "right": "`JSONHandler`"
+      }
+    ],
+    "right_distractors": [
+      "`fmt.Printf`"
+    ]
+  },
+  {
+    "id": "ex-qbc8g7xn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these calls does `go vet` report? Choose all that apply.",
+    "hint": "It checks that the arguments after the message come in pairs.",
+    "choices": [
+      {
+        "text": "`slog.Info(\"saved\", \"id\")`",
+        "correct": true,
+        "why": "Yes: a key with no value."
+      },
+      {
+        "text": "`slog.Info(\"saved\", \"id\", 7)`",
+        "correct": false,
+        "why": "A key and its value: nothing to report."
+      },
+      {
+        "text": "`slog.Info(\"saved\", slog.Int(\"id\", 7))`",
+        "correct": false,
+        "why": "A typed attribute stands alone and needs no partner."
+      },
+      {
+        "text": "`slog.Warn(\"slow\", \"took_ms\", 812, \"query\")`",
+        "correct": true,
+        "why": "Yes: the last key has no value."
+      }
+    ]
+  }
+]

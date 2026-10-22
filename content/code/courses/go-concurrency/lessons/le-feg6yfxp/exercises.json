@@ -1,0 +1,496 @@
+[
+  {
+    "id": "ex-7xmgv2ht",
+    "version": 1,
+    "section": "marshal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `order.go`, what made the key `price_cents` appear instead of `Cents`?",
+    "hint": "The string in backquotes after the field.",
+    "choices": [
+      {
+        "text": "A method called `MarshalJSON` on `Item`",
+        "correct": false,
+        "why": "`Item` has no methods; the tag alone renamed the key."
+      },
+      {
+        "text": "The tag `json:\"price_cents\"`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`encoding/json` turns every name into lower case with underscores",
+        "correct": false,
+        "why": "Without a tag the key is the Go name exactly, `Cents`."
+      },
+      {
+        "text": "The field being of type `int64`",
+        "correct": false,
+        "why": "The type decides how the value is written, not what the key is called."
+      }
+    ]
+  },
+  {
+    "id": "ex-736kb08c",
+    "version": 1,
+    "section": "marshal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `Order` had a field `internal` set to a string, and the JSON had no `internal` key. Why?",
+    "hint": "Look at its first letter.",
+    "choices": [
+      {
+        "text": "It had no tag",
+        "correct": false,
+        "why": "`Order`'s other fields would appear under their Go names without tags; tags rename, they do not admit."
+      },
+      {
+        "text": "`omitempty` removed it",
+        "correct": false,
+        "why": "It had no `omitempty`, and its value was not empty."
+      },
+      {
+        "text": "It is unexported, so `encoding/json` cannot see it",
+        "correct": true,
+        "why": "Right; no tag can make it appear."
+      },
+      {
+        "text": "Strings longer than 20 characters are dropped",
+        "correct": false,
+        "why": "There is no length limit; `ana@example.com` went through."
+      }
+    ]
+  },
+  {
+    "id": "ex-xvmw3ghn",
+    "version": 1,
+    "section": "marshal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An exported field `PasswordHash` must never reach the JSON. Which tag does that?",
+    "hint": "One character between the quotes.",
+    "choices": [
+      {
+        "text": "`json:\"passwordHash,omitempty\"`",
+        "correct": false,
+        "why": "That still writes it whenever it is set."
+      },
+      {
+        "text": "`json:\"-\"`",
+        "correct": true,
+        "why": "Right: never written and never read."
+      },
+      {
+        "text": "`json:\",string\"`",
+        "correct": false,
+        "why": "That writes a number or bool inside a string; it still writes it."
+      },
+      {
+        "text": "`json:\"private\"`",
+        "correct": false,
+        "why": "That renames the key to `private` and writes the hash under it."
+      }
+    ]
+  },
+  {
+    "id": "ex-m2erxvm9",
+    "version": 1,
+    "section": "marshal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler builds a large report and writes it as the HTTP response. Why does the lesson suggest `json.NewEncoder(w).Encode(report)` over `json.Marshal`?",
+    "hint": "What does `Marshal` give back, and where does the response go?",
+    "choices": [
+      {
+        "text": "`Marshal` cannot handle nested structs",
+        "correct": false,
+        "why": "It wrote `items` inside the order without trouble."
+      },
+      {
+        "text": "`Encode` omits empty fields and `Marshal` does not",
+        "correct": false,
+        "why": "Both follow the same tags."
+      },
+      {
+        "text": "Only an Encoder sorts the keys",
+        "correct": false,
+        "why": "Neither reorders a struct's fields; both write them in declaration order."
+      },
+      {
+        "text": "It writes to the response's Writer with no copy in memory first",
+        "correct": true,
+        "why": "Right: `Marshal` builds the whole `[]byte` first."
+      }
+    ]
+  },
+  {
+    "id": "ex-241wsdkp",
+    "version": 1,
+    "section": "unmarshal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The body carried `\"coupon\": \"WELCOME\"` and `Order` has no such field. What did `json.Unmarshal` do?",
+    "hint": "`err` was `<nil>`.",
+    "choices": [
+      {
+        "text": "Dropped it without a word",
+        "correct": true,
+        "why": "Right; by default unknown keys are ignored."
+      },
+      {
+        "text": "Returned an error naming `coupon`",
+        "correct": false,
+        "why": "Only the Decoder with `DisallowUnknownFields` did that."
+      },
+      {
+        "text": "Stored it in the `Customer` field",
+        "correct": false,
+        "why": "Keys match fields by name; `coupon` matches none."
+      },
+      {
+        "text": "Stopped reading and left `Items` empty",
+        "correct": false,
+        "why": "`Items` came out with `KB-01` in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jcxpkqx",
+    "version": 1,
+    "section": "unmarshal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The body said `\"Customer\"` with a capital C, and the field is tagged `customer`. What happened?",
+    "hint": "Look at the first line `decode.go` printed.",
+    "choices": [
+      {
+        "text": "The field stayed empty, because keys are case-sensitive",
+        "correct": false,
+        "why": "`encoding/json` matches without regard to case; v2 is the one that does not."
+      },
+      {
+        "text": "The field was filled; matching ignores case",
+        "correct": true,
+        "why": "Right: `Customer:ana@example.com`."
+      },
+      {
+        "text": "An error: `unknown field \"Customer\"`",
+        "correct": false,
+        "why": "Even the strict Decoder complained only about `coupon`."
+      },
+      {
+        "text": "Both a `Customer` and a `customer` key were kept",
+        "correct": false,
+        "why": "A struct has one field; there is nowhere to keep two."
+      }
+    ]
+  },
+  {
+    "id": "ex-je15nc72",
+    "version": 1,
+    "section": "unmarshal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An API's clients have sent misspelled keys for months, and their settings were silently ignored. What change makes such a request fail loudly?",
+    "hint": "Section 03 of this lesson turned silence into an error.",
+    "choices": [
+      {
+        "text": "Add `omitempty` to every field",
+        "correct": false,
+        "why": "That changes writing, not reading."
+      },
+      {
+        "text": "Switch from a Decoder to `json.Unmarshal`",
+        "correct": false,
+        "why": "`Unmarshal` has no switch for it."
+      },
+      {
+        "text": "A Decoder with `DisallowUnknownFields`",
+        "correct": true,
+        "why": "Right: `json: unknown field` instead of a half-understood request."
+      },
+      {
+        "text": "Decode into `map[string]any` and compare by hand",
+        "correct": false,
+        "why": "Possible, and it rebuilds what the switch does in one line."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rwx3a7r",
+    "version": 1,
+    "section": "unmarshal",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the four results of `decode.go` as it printed them.",
+    "hint": "Forgiving first, then the three refusals in the order the code asks.",
+    "items": [
+      "the order decoded, `coupon` ignored",
+      "`unknown field \"coupon\"`",
+      "a string cannot become `Order.id`",
+      "`invalid character '}'`"
+    ]
+  },
+  {
+    "id": "ex-g6mg8zdw",
+    "version": 1,
+    "section": "unmarshal",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "JSON Lines, one value per line, is read back with a json.___, which reads one value after another from an `io.Reader`.",
+    "hint": "Created with `json.NewDecoder`.",
+    "blanks": [
+      {
+        "accept": [
+          "Decoder"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0cjebzpe",
+    "version": 1,
+    "section": "optional-fields",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Patch.Stock` is a `*int`. Which body leaves it pointing at a value?",
+    "hint": "Even zero counts as a value.",
+    "choices": [
+      {
+        "text": "`{}`",
+        "correct": false,
+        "why": "An absent key leaves the pointer nil."
+      },
+      {
+        "text": "`{\"stock\": null}`",
+        "correct": false,
+        "why": "`null` also left it nil."
+      },
+      {
+        "text": "`{\"stock\": 0}`",
+        "correct": true,
+        "why": "Right: stock set to 0."
+      },
+      {
+        "text": "`{\"Stock\": \"0\"}`",
+        "correct": false,
+        "why": "The key matches, but a string cannot become an `int`: that is an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-gpnyzwqx",
+    "version": 1,
+    "section": "optional-fields",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why was `restocked` written as `\"0001-01-01T00:00:00Z\"` despite `omitempty`?",
+    "hint": "How does `omitempty` decide what is empty?",
+    "choices": [
+      {
+        "text": "`omitempty` only works on strings",
+        "correct": false,
+        "why": "It dropped the zero `stock`, an `int`."
+      },
+      {
+        "text": "A struct is never empty by `omitempty`'s rule",
+        "correct": true,
+        "why": "Right; `omitzero` asks `IsZero` instead."
+      },
+      {
+        "text": "The time was set by `time.Now`",
+        "correct": false,
+        "why": "Nothing set it; the date shown is the zero time."
+      },
+      {
+        "text": "Time zones prevent omission",
+        "correct": false,
+        "why": "The zone has nothing to do with it; the value was zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-efmqkq3k",
+    "version": 1,
+    "section": "optional-fields",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A product truly has zero units in stock, and its type says `Stock int `json:\"stock,omitempty\"``. What does a client reading the JSON see?",
+    "hint": "What happened to `stock` in `optional.go`'s output?",
+    "choices": [
+      {
+        "text": "`\"stock\": 0`",
+        "correct": false,
+        "why": "`omitempty` drops a zero `int`."
+      },
+      {
+        "text": "`\"stock\": null`",
+        "correct": false,
+        "why": "Nothing writes `null` for an `int`."
+      },
+      {
+        "text": "An error from `Marshal`",
+        "correct": false,
+        "why": "Omitting is not an error."
+      },
+      {
+        "text": "No `stock` key, as if the stock were unknown",
+        "correct": true,
+        "why": "Right: use `omitempty` only where zero and absent mean the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr0mdrkr",
+    "version": 1,
+    "section": "optional-fields",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Above which power of two can a `float64` no longer hold every integer exactly? Give the exponent.",
+    "hint": "The section names it beside identifiers.",
+    "value": 53,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bsy49qn6",
+    "version": 1,
+    "section": "optional-fields",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`versions.go` decoded `{\"ID\": 7}` into a field tagged `id`. What did v1 and v2 do?",
+    "hint": "One matched case-insensitively.",
+    "choices": [
+      {
+        "text": "Both filled it with 7",
+        "correct": false,
+        "why": "v2 printed 0."
+      },
+      {
+        "text": "v1 filled it with 7; v2 left it 0",
+        "correct": true,
+        "why": "Right; v2 matches keys with their case."
+      },
+      {
+        "text": "v1 returned an error and v2 filled it",
+        "correct": false,
+        "why": "It was the other way round, and neither returned an error."
+      },
+      {
+        "text": "Both returned an unknown-field error",
+        "correct": false,
+        "why": "Both errors printed `<nil>`."
+      }
+    ]
+  },
+  {
+    "id": "ex-29khb4ph",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tag option with its effect.",
+    "hint": "Four options from the table in section 02.",
+    "pairs": [
+      {
+        "left": "`omitempty`",
+        "right": "drops zero numbers, empty strings, slices and maps"
+      },
+      {
+        "left": "`omitzero`",
+        "right": "drops the type's zero value, asking `IsZero` if it exists"
+      },
+      {
+        "left": "`-`",
+        "right": "never written and never read"
+      },
+      {
+        "left": "`string`",
+        "right": "a number written inside quotes"
+      }
+    ],
+    "right_distractors": [
+      "sorts the keys of the object"
+    ]
+  },
+  {
+    "id": "ex-d4ssmyxm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A PATCH endpoint must tell \"set the discount to 0\" from \"leave the discount alone\". Which field type and tag fit the request struct?",
+    "hint": "Section 04, reading.",
+    "choices": [
+      {
+        "text": "`Discount int `json:\"discount,omitempty\"``",
+        "correct": false,
+        "why": "`omitempty` affects writing, and an `int` reads 0 for both cases."
+      },
+      {
+        "text": "`Discount *int `json:\"discount\"``",
+        "correct": true,
+        "why": "Right: nil means not given, non-nil means set, even to 0."
+      },
+      {
+        "text": "`Discount string `json:\"discount\"``",
+        "correct": false,
+        "why": "A JSON number cannot fill a string field; that is an error."
+      },
+      {
+        "text": "`Discount float64 `json:\"discount,omitzero\"``",
+        "correct": false,
+        "why": "Still reads 0 for both cases; the option only matters when writing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rkpfka9",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many keys did the top-level object of `order.go`'s compact JSON have?",
+    "hint": "Six fields, minus one empty and one unexported.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "keys"
+  },
+  {
+    "id": "ex-hwvb4gz3",
+    "version": 1,
+    "section": "marshal",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `time.Time` is written into JSON in the RFC ___ form, such as `2026-10-16T14:30:00Z`.",
+    "hint": "A four-digit number.",
+    "blanks": [
+      {
+        "accept": [
+          "3339"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,309 @@
+{
+  "ex-21wvaek9": {
+    "prompt": "O `unbounded.go` funcionou sob um limite de 1.024 arquivos abertos e perdeu 752 de 1.000 tarefas sob 256. O que isso diz sobre o programa?",
+    "hint": "Nada no programa mudou entre as duas execuções.",
+    "choices": [
+      {
+        "text": "Goroutines falham quando existem mais de 256",
+        "why": "Goroutines não têm esse limite; os arquivos é que têm. As mesmas mil goroutines tiveram sucesso sob 1.024."
+      },
+      {
+        "text": "Só o ambiente o limitava, por acaso",
+        "why": "Isso. Ele segurava tantos arquivos quanto tinha goroutines, e o limite que encontrou foi o de quem o rodou."
+      },
+      {
+        "text": "O `/etc/hostname` não pode ser aberto duas vezes",
+        "why": "Um arquivo pode ser aberto por qualquer número de goroutines; a execução sob 1.024 o abriu mil vezes."
+      },
+      {
+        "text": "O mutex serializou as tarefas e as fez expirar",
+        "why": "O mutex protege só os dois contadores, e nada no programa tem prazo."
+      }
+    ]
+  },
+  "ex-3sm9c0wb": {
+    "prompt": "No `pool.go`, quem fecha `results`, e por que não um worker?",
+    "hint": "O que um worker não sabe quando o próprio laço acaba?",
+    "choices": [
+      {
+        "text": "A produtora, logo depois de enviar a última tarefa",
+        "why": "Os workers ainda podem estar rodando tarefas e enviando resultados nesse momento; fechar faria os envios deles entrarem em pânico."
+      },
+      {
+        "text": "Cada worker, no momento em que o laço dele acaba",
+        "why": "Cinquenta fechamentos de um canal: o segundo entra em pânico."
+      },
+      {
+        "text": "Quem espera em `wg.Wait`",
+        "why": "Isso. Um worker sabe que o próprio laço acabou, não se os outros quarenta e nove acabaram."
+      },
+      {
+        "text": "O `main`, depois de ler o último resultado",
+        "why": "O `main` não sabe qual é o último resultado até o canal ser fechado; é isso que ele espera."
+      }
+    ]
+  },
+  "ex-y9bcw46n": {
+    "prompt": "Alguém apaga o `close(jobs)` da produtora do `pool.go`. O que acontece?",
+    "hint": "Siga o `for range jobs` de um worker depois da última tarefa.",
+    "choices": [
+      {
+        "text": "Os workers esperam mais tarefas, e o `main` também",
+        "why": "Isso. A corrente de fechamentos quebra no primeiro elo, e toda goroutine depois dele espera."
+      },
+      {
+        "text": "Os workers param sozinhos depois da última tarefa",
+        "why": "Um `for range` sobre um canal só acaba quando o canal é fechado."
+      },
+      {
+        "text": "O programa entra em pânico ao enviar em `jobs`",
+        "why": "Nada envia depois da última tarefa, e enviar num canal aberto não entra em pânico."
+      },
+      {
+        "text": "As tarefas rodam duas vezes",
+        "why": "Cada valor num canal é recebido uma vez; nada o repete."
+      }
+    ]
+  },
+  "ex-3ed5be67": {
+    "prompt": "O `pool.go` roda 1.000 tarefas de 50 ms cada em 50 workers. Se cada worker passa quase todo o tempo em tarefas, cerca de quantos milissegundos a execução inteira deve levar?",
+    "hint": "Quantas rodadas de cinquenta, e quanto dura uma rodada?",
+    "unit": "ms"
+  },
+  "ex-2sgjk46k": {
+    "prompt": "O `size cpu` levou 2,039 s com um worker e 572 ms com quatro, e oito workers não foram melhora de verdade. Por que não?",
+    "hint": "Quantas goroutines podem calcular ao mesmo tempo nesta máquina?",
+    "choices": [
+      {
+        "text": "O canal `jobs` só consegue alimentar quatro workers",
+        "why": "Qualquer número de workers pode receber de um canal; dezesseis receberam."
+      },
+      {
+        "text": "Quatro processadores, então quatro goroutines calculam por vez",
+        "why": "Isso. Um quinto worker só reveza com os outros."
+      },
+      {
+        "text": "As tarefas compartilham memória e atrasam umas às outras",
+        "why": "O `compute` não compartilha nada além de escrever o resultado em `sink`; o limite são os processadores."
+      },
+      {
+        "text": "O coletor de lixo pausa os workers extras enquanto eles calculam",
+        "why": "O `compute` não aloca nada, então o coletor não tem papel nisso."
+      }
+    ]
+  },
+  "ex-hzc6v5gs": {
+    "prompt": "Por que o `size wait` continuou ficando mais rápido até 64 workers, enquanto o `size cpu` parou em quatro?",
+    "hint": "Do que precisa um worker que dorme?",
+    "choices": [
+      {
+        "text": "Tarefas que dormem são mais curtas que as que calculam",
+        "why": "Vinte contra cerca de trinta milissegundos é pouca diferença; não explica uma curva que continua caindo."
+      },
+      {
+        "text": "O `time.Sleep` roda num processador separado",
+        "why": "Não existe tal processador. Uma goroutine dormindo simplesmente não precisa de nenhum."
+      },
+      {
+        "text": "Um worker que espera não precisa de processador",
+        "why": "Isso, então o número de processadores não impõe teto; aquilo que se espera é que impõe."
+      },
+      {
+        "text": "Go aumenta o `GOMAXPROCS` quando goroutines dormem",
+        "why": "O `GOMAXPROCS` fica em quatro o tempo todo; é uma configuração, não algo que o runtime aumenta."
+      }
+    ]
+  },
+  "ex-chdm5g7j": {
+    "prompt": "Cada tarefa chama a API de um parceiro, que permite 10 requisições ao mesmo tempo da sua conta e recusa o resto. As tarefas quase só esperam. Que tamanho de pool o raciocínio da seção dá?",
+    "hint": "Para trabalho que espera, o teto está do outro lado.",
+    "choices": [
+      {
+        "text": "`runtime.GOMAXPROCS(0)`, como para trabalho que calcula",
+        "why": "Essa regra é para tarefas que calculam. Estas esperam, e o parceiro define o limite."
+      },
+      {
+        "text": "Tantos quanto houver tarefas",
+        "why": "Aí a maior parte das requisições seria recusada, que é o `unbounded.go` contra uma API."
+      },
+      {
+        "text": "64, já que foi o mais rápido no `size wait`",
+        "why": "Aquilo mediu uma espera, que qualquer um pode compartilhar. A API do parceiro não pode ser compartilhada assim."
+      },
+      {
+        "text": "No máximo 10, menos o que mais usar essa conta",
+        "why": "Isso. O limite da coisa do outro lado, menos os outros usuários dela."
+      }
+    ]
+  },
+  "ex-8bm0sa0g": {
+    "prompt": "Ordene as execuções do `size cpu` da mais rápida para a mais lenta, como a captura as imprimiu.",
+    "hint": "Depois de quatro workers os números ficam próximos: leia-os.",
+    "items": [
+      "8 workers",
+      "16 workers",
+      "4 workers",
+      "2 workers",
+      "1 worker"
+    ]
+  },
+  "ex-y12a5ry3": {
+    "prompt": "No `semaphore.go`, o que significa um envio em `sem`?",
+    "hint": "O canal só conta.",
+    "choices": [
+      {
+        "text": "Tomar um lugar, esperando se não houver livre",
+        "why": "Isso. O recebimento adiado devolve o lugar quando a tarefa acaba."
+      },
+      {
+        "text": "Entregar a próxima tarefa a um worker",
+        "why": "Aqui não há workers; a struct vazia não leva nada a ninguém."
+      },
+      {
+        "text": "Avisar ao `main` que uma tarefa falhou",
+        "why": "Falhas são contadas com `failed.Add(1)`; o envio acontece antes mesmo de a tarefa começar."
+      },
+      {
+        "text": "Fechar um arquivo",
+        "why": "`f.Close()` fecha o arquivo, adiado dentro de `job`."
+      }
+    ]
+  },
+  "ex-701h31sx": {
+    "prompt": "Um colega move o `sem <- struct{}{}` do laço para a primeira linha dentro da goroutine. Os arquivos ficam abaixo do limite. O que muda?",
+    "hint": "Quando o laço inicia a milésima goroutine agora?",
+    "choices": [
+      {
+        "text": "Absolutamente nada",
+        "why": "O trabalho continua limitado, mas o número de goroutines não."
+      },
+      {
+        "text": "As tarefas voltam a falhar por arquivos demais abertos ao mesmo tempo",
+        "why": "O lugar ainda é tomado antes do `os.Open`, então no máximo cinquenta arquivos ficam abertos."
+      },
+      {
+        "text": "As 1.000 goroutines existem de uma vez; cinquenta trabalham",
+        "why": "Isso. Tomar o lugar no laço é o que mantinha limitada também a contagem de goroutines."
+      },
+      {
+        "text": "O programa trava no quinquagésimo primeiro envio em `sem`",
+        "why": "A quinquagésima primeira goroutine espera um lugar liberar, e lugares continuam liberando conforme tarefas acabam."
+      }
+    ]
+  },
+  "ex-kehw2b3h": {
+    "prompt": "Associe cada situação à forma que a seção sugere para ela.",
+    "hint": "Uma forma mantém goroutines fixas; a outra, uma por tarefa.",
+    "pairs": [
+      {
+        "left": "um fluxo de tarefas de uma fila que não acaba",
+        "right": "um pool de workers"
+      },
+      {
+        "left": "uma lista conhecida de tarefas, cada uma uma chamada de função",
+        "right": "um canal com buffer como semáforo"
+      },
+      {
+        "left": "tarefas que só calculam",
+        "right": "cerca de `runtime.GOMAXPROCS(0)` por vez"
+      }
+    ],
+    "right_distractors": [
+      "uma goroutine por tarefa sem limite"
+    ]
+  },
+  "ex-0bsq9e01": {
+    "prompt": "O tipo dos elementos de `sem` não ocupa memória, porque o canal só conta: é a ___ vazia.",
+    "hint": "`struct{}{}` é um valor dela.",
+    "blanks": [
+      {
+        "accept": [
+          "struct",
+          "struct{}"
+        ]
+      }
+    ]
+  },
+  "ex-75qb30tr": {
+    "prompt": "Um pool de 4 workers redimensiona fotos, que é cálculo puro, numa máquina de 4 processadores. Alguém o aumenta para 40 para 'ir mais rápido'. O que deve esperar, pelas medidas da lição?",
+    "hint": "Compare 4, 8 e 16 workers no `size cpu`.",
+    "choices": [
+      {
+        "text": "Cerca de dez vezes mais rápido",
+        "why": "Dez vezes os workers não é dez vezes os processadores; quatro continuam calculando por vez."
+      },
+      {
+        "text": "Mais ou menos o mesmo tempo, com o ruído entre execuções",
+        "why": "Isso: 572, 543 e 560 ms para 4, 8 e 16 workers."
+      },
+      {
+        "text": "Falhas por arquivos demais abertos",
+        "why": "Cálculo puro não abre nada; essa falha era das tarefas que seguravam arquivos."
+      },
+      {
+        "text": "Um deadlock, porque 40 passa do `GOMAXPROCS`",
+        "why": "Dezesseis workers rodaram em quatro processadores sem problema; os extras revezam."
+      }
+    ]
+  },
+  "ex-9vtwy94j": {
+    "prompt": "O que um pool de workers limita? Escolha todas as que se aplicam.",
+    "hint": "Pense no `pool.go` com mil tarefas e cinquenta workers.",
+    "choices": [
+      {
+        "text": "Quantas tarefas estão em andamento ao mesmo tempo",
+        "why": "Sim, no máximo uma por worker."
+      },
+      {
+        "text": "Quantas goroutines fazem o trabalho",
+        "why": "Sim, os workers são um número fixo."
+      },
+      {
+        "text": "Quantas tarefas podem esperar na fila",
+        "why": "A produtora pode oferecer qualquer número; ela espera no envio, mas a lista atrás dela não tem limite."
+      },
+      {
+        "text": "Quanto tempo cada tarefa pode levar",
+        "why": "Nada no pool cronometra uma tarefa; isso pede um prazo, a lição 10."
+      }
+    ]
+  },
+  "ex-eqrxfxke": {
+    "prompt": "Que linha do `pool.go` decide quantos arquivos podem estar abertos ao mesmo tempo?",
+    "hint": "Não está em `job`.",
+    "choices": [
+      {
+        "text": "`f, err := os.Open(\"/etc/hostname\")`",
+        "why": "Isso abre um arquivo por tarefa; quantas tarefas rodam ao mesmo tempo é decidido em outro lugar."
+      },
+      {
+        "text": "`const workers = 50`",
+        "why": "Isso: uma tarefa por worker, um arquivo por tarefa."
+      },
+      {
+        "text": "`jobs := make(chan int)`",
+        "why": "Um canal sem buffer não guarda tarefas; só as entrega."
+      },
+      {
+        "text": "`for i := range 1000`",
+        "why": "Esse é o número de tarefas, não quantas rodam juntas."
+      }
+    ]
+  },
+  "ex-mc3zggs8": {
+    "prompt": "O comando de shell `ulimit ___` imprime quantos arquivos um processo iniciado daquele shell pode ter abertos ao mesmo tempo.",
+    "hint": "A captura imprimiu 1024.",
+    "blanks": [
+      {
+        "accept": [
+          "-n"
+        ]
+      }
+    ]
+  },
+  "ex-hn3bde4w": {
+    "prompt": "O `size wait` roda 64 tarefas de 20 ms cada. Com 16 workers, quantas rodadas de tarefas a execução leva, se cada worker sempre tem uma tarefa pronta?",
+    "hint": "64 tarefas divididas entre 16 workers.",
+    "unit": "rodadas"
+  }
+}

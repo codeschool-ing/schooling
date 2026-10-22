@@ -1,0 +1,2006 @@
+{
+  "ex-xeqnan5m": {
+    "prompt": "Lição 1. As quatro goroutines de um programa calculam por 400 ms cada e não compartilham nada. Numa máquina com `GOMAXPROCS=1` a execução leva cerca de 1,6 s. O que mudou entre essa execução e uma de 0,4 s em quatro processadores?",
+    "hint": "Uma palavra é sobre o programa, a outra sobre a execução.",
+    "choices": [
+      {
+        "text": "A concorrência do programa",
+        "why": "O programa, quatro goroutines independentes, era o mesmo nas duas execuções."
+      },
+      {
+        "text": "Só o paralelismo que a execução recebeu",
+        "why": "Isso. A concorrência é escrita; o paralelismo é quantos processadores a rodam ao mesmo tempo."
+      },
+      {
+        "text": "O número de goroutines que o runtime criou",
+        "why": "O laço iniciou quatro nas duas execuções."
+      },
+      {
+        "text": "A quantidade de contas que cada goroutine fez",
+        "why": "Cada uma fez o mesmo meio bilhão de multiplicações."
+      }
+    ]
+  },
+  "ex-k0pv44bm": {
+    "prompt": "Lição 1. Um serviço quase sempre espera uma rede. Levado de quatro processadores para um, que previsão o curso sustenta?",
+    "hint": "Uma goroutine que espera não precisa de processador.",
+    "choices": [
+      {
+        "text": "Fica cerca de quatro vezes mais lento, como trabalho de CPU",
+        "why": "Essa é a previsão para trabalho que calcula."
+      },
+      {
+        "text": "Para de funcionar, já que cada goroutine precisa de um processador",
+        "why": "Goroutines dividem processadores; cem mil rodaram em quatro na lição 2."
+      },
+      {
+        "text": "Fica bem menos lento, porque as esperas se sobrepõem num processador",
+        "why": "Isso: quatro esperas de um segundo levaram um segundo com `GOMAXPROCS=1`."
+      },
+      {
+        "text": "As corridas de dados dele somem",
+        "why": "Goroutines se intercalam num processador também; uma corrida não precisa de paralelismo."
+      }
+    ]
+  },
+  "ex-5nyddns2": {
+    "prompt": "Lição 1. `go run -race` imprimiu `WARNING: DATA RACE` e o programa saiu com status 66. O que o detector fez com a corrida?",
+    "hint": "O total saiu certo?",
+    "choices": [
+      {
+        "text": "Relatou, com os dois lugares no código",
+        "why": "Isso. Ele relata em vez de consertar; o total continuou errado."
+      },
+      {
+        "text": "Serializou as duas goroutines para o total sair certo",
+        "why": "A execução imprimiu um total errado depois dos relatórios."
+      },
+      {
+        "text": "Parou o programa na primeira escrita em conflito",
+        "why": "O programa rodou até o fim e imprimiu o total."
+      },
+      {
+        "text": "Reescreveu `total++` como operação atômica",
+        "why": "O detector não muda nada no seu código."
+      }
+    ]
+  },
+  "ex-kz0y568f": {
+    "prompt": "Lição 1. Numa máquina sem compilador de C, o que `go env CGO_ENABLED` imprime, e o que `go test -race` faz então?",
+    "hint": "O próprio comando go procura o `gcc`.",
+    "choices": [
+      {
+        "text": "`1`; roda sem o detector",
+        "why": "Sem compilador encontrado o padrão é `0`, e o `-race` recusa em vez de rodar sem si mesmo."
+      },
+      {
+        "text": "`0`; ele recusa: `-race requires cgo`",
+        "why": "Isso. Instalar o `gcc` faz o padrão voltar a `1`."
+      },
+      {
+        "text": "`0`; baixa um compilador e segue",
+        "why": "O comando go nunca busca um compilador de C."
+      },
+      {
+        "text": "Um erro; Go precisa de `gcc` em todo build",
+        "why": "Builds comuns não precisam de C nenhum."
+      }
+    ]
+  },
+  "ex-sarh1qy9": {
+    "prompt": "Lição 2. `main` inicia uma goroutine com `go save(record)` e depois retorna. O que acontece com `save`?",
+    "hint": "O que retornar de `main` faz com o processo?",
+    "choices": [
+      {
+        "text": "Termina antes, porque o runtime espera toda goroutine",
+        "why": "O runtime não espera nenhuma; o `early.go` imprimiu a saudação em nenhuma de cinco execuções."
+      },
+      {
+        "text": "Vai para outro processo e continua lá",
+        "why": "Goroutines vivem dentro de um processo e acabam com ele."
+      },
+      {
+        "text": "Acaba com o processo, talvez antes de fazer qualquer coisa",
+        "why": "Isso. `main` precisa esperar de propósito, com `wg.Wait` ou um recebimento."
+      },
+      {
+        "text": "O valor de retorno dela é guardado para a próxima execução",
+        "why": "Um comando `go` joga fora os valores de retorno."
+      }
+    ]
+  },
+  "ex-tnyk81tw": {
+    "prompt": "Lição 2. A pilha de uma goroutine começou com 2048 bytes no `many.go`. Quantos megabytes (MiB) de pilha 512.000 goroutines assim ocupariam no começo?",
+    "hint": "2 KiB vezes 512.000, dividido por 1024.",
+    "unit": "MiB"
+  },
+  "ex-myagj2jg": {
+    "prompt": "Lição 2. Uma goroutine iniciada com `go` dá panic enquanto `main` está numa função protegida por `defer` com `recover`. O que acontece?",
+    "hint": "Um panic não viaja para a goroutine que iniciou esta.",
+    "choices": [
+      {
+        "text": "O `recover` de `main` o pega e o programa segue",
+        "why": "Um `recover` só para um panic na própria goroutine."
+      },
+      {
+        "text": "O programa inteiro acaba com o trace do panic",
+        "why": "Isso. Um panic em qualquer goroutine encerra o processo, a não ser que aquela goroutine o recupere."
+      },
+      {
+        "text": "Só a goroutine do panic acaba; `main` nem percebe",
+        "why": "O `crash.go` mostrou o processo inteiro acabando, `main` incluída."
+      },
+      {
+        "text": "O runtime reinicia a goroutine",
+        "why": "Go nunca reinicia uma goroutine."
+      }
+    ]
+  },
+  "ex-2k7rxdak": {
+    "prompt": "Lição 2. Associe cada termo do escalonador ao seu significado.",
+    "hint": "G, M, P.",
+    "pairs": [
+      {
+        "left": "G",
+        "right": "uma goroutine"
+      },
+      {
+        "left": "M",
+        "right": "uma thread do sistema operacional"
+      },
+      {
+        "left": "P",
+        "right": "uma das `GOMAXPROCS` licenças para rodar código Go"
+      },
+      {
+        "left": "roubo de trabalho",
+        "right": "um P ocioso pegando metade da fila de outro P"
+      }
+    ],
+    "right_distractors": [
+      "uma goroutine esperando um canal para sempre"
+    ]
+  },
+  "ex-hasvrh7q": {
+    "prompt": "Lição 3. Que goroutine deve fechar um canal?",
+    "hint": "Um envio depois do close dá panic.",
+    "choices": [
+      {
+        "text": "Qualquer receptor que já leu o bastante",
+        "why": "Um receptor não sabe se alguém está prestes a enviar."
+      },
+      {
+        "text": "Quem envia, depois de enviar tudo",
+        "why": "Isso, uma vez. Com vários remetentes, uma goroutine que espera todos eles."
+      },
+      {
+        "text": "O coletor de lixo, quando ninguém se refere a ele",
+        "why": "O coletor libera canais; nunca os fecha."
+      },
+      {
+        "text": "A goroutine que o criou com `make`",
+        "why": "Criar um canal não diz nada sobre quem envia nele."
+      }
+    ]
+  },
+  "ex-pf3tgpmj": {
+    "prompt": "Lição 3. `v, ok := <-ch` devolve `0` e `false`. O que isso diz?",
+    "hint": "Alguém também pode enviar um 0 de verdade.",
+    "choices": [
+      {
+        "text": "Alguém enviou 0",
+        "why": "Um 0 enviado chega com `ok` verdadeiro."
+      },
+      {
+        "text": "O canal é nil",
+        "why": "Um recebimento num canal nil bloqueia para sempre e não devolve nada."
+      },
+      {
+        "text": "O canal está fechado e sem valores sobrando",
+        "why": "Isso. Valores enviados antes do close vêm antes, com `ok` verdadeiro."
+      },
+      {
+        "text": "O buffer está vazio mas o canal está aberto",
+        "why": "Num canal aberto e vazio o recebimento esperaria."
+      }
+    ]
+  },
+  "ex-5wh39w3s": {
+    "prompt": "Lição 3. Um parâmetro do tipo `___ int` deixa uma função só enviar num canal, e o compilador recusa um recebimento dele.",
+    "hint": "A seta fica depois da palavra-chave.",
+    "blanks": [
+      {
+        "accept": [
+          "chan<-"
+        ]
+      }
+    ]
+  },
+  "ex-vmbeqr59": {
+    "prompt": "Lição 4. Um envio num canal sem buffer retornou. O que quem enviou sabe?",
+    "hint": "Não há onde o valor esperar.",
+    "choices": [
+      {
+        "text": "Que o valor está no canal para depois",
+        "why": "Um canal sem buffer não guarda nada."
+      },
+      {
+        "text": "Que quem recebe terminou de processá-lo",
+        "why": "Ele sabe que o valor foi pego, não o que foi feito dele."
+      },
+      {
+        "text": "Nada além do que saberia com um canal com buffer",
+        "why": "Um envio com buffer que retorna só diz que o valor está no buffer."
+      },
+      {
+        "text": "Que alguém recebeu o valor",
+        "why": "Isso. Esse encontro é o rendezvous."
+      }
+    ]
+  },
+  "ex-1dts5phn": {
+    "prompt": "Lição 4. Ordene estes canais por quantos valores quem envia consegue deixar neles sem ninguém receber, do menor para o maior.",
+    "hint": "O tamanho depois do tipo é o espaço.",
+    "items": [
+      "`make(chan int)`",
+      "`make(chan int, 1)`",
+      "`make(chan int, 3)`",
+      "`make(chan int, 100)`"
+    ]
+  },
+  "ex-kfsy7fav": {
+    "prompt": "Lição 4. Uma goroutine de servidor está presa para sempre num envio que ninguém vai receber, enquanto outras goroutines continuam atendendo. O que relata isso?",
+    "hint": "Quando a conferência de deadlock do runtime dispara?",
+    "choices": [
+      {
+        "text": "O runtime, com `all goroutines are asleep`",
+        "why": "Isso só dispara quando toda goroutine está bloqueada."
+      },
+      {
+        "text": "O `go vet`, antes de o programa rodar",
+        "why": "O `go vet` aprovou até o deadlock simples do `stuck.go`."
+      },
+      {
+        "text": "Nada por si só: é um vazamento silencioso",
+        "why": "Isso. A lição 6 trata de achar essas goroutines."
+      },
+      {
+        "text": "Um panic depois de o envio esperar demais",
+        "why": "Um envio não tem limite de tempo próprio."
+      }
+    ]
+  },
+  "ex-35rgzgtt": {
+    "prompt": "Lição 4. Um produtor gera 1.000 itens por segundo, o consumidor trata 900, e o buffer guarda 5.000. Depois de quantos segundos o buffer enche?",
+    "hint": "O buffer cresce pela diferença a cada segundo.",
+    "unit": "segundos"
+  },
+  "ex-s67xzq92": {
+    "prompt": "Lição 5. Dois casos de um `select` estão prontos no mesmo momento. Qual roda?",
+    "hint": "O `fair.go` contou.",
+    "choices": [
+      {
+        "text": "O que foi escrito primeiro",
+        "why": "A ordem escrita não dá prioridade."
+      },
+      {
+        "text": "Um deles, escolhido ao acaso",
+        "why": "Isso, de modo uniforme, para um canal ocupado não deixar outro sem vez."
+      },
+      {
+        "text": "Os dois, um depois do outro",
+        "why": "Um `select` roda exatamente um caso."
+      },
+      {
+        "text": "Nenhum: o `select` relata um conflito",
+        "why": "Vários casos prontos são a situação comum."
+      }
+    ]
+  },
+  "ex-4g9jzrbw": {
+    "prompt": "Lição 5. Um handler tem 300 ms para responder e junta resultados parciais de um canal num laço. Onde deve ir o `time.After`?",
+    "hint": "Um relógio para a resposta inteira, ou um novo a cada passo?",
+    "choices": [
+      {
+        "text": "Dentro do laço, para cada recebimento ter 300 ms",
+        "why": "Aí um fluxo constante de resultados poderia manter o handler rodando para sempre."
+      },
+      {
+        "text": "Antes do laço, criado uma vez",
+        "why": "Isso: um prazo para a coleta inteira, como o laço `overall` do `budget.go`."
+      },
+      {
+        "text": "Num caso `default`",
+        "why": "Um `default` nunca espera, então não é timeout nenhum."
+      },
+      {
+        "text": "Em lugar nenhum: um canal com buffer o torna desnecessário",
+        "why": "Um buffer não faz nada por uma fonte que responde devagar."
+      }
+    ]
+  },
+  "ex-51r0z28s": {
+    "prompt": "Lição 5. Por que `for { select { case v := <-ch: …; default: } }` é um jeito ruim de esperar um valor?",
+    "hint": "Compare os tempos `user` do `patient` e do `restless`.",
+    "choices": [
+      {
+        "text": "Perde valores que chegam enquanto o `default` roda",
+        "why": "Um valor enviado num canal espera quem recebe; nenhum se perde."
+      },
+      {
+        "text": "Trava quando o canal está vazio",
+        "why": "Ele nunca bloqueia, que é justamente o problema."
+      },
+      {
+        "text": "Mantém um processador ocupado o tempo todo",
+        "why": "Isso: 994 ms de processador em um segundo, contra 3 de um recebimento simples."
+      },
+      {
+        "text": "O `select` recusa um `default` dentro de um laço",
+        "why": "Compila e roda; só fica girando."
+      }
+    ]
+  },
+  "ex-m1t1pngj": {
+    "prompt": "Uma função inicia três goroutines que enviam cada uma um resultado num canal sem buffer, recebe um resultado e retorna. O que acontece com as outras duas goroutines?",
+    "hint": "Quem recebe os envios delas?",
+    "choices": [
+      {
+        "text": "São paradas quando a função retorna",
+        "why": "Nada para uma goroutine de fora; retornar não encerra as goroutines que a função iniciou."
+      },
+      {
+        "text": "Ficam bloqueadas nos envios pelo resto do programa",
+        "why": "Isso: um vazamento de duas goroutines por chamada."
+      },
+      {
+        "text": "Os valores delas esperam no canal pela próxima chamada",
+        "why": "Um canal sem buffer não guarda valores; cada chamada também cria um canal novo."
+      },
+      {
+        "text": "O programa entra em pânico com envio em canal fechado",
+        "why": "Nada fecha o canal; os envios simplesmente esperam."
+      }
+    ]
+  },
+  "ex-96yqp56x": {
+    "prompt": "O perfil `goroutineleak` de um serviço informa `total 0`, mas `runtime.NumGoroutine` sobe a cada hora em repouso. Qual é a explicação mais provável?",
+    "hint": "O que o perfil de vazamentos precisa provar?",
+    "choices": [
+      {
+        "text": "A contagem de goroutines está errada",
+        "why": "A contagem é exata; o perfil é que só relata o que prova."
+      },
+      {
+        "text": "As goroutines estão rodando, então não são vazamento",
+        "why": "Um serviço em repouso cuja contagem continua subindo está vazando, façam elas o que fizerem."
+      },
+      {
+        "text": "Elas esperam algo ainda alcançável, como um canal guardado numa global",
+        "why": "Isso: o alcance derrota a prova, como no `hidden.go`."
+      },
+      {
+        "text": "O perfil de vazamentos precisa do detector de corridas",
+        "why": "Ele não precisa do detector de corridas; roda uma coleta de lixo que procura goroutines presas."
+      }
+    ]
+  },
+  "ex-gkm5b0z7": {
+    "prompt": "Que mudanças impedem que uma goroutine que percorre um canal com range vaze quando quem chamou retorna cedo? Escolha todas as que se aplicam.",
+    "hint": "O range acaba quando o canal é fechado.",
+    "choices": [
+      {
+        "text": "`defer close(ch)` logo depois do `make`",
+        "why": "Sim, roda em todo caminho."
+      },
+      {
+        "text": "Um `time.Sleep` antes do `return` antecipado",
+        "why": "Esperar não fecha nada."
+      },
+      {
+        "text": "Um `close(ch)` antes de todo `return`",
+        "why": "Sim, embora o próximo `return` que alguém acrescentar possa esquecer."
+      },
+      {
+        "text": "Tornar o canal com buffer",
+        "why": "Um buffer ajuda quem envia; quem recebe ainda espera um fechamento."
+      }
+    ]
+  },
+  "ex-4n4ndzzt": {
+    "prompt": "A função do pacote `runtime` que informa quantas goroutines existem agora é `runtime.___`.",
+    "hint": "Estava em todo painel da lição 6.",
+    "blanks": [
+      {
+        "accept": [
+          "NumGoroutine",
+          "NumGoroutine()"
+        ]
+      }
+    ]
+  },
+  "ex-087w3sfb": {
+    "prompt": "Num pool de workers, que goroutine deve fechar o canal de resultados?",
+    "hint": "Ela precisa saber que todo worker terminou.",
+    "choices": [
+      {
+        "text": "O último worker a terminar",
+        "why": "Nenhum worker sabe que é o último."
+      },
+      {
+        "text": "A produtora, depois de enviar a última tarefa",
+        "why": "Os workers ainda podem estar enviando resultados nesse momento."
+      },
+      {
+        "text": "Uma que espera antes o `WaitGroup` dos workers",
+        "why": "Isso: depois do `wg.Wait`, nada vai enviar de novo."
+      },
+      {
+        "text": "A leitora, quando tem os resultados que quer",
+        "why": "Fechar do lado de quem recebe faz o próximo envio dos workers entrar em pânico."
+      }
+    ]
+  },
+  "ex-c4de3prm": {
+    "prompt": "Uma tarefa quase só espera um banco de dados que aceita 40 conexões, 10 das quais outros serviços usam. A máquina tem 8 processadores. Que tamanho de pool o raciocínio da lição 7 dá?",
+    "hint": "Para trabalho que espera, olhe o outro lado.",
+    "choices": [
+      {
+        "text": "8, um por processador",
+        "why": "Essa é a regra para trabalho que calcula."
+      },
+      {
+        "text": "Cerca de 30",
+        "why": "Isso: o limite do outro lado menos os outros usuários dele."
+      },
+      {
+        "text": "40, o limite do banco",
+        "why": "Dez delas já estão em uso em outro lugar."
+      },
+      {
+        "text": "Tantos quanto houver tarefas",
+        "why": "Esse é o programa sem limite que ficou sem arquivos."
+      }
+    ]
+  },
+  "ex-1pf19t6v": {
+    "prompt": "Um pool de 20 workers roda 400 tarefas de 50 ms cada, todas esperando, nada mais as limitando. Cerca de quantos milissegundos a execução deve levar?",
+    "hint": "Quantas rodadas de vinte?",
+    "unit": "ms"
+  },
+  "ex-zabfre1e": {
+    "prompt": "No padrão de semáforo, por que o lugar é tomado com `sem <- struct{}{}` antes do `go`, e não dentro da goroutine?",
+    "hint": "O que existiria de uma vez, do contrário?",
+    "choices": [
+      {
+        "text": "Dentro da goroutine o envio entraria em pânico",
+        "why": "Funcionaria; só limitaria menos."
+      },
+      {
+        "text": "Para que o número de goroutines também fique limitado, não só o trabalho",
+        "why": "Isso."
+      },
+      {
+        "text": "Para que as tarefas rodem na ordem da lista",
+        "why": "Goroutines terminam sem ordem prometida de qualquer jeito."
+      },
+      {
+        "text": "Porque um canal com buffer não pode ser usado dentro de uma goroutine",
+        "why": "Canais funcionam em qualquer goroutine."
+      }
+    ]
+  },
+  "ex-cnqpy4qs": {
+    "prompt": "Quatro goroutines incrementam um `int` compartilhado 100.000 vezes cada com `mu.Lock(); n++; mu.Unlock()`. O que o programa imprime?",
+    "hint": "O mutex torna o incremento um passo só.",
+    "choices": [
+      {
+        "text": "Um total diferente abaixo de 400.000 a cada execução",
+        "why": "Esse era o programa da lição 1 sem o mutex."
+      },
+      {
+        "text": "400.000 em toda execução",
+        "why": "Isso."
+      },
+      {
+        "text": "100.000, porque só uma goroutine pega a trava",
+        "why": "Cada uma a pega por sua vez, muitas e muitas vezes."
+      },
+      {
+        "text": "Nada: as goroutines travam",
+        "why": "Todo `Lock` é seguido de um `Unlock`, então ninguém espera para sempre."
+      }
+    ]
+  },
+  "ex-q9np5k0q": {
+    "prompt": "Uma struct com um campo `sync.Mutex` tem um método `func (s Store) Put(k, v string)` que trava e escreve num campo map. O programa tem corridas de dados e não perde escritas nos testes. O que está errado?",
+    "hint": "O que um receptor por valor copia, e o que ele compartilha?",
+    "choices": [
+      {
+        "text": "O map deveria ser um `sync.Map`",
+        "why": "O defeito real é a trava copiada; o map é protegido assim que o receptor é corrigido."
+      },
+      {
+        "text": "Cada chamada trava a sua cópia do mutex, enquanto o map lá dentro é compartilhado",
+        "why": "Isso. Copiar a struct copia o mutex, mas um valor map é uma referência, então toda cópia escreve no mesmo map sem proteção. Um receptor ponteiro conserta."
+      },
+      {
+        "text": "`defer` não pode ser usado com `Unlock`",
+        "why": "`defer mu.Unlock()` é o hábito recomendado."
+      },
+      {
+        "text": "Métodos não podem travar um mutex que não criaram",
+        "why": "Qualquer código que tem o mutex pode travá-lo."
+      }
+    ]
+  },
+  "ex-kvmx0tdy": {
+    "prompt": "Quando um `RWMutex` tende a vencer um `Mutex` comum, pelas medidas da lição 8?",
+    "hint": "Compare as execuções com `work 200` e `work 0`.",
+    "choices": [
+      {
+        "text": "Muitos leitores que seguram a trava o bastante para se sobrepor",
+        "why": "Isso: três vezes mais rápido com trabalho sob a trava, mais lento sem ele."
+      },
+      {
+        "text": "Sempre que há mais leitores que escritores",
+        "why": "Com uma única consulta sob a trava, ele foi mais lento."
+      },
+      {
+        "text": "Quando escritores são frequentes e longos",
+        "why": "Um escritor segura um `RWMutex` sozinho; escritores frequentes tiram a vantagem dele."
+      },
+      {
+        "text": "Quando um leitor precisa promover a trava para escrever",
+        "why": "Um `RLock` não pode ser promovido; tentar espera para sempre."
+      }
+    ]
+  },
+  "ex-g61mc592": {
+    "prompt": "Associe cada pedaço de estado compartilhado à ferramenta que a lição 8 recomenda para ele.",
+    "hint": "Um valor, vários valores ou uma entrega.",
+    "pairs": [
+      {
+        "left": "um contador de requisições",
+        "right": "`sync/atomic`"
+      },
+      {
+        "left": "um map de cache alterado no lugar",
+        "right": "um `sync.Mutex`"
+      },
+      {
+        "left": "um resultado entregue de uma goroutine a outra",
+        "right": "um canal"
+      }
+    ],
+    "right_distractors": [
+      "um `sync.Once`"
+    ]
+  },
+  "ex-n2bjrm6w": {
+    "prompt": "Por que `wg.Add(1)` deve ser chamado antes do `go` e não como primeira linha da goroutine?",
+    "hint": "E se o `Wait` rodar antes de a goroutine ser escalonada?",
+    "choices": [
+      {
+        "text": "`Add` entra em pânico dentro de uma goroutine",
+        "why": "Ele não entra em pânico; só chega tarde demais."
+      },
+      {
+        "text": "O `Wait` acha o contador em zero e retorna na hora",
+        "why": "Isso, sempre que as goroutines ainda não rodaram: o `late.go` imprimiu 0 terminadas."
+      },
+      {
+        "text": "A goroutine não consegue ver o `WaitGroup`",
+        "why": "A closure o captura."
+      },
+      {
+        "text": "Faz o `Done` rodar duas vezes",
+        "why": "O `Done` roda uma vez por goroutine de qualquer jeito."
+      }
+    ]
+  },
+  "ex-mkjxg6t0": {
+    "prompt": "Um carregador de configuração usa `sync.OnceValues`. A primeira chamada falha porque falta um arquivo; o arquivo é criado um segundo depois. O que as chamadas seguintes devolvem?",
+    "hint": "Uma vez quer dizer uma vez.",
+    "choices": [
+      {
+        "text": "A configuração, lida do arquivo novo",
+        "why": "A função nunca roda de novo."
+      },
+      {
+        "text": "O mesmo erro da primeira chamada",
+        "why": "Isso: erros são guardados como resultados."
+      },
+      {
+        "text": "Uma configuração zero e erro nil",
+        "why": "O par guardado é devolvido exatamente como a primeira chamada o produziu."
+      },
+      {
+        "text": "Um pânico, porque a primeira chamada falhou",
+        "why": "Um erro é um valor devolvido; nada entra em pânico."
+      }
+    ]
+  },
+  "ex-ascza1pk": {
+    "prompt": "O que o runtime faz quando duas goroutines escrevem num map comum no mesmo momento, sem trava?",
+    "hint": "O `crash.go`.",
+    "choices": [
+      {
+        "text": "Ele põe as escritas em fila por você",
+        "why": "Não põe; para isso servem uma trava ou um `sync.Map`."
+      },
+      {
+        "text": "Ele levanta um pânico que o `recover` pode pegar",
+        "why": "É um erro fatal, fora do alcance do `recover`."
+      },
+      {
+        "text": "Ele para o programa com `fatal error: concurrent map writes` quando as detecta",
+        "why": "Isso; a verificação é barata e não pega todo caso."
+      },
+      {
+        "text": "Guarda o último valor escrito e continua",
+        "why": "Quando detecta as escritas, ele para o programa."
+      }
+    ]
+  },
+  "ex-67xrq4v5": {
+    "prompt": "Que goroutine deve chamar a função `cancel` devolvida por `context.WithCancel`?",
+    "hint": "O worker só escuta.",
+    "choices": [
+      {
+        "text": "A que criou o contexto",
+        "why": "Isso, com `defer cancel()` como hábito."
+      },
+      {
+        "text": "Todo worker que recebeu o contexto",
+        "why": "Workers escutam o `Done`; um deles cancelando pararia os outros."
+      },
+      {
+        "text": "O coletor de lixo",
+        "why": "O coletor não chama funções suas."
+      },
+      {
+        "text": "Ninguém: é chamada quando passa o prazo",
+        "why": "`WithCancel` não tem prazo nenhum."
+      }
+    ]
+  },
+  "ex-w9m58dff": {
+    "prompt": "Ordene estes contextos da raiz da árvore para baixo.",
+    "hint": "Cada `With…` faz um filho do que recebe.",
+    "items": [
+      "`context.Background()`",
+      "`ctx, cancel := context.WithCancel(context.Background())`",
+      "`tctx, _ := context.WithTimeout(ctx, time.Second)`",
+      "`vctx := context.WithValue(tctx, key, id)`"
+    ]
+  },
+  "ex-ybkxndgg": {
+    "prompt": "Dois caminhos de código compartilham um contexto de requisição com prazo de 3 s: uma chamada ao banco e uma ao cache, cada uma embrulhada no seu `WithTimeoutCause`. Uma linha de log mostra `context deadline exceeded`. O que diz qual orçamento acabou?",
+    "hint": "`Err()` é um de dois valores.",
+    "choices": [
+      {
+        "text": "`ctx.Err()`, comparado com `errors.Is`",
+        "why": "Ele é `DeadlineExceeded` para os dois."
+      },
+      {
+        "text": "`context.Cause(ctx)`, que devolve o erro dado a cada prazo",
+        "why": "Isso."
+      },
+      {
+        "text": "`ctx.Deadline()`",
+        "why": "Ele informa quando, não por quê."
+      },
+      {
+        "text": "`ctx.Value(\"cause\")`",
+        "why": "Causas não são guardadas como valores, e uma chave string é uma colisão esperando para acontecer."
+      }
+    ]
+  },
+  "ex-mj1jqwj5": {
+    "prompt": "Lição 11. Uma função `func Fetch(id string, ctx context.Context) error` está em revisão. O que a convenção pede para mudar?",
+    "hint": "Onde vai o contexto?",
+    "choices": [
+      {
+        "text": "Nada; um contexto pode ir em qualquer posição da lista",
+        "why": "A documentação do pacote `context` fixa o lugar dele."
+      },
+      {
+        "text": "Mover `ctx` para primeiro parâmetro",
+        "why": "Isso: `func Fetch(ctx context.Context, id string) error`."
+      },
+      {
+        "text": "Trocar `ctx` por um campo no receptor",
+        "why": "Guardar um contexto numa struct é justamente o que a convenção proíbe."
+      },
+      {
+        "text": "Renomear `ctx` para `context`",
+        "why": "Isso esconderia o nome do pacote; `ctx` é o nome convencional."
+      }
+    ]
+  },
+  "ex-1zrsdsvm": {
+    "prompt": "Lição 11. Um contexto pai tem 200 ms sobrando. Uma função deriva um filho com `context.WithTimeout(parent, 5*time.Second)`. Quando o filho termina, se nada mais o cancelar?",
+    "hint": "Um filho não vive mais que o pai.",
+    "choices": [
+      {
+        "text": "Depois de 5 segundos",
+        "why": "O pai termina antes, e o fim dele alcança o filho."
+      },
+      {
+        "text": "Depois de 5,2 segundos",
+        "why": "Timeouts não se somam."
+      },
+      {
+        "text": "Por volta dos 200 ms, com o pai",
+        "why": "Isso: o prazo mais cedo vence."
+      },
+      {
+        "text": "Na hora, porque os timeouts discordam",
+        "why": "Não há conflito; o filho só fica com o prazo mais cedo."
+      }
+    ]
+  },
+  "ex-amcaa8wt": {
+    "prompt": "Lição 11. Um laço processa itens de cerca de 2 segundos cada e consulta `ctx.Err()` no topo de cada iteração. O contexto dele é cancelado. Com quanto atraso o laço pode perceber?",
+    "hint": "Quanto tempo o laço passa entre duas olhadas?",
+    "choices": [
+      {
+        "text": "Nenhum: o cancelamento interrompe o item",
+        "why": "Nada interrompe um código que não olha; a consulta só está no topo."
+      },
+      {
+        "text": "Até um item, cerca de 2 segundos",
+        "why": "Isso. O atraso é o custo de um passo; um passo de 2 segundos precisa de um contexto passado para dentro dele."
+      },
+      {
+        "text": "Até o laço inteiro terminar",
+        "why": "Isso é um laço que nunca consulta, como o `deaf` da lição 11."
+      },
+      {
+        "text": "Um tique do escalonador, cerca de 10 ms",
+        "why": "O escalonador não para trabalho em nome de um contexto."
+      }
+    ]
+  },
+  "ex-yf6zzf79": {
+    "prompt": "Lição 11. Que função devolve um contexto que mantém os valores do pai mas nunca é cancelado quando o pai é?",
+    "hint": "Ela serve para trabalho na borda de uma requisição.",
+    "choices": [
+      {
+        "text": "`context.Background()`",
+        "why": "Ele nunca é cancelado, mas não carrega valor nenhum."
+      },
+      {
+        "text": "`context.AfterFunc`",
+        "why": "Esse roda uma função quando um contexto termina; ele não cria contexto."
+      },
+      {
+        "text": "`context.TODO()`",
+        "why": "Como o `Background`, ele não tem pai nem valores."
+      },
+      {
+        "text": "`context.WithoutCancel`",
+        "why": "Isso: valores mantidos, fim descartado."
+      }
+    ]
+  },
+  "ex-rvj0vnk3": {
+    "prompt": "Lição 12. Um cliente monta a requisição com `http.NewRequestWithContext` e um timeout de 100 ms, e o servidor leva 2 segundos. O que o `Do` do cliente devolve?",
+    "hint": "Que lado desiste primeiro?",
+    "choices": [
+      {
+        "text": "O erro do contexto, depois de 100 ms",
+        "why": "Isso. O cliente para de esperar quando o contexto dele termina."
+      },
+      {
+        "text": "A resposta, depois de 2 segundos",
+        "why": "Isso é o `http.NewRequest` sem contexto."
+      },
+      {
+        "text": "Um HTTP 504 do servidor",
+        "why": "O servidor não envia nada; o cliente saiu."
+      },
+      {
+        "text": "Um corpo parcial",
+        "why": "Nenhum corpo tinha sido enviado quando o cliente desistiu."
+      }
+    ]
+  },
+  "ex-w58x9bjg": {
+    "prompt": "Lição 12. Um handler espera `r.Context().Done()`. O cliente dele desconecta depois de 100 ms por causa do próprio prazo. Que erro o handler vê em `r.Context().Err()`?",
+    "hint": "O motivo do cliente viaja até o servidor?",
+    "choices": [
+      {
+        "text": "`context.DeadlineExceeded`, o motivo do cliente",
+        "why": "O motivo fica com o cliente; o servidor só vê a conexão fechar."
+      },
+      {
+        "text": "`context.Canceled`",
+        "why": "Isso: o servidor cancela o contexto da requisição quando o cliente sai."
+      },
+      {
+        "text": "`http.ErrServerClosed`",
+        "why": "Isso é o que o `ListenAndServe` devolve depois do `Shutdown`."
+      },
+      {
+        "text": "`nil`, porque o handler não falhou",
+        "why": "Depois que o contexto terminou, `Err` nunca é nil."
+      }
+    ]
+  },
+  "ex-11qfecg4": {
+    "prompt": "Lição 12. O que acontece quando `http.Server.Shutdown` é chamado com uma requisição respondida pela metade?",
+    "hint": "Primeiro a porta, depois o trabalho de dentro.",
+    "choices": [
+      {
+        "text": "A requisição é cortada e o servidor para na hora",
+        "why": "É o que morrer faz; o `Shutdown` existe para evitar isso."
+      },
+      {
+        "text": "Conexões novas são aceitas até a requisição terminar",
+        "why": "A porta fecha primeiro, então conexões novas são recusadas."
+      },
+      {
+        "text": "Conexões novas são recusadas, e a requisição é terminada",
+        "why": "Isso, dentro do limite do contexto dado ao `Shutdown`."
+      },
+      {
+        "text": "O contexto da requisição é cancelado para ela parar rápido",
+        "why": "O `Shutdown` espera os handlers; ele não os cancela."
+      }
+    ]
+  },
+  "ex-bjndbfw7": {
+    "prompt": "Lição 12. Uma plataforma envia `SIGTERM` e mata o processo 30 segundos depois. A requisição mais longa que um serviço atende leva 12 segundos. Em segundos, qual é o maior limite de `Shutdown` que ainda termina antes da morte, deixando 3 segundos de folga?",
+    "hint": "30 menos a folga.",
+    "unit": "segundos"
+  },
+  "ex-ehq2vv7a": {
+    "prompt": "Lição 13. Doze jobs são enviados num canal lido por três workers. Como cada job é atribuído?",
+    "hint": "Ninguém distribui.",
+    "choices": [
+      {
+        "text": "Em rodízio: o job 1 ao primeiro worker, o job 2 ao segundo",
+        "why": "Canais não distribuem em rodízio."
+      },
+      {
+        "text": "Aos três, e vence o primeiro resultado",
+        "why": "Um valor é recebido por exatamente uma goroutine."
+      },
+      {
+        "text": "Ao worker que receber em seguida",
+        "why": "Isso, então a divisão segue a velocidade e varia entre execuções."
+      },
+      {
+        "text": "Pelo número do job módulo três",
+        "why": "Nada calcula uma atribuição."
+      }
+    ]
+  },
+  "ex-2ap3thda": {
+    "prompt": "Lição 13. Oito goroutines calculam um resultado cada e precisam deixá-los na ordem da entrada, sem canal. Que arranjo está livre de corridas de dados?",
+    "hint": "Que memória cada goroutine escreve?",
+    "choices": [
+      {
+        "text": "Cada uma faz append do resultado numa slice compartilhada",
+        "why": "O `append` lê e escreve o tamanho compartilhado: uma corrida."
+      },
+      {
+        "text": "Cada uma escreve `results[i]` numa slice de tamanho 8",
+        "why": "Isso: elementos separados são memórias separadas, lidas depois de `wg.Wait`."
+      },
+      {
+        "text": "Cada uma escreve num map compartilhado, com o índice como chave",
+        "why": "Um map é uma estrutura compartilhada só; escritas concorrentes são corrida."
+      },
+      {
+        "text": "Cada uma imprime o resultado, na ordem da entrada",
+        "why": "A ordem de impressão entre goroutines não é a ordem da entrada."
+      }
+    ]
+  },
+  "ex-w14kqcz3": {
+    "prompt": "Lição 13. Num fan-out, o primeiro erro precisa parar o resto e quem chamou precisa saber qual foi. Que chamada da biblioteca padrão registra esse motivo?",
+    "hint": "Uma função de cancelamento que recebe um argumento.",
+    "choices": [
+      {
+        "text": "`context.WithCancel`",
+        "why": "O cancel dele não recebe argumento; o `Err` então só diz `context canceled`."
+      },
+      {
+        "text": "`errors.Join`",
+        "why": "Ele combina erros; não cancela nada."
+      },
+      {
+        "text": "`context.WithCancelCause`",
+        "why": "Isso: `cancel(err)` o registra e `context.Cause` o devolve."
+      },
+      {
+        "text": "`sync.WaitGroup.Wait`",
+        "why": "Ele espera; não registra erro."
+      }
+    ]
+  },
+  "ex-zfk5hpt5": {
+    "prompt": "Lição 14. Uma junção com três goroutines copiadoras precisa fechar a saída. Quando?",
+    "hint": "O último remetente fecha.",
+    "choices": [
+      {
+        "text": "Quando a primeira entrada fecha",
+        "why": "As outras copiadoras enviariam num canal fechado e entrariam em panic."
+      },
+      {
+        "text": "Depois que as três copiadoras terminaram",
+        "why": "Isso, o que uma goroutine esperando um `WaitGroup` sabe."
+      },
+      {
+        "text": "Nunca; o coletor de lixo o fecha",
+        "why": "Nada fecha canais por você, e um leitor percorrendo-o espera para sempre."
+      },
+      {
+        "text": "Quando o leitor recebeu valores suficientes",
+        "why": "Um leitor fechando um canal em que outros enviam causa o mesmo panic."
+      }
+    ]
+  },
+  "ex-a190nr5q": {
+    "prompt": "Lição 14. Um laço `select` junta dois canais com `v := <-a` e `v := <-b` simples, e roda até os dois fecharem. O que acontece quando fecham?",
+    "hint": "Um canal fechado está pronto?",
+    "choices": [
+      {
+        "text": "O `select` trava, esperando um valor",
+        "why": "Um canal fechado nunca trava um recebimento."
+      },
+      {
+        "text": "O programa entra em panic com `receive from closed channel`",
+        "why": "Receber de um canal fechado é permitido; enviar é que provoca panic."
+      },
+      {
+        "text": "O laço termina sozinho",
+        "why": "Nada num recebimento simples encerra um laço `select`."
+      },
+      {
+        "text": "Ele gira, recebendo valores zero sem parar",
+        "why": "Isso: o `spin.go` da lição 14 contou 972.922 em 100 ms. Comma-ok e nil consertam."
+      }
+    ]
+  },
+  "ex-w5gwawvv": {
+    "prompt": "Lição 14. Dentro de um laço `select`, atribuir ___ a uma variável de canal desliga o case dela, porque um canal assim nunca está pronto.",
+    "hint": "O valor zero de um tipo canal.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ]
+      }
+    ]
+  },
+  "ex-240c0ka3": {
+    "prompt": "Lição 15. O consumidor de um pipeline lê três resultados e retorna, e os estágios não têm contexto. O que fica para trás?",
+    "hint": "Em que sentido o fechamento anda?",
+    "choices": [
+      {
+        "text": "Estágios presos em envios que ninguém vai receber",
+        "why": "Isso: um vazamento, porque o fechamento só anda corrente abaixo."
+      },
+      {
+        "text": "Nada; os estágios veem o leitor sair e fecham",
+        "why": "Um estágio não vê o leitor sair sem um contexto."
+      },
+      {
+        "text": "Um relatório de deadlock do runtime",
+        "why": "Só se todas as goroutines estiverem presas; a goroutine do consumidor continua."
+      },
+      {
+        "text": "Um panic no primeiro estágio",
+        "why": "Nada é fechado errado; os estágios só esperam."
+      }
+    ]
+  },
+  "ex-8akwgxjn": {
+    "prompt": "Lição 15. Ponha em ordem o desligamento normal do pipeline `main ← sq ← gen`.",
+    "hint": "O fechamento viaja com os dados.",
+    "items": [
+      "`gen` envia o último número e fecha a saída",
+      "o `range` de `sq` sobre esse canal termina",
+      "`sq` fecha a própria saída",
+      "o `range` do `main` termina"
+    ]
+  },
+  "ex-mcay9k6w": {
+    "prompt": "Lições 13 a 15. Quais destas afirmações são verdadeiras? Escolha todas as que se aplicam.",
+    "hint": "Um padrão por lição, e as suas regras.",
+    "choices": [
+      {
+        "text": "Um pipeline não anda mais rápido que o estágio mais lento",
+        "why": "Sim: os itens saem no ritmo desse estágio."
+      },
+      {
+        "text": "Um estágio pode rodar em várias goroutines e ainda fechar uma vez",
+        "why": "Sim: com um `WaitGroup` e quem fecha, como no `wide.go`."
+      },
+      {
+        "text": "O fan-in mantém os valores na ordem em que as fontes foram listadas",
+        "why": "Ele entrega na ordem de chegada."
+      },
+      {
+        "text": "O fan-out dá cada job a todos os workers",
+        "why": "Cada job chega a exatamente um worker."
+      }
+    ]
+  },
+  "ex-f28e3r38": {
+    "prompt": "Um programa compilado com `-race` imprime um relatório e continua rodando. Como um script de CI sabe que a execução achou uma corrida sem ler o texto?",
+    "hint": "O detector relata em vez de parar.",
+    "choices": [
+      {
+        "text": "O programa não imprime nada na saída padrão",
+        "why": "A saída do próprio programa não muda; o relatório vai ao lado."
+      },
+      {
+        "text": "O status de saída é 66",
+        "why": "Isso."
+      },
+      {
+        "text": "O binário se apaga depois de uma corrida",
+        "why": "Nada do tipo acontece."
+      },
+      {
+        "text": "O build com corrida se recusa a começar uma segunda vez",
+        "why": "Cada execução é independente."
+      }
+    ]
+  },
+  "ex-k7h15e6z": {
+    "prompt": "As duas pilhas de um relatório de corrida terminam na sua função `Save`, linha 40, chamada de duas goroutines diferentes. A variável é um campo de uma struct que as duas compartilham. Que conserto a tabela da lição aponta primeiro?",
+    "hint": "Pergunte o que é compartilhado e como é atualizado.",
+    "choices": [
+      {
+        "text": "Pôr um `time.Sleep` antes da linha 40",
+        "why": "Uma pausa é tempo, não sincronização."
+      },
+      {
+        "text": "Rodar com `GORACE=halt_on_error=1`",
+        "why": "Isso muda quantos relatórios são impressos, não a corrida."
+      },
+      {
+        "text": "Depende do campo: um atômico se for um número, um mutex se for uma estrutura",
+        "why": "Isso: escolha pelo que é compartilhado."
+      },
+      {
+        "text": "Compilar sem `-race` para o relatório sumir",
+        "why": "A corrida fica; só a testemunha vai embora."
+      }
+    ]
+  },
+  "ex-x0ee2p1n": {
+    "prompt": "Quais destes descrevem o detector de corridas como a lição 16 o mediu e usou? Escolha todas as que se aplicam.",
+    "hint": "Custo, alcance e comportamento.",
+    "choices": [
+      {
+        "text": "Deixou o `cost` cerca de doze vezes mais lento",
+        "why": "Sim, de 0,156 s para 1,852 s."
+      },
+      {
+        "text": "Só vê corridas que acontecem durante a execução",
+        "why": "Sim."
+      },
+      {
+        "text": "Prova que um programa não tem corridas quando fica quieto",
+        "why": "O silêncio cobre só os caminhos que a execução percorreu."
+      },
+      {
+        "text": "`go test -race` reprova um teste durante o qual houve uma corrida",
+        "why": "Sim."
+      }
+    ]
+  },
+  "ex-11qhqmvw": {
+    "prompt": "Por que os testes de um tipo que diz ser seguro para uso concorrente precisam de um teste que o chame de várias goroutines ao mesmo tempo?",
+    "hint": "O que o detector precisa para ver uma corrida?",
+    "choices": [
+      {
+        "text": "Para os acessos de fato se encontrarem enquanto o detector observa",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o `go test` recusa testes de uma goroutine só",
+        "why": "O `TestGet` rodou numa goroutine e passou."
+      },
+      {
+        "text": "Para o teste ficar mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Porque respostas só são conferidas em testes paralelos",
+        "why": "Qualquer teste confere respostas; corridas é que precisam de concorrência."
+      }
+    ]
+  },
+  "ex-58tz14ax": {
+    "prompt": "Um Reader com 30 bytes é lido com um buffer de 8 por um Reader que devolve `0, io.EOF` numa chamada separada no fim, como o `strings.Reader` fez. Quantas chamadas a `Read` acontecem ao todo?",
+    "hint": "8 + 8 + 8 + 6, e mais uma.",
+    "unit": "chamadas"
+  },
+  "ex-xpsbsjv7": {
+    "prompt": "Um Reader próprio devolve os últimos 4 bytes junto com `io.EOF`. O laço de quem chama faz `n, err := r.Read(buf); if err != nil { break }; use(buf[:n])`. O que está errado?",
+    "hint": "O contrato diz o que processar antes de olhar o `err`.",
+    "choices": [
+      {
+        "text": "Nada, já que o contrato proíbe dados com EOF",
+        "why": "O contrato permite, e o `alphabet` fez."
+      },
+      {
+        "text": "Os últimos 4 bytes são perdidos",
+        "why": "Isso: use os `n` bytes primeiro, depois olhe o `err`."
+      },
+      {
+        "text": "O laço nunca termina",
+        "why": "Ele termina no EOF, cedo demais."
+      },
+      {
+        "text": "`buf[:n]` dá panic quando `n` é 4",
+        "why": "Fatiar 4 de 8 não tem problema."
+      }
+    ]
+  },
+  "ex-6ze8sgfe": {
+    "prompt": "Associe cada ajudante de `io` ao que ele faz dos argumentos.",
+    "hint": "Readers entram, Readers ou Writers saem.",
+    "pairs": [
+      {
+        "left": "`io.TeeReader(r, w)`",
+        "right": "lê r, copiando o que lê para w"
+      },
+      {
+        "left": "`io.MultiWriter(a, b)`",
+        "right": "escreve cada pedaço em a e em b"
+      },
+      {
+        "left": "`io.LimitReader(r, 5)`",
+        "right": "para depois de cinco bytes"
+      },
+      {
+        "left": "`io.MultiReader(a, b)`",
+        "right": "todo o a, depois todo o b"
+      }
+    ],
+    "right_distractors": [
+      "a e b intercalados byte a byte"
+    ]
+  },
+  "ex-h6ckmc84": {
+    "prompt": "O `io.Pipe` não tem buffer. A que isso obriga um programa?",
+    "hint": "O canal sem buffer da lição 4.",
+    "choices": [
+      {
+        "text": "Chamar `Flush` depois de toda escrita",
+        "why": "Um pipe não tem nada a dar flush."
+      },
+      {
+        "text": "Escrever e ler de goroutines diferentes",
+        "why": "Isso: cada escrita espera uma leitura."
+      },
+      {
+        "text": "Usá-lo só com arquivos",
+        "why": "Ele liga qualquer writer a qualquer reader."
+      },
+      {
+        "text": "Travar um mutex em volta de cada escrita",
+        "why": "O pipe já sincroniza as duas pontas."
+      }
+    ]
+  },
+  "ex-58w5azyt": {
+    "prompt": "Uma função escreve a saída com `fmt.Printf`. Por que é mais difícil de testar que uma que recebe um `io.Writer`?",
+    "hint": "Onde um teste poderia pegar a saída?",
+    "choices": [
+      {
+        "text": "A saída do `Printf` não pode ser comparada com uma string",
+        "why": "Pode, depois de capturada; o problema é capturá-la."
+      },
+      {
+        "text": "O `Printf` é mais lento que o `Fprintf`",
+        "why": "O `Printf` é o `Fprintf` para `os.Stdout`."
+      },
+      {
+        "text": "O destino é fixo; um teste não pode lhe dar um `bytes.Buffer`",
+        "why": "Isso."
+      },
+      {
+        "text": "Testes não podem rodar código que imprime",
+        "why": "Podem; a saída só cai no terminal."
+      }
+    ]
+  },
+  "ex-k7sgqxce": {
+    "prompt": "Um programa escreve 20.000 bytes por `bufio.NewWriter` e fecha o arquivo sem chamar `Flush`. O arquivo sai menor, e os bytes que faltam estão todos no fim. Por que no fim?",
+    "hint": "Quais buffers chegaram ao arquivo?",
+    "choices": [
+      {
+        "text": "O último buffer, incompleto, nunca saiu da memória",
+        "why": "Isso: só buffers cheios são escritos antes de um Flush."
+      },
+      {
+        "text": "O Close trunca arquivos abertos por `os.Create`",
+        "why": "O Close não corta nada."
+      },
+      {
+        "text": "O disco estava cheio",
+        "why": "Nada informou erro."
+      },
+      {
+        "text": "O `bufio.Writer` guarda um buffer sim, outro não",
+        "why": "Ele repassa todo buffer cheio."
+      }
+    ]
+  },
+  "ex-etm0s0pw": {
+    "prompt": "Um `bufio.Scanner` que para numa linha longa devolve false do `Scan`, e só o `s.___()` diz por quê.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "Err"
+        ]
+      }
+    ]
+  },
+  "ex-c2dt7khx": {
+    "prompt": "Um servidor descompacta arquivos cujos nomes de entrada vêm de usuários. Que ferramenta da lição 18 impede um nome como `../../etc/passwd` de sair do diretório de destino?",
+    "hint": "Um tipo desde o Go 1.24.",
+    "choices": [
+      {
+        "text": "`filepath.Join`, que remove `..`",
+        "why": "O `Join` limpa o caminho e mantém o `..`, que leva para fora."
+      },
+      {
+        "text": "`os.MkdirAll` com modo `0o700`",
+        "why": "Permissões dizem quem pode entrar, não para onde um nome leva."
+      },
+      {
+        "text": "Um `os.Root` aberto onde os arquivos vão ficar",
+        "why": "Isso: os nomes são resolvidos dentro dele ou recusados."
+      },
+      {
+        "text": "`filepath.WalkDir` com `SkipDir`",
+        "why": "Isso percorre árvores existentes; não protege nomes novos."
+      }
+    ]
+  },
+  "ex-0gnhsb9c": {
+    "prompt": "Que teste de erro um programa deve usar para saber que um arquivo que tentou abrir não existe?",
+    "hint": "O `io/fs` guarda os valores.",
+    "choices": [
+      {
+        "text": "`err.Error() == \"file not found\"`",
+        "why": "O texto é para pessoas, e nem é esse texto."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)`",
+        "why": "Isso."
+      },
+      {
+        "text": "`err == io.EOF`",
+        "why": "EOF é o fim dos dados, não um arquivo que falta."
+      },
+      {
+        "text": "`os.IsExist(err)`",
+        "why": "Isso faz a pergunta oposta."
+      }
+    ]
+  },
+  "ex-f1tqs0bk": {
+    "prompt": "Um campo de struct é `Retired time.Time` com a tag `json:\"retired,omitempty\"`, e nunca é preenchido. O que aparece no JSON?",
+    "hint": "Uma struct é vazia para o `omitempty`?",
+    "choices": [
+      {
+        "text": "Nenhuma chave `retired`",
+        "why": "É o que o `omitzero` daria."
+      },
+      {
+        "text": "`\"retired\": null`",
+        "why": "Um `time.Time` nunca é escrito como null."
+      },
+      {
+        "text": "`\"retired\": \"0001-01-01T00:00:00Z\"`",
+        "why": "Isso: o horário zero, escrito."
+      },
+      {
+        "text": "Um erro `json: unsupported type`",
+        "why": "Horários são suportados."
+      }
+    ]
+  },
+  "ex-y7vy5mbm": {
+    "prompt": "JSON decodificado para `map[string]any` dá `float64` para todo número. Que tipo de valor corre mais risco?",
+    "hint": "Acima de 2^53.",
+    "choices": [
+      {
+        "text": "Uma quantidade como 2",
+        "why": "Inteiros pequenos são exatos num float64."
+      },
+      {
+        "text": "Um preço já em centavos, como 24990",
+        "why": "Bem abaixo de 2^53, então exato."
+      },
+      {
+        "text": "Um identificador de 64 bits",
+        "why": "Isso; o `UseNumber` o mantém como texto."
+      },
+      {
+        "text": "Um booleano",
+        "why": "Booleanos viram `bool`."
+      }
+    ]
+  },
+  "ex-29092ygp": {
+    "prompt": "Ordene o que o `json.Unmarshal` confere, da primeira falha possível à última.",
+    "hint": "Um documento que não é JSON falha antes de qualquer campo ser olhado.",
+    "items": [
+      "que os bytes são JSON válido",
+      "a que campo cada chave corresponde",
+      "que cada valor cabe no tipo do campo"
+    ]
+  },
+  "ex-fzkxwghv": {
+    "prompt": "Uma assinatura de função é `func Retry(n int, wait time.Duration)`. Quem chama tem `secs := 3`. Que chamada compila e espera três segundos entre tentativas?",
+    "hint": "Uma variável já tem tipo.",
+    "choices": [
+      {
+        "text": "`Retry(5, secs)`",
+        "why": "Um `int` não é um `Duration`, e seria nanossegundos se fosse."
+      },
+      {
+        "text": "`Retry(5, secs * time.Second)`",
+        "why": "Tipos incompatíveis `int` e `time.Duration`."
+      },
+      {
+        "text": "`Retry(5, time.Duration(secs) * time.Second)`",
+        "why": "Isso: converter, depois multiplicar pela unidade."
+      },
+      {
+        "text": "`Retry(5, time.Second(secs))`",
+        "why": "`time.Second` é uma constante, não uma função."
+      }
+    ]
+  },
+  "ex-q07t4q0g": {
+    "prompt": "Um job grava `start := time.Now()` num banco de dados, e uma hora depois outro processo o lê de volta e calcula `time.Since(start)`. Em que a medição do segundo processo se apoia?",
+    "hint": "A leitura monotônica sobrevive a sair do processo?",
+    "choices": [
+      {
+        "text": "Só o relógio de parede",
+        "why": "Isso. A leitura monotônica não significa nada fora do processo que a fez."
+      },
+      {
+        "text": "O relógio monotônico, que o banco de dados guarda",
+        "why": "Uma hora gravada mantém o relógio de parede; a parte monotônica não viaja."
+      },
+      {
+        "text": "Nenhum: o `Since` recusa horas de outros processos",
+        "why": "Ele calcula; só tem o relógio de parede para usar."
+      },
+      {
+        "text": "O fuso horário do primeiro processo",
+        "why": "Fusos mudam como uma hora é impressa, não o intervalo."
+      }
+    ]
+  },
+  "ex-55eaqqnx": {
+    "prompt": "Um laço precisa atualizar um cache a cada minuto e também parar quando um canal `done` fecha. Que ferramenta serve?",
+    "hint": "Algo que dispara repetidamente e pode estar num `select`.",
+    "choices": [
+      {
+        "text": "`time.Sleep(time.Minute)` no laço",
+        "why": "Uma goroutine dormindo não percebe o `done` até acordar."
+      },
+      {
+        "text": "Um `time.Ticker` no `select`",
+        "why": "Isso, e com `Stop` quando o laço acaba."
+      },
+      {
+        "text": "`time.AfterFunc` uma vez",
+        "why": "Isso roda uma função uma vez, na própria goroutine."
+      },
+      {
+        "text": "Um `time.Timer` que nunca é reiniciado",
+        "why": "Ele dispararia uma vez e a atualização pararia."
+      }
+    ]
+  },
+  "ex-x36xnr40": {
+    "prompt": "`time.Date(2026, 3, 5, 9, 0, 0, 0, time.UTC).Format(\"2006-02-01\")` imprime `2026-05-03`. Por quê?",
+    "hint": "No momento de referência, que número é o dia e qual é o mês?",
+    "choices": [
+      {
+        "text": "O layout é lido da direita para a esquerda",
+        "why": "Ele é lido como escrito; os números nomeiam os campos."
+      },
+      {
+        "text": "O UTC troca dia e mês",
+        "why": "Fusos mudam horas, nunca campos."
+      },
+      {
+        "text": "`02` é o dia e `01` o mês",
+        "why": "Isso: o layout pediu ano, dia, mês."
+      },
+      {
+        "text": "O `Format` rejeita o layout e usa outro",
+        "why": "Nada foi rejeitado; ele fez o que estava escrito."
+      }
+    ]
+  },
+  "ex-m9ye31xr": {
+    "prompt": "O momento de referência de Go é segunda, 2 de janeiro de 2006, às 15:04:05. Num layout, que número representa os minutos?",
+    "hint": "Hora 15, depois…"
+  },
+  "ex-fakf9xnr": {
+    "prompt": "Uma ferramenta roda como `tool -verbose false input.txt`, e `-verbose` é uma `flag.Bool`. O que o programa vê?",
+    "hint": "Uma flag bool toma a próxima palavra como valor?",
+    "choices": [
+      {
+        "text": "`verbose` falso e `input.txt` nos argumentos",
+        "why": "Isso precisa de `-verbose=false`."
+      },
+      {
+        "text": "`verbose` verdadeiro, e `false input.txt` sobrando",
+        "why": "Isso: a leitura parou em `false`."
+      },
+      {
+        "text": "Uma recusa com status 2",
+        "why": "Nada inválido foi dado; `false` é só uma palavra."
+      },
+      {
+        "text": "`verbose` verdadeiro e só `input.txt` sobrando",
+        "why": "O `false` não foi consumido pela flag."
+      }
+    ]
+  },
+  "ex-84bbfwv1": {
+    "prompt": "Uma flag `-ratio` tem de ser um número entre 0 e 1. Só com a biblioteca padrão, qual é o jeito mais curto de recusar `1.5` com uma mensagem clara?",
+    "hint": "Uma verificação escrita como função.",
+    "choices": [
+      {
+        "text": "`flag.Float64`, depois `os.Exit(1)` se fora do intervalo",
+        "why": "Funciona, mas com o status errado e sem texto de uso; o `flag.Func` faz os dois."
+      },
+      {
+        "text": "`flag.Func` devolvendo um erro",
+        "why": "Isso: o `Parse` o imprime e sai com 2."
+      },
+      {
+        "text": "`flag.TextVar` com um `float64`",
+        "why": "`float64` não tem `UnmarshalText`."
+      },
+      {
+        "text": "Um `FlagSet` com `PanicOnError`",
+        "why": "Um panic não é mensagem clara, e o intervalo continua sem conferência."
+      }
+    ]
+  },
+  "ex-ec046d3f": {
+    "prompt": "Um serviço registra com um `JSONHandler` e alguém acrescenta `slog.Info(\"login\", \"user\", u.Email, \"password\", pw)` enquanto depura. Que mudança protege toda chamada futura, seja quem for que a escreva?",
+    "hint": "Ponha a regra onde toda chamada a encontra.",
+    "choices": [
+      {
+        "text": "Apagar a linha e lembrar o time",
+        "why": "Isso conserta esta chamada e depende da memória para a próxima."
+      },
+      {
+        "text": "Subir o nível para `WARN`",
+        "why": "Um aviso com uma senha dentro ainda seria escrito."
+      },
+      {
+        "text": "Um tipo `Password` cujo `LogValue` a esconde",
+        "why": "Isso: o tipo decide como é registrado, com qualquer handler."
+      },
+      {
+        "text": "Trocar para `TextHandler`",
+        "why": "O texto escreve os mesmos valores, em outro formato."
+      }
+    ]
+  },
+  "ex-rg9gkya5": {
+    "prompt": "Ponha estes níveis do `slog` do menos para o mais grave.",
+    "hint": "O logger padrão esconde o primeiro.",
+    "items": [
+      "`DEBUG`",
+      "`INFO`",
+      "`WARN`",
+      "`ERROR`"
+    ]
+  },
+  "ex-5s41d8ym": {
+    "prompt": "Num servidor, toda função recebe `ctx` primeiro e registra com `InfoContext(ctx, …)`. Como um id de requisição definido uma vez no topo chega a cada registro?",
+    "hint": "Quem lê o contexto?",
+    "choices": [
+      {
+        "text": "Cada função o acrescenta às próprias chamadas",
+        "why": "Essa é a repetição que o desenho evita."
+      },
+      {
+        "text": "Um handler o lê do contexto",
+        "why": "Isso: um handler que embrulha o outro o acrescenta no `Handle`."
+      },
+      {
+        "text": "O `slog` o lê de uma variável global",
+        "why": "Nada global está envolvido; o contexto o leva."
+      },
+      {
+        "text": "O `InfoContext` imprime todo valor do contexto",
+        "why": "Ele passa o contexto ao handler; imprimir é escolha do handler."
+      }
+    ]
+  },
+  "ex-ryggntcy": {
+    "prompt": "Um padrão de um arquivo de configuração é compilado com `regexp.MustCompile` numa função `init`. O que acontece no dia em que alguém salva o arquivo com um erro no padrão?",
+    "hint": "Quem escreveu o padrão, o programador ou o operador?",
+    "choices": [
+      {
+        "text": "O padrão é ignorado e tudo casa",
+        "why": "Nada é ignorado; o `MustCompile` dá panic."
+      },
+      {
+        "text": "O build falha antes da implantação",
+        "why": "O arquivo é lido na execução; o build nunca o viu."
+      },
+      {
+        "text": "Um panic logo na partida do programa",
+        "why": "Isso. O `MustCompile` é para padrões no código."
+      },
+      {
+        "text": "Ele é compilado na primeira busca",
+        "why": "A compilação acontece na chamada, no `init`."
+      }
+    ]
+  },
+  "ex-a55n59sw": {
+    "prompt": "Quais destes padrões o `regexp` de Go se recusa a compilar? Escolha todos os que se aplicam.",
+    "hint": "Referências e *lookaround* quebram a promessa de tempo linear.",
+    "choices": [
+      {
+        "text": "`(a)\\1`",
+        "why": "Sim: uma referência."
+      },
+      {
+        "text": "`^(a+)+$`",
+        "why": "Compila; o RE2 o roda em tempo linear."
+      },
+      {
+        "text": "`foo(?=bar)`",
+        "why": "Sim: *lookahead*."
+      },
+      {
+        "text": "`(?P<id>\\d+)`",
+        "why": "Grupos com nome são suportados."
+      }
+    ]
+  },
+  "ex-f44xexp4": {
+    "prompt": "As expressões regulares de Go seguem a sintaxe e as garantias do motor chamado ___, que roda em tempo linear na entrada.",
+    "hint": "Duas letras e um dígito.",
+    "blanks": [
+      {
+        "accept": [
+          "RE2"
+        ]
+      }
+    ]
+  },
+  "ex-qv1kq1m3": {
+    "prompt": "Um binário serve páginas embutidas com `//go:embed static`. Depois de implantá-lo, alguém edita `static/index.html` no disco do servidor. O que os visitantes veem?",
+    "hint": "Quando os arquivos foram copiados?",
+    "choices": [
+      {
+        "text": "A página editada, na hora",
+        "why": "O binário nunca lê o disco para arquivos embutidos."
+      },
+      {
+        "text": "A página do build",
+        "why": "Isso: uma mudança precisa de um build e uma implantação novos."
+      },
+      {
+        "text": "Um 404, já que o arquivo mudou",
+        "why": "A cópia embutida não foi tocada e continua servida."
+      },
+      {
+        "text": "A página editada depois de reiniciar",
+        "why": "Reiniciar roda o mesmo binário com a mesma cópia."
+      }
+    ]
+  },
+  "ex-xzkcpcbw": {
+    "prompt": "Um diretório embutido com `//go:embed config` tem `app.json` e `.secrets.json`. Que arquivo acaba dentro do binário?",
+    "hint": "O que um padrão de diretório simples deixa de fora?",
+    "choices": [
+      {
+        "text": "Os dois, já que o diretório foi citado",
+        "why": "Nomes começados por `.` ficam de fora sem o `all:`."
+      },
+      {
+        "text": "Só `app.json`",
+        "why": "Isso. `all:config` levaria o segredo também."
+      },
+      {
+        "text": "Só `.secrets.json`",
+        "why": "A regra exclui esse, não o `app.json`."
+      },
+      {
+        "text": "Nenhum: o build falha no arquivo oculto",
+        "why": "Arquivos ocultos ficam de fora em silêncio, não são recusados."
+      }
+    ]
+  },
+  "ex-d5yqrx2w": {
+    "prompt": "Associe cada peça da biblioteca padrão ao trabalho que ela faz nestas lições.",
+    "hint": "Cinco lições, cinco pacotes.",
+    "pairs": [
+      {
+        "left": "`time.ParseDuration`",
+        "right": "lê `1h15m30.5s`"
+      },
+      {
+        "left": "`flag.NewFlagSet`",
+        "right": "flags de um subcomando"
+      },
+      {
+        "left": "`slog.LevelVar`",
+        "right": "um nível que muda na execução"
+      },
+      {
+        "left": "`fs.Sub`",
+        "right": "um subdiretório como sistema de arquivos"
+      }
+    ],
+    "right_distractors": [
+      "um padrão compilado uma vez"
+    ]
+  },
+  "ex-j3hzvhmr": {
+    "prompt": "O primeiro teste da lição 25 falhou em `fun` e `fast`. O que foi mudado para ele passar?",
+    "hint": "O teste fez a pergunta certa.",
+    "choices": [
+      {
+        "text": "As contagens esperadas no teste",
+        "why": "O teste estava certo; mudá-lo teria escondido o defeito."
+      },
+      {
+        "text": "O `Count`, que apara a pontuação",
+        "why": "Isso: `strings.TrimFunc` com `notLetter`."
+      },
+      {
+        "text": "A frase, para tirar os pontos",
+        "why": "Isso testaria uma entrada mais fácil e deixaria o defeito lá."
+      },
+      {
+        "text": "O `t.Errorf` trocado por `t.Logf`",
+        "why": "Uma linha de log não reprova um teste, então o defeito passaria em silêncio."
+      }
+    ]
+  },
+  "ex-y3144km9": {
+    "prompt": "Um helper de teste relata falhas sem chamar `t.Helper()`. Para onde o relatório de falha aponta?",
+    "hint": "A demonstração da lição 25 imprimiu a linha 7.",
+    "choices": [
+      {
+        "text": "A declaração da função de teste",
+        "why": "Relatórios apontam a linha que registrou a falha."
+      },
+      {
+        "text": "A última linha do arquivo de teste",
+        "why": "A posição no arquivo não entra nisso."
+      },
+      {
+        "text": "O `t.Errorf` dentro do helper",
+        "why": "Isso; o `t.Helper()` faz ele nomear quem chamou."
+      },
+      {
+        "text": "Nada: a falha não é relatada",
+        "why": "A falha é relatada, numa linha pouco útil."
+      }
+    ]
+  },
+  "ex-qy4w5zat": {
+    "prompt": "No relatório, um subteste iniciado com `t.Run(\"only punctuation\", …)` dentro de `TestCount` se chama `TestCount/___`.",
+    "hint": "Um espaço não sobrevive.",
+    "blanks": [
+      {
+        "accept": [
+          "only_punctuation"
+        ]
+      }
+    ]
+  },
+  "ex-sx39s4zp": {
+    "prompt": "Um teste de tabela compara slices montados a partir de um map e falha em algumas execuções e não em outras, sem código mudado. Que mudança no código testado conserta a causa, e não o sintoma?",
+    "hint": "O `Top` da lição 26.",
+    "choices": [
+      {
+        "text": "Rodar o teste com `-count=1`",
+        "why": "Isso desliga o cache; a ordem continua mudando entre execuções."
+      },
+      {
+        "text": "Marcar a linha com `t.Skip`",
+        "why": "Isso esconde a falha e mantém o defeito."
+      },
+      {
+        "text": "Ordenar o slice esperado no teste",
+        "why": "O resultado continua na ordem do map, então continua variando de execução para execução."
+      },
+      {
+        "text": "Desempatar na ordenação",
+        "why": "Isso: o código impõe uma ordem, então o resultado deixa de depender do map."
+      }
+    ]
+  },
+  "ex-1bsr0k2d": {
+    "prompt": "Por que o `go test .` imprime `(cached)` numa segunda execução sem nada mudado?",
+    "hint": "Ele nomeia um pacote.",
+    "choices": [
+      {
+        "text": "Ele repete um resultado aprovado enquanto código e testes não mudam",
+        "why": "Isso; o `-count=1` força uma execução real."
+      },
+      {
+        "text": "Ele pula testes que passaram na última hora",
+        "why": "O cache é indexado por conteúdo, não por tempo."
+      },
+      {
+        "text": "A segunda execução usou o detector de corridas",
+        "why": "Nada no comando pediu `-race`."
+      },
+      {
+        "text": "O binário de teste era grande demais para recompilar",
+        "why": "O tamanho não entra nisso."
+      }
+    ]
+  },
+  "ex-fqsns4m5": {
+    "prompt": "Associe cada dublê ao trabalho que fez para o `TopOf` na lição 27.",
+    "hint": "Pronto, funcionando, observando.",
+    "pairs": [
+      {
+        "left": "`mapSource`",
+        "right": "serviu documentos da memória"
+      },
+      {
+        "left": "`failingSource`",
+        "right": "levou ao caminho de erro"
+      },
+      {
+        "left": "`spySource`",
+        "right": "pegou um documento nunca fechado"
+      }
+    ],
+    "right_distractors": [
+      "mediu quanto tempo o `Count` levou"
+    ]
+  },
+  "ex-b2jkydj8": {
+    "prompt": "Por que o `Source` é declarado em `wordcount`, e não no pacote de cada implementação?",
+    "hint": "Interfaces de Go são satisfeitas implicitamente.",
+    "choices": [
+      {
+        "text": "Porque uma interface tem de morar com a primeira implementação",
+        "why": "Não existe essa regra em Go."
+      },
+      {
+        "text": "O código que precisa do comportamento o declara",
+        "why": "Isso; as implementações não precisam importá-lo nem saber que ele existe."
+      },
+      {
+        "text": "Para impedir outros pacotes de implementá-lo",
+        "why": "Qualquer tipo com o método o satisfaz, de qualquer pacote."
+      },
+      {
+        "text": "Porque o `go vet` acusa interfaces declaradas ao lado das implementações",
+        "why": "O `go vet` não tem essa conferência."
+      }
+    ]
+  },
+  "ex-j2ymnym2": {
+    "prompt": "Uma função precisa de um sistema de arquivos num teste. Seguindo a lição 27, o que você lhe entrega?",
+    "hint": "Coisas reais que são baratas.",
+    "choices": [
+      {
+        "text": "Um spy de `os.File` escrito à mão",
+        "why": "Isso falsifica algo de que você não é dono; o palpite erra nos erros."
+      },
+      {
+        "text": "Um diretório em `/tmp` num caminho fixo",
+        "why": "Ele colide entre execuções; o `t.TempDir` ou um em memória é melhor."
+      },
+      {
+        "text": "Um `fstest.MapFS` por um parâmetro `fs.FS`",
+        "why": "Isso: um sistema de arquivos real, guardado na memória."
+      },
+      {
+        "text": "Nada: o teste lê a pasta pessoal de quem desenvolve",
+        "why": "Um teste que depende dos arquivos de uma máquina falha em todas as outras."
+      }
+    ]
+  },
+  "ex-c4r332j7": {
+    "prompt": "Um handler define o `Content-Type` depois de escrever o corpo. Que conferência num teste com recorder pega isso?",
+    "hint": "Uma das duas mostra o que foi enviado.",
+    "choices": [
+      {
+        "text": "`rec.Header().Get(\"Content-Type\")`",
+        "why": "Esse é o map vivo, e ele mostra o valor tardio como se tivesse sido enviado."
+      },
+      {
+        "text": "`rec.Result().Header.Get(\"Content-Type\")`",
+        "why": "Isso: os cabeçalhos como um cliente os recebeu."
+      },
+      {
+        "text": "`rec.Body.String()`",
+        "why": "O corpo estava certo; o rótulo estava errado."
+      },
+      {
+        "text": "`rec.Code`",
+        "why": "O status era 200, como devia ser."
+      }
+    ]
+  },
+  "ex-d3acwee0": {
+    "prompt": "O handler de um servidor de teste dorme seis segundos e ignora o contexto da requisição. O cliente desiste depois de 50 ms. Quanto o teste leva, e por quê?",
+    "hint": "O que o `srv.Close` espera?",
+    "choices": [
+      {
+        "text": "50 ms, porque o cliente desistiu",
+        "why": "O cliente retornou então; o teste ainda tinha de fechar o servidor."
+      },
+      {
+        "text": "Cinco segundos, o limite do `srv.Close`",
+        "why": "Aos cinco segundos ele registra um aviso e continua esperando."
+      },
+      {
+        "text": "Cerca de seis segundos: o `srv.Close` espera o que ainda está rodando",
+        "why": "Isso; a lição 28 mediu 6,02 s."
+      },
+      {
+        "text": "Para sempre, porque o handler nunca retorna",
+        "why": "Ele retorna quando o sono termina."
+      }
+    ]
+  },
+  "ex-kb38xvgj": {
+    "prompt": "Quais destes fazem uma requisição do `HTTPSource` parar de esperar um servidor calado? Escolha todos os que se aplicam.",
+    "hint": "Um pertence à chamada, outro ao cliente.",
+    "choices": [
+      {
+        "text": "Um contexto com prazo passado ao `Open`",
+        "why": "Sim, como o teste de timeout da lição 28 fez."
+      },
+      {
+        "text": "Um cliente com o campo `Timeout` definido",
+        "why": "Sim, um limite em toda requisição feita por ele."
+      },
+      {
+        "text": "`http.DefaultClient`",
+        "why": "Ele não tem timeout."
+      },
+      {
+        "text": "`context.Background()`",
+        "why": "Ele não tem prazo."
+      }
+    ]
+  },
+  "ex-7tygsqty": {
+    "prompt": "Num benchmark que usa `for b.Loop()`, e o código antes do laço?",
+    "hint": "Preparação.",
+    "choices": [
+      {
+        "text": "Roda uma vez por rodada",
+        "why": "Roda uma vez no total; só o corpo do laço se repete."
+      },
+      {
+        "text": "Não é cronometrado",
+        "why": "Isso."
+      },
+      {
+        "text": "Precisa chamar `b.ResetTimer()`",
+        "why": "Isso é necessário no estilo antigo com `b.N`, não com o `b.Loop`."
+      },
+      {
+        "text": "É relatado numa coluna separada",
+        "why": "Nenhuma coluna relata a preparação."
+      }
+    ]
+  },
+  "ex-zny03ytv": {
+    "prompt": "Um benchmark relata `16104 B/op` e `2311 allocs/op` para um texto de 2048 palavras. Cerca de quantas alocações é isso por palavra? Dê um número inteiro.",
+    "hint": "2311 dividido por 2048.",
+    "unit": "alocações"
+  },
+  "ex-bsgw56ct": {
+    "prompt": "Um benchmark com `b.N` de uma função pequena e pura relata um tempo bem abaixo da mesma função com `b.Loop`. Qual é a explicação mais provável?",
+    "hint": "A lição 29 desmontou um.",
+    "choices": [
+      {
+        "text": "O `b.Loop` acrescenta um custo fixo grande por rodada",
+        "why": "A diferença era a aritmética que a versão com `b.N` perdeu."
+      },
+      {
+        "text": "O compilador removeu o trabalho não usado",
+        "why": "Isso: o resultado era descartado, então o trabalho foi junto."
+      },
+      {
+        "text": "A versão com `b.N` rodou em mais processadores",
+        "why": "As duas rodaram com o mesmo `GOMAXPROCS`."
+      },
+      {
+        "text": "A função foi guardada em cache depois da primeira chamada",
+        "why": "Go não guarda resultados de funções em cache."
+      }
+    ]
+  },
+  "ex-1dqwsaxf": {
+    "prompt": "Ponha estes na ordem em que o fluxo da lição 29 os usa ao julgar uma mudança candidata.",
+    "hint": "Correção antes de velocidade.",
+    "items": [
+      "`go test . -count=1` no candidato",
+      "`-bench Count -benchmem -count 5` no candidato",
+      "comparar o espalhamento com o do original",
+      "decidir se o ganho vale o código"
+    ]
+  },
+  "ex-b5qsmacp": {
+    "prompt": "Um pacote informa 100% de cobertura. Que conclusão a lição 30 permite?",
+    "hint": "O que uma instrução coberta registra?",
+    "choices": [
+      {
+        "text": "Toda entrada foi tentada",
+        "why": "O `Top` estava em 100% e nunca tinha encontrado `-1`."
+      },
+      {
+        "text": "O pacote não tem corrida de dados",
+        "why": "A cobertura não vê corrida."
+      },
+      {
+        "text": "Cada instrução rodou pelo menos uma vez",
+        "why": "Isso, e nada além disso."
+      },
+      {
+        "text": "Todo resultado foi conferido por uma afirmação",
+        "why": "Um teste sem afirmação cobre toda linha que alcança."
+      }
+    ]
+  },
+  "ex-a1c6pnc2": {
+    "prompt": "Para compilar um programa que registra a própria cobertura enquanto roda, acrescente a flag ___ ao `go build`.",
+    "hint": "A mesma palavra que o `go test` usa para uma porcentagem.",
+    "blanks": [
+      {
+        "accept": [
+          "-cover"
+        ]
+      }
+    ]
+  },
+  "ex-kdxc69p7": {
+    "prompt": "Duas execuções de um `topwords` instrumentado deixaram o `Handler` em 0% e o `main` em 85,7%. O que isso diz sobre onde olhar primeiro?",
+    "hint": "A cobertura do programa responde o que execuções realistas nunca tocam.",
+    "choices": [
+      {
+        "text": "O `Handler` é código morto e deve ser apagado",
+        "why": "Ele é usado por um servidor, só não por este programa."
+      },
+      {
+        "text": "Os testes de unidade não valem nada",
+        "why": "Eles alcançaram o `Handler` por completo; as duas medições respondem perguntas diferentes."
+      },
+      {
+        "text": "Cobertura abaixo de 100% significa que o build falhou",
+        "why": "As duas execuções terminaram e escreveram os contadores."
+      },
+      {
+        "text": "O caminho de uso do `main`",
+        "why": "Isso: a parte do programa que uma invocação real alcança e as execuções não alcançaram."
+      }
+    ]
+  }
+}

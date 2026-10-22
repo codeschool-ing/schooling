@@ -1,0 +1,324 @@
+{
+  "ex-xez3wbkk": {
+    "prompt": "No `spread.go`, três workers percorrem o mesmo canal `jobs`. Quantos workers recebem o job 5?",
+    "hint": "Conte quantas vezes cada número aparece nas três listas.",
+    "choices": [
+      {
+        "text": "Os três, e fica o resultado mais rápido",
+        "why": "Cada número apareceu uma vez nas listas. Um canal entrega cada valor a um receptor."
+      },
+      {
+        "text": "Exatamente um",
+        "why": "Isso. Um valor enviado num canal é recebido uma vez, pela goroutine que o pegar."
+      },
+      {
+        "text": "Dois, para um assumir se o outro falhar",
+        "why": "Nada num canal duplica um valor; redundância teria de ser construída à mão."
+      },
+      {
+        "text": "O w2, porque os jobs são distribuídos em rodízio",
+        "why": "Ninguém distribui: nas duas execuções o job 5 foi para o w1, e as listas não seguiram rodízio."
+      }
+    ]
+  },
+  "ex-s8ww9yhs": {
+    "prompt": "Entre as duas execuções do `spread.go`, os jobs que cada worker pegou mudaram. Por quê?",
+    "hint": "Quando um worker pede o próximo job?",
+    "choices": [
+      {
+        "text": "O canal embaralha os valores antes de entregá-los",
+        "why": "Um canal entrega na ordem em que os valores foram enviados; o que varia é quem recebe cada um."
+      },
+      {
+        "text": "Go atribui jobs a workers por um número aleatório",
+        "why": "Nenhuma atribuição acontece; cada worker pega o próximo job quando fica livre."
+      },
+      {
+        "text": "Cada um pega o próximo job quando fica livre",
+        "why": "Isso. A divisão segue a velocidade, e por isso não é igual de uma execução para outra."
+      },
+      {
+        "text": "A segunda execução teve menos processadores",
+        "why": "As duas rodaram na mesma máquina de quatro processadores."
+      }
+    ]
+  },
+  "ex-2je2d6zm": {
+    "prompt": "O `spread.go` deu a três workers 300 ms de trabalho no total. Dividido com perfeição, quantos milissegundos levaria? A execução levou 120.",
+    "hint": "300 dividido entre três.",
+    "unit": "ms"
+  },
+  "ex-ewvwjnyy": {
+    "prompt": "Um colega muda o `spread.go` para que cada worker feche `jobs` quando vê o canal vazio. O que dá errado?",
+    "hint": "Quem sabe que o envio acabou?",
+    "choices": [
+      {
+        "text": "Um envio posterior do `main` provoca panic",
+        "why": "Isso. Um canal vazio não é um canal terminado; só quem envia sabe quando enviou o último job, como disse a lição 3."
+      },
+      {
+        "text": "Nada, desde que só um worker o feche",
+        "why": "Mesmo um fechamento antecipado quebra o próximo envio do `main`."
+      },
+      {
+        "text": "Os outros workers continuam esperando para sempre",
+        "why": "Fechar encerra todo `range` sobre o canal; esperar não é a falha aqui."
+      },
+      {
+        "text": "Os jobs são feitos duas vezes",
+        "why": "Um canal ainda entrega cada valor uma vez, fechado ou não."
+      }
+    ]
+  },
+  "ex-pvq67z8r": {
+    "prompt": "O `arrival.go` mediu `concurrency is not parallelism` e imprimiu `is` primeiro. Por quê?",
+    "hint": "Uma palavra mais longa demora mais para ser medida.",
+    "choices": [
+      {
+        "text": "A goroutine dela foi iniciada primeiro",
+        "why": "`concurrency` foi iniciada primeiro, no índice 0, e saiu em terceiro."
+      },
+      {
+        "text": "O canal ordena os resultados por tamanho",
+        "why": "Um canal entrega na ordem em que os valores foram enviados, e nada os ordena."
+      },
+      {
+        "text": "O `main` imprime a palavra mais curta primeiro",
+        "why": "O `main` imprime o que chegar; ele não compara nada."
+      },
+      {
+        "text": "O job dela terminou primeiro",
+        "why": "Isso. Os resultados chegam na ordem em que o trabalho terminou."
+      }
+    ]
+  },
+  "ex-m39fza5g": {
+    "prompt": "O `inplace.go` tem quatro goroutines escrevendo numa slice no mesmo instante, e o `-race` não relatou nada. Por que não é uma corrida?",
+    "hint": "Que memória cada goroutine toca?",
+    "choices": [
+      {
+        "text": "Slices são seguras para uso concorrente",
+        "why": "Não são: `append` a partir de várias goroutines é corrida, como a lição 16 mostra."
+      },
+      {
+        "text": "Cada uma escreve só o próprio elemento",
+        "why": "Isso, e o `main` só lê depois de `wg.Wait`."
+      },
+      {
+        "text": "O detector de corridas ignora slices",
+        "why": "Ele observa elementos de slice como qualquer memória."
+      },
+      {
+        "text": "As escritas foram rápidas demais para se sobrepor",
+        "why": "Velocidade não torna uma corrida segura; memória separada torna."
+      }
+    ]
+  },
+  "ex-hy0d8sy8": {
+    "prompt": "Os resultados de um fan-out precisam alimentar um estágio seguinte na ordem da entrada, e o estágio lê de um canal. Que correção serve?",
+    "hint": "Uma das duas correções mantém o canal.",
+    "choices": [
+      {
+        "text": "Escrever numa slice por índice e dispensar o canal",
+        "why": "Isso dá a ordem só quando tudo termina, e o estágio seguinte quer um canal."
+      },
+      {
+        "text": "Usar um worker só para os resultados virem em ordem",
+        "why": "Isso recupera a ordem abrindo mão do fan-out, que era o objetivo."
+      },
+      {
+        "text": "Levar um índice em cada resultado",
+        "why": "Isso. Quem recebe pode recolocar cada resultado no lugar e repassá-los em ordem."
+      },
+      {
+        "text": "Acrescentar `time.Sleep` para os jobs anteriores terminarem antes",
+        "why": "Uma pausa é tempo, não ordem; a lição 1 mostrou que ela não promete nada."
+      }
+    ]
+  },
+  "ex-arhbjzmj": {
+    "prompt": "Várias goroutines chamando ___ numa mesma slice compartilhada é uma corrida, porque todas leem e escrevem o tamanho dela.",
+    "hint": "A função embutida que faz uma slice crescer.",
+    "blanks": [
+      {
+        "accept": [
+          "append",
+          "append()"
+        ]
+      }
+    ]
+  },
+  "ex-asgmz4zf": {
+    "prompt": "No `firsterr.go`, o que `context.Cause(ctx)` devolve que `ctx.Err()` não devolve?",
+    "hint": "Compare `cancel()` com `cancel(err)`.",
+    "choices": [
+      {
+        "text": "Quanto tempo o contexto viveu",
+        "why": "Nenhum dos dois informa uma duração."
+      },
+      {
+        "text": "O erro passado para `cancel(err)`",
+        "why": "Isso: `file 4: checksum mismatch`, enquanto `ctx.Err()` só diz `context canceled`."
+      },
+      {
+        "text": "Todos os erros que os workers juntaram",
+        "why": "Isso é o `errors.Join` da lista juntada; a causa é um erro só, o primeiro."
+      },
+      {
+        "text": "A goroutine que cancelou o contexto",
+        "why": "Contextos não registram goroutine; a causa é um valor de erro."
+      }
+    ]
+  },
+  "ex-z6s5zny0": {
+    "prompt": "Os arquivos 3 e 4 estavam danificados, e os dois erros foram impressos, embora o primeiro tenha cancelado o contexto. Por que o segundo não foi evitado?",
+    "hint": "Quando o `check` olha o contexto?",
+    "choices": [
+      {
+        "text": "As duas leituras já estavam em andamento",
+        "why": "Isso. O `check` olha antes de começar, então o trabalho em andamento termina e o erro dele é guardado."
+      },
+      {
+        "text": "O `cancel(err)` leva 20 ms para chegar às outras goroutines",
+        "why": "Cancelar é imediato; a segunda verificação simplesmente já tinha começado."
+      },
+      {
+        "text": "O `WithCancelCause` ignora o primeiro cancelamento",
+        "why": "As chamadas seguintes é que não mudam nada; a primeira define a causa."
+      },
+      {
+        "text": "O laço de alimentação enviou o arquivo 4 depois do cancelamento",
+        "why": "Os arquivos 1 a 4 saíram na primeira leva, antes de qualquer falha."
+      }
+    ]
+  },
+  "ex-bqrrnxy6": {
+    "prompt": "Por que um worker do `firsterr.go` pula um erro que `errors.Is(err, context.Canceled)` reconhece?",
+    "hint": "Um cancelamento é uma das falhas que estão sendo relatadas?",
+    "choices": [
+      {
+        "text": "Erros de cancelamento não podem ser juntados",
+        "why": "O `errors.Join` aceita qualquer erro."
+      },
+      {
+        "text": "Para manter certa a contagem de arquivos limpos",
+        "why": "Pular com `continue` também pula a contagem; o motivo é o que a lista de erros deve dizer."
+      },
+      {
+        "text": "É consequência de uma falha, e não uma falha",
+        "why": "Isso. Listá-lo enterraria os arquivos danificados sob linhas dizendo `context canceled`."
+      },
+      {
+        "text": "Porque o `check` o devolve como panic",
+        "why": "O `check` devolve `ctx.Err()` como um erro comum."
+      }
+    ]
+  },
+  "ex-72tahj98": {
+    "prompt": "O laço de alimentação do `firsterr.go` envia com `select { case files <- f: case <-ctx.Done(): break feed }`. O que um `files <- f` simples arriscaria quando os workers param de pegar arquivos?",
+    "hint": "Os workers param de ler o canal depois do cancelamento?",
+    "choices": [
+      {
+        "text": "Um panic, porque o contexto fecha `files`",
+        "why": "Um contexto não fecha nada além do próprio canal `Done`."
+      },
+      {
+        "text": "Nada aqui, mas distribuiria arquivos que ninguém verifica",
+        "why": "Isso é parte: aqui os workers ainda esvaziam o canal, pulando cada arquivo, então o laço alimentaria os vinte à toa."
+      },
+      {
+        "text": "O `main` ficaria preso no envio para sempre",
+        "why": "Isso. Um envio precisa de um receptor; o `select` dá ao `main` uma saída, o vazamento que a lição 6 descreveu."
+      },
+      {
+        "text": "Os arquivos seriam enviados na ordem errada",
+        "why": "O laço envia em ordem de qualquer jeito."
+      }
+    ]
+  },
+  "ex-chxpdn1w": {
+    "prompt": "Ponha em ordem os passos do `firsterr.go`, da primeira falha ao relatório final.",
+    "hint": "A causa é definida pela primeira falha, a lista é impressa por último.",
+    "items": [
+      "a verificação de um arquivo danificado falha num worker",
+      "esse worker chama `cancel(err)`",
+      "o laço de alimentação para e fecha `files`",
+      "o `wg.Wait` retorna",
+      "o `errors.Join` imprime cada falha de verdade"
+    ]
+  },
+  "ex-qrrmxpr0": {
+    "prompt": "Associe cada problema de um fan-out à ferramenta que esta lição usou para ele.",
+    "hint": "Uma por seção.",
+    "pairs": [
+      {
+        "left": "resultados chegam na ordem de término",
+        "right": "um índice levado em cada resultado"
+      },
+      {
+        "left": "parar o resto na primeira falha",
+        "right": "`context.WithCancelCause`"
+      },
+      {
+        "left": "guardar cada falha que aconteceu",
+        "right": "`errors.Join`"
+      },
+      {
+        "left": "avisar os workers de que não há mais trabalho",
+        "right": "`close(jobs)` por quem envia"
+      }
+    ],
+    "right_distractors": [
+      "um `time.Sleep` entre envios"
+    ]
+  },
+  "ex-t9g0wz98": {
+    "prompt": "Quais destas afirmações valem para o fan-out como o `spread.go` o monta? Escolha todas as que se aplicam.",
+    "hint": "Pense no que o canal garante e no que ele deixa para o tempo.",
+    "choices": [
+      {
+        "text": "Nenhum job é feito duas vezes",
+        "why": "Sim: cada valor é recebido uma vez."
+      },
+      {
+        "text": "Cada worker recebe o mesmo número de jobs",
+        "why": "As listas tiveram três, quatro e cinco jobs."
+      },
+      {
+        "text": "Um worker mais rápido acaba fazendo mais jobs",
+        "why": "Sim: ele volta ao canal mais cedo."
+      },
+      {
+        "text": "Os resultados voltam na ordem em que os jobs foram enviados",
+        "why": "Eles voltam na ordem de término, como a seção 03 mostrou."
+      }
+    ]
+  },
+  "ex-3mdexn3w": {
+    "prompt": "Na execução do `firsterr.go` que a lição cita, quantos dos 20 arquivos foram verificados sem problema antes de a primeira falha parar o resto?",
+    "hint": "A primeira linha da saída; outras execuções imprimiram outro número.",
+    "unit": "arquivos"
+  },
+  "ex-e31yk8rg": {
+    "prompt": "Três workers dividiram 300 ms de jobs no `spread.go`, e a execução levou 120 ms em vez de 100. De onde vieram os 20 ms a mais?",
+    "hint": "O último job pode ser dividido entre dois workers?",
+    "choices": [
+      {
+        "text": "Iniciar três goroutines custa cerca de 20 ms",
+        "why": "Iniciar uma goroutine custa bem menos que um milissegundo; a lição 2 mede isso."
+      },
+      {
+        "text": "Jobs são indivisíveis, então algum worker termina por último",
+        "why": "Isso. O trabalho não se corta em terços exatos, então a execução dura o quanto dura o worker mais ocupado."
+      },
+      {
+        "text": "A trava em volta de `took` serializou os jobs",
+        "why": "A trava cobre um `append`, uma parte minúscula de cada job; as esperas rodaram em paralelo."
+      },
+      {
+        "text": "O canal não tem buffer, então cada envio espera 20 ms",
+        "why": "Um envio sem buffer espera um receptor, e não um tempo fixo."
+      }
+    ]
+  }
+}

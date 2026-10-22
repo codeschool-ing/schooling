@@ -1,0 +1,307 @@
+{
+  "ex-5nada046": {
+    "prompt": "O `early.go` inicia uma goroutine que imprime uma saudação, depois `main` imprime a sua linha e retorna. Em cinco execuções a saudação não apareceu. Por quê?",
+    "hint": "O que acontece com toda goroutine quando `main` retorna?",
+    "choices": [
+      {
+        "text": "O comando `go` adia uma goroutine até `main` bloquear",
+        "why": "Uma goroutine fica pronta para rodar no momento em que é criada. Nada garante que ela receba um processador antes de `main` retornar, nem que não receba."
+      },
+      {
+        "text": "Retornar de `main` encerra o processo, com goroutines e tudo",
+        "why": "Isso. A goroutine ainda não tinha recebido um processador, e nada pediu a ninguém que esperasse por ela."
+      },
+      {
+        "text": "`fmt.Println` não pode ser chamado de uma goroutine",
+        "why": "O `waited.go` chama a mesma função de uma goroutine e a imprimiu cinco vezes."
+      },
+      {
+        "text": "A saída de uma goroutine vai para a saída de erro, que o laço não mostrou",
+        "why": "Uma goroutine escreve onde o código dela escreve. `Println` escreve na saída padrão, seja quem for que o chame."
+      }
+    ]
+  },
+  "ex-xvtpfjjt": {
+    "prompt": "Alguém conserta o `early.go` acrescentando `time.Sleep(100 * time.Millisecond)` no fim de `main`. A saudação agora aparece na máquina dele. O que há de errado com o conserto?",
+    "hint": "A ordem agora é prometida, ou só provável?",
+    "choices": [
+      {
+        "text": "Nada: 100 ms é mais do que qualquer goroutine precisa para começar",
+        "why": "Quase sempre suficiente não é o mesmo que prometido. Uma máquina carregada pode demorar mais, e o programa não diz pelo que espera."
+      },
+      {
+        "text": "É um palpite sobre tempo, onde `wg.Wait` seria uma promessa",
+        "why": "Isso. `wg.Wait` só retorna depois que a goroutine retornou, em toda máquina e em toda execução."
+      },
+      {
+        "text": "`time.Sleep` bloqueia todas as goroutines, então a saudação não pode sair",
+        "why": "Uma espera bloqueia só a goroutine que a chama. O `wait.go` da lição 1 sobrepôs quatro delas."
+      },
+      {
+        "text": "A espera faz o programa usar um segundo processador",
+        "why": "Dormir não precisa de processador nenhum; muda o tempo, não o paralelismo."
+      }
+    ]
+  },
+  "ex-se79wjze": {
+    "prompt": "Uma goroutine iniciada com `wg.Go` escreve num mapa nil e dá panic. `main` tem um `defer` que imprime uma linha. O que a execução mostra?",
+    "hint": "O `crash.go`.",
+    "choices": [
+      {
+        "text": "A linha adiada, depois o panic, porque `main` se desfaz primeiro",
+        "why": "A chamada adiada pertence à goroutine de `main`, e o panic aconteceu em outra. O processo acabou debaixo de `main` sem rodá-la."
+      },
+      {
+        "text": "Nada: `wg.Go` recupera o panic e o programa segue",
+        "why": "`wg.Go` só o recupera para levantá-lo de novo, que é a anotação `[recovered, repanicked]` no trace."
+      },
+      {
+        "text": "Um trace de panic e status de saída 2, sem a linha adiada",
+        "why": "Isso. Um panic em qualquer goroutine encerra o programa inteiro, e o defer de `main` não roda."
+      },
+      {
+        "text": "`main is done`, porque `wg.Wait` retorna quando uma goroutine falha",
+        "why": "`wg.Wait` não retornou: o processo acabou antes."
+      }
+    ]
+  },
+  "ex-08r2trg6": {
+    "prompt": "Num trace de panic, a linha `created by sync.(*WaitGroup).Go in goroutine 1` diz que a goroutine que falhou foi iniciada a partir da goroutine de número ___, que é `main`.",
+    "hint": "O número no fim dessa linha.",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "um"
+        ]
+      }
+    ]
+  },
+  "ex-ck5e6chc": {
+    "prompt": "`x := 1; go show(x); x = 2` — a goroutine roda um instante depois de `x = 2`. O que `show` recebe?",
+    "hint": "Quando os argumentos de um comando `go` são avaliados?",
+    "choices": [
+      {
+        "text": "1",
+        "why": "Isso. Os argumentos são avaliados pela goroutine que executa o comando `go`, naquele momento, e copiados."
+      },
+      {
+        "text": "2, porque a goroutine lê `x` quando começa a rodar",
+        "why": "Isso é o que faria uma closure lendo `x`. Os argumentos de uma chamada já foram copiados quando o comando rodou."
+      },
+      {
+        "text": "1 ou 2, dependendo do escalonador",
+        "why": "Não há corrida aqui: o valor foi copiado antes de a goroutine existir."
+      },
+      {
+        "text": "Um erro de compilação, já que `x` muda depois do `go`",
+        "why": "Nada proíbe mudar uma variável depois de passar o seu valor a uma chamada."
+      }
+    ]
+  },
+  "ex-3nnq6wgc": {
+    "prompt": "O `many.go` informou `per goroutine: 2048 bytes` de pilha. Quantos kilobytes são?",
+    "hint": "1024 bytes por kilobyte.",
+    "unit": "KiB"
+  },
+  "ex-yc8qna0c": {
+    "prompt": "`ulimit -s` imprimiu `8192` e uma goroutine começou com 2048 bytes. Por que a lição diz que uma thread custa mais do que o tamanho bruto sugere?",
+    "hint": "Duas diferenças: quando a pilha é reservada, e o que criar uma envolve.",
+    "choices": [
+      {
+        "text": "Threads usam 8192 bytes, quatro vezes uma goroutine",
+        "why": "`ulimit -s` informa kilobytes: 8192 KiB são 8 MiB, quatro mil vezes o começo de uma goroutine."
+      },
+      {
+        "text": "A pilha de 8 MiB é reservada de antemão, e cada uma é uma chamada de sistema",
+        "why": "Isso. A pilha de uma goroutine começa com dois kilobytes, só cresce quando precisa, e iniciar uma nunca sai do processo."
+      },
+      {
+        "text": "A pilha de uma thread não pode crescer, então é dimensionada para o pior caso",
+        "why": "O ponto da seção é a reserva e a chamada de sistema, não uma regra sobre crescimento."
+      },
+      {
+        "text": "O kernel copia a pilha de toda thread a cada troca",
+        "why": "Nenhuma cópia acontece numa troca. O runtime só copia a pilha de uma goroutine quando ela cresce."
+      }
+    ]
+  },
+  "ex-50tw4yts": {
+    "prompt": "O `many.go` imprimiu `goroutines: 100001` enquanto as goroutines esperavam, e `after they return: 1`. O que é a uma a mais em 100001?",
+    "hint": "Que goroutine estava viva antes do laço e depois dele?",
+    "choices": [
+      {
+        "text": "A goroutine que fecha `release`",
+        "why": "O próprio `main` o fecha; nenhuma goroutine separada faz isso."
+      },
+      {
+        "text": "O coletor de lixo, contado como goroutine",
+        "why": "O `NumGoroutine` não o contou: depois que elas retornaram a contagem foi 1, e essa é `main`."
+      },
+      {
+        "text": "`main`",
+        "why": "Isso. `main` roda numa goroutine própria, a que continua viva no fim."
+      },
+      {
+        "text": "Um erro de um a mais em `wg.Go`",
+        "why": "`wg.Go` iniciou exatamente uma goroutine por chamada. A extra é a que o chamou."
+      }
+    ]
+  },
+  "ex-d7e1r20x": {
+    "prompt": "Um servidor mantém uma goroutine por conexão aberta. Sob carga ele usa 3 GB e mantém 40.000 goroutines. Pela seção 03, para onde vai a maior parte da memória?",
+    "hint": "40.000 vezes dois kilobytes dá cerca de 80 MB.",
+    "choices": [
+      {
+        "text": "Para as pilhas iniciais das goroutines, dois kilobytes cada",
+        "why": "Elas somam uns 80 MB, uma parte pequena de 3 GB."
+      },
+      {
+        "text": "Para o que as goroutines seguram: buffers, conexões e os dados delas",
+        "why": "Isso. A goroutine em si é o piso; uma de verdade segura aquilo em que trabalha, e é isso que enche a memória."
+      },
+      {
+        "text": "Para 40.000 threads do sistema operacional",
+        "why": "As goroutines ficam em poucas threads, mais ou menos `GOMAXPROCS` mais uma ou duas de sobra."
+      },
+      {
+        "text": "Para as filas do escalonador",
+        "why": "Uma fila guarda referências a goroutines, não cópias delas, e quase não custa nada."
+      }
+    ]
+  },
+  "ex-7x38mt0t": {
+    "prompt": "Associe cada letra do escalonador ao que ela representa.",
+    "hint": "Uma é código, uma é coisa do sistema operacional, uma é uma licença.",
+    "pairs": [
+      {
+        "left": "G",
+        "right": "uma goroutine: a pilha e até onde ela chegou"
+      },
+      {
+        "left": "M",
+        "right": "uma thread do sistema operacional"
+      },
+      {
+        "left": "P",
+        "right": "uma licença para rodar código Go, `GOMAXPROCS` delas"
+      }
+    ],
+    "right_distractors": [
+      "uma trava que protege memória compartilhada"
+    ]
+  },
+  "ex-qyy31hnh": {
+    "prompt": "Em 505ms o trace mostrou `runqueue=2` e filas locais `[ 1 0 0 1 ]`, com os quatro Ps ocupados. Quantas goroutines do `busy.go` estavam esperando em vez de rodando?",
+    "hint": "A fila global mais todas as filas locais.",
+    "unit": "goroutines"
+  },
+  "ex-s1b3v2fn": {
+    "prompt": "A fila local de um P está vazia enquanto outro P está atrasado. O que o escalonador faz?",
+    "hint": "A seção 03 dá nome ao movimento com um verbo do crime.",
+    "choices": [
+      {
+        "text": "Deixa o P ocioso esperando até `main` lhe dar trabalho",
+        "why": "`main` não distribui goroutines; o escalonador faz isso sozinho."
+      },
+      {
+        "text": "Inicia outra thread para cada goroutine que espera",
+        "why": "As threads continuam poucas. Oito goroutines rodaram em cinco threads."
+      },
+      {
+        "text": "O P ocioso rouba metade da fila do outro",
+        "why": "Isso, depois de olhar a fila global. O roubo de trabalho mantém todo processador ocupado enquanto houver trabalho."
+      },
+      {
+        "text": "Aumenta o `GOMAXPROCS` para acompanhar o atraso",
+        "why": "`GOMAXPROCS` é fixo na execução, a não ser que o programa o mude. O trace disse 4 do começo ao fim."
+      }
+    ]
+  },
+  "ex-rztj45f6": {
+    "prompt": "Uma goroutine faz uma chamada de sistema que bloqueia por dois segundos. `GOMAXPROCS` é 4 e outras três goroutines estão prontas. O que acontece com o P dela?",
+    "hint": "A thread está presa no kernel; a licença não precisa estar.",
+    "choices": [
+      {
+        "text": "Fica presa com a thread, deixando três Ps para as goroutines prontas",
+        "why": "O runtime não deixa uma thread bloqueada segurar uma licença que ela não pode usar."
+      },
+      {
+        "text": "É passado a outra thread, e os quatro Ps continuam rodando código Go",
+        "why": "Isso. Essa passagem é o motivo de um programa Go ter algumas threads a mais que processadores."
+      },
+      {
+        "text": "O programa inteiro pausa até a chamada retornar",
+        "why": "Só aquela goroutine e a thread dela esperam. As outras seguem."
+      },
+      {
+        "text": "A goroutine é preemptada por um sinal e a chamada é cancelada",
+        "why": "A preempção interrompe código Go que roda demais; ela não cancela uma chamada de sistema."
+      }
+    ]
+  },
+  "ex-22qhh35r": {
+    "prompt": "O `hog.go` repete `for {}` num processador só. Com as configurações padrão `main` ainda imprimiu; com `GODEBUG=asyncpreemptoff=1` o programa travou. O que essa configuração tirou?",
+    "hint": "Desde o Go 1.14 o runtime interrompe uma goroutine que roda há muito tempo de um jeito específico.",
+    "choices": [
+      {
+        "text": "O segundo processador em que `main` rodava",
+        "why": "O próprio `hog.go` definiu `GOMAXPROCS` como 1, nas duas execuções."
+      },
+      {
+        "text": "O timer que acorda `main` da espera",
+        "why": "O timer disparou; `main` só nunca recebeu o processador de volta para agir."
+      },
+      {
+        "text": "A preempção por sinal, sobrando só a que ocorre numa chamada de função",
+        "why": "Isso. O laço não chama função nenhuma, então nada conseguia tomar o processador de volta."
+      },
+      {
+        "text": "As pausas do coletor de lixo",
+        "why": "A configuração é sobre preempção; o coletor não tem nada a ver com esse travamento."
+      }
+    ]
+  },
+  "ex-83vyskr9": {
+    "prompt": "O `timeout` parou o `hog` travado depois de três segundos, e o shell informou o status de saída como ___.",
+    "hint": "A última linha da transcrição do `hog`.",
+    "blanks": [
+      {
+        "accept": [
+          "124"
+        ]
+      }
+    ]
+  },
+  "ex-rx9h6qeg": {
+    "prompt": "Ordene pelo tamanho com que cada um começa, do menor para o maior.",
+    "hint": "A pilha de uma goroutine, a pilha de uma thread, e o que cem mil goroutines ocuparam.",
+    "items": [
+      "a pilha de uma goroutine, 2 KiB",
+      "a pilha de uma thread, 8 MiB",
+      "as pilhas de cem mil goroutines, 195 MiB"
+    ]
+  },
+  "ex-yea0epff": {
+    "prompt": "Um programa inicia uma goroutine por arquivo para calcular o hash de 10.000 arquivos, depois `main` imprime \"all hashed\" e retorna. Algumas execuções imprimem menos hashes do que arquivos. Que mudança conserta para toda execução?",
+    "hint": "A lição 2 seção 02.",
+    "choices": [
+      {
+        "text": "Baixar para 1.000 goroutines por vez",
+        "why": "O custo das goroutines não é o problema; o problema é `main` retornar antes de elas terminarem."
+      },
+      {
+        "text": "Definir `GOMAXPROCS` como o número de arquivos",
+        "why": "Mais paralelismo as deixa mais rápidas, e ainda deixa `main` livre para retornar antes."
+      },
+      {
+        "text": "Iniciá-las com `wg.Go` e chamar `wg.Wait` antes de imprimir",
+        "why": "Isso. `wg.Wait` só retorna depois de toda goroutine retornar, o que é uma promessa e não um tempo."
+      },
+      {
+        "text": "Dormir um segundo por mil arquivos antes de imprimir",
+        "why": "Uma espera suficiente nesta máquina é um palpite sobre a próxima."
+      }
+    ]
+  }
+}
