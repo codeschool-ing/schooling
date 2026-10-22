@@ -34,11 +34,16 @@ Build it, and start the application in a second terminal. The `grep` keeps only 
 the migration; without it you see the whole startup, as in earlier lessons:
 
 ```
-MISSING CAPTURE build
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
 ```
 
 ```
-MISSING CAPTURE startup
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'Flyway|DbMigrate|Started Bookshop'
+2026-10-22T19:38:25.375-03:00  INFO 491 --- [bookshop] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/bookshop (PostgreSQL 16.15)
+2026-10-22T19:38:25.520-03:00  INFO 491 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-22T19:38:25.533-03:00  INFO 491 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - stock and orders"
+2026-10-22T19:38:25.576-03:00  INFO 491 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v3 (execution time 00:00.032s)
+2026-10-22T19:38:28.170-03:00  INFO 491 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 6.316 seconds (process running for 6.902)
 ```
 
 Flyway found the database at version 2, where lesson 13 left it, and applied `V3`. Leave the
@@ -50,26 +55,46 @@ Ask for one Dom Casmurro and two copies of Frankenstein, of which the shop has o
 the line break the JSON does not end with:
 
 ```
-MISSING CAPTURE fail
+ana@vm:~/bookshop$ curl -s -i -w '\n' -H "Content-Type: application/json" -d '{"customer":"ana","lines":[{"bookId":1,"quantity":1},{"bookId":3,"quantity":2}]}' localhost:8080/orders
+HTTP/1.1 409 
+Content-Type: application/problem+json
+Transfer-Encoding: chunked
+Date: Thu, 22 Oct 2026 22:38:28 GMT
+
+{"detail":"Only 1 of 'Frankenstein' left, 2 wanted","instance":"/orders","status":409,"title":"Out of stock","type":"https://bookshop.example/problems/out-of-stock"}
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books/1
+{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990,"stock":5}
 ```
 
-The `409` is the `ApiErrorHandler` answering for `OutOfStockException`. What matters is the last
-command: Dom Casmurro still has 5 copies. The first line of the order was handled before the second
-failed, `take(1)` ran on it, and the change is gone, because the exception left `place` and Spring
-rolled the whole transaction back. No `customer_order` row was written either.
+The `409` is the `ApiErrorHandler` answering for `OutOfStockException`. The command that matters is
+the last one: Dom Casmurro still has 5 copies. The first line of the order was handled before the
+second one failed. `take(1)` ran on Dom Casmurro, and Hibernate even sent its `update` to the database,
+as the log in the next section shows. The change is gone all the same, because the exception left
+`place` and Spring rolled the whole transaction back. No `customer_order` row was written either.
 
 An order the shop can fill goes through, and both stocks move:
 
 ```
-MISSING CAPTURE ok
+ana@vm:~/bookshop$ curl -s -i -w '\n' -H "Content-Type: application/json" -d '{"customer":"ana","lines":[{"bookId":1,"quantity":1},{"bookId":2,"quantity":2}]}' localhost:8080/orders
+HTTP/1.1 201 
+Location: /orders/1
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Thu, 22 Oct 2026 22:38:28 GMT
+
+{"id":1,"customer":"ana","placedAt":"2026-10-22T22:38:28Z","lines":[{"bookId":1,"title":"Dom Casmurro","quantity":1,"priceCents":3990},{"bookId":2,"title":"The Time Machine","quantity":2,"priceCents":2950}],"totalCents":9890}
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books/1
+{"id":1,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990,"stock":4}
+ana@vm:~/bookshop$ curl -s -w '\n' localhost:8080/books/2
+{"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950,"stock":3}
 ```
 
 ## What rolls back, and what does not
 
 By default Spring rolls back when a `RuntimeException` or an `Error` leaves the method, and **commits
-when a checked exception leaves it**. The rule comes from the old Java EE convention that a checked
-exception is a business outcome the caller is expected to handle, not a failure. It surprises people
-who declare `throws SomeCheckedException` on a service method and find the half-done work committed.
+when a checked exception leaves it**. The rule comes from EJB, where a checked exception meant a business outcome the caller was expected
+to handle rather than a failure. It surprises people who declare `throws SomeCheckedException` on a
+service method and find the half-done work committed.
 `OutOfStockException` extends `RuntimeException`, so it is on the right side of the rule. A method that
 must roll back on a checked exception says so with
 `@Transactional(rollbackFor = SomeCheckedException.class)`.

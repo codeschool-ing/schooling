@@ -103,6 +103,9 @@ ana@vm:~/bookshop$ curl -s localhost:8080/books -H 'Content-Type: application/js
 }
 ```
 
+`python3 -m json.tool` writes the `ã` of `não` as `\u00e3`, which is the same character in JSON; a
+browser or a JSON library shows it as `ã`.
+
 `must be a valid ISBN-13` stayed in English because `@ValidIsbn` declares its message as a plain
 sentence. The standard constraints declare theirs as keys in braces, such as
 `{jakarta.validation.constraints.NotBlank.message}`, which Hibernate Validator looks up in a bundle per
@@ -128,7 +131,8 @@ ana@vm:~/bookshop$ python3 -c 'import json; print(json.dumps({"isbn": "978650000
 ```
 
 Two constraints failed and one message reached the client; `detail` says one field, because it counts
-the map's entries. Which of the two messages wins is not defined. For a form that is
+the map's entries. Which of the two messages wins is not defined, and that is not a manner of speaking:
+another run of this same request, made while this lesson was recorded, kept the other one. For a form that is
 enough: the person fixes the title, sends it again, and meets the other message if it still applies. A
 client that must show every reason at once needs a list per field, `Map<String, List<String>>`, which is
 a small change the bookshop does not need.

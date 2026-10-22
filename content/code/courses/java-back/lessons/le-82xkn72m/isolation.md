@@ -29,7 +29,16 @@ The bookshop never chose a level, so it runs at PostgreSQL's default, `READ COMM
 says so when asked over the same connection the application uses:
 
 ```
-MISSING CAPTURE isolation
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'SHOW transaction_isolation' -c 'SHOW max_connections'
+ transaction_isolation 
+-----------------------
+ read committed
+(1 row)
+
+ max_connections 
+-----------------
+ 100
+(1 row)
 ```
 
 `max_connections` is the other number in that output, and section 07 comes back to it.
@@ -49,7 +58,29 @@ stock and sleeps for two seconds; meanwhile the second, at the default level, ta
 When the first one wakes and tries to take a copy too, PostgreSQL refuses:
 
 ```
-MISSING CAPTURE rr
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'BEGIN ISOLATION LEVEL REPEATABLE READ' -c 'SELECT stock FROM book WHERE id = 4' -c 'SELECT pg_sleep(2)' -c 'UPDATE book SET stock = stock - 1 WHERE id = 4' -c 'COMMIT' &
+sleep 0.5
+psql postgresql://bookshop:bookshop@localhost/bookshop -c 'UPDATE book SET stock = stock - 1 WHERE id = 4'
+wait
+BEGIN
+ stock 
+-------
+     5
+(1 row)
+
+UPDATE 1
+ pg_sleep 
+----------
+ 
+(1 row)
+
+ERROR:  could not serialize access due to concurrent update
+ROLLBACK
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'SELECT stock FROM book WHERE id = 4'
+ stock 
+-------
+     4
+(1 row)
 ```
 
 The second transaction committed and the first was refused, so the stock went from 5 to 4 once.

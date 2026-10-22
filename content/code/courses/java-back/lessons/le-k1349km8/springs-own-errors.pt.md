@@ -13,17 +13,17 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/j
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:22 GMT
+Date: Thu, 22 Oct 2026 22:40:43 GMT
 Connection: close
 
-{"timestamp":"2026-10-16T23:42:22.353Z","status":400,"error":"Bad Request","path":"/books"}
+{"timestamp":"2026-10-22T22:40:43.725Z","status":400,"error":"Bad Request","path":"/books"}
 ana@vm:~/bookshop$ curl -si localhost:8080/nope -w '\n'
 HTTP/1.1 404 
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:22 GMT
+Date: Thu, 22 Oct 2026 22:40:43 GMT
 
-{"timestamp":"2026-10-16T23:42:22.385Z","status":404,"error":"Not Found","path":"/nope"}
+{"timestamp":"2026-10-22T22:40:43.772Z","status":404,"error":"Not Found","path":"/nope"}
 ```
 
 Dois formatos numa mesma API é pior que qualquer um dos dois sozinho. Um cliente que lê `type` e
@@ -41,7 +41,7 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/j
 HTTP/1.1 400 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 Connection: close
 
 {"detail":"Failed to read request","instance":"/books","status":400,"title":"Bad Request"}
@@ -49,7 +49,7 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/j
 HTTP/1.1 400 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 Connection: close
 
 {"detail":"Failed to read request","instance":"/books","status":400,"title":"Bad Request"}
@@ -57,7 +57,7 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books/abc -w '\n'
 HTTP/1.1 400 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 Connection: close
 
 {"detail":"Failed to convert 'id' with value: 'abc'","instance":"/books/abc","status":400,"title":"Bad Request"}
@@ -65,7 +65,7 @@ ana@vm:~/bookshop$ curl -si localhost:8080/nope -w '\n'
 HTTP/1.1 404 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 
 {"detail":"No static resource nope.","instance":"/nope","status":404,"title":"Not Found"}
 ana@vm:~/bookshop$ curl -si -X DELETE localhost:8080/books/1 -w '\n'
@@ -73,7 +73,7 @@ HTTP/1.1 405
 Allow: GET
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 
 {"detail":"Method 'DELETE' is not supported.","instance":"/books/1","status":405,"title":"Method Not Allowed"}
 ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: text/plain' -d 'hello' -w '\n'
@@ -81,7 +81,7 @@ HTTP/1.1 415
 Accept: application/json, application/*+json
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 
 {"detail":"Content-Type 'text/plain;charset=UTF-8' is not supported.","instance":"/books","status":415,"title":"Unsupported Media Type"}
 ```
@@ -96,7 +96,7 @@ Toda resposta é `application/problem+json` agora, e cada status é o que o HTTP
 | um método que o caminho não aceita | 405 | `HttpRequestMethodNotSupportedException` |
 | um `Content-Type` que nada consegue ler | 415 | `HttpMediaTypeNotSupportedException` |
 
-O 405 e o 415 trazem também um cabeçalho, porque o HTTP pede um. `Allow: GET` lista os métodos que
+O 405 e o 415 trazem também um cabeçalho, que diz ao cliente o que teria funcionado. `Allow: GET` lista os métodos que
 `/books/1` aceita, e `Accept` lista os media types que `/books` consegue ler. O 404 de `/nope` fala em
 recurso estático por causa de como o Spring MVC procura: um caminho que nenhum controller mapeia é
 oferecido por último ao handler que serve arquivos de `src/main/resources/static`, e a exceção desse
@@ -114,11 +114,11 @@ para olhar quando uma resposta surpreende. Com a aplicação iniciada com
 a resposta dela foi a da primeira, palavra por palavra.
 
 ```
-2026-10-16T20:42:41.715-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input within/between Object entries]
-2026-10-16T20:42:41.746-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: "abc"]
-2026-10-16T20:42:41.792-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource nope for request '/nope'.]
-2026-10-16T20:42:41.818-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported]
-2026-10-16T20:42:41.874-03:00 DEBUG 16814 --- [bookshop] [nio-8081-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'text/plain;charset=UTF-8' is not supported]
+2026-10-22T19:41:05.060-03:00 DEBUG 5696 --- [bookshop] [nio-8081-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected end-of-input within/between Object entries]
+2026-10-22T19:41:05.094-03:00 DEBUG 5696 --- [bookshop] [nio-8081-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'id': Failed to convert value of type 'java.lang.String' to required type 'long'; For input string: "abc"]
+2026-10-22T19:41:05.134-03:00 DEBUG 5696 --- [bookshop] [nio-8081-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource nope for request '/nope'.]
+2026-10-22T19:41:05.168-03:00 DEBUG 5696 --- [bookshop] [nio-8081-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'DELETE' is not supported]
+2026-10-22T19:41:05.196-03:00 DEBUG 5696 --- [bookshop] [nio-8081-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'text/plain;charset=UTF-8' is not supported]
 ```
 
 Cada linha nomeia a exceção e a mensagem dela, que muitas vezes diz mais que a resposta disse. A

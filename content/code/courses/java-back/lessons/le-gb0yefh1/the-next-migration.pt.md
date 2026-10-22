@@ -57,7 +57,7 @@ vai tentar o V3 de novo desde o começo. Nem todo banco consegue isso. O MySQL c
 `ALTER` no momento em que roda, então a mesma falha lá deixa a tabela para trás e uma linha de falha no
 histórico, e alguém tem de limpar as duas coisas à mão antes de qualquer coisa andar.
 
-Agora leia por que falhou, porque essa é a falha pela qual as migrações são conhecidas. Uma coluna
+Agora leia por que falhou. Uma coluna
 `NOT NULL` sem default não pode ser acrescentada a uma tabela que tem linhas, já que toda linha existente
 violaria a regra no instante em que a coluna aparecesse. Num banco vazio, o mesmo arquivo funciona: no
 notebook de um colega novo, nos testes da aula 19, que partem do zero, e em toda verificação que nunca

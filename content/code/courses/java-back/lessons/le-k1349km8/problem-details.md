@@ -56,14 +56,14 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
 HTTP/1.1 404 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 
 {"detail":"No book has id 99","instance":"/books/99","status":404,"title":"Book not found","type":"https://bookshop.example/problems/book-not-found"}
 ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "title": "Dom Casmurro", "author": "Machado de Assis", "priceCents": 3990}' -w '\n'
 HTTP/1.1 409 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:38 GMT
+Date: Thu, 22 Oct 2026 22:40:59 GMT
 
 {"detail":"A book with ISBN 9786500000016 is already in the catalogue","instance":"/books","status":409,"title":"Duplicate ISBN","type":"https://bookshop.example/problems/duplicate-isbn"}
 ```

@@ -14,7 +14,10 @@ Spring Boot's pool is **HikariCP**, which came with the JPA starter. Its startup
 every log since lesson 9; with the name section 02 gave it, they read:
 
 ```
-MISSING CAPTURE hikari
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'hikari'
+2026-10-22T19:38:24.890-03:00  INFO 491 --- [bookshop] [           main] com.zaxxer.hikari.HikariDataSource       : bookshop-pool - Starting...
+2026-10-22T19:38:25.354-03:00  INFO 491 --- [bookshop] [           main] com.zaxxer.hikari.pool.HikariPool        : bookshop-pool - Added connection org.postgresql.jdbc.PgConnection@53d6e959
+2026-10-22T19:38:25.355-03:00  INFO 491 --- [bookshop] [           main] com.zaxxer.hikari.HikariDataSource       : bookshop-pool - Start completed.
 ```
 
 ## The three lines
@@ -40,7 +43,10 @@ spends waiting for a lock. That makes exhaustion easy to produce. Restart the ap
 second terminal with a pool of two connections, overriding the property from the command line:
 
 ```
-MISSING CAPTURE poolstart
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.datasource.hikari.maximum-pool-size=2 | grep -E 'hikari'
+2026-10-22T19:39:27.054-03:00  INFO 2764 --- [bookshop] [           main] com.zaxxer.hikari.HikariDataSource       : bookshop-pool - Starting...
+2026-10-22T19:39:27.753-03:00  INFO 2764 --- [bookshop] [           main] com.zaxxer.hikari.pool.HikariPool        : bookshop-pool - Added connection org.postgresql.jdbc.PgConnection@11e9ac24
+2026-10-22T19:39:27.754-03:00  INFO 2764 --- [bookshop] [           main] com.zaxxer.hikari.HikariDataSource       : bookshop-pool - Start completed.
 ```
 
 In a third terminal, `psql` locks The Time Machine's row for eight seconds, the way a transaction
@@ -48,21 +54,38 @@ that called something slow would: `BEGIN`, a locking read, `pg_sleep(8)` and onl
 the first terminal, while that runs, three customers order The Time Machine at once:
 
 ```
-MISSING CAPTURE exhaust
+ana@vm:~/bookshop$ for c in ana bia cris; do curl -s -o /dev/null -w "$c %{http_code} %{time_total}s\n" -H "Content-Type: application/json" -d "{\"customer\":\"$c\",\"lines\":[{\"bookId\":2,\"quantity\":1}]}" localhost:8080/orders & done; wait
+bia 500 5.260944s
+ana 201 7.127874s
+cris 201 7.131366s
 ```
 
 ```
-MISSING CAPTURE exhaustpsql
+ana@vm:~$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'BEGIN' -c 'SELECT title, stock FROM book WHERE id = 2 FOR UPDATE' -c 'SELECT pg_sleep(8)' -c 'COMMIT'
+BEGIN
+      title       | stock 
+------------------+-------
+ The Time Machine |     3
+(1 row)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+
+COMMIT
 ```
 
 ```
-MISSING CAPTURE exhaustlog
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.datasource.hikari.maximum-pool-size=2 | grep -E 'Connection is not available'
+2026-10-22T19:39:39.420-03:00  WARN 2764 --- [bookshop] [nio-8080-exec-2] org.hibernate.orm.jdbc.error             : bookshop-pool - Connection is not available, request timed out after 5005ms (total=2, active=2, idle=0, waiting=0)
+java.sql.SQLTransientConnectionException: bookshop-pool - Connection is not available, request timed out after 5005ms (total=2, active=2, idle=0, waiting=0)
 ```
 
-Read the three answers against the pool. The first two requests each borrowed a connection and sat in
-`findByIdForUpdate`, waiting for `psql` to let go of the row: they finished once the eight seconds
-were up and placed their orders. The third found both connections lent out, waited for one for
-5000 ms, and failed. HikariCP's message counts the pool at that instant: two connections in total,
+Read the three answers against the pool. Two of the requests, ana's and cris's here, each borrowed a
+connection and sat in `findByIdForUpdate`, waiting for `psql` to let go of the row: they finished once
+the eight seconds were up, about 7 seconds after they were sent, and placed their orders. The third,
+bia's, found both connections lent out, waited for one for 5 seconds, and failed. HikariCP's message counts the pool at that instant: two connections in total,
 both active, none idle. That failure has no handler of its own, so it comes back as a `500`, with the
 detail kept in the server's log.
 

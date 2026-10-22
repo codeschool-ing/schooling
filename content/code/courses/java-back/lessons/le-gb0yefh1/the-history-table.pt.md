@@ -39,7 +39,7 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'o\.f\.'
 
 ## Editando uma migração que já rodou
 
-Agora o erro que toda equipe comete uma vez. Alguém percebe que Frankenstein deveria custar 36,00 e não
+Agora um erro comum. Alguém percebe que Frankenstein deveria custar 36,00 e não
 35,00, abre o `V2__first_titles.sql` e corrige lá, porque é lá que o preço está escrito. Pare a
 aplicação e faça o mesmo:
 
@@ -53,8 +53,7 @@ Migration checksum mismatch for migration version 2
 Either revert the changes to the migration, or run repair to update the schema history.
 ```
 
-**O Flyway se recusou a iniciar.** O arquivo não bate mais com a linha que o registrou, e o motivo
-importa mais que o preço. Este banco rodou o V2 antigo e guarda 3500; um banco criado amanhã rodaria o V2
+**O Flyway se recusou a iniciar.** O arquivo não bate mais com a linha que o registrou. Este banco rodou o V2 antigo e guarda 3500; um banco criado amanhã rodaria o V2
 novo e guardaria 3600. Dois bancos montados a partir do que parece o mesmo conjunto de arquivos
 discordariam, e nada jamais diria qual está errado. O checksum é como o Flyway percebe que a história foi
 reescrita, e ele para antes de qualquer estrago.

@@ -57,7 +57,7 @@ the top. Not every database can do this. MySQL commits each `CREATE` and `ALTER`
 the same failure there leaves the table behind and a failed row in the history, and somebody has to
 clean up both by hand before anything moves.
 
-Now read why it failed, because this is the failure migrations are known for. A `NOT NULL` column with
+Now read why it failed. A `NOT NULL` column with
 no default cannot be added to a table that has rows, since every existing row would break the rule the
 moment the column appeared. On an empty database the same file succeeds: on a new colleague's laptop, in
 lesson 19's tests, which start from nothing, and in every check that never meets real data. **A

@@ -39,7 +39,7 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'o\.f\.'
 
 ## Editing a migration that already ran
 
-Now the mistake every team makes once. Somebody notices that Frankenstein should cost 36.00 rather than
+Now a common mistake. Somebody notices that Frankenstein should cost 36.00 rather than
 35.00, opens `V2__first_titles.sql`, and corrects it there, because that is where the price is written.
 Stop the application and do the same:
 
@@ -53,8 +53,7 @@ Migration checksum mismatch for migration version 2
 Either revert the changes to the migration, or run repair to update the schema history.
 ```
 
-**Flyway refused to start.** The file no longer matches the row that recorded it, and the reason
-matters more than the price. This database ran the old V2 and holds 3500; a database created tomorrow
+**Flyway refused to start.** The file no longer matches the row that recorded it. This database ran the old V2 and holds 3500; a database created tomorrow
 would run the new V2 and hold 3600. Two databases built from what looks like the same set of files
 would disagree, and nothing would ever say which one is wrong. The checksum is how Flyway notices that
 history was rewritten, and it stops before any harm is done.

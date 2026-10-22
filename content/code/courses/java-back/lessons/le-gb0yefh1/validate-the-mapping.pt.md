@@ -68,7 +68,8 @@ duas anotações, e dois imports vêm junto:
       "note": "O resto da entidade é o da aula 10, sem mudança."
     }
   ]
-}```
+}
+```
 
 Compile e inicie mais uma vez. Agora é o log inteiro, como o segundo terminal o mostra:
 

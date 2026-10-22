@@ -105,6 +105,9 @@ ana@vm:~/bookshop$ curl -s localhost:8080/books -H 'Content-Type: application/js
 }
 ```
 
+O `python3 -m json.tool` escreve o `ã` de `não` como `\u00e3`, que é o mesmo caractere em JSON; um
+navegador ou uma biblioteca JSON o mostra como `ã`.
+
 `must be a valid ISBN-13` ficou em inglês porque a `@ValidIsbn` declara a mensagem como uma frase pronta.
 As restrições padrão declaram as suas como chaves entre chaves, como
 `{jakarta.validation.constraints.NotBlank.message}`, que o Hibernate Validator procura num arquivo por
@@ -130,7 +133,8 @@ ana@vm:~/bookshop$ python3 -c 'import json; print(json.dumps({"isbn": "978650000
 ```
 
 Duas restrições falharam e uma mensagem chegou ao cliente; o `detail` diz um campo, porque conta as
-entradas do mapa. Qual das duas mensagens vence não está definido. Para um formulário isso
+entradas do mapa. Qual das duas mensagens vence não está definido, e isso não é força de expressão: outra
+execução desta mesma requisição, feita enquanto esta aula era gravada, guardou a outra. Para um formulário isso
 basta: a pessoa corrige o título, manda de novo e encontra a outra mensagem se ela ainda valer. Um
 cliente que precisa mostrar todos os motivos de uma vez precisa de uma lista por campo,
 `Map<String, List<String>>`, uma mudança pequena de que a livraria não precisa.

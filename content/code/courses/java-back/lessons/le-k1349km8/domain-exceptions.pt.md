@@ -14,23 +14,23 @@ depois do corpo, coisa com que uma resposta JSON não termina:
 ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
 HTTP/1.1 404 
 Content-Length: 0
-Date: Fri, 16 Oct 2026 23:42:22 GMT
+Date: Thu, 22 Oct 2026 22:40:43 GMT
 
 
 ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000017", "title": "", "priceCents": -1}' -w '\n'
 HTTP/1.1 400 
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:22 GMT
+Date: Thu, 22 Oct 2026 22:40:43 GMT
 Connection: close
 
-{"timestamp":"2026-10-16T23:42:22.264Z","status":400,"error":"Bad Request","path":"/books"}
+{"timestamp":"2026-10-22T22:40:43.514Z","status":400,"error":"Bad Request","path":"/books"}
 ana@vm:~/bookshop$ curl -si localhost:8080/books -H 'Content-Type: application/json' -d '{"isbn": "9786500000016", "title": "Dom Casmurro", "author": "Machado de Assis", "priceCents": 3990}' -w '\n'
 HTTP/1.1 201 
 Location: /books/4
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:22 GMT
+Date: Thu, 22 Oct 2026 22:40:43 GMT
 
 {"id":4,"isbn":"9786500000016","title":"Dom Casmurro","author":"Machado de Assis","priceCents":3990}
 ```
@@ -184,10 +184,10 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books/99 -w '\n'
 HTTP/1.1 500 
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:30 GMT
+Date: Thu, 22 Oct 2026 22:40:52 GMT
 Connection: close
 
-{"timestamp":"2026-10-16T23:42:30.119Z","status":500,"error":"Internal Server Error","path":"/books/99"}
+{"timestamp":"2026-10-22T22:40:52.405Z","status":500,"error":"Internal Server Error","path":"/books/99"}
 ```
 
 Um **500**, Internal Server Error, para um livro que simplesmente não existe. A exceção saiu do
@@ -196,7 +196,7 @@ página de erro do Spring Boot respondeu com o único status que tem para esse c
 segundo terminal registrou o erro, e o stack trace continua abaixo destas linhas:
 
 ```
-2026-10-16T20:42:30.104-03:00 ERROR 16421 --- [bookshop] [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.example.bookshop.catalogue.BookNotFoundException: No book has id 99] with root cause
+2026-10-22T19:40:52.394-03:00 ERROR 5197 --- [bookshop] [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: com.example.bookshop.catalogue.BookNotFoundException: No book has id 99] with root cause
 
 com.example.bookshop.catalogue.BookNotFoundException: No book has id 99
 ```

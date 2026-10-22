@@ -5,8 +5,7 @@ version: 1
 
 Flyway's model fits in one sentence. **It reads SQL files named `V<version>__<description>.sql` from
 `db/migration` on the classpath, applies in version order the ones this database has not received, and
-records each one in a table of its own, `flyway_schema_history`.** Everything else in this lesson is a
-consequence of that sentence.
+records each one in a table of its own, `flyway_schema_history`.**
 
 The name carries the order. `V1__catalogue.sql` is version 1 with the description `catalogue`;
 `V2__first_titles.sql` is version 2, `first titles`, the underscores turned into spaces. The separator

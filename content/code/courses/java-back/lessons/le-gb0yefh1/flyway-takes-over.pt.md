@@ -5,7 +5,7 @@ version: 1
 
 O modelo do Flyway cabe numa frase. **Ele lê arquivos SQL com nomes `V<versão>__<descrição>.sql` de
 `db/migration` no classpath, aplica em ordem de versão os que este banco ainda não recebeu e registra cada
-um numa tabela própria, a `flyway_schema_history`.** Todo o resto desta aula é consequência dessa frase.
+um numa tabela própria, a `flyway_schema_history`.**
 
 O nome carrega a ordem. `V1__catalogue.sql` é a versão 1 com a descrição `catalogue`;
 `V2__first_titles.sql` é a versão 2, `first titles`, com os sublinhados virando espaços. O separador são

@@ -30,10 +30,10 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books/1 -w '\n'
 HTTP/1.1 500 
 Content-Type: application/json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:42:52 GMT
+Date: Thu, 22 Oct 2026 22:41:22 GMT
 Connection: close
 
-{"timestamp":"2026-10-16T23:42:52.916Z","status":500,"error":"Internal Server Error","path":"/books/1"}
+{"timestamp":"2026-10-22T22:41:22.507Z","status":500,"error":"Internal Server Error","path":"/books/1"}
 ```
 
 Nenhum handler da `ApiErrorHandler` reclama uma `IllegalStateException`, então este é o 500 da primeira
@@ -41,7 +41,7 @@ seção desta aula, e o corpo é o do Spring Boot: um timestamp, o status, a fra
 mensagem não está ali. O segundo terminal tem tudo:
 
 ```
-2026-10-16T20:42:52.902-03:00 ERROR 17136 --- [bookshop] [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalStateException: connection to db-01.bookshop.example:5432 refused for user bookshop] with root cause
+2026-10-22T19:41:22.496-03:00 ERROR 6477 --- [bookshop] [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.IllegalStateException: connection to db-01.bookshop.example:5432 refused for user bookshop] with root cause
 
 java.lang.IllegalStateException: connection to db-01.bookshop.example:5432 refused for user bookshop
 ```
@@ -54,7 +54,7 @@ dão a propriedade como `server.error.include-message`. Iniciada com
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8080/books/1 -w '\n'
-{"timestamp":"2026-10-16T23:42:56.643Z","status":500,"error":"Internal Server Error","path":"/books/1"}
+{"timestamp":"2026-10-22T22:41:27.227Z","status":500,"error":"Internal Server Error","path":"/books/1"}
 ```
 
 **O Spring Boot 4 renomeou o grupo para `spring.web.error`**, e o nome antigo é aceito e ignorado. O
@@ -64,7 +64,7 @@ propriedades renomeadas quando a aplicação sobe. Iniciada com
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8080/books/1 -w '\n'
-{"timestamp":"2026-10-16T23:43:00.441Z","status":500,"error":"Internal Server Error","message":"connection to db-01.bookshop.example:5432 refused for user bookshop","path":"/books/1"}
+{"timestamp":"2026-10-22T22:41:31.962Z","status":500,"error":"Internal Server Error","message":"connection to db-01.bookshop.example:5432 refused for user bookshop","path":"/books/1"}
 ```
 
 E com `--spring.web.error.include-stacktrace=always`, o corpo ganha um membro `trace`: o stack trace
@@ -72,14 +72,13 @@ inteiro numa string só, que o pequeno programa Python abaixo imprime uma linha 
 sexta:
 
 ```
-ana@vm:~/bookshop$ curl -s localhost:8080/books/1 | python3 -m json.tool | head -n 7
-{
-    "timestamp": "2026-10-16T23:43:05.307Z",
-    "status": 500,
-    "error": "Internal Server Error",
-    "trace": "java.lang.IllegalStateException: connection to db-01.bookshop.example:5432 refused for user bookshop\n\tat com.example.bookshop.catalogue.InMemoryBookRepository.findById(InMemoryBookRepository.java:30)\n\tat com.example.bookshop.catalogue.BookService.get(BookService.java:21)\n\tat com.example.bookshop.catalogue.BookController.get(BookController.java:33)\n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:565)\n\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:252)\n\tat org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:184)\n\tat org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)\n\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:934)\n\tat org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:853)\n\tat org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:86)\n\tat org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)\n\tat org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866)\n\tat org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1000)\n\tat org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:892)\n\tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:622)\n\tat org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874)\n\tat jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)\n\tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:59)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\n\tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\n\tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\n\tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)\n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:111)\n\tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)\n\tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)\n\tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:535)\n\tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)\n\tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:86)\n\tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:71)\n\tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:347)\n\tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:406)\n\tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:71)\n\tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1307)\n\tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:2036)\n\tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:74)\n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:949)\n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:483)\n\tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:74)\n\tat java.base/java.lang.Thread.run(Thread.java:1474)\n",
-    "path": "/books/1"
-}
+ana@vm:~/bookshop$ curl -s localhost:8080/books/1 | python3 -c 'import json, sys; print(*json.load(sys.stdin)["trace"].splitlines()[:6], sep="\n")'
+java.lang.IllegalStateException: connection to db-01.bookshop.example:5432 refused for user bookshop
+	at com.example.bookshop.catalogue.InMemoryBookRepository.findById(InMemoryBookRepository.java:30)
+	at com.example.bookshop.catalogue.BookService.get(BookService.java:21)
+	at com.example.bookshop.catalogue.BookController.get(BookController.java:33)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
 ```
 
 O resto continua por todas as classes do Spring e do Tomcat por onde a requisição passou. Nomes de
@@ -106,7 +105,7 @@ ana@vm:~/bookshop$ curl -si localhost:8080/books/1 -w '\n'
 HTTP/1.1 500 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:43:13 GMT
+Date: Thu, 22 Oct 2026 22:41:51 GMT
 Connection: close
 
 {"detail":"connection to db-01.bookshop.example:5432 refused for user bookshop","instance":"/books/1","status":500,"title":"Unexpected error","type":"https://bookshop.example/problems/unexpected"}
@@ -114,13 +113,13 @@ ana@vm:~/bookshop$ curl -si localhost:8080/nope -w '\n'
 HTTP/1.1 404 
 Content-Type: application/problem+json
 Transfer-Encoding: chunked
-Date: Fri, 16 Oct 2026 23:43:13 GMT
+Date: Thu, 22 Oct 2026 22:41:51 GMT
 
 {"detail":"No static resource nope.","instance":"/nope","status":404,"title":"Not Found"}
 ```
 
 Duas falhas num método só. O detail é a própria mensagem da exceção, então a máquina, a porta e o
-usuário do banco foram parar no cliente. E o segundo terminal não imprimiu nada: a exceção contou como
+usuário do banco foram parar no cliente. E o segundo terminal não imprimiu erro nenhum: a exceção contou como
 tratada, então nada a registrou, e a única pessoa que podia consertar o banco foi a única que não ficou
 sabendo.
 
