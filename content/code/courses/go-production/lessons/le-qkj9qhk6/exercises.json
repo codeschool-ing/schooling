@@ -1,0 +1,541 @@
+[
+  {
+    "id": "ex-725dyhvj",
+    "version": 1,
+    "section": "the-race-in-hits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go vet` is silent and `go test` passes, yet six runs of `pcount` over the same 20,000-line file print six different line counts. What is the likeliest explanation?",
+    "hint": "The workers share one `Summary`.",
+    "choices": [
+      {
+        "text": "The log file is rewritten between one run and the next",
+        "correct": false,
+        "why": "`access.log` was written once by `genlog` with a fixed seed; the input was identical every time."
+      },
+      {
+        "text": "Lost increments on a shared counter",
+        "correct": true,
+        "why": "Right. Two workers read the same old value of `s.Lines` and both write back one more; vet reads no timing and the four-line test hardly ever overlaps."
+      },
+      {
+        "text": "`bufio.Scanner` drops lines when it reads fast",
+        "correct": false,
+        "why": "The lines are read by one goroutine before any worker starts, and the fixed version counts 20,000 every time from the same reader."
+      },
+      {
+        "text": "`go vet` reports every data race, so the fault is in the hardware",
+        "correct": false,
+        "why": "`go vet` checks code shapes it recognises; a race depends on what happens at run time, which only `-race` watches."
+      }
+    ]
+  },
+  {
+    "id": "ex-ek06tbrt",
+    "version": 1,
+    "section": "the-race-in-hits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the race report, the frame under `sync.(*WaitGroup).Go()` is `checkParallel()` at `parallel_test.go:21`, which is the call to `CountParallel`. Where was `wg.Go` actually called?",
+    "hint": "One frame is missing from that stack, and the lesson said why.",
+    "choices": [
+      {
+        "text": "In `checkParallel`, at line 21 of the test",
+        "correct": false,
+        "why": "Line 21 calls `CountParallel`; the test never calls `wg.Go` itself."
+      },
+      {
+        "text": "One level deeper, in the function line 21 calls; its frame is missing",
+        "correct": true,
+        "why": "Right. The `sync` package is compiled without the entry and exit bookkeeping the detector builds stacks from, so `CountParallel`, the caller of `wg.Go`, drops out and the next frame is one level too high."
+      },
+      {
+        "text": "In `testing.tRunner`, which starts every goroutine of a test",
+        "correct": false,
+        "why": "`tRunner` starts the test function's goroutine, not the workers; the workers come from `wg.Go`."
+      },
+      {
+        "text": "Nowhere: the goroutines were started by the runtime",
+        "correct": false,
+        "why": "Every goroutine has a `go` statement somewhere; here it is inside `wg.Go`, called from `CountParallel`'s loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta0ge70n",
+    "version": 1,
+    "section": "the-race-in-hits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`./pcount-race < access.log 2>/dev/null; echo $?` printed a count and then an exit status, with every report thrown away. Which status, the race detector's default for a run that saw a race?",
+    "hint": "The same number `go-concurrency` lesson 16 met at the end of every report.",
+    "value": 66,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9hga7bha",
+    "version": 1,
+    "section": "the-race-in-hits",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these changes to the first `CountParallel` remove the race on `s.Lines` and `s.Total`? Choose all that apply.",
+    "hint": "A fix either orders the accesses or stops them sharing memory.",
+    "choices": [
+      {
+        "text": "Move `mu.Lock()` above `s.Lines++`",
+        "correct": true,
+        "why": "Yes, this is the fix the lesson made: every access to `s` then happens under one lock, so each is ordered against the others."
+      },
+      {
+        "text": "Give each worker a `Summary` of its own and add them up after `wg.Wait()`",
+        "correct": true,
+        "why": "Yes. No two goroutines touch the same counters any more, and `wg.Wait()` orders every worker's writes before the sum."
+      },
+      {
+        "text": "Run the tests with `-cpu 1`",
+        "correct": false,
+        "why": "That changes what the run does, not the code: with explicit workers the race remains, and `pcount` still loses lines on a big machine."
+      },
+      {
+        "text": "Set `GORACE=halt_on_error=1`",
+        "correct": false,
+        "why": "It stops the run at the first report. The race is still in the code, and the binary without `-race` ignores `GORACE` entirely."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbwm69q9",
+    "version": 1,
+    "section": "only-what-runs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`TestCountParallelOneWorker` passed under `go test -race` while `CountParallel` still had its race. Why did the detector stay silent?",
+    "hint": "Count the goroutines that touch `s`.",
+    "choices": [
+      {
+        "text": "One worker means one goroutine, and a race needs two",
+        "correct": true,
+        "why": "Right. The detector reports two unordered accesses from different goroutines, and that run had only one goroutine doing the work."
+      },
+      {
+        "text": "The detector samples accesses and missed these",
+        "correct": false,
+        "why": "It checks every access the instrumented code makes; there was simply no second goroutine to collide with."
+      },
+      {
+        "text": "Four lines are too few for the detector to start",
+        "correct": false,
+        "why": "Section 02's test used the same four lines with two workers and failed every time."
+      },
+      {
+        "text": "`-run OneWorker` turned the detector off for the other tests",
+        "correct": false,
+        "why": "`-run` picks which tests run; the detector watches whatever runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-40nnbssc",
+    "version": 1,
+    "section": "only-what-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestCountParallelDefault` passes with `-race` under `taskset -c 0` and fails without it on the same 4-CPU machine. What changed between the two runs?",
+    "hint": "The test passes zero workers.",
+    "choices": [
+      {
+        "text": "`taskset` turns the detector off for pinned processes",
+        "correct": false,
+        "why": "The detector ran in both; under `taskset -c 0` the other test with two workers still failed."
+      },
+      {
+        "text": "`GOMAXPROCS` defaulted to 1, so zero meant a single worker",
+        "correct": true,
+        "why": "Right. The default follows the affinity mask, so 'one per CPU' became one goroutine and the racy path never ran."
+      },
+      {
+        "text": "One CPU is too slow for two accesses to overlap",
+        "correct": false,
+        "why": "Overlap in time is not what the detector looks for; it looks for accesses that nothing ordered, and two goroutines on one CPU still produce them."
+      },
+      {
+        "text": "The test cache answered for the pinned run",
+        "correct": false,
+        "why": "Both commands used `-count=1`, which never answers from the cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-2qzf0mcs",
+    "version": 1,
+    "section": "only-what-runs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A CI job runs in a container limited to one CPU on a 16-CPU host, with no `GOMAXPROCS` set. What does `runtime.GOMAXPROCS(0)` return under Go 1.27.1, according to its documentation?",
+    "hint": "The quota is one input; the documentation names a floor.",
+    "choices": [
+      {
+        "text": "16, because a container's quota is ignored",
+        "correct": false,
+        "why": "The documentation lists the cgroup CPU quota among the inputs on Linux, since Go 1.25's default."
+      },
+      {
+        "text": "1, matching the quota",
+        "correct": false,
+        "why": "The quota never brings the default below 2 unless the machine or the affinity mask has fewer than two CPUs."
+      },
+      {
+        "text": "2: a quota alone never takes it lower",
+        "correct": true,
+        "why": "Right. So `CountParallel(r, 0)` starts two workers there, and the default test catches the race; a one-CPU VM or `taskset -c 0` would give 1."
+      },
+      {
+        "text": "0, until the program calls `runtime.GOMAXPROCS` with a value",
+        "correct": false,
+        "why": "Called with 0 it reports the current setting, which always has a default of at least 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-ra8fxja0",
+    "version": 1,
+    "section": "only-what-runs",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test -race ___ 1,4 ./...` runs every test twice, once with `GOMAXPROCS` set to 1 and once with it set to 4.",
+    "hint": "A `go test` flag taking a list of values.",
+    "blanks": [
+      {
+        "accept": [
+          "-cpu",
+          "cpu"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p0h3n8k0",
+    "version": 1,
+    "section": "only-what-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Pinned to one CPU with `taskset -c 0`, `TestCountParallel`, which asks for two workers, still failed with `-race`. What does that show?",
+    "hint": "Compare it with the zero-worker test on the same CPU.",
+    "choices": [
+      {
+        "text": "The detector needs two goroutines, not two CPUs",
+        "correct": true,
+        "why": "Right. Two goroutines taking turns on one CPU still make accesses that nothing orders, and that is all a report needs."
+      },
+      {
+        "text": "`taskset` does not really restrict a Go program",
+        "correct": false,
+        "why": "It did: `taskset -c 0 nproc` printed 1, and the zero-worker test ran a single worker."
+      },
+      {
+        "text": "Races are more frequent on one CPU than on four",
+        "correct": false,
+        "why": "The plain `pcount` lost lines on four CPUs; the detector's verdict does not depend on how often increments collide."
+      },
+      {
+        "text": "The test failed for a reason other than the race",
+        "correct": false,
+        "why": "Its failure was the race report on `s.Lines`, the same as on four CPUs."
+      }
+    ]
+  },
+  {
+    "id": "ex-27q8fbmw",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With and without `-race`, `-benchmem` reported about 4,133,000 B/op for `BenchmarkCountParallel`, while the kernel's `VmHWM` read 19,748 kB and 46,020 kB. Why does `-benchmem` miss the difference?",
+    "hint": "Ask what `-benchmem` counts.",
+    "choices": [
+      {
+        "text": "The detector allocated nothing in this benchmark",
+        "correct": false,
+        "why": "The kernel saw the process more than double its peak; that memory came from somewhere."
+      },
+      {
+        "text": "`-benchmem` turns the detector off while it measures",
+        "correct": false,
+        "why": "The race run was 4.7 times slower, so the detector was clearly running."
+      },
+      {
+        "text": "It counts the Go heap, and the detector's records live outside it",
+        "correct": true,
+        "why": "Right. The detector's memory is taken by its own runtime, which the Go allocator's statistics never see; only the operating system's view shows it."
+      },
+      {
+        "text": "`VmHWM` includes the size of the binary on disk",
+        "correct": false,
+        "why": "`VmHWM` is resident memory at the peak; the binary grew by about 1.3 MB, far less than the 26 MB gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-phgmvvjk",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`BenchmarkCountParallel` took 10,830,468 ns/op plainly and 50,833,093 ns/op with `-race`. How many times as long is the race run, to one decimal place?",
+    "hint": "Divide the second by the first.",
+    "value": 4.7,
+    "tolerance": 0.1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-rrzhydbv",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The tests of `internal/tally` take 3 ms plainly and 1.017 s with `-race`, and 0.013 s with `GORACE=atexit_sleep_ms=0`. What is the extra second?",
+    "hint": "It does not grow with the work the tests do.",
+    "choices": [
+      {
+        "text": "The time to compile the race build",
+        "correct": false,
+        "why": "`go test` reports the run of the test binary, not its build; and the build was already cached."
+      },
+      {
+        "text": "A one-second wait before a race-enabled program exits",
+        "correct": true,
+        "why": "Right. The detector waits 1,000 ms at exit so that goroutines still running get a chance to be reported; setting it to 0 skips the wait."
+      },
+      {
+        "text": "The instrumentation slowing every test by the same factor",
+        "correct": false,
+        "why": "A slowdown by a factor would turn 3 ms into a few tens of milliseconds, not a second, and would not vanish with one variable."
+      },
+      {
+        "text": "Writing the reports to standard error",
+        "correct": false,
+        "why": "These tests passed and printed no report at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-68zrw4j7",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line a `-race` run printed with its cause.",
+    "hint": "Two are refusals before anything compiles.",
+    "pairs": [
+      {
+        "left": "`go: -race requires cgo; enable cgo by setting CGO_ENABLED=1`",
+        "right": "cgo is off, by the variable or for want of a C compiler"
+      },
+      {
+        "left": "`-race is not supported on linux/386`",
+        "right": "no race runtime exists for that platform"
+      },
+      {
+        "left": "`ok ... 1.017s` for tests that take milliseconds",
+        "right": "the second the detector waits at exit"
+      },
+      {
+        "left": "`race detected during execution of test`",
+        "right": "two goroutines touched memory with nothing ordering them"
+      }
+    ],
+    "right_distractors": [
+      "the module cache is read-only"
+    ]
+  },
+  {
+    "id": "ex-4fc914kp",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the workflow's test step say `-count=1`?",
+    "hint": "Two identical `go test -race ./...` runs in a row printed `(cached)` the second time.",
+    "choices": [
+      {
+        "text": "Without it, go test runs every test only once per package",
+        "correct": false,
+        "why": "Once is the default anyway: `-count` says how many times, and 1 is what you get without it."
+      },
+      {
+        "text": "It turns off the detector's exit sleep",
+        "correct": false,
+        "why": "That is `GORACE=atexit_sleep_ms=0`; `-count` has nothing to do with the detector."
+      },
+      {
+        "text": "A restored build cache would otherwise replay an old pass",
+        "correct": true,
+        "why": "Right. setup-go restores the build cache by default, results of earlier passes live there, and `-count=1` is the documented way to make go test run anyway."
+      },
+      {
+        "text": "GitHub Actions requires it for any step that sets `CGO_ENABLED`",
+        "correct": false,
+        "why": "Actions knows nothing about go test's flags; the reason is go test's own cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-hejmcbqh",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the places a change passes through in order, from the first that runs the detector to the one that never does.",
+    "hint": "From a pull request to what users run.",
+    "items": [
+      "a pull request: `go test -race -count=1 -cpu 1,4 ./...`",
+      "the push to `main`: the same tests, and `go build -race`",
+      "staging: the race build serves real traffic with `log_path` set",
+      "the release: a plain `go build`, with no detector"
+    ]
+  },
+  {
+    "id": "ex-nzxj22za",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pull request's race job fails with a report naming two lines of new code. A teammate reruns the job and it goes green. What should happen next?",
+    "hint": "What does a green rerun tell you about the code?",
+    "choices": [
+      {
+        "text": "Merge: the second run proves the first was noise",
+        "correct": false,
+        "why": "A report is two accesses the detector watched happen. A green rerun only shows a run that did not take that path with two goroutines."
+      },
+      {
+        "text": "Mark the test as flaky so it stops blocking merges",
+        "correct": false,
+        "why": "That test is what made the goroutines meet; disabling it removes the only witness."
+      },
+      {
+        "text": "Fix the two lines or revert the change, then rerun",
+        "correct": true,
+        "why": "Right. The report already names the lines; the fix goes through the same step, with `-count` and `-cpu`, and must come out clean."
+      },
+      {
+        "text": "Add an automatic retry so a single bad run never fails the job",
+        "correct": false,
+        "why": "That builds 'rerun until green' into the pipeline, and a race only shows on some runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8hmzmh3",
+    "version": 1,
+    "section": "in-the-pipeline",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a staging machine, `GORACE=___=/var/log/pcount/race` makes each race-enabled process write its reports to `/var/log/pcount/race.` followed by its process id.",
+    "hint": "The option is named after where the log goes.",
+    "blanks": [
+      {
+        "accept": [
+          "log_path"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3td1q5c5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should the CI test step leave `halt_on_error` at its default rather than set `GORACE=halt_on_error=1`?",
+    "hint": "What happens to the tests after the first report?",
+    "choices": [
+      {
+        "text": "It makes the detector miss the first race",
+        "correct": false,
+        "why": "It reports the first race and then stops; the first is never the one lost."
+      },
+      {
+        "text": "It would stop at the first report and hide the rest",
+        "correct": true,
+        "why": "Right. One report is easier to read by hand, but CI should show every race in one run, and the tests after the stop give no result at all."
+      },
+      {
+        "text": "A halted run exits with status 0, so the job would go green",
+        "correct": false,
+        "why": "A halted run still exits with the detector's status; the job fails either way."
+      },
+      {
+        "text": "It works only together with `log_path`, which CI does not set",
+        "correct": false,
+        "why": "The two options are independent; section 02 used `halt_on_error` alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-say9gggb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To stop the race job blocking merges, somebody sets `GORACE=exitcode=0` on the step running `go test -race ./...`. What happens on the next pull request that brings a race?",
+    "hint": "Who decides that a test failed?",
+    "choices": [
+      {
+        "text": "The job goes green, because every race now exits 0",
+        "correct": false,
+        "why": "That would be true of a plain program like `pcount-race`, but not of a test binary."
+      },
+      {
+        "text": "It still fails: the testing package fails the test",
+        "correct": true,
+        "why": "Right. A test binary that sees a race fails with status 1 whatever `exitcode` says, so the setting changes nothing in that step, and only hides races where it is applied to a plain binary."
+      },
+      {
+        "text": "go test refuses to run, because 0 is not a valid exit code",
+        "correct": false,
+        "why": "0 is accepted; the detector simply uses it for runs with a race."
+      },
+      {
+        "text": "The detector stops writing reports",
+        "correct": false,
+        "why": "`exitcode` changes only the status; the reports are written as before."
+      }
+    ]
+  },
+  {
+    "id": "ex-szys9gp9",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`go test -race -count=3 -cpu 1,2,4 ./...` ran after the fix. How many times did it run `TestCountParallelDefault`?",
+    "hint": "`-count` applies once per value of `-cpu`.",
+    "value": 9,
+    "tolerance": 0
+  }
+]
