@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-adc2hrvc",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A whole number written in the source, such as `42`, has which type?",
+    "hint": "It is one of the two defaults.",
+    "choices": [
+      {
+        "text": "`long`, because it is the safest",
+        "correct": false,
+        "why": "A plain whole number is an `int`; `long` needs the suffix `L`."
+      },
+      {
+        "text": "`int`",
+        "correct": true,
+        "why": "Right: and a number with a point is a `double`."
+      },
+      {
+        "text": "Whichever is smallest that fits, here `byte`",
+        "correct": false,
+        "why": "Java does not shrink a literal to fit; `42` is an `int` whatever its size."
+      },
+      {
+        "text": "The type of the variable it is put into",
+        "correct": false,
+        "why": "`8_000_000_000` into a `long` failed for exactly this reason: the literal is typed first."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvjr33bf",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bits does an `int` take?",
+    "hint": "`Integer.SIZE` printed it.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "bits"
+  },
+  {
+    "id": "ex-nhymye26",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Overflow` printed `Integer.MAX_VALUE + 1`. What came out, and why?",
+    "hint": "Java does not stop at the largest value.",
+    "choices": [
+      {
+        "text": "`2147483648`, because Java widens the result to a `long`",
+        "correct": false,
+        "why": "That is what the `long` version printed; the `int` sum stays an `int`."
+      },
+      {
+        "text": "`-2147483648`: it wrapped round to the smallest `int`, silently",
+        "correct": true,
+        "why": "Right: no error, no warning, and that is the danger."
+      },
+      {
+        "text": "An `ArithmeticException` saying the value overflowed",
+        "correct": false,
+        "why": "Plain arithmetic never throws on overflow; lesson 8's `Math.addExact` does."
+      },
+      {
+        "text": "`2147483647` again, because the value is capped at the maximum",
+        "correct": false,
+        "why": "There is no cap: it went past the end and came round the other side."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwy8sfre",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`long people = 8_000_000_000;` does not compile. What is the smallest fix?",
+    "hint": "The literal's type is decided before the variable is looked at.",
+    "choices": [
+      {
+        "text": "Remove the underscores",
+        "correct": false,
+        "why": "The underscores are ignored by the compiler; the number is still too large for an `int`."
+      },
+      {
+        "text": "Declare `people` as `double` instead",
+        "correct": false,
+        "why": "The literal is read as an `int` before the variable's type matters, so it fails the same way."
+      },
+      {
+        "text": "Add the suffix: `8_000_000_000L`",
+        "correct": true,
+        "why": "Right: the `L` makes the literal a `long`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xeyfsrd",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web shop stores each product's total page views in an `int`. One product has been viewed 2,147,483,647 times. What happens at the next view?",
+    "hint": "That number is a familiar one.",
+    "choices": [
+      {
+        "text": "The program stops with an error the shop's logs will show",
+        "correct": false,
+        "why": "Overflow raises nothing; there is no error for a log to show."
+      },
+      {
+        "text": "The count becomes -2,147,483,648, and nothing reports it",
+        "correct": true,
+        "why": "Right: it is `Integer.MAX_VALUE`, and one more wraps it to the smallest `int`."
+      },
+      {
+        "text": "The count stays at 2,147,483,647 from then on",
+        "correct": false,
+        "why": "Nothing caps an `int`; it wraps."
+      },
+      {
+        "text": "Java moves the value into a `long` the first time it is needed",
+        "correct": false,
+        "why": "Java never changes a variable's type; it was decided at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-qc4s4dep",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`char letter = 'A';` and then `letter++;`. What does `System.out.println(letter)` print?",
+    "hint": "A `char` is a number underneath.",
+    "choices": [
+      {
+        "text": "`66`",
+        "correct": false,
+        "why": "That is what `letter + 0` would print after the increment; printed as a `char` it is a letter."
+      },
+      {
+        "text": "`B`",
+        "correct": true,
+        "why": "Right: the code 65 became 66, which is `B`."
+      },
+      {
+        "text": "`A1`",
+        "correct": false,
+        "why": "That would be joining text; `++` adds one to the number."
+      },
+      {
+        "text": "Nothing: `++` is a compile error on a `char`",
+        "correct": false,
+        "why": "It compiled and ran in `Overflow`."
+      }
+    ]
+  },
+  {
+    "id": "ex-3rj0nz60",
+    "version": 1,
+    "section": "eight-primitives",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each literal to its type.",
+    "hint": "The suffix and the quotes decide.",
+    "pairs": [
+      {
+        "left": "`42L`",
+        "right": "`long`"
+      },
+      {
+        "left": "`39.90`",
+        "right": "`double`"
+      },
+      {
+        "left": "`39.90f`",
+        "right": "`float`"
+      },
+      {
+        "left": "`'A'`",
+        "right": "`char`"
+      }
+    ],
+    "right_distractors": [
+      "`short`"
+    ]
+  },
+  {
+    "id": "ex-c017czvj",
+    "version": 1,
+    "section": "wrappers-and-boxing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does Java need `Integer` when it already has `int`?",
+    "hint": "Think of what the collections hold.",
+    "choices": [
+      {
+        "text": "Because `Integer` can hold larger numbers than `int`",
+        "correct": false,
+        "why": "It holds exactly an `int`'s range; the wrapper adds an object around it, not bits."
+      },
+      {
+        "text": "Because much of Java works with objects only, such as the collections",
+        "correct": true,
+        "why": "Right: a list of numbers is a list of `Integer`."
+      },
+      {
+        "text": "Because arithmetic on `int` is slower than on `Integer`",
+        "correct": false,
+        "why": "The reverse: arithmetic on `Integer` unboxes to `int` first."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpbzsch5",
+    "version": 1,
+    "section": "wrappers-and-boxing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Integer a = 127, b = 127;` gives `a == b` true, and `Integer c = 128, d = 128;` gives `c == d` false. What explains the difference?",
+    "hint": "`==` on objects compares references.",
+    "choices": [
+      {
+        "text": "128 does not fit in a byte, so it is stored with less precision",
+        "correct": false,
+        "why": "Both are `int` values stored exactly; precision is not involved."
+      },
+      {
+        "text": "`==` compares values up to 127 and references above it",
+        "correct": false,
+        "why": "`==` always compares references on objects; the values just happened to share an object."
+      },
+      {
+        "text": "Boxing reuses cached objects from -128 to 127, so `a` and `b` are one object",
+        "correct": true,
+        "why": "Right: 128 is outside the cache, so `c` and `d` are two objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-49ffwkct",
+    "version": 1,
+    "section": "wrappers-and-boxing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two `Integer` variables hold the same value. Which comparison is right whatever the value?",
+    "hint": "The section's rule for objects.",
+    "choices": [
+      {
+        "text": "`x.equals(y)`",
+        "correct": true,
+        "why": "Right: it compares the values, and said `true` for 128."
+      },
+      {
+        "text": "`x == y`",
+        "correct": false,
+        "why": "It compares references, and said `false` for two boxed 128s."
+      },
+      {
+        "text": "`x == y`, as long as both were assigned from literals",
+        "correct": false,
+        "why": "Literals are where the cache came in: 127 passed and 128 failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkjycjpw",
+    "version": 1,
+    "section": "wrappers-and-boxing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Turning an `int` into an `Integer` automatically is called ___, and taking the `int` back out is called unboxing.",
+    "hint": "The opposite of the other word.",
+    "blanks": [
+      {
+        "accept": [
+          "boxing",
+          "autoboxing"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8h32qxjc",
+    "version": 1,
+    "section": "wrappers-and-boxing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`int copies = copiesLeft;` throws a `NullPointerException` that mentions `intValue()`, and the line has no method call. Where did the call come from?",
+    "hint": "Someone wrote the conversion for you.",
+    "choices": [
+      {
+        "text": "From the JVM, which checks every assignment for `null`",
+        "correct": false,
+        "why": "The JVM checks nothing extra; it ran a call that was in the bytecode."
+      },
+      {
+        "text": "The compiler wrote it, to unbox the `Integer` into an `int`",
+        "correct": true,
+        "why": "Right: unboxing is a call to `intValue()`, and calling it on `null` fails."
+      },
+      {
+        "text": "From `System.out.println` on the next line",
+        "correct": false,
+        "why": "The stack trace names line 5, the assignment, before anything was printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz3wwtad",
+    "version": 1,
+    "section": "wrappers-and-boxing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first run named the null variable `<local1>`, and the second named it `copiesLeft`. What changed?",
+    "hint": "The second run was compiled differently.",
+    "choices": [
+      {
+        "text": "The second run used Java 21, which prints names",
+        "correct": false,
+        "why": "Both ran on 25; the class file was what differed."
+      },
+      {
+        "text": "The variable was renamed between the runs",
+        "correct": false,
+        "why": "The same `Missing.java` was used both times."
+      },
+      {
+        "text": "`javac -g` kept local variable names in the class file",
+        "correct": true,
+        "why": "Right: without them the JVM can only number the locals."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0hefwmv",
+    "version": 1,
+    "section": "var",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`var year = 1899;` What is the type of `year`?",
+    "hint": "The literal decides.",
+    "choices": [
+      {
+        "text": "None: `var` variables have no type",
+        "correct": false,
+        "why": "They have one, written by the compiler; `/vars` printed it."
+      },
+      {
+        "text": "`int`",
+        "correct": true,
+        "why": "Right: a plain whole number is an `int`."
+      },
+      {
+        "text": "`long`, since years can grow",
+        "correct": false,
+        "why": "Only `1899L` would be a `long`."
+      },
+      {
+        "text": "`Integer`, since `var` makes objects",
+        "correct": false,
+        "why": "`var` infers the literal's type, a primitive here."
+      }
+    ]
+  },
+  {
+    "id": "ex-sqhv4pmb",
+    "version": 1,
+    "section": "var",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these lines does the compiler refuse? Choose all that apply.",
+    "hint": "The type is decided once, from the value at the declaration.",
+    "choices": [
+      {
+        "text": "`var title;`",
+        "correct": true,
+        "why": "Yes: no value, nothing to infer from."
+      },
+      {
+        "text": "`var author = null;`",
+        "correct": true,
+        "why": "Yes: `null` has no type of its own."
+      },
+      {
+        "text": "`var initial = 'D';`",
+        "correct": false,
+        "why": "No: it is a `char`, as `/vars` showed."
+      },
+      {
+        "text": "`year = \"nineteenth century\";` after `var year = 1899;`",
+        "correct": true,
+        "why": "Yes: `year` is an `int`, and stays one."
+      }
+    ]
+  },
+  {
+    "id": "ex-3g6rckpf",
+    "version": 1,
+    "section": "var",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Where does the section say `var` costs the reader something?",
+    "hint": "The reader needs the type from somewhere.",
+    "choices": [
+      {
+        "text": "`var members = new java.util.ArrayList<String>();`",
+        "correct": false,
+        "why": "There the type is on the same line, so `var` saves writing it twice."
+      },
+      {
+        "text": "`var total = calculate();`",
+        "correct": true,
+        "why": "Right: nothing on the line says whether `total` is an `int`, a `long` or a `double`."
+      },
+      {
+        "text": "`var title = \"Dom Casmurro\";`",
+        "correct": false,
+        "why": "The quotes make the `String` plain to every reader."
+      }
+    ]
+  },
+  {
+    "id": "ex-e609p2fj",
+    "version": 1,
+    "section": "var",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where can `var` be used?",
+    "hint": "Fields and parameters are read by other code.",
+    "choices": [
+      {
+        "text": "Anywhere a type is written",
+        "correct": false,
+        "why": "Not for fields, parameters or return types, which are always written out."
+      },
+      {
+        "text": "For fields of a class, so the class is shorter",
+        "correct": false,
+        "why": "Fields keep their written types; `var` is for locals."
+      },
+      {
+        "text": "For local variables, inside a method, with a value",
+        "correct": true,
+        "why": "Right: and only where that value gives the compiler a type."
+      }
+    ]
+  },
+  {
+    "id": "ex-fjzrv37y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A library counts the milliseconds since 1970 in a variable. Which type, and why?",
+    "hint": "How many milliseconds are there in fifty years?",
+    "choices": [
+      {
+        "text": "`int`, because it is the default for whole numbers",
+        "correct": false,
+        "why": "The default overflows here: two billion milliseconds is under a month."
+      },
+      {
+        "text": "`double`, because time is a measurement",
+        "correct": false,
+        "why": "Milliseconds are whole, and a `double` would round large values."
+      },
+      {
+        "text": "`long`, because the count passes two billion",
+        "correct": true,
+        "why": "Right: it is the section's own example of a value that outgrows an `int`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zssncgz4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A method returns `Integer` and gives back `null` when a book is not found. The caller writes `int stock = findStock(isbn);`. What happens for a missing book?",
+    "hint": "The assignment unboxes.",
+    "choices": [
+      {
+        "text": "`stock` becomes 0, the default for an `int`",
+        "correct": false,
+        "why": "There is no default here: unboxing `null` throws before anything is assigned."
+      },
+      {
+        "text": "A `NullPointerException` on that line",
+        "correct": true,
+        "why": "Right: the unboxing calls `intValue()` on `null`."
+      },
+      {
+        "text": "A compile error, because `null` cannot become an `int`",
+        "correct": false,
+        "why": "The compiler cannot know the method returns `null`; it fails at run time."
+      },
+      {
+        "text": "`stock` holds `null` until a value is known",
+        "correct": false,
+        "why": "An `int` cannot hold `null` at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1yv9cqme",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these whole-number types from smallest to largest.",
+    "hint": "8, 16, 32 and 64 bits.",
+    "items": [
+      "`byte`",
+      "`short`",
+      "`int`",
+      "`long`"
+    ]
+  }
+]

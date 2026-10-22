@@ -1,0 +1,364 @@
+{
+  "ex-gy53jk8a": {
+    "prompt": "`final int maxLoans = 3;` e depois `maxLoans = 4;`. O que o `javac` diz?",
+    "hint": "Atribuída exatamente uma vez.",
+    "choices": [
+      {
+        "text": "`cannot assign a value to final variable maxLoans`",
+        "why": "Isso: uma variável final é atribuída uma vez, e esta é a segunda."
+      },
+      {
+        "text": "Nada: o `final` só importa em atributos",
+        "why": "Funciona em locais também; o `Locals.java` não compilou."
+      },
+      {
+        "text": "Um aviso, e a variável fica com 3",
+        "why": "É erro, não aviso, e nada roda."
+      }
+    ]
+  },
+  "ex-5767r5aj": {
+    "prompt": "`Book` tem `final String isbn;` e um construtor `Book(String title)` que só define o título. Para onde aponta o erro?",
+    "hint": "Onde o construtor termina sem tê-lo definido?",
+    "choices": [
+      {
+        "text": "Para a declaração `final String isbn;`",
+        "why": "A declaração está certa; a falha está num construtor que o deixa sem valor."
+      },
+      {
+        "text": "Para a linha `this.title = title;`",
+        "why": "Essa linha está certa; o problema é o que falta depois dela."
+      },
+      {
+        "text": "Para a chave que fecha o construtor",
+        "why": "Isso: linha 13, `variable isbn might not have been initialized`."
+      },
+      {
+        "text": "Para o primeiro `new Book(...)` em outra classe",
+        "why": "A própria classe não compila, então nenhum chamador é examinado."
+      }
+    ]
+  },
+  "ex-fzf798zt": {
+    "prompt": "`final StringBuilder note = new StringBuilder(\"Due\");` Qual linha compila em seguida?",
+    "hint": "O `final` fixa a variável, não o objeto.",
+    "choices": [
+      {
+        "text": "`note.append(\" on Friday\");`",
+        "why": "Isso: o objeto muda, a referência não, e o `Notes` imprimiu `Due on Friday`."
+      },
+      {
+        "text": "`note = new StringBuilder(\"Overdue\");`",
+        "why": "Isso aponta a variável para outro objeto, o que o `Reassign` mostrou ser recusado."
+      },
+      {
+        "text": "`note = null;`",
+        "why": "`null` também é outra referência; uma variável final aceita uma atribuição."
+      }
+    ]
+  },
+  "ex-yxv9kxw5": {
+    "prompt": "Uma classe tem `private final int[] scores;`, definido no construtor e devolvido por um getter. Quem chama consegue mudar as notas?",
+    "hint": "O que o getter entrega?",
+    "choices": [
+      {
+        "text": "Não: `private` e `final` juntos tornam o array imutável",
+        "why": "Eles impedem atribuir o atributo de fora; o array a que o atributo leva não é afetado por nenhum dos dois."
+      },
+      {
+        "text": "Sim: o que ele devolve leva ao mesmo array, e `[0] = 9` o altera",
+        "why": "Isso: como `counts[0] = 9` fez no `Notes`; a lição 22 mostra a cópia defensiva que fecha isso."
+      },
+      {
+        "text": "Só se também tiverem acesso de escrita ao atributo",
+        "why": "Não precisam de acesso ao atributo quando já têm uma referência ao array."
+      }
+    ]
+  },
+  "ex-ayh76nb8": {
+    "prompt": "Um atributo `final` sem valor na declaração, que todo construtor tem de definir, se chama blank ___.",
+    "hint": "A própria palavra-chave.",
+    "blanks": [
+      {
+        "accept": [
+          "final"
+        ]
+      }
+    ]
+  },
+  "ex-48jdmw8k": {
+    "prompt": "`Item` declara `final String label()`, e `Dvd extends Item` declara o seu próprio `label()`. O que acontece?",
+    "hint": "Um método final não pode ser substituído.",
+    "choices": [
+      {
+        "text": "A versão de `Dvd` roda para DVDs e a de `Item` para o resto",
+        "why": "Isso é o que sobrescrever faria, e o `final` proíbe."
+      },
+      {
+        "text": "`Dvd` não compila: o método é final",
+        "why": "Isso: `label() in Dvd cannot override label() in Item`."
+      },
+      {
+        "text": "A versão de `Item` sempre roda e a de `Dvd` é ignorada em silêncio",
+        "why": "Nada é ignorado em silêncio; o compilador recusa a classe."
+      }
+    ]
+  },
+  "ex-htht0bcs": {
+    "prompt": "O que `final class Isbn` proíbe?",
+    "hint": "O `FakeIsbn` tentou.",
+    "choices": [
+      {
+        "text": "Criar mais de um objeto `Isbn`",
+        "why": "O `final` numa classe é sobre subclasses; dá para criar quantos objetos quiser."
+      },
+      {
+        "text": "Mudar o `value` de um `Isbn`",
+        "why": "Isso é o `final` do atributo; o `final` da classe é outra coisa."
+      },
+      {
+        "text": "Qualquer classe que a estenda",
+        "why": "Isso: `cannot inherit from final Isbn`."
+      },
+      {
+        "text": "Chamar os métodos dela de outro pacote",
+        "why": "Isso seria acesso, a lição 14, não `final`."
+      }
+    ]
+  },
+  "ex-rh8b54v0": {
+    "prompt": "Por que a seção diz que a `String` tem de ser final para a promessa dela valer?",
+    "hint": "O que uma subclasse poderia acrescentar?",
+    "choices": [
+      {
+        "text": "Porque classes final rodam mais rápido, e strings estão em toda parte",
+        "why": "Velocidade não é o argumento que a seção faz."
+      },
+      {
+        "text": "Uma subclasse poderia mudar os caracteres, e uma string conferida uma vez poderia diferir no uso",
+        "why": "Isso: uma promessa que uma subclasse consegue quebrar não vale para `String` nenhuma."
+      },
+      {
+        "text": "Porque senão o `javap` mostraria os atributos privados dela",
+        "why": "O `javap` mostra o que mostra de qualquer jeito; o motivo não é esse."
+      }
+    ]
+  },
+  "ex-6xxmzp33": {
+    "prompt": "Quais destes o `javac` recusou na seção 03? Escolha todos os que se aplicam.",
+    "hint": "Três recusas, e uma classe compilou.",
+    "choices": [
+      {
+        "text": "`class Dvd extends Item` sobrescrevendo um `label()` final",
+        "why": "Sim: `overridden method is final`."
+      },
+      {
+        "text": "`class FakeIsbn extends Isbn`",
+        "why": "Sim: `Isbn` é uma classe final."
+      },
+      {
+        "text": "`class MyString extends String`",
+        "why": "Sim: `String` é final no próprio JDK."
+      },
+      {
+        "text": "`final class Isbn` com um atributo `final String value`",
+        "why": "Essa classe compilou; só a pretensa subclasse falhou."
+      }
+    ]
+  },
+  "ex-fkseb3tn": {
+    "prompt": "Você quer um método que faça algo novo com strings. A `String` é final. Para onde vai o método?",
+    "hint": "O `Isbns` da lição 15.",
+    "choices": [
+      {
+        "text": "Numa subclasse de `String`",
+        "why": "É exatamente isso que o `final` recusa."
+      },
+      {
+        "text": "Num auxiliar estático de uma classe sua, que recebe o texto como parâmetro",
+        "why": "Isso: como o `Isbns.looksValid(String)`."
+      },
+      {
+        "text": "No próprio `java.lang.String`, depois de editar o fonte do JDK",
+        "why": "O JDK que você roda não é seu para editar, e toda outra máquina ficaria sem o método."
+      }
+    ]
+  },
+  "ex-p5sk2e1q": {
+    "prompt": "Quando uma variável local é *efetivamente final*?",
+    "hint": "Nenhuma palavra-chave está envolvida.",
+    "choices": [
+      {
+        "text": "Quando é declarada dentro do `main`",
+        "why": "Onde é declarada não importa; importa se é atribuída de novo."
+      },
+      {
+        "text": "Quando nada a atribui depois da declaração",
+        "why": "Isso: mesmo sem `final` escrito."
+      },
+      {
+        "text": "Quando guarda um objeto e não um primitivo",
+        "why": "`count` era um `int` e a regra valeu para ele."
+      },
+      {
+        "text": "Quando o compilador embutiu o valor dela como constante",
+        "why": "Isso é a constante de compilação da lição 15, outra coisa."
+      }
+    ]
+  },
+  "ex-tkthhedv": {
+    "prompt": "O segundo `Capture` atribuiu `branch = \"Norte\";` depois de criar o `Runnable`. O que aconteceu?",
+    "hint": "O erro fala de uma classe interna.",
+    "choices": [
+      {
+        "text": "Imprimiu `Report for Norte`",
+        "why": "Nem rodou: o compilador recusou."
+      },
+      {
+        "text": "Imprimiu `Report for Centro`, o valor quando o objeto foi criado",
+        "why": "É o que a cópia teria impresso, que é justamente a discordância que a regra evita."
+      },
+      {
+        "text": "Não compilou",
+        "why": "Isso: `branch` deixou de ser efetivamente final."
+      }
+    ]
+  },
+  "ex-33mfv3ec": {
+    "prompt": "Por que o Java proíbe atribuir de novo uma variável local capturada, em vez de deixar o código interno ver o valor novo?",
+    "hint": "O que o objeto guarda: a variável, ou o valor dela?",
+    "choices": [
+      {
+        "text": "O objeto guarda só uma cópia do valor",
+        "why": "Isso: o quadro some antes de ele rodar, e uma mudança posterior deixaria a cópia e a variável discordando em silêncio."
+      },
+      {
+        "text": "Porque locais ficam no arquivo de classe, que não pode mudar",
+        "why": "Locais vivem num quadro na pilha; o arquivo de classe guarda bytecode."
+      },
+      {
+        "text": "Para classes anônimas rodarem mais rápido que métodos comuns",
+        "why": "Velocidade não é o motivo; consistência é."
+      }
+    ]
+  },
+  "ex-vzgxtsf6": {
+    "prompt": "A lambda do `Lambda.java` segue a mesma regra que a classe anônima do `Capture.java`?",
+    "hint": "Compare as duas mensagens de erro.",
+    "choices": [
+      {
+        "text": "Não: lambdas podem capturar qualquer variável local",
+        "why": "O `count = 5;` fez a lambda não compilar."
+      },
+      {
+        "text": "Sim: as duas recusam uma local capturada que é atribuída de novo",
+        "why": "Isso: as duas mensagens diferem numa expressão, `inner class` contra `lambda expression`."
+      },
+      {
+        "text": "Só para primitivos como `int`",
+        "why": "`branch` era uma `String`, e a regra valeu para ela também."
+      }
+    ]
+  },
+  "ex-r00e4cj7": {
+    "prompt": "Ponha em ordem os acontecimentos do primeiro `Capture`.",
+    "hint": "A cópia é tirada quando o objeto é criado.",
+    "items": [
+      "`branch` recebe `\"Centro\"`",
+      "O objeto `Runnable` é criado, guardando uma cópia de `branch`",
+      "`report.run()` é chamado",
+      "`Report for Centro` é impresso"
+    ]
+  },
+  "ex-naecfeck": {
+    "prompt": "Ligue cada uso de `final` ao que ele proíbe.",
+    "hint": "Três lugares, três sentidos.",
+    "pairs": [
+      {
+        "left": "uma variável local `final`",
+        "right": "Uma segunda atribuição"
+      },
+      {
+        "left": "um atributo `final`",
+        "right": "Deixá-lo sem valor num construtor, ou atribuí-lo depois"
+      },
+      {
+        "left": "um método `final`",
+        "right": "Sobrescrevê-lo numa subclasse"
+      },
+      {
+        "left": "uma classe `final`",
+        "right": "Estendê-la"
+      }
+    ],
+    "right_distractors": [
+      "Mudar o objeto a que a variável leva"
+    ]
+  },
+  "ex-2wyr89vb": {
+    "prompt": "Um `Loan` nunca deve mudar de livro depois de criado. Que declaração faz isso, e confere na compilação?",
+    "hint": "Todo construtor o define, nada o atribui depois.",
+    "choices": [
+      {
+        "text": "`Book book;` com um comentário dizendo para não mudá-lo",
+        "why": "Um comentário não é conferido por nada."
+      },
+      {
+        "text": "`static Book book;`",
+        "why": "Estático daria a todos os empréstimos o mesmo livro, que é outro defeito."
+      },
+      {
+        "text": "`private final Book book;`, definido em todo construtor",
+        "why": "Isso: o compilador recusa um construtor que o esqueça e qualquer atribuição posterior."
+      },
+      {
+        "text": "`final class Book`",
+        "why": "Isso impede subclasses de `Book`; não diz nada sobre que livro um empréstimo guarda."
+      }
+    ]
+  },
+  "ex-dkpsee9n": {
+    "prompt": "Qual destas é verdade sobre `final StringBuilder note`?",
+    "hint": "O `Notes` da seção 02.",
+    "choices": [
+      {
+        "text": "O texto dele nunca pode mudar",
+        "why": "O `append` o mudou, e o programa imprimiu `Due on Friday`."
+      },
+      {
+        "text": "É uma constante de compilação copiada para outras classes",
+        "why": "Só primitivos e strings com valor conhecido na compilação são; isto é um objeto criado com `new`."
+      },
+      {
+        "text": "Ele sempre leva ao mesmo objeto",
+        "why": "Isso: a referência é fixa; o conteúdo do objeto não."
+      }
+    ]
+  },
+  "ex-d7hmc9yn": {
+    "prompt": "`final int[] counts = {1, 2, 3}; counts[0] = 9;` O que o `Notes` imprimiu para `counts[0]`?",
+    "hint": "O array não é final; a variável é."
+  },
+  "ex-smq3acyw": {
+    "prompt": "Quando a seção aconselha tornar uma classe sua `final`?",
+    "hint": "Ela foi pensada para ser estendida?",
+    "choices": [
+      {
+        "text": "Nunca: só as classes do JDK devem ser final",
+        "why": "A seção aconselha o contrário para classes que você não pensou para extensão."
+      },
+      {
+        "text": "A menos que você a tenha pensado para ser estendida",
+        "why": "Isso: a lição 20 mostra o que estender com segurança exige de uma classe."
+      },
+      {
+        "text": "Quando ela tiver ao menos um atributo `final` entre os seus",
+        "why": "Um atributo final e uma classe final protegem coisas diferentes."
+      },
+      {
+        "text": "Só quando ela tiver métodos estáticos",
+        "why": "Métodos estáticos não têm nada a ver com ser estendida."
+      }
+    ]
+  }
+}

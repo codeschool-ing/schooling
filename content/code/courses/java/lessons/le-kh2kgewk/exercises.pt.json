@@ -1,0 +1,373 @@
+{
+  "ex-61pqbjf9": {
+    "prompt": "O `Lendable` declara `String title();` sem modificador nenhum escrito. O que é esse método?",
+    "hint": "As palavras ficam de fora porque estão implícitas.",
+    "choices": [
+      {
+        "text": "De pacote e abstrato, já que nenhuma palavra de acesso foi escrita",
+        "why": "Numa classe seria de pacote; numa interface o padrão é público."
+      },
+      {
+        "text": "Público e abstrato",
+        "why": "Isso: todo método de interface é as duas coisas, a menos que diga outra coisa."
+      },
+      {
+        "text": "Público, com um corpo vazio que devolve `null`",
+        "why": "Não há corpo nenhum; uma classe que assina tem de escrever um."
+      },
+      {
+        "text": "Privado à interface até uma classe implementá-la",
+        "why": "Um método privado de interface precisa da palavra `private` e de um corpo."
+      }
+    ]
+  },
+  "ex-46ajxwqm": {
+    "prompt": "`books.sort(null)` pôs `Dom Casmurro` primeiro. O que disse ao `List.sort` como ordenar dois livros?",
+    "hint": "`null` quer dizer \"use a ordem dos próprios elementos\".",
+    "choices": [
+      {
+        "text": "A ordem em que os livros foram acrescentados à lista",
+        "why": "Foram acrescentados como `O Guarani`, `Dom Casmurro`, `Iracema`, e saíram em outra ordem."
+      },
+      {
+        "text": "O `loanDays()`, que todo `Lendable` tem",
+        "why": "Os três livros emprestam por 21 dias; isso não conseguiria ordená-los."
+      },
+      {
+        "text": "O `Book.compareTo`, do `Comparable<Book>`",
+        "why": "Isso: o `List.sort` chama o método que o contrato promete."
+      },
+      {
+        "text": "Os hash codes dos objetos `Book`",
+        "why": "Hash codes não têm ordem que signifique algo aqui; o `compareTo` compara títulos."
+      }
+    ]
+  },
+  "ex-nmkbf5wp": {
+    "prompt": "O que o `javac` disse sobre a `Magazine`, que implementa `Lendable` e escreve só o `title()`?",
+    "hint": "A mensagem nomeia o método que falta.",
+    "choices": [
+      {
+        "text": "Que ela não é abstrata e não sobrescreve `loanDays()`",
+        "why": "Isso: quem assina o contrato entrega todos os métodos, ou declara a classe abstrata."
+      },
+      {
+        "text": "Nada; o `loanDays()` devolve 0 por padrão",
+        "why": "Métodos abstratos não têm valor padrão; o compilador recusa."
+      },
+      {
+        "text": "Que o `Lendable` não pode ser instanciado",
+        "why": "Esse foi o erro do `Nope`, que tentou `new Lendable()`."
+      }
+    ]
+  },
+  "ex-y26qftr5": {
+    "prompt": "Quais destas linhas compilam, dados o `Lendable`, o `Book` e o `Dvd` da seção 02? Escolha todas as que se aplicam.",
+    "hint": "Uma variável pode ter o tipo de uma interface; um objeto não.",
+    "choices": [
+      {
+        "text": "`Lendable item = new Dvd(\"Central do Brasil\");`",
+        "why": "Sim: o `Dvd` assinou o `Lendable`."
+      },
+      {
+        "text": "`Lendable item = new Lendable();`",
+        "why": "Não: `Lendable is abstract; cannot be instantiated`."
+      },
+      {
+        "text": "`Comparable<Book> c = new Book(\"Iracema\");`",
+        "why": "Sim: o `Book` assinou também o `Comparable<Book>`."
+      },
+      {
+        "text": "`Comparable<Book> c = new Dvd(\"Central do Brasil\");`",
+        "why": "Não: o `Dvd` assinou só o `Lendable`."
+      }
+    ]
+  },
+  "ex-dx5nj68c": {
+    "prompt": "Um colega escreve no ano que vem uma classe `Map` que implementa `Lendable`. Sem mudar uma linha do `Desk`, o laço dele sobre uma `List<Lendable>` funciona com mapas?",
+    "hint": "O laço foi escrito contra o contrato.",
+    "choices": [
+      {
+        "text": "Não, porque o `Desk` foi compilado antes de o `Map` existir",
+        "why": "Compilar contra a interface é justamente o que deixa classes posteriores se encaixarem."
+      },
+      {
+        "text": "Sim, cada mapa responde com o seu `title()` e o seu `loanDays()`",
+        "why": "Isso: código escrito contra uma interface funciona com toda classe que a assina, inclusive as posteriores."
+      },
+      {
+        "text": "Só se o `Map` também estender `Book`",
+        "why": "Nenhum pai é necessário; o `Book` e o `Dvd` também não compartilham nenhum."
+      },
+      {
+        "text": "Só depois de o `Desk` acrescentar um `case` para mapas no laço",
+        "why": "O laço não tem casos; ele chama os métodos da interface e cada objeto responde."
+      }
+    ]
+  },
+  "ex-75tegt2n": {
+    "prompt": "O `renewable()` foi acrescentado ao `Lendable` como método `default`. O que aconteceu com o `Book.java` e o `Dvd.java`?",
+    "hint": "Eles foram copiados sem mudança.",
+    "choices": [
+      {
+        "text": "Tiveram de acrescentar `renewable()` antes de compilar de novo",
+        "why": "Isso é o que um método abstrato exigiria; um default não pede nada."
+      },
+      {
+        "text": "Nada; compilaram e herdaram `true`",
+        "why": "Isso: os dois responderam `renewable` pelo corpo default."
+      },
+      {
+        "text": "Compilaram, e o `renewable()` lançava exceção para eles até que o escrevessem",
+        "why": "Um default tem um corpo que roda; nada lança exceção."
+      }
+    ]
+  },
+  "ex-kyfxdctz": {
+    "prompt": "Como o `describe` é chamado, e por que desse jeito?",
+    "hint": "Ele é `static`.",
+    "choices": [
+      {
+        "text": "`item.describe()`, porque todo implementador o herda",
+        "why": "Métodos estáticos de interface não são herdados; `Book.describe` não existe."
+      },
+      {
+        "text": "`Book.describe(item)`, porque `Book` é a classe que o implementa",
+        "why": "Não é herdado, então não se alcança por `Book`."
+      },
+      {
+        "text": "`Lendable.describe(item)`, porque um método estático pertence à interface",
+        "why": "Isso: é chamado pelo nome da interface, como o `Shelf` fez."
+      }
+    ]
+  },
+  "ex-ghrg15qq": {
+    "prompt": "O `javap Lendable` listou os métodos que a interface mostra ao mundo. Quantas linhas de métodos ele imprimiu?",
+    "hint": "Conte os abstratos, o default e o estático; o privado não aparece.",
+    "unit": "métodos"
+  },
+  "ex-135qvyhq": {
+    "prompt": "Dois métodos default de uma interface precisam atualizar uma contagem de quantos itens foram emprestados. Seguindo a seção, o que o desenho pede?",
+    "hint": "O que uma interface consegue guardar, e o que não consegue?",
+    "choices": [
+      {
+        "text": "Um atributo não final na interface",
+        "why": "Uma interface só pode declarar constantes; ela não tem atributos que mudam."
+      },
+      {
+        "text": "Um método default privado que guarda a contagem",
+        "why": "Um método não consegue guardar valor entre chamadas sem um atributo onde pô-lo."
+      },
+      {
+        "text": "Uma classe abstrata",
+        "why": "Isso: estado compartilhado e o código em volta dele pertencem a uma classe abstrata, a ferramenta da lição 21."
+      },
+      {
+        "text": "Uma segunda interface cujo método default guarda o número",
+        "why": "Interfaces não guardam estado, sejam quantas forem."
+      }
+    ]
+  },
+  "ex-x8f6rm30": {
+    "prompt": "`Audiobook implements Printed, Recorded` e não escreve nenhum `label()`. O que acontece?",
+    "hint": "O compilador se recusa a adivinhar.",
+    "choices": [
+      {
+        "text": "Roda o rótulo de `Printed`, porque ele vem primeiro na lista",
+        "why": "Nenhuma ordem no `implements` decide isso."
+      },
+      {
+        "text": "Os dois rótulos rodam, um depois do outro",
+        "why": "Uma chamada executa um método."
+      },
+      {
+        "text": "Não compila: herda defaults sem relação para `label()`",
+        "why": "Isso: a classe tem de escrever o seu próprio `label()`."
+      }
+    ]
+  },
+  "ex-0rbfmnb7": {
+    "prompt": "Dentro de `Audiobook`, a chamada que executa o default de `Recorded` se escreve `Recorded.___.label()`.",
+    "hint": "A mesma palavra que alcança o método de uma classe pai.",
+    "blanks": [
+      {
+        "accept": [
+          "super"
+        ]
+      }
+    ]
+  },
+  "ex-t3xw4d9b": {
+    "prompt": "`Leaflet extends Catalogue implements Printed`. Os dois dão um `label()`. Qual roda, e por que a regra existe?",
+    "hint": "Imprimiu `a catalogue entry`.",
+    "choices": [
+      {
+        "text": "O de `Printed`, já que interfaces são mais novas que classes",
+        "why": "Venceu o método da classe, e a regra contrária deixaria classes antigas mudarem."
+      },
+      {
+        "text": "O de `Catalogue`, para que acrescentar um default não mude uma classe existente",
+        "why": "Isso: uma classe que já tinha o método continua com ele."
+      },
+      {
+        "text": "Nenhum; é o mesmo erro de compilação do `Audiobook`",
+        "why": "Uma classe contra uma interface não é conflito; só duas interfaces são."
+      },
+      {
+        "text": "O que foi compilado por último",
+        "why": "A ordem de compilação nunca decide qual método roda."
+      }
+    ]
+  },
+  "ex-dg7ybpbv": {
+    "prompt": "Uma classe implementa só `Printed`, e quer também o rótulo de `Recorded`. Ela pode escrever `Recorded.super.label()`?",
+    "hint": "A última frase sobre `.super` na seção 04.",
+    "choices": [
+      {
+        "text": "Sim, o default de qualquer interface se alcança assim",
+        "why": "Só o de uma interface que a classe nomeia no seu próprio `implements`."
+      },
+      {
+        "text": "Não: essa forma só alcança interfaces que a classe assina diretamente",
+        "why": "Isso: ela alcança uma superinterface direta, e `Recorded` não é uma."
+      },
+      {
+        "text": "Sim, desde que `Recorded` esteja no mesmo diretório",
+        "why": "O lugar não é a regra; a cláusula `implements` é."
+      }
+    ]
+  },
+  "ex-bshrgm2m": {
+    "prompt": "O que diz `sealed interface Item permits Book, Dvd`?",
+    "hint": "Leia o `permits` ao pé da letra.",
+    "choices": [
+      {
+        "text": "Que só `Book` e `Dvd` podem implementar `Item`",
+        "why": "Isso: o compilador faz valer a lista."
+      },
+      {
+        "text": "Que `Book` e `Dvd` não podem ser estendidas por nada",
+        "why": "Cada classe permitida decide isso sozinha, com `final`, `sealed` ou `non-sealed`."
+      },
+      {
+        "text": "Que `Item` só pode ser implementada neste arquivo",
+        "why": "As classes permitidas estavam em arquivos próprios."
+      }
+    ]
+  },
+  "ex-gjgsevbv": {
+    "prompt": "`public class Dvd implements Item` foi recusada com `sealed, non-sealed or final modifiers expected`. O que o compilador está pedindo?",
+    "hint": "Uma classe permitida precisa dizer o que acontece abaixo dela.",
+    "choices": [
+      {
+        "text": "Acrescentar `Dvd` ao `permits`",
+        "why": "Ela já estava lá; a reclamação não era essa."
+      },
+      {
+        "text": "Declarar o que é permitido abaixo de `Dvd`",
+        "why": "Isso: `final` fecha, `sealed` lista as suas, `non-sealed` abre de novo."
+      },
+      {
+        "text": "Marcar `title()` como `final` para nenhuma subclasse alterá-lo",
+        "why": "A mensagem é sobre os modificadores da classe, não de um método."
+      },
+      {
+        "text": "Transformar `Item` numa classe abstrata em vez de interface",
+        "why": "Interfaces seladas são permitidas; a correção foi uma palavra em `Dvd`."
+      }
+    ]
+  },
+  "ex-nhs4ne2g": {
+    "prompt": "Ligue cada modificador de uma classe permitida ao que ele significa para as classes abaixo dela.",
+    "hint": "As três palavras da seção 05.",
+    "pairs": [
+      {
+        "left": "`final`",
+        "right": "Nada pode estendê-la"
+      },
+      {
+        "left": "`sealed`",
+        "right": "Só as classes do seu próprio `permits` podem estendê-la"
+      },
+      {
+        "left": "`non-sealed`",
+        "right": "Qualquer classe pode estendê-la de novo"
+      }
+    ],
+    "right_distractors": [
+      "Só classes do mesmo arquivo podem estendê-la"
+    ]
+  },
+  "ex-hnad31x9": {
+    "prompt": "Alguém acrescenta `Magazine` ao `permits` de `Item` e escreve a classe. O que acontece com o `Rules.loanDays`, cujo switch não tem `default`?",
+    "hint": "O compilador leu o `permits` para aceitar o switch.",
+    "choices": [
+      {
+        "text": "Devolve 0 para revistas",
+        "why": "Nenhum caso as cobre, e não há valor padrão para onde cair."
+      },
+      {
+        "text": "Lança exceção em tempo de execução na primeira vez que chega uma revista",
+        "why": "A falha vem antes disso, e é essa a ideia."
+      },
+      {
+        "text": "O código deixa de compilar: falta um caso no switch",
+        "why": "Isso: todo switch sobre `Item` precisa decidir o novo tipo antes de o código compilar."
+      },
+      {
+        "text": "Nada muda, porque o switch só nomeia `Book` e `Dvd`",
+        "why": "Nomear dois de três é exatamente o que o torna incompleto."
+      }
+    ]
+  },
+  "ex-qqg0rnq6": {
+    "prompt": "Ponha os passos de fazer o contrato `Lendable` crescer com o `renewable()` na ordem que a lição seguiu.",
+    "hint": "Escreva o default primeiro; as classes antigas não precisam de nada.",
+    "items": [
+      "Acrescentar `default boolean renewable()` com corpo ao `Lendable`",
+      "Recompilar `Book` e `Dvd` sem mudança",
+      "Sobrescrever `renewable()` em `Game`, a única classe que discorda",
+      "Chamar `Lendable.describe` em cada item"
+    ]
+  },
+  "ex-4fqh0gpd": {
+    "prompt": "Sua equipe precisa de um tipo para formas de pagamento: cartão, Pix e boleto, cada uma com regras diferentes, e nenhum outro tipo pode ser aceito sem revisão. O que você escreve?",
+    "hint": "Qual ferramenta lista os implementadores e deixa um switch saber que está completo?",
+    "choices": [
+      {
+        "text": "Uma interface comum, e um ramo `default` em todo switch",
+        "why": "Qualquer classe nova entraria e levaria o default em silêncio."
+      },
+      {
+        "text": "Uma interface selada que permite as três",
+        "why": "Isso: acrescentar uma quarta exige editar o `permits`, e todo switch falha até decidir."
+      },
+      {
+        "text": "Três classes sem relação, cada uma com um atributo `type` de string",
+        "why": "Uma string não é conferida por nada; um erro de digitação vira um tipo novo."
+      },
+      {
+        "text": "Uma interface com três métodos default, um por forma de pagamento",
+        "why": "Defaults compartilham comportamento; não limitam quem pode implementar."
+      }
+    ]
+  },
+  "ex-8s49257h": {
+    "prompt": "Que afirmação sobre a herança em Java fecha a lição?",
+    "hint": "Uma classe, várias interfaces.",
+    "choices": [
+      {
+        "text": "Comportamento e estado chegam ambos de qualquer número de pais",
+        "why": "Estado chega de uma classe só."
+      },
+      {
+        "text": "Interfaces carregam estado, classes carregam comportamento",
+        "why": "Ao contrário: interfaces não guardam estado."
+      },
+      {
+        "text": "Comportamento de várias interfaces, estado de uma classe",
+        "why": "Isso: e onde duas respostas disputam sem regra, você escreve a resposta."
+      }
+    ]
+  }
+}

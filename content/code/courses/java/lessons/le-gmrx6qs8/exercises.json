@@ -1,0 +1,535 @@
+[
+  {
+    "id": "ex-6tx22maa",
+    "version": 1,
+    "section": "overloading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is it decided which overload of `show` a call reaches?",
+    "hint": "Nothing about overloading happens at run time.",
+    "choices": [
+      {
+        "text": "At compile time, from the argument types",
+        "correct": true,
+        "why": "Right: `javac` picks one and writes its choice into the class file."
+      },
+      {
+        "text": "At run time, from the class of the object passed in",
+        "correct": false,
+        "why": "That describes overriding, chosen by the object while the program runs."
+      },
+      {
+        "text": "When the JIT compiles the method, from how often each one runs",
+        "correct": false,
+        "why": "The JIT never changes which method a call means; it only speeds up the one chosen."
+      },
+      {
+        "text": "When the class is loaded, from the order the overloads are written",
+        "correct": false,
+        "why": "The order in the file plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdv1t1ja",
+    "version": 1,
+    "section": "overloading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`show(small)`, with `byte small = 5`, printed `int 5`. Why not `Integer` or `Object`?",
+    "hint": "There is no `show(byte)`.",
+    "choices": [
+      {
+        "text": "Because a `byte` literal is always an `int` in Java",
+        "correct": false,
+        "why": "`small` is a `byte` variable; the conversion happened at the call."
+      },
+      {
+        "text": "Widening to `int` is preferred over boxing or reaching `Object`",
+        "correct": true,
+        "why": "Right: the nearest wider primitive wins before any boxing is tried."
+      },
+      {
+        "text": "Because `show(int)` is written first in the class",
+        "correct": false,
+        "why": "Order in the file never decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-m4b4wv9b",
+    "version": 1,
+    "section": "overloading",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When no overload matches exactly, put the compiler's preferences in order, the most preferred first.",
+    "hint": "`Ranking` asked twice.",
+    "items": [
+      "Widening a primitive, such as `int` to `long`",
+      "Boxing, such as `int` to `Integer`",
+      "Varargs, such as `int` into `int...`"
+    ]
+  },
+  {
+    "id": "ex-95kxnz4v",
+    "version": 1,
+    "section": "overloading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does widening rank above boxing?",
+    "hint": "Boxing arrived in Java 5.",
+    "choices": [
+      {
+        "text": "Because boxing allocates an object and is slower",
+        "correct": false,
+        "why": "Speed was not the reason the section gave."
+      },
+      {
+        "text": "Because primitives are checked before objects in every Java rule",
+        "correct": false,
+        "why": "There is no such general rule; this one is about history."
+      },
+      {
+        "text": "So that calls written before Java 5 kept reaching the same method",
+        "correct": true,
+        "why": "Right: a 1.4 program's `widen(5)` had always reached `widen(long)`, and still does."
+      }
+    ]
+  },
+  {
+    "id": "ex-evx1gq83",
+    "version": 1,
+    "section": "overloading",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`lend(Integer, Object)` and `lend(Object, Integer)` both exist. What does `lend(1, 2)` do?",
+    "hint": "Neither path is better than the other.",
+    "choices": [
+      {
+        "text": "Calls the first method declared",
+        "correct": false,
+        "why": "The compiler does not pick by position."
+      },
+      {
+        "text": "Calls both, in order",
+        "correct": false,
+        "why": "One call reaches one method, or none."
+      },
+      {
+        "text": "It does not compile: ambiguous",
+        "correct": true,
+        "why": "Right: it names both candidates and leaves the choice to you."
+      },
+      {
+        "text": "Throws at run time when the JVM cannot decide",
+        "correct": false,
+        "why": "It never gets that far; the error is at compile time."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpw43933",
+    "version": 1,
+    "section": "overloading",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A method's name and its parameter types, in order, are called its ___; the return type is not part of it.",
+    "hint": "`Twice` failed because two methods had the same one.",
+    "blanks": [
+      {
+        "accept": [
+          "signature"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0hygbhsg",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an override?",
+    "hint": "One level down, same signature.",
+    "choices": [
+      {
+        "text": "A second method in the same class with the same name and other parameters",
+        "correct": false,
+        "why": "That is an overload."
+      },
+      {
+        "text": "A subclass's method with the signature of one it inherited",
+        "correct": true,
+        "why": "Right: it replaces the inherited body for objects of the subclass."
+      },
+      {
+        "text": "Any method marked `@Override`",
+        "correct": false,
+        "why": "The annotation only asks for a check; the method is an override whether or not it is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8xz8pmc",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Typo` declared `descibe()` without `@Override`. What did `typo.describe()` print, and why?",
+    "hint": "A new method nobody calls.",
+    "choices": [
+      {
+        "text": "`typo Dom Casmurro`, because the compiler corrected the spelling",
+        "correct": false,
+        "why": "The compiler corrects nothing; it accepted a new method."
+      },
+      {
+        "text": "`item Dom Casmurro`, from `Item`",
+        "correct": true,
+        "why": "Right: `descibe` replaced nothing, so `Item`'s method ran."
+      },
+      {
+        "text": "Nothing, because the program did not compile",
+        "correct": false,
+        "why": "Without the annotation it compiled; that is what makes the typo dangerous."
+      }
+    ]
+  },
+  {
+    "id": "ex-45a3599g",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Item.copy()` returns `Item`. Which return type may `Book.copy()` declare?",
+    "hint": "Every caller of the old signature must still get what it was promised.",
+    "choices": [
+      {
+        "text": "Only `Item`, exactly",
+        "correct": false,
+        "why": "A subtype is allowed; `Book` used it."
+      },
+      {
+        "text": "`Object`, since every class is one",
+        "correct": false,
+        "why": "That widens the promise, and callers expecting an `Item` would break."
+      },
+      {
+        "text": "`Item` or any subtype of it, such as `Book`",
+        "correct": true,
+        "why": "Right: a covariant return narrows the type and keeps the promise."
+      },
+      {
+        "text": "Any type, as long as the method is annotated",
+        "correct": false,
+        "why": "`@Override` checks the rules; it does not relax them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wjwgfbh",
+    "version": 1,
+    "section": "overriding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Quiet` overrode the public `describe()` as `protected` and was refused. Why does Java forbid narrowing access?",
+    "hint": "Think of code holding an `Item`.",
+    "choices": [
+      {
+        "text": "Code holding an `Item` was promised it could call `describe()`",
+        "correct": true,
+        "why": "Right: a `Quiet` behind an `Item` variable would break that promise."
+      },
+      {
+        "text": "Because `protected` methods cannot be overridden",
+        "correct": false,
+        "why": "They can; the rule is about which direction access may move."
+      },
+      {
+        "text": "Because a subclass must use the same access words as its parent",
+        "correct": false,
+        "why": "Wider access is allowed; only narrower is refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-zc5h6wan",
+    "version": 1,
+    "section": "overriding",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would the compiler refuse in a subclass of `Item`? Choose all that apply.",
+    "hint": "The table in section 03.",
+    "choices": [
+      {
+        "text": "`@Override public String descibe()`",
+        "correct": true,
+        "why": "Yes: the annotation finds that it overrides nothing."
+      },
+      {
+        "text": "`@Override public Book copy()`",
+        "correct": false,
+        "why": "No: a covariant return is allowed."
+      },
+      {
+        "text": "`@Override protected String describe()`",
+        "correct": true,
+        "why": "Yes: weaker access than `public`."
+      },
+      {
+        "text": "`@Override public Object copy()`",
+        "correct": true,
+        "why": "Yes: `Object` is not `Item` nor a subtype of it."
+      },
+      {
+        "text": "`public String describe(String prefix)` with no annotation",
+        "correct": false,
+        "why": "No: that is a new overload, and legal."
+      }
+    ]
+  },
+  {
+    "id": "ex-34hj41dt",
+    "version": 1,
+    "section": "the-trap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Book` declared `public boolean equals(Book other)`. What is that method, to the compiler?",
+    "hint": "Compare its parameter with `Object`'s.",
+    "choices": [
+      {
+        "text": "An override of `Object.equals`",
+        "correct": false,
+        "why": "An override needs the same parameter type, `Object`."
+      },
+      {
+        "text": "An overload of `equals`",
+        "correct": true,
+        "why": "Right: it sits beside the inherited `equals(Object)`, and `Book` ends up with two."
+      },
+      {
+        "text": "A compile error, since `equals` may only take `Object`",
+        "correct": false,
+        "why": "It compiled; that is why the mistake survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-an3ehqqa",
+    "version": 1,
+    "section": "the-trap",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `equals(Book)`, how many books did the `HashSet` hold after adding `a` and `b`, two books with the same ISBN?",
+    "hint": "The second line of the first run.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "books"
+  },
+  {
+    "id": "ex-3r6v3qsx",
+    "version": 1,
+    "section": "the-trap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did `HashSet` never call the `equals(Book)` Ana wrote?",
+    "hint": "What type does `HashSet` know its elements as, when it is compiled?",
+    "choices": [
+      {
+        "text": "Because `HashSet` compares hash codes only, never `equals`",
+        "correct": false,
+        "why": "It compares hash codes first and then calls `equals` on a match; both hash codes matched here."
+      },
+      {
+        "text": "Its call was compiled as `equals(Object)`, which still meant `Object`'s identity check",
+        "correct": true,
+        "why": "Right: overloads are chosen from declared types, and the set declares `Object`."
+      },
+      {
+        "text": "Because `equals(Book)` is not public",
+        "correct": false,
+        "why": "It was declared `public`."
+      },
+      {
+        "text": "Because `a` and `b` have different titles",
+        "correct": false,
+        "why": "Their titles were the same, and the rule compared ISBNs anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxzhydpt",
+    "version": 1,
+    "section": "the-trap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `a.equals(asObject)` print with the first `Book`, where `asObject` is `b` held in an `Object` variable?",
+    "hint": "The declared type of the argument chose the method.",
+    "choices": [
+      {
+        "text": "`a.equals(asObject): true`, since it is the same `b`",
+        "correct": false,
+        "why": "Same object, different declared type, so a different method."
+      },
+      {
+        "text": "`a.equals(asObject): false`",
+        "correct": true,
+        "why": "Right: declared `Object`, so `equals(Object)`, so identity."
+      },
+      {
+        "text": "A `ClassCastException`, since an `Object` is not a `Book`",
+        "correct": false,
+        "why": "Nothing was cast; the inherited method accepted the `Object`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nryxzw1q",
+    "version": 1,
+    "section": "the-trap",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Putting the annotation `@___` on `equals(Book)` turns the mistake into a compile error.",
+    "hint": "It asks the compiler to confirm a method replaces one from a supertype.",
+    "blanks": [
+      {
+        "accept": [
+          "Override"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4xc05zx2",
+    "version": 1,
+    "section": "the-trap",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The fixed `Book` overrides `equals(Object)` correctly but someone deletes its `hashCode`. Two books with the same ISBN go into a `HashSet`. What is the risk?",
+    "hint": "Equal objects must have equal hash codes.",
+    "choices": [
+      {
+        "text": "The set looks for the second in the wrong place and keeps both",
+        "correct": true,
+        "why": "Right: with identity hash codes the two land in different places and `equals` is never asked."
+      },
+      {
+        "text": "None, since `equals` is now right",
+        "correct": false,
+        "why": "`HashSet` only calls `equals` for elements whose hash codes lead to the same place."
+      },
+      {
+        "text": "The program fails to compile without `hashCode`",
+        "correct": false,
+        "why": "Every class inherits one from `Object`; the code compiles and misbehaves."
+      },
+      {
+        "text": "`HashSet.add` throws because the hash codes differ",
+        "correct": false,
+        "why": "Different hash codes are normal; the set simply files them apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-75mrpwqe",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to what decides which method runs.",
+    "hint": "Overloads are chosen by the compiler; overrides by the object.",
+    "pairs": [
+      {
+        "left": "`show(5)` against `show(int)` and `show(long)`",
+        "right": "The declared types of the arguments"
+      },
+      {
+        "left": "`item.describe()` where `item` holds a `Book`",
+        "right": "The class of the object"
+      },
+      {
+        "left": "`lend(1, 2)` against two equally good overloads",
+        "right": "Nothing: it does not compile"
+      }
+    ],
+    "right_distractors": [
+      "The order the methods appear in the file"
+    ]
+  },
+  {
+    "id": "ex-aavvkzzq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Member` class declares `public int compareTo(Member other)` but forgets `implements Comparable<Member>`. `members.sort(null)` throws a `ClassCastException`. What happened?",
+    "hint": "A method with the right name is not a signed contract.",
+    "choices": [
+      {
+        "text": "`compareTo` was overloaded instead of overridden, as in the `equals` trap",
+        "correct": false,
+        "why": "Close, but here there was nothing to override: `Member` signed no contract at all."
+      },
+      {
+        "text": "`sort` casts each element to the interface, and that cast fails",
+        "correct": true,
+        "why": "Right: the method exists, but only `implements` makes the class the type `sort` casts to."
+      },
+      {
+        "text": "`compareTo` returned a negative number for equal members",
+        "correct": false,
+        "why": "The cast failed before any comparison ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhw09fsd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habit from this lesson would have caught both the `descibe` typo and the `equals(Book)` mistake?",
+    "hint": "One annotation.",
+    "choices": [
+      {
+        "text": "Writing a unit test for every method",
+        "correct": false,
+        "why": "Tests help, but the quick test of `a.equals(b)` passed."
+      },
+      {
+        "text": "Avoiding overloads altogether",
+        "correct": false,
+        "why": "Neither mistake was a deliberate overload."
+      },
+      {
+        "text": "`@Override` on every method meant to replace one",
+        "correct": true,
+        "why": "Right: in both cases the compiler would have said the method overrides nothing."
+      }
+    ]
+  }
+]

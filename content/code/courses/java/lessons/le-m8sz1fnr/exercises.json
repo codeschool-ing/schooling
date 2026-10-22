@@ -1,0 +1,539 @@
+[
+  {
+    "id": "ex-8hc5px1q",
+    "version": 1,
+    "section": "compile-and-run",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `javac -d out Greet.java`, where is `Greet.class`?",
+    "hint": "`-d` names a directory.",
+    "choices": [
+      {
+        "text": "Beside `Greet.java`, as in lesson 1",
+        "correct": false,
+        "why": "That is where it goes without `-d`; with it, the source directory kept only the source."
+      },
+      {
+        "text": "In `out`, a directory `javac` created for it",
+        "correct": true,
+        "why": "Right: `javac` created `out` because it did not exist and wrote the class there."
+      },
+      {
+        "text": "Nowhere on disk until `java` asks for it",
+        "correct": false,
+        "why": "That describes source-file mode, `java Greet.java`; `javac` always writes a file."
+      },
+      {
+        "text": "In `~/.cache`, where the JDK keeps compiled classes",
+        "correct": false,
+        "why": "The JDK keeps no such cache; the class went exactly where `-d` said."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bfgrg2z",
+    "version": 1,
+    "section": "compile-and-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`java -cp out Greet Ana Bruno` runs. What is `args.length` inside `main`?",
+    "hint": "Count only what comes after the class name.",
+    "choices": [
+      {
+        "text": "4, one for each word after `java`",
+        "correct": false,
+        "why": "`-cp`, `out` and `Greet` are for `java` itself; the program never sees them."
+      },
+      {
+        "text": "3, the class name and the two names",
+        "correct": false,
+        "why": "The class name is not passed to the program, unlike `argv[0]` in C."
+      },
+      {
+        "text": "2",
+        "correct": true,
+        "why": "Right: `Ana` and `Bruno`, and the program printed two lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs2hhf57",
+    "version": 1,
+    "section": "compile-and-run",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`java -cp out Greet` with no names: what number did `echo $?` print?",
+    "hint": "The number passed to `System.exit`.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vcktgaxr",
+    "version": 1,
+    "section": "compile-and-run",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Greet` print its usage line with `System.err` rather than `System.out`?",
+    "hint": "Think of `java -cp out Greet > names.txt`.",
+    "choices": [
+      {
+        "text": "So a redirect of the output does not swallow the message",
+        "correct": true,
+        "why": "Right: `>` captures standard output only, and the complaint still reaches the screen."
+      },
+      {
+        "text": "Because only `System.err` can be followed by `System.exit`",
+        "correct": false,
+        "why": "`System.exit` can follow anything; the stream and the status are unrelated."
+      },
+      {
+        "text": "Because `System.err` prints in red, which marks an error",
+        "correct": false,
+        "why": "Nothing in the transcript is coloured; the difference is where the text goes."
+      },
+      {
+        "text": "Because the shell sets `$?` from what is written to `System.err`",
+        "correct": false,
+        "why": "`$?` comes from `System.exit`, or from `main` returning, never from the text."
+      }
+    ]
+  },
+  {
+    "id": "ex-244qec1z",
+    "version": 1,
+    "section": "compile-and-run",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`java -cp out Greet.class` fails with `ClassNotFoundException: Greet.class`. What did `java` look for?",
+    "hint": "`java` reads a class name, and a dot means something in one.",
+    "choices": [
+      {
+        "text": "A file called `Greet.class.class` in `out`",
+        "correct": false,
+        "why": "Close in spirit, but the dot changes the meaning: it separates a package from a class."
+      },
+      {
+        "text": "A class called `class` in a package called `Greet`",
+        "correct": true,
+        "why": "Right: the dot is a package separator, which is why the fix is dropping the extension."
+      },
+      {
+        "text": "The file `Greet.class` in the current directory, ignoring `-cp`",
+        "correct": false,
+        "why": "`-cp out` was honoured; the class path was right and the name was wrong."
+      },
+      {
+        "text": "A source file `Greet.class` to compile in memory",
+        "correct": false,
+        "why": "Source-file mode starts only for a name ending in `.java`, or with `--source`."
+      }
+    ]
+  },
+  {
+    "id": "ex-82gzp9j5",
+    "version": 1,
+    "section": "compile-and-run",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these commands fail with `Could not find or load main class`, run in `~/life` where the class is in `out`? Choose all that apply.",
+    "hint": "The name must be exact, and the place must be on the class path.",
+    "choices": [
+      {
+        "text": "`java Greet Ana`",
+        "correct": true,
+        "why": "Yes: with no `-cp` the class path is the current directory, and the class is not there."
+      },
+      {
+        "text": "`java -cp out greet Ana`",
+        "correct": true,
+        "why": "Yes: class names are case-sensitive."
+      },
+      {
+        "text": "`java -cp out Greet`",
+        "correct": false,
+        "why": "No: it finds the class and runs it; it prints the usage line and exits with 2, which is the program working."
+      },
+      {
+        "text": "`java Greet.java Ana`",
+        "correct": false,
+        "why": "No: the source file is right there, and source-file mode compiles and runs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gha7be2j",
+    "version": 1,
+    "section": "source-launcher",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `java Greet.java Ana` leave on disk?",
+    "hint": "`ls` was run right after.",
+    "choices": [
+      {
+        "text": "`Greet.class`, beside the source",
+        "correct": false,
+        "why": "That is what `javac` does; `ls` showed only `Greet.java`."
+      },
+      {
+        "text": "A cached class under `~/.java`, reused next time",
+        "correct": false,
+        "why": "There is no such cache: the class lived in the JVM's memory and every run compiles again."
+      },
+      {
+        "text": "Nothing new: the class lived in memory",
+        "correct": true,
+        "why": "Right: it compiled in memory, ran, and wrote nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahwzms2m",
+    "version": 1,
+    "section": "source-launcher",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`time` measured 1.093 s for `java Greet.java Ana` and 0.206 s for `java Greet Ana` from a compiled class. Roughly how many times longer did the source run take? Give a whole number.",
+    "hint": "Divide the first by the second.",
+    "value": 5,
+    "tolerance": 1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-9pk8jxr0",
+    "version": 1,
+    "section": "source-launcher",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Main.java` uses `Shout`, which is in `Shout.java` beside it. On Java 25, what does `java Main.java` do?",
+    "hint": "Java 22 changed the answer.",
+    "choices": [
+      {
+        "text": "Fails, because source-file mode compiles one file only",
+        "correct": false,
+        "why": "That was true up to 21; since 22 it compiles the other classes it needs from the same directory."
+      },
+      {
+        "text": "Compiles both in memory and runs `Main`",
+        "correct": true,
+        "why": "Right: it found `Shout.java` by the class name and printed `HELLO FROM TWO FILES!`."
+      },
+      {
+        "text": "Compiles every `.java` file in the directory, then runs `Main`",
+        "correct": false,
+        "why": "Only what is needed: a broken `Broken.java` beside them was never looked at."
+      },
+      {
+        "text": "Asks which file holds `main`, because both are public classes",
+        "correct": false,
+        "why": "The file you name is the one whose `main` runs; nothing is asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0avgn33",
+    "version": 1,
+    "section": "source-launcher",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You copy the script `greet`, `#!` line and all, to `greet.java` and run `java greet.java Ana`. Why does it fail?",
+    "hint": "What does `--source 25` do for a file without an extension?",
+    "choices": [
+      {
+        "text": "A script cannot be run by naming it after `java`",
+        "correct": false,
+        "why": "A script can; the extension is what changed, not the way it was started."
+      },
+      {
+        "text": "A `.java` file is compiled as plain Java, where `#` is an illegal character",
+        "correct": true,
+        "why": "Right: the compiler stopped at line 1, and only an extensionless file run with `--source` has its `#!` line skipped."
+      },
+      {
+        "text": "The file is not executable after `cp`",
+        "correct": false,
+        "why": "`java greet.java` reads the file; it does not need the execute bit."
+      }
+    ]
+  },
+  {
+    "id": "ex-zce04617",
+    "version": 1,
+    "section": "source-launcher",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match what you have to the command that runs it.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "A class compiled into `out`",
+        "right": "`java -cp out Greet Ana`"
+      },
+      {
+        "left": "A source file",
+        "right": "`java Greet.java Ana`"
+      },
+      {
+        "left": "An executable file with a `#!` line",
+        "right": "`./greet Ana`"
+      }
+    ],
+    "right_distractors": [
+      "`javac Greet Ana`"
+    ]
+  },
+  {
+    "id": "ex-97va26nh",
+    "version": 1,
+    "section": "the-running-process",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which JDK tool lists the JVMs running under your user, with their process ids?",
+    "hint": "Its name is the shell's `ps` with a `j`.",
+    "choices": [
+      {
+        "text": "`jps`",
+        "correct": true,
+        "why": "Right: and `-l` adds the main class."
+      },
+      {
+        "text": "`jcmd`",
+        "correct": false,
+        "why": "`jcmd` sends a command to one JVM; `jps` is the one that lists them."
+      },
+      {
+        "text": "`javap`",
+        "correct": false,
+        "why": "`javap` reads class files on disk, not running processes."
+      },
+      {
+        "text": "`jshell`",
+        "correct": false,
+        "why": "`jshell` runs Java line by line; it lists nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pqvb5xg",
+    "version": 1,
+    "section": "the-running-process",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`Wait` starts no threads, and `jcmd Wait Thread.print` counted 18. Where do the other 17 come from?",
+    "hint": "Whose process is it?",
+    "choices": [
+      {
+        "text": "From `Thread.sleep`, which starts a thread per second it waits",
+        "correct": false,
+        "why": "`sleep` pauses the thread that calls it; it starts nothing."
+      },
+      {
+        "text": "From `jcmd`, which copies its own threads into the target",
+        "correct": false,
+        "why": "One thread answered `jcmd`, and it belongs to the target JVM; `jcmd` copies nothing."
+      },
+      {
+        "text": "From the JVM itself: the garbage collector, the JIT compilers and others",
+        "correct": true,
+        "why": "Right: the process is the JVM, and `main` is one thread among its own."
+      },
+      {
+        "text": "From other Java programs of yours, which share one JVM",
+        "correct": false,
+        "why": "Each `java` command is a process of its own; `jps` lists them separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-16za82f2",
+    "version": 1,
+    "section": "the-running-process",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To ask a running JVM which JDK it is running on, you type `jcmd Wait ___`.",
+    "hint": "Two words joined by a dot.",
+    "blanks": [
+      {
+        "accept": [
+          "VM.version"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5ssw0yvc",
+    "version": 1,
+    "section": "the-running-process",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`-Xlog:class+load` printed 605 lines for `Greet`, and 600 came from the shared objects file. What does that archive buy?",
+    "hint": "It was prepared before the program existed.",
+    "choices": [
+      {
+        "text": "A smaller program: classes in it are not counted in memory",
+        "correct": false,
+        "why": "They are in memory all the same; what changes is how they got there."
+      },
+      {
+        "text": "A faster start: library classes arrive already parsed and checked, mapped rather than loaded one by one",
+        "correct": true,
+        "why": "Right: that is the `sharing` in `java -version`'s last line."
+      },
+      {
+        "text": "Your own classes compiled to machine code in advance",
+        "correct": false,
+        "why": "Your `Greet` came from `out`; the archive holds the JDK's library."
+      }
+    ]
+  },
+  {
+    "id": "ex-ep73ady8",
+    "version": 1,
+    "section": "the-running-process",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ps` reported 44,080 KB for `java Wait`, a program that holds one string. Where does most of that memory go?",
+    "hint": "Count what is in the process besides your code.",
+    "choices": [
+      {
+        "text": "To the string, which Java stores with large padding",
+        "correct": false,
+        "why": "A short string is a few dozen bytes; it is nowhere near the total."
+      },
+      {
+        "text": "To the 60,000 milliseconds `sleep` reserves",
+        "correct": false,
+        "why": "Sleeping reserves no memory; it is a pause."
+      },
+      {
+        "text": "To the JVM itself and the library classes it loaded",
+        "correct": true,
+        "why": "Right: the JVM, its threads and hundreds of classes are the bulk of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bdh6v87x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A script runs `java -cp app/classes Report` and then decides from `$?` whether to e-mail the result. `Report` ends with an exception it never catches. What does the script see?",
+    "hint": "An exception escaping `main` has its own status.",
+    "choices": [
+      {
+        "text": "0, because the JVM itself ended normally",
+        "correct": false,
+        "why": "An escaping exception is a failure, and the JVM reports it."
+      },
+      {
+        "text": "1, the status of an exception escaping `main`",
+        "correct": true,
+        "why": "Right: 0 when `main` returns, 1 when an exception escapes it, or whatever `System.exit` was given."
+      },
+      {
+        "text": "127, because the class could not finish loading",
+        "correct": false,
+        "why": "127 is the shell's code for a command that does not exist; `java` did exist."
+      },
+      {
+        "text": "2, the status used for usage errors",
+        "correct": false,
+        "why": "2 is what `Greet` chose for itself; nothing makes it a default."
+      }
+    ]
+  },
+  {
+    "id": "ex-tp5swcke",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `java -cp out Greet Ana` in order.",
+    "hint": "The process exists before any of your code.",
+    "items": [
+      "The operating system starts the JVM process",
+      "The JVM finds `Greet.class` in `out` and loads it",
+      "`main` runs with `args` holding `Ana`",
+      "The process exits with status 0"
+    ]
+  },
+  {
+    "id": "ex-9wpvdaxk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's service on a shared server misbehaves, and three JDKs are installed there. Which single command tells you which one that running service is using?",
+    "hint": "Ask the process, not the machine.",
+    "choices": [
+      {
+        "text": "`java -version`",
+        "correct": false,
+        "why": "That reports the `java` your shell would start now, which may not be the one that started the service."
+      },
+      {
+        "text": "`update-alternatives --display java`",
+        "correct": false,
+        "why": "That says where `/usr/bin/java` points; the service may have been started by a full path."
+      },
+      {
+        "text": "`jcmd <pid> VM.version`, with the service's process id",
+        "correct": true,
+        "why": "Right: the running JVM answers for itself, whatever started it."
+      },
+      {
+        "text": "`ls /usr/lib/jvm`",
+        "correct": false,
+        "why": "That lists the three JDKs; it does not say which one is running."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3j54sx9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which way of running a program writes no `.class` file to disk?",
+    "hint": "One of them compiles in memory.",
+    "choices": [
+      {
+        "text": "`javac -d out Greet.java` and then `java -cp out Greet`",
+        "correct": false,
+        "why": "`javac` wrote `out/Greet.class`."
+      },
+      {
+        "text": "`java Greet.java`",
+        "correct": true,
+        "why": "Right: the source-file mode compiles in memory and keeps nothing."
+      },
+      {
+        "text": "`javac Greet.java` and then `java Greet`",
+        "correct": false,
+        "why": "That writes `Greet.class` beside the source, as lesson 1 did."
+      }
+    ]
+  }
+]
