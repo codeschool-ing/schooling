@@ -8,12 +8,12 @@ biblioteca Go que faz o mesmo de dentro de um programa. **Primeiro a ferramenta 
 instalada como o sqlc na aula 8, numa versão fixada:
 
 ```
-ana@vm:~/.$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
-ana@vm:~/.$ goose --version
+ana@vm:~$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
+ana@vm:~$ goose --version
 goose version: v3.29.0
 ...
-ana@vm:~/.$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
-ana@vm:~/.$ goose --version
+ana@vm:~$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
+ana@vm:~$ goose --version
 goose version: v3.29.0
 ```
 

@@ -26,7 +26,7 @@ LAB_SH=${LAB_SH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lab.sh}
 FENCE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/fence.py
 PORT=${PORT:-8080}
 lab() { bash "$LAB_SH" "$@"; }
-on() { local d=$1; shift; printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; lab exec "$d" "${PRELUDE:+$PRELUDE; }$*" 2>&1 || true; }
+on() { local d=$1; shift; if [ "$d" = . ]; then printf 'ana@vm:~$ %s\n' "$*"; else printf 'ana@vm:~/%s$ %s\n' "$d" "$*"; fi; lab exec "$d" "${PRELUDE:+$PRELUDE; }$*" 2>&1 || true; }
 quiet() { lab exec "$1" "${PRELUDE:+$PRELUDE; }$2" >/dev/null 2>&1 || true; }
 put() { lab put "$1"; }
 show() { python3 "$FENCE" "$1" "$2" | lab put "$3"; }

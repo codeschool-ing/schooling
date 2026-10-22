@@ -27,8 +27,8 @@ sudo apt install -y gcc
 Then sqlc itself, at the release this lesson was written with:
 
 ```
-ana@vm:~/.$ go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
-ana@vm:~/.$ sqlc version; command -v sqlc
+ana@vm:~$ go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
+ana@vm:~$ sqlc version; command -v sqlc
 v1.31.1
 /home/ana/go/bin/sqlc
 ```
@@ -44,10 +44,10 @@ back and forth.
 On a machine with no C compiler, the build stops at the first package that needs one:
 
 ```
-ana@vm:~/.$ CC=gcc-missing go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
+ana@vm:~$ CC=gcc-missing go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.31.1
 # runtime/cgo
 cgo: C compiler "gcc-missing" not found: exec: "gcc-missing": executable file not found in $PATH
-ana@vm:~/.$ gcc --version | head -1
+ana@vm:~$ gcc --version | head -1
 gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 ```
 

@@ -8,12 +8,12 @@ does the same from inside a program. **The command-line tool first**, installed 
 at a pinned release:
 
 ```
-ana@vm:~/.$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
-ana@vm:~/.$ goose --version
+ana@vm:~$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
+ana@vm:~$ goose --version
 goose version: v3.29.0
 ...
-ana@vm:~/.$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
-ana@vm:~/.$ goose --version
+ana@vm:~$ go install github.com/pressly/goose/v3/cmd/goose@v3.29.0
+ana@vm:~$ goose --version
 goose version: v3.29.0
 ```
 
