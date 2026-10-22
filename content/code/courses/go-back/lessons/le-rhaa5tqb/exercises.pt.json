@@ -1,0 +1,626 @@
+{
+  "ex-dk45tbpx": {
+    "prompt": "O que permite a um banco dizer quais mudanças de schema já recebeu?",
+    "hint": "A ferramenta guarda algo dentro de cada banco.",
+    "choices": [
+      {
+        "text": "A data do último deploy, guardada no README do repositório",
+        "why": "O README não sabe nada de um banco específico."
+      },
+      {
+        "text": "Uma tabela com os números das migrações aplicadas nele",
+        "why": "Certo. Lê-la diz onde aquele banco está."
+      },
+      {
+        "text": "O tamanho do diretório de dados",
+        "why": "Tamanho não diz nada sobre quais mudanças rodaram."
+      },
+      {
+        "text": "Um comentário no topo do schema.sql",
+        "why": "O schema.sql rodou uma vez à mão e não registra nada por banco."
+      }
+    ]
+  },
+  "ex-3jmd6f7g": {
+    "prompt": "Uma migração acrescentou uma coluna e, uma semana depois, ela se revela errada. A produção já gravou dados nela. Qual a saída de costume?",
+    "hint": "O que uma migração down faria com os dados?",
+    "choices": [
+      {
+        "text": "Rodar a migração down em produção",
+        "why": "Um down que remove a coluna remove junto os dados da semana."
+      },
+      {
+        "text": "Editar o arquivo da migração antiga e aplicá-lo de novo",
+        "why": "Bancos que já a aplicaram nunca rodariam a edição."
+      },
+      {
+        "text": "Uma migração nova que a corrige",
+        "why": "Certo. O histórico só anda para frente, e os dados ficam."
+      },
+      {
+        "text": "Apagar à mão a linha dessa migração da tabela de histórico",
+        "why": "Aí a ferramenta tenta aplicá-la de novo sobre uma coluna que existe."
+      }
+    ]
+  },
+  "ex-1hzmqfgv": {
+    "prompt": "Ligue cada ferramenta de migração a como uma migração é escrita.",
+    "hint": "A tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "golang-migrate",
+        "right": "dois arquivos, `.up.sql` e `.down.sql`"
+      },
+      {
+        "left": "goose",
+        "right": "um arquivo com `-- +goose Up` e `-- +goose Down`"
+      },
+      {
+        "left": "o jeito da aula 6",
+        "right": "`schema.sql`, rodado uma vez à mão com `psql`"
+      }
+    ],
+    "right_distractors": [
+      "uma struct Go lida pelo AutoMigrate"
+    ]
+  },
+  "ex-5f418dw8": {
+    "prompt": "No goose, o que decide a ordem em que `00001_events.sql` e `00002_tickets.sql` são aplicados?",
+    "hint": "Olhe o começo de cada nome.",
+    "choices": [
+      {
+        "text": "A hora em que cada arquivo foi modificado pela última vez no disco",
+        "why": "O goose lê versões dos nomes, não de horários no disco."
+      },
+      {
+        "text": "A ordem alfabética dos nomes das tabelas lá dentro",
+        "why": "O goose não lê o SQL para ordenar arquivos."
+      },
+      {
+        "text": "O número no começo do nome",
+        "why": "Certo. É a versão da migração."
+      },
+      {
+        "text": "A ordem em que aparecem no sqlc.yaml",
+        "why": "O sqlc.yaml aponta um diretório, não arquivos em ordem."
+      }
+    ]
+  },
+  "ex-dycjnc2h": {
+    "prompt": "Depois de o `goose up` aplicar duas migrações, a `goose_db_version` tinha três linhas. De onde veio a terceira?",
+    "hint": "Leia a coluna version_id.",
+    "choices": [
+      {
+        "text": "O INSERT de dois eventos da primeira migração",
+        "why": "Essas linhas foram para events, não para a tabela do goose."
+      },
+      {
+        "text": "O comando status, que registra cada verificação que faz",
+        "why": "O status lê a tabela e não escreve nada."
+      },
+      {
+        "text": "A versão 0, escrita na primeira vez",
+        "why": "Certo. As linhas 1 e 2 são as duas migrações."
+      },
+      {
+        "text": "O sqlc generate",
+        "why": "O sqlc lê arquivos de migração; escreve Go, não linhas."
+      }
+    ]
+  },
+  "ex-rrqeyc6p": {
+    "prompt": "O `goose down` foi rodado uma vez depois de o `up` aplicar as versões 1 e 2. O que foi desfeito?",
+    "hint": "O \\dt respondeu logo depois.",
+    "choices": [
+      {
+        "text": "As duas migrações, voltando a um banco vazio",
+        "why": "`events` ainda aparecia no `\\dt`."
+      },
+      {
+        "text": "Só a versão 2",
+        "why": "Certo. O down desfaz só a última migração."
+      },
+      {
+        "text": "Nada, porque o down precisa de um número de versão",
+        "why": "Ele informou `OK 00002_tickets.sql`."
+      },
+      {
+        "text": "As linhas de events, mantendo a tabela",
+        "why": "O down roda o SQL Down do arquivo, que removeu tickets."
+      }
+    ]
+  },
+  "ex-2n3yn3jv": {
+    "prompt": "Por que a aula apaga e recria o banco boxoffice antes do primeiro `goose up`, em vez de só rodá-lo?",
+    "hint": "O que falta ao banco feito à mão?",
+    "choices": [
+      {
+        "text": "Ele tem events e nenhum histórico",
+        "why": "Certo. Em produção você marcaria a versão 1 como aplicada."
+      },
+      {
+        "text": "O goose se recusa a conectar num banco criado com createdb",
+        "why": "Ele conecta em qualquer banco PostgreSQL."
+      },
+      {
+        "text": "A tabela tickets já está lá",
+        "why": "tickets é nova nesta aula."
+      },
+      {
+        "text": "O sqlc precisa de um banco vazio para gerar",
+        "why": "O sqlc precisa que as tabelas existam, o contrário."
+      }
+    ]
+  },
+  "ex-a7bqtpn9": {
+    "prompt": "O sqlc.yaml agora diz `schema: ___`, então as migrações são o único lugar onde o schema é escrito.",
+    "hint": "O diretório que o goose também lê.",
+    "blanks": [
+      {
+        "accept": [
+          "migrations"
+        ]
+      }
+    ]
+  },
+  "ex-k1mkj2vz": {
+    "prompt": "O que o `//go:embed migrations/*.sql` dá ao boxoffice?",
+    "hint": "Pense no binário único da aula 16.",
+    "choices": [
+      {
+        "text": "Um comando goose instalado ao lado",
+        "why": "A biblioteca roda dentro do boxoffice; nenhum comando é preciso."
+      },
+      {
+        "text": "Os arquivos SQL, compilados dentro",
+        "why": "Certo. Nenhum diretório precisa ficar ao lado do binário."
+      },
+      {
+        "text": "Migrações geradas a partir das structs Go",
+        "why": "Essa é a abordagem do AutoMigrate na aula 7."
+      },
+      {
+        "text": "Uma cópia do banco",
+        "why": "Só os arquivos são embutidos."
+      }
+    ]
+  },
+  "ex-74s0tzea": {
+    "prompt": "Três cópias do boxoffice iniciam no mesmo instante contra um banco vazio. O que o session locker faz?",
+    "hint": "Um advisory lock no PostgreSQL.",
+    "choices": [
+      {
+        "text": "Uma as aplica enquanto as outras duas esperam",
+        "why": "Certo. Quando o lock fica livre, não sobra nada a aplicar."
+      },
+      {
+        "text": "Cada cópia aplica as migrações na própria transação, e duas falham",
+        "why": "O lock é o que impede três tentativas ao mesmo tempo."
+      },
+      {
+        "text": "Impede de vez que as duas cópias posteriores iniciem",
+        "why": "Elas esperam, depois iniciam normalmente."
+      },
+      {
+        "text": "Trava a tabela events até um reinício",
+        "why": "O lock dura só durante as migrações."
+      }
+    ]
+  },
+  "ex-58akszj4": {
+    "prompt": "O boxoffice é iniciado uma segunda vez contra um banco já na versão 2. O que o log mostra sobre migrações?",
+    "hint": "A captura do reinício.",
+    "choices": [
+      {
+        "text": "As duas migrações aplicadas de novo, mais rápido",
+        "why": "Migrações aplicadas não rodam duas vezes."
+      },
+      {
+        "text": "Um erro dizendo que as tabelas já existem",
+        "why": "O goose sabia pela tabela que nada estava pendente."
+      },
+      {
+        "text": "Uma linha dizendo que o banco está atrasado",
+        "why": "Ele estava na versão mais nova."
+      },
+      {
+        "text": "Nada: só a linha de escuta",
+        "why": "Certo. Não havia nada pendente."
+      }
+    ]
+  },
+  "ex-9am3cz1c": {
+    "prompt": "Um índice novo numa tabela de cem milhões de linhas leva minutos para ser criado. Por que isso é um problema justamente para migrar na inicialização?",
+    "hint": "O que o servidor faz enquanto migra?",
+    "choices": [
+      {
+        "text": "O PostgreSQL recusa migrações com mais de um minuto",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "O go:embed não comporta uma migração tão grande",
+        "why": "O arquivo tem poucas linhas; grande é a tabela."
+      },
+      {
+        "text": "Ele não responde às verificações de saúde enquanto isso",
+        "why": "Certo. Um passo separado de migração mantém a inicialização rápida."
+      },
+      {
+        "text": "O advisory lock expira depois de um minuto",
+        "why": "O lock dura enquanto a sessão o segura."
+      }
+    ]
+  },
+  "ex-qgds80ks": {
+    "prompt": "Quais mudanças deixam cópias antigas e novas do boxoffice rodarem contra o mesmo schema durante um deploy? Marque todas as que se aplicam.",
+    "hint": "Mudanças com que as duas versões convivem.",
+    "choices": [
+      {
+        "text": "Acrescentar uma coluna antes de o código usá-la",
+        "why": "Certo. O código antigo a ignora."
+      },
+      {
+        "text": "Remover uma coluna que o código antigo ainda lê",
+        "why": "As cópias antigas falham na próxima consulta."
+      },
+      {
+        "text": "Remover uma coluna só depois que nada a lê",
+        "why": "Certo. As duas versões já passaram dela."
+      },
+      {
+        "text": "Renomear uma coluna numa migração com as duas versões rodando",
+        "why": "O código antigo ainda usa o nome antigo."
+      }
+    ]
+  },
+  "ex-k83nc6dw": {
+    "prompt": "No psql, o INSERT dentro da transação falhou, e depois foi digitado COMMIT. O que o PostgreSQL respondeu?",
+    "hint": "As últimas linhas antes do SELECT.",
+    "choices": [
+      {
+        "text": "COMMIT, mantendo o UPDATE",
+        "why": "sold ficou em 2, então o UPDATE não ficou."
+      },
+      {
+        "text": "Um erro perguntando qual comando manter",
+        "why": "Não existe commit parcial."
+      },
+      {
+        "text": "WARNING e um commit parcial",
+        "why": "Nada parcial sobreviveu: sold ficou em 2."
+      },
+      {
+        "text": "ROLLBACK",
+        "why": "Certo. Uma transação quebrada é jogada fora inteira."
+      }
+    ]
+  },
+  "ex-4ckckb4k": {
+    "prompt": "Por que o `pgStore.Sell` escreve `defer tx.Rollback(ctx)` logo depois do `Begin`, se também chama `Commit`?",
+    "hint": "Pense em todo return antecipado.",
+    "choices": [
+      {
+        "text": "Um return antecipado a descarta",
+        "why": "Certo. Senão a conexão volta ao pool no meio da transação, segurando locks."
+      },
+      {
+        "text": "Rollback depois do Commit desfaz o commit, como verificação",
+        "why": "Depois de um Commit bem-sucedido, o Rollback não faz nada."
+      },
+      {
+        "text": "O pgx se recusa a confirmar sem um rollback adiado",
+        "why": "O pgx não tem essa regra; o defer é para os caminhos de erro."
+      },
+      {
+        "text": "Deixa a transação mais rápida",
+        "why": "Velocidade não tem nada a ver."
+      }
+    ]
+  },
+  "ex-s590bmef": {
+    "prompt": "O que o `s.q().WithTx(tx)` muda no `SellSeats` e no `InsertTicket` gerados?",
+    "hint": "Aula 8 seção 05.",
+    "choices": [
+      {
+        "text": "Eles são regerados com BEGIN e COMMIT dentro",
+        "why": "Nada é regerado; só muda por onde as consultas vão."
+      },
+      {
+        "text": "Eles mandam o SQL pela conexão da transação",
+        "why": "Certo. As mesmas funções, passando por tx."
+      },
+      {
+        "text": "Passam a tentar de novo no erro 40001",
+        "why": "O WithTx não acrescenta novas tentativas."
+      },
+      {
+        "text": "Pegam um lock na tabela events",
+        "why": "Locks vêm dos comandos, não do WithTx."
+      }
+    ]
+  },
+  "ex-0072bnh7": {
+    "prompt": "Ponha em ordem os passos de um `pgStore.Sell` bem-sucedido.",
+    "hint": "Begin primeiro, Commit por último.",
+    "items": [
+      "`s.pool.Begin` pega uma conexão e manda BEGIN",
+      "`SellSeats` tira os lugares se sobrarem o bastante",
+      "`InsertTicket` registra o ingresso e devolve o id",
+      "`tx.Commit` torna as duas escritas permanentes",
+      "O handler responde 201 com o id do ingresso"
+    ]
+  },
+  "ex-2pp1ykta": {
+    "prompt": "\"Ler, depois escrever\" registrou 27 vendidos para 50 vendas numa execução e 17 na seguinte. O que aconteceu com o resto?",
+    "hint": "Muitas transações leram o mesmo valor.",
+    "choices": [
+      {
+        "text": "Foram recusadas com 40001",
+        "why": "A contagem de recusas foi 0 em READ COMMITTED."
+      },
+      {
+        "text": "Atualizações perdidas: escritas posteriores apagaram as anteriores",
+        "why": "Certo. Cada uma gravou o mesmo número mais um."
+      },
+      {
+        "text": "As goroutines que os venderam caíram antes de confirmar qualquer coisa",
+        "why": "Nenhum erro foi registrado; os commits deram certo com números velhos."
+      },
+      {
+        "text": "O pool ficou sem conexões",
+        "why": "As requisições esperaram conexões e todas rodaram."
+      }
+    ]
+  },
+  "ex-cs2qk9ea": {
+    "prompt": "Em REPEATABLE READ as contas fecharam (16 vendidos mais 34 recusados), mas 34 compradores ouviram não. O que o código nesse nível tem de fazer?",
+    "hint": "SQLSTATE 40001.",
+    "choices": [
+      {
+        "text": "Responder 409 Conflict a esses compradores",
+        "why": "Havia lugares; dizer que esgotou é falso."
+      },
+      {
+        "text": "Capturar o 40001 e rodar a transação inteira de novo",
+        "why": "Certo. A recusa é um pedido para tentar de novo, não um esgotado."
+      },
+      {
+        "text": "Baixar o nível para READ COMMITTED nessas requisições",
+        "why": "Isso traz de volta as atualizações perdidas."
+      },
+      {
+        "text": "Repetir só o comando UPDATE",
+        "why": "A leitura também está velha; a transação é repetida inteira."
+      }
+    ]
+  },
+  "ex-d6q7r8k7": {
+    "prompt": "Por que o `SellSeats` do boxoffice é exato sob concorrência sem FOR UPDATE nem nível mais estrito?",
+    "hint": "Veja onde está a verificação.",
+    "choices": [
+      {
+        "text": "Verificação e mudança são um só comando",
+        "why": "Certo. O segundo comprador encontra seats - sold pequeno demais."
+      },
+      {
+        "text": "O pgx serializa toda consulta mandada por um pool",
+        "why": "Um pool roda várias consultas ao mesmo tempo."
+      },
+      {
+        "text": "O mutex do Go no pgStore",
+        "why": "O pgStore não tem mutex; o memStore tinha."
+      },
+      {
+        "text": "Cada requisição ganha a própria tabela",
+        "why": "Todas dividem a tabela events."
+      }
+    ]
+  },
+  "ex-163ckqy1": {
+    "prompt": "Ligue cada jeito de vender um lugar ao que o programa race mediu.",
+    "hint": "Quatro linhas por execução.",
+    "pairs": [
+      {
+        "left": "ler, depois escrever",
+        "right": "menos de 50 vendidos, nenhuma recusa"
+      },
+      {
+        "left": "o mesmo em REPEATABLE READ",
+        "right": "vendidos mais recusas somam 50"
+      },
+      {
+        "left": "SELECT ... FOR UPDATE",
+        "right": "50 vendidos, transações em fila pela linha"
+      },
+      {
+        "left": "um UPDATE",
+        "right": "50 vendidos, sem precisar de transação"
+      }
+    ]
+  },
+  "ex-nn80xr2m": {
+    "prompt": "Uma transação recusada em REPEATABLE READ por atualização concorrente traz o SQLSTATE ___.",
+    "hint": "Uma falha de serialização.",
+    "blanks": [
+      {
+        "accept": [
+          "40001"
+        ]
+      }
+    ]
+  },
+  "ex-2e7p467p": {
+    "prompt": "Com MaxConns 2, seis consultas de um segundo e prazo de 2,5 s cada, por que duas falharam?",
+    "hint": "Quando as duas últimas pegaram conexão?",
+    "choices": [
+      {
+        "text": "O PostgreSQL limita o pg_sleep a dois por vez",
+        "why": "O limite eram as duas conexões do pool."
+      },
+      {
+        "text": "Os contextos delas foram cancelados pelas duas primeiras consultas",
+        "why": "Cada uma tinha o próprio contexto e prazo."
+      },
+      {
+        "text": "Esperaram 2 s por conexão, sobrando 0,5 s para uma consulta de 1 s",
+        "why": "Certo. Esperar o pool gasta o prazo da própria consulta."
+      },
+      {
+        "text": "O pool desistiu de esperar por elas",
+        "why": "O Stat disse 0 desistências; elas pegaram conexão e ficaram sem tempo."
+      }
+    ]
+  },
+  "ex-9rh2mkh5": {
+    "prompt": "O max_connections é 100. Três cópias do boxoffice rodam com MaxConns 10. Quantas conexões os três pools seguram no máximo juntos?",
+    "hint": "A conta da seção 07.",
+    "unit": "conexões"
+  },
+  "ex-s3p40w4k": {
+    "prompt": "Vinte compradores atingiram um evento de cinco lugares, e quinze ficaram sem resposta por cinco segundos. Que linha causou isso?",
+    "hint": "Um comprador depois do esgotamento, dentro de uma transação.",
+    "choices": [
+      {
+        "text": "O `SellSeats`, cujo UPDATE trava a tabela inteira",
+        "why": "Ele trava uma linha e termina rápido."
+      },
+      {
+        "text": "O `InsertTicket`, que espera a chave estrangeira",
+        "why": "Os compradores do esgotamento nem chegaram ao insert."
+      },
+      {
+        "text": "`if _, err := s.Get(ctx, id)`, pedindo ao pool uma segunda conexão enquanto segura uma",
+        "why": "Certo. Dez donos esperando uma décima primeira: ninguém avança."
+      },
+      {
+        "text": "O `tx.Commit`, que bloqueia até as vinte terminarem",
+        "why": "Commits não esperam outras requisições."
+      }
+    ]
+  },
+  "ex-378n785d": {
+    "prompt": "O que encerrou as requisições presas depois de cinco segundos naquela execução?",
+    "hint": "O cliente rush tinha um limite.",
+    "choices": [
+      {
+        "text": "O PostgreSQL matou as transações ociosas",
+        "why": "Nada do lado do banco interveio."
+      },
+      {
+        "text": "O WriteTimeout fechou as conexões",
+        "why": "O WriteTimeout é de dez segundos e não cancela contextos."
+      },
+      {
+        "text": "O cliente desistiu, o net/http cancelou os contextos e as esperas retornaram",
+        "why": "Certo. O log mostra context canceled depois de 5.000906 s, como 500."
+      },
+      {
+        "text": "O pool cresceu para 20 conexões",
+        "why": "O MaxConns continuou 10."
+      }
+    ]
+  },
+  "ex-7j05vhfp": {
+    "prompt": "Que regra a correção no `Sell` segue?",
+    "hint": "q.GetEvent em vez de s.Get.",
+    "choices": [
+      {
+        "text": "Dentro de uma transação, consultar por ela",
+        "why": "Certo. Nunca esperar um segundo recurso do pool de que já se segura um."
+      },
+      {
+        "text": "Nunca chamar Get num método do store",
+        "why": "Get não tem problema fora de uma transação."
+      },
+      {
+        "text": "Subir o MaxConns acima do número de compradores",
+        "why": "Um pool maior só muda o limiar; o ciclo continua."
+      },
+      {
+        "text": "Confirmar antes de verificar se o evento existe",
+        "why": "Não há nada a confirmar no caminho do esgotamento."
+      }
+    ]
+  },
+  "ex-h9kkh5we": {
+    "prompt": "Depois da correção, quantos dos vinte compradores receberam 409?",
+    "hint": "O último rush.",
+    "unit": "compradores"
+  },
+  "ex-fqy2ptmx": {
+    "prompt": "Qual arquivo guarda a transação que grava a venda e o ingresso?",
+    "hint": "A tabela da seção 08.",
+    "choices": [
+      {
+        "text": "`pgstore.go`",
+        "why": "Certo. Toda consulta dele passa pela transação."
+      },
+      {
+        "text": "`migrate.go`, rodado na inicialização",
+        "why": "O migrate.go aplica migrações."
+      },
+      {
+        "text": "`events.go`, no handler",
+        "why": "O handler só chama Store.Sell."
+      },
+      {
+        "text": "`migrations/00002_tickets.sql`",
+        "why": "Esse arquivo cria a tabela."
+      }
+    ]
+  },
+  "ex-539zjjgs": {
+    "prompt": "Por que o `schema.sql` foi apagado nesta aula?",
+    "hint": "Onde o schema é escrito agora?",
+    "choices": [
+      {
+        "text": "O goose não roda num diretório que o contenha",
+        "why": "O goose só lê o diretório de migrações."
+      },
+      {
+        "text": "Ele tinha um erro de sintaxe",
+        "why": "Ele rodou bem na aula 6."
+      },
+      {
+        "text": "O go:embed o compilaria no binário por engano",
+        "why": "O padrão é migrations/*.sql."
+      },
+      {
+        "text": "Ele virou a migração 1",
+        "why": "Certo. Um só lugar para o schema."
+      }
+    ]
+  },
+  "ex-669jx809": {
+    "prompt": "O handler de um colega abre uma transação e, dentro dela, chama um helper que roda `pool.QueryRow`. Sob carga o serviço trava. O que você muda?",
+    "hint": "A regra da seção 07.",
+    "choices": [
+      {
+        "text": "Dobrar o MaxConns",
+        "why": "O ciclo ainda se forma com o dobro da carga."
+      },
+      {
+        "text": "Mudar a transação para REPEATABLE READ",
+        "why": "Isolamento não muda como as conexões são seguradas."
+      },
+      {
+        "text": "Entregar a ele o tx para consultar por ele",
+        "why": "Certo. Uma conexão por requisição, sem esperar o pool enquanto a segura."
+      },
+      {
+        "text": "Pôr um mutex em volta do handler",
+        "why": "Isso serializa toda requisição e esconde a causa."
+      }
+    ]
+  },
+  "ex-2bmrj4yg": {
+    "prompt": "Ponha em ordem o que acontece quando o boxoffice inicia contra um banco vazio.",
+    "hint": "Migrar antes do pool.",
+    "items": [
+      "o main lê os tokens e o DATABASE_URL",
+      "o migrate pega o advisory lock e aplica 00001 e 00002",
+      "o pool é montado com MaxConns 10 e recebe ping",
+      "o servidor registra que está escutando"
+    ]
+  }
+}
