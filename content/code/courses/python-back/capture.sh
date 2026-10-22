@@ -53,7 +53,7 @@ from() {
     || { echo "from: $path is not in $md" >&2; exit 1; }
 }
 serve() {
-  lab as "cd $(dir) && $ENVS && setsid bash -c '$2' </dev/null >/tmp/$1.log 2>&1 & echo \$! > /tmp/$1.pid"
+  lab as "cd $(dir) && $ENVS && { setsid bash -c '$2' </dev/null >/tmp/$1.log 2>&1 & echo \$! > /tmp/$1.pid; }"
   sleep "${WAIT:-3}"
 }
 stop() {

@@ -1,0 +1,849 @@
+[
+  {
+    "id": "ex-j4v93asw",
+    "version": 1,
+    "section": "the-engine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens at the moment create_engine(...) runs in app/db.py?",
+    "choices": [
+      {
+        "text": "It opens five connections to PostgreSQL and keeps them waiting",
+        "correct": false,
+        "why": "It opens none yet."
+      },
+      {
+        "text": "It creates the tables the models describe",
+        "correct": false,
+        "why": "That is Alembic's job, later."
+      },
+      {
+        "text": "It sets up a pool; nothing connects until something asks",
+        "correct": true,
+        "why": "Right. hello_db.py was the first to ask."
+      },
+      {
+        "text": "It checks the password in the URL",
+        "correct": false,
+        "why": "This URL has no password, and nothing is checked yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-j75qr1fy",
+    "version": 1,
+    "section": "the-engine",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of postgresql+psycopg:///agenda_api to what it says.",
+    "pairs": [
+      {
+        "left": "postgresql",
+        "right": "which SQL to write"
+      },
+      {
+        "left": "+psycopg",
+        "right": "which library carries it"
+      },
+      {
+        "left": "///",
+        "right": "the local socket, as the system user"
+      },
+      {
+        "left": "agenda_api",
+        "right": "the database"
+      }
+    ]
+  },
+  {
+    "id": "ex-7dn1yk6k",
+    "version": 1,
+    "section": "the-engine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does app/db.py create the engine at import rather than inside each route?",
+    "choices": [
+      {
+        "text": "Routes are not allowed to import SQLAlchemy",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "The pool keeps connections for the next request",
+        "correct": true,
+        "why": "Right. An engine per request opens a connection per request."
+      },
+      {
+        "text": "Uvicorn refuses a module that creates objects after start-up",
+        "correct": false,
+        "why": "No such rule exists."
+      },
+      {
+        "text": "PostgreSQL limits each process to one engine for its whole life",
+        "correct": false,
+        "why": "PostgreSQL knows nothing of engines."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pnk1bra",
+    "version": 1,
+    "section": "the-engine",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "hello_db.py ran raw SQL by wrapping the string in ___(), which belongs to SQLAlchemy Core.",
+    "blanks": [
+      {
+        "accept": [
+          "text"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hw9bnt4f",
+    "version": 1,
+    "section": "mapped-classes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the CREATE TABLE that show_sql.py printed, which column has a DEFAULT in the table itself?",
+    "choices": [
+      {
+        "text": "description, from default=\"\"",
+        "correct": false,
+        "why": "That default is applied by SQLAlchemy; the table has none."
+      },
+      {
+        "text": "created_at",
+        "correct": true,
+        "why": "Right: server_default=func.now() became DEFAULT now()."
+      },
+      {
+        "text": "capacity, which gets zero",
+        "correct": false,
+        "why": "capacity has no default at all."
+      },
+      {
+        "text": "Every NOT NULL column gets one automatically",
+        "correct": false,
+        "why": "Only created_at had one."
+      }
+    ]
+  },
+  {
+    "id": "ex-dks4x307",
+    "version": 1,
+    "section": "mapped-classes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new field is declared as note: Mapped[str | None]. What does the table get?",
+    "choices": [
+      {
+        "text": "A nullable column",
+        "correct": true,
+        "why": "Right. Without | None it would be NOT NULL."
+      },
+      {
+        "text": "Nothing until a relationship names it",
+        "correct": false,
+        "why": "Every mapped attribute with a type is a column."
+      },
+      {
+        "text": "A NOT NULL column with an empty string as default",
+        "correct": false,
+        "why": "| None is what allows null."
+      },
+      {
+        "text": "A second table holding the notes",
+        "correct": false,
+        "why": "One attribute, one column."
+      }
+    ]
+  },
+  {
+    "id": "ex-fq9p4yrp",
+    "version": 1,
+    "section": "mapped-classes",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these in app/models.py became something in the CREATE TABLE? Choose all that apply.",
+    "choices": [
+      {
+        "text": "UniqueConstraint(\"event_id\", \"email\")",
+        "correct": true,
+        "why": "Right: UNIQUE (event_id, email)."
+      },
+      {
+        "text": "registrations: Mapped[list[\"Registration\"]] = relationship(...)",
+        "correct": false,
+        "why": "A relationship is Python only; the foreign key is the column."
+      },
+      {
+        "text": "mapped_column(ForeignKey(\"events.id\"))",
+        "correct": true,
+        "why": "Right: FOREIGN KEY(event_id) REFERENCES events (id)."
+      },
+      {
+        "text": "The taken property",
+        "correct": false,
+        "why": "A property is plain Python."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8yp1a0v",
+    "version": 1,
+    "section": "mapped-classes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does agenda-api keep EventIn in schemas.py and Event in models.py instead of one class for both?",
+    "choices": [
+      {
+        "text": "SQLAlchemy cannot read type annotations",
+        "correct": false,
+        "why": "It reads them: Mapped[int] is one."
+      },
+      {
+        "text": "Pydantic refuses any class with a primary key",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "What a client sends and what a table stores then change apart",
+        "correct": true,
+        "why": "Right: the id, for one, is in the table and not in the input."
+      },
+      {
+        "text": "A single class would run its validation twice per request",
+        "correct": false,
+        "why": "Validation is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-z41he6rx",
+    "version": 1,
+    "section": "alembic",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the steps that took agenda_api from empty to three events in order.",
+    "items": [
+      "uv run alembic init migrations",
+      "point sqlalchemy.url and target_metadata at the project",
+      "uv run alembic revision --autogenerate --rev-id 0001 -m \"events and registrations\"",
+      "read the file it wrote",
+      "uv run alembic upgrade head",
+      "uv run python seed.py"
+    ]
+  },
+  {
+    "id": "ex-rh9ywgay",
+    "version": 1,
+    "section": "alembic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does Alembic record which migration a database has reached?",
+    "choices": [
+      {
+        "text": "In alembic.ini, which it rewrites after each upgrade",
+        "correct": false,
+        "why": "alembic.ini is configuration; it is not rewritten."
+      },
+      {
+        "text": "In the newest file under migrations/versions",
+        "correct": false,
+        "why": "The files are the chain, not the position."
+      },
+      {
+        "text": "In a table called alembic_version",
+        "correct": true,
+        "why": "Right: one row, 0001 after the upgrade."
+      },
+      {
+        "text": "Nowhere; it compares models and tables each time",
+        "correct": false,
+        "why": "That is autogenerate, not the record."
+      }
+    ]
+  },
+  {
+    "id": "ex-gsp0ykf6",
+    "version": 1,
+    "section": "alembic",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "seed.py called session.add_all(...) and then session.commit(). When were the three rows sent to PostgreSQL?",
+    "choices": [
+      {
+        "text": "One by one, as add_all walked the list",
+        "correct": false,
+        "why": "add_all only hands objects to the session."
+      },
+      {
+        "text": "At commit, in one transaction",
+        "correct": true,
+        "why": "Right: the session is a unit of work."
+      },
+      {
+        "text": "When the with block closed the session",
+        "correct": false,
+        "why": "Closing without commit would have rolled back."
+      },
+      {
+        "text": "At the next alembic upgrade",
+        "correct": false,
+        "why": "Alembic does not carry rows from Python objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5mpnmm7",
+    "version": 1,
+    "section": "alembic",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To name a revision 0001 instead of a random string of hex, pass --___ 0001 to alembic revision.",
+    "blanks": [
+      {
+        "accept": [
+          "rev-id"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-h2n5ytqg",
+    "version": 1,
+    "section": "what-autogenerate-misses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The attribute venue was renamed place in the model. What did autogenerate write?",
+    "choices": [
+      {
+        "text": "op.alter_column renaming venue to place",
+        "correct": false,
+        "why": "That is what the fix wrote by hand."
+      },
+      {
+        "text": "An added column place and a dropped column venue",
+        "correct": true,
+        "why": "Right. From outside, a rename looks like that."
+      },
+      {
+        "text": "Nothing, since the column's type did not change",
+        "correct": false,
+        "why": "It noticed a difference, just the wrong one."
+      },
+      {
+        "text": "A warning asking whether venue was renamed",
+        "correct": false,
+        "why": "It asks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-7w00qyev",
+    "version": 1,
+    "section": "what-autogenerate-misses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson call the failed upgrade of 0002 the lucky case?",
+    "choices": [
+      {
+        "text": "On an empty table, or with a nullable column, it would have run and dropped every venue",
+        "correct": true,
+        "why": "Right: the NOT NULL failure is what stopped it."
+      },
+      {
+        "text": "Alembic retried it with the right operation",
+        "correct": false,
+        "why": "It did not retry; the fix was written by hand."
+      },
+      {
+        "text": "The error message told the author which column to rename",
+        "correct": false,
+        "why": "It complained about null values."
+      },
+      {
+        "text": "The failure deleted the bad file",
+        "correct": false,
+        "why": "The file stayed, and was edited."
+      }
+    ]
+  },
+  {
+    "id": "ex-parf3jzn",
+    "version": 1,
+    "section": "what-autogenerate-misses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the failed upgrade, what state was the events table in?",
+    "choices": [
+      {
+        "text": "With an empty place column and venue still there",
+        "correct": false,
+        "why": "Nothing of the migration stayed."
+      },
+      {
+        "text": "Without venue, which was dropped before the error",
+        "correct": false,
+        "why": "The drop came after the add, and both were undone."
+      },
+      {
+        "text": "Locked until someone ran alembic downgrade",
+        "correct": false,
+        "why": "Nothing was left locked."
+      },
+      {
+        "text": "As before: PostgreSQL rolled back all of it",
+        "correct": true,
+        "why": "Right: transactional DDL."
+      }
+    ]
+  },
+  {
+    "id": "ex-trc85vs2",
+    "version": 1,
+    "section": "what-autogenerate-misses",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does alembic check answer?",
+    "choices": [
+      {
+        "text": "Whether every migration file is valid Python",
+        "correct": false,
+        "why": "It compares the schema, not the files."
+      },
+      {
+        "text": "Whether the models need a migration the database lacks",
+        "correct": true,
+        "why": "Right, and it writes no file."
+      },
+      {
+        "text": "Whether PostgreSQL is running",
+        "correct": false,
+        "why": "That would show as a connection error."
+      },
+      {
+        "text": "Which revision the database is at",
+        "correct": false,
+        "why": "That is alembic current."
+      }
+    ]
+  },
+  {
+    "id": "ex-acneptzs",
+    "version": 1,
+    "section": "querying",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "queries.py printed True for same is night. What does that show?",
+    "choices": [
+      {
+        "text": "Both queries returned equal values",
+        "correct": false,
+        "why": "is compares identity, not equality."
+      },
+      {
+        "text": "session.get read from a cache shared by every process",
+        "correct": false,
+        "why": "The map belongs to one session."
+      },
+      {
+        "text": "One session holds one object per row",
+        "correct": true,
+        "why": "Right: the identity map."
+      },
+      {
+        "text": "The event was copied, then compared",
+        "correct": false,
+        "why": "No copy was made."
+      }
+    ]
+  },
+  {
+    "id": "ex-z02r0479",
+    "version": 1,
+    "section": "querying",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In nplus1.py's lazy loop, how many queries did the engine send for the three events?",
+    "hint": "One for the list, then one per event.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-kfq1qnwt",
+    "version": 1,
+    "section": "querying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With selectinload(Event.registrations), how many queries would a page of a hundred events cost?",
+    "choices": [
+      {
+        "text": "A hundred and one",
+        "correct": false,
+        "why": "That is the lazy loop."
+      },
+      {
+        "text": "Two: one for the page, one with IN for the rest",
+        "correct": true,
+        "why": "Right, whatever the page size."
+      },
+      {
+        "text": "One, joined",
+        "correct": false,
+        "why": "That is joinedload."
+      },
+      {
+        "text": "A hundred",
+        "correct": false,
+        "why": "The list itself is a query too."
+      }
+    ]
+  },
+  {
+    "id": "ex-zbmnzhcj",
+    "version": 1,
+    "section": "querying",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each SQLAlchemy loader to the Django method that does the same.",
+    "pairs": [
+      {
+        "left": "selectinload",
+        "right": "prefetch_related"
+      },
+      {
+        "left": "joinedload",
+        "right": "select_related"
+      }
+    ],
+    "right_distractors": [
+      "only",
+      "annotate"
+    ]
+  },
+  {
+    "id": "ex-a1r30byf",
+    "version": 1,
+    "section": "a-session-per-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A route raises an exception halfway through, after session.add(...) and before commit. What becomes of the row?",
+    "choices": [
+      {
+        "text": "It is written, since add sends it at once",
+        "correct": false,
+        "why": "add sends nothing."
+      },
+      {
+        "text": "It waits in the pool for the next request to commit",
+        "correct": false,
+        "why": "Each request has its own session."
+      },
+      {
+        "text": "Nothing is written: closing the session rolls back",
+        "correct": true,
+        "why": "Right: get_session's with block closes it."
+      },
+      {
+        "text": "Half of it is written",
+        "correct": false,
+        "why": "A row is written whole or not at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-09pqrrnf",
+    "version": 1,
+    "section": "a-session-per-request",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets EventOut be built from an Event object rather than a dict?",
+    "choices": [
+      {
+        "text": "from_attributes=True in its model_config",
+        "correct": true,
+        "why": "Right: Pydantic then reads attributes."
+      },
+      {
+        "text": "Inheriting from Base as well as BaseModel",
+        "correct": false,
+        "why": "The two stay apart."
+      },
+      {
+        "text": "Calling event.__dict__ in every route before returning",
+        "correct": false,
+        "why": "The routes return the object itself."
+      },
+      {
+        "text": "FastAPI does it for any class",
+        "correct": false,
+        "why": "Without the setting, validation expects a dict."
+      }
+    ]
+  },
+  {
+    "id": "ex-9d6jy50d",
+    "version": 1,
+    "section": "a-session-per-request",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which changed when agenda-api moved from app/store.py to PostgreSQL? Choose all that apply.",
+    "choices": [
+      {
+        "text": "forecast.py reads event.slug instead of event[\"slug\"]",
+        "correct": true,
+        "why": "Right, in three places."
+      },
+      {
+        "text": "create_event leaves the duplicate slug to the unique constraint",
+        "correct": true,
+        "why": "Right: IntegrityError becomes a 409."
+      },
+      {
+        "text": "The paths of the routes",
+        "correct": false,
+        "why": "Every path stayed the same."
+      },
+      {
+        "text": "registration_lock left dependencies.py",
+        "correct": true,
+        "why": "Right: the lock moved into the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rf10a3v",
+    "version": 1,
+    "section": "one-lock-for-every-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without .with_for_update(), three rounds of crowd.py let 20, 19 and 18 people into twelve seats. Why?",
+    "choices": [
+      {
+        "text": "The unique constraint was dropped as well",
+        "correct": false,
+        "why": "It was untouched; every address was different."
+      },
+      {
+        "text": "Requests counted before enough others had committed",
+        "correct": true,
+        "why": "Right: count, then insert, with room between."
+      },
+      {
+        "text": "Four workers each kept their own copy of the table",
+        "correct": false,
+        "why": "There is one table, in PostgreSQL."
+      },
+      {
+        "text": "httpx2 sent some requests twice",
+        "correct": false,
+        "why": "Each of the twenty was sent once."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hdsw4tt",
+    "version": 1,
+    "section": "one-lock-for-every-worker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why could lesson 8's threading.Lock not have stopped the overbooking here?",
+    "choices": [
+      {
+        "text": "A threading.Lock does not work with def routes",
+        "correct": false,
+        "why": "It does, within its process."
+      },
+      {
+        "text": "SQLAlchemy releases Python locks on commit",
+        "correct": false,
+        "why": "It knows nothing of them."
+      },
+      {
+        "text": "There were four processes, each with its own lock",
+        "correct": true,
+        "why": "Right: the row lock lives where all four look."
+      },
+      {
+        "text": "Locks only work inside async def",
+        "correct": false,
+        "why": "Not so."
+      }
+    ]
+  },
+  {
+    "id": "ex-4f9hf89c",
+    "version": 1,
+    "section": "one-lock-for-every-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the duplicate address left to the unique constraint instead of a query that checks first?",
+    "choices": [
+      {
+        "text": "Check-then-insert has a gap another request fits in",
+        "correct": true,
+        "why": "Right: the constraint refuses inside the insert."
+      },
+      {
+        "text": "A SELECT on registrations is not allowed while the event row is locked",
+        "correct": false,
+        "why": "It is allowed; the count does just that."
+      },
+      {
+        "text": "Pydantic already rejected repeated addresses",
+        "correct": false,
+        "why": "Pydantic sees one request, not the table."
+      },
+      {
+        "text": "Constraints are faster than any query",
+        "correct": false,
+        "why": "Speed is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-m613yfw7",
+    "version": 1,
+    "section": "one-lock-for-every-worker",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "with_for_update() turns the query into SELECT … FOR ___, which holds the row until the transaction commits.",
+    "blanks": [
+      {
+        "accept": [
+          "UPDATE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-66tjq07t",
+    "version": 1,
+    "section": "one-lock-for-every-worker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "While one registration for the async workshop holds its row lock, what happens to a registration for Django Night?",
+    "choices": [
+      {
+        "text": "It waits for the workshop's commit",
+        "correct": false,
+        "why": "It locks a different row."
+      },
+      {
+        "text": "It is refused with a 409 until the lock is released",
+        "correct": false,
+        "why": "Nothing refuses it."
+      },
+      {
+        "text": "It goes ahead: another event is another row",
+        "correct": true,
+        "why": "Right: the lock is per row."
+      },
+      {
+        "text": "It is queued by Uvicorn for the next worker",
+        "correct": false,
+        "why": "Uvicorn does not know about the lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-0whnhttg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before deploying a new model field, what does the lesson have a project run in CI?",
+    "choices": [
+      {
+        "text": "alembic upgrade head against production",
+        "correct": false,
+        "why": "Not from CI, and not as a test."
+      },
+      {
+        "text": "alembic check",
+        "correct": true,
+        "why": "Right: a model without a migration fails the build."
+      },
+      {
+        "text": "alembic history",
+        "correct": false,
+        "why": "That lists the chain and checks nothing."
+      },
+      {
+        "text": "alembic downgrade base, then upgrade head",
+        "correct": false,
+        "why": "That rebuilds; it does not compare."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvyz4q4q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A route lists fifty events and, for each, returns the name of its first registrant. What should its query use?",
+    "choices": [
+      {
+        "text": "Nothing extra: lazy loading is fast enough for fifty",
+        "correct": false,
+        "why": "Fifty-one queries per request."
+      },
+      {
+        "text": "with_for_update(), so the list stays consistent",
+        "correct": false,
+        "why": "A listing needs no lock."
+      },
+      {
+        "text": "options(selectinload(Event.registrations))",
+        "correct": true,
+        "why": "Right: two queries for the page."
+      },
+      {
+        "text": "A new engine for the route",
+        "correct": false,
+        "why": "One engine per process is enough."
+      }
+    ]
+  }
+]
