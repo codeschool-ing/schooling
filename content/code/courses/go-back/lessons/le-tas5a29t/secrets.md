@@ -32,8 +32,8 @@ BOXOFFICE_MANAGER_TOKEN=3f9c1e7a2b8d4f60
 ```
 
 That is better than a flag and still not airtight. An exported variable reaches every program its owner
-starts, as section 04 showed, including the ones that have no use for it; a debugging page or a crash
-report that prints the environment prints the secret; and the tokens you have exported since lesson 2,
+starts, as section 04 showed, including the ones that have no use for it. A debugging page or a crash
+report that prints the environment prints the secret. And the tokens you have exported since lesson 2,
 kept in `~/.profile` beside lesson 6's `DATABASE_URL`, are in every terminal you open.
 
 ## A file of its own

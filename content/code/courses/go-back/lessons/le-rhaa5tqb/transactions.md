@@ -36,7 +36,7 @@ ROLLBACK
 `BEGIN` opened the transaction and the `UPDATE` succeeded inside it. The `INSERT` failed, and from that
 moment the transaction was broken: **`COMMIT` answered `ROLLBACK`**, PostgreSQL's way of saying it threw
 the whole group away. The jazz event still shows the 2 seats sold before, not 4. Nothing of the failed
-sale survived, which is the point.
+sale survived.
 
 ## In Go
 

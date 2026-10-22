@@ -147,7 +147,7 @@ middleware que você acrescenta.
 O `fasthttp` ganha velocidade reaproveitando memória entre requisições, e isso vaza para as regras de
 uso do Fiber. **Uma string lida de um `fiber.Ctx` pertence a um buffer que a próxima requisição
 reaproveita**, então um valor guardado depois de o handler retornar, posto num mapa ou entregue a uma
-goroutine, muda debaixo de você se não for copiado antes; a documentação do Fiber avisa disso, e tem
+goroutine, muda debaixo de você se não for copiado antes. A documentação do Fiber avisa disso, e tem
 uma configuração que faz de todo valor uma cópia, ao custo de velocidade. E como um handler do Fiber
 não é um `http.Handler`:
 

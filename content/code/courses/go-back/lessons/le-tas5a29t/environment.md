@@ -34,9 +34,9 @@ in the environment.
 ## Strings, every one of them
 
 An environment holds only strings. A port, a pool size or a timeout has to be parsed, and a value that does
-not parse is the program's problem to report, with the variable's name in the message, because a message
-that says `parse error` without saying which of thirty variables caused it sends somebody reading through
-all thirty. Section 07 reuses the flag package's parsers for this, so `BOXOFFICE_WRITE_TIMEOUT=90s` is read
+not parse is the program's problem to report, with the variable's name in the message. A message that says
+`parse error` without saying which of thirty variables caused it sends somebody reading through all
+thirty. Section 07 reuses the flag package's parsers for this, so `BOXOFFICE_WRITE_TIMEOUT=90s` is read
 by exactly the same code as `-write-timeout 90s`.
 
 ## Names

@@ -32,8 +32,8 @@ BOXOFFICE_MANAGER_TOKEN=3f9c1e7a2b8d4f60
 ```
 
 Isso é melhor que uma flag e ainda não é à prova de vazamento. Uma variável exportada chega a todo programa
-que o dono inicia, como a seção 04 mostrou, inclusive os que não têm uso para ela; uma página de depuração
-ou um relatório de falha que imprime o ambiente imprime o segredo; e os tokens que você exporta desde a
+que o dono inicia, como a seção 04 mostrou, inclusive os que não têm uso para ela. Uma página de depuração
+ou um relatório de falha que imprime o ambiente imprime o segredo. E os tokens que você exporta desde a
 aula 2, guardados no `~/.profile` ao lado do `DATABASE_URL` da aula 6, estão em todo terminal que você abre.
 
 ## Um arquivo só dele

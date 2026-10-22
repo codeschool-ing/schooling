@@ -147,7 +147,7 @@ you add.
 `fasthttp` gets its speed by reusing memory between requests, and that leaks into the rules for using
 Fiber. **A string read from a `fiber.Ctx` belongs to a buffer that the next request reuses**, so a
 value kept after the handler returns, put in a map or handed to a goroutine, can change under you
-unless it is copied first; Fiber's documentation warns about this, and has a setting that makes
+unless it is copied first. Fiber's documentation warns about this, and has a setting that makes
 every value a copy at a cost in speed. And because a Fiber handler is not an `http.Handler`:
 
 - **none of the `net/http` middleware in the Go ecosystem plugs in directly**, lesson 2's included;

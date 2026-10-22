@@ -37,7 +37,7 @@ ROLLBACK
 O `BEGIN` abriu a transação e o `UPDATE` deu certo dentro dela. O `INSERT` falhou, e a partir desse
 momento a transação estava quebrada: **o `COMMIT` respondeu `ROLLBACK`**, o jeito do PostgreSQL de dizer
 que jogou o grupo inteiro fora. O evento de jazz continua mostrando os 2 lugares vendidos antes, não 4.
-Nada da venda que falhou sobreviveu, e é exatamente essa a ideia.
+Nada da venda que falhou sobreviveu.
 
 ## Em Go
 

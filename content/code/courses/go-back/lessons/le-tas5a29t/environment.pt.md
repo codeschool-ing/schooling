@@ -34,8 +34,8 @@ segredos no ambiente.
 ## Strings, todas elas
 
 Um ambiente só guarda strings. Uma porta, um tamanho de pool ou um timeout precisa ser analisado, e um valor
-que não se analisa é problema do programa informar, com o nome da variável na mensagem, porque uma mensagem
-que diz `parse error` sem dizer qual de trinta variáveis o causou manda alguém ler as trinta. A seção 07
+que não se analisa é problema do programa informar, com o nome da variável na mensagem. Uma mensagem que
+diz `parse error` sem dizer qual de trinta variáveis o causou manda alguém ler as trinta. A seção 07
 reaproveita os analisadores do pacote flag para isso, então `BOXOFFICE_WRITE_TIMEOUT=90s` é lido
 exatamente pelo mesmo código que `-write-timeout 90s`.
 
