@@ -6,7 +6,7 @@ version: 1
 **Este curso roda na máquina que o curso `java` montou, e não muda nada nela.** Bastam dois
 programas: o **OpenJDK 25**, que compila e roda Java, e o **Maven**, que constrói um projeto que usa
 a biblioteca de outra pessoa. Os dois vêm do próprio repositório do Ubuntu 24.04. O curso `java`
-instala os dois antes do primeiro programa e explica cada passo; esta seção dá os mesmos passos em
+instala os dois na seção 02 da aula 1 e explica cada passo; esta seção dá os mesmos passos em
 resumo, para quem chega de outro lugar, e depois confere se cada ferramenta responde. O `java-back`,
 o curso seguinte, usa os mesmos dois nas mesmas versões, então quem faz os três em ordem não instala
 nada duas vezes.

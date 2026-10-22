@@ -6,7 +6,7 @@ version: 1
 **This course runs on the machine the `java` course built, and changes nothing about it.** Two
 programs are all it needs: **OpenJDK 25**, which compiles and runs Java, and **Maven**, which
 builds a project that uses somebody else's library. Both come from Ubuntu 24.04's own archive. The
-`java` course installs them before its first program and explains every step; this section gives
+`java` course installs them in lesson 1 section 02 and explains every step; this section gives
 the same steps in brief, for anybody arriving from somewhere else, and then checks that each tool
 answers. `java-back`, the course after this one, uses the same two at the same versions, so a
 student who takes the three in order installs nothing twice.
