@@ -63,6 +63,6 @@ do mesmo jeito: um comando, um ambiente, e `SIGTERM` para parar.
 
 **O que não vem junto é o ecossistema.** Qual framework usar, como o middleware dele é escrito, qual
 pacote faz JSON ou conversa com um banco, o que as mensagens de erro querem dizer, onde a documentação
-do runtime esconde aquilo de que você precisa: cada um disso é aprendido de novo, e cada um leva o tempo
+do runtime esconde aquilo de que você precisa: cada um disso é aprendido de novo. Cada um leva o tempo
 que a aula 1 disse que levaria. A diferença é que você estaria aprendendo *o jeito do Go de fazer* algo
 que já entende, o que é uma fração de aprender a coisa.

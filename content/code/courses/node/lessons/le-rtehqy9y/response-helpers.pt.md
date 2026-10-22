@@ -62,7 +62,7 @@ Location: /landed
 ```
 
 **O 302 chegou como GET e o 307 manteve o POST.** Para o redirecionamento do próprio serviço links um
-302 é o certo: só GETs seguem um link curto, e **um 301 é uma promessa que o serviço não consegue
+302 é o certo: só GETs seguem um link curto. E **um 301 é uma promessa que o serviço não consegue
 desfazer**, porque um navegador que viu um pode ir direto ao endereço antigo por meses sem perguntar
 de novo. Um link que é apagado, ou mudado, precisa ser perguntado toda vez, e é o 302 que faz isso
 acontecer.

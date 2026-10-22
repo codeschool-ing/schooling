@@ -35,10 +35,9 @@ curl exit code 28
 
 `curl -T -` uploads, with PUT, whatever is piped into it. **The download and the upload each ran with
 a few chunks in memory**, whatever their size. The oversized upload was stopped at the limit, its
-partial file removed, and answered 413. The last download was slowed by `--limit-rate` to a mebibyte a
-second, and the server simply waited for it, the backpressure of the section on it; then `-m 1` made
-the client give up after a second, and `pipeline` noticed, stopped reading the file, and reported it
-in the server's terminal:
+partial file removed, and answered 413. The last download was slowed by `--limit-rate` to a mebibyte a second, and the server simply waited
+for it: the backpressure of the section on it. Then `-m 1` made the client give up after a second,
+and `pipeline` noticed, stopped reading the file, and reported it in the server's terminal:
 
 ```
 ana@dev:~/server/links$ node demo/transfer.js

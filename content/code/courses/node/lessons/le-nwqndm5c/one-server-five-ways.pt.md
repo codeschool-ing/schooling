@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Este curso escolheu uma linguagem e foi fundo nela, e a primeira aula fez uma promessa sobre a
-última**: que HTTP, códigos de status, configuração pelo ambiente, um desligamento limpo e o resto
-existem em toda linguagem de servidor, e que, tendo construído isso uma vez, você os leria em outro
+última.** HTTP, códigos de status, configuração pelo ambiente, um desligamento limpo e o resto
+existem em toda linguagem de servidor, ela disse, e, tendo construído isso uma vez, você os leria em outro
 lugar como as mesmas ideias com nomes novos. Esta aula cumpre a promessa. Ela escreve um servidor
 pequeno em Node e depois em outras cinco linguagens que rodam uma boa parte dos servidores do mundo,
 roda cada um, e faz as mesmas três perguntas a todos.

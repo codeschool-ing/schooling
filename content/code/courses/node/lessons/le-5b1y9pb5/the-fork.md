@@ -33,8 +33,8 @@ Two courses before it, and nothing else:
 
 ## What it leaves you able to do
 
-By lesson 10 you will have written one small service, a link shortener, three times over: once
-with nothing but Node's own HTTP module, once with Express, and then grown in place until it keeps
+By lesson 10 you will have written one small service, a link shortener, three times over: once with
+nothing but Node's own HTTP module, once with Express, and then grown in place. By the end it keeps
 its data in a file, reads its settings from the environment and runs one process per processor.
 It is small on purpose. Every line of it is shown in a lesson, and everything it does is something
 the courses after this one take for granted.

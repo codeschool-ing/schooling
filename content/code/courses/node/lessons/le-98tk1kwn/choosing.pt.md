@@ -27,6 +27,5 @@ o mínimo: um pool para uma rota lenta é uma mudança menor que um cluster para
 cluster é uma mudança menor que dividir o serviço em vários.
 
 Numa plataforma de contêineres as duas últimas linhas costumam se juntar. A plataforma roda várias
-cópias de um serviço de um processo só e reinicia cada uma, o que é o `cluster` e o systemd feitos de
-fora, com a mesma condição: um serviço cujo estado mora em outro lugar pode ser copiado, e um que o
+cópias de um serviço de um processo só e reinicia cada uma, o que é o `cluster` e o systemd feitos de fora. A condição é a mesma: um serviço cujo estado mora em outro lugar pode ser copiado, e um que o
 guarda na memória não pode.

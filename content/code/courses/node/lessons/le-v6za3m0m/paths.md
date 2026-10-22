@@ -37,7 +37,7 @@ report.pdf .gz
 ## Staying inside
 
 A server that reads or writes a file named by a client — an upload, a download, a template — has one
-rule: **resolve the final path, and check that it is still inside the folder.** Not by looking for
+rule. **Resolve the final path, and check that it is still inside the folder.** Not by looking for
 `..` in the input, which misses the forms nobody thought of, but by comparing where the path ends up:
 
 ```javascript

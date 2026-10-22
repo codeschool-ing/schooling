@@ -32,7 +32,7 @@ TypeError [ERR_PARSE_ARGS_UNKNOWN_OPTION]: Unknown option '--minimum'
 
 **An option that does not exist is refused with its name**, which a tool that only scanned
 `process.argv` by hand would have ignored, running with defaults the user did not choose. The order of
-precedence — flag, then environment, then default — is the usual one for tools, and it is the same
+precedence (flag, then environment, then default) is the usual one for tools, and it is the same
 order `--env-file` follows: whoever is closest to the command decides.
 
 ```schooling-figure

@@ -112,6 +112,5 @@ a new code: aj69pv
 ```
 
 Duas requisições, dois códigos. **Mantenha o `node_modules` fora do git**: são 4,3 MB de código de
-outras pessoas que o `npm ci` repõe exatamente a partir do lockfile em poucos segundos, então um
-`.gitignore` com a única linha `node_modules/` passa a fazer parte do projeto, ao lado de um
+outras pessoas que o `npm ci` repõe exatamente a partir do lockfile em poucos segundos. Então um `.gitignore` com a única linha `node_modules/` passa a fazer parte do projeto, ao lado de um
 `package-lock.json` que vai para o commit.

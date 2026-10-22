@@ -61,8 +61,7 @@ ana@dev:~/server/other$ for p in 4001 4002 4003 4004 4005; do curl -s "http://12
 container platform or a systemd unit from lesson 10 starts any of them the same way: a command, an
 environment, and `SIGTERM` to stop it.
 
-**What does not transfer is the ecosystem.** Which framework to use, how its middleware is written,
-which package does JSON or talks to a database, what the error messages mean, where the runtime's
-documentation hides the thing you need: each of those is learnt again, and each takes the time lesson
-1 said it would. The difference is that you would be learning *Go's way of doing* something you
+**What does not transfer is the ecosystem.** Which framework to use, how its middleware is written, which package does JSON or talks to a
+database, what the error messages mean, where the documentation hides the thing you need: each of
+those is learnt again. Each takes the time lesson 1 said it would. The difference is that you would be learning *Go's way of doing* something you
 already understand, which is a fraction of learning the thing.

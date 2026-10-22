@@ -4,9 +4,9 @@ version: 1
 ---
 
 **Most stream code moves data from one stream to another, possibly changing it on the way**, and
-`pipeline` from `node:stream/promises` does exactly that: it connects a readable, any number of
-transforms, and a writable, and returns a promise that settles when the last one finishes, or rejects
-with the first error from any of them.
+`pipeline` from `node:stream/promises` does exactly that. It connects a readable, any number of
+transforms, and a writable, and returns a promise that settles when the last one finishes, or
+rejects with the first error from any of them.
 
 ```javascript
 // gzip.js: compress a file, and say how much it saved.

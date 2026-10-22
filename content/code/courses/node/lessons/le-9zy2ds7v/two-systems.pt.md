@@ -18,7 +18,7 @@ Dois fatos da aula 9 sustentam esta aula inteira:
 
 **A primeira linha é o motivo de os dois não poderem ser trocados com um buscar e substituir.** Um
 `require` pode ficar dentro de um `if` e rodar ou não; uma declaração `import` é encontrada e
-carregada antes de a primeira linha do arquivo executar, e é isso que permite ao Node acusar um
+carregada antes de a primeira linha do arquivo executar. É isso que permite ao Node acusar um
 módulo ausente antes de qualquer coisa rodar, e que torna possível o `await` no topo.
 
 ## Por que os dois ainda existem

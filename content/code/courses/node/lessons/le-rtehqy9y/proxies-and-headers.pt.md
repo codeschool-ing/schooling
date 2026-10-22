@@ -39,7 +39,7 @@ ana@dev:~/server/links$ curl -s -H 'X-Forwarded-For: 203.0.113.9' http://127.0.0
 **Sem confiança, o cabeçalho é ignorado e o `req.ip` é o endereço do socket**, que é a verdade. Com
 `loopback`, o Express acredita num `X-Forwarded-For` que chega de `127.0.0.1`, e o endereço forjado
 virou o `req.ip`. Essa é a configuração certa quando a única coisa que alcança o serviço no loopback
-é o proxy na mesma máquina, e a errada em qualquer outro caso: **o `trust proxy` como `true` acredita
+é o proxy na mesma máquina, e a errada em qualquer outro caso. **O `trust proxy` como `true` acredita
 no cabeçalho vindo de qualquer um**, então todo cliente pode escolher o endereço que os logs, os
 limites de taxa e a trilha de auditoria registram. Confie exatamente nos proxies que você roda, por
 endereço ou por contagem, e em mais nada. Os endereços aqui são de `203.0.113.0/24`, uma faixa

@@ -25,7 +25,6 @@ package or two, and the commands will not.
 ## What changes when the package is a server
 
 A library is installed into other people's projects, so its `package.json` is a promise to strangers:
-which versions of Node it supports, which of its files they may import. **A server is installed in one
-place, by you**, and its `package.json` is a description of how to run it: which commands start it and
-test it, which packages it needs in production and which only on your laptop, and the exact versions
-that were tested together. Each section of this lesson is one of those.
+which versions of Node it supports, which of its files they may import. **A server is installed in one place, by you**, and its `package.json` is a description of how to
+run it. It says which commands start it and test it, which packages it needs in production and which
+only on your laptop, and the exact versions that were tested together. Each section of this lesson is one of those.

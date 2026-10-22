@@ -38,10 +38,10 @@ ana@dev:~/server/links$ curl -s -H 'X-Forwarded-For: 203.0.113.9' http://127.0.0
 
 **With no trust, the header is ignored and `req.ip` is the socket's address**, which is the truth.
 With `loopback`, Express believes an `X-Forwarded-For` that arrives from `127.0.0.1`, and the forged
-address became `req.ip`. That is the right setting when the only thing that can reach the service on
-loopback is the proxy on the same machine, and the wrong one anywhere else: **`trust proxy` set to
-`true` believes the header from anybody**, so every client can choose the address the logs, the rate
-limits and the audit trail record. Trust exactly the proxies you run, by address or by count, and
+address became `req.ip`. That is the right setting when the only thing that can reach the service on loopback is the proxy on
+the same machine, and the wrong one anywhere else. **`trust proxy` set to `true` believes the header
+from anybody**, so every client can choose the address the logs, the rate limits and the audit trail
+record. Trust exactly the proxies you run, by address or by count, and
 nothing more. The addresses here are from `203.0.113.0/24`, a range reserved for documentation that
 belongs to nobody.
 

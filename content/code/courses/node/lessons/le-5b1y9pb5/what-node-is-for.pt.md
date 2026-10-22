@@ -42,8 +42,7 @@ para outros programas, e modo cluster para um processo por processador.
 
 ## Mais duas coisas que ele dá
 
-**Uma linguagem dos dois lados.** O navegador roda JavaScript e nada mais, então uma equipe que
-escreve o servidor em Node escreve uma linguagem só em todo lugar, pode compartilhar o código que
+**Uma linguagem dos dois lados.** O navegador roda JavaScript e nada mais, então uma equipe que escreve o servidor em Node escreve uma linguagem só em todo lugar. Ela pode compartilhar o código que
 valida um formulário nos dois lados, e muda pessoas entre as duas metades da aplicação sem uma
 segunda linguagem para aprender. É uma vantagem real e modesta: a metade do servidor ainda tem o
 próprio runtime e as próprias bibliotecas, que são o resto deste curso.

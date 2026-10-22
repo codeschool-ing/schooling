@@ -36,8 +36,7 @@ curl exit code 28
 O `curl -T -` envia, com PUT, o que chegar pelo pipe. **O download e o upload rodaram cada um com
 poucos pedaços na memória**, seja qual for o tamanho. O upload grande demais foi parado no limite, o
 arquivo parcial removido, e respondido com 413. O último download foi desacelerado pelo `--limit-rate`
-para um mebibyte por segundo, e o servidor simplesmente esperou por ele, a contrapressão da seção sobre
-ela; depois o `-m 1` fez o cliente desistir depois de um segundo, e o `pipeline` percebeu, parou de ler
+para um mebibyte por segundo, e o servidor simplesmente esperou por ele: a contrapressão da seção sobre ela. Depois o `-m 1` fez o cliente desistir depois de um segundo, e o `pipeline` percebeu, parou de ler
 o arquivo, e relatou isso no terminal do servidor:
 
 ```

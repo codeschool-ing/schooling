@@ -120,6 +120,6 @@ ana@dev:~/server/links$ head -c 2000 /dev/zero | tr '\0' 'a' | curl -s -H 'conte
 ```
 
 **Os erros que o `express.json` lançou trazem um `status`**, 400 para JSON ruim e 413 para grande
-demais, então o handler repassa a mensagem deles; um erro sem status é nosso, um 500, e a mensagem
+demais, então o handler repassa a mensagem deles. Um erro sem status é nosso, um 500, e a mensagem
 dele fica no log, onde `database password rejected` deve ficar. Essa é a borda da aula 5 em seis
 linhas, e ela vale para toda rota que a aplicação vier a ter.

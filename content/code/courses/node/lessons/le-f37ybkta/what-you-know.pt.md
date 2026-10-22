@@ -26,7 +26,6 @@ pacotes, e os comandos não.
 
 Uma biblioteca é instalada nos projetos de outras pessoas, então o `package.json` dela é uma promessa
 para estranhos: quais versões do Node ela suporta, quais arquivos dela eles podem importar. **Um
-servidor é instalado num lugar só, por você**, e o `package.json` dele é uma descrição de como
-rodá-lo: quais comandos o iniciam e o testam, de quais pacotes ele precisa em produção e de quais só
+servidor é instalado num lugar só, por você**, e o `package.json` dele é uma descrição de como rodá-lo. Ele diz quais comandos o iniciam e o testam, de quais pacotes ele precisa em produção e de quais só
 no seu notebook, e as versões exatas que foram testadas juntas. Cada seção desta aula é uma dessas
 coisas.

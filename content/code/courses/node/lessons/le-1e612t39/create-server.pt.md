@@ -37,7 +37,7 @@ aula:
 **Todo servidor deste curso escuta em `127.0.0.1`.** Um servidor de desenvolvimento em `0.0.0.0` num
 notebook num café é um servidor com que qualquer pessoa do café consegue falar, com as rotas de
 depuração que ele tiver. Em produção um processo costuma ficar atrás de um proxy na mesma máquina, e
-escuta em `127.0.0.1` para ele, o que o curso `servers-cache` monta; dentro de um contêiner ele precisa
+escuta em `127.0.0.1` para ele, o que o curso `servers-cache` monta. Dentro de um contêiner ele precisa
 escutar em `0.0.0.0`, porque o loopback do próprio contêiner não é onde as requisições chegam, e o
 curso `docker` diz por quê.
 

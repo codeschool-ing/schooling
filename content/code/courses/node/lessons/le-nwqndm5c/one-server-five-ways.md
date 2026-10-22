@@ -4,9 +4,9 @@ version: 1
 ---
 
 **This course chose one language and went deep in it, and the first lesson made a promise about the
-last one**: that HTTP, status codes, configuration from the environment, a clean shutdown and the rest
-exist in every server language, and that having built them once you would read them elsewhere as the
-same ideas with new names. This lesson keeps it. It writes one small server in Node and then in five
+last one.** HTTP, status codes, configuration from the environment, a clean shutdown and the rest
+exist in every server language, it said, and having built them once you would read them elsewhere as
+the same ideas with new names. This lesson keeps it. It writes one small server in Node and then in five
 other languages that run a large share of the world's servers, runs each one, and asks the same three
 questions of all of them.
 

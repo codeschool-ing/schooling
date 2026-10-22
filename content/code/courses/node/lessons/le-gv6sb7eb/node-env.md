@@ -5,7 +5,7 @@ version: 1
 
 **`NODE_ENV` is a convention, not a feature of Node**: Node itself ignores it. Libraries read it, and
 by long agreement the one value that means something is `production`. Lesson 6 showed what it changes
-in Express — the default error page stops printing the stack trace — and it changes two more things
+in Express, where the default error page stops printing the stack trace, and it changes two more things
 worth knowing:
 
 | who reads it | what `NODE_ENV=production` changes |

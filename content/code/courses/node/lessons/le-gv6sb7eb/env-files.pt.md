@@ -21,8 +21,7 @@ undefined
 ana@dev:~/server/links$ rm demo.env
 ```
 
-**Uma variável que já está no ambiente vence o arquivo**, que é o que o segundo comando mostra: o
-arquivo dá os valores padrão para o notebook de quem desenvolve, e um deploy que define o ambiente de
+**Uma variável que já está no ambiente vence o arquivo**, que é o que o segundo comando mostra. O arquivo dá os valores padrão para o notebook de quem desenvolve, e um deploy que define o ambiente de
 verdade nunca é sobrescrito por um arquivo que alguém esqueceu ali. **Um arquivo que falta é um erro**
 com `--env-file`, e com `--env-file-if-exists` é um aviso e nada mais, que é o que um script de
 `start` quer: um notebook tem um `.env`, um servidor tem o ambiente definido de outro jeito e arquivo

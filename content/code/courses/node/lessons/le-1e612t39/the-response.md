@@ -48,10 +48,10 @@ too late for headers
 ```
 
 **`Content-Length` and `Transfer-Encoding: chunked` are the two ways a client learns where a body
-ends**, and a reply always has one of them. Node chose for you each time. Two details in the headers
-are worth knowing: `Buffer.byteLength(body)` and not `body.length`, because the header counts bytes
-and lesson 1's `"olá"` is three characters and four bytes; and the names you wrote in lower case
-went out in lower case, while Node's own `Date` and `Connection` went out capitalised. Both are
+ends**, and a reply always has one of them. Node chose for you each time. Two details in the headers are worth knowing. The length is `Buffer.byteLength(body)` and not
+`body.length`, because the header counts bytes and lesson 1's `"olá"` is three characters and four
+bytes. And the names you wrote in lower case went out in lower case, while Node's own `Date` and
+`Connection` went out capitalised. Both are
 fine, because header names are case-insensitive.
 
 The fourth route, in the server's terminal:

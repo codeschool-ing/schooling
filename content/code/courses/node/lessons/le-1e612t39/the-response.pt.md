@@ -48,9 +48,8 @@ too late for headers
 ```
 
 **O `Content-Length` e o `Transfer-Encoding: chunked` são os dois jeitos de um cliente saber onde um
-corpo termina**, e uma resposta sempre tem um deles. O Node escolheu por você em cada caso. Dois
-detalhes nos cabeçalhos valem saber: `Buffer.byteLength(body)` e não `body.length`, porque o
-cabeçalho conta bytes e o `"olá"` da aula 1 tem três caracteres e quatro bytes; e os nomes que você
+corpo termina**, e uma resposta sempre tem um deles. O Node escolheu por você em cada caso. Dois detalhes nos cabeçalhos valem saber. O tamanho é `Buffer.byteLength(body)` e não `body.length`,
+porque o cabeçalho conta bytes e o `"olá"` da aula 1 tem três caracteres e quatro bytes. E os nomes que você
 escreveu em minúsculas saíram em minúsculas, enquanto o `Date` e o `Connection` do próprio Node saíram
 com maiúscula. As duas coisas estão certas, porque nomes de cabeçalho não diferenciam maiúsculas.
 

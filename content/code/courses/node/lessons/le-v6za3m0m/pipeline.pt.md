@@ -4,7 +4,7 @@ version: 1
 ---
 
 **A maior parte do código com streams leva dados de um stream para outro, talvez mudando-os no
-caminho**, e o `pipeline` do `node:stream/promises` faz exatamente isso: liga um stream de leitura,
+caminho**, e o `pipeline` do `node:stream/promises` faz exatamente isso. Ele liga um stream de leitura,
 qualquer número de transforms, e um de escrita, e devolve uma promise que se resolve quando o último
 termina, ou rejeita com o primeiro erro de qualquer um deles.
 

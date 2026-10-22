@@ -35,10 +35,9 @@ lesson:
 | leave it out | Node listens on every address, IPv6 included, the same as `0.0.0.0` and wider |
 
 **Every server in this course listens on `127.0.0.1`.** A development server on `0.0.0.0` on a laptop
-in a café is a server anybody in the café can talk to, with whatever debugging routes it has. In
-production a process usually sits behind a proxy on the same machine, and listens on `127.0.0.1` for
-it, which the `servers-cache` course sets up; inside a container it must listen on `0.0.0.0`, because
-the container's own loopback is not where requests arrive, and the `docker` course says why.
+in a café is a server anybody in the café can talk to, with whatever debugging routes it has. In production a process usually sits behind a proxy on the same machine, and listens on `127.0.0.1`
+for it, which the `servers-cache` course sets up. Inside a container it must listen on `0.0.0.0`,
+because the container's own loopback is not where requests arrive, and the `docker` course says why.
 
 ## Port 0
 

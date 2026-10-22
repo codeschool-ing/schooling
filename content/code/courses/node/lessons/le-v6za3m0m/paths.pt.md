@@ -37,7 +37,7 @@ report.pdf .gz
 ## Ficando dentro
 
 Um servidor que lê ou escreve um arquivo cujo nome veio de um cliente — um upload, um download, um
-template — tem uma regra: **resolva o caminho final, e confira se ele continua dentro da pasta.** Não
+template — tem uma regra. **Resolva o caminho final, e confira se ele continua dentro da pasta.** Não
 procurando `..` na entrada, o que deixa passar as formas em que ninguém pensou, e sim comparando onde
 o caminho termina:
 

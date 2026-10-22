@@ -34,8 +34,7 @@ Dois cursos antes dele, e nada mais:
 ## O que ele deixa você capaz de fazer
 
 Até a aula 10 você terá escrito um serviço pequeno, um encurtador de links, três vezes: uma só com
-o módulo HTTP do próprio Node, uma com Express, e depois crescendo no lugar até guardar os dados em
-um arquivo, ler as configurações do ambiente e rodar um processo por processador. Ele é pequeno de
+o módulo HTTP do próprio Node, uma com Express, e depois crescendo no lugar. No fim ele guarda os dados em um arquivo, lê as configurações do ambiente e roda um processo por processador. Ele é pequeno de
 propósito. Cada linha dele aparece em uma aula, e tudo o que ele faz é algo que os cursos depois
 deste dão por garantido.
 
