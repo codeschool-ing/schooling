@@ -1,0 +1,535 @@
+[
+  {
+    "id": "ex-ky3t6z3w",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a Bubble Tea program, what is allowed to change the model?",
+    "hint": "One of the three methods returns a model.",
+    "choices": [
+      {
+        "text": "Only `Update`, by returning the next model",
+        "correct": true,
+        "why": "Right. The program keeps whatever `Update` returns, and nothing else in the loop produces a model."
+      },
+      {
+        "text": "`View`, when what it draws needs a field corrected",
+        "correct": false,
+        "why": "`View` only reads the model and returns a `tea.View`. A change made inside it would be made to a copy and thrown away."
+      },
+      {
+        "text": "The key press itself, before any method runs",
+        "correct": false,
+        "why": "A key press becomes a message. It changes nothing until `Update` decides what the next model is."
+      },
+      {
+        "text": "`Init`, which Bubble Tea calls again before each frame",
+        "correct": false,
+        "why": "`Init` runs once, before the first screen, and returns a command rather than a model."
+      }
+    ]
+  },
+  {
+    "id": "ex-aabdceqc",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague's `View` opens the log and counts it again every time it is called, so that the numbers are always fresh. What goes wrong?",
+    "hint": "How often does the loop call `View`?",
+    "choices": [
+      {
+        "text": "Bubble Tea refuses to compile a `View` that does I/O",
+        "correct": false,
+        "why": "Nothing in the type system stops it; `View` is an ordinary method. The trouble shows up at run time."
+      },
+      {
+        "text": "Nothing: `View` runs only once, when the program starts",
+        "correct": false,
+        "why": "`View` runs after every `Update`, which means after every key press and every other message."
+      },
+      {
+        "text": "Every key press rereads the whole file before the screen moves",
+        "correct": true,
+        "why": "Right. `View` runs after every `Update`, so each message pays for a full count and the keys queue up behind it. The reading belongs in a command."
+      },
+      {
+        "text": "The counts go stale, because Bubble Tea caches the first `View`",
+        "correct": false,
+        "why": "There is no such cache; every `View` result is drawn. The cost is the opposite one: far too much work."
+      }
+    ]
+  },
+  {
+    "id": "ex-8pr6pd6q",
+    "version": 1,
+    "section": "the-model",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a Bubble Tea program with when it runs.",
+    "hint": "One of the right-hand phrases describes nothing in the loop.",
+    "pairs": [
+      {
+        "left": "`Init`",
+        "right": "once, before the first screen"
+      },
+      {
+        "left": "`Update`",
+        "right": "for every message, one at a time"
+      },
+      {
+        "left": "`View`",
+        "right": "after every `Update`"
+      },
+      {
+        "left": "a `tea.Cmd`",
+        "right": "in a goroutine of its own"
+      }
+    ],
+    "right_distractors": [
+      "only when the terminal is resized"
+    ]
+  },
+  {
+    "id": "ex-j5yjtcdr",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Code from an older tutorial declares `func (m model) View() string` and starts with `tea.NewProgram(m, tea.WithAltScreen())`. Against `charm.land/bubbletea/v2` it does not compile. What is the version 2 shape?",
+    "hint": "In version 2 the view says what the terminal should be doing.",
+    "choices": [
+      {
+        "text": "`View` returns a `tea.View`, and setting its `AltScreen` field asks for the alternate screen",
+        "correct": true,
+        "why": "Right. Version 2 made the view declarative: `tea.NewView(s)` wraps the text, and `v.AltScreen = true` replaces the program option."
+      },
+      {
+        "text": "Keep `View() string` and call `tea.EnterAltScreen` from `Init`",
+        "correct": false,
+        "why": "`tea.EnterAltScreen` is one of the commands version 2 removed, and `View` no longer returns a string."
+      },
+      {
+        "text": "Change only the import path; the rest is the same API",
+        "correct": false,
+        "why": "The import path changed and so did the API: the type `View` returns and the way the alternate screen is asked for."
+      },
+      {
+        "text": "Return the text from `Update` and drop `View`",
+        "correct": false,
+        "why": "`View` is one of the three methods of `tea.Model`. A type without it is not a model at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-h7a0gec1",
+    "version": 1,
+    "section": "update-and-messages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Bubble Tea program whose `Update` has no `\"ctrl+c\"` case cannot be stopped with Ctrl+C. Why not?",
+    "hint": "What mode does Bubble Tea put the terminal in?",
+    "choices": [
+      {
+        "text": "Go programs ignore `SIGINT` unless they call `signal.Notify`",
+        "correct": false,
+        "why": "Without `signal.Notify`, `SIGINT` kills a Go program. Here no signal is sent at all."
+      },
+      {
+        "text": "In raw mode the keystroke arrives as a key message, not as a signal",
+        "correct": true,
+        "why": "Right. The terminal driver stops turning Ctrl+C into `SIGINT`, so the program sees `\"ctrl+c\"` like any key and must handle it."
+      },
+      {
+        "text": "The alternate screen captures Ctrl+C and discards it",
+        "correct": false,
+        "why": "The alternate screen is a second buffer to draw on; it has nothing to do with how keys are delivered."
+      },
+      {
+        "text": "Ctrl+C reaches `View`, which has no way to quit",
+        "correct": false,
+        "why": "Every message goes to `Update`; `View` receives none."
+      }
+    ]
+  },
+  {
+    "id": "ex-j4n8b8xp",
+    "version": 1,
+    "section": "update-and-messages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Bubble Tea version 2, pressing a key delivers a message of type `tea.___`; `tea.KeyMsg` is now an interface that also covers releases.",
+    "hint": "Its name says the key went down.",
+    "blanks": [
+      {
+        "accept": [
+          "KeyPressMsg"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6ggvyef9",
+    "version": 1,
+    "section": "update-and-messages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `hits browse`, what does the breakdown screen draw if Enter is handled before the first `tea.WindowSizeMsg` has arrived?",
+    "hint": "What is `width` in a freshly built model?",
+    "choices": [
+      {
+        "text": "The counts, with no bars",
+        "correct": true,
+        "why": "Right. `width` is 0 until the first `WindowSizeMsg`, `bar` gets a negative width and returns an empty string, and the counts are drawn alone."
+      },
+      {
+        "text": "Bars sized for an 80-column terminal, the usual default",
+        "correct": false,
+        "why": "The model has no default of its own; it knows only what the messages told it, and nothing has told it a width yet."
+      },
+      {
+        "text": "Nothing: `Update` ignores Enter until it knows the size",
+        "correct": false,
+        "why": "The Enter case checks only that there are rows. The width matters to `View`, not to `Update`."
+      },
+      {
+        "text": "It panics, because `strings.Repeat` is given a count below zero",
+        "correct": false,
+        "why": "`bar` returns early when the width is below 1, so `strings.Repeat` never sees a negative count."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa7qg7vn",
+    "version": 1,
+    "section": "update-and-messages",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a terminal 72 columns wide, the breakdown of `/static/app.js` drew 56 `#` for its largest count, 944, and 20 for `404`'s 340. With integer division as `bar` does it, how many `#` would `404` get on a terminal 100 columns wide?",
+    "hint": "The bar has width − 16 columns; it is n × that ÷ the largest count, rounded down.",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gc81c864",
+    "version": 1,
+    "section": "commands-and-io",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`hits browse` reads the log in a command returned by `Init` instead of reading it inside `Init`. What does that buy?",
+    "hint": "Where does the program run a command?",
+    "choices": [
+      {
+        "text": "The screen answers keys while the file is read",
+        "correct": true,
+        "why": "Right. The program runs a command in a goroutine of its own, so the first screen is drawn at once; the result arrives later as `loaded`. A blocking read in `Init` would hold up that screen."
+      },
+      {
+        "text": "The file is read twice as fast",
+        "correct": false,
+        "why": "The reading loop is the same either way; what changes is which goroutine waits for it."
+      },
+      {
+        "text": "`Init` is not allowed to open files",
+        "correct": false,
+        "why": "`Init` is an ordinary method and may do anything; doing slow work there is the problem."
+      },
+      {
+        "text": "A command can change the model directly, which `Init` cannot",
+        "correct": false,
+        "why": "A command never touches the model. It returns a message, and `Update` makes the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-p0t3w6t7",
+    "version": 1,
+    "section": "commands-and-io",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is `tea.Quit`, which `Update` returns when `q` is pressed?",
+    "hint": "Look at its type.",
+    "choices": [
+      {
+        "text": "A function that calls `os.Exit(0)` straight away",
+        "correct": false,
+        "why": "Nothing exits on the spot. The program finishes its loop and `Run` returns, which is what lets `browse` print an error afterwards."
+      },
+      {
+        "text": "A command: a `func() tea.Msg` that returns `tea.QuitMsg`",
+        "correct": true,
+        "why": "Right. It has exactly the type of a `tea.Cmd`, and when its message comes round the loop the program stops."
+      },
+      {
+        "text": "A field of the model that `View` checks",
+        "correct": false,
+        "why": "The model is the program's own type; Bubble Tea adds no fields to it."
+      },
+      {
+        "text": "The signal Bubble Tea sends itself on Ctrl+C",
+        "correct": false,
+        "why": "In raw mode Ctrl+C is a key message; `tea.Quit` is returned by the program's own `Update`."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2mk2hew",
+    "version": 1,
+    "section": "commands-and-io",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when `./hits browse bad.log` runs on a terminal and line 1 of `bad.log` will not parse.",
+    "hint": "The message is printed last, for a reason.",
+    "items": [
+      "`browse` opens `bad.log` and starts the program",
+      "the command `Init` returned runs `count` in its own goroutine",
+      "`count` returns `loaded` carrying the error for line 1",
+      "`Update` keeps the error in the model and returns `tea.Quit`",
+      "the alternate screen is switched off and `Run` returns",
+      "`browse` prints `hits: line 1: want 5 fields, got 1` and returns 1"
+    ]
+  },
+  {
+    "id": "ex-9psz7jqq",
+    "version": 1,
+    "section": "commands-and-io",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`HITS_DEBUG=msgs.log` recorded every message of one run. Which of these came from Bubble Tea or the terminal, rather than from the person typing or from `hits`'s own code? Choose all that apply.",
+    "hint": "Three of them nobody asked for.",
+    "choices": [
+      {
+        "text": "`tea.ColorProfileMsg`",
+        "correct": true,
+        "why": "Right. Bubble Tea tells the model how many colours the terminal can show."
+      },
+      {
+        "text": "`tui.loaded`",
+        "correct": false,
+        "why": "That is `hits`'s own message, returned by the command `Init` started."
+      },
+      {
+        "text": "`tea.ModeReportMsg`",
+        "correct": true,
+        "why": "Right. These were the terminal's answers to Bubble Tea's questions about modes 2026 and 2027."
+      },
+      {
+        "text": "`tea.KeyPressMsg`",
+        "correct": false,
+        "why": "Those were `j`, `j` and `q`, typed by the person at the keyboard."
+      },
+      {
+        "text": "`tea.EnvMsg`",
+        "correct": true,
+        "why": "Right. Bubble Tea hands the model the environment it was started with."
+      }
+    ]
+  },
+  {
+    "id": "ex-k1v5140t",
+    "version": 1,
+    "section": "testing-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`TestScreens` compares the whole string `View` returned with the screen it expects, instead of checking that the text contains `/login`. What failure would the shorter check miss?",
+    "hint": "Two rows of the list both contain a path.",
+    "choices": [
+      {
+        "text": "A `View` that panics on an empty log",
+        "correct": false,
+        "why": "That is a different input altogether; `TestEmptyLog` is the test that feeds an empty log."
+      },
+      {
+        "text": "A count that took too long to finish",
+        "correct": false,
+        "why": "The test runs the command synchronously; time is not what either check measures."
+      },
+      {
+        "text": "The `>` beside the wrong row",
+        "correct": true,
+        "why": "Right. `/login` is on the screen wherever the cursor is; only the whole string pins down which row carries the `>`."
+      },
+      {
+        "text": "Escape sequences that the terminal would not understand",
+        "correct": false,
+        "why": "`View().Content` is the text before Bubble Tea turns it into escape sequences, so neither check sees them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppyxkz1n",
+    "version": 1,
+    "section": "testing-and-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `browse` use `term.IsTerminal` rather than checking `os.Stdout.Stat()` for `os.ModeCharDevice`?",
+    "hint": "Run `stat -c %F` on the file a script uses to throw output away.",
+    "choices": [
+      {
+        "text": "`ModeCharDevice` is only defined on Windows",
+        "correct": false,
+        "why": "It is defined on every platform; the stat in the section ran on Linux."
+      },
+      {
+        "text": "`/dev/null` is a character device too, so the shorter test would start a screen nobody sees",
+        "correct": true,
+        "why": "Right. `stat` reported `character special file` for `/dev/null`; `term.IsTerminal` asks whether the descriptor is a terminal, and refuses it."
+      },
+      {
+        "text": "`Stat` on standard output fails while a terminal is attached",
+        "correct": false,
+        "why": "`Stat` works on any open descriptor. The problem is what it cannot tell apart."
+      },
+      {
+        "text": "Bubble Tea requires `golang.org/x/term`",
+        "correct": false,
+        "why": "Bubble Tea brings its own terminal package; `hits` imports `golang.org/x/term` for its own check."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dmrnmah",
+    "version": 1,
+    "section": "testing-and-limits",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With its terminal check deleted, `./hits-raw browse access.log > screen.out` left 108 bytes in the file. What were they?",
+    "hint": "`grep -c login screen.out` printed 0.",
+    "choices": [
+      {
+        "text": "The list of paths, without colours",
+        "correct": false,
+        "why": "Not one path reached the file: `grep` counted no line with `login` in it."
+      },
+      {
+        "text": "An error message saying there was no terminal",
+        "correct": false,
+        "why": "Bubble Tea does not refuse when its output is not a terminal; it starts anyway, which is why the check exists."
+      },
+      {
+        "text": "Escape sequences, and no data at all",
+        "correct": true,
+        "why": "Right. `od -c` shows `033 [ ? 2 0 2 6 $ p` and similar: questions and mode switches meant for a terminal, written into a file."
+      },
+      {
+        "text": "The `msgs.log` debug lines",
+        "correct": false,
+        "why": "Those go to the file named by `HITS_DEBUG`, and only when it is set."
+      }
+    ]
+  },
+  {
+    "id": "ex-qrnhzbye",
+    "version": 1,
+    "section": "testing-and-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate wants a cron job that emails the busiest path of the day every morning, and proposes running `hits browse` with its output captured. What do you tell them?",
+    "hint": "What is standard output in a cron job?",
+    "choices": [
+      {
+        "text": "Use `hits top -n 1`: `browse` refuses without a terminal",
+        "correct": true,
+        "why": "Right. Cron gives the job no terminal, so `browse` stops with status 2; `top` prints a line of data and an exit code, which is what a job can use."
+      },
+      {
+        "text": "Fine, as long as they send `q` on standard input",
+        "correct": false,
+        "why": "The check runs before any key is read: with no terminal on standard output, `browse` stops at once with status 2."
+      },
+      {
+        "text": "Fine, but strip the colours with `sed` first",
+        "correct": false,
+        "why": "There are no colours to strip and no data either: `browse` refuses, and without the check the file would hold only escape sequences."
+      },
+      {
+        "text": "Run it with `HITS_DEBUG` set and parse the log of messages",
+        "correct": false,
+        "why": "The debug log is for watching the program; the terminal check still refuses before anything runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-dzkt7emc",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add an `r` key to `hits browse` that reads the log again. Where does the reading go?",
+    "hint": "Section 04 says how a model asks for work.",
+    "choices": [
+      {
+        "text": "In `Update`, which reads the file and stores the new rows before returning",
+        "correct": false,
+        "why": "That blocks the loop: no `View`, no keys, until the read is done. It is the mistake section 04 opens with."
+      },
+      {
+        "text": "In `Update` on `r`, returning a command that counts and sends `loaded`",
+        "correct": true,
+        "why": "Right. The case returns `m, count(...)`; the result arrives as a message like the first one, and the existing `loaded` case takes it."
+      },
+      {
+        "text": "In `View`, so that the rows are fresh whenever the screen is drawn",
+        "correct": false,
+        "why": "`View` runs after every message, and a model it changed would be a copy nobody keeps."
+      },
+      {
+        "text": "In a goroutine started from `Update` that writes `m.rows` when done",
+        "correct": false,
+        "why": "`m` is a copy that has already been returned, so the rows land in a model nobody keeps and the screen never changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4y2d3ay",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Bubble Tea command has the type `func() tea.___`: it does its work and hands back a value for `Update`.",
+    "hint": "The same type every message satisfies.",
+    "blanks": [
+      {
+        "accept": [
+          "Msg"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bzr68cnn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1's standard-library `hits` was 4,031,903 bytes; with `browse`, Bubble Tea and `golang.org/x/term` it is 6,773,596 bytes. By what percentage did the binary grow, to the nearest whole number?",
+    "hint": "(6,773,596 − 4,031,903) ÷ 4,031,903.",
+    "value": 68,
+    "tolerance": 0.5,
+    "unit": "%"
+  }
+]

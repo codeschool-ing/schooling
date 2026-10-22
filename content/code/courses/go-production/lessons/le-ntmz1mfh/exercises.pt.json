@@ -1,0 +1,360 @@
+{
+  "ex-ky3t6z3w": {
+    "prompt": "Num programa Bubble Tea, o que pode mudar o modelo?",
+    "hint": "Um dos três métodos devolve um modelo.",
+    "choices": [
+      {
+        "text": "Só o `Update`, devolvendo o próximo modelo",
+        "why": "Isso. O programa guarda o que o `Update` devolve, e nada mais no laço produz um modelo."
+      },
+      {
+        "text": "O `View`, quando o desenho precisa corrigir um campo",
+        "why": "O `View` só lê o modelo e devolve um `tea.View`. Uma mudança feita nele cairia numa cópia e seria descartada."
+      },
+      {
+        "text": "A própria tecla, antes de qualquer método rodar",
+        "why": "Uma tecla vira mensagem. Ela não muda nada até o `Update` decidir qual é o próximo modelo."
+      },
+      {
+        "text": "O `Init`, que o Bubble Tea chama de novo antes de cada quadro",
+        "why": "O `Init` roda uma vez, antes da primeira tela, e devolve um comando, não um modelo."
+      }
+    ]
+  },
+  "ex-aabdceqc": {
+    "prompt": "O `View` de um colega abre o log e conta tudo de novo a cada chamada, para os números estarem sempre atualizados. O que dá errado?",
+    "hint": "Com que frequência o laço chama o `View`?",
+    "choices": [
+      {
+        "text": "O Bubble Tea se recusa a compilar um `View` que faz I/O",
+        "why": "Nada no sistema de tipos impede; o `View` é um método comum. O problema aparece na execução."
+      },
+      {
+        "text": "Nada: o `View` roda só uma vez, quando o programa começa",
+        "why": "O `View` roda depois de cada `Update`, ou seja, depois de cada tecla e de cada outra mensagem."
+      },
+      {
+        "text": "Cada tecla relê o arquivo inteiro antes de a tela mudar",
+        "why": "Isso. O `View` roda depois de cada `Update`, então cada mensagem paga uma contagem inteira e as teclas fazem fila atrás dela. A leitura cabe num comando."
+      },
+      {
+        "text": "As contagens ficam velhas, porque o Bubble Tea guarda o primeiro `View`",
+        "why": "Esse cache não existe; todo resultado do `View` é desenhado. O custo é o oposto: trabalho demais."
+      }
+    ]
+  },
+  "ex-8pr6pd6q": {
+    "prompt": "Associe cada peça de um programa Bubble Tea com quando ela roda.",
+    "hint": "Uma das frases da direita não descreve nada do laço.",
+    "pairs": [
+      {
+        "left": "`Init`",
+        "right": "uma vez, antes da primeira tela"
+      },
+      {
+        "left": "`Update`",
+        "right": "para cada mensagem, uma de cada vez"
+      },
+      {
+        "left": "`View`",
+        "right": "depois de cada `Update`"
+      },
+      {
+        "left": "um `tea.Cmd`",
+        "right": "numa goroutine própria"
+      }
+    ],
+    "right_distractors": [
+      "só quando o terminal muda de tamanho"
+    ]
+  },
+  "ex-j5yjtcdr": {
+    "prompt": "Um código de um tutorial antigo declara `func (m model) View() string` e começa com `tea.NewProgram(m, tea.WithAltScreen())`. Com `charm.land/bubbletea/v2` ele não compila. Qual é a forma na versão 2?",
+    "hint": "Na versão 2, a view diz o que o terminal deve estar fazendo.",
+    "choices": [
+      {
+        "text": "O `View` devolve um `tea.View`, e o campo `AltScreen` dele pede a tela alternativa",
+        "why": "Isso. A versão 2 tornou a view declarativa: `tea.NewView(s)` embrulha o texto, e `v.AltScreen = true` substitui a opção do programa."
+      },
+      {
+        "text": "Manter `View() string` e chamar `tea.EnterAltScreen` no `Init`",
+        "why": "O `tea.EnterAltScreen` é um dos comandos que a versão 2 removeu, e o `View` não devolve mais string."
+      },
+      {
+        "text": "Trocar só o caminho do import; o resto é a mesma API",
+        "why": "Mudou o caminho e mudou a API: o tipo que o `View` devolve e o jeito de pedir a tela alternativa."
+      },
+      {
+        "text": "Devolver o texto pelo `Update` e abandonar o `View`",
+        "why": "O `View` é um dos três métodos de `tea.Model`. Um tipo sem ele nem é um modelo."
+      }
+    ]
+  },
+  "ex-h7a0gec1": {
+    "prompt": "Um programa Bubble Tea cujo `Update` não tem um caso `\"ctrl+c\"` não para com Ctrl+C. Por quê?",
+    "hint": "Em que modo o Bubble Tea põe o terminal?",
+    "choices": [
+      {
+        "text": "Programas Go ignoram `SIGINT` a não ser que chamem `signal.Notify`",
+        "why": "Sem `signal.Notify`, o `SIGINT` mata um programa Go. Aqui nenhum sinal chega a ser enviado."
+      },
+      {
+        "text": "Em modo raw a tecla chega como mensagem de tecla, não como sinal",
+        "why": "Isso. O driver do terminal deixa de transformar Ctrl+C em `SIGINT`, então o programa vê `\"ctrl+c\"` como qualquer tecla e precisa tratá-la."
+      },
+      {
+        "text": "A tela alternativa captura o Ctrl+C e o descarta",
+        "why": "A tela alternativa é um segundo buffer de desenho; ela não tem nada a ver com a entrega das teclas."
+      },
+      {
+        "text": "O Ctrl+C chega ao `View`, que não tem como sair",
+        "why": "Toda mensagem vai para o `Update`; o `View` não recebe nenhuma."
+      }
+    ]
+  },
+  "ex-j4n8b8xp": {
+    "prompt": "No Bubble Tea versão 2, apertar uma tecla entrega uma mensagem do tipo `tea.___`; o `tea.KeyMsg` agora é uma interface que também cobre o soltar.",
+    "hint": "O nome diz que a tecla desceu.",
+    "blanks": [
+      {
+        "accept": [
+          "KeyPressMsg"
+        ]
+      }
+    ]
+  },
+  "ex-6ggvyef9": {
+    "prompt": "No `hits browse`, o que a tela de detalhe desenha se o Enter for tratado antes de chegar a primeira `tea.WindowSizeMsg`?",
+    "hint": "Quanto vale `width` num modelo recém-criado?",
+    "choices": [
+      {
+        "text": "As contagens, sem barras",
+        "why": "Isso. O `width` vale 0 até a primeira `WindowSizeMsg`, o `bar` recebe largura negativa e devolve string vazia, e as contagens saem sozinhas."
+      },
+      {
+        "text": "Barras para um terminal de 80 colunas, o padrão de sempre",
+        "why": "O modelo não tem padrão próprio; ele só sabe o que as mensagens contaram, e nenhuma contou a largura ainda."
+      },
+      {
+        "text": "Nada: o `Update` ignora o Enter até saber o tamanho",
+        "why": "O caso do Enter só confere se há linhas. A largura importa ao `View`, não ao `Update`."
+      },
+      {
+        "text": "Ele entra em pânico, porque `strings.Repeat` recebe uma contagem negativa",
+        "why": "O `bar` retorna cedo quando a largura é menor que 1, então o `strings.Repeat` nunca vê contagem negativa."
+      }
+    ]
+  },
+  "ex-sa7qg7vn": {
+    "prompt": "Num terminal de 72 colunas, o detalhe de `/static/app.js` desenhou 56 `#` para a maior contagem, 944, e 20 para os 340 do `404`. Com divisão inteira, como o `bar` faz, quantos `#` o `404` teria num terminal de 100 colunas?",
+    "hint": "A barra tem largura − 16 colunas; ela vale n × isso ÷ a maior contagem, arredondado para baixo."
+  },
+  "ex-gc81c864": {
+    "prompt": "O `hits browse` lê o log num comando devolvido pelo `Init` em vez de ler dentro do `Init`. O que isso garante?",
+    "hint": "Onde o programa roda um comando?",
+    "choices": [
+      {
+        "text": "A tela atende teclas enquanto o arquivo é lido",
+        "why": "Isso. O programa roda o comando numa goroutine própria, então a primeira tela sai na hora; o resultado chega depois, como `loaded`. Uma leitura bloqueante no `Init` seguraria essa tela."
+      },
+      {
+        "text": "O arquivo é lido duas vezes mais rápido",
+        "why": "O laço de leitura é o mesmo nos dois casos; o que muda é qual goroutine espera por ele."
+      },
+      {
+        "text": "O `Init` não tem permissão para abrir arquivos",
+        "why": "O `Init` é um método comum e pode fazer qualquer coisa; o problema é fazer trabalho lento ali."
+      },
+      {
+        "text": "Um comando pode mudar o modelo direto, e o `Init` não",
+        "why": "Um comando nunca toca no modelo. Ele devolve uma mensagem, e o `Update` faz a mudança."
+      }
+    ]
+  },
+  "ex-p0t3w6t7": {
+    "prompt": "O que é o `tea.Quit`, que o `Update` devolve quando se aperta `q`?",
+    "hint": "Olhe o tipo dele.",
+    "choices": [
+      {
+        "text": "Uma função que chama `os.Exit(0)` na hora",
+        "why": "Nada sai na hora. O programa termina o laço e o `Run` retorna, e é isso que deixa o `browse` imprimir um erro depois."
+      },
+      {
+        "text": "Um comando: uma `func() tea.Msg` que devolve `tea.QuitMsg`",
+        "why": "Isso. Ele tem exatamente o tipo de um `tea.Cmd`, e quando a mensagem dele dá a volta no laço o programa para."
+      },
+      {
+        "text": "Um campo do modelo que o `View` confere",
+        "why": "O modelo é um tipo do próprio programa; o Bubble Tea não acrescenta campos a ele."
+      },
+      {
+        "text": "O sinal que o Bubble Tea manda a si mesmo no Ctrl+C",
+        "why": "Em modo raw o Ctrl+C é uma mensagem de tecla; o `tea.Quit` é devolvido pelo `Update` do próprio programa."
+      }
+    ]
+  },
+  "ex-n2mk2hew": {
+    "prompt": "Ponha em ordem o que acontece quando `./hits browse bad.log` roda num terminal e a linha 1 de `bad.log` não pode ser lida.",
+    "hint": "A mensagem sai por último, por um motivo.",
+    "items": [
+      "o `browse` abre `bad.log` e inicia o programa",
+      "o comando que o `Init` devolveu roda o `count` numa goroutine própria",
+      "o `count` devolve `loaded` com o erro da linha 1",
+      "o `Update` guarda o erro no modelo e devolve `tea.Quit`",
+      "a tela alternativa é desligada e o `Run` retorna",
+      "o `browse` imprime `hits: line 1: want 5 fields, got 1` e devolve 1"
+    ]
+  },
+  "ex-9psz7jqq": {
+    "prompt": "O `HITS_DEBUG=msgs.log` registrou todas as mensagens de uma execução. Quais destas vieram do Bubble Tea ou do terminal, e não da pessoa digitando nem do código do próprio `hits`? Marque todas as que se aplicam.",
+    "hint": "Três delas ninguém pediu.",
+    "choices": [
+      {
+        "text": "`tea.ColorProfileMsg`",
+        "why": "Isso. O Bubble Tea conta ao modelo quantas cores o terminal mostra."
+      },
+      {
+        "text": "`tui.loaded`",
+        "why": "Essa é a mensagem do próprio `hits`, devolvida pelo comando que o `Init` iniciou."
+      },
+      {
+        "text": "`tea.ModeReportMsg`",
+        "why": "Isso. Eram as respostas do terminal às perguntas do Bubble Tea sobre os modos 2026 e 2027."
+      },
+      {
+        "text": "`tea.KeyPressMsg`",
+        "why": "Essas eram `j`, `j` e `q`, digitadas pela pessoa no teclado."
+      },
+      {
+        "text": "`tea.EnvMsg`",
+        "why": "Isso. O Bubble Tea entrega ao modelo o ambiente com que foi iniciado."
+      }
+    ]
+  },
+  "ex-k1v5140t": {
+    "prompt": "O `TestScreens` compara a string inteira que o `View` devolveu com a tela esperada, em vez de conferir se o texto contém `/login`. Que falha a verificação mais curta deixaria passar?",
+    "hint": "Duas linhas da lista contêm um caminho.",
+    "choices": [
+      {
+        "text": "Um `View` que entra em pânico com log vazio",
+        "why": "Essa é outra entrada; o `TestEmptyLog` é o teste que alimenta um log vazio."
+      },
+      {
+        "text": "Uma contagem que demorou demais para terminar",
+        "why": "O teste roda o comando de forma síncrona; tempo não é o que nenhuma das duas verificações mede."
+      },
+      {
+        "text": "O `>` ao lado da linha errada",
+        "why": "Isso. `/login` está na tela onde quer que o cursor esteja; só a string inteira fixa qual linha leva o `>`."
+      },
+      {
+        "text": "Sequências de escape que o terminal não entenderia",
+        "why": "O `View().Content` é o texto antes de o Bubble Tea virar sequências de escape, então nenhuma das duas verificações as vê."
+      }
+    ]
+  },
+  "ex-ppyxkz1n": {
+    "prompt": "Por que o `browse` usa `term.IsTerminal` em vez de conferir `os.ModeCharDevice` em `os.Stdout.Stat()`?",
+    "hint": "Rode `stat -c %F` no arquivo que um script usa para jogar saída fora.",
+    "choices": [
+      {
+        "text": "O `ModeCharDevice` só existe no Windows",
+        "why": "Ele existe em toda plataforma; o stat da seção rodou no Linux."
+      },
+      {
+        "text": "O `/dev/null` também é dispositivo de caractere, então o teste mais curto abriria uma tela que ninguém vê",
+        "why": "Isso. O `stat` mostrou `character special file` para o `/dev/null`; o `term.IsTerminal` pergunta se o descritor é um terminal, e o recusa."
+      },
+      {
+        "text": "O `Stat` na saída padrão falha quando há um terminal ligado",
+        "why": "O `Stat` funciona em qualquer descritor aberto. O problema é o que ele não consegue distinguir."
+      },
+      {
+        "text": "O Bubble Tea exige o `golang.org/x/term`",
+        "why": "O Bubble Tea traz seu próprio pacote de terminal; o `hits` importa o `golang.org/x/term` para a verificação dele."
+      }
+    ]
+  },
+  "ex-6dmrnmah": {
+    "prompt": "Com a verificação de terminal apagada, `./hits-raw browse access.log > screen.out` deixou 108 bytes no arquivo. O que eram?",
+    "hint": "O `grep -c login screen.out` imprimiu 0.",
+    "choices": [
+      {
+        "text": "A lista de caminhos, sem cores",
+        "why": "Nenhum caminho chegou ao arquivo: o `grep` não contou nenhuma linha com `login`."
+      },
+      {
+        "text": "Uma mensagem de erro dizendo que não havia terminal",
+        "why": "O Bubble Tea não recusa quando a saída não é um terminal; ele começa assim mesmo, e por isso a verificação existe."
+      },
+      {
+        "text": "Sequências de escape, e nenhum dado",
+        "why": "Isso. O `od -c` mostra `033 [ ? 2 0 2 6 $ p` e parecidos: perguntas e trocas de modo feitas para um terminal, gravadas num arquivo."
+      },
+      {
+        "text": "As linhas de depuração do `msgs.log`",
+        "why": "Essas vão para o arquivo indicado em `HITS_DEBUG`, e só quando ele está definido."
+      }
+    ]
+  },
+  "ex-qrnhzbye": {
+    "prompt": "Um colega quer um job do cron que mande por e-mail o caminho mais acessado do dia toda manhã, e propõe rodar `hits browse` com a saída capturada. O que você diz?",
+    "hint": "O que é a saída padrão num job do cron?",
+    "choices": [
+      {
+        "text": "Use `hits top -n 1`: o `browse` recusa sem terminal",
+        "why": "Isso. O cron não dá terminal ao job, então o `browse` para com status 2; o `top` imprime uma linha de dados e um código de saída, que é o que um job consegue usar."
+      },
+      {
+        "text": "Tudo bem, desde que mandem `q` pela entrada padrão",
+        "why": "A verificação roda antes de qualquer tecla ser lida: sem terminal na saída padrão, o `browse` para na hora com status 2."
+      },
+      {
+        "text": "Tudo bem, mas tire as cores com `sed` antes",
+        "why": "Não há cores para tirar nem dados: o `browse` recusa, e sem a verificação o arquivo só teria sequências de escape."
+      },
+      {
+        "text": "Rodar com `HITS_DEBUG` definido e ler o log de mensagens",
+        "why": "O log de depuração serve para observar o programa; a verificação de terminal recusa antes de qualquer coisa rodar."
+      }
+    ]
+  },
+  "ex-dzkt7emc": {
+    "prompt": "Você acrescenta ao `hits browse` uma tecla `r` que lê o log de novo. Onde fica a leitura?",
+    "hint": "A seção 04 diz como um modelo pede trabalho.",
+    "choices": [
+      {
+        "text": "No `Update`, que lê o arquivo e guarda as linhas novas antes de retornar",
+        "why": "Isso trava o laço: nenhum `View`, nenhuma tecla, até a leitura acabar. É o erro com que a seção 04 começa."
+      },
+      {
+        "text": "No `Update`, no `r`, devolvendo um comando que conta e manda `loaded`",
+        "why": "Isso. O caso devolve `m, count(...)`; o resultado chega como mensagem igual à primeira, e o caso `loaded` que já existe cuida dele."
+      },
+      {
+        "text": "No `View`, para as linhas estarem novas sempre que a tela for desenhada",
+        "why": "O `View` roda depois de cada mensagem, e um modelo que ele mudasse seria uma cópia que ninguém guarda."
+      },
+      {
+        "text": "Numa goroutine iniciada no `Update` que escreve `m.rows` ao terminar",
+        "why": "O `m` é uma cópia que já foi devolvida, então as linhas caem num modelo que ninguém guarda e a tela nunca muda."
+      }
+    ]
+  },
+  "ex-g4y2d3ay": {
+    "prompt": "Um comando do Bubble Tea tem o tipo `func() tea.___`: ele faz o trabalho e devolve um valor para o `Update`.",
+    "hint": "O mesmo tipo que toda mensagem satisfaz.",
+    "blanks": [
+      {
+        "accept": [
+          "Msg"
+        ]
+      }
+    ]
+  },
+  "ex-bzr68cnn": {
+    "prompt": "O `hits` só com a biblioteca padrão da lição 1 tinha 4.031.903 bytes; com o `browse`, o Bubble Tea e o `golang.org/x/term` ele tem 6.773.596 bytes. Quantos por cento o binário cresceu, arredondando para inteiro?",
+    "hint": "(6.773.596 − 4.031.903) ÷ 4.031.903.",
+    "unit": "%"
+  }
+}
