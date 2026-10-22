@@ -1,0 +1,478 @@
+[
+  {
+    "id": "ex-n8exqpns",
+    "version": 1,
+    "section": "select",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `first.go`, the mirror answered at 80 ms and the primary at 120 ms. What did the `select` do with the primary's case?",
+    "hint": "A `select` performs one case and ends.",
+    "choices": [
+      {
+        "text": "Ran it 40 ms later, after the mirror's",
+        "correct": false,
+        "why": "A `select` runs one case. A second answer needs a second `select`."
+      },
+      {
+        "text": "Nothing: it was not taken",
+        "correct": true,
+        "why": "Right. The mirror's case ran and the `select` was over."
+      },
+      {
+        "text": "Cancelled the primary goroutine's work",
+        "correct": false,
+        "why": "Nothing cancels a goroutine from outside; the primary went on and sent into its buffer."
+      },
+      {
+        "text": "Combined both answers into one",
+        "correct": false,
+        "why": "Each case receives from one channel; nothing merges them."
+      }
+    ]
+  },
+  {
+    "id": "ex-cmjha8wt",
+    "version": 1,
+    "section": "select",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do both channels in `first.go` have a buffer of one?",
+    "hint": "What happens to the loser's send?",
+    "choices": [
+      {
+        "text": "So the `select` can see which one is ready",
+        "correct": false,
+        "why": "A `select` sees ready sends and receives on unbuffered channels just as well."
+      },
+      {
+        "text": "Because `select` refuses unbuffered channels",
+        "correct": false,
+        "why": "It accepts any channel."
+      },
+      {
+        "text": "So the loser's send completes",
+        "correct": true,
+        "why": "Right. Nobody receives the slower answer; with room for it, the send completes anyway."
+      },
+      {
+        "text": "To make the mirror answer faster",
+        "correct": false,
+        "why": "The buffer has no effect on how long `ask` sleeps."
+      }
+    ]
+  },
+  {
+    "id": "ex-t037vatz",
+    "version": 1,
+    "section": "select",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fair.go` kept both channels ready and ran `select` 10,000 times: `map[a:4932 b:5068]`. What does that tell you about the order of cases?",
+    "hint": "If the first case written were preferred, what would the map show?",
+    "choices": [
+      {
+        "text": "The first case written wins slightly more often",
+        "correct": false,
+        "why": "`b`, the second case, won more in this run, and the next run went the other way."
+      },
+      {
+        "text": "Written order gives no priority",
+        "correct": true,
+        "why": "Right. Uniformly at random, so a busy channel cannot starve another."
+      },
+      {
+        "text": "The runtime alternates between the two cases",
+        "correct": false,
+        "why": "Strict alternation would give exactly 5000 each."
+      },
+      {
+        "text": "Channel `b` is faster than channel `a`",
+        "correct": false,
+        "why": "The two are identical; the split changes from run to run."
+      }
+    ]
+  },
+  {
+    "id": "ex-2nka60dt",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `time.After(200 * time.Millisecond)` return?",
+    "hint": "It is used as a `case` in a `select`.",
+    "choices": [
+      {
+        "text": "A boolean that turns true after 200 ms",
+        "correct": false,
+        "why": "A boolean could not be waited on by `select`."
+      },
+      {
+        "text": "Nothing; it blocks the caller for 200 ms",
+        "correct": false,
+        "why": "That is `time.Sleep`. `time.After` returns at once."
+      },
+      {
+        "text": "A channel that delivers one value after 200 ms",
+        "correct": true,
+        "why": "Right. A receive on it is the timeout case."
+      },
+      {
+        "text": "An error once 200 ms have passed",
+        "correct": false,
+        "why": "No error is involved; a value arrives on a channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-71f1y68q",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`timeout.go` printed `timed out` after 200 ms, while its slow goroutine needed 500 ms. What happened to that goroutine?",
+    "hint": "A timeout stops the waiting, not the work.",
+    "choices": [
+      {
+        "text": "It was stopped when the timer fired",
+        "correct": false,
+        "why": "Nothing stopped it. Stopping work is what `context` adds, in lesson 10."
+      },
+      {
+        "text": "It slept on, sent into its buffer and returned",
+        "correct": true,
+        "why": "Right. The buffer of one let it finish even though nobody read the result."
+      },
+      {
+        "text": "It panicked, because its channel had been abandoned",
+        "correct": false,
+        "why": "There is no such thing as an abandoned channel; a send waits or completes."
+      },
+      {
+        "text": "It became the result of the next `select`",
+        "correct": false,
+        "why": "There was no next `select`; the program printed the time and ended."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2yqpwrq",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A loop receives results with `case <-time.After(150 * time.Millisecond)` inside it. The source sends one result every 140 ms, forever. When does the loop time out?",
+    "hint": "Each pass of the `select` creates a new timer.",
+    "choices": [
+      {
+        "text": "After 150 ms",
+        "correct": false,
+        "why": "The first result arrives at 140 ms, and the next pass starts a fresh 150 ms."
+      },
+      {
+        "text": "After about a second, when the timers add up",
+        "correct": false,
+        "why": "Timers do not add up; each one is new and each is beaten."
+      },
+      {
+        "text": "Never: each result beats its fresh timer",
+        "correct": true,
+        "why": "Right. A per-step limit only catches a stream that goes quiet for longer than the limit."
+      },
+      {
+        "text": "After 150 results",
+        "correct": false,
+        "why": "The number 150 is milliseconds, and nothing counts results."
+      }
+    ]
+  },
+  {
+    "id": "ex-vaarwzcn",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `budget.go` the deadline made once before the loop was 350 ms, and results arrived every 100 ms. How many results did that loop get?",
+    "hint": "Results at 100, 200, 300, 400…",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "results"
+  },
+  {
+    "id": "ex-gc4s4gss",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a `for` loop with a `select`, why does `budget.go` write `break perStep` rather than `break`?",
+    "hint": "What does a plain `break` leave?",
+    "choices": [
+      {
+        "text": "A plain `break` would leave only the `select`",
+        "correct": true,
+        "why": "Right. The label makes it leave the `for` loop around it."
+      },
+      {
+        "text": "A plain `break` is not allowed inside `select`",
+        "correct": false,
+        "why": "It is allowed; it just ends the `select`, and the loop goes round again."
+      },
+      {
+        "text": "Labels make the loop run faster",
+        "correct": false,
+        "why": "A label changes where control goes, not speed."
+      },
+      {
+        "text": "To stop the timer created by `time.After`",
+        "correct": false,
+        "why": "The label has nothing to do with the timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-0v3jjjkp",
+    "version": 1,
+    "section": "default",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`try.go` offered five updates to a channel with room for two, using `select` with `default`. What did it print for updates 3, 4 and 5?",
+    "hint": "The buffer was full and the `select` does not wait.",
+    "choices": [
+      {
+        "text": "`queued`, after waiting for room",
+        "correct": false,
+        "why": "With a `default` there is no waiting: the case that cannot proceed is skipped."
+      },
+      {
+        "text": "`dropped`",
+        "correct": true,
+        "why": "Right. No room, so `default` ran."
+      },
+      {
+        "text": "A deadlock error",
+        "correct": false,
+        "why": "Nothing ever blocked, so there was nothing to deadlock."
+      },
+      {
+        "text": "`received`, straight away",
+        "correct": false,
+        "why": "Only 1 and 2 were received, after the loop."
+      }
+    ]
+  },
+  {
+    "id": "ex-mqfssstz",
+    "version": 1,
+    "section": "default",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`time ./restless` reported `user 0m0.994s` and `time ./patient` `user 0m0.003s`, both over one second of `real` time. Roughly how many milliseconds of processor time did polling waste?",
+    "hint": "994 minus 3.",
+    "value": 991,
+    "tolerance": 5,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-8dky2d19",
+    "version": 1,
+    "section": "default",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes a case on a nil channel useful inside a `select`?",
+    "hint": "What does a receive on a nil channel do?",
+    "choices": [
+      {
+        "text": "It returns the zero value at once, like a closed channel",
+        "correct": false,
+        "why": "That is a closed channel. A nil one blocks forever."
+      },
+      {
+        "text": "It panics, which shows a forgotten `make`",
+        "correct": false,
+        "why": "Sending or receiving on nil does not panic; it blocks forever. Closing a nil channel panics."
+      },
+      {
+        "text": "It is never chosen, which switches its case off",
+        "correct": true,
+        "why": "Right. `both.go` sets each input to `nil` when it closes."
+      },
+      {
+        "text": "It makes the `select` pick the other cases first",
+        "correct": false,
+        "why": "There is no priority: the nil case is never ready, so it is never a candidate."
+      }
+    ]
+  },
+  {
+    "id": "ex-cknckwse",
+    "version": 1,
+    "section": "default",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `both.go`, someone deletes the line `a = nil`. Input `a` closes first. What does the loop do from then on?",
+    "hint": "A closed channel is always ready to receive.",
+    "choices": [
+      {
+        "text": "It waits only on `b`, as before",
+        "correct": false,
+        "why": "Without `nil`, `a`'s case stays ready, returning zero and `false` on every pass."
+      },
+      {
+        "text": "It panics: receive from closed channel",
+        "correct": false,
+        "why": "Receiving from a closed channel is allowed."
+      },
+      {
+        "text": "It spins, printing `a closed` again and again, and never ends",
+        "correct": true,
+        "why": "Right: `a != nil` stays true, and the closed case keeps winning half the draws, like `restless`."
+      },
+      {
+        "text": "It ends at once, because one input is done",
+        "correct": false,
+        "why": "The loop condition needs both to be `nil`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ap9jrg59",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `select` shape with what it does.",
+    "hint": "One waits for the first, one gives up, one never waits.",
+    "pairs": [
+      {
+        "left": "two receives, no `default`",
+        "right": "waits for whichever is ready first"
+      },
+      {
+        "left": "a receive and `time.After`",
+        "right": "waits, but only so long"
+      },
+      {
+        "left": "a send and `default`",
+        "right": "sends now or not at all"
+      },
+      {
+        "left": "a receive on a nil channel",
+        "right": "a case that can never be chosen"
+      }
+    ],
+    "right_distractors": [
+      "receives from every channel in order"
+    ]
+  },
+  {
+    "id": "ex-dbbbdgvc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `select` in the order the lesson describes them.",
+    "hint": "It looks at every case before choosing.",
+    "items": [
+      "look at every case",
+      "if some are ready, pick one of them at random",
+      "if none is ready and there is a `default`, run it",
+      "otherwise wait until one becomes ready"
+    ]
+  },
+  {
+    "id": "ex-50z615g7",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A receive on a ___ channel blocks forever, which is why setting a channel variable to it switches its case off.",
+    "hint": "The zero value of a channel variable.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n7rsfhbr",
+    "version": 1,
+    "section": "select",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A worker must handle messages from `urgent` before any from `normal` whenever both are waiting. Writing the `urgent` case first in one `select` does not do it. What does?",
+    "hint": "Section 02 ends with the shape.",
+    "choices": [
+      {
+        "text": "A larger buffer on `urgent`",
+        "correct": false,
+        "why": "A buffer changes when a send waits, not which ready case `select` picks."
+      },
+      {
+        "text": "First a `select` on `urgent` alone with a `default`, then the general one",
+        "correct": true,
+        "why": "Right. The first `select` takes an urgent message if there is one, and only then are both considered."
+      },
+      {
+        "text": "Listing `urgent` twice in the same `select`",
+        "correct": false,
+        "why": "It would shift the odds, not give a priority: `normal` could still be chosen while urgent ones wait."
+      },
+      {
+        "text": "Setting `GOMAXPROCS` to 1",
+        "correct": false,
+        "why": "The choice among ready cases is random on any number of processors."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0qv8yyw",
+    "version": 1,
+    "section": "default",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A progress bar goroutine reads from `updates`, and the worker must never be held up by it. Which send fits?",
+    "hint": "Dropping a progress percentage is acceptable.",
+    "choices": [
+      {
+        "text": "`updates <- p`, on an unbuffered channel",
+        "correct": false,
+        "why": "That waits for the progress bar every time."
+      },
+      {
+        "text": "`updates <- p` in a loop with `time.Sleep` until it succeeds",
+        "correct": false,
+        "why": "That is the worker waiting, in a slower form."
+      },
+      {
+        "text": "A `select` with `case updates <- p` and a `default`",
+        "correct": true,
+        "why": "Right. It sends if the bar is ready and drops the update otherwise."
+      },
+      {
+        "text": "A `select` with `case updates <- p` and a nil channel",
+        "correct": false,
+        "why": "A nil case is never chosen, so this waits exactly like a plain send."
+      }
+    ]
+  }
+]

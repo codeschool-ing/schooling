@@ -1,0 +1,463 @@
+[
+  {
+    "id": "ex-21wvaek9",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`unbounded.go` worked under an open-file limit of 1,024 and lost 752 of 1,000 jobs under 256. What does that say about the program?",
+    "hint": "Nothing in the program changed between the two runs.",
+    "choices": [
+      {
+        "text": "Goroutines fail when more than 256 exist",
+        "correct": false,
+        "why": "Goroutines have no such limit; the files did. The same thousand goroutines succeeded under 1,024."
+      },
+      {
+        "text": "Only the environment limited it, by accident",
+        "correct": true,
+        "why": "Right. It held as many files as it had goroutines, and the limit it met was whoever ran it."
+      },
+      {
+        "text": "`/etc/hostname` cannot be opened twice",
+        "correct": false,
+        "why": "A file can be opened by any number of goroutines; the run under 1,024 opened it a thousand times."
+      },
+      {
+        "text": "The mutex serialised the jobs and made them time out",
+        "correct": false,
+        "why": "The mutex guards only the two counters, and nothing in the program has a timeout."
+      }
+    ]
+  },
+  {
+    "id": "ex-3sm9c0wb",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `pool.go`, who closes `results`, and why not a worker?",
+    "hint": "What does a worker not know when its own loop ends?",
+    "choices": [
+      {
+        "text": "The producer, right after it has sent the last job",
+        "correct": false,
+        "why": "Workers may still be running jobs and sending results then; closing would make their sends panic."
+      },
+      {
+        "text": "Each worker, at the moment its own loop ends",
+        "correct": false,
+        "why": "Fifty closes of one channel: the second one panics."
+      },
+      {
+        "text": "Whoever waits on `wg.Wait`",
+        "correct": true,
+        "why": "Right. A worker knows its own loop ended, not whether the other forty-nine have."
+      },
+      {
+        "text": "`main`, after it has read the last result",
+        "correct": false,
+        "why": "`main` cannot know which result is the last until the channel is closed; that is what it waits for."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9bcw46n",
+    "version": 1,
+    "section": "the-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody deletes `close(jobs)` from `pool.go`'s producer. What happens?",
+    "hint": "Follow a worker's `for range jobs` after the last job.",
+    "choices": [
+      {
+        "text": "The workers wait for more jobs, and so does `main`",
+        "correct": true,
+        "why": "Right. The chain of closes breaks at its first link, and every goroutine downstream waits."
+      },
+      {
+        "text": "The workers stop after the last job on their own",
+        "correct": false,
+        "why": "A `for range` over a channel ends only when the channel is closed."
+      },
+      {
+        "text": "The program panics on the next send to `jobs`",
+        "correct": false,
+        "why": "Nothing sends after the last job, and sending on an open channel never panics."
+      },
+      {
+        "text": "The jobs run twice",
+        "correct": false,
+        "why": "Each value on a channel is received once; nothing repeats it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ed5be67",
+    "version": 1,
+    "section": "the-shape",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pool.go` runs 1,000 jobs of 50 ms each on 50 workers. If each worker spends almost all its time in jobs, about how many milliseconds should the whole run take?",
+    "hint": "How many rounds of fifty, and how long is a round?",
+    "value": 1000,
+    "tolerance": 50,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-2sgjk46k",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`size cpu` took 2.039 s with one worker and 572 ms with four, and eight workers were no real improvement. Why not?",
+    "hint": "How many goroutines may compute at once on this machine?",
+    "choices": [
+      {
+        "text": "The channel `jobs` can feed only four workers",
+        "correct": false,
+        "why": "Any number of workers may receive from one channel; sixteen did."
+      },
+      {
+        "text": "Four processors, so four goroutines compute at a time",
+        "correct": true,
+        "why": "Right. A fifth worker only takes turns with the others."
+      },
+      {
+        "text": "The jobs share memory and slow each other down",
+        "correct": false,
+        "why": "`compute` shares nothing except writing its result to `sink`; the limit is processors."
+      },
+      {
+        "text": "The garbage collector pauses the extra workers while they compute",
+        "correct": false,
+        "why": "`compute` allocates nothing, so the collector has no part in this."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzc6v5gs",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `size wait` keep getting faster all the way to 64 workers, while `size cpu` stopped at four?",
+    "hint": "What does a sleeping worker need?",
+    "choices": [
+      {
+        "text": "Sleeping jobs are shorter than computing ones",
+        "correct": false,
+        "why": "Twenty against about thirty milliseconds is a small difference; it does not explain a curve that keeps falling."
+      },
+      {
+        "text": "`time.Sleep` runs on a separate processor",
+        "correct": false,
+        "why": "There is no such processor. A sleeping goroutine simply needs none."
+      },
+      {
+        "text": "A waiting worker needs no processor",
+        "correct": true,
+        "why": "Right, so the processor count sets no ceiling; the thing waited on does."
+      },
+      {
+        "text": "Go raises `GOMAXPROCS` when goroutines sleep",
+        "correct": false,
+        "why": "`GOMAXPROCS` stays at four throughout; it is a setting, not something the runtime raises."
+      }
+    ]
+  },
+  {
+    "id": "ex-chdm5g7j",
+    "version": 1,
+    "section": "sizing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Each job calls a partner's API, which allows 10 requests at a time from your account and refuses the rest. The jobs mostly wait. What pool size does the section's reasoning give?",
+    "hint": "For waiting work, the ceiling is on the other end.",
+    "choices": [
+      {
+        "text": "`runtime.GOMAXPROCS(0)`, as for computing work",
+        "correct": false,
+        "why": "That rule is for jobs that compute. These wait, and the partner sets the limit."
+      },
+      {
+        "text": "As many as there are jobs",
+        "correct": false,
+        "why": "Then most requests would be refused, which is `unbounded.go` against an API."
+      },
+      {
+        "text": "64, since that was fastest in `size wait`",
+        "correct": false,
+        "why": "That measured a sleep, which anyone can share. The partner's API cannot be shared that way."
+      },
+      {
+        "text": "At most 10, less whatever else uses that account",
+        "correct": true,
+        "why": "Right. The limit of the thing on the other end, minus its other users."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bm0sa0g",
+    "version": 1,
+    "section": "sizing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the `size cpu` runs from the fastest to the slowest, as the capture printed them.",
+    "hint": "Past four workers the numbers are close: read them.",
+    "items": [
+      "8 workers",
+      "16 workers",
+      "4 workers",
+      "2 workers",
+      "1 worker"
+    ]
+  },
+  {
+    "id": "ex-y12a5ry3",
+    "version": 1,
+    "section": "semaphore",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `semaphore.go`, what does a send on `sem` mean?",
+    "hint": "The channel only counts.",
+    "choices": [
+      {
+        "text": "Taking a place, waiting if none is free",
+        "correct": true,
+        "why": "Right. The deferred receive gives the place back when the job ends."
+      },
+      {
+        "text": "Handing the next job to one of the waiting workers",
+        "correct": false,
+        "why": "There are no workers here; the empty struct carries nothing to anybody."
+      },
+      {
+        "text": "Reporting to `main` that a job has failed",
+        "correct": false,
+        "why": "Failures are counted with `failed.Add(1)`; the send happens before the job even starts."
+      },
+      {
+        "text": "Closing a file",
+        "correct": false,
+        "why": "`f.Close()` closes the file, deferred inside `job`."
+      }
+    ]
+  },
+  {
+    "id": "ex-701h31sx",
+    "version": 1,
+    "section": "semaphore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague moves `sem <- struct{}{}` from the loop to the first line inside the goroutine. Files stay under the limit. What changes?",
+    "hint": "When does the loop start the thousandth goroutine now?",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "The work is still limited, but the number of goroutines no longer is."
+      },
+      {
+        "text": "Jobs fail with too many open files again",
+        "correct": false,
+        "why": "The place is still taken before `os.Open`, so at most fifty files are open."
+      },
+      {
+        "text": "1,000 goroutines exist at once; fifty of them work",
+        "correct": true,
+        "why": "Right. Acquiring in the loop is what kept the goroutine count bounded too."
+      },
+      {
+        "text": "The program deadlocks on the fifty-first send to `sem`",
+        "correct": false,
+        "why": "The fifty-first goroutine waits until a place frees, and places keep freeing as jobs end."
+      }
+    ]
+  },
+  {
+    "id": "ex-kehw2b3h",
+    "version": 1,
+    "section": "semaphore",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation with the shape the section suggests for it.",
+    "hint": "One shape keeps fixed goroutines; the other one per job.",
+    "pairs": [
+      {
+        "left": "a stream of jobs from a queue that never ends",
+        "right": "a worker pool"
+      },
+      {
+        "left": "a known list of jobs, each a function call",
+        "right": "a buffered channel as a semaphore"
+      },
+      {
+        "left": "jobs that compute and nothing else",
+        "right": "about `runtime.GOMAXPROCS(0)` at a time"
+      }
+    ],
+    "right_distractors": [
+      "one goroutine per job with no limit"
+    ]
+  },
+  {
+    "id": "ex-0bsq9e01",
+    "version": 1,
+    "section": "semaphore",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The element type of `sem` takes no memory, because the channel only counts: it is the empty ___.",
+    "hint": "`struct{}{}` is a value of it.",
+    "blanks": [
+      {
+        "accept": [
+          "struct",
+          "struct{}"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-75qb30tr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A pool of 4 workers resizes photos, which is pure computation, on a machine with 4 processors. Someone raises it to 40 to 'go faster'. What should they expect, by the lesson's measurements?",
+    "hint": "Compare 4, 8 and 16 workers in `size cpu`.",
+    "choices": [
+      {
+        "text": "About ten times faster",
+        "correct": false,
+        "why": "Ten times the workers is not ten times the processors; four still compute at a time."
+      },
+      {
+        "text": "About the same time, give or take the noise between runs",
+        "correct": true,
+        "why": "Right: 572, 543 and 560 ms for 4, 8 and 16 workers."
+      },
+      {
+        "text": "Failures with too many open files",
+        "correct": false,
+        "why": "Pure computation opens nothing; that failure belonged to jobs holding files."
+      },
+      {
+        "text": "A deadlock, because 40 exceeds `GOMAXPROCS`",
+        "correct": false,
+        "why": "Sixteen workers ran on four processors without trouble; extra workers take turns."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vtwy94j",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does a worker pool limit? Choose all that apply.",
+    "hint": "Think of `pool.go` with a thousand jobs and fifty workers.",
+    "choices": [
+      {
+        "text": "How many jobs are in progress at once",
+        "correct": true,
+        "why": "Yes, at most one per worker."
+      },
+      {
+        "text": "How many goroutines do the work",
+        "correct": true,
+        "why": "Yes, the workers are a fixed number."
+      },
+      {
+        "text": "How many jobs may wait in the queue",
+        "correct": false,
+        "why": "The producer can offer any number; it waits on the send, but the list behind it is unbounded."
+      },
+      {
+        "text": "How long each job may take",
+        "correct": false,
+        "why": "Nothing in the pool times a job; that needs a deadline, lesson 10."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqrxfxke",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line in `pool.go` decides how many files may be open at once?",
+    "hint": "It is not in `job`.",
+    "choices": [
+      {
+        "text": "`f, err := os.Open(\"/etc/hostname\")`",
+        "correct": false,
+        "why": "That opens one file per job; how many jobs run at once is decided elsewhere."
+      },
+      {
+        "text": "`const workers = 50`",
+        "correct": true,
+        "why": "Right: one job per worker, one file per job."
+      },
+      {
+        "text": "`jobs := make(chan int)`",
+        "correct": false,
+        "why": "An unbuffered channel holds no jobs; it only hands them over."
+      },
+      {
+        "text": "`for i := range 1000`",
+        "correct": false,
+        "why": "That is the number of jobs, not how many run together."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc3zggs8",
+    "version": 1,
+    "section": "the-shape",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The shell command `ulimit ___` prints how many files a process started from that shell may have open at once.",
+    "hint": "The capture printed 1024.",
+    "blanks": [
+      {
+        "accept": [
+          "-n"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hn3bde4w",
+    "version": 1,
+    "section": "sizing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`size wait` runs 64 jobs of 20 ms each. With 16 workers, how many rounds of jobs does the run take, if each worker always has a job ready?",
+    "hint": "64 jobs shared among 16 workers.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "rounds"
+  }
+]

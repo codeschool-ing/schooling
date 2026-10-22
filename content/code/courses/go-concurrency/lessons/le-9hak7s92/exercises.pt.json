@@ -1,0 +1,333 @@
+{
+  "ex-jsysgpeh": {
+    "prompt": "No `hand.go`, `main` lê dois valores com `<-results` e não tem `WaitGroup`. O que o impede de imprimir antes de as goroutines terminarem?",
+    "hint": "O que um recebimento faz quando nenhum valor foi enviado ainda?",
+    "choices": [
+      {
+        "text": "Cada recebimento espera até que algum valor tenha sido enviado",
+        "why": "Isso. O valor chegar já é a prova de que a goroutine foi até ali."
+      },
+      {
+        "text": "O `time.Sleep` dentro de `sum` segura `main` também",
+        "why": "Uma espera bloqueia só a goroutine que a chama. `main` fica preso no recebimento."
+      },
+      {
+        "text": "Nada: ele pode imprimir antes delas, e imprimiu numa execução",
+        "why": "Ele não pode imprimir um total antes de recebê-lo, e não pode receber antes de um envio."
+      },
+      {
+        "text": "`make(chan int)` faz `main` ser a última goroutine a rodar",
+        "why": "Criar um canal não decide nada sobre ordem. Receber dele decide."
+      }
+    ]
+  },
+  "ex-8h8xqxx1": {
+    "prompt": "Os dois totais do `hand.go` chegaram por volta de 200 ms, embora cada goroutine tenha dormido 200 ms. Por que não 200 ms e depois 400 ms?",
+    "hint": "Olhe a figura da seção 02.",
+    "choices": [
+      {
+        "text": "O canal guarda os dois valores, então o segundo envio não esperou",
+        "why": "`make(chan int)` não tem espaço para valor nenhum; cada envio esperou um recebimento."
+      },
+      {
+        "text": "As duas goroutines dormiram ao mesmo tempo",
+        "why": "Isso. As esperas se sobrepuseram, e cada envio só esperou `main` estar pronto."
+      },
+      {
+        "text": "A segunda goroutine pulou a espera porque a primeira tinha dormido",
+        "why": "Cada goroutine roda a sua própria cópia de `sum`, com a espera incluída."
+      },
+      {
+        "text": "O arredondamento para 10 ms escondeu a diferença",
+        "why": "Uma diferença de 200 ms sobreviveria fácil a um arredondamento para 10 ms."
+      }
+    ]
+  },
+  "ex-p2r965sm": {
+    "prompt": "Um colega precisa saber de que lista veio cada total do `hand.go`. Numa execução o primeiro valor recebido foi 60. O que ele deve mudar?",
+    "hint": "Qual goroutine termina primeiro não é prometido.",
+    "choices": [
+      {
+        "text": "Iniciar as goroutines na ordem em que os totais são esperados",
+        "why": "É o que o programa já faz, e 60 veio primeiro mesmo assim."
+      },
+      {
+        "text": "Pôr uma espera curta entre os dois comandos `go`",
+        "why": "Uma espera torna uma ordem provável numa máquina. Não promete nada."
+      },
+      {
+        "text": "Enviar o nome da lista junto com o total",
+        "why": "Isso. Se o valor diz de onde veio, a ordem em que chega deixa de importar."
+      },
+      {
+        "text": "Usar dois recebimentos em duas linhas separadas",
+        "why": "Ele já faz isso, e os dois leem de um canal compartilhado, que não carrega a origem."
+      }
+    ]
+  },
+  "ex-65w1xxd7": {
+    "prompt": "Um canal declarado com `var ch chan int` e nunca criado tem o zero value ___.",
+    "hint": "O mesmo zero value de um mapa ou de um ponteiro.",
+    "blanks": [
+      {
+        "accept": [
+          "nil"
+        ]
+      }
+    ]
+  },
+  "ex-jddbt2z6": {
+    "prompt": "O `closed.go` enviou duas strings, fechou o canal e recebeu quatro vezes. O que o terceiro recebimento devolveu?",
+    "hint": "Àquela altura o canal estava fechado e vazio.",
+    "choices": [
+      {
+        "text": "`\"second\"` de novo, o último valor enviado",
+        "why": "Um canal fechado não repete o último valor. Ele responde com o zero value."
+      },
+      {
+        "text": "Ele bloqueou até o programa acabar",
+        "why": "Receber de um canal fechado e vazio nunca bloqueia; é para isso que serve o close."
+      },
+      {
+        "text": "`\"\"` e `false`",
+        "why": "Isso: o zero value do tipo do elemento, e `ok` falso para dizer que o canal está fechado."
+      },
+      {
+        "text": "Um panic: recebimento de canal fechado",
+        "why": "Receber depois do close é permitido e responde na hora. Enviar depois do close é que dá panic."
+      }
+    ]
+  },
+  "ex-haz3rrqb": {
+    "prompt": "Associe cada operação num canal fechado ao que ela faz.",
+    "hint": "Duas delas dão panic.",
+    "pairs": [
+      {
+        "left": "`v, ok := <-ch` com valores sobrando",
+        "right": "o próximo valor e `true`"
+      },
+      {
+        "left": "`v, ok := <-ch` já vazio",
+        "right": "o zero value e `false`, na hora"
+      },
+      {
+        "left": "`ch <- v`",
+        "right": "panic: send on closed channel"
+      },
+      {
+        "left": "`close(ch)`",
+        "right": "panic: close of closed channel"
+      }
+    ],
+    "right_distractors": [
+      "bloqueia até alguém reabri-lo"
+    ]
+  },
+  "ex-03ndsv4k": {
+    "prompt": "Por que a lição diz que só o lado que envia deve fechar um canal?",
+    "hint": "O que um receptor não tem como saber sobre quem envia?",
+    "choices": [
+      {
+        "text": "Fechar do lado que recebe é um erro de compilação",
+        "why": "Só quando o receptor tem um tipo `<-chan`. Com um `chan` comum compila, e esse é o perigo."
+      },
+      {
+        "text": "Só quem envia sabe que os envios acabaram",
+        "why": "Isso. A goroutine dona dos envios é a que sabe que terminou."
+      },
+      {
+        "text": "Fechar descarta os valores que ainda estão no canal",
+        "why": "Não descarta: o `closed.go` recebeu os dois valores enviados antes do close."
+      },
+      {
+        "text": "Um receptor pode conferir antes se o canal está fechado",
+        "why": "Essa conferência não existe, e uma resposta poderia estar desatualizada quando chegasse."
+      }
+    ]
+  },
+  "ex-fffsfd9h": {
+    "prompt": "`func drain(in <-chan int)` contém `in <- 1`. Quando o erro é encontrado?",
+    "hint": "O `oops.go`.",
+    "choices": [
+      {
+        "text": "Quando `drain` roda, como um panic",
+        "why": "Não chega tão longe. A direção faz parte do tipo."
+      },
+      {
+        "text": "Só pelo detector de corridas, com `-race`",
+        "why": "Isso não é uma corrida; é um erro de tipo."
+      },
+      {
+        "text": "Nunca: a direção é um comentário para quem lê",
+        "why": "O compilador a impõe, e recusou o `oops.go`."
+      },
+      {
+        "text": "Na compilação: cannot send to receive-only channel",
+        "why": "Isso. `go build` recusou antes de qualquer coisa rodar, dando o nome do tipo `<-chan int`."
+      }
+    ]
+  },
+  "ex-k0wrh2mc": {
+    "prompt": "O que encerra `for w := range words` no `words.go`?",
+    "hint": "Apague uma linha e o laço nunca termina.",
+    "choices": [
+      {
+        "text": "Receber tantos valores quanto `strings.Fields` devolveu",
+        "why": "`main` não sabe quantas palavras há; é por isso que usa range."
+      },
+      {
+        "text": "`split` fechar o canal depois da última palavra",
+        "why": "Isso. O laço recebe até o canal estar fechado e vazio."
+      },
+      {
+        "text": "`split` retornar",
+        "why": "No `forgot.go`, `split` retornou e o laço continuou esperando."
+      },
+      {
+        "text": "Um recebimento que espera mais de um segundo",
+        "why": "Um range não tem timeout próprio. A lição 5 acrescenta timeouts com `select`."
+      }
+    ]
+  },
+  "ex-b1jt22zp": {
+    "prompt": "O `forgot.go` imprimiu as quatro palavras e depois `fatal error: all goroutines are asleep - deadlock!`. O que disse ao runtime que o programa estava preso?",
+    "hint": "Leia a mensagem ao pé da letra.",
+    "choices": [
+      {
+        "text": "O canal estava aberto havia tempo demais",
+        "why": "O runtime não tem noção de um canal aberto há tempo demais."
+      },
+      {
+        "text": "`main` tinha recebido mais valores do que foram enviados",
+        "why": "Recebeu exatamente os quatro enviados, e depois esperou um quinto."
+      },
+      {
+        "text": "Nada mais podia rodar: tudo estava bloqueado",
+        "why": "Isso. `split` tinha retornado e `main` esperava num recebimento, então nada podia andar."
+      },
+      {
+        "text": "O compilador marcou o `close` que faltava",
+        "why": "Compilou sem reclamar. O erro veio na execução."
+      }
+    ]
+  },
+  "ex-4d3cpfnn": {
+    "prompt": "O mesmo `close` esquecido está num servidor, em que outras goroutines esperam conexões. O que o aluno vê?",
+    "hint": "Quando o detector de deadlock do runtime dispara?",
+    "choices": [
+      {
+        "text": "O mesmo erro fatal, assim que as palavras acabam",
+        "why": "A conferência só dispara quando toda goroutine está bloqueada, e as do servidor estão vivas."
+      },
+      {
+        "text": "Nada: a goroutine do range espera para sempre, em silêncio",
+        "why": "Isso. É um vazamento de goroutine, o assunto da lição 6."
+      },
+      {
+        "text": "Um panic: recebimento num canal em que ninguém envia",
+        "why": "Esse panic não existe. Esperar é permitido."
+      },
+      {
+        "text": "O laço termina depois de um timeout que o runtime acrescenta",
+        "why": "O runtime não acrescenta timeouts a operações de canal."
+      }
+    ]
+  },
+  "ex-8jjmecbp": {
+    "prompt": "Ponha em ordem os eventos do `words.go`.",
+    "hint": "Um close nunca passa na frente de valores já enviados.",
+    "items": [
+      "`main` cria o canal e inicia `split`",
+      "`split` envia `share` e `main` a imprime",
+      "`split` envia `communicating` e `main` a imprime",
+      "`split` fecha o canal",
+      "o range termina e `main` imprime a última linha"
+    ]
+  },
+  "ex-jfwpxp1d": {
+    "prompt": "O `words.go` imprimiu `13 communicating`. Quantas palavras o laço recebeu ao todo?",
+    "hint": "`share memory by communicating`.",
+    "unit": "palavras"
+  },
+  "ex-6fxekmeh": {
+    "prompt": "Quais destas coisas um canal faz no `hand.go`? Escolha todas as que se aplicam.",
+    "hint": "Pense no valor e no tempo.",
+    "choices": [
+      {
+        "text": "Leva o total de cada goroutine até `main`",
+        "why": "Sim. Ele substitui o valor de retorno que o comando `go` joga fora."
+      },
+      {
+        "text": "Faz `main` esperar até cada total existir",
+        "why": "Sim. Um recebimento não termina antes de um envio."
+      },
+      {
+        "text": "Põe os totais na ordem em que as goroutines começaram",
+        "why": "O 60 chegou primeiro, da segunda goroutine iniciada."
+      },
+      {
+        "text": "Copia as slices para as goroutines não poderem compartilhá-las",
+        "why": "As slices são argumentos, copiadas (como cabeçalhos) pela chamada, não pelo canal."
+      }
+    ]
+  },
+  "ex-swpjh77k": {
+    "prompt": "Três goroutines enviam resultados num canal e `main` o percorre com range. Que goroutine deve fechar o canal?",
+    "hint": "Fechar cedo dá panic nas outras; nunca fechar trava `main`.",
+    "choices": [
+      {
+        "text": "A primeira das três a terminar",
+        "why": "As outras duas ainda podem enviar, e um envio depois do close dá panic."
+      },
+      {
+        "text": "`main`, assim que tiver recebido o primeiro valor delas",
+        "why": "Um receptor não sabe se quem envia terminou, e fechar debaixo deles dá panic."
+      },
+      {
+        "text": "Uma que espera as três terminarem e então fecha",
+        "why": "Isso. Nenhuma das três pode fechar sozinha; a lição 14 constrói essa goroutine que espera."
+      },
+      {
+        "text": "Cada uma das três, depois do seu último envio",
+        "why": "O segundo close daria panic: close of closed channel."
+      }
+    ]
+  },
+  "ex-qab3t1w8": {
+    "prompt": "`main` cria `ch := make(chan int)` e chama `produce(ch)`, em que `func produce(out chan<- int)`. O que acontece com o tipo?",
+    "hint": "Um canal comum se converte em qualquer direção.",
+    "choices": [
+      {
+        "text": "Um erro de compilação: `chan int` não é `chan<- int`",
+        "why": "A conversão de um canal de duas vias para uma direção é implícita."
+      },
+      {
+        "text": "Dentro de `produce` ele só envia; `main` mantém as duas direções",
+        "why": "Isso. O mesmo canal, duas visões dele: é assim que o `words.go` dá a `split` só a metade de que ela precisa."
+      },
+      {
+        "text": "Uma cópia do canal é feita para `produce`",
+        "why": "Um canal é uma referência; os dois nomes apontam para o mesmo canal."
+      },
+      {
+        "text": "`main` perde o direito de receber de `ch`",
+        "why": "A variável de `main` mantém o seu próprio tipo, `chan int`."
+      }
+    ]
+  },
+  "ex-wcfcks2v": {
+    "prompt": "O laço que recebe até um canal estar fechado e vazio se escreve `for v := ___ ch`.",
+    "hint": "A mesma palavra-chave que percorre uma slice.",
+    "blanks": [
+      {
+        "accept": [
+          "range"
+        ]
+      }
+    ]
+  },
+  "ex-47tsx0fe": {
+    "prompt": "`go run sendclosed.go` deu panic. Com que status de saída o programa terminou, pela linha que `go run` imprimiu?",
+    "hint": "`exit status …`."
+  }
+}

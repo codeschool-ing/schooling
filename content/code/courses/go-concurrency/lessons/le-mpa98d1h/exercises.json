@@ -1,0 +1,496 @@
+[
+  {
+    "id": "ex-5sfvq574",
+    "version": 1,
+    "section": "defining",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `flag.Int(\"times\", 1, \"how many greetings\")` return?",
+    "hint": "`greet` reads `*times` after `Parse`.",
+    "choices": [
+      {
+        "text": "The number given on the command line",
+        "correct": false,
+        "why": "Nothing has been read yet when `flag.Int` returns; `Parse` comes after."
+      },
+      {
+        "text": "A pointer, filled by `Parse`",
+        "correct": true,
+        "why": "Right. The program dereferences it after `Parse`."
+      },
+      {
+        "text": "An error if `-times` is missing",
+        "correct": false,
+        "why": "A missing flag takes its default, 1 here; there is no error."
+      },
+      {
+        "text": "The help line, for `-h`",
+        "correct": false,
+        "why": "The help is the third argument and the package keeps it for the usage text."
+      }
+    ]
+  },
+  {
+    "id": "ex-0rr4gzwd",
+    "version": 1,
+    "section": "defining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bin/greet bia -times 2` printed one greeting and `left over: [bia -times 2]`. Why?",
+    "hint": "Where does `Parse` stop?",
+    "choices": [
+      {
+        "text": "`Parse` stopped at `bia`",
+        "correct": true,
+        "why": "Right. Everything from there on is left in `flag.Args()`."
+      },
+      {
+        "text": "`-times` needs an equals sign",
+        "correct": false,
+        "why": "`-times 2` works when it comes first; only bool flags need `=` for a value."
+      },
+      {
+        "text": "Unknown words cancel all the flags",
+        "correct": false,
+        "why": "Nothing was cancelled: the flags after `bia` were never parsed at all."
+      },
+      {
+        "text": "`bia` was taken as the value of `-name`",
+        "correct": false,
+        "why": "The greeting said `hello, world`, so `-name` kept its default."
+      }
+    ]
+  },
+  {
+    "id": "ex-thtghav8",
+    "version": 1,
+    "section": "defining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Someone runs `bin/greet -shout false` to make sure the greeting is not in capitals. What happens?",
+    "hint": "Does a bool flag take a separate value?",
+    "choices": [
+      {
+        "text": "Shouting is off, as asked",
+        "correct": false,
+        "why": "The output was `HELLO, WORLD`: `-shout` alone means true."
+      },
+      {
+        "text": "`Parse` refuses `false` as an unknown flag",
+        "correct": false,
+        "why": "`false` has no dash, so it is not a flag at all; it is a leftover word."
+      },
+      {
+        "text": "It shouts, and `false` is left over in `flag.Args()`",
+        "correct": true,
+        "why": "Right. `-shout=false` is how a bool is set to false."
+      },
+      {
+        "text": "The program exits with status 2",
+        "correct": false,
+        "why": "Nothing was refused; the greeting ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-phgzd16y",
+    "version": 1,
+    "section": "defining",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With what exit status did `bin/greet -times=two` end?",
+    "hint": "The convention for \"you called me wrongly\".",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-hha15a9z",
+    "version": 1,
+    "section": "defining",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A script runs `tool -h` to print the help into a file, and checks the exit status to see whether the tool is installed. With the `flag` package's default handling, what status will it see?",
+    "hint": "Asking for help is not an error.",
+    "choices": [
+      {
+        "text": "2, as for any refused flag",
+        "correct": false,
+        "why": "`-h` printed the usage and exited with 0 in the lesson."
+      },
+      {
+        "text": "0",
+        "correct": true,
+        "why": "Right: `bin/greet -h; echo $?` printed `0`."
+      },
+      {
+        "text": "1, because the program did not run",
+        "correct": false,
+        "why": "The package chooses 0 for help and 2 for a refusal; 1 does not appear."
+      },
+      {
+        "text": "127, the status for a missing command",
+        "correct": false,
+        "why": "127 is the shell's, when there is no such program. Here the program ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgxktwty",
+    "version": 1,
+    "section": "custom",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which two methods make a type usable with `flag.Var`?",
+    "hint": "`list` in `tags/main.go` has them.",
+    "choices": [
+      {
+        "text": "`Parse` and `Usage`",
+        "correct": false,
+        "why": "Those belong to a `FlagSet`, not to a value."
+      },
+      {
+        "text": "`MarshalText` and `UnmarshalText`",
+        "correct": false,
+        "why": "Those serve `flag.TextVar`. `flag.Var` asks for the `flag.Value` interface."
+      },
+      {
+        "text": "`String` and `Set`",
+        "correct": true,
+        "why": "Right: that is `flag.Value`."
+      },
+      {
+        "text": "`Get` and `Default`",
+        "correct": false,
+        "why": "There is no such pair in the interface."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez7pcpw6",
+    "version": 1,
+    "section": "custom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`-tag go -tag concurrency` gave a list of two. What in `list` makes a repeated flag add up instead of the last one winning?",
+    "hint": "How many times is `Set` called?",
+    "choices": [
+      {
+        "text": "`flag.Var` keeps every value it was given",
+        "correct": false,
+        "why": "The package keeps nothing; it calls `Set` and the type decides."
+      },
+      {
+        "text": "`Set` appends rather than assigns",
+        "correct": true,
+        "why": "Right. A `Set` that assigned would keep only the last."
+      },
+      {
+        "text": "The flag's name ends in a plural",
+        "correct": false,
+        "why": "The name is `tag`, and names do not change behaviour."
+      },
+      {
+        "text": "`String` joins the values with commas",
+        "correct": false,
+        "why": "`String` only prints; collecting is `Set`'s job."
+      }
+    ]
+  },
+  {
+    "id": "ex-tb64yj6w",
+    "version": 1,
+    "section": "custom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bin/tags -port 70000` printed `invalid value \"70000\" for flag -port: not a port`. Where did `not a port` come from?",
+    "hint": "Who checked the range?",
+    "choices": [
+      {
+        "text": "From `strconv.Atoi`, which refuses numbers above 65535",
+        "correct": false,
+        "why": "`Atoi` reads 70000 happily; the range check is the program's."
+      },
+      {
+        "text": "From the `flag` package's port type",
+        "correct": false,
+        "why": "The package has no port type; that is why `flag.Func` was used."
+      },
+      {
+        "text": "From the error the function given to `flag.Func` returned",
+        "correct": true,
+        "why": "Right. `Parse` prints that error after the flag's name."
+      },
+      {
+        "text": "From the operating system",
+        "correct": false,
+        "why": "No socket was opened; the program never got past `Parse`."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp5ng92b",
+    "version": 1,
+    "section": "custom",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `tags/main.go` read `-addr` with `flag.TextVar` and `netip.Addr` rather than a `flag.String` checked by hand?",
+    "hint": "Who owns the rules of an IPv4 address?",
+    "choices": [
+      {
+        "text": "`flag.String` cannot hold dots",
+        "correct": false,
+        "why": "A string flag holds any text."
+      },
+      {
+        "text": "The type that owns the rules checks them",
+        "correct": true,
+        "why": "Right: `IPv4 field has value >255`, written by `netip`, not by this program."
+      },
+      {
+        "text": "`TextVar` is faster at parsing",
+        "correct": false,
+        "why": "Speed is not the argument; correctness is."
+      },
+      {
+        "text": "A hand check would be required to run before `Parse`",
+        "correct": false,
+        "why": "It would run after `Parse`, which is legal; the point is not writing a parser that exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-8zwbbyt8",
+    "version": 1,
+    "section": "custom",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a check written as a function, without declaring a type, the package offers `flag.___`.",
+    "hint": "The `-port` flag used it.",
+    "blanks": [
+      {
+        "accept": [
+          "Func"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5cn1t10x",
+    "version": 1,
+    "section": "subcommands",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do the package-level functions such as `flag.String` and `flag.Parse` work on?",
+    "hint": "A subcommand makes its own of the same kind.",
+    "choices": [
+      {
+        "text": "A hidden `FlagSet`, `flag.CommandLine`",
+        "correct": true,
+        "why": "Right. `flag.NewFlagSet` makes another one."
+      },
+      {
+        "text": "The environment variables of the process",
+        "correct": false,
+        "why": "The package reads the command line, not the environment."
+      },
+      {
+        "text": "A file of defaults in the home directory",
+        "correct": false,
+        "why": "No file is read; the defaults are in the code."
+      },
+      {
+        "text": "The go command's own settings",
+        "correct": false,
+        "why": "The go command uses the package; it does not lend it settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-x2a1pken",
+    "version": 1,
+    "section": "subcommands",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`bin/tool list -tag x` was refused with `flag provided but not defined: -tag`, though `add` accepts `-tag`. Why?",
+    "hint": "How many `FlagSet`s are there?",
+    "choices": [
+      {
+        "text": "Flags must be defined before `os.Args` is read",
+        "correct": false,
+        "why": "`os.Args` is available from the start; order of reading is not the issue."
+      },
+      {
+        "text": "`-tag` was used up by the `add` case",
+        "correct": false,
+        "why": "Only one case runs. The `add` set was never even made."
+      },
+      {
+        "text": "`list` has a `FlagSet` of its own",
+        "correct": true,
+        "why": "Right. Its usage text names only `-limit`."
+      },
+      {
+        "text": "A tag cannot be one letter",
+        "correct": false,
+        "why": "The value never got checked: the flag itself is unknown to `list`."
+      }
+    ]
+  },
+  {
+    "id": "ex-zz1zj5e4",
+    "version": 1,
+    "section": "subcommands",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program parses the same arguments twice, once to find a configuration file and once for real, and must not exit on the first pass. Which error handling should its `FlagSet` use?",
+    "hint": "Which choice hands the error back?",
+    "choices": [
+      {
+        "text": "`flag.ExitOnError`",
+        "correct": false,
+        "why": "That ends the program with status 2 on the first bad flag."
+      },
+      {
+        "text": "`flag.PanicOnError`",
+        "correct": false,
+        "why": "That panics, which is no way to carry on to a second pass."
+      },
+      {
+        "text": "`flag.ContinueOnError`",
+        "correct": true,
+        "why": "Right. `Parse` returns the error and the program decides."
+      },
+      {
+        "text": "No `FlagSet`, since `flag.Parse` can be called twice",
+        "correct": false,
+        "why": "`flag.CommandLine` exits on error, so the first pass could still end the program."
+      }
+    ]
+  },
+  {
+    "id": "ex-011j840g",
+    "version": 1,
+    "section": "subcommands",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `tool` write `unknown command \"remove\"` to standard error rather than standard output?",
+    "hint": "Think of `tool list | sort`.",
+    "choices": [
+      {
+        "text": "Standard output is closed after an error",
+        "correct": false,
+        "why": "Nothing closes it; the choice is the program's."
+      },
+      {
+        "text": "To keep it out of a pipe",
+        "correct": true,
+        "why": "Right, and the status 2 tells a script what went wrong."
+      },
+      {
+        "text": "`os.Exit` discards standard output",
+        "correct": false,
+        "why": "What was written before `os.Exit` has been written."
+      },
+      {
+        "text": "The `flag` package requires it",
+        "correct": false,
+        "why": "This message is the program's own; no `FlagSet` saw `remove`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fdhp29g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `greet` in the order they happen.",
+    "hint": "Nothing can be read before it is declared and parsed.",
+    "items": [
+      "declare the flags with `flag.String`, `flag.Int`…",
+      "call `flag.Parse`",
+      "read `*name` and `*times`",
+      "print what is left in `flag.Args()`"
+    ]
+  },
+  {
+    "id": "ex-wyea6g9f",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call with what it reads.",
+    "hint": "One of them takes any type that unmarshals text.",
+    "pairs": [
+      {
+        "left": "`flag.Duration`",
+        "right": "`1s`, `250ms`"
+      },
+      {
+        "left": "`flag.TextVar`",
+        "right": "a `netip.Addr` such as `192.0.2.10`"
+      },
+      {
+        "left": "`flag.Var`",
+        "right": "a type with `String` and `Set`"
+      },
+      {
+        "left": "`flag.Bool`",
+        "right": "`-shout` alone, or `-shout=false`"
+      }
+    ],
+    "right_distractors": [
+      "a file of settings"
+    ]
+  },
+  {
+    "id": "ex-gcb8seqg",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these command lines end with status 2? Choose all that apply.",
+    "hint": "Refusals are 2; help is 0; a leftover word is not a refusal.",
+    "choices": [
+      {
+        "text": "`bin/greet -times=two`",
+        "correct": true,
+        "why": "Yes: not an `int`."
+      },
+      {
+        "text": "`bin/tool remove`",
+        "correct": true,
+        "why": "Yes: the program's own refusal follows the convention."
+      },
+      {
+        "text": "`bin/greet -h`",
+        "correct": false,
+        "why": "Help exits with 0."
+      },
+      {
+        "text": "`bin/greet -shout false`",
+        "correct": false,
+        "why": "It ran and shouted; `false` was only a leftover word."
+      }
+    ]
+  }
+]
