@@ -65,7 +65,7 @@ Ten runs of the same code, three different outcomes. Six runs lost elements, one
 Run 6 threw `ArrayIndexOutOfBoundsException`. And three runs came out right, which is the worst of
 the three outcomes, because a test that happened to land on one of those would pass.
 `ArrayList.add` reads the size, writes the element at that index and stores the new size; two
-threads doing that at once can write to the same slot, so one element vanishes, or one thread grows
+threads doing that at once can write to the same slot, so one element vanishes. Or one thread grows
 the internal array while another writes past its old end, and the result is an exception from deep
 inside `ArrayList`. **Which one happens, and how many elements go missing, changes from run to
 run**, which is the signature of a race condition. Lesson 14 names it

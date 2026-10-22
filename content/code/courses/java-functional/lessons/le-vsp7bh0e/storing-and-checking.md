@@ -101,7 +101,7 @@ asked to change anything, and the old records disappear as people log in.
 | the same answer for a wrong password and an unknown user | the login page is not a way to ask who has an account |
 
 The last row is outside this program and just as important. A login that says "no such user" for one
-address and "wrong password" for another tells a stranger who has an account, so a server answers both
+address and "wrong password" for another tells a stranger who has an account. So a server answers both
 the same way, and takes the same time to do it, by checking a typed password against a decoy record when
 the account does not exist.
 

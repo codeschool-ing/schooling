@@ -71,7 +71,7 @@ fails with an error page. Quoted, it is a search for the text `*java`, which no 
 | a user, who means plain text | `Pattern.quote(term)`, or `String.contains` and no pattern at all |
 | a user, who really writes patterns | limit the length of the text, and build a limit on the time |
 
-The last row is rare and hard: Java's `Matcher` has no timeout, and interrupting its thread does not stop
-it, so a program that must accept patterns from strangers has to build its own limit, and limits how long
+The last row is rare and hard. Java's `Matcher` has no timeout, and interrupting its thread does not stop
+it, so a program that must accept patterns from strangers has to build its own limit. It also limits how long
 the text may be, since the cost of the worst patterns grows with the length of the text. **For almost every program the answer
 is the middle row.** A search term is text, and `quote` keeps it text.

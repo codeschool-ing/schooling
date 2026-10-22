@@ -12,8 +12,7 @@ does not work, so it shows each message before explaining it.
 
 `apt` answers with that line on an Ubuntu older than 24.04, whose archive stops at an earlier Java.
 *This one was not run for the course, because the machine it was recorded on is 24.04.* The cure is
-the system, not the package: `cat /etc/os-release` says which Ubuntu you have, and anything before
-24.04 is a reason to take the virtual machine path from the previous section rather than to hunt
+the system, not the package: `cat /etc/os-release` says which Ubuntu you have. Anything before 24.04 is a reason to take the virtual machine path from the previous section rather than to hunt
 for Java 25 somewhere else.
 
 ## A class file version the runtime does not know

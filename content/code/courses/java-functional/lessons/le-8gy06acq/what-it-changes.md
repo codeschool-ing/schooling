@@ -55,7 +55,7 @@ starting the threads: 187 ms. **Fifty times faster, on the same processors, with
 ## The style it brings back
 
 Before virtual threads, a server that wanted to keep ten thousand requests in flight with a few hundred
-threads had to stop blocking: every call to a database or another service returned a future, and the
+threads had to stop blocking. Every call to a database or another service returned a future, and the
 code became chains of `thenApply` and `thenCompose`, lesson 16 section 05 stretched over a whole
 program, with stack traces that no longer showed who called whom. **Virtual threads make the plain
 blocking style affordable again**: one thread per request, code that reads top to bottom, a `try`/`catch`

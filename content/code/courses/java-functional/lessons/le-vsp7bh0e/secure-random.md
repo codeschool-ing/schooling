@@ -53,8 +53,7 @@ no repeats, and that is the expected result: the chance of two 256-bit tokens be
 write down.
 
 The six-digit code is the other common form, and it has only a million values. That is fine for a code
-sent by message that expires in minutes and allows a handful of attempts, and wrong for anything else:
-**the strength of a random secret is the number of values it could have had**, and a short code
+sent by message that expires in minutes and allows a handful of attempts, and wrong for anything else. **The strength of a random secret is the number of values it could have had**, and a short code
 borrows its safety from the limits around it.
 
 Three habits keep `SecureRandom` working as intended. Make one and share it; it is thread-safe, and the

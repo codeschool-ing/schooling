@@ -74,7 +74,7 @@ over half a millisecond a thread, just to create them. The work each one did was
 
 Each thread also reserves room for a stack, a megabyte by default on 64-bit Linux, changeable with
 `-Xss`. Most of that reservation is address space that is never touched, which is why the resident
-memory grew by far less than a megabyte per thread; but every reservation still counts against the
+memory grew by far less than a megabyte per thread. But every reservation still counts against the
 limits the kernel places on a process, and those limits, not memory, are usually what ends a program
 that starts threads in a loop.
 

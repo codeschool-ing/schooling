@@ -43,7 +43,7 @@ atomic is cheaper than a lock. Under heavy contention many threads retry against
 
 The `largest` loop also shows the limit of an atomic: **it protects one variable.** Keeping a minimum and
 a maximum consistent with each other, or a balance and the list of transactions that produced it, is
-two variables that must change together, and that needs a lock or a single immutable object behind an
+two variables that must change together. That needs a lock or a single immutable object behind an
 `AtomicReference`, replaced as a whole (lesson 12 section 05).
 
 `updateAndGet` and `accumulateAndGet` write the retry loop for you: `largest.accumulateAndGet(candidate,

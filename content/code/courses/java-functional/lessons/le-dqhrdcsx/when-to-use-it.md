@@ -60,7 +60,7 @@ a got Index[entries=12]
 
 The index was built once, and both threads got it. The first check, outside the lock, keeps the fast
 path free of locking once the object exists; the second, inside, stops two threads that both saw `null`
-from both building it; and **`volatile` is what makes the published object safe to read on the fast
+from both building it. And **`volatile` is what makes the published object safe to read on the fast
 path**, by the ordering promise of section 03. Without it, a thread could see the reference before the
 object's fields, which is lesson 12 section 05's unsafe publication. Lesson 14 explains `synchronized`.
 

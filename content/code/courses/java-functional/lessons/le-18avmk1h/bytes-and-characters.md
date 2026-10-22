@@ -69,7 +69,7 @@ which is why encoding bugs are found by customers reading their own names.
 
 The rule that prevents them is to **name the encoding wherever bytes become characters or characters
 become bytes**, and to make it UTF-8 unless a format says otherwise. Since Java 18 the platform default
-is UTF-8 on every system, which removed the worst of the old surprises, but a file written by another
+is UTF-8 on every system, which removed the worst of the old surprises. But a file written by another
 program, an old system or a spreadsheet export can still be in anything, and only the code that reads it
 can say what it expects.
 

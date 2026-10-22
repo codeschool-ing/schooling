@@ -6,7 +6,7 @@ version: 1
 **A virtual thread is a `java.lang.Thread` that the JVM schedules itself, instead of handing it to the
 operating system.** It has a stack, a name, a state, interruption and everything else lessons 11 to 16
 used. What it does not have is an operating system thread of its own. A small pool of ordinary threads,
-called **carriers**, runs the virtual threads: a virtual thread is **mounted** on a carrier while it runs,
+called **carriers**, runs the virtual threads. A virtual thread is **mounted** on a carrier while it runs,
 and when it blocks, on `sleep`, a lock, a socket or a queue, the JVM **unmounts** it, keeps its stack in
 the heap, and gives the carrier to another virtual thread. Project Loom built them, and they became a
 standard part of Java in Java 21.

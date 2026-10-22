@@ -84,7 +84,7 @@ account ended below zero in every run**: money that did not exist was paid out.
 
 The window is the gap between `if (cents >= amount)` and `cents -= amount`. `Thread.yield()` sits in
 that gap only to make it wider, by inviting the scheduler to switch threads there, so that the failure
-shows up on a quiet machine; **real code has the same gap without it**, and under load it is hit just as
+shows up on a quiet machine. **Real code has the same gap without it**, and under load it is hit just as
 surely, only less often. Two tills both read a balance of 50, both pass the check, and both subtract,
 leaving −50. And `cents -= amount` is itself a read-modify-write, so subtractions can also be lost,
 which pushes the balance the other way.

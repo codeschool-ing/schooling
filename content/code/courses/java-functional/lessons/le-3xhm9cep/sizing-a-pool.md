@@ -75,7 +75,7 @@ Two threads and a queue of three hold five orders; the sixth and seventh were **
 `RejectedExecutionException`. That is the `AbortPolicy`, and it is the right default: the caller learns
 that the system is saturated and can tell its own caller to try later. The alternative policies are worth
 knowing by name: `CallerRunsPolicy` makes the submitting thread run the task itself, which slows the
-producer down to the pool's pace; `DiscardPolicy` drops the task silently, which is almost never what
+producer down to the pool's pace. `DiscardPolicy` drops the task silently, which is almost never what
 anybody wants and should need a comment explaining why the silence is right.
 
 `Bounded` uses `Pool.sleep` from section 02's file, which is in the same folder.

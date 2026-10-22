@@ -78,8 +78,7 @@ the compiler named `lambda$main$0`. Where the lambda is used, the bytecode says 
 instruction that asks the JVM, the first time it runs, to build an object implementing `Comparator`
 around that method. That is the middle one of the three, the one that says
 `compare:()Ljava/util/Comparator;`. The other two are the two `+` that join strings in the
-`println` lines, which the compiler has also turned into `invokedynamic` since Java 9: the
-instruction is a general way to let the JVM decide how to build something, and lambdas were its
+`println` lines, which the compiler has also turned into `invokedynamic` since Java 9. The instruction is a general way to let the JVM decide how to build something, and lambdas were its
 first big customer.
 
 Three consequences follow, and the rest of this lesson and the next are about them:

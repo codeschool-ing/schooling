@@ -81,8 +81,7 @@ in Jackson 3 is unchecked, so a lambda can call `readValue` with no wrapping, un
 lesson 20.
 
 The two in the middle are the ones to look at. **The default mapper accepted both without a word.** It
-skipped the `isbn` it had no component for, and it built a `Book` with no author and the year 0 from an
-object that had neither: a book printed in year 0, by nobody, is now in the program, and nothing will
+skipped the `isbn` it had no component for, and it built a `Book` with no author and the year 0 from an object that had neither. A book printed in year 0, by nobody, is now in the program, and nothing will
 notice until a page shows it. The strict mapper refused each of them, naming the field.
 
 | feature | refuses | default in Jackson 3 |
@@ -93,8 +92,7 @@ notice until a page shows it. The strict mapper refused each of them, naming the
 Which to turn on depends on who writes the JSON. Accepting unknown fields lets the other side add one
 without breaking every reader; refusing missing ones is almost always
 right for data a program is about to trust. Either way, **the checks that belong to the data belong in
-the record**: a compact constructor that refuses a blank title or a year in the future runs when Jackson
-builds the record, because Jackson builds it through that constructor, so no JSON can make an invalid
+the record**: a compact constructor that refuses a blank title or a year in the future runs when Jackson builds the record. Jackson builds it through that constructor, so no JSON can make an invalid
 `Book`.
 
 ## The one setting that brings the danger back

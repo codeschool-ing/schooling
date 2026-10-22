@@ -51,7 +51,7 @@ none of them can match, and the question is how long each takes to find that out
 `a+b` took nothing: the `a`s are taken, the `b` is missing, done. **`((a+)+)+b` went from 7 ms at sixteen
 letters to almost eleven seconds at twenty-eight.** Before it can give up, it has to try every way of
 splitting the run of `a`s between the three nested repetitions, ten letters as one group and eighteen as
-another, or as three and twenty-five, and so on, and the number of ways roughly doubles with every letter.
+another, or as three and twenty-five, and so on. The number of ways roughly doubles with every letter.
 Every four letters multiplied the time by eight to sixteen, so a line of forty letters would take hours,
 from one call.
 

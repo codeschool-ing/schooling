@@ -98,5 +98,5 @@ have the same cure: **write the interface the lambda should be**.
 
 Write the shortest form that stays readable. A block with one `return` in it is almost always the
 expression form with more noise, and **a lambda longer than a few lines is a method that has not
-been given a name yet**: lesson 3 shows how to pass a method itself, and that reads better than
+been given a name yet**. Lesson 3 shows how to pass a method itself, and that reads better than
 twenty lines inside an argument list.

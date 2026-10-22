@@ -71,8 +71,7 @@ client; a real server calls it in a loop and hands each socket to a thread of it
 the work virtual threads were made for in lesson 17.
 
 The socket carried bytes, and each end wrapped them as lesson 19 said it would have to: an
-`InputStreamReader` for reading and a `PrintWriter` for writing, **with UTF-8 named on both ends**, so
-`sertão` crossed as seven bytes and a line break, and came back as `SERTÃO`. Had the two ends named different
+`InputStreamReader` for reading and a `PrintWriter` for writing, **with UTF-8 named on both ends**. So `sertão` crossed as seven bytes and a line break, and came back as `SERTÃO`. Had the two ends named different
 encodings, the word would have crossed just as quietly and come back wrong.
 
 Two details keep the conversation from hanging. The `true` in `new PrintWriter(..., true, ...)` flushes
