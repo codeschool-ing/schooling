@@ -9,9 +9,9 @@ the run ends. With PostgreSQL in a container, an integration test checks the boo
 same database it runs on in production, with a schema Flyway built from nothing a few seconds before.
 
 The other common answer is an in-memory database such as H2 in place of PostgreSQL. It is faster to
-start, and it is a different database: its SQL dialect, its types and its locking are its own, so a
-migration with a PostgreSQL-only type, or a query whose behaviour depends on PostgreSQL's, passes or
-fails for H2's reasons. The bookshop's `isbn` column is `char(13)`, and lesson 13 met a failure that
+start, and it is a different database, with its own SQL dialect, its own types and its own locking.
+A migration with a type only PostgreSQL has, or a query whose behaviour depends on PostgreSQL's,
+passes or fails there for H2's reasons. The bookshop's `isbn` column is `char(13)`, and lesson 13 met a failure that
 depended on exactly that type.
 
 ## The dependencies
@@ -175,9 +175,9 @@ so the number holds only if Flyway ran every migration on the empty database.
 ## Only the persistence half
 
 `BookRepositoryIT` tests two of lesson 11's queries. It does not need the controllers, the security
-filters or the services, and **`@DataJpaTest`** starts none of them: only the data source, Flyway,
-Hibernate and the repositories, and each test method runs inside a transaction that is rolled back
-when it ends. Create `src/test/java/com/example/bookshop/catalogue/BookRepositoryIT.java`:
+filters or the services, and **`@DataJpaTest`** starts none of them, only the data source, Flyway,
+Hibernate and the repositories. Each test method runs inside a transaction that is rolled back when
+it ends. Create `src/test/java/com/example/bookshop/catalogue/BookRepositoryIT.java`:
 
 ```java
 package com.example.bookshop.catalogue;
@@ -308,8 +308,8 @@ ana@vm:~/bookshop$ grep -E 'DockerClientProviderStrategy|DockerClientFactory   :
 
 It looked for the socket where Docker's packages put it, connected, and started a first container
 that is not a database. **Ryuk** is Testcontainers' reaper. The test JVM keeps a connection open to
-it, and when that connection closes, because the run ended or because the JVM crashed or was killed,
-Ryuk waits a few seconds and then removes every container that run started, and itself. Without it,
+it, and that connection closes when the run ends, or when the JVM crashes or is killed. Ryuk then
+waits a few seconds and removes every container that run started, and itself. Without it,
 a test run stopped with Ctrl+C in the middle would leave its databases running until somebody
 noticed.
 

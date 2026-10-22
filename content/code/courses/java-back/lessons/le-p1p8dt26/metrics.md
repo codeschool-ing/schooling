@@ -26,11 +26,11 @@ on `/books/{id}`".
 ## What is already measured
 
 The bookshop's own code registers one meter, the counter of the next section. Ask for the list of
-names anyway, and there are 99:
+names anyway, and in this run there are 98:
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/metrics | python3 -c 'import json,sys; print(len(json.load(sys.stdin)["names"]))'
-99
+98
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/metrics | python3 -c 'import json,sys; print(*json.load(sys.stdin)["names"], sep="\n")' | grep -E '^(http|hikaricp|jvm.memory|bookshop)'
 bookshop.orders
 hikaricp.connections
@@ -119,11 +119,11 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator/metrics/http.server.requests 
         },
         {
             "statistic": "TOTAL_TIME",
-            "value": 0.170490973
+            "value": 0.187019944
         },
         {
             "statistic": "MAX",
-            "value": 0.118845575
+            "value": 0.12685655
         }
     ],
     "name": "http.server.requests"
@@ -155,11 +155,11 @@ ana@vm:~/bookshop$ curl -s "localhost:8081/actuator/metrics/http.server.requests
         },
         {
             "statistic": "TOTAL_TIME",
-            "value": 0.015837695
+            "value": 0.015200056
         },
         {
             "statistic": "MAX",
-            "value": 0.015837695
+            "value": 0.015200056
         }
     ],
     "name": "http.server.requests"

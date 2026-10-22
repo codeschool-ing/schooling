@@ -4,15 +4,15 @@ version: 1
 ---
 
 The tests so far need nothing but a JDK. The next ones need a real PostgreSQL 16, and not the one
-lesson 9 installed: that database holds whatever you last did to it by hand, and a test that passes
+lesson 9 installed. That database holds whatever you last did to it by hand, and a test that passes
 because of a row you inserted last Tuesday proves nothing. **Testcontainers starts a fresh database
 in a container for each test run and throws it away afterwards**, and for that the machine needs a
 container engine. This course uses **Docker Engine**, the open-source daemon from Docker, and the
 `docker` command that talks to it.
 
 A **container** is a process the engine starts with a file system of its own, unpacked from an
-**image**, and walled off from the rest of the machine: it sees its own files, its own processes and
-its own network address. An image of PostgreSQL 16 holds the server and everything it needs, so a
+**image**. It is walled off from the rest of the machine, and sees its own files, its own processes
+and its own network address. An image of PostgreSQL 16 holds the server and everything it needs, so a
 container made from it is a database server that exists for as long as the test run does. Lesson 1
 used the same thing once as a clean machine made in one line, to show what a fresh Ubuntu says when
 Java is missing.
@@ -146,7 +146,7 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
-**`hello-world` is the smallest test that goes all the way through**: the engine did not have the
-image, fetched it from Docker Hub, made a container from it and ran it, and the container's program
+**`hello-world` is the smallest test that goes all the way through.** The engine did not have the
+image, so it fetched it from Docker Hub, made a container from it and ran it. The container's program
 printed the text, which describes the trip it just took. `--rm` removed the container when it ended.
 Testcontainers does the same four things for every database it starts, through the same socket.

@@ -5,9 +5,9 @@ version: 1
 
 `OrderServiceTest` is a **unit test**: one class, its collaborators replaced, nothing outside the
 JVM, a second to run. The next tests in this lesson are **integration tests**: the real service, the
-real repositories, Hibernate, Flyway and a real PostgreSQL, checked together, because the questions
-they answer — does this query return what its name promises, do the migrations produce the schema
-the entities expect — have no answer without the real parts. They take seconds, and they need a
+real repositories, Hibernate, Flyway and a real PostgreSQL, checked together. Does this query return
+what its name promises? Do the migrations produce the schema the entities expect? Those questions
+have no answer without the real parts. They take seconds, and they need a
 container engine on the machine.
 
 Mocks cannot replace them. A mock of `BookRepository` returns what the test told it to, so a test

@@ -51,7 +51,7 @@
         "why": "No stubbing calls the real method; a mock has no real method behind it. A spy would, and there is none here."
       },
       {
-        "text": "The order is created inside `place`, so the test has nothing to hand back in advance",
+        "text": "The order does not exist until `place` creates it",
         "correct": true,
         "why": "Right. The answer runs at the call, takes the order from the arguments, gives it id 7 and returns it."
       },
@@ -148,7 +148,7 @@
         "why": "A stubbing matches on its arguments; 5 is not 3, so it does not apply."
       },
       {
-        "text": "The test fails with a `PotentialStubbingProblem` before any assertion runs",
+        "text": "It fails with a `PotentialStubbingProblem`",
         "correct": true,
         "why": "Right. This is the lesson's second detour: Mockito names the call it got and the stubbing it had."
       },
@@ -174,7 +174,7 @@
         "why": "Mockito 5's inline mock maker could already do that by attaching itself; the option changes when the agent arrives, not what it can do."
       },
       {
-        "text": "The agent is loaded as the test JVM starts, so Mockito no longer attaches itself mid-run",
+        "text": "The agent arrives as the JVM starts, so Mockito no longer attaches mid-run",
         "correct": true,
         "why": "Right, and with nothing attaching, both Mockito's message and the JDK's four warnings disappear."
       },
@@ -234,7 +234,7 @@
         "why": "Nothing in the line mentions a version, and the agent works: the attaching messages are gone."
       },
       {
-        "text": "The JVM noting that its class data sharing covers fewer classes, which is harmless",
+        "text": "A harmless note from the JVM about its startup cache",
         "correct": true,
         "why": "Right. The agent adds classes to the boot class path, and the JVM's cache of shared classes then covers less of it."
       }
@@ -321,7 +321,7 @@
         "why": "`*Tests` is one of surefire's patterns, so it does run, just in the wrong place."
       },
       {
-        "text": "Surefire runs it with the unit tests, so every `mvn test` needs Docker and starts a container",
+        "text": "Surefire runs it, and every `mvn test` now needs Docker",
         "correct": true,
         "why": "Right. The suffix is the whole switch, and this one puts a slow test into the fast loop."
       },
@@ -342,7 +342,7 @@
     "prompt": "Why does failsafe only record failures in `integration-test` and fail the build later, in `verify`?",
     "choices": [
       {
-        "text": "Because integration tests are allowed to fail without breaking the build",
+        "text": "Because integration tests may fail without breaking the build, unlike unit tests",
         "correct": false,
         "why": "They are not: a failure still fails the build, one phase later."
       },
@@ -431,7 +431,7 @@
         "why": "Right. The client printed what it knows about itself and failed to reach the server through the socket."
       },
       {
-        "text": "The client and the engine have different versions",
+        "text": "The client and the engine were installed from different releases of Docker",
         "correct": false,
         "why": "A mismatch would still show both blocks, each with its own version."
       },
@@ -554,7 +554,7 @@
         "why": "Flyway reads `db/migration` as always; what changed is the database it connects to."
       },
       {
-        "text": "Spring Boot uses the container's address, database, user and password instead of `spring.datasource.*`",
+        "text": "Boot connects to the container instead of `spring.datasource.*`",
         "correct": true,
         "why": "Right. That is why the test names no port and why Flyway's log shows the container's JDBC URL."
       },
@@ -590,7 +590,7 @@
         "why": "The log shows the JDBC URL of a PostgreSQL 16 container; nothing in memory took its place."
       },
       {
-        "text": "The data source, Flyway, Hibernate and the repositories, each test in a transaction rolled back at its end",
+        "text": "Only the persistence half, each test rolled back at its end",
         "correct": true,
         "why": "Right, which is why its context was ready in a fraction of a second."
       }
@@ -623,7 +623,7 @@
         "why": "The warning exists since JDK 24 and appears the same way on newer ones; the version is not what differs."
       },
       {
-        "text": "Each server build starts clean, without `~/.testcontainers.properties`, so the search that loads JNA runs every time",
+        "text": "Each server build starts without `~/.testcontainers.properties`",
         "correct": true,
         "why": "Right. Your machine wrote that file after its first successful run and goes straight to the socket since."
       },
@@ -659,7 +659,7 @@
         "why": "The images were already on the machine; none of the measured runs downloaded anything."
       },
       {
-        "text": "Starting the whole application context for `BookshopApplicationIT`",
+        "text": "Starting the whole Spring context",
         "correct": true,
         "why": "Right: 6.2 seconds in that run, against under 0.4 for the persistence slice."
       },
@@ -702,7 +702,7 @@
         "why": "That is the `static @Container` field's behaviour; this class uses the bean, which belongs to a context."
       },
       {
-        "text": "None: Spring reuses the cached context, and the container bean comes with it",
+        "text": "None: the cached context is reused, container and all",
         "correct": true,
         "why": "Right. Same configuration, same context, same database, and no extra seconds of context start either."
       },

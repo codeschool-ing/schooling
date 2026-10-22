@@ -13,9 +13,9 @@ interface for changing loaded classes. A program gets that interface by being a 
 Mockito made itself one by attaching to its own JVM in the middle of the run. Its message says this
 will stop working and asks for it to be added "as an agent to your build".
 
-**The JVM spoke next.** The four `WARNING:` lines are the JDK's side of the same event, a rule since
-JDK 21: an agent loaded into a running JVM, instead of named when the JVM starts, is reported, and a
-future release will refuse it unless the JVM was started with `-XX:+EnableDynamicAgentLoading`. The
+**The JVM spoke next.** The four `WARNING:` lines are the JDK's side of the same event, and a rule
+since JDK 21. An agent loaded into a running JVM, instead of named when the JVM starts, is reported,
+and a future release will refuse it unless the JVM was started with `-XX:+EnableDynamicAgentLoading`. The
 path in the first line is the jar that did the attaching, from Byte Buddy, the library Mockito
 generates classes with.
 
@@ -117,9 +117,9 @@ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader clas
 
 Mockito's message and the four warnings are gone, because nothing attaches any more: the agent was
 there from the first instruction. **One line stays, and it is harmless.** The agent adds classes to
-the boot class path, the classes the JVM loads before any other, and the JVM's class data sharing, a
-cache of classes it keeps between runs to start faster, then covers fewer of them. The tests do not
-see it.
+the boot class path, the classes the JVM loads before any other. The JVM's class data sharing, a
+cache of classes it keeps between runs to start faster, then covers fewer of them, and the tests do
+not see the difference.
 
 The other way out, `-XX:+EnableDynamicAgentLoading` in the same `argLine`, would only hide the JDK's
 warning. Mockito would still attach in the middle of the run, which is exactly what the JDK has

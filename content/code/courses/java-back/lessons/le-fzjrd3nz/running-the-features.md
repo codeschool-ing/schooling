@@ -205,7 +205,11 @@ no version at all. The four new test dependencies:
 | `junit-platform-suite` | `@Suite`, the class that tells the platform what to run; its version comes from Spring Boot |
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn dependency:tree | grep -E 'cucumber-(java|spring|junit)|junit-platform-suite:'
+[INFO] +- io.cucumber:cucumber-java:jar:8.0.4:test
+[INFO] +- io.cucumber:cucumber-spring:jar:8.0.4:test
+[INFO] +- io.cucumber:cucumber-junit-platform-engine:jar:8.0.4:test
+[INFO] +- org.junit.platform:junit-platform-suite:jar:6.0.3:test
 ```
 
 ## The suite
@@ -240,6 +244,11 @@ here too. `@SelectPackages("features")` says where the features are: a package o
 classpath, which is where `src/test/resources/features/` ends up after the build. The first
 `@ConfigurationParameter` is the glue, `cucumber.glue`, naming the package of the step definitions.
 The second is `cucumber.plugin`, the report to print, and `pretty` is the one you are about to see.
+The third switches the report's colours off. Cucumber colours it whether or not anybody is looking
+at a terminal, and in this lesson the report goes through a pipe into `grep`, as it goes into a log
+file on a build server: there a colour is a run of escape codes, which a pattern does not match
+across. Maven colours its own lines in the same circumstances, so the commands in this lesson add
+`-B`, batch mode, which turns Maven's colours off as well.
 
 The name ends in `IT` on purpose. Lesson 19 split the tests in two: Surefire runs `*Test` classes in
 `mvn test`, and Failsafe runs `*IT` classes in `mvn verify`, because they start the whole
@@ -284,8 +293,35 @@ because `verify` comes after `test`. The pretty report shares the terminal with 
 verdict:
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Scenario: An order takes copies out of stock               # classpath:features/ordering.feature:8
+  ✔ Given the customer "ana" has signed in                 # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 5 copies of "The War of the Worlds" # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 2 copies of "The War of the Worlds"    # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is accepted with a total of 6400 cents  # com.example.bookshop.acceptance.OrderingSteps.theOrderIsAccepted(int)
+  ✔ And "The War of the Worlds" has 3 copies left          # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+Scenario Outline: An order for more copies than the shop has is refused # classpath:features/ordering.feature:22
+  ✔ Given the customer "ana" has signed in                              # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 5 copies of "Persuasion"                         # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 6 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
+  ✔ And "Persuasion" has 5 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+Scenario Outline: An order for more copies than the shop has is refused # classpath:features/ordering.feature:23
+  ✔ Given the customer "ana" has signed in                              # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 0 copies of "Persuasion"                         # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 2 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
+  ✔ And "Persuasion" has 0 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.518 s -- in com.example.bookshop.acceptance.CucumberIT
+[INFO] BUILD SUCCESS
 ```
+
+Two lines get past the `grep` because the JVM writes its warnings to the error stream, which the
+pipe does not touch. There is one for each JVM Maven starts for tests, Surefire's and Failsafe's.
+The warning appears when something adds to the JVM's own class path at start-up, as the Mockito
+agent from lesson 19 does, and it is harmless.
 
 Every scenario is printed with the file and line it came from, and every step with a tick and the
 method that ran it, which is the first thing to read when a sentence goes to the wrong method. The
@@ -310,7 +346,20 @@ included, was committed the moment it was made.
 The cache reaches further than Cucumber. Run the whole of `verify` and count the containers:
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Running com.example.bookshop.BookshopApplicationIT
+2026-10-22T20:36:23.806-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:36:28.302-03:00  INFO 22514 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 7.121 seconds (process running for 8.301)
+[INFO] Running com.example.bookshop.catalogue.BookRepositoryIT
+2026-10-22T20:36:28.584-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:36:30.466-03:00  INFO 22514 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.452 seconds (process running for 10.466)
+[INFO] Running com.example.bookshop.BooksApiIT
+2026-10-22T20:36:32.319-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:36:34.118-03:00  INFO 22514 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 2.306 seconds (process running for 14.118)
+[INFO] Running com.example.bookshop.acceptance.CucumberIT
+[INFO] BUILD SUCCESS
 ```
 
 Three integration test classes start a PostgreSQL container and a context of their own.

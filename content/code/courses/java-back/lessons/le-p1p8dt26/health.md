@@ -25,7 +25,7 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator/health | python3 -m json.tool
         "diskSpace": {
             "details": {
                 "total": 270553174016,
-                "free": 24568188928,
+                "free": 24556486656,
                 "threshold": 10485760,
                 "path": "/home/ana/bookshop/.",
                 "exists": true
@@ -92,7 +92,7 @@ Ten connections, the pool's whole `maximum-pool-size` from lesson 14. Now ask ag
 
 ```
 ana@vm:~/bookshop$ curl -s -w "%{http_code} after %{time_total} s\n" -o health.json localhost:8081/actuator/health
-503 after 0.014533 s
+503 after 0.015768 s
 ana@vm:~/bookshop$ python3 -m json.tool health.json | head -9
 {
     "components": {
@@ -114,20 +114,23 @@ connection, found it dead, and said so. The two groups still answer `UP`, and th
 the next part explains. The API fared worse. `GET /books` waited the pool's five-second
 `connection-timeout` for a connection that never came, and then answered `401`. That last number is a
 defect of its own rather than a verdict on the token: the failed request is forwarded to Spring's
-`/error` page, which the API's rules do not open to anonymous callers. The metrics of a later section
-record it the same way, as a client's mistake on no known route:
+`/error` page, which the API's rules do not open to anonymous callers. The metrics, which the next section
+reads properly, saw the request before that rewrite:
 
 ```
 ana@vm:~/bookshop$ curl -s -o /dev/null -w "%{http_code} after %{time_total} s\n" localhost:8080/books
-401 after 5.019238 s
+401 after 5.018283 s
 ```
 
-The second terminal says what really happened:
+The first line is the outage: `GET /books`, status `500`, `SERVER_ERROR`, and the exception that
+caused it. The client was told 401; the timer recorded what the handler did. The other lines are this
+lesson's earlier requests, the anonymous 401 and the 404 with a token among them. The second terminal
+tells the same story from the inside:
 
 ```
-2026-10-22T20:21:30.683-03:00  WARN 11393 --- [bookshop] [nio-8080-exec-1] [36b99f27] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 28000
-2026-10-22T20:21:30.683-03:00  WARN 11393 --- [bookshop] [nio-8080-exec-1] [36b99f27] org.hibernate.orm.jdbc.error             : bookshop-pool - Connection is not available, request timed out after 5001ms (total=0, active=0, idle=0, waiting=0)
-2026-10-22T20:21:30.687-03:00 ERROR 11393 --- [bookshop] [nio-8080-exec-1] [] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction] with root cause
+2026-10-22T20:34:36.781-03:00  WARN 13286 --- [bookshop] [nio-8080-exec-8] [cfd409dc] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 28000
+2026-10-22T20:34:36.781-03:00  WARN 13286 --- [bookshop] [nio-8080-exec-8] [cfd409dc] org.hibernate.orm.jdbc.error             : bookshop-pool - Connection is not available, request timed out after 5000ms (total=0, active=0, idle=0, waiting=0)
+2026-10-22T20:34:36.785-03:00 ERROR 13286 --- [bookshop] [nio-8080-exec-8] [] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction] with root cause
 ```
 
 Give the role its login back, and the pool reconnects on the next request. A single indicator has a
@@ -161,39 +164,39 @@ both groups to the application's own state, and the outage above showed exactly 
 against the paragraph above.
 
 What does move readiness is the application's own life cycle. Start a loop in a third terminal that
-asks all three, ten or so times a second, and then start the bookshop in the second terminal:
+asks all three, as fast as curl can, and then start the bookshop in the second terminal:
 
 ```
 ana@vm:~/bookshop$ for i in $(seq 1500); do echo $(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/$p; done); done | uniq -c
-    537 000 000 000
-      1 000 503 503
-    962 200 200 200
+    733 000 000 000
+      1 200 503 503
+    766 200 200 200
 ```
 
-`uniq -c` folds identical lines, so the loop ran 1,500 rounds and printed three lines. For the first
-535 rounds nothing listened on 8081, and curl's `000` means no connection. Then one round in which
-the port opened partway through: liveness had already been refused, while readiness and the full
-report answered `503`. Every round after that answered `200` three times. The application was
-running and listening, and still said it was not ready. The second terminal, started with the
-availability logger at `debug`, says why:
+`uniq -c` folds identical lines, so 1,500 rounds came out as three lines. For the first 733 rounds
+nothing listened on 8081, and curl's `000` means no connection at all. Then one round answered
+`200 503 503`: the process was alive, and readiness and the full report said it was not ready. Every
+round after that answered `200` three times. The window is short, and a loop can miss it; if yours
+shows no `503`, start the application again. The second terminal, started with
+`--logging.level.org.springframework.boot.availability=debug`, says what the window was:
 
 ```
-2026-10-22T20:21:38.883-03:00  INFO 12118 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 6.135 seconds (process running for 6.535)
-2026-10-22T20:21:38.987-03:00 DEBUG 12118 --- [bookshop] [           main] [] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
-2026-10-22T20:21:39.070-03:00  INFO 12118 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
-2026-10-22T20:21:39.071-03:00 DEBUG 12118 --- [bookshop] [           main] [] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
+2026-10-22T20:34:48.964-03:00  INFO 14179 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 9.799 seconds (process running for 10.494)
+2026-10-22T20:34:49.075-03:00 DEBUG 14179 --- [bookshop] [           main] [] o.s.b.a.ApplicationAvailabilityBean      : Application availability state LivenessState changed to CORRECT
+2026-10-22T20:34:49.201-03:00  INFO 14179 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
+2026-10-22T20:34:49.202-03:00 DEBUG 14179 --- [bookshop] [           main] [] o.s.b.a.ApplicationAvailabilityBean      : Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
 ```
 
 `Started BookshopApplication` is not the end of a start-up. Right after it, liveness turns `CORRECT`.
 Then the application's runners run, here lesson 5's `CatalogueReport`, and only when the last one
-returns does readiness turn `ACCEPTING_TRAFFIC`. In between, less than two tenths of a second in this
-run, the process is alive and still preparing, and that is the moment readiness exists for. The same
+returns does readiness turn `ACCEPTING_TRAFFIC`. In between, about a quarter of a second in this run,
+the process is alive and still preparing, and that is the moment readiness exists for. The same
 two instants are kept as metrics:
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep -E "^application_(started|ready)_time"
-application_ready_time_seconds{main_application_class="com.example.bookshop.BookshopApplication"} 6.322
-application_started_time_seconds{main_application_class="com.example.bookshop.BookshopApplication"} 6.135
+application_ready_time_seconds{main_application_class="com.example.bookshop.BookshopApplication"} 10.038
+application_started_time_seconds{main_application_class="com.example.bookshop.BookshopApplication"} 9.799
 ```
 
 So work that has to finish before the first request, warming a cache or loading a file, belongs in a

@@ -9,9 +9,9 @@ execução termina. Com o PostgreSQL num contêiner, um teste de integração co
 mesmo banco em que ele roda em produção, com um esquema que o Flyway construiu do zero segundos antes.
 
 A outra resposta comum é um banco em memória, como o H2, no lugar do PostgreSQL. Ele sobe mais rápido,
-e é outro banco: o dialeto SQL, os tipos e o jeito de travar são dele, então uma migração com um tipo
-que só o PostgreSQL tem, ou uma consulta cujo comportamento depende do PostgreSQL, passa ou falha pelos
-motivos do H2. A coluna `isbn` do bookshop é `char(13)`, e a aula 13 encontrou uma falha que dependia
+e é outro banco, com o próprio dialeto SQL, os próprios tipos e o próprio jeito de travar. Uma migração
+com um tipo que só o PostgreSQL tem, ou uma consulta cujo comportamento depende do PostgreSQL, passa ou
+falha ali pelos motivos do H2. A coluna `isbn` do bookshop é `char(13)`, e a aula 13 encontrou uma falha que dependia
 exatamente desse tipo.
 
 ## As dependências
@@ -174,8 +174,8 @@ então o número só se confirma se o Flyway rodou todas as migrações no banco
 ## Só a metade de persistência
 
 `BookRepositoryIT` testa duas das consultas da aula 11. Ele não precisa dos controllers, dos filtros de
-segurança nem dos serviços, e o **`@DataJpaTest`** não sobe nenhum deles: só o data source, o Flyway, o
-Hibernate e os repositórios, e cada método de teste roda dentro de uma transação que é desfeita quando
+segurança nem dos serviços, e o **`@DataJpaTest`** não sobe nenhum deles, só o data source, o Flyway, o
+Hibernate e os repositórios. Cada método de teste roda dentro de uma transação que é desfeita quando
 ele termina. Crie `src/test/java/com/example/bookshop/catalogue/BookRepositoryIT.java`:
 
 ```java
@@ -308,8 +308,8 @@ ana@vm:~/bookshop$ grep -E 'DockerClientProviderStrategy|DockerClientFactory   :
 
 Ele procurou o socket onde os pacotes da Docker o põem, conectou e subiu um primeiro contêiner que não é
 um banco. O **Ryuk** é o ceifador do Testcontainers. A JVM dos testes mantém uma conexão aberta com ele,
-e quando essa conexão fecha, porque a execução terminou ou porque a JVM quebrou ou foi morta, o Ryuk
-espera alguns segundos e então remove todos os contêineres que aquela execução subiu, e a si mesmo. Sem
+e essa conexão fecha quando a execução termina, ou quando a JVM quebra ou é morta. O Ryuk então espera
+alguns segundos e remove todos os contêineres que aquela execução subiu, e a si mesmo. Sem
 ele, uma execução de testes interrompida com Ctrl+C no meio deixaria os bancos rodando até alguém
 perceber.
 

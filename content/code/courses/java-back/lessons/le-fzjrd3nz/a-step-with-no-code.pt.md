@@ -16,15 +16,27 @@ primeiro cenário, uma promessa que a loja nunca fez:
     And she receives an e-mail confirming the order
 ```
 
-e rode as *features* de novo, desta vez ficando com as linhas que seguem a exceção:
+e rode as *features* de novo, desta vez ficando com a contagem e com as linhas que seguem a exceção:
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E -A 8 'Tests run:.*Cucumber|UndefinedStepException'
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+io.cucumber.junit.platform.engine.UndefinedStepException: 
+The step 'she receives an e-mail confirming the order' is undefined.
+You can implement this step using the snippet(s) below:
+
+@Then("she receives an e-mail confirming the order")
+public void she_receives_an_e_mail_confirming_the_order() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
 ```
 
-Um **passo indefinido** (*undefined step*) é um erro, não um pulo. Os passos antes dele rodaram,
-então o pedido foi feito de verdade; depois o cenário parou na linha que nenhum método reivindica, o
-relatório *pretty* pôs um quadradinho onde estaria o tique, e o build falhou. O Cucumber 8 não tem
+Um **passo indefinido** (*undefined step*) é um erro, e não um passo pulado: `Errors: 1`, com o nome do
+cenário, e um build que falhou. Os passos antes dele rodaram, então o pedido foi feito de verdade;
+depois o cenário parou na linha que nenhum método reivindica, e o relatório *pretty* pôs um
+quadradinho onde estaria o tique. O Cucumber 8 não tem
 configuração que deixe um passo indefinido passar, e esse é o padrão certo: uma frase que não roda
 nada seria lida como uma verificação que se sustenta.
 
@@ -44,10 +56,39 @@ Uma falha se lê do mesmo jeito, no nível da frase. Troque `6400` por `6300` no
 cenário e rode:
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|expected:|but was:|Tests run:.*Cucumber'
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Scenario: An order takes copies out of stock               # classpath:features/ordering.feature:8
+  ✔ Given the customer "ana" has signed in                 # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 5 copies of "The War of the Worlds" # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 2 copies of "The War of the Worlds"    # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✘ Then the order is accepted with a total of 6300 cents  # com.example.bookshop.acceptance.OrderingSteps.theOrderIsAccepted(int)
+        expected: 6300
+         but was: 6400
+  ↷ And "The War of the Worlds" has 3 copies left          # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+Scenario Outline: An order for more copies than the shop has is refused # classpath:features/ordering.feature:22
+  ✔ Given the customer "ana" has signed in                              # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 5 copies of "Persuasion"                         # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 6 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
+  ✔ And "Persuasion" has 5 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+Scenario Outline: An order for more copies than the shop has is refused # classpath:features/ordering.feature:23
+  ✔ Given the customer "ana" has signed in                              # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 0 copies of "Persuasion"                         # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 2 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
+  ✔ And "Persuasion" has 0 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+expected: 6300
+ but was: 6400
+expected: 6300
+ but was: 6400
 ```
 
-O X marca a frase que falhou, e embaixo dela o AssertJ diz o que esperava e o que voltou. O passo
+O X marca a frase que falhou, e embaixo dela o AssertJ diz o que esperava e o que voltou. Desta
+vez a contagem diz `Failures: 1`, e não `Errors: 1`: uma verificação que rodou e não se sustentou,
+não uma frase que nada conseguia rodar. As últimas quatro linhas são o resumo do Failsafe dizendo a
+mesma coisa mais duas vezes. O passo
 seguinte é marcado com uma seta curva, **pulado** (*skipped*): quando um passo falha, o Cucumber não
 roda mais nada naquele cenário, porque todos os passos seguintes supunham que os anteriores
 valiam. Os outros dois cenários não são afetados, que é o que manter um `When` por cenário compra.

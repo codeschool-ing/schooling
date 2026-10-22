@@ -16,15 +16,27 @@ the shop has never made:
     And she receives an e-mail confirming the order
 ```
 
-and run the features again, this time keeping the lines that follow the exception:
+and run the features again, this time keeping the count and the lines that follow the exception:
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E -A 8 'Tests run:.*Cucumber|UndefinedStepException'
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+io.cucumber.junit.platform.engine.UndefinedStepException: 
+The step 'she receives an e-mail confirming the order' is undefined.
+You can implement this step using the snippet(s) below:
+
+@Then("she receives an e-mail confirming the order")
+public void she_receives_an_e_mail_confirming_the_order() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
 ```
 
-An **undefined step** is an error, not a skip. The steps before it ran, so the order was really
-placed; then the scenario stopped at the line no method claims, the pretty report put a small
-square where the tick would have been, and the build failed. Cucumber 8 has no setting that lets
+An **undefined step** is an error, not a skip: `Errors: 1`, against the scenario's name, and a
+failed build. The steps before it ran, so the order was really placed; then the scenario stopped
+at the line no method claims, and the pretty report put a small square where the tick would have
+been. Cucumber 8 has no setting that lets
 an undefined step pass, and that is the right default: a sentence that runs nothing would
 otherwise read as a check that holds.
 
@@ -44,11 +56,39 @@ A failure reads the same way, at the level of the sentence. Change `6400` to `63
 scenario's `Then` and run:
 
 ```
-ana@vm:~/bookshop$ PENDING
+ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|expected:|but was:|Tests run:.*Cucumber'
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+Scenario: An order takes copies out of stock               # classpath:features/ordering.feature:8
+  ✔ Given the customer "ana" has signed in                 # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 5 copies of "The War of the Worlds" # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 2 copies of "The War of the Worlds"    # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✘ Then the order is accepted with a total of 6300 cents  # com.example.bookshop.acceptance.OrderingSteps.theOrderIsAccepted(int)
+        expected: 6300
+         but was: 6400
+  ↷ And "The War of the Worlds" has 3 copies left          # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+Scenario Outline: An order for more copies than the shop has is refused # classpath:features/ordering.feature:22
+  ✔ Given the customer "ana" has signed in                              # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 5 copies of "Persuasion"                         # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 6 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
+  ✔ And "Persuasion" has 5 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+Scenario Outline: An order for more copies than the shop has is refused # classpath:features/ordering.feature:23
+  ✔ Given the customer "ana" has signed in                              # com.example.bookshop.acceptance.OrderingSteps.theCustomerHasSignedIn(java.lang.String)
+  ✔ Given the shop has 0 copies of "Persuasion"                         # com.example.bookshop.acceptance.OrderingSteps.theShopHas(int,java.lang.String)
+  ✔ When she orders 2 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
+  ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
+  ✔ And "Persuasion" has 0 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+expected: 6300
+ but was: 6400
+expected: 6300
+ but was: 6400
 ```
 
 The cross marks the sentence that failed, and under it AssertJ says what it expected and what came
-back. The step after it is marked with a curved arrow, **skipped**: once one step fails, Cucumber
+back. This time the count says `Failures: 1` rather than `Errors: 1`: a check that ran and did not
+hold, not a sentence nothing could run. The last four lines are Failsafe's summary saying the same
+thing twice more. The step after it is marked with a curved arrow, **skipped**: once one step fails, Cucumber
 runs nothing else in that scenario, because every later step assumed the earlier ones held. The
 other two scenarios are untouched, which is what keeping one `When` per scenario buys. The
 question the failure asks is still the conversation's: either the example was wrong or the code is.

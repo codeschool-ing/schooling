@@ -15,7 +15,7 @@ this section reads is the contract between the two, the text the bookshop serves
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | wc -l
-476
+466
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep -E "bookshop_orders|^hikaricp_connections_(active|pending)"
 # HELP bookshop_orders_total  
 # TYPE bookshop_orders_total counter
@@ -42,7 +42,7 @@ the name. A timer's count and sum are counters themselves:
 ```
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep -E "^http_server_requests_seconds_(count|sum)" | grep "/books\""
 http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 2
-http_server_requests_seconds_sum{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 0.124826278
+http_server_requests_seconds_sum{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 0.134895875
 ```
 
 ## A counter is read as a rate
@@ -56,13 +56,13 @@ orders in between, and the arithmetic is the same one Prometheus does:
 ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T
 bookshop_orders_total{outcome="out-of-stock"} 1.0
 bookshop_orders_total{outcome="placed"} 2.0
-20:21:57
+20:35:05
 ana@vm:~/bookshop$ for book in 4 4 4 4 4 4 3 3; do curl -s -o /dev/null -w '%{http_code} ' -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d "{\"lines\":[{\"bookId\":$book,\"quantity\":1}]}" localhost:8080/orders; done; echo
 201 201 201 201 201 409 409 409 
 ana@vm:~/bookshop$ sleep 15; curl -s localhost:8081/actuator/prometheus | grep "^bookshop_orders_total"; date +%T
 bookshop_orders_total{outcome="out-of-stock"} 4.0
 bookshop_orders_total{outcome="placed"} 7.0
-20:22:12
+20:35:20
 ```
 
 The eight codes in the middle say what happened: Persuasion had five copies, so its sixth order was
@@ -111,8 +111,12 @@ scrapes, from its own configuration, so a rule names one application.
 
 The fourth is the bookshop's own counter, and it is a different kind of alert. More than a fifth of
 orders refused for lack of stock, for half an hour, is a buying problem rather than an outage. It
-belongs in a ticket for whoever orders books, not on somebody's phone at three in the morning. The outage from the health section shows where a rule stops seeing. `GET /books` failed after five
-seconds and was recorded as a `401` with `outcome="CLIENT_ERROR"`, so the numerator of the second rule
-never moved. `up` stayed at 1, because the scrape still answered. Only the third rule would have
-fired, and only if the outage lasted two minutes with requests arriving. A rule is only as true as the
-numbers under it, which is reason enough to fix that error path.
+belongs in a ticket for whoever orders books, not on somebody's phone at three in the morning.
+
+Run the outage from the health section past these rules. `up` stayed at 1, because the management
+server kept answering the scrape, so the first rule is silent: the process was alive, and that is all
+it asks. The second fires. The client was told 401, but the timer recorded a `500` with
+`SERVER_ERROR`, and with every request that needs the database failing, the share is far above five
+per cent. The third fires too, if the outage lasts two minutes with requests arriving, because each of
+them waits five seconds for a connection. A rule is only as true as the numbers under it, and here the
+numbers were truer than the response the client got.

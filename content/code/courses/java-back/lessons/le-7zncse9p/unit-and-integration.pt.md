@@ -5,9 +5,9 @@ version: 1
 
 `OrderServiceTest` é um **teste de unidade**: uma classe, os colaboradores substituídos, nada fora da
 JVM, um segundo para rodar. Os próximos testes desta aula são **testes de integração**: o serviço real,
-os repositórios reais, Hibernate, Flyway e um PostgreSQL de verdade, conferidos juntos, porque as
-perguntas que eles respondem — esta consulta devolve o que o nome promete? as migrações produzem o
-esquema que as entidades esperam? — não têm resposta sem as peças reais. Eles levam segundos e precisam
+os repositórios reais, Hibernate, Flyway e um PostgreSQL de verdade, conferidos juntos. Esta consulta
+devolve o que o nome promete? As migrações produzem o esquema que as entidades esperam? Essas perguntas
+não têm resposta sem as peças reais. Eles levam segundos e precisam
 de um engine de contêineres na máquina.
 
 Mocks não os substituem. Um mock de `BookRepository` devolve o que o teste mandou, então um teste que

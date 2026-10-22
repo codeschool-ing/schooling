@@ -14,9 +14,9 @@ interface sendo um **agente Java**, e o Mockito virou um se anexando à própria
 execução. A mensagem dele diz que isso vai deixar de funcionar e pede que ele seja adicionado "as an
 agent to your build".
 
-**Depois falou a JVM.** As quatro linhas `WARNING:` são o lado do JDK no mesmo acontecimento, uma regra
-desde o JDK 21: um agente carregado numa JVM já em execução, em vez de nomeado quando ela inicia, é
-relatado, e uma versão futura vai recusá-lo, a menos que a JVM tenha iniciado com
+**Depois falou a JVM.** As quatro linhas `WARNING:` são o lado do JDK no mesmo acontecimento, e uma
+regra desde o JDK 21. Um agente carregado numa JVM já em execução, em vez de nomeado quando ela inicia,
+é relatado, e uma versão futura vai recusá-lo, a menos que a JVM tenha iniciado com
 `-XX:+EnableDynamicAgentLoading`. O caminho na primeira linha é o jar que fez o anexo, do Byte Buddy, a
 biblioteca com que o Mockito gera classes.
 
@@ -118,9 +118,9 @@ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader clas
 
 A mensagem do Mockito e os quatro avisos sumiram, porque nada mais se anexa: o agente estava lá desde a
 primeira instrução. **Uma linha fica, e ela é inofensiva.** O agente acrescenta classes ao boot class
-path, as classes que a JVM carrega antes de todas as outras, e o class data sharing da JVM, um cache de
-classes que ela mantém entre execuções para iniciar mais rápido, passa a cobrir menos delas. Os testes
-não percebem nada.
+path, as classes que a JVM carrega antes de todas as outras. O class data sharing da JVM, um cache de
+classes que ela mantém entre execuções para iniciar mais rápido, passa então a cobrir menos delas, e os
+testes não percebem a diferença.
 
 A outra saída, `-XX:+EnableDynamicAgentLoading` no mesmo `argLine`, só esconderia o aviso do JDK. O
 Mockito continuaria se anexando no meio da execução, que é exatamente o que o JDK anunciou que vai

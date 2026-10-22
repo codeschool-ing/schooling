@@ -1,0 +1,712 @@
+[
+  {
+    "id": "ex-4q9xwmzp",
+    "version": 1,
+    "section": "junit-platform",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The bookshop's tests run on JUnit 6.0.3, and most articles say \"JUnit 5\". What is the relation between the two?",
+    "choices": [
+      {
+        "text": "JUnit 6 is JUnit 4 under a new name, and the Jupiter API was dropped",
+        "correct": false,
+        "why": "No. JUnit 4 is the older API, `org.junit.Test`. The tests here import `org.junit.jupiter.api`, which is Jupiter, and Jupiter is what JUnit 6 kept."
+      },
+      {
+        "text": "JUnit 6 continues JUnit 5's Jupiter model: same packages, same annotations",
+        "correct": true,
+        "why": "Right. JUnit 6 kept the annotations of `org.junit.jupiter.api`, raised the minimum Java to 17 and put all its parts on one version number."
+      },
+      {
+        "text": "JUnit 5 and JUnit 6 are two engines that Spring Boot runs side by side on every build",
+        "correct": false,
+        "why": "No. The dependency tree shows one `junit-jupiter`, at 6.0.3. There is no separate JUnit 5 engine in the project."
+      },
+      {
+        "text": "JUnit 6 moved the annotations to a new package, so every JUnit 5 test needs its imports rewritten",
+        "correct": false,
+        "why": "No. The imports in `IsbnTest` are `org.junit.jupiter.api.Test` and friends, the same packages JUnit 5 introduced in 2017."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q2n3vs9",
+    "version": 1,
+    "section": "junit-platform",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece to what it does when you type `mvn test` in the bookshop.",
+    "pairs": [
+      {
+        "left": "maven-surefire-plugin",
+        "right": "finds the test classes by name and runs them in a JVM of its own"
+      },
+      {
+        "left": "the JUnit Platform",
+        "right": "discovers the tests and hands each one to an engine"
+      },
+      {
+        "left": "the Jupiter engine",
+        "right": "gives `@Test` and `@ParameterizedTest` their meaning"
+      },
+      {
+        "left": "spring-boot-starter-test",
+        "right": "brings JUnit, AssertJ and Mockito in the test scope"
+      }
+    ],
+    "right_distractors": [
+      "compiles the classes in src/test/java"
+    ]
+  },
+  {
+    "id": "ex-vk6mvj5k",
+    "version": 1,
+    "section": "junit-platform",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before this lesson, `mvn test` on the bookshop printed `No tests to run.` and then `BUILD SUCCESS`. What does that pair tell you?",
+    "hint": "Read the verdict and the line just before it separately.",
+    "choices": [
+      {
+        "text": "That surefire was missing from the pom and Maven skipped the phase",
+        "correct": false,
+        "why": "No. The line above it names `maven-surefire-plugin:3.5.6:test`: surefire ran, and found nothing to run."
+      },
+      {
+        "text": "That every test of the project passed",
+        "correct": false,
+        "why": "There were none. A success with no tests is not a statement about any code."
+      },
+      {
+        "text": "That a run with no tests counts as a success in Maven",
+        "correct": true,
+        "why": "Right. Nothing fails when nothing runs, which is why the misnamed class later in the lesson passes the build too."
+      },
+      {
+        "text": "That the JUnit engine refused the project because the starter was not there yet",
+        "correct": false,
+        "why": "No engine was involved. Without the starter, surefire had no JUnit Platform to hand anything to, and no test classes either."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7ed8v0t",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`IsbnTest` and its methods are declared without `public`. Why does that work?",
+    "choices": [
+      {
+        "text": "Jupiter reaches them by reflection, whatever their visibility",
+        "correct": true,
+        "why": "Right. JUnit 4 required `public`; Jupiter does not, so the tests can stay package-private."
+      },
+      {
+        "text": "Because Maven makes every class in src/test/java public when it compiles them",
+        "correct": false,
+        "why": "Maven compiles the sources as written. Visibility is the Java source's, and the test class stays package-private."
+      },
+      {
+        "text": "Because a test class in the same package as `Isbn` inherits its visibility",
+        "correct": false,
+        "why": "Classes do not inherit visibility from their neighbours. Sharing the package only lets the test see package-private members of `Isbn`."
+      },
+      {
+        "text": "It works only when the tests are run from an IDE, not from Maven",
+        "correct": false,
+        "why": "The lesson ran them from Maven: `Tests run: 3`. Surefire hands them to the same Platform an IDE uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-ycg0krzn",
+    "version": 1,
+    "section": "first-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test calls a method that throws `NullPointerException` before the test reaches its assertion. How does surefire report that test?",
+    "choices": [
+      {
+        "text": "Under Failures, because the test did not pass",
+        "correct": false,
+        "why": "Failures are assertions that did not hold. This test never reached its assertion."
+      },
+      {
+        "text": "Under Skipped, because the assertion never ran",
+        "correct": false,
+        "why": "Skipped is for a test that was deliberately not run. This one ran and threw."
+      },
+      {
+        "text": "As passed, because no assertion failed",
+        "correct": false,
+        "why": "A test passes only if nothing it calls throws. An exception escaping the test is never a pass."
+      },
+      {
+        "text": "Under Errors, and the build fails",
+        "correct": true,
+        "why": "Right. An error is any exception other than a failed assertion; it fails the build, and it says the code never got as far as answering."
+      }
+    ]
+  },
+  {
+    "id": "ex-wws4q10n",
+    "version": 1,
+    "section": "first-test",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Surefire runs a class only when its name matches an include pattern. Renamed `IsbnChecks`, the class compiled and nothing ran; renamed back to `Isbn___`, its three methods ran again.",
+    "hint": "The default patterns are four, and the bookshop's class names use one of them.",
+    "blanks": [
+      {
+        "accept": [
+          "Test"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4n0h3eve",
+    "version": 1,
+    "section": "first-test",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about the commands this section ran are true? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "`mvn -q test` printed nothing when every test passed",
+        "correct": true,
+        "why": "Right. `-q` keeps warnings and errors only, so a passing run leaves just the exit code."
+      },
+      {
+        "text": "`-Dtest='IsbnTest#refusesNull'` ran a single test",
+        "correct": true,
+        "why": "Right. `Tests run: 1`: the class, then one method after `#`."
+      },
+      {
+        "text": "`-q` skips the tests to make the build quicker",
+        "correct": false,
+        "why": "That is `-DskipTests`. `-q` only changes how much Maven prints; the tests ran and the exit code was 0."
+      },
+      {
+        "text": "After this lesson, a failing test also stops `mvn package` from building the jar",
+        "correct": true,
+        "why": "Right. `package` comes after `test` in the lifecycle, so the tests run first and a failure stops the build."
+      },
+      {
+        "text": "`-q` hides failing tests, so a broken build exits with 0",
+        "correct": false,
+        "why": "`-q` hides information messages, not errors: a failure is still printed and the exit code is still non-zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qtxgddm",
+    "version": 1,
+    "section": "parameterized",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test class has one method with `@ParameterizedTest` and `@ValueSource(ints = {1, 2, 3})`, one with `@ParameterizedTest` and a `@CsvSource` of four rows, and two plain `@Test` methods. What number does surefire print after `Tests run:` for this class?",
+    "hint": "Surefire counts invocations, not methods.",
+    "value": 9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-araywhzj",
+    "version": 1,
+    "section": "parameterized",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`refusesAnythingElse` carries `@ParameterizedTest(name = \"{1}: {0}\")` and takes `(String isbn, String reason)`. What does the pattern do?",
+    "choices": [
+      {
+        "text": "It tells `@CsvSource` to read the second column before the first",
+        "correct": false,
+        "why": "The columns go to the parameters in order whatever the pattern says: `isbn` is still the first column."
+      },
+      {
+        "text": "It renames the test method in surefire's XML report",
+        "correct": false,
+        "why": "The XML still says `refusesAnythingElse(String, String)[1]`. The pattern names the display name, not the method."
+      },
+      {
+        "text": "It names each invocation by the reason, then the ISBN",
+        "correct": true,
+        "why": "Right. `{1}` is the second argument and `{0}` the first, so the launcher printed `\"a hyphen\": \"978-6500000016\"`."
+      },
+      {
+        "text": "It makes the assertion print the reason when the test fails",
+        "correct": false,
+        "why": "The assertion is `assertFalse`, and its message is the same whatever the name; `reason` is never passed to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyj2eex4",
+    "version": 1,
+    "section": "parameterized",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says the `name` pattern on a parameterised test is useless, because `mvn test` never prints it. Which reply is accurate?",
+    "choices": [
+      {
+        "text": "Surefire does print it, as the test's name in the `Tests run` line",
+        "correct": false,
+        "why": "The `Tests run` line names the class, and the failure line names `acceptsAValidIsbn13(String)[3]`. The pattern was not in either."
+      },
+      {
+        "text": "It is right about surefire, and the names are for whatever shows JUnit's display names: an IDE's test window, or the console launcher",
+        "correct": true,
+        "why": "Right. Surefire reports by signature and index; the launcher and the IDEs show the names JUnit builds from the pattern."
+      },
+      {
+        "text": "The pattern also decides the order the invocations run in, so it is not useless",
+        "correct": false,
+        "why": "The invocations run in the order of the source's rows; the pattern only names them."
+      },
+      {
+        "text": "It is right, and the pattern only has an effect under JUnit 4",
+        "correct": false,
+        "why": "JUnit 4 had no `@ParameterizedTest`. The pattern is Jupiter's, and the launcher printed the names it builds."
+      }
+    ]
+  },
+  {
+    "id": "ex-fc1nhffr",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these lines of the failing run in the order surefire printed them, top to bottom.",
+    "hint": "The class line, then the detail, then the totals, then the verdict.",
+    "items": [
+      "Running com.example.bookshop.catalogue.IsbnTest",
+      "Tests run: 10, Failures: 1 ... <<< FAILURE! -- in com.example.bookshop.catalogue.IsbnTest",
+      "com.example.bookshop.catalogue.IsbnTest.acceptsAValidIsbn13(String)[3] ... <<< FAILURE!",
+      "org.opentest4j.AssertionFailedError: expected: <true> but was: <false>",
+      "Results:",
+      "BUILD FAILURE"
+    ]
+  },
+  {
+    "id": "ex-mk34dkj1",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the outer `% 10` removed, taking Frankenstein's `9786500000030` out of `@ValueSource` turned the run green. Why could none of the three remaining ISBNs catch the bug?",
+    "choices": [
+      {
+        "text": "Because the three remaining ISBNs are tested by `refusesAnythingElse`, which expects `false`",
+        "correct": false,
+        "why": "They are in `acceptsAValidIsbn13`, which expects `true`, and they still got `true` from the broken rule."
+      },
+      {
+        "text": "Because surefire stops comparing after the first ISBN that passes",
+        "correct": false,
+        "why": "Every invocation runs and reports on its own: the run said `Tests run: 9`."
+      },
+      {
+        "text": "Because their check digits are not 0, and the outer `% 10` only changes the result when the sum already ends in 0",
+        "correct": true,
+        "why": "Right. For any other sum, `10 - sum % 10` is already below 10 and the outer `% 10` leaves it alone, so both rules agree on those three."
+      },
+      {
+        "text": "Because `9780306406157` has a different prefix, so the rule treats it separately",
+        "correct": false,
+        "why": "The rule never looks at the prefix: it weighs all twelve digits the same way for every ISBN."
+      }
+    ]
+  },
+  {
+    "id": "ex-4az13mkp",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Keep the broken rule, `int check = 10 - sum % 10;`. How many of these five valid ISBNs does `Isbn.isValid` still accept: `9786500000016`, `9786500000023`, `9786500000030`, `9780306406157`, `9786500000160`?",
+    "hint": "Look only at the last digit of each.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-343519q6",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The failure said only `expected: <true> but was: <false>`. Why did it not name the ISBN that failed?",
+    "choices": [
+      {
+        "text": "Because surefire shortens every assertion message to its first few words",
+        "correct": false,
+        "why": "Surefire printed AssertJ's messages over several lines later in the lesson. It prints what the assertion gives it."
+      },
+      {
+        "text": "Because `assertTrue` receives only a boolean and has nothing else to report",
+        "correct": true,
+        "why": "Right. The ISBN was gone by the time `assertTrue` was called; the index `[3]` in the test's name is what pointed at it."
+      },
+      {
+        "text": "Because JUnit hides test arguments from the output unless a flag enables them",
+        "correct": false,
+        "why": "No flag is involved. The launcher showed the arguments in the names without being asked; the assertion never had them."
+      },
+      {
+        "text": "Because the message is inverted: the rule returned true and the test expected false",
+        "correct": false,
+        "why": "The test is `acceptsAValidIsbn13`, which expects `true`; the broken rule returned `false` for Frankenstein."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0na8b6d",
+    "version": 1,
+    "section": "fixtures-and-assertj",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "JUnit runs the three tests of `BookTest.Take`. How many instances of `BookTest` does it create?",
+    "choices": [
+      {
+        "text": "One, shared by the three tests",
+        "correct": false,
+        "why": "That is TestNG's model. Jupiter's default is a new instance per test method."
+      },
+      {
+        "text": "Three, one for each test",
+        "correct": true,
+        "why": "Right. Each test gets a new `BookTest` and a new `Take` inside it, and `@BeforeEach` runs on each."
+      },
+      {
+        "text": "None, because the tests are in the nested class",
+        "correct": false,
+        "why": "`Take` is an inner class, and an inner instance cannot exist without an outer one."
+      },
+      {
+        "text": "Six, two for each test",
+        "correct": false,
+        "why": "Two objects per test, yes, but only one of them is a `BookTest`; the other is a `Take`."
+      }
+    ]
+  },
+  {
+    "id": "ex-87gy9f31",
+    "version": 1,
+    "section": "fixtures-and-assertj",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `@BeforeAll` and a `static` book, two of the three `take` tests failed. What was wrong?",
+    "choices": [
+      {
+        "text": "`take` itself, which only fails when the book is static",
+        "correct": false,
+        "why": "`Book.take` was unchanged and passed under `@BeforeEach`. The tests shared one book, which is a property of the test, not of the code."
+      },
+      {
+        "text": "`@BeforeAll` ran after the tests instead of before them",
+        "correct": false,
+        "why": "It ran once, before all of them, which is the problem: one book for three tests that each change it."
+      },
+      {
+        "text": "The two failing tests, whose expectations were written for a different book",
+        "correct": false,
+        "why": "Their expectations are right for a book with two copies. They received a book somebody else had already emptied."
+      },
+      {
+        "text": "The fixture: one shared book, emptied by `lowersTheStock` first",
+        "correct": true,
+        "why": "Right. `but was: <0>` and `Only 0 of 'Dom Casmurro' left` are both the trace of the first test's `take(2)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nxmmzc9n",
+    "version": 1,
+    "section": "fixtures-and-assertj",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about AssertJ, as `OrderTest` uses it, are true? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "`assertThat` starts from the actual value, and the method after it states what is expected",
+        "correct": true,
+        "why": "Right. `assertThat(order.totalCents()).isEqualTo(11670)` reads actual, then expected."
+      },
+      {
+        "text": "`containsExactly(2, 1)` fails if the quantities are right but in another order",
+        "correct": true,
+        "why": "Right. The detour with `(1, 2)` failed on both positions."
+      },
+      {
+        "text": "Its failure message showed both lists and each index where they differed",
+        "correct": true,
+        "why": "Right. That is the reason the lesson gives for preferring it on collections."
+      },
+      {
+        "text": "Using AssertJ means JUnit's engine is no longer needed to run the test",
+        "correct": false,
+        "why": "AssertJ is only assertions. `OrderTest` still has `@Test`, and the Jupiter engine still runs it."
+      },
+      {
+        "text": "`isEqualTo` compares two `int` values with `==` on their references",
+        "correct": false,
+        "why": "An `int` has no reference. `isEqualTo` compares values, and the message showed `expected: 11680` and `but was: 11670`."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbgk7cqr",
+    "version": 1,
+    "section": "fixtures-and-assertj",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A run of the whole project prints `Tests run: 3 ... -- in take` and then `Tests run: 0 ... -- in com.example.bookshop.catalogue.BookTest`. What happened to `BookTest`?",
+    "choices": [
+      {
+        "text": "They ran in the nested class, which surefire reports as `take`",
+        "correct": true,
+        "why": "Right. The outer class has no test methods of its own, so it reports zero; the total at the bottom still counts 15."
+      },
+      {
+        "text": "Its tests were discovered but skipped, because `@DisplayName` disables a class",
+        "correct": false,
+        "why": "A skipped test is counted under `Skipped`, which says 0. `@DisplayName` only names."
+      },
+      {
+        "text": "Its tests ran twice, once as `take` and once as `BookTest`",
+        "correct": false,
+        "why": "The total is 15, which is 2 + 3 + 10: each test of `take` counted once."
+      },
+      {
+        "text": "Its name does not end in `Test`, so surefire ignored it",
+        "correct": false,
+        "why": "`BookTest` ends in `Test`, and surefire did run it: `Running com.example.bookshop.catalogue.BookTest`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc8rzf25",
+    "version": 1,
+    "section": "fixtures-and-assertj",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `BookTest`, the method that builds a new book with two copies before every test is annotated `@___`.",
+    "blanks": [
+      {
+        "accept": [
+          "BeforeEach",
+          "@BeforeEach"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-trm3g0wy",
+    "version": 1,
+    "section": "testng",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ShelfTest` calls `assertEquals(shelf.count(\"Dom Casmurro\"), 2)` from `org.testng.Assert`. Which argument is which?",
+    "choices": [
+      {
+        "text": "The first is expected and the second actual, as in JUnit",
+        "correct": false,
+        "why": "That is JUnit's order. TestNG's is the reverse, which is why a line copied between them blames the wrong side."
+      },
+      {
+        "text": "The order does not matter, because the two values are only compared",
+        "correct": false,
+        "why": "The comparison does not care; the message does. The run said `expected [3] but found [2]` because the arguments were in TestNG's order."
+      },
+      {
+        "text": "The first is actual and the second expected",
+        "correct": true,
+        "why": "Right. TestNG puts the actual value first, the reverse of JUnit's `assertEquals`."
+      },
+      {
+        "text": "The first is the message to print and the second the value to check",
+        "correct": false,
+        "why": "The message is an optional third argument in TestNG; both of these are values."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn360sx9",
+    "version": 1,
+    "section": "testng",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`takesOne` has `dependsOnMethods = \"addsCopies\"`. When `addsCopies` failed, what did TestNG do with `takesOne`?",
+    "choices": [
+      {
+        "text": "Ran it on a fresh `Shelf`, so it failed with an exception",
+        "correct": false,
+        "why": "TestNG keeps one instance per class, and it did not run `takesOne` at all: `Skipped: 1`."
+      },
+      {
+        "text": "Skipped it, and the result file marked it `SKIP`",
+        "correct": true,
+        "why": "Right. A test whose dependency failed is not run, so the report has one failure instead of two."
+      },
+      {
+        "text": "Ran it anyway and counted it as a second failure",
+        "correct": false,
+        "why": "The summary said `Failures: 1`; the second test was `SKIP`, not `FAIL`."
+      },
+      {
+        "text": "Ran it first, because a dependency reverses the order",
+        "correct": false,
+        "why": "A dependency puts the depended-on method first; `takesOne` waits for `addsCopies`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7eqdfsc8",
+    "version": 1,
+    "section": "testng",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a Spring Boot project like the bookshop use JUnit rather than TestNG?",
+    "choices": [
+      {
+        "text": "Because TestNG cannot run on Java 25",
+        "correct": false,
+        "why": "`~/testng-look` built and ran six tests on the same JDK 25."
+      },
+      {
+        "text": "Because Spring has no support for TestNG at all",
+        "correct": false,
+        "why": "Spring supports it through `AbstractTestNGSpringContextTests`; it is the less travelled road, not a closed one."
+      },
+      {
+        "text": "Because JUnit has features TestNG lacks, such as data providers and groups",
+        "correct": false,
+        "why": "Those are TestNG's features; Jupiter has its own versions of them. The choice is not about features."
+      },
+      {
+        "text": "Because the starter brings Jupiter, and Boot's test annotations are Jupiter extensions that a TestNG class does not read",
+        "correct": true,
+        "why": "Right. `@SpringBootTest` carries `@ExtendWith(SpringExtension.class)`, which only Jupiter reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2br26qb",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each TestNG feature from `~/testng-look` to what a JUnit Jupiter project uses for the same job.",
+    "pairs": [
+      {
+        "left": "@Test(groups = \"stress\")",
+        "right": "@Tag(\"stress\") on the test"
+      },
+      {
+        "left": "@DataProvider",
+        "right": "@ParameterizedTest with a source such as @CsvSource"
+      },
+      {
+        "left": "<exclude name=\"stress\"/> in testng.xml",
+        "right": "-DexcludedGroups=stress on the Maven command line"
+      },
+      {
+        "left": "dependsOnMethods",
+        "right": "nothing: Jupiter's tests are meant to be independent"
+      }
+    ],
+    "right_distractors": [
+      "@Nested with @DisplayName"
+    ]
+  },
+  {
+    "id": "ex-7r7xqnx6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate adds `src/test/java/com/example/bookshop/ordering/PriceRules.java` with five `@Test` methods. For weeks `mvn package` is green, and then a pricing bug those tests would have caught reaches production. What is the most likely reason?",
+    "hint": "Compare the class name with the four patterns surefire uses by default.",
+    "choices": [
+      {
+        "text": "The `test` scope keeps classes in src/test/java out of the build",
+        "correct": false,
+        "why": "The scope is about dependencies. Classes in src/test/java are compiled, and the build compiled `IsbnChecks` the same way."
+      },
+      {
+        "text": "Surefire never ran it: the name matches no include pattern",
+        "correct": true,
+        "why": "Right. The class compiles and nothing runs it, and a run with nothing in it is a success."
+      },
+      {
+        "text": "`mvn package` does not run tests unless `-Dtest` names them",
+        "correct": false,
+        "why": "`package` comes after `test` in the lifecycle, and runs every class surefire's patterns select."
+      },
+      {
+        "text": "The tests passed because AssertJ was missing from the classpath",
+        "correct": false,
+        "why": "A missing library fails compilation, which would have turned the build red."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvnk0zfe",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`ShelfTest` is ported to JUnit Jupiter: `org.testng` imports become Jupiter's, the `dependsOnMethods` attributes are dropped, and the field `private final Shelf shelf = new Shelf();` stays. Whatever order JUnit picks, what happens to `takesOne`?",
+    "choices": [
+      {
+        "text": "It passes if JUnit happens to run `addsCopies` first, and fails otherwise",
+        "correct": false,
+        "why": "Order would matter if the instance were shared. In Jupiter `takesOne` has its own `ShelfTest`, so `addsCopies` never touches its shelf."
+      },
+      {
+        "text": "It is skipped, because JUnit sees that it needs `addsCopies`",
+        "correct": false,
+        "why": "Nothing tells JUnit that any more; the attribute was dropped, and Jupiter has no such skip."
+      },
+      {
+        "text": "It passes, because the field is initialised once for the whole class",
+        "correct": false,
+        "why": "That is TestNG's model. Jupiter builds a new instance, and so a new empty `Shelf`, for every test."
+      },
+      {
+        "text": "Errors: its own empty shelf makes `take` throw `IllegalStateException`",
+        "correct": true,
+        "why": "Right. A fresh instance means a fresh empty shelf, and an exception other than a failed assertion is an error."
+      }
+    ]
+  }
+]

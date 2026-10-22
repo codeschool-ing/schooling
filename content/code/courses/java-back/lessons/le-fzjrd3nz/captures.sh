@@ -25,10 +25,11 @@
 # interface's mono font does not have, so the transcript of the undefined step
 # selects the snippet with a visible grep rather than showing that line.
 #
-# Maven 3.8.7 colours its own lines even with no terminal attached; capture.sh
-# strips that colour after the command, so a pattern a lesson types never
-# anchors on the end of a coloured line. Cucumber's colours are off in the
-# runner itself (cucumber.ansi-colors.disabled), which the lesson explains.
+# Maven 3.8.7 colours its own lines even with no terminal attached, and
+# capture.sh strips colour only after the command, so a grep the student types
+# would miss coloured lines: the lesson's commands use -B, which turns Maven's
+# colours off, and say so. Cucumber's colours are off in the runner itself
+# (cucumber.ansi-colors.disabled), which the lesson also explains.
 #
 # Run as root. Timestamps, PIDs, ports and durations differ on every run.
 #
@@ -62,10 +63,10 @@ block tree
 run "mvn dependency:tree | grep -E 'cucumber-(java|spring|junit)|junit-platform-suite:'"
 
 block run
-run "mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'"
+run "mvn -B verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'"
 
 block shared
-run "mvn verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'"
+run "mvn -B verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'"
 
 # --- a step nobody wrote code for -----------------------------------------------
 ADDED='    And she receives an e-mail confirming the order'
@@ -73,13 +74,13 @@ grep -qxF "$ADDED" a-step-with-no-code.md || { echo '!!! the added line is not i
 edit $FEATURE "$(printf '    And "The War of the Worlds" has 3 copies left\n')" \
   "$(printf '    And "The War of the Worlds" has 3 copies left\n%s\n' "$ADDED")"
 block undefined
-run "mvn verify -Dit.test=CucumberIT | grep -A 8 UndefinedStepException"
+run "mvn -B verify -Dit.test=CucumberIT | grep -E -A 8 'Tests run:.*Cucumber|UndefinedStepException'"
 restore $FEATURE
 
 # --- a step that fails ------------------------------------------------------------
 edit $FEATURE 'total of 6400 cents' 'total of 6300 cents'
 block failing
-run "mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|expected:|but was:'"
+run "mvn -B verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|expected:|but was:|Tests run:.*Cucumber'"
 restore $FEATURE
 
 # --- what the lesson shows is what the stage holds ---------------------------------

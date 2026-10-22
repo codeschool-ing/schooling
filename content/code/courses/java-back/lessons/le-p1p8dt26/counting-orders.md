@@ -28,11 +28,8 @@ Replace `src/main/java/com/example/bookshop/ordering/OrderService.java`:
       "code": "import org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\nimport org.springframework.stereotype.Service;\nimport org.springframework.transaction.annotation.Transactional;\n\nimport com.example.bookshop.catalogue.Book;\nimport com.example.bookshop.catalogue.BookNotFoundException;\nimport com.example.bookshop.catalogue.BookRepository;\n\n@Service\npublic class OrderService {\n\n    private static final Logger log = LoggerFactory.getLogger(OrderService.class);\n\n    private final BookRepository books;\n    private final OrderRepository orders;\n    private final Clock clock;"
     },
     {
-      "code": "    private final Counter placed;\n    private final Counter refused;",
+      "code": "    private final Counter placed;\n    private final Counter refused;\n",
       "note": "Two counters, held in fields so that recording costs one method call."
-    },
-    {
-      "code": ""
     },
     {
       "code": "    public OrderService(BookRepository books, OrderRepository orders, Clock clock, MeterRegistry meters) {\n        this.books = books;\n        this.orders = orders;\n        this.clock = clock;",

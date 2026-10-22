@@ -4,15 +4,15 @@ version: 1
 ---
 
 Os testes até aqui não precisam de nada além de um JDK. Os próximos precisam de um PostgreSQL 16 de
-verdade, e não o que a aula 9 instalou: aquele banco guarda o que você fez nele à mão por último, e um
+verdade, e não o que a aula 9 instalou. Aquele banco guarda o que você fez nele à mão por último, e um
 teste que passa por causa de uma linha que você inseriu na terça passada não prova nada. **O
 Testcontainers sobe um banco novo num contêiner a cada execução dos testes e o joga fora depois**, e
 para isso a máquina precisa de um engine de contêineres. Este curso usa o **Docker Engine**, o daemon de
 código aberto da Docker, e o comando `docker`, que conversa com ele.
 
 Um **contêiner** é um processo que o engine inicia com um sistema de arquivos próprio, desempacotado de
-uma **imagem**, e isolado do resto da máquina: ele enxerga os próprios arquivos, os próprios processos e
-o próprio endereço de rede. Uma imagem do PostgreSQL 16 contém o servidor e tudo de que ele precisa,
+uma **imagem**. Ele fica isolado do resto da máquina e enxerga os próprios arquivos, os próprios
+processos e o próprio endereço de rede. Uma imagem do PostgreSQL 16 contém o servidor e tudo de que ele precisa,
 então um contêiner criado a partir dela é um servidor de banco que existe enquanto durar a execução dos
 testes. A aula 1 já usou isso uma vez, como uma máquina limpa criada em uma linha, para mostrar o que um
 Ubuntu recém-instalado diz quando falta o Java.
@@ -147,7 +147,7 @@ For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
 
-**`hello-world` é o menor teste que vai até o fim**: o engine não tinha a imagem, buscou-a no Docker
-Hub, criou um contêiner a partir dela e o executou, e o programa do contêiner imprimiu o texto, que
+**`hello-world` é o menor teste que vai até o fim.** O engine não tinha a imagem, então a buscou no
+Docker Hub, criou um contêiner a partir dela e o executou. O programa do contêiner imprimiu o texto, que
 descreve o caminho que acabou de fazer. O `--rm` removeu o contêiner quando ele terminou. O
 Testcontainers faz as mesmas quatro coisas para cada banco que sobe, pelo mesmo socket.
