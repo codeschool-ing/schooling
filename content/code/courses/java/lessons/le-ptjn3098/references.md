@@ -51,7 +51,7 @@ set through `b`. There was only ever one `new` before that line, so there was on
 ## `==` asks whether two references lead to one object
 
 `a == b` is `true` because both lead to the same object. `a == c` is `false` even though `c` holds
-the same title: `c` came from a second `new`, so it is a second object. **For references, `==`
+the same title, because `c` came from a second `new`, so it is a second object. **For references, `==`
 compares identity, never contents.** To compare contents you ask the objects, with a method;
 `a.title.equals(c.title)` compared the two strings character by character and said `true`. Lesson 7
 met the same rule for strings, and lesson 24 writes an `equals` for `Book` itself.

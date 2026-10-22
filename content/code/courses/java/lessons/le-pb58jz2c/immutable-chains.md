@@ -41,7 +41,7 @@ The first chain did what it says: three weeks and a day after 9 October is 31 Oc
 holds the result. `lent` still says the 9th, because `plusWeeks` never touched it.
 
 **The renewal is the bug.** `due.plusDays(7)` computed 7 November, returned it, and the program threw
-it away, because nothing was assigned. `due` still says 31 October. The same happened to the title:
+it away, because nothing was assigned. `due` still says 31 October. The same happened to the title, where
 `toUpperCase()` built `IRACEMA` and the line discarded it, so `iracema` printed. The compiler said
 nothing about either, since calling a method and ignoring its result is legal Java. **The fix is the
 assignment the reader assumed was there**: `due = due.plusDays(7);`.
