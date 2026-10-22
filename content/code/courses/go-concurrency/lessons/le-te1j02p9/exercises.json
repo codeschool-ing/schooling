@@ -1,0 +1,479 @@
+[
+  {
+    "id": "ex-86f3waay",
+    "version": 1,
+    "section": "rendezvous",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `meet.go` the sender reached `ch <- \"ping\"` at 0 ms on an unbuffered channel, and the receiver arrived at 300 ms. When did the send return?",
+    "hint": "An unbuffered channel has no room for the value.",
+    "choices": [
+      {
+        "text": "At 0 ms, leaving the value in the channel",
+        "correct": false,
+        "why": "There is nowhere in an unbuffered channel to leave it."
+      },
+      {
+        "text": "At 300 ms, when the value was taken",
+        "correct": true,
+        "why": "Right. The send waits for the receiver; that meeting is the rendezvous."
+      },
+      {
+        "text": "Never: the program deadlocked",
+        "correct": false,
+        "why": "The receiver did come, so both moved on at 300 ms."
+      },
+      {
+        "text": "At 600 ms, after a second round trip",
+        "correct": false,
+        "why": "There is one crossing and no acknowledgement travelling back."
+      }
+    ]
+  },
+  {
+    "id": "ex-36wtnbn2",
+    "version": 1,
+    "section": "rendezvous",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run of `meet.go`, `receiver: got ping` printed before `sender: the send returned`, both at 300ms. On another run, may the two lines swap?",
+    "hint": "What is promised is about the value crossing, not about the next `Println`.",
+    "choices": [
+      {
+        "text": "Yes: after the handoff the two are independent again",
+        "correct": true,
+        "why": "Right. Each line only waits for the crossing, not for the other goroutine's print."
+      },
+      {
+        "text": "No: the receiver's line always comes first",
+        "correct": false,
+        "why": "Nothing orders the two prints after the crossing."
+      },
+      {
+        "text": "No: the sender's line always comes first, as it sent first",
+        "correct": false,
+        "why": "In the captured run it came second, which already rules this out."
+      },
+      {
+        "text": "Only with the race detector on",
+        "correct": false,
+        "why": "There is no race here; the order of two independent prints is simply open."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw9hrd20",
+    "version": 1,
+    "section": "rendezvous",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A worker sends `\"done\"` on an unbuffered channel when it finishes. When the send returns, what does the worker know that it would not know with a buffered channel?",
+    "hint": "Section 03 lists what a buffer removes.",
+    "choices": [
+      {
+        "text": "That the channel has been closed",
+        "correct": false,
+        "why": "Nothing about a send says anything about a close."
+      },
+      {
+        "text": "That no other goroutine is running",
+        "correct": false,
+        "why": "Other goroutines may run freely; the send concerns two of them."
+      },
+      {
+        "text": "That a receiver has taken the message",
+        "correct": true,
+        "why": "Right. A buffered send that returns only says the value is in the buffer."
+      },
+      {
+        "text": "That the receiver has finished handling the message",
+        "correct": false,
+        "why": "It knows the value was received, not what the receiver did with it afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3hp2jtg",
+    "version": 1,
+    "section": "buffers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`buffered.go` sent into `make(chan int, 3)` with nobody receiving until 300 ms. How many sends returned at 0 ms?",
+    "hint": "As many as the buffer holds.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "sends"
+  },
+  {
+    "id": "ex-4aq7na8w",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `buffered.go` the fourth send returned at 300 ms. What freed it?",
+    "hint": "Look at the line printed just before it.",
+    "choices": [
+      {
+        "text": "The buffer grew to hold four",
+        "correct": false,
+        "why": "A channel's capacity is fixed when it is made; `cap` printed 3 throughout."
+      },
+      {
+        "text": "The receiver took `1`, freeing a slot",
+        "correct": true,
+        "why": "Right: `received 1` at 300 ms, then `sent 4` at once, with `len` back at 3."
+      },
+      {
+        "text": "The sender's goroutine was preempted after 300 ms",
+        "correct": false,
+        "why": "Preemption hands over a processor; it cannot make room in a channel."
+      },
+      {
+        "text": "The `close(ch)` at the end of the loop",
+        "correct": false,
+        "why": "The close comes after the fifth send, and a close never frees room."
+      }
+    ]
+  },
+  {
+    "id": "ex-gasm87c0",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A producer makes 1,000 items a second and the consumer handles 800. Someone raises the buffer from 100 to 10,000. What happens?",
+    "hint": "A buffer absorbs a burst; what about a difference that lasts?",
+    "choices": [
+      {
+        "text": "The consumer speeds up to keep the buffer from filling",
+        "correct": false,
+        "why": "A buffer changes nothing about how fast the consumer works."
+      },
+      {
+        "text": "The mismatch is gone, since the buffer is now large enough",
+        "correct": false,
+        "why": "200 items a second pile up whatever the size; a larger buffer only fills later."
+      },
+      {
+        "text": "It fills later, at about 50 s, and then sends block again",
+        "correct": true,
+        "why": "Right. The surplus of 200 a second fills 10,000 slots in 50 s; then sends block, as before."
+      },
+      {
+        "text": "The program deadlocks when the buffer fills",
+        "correct": false,
+        "why": "The consumer is still receiving, so a full buffer slows the producer rather than stopping everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8spkjr7",
+    "version": 1,
+    "section": "buffers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each channel state with what a send does in it.",
+    "hint": "Only room decides, unless nobody has room for it.",
+    "pairs": [
+      {
+        "left": "unbuffered, receiver waiting",
+        "right": "returns as the value crosses"
+      },
+      {
+        "left": "unbuffered, no receiver yet",
+        "right": "waits for a receiver"
+      },
+      {
+        "left": "buffered, `len` below `cap`",
+        "right": "returns at once"
+      },
+      {
+        "left": "buffered, `len` equal to `cap`",
+        "right": "waits for a free slot"
+      }
+    ],
+    "right_distractors": [
+      "panics"
+    ]
+  },
+  {
+    "id": "ex-hy4efj0k",
+    "version": 1,
+    "section": "deadlock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`stuck.go` ended with `goroutine 1 [chan send]`. What does the bracketed part tell you?",
+    "hint": "Each goroutine in a deadlock report carries one.",
+    "choices": [
+      {
+        "text": "The type of the channel involved",
+        "correct": false,
+        "why": "The type was `chan int`; the brackets say what the goroutine was doing."
+      },
+      {
+        "text": "How long the goroutine had been blocked",
+        "correct": false,
+        "why": "A duration appears in some reports, but `chan send` is an operation, not a time."
+      },
+      {
+        "text": "That the channel had been closed",
+        "correct": false,
+        "why": "Sending on a closed channel panics with its own message. This one was open."
+      },
+      {
+        "text": "What it was waiting to do: send on a channel",
+        "correct": true,
+        "why": "Right, at line 8, `ch <- 42`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxjwvjj0",
+    "version": 1,
+    "section": "deadlock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Changing `make(chan int)` to `make(chan int, 1)` made `stuck.go` print 42. A colleague concludes buffered channels cannot deadlock. What is wrong with that?",
+    "hint": "What if the program sent two values before receiving?",
+    "choices": [
+      {
+        "text": "Nothing: a buffer removes the need for a receiver",
+        "correct": false,
+        "why": "It removes it only until the buffer is full."
+      },
+      {
+        "text": "A second send before the receive would block",
+        "correct": true,
+        "why": "Right. A buffer moves the point where a program deadlocks; it does not decide whether it does."
+      },
+      {
+        "text": "Buffered channels deadlock more often than unbuffered ones",
+        "correct": false,
+        "why": "The lesson makes no such comparison; the size only moves where blocking starts."
+      },
+      {
+        "text": "`go vet` would have flagged the buffered version",
+        "correct": false,
+        "why": "`go vet` passed the unbuffered one too; it cannot see this."
+      }
+    ]
+  },
+  {
+    "id": "ex-cwfmw928",
+    "version": 1,
+    "section": "deadlock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`partial.go` left a goroutine stuck on a send for its whole run, yet it exited with status 0 and no error. Why did the runtime say nothing?",
+    "hint": "When exactly does the deadlock check fire?",
+    "choices": [
+      {
+        "text": "The goroutine was not counted by `NumGoroutine`",
+        "correct": false,
+        "why": "It was: the count was 2 each time."
+      },
+      {
+        "text": "A send inside a goroutine is never checked",
+        "correct": false,
+        "why": "The check is about all goroutines together, wherever the send is."
+      },
+      {
+        "text": "`main` was asleep, not blocked",
+        "correct": true,
+        "why": "Right. The check fires only when every goroutine is blocked."
+      },
+      {
+        "text": "The comment on the send told the compiler to ignore it",
+        "correct": false,
+        "why": "Comments mean nothing to the compiler or the runtime."
+      }
+    ]
+  },
+  {
+    "id": "ex-98r5cx3p",
+    "version": 1,
+    "section": "deadlock",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When every goroutine in a program is blocked, the runtime stops it with `fatal error: all goroutines are asleep - ___!`",
+    "hint": "The word the lesson is named after.",
+    "blanks": [
+      {
+        "accept": [
+          "deadlock"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-sw0s3nbh",
+    "version": 1,
+    "section": "deadlock",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`partial.go` printed `goroutines alive: 2` three times. How many of those two goroutines were stuck for good?",
+    "hint": "One of the two is `main`.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "goroutines"
+  },
+  {
+    "id": "ex-z3tyrn32",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines of the `buffered.go` run in the order they were printed.",
+    "hint": "Three sends first, then the receiver frees one slot at a time.",
+    "items": [
+      "sent 3, len 3 of cap 3",
+      "received 1",
+      "sent 4, len 3 of cap 3",
+      "received 2",
+      "sent 5, len 3 of cap 3"
+    ]
+  },
+  {
+    "id": "ex-ttv0qa5k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler starts a goroutine that sends its result on `ch := make(chan Result)`, then returns early on an error without receiving. The server runs for weeks. What happens on each such error?",
+    "hint": "This is `partial.go` inside a program that never ends.",
+    "choices": [
+      {
+        "text": "The runtime reports a deadlock on the first one",
+        "correct": false,
+        "why": "Other goroutines are alive and serving, so the check never fires."
+      },
+      {
+        "text": "The send panics once the handler has returned",
+        "correct": false,
+        "why": "Nothing closes the channel; the send simply waits."
+      },
+      {
+        "text": "The goroutine is collected when the handler returns",
+        "correct": false,
+        "why": "A blocked goroutine is never collected; it holds its stack and everything it refers to."
+      },
+      {
+        "text": "One more goroutine stays stuck, silently, and memory grows",
+        "correct": true,
+        "why": "Right. A leak, lesson 6's subject; a buffer of one would let that send complete."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkbjyg43",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do `len(ch)` and `cap(ch)` report for a buffered channel?",
+    "hint": "`sent 2, len 2 of cap 3`.",
+    "choices": [
+      {
+        "text": "Values sent so far, and values received so far",
+        "correct": false,
+        "why": "Neither counts history. `buffered.go` sent five, and `len` never passed 3."
+      },
+      {
+        "text": "Values waiting in the buffer, and its size",
+        "correct": true,
+        "why": "Right. `cap` is fixed when the channel is made; `len` moves as values go in and out."
+      },
+      {
+        "text": "Goroutines waiting to send, and goroutines waiting to receive",
+        "correct": false,
+        "why": "Neither counts goroutines; `runtime.NumGoroutine` does that, for the whole program."
+      },
+      {
+        "text": "The size of one element in bytes, and the buffer's size in bytes",
+        "correct": false,
+        "why": "Both count values, not bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-fcp7za8j",
+    "version": 1,
+    "section": "rendezvous",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For the 300 ms that `meet.go`'s sender waited on its send, what was its goroutine doing?",
+    "hint": "Compare with a goroutine in `time.Sleep`.",
+    "choices": [
+      {
+        "text": "Checking the channel in a loop, using a processor",
+        "correct": false,
+        "why": "A blocked send does not spin; the scheduler parks the goroutine."
+      },
+      {
+        "text": "Holding the channel locked so the receiver could not use it",
+        "correct": false,
+        "why": "The receiver used it the moment it arrived."
+      },
+      {
+        "text": "Nothing: it was parked, using no processor",
+        "correct": true,
+        "why": "Right, exactly like a goroutine in `time.Sleep`."
+      },
+      {
+        "text": "Copying the value into a buffer the runtime made for it",
+        "correct": false,
+        "why": "An unbuffered channel gets no hidden buffer; the value crosses at the meeting."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdnf5gfq",
+    "version": 1,
+    "section": "deadlock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two goroutines each send on an unbuffered channel the other one is supposed to receive from, and each sends before it receives. Nothing else runs. What happens?",
+    "hint": "Each send waits for a receiver that is itself waiting to send.",
+    "choices": [
+      {
+        "text": "One of the two wins and the other follows",
+        "correct": false,
+        "why": "Neither can win: each send needs the other goroutine to be at its receive, and neither ever gets there."
+      },
+      {
+        "text": "A fatal deadlock error, if `main` is blocked too",
+        "correct": true,
+        "why": "Right. Both are in `[chan send]`; if nothing else can move, the runtime stops the program."
+      },
+      {
+        "text": "The values cross in both directions at once",
+        "correct": false,
+        "why": "A send and a receive must meet on the same channel; two sends do not meet each other."
+      },
+      {
+        "text": "A panic: send on a channel with no receiver",
+        "correct": false,
+        "why": "There is no such panic; a send without a receiver waits."
+      }
+    ]
+  }
+]

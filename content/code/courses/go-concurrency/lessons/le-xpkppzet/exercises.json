@@ -1,0 +1,505 @@
+[
+  {
+    "id": "ex-5c0ev1qs",
+    "version": 1,
+    "section": "how-they-leak",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a goroutine end in Go?",
+    "hint": "Section 02 says there is no handle to kill.",
+    "choices": [
+      {
+        "text": "Another goroutine stops it through its handle",
+        "correct": false,
+        "why": "Go gives you no handle on a goroutine at all, so there is nothing to stop it through."
+      },
+      {
+        "text": "Its function returns",
+        "correct": true,
+        "why": "Right. Returning is the one way out, which is why a goroutine blocked forever is a goroutine forever."
+      },
+      {
+        "text": "The garbage collector frees it once nothing refers to it",
+        "correct": false,
+        "why": "The collector frees memory, not goroutines. The leak profile can report a stuck one; it does not end it."
+      },
+      {
+        "text": "It times out after a while with no work",
+        "correct": false,
+        "why": "There is no such timeout. The leaked goroutines of `first.go` waited for the whole run."
+      }
+    ]
+  },
+  {
+    "id": "ex-24p3cv94",
+    "version": 1,
+    "section": "how-they-leak",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`first.go` reported 3 goroutines after one call and 203 after a hundred more. How many goroutines does each call to `first` leave behind?",
+    "hint": "Take `main` away, then divide.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "goroutines"
+  },
+  {
+    "id": "ex-zpxfeq4k",
+    "version": 1,
+    "section": "how-they-leak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `first.go`, why are the goroutines for servers 2 and 3 stuck, while server 1's goroutine finished?",
+    "hint": "Who is receiving on `ch` when each of them sends?",
+    "choices": [
+      {
+        "text": "Servers 2 and 3 sleep for ever, so they never reach the send",
+        "correct": false,
+        "why": "They sleep 20 and 30 milliseconds. The sleep ends; the send after it never does."
+      },
+      {
+        "text": "Their sends have no receiver, because `first` has already returned",
+        "correct": true,
+        "why": "Right. An unbuffered send waits for a receiver, and the only one has gone."
+      },
+      {
+        "text": "The channel was closed after the first answer",
+        "correct": false,
+        "why": "Nothing closes `ch`. A send on a closed channel would panic, not wait."
+      },
+      {
+        "text": "Three goroutines cannot share one channel",
+        "correct": false,
+        "why": "Any number of goroutines may send on one channel; that part of the design is fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-hsm6gnbn",
+    "version": 1,
+    "section": "how-they-leak",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`early.go` ran `process` 100 times, 50 of them with an empty line, and ended with 51 goroutines. Which line's absence on the error path caused it?",
+    "hint": "What ends a `for range` over a channel?",
+    "choices": [
+      {
+        "text": "`logs <- l`",
+        "correct": false,
+        "why": "Skipping a send leaves the helper waiting for the next value, but it is the missing close that keeps it waiting forever."
+      },
+      {
+        "text": "`chars += len(l)`",
+        "correct": false,
+        "why": "That line is inside the helper and runs for every line it receives; it has nothing to do with how the helper ends."
+      },
+      {
+        "text": "`close(logs)`",
+        "correct": true,
+        "why": "Right. The early `return` jumps over it, and the helper's `for range` waits for a close that never comes."
+      },
+      {
+        "text": "`_ = chars`",
+        "correct": false,
+        "why": "That line only keeps the compiler from complaining about an unused variable."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn7yj2hg",
+    "version": 1,
+    "section": "how-they-leak",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service leaks one goroutine per failed request. Each leaked goroutine holds a 64 KB buffer it was filling. What will the operators see first?",
+    "hint": "A blocked goroutine uses no processor.",
+    "choices": [
+      {
+        "text": "Processor use climbing with every failed request",
+        "correct": false,
+        "why": "A blocked goroutine is never scheduled, so it costs no processor time."
+      },
+      {
+        "text": "Memory growing, never given back",
+        "correct": true,
+        "why": "Right. The stacks and everything they reach, the buffers here, stay alive for as long as the goroutines do."
+      },
+      {
+        "text": "A crash with a deadlock message",
+        "correct": false,
+        "why": "The deadlock message appears when every goroutine is asleep. A server's other goroutines keep running."
+      },
+      {
+        "text": "Failed requests answered more slowly",
+        "correct": false,
+        "why": "The leak happens after the request has its answer; it does not slow the answer down."
+      }
+    ]
+  },
+  {
+    "id": "ex-5p30d1dy",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the goroutine profile, printed with debug level 1, give that `runtime.NumGoroutine` does not?",
+    "hint": "Look at the line `200 @ ...` and the line under it.",
+    "choices": [
+      {
+        "text": "A more exact total than the counter",
+        "correct": false,
+        "why": "The total is the same, 201 in both."
+      },
+      {
+        "text": "The memory each goroutine holds",
+        "correct": false,
+        "why": "The profile shows stacks, not sizes. Memory is a different profile."
+      },
+      {
+        "text": "Grouped stacks, with the line each group waits at",
+        "correct": true,
+        "why": "Right: 200 goroutines at line 19 of `find.go` is the leak with its address."
+      },
+      {
+        "text": "The time each goroutine has been waiting on its channel",
+        "correct": false,
+        "why": "Debug level 1 shows no waiting times, only grouped stacks and counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jqz6bfs",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `main` listed in the `goroutine` profile of `find.go` but not in its `goroutineleak` profile?",
+    "hint": "What does the leak profile try to prove about a goroutine?",
+    "choices": [
+      {
+        "text": "`main` is running, so nothing proves it will never run again",
+        "correct": true,
+        "why": "Right. The leak profile lists only goroutines blocked on something no running goroutine can reach."
+      },
+      {
+        "text": "The leak profile hides the main goroutine on purpose, by design",
+        "correct": false,
+        "why": "There is no special case for `main`; a blocked `main` waiting on an unreachable channel would be stuck like any other."
+      },
+      {
+        "text": "`main` had already returned",
+        "correct": false,
+        "why": "When `main` returns the program ends, and nothing would be printed."
+      },
+      {
+        "text": "Only goroutines started with `go` appear in it",
+        "correct": false,
+        "why": "That is not the rule it applies. It reports goroutines it can prove are stuck."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3pyqgks",
+    "version": 1,
+    "section": "finding-them",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`hidden.go` leaked 200 goroutines and its `goroutineleak` profile said `total 0`. What should a reader conclude from an empty leak profile in their own service?",
+    "hint": "What kept the channel in `hidden.go` reachable?",
+    "choices": [
+      {
+        "text": "That the service has no leak and needs no further watching",
+        "correct": false,
+        "why": "`hidden.go` is the counterexample: 200 leaked goroutines and a profile of zero."
+      },
+      {
+        "text": "That the profile failed to run and printed nothing useful",
+        "correct": false,
+        "why": "It ran: it printed its header and a total. It found nothing it could prove."
+      },
+      {
+        "text": "No leak it could prove; the count still matters",
+        "correct": true,
+        "why": "Right. A channel reachable from a global, or from anything alive, hides its waiters from the proof."
+      },
+      {
+        "text": "That the leaked goroutines finished",
+        "correct": false,
+        "why": "The same program printed `goroutines: 201` just before the profile."
+      }
+    ]
+  },
+  {
+    "id": "ex-07t3gg7w",
+    "version": 1,
+    "section": "finding-them",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The package that keeps the goroutine profile, and the leak profile beside it, is `runtime/___`.",
+    "hint": "It is imported by `find.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "pprof"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pr9qhbkt",
+    "version": 1,
+    "section": "finding-them",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool with the question it answers about a leak.",
+    "hint": "From the cheapest to the most precise.",
+    "pairs": [
+      {
+        "left": "`runtime.NumGoroutine`",
+        "right": "how many goroutines exist now"
+      },
+      {
+        "left": "the `goroutine` profile",
+        "right": "which line every goroutine is stopped at"
+      },
+      {
+        "left": "the `goroutineleak` profile",
+        "right": "which goroutines can provably never run again"
+      }
+    ],
+    "right_distractors": [
+      "how much processor time each goroutine used"
+    ]
+  },
+  {
+    "id": "ex-f97fnyrh",
+    "version": 1,
+    "section": "avoiding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What single change turned `first.go` into `buffered.go`, which ends a hundred calls with one goroutine?",
+    "hint": "Look at `make`.",
+    "choices": [
+      {
+        "text": "Receiving three times instead of once",
+        "correct": false,
+        "why": "That would also stop the leak, but it waits for the slowest server, which defeats the point of `first`."
+      },
+      {
+        "text": "A channel with room for three answers",
+        "correct": true,
+        "why": "Right. No send ever waits, so every sender returns."
+      },
+      {
+        "text": "Closing the channel after the first answer",
+        "correct": false,
+        "why": "The later senders would then panic with a send on a closed channel."
+      },
+      {
+        "text": "A `time.Sleep` in `main` before counting",
+        "correct": false,
+        "why": "`first.go` already slept 100 ms before counting, and still counted 203."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1b3xhzd",
+    "version": 1,
+    "section": "avoiding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`buffered.go` fixed the leak with `const servers = 3` used for both the buffer and the loop. What is the fragile part the section points out?",
+    "hint": "What happens when somebody adds a server?",
+    "choices": [
+      {
+        "text": "Buffered channels cost more time per send than unbuffered ones",
+        "correct": false,
+        "why": "The section says nothing about speed; its worry is correctness."
+      },
+      {
+        "text": "The buffer keeps the answers in memory for ever",
+        "correct": false,
+        "why": "The buffer is collected with the channel once nothing refers to it."
+      },
+      {
+        "text": "The buffer's size has to keep matching the number of senders",
+        "correct": true,
+        "why": "Right. A fourth sender with a buffer of three brings back one leaked goroutine per call."
+      },
+      {
+        "text": "A constant cannot size a channel",
+        "correct": false,
+        "why": "It can, and it did: `make(chan string, servers)` compiled and ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-6mzwjxra",
+    "version": 1,
+    "section": "avoiding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `done.go` put `defer close(logs)` right after `make` rather than a `close(logs)` before each `return`?",
+    "hint": "What does `defer` guarantee?",
+    "choices": [
+      {
+        "text": "A deferred close is faster",
+        "correct": false,
+        "why": "Speed is not the reason; the two take the same work."
+      },
+      {
+        "text": "It runs on every way out, later returns included",
+        "correct": true,
+        "why": "Right. The leak in `early.go` was a `return` added beside the close and jumping over it."
+      },
+      {
+        "text": "Closing a channel twice is allowed only with `defer`",
+        "correct": false,
+        "why": "Closing twice panics however it is done; `done.go` closes once."
+      },
+      {
+        "text": "Without `defer` the helper goroutine would never start",
+        "correct": false,
+        "why": "The goroutine starts at the `go` statement either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cjxa3e2",
+    "version": 1,
+    "section": "avoiding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Several goroutines each wait in a `select` on their send and on a channel `done`. What lets the owner stop all of them with a single statement?",
+    "hint": "What does a receive on a closed channel do?",
+    "choices": [
+      {
+        "text": "Sending one value on `done`, which reaches every goroutine",
+        "correct": false,
+        "why": "A value sent on a channel is received by exactly one receiver, so one send stops one goroutine."
+      },
+      {
+        "text": "`close(done)`, which is ready for every receiver at the same time",
+        "correct": true,
+        "why": "Right. A closed channel never blocks a receive, so every `select` sees it."
+      },
+      {
+        "text": "Setting `done` to `nil`",
+        "correct": false,
+        "why": "That changes the owner's variable; the goroutines hold their own copy of the channel and keep waiting."
+      },
+      {
+        "text": "Calling `runtime.Goexit` from the owner",
+        "correct": false,
+        "why": "`Goexit` ends the goroutine that calls it, the owner, not the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-3f6bndta",
+    "version": 1,
+    "section": "avoiding",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the section's three questions in the order to ask them before writing `go`.",
+    "hint": "From what it blocks on to the caller giving up.",
+    "items": [
+      "What does it block on?",
+      "Who makes that operation complete?",
+      "What happens if the caller gives up early?"
+    ]
+  },
+  {
+    "id": "ex-8g7a3jw3",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these goroutines can leak? Choose all that apply.",
+    "hint": "For each, ask who completes the operation it blocks on.",
+    "choices": [
+      {
+        "text": "One sending its result on an unbuffered channel the caller may stop reading",
+        "correct": true,
+        "why": "Yes: the `first.go` shape."
+      },
+      {
+        "text": "One ranging over a channel that is closed only at the end of the happy path",
+        "correct": true,
+        "why": "Yes: the `early.go` shape."
+      },
+      {
+        "text": "One sending on a channel whose buffer has room for every sender",
+        "correct": false,
+        "why": "No send waits, so it returns: `buffered.go`."
+      },
+      {
+        "text": "One ranging over a channel closed by a `defer` right after `make`",
+        "correct": false,
+        "why": "The close runs on every path: `done.go`."
+      }
+    ]
+  },
+  {
+    "id": "ex-j29m1zw0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague fixes `first.go` by making it receive three times and return the first answer. The leak is gone. What did the fix cost?",
+    "hint": "When does `first` return now?",
+    "choices": [
+      {
+        "text": "Nothing: same as the buffered version",
+        "correct": false,
+        "why": "The buffered version returns after the fastest server; this one waits for all three."
+      },
+      {
+        "text": "A goroutine per call, now leaked elsewhere",
+        "correct": false,
+        "why": "With three receives every sender has a receiver, so none is left waiting."
+      },
+      {
+        "text": "Each call now takes as long as the slowest server",
+        "correct": true,
+        "why": "Right: 30 ms instead of 10. The point of asking three was to take the fastest."
+      },
+      {
+        "text": "A panic when the third answer arrives",
+        "correct": false,
+        "why": "Receiving three values from three senders is ordinary and does not panic."
+      }
+    ]
+  },
+  {
+    "id": "ex-673kzd6q",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A service built like `early.go` handles 2,000 requests an hour, and 3 in every 100 hit the early return. How many goroutines has it leaked after 10 hours?",
+    "hint": "One goroutine per early return.",
+    "value": 600,
+    "tolerance": 0,
+    "unit": "goroutines"
+  }
+]

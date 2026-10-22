@@ -1,0 +1,428 @@
+[
+  {
+    "id": "ex-78a3s1yf",
+    "version": 1,
+    "section": "single-file",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `bin/version` was built, `version.txt` was changed to `1.5.0` and the same binary run again. What did it print, and why?",
+    "hint": "When are the contents copied?",
+    "choices": [
+      {
+        "text": "`1.5.0`, because the file is read at start-up",
+        "correct": false,
+        "why": "Nothing reads the disk; the variable was filled at build time."
+      },
+      {
+        "text": "`1.4.2`, copied in at build time",
+        "correct": true,
+        "why": "Right. Only a new build picked up `1.5.0`."
+      },
+      {
+        "text": "An error, because the embedded file changed",
+        "correct": false,
+        "why": "The binary does not know the file changed."
+      },
+      {
+        "text": "An empty version",
+        "correct": false,
+        "why": "The contents are inside the binary and do not disappear."
+      }
+    ]
+  },
+  {
+    "id": "ex-tc411xde",
+    "version": 1,
+    "section": "single-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague deletes `logo.txt` by mistake and rebuilds. What happens?",
+    "hint": "The first build in the lesson had no banner yet.",
+    "choices": [
+      {
+        "text": "It builds, and `logo` is empty",
+        "correct": false,
+        "why": "A pattern that matches nothing is refused, so no binary ships without its file."
+      },
+      {
+        "text": "It builds, and the old banner is reused from the cache",
+        "correct": false,
+        "why": "The build reads the source tree; a missing file is an error."
+      },
+      {
+        "text": "The build fails on the missing pattern",
+        "correct": true,
+        "why": "Right, which is what makes an embedded file safe to rely on."
+      },
+      {
+        "text": "It panics when it starts",
+        "correct": false,
+        "why": "It never gets that far: there is no binary."
+      }
+    ]
+  },
+  {
+    "id": "ex-xtkgf1yn",
+    "version": 1,
+    "section": "single-file",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a file with `//go:embed` import `embed`, even as `import _ \"embed\"`?",
+    "hint": "What would a forgotten directive look like without the check?",
+    "choices": [
+      {
+        "text": "A forgotten one fails instead of going empty",
+        "correct": true,
+        "why": "Right. A directive is a comment, and the import is what the go command checks."
+      },
+      {
+        "text": "Because `embed` contains the files at run time",
+        "correct": false,
+        "why": "The files are in the variable; the package is the marker."
+      },
+      {
+        "text": "The import makes the binary smaller",
+        "correct": false,
+        "why": "It has nothing to do with size."
+      },
+      {
+        "text": "Only for a `[]byte` variable",
+        "correct": false,
+        "why": "`version` was a `string` and the rule held there too."
+      }
+    ]
+  },
+  {
+    "id": "ex-0qr7a4er",
+    "version": 1,
+    "section": "single-file",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The directive is written as a comment, with no space after the slashes: `//go:___ version.txt`.",
+    "hint": "The name of the lesson.",
+    "blanks": [
+      {
+        "accept": [
+          "embed"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3bmbsw6k",
+    "version": 1,
+    "section": "embed-fs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`//go:embed static` brought in `index.html` and `style.css` but not `.draft.html` or `_notes.txt`. What brings in all four?",
+    "hint": "A prefix on the pattern.",
+    "choices": [
+      {
+        "text": "`//go:embed static/*.*`",
+        "correct": false,
+        "why": "The lesson used a prefix, not a glob; `all:` is what it showed taking everything."
+      },
+      {
+        "text": "`//go:embed all:static`",
+        "correct": true,
+        "why": "Right: the second variable got all four."
+      },
+      {
+        "text": "Renaming them without the prefix characters",
+        "correct": false,
+        "why": "That changes the files, not the pattern; `all:` keeps their names."
+      },
+      {
+        "text": "An `embed.FS` cannot hold them",
+        "correct": false,
+        "why": "`everything` held them."
+      }
+    ]
+  },
+  {
+    "id": "ex-1xyn1qb6",
+    "version": 1,
+    "section": "embed-fs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `//go:embed` leave out files starting with `.` or `_` by default?",
+    "hint": "Think of a `.env` in the directory.",
+    "choices": [
+      {
+        "text": "Hidden files cannot be read by the go command",
+        "correct": false,
+        "why": "`all:` reads them fine."
+      },
+      {
+        "text": "So a `.env` cannot ship by accident",
+        "correct": true,
+        "why": "Right. Leaving them out is the safe default; `all:` is a decision."
+      },
+      {
+        "text": "To keep the binary under a size limit",
+        "correct": false,
+        "why": "There is no such limit in the lesson."
+      },
+      {
+        "text": "Because Windows forbids such names",
+        "correct": false,
+        "why": "The rule is about what is likely to be private, not about any system."
+      }
+    ]
+  },
+  {
+    "id": "ex-h8krzspr",
+    "version": 1,
+    "section": "embed-fs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`static.ReadFile(\"index.html\")` failed with `file does not exist`, though the page was embedded. Why?",
+    "hint": "Look at the paths the listing printed.",
+    "choices": [
+      {
+        "text": "Embedded files are read only once",
+        "correct": false,
+        "why": "The previous line read it fine as `static/index.html`."
+      },
+      {
+        "text": "HTML files need `all:`",
+        "correct": false,
+        "why": "`all:` is about names starting with `.` or `_`."
+      },
+      {
+        "text": "Its path keeps the directory: `static/index.html`",
+        "correct": true,
+        "why": "Right. `fs.Sub` is how the next section drops the prefix."
+      },
+      {
+        "text": "`ReadFile` only works on a disk",
+        "correct": false,
+        "why": "It is a method of `embed.FS` and worked on the full path."
+      }
+    ]
+  },
+  {
+    "id": "ex-fkn483tj",
+    "version": 1,
+    "section": "embed-fs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A function takes an `fs.FS` and reads `config.json` from it. In tests it is given `os.DirFS(\"testdata\")`; in production, an `embed.FS` narrowed with `fs.Sub`. What makes that work?",
+    "hint": "What do both values have in common, errors included?",
+    "choices": [
+      {
+        "text": "`embed.FS` converts itself to a directory on disk",
+        "correct": false,
+        "why": "Nothing is written to disk; it is read-only and in memory."
+      },
+      {
+        "text": "Both are an `fs.FS`, with the same errors",
+        "correct": true,
+        "why": "Right: `fs.ErrNotExist` in both, so the function need not know which."
+      },
+      {
+        "text": "`fs.Sub` copies the embedded files into `testdata`",
+        "correct": false,
+        "why": "`fs.Sub` only narrows a view to a sub-directory."
+      },
+      {
+        "text": "The go command swaps them during `go test`",
+        "correct": false,
+        "why": "The test passes a different value; nothing is swapped behind it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tcqnqkc",
+    "version": 1,
+    "section": "serving",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did a request for `/` find `index.html`, when the embedded path is `static/index.html`?",
+    "hint": "What did the program do with `files` before serving it?",
+    "choices": [
+      {
+        "text": "`FileServerFS` strips any first directory",
+        "correct": false,
+        "why": "It serves the paths it is given; the stripping happened before."
+      },
+      {
+        "text": "The browser adds `/static`",
+        "correct": false,
+        "why": "curl asked for `/` and nothing added anything."
+      },
+      {
+        "text": "`all:` was used",
+        "correct": false,
+        "why": "`serve/main.go` embeds plain `static`; `_notes.txt` was a 404."
+      },
+      {
+        "text": "`fs.Sub(files, \"static\")` made `static` the root",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma7n41ms",
+    "version": 1,
+    "section": "serving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `rm -r serve/static`, the running server still returned `<h1>Orders</h1>`. What does that show?",
+    "hint": "When did the directory matter?",
+    "choices": [
+      {
+        "text": "The directory was needed only for the build",
+        "correct": true,
+        "why": "Right. Deploying the server is copying one file."
+      },
+      {
+        "text": "The server keeps a cache that expires later",
+        "correct": false,
+        "why": "There is no cache: the files are part of the program."
+      },
+      {
+        "text": "`rm` cannot delete files a server has open",
+        "correct": false,
+        "why": "The server never opened them; they were deleted."
+      },
+      {
+        "text": "curl served the page from its own cache",
+        "correct": false,
+        "why": "curl keeps no cache between runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-qct8g9ak",
+    "version": 1,
+    "section": "serving",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What HTTP status did the server answer for `/_notes.txt`?",
+    "hint": "The plain pattern never embedded it.",
+    "value": 404,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-q43yg1g1",
+    "version": 1,
+    "section": "serving",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants its service's per-environment settings, a database address that differs between staging and production, embedded with `//go:embed`. What does the lesson say?",
+    "hint": "When are embedded files fixed?",
+    "choices": [
+      {
+        "text": "Fine, and `fs.Sub` picks the environment",
+        "correct": false,
+        "why": "`fs.Sub` narrows a tree; it knows nothing about environments."
+      },
+      {
+        "text": "Fine, if the file starts with `_`",
+        "correct": false,
+        "why": "That would just keep it out of a plain pattern."
+      },
+      {
+        "text": "No: it differs, so it is read at run time",
+        "correct": true,
+        "why": "Right. Embedded files are fixed at build time, the same in every copy."
+      },
+      {
+        "text": "No: an `embed.FS` cannot hold JSON",
+        "correct": false,
+        "why": "It holds any file."
+      }
+    ]
+  },
+  {
+    "id": "ex-fe23sevk",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the lesson's server in order, from source to answer.",
+    "hint": "The directory matters only before the binary exists.",
+    "items": [
+      "write the files into `serve/static`",
+      "`go build` copies them into the binary",
+      "`fs.Sub` makes `static` the root",
+      "`FileServerFS` answers `/` with `index.html`"
+    ]
+  },
+  {
+    "id": "ex-kc6ymksq",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each variable type with what `//go:embed` puts in it.",
+    "hint": "One file as text, one file as bytes, a tree.",
+    "pairs": [
+      {
+        "left": "`string`",
+        "right": "one file's contents as text"
+      },
+      {
+        "left": "`[]byte`",
+        "right": "one file's contents as bytes"
+      },
+      {
+        "left": "`embed.FS`",
+        "right": "a read-only tree of files"
+      }
+    ],
+    "right_distractors": [
+      "a path to read at run time"
+    ]
+  },
+  {
+    "id": "ex-hy5ttvf6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are true of `//go:embed`? Choose all that apply.",
+    "hint": "Build time, refusals and defaults.",
+    "choices": [
+      {
+        "text": "A pattern matching no file stops the build",
+        "correct": true,
+        "why": "Yes: `no matching files found`."
+      },
+      {
+        "text": "The program re-reads the file when it changes",
+        "correct": false,
+        "why": "It printed `1.4.2` after the file said `1.5.0`."
+      },
+      {
+        "text": "Files starting with `_` are skipped unless `all:` is used",
+        "correct": true,
+        "why": "Yes, like those starting with `.`."
+      },
+      {
+        "text": "It works on a variable declared inside a function",
+        "correct": false,
+        "why": "The lesson places it above a package-level variable."
+      }
+    ]
+  }
+]

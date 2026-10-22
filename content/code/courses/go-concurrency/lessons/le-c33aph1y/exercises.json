@@ -1,0 +1,433 @@
+[
+  {
+    "id": "ex-b9v4v9d5",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `go test -cover` measure?",
+    "hint": "Statements, not answers.",
+    "choices": [
+      {
+        "text": "The share of tests that passed",
+        "correct": false,
+        "why": "That is what PASS and FAIL report; coverage is about the code, not the tests."
+      },
+      {
+        "text": "The share of statements that ran during the tests",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "How many of the code's possible inputs were tried",
+        "correct": false,
+        "why": "Section 03 shows it records nothing about values."
+      },
+      {
+        "text": "How long each function took",
+        "correct": false,
+        "why": "That is a benchmark's job, lesson 29."
+      }
+    ]
+  },
+  {
+    "id": "ex-35v7mtz3",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson use `-coverprofile` and `go tool cover -func` after the first number?",
+    "hint": "A number says how much.",
+    "choices": [
+      {
+        "text": "Because `-cover` does not work without a profile file",
+        "correct": false,
+        "why": "It printed 93.4% on its own."
+      },
+      {
+        "text": "To make the tests run faster",
+        "correct": false,
+        "why": "Writing a profile costs a little; it never speeds anything up."
+      },
+      {
+        "text": "To raise the percentage",
+        "correct": false,
+        "why": "Reading the profile changes nothing; the third gap was left open on purpose."
+      },
+      {
+        "text": "To see where the gaps are",
+        "correct": true,
+        "why": "Right: per function, and with `-html` per line."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5znthwx",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did the lesson reach `Handler`'s 500 branch?",
+    "hint": "A document that fails half way through.",
+    "choices": [
+      {
+        "text": "A document that fails on its first read",
+        "correct": true,
+        "why": "Right: `Count` fails, `TopOf` wraps it, `Handler` answers 500."
+      },
+      {
+        "text": "A request with `n=0`",
+        "correct": false,
+        "why": "That is the 400 branch, already covered."
+      },
+      {
+        "text": "A source that returns `fs.ErrNotExist` for every name",
+        "correct": false,
+        "why": "That gives a 404."
+      },
+      {
+        "text": "A broken base URL in `HTTPSource`",
+        "correct": false,
+        "why": "That is the gap the lesson left open, and `Handler` was not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-j64cc3h4",
+    "version": 1,
+    "section": "measuring",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `readfail_test.go` was added, what percentage of statements did `go test -cover` report? Give the number with one decimal.",
+    "hint": "It rose from 93.4.",
+    "value": 98.4,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-90bs8ss4",
+    "version": 1,
+    "section": "measuring",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the lesson leave `HTTPSource.Open`'s request-building error uncovered?",
+    "hint": "What would a test of it actually exercise?",
+    "choices": [
+      {
+        "text": "Because it cannot be reached by any input",
+        "correct": false,
+        "why": "A base URL `net/http` refuses to parse reaches it."
+      },
+      {
+        "text": "Because 98% is the target the course set",
+        "correct": false,
+        "why": "The course sets no target; it reads the map."
+      },
+      {
+        "text": "It would test `net/http` more than this package",
+        "correct": true,
+        "why": "Right, for a mistake that fails loudly on the first request. Decided and written down."
+      },
+      {
+        "text": "Because `httptest` cannot start a server with a bad URL",
+        "correct": false,
+        "why": "No server is needed; the request is never built."
+      }
+    ]
+  },
+  {
+    "id": "ex-ba75tscy",
+    "version": 1,
+    "section": "what-it-misses",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`Top` was at 100% coverage. What happened when a test called it with `n` of `-1`?",
+    "hint": "`entries[:min(n, len(entries))]`",
+    "choices": [
+      {
+        "text": "It returned every word",
+        "correct": false,
+        "why": "`min(-1, len)` is `-1`, and slicing to `-1` is not allowed."
+      },
+      {
+        "text": "It returned no words",
+        "correct": false,
+        "why": "That is what the fix makes it do."
+      },
+      {
+        "text": "It panicked: slice bounds out of range",
+        "correct": true,
+        "why": "Right, in a function every statement of which the tests had run."
+      },
+      {
+        "text": "The compiler refused the call before the test could run",
+        "correct": false,
+        "why": "`-1` is a valid `int`; the problem appears at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-77p2wj05",
+    "version": 1,
+    "section": "what-it-misses",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the fix to `Top`, what did its coverage become?",
+    "hint": "Before the fix it was already full.",
+    "choices": [
+      {
+        "text": "It rose, because a new row was added to the table",
+        "correct": false,
+        "why": "It could not rise above 100%."
+      },
+      {
+        "text": "100%, the same as before the fix",
+        "correct": true,
+        "why": "Right: the defect came and went and the number never moved."
+      },
+      {
+        "text": "It fell, because `max` adds a branch nobody tests",
+        "correct": false,
+        "why": "`max` is a call inside one statement, and the statement ran."
+      },
+      {
+        "text": "It cannot be measured after a panic",
+        "correct": false,
+        "why": "The panic was in the throwaway test, which was removed."
+      }
+    ]
+  },
+  {
+    "id": "ex-avv22216",
+    "version": 1,
+    "section": "what-it-misses",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a package have at full coverage? Choose all that apply.",
+    "hint": "Section 03's last list.",
+    "choices": [
+      {
+        "text": "Tests that check nothing",
+        "correct": true,
+        "why": "Yes: a call with no assertion covers every line it reaches."
+      },
+      {
+        "text": "A data race",
+        "correct": true,
+        "why": "Yes: `count.go` reaches every statement in one run."
+      },
+      {
+        "text": "A missing `if` for a case nobody wrote",
+        "correct": true,
+        "why": "Yes: there is no line to be red."
+      },
+      {
+        "text": "A statement no test ever ran",
+        "correct": false,
+        "why": "That is exactly what lowers coverage below full."
+      }
+    ]
+  },
+  {
+    "id": "ex-ht3ns5qx",
+    "version": 1,
+    "section": "what-it-misses",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team requires 95% coverage on every pull request. What does the lesson predict?",
+    "hint": "What does a target do to how tests are written?",
+    "choices": [
+      {
+        "text": "Defects like `Top`'s `-1` stop reaching production",
+        "correct": false,
+        "why": "`Top` was at 100% with the defect inside."
+      },
+      {
+        "text": "Races become visible in the coverage report",
+        "correct": false,
+        "why": "Coverage cannot see a race; `-race` can."
+      },
+      {
+        "text": "Tests written to move the number",
+        "correct": true,
+        "why": "Right. Coverage is a map read by a person who decides, not a goal."
+      },
+      {
+        "text": "Benchmarks become unnecessary",
+        "correct": false,
+        "why": "Coverage says nothing about speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-7wrkkhhn",
+    "version": 1,
+    "section": "integration-coverage",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A binary built with `go build -cover` writes its counters into the directory named by the environment variable ___.",
+    "hint": "GO, COVER, DIR.",
+    "blanks": [
+      {
+        "accept": [
+          "GOCOVERDIR"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-7craykvh",
+    "version": 1,
+    "section": "integration-coverage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After two runs of `topwords`, why was `Handler` at 0%?",
+    "hint": "What does the program do?",
+    "choices": [
+      {
+        "text": "Because `-cover` skips functions that return a handler",
+        "correct": false,
+        "why": "It instruments every function of the module's packages."
+      },
+      {
+        "text": "Nothing in the program serves HTTP",
+        "correct": true,
+        "why": "Right. Program coverage shows what realistic runs never touch."
+      },
+      {
+        "text": "Because the second run exited with status 1",
+        "correct": false,
+        "why": "The counters are written on exit, failed runs included."
+      },
+      {
+        "text": "Because `GOCOVERDIR` was set only for the first run",
+        "correct": false,
+        "why": "Both runs set it, and `ls covdata` showed two counter files."
+      }
+    ]
+  },
+  {
+    "id": "ex-cy2krhhm",
+    "version": 1,
+    "section": "integration-coverage",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of measuring a program's coverage in order.",
+    "hint": "Build, run, read.",
+    "items": [
+      "`go build -cover -o topwords ./cmd/topwords`",
+      "`mkdir -p covdata`",
+      "`GOCOVERDIR=covdata ./topwords -n 2 hamlet.txt`",
+      "`go tool covdata percent -i=covdata`"
+    ]
+  },
+  {
+    "id": "ex-4ddcp9qc",
+    "version": 1,
+    "section": "integration-coverage",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The run with `missing.txt` printed `open missing.txt` twice. What does the lesson make of that?",
+    "hint": "Who adds each part of the message?",
+    "choices": [
+      {
+        "text": "That the file was opened twice",
+        "correct": false,
+        "why": "One open, one error; the name appears in two layers of it."
+      },
+      {
+        "text": "That `-cover` duplicates every error message",
+        "correct": false,
+        "why": "Instrumentation changes no output."
+      },
+      {
+        "text": "Each layer adds the file's name",
+        "correct": true,
+        "why": "Right: a small wart only a run of the real program showed."
+      },
+      {
+        "text": "That two goroutines reported the same failure",
+        "correct": false,
+        "why": "`topwords` starts no goroutine of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw4mrfnd",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command with what it gives.",
+    "hint": "Two read a profile, one writes it, one reads program counters.",
+    "pairs": [
+      {
+        "left": "`go test -cover`",
+        "right": "one percentage for the package"
+      },
+      {
+        "left": "`go test -coverprofile=c.out`",
+        "right": "the counters, written to a file"
+      },
+      {
+        "left": "`go tool cover -func=c.out`",
+        "right": "one line per function"
+      },
+      {
+        "left": "`go tool covdata percent -i=covdata`",
+        "right": "coverage of a program's runs"
+      }
+    ],
+    "right_distractors": [
+      "the time per round"
+    ]
+  },
+  {
+    "id": "ex-6jr7ezkm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which coverage reading would make you write a new test first?",
+    "hint": "Which gap is a real failure nobody has asked about?",
+    "choices": [
+      {
+        "text": "A red line that only a malformed configuration reaches, failing loudly",
+        "correct": false,
+        "why": "That is the gap the lesson chose to leave, with the reason written down."
+      },
+      {
+        "text": "A red error branch for a read that fails half way",
+        "correct": true,
+        "why": "Right: a real failure, and the package had never said what it does then."
+      },
+      {
+        "text": "A function at 100%",
+        "correct": false,
+        "why": "Full coverage says the lines ran, not that a test is missing."
+      },
+      {
+        "text": "The total going from 93.4% to 98.4%",
+        "correct": false,
+        "why": "That is the result of the test, not a reason for one."
+      }
+    ]
+  }
+]

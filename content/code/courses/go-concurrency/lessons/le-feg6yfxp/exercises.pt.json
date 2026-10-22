@@ -1,0 +1,332 @@
+{
+  "ex-7xmgv2ht": {
+    "prompt": "No `order.go`, o que fez a chave `price_cents` aparecer em vez de `Cents`?",
+    "hint": "A string entre crases depois do campo.",
+    "choices": [
+      {
+        "text": "Um método chamado `MarshalJSON` em `Item`",
+        "why": "O `Item` não tem métodos; só a tag renomeou a chave."
+      },
+      {
+        "text": "A tag `json:\"price_cents\"`",
+        "why": "Isso."
+      },
+      {
+        "text": "O `encoding/json` transforma todo nome em minúsculas com sublinhados",
+        "why": "Sem tag a chave é exatamente o nome Go, `Cents`."
+      },
+      {
+        "text": "O campo ser do tipo `int64`",
+        "why": "O tipo decide como o valor é escrito, não como a chave se chama."
+      }
+    ]
+  },
+  "ex-736kb08c": {
+    "prompt": "O `Order` tinha um campo `internal` com uma string, e o JSON não tinha a chave `internal`. Por quê?",
+    "hint": "Olhe a primeira letra dele.",
+    "choices": [
+      {
+        "text": "Não tinha tag",
+        "why": "Os outros campos apareceriam com os nomes Go sem tags; tags renomeiam, não dão entrada."
+      },
+      {
+        "text": "O `omitempty` o removeu",
+        "why": "Ele não tinha `omitempty`, e o valor não estava vazio."
+      },
+      {
+        "text": "Não é exportado, então o `encoding/json` não o enxerga",
+        "why": "Isso; nenhuma tag o faz aparecer."
+      },
+      {
+        "text": "Strings com mais de 20 caracteres são descartadas",
+        "why": "Não há limite de tamanho; `ana@example.com` passou."
+      }
+    ]
+  },
+  "ex-xvmw3ghn": {
+    "prompt": "Um campo exportado `PasswordHash` nunca pode chegar ao JSON. Que tag faz isso?",
+    "hint": "Um caractere entre as aspas.",
+    "choices": [
+      {
+        "text": "`json:\"passwordHash,omitempty\"`",
+        "why": "Isso ainda o escreve sempre que estiver preenchido."
+      },
+      {
+        "text": "`json:\"-\"`",
+        "why": "Isso: nunca escrito e nunca lido."
+      },
+      {
+        "text": "`json:\",string\"`",
+        "why": "Isso escreve um número ou bool dentro de uma string; ainda o escreve."
+      },
+      {
+        "text": "`json:\"private\"`",
+        "why": "Isso renomeia a chave para `private` e escreve o hash nela."
+      }
+    ]
+  },
+  "ex-m2erxvm9": {
+    "prompt": "Um handler monta um relatório grande e o escreve como resposta HTTP. Por que a lição sugere `json.NewEncoder(w).Encode(report)` em vez de `json.Marshal`?",
+    "hint": "O que o `Marshal` devolve, e para onde vai a resposta?",
+    "choices": [
+      {
+        "text": "O `Marshal` não lida com structs aninhadas",
+        "why": "Ele escreveu `items` dentro do pedido sem problema."
+      },
+      {
+        "text": "O `Encode` omite campos vazios e o `Marshal` não",
+        "why": "Os dois seguem as mesmas tags."
+      },
+      {
+        "text": "Só um Encoder ordena as chaves",
+        "why": "Nenhum reordena os campos de uma struct; os dois os escrevem na ordem de declaração."
+      },
+      {
+        "text": "Ele escreve no Writer da resposta sem cópia na memória antes",
+        "why": "Isso: o `Marshal` monta o `[]byte` inteiro antes."
+      }
+    ]
+  },
+  "ex-241wsdkp": {
+    "prompt": "O corpo trazia `\"coupon\": \"WELCOME\"` e o `Order` não tem esse campo. O que o `json.Unmarshal` fez?",
+    "hint": "O `err` foi `<nil>`.",
+    "choices": [
+      {
+        "text": "Descartou sem uma palavra",
+        "why": "Isso; por padrão chaves desconhecidas são ignoradas."
+      },
+      {
+        "text": "Devolveu um erro citando `coupon`",
+        "why": "Só o Decoder com `DisallowUnknownFields` fez isso."
+      },
+      {
+        "text": "Guardou no campo `Customer`",
+        "why": "Chaves casam com campos pelo nome; `coupon` não casa com nenhum."
+      },
+      {
+        "text": "Parou de ler e deixou `Items` vazio",
+        "why": "O `Items` saiu com `KB-01` dentro."
+      }
+    ]
+  },
+  "ex-7jcxpkqx": {
+    "prompt": "O corpo dizia `\"Customer\"` com C maiúsculo, e o campo tem a tag `customer`. O que aconteceu?",
+    "hint": "Olhe a primeira linha que o `decode.go` imprimiu.",
+    "choices": [
+      {
+        "text": "O campo ficou vazio, porque chaves diferenciam maiúsculas",
+        "why": "O `encoding/json` casa sem ligar para maiúsculas; a v2 é que liga."
+      },
+      {
+        "text": "O campo foi preenchido; o casamento ignora maiúsculas",
+        "why": "Isso: `Customer:ana@example.com`."
+      },
+      {
+        "text": "Um erro: `unknown field \"Customer\"`",
+        "why": "Até o Decoder rígido só reclamou de `coupon`."
+      },
+      {
+        "text": "Uma chave `Customer` e outra `customer` foram mantidas",
+        "why": "Uma struct tem um campo; não há onde guardar dois."
+      }
+    ]
+  },
+  "ex-je15nc72": {
+    "prompt": "Os clientes de uma API mandaram chaves com erro de digitação durante meses, e as configurações foram ignoradas em silêncio. Que mudança faz uma requisição assim falhar alto?",
+    "hint": "A seção 03 desta lição transformou silêncio em erro.",
+    "choices": [
+      {
+        "text": "Acrescentar `omitempty` em todo campo",
+        "why": "Isso muda a escrita, não a leitura."
+      },
+      {
+        "text": "Trocar o Decoder pelo `json.Unmarshal`",
+        "why": "O `Unmarshal` não tem chave para isso."
+      },
+      {
+        "text": "Um Decoder com `DisallowUnknownFields`",
+        "why": "Isso: `json: unknown field` em vez de uma requisição entendida pela metade."
+      },
+      {
+        "text": "Decodificar para `map[string]any` e comparar à mão",
+        "why": "Possível, e reconstrói o que a chave faz numa linha."
+      }
+    ]
+  },
+  "ex-8rwx3a7r": {
+    "prompt": "Ordene os quatro resultados do `decode.go` como ele os imprimiu.",
+    "hint": "O tolerante primeiro, depois as três recusas na ordem em que o código pede.",
+    "items": [
+      "o pedido decodificado, `coupon` ignorado",
+      "`unknown field \"coupon\"`",
+      "uma string não vira `Order.id`",
+      "`invalid character '}'`"
+    ]
+  },
+  "ex-g6mg8zdw": {
+    "prompt": "JSON Lines, um valor por linha, é lido de volta com um json.___, que lê um valor depois do outro de um `io.Reader`.",
+    "hint": "Criado com `json.NewDecoder`.",
+    "blanks": [
+      {
+        "accept": [
+          "Decoder"
+        ]
+      }
+    ]
+  },
+  "ex-0cjebzpe": {
+    "prompt": "O `Patch.Stock` é um `*int`. Qual corpo o deixa apontando para um valor?",
+    "hint": "Até zero conta como valor.",
+    "choices": [
+      {
+        "text": "`{}`",
+        "why": "Uma chave ausente deixa o ponteiro nil."
+      },
+      {
+        "text": "`{\"stock\": null}`",
+        "why": "O `null` também o deixou nil."
+      },
+      {
+        "text": "`{\"stock\": 0}`",
+        "why": "Isso: estoque posto em 0."
+      },
+      {
+        "text": "`{\"Stock\": \"0\"}`",
+        "why": "A chave casa, mas uma string não vira `int`: isso é um erro."
+      }
+    ]
+  },
+  "ex-gpnyzwqx": {
+    "prompt": "Por que o `restocked` foi escrito como `\"0001-01-01T00:00:00Z\"` apesar do `omitempty`?",
+    "hint": "Como o `omitempty` decide o que é vazio?",
+    "choices": [
+      {
+        "text": "O `omitempty` só funciona em strings",
+        "why": "Ele descartou o `stock` zero, um `int`."
+      },
+      {
+        "text": "Uma struct nunca é vazia pela regra do `omitempty`",
+        "why": "Isso; o `omitzero` pergunta ao `IsZero`."
+      },
+      {
+        "text": "O horário foi definido por `time.Now`",
+        "why": "Nada o definiu; a data mostrada é o horário zero."
+      },
+      {
+        "text": "Fusos horários impedem a omissão",
+        "why": "O fuso não tem nada a ver; o valor era zero."
+      }
+    ]
+  },
+  "ex-efmqkq3k": {
+    "prompt": "Um produto tem de fato zero unidades em estoque, e o tipo diz `Stock int `json:\"stock,omitempty\"``. O que um cliente lendo o JSON vê?",
+    "hint": "O que aconteceu com `stock` na saída do `optional.go`?",
+    "choices": [
+      {
+        "text": "`\"stock\": 0`",
+        "why": "O `omitempty` descarta um `int` zero."
+      },
+      {
+        "text": "`\"stock\": null`",
+        "why": "Nada escreve `null` para um `int`."
+      },
+      {
+        "text": "Um erro do `Marshal`",
+        "why": "Omitir não é um erro."
+      },
+      {
+        "text": "Nenhuma chave `stock`, como se o estoque fosse desconhecido",
+        "why": "Isso: use `omitempty` só onde zero e ausente querem dizer o mesmo."
+      }
+    ]
+  },
+  "ex-yr0mdrkr": {
+    "prompt": "Acima de que potência de dois um `float64` deixa de guardar todo inteiro exatamente? Dê o expoente.",
+    "hint": "A seção a cita ao lado de identificadores."
+  },
+  "ex-bsy49qn6": {
+    "prompt": "O `versions.go` decodificou `{\"ID\": 7}` num campo com a tag `id`. O que a v1 e a v2 fizeram?",
+    "hint": "Uma casou sem ligar para maiúsculas.",
+    "choices": [
+      {
+        "text": "As duas o preencheram com 7",
+        "why": "A v2 imprimiu 0."
+      },
+      {
+        "text": "A v1 o preencheu com 7; a v2 o deixou em 0",
+        "why": "Isso; a v2 casa as chaves respeitando maiúsculas."
+      },
+      {
+        "text": "A v1 devolveu um erro e a v2 o preencheu",
+        "why": "Foi o contrário, e nenhuma devolveu erro."
+      },
+      {
+        "text": "As duas devolveram erro de campo desconhecido",
+        "why": "Os dois erros imprimiram `<nil>`."
+      }
+    ]
+  },
+  "ex-29khb4ph": {
+    "prompt": "Associe cada opção de tag ao seu efeito.",
+    "hint": "Quatro opções da tabela da seção 02.",
+    "pairs": [
+      {
+        "left": "`omitempty`",
+        "right": "descarta números zero, strings, slices e maps vazios"
+      },
+      {
+        "left": "`omitzero`",
+        "right": "descarta o zero value do tipo, perguntando ao `IsZero` se existir"
+      },
+      {
+        "left": "`-`",
+        "right": "nunca escrito e nunca lido"
+      },
+      {
+        "left": "`string`",
+        "right": "um número escrito entre aspas"
+      }
+    ],
+    "right_distractors": [
+      "ordena as chaves do objeto"
+    ]
+  },
+  "ex-d4ssmyxm": {
+    "prompt": "Um endpoint PATCH precisa distinguir \"ponha o desconto em 0\" de \"não mexa no desconto\". Que tipo de campo e tag servem na struct da requisição?",
+    "hint": "Seção 04, leitura.",
+    "choices": [
+      {
+        "text": "`Discount int `json:\"discount,omitempty\"``",
+        "why": "O `omitempty` afeta a escrita, e um `int` lê 0 nos dois casos."
+      },
+      {
+        "text": "`Discount *int `json:\"discount\"``",
+        "why": "Isso: nil significa não dado, não nil significa definido, mesmo em 0."
+      },
+      {
+        "text": "`Discount string `json:\"discount\"``",
+        "why": "Um número JSON não preenche um campo string; isso é um erro."
+      },
+      {
+        "text": "`Discount float64 `json:\"discount,omitzero\"``",
+        "why": "Ainda lê 0 nos dois casos; a opção só importa na escrita."
+      }
+    ]
+  },
+  "ex-2rkpfka9": {
+    "prompt": "Quantas chaves tinha o objeto de nível mais alto do JSON compacto do `order.go`?",
+    "hint": "Seis campos, menos um vazio e um não exportado.",
+    "unit": "chaves"
+  },
+  "ex-hwvb4gz3": {
+    "prompt": "Um `time.Time` é escrito no JSON na forma RFC ___, como `2026-10-16T14:30:00Z`.",
+    "hint": "Um número de quatro dígitos.",
+    "blanks": [
+      {
+        "accept": [
+          "3339"
+        ]
+      }
+    ]
+  }
+}

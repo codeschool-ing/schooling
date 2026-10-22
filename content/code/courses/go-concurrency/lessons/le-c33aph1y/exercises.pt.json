@@ -1,0 +1,295 @@
+{
+  "ex-b9v4v9d5": {
+    "prompt": "O que o `go test -cover` mede?",
+    "hint": "Instruções, não respostas.",
+    "choices": [
+      {
+        "text": "A parcela de testes que passaram",
+        "why": "Isso é o que PASS e FAIL informam; cobertura é sobre o código, não sobre os testes."
+      },
+      {
+        "text": "A parcela de instruções que rodaram durante os testes",
+        "why": "Isso."
+      },
+      {
+        "text": "Quantas das entradas possíveis do código foram tentadas",
+        "why": "A seção 03 mostra que ela não registra nada sobre valores."
+      },
+      {
+        "text": "Quanto tempo cada função levou",
+        "why": "Isso é trabalho de um benchmark, lição 29."
+      }
+    ]
+  },
+  "ex-35v7mtz3": {
+    "prompt": "Por que a lição usa `-coverprofile` e `go tool cover -func` depois do primeiro número?",
+    "hint": "Um número diz quanto.",
+    "choices": [
+      {
+        "text": "Porque o `-cover` não funciona sem um arquivo de perfil",
+        "why": "Ele imprimiu 93,4% sozinho."
+      },
+      {
+        "text": "Para os testes rodarem mais rápido",
+        "why": "Escrever um perfil custa um pouco; nunca acelera nada."
+      },
+      {
+        "text": "Para aumentar a porcentagem",
+        "why": "Ler o perfil não muda nada; a terceira lacuna ficou aberta de propósito."
+      },
+      {
+        "text": "Para ver onde estão as lacunas",
+        "why": "Isso: por função, e com `-html` por linha."
+      }
+    ]
+  },
+  "ex-p5znthwx": {
+    "prompt": "Como a lição alcançou o caminho do 500 do `Handler`?",
+    "hint": "Um documento que falha no meio.",
+    "choices": [
+      {
+        "text": "Uma fonte cujo documento falha na primeira leitura",
+        "why": "Isso: o `Count` falha, o `TopOf` embrulha, o `Handler` responde 500."
+      },
+      {
+        "text": "Uma requisição com `n=0`",
+        "why": "Esse é o caminho do 400, já coberto."
+      },
+      {
+        "text": "Uma fonte que devolve `fs.ErrNotExist` para qualquer nome",
+        "why": "Isso dá um 404."
+      },
+      {
+        "text": "Uma URL base quebrada no `HTTPSource`",
+        "why": "Essa é a lacuna que a lição deixou aberta, e o `Handler` não entrava."
+      }
+    ]
+  },
+  "ex-j64cc3h4": {
+    "prompt": "Depois de acrescentar o `readfail_test.go`, que porcentagem de instruções o `go test -cover` informou? Dê o número com uma casa decimal.",
+    "hint": "Subiu de 93,4.",
+    "unit": "%"
+  },
+  "ex-90bs8ss4": {
+    "prompt": "Por que a lição deixou sem cobertura o erro de montagem da requisição do `HTTPSource.Open`?",
+    "hint": "O que um teste disso exercitaria de fato?",
+    "choices": [
+      {
+        "text": "Porque nenhuma entrada consegue alcançá-lo",
+        "why": "Uma URL base que o `net/http` se recusa a interpretar o alcança."
+      },
+      {
+        "text": "Porque 98% é a meta que o curso definiu",
+        "why": "O curso não define meta; ele lê o mapa."
+      },
+      {
+        "text": "Testaria mais o `net/http` que este pacote",
+        "why": "Isso, por um erro que falha alto na primeira requisição. Decidido e escrito."
+      },
+      {
+        "text": "Porque o `httptest` não consegue iniciar um servidor com URL ruim",
+        "why": "Nenhum servidor é necessário; a requisição nem chega a ser montada."
+      }
+    ]
+  },
+  "ex-ba75tscy": {
+    "prompt": "O `Top` estava com 100% de cobertura. O que aconteceu quando um teste o chamou com `n` igual a `-1`?",
+    "hint": "`entries[:min(n, len(entries))]`",
+    "choices": [
+      {
+        "text": "Devolveu todas as palavras",
+        "why": "`min(-1, len)` é `-1`, e fatiar até `-1` não é permitido."
+      },
+      {
+        "text": "Não devolveu palavra nenhuma",
+        "why": "É isso que o conserto faz ele fazer."
+      },
+      {
+        "text": "Entrou em pânico: slice bounds out of range",
+        "why": "Isso, numa função cujas instruções os testes tinham rodado todas."
+      },
+      {
+        "text": "O compilador recusou a chamada antes de o teste rodar",
+        "why": "`-1` é um `int` válido; o problema aparece na execução."
+      }
+    ]
+  },
+  "ex-77p2wj05": {
+    "prompt": "Depois do conserto do `Top`, qual ficou a cobertura dele?",
+    "hint": "Antes do conserto ela já era total.",
+    "choices": [
+      {
+        "text": "Subiu, porque uma linha nova entrou na tabela",
+        "why": "Ela não podia subir acima de 100%."
+      },
+      {
+        "text": "100%, igual a antes do conserto",
+        "why": "Isso: o defeito veio e foi embora e o número nunca se mexeu."
+      },
+      {
+        "text": "Caiu, porque o `max` acrescenta um desvio que ninguém testa",
+        "why": "O `max` é uma chamada dentro de uma instrução, e a instrução rodou."
+      },
+      {
+        "text": "Não pode ser medida depois de um pânico",
+        "why": "O pânico foi no teste descartável, que foi removido."
+      }
+    ]
+  },
+  "ex-avv22216": {
+    "prompt": "Quais destes um pacote pode ter com cobertura total? Escolha todos os que se aplicam.",
+    "hint": "A última lista da seção 03.",
+    "choices": [
+      {
+        "text": "Testes que não conferem nada",
+        "why": "Sim: uma chamada sem afirmação cobre toda linha que alcança."
+      },
+      {
+        "text": "Uma corrida de dados",
+        "why": "Sim: o `count.go` alcança toda instrução numa execução."
+      },
+      {
+        "text": "Um `if` que falta para um caso que ninguém escreveu",
+        "why": "Sim: não há linha para ficar vermelha."
+      },
+      {
+        "text": "Uma instrução que nenhum teste rodou",
+        "why": "É exatamente o que baixa a cobertura abaixo do total."
+      }
+    ]
+  },
+  "ex-ht3ns5qx": {
+    "prompt": "Um time exige 95% de cobertura em todo pull request. O que a lição prevê?",
+    "hint": "O que uma meta faz com o jeito de escrever testes?",
+    "choices": [
+      {
+        "text": "Defeitos como o `-1` do `Top` param de chegar à produção",
+        "why": "O `Top` estava em 100% com o defeito dentro."
+      },
+      {
+        "text": "Corridas ficam visíveis no relatório de cobertura",
+        "why": "A cobertura não vê corrida; o `-race` vê."
+      },
+      {
+        "text": "Testes escritos para mexer no número",
+        "why": "Isso. Cobertura é um mapa lido por uma pessoa que decide, não um objetivo."
+      },
+      {
+        "text": "Benchmarks ficam desnecessários",
+        "why": "A cobertura não diz nada sobre velocidade."
+      }
+    ]
+  },
+  "ex-7wrkkhhn": {
+    "prompt": "Um binário compilado com `go build -cover` escreve os contadores no diretório indicado pela variável de ambiente ___.",
+    "hint": "GO, COVER, DIR.",
+    "blanks": [
+      {
+        "accept": [
+          "GOCOVERDIR"
+        ]
+      }
+    ]
+  },
+  "ex-7craykvh": {
+    "prompt": "Depois de duas execuções do `topwords`, por que o `Handler` estava em 0%?",
+    "hint": "O que o programa faz?",
+    "choices": [
+      {
+        "text": "Porque o `-cover` pula funções que devolvem um handler",
+        "why": "Ele instrumenta toda função dos pacotes do módulo."
+      },
+      {
+        "text": "Nada no programa serve HTTP",
+        "why": "Isso. A cobertura do programa mostra o que execuções realistas nunca tocam."
+      },
+      {
+        "text": "Porque a segunda execução saiu com status 1",
+        "why": "Os contadores são escritos na saída, execuções que falharam inclusive."
+      },
+      {
+        "text": "Porque o `GOCOVERDIR` foi definido só na primeira execução",
+        "why": "As duas execuções o definiram, e o `ls covdata` mostrou dois arquivos de contadores."
+      }
+    ]
+  },
+  "ex-cy2krhhm": {
+    "prompt": "Ponha em ordem os passos para medir a cobertura de um programa.",
+    "hint": "Compilar, rodar, ler.",
+    "items": [
+      "`go build -cover -o topwords ./cmd/topwords`",
+      "`mkdir -p covdata`",
+      "`GOCOVERDIR=covdata ./topwords -n 2 hamlet.txt`",
+      "`go tool covdata percent -i=covdata`"
+    ]
+  },
+  "ex-4ddcp9qc": {
+    "prompt": "A execução com `missing.txt` imprimiu `open missing.txt` duas vezes. O que a lição conclui disso?",
+    "hint": "Quem acrescenta cada parte da mensagem?",
+    "choices": [
+      {
+        "text": "Que o arquivo foi aberto duas vezes",
+        "why": "Uma abertura, um erro; o nome aparece em duas camadas dele."
+      },
+      {
+        "text": "Que o `-cover` duplica toda mensagem de erro",
+        "why": "A instrumentação não muda saída nenhuma."
+      },
+      {
+        "text": "Cada camada acrescenta o nome",
+        "why": "Isso: um defeitinho que só uma execução do programa real mostrou."
+      },
+      {
+        "text": "Que duas goroutines relataram a mesma falha",
+        "why": "O `topwords` não inicia goroutine própria."
+      }
+    ]
+  },
+  "ex-jw4mrfnd": {
+    "prompt": "Associe cada comando ao que ele dá.",
+    "hint": "Dois leem um perfil, um o escreve, um lê contadores de programa.",
+    "pairs": [
+      {
+        "left": "`go test -cover`",
+        "right": "uma porcentagem para o pacote"
+      },
+      {
+        "left": "`go test -coverprofile=c.out`",
+        "right": "os contadores, escritos num arquivo"
+      },
+      {
+        "left": "`go tool cover -func=c.out`",
+        "right": "uma linha por função"
+      },
+      {
+        "left": "`go tool covdata percent -i=covdata`",
+        "right": "a cobertura das execuções de um programa"
+      }
+    ],
+    "right_distractors": [
+      "o tempo por rodada"
+    ]
+  },
+  "ex-6jr7ezkm": {
+    "prompt": "Que leitura de cobertura faria você escrever um teste novo primeiro?",
+    "hint": "Qual lacuna é uma falha real sobre a qual ninguém perguntou?",
+    "choices": [
+      {
+        "text": "Uma linha vermelha que só uma configuração malformada alcança, falhando alto",
+        "why": "Essa é a lacuna que a lição escolheu deixar, com o motivo escrito."
+      },
+      {
+        "text": "Um caminho de erro vermelho para uma leitura que falha no meio",
+        "why": "Isso: uma falha real, e o pacote nunca tinha dito o que faz nesse caso."
+      },
+      {
+        "text": "Uma função em 100%",
+        "why": "Cobertura total diz que as linhas rodaram, não que falta um teste."
+      },
+      {
+        "text": "O total indo de 93,4% para 98,4%",
+        "why": "Isso é o resultado do teste, não um motivo para um."
+      }
+    ]
+  }
+}
