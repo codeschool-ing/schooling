@@ -65,9 +65,9 @@ The second terminal shows nothing now; it all goes to `app.log`. In the first te
 
 ```
 ana@vm:~/bookshop$ grep -E 'Starting Bookshop|Started|Catalogue' app.log
-2026-10-16T20:28:21.213-03:00  INFO 21040 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 21040 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
-2026-10-16T20:28:31.311-03:00  INFO 21040 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 10.862 seconds (process running for 11.565)
-2026-10-16T20:28:31.409-03:00  INFO 21040 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
+2026-10-22T19:30:41.658-03:00  INFO 18927 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 18927 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
+2026-10-22T19:30:46.856-03:00  INFO 18927 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.588 seconds (process running for 6.085)
+2026-10-22T19:30:46.921-03:00  INFO 18927 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 This is Boot's pattern for Logback, and each field has a place:
@@ -113,10 +113,10 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --logging.level.root=warn
 
 ```
 ana@vm:~/bookshop$ grep INFO app.log
-2026-10-16T20:30:11.198-03:00  INFO 24312 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 24312 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
-2026-10-16T20:30:11.205-03:00  INFO 24312 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-10-16T20:30:19.151-03:00  INFO 24312 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 8.717 seconds (process running for 8.717)
-2026-10-16T20:30:19.268-03:00  INFO 24312 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-16 with 6 books
+2026-10-22T19:32:26.469-03:00  INFO 21234 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 21234 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
+2026-10-22T19:32:26.472-03:00  INFO 21234 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T19:32:30.707-03:00  INFO 21234 --- [bookshop] [           main] [] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 4.556 seconds (process running for 4.929)
+2026-10-22T19:32:30.782-03:00  INFO 21234 --- [bookshop] [           main] [] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
 ```
 
 The catalogue line is back, which was expected. The other three are a lesson about names. **Spring

@@ -15,7 +15,22 @@ uma thread em segundo plano para quem chama não esperar o disco, e um modo sem 
 objetos por linha. Ele também tem uma API própria, `log4j-api`, e é por isso que a livraria carrega o
 `log4j-to-slf4j`: uma biblioteca escrita contra essa API ainda acaba no Logback.
 
-@@FENCE 0@@
+```
+ana@vm:~/logging-look$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P log4j2
+ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
+2026-10-22T22:33:20.563038177Z main ERROR Quantity 'two' is not a number
+java.lang.NumberFormatException: For input string: "two"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at Hello.main(Hello.java:13)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:258)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:138)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:76)
+
+```
 
 **Uma linha de quatro.** Sem arquivo de configuração, o Log4j2 escreve `ERROR` e nada abaixo, com a
 hora em UTC. O Logback sem arquivo escreveu tudo de `DEBUG` para cima. Nenhum dos dois padrões é feito
@@ -31,12 +46,37 @@ O **TinyLog** é um backend pequeno de uma equipe pequena, e o tamanho é o pont
 estática própria, `org.tinylog.Logger.info(...)`, sem campo de logger para declarar, e um provider
 para o SLF4J, que é o que o perfil acrescenta:
 
-@@FENCE 1@@
+```
+ana@vm:~/logging-look$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P tinylog
+ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
+2026-10-22 19:33:22 [main] Hello.main()
+DEBUG: Looking up book 3
+2026-10-22 19:33:22 [main] Hello.main()
+INFO: Order 7 placed by ana: 2 line(s)
+2026-10-22 19:33:22 [main] Hello.main()
+WARN: Only 1 of 'Frankenstein' left
+2026-10-22 19:33:22 [main] Hello.main()
+ERROR: Quantity 'two' is not a number: java.lang.NumberFormatException: For input string: "two"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at Hello.main(Hello.java:13)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:258)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:138)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:76)
+```
 
 Todo nível, duas linhas por evento, e o método que registrou, `Hello.main()`, que nenhum dos outros
 imprime por padrão. O tamanho fica mais fácil de ver no disco, cada total incluindo o `slf4j-api`:
 
-@@FENCE 2@@
+```
+ana@vm:~/logging-look$ for p in logback log4j2 tinylog; do mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P $p; printf '%-8s ' $p; du -ch $(tr ':' ' ' < cp.txt) | tail -n 1; done
+logback  984K	total
+log4j2   2.4M	total
+tinylog  288K	total
+```
 
 É por isso que o TinyLog aparece em ferramentas de linha de comando pequenas, em apps Android e onde
 quer que o tamanho de um jar conte. Ele não é um backend que o Spring Boot configura: o suporte de

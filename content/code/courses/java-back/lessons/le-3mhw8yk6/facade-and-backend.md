@@ -54,8 +54,8 @@ ana@vm:~/bookshop$ mvn dependency:tree -Dincludes=org.slf4j,ch.qos.logback,org.a
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  1.254 s
-[INFO] Finished at: 2026-10-16T20:28:13-03:00
+[INFO] Total time:  0.761 s
+[INFO] Finished at: 2026-10-22T19:30:34-03:00
 [INFO] ------------------------------------------------------------------------
 ```
 
@@ -211,10 +211,10 @@ ana@vm:~/logging-look$ tr ':' '\n' < cp.txt; echo
 /home/ana/.m2/repository/ch/qos/logback/logback-classic/1.5.38/logback-classic-1.5.38.jar
 /home/ana/.m2/repository/ch/qos/logback/logback-core/1.5.38/logback-core-1.5.38.jar
 ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
-20:28:19.674 [main] DEBUG Hello -- Looking up book 3
-20:28:19.677 [main] INFO Hello -- Order 7 placed by ana: 2 line(s)
-20:28:19.677 [main] WARN Hello -- Only 1 of 'Frankenstein' left
-20:28:19.678 [main] ERROR Hello -- Quantity 'two' is not a number
+19:30:38.281 [main] DEBUG Hello -- Looking up book 3
+19:30:38.283 [main] INFO Hello -- Order 7 placed by ana: 2 line(s)
+19:30:38.284 [main] WARN Hello -- Only 1 of 'Frankenstein' left
+19:30:38.284 [main] ERROR Hello -- Quantity 'two' is not a number
 java.lang.NumberFormatException: For input string: "two"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
 	at java.base/java.lang.Integer.parseInt(Integer.java:565)

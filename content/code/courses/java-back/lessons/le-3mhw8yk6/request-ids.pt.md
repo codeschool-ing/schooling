@@ -25,7 +25,9 @@ Crie `src/main/java/com/example/bookshop/web/RequestIdFilter.java`:
 
 A última linha do `application.properties`, acrescentada na seção anterior, é a outra metade:
 
-@@FENCE 0@@
+```properties
+logging.pattern.correlation=[%X{requestId:-}] 
+```
 
 `%X{requestId}` é o jeito do Logback de ler a chave `requestId` do MDC, e `:-` sem nada depois diz o
 que imprimir quando a chave falta: nada. O Boot põe esse padrão depois do nome da thread em toda
@@ -33,9 +35,13 @@ linha, que é o `[]` que as linhas da partida traziam. **A linha termina com um 
 acima e parte do valor: o Boot põe o padrão colado ao nome do logger, e sem o espaço os dois ficariam
 grudados. Empacote de novo, e reinicie o segundo terminal:
 
-@@FENCE 1@@
+```
+ana@vm:~/bookshop$ mvn -q package
+```
 
-@@FENCE 2@@
+```
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar > app.log
+```
 
 ## Seguindo uma requisição
 
@@ -43,7 +49,20 @@ O cabeçalho volta em toda resposta. Uma requisição sem ele ganha um id invent
 mantido. Um em que o filtro não confia é trocado. Uma requisição que o Spring Security recusa ainda
 ganha um id, porque o filtro roda primeiro:
 
-@@FENCE 3@@
+```
+ana@vm:~/bookshop$ curl -si localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
+HTTP/1.1 200 
+X-Request-Id: 85b598d4
+ana@vm:~/bookshop$ curl -si -H 'X-Request-Id: checkout-41' localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
+HTTP/1.1 200 
+X-Request-Id: checkout-41
+ana@vm:~/bookshop$ curl -si -H 'X-Request-Id: two words' localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
+HTTP/1.1 200 
+X-Request-Id: 1a1c6767
+ana@vm:~/bookshop$ curl -si -X POST localhost:8080/orders | grep -iE '^(HTTP|X-Request-Id)'
+HTTP/1.1 401 
+X-Request-Id: 82327b57
+```
 
 **Por que recusar `two words` em vez de registrar?** Porque o que estiver nesse cabeçalho seria copiado
 para o log, e o log é lido por pessoas e analisado por programas que confiam nele. Um cabeçalho com uma
@@ -53,7 +72,13 @@ forjar.
 
 Agora um pedido, com o token do `/auth/token` da aula 15:
 
-@@FENCE 4@@
+```
+ana@vm:~/bookshop$ TOKEN=$(curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])')
+ana@vm:~/bookshop$ curl -s -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-42' -d '{"lines":[{"bookId":2,"quantity":1}]}' localhost:8080/orders; echo
+{"id":1,"customer":"ana","placedAt":"2026-10-22T22:32:44Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
+ana@vm:~/bookshop$ grep checkout-42 app.log
+2026-10-22T19:32:44.986-03:00  INFO 21495 --- [bookshop] [nio-8080-exec-9] [checkout-42] c.e.bookshop.ordering.OrderService       : Order 1 placed by ana: 1 line(s), 2950 cents
+```
 
 O `OrderService` nunca menciona um id de requisição, e a linha dele traz um. Toda outra linha escrita
 naquela thread enquanto a requisição estava em andamento, pela livraria, pelo Spring ou pelo

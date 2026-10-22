@@ -33,18 +33,18 @@ application checks it with the same secret. (If it has expired, fetch another th
 ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-43' -d '{"lines":[{"bookId":4,"quantity":2}]}' localhost:8080/orders
 201
 ana@vm:~/bookshop$ grep checkout-43 app.log
-{"@timestamp":"2026-10-16T23:30:49.335782513Z","log":{"level":"INFO","logger":"com.example.bookshop.ordering.OrderService"},"process":{"pid":25221,"thread":{"name":"http-nio-8080-exec-2"}},"service":{"name":"bookshop","version":"0.1.0","node":{}},"message":"Order 2 placed by ana: 1 line(s), 6200 cents","requestId":"checkout-43","ecs":{"version":"8.11"}}
+{"@timestamp":"2026-10-22T22:32:55.345021176Z","log":{"level":"INFO","logger":"com.example.bookshop.ordering.OrderService"},"process":{"pid":21752,"thread":{"name":"http-nio-8080-exec-1"}},"service":{"name":"bookshop","version":"0.1.0","node":{}},"message":"Order 2 placed by ana: 1 line(s), 6200 cents","requestId":"checkout-43","ecs":{"version":"8.11"}}
 ana@vm:~/bookshop$ grep checkout-43 app.log | python3 -m json.tool
 {
-    "@timestamp": "2026-10-16T23:30:49.335782513Z",
+    "@timestamp": "2026-10-22T22:32:55.345021176Z",
     "log": {
         "level": "INFO",
         "logger": "com.example.bookshop.ordering.OrderService"
     },
     "process": {
-        "pid": 25221,
+        "pid": 21752,
         "thread": {
-            "name": "http-nio-8080-exec-2"
+            "name": "http-nio-8080-exec-1"
         }
     },
     "service": {
@@ -92,11 +92,11 @@ ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: B
 201
 ana@vm:~/bookshop$ grep checkout-44 app.log | python3 -m json.tool
 {
-    "@timestamp": "2026-10-16T20:30:59.853674663-03:00",
+    "@timestamp": "2026-10-22T19:33:06.290886261-03:00",
     "@version": "1",
     "message": "Order 3 placed by ana: 1 line(s), 3690 cents",
     "logger_name": "com.example.bookshop.ordering.OrderService",
-    "thread_name": "http-nio-8080-exec-2",
+    "thread_name": "http-nio-8080-exec-1",
     "level": "INFO",
     "level_value": 20000,
     "requestId": "checkout-44"
@@ -135,7 +135,7 @@ ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -H 'Authorization: B
 ana@vm:~/bookshop$ grep -c not-a-real-token app.log
 0
 ana@vm:~/bookshop$ grep masked app.log
-2026-10-16T20:31:14.255-03:00 DEBUG 26381 --- [bookshop] [nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-10-22T19:33:16.000-03:00 DEBUG 22175 --- [bookshop] [nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
 ```
 
 The token appears nowhere, and Spring says why on the first request. The switch that unmasks them,

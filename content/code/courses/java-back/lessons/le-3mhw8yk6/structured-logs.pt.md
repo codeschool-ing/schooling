@@ -15,17 +15,50 @@ thread e cada entrada do MDC como campos próprios. O Spring Boot faz isso com u
 livraria mantém o formato legível por padrão e liga o JSON com um perfil. Crie
 `src/main/resources/application-json.properties`:
 
-@@FENCE 0@@
+```properties
+logging.structured.format.console=ecs
+```
 
 `ecs` é o **Elastic Common Schema**, os nomes de campo que a pilha da Elastic lê. Rode `mvn -q package`
 de novo, e reinicie o segundo terminal com o perfil:
 
-@@FENCE 1@@
+```
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=json > app.log
+```
 
 O token da seção anterior ainda vale: ele dura quinze minutos, e a aplicação reiniciada o confere com
 o mesmo segredo. (Se tiver expirado, pegue outro do mesmo jeito.)
 
-@@FENCE 2@@
+```
+ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-43' -d '{"lines":[{"bookId":4,"quantity":2}]}' localhost:8080/orders
+201
+ana@vm:~/bookshop$ grep checkout-43 app.log
+{"@timestamp":"2026-10-22T22:32:55.345021176Z","log":{"level":"INFO","logger":"com.example.bookshop.ordering.OrderService"},"process":{"pid":21752,"thread":{"name":"http-nio-8080-exec-1"}},"service":{"name":"bookshop","version":"0.1.0","node":{}},"message":"Order 2 placed by ana: 1 line(s), 6200 cents","requestId":"checkout-43","ecs":{"version":"8.11"}}
+ana@vm:~/bookshop$ grep checkout-43 app.log | python3 -m json.tool
+{
+    "@timestamp": "2026-10-22T22:32:55.345021176Z",
+    "log": {
+        "level": "INFO",
+        "logger": "com.example.bookshop.ordering.OrderService"
+    },
+    "process": {
+        "pid": 21752,
+        "thread": {
+            "name": "http-nio-8080-exec-1"
+        }
+    },
+    "service": {
+        "name": "bookshop",
+        "version": "0.1.0",
+        "node": {}
+    },
+    "message": "Order 2 placed by ana: 1 line(s), 6200 cents",
+    "requestId": "checkout-43",
+    "ecs": {
+        "version": "8.11"
+    }
+}
+```
 
 O mesmo evento, e nada mais precisa ser deduzido pela posição. O nome do logger e o da thread vêm
 inteiros, sem corte. A hora está em UTC com o fuso escrito como `Z`, então linhas de máquinas em fusos
@@ -40,7 +73,10 @@ verdade.
 Mais uma coisa que o JSON mostra e o texto não mostrava. As classes do próprio Spring registram pelo
 `commons-logging`, e as linhas delas trazem uma tag dizendo isso:
 
-@@FENCE 3@@
+```
+ana@vm:~/bookshop$ grep -c '"tags":\["COMMONS-LOGGING"\]' app.log
+14
+```
 
 ## Três formatos, um evento
 
@@ -49,9 +85,25 @@ O ECS é um de três formatos que o Boot escreve; `logstash` e `gelf` (o do Gray
 vence o arquivo do perfil, então o mesmo evento com os nomes do Logstash está a um reinício de
 distância:
 
-@@FENCE 4@@
+```
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=json --logging.structured.format.console=logstash > app.log
+```
 
-@@FENCE 5@@
+```
+ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-44' -d '{"lines":[{"bookId":5,"quantity":1}]}' localhost:8080/orders
+201
+ana@vm:~/bookshop$ grep checkout-44 app.log | python3 -m json.tool
+{
+    "@timestamp": "2026-10-22T19:33:06.290886261-03:00",
+    "@version": "1",
+    "message": "Order 3 placed by ana: 1 line(s), 3690 cents",
+    "logger_name": "com.example.bookshop.ordering.OrderService",
+    "thread_name": "http-nio-8080-exec-1",
+    "level": "INFO",
+    "level_value": 20000,
+    "requestId": "checkout-44"
+}
+```
 
 `logger_name` em vez de `log.logger`, um `level_value` numérico ao lado do nível, a hora com a
 diferença de São Paulo em vez de UTC, e o mesmo `requestId`. O código que escreveu a linha não mudou, e
@@ -77,9 +129,18 @@ O logging de requisições do próprio Spring foi feito pensando na segunda regr
 4 sobe `org.springframework.web` para `debug`; mande a ele uma requisição com um token que ele vai
 recusar:
 
-@@FENCE 6@@
+```
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=dev > app.log
+```
 
-@@FENCE 7@@
+```
+ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' -H 'Authorization: Bearer not-a-real-token' localhost:8081/books/1
+401
+ana@vm:~/bookshop$ grep -c not-a-real-token app.log
+0
+ana@vm:~/bookshop$ grep masked app.log
+2026-10-22T19:33:16.000-03:00 DEBUG 22175 --- [bookshop] [nio-8081-exec-1] [] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+```
 
 O token não aparece em lugar nenhum, e o Spring diz por que já na primeira requisição. A chave que
 desliga o mascaramento, `spring.mvc.log-request-details`, existe para a máquina de quem desenvolve. O

@@ -21,7 +21,43 @@ por uma interface só e deixa a escolha do backend para quem monta a aplicação
 A aula 4 encontrou o `spring-boot-starter-logging` na árvore de dependências do starter. Pedir ao
 Maven só as bibliotecas de logging mostra de onde vem cada uma:
 
-@@FENCE 0@@
+```
+ana@vm:~/bookshop$ mvn dependency:tree -Dincludes=org.slf4j,ch.qos.logback,org.apache.logging.log4j,commons-logging,org.jboss.logging
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:bookshop >------------------------
+[INFO] Building bookshop 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.10.0:tree (default-cli) @ bookshop ---
+[INFO] com.example:bookshop:jar:0.1.0
+[INFO] +- org.springframework.boot:spring-boot-starter-webmvc:jar:4.1.1:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:4.1.1:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-starter-logging:jar:4.1.1:compile
+[INFO] |  |     +- ch.qos.logback:logback-classic:jar:1.5.38:compile
+[INFO] |  |     |  \- ch.qos.logback:logback-core:jar:1.5.38:compile
+[INFO] |  |     +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.25.5:compile
+[INFO] |  |     |  \- org.apache.logging.log4j:log4j-api:jar:2.25.5:compile
+[INFO] |  |     \- org.slf4j:jul-to-slf4j:jar:2.0.18:compile
+[INFO] |  \- org.springframework.boot:spring-boot-http-converter:jar:4.1.1:compile
+[INFO] |     \- org.springframework.boot:spring-boot:jar:4.1.1:compile
+[INFO] |        \- org.springframework:spring-core:jar:7.0.9:compile
+[INFO] |           \- commons-logging:commons-logging:jar:1.3.6:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-validation:jar:4.1.1:compile
+[INFO] |  \- org.springframework.boot:spring-boot-validation:jar:4.1.1:compile
+[INFO] |     \- org.hibernate.validator:hibernate-validator:jar:9.1.3.Final:compile
+[INFO] |        \- org.jboss.logging:jboss-logging:jar:3.6.3.Final:compile
+[INFO] \- org.springframework.boot:spring-boot-starter-data-jpa:jar:4.1.1:compile
+[INFO]    \- org.springframework.boot:spring-boot-starter-jdbc:jar:4.1.1:compile
+[INFO]       \- com.zaxxer:HikariCP:jar:7.0.2:compile
+[INFO]          \- org.slf4j:slf4j-api:jar:2.0.18:compile
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.761 s
+[INFO] Finished at: 2026-10-22T19:30:34-03:00
+[INFO] ------------------------------------------------------------------------
+```
 
 Leia de baixo para cima. `slf4j-api` é a fachada, e o Maven a coloca sob o HikariCP só porque foi o
 primeiro lugar onde a encontrou; o Logback também depende dela. `logback-classic` é o backend. Todo o
@@ -42,12 +78,104 @@ por vez. Crie `~/logging-look/pom.xml`. Ele não tem código para compilar: exis
 um classpath, e cada **perfil** acrescenta um backend à única dependência que todas as variantes
 compartilham:
 
-@@FENCE 1@@
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example</groupId>
+  <artifactId>logging-look</artifactId>
+  <version>1.0.0</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.18</version>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>logback</id>
+      <dependencies>
+        <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+          <version>1.5.38</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>log4j2</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j2-impl</artifactId>
+          <version>2.25.5</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>2.25.5</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tinylog</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.tinylog</groupId>
+          <artifactId>slf4j-tinylog</artifactId>
+          <version>2.8.1</version>
+        </dependency>
+        <dependency>
+          <groupId>org.tinylog</groupId>
+          <artifactId>tinylog-impl</artifactId>
+          <version>2.8.1</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.10.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
+```
 
 As versões são as que o Boot 4.1.1 gerencia para a livraria, então as duas primeiras variantes não
 baixam nada novo. Ao lado dele, `~/logging-look/Hello.java`, que importa o SLF4J e mais nada:
 
-@@FENCE 2@@
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Hello {
+
+    private static final Logger log = LoggerFactory.getLogger(Hello.class);
+
+    public static void main(String[] args) {
+        log.debug("Looking up book {}", 3);
+        log.info("Order {} placed by {}: {} line(s)", 7, "ana", 2);
+        log.warn("Only {} of '{}' left", 1, "Frankenstein");
+        try {
+            Integer.parseInt("two");
+        } catch (NumberFormatException e) {
+            log.error("Quantity '{}' is not a number", "two", e);
+        }
+    }
+}
+```
 
 `LoggerFactory.getLogger(Hello.class)` pede um **logger**, e a classe recebida vira o **nome** do
 logger: `Hello` aqui, `com.example.bookshop.ordering.OrderService` na livraria. Toda linha traz esse
@@ -59,7 +187,15 @@ arquivo, e `-q` deixa o Maven calado a menos que algo falhe. O `java` então rod
 direto com esse classpath. Primeiro sem perfil, com a fachada sozinha (o `cp.txt` não tem quebra de
 linha no fim, daí o `echo`):
 
-@@FENCE 3@@
+```
+ana@vm:~/logging-look$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt
+ana@vm:~/logging-look$ cat cp.txt; echo
+/home/ana/.m2/repository/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar
+ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+```
 
 O programa compilou, rodou e terminou, e **nenhuma das quatro linhas foi escrita, nem a de erro.** O
 SLF4J procurou um **provider**, que é como o SLF4J chama um backend, não achou nenhum, avisou três
@@ -69,7 +205,28 @@ vazio, então vale reconhecer esses três avisos.
 
 Agora com o Logback:
 
-@@FENCE 4@@
+```
+ana@vm:~/logging-look$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P logback
+ana@vm:~/logging-look$ tr ':' '\n' < cp.txt; echo
+/home/ana/.m2/repository/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar
+/home/ana/.m2/repository/ch/qos/logback/logback-classic/1.5.38/logback-classic-1.5.38.jar
+/home/ana/.m2/repository/ch/qos/logback/logback-core/1.5.38/logback-core-1.5.38.jar
+ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
+19:30:38.281 [main] DEBUG Hello -- Looking up book 3
+19:30:38.283 [main] INFO Hello -- Order 7 placed by ana: 2 line(s)
+19:30:38.284 [main] WARN Hello -- Only 1 of 'Frankenstein' left
+19:30:38.284 [main] ERROR Hello -- Quantity 'two' is not a number
+java.lang.NumberFormatException: For input string: "two"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at Hello.main(Hello.java:13)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.execute(SourceLauncher.java:258)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.run(SourceLauncher.java:138)
+	at jdk.compiler/com.sun.tools.javac.launcher.SourceLauncher.main(SourceLauncher.java:76)
+```
 
 O mesmo arquivo-fonte, mais três jars, e agora toda linha chega: a hora, a thread, o nível, o nome do
 logger e a mensagem, com o stack trace da exceção depois da última. Nada no `Hello.java` mudou entre as

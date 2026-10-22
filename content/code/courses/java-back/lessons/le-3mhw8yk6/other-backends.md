@@ -18,7 +18,7 @@ bookshop carries `log4j-to-slf4j`: a library written against that API still ends
 ```
 ana@vm:~/logging-look$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P log4j2
 ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
-2026-10-16T23:31:21.248704849Z main ERROR Quantity 'two' is not a number
+2026-10-22T22:33:20.563038177Z main ERROR Quantity 'two' is not a number
 java.lang.NumberFormatException: For input string: "two"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
 	at java.base/java.lang.Integer.parseInt(Integer.java:565)
@@ -49,13 +49,13 @@ is what the profile adds:
 ```
 ana@vm:~/logging-look$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P tinylog
 ana@vm:~/logging-look$ java -cp "$(cat cp.txt)" Hello.java
-2026-10-16 20:31:26 [main] Hello.main()
+2026-10-22 19:33:22 [main] Hello.main()
 DEBUG: Looking up book 3
-2026-10-16 20:31:26 [main] Hello.main()
+2026-10-22 19:33:22 [main] Hello.main()
 INFO: Order 7 placed by ana: 2 line(s)
-2026-10-16 20:31:26 [main] Hello.main()
+2026-10-22 19:33:22 [main] Hello.main()
 WARN: Only 1 of 'Frankenstein' left
-2026-10-16 20:31:26 [main] Hello.main()
+2026-10-22 19:33:22 [main] Hello.main()
 ERROR: Quantity 'two' is not a number: java.lang.NumberFormatException: For input string: "two"
 	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
 	at java.base/java.lang.Integer.parseInt(Integer.java:565)

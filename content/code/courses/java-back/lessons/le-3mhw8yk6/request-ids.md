@@ -53,16 +53,16 @@ still gets an id, because the filter runs first:
 ```
 ana@vm:~/bookshop$ curl -si localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
 HTTP/1.1 200 
-X-Request-Id: a2427a7e
+X-Request-Id: 85b598d4
 ana@vm:~/bookshop$ curl -si -H 'X-Request-Id: checkout-41' localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
 HTTP/1.1 200 
 X-Request-Id: checkout-41
 ana@vm:~/bookshop$ curl -si -H 'X-Request-Id: two words' localhost:8080/books/1 | grep -iE '^(HTTP|X-Request-Id)'
 HTTP/1.1 200 
-X-Request-Id: 29aba6be
+X-Request-Id: 1a1c6767
 ana@vm:~/bookshop$ curl -si -X POST localhost:8080/orders | grep -iE '^(HTTP|X-Request-Id)'
 HTTP/1.1 401 
-X-Request-Id: 6bd16e4a
+X-Request-Id: 82327b57
 ```
 
 **Why refuse `two words` rather than log it?** Because whatever is in that header would be copied into
@@ -75,9 +75,9 @@ Now an order, with a token from lesson 15's `/auth/token`:
 ```
 ana@vm:~/bookshop$ TOKEN=$(curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])')
 ana@vm:~/bookshop$ curl -s -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-42' -d '{"lines":[{"bookId":2,"quantity":1}]}' localhost:8080/orders; echo
-{"id":1,"customer":"ana","placedAt":"2026-10-16T23:30:37Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
+{"id":1,"customer":"ana","placedAt":"2026-10-22T22:32:44Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
 ana@vm:~/bookshop$ grep checkout-42 app.log
-2026-10-16T20:30:37.719-03:00  INFO 24749 --- [bookshop] [nio-8080-exec-9] [checkout-42] c.e.bookshop.ordering.OrderService       : Order 1 placed by ana: 1 line(s), 2950 cents
+2026-10-22T19:32:44.986-03:00  INFO 21495 --- [bookshop] [nio-8080-exec-9] [checkout-42] c.e.bookshop.ordering.OrderService       : Order 1 placed by ana: 1 line(s), 2950 cents
 ```
 
 `OrderService` never mentions a request id, and its line carries one. Every other line written on
