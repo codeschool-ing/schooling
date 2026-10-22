@@ -112,12 +112,14 @@ quiet 'rm -f health.json'
 stop
 
 block readiness-loop
-quiet "cd ~/bookshop && (for i in \$(seq 200); do curl -s -o /dev/null -w '%{http_code}\n' localhost:8081/actuator/health/readiness; sleep 0.1; done | uniq -c) > /tmp/l22-loop.txt 2>&1 &"
+LOOP="for i in \$(seq 200); do curl -s -o /dev/null -w '%{http_code}\n' localhost:8081/actuator/health/readiness; sleep 0.1; done | uniq -c"
+runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
+LOOPPID=$!
 sleep 1
 EXTRA_ENV="$SECRET" start
 ready
-for _ in $(seq 60); do [ "$(grep -c . /tmp/l22-loop.txt 2>/dev/null)" -ge 2 ] && ! pgrep -u ana -f 'seq 200' >/dev/null && break; sleep 1; done
-printf 'ana@vm:%s$ %s\n' '~/bookshop' "for i in \$(seq 200); do curl -s -o /dev/null -w '%{http_code}\n' localhost:8081/actuator/health/readiness; sleep 0.1; done | uniq -c"
+wait $LOOPPID
+printf 'ana@vm:%s$ %s\n' '~/bookshop' "$LOOP"
 cat /tmp/l22-loop.txt
 rm -f /tmp/l22-loop.txt
 block readiness-log
