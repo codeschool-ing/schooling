@@ -128,8 +128,8 @@ stage() {
 
 db() {
   pg_ctlcluster 16 main start 9>&- >/dev/null 2>&1 || true
-  runuser -u postgres -- psql -qX >/dev/null <<'SQL'
-DROP DATABASE IF EXISTS bookshop;
+  runuser -u postgres -- psql -qX -v ON_ERROR_STOP=1 >/dev/null <<'SQL'
+DROP DATABASE IF EXISTS bookshop WITH (FORCE);
 DROP ROLE IF EXISTS bookshop;
 CREATE ROLE bookshop LOGIN PASSWORD 'bookshop';
 CREATE DATABASE bookshop OWNER bookshop;

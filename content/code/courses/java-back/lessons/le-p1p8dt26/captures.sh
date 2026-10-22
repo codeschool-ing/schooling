@@ -21,8 +21,8 @@
 #   - ana has no sudo in the lab, so a command the lesson shows with `sudo` is
 #     printed with ana's prompt and run by root, exactly as written;
 #   - the detours are applied by this script, run, and undone: SecurityConfig
-#     without its EndpointRequest line, and the `dev` profile of lesson 4,
-#     whose port meets the management port;
+#     without its EndpointRequest line, and lesson 4's application-dev.properties
+#     as it was before this lesson gave the management server port 8082;
 #   - 192.0.2.2 is the lab machine's own address (a documentation range).
 #
 # Run as root. PIDs, timestamps, durations, request ids, disk sizes and Date
@@ -103,6 +103,7 @@ run 'python3 -m json.tool health.json | head -9'
 run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health/liveness'
 run 'curl -s -w " %{http_code}\n" localhost:8081/actuator/health/readiness'
 run 'curl -s -o /dev/null -w "%{http_code} after %{time_total} s\n" localhost:8080/books'
+run 'curl -s localhost:8081/actuator/prometheus | grep "^http_server_requests_seconds_count" | grep "status=\"401\""'
 block db-down-log
 grep -E 'WARN|ERROR' $LOG | tail -n 3
 block db-back
@@ -112,7 +113,7 @@ quiet 'rm -f health.json'
 stop
 
 block readiness-loop
-LOOP="for i in \$(seq 1000); do echo \$(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/\$p; done); sleep 0.02; done | uniq -c"
+LOOP="for i in \$(seq 1500); do echo \$(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/\$p; done); done | uniq -c"
 runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
 LOOPPID=$!
 sleep 1
@@ -176,13 +177,19 @@ run 'curl -s -i localhost:8081/actuator/health | head -n 3'
 stop
 restore $SEC
 
-# --- detour: lesson 4's dev profile ---------------------------------------------------
-block dev
+# --- detour: lesson 4's dev profile, before and after this lesson's line ---------------
+DEV=src/main/resources/application-dev.properties
+asroot "cp $COURSE/lab/stages/le-djnvk025/$DEV $BS/$DEV && chown ana:ana $BS/$DEV"
 build
+block dev-broken
+EXTRA_ENV="$SECRET" run "java -jar target/bookshop-0.1.0.jar --spring.profiles.active=dev | grep -o 'IllegalStateException: .*'"
+restore $DEV
+build
+block dev-fixed
 EXTRA_ENV="$SECRET" start --spring.profiles.active=dev
 ready
-grep -E "Tomcat started on port|Exposing|already in use|APPLICATION FAILED|^Description|^Action|^Web server|^Identify" -A1 $LOG | grep -v '^--$'
-run 'curl -s -o /dev/null -w "%{http_code}\n" 192.0.2.2:8081/actuator/health'
+grep -E "Tomcat started on port" $LOG
+run 'curl -s -o /dev/null -w "%{http_code}\n" localhost:8082/actuator/health'
 stop
 
 # --- what the lesson shows is what the stage holds -----------------------------------
@@ -191,7 +198,7 @@ for f in $(cd $STAGE && find . -type f ! -name .removed | sed 's|^\./||'); do
   cmp -s "$STAGE/$f" "$BS/$f" || { echo "!!! $f differs from the stage" >&2; exit 1; }
 done
 if [ -f endpoints.md ]; then
-  shown endpoints.md pom.xml src/main/resources/application.properties $SEC
+  shown endpoints.md pom.xml src/main/resources/application.properties $SEC src/main/resources/application-dev.properties
   shown counting-orders.md src/main/java/com/example/bookshop/ordering/OrderService.java \
     src/test/java/com/example/bookshop/ordering/OrderServiceTest.java src/test/resources/application-test.properties
   echo 'every file shown is the file the stage holds'
