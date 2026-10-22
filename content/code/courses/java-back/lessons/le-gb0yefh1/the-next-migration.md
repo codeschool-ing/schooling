@@ -22,13 +22,32 @@ ALTER TABLE book ADD COLUMN publisher_id bigint NOT NULL REFERENCES publisher (i
 Build and start it, keeping Flyway's progress lines and the database's message:
 
 ```
-@@failing@@
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -m4 -E 'DbMigrate|^Message'
+2026-10-22T19:30:23.171-03:00  INFO 17484 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-22T19:30:23.181-03:00  INFO 17484 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - publisher"
+2026-10-22T19:30:23.230-03:00 ERROR 17484 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Migration of schema "public" to version "3 - publisher" failed! Changes successfully rolled back.
+Message    : ERROR: column "publisher_id" of relation "book" contains null values
 ```
 
 The second statement failed, and the first one is gone with it:
 
 ```
-@@afterfail@@
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c '\dt'
+                 List of relations
+ Schema |         Name          | Type  |  Owner   
+--------+-----------------------+-------+----------
+ public | author                | table | bookshop
+ public | book                  | table | bookshop
+ public | flyway_schema_history | table | bookshop
+(3 rows)
+
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'select installed_rank, version, description, success from flyway_schema_history'
+ installed_rank | version | description  | success 
+----------------+---------+--------------+---------
+              1 | 1       | catalogue    | t
+              2 | 2       | first titles | t
+(2 rows)
 ```
 
 No `publisher` table, and no row for version 3. **PostgreSQL runs DDL inside transactions**, so Flyway
@@ -61,5 +80,6 @@ This V3 was a demonstration. Delete it, so that version 3 is free for the booksh
 lesson 14 writes:
 
 ```
-@@removed@@
+ana@vm:~/bookshop$ rm src/main/resources/db/migration/V3__publisher.sql
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
 ```

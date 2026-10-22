@@ -152,7 +152,11 @@ spring.jpa.open-in-view=false
 Build, and look for the migrations inside the jar, which is where Flyway reads them from:
 
 ```
-@@files@@
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
+ana@vm:~/bookshop$ jar tf target/bookshop-0.1.0.jar | grep db/migration
+BOOT-INF/classes/db/migration/
+BOOT-INF/classes/db/migration/V1__catalogue.sql
+BOOT-INF/classes/db/migration/V2__first_titles.sql
 ```
 
 ## A database that already has tables
@@ -161,7 +165,8 @@ Start it in the second terminal. The log is long, so this time it goes through `
 one line that matters:
 
 ```
-@@nonempty@@
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep FlywayException
+Caused by: org.flywaydb.core.api.FlywayException: Found non-empty schema(s) "public" but no schema history table. Use baseline() or set baselineOnMigrate to true to initialize the schema history table.
 ```
 
 Flyway found tables and **no history table**, and it refuses to guess. These tables could be what V1
@@ -176,7 +181,19 @@ of rows in it. The bookshop's database was made by `schema.sql` and `data.sql`, 
 V1 and V2 make, so its baseline is 2. Try it once, with the two settings on the command line:
 
 ```
-@@baseline@@
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.flyway.baseline-on-migrate=true --spring.flyway.baseline-version=2 | grep -E 'o\.f\.|Started'
+2026-10-22T19:29:26.879-03:00  INFO 14768 --- [bookshop] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-22T19:29:26.883-03:00  INFO 14768 --- [bookshop] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.019s)
+2026-10-22T19:29:26.901-03:00  INFO 14768 --- [bookshop] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" with baseline ...
+2026-10-22T19:29:26.939-03:00  INFO 14768 --- [bookshop] [           main] o.f.core.internal.command.DbBaseline     : Successfully baselined schema with version: 2
+2026-10-22T19:29:26.973-03:00  INFO 14768 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-22T19:29:26.978-03:00  INFO 14768 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-10-22T19:29:29.883-03:00  INFO 14768 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 5.625 seconds (process running for 6.106)
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'select installed_rank, version, description, type, success from flyway_schema_history'
+ installed_rank | version |      description      |   type   | success 
+----------------+---------+-----------------------+----------+---------
+              1 | 2       | << Flyway Baseline >> | BASELINE | t
+(1 row)
 ```
 
 Flyway created its history with a **baseline** row at version 2 and applied nothing. The version is a
@@ -197,7 +214,15 @@ Start it again. On an empty database there is nothing to refuse, and Flyway's li
 story:
 
 ```
-@@migrate@@
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'o\.f\.|Started'
+2026-10-22T19:29:36.300-03:00  INFO 15121 --- [bookshop] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-22T19:29:36.304-03:00  INFO 15121 --- [bookshop] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.039s)
+2026-10-22T19:29:36.323-03:00  INFO 15121 --- [bookshop] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-22T19:29:36.417-03:00  INFO 15121 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-22T19:29:36.433-03:00  INFO 15121 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - catalogue"
+2026-10-22T19:29:36.576-03:00  INFO 15121 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - first titles"
+2026-10-22T19:29:36.627-03:00  INFO 15121 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.080s)
+2026-10-22T19:29:39.408-03:00  INFO 15121 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 7.082 seconds (process running for 7.743)
 ```
 
 It created its history table, found the schema empty, applied version 1 and then version 2, and only
@@ -208,7 +233,9 @@ The second dependency in the pom is easy to leave out, because the project compi
 is the start without it, against the same database:
 
 ```
-@@nopg@@
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep 'Caused by: org.flywaydb'
+Caused by: org.flywaydb.core.api.FlywayException: Unsupported Database: PostgreSQL 16.15
 ```
 
 Flyway knows PostgreSQL's name and nothing else about it. Put the dependency back.

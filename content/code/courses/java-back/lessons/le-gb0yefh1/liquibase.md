@@ -124,14 +124,38 @@ carries a `rollback` of its own; the reason is at the end of this section. Creat
 the changelog twice:
 
 ```
-@@lqupdate@@
+ana@vm:~/liquibase-look$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'CREATE SCHEMA look'
+CREATE SCHEMA
+ana@vm:~/liquibase-look$ mvn -B -q liquibase:update
+
+UPDATE SUMMARY
+Run:                          3
+Previously run:               0
+Filtered out:                 0
+-------------------------------
+Total change sets:            3
+
+ana@vm:~/liquibase-look$ mvn -B -q liquibase:update
+
+UPDATE SUMMARY
+Run:                          0
+Previously run:               3
+Filtered out:                 0
+-------------------------------
+Total change sets:            3
 ```
 
 The first run applied three changesets and the second applied none, which is Flyway's "up to date" in
 Liquibase's words. Its history is the table `databasechangelog`:
 
 ```
-@@lqtable@@
+ana@vm:~/liquibase-look$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'select id, author, filename, md5sum, exectype, orderexecuted from look.databasechangelog'
+      id      | author |    filename    |               md5sum               | exectype | orderexecuted 
+--------------+--------+----------------+------------------------------------+----------+---------------
+ author       | ana    | changelog.yaml | 9:9f262f08622c0f18cafcf7c050aa0b36 | EXECUTED |             1
+ book         | ana    | changelog.yaml | 9:9341c4015a946c2287430dcf5c96a8f3 | EXECUTED |             2
+ first-author | ana    | changelog.yaml | 9:74f9aa91af47f13bc625299b866ecca3 | EXECUTED |             3
+(3 rows)
 ```
 
 A changeset is known by its `id`, `author` and `filename` together, and `md5sum` plays the part of
@@ -145,7 +169,27 @@ The feature people choose Liquibase for is **rollback**: undoing the last change
 Undo the last two:
 
 ```
-@@lqrollback@@
+ana@vm:~/liquibase-look$ mvn -B -q liquibase:rollback -Dliquibase.rollbackCount=2
+ana@vm:~/liquibase-look$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'select id from look.databasechangelog'
+   id   
+--------
+ author
+(1 row)
+
+ana@vm:~/liquibase-look$ psql postgresql://bookshop:bookshop@localhost/bookshop -c '\dt look.*'
+                 List of relations
+ Schema |         Name          | Type  |  Owner   
+--------+-----------------------+-------+----------
+ look   | author                | table | bookshop
+ look   | databasechangelog     | table | bookshop
+ look   | databasechangeloglock | table | bookshop
+(3 rows)
+
+ana@vm:~/liquibase-look$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'select count(*) from look.author'
+ count 
+-------
+     0
+(1 row)
 ```
 
 The history lost its last two rows, the `book` table is gone and `author` is empty again. Liquibase
@@ -158,7 +202,12 @@ drop what was created. A dropped column's data does not come back.
 Drop the schema when you have finished looking:
 
 ```
-@@lqdrop@@
+ana@vm:~/liquibase-look$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'DROP SCHEMA look CASCADE'
+NOTICE:  drop cascades to 3 other objects
+DETAIL:  drop cascades to table look.databasechangelog
+drop cascades to table look.databasechangeloglock
+drop cascades to table look.author
+DROP SCHEMA
 ```
 
 ## Choosing between them
@@ -175,7 +224,12 @@ Drop the schema when you have finished looking:
 They differ in one more way, and it is not technical. The licence each one ships under is in its pom:
 
 ```
-@@lqlicence@@
+ana@vm:~$ grep -A1 '<license>' .m2/repository/org/flywaydb/flyway-parent/12.4.0/flyway-parent-12.4.0.pom .m2/repository/org/liquibase/liquibase-maven-plugin/5.0.3/liquibase-maven-plugin-5.0.3.pom
+.m2/repository/org/flywaydb/flyway-parent/12.4.0/flyway-parent-12.4.0.pom:    <license>
+.m2/repository/org/flywaydb/flyway-parent/12.4.0/flyway-parent-12.4.0.pom-      <name>Apache License, Version 2.0</name>
+--
+.m2/repository/org/liquibase/liquibase-maven-plugin/5.0.3/liquibase-maven-plugin-5.0.3.pom:        <license>
+.m2/repository/org/liquibase/liquibase-maven-plugin/5.0.3/liquibase-maven-plugin-5.0.3.pom-            <name>FSL-1.1-ALv2</name>
 ```
 
 Flyway is under the Apache License 2.0. Liquibase 5 moved to the **Functional Source License**, whose

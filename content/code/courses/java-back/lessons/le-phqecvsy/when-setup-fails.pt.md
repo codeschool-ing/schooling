@@ -30,8 +30,8 @@ tem compilador.
 Uma máquina que já foi usada para Java pode ter outro JDK, e o Maven pode encontrar esse no lugar
 do certo. Dois lugares decidem, e o `mvn -v` informa o resultado: a variável `JAVA_HOME`, se
 estiver definida, e senão o `java` a que o seu path leva. Um `JAVA_HOME` esquecido no `~/.bashrc`
-por um tutorial antigo é o caso mais comum, e com a linha do `~/.mavenrc` da seção sobre o JDK e o
-Maven no lugar ele falha antes mesmo de o Maven começar:
+por um tutorial antigo é o caso mais comum. Com a linha do `~/.mavenrc` da seção sobre o JDK e o
+Maven no lugar, ele falha antes mesmo de o Maven começar:
 
 ```
 ana@vm:~$ echo $JAVA_HOME

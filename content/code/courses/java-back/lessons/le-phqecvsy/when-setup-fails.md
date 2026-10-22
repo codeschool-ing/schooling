@@ -30,8 +30,8 @@ cause: a Java
 A machine that has been used for Java before may have another JDK on it, and Maven may find that
 one instead. Two places decide it, and `mvn -v` reports the result: the `JAVA_HOME` variable, if
 it is set, and otherwise the `java` your path leads to. A `JAVA_HOME` left over in `~/.bashrc` by
-an older tutorial is the commonest case, and with the `~/.mavenrc` line from the section on the JDK
-and Maven in place it fails before Maven even starts:
+an older tutorial is the commonest case. With the `~/.mavenrc` line from the section on the JDK and
+Maven in place, it fails before Maven even starts:
 
 ```
 ana@vm:~$ echo $JAVA_HOME

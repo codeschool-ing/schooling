@@ -35,7 +35,26 @@ the table looks like. `psql` accepts the whole connection as one URL; the passwo
 it is this course's development password:
 
 ```
-@@schemasql@@
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'Started|Catalogue'
+2026-10-22T19:29:14.030-03:00  INFO 13638 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 7.627 seconds (process running for 8.277)
+2026-10-22T19:29:14.169-03:00  INFO 13638 --- [bookshop] [           main] c.e.bookshop.catalogue.CatalogueReport   : Catalogue opened on 2026-10-22 with 6 books
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c '\d book'
+                                  Table "public.book"
+   Column    |     Type      | Collation | Nullable |             Default              
+-------------+---------------+-----------+----------+----------------------------------
+ id          | bigint        |           | not null | nextval('book_id_seq'::regclass)
+ isbn        | character(13) |           | not null | 
+ title       | text          |           | not null | 
+ author_id   | bigint        |           | not null | 
+ price_cents | integer       |           | not null | 
+Indexes:
+    "book_pkey" PRIMARY KEY, btree (id)
+    "book_isbn_key" UNIQUE CONSTRAINT, btree (isbn)
+Check constraints:
+    "book_price_cents_check" CHECK (price_cents >= 0)
+Foreign-key constraints:
+    "book_author_id_fkey" FOREIGN KEY (author_id) REFERENCES author(id)
 ```
 
 The application started without a word of complaint, and the table has no `stock` column. `IF NOT

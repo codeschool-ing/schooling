@@ -15,8 +15,8 @@ sudo apt install -y openjdk-25-jdk maven
 
 `openjdk-25-jdk` is the **JDK**, the Java Development Kit: the `java` launcher that runs programs,
 and `javac`, the compiler, which a runtime alone does not have. `maven` is Maven 3.8.7, Ubuntu's
-packaging of it, which puts the `mvn` command on your path. `apt` prints a screen of progress for
-a minute or two.
+packaging of it, which puts the `mvn` command on your path. `apt` prints a screen of progress while
+it downloads and installs both.
 
 ## Four lines of warning, and the line that silences them
 

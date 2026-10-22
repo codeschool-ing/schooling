@@ -7,7 +7,12 @@ Everything Flyway knows about this database is in one table it created and nothi
 Ask for it:
 
 ```
-@@history@@
+ana@vm:~/bookshop$ psql postgresql://bookshop:bookshop@localhost/bookshop -c 'select installed_rank, version, description, script, checksum, success from flyway_schema_history'
+ installed_rank | version | description  |        script        |  checksum  | success 
+----------------+---------+--------------+----------------------+------------+---------
+              1 | 1       | catalogue    | V1__catalogue.sql    | 2131081588 | t
+              2 | 2       | first titles | V2__first_titles.sql | -765405402 | t
+(2 rows)
 ```
 
 One row per migration it applied, in the order it applied them. `installed_rank` is that order,
@@ -26,7 +31,10 @@ Stop the application with Ctrl+C and start it again. Both files have a row with 
 there is nothing to do, and Flyway says so:
 
 ```
-@@uptodate@@
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'o\.f\.'
+2026-10-22T19:30:02.279-03:00  INFO 16715 --- [bookshop] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.018s)
+2026-10-22T19:30:02.319-03:00  INFO 16715 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-22T19:30:02.321-03:00  INFO 16715 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
 ```
 
 ## Editing a migration that already ran
@@ -36,7 +44,13 @@ Now the mistake every team makes once. Somebody notices that Frankenstein should
 Stop the application and do the same:
 
 ```
-@@mismatch@@
+ana@vm:~/bookshop$ sed -i 's/3500/3600/' src/main/resources/db/migration/V2__first_titles.sql
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -m1 -A3 'checksum mismatch'
+Migration checksum mismatch for migration version 2
+-> Applied to database : -765405402
+-> Resolved locally    : 1463101623
+Either revert the changes to the migration, or run repair to update the schema history.
 ```
 
 **Flyway refused to start.** The file no longer matches the row that recorded it, and the reason
@@ -63,7 +77,13 @@ history, and history is corrected by adding to it.
 Put the price back, so that the file is the one that ran:
 
 ```
-@@reverted@@
+ana@vm:~/bookshop$ sed -i 's/3600/3500/' src/main/resources/db/migration/V2__first_titles.sql
+ana@vm:~/bookshop$ mvn -B -q package -DskipTests
+ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar | grep -E 'o\.f\.|Started'
+2026-10-22T19:30:15.616-03:00  INFO 17238 --- [bookshop] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.027s)
+2026-10-22T19:30:15.649-03:00  INFO 17238 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-10-22T19:30:15.652-03:00  INFO 17238 --- [bookshop] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-10-22T19:30:17.657-03:00  INFO 17238 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 4.654 seconds (process running for 5.124)
 ```
 
 The checksums agree again, and the application starts. The correction itself, if the shop wanted it,
