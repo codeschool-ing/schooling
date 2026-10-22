@@ -1,0 +1,396 @@
+[
+  {
+    "id": "ex-p5vktsxf",
+    "version": 1,
+    "section": "atomics",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `compareAndSet(seen, candidate)` do when another thread changed the value since `seen` was read?",
+    "hint": "It reports whether it wrote.",
+    "choices": [
+      {
+        "text": "Throws `ConcurrentModificationException`",
+        "correct": false,
+        "why": "Atomics report failure by return value."
+      },
+      {
+        "text": "Writes `candidate` anyway and returns `true`",
+        "correct": false,
+        "why": "That would be a plain write, losing the other thread's value."
+      },
+      {
+        "text": "Writes nothing and returns `false`",
+        "correct": true,
+        "why": "Right; the caller reads again and retries."
+      },
+      {
+        "text": "Waits until the other thread is done",
+        "correct": false,
+        "why": "It never waits; that is the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqjkzg20",
+    "version": 1,
+    "section": "atomics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a function passed to `updateAndGet` required to have no side effects?",
+    "hint": "The retry loop underneath.",
+    "choices": [
+      {
+        "text": "It runs on another thread",
+        "correct": false,
+        "why": "It runs on the caller's thread."
+      },
+      {
+        "text": "The compiler rejects lambdas that print",
+        "correct": false,
+        "why": "It compiles; it just misbehaves."
+      },
+      {
+        "text": "It runs again each time a set fails",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Side effects make the atomic lose its lock",
+        "correct": false,
+        "why": "Atomics have no lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-jsg70t2a",
+    "version": 1,
+    "section": "atomics",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A minimum and a maximum must always agree. Why are two `AtomicLong` fields not enough?",
+    "hint": "What does one atomic protect?",
+    "choices": [
+      {
+        "text": "`compareAndSet` only works on `AtomicInteger`",
+        "correct": false,
+        "why": "Every atomic class has it."
+      },
+      {
+        "text": "`AtomicLong` cannot hold negative values",
+        "correct": false,
+        "why": "It holds any `long`."
+      },
+      {
+        "text": "Two atomics deadlock each other",
+        "correct": false,
+        "why": "Atomics never block, so they cannot deadlock."
+      },
+      {
+        "text": "Each guards one variable; the pair is not guarded",
+        "correct": true,
+        "why": "Right: a lock, or one immutable object in an `AtomicReference`."
+      }
+    ]
+  },
+  {
+    "id": "ex-nh2dgj45",
+    "version": 1,
+    "section": "atomics",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A counter written far more often than it is read is a good fit for `Long___`, which spreads writes over several cells.",
+    "hint": "It adds.",
+    "blanks": [
+      {
+        "accept": [
+          "Adder"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-q63eb6g7",
+    "version": 1,
+    "section": "concurrent-maps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `ConcurrentHashMap` updated with `get` and then `put` lost counts. Why, if the map is thread-safe?",
+    "hint": "Two calls.",
+    "choices": [
+      {
+        "text": "`getOrDefault` is not thread-safe",
+        "correct": false,
+        "why": "Each call is safe on its own."
+      },
+      {
+        "text": "The pair is a check-then-act",
+        "correct": true,
+        "why": "Right: use `merge` or `compute`."
+      },
+      {
+        "text": "`ConcurrentHashMap` drops writes under load",
+        "correct": false,
+        "why": "With `merge` it kept all 400,000."
+      },
+      {
+        "text": "The map needs `volatile` on its fields",
+        "correct": false,
+        "why": "Visibility is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-6cfccq35",
+    "version": 1,
+    "section": "concurrent-maps",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson call the shared `HashMap` the most dangerous shape of race?",
+    "hint": "What did the program do afterwards?",
+    "choices": [
+      {
+        "text": "It loses the keys but keeps the values",
+        "correct": false,
+        "why": "It lost counts, a different number each time."
+      },
+      {
+        "text": "Nothing threw, and the program went on with wrong numbers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is slower than `ConcurrentHashMap`",
+        "correct": false,
+        "why": "Speed is not the danger."
+      },
+      {
+        "text": "It always deadlocks",
+        "correct": false,
+        "why": "It finished every run."
+      }
+    ]
+  },
+  {
+    "id": "ex-aty7k1pc",
+    "version": 1,
+    "section": "concurrent-maps",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `ConcurrentHashMap` call with what it does atomically for one key.",
+    "hint": "Section 03.",
+    "pairs": [
+      {
+        "left": "`merge(k, 1, Integer::sum)`",
+        "right": "puts 1, or adds 1 to the value"
+      },
+      {
+        "left": "`computeIfAbsent(k, f)`",
+        "right": "builds a value only if the key is missing"
+      },
+      {
+        "left": "`compute(k, f)`",
+        "right": "replaces the value with `f` of the old one"
+      }
+    ],
+    "right_distractors": [
+      "locks the whole map for the call"
+    ]
+  },
+  {
+    "id": "ex-ptwkkw7q",
+    "version": 1,
+    "section": "blocking-queues",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `put` do on a full `ArrayBlockingQueue`?",
+    "hint": "Backpressure.",
+    "choices": [
+      {
+        "text": "Grows the queue",
+        "correct": false,
+        "why": "It is bounded; that is the point."
+      },
+      {
+        "text": "Drops the oldest element",
+        "correct": false,
+        "why": "Nothing is dropped."
+      },
+      {
+        "text": "Waits for room",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Throws `IllegalStateException`",
+        "correct": false,
+        "why": "That is `add`; `put` waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6zz6c0g",
+    "version": 1,
+    "section": "blocking-queues",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `Handover.java` put `STOP` into the queue twice?",
+    "hint": "Each consumer takes one.",
+    "choices": [
+      {
+        "text": "In case the first one is lost",
+        "correct": false,
+        "why": "Queues lose nothing."
+      },
+      {
+        "text": "`STOP` must be compared twice to be recognised",
+        "correct": false,
+        "why": "One `==` recognises it."
+      },
+      {
+        "text": "One poison pill for each consumer",
+        "correct": true,
+        "why": "Right: two packers."
+      },
+      {
+        "text": "To make sure the queue is full",
+        "correct": false,
+        "why": "Fullness is irrelevant to stopping."
+      }
+    ]
+  },
+  {
+    "id": "ex-56yjrqwd",
+    "version": 1,
+    "section": "blocking-queues",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `Order` need neither `volatile` nor a lock when it crosses the queue?",
+    "hint": "Lesson 12's table.",
+    "choices": [
+      {
+        "text": "The queue copies the order for each consumer",
+        "correct": false,
+        "why": "It hands over the same object."
+      },
+      {
+        "text": "Records are always thread-safe, however they are shared",
+        "correct": false,
+        "why": "Immutability helps, but the edge is what makes it visible."
+      },
+      {
+        "text": "`put` happens-before the `take` that gets it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Only one thread ever touches an order",
+        "correct": false,
+        "why": "Two do: the producer and one consumer."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5ag7p6s",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of sharing with the tool.",
+    "hint": "The table in section 05.",
+    "pairs": [
+      {
+        "left": "work from producers to consumers",
+        "right": "`ArrayBlockingQueue`"
+      },
+      {
+        "left": "at most N threads in some code",
+        "right": "`Semaphore`"
+      },
+      {
+        "left": "a list read far more than changed",
+        "right": "`CopyOnWriteArrayList`"
+      },
+      {
+        "left": "wait until N things have happened",
+        "right": "`CountDownLatch`"
+      }
+    ],
+    "right_distractors": [
+      "`HashMap`"
+    ]
+  },
+  {
+    "id": "ex-ez68f9ep",
+    "version": 1,
+    "section": "choosing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `new Semaphore(2)`, what was the most jobs printing at once in `TwoMore.java`?",
+    "hint": "The last line.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "jobs"
+  },
+  {
+    "id": "ex-6svs27tj",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the loop over the `CopyOnWriteArrayList` not throw, although it added to the list?",
+    "hint": "What does it copy, and when?",
+    "choices": [
+      {
+        "text": "Adding during a loop is always allowed in Java",
+        "correct": false,
+        "why": "An `ArrayList` would have thrown."
+      },
+      {
+        "text": "The loop walked the copy it started with",
+        "correct": true,
+        "why": "Right: each change makes a new array."
+      },
+      {
+        "text": "The new elements were added after the loop",
+        "correct": false,
+        "why": "They were added inside it."
+      },
+      {
+        "text": "The loop ran on a separate thread",
+        "correct": false,
+        "why": "One thread did both."
+      }
+    ]
+  },
+  {
+    "id": "ex-k5g87wcr",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one turn of a compare-and-set retry loop in order.",
+    "hint": "Read, decide, try, check.",
+    "items": [
+      "read the current value",
+      "compute the new value from it",
+      "`compareAndSet(old, new)`",
+      "if it returned `false`, start again"
+    ]
+  }
+]
