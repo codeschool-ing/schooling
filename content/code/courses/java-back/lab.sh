@@ -80,7 +80,8 @@ up() {
   # The one line lesson 1 adds, so Maven on Java 25 does not warn on every run.
   echo 'MAVEN_OPTS="--sun-misc-unsafe-memory-access=allow"' > /home/ana/.mavenrc
   mkdir -p /home/ana/.m2
-  cat > /home/ana/.m2/settings.xml <<'XML'
+  local port=${HTTPS_PROXY##*:}; port=${port%%/*}
+  cat > /home/ana/.m2/settings.xml <<XML
 <settings>
   <mirrors>
     <mirror><id>google-maven-central</id><mirrorOf>central</mirrorOf>
@@ -88,7 +89,7 @@ up() {
   </mirrors>
   <proxies>
     <proxy><id>sandbox</id><active>true</active><protocol>https</protocol>
-      <host>127.0.0.1</host><port>40917</port>
+      <host>127.0.0.1</host><port>$port</port>
       <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts></proxy>
   </proxies>
 </settings>
