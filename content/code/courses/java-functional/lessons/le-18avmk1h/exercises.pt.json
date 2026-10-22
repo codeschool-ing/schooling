@@ -1,0 +1,291 @@
+{
+  "ex-kpv6j78j": {
+    "prompt": "`Encoding.java` gravou `Sertão` em UTF-8. Quantos bytes o arquivo tinha?",
+    "hint": "Uma letra não é do alfabeto simples.",
+    "choices": [
+      {
+        "text": "Sete: um por letra, dois para o `ã`",
+        "why": "Isso: `c3 a3`."
+      },
+      {
+        "text": "Seis, um por caractere",
+        "why": "O `ã` ocupa dois."
+      },
+      {
+        "text": "Doze, dois para cada caractere",
+        "why": "Isso é UTF-16, que o arquivo não usou."
+      },
+      {
+        "text": "Oito, com um marcador no fim do texto",
+        "why": "A captura lista cada byte, e não há marcador."
+      }
+    ]
+  },
+  "ex-taf7pzny": {
+    "prompt": "O arquivo UTF-8 foi lido de volta como ISO-8859-1. O que aconteceu?",
+    "hint": "Olhe a última linha da captura.",
+    "choices": [
+      {
+        "text": "Uma `MalformedInputException` parou a leitura",
+        "why": "Nada foi lançado."
+      },
+      {
+        "text": "`SertÃ£o`, impresso sem erro e sem aviso",
+        "why": "Isso: cada byte virou um caractere."
+      },
+      {
+        "text": "A palavra voltou inteira, porque o Java 18 resolveu",
+        "why": "O Java 18 mudou o padrão, não um charset escrito no código."
+      },
+      {
+        "text": "O `ã` sumiu e voltou `Serto`",
+        "why": "Os dois bytes dele voltaram, como caracteres."
+      }
+    ]
+  },
+  "ex-7k5n34ae": {
+    "prompt": "Que classe transforma um `InputStream` num `Reader`?",
+    "hint": "A ponte da tabela.",
+    "choices": [
+      {
+        "text": "`InputStreamReader`",
+        "why": "Isso."
+      },
+      {
+        "text": "`FileReader`",
+        "why": "Essa abre um arquivo pelo nome; não embrulha um stream que você entrega."
+      },
+      {
+        "text": "`BufferedInputStream`",
+        "why": "Essa acrescenta um buffer e continua de bytes."
+      },
+      {
+        "text": "`OutputStreamWriter`",
+        "why": "Essa é a ponte no sentido contrário."
+      }
+    ]
+  },
+  "ex-ebt72sgr": {
+    "prompt": "Desde o Java 18 a codificação padrão da plataforma é ___ em todo sistema.",
+    "hint": "A que a aula manda escrever.",
+    "blanks": [
+      {
+        "accept": [
+          "UTF-8",
+          "UTF8"
+        ]
+      }
+    ]
+  },
+  "ex-b1xrafy4": {
+    "prompt": "Na captura, quantos milissegundos levou a leitura com buffer do arquivo de 5 MB?",
+    "hint": "A segunda linha.",
+    "unit": "ms"
+  },
+  "ex-2y8by2cs": {
+    "prompt": "Por que a leitura sem buffer foi tão mais lenta, com o mesmo laço?",
+    "hint": "Conte as viagens.",
+    "choices": [
+      {
+        "text": "A soma estourou e teve de ser recalculada",
+        "why": "As duas somas são iguais e cabem num `long`."
+      },
+      {
+        "text": "Cada `read()` era uma viagem própria ao kernel",
+        "why": "Isso: mais de cinco milhões delas."
+      },
+      {
+        "text": "O `FileInputStream` decodifica cada byte como UTF-8",
+        "why": "Ele move bytes e não decodifica nada."
+      },
+      {
+        "text": "O disco teve de acordar para a primeira",
+        "why": "O arquivo tinha acabado de ser gravado, e a diferença é por byte."
+      }
+    ]
+  },
+  "ex-j5d7qt34": {
+    "prompt": "Um programa grava um relatório por um `BufferedWriter`, nunca o fecha, e sai. O que há no arquivo?",
+    "hint": "Onde os últimos caracteres ainda estão.",
+    "choices": [
+      {
+        "text": "Só o que já tinha saído para o arquivo antes do fim",
+        "why": "Isso: o resto ainda estava na memória."
+      },
+      {
+        "text": "O relatório inteiro, porque sair esvazia todo buffer",
+        "why": "Nada esvazia um buffer Java na saída."
+      },
+      {
+        "text": "Nada; o arquivo nem é criado",
+        "why": "Abrir o stream cria o arquivo."
+      },
+      {
+        "text": "O relatório seguido dos bytes não usados do buffer",
+        "why": "Espaço não usado nunca é gravado."
+      }
+    ]
+  },
+  "ex-vdzsndpp": {
+    "prompt": "Ponha as camadas de `Layers.java` em ordem, do arquivo para fora.",
+    "hint": "A figura.",
+    "items": [
+      "`FileInputStream`, que lê bytes",
+      "`InputStreamReader`, que os decodifica",
+      "`BufferedReader`, que entrega linhas"
+    ]
+  },
+  "ex-szwdctp2": {
+    "prompt": "Com `ulimit -n 64`, que `FileInputStream` o `Leak.java` não conseguiu abrir?",
+    "hint": "A JVM segura alguns descritores ela mesma.",
+    "choices": [
+      {
+        "text": "O 65º",
+        "why": "A JVM já tinha pegado alguns."
+      },
+      {
+        "text": "O 61º",
+        "why": "Isso."
+      },
+      {
+        "text": "O 101º, depois do laço",
+        "why": "O laço para no 100."
+      },
+      {
+        "text": "O primeiro: o limite era baixo demais",
+        "why": "Sessenta deles abriram."
+      }
+    ]
+  },
+  "ex-24zf2ymn": {
+    "prompt": "Um `BufferedReader` embrulha um `InputStreamReader`, que embrulha um `FileInputStream`. O que o código deve fechar?",
+    "hint": "Cada um fecha o que embrulha.",
+    "choices": [
+      {
+        "text": "Só o `FileInputStream`, que segura o arquivo",
+        "why": "Isso pula o que as camadas de fora seguram."
+      },
+      {
+        "text": "Nada, porque o coletor de lixo os fecha",
+        "why": "Talvez, e talvez nunca."
+      },
+      {
+        "text": "Os três, de dentro para fora",
+        "why": "Fechar os de dentro primeiro deixa o buffer de fora apontando para um stream fechado."
+      },
+      {
+        "text": "Só o de fora, o `BufferedReader`",
+        "why": "Isso: o `close` dele chega aos outros dois."
+      }
+    ]
+  },
+  "ex-n5y8fn7v": {
+    "prompt": "Um servidor vaza um descritor por requisição. Onde aparece `Too many open files`?",
+    "hint": "Quem pede o próximo?",
+    "choices": [
+      {
+        "text": "Na linha que esqueceu de fechar",
+        "why": "Essa linha deu certo todas as vezes."
+      },
+      {
+        "text": "Na inicialização, antes da primeira requisição",
+        "why": "O limite chega depois de milhares."
+      },
+      {
+        "text": "No log do coletor de lixo",
+        "why": "Chega como uma `IOException` no programa."
+      },
+      {
+        "text": "Em qualquer código que abra o próximo arquivo ou socket",
+        "why": "Isso: muitas vezes longe do vazamento."
+      }
+    ]
+  },
+  "ex-00e6yy0j": {
+    "prompt": "`java WordCount.java < /dev/null 2> errors.txt` imprimiu uma linha. Para onde foi o aviso?",
+    "hint": "O que o `2>` indica.",
+    "choices": [
+      {
+        "text": "Nunca foi impresso, porque chegou uma linha",
+        "why": "Nada chegou, então foi impresso."
+      },
+      {
+        "text": "Para o `errors.txt`, onde o `cat` o achou",
+        "why": "Isso."
+      },
+      {
+        "text": "Para lugar nenhum: o `/dev/null` engoliu",
+        "why": "O `/dev/null` era a entrada."
+      },
+      {
+        "text": "Para a contagem, na saída padrão",
+        "why": "A linha da contagem saiu sozinha."
+      }
+    ]
+  },
+  "ex-drbccvm1": {
+    "prompt": "Por que o `WordCount` deixa o `System.in` aberto?",
+    "hint": "A quem ele pertence.",
+    "choices": [
+      {
+        "text": "Ele pertence ao processo, não à `main`",
+        "why": "Isso."
+      },
+      {
+        "text": "Fechá-lo lança uma `IOException`",
+        "why": "Ele pode ser fechado."
+      },
+      {
+        "text": "O shell o fecha antes de o programa começar",
+        "why": "O programa leu três linhas dele."
+      },
+      {
+        "text": "Um `BufferedReader` em volta já o fecha",
+        "why": "O reader também nunca foi fechado."
+      }
+    ]
+  },
+  "ex-9jk4h71h": {
+    "prompt": "Ligue cada tarefa ao stream a usar.",
+    "hint": "Bytes ou caracteres, e a ponte entre eles.",
+    "pairs": [
+      {
+        "left": "copiar uma imagem PNG",
+        "right": "`InputStream`"
+      },
+      {
+        "left": "ler um CSV em Latin-1",
+        "right": "`InputStreamReader` com `ISO_8859_1`"
+      },
+      {
+        "left": "imprimir uma reclamação",
+        "right": "`System.err`"
+      }
+    ],
+    "right_distractors": [
+      "`Writer`"
+    ]
+  },
+  "ex-emk9skx6": {
+    "prompt": "Quais destes vazam um descritor de arquivo? Marque todos os que se aplicam.",
+    "hint": "Quem chama `close`?",
+    "choices": [
+      {
+        "text": "`try (var in = new FileInputStream(f)) { in.read(); }`",
+        "why": "Não: o `try` o fecha."
+      },
+      {
+        "text": "`new FileInputStream(f).read()` num laço",
+        "why": "Sim: nada o fecha."
+      },
+      {
+        "text": "Um `BufferedReader` guardado num campo e nunca fechado",
+        "why": "Sim."
+      },
+      {
+        "text": "`Files.readString(path)`",
+        "why": "Não: ele abre e fecha o arquivo sozinho."
+      }
+    ]
+  }
+}
