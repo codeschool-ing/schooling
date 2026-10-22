@@ -1,0 +1,434 @@
+[
+  {
+    "id": "ex-2bz12wx4",
+    "version": 1,
+    "section": "cancellation",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each method of `context.Context` with what it gives.",
+    "hint": "Two of them are about stopping, one about time, one about data.",
+    "pairs": [
+      {
+        "left": "`Done()`",
+        "right": "a channel closed when the work should stop"
+      },
+      {
+        "left": "`Err()`",
+        "right": "why it stopped, or nil before"
+      },
+      {
+        "left": "`Deadline()`",
+        "right": "the time it will cancel itself, if any"
+      },
+      {
+        "left": "`Value(key)`",
+        "right": "request-scoped data stored under a key"
+      }
+    ],
+    "right_distractors": [
+      "the number of goroutines listening"
+    ]
+  },
+  {
+    "id": "ex-1dfg7v6s",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `cancel.go`, `main` cancelled only the parent context. What happened to the worker on the child?",
+    "hint": "Cancellation travels in one direction in the tree.",
+    "choices": [
+      {
+        "text": "It kept running until `cancelChild` ran",
+        "correct": false,
+        "why": "It stopped with the parent; `cancelChild` only runs at the end of `main`."
+      },
+      {
+        "text": "It stopped too, with `context canceled`",
+        "correct": true,
+        "why": "Right. Cancelling a context cancels all its children."
+      },
+      {
+        "text": "It panicked, because its parent was gone",
+        "correct": false,
+        "why": "Nothing panics; the child's `Done` closes and its `Err` is set."
+      },
+      {
+        "text": "It stopped with `context deadline exceeded`",
+        "correct": false,
+        "why": "There is no deadline in `cancel.go`; the reason was a cancel."
+      }
+    ]
+  },
+  {
+    "id": "ex-21edxege",
+    "version": 1,
+    "section": "cancellation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A worker runs a long loop and never looks at `ctx.Done()`. Its owner calls `cancel()`. What happens to the worker?",
+    "hint": "What actually stops a goroutine?",
+    "choices": [
+      {
+        "text": "The runtime stops it at the next function call",
+        "correct": false,
+        "why": "The runtime never stops a goroutine for you; cancellation is a message the goroutine has to read."
+      },
+      {
+        "text": "Nothing: it keeps running until its loop ends",
+        "correct": true,
+        "why": "Right. A context can only stop code that listens to it."
+      },
+      {
+        "text": "It panics with `context canceled`",
+        "correct": false,
+        "why": "`context canceled` is a value `Err` returns, not a panic."
+      },
+      {
+        "text": "Its `ctx` is replaced by a fresh one",
+        "correct": false,
+        "why": "Contexts are immutable; cancelling closes `Done` on the same one."
+      }
+    ]
+  },
+  {
+    "id": "ex-qnpyz9b2",
+    "version": 1,
+    "section": "cancellation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The root of every context tree, empty and never cancelled, comes from `context.___()`.",
+    "hint": "`cancel.go` starts its tree with it.",
+    "blanks": [
+      {
+        "accept": [
+          "Background"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-60p2c5x4",
+    "version": 1,
+    "section": "deadlines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`deadline.go` gave a 300 ms lookup a 100 ms budget. After how long did `lookup` return?",
+    "hint": "Its `select` also waits on `ctx.Done()`.",
+    "choices": [
+      {
+        "text": "300 ms, with the address",
+        "correct": false,
+        "why": "It printed `addr \"\"`: no address, because it gave up."
+      },
+      {
+        "text": "100 ms, with an empty address",
+        "correct": true,
+        "why": "Right: `addr \"\" after 100ms`."
+      },
+      {
+        "text": "200 ms, the difference between the two",
+        "correct": false,
+        "why": "The budget is a point in time, not a subtraction."
+      },
+      {
+        "text": "Never, because nothing cancelled it",
+        "correct": false,
+        "why": "The timeout cancels the context by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-4z9xesp4",
+    "version": 1,
+    "section": "deadlines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `deadline.go` use `WithTimeoutCause` instead of `WithTimeout`?",
+    "hint": "What can `Err()` say, and what can it not?",
+    "choices": [
+      {
+        "text": "`WithTimeout` cannot be cancelled early",
+        "correct": false,
+        "why": "It can: it returns a `cancel` too."
+      },
+      {
+        "text": "Only `WithTimeoutCause` sets `Err()` to `DeadlineExceeded`",
+        "correct": false,
+        "why": "Both do; `Err()` printed `context deadline exceeded` as usual."
+      },
+      {
+        "text": "So that `context.Cause` names the budget that ran out",
+        "correct": true,
+        "why": "Right. `Err()` is one of two values; the cause names the budget."
+      },
+      {
+        "text": "To make the timeout more precise",
+        "correct": false,
+        "why": "The timing is the same; only the recorded reason differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-xryame1p",
+    "version": 1,
+    "section": "deadlines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request arrives with a context that expires in 2 s. Deep inside, a function calls `context.WithTimeout(ctx, 5*time.Second)` for a slow report. When is the new context cancelled?",
+    "hint": "A child can only tighten a deadline.",
+    "choices": [
+      {
+        "text": "After 5 s, since the child sets its own",
+        "correct": false,
+        "why": "A child cannot outlive its parent's deadline."
+      },
+      {
+        "text": "After 2 s",
+        "correct": true,
+        "why": "Right. The earlier deadline is kept."
+      },
+      {
+        "text": "After 7 s, the two added together",
+        "correct": false,
+        "why": "Deadlines are points in time; they are not added."
+      },
+      {
+        "text": "Immediately, since 5 s is beyond the parent",
+        "correct": false,
+        "why": "It is not refused; it just keeps the parent's earlier deadline."
+      }
+    ]
+  },
+  {
+    "id": "ex-syc4sbg2",
+    "version": 1,
+    "section": "deadlines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go vet` refused `ctx, _ := context.WithTimeout(...)` in `lost.go`. What does an uncalled `cancel` keep alive until the deadline?",
+    "hint": "The section names two things.",
+    "choices": [
+      {
+        "text": "The goroutine that created the context",
+        "correct": false,
+        "why": "That goroutine goes on with its life; a context does not hold it."
+      },
+      {
+        "text": "A copy of the whole parent context",
+        "correct": false,
+        "why": "A child points at its parent; it does not copy it."
+      },
+      {
+        "text": "A timer and a slot in the parent",
+        "correct": true,
+        "why": "Right. Per request, with long timeouts, those pile up."
+      },
+      {
+        "text": "Nothing: vet's message is about style",
+        "correct": false,
+        "why": "The message says why: to avoid a context leak."
+      }
+    ]
+  },
+  {
+    "id": "ex-ab13rrns",
+    "version": 1,
+    "section": "deadlines",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lines `deadline.go` printed in order.",
+    "hint": "It asks about the deadline before it starts the lookup.",
+    "items": [
+      "has a deadline: true",
+      "addr \"\" after 100ms",
+      "err: context deadline exceeded",
+      "is DeadlineExceeded: true",
+      "cause: lookup budget of 100ms spent"
+    ]
+  },
+  {
+    "id": "ex-cy8vhp3r",
+    "version": 1,
+    "section": "values",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does the lesson say belongs in a context value?",
+    "hint": "Data that belongs to the request and crosses API boundaries.",
+    "choices": [
+      {
+        "text": "The database handle the function needs",
+        "correct": false,
+        "why": "The function cannot work without it, which makes it a parameter."
+      },
+      {
+        "text": "The id of the request being handled",
+        "correct": true,
+        "why": "Right: request-scoped, and useful in every log line below."
+      },
+      {
+        "text": "The program's configuration",
+        "correct": false,
+        "why": "It is the same for every request, so it belongs to the program."
+      },
+      {
+        "text": "An optional flag for one function",
+        "correct": false,
+        "why": "The documentation says plainly: not for optional parameters."
+      }
+    ]
+  },
+  {
+    "id": "ex-md7dkg6j",
+    "version": 1,
+    "section": "values",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `values.go`, `ctx.Value(0)` returned `<nil>` although the key constant is `0`. Why?",
+    "hint": "Keys are compared like map keys, type included.",
+    "choices": [
+      {
+        "text": "Values are looked up by text, not by number",
+        "correct": false,
+        "why": "Neither: they are compared like map keys. The string `\"requestIDKey\"` failed as well."
+      },
+      {
+        "text": "The value was stored in a child that `main` cannot see",
+        "correct": false,
+        "why": "`ctx` is that child; `handle(ctx)` found the id in it."
+      },
+      {
+        "text": "The untyped `0` became an `int`, and the key is a `ctxKey`",
+        "correct": true,
+        "why": "Right. Different types, different keys, which is the protection."
+      },
+      {
+        "text": "`Value` only works inside `handle`",
+        "correct": false,
+        "why": "It works anywhere the context is; `main` used the wrong key."
+      }
+    ]
+  },
+  {
+    "id": "ex-zqd8cybj",
+    "version": 1,
+    "section": "values",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two libraries both store a value under the string key `\"user\"` in the same request's context. What does each see when it reads it back?",
+    "hint": "`Value` searches from the context outwards to its parents.",
+    "choices": [
+      {
+        "text": "Whichever value was set nearest to the reading context",
+        "correct": true,
+        "why": "Right: the nearest match wins, so one library can read the other's value. A private key type prevents it."
+      },
+      {
+        "text": "Each its own value, kept apart by package",
+        "correct": false,
+        "why": "Nothing separates them: a string key is the same in every package."
+      },
+      {
+        "text": "A panic for a duplicate key",
+        "correct": false,
+        "why": "`WithValue` accepts any key, duplicates included."
+      },
+      {
+        "text": "`nil`, since the two cancel each other",
+        "correct": false,
+        "why": "Values do not cancel each other; the nearer one hides the farther."
+      }
+    ]
+  },
+  {
+    "id": "ex-za4xpzdn",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which habits does this lesson recommend? Choose all that apply.",
+    "hint": "One is about `cancel`, one about errors, one about keys.",
+    "choices": [
+      {
+        "text": "`defer cancel()` on the line after `WithTimeout`",
+        "correct": true,
+        "why": "Yes, and `go vet` checks it."
+      },
+      {
+        "text": "Testing for `context.DeadlineExceeded` with `errors.Is`",
+        "correct": true,
+        "why": "Yes, since callers may wrap the error."
+      },
+      {
+        "text": "An unexported key type for context values",
+        "correct": true,
+        "why": "Yes, so no other package can collide with it."
+      },
+      {
+        "text": "Letting the worker call `cancel` when it is done",
+        "correct": false,
+        "why": "The owner cancels; the worker only listens."
+      }
+    ]
+  },
+  {
+    "id": "ex-fc2xpg20",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler starts a background goroutine that writes an audit record, passing the request's context. The client hangs up. What happens to the audit write, and what does lesson 11 offer for it?",
+    "hint": "The request's context is cancelled when the request ends.",
+    "choices": [
+      {
+        "text": "It completes, since background goroutines ignore contexts",
+        "correct": false,
+        "why": "A goroutine that listens to the request's context stops with it, wherever it runs."
+      },
+      {
+        "text": "It is cancelled too; `WithoutCancel` avoids that",
+        "correct": true,
+        "why": "Right. The audit is not part of answering, so it needs a context that outlives the request."
+      },
+      {
+        "text": "It panics when the client hangs up",
+        "correct": false,
+        "why": "Cancellation closes `Done`; it panics nothing."
+      },
+      {
+        "text": "It waits for the client to reconnect",
+        "correct": false,
+        "why": "Nothing in a context waits for a client."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma6j6eqe",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Each worker in `cancel.go` takes a step every 30 ms, and `main` cancels after 100 ms. How many steps did each worker report?",
+    "hint": "100 divided by 30, whole steps only.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "steps"
+  }
+]

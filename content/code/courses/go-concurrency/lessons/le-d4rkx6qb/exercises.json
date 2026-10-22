@@ -1,0 +1,445 @@
+[
+  {
+    "id": "ex-dxtedr5t",
+    "version": 1,
+    "section": "matching",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`regexp.MustCompile(`\\d{3}`).FindString(\"GET /orders/1042 200\")` returned `104`. Why not `200`?",
+    "hint": "Which match does `FindString` return, and where may three digits end?",
+    "choices": [
+      {
+        "text": "`FindString` returns the shortest match",
+        "correct": false,
+        "why": "Both candidates are three characters; position decided."
+      },
+      {
+        "text": "The leftmost match wins",
+        "correct": true,
+        "why": "Right. `\\b\\d{3}\\b` says the digits must stand alone, and found `200`."
+      },
+      {
+        "text": "`\\d` matches only digits inside a word",
+        "correct": false,
+        "why": "`\\d` matches any digit; boundaries are `\\b`'s job."
+      },
+      {
+        "text": "Status codes are excluded from `\\d`",
+        "correct": false,
+        "why": "The engine knows nothing about status codes."
+      }
+    ]
+  },
+  {
+    "id": "ex-1q8ppyga",
+    "version": 1,
+    "section": "matching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are this lesson's patterns written between backquotes, such as `` `\\d{3}` ``?",
+    "hint": "What would the compiler do with `\"\\d\"`?",
+    "choices": [
+      {
+        "text": "The `regexp` package requires raw strings",
+        "correct": false,
+        "why": "It takes any string; the backquotes are for the compiler's sake."
+      },
+      {
+        "text": "Backquotes make the pattern compile faster",
+        "correct": false,
+        "why": "The bytes are the same; only the escaping differs."
+      },
+      {
+        "text": "So the backslash reaches the package as written",
+        "correct": true,
+        "why": "Right. In a raw string `\\d` is two characters, a backslash and a `d`."
+      },
+      {
+        "text": "They allow named groups",
+        "correct": false,
+        "why": "Named groups work in any string; `(?P<…>)` has no backslash."
+      }
+    ]
+  },
+  {
+    "id": "ex-e98qbva7",
+    "version": 1,
+    "section": "matching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program reads a search pattern from a flag given by the user. Which call should compile it?",
+    "hint": "What should happen when the user mistypes it?",
+    "choices": [
+      {
+        "text": "`regexp.Compile`, reporting the error",
+        "correct": true,
+        "why": "Right. A person's typo is an error to report, not a reason to crash."
+      },
+      {
+        "text": "`regexp.MustCompile` in a package-level variable",
+        "correct": false,
+        "why": "That idiom is for patterns in the source; a user's typo would panic at start-up."
+      },
+      {
+        "text": "`regexp.MustCompile` inside a `recover`",
+        "correct": false,
+        "why": "That turns a returned error into a panic and back; `Compile` already returns it."
+      },
+      {
+        "text": "Neither; `strings.Contains` is safer",
+        "correct": false,
+        "why": "The user asked for a pattern, not a fixed string."
+      }
+    ]
+  },
+  {
+    "id": "ex-t76ej34f",
+    "version": 1,
+    "section": "matching",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group written `(?P<status>\\d{3})` is found by name with the method `___`, which returns its position in the submatch slice.",
+    "hint": "The program called it on `line`.",
+    "blanks": [
+      {
+        "accept": [
+          "SubexpIndex"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qga27qcs",
+    "version": 1,
+    "section": "re2",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does RE2, Go's `regexp`, promise about the time a match takes?",
+    "hint": "Proportional to what?",
+    "choices": [
+      {
+        "text": "A constant time, whatever the input",
+        "correct": false,
+        "why": "A longer input still costs its length."
+      },
+      {
+        "text": "Time proportional to the length of the text",
+        "correct": true,
+        "why": "Right, whatever the pattern."
+      },
+      {
+        "text": "Faster than any other engine on every pattern",
+        "correct": false,
+        "why": "Not promised; the promise is about the worst case."
+      },
+      {
+        "text": "A timeout after one second",
+        "correct": false,
+        "why": "There is no timeout; there is no need for one."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0xjwn0d",
+    "version": 1,
+    "section": "re2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A pattern copied from another language, `(\\w+) \\1`, finds a word written twice. Go refuses it. What does the lesson suggest?",
+    "hint": "Which part can Go's engine not do, and which part can plain Go do?",
+    "choices": [
+      {
+        "text": "Enable backreferences with a compile flag",
+        "correct": false,
+        "why": "There is no such flag; RE2 refuses them on purpose."
+      },
+      {
+        "text": "Use `(?=` lookahead instead",
+        "correct": false,
+        "why": "Lookahead is refused too, for the same reason."
+      },
+      {
+        "text": "Match in Go, compare with `==`",
+        "correct": true,
+        "why": "Right: the expression finds candidates and `==` checks they match."
+      },
+      {
+        "text": "Escape it as `\\\\1`",
+        "correct": false,
+        "why": "That matches a literal backslash and a 1, not the earlier word."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3pz7v4a",
+    "version": 1,
+    "section": "re2",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Python took 0.52 s at n=24 and 2.07 s at n=26. Roughly by what factor did each two more `a`s multiply its time? Give a whole number.",
+    "hint": "2.07 divided by 0.52.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "times"
+  },
+  {
+    "id": "ex-f001rfbt",
+    "version": 1,
+    "section": "re2",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sign-up form validates e-mail addresses with a pattern that backtracks badly. One request sends a long, almost-matching value. With Python's `re` and with Go's `regexp`, what happens to the server?",
+    "hint": "This is `evil.py` and `evil/main.go` with a form in front.",
+    "choices": [
+      {
+        "text": "Both reject the value in microseconds",
+        "correct": false,
+        "why": "Python's time grows fourfold per two characters."
+      },
+      {
+        "text": "Python stalls; Go answers at once",
+        "correct": true,
+        "why": "Right. That is ReDoS, and with RE2 the worst case is the input's length."
+      },
+      {
+        "text": "Both are slow, since the pattern is the problem",
+        "correct": false,
+        "why": "The engine is the problem: the same pattern took Go a microsecond."
+      },
+      {
+        "text": "Go panics on the bad pattern",
+        "correct": false,
+        "why": "`^(a+)+$` compiles in Go; it just cannot explode."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh9mmgv0",
+    "version": 1,
+    "section": "re2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With RE2 a match cannot explode. What does the lesson say a program reading untrusted text should still do?",
+    "hint": "What does a long input still cost?",
+    "choices": [
+      {
+        "text": "Switch to a backtracking engine for safety",
+        "correct": false,
+        "why": "That is the unsafe choice."
+      },
+      {
+        "text": "Compile the pattern for every request",
+        "correct": false,
+        "why": "That is the cost the next section measures."
+      },
+      {
+        "text": "Nothing more",
+        "correct": false,
+        "why": "A long input still costs its length."
+      },
+      {
+        "text": "Limit how much of it it reads",
+        "correct": true,
+        "why": "Right, with `io.LimitReader` for instance."
+      }
+    ]
+  },
+  {
+    "id": "ex-mj778aa4",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `cost/main.go`, what made `compiled each` so much slower than `compiled once`?",
+    "hint": "What happened a hundred thousand times?",
+    "choices": [
+      {
+        "text": "It matched more lines",
+        "correct": false,
+        "why": "Both found 33,333."
+      },
+      {
+        "text": "The pattern was parsed and built once per line",
+        "correct": true,
+        "why": "Right: a hundred thousand compilations, each run once."
+      },
+      {
+        "text": "A closure is slower than a method value",
+        "correct": false,
+        "why": "`strings only` was also a closure and was the fastest."
+      },
+      {
+        "text": "The garbage collector stopped the loop",
+        "correct": false,
+        "why": "The cost was compilation; the lesson measured nothing about the collector."
+      }
+    ]
+  },
+  {
+    "id": "ex-zn8qd4y0",
+    "version": 1,
+    "section": "the-cost",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the first run, `compiled each` took 151.4 ms and `compiled once` 4.2 ms. Roughly how many times as long did compiling every time take? Give a whole number.",
+    "hint": "151.4 divided by 4.2.",
+    "value": 36,
+    "tolerance": 2,
+    "unit": "times"
+  },
+  {
+    "id": "ex-935w65cd",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question is the lesson's example of one better answered with the `strings` package than with a pattern?",
+    "hint": "Simple: a prefix, a suffix, a fixed piece.",
+    "choices": [
+      {
+        "text": "Splitting a log line into method, path, status and time",
+        "correct": false,
+        "why": "That is a shape, which is where a pattern earns its place."
+      },
+      {
+        "text": "Whether the last field starts with `5`",
+        "correct": true,
+        "why": "Right. `strings` answered it eight to ten times faster."
+      },
+      {
+        "text": "Whether a word appears twice in a row",
+        "correct": false,
+        "why": "That was the backreference example, done with a pattern and `==`."
+      },
+      {
+        "text": "Rewriting `/orders/1042` as `/orders/{id=1042}`",
+        "correct": false,
+        "why": "That used a group and `$1`, a pattern's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-dqne1bh9",
+    "version": 1,
+    "section": "the-cost",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A handler validates every request's header with `regexp.MustCompile(pattern).MatchString(h)` inside the handler function. What is the fix, and what does it change?",
+    "hint": "Where is a pattern from the source compiled, and how often?",
+    "choices": [
+      {
+        "text": "Use `Compile` instead, so errors are returned",
+        "correct": false,
+        "why": "That still compiles per request; the cost stays."
+      },
+      {
+        "text": "Add a `sync.Mutex` around the call",
+        "correct": false,
+        "why": "A compiled `Regexp` is safe to share; the cost is compilation, not contention."
+      },
+      {
+        "text": "A package-level `MustCompile`",
+        "correct": true,
+        "why": "Right. It removes the per-request compile and moves the failure to the first run."
+      },
+      {
+        "text": "Cache the result of `MatchString` per header",
+        "correct": false,
+        "why": "That adds memory and still compiles on every miss."
+      }
+    ]
+  },
+  {
+    "id": "ex-wd4fkps7",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three ways of `cost/main.go` from fastest to slowest, as measured.",
+    "hint": "Hundreds of microseconds, a few milliseconds, more than a hundred milliseconds.",
+    "items": [
+      "`strings only`",
+      "`compiled once`",
+      "`compiled each`"
+    ]
+  },
+  {
+    "id": "ex-c1z7f3j3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pattern with what it does.",
+    "hint": "Two of them are refused by Go.",
+    "pairs": [
+      {
+        "left": "`\\b\\d{3}\\b`",
+        "right": "three digits standing alone"
+      },
+      {
+        "left": "`(\\w+) \\1`",
+        "right": "refused: a backreference"
+      },
+      {
+        "left": "`\\d+(?= ms)`",
+        "right": "refused: lookahead"
+      },
+      {
+        "left": "`(?m)^`",
+        "right": "the start of every line"
+      }
+    ],
+    "right_distractors": [
+      "the end of the whole text"
+    ]
+  },
+  {
+    "id": "ex-d1c23gv2",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these hold for Go's `regexp`? Choose all that apply.",
+    "hint": "Think of the promise and of what it costs.",
+    "choices": [
+      {
+        "text": "`^(a+)+$` on 26 `a`s and a `b` answers in microseconds",
+        "correct": true,
+        "why": "Yes, 1µs in the capture."
+      },
+      {
+        "text": "Backreferences such as `\\1` are accepted",
+        "correct": false,
+        "why": "Refused: `invalid escape sequence`."
+      },
+      {
+        "text": "A compiled `*Regexp` is meant to be compiled once and reused",
+        "correct": true,
+        "why": "Yes; compiling each time cost about 35 times as much."
+      },
+      {
+        "text": "`MustCompile` returns an error for a bad pattern",
+        "correct": false,
+        "why": "It panics; `Compile` returns the error."
+      }
+    ]
+  }
+]

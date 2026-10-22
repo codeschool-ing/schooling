@@ -1,0 +1,293 @@
+{
+  "ex-ery6sc92": {
+    "prompt": "Do que um teste com `httptest.NewRecorder` precisa além do handler?",
+    "hint": "O único método do handler recebe dois argumentos.",
+    "choices": [
+      {
+        "text": "Uma porta livre, e um servidor já rodando nela",
+        "why": "Isso é o `NewServer`. Um recorder é chamado sem rede nenhuma."
+      },
+      {
+        "text": "Uma requisição, de `httptest.NewRequest`",
+        "why": "Isso: o teste chama `ServeHTTP(rec, req)` diretamente."
+      },
+      {
+        "text": "Uma goroutine para rodar o handler",
+        "why": "O `ServeHTTP` é uma chamada comum na própria goroutine do teste."
+      },
+      {
+        "text": "Um `http.Client` para enviar a requisição",
+        "why": "Nada é enviado; o valor da requisição é entregue ao método."
+      }
+    ]
+  },
+  "ex-0zpyxpea": {
+    "prompt": "O primeiro `Handler` definia o `Content-Type` depois de chamar o `Encode`. Por que o JSON saiu como `text/plain`?",
+    "hint": "Quando os cabeçalhos são enviados?",
+    "choices": [
+      {
+        "text": "O `json.Encoder` sempre escreve texto puro",
+        "why": "Ele escreve bytes; o tipo é um cabeçalho, e o cabeçalho foi definido tarde demais."
+      },
+      {
+        "text": "O recorder não consegue levar um `Content-Type`",
+        "why": "Depois do conserto o mesmo recorder relatou `application/json`."
+      },
+      {
+        "text": "Os cabeçalhos saem na primeira escrita",
+        "why": "Isso. Sem tipo definido naquele momento, o `net/http` farejou um do corpo."
+      },
+      {
+        "text": "O `http.Error` rodou primeiro e fixou o tipo",
+        "why": "O `http.Error` só roda nos caminhos de erro, que passaram."
+      }
+    ]
+  },
+  "ex-cp6vrk6p": {
+    "prompt": "Um teste confere o tipo de conteúdo com `rec.Header().Get(\"Content-Type\")` em vez de `rec.Result()`. Contra o primeiro `Handler`, o com defeito, o que esse teste relataria?",
+    "hint": "O `rec.Header()` é o map vivo em que o handler escreve.",
+    "choices": [
+      {
+        "text": "Uma aprovação: o map vivo tem o `Set` tardio",
+        "why": "Isso, e é por isso que a seção confere `Result()`: ele mostra o que foi de fato enviado."
+      },
+      {
+        "text": "A mesma falha que o próprio teste da lição relatou",
+        "why": "O map vivo tem `application/json` quando o handler retorna."
+      },
+      {
+        "text": "Um erro de compilação",
+        "why": "O `rec.Header()` existe e compila."
+      },
+      {
+        "text": "Um pânico dentro do recorder",
+        "why": "Ler um map de cabeçalhos não entra em pânico."
+      }
+    ]
+  },
+  "ex-nkjyff6z": {
+    "prompt": "Depois que o `ServeHTTP` retorna, a resposta que um cliente teria recebido vem do método ___ do recorder.",
+    "hint": "Ele devolve um `*http.Response`.",
+    "blanks": [
+      {
+        "accept": [
+          "Result",
+          "Result()"
+        ]
+      }
+    ]
+  },
+  "ex-hfre6why": {
+    "prompt": "Onde o `httptest.NewServer` escuta?",
+    "hint": "O log do teste imprimiu o endereço.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: é um objeto na memória",
+        "why": "Esse é o recorder. O servidor é real e tem endereço."
+      },
+      {
+        "text": "Na porta 80 de toda interface",
+        "why": "Ele pega uma porta livre, e só no loopback."
+      },
+      {
+        "text": "Numa porta que o teste tem de escolher e passar",
+        "why": "Ele mesmo escolhe uma e a informa em `srv.URL`."
+      },
+      {
+        "text": "Numa porta livre de `127.0.0.1`",
+        "why": "Isso: `http://127.0.0.1:40299` na execução citada."
+      }
+    ]
+  },
+  "ex-cayzej0z": {
+    "prompt": "Por que o `HTTPSource.Open` transforma um 404 em `fs.ErrNotExist`?",
+    "hint": "O que o `FSSource` dá para um arquivo que falta?",
+    "choices": [
+      {
+        "text": "Porque o `http.Client` se recusa a devolver respostas 404",
+        "why": "O cliente devolve qualquer status; o `Open` decide o que cada um significa."
+      },
+      {
+        "text": "Para um documento ausente significar uma coisa só",
+        "why": "Isso, e o `Handler` o transforma de novo num 404 dele."
+      },
+      {
+        "text": "Porque o `fs.ErrNotExist` fecha o corpo da resposta",
+        "why": "Um valor de erro não fecha nada; o próprio `Open` fecha o corpo."
+      },
+      {
+        "text": "Para o 404 contar como falha de teste",
+        "why": "O teste espera `fs.ErrNotExist` para `b.txt`; é o sucesso dessa conferência."
+      }
+    ]
+  },
+  "ex-40hsr53r": {
+    "prompt": "Num 500, o `HTTPSource.Open` fecha o corpo antes de devolver o erro. Por que ali, e não no `TopOf`?",
+    "hint": "O que o `TopOf` tem nas mãos quando o `Open` falha?",
+    "choices": [
+      {
+        "text": "Porque o `TopOf` só fecha arquivos",
+        "why": "O `TopOf` fecha qualquer `io.ReadCloser` que recebe."
+      },
+      {
+        "text": "Porque o servidor o fecha de qualquer jeito",
+        "why": "O corpo pertence ao lado do cliente e cabe ao cliente fechá-lo."
+      },
+      {
+        "text": "O `TopOf` nunca vê o corpo",
+        "why": "Isso. Quem segura o corpo por último o fecha."
+      },
+      {
+        "text": "Para a mensagem de erro incluir o texto do corpo",
+        "why": "A mensagem leva o status, não o corpo."
+      }
+    ]
+  },
+  "ex-63zxk1bq": {
+    "prompt": "Quais destes um teste com `httptest.NewServer` exercita e um teste com recorder não? Escolha todos os que se aplicam.",
+    "hint": "Um deles é uma conexão real.",
+    "choices": [
+      {
+        "text": "A requisição do cliente indo por uma conexão real",
+        "why": "Sim."
+      },
+      {
+        "text": "O prazo de um cliente interrompendo uma requisição",
+        "why": "Sim, como a seção 04 mostrou."
+      },
+      {
+        "text": "A escolha de código de status do handler",
+        "why": "Um recorder captura isso também; foi o assunto da seção 02."
+      },
+      {
+        "text": "O corpo que o handler escreve",
+        "why": "O `Body` do recorder o guarda."
+      }
+    ]
+  },
+  "ex-5499bsnk": {
+    "prompt": "Que timeout o `http.DefaultClient` tem?",
+    "hint": "O primeiro parágrafo da seção 04.",
+    "choices": [
+      {
+        "text": "Trinta segundos",
+        "why": "Não existe número padrão nenhum."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Isso, então sem prazo ele espera o tanto que o servidor esperar."
+      },
+      {
+        "text": "O valor de `GOMAXPROCS`, em segundos",
+        "why": "O `GOMAXPROCS` não tem nada a ver com HTTP."
+      },
+      {
+        "text": "O prazo do teste que o usa",
+        "why": "Um cliente não sabe nada de testes."
+      }
+    ]
+  },
+  "ex-mqfjsm2j": {
+    "prompt": "Na execução citada, depois de quantos milissegundos o `TestHTTPSourceTimeout` desistiu?",
+    "hint": "A linha do `t.Logf`.",
+    "unit": "ms"
+  },
+  "ex-q7zpdkhs": {
+    "prompt": "O cliente do `TestStuckServer` desistiu depois de 50 ms, mas o teste levou seis segundos. O que o segurou?",
+    "hint": "O que o `srv.Close` espera?",
+    "choices": [
+      {
+        "text": "O prazo do contexto, que era de seis segundos",
+        "why": "O prazo era de 50 milissegundos."
+      },
+      {
+        "text": "O detector de corridas, que deixa os testes lentos",
+        "why": "A execução não tinha `-race`."
+      },
+      {
+        "text": "O `srv.Close`, esperando o handler adormecido",
+        "why": "Isso, e ele avisou: blocked in Close after 5 seconds."
+      },
+      {
+        "text": "O `TopOf`, que tentou a requisição de novo",
+        "why": "O `TopOf` faz uma chamada e devolve o erro."
+      }
+    ]
+  },
+  "ex-gvq4jb6n": {
+    "prompt": "Um time quer toda requisição de um serviço ao `HTTPSource` limitada a dois segundos, mesmo quando quem chama esquece de passar um prazo. Que mudança faz isso?",
+    "hint": "Um dos dois limites pertence ao cliente, não à chamada.",
+    "choices": [
+      {
+        "text": "Passar `context.Background()` em todo lugar",
+        "why": "O `Background` não tem prazo nenhum."
+      },
+      {
+        "text": "Um cliente com `Timeout: 2 * time.Second`",
+        "why": "Isso. Ele limita toda requisição feita por esse cliente; um prazo menor de quem chama ainda vence."
+      },
+      {
+        "text": "Fazer o handler de teste dormir dois segundos",
+        "why": "Isso muda o servidor de teste, não o serviço."
+      },
+      {
+        "text": "Usar o `http.DefaultClient`",
+        "why": "Ele não tem timeout, que é o problema."
+      }
+    ]
+  },
+  "ex-ehz0856z": {
+    "prompt": "Ponha em ordem os eventos do `TestHTTPSourceTimeout`.",
+    "hint": "O handler espera desde o momento em que a requisição chega.",
+    "items": [
+      "o teste inicia o servidor",
+      "o `TopOf` envia a requisição pelo `HTTPSource`",
+      "o handler espera em `r.Context().Done()`",
+      "o prazo de 50 ms passa e o cliente desiste",
+      "o handler retorna e o `srv.Close` termina"
+    ]
+  },
+  "ex-e0zrn7pz": {
+    "prompt": "Associe cada coisa a testar à ferramenta que a lição usa para ela.",
+    "hint": "Que lado da conversa está sendo testado?",
+    "pairs": [
+      {
+        "left": "o que o `Handler` responde a um `n` ruim",
+        "right": "`httptest.NewRecorder`"
+      },
+      {
+        "left": "o que o `HTTPSource` faz com um 500",
+        "right": "`httptest.NewServer`"
+      },
+      {
+        "left": "o `TopOf` com uma fonte que falha",
+        "right": "um `Source` stub"
+      }
+    ],
+    "right_distractors": [
+      "o detector de corridas"
+    ]
+  },
+  "ex-x71mvr2f": {
+    "prompt": "Um colega troca o `srv.Client()` pelo `http.DefaultClient` no `TestHTTPSource`. O que muda para esse teste?",
+    "hint": "O que o `srv.Client()` tem de especial para um `NewServer` simples?",
+    "choices": [
+      {
+        "text": "Ele falha, porque o cliente padrão não alcança `127.0.0.1`",
+        "why": "Qualquer cliente alcança o loopback."
+      },
+      {
+        "text": "Ele trava, porque o cliente padrão espera para sempre",
+        "why": "O servidor de arquivos responde na hora, então não há o que esperar."
+      },
+      {
+        "text": "Nada visível: para HTTP simples ele é um cliente comum",
+        "why": "Isso. A diferença aparece com o `NewTLSServer`, em que o `srv.Client()` confia no certificado de teste."
+      },
+      {
+        "text": "O 404 deixa de ser `fs.ErrNotExist`",
+        "why": "Esse mapeamento está no `HTTPSource.Open`, seja qual for o cliente."
+      }
+    ]
+  }
+}

@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-2k3kgs0q",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`notes.go` opened `notes.txt` with `os.O_APPEND|os.O_WRONLY`. What did that make the second write do?",
+    "hint": "The file ended with 33 bytes and two lines.",
+    "choices": [
+      {
+        "text": "Replace the first line",
+        "correct": false,
+        "why": "That is what `os.Create` or `os.WriteFile` would do: empty the file first."
+      },
+      {
+        "text": "Go after the existing line",
+        "correct": true,
+        "why": "Right: `O_APPEND` writes at the end."
+      },
+      {
+        "text": "Fail, because the file was already open for reading",
+        "correct": false,
+        "why": "`os.WriteFile` had closed it; nothing held it open."
+      },
+      {
+        "text": "Create a second file called `notes.txt.1`",
+        "correct": false,
+        "why": "No flag renames or duplicates a file."
+      }
+    ]
+  },
+  {
+    "id": "ex-nwp279bh",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `notes.go` check the error from `f.Close()` after writing, when a reading program may simply `defer f.Close()`?",
+    "hint": "When might a failed write be reported?",
+    "choices": [
+      {
+        "text": "`defer` is not allowed on a file opened for writing",
+        "correct": false,
+        "why": "`defer f.Close()` compiles fine for any file; it just discards the error."
+      },
+      {
+        "text": "Closing a file twice panics",
+        "correct": false,
+        "why": "A second Close returns an error, and the program closes once anyway."
+      },
+      {
+        "text": "Some systems report a failed write only at Close",
+        "correct": true,
+        "why": "Right; ignoring it can lose data without a word."
+      },
+      {
+        "text": "Close returns how many bytes were written",
+        "correct": false,
+        "why": "`Close` returns only an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-ez2whkwn",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program asks for permissions `0o666` on the lab machine, whose umask is `0022`. What does `ls -l` show?",
+    "hint": "The umask removes bits from every file the process creates.",
+    "choices": [
+      {
+        "text": "`-rw-rw-rw-`, exactly what was asked",
+        "correct": false,
+        "why": "The mode is a request; the umask trims it."
+      },
+      {
+        "text": "`-rw-r--r--`",
+        "correct": true,
+        "why": "Right: 0o666 minus the 0o022 bits is 0o644."
+      },
+      {
+        "text": "`-rwxr-xr-x`, because files get execute by default",
+        "correct": false,
+        "why": "Nothing adds bits; 0o666 has no execute bit to start with."
+      },
+      {
+        "text": "An error, because the umask forbids group write",
+        "correct": false,
+        "why": "The umask never refuses; it quietly removes bits."
+      }
+    ]
+  },
+  {
+    "id": "ex-add0mdt3",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How should a program decide that an error from `os.ReadFile` means the file does not exist?",
+    "hint": "The text is for people.",
+    "choices": [
+      {
+        "text": "`strings.Contains(err.Error(), \"no such file\")`",
+        "correct": false,
+        "why": "The text differs between systems and can change; it is for people."
+      },
+      {
+        "text": "Compare `err == nil` and assume the rest",
+        "correct": false,
+        "why": "A file you may not read also returns an error; the two need different handling."
+      },
+      {
+        "text": "`errors.Is(err, fs.ErrNotExist)`",
+        "correct": true,
+        "why": "Right; it printed `does not exist: true`."
+      },
+      {
+        "text": "Check whether `len(data) == 0`",
+        "correct": false,
+        "why": "An empty file that exists also has no data."
+      }
+    ]
+  },
+  {
+    "id": "ex-s5nw08f2",
+    "version": 1,
+    "section": "directories",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which statements about `tree.go`'s run are true? Choose all that apply.",
+    "hint": "Read its output line by line.",
+    "choices": [
+      {
+        "text": "`os.ReadDir` listed `14`, `15` and `16` in that order",
+        "correct": true,
+        "why": "Yes; it sorts by name."
+      },
+      {
+        "text": "`WalkDir` found 32 Go files in the standard library's `io`",
+        "correct": true,
+        "why": "Yes, 144,889 bytes of them, tests included."
+      },
+      {
+        "text": "`MkdirAll` failed on its second call, since `logs/2026/10` existed",
+        "correct": false,
+        "why": "`MkdirAll` is content when directories exist; `Mkdir` would have failed."
+      },
+      {
+        "text": "The root refused `../notes.txt`",
+        "correct": true,
+        "why": "Yes: `path escapes from parent`."
+      }
+    ]
+  },
+  {
+    "id": "ex-yr4xwe34",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server joins a user-supplied name onto `uploads/` with `filepath.Join` and opens it. What does `os.Root` add that a check for `..` in the name does not?",
+    "hint": "Not every way out of a directory is spelled with two dots.",
+    "choices": [
+      {
+        "text": "Faster opening of files",
+        "correct": false,
+        "why": "Speed is not its purpose."
+      },
+      {
+        "text": "It refuses escapes through symbolic links too",
+        "correct": true,
+        "why": "Right: every name is resolved inside the root or refused, links included."
+      },
+      {
+        "text": "It encrypts the files inside the root",
+        "correct": false,
+        "why": "It changes where names resolve, not what the files hold."
+      },
+      {
+        "text": "It makes the directory read-only",
+        "correct": false,
+        "why": "`os.Root` has `Create`, `Mkdir` and `Remove` as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-j41211rk",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Inside a `filepath.WalkDir` callback, the `err` argument is not nil for one directory. What does the lesson recommend?",
+    "hint": "A directory you could not read arrives as that error.",
+    "choices": [
+      {
+        "text": "Ignore it and return nil, so the walk finishes",
+        "correct": false,
+        "why": "That hides the unreadable directory: the totals come out short and nothing says why."
+      },
+      {
+        "text": "Call `os.Exit(1)` at once",
+        "correct": false,
+        "why": "Return the error and let the caller of `WalkDir` decide."
+      },
+      {
+        "text": "Return it, unless you mean to skip that directory",
+        "correct": true,
+        "why": "Right; returning `filepath.SkipDir` is the deliberate way to skip."
+      },
+      {
+        "text": "Retry the same path until it succeeds",
+        "correct": false,
+        "why": "A permission error does not go away by asking again."
+      }
+    ]
+  },
+  {
+    "id": "ex-w5m0p48j",
+    "version": 1,
+    "section": "directories",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To leave a whole subtree such as `.git` out of a walk, the callback returns `filepath.___`.",
+    "hint": "A sentinel error value whose name says what it does.",
+    "blanks": [
+      {
+        "accept": [
+          "SkipDir"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-0e7x7k6e",
+    "version": 1,
+    "section": "bufio",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`plain.txt` was 1,088,890 bytes and `forgot.txt`, written through a buffer never flushed, was 1,085,440. How many bytes were lost?",
+    "hint": "Subtract.",
+    "value": 3450,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-yzrj2m99",
+    "version": 1,
+    "section": "bufio",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why was `forgot.txt` exactly 265 times 4,096 bytes long?",
+    "hint": "What does a `bufio.Writer` pass on, and when?",
+    "choices": [
+      {
+        "text": "Only full buffers reached the file",
+        "correct": true,
+        "why": "Right; nothing called `Flush`."
+      },
+      {
+        "text": "The disk stores files in blocks and rounded it down",
+        "correct": false,
+        "why": "`wc -c` reports the file's length, not the blocks it occupies; `plain.txt` was not a multiple."
+      },
+      {
+        "text": "`h.Close()` cut the file at the last full block",
+        "correct": false,
+        "why": "Close wrote nothing and cut nothing; the tail never left the buffer."
+      },
+      {
+        "text": "`Fprintf` stops writing after 4,096 calls",
+        "correct": false,
+        "why": "4,096 is the buffer's size in bytes, not a count of calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-wh731abc",
+    "version": 1,
+    "section": "bufio",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was writing through the `bufio.Writer` faster?",
+    "hint": "Count the system calls.",
+    "choices": [
+      {
+        "text": "It compresses the lines",
+        "correct": false,
+        "why": "Both files were 1,088,890 bytes."
+      },
+      {
+        "text": "It writes from several goroutines",
+        "correct": false,
+        "why": "One goroutine did all of it."
+      },
+      {
+        "text": "It skips `fmt.Fprintf`'s formatting",
+        "correct": false,
+        "why": "`Fprintf` formatted every line in both runs."
+      },
+      {
+        "text": "Fewer, larger system calls",
+        "correct": true,
+        "why": "Right: about 266 writes of 4,096 bytes."
+      }
+    ]
+  },
+  {
+    "id": "ex-b7ghcseh",
+    "version": 1,
+    "section": "bufio",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log reader built on `bufio.Scanner` reports 100,000 lines from a file that has 100,001. What has it forgotten?",
+    "hint": "How did `lines.go` learn why it stopped?",
+    "choices": [
+      {
+        "text": "To call `Scan` once more after the loop",
+        "correct": false,
+        "why": "`Scan` already returned false; calling again changes nothing."
+      },
+      {
+        "text": "To check `s.Err()` after the loop",
+        "correct": true,
+        "why": "Right: it would have said `token too long`, and `s.Buffer` is the fix."
+      },
+      {
+        "text": "To open the file with `os.O_APPEND`",
+        "correct": false,
+        "why": "The flag is about writing; this program reads."
+      },
+      {
+        "text": "To count the trailing newline as a line",
+        "correct": false,
+        "why": "The missing line was 100,000 bytes long, not empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-w656ts3j",
+    "version": 1,
+    "section": "bufio",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each call with what it does.",
+    "hint": "Two belong to the Writer side, two to the Scanner side.",
+    "pairs": [
+      {
+        "left": "`w.Flush()`",
+        "right": "sends what is buffered to the file"
+      },
+      {
+        "left": "`s.Scan()`",
+        "right": "advances to the next line, false at the end"
+      },
+      {
+        "left": "`s.Err()`",
+        "right": "says why scanning stopped, if not the end"
+      },
+      {
+        "left": "`s.Buffer(buf, max)`",
+        "right": "raises the longest line accepted"
+      }
+    ],
+    "right_distractors": [
+      "closes the underlying file"
+    ]
+  },
+  {
+    "id": "ex-s4764mw6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of writing a file safely through a buffer.",
+    "hint": "The buffer sits on top of the file, so it is emptied first.",
+    "items": [
+      "`os.Create` the file and check the error",
+      "wrap it in `bufio.NewWriter`",
+      "write the lines through the buffer",
+      "`Flush` and check its error",
+      "`Close` the file and check its error"
+    ]
+  },
+  {
+    "id": "ex-ed83hxax",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A program writes a report with `bufio.NewWriter(f)` and `defer f.Close()`, and never calls `Flush`. The report is shorter than 4,096 bytes. What ends up in the file?",
+    "hint": "Which buffers reached `forgot.txt`?",
+    "choices": [
+      {
+        "text": "The whole report, since `Close` flushes",
+        "correct": false,
+        "why": "Closing the file does not flush the `bufio.Writer` above it."
+      },
+      {
+        "text": "The first 4,096 bytes",
+        "correct": false,
+        "why": "The report never filled a buffer."
+      },
+      {
+        "text": "Nothing: the file is empty",
+        "correct": true,
+        "why": "Right: the only buffer was partial, and it was never flushed."
+      },
+      {
+        "text": "A runtime error at exit",
+        "correct": false,
+        "why": "Nothing reports the loss, which is what makes it dangerous."
+      }
+    ]
+  },
+  {
+    "id": "ex-39zv8gnt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which pair of calls does lesson 18 use to read and write whole small files in one step?",
+    "hint": "Section 02.",
+    "choices": [
+      {
+        "text": "`os.Open` and `os.Create`",
+        "correct": false,
+        "why": "Those open a file; reading and writing it are further calls."
+      },
+      {
+        "text": "`os.ReadFile` and `os.WriteFile`",
+        "correct": true,
+        "why": "Right, the whole-file shortcuts."
+      },
+      {
+        "text": "`bufio.NewScanner` and `bufio.NewWriter`",
+        "correct": false,
+        "why": "Those wrap an open file for many small reads and writes."
+      },
+      {
+        "text": "`os.ReadDir` and `os.MkdirAll`",
+        "correct": false,
+        "why": "Those work on directories."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7m7k56r",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which call opens an existing file for reading only?",
+    "hint": "It is `OpenFile` with the reading flag filled in.",
+    "choices": [
+      {
+        "text": "`os.Open`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`os.Create`, which also empties it",
+        "correct": false,
+        "why": "`Create` opens for writing, and empties an existing file."
+      },
+      {
+        "text": "`os.ReadDir`, given the file's name",
+        "correct": false,
+        "why": "`ReadDir` lists a directory."
+      },
+      {
+        "text": "`os.OpenRoot`, which opens anything below it",
+        "correct": false,
+        "why": "`OpenRoot` opens a directory as a root for further names."
+      }
+    ]
+  },
+  {
+    "id": "ex-d92rsagy",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order does `os.ReadDir` return a directory's entries?",
+    "hint": "`14`, `15` and `16` came out in order.",
+    "choices": [
+      {
+        "text": "The order the disk happens to keep them in",
+        "correct": false,
+        "why": "That is what the operating system hands over; `ReadDir` sorts it."
+      },
+      {
+        "text": "Sorted by name",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Newest first, by modification time",
+        "correct": false,
+        "why": "Times would need `Info()` for every entry; `ReadDir` sorts by name."
+      },
+      {
+        "text": "Directories first, then files",
+        "correct": false,
+        "why": "It does not group by kind."
+      }
+    ]
+  }
+]

@@ -1,0 +1,339 @@
+{
+  "ex-5c0ev1qs": {
+    "prompt": "Como uma goroutine termina em Go?",
+    "hint": "A seção 02 diz que não há identificador para matar.",
+    "choices": [
+      {
+        "text": "Outra goroutine a para por meio do identificador dela",
+        "why": "Go não dá identificador nenhum de goroutine, então não há por onde pará-la."
+      },
+      {
+        "text": "A função dela retorna",
+        "why": "Isso. Retornar é a única saída, e é por isso que uma goroutine bloqueada para sempre é uma goroutine para sempre."
+      },
+      {
+        "text": "O coletor de lixo a libera quando nada mais se refere a ela",
+        "why": "O coletor libera memória, não goroutines. O perfil de vazamentos consegue relatar uma presa; ele não a encerra."
+      },
+      {
+        "text": "Ela expira depois de um tempo sem trabalho",
+        "why": "Não existe esse prazo. As goroutines vazadas do `first.go` esperaram a execução inteira."
+      }
+    ]
+  },
+  "ex-24p3cv94": {
+    "prompt": "O `first.go` informou 3 goroutines depois de uma chamada e 203 depois de mais cem. Quantas goroutines cada chamada de `first` deixa para trás?",
+    "hint": "Tire o `main`, depois divida.",
+    "unit": "goroutines"
+  },
+  "ex-zpxfeq4k": {
+    "prompt": "No `first.go`, por que as goroutines dos servidores 2 e 3 ficam presas, enquanto a do servidor 1 terminou?",
+    "hint": "Quem está recebendo em `ch` quando cada uma envia?",
+    "choices": [
+      {
+        "text": "Os servidores 2 e 3 dormem para sempre e nunca chegam ao envio",
+        "why": "Eles dormem 20 e 30 milissegundos. A espera acaba; o envio depois dela é que nunca acaba."
+      },
+      {
+        "text": "Os envios delas ficam sem receptor, porque a função `first` já retornou",
+        "why": "Isso. Um envio sem buffer espera um receptor, e o único já foi embora."
+      },
+      {
+        "text": "O canal foi fechado depois da primeira resposta",
+        "why": "Nada fecha `ch`. Um envio num canal fechado entraria em pânico, não esperaria."
+      },
+      {
+        "text": "Três goroutines não podem compartilhar um canal",
+        "why": "Qualquer número de goroutines pode enviar num canal; essa parte do desenho está certa."
+      }
+    ]
+  },
+  "ex-hsm6gnbn": {
+    "prompt": "O `early.go` rodou `process` 100 vezes, 50 delas com uma linha vazia, e terminou com 51 goroutines. A falta de que linha no caminho de erro causou isso?",
+    "hint": "O que encerra um `for range` sobre um canal?",
+    "choices": [
+      {
+        "text": "`logs <- l`",
+        "why": "Pular um envio deixa a auxiliar esperando o próximo valor, mas é o fechamento que falta que a mantém esperando para sempre."
+      },
+      {
+        "text": "`chars += len(l)`",
+        "why": "Essa linha está dentro da auxiliar e roda para cada linha recebida; não tem nada a ver com o fim dela."
+      },
+      {
+        "text": "`close(logs)`",
+        "why": "Isso. O `return` antecipado pula essa linha, e o `for range` da auxiliar espera um fechamento que nunca vem."
+      },
+      {
+        "text": "`_ = chars`",
+        "why": "Essa linha só evita que o compilador reclame de uma variável sem uso."
+      }
+    ]
+  },
+  "ex-zn7yj2hg": {
+    "prompt": "Um serviço vaza uma goroutine por requisição que falha. Cada goroutine vazada segura um buffer de 64 KB que estava preenchendo. O que os operadores vão ver primeiro?",
+    "hint": "Uma goroutine bloqueada não usa processador.",
+    "choices": [
+      {
+        "text": "O uso de processador subindo a cada requisição que falha",
+        "why": "Uma goroutine bloqueada nunca é escalonada, então não custa tempo de processador."
+      },
+      {
+        "text": "Memória crescendo, nunca devolvida",
+        "why": "Isso. As pilhas e tudo o que elas alcançam, aqui os buffers, ficam vivos enquanto as goroutines viverem."
+      },
+      {
+        "text": "Uma queda com uma mensagem de deadlock",
+        "why": "A mensagem de deadlock aparece quando todas as goroutines dormem. As outras goroutines de um servidor continuam rodando."
+      },
+      {
+        "text": "Requisições com falha respondidas mais devagar",
+        "why": "O vazamento acontece depois que a requisição já tem a resposta; ele não a atrasa."
+      }
+    ]
+  },
+  "ex-5p30d1dy": {
+    "prompt": "O que o perfil de goroutines, impresso com nível de depuração 1, dá que `runtime.NumGoroutine` não dá?",
+    "hint": "Olhe a linha `200 @ ...` e a linha abaixo dela.",
+    "choices": [
+      {
+        "text": "Um total mais exato que o contador",
+        "why": "O total é o mesmo, 201 nos dois."
+      },
+      {
+        "text": "A memória que cada goroutine segura",
+        "why": "O perfil mostra pilhas, não tamanhos. Memória é outro perfil."
+      },
+      {
+        "text": "Pilhas agrupadas, com a linha em que cada grupo espera",
+        "why": "Isso: 200 goroutines na linha 19 de `find.go` é o vazamento com endereço."
+      },
+      {
+        "text": "O tempo que cada goroutine já passou esperando no seu canal",
+        "why": "O nível de depuração 1 não mostra tempos de espera, só pilhas agrupadas e contagens."
+      }
+    ]
+  },
+  "ex-7jqz6bfs": {
+    "prompt": "Por que o `main` aparece no perfil `goroutine` do `find.go` mas não no perfil `goroutineleak`?",
+    "hint": "O que o perfil de vazamentos tenta provar sobre uma goroutine?",
+    "choices": [
+      {
+        "text": "`main` está rodando, então nada prova que ele nunca mais vai rodar",
+        "why": "Isso. O perfil de vazamentos lista só goroutines bloqueadas em algo que nenhuma goroutine em execução alcança."
+      },
+      {
+        "text": "O perfil de vazamentos esconde de propósito a goroutine principal do programa",
+        "why": "Não há caso especial para o `main`; um `main` bloqueado num canal inalcançável estaria preso como qualquer outra."
+      },
+      {
+        "text": "O `main` já tinha retornado",
+        "why": "Quando o `main` retorna o programa acaba, e nada seria impresso."
+      },
+      {
+        "text": "Só goroutines iniciadas com `go` aparecem nele",
+        "why": "Essa não é a regra que ele aplica. Ele relata goroutines que consegue provar que estão presas."
+      }
+    ]
+  },
+  "ex-v3pyqgks": {
+    "prompt": "O `hidden.go` vazou 200 goroutines e o perfil `goroutineleak` dele disse `total 0`. O que alguém deve concluir de um perfil de vazamentos vazio no próprio serviço?",
+    "hint": "O que manteve o canal do `hidden.go` alcançável?",
+    "choices": [
+      {
+        "text": "Que o serviço não tem vazamento nenhum e dispensa mais atenção",
+        "why": "O `hidden.go` é o contraexemplo: 200 goroutines vazadas e um perfil zerado."
+      },
+      {
+        "text": "Que o perfil falhou ao rodar e não imprimiu coisa útil",
+        "why": "Ele rodou: imprimiu o cabeçalho e um total. Não achou nada que pudesse provar."
+      },
+      {
+        "text": "Nenhum vazamento provado; a contagem ainda importa",
+        "why": "Isso. Um canal alcançável por uma global, ou por qualquer coisa viva, esconde da prova quem espera nele."
+      },
+      {
+        "text": "Que as goroutines vazadas terminaram",
+        "why": "O mesmo programa imprimiu `goroutines: 201` logo antes do perfil."
+      }
+    ]
+  },
+  "ex-07t3gg7w": {
+    "prompt": "O pacote que mantém o perfil de goroutines, e o perfil de vazamentos ao lado dele, é `runtime/___`.",
+    "hint": "Ele é importado pelo `find.go`.",
+    "blanks": [
+      {
+        "accept": [
+          "pprof"
+        ]
+      }
+    ]
+  },
+  "ex-pr9qhbkt": {
+    "prompt": "Associe cada ferramenta à pergunta que ela responde sobre um vazamento.",
+    "hint": "Da mais barata à mais precisa.",
+    "pairs": [
+      {
+        "left": "`runtime.NumGoroutine`",
+        "right": "quantas goroutines existem agora"
+      },
+      {
+        "left": "o perfil `goroutine`",
+        "right": "em que linha cada goroutine está parada"
+      },
+      {
+        "left": "o perfil `goroutineleak`",
+        "right": "quais goroutines comprovadamente nunca mais vão rodar"
+      }
+    ],
+    "right_distractors": [
+      "quanto tempo de processador cada goroutine usou"
+    ]
+  },
+  "ex-f97fnyrh": {
+    "prompt": "Que única mudança transformou o `first.go` no `buffered.go`, que termina cem chamadas com uma goroutine?",
+    "hint": "Olhe o `make`.",
+    "choices": [
+      {
+        "text": "Receber três vezes em vez de uma",
+        "why": "Isso também pararia o vazamento, mas espera o servidor mais lento, o que desfaz o propósito de `first`."
+      },
+      {
+        "text": "Um canal com espaço para três respostas",
+        "why": "Isso. Nenhum envio espera, então todo remetente retorna."
+      },
+      {
+        "text": "Fechar o canal depois da primeira resposta",
+        "why": "Os remetentes seguintes entrariam em pânico com um envio num canal fechado."
+      },
+      {
+        "text": "Um `time.Sleep` no `main` antes de contar",
+        "why": "O `first.go` já dormia 100 ms antes de contar, e ainda contou 203."
+      }
+    ]
+  },
+  "ex-q1b3xhzd": {
+    "prompt": "O `buffered.go` consertou o vazamento com `const servers = 3` usado no buffer e no laço. Qual é a parte frágil que a seção aponta?",
+    "hint": "O que acontece quando alguém acrescenta um servidor?",
+    "choices": [
+      {
+        "text": "Canais com buffer custam mais tempo por envio que canais sem buffer",
+        "why": "A seção não diz nada sobre velocidade; a preocupação dela é a correção."
+      },
+      {
+        "text": "O buffer mantém as respostas na memória para sempre",
+        "why": "O buffer é recolhido junto com o canal quando nada mais se refere a ele."
+      },
+      {
+        "text": "O tamanho do buffer tem de bater com o número de remetentes",
+        "why": "Isso. Um quarto remetente com buffer de três traz de volta uma goroutine vazada por chamada."
+      },
+      {
+        "text": "Uma constante não pode dimensionar um canal",
+        "why": "Pode, e dimensionou: `make(chan string, servers)` compilou e rodou."
+      }
+    ]
+  },
+  "ex-6mzwjxra": {
+    "prompt": "Por que o `done.go` põe `defer close(logs)` logo depois do `make` em vez de um `close(logs)` antes de cada `return`?",
+    "hint": "O que o `defer` garante?",
+    "choices": [
+      {
+        "text": "Um fechamento adiado é mais rápido",
+        "why": "Velocidade não é o motivo; os dois dão o mesmo trabalho."
+      },
+      {
+        "text": "Ele roda em toda saída, até em retornos futuros",
+        "why": "Isso. O vazamento do `early.go` foi um `return` acrescentado ao lado do fechamento e pulando-o."
+      },
+      {
+        "text": "Fechar um canal duas vezes só é permitido com `defer`",
+        "why": "Fechar duas vezes entra em pânico, seja como for; o `done.go` fecha uma vez."
+      },
+      {
+        "text": "Sem `defer` a goroutine auxiliar nunca começaria",
+        "why": "A goroutine começa no `go` de qualquer jeito."
+      }
+    ]
+  },
+  "ex-2cjxa3e2": {
+    "prompt": "Várias goroutines esperam num `select` o seu envio e um canal `done`. O que permite ao dono parar todas com uma única instrução?",
+    "hint": "O que faz um recebimento num canal fechado?",
+    "choices": [
+      {
+        "text": "Enviar um valor em `done`, que chega a todas as goroutines",
+        "why": "Um valor enviado num canal é recebido por exatamente um receptor, então um envio para uma goroutine."
+      },
+      {
+        "text": "`close(done)`, que fica pronto para todos os receptores de uma vez",
+        "why": "Isso. Um canal fechado nunca bloqueia um recebimento, então todo `select` o vê."
+      },
+      {
+        "text": "Atribuir `nil` a `done`",
+        "why": "Isso muda a variável do dono; as goroutines guardam a própria cópia do canal e continuam esperando."
+      },
+      {
+        "text": "Chamar `runtime.Goexit` no dono",
+        "why": "`Goexit` encerra a goroutine que o chama, o dono, não as outras."
+      }
+    ]
+  },
+  "ex-3f6bndta": {
+    "prompt": "Ponha as três perguntas da seção na ordem em que se faz antes de escrever `go`.",
+    "hint": "Do que bloqueia até quem chamou desistir.",
+    "items": [
+      "Em que ela bloqueia?",
+      "Quem faz essa operação terminar?",
+      "O que acontece se quem chamou desistir cedo?"
+    ]
+  },
+  "ex-8g7a3jw3": {
+    "prompt": "Quais destas goroutines podem vazar? Escolha todas as que se aplicam.",
+    "hint": "Para cada uma, pergunte quem completa a operação em que ela bloqueia.",
+    "choices": [
+      {
+        "text": "Uma que envia o resultado num canal sem buffer que quem chamou pode parar de ler",
+        "why": "Sim: a forma do `first.go`."
+      },
+      {
+        "text": "Uma que percorre com range um canal fechado só no fim do caminho feliz",
+        "why": "Sim: a forma do `early.go`."
+      },
+      {
+        "text": "Uma que envia num canal cujo buffer tem espaço para todo remetente",
+        "why": "Nenhum envio espera, então ela retorna: o `buffered.go`."
+      },
+      {
+        "text": "Uma que percorre com range um canal fechado por um `defer` logo depois do `make`",
+        "why": "O fechamento roda em todo caminho: o `done.go`."
+      }
+    ]
+  },
+  "ex-j29m1zw0": {
+    "prompt": "Um colega conserta o `first.go` fazendo-o receber três vezes e devolver a primeira resposta. O vazamento sumiu. Quanto custou o conserto?",
+    "hint": "Quando `first` retorna agora?",
+    "choices": [
+      {
+        "text": "Nada: é igual à versão com buffer",
+        "why": "A versão com buffer retorna depois do servidor mais rápido; esta espera os três."
+      },
+      {
+        "text": "Uma goroutine por chamada, agora vazada em outro lugar",
+        "why": "Com três recebimentos todo remetente tem um receptor, então nenhum fica esperando."
+      },
+      {
+        "text": "Cada chamada agora leva o tempo do servidor mais lento de todos",
+        "why": "Isso: 30 ms em vez de 10. O propósito de perguntar a três era ficar com o mais rápido."
+      },
+      {
+        "text": "Um pânico quando a terceira resposta chega",
+        "why": "Receber três valores de três remetentes é normal e não entra em pânico."
+      }
+    ]
+  },
+  "ex-673kzd6q": {
+    "prompt": "Um serviço feito como o `early.go` atende 2.000 requisições por hora, e 3 em cada 100 caem no retorno antecipado. Quantas goroutines ele vazou depois de 10 horas?",
+    "hint": "Uma goroutine por retorno antecipado.",
+    "unit": "goroutines"
+  }
+}

@@ -1,0 +1,499 @@
+[
+  {
+    "id": "ex-dxkr6twd",
+    "version": 1,
+    "section": "the-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a table-driven test, what does adding a new case usually cost?",
+    "hint": "Lesson 26 added two cases to `TestCount`.",
+    "choices": [
+      {
+        "text": "A new `Test` function with its own setup",
+        "correct": false,
+        "why": "That is what the table replaces: the setup is written once, in the loop."
+      },
+      {
+        "text": "One row",
+        "correct": true,
+        "why": "Right. `only punctuation` and `digits` were one line each."
+      },
+      {
+        "text": "A new subtest written by hand inside the loop",
+        "correct": false,
+        "why": "The loop calls `t.Run` once per row; nothing is written inside it per case."
+      },
+      {
+        "text": "A change to the anonymous struct's fields",
+        "correct": false,
+        "why": "The fields change only when a new kind of thing starts to vary between cases."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6v24zaw",
+    "version": 1,
+    "section": "the-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the table compare the whole map with `maps.Equal` rather than checking a few words as lesson 25 did?",
+    "hint": "What would a `Count` that also produced a stray `fun.` do to each kind of check?",
+    "choices": [
+      {
+        "text": "Because indexing a map in a test is not allowed",
+        "correct": false,
+        "why": "Lesson 25 indexed the map in every check, and those tests compiled and ran."
+      },
+      {
+        "text": "Because `maps.Equal` is faster",
+        "correct": false,
+        "why": "Speed is not the point for maps of a handful of words."
+      },
+      {
+        "text": "It catches a word the test did not ask about",
+        "correct": true,
+        "why": "Right. Checking `fun` alone passes a map that also holds a wrong `fun.`; comparing all of it does not."
+      },
+      {
+        "text": "Because a table row cannot hold more than one expectation",
+        "correct": false,
+        "why": "A row may hold as many fields as the cases need."
+      }
+    ]
+  },
+  {
+    "id": "ex-c14548d1",
+    "version": 1,
+    "section": "the-table",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate wants to fold `TestCountFile` into the `TestCount` table with a `file bool` column. What does the lesson say against it?",
+    "hint": "Do all the rows go through the same steps?",
+    "choices": [
+      {
+        "text": "A case with its own steps is its own test",
+        "correct": true,
+        "why": "Right. Every other row would carry a field it ignores, and the loop an `if` for one case."
+      },
+      {
+        "text": "Tables cannot contain `bool` fields",
+        "correct": false,
+        "why": "A struct field can be of any type; the objection is about steps, not types."
+      },
+      {
+        "text": "`t.TempDir` does not work inside a subtest of the table",
+        "correct": false,
+        "why": "It works in any test or subtest; each gets its own directory."
+      },
+      {
+        "text": "Files are slower to read than strings",
+        "correct": false,
+        "why": "The section's argument is about the shape of the test, not its speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-3za387j7",
+    "version": 1,
+    "section": "the-table",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before Go 1.22, a table loop that started closures copied its row first with the line `tc ___ tc`.",
+    "hint": "The short variable declaration operator.",
+    "blanks": [
+      {
+        "accept": [
+          ":="
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bhjpgqxd",
+    "version": 1,
+    "section": "naming-and-filtering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A row is named `only punctuation`. Under what name does the report show its subtest?",
+    "hint": "Look at the `-v` output.",
+    "choices": [
+      {
+        "text": "`TestCount/only punctuation`",
+        "correct": false,
+        "why": "The space does not survive into the reported name."
+      },
+      {
+        "text": "`TestCount/\"only punctuation\"`",
+        "correct": false,
+        "why": "No quotes are added; the name is rewritten instead."
+      },
+      {
+        "text": "`TestCount/6`",
+        "correct": false,
+        "why": "Rows are not numbered; the `name` field is used."
+      },
+      {
+        "text": "`TestCount/only_punctuation`",
+        "correct": true,
+        "why": "Right: the space becomes an underscore."
+      }
+    ]
+  },
+  {
+    "id": "ex-kgqbjaw3",
+    "version": 1,
+    "section": "naming-and-filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`go test -v -run 'TestCount/only punctuation'` also ran `TestCountFile` in full. Why?",
+    "hint": "What does the first level of the pattern match?",
+    "choices": [
+      {
+        "text": "Because a space in a `-run` pattern matches any test",
+        "correct": false,
+        "why": "The space is rewritten to an underscore and matched normally; `only_punctuation` was the only row of `TestCount` that ran."
+      },
+      {
+        "text": "The first level is not anchored",
+        "correct": true,
+        "why": "Right, and `TestCountFile` has no subtests for the second level to filter. `^TestCount$` fixes it."
+      },
+      {
+        "text": "Because `go test` always runs every test that uses `t.TempDir`",
+        "correct": false,
+        "why": "Nothing about `t.TempDir` affects which tests are selected."
+      },
+      {
+        "text": "Because `-v` disables `-run`",
+        "correct": false,
+        "why": "`-v` changes the output, not the selection; `TestCount` ran only one row."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8v3bkez",
+    "version": 1,
+    "section": "naming-and-filtering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `case 3` a poor name for a row, beyond saying nothing about the case?",
+    "hint": "What happens to the numbers when a row is inserted above it?",
+    "choices": [
+      {
+        "text": "Digits are not allowed in subtest names",
+        "correct": false,
+        "why": "They are allowed; the report would print `TestCount/case_3`."
+      },
+      {
+        "text": "Names with numbers run in numeric order",
+        "correct": false,
+        "why": "Subtests run in the order of the table, whatever their names."
+      },
+      {
+        "text": "An insert moves the numbers away from the rows",
+        "correct": true,
+        "why": "Right. A name tied to position stops naming the case the day the table changes."
+      },
+      {
+        "text": "It collides with `go test -count=3`",
+        "correct": false,
+        "why": "`-count` repeats runs; it has nothing to do with names."
+      }
+    ]
+  },
+  {
+    "id": "ex-jg8e8k4g",
+    "version": 1,
+    "section": "naming-and-filtering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A case fails on machines without a network and the cause is being worked on. Why does the lesson prefer `t.Skip` to commenting the row out?",
+    "hint": "Which of the two still appears in every report?",
+    "choices": [
+      {
+        "text": "A commented-out row makes the file fail to compile",
+        "correct": false,
+        "why": "A comment compiles fine; that is exactly why it is easy to forget."
+      },
+      {
+        "text": "A skip stays in the report, with its reason",
+        "correct": true,
+        "why": "Right. A commented row vanishes from everybody's view; a skip is reported on every run."
+      },
+      {
+        "text": "`t.Skip` makes the test pass, which keeps CI green",
+        "correct": false,
+        "why": "It ends the test as skipped, not passed, and says why."
+      },
+      {
+        "text": "`t.Skip` retries the case until the network returns",
+        "correct": false,
+        "why": "It does not retry anything; it ends the test there."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqvx054s",
+    "version": 1,
+    "section": "failure-messages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which failure message follows the Go convention?",
+    "hint": "Call, then what it returned, then what was wanted.",
+    "choices": [
+      {
+        "text": "`wrong result`",
+        "correct": false,
+        "why": "It names neither the call, the input, nor either value."
+      },
+      {
+        "text": "`expected 4 entries`",
+        "correct": false,
+        "why": "It gives the expectation without what came back or what was called."
+      },
+      {
+        "text": "`Top(counts, 4) = [{is 3} {go 3}], want [{go 3} {is 3}]`",
+        "correct": true,
+        "why": "Right: the call as made, `=`, what it returned, `want` and the expectation."
+      },
+      {
+        "text": "`want [{go 3} {is 3}] but got something else entirely`",
+        "correct": false,
+        "why": "Without the value that came back, the reader has to rerun the test to see it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn6pgzbe",
+    "version": 1,
+    "section": "failure-messages",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In twenty runs of the buggy `TestTop`, in how many did the `first` row fail?",
+    "hint": "The `uniq -c` count beside `TestTop/first`.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "runs"
+  },
+  {
+    "id": "ex-5b7qj8dk",
+    "version": 1,
+    "section": "failure-messages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the buggy `Top` return tied words in a different order from run to run?",
+    "hint": "Where did the slice's starting order come from?",
+    "choices": [
+      {
+        "text": "`slices.SortFunc` shuffles its input before sorting",
+        "correct": false,
+        "why": "The sort is deterministic for a given input; the input itself changed."
+      },
+      {
+        "text": "Map order is random and ties kept it",
+        "correct": true,
+        "why": "Right. Ties kept whatever order the map produced, and that order changes on purpose."
+      },
+      {
+        "text": "The goroutines in `Top` raced",
+        "correct": false,
+        "why": "`Top` starts no goroutine."
+      },
+      {
+        "text": "`cmp.Compare` returns a random sign for equal values",
+        "correct": false,
+        "why": "It returns 0 for equal values, and the sort is then free to keep any order the input had."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxb2zw8m",
+    "version": 1,
+    "section": "failure-messages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You run `go test .` twice and the second run prints `(cached)`. You then change a file `Count` reads from disk, outside the package. What does a third `go test .` do?",
+    "hint": "The cache is keyed on the code and the test. What else could a test depend on?",
+    "choices": [
+      {
+        "text": "It fails, because the cache detects any changed file on the machine",
+        "correct": false,
+        "why": "The lesson says the cache tracks the code and the test, not every file on the machine."
+      },
+      {
+        "text": "It refuses to run until `go clean` is used",
+        "correct": false,
+        "why": "Nothing refuses; a cached pass is simply replayed."
+      },
+      {
+        "text": "It reruns, because a third run always bypasses the cache",
+        "correct": false,
+        "why": "There is no such rule; the cache is replayed as long as the code and test are unchanged."
+      },
+      {
+        "text": "It replays the cached pass; `-count=1` would rerun it",
+        "correct": true,
+        "why": "Right. A test depending on something outside the package is exactly when to reach for `-count=1`."
+      }
+    ]
+  },
+  {
+    "id": "ex-gahc18gv",
+    "version": 1,
+    "section": "failure-messages",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each comparison with what it suits.",
+    "hint": "Three come from packages, one is an operator.",
+    "pairs": [
+      {
+        "left": "`maps.Equal`",
+        "right": "two maps with comparable values"
+      },
+      {
+        "left": "`slices.Equal`",
+        "right": "two slices, element by element"
+      },
+      {
+        "left": "`reflect.DeepEqual`",
+        "right": "any two values, nested ones included"
+      },
+      {
+        "left": "`==`",
+        "right": "a struct whose fields are all comparable"
+      }
+    ],
+    "right_distractors": [
+      "two goroutines' views of one variable"
+    ]
+  },
+  {
+    "id": "ex-cxq13b60",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of a Go failure message in the conventional order.",
+    "hint": "It reads like the call itself.",
+    "items": [
+      "the call with its arguments",
+      "`=`",
+      "what it returned",
+      "`want`",
+      "the expected value"
+    ]
+  },
+  {
+    "id": "ex-e06snym7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table test passes on your laptop and fails one run in ten on CI, always on a row whose expected slice was built from a map. What is the first thing to suspect?",
+    "hint": "Lesson 26 met this exact shape.",
+    "choices": [
+      {
+        "text": "The CI machine has a different number of processors",
+        "correct": false,
+        "why": "Nothing in a map walk depends on processors; the randomisation is per run, on any machine."
+      },
+      {
+        "text": "An order that comes from walking a map, which Go randomises",
+        "correct": true,
+        "why": "Right. It changes between identical runs; either the code imposes an order or the test stops depending on one."
+      },
+      {
+        "text": "A stale `(cached)` result on the laptop",
+        "correct": false,
+        "why": "A cache would show the same verdict every time, not one failure in ten on CI."
+      },
+      {
+        "text": "A missing `t.Helper()` in the loop",
+        "correct": false,
+        "why": "`t.Helper` changes which line a failure names, not whether it happens."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mkt9ygj",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these belong in the table, as rows of `TestCount`? Choose all that apply.",
+    "hint": "A row goes through the same steps as the others.",
+    "choices": [
+      {
+        "text": "A text with a tab between two words",
+        "correct": true,
+        "why": "Yes: another input and its expected map."
+      },
+      {
+        "text": "A text in Portuguese with `não` and `NÃO`",
+        "correct": true,
+        "why": "Yes: same steps, different data."
+      },
+      {
+        "text": "Counting a file that does not exist",
+        "correct": false,
+        "why": "That needs a file system and an error check, which is `TestCountFile`'s job."
+      },
+      {
+        "text": "Checking `Top` returns ties alphabetically",
+        "correct": false,
+        "why": "Different function, different steps: that is `TestTop`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z0zn0bv",
+    "version": 1,
+    "section": "the-table",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows does the `TestCount` table have at the end of lesson 26?",
+    "hint": "Lesson 25's five cases, plus the two new ones.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-mfb268fq",
+    "version": 1,
+    "section": "failure-messages",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To force `go test` to run a test again rather than replay a cached pass, the usual flag is ___.",
+    "hint": "A count of one.",
+    "blanks": [
+      {
+        "accept": [
+          "-count=1",
+          "-count 1"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

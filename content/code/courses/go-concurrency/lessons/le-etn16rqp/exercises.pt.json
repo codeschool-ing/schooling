@@ -1,0 +1,296 @@
+{
+  "ex-q1de8jrn": {
+    "prompt": "Que assinatura o `go test -bench` roda como benchmark?",
+    "hint": "As mesmas regras de um teste, com outro prefixo e outro parâmetro.",
+    "choices": [
+      {
+        "text": "`func BenchCount(b *testing.B)`",
+        "why": "O prefixo é `Benchmark`, por extenso."
+      },
+      {
+        "text": "`func BenchmarkCount(t *testing.T)`",
+        "why": "Um benchmark recebe um `*testing.B`; com um `*testing.T` o comando go acusa um nome malformado."
+      },
+      {
+        "text": "`func BenchmarkCount(b *testing.B)`",
+        "why": "Isso."
+      },
+      {
+        "text": "`func TestBenchmarkCount(b *testing.B)`",
+        "why": "Um prefixo `Test` faz dele um teste, e um teste recebe um `*testing.T`."
+      }
+    ]
+  },
+  "ex-k390bajw": {
+    "prompt": "O `BenchmarkTop` chama o `Count` uma vez antes do `for b.Loop()`. O que o resultado dele mede?",
+    "hint": "O que o `b.Loop` cronometra?",
+    "choices": [
+      {
+        "text": "Só o `Top`",
+        "why": "Isso: a preparação antes do laço não é cronometrada."
+      },
+      {
+        "text": "`Count` e `Top` juntos, divididos por dois",
+        "why": "Nada é dividido por dois; o `Count` roda uma vez, fora do laço cronometrado."
+      },
+      {
+        "text": "Só o `Count`, já que é o mais lento dos dois",
+        "why": "A velocidade não decide o que é cronometrado; a posição em relação ao laço decide."
+      },
+      {
+        "text": "O tempo de montar o `sample`",
+        "why": "O `sample` é montado no nível do pacote, antes de qualquer benchmark."
+      }
+    ]
+  },
+  "ex-ad4cex1t": {
+    "prompt": "Por que a lição roda benchmarks com `-run '^$'`?",
+    "hint": "Com o que esse padrão casa?",
+    "choices": [
+      {
+        "text": "Faz os benchmarks rodarem em ordem alfabética",
+        "why": "O `-run` escolhe testes; não diz nada sobre a ordem dos benchmarks."
+      },
+      {
+        "text": "Escolhe todos os benchmarks",
+        "why": "Benchmarks são escolhidos pelo `-bench`."
+      },
+      {
+        "text": "Liga as colunas de memória",
+        "why": "Isso é o `-benchmem`."
+      },
+      {
+        "text": "Não casa com nome de teste nenhum, então nenhum teste roda antes",
+        "why": "Isso: um nome vazio é a única coisa com que `^$` casa."
+      }
+    ]
+  },
+  "ex-zn2zdeea": {
+    "prompt": "Para ter uma coluna de vazão em MB/s, um benchmark declara quantos bytes uma rodada processa com `b.___`.",
+    "hint": "Definir, bytes.",
+    "blanks": [
+      {
+        "accept": [
+          "SetBytes"
+        ]
+      }
+    ]
+  },
+  "ex-cy9xq9qx": {
+    "prompt": "Associe cada parte de `BenchmarkCount-4  10363  113733 ns/op  16104 B/op  2311 allocs/op` ao que ela é.",
+    "hint": "A tabela da seção 03.",
+    "pairs": [
+      {
+        "left": "`-4`",
+        "right": "o GOMAXPROCS da execução"
+      },
+      {
+        "left": "`10363`",
+        "right": "rodadas na execução medida"
+      },
+      {
+        "left": "`16104 B/op`",
+        "right": "bytes alocados por rodada"
+      },
+      {
+        "left": "`2311 allocs/op`",
+        "right": "alocações separadas por rodada"
+      }
+    ],
+    "right_distractors": [
+      "goroutines iniciadas por rodada"
+    ]
+  },
+  "ex-fbwe3fhj": {
+    "prompt": "Em cinco execuções de código sem mudança, que coluna não se mexeu nada?",
+    "hint": "Ela depende só do código.",
+    "choices": [
+      {
+        "text": "ns/op",
+        "why": "Ela variou entre 98.755 e 101.532."
+      },
+      {
+        "text": "MB/s",
+        "why": "A vazão é calculada a partir do tempo, então se mexeu junto."
+      },
+      {
+        "text": "allocs/op",
+        "why": "Isso: 2311 toda vez."
+      },
+      {
+        "text": "o número de rodadas",
+        "why": "Ele foi de 12162 a 10000."
+      }
+    ]
+  },
+  "ex-nv3ymjyn": {
+    "prompt": "O candidato cortou as alocações de 2311 para 2055 por rodada. Em quantas?",
+    "hint": "Duas palavras com maiúscula em cada uma das 128 repetições.",
+    "unit": "alocações"
+  },
+  "ex-zn6880j3": {
+    "prompt": "O candidato foi mensuravelmente mais rápido, em cerca de um décimo. Por que o curso ainda assim voltou o `Count` antigo?",
+    "hint": "Medido não é o mesmo que valer a pena.",
+    "choices": [
+      {
+        "text": "Porque os testes falharam no candidato",
+        "why": "O `go test . -count=1` passou nele."
+      },
+      {
+        "text": "Não se mostrou que contar importava",
+        "why": "Isso: vinte linhas, um segundo caminho e uma escrita no lugar, por um ganho de que nada precisava."
+      },
+      {
+        "text": "Porque os dois grupos de execuções se sobrepunham no eixo",
+        "why": "Não se sobrepunham: 87.509 a 93.811 contra 98.755 a 101.532."
+      },
+      {
+        "text": "Porque as alocações subiram",
+        "why": "Elas caíram 256."
+      }
+    ]
+  },
+  "ex-mnxw8ket": {
+    "prompt": "A execução única da seção 02 disse 113.733 ns/op; cinco execuções um minuto depois disseram cerca de 100.000. O que a lição conclui disso?",
+    "hint": "Nada mudou entre uma e outra.",
+    "choices": [
+      {
+        "text": "O código ficou mais rápido sozinho",
+        "why": "Nada mudou; a máquina mudou."
+      },
+      {
+        "text": "A primeira execução é sempre descartada",
+        "why": "Não existe essa regra no relatório."
+      },
+      {
+        "text": "O `-count 5` deixa cada rodada mais barata",
+        "why": "Ele repete a medição; não muda nada dentro dela."
+      },
+      {
+        "text": "Uma execução não é uma medição",
+        "why": "Isso. O espalhamento entre execuções idênticas é o piso de ruído."
+      }
+    ]
+  },
+  "ex-8v7y1kry": {
+    "prompt": "O `BenchmarkSumN` relatou cerca de 150 ns/op e o `BenchmarkSumLoop` cerca de 280. O que a desmontagem mostra?",
+    "hint": "Procure uma multiplicação nas linhas `sum_test.go:7`.",
+    "choices": [
+      {
+        "text": "Que laços com `b.N` rodam em dois processadores",
+        "why": "O código da função não tem nada a ver com processadores; um laço não tem aritmética."
+      },
+      {
+        "text": "O laço `b.N` só conta até 1000",
+        "why": "Isso: o resultado não era usado, então o compilador removeu o trabalho e deixou a contagem."
+      },
+      {
+        "text": "Que o `b.Loop` acrescenta 130 ns de sobrecarga por rodada",
+        "why": "A diferença é a aritmética que o `b.N` perdeu, não sobrecarga do `b.Loop`."
+      },
+      {
+        "text": "Que o `sumTo` nunca foi chamado",
+        "why": "O laço dele está lá, inline; só a aritmética do corpo sumiu."
+      }
+    ]
+  },
+  "ex-zcvt8sj1": {
+    "prompt": "Um benchmark antigo escrito com `b.N` monta uma entrada de 1 MB no começo da função, e depois faz o laço. Os números parecem altos. O que falta?",
+    "hint": "No estilo com `b.N`, quando o cronômetro começa?",
+    "choices": [
+      {
+        "text": "`b.SetBytes(1 << 20)`",
+        "why": "Isso acrescenta uma coluna de vazão; não exclui a preparação."
+      },
+      {
+        "text": "`-benchmem`",
+        "why": "Ele relata memória; o tempo continua igual."
+      },
+      {
+        "text": "`b.ResetTimer()` depois da preparação",
+        "why": "Isso. Sem ele a preparação entra no tempo; o `b.Loop` a excluiria sozinho."
+      },
+      {
+        "text": "`-count 5`",
+        "why": "Repetir uma medição enviesada repete o viés."
+      }
+    ]
+  },
+  "ex-ttpkpd7c": {
+    "prompt": "Que hábitos a lição dá para uma máquina ocupada? Escolha todos os que se aplicam.",
+    "hint": "Três, numa lista numerada.",
+    "choices": [
+      {
+        "text": "Comparar execuções feitas uma depois da outra, na mesma máquina",
+        "why": "Sim."
+      },
+      {
+        "text": "Olhar o espalhamento de várias execuções antes das médias",
+        "why": "Sim, com `-count`."
+      },
+      {
+        "text": "Comparar o número de hoje com um anotado no mês passado",
+        "why": "É exatamente o que o primeiro hábito desaconselha."
+      },
+      {
+        "text": "Pôr GOMAXPROCS em 1 para outros programas não interferirem",
+        "why": "Ele limita este programa, não os outros da máquina."
+      }
+    ]
+  },
+  "ex-eyspy1cm": {
+    "prompt": "De onde vem o `benchstat`?",
+    "hint": "O curso não o instala.",
+    "choices": [
+      {
+        "text": "É um subcomando, `go test -benchstat`",
+        "why": "Não existe essa flag."
+      },
+      {
+        "text": "O módulo `golang.org/x/perf`, um download à parte",
+        "why": "Isso."
+      },
+      {
+        "text": "O pacote `testing`",
+        "why": "O `testing` não tem ferramenta de estatística."
+      },
+      {
+        "text": "`go tool benchstat`, que vem com o 1.27.1",
+        "why": "Ele não faz parte do toolchain."
+      }
+    ]
+  },
+  "ex-1xv5g3yj": {
+    "prompt": "Ponha em ordem os passos que a lição seguiu com o `Count` candidato.",
+    "hint": "Uma resposta errada mais rápida não vale nada.",
+    "items": [
+      "medir a versão atual várias vezes",
+      "escrever o candidato",
+      "rodar os testes nele",
+      "medi-lo o mesmo número de vezes",
+      "decidir se a diferença vale o código"
+    ]
+  },
+  "ex-dvzb2v1j": {
+    "prompt": "Um colega mostra uma execução em que a mudança dele deixou uma função 4% mais rápida. Antes de ler qualquer código, o que você pede?",
+    "hint": "Qual foi o espalhamento entre execuções idênticas nesta lição?",
+    "choices": [
+      {
+        "text": "Uma execução com `-benchmem` a mais",
+        "why": "As colunas de memória ajudam, mas a questão é se 4% está acima do ruído."
+      },
+      {
+        "text": "O nome da máquina em que a execução rodou",
+        "why": "Saber a máquina não diz o espalhamento."
+      },
+      {
+        "text": "Um perfil com `-cpuprofile`",
+        "why": "Um perfil diz para onde vai o tempo, não se 4% é real."
+      },
+      {
+        "text": "Várias execuções de cada uma",
+        "why": "Isso. Execuções idênticas aqui se espalharam por quase 3%, então uma execução de 4% ainda não prova nada."
+      }
+    ]
+  }
+}
