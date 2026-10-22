@@ -27,9 +27,11 @@ de outro jeito e alguns comandos destas aulas não existem; o WSL, o Linux que o
 conta como uma. O Playground serve para conferir o que uma função devolve e não serve para um
 servidor, que é o assunto inteiro aqui.
 
-Aulas seguintes acrescentam mais três coisas, cada uma instalada na aula que primeiro precisa
-dela, com seus próprios caminhos e sua própria seção sobre o que falha: **o PostgreSQL 16 na aula
-6, um compilador C na aula 8 e um motor de containers na aula 16.**
+Aulas seguintes acrescentam mais duas coisas, cada uma instalada na aula que primeiro precisa
+dela, com seus próprios caminhos e sua própria seção sobre o que falha: **o PostgreSQL 16 na aula 6
+e um motor de containers na aula 16.** Uma terceira, o compilador C `gcc`, é a que a aula 1 do
+`go-concurrency` instalou para o detector de corrida; a aula 8 também precisa dele, e diz como
+consegui-lo se você não fez aquele curso.
 
 ## A instalação em resumo
 

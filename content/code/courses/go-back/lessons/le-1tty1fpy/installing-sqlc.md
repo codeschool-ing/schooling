@@ -7,7 +7,7 @@ sqlc is a Go program, and the Go way to install a Go program is `go install`, wh
 source, builds it and puts the binary in `~/go/bin`, the directory lesson 1 section 02 put on your
 `PATH`. **It needs one more thing than most Go tools: a C compiler.** sqlc understands PostgreSQL's
 SQL by using PostgreSQL's own parser, written in C and compiled into sqlc through cgo, Go's bridge to
-C. That is why a C compiler appeared in lesson 1's list of things this course installs.
+C. That is why lesson 1 named the compiler among the things this course needs.
 
 ## Three ways to get it
 
@@ -18,7 +18,7 @@ C. That is why a C compiler appeared in lesson 1's list of things this course in
 | **the `sqlc/sqlc` container image** | a container engine, which lesson 16 installs | works, with the project mounted into the container |
 
 The C compiler is worth having anyway: lesson 15's race detector needs it too. On Ubuntu it is one
-package, and it is the same one `go-concurrency` installed for its race detector in lesson 16:
+package, and it is the same one `go-concurrency` installed for its race detector in lesson 1:
 
 ```sh
 sudo apt install -y gcc

@@ -26,9 +26,10 @@ differently and some commands in these lessons do not exist; WSL, the Linux that
 counts as one. The Playground is fine for checking what a function returns and useless for a
 server, which is the whole subject here.
 
-Later lessons add three more things, each installed in the lesson that first needs it, with its
-own paths and its own section on what fails: **PostgreSQL 16 in lesson 6, a C compiler in lesson
-8, and a container engine in lesson 16.**
+Later lessons add two more things, each installed in the lesson that first needs it, with its own
+paths and its own section on what fails: **PostgreSQL 16 in lesson 6 and a container engine in
+lesson 16.** A third, the C compiler `gcc`, is the one `go-concurrency` lesson 1 installed for the
+race detector; lesson 8 needs it too, and says how to get it if you did not take that course.
 
 ## The setup in brief
 

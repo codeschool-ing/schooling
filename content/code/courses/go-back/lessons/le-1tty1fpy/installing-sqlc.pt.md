@@ -7,8 +7,8 @@ O sqlc é um programa Go, e o jeito Go de instalar um programa Go é o `go insta
 compila e põe o binário em `~/go/bin`, o diretório que a seção 02 da aula 1 pôs no seu `PATH`. **Ele
 precisa de uma coisa a mais do que a maioria das ferramentas Go: um compilador C.** O sqlc entende o SQL
 do PostgreSQL usando o próprio parser do PostgreSQL, escrito em C e compilado dentro do sqlc por meio do
-cgo, a ponte do Go para o C. É por isso que um compilador C apareceu na lista da aula 1 das coisas que
-este curso instala.
+cgo, a ponte do Go para o C. É por isso que a aula 1 citou o compilador entre as coisas de que este
+curso precisa.
 
 ## Três jeitos de obtê-lo
 
@@ -19,7 +19,7 @@ este curso instala.
 | **a imagem de container `sqlc/sqlc`** | um motor de containers, que a aula 16 instala | funciona, com o projeto montado dentro do container |
 
 O compilador C vale a pena de qualquer jeito: o detector de corrida da aula 15 também precisa dele. No
-Ubuntu é um pacote só, e é o mesmo que o `go-concurrency` instalou para o detector de corrida na aula 16:
+Ubuntu é um pacote só, e é o mesmo que o `go-concurrency` instalou para o detector de corrida na aula 1:
 
 ```sh
 sudo apt install -y gcc
