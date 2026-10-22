@@ -1,0 +1,720 @@
+[
+  {
+    "id": "ex-s9ghxq9m",
+    "version": 1,
+    "section": "why-a-framework",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client sends a body that is not valid JSON to a view using json.loads(request.body). What does it get, compared with DRF?",
+    "hint": "The table in the first section.",
+    "choices": [
+      {
+        "text": "The same 400 in both cases",
+        "correct": false,
+        "why": "Only DRF turns a parse error into a 400."
+      },
+      {
+        "text": "500 by hand, 400 with DRF",
+        "correct": true,
+        "why": "Right: DRF's 400 says where the JSON broke, as the registering section showed."
+      },
+      {
+        "text": "An empty dictionary in both",
+        "correct": false,
+        "why": "Neither silently accepts it."
+      },
+      {
+        "text": "A 415 from Django, a 200 from DRF",
+        "correct": false,
+        "why": "DRF does not answer 200 to broken JSON."
+      }
+    ]
+  },
+  {
+    "id": "ex-j5xemy8c",
+    "version": 1,
+    "section": "why-a-framework",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does IsAuthenticatedOrReadOnly, set as the default, mean for agenda's API?",
+    "choices": [
+      {
+        "text": "Only logged-in users may read",
+        "correct": false,
+        "why": "Reading is open."
+      },
+      {
+        "text": "Nobody may write through the API",
+        "correct": false,
+        "why": "Authenticated users may."
+      },
+      {
+        "text": "Anybody reads; writes need a user",
+        "correct": true,
+        "why": "Right, unless a view says otherwise."
+      },
+      {
+        "text": "Every request needs a token",
+        "correct": false,
+        "why": "Basic authentication worked, and reads need nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy341gnb",
+    "version": 1,
+    "section": "serializers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a DRF serializer the counterpart of in a Django site?",
+    "hint": "Lesson 3.",
+    "choices": [
+      {
+        "text": "A Form",
+        "correct": true,
+        "why": "Right: it describes fields, validates input and produces clean values."
+      },
+      {
+        "text": "A template",
+        "correct": false,
+        "why": "Templates render; serializers validate and convert."
+      },
+      {
+        "text": "A migration",
+        "correct": false,
+        "why": "Migrations change the schema."
+      },
+      {
+        "text": "Middleware",
+        "correct": false,
+        "why": "Middleware wraps requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-40ex4n8g",
+    "version": 1,
+    "section": "serializers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does EventSerializer list its fields instead of using \"__all__\"?",
+    "hint": "What happens when the model grows?",
+    "choices": [
+      {
+        "text": "\"__all__\" is not allowed on a ModelSerializer",
+        "correct": false,
+        "why": "It is allowed; it is the risk that matters."
+      },
+      {
+        "text": "Listing fields makes the queries faster",
+        "correct": false,
+        "why": "The query is the queryset's business."
+      },
+      {
+        "text": "So new columns stay private",
+        "correct": true,
+        "why": "Right: a column added later is not exposed by accident. The API shows exactly what it names."
+      },
+      {
+        "text": "Because taken is not a model field",
+        "correct": false,
+        "why": "That needs a declaration, not a list."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbhrz1sy",
+    "version": 1,
+    "section": "serializers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Serialized from a plain get(), the Testing dojo came out without taken. Why?",
+    "hint": "Where does taken come from?",
+    "choices": [
+      {
+        "text": "taken is write-only",
+        "correct": false,
+        "why": "It is read-only."
+      },
+      {
+        "text": "The object had no annotation to read",
+        "correct": true,
+        "why": "Right. A read-only field the object lacks is left out."
+      },
+      {
+        "text": "The event had no registrations",
+        "correct": false,
+        "why": "It had two; zero would print 0."
+      },
+      {
+        "text": "The serializer only shows taken on lists",
+        "correct": false,
+        "why": "It showed on the viewset's detail."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z6xnf7j",
+    "version": 1,
+    "section": "serializers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "EventSerializer(data={\"slug\": \"bad slug\", \"title\": \"\", \"capacity\": -1}).errors named which fields? Choose all that apply.",
+    "hint": "All the errors come at once.",
+    "choices": [
+      {
+        "text": "slug",
+        "correct": true,
+        "why": "Right: not a valid slug."
+      },
+      {
+        "text": "title",
+        "correct": true,
+        "why": "Right: may not be blank."
+      },
+      {
+        "text": "starts_at",
+        "correct": true,
+        "why": "Right: required and missing."
+      },
+      {
+        "text": "description",
+        "correct": false,
+        "why": "It has blank=True, so leaving it out is fine."
+      },
+      {
+        "text": "taken",
+        "correct": false,
+        "why": "Read-only fields are never validated on input."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctt5qfd0",
+    "version": 1,
+    "section": "api-views",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does lookup_field = \"slug\" change in EventViewSet?",
+    "choices": [
+      {
+        "text": "It makes slug the primary key",
+        "correct": false,
+        "why": "The table keeps its id."
+      },
+      {
+        "text": "Detail URLs use the slug instead of the id",
+        "correct": true,
+        "why": "Right: /api/events/django-night/."
+      },
+      {
+        "text": "It sorts the list by slug",
+        "correct": false,
+        "why": "Ordering is in get_queryset."
+      },
+      {
+        "text": "It hides the slug from the JSON",
+        "correct": false,
+        "why": "The slug is in fields."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nrb2etb",
+    "version": 1,
+    "section": "api-views",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same URL answered JSON to curl and an HTML page to a request with Accept: text/html. What decided?",
+    "hint": "A header the client sends.",
+    "choices": [
+      {
+        "text": "Two views mounted at one address",
+        "correct": false,
+        "why": "One view, two renderers."
+      },
+      {
+        "text": "Whether the client was logged in",
+        "correct": false,
+        "why": "Logging in changes the forms shown, not the format."
+      },
+      {
+        "text": "The User-Agent header",
+        "correct": false,
+        "why": "DRF looks at Accept."
+      },
+      {
+        "text": "Content negotiation on Accept",
+        "correct": true,
+        "why": "Right, the browsable API."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvc6bmtb",
+    "version": 1,
+    "section": "api-views",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does EventViewSet.get_queryset add order_by(\"starts_at\") when Event's Meta already orders by it?",
+    "hint": "Lesson 4's last section.",
+    "choices": [
+      {
+        "text": "The annotation's GROUP BY drops it",
+        "correct": true,
+        "why": "Right: a GROUP BY leaves Meta.ordering out, and pages need a stable order."
+      },
+      {
+        "text": "DRF ignores model Meta options",
+        "correct": false,
+        "why": "DRF does not decide the SQL's order."
+      },
+      {
+        "text": "PostgreSQL sorts dates wrongly without it",
+        "correct": false,
+        "why": "It sorts dates correctly when asked."
+      },
+      {
+        "text": "So venue filters work",
+        "correct": false,
+        "why": "Filtering does not need ordering."
+      }
+    ]
+  },
+  {
+    "id": "ex-qz45f5vf",
+    "version": 1,
+    "section": "viewsets-and-routers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each request to the viewset method that answers it.",
+    "hint": "The router's table.",
+    "pairs": [
+      {
+        "left": "GET /api/events/",
+        "right": "list"
+      },
+      {
+        "left": "POST /api/events/",
+        "right": "create"
+      },
+      {
+        "left": "PATCH /api/events/django-night/",
+        "right": "partial_update"
+      },
+      {
+        "left": "DELETE /api/events/pycon-watch/",
+        "right": "destroy"
+      }
+    ],
+    "right_distractors": [
+      "retrieve_all"
+    ]
+  },
+  {
+    "id": "ex-96658d59",
+    "version": 1,
+    "section": "viewsets-and-routers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An anonymous PATCH to an event answered 403. Which setting decided that?",
+    "choices": [
+      {
+        "text": "PAGE_SIZE",
+        "correct": false,
+        "why": "Pagination has nothing to say about writes."
+      },
+      {
+        "text": "ALLOWED_HOSTS",
+        "correct": false,
+        "why": "That checks host names."
+      },
+      {
+        "text": "DEFAULT_PERMISSION_CLASSES",
+        "correct": true,
+        "why": "Right: IsAuthenticatedOrReadOnly."
+      },
+      {
+        "text": "CSRF_COOKIE_SECURE",
+        "correct": false,
+        "why": "The request carried no cookie at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-1t7m3b02",
+    "version": 1,
+    "section": "viewsets-and-routers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What status code did the API return for deleting the pycon-watch event?",
+    "hint": "No Content.",
+    "value": 204,
+    "tolerance": 0,
+    "unit": "status code"
+  },
+  {
+    "id": "ex-gpsshqe1",
+    "version": 1,
+    "section": "viewsets-and-routers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call Basic authentication only acceptable over HTTPS, and barely?",
+    "hint": "What travels with every request?",
+    "choices": [
+      {
+        "text": "It is slower than tokens",
+        "correct": false,
+        "why": "Speed is not the concern."
+      },
+      {
+        "text": "The password itself travels with each request",
+        "correct": true,
+        "why": "Right. Lesson 11 replaces it with tokens."
+      },
+      {
+        "text": "Browsers cannot send it",
+        "correct": false,
+        "why": "Browsers can."
+      },
+      {
+        "text": "DRF disables it in production",
+        "correct": false,
+        "why": "It is enabled unless you change the settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbg6g5se",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "PATCH capacity 1 on the Testing dojo, which has two registrations, answered 400. Which code produced the message?",
+    "choices": [
+      {
+        "text": "The model's PositiveIntegerField",
+        "correct": false,
+        "why": "1 is a positive integer."
+      },
+      {
+        "text": "validate_capacity",
+        "correct": true,
+        "why": "Right: 2 people are already registered."
+      },
+      {
+        "text": "The database's CHECK constraint",
+        "correct": false,
+        "why": "1 passes the CHECK."
+      },
+      {
+        "text": "services.register",
+        "correct": false,
+        "why": "Changing an event does not register anybody."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjrky575",
+    "version": 1,
+    "section": "validation",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each rule to where the lesson says it belongs.",
+    "hint": "The last table of the validation section.",
+    "pairs": [
+      {
+        "left": "capacity is a whole number",
+        "right": "the model field"
+      },
+      {
+        "left": "capacity not below the registrations",
+        "right": "validate_capacity"
+      },
+      {
+        "left": "an end after a start",
+        "right": "validate(self, attrs)"
+      },
+      {
+        "left": "one registration per address under load",
+        "right": "the database's constraint"
+      }
+    ],
+    "right_distractors": [
+      "the template"
+    ]
+  },
+  {
+    "id": "ex-f4h9fvxx",
+    "version": 1,
+    "section": "validation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A method named validate____ runs after that field's own checks; for capacity it is validate_capacity.",
+    "hint": "An underscore, then something.",
+    "blanks": [
+      {
+        "accept": [
+          "_<field>",
+          "_field",
+          "_<fieldname>"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-spfv7r2v",
+    "version": 1,
+    "section": "registering",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A second registration for elisa@example.org got which status code?",
+    "choices": [
+      {
+        "text": "400 Bad Request",
+        "correct": false,
+        "why": "The data was well formed."
+      },
+      {
+        "text": "409 Conflict",
+        "correct": true,
+        "why": "Right: the state of the data refused it."
+      },
+      {
+        "text": "403 Forbidden",
+        "correct": false,
+        "why": "Registering is open to anybody."
+      },
+      {
+        "text": "500 Internal Server Error",
+        "correct": false,
+        "why": "The service's refusal was handled."
+      }
+    ]
+  },
+  {
+    "id": "ex-yzy2t14t",
+    "version": 1,
+    "section": "registering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the registration endpoint call services.register instead of counting in the serializer?",
+    "hint": "Two requests at once.",
+    "choices": [
+      {
+        "text": "Serializers cannot run queries",
+        "correct": false,
+        "why": "They can; the count would just be racy."
+      },
+      {
+        "text": "DRF forbids business rules in serializers",
+        "correct": false,
+        "why": "It forbids nothing of the kind."
+      },
+      {
+        "text": "The service holds the lock while it counts",
+        "correct": true,
+        "why": "Right: the same rule, with the same lock, as the form."
+      },
+      {
+        "text": "To return 201 instead of 200",
+        "correct": false,
+        "why": "Status codes are the view's choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-aswa88mh",
+    "version": 1,
+    "section": "registering",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each refusal to its status code.",
+    "hint": "The section's table.",
+    "pairs": [
+      {
+        "left": "email is not an address",
+        "right": "400"
+      },
+      {
+        "left": "the event is full",
+        "right": "409"
+      },
+      {
+        "left": "GET on the registration endpoint",
+        "right": "405"
+      },
+      {
+        "left": "an anonymous PATCH on an event",
+        "right": "403"
+      }
+    ],
+    "right_distractors": [
+      "404"
+    ]
+  },
+  {
+    "id": "ex-35a04brf",
+    "version": 1,
+    "section": "registering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The anonymous registration POSTs carried no CSRF token and were accepted. When would DRF have demanded one?",
+    "hint": "CSRF is an attack on what?",
+    "choices": [
+      {
+        "text": "Always, for any POST",
+        "correct": false,
+        "why": "It accepted these."
+      },
+      {
+        "text": "Only for requests with Basic authentication",
+        "correct": false,
+        "why": "Basic is a header a browser does not add by itself."
+      },
+      {
+        "text": "With a session cookie",
+        "correct": true,
+        "why": "Right: when the request is authenticated by one, since the cookie is what a forged request rides on."
+      },
+      {
+        "text": "When the body is JSON rather than a form",
+        "correct": false,
+        "why": "The format does not decide it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c43y5100",
+    "version": 1,
+    "section": "pagination",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With PAGE_SIZE 2 and three events, what did the first page's next field hold?",
+    "choices": [
+      {
+        "text": "null",
+        "correct": false,
+        "why": "That was the second page's."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "next is an address, not a number."
+      },
+      {
+        "text": "The full address of page 2",
+        "correct": true,
+        "why": "Right: http://127.0.0.1:8000/api/events/?page=2."
+      },
+      {
+        "text": "The slug of the third event",
+        "correct": false,
+        "why": "Pages are not linked by slug."
+      }
+    ]
+  },
+  {
+    "id": "ex-xpmtyse9",
+    "version": 1,
+    "section": "pagination",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must a paginated queryset have a stable order?",
+    "hint": "What could page 2 contain otherwise?",
+    "choices": [
+      {
+        "text": "Rows repeat or vanish between pages",
+        "correct": true,
+        "why": "Right, and DRF warns about it."
+      },
+      {
+        "text": "count is wrong without ORDER BY",
+        "correct": false,
+        "why": "COUNT does not depend on order."
+      },
+      {
+        "text": "PostgreSQL refuses OFFSET without ORDER BY",
+        "correct": false,
+        "why": "It accepts it, with unpredictable results."
+      },
+      {
+        "text": "The browsable API needs it",
+        "correct": false,
+        "why": "Any client is affected."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3nfbc7s",
+    "version": 1,
+    "section": "pagination",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A feed of millions of rows that clients only scroll forwards. Which pagination does the lesson point to?",
+    "hint": "No count, no offset.",
+    "choices": [
+      {
+        "text": "PageNumberPagination with a larger PAGE_SIZE",
+        "correct": false,
+        "why": "Bigger pages still count and offset."
+      },
+      {
+        "text": "LimitOffsetPagination",
+        "correct": false,
+        "why": "Same costs as page numbers."
+      },
+      {
+        "text": "CursorPagination",
+        "correct": true,
+        "why": "Right: it asks for rows after the last one seen."
+      },
+      {
+        "text": "No pagination, and gzip",
+        "correct": false,
+        "why": "Compression does not shrink the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-vx2p6n0f",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to a registration POST in order.",
+    "hint": "Parse, validate, register, answer.",
+    "items": [
+      "DRF parses the JSON into request.data",
+      "RegistrationSerializer validates it",
+      "register() locks the event and counts",
+      "the view answers 201 or 409"
+    ]
+  }
+]
