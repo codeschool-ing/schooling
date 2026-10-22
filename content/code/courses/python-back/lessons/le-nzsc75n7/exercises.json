@@ -1,0 +1,706 @@
+[
+  {
+    "id": "ex-t2hb5c0b",
+    "version": 1,
+    "section": "first-app",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did \"pydantic[email]\" add to the project besides Pydantic?",
+    "hint": "The square brackets name an extra.",
+    "choices": [
+      {
+        "text": "A mail server for sending confirmations",
+        "correct": false,
+        "why": "Nothing sends mail yet; lesson 13 does."
+      },
+      {
+        "text": "email-validator and dnspython",
+        "correct": true,
+        "why": "Right: what EmailStr needs to check an address."
+      },
+      {
+        "text": "A second copy of Pydantic",
+        "correct": false,
+        "why": "Extras add optional dependencies, not copies."
+      },
+      {
+        "text": "FastAPI's email routes",
+        "correct": false,
+        "why": "There are no such routes."
+      }
+    ]
+  },
+  {
+    "id": "ex-4p6q7f0n",
+    "version": 1,
+    "section": "first-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the API run on port 8001?",
+    "choices": [
+      {
+        "text": "To leave 8000 to Django",
+        "correct": true,
+        "why": "Right: the two never fight over a port, which only one server may hold."
+      },
+      {
+        "text": "Uvicorn refuses port 8000",
+        "correct": false,
+        "why": "It accepts any free port."
+      },
+      {
+        "text": "FastAPI requires an odd port",
+        "correct": false,
+        "why": "There is no such rule."
+      },
+      {
+        "text": "8001 is the ASGI standard port",
+        "correct": false,
+        "why": "ASGI has no standard port."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx818bag",
+    "version": 1,
+    "section": "first-app",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first list_events returned dictionaries with datetime values. How did they become JSON?",
+    "hint": "Nobody wrote a serializer.",
+    "choices": [
+      {
+        "text": "json.dumps, which handles datetime",
+        "correct": false,
+        "why": "json.dumps refuses datetime objects."
+      },
+      {
+        "text": "Uvicorn converted them",
+        "correct": false,
+        "why": "Uvicorn sends bytes it is given."
+      },
+      {
+        "text": "FastAPI's jsonable_encoder",
+        "correct": true,
+        "why": "Right: ISO 8601 strings with their offset."
+      },
+      {
+        "text": "The store kept them as strings",
+        "correct": false,
+        "why": "store.py builds datetime objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhq8fjw8",
+    "version": 1,
+    "section": "pydantic-models",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "EventIn(capacity=\"15\", ...) succeeded. What did capacity hold afterwards?",
+    "hint": "Lax mode.",
+    "choices": [
+      {
+        "text": "The string \"15\"",
+        "correct": false,
+        "why": "Pydantic converted it."
+      },
+      {
+        "text": "The integer 15",
+        "correct": true,
+        "why": "Right: an unambiguous conversion."
+      },
+      {
+        "text": "15.0, a float",
+        "correct": false,
+        "why": "The field is an int."
+      },
+      {
+        "text": "None, with a warning",
+        "correct": false,
+        "why": "It neither warns nor drops the value."
+      }
+    ]
+  },
+  {
+    "id": "ex-zgbvx770",
+    "version": 1,
+    "section": "pydantic-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "RegistrationIn(name=\"\", email=\"not-an-address\") raised one ValidationError. How many errors did it hold?",
+    "hint": "Validation is complete, not first-error-only.",
+    "choices": [
+      {
+        "text": "One, for the first field that failed",
+        "correct": false,
+        "why": "Every field is checked."
+      },
+      {
+        "text": "Two, one per field",
+        "correct": true,
+        "why": "Right: string_too_short and value_error."
+      },
+      {
+        "text": "None, since EmailStr accepts anything with letters",
+        "correct": false,
+        "why": "It requires an @-sign."
+      },
+      {
+        "text": "Three, counting the model itself",
+        "correct": false,
+        "why": "Errors are per field."
+      }
+    ]
+  },
+  {
+    "id": "ex-ajhfgr6a",
+    "version": 1,
+    "section": "pydantic-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the lesson say sets Pydantic apart from a DRF serializer, for use outside the web?",
+    "hint": "Look at the last row of the table.",
+    "choices": [
+      {
+        "text": "It knows the Django models",
+        "correct": false,
+        "why": "It knows nothing about any database."
+      },
+      {
+        "text": "It only works inside a FastAPI route",
+        "correct": false,
+        "why": "It is a library of its own."
+      },
+      {
+        "text": "It checks data outside the web too",
+        "correct": true,
+        "why": "Right: settings in lesson 15, a queue message, a CSV row."
+      },
+      {
+        "text": "It writes the SQL for you",
+        "correct": false,
+        "why": "No SQL is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-k523ekwe",
+    "version": 1,
+    "section": "pydantic-models",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each declaration in schemas.py to what it enforces.",
+    "pairs": [
+      {
+        "left": "Field(pattern=r\"^[a-z0-9-]+$\")",
+        "right": "lower-case letters, digits and hyphens"
+      },
+      {
+        "left": "Field(ge=1, le=1000)",
+        "right": "a number from 1 to 1000"
+      },
+      {
+        "left": "EmailStr",
+        "right": "a valid email address"
+      },
+      {
+        "left": "Field(min_length=1)",
+        "right": "not empty"
+      }
+    ],
+    "right_distractors": [
+      "unique in the database"
+    ]
+  },
+  {
+    "id": "ex-vrxcxhfr",
+    "version": 1,
+    "section": "path-and-query",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each parameter of a FastAPI route to where its value is read from.",
+    "hint": "The signature decides.",
+    "pairs": [
+      {
+        "left": "slug, named in \"/events/{slug}\"",
+        "right": "the path"
+      },
+      {
+        "left": "limit: int, not in the path",
+        "right": "the query string"
+      },
+      {
+        "left": "event: EventIn",
+        "right": "the JSON body"
+      }
+    ],
+    "right_distractors": [
+      "a cookie"
+    ]
+  },
+  {
+    "id": "ex-n17awvrx",
+    "version": 1,
+    "section": "path-and-query",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "GET /events?limit=500 answered 422. Why?",
+    "choices": [
+      {
+        "text": "500 events do not exist",
+        "correct": false,
+        "why": "The list would just be shorter."
+      },
+      {
+        "text": "limit is declared le=100",
+        "correct": true,
+        "why": "Right: Input should be less than or equal to 100."
+      },
+      {
+        "text": "Query parameters cannot be numbers",
+        "correct": false,
+        "why": "limit is an int."
+      },
+      {
+        "text": "The server ran out of memory",
+        "correct": false,
+        "why": "Nothing ran at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-had07tzt",
+    "version": 1,
+    "section": "path-and-query",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "venue: str | None = None in list_events means what?",
+    "choices": [
+      {
+        "text": "venue is required in the body",
+        "correct": false,
+        "why": "Simple types not in the path come from the query string."
+      },
+      {
+        "text": "An optional query parameter",
+        "correct": true,
+        "why": "Right: absent means no filter."
+      },
+      {
+        "text": "venue must be the string \"None\"",
+        "correct": false,
+        "why": "None is Python's None."
+      },
+      {
+        "text": "A path parameter with a default",
+        "correct": false,
+        "why": "It is not in the path."
+      }
+    ]
+  },
+  {
+    "id": "ex-639t1az5",
+    "version": 1,
+    "section": "path-and-query",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "find_event raises HTTPException three calls below the route. What does the client get?",
+    "hint": "Who catches it?",
+    "choices": [
+      {
+        "text": "A 500, because the route did not catch it",
+        "correct": false,
+        "why": "FastAPI catches it for every route."
+      },
+      {
+        "text": "Nothing until the route adds try/except",
+        "correct": false,
+        "why": "No try/except is needed."
+      },
+      {
+        "text": "The 404 and its detail",
+        "correct": true,
+        "why": "Right: FastAPI turns it into the response."
+      },
+      {
+        "text": "A 422 with the slug as the error",
+        "correct": false,
+        "why": "422 is for validation."
+      }
+    ]
+  },
+  {
+    "id": "ex-czxa9vn8",
+    "version": 1,
+    "section": "response-models",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The registrations list showed names and times but no addresses. What removed them?",
+    "choices": [
+      {
+        "text": "The function deleted the email key",
+        "correct": false,
+        "why": "The function returned the full rows."
+      },
+      {
+        "text": "response_model=list[RegistrationPublic]",
+        "correct": true,
+        "why": "Right: fields it does not name never leave."
+      },
+      {
+        "text": "Uvicorn, for privacy",
+        "correct": false,
+        "why": "The server knows nothing of fields."
+      },
+      {
+        "text": "The store never kept them",
+        "correct": false,
+        "why": "store rows have an email key."
+      }
+    ]
+  },
+  {
+    "id": "ex-fce2mdkp",
+    "version": 1,
+    "section": "response-models",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody adds a phone field to the store's registration rows next year. What does the public list send?",
+    "hint": "What does the response model name?",
+    "choices": [
+      {
+        "text": "The phone, since the function returns it",
+        "correct": false,
+        "why": "The model filters it out."
+      },
+      {
+        "text": "An error, since the model lacks the field",
+        "correct": false,
+        "why": "Extra fields are dropped, not refused."
+      },
+      {
+        "text": "Still a name and a time",
+        "correct": true,
+        "why": "Right. The model on the way out names what may leave."
+      },
+      {
+        "text": "Whatever the client asks for",
+        "correct": false,
+        "why": "Clients do not choose fields here."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft7vgv9t",
+    "version": 1,
+    "section": "response-models",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson call the in-memory registration rules racy, even under FastAPI?",
+    "hint": "Where do def routes run?",
+    "choices": [
+      {
+        "text": "Pydantic validates in parallel",
+        "correct": false,
+        "why": "Validation is per request."
+      },
+      {
+        "text": "def routes run in a thread pool, between count and append",
+        "correct": true,
+        "why": "Right. Lesson 10 moves them onto a database lock."
+      },
+      {
+        "text": "Uvicorn handles one request at a time",
+        "correct": false,
+        "why": "That would remove the race, not cause it."
+      },
+      {
+        "text": "Lists in Python are not ordered",
+        "correct": false,
+        "why": "They are ordered."
+      }
+    ]
+  },
+  {
+    "id": "ex-sw0agdh0",
+    "version": 1,
+    "section": "response-models",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What status code did a new registration get?",
+    "hint": "status_code on the route.",
+    "value": 201,
+    "tolerance": 0,
+    "unit": "status code"
+  },
+  {
+    "id": "ex-krtsmq4n",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which status does FastAPI answer when a body fails validation?",
+    "choices": [
+      {
+        "text": "400",
+        "correct": false,
+        "why": "That is DRF's choice."
+      },
+      {
+        "text": "409",
+        "correct": false,
+        "why": "That is for a state that refuses valid data."
+      },
+      {
+        "text": "422",
+        "correct": true,
+        "why": "Right: Unprocessable Content."
+      },
+      {
+        "text": "500",
+        "correct": false,
+        "why": "Nothing crashed."
+      }
+    ]
+  },
+  {
+    "id": "ex-skpnq4tz",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each key of a validation error to what it holds.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "type",
+        "right": "a stable code for a program"
+      },
+      {
+        "left": "loc",
+        "right": "where: body, query or path, then the field"
+      },
+      {
+        "left": "msg",
+        "right": "a sentence for a person"
+      },
+      {
+        "left": "input",
+        "right": "the value that was refused"
+      }
+    ],
+    "right_distractors": [
+      "the stack trace"
+    ]
+  },
+  {
+    "id": "ex-j5f651f3",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Creating an event whose slug already exists: why is that a 409 and not a 422?",
+    "hint": "Shape, or state?",
+    "choices": [
+      {
+        "text": "The data fits the model; the current state refuses it",
+        "correct": true,
+        "why": "Right: fix your input versus the world changed."
+      },
+      {
+        "text": "422 is reserved for query parameters",
+        "correct": false,
+        "why": "Bodies get 422 too."
+      },
+      {
+        "text": "Pydantic cannot check slugs",
+        "correct": false,
+        "why": "It checked the pattern."
+      },
+      {
+        "text": "409 is FastAPI's default for POST",
+        "correct": false,
+        "why": "201 is this route's default."
+      }
+    ]
+  },
+  {
+    "id": "ex-qafjf01e",
+    "version": 1,
+    "section": "validation-errors",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 422 for a bad ?limit= value gives its location as loc [\"___\", \"limit\"].",
+    "hint": "Where does ?limit= travel?",
+    "blanks": [
+      {
+        "accept": [
+          "query"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gsazejbf",
+    "version": 1,
+    "section": "errors-and-status",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "DELETE /events/pycon-watch answered 405 with an allow header. What did allow say?",
+    "choices": [
+      {
+        "text": "GET",
+        "correct": true,
+        "why": "Right: the only method that path has."
+      },
+      {
+        "text": "GET, POST, DELETE",
+        "correct": false,
+        "why": "There is no DELETE route."
+      },
+      {
+        "text": "POST",
+        "correct": false,
+        "why": "POST is on /events, not on an event."
+      },
+      {
+        "text": "Nothing; FastAPI omits it",
+        "correct": false,
+        "why": "It was there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dhft2mt",
+    "version": 1,
+    "section": "errors-and-status",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson warn against answering 200 with {\"error\": ...} in the body?",
+    "hint": "Who reads the status line?",
+    "choices": [
+      {
+        "text": "JSON cannot hold a key called error",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "FastAPI refuses it",
+        "correct": false,
+        "why": "It would send it."
+      },
+      {
+        "text": "Clients, proxies and logs tell failure by the status",
+        "correct": true,
+        "why": "Right, without parsing the body."
+      },
+      {
+        "text": "It makes the response larger",
+        "correct": false,
+        "why": "Size is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-04cr4yaa",
+    "version": 1,
+    "section": "errors-and-status",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to the status agenda-api answers with.",
+    "hint": "The section's table.",
+    "pairs": [
+      {
+        "left": "the event does not exist",
+        "right": "404"
+      },
+      {
+        "left": "the address is already registered",
+        "right": "409"
+      },
+      {
+        "left": "limit is \"ten\"",
+        "right": "422"
+      },
+      {
+        "left": "a new event was created",
+        "right": "201"
+      }
+    ],
+    "right_distractors": [
+      "302"
+    ]
+  },
+  {
+    "id": "ex-0xx31v69",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to POST /events/testing-dojo/registrations in order.",
+    "items": [
+      "the path gives slug=\"testing-dojo\"",
+      "the body is validated against RegistrationIn",
+      "register() runs, or a 422 goes back",
+      "the result is filtered through RegistrationOut"
+    ]
+  },
+  {
+    "id": "ex-r9qkgy7q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client sends {\"capacity\": \"15\"} to one API built with strict=True models and to agenda-api. What differs?",
+    "hint": "Lax and strict.",
+    "choices": [
+      {
+        "text": "Nothing: both convert it",
+        "correct": false,
+        "why": "Strict refuses the conversion."
+      },
+      {
+        "text": "Both refuse it",
+        "correct": false,
+        "why": "agenda-api's lax models convert it."
+      },
+      {
+        "text": "The strict one answers 422; agenda-api accepts 15",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "agenda-api answers 422; the strict one accepts it",
+        "correct": false,
+        "why": "It is the other way round."
+      }
+    ]
+  }
+]

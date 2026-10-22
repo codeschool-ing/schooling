@@ -15,6 +15,8 @@
 #                        PATH under the current directory
 #   serve NAME 'command' start a server as ana in the background, its output
 #                        in /tmp/NAME.log; `stop NAME` ends it
+#   showlog NAME 'cmd'   what a server started by `serve` has printed so far,
+#                        under the prompt and the command that started it
 #   at DIR               the directory the next commands run in, ~ by default
 #   block NAME           a marker between transcripts, never quoted
 #
@@ -60,3 +62,7 @@ stop() {
     kill -9 -- -\$p 2>/dev/null; rm -f /tmp/$1.pid" || true
 }
 block() { printf '##### %s\n' "$1"; }
+showlog() { # showlog NAME 'command': the server's output so far, under the command that started it
+  printf 'ana@vm:%s$ %s\n' "$HERE" "$2"
+  lab as "cat /tmp/$1.log"
+}
