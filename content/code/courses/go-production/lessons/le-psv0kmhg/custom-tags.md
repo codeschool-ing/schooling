@@ -42,7 +42,7 @@ ana@vm:~/tags$ go build -o hits . && ./hits top -n 1 access.log
 path    requests
 /login  2576
 ana@vm:~/tags$ go build -tags debug -o hits-debug . && ./hits-debug top -n 1 access.log
-hits: debug: 20000 lines, 914867 bytes in 5.420602ms
+hits: debug: 20000 lines, 914867 bytes in 6.991181ms
 path    requests
 /login  2576
 ```
@@ -149,9 +149,9 @@ ana@vm:~/tags$ go test -count=1 .
 ok  	example.com/hits	0.002s
 ana@vm:~/tags$ go test -count=1 -tags integration -run TestBinary -v .
 === RUN   TestBinary
---- PASS: TestBinary (0.23s)
+--- PASS: TestBinary (0.32s)
 PASS
-ok  	example.com/hits	0.233s
+ok  	example.com/hits	0.322s
 ana@vm:~/tags$ go list -f '{{.TestGoFiles}} {{.IgnoredGoFiles}}' .
 [main_test.go] [debug.go integration_test.go progress_darwin.go progress_other.go]
 ```
@@ -173,7 +173,7 @@ the constant everywhere in `main.go`, the kind of tidy-up anybody might make:
 
 ```
 ana@vm:~/tags$ gofmt -r 'usage -> usageText' -w main.go && go vet ./... && go test -count=1 ./... && echo green
-ok  	example.com/hits	0.003s
+ok  	example.com/hits	0.002s
 ?   	example.com/hits/internal/tally	[no test files]
 ?   	example.com/hits/tools/genlog	[no test files]
 green

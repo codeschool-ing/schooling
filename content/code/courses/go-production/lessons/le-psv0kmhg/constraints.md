@@ -110,8 +110,8 @@ the shell starts the pipeline in the background with `&`, and `$!` is the proces
 ```
 ana@vm:~/tags$ go build -o hits . && go build -o genlog ./tools/genlog
 ana@vm:~/tags$ ./genlog -n 20000000 | ./hits count > /dev/null & sleep 1; kill -USR1 $!; sleep 1; kill -USR1 $!; wait $!
-hits: 58470400 bytes read
-hits: 105482653 bytes read
+hits: 142302665 bytes read
+hits: 290270575 bytes read
 ```
 
 Each signal produced a line on standard error, and **the second count is larger than the first**
@@ -200,7 +200,7 @@ Three systems, three builds:
 ana@vm:~/tags$ go build -o hits . && GOOS=darwin go build -o hits-mac . && GOOS=windows go build -o hits.exe . && echo built
 built
 ana@vm:~/tags$ ./genlog -n 20000000 | ./hits count > /dev/null & sleep 1; kill -USR1 $!; wait $!
-hits: 105235506 bytes read
+hits: 75326472 bytes read
 ana@vm:~/tags$ file hits-mac hits.exe | cut -d, -f1,2
 hits-mac: Mach-O 64-bit x86_64 executable, flags:<|DYLDLINK|PIE>
 hits.exe: PE32+ executable (console) x86-64, for MS Windows

@@ -94,6 +94,8 @@ ana@vm:~/tags$ for os in linux darwin windows; do echo "$os: $(GOOS=$os go list 
 linux: 45 files, 87 left out
 darwin: 44 files, 92 left out
 windows: 34 files, 105 left out
+ana@vm:~/tags$ ls $(go env GOROOT)/src/os/*.go | grep -vc _test.go
+119
 ```
 
 `os` has 119 files that are not tests, and **a build compiles about a third of

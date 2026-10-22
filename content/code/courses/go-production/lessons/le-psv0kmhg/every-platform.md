@@ -97,10 +97,12 @@ func init() {
 On this machine, the debug build works:
 
 ```
-ana@vm:~/tags$ go build -tags debug -o hits-debug . && ./hits-debug top -n 1 access.log
-hits: debug: 20000 lines, 914867 bytes in 5.420602ms
-path    requests
-/login  2576
+ana@vm:~/tags$ go build -tags debug -o hits-debug . && ./hits-debug top -n 2 access.log
+hits: debug: pid 11694: kill -USR1 prints progress
+hits: debug: 20000 lines, 914867 bytes in 5.765155ms
+path         requests
+/login       2576
+/api/orders  2542
 ```
 
 And the loop over targets, run again:
