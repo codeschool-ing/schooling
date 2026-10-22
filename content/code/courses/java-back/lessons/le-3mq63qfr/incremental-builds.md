@@ -39,9 +39,9 @@ BUILD SUCCESSFUL in 2s
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.1/userguide/configuration_cache_enabling.html
 ```
 
-Every task is **`UP-TO-DATE`** and the summary says `7 up-to-date`: Gradle compared, found the
-inputs and outputs as it left them, and ran nothing. The two seconds are Gradle reading the
-scripts and making the comparison.
+Every task with work to do is **`UP-TO-DATE`**, and the summary says `7 up-to-date`: Gradle compared, found the
+inputs and outputs as it left them, and ran nothing. The two seconds went on starting up,
+reading the scripts and comparing.
 
 Now change a source file's modification time without changing a byte of it:
 
@@ -140,8 +140,8 @@ Task ':test' is not up-to-date because:
 
 Each reason names the input that changed and which file it was. The chain is visible in the
 paths: the `.java` file changed, so its `.class` changed, so the jar changed, so everything holding
-the jar ran. The reasons are worth keeping in mind for the day a task runs when you did not expect
-it to: `--info` names the input, and the input is usually somewhere you did not think to look.
+the jar ran. When a task runs and you did not expect it to, `--info` names the input, and the
+input is usually somewhere you did not think to look.
 
 ## The build cache and the configuration cache
 

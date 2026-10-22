@@ -11,9 +11,11 @@
 # What is STAGED rather than typed:
 #   - The JDK and Maven are already installed (lab.sh up), so the two apt
 #     commands in the-chain-so-far.md are shown and not run here.
-#   - ~/.mavenrc is moved aside for the first `mvn -v`, so the four Unsafe
-#     warnings a fresh install prints are real; the line the lesson types then
-#     writes it again, and a trap puts the lab's own copy back on any exit.
+#   - ~/.mavenrc is moved aside for the first `mvn -q validate`, so the four
+#     Unsafe warning lines a fresh install prints are real; the line the lesson
+#     types then writes it again, and a trap puts the lab's own copy back on any
+#     exit. It is moved aside once more for the `release version 25 not
+#     supported` failure, which a JDK 21 only reaches without that line.
 #   - The older JDK on the path is JDK 21 (openjdk-21-jdk, installed in the
 #     lab), selected with JAVA_HOME passed in the environment: it stands for an
 #     `export JAVA_HOME=...` line in ~/.bashrc, which is how a student meets it.
@@ -74,10 +76,10 @@ run 'javac -version'
 
 block unsafe
 quiet 'mv ~/.mavenrc ~/.mavenrc.lab'
-run 'mvn -v'
+run 'mvn -q validate'
 run "echo '$MAVENRC' >> ~/.mavenrc"
 quiet 'rm -f ~/.mavenrc.lab'
-run 'cat ~/.mavenrc'
+run 'mvn -q validate'
 
 block mvn-v
 run 'mvn -v'
@@ -103,7 +105,10 @@ run 'mvn compile'
 run 'ls target/classes/com/example/isbn'
 
 block old-jdk-build
-EXTRA_ENV='JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' run 'mvn -q compile'
+quiet 'mv ~/.mavenrc ~/.mavenrc.lab'
+EXTRA_ENV='JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' run 'mvn -q clean compile'
+quiet 'mv ~/.mavenrc.lab ~/.mavenrc'
+run 'mvn -q compile'
 
 block tree
 run 'mvn dependency:tree'

@@ -24,8 +24,9 @@
 # first `mvn dependency:build-classpath` for the log4j2 and tinylog profiles
 # downloads those jars (quietly, -q) through the lab's mirror of Central.
 #
-# TOKEN is kept between commands in /tmp/l16-token, as a shell keeps a
-# variable (see runt).
+# TOKEN is fetched once and kept between commands in /tmp/l16-token, as a
+# shell keeps a variable (see runt). It lives fifteen minutes, and every
+# restart below uses the same secret, so it stays valid across them.
 #
 # Timestamps, pids, request ids made up by the filter, and thread names differ
 # on every run.
@@ -94,7 +95,7 @@ run 'cat app.log'
 halt
 block warn-ours
 launch '--logging.level.root=warn --logging.level.com.example.bookshop=info'
-run 'cat app.log'
+run 'grep INFO app.log'
 halt
 
 # ---------------------------------------------------------------- request ids
@@ -108,13 +109,11 @@ block order
 runt "$TOKEN"
 runt "curl -s -H \"Authorization: Bearer \$TOKEN\" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-42' -d '{\"lines\":[{\"bookId\":2,\"quantity\":1}]}' localhost:8080/orders; echo"
 run 'grep checkout-42 app.log'
-run "tail -n 4 app.log"
 halt
 
 # ------------------------------------------------------------- structured logs
 block json
 launch '--spring.profiles.active=json'
-runt "$TOKEN"
 runt "curl -s -o /dev/null -w '%{http_code}\n' -H \"Authorization: Bearer \$TOKEN\" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-43' -d '{\"lines\":[{\"bookId\":4,\"quantity\":2}]}' localhost:8080/orders"
 run 'grep checkout-43 app.log'
 run 'grep checkout-43 app.log | python3 -m json.tool'
@@ -122,7 +121,6 @@ run "grep -c '\"tags\":\[\"COMMONS-LOGGING\"\]' app.log"
 halt
 block logstash
 launch '--spring.profiles.active=json --logging.structured.format.console=logstash'
-runt "$TOKEN"
 runt "curl -s -o /dev/null -w '%{http_code}\n' -H \"Authorization: Bearer \$TOKEN\" -H 'Content-Type: application/json' -H 'X-Request-Id: checkout-44' -d '{\"lines\":[{\"bookId\":5,\"quantity\":1}]}' localhost:8080/orders"
 run 'grep checkout-44 app.log | python3 -m json.tool'
 halt
@@ -131,7 +129,7 @@ block masked
 launch '--spring.profiles.active=dev'
 run "curl -s -o /dev/null -w '%{http_code}\n' -H 'Authorization: Bearer not-a-real-token' localhost:8081/books/1"
 run "grep -c not-a-real-token app.log"
-run "grep -E 'DEBUG' app.log | grep -vE 'Bootstrap|Mapped|Detected|Patterns|Did not|Will secure|Securing|Secured|Set SecurityContext' | tail -n 6"
+run 'grep masked app.log'
 halt
 
 # ---------------------------------------------------------- the other backends
@@ -139,12 +137,10 @@ block others
 at '~/logging-look'
 run 'mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P log4j2'
 run 'java -cp "$(cat cp.txt)" Hello.java'
-run "du -ch \$(tr ':' ' ' < cp.txt) | tail -n 1"
 run 'mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P tinylog'
 run 'java -cp "$(cat cp.txt)" Hello.java'
-run "du -ch \$(tr ':' ' ' < cp.txt) | tail -n 1"
-run 'mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P logback'
-run "du -ch \$(tr ':' ' ' < cp.txt) | tail -n 1"
+block sizes
+run "for p in logback log4j2 tinylog; do mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt -P \$p; printf '%-8s ' \$p; du -ch \$(tr ':' ' ' < cp.txt) | tail -n 1; done"
 
 # ------------------------------------------------- what the lesson shows, byte for byte
 block shown

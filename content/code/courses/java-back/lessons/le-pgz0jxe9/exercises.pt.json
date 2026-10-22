@@ -4,12 +4,12 @@
     "hint": "Quem está pedindo vem antes do que pode fazer.",
     "choices": [
       {
-        "text": "403, porque a requisição não está autorizada",
-        "why": "Um 403 precisa de alguém para recusar: o servidor teria de saber quem pede e decidir que essa pessoa não pode. Sem token, ele nem chega a saber quem pede."
-      },
-      {
         "text": "401, porque a autenticação falhou",
         "why": "Certo. Ninguém foi identificado, então a autenticação falha primeiro, e o HTTP chama isso de 401 Unauthorized, embora signifique \"não autenticado\"."
+      },
+      {
+        "text": "403, porque a requisição não está autorizada",
+        "why": "Um 403 precisa de alguém para recusar: o servidor teria de saber quem pede e decidir que essa pessoa não pode. Sem token, ele nem chega a saber quem pede."
       },
       {
         "text": "404, porque o pedido não pode ser achado sem um cliente",
@@ -34,12 +34,12 @@
         "why": "Um @RestControllerAdvice é escolhido pelo tipo da exceção, não pelo status, e ele trata os 400 de validação nesta mesma aplicação."
       },
       {
-        "text": "Um filtro responde antes do DispatcherServlet, então nenhum advice roda",
-        "why": "Certo. Um @RestControllerAdvice pertence ao Spring MVC, e uma requisição recusada pela cadeia de filtros nunca chega ao Spring MVC."
-      },
-      {
         "text": "Falhas de segurança vão para o log em vez de voltarem ao cliente como corpo",
         "why": "Eles voltam, com status e cabeçalho WWW-Authenticate; só o corpo é vazio."
+      },
+      {
+        "text": "Um filtro responde antes do DispatcherServlet, então nenhum advice roda",
+        "why": "Certo. Um @RestControllerAdvice pertence ao Spring MVC, e uma requisição recusada pela cadeia de filtros nunca chega ao Spring MVC."
       }
     ]
   },
@@ -125,12 +125,12 @@
         "why": "Ele compara o hash calculado inteiro; mude um caractere de um hash guardado e ele deixa de casar."
       },
       {
-        "text": "Os dois são a senha cifrada com duas chaves diferentes",
-        "why": "Não há chave e nada é decifrado; o hash é de mão única."
-      },
-      {
         "text": "Cada hash leva o seu próprio sal aleatório, que o `matches` lê de volta",
         "why": "Certo. O sal fica dentro do hash, então conferir não precisa de mais nada, e a mesma senha nunca dá o mesmo hash duas vezes."
+      },
+      {
+        "text": "Os dois são a senha cifrada com duas chaves diferentes",
+        "why": "Não há chave e nada é decifrado; o hash é de mão única."
       }
     ]
   },
@@ -139,16 +139,16 @@
     "hint": "O custo é um expoente.",
     "choices": [
       {
-        "text": "20% mais, já que 12 é 20% mais que 10",
-        "why": "Isso lê o custo como número de rodadas. Ele é o expoente desse número: 2 elevado a 10 contra 2 elevado a 12."
+        "text": "Quatro vezes mais",
+        "why": "Certo. Cada passo de custo dobra o trabalho, então dois passos o multiplicam por quatro, para o servidor e também para quem tenta adivinhar senhas numa tabela roubada."
       },
       {
         "text": "O dobro",
         "why": "Um passo de custo dobra o trabalho; aqui são dois passos."
       },
       {
-        "text": "Quatro vezes mais",
-        "why": "Certo. Cada passo de custo dobra o trabalho, então dois passos o multiplicam por quatro, para o servidor e também para quem tenta adivinhar senhas numa tabela roubada."
+        "text": "20% mais, já que 12 é 20% mais que 10",
+        "why": "Isso lê o custo como número de rodadas. Ele é o expoente desse número: 2 elevado a 10 contra 2 elevado a 12."
       },
       {
         "text": "Cem vezes mais",
@@ -161,8 +161,8 @@
     "hint": "O codificador no `SecurityConfig` é delegante.",
     "choices": [
       {
-        "text": "Diz ao codificador delegante qual algoritmo fez o hash, para algoritmos antigos e novos conviverem numa tabela",
-        "why": "Certo. Um sistema pode guardar hashes {argon2} para senhas novas enquanto todo hash {bcrypt} continua conferindo."
+        "text": "Define o fator de custo como o padrão",
+        "why": "O custo é o 10 dentro do próprio hash."
       },
       {
         "text": "Faz parte do formato do próprio bcrypt, como o `$2a$`",
@@ -173,8 +173,8 @@
         "why": "Nada aqui é cifrado; o prefixo nomeia um algoritmo de hash, e {noop} é o que significaria texto puro."
       },
       {
-        "text": "Define o fator de custo como o padrão",
-        "why": "O custo é o 10 dentro do próprio hash."
+        "text": "Diz ao codificador delegante qual algoritmo fez o hash, para algoritmos antigos e novos conviverem numa tabela",
+        "why": "Certo. Um sistema pode guardar hashes {argon2} para senhas novas enquanto todo hash {bcrypt} continua conferindo."
       }
     ]
   },
@@ -246,12 +246,12 @@
         "why": "Uma assinatura HMAC-SHA256 tem 32 bytes seja qual for o tamanho do que ela assina."
       },
       {
-        "text": "Quem tiver o token consegue ler o payload",
-        "why": "Certo. Qualquer um lê base64url com basenc, inclusive quem achar um token num log ou num cabeçalho copiado."
-      },
-      {
         "text": "O servidor não conseguiria verificar um token tão longo",
         "why": "O tamanho não impede a verificação; ele deixa cada requisição mais pesada, um problema menor que a exposição."
+      },
+      {
+        "text": "Quem tiver o token consegue ler o payload",
+        "why": "Certo. Qualquer um lê base64url com basenc, inclusive quem achar um token num log ou num cabeçalho copiado."
       }
     ]
   },
@@ -260,16 +260,16 @@
     "hint": "Sobre o que a assinatura é calculada, e com o quê?",
     "choices": [
       {
-        "text": "A verificação da validade; editar um payload zera o exp",
-        "why": "O exp foi copiado sem mudança e ainda estava no futuro. A falha foi da assinatura."
+        "text": "A verificação da assinatura, já que o HMAC do payload novo é outro e calcular um novo exige o segredo do servidor",
+        "why": "Certo. Qualquer um recalcula o base64url, mas ninguém sem o segredo produz os 32 bytes que casam com ele."
       },
       {
         "text": "A verificação de escopo; catalogue:write é reservado ao nome de usuário do clerk",
         "why": "A autorização nem rodou. O token foi recusado antes de qualquer regra ser lida, com 401 e não 403."
       },
       {
-        "text": "A verificação da assinatura, já que o HMAC do payload novo é outro e calcular um novo exige o segredo do servidor",
-        "why": "Certo. Qualquer um recalcula o base64url, mas ninguém sem o segredo produz os 32 bytes que casam com ele."
+        "text": "A verificação da validade; editar um payload zera o exp",
+        "why": "O exp foi copiado sem mudança e ainda estava no futuro. A falha foi da assinatura."
       },
       {
         "text": "O decoder, porque base64url sem preenchimento é malformado",
@@ -286,12 +286,12 @@
         "why": "Essa é a autoridade na lista de usuários. Vindo de um token, todo escopo ganha um prefixo, então uma regra com orders puro não casaria com nada."
       },
       {
-        "text": "`SCOPE_orders`",
-        "why": "Certo, e esse é o nome que as regras do apiChain usam."
-      },
-      {
         "text": "`ROLE_orders`",
         "why": "ROLE_ é o prefixo que o hasRole acrescenta, para papéis; escopos de um JWT ganham SCOPE_."
+      },
+      {
+        "text": "`SCOPE_orders`",
+        "why": "Certo, e esse é o nome que as regras do apiChain usam."
       },
       {
         "text": "`FACTOR_PASSWORD orders`",
@@ -334,12 +334,12 @@
         "why": "Nenhuma regra o nomeia, então ele não concede nada. O problema é o que ele afirma, não o que ele abre."
       },
       {
-        "text": "Ele diz como a ana entrou, não o que o token permite",
-        "why": "Certo. No token ele viraria SCOPE_FACTOR_PASSWORD em toda requisição, uma palavra que parece permissão e que nenhuma regra confere."
-      },
-      {
         "text": "Ele revela a senha do usuário a quem ler o payload",
         "why": "Ele nomeia o tipo de fator, senha, e nada sobre a senha em si."
+      },
+      {
+        "text": "Ele diz como a ana entrou, não o que o token permite",
+        "why": "Certo. No token ele viraria SCOPE_FACTOR_PASSWORD em toda requisição, uma palavra que parece permissão e que nenhuma regra confere."
       }
     ]
   },
@@ -348,16 +348,16 @@
     "hint": "Qual regra decide?",
     "choices": [
       {
-        "text": "Passa, porque a regra nova casa primeiro",
-        "why": "Certo. A primeira regra que casa decide, então a regra mais estreita de SCOPE_orders abaixo dela nunca é lida para esse caminho."
+        "text": "O Spring se recusa a subir, já que duas regras nomeiam um mesmo caminho",
+        "why": "Dois matchers para um caminho são permitidos. O que o Spring recusa na subida é uma regra escrita depois do anyRequest()."
       },
       {
         "text": "403, porque as duas regras precisam passar e falta SCOPE_orders",
         "why": "As regras não se combinam; uma decide. Por isso a ordem em que são escritas importa."
       },
       {
-        "text": "O Spring se recusa a subir, já que duas regras nomeiam um mesmo caminho",
-        "why": "Dois matchers para um caminho são permitidos. O que o Spring recusa na subida é uma regra escrita depois do anyRequest()."
+        "text": "Passa, porque a regra nova casa primeiro",
+        "why": "Certo. A primeira regra que casa decide, então a regra mais estreita de SCOPE_orders abaixo dela nunca é lida para esse caminho."
       },
       {
         "text": "401, porque o escopo do token não casa com o caminho",
@@ -370,16 +370,16 @@
     "hint": "O que um navegador anexa sozinho a uma requisição?",
     "choices": [
       {
-        "text": "Uma API que responde em JSON não pode ser alvo de um ataque de CSRF",
-        "why": "CSRF tem a ver com como a requisição é autenticada, não com o formato da resposta. Uma API JSON autenticada por cookie é um alvo."
+        "text": "Nada autentica por cookie, e navegadores nunca acrescentam Authorization",
+        "why": "Certo. Uma requisição forjada de outro site chega sem credenciais e recebe 401, então não há nada para um token CSRF proteger."
       },
       {
         "text": "O HTTPS já impede requisições entre sites",
         "why": "O HTTPS protege a requisição no caminho; uma requisição forjada de outro site viaja por HTTPS do mesmo jeito."
       },
       {
-        "text": "Nada autentica por cookie, e navegadores nunca acrescentam Authorization",
-        "why": "Certo. Uma requisição forjada de outro site chega sem credenciais e recebe 401, então não há nada para um token CSRF proteger."
+        "text": "Uma API que responde em JSON não pode ser alvo de um ataque de CSRF",
+        "why": "CSRF tem a ver com como a requisição é autenticada, não com o formato da resposta. Uma API JSON autenticada por cookie é um alvo."
       },
       {
         "text": "O filtro bearer confere o cabeçalho Origin de cada requisição",
@@ -422,12 +422,12 @@
         "why": "A senha só é conferida em /auth/token. Um token já emitido nunca mais a encontra."
       },
       {
-        "text": "Pôr o token numa lista de revogação que o filtro já lê",
-        "why": "Essa lista não existe aqui. Ela pode ser construída, com um claim jti, e traz de volta estado no servidor."
-      },
-      {
         "text": "Trocar o segredo, encerrando todos, ou esperar o exp",
         "why": "Certo. O servidor não guarda nada para riscar; um segredo novo encerra todos os tokens de uma vez, e a duração de quinze minutos encerra este logo."
+      },
+      {
+        "text": "Pôr o token numa lista de revogação que o filtro já lê",
+        "why": "Essa lista não existe aqui. Ela pode ser construída, com um claim jti, e traz de volta estado no servidor."
       }
     ]
   },
@@ -467,16 +467,16 @@
         "why": "Um controller ou um tratador de exceção também pode responder 403. A escolha aqui é sobre o que a resposta revela."
       },
       {
-        "text": "Um 403 confirmaria que o pedido existe",
-        "why": "Certo. O 404 não diz nada sobre o pedido existir, que é tudo o que um estranho deve saber."
+        "text": "OrderNotFoundException é a única exceção que o tratador mapeia",
+        "why": "O ApiErrorHandler mapeia várias exceções; dava para acrescentar uma de \"não é seu\". O serviço lança não-encontrado de propósito."
       },
       {
         "text": "O clerk tem SCOPE_orders, então um 403 estaria errado aqui",
         "why": "O escopo só fez a requisição passar pela porta. A posse é outra verificação, e recusar por ela poderia ter qualquer um dos dois códigos."
       },
       {
-        "text": "OrderNotFoundException é a única exceção que o tratador mapeia",
-        "why": "O ApiErrorHandler mapeia várias exceções; dava para acrescentar uma de \"não é seu\". O serviço lança não-encontrado de propósito."
+        "text": "Um 403 confirmaria que o pedido existe",
+        "why": "Certo. O 404 não diz nada sobre o pedido existir, que é tudo o que um estranho deve saber."
       }
     ]
   },
@@ -485,16 +485,16 @@
     "hint": "Compare o JSON com o record em que ele é lido.",
     "choices": [
       {
-        "text": "O serviço comparou com o token e corrigiu",
-        "why": "O serviço nunca o vê: o place recebe o cliente do controller, que o tira do token."
+        "text": "O OrderRequest não tem esse componente, e o Jackson do Spring Boot ignora uma propriedade que o record não tem",
+        "why": "Certo. O campo que o cliente podia forjar não existe mais, então enviá-lo não muda nada."
       },
       {
         "text": "A Bean Validation o removeu por ser inválido",
         "why": "A validação confere os componentes que um record tem; ela não remove propriedades, e uma falha teria dado 400."
       },
       {
-        "text": "O OrderRequest não tem esse componente, e o Jackson do Spring Boot ignora uma propriedade que o record não tem",
-        "why": "Certo. O campo que o cliente podia forjar não existe mais, então enviá-lo não muda nada."
+        "text": "O serviço comparou com o token e corrigiu",
+        "why": "O serviço nunca o vê: o place recebe o cliente do controller, que o tira do token."
       },
       {
         "text": "A regra de escopo o tirou, já que a ana não tem catalogue:write",
@@ -548,12 +548,12 @@
         "why": "Sem estado quer dizer que nenhuma sessão é compartilhada, o que ajuda; o único segredo ainda precisa ser compartilhado, e aqui não é."
       },
       {
-        "text": "403 em toda requisição que vai para a segunda instância",
-        "why": "Uma assinatura que não confere é falha de autenticação, então a resposta é 401, não 403."
-      },
-      {
         "text": "Um 401 sempre que a requisição cai na outra instância",
         "why": "Certo. Cada instância confere com o seu próprio segredo, então um token vale numa e é inválido na outra; um segredo compartilhado resolve."
+      },
+      {
+        "text": "403 em toda requisição que vai para a segunda instância",
+        "why": "Uma assinatura que não confere é falha de autenticação, então a resposta é 401, não 403."
       },
       {
         "text": "Um erro de JSESSIONID trocado, levantado pelo próprio balanceador",
@@ -574,12 +574,12 @@
         "why": "Esse permitAll é só para GET; um DELETE não casa com ele."
       },
       {
-        "text": "Qualquer um com um token válido, inclusive a ana, já que só o anyRequest().authenticated() casa",
-        "why": "Certo. O padrão para uma requisição não listada é \"qualquer usuário autenticado\", então um endpoint destrutivo precisa da sua própria regra, como SCOPE_catalogue:write."
-      },
-      {
         "text": "Só o clerk, porque POST /books exige SCOPE_catalogue:write",
         "why": "As regras casam método e caminho; a regra do POST não diz nada sobre DELETE."
+      },
+      {
+        "text": "Qualquer um com um token válido, inclusive a ana, já que só o anyRequest().authenticated() casa",
+        "why": "Certo. O padrão para uma requisição não listada é \"qualquer usuário autenticado\", então um endpoint destrutivo precisa da sua própria regra, como SCOPE_catalogue:write."
       }
     ]
   }

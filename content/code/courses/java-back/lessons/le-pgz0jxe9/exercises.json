@@ -10,14 +10,14 @@
     "hint": "Who is asking comes before what they may do.",
     "choices": [
       {
-        "text": "403, because the request is not authorised",
-        "correct": false,
-        "why": "A 403 needs somebody to refuse: the server would have to know who is asking and decide that person may not. With no token, it never learns who is asking."
-      },
-      {
         "text": "401, because authentication failed",
         "correct": true,
         "why": "Right. Nobody is identified, so authentication fails first, and HTTP calls that 401 Unauthorized even though it means \"not authenticated\"."
+      },
+      {
+        "text": "403, because the request is not authorised",
+        "correct": false,
+        "why": "A 403 needs somebody to refuse: the server would have to know who is asking and decide that person may not. With no token, it never learns who is asking."
       },
       {
         "text": "404, because the order cannot be found without a customer",
@@ -52,14 +52,14 @@
         "why": "A @RestControllerAdvice is chosen by exception type, not by status, and it handles 400s from validation in this very application."
       },
       {
-        "text": "A filter answers before the DispatcherServlet, so no advice runs",
-        "correct": true,
-        "why": "Right. A @RestControllerAdvice belongs to Spring MVC, and a request refused by the filter chain never reaches Spring MVC."
-      },
-      {
         "text": "Security failures are written to the log instead of being returned to the client",
         "correct": false,
         "why": "They are returned, with a status and a WWW-Authenticate header; only the body is empty."
+      },
+      {
+        "text": "A filter answers before the DispatcherServlet, so no advice runs",
+        "correct": true,
+        "why": "Right. A @RestControllerAdvice belongs to Spring MVC, and a request refused by the filter chain never reaches Spring MVC."
       }
     ]
   },
@@ -179,14 +179,14 @@
         "why": "It compares the whole computed hash; change one character of a stored hash and it no longer matches."
       },
       {
-        "text": "The two are encryptions of the password under two different keys",
-        "correct": false,
-        "why": "There is no key and nothing is decrypted; the hash is one-way."
-      },
-      {
         "text": "Each hash carries its own random salt, which `matches` reads back",
         "correct": true,
         "why": "Right. The salt is stored inside the hash, so checking needs nothing else, and the same password never gives the same hash twice."
+      },
+      {
+        "text": "The two are encryptions of the password under two different keys",
+        "correct": false,
+        "why": "There is no key and nothing is decrypted; the hash is one-way."
       }
     ]
   },
@@ -201,9 +201,9 @@
     "hint": "The cost is an exponent.",
     "choices": [
       {
-        "text": "20% longer, since 12 is 20% more than 10",
-        "correct": false,
-        "why": "That reads the cost as a count of rounds. It is the exponent of the count: 2 to the 10th against 2 to the 12th."
+        "text": "Four times as long",
+        "correct": true,
+        "why": "Right. Each step of cost doubles the work, so two steps multiply it by four, for the server and for anybody guessing against a stolen table alike."
       },
       {
         "text": "Twice as long",
@@ -211,9 +211,9 @@
         "why": "One step of cost doubles the work; this is two steps."
       },
       {
-        "text": "Four times as long",
-        "correct": true,
-        "why": "Right. Each step of cost doubles the work, so two steps multiply it by four, for the server and for anybody guessing against a stolen table alike."
+        "text": "20% longer, since 12 is 20% more than 10",
+        "correct": false,
+        "why": "That reads the cost as a count of rounds. It is the exponent of the count: 2 to the 10th against 2 to the 12th."
       },
       {
         "text": "A hundred times as long",
@@ -233,9 +233,9 @@
     "hint": "The encoder in `SecurityConfig` is a delegating one.",
     "choices": [
       {
-        "text": "It tells the delegating encoder which algorithm made the hash, so old and new algorithms can sit in one table",
-        "correct": true,
-        "why": "Right. A system can store {argon2} hashes for new passwords while every {bcrypt} hash keeps checking."
+        "text": "It sets the cost factor to the default",
+        "correct": false,
+        "why": "The cost is the 10 inside the hash itself."
       },
       {
         "text": "It is part of bcrypt's own format, like `$2a$`",
@@ -248,9 +248,9 @@
         "why": "Nothing here is encrypted; the prefix names a hashing algorithm, and {noop} is the one that would mean plain text."
       },
       {
-        "text": "It sets the cost factor to the default",
-        "correct": false,
-        "why": "The cost is the 10 inside the hash itself."
+        "text": "It tells the delegating encoder which algorithm made the hash, so old and new algorithms can sit in one table",
+        "correct": true,
+        "why": "Right. A system can store {argon2} hashes for new passwords while every {bcrypt} hash keeps checking."
       }
     ]
   },
@@ -358,14 +358,14 @@
         "why": "An HMAC-SHA256 signature is 32 bytes whatever the length of what it signs."
       },
       {
-        "text": "Anybody holding the token can read the payload",
-        "correct": true,
-        "why": "Right. base64url is readable by anybody with basenc, including whoever finds a token in a log or a copied header."
-      },
-      {
         "text": "The server could not verify a token that long",
         "correct": false,
         "why": "Length does not stop verification; it makes every request heavier, which is a smaller problem than the exposure."
+      },
+      {
+        "text": "Anybody holding the token can read the payload",
+        "correct": true,
+        "why": "Right. base64url is readable by anybody with basenc, including whoever finds a token in a log or a copied header."
       }
     ]
   },
@@ -380,9 +380,9 @@
     "hint": "What is the signature computed over, and with what?",
     "choices": [
       {
-        "text": "The expiry check; editing a payload resets its exp",
-        "correct": false,
-        "why": "exp was copied unchanged and still lay in the future. The failure was about the signature."
+        "text": "The signature check, since the HMAC over the new payload differs and computing a new one needs the server's secret",
+        "correct": true,
+        "why": "Right. Anybody can recompute the base64url, but nobody without the secret can produce the 32 bytes that match it."
       },
       {
         "text": "The scope check; catalogue:write is reserved for the clerk's user name",
@@ -390,9 +390,9 @@
         "why": "Authorisation never ran. The token was refused before any rule was read, with 401 rather than 403."
       },
       {
-        "text": "The signature check, since the HMAC over the new payload differs and computing a new one needs the server's secret",
-        "correct": true,
-        "why": "Right. Anybody can recompute the base64url, but nobody without the secret can produce the 32 bytes that match it."
+        "text": "The expiry check; editing a payload resets its exp",
+        "correct": false,
+        "why": "exp was copied unchanged and still lay in the future. The failure was about the signature."
       },
       {
         "text": "The decoder, because base64url without padding is malformed",
@@ -417,14 +417,14 @@
         "why": "That is the authority in the user list. From a token, every scope gets a prefix, so a rule naming plain orders would match nothing."
       },
       {
-        "text": "`SCOPE_orders`",
-        "correct": true,
-        "why": "Right, and that is the name the rules in apiChain are written against."
-      },
-      {
         "text": "`ROLE_orders`",
         "correct": false,
         "why": "ROLE_ is the prefix hasRole adds, for roles; scopes from a JWT get SCOPE_."
+      },
+      {
+        "text": "`SCOPE_orders`",
+        "correct": true,
+        "why": "Right, and that is the name the rules in apiChain are written against."
       },
       {
         "text": "`FACTOR_PASSWORD orders`",
@@ -486,14 +486,14 @@
         "why": "No rule names it, so it grants nothing. The trouble is what it claims, not what it opens."
       },
       {
-        "text": "It says how ana signed in, not what the token allows",
-        "correct": true,
-        "why": "Right. In the token it would become SCOPE_FACTOR_PASSWORD on every request, a word that reads like a permission and that no rule checks."
-      },
-      {
         "text": "It reveals the user's password to whoever reads the payload",
         "correct": false,
         "why": "It names the kind of factor, password, and nothing about the password itself."
+      },
+      {
+        "text": "It says how ana signed in, not what the token allows",
+        "correct": true,
+        "why": "Right. In the token it would become SCOPE_FACTOR_PASSWORD on every request, a word that reads like a permission and that no rule checks."
       }
     ]
   },
@@ -508,9 +508,9 @@
     "hint": "Which rule decides?",
     "choices": [
       {
-        "text": "It gets through, because the new rule matches first",
-        "correct": true,
-        "why": "Right. The first matching rule decides, so the narrower SCOPE_orders rule below it is never read for that path."
+        "text": "Spring refuses to start, since two rules name one and the same path",
+        "correct": false,
+        "why": "Two matchers for one path are allowed. What Spring refuses at start-up is a rule written after anyRequest()."
       },
       {
         "text": "403, because both rules must pass and SCOPE_orders is missing",
@@ -518,9 +518,9 @@
         "why": "Rules are not combined; one decides. That is why the order they are written in matters."
       },
       {
-        "text": "Spring refuses to start, since two rules name one and the same path",
-        "correct": false,
-        "why": "Two matchers for one path are allowed. What Spring refuses at start-up is a rule written after anyRequest()."
+        "text": "It gets through, because the new rule matches first",
+        "correct": true,
+        "why": "Right. The first matching rule decides, so the narrower SCOPE_orders rule below it is never read for that path."
       },
       {
         "text": "401, because the token's scope does not match the path",
@@ -540,9 +540,9 @@
     "hint": "What does a browser attach to a request by itself?",
     "choices": [
       {
-        "text": "An API that answers in JSON cannot be the target of a CSRF attack at all",
-        "correct": false,
-        "why": "CSRF is about how the request is authenticated, not about the format of the answer. A JSON API signed in by cookie is a target."
+        "text": "Nothing authenticates by cookie, and browsers never add Authorization",
+        "correct": true,
+        "why": "Right. A forged request from another site arrives with no credentials and gets 401, so there is nothing for a CSRF token to protect."
       },
       {
         "text": "HTTPS already prevents cross-site requests",
@@ -550,9 +550,9 @@
         "why": "HTTPS protects the request in transit; a forged request from another site travels over HTTPS just as well."
       },
       {
-        "text": "Nothing authenticates by cookie, and browsers never add Authorization",
-        "correct": true,
-        "why": "Right. A forged request from another site arrives with no credentials and gets 401, so there is nothing for a CSRF token to protect."
+        "text": "An API that answers in JSON cannot be the target of a CSRF attack at all",
+        "correct": false,
+        "why": "CSRF is about how the request is authenticated, not about the format of the answer. A JSON API signed in by cookie is a target."
       },
       {
         "text": "The bearer filter checks every request's Origin header",
@@ -614,14 +614,14 @@
         "why": "The password is checked only at /auth/token. A token already issued never meets it again."
       },
       {
-        "text": "Add the token to a revocation list that the filter already reads",
-        "correct": false,
-        "why": "That list does not exist here. It can be built, with a jti claim, and it brings back state on the server."
-      },
-      {
         "text": "Change the secret, ending all tokens, or wait for exp",
         "correct": true,
         "why": "Right. The server holds nothing to cross out; a new secret ends every token at once, and the fifteen-minute lifetime ends this one soon."
+      },
+      {
+        "text": "Add the token to a revocation list that the filter already reads",
+        "correct": false,
+        "why": "That list does not exist here. It can be built, with a jti claim, and it brings back state on the server."
       }
     ]
   },
@@ -686,9 +686,9 @@
         "why": "A controller or an exception handler may answer 403 too. The choice here is about what the answer reveals."
       },
       {
-        "text": "A 403 would confirm that the order exists",
-        "correct": true,
-        "why": "Right. 404 says nothing about whether the order exists, which is all a stranger should learn."
+        "text": "OrderNotFoundException is the only exception the handler maps",
+        "correct": false,
+        "why": "ApiErrorHandler maps several exceptions; one for \"not yours\" could be added. The service throws not-found on purpose."
       },
       {
         "text": "The clerk holds SCOPE_orders, so a 403 would be wrong here",
@@ -696,9 +696,9 @@
         "why": "The scope only got the request past the door. Ownership is a separate check, and refusing on it could have been either code."
       },
       {
-        "text": "OrderNotFoundException is the only exception the handler maps",
-        "correct": false,
-        "why": "ApiErrorHandler maps several exceptions; one for \"not yours\" could be added. The service throws not-found on purpose."
+        "text": "A 403 would confirm that the order exists",
+        "correct": true,
+        "why": "Right. 404 says nothing about whether the order exists, which is all a stranger should learn."
       }
     ]
   },
@@ -713,9 +713,9 @@
     "hint": "Compare the JSON with the record it is read into.",
     "choices": [
       {
-        "text": "The service compared it with the token and corrected it",
-        "correct": false,
-        "why": "The service never sees it: place takes the customer from the controller, which takes it from the token."
+        "text": "OrderRequest has no such component, and Spring Boot's Jackson ignores a property the record lacks",
+        "correct": true,
+        "why": "Right. The field the client could forge no longer exists, so sending it changes nothing."
       },
       {
         "text": "Bean Validation removed it as invalid",
@@ -723,9 +723,9 @@
         "why": "Validation checks the components a record has; it does not remove properties, and a failure would have been a 400."
       },
       {
-        "text": "OrderRequest has no such component, and Spring Boot's Jackson ignores a property the record lacks",
-        "correct": true,
-        "why": "Right. The field the client could forge no longer exists, so sending it changes nothing."
+        "text": "The service compared it with the token and corrected it",
+        "correct": false,
+        "why": "The service never sees it: place takes the customer from the controller, which takes it from the token."
       },
       {
         "text": "The scope rule stripped it, since ana lacks catalogue:write",
@@ -799,14 +799,14 @@
         "why": "Stateless means no session is shared, which helps; it still needs the one secret shared, and here it is not."
       },
       {
-        "text": "403 on every request routed to the second instance",
-        "correct": false,
-        "why": "A signature that does not verify is an authentication failure, so the answer is 401, not 403."
-      },
-      {
         "text": "A 401 whenever a request reaches the other instance",
         "correct": true,
         "why": "Right. Each instance checks with its own secret, so a token is good on one and invalid on the other; one shared secret fixes it."
+      },
+      {
+        "text": "403 on every request routed to the second instance",
+        "correct": false,
+        "why": "A signature that does not verify is an authentication failure, so the answer is 401, not 403."
       },
       {
         "text": "A JSESSIONID mismatch error raised by the load balancer itself",
@@ -836,14 +836,14 @@
         "why": "That permitAll is for GET only; a DELETE does not match it."
       },
       {
-        "text": "Anybody with a valid token, ana included, since only anyRequest().authenticated() matches it",
-        "correct": true,
-        "why": "Right. The default for an unlisted request is \"any signed-in user\", so a destructive endpoint needs its own rule, such as SCOPE_catalogue:write."
-      },
-      {
         "text": "Only the clerk, because POST /books needs SCOPE_catalogue:write",
         "correct": false,
         "why": "Rules match a method and a path; the POST rule says nothing about DELETE."
+      },
+      {
+        "text": "Anybody with a valid token, ana included, since only anyRequest().authenticated() matches it",
+        "correct": true,
+        "why": "Right. The default for an unlisted request is \"any signed-in user\", so a destructive endpoint needs its own rule, such as SCOPE_catalogue:write."
       }
     ]
   }
