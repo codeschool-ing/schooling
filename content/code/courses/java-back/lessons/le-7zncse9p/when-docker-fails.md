@@ -57,11 +57,11 @@ Could not find a valid Docker environment for Testcontainers.
 [INFO] BUILD FAILURE
 ```
 
-**Testcontainers says "not listening" when the socket refused it.** The message is the same for a
-socket that exists and denies you and for one with nothing behind it, so do not take it literally:
-run `docker ps` in the same terminal, and its answer is one of the two sentences above, with the fix
-beside it. The unit tests passed, because they never reach Docker; both integration test classes
-failed with errors before running a single assertion, and `verify` failed the build.
+**Testcontainers says "not listening" about a socket that is there and refused it**, so do not
+take the words literally. Run `docker ps` in the same terminal: its answer is one of the two
+sentences above, and the fix is beside it. The unit tests passed, because they never reach Docker;
+both integration test classes failed with errors before running a single assertion, and `verify`
+failed the build.
 
 ## Other sentences you may meet
 
@@ -75,5 +75,5 @@ or log in with `docker login` and a free Docker account, which raises the limit.
 has more on this one.
 
 **The tests pass on your machine and a container is still running afterwards**, seen with
-`docker ps`: it is Ryuk, still waiting the few seconds it waits before cleaning up, and the section
-after next shows it going.
+`docker ps`: it is Ryuk, still waiting the few seconds it waits before cleaning up, and the next
+section shows it going.

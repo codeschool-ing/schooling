@@ -23,8 +23,8 @@ Maven keeps them apart by class name, with one plugin for each:
 | **surefire** | `*Test`, `Test*`, `*Tests`, `*TestCase` | `test` | stops the build there |
 | **failsafe** | `*IT`, `IT*`, `*ITCase` | `integration-test`, then `verify` | is recorded, and stops the build at `verify` |
 
-So `OrderServiceTest` is surefire's and the two classes of the section after next will be
-`BookshopApplicationIT` and `BookRepositoryIT`, failsafe's. The suffix is the whole switch: a test
+So `OrderServiceTest` is surefire's, and the two classes of the Testcontainers section,
+`BookshopApplicationIT` and `BookRepositoryIT`, will be failsafe's. The suffix is the whole switch: a test
 class named `BookRepositoryTests` would run with the unit tests, start a container in the middle of
 them, and slow down every `mvn test` there is.
 

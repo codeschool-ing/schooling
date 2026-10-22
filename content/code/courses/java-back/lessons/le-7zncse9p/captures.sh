@@ -114,6 +114,7 @@ run "mvn -B verify 2>&1 | grep -E '^\[INFO\] --- |Skipped: 0\$|No tests|BUILD'"
 ########################################################### installing-docker.md
 block docker-version
 run 'docker version'
+asroot 'docker image rm hello-world'   # so the check pulls it, as on a new machine
 block hello
 run 'docker run --rm hello-world'
 block groups
@@ -149,9 +150,7 @@ asroot 'rm -f /home/ana/.testcontainers.properties'
 block tc-verify
 run "mvn -B verify 2>&1 | tee /tmp/verify.log | grep -E '^WARNING|Running |Tests run:|BUILD|Total time'"
 block tc-log-docker
-run "grep -E 'DockerClientProviderStrategy|DockerClientFactory   : (Testcontainers|Docker host|Connected)|ryuk|Ryuk' /tmp/verify.log"
-block tc-log-postgres
-run "grep -m 4 -E 'tc.postgres|FlywayExecutor|Successfully applied' /tmp/verify.log"
+run "grep -E 'DockerClientProviderStrategy|DockerClientFactory   : (Testcontainers|Docker host|Connected)|tc.testcontainers/ryuk|RyukResourceReaper' /tmp/verify.log"
 block tc-log-flyway
 run "grep -E 'FlywayExecutor|DbMigrate|Started BookshopApplicationIT|Catalogue opened' /tmp/verify.log | head -n 8"
 block tc-log-slice
