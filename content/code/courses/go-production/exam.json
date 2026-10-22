@@ -1,0 +1,3035 @@
+[
+  {
+    "id": "ex-346jq7vh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Go CLI built on the standard `flag` package is run as `report -v data.csv -o out.txt`. Which flags does `flag.Parse` set?",
+    "hint": "Where does the flag package stop reading?",
+    "choices": [
+      {
+        "text": "`-v` only; `-o out.txt` is left in `flag.Args()` after `data.csv`",
+        "correct": true,
+        "why": "Right. Parsing stops at `data.csv`, the first word that is not a flag, and everything after it is an argument."
+      },
+      {
+        "text": "`-v` and `-o`, since flags are found anywhere on the line",
+        "correct": false,
+        "why": "That is GNU-style parsing, which Cobra's pflag does. The standard package stops at the first non-flag word."
+      },
+      {
+        "text": "Neither: the program exits with status 2 because `data.csv` is not a flag",
+        "correct": false,
+        "why": "A positional argument is not an error; it ends the flags and is kept in `flag.Args()`."
+      },
+      {
+        "text": "`-o` only, because a boolean flag needs `-v=true`",
+        "correct": false,
+        "why": "A bare `-v` sets a boolean flag to true."
+      }
+    ]
+  },
+  {
+    "id": "ex-jk125mkd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "easy",
+    "prompt": "A program in a pipeline was killed by `SIGPIPE`, signal 13. What exit status does Bash report for it in `${PIPESTATUS[@]}`?",
+    "hint": "128 plus the signal's number.",
+    "value": 141,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-cpxhq3tb",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A CLI prints its usage to standard output and exits 0 when given an unknown subcommand. Which real use of the tool does that break?",
+    "hint": "Think about who reads the exit code and who reads standard output.",
+    "choices": [
+      {
+        "text": "A script under `set -e` carries on, and the usage text flows into the next program as data",
+        "correct": true,
+        "why": "Right. Exit 0 tells the script all went well, and text on standard output is what the next stage of a pipeline consumes."
+      },
+      {
+        "text": "Tab completion of the subcommand names",
+        "correct": false,
+        "why": "Completion is a separate mechanism; the exit code of a mistaken run does not affect it."
+      },
+      {
+        "text": "The `-h` flag, which then prints nothing",
+        "correct": false,
+        "why": "Help is a different path; it is the mistaken call that now looks like a success."
+      },
+      {
+        "text": "Reading from standard input with `-`",
+        "correct": false,
+        "why": "Input handling is untouched; the damage is in what the caller is told."
+      }
+    ]
+  },
+  {
+    "id": "ex-g6x9ztx4",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each piece of a standard-library CLI with its job.",
+    "hint": "One piece decides, one reads, one prints, one tests.",
+    "pairs": [
+      {
+        "left": "`flag.NewFlagSet(name, flag.ContinueOnError)`",
+        "right": "flags of one subcommand, with the error returned to the caller"
+      },
+      {
+        "left": "`run(args, stdin, stdout, stderr) int`",
+        "right": "the command line as a function a test can call"
+      },
+      {
+        "left": "`text/tabwriter`",
+        "right": "columns padded to their widest cell"
+      },
+      {
+        "left": "`os.Exit(run(...))` in `main`",
+        "right": "the exit code handed to the shell"
+      }
+    ],
+    "right_distractors": [
+      "the word list built from the line the user typed"
+    ]
+  },
+  {
+    "id": "ex-my7wrt8c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a fresh Ubuntu machine, `go env CGO_ENABLED` prints `0` and `go build -race` fails with `-race requires cgo`. What fixes it?",
+    "hint": "What did the go command look for and not find?",
+    "choices": [
+      {
+        "text": "`export CGO_ENABLED=1` in `~/.profile`",
+        "correct": false,
+        "why": "cgo still needs a C compiler to run; setting the variable alone leaves nothing to call."
+      },
+      {
+        "text": "`sudo apt install gcc`",
+        "correct": true,
+        "why": "Right. With a C compiler on the path the go command turns cgo back on by itself and the race detector builds."
+      },
+      {
+        "text": "Reinstalling Go, since the archive was unpacked over an older one",
+        "correct": false,
+        "why": "A mixed install fails in other ways; `CGO_ENABLED=0` is the go command reporting a missing compiler."
+      },
+      {
+        "text": "Adding `~/go/bin` to `PATH`",
+        "correct": false,
+        "why": "That directory holds tools you installed with `go install`; the compiler lives in `/usr/bin`."
+      }
+    ]
+  },
+  {
+    "id": "ex-63a20des",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Cobra program's `main` is the generator's template: `if err := rootCmd.Execute(); err != nil { os.Exit(1) }`. What does a CI job running it lose?",
+    "hint": "Compare a typo in a flag with a file that does not exist.",
+    "choices": [
+      {
+        "text": "The error messages, which Cobra stops printing when `main` exits",
+        "correct": false,
+        "why": "Cobra prints the message before `Execute` returns, unless `SilenceErrors` is set; exiting afterwards does not unprint it."
+      },
+      {
+        "text": "Any way to tell from the status whether the command line or the run was at fault",
+        "correct": true,
+        "why": "Right. A misspelt flag and a missing file both exit 1, so a script cannot tell \"fix your invocation\" from \"fix your data\" without reading the text."
+      },
+      {
+        "text": "Success detection, since `Execute` returns an error after help is printed",
+        "correct": false,
+        "why": "Printing help returns `nil`, so the job still sees 0 for help and for a good run."
+      },
+      {
+        "text": "Nothing: 1 is the conventional status for a usage mistake",
+        "correct": false,
+        "why": "The convention the standard `flag` package and `grep` follow is 2 for a usage mistake and 1 for a failed run."
+      }
+    ]
+  },
+  {
+    "id": "ex-mmshte18",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "For the Cobra build of `hits`, `go list -m all` printed 8 lines, the first being `example.com/hits` itself, and `go version -m hits` listed 2 `dep` lines. How many modules are in the graph but were not compiled into the binary?",
+    "hint": "Take away the main module and the compiled dependencies.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-skapz95f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a Cobra tool, `--dry-run` is declared with `root.Flags()`, not `root.PersistentFlags()`. A user runs `tool deploy --dry-run`. What happens?",
+    "hint": "Which commands does a flag added with `Flags()` belong to?",
+    "choices": [
+      {
+        "text": "`deploy` runs with dry-run on, since flags are collected from the root down",
+        "correct": false,
+        "why": "Only persistent flags are collected along the path; a local flag of the root belongs to the root alone."
+      },
+      {
+        "text": "`deploy` runs with dry-run off and the flag is ignored",
+        "correct": false,
+        "why": "pflag ignores nothing: an unknown flag is an error."
+      },
+      {
+        "text": "Parsing fails with `unknown flag: --dry-run` and `deploy` never runs",
+        "correct": true,
+        "why": "Right. `deploy` has no such flag of its own and inherits none, so pflag refuses it before `RunE`; a program that maps that to 2 tells the caller it was their mistake."
+      },
+      {
+        "text": "Cobra suggests `--dry-run` under \"Did you mean this?\"",
+        "correct": false,
+        "why": "Suggestions are offered for unknown commands, not for unknown flags."
+      }
+    ]
+  },
+  {
+    "id": "ex-b10x2vpy",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each line of output from a Cobra program's hidden `__complete` command with what it means.",
+    "hint": "Only standard output is read by the shell's script.",
+    "pairs": [
+      {
+        "left": "`top<TAB>The paths with the most requests`",
+        "right": "a candidate, with the description shown beside it"
+      },
+      {
+        "left": "`:4`",
+        "right": "offer these candidates and no file names"
+      },
+      {
+        "left": "`:8`",
+        "right": "use the candidates as file extensions to filter by"
+      },
+      {
+        "left": "`Completion ended with directive: ...`",
+        "right": "a note on standard error for a person debugging"
+      }
+    ],
+    "right_distractors": [
+      "the exit status the program will return"
+    ]
+  },
+  {
+    "id": "ex-njvyrtxk",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "Put in order what Cobra's `ExecuteC` does for `hits top access.log -n 2`, where `top` has `Args: cobra.MaximumNArgs(1)`.",
+    "hint": "A wrong argument count is reported only after the flags have parsed.",
+    "items": [
+      "walk the tree from `hits` and stop at `top`",
+      "parse `top`'s flags and the persistent ones it inherits, leaving `access.log`",
+      "check the remaining arguments with `MaximumNArgs(1)`",
+      "call `top`'s `RunE` with `[\"access.log\"]`",
+      "return `top` and the `RunE`'s error, `nil` here, to the caller"
+    ]
+  },
+  {
+    "id": "ex-ct9gqfan",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A urfave/cli v3 program ends `main` with `if err := cmd.Run(ctx, os.Args); err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }` and sets no `ExitErrHandler`. One Action returns `cli.Exit(\"disk full\", 4)`. What exit status does the process end with?",
+    "hint": "Who handles an `ExitCoder` when nobody replaced the default?",
+    "choices": [
+      {
+        "text": "1, because `main` exits with 1 on any error",
+        "correct": false,
+        "why": "`main` never sees that error: the default handler acts inside `Run`, before it returns."
+      },
+      {
+        "text": "4",
+        "correct": true,
+        "why": "Right. With no `ExitErrHandler`, the library prints `disk full` and calls `os.Exit(4)` from inside `Run`, so `main`'s line never runs."
+      },
+      {
+        "text": "2, the status urfave/cli uses for every error",
+        "correct": false,
+        "why": "The library uses the code the `ExitCoder` carries; 2 is only a convention a program may choose for usage errors."
+      },
+      {
+        "text": "0, because `cli.Exit` returns an error value and does not exit by itself",
+        "correct": false,
+        "why": "`cli.Exit` itself does not exit, but the default handler that receives it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2v35bha",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "In the urfave/cli `hits`, `top`'s `-n` is declared with `Value: 3` and `Sources: cli.EnvVars(\"HITS_TOP\")`. On the 20,000-line `access.log`, how many path rows does `HITS_TOP=4 ./hits top -n 2 access.log` print below the header?",
+    "hint": "Command line, environment, default: which one wins?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-qt4m8fz4",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A test builds a urfave/cli v3 command with `Writer: &out` and `ErrWriter: &errs` (two `bytes.Buffer`s) and no `OnUsageError`, then runs a subcommand with `-n five` where `-n` is an `IntFlag`. Where does the generated help listing end up?",
+    "hint": "The `Incorrect Usage` line and the listing are written to different writers.",
+    "choices": [
+      {
+        "text": "In `errs`, next to the `Incorrect Usage` line",
+        "correct": false,
+        "why": "Only the `Incorrect Usage` line goes to `ErrWriter`; the listing is printed like any other help, to `Writer`."
+      },
+      {
+        "text": "Nowhere: a failed parse prints nothing but returns the error",
+        "correct": false,
+        "why": "Without `OnUsageError` the library prints both the complaint and the listing before returning the error."
+      },
+      {
+        "text": "In `out`, while the `Incorrect Usage` line goes to `errs`",
+        "correct": true,
+        "why": "Right. The help goes to `Writer`, the stream that stands for standard output, which is why a bad flag puts a help screen where a pipeline reads data."
+      },
+      {
+        "text": "On the real `os.Stdout`, since help ignores the command's writers",
+        "correct": false,
+        "why": "Help respects the command's `Writer`; it is the default exit handler that uses the package-level `cli.ErrWriter`."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjfnzyvb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "`./hits top -n 2 access.log` runs a urfave/cli v3 root command whose subcommand `top` has an `Action`. Put in order what `Run` does.",
+    "hint": "The root reads its own flags before it can tell which word names a subcommand.",
+    "items": [
+      "parse the root command's flags",
+      "match the first remaining argument, `top`, to a subcommand",
+      "parse `top`'s flags, taking `-n 2` and leaving `access.log`",
+      "check that `top`'s required flags were given",
+      "call `top`'s `Action`"
+    ]
+  },
+  {
+    "id": "ex-7jqxfwqd",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "The same `hits` was built three ways: the standard library (4,031,823 bytes), urfave/cli v3.14.0 (6,276,176 bytes) and Cobra v1.10.2 (5,107,200 bytes). Which statements are true? Choose all that apply.",
+    "hint": "Separate the module graph from the packages compiled in.",
+    "choices": [
+      {
+        "text": "The urfave/cli binary is the largest of the three",
+        "correct": true,
+        "why": "Yes. It is 1,168,976 bytes larger than the Cobra one, so \"lighter\" does not describe its size."
+      },
+      {
+        "text": "Only one third-party package is compiled into the urfave/cli build",
+        "correct": true,
+        "why": "Yes. `go list -deps .` showed `github.com/urfave/cli/v3` and nothing else from outside the module and the standard library."
+      },
+      {
+        "text": "`testify` ends up in the urfave/cli binary, since `go list -m all` lists it",
+        "correct": false,
+        "why": "`go list -m all` is the module graph; `testify` is only used by urfave/cli's own tests and is never compiled into `hits`."
+      },
+      {
+        "text": "Cobra's `go list -m all` is shorter than urfave/cli's",
+        "correct": false,
+        "why": "It is longer: 8 lines against 4, with `pflag`, `mousetrap` and the man-page generator's modules."
+      }
+    ]
+  },
+  {
+    "id": "ex-26ceqedh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Bubble Tea program freezes for three seconds every time the user presses `r`, which reloads its data from a slow server. The `\"r\"` case of `Update` calls the function that fetches the data and stores the result in the model. What is the fix?",
+    "hint": "Which part of a Bubble Tea program is allowed to take its time?",
+    "choices": [
+      {
+        "text": "Return a `tea.Cmd` that does the slow work and sends a message back",
+        "correct": true,
+        "why": "Right. The program runs a command in a goroutine of its own, so `Update` returns at once, the screen keeps answering, and the data arrives later as a message `Update` handles."
+      },
+      {
+        "text": "Move the fetch into `View`",
+        "correct": false,
+        "why": "`View` runs after every `Update`, so the fetch would run on every key press, and a model changed there is a copy nobody keeps."
+      },
+      {
+        "text": "Raise the frame rate with `tea.WithFPS(120)`",
+        "correct": false,
+        "why": "The frame rate limits how often the screen is repainted. Nothing is repainted while `Update` is blocked, whatever the rate."
+      },
+      {
+        "text": "Fetch in `Init` instead, once, before the first screen",
+        "correct": false,
+        "why": "That moves the freeze to start-up and loses the reload. Slow work belongs in a command wherever it is asked for."
+      }
+    ]
+  },
+  {
+    "id": "ex-13fkmnfs",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "Code ported from a Bubble Tea v1 tutorial keeps `case tea.KeyMsg:` in `Update`. Built against `charm.land/bubbletea/v2` it works, until the view sets `KeyboardEnhancements.ReportEventTypes = true`; then, on a terminal that supports it, each press of `j` moves the cursor two rows. Why?",
+    "hint": "What does `tea.KeyMsg` cover in version 2?",
+    "choices": [
+      {
+        "text": "The terminal repeats every key twice once enhancements are on",
+        "correct": false,
+        "why": "The terminal sends one event when the key goes down and another when it comes up; neither is a repeat."
+      },
+      {
+        "text": "In v2, `tea.KeyMsg` matches presses and releases alike",
+        "correct": true,
+        "why": "Right. It became an interface over `tea.KeyPressMsg` and `tea.KeyReleaseMsg`; once releases are reported, both land in that case. Matching `tea.KeyPressMsg` fixes it."
+      },
+      {
+        "text": "`View` is called twice per message when enhancements are on",
+        "correct": false,
+        "why": "How often `View` runs does not move the cursor; only `Update` changes the model."
+      },
+      {
+        "text": "`msg.String()` returns `\"j j\"` for an enhanced key",
+        "correct": false,
+        "why": "The string is still `\"j\"`; the second move comes from a second message, the release."
+      }
+    ]
+  },
+  {
+    "id": "ex-f232rdra",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`hits browse` draws each status's bar as `count × (terminal width − 16) ÷ largest count`, with integer division. For `/static/app.js` the largest count is 944 (status 200) and status 500 has 174. How many `#` does status 500 get on a terminal 60 columns wide?",
+    "hint": "60 − 16 = 44 columns for the largest bar.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-app93taf",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order what happens in a Bubble Tea program between the user pressing `j` and the moved cursor appearing on the screen.",
+    "hint": "The library turns bytes into a value before your code sees anything.",
+    "items": [
+      "the terminal sends the byte for `j` to the program",
+      "Bubble Tea decodes it into a `tea.KeyPressMsg`",
+      "`Update` returns a copy of the model with the cursor one row lower",
+      "`View` draws that new model as text",
+      "the renderer writes the escape sequences that repaint what changed"
+    ]
+  },
+  {
+    "id": "ex-h0terecy",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A team is choosing between a full-screen Bubble Tea view and a plain table printed to standard output for a report of failed logins. In which of these situations is the plain table the right tool? Choose all that apply.",
+    "hint": "Think about who, or what, reads the output, and when.",
+    "choices": [
+      {
+        "text": "The report runs nightly from cron and is mailed to the team",
+        "correct": true,
+        "why": "Right. Cron gives the job no terminal; a full-screen view has nothing to draw on and nobody to press a key."
+      },
+      {
+        "text": "One of the operators uses a screen reader",
+        "correct": true,
+        "why": "Right. A screen repainted cell by cell reaches a screen reader as fragments; printed lines arrive in order."
+      },
+      {
+        "text": "The log has 20,000 lines",
+        "correct": false,
+        "why": "Size is no argument either way: the screen counts in a command and stays responsive, and the table prints the same totals."
+      },
+      {
+        "text": "Someone pastes the numbers into a ticket after the program has exited",
+        "correct": true,
+        "why": "Right. The alternate screen is erased on exit; a printed table is still in the scrollback."
+      },
+      {
+        "text": "The terminal is 72 columns wide",
+        "correct": false,
+        "why": "A full-screen view adapts to the width through `tea.WindowSizeMsg`; 72 columns is plenty for either."
+      }
+    ]
+  },
+  {
+    "id": "ex-a6s76fb3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "On a laptop, `go build -o hits .` for the `hits` tool takes 0.078 seconds. On a CI runner that starts from a clean machine for every job, the same build takes about 6 seconds each time. What explains the difference?",
+    "hint": "Think about where compiled packages are kept between builds.",
+    "choices": [
+      {
+        "text": "CI machines compile without optimisation",
+        "correct": false,
+        "why": "Nothing in the job changes compiler flags; and unoptimised builds are faster, not slower."
+      },
+      {
+        "text": "The build cache is empty on every job, so the standard library is compiled again each time",
+        "correct": true,
+        "why": "Right. A build from an empty `GOCACHE` compiled 79 packages in 5.8 s; the warm one compiled none. Keeping `GOCACHE` between jobs removes most of the gap."
+      },
+      {
+        "text": "`-o` is slower when the output directory is new",
+        "correct": false,
+        "why": "Writing one 4 MB file takes milliseconds; the seconds are compilation."
+      },
+      {
+        "text": "The runner downloads Go's standard library from the module proxy",
+        "correct": false,
+        "why": "The standard library ships with the toolchain in `GOROOT`; only modules come from the proxy, and `hits` requires none."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzngxkem",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A table test has four subtests, and the first one, `TestParse/good`, fails. The package is run with `go test -failfast -v`. How many of `TestParse`'s four subtests start?",
+    "hint": "`-failfast` starts no new test after the first failure.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "subtests"
+  },
+  {
+    "id": "ex-y7g5d3cc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`go install example.com/tool/cmd/tool@v1.2.0` is refused, while cloning the repository and running `go install ./cmd/tool` inside it works. The module's `go.mod` contains a `replace` directive. Why the difference?",
+    "hint": "`go help install` lists conditions for the `@version` form.",
+    "choices": [
+      {
+        "text": "Fetched by version, the tool has no main module, so substitutions are an error",
+        "correct": true,
+        "why": "Right. With a version no module is the main module, so a `replace` that only applies to a main module is refused; inside the clone it is the main module and the `replace` applies."
+      },
+      {
+        "text": "Version v1.2.0 was never published to the module proxy, so there is nothing to download",
+        "correct": false,
+        "why": "Then the clone at that tag would not exist either; the refusal is about the `replace`, which `go help install` names."
+      },
+      {
+        "text": "`go install` with a version needs `GOBIN` set",
+        "correct": false,
+        "why": "Unset `GOBIN` falls back to `~/go/bin` in both forms."
+      },
+      {
+        "text": "A package path with `@version` must be a library",
+        "correct": false,
+        "why": "The reverse: the arguments must be `main` packages."
+      }
+    ]
+  },
+  {
+    "id": "ex-e2gg7g5v",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each question about a Go project with the command that answers it.",
+    "hint": "One command answers none of these.",
+    "pairs": [
+      {
+        "left": "What does `tally.Top` promise to return?",
+        "right": "`go doc tally.Top`"
+      },
+      {
+        "left": "Which `.go` files make up a package?",
+        "right": "`go list -f '{{.GoFiles}}' ./internal/tally`"
+      },
+      {
+        "left": "Which module versions were built into an installed binary?",
+        "right": "`go version -m ~/go/bin/stringer`"
+      },
+      {
+        "left": "Where will `go install` put executables?",
+        "right": "`go env GOBIN`"
+      }
+    ],
+    "right_distractors": [
+      "`go clean -cache`"
+    ]
+  },
+  {
+    "id": "ex-7739d22z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A developer runs `go test` with no package argument, twice in a row in the same directory, and never sees `(cached)`. Why?",
+    "hint": "`go help test` describes two modes.",
+    "choices": [
+      {
+        "text": "Their tests read the clock",
+        "correct": false,
+        "why": "The cache does not inspect what a test reads apart from files in the module and environment variables; reading the clock would not stop caching."
+      },
+      {
+        "text": "That form, local directory mode, never caches results",
+        "correct": true,
+        "why": "Right. Only package list mode, as in `go test .` or `go test ./...`, caches successful results."
+      },
+      {
+        "text": "`-count=1` is the default",
+        "correct": false,
+        "why": "The default count is 1, but that is not the same as giving the flag: only an explicit `-count` disables caching."
+      },
+      {
+        "text": "The test cache is shared between users, and somebody else on the machine cleared it",
+        "correct": false,
+        "why": "Each user has their own `GOCACHE`; and the same thing happens on a machine nobody else uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-gw4t4a5a",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Makefile target runs `gofmt -d .` as its formatting check. A pull request adds one file with four-space indentation. What does the target do?",
+    "hint": "`-d` and `-l` do not end the same way.",
+    "choices": [
+      {
+        "text": "Prints the diff and fails, because `gofmt -d` exits 1 when it prints one",
+        "correct": true,
+        "why": "Right. Unlike `-l`, `gofmt -d` exits 1 whenever the formatting differs, so it works as a check on its own and leaves the diff in the log."
+      },
+      {
+        "text": "Prints the diff and passes, because printing it was what was asked",
+        "correct": false,
+        "why": "That is how `gofmt -l` and `goimports -d` behave. `gofmt -d` exits 1 when it has a diff to print."
+      },
+      {
+        "text": "Rewrites the file with tabs and passes",
+        "correct": false,
+        "why": "`-d` writes nothing; only `-w` touches the file."
+      },
+      {
+        "text": "Nothing, since four spaces is a matter of taste `gofmt` leaves to the author",
+        "correct": false,
+        "why": "Indentation is one tab per level, always; it is among the first things `gofmt` changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-jvbcmsym",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`gofmt -l .` reads a directory in which one `.go` file has a syntax error. What exit status does it return?",
+    "hint": "It is neither the status for success nor the one `-d` uses for a difference.",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zmsjdnqy",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "hard",
+    "prompt": "A file in the module `example.com/hits` imports `strings`, `github.com/spf13/cobra`, `example.com/hits/internal/tally` and `net/http`. Put them in the order `goimports -local example.com/hits` writes them.",
+    "hint": "Three groups, each sorted, and the standard library has no dot in its first path element.",
+    "items": [
+      "`\"net/http\"`",
+      "`\"strings\"`",
+      "`\"github.com/spf13/cobra\"`",
+      "`\"example.com/hits/internal/tally\"`"
+    ]
+  },
+  {
+    "id": "ex-qqadv4k7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "An old codebase writes `interface{}` everywhere. What does `gofmt -r 'interface{} -> any' -w .` do to it?",
+    "hint": "Which identifiers in a rewrite rule are wildcards?",
+    "choices": [
+      {
+        "text": "Nothing: the rule fails, because `interface{}` is a type rather than an expression",
+        "correct": false,
+        "why": "A type is a valid expression for a rewrite rule; the rule runs and rewrites every occurrence."
+      },
+      {
+        "text": "Replaces every `interface{}` with `any`",
+        "correct": true,
+        "why": "Right. Only single lowercase letters are wildcards, so `any` is taken literally, and `interface{}` becomes `any` in parameters, slices and literals alike."
+      },
+      {
+        "text": "Replaces each `interface{}` with whatever expression `a` matched",
+        "correct": false,
+        "why": "`any` is three letters, so it is not a wildcard; there is also no `a` in the pattern for it to refer to."
+      },
+      {
+        "text": "Only the `interface{}` written in function parameters",
+        "correct": false,
+        "why": "The rule matches the syntax wherever it appears: parameters, return types and composite literals."
+      }
+    ]
+  },
+  {
+    "id": "ex-wz74wp5f",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "Every developer on a team formats on save with `gopls`, and CI runs `goimports -l -local example.com/shop .`. CI keeps failing on Fábio's commits alone, always in the import block. What is the likely cause?",
+    "hint": "What has to match between an editor and the CI command?",
+    "choices": [
+      {
+        "text": "Fábio's `gopls` has a different tab width",
+        "correct": false,
+        "why": "Tab width is an editor display setting; neither `gopls` nor `goimports` writes anything different because of it."
+      },
+      {
+        "text": "His editor's `gopls` lacks the `local` setting, so his own packages stay in the second group",
+        "correct": true,
+        "why": "Right. `local` is `gopls`'s equivalent of `-local`; without it his imports come out in two groups and the CI command, which splits a third, lists the file."
+      },
+      {
+        "text": "`gopls` and `goimports` disagree on the layout of code",
+        "correct": false,
+        "why": "`gopls` applies the same canonical formatting as `gofmt`; the difference here is confined to the import block."
+      },
+      {
+        "text": "He commits with `--no-verify`",
+        "correct": false,
+        "why": "That skips a local hook. CI runs on the server whatever happened on his machine, and the failures name the import block."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx07xaz7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A test file declares four functions with the signature `func(t *testing.T)`. On Go 1.27.1, which one makes `go test` fail with a vet finding before any test runs?",
+    "hint": "`testing` wants `Test` followed by something that does not start with a lower-case letter.",
+    "choices": [
+      {
+        "text": "`Test_parse`",
+        "correct": false,
+        "why": "An underscore is not a lower-case letter, so `Test_parse` is a valid test name: `go test -v` runs it and reports `PASS`."
+      },
+      {
+        "text": "`Testparse`",
+        "correct": true,
+        "why": "Right. A lower-case letter after `Test` is a malformed name; the `tests` analyzer is in `go test`'s default subset, so the run fails with `[build failed]`."
+      },
+      {
+        "text": "`TestHTTP`, because an initialism is not a word",
+        "correct": false,
+        "why": "Capitals after `Test` are what a test name needs; `TestHTTP` runs and passes."
+      },
+      {
+        "text": "`TestParseLongLine`, for being longer than the function it tests",
+        "correct": false,
+        "why": "Nothing checks a test's name against the function it tests; length is not a rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehzasa4z",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`func length(b []byte) uint16 { hi, lo := b[0], b[1]; return uint16(hi<<8 | lo) }` compiles, and `go vet` reports `hi (8 bits) too small for shift of 8`. What does `length([]byte{0x03, 0x20})` return as written?",
+    "hint": "The shift happens on a `byte`, before the conversion.",
+    "value": 32,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-cnn005v3",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A codebase calls a helper the team knows `go vet`'s `unusedresult` misjudges, and they want every other vet analyzer kept. Which command does that?",
+    "hint": "One spelling selects an analyzer, the other excludes it.",
+    "choices": [
+      {
+        "text": "`go vet -unusedresult ./...`",
+        "correct": false,
+        "why": "Naming an analyzer as `-NAME` runs only the ones named: this would run `unusedresult` and nothing else."
+      },
+      {
+        "text": "`go test -vet=off ./...`",
+        "correct": false,
+        "why": "That removes vet from the test run entirely, and `unusedresult` was never in `go test`'s default subset anyway."
+      },
+      {
+        "text": "`go vet -unusedresult=false ./...`",
+        "correct": true,
+        "why": "Right. Turning one analyzer off with `=false` runs all the others."
+      },
+      {
+        "text": "A `//nolint:unusedresult` comment above the call",
+        "correct": false,
+        "why": "Vet has no comment that silences a line; that syntax belongs to other tools."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fnrbqhh",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A CI pipeline runs `go test ./...` and nothing else, on Go 1.27.1 with default flags. Which of these mistakes in a tested package does it stop? Choose all that apply.",
+    "hint": "`go test` runs only a curated subset of vet's analyzers.",
+    "choices": [
+      {
+        "text": "`fmt.Errorf(\"read %s: %d\", path)`, one argument short",
+        "correct": true,
+        "why": "Yes. `printf` is in `go test`'s subset, so the run fails before the tests."
+      },
+      {
+        "text": "`errors.As(err, target)` with `target` a non-pointer",
+        "correct": true,
+        "why": "Yes. `errorsas` is in the subset too."
+      },
+      {
+        "text": "a method with a value receiver on a type holding a `sync.Mutex`",
+        "correct": false,
+        "why": "`copylocks` is outside the subset; it needs `go vet` or `go test -vet=all`."
+      },
+      {
+        "text": "`ctx, _ := context.WithTimeout(parent, time.Second)`",
+        "correct": false,
+        "why": "`lostcancel` is outside the subset as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-qgv9mjen",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`ids := []int{1, 1, 2, 3, 3}; slices.Compact(ids); fmt.Println(ids)` compiles and `go vet` reports `result of slices.Compact call not used`. What does it print on Go 1.27.1?",
+    "hint": "`Compact` returns the shorter slice and zeroes what it no longer uses.",
+    "choices": [
+      {
+        "text": "`[1 1 2 3 3]`, since the call changed nothing",
+        "correct": false,
+        "why": "`Compact` works in place: it moved the elements and zeroed the tail, even though the result was thrown away."
+      },
+      {
+        "text": "`[1 2 3]`",
+        "correct": false,
+        "why": "That is the returned slice. `ids` keeps its own length of five."
+      },
+      {
+        "text": "`[1 2 3 3 3]`",
+        "correct": false,
+        "why": "Before Go 1.22 the tail kept its old values; on 1.27.1 `Compact` zeroes the elements between the new length and the old one."
+      },
+      {
+        "text": "`[1 2 3 0 0]`",
+        "correct": true,
+        "why": "Right. The first three are the compacted values, and the two the result no longer covers were zeroed; the fix is `ids = slices.Compact(ids)`."
+      }
+    ]
+  },
+  {
+    "id": "ex-20qqxwdn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "CI runs golangci-lint v2.14.0, built with `go install`, and a developer runs `staticcheck` v0.8.2 on her laptop. On the same commit, one `SA` check reports in one and not the other. What is the first thing to suspect?",
+    "hint": "Which staticcheck is inside golangci-lint?",
+    "choices": [
+      {
+        "text": "golangci-lint passes different flags to every analyzer",
+        "correct": false,
+        "why": "It does choose its own default list of checks, but `SA` checks are on in both; the more basic difference is the code that runs."
+      },
+      {
+        "text": "They are different staticcheck releases",
+        "correct": true,
+        "why": "Right. golangci-lint 2.14.0 carries staticcheck v0.8.1, fixed in its own `go.mod`, as `go version -m` shows; pinning one does not pin the other."
+      },
+      {
+        "text": "staticcheck reads `staticcheck.conf` and the laptop has a different Go",
+        "correct": false,
+        "why": "A different Go would change more than one check, and the version of the analyzer itself is the difference already known."
+      },
+      {
+        "text": "golangci-lint's cache holds a stale result from an older commit",
+        "correct": false,
+        "why": "The cache is per package and per content; a changed file is analysed again."
+      }
+    ]
+  },
+  {
+    "id": "ex-kc5kt606",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On the `hits` module with `report.go`, `golangci-lint run --no-config` reported 10 `errcheck` findings: one `os.WriteFile`, one deferred `w.Flush`, one deferred `f.Close` and seven `fmt.Fprint`, `fmt.Fprintf` or `fmt.Fprintln` calls. How many remain with a `.golangci.yml` that enables only the `std-error-handling` exclusion preset?",
+    "hint": "The preset lets off printing, closing, flushing, `os.Remove` and environment variables.",
+    "value": 1,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-w28px44x",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A `.golangci.yml` with `version: \"2\"` says `enabel:` under `linters:` where it meant `enable:`, to add revive. What does `golangci-lint run` do?",
+    "hint": "Compare what `run` and `config verify` do with a key they do not know.",
+    "choices": [
+      {
+        "text": "Exits 3, refusing the configuration file",
+        "correct": false,
+        "why": "That is `config verify`, which checks the file against the schema; `run` ignores the unknown key."
+      },
+      {
+        "text": "Runs revive anyway, guessing the meant key",
+        "correct": false,
+        "why": "Nothing is guessed; revive is simply never enabled."
+      },
+      {
+        "text": "Runs the standard set without revive, as if the key were absent",
+        "correct": true,
+        "why": "Right. It reports on errcheck, govet, ineffassign, staticcheck and unused, and exits 0 when they find nothing, which is why `golangci-lint config verify` belongs in CI before the run."
+      },
+      {
+        "text": "Runs no linters and prints `0 issues.`",
+        "correct": false,
+        "why": "`default: standard` still applies when `enable` is missing, so the five standard linters run."
+      }
+    ]
+  },
+  {
+    "id": "ex-5an0mthk",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`golangci-lint run --no-config`, which runs the standard set of five linters, is pointed at a file containing each of these. Which does it report? Choose all that apply.",
+    "hint": "The standard set is errcheck, govet, ineffassign, staticcheck and unused.",
+    "choices": [
+      {
+        "text": "`os.WriteFile(path, data, 0o644)` with the error dropped",
+        "correct": true,
+        "why": "Yes, through `errcheck`; no preset is on without a configuration file."
+      },
+      {
+        "text": "`if n >= 0` where `n` is a `uint`",
+        "correct": true,
+        "why": "Yes, as `SA4003` from the staticcheck inside it."
+      },
+      {
+        "text": "`func Save(path string, ctx context.Context) error`",
+        "correct": false,
+        "why": "Context position is revive's `context-as-argument`, which is not in the standard set."
+      },
+      {
+        "text": "An exported function with no doc comment",
+        "correct": false,
+        "why": "That is revive's `exported`; staticcheck's documentation checks judge only a comment that exists."
+      },
+      {
+        "text": "An unexported function nothing calls",
+        "correct": true,
+        "why": "Yes, through `unused`, one of the five."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4q6t6ve",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A GitHub Actions workflow runs golangci-lint with `args: --new-from-merge-base=origin/main` on every `push`, including pushes to `main`. What does the step check on a push to `main`?",
+    "hint": "What is the merge base of `main` and `origin/main`, on `main`?",
+    "choices": [
+      {
+        "text": "Every line, since `main` has no branch point",
+        "correct": false,
+        "why": "There is a merge base: the commit itself. Nothing differs from it."
+      },
+      {
+        "text": "The lines of the last commit",
+        "correct": false,
+        "why": "That would be `--new-from-rev=HEAD~`; the merge base on `main` is `HEAD` itself."
+      },
+      {
+        "text": "Nothing: every finding is filtered out",
+        "correct": true,
+        "why": "Right. The merge base is the commit being checked, so no line is new and the step passes whatever is there; the workflow should run on `pull_request`."
+      },
+      {
+        "text": "It fails, because `origin/main` cannot be compared with itself",
+        "correct": false,
+        "why": "Git computes the merge base happily; the result is simply the same commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfg08epa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A service requires `golang.org/x/text` v0.3.7 and calls only `language.Parse`, and `govulncheck ./...` exits 0. GO-2022-1059 names `MatchStrings` and `ParseAcceptLanguage`. A colleague adds a handler that calls `language.MatchStrings`. What does the next scan do?",
+    "hint": "Which level does the new call move the finding to?",
+    "choices": [
+      {
+        "text": "Still exits 0: the package was already imported",
+        "correct": false,
+        "why": "Importing put it at the package level, which does not fail a run. The new call is a path to a named function."
+      },
+      {
+        "text": "Exits 3 with GO-2022-1059 under Symbol Results, tracing the new handler",
+        "correct": true,
+        "why": "Right. `MatchStrings` is one of the two names, so the finding moves up from Package Results to the symbol level, and the trace names the handler's line."
+      },
+      {
+        "text": "Exits 2, because a new import requires `go mod tidy` first",
+        "correct": false,
+        "why": "No import was added; `language` was already imported. 2 is for a mistake on the command line."
+      },
+      {
+        "text": "Nothing changes until the database publishes a new entry",
+        "correct": false,
+        "why": "The entry has named `MatchStrings` all along; what changed is the code, and the scan reads both."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0a8y7wg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A CI step runs `govulncheck -scan package ./...` with text output on a program that imports a vulnerable package and calls none of the functions the entry names. What exit status does the step get?",
+    "hint": "The exit status follows the level asked for.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-yqnpr1fh",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "hard",
+    "prompt": "Match each `govulncheck` situation with the change that closes it.",
+    "hint": "One of the fixes on the right closes none of them.",
+    "pairs": [
+      {
+        "left": "every finding says `Fixed in: stdlib@go1.27.2`",
+        "right": "install Go 1.27.2 and rebuild the binaries"
+      },
+      {
+        "left": "`go mod why -m` shows a vulnerable module arriving through another module that still asks for the old version",
+        "right": "`go get` the vulnerable module at its fixed version in your own module"
+      },
+      {
+        "left": "`-mode binary` on a binary built with `-ldflags=\"-s -w\"` lists every vulnerability of every module",
+        "right": "scan the unstripped build, or the source it came from"
+      },
+      {
+        "left": "a job writing `-format json` has never failed, though the file holds a symbol-level finding",
+        "right": "read the findings in a script, or add a text scan for its exit status"
+      }
+    ],
+    "right_distractors": [
+      "run `go mod tidy`"
+    ]
+  },
+  {
+    "id": "ex-0w5zkcnn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A library module has no `main` package. Its exported `Normalize` calls a function a Go vulnerability entry names, and nothing inside the module calls `Normalize`. What does `govulncheck ./...` report?",
+    "hint": "Who calls a library's exported functions?",
+    "choices": [
+      {
+        "text": "Nothing at the symbol level, since no code in the module calls `Normalize`",
+        "correct": false,
+        "why": "That would make every library clean by construction. Programs outside the module are the callers, so exported functions are treated as entry points."
+      },
+      {
+        "text": "A symbol-level finding traced from `Normalize`, exit status 3",
+        "correct": true,
+        "why": "Right. In a package that is not `main`, every exported function and method is an entry point, and `Normalize` reaches a named function."
+      },
+      {
+        "text": "An error: `govulncheck` needs a `main` package to build a call graph",
+        "correct": false,
+        "why": "It scans libraries; their exported API stands in for `main`."
+      },
+      {
+        "text": "A module-level finding only, because libraries are judged by `go.mod`",
+        "correct": false,
+        "why": "Libraries get the same three levels as programs; only the entry points differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-8na706ck",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A `govulncheck` finding names a module you never added to `go.mod` yourself. Which commands help you find where it comes from and what to move it to? Select all that apply.",
+    "hint": "Three of them read the module graph or the call path; the others check something else.",
+    "choices": [
+      {
+        "text": "`go mod why -m <module>`",
+        "correct": true,
+        "why": "Right. It prints the shortest chain of imports from your packages to the module, which names the module in between."
+      },
+      {
+        "text": "`go list -m -u <module>`",
+        "correct": true,
+        "why": "Right. It shows the version you have and, in brackets, the newest one available."
+      },
+      {
+        "text": "`govulncheck -show traces ./...`",
+        "correct": true,
+        "why": "Right. It prints the whole call path from your entry point into the module, so you see which of your packages reaches it."
+      },
+      {
+        "text": "`go mod verify`",
+        "correct": false,
+        "why": "It checks that downloaded modules match their recorded checksums. It knows nothing about vulnerabilities or who imports what."
+      },
+      {
+        "text": "`go vet ./...`",
+        "correct": false,
+        "why": "`vet` looks for suspicious constructs in your code, such as a bad format string; it does not read the module graph."
+      },
+      {
+        "text": "`go clean -modcache`",
+        "correct": false,
+        "why": "It deletes the downloaded modules, which the next build fetches again at the same versions. Nothing about the finding changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qh6vr7t",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Go module's CI job runs `go generate ./...` and fails because the runner has no `stringer` executable; the directive is `//go:generate stringer -type=Level`. Which change fixes it for every machine at once, with the version reviewed like any dependency?",
+    "hint": "Where can a version be written down so that every `go generate` reads the same one?",
+    "choices": [
+      {
+        "text": "Add `go install golang.org/x/tools/cmd/stringer@latest` to the CI job before the step",
+        "correct": false,
+        "why": "It makes CI pass today, with whatever release is newest, and leaves every laptop with its own version. `@latest` means a different program next month."
+      },
+      {
+        "text": "Record the tool in `go.mod` with `go get -tool …@v0.52.0` and call it through `go tool`",
+        "correct": true,
+        "why": "Right. The version goes into `go.mod`, the modules into `go.sum`, and `go tool` builds exactly that version wherever the module is checked out."
+      },
+      {
+        "text": "Delete `level_string.go` from the repository so that CI no longer needs to generate it",
+        "correct": false,
+        "why": "Then nothing builds the `String` method at all: `go build` never runs `go generate`, so a clone gets no method."
+      },
+      {
+        "text": "Skip the generate step in CI, since the compiler's guard already catches stale files",
+        "correct": false,
+        "why": "The guard catches changed constant values only; a changed directive or a new constant builds cleanly."
+      }
+    ]
+  },
+  {
+    "id": "ex-tfwfkgqd",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "`stringer -type=Color` runs on `const ( Red Color = iota; Green; Blue )`. It writes `_Color_name = \"RedGreenBlue\"` and an index table `_Color_index`. What is the last number in `_Color_index`?",
+    "hint": "The table holds where each name starts, plus where the last one ends.",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-add7rk8x",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the life of a change to a `//go:generate` directive in order, from the author's editor to the CI verdict.",
+    "hint": "The author's step comes before the commit, and CI generates again after it.",
+    "items": [
+      "edit the directive or the source it reads",
+      "run `go generate ./...` on the author's machine",
+      "commit the source and the generated file together",
+      "CI runs `go generate ./...` on a fresh checkout",
+      "CI runs `git diff --exit-code` and fails on any difference"
+    ]
+  },
+  {
+    "id": "ex-6qtytdxx",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A package holds `//go:generate echo *.go` beside three `.go` files. What does `go generate` print for it?",
+    "hint": "Who would expand the `*`?",
+    "choices": [
+      {
+        "text": "The three file names, in alphabetical order",
+        "correct": false,
+        "why": "That is what a shell would print. go generate starts the command itself, with no shell, and does no globbing."
+      },
+      {
+        "text": "`*.go`",
+        "correct": true,
+        "why": "Right. Only `$NAME` variables and quoted strings are processed; `*` reaches `echo` as a character."
+      },
+      {
+        "text": "An error, because a directive may not contain `*`",
+        "correct": false,
+        "why": "Nothing forbids it; the character is simply passed on, as the run shows."
+      },
+      {
+        "text": "The name of the file holding the directive, as `$GOFILE` would",
+        "correct": false,
+        "why": "`$GOFILE` is a variable go generate expands by name; `*` is not one."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg4cjny6",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "prompt": "A module is downloaded by `go get` into somebody else's project. Its repository commits `parser_gen.go`, written by a directive that runs a generator from the module's `tools/` directory. Which statements are true? Choose all that apply.",
+    "hint": "Who runs `go generate`, and what does a download contain?",
+    "choices": [
+      {
+        "text": "Their `go build` compiles `parser_gen.go` as it was committed",
+        "correct": true,
+        "why": "Yes. The download holds the committed files, and a build compiles what is there."
+      },
+      {
+        "text": "Their machine never needs the generator",
+        "correct": true,
+        "why": "Yes. Nothing on their side runs `go generate` for a dependency."
+      },
+      {
+        "text": "Their `go build` runs the directive first if `parser_gen.go` is older than its input",
+        "correct": false,
+        "why": "`go build` never runs a directive, whatever the dates of the files."
+      },
+      {
+        "text": "Their `go mod tidy` fails unless the generator is installed on their machine",
+        "correct": false,
+        "why": "`go mod tidy` reads imports and requirements; it never runs a directive, and a dependency's generator is not one of its packages' imports."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzt5qawk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Go package has `lock_linux.go`, calling `syscall.Flock`, and `lock_windows.go`, each constrained by its name only. A user builds it for `GOOS=plan9` and gets `undefined: lockFile`. What is the fix that keeps the two existing files as they are?",
+    "hint": "Which of the two files does a Plan 9 build compile?",
+    "choices": [
+      {
+        "text": "Rename `lock_linux.go` to `lock_plan9.go`",
+        "correct": false,
+        "why": "Plan 9 has no `syscall.Flock`, so the same code would fail there for another reason, and Linux would lose its file."
+      },
+      {
+        "text": "Put `//go:build windows || plan9` at the top of `lock_windows.go`",
+        "correct": false,
+        "why": "A name and a line combine with \"and\": the file still needs `windows`, so Plan 9 still compiles neither file."
+      },
+      {
+        "text": "Add `lock_other.go` with `//go:build !linux && !windows`",
+        "correct": true,
+        "why": "Right. Plan 9 satisfies neither name, so it compiles neither file; a third file for everything else gives every target exactly one definition."
+      },
+      {
+        "text": "Replace both files with a `switch runtime.GOOS` in one file",
+        "correct": false,
+        "why": "A `switch` needs every branch to compile on every system, and `syscall.Flock` does not exist on Windows or Plan 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-8b40zdyh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a module whose `go.mod` says `go 1.27.1`, a file starting with `// go:build windows` (with a space after the slashes) defines only a function nothing else defines. What happens when the package is built on Linux?",
+    "hint": "Is that first line a directive?",
+    "choices": [
+      {
+        "text": "The file is left out, as on any system that is not Windows",
+        "correct": false,
+        "why": "Only a directive leaves a file out, and with the space the line is an ordinary comment."
+      },
+      {
+        "text": "The compiler stops with `misplaced compiler directive`",
+        "correct": false,
+        "why": "That message is for a real directive below the package clause. This line is not a directive at all."
+      },
+      {
+        "text": "`go vet` fails with an error about the malformed line",
+        "correct": false,
+        "why": "vet's checks did not flag a spaced `// go:build`: in the `hits` case it passed the line and reported only the redeclaration it caused."
+      },
+      {
+        "text": "The file is compiled on Linux, and nothing reports it",
+        "correct": true,
+        "why": "Right. The space turns the directive into a comment, and with no name colliding there is no error to give the mistake away."
+      }
+    ]
+  },
+  {
+    "id": "ex-gwxr037z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team's CI runs `go vet ./...` and `go test ./...` on Linux only. Their code has `metrics_windows.go` and a test file behind `//go:build e2e`. Which change makes CI compile every file at least once?",
+    "hint": "Count the ways the module gets built, and which of them CI covers.",
+    "choices": [
+      {
+        "text": "Add `go build ./...` before the tests",
+        "correct": false,
+        "why": "`go build` on Linux compiles the same files `go vet` already did, minus the tests; it reaches neither the Windows file nor the tagged test."
+      },
+      {
+        "text": "Add `GOOS=windows go vet ./...` and `go vet -tags e2e ./...`",
+        "correct": true,
+        "why": "Right. The first compiles `metrics_windows.go`, and vet includes test files, so the second compiles the tagged test. Neither runs anything."
+      },
+      {
+        "text": "Set `GOFLAGS=-tags=e2e` for the whole CI job",
+        "correct": false,
+        "why": "That compiles the tagged test but changes nothing for Windows, and it also turns every ordinary run into one with the slow tests included."
+      },
+      {
+        "text": "Rename the tagged test to `e2e_windows_test.go`",
+        "correct": false,
+        "why": "Then the test is compiled only for Windows, and only with the tag. Linux CI would see it even less than before."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgh5y6kg",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "In the `hits` module with `main.go`, `progress.go`, `progress_unix.go` (`//go:build unix && !darwin`), `progress_darwin.go`, `progress_other.go` (`//go:build !unix`) and `debug.go` (`//go:build debug`), how many of these six files does `GOOS=freebsd go build -tags debug` compile?",
+    "hint": "FreeBSD is Unix and is not macOS.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "files"
+  },
+  {
+    "id": "ex-3nezk9g0",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each file name with the builds that compile it, assuming no `//go:build` line in any of them.",
+    "hint": "Read each name from the end; one description on the right fits none of them.",
+    "pairs": [
+      {
+        "left": "`sum_amd64.go`",
+        "right": "every system on `amd64`"
+      },
+      {
+        "left": "`sum_windows_arm64.go`",
+        "right": "Windows on `arm64` only"
+      },
+      {
+        "left": "`sum_linux_test.go`",
+        "right": "the tests, on Linux only"
+      },
+      {
+        "left": "`sum_osx.go`",
+        "right": "every build, since `osx` is not a `GOOS`"
+      }
+    ],
+    "right_distractors": [
+      "macOS only, on every processor"
+    ]
+  },
+  {
+    "id": "ex-x6s0835z",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Go service's goroutine count, read from `/debug/pprof/`, climbs from 11 to 37 in thirteen seconds and never falls. The `goroutine?debug=2` output shows most of them in state `[chan send]` on the same line. What is the likely defect?",
+    "hint": "Who is supposed to receive what those goroutines are sending?",
+    "choices": [
+      {
+        "text": "The HTTP server leaks one goroutine per profile request",
+        "correct": false,
+        "why": "The stacks are on the service's own line, not in `net/http`; the profile requests appear as one goroutine each while they run."
+      },
+      {
+        "text": "`GOMAXPROCS` is set too low for the load",
+        "correct": false,
+        "why": "Too few processors would leave goroutines runnable, not parked on a channel send."
+      },
+      {
+        "text": "A goroutine sends its result after the receiver gave up and returned",
+        "correct": true,
+        "why": "Right. An unbuffered send whose receiver left after a timeout waits for ever; a buffer of one lets it finish."
+      },
+      {
+        "text": "The garbage collector is too slow to free finished goroutines",
+        "correct": false,
+        "why": "A goroutine that has returned is gone; these have not returned, they are blocked on a send."
+      }
+    ]
+  },
+  {
+    "id": "ex-qszxmpth",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A program calls `runtime.GC()` and then `pprof.WriteHeapProfile` after counting a 91 MB log. `go tool pprof -top` on the file shows 2.2 MB, none of it from the counting code, while `-sample_index=alloc_space` shows 255 MB from it. Which reading is right?",
+    "hint": "The default view of a heap profile and the view chosen with `-sample_index` answer different questions.",
+    "choices": [
+      {
+        "text": "`runtime.GC()` wiped the counting code from the profile",
+        "correct": false,
+        "why": "A collection frees objects; the records of who allocated them stay, as the `alloc_space` view shows."
+      },
+      {
+        "text": "The profile is corrupt, because the two views should agree",
+        "correct": false,
+        "why": "They measure different things: what is live now and what was ever allocated."
+      },
+      {
+        "text": "The counting code leaks 255 MB that the collector has not found yet",
+        "correct": false,
+        "why": "A leak would show in the live view; after `runtime.GC()` none of it was live."
+      },
+      {
+        "text": "It keeps nothing but churns: 255 MB made and thrown away",
+        "correct": true,
+        "why": "Right. `inuse_space` is retention, `alloc_space` is churn; this program has the second problem and not the first."
+      }
+    ]
+  },
+  {
+    "id": "ex-tepnrb51",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each way of getting a Go profile with what it needs.",
+    "hint": "One requirement on the right belongs to none of them.",
+    "pairs": [
+      {
+        "left": "`go test -bench Count -cpuprofile cpu.out`",
+        "right": "a benchmark function in a `_test.go` file"
+      },
+      {
+        "left": "`pprof.StartCPUProfile` in the program",
+        "right": "a deferred `StopCPUProfile` that is allowed to run"
+      },
+      {
+        "left": "`go tool pprof http://127.0.0.1:6060/debug/pprof/profile?seconds=5`",
+        "right": "the program importing `net/http/pprof` and listening"
+      },
+      {
+        "left": "a `block` profile with something in it",
+        "right": "a call to `runtime.SetBlockProfileRate`"
+      }
+    ],
+    "right_distractors": [
+      "a rebuild of the Go toolchain with profiling enabled"
+    ]
+  },
+  {
+    "id": "ex-5gf8qmbv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`go tool pprof -top` reports `Duration: 1.10s, Total samples = 1.20s` for a CPU profile taken at Go's default rate. How many samples does the profile hold?",
+    "hint": "Each sample stands for one tick of the profiling clock.",
+    "value": 120,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z7k3dj38",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team wants profiles from production and adds `import _ \"net/http/pprof\"` to a service that serves its public API with `http.ListenAndServe(\":8080\", nil)`. Which change makes the profiles safe to leave in?",
+    "hint": "Which mux does the import register on?",
+    "choices": [
+      {
+        "text": "Rename the import with an alias so its paths are hidden",
+        "correct": false,
+        "why": "The alias changes nothing: the handlers are registered by the package's `init` whatever it is called in your file."
+      },
+      {
+        "text": "Serve the API from its own mux, and the default mux on 127.0.0.1",
+        "correct": true,
+        "why": "Right. The profiles stay on `DefaultServeMux`, which then listens only on loopback; the public port never sees them."
+      },
+      {
+        "text": "Call `runtime.SetCPUProfileRate(0)` so nothing can be collected",
+        "correct": false,
+        "why": "That turns off CPU profiling but leaves `cmdline`, goroutine stacks and the heap open to anybody on port 8080."
+      },
+      {
+        "text": "Keep it as it is: the handlers require a token in production builds",
+        "correct": false,
+        "why": "They have no authentication at all, in any build."
+      }
+    ]
+  },
+  {
+    "id": "ex-gaj1e0k5",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "easy",
+    "prompt": "A benchmark writes a CPU profile for `go tool pprof` when run as `go test -bench Count -___ cpu.out`.",
+    "hint": "The flag is named after the kind of profile and ends in \"profile\".",
+    "blanks": [
+      {
+        "accept": [
+          "cpuprofile",
+          "-cpuprofile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3x427j99",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "In a Go CPU profile, `json.Unmarshal` shows 0.05 s flat and 3.10 s cum out of 4 s, and `reflect.Value.Field` shows 0.90 s flat and 0.95 s cum. Which statement is right?",
+    "hint": "Flat is a function's own code; cum includes what it called.",
+    "choices": [
+      {
+        "text": "`reflect.Value.Field` is the bigger cost, since its flat is eighteen times larger",
+        "correct": false,
+        "why": "Its own code is busier, but `Unmarshal` and what it calls hold over three times as much time in total."
+      },
+      {
+        "text": "`Unmarshal` delegates; `Field` does its own work, likely under `Unmarshal`",
+        "correct": true,
+        "why": "Right. A large cum with a tiny flat is a function whose time is in its callees; `Field` is where the processor is most often found."
+      },
+      {
+        "text": "`Unmarshal` is called sixty times more often than `Field`",
+        "correct": false,
+        "why": "A CPU profile holds no call counts; 3.10 against 0.05 is cum against flat, not a ratio of calls."
+      },
+      {
+        "text": "The numbers are inconsistent, since cum can never exceed the total of flat",
+        "correct": false,
+        "why": "Cum always includes callees, so a delegating function's cum is far above its flat."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgzm36t7",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "In a flame graph of a Go service, the box for `handleOrder` spans 60% of the width and is covered almost entirely by boxes above it, while a box for `crc32.update` near the top is 15% wide with nothing above it. A colleague wants to optimise `handleOrder`'s own code first. What does the graph say?",
+    "hint": "Width answers one question, the bare top edge another.",
+    "choices": [
+      {
+        "text": "The bare 15% box on top is where time goes; the 60% box spends little itself",
+        "correct": true,
+        "why": "Right. A bare top edge is flat time; a covered box delegates, and its own code buys at most its flat."
+      },
+      {
+        "text": "Neither: in a flame graph colour shows the hot spot, so look for the reddest box",
+        "correct": false,
+        "why": "Colour carries no meaning in a flame graph."
+      },
+      {
+        "text": "`crc32.update` must be called more often, because it is near the top",
+        "correct": false,
+        "why": "Height is call depth, and a flame graph has no call counts."
+      },
+      {
+        "text": "Agree: the widest box is always the first thing to optimise",
+        "correct": false,
+        "why": "Width is cum: most of `handleOrder`'s 60% is spent in what it calls, not in its own code."
+      }
+    ]
+  },
+  {
+    "id": "ex-a40t4n5t",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To compare two CPU profiles of the same benchmark, before and after a change, `go tool pprof -top -___ cpu.old cpu.new` subtracts the first from the second.",
+    "hint": "The option that names the base profile.",
+    "blanks": [
+      {
+        "accept": [
+          "diff_base"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-434dhyc5",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "In a profile of the `hits` benchmark, `split5` holds 19.15% of the samples, more than any other function. If it could be made to cost nothing, at most what percentage of the profiled time would disappear?",
+    "hint": "Removing a function removes no more than its own share.",
+    "value": 19.15,
+    "tolerance": 0.5,
+    "unit": "%"
+  },
+  {
+    "id": "ex-x1x5rey7",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put these steps of optimising a Go function from a profile in a defensible order.",
+    "hint": "The measurement that judges the change has to exist before the change.",
+    "items": [
+      "profile a benchmark and read flat and cum",
+      "record `-count 10` benchmark results as a baseline",
+      "change the code the profile points at",
+      "run the tests and a fuzz target against the old behaviour",
+      "compare new results with benchstat and profile again"
+    ]
+  },
+  {
+    "id": "ex-hx1517q6",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "`go tool trace -pprof=sync` on a trace of a 1.023-second run reports 1.71 s in `sync.(*Mutex).Lock` across four worker goroutines. On average, how many goroutines were waiting for that lock at any moment? Give one decimal.",
+    "hint": "Blocked time from overlapping goroutines adds up; divide by the wall time.",
+    "value": 1.7,
+    "tolerance": 0.1,
+    "unit": "goroutines"
+  },
+  {
+    "id": "ex-cenvxm40",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Go service with `GOMAXPROCS=8` gets slower under load while a CPU profile shows nothing new. Its execution trace's Goroutine analysis says the request goroutines spend 60% of their time in \"Sched wait time\". What does that mean?",
+    "hint": "Sched wait is one particular state.",
+    "choices": [
+      {
+        "text": "They were blocked on locks or channels for 60% of the time",
+        "correct": false,
+        "why": "Blocking on a lock or a channel is listed separately, as block time; sched wait is time when nothing was blocking them."
+      },
+      {
+        "text": "They were runnable and waiting for a P",
+        "correct": true,
+        "why": "Right. Ready to run with every P busy: more runnable goroutines than processors, which `-pprof=sched` shows by where they became runnable."
+      },
+      {
+        "text": "The trace itself slowed them down by 60%",
+        "correct": false,
+        "why": "Tracing costs something, but it does not appear as a state of the goroutines; sched wait is measured time with no P."
+      },
+      {
+        "text": "The operating system descheduled their threads for 60% of the time",
+        "correct": false,
+        "why": "The trace cannot see the kernel taking a CPU from a thread; such time counts as running, not as sched wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-601ddnmt",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A program counts a log with four worker goroutines and runs no faster than with one. Its trace's sync profile, focused on the program's own code, names `runtime.gcStart`, `runtime.gcMarkDone` and `runtime.chanrecv2`, and no mutex. Which change is the trace pointing at?",
+    "hint": "None of those three is a lock the program took.",
+    "choices": [
+      {
+        "text": "Replace the channels with a shared map behind a mutex",
+        "correct": false,
+        "why": "That adds the lock the profile did not have; a shared mutex held per line made the same program's workers take turns."
+      },
+      {
+        "text": "Raise the number of workers to sixteen",
+        "correct": false,
+        "why": "The workers were already waiting for the reader and the collector; more of them would wait too."
+      },
+      {
+        "text": "Allocate less per line, so the collector runs less and the reader keeps up",
+        "correct": true,
+        "why": "Right. `gcStart` and `gcMarkDone` are waits on the collector, and `chanrecv2` is workers waiting for batches: the limit is the reading and its garbage."
+      },
+      {
+        "text": "Set `GOMAXPROCS=1` so nothing waits for a processor",
+        "correct": false,
+        "why": "With one P the workers spend most of their time runnable instead; it moves the waiting, it does not remove its cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbc4zrxg",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "A Go program uses `runtime/trace`'s flight recorder to explain a rare slow batch. Put the steps in the order they happen.",
+    "hint": "The recorder must already be running when the incident happens.",
+    "items": [
+      "Create it with `trace.NewFlightRecorder` and a `FlightRecorderConfig`",
+      "Call `Start` before the work begins",
+      "A batch takes longer than the threshold",
+      "Leave a `trace.Log` naming the batch",
+      "Call `WriteTo` with a new file",
+      "Read the file with `go tool trace -pprof=sync`"
+    ]
+  },
+  {
+    "id": "ex-3hy1x73c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`go test -trace=test.trace ./cmd/pcount` produced a 21,214-byte file, and `pcount -trace` on a 3-million-line log produced 5,257,509 bytes. What mostly decides how big an execution trace is?",
+    "hint": "A trace records events, not samples.",
+    "choices": [
+      {
+        "text": "The number of goroutines the program creates",
+        "correct": false,
+        "why": "The one-worker run of the same program wrote a larger trace than the four-worker run; the count of goroutines is not what grows it."
+      },
+      {
+        "text": "How many runtime events happen while it records",
+        "correct": true,
+        "why": "Right. Each state change, collection and annotation is an event; a short test makes few, a second of busy work with 94 collections makes millions."
+      },
+      {
+        "text": "The size of the input file that the program reads through",
+        "correct": false,
+        "why": "Bytes read are not recorded; only the events reading causes, such as system calls and garbage collections."
+      },
+      {
+        "text": "The sampling rate, a hundred times a second",
+        "correct": false,
+        "why": "That is the CPU profile's rate. A trace does not sample."
+      }
+    ]
+  },
+  {
+    "id": "ex-nbjf05vj",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A batch job built with `go build -race` runs in staging with `GORACE=log_path=/var/log/job/race`. It prints the right totals and exits with status 66. What do you conclude?",
+    "hint": "What does the race detector judge: the output, or the run?",
+    "choices": [
+      {
+        "text": "Nothing is wrong: the totals are correct, so 66 is a false alarm",
+        "correct": false,
+        "why": "The detector reports two accesses it watched happen with nothing ordering them. A run can race and still print the right number by luck."
+      },
+      {
+        "text": "A race happened; read the `race.<pid>` file",
+        "correct": true,
+        "why": "Right. 66 is the detector's exit status for a run with a race, and `log_path` sent the reports to a file named after the process id instead of standard error."
+      },
+      {
+        "text": "The job ran out of memory, which race builds report as 66",
+        "correct": false,
+        "why": "Running out of memory has its own symptoms; 66 is `exitcode`'s default, used only when the detector found a race."
+      },
+      {
+        "text": "The log directory was missing, so the reports were lost",
+        "correct": false,
+        "why": "The exit status does not depend on where the reports went; and the place to look first is that directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-bevmkd2w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "The race job of a CI pipeline keeps running out of memory, although `go test -bench . -benchmem` reports the same B/op with and without `-race`. Which measurement tells you how much memory to give that job?",
+    "hint": "Where does the detector keep its records?",
+    "choices": [
+      {
+        "text": "The B/op from `-benchmem`, since it is identical",
+        "correct": false,
+        "why": "`-benchmem` counts the Go heap, and the detector's records live outside it, so B/op stays the same while the process grows."
+      },
+      {
+        "text": "The size of the race-enabled test binary",
+        "correct": false,
+        "why": "The binary grows by about a megabyte; the cost is paid while it runs, not on disk."
+      },
+      {
+        "text": "The peak resident memory of the race build, such as `VmHWM`",
+        "correct": true,
+        "why": "Right. Only the operating system's view sees the detector's memory: on the `hits` benchmark the peak went from 19,748 kB to 46,020 kB with the same B/op."
+      },
+      {
+        "text": "The elapsed time `go test` prints beside each package it ran",
+        "correct": false,
+        "why": "Time and memory grow by different factors; the elapsed time says nothing about how much memory to provide."
+      }
+    ]
+  },
+  {
+    "id": "ex-w12vkpxw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "On a machine pinned to one CPU with `taskset -c 0`, a test calling `CountParallel(r, 2)` fails under `go test -race`, while the same test calling `CountParallel(r, 0)`, meaning one worker per CPU, passes. A colleague concludes the race only exists when the worker count is explicit. What is wrong with that?",
+    "hint": "How many goroutines did each call start there?",
+    "choices": [
+      {
+        "text": "Nothing: zero workers selects a code path with its own lock",
+        "correct": false,
+        "why": "Zero only chooses how many workers start; every worker runs the same loop with the same unlocked counters."
+      },
+      {
+        "text": "With one CPU, zero meant one worker, so that run never raced",
+        "correct": true,
+        "why": "Right. `GOMAXPROCS` defaulted to 1, so only one goroutine touched the counters; the race is in the code either way, and `-cpu 1,4` would make the zero-worker test show it too."
+      },
+      {
+        "text": "`taskset` disables the detector for the second call",
+        "correct": false,
+        "why": "The detector ran for both calls in the same process; it reported the one that ran two goroutines."
+      },
+      {
+        "text": "The second test passed because the detector needs two CPUs",
+        "correct": false,
+        "why": "The first test failed on that very CPU: the detector needs two goroutines, not two CPUs."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkwqd93n",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "hard",
+    "prompt": "A module has 12 packages with tests, and nothing sets `GORACE`. Each race-enabled test binary waits the detector's default 1,000 ms before exiting. In total, how many seconds of that exit wait does `go test -race -count=1 -cpu 1,4 ./...` add, summed over all the binaries?",
+    "hint": "`-cpu` and `-count` repeat tests inside one run of each package's binary.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "s"
+  },
+  {
+    "id": "ex-83gxmcfw",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each situation with the `GORACE` option that addresses it.",
+    "hint": "Four of the options the race detector's `help=1` listing prints.",
+    "pairs": [
+      {
+        "left": "A script already uses status 66 to mean something else",
+        "right": "exitcode"
+      },
+      {
+        "left": "A staging server's standard error is thrown away",
+        "right": "log_path"
+      },
+      {
+        "left": "You want one report at a time while reading by hand",
+        "right": "halt_on_error"
+      },
+      {
+        "left": "A goroutine still writing when `main` returns must have time to be reported",
+        "right": "atexit_sleep_ms"
+      }
+    ],
+    "right_distractors": [
+      "strip_path_prefix"
+    ]
+  },
+  {
+    "id": "ex-2rm13x7v",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "From an Intel Linux laptop with `gcc` installed, you build a Go tool that uses the `net` package for `linux/amd64` and `linux/arm64` with plain `GOOS`/`GOARCH` and nothing else. You want neither binary to depend on the C library. What do you have to change?",
+    "hint": "Which of the two builds is a cross build, and what is cgo's default for the other one?",
+    "choices": [
+      {
+        "text": "Nothing: Go binaries never depend on the C library",
+        "correct": false,
+        "why": "The native build of a program using `os/user` or `net` came out `dynamically linked`, because cgo is on by default where a C compiler exists."
+      },
+      {
+        "text": "Set `CGO_ENABLED=0` for the `amd64` build too",
+        "correct": true,
+        "why": "Right. The `arm64` build is a cross build and already has cgo off; the native `amd64` one defaults to cgo on, and `net` then compiles its cgo files."
+      },
+      {
+        "text": "Install an ARM cross-compiler and name it in `CC`",
+        "correct": false,
+        "why": "That would let the `arm64` build use cgo, the opposite of the goal. The `amd64` build is the one linking the C library."
+      },
+      {
+        "text": "Build both with `GOAMD64=v1` so they are portable",
+        "correct": false,
+        "why": "`GOAMD64` chooses which Intel instructions the compiler may use; it has no say over cgo, and it is ignored for `arm64`."
+      }
+    ]
+  },
+  {
+    "id": "ex-7jzr2e8w",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A customer reports that your Linux binary prints `This program can only be run on AMD64 processors with v3 microarchitecture support.` and exits. You want one binary that runs for every customer. What do you do?",
+    "hint": "The message comes from a setting chosen at build time.",
+    "choices": [
+      {
+        "text": "Ask the customer to set `GOAMD64=v1` before running it",
+        "correct": false,
+        "why": "`GOAMD64` is read by the go command when it compiles; the finished binary already holds v3 instructions and checks for them at start-up."
+      },
+      {
+        "text": "Rebuild with `GOAMD64=v1`, the default",
+        "correct": true,
+        "why": "Right. v1 is the 64-bit instruction set every Intel and AMD processor runs, and a v1 build ran on the emulated 2008 processor that refused the v3 one."
+      },
+      {
+        "text": "Rebuild with `GOARCH=386` so that older processors can run it",
+        "correct": false,
+        "why": "That makes a 32-bit binary for a different `GOARCH`. The customer's processor is 64-bit and lacks only the v3 extensions."
+      },
+      {
+        "text": "Rebuild with `CGO_ENABLED=0`",
+        "correct": false,
+        "why": "cgo decides whether C code is linked in, not which processor instructions the Go compiler uses."
+      }
+    ]
+  },
+  {
+    "id": "ex-htjmgrjq",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A package builds for `linux` and `darwin`, but `GOOS=windows go build` fails with `undefined: lockFile`. The package has `lock_unix.go` and no other file mentioning `lockFile`. What is the likely cause?",
+    "hint": "The build reads a different set of files for each target.",
+    "choices": [
+      {
+        "text": "Windows file names are case-insensitive, so the compiler cannot find the function",
+        "correct": false,
+        "why": "File names on the build machine do not change with `GOOS`; the go command is still reading the same directory on Linux."
+      },
+      {
+        "text": "Cross builds turn cgo off, which removes `lockFile`",
+        "correct": false,
+        "why": "Builds for `darwin` from Linux are cross builds too, and they succeeded. Nothing here imports \"C\"."
+      },
+      {
+        "text": "`lock_unix.go` is built only on Unix-like systems, and no file defines `lockFile` for Windows",
+        "correct": true,
+        "why": "Right. A file named or constrained for Unix is left out for `windows`, so the function is simply missing there; a Windows file has to provide it."
+      },
+      {
+        "text": "Go cannot build for Windows on a Linux machine",
+        "correct": false,
+        "why": "`GOOS=windows GOARCH=amd64 go build` made a `PE32+` file on Linux for a package with no system-specific files."
+      }
+    ]
+  },
+  {
+    "id": "ex-0g50b3vs",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A release script built `hits` for six targets into a directory that `du -sb` measured at 24,013,603 bytes. What is the average size of one binary, in thousands of bytes (kB), to the nearest whole number?",
+    "hint": "Divide by six, then by 1,000.",
+    "value": 4002,
+    "tolerance": 1,
+    "unit": "kB"
+  },
+  {
+    "id": "ex-9mdjb3v5",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order what happens when `GOARCH=arm64 go test -exec qemu-aarch64-static .` runs on an Intel Linux machine.",
+    "hint": "From source code to the `ok` line.",
+    "items": [
+      "the go command compiles the package and its tests for `arm64`",
+      "it links an ARM test binary in a temporary directory",
+      "it starts `qemu-aarch64-static` with the test binary's path",
+      "QEMU translates the ARM instructions and passes system calls to the kernel",
+      "the go command reads the result and prints `ok`"
+    ]
+  },
+  {
+    "id": "ex-26fnx5am",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A team builds its Go server with `-ldflags=\"-s -w\"` and worries that CPU profiles taken in production will show bare addresses instead of function names. What will `go tool pprof` show?",
+    "hint": "Where does a running Go program find its own function names, and does stripping touch it?",
+    "choices": [
+      {
+        "text": "Bare addresses, unless the unstripped binary is passed to `pprof` instead",
+        "correct": false,
+        "why": "The profile records names when it is written, from the runtime's own table, `.gopclntab`, which stripping leaves in place."
+      },
+      {
+        "text": "Function names, because the runtime writes them into the profile from `.gopclntab`",
+        "correct": true,
+        "why": "Right. It is the same table that let a stripped `hits` name every function on `SIGQUIT`; `-s -w` removes only what tools outside the program read."
+      },
+      {
+        "text": "Nothing: a stripped binary cannot be profiled at all",
+        "correct": false,
+        "why": "Profiling is done by the runtime inside the program, and nothing it needs is in the DWARF or the symbol table."
+      },
+      {
+        "text": "Names for the standard library only, since its symbols ship with the toolchain",
+        "correct": false,
+        "why": "Every function, the program's own included, is named from the same table inside the binary."
+      }
+    ]
+  },
+  {
+    "id": "ex-ecehy8b9",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A Go program measured 4,031,935 bytes built plainly, 2,869,509 bytes with `-ldflags=\"-w\"` and 2,654,368 with `-ldflags=\"-s\"`. How many bytes did the symbol table and its names take, that is, what does `-s` save beyond `-w`?",
+    "hint": "`-s` implies `-w`, so the difference between the two builds is what `-s` adds.",
+    "value": 215141,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-jg7ry3bx",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "A Go CLI prints its module version from `runtime/debug.ReadBuildInfo` (the same value `go version -m` shows), and its repository has the tags v1.0.0 and v1.1.0. Match each way the binary was built with what it reports.",
+    "hint": "The version comes from git when there is a repository to read.",
+    "pairs": [
+      {
+        "left": "a plain `go build` in a clean checkout of the commit tagged v1.1.0",
+        "right": "v1.1.0, with `vcs.modified=false`"
+      },
+      {
+        "left": "a plain `go build` with an uncommitted edit on top of v1.0.0",
+        "right": "v1.0.0+dirty, with `vcs.modified=true`"
+      },
+      {
+        "left": "a plain `go build` in a copy made by `git archive`",
+        "right": "(devel), with no `vcs` settings"
+      },
+      {
+        "left": "the v1.1.0 release build, then packed with UPX",
+        "right": "nothing: `go version -m` says it is not a Go executable"
+      }
+    ],
+    "right_distractors": [
+      "v1.1.0-dirty, with `vcs.modified=false`"
+    ]
+  },
+  {
+    "id": "ex-tnh8tbyn",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Makefile builds a Go tool with `go build -ldflags=\"-X main.version=$(VERSION)\"`, and `main.go` declares `const version = \"dev\"`. What happens when it runs?",
+    "hint": "Read the condition `go doc cmd/link` gives for `-X`, and remember how it reports a miss.",
+    "choices": [
+      {
+        "text": "The build fails, because `-X` cannot set a constant",
+        "correct": false,
+        "why": "The linker does not report a name it could not set: the build succeeds, as it did for the misspelt `main.Version`."
+      },
+      {
+        "text": "The build succeeds and the binary still says `dev`",
+        "correct": true,
+        "why": "Right. `-X` sets string variables only, and it is silent about everything else; the fix is `var version = \"dev\"`."
+      },
+      {
+        "text": "The binary says the Makefile's version, because the linker rewrites the constant's string",
+        "correct": false,
+        "why": "A constant is folded into the code that uses it when it is compiled; there is no variable left for the linker to fill in."
+      },
+      {
+        "text": "The compiler stops with a duplicate declaration of `version`",
+        "correct": false,
+        "why": "`-X` creates no declaration; the compiler never sees it, since it is a flag for the linker."
+      }
+    ]
+  },
+  {
+    "id": "ex-xftjwnpw",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Go tool has to fit on a device whose storage is small, holds files uncompressed, and is already full; the tool is started a few times a day. Built with `-trimpath -ldflags=\"-s -w\"` it is 2.6 MB. Which further step frees the most storage at a cost the use can bear?",
+    "hint": "Weigh what each step saves against what it costs, for a program that starts rarely.",
+    "choices": [
+      {
+        "text": "Building with `-gcflags=all=-l`",
+        "correct": false,
+        "why": "Turning inlining off saved 4.6% on `hits` and made it a third slower, the least saving for the most lasting cost."
+      },
+      {
+        "text": "Packing it with UPX, accepting a slower start",
+        "correct": true,
+        "why": "Right. UPX took `hits` to 43% of its size, and the start cost, about 20 milliseconds there, does not matter a few times a day. Storage that holds files uncompressed is where UPX pays."
+      },
+      {
+        "text": "Storing it gzipped and running the `.gz` file directly",
+        "correct": false,
+        "why": "The kernel cannot run a gzip file; it would have to be unpacked to storage first, which is the space that is short."
+      },
+      {
+        "text": "Adding `-buildvcs=false` to drop the version information",
+        "correct": false,
+        "why": "The build information is a few hundred bytes; the whole revision record is nothing next to the megabytes at stake."
+      }
+    ]
+  },
+  {
+    "id": "ex-aps5k0hx",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "In `go build -ldflags=\"-s -w\"`, the `-w` flag leaves out the ___ debugging information that debuggers read.",
+    "hint": "The format's name is four capital letters.",
+    "blanks": [
+      {
+        "accept": [
+          "DWARF"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-km2g7meh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A multi-stage `Containerfile` builds from `docker.io/library/golang:1.27.1` with `RUN CGO_ENABLED=0 go build -o /hits .`, and `podman build --cap-drop=all` stops with `open /hits: permission denied`, although the step runs as root. Why?",
+    "hint": "What does root lose when every capability is dropped, and what mode does `/` have in that image?",
+    "choices": [
+      {
+        "text": "Rootless Podman never runs a build step as root, whatever the step says",
+        "correct": false,
+        "why": "The step does run as uid 0 inside the container; `id` in the same image prints `uid=0(root)`."
+      },
+      {
+        "text": "Without `CAP_DAC_OVERRIDE`, root obeys the mode of `/`, which is 555",
+        "correct": true,
+        "why": "Right. Root writes anywhere only because of its capabilities; with them dropped, a directory with no write bit refuses it like anybody else. Building into the `WORKDIR` avoids it."
+      },
+      {
+        "text": "`go build` refuses to write outside the module directory",
+        "correct": false,
+        "why": "`-o` accepts any path the process may write; `/tmp/hits` or `/src/hits` would have worked."
+      },
+      {
+        "text": "`--network=none` was missing, so the build could not fetch modules",
+        "correct": false,
+        "why": "The error is about writing a file, and a program with no dependencies fetches nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahc54yfv",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`podman manifest inspect` on the index digest of `gcr.io/distroless/static-debian12:nonroot` listed one manifest per platform: `amd64`, `arm64`, `arm`, `s390x` and `ppc64le`. How many images does pinning that one index digest fix at once?",
+    "hint": "Count the platforms the index names.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-v9chv1mc",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "After an ordinary `podman build -t hits:1 .`, a `podman build --timestamp 0` of the same unchanged tree, without `--no-cache`, ends with the very image id of `hits:1`. Two runs with `--no-cache --timestamp 0` agree with each other on a different id. What explains the first result?",
+    "hint": "What does a cached layer remember?",
+    "choices": [
+      {
+        "text": "`--timestamp` is ignored unless `--network=none` is set",
+        "correct": false,
+        "why": "Every run used the same network setting; only the cache differed."
+      },
+      {
+        "text": "Go stamps the build time into the binary, so builds never agree",
+        "correct": false,
+        "why": "The binaries were identical: the one copied out of the image hashed like the host's builds. Go writes no build time."
+      },
+      {
+        "text": "Cached layers keep the dates they were first made with",
+        "correct": true,
+        "why": "Right. A cached step is reused as it was, timestamp included, so `--timestamp 0` only governs layers actually built in that run."
+      },
+      {
+        "text": "The distroless base was pulled again in between, with a new digest",
+        "correct": false,
+        "why": "No pull happened; the base is pinned by digest and was already on the machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-387e1xcb",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each question about a Go release to the command that answers it.",
+    "hint": "Each tool answers one kind of question.",
+    "pairs": [
+      {
+        "left": "Did the bytes change on the way?",
+        "right": "`sha256sum -c SHA256SUMS`"
+      },
+      {
+        "left": "Who stands behind this list of hashes?",
+        "right": "`cosign verify-blob --key cosign.pub`"
+      },
+      {
+        "left": "Which shared libraries will this binary load?",
+        "right": "`ldd`"
+      },
+      {
+        "left": "Does the build compile `runtime/cgo`?",
+        "right": "`go list -deps .`"
+      }
+    ],
+    "right_distractors": [
+      "`go vet`"
+    ]
+  },
+  {
+    "id": "ex-1ynzx6n4",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "A static Go binary built with `CGO_ENABLED=0` goes into an image `FROM scratch` and nothing else. Which of these will it find missing if it asks for them? Choose every one.",
+    "hint": "scratch starts with no files. What does a process get from somewhere other than its image?",
+    "choices": [
+      {
+        "text": "`/etc/passwd`, for `user.Current`",
+        "correct": true,
+        "why": "Missing: `user.Current` answered that it needs cgo or `$USER` instead."
+      },
+      {
+        "text": "the zone rules in `/usr/share/zoneinfo`",
+        "correct": true,
+        "why": "Missing: `time.LoadLocation` said `unknown time zone`, unless the binary embeds them with `-tags timetzdata`."
+      },
+      {
+        "text": "a certificate bundle",
+        "correct": true,
+        "why": "Missing, silently: `SystemCertPool` returns an empty pool and no error."
+      },
+      {
+        "text": "the Linux kernel",
+        "correct": false,
+        "why": "A container has no kernel of its own; every process runs on the host's, scratch or not."
+      },
+      {
+        "text": "the C library and its loader",
+        "correct": false,
+        "why": "A `CGO_ENABLED=0` binary is statically linked and asks for neither."
+      }
+    ]
+  },
+  {
+    "id": "ex-m19328bv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A Go service runs with `GOMEMLIMIT=300MiB`. Its `GODEBUG=gctrace=1` lines read like `gc 812 @95.1s 31%: ... 310->312->305 MB, 310 MB goal`, one every few milliseconds, and requests have slowed to half speed. What is the right first change?",
+    "hint": "Compare the live heap, the third heap number, with the limit.",
+    "choices": [
+      {
+        "text": "Lower `GOGC` so that each collection has less garbage to find",
+        "correct": false,
+        "why": "There is almost no garbage to find: 305 of 312 MB survived. A lower `GOGC` only adds collections to a program already collecting continuously."
+      },
+      {
+        "text": "Call `runtime.GC()` from a ticker every second",
+        "correct": false,
+        "why": "A forced collection frees exactly what an automatic one frees, which here is nearly nothing, and adds stops of its own."
+      },
+      {
+        "text": "Raise the limit above the live heap",
+        "correct": true,
+        "why": "Right. The trace counts in units of 2^20 bytes, so 305 MB alive is already past the 300 MiB limit: every cycle frees nothing and the next starts at once. Keeping less alive would work too. Until then, the CPU limiter is all that keeps it at half speed rather than zero."
+      },
+      {
+        "text": "Set `GOGC=off`, so that only the limit triggers collections",
+        "correct": false,
+        "why": "Only the limit is triggering them already, and the limit is the problem: with the live heap above it, `GOGC=off` changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6k8h93c",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "A Go program runs with `GOGC=200`. The last collection found 60 MB of live heap, 2 MB of stacks to scan and no package variables worth counting. Following the pacer's rule in `mgcpacer.go`, what heap goal, in MB, does the next cycle aim for?",
+    "hint": "The marked heap, plus the marked heap, stacks and globals multiplied by `GOGC` over 100.",
+    "value": 184,
+    "tolerance": 1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-xxechqzk",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A test holds `Encode` to zero allocations with `testing.AllocsPerRun`. After a change that makes `Encode` build its output in a local 64-byte buffer and hand it to an `io.Writer` passed in by the caller, the test reports one allocation per call. Why?",
+    "hint": "Ask whether the compiler can prove the buffer dies with the call.",
+    "choices": [
+      {
+        "text": "`AllocsPerRun` counts stack memory as well as heap memory",
+        "correct": false,
+        "why": "It counts heap allocations only; a buffer kept in the frame would have left the count at zero."
+      },
+      {
+        "text": "The buffer escapes, since the interface call is free to keep it",
+        "correct": true,
+        "why": "Right. The compiler cannot prove what `w.Write` does with the slice, so the buffer must outlive the frame and goes on the heap, one allocation per call."
+      },
+      {
+        "text": "Every buffer of 64 bytes or more is put on the heap",
+        "correct": false,
+        "why": "64 bytes is far below any size limit for a frame, and an identical buffer that never leaves the function stays in the frame."
+      },
+      {
+        "text": "The goroutine's stack grew to fit the buffer, and growth counts as an allocation",
+        "correct": false,
+        "why": "Stack growth is a copy into stack memory and is not counted as a heap allocation; it would not happen on every call either."
+      }
+    ]
+  },
+  {
+    "id": "ex-1yyg8qfb",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put the phases of one Go garbage-collection cycle in order, as `runtime/mgc.go` describes them.",
+    "hint": "Two of the phases stop the world, and the write barrier is on only between them.",
+    "items": [
+      "stop the world for sweep termination, and turn the write barrier on",
+      "mark concurrently, with background workers and assists",
+      "stop the world for mark termination, and turn the write barrier off",
+      "sweep concurrently while the program allocates"
+    ]
+  },
+  {
+    "id": "ex-8859w7h0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "To avoid re-parsing a large configuration file, a developer stores the parsed result in a `sync.Pool` and calls `Get` on every request, parsing again only when `Get` returns nil. What will they see in production?",
+    "hint": "Recall what the `~/mem-pool` program printed after one and two collections.",
+    "choices": [
+      {
+        "text": "Requests share one parsed value safely, and parsing happens once",
+        "correct": false,
+        "why": "A pool does not keep items: the program in `~/mem-pool` lost its buffer within two collections, and on four processors after one."
+      },
+      {
+        "text": "Re-parsing at unpredictable moments, whenever collections empty the pool",
+        "correct": true,
+        "why": "Right. A pool is a cache that the collector empties, and `Get` also hands an item to only one caller until it is put back. A value that must persist belongs in an ordinary variable."
+      },
+      {
+        "text": "An allocation per request, because a struct in an `any` is copied",
+        "correct": false,
+        "why": "A pointer to the parsed struct fits in an `any` as it is. The trouble is what the pool forgets, not what it costs."
+      },
+      {
+        "text": "A panic the first time two goroutines call `Get` at once",
+        "correct": false,
+        "why": "A `sync.Pool` is safe for concurrent use; its documentation says so in its first paragraphs."
+      }
+    ]
+  },
+  {
+    "id": "ex-aywxzdq6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`func NewBuffer() *bytes.Buffer { var b bytes.Buffer; return &b }` is compiled with `go build -gcflags=-m`. Which line does the compiler print about `b`?",
+    "hint": "A named variable and an expression get different spellings of the same verdict.",
+    "choices": [
+      {
+        "text": "`b does not escape`",
+        "correct": false,
+        "why": "That is the verdict for a value nothing reaches after the return; `&b` is returned, so the caller reaches it."
+      },
+      {
+        "text": "`leaking param: b`",
+        "correct": false,
+        "why": "\"Leaking param\" is written for parameters, and `b` is a local variable."
+      },
+      {
+        "text": "`moved to heap: b`",
+        "correct": true,
+        "why": "Right. A named local whose address outlives the function is reported as moved to the heap; an expression like `&bytes.Buffer{}` would say `escapes to heap`."
+      },
+      {
+        "text": "`can inline NewBuffer`, and nothing about `b` until it is called",
+        "correct": false,
+        "why": "The inlining line may well appear, but the escape verdict for `b` is printed too, at compile time, whether or not anything calls `NewBuffer`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4de13pkr",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "`testing.AllocsPerRun` measured `tally.Count` from `hits` at 1,009 allocations over 1,000 log lines and 100,009 over 100,000. Following the same pattern, how many allocations would a count of 20,000 lines make?",
+    "hint": "One per line, plus a fixed number per call.",
+    "value": 20009,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-54d4bq33",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A function declares `var buf [200 << 10]byte`, fills it, and returns only a checksum of it; no pointer to `buf` leaves the function. Where does Go 1.27's compiler put `buf`?",
+    "hint": "Escaping is one of two questions; size is the other.",
+    "choices": [
+      {
+        "text": "On the stack, since nothing reaches it after the return",
+        "correct": false,
+        "why": "Lifetime alone is not enough: 200 KiB is over the 128 KiB limit for a declared variable."
+      },
+      {
+        "text": "On the heap, reported as `moved to heap: buf` by `-m`",
+        "correct": true,
+        "why": "Right. It is too large: `-m=2` gives the reason `too large for stack`, as it did for a 1 MiB array that nothing pointed at."
+      },
+      {
+        "text": "On the stack, because `var` declarations are never moved",
+        "correct": false,
+        "why": "A `var` declaration is moved like any other variable; the limit for declared variables is 128 KiB."
+      },
+      {
+        "text": "Nowhere: the build fails with a frame-size error",
+        "correct": false,
+        "why": "The compiler does not refuse it; it allocates the array on the heap and says so with `-m`."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8hjxb2c",
+    "version": 1,
+    "type": "ordering",
+    "difficulty": "medium",
+    "prompt": "Put in order a sound way to remove an allocation from a Go hot path.",
+    "hint": "Measure before and after; read the compiler in between.",
+    "items": [
+      "find the hot allocation with a benchmark run with `-benchmem` or a memory profile",
+      "locate the escaping line with `-gcflags='<module>/...=-m'`",
+      "read why it escapes with `-m=2`",
+      "change the code so that the value no longer escapes",
+      "confirm the change with `testing.AllocsPerRun` and the benchmark again"
+    ]
+  },
+  {
+    "id": "ex-ceg92byd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A caller's `-gcflags=-m` report used to say `&Config{...} does not escape` and `inlining call to NewConfig`. After a colleague added logging inside `NewConfig`, both lines are gone and the caller's benchmark shows 1 allocs/op instead of 0. Nothing in the caller changed. What happened?",
+    "hint": "What made the `&Config{...}` the caller's value in the first place?",
+    "choices": [
+      {
+        "text": "Logging forces every value it touches onto the heap, wherever it is",
+        "correct": false,
+        "why": "The caller's value is not passed to the logger at all; the change is in whether `NewConfig` is inlined."
+      },
+      {
+        "text": "`NewConfig` grew past the inlining budget, so it is called, and the value it returns is made on the heap",
+        "correct": true,
+        "why": "Right. Inlined, the `&Config{...}` was built in the caller's frame; called, it is `NewConfig`'s and is returned, as `Distance` showed with `//go:noinline`."
+      },
+      {
+        "text": "The benchmark is noisy, and allocs/op moves between runs",
+        "correct": false,
+        "why": "allocs/op does not depend on how busy the machine is; it moved because the code moved."
+      },
+      {
+        "text": "The build cache served an old report",
+        "correct": false,
+        "why": "A cached report would show the old lines, not lose them; the report changed with the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-pjcesrya",
+    "version": 1,
+    "type": "cloze",
+    "difficulty": "medium",
+    "prompt": "To have the compiler print which variables escape to the heap, and with `=2` why, build with `go build -gcflags=___`.",
+    "hint": "A single letter after a dash.",
+    "blanks": [
+      {
+        "accept": [
+          "-m",
+          "-m=2"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2y5003v0",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "With `type ID string`, what do `reflect.ValueOf(ID(\"a\")).Kind()` and `.Type()` report?",
+    "hint": "Kind is the family underneath; Type is the exact type.",
+    "choices": [
+      {
+        "text": "Kind `string`, Type `main.ID`",
+        "correct": true,
+        "why": "Right. A named type keeps its own name as its Type, and its Kind is what it is underneath, so code switching on Kind treats it as a string."
+      },
+      {
+        "text": "Kind `main.ID`, Type `string`, since Type is the underlying type",
+        "correct": false,
+        "why": "That swaps the two: the Kind is one of a fixed list of 26 families, which can never be a name you declared."
+      },
+      {
+        "text": "Kind `interface`, because `ValueOf` takes an `any`",
+        "correct": false,
+        "why": "The `any` is unpacked: `ValueOf` reads the dynamic type from its type word, so the interface never shows."
+      },
+      {
+        "text": "Both `string`: a named type disappears once compiled",
+        "correct": false,
+        "why": "The type descriptor the compiler writes keeps the name `main.ID`; that is how `fmt` can print `%T` as `main.ID`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggrz8c4c",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A library function `Fill(dst any, values map[string]string)` sets struct fields by reflection. Called as `Fill(cfg, m)` with `cfg` a struct variable, it panics with `reflect: call of reflect.Value.Elem on struct Value`. What is the fix in the caller?",
+    "hint": "What does the library need in order to change `cfg` rather than a copy?",
+    "choices": [
+      {
+        "text": "Export the fields of the struct's type",
+        "correct": false,
+        "why": "Unexported fields would cause a different refusal, on the set itself; this panic comes earlier, from `Elem` being handed a struct where it expected a pointer."
+      },
+      {
+        "text": "Pass `&cfg`, so the library follows the address to the variable",
+        "correct": true,
+        "why": "Right. A struct passed by value is a copy and cannot be set; `Elem` needs a pointer to follow, and through it every exported field becomes settable."
+      },
+      {
+        "text": "Convert it first, as `Fill(any(cfg), m)`",
+        "correct": false,
+        "why": "The argument is converted to `any` anyway; an explicit conversion changes nothing, and it is still a copy of the struct."
+      },
+      {
+        "text": "Call `reflect.ValueOf(cfg).Addr()` and pass that",
+        "correct": false,
+        "why": "`Addr` panics on a value that is not addressable, and a copy inside an `any` is exactly that; the address has to come from the caller's `&`."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ezngzbd",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A team renames a struct tag from `json:\"hits\"` to `json:\"hist\"` by mistake. Which check catches it before production?",
+    "hint": "Who reads a tag's contents, and when?",
+    "choices": [
+      {
+        "text": "The compiler, which validates tag names against field names",
+        "correct": false,
+        "why": "The compiler stores the tag as an opaque string and never interprets it; nothing ties `hist` to the field `Hits`."
+      },
+      {
+        "text": "`go vet`, whose struct-tag check reads every tag",
+        "correct": false,
+        "why": "`go vet` checks a tag's syntax and flags a tag on an unexported field, but a well-formed tag with the wrong name is perfectly valid to it."
+      },
+      {
+        "text": "A test that encodes a value and compares the output",
+        "correct": true,
+        "why": "Right. The tag only takes effect when `encoding/json` reflects on it at run time, so only code that runs, such as a test of the encoded output, can notice the new key."
+      },
+      {
+        "text": "An editor's rename refactoring, run on the field",
+        "correct": false,
+        "why": "A rename tool changes every `r.Hits` in the code and leaves strings alone, and a tag is a string."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jazn959",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "In a Go 1.27 benchmark over eight `tally.PathCount` rows, summing `r.Hits` directly took about 15.4 ns/op and summing `v.Index(i).Field(1).Int()` through `reflect` took between 37.5 and 39.8 ns/op. About how many times slower is the reflective read by field index?",
+    "hint": "Divide the reflective time by the direct one.",
+    "value": 2.5,
+    "tolerance": 0.3
+  },
+  {
+    "id": "ex-c4eb9vwb",
+    "version": 1,
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "prompt": "`go list` on Go 1.27 shows which standard packages import `reflect`. Which of these do? Choose every one.",
+    "hint": "Which of them handle values of types they could not know when they were compiled?",
+    "choices": [
+      {
+        "text": "`encoding/json`",
+        "correct": true,
+        "why": "Yes. It encodes and decodes structs written after it was compiled, reading their fields and tags by reflection."
+      },
+      {
+        "text": "`strconv`",
+        "correct": false,
+        "why": "It converts between strings and basic types it knows by name, and needs no reflection."
+      },
+      {
+        "text": "`flag`",
+        "correct": true,
+        "why": "Yes. It builds a flag value's zero to decide whether to print `(default …)` in the usage text."
+      },
+      {
+        "text": "`slices`",
+        "correct": false,
+        "why": "Its functions take type parameters, so the element type is known at compile time; it does not import `reflect`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fb5pdjp",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "On linux/amd64, a struct holding `Loose` values (`Cached bool; Bytes int64; TLS bool; Status int32; Retry bool`, 32 bytes each) is rewritten with the same fields largest first, 16 bytes each. A slice of 2,000,000 of them is allocated. Roughly how many megabytes (millions of bytes) does the reordering save?",
+    "hint": "Size difference per element, times the number of elements.",
+    "value": 32,
+    "tolerance": 0.5,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-5jdc8jtr",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A program keeps a cache of parsed records as `map[uintptr]string`, keyed by `uintptr(unsafe.Pointer(rec))` for each `*Record`, and holds no other reference to the records. It never converts a key back into a pointer. What goes wrong?",
+    "hint": "What keeps a `*Record` reachable once only its address, as an integer, remains?",
+    "choices": [
+      {
+        "text": "The records get collected, and a later allocation reuses an address that is still a key",
+        "correct": true,
+        "why": "Right. A `uintptr` keeps nothing alive, so the records are garbage; the allocator is free to hand the same address to a later record, which then finds another record's cached string."
+      },
+      {
+        "text": "Nothing, since the program follows pattern 2 and never converts back",
+        "correct": false,
+        "why": "Pattern 2 makes the conversion valid; it does not make the integer a reference. The program is valid Go and still wrong, because the keys outlive the objects they name."
+      },
+      {
+        "text": "`go vet` refuses to build it because of the `unsafeptr` check",
+        "correct": false,
+        "why": "`unsafeptr` reports a `uintptr` turned back into a `Pointer`, which never happens here. And `vet` reports; it never refuses a build."
+      },
+      {
+        "text": "The keys change when the collector moves the records",
+        "correct": false,
+        "why": "Go's collector does not move heap objects. The danger is that it frees them, not that it moves them."
+      }
+    ]
+  },
+  {
+    "id": "ex-wzvxwa5e",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A CI pipeline runs `go test ./...` on a package that converts `[]byte` to `string` with `unsafe.String`. Which addition makes the pipeline able to catch an `unsafe.Pointer` conversion that reads past the end of an allocation on the heap?",
+    "hint": "One flag turns on a run-time check of `unsafe.Pointer` conversions as a side effect.",
+    "choices": [
+      {
+        "text": "Running `go test -race ./...`",
+        "correct": true,
+        "why": "Right. `-race` implies `-d=checkptr`, which instruments every conversion involving `unsafe.Pointer` and stops the program on one that straddles two allocations."
+      },
+      {
+        "text": "Running `fieldalignment ./...` and failing on its exit status 3",
+        "correct": false,
+        "why": "`fieldalignment` reports structs that would be smaller in another order. It knows nothing about pointer conversions."
+      },
+      {
+        "text": "Adding `-count=1`, so that cached test results are not reused",
+        "correct": false,
+        "why": "Fresh runs of the same uninstrumented binary read past the end just as silently. The check has to be compiled in."
+      },
+      {
+        "text": "Running `go vet ./...`, whose `unsafeptr` check reads every cast",
+        "correct": false,
+        "why": "`unsafeptr` looks for a `uintptr` turned back into a pointer. Whether a read runs past an allocation depends on lengths at run time, which no reading of code can know."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wcs12mh",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A function reads lines with `bufio.Scanner` and needs, for each line, to check whether its path is in a `map[string]bool` of blocked paths, without allocating. Which version is both allocation-free and safe?",
+    "hint": "Two of the options store or keep something; one only looks.",
+    "choices": [
+      {
+        "text": "`blocked[string(path)]`, written inside the index expression",
+        "correct": true,
+        "why": "Right. The compiler passes the bytes of a conversion inside a map index straight to the lookup, so it allocates nothing, and nothing outlives the call to point at the scanner's buffer."
+      },
+      {
+        "text": "`k := zc.String(path)`, then `blocked[k]`, and keep `k` for logging later",
+        "correct": false,
+        "why": "The lookup works, but `k` is kept beyond the line, and the scanner overwrites the bytes it shares: the log would record pieces of other lines."
+      },
+      {
+        "text": "`sc.Text()`, which returns the line without copying",
+        "correct": false,
+        "why": "`Scanner.Text` returns a newly allocated string; `Scanner.Bytes` is the one that does no allocation and reuses its buffer."
+      },
+      {
+        "text": "`unsafe.String(&path[0], len(path))` stored into a slice of all paths seen",
+        "correct": false,
+        "why": "That is the `paths` bug again: strings that share the scanner's buffer, kept after the next `Scan` rewrites it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdc9k3qz",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each cost of using Go's `unsafe` package with the evidence for it that the Go 1.27.1 toolchain itself shows.",
+    "hint": "Each piece of evidence is a command or a line of documentation.",
+    "pairs": [
+      {
+        "left": "outside the compatibility promise",
+        "right": "the sentence in `go doc unsafe` about the Go 1 guidelines"
+      },
+      {
+        "left": "frozen runtime internals",
+        "right": "182 comments naming packages that link to runtime functions"
+      },
+      {
+        "left": "numbers tied to one architecture",
+        "right": "`tally.Entry` is 72 bytes on amd64 and 48 with `GOARCH=386`"
+      },
+      {
+        "left": "tools that cannot see every misuse",
+        "right": "`go doc unsafe.Pointer`: silence from `go vet` is no guarantee"
+      }
+    ],
+    "right_distractors": [
+      "`go list std` counting 101 packages that import `unsafe`"
+    ]
+  },
+  {
+    "id": "ex-ef9vf3w6",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Go package calls zlib's `deflate` through cgo. Its preamble includes `<zlib.h>`, it compiles, and the link fails with `undefined reference` to `deflate`. What is missing?",
+    "hint": "A header and a library are two different things to the C toolchain.",
+    "choices": [
+      {
+        "text": "`#cgo LDFLAGS: -lz` in the preamble",
+        "correct": true,
+        "why": "Right. The header told the compiler `deflate` exists; only `-lz` gives the linker its code, as `-lm` did for `cbrt`."
+      },
+      {
+        "text": "A conversion of each argument to its C type, such as `C.uInt(len(b))`",
+        "correct": false,
+        "why": "A missing conversion is a Go compile error, `cannot use ... as C.uInt value`, long before the link."
+      },
+      {
+        "text": "`#include <stdlib.h>`, which declares the C library's functions",
+        "correct": false,
+        "why": "`stdlib.h` declares `malloc` and `free`; `deflate` is zlib's, and declaring is not what failed."
+      },
+      {
+        "text": "`CGO_ENABLED=1`, because the go command turned cgo off",
+        "correct": false,
+        "why": "With cgo off, the file importing `\"C\"` would not be compiled at all; here it compiled and reached gcc's linker."
+      }
+    ]
+  },
+  {
+    "id": "ex-6erx1mtm",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A C audio library calls a function you supply for every buffer it decodes, passing back a `void *user` you gave it when you opened the stream. You want each callback to append to a Go `[]Frame`. What should `user` be?",
+    "hint": "C will keep `user` for as long as the stream is open, long after the call that opened it returned.",
+    "choices": [
+      {
+        "text": "`unsafe.Pointer(&frames)`, since the slice header lives in Go memory",
+        "correct": false,
+        "why": "A slice header contains a Go pointer, and C keeps the value after the call returns, which the pointer-passing rules forbid."
+      },
+      {
+        "text": "A `C.CString` of the slice's contents, freed when the stream closes",
+        "correct": false,
+        "why": "A copy in C memory cannot grow the Go slice; every append would land in memory Go does not see."
+      },
+      {
+        "text": "The address of a `cgo.Handle` wrapping a pointer to the slice, deleted when the stream closes",
+        "correct": true,
+        "why": "Right. The handle keeps the Go value in Go; C carries only a number, and the callback turns it back with `Value()`. Delete the handle when the stream closes."
+      },
+      {
+        "text": "`&frames[0]`, with the slice made big enough beforehand",
+        "correct": false,
+        "why": "Lending `&frames[0]` is allowed for one call only, and a `Frame` holding any Go pointer would break the rule even then."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6qr7enc",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "Checksumming a 20,000-line access log with zlib's `crc32` through cgo took 1.86 ms calling it once per line (the loop written in C) and 0.174 ms calling it once on the whole file. To the nearest whole number, how many times faster was the single call?",
+    "hint": "Divide the per-line time by the single-call time.",
+    "value": 11,
+    "tolerance": 1,
+    "unit": "times"
+  },
+  {
+    "id": "ex-q37zn2bb",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each message from a cgo program's build or run with what it means.",
+    "hint": "Two come from the go command, one from the runtime's pointer check, one from a crash.",
+    "pairs": [
+      {
+        "left": "`build constraints exclude all Go files`",
+        "right": "cgo was off, so the file importing \"C\" was left out"
+      },
+      {
+        "left": "`cgo: C compiler \"aarch64-linux-gnu-gcc\" not found`",
+        "right": "`CC` names a compiler that is not installed"
+      },
+      {
+        "left": "`argument of cgo function has Go pointer to unpinned Go pointer`",
+        "right": "Go memory passed to C contains a Go pointer"
+      },
+      {
+        "left": "`signal arrived during cgo execution`",
+        "right": "C code crashed and took the program down"
+      }
+    ],
+    "right_distractors": [
+      "a C string was never freed"
+    ]
+  },
+  {
+    "id": "ex-nv3jr7pa",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "A command uses `os/user` and `net` and has no C of its own. It must ship as a static binary, but the build machine's CI job also runs `go test -race`, which needs cgo. Which build line gives a static binary without turning cgo off for the job?",
+    "hint": "Two build tags choose the pure Go halves of exactly those packages.",
+    "choices": [
+      {
+        "text": "`go build -ldflags=-extldflags=-static`",
+        "correct": false,
+        "why": "With no C of its own the program links internally, so flags for the external linker do not apply, and `os/user` and `net` would still use the C library."
+      },
+      {
+        "text": "`go build -tags netgo,osusergo`",
+        "correct": true,
+        "why": "Right. The tags select the pure Go resolver and account lookup with cgo still on, and the binary comes out statically linked."
+      },
+      {
+        "text": "`GOARCH=amd64 go build`, so that the build counts as a cross build",
+        "correct": false,
+        "why": "Naming the machine's own architecture is not a cross build; cgo stays on and the binary stays dynamic."
+      },
+      {
+        "text": "`GODEBUG=cgocheck=0 go build`",
+        "correct": false,
+        "why": "`GODEBUG` changes what the runtime checks while the program runs; it does nothing to how it is linked."
+      }
+    ]
+  },
+  {
+    "id": "ex-x3wrgkvv",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "A Go plugin declares `func New() report.Reporter`. The host calls `sym, err := p.Lookup(\"New\")`. Which type assertion gives it a working reporter?",
+    "hint": "`go doc plugin.Symbol` shows a variable and a function being looked up.",
+    "choices": [
+      {
+        "text": "`r := sym.(func() report.Reporter)()`",
+        "correct": true,
+        "why": "Right. An exported function comes back as the function value itself, so the assertion names its type and the call returns the reporter."
+      },
+      {
+        "text": "`r := (*sym.(*func() report.Reporter))()`",
+        "correct": false,
+        "why": "Only variables come back as pointers. Asserting a pointer to a function type on a function value panics."
+      },
+      {
+        "text": "`r := sym.(report.Reporter)`",
+        "correct": false,
+        "why": "The symbol is a function, which has no `Report` method; the assertion fails."
+      },
+      {
+        "text": "`r := *sym.(*report.Reporter)`",
+        "correct": false,
+        "why": "That is the form for an exported variable of interface type, like `var Reporter report.Reporter`. `New` is a function."
+      }
+    ]
+  },
+  {
+    "id": "ex-hk5df7m0",
+    "version": 1,
+    "type": "numeric",
+    "difficulty": "medium",
+    "prompt": "In one measurement, the plugin-loading host `hits-plugin` was 4,901,728 bytes, `csv.so` 3,725,312 and `mean.so` 4,678,960, while `hits-static`, with both reporters compiled in, was 2,689,276. How many megabytes (millions of bytes) does the plugin version ship in total? Give one decimal place.",
+    "hint": "Add the host and both plugin files.",
+    "value": 13.3,
+    "tolerance": 0.1,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-5spab42s",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "hard",
+    "prompt": "`csv.so` contains its own compiled copy of `fmt`, and so does the host that opens it. When the plugin's code calls `fmt.Fprintf` after `plugin.Open`, whose code runs?",
+    "hint": "Why does a host that imports `plugin` export about ten thousand dynamic symbols?",
+    "choices": [
+      {
+        "text": "The plugin's copy, because every `.so` is self-contained",
+        "correct": false,
+        "why": "It is self-contained on disk, which is why it is several megabytes. At load time its references to shared packages are bound to the host's definitions."
+      },
+      {
+        "text": "Whichever copy the dynamic linker happens to find first, which can change between runs",
+        "correct": false,
+        "why": "The binding is not random: the host's exported definitions win, every time, and the runtime has already checked that the two copies' hashes match."
+      },
+      {
+        "text": "The host's: there is one `fmt` in the process",
+        "correct": true,
+        "why": "Right. The host exports its symbols for the plugin to bind to, so the plugin's own copy of every shared package is dead weight."
+      },
+      {
+        "text": "Both, since a call into a shared package runs in each copy so that their state stays the same",
+        "correct": false,
+        "why": "Nothing keeps two copies in step; there is a single copy, and its state is what the plugin's `init` writes into, as the host's registry showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-rt6xx8bg",
+    "version": 1,
+    "type": "matching",
+    "difficulty": "medium",
+    "prompt": "Match each message a plugin-loading Go program printed to its cause.",
+    "hint": "One cause produced none of these messages.",
+    "pairs": [
+      {
+        "left": "`plugin was built with a different version of package example.com/hits/internal/tally`",
+        "right": "a shared package gained a method after the plugin was built"
+      },
+      {
+        "left": "`plugin already loaded`",
+        "right": "a plugin with the same package path is already in the process"
+      },
+      {
+        "left": "`plugin: not implemented`",
+        "right": "the host was built with `CGO_ENABLED=0`"
+      },
+      {
+        "left": "`exec ./hits-plugin: no such file or directory`, in a container",
+        "right": "the image has no dynamic loader for the host"
+      }
+    ],
+    "right_distractors": [
+      "the plugin's `main` function returned an error"
+    ]
+  },
+  {
+    "id": "ex-k6pezkbz",
+    "version": 1,
+    "type": "quiz",
+    "difficulty": "medium",
+    "prompt": "`hits-exec` runs reporters as child processes, sending them JSON on standard input. A reporter, `mean-exec`, is rebuilt with `-race` and Go 1.27.2 while `hits-exec` stays on 1.27.1. What happens on the next run?",
+    "hint": "Compare with what the same change does to a Go plugin.",
+    "choices": [
+      {
+        "text": "It works: the processes share no package, only the message and its protocol number",
+        "correct": true,
+        "why": "Right. The toolchain and flags of each program are its own business; what must match is the JSON the two exchange."
+      },
+      {
+        "text": "`hits-exec` refuses it with `different version of package internal/goarch`",
+        "correct": false,
+        "why": "That check belongs to `plugin.Open`, which compares packages loaded into one process. `os/exec` loads nothing into the host."
+      },
+      {
+        "text": "`mean-exec` refuses the message, because its protocol changed with the toolchain",
+        "correct": false,
+        "why": "The protocol number is written in the source, and the source did not change."
+      },
+      {
+        "text": "It fails until `hits-exec` is rebuilt with the same flags",
+        "correct": false,
+        "why": "That is the Go plugin rule. Here the host is never rebuilt for a reporter."
+      }
+    ]
+  }
+]
