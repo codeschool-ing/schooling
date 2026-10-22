@@ -121,6 +121,12 @@ As métricas, que a próxima seção lê com calma, viram a requisição antes d
 ```
 ana@vm:~/bookshop$ curl -s -o /dev/null -w "%{http_code} after %{time_total} s\n" localhost:8080/books
 401 after 5.018283 s
+ana@vm:~/bookshop$ curl -s localhost:8081/actuator/prometheus | grep "^http_server_requests_seconds_count"
+http_server_requests_seconds_count{error="CannotCreateTransactionException",exception="CannotCreateTransactionException",method="GET",outcome="SERVER_ERROR",status="500",uri="/books"} 1
+http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="CLIENT_ERROR",status="401",uri="UNKNOWN"} 1
+http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="CLIENT_ERROR",status="404",uri="/**"} 1
+http_server_requests_seconds_count{error="none",exception="none",method="GET",outcome="SUCCESS",status="200",uri="/books"} 2
+http_server_requests_seconds_count{error="none",exception="none",method="POST",outcome="SUCCESS",status="200",uri="/auth/token"} 1
 ```
 
 A primeira linha é a falha: `GET /books`, status `500`, `SERVER_ERROR`, e a exceção que a causou. O
