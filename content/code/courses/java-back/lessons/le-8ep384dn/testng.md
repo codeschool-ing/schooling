@@ -107,7 +107,37 @@ public class Shelf {
 
 `src/test/java/look/ShelfTest.java`:
 
-@@EXAMPLE shelftest@@
+```schooling-example
+{
+  "language": "java",
+  "file": "ShelfTest.java",
+  "parts": [
+    {
+      "code": "package look;\n\nimport static org.testng.Assert.assertEquals;\n\nimport org.testng.annotations.DataProvider;\nimport org.testng.annotations.Test;\n",
+      "note": "`assertEquals` comes from `org.testng.Assert`, and **its arguments are the other way round from JUnit's: actual first, expected second.** A line copied between the two frameworks compiles, and its failure message names the wrong side as the expected one."
+    },
+    {
+      "code": "public class ShelfTest {\n\n    private final Shelf shelf = new Shelf();\n",
+      "note": "TestNG builds one `ShelfTest` for the whole class, so this `shelf` is shared by every method that uses it."
+    },
+    {
+      "code": "    @Test\n    public void startsEmpty() {\n        assertEquals(shelf.count(\"Dom Casmurro\"), 0);\n    }\n\n    @Test(dependsOnMethods = \"startsEmpty\")\n    public void addsCopies() {\n        shelf.add(\"Dom Casmurro\", 2);\n        assertEquals(shelf.count(\"Dom Casmurro\"), 2);\n    }\n\n    @Test(dependsOnMethods = \"addsCopies\")\n    public void takesOne() {\n        shelf.take(\"Dom Casmurro\");\n        assertEquals(shelf.count(\"Dom Casmurro\"), 1);\n    }\n",
+      "note": "Three tests that are one scenario in steps. **`dependsOnMethods` fixes their order and adds a rule: when the method it names fails, this one is skipped instead of run.** `takesOne` only makes sense on a shelf `addsCopies` has filled."
+    },
+    {
+      "code": "    @DataProvider\n    public Object[][] deliveries() {\n        return new Object[][] {\n                {1, 0, 1},\n                {2, 3, 5},\n                {0, 0, 0}\n        };\n    }\n\n    @Test(dataProvider = \"deliveries\")\n    public void addsUpTwoDeliveries(int first, int second, int expected) {\n        Shelf fresh = new Shelf();\n        fresh.add(\"Iracema\", first);\n        fresh.add(\"Iracema\", second);\n        assertEquals(fresh.count(\"Iracema\"), expected);\n    }\n",
+      "note": "A **data provider** is a method that returns rows. The test names it and runs once per row, like `@CsvSource` with the rows built in Java. This test makes its own `Shelf`: sharing the field would make every row depend on the rows before it."
+    },
+    {
+      "code": "    @Test(groups = \"stress\")\n    public void holdsAMillionCopies() {\n        Shelf big = new Shelf();\n        for (int i = 0; i < 1_000_000; i++) {\n            big.add(\"Senhora\", 1);\n        }\n        assertEquals(big.count(\"Senhora\"), 1_000_000);\n    }",
+      "note": "A **group** is a label. Nothing in the class decides whether this runs; the suite file below does."
+    },
+    {
+      "code": "}"
+    }
+  ]
+}
+```
 
 `testng.xml`, in the project's root, beside the pom:
 
@@ -133,17 +163,63 @@ file the team versions beside the tests.
 
 ## Running it
 
-@@CAP run@@
+The first run downloads TestNG and surefire's TestNG provider. After that:
+
+```
+(capture tng-run missing)
+```
+
+Three differences from the bookshop's runs, each with a reason:
+
+- `Using auto detected provider ... TestNGProvider`: the same surefire, a different provider, chosen
+  by what is on the test classpath.
+- `Running TestSuite`: with a suite file, surefire reports the whole suite as one class called
+  `TestSuite` rather than one line per test class.
+- **The three `SLF4J(W)` lines** come from TestNG, which logs through the SLF4J facade. Lesson 16
+  drew the line between a facade and a backend, and this project has the facade with no backend, so
+  SLF4J says it will log nothing. They are warnings about TestNG's own logging, not about the tests.
+
+`Tests run: 6`: the three steps of the scenario and the three rows of the data provider.
+`holdsAMillionCopies` is not among them, because the suite excludes its group.
 
 ## A test that depends on another
 
-Break `add` so that it replaces the count instead of adding to it, and run again:
+Make `addsCopies` expect three copies instead of two, as if the code had a bug that only it can see:
 
-@@CAP broken@@
+```
+(capture tng-skip missing)
+```
+
+One failure, and **`Skipped: 1`**. TestNG's own result file says which test was skipped:
+
+```
+(capture tng-results missing)
+```
+
+`takesOne` never ran: `addsCopies`, which it depends on, failed. That is the point of the feature and
+its whole cost in one line. The report is honest, one failure and one test that could not tell you
+anything, instead of a second failure that is only an echo of the first. But it also means the test
+class is a sequence: `takesOne` cannot be understood, or run, without the two tests before it, and
+all three share the one `shelf`. **JUnit makes the opposite choice, a fresh instance
+per test, so that no test can depend on another by accident.** Put the expectation back:
+
+```
+(capture tng-skip-back missing)
+```
 
 ## Groups
 
-@@CAP groups@@
+The suite file excludes `stress`. Turn the exclusion into an inclusion and only that group runs; turn
+it back and the six run again:
+
+```
+(capture tng-groups missing)
+```
+
+Nothing in the Java changed between the two runs. Which tests make up "the fast suite" or "the
+nightly suite" is decided in XML beside the tests, and a team can keep several suite files. JUnit's
+equivalent is `@Tag("stress")` on the test and `-Dgroups=stress` or `-DexcludedGroups=stress` on the
+Maven command line: the same choice, made by the build instead of by a file of the framework's.
 
 ## Why the bookshop uses JUnit
 

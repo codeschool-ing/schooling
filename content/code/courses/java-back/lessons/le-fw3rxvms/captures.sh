@@ -75,6 +75,7 @@ quiet "sed -i 's/<doclint>all,-missing</<doclint>all</' pom.xml"
 run "mvn javadoc:javadoc | grep 'warning: no comment' > ~/missing.txt"
 run 'wc -l < ~/missing.txt'
 run 'head -3 ~/missing.txt'
+run 'grep BookController ~/missing.txt'
 quiet "sed -i 's/<doclint>all</<doclint>all,-missing</' pom.xml"
 quiet 'rm -f ~/missing.txt'
 
@@ -144,10 +145,12 @@ block DISABLED
 app --springdoc.api-docs.enabled=false
 run "curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/v3/api-docs"
 run "curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/swagger-ui.html"
+block DISABLED_LOG
 echo "(SpringDocAppInitializer lines in the log: $(grep -c SpringDocAppInitializer /tmp/bookshop.log))"
 block ENV
 ENVX='SPRINGDOC_APIDOCS_ENABLED=false' app
 run "curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/v3/api-docs"
+block ENV_LOG
 echo "(SpringDocAppInitializer lines in the log: $(grep -c SpringDocAppInitializer /tmp/bookshop.log))"
 app
 

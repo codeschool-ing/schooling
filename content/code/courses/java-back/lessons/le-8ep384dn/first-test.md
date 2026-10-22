@@ -11,7 +11,30 @@ Create `src/test/java/com/example/bookshop/catalogue/IsbnTest.java`. This is a f
 next section replaces it:
 
 ```java
-@@FIRST@@
+package com.example.bookshop.catalogue;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+class IsbnTest {
+
+    @Test
+    void acceptsAValidIsbn13() {
+        assertTrue(Isbn.isValid("9786500000016"));
+    }
+
+    @Test
+    void refusesAWrongCheckDigit() {
+        assertFalse(Isbn.isValid("9786500000017"));
+    }
+
+    @Test
+    void refusesNull() {
+        assertFalse(Isbn.isValid(null));
+    }
+}
 ```
 
 Five things about its shape, each of which matters:
@@ -32,7 +55,9 @@ Five things about its shape, each of which matters:
 
 ## Running it
 
-@@CAP first-run@@
+```
+(capture first-run missing)
+```
 
 Read it bottom up, the way you will read every run after this one:
 
@@ -40,21 +65,27 @@ Read it bottom up, the way you will read every run after this one:
   what a script, or later a CI server, looks at.
 - `Results:` adds up every class: `Tests run: 3, Failures: 0, Errors: 0, Skipped: 0`. A **failure**
   is an assertion that did not hold; an **error** is any other exception escaping the test, such as
-  a `NullPointerException` in the code under test. Both fail the build.
+  a `NullPointerException` in the code under test. Both fail the build, and the difference says where
+  to look: after a failure the code answered wrongly, after an error it never got as far as
+  answering.
 - Above it, one `Running` line and one `Tests run` line per test class, with its time.
 - `Using auto detected provider ... JUnitPlatformProvider` is surefire saying it found the JUnit
   Platform on the test classpath, which is the starter's doing.
 
 Surefire also writes a report per class into `target/surefire-reports`, as text and as XML:
 
-@@CAP reports@@
+```
+(capture reports missing)
+```
 
 The XML files are the ones a CI server reads to draw its list of tests. `testing-cicd` reads them.
 
 Two ways to run less. `-q` keeps only warnings and errors, so a passing run prints nothing at all and
 only the exit code is left to say it passed; `-Dtest` picks a class, or one method with `#`:
 
-@@CAP quiet@@
+```
+(capture quiet missing)
+```
 
 One more consequence of the lifecycle lesson 1 drew: `package` comes after `test`. From now on
 `mvn package` runs these tests first, and a failing one means no jar. `-DskipTests` skips them, and
@@ -66,7 +97,9 @@ Surefire does not run every class in `src/test/java`. It runs the ones whose nam
 **include patterns**, which by default are `Test*`, `*Test`, `*Tests` and `*TestCase`. Rename the
 class to something that reads just as well, `IsbnChecks`:
 
-@@CAP badname@@
+```
+(capture badname missing)
+```
 
 The class compiled (`Compiling 1 source file`), surefire ran, and the `T E S T S` banner never
 appeared. **The build says `BUILD SUCCESS` and three tests checked nothing.** That is the same shape
@@ -74,4 +107,6 @@ as lesson 6's constraint that was never applied: nothing fails, so nothing looks
 uses the same patterns on purpose, naming integration tests `*IT` so that surefire leaves them to
 another plugin. Rename the class back:
 
-@@CAP badname-back@@
+```
+(capture badname-back missing)
+```

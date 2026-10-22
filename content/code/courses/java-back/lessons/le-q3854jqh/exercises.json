@@ -1,0 +1,692 @@
+[
+  {
+    "id": "ex-zgpzd4he",
+    "version": 1,
+    "section": "through-the-port",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `@SpringBootTest(webEnvironment = RANDOM_PORT)` start that the default `MOCK` does not?",
+    "hint": "Think about what a request has to cross to reach the controller.",
+    "choices": [
+      {
+        "text": "A second PostgreSQL container, on a port of its own",
+        "correct": false,
+        "why": "The database comes from `TestcontainersConfiguration` in both cases. The port in `RANDOM_PORT` is the web server's."
+      },
+      {
+        "text": "The embedded Tomcat, listening on a free port the OS picks",
+        "correct": true,
+        "why": "Right. `MOCK` has no server at all; `RANDOM_PORT` starts Tomcat on whatever port is free, and `@LocalServerPort` says which."
+      },
+      {
+        "text": "A `MockMvc` that calls the controller in the same thread",
+        "correct": false,
+        "why": "That is how requests reach the controller under `MOCK`, with no socket."
+      },
+      {
+        "text": "A separate JVM running `target/bookshop-0.1.0.jar`",
+        "correct": false,
+        "why": "Everything runs inside the JVM failsafe started; no jar is launched."
+      }
+    ]
+  },
+  {
+    "id": "ex-rk92gh95",
+    "version": 1,
+    "section": "through-the-port",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `BooksApiIT` ask for `RANDOM_PORT` rather than `DEFINED_PORT`?",
+    "choices": [
+      {
+        "text": "`DEFINED_PORT` starts the application without its security filter chain",
+        "correct": false,
+        "why": "Both start the same application with the same filters. They differ only in the port."
+      },
+      {
+        "text": "A random port makes the context start faster",
+        "correct": false,
+        "why": "Choosing a port costs nothing measurable; the context and the container are the slow parts."
+      },
+      {
+        "text": "Another program on 8080 would fail the test, not the code",
+        "correct": true,
+        "why": "Right. `DEFINED_PORT` uses `server.port`, and a test that fails because another process holds it fails for a reason that has nothing to do with the code."
+      },
+      {
+        "text": "Testcontainers refuses to start next to a server on a fixed port",
+        "correct": false,
+        "why": "Testcontainers maps the database's port and never looks at the web server's."
+      }
+    ]
+  },
+  {
+    "id": "ex-1a80m05s",
+    "version": 1,
+    "section": "through-the-port",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague tests the API by building a `BookController` and calling `get(1)` directly. Which of these does that test never exercise, where `BooksApiIT` does? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The mapping from `GET /books/1` to the method",
+        "correct": true,
+        "why": "Right. The direct call skips the dispatcher that finds the method from the path."
+      },
+      {
+        "text": "The security filter chain",
+        "correct": true,
+        "why": "Right. Filters run around a request, and a method call is not one."
+      },
+      {
+        "text": "Jackson writing the answer as JSON",
+        "correct": true,
+        "why": "Right. The method returns a record; only the HTTP layer turns it into JSON."
+      },
+      {
+        "text": "`BookService` looking the book up",
+        "correct": false,
+        "why": "The controller calls the service in both tests, so both run it."
+      },
+      {
+        "text": "The `get` method's own code",
+        "correct": false,
+        "why": "That is the one thing the direct call does run."
+      }
+    ]
+  },
+  {
+    "id": "ex-1fj2wa8j",
+    "version": 1,
+    "section": "through-the-port",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "REST Assured 6.1.0's pom asks for Groovy 5.0.3, and `mvn dependency:tree` shows Groovy 5.0.8. Why?",
+    "choices": [
+      {
+        "text": "Maven always resolves a library to the newest version available",
+        "correct": false,
+        "why": "Maven never looks for newer versions on its own. Left alone, it would have taken 5.0.3."
+      },
+      {
+        "text": "Spring Boot's parent manages Groovy, and the managed version wins",
+        "correct": true,
+        "why": "Right. The parent's `<dependencyManagement>` from lesson 4 names a version for Groovy, and it applies even to a library that arrives through somebody else's pom."
+      },
+      {
+        "text": "The `rest-assured.version` property raised Groovy along with REST Assured",
+        "correct": false,
+        "why": "That property is only used by the REST Assured dependency; it says nothing about Groovy."
+      },
+      {
+        "text": "Hamcrest 3.0 from the test starter requires Groovy 5.0.8",
+        "correct": false,
+        "why": "Hamcrest has no dependency on Groovy at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-jx7s200c",
+    "version": 1,
+    "section": "given-when-then",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens after `mvn verify -Dit.test=BooksApiIT`, up to the first request.",
+    "hint": "The unit tests come from an earlier phase of the lifecycle.",
+    "items": [
+      "surefire runs the unit tests",
+      "Testcontainers starts a PostgreSQL container",
+      "Flyway migrates that database",
+      "Tomcat starts on a random port",
+      "REST Assured sends GET /books/1"
+    ]
+  },
+  {
+    "id": "ex-az8n6dj4",
+    "version": 1,
+    "section": "given-when-then",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the detour, the failure ended with `at com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail(BooksApiIT.java:50)`. What is on line 50?",
+    "choices": [
+      {
+        "text": "The `get(\"/books/{id}\", 999)` that sent the request",
+        "correct": false,
+        "why": "The request was sent and answered without trouble; it was a claim about the answer that broke."
+      },
+      {
+        "text": "The line of `ApiErrorHandler` that wrote the problem detail",
+        "correct": false,
+        "why": "That code runs in the server. The stack trace is the test's own thread, checking the answer."
+      },
+      {
+        "text": "The `contentType(...)` expectation that did not match",
+        "correct": true,
+        "why": "Right. REST Assured fails at the expectation, so the line number points at the claim that broke."
+      },
+      {
+        "text": "The first line of the test method",
+        "correct": false,
+        "why": "A stack trace names the exact line, not the start of the method."
+      }
+    ]
+  },
+  {
+    "id": "ex-hw3djcmn",
+    "version": 1,
+    "section": "given-when-then",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To run one integration test class, failsafe reads a property: `mvn verify -D___=BooksApiIT`.",
+    "blanks": [
+      {
+        "accept": [
+          "it.test"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fzma8sm9",
+    "version": 1,
+    "section": "given-when-then",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two test classes, each with its own `RANDOM_PORT` context and its own `@BeforeEach` setting `RestAssured.port`, are made to run in parallel in one JVM. What can go wrong?",
+    "hint": "Look at what kind of field `RestAssured.port` is.",
+    "choices": [
+      {
+        "text": "The two contexts receive the same port and the second fails to start",
+        "correct": false,
+        "why": "Each Tomcat asks the operating system for a free port, and two never get the same one."
+      },
+      {
+        "text": "A request of one class reaches the other class's running server",
+        "correct": true,
+        "why": "Right. The field is static, so it holds the port whichever class set it last, and a test then judges the wrong application."
+      },
+      {
+        "text": "`@LocalServerPort` injects 0 while the other context is starting",
+        "correct": false,
+        "why": "The port is injected after this context's own server has started, whatever the other one is doing."
+      },
+      {
+        "text": "Nothing, because `@BeforeEach` runs again before every test",
+        "correct": false,
+        "why": "It does, and the other class's `@BeforeEach` can run between that and the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-htan2vdw",
+    "version": 1,
+    "section": "tokens-in-a-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With no credentials, a client posts a book whose ISBN has a wrong check digit to `/books`. What status comes back?",
+    "hint": "Which runs first: the filters or the controller's validation?",
+    "choices": [
+      {
+        "text": "400, because the ISBN fails `@ValidIsbn`",
+        "correct": false,
+        "why": "Validation runs when the controller is called, and the request never gets that far."
+      },
+      {
+        "text": "401",
+        "correct": true,
+        "why": "Right. The security filter chain refuses an unauthenticated request before the controller, so the ISBN is never looked at."
+      },
+      {
+        "text": "403, because posting books needs the `catalogue:write` scope",
+        "correct": false,
+        "why": "403 is for a caller who is known and lacks the scope. This one sent no credentials at all."
+      },
+      {
+        "text": "201, because the request body is well-formed JSON",
+        "correct": false,
+        "why": "Well-formed is not enough twice over: no token, and an invalid ISBN."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6q6kwfk",
+    "version": 1,
+    "section": "tokens-in-a-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`addingABookNeedsAToken` is changed to fetch ana's token first and send it with the book. Which status does the test now get?",
+    "hint": "Look at ana's authorities in lesson 15's `SecurityConfig`.",
+    "choices": [
+      {
+        "text": "201, because the token is valid",
+        "correct": false,
+        "why": "A valid token says who ana is. Whether she may add books is a separate question."
+      },
+      {
+        "text": "401, because ana is not the clerk",
+        "correct": false,
+        "why": "She is authenticated: the token is good. 401 means nobody is known."
+      },
+      {
+        "text": "403",
+        "correct": true,
+        "why": "Right. Her token carries the scope `orders` only, and `POST /books` needs `catalogue:write`: known, and not allowed."
+      },
+      {
+        "text": "409, because the ISBN is already in the catalogue",
+        "correct": false,
+        "why": "9786500000078 is not one of the six migrated books, and the request never reaches the service anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-0q0pcj5r",
+    "version": 1,
+    "section": "tokens-in-a-test",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the full `mvn verify`, three PostgreSQL containers started for three integration test classes. If `BookshopApplicationIT` were changed to carry exactly the same three annotations as `BooksApiIT`, how many would start?",
+    "hint": "Which containers belong to a context, and which contexts can Spring reuse?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wnt8tzf6",
+    "version": 1,
+    "section": "tokens-in-a-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A new test in `BooksApiIT` asserts that book 2 has a stock of 5. It passes when run alone and fails in the full class. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "The order test has already taken one copy of book 2 from the same database",
+        "correct": true,
+        "why": "Right. The class shares one context and one container, and the order is real; the new test depends on which ran first."
+      },
+      {
+        "text": "Flyway runs the migrations again before each test method",
+        "correct": false,
+        "why": "Flyway runs once, when the context starts. Nothing puts the stock back."
+      },
+      {
+        "text": "Each test method gets its own PostgreSQL container",
+        "correct": false,
+        "why": "The container is a bean of the context, and the class has one context."
+      },
+      {
+        "text": "REST Assured caches the first answer for `/books/2`",
+        "correct": false,
+        "why": "REST Assured sends every request; it keeps no cache of answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-a3j2hnzv",
+    "version": 1,
+    "section": "installing-jmeter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sha512sum -c apache-jmeter-5.6.3.tgz.sha512` printed `OK`. What does that establish?",
+    "choices": [
+      {
+        "text": "That the Apache release manager signed the archive",
+        "correct": false,
+        "why": "A signature is checked against the `.asc` file and a public key, which this step does not touch."
+      },
+      {
+        "text": "That the bytes match the published hash",
+        "correct": true,
+        "why": "Right. The download is complete and undamaged. Who made it is the signature's question."
+      },
+      {
+        "text": "That 5.6.3 is the newest release of JMeter",
+        "correct": false,
+        "why": "A checksum is about one file and says nothing about other releases."
+      },
+      {
+        "text": "That the archive runs on Java 25",
+        "correct": false,
+        "why": "Which Java it runs on is the program's business; the hash covers bytes only."
+      }
+    ]
+  },
+  {
+    "id": "ex-985hkz40",
+    "version": 1,
+    "section": "installing-jmeter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after appending the `export PATH=...` line to `~/.bashrc`, `command -v jmeter` in the same terminal prints nothing. Why?",
+    "choices": [
+      {
+        "text": "The archive was unpacked into the wrong directory",
+        "correct": false,
+        "why": "`ls ~/opt/apache-jmeter-5.6.3` showed it in place. The shell is the one that has not changed."
+      },
+      {
+        "text": "`command -v` only finds programs that apt installed",
+        "correct": false,
+        "why": "It searches every directory on `PATH`, whoever put the program there."
+      },
+      {
+        "text": "This shell read `~/.bashrc` before the line existed",
+        "correct": true,
+        "why": "Right. A shell reads `~/.bashrc` when it starts, so this one still has the old `PATH`. Open a new terminal, or `source ~/.bashrc`, and the line takes effect."
+      },
+      {
+        "text": "The `jmeter` script is not executable until JMeter runs once",
+        "correct": false,
+        "why": "The archive keeps the script's permissions; it was executable from the moment it was unpacked."
+      }
+    ]
+  },
+  {
+    "id": "ex-3725b6c1",
+    "version": 1,
+    "section": "a-test-plan",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each flag of the `jmeter` command to its job.",
+    "pairs": [
+      {
+        "left": "-n",
+        "right": "run without the window"
+      },
+      {
+        "left": "-l",
+        "right": "the results file, one line per request"
+      },
+      {
+        "left": "-e",
+        "right": "build the HTML report when the run ends"
+      },
+      {
+        "left": "-f",
+        "right": "delete earlier results and report first"
+      },
+      {
+        "left": "-J",
+        "right": "set a property the plan reads with __P"
+      }
+    ],
+    "right_distractors": [
+      "stop the run at the first error"
+    ]
+  },
+  {
+    "id": "ex-a7scq1g9",
+    "version": 1,
+    "section": "a-test-plan",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`books.jmx` is run with `-Jthreads=8 -Jloops=250`. How many requests does the run send?",
+    "hint": "Count what each thread does on one round.",
+    "value": 4000,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vvntmpvt",
+    "version": 1,
+    "section": "a-test-plan",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the bookshop started with `java -jar` for the load test, rather than run inside `mvn`?",
+    "choices": [
+      {
+        "text": "Under `mvn` the application ignores `BOOKSHOP_JWT_SECRET`",
+        "correct": false,
+        "why": "The secret is read from the environment either way."
+      },
+      {
+        "text": "It measures the jar as it ships, without Maven's JVM",
+        "correct": true,
+        "why": "Right. A load test is a measurement, and whatever else runs on the machine is in it."
+      },
+      {
+        "text": "JMeter can only reach a server started from a jar",
+        "correct": false,
+        "why": "JMeter sends HTTP to a host and a port; it cannot tell how the server was started."
+      },
+      {
+        "text": "`mvn` would run the load test during `verify`",
+        "correct": false,
+        "why": "Nothing binds JMeter to a Maven phase here; the plan sits in a directory Maven ignores."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vx3rvmf",
+    "version": 1,
+    "section": "a-test-plan",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody empties the `book` table while the plan runs. `/books/search?q=the` now answers `200` with `[]`. What does JMeter record for those samples?",
+    "hint": "A status is one check. What else does the plan check?",
+    "choices": [
+      {
+        "text": "Successes, because the status is 200",
+        "correct": false,
+        "why": "A 200 alone would pass, but the plan also asserts on the body."
+      },
+      {
+        "text": "Successes, though fewer bytes came back",
+        "correct": false,
+        "why": "The size is recorded, and the samples are still marked failed by the assertion."
+      },
+      {
+        "text": "Nothing: JMeter skips samples whose body is empty",
+        "correct": false,
+        "why": "Every request becomes a line in the results file, empty body or not."
+      },
+      {
+        "text": "Errors, because the body does not contain `\"isbn\"`",
+        "correct": true,
+        "why": "Right. That is the assertion's job: a 200 with the wrong content counts as a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-es6zv1zh",
+    "version": 1,
+    "section": "reading-the-numbers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A report says the 95th percentile of response time was 40 ms. What does that mean?",
+    "choices": [
+      {
+        "text": "The average request took 40 ms",
+        "correct": false,
+        "why": "The average is `meanResTime`, a different number; a few slow requests pull it up."
+      },
+      {
+        "text": "95% of the requests took 40 ms or less",
+        "correct": true,
+        "why": "Right. The other 5% took longer, and the 99th percentile and the maximum say how much longer."
+      },
+      {
+        "text": "95% of the requests succeeded within the run",
+        "correct": false,
+        "why": "Success is the error count. A percentile is about time."
+      },
+      {
+        "text": "The slowest 95 requests averaged 40 ms each",
+        "correct": false,
+        "why": "A percentile is a position in the sorted times, not an average of a group."
+      }
+    ]
+  },
+  {
+    "id": "ex-1ynd3j20",
+    "version": 1,
+    "section": "reading-the-numbers",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan has 50 threads and no pause between requests. The average response time is 10 ms. Roughly how many requests a second can the run reach?",
+    "hint": "Each thread sends its next request only when the last one has answered.",
+    "value": 5000,
+    "tolerance": 100,
+    "unit": "requests per second"
+  },
+  {
+    "id": "ex-a7yrcq8g",
+    "version": 1,
+    "section": "reading-the-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A run reports an average response time of 1 ms and a maximum of 17 ms, better than any run before it. What should you read first?",
+    "choices": [
+      {
+        "text": "The maximum, to see whether one request was slow",
+        "correct": false,
+        "why": "The maximum is already the best of any run; slowness is not what went wrong."
+      },
+      {
+        "text": "The 99th percentile, which the average hides",
+        "correct": false,
+        "why": "Worth reading in a sound run. This one may not have measured the application at all."
+      },
+      {
+        "text": "The error count",
+        "correct": true,
+        "why": "Right. A refused connection fails at once, so a run against a stopped server has the best response times of all, and every one of them is an error."
+      },
+      {
+        "text": "The ramp-up, which was probably too short",
+        "correct": false,
+        "why": "Ramp-up changes when threads start, not whether the answers are real."
+      }
+    ]
+  },
+  {
+    "id": "ex-h139ey3q",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "JMeter, the bookshop and PostgreSQL all ran on one four-processor machine. Which conclusions can such a run support? Choose all that apply.",
+    "choices": [
+      {
+        "text": "This commit is slower than the last one, measured with the same plan on the same machine",
+        "correct": true,
+        "why": "Right. Comparing two versions under identical conditions is what a local run is good for."
+      },
+      {
+        "text": "The response times grow as threads are added on this machine",
+        "correct": true,
+        "why": "Right. That is a measurement of this machine under this plan, and it says so."
+      },
+      {
+        "text": "The production server will handle the same number of requests a second",
+        "correct": false,
+        "why": "Production has other processors, other data, a network, and no load generator sharing them."
+      },
+      {
+        "text": "The application, not JMeter, was the limit on throughput",
+        "correct": false,
+        "why": "JMeter itself used a large share of the same processors, so nothing in this run separates the two."
+      }
+    ]
+  },
+  {
+    "id": "ex-bn1es7hg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the steps of a load test you could defend in order.",
+    "hint": "A number means nothing until you know what it was supposed to be.",
+    "items": [
+      "write down the target, such as a 95th percentile under 50 ms",
+      "start the application as it ships",
+      "run once to warm it up, and discard that run",
+      "run the measured test with -f",
+      "read the error count before any time"
+    ]
+  },
+  {
+    "id": "ex-49qdt9dx",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each failure to the test that would catch it first.",
+    "pairs": [
+      {
+        "left": "the error handler starts answering application/json",
+        "right": "BooksApiIT"
+      },
+      {
+        "left": "a derived query returns titles in the wrong order",
+        "right": "BookRepositoryIT"
+      },
+      {
+        "left": "placing an order saves it even when the stock is short",
+        "right": "OrderServiceTest"
+      },
+      {
+        "left": "a change makes each search take three times as long",
+        "right": "the JMeter plan"
+      }
+    ],
+    "right_distractors": [
+      "IsbnTest"
+    ]
+  },
+  {
+    "id": "ex-f9sydg76",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A REST Assured test for `GET /books/1` checks only `statusCode(200)`. Which regression would it still pass?",
+    "choices": [
+      {
+        "text": "The route `/books/{id}` is removed",
+        "correct": false,
+        "why": "Then the answer is a 404 and the status check fails."
+      },
+      {
+        "text": "Reading a book starts to require a token",
+        "correct": false,
+        "why": "Then the answer is a 401 and the status check fails."
+      },
+      {
+        "text": "The JSON field `title` is renamed to `name`",
+        "correct": true,
+        "why": "Right. The status stays 200, and every client reading `title` breaks. Only a `body(...)` expectation sees it."
+      },
+      {
+        "text": "The database is unreachable when the test runs",
+        "correct": false,
+        "why": "Then the context fails to start, or the answer is a 500; either way the test fails."
+      }
+    ]
+  }
+]

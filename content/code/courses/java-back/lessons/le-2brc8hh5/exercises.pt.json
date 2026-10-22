@@ -1,0 +1,458 @@
+{
+  "ex-jyhs75f3": {
+    "prompt": "`java -jar target/bookshop-0.1.0.jar` é iniciado. Qual classe a JVM executa primeiro?",
+    "hint": "A JVM lê um atributo do manifesto e nada mais.",
+    "choices": [
+      {
+        "text": "`BookshopApplication`, a classe com `@SpringBootApplication`",
+        "why": "Essa é a `Start-Class`, um atributo que a JVM desconhece. O inicializador a lê e chama o `main` dela quando as bibliotecas já podem ser carregadas."
+      },
+      {
+        "text": "`JarLauncher`, do carregador do Spring Boot",
+        "why": "`Main-Class` aponta para ela. Ela monta um class loader capaz de ler os jars de dentro do jar e então passa a vez para a `Start-Class`."
+      },
+      {
+        "text": "A classe de inicialização do Tomcat, que implanta a aplicação no servidor",
+        "why": "O Tomcat é uma das bibliotecas em `BOOT-INF/lib`. É a aplicação que o inicia, e não o contrário."
+      },
+      {
+        "text": "Uma classe do Maven que resolve as dependências listadas no `pom.xml`",
+        "why": "O Maven terminou o trabalho dele quando o jar passou a existir. Todas as bibliotecas já estão dentro do arquivo, e o servidor não precisa de Maven."
+      }
+    ]
+  },
+  "ex-d5pt2svx": {
+    "prompt": "Por que os jars em `BOOT-INF/lib` são armazenados sem compressão?",
+    "hint": "Pense no que o inicializador faz com eles na inicialização.",
+    "choices": [
+      {
+        "text": "Porque o formato zip não consegue guardar um arquivo comprimido dentro de outro arquivo comprimido",
+        "why": "Consegue; um zip de zips é algo comum. Armazenar sem comprimir é uma escolha do Boot, por um motivo ligado à leitura."
+      },
+      {
+        "text": "Para que o inicializador leia cada um no lugar, sem desempacotá-lo antes",
+        "why": "Uma entrada armazenada são os bytes originais em uma posição conhecida, então um jar aninhado pode ser aberto diretamente dentro do arquivo externo."
+      },
+      {
+        "text": "Para que o class loader da própria JVM possa colocá-los no class path",
+        "why": "O class loader da JVM não carrega um jar dentro de um jar de jeito nenhum, armazenado ou não. Essa lacuna é a razão de o inicializador existir."
+      },
+      {
+        "text": "Para deixar o jar executável menor",
+        "why": "Armazenar sem comprimir nunca deixa um arquivo menor. Um jar já é comprimido por dentro, então pouco se perde ao não comprimi-lo de novo."
+      }
+    ]
+  },
+  "ex-ett8wj4r": {
+    "prompt": "Um colega copia `bookshop-0.1.0.jar.original` para um servidor, porque é menor, e executa `java -jar` nele. O que acontece?",
+    "hint": "Compare o que cada um dos dois arquivos contém.",
+    "choices": [
+      {
+        "text": "Inicia como antes, porque as bibliotecas são baixadas do Maven Central na primeira execução",
+        "why": "Nada em um jar baixa coisa alguma. Um jar comum tem só as próprias classes, e as bibliotecas precisam chegar ao class path de outra forma."
+      },
+      {
+        "text": "Ele se recusa a iniciar, porque esse jar não tem o atributo `Main-Class`",
+        "why": "O jar comum que o Maven construiu primeiro tem as classes da livraria e nenhum inicializador, e o manifesto dele não indica classe alguma para executar."
+      },
+      {
+        "text": "Inicia e falha na primeira requisição, quando falta uma classe do Spring",
+        "why": "Ele nem chega a uma requisição: `java -jar` precisa de uma classe principal antes que qualquer coisa execute."
+      },
+      {
+        "text": "Inicia, porque `.original` é só uma cópia de segurança do mesmo arquivo",
+        "why": "Os tamanhos diferem por um fator de mais de mil. O `.original` é o que o Maven construiu antes de o plugin do Boot reempacotá-lo."
+      }
+    ]
+  },
+  "ex-f3xdjnbj": {
+    "prompt": "O Spring Boot associa a variável de ambiente `___` à propriedade `management.server.address`.",
+    "hint": "Associação flexível: pontos viram sublinhados, letras viram maiúsculas.",
+    "blanks": [
+      {
+        "accept": [
+          "MANAGEMENT_SERVER_ADDRESS"
+        ]
+      }
+    ]
+  },
+  "ex-bpw68rgb": {
+    "prompt": "O `application.properties` do jar diz `spring.datasource.username=bookshop`, e o shell que o inicia tem `SPRING_DATASOURCE_USERNAME=shop` exportada. Com qual usuário a aplicação entra no PostgreSQL?",
+    "hint": "A aula 4 ordenou os lugares de onde uma propriedade pode vir.",
+    "choices": [
+      {
+        "text": "`bookshop`, porque o arquivo vai empacotado com o código e vence a máquina",
+        "why": "É o contrário: o arquivo dentro do jar é um dos lugares mais fracos, justamente para que a máquina possa sobrepô-lo."
+      },
+      {
+        "text": "`shop`",
+        "why": "Uma variável de ambiente tem precedência sobre o `application.properties`, e a associação flexível liga a variável a essa mesma propriedade."
+      },
+      {
+        "text": "Nenhum dos dois: o Spring Boot se recusa a iniciar quando dois lugares definem a mesma propriedade",
+        "why": "Dois lugares definindo a mesma propriedade é o caso normal, e a ordem decide sem uma palavra no log."
+      },
+      {
+        "text": "`bookshop`, porque um nome de usuário, diferente de uma senha, nunca é lido do ambiente",
+        "why": "A associação não se importa com o que a propriedade significa. Qualquer propriedade pode vir do ambiente."
+      }
+    ]
+  },
+  "ex-4z596eyd": {
+    "prompt": "Uma equipe guarda a senha do banco de produção em `application-prod.properties`, dentro do jar, e só troca o perfil no servidor. Qual é o problema disso?",
+    "hint": "Quem consegue ler um jar?",
+    "choices": [
+      {
+        "text": "O arquivo de um perfil é ignorado depois que o jar é construído",
+        "why": "Ele é lido: a aula 4 iniciou a livraria com o perfil `dev` a partir de um jar já construído."
+      },
+      {
+        "text": "Quem copiar o jar lê a senha com `unzip -p`, e trocá-la exige outro build",
+        "why": "Um jar é um arquivo zip. A senha viaja em toda cópia do artefato, para todo registro e notebook, e trocá-la vira uma nova versão."
+      },
+      {
+        "text": "Uma senha deve sempre ser passada na linha de comando, que tem precedência sobre todo arquivo",
+        "why": "A linha de comando tem precedência, mas uma senha ali pode ser lida por todo usuário que lista os processos da máquina. O ambiente é o lugar habitual."
+      },
+      {
+        "text": "O Spring Boot cifra os arquivos de propriedades no jar, então a senha ficaria ilegível para a aplicação",
+        "why": "Nada é cifrado: `unzip -p` imprime o arquivo como foi escrito."
+      }
+    ]
+  },
+  "ex-mvf45ha0": {
+    "prompt": "Das quatro camadas em que o jar é dividido, qual muda em quase todo commit?",
+    "hint": "Para onde vão as suas próprias classes?",
+    "choices": [
+      {
+        "text": "`dependencies`",
+        "why": "Ela muda quando o `pom.xml` troca uma biblioteca, o que é bem mais raro que uma mudança no código."
+      },
+      {
+        "text": "`spring-boot-loader`",
+        "why": "O inicializador muda quando o Spring Boot é atualizado, e em nenhum outro momento."
+      },
+      {
+        "text": "`snapshot-dependencies`",
+        "why": "Ela guarda bibliotecas cuja versão termina em `-SNAPSHOT`, e a livraria não tem nenhuma, então está vazia."
+      },
+      {
+        "text": "`application`",
+        "why": "`BOOT-INF/classes` está ali, com as classes da livraria, as propriedades e as migrações."
+      }
+    ]
+  },
+  "ex-zma7495k": {
+    "prompt": "A livraria passa a depender de uma biblioteca na versão `2.1.0-SNAPSHOT`. Onde o `extract --layers` a coloca?",
+    "hint": "Leia o `layers.idx` levando a versão em conta.",
+    "choices": [
+      {
+        "text": "Em `dependencies`, com todas as outras bibliotecas",
+        "why": "Um snapshot pode mudar sem mudar de versão, então o Boot o mantém fora da camada que deveria ficar parada."
+      },
+      {
+        "text": "Em `snapshot-dependencies`, numa camada só para elas",
+        "why": "Essa camada existe exatamente para isso: uma biblioteca cujos bytes podem mudar a qualquer build, separada para não invalidar a camada grande e estável."
+      },
+      {
+        "text": "Em `application`, porque um snapshot é código ainda em desenvolvimento",
+        "why": "`application` é a saída do próprio projeto. Um snapshot vindo de outro lugar ainda vai para uma camada de bibliotecas."
+      },
+      {
+        "text": "Em lugar nenhum: versões snapshot são recusadas no reempacotamento",
+        "why": "Elas são aceitas; o diretório vazio `snapshot-dependencies` está esperando por uma."
+      }
+    ]
+  },
+  "ex-k33pafns": {
+    "prompt": "Associe cada camada ao que a faz mudar.",
+    "hint": "A ordem em que o Dockerfile as copia é a mesma ideia.",
+    "pairs": [
+      {
+        "left": "dependencies",
+        "right": "uma biblioteca adicionada ou atualizada no pom.xml"
+      },
+      {
+        "left": "spring-boot-loader",
+        "right": "uma nova versão do Spring Boot"
+      },
+      {
+        "left": "snapshot-dependencies",
+        "right": "qualquer novo build de uma biblioteca -SNAPSHOT"
+      },
+      {
+        "left": "application",
+        "right": "uma mudança no código da livraria"
+      }
+    ],
+    "right_distractors": [
+      "uma nova imagem base"
+    ]
+  },
+  "ex-n9rt13yd": {
+    "prompt": "Por que o Dockerfile começa com `FROM eclipse-temurin:25-jre-noble` em vez de `ubuntu:24.04` com uma linha que instala o Java?",
+    "hint": "O que é `noble`, e o que é um JRE?",
+    "choices": [
+      {
+        "text": "Porque o repositório do Ubuntu não tem o Java 25",
+        "why": "Tem: a aula 1 instalou o `openjdk-25-jdk` a partir dele. A imagem base é uma questão de quem mantém a camada, não de disponibilidade."
+      },
+      {
+        "text": "É o mesmo Ubuntu 24.04 com um runtime Java 25 já instalado e mantido atualizado pelos responsáveis",
+        "why": "`noble` é o nome do Ubuntu 24.04, e a tag `jre` traz um runtime sem o compilador. Ninguém precisa escrever nem manter a instalação."
+      },
+      {
+        "text": "Porque só essa imagem consegue executar um jar do Spring Boot",
+        "why": "Qualquer imagem com um runtime Java 25 o executa. Esta é uma escolha conveniente e mantida."
+      },
+      {
+        "text": "Porque uma imagem JRE inclui o `curl`, de que a verificação de saúde precisa",
+        "why": "Não inclui: o `command -v` não encontrou `curl` nela, e é por isso que a verificação de saúde usa só o `bash`."
+      }
+    ]
+  },
+  "ex-a67a74a9": {
+    "prompt": "Coloque as quatro linhas `COPY` do segundo estágio na ordem que o Dockerfile usa.",
+    "hint": "A que muda menos primeiro.",
+    "items": [
+      "COPY …/dependencies/ ./",
+      "COPY …/spring-boot-loader/ ./",
+      "COPY …/snapshot-dependencies/ ./",
+      "COPY …/application/ ./"
+    ],
+    "trap": "Copiar `application` antes faria toda mudança de código reconstruir as camadas depois dela, inclusive os 69 MB de bibliotecas."
+  },
+  "ex-189qvtas": {
+    "prompt": "Depois da mudança de uma palavra em `CatalogueReport` e de um novo `docker build`, quantas linhas o `diff` mostrou como alteradas na lista de camadas da imagem, contando só as que começam com `>`?",
+    "hint": "Cada camada é uma linha dessa lista.",
+    "unit": "camadas"
+  },
+  "ex-mnw0m950": {
+    "prompt": "Alguém reordena o Dockerfile para que `application` seja copiada primeiro e `dependencies` por último. Toda imagem ainda funciona. O que piora?",
+    "hint": "Uma camada só é reaproveitada se todas as camadas abaixo dela também foram.",
+    "choices": [
+      {
+        "text": "Nada: o Docker compara o conteúdo de cada camada, então a ordem das linhas `COPY` não importa",
+        "why": "Cada camada é empilhada sobre a de baixo, e uma camada alterada invalida tudo acima dela, seja qual for o conteúdo."
+      },
+      {
+        "text": "Toda mudança de código gera outra camada de 69 MB de bibliotecas, para guardar e enviar",
+        "why": "A camada do código agora fica na base das quatro, então toda camada acima dela é refeita, e a maior está entre elas."
+      },
+      {
+        "text": "A aplicação inicia mais devagar, porque o inicializador encontra as suas classes por último",
+        "why": "Em execução, os quatro diretórios são mesclados em um único `/app`; a ordem das camadas é invisível para a JVM."
+      },
+      {
+        "text": "A imagem fica maior, porque cada camada passa a guardar uma cópia das de baixo",
+        "why": "Uma camada guarda só o que acrescenta. O tamanho de uma imagem é o mesmo; o que cresce é o que muda entre duas delas."
+      }
+    ]
+  },
+  "ex-45gts824": {
+    "prompt": "O que `USER bookshop` no segundo estágio muda? Escolha todas as que se aplicam.",
+    "hint": "O `docker run --entrypoint id` respondeu à pergunta para uma delas.",
+    "choices": [
+      {
+        "text": "O processo Java no contêiner roda como uid 10001, e não como root",
+        "why": "O `ENTRYPOINT` roda como o último `USER` indicado, e o `ps` dentro do contêiner mostrou isso."
+      },
+      {
+        "text": "As linhas `RUN` depois dela rodam como esse usuário",
+        "why": "Toda instrução que executa um comando usa o usuário atual, e é por isso que o `useradd` fica antes do `USER`, e não depois."
+      },
+      {
+        "text": "Os arquivos que as linhas `COPY` colocam em `/app` pertencem a `bookshop`",
+        "why": "O `COPY` entrega os arquivos ao root, a menos que se diga outra coisa com `--chown`, não importa o que o `USER` diga. Aqui isso é bom: a aplicação só precisa lê-los."
+      },
+      {
+        "text": "Só o usuário `bookshop` do host pode iniciar o contêiner",
+        "why": "`USER` diz respeito ao processo de dentro. Quem pode iniciar contêineres no host é decidido pelo acesso ao socket do Docker, como a aula 19 configurou."
+      }
+    ]
+  },
+  "ex-5c62h84b": {
+    "prompt": "No `compose.yaml`, a `SPRING_DATASOURCE_URL` da livraria indica o host `db`. Por que `localhost` não funcionaria no lugar dele?",
+    "hint": "Cada contêiner tem as suas próprias interfaces de rede.",
+    "choices": [
+      {
+        "text": "Porque o PostgreSQL recusa conexões que vêm de `localhost`",
+        "why": "O PostgreSQL aceita essas conexões normalmente. A conexão nem chegaria ao PostgreSQL."
+      },
+      {
+        "text": "Porque `localhost` num contêiner é o próprio contêiner, e o banco roda em outro",
+        "why": "Na rede que o Compose cria, cada serviço é alcançado pelo seu nome, e `db` resolve para o endereço do contêiner do banco."
+      },
+      {
+        "text": "Porque `localhost` alcançaria o PostgreSQL que a aula 9 instalou na máquina",
+        "why": "O loopback da máquina não é o do contêiner. De dentro, `localhost` não alcança nenhum dos dois bancos."
+      },
+      {
+        "text": "Porque a porta 5432 não é publicada no `compose.yaml`",
+        "why": "Publicar serve para alcançar um contêiner de fora. Contêineres na mesma rede do Compose alcançam as portas uns dos outros sem isso."
+      }
+    ]
+  },
+  "ex-9gf7z9v2": {
+    "prompt": "Associe cada linha do `compose.yaml` ao que ela garante.",
+    "hint": "Leia as notas ao lado do arquivo.",
+    "pairs": [
+      {
+        "left": "condition: service_healthy",
+        "right": "a aplicação inicia depois que o PostgreSQL responde"
+      },
+      {
+        "left": "db-data:/var/lib/postgresql/data",
+        "right": "o catálogo sobrevive ao docker compose down"
+      },
+      {
+        "left": "127.0.0.1:8081:8081",
+        "right": "a porta de gerenciamento só é alcançável da própria máquina"
+      },
+      {
+        "left": "${BOOKSHOP_JWT_SECRET:?…}",
+        "right": "nada inicia enquanto o segredo estiver faltando"
+      }
+    ],
+    "right_distractors": [
+      "o contêiner reinicia depois de uma falha"
+    ]
+  },
+  "ex-5qz7hex9": {
+    "prompt": "Qual comando remove os contêineres e também apaga o catálogo que o PostgreSQL guarda?",
+    "hint": "Os dados vivem num volume nomeado.",
+    "choices": [
+      {
+        "text": "`docker compose stop`",
+        "why": "Ele para os contêineres e os mantém, prontos para iniciar de novo com tudo no lugar."
+      },
+      {
+        "text": "`docker compose down`",
+        "why": "Ele remove os contêineres e a rede e mantém o volume, e é por isso que a segunda subida encontrou o esquema em dia."
+      },
+      {
+        "text": "`docker compose down -v`",
+        "why": "O `-v` remove também os volumes nomeados que o arquivo declara, e com o `db-data` vão todas as linhas."
+      },
+      {
+        "text": "`docker compose rm`",
+        "why": "Ele remove só contêineres parados. Os volumes ficam como estão."
+      }
+    ]
+  },
+  "ex-g00ja14t": {
+    "prompt": "Você apaga a linha `MANAGEMENT_SERVER_ADDRESS: 0.0.0.0` e sobe o conjunto de novo. O que acontece?",
+    "hint": "Onde roda a verificação de saúde, e onde roda o seu `curl`?",
+    "choices": [
+      {
+        "text": "O contêiner nunca fica saudável, porque a verificação de saúde não alcança a porta 8081",
+        "why": "A verificação de saúde roda dentro do contêiner, onde 127.0.0.1 é exatamente o endereço em que o servidor de gerenciamento passa a escutar."
+      },
+      {
+        "text": "A porta 8080 também para de responder, porque as duas portas compartilham uma configuração",
+        "why": "`management.server.address` pertence só ao servidor de gerenciamento; a API continua escutando em todas as interfaces."
+      },
+      {
+        "text": "O contêiner se declara saudável, e um `curl` para 127.0.0.1:8081 a partir da máquina falha",
+        "why": "O servidor de gerenciamento volta ao 127.0.0.1 do `application.properties`, o loopback do próprio contêiner, que uma porta publicada não alcança."
+      },
+      {
+        "text": "Nada muda, porque a porta publicada já limita a 8081 à máquina",
+        "why": "Os dois limites ficam de lados diferentes. A porta publicada decide quem de fora pode se conectar; o endereço decide onde, por dentro, o servidor escuta."
+      }
+    ]
+  },
+  "ex-qkrmhpst": {
+    "prompt": "`docker compose stop app` voltou em menos de um segundo, e o código de saída do contêiner foi 143. O que o 143 diz?",
+    "hint": "128 mais o número de um sinal.",
+    "choices": [
+      {
+        "text": "A JVM falhou ao fechar o pool de conexões",
+        "why": "O log mostrou o `Shutdown completed.` do pool antes da saída. Uma falha deixaria um stack trace no lugar."
+      },
+      {
+        "text": "O Docker matou o processo depois de esperar dez segundos",
+        "why": "Isso é 137, 128 mais o 9 do SIGKILL, e o desvio com a forma shell mostra isso."
+      },
+      {
+        "text": "O processo terminou por causa do SIGTERM, depois de executar seus ganchos de desligamento",
+        "why": "15 é o SIGTERM. A JVM executou o desligamento gracioso do Spring e depois saiu com o código que diz qual sinal a encerrou."
+      },
+      {
+        "text": "Um erro na aplicação, que deveria ser lido no log",
+        "why": "Um código acima de 128 indica um sinal, e não um erro. Este é o fim normal de um processo Java a quem se pediu para parar."
+      }
+    ]
+  },
+  "ex-s8exe6k6": {
+    "prompt": "A opção da JVM que define o heap máximo como uma fração do limite de memória do contêiner é `-XX:___=75`.",
+    "hint": "O padrão é 25.",
+    "blanks": [
+      {
+        "accept": [
+          "MaxRAMPercentage"
+        ]
+      }
+    ]
+  },
+  "ex-pe709fhs": {
+    "prompt": "Um contêiner recebe `--memory=2g`, e a JVM dentro dele é iniciada com `-XX:MaxRAMPercentage=75`. Qual heap máximo a JVM escolhe, em MiB?",
+    "hint": "2g são 2048 MiB.",
+    "unit": "MiB"
+  },
+  "ex-vcpqpf1x": {
+    "prompt": "Você corrigiu um bug no `BookService`. Coloque em ordem os passos que levam a correção a rodar no Compose.",
+    "hint": "A imagem é construída a partir do jar, e não do código-fonte.",
+    "items": [
+      "mvn package reconstrói target/bookshop-0.1.0.jar",
+      "docker build troca só a camada application",
+      "docker compose up -d substitui o contêiner app",
+      "a verificação de readiness responde UP e o contêiner fica saudável"
+    ],
+    "trap": "Construir a imagem antes do `mvn package` copia o jar ANTIGO, e a imagem nova executa o bug que você acabou de corrigir."
+  },
+  "ex-6hcj98d6": {
+    "prompt": "A mesma imagem vai rodar num servidor de testes e em produção. Quais destes pertencem ao ambiente, e não à imagem? Escolha todas as que se aplicam.",
+    "hint": "O que difere entre os dois lugares, e o que não pode ser lido a partir da imagem?",
+    "choices": [
+      {
+        "text": "A URL do banco",
+        "why": "Cada lugar tem o seu banco. Uma imagem com a URL no ambiente roda contra qualquer um dos dois."
+      },
+      {
+        "text": "O segredo que assina os tokens",
+        "why": "Um segredo numa imagem pode ser lido por qualquer um que consiga baixá-la, e os dois lugares assinariam com a mesma chave."
+      },
+      {
+        "text": "As bibliotecas em `BOOT-INF/lib`",
+        "why": "Elas são o que foi testado. Fornecê-las por lugar faria o servidor de testes e a produção rodarem código diferente."
+      },
+      {
+        "text": "O usuário com que o processo roda",
+        "why": "É uma propriedade de como a imagem foi construída, igual em todo lugar, e nada nela é segredo."
+      }
+    ]
+  },
+  "ex-n93007w3": {
+    "prompt": "A imagem de um colega inicia `java -jar app.jar` sem opção de memória nenhuma, e roda com `--memory=512m`. Até quanto o heap dela pode crescer?",
+    "hint": "A JVM lê o limite, e a fração padrão é um quarto.",
+    "choices": [
+      {
+        "text": "Um quarto da memória física do servidor, porque a JVM não enxerga o limite do contêiner",
+        "why": "A JVM lê o limite há anos: com `--memory=1g` ela escolheu 256 MiB, e não um quarto da máquina de 15 GB."
+      },
+      {
+        "text": "512 MiB, o limite inteiro",
+        "why": "O limite inteiro não deixa nada para metaspace, threads e o código do JIT, e o kernel mataria o contêiner antes."
+      },
+      {
+        "text": "128 MiB",
+        "why": "25% de 512 MiB. Para uma aplicação Spring Boot é pouco, e é por isso que a imagem da livraria define 75%."
+      },
+      {
+        "text": "256 MiB, o heap padrão seja qual for o limite",
+        "why": "256 MiB era um quarto do limite de 1 GiB da aula, e não um padrão fixo: o heap acompanha o limite."
+      }
+    ]
+  }
+}

@@ -114,7 +114,25 @@ The plugin is not bound to any phase in this pom, so `mvn package` does not run 
 by its goal:
 
 ```
-(pending JAVADOC)
+ana@vm:~/bookshop$ mvn javadoc:javadoc
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example:bookshop >------------------------
+[INFO] Building bookshop 0.1.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> maven-javadoc-plugin:3.12.0:javadoc (default-cli) > generate-sources @ bookshop >>>
+[INFO] 
+[INFO] <<< maven-javadoc-plugin:3.12.0:javadoc (default-cli) < generate-sources @ bookshop <<<
+[INFO] 
+[INFO] 
+[INFO] --- maven-javadoc-plugin:3.12.0:javadoc (default-cli) @ bookshop ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.800 s
+[INFO] Finished at: 2026-10-22T20:07:50-03:00
+[INFO] ------------------------------------------------------------------------
 ```
 
 The two lines with `>>>` and `<<<` are the plugin asking Maven to run the lifecycle up to
@@ -122,7 +140,47 @@ The two lines with `>>>` and `<<<` are the plugin asking Maven to run the lifecy
 The pages go to `target/reports/apidocs`:
 
 ```
-(pending LS)
+ana@vm:~/bookshop$ ls target/reports/apidocs
+allclasses-index.html
+allpackages-index.html
+com
+element-list
+help-doc.html
+index-all.html
+index.html
+legal
+member-search-index.js
+module-search-index.js
+overview-summary.html
+overview-tree.html
+package-search-index.js
+resource-files
+script-files
+search.html
+serialized-form.html
+tag-search-index.js
+type-search-index.js
+ana@vm:~/bookshop$ ls target/reports/apidocs/com/example/bookshop/catalogue
+Author.html
+AuthorRepository.html
+Book.html
+BookController.html
+BookNotFoundException.html
+BookRepository.html
+BookRequest.html
+BookResponse.html
+BookService.html
+CatalogueReport.html
+DuplicateIsbnException.html
+Isbn.html
+IsbnValidator.html
+OutOfStockException.html
+TitleAndPrice.html
+ValidIsbn.html
+class-use
+package-summary.html
+package-tree.html
+package-use.html
 ```
 
 Open `target/reports/apidocs/index.html` in a browser. It is a website with no server behind it:
@@ -138,7 +196,7 @@ does not close, a `{@link}` to nothing, an `@param` that names no parameter. Som
 `@param q` to `@param query`, a name the method does not have, and run the goal again:
 
 ```
-(pending STALE)
+ana@vm:~/bookshop$ mvn -q javadoc:javadoc
 ```
 
 Nothing, and that is wrong. The plugin keeps a record of the command line it gave `javadoc` last
@@ -147,7 +205,13 @@ has not changed**. Editing a comment does not change it, so the check you asked 
 `clean` deletes `target`, record included:
 
 ```
-(pending CLEAN)
+ana@vm:~/bookshop$ mvn -q clean javadoc:javadoc | head -6
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-javadoc-plugin:3.12.0:javadoc (default-cli) on project bookshop: An error has occurred in Javadoc report generation: 
+[ERROR] Exit code: 1
+[ERROR] /home/ana/bookshop/src/main/java/com/example/bookshop/catalogue/BookController.java:48: error: @param name not found
+[ERROR]      * @param query the text to look for
+[ERROR]               ^
+[ERROR] 1 error
 ```
 
 `-q` hides everything but errors, and `head -6` keeps the error and leaves out Maven's advice
@@ -163,9 +227,22 @@ about every public element with no comment at all. Switch it back on by changing
 `<doclint>all</doclint>`, and count what it finds. The pom changed, so this time the plugin runs:
 
 ```
-(pending MISSING)
+ana@vm:~/bookshop$ mvn javadoc:javadoc | grep 'warning: no comment' > ~/missing.txt
+ana@vm:~/bookshop$ wc -l < ~/missing.txt
+92
+ana@vm:~/bookshop$ head -3 ~/missing.txt
+[WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/web/ApiErrorHandler.java:24: warning: no comment
+[WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/web/ApiErrorHandler.java:32: warning: no comment
+[WARNING] /home/ana/bookshop/src/main/java/com/example/bookshop/web/ApiErrorHandler.java:27: warning: no comment
 ```
 
-```
-(pending MISSING_TEXT)
-```
+Ninety-two public elements with no comment. The first three are the handlers of lesson 7's
+`ApiErrorHandler`, and the controller's constructor is in the list too, on line 30. They are
+public because Spring calls them, and nobody who reads a page of Javadoc will ever call them
+directly. A sentence on each would be exactly the kind of comment the previous part warned about.
+`-missing` keeps every check on the comments that exist and drops the demand for a comment on
+everything. Put `<doclint>all,-missing</doclint>` back.
+
+A library is the opposite case. Code that other projects depend on is read through its Javadoc,
+Maven Central requires a jar of it, built by `mvn javadoc:jar`, beside every library it publishes,
+and there `missing` belongs switched on.

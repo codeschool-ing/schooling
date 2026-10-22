@@ -1,0 +1,674 @@
+[
+  {
+    "id": "ex-jyhs75f3",
+    "version": 1,
+    "section": "executable-jar",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`java -jar target/bookshop-0.1.0.jar` starts. Which class does the JVM run first?",
+    "hint": "The JVM reads one attribute of the manifest and nothing else.",
+    "choices": [
+      {
+        "text": "`BookshopApplication`, the class with `@SpringBootApplication`",
+        "correct": false,
+        "why": "That is `Start-Class`, an attribute the JVM does not know about. The launcher reads it and calls its `main` once the libraries can be loaded."
+      },
+      {
+        "text": "`JarLauncher`, from Spring Boot's loader",
+        "correct": true,
+        "why": "`Main-Class` names it. It builds a class loader that can read the jars inside the jar, then hands over to `Start-Class`."
+      },
+      {
+        "text": "Tomcat's bootstrap class, which deploys the application into the server",
+        "correct": false,
+        "why": "Tomcat is one of the libraries in `BOOT-INF/lib`. The application starts it, and not the other way round."
+      },
+      {
+        "text": "A Maven class that resolves the dependencies listed in `pom.xml`",
+        "correct": false,
+        "why": "Maven has finished its work when the jar exists. Every library is already inside the file, and the server needs no Maven."
+      }
+    ]
+  },
+  {
+    "id": "ex-d5pt2svx",
+    "version": 1,
+    "section": "executable-jar",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are the jars under `BOOT-INF/lib` stored without compression?",
+    "hint": "Think about what the launcher does with them at start-up.",
+    "choices": [
+      {
+        "text": "Because the zip format cannot hold a compressed file inside another compressed file",
+        "correct": false,
+        "why": "It can; a zip of zips is ordinary. Storing is a choice Boot makes, for a reason that has to do with reading."
+      },
+      {
+        "text": "So the launcher can read each one in place, without unpacking it first",
+        "correct": true,
+        "why": "A stored entry is the original bytes at a known offset, so a nested jar can be opened directly inside the outer file."
+      },
+      {
+        "text": "So the JVM's own class loader can put them on the class path",
+        "correct": false,
+        "why": "The JVM's class loader cannot load a jar inside a jar at all, stored or not. That gap is the reason the launcher exists."
+      },
+      {
+        "text": "To make the executable jar smaller",
+        "correct": false,
+        "why": "Storing never makes a file smaller. A jar is already compressed inside, so little is lost by not compressing it again."
+      }
+    ]
+  },
+  {
+    "id": "ex-ett8wj4r",
+    "version": 1,
+    "section": "executable-jar",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague copies `bookshop-0.1.0.jar.original` to a server, because it is smaller, and runs `java -jar` on it. What happens?",
+    "hint": "Compare what each of the two files holds.",
+    "choices": [
+      {
+        "text": "It starts as before, because the libraries are fetched from Maven Central on the first run",
+        "correct": false,
+        "why": "Nothing in a jar downloads anything. A plain jar is only its own classes, and the libraries have to be on the class path some other way."
+      },
+      {
+        "text": "It refuses to start, because that jar has no `Main-Class` attribute",
+        "correct": true,
+        "why": "The plain jar Maven built first has the bookshop's own classes and no launcher, and its manifest names no class to run."
+      },
+      {
+        "text": "It starts and fails at the first request, when a Spring class is missing",
+        "correct": false,
+        "why": "It never gets as far as a request: `java -jar` needs a main class before anything runs."
+      },
+      {
+        "text": "It starts, because `.original` is only a backup copy of the same file",
+        "correct": false,
+        "why": "They differ by a factor of over a thousand in size. The `.original` is what Maven built before Boot's plugin repackaged it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f3xdjnbj",
+    "version": 1,
+    "section": "from-the-environment",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Spring Boot binds the environment variable `___` to the property `management.server.address`.",
+    "hint": "Relaxed binding: dots become underscores, letters become capitals.",
+    "blanks": [
+      {
+        "accept": [
+          "MANAGEMENT_SERVER_ADDRESS"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-bpw68rgb",
+    "version": 1,
+    "section": "from-the-environment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The jar's `application.properties` says `spring.datasource.username=bookshop`, and the shell that starts it has `SPRING_DATASOURCE_USERNAME=shop` exported. Which user does the application log in to PostgreSQL as?",
+    "hint": "Lesson 4 ranked the places a property can come from.",
+    "choices": [
+      {
+        "text": "`bookshop`, because the file is packaged with the code and wins over the machine",
+        "correct": false,
+        "why": "It is the other way round: the file inside the jar is one of the weakest places, so that the machine can override it."
+      },
+      {
+        "text": "`shop`",
+        "correct": true,
+        "why": "An environment variable outranks `application.properties`, and relaxed binding maps the variable onto that very property."
+      },
+      {
+        "text": "Neither: Spring Boot refuses to start when two places set the same property",
+        "correct": false,
+        "why": "Two places setting one property is the normal case, and the order decides it without a word in the log."
+      },
+      {
+        "text": "`bookshop`, because a username, unlike a password, is never read from the environment",
+        "correct": false,
+        "why": "Binding does not care what a property means. Every property can be set from the environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-4z596eyd",
+    "version": 1,
+    "section": "from-the-environment",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps the production database password in `application-prod.properties`, inside the jar, and only switches the profile on the server. What is the problem with that?",
+    "hint": "Who can read a jar?",
+    "choices": [
+      {
+        "text": "A profile's file is ignored once the jar is built",
+        "correct": false,
+        "why": "It is read: lesson 4 started the bookshop with the `dev` profile from a built jar."
+      },
+      {
+        "text": "Anybody who copies the jar reads the password with `unzip -p`, and changing it means a new build",
+        "correct": true,
+        "why": "A jar is a zip file. The password travels with every copy of the artefact, to every registry and laptop, and rotating it is a release."
+      },
+      {
+        "text": "A password must always be given on the command line, which outranks every file",
+        "correct": false,
+        "why": "The command line outranks it, but a password there can be read by every user who lists the machine's processes. The environment is the usual place."
+      },
+      {
+        "text": "Spring Boot encrypts properties files in the jar, so the password would be unreadable to the application",
+        "correct": false,
+        "why": "Nothing is encrypted: `unzip -p` prints the file as it was written."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvf45ha0",
+    "version": 1,
+    "section": "layers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the four layers the jar is split into, which one changes with almost every commit?",
+    "hint": "Where do your own classes go?",
+    "choices": [
+      {
+        "text": "`dependencies`",
+        "correct": false,
+        "why": "It changes when the `pom.xml` changes a library, which is far rarer than a change to the code."
+      },
+      {
+        "text": "`spring-boot-loader`",
+        "correct": false,
+        "why": "The launcher changes when Spring Boot is upgraded, and at no other time."
+      },
+      {
+        "text": "`snapshot-dependencies`",
+        "correct": false,
+        "why": "It holds libraries whose version ends in `-SNAPSHOT`, and the bookshop has none, so it is empty."
+      },
+      {
+        "text": "`application`",
+        "correct": true,
+        "why": "`BOOT-INF/classes` is there, with the bookshop's classes, its properties and its migrations."
+      }
+    ]
+  },
+  {
+    "id": "ex-zma7495k",
+    "version": 1,
+    "section": "layers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop starts depending on a library at version `2.1.0-SNAPSHOT`. Where does `extract --layers` put it?",
+    "hint": "Read `layers.idx` against the version.",
+    "choices": [
+      {
+        "text": "In `dependencies`, with every other library",
+        "correct": false,
+        "why": "A snapshot can change without changing its version, so Boot keeps it out of the layer that is meant to stay still."
+      },
+      {
+        "text": "In `snapshot-dependencies`, a layer of its own",
+        "correct": true,
+        "why": "That layer exists for exactly this: a library whose bytes may change on any build, kept apart so it does not invalidate the big stable one."
+      },
+      {
+        "text": "In `application`, because a snapshot is code still under development",
+        "correct": false,
+        "why": "`application` is the project's own output. A snapshot from somewhere else still goes to a layer for libraries."
+      },
+      {
+        "text": "Nowhere: snapshot versions are refused by the repackage",
+        "correct": false,
+        "why": "They are accepted; the empty `snapshot-dependencies` directory is waiting for one."
+      }
+    ]
+  },
+  {
+    "id": "ex-k33pafns",
+    "version": 1,
+    "section": "layers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer to what makes it change.",
+    "hint": "The order the Dockerfile copies them in is the same idea.",
+    "pairs": [
+      {
+        "left": "dependencies",
+        "right": "a library added or upgraded in pom.xml"
+      },
+      {
+        "left": "spring-boot-loader",
+        "right": "a new version of Spring Boot"
+      },
+      {
+        "left": "snapshot-dependencies",
+        "right": "any rebuild of a -SNAPSHOT library"
+      },
+      {
+        "left": "application",
+        "right": "a change to the bookshop's code"
+      }
+    ],
+    "right_distractors": [
+      "a new base image"
+    ]
+  },
+  {
+    "id": "ex-n9rt13yd",
+    "version": 1,
+    "section": "an-image",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the Dockerfile start `FROM eclipse-temurin:25-jre-noble` rather than from `ubuntu:24.04` with a line that installs Java?",
+    "hint": "What is `noble`, and what is a JRE?",
+    "choices": [
+      {
+        "text": "Because Ubuntu's archive does not carry Java 25",
+        "correct": false,
+        "why": "It does: lesson 1 installed `openjdk-25-jdk` from it. The base image is a matter of who maintains the layer, not of availability."
+      },
+      {
+        "text": "It is the same Ubuntu 24.04 with a Java 25 runtime already installed and kept up to date by its maintainers",
+        "correct": true,
+        "why": "`noble` is Ubuntu 24.04's name, and the `jre` tag carries a runtime without the compiler. Nobody has to write or maintain the install."
+      },
+      {
+        "text": "Because only that image can run a Spring Boot jar",
+        "correct": false,
+        "why": "Any image with a Java 25 runtime runs it. This one is a convenient, maintained choice."
+      },
+      {
+        "text": "Because a JRE image includes `curl`, which the health check needs",
+        "correct": false,
+        "why": "It does not: `command -v` found no `curl` in it, which is why the health check uses `bash` alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-a67a74a9",
+    "version": 1,
+    "section": "an-image",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four `COPY` lines of the second stage in the order the Dockerfile uses.",
+    "hint": "Least often changed first.",
+    "items": [
+      "COPY …/dependencies/ ./",
+      "COPY …/spring-boot-loader/ ./",
+      "COPY …/snapshot-dependencies/ ./",
+      "COPY …/application/ ./"
+    ],
+    "trap": "Copying `application` earlier would make every code change rebuild the layers after it, the 69 MB of libraries included."
+  },
+  {
+    "id": "ex-189qvtas",
+    "version": 1,
+    "section": "an-image",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the one-word change to `CatalogueReport` and a new `docker build`, how many lines did `diff` print as changed in the list of the image's layers, counting only the lines starting with `>`?",
+    "hint": "Each layer is one line of that list.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "layers"
+  },
+  {
+    "id": "ex-mnw0m950",
+    "version": 1,
+    "section": "an-image",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody reorders the Dockerfile so that `application` is copied first and `dependencies` last. Every image still works. What gets worse?",
+    "hint": "A layer is reused only if every layer below it was reused too.",
+    "choices": [
+      {
+        "text": "Nothing: Docker compares each layer's content, so the order of the `COPY` lines does not matter",
+        "correct": false,
+        "why": "Each layer is stacked on the one below it, and a changed layer invalidates everything above it, whatever its content."
+      },
+      {
+        "text": "Every code change produces a new 69 MB layer of libraries, to be stored and pushed again",
+        "correct": true,
+        "why": "The code layer now sits at the bottom of the four, so every layer above it is rebuilt, and the biggest one is among them."
+      },
+      {
+        "text": "The application starts more slowly, because the launcher finds its classes last",
+        "correct": false,
+        "why": "At run time the four directories are merged into one `/app`; the order of the layers is invisible to the JVM."
+      },
+      {
+        "text": "The image gets bigger, because each layer then stores a copy of the ones below",
+        "correct": false,
+        "why": "A layer stores only what it adds. The size of one image is the same; what grows is what changes between two of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-45gts824",
+    "version": 1,
+    "section": "an-image",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `USER bookshop` in the second stage change? Choose all that apply.",
+    "hint": "`docker run --entrypoint id` answered the question for one of them.",
+    "choices": [
+      {
+        "text": "The Java process in the container runs as uid 10001, not as root",
+        "correct": true,
+        "why": "`ENTRYPOINT` runs as the last `USER` named, and `ps` inside the container showed it."
+      },
+      {
+        "text": "The `RUN` lines after it run as that user",
+        "correct": true,
+        "why": "Every instruction that runs a command uses the current user, which is why `useradd` sits before `USER` and not after it."
+      },
+      {
+        "text": "The files the `COPY` lines put in `/app` belong to `bookshop`",
+        "correct": false,
+        "why": "`COPY` gives files to root unless it is told otherwise with `--chown`, whatever `USER` says. That is fine here: the application only needs to read them."
+      },
+      {
+        "text": "Only the host's `bookshop` user may start the container",
+        "correct": false,
+        "why": "`USER` is about the process inside. Who may start containers on the host is decided by access to Docker's socket, as lesson 19 set up."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c62h84b",
+    "version": 1,
+    "section": "compose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `compose.yaml`, the bookshop's `SPRING_DATASOURCE_URL` names the host `db`. Why would `localhost` not work in its place?",
+    "hint": "Each container has its own network interfaces.",
+    "choices": [
+      {
+        "text": "Because PostgreSQL refuses connections that come from `localhost`",
+        "correct": false,
+        "why": "PostgreSQL accepts them happily. The connection would never reach PostgreSQL in the first place."
+      },
+      {
+        "text": "Because `localhost` in a container is that container, and the database runs in another one",
+        "correct": true,
+        "why": "On the network Compose creates, each service is reached by its name, and `db` resolves to the database container's address."
+      },
+      {
+        "text": "Because `localhost` would reach the PostgreSQL that lesson 9 installed on the machine",
+        "correct": false,
+        "why": "The machine's loopback is not the container's. From inside, `localhost` reaches neither database."
+      },
+      {
+        "text": "Because the port 5432 is not published in `compose.yaml`",
+        "correct": false,
+        "why": "Publishing is for reaching a container from outside. Containers on the same Compose network reach each other's ports without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gf7z9v2",
+    "version": 1,
+    "section": "compose",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each line of `compose.yaml` to what it guarantees.",
+    "hint": "Read the notes beside the file.",
+    "pairs": [
+      {
+        "left": "condition: service_healthy",
+        "right": "the application starts after PostgreSQL answers"
+      },
+      {
+        "left": "db-data:/var/lib/postgresql/data",
+        "right": "the catalogue survives docker compose down"
+      },
+      {
+        "left": "127.0.0.1:8081:8081",
+        "right": "the management port is reachable only from the machine itself"
+      },
+      {
+        "left": "${BOOKSHOP_JWT_SECRET:?…}",
+        "right": "nothing starts while the secret is missing"
+      }
+    ],
+    "right_distractors": [
+      "the container restarts after a crash"
+    ]
+  },
+  {
+    "id": "ex-5qz7hex9",
+    "version": 1,
+    "section": "compose",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command removes the containers and also deletes the catalogue PostgreSQL keeps?",
+    "hint": "The data lives in a named volume.",
+    "choices": [
+      {
+        "text": "`docker compose stop`",
+        "correct": false,
+        "why": "It stops the containers and keeps them, ready to start again with everything in place."
+      },
+      {
+        "text": "`docker compose down`",
+        "correct": false,
+        "why": "It removes the containers and the network and keeps the volume, which is why the second start found the schema up to date."
+      },
+      {
+        "text": "`docker compose down -v`",
+        "correct": true,
+        "why": "`-v` removes the named volumes the file declares as well, and with `db-data` goes every row."
+      },
+      {
+        "text": "`docker compose rm`",
+        "correct": false,
+        "why": "It removes stopped containers only. Volumes are left alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-g00ja14t",
+    "version": 1,
+    "section": "compose",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You delete the line `MANAGEMENT_SERVER_ADDRESS: 0.0.0.0` and start the stack again. What happens?",
+    "hint": "Where does the health check run, and where does your `curl` run?",
+    "choices": [
+      {
+        "text": "The container never becomes healthy, because the health check cannot reach port 8081",
+        "correct": false,
+        "why": "The health check runs inside the container, where 127.0.0.1 is exactly the address the management server now listens on."
+      },
+      {
+        "text": "Port 8080 stops answering too, because both ports share one setting",
+        "correct": false,
+        "why": "`management.server.address` belongs to the management server alone; the API keeps listening on every interface."
+      },
+      {
+        "text": "The container reports healthy, and a `curl` to 127.0.0.1:8081 from the machine fails",
+        "correct": true,
+        "why": "The management server falls back to the 127.0.0.1 in `application.properties`, the container's own loopback, which a published port does not reach."
+      },
+      {
+        "text": "Nothing changes, because the published port already limits 8081 to the machine",
+        "correct": false,
+        "why": "The two limits are on different sides. The published port decides who outside may connect; the address decides where inside the server listens."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkrmhpst",
+    "version": 1,
+    "section": "stopping-and-memory",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docker compose stop app` returned in under a second, and the container's exit code was 143. What does 143 say?",
+    "hint": "128 plus a signal's number.",
+    "choices": [
+      {
+        "text": "The JVM crashed while closing the connection pool",
+        "correct": false,
+        "why": "The log showed the pool's `Shutdown completed.` before the exit. A crash would leave a stack trace instead."
+      },
+      {
+        "text": "Docker killed the process after waiting ten seconds",
+        "correct": false,
+        "why": "That is 137, 128 plus SIGKILL's 9, and the shell-form detour shows it."
+      },
+      {
+        "text": "The process ended because of SIGTERM, after running its shutdown hooks",
+        "correct": true,
+        "why": "15 is SIGTERM. The JVM ran Spring's graceful shutdown, then exited with the code that says which signal ended it."
+      },
+      {
+        "text": "An error in the application, which should be read in the log",
+        "correct": false,
+        "why": "A code above 128 names a signal rather than an error. This one is the ordinary end of a Java process asked to stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-s8exe6k6",
+    "version": 1,
+    "section": "stopping-and-memory",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The JVM option that sets the maximum heap as a share of the container's memory limit is `-XX:___=75`.",
+    "hint": "The default is 25.",
+    "blanks": [
+      {
+        "accept": [
+          "MaxRAMPercentage"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pe709fhs",
+    "version": 1,
+    "section": "stopping-and-memory",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container is given `--memory=2g`, and the JVM in it is started with `-XX:MaxRAMPercentage=75`. What maximum heap does the JVM choose, in MiB?",
+    "hint": "2g is 2048 MiB.",
+    "value": 1536,
+    "tolerance": 0,
+    "unit": "MiB"
+  },
+  {
+    "id": "ex-vcpqpf1x",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You fixed a bug in `BookService`. Put the steps that get the fix running in Compose in order.",
+    "hint": "The image is built from the jar, not from the source.",
+    "items": [
+      "mvn package rebuilds target/bookshop-0.1.0.jar",
+      "docker build replaces only the application layer",
+      "docker compose up -d replaces the app container",
+      "the readiness check reports UP and the container turns healthy"
+    ],
+    "trap": "Building the image before `mvn package` copies the OLD jar in, and the new image runs the bug you just fixed."
+  },
+  {
+    "id": "ex-6hcj98d6",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same image is to run on a test server and in production. Which of these belong in the environment rather than in the image? Choose all that apply.",
+    "hint": "What differs between the two places, and what must not be readable from the image?",
+    "choices": [
+      {
+        "text": "The database URL",
+        "correct": true,
+        "why": "Each place has its own database. One image with the URL in the environment runs against either."
+      },
+      {
+        "text": "The token-signing secret",
+        "correct": true,
+        "why": "A secret in an image is readable by anybody who can pull it, and both places would then sign with the same key."
+      },
+      {
+        "text": "The libraries in `BOOT-INF/lib`",
+        "correct": false,
+        "why": "They are what was tested. Supplying them per place would make the test server and production run different code."
+      },
+      {
+        "text": "The user the process runs as",
+        "correct": false,
+        "why": "It is a property of how the image was built, the same everywhere, and nothing about it is secret."
+      }
+    ]
+  },
+  {
+    "id": "ex-n93007w3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's image starts `java -jar app.jar` with no memory options at all, and it runs with `--memory=512m`. How big may its heap grow?",
+    "hint": "The JVM reads the limit, and the default share is a quarter.",
+    "choices": [
+      {
+        "text": "A quarter of the server's physical memory, because the JVM does not see the container's limit",
+        "correct": false,
+        "why": "The JVM has read the limit for years: with `--memory=1g` it chose 256 MiB, not a quarter of the 15 GB machine."
+      },
+      {
+        "text": "512 MiB, the whole limit",
+        "correct": false,
+        "why": "The whole limit leaves nothing for metaspace, threads and the JIT's code, and the kernel would kill the container first."
+      },
+      {
+        "text": "128 MiB",
+        "correct": true,
+        "why": "25% of 512 MiB. For a Spring Boot application that is tight, which is why the bookshop's image sets 75%."
+      },
+      {
+        "text": "256 MiB, the default heap whatever the limit",
+        "correct": false,
+        "why": "256 MiB was a quarter of the 1 GiB limit in the lesson, not a fixed default: the heap follows the limit."
+      }
+    ]
+  }
+]

@@ -117,14 +117,14 @@ LOOP="for i in \$(seq 1500); do echo \$(for p in health/liveness health/readines
 runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
 LOOPPID=$!
 sleep 1
-EXTRA_ENV="$SECRET" start
+EXTRA_ENV="$SECRET" start --logging.level.org.springframework.boot.availability=debug
 ready
 wait $LOOPPID
 printf 'ana@vm:%s$ %s\n' '~/bookshop' "$LOOP"
 cat /tmp/l22-loop.txt
 rm -f /tmp/l22-loop.txt
 block readiness-log
-grep -E 'Started BookshopApplication|Catalogue opened' $LOG
+grep -E 'availability|Started BookshopApplication|Catalogue opened' $LOG
 block ready-times
 run 'curl -s localhost:8081/actuator/prometheus | grep -E "^application_(started|ready)_time"'
 
@@ -134,12 +134,9 @@ run "curl -s localhost:8081/actuator/metrics | python3 -c 'import json,sys; prin
 run "curl -s localhost:8081/actuator/metrics | python3 -c 'import json,sys; print(*json.load(sys.stdin)[\"names\"], sep=\"\\n\")' | grep -E '^(http|hikaricp|jvm.memory|bookshop)'"
 
 block requests
-quiet 'curl -s -o /dev/null localhost:8080/books'
-quiet 'curl -s -o /dev/null localhost:8080/books/2'
-quiet 'curl -s -o /dev/null localhost:8080/books/99'
 run 'for path in /books /books /books/1 /books/2 /books/99; do curl -s -o /dev/null -w "%{http_code} $path\n" localhost:8080$path; done'
 run 'curl -s localhost:8081/actuator/metrics/http.server.requests | python3 -m json.tool'
-run 'curl -s -g "localhost:8081/actuator/metrics/http.server.requests?tag=uri:/books/{id}&tag=status:404" | python3 -m json.tool | tail -n 16'
+run 'curl -s "localhost:8081/actuator/metrics/http.server.requests?tag=uri:/books/%7Bid%7D&tag=status:404" | python3 -m json.tool | tail -n 16'
 
 block pool
 run 'for m in active idle pending max; do printf "%-8s" $m; curl -s localhost:8081/actuator/metrics/hikaricp.connections.$m | python3 -c "import json,sys; print(json.load(sys.stdin)[\"measurements\"][0][\"value\"])"; done'
@@ -185,10 +182,11 @@ block dev-broken
 EXTRA_ENV="$SECRET" run "java -jar target/bookshop-0.1.0.jar --spring.profiles.active=dev | grep -o 'IllegalStateException: .*'"
 restore $DEV
 build
-block dev-fixed
 EXTRA_ENV="$SECRET" start --spring.profiles.active=dev
 ready
+block dev-fixed-log
 grep -E "Tomcat started on port" $LOG
+block dev-fixed
 run 'curl -s -o /dev/null -w "%{http_code}\n" localhost:8082/actuator/health'
 stop
 

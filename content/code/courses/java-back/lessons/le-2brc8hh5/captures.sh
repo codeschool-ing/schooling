@@ -96,6 +96,8 @@ block launcher
 run "jar tf target/bookshop-0.1.0.jar | grep 'loader/launch/.*Launcher.class'"
 
 # --- configuration from the environment ----------------------------------------
+block readable
+run "unzip -p target/bookshop-0.1.0.jar BOOT-INF/classes/application.properties | grep password"
 take from-the-environment.md 'spring.application.name' bookshop/src/main/resources/application.properties
 same_as_stage src/main/resources/application.properties
 block no-password

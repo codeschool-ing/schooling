@@ -31,10 +31,13 @@
 #     reproduced with setpriv: ana's uid and gid, no supplementary groups.
 #     `stale` prints ana's prompt and runs the command that way.
 #   - ~/.testcontainers.properties is removed before the first integration
-#     test, so the log is the one a first run prints. Testcontainers writes it
-#     again on every successful run.
-#   - The two detours (a stubbing removed, a stubbing for the wrong id) are
-#     applied with sed, run, and the stage's file is put back.
+#     test, so the log is the one a first run prints, and again before the
+#     run that fails for want of the docker group, which is a first run for
+#     anybody who meets it. Testcontainers writes the file again on every run
+#     that reaches the engine.
+#   - The detours (a stubbing removed, a stubbing for the wrong id, the pom
+#     without --enable-native-access) are typed with sed and run; the stage's
+#     file is put back after the first two, and a typed sed undoes the third.
 # Container ids, ports, PIDs, timestamps and durations differ on every run.
 #
 # Recorded on Ubuntu 24.04, OpenJDK 25.0.4.1, Maven 3.8.7, Docker Engine
@@ -82,18 +85,18 @@ quiet 'mvn -q test'         # compiled once, out of sight
 final $T/ordering/OrderServiceTest.java
 shown test-doubles.md $T/ordering/OrderServiceTest.java
 block first-run
-run "mvn test | sed -n '/T E S T S/,\$p'"
+run "mvn test 2>&1 | sed -n '/T E S T S/,\$p'"
 
 # Detour 1: the second test without its stubbing.
 block no-stub
 run "sed -i '/void anOrderForMoreThanTheStockIsNeverSaved/{n;d}' $T/ordering/OrderServiceTest.java && sed -n '/void anOrderForMoreThanTheStockIsNeverSaved/,/^    }/p' $T/ordering/OrderServiceTest.java"
-run "mvn test -Dtest=OrderServiceTest | grep -E 'Tests run:|ERROR|Expecting|to be an instance|but was|BookNotFound' | head -n 12"
+run "mvn -B test -Dtest=OrderServiceTest 2>&1 | sed -n '/<<< FAILURE!\$/,/BookNotFoundException/p'"
 final $T/ordering/OrderServiceTest.java
 
 # Detour 2: a stubbing for the wrong id.
 block wrong-id
 run "sed -i '0,/findByIdForUpdate(3L)/s//findByIdForUpdate(4L)/' $T/ordering/OrderServiceTest.java && grep -n 'findByIdForUpdate' $T/ordering/OrderServiceTest.java"
-run "mvn test -Dtest=OrderServiceTest | sed -n '/Strict stubbing/,/^  - /p' | head -n 14"
+run "mvn -B test -Dtest=OrderServiceTest 2>&1 | sed -n '/<<< ERROR!\$/,/OrderServiceTest.java:50)\$/p'"
 final $T/ordering/OrderServiceTest.java
 
 ########################################################### the-mockito-agent.md
@@ -101,12 +104,12 @@ block agent-jar
 run 'ls ~/.m2/repository/org/mockito/mockito-core/5.23.0/'
 setpom the-mockito-agent.md '  <build>'
 block agent-run
-run "mvn test | sed -n '/T E S T S/,\$p'"
+run "mvn test 2>&1 | sed -n '/T E S T S/,\$p'"
 
 ########################################################### unit-and-integration.md
 setpom unit-and-integration.md '  <build>'
 block verify-empty
-run "mvn verify | grep -E '^\[INFO\] --- |Tests run:|No tests|BUILD'"
+run "mvn -B verify 2>&1 | grep -E '^\[INFO\] --- |Skipped: 0\$|No tests|BUILD'"
 
 ########################################################### installing-docker.md
 block docker-version
@@ -132,10 +135,19 @@ final $T/TestcontainersConfiguration.java $T/BookshopApplicationIT.java \
   $T/catalogue/BookRepositoryIT.java src/test/resources/application-test.properties
 shown testcontainers.md $T/TestcontainersConfiguration.java $T/BookshopApplicationIT.java \
   $T/catalogue/BookRepositoryIT.java src/test/resources/application-test.properties
+# Detour: the first run without --enable-native-access, then the option back.
+asroot 'rm -f /home/ana/.testcontainers.properties'
+block jna-warning
+run "sed -i 's/ --enable-native-access=ALL-UNNAMED//' pom.xml && grep -c 'enable-native-access' pom.xml"
+run "mvn -B verify 2>&1 | grep -E '^WARNING|Skipped: 0\$|BUILD'"
+block jna-back
+run "sed -i 's/mockito-core:jar}</mockito-core:jar} --enable-native-access=ALL-UNNAMED</' pom.xml && grep -c 'enable-native-access' pom.xml"
+diff /home/ana/bookshop/pom.xml "$STAGE/pom.xml" >/dev/null \
+  || { echo '!!! the pom after the detour is not the stage pom' >&2; exit 1; }
 asroot 'rm -f /home/ana/.testcontainers.properties'
 
 block tc-verify
-run "mvn verify | tee /tmp/verify.log | grep -E 'Running |Tests run:|BUILD|Total time'"
+run "mvn -B verify 2>&1 | tee /tmp/verify.log | grep -E '^WARNING|Running |Tests run:|BUILD|Total time'"
 block tc-log-docker
 run "grep -E 'DockerClientProviderStrategy|DockerClientFactory   : (Testcontainers|Docker host|Connected)|ryuk|Ryuk' /tmp/verify.log"
 block tc-log-postgres
@@ -149,14 +161,15 @@ run "docker ps -a --filter label=org.testcontainers=true --format '{{.Image}}  {
 run "sleep 15; docker ps -a --filter label=org.testcontainers=true --format '{{.Image}}  {{.Status}}'"
 
 ########################################################### when-docker-fails.md (Testcontainers)
+asroot 'rm -f /home/ana/.testcontainers.properties'
 block stale-verify
-stale "mvn verify | grep -E 'DockerClientProviderStrategy|valid Docker environment for|Tests run:|BUILD'"
+stale "mvn -B verify 2>&1 | grep -E 'o.t.d.DockerClientProviderStrategy|valid Docker environment for|Skipped: 0\$|BUILD'"
 
 ########################################################### what-it-costs.md
 block cost-test
-run "mvn test | grep -E 'Tests run:|Total time'"
+run "mvn -B test 2>&1 | grep -E 'Skipped: 0\$|Total time'"
 block cost-verify
-run "mvn verify | grep -E 'Tests run:|Total time|started in PT|Started .*IT in'"
+run "mvn -B verify 2>&1 | grep -E 'Skipped: 0\$|Total time|started in PT|Started .*IT in'"
 block cost-images
 run "docker image ls --format '{{.Repository}}:{{.Tag}}  {{.Size}}' | grep -E 'postgres|ryuk'"
 

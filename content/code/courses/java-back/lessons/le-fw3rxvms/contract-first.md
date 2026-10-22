@@ -18,21 +18,33 @@ A document derived from the code always matches the code, and that is its weakne
 strength. Rename the search parameter from `q` to `text`, a change that reads like tidying:
 
 ```
-(pending RENAME)
+ana@vm:~/bookshop$ sed -i 's/String q)/String text)/; s/search(q)/search(text)/; s/@param q the/@param text the/' src/main/java/com/example/bookshop/catalogue/BookController.java && grep -n 'text' src/main/java/com/example/bookshop/catalogue/BookController.java
+57:     * Books whose title contains the text, ignoring case.
+59:     * @param text the text to look for
+64:    public List<BookResponse> search(@RequestParam String text) {
+65:        return books.search(text);
 ```
 
-Build, restart, and fetch the document into a second file. `~/api.json` still holds the one from
-the previous section, so `diff` can compare the two:
+Build, restart, and fetch the document into a second file. `~/api.json` still holds the one saved in
+the section on annotations, so `diff` can compare the two:
 
 ```
-(pending DIFF)
+ana@vm:~/bookshop$ curl -s localhost:8080/v3/api-docs | python3 -m json.tool > ~/api-renamed.json
+ana@vm:~/bookshop$ diff ~/api.json ~/api-renamed.json
+262c262
+<                         "name": "q",
+---
+>                         "name": "text",
 ```
 
 One line of the document changed, and the application started without a word about it. Every
 client that searches with `?q=` is now broken:
 
 ```
-(pending BROKEN)
+ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' 'localhost:8080/books/search?q=time'
+400
+ana@vm:~/bookshop$ curl -s -w '\n' 'localhost:8080/books/search?text=time'
+[{"id":2,"isbn":"9786500000023","title":"The Time Machine","author":"H. G. Wells","priceCents":2950,"stock":5}]
 ```
 
 Nothing in code first refuses this, because the document follows whatever the code does. What

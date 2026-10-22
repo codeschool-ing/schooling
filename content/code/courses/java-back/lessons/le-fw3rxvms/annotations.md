@@ -17,7 +17,11 @@ the class file. Annotations survive, because the ones springdoc reads are declar
 time. The class file says so, for one comment and one annotation of the same method:
 
 ```
-(pending JAVAP)
+ana@vm:~/bookshop$ javap -v target/classes/com/example/bookshop/catalogue/BookController.class | grep -c 'One page of the catalogue'
+0
+ana@vm:~/bookshop$ javap -v target/classes/com/example/bookshop/catalogue/BookController.class | grep 'List the catalogue'
+   #82 = Utf8               List the catalogue, a page at a time
+          summary="List the catalogue, a page at a time"
 ```
 
 The comment's words appear nowhere in `BookController.class`; the `summary` you are about to write
@@ -26,8 +30,8 @@ is there twice, as a string in the class's table of constants and as the value o
 So the second reader gets annotations from the `io.swagger.v3.oas.annotations` packages, which the
 springdoc starter brought in. springdoc's own documentation describes an annotation processor,
 therapi-runtime-javadoc, that keeps the comments where it can read them; this project keeps the two
-apart instead, because the two readers want different sentences. A Java developer wants to know that `get` throws
-`BookNotFoundException`. An HTTP client wants to know that it gets a 404.
+apart instead, because the two readers want different sentences. A Java developer wants to know that
+`get` throws `BookNotFoundException`. An HTTP client wants to know that it gets a 404.
 
 ## A name and a way in
 
@@ -114,41 +118,162 @@ untouched:
 Build, restart, and save the new document over the old one:
 
 ```
-(pending SAVE2)
+ana@vm:~/bookshop$ curl -s localhost:8080/v3/api-docs | python3 -m json.tool > ~/api.json
 ```
 
-```
-(pending INFO)
-```
+The title, the description and the version are the ones `Info` gave:
 
 ```
-(pending GETFINAL)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json info
+{
+  "title": "Bookshop API",
+  "description": "The catalogue and the orders of a small bookshop.",
+  "version": "0.1.0"
+}
 ```
 
-```
-(pending GETFINAL_TEXT)
-```
+`GET /books/{id}` has two responses now:
 
 ```
-(pending PROBLEM)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json paths /books/{id} get responses
+{
+  "200": {
+    "description": "The book",
+    "content": {
+      "*/*": {
+        "schema": {
+          "$ref": "#/components/schemas/BookResponse"
+        }
+      }
+    }
+  },
+  "404": {
+    "description": "No book has that id",
+    "content": {
+      "application/problem+json": {
+        "schema": {
+          "$ref": "#/components/schemas/ProblemDetail"
+        }
+      }
+    }
+  }
+}
 ```
 
-```
-(pending PROBLEM_TEXT)
-```
+The 404 is in the document now, as `application/problem+json` with a reference to a schema
+called `ProblemDetail`. The 200 still says `*/*`: the controller declares no media type, and the
+document does not invent one. The schema the 404 points to is new too:
 
 ```
-(pending PARAMS)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json components schemas ProblemDetail
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "format": "uri"
+    },
+    "title": {
+      "type": "string"
+    },
+    "status": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "detail": {
+      "type": "string"
+    },
+    "instance": {
+      "type": "string",
+      "format": "uri"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": {}
+    }
+  }
+}
 ```
 
-```
-(pending PARAMS_TEXT)
-```
+springdoc built this schema from Spring's `ProblemDetail` class, and the first five members are
+the ones RFC 9457 defines and lesson 7 used. The sixth is not what a client receives. `properties`
+is the Java field that holds extra members, and Jackson writes those at the top level of the body:
+lesson 7's 400 carries `errors` beside `title` and `detail`, not inside an object called
+`properties`. Annotations make the document better, and reading what it says is still your job.
+
+`@ParameterObject` replaced the one impossible parameter of `GET /books`:
 
 ```
-(pending SECURITY)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json paths /books get parameters
+[
+  {
+    "name": "page",
+    "in": "query",
+    "description": "Zero-based page index (0..N)",
+    "required": false,
+    "schema": {
+      "type": "integer",
+      "default": 0,
+      "minimum": 0
+    }
+  },
+  {
+    "name": "size",
+    "in": "query",
+    "description": "The size of the page to be returned",
+    "required": false,
+    "schema": {
+      "type": "integer",
+      "default": 20,
+      "minimum": 1
+    }
+  },
+  {
+    "name": "sort",
+    "in": "query",
+    "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+    "required": false,
+    "schema": {
+      "type": "array",
+      "default": [
+        "id,ASC"
+      ],
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+]
 ```
 
+Three optional parameters, with the defaults from `@PageableDefault`, `size` 20 and `sort` `id,ASC`,
+and descriptions that springdoc carries for `Pageable`. This is what a client can really send.
+
+And the operation that adds a book, and the scheme it refers to:
+
 ```
-(pending SECURITY_TEXT)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json paths /books post security
+[
+  {
+    "bearer": []
+  }
+]
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json components securitySchemes
+{
+  "bearer": {
+    "type": "http",
+    "scheme": "bearer",
+    "bearerFormat": "JWT"
+  }
+}
 ```
+
+`POST /books` names the `bearer` scheme, and the scheme is the one `OpenApiConfig` declared. The
+empty list after the name is where an OAuth 2.0 scheme would list scopes. This one lists none, so
+the document says that a token is needed and not that it has to carry `catalogue:write`; that
+sentence is in the class's Javadoc, where an HTTP reader will never see it. If clients need to
+know, the `description` of `@Operation` is where to say it.
+
+The orders are still as springdoc found them: a 200 where the code answers 201, and no `security`
+where every call needs a token. Fixing them takes the same annotations on `OrderController`, and
+the questions at the end of this lesson ask which ones.

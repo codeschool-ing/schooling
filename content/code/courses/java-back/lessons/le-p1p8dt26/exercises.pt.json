@@ -1,0 +1,488 @@
+{
+  "ex-xc8cdbar": {
+    "prompt": "Por que a livraria coloca os endpoints do Actuator em `127.0.0.1:8081` em vez de deixá-los na porta da API?",
+    "hint": "Pense em quem consegue abrir uma conexão com um endereço de loopback.",
+    "choices": [
+      {
+        "text": "O Actuator não consegue dividir a porta com os controllers, então sempre precisa de uma segunda só dele",
+        "why": "Consegue: sem `management.server.port`, os endpoints ficam na própria porta da API. A segunda porta é uma escolha de segurança."
+      },
+      {
+        "text": "Só a própria máquina alcança um endereço de loopback, então não é preciso senha",
+        "why": "Isso. O loopback é alcançável da máquina e de nenhum outro lugar, então a rede faz o papel que uma senha faria."
+      },
+      {
+        "text": "Uma segunda porta deixa os endpoints mais rápidos, sem a fila da API",
+        "why": "Os dois servidores rodam na mesma JVM e dividem CPU e memória. Velocidade não teve nada a ver com a decisão."
+      },
+      {
+        "text": "A porta 8080 só aceita requisições com um bearer token",
+        "why": "A 8080 aceita `GET /books` anônimo. As regras de token são por caminho, e cobririam os endpoints também, e é por isso que o `SecurityConfig` ganhou uma linha."
+      }
+    ]
+  },
+  "ex-6fnvw5qe": {
+    "prompt": "Um `curl localhost:8080/actuator/health` anônimo responde `401`. O que isso diz sobre o Actuator na porta 8080?",
+    "hint": "Repita a requisição com o token da ana e compare.",
+    "choices": [
+      {
+        "text": "Nada: a checagem de token responde antes de tudo; com token, a resposta é 404",
+        "why": "Isso. A filter chain da API pede um token antes de procurar qualquer handler, então todo caminho desconhecido na 8080 responde 401 a um cliente anônimo, e o 401 esconde que ali não existe endpoint nenhum."
+      },
+      {
+        "text": "O endpoint está lá e protegido, então um token mostraria o relatório de health",
+        "why": "Com o token da ana, a mesma requisição respondeu 404. Os endpoints vivem só na 8081."
+      },
+      {
+        "text": "O servidor de gerenciamento recusou a requisição porque ela chegou na porta errada",
+        "why": "O servidor de gerenciamento nem a viu: ele escuta na 8081, e esta requisição foi para a 8080, onde o Spring Security respondeu."
+      },
+      {
+        "text": "A porta 8080 também tem os endpoints, com o `show-details` escondendo tudo",
+        "why": "O `show-details` decide quanto do relatório de health aparece, não se um endpoint existe. A 8080 não tem Actuator."
+      }
+    ]
+  },
+  "ex-t0wc78b2": {
+    "prompt": "A livraria define `management.endpoints.web.exposure.include=health,info,metrics,prometheus`. Quais destes não têm URL nenhuma? Marque todas as que se aplicam.",
+    "hint": "Um endpoint fora da lista não existe por HTTP, em qualquer porta que você tente.",
+    "choices": [
+      {
+        "text": "`env`, que lista todas as propriedades e de onde cada uma veio",
+        "why": "Isso. Não está na lista, então na 8081 a requisição caiu em `anyRequest().authenticated()` e respondeu 401."
+      },
+      {
+        "text": "`heapdump`, uma cópia da memória do processo",
+        "why": "Isso, e é o que mais importa: o segredo do JWT e a senha do banco estão nessa memória em texto puro."
+      },
+      {
+        "text": "`prometheus`, os números no formato de texto",
+        "why": "Está na lista, e é o que um servidor de monitoramento coleta."
+      },
+      {
+        "text": "`health/readiness`, um dos grupos",
+        "why": "Os grupos são caminhos abaixo de `health`, que está exposto. O `probes.enabled` os acrescentou."
+      },
+      {
+        "text": "`beans`, todos os beans do contexto",
+        "why": "Isso. Desligado, como todo endpoint que a lista não cita."
+      }
+    ]
+  },
+  "ex-9sm5s468": {
+    "prompt": "O perfil `dev` da aula 4 definia `server.port=8081`, o mesmo número de `management.server.port`, e `management.server.address=127.0.0.1` também estava definido. O que a livraria fez?",
+    "hint": "Com portas iguais, existe um servidor só.",
+    "choices": [
+      {
+        "text": "Moveu o servidor de gerenciamento para a próxima porta livre e subiu normalmente",
+        "why": "O Boot não escolhe portas sozinho aqui. Os endpoints entrariam no servidor da API, e é isso que o endereço proíbe."
+      },
+      {
+        "text": "Recusou-se a subir: as duas configurações se contradizem",
+        "why": "Isso: \"Management-specific server address cannot be configured as the management server is not listening on a separate port\". Uma contradição para a aplicação em vez de ser resolvida em silêncio."
+      },
+      {
+        "text": "Serviu os endpoints junto com a API na 8081, em todos os endereços",
+        "why": "É o que portas iguais significam sem a linha do endereço. Com ela, o Boot recusou em vez de expor os endpoints à rede em silêncio."
+      },
+      {
+        "text": "Subiu, e o segundo Tomcat falhou com \"port already in use\"",
+        "why": "Com portas iguais nenhum segundo Tomcat é criado; a falha veio antes, da configuração."
+      }
+    ]
+  },
+  "ex-h84h8v0h": {
+    "prompt": "A propriedade que faz o servidor de gerenciamento escutar só no loopback é `management.server.___=127.0.0.1`.",
+    "blanks": [
+      {
+        "accept": [
+          "address"
+        ]
+      }
+    ]
+  },
+  "ex-jxrz8abd": {
+    "prompt": "De onde vem o `build.time` de `/actuator/info`?",
+    "hint": "O pom ganhou um goal de plugin nesta aula.",
+    "choices": [
+      {
+        "text": "O momento em que a JVM começou, registrado pelo Boot quando a aplicação subiu",
+        "why": "Isso é o `process.start.time`, uma métrica. O `build.time` não muda de uma inicialização para outra."
+      },
+      {
+        "text": "A data de modificação do arquivo jar no disco",
+        "why": "Copiar o jar muda essa data e não o `build.time`. O valor é lido de um arquivo dentro do jar."
+      },
+      {
+        "text": "Um arquivo que o goal `build-info` gravou no jar durante o `mvn package`",
+        "why": "Isso: `META-INF/build-info.properties`, com a hora em UTC. Ele responde \"qual build está rodando?\" sem ninguém ler um log."
+      },
+      {
+        "text": "O último commit do repositório git",
+        "why": "Nada na livraria lê o git. Um plugin separado pode acrescentar dados do commit, e a aula não usou nenhum."
+      }
+    ]
+  },
+  "ex-9prvgr1y": {
+    "prompt": "Ligue cada health indicator ao que ele verifica.",
+    "hint": "Cada um chegou com uma dependência ou com a configuração de probes.",
+    "pairs": [
+      {
+        "left": "db",
+        "right": "pega uma conexão do pool e pergunta se ela ainda é válida"
+      },
+      {
+        "left": "diskSpace",
+        "right": "o espaço livre no diretório de trabalho, contra um limite"
+      },
+      {
+        "left": "ping",
+        "right": "nada: fica UP sempre que alguma coisa responde"
+      },
+      {
+        "left": "readinessState",
+        "right": "se a aplicação já disse que aceita tráfego"
+      }
+    ],
+    "right_distractors": [
+      "se o segredo do JWT é longo o bastante"
+    ]
+  },
+  "ex-xsxdctyy": {
+    "prompt": "Com o banco recusando a livraria, `/actuator/health` respondeu 503 e `/actuator/health/liveness` respondeu 200. Por que a segunda resposta é a certa?",
+    "hint": "Pergunte o que a plataforma faz quando o liveness falha.",
+    "choices": [
+      {
+        "text": "O liveness só é calculado uma vez, na inicialização, então não teve como perceber",
+        "why": "Ele é calculado a cada requisição, a partir do estado de disponibilidade da aplicação. Esse estado simplesmente não inclui o banco."
+      },
+      {
+        "text": "Um liveness falho faz reiniciar o processo, e nenhum reinício conserta o PostgreSQL",
+        "why": "Isso. Todas as cópias reiniciariam juntas, pagariam uma inicialização inteira e voltariam para a mesma falha."
+      },
+      {
+        "text": "A verificação do banco foi lenta demais, e o liveness responde antes de ela terminar",
+        "why": "O relatório completo voltou em 16 milissegundos com `db` DOWN. O liveness nunca pergunta nada ao banco."
+      },
+      {
+        "text": "Não é a resposta certa; o Boot deixa o `db` fora do liveness só até alguém configurá-lo",
+        "why": "Deixá-lo fora é o desenho recomendado, não uma lacuna. Incluí-lo transforma uma queda do banco em reinício de todas as instâncias."
+      }
+    ]
+  },
+  "ex-np7nwb8e": {
+    "prompt": "Ponha em ordem o que aconteceu enquanto a livraria subia, com o logger de disponibilidade em `debug`.",
+    "hint": "O readiness é a última coisa a mudar.",
+    "items": [
+      "O Tomcat sobe na porta 8080",
+      "O Tomcat sobe na porta 8081, para os endpoints",
+      "O liveness passa a CORRECT, e o fim da inicialização vai para o log",
+      "O CatalogueReport roda, enquanto o readiness ainda responde 503",
+      "O readiness passa a ACCEPTING_TRAFFIC"
+    ],
+    "trap": "\"Started BookshopApplication\" não é o fim: os runners vêm depois, e o readiness espera por eles."
+  },
+  "ex-ed6rm6fb": {
+    "prompt": "Uma equipe mantém o Actuator na porta pública da API, atrás de login, e quer os detalhes de `/actuator/health` só para os operadores. Qual valor de `management.endpoint.health.show-details` serve?",
+    "hint": "A livraria escolheu `always`, por um motivo que aqui não vale mais.",
+    "choices": [
+      {
+        "text": "`always`, já que os operadores precisam dos detalhes",
+        "why": "Numa porta pública isso mostra o produto do banco e o disco livre para qualquer estranho. A livraria só pode se dar a isso porque ninguém mais alcança a 8081."
+      },
+      {
+        "text": "`never`, e os operadores leem os logs",
+        "why": "Isso deixa os estranhos de fora e os operadores também. A configuração tem um valor feito para este caso."
+      },
+      {
+        "text": "`when-authorized`",
+        "why": "Isso: os detalhes vão para quem está autenticado, e todos os outros recebem só o status."
+      },
+      {
+        "text": "Qualquer valor, desde que os probes estejam ligados",
+        "why": "Os probes acrescentam os grupos liveness e readiness; não decidem quem vê os detalhes."
+      }
+    ]
+  },
+  "ex-12jw71jh": {
+    "prompt": "Que tipo de meter é o `hikaricp.connections.active`?",
+    "hint": "O valor dele pode descer, além de subir.",
+    "choices": [
+      {
+        "text": "Um counter, já que ele conta conexões",
+        "why": "Um counter só sobe. As conexões em uso sobem e descem com a carga."
+      },
+      {
+        "text": "Um timer, já que as conexões ficam presas um tempo",
+        "why": "Um timer registra eventos e suas durações; quanto tempo as conexões ficam presas é o `hikaricp.connections.usage`."
+      },
+      {
+        "text": "Um gauge, uma leitura deste momento",
+        "why": "Isso: quantas conexões estão ocupadas agora. Pergunte duas vezes e ele pode dar dois números diferentes, em qualquer direção."
+      },
+      {
+        "text": "Uma das tags de `http.server.requests`",
+        "why": "É um meter próprio, com uma tag `pool`. Tags pertencem a meters, nunca o contrário."
+      }
+    ]
+  },
+  "ex-d303bdcs": {
+    "prompt": "Por que a tag `uri` de `http.server.requests` guarda `/books/{id}` e não `/books/2`?",
+    "hint": "Conte quantos valores a tag poderia ter de cada jeito.",
+    "choices": [
+      {
+        "text": "Caminhos com ids seriam dados pessoais",
+        "why": "O id de um livro identifica um livro, não uma pessoa. O motivo é a quantidade de valores, não privacidade."
+      },
+      {
+        "text": "O Prometheus não consegue guardar uma label cujo valor tenha um dígito, como um id",
+        "why": "Valores de label podem ter qualquer texto. `status=\"404\"` é só dígitos."
+      },
+      {
+        "text": "O Spring reescreve o caminho para deixar o JSON menor",
+        "why": "Nada é reescrito para economizar espaço; a tag registra a rota que atendeu a requisição."
+      },
+      {
+        "text": "Cada id somaria uma série, e o registry guarda todas as séries na memória",
+        "why": "Isso. Uma série nova para cada livro que alguém já pediu; o template da rota mantém a família em poucas séries, quantos ids existirem."
+      }
+    ]
+  },
+  "ex-pht4edyp": {
+    "prompt": "Uma livraria recém-iniciada recebe `GET /books` duas vezes, depois `GET /books/1`, `GET /books/2` e `GET /books/99`, que responde 404. Todas são `GET` e nenhuma lança exceção. Quantas séries o `http.server.requests` guarda para elas?",
+    "hint": "Uma série é uma combinação de valores de tag. Olhe `uri`, `status` e `outcome`.",
+    "unit": "séries"
+  },
+  "ex-mc8jxkpz": {
+    "prompt": "A ana pede o livro 99, que não existe, e recebe um 404. Qual série de `bookshop.orders` anda?",
+    "hint": "Siga o `place` até a exceção e veja qual incremento ela alcança.",
+    "choices": [
+      {
+        "text": "`outcome=\"out-of-stock\"`, já que nenhum exemplar pôde ser retirado",
+        "why": "Esse incremento fica depois de o livro ser encontrado. O `findByIdForUpdate` lançou a exceção antes, e a linha nunca foi alcançada."
+      },
+      {
+        "text": "Nenhuma das duas",
+        "why": "Isso, e foi uma decisão: um livro inexistente é um erro do cliente, não uma venda perdida. Contá-lo seria um terceiro valor da mesma tag."
+      },
+      {
+        "text": "`outcome=\"placed\"`, já que a requisição chegou ao serviço",
+        "why": "O `placed` anda depois do `orders.save`, e a exceção saiu do método muito antes disso."
+      },
+      {
+        "text": "As duas, e depois o rollback da transação as desfaz",
+        "why": "Nenhum incremento rodou. E um rollback não desfaria nenhum: contadores não fazem parte da transação."
+      }
+    ]
+  },
+  "ex-5bwp3bz6": {
+    "prompt": "No `place`, o `refused.increment()` roda, depois o `book.take` lança `OutOfStockException` e a transação sofre rollback. O que o contador diz depois?",
+    "hint": "Pergunte o que o rollback realmente desfaz.",
+    "choices": [
+      {
+        "text": "Conta a recusa, porque só o que foi gravado no banco volta atrás",
+        "why": "Isso: um contador na memória não é uma escrita no banco. E aqui essa é a ideia: uma recusa é o que a série existe para contar. A mesma independência é o motivo de o `placed` poder ficar um à frente se um commit falhar."
+      },
+      {
+        "text": "Nada, porque o `@Transactional` desfaz o incremento junto com o resto",
+        "why": "O `@Transactional` desfaz o que passou pela conexão da transação. O Micrometer nunca toca no banco."
+      },
+      {
+        "text": "Menos um, para cancelar o incremento que veio antes da exceção",
+        "why": "Um counter só sobe. Nada o decrementa, e o Micrometer recusaria um valor negativo."
+      },
+      {
+        "text": "Nada por enquanto: os incrementos ficam guardados até o commit",
+        "why": "Não existe buffer ligado a transações. O incremento aparece no momento em que roda, como o 409 seguido de um contador em 1 mostrou."
+      }
+    ]
+  },
+  "ex-3nek7b1q": {
+    "prompt": "Por que o `OrderServiceTest` agora passa `new SimpleMeterRegistry()` para o construtor?",
+    "hint": "O construtor ganhou um parâmetro.",
+    "choices": [
+      {
+        "text": "Para verificar se o Prometheus recebe os pedidos do teste",
+        "why": "Nada no teste fala com o Prometheus, e nada deveria: um teste unitário não tem servidor de monitoramento."
+      },
+      {
+        "text": "Porque o Mockito não consegue fazer mock de um `MeterRegistry`",
+        "why": "Conseguiria; um mock só responderia `null` a `counter(...)`, e o serviço falharia no primeiro incremento. Um registry de verdade é mais simples."
+      },
+      {
+        "text": "O Spring Boot exige o registry simples em todo perfil usado por testes",
+        "why": "Este teste não sobe Spring nenhum; ele mesmo chama o construtor."
+      },
+      {
+        "text": "O serviço precisa de um registry, e este não envia nada a lugar algum",
+        "why": "Isso. É do próprio Micrometer: guarda os números na memória, feito justamente para isto."
+      }
+    ]
+  },
+  "ex-wdqrs68f": {
+    "prompt": "Quais destes são bons valores para a tag de um meter? Marque todas as que se aplicam.",
+    "hint": "Os valores de uma tag precisam ser poucos e conhecidos de antemão.",
+    "choices": [
+      {
+        "text": "O resultado de um pedido: `placed` ou `out-of-stock`",
+        "why": "Isso: dois valores, conhecidos quando o código é escrito."
+      },
+      {
+        "text": "O template da rota, como `/books/{id}`",
+        "why": "Isso: um valor por rota, e as rotas estão no código."
+      },
+      {
+        "text": "O cliente que fez o pedido",
+        "why": "Uma série por cliente, para sempre, e um nome de conta copiado para um sistema que o guarda por meses."
+      },
+      {
+        "text": "O id de cada pedido",
+        "why": "Cada pedido criaria uma série que nunca mais é usada. Ids ficam no banco e nas linhas de log."
+      },
+      {
+        "text": "O método HTTP",
+        "why": "Isso: poucos valores, e o `http.server.requests` já o usa."
+      }
+    ]
+  },
+  "ex-bred8srk": {
+    "prompt": "Ligue cada meter, com o nome que o Micrometer dá, a uma linha que o formato do Prometheus escreve para ele.",
+    "hint": "Pontos viram sublinhados, counters ganham um sufixo, timers ganham uma unidade.",
+    "pairs": [
+      {
+        "left": "bookshop.orders (um counter)",
+        "right": "bookshop_orders_total"
+      },
+      {
+        "left": "hikaricp.connections.pending (um gauge)",
+        "right": "hikaricp_connections_pending"
+      },
+      {
+        "left": "http.server.requests (um timer)",
+        "right": "http_server_requests_seconds_count"
+      }
+    ],
+    "right_distractors": [
+      "bookshop_orders_seconds",
+      "http_server_requests_total"
+    ]
+  },
+  "ex-2rbx9aea": {
+    "prompt": "Duas coletas com 15 segundos de intervalo leram `bookshop_orders_total{outcome=\"placed\"}` como 2.0 e depois 7.0. A que taxa os pedidos foram feitos entre elas?",
+    "hint": "O aumento dividido pelo tempo entre as leituras.",
+    "unit": "pedidos por segundo"
+  },
+  "ex-8frybqqb": {
+    "prompt": "Por que um alerta sobre pedidos usa `rate(bookshop_orders_total[...])` em vez do valor do counter?",
+    "hint": "O que acontece com o valor quando o processo reinicia?",
+    "choices": [
+      {
+        "text": "O valor é acumulado desde a inicialização: diz mais sobre o tempo no ar do que sobre agora, e cai para zero num reinício",
+        "why": "Isso. A taxa é o quanto ele cresce numa janela, e o `rate()` lê uma queda como reinício, não como pedidos devolvidos."
+      },
+      {
+        "text": "O Prometheus não consegue comparar um counter com um número",
+        "why": "Ele compara qualquer série com um número. A regra usa uma taxa porque o total cru responde à pergunta errada."
+      },
+      {
+        "text": "Os counters zeram a cada coleta, então o valor já é uma taxa",
+        "why": "Nada zera numa coleta: a segunda leitura deu 7 porque os 2 primeiros continuavam contados."
+      },
+      {
+        "text": "O `rate()` custa menos para guardar do que um valor",
+        "why": "O Prometheus guarda as amostras de qualquer jeito; o `rate()` é calculado a partir delas quando uma regra ou consulta pede."
+      }
+    ]
+  },
+  "ex-3gzwvzvm": {
+    "prompt": "Um colega acrescenta `db` ao grupo liveness de uma livraria que roda em seis cópias. Depois disso, o banco leva dois minutos para trocar de servidor. O que acontece?",
+    "hint": "O liveness responde para uma plataforma que reinicia quem falha nele.",
+    "choices": [
+      {
+        "text": "Nada muda, porque o liveness só é lido na inicialização",
+        "why": "A plataforma continua perguntando enquanto o processo roda. Foi isso que deixou a falha da seção de health visível."
+      },
+      {
+        "text": "As seis cópias param de receber requisições até o banco voltar, e então continuam",
+        "why": "Isso é o que um readiness falho faria. Um liveness falho significa matar o processo, não deixá-lo descansar."
+      },
+      {
+        "text": "As seis são reiniciadas juntas, cada uma paga uma inicialização inteira, e os reinícios não encurtam a troca do banco",
+        "why": "Isso. Um problema no banco virou uma queda da aplicação que dura mais do que ele."
+      },
+      {
+        "text": "Só a cópia cuja conexão falhou primeiro é reiniciada",
+        "why": "Todas as cópias perguntam ao mesmo banco e veem a mesma falha, então todas falham no probe."
+      }
+    ]
+  },
+  "ex-ed46b488": {
+    "prompt": "O readiness probe de uma plataforma aponta para `/actuator/health` em vez de `/actuator/health/readiness`. Que situação isso muda?",
+    "hint": "Compare o que o relatório completo e o grupo responderam durante a falha.",
+    "choices": [
+      {
+        "text": "Nenhuma: as duas URLs sempre respondem o mesmo status",
+        "why": "Durante a falha, o relatório completo respondeu 503 e o readiness, 200. Elas diferem justamente quando importa."
+      },
+      {
+        "text": "Um disco cheio ou uma queda do banco tira todas as cópias de circulação ao mesmo tempo",
+        "why": "Isso. O relatório completo inclui `db` e `diskSpace`, então um problema compartilhado esvazia o load balancer, até para requisições que nunca tocariam nele."
+      },
+      {
+        "text": "A inicialização fica mais rápida, porque o relatório completo pula os runners",
+        "why": "O relatório completo também inclui o `readinessState` e respondeu 503 enquanto os runners trabalhavam, como o grupo."
+      },
+      {
+        "text": "O probe passa a precisar de token, porque `/actuator/health` é protegido e os grupos não",
+        "why": "O `EndpointRequest.toAnyEndpoint()` abre o endpoint e todos os caminhos abaixo dele do mesmo jeito."
+      }
+    ]
+  },
+  "ex-p5sx2h6c": {
+    "prompt": "Ligue cada pergunta que alguém faz durante um incidente ao lugar onde a livraria a responde.",
+    "hint": "Quatro endpoints ou séries diferentes; um que sobra não responde a nenhuma.",
+    "pairs": [
+      {
+        "left": "A correção que subimos há uma hora é a que está rodando?",
+        "right": "build.time em /actuator/info"
+      },
+      {
+        "left": "Há requisições na fila esperando uma conexão com o banco?",
+        "right": "hikaricp_connections_pending"
+      },
+      {
+        "left": "O load balancer deve mandar tráfego para esta cópia agora?",
+        "right": "/actuator/health/readiness"
+      },
+      {
+        "left": "Quantos pedidos foram recusados por falta de estoque na última hora?",
+        "right": "taxa de bookshop_orders_total{outcome=\"out-of-stock\"}"
+      }
+    ],
+    "right_distractors": [
+      "jvm_threads_peak_threads"
+    ]
+  },
+  "ex-7bsw05wv": {
+    "prompt": "Durante a falha da seção de health, quais das quatro regras do arquivo teriam disparado se ela durasse dez minutos, com requisições chegando o tempo todo? Marque todas as que se aplicam.",
+    "hint": "Lembre como as requisições que falharam foram registradas, e que as coletas continuaram respondendo.",
+    "choices": [
+      {
+        "text": "`BookshopDown`, com `up == 0`",
+        "why": "O `up` fala da coleta, e o servidor de gerenciamento continuou respondendo. O processo estava vivo."
+      },
+      {
+        "text": "`BookshopServerErrors`, com a fração de `SERVER_ERROR`",
+        "why": "As falhas foram registradas como 401, `CLIENT_ERROR`, e o numerador nunca andou. O defeito no caminho de erro escondeu a falha desta regra."
+      },
+      {
+        "text": "`BookshopPoolWaiting`, com `hikaricp_connections_pending > 0` por dois minutos",
+        "why": "Isso. Cada requisição esperou cinco segundos por uma conexão, então com tráfego constante sempre havia alguém na fila."
+      },
+      {
+        "text": "`BookshopOrdersRefused`, com a fração de pedidos sem estoque",
+        "why": "Nenhum pedido chegou a conferir o estoque: falharam ao abrir a transação, e nenhuma das séries andou."
+      }
+    ]
+  }
+}

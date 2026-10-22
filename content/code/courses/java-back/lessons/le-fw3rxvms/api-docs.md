@@ -111,7 +111,18 @@ UI along with the document, and the section on Swagger UI uses it.
 Build, restart the application in the second terminal, and ask for the document:
 
 ```
-(pending 401)
+ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/v3/api-docs
+HTTP/1.1 401 
+X-Request-Id: f095c0a7
+WWW-Authenticate: Bearer resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 0
+Date: Thu, 22 Oct 2026 23:08:07 GMT
 ```
 
 **401.** The bookshop's `apiChain` from lesson 15 ends with `.anyRequest().authenticated()`, so
@@ -222,7 +233,21 @@ open to anyone, like the catalogue.
 Build, restart, and ask again. `python3 -m json.tool` lays the JSON out one value per line:
 
 ```
-(pending FIRST)
+ana@vm:~/bookshop$ curl -s localhost:8080/v3/api-docs | python3 -m json.tool | head -14
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/orders": {
 ```
 
 `"openapi": "3.1.0"` is the version of the specification the document follows. `info` is a
@@ -232,7 +257,18 @@ it was asked on.
 The whole document runs to a few hundred lines, so save it to a file and read it a piece at a time:
 
 ```
-(pending SAVE)
+ana@vm:~/bookshop$ curl -s localhost:8080/v3/api-docs | python3 -m json.tool > ~/api.json
+ana@vm:~/bookshop$ wc -l ~/api.json
+457 /home/ana/api.json
+ana@vm:~/bookshop$ python3 -c 'import json; [print(m.upper(), p) for p, ops in json.load(open("/home/ana/api.json"))["paths"].items() for m in ops]'
+POST /orders
+GET /books
+POST /books
+POST /auth/token
+GET /orders/{id}
+GET /books/{id}
+GET /books/search
+GET /books/by-author
 ```
 
 Eight operations, and every one is real. springdoc found the two controllers of the catalogue and
@@ -254,23 +290,98 @@ print(json.dumps(doc, indent=2))
 ## What springdoc worked out on its own
 
 ```
-(pending GET)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json paths /books/{id} get
+{
+  "tags": [
+    "book-controller"
+  ],
+  "operationId": "get_1",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+        "type": "integer",
+        "format": "int64"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "OK",
+      "content": {
+        "*/*": {
+          "schema": {
+            "$ref": "#/components/schemas/BookResponse"
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
-```
-(pending GET_TEXT)
-```
+Everything here came from the code. The path and the `id` parameter come from
+`@GetMapping("/{id}")` and `@PathVariable`, and `required` is true because a path variable cannot be
+left out. `long` became `integer` with `format: int64`, which is how JSON Schema names a 64-bit whole
+number. The one response is a 200 whose body is a `BookResponse`, read from the method's return
+type, and its media type is `*/*` because the controller never declared one. The tag
+`book-controller` is the class's name, and `get_1` is an operation id made unique because
+`OrderController` has a method called `get` too.
+
+What is missing is the 404. The method throws `BookNotFoundException`, lesson 7's handler turns it
+into a 404, and none of that shows in a signature that returns a `BookResponse`.
 
 The request body of `POST /books` is described by a schema, built from the `BookRequest` record of
-lesson 6 and the Bean Validation constraints on it:
+lesson 6, with the `stock` that lesson 14 added, and the Bean Validation constraints on it:
 
 ```
-(pending SCHEMA)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json components schemas BookRequest
+{
+  "type": "object",
+  "properties": {
+    "isbn": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 0
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 0
+    },
+    "priceCents": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 0
+    },
+    "stock": {
+      "type": "integer",
+      "format": "int32",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "author",
+    "isbn",
+    "priceCents",
+    "stock",
+    "title"
+  ]
+}
 ```
 
-```
-(pending SCHEMA_TEXT)
-```
+Each component became a property, and each constraint became the nearest JSON Schema keyword:
+`@Size(max = 200)` is `maxLength`, `@PositiveOrZero` is `minimum: 0`, and every `@NotNull` and
+`@NotBlank` put its field in `required`. The translation is not exact. `@NotBlank` refuses a title
+of three spaces, and the schema says only `minLength: 0`, which three spaces satisfy. `@ValidIsbn`,
+lesson 6's own constraint, is not there at all: springdoc knows the standard annotations and
+nothing about one somebody wrote. A client that obeys this schema to the letter can still get a
+400.
 
 ## What it got wrong
 
@@ -278,20 +389,45 @@ A document built from code says what the code says, and some things the code doe
 says in a way springdoc cannot read. Three of them are in this document already.
 
 ```
-(pending PAGEABLE)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json paths /books get parameters
+[
+  {
+    "name": "pageable",
+    "in": "query",
+    "required": true,
+    "schema": {
+      "$ref": "#/components/schemas/Pageable"
+    }
+  }
+]
 ```
 
-```
-(pending PAGEABLE_TEXT)
-```
+One parameter called `pageable`, required, whose value is an object. No client can send that. A
+query string holds names and values, and Spring builds the `Pageable` out of three of them, `page`,
+`size` and `sort`, each optional, with the defaults from `@PageableDefault`. springdoc saw a
+parameter of type `Pageable` and described the type, and a client built from this document would
+send a parameter the server never reads.
 
 ```
-(pending ORDERS)
+ana@vm:~/bookshop$ python3 ~/oapi.py ~/api.json paths /orders post responses
+{
+  "200": {
+    "description": "OK",
+    "content": {
+      "*/*": {
+        "schema": {
+          "$ref": "#/components/schemas/OrderResponse"
+        }
+      }
+    }
+  }
+}
 ```
 
-```
-(pending ORDERS_TEXT)
-```
+A 200, where `OrderController.place` answers 201, through `ResponseEntity.created(...)`, as `POST
+/books` does. The status is chosen at run time, inside the method, and the declaration
+`ResponseEntity<OrderResponse>` says nothing about which one it will be. springdoc falls back to
+200.
 
 And no operation in the document mentions a token. springdoc reads controllers, not the security
 filter chain, so it cannot know that `POST /books` needs `catalogue:write` and that the orders need
@@ -301,7 +437,8 @@ One more thing that is not springdoc's fault. The document is also served as YAM
 `/v3/api-docs.yaml`, and the rule you just added does not name that path:
 
 ```
-(pending YAML)
+ana@vm:~/bookshop$ curl -s -o /dev/null -w '%{http_code}\n' localhost:8080/v3/api-docs.yaml
+401
 ```
 
 `/v3/api-docs/**` matches `/v3/api-docs` and everything under it, and `/v3/api-docs.yaml` is

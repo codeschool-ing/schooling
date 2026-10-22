@@ -1,0 +1,465 @@
+{
+  "ex-zgpzd4he": {
+    "prompt": "O que `@SpringBootTest(webEnvironment = RANDOM_PORT)` sobe que o padrão `MOCK` não sobe?",
+    "hint": "Pense no que uma requisição precisa atravessar para chegar ao controller.",
+    "choices": [
+      {
+        "text": "Um segundo contêiner PostgreSQL, numa porta só dele",
+        "why": "O banco vem da `TestcontainersConfiguration` nos dois casos. A porta de `RANDOM_PORT` é a do servidor web."
+      },
+      {
+        "text": "O Tomcat embutido, escutando numa porta livre que o sistema escolhe",
+        "why": "Certo. `MOCK` não tem servidor nenhum; `RANDOM_PORT` sobe o Tomcat na porta que estiver livre, e `@LocalServerPort` diz qual."
+      },
+      {
+        "text": "Um `MockMvc` que chama o controller na mesma thread",
+        "why": "É assim que as requisições chegam ao controller no `MOCK`, sem socket."
+      },
+      {
+        "text": "Uma JVM separada rodando `target/bookshop-0.1.0.jar`",
+        "why": "Tudo roda dentro da JVM que o failsafe iniciou; nenhum jar é executado."
+      }
+    ]
+  },
+  "ex-rk92gh95": {
+    "prompt": "Por que o `BooksApiIT` pede `RANDOM_PORT` em vez de `DEFINED_PORT`?",
+    "choices": [
+      {
+        "text": "`DEFINED_PORT` sobe a aplicação sem a cadeia de filtros de segurança",
+        "why": "Os dois sobem a mesma aplicação com os mesmos filtros. Só a porta muda."
+      },
+      {
+        "text": "Uma porta aleatória faz o contexto subir mais rápido",
+        "why": "Escolher a porta não custa nada mensurável; o contexto e o contêiner são as partes lentas."
+      },
+      {
+        "text": "Outro programa na 8080 derrubaria o teste, não o código",
+        "why": "Certo. `DEFINED_PORT` usa `server.port`, e um teste que falha porque outro processo ocupa a porta falha por um motivo que nada tem a ver com o código."
+      },
+      {
+        "text": "O Testcontainers se recusa a subir ao lado de um servidor em porta fixa",
+        "why": "O Testcontainers mapeia a porta do banco e nunca olha a do servidor web."
+      }
+    ]
+  },
+  "ex-1a80m05s": {
+    "prompt": "Um colega testa a API construindo um `BookController` e chamando `get(1)` direto. Quais destes esse teste nunca exercita, e o `BooksApiIT` exercita? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "O mapeamento de `GET /books/1` para o método",
+        "why": "Certo. A chamada direta pula o dispatcher que acha o método pelo caminho."
+      },
+      {
+        "text": "A cadeia de filtros de segurança",
+        "why": "Certo. Os filtros rodam em volta de uma requisição, e uma chamada de método não é uma."
+      },
+      {
+        "text": "O Jackson escrevendo a resposta como JSON",
+        "why": "Certo. O método devolve um record; só a camada HTTP o transforma em JSON."
+      },
+      {
+        "text": "O `BookService` buscando o livro",
+        "why": "O controller chama o serviço nos dois testes, então os dois o executam."
+      },
+      {
+        "text": "O próprio código do método `get`",
+        "why": "É justamente a única coisa que a chamada direta executa."
+      }
+    ]
+  },
+  "ex-1fj2wa8j": {
+    "prompt": "O pom do REST Assured 6.1.0 pede o Groovy 5.0.3, e o `mvn dependency:tree` mostra o Groovy 5.0.8. Por quê?",
+    "choices": [
+      {
+        "text": "O Maven sempre resolve uma biblioteca para a versão mais nova que encontra",
+        "why": "O Maven nunca procura versões mais novas por conta própria. Sozinho, teria pegado a 5.0.3."
+      },
+      {
+        "text": "O parent do Spring Boot gerencia o Groovy, e a versão gerenciada vence",
+        "why": "Certo. O `<dependencyManagement>` do parent, da lição 4, dá uma versão para o Groovy, e ela vale até para uma biblioteca que chega pelo pom de outro."
+      },
+      {
+        "text": "A propriedade `rest-assured.version` subiu o Groovy junto com o REST Assured",
+        "why": "Essa propriedade só é usada pela dependência do REST Assured; ela não diz nada sobre o Groovy."
+      },
+      {
+        "text": "O Hamcrest 3.0 do starter de teste exige o Groovy 5.0.8",
+        "why": "O Hamcrest não depende do Groovy em nada."
+      }
+    ]
+  },
+  "ex-jx7s200c": {
+    "prompt": "Ponha em ordem o que acontece depois de `mvn verify -Dit.test=BooksApiIT`, até a primeira requisição.",
+    "hint": "Os testes de unidade vêm de uma fase anterior do ciclo de vida.",
+    "items": [
+      "o surefire roda os testes de unidade",
+      "o Testcontainers sobe um contêiner PostgreSQL",
+      "o Flyway migra esse banco",
+      "o Tomcat sobe numa porta aleatória",
+      "o REST Assured envia GET /books/1"
+    ]
+  },
+  "ex-az8n6dj4": {
+    "prompt": "No desvio, a falha terminou com `at com.example.bookshop.BooksApiIT.anUnknownBookIsAProblemDetail(BooksApiIT.java:50)`. O que está na linha 50?",
+    "choices": [
+      {
+        "text": "O `get(\"/books/{id}\", 999)` que enviou a requisição",
+        "why": "A requisição foi enviada e respondida sem problema; o que quebrou foi uma afirmação sobre a resposta."
+      },
+      {
+        "text": "A linha do `ApiErrorHandler` que escreveu o problem detail",
+        "why": "Esse código roda no servidor. O stack trace é da thread do próprio teste, conferindo a resposta."
+      },
+      {
+        "text": "A expectativa `contentType(...)` que não bateu",
+        "why": "Certo. O REST Assured falha na expectativa, então o número da linha aponta para a afirmação que quebrou."
+      },
+      {
+        "text": "A primeira linha do método de teste",
+        "why": "Um stack trace aponta a linha exata, não o começo do método."
+      }
+    ]
+  },
+  "ex-hw3djcmn": {
+    "prompt": "Para rodar uma única classe de teste de integração, o failsafe lê uma propriedade: `mvn verify -D___=BooksApiIT`.",
+    "blanks": [
+      {
+        "accept": [
+          "it.test"
+        ]
+      }
+    ]
+  },
+  "ex-fzma8sm9": {
+    "prompt": "Duas classes de teste, cada uma com seu contexto `RANDOM_PORT` e seu `@BeforeEach` ajustando `RestAssured.port`, passam a rodar em paralelo na mesma JVM. O que pode dar errado?",
+    "hint": "Veja que tipo de campo é `RestAssured.port`.",
+    "choices": [
+      {
+        "text": "Os dois contextos recebem a mesma porta e o segundo não sobe",
+        "why": "Cada Tomcat pede uma porta livre ao sistema operacional, e dois nunca recebem a mesma."
+      },
+      {
+        "text": "Uma requisição de uma classe chega ao servidor da outra classe",
+        "why": "Certo. O campo é estático, então guarda a porta de quem o ajustou por último, e um teste acaba julgando a aplicação errada."
+      },
+      {
+        "text": "`@LocalServerPort` injeta 0 enquanto o outro contexto está subindo",
+        "why": "A porta é injetada depois que o servidor deste contexto subiu, faça o outro o que fizer."
+      },
+      {
+        "text": "Nada, porque o `@BeforeEach` roda de novo antes de cada teste",
+        "why": "Roda, e o `@BeforeEach` da outra classe pode rodar entre ele e a requisição."
+      }
+    ]
+  },
+  "ex-htan2vdw": {
+    "prompt": "Sem credencial nenhuma, um cliente faz POST em `/books` de um livro cujo ISBN tem dígito verificador errado. Que status volta?",
+    "hint": "O que roda primeiro: os filtros ou a validação do controller?",
+    "choices": [
+      {
+        "text": "400, porque o ISBN não passa no `@ValidIsbn`",
+        "why": "A validação roda quando o controller é chamado, e a requisição nunca chega lá."
+      },
+      {
+        "text": "401",
+        "why": "Certo. A cadeia de filtros de segurança recusa a requisição não autenticada antes do controller, então ninguém olha o ISBN."
+      },
+      {
+        "text": "403, porque cadastrar livro exige o escopo `catalogue:write`",
+        "why": "403 é para quem foi identificado e não tem o escopo. Este não mandou credencial nenhuma."
+      },
+      {
+        "text": "201, porque o corpo da requisição é JSON bem formado",
+        "why": "Bem formado não basta, por dois motivos: sem token e com ISBN inválido."
+      }
+    ]
+  },
+  "ex-k6q6kwfk": {
+    "prompt": "O `addingABookNeedsAToken` é alterado para buscar antes o token de ana e mandá-lo junto com o livro. Que status o teste recebe agora?",
+    "hint": "Veja as autoridades de ana no `SecurityConfig` da lição 15.",
+    "choices": [
+      {
+        "text": "201, porque o token é válido",
+        "why": "Um token válido diz quem ana é. Se ela pode cadastrar livros é outra pergunta."
+      },
+      {
+        "text": "401, porque ana não é a atendente",
+        "why": "Ela está autenticada: o token é bom. 401 quer dizer que ninguém foi identificado."
+      },
+      {
+        "text": "403",
+        "why": "Certo. O token dela só tem o escopo `orders`, e `POST /books` exige `catalogue:write`: identificada, e sem permissão."
+      },
+      {
+        "text": "409, porque o ISBN já está no catálogo",
+        "why": "9786500000078 não está entre os seis livros da migração, e a requisição nem chega ao serviço."
+      }
+    ]
+  },
+  "ex-0q0pcj5r": {
+    "prompt": "No `mvn verify` completo, três contêineres PostgreSQL subiram para três classes de teste de integração. Se o `BookshopApplicationIT` passasse a ter exatamente as mesmas três anotações do `BooksApiIT`, quantos subiriam?",
+    "hint": "Quais contêineres pertencem a um contexto, e quais contextos o Spring pode reaproveitar?"
+  },
+  "ex-wnt8tzf6": {
+    "prompt": "Um teste novo no `BooksApiIT` afirma que o livro 2 tem estoque 5. Ele passa quando roda sozinho e falha na classe inteira. Qual a causa mais provável?",
+    "choices": [
+      {
+        "text": "O teste de pedido já tirou um exemplar do livro 2 do mesmo banco",
+        "why": "Certo. A classe compartilha um contexto e um contêiner, e o pedido é real; o teste novo depende de quem rodou primeiro."
+      },
+      {
+        "text": "O Flyway roda as migrações outra vez antes de cada método",
+        "why": "O Flyway roda uma vez, quando o contexto sobe. Nada devolve o estoque."
+      },
+      {
+        "text": "Cada método de teste ganha seu próprio contêiner PostgreSQL",
+        "why": "O contêiner é um bean do contexto, e a classe tem um contexto só."
+      },
+      {
+        "text": "O REST Assured guarda em cache a resposta de `/books/2`",
+        "why": "O REST Assured envia toda requisição; ele não guarda cache de respostas."
+      }
+    ]
+  },
+  "ex-a3j2hnzv": {
+    "prompt": "`sha512sum -c apache-jmeter-5.6.3.tgz.sha512` imprimiu `OK`. O que isso estabelece?",
+    "choices": [
+      {
+        "text": "Que o gerente de release da Apache assinou o arquivo",
+        "why": "Uma assinatura é conferida com o arquivo `.asc` e uma chave pública, que este passo não usa."
+      },
+      {
+        "text": "Que os bytes batem com o hash publicado",
+        "why": "Certo. O download está completo e intacto. Quem o fez é a pergunta da assinatura."
+      },
+      {
+        "text": "Que a 5.6.3 é a versão mais nova do JMeter",
+        "why": "Um checksum fala de um arquivo só e nada sobre outras versões."
+      },
+      {
+        "text": "Que o arquivo roda no Java 25",
+        "why": "Em qual Java ele roda é assunto do programa; o hash cobre só bytes."
+      }
+    ]
+  },
+  "ex-985hkz40": {
+    "prompt": "Logo depois de acrescentar a linha `export PATH=...` ao `~/.bashrc`, `command -v jmeter` no mesmo terminal não imprime nada. Por quê?",
+    "choices": [
+      {
+        "text": "O arquivo foi descompactado no diretório errado",
+        "why": "O `ls ~/opt/apache-jmeter-5.6.3` mostrou tudo no lugar. Quem não mudou foi o shell."
+      },
+      {
+        "text": "`command -v` só acha programas instalados pelo apt",
+        "why": "Ele procura em todo diretório do `PATH`, seja quem for que pôs o programa lá."
+      },
+      {
+        "text": "Este shell leu o `~/.bashrc` antes de a linha existir",
+        "why": "Certo. Um shell lê o `~/.bashrc` quando começa, então este ainda tem o `PATH` antigo. Abra um terminal novo, ou rode `source ~/.bashrc`, e a linha passa a valer."
+      },
+      {
+        "text": "O script `jmeter` só vira executável depois de o JMeter rodar uma vez",
+        "why": "O arquivo guarda as permissões do script; ele já era executável desde a descompactação."
+      }
+    ]
+  },
+  "ex-3725b6c1": {
+    "prompt": "Associe cada opção do comando `jmeter` à sua função.",
+    "pairs": [
+      {
+        "left": "-n",
+        "right": "rodar sem a janela"
+      },
+      {
+        "left": "-l",
+        "right": "o arquivo de resultados, uma linha por requisição"
+      },
+      {
+        "left": "-e",
+        "right": "gerar o relatório HTML quando a execução termina"
+      },
+      {
+        "left": "-f",
+        "right": "apagar antes os resultados e o relatório anteriores"
+      },
+      {
+        "left": "-J",
+        "right": "definir uma propriedade que o plano lê com __P"
+      }
+    ],
+    "right_distractors": [
+      "parar a execução no primeiro erro"
+    ]
+  },
+  "ex-a7scq1g9": {
+    "prompt": "`books.jmx` é executado com `-Jthreads=8 -Jloops=250`. Quantas requisições a execução envia?",
+    "hint": "Conte o que cada thread faz numa volta."
+  },
+  "ex-vvntmpvt": {
+    "prompt": "Por que a livraria é iniciada com `java -jar` para o teste de carga, em vez de rodar dentro do `mvn`?",
+    "choices": [
+      {
+        "text": "Dentro do `mvn` a aplicação ignora o `BOOKSHOP_JWT_SECRET`",
+        "why": "O segredo é lido do ambiente nos dois casos."
+      },
+      {
+        "text": "Mede o jar como ele vai para produção, sem a JVM do Maven junto",
+        "why": "Certo. Um teste de carga é uma medição, e tudo o que mais roda na máquina entra nela."
+      },
+      {
+        "text": "O JMeter só alcança um servidor iniciado a partir de um jar",
+        "why": "O JMeter envia HTTP para um host e uma porta; ele não sabe como o servidor foi iniciado."
+      },
+      {
+        "text": "O `mvn` rodaria o teste de carga como parte do `verify`",
+        "why": "Nada liga o JMeter a uma fase do Maven aqui; o plano fica num diretório que o Maven ignora."
+      }
+    ]
+  },
+  "ex-9vx3rvmf": {
+    "prompt": "Alguém esvazia a tabela `book` enquanto o plano roda. `/books/search?q=the` passa a responder `200` com `[]`. O que o JMeter registra para essas amostras?",
+    "hint": "O status é uma conferência. O que mais o plano confere?",
+    "choices": [
+      {
+        "text": "Sucessos, porque o status é 200",
+        "why": "Um 200 sozinho passaria, mas o plano também confere o corpo."
+      },
+      {
+        "text": "Sucessos, com um número menor de bytes recebidos",
+        "why": "O tamanho é registrado, e as amostras continuam marcadas como falha pela assertion."
+      },
+      {
+        "text": "Nada: o JMeter descarta amostras de corpo vazio",
+        "why": "Toda requisição vira uma linha no arquivo de resultados, com corpo vazio ou não."
+      },
+      {
+        "text": "Erros, porque o corpo não contém `\"isbn\"`",
+        "why": "Certo. É para isso que serve a assertion: um 200 com o conteúdo errado conta como falha."
+      }
+    ]
+  },
+  "ex-es6zv1zh": {
+    "prompt": "Um relatório diz que o percentil 95 do tempo de resposta foi 40 ms. O que isso quer dizer?",
+    "choices": [
+      {
+        "text": "A requisição média levou 40 ms",
+        "why": "A média é o `meanResTime`, outro número; algumas requisições lentas a puxam para cima."
+      },
+      {
+        "text": "95% das requisições levaram 40 ms ou menos",
+        "why": "Certo. Os outros 5% demoraram mais, e o percentil 99 e o máximo dizem quanto mais."
+      },
+      {
+        "text": "95% das requisições deram certo",
+        "why": "Sucesso é a contagem de erros. Percentil é sobre tempo."
+      },
+      {
+        "text": "As 95 requisições mais lentas tiveram média de 40 ms",
+        "why": "Percentil é uma posição nos tempos ordenados, não a média de um grupo."
+      }
+    ]
+  },
+  "ex-1ynd3j20": {
+    "prompt": "Um plano tem 50 threads e nenhuma pausa entre requisições. O tempo de resposta médio é 10 ms. Aproximadamente quantas requisições por segundo a execução consegue?",
+    "hint": "Cada thread só envia a próxima requisição quando a anterior respondeu.",
+    "unit": "requisições por segundo"
+  },
+  "ex-a7yrcq8g": {
+    "prompt": "Uma execução mostra tempo de resposta médio de 1 ms e máximo de 17 ms, melhores que os de qualquer execução anterior. O que você deve ler primeiro?",
+    "choices": [
+      {
+        "text": "O máximo, para ver se alguma requisição foi lenta",
+        "why": "O máximo já é o melhor de todas as execuções; lentidão não é o que deu errado."
+      },
+      {
+        "text": "O percentil 99, que a média esconde",
+        "why": "Vale ler numa execução sã. Esta pode nem ter medido a aplicação."
+      },
+      {
+        "text": "A contagem de erros",
+        "why": "Certo. Uma conexão recusada falha na hora, então uma execução contra um servidor parado tem os melhores tempos de todos, e cada um deles é um erro."
+      },
+      {
+        "text": "O ramp-up, que provavelmente foi curto demais",
+        "why": "O ramp-up muda quando as threads começam, não se as respostas são de verdade."
+      }
+    ]
+  },
+  "ex-h139ey3q": {
+    "prompt": "O JMeter, a livraria e o PostgreSQL rodaram todos numa máquina de quatro processadores. Que conclusões uma execução assim sustenta? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Este commit é mais lento que o anterior, medido com o mesmo plano na mesma máquina",
+        "why": "Certo. Comparar duas versões sob condições idênticas é para o que uma execução local serve."
+      },
+      {
+        "text": "Os tempos de resposta crescem conforme se acrescentam threads nesta máquina",
+        "why": "Certo. Isso é uma medição desta máquina sob este plano, e é isso que ela diz."
+      },
+      {
+        "text": "O servidor de produção vai aguentar o mesmo número de requisições por segundo",
+        "why": "A produção tem outros processadores, outros dados, uma rede, e nenhum gerador de carga dividindo-os."
+      },
+      {
+        "text": "A aplicação, e não o JMeter, foi o limite da vazão",
+        "why": "O próprio JMeter usou boa parte dos mesmos processadores, então nada nesta execução separa os dois."
+      }
+    ]
+  },
+  "ex-bn1es7hg": {
+    "prompt": "Ponha em ordem os passos de um teste de carga que você consiga defender.",
+    "hint": "Um número não quer dizer nada até você saber o que ele deveria ser.",
+    "items": [
+      "anotar a meta, por exemplo percentil 95 abaixo de 50 ms",
+      "subir a aplicação como ela vai para produção",
+      "rodar uma vez para aquecer, e descartar essa execução",
+      "rodar o teste medido com -f",
+      "ler a contagem de erros antes de qualquer tempo"
+    ]
+  },
+  "ex-49qdt9dx": {
+    "prompt": "Associe cada falha ao teste que a pegaria primeiro.",
+    "pairs": [
+      {
+        "left": "o tratador de erros passa a responder application/json",
+        "right": "BooksApiIT"
+      },
+      {
+        "left": "uma consulta derivada devolve os títulos na ordem errada",
+        "right": "BookRepositoryIT"
+      },
+      {
+        "left": "fazer um pedido o grava mesmo com estoque insuficiente",
+        "right": "OrderServiceTest"
+      },
+      {
+        "left": "uma mudança faz cada busca levar o triplo do tempo",
+        "right": "o plano do JMeter"
+      }
+    ],
+    "right_distractors": [
+      "IsbnTest"
+    ]
+  },
+  "ex-f9sydg76": {
+    "prompt": "Um teste REST Assured para `GET /books/1` confere só `statusCode(200)`. Que regressão ele ainda deixaria passar?",
+    "choices": [
+      {
+        "text": "A rota `/books/{id}` é removida",
+        "why": "Aí a resposta é 404 e a conferência de status falha."
+      },
+      {
+        "text": "Ler um livro passa a exigir token",
+        "why": "Aí a resposta é 401 e a conferência de status falha."
+      },
+      {
+        "text": "O campo JSON `title` é renomeado para `name`",
+        "why": "Certo. O status continua 200, e todo cliente que lê `title` quebra. Só uma expectativa `body(...)` enxerga isso."
+      },
+      {
+        "text": "O banco fica inacessível enquanto o teste roda",
+        "why": "Aí o contexto não sobe, ou a resposta é 500; de um jeito ou de outro o teste falha."
+      }
+    ]
+  }
+}
