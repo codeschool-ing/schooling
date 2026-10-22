@@ -28,7 +28,7 @@ at() { DIR=$1; lab fresh "$DIR"; }
 on() { printf 'ana@vm:~/%s$ %s\n' "$DIR" "$*"; lab exec "$DIR" "timeout 300 bash -c $(printf '%q' "$*") 2>&1 < /dev/null" || true; }
 home() { printf 'ana@vm:~$ %s\n' "$*"; lab exec . "timeout 300 bash -c $(printf '%q' "$*") 2>&1 < /dev/null" || true; }
 src() {
-  local text; text=$(python3 "$COURSE/lab/fences.py" named "$LESSON/$2" "${3:-$(basename "$1")}"; printf x) || exit 1
+  local text; text=$(python3 "$COURSE/lab/fences.py" named "$LESSON/$2" "${3:-$(basename "$1")}" && printf x) || exit 1
   text=${text%x}
   printf '%s' "$text" | lab put "$DIR/$1"
 }
