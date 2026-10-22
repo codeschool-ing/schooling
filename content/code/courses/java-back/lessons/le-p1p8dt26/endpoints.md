@@ -130,8 +130,8 @@ a rule of its own, every endpoint would ask for a bearer token. Replace
 ```
 
 `EndpointRequest.toAnyEndpoint()` matches the exposed endpoints, wherever they live, so the rule
-survives a change of port or of base path. It is worth seeing the line earn its place. With it
-removed, rebuilt and restarted, the private port answers like the API:
+survives a change of port or of base path. Take the line out, rebuild and restart, and the private
+port answers like the API:
 
 ```
 ana@vm:~/bookshop$ curl -s -i localhost:8081/actuator/health | head -n 3
@@ -208,7 +208,7 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator | python3 -m json.tool
 
 ## What answers where
 
-The address is the boundary, and it is worth testing from both sides. In the lab the machine's own
+Test the boundary from both sides. In the lab the machine's own
 address on the network is `192.0.2.2`; yours will be different, and `hostname -I` prints it.
 
 ```

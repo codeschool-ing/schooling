@@ -104,8 +104,8 @@ something is the index: `[3]`, the third value of the `@ValueSource`, which is `
 Frankenstein. The display names of the previous section would have printed it outright.
 
 So the broken rule refuses a real book, and the reason is arithmetic. The weighted products of
-Frankenstein's first twelve digits add up to 70. The real rule gives `(10 - 0) % 10`, which is 0, and the ISBN ends in 0. The broken one
-gives `10 - 0`, which is 10, and no single digit is ever 10. **Every ISBN whose check digit is 0 is
+Frankenstein's first twelve digits add up to 70. The real rule gives `(10 - 0) % 10`, which is 0,
+and the ISBN ends in 0. The broken one gives `10 - 0`, which is 10, and no single digit is ever 10. **Every ISBN whose check digit is 0 is
 now refused**, roughly one book in ten, and every other ISBN still passes.
 
 ## The same bug, and a green build
@@ -125,7 +125,7 @@ ana@vm:~/bookshop$ mvn test | grep -E "Tests run:|BUILD"
 left ends in 0, so none of them can see the difference. A passing test says that the cases somebody
 wrote down behave as written down, and nothing about the ones nobody did. That is why the row for
 Frankenstein is in the final `IsbnTest`: it is the one input that tells the two rules apart.
-Choosing rows is the actual work of writing a test, and the question to ask of each one is what
+Choosing the rows is most of the work of writing a parameterised test, and the question to ask of each one is what
 mistake it would catch.
 
 Put both files back, the rule and the test, and check that everything passes again:

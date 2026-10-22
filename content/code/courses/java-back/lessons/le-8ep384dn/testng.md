@@ -254,10 +254,9 @@ name="addsCopies"	status="FAIL"
 name="takesOne"	status="SKIP"
 ```
 
-`takesOne` never ran: `addsCopies`, which it depends on, failed. That is the point of the feature and
-its whole cost in one line. The report is honest, one failure and one test that could not tell you
-anything, instead of a second failure that is only an echo of the first. But it also means the test
-class is a sequence: `takesOne` cannot be understood, or run, without the two tests before it, and
+`takesOne` never ran: `addsCopies`, which it depends on, failed. The report is honest, one failure
+and one test that could not have told you anything, instead of a second failure that only echoes
+the first. The cost is that the class is now a sequence: `takesOne` cannot be understood, or run, without the two tests before it, and
 all three share the one `shelf`. **JUnit makes the opposite choice, a fresh
 instance per test, so that no test can depend on another by accident.** Put the expectation back:
 

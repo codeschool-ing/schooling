@@ -294,7 +294,7 @@ Spring, então o `grep` fica com as linhas que trazem os comentários de origem 
 com a contagem e o veredito:
 
 ```
-ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'
+ana@vm:~/bookshop$ mvn -B verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Scenario: An order takes copies out of stock               # classpath:features/ordering.feature:8
@@ -315,7 +315,7 @@ Scenario Outline: An order for more copies than the shop has is refused # classp
   ✔ When she orders 2 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
   ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
   ✔ And "Persuasion" has 0 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.518 s -- in com.example.bookshop.acceptance.CucumberIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.60 s -- in com.example.bookshop.acceptance.CucumberIT
 [INFO] BUILD SUCCESS
 ```
 
@@ -347,18 +347,18 @@ as dos próprios passos, foi confirmada no momento em que foi feita.
 O cache vai além do Cucumber. Rode o `verify` inteiro e conte os contêineres:
 
 ```
-ana@vm:~/bookshop$ mvn verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'
+ana@vm:~/bookshop$ mvn -B verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 [INFO] Running com.example.bookshop.BookshopApplicationIT
-2026-10-22T20:36:23.806-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
-2026-10-22T20:36:28.302-03:00  INFO 22514 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 7.121 seconds (process running for 8.301)
+2026-10-22T20:38:43.063-03:00  INFO 27358 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:38:48.977-03:00  INFO 27358 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 9.621 seconds (process running for 11.258)
 [INFO] Running com.example.bookshop.catalogue.BookRepositoryIT
-2026-10-22T20:36:28.584-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
-2026-10-22T20:36:30.466-03:00  INFO 22514 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.452 seconds (process running for 10.466)
+2026-10-22T20:38:49.405-03:00  INFO 27358 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:38:51.547-03:00  INFO 27358 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.711 seconds (process running for 13.828)
 [INFO] Running com.example.bookshop.BooksApiIT
-2026-10-22T20:36:32.319-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
-2026-10-22T20:36:34.118-03:00  INFO 22514 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 2.306 seconds (process running for 14.118)
+2026-10-22T20:38:53.846-03:00  INFO 27358 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:38:55.892-03:00  INFO 27358 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 2.911 seconds (process running for 18.172)
 [INFO] Running com.example.bookshop.acceptance.CucumberIT
 [INFO] BUILD SUCCESS
 ```
@@ -367,6 +367,6 @@ Três classes de teste de integração sobem um contêiner do PostgreSQL e um co
 `CucumberIT` não sobe nenhum dos dois: a configuração dele é igual à do `BooksApiIT`, então o Spring
 lhe entregou o contexto que o `BooksApiIT` tinha deixado, com banco e tudo, inclusive o exemplar de
 *The Time Machine* que um dos testes dele tinha acabado de pedir. Nesta execução o `BooksApiIT`
-calhou de ir primeiro, e o Maven não promete ordem nenhuma. **É por isso que os passos `Given`
+calhou de rodar antes dele, e o Maven não promete ordem nenhuma. **É por isso que os passos `Given`
 escrevem o estoque em vez de supor qual é**: um cenário que depende do estado que outro deixou passa
 ou falha conforme quem rodou antes dele.

@@ -220,8 +220,8 @@ também, ele é um terceiro valor da mesma tag, e não um meter novo.
 
 Os valores de uma tag têm de ser poucos e conhecidos de antemão. A `outcome` tem dois. Marcar cada
 pedido com o cliente, `meters.counter("bookshop.orders", "customer", customer)`, pareceria inofensivo
-com dois usuários e criaria uma série nova para cada cliente que a loja já teve: memória no registry,
-uma linha em cada sistema que guarda os números, e um nome de conta copiado para um sistema de
-monitoramento que o guarda por meses, que é a regra da aula 16 sobre dados pessoais aplicada a
-números. Uma pergunta sobre um cliente pertence ao banco; uma métrica responde perguntas sobre todos
+com dois usuários. Também criaria uma série nova para cada cliente que a loja já teve: memória no
+registry, uma linha em cada sistema que guarda os números, e um nome de conta copiado para um sistema
+de monitoramento que o guarda por meses. Esse último custo é a regra da aula 16 sobre dados pessoais,
+aplicada a números. Uma pergunta sobre um cliente pertence ao banco; uma métrica responde perguntas sobre todos
 eles de uma vez.

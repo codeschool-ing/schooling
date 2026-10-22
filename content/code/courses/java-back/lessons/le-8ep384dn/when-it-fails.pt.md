@@ -125,7 +125,7 @@ ana@vm:~/bookshop$ mvn test | grep -E "Tests run:|BUILD"
 que sobraram termina em 0, então nenhum deles enxerga a diferença. Um teste que passa diz que os
 casos que alguém anotou se comportam como foi anotado, e nada sobre os que ninguém anotou. É por
 isso que a linha de Frankenstein está no `IsbnTest` final: é a única entrada que distingue as duas
-regras. Escolher as linhas é o trabalho de verdade de escrever um teste, e a pergunta a fazer a cada
+regras. Escolher as linhas é a maior parte do trabalho de escrever um teste parametrizado, e a pergunta a fazer a cada
 uma é que erro ela pegaria.
 
 Volte os dois arquivos, a regra e o teste, e confira que tudo passa de novo:

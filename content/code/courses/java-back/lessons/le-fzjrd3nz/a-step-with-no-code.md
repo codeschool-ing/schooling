@@ -19,9 +19,11 @@ the shop has never made:
 and run the features again, this time keeping the count and the lines that follow the exception:
 
 ```
-ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E -A 8 'Tests run:.*Cucumber|UndefinedStepException'
+ana@vm:~/bookshop$ mvn -B verify -Dit.test=CucumberIT | grep -E -A 8 'Tests run:.*Cucumber|UndefinedStepException'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[ERROR] Tests run: 3, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 19.51 s <<< FAILURE! -- in com.example.bookshop.acceptance.CucumberIT
+[ERROR] com.example.bookshop.acceptance.CucumberIT.An order takes copies out of stock -- Time elapsed: 18.37 s <<< ERROR!
 io.cucumber.junit.platform.engine.UndefinedStepException: 
 The step 'she receives an e-mail confirming the order' is undefined.
 You can implement this step using the snippet(s) below:
@@ -56,7 +58,7 @@ A failure reads the same way, at the level of the sentence. Change `6400` to `63
 scenario's `Then` and run:
 
 ```
-ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|expected:|but was:|Tests run:.*Cucumber'
+ana@vm:~/bookshop$ mvn -B verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|expected:|but was:|Tests run:.*Cucumber'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Scenario: An order takes copies out of stock               # classpath:features/ordering.feature:8
@@ -79,6 +81,7 @@ Scenario Outline: An order for more copies than the shop has is refused # classp
   ✔ When she orders 2 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
   ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
   ✔ And "Persuasion" has 0 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 10.63 s <<< FAILURE! -- in com.example.bookshop.acceptance.CucumberIT
 expected: 6300
  but was: 6400
 expected: 6300

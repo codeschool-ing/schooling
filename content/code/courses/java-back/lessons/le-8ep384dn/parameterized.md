@@ -70,7 +70,7 @@ testcase name="refusesAnythingElse(String, String)[4]"
 testcase name="refusesAnythingElse(String, String)[5]"
 ```
 
-That is all Maven will ever print about them, and `[3]` does not say which ISBN was third. The
+That is all Maven prints about them, and `[3]` does not say which ISBN was third. The
 `name` pattern written on `refusesAnythingElse` is for whatever prints JUnit's own **display
 names**. An IDE's test window does: IntelliJ IDEA, Eclipse and VS Code all draw the tree of tests
 under those names. In the terminal, JUnit's **console launcher** does, and it takes two commands to

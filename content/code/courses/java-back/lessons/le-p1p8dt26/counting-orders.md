@@ -219,8 +219,9 @@ third value of the same tag, not a new meter.
 
 A tag's values have to be few and known in advance. `outcome` has two. Tagging each order with the
 customer instead, `meters.counter("bookshop.orders", "customer", customer)`, would look harmless with
-two users and create a new series for every customer the shop ever has: memory in the registry, a
-row in every system that stores the numbers, and an account name copied into a monitoring system
-that keeps it for months, which is lesson 16's rule about personal data applied to numbers. A question about
+two users. It would also create a new series for every customer the shop ever has: memory in the
+registry, a row in every system that stores the numbers, and an account name copied into a monitoring
+system that keeps it for months. That last cost is lesson 16's rule about personal data, applied to
+numbers. A question about
 one customer belongs in the database; a metric answers questions about all of them
 at once.

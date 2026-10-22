@@ -118,5 +118,5 @@ server kept answering the scrape, so the first rule is silent: the process was a
 it asks. The second fires. The client was told 401, but the timer recorded a `500` with
 `SERVER_ERROR`, and with every request that needs the database failing, the share is far above five
 per cent. The third fires too, if the outage lasts two minutes with requests arriving, because each of
-them waits five seconds for a connection. A rule is only as true as the numbers under it, and here the
-numbers were truer than the response the client got.
+them waits five seconds for a connection. Here the numbers were truer than the
+response the client got.

@@ -130,8 +130,8 @@ regra própria, todo endpoint pediria um bearer token. Substitua
 ```
 
 `EndpointRequest.toAnyEndpoint()` casa com os endpoints expostos, onde quer que estejam, então a
-regra sobrevive a uma troca de porta ou de caminho base. Vale ver a linha fazer diferença. Sem ela,
-depois de recompilar e reiniciar, a porta privada responde como a API:
+regra sobrevive a uma troca de porta ou de caminho base. Tire a linha, recompile e reinicie, e a porta
+privada responde como a API:
 
 ```
 ana@vm:~/bookshop$ curl -s -i localhost:8081/actuator/health | head -n 3
@@ -209,7 +209,7 @@ ana@vm:~/bookshop$ curl -s localhost:8081/actuator | python3 -m json.tool
 
 ## O que responde onde
 
-O endereço é a fronteira, e vale testar dos dois lados. No laboratório, o endereço da máquina na rede
+Teste a fronteira dos dois lados. No laboratório, o endereço da máquina na rede
 é `192.0.2.2`; o seu será outro, e o `hostname -I` mostra qual.
 
 ```

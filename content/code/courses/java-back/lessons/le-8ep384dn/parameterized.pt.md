@@ -70,7 +70,7 @@ testcase name="refusesAnythingElse(String, String)[4]"
 testcase name="refusesAnythingElse(String, String)[5]"
 ```
 
-Isso é tudo o que o Maven vai imprimir sobre elas, e `[3]` não diz qual ISBN era o terceiro. O padrão
+Isso é tudo o que o Maven imprime sobre elas, e `[3]` não diz qual ISBN era o terceiro. O padrão
 `name` escrito em `refusesAnythingElse` serve para o que imprime os **nomes de exibição** do próprio
 JUnit. A janela de testes de uma IDE imprime: IntelliJ IDEA, Eclipse e VS Code desenham a árvore de
 testes com esses nomes. No terminal, quem imprime é o **console launcher** do JUnit, e são dois

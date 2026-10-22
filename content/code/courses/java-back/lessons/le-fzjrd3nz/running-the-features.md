@@ -293,7 +293,7 @@ because `verify` comes after `test`. The pretty report shares the terminal with 
 verdict:
 
 ```
-ana@vm:~/bookshop$ mvn verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'
+ana@vm:~/bookshop$ mvn -B verify -Dit.test=CucumberIT | grep -E ' # (classpath|com\.example)|Tests run:.*Cucumber|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 Scenario: An order takes copies out of stock               # classpath:features/ordering.feature:8
@@ -314,7 +314,7 @@ Scenario Outline: An order for more copies than the shop has is refused # classp
   ✔ When she orders 2 copies of "Persuasion"                            # com.example.bookshop.acceptance.OrderingSteps.sheOrders(int,java.lang.String)
   ✔ Then the order is refused as out of stock                           # com.example.bookshop.acceptance.OrderingSteps.theOrderIsRefused()
   ✔ And "Persuasion" has 0 copies left                                  # com.example.bookshop.acceptance.OrderingSteps.hasCopiesLeft(java.lang.String,int)
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.518 s -- in com.example.bookshop.acceptance.CucumberIT
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.60 s -- in com.example.bookshop.acceptance.CucumberIT
 [INFO] BUILD SUCCESS
 ```
 
@@ -346,18 +346,18 @@ included, was committed the moment it was made.
 The cache reaches further than Cucumber. Run the whole of `verify` and count the containers:
 
 ```
-ana@vm:~/bookshop$ mvn verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'
+ana@vm:~/bookshop$ mvn -B verify | grep -E 'Running .*IT|Creating container for image: postgres|Started [A-Z]|BUILD'
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 [INFO] Running com.example.bookshop.BookshopApplicationIT
-2026-10-22T20:36:23.806-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
-2026-10-22T20:36:28.302-03:00  INFO 22514 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 7.121 seconds (process running for 8.301)
+2026-10-22T20:38:43.063-03:00  INFO 27358 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:38:48.977-03:00  INFO 27358 --- [bookshop] [           main] [] c.e.bookshop.BookshopApplicationIT       : Started BookshopApplicationIT in 9.621 seconds (process running for 11.258)
 [INFO] Running com.example.bookshop.catalogue.BookRepositoryIT
-2026-10-22T20:36:28.584-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
-2026-10-22T20:36:30.466-03:00  INFO 22514 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.452 seconds (process running for 10.466)
+2026-10-22T20:38:49.405-03:00  INFO 27358 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:38:51.547-03:00  INFO 27358 --- [bookshop] [           main] [] c.e.bookshop.catalogue.BookRepositoryIT  : Started BookRepositoryIT in 0.711 seconds (process running for 13.828)
 [INFO] Running com.example.bookshop.BooksApiIT
-2026-10-22T20:36:32.319-03:00  INFO 22514 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
-2026-10-22T20:36:34.118-03:00  INFO 22514 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 2.306 seconds (process running for 14.118)
+2026-10-22T20:38:53.846-03:00  INFO 27358 --- [bookshop] [           main] [] tc.postgres:16-alpine                    : Creating container for image: postgres:16-alpine
+2026-10-22T20:38:55.892-03:00  INFO 27358 --- [bookshop] [           main] [] com.example.bookshop.BooksApiIT          : Started BooksApiIT in 2.911 seconds (process running for 18.172)
 [INFO] Running com.example.bookshop.acceptance.CucumberIT
 [INFO] BUILD SUCCESS
 ```
@@ -365,7 +365,7 @@ OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader clas
 Three integration test classes start a PostgreSQL container and a context of their own.
 `CucumberIT` starts neither: its configuration is the same as `BooksApiIT`'s, so Spring handed it
 the context `BooksApiIT` had left behind, database and all, including the copy of *The Time
-Machine* one of its tests had just ordered. In this run `BooksApiIT` happened to go first, and
+Machine* one of its tests had just ordered. In this run `BooksApiIT` happened to run before it, and
 Maven promises no order. **That is the reason the `Given` steps write the stock instead of
 assuming it**: a scenario that depends on the state somebody else left passes or fails depending
 on who ran before it.

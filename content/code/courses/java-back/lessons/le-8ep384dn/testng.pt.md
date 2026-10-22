@@ -255,10 +255,9 @@ name="addsCopies"	status="FAIL"
 name="takesOne"	status="SKIP"
 ```
 
-`takesOne` nunca rodou: `addsCopies`, de quem ele depende, falhou. Isso é o objetivo do recurso e
-todo o seu custo numa linha só. O relatório é honesto, uma falha e um teste que não teria nada a
-dizer, em vez de uma segunda falha que é só eco da primeira. Mas isso também quer dizer que a classe
-de teste é uma sequência: `takesOne` não pode ser entendido, nem rodado, sem os dois testes antes
+`takesOne` nunca rodou: `addsCopies`, de quem ele depende, falhou. O relatório é honesto, uma falha
+e um teste que não teria nada a dizer, em vez de uma segunda falha que só ecoa a primeira. O custo é
+que a classe agora é uma sequência: `takesOne` não pode ser entendido, nem rodado, sem os dois testes antes
 dele, e os três dividem a mesma `shelf`. **O JUnit faz a escolha oposta, uma instância nova por
 teste, para que nenhum teste dependa de outro por acidente.** Volte a expectativa:
 

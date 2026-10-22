@@ -121,6 +121,5 @@ gerenciamento continuou respondendo à coleta, então a primeira regra fica quie
 vivo, e é só isso que ela pergunta. A segunda dispara. O cliente recebeu 401, mas o timer registrou um
 `500` com `SERVER_ERROR`, e, com toda requisição que precisa do banco falhando, a fração fica muito
 acima de cinco por cento. A terceira dispara também, se a falha durar dois minutos com requisições
-chegando, porque cada uma espera cinco segundos por uma conexão. Uma regra só é tão verdadeira quanto
-os números por baixo dela, e aqui os números foram mais verdadeiros do que a resposta que o cliente
-recebeu.
+chegando, porque cada uma espera cinco segundos por uma conexão. Aqui os números foram mais verdadeiros
+do que a resposta que o cliente recebeu.
