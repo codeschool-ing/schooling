@@ -5,7 +5,7 @@ version: 1
 
 In lesson 14 an order named its customer in the request body. Anybody could place an order in
 anybody's name, and anybody could read any order by counting up its id. The scope rule now keeps out
-whoever has no token with `orders` in it, but ana and the clerk both have one, and a URL rule cannot
+whoever has no token with `orders` in it, but ana and the clerk both have one. A URL rule cannot
 tell their orders apart: it sees a path and a list of authorities, not who owns row 1. That check
 belongs to the data, so it goes in the code that reads the data.
 
@@ -132,9 +132,9 @@ and for one that does not exist:
 
 ```
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d '{"lines":[{"bookId":1,"quantity":1}]}' localhost:8080/orders
-{"id":1,"customer":"ana","placedAt":"2026-10-22T22:14:06Z","lines":[{"bookId":1,"title":"Dom Casmurro","quantity":1,"priceCents":3990}],"totalCents":3990}
+{"id":1,"customer":"ana","placedAt":"2026-10-22T22:48:31Z","lines":[{"bookId":1,"title":"Dom Casmurro","quantity":1,"priceCents":3990}],"totalCents":3990}
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d '{"customer":"clerk","lines":[{"bookId":2,"quantity":1}]}' localhost:8080/orders
-{"id":2,"customer":"ana","placedAt":"2026-10-22T22:14:06Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
+{"id":2,"customer":"ana","placedAt":"2026-10-22T22:48:31Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat clerk.token)" localhost:8080/orders/1
 {"detail":"No order has id 1","instance":"/orders/1","status":404,"title":"Order not found","type":"https://bookshop.example/problems/order-not-found"}
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat clerk.token)" localhost:8080/orders/99

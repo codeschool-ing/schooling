@@ -112,7 +112,7 @@ quiet 'rm -f health.json'
 stop
 
 block readiness-loop
-LOOP="for i in \$(seq 200); do curl -s -o /dev/null -w '%{http_code}\n' localhost:8081/actuator/health/readiness; sleep 0.1; done | uniq -c"
+LOOP="for i in \$(seq 200); do echo \$(for p in health/liveness health/readiness health; do curl -s -o /dev/null -w '%{http_code} ' localhost:8081/actuator/\$p; done); sleep 0.1; done | uniq -c"
 runuser -u ana -- env -i HOME=/home/ana PATH=/usr/bin:/bin LC_ALL=C.UTF-8 bash -c "cd ~/bookshop && $LOOP" > /tmp/l22-loop.txt 2>&1 9>&- &
 LOOPPID=$!
 sleep 1

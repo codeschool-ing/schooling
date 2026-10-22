@@ -39,11 +39,11 @@ Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
 Content-Length: 0
-Date: Thu, 22 Oct 2026 22:14:05 GMT
+Date: Thu, 22 Oct 2026 22:48:30 GMT
 
 ana@vm:~/bookshop$ curl -s -u clerk:clerk-adds-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' > clerk.token
 ana@vm:~/bookshop$ cut -d. -f2 clerk.token | basenc -d --base64url; echo
-{"iss":"bookshop","sub":"clerk","exp":1792708145,"iat":1792707245,"scope":"catalogue:write orders"}
+{"iss":"bookshop","sub":"clerk","exp":1792710210,"iat":1792709310,"scope":"catalogue:write orders"}
 ana@vm:~/bookshop$ curl -si -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d '{"isbn":"9786500000078","title":"Emma","author":"Jane Austen","priceCents":3300,"stock":2}' localhost:8080/books
 HTTP/1.1 403 
 WWW-Authenticate: Bearer error="insufficient_scope", error_description="The request requires higher privileges than provided by the access token.", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1"
@@ -54,7 +54,7 @@ Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
 Content-Length: 0
-Date: Thu, 22 Oct 2026 22:14:06 GMT
+Date: Thu, 22 Oct 2026 22:48:30 GMT
 
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat clerk.token)" -H 'Content-Type: application/json' -d '{"isbn":"9786500000078","title":"Emma","author":"Jane Austen","priceCents":3300,"stock":2}' localhost:8080/books
 {"id":7,"isbn":"9786500000078","title":"Emma","author":"Jane Austen","priceCents":3300,"stock":2}
@@ -80,7 +80,7 @@ and restart, and ask for a token; put the line back afterwards:
 
 ```
 ana@vm:~/bookshop$ curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' | cut -d. -f2 | basenc -d --base64url; echo
-{"iss":"bookshop","sub":"ana","exp":1792708226,"iat":1792707326,"scope":"FACTOR_PASSWORD orders"}basenc: invalid input
+{"iss":"bookshop","sub":"ana","exp":1792710291,"iat":1792709391,"scope":"FACTOR_PASSWORD orders"}basenc: invalid input
 ```
 
 **`FACTOR_PASSWORD`.** Spring Security 7 records, beside a user's authorities, how the user proved who

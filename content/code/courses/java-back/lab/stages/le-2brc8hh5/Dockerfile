@@ -12,4 +12,4 @@ COPY --from=layers /build/extracted/spring-boot-loader/ ./
 COPY --from=layers /build/extracted/snapshot-dependencies/ ./
 COPY --from=layers /build/extracted/application/ ./
 EXPOSE 8080 8081
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "org.springframework.boot.loader.launch.JarLauncher"]

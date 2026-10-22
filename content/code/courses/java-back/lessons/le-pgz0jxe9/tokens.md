@@ -168,12 +168,12 @@ ana until it expires, so delete it when you are done.
 ```
 ana@vm:~/bookshop$ curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' > ana.token
 ana@vm:~/bookshop$ cat ana.token
-eyJraWQiOiJPWk9odmt2Ui1tOVpKOUM3N2xxUm5yN0E0VVMxdk1obkpuR0hLcDl1eGJnIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJib29rc2hvcCIsInN1YiI6ImFuYSIsImV4cCI6MTc5MjcwODE0NSwiaWF0IjoxNzkyNzA3MjQ1LCJzY29wZSI6Im9yZGVycyJ9.MpSSa089W22PreCSDmsz487vOif-x5m4WV5aRyScMgQ
+eyJraWQiOiJPWk9odmt2Ui1tOVpKOUM3N2xxUm5yN0E0VVMxdk1obkpuR0hLcDl1eGJnIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJib29rc2hvcCIsInN1YiI6ImFuYSIsImV4cCI6MTc5MjcxMDIxMCwiaWF0IjoxNzkyNzA5MzEwLCJzY29wZSI6Im9yZGVycyJ9.mZduNKAMtWvUw2eCxswJiwxnX6yMaeFGcIAMr5b02yM
 ana@vm:~/bookshop$ cut -d. -f1 ana.token | basenc -d --base64url; echo
 {"kid":"OZOhvkvR-m9ZJ9C77lqRnr7A4US1vMhnJnGHKp9uxbg","alg":"HS256"}basenc: invalid input
 
 ana@vm:~/bookshop$ cut -d. -f2 ana.token | basenc -d --base64url; echo
-{"iss":"bookshop","sub":"ana","exp":1792708145,"iat":1792707245,"scope":"orders"}
+{"iss":"bookshop","sub":"ana","exp":1792710210,"iat":1792709310,"scope":"orders"}
 ana@vm:~/bookshop$ cut -d. -f3 ana.token | basenc -d --base64url | wc -c
 basenc: invalid input
 32
@@ -183,9 +183,9 @@ A JWT is three parts separated by dots, each in **base64url**, the variant of ba
 URL. `basenc` decodes it; its `invalid input` is about the `=` padding that base64 normally ends with
 and a JWT leaves out, and the text printed before the complaint is complete. The **header** names the
 algorithm, `HS256`, and a key id the encoder adds so that a server with several keys knows which one
-to check with. The **payload** holds the claims `TokenController` set: `iss`, the issuer; `sub`, the
-**subject**, whose token this is; `iat` and `exp`, issued at and expires at, in seconds since 1 January
-1970 UTC, 900 apart, which is the fifteen minutes; and `scope`. The **signature** is 32 bytes, the
+to check with. The **payload** holds the claims `TokenController` set. `iss` is the issuer and `sub` the
+**subject**, whose token this is. `iat` and `exp` are issued at and expires at, in seconds since
+1 January 1970 UTC, and they are 900 apart, which is the fifteen minutes. Then `scope`. The **signature** is 32 bytes, the
 size of a SHA-256 output.
 
 ```schooling-figure
@@ -205,7 +205,7 @@ payload, give ana the clerk's scope, and put the token back together around the 
 ana@vm:~/bookshop$ cut -d. -f2 ana.token | basenc -d --base64url | sed 's/"orders"/"catalogue:write orders"/' | basenc --base64url -w0 | tr -d = > payload
 ana@vm:~/bookshop$ echo "$(cut -d. -f1 ana.token).$(cat payload).$(cut -d. -f3 ana.token)" > forged.token
 ana@vm:~/bookshop$ cut -d. -f2 forged.token | basenc -d --base64url; echo
-{"iss":"bookshop","sub":"ana","exp":1792708145,"iat":1792707245,"scope":"catalogue:write orders"}basenc: invalid input
+{"iss":"bookshop","sub":"ana","exp":1792710210,"iat":1792709310,"scope":"catalogue:write orders"}basenc: invalid input
 
 ana@vm:~/bookshop$ curl -si -H "Authorization: Bearer $(cat forged.token)" -H 'Content-Type: application/json' -d '{"isbn":"9786500000078","title":"Emma","author":"Jane Austen","priceCents":3300,"stock":2}' localhost:8080/books
 HTTP/1.1 401 
@@ -217,7 +217,7 @@ Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
 Content-Length: 0
-Date: Thu, 22 Oct 2026 22:14:05 GMT
+Date: Thu, 22 Oct 2026 22:48:30 GMT
 ```
 
 **401, `Invalid signature`.** The decoder computed the HMAC of the header and the edited payload with

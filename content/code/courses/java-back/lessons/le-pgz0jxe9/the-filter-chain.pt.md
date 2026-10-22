@@ -101,7 +101,7 @@ como na aula 14 e peça um livro. Na aula 14 qualquer um conseguia:
 ana@vm:~/bookshop$ mvn -B -q package -DskipTests
 ana@vm:~/bookshop$ curl -si -w '\n' localhost:8080/books/1
 HTTP/1.1 401 
-Set-Cookie: JSESSIONID=CB3589EA4E2D46C6064300D8FD44DAF0; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=B2E681B3D4149A44D69DDAE867AB6FCC; Path=/; HttpOnly
 WWW-Authenticate: Basic realm="Realm", charset="UTF-8"
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
@@ -110,7 +110,7 @@ Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
 Content-Length: 0
-Date: Thu, 22 Oct 2026 22:12:04 GMT
+Date: Thu, 22 Oct 2026 22:47:31 GMT
 ```
 
 Um **401**, corpo vazio e um cabeçalho `WWW-Authenticate` nomeando o esquema que o servidor aceitaria,

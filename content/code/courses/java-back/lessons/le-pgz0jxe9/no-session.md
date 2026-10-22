@@ -20,7 +20,7 @@ Expires: 0
 X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 298
-Date: Thu, 22 Oct 2026 22:14:06 GMT
+Date: Thu, 22 Oct 2026 22:48:31 GMT
 ```
 
 No `Set-Cookie`. The client gets nothing to send back except the token itself, and every request
@@ -31,7 +31,7 @@ accepts a token the first one signed, as long as both hold the same secret.
 
 **The server keeps no record of the tokens it hands out.** It checks a signature and a date, and that
 is all. Expiry is therefore the one way a token stops working on its own. To watch it happen without
-waiting fifteen minutes, start the application with a two-second lifetime; a property given on the
+waiting fifteen minutes, start the application with a two-second lifetime. A property given on the
 command line wins over the file (lesson 4):
 
 ```sh
@@ -41,12 +41,12 @@ java -jar target/bookshop-0.1.0.jar --bookshop.jwt.lifetime=2s
 ```
 ana@vm:~/bookshop$ curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' > ana.token
 ana@vm:~/bookshop$ cut -d. -f2 ana.token | basenc -d --base64url; echo
-{"iss":"bookshop","sub":"ana","exp":1792707255,"iat":1792707253,"scope":"orders"}
+{"iss":"bookshop","sub":"ana","exp":1792709320,"iat":1792709318,"scope":"orders"}
 ana@vm:~/bookshop$ sleep 5; curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $(cat ana.token)" localhost:8080/books/1
 200
 ana@vm:~/bookshop$ sleep 60; curl -si -H "Authorization: Bearer $(cat ana.token)" localhost:8080/books/1 | head -2
 HTTP/1.1 401 
-WWW-Authenticate: Bearer error="invalid_token", error_description="An error occurred while attempting to decode the Jwt: Jwt expired at 2026-10-22T22:14:15Z", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1", resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer error="invalid_token", error_description="An error occurred while attempting to decode the Jwt: Jwt expired at 2026-10-22T22:48:40Z", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1", resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
 ```
 
 The payload says `exp` is two seconds after `iat`, and five seconds later the token still worked.
@@ -56,7 +56,7 @@ later it was refused, with the moment it expired in the header. The book is publ
 was still 401: **a token that fails its check is refused wherever it is sent**, even where no token is
 needed, because the bearer filter checks any token it is given before the rules are read.
 
-The other side of the same fact is the one that matters: **a JWT cannot be revoked.** A token copied
+The other side of the same fact: **a JWT cannot be revoked.** A token copied
 off somebody's machine is good until its `exp`, and nothing the server holds can be crossed out,
 because the server holds nothing. Signing out, with tokens like these, means the client throws its
 copy away. Three defences exist, and each one costs something:

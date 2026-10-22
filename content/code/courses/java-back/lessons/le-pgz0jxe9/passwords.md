@@ -57,11 +57,12 @@ the hash stored for ana. The `cd` with no argument goes back to your home direct
 
 ```
 ana@vm:~/bookshop$ mvn -q dependency:build-classpath -Dmdep.outputFile=cp.txt
+ana@vm:~/bookshop$ cd
 ana@vm:~$ java -cp "$(cat bookshop/cp.txt)" HashPassword.java ana-reads-books
-$2a$10$DJb4Yi9p3JRJ7npM1TZxteGJDauIkBKZYZY0fl/493FyqKq4XBWW6
+$2a$10$Guh5lpT/0tNvk7K.EuZUquT4Z1kWUY8XE9zsKpg73SFRlhK86b7Vm
 matches its own hash: true
 ana@vm:~$ java -cp "$(cat bookshop/cp.txt)" HashPassword.java ana-reads-books '$2a$10$ZGOqa4SybKybYWez.kObuOlRJidwtH0M8N11oKrIWVxl4mA422MiG'
-$2a$10$cdk7/w3ZVeMjBIJTWFk22eJZgPVl0KD8qpp1hfNKoxtCRmmGXCarW
+$2a$10$rQvoUqb9C5eYLg7DYyeWDOr9DqmqQw9gr.FHS1s.GFbNzN3cx5N0G
 matches its own hash: true
 matches the hash given: true
 ```
@@ -93,22 +94,22 @@ token, which run bcrypt, and then five requests carrying a token, which do not:
 
 ```
 ana@vm:~/bookshop$ for i in 1 2 3 4 5; do curl -s -o /dev/null -w '%{time_total}\n' -u ana:ana-reads-books -X POST localhost:8080/auth/token; done
-0.068564
-0.067145
-0.067239
-0.069804
-0.069891
+0.066478
+0.064783
+0.066993
+0.066761
+0.065047
 ana@vm:~/bookshop$ curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' > ana.token
 ana@vm:~/bookshop$ for i in 1 2 3 4 5; do curl -s -o /dev/null -w '%{time_total}\n' -H "Authorization: Bearer $(cat ana.token)" localhost:8080/books/1; done
-0.047668
-0.009704
-0.007936
-0.007902
-0.007915
+0.046781
+0.006146
+0.005610
+0.005367
+0.007246
 ```
 
-The numbers are seconds per request and differ on every run, but the shape does not: about 0.068 with
-bcrypt, and about 0.008 with a token once the first request has warmed up. That slowness is the
+The numbers are seconds per request and differ on every run, but the shape does not: about 0.065 with
+bcrypt, and about 0.006 with a token once the first request has warmed up. That slowness is the
 protection, and nobody wants to pay it on every request. So the bookshop asks for the password once, at `/auth/token`, and answers with a token that every
 later request carries instead:
 
@@ -131,9 +132,9 @@ Expires: 0
 X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 298
-Date: Thu, 22 Oct 2026 22:14:05 GMT
+Date: Thu, 22 Oct 2026 22:48:29 GMT
 
-{"accessToken":"eyJraWQiOiJPWk9odmt2Ui1tOVpKOUM3N2xxUm5yN0E0VVMxdk1obkpuR0hLcDl1eGJnIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJib29rc2hvcCIsInN1YiI6ImFuYSIsImV4cCI6MTc5MjcwODE0NSwiaWF0IjoxNzkyNzA3MjQ1LCJzY29wZSI6Im9yZGVycyJ9.MpSSa089W22PreCSDmsz487vOif-x5m4WV5aRyScMgQ","tokenType":"Bearer","expiresIn":900}
+{"accessToken":"eyJraWQiOiJPWk9odmt2Ui1tOVpKOUM3N2xxUm5yN0E0VVMxdk1obkpuR0hLcDl1eGJnIiwiYWxnIjoiSFMyNTYifQ.eyJpc3MiOiJib29rc2hvcCIsInN1YiI6ImFuYSIsImV4cCI6MTc5MjcxMDIwOSwiaWF0IjoxNzkyNzA5MzA5LCJzY29wZSI6Im9yZGVycyJ9.2aw539_Q13oLgf27ErwKrPKfjSY5N6IGiJ1SYIV2oMw","tokenType":"Bearer","expiresIn":900}
 ```
 
 The users here live in memory, in `SecurityConfig`, which is enough for two accounts and wrong for a

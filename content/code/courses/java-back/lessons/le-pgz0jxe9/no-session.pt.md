@@ -20,7 +20,7 @@ Expires: 0
 X-Frame-Options: DENY
 Content-Type: application/json
 Content-Length: 298
-Date: Thu, 22 Oct 2026 22:14:06 GMT
+Date: Thu, 22 Oct 2026 22:48:31 GMT
 ```
 
 Nenhum `Set-Cookie`. O cliente não recebe nada para mandar de volta além do próprio token, e toda
@@ -31,7 +31,7 @@ livraria aceita um token que a primeira assinou, desde que as duas tenham o mesm
 
 **O servidor não guarda registro dos tokens que entrega.** Ele confere uma assinatura e uma data, e é
 só. A expiração é, portanto, o único jeito de um token parar de funcionar sozinho. Para vê-la
-acontecer sem esperar quinze minutos, suba a aplicação com uma duração de dois segundos; uma
+acontecer sem esperar quinze minutos, suba a aplicação com uma duração de dois segundos. Uma
 propriedade dada na linha de comando vence a do arquivo (aula 4):
 
 ```sh
@@ -41,12 +41,12 @@ java -jar target/bookshop-0.1.0.jar --bookshop.jwt.lifetime=2s
 ```
 ana@vm:~/bookshop$ curl -s -u ana:ana-reads-books -X POST localhost:8080/auth/token | python3 -c 'import json,sys; print(json.load(sys.stdin)["accessToken"])' > ana.token
 ana@vm:~/bookshop$ cut -d. -f2 ana.token | basenc -d --base64url; echo
-{"iss":"bookshop","sub":"ana","exp":1792707255,"iat":1792707253,"scope":"orders"}
+{"iss":"bookshop","sub":"ana","exp":1792709320,"iat":1792709318,"scope":"orders"}
 ana@vm:~/bookshop$ sleep 5; curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $(cat ana.token)" localhost:8080/books/1
 200
 ana@vm:~/bookshop$ sleep 60; curl -si -H "Authorization: Bearer $(cat ana.token)" localhost:8080/books/1 | head -2
 HTTP/1.1 401 
-WWW-Authenticate: Bearer error="invalid_token", error_description="An error occurred while attempting to decode the Jwt: Jwt expired at 2026-10-22T22:14:15Z", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1", resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer error="invalid_token", error_description="An error occurred while attempting to decode the Jwt: Jwt expired at 2026-10-22T22:48:40Z", error_uri="https://tools.ietf.org/html/rfc6750#section-3.1", resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
 ```
 
 O payload diz que o `exp` está dois segundos depois do `iat`, e cinco segundos depois o token ainda
@@ -57,7 +57,7 @@ público, e a resposta ainda assim foi 401: **um token que falha na verificaçã
 que seja enviado**, mesmo onde não é preciso token, porque o filtro bearer confere qualquer token que
 recebe antes de as regras serem lidas.
 
-O outro lado do mesmo fato é o que importa: **um JWT não pode ser revogado.** Um token copiado da
+O outro lado do mesmo fato: **um JWT não pode ser revogado.** Um token copiado da
 máquina de alguém vale até o seu `exp`, e nada que o servidor guarda pode ser riscado, porque o
 servidor não guarda nada. Sair, com tokens assim, quer dizer o cliente jogar fora a sua cópia. Existem
 três defesas, e cada uma custa algo:

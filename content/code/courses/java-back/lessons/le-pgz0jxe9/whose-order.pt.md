@@ -5,7 +5,7 @@ version: 1
 
 Na aula 14 um pedido nomeava o cliente no corpo da requisição. Qualquer um podia fazer pedido em nome
 de qualquer um, e qualquer um podia ler qualquer pedido contando os ids. A regra de escopo agora barra
-quem não tem token com `orders`, mas a ana e o clerk têm, e uma regra de URL não distingue os pedidos
+quem não tem token com `orders`, mas a ana e o clerk têm. Uma regra de URL não distingue os pedidos
 de um e de outro: ela vê um caminho e uma lista de autoridades, não quem é dono da linha 1. Essa
 verificação pertence aos dados, então vai no código que lê os dados.
 
@@ -131,9 +131,9 @@ faz outro e tenta nomear o clerk como cliente; então o clerk pede o pedido da a
 
 ```
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d '{"lines":[{"bookId":1,"quantity":1}]}' localhost:8080/orders
-{"id":1,"customer":"ana","placedAt":"2026-10-22T22:14:06Z","lines":[{"bookId":1,"title":"Dom Casmurro","quantity":1,"priceCents":3990}],"totalCents":3990}
+{"id":1,"customer":"ana","placedAt":"2026-10-22T22:48:31Z","lines":[{"bookId":1,"title":"Dom Casmurro","quantity":1,"priceCents":3990}],"totalCents":3990}
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat ana.token)" -H 'Content-Type: application/json' -d '{"customer":"clerk","lines":[{"bookId":2,"quantity":1}]}' localhost:8080/orders
-{"id":2,"customer":"ana","placedAt":"2026-10-22T22:14:06Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
+{"id":2,"customer":"ana","placedAt":"2026-10-22T22:48:31Z","lines":[{"bookId":2,"title":"The Time Machine","quantity":1,"priceCents":2950}],"totalCents":2950}
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat clerk.token)" localhost:8080/orders/1
 {"detail":"No order has id 1","instance":"/orders/1","status":404,"title":"Order not found","type":"https://bookshop.example/problems/order-not-found"}
 ana@vm:~/bookshop$ curl -s -w '\n' -H "Authorization: Bearer $(cat clerk.token)" localhost:8080/orders/99
