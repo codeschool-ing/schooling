@@ -28,44 +28,24 @@ linhas que fazem alguma coisa. Crie
 }
 ```
 
-Uma anotação em Java é uma interface, então as anotações dela estão na classe compilada, e o
-`javap` as lê do jar que o Maven baixou:
+Uma anotação em Java é um tipo de interface, então as anotações dela estão na classe compilada,
+e o `javap` as lê do jar que o Maven baixou. O `sed` guarda a lista da classe, e o `grep` guarda um
+nome por entrada:
 
 ```
-ana@vm:~/bookshop$ javap -v -cp ~/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/4.1.1/spring-boot-autoconfigure-4.1.1.jar org.springframework.boot.autoconfigure.SpringBootApplication | grep -E 'RuntimeVisibleAnnotations|^ +[0-9]+: #[0-9]+|^ +org\.springframework'
-  #12 = Utf8               RuntimeVisibleAnnotations
-    RuntimeVisibleAnnotations:
-      0: #13(#14=c#15)
-        org.springframework.core.annotation.AliasFor(
-    RuntimeVisibleAnnotations:
-      0: #13(#14=c#15)
-        org.springframework.core.annotation.AliasFor(
-    RuntimeVisibleAnnotations:
-      0: #13(#14=c#19,#20=s#21)
-        org.springframework.core.annotation.AliasFor(
-    RuntimeVisibleAnnotations:
-      0: #13(#14=c#19,#20=s#23)
-        org.springframework.core.annotation.AliasFor(
-    RuntimeVisibleAnnotations:
-      0: #13(#14=c#19,#20=s#24)
-        org.springframework.core.annotation.AliasFor(
-    RuntimeVisibleAnnotations:
-      0: #13(#14=c#31)
-        org.springframework.core.annotation.AliasFor(
-RuntimeVisibleAnnotations:
-  0: #34(#35=[e#36.#37])
-  1: #38(#35=e#39.#40)
-  2: #41()
-  3: #42()
-  4: #43()
+ana@vm:~/bookshop$ javap -v -cp ~/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/4.1.1/spring-boot-autoconfigure-4.1.1.jar org.springframework.boot.autoconfigure.SpringBootApplication | sed -n '/^RuntimeVisibleAnnotations:/,/^InnerClasses:/p' | grep -E '^    [a-z]'
+    java.lang.annotation.Target(
+    java.lang.annotation.Retention(
+    java.lang.annotation.Documented
+    java.lang.annotation.Inherited
     org.springframework.boot.SpringBootConfiguration
-  5: #15()
     org.springframework.boot.autoconfigure.EnableAutoConfiguration
-  6: #19(#44=[@#45(#46=e#47.#48,#49=[c#50]),@#45(#46=e#47.#48,#49=[c#51])])
     org.springframework.context.annotation.ComponentScan(
 ```
 
-Passadas as duas que toda anotação carrega, vêm as três que fazem o trabalho.
+Sete. As quatro primeiras são o que qualquer anotação diz sobre si mesma: onde pode ser posta,
+que é mantida em tempo de execução, que aparece no Javadoc e que subclasses a herdam. As três
+últimas fazem o trabalho.
 **`@SpringBootConfiguration`** marca a classe como fonte de definições de beans, os objetos que o
 Spring cria e conecta, que são o assunto da aula 5. **`@EnableAutoConfiguration`** liga o mecanismo
 que a próxima seção abre. **`@ComponentScan`** diz ao Spring para procurar as suas classes neste
@@ -91,14 +71,16 @@ ana@vm:~/bookshop$ mvn -B package | tail -n 8
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.597 s
-[INFO] Finished at: 2026-10-16T20:20:39-03:00
+[INFO] Total time:  26.136 s
+[INFO] Finished at: 2026-10-22T19:10:48-03:00
 [INFO] ------------------------------------------------------------------------
 ana@vm:~/bookshop$ ls -l target/*.jar*
--rw-r--r-- 1 ana ana 19904573 Oct 16 20:20 target/bookshop-0.1.0.jar
--rw-r--r-- 1 ana ana     2766 Oct 16 20:20 target/bookshop-0.1.0.jar.original
+-rw-r--r-- 1 ana ana 19904573 Oct 22 19:10 target/bookshop-0.1.0.jar
+-rw-r--r-- 1 ana ana     2766 Oct 22 19:10 target/bookshop-0.1.0.jar.original
 ana@vm:~/bookshop$ jar tf target/bookshop-0.1.0.jar | grep -c '^BOOT-INF/lib/.*\.jar$'
 34
+ana@vm:~/bookshop$ jar tf target/bookshop-0.1.0.jar | grep -E '^BOOT-INF/lib/spring-boot-(starter|jarmode)'
+BOOT-INF/lib/spring-boot-jarmode-tools-4.1.1.jar
 ```
 
 O `spring-boot-maven-plugin:4.1.1:repackage` rodou depois de o jar comum ser montado e o
@@ -127,14 +109,14 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-10-16T20:20:41.311-03:00  INFO 977 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 977 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
-2026-10-16T20:20:41.320-03:00  INFO 977 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-10-16T20:20:42.655-03:00  INFO 977 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
-2026-10-16T20:20:42.668-03:00  INFO 977 --- [bookshop] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-10-16T20:20:42.669-03:00  INFO 977 --- [bookshop] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
-2026-10-16T20:20:42.704-03:00  INFO 977 --- [bookshop] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1272 ms
-2026-10-16T20:20:43.083-03:00  INFO 977 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
-2026-10-16T20:20:43.098-03:00  INFO 977 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 2.526 seconds (process running for 3.095)
+2026-10-22T19:10:50.299-03:00  INFO 5395 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 5395 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
+2026-10-22T19:10:50.317-03:00  INFO 5395 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T19:10:51.485-03:00  INFO 5395 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-10-22T19:10:51.541-03:00  INFO 5395 --- [bookshop] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-22T19:10:51.541-03:00  INFO 5395 --- [bookshop] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-22T19:10:51.561-03:00  INFO 5395 --- [bookshop] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1152 ms
+2026-10-22T19:10:52.035-03:00  INFO 5395 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-22T19:10:52.054-03:00  INFO 5395 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 2.658 seconds (process running for 3.253)
 ```
 
 Leia de cima. O banner e a versão do Boot. `Starting BookshopApplication v0.1.0 using Java
@@ -147,7 +129,7 @@ No primeiro terminal, peça alguma coisa:
 
 ```
 ana@vm:~/bookshop$ curl -s localhost:8080/; echo
-{"timestamp":"2026-10-16T23:20:44.163Z","status":404,"error":"Not Found","path":"/"}
+{"timestamp":"2026-10-22T22:10:53.029Z","status":404,"error":"Not Found","path":"/"}
 ```
 
 Um `404`, e essa é a resposta certa. A requisição chegou ao Spring MVC, nada na livraria trata `/`

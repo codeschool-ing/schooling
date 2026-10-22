@@ -111,9 +111,9 @@ ana@vm:~/bookshop$ grep -c ':compile' /tmp/tree.txt
 Uma linha no pom, e cada linha dessa árvore está no classpath. Leia de cima: o
 `spring-boot-starter` é o núcleo que todo starter compartilha, e ele traz o log (Logback por
 trás do SLF4J, que a aula 16 desmonta) e o `spring-boot-autoconfigure`, assunto da seção
-depois da próxima. Depois o Jackson 3, que transforma objetos em JSON, o Tomcat 11,
-embutido, de modo que o servidor é uma biblioteca dentro da aplicação, e não algo onde a aplicação
-é implantada, e o Spring MVC, que entrega cada requisição ao seu código.
+depois da próxima. Depois o Jackson 3, que transforma objetos em JSON, e o Spring MVC, que
+entrega cada requisição ao seu código. E o Tomcat 11, embutido: **o servidor é uma biblioteca
+dentro da aplicação**, e não algo onde a aplicação é implantada.
 
 O próprio starter não contribui código nenhum:
 
@@ -156,7 +156,7 @@ ana@vm:~/bookshop$ mvn -q help:evaluate -Dexpression=jackson-bom.version -Dforce
 195 propriedades de versão, para as bibliotecas e também para os plugins do Maven, e é por isso
 que este pom não fixa nenhum dos plugins que a aula 1 precisou fixar. Cada uma foi escolhida pela
 equipe do Spring e **testada junto** com as outras antes de o Boot 4.1.1 sair, e esse é o
-argumento de verdade a favor do pai. Sem ele, escolher um Jackson que funcione com este Spring
+argumento a favor do pai. Sem ele, escolher um Jackson que funcione com este Spring
 Framework, e um Tomcat que funcione com os dois, é um trabalho que você faz a cada atualização, e
 erra uma vez.
 

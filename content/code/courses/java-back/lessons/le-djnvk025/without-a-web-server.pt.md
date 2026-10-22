@@ -33,9 +33,9 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-10-16T20:20:49.830-03:00  INFO 1664 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 1664 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
-2026-10-16T20:20:49.833-03:00  INFO 1664 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-10-16T20:20:50.294-03:00  INFO 1664 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 0.88 seconds (process running for 1.198)
+2026-10-22T19:11:01.831-03:00  INFO 6354 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 6354 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
+2026-10-22T19:11:01.838-03:00  INFO 6354 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-10-22T19:11:02.800-03:00  INFO 6354 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 1.609 seconds (process running for 2.035)
 ```
 
 O mesmo banner, o mesmo `Started BookshopApplication`, e o prompt volta. Nada falhou. Sem servidor

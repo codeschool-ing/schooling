@@ -17,8 +17,8 @@ ana@vm:~/bookshop$ SPRING_PROFILES_ACTIVE=dev SERVER_PORT=9090 java -jar target/
 
 ```
 ana@vm:~/bookshop$ grep -E 'profile|Tomcat started' /tmp/bookshop.log
-2026-10-16T20:21:09.167-03:00  INFO 2452 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
-2026-10-16T20:21:11.108-03:00  INFO 2452 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9090 (http) with context path '/'
+2026-10-22T19:11:22.567-03:00  INFO 6947 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
+2026-10-22T19:11:24.508-03:00  INFO 6947 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9090 (http) with context path '/'
 ```
 
 O perfil está ativo e o arquivo dele diz 8081, e o Tomcat está na **9090**: a variável de ambiente
@@ -30,8 +30,8 @@ ana@vm:~/bookshop$ SPRING_PROFILES_ACTIVE=dev SERVER_PORT=9090 java -jar target/
 
 ```
 ana@vm:~/bookshop$ grep -E 'profile|Tomcat started' /tmp/bookshop.log
-2026-10-16T20:21:13.389-03:00  INFO 2599 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
-2026-10-16T20:21:14.721-03:00  INFO 2599 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9091 (http) with context path '/'
+2026-10-22T19:11:27.112-03:00  INFO 7070 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
+2026-10-22T19:11:29.112-03:00  INFO 7070 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 9091 (http) with context path '/'
 ```
 
 **9091**: o argumento supera o ambiente. Pare a aplicação.

@@ -54,18 +54,18 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=
 
  :: Spring Boot ::                (v4.1.1)
 
-2026-10-16T20:20:57.167-03:00  INFO 2023 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 2023 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
-2026-10-16T20:20:57.172-03:00  INFO 2023 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
-2026-10-16T20:20:58.341-03:00  INFO 2023 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8081 (http)
-2026-10-16T20:20:58.354-03:00  INFO 2023 --- [bookshop] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-10-16T20:20:58.355-03:00  INFO 2023 --- [bookshop] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
-2026-10-16T20:20:58.377-03:00  INFO 2023 --- [bookshop] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1048 ms
-2026-10-16T20:20:58.642-03:00 DEBUG 2023 --- [bookshop] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 2 mappings in 'requestMappingHandlerMapping'
-2026-10-16T20:20:58.656-03:00 DEBUG 2023 --- [bookshop] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
-2026-10-16T20:20:58.668-03:00 DEBUG 2023 --- [bookshop] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 2 RequestBodyAdvice, 1 ResponseBodyAdvice
-2026-10-16T20:20:58.700-03:00 DEBUG 2023 --- [bookshop] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
-2026-10-16T20:20:58.739-03:00  INFO 2023 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
-2026-10-16T20:20:58.751-03:00  INFO 2023 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 2.112 seconds (process running for 2.704)
+2026-10-22T19:11:09.842-03:00  INFO 6591 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Starting BookshopApplication v0.1.0 using Java 25.0.4.1 with PID 6591 (/home/ana/bookshop/target/bookshop-0.1.0.jar started by ana in /home/ana/bookshop)
+2026-10-22T19:11:09.854-03:00  INFO 6591 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
+2026-10-22T19:11:11.200-03:00  INFO 6591 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8081 (http)
+2026-10-22T19:11:11.227-03:00  INFO 6591 --- [bookshop] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-22T19:11:11.229-03:00  INFO 6591 --- [bookshop] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-10-22T19:11:11.250-03:00  INFO 6591 --- [bookshop] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1189 ms
+2026-10-22T19:11:11.575-03:00 DEBUG 6591 --- [bookshop] [           main] s.w.s.m.m.a.RequestMappingHandlerMapping : 2 mappings in 'requestMappingHandlerMapping'
+2026-10-22T19:11:11.614-03:00 DEBUG 6591 --- [bookshop] [           main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2026-10-22T19:11:11.633-03:00 DEBUG 6591 --- [bookshop] [           main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 2 RequestBodyAdvice, 1 ResponseBodyAdvice
+2026-10-22T19:11:11.673-03:00 DEBUG 6591 --- [bookshop] [           main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+2026-10-22T19:11:11.729-03:00  INFO 6591 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-10-22T19:11:11.742-03:00  INFO 6591 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : Started BookshopApplication in 2.587 seconds (process running for 3.171)
 ```
 
 `The following 1 profile is active: "dev"` replaces the `No active profile set` of the first run,
@@ -85,8 +85,8 @@ ana@vm:~/bookshop$ SPRING_PROFILES_ACTIVE=dev java -jar target/bookshop-0.1.0.ja
 
 ```
 ana@vm:~/bookshop$ grep -E 'profile|Tomcat started' /tmp/bookshop.log
-2026-10-16T20:21:00.778-03:00  INFO 2199 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
-2026-10-16T20:21:02.443-03:00  INFO 2199 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
+2026-10-22T19:11:14.402-03:00  INFO 6706 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dev"
+2026-10-22T19:11:16.364-03:00  INFO 6706 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8081 (http) with context path '/'
 ```
 
 The same profile, chosen from the environment. Stop it again.
@@ -101,8 +101,8 @@ ana@vm:~/bookshop$ java -jar target/bookshop-0.1.0.jar --spring.profiles.active=
 
 ```
 ana@vm:~/bookshop$ grep -E 'profile|Tomcat started' /tmp/bookshop.log
-2026-10-16T20:21:04.531-03:00  INFO 2294 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dve"
-2026-10-16T20:21:06.852-03:00  INFO 2294 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-10-22T19:11:18.843-03:00  INFO 6854 --- [bookshop] [           main] c.example.bookshop.BookshopApplication   : The following 1 profile is active: "dve"
+2026-10-22T19:11:20.654-03:00  INFO 6854 --- [bookshop] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
 ```
 
 It started, it says profile `dve` is active, and it is on 8080. **A profile with no file is not
